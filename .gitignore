@@ -1,0 +1,9 @@
+/license.txt
+/mbs-errors.log
+/user-uploads/*
+/conf
+/index.php
+/public/cache/*
+/public/.htaccess
+/.htaccess
+/library/*

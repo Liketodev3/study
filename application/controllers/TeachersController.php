@@ -1,0 +1,781 @@
+<?php
+class TeachersController extends MyAppController {
+
+	public function index($teachLangId=0) {
+		$frmSrch = $this->getTeacherSearchForm($teachLangId);
+		$this->set( 'frmTeacherSrch', $frmSrch );
+		$daysArr = array(
+						0 => Label::getLabel('LBL_Sunday'),
+						1 => Label::getLabel('LBL_Monday'),
+						2 => Label::getLabel('LBL_Tuesday'),
+						3 => Label::getLabel('LBL_Wednesday'),
+						4 => Label::getLabel('LBL_Thursday'),
+						5 => Label::getLabel('LBL_Friday'),
+						6 => Label::getLabel('LBL_Saturday')
+						);
+		$timeSlotArr = TeacherGeneralAvailability::timeSlotArr();
+		$this->set( 'daysArr', $daysArr );
+		$this->set( 'timeSlotArr', $timeSlotArr );
+		$this->_template->addJs('js/enscroll-0.6.2.min.js');
+		$this->_template->addJs('js/moment.min.js');
+		$this->_template->addJs('js/fullcalendar.min.js');
+		$this->_template->addCss('css/fullcalendar.min.css');
+		$this->_template->addCss('css/custom-full-calendar.css');
+		$this->_template->addJs('js/ion.rangeSlider.js');
+		$this->_template->addCss('css/ion.rangeSlider.css');
+		$this->_template->addCss('css/ion.rangeSlider.skinHTML5.css');
+
+		$this->_template->render();
+	}
+
+	public function teachersList(){
+		//$json = array();
+
+		$frmSrch = $this->getTeacherSearchForm();
+		$post = $frmSrch->getFormDataFromArray( FatApp::getPostedData() );
+
+		if( false === $post ){
+			Message::addErrorMessage($frmSrch->getValidationErrors());
+			FatUtility::dieWithError( Message::getHtml() );
+		}
+
+		$page = FatApp::getPostedData( 'page', FatUtility::VAR_INT, 1 );
+		if ($page < 2) {
+			$page = 1;
+		}
+		$pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
+
+		/* $json['status'] = true;
+		$json['msg'] = ''; */
+
+		$srch = new stdClass();
+		$this->searchTeachers( $srch );
+		$srch->joinUserLang( $this->siteLangId );        
+		$srch->joinTeacherLessonData( );
+		$srch->joinRatingReview( );
+		$srch->addMultipleFields( array('ulg.*','IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info','utls.*') );        
+		$srch->setPageSize($pageSize);
+		$srch->setPageNumber( $page );
+		//$srch->addCondition('slanguage_active','=',applicationConstants::ACTIVE);        
+		$rs = $srch->getResultSet();
+		$db = FatApp::getDb();
+		$teachersList = $db->fetchAll($rs);
+		$totalRecords = $srch->recordCount();
+		$pagingArr = array(
+			'pageCount'	=>	$srch->pages(),
+			'page'	=>	$page,
+			'pageSize'	=>	$pageSize,
+			'recordCount'	=>	$totalRecords,
+		);
+
+		//echo $srch->getQuery(); die();
+		$this->set('teachers', $teachersList );
+		$post['page'] = $page;
+		$this->set( 'postedData', $post );
+		$this->set( 'pagingArr', $pagingArr );
+		$html = $this->_template->render( false, false, 'teachers/teachers-list.php', true);
+		$this->set( 'html', $html);
+
+		$startRecord = ( $page - 1 ) * $pageSize + 1 ;
+		$endRecord = $page * $pageSize;
+		if ($totalRecords < $endRecord) { $endRecord = $totalRecords; }
+		$this->set( 'startRecord', $startRecord );
+		$this->set( 'endRecord', $endRecord );
+		$this->set( 'totalRecords', $totalRecords );
+		$this->set( 'msg', Label::getLabel('LBL_Request_Processing..') );
+		/* $json['startRecord'] = $startRecord ;
+		$json['endRecord'] = $endRecord;
+		$json['totalRecords'] = $totalRecords; */
+		//FatUtility::dieJsonSuccess($json);
+		$this->_template->render( false, false, 'json-success.php', false, false );
+	}
+
+	public function spokenLanguagesAutoCompleteJson(){
+		$pageSize        = 20;
+        $post            = FatApp::getPostedData();
+
+		$srch = new SpokenLanguageSearch( $this->siteLangId );
+        $srch->addChecks();
+        $srch->setPageSize($pageSize);        
+		$keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '');
+        if ( !empty($keyword) ) {
+            $cnd = $srch->addCondition('slanguage_identifier', 'like', '%' . $keyword . '%');
+            $cnd->attachCondition('slanguage_name', 'like', '%' . $keyword . '%', 'OR');
+        }
+        $rs    = $srch->getResultSet();        
+        $languages = FatApp::getDb()->fetchAll( $rs, 'slanguage_id' );
+        $json  = array();
+        foreach ($languages as $key => $language) {
+            $json[] = array(
+                'id' => $key,
+                'name' => $language['slanguage_name'],
+            );
+        }
+        die(json_encode($json));
+	}
+	/* Auto-complete for Teaching languages code added 02-08-2019 */
+	public function teachLanguagesAutoCompleteJson(){
+		$pageSize        = 20;
+        $post            = FatApp::getPostedData();
+
+		$srch = new TeachingLanguageSearch( $this->siteLangId );
+        $srch->addChecks();
+        $srch->setPageSize($pageSize);        
+		$keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '');
+        if ( !empty($keyword) ) {
+            $cnd = $srch->addCondition('tlanguage_identifier', 'like', '%' . $keyword . '%');
+            $cnd->attachCondition('tlanguage_name', 'like', '%' . $keyword . '%', 'OR');
+        }
+        $rs    = $srch->getResultSet();        
+        $languages = FatApp::getDb()->fetchAll( $rs, 'tlanguage_id' );
+        $json  = array();
+        foreach ($languages as $key => $language) {
+            $json[] = array(
+                'id' => $key,
+                'name' => $language['tlanguage_name'],
+            );
+        }
+        die(json_encode($json));
+	}
+	/******/
+	public function view( $teacher_id ){
+		$this->_template->addJs('js/moment.min.js');
+		$this->_template->addJs('js/fullcalendar.min.js');
+		$this->_template->addCss('css/fullcalendar.min.css');
+		$this->_template->addCss('css/custom-full-calendar.css');
+
+
+		//$this->_template->addJs('js/popper.min.js');
+		//$this->_template->addJs('js/bootstrap.min.js');
+		//$this->_template->addCss('css/bootstrap.min.css');
+
+		$teacher_id = FatUtility::int( $teacher_id );
+
+		/* preferences/skills[ */
+		$prefSrch = new UserToPreferenceSearch();
+		$prefSrch->joinToPreference( $this->siteLangId );
+		$prefSrch->addCondition( 'utpref_user_id', '=', $teacher_id );
+		$prefSrch->addOrder( 'preference_type' );
+		$prefSrch->addGroupBy( 'preference_type' );
+		$prefSrch->addMultipleFields( array('preference_type', 'GROUP_CONCAT(IFNULL(preference_title, preference_identifier)) as preference_titles') );
+		$prefRs = $prefSrch->getResultSet();
+		$teacherPreferences = FatApp::getDb()->fetchAll( $prefRs );
+		/* ] */
+
+		$srch = new UserSearch( );
+		$srch->setTeacherDefinedCriteria(true);
+		$srch->joinUserLang( $this->siteLangId );                
+		$srch->joinTeacherLessonData();
+		$srch->joinUserSpokenLanguages( $this->siteLangId );
+		$srch->joinUserTeachLanguage( $this->siteLangId );
+		$srch->joinUserCountry( $this->siteLangId );
+		$srch->joinUserState( $this->siteLangId );
+		
+		if(UserAuthentication::isUserLogged()){
+			$srch->joinFavouriteTeachers( UserAuthentication::getLoggedUserId() );
+			$srch->addFld('uft_id');
+            
+            /* find, if have added any offer price is locked with this teacher[ */
+            $srch->joinTable( TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top_teacher_id = user_id AND top_learner_id = '.UserAuthentication::getLoggedUserId(), 'top' );
+            $srch->addFld( array('top_single_lesson_price', 'top_bulk_lesson_price') );
+            /* ] */
+            
+		}else{
+			$srch->addFld('0 as uft_id');
+		}
+
+		$srch->setPageSize(1);
+		$srch->addCondition( 'user_id', '=', $teacher_id );
+		$srch->addMultipleFields( array(
+			'user_id',
+			'user_first_name',
+			'user_last_name',
+			'CONCAT(user_first_name," ", user_last_name) as user_full_name',
+			'user_country_id',
+			/* 'user_timezone', */
+			'IFNULL(country_name, country_code) as user_country_name',
+			'IFNULL(state_name, state_identifier) as user_state_name',
+			'IFNULL(slanguage_name, slanguage_identifier) as teachlanguage_name',
+			'utsl.spoken_language_names',
+			'utsl.spoken_languages_proficiency',
+			'us_video_link',
+			'us_is_trial_lesson_enabled',
+			'us_single_lesson_amount',
+			'us_bulk_lesson_amount',
+			'minPrice',
+			'maxPrice',
+            'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
+            'utl_slanguage_ids'
+			) );
+
+		$rs = $srch->getResultSet();
+		$teacher = FatApp::getDb()->fetch( $rs );
+		if( empty($teacher) ){
+			FatUtility::exitWithErrorCode(404);
+		}
+		
+		/* if offered price are locked with this teacher, then buying will be with that offered price[ */
+		if( isset($teacher['top_single_lesson_price']) && !empty($teacher['top_single_lesson_price']) && !empty( $teacher['top_bulk_lesson_price'] ) ){
+			$teacher['us_bulk_lesson_amount'] = $teacher['top_bulk_lesson_price'];
+			$teacher['us_single_lesson_amount'] = $teacher['top_single_lesson_price'];
+		}
+		/* ] */
+
+		/* [ */
+		$isFreeTrialEnabled = false;
+		$freeTrialPackageRow = LessonPackage::getFreeTrialPackage( $this->siteLangId );
+		if( $teacher['us_is_trial_lesson_enabled'] == 1 && $freeTrialPackageRow ){
+			$isFreeTrialEnabled = true;
+			$this->set( 'freeTrialPackageRow', $freeTrialPackageRow );
+		}
+		$teacher['isFreeTrialEnabled'] = $isFreeTrialEnabled;
+		/* ] */
+
+        /* Languages [ */
+        $userSrchObj = new UserSearch();
+        $tLangsrch = $userSrchObj->getMyTeachLangQry();
+        $tLangsrch->addCondition('utl_us_user_id','=',$teacher_id);
+		$rs = $tLangsrch->getResultSet();
+		$tLangs = FatApp::getDb()->fetch($rs);
+        $teachLanguages = SpokenLanguage::getAllLangs($this->siteLangId,true);  
+        if(!empty($tLangs['utl_slanguage_ids'])){
+            $tLangidsArr = explode(',',$tLangs['utl_slanguage_ids']);
+            $tlangArr = array_intersect_key($teachLanguages, array_flip($tLangidsArr));
+        }
+
+        /* ] */        
+        
+		/* [ */
+		$srch = LessonPackage::getSearchObject( $this->siteLangId );
+		$srch->addCondition( 'lpackage_is_free_trial', '=', 0 );
+		$srch->addMultipleFields(array(
+			'lpackage_id',
+			'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',
+			'lpackage_lessons'
+        ));
+		$rs = $srch->getResultSet();
+		$lessonPackages = FatApp::getDb()->fetchAll($rs);
+		$teacher['lessonPackages'] = $lessonPackages;
+		$teacher['teachLanguages'] = $tlangArr;
+		/* ] */
+
+		$teacherLessonReviewObj = new TeacherLessonReviewSearch();
+		$teacherLessonReviewObj->joinTeacherLessonRating();
+		$teacherLessonReviewObj->doNotCalculateRecords();
+		$teacherLessonReviewObj->doNotLimitRecords();
+		$teacherLessonReviewObj->addCondition('tlr.tlreview_status', '=', TeacherLessonReview::STATUS_APPROVED);
+		$teacherLessonReviewObj->addCondition('tlreview_teacher_user_id','=',$teacher_id);
+		$teacherLessonReviewObj->addMultipleFields(array("ROUND(AVG(tlrating_rating),2) as prod_rating","count(DISTINCT tlreview_id) as totReviews"));
+		$teacherLessonReviewObj->addMultipleFields(array('sum(if(tlrating_rating=1,1,0)) rated_1','sum(if(tlrating_rating=2,1,0)) rated_2','sum(if(tlrating_rating=3,1,0)) rated_3','sum(if(tlrating_rating=4,1,0)) rated_4','sum(if(tlrating_rating=5,1,0)) rated_5','COUNT(DISTINCT tlreview_postedby_user_id) as totStudents'));
+		$reviews = FatApp::getDb()->fetch($teacherLessonReviewObj->getResultSet());
+		//print_r($reviews); die;
+		$this->set('reviews',$reviews);
+		$frmReviewSearch = $this->getTeacherReviewSearchForm( FatApp::getConfig('CONF_FRONTEND_PAGESIZE'));
+		$frmReviewSearch->fill(array('tlreview_teacher_user_id'=>$teacher_id,'teach_lang_name'=>$teacher['teachlanguage_name']));
+		$this->set( 'frmReviewSearch', $frmReviewSearch );
+		$teacher['preferences'] = $teacherPreferences;
+		$this->set( 'teacher', $teacher );
+		$this->_template->render();
+	}
+
+	private function getTeacherReviewSearchForm($pageSize = 10){
+		$frm = new Form('frmReviewSearch');
+		$frm->addHiddenField('', 'tlreview_teacher_user_id');
+		$frm->addHiddenField('', 'teach_lang_name');
+		$frm->addHiddenField('', 'page');
+		$frm->addHiddenField('', 'pageSize',$pageSize);
+		$frm->addHiddenField('', 'orderBy','most_recent');
+		return $frm;
+	}
+
+	public function getTeacherReviews(){
+		$teacherId = FatApp::getPostedData('tlreview_teacher_user_id');
+		$langName = FatApp::getPostedData('teach_lang_name');
+		$page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
+		$orderBy = FatApp::getPostedData('orderBy', FatUtility::VAR_STRING, 'most_recent');
+		$page = ($page)? $page : 1;
+		$pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
+		$srch = new TeacherLessonReviewSearch();
+		$srch->joinTeacher();
+		$srch->joinLearner();
+		$srch->joinTeacherLessonRating();
+		//$srch->addCondition('tlrating_rating_type','=',TeacherLessonRating::TYPE_LESSON);
+		$srch->addCondition('tlr.tlreview_teacher_user_id', '=', $teacherId);
+		$srch->addCondition('tlr.tlreview_status', '=', TeacherLessonReview::STATUS_APPROVED);
+		$srch->addMultipleFields(array('tlreview_id',"ROUND(AVG(tlrating_rating),2) as prod_rating" ,'tlreview_title','tlreview_description','tlreview_posted_on','tlreview_postedby_user_id','ul.user_first_name as lname','ut.user_first_name as tname' ));
+		$srch->addGroupBy('tlr.tlreview_id');
+		//$srch->addGroupBy('ul.user_id');
+		$srch->setPageNumber($page);
+		$srch->setPageSize($pageSize);
+		switch ($orderBy){
+			case 'most_helpful':
+				$srch->addOrder('helpful','desc');
+			break;
+			default:
+				$srch->addOrder('tlr.tlreview_posted_on','desc');
+			break;
+		}
+		//echo $srch->getQuery();
+		$records = FatApp::getDb()->fetchAll($srch->getResultSet());
+		$this->set('reviewsList',$records);
+		$this->set('page', $page);
+		$this->set('langName', $langName);
+		$this->set('pageCount', $srch->pages());
+		$this->set('postedData', FatApp::getPostedData());
+
+		$json['startRecord'] = !empty($records)?($page-1)*$pageSize + 1 :0;
+
+		$json['recordsToDisplay'] = count($records);
+		$json['totalRecords'] = $srch->recordCount() ;
+
+
+		$json['html'] = $this->_template->render( false,false,'_partial/teacher-reviews-list.php', true, false);
+		$json['loadMoreBtnHtml'] = $this->_template->render( false, false, '_partial/load-more-teacher-reviews-btn.php', true, false);
+		FatUtility::dieJsonSuccess($json);
+	}
+
+	public function viewCalendar( $teacher_id = 0, $languageId = 1 ){
+		$teacher_id = FatUtility::int( $teacher_id );
+		$languageId = FatUtility::int( $languageId );
+		if( $teacher_id < 1 ){ echo 1;
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+
+		$srch = new UserSearch( );
+		$srch->setTeacherDefinedCriteria();
+		$srch->setPageSize(1);
+		$srch->addCondition( 'user_id', '=', $teacher_id );
+		if(UserAuthentication::isUserLogged()){
+            /* find, if have added any offer price is locked with this teacher[ */
+            $srch->joinTable( TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top_teacher_id = user_id AND top_learner_id = '.UserAuthentication::getLoggedUserId(), 'top' );
+            $srch->addFld( array('top_single_lesson_price', 'top_bulk_lesson_price') );
+            /* ] */        
+        }
+		$srch->addMultipleFields( array(
+			/* 'user_timezone', */
+			'user_first_name',
+			'user_country_id',
+			'us_single_lesson_amount',
+			'us_bulk_lesson_amount',
+		) );
+		$rs = $srch->getResultSet();
+		$userRow = FatApp::getDb()->fetch( $rs );
+		if( !$userRow ){ 
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+
+		/* if offered price are locked with this teacher, then buying will be with that offered price[ */
+		if( isset($userRow['top_single_lesson_price']) && !empty($userRow['top_single_lesson_price']) && !empty( $userRow['top_bulk_lesson_price'] ) ){
+			$userRow['us_bulk_lesson_amount'] = $userRow['top_bulk_lesson_price'];
+			$userRow['us_single_lesson_amount'] = $userRow['top_single_lesson_price'];
+		}
+		/* ] */        
+        
+		$allowedActionArr = array(
+			'free_trial',
+			'paid'
+		);
+
+		$postedAction = FatApp::getPostedData('action');
+		if( !in_array($postedAction, $allowedActionArr) ){
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+
+		$bookingMinutesDuration = FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60);
+		
+		if( 'free_trial' == $postedAction ){
+			$bookingMinutesDuration = FatApp::getConfig( 'conf_trial_lesson_duration', FatUtility::VAR_INT, 30 );
+			
+			$freeTrialPackageRow = LessonPackage::getFreeTrialPackage( );
+			$lPackageId = $freeTrialPackageRow['lpackage_id'];
+		} else {
+			
+			/* [ */
+			$srch = LessonPackage::getSearchObject();
+			$srch->addCondition( 'lpackage_is_free_trial', '=', 0 );
+			$srch->addOrder( 'lpackage_id', 'ASC' );
+			$srch->setPageSize(1);
+			$srch->addFld( 'lpackage_id' );
+			$rs = $srch->getResultSet();
+			$lessonPackageRow = FatApp::getDb()->fetch( $rs );
+			if( !empty($lessonPackageRow) ){
+				$lPackageId = $lessonPackageRow['lpackage_id'];
+			}
+			/* ] */
+		}
+		
+		if( $lPackageId <= 0 ){
+			FatUtility::dieWithError( Label::getLabel('LBL_Packages_are_not_configured_by_admin') );
+		}
+
+		$bookingSnapDuration = floor($bookingMinutesDuration / 60).':'.($bookingMinutesDuration -   floor($bookingMinutesDuration / 60) * 60).':00';
+
+		$this->set( 'bookingMinutesDuration', $bookingMinutesDuration );
+		$this->set( 'bookingSnapDuration', $bookingSnapDuration );
+
+		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
+		$this->set( 'lPackageId', $lPackageId );
+		$this->set('userRow',$userRow);
+		$this->set('action',$postedAction);
+		$this->set('teacher_name',$userRow['user_first_name']);
+		$this->set('teacher_country_id',$userRow['user_country_id']);
+		$this->set('teacher_id',$teacher_id);
+		$this->set('languageId',$languageId);
+		$this->set('cssClassArr',$cssClassNamesArr);
+		$this->_template->render(false,false);
+	}
+
+	public function checkCalendarTimeSlotAvailability($userId = 0){
+		$userId = FatUtility::int($userId);
+		$post = FatApp::getPostedData();
+		if ( false === $post ) {
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+		if( $userId < 1 ){
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+        if(strtotime($post['date'].' '.$post['startTime'])<strtotime(date('Y-m-d h:i:s'))){
+            FatUtility::dieJsonSuccess(0);
+        }
+		$tWsch = new TeacherWeeklySchedule();
+		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId,$post['startTime'],$post['endTime'],$post['date'],$post['day']);
+		FatUtility::dieJsonSuccess($checkAvialSlots);
+	}
+
+	public function getTeacherGeneralAvailabilityJsonData($userId = 0){
+		$userId = FatUtility::int($userId);
+		if( $userId < 1 ){
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId);
+		echo FatUtility::convertToJson($jsonArr);
+	}
+
+	public function getTeacherScheduledLessonData( $userId = 0 ){
+		$userId = FatUtility::int($userId);
+		if( $userId < 1 ){
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+		$srch = new ScheduledLessonSearch();
+		$srch->addGroupBy('slesson_id');
+		$srch->joinTeacher();
+		$srch->joinTeacherSettings();
+		$srch->joinTeacherTeachLanguageView( $this->siteLangId );
+		$srch->addMultipleFields(
+			array(
+			'slns.slesson_date',
+			'slns.slesson_start_time',
+			'slns.slesson_end_time',
+			//'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName'
+			));
+		$srch->addCondition( 'slns.slesson_teacher_id',' = ', $userId );
+		$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
+		$rs = $srch->getResultSet();
+		//echo $srch->getQuery();
+		$data = FatApp::getDb()->fetchAll($rs);
+		$jsonArr = array();
+		foreach($data as $data){
+			$jsonArr[] = array(
+			"title"=>$data['teacherTeachLanguageName'],
+			"start"=>$data['slesson_date']." ".$data['slesson_start_time'],
+			"end"=>$data['slesson_date']." ".$data['slesson_end_time'],
+			"className"=>"sch_data",
+			"classType"=>"0",
+			);
+		}
+		echo FatUtility::convertToJson($jsonArr);
+	}
+
+	public function getTeacherWeeklyScheduleJsonData($userId = 0){
+		$userId = FatUtility::int($userId);
+		$post = FatApp::getPostedData();
+		if ( false === $post ) {
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+		if( $userId < 1 ){
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+
+		$weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId,$post['start'],$post['end']);
+		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
+		$jsonArr = array();
+		if( !empty($weeklySchRows) ){
+			foreach( $weeklySchRows as $row){
+				$jsonArr[] = array(
+					"title"	=>	"",
+					"date"	=>	$row['twsch_date'],
+					"start"	=>	$row['twsch_date']." ".$row['twsch_start_time'],
+					"end"	=>	$row['twsch_date']." ".$row['twsch_end_time'],
+					'_id'	=>	$row['twsch_id'],
+					'classType'	=>	$row['twsch_is_available'],
+					'className'	=>	$cssClassNamesArr[$row['twsch_is_available']]
+					);
+			}
+		}
+		echo FatUtility::convertToJson($jsonArr);
+	}
+
+	public function qualificationList(){
+		$json = array();
+		$post = FatApp::getPostedData();
+		if ( false === $post ) {
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+		$user_id = FatApp::getPostedData( 'user_id', FatUtility::VAR_INT, 0 );
+		if( $user_id < 1 ){
+			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		}
+
+		$srch = new UserQualificationSearch( false );
+		$srch->addCondition( 'uqualification_user_id', '=', $user_id );
+		$srch->addCondition( 'uqualification_active', '=', 1 );
+		$srch->addOrder( 'uqualification_experience_type' );
+		$srch->addOrder( 'uqualification_start_year' );
+		//$srch->joinTable(AttachedFile::DB_TBL, 'LEFT OUTER JOIN','uqualification_id=afile_record_subid');
+		$srch->addMultiplefields(
+			array(
+				'uqualification_id',
+				'uqualification_experience_type',
+				'uqualification_title',
+				'uqualification_institute_name',
+				'uqualification_institute_address',
+				'uqualification_description',
+				'uqualification_start_year',
+				'uqualification_end_year'
+			));
+		$rs = $srch->getResultSet();
+		$totalRecords = $srch->recordCount();
+		$qualifications = FatApp::getDb()->fetchAll( $rs );
+		$this->set( 'qualifications', $qualifications );
+		$this->set( 'qualificationTypeArr', UserQualification::getExperienceTypeArr() );
+		if( $totalRecords > 0 ){
+			$this->_template->render( false, false, 'teachers/qualification-list.php', false, false);
+		} else {
+			$this->_template->render( false, false, 'teachers/no-qualification-found.php', false, false);
+		}
+	}
+
+	private function searchTeachers( &$srch ){
+
+		$srch = new UserSearch( false );
+		$srch->setTeacherDefinedCriteria(true);
+		$srch->joinUserSpokenLanguages( $this->siteLangId );
+		//$srch->joinUserTeachLanguage( $this->siteLangId );
+		$srch->joinUserCountry( $this->siteLangId );
+		$srch->joinUserSettings( );
+		$srch->joinUserAvailibility( );
+		if(UserAuthentication::isUserLogged()){
+			$srch->joinFavouriteTeachers( UserAuthentication::getLoggedUserId() );
+			$srch->addFld('uft_id');
+		}else{
+			$srch->addFld('0 as uft_id');
+		}
+		/*$teachLanguageName = FatApp::getPostedData( 'teach_language_name', FatUtility::VAR_STRING, NULL );
+		if( !empty($teachLanguageName) ){
+			$cnd = $srch->addCondition( 'slanguage_name', 'LIKE', '%' . $teachLanguageName . '%' );
+			$cnd->attachCondition( 'slanguage_identifier', 'LIKE', '%' . $teachLanguageName . '%' );
+		}*/
+
+		/* [ */
+		$keyword = FatApp::getPostedData( 'keyword', FatUtility::VAR_STRING, NULL );
+		if( !empty($keyword) ){
+			$cnd = $srch->addCondition( 'user_first_name', 'LIKE', '%'. $keyword .'%' );
+			$cnd->attachCondition( 'user_last_name', 'LIKE', '%'. $keyword .'%' );
+			$cnd->attachCondition( 'user_profile_info', 'LIKE', '%' . $keyword . '%' );
+		}
+		/* ] */
+
+		/* [ */
+		$spokenLanguage = FatApp::getPostedData('spokenLanguage', FatUtility::VAR_STRING, NULL);
+		if( !empty($spokenLanguage) ){
+			if( is_numeric( $spokenLanguage ) ){
+				$srch->addDirectCondition( 'FIND_IN_SET(' . $spokenLanguage . ', spoken_language_ids)' );
+			} else {
+				$spokenLanguageArr = explode( "," , $spokenLanguage );
+				if( !empty($spokenLanguageArr) ){
+					$spokenLanguageArr = FatUtility::int($spokenLanguageArr);
+					foreach( $spokenLanguageArr as $spokenLanguage ){
+						$srch->addDirectCondition( 'FIND_IN_SET(' . $spokenLanguage . ', spoken_language_ids)' );
+					}
+				}
+			}
+		}
+		/* ] */
+
+		/* [ */
+		$preferenceFilter = FatApp::getPostedData('preferenceFilter', FatUtility::VAR_STRING, NULL);
+		if( !empty($preferenceFilter) ){
+			if( is_numeric( $preferenceFilter ) ){
+				$srch->addDirectCondition( 'FIND_IN_SET(' . $preferenceFilter . ', utpref_preference_ids)' );
+			} else {
+				$preferenceFilterArr = explode( "," , $preferenceFilter );
+				if( !empty($preferenceFilterArr) ){
+					$preferenceFilterArr = FatUtility::int($preferenceFilterArr);
+					foreach( $preferenceFilterArr as $preferenceFilter ){
+						$srch->addDirectCondition( 'FIND_IN_SET(' . $preferenceFilter . ', utpref_preference_ids)' );
+					}
+				}
+			}
+		}
+		/* ] */
+
+		/* from country[ */
+		$fromCountry = FatApp::getPostedData('fromCountry', FatUtility::VAR_STRING, NULL);
+		if( !empty($fromCountry) ){
+			if( is_numeric( $fromCountry ) ){
+				$srch->addCondition( 'user_country_id', '=', $fromCountry );
+			} else {
+				$fromCountryArr = explode( "," , $fromCountry );
+				if( !empty($fromCountryArr) ){
+					$fromCountryArr = FatUtility::int($fromCountryArr);
+					$srch->addCondition( 'user_country_id', 'IN', $fromCountryArr );
+				}
+			}
+		}
+		/* ] */
+
+		/* Language Teach [ */
+		$langTeach = FatApp::getPostedData('teach_language_id', FatUtility::VAR_STRING, NULL);
+		if( $langTeach > 0  ){
+			if( is_numeric( $langTeach ) ){
+				//$srch->addCondition( 'us.us_teach_slanguage_id', '=', $langTeach );
+                $srch->addDirectCondition( 'FIND_IN_SET(' . $langTeach . ', utl_slanguage_ids)' );                
+			}
+		}
+		/* ] */
+
+		/* Week Day [ */
+		$weekDays = FatApp::getPostedData('filterWeekDays', FatUtility::VAR_STRING, array());
+		if( $weekDays  ){
+				$srch->addCondition( 'ta.tgavl_day', 'IN', $weekDays );
+		}
+		/* ] */
+
+		/* Time Slot [ */
+		$timeSlots = FatApp::getPostedData('filterTimeSlots', FatUtility::VAR_STRING, array());
+		if( $timeSlots  ){
+		 $formatedArr = CommonHelper::formatTimeSlotArr($timeSlots);
+				if($formatedArr){
+					foreach($formatedArr as $key=>$formatedVal){
+						/*	if($key==0){
+								$cnd = $srch->addCondition('tgavl_start_time', '<=', $formatedVal['startTime'],'AND');
+								$cnd->attachCondition('tgavl_end_time', '>=', $formatedVal['endTime'], 'AND');
+							}else{
+								$newSrch = $cnd->attachCondition('tgavl_start_time', '<=', $formatedVal['startTime'], 'OR');
+								$newSrch->attachCondition('tgavl_end_time', '>=', $formatedVal['endTime'], 'AND');
+							}
+						*/
+				if($key==0){
+					$cnd = $srch->addCondition('tgavl_start_time', '<=', $formatedVal['startTime'],'AND');
+					$cnd->attachCondition('tgavl_end_time', '>=', $formatedVal['startTime'], 'AND');
+				}else{
+					$newSrch = $cnd->attachCondition('tgavl_start_time', '<=', $formatedVal['endTime'], 'OR');
+					$newSrch->attachCondition('tgavl_end_time', '>=', $formatedVal['endTime'], 'AND');
+				}
+
+					}
+				}
+		}
+		/* ] */
+
+		/* [ */
+		$gender = FatApp::getPostedData('gender', FatUtility::VAR_STRING, NULL);
+		if( !empty($gender) ){
+			if( is_numeric( $gender ) ){
+				$srch->addCondition( 'user_gender', '=', $gender );
+			} else {
+				$genderArr = explode( "," , $gender );
+				if( !empty($genderArr) ){
+					$genderArr = FatUtility::int($genderArr);
+					$srch->addCondition( 'user_gender', 'IN', $genderArr );
+				}
+			}
+		}
+		/* ] */
+
+		/* price Range[ */
+		$minPriceRange = FatApp::getPostedData('minPriceRange', FatUtility::VAR_FLOAT, 0 );
+		if( !empty($minPriceRange) ) {
+			$minPriceRangeInDefaultCurrency =  CommonHelper::getDefaultCurrencyValue($minPriceRange,false,false);
+			//$srch->addCondition('us_bulk_lesson_amount', '>=', $minPriceRangeInDefaultCurrency);
+			$srch->addCondition('minPrice', '>=', $minPriceRangeInDefaultCurrency);
+		}
+		$maxPriceRange = FatApp::getPostedData('maxPriceRange', FatUtility::VAR_FLOAT, 0 );
+		if( !empty($maxPriceRange) ) {
+			$maxPriceRangeInDefaultCurrency =  CommonHelper::getDefaultCurrencyValue($maxPriceRange,false,false);
+			//$srch->addCondition('us_bulk_lesson_amount', '<=', $maxPriceRangeInDefaultCurrency);
+			$srch->addCondition('maxPrice', '<=', $maxPriceRangeInDefaultCurrency);
+		}        
+		/* ] */
+
+		/* [ */
+		$sortBy = FatApp::getPostedData('sortBy', FatUtility::VAR_STRING, 'popularity');
+		$sortOrder = FatApp::getPostedData('sortOrder', FatUtility::VAR_STRING, 'asc');
+		if( !in_array($sortOrder,array('asc','desc')) ){
+			$sortOrder = 'asc';
+		}
+
+		if(!empty($sortBy)) {
+			$sortByArr = explode("_",$sortBy);
+			$sortBy = isset($sortByArr[0]) ? $sortByArr[0] : $sortBy;
+			$sortOrder = isset($sortByArr[1]) ? $sortByArr[1] : $sortOrder;
+			switch($sortBy){
+				case 'price':
+					$srch->addOrder('us_bulk_lesson_amount',$sortOrder);
+				break;
+				case 'popularity':
+					//$srch->addOrder('selprod_sold_count',$sortOrder);
+				break;
+			}
+		}
+		/* ] */
+		$srch->addOrder('user_id','DESC');
+		$srch->addGroupBy('user_id');
+		$srch->addMultipleFields( array(
+			'user_id',
+			'user_first_name',
+			'user_last_name',
+			'user_country_id',
+			'country_name as user_country_name',
+			'user_profile_info',
+			'us_single_lesson_amount',
+			'us_bulk_lesson_amount',
+			//'IFNULL(slanguage_name, slanguage_identifier) as teachlanguage_name',
+			'utsl.spoken_language_names',
+			'utsl.spoken_languages_proficiency',
+            'utl_ids',
+            'utl_slanguage_ids'
+		) );
+	}
+
+	private function getTeacherSearchForm($teachLangId = 0){
+		$slangId = 0;
+		$slangName = '';
+		if($teachLangId){
+			$srch = new SpokenLanguageSearch( $this->siteLangId );
+			$srch->addCondition('slanguage_id', '=', $teachLangId);
+			$srch->addMultipleFields(
+				array(
+					'slanguage_id',
+					'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name'
+					)
+				);
+
+			$rs    = $srch->getResultSet();
+			$languages = FatApp::getDb()->fetch( $rs );
+			if($languages){
+				$slangId = $languages['slanguage_id'];
+				$slangName = $languages['slanguage_name'];
+			}
+		}
+		$frm = new Form( 'frmTeacherSrch' );
+		$frm->addTextBox( '', 'teach_language_name', $slangName, array( 'placeholder' => Label::getLabel('LBL_Teaches:Select_Language') ) );
+		$frm->addHiddenField( '', 'teach_language_id', $slangId );
+		$frm->addTextBox( '', 'teach_availability', '', array( 'placeholder' => Label::getLabel('LBL_Availiblity') ) );
+		$frm->addTextBox( '', 'keyword', '', array( 'placeholder' => Label::getLabel('LBL_Search_Teacher\'s_Name') ) );
+		$fld = $frm->addHiddenField('', 'page', 1);
+		$fld->requirements()->setIntPositive();
+		$frm->addSubmitButton( '', 'btnTeacherSrchSubmit', '' );
+		return $frm;
+	}
+}

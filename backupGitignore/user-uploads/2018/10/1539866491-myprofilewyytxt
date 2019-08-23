@@ -1,0 +1,16 @@
+I'll redirect to the Teacher Settings page. The page will contain tabs: General Info, General Availability, Resume, Skills and Payment Method. General Info will be the default tab.
+ UI elements of the General Info tab will be:
+-- Teacher Username (mandatory): Should be unique, contain alphabets and numbers only.
+-- Nationality (mandatory): Country list
+-- About Me (mandatory): Text area
+
+-- Enable Trial Lesson: Checkbox and will be unchecked by default.
+-- How much notice do you require before lessons? (mandatory): Selectbox with options 12 hours, 24 hours and 48 hours. Default value will be 12 hours
+--  Single Lesson Rate (mandatory): Text field that accepts integers only.
+--  Bulk Lesson Rate (mandatory): Text field that accepts integers only.
+--  Introduction Video Link: Should allow teacher to add youtube link.
+-- Save button to save the changes.
+
+
+
+
