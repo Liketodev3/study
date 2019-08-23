@@ -412,6 +412,14 @@ class TeachersController extends MyAppController {
 
 		$this->set( 'bookingMinutesDuration', $bookingMinutesDuration );
 		$this->set( 'bookingSnapDuration', $bookingSnapDuration );
+		
+		
+		$teacherBookingBefore = current( UserSetting::getUserSettings($teacher_id) )['us_booking_before']; 
+		if (  '' ==  $teacherBookingBefore  ) {
+			$teacherBookingBefore = 0;
+		}
+		$this->set('teacherBookingBefore',$teacherBookingBefore); 
+		
 
 		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
 		$this->set( 'lPackageId', $lPackageId );

@@ -197,6 +197,8 @@ class AccountController extends LoggedUserController {
 		$profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
         if($userRow['user_is_teacher']){
          $userRow['us_video_link'] = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_video_link'];
+		 
+		 $userRow['us_booking_before'] = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_booking_before']; //== code added on 23-08-2019
         }
 		$profileFrm->fill($userRow);
 
@@ -346,8 +348,15 @@ class AccountController extends LoggedUserController {
         $db->startTransaction();
 
         if($isTeacher){
+			
+			$bookingDurationOptions = array(0, 12, 24);
+			if ( !in_array($post['us_booking_before'], $bookingDurationOptions ) ) {
+				Message::addErrorMessage('Invalid Selection of Booking Field');
+				FatUtility::dieWithError( Message::getHtml() ); 
+			} //  code added on 23-08-2019
+			
             $record = new TableRecord( UserSetting::DB_TBL );
-            $record->assignValues(array('us_video_link'=>$post['us_video_link']));
+            $record->assignValues(array('us_video_link'=>$post['us_video_link'], 'us_booking_before' => $post['us_booking_before'])); //  code added on 23-08-2019
             if( !$record->update(array('smt'=>'us_user_id=?', 'vals'=>array(UserAuthentication::getLoggedUserId()))) ){
        			$db->rollbackTransaction();
                 $this->error = $record->getError();
@@ -397,6 +406,15 @@ class AccountController extends LoggedUserController {
 
 		$fld2 = $frm->addSelectBox(Label::getLabel('LBL_TimeZone'),'user_timezone',$optionArr,FatApp::getConfig('CONF_COUNTRY',FatUtility::VAR_INT,0),array(),Label::getLabel('LBL_Select'));
 		$fld2->requirement->setRequired(true);
+		
+		if($teacher){ //== check if user is teacher 
+			$bookingOptionArr = array(0 => 'Immediate', 12 => '12 Hours', 24 => '24 Hours');
+			
+			$fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'),'us_booking_before',$bookingOptionArr,'us_booking_before',array(),Label::getLabel('LBL_Select'));
+			
+			$fld3->requirement->setRequired(true);
+		}
+		
 
 		$fld = $frm->addTextArea(Label::getLabel('LBL_Biography'), 'user_profile_info');
         $fld->requirements()->setLength(1,500);                                                $fld->requirements()->setLength(1,500);

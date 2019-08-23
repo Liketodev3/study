@@ -534,6 +534,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 
 		$userRow = User::getAttributesById($teacher_id,array('user_first_name','user_country_id')); 
 		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
+		
+		$teacherBookingBefore = current( UserSetting::getUserSettings($teacher_id) )['us_booking_before']; 
+		if (  '' ==  $teacherBookingBefore  ) {
+			$teacherBookingBefore = 0;
+		}
+		$this->set('teacherBookingBefore',$teacherBookingBefore);
 
 		$this->set('userRow',$userRow); 
 		$this->set('action',FatApp::getPostedData('action'));
@@ -554,6 +560,29 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		if( $lessonId < 1 ){
 			FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
 		}
+		
+		$teacher_id = FatApp::getPostedData( 'teacherId', FatUtility::VAR_INT, 0 );
+		$teacherBookingBefore = current( UserSetting::getUserSettings($teacher_id) )['us_booking_before']; 
+		if (  '' ==  FatUtility::int($teacherBookingBefore) ) {
+			$teacherBookingBefore = 0;
+		}
+		
+		$startTime = $post['date'].' '. $post['startTime'];
+		$endTime = $post['date'].' '. $post['endTime'];
+		
+		$validDate = date('Y-m-d H:i:s', strtotime('+'.$teacherBookingBefore. 'hours', strtotime(date('Y-m-d H:i:s'))));
+		
+		$validDateTimeStamp = strtotime($validDate);
+		$SelectedDateTimeStamp = strtotime($startTime); //== always should be greater then current date
+		$endDateTimeStamp = strtotime($endTime);
+		
+		$difference =  $SelectedDateTimeStamp - $validDateTimeStamp; //== Difference should be always greaten then 0
+		
+		if( $difference < 1  ) {
+			FatUtility::dieJsonError(Label::getLabel('LBL_Teacher_Disable_the_Booking_before').' '. $teacherBookingBefore .' Hours' );
+		}
+		
+		
 
 		$srch = new stdClass();
 		$this->searchLessons( $srch );

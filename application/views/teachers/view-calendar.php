@@ -40,16 +40,46 @@
 			timezone: "<?php echo MyDate::getTimeZone(); ?>",
 			                <?php if( 'free_trial' == $action ){ ?>
 			select: function (start, end, jsEvent, view ) {
+				
+				$("body").css( {"pointer-events": "none"} );
+				$("body").css( {"cursor": "wait"} );
+				//==================================//
+					var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
+					var validSelectDateTime = moment().add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
+					if ( selectedDateTime < validSelectDateTime ) {	
+						$("body").css({"cursor": "default"});
+						$("body").css({"pointer-events": "initial"});
+						if( selectedDateTime > moment().format('YYYY-MM-DD HH:mm:ss') ) {
+							$.systemMessage('<?php echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--success');	
+								setTimeout(function() {  
+									$.systemMessage.close();
+								}, 3000);
+						}
+					
+						$('#calendar').fullCalendar('unselect');
+						return false;
+					}
+				//================================//
+				
+				
 				if( getEventsByTime( start, end ).length > 1 ){
 					$('#d_calendar').fullCalendar('refetchEvents');
 				}
 				
 				if( moment().diff(moment(start)) >= 0 ) {
+					
+					$("body").css( {"cursor": "default"} );
+				    $("body").css( {"pointer-events": "initial"} );
+					
 					$('#d_calendar').fullCalendar('unselect');
 					return false;
 				}
 				
 				if( moment(start).format('d') != moment(end).format('d') ) {
+					
+					$("body").css( {"cursor": "default"} );
+				    $("body").css( {"pointer-events": "initial"} );
+					
 					$('#d_calendar').fullCalendar('unselect');
 					return false;
 				}
@@ -58,6 +88,10 @@
 				var minutesDiff = duration.asMinutes();
 				var minutes = "<?php echo $bookingMinutesDuration ?>";
 				if( minutesDiff > minutes ){
+					
+					$("body").css( {"cursor": "default"} );
+				    $("body").css( {"pointer-events": "initial"} );
+					
 					$('#d_calendar').fullCalendar('unselect');
 					$('.tooltipevent').remove();
 					return false;
@@ -78,6 +112,10 @@
 				newEvent.eventOverlap = false;
 				
 				fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[<?php echo $teacher_id; ?>]), newEvent, function(doc) {
+					
+					$("body").css( {"cursor": "default"} );
+				    $("body").css( {"pointer-events": "initial"} );
+					
 					var res = JSON.parse(doc);
 					if( res.msg == 1 ){
 						$('#d_calendar').fullCalendar('renderEvent',newEvent);

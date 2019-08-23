@@ -36,6 +36,7 @@ class UserSetting extends MyAppModel {
 				'us_single_lesson_amount',
 				'us_bulk_lesson_amount',
 				'us_video_link',
+				'us_booking_before', //== code added on 23-08-2019
 				'us_teach_slanguage_id',
                 'utl.*'
 				));

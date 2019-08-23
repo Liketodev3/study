@@ -37,7 +37,7 @@
     
     var slot = 0;
 	
-    setUpLessonSchedule = function(lessonId,startTime,endTime,date){
+    setUpLessonSchedule = function(teacherId,lessonId,startTime,endTime,date){
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','isSlotTaken'),'&startTime='+startTime+'&endTime='+endTime+'&date='+date,function(t){ 
             t = JSON.parse(t);
             slot = t.count;
@@ -52,7 +52,7 @@
                             btnClass: 'btn btn--primary',
                             keys: ['enter', 'shift'],
                             action: function(){
-                                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), 'lessonId='+lessonId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
+                                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), 'teacherId='+teacherId +'&lessonId='+lessonId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
                                 $.facebox.close();
                                 location.reload();
                                 });
@@ -68,7 +68,7 @@
                     }
                 });            
             }else{ 
-                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), 'lessonId='+lessonId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
+                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), 'teacherId='+teacherId+'&lessonId='+lessonId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
                     $.facebox.close();
                     location.reload();
                 });

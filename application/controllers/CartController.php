@@ -55,6 +55,24 @@ class CartController extends MyAppController{
 			}
 		}
 		
+		$teacherBookingBefore = current( UserSetting::getUserSettings($teacher_id) )['us_booking_before'];
+		if (  '' ==  $teacherBookingBefore  ) {
+			$teacherBookingBefore = 0;
+		}
+		
+		if ( $startDateTime != '' && $endDateTime != '' ) {
+			$validDate = date('Y-m-d H:i:s', strtotime('+'.$teacherBookingBefore. 'hours', strtotime(date('Y-m-d H:i:s'))));
+			$selectedDate = $startDateTime;
+			$validDateTimeStamp = strtotime($validDate);
+			$SelectedDateTimeStamp = strtotime($selectedDate); //== always should be greater then current date
+			$difference =  $SelectedDateTimeStamp - $validDateTimeStamp; //== Difference should be always greaten then 0
+		
+			if( $difference < 1  ) {
+				FatUtility::dieJsonError(Label::getLabel('LBL_Booking_Close_For_This_Teacher'));
+			}
+		}
+		
+		
 		/* add to cart[ */
 		$cart = new Cart();
 		if( !$cart->add( $teacher_id, $lpackageId, $languageId, $startDateTime, $endDateTime ) ){
