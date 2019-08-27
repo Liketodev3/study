@@ -52,14 +52,19 @@ class WalletController extends LoggedUserController {
 			$cond->attachCondition('utxn.utxn_comments','like','%'.$keyword.'%','OR');
 			$cond->attachCondition('concat("TN-" ,lpad( utxn.`utxn_id`,7,0))','like','%'.$keyword.'%','OR' , true);
 		}
+		
+		$systemTimeZone = MyDate::getTimeZone();
+		$user_timezone = MyDate::getUserTimeZone();
 
 		$fromDate = FatApp::getPostedData('date_from', FatUtility::VAR_DATE, '');
 		if( !empty($fromDate) ) {
+			$fromDate = MyDate::changeDateTimezone( $fromDate, $user_timezone, $systemTimeZone);
 			$cond = $srch->addCondition('utxn.utxn_date','>=',$fromDate);
 		}
 
 		$toDate = FatApp::getPostedData('date_to', FatUtility::VAR_DATE, '');
 		if( !empty($toDate) ) {
+			$toDate = MyDate::changeDateTimezone( $toDate, $user_timezone, $systemTimeZone);
 			$cond = $srch->addCondition('cast( utxn.`utxn_date` as date)','<=',$toDate ,'and' , true);
 		}
 		

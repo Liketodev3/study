@@ -341,15 +341,24 @@ class Order extends MyAppModel{
 		
 		if($filter['keyword']){
 			$srch->addCondition('o.order_id','LIKE','%'.$filter['keyword'].'%');
-		}		
+		}	
+	
+		$systemTimeZone = MyDate::getTimeZone();
+		$user_timezone = MyDate::getUserTimeZone();
+		
+		
 
         $dateFrom = $filter['date_from'];
         if (!empty($dateFrom)) {
+			$dateFrom = MyDate::changeDateTimezone( $dateFrom, $user_timezone, $systemTimeZone);
+			$dateFrom = date('Y-m-d', strtotime( $dateFrom ));
             $srch->addCondition('o.order_date_added', '>=', $dateFrom . ' 00:00:00');
-        }
+		}
 
         $dateTo = $filter['date_to'];
         if (!empty($dateTo)) {
+			$dateTo = MyDate::changeDateTimezone( $dateTo, $user_timezone, $systemTimeZone);
+			$dateTo = date('Y-m-d', strtotime( $dateTo ));
             $srch->addCondition('o.order_date_added', '<=', $dateTo . ' 23:59:59');
         }
 		

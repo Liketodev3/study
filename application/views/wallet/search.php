@@ -1,4 +1,5 @@
 <?php  defined('SYSTEM_INIT') or die('Invalid Usage.');
+$user_timezone = MyDate::getUserTimeZone();
 $arr_flds = array(
 	'utxn_id'	=>	Label::getLabel('LBL_Txn_ID', $siteLangId),
 	'utxn_date'	=>	Label::getLabel('LBL_Date', $siteLangId),
@@ -32,7 +33,9 @@ foreach ($arrListing as $sn => $row){
 				$td->appendElement('span', array('class'=>'td__data'), Transaction::formatTransactionNumber($row[$key]), true);
 			break;
 			case 'utxn_date':
-				$td->appendElement('span', array('class'=>'td__data'), FatDate::format($row[$key]), true);			
+				$utxn_date = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', $row[$key], true , $user_timezone );
+				$td->appendElement('span', array('class'=>'td__data'), $utxn_date, true);
+				
 			break;
 			case 'utxn_status':
             if($row[$key] == Transaction::STATUS_COMPLETED){
