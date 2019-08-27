@@ -33,7 +33,7 @@
    			allDaySlot: false,
    			columnHeaderFormat :"ddd",
             timeFormat: 'hh:mm a',
-			timezone: "<?php echo MyDate::getTimeZone(); ?>",
+			timezone: "<?php echo $user_timezone; ?>",
    			select: function (start, end, jsEvent, view ) {
    				if(moment(start).format('d')!=moment(end).format('d') ) {
    					$('#listing_calendar').fullCalendar('unselect');
@@ -61,5 +61,6 @@
    });
 </script>
 <div class="calendar-view">
-<div id='listing_calendar'></div>
+	<span><?php echo MyDate::displayTimezoneString();?></span>
+	<div id='listing_calendar'></div>
 </div>

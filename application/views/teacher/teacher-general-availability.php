@@ -1,4 +1,7 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+$user_timezone = MyDate::getUserTimeZone();
+$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date('Y-m-d H:i:s'), true , $user_timezone );
+?>
 <script>
    function isOverlapping(start,end){
        var array = $("#ga_calendar").fullCalendar('clientEvents');
@@ -39,7 +42,7 @@
    			slotEventOverlap : false,
    			allDaySlot: false,
    			columnHeaderFormat :"ddd",
-			timezone: "<?php echo MyDate::getTimeZone(); ?>",
+			timezone: "<?php echo $user_timezone; ?>",
    			select: function (start, end, jsEvent, view ) {
    				if(moment(start).format('d')!=moment(end).format('d') ) {
    					$('#ga_calendar').fullCalendar('unselect');

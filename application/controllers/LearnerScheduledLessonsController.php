@@ -58,8 +58,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$lessons = FatApp::getDb()->fetchAll($rs);
 		
 		$lessonArr=array();
-		foreach($lessons as $lesson){
-			$lessonArr[$lesson['slesson_date']][] = $lesson;
+		$user_timezone = MyDate::getUserTimeZone();
+		foreach ( $lessons as $lesson ) {
+			$key = $lesson['slesson_date'];
+			if ( $lesson['slesson_date'] != '0000-00-00' ) {
+				$key  = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', $lesson['slesson_date'] .' '. $lesson['slesson_start_time'], true , $user_timezone );
+			}
+			$lessonArr[$key][] = $lesson;
 		}
 
 		/* [ */
@@ -285,10 +290,15 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 	}
 
 	public function viewCalendar(){
+		MyDate::setUserTimeZone(); 
+		$user_timezone = MyDate::getUserTimeZone();
+		$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
+		$this->set('user_timezone',$user_timezone); 
+		$this->set('nowDate',$nowDate);
 		$this->_template->render(false,false);
 	}
 
-	public function calendarJsonData(){
+	public function calendarJsonData() {
 		$cssClassNamesArr = ScheduledLesson::getStatusArr();
 		$srch = new ScheduledLessonSearch();
 		$srch->addMultipleFields(
@@ -296,6 +306,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'slns.slesson_teacher_id',
 			'slns.slesson_learner_id',
 			'slns.slesson_date',
+			'slns.slesson_end_date',
 			'slns.slesson_start_time',
 			'slns.slesson_end_time',
 			'slns.slesson_status',
@@ -308,23 +319,27 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$rows = FatApp::getDb()->fetchAll($rs);
 		$jsonArr = array();
 		if( !empty($rows) ){
+			$user_timezone = MyDate::getUserTimeZone();
 			foreach( $rows as $k=>$row){
+				$slesson_start_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['slesson_date'] .' '. $row['slesson_start_time'] , true , $user_timezone );
+				$slesson_end_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['slesson_end_date'] .' '. $row['slesson_end_time'] , true , $user_timezone );
+				
 				$jsonArr[$k] = array(
 					"title"	=>	$row['user_first_name'],
-					"date"	=>	$row['slesson_date'],
-					"start"	=>	$row['slesson_date']." ".$row['slesson_start_time'],
-					"end"	=>	$row['slesson_date']." ".$row['slesson_end_time'],
+					"date"	=>	$slesson_start_time,
+					"start"	=>	$slesson_start_time,
+					"end"	=>	$slesson_end_time,
 					'lid'	=>	$row['slesson_learner_id'],
-
 					'liFname'	=>	substr($row['user_first_name'],0,1),
 					'classType'	=>	$row['slesson_status'],
 					'className'	=>	$cssClassNamesArr[$row['slesson_status']]
-					); 
-                if( true == User::isProfilePicUploaded( $row['user_id'] ) ){
+				);
+				
+				if ( true == User::isProfilePicUploaded( $row['user_id'] ) ) {
                     $teacherUrl = CommonHelper::generateFullUrl('Teachers','view', array($row['user_id']));                    
                     $img = CommonHelper::generateFullUrl('Image','User', array( $row['user_id'] )); 
                     $jsonArr[$k]['imgTag'] = '<a href="'.$teacherUrl.'"><img src="'.$img.'" /></a>';
-                }else{
+                } else {
                     $jsonArr[$k]['imgTag'] = '';
                 }                    
 			}
@@ -491,6 +506,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$sLessonArr = array(
 			'slesson_status'	=>	ScheduledLesson::STATUS_NEED_SCHEDULING,
 			'slesson_date'		=>	'',
+			'slesson_end_date'	=>	'',
 			'slesson_start_time'=>	'',
 			'slesson_end_time'	=>	''
 		);
@@ -535,17 +551,24 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$userRow = User::getAttributesById($teacher_id,array('user_first_name','user_country_id')); 
 		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
 		
+		MyDate::setUserTimeZone(); 
+		$user_timezone = MyDate::getUserTimeZone();
+		$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone );
+		
 		$teacherBookingBefore = current( UserSetting::getUserSettings($teacher_id) )['us_booking_before']; 
 		if (  '' ==  $teacherBookingBefore  ) {
 			$teacherBookingBefore = 0;
 		}
-		$this->set('teacherBookingBefore',$teacherBookingBefore);
+		
+		$this->set('teacherBookingBefore', $teacherBookingBefore);
+		$this->set('user_timezone', $user_timezone); 
+		$this->set('nowDate', $nowDate); 
 
-		$this->set('userRow',$userRow); 
-		$this->set('action',FatApp::getPostedData('action'));
-		$this->set('teacher_id',$teacher_id);
-		$this->set('lessonId',$lessonId);
-		$this->set('cssClassArr',$cssClassNamesArr);
+		$this->set('userRow', $userRow); 
+		$this->set('action', FatApp::getPostedData('action'));
+		$this->set('teacher_id', $teacher_id);
+		$this->set('lessonId', $lessonId);
+		$this->set('cssClassArr', $cssClassNamesArr);
 		$this->_template->render(false,false);
 	}
 
@@ -562,28 +585,29 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		}
 		
 		$teacher_id = FatApp::getPostedData( 'teacherId', FatUtility::VAR_INT, 0 );
+		
+		$user_timezone = MyDate::getUserTimeZone();
+		$systemTimeZone = MyDate::getTimeZone();
+		$startTime = MyDate::changeDateTimezone( $post['date'].' '. $post['startTime'],  $user_timezone,  $systemTimeZone );
+		$endTime = MyDate::changeDateTimezone( $post['date'].' '. $post['endTime'],  $user_timezone,  $systemTimeZone);
+		
+		
 		$teacherBookingBefore = current( UserSetting::getUserSettings($teacher_id) )['us_booking_before']; 
 		if (  '' ==  FatUtility::int($teacherBookingBefore) ) {
 			$teacherBookingBefore = 0;
 		}
 		
-		$startTime = $post['date'].' '. $post['startTime'];
-		$endTime = $post['date'].' '. $post['endTime'];
-		
 		$validDate = date('Y-m-d H:i:s', strtotime('+'.$teacherBookingBefore. 'hours', strtotime(date('Y-m-d H:i:s'))));
-		
 		$validDateTimeStamp = strtotime($validDate);
 		$SelectedDateTimeStamp = strtotime($startTime); //== always should be greater then current date
 		$endDateTimeStamp = strtotime($endTime);
 		
 		$difference =  $SelectedDateTimeStamp - $validDateTimeStamp; //== Difference should be always greaten then 0
 		
-		if( $difference < 1  ) {
+		if ( $difference < 1  ) {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Teacher_Disable_the_Booking_before').' '. $teacherBookingBefore .' Hours' );
 		}
 		
-		
-
 		$srch = new stdClass();
 		$this->searchLessons( $srch );
 		$srch->joinTeacherCredentials();
@@ -607,9 +631,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		}
 
 		$sLessonArr = array(
-			'slesson_date'	=>	$post['date'],
-			'slesson_start_time'	=>	$post['startTime'],
-			'slesson_end_time'	=>	$post['endTime'],
+			'slesson_date'	=>	date('Y-m-d', $SelectedDateTimeStamp),
+			'slesson_end_date'	=>	date('Y-m-d', $endDateTimeStamp),
+			'slesson_start_time'	=>	date('H:i:s', $SelectedDateTimeStamp),
+			'slesson_end_time'	=> date('H:i:s', $endDateTimeStamp ) ,
 			'slesson_status'	=>	ScheduledLesson::STATUS_SCHEDULED
 		);
 
@@ -1144,8 +1169,14 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		echo FatUtility::convertToJson($data);
 	}
 
-    public function isSlotTaken(){
+    public function isSlotTaken() {
 		$post = FatApp::getPostedData();
+		$user_timezone = MyDate::getUserTimeZone();
+		$systemTimeZone = MyDate::getTimeZone();
+		$startDateTime = MyDate::changeDateTimezone( $post['date'].' '. $post['startTime'] , $user_timezone, $systemTimeZone);
+		$endDateTime = MyDate::changeDateTimezone( $post['date'].' '.$post['endTime'], $user_timezone, $systemTimeZone);
+		
+		
 		$db = FatApp::getDb();
 		if( empty($post)) {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
@@ -1155,18 +1186,19 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			array(
 			'slns.slesson_status'
 			));
+			
 		$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
 		$srch->addCondition( 'slns.slesson_learner_id',' = ', UserAuthentication::getLoggedUserId() );
-		$srch->addCondition( 'slns.slesson_date',' = ', $post['date'] );
+		$srch->addCondition( 'slns.slesson_date',' = ', date('Y-m-d', strtotime( $startDateTime )) );
 
-
-		$cnd = $srch->addCondition( 'slns.slesson_start_time',' >= ', $post['startTime'],'AND' );
-        $cnd->attachCondition('slns.slesson_start_time','<=',$post['endTime'],'AND');
-
-		$cnd1 = $cnd->attachCondition( 'slns.slesson_end_time',' >= ', $post['startTime'],'OR' );
-        $cnd1->attachCondition('slns.slesson_end_time','<=',$post['endTime'],'AND');        
+		$cnd = $srch->addCondition( 'slns.slesson_start_time',' >= ',date('H:i:s', strtotime( $startDateTime )),'AND' );
+        $cnd->attachCondition('slns.slesson_start_time','<=',date('H:i:s', strtotime( $endDateTime )),'AND');
+		
+		$cnd1 = $cnd->attachCondition( 'slns.slesson_end_time',' >= ', date('H:i:s', strtotime( $startDateTime )),'OR' );
+        $cnd1->attachCondition('slns.slesson_end_time','<=',date('H:i:s', strtotime( $endDateTime )),'AND');    
+        
 		$rs = $srch->getResultSet();
-		$data = FatApp::getDb()->fetchAll($rs);
+		$data = FatApp::getDb()->fetchAll( $rs );
         $this->set('count',count($data));
 		$this->_template->render(false, false, 'json-success.php');
     }

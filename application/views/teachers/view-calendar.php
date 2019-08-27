@@ -38,18 +38,19 @@
 			snapDuration : "<?php echo $bookingSnapDuration; ?>",
 			allDaySlot: false,
 			timezone: "<?php echo MyDate::getTimeZone(); ?>",
-			                <?php if( 'free_trial' == $action ){ ?>
+			<?php if( 'free_trial' == $action ) { ?>
 			select: function (start, end, jsEvent, view ) {
 				
 				$("body").css( {"pointer-events": "none"} );
 				$("body").css( {"cursor": "wait"} );
 				//==================================//
 					var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
-					var validSelectDateTime = moment().add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
+					var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
+					
 					if ( selectedDateTime < validSelectDateTime ) {	
-						$("body").css({"cursor": "default"});
-						$("body").css({"pointer-events": "initial"});
-						if( selectedDateTime > moment().format('YYYY-MM-DD HH:mm:ss') ) {
+						$("body").css( {"cursor": "default"} );
+						$("body").css( {"pointer-events": "initial"} );
+						if ( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
 							$.systemMessage('<?php echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--success');	
 								setTimeout(function() {  
 									$.systemMessage.close();
@@ -61,25 +62,20 @@
 					}
 				//================================//
 				
-				
-				if( getEventsByTime( start, end ).length > 1 ){
+				if ( getEventsByTime( start, end ).length > 1 ) {
 					$('#d_calendar').fullCalendar('refetchEvents');
 				}
 				
-				if( moment().diff(moment(start)) >= 0 ) {
-					
+				if ( moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0 ) {
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
-					
 					$('#d_calendar').fullCalendar('unselect');
 					return false;
 				}
 				
-				if( moment(start).format('d') != moment(end).format('d') ) {
-					
+				if ( moment(start).format('d') != moment(end).format('d') ) {
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
-					
 					$('#d_calendar').fullCalendar('unselect');
 					return false;
 				}
@@ -87,11 +83,9 @@
 				var duration = moment.duration( moment(end).diff(moment(start)) );
 				var minutesDiff = duration.asMinutes();
 				var minutes = "<?php echo $bookingMinutesDuration ?>";
-				if( minutesDiff > minutes ){
-					
+				if ( minutesDiff > minutes ) {
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
-					
 					$('#d_calendar').fullCalendar('unselect');
 					$('.tooltipevent').remove();
 					return false;
@@ -111,8 +105,14 @@
 				newEvent.maxTime = "<?php echo $bookingSnapDuration; ?>";
 				newEvent.eventOverlap = false;
 				
+				var currentDate = $('#calendar').fullCalendar('getDate');
+				var beginOfWeek = moment(start).startOf('week').format('YYYY-MM-DD HH:mm:ss');
+				var endOfWeek = moment(start).endOf('week').format('YYYY-MM-DD HH:mm:ss');
+				
+				newEvent.weekStart = moment(beginOfWeek).format('YYYY-MM-DD HH:mm:ss');
+				newEvent.weekEnd = moment(endOfWeek).format('YYYY-MM-DD HH:mm:ss');
+				
 				fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[<?php echo $teacher_id; ?>]), newEvent, function(doc) {
-					
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					
@@ -125,22 +125,22 @@
 					}
 				});
 			},
-                            <?php } ?>
+            <?php } ?>
 			eventLimit: true,
-			defaultDate: '<?php echo date('Y-m-d'); ?>',
+			defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
 			events: function( start, end, timezone, callback ) {
 				var data = { start:moment(start).format('YYYY-MM-DD HH:mm:ss'), end:moment(end).format('YYYY-MM-DD HH:mm:ss') };
 				
 				fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData',[<?php echo $teacher_id; ?>]), data, function(doc) {
 					if( doc == "[]" ){
-						
-						fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData',[<?php echo $teacher_id; ?>]), '', function(doc) {
+						var data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };
+						fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData',[<?php echo $teacher_id; ?>]), data , function(doc) {
 							var doc = JSON.parse(doc);
 							var events = [];
 							events.push({
 								title: '',
-								start: moment().format('YYYY-MM-DD 00:00:00'),
-								end: moment(),
+								start: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
+								end: moment('<?php echo $nowDate; ?>'),
 								className: 'past_current_day',
 								editable: false,
 								rendering:'background'
@@ -156,8 +156,8 @@
 								
 								events.push({
 									title: $(this).attr('title'),
-									start: $(this).attr('startW'),
-									end: $(this).attr('endW'),
+									start: $(this).attr('start'),
+									end: $(this).attr('end'),
 									color: $(this).attr('color'),
 									day: $(this).attr('day'),
 									_id: $(this).attr('_id'),
@@ -168,7 +168,7 @@
 									rendering:'background',
 									selectable: true,
 									dow:[$(this).attr('day')]
-								  });
+								});
 							});
 							
 							fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
@@ -193,8 +193,8 @@
 						
 						events.push({
 							title: '',
-							start: moment().format('YYYY-MM-DD 00:00:00'),
-							end: moment(),
+							start: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
+							end: moment('<?php echo $nowDate; ?>'),
 							className: 'past_current_day',
 							editable: false,
 							rendering:'background'
@@ -204,7 +204,7 @@
 							var classType = $(this).attr('classType');
 							if( classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>" ){
 								var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
-								if( moment() > moment(e.start) ) {
+								if( moment('<?php echo $nowDate; ?>') > moment(e.start) ) {
 									var editable = false;
 								} else {
 									var editable = true;
@@ -270,15 +270,15 @@
 				});
 				
 				var eventEnd = moment(event.end);
-				var NOW = moment();
-				if(moment(event.end).format('YYYY-MM-DD HH:mm') < moment().format('YYYY-MM-DD HH:mm') && event.className != "sch_data"){
+				var NOW = moment('<?php echo $nowDate; ?>');
+				if(moment(event.end).format('YYYY-MM-DD HH:mm') < moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm') && event.className != "sch_data"){
 					return false;
 				}
 			},
 			
 			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 				//console.log(event.start.isBefore(moment()));
-				if( moment().diff(moment(event.start)) >= 0) {
+				if( moment('<?php echo $nowDate; ?>').diff(moment(event.start)) >= 0) {
 					$("#d_calendar").fullCalendar("refetchEvents");
 					return false;
 				}
@@ -338,5 +338,6 @@
 <?php if( 'free_trial' != $action ){ ?>
 <h4><?php echo Label::getLabel('Lbl_View_Availibility_(Click_Buy_to_Book)'); ?></h4>
 <?php } ?>
+<span> <?php echo MyDate::displayTimezoneString();?> </span>
 <div id='d_calendar'></div>
 </div>

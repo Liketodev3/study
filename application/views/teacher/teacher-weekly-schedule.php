@@ -1,4 +1,7 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+$user_timezone = MyDate::getUserTimeZone();
+$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
+?>
 <script>
    $(document).ready(function() {
    	$("#setUpWeeklyAvailability").click(function(){
@@ -25,12 +28,13 @@
    		editable: true,
    		//firstDay:"<?php echo date('N', strtotime(date('Y-m-d')));  ?>",
    		nowIndicator:true,
+		now:'<?php echo $nowDate; ?>',
    		selectOverlap: false,
    		eventOverlap: false,
    		slotEventOverlap : false,
    		forceEventDuration : true,
    		defaultTimedEventDuration : "00:30:00",
-		timezone: "<?php echo MyDate::getTimeZone(); ?>",
+		timezone: "<?php echo $user_timezone; ?>",
    		allDaySlot: false,
    		select: function (start, end, jsEvent, view ) {
 			if(moment().diff(moment(start)) >= 0) {
@@ -52,7 +56,7 @@
    			$('#w_calendar').fullCalendar('renderEvent',newEvent);
    		},
    		eventLimit: true, 
-   		defaultDate: '<?php echo date('Y-m-d'); ?>',
+   		defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
    		events: function(start, end, timezone, callback) {
    			$.ajax({
    			  url: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherWeeklyScheduleJsonData'); ?>",
@@ -61,16 +65,20 @@
    				success: function(doc) {
    				if(doc == "[]")
    				{
-   					$.ajax({
-   				url: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonData'); ?>",
+				data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };	
+   				
+				$.ajax({
+   				url: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonDataForWeekly'); ?>",
+				data : data,
+				method : 'POST',
    				success: function(doc) {
    					var doc = JSON.parse(doc);
    					var events = [];
    					events.push({
    						title: '',
-   						start: moment().format('YYYY-MM-DD 00:00:00'),
-   						date: moment().format('YYYY-MM-DD'),
-   						end: moment(),
+   						start: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
+   						date: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD'),
+   						end: moment('<?php echo $nowDate; ?>'),
    						className: 'past_current_day',
    						editable: false,
    						rendering:'background'
@@ -82,18 +90,20 @@
    					}else if(classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>"){
    						var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
    					}
-   					events.push({
+   					  
+					events.push({
    						title: $(this).attr('title'),
-   						start: $(this).attr('startW'),
-   						end: $(this).attr('endW'),
+   						start: $(this).attr('start'),
+   						end: $(this).attr('end'),
    						color: $(this).attr('color'),
    						_id: $(this).attr('_id'),
    						action: 'fromGeneralAvailability',
    						classType: $(this).attr('classType'),
    						className: className,
    						editable: false,
-   						dow:[$(this).attr('day')]
-   					  });
+   						//dow:[$(this).attr('day')]
+   					  });  
+					  
    					});
    					callback(events);
    					}
@@ -104,9 +114,9 @@
    				var events = [];
    				events.push({
    						title: '',
-   						start: moment().format('YYYY-MM-DD 00:00:00'),
-						date: moment().format('YYYY-MM-DD'),
-   						end: moment(),
+   						start: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
+						date: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD'),
+   						end: moment('<?php echo $nowDate; ?>'),
    						className: 'past_current_day',
    						editable: false,
    						rendering:'background'
@@ -115,7 +125,7 @@
    					var classType = $(this).attr('classType');
    					if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
    						var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
-   						 if(moment() > moment(e.start)) {
+   						if(moment('<?php echo $nowDate; ?>') > moment(e.start)) {
    							var editable = false;
    						}
    						else{
@@ -158,8 +168,8 @@
    			}
    		});
    		var eventEnd = moment(event.end);
-   		var NOW = moment();
-   		if(moment(event.end).format('YYYY-MM-DD HH:mm') < moment().format('YYYY-MM-DD HH:mm')){
+   		var NOW = moment('<?php echo $nowDate; ?>');
+   		if(moment(event.end).format('YYYY-MM-DD HH:mm') < moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm')){
    			return false;
    		}
    	},
@@ -177,5 +187,6 @@
 <button id="setUpWeeklyAvailability" class="btn btn--secondary"><?php echo Label::getLabel( 'LBL_Save' );?></button>
 <span class="-gap"></span>
 <div class="calendar-view -no-padding">
+<span> <?php echo MyDate::displayTimezoneString();?> </span>
 <div id='w_calendar'></div>
 </div>

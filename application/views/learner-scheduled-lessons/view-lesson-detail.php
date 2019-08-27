@@ -1,7 +1,11 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
-$curDate = date('Y/m/d H:i:s');
-$startTime = date("Y/m/d", strtotime($lessonData['slesson_date'])).' '.$lessonData['slesson_start_time'];
-$endTime = date("Y/m/d", strtotime($lessonData['slesson_date'])).' '.$lessonData['slesson_end_time'];
+$user_timezone = MyDate::getUserTimeZone();
+$curDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
+
+$startTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($lessonData['slesson_date'] .' '. $lessonData['slesson_start_time']), true , $user_timezone );
+
+$endTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($lessonData['slesson_end_date'] .' '. $lessonData['slesson_end_time']), true , $user_timezone );
+
 //$chatId = $lessonData['slesson_id']."_".UserAuthentication::getLoggedUserId()."_learner";
 $chatId = UserAuthentication::getLoggedUserId();
 $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacherId'],$lessonData['slesson_id']);
@@ -274,22 +278,24 @@ function endLessonButtonAction(){
                         <h6><?php echo Label::getLabel('LBL_Lesson_Details'); ?></h6>
                         <div class="schedule-list">
                            <ul>
-                              <?php 
-                                 $date = DateTime::createFromFormat('Y-m-d', $lessonData['slesson_date']);
-                                 if($date && ($date->format('Y-m-d') === $lessonData['slesson_date'])){ ?>
+							<?php 
+								$sdate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date($lessonData['slesson_date'] .' '. $lessonData['slesson_start_time']), true , $user_timezone );
+                                 $date = DateTime::createFromFormat('Y-m-d', $sdate);
+                                 //if($date && ($date->format('Y-m-d') === $lessonData['slesson_date'])){ 
+                                 if($date && ($date->format('Y-m-d') === $sdate )){ ?>
                               <li>
                                  <span class="span-left"><?php echo Label::getLabel('LBL_Schedule'); ?></span>
                                  <span class="span-right">
                                     <h4>
-                                       <?php echo date('h:i A',strtotime($lessonData['slesson_start_time'])); ?> - 
-                                       <?php echo date('h:i A',strtotime($lessonData['slesson_end_time'])); ?>
+                                       <?php echo date('h:i A',strtotime($startTime)); ?> - 
+                                       <?php echo date('h:i A',strtotime($endTime)); ?>
                                     </h4>
-                                    <?php echo date('l, F d, Y',strtotime($lessonData['slesson_date'])); ?>
+                                    <?php echo date('l, F d, Y',strtotime($startTime)); ?>
                                  </span>
                               </li>
                               <?php } ?>
-							  
-                              <li>
+						   
+							  <li>
                                  <span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
                                  <span class="span-right"><?php echo $statusArr[$lessonData['slesson_status']]; ?></span>
                               </li>

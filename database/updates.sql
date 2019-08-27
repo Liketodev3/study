@@ -154,3 +154,8 @@ ALTER TABLE `tbl_user_email_change_request`
 ALTER TABLE `tbl_user_email_change_request`
   MODIFY `uecreq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
   
+ALTER TABLE `tbl_user_settings` ADD `us_booking_before` INT(20) NULL DEFAULT NULL AFTER `us_teach_slanguage_id`;
+ALTER TABLE `tbl_scheduled_lessons` ADD `slesson_end_date` DATE NOT NULL AFTER `slesson_date`;
+ALTER TABLE `tbl_teachers_weekly_schedule` ADD `twsch_end_date` DATE NOT NULL AFTER `twsch_date`;
+ALTER TABLE `tbl_teachers_general_availability` ADD `tgavl_date` DATE NULL DEFAULT NULL AFTER `tgavl_end_time`;  
+  

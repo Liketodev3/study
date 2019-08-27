@@ -44,8 +44,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController {
 		$rs = $srch->getResultSet();
 		$lessons = FatApp::getDb()->fetchAll($rs);
 		$lessonArr=array();
-		foreach($lessons as $lesson){
-			$lessonArr[$lesson['slesson_date']][] = $lesson;
+		$user_timezone = MyDate::getUserTimeZone();
+		foreach($lessons as $lesson) {
+			$key = $lesson['slesson_date'];
+			if ( $lesson['slesson_date'] != '0000-00-00' ) {
+				$key  = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', $lesson['slesson_date'] .' '. $lesson['slesson_start_time'], true , $user_timezone );
+			}
+			$lessonArr[$key][] = $lesson;
 		}		
 		/* [ */
 		$totalRecords = $srch->recordCount();
@@ -266,7 +271,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController {
 		$this->_template->render(false,false, 'teacher-scheduled-lessons/search-flash-cards.php');
 	}
 	
-	public function viewCalendar(){
+	public function viewCalendar() {
+		MyDate::setUserTimeZone(); 
+		$user_timezone = MyDate::getUserTimeZone();
+		$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
+		$this->set('user_timezone',$user_timezone); 
+		$this->set('nowDate',$nowDate); 
+		
 		$this->set('statusArr',ScheduledLesson::getStatusArr());
 		$this->_template->render(false,false);
 	}
@@ -279,6 +290,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController {
 			'slns.slesson_teacher_id',
 			'slns.slesson_learner_id',
 			'slns.slesson_date',
+			'slns.slesson_end_date',
 			'slns.slesson_start_time',
 			'slns.slesson_end_time',
 			'slns.slesson_status',
@@ -291,22 +303,29 @@ class TeacherScheduledLessonsController extends TeacherBaseController {
 		$rows = FatApp::getDb()->fetchAll($rs);
 		$jsonArr = array();
 		if( !empty($rows) ){
+			$user_timezone = MyDate::getUserTimeZone();
 			foreach( $rows as $k=>$row){
+				
+				$slesson_date = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['slesson_date'], true , $user_timezone );
+				$slesson_start_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['slesson_date'] .' '. $row['slesson_start_time'] , true , $user_timezone );
+				$slesson_end_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['slesson_end_date'] .' '. $row['slesson_end_time'] , true , $user_timezone );
+				
 				$jsonArr[$k] = array(
 					"title"	=>	$row['user_first_name'],
-					"date"	=>	$row['slesson_date'],
-					"start"	=>	$row['slesson_date']." ".$row['slesson_start_time'],
-					"end"	=>	$row['slesson_date']." ".$row['slesson_end_time'],
+					"date"	=>	$slesson_date,
+					"start"	=>	$slesson_start_time,
+					"end"	=>	$slesson_end_time,
 					'lid'	=>	$row['slesson_learner_id'],
-					
 					'liFname'	=>	substr($row['user_first_name'],0,1),
 					'classType'	=>	$row['slesson_status'],
 					'className'	=>	$cssClassNamesArr[$row['slesson_status']]
-					);
-                if( true == User::isProfilePicUploaded( $row['user_id'] ) ){
+				);
+				
+				
+                if ( true == User::isProfilePicUploaded( $row['user_id'] ) ) {
                     $img = CommonHelper::generateFullUrl('Image','User', array( $row['user_id'] )); 
                     $jsonArr[$k]['imgTag'] = '<img src="'.$img.'" />';
-                }else{
+                } else {
                     $jsonArr[$k]['imgTag'] = '';
                 }                                        
 			}

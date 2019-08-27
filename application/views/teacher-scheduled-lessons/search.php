@@ -1,4 +1,8 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+
+MyDate::setUserTimeZone(); 
+$user_timezone = MyDate::getUserTimeZone();
+ 
 $referer = preg_replace("(^https?://)", "", $referer );
 foreach( $lessonArr as $key=>$lessons ){ ?>
 <div class="col-list-group">
@@ -32,14 +36,16 @@ foreach( $lessonArr as $key=>$lessons ){ ?>
 								<span class="span-left"><?php echo Label::getLabel('LBL_Schedule'); ?></span>
 								<span class="span-right">
 									<h4>
-									<?php echo date('h:i A',strtotime($lesson['slesson_start_time'])); ?>  
-									<?php //echo date('h:i A',strtotime($lesson['slesson_end_time'])); ?>
+									<?php 
+										echo MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_start_time'], true , $user_timezone );
+									?>  
 									</h4>
-									<?php echo date('l, F d, Y',strtotime($lesson['slesson_date'])); ?>
+									<?php 
+										echo MyDate::convertTimeFromSystemToUserTimezone( 'l, F d, Y', $lesson['slesson_date'].' '. $lesson['slesson_start_time'], true , $user_timezone );
+									?>
 								</span>
 							</li>
 						<?php } ?>
-						
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
 							<span class="span-right"><?php echo $statusArr[$lesson['slesson_status']]; ?></span>
@@ -124,22 +130,19 @@ foreach( $lessonArr as $key=>$lessons ){ ?>
 </div>
 </div>
 <?php }
- if( empty($lessons) ) { 
+if ( empty($lessons) ) { 
 	$this->includeTemplate('_partial/no-record-found.php');
- }
- else{
-echo FatUtility::createHiddenFormFromData ( $postedData, array (
-	'name' => 'frmSLnsSearchPaging'
-) );
-if($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('teacher-scheduled-lessons'))){
-	$this->includeTemplate('_partial/pagination.php', $pagingArr,false);
-}else{
-	echo "<div class='load-more -align-center'><a href='".CommonHelper::generateFullUrl('teacher-scheduled-lessons')."' class='btn btn--bordered btn--xlarge'>View all</a></div>";
+} else {
+	echo FatUtility::createHiddenFormFromData ( $postedData, array (
+		'name' => 'frmSLnsSearchPaging'
+	) );
+	if ($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('teacher-scheduled-lessons'))) {
+		$this->includeTemplate('_partial/pagination.php', $pagingArr,false);
+	} else {
+		echo "<div class='load-more -align-center'><a href='".CommonHelper::generateFullUrl('teacher-scheduled-lessons')."' class='btn btn--bordered btn--xlarge'>View all</a></div>";
+	}
 }
- }
-?>
-						
-						
+?>					
 <script type="text/javascript">
 jQuery(document).ready(function () {
 	/*$(".toggle__trigger-js").click(function () {

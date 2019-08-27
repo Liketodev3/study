@@ -556,30 +556,53 @@ class TeacherController extends TeacherBaseController {
 	
 	public function getTeacherGeneralAvailabilityJsonData(){
 		$userId = UserAuthentication::getLoggedUserId();
-		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId);
+		$post = FatApp::getPostedData();
+		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr( $userId, $post, $requestBtTeacher = true );
+		echo FatUtility::convertToJson( $jsonArr );
+	}
+	
+	public function getTeacherGeneralAvailabilityJsonDataForWeekly(){
+		$userId = UserAuthentication::getLoggedUserId();
+		$post = FatApp::getPostedData();
+		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr( $userId, $post );
 		echo FatUtility::convertToJson($jsonArr);
 	}
 	
-	public function getTeacherWeeklyScheduleJsonData(){
+	public function getTeacherWeeklyScheduleJsonData() {
 		$userId = UserAuthentication::getLoggedUserId();
 		$post = FatApp::getPostedData();
 		if ( false === $post ) {
 			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
 		}
 		$weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId,$post['start'],$post['end']);
+		$_serchEndDate = date('Y-m-d 00:00:00', strtotime($post['end']));
 		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
+		
 		$jsonArr = array();
-		if( !empty($weeklySchRows) ){
-			foreach( $weeklySchRows as $row){
-				$jsonArr[] = array(
-					"title"	=>	"",
-					"date"	=>	$row['twsch_date'],
-					"start"	=>	$row['twsch_date']." ".$row['twsch_start_time'],
-					"end"	=>	$row['twsch_date']." ".$row['twsch_end_time'],
-					'_id'	=>	$row['twsch_id'],
-					'classType'	=>	$row['twsch_is_available'],
-					'className'	=>	$cssClassNamesArr[$row['twsch_is_available']]
+		if ( !empty($weeklySchRows) ) {
+			$user_timezone = MyDate::getUserTimeZone( $userId );
+			
+			foreach ( $weeklySchRows as $row) {
+				$twsch_end_time = MyDate::format(date('Y-m-d H:i:s', strtotime($row['twsch_end_date'].' '. $row['twsch_end_time'])), true, true, $user_timezone);
+				
+				$twsch_start_time = MyDate::format( date('Y-m-d H:i:s', strtotime($row['twsch_date']. ' ' . $row['twsch_start_time'])), true, true, $user_timezone );
+				
+				$startDate = date('Y-m-d', strtotime($twsch_start_time));
+				$endDate = date('Y-m-d', strtotime($twsch_end_time));
+				
+				
+				if ( ( strtotime( $twsch_start_time ) >=  strtotime( $post['start'] .' 00:00:00 '  ) ) && (strtotime( $twsch_end_time ) <= strtotime( $_serchEndDate ) ) ) {
+					$jsonArr[] = array(
+						"title"	=>	"",
+						"date"	=>	date('Y-m-d', strtotime($twsch_start_time)),
+						"start"	=>	$twsch_start_time,
+						"end"	=>	$twsch_end_time,
+						'_id'	=>	$row['twsch_id'],
+						'classType'	=>	$row['twsch_is_available'],
+						'className'	=>	$cssClassNamesArr[$row['twsch_is_available']] 
 					);
+				}
+			
 			}
 		}
 		echo FatUtility::convertToJson($jsonArr);

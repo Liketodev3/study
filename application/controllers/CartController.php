@@ -17,22 +17,18 @@ class CartController extends MyAppController{
 		/* [ */
 		$startDateTime = FatApp::getPostedData( 'startDateTime', FatUtility::VAR_STRING, '' );
 		$endDateTime = FatApp::getPostedData( 'endDateTime', FatUtility::VAR_STRING, '' );
+		$weekStart = FatApp::getPostedData( 'weekStart', FatUtility::VAR_STRING, '' );
+		$weekEnd = FatApp::getPostedData( 'weekEnd', FatUtility::VAR_STRING, '' );
 		/* ] */
 		
 		$teacher_id = FatApp::getPostedData( 'teacher_id', FatUtility::VAR_INT, 0 );
 		$lpackageId = FatApp::getPostedData( 'lpackageId', FatUtility::VAR_INT, 0 );
 		$languageId = FatApp::getPostedData( 'languageId', FatUtility::VAR_INT, 1 );
 		
-        if($teacher_id == UserAuthentication::getLoggedUserId()){
+        if ( $teacher_id == UserAuthentication::getLoggedUserId() ) {
 			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );            
         }
-        
-		/* if(CommonHelper::redirectUserReferer(true) == CommonHelper::generateFullUrl('Teachers')){
-			$this->set( 'redirectUrl', CommonHelper::generateUrl('Teachers', 'View',array($teacher_id)) );
-			$this->set( 'msg', Label::getLabel('LBL_Redirecting_in_3_seconds.') );
-			$this->_template->render(false, false, 'json-success.php',false,false);			
-		} */
-
+		
 		/* [ */
 		$srch = new UserSearch();
 		$srch->setTeacherDefinedCriteria();
@@ -48,12 +44,17 @@ class CartController extends MyAppController{
 		
 		$teacher_id = $teacher['user_id'];
 		
-		
-		if( $startDateTime != '' && $endDateTime != '' ){
-			if( !TeacherWeeklySchedule::isSlotAvailable( $teacher_id, $startDateTime, $endDateTime ) ){
+		if ( $startDateTime != '' && $endDateTime != '' ) {
+			$user_timezone = MyDate::getUserTimeZone();
+			$systemTimeZone = MyDate::getTimeZone();
+			$startDateTime = MyDate::changeDateTimezone( $startDateTime, $user_timezone, $systemTimeZone);
+			$endDateTime = MyDate::changeDateTimezone( $endDateTime, $user_timezone, $systemTimeZone);
+			
+			if ( !TeacherWeeklySchedule::isSlotAvailable( $teacher_id, $startDateTime, $endDateTime, $weekStart, $weekEnd ) ) {
 				FatUtility::dieWithError( Label::getLabel('LBL_Requested_Slot_is_not_available') );
 			}
 		}
+		
 		
 		$teacherBookingBefore = current( UserSetting::getUserSettings($teacher_id) )['us_booking_before'];
 		if (  '' ==  $teacherBookingBefore  ) {
@@ -71,7 +72,6 @@ class CartController extends MyAppController{
 				FatUtility::dieJsonError(Label::getLabel('LBL_Booking_Close_For_This_Teacher'));
 			}
 		}
-		
 		
 		/* add to cart[ */
 		$cart = new Cart();

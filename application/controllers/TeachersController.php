@@ -413,13 +413,17 @@ class TeachersController extends MyAppController {
 		$this->set( 'bookingMinutesDuration', $bookingMinutesDuration );
 		$this->set( 'bookingSnapDuration', $bookingSnapDuration );
 		
+		MyDate::setUserTimeZone(); 
+		$user_timezone = MyDate::getUserTimeZone();
+		$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 		
 		$teacherBookingBefore = current( UserSetting::getUserSettings($teacher_id) )['us_booking_before']; 
 		if (  '' ==  $teacherBookingBefore  ) {
 			$teacherBookingBefore = 0;
 		}
 		$this->set('teacherBookingBefore',$teacherBookingBefore); 
-		
+		$this->set('user_timezone',$user_timezone); 
+		$this->set('nowDate',$nowDate);
 
 		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
 		$this->set( 'lPackageId', $lPackageId );
@@ -442,20 +446,31 @@ class TeachersController extends MyAppController {
 		if( $userId < 1 ){
 			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
 		}
-        if(strtotime($post['date'].' '.$post['startTime'])<strtotime(date('Y-m-d h:i:s'))){
+		
+		$systemTimeZone = MyDate::getTimeZone();
+		$user_timezone = MyDate::getUserTimeZone();
+		$startDateTime = MyDate::changeDateTimezone( $post['start'],  $user_timezone,  $systemTimeZone);
+		
+		$endDateTime = MyDate::changeDateTimezone( $post['end'],  $user_timezone,  $systemTimeZone);
+		$date = MyDate::changeDateTimezone( $post['date'] .' '. $post['startTime'],  $user_timezone,  $systemTimeZone);
+		$day = MyDate::getDayNumber($startDateTime );
+		
+		if(strtotime( $startDateTime ) < strtotime( date('Y-m-d H:i:s') )){
             FatUtility::dieJsonSuccess(0);
         }
+		$originalDayNumber = $post['day'];
 		$tWsch = new TeacherWeeklySchedule();
-		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId,$post['startTime'],$post['endTime'],$post['date'],$post['day']);
+		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime, $date, $day, $originalDayNumber, $post['weekStart'], $post['weekEnd'] );
 		FatUtility::dieJsonSuccess($checkAvialSlots);
 	}
 
 	public function getTeacherGeneralAvailabilityJsonData($userId = 0){
 		$userId = FatUtility::int($userId);
+		$post = FatApp::getPostedData();
 		if( $userId < 1 ){
 			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
 		}
-		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId);
+		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr( $userId, $post );
 		echo FatUtility::convertToJson($jsonArr);
 	}
 
