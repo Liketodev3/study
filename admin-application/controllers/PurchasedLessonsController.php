@@ -64,6 +64,7 @@ class PurchasedLessonsController extends AdminBaseController
             $page = 1;
         }
 		$srch = new OrderSearch(false,false);
+		$srch->addGroupBy('order_id');
 		$srch->joinOrderProduct();
 		$srch->joinUser();
 		$srch->joinTeacherLessonLanguage($this->adminLangId);
