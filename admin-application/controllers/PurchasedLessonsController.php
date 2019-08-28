@@ -66,7 +66,7 @@ class PurchasedLessonsController extends AdminBaseController
 		$srch = new OrderSearch(false,false);
 		$srch->joinOrderProduct();
 		$srch->joinUser();
-		$srch->joinTeacher($this->adminLangId);
+		$srch->joinTeacherLessonLanguage($this->adminLangId);
 		$srch->addMultipleFields( array(
 			'order_id', 
 			'order_user_id',
@@ -76,7 +76,7 @@ class PurchasedLessonsController extends AdminBaseController
 			'order_net_amount',
 			'CONCAT(u.user_first_name, " " , u.user_last_name) AS learner_username',
 			'CONCAT(t.user_first_name, " " , t.user_last_name) AS teacher_username',
-			'COALESCE(NULLIF(sl.slanguage_name, ""), s.slanguage_identifier) AS language',
+			'COALESCE(NULLIF(sl.tlanguage_name, ""), tlang.tlanguage_identifier) AS language',
 			'order_currency_code'
 			) 
 		);
@@ -101,7 +101,10 @@ class PurchasedLessonsController extends AdminBaseController
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         $rs      = $srch->getResultSet();
-        $records = FatApp::getDb()->fetchAll($rs);
+		//echo $srch->getQuery();
+		//die();
+		
+		$records = FatApp::getDb()->fetchAll($rs);
         $adminId = AdminAuthentication::getLoggedAdminId();
         $this->set("arr_listing", $records);
         $this->set('pageCount', $srch->pages());
@@ -116,7 +119,7 @@ class PurchasedLessonsController extends AdminBaseController
 		$srch = new ScheduledLessonSearch();
 		$srch->joinTeacher();
 		$srch->joinTeacherSettings();
-		$srch->joinTeacherTeachLanguage( $this->adminLangId );
+		$srch->joinLessonLanguage( $this->adminLangId );
 		$srch->addCondition( 'slns.slesson_order_id',' = ', $orderId );
 		//echo $srch->getQuery(); die();
 		$srch->addMultipleFields(
@@ -128,10 +131,13 @@ class PurchasedLessonsController extends AdminBaseController
 			'slns.slesson_ended_by',
 			'slns.slesson_ended_on',
 			'slns.slesson_status',
-			'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
+			'IFNULL(sl.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
 			));
 		//$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
 		$rs = $srch->getResultSet();
+		//echo $srch->getQuery();
+		//die();
+		
 		$data = FatApp::getDb()->fetchAll($rs);
 		if ($data == false || $orderId == null) { 
 			Message::addErrorMessage('Error: Lessons not allocated yet.');
@@ -159,7 +165,7 @@ class PurchasedLessonsController extends AdminBaseController
 		$srch->joinLearnerCountry( $this->adminLangId );
 		$srch->addCondition( 'slns.slesson_id',' = ', $slesson_id );
 		$srch->joinTeacherSettings();
-		$srch->joinTeacherTeachLanguage( $this->adminLangId );
+		$srch->joinLessonLanguage( $this->adminLangId );
 		
 		$srch->addMultipleFields(array(
 			'slns.slesson_id',
@@ -173,7 +179,8 @@ class PurchasedLessonsController extends AdminBaseController
 			'slns.slesson_start_time',
 			'slns.slesson_end_time',
 			'slns.slesson_status',
-			'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
+			//'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
+			'IFNULL(sl.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
 			'op_lpackage_is_free_trial as is_trial',
 			'op_lesson_duration'
 		));

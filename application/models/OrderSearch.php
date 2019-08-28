@@ -44,8 +44,18 @@ class OrderSearch extends SearchBase {
 			$this->joinTable( SpokenLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN','sl.slanguagelang_slanguage_id = s.slanguage_id AND slanguagelang_lang_id = ' . $langId, 'sl');
 		}
 		$this->isUserJoined = true;
-	}	
+	}
 
+	public function joinTeacherLessonLanguage( $langId = 0 ) {
+		$this->joinTable( User::DB_TBL, 'INNER JOIN', 'op.op_teacher_id = t.user_id', 't' );
+		$this->joinTable( ScheduledLesson::DB_TBL, 'INNER JOIN', 'o.order_id = slns.slesson_order_id', 'slns' );
+		$this->joinTable( TeachingLanguage::DB_TBL, 'INNER JOIN', 'slns.slesson_slanguage_id = tlang.tlanguage_id', 'tlang' );
+		if ( $langId > 0) {
+			$this->joinTable( TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN','sl.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl');
+		}
+		$this->isUserJoined = true;
+	}	
+	
 	public function joinOrderPaymentMethod($langId = 0)
 	{
 		$this->joinTable(PaymentMethods::DB_TBL, 'LEFT OUTER JOIN', 'o.order_pmethod_id = pm.pmethod_id', 'pm');
