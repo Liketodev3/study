@@ -520,6 +520,7 @@ class TeachersController extends MyAppController {
 		}
 
 		$weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId,$post['start'],$post['end']);
+		$_serchEndDate = date('Y-m-d 00:00:00', strtotime($post['end']));
 		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
 		$jsonArr = array();
 		if( !empty($weeklySchRows) ){
@@ -535,6 +536,34 @@ class TeachersController extends MyAppController {
 					);
 			}
 		}
+		
+		if( !empty($weeklySchRows) ){
+		//============ code added  on 12-07-2019 =============//
+			 $user_timezone = MyDate::getUserTimeZone($userId);
+		//===================================================//
+			foreach( $weeklySchRows as $row){ 
+				$twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['twsch_end_date'].' '. $row['twsch_end_time'], true, $user_timezone );
+				 
+				$twsch_start_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['twsch_date'].' '. $row['twsch_start_time'], true, $user_timezone );
+				
+				$startDate = date('Y-m-d', strtotime($twsch_start_time));
+				$endDate = date('Y-m-d', strtotime($twsch_end_time));
+				
+				if( ( strtotime( $twsch_start_time ) >=  strtotime( $post['start'] .' 00:00:00 '  ) ) && (strtotime( $twsch_end_time ) <= strtotime( $_serchEndDate ) ) )  {
+					$jsonArr[] = array(
+						"title"	=>	"",
+						"date"	=>	date('Y-m-d', strtotime($twsch_start_time)),
+						"start"	=>	$twsch_start_time,
+						"end"	=>	$twsch_end_time,
+						'_id'	=>	$row['twsch_id'],
+						'classType'	=>	$row['twsch_is_available'],
+						'className'	=>	$cssClassNamesArr[$row['twsch_is_available']] 
+					);
+				}
+			}
+		}
+		
+		
 		echo FatUtility::convertToJson($jsonArr);
 	}
 
