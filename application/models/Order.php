@@ -312,10 +312,11 @@ class Order extends MyAppModel{
 	
 	public static function getOrders($filter,$userType,$userId){
 		$srch = new OrderSearch(false,false);
+		$srch->addGroupBy('order_id');
 		$srch->joinOrderProduct();
 		if($userType == User::USER_TYPE_LEANER){
 			$srch->addCondition('o.order_user_id','=',$userId);
-			$srch->joinTeacher();
+			$srch->joinTeacherLessonLanguage();
 			$srch->addMultipleFields( array(
 				'CONCAT(t.user_first_name," ",t.user_last_name) AS teacher_name',
 				'op_teacher_id'
