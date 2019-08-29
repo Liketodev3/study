@@ -6,7 +6,7 @@
     'noti_sent_on' => Label::getLabel('LBL_Notification_Sent_ON', $siteLangId),
 );
 
-
+$user_timezone = MyDate::getUserTimeZone();
 
 $tbl = new HtmlElement('table', array('class' => 'table-listing'));
 
@@ -58,8 +58,12 @@ foreach ($list as $sn => $order) {
 
             case 'noti_sent_on':
 				$dateTime = explode(' ',$order['noti_sent_on']);
-                $txt = '<span class="date"> '.$dateTime[0].' <span class="time">'.$dateTime[1].'</span></span>';
+                //$txt = '<span class="date"> '.$dateTime[0].' <span class="time">'.$dateTime[1].'</span></span>';
+                //$td->appendElement('plaintext', array(), $txt, true);
+				$txt = '<span class="date"> '. MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', $order['noti_sent_on'], true , $user_timezone ) .' <span class="time">'.  MyDate::convertTimeFromSystemToUserTimezone( 'H:i:s', $order['noti_sent_on'], true , $user_timezone ) .'</span></span>';
                 $td->appendElement('plaintext', array(), $txt, true);
+				
+				
                 break;			
 			
             default:

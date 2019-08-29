@@ -1,4 +1,6 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+$user_timezone = MyDate::getUserTimeZone();
+?>
 <div class="box -padding-20">
 	<div class="table-scroll">
 	 <table class="table">
@@ -38,7 +40,7 @@
                                     </td>									
                                     <td>
                                         <span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Order_Date'); ?></span>
-                                        <span class="td__data"><?php echo $order['order_date_added']; ?></span>
+                                        <span class="td__data"><?php echo  MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $order['order_date_added'], true , $user_timezone ); ?></span>
                                     </td>									
                                     <td>
                                         <span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Actions'); ?></span>
