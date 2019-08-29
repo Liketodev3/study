@@ -272,6 +272,24 @@
 		</li>
 		<?php } ?>
 		
+		<!-- Report [ -->
+		<?php if (
+			$objPrivilege->canViewTopLangReport(AdminAuthentication::getLoggedAdminId(), true)
+			) { ?>			
+		<li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Reports',$adminLangId);?></a>
+			<ul>
+			<?php if ( $objPrivilege->canViewTopLangReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
+				<li><a href="<?php echo CommonHelper::generateUrl('TopLanguagesReport'); ?>"><?php echo Label::getLabel('LBL_Top_Languages',$adminLangId);?></a></li>
+			<?php } ?>	
+			</ul>
+		</li>
+		<?php } ?>
+		
+		<!--  ] -->
+		
+		
+		
+		
 		<!--Admin Users[-->
 		<?php if( $objPrivilege->canViewAdminUsers(AdminAuthentication::getLoggedAdminId(), true) || $objPrivilege->canViewAdminUsers(AdminAuthentication::getLoggedAdminId(), true) ){ ?>
 		<li><a href="<?php echo CommonHelper::generateUrl('AdminUsers')?>"><?php echo Label::getLabel('LBL_Manage_Admin_Users',$adminLangId);?></a>

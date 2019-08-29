@@ -49,6 +49,9 @@ class AdminPrivilege
     const PRIVILEGE_NONE = 0;
     const PRIVILEGE_READ = 1;
     const PRIVILEGE_WRITE = 2;
+	
+	const SECTION_TOP_LANGUAGES_REPORT = 46;
+	
     private static $instance = null;
     private $loadedPermissions = array();
 	
@@ -114,7 +117,8 @@ class AdminPrivilege
 			static::SECTION_TEACHER_REVIEWS => Label::getLabel('MSG_Teacher_Reviews',CommonHelper::getLangId()),	
 			static::SECTION_COMMISSION => Label::getLabel('MSG_Commission',CommonHelper::getLangId()),				
 			static::SECTION_SALES_REPORT => Label::getLabel('MSG_Sales_Report',CommonHelper::getLangId()),			
-			static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs',CommonHelper::getLangId()),			
+			static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs',CommonHelper::getLangId()),
+			static::SECTION_TOP_LANGUAGES_REPORT => Label::getLabel('MSG_Top_Languages_Report',CommonHelper::getLangId()),				
         );
         return $arr;
     }
@@ -623,6 +627,14 @@ class AdminPrivilege
 
 	public function canViewLanguage( $adminId = 0, $returnResult = false ){
 		return $this->checkPermission( $adminId, static::SECTION_LANGUAGE, static::PRIVILEGE_READ, $returnResult);
+	}
+
+	public function canEditTopLangReport( $adminId = 0, $returnResult = false ){
+		return $this->checkPermission( $adminId, static::SECTION_TOP_LANGUAGES_REPORT, static::PRIVILEGE_WRITE, $returnResult);
+	}
+
+	public function canViewTopLangReport( $adminId = 0, $returnResult = false ){
+		return $this->checkPermission( $adminId, static::SECTION_TOP_LANGUAGES_REPORT, static::PRIVILEGE_READ, $returnResult);
 	}	
 	
 }

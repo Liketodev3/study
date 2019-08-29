@@ -225,8 +225,9 @@ class AdminStatistic extends MyAppModel{
 			$langId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG');
 		}
 		$srch = new ScheduledLessonSearch();
-		$srch->joinTeacherSettings();
-		$srch->joinTeacherTeachLanguage($langId);
+		//$srch->joinTeacherSettings();
+		//$srch->joinTeacherTeachLanguage($langId);
+		$srch->joinLessonLanguage($langId);
 		$srch->doNotCalculateRecords();
 		if($pageSize > 0){
 			$srch->setPageSize($pageSize);	
@@ -234,7 +235,8 @@ class AdminStatistic extends MyAppModel{
 			$srch->doNotLimitRecords();
 		}
 
-		$srch->addMultipleFields(array('IFNULL(slanguage_name , slanguage_Identifier) as languageName','count(slesson_id) as lessonsSold'));	
+		$srch->addMultipleFields(array('IFNULL(tlanguage_name , tlanguage_Identifier) as languageName','count(slesson_id) as lessonsSold'));	
+		//$srch->addMultipleFields(array('IFNULL(slanguage_name , slanguage_Identifier) as languageName','count(slesson_id) as lessonsSold'));	
 		switch(strtoupper($type)){
 			case 'TODAY':
 				$srch->addDirectCondition('DATE(slesson_added_on)=DATE(NOW())');				
@@ -250,7 +252,7 @@ class AdminStatistic extends MyAppModel{
 			break;
 		}
 		
-		$srch->addGroupBy('us_teach_slanguage_id');
+		$srch->addGroupBy('slesson_slanguage_id');
 		$srch->addOrder ('lessonsSold','desc');
 		
 		$rs = $srch->getResultSet();		
@@ -283,6 +285,16 @@ class AdminStatistic extends MyAppModel{
 		$orderSrch->joinScheduledLesson();
 		$orderSrch->addMultipleFields(array('DATE(order_date_added) as order_date','SUM(order_net_amount) as orderNetAmount','count(op_id) as totOrders','SUM((order_net_amount )) - (COUNT(slesson_id) * op_commission_charged ) as  Earnings'));
 		return $orderSrch;
-	}		
+	}
+
+	public static function LessonLanguagesObject($langId = 0){
+		
+		$srch = new ScheduledLessonSearch();
+		$srch->joinLessonLanguage($langId);
+		$srch->addMultipleFields(array('IFNULL(tlanguage_name , tlanguage_Identifier) as languageName','count(slesson_id) as lessonsSold', 'slesson_slanguage_id'));	
+		return $srch;
+
+	}
+	
 	
 }
