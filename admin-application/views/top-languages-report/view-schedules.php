@@ -40,6 +40,7 @@ foreach ($arr_flds as $val) {
 }
 
 $sr_no = 0;
+
 foreach ($arr_listing as $sn=>$row){
 	$sr_no++;
 	$tr = $tbl->appendElement('tr');
@@ -73,53 +74,25 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			
 			case 'learner_username':
-				$td->appendElement('plaintext', array(), $status_arr[$row[$key]], true);
+				$td->appendElement('plaintext', array(), $row[$key], true);
 			break;
 			
 			case 'teacher_username':
-				$td->appendElement('plaintext', array(), $status_arr[$row[$key]], true);
+				$td->appendElement('plaintext', array(), $row[$key], true);
 			break;
 			
 			case 'lpackage_is_free_trial':
 				$td->appendElement('plaintext', array(), applicationConstants::getYesNoArr($adminLangId)[$row[$key]],true);
 			break;
-			case 'slesson_ended_by':
-				$str = '-NA-';
-				if($row[$key]){
-					$str = User::getUserTypesArr($adminLangId)[$row[$key]];
-				}				
-				$td->appendElement('plaintext', array(), $str,true);
-			break;
-			case 'slesson_start_time':
-				$td->appendElement('plaintext', array(), date('h:i A',strtotime($row[$key])),true);
-			break;
-			case 'slesson_ended_on':
-				$td->appendElement('plaintext', array(), date('h:i A',strtotime($row[$key])),true);
-			break;
-			case 'slesson_date':
-				$td->appendElement('plaintext', array(), date('l, F d, Y',strtotime($row[$key])),true);
-			break;
-			case 'slanguage_name':
-				$str = $row[$key];
-				if( $row['slesson_start_time'] != '00:00:00' && $row['slesson_end_time'] != '0000:00:00' ){
-					$to_time = strtotime($row['slesson_start_time']);
-					$from_time = strtotime($row['slesson_end_time']);
-					$minutes = round(abs($to_time - $from_time) / 60,2);
-					$isTrial = ( $minutes == 30 ) ? ' Trial ' : ' ';
-					$str.= "<br>".$minutes." Minutes".$isTrial."Lesson";
-				} 
-				$td->appendElement('plaintext', array(), $str ,true);
-			break;
-			case 'lpackage_identifier':
-				if($row['lpackage_title']!=''){
-					$td->appendElement('plaintext', array(), $row['lpackage_title'],true);
-					$td->appendElement('br', array());
-					$td->appendElement('plaintext', array(), '('.$row[$key].')',true);
-				}else{
-					$td->appendElement('plaintext', array(), $row[$key],true);
+			case 'slesson_date': 
+				if( $row[$key] == '0000-00-00' ) {
+					$_str = '-';
+				} else {
+					$_str = date('l, F d, Y',strtotime($row[$key]));
 				}
-			break;
 			
+				$td->appendElement('plaintext', array(), $_str, true);
+			break;
 			default:
 				$td->appendElement('plaintext', array(), $row[$key],true);
 			break;

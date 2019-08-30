@@ -88,10 +88,7 @@ class TopLanguagesReportController extends AdminBaseController {
 			Message::addErrorMessage('Error: Lessons not allocated yet.');
 			FatApp::redirectUser(FatUtility::generateUrl("TopLanguagesReport"));
 		}
-		echo '<pre>';
-		print_r( $data );
-		echo '</pre>';
-		die();
+		 
 		
 		$statusArr = ScheduledLesson::getStatusArr();
         $this->set( 'arr_listing', $data );
