@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	searchSpokenLanguage(document.frmSpokenLanguageearch);
+	searchSpokenLanguage(document.frmSpokenLanguageSearch);
 });
 
 (function() {
@@ -164,8 +164,8 @@ $(document).ready(function(){
 	};
 	
 	clearSearch = function(){
-		document.frmSearch.reset();
-		searchSpokenLanguage(document.frmSearch);
+		document.frmSpokenLanguageSearch.reset();
+		searchSpokenLanguage(document.frmSpokenLanguageSearch);
 	};
 	
 	mediaForm = function(sLangId){

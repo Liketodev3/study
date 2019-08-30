@@ -131,5 +131,13 @@ $('.quote-thumbs').slick({
         ]
 
 });    
+
+$(".banner_link_how_works").click(function(e) {
+	e.preventDefault();
+    $('html, body').animate({
+        scrollTop: $("#how-it-works").offset().top
+    }, 1000);
+});
     
 });
+

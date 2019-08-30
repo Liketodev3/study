@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	searchTeachingLanguage(document.frmTeachingLanguageearch);
+	searchTeachingLanguage(document.frmTeachingLanguageSearch);
 });
 
 (function() {
@@ -32,6 +32,12 @@ $(document).ready(function(){
 			$(dv).html(res);			
 		});
 	};
+	clearSearch = function(){
+		document.frmTeachingLanguageSearch.reset();
+		searchTeachingLanguage(document.frmTeachingLanguageSearch);
+	};
+	
+	
 	addTeachingLanguageForm = function(id) {
 		
 		$.facebox(function() { TeachingLanguageForm(id);
@@ -161,11 +167,6 @@ $(document).ready(function(){
 			fcom.displayErrorMessage(ans.msg);				
 		}
 	});
-	};
-	
-	clearSearch = function(){
-		document.frmSearch.reset();
-		searchTeachingLanguage(document.frmSearch);
 	};
 	
 	mediaForm = function(tLangId){

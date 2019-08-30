@@ -11,12 +11,18 @@ class TeachingLanguageController extends AdminBaseController
     {
         $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditTeachingLanguage($this->admin_id, true);
+		$frmSearch = $this->getSearchForm();
+		$this->set('frmSearch', $frmSearch);
         $this->set("canEdit", $canEdit);
         $this->_template->render();
     }
     
 	public function search()
     {
+		$data       = FatApp::getPostedData();
+		$searchForm = $this->getSearchForm();
+		$post       = $searchForm->getFormDataFromArray($data);
+		
         $srch = TeachingLanguage::getSearchObject($this->adminLangId, false);
         $srch->addMultipleFields(array(
             'tlanguage_id',
@@ -25,6 +31,11 @@ class TeachingLanguageController extends AdminBaseController
             'tlanguage_active',
             'tlanguage_name',
         ));
+		
+		if (!empty($post['keyword'])) {
+            $srch->addCondition('tlanguage_identifier', 'like', '%' . $post['keyword'] . '%');
+        }
+		
         $srch->addOrder('tlanguage_active', 'desc');
 		$rs      = $srch->getResultSet();
         $records = array();
@@ -438,6 +449,31 @@ class TeachingLanguageController extends AdminBaseController
         $image_name = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
 
         AttachedFile::displayImage($image_name, $w, $h, '', '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
-    }    
+    } 
+
+	public function updateOrder() {
+		$post = FatApp::getPostedData();
+		
+		if (!empty($post)) {
+			$teachLangObj = new TeachingLanguage();
+			if(!$teachLangObj->updateOrder($post['teachingLangages'])){
+				Message::addErrorMessage($teachLangObj->getError());
+				FatUtility::dieJsonError( Message::getHtml() );
+			}
+			
+			$this->set('msg', Label::getLabel('LBL_Order_Updated_Successfully',$this->adminLangId));
+			$this->_template->render(false, false, 'json-success.php');
+        } 
+	}
+	
+	private function getSearchForm() {
+        $frm = new Form('frmTeachingLanguageSearch');
+        $f1 = $frm->addTextBox(Label::getLabel('LBL_Language_Identifier', $this->adminLangId), 'keyword', '');
+        $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
+        $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
+        $fld_submit->attachField($fld_cancel);
+        return $frm;
+    }
+	
     
  }

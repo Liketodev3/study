@@ -33,6 +33,7 @@ class AdminPrivilege
     const SECTION_SPOKEN_LANGUAGES = 30;
     const SECTION_TEACHING_LANGUAGES = 44;
     const SECTION_FAQ = 31;
+    const SECTION_FAQ_CATEGORY = 45;
 	const SECTION_BLOG_POST_CATEGORIES = 32;
 	const SECTION_BLOG_POSTS = 33;
 	const SECTION_BLOG_CONTRIBUTIONS = 34;
@@ -118,7 +119,9 @@ class AdminPrivilege
 			static::SECTION_COMMISSION => Label::getLabel('MSG_Commission',CommonHelper::getLangId()),				
 			static::SECTION_SALES_REPORT => Label::getLabel('MSG_Sales_Report',CommonHelper::getLangId()),			
 			static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs',CommonHelper::getLangId()),
-			static::SECTION_TOP_LANGUAGES_REPORT => Label::getLabel('MSG_Top_Languages_Report',CommonHelper::getLangId()),				
+			static::SECTION_TOP_LANGUAGES_REPORT => Label::getLabel('MSG_Top_Languages_Report',CommonHelper::getLangId()),
+			static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs',CommonHelper::getLangId()),			
+			static::SECTION_FAQ_CATEGORY => Label::getLabel('MSG_Manage_faq_Categories',CommonHelper::getLangId()),			
         );
         return $arr;
     }
@@ -474,6 +477,17 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_FAQ, static::PRIVILEGE_WRITE, $returnResult);
     }
+	
+	public function canViewFaqCategory($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_FAQ_CATEGORY, static::PRIVILEGE_READ, $returnResult);
+    }
+	
+    public function canEditFaqCategory($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_FAQ_CATEGORY, static::PRIVILEGE_WRITE, $returnResult);
+    }
+	
 	
 	public function canViewCourseCategory($adminId = 0, $returnResult = false)
     {

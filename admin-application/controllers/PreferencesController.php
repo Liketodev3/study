@@ -233,5 +233,20 @@ class PreferencesController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+	
+	public function updateOrder()
+	{
+		$post = FatApp::getPostedData();
+		if (!empty($post)) {
+			$prefObj = new Preference();
+			if(!$prefObj->updateOrder($post['preferences'])){
+				Message::addErrorMessage($prefObj->getError());
+				FatUtility::dieJsonError( Message::getHtml() );
+			}
+			
+			$this->set('msg', Label::getLabel('LBL_Order_Updated_Successfully',$this->adminLangId));
+			$this->_template->render(false, false, 'json-success.php');
+        } 
+	}
  
 }

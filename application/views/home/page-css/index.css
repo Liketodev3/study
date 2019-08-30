@@ -421,6 +421,7 @@
         text-align: center;
         max-width: 100%;
         font-size: 1.328rem;
+		    flex-basis: 100%;
     }
 
     .cta-wrap .btn {

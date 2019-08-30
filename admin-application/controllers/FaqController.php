@@ -7,11 +7,15 @@ class FaqController extends AdminBaseController
         $this->objPrivilege->canViewFaq();
     }
     
-	public function index()
+	public function index( $faq_catid = 0 )
     {
         $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditFaq($this->admin_id, true);
         $this->set("canEdit", $canEdit);
+		
+		$faq_catid = FatUtility::int($faq_catid);
+        $this->set("faq_catid", $faq_catid);
+		
         $this->_template->render();
     }
     
@@ -207,7 +211,7 @@ class FaqController extends AdminBaseController
         $frm           = new Form('frmFaq');
         $frm->addHiddenField('', 'faq_id', $faqId);
         $frm->addRequiredField(Label::getLabel('LBL_Faq_Identifier', $this->adminLangId), 'faq_identifier');
-        $fld = $frm->addSelectBox(Label::getLabel('LBL_faq_category', $this->adminLangId), 'faq_category',Faq::getFaqCategoryArr());
+		$fld = $frm->addSelectBox(Label::getLabel('LBL_faq_category', $this->adminLangId), 'faq_category', Faq::getFaqCategoryArr());
 		$fld->requirement->setRequired(true);
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'faq_active', $activeInactiveArr, '', array(), '');

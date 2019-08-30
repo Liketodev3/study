@@ -14,7 +14,22 @@
 					</div>
 				</div>
 
-
+		<section class="section searchform_filter">
+			<div class="sectionhead">
+				<h4> <?php echo Label::getLabel('LBL_Search...',$adminLangId); ?></h4>
+			</div>
+			<div class="sectionbody space togglewrap" style="display:none;">
+				<?php 
+				$frmSearch->setFormTagAttribute ( 'onsubmit', 'searchSpokenLanguage(this); return(false);');
+				$frmSearch->setFormTagAttribute ( 'class', 'web_form' );
+				$frmSearch->developerTags['colClassPrefix'] = 'col-md-';					
+				$frmSearch->developerTags['fld_default_col'] = 6;
+				$btn_clear = $frmSearch->getField('btn_clear');
+				$btn_clear->addFieldTagAttribute('onclick', 'clearSearch()');					
+				echo  $frmSearch->getFormHtml();
+				?>    
+			</div>
+		</section> 
 	
 		
 		<section class="section">

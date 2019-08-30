@@ -865,7 +865,7 @@ class GuestUserController extends MyAppController
 
 		$client = new Google_Client();
 		$client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
-		$client->setScopes(['email']); // set scope during user login
+		$client->setScopes(['email','profile']); // set scope during user login
 		$client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
 		$client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
 

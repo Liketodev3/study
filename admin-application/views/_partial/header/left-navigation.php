@@ -128,7 +128,7 @@
 			$objPrivilege->canViewLessonPackages(AdminAuthentication::getLoggedAdminId(), true) ||
 			$objPrivilege->canViewLanguageLabel(AdminAuthentication::getLoggedAdminId(), true) ||
 			$objPrivilege->canViewBibleContent(AdminAuthentication::getLoggedAdminId(), true)		||	
-			$objPrivilege->canViewFaq(AdminAuthentication::getLoggedAdminId(), true)			
+			$objPrivilege->canViewFaq(AdminAuthentication::getLoggedAdminId(), true) || $objPrivilege->canViewFaqCategory(AdminAuthentication::getLoggedAdminId(), true)			
 		){ ?>
 		<li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Cms',$adminLangId);?></a>
 			<ul>					
@@ -188,6 +188,12 @@
 				<li><a href="<?php echo CommonHelper::generateUrl('faq'); ?>"><?php echo Label::getLabel('LBL_Manage_FAQs',$adminLangId);?></a></li>
 
 				<?php } ?>
+				
+				<?php if($objPrivilege->canViewFaqCategory(AdminAuthentication::getLoggedAdminId(), true)){?>
+				<li><a href="<?php echo CommonHelper::generateUrl('FaqCategories'); ?>"><?php echo Label::getLabel('LBL_Manage_FAQ_Category',$adminLangId);?></a></li>
+
+				<?php } ?>
+				
 			</ul>
 		</li>
 		<?php } ?>

@@ -158,4 +158,33 @@ ALTER TABLE `tbl_user_settings` ADD `us_booking_before` INT(20) NULL DEFAULT NUL
 ALTER TABLE `tbl_scheduled_lessons` ADD `slesson_end_date` DATE NOT NULL AFTER `slesson_date`;
 ALTER TABLE `tbl_teachers_weekly_schedule` ADD `twsch_end_date` DATE NOT NULL AFTER `twsch_date`;
 ALTER TABLE `tbl_teachers_general_availability` ADD `tgavl_date` DATE NULL DEFAULT NULL AFTER `tgavl_end_time`;  
+
+ALTER TABLE `tbl_teaching_languages` ADD `tlanguage_display_order` INT(11) NOT NULL AFTER `tlanguage_active`;
+ALTER TABLE `tbl_spoken_languages` ADD `slanguage_display_order` INT(11) NOT NULL AFTER `slanguage_active`;
+
+CREATE TABLE `tbl_faq_categories` (
+  `faqcat_id` int(11) NOT NULL,
+  `faqcat_identifier` varchar(150) NOT NULL,
+  `faqcat_active` tinyint(1) NOT NULL,
+  `faqcat_type` tinyint(4) NOT NULL,
+  `faqcat_deleted` tinyint(1) NOT NULL,
+  `faqcat_display_order` int(11) NOT NULL,
+  `faqcat_featured` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `tbl_faq_categories`
+ADD PRIMARY KEY (`faqcat_id`);  
+  
+ALTER TABLE `tbl_faq_categories`
+MODIFY `faqcat_id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+CREATE TABLE `tbl_faq_categories_lang` (
+  `faqcatlang_faqcat_id` int(11) NOT NULL,
+  `faqcatlang_lang_id` int(11) NOT NULL,
+  `faqcat_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `tbl_faq_categories_lang`
+ADD PRIMARY KEY (`faqcatlang_faqcat_id`,`faqcatlang_lang_id`);
   

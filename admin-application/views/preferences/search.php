@@ -1,12 +1,13 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php
 $arr_flds = array(
+		'dragdrop'=>'',
 		'listserial'=>Label::getLabel('LBL_Sr_no.',$adminLangId),
 		'preference_identifier'=>Label::getLabel('LBL_Preference_Identifier',$adminLangId),	
 		'preference_title'=>Label::getLabel('LBL_Preference_Title',$adminLangId),
 		'action' => Label::getLabel('LBL_Action',$adminLangId),
 	);
-$tbl = new HtmlElement('table', array('width'=>'100%', 'class'=>'table table-responsive table--hovered'));
+$tbl = new HtmlElement('table', array('width'=>'100%', 'class'=>'table table-responsive table--hovered', 'id' => 'preferences'));
 $th = $tbl->appendElement('thead')->appendElement('tr');
 foreach ($arr_flds as $val) {
 	$e = $th->appendElement('th', array(), $val);
@@ -22,6 +23,11 @@ foreach ($arr_listing as $sn=>$row){
 	foreach ($arr_flds as $key=>$val){
 		$td = $tr->appendElement('td');
 		switch ($key){
+			case 'dragdrop':			
+					$td->appendElement('i',array('class'=>'ion-arrow-move icon'));					
+					$td->setAttribute("class",'dragHandle');
+			break;
+			
 			case 'listserial':
 				$td->appendElement('plaintext', array(), $sr_no);
 			break;
@@ -55,3 +61,24 @@ if (count($arr_listing) == 0){
 	$tbl->appendElement('tr')->appendElement('td', array('colspan'=>count($arr_flds)), Label::getLabel('LBL_No_Records_Found',$adminLangId));
 }
 echo $tbl->getHtml();
+?>
+<script>
+$(document).ready(function(){	
+	$('#preferences').tableDnD({		
+		onDrop: function (table, row) {
+			fcom.displayProcessing();
+			var order = $.tableDnD.serialize('id');			
+			fcom.ajax(fcom.makeUrl('Preferences', 'updateOrder'), order, function (res) {
+				var ans =$.parseJSON(res);
+				if(ans.status==1)
+				{
+					fcom.displaySuccessMessage(ans.msg);
+				}else{
+					fcom.displayErrorMessage(ans.msg);
+				}
+			});
+		},
+		dragHandle: ".dragHandle",		
+	});
+});
+</script>

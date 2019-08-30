@@ -15,11 +15,34 @@ class Faq extends MyAppModel{
 	}
 	
 	public static function getFaqCategoryArr( ){
-		return array(
+		/* return array(
 			static::CATEGORY_GENERAL_QUERIES	=>	Label::getLabel('LBL_General_Queries'),
 			static::CATEGORY_APPLICATION	=>	Label::getLabel('LBL_Application_/_Requirements'),
 			static::CATEGORY_PAYMENTS	=>	Label::getLabel('LBL_Payments'),
-		);
+		); */
+		$srch = FaqCategory::getSearchObject();
+		$srch->addCondition('faqcat_active','=', 1);
+        $srch->addOrder('faqcat_display_order', 'ASC');
+        $rs = $srch->getResultSet();
+		$CatList = array();
+		$category_options = array();
+        if ($rs) {
+            $CatList = FatApp::getDb()->fetchAll($rs);
+        }
+		
+		if ( !empty (  $CatList )) {
+			foreach ( $CatList as $cat ) {
+				if ( isset( $cat['faqcat_name'] ) && $cat['faqcat_name'] !='' ) {
+					$name = $cat['faqcat_name'];
+				} else { 
+					$name = $cat['faqcat_identifier'];
+				}
+				$category_options[$cat['faqcat_id']] = $name;
+			}
+		}
+		return $category_options;
+		
+		
 	}
 	public static function getSearchObject( $langId = 0 , $active =  true) {
 		$langId = FatUtility::int($langId);

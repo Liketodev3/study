@@ -11,12 +11,18 @@ class SpokenLanguageController extends AdminBaseController
     {
         $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditSpokenLanguage($this->admin_id, true);
+		$frmSearch = $this->getSearchForm();
+		$this->set('frmSearch', $frmSearch);
         $this->set("canEdit", $canEdit);
         $this->_template->render();
     }
     
 	public function search()
     {
+		$data       = FatApp::getPostedData();
+		$searchForm = $this->getSearchForm();
+		$post       = $searchForm->getFormDataFromArray($data);
+		
         $srch = SpokenLanguage::getSearchObject($this->adminLangId, false);
         $srch->addMultipleFields(array(
             'slanguage_id',
@@ -25,6 +31,11 @@ class SpokenLanguageController extends AdminBaseController
             'slanguage_active',
             'slanguage_name',
         ));
+		
+		if (!empty($post['keyword'])) {
+            $srch->addCondition('slanguage_identifier', 'like', '%' . $post['keyword'] . '%');
+        }
+		
         $srch->addOrder('slanguage_active', 'desc');
 		$rs      = $srch->getResultSet();
         $records = array();
@@ -437,6 +448,32 @@ class SpokenLanguageController extends AdminBaseController
         $image_name = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
 
         AttachedFile::displayImage($image_name, $w, $h, '', '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
-    }    
+    } 
+	
+	public function updateOrder()
+	{
+		$post = FatApp::getPostedData();
+	
+		if (!empty($post)) {
+			$spokeLangObj = new SpokenLanguage();
+			if(!$spokeLangObj->updateOrder($post['spokenLangages'])){
+				Message::addErrorMessage($spokeLangObj->getError());
+				FatUtility::dieJsonError( Message::getHtml() );
+			}
+			
+			$this->set('msg', Label::getLabel('LBL_Order_Updated_Successfully',$this->adminLangId));
+			$this->_template->render(false, false, 'json-success.php');
+        } 
+	}
+	
+	private function getSearchForm() {
+        $frm = new Form('frmSpokenLanguageSearch');
+        $f1 = $frm->addTextBox(Label::getLabel('LBL_Language_Identifier', $this->adminLangId), 'keyword', '');
+        $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
+        $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
+        $fld_submit->attachField($fld_cancel);
+        return $frm;
+    }
+	
     
  }

@@ -66,7 +66,7 @@
 						<?php 
 		
 							} else {
-								echo ' <strong>'. $teacher['teacherTeachLanguageName'] .' </strong>';    
+								echo ' <p><span>'. Label::getLabel('LBL_Teaches:') . '</span>'. $teacher['teacherTeachLanguageName'] .' </p>';  
 							}
 						}
 						?>

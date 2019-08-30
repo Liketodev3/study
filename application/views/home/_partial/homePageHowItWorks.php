@@ -76,7 +76,7 @@ $bannerDet = current($secondBlockdata['banners']); ?>
 <?php if(!empty($hWorksdata)){
 ?>
 
-<section class="section section--gray">
+<section class="section section--gray" id="how-it-works">
 	<div class="container container--fixed">
 		<div class="section-title"><h2><?php echo $hWorksdata['blocation_name']; ?></h2></div>
 

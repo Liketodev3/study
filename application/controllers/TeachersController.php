@@ -126,6 +126,7 @@ class TeachersController extends MyAppController {
             $cnd = $srch->addCondition('tlanguage_identifier', 'like', '%' . $keyword . '%');
             $cnd->attachCondition('tlanguage_name', 'like', '%' . $keyword . '%', 'OR');
         }
+		
         $rs    = $srch->getResultSet();        
         $languages = FatApp::getDb()->fetchAll( $rs, 'tlanguage_id' );
         $json  = array();

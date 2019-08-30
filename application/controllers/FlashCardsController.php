@@ -82,7 +82,7 @@ class FlashCardsController extends LoggedUserController {
 	private function getSearchForm(){
 		$frm = new Form( 'frmSrch' );
 		$frm->addTextBox( Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_By_Keyword')) );
-		$frm->addSelectBox( Label::getLabel('LBL_Language'), 'slanguage_id', SpokenLanguage::getAllLangs(), '', array(), Label::getLabel('LBL_All') )->requirements()->setInt();
+		$frm->addSelectBox( Label::getLabel('LBL_Language'), 'slanguage_id', SpokenLanguage::getAllLangs(CommonHelper::getLangId(), true), '', array(), Label::getLabel('LBL_All') )->requirements()->setInt();
 		$fld = $frm->addHiddenField( '', 'page', 1 );
 		$fld->requirements()->setIntPositive();
 		$btnSubmit = $frm->addSubmitButton( '', 'btn_submit', Label::getLabel('LBL_Search') );
@@ -136,7 +136,7 @@ class FlashCardsController extends LoggedUserController {
 	private function getForm(){
 		$frm= new Form('flashcardFrm');
 		$frm->addRequiredField( Label::getLabel('LBL_Title'), 'flashcard_title' );
-		$langArr = SpokenLanguage::getAllLangs();
+		$langArr = SpokenLanguage::getAllLangs(CommonHelper::getLangId(), true);
 		
 		$fld = $frm->addSelectBox(Label::getLabel('LBL_Title_Language') ,'flashcard_slanguage_id',$langArr);
 		$fld->requirements()->setRequired(true);
