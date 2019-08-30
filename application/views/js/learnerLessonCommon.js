@@ -29,8 +29,9 @@
 		});	
 	};
 
-	viewBookingCalendar = function(id){	
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','viewBookingCalendar',[id]),'',function(t){
+	viewBookingCalendar = function(id, action=''){	
+		var data = {'action' : action };
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','viewBookingCalendar',[id]),data ,function(t){
 			$.facebox( t,'facebox-medium');
 		});
 	};

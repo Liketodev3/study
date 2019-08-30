@@ -10,7 +10,14 @@ foreach( $lessonArr as $key=>$lessons ){ ?>
 <h6><?php  echo date('l, F d, Y',strtotime($key)); ?></h6>
 <?php } ?>
 <div class="col-list-container">
-<?php foreach( $lessons as $lesson ){ ?>
+<?php
+foreach( $lessons as $lesson ){ 
+$action = '';
+if ( $lesson['is_trial'] == 1 ) {
+	$action = 'free_trial';
+} 
+
+?>
 	<div class="col-list">
 		<div class="d-lg-flex align-items-center">
 			<div class="col-xl-4 col-lg-4 col-md-12">
@@ -92,7 +99,7 @@ foreach( $lessonArr as $key=>$lessons ){ ?>
 						<div class="listing listing--vertical">
 							<ul>
 								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
-								<li><a href="javascript:void(0);" onclick="viewBookingCalendar('<?php echo $lesson['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Schedule'); ?></a></li>
+								<li><a href="javascript:void(0);" onclick="viewBookingCalendar('<?php echo $lesson['slesson_id']; ?>', '<?php echo $action; ?>')"><?php echo Label::getLabel('LBL_Schedule'); ?></a></li>
 								<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
 								<?php }  ?>
 
