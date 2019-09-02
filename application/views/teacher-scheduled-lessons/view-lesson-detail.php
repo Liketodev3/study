@@ -1,4 +1,4 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
 
 $user_timezone = MyDate::getUserTimeZone();
 $curDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
@@ -353,7 +353,7 @@ $('#end_lesson_timer').countdowntimer({
 									echo TeachingLanguage::getLangById($lessonData['slesson_slanguage_id']);
 								 ?><br>
                                  <?php 
-									if( $lessonData['slesson_date'] != "0000-00-00" ){
+									if( date('Y-m-d', strtotime($startTime)) != "0000-00-00" ){
 										$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
 										$arrReplacements = array(
 											'{n}'	=>	$lessonData['op_lesson_duration'],

@@ -44,6 +44,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController {
 		$rs = $srch->getResultSet();
 		$lessons = FatApp::getDb()->fetchAll($rs);
 		$lessonArr=array();
+		
 		$user_timezone = MyDate::getUserTimeZone();
 		foreach($lessons as $lesson) {
 			$key = $lesson['slesson_date'];
@@ -107,6 +108,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController {
 			/* 'ul.user_timezone as learnerTimeZone', */
 			'IFNULL(learnercountry_lang.country_name, learnercountry.country_code) as learnerCountryName',
 			'slns.slesson_date',
+			'slns.slesson_end_date',
 			'slns.slesson_start_time',
 			'slns.slesson_end_time',
 			'slns.slesson_status',

@@ -42,7 +42,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date('Y-m-d H:i
    			slotEventOverlap : false,
    			allDaySlot: false,
    			columnHeaderFormat :"ddd",
-			timezone: "<?php echo $user_timezone; ?>",
+			timezone: '<?php echo $user_timezone; ?>',
    			select: function (start, end, jsEvent, view ) {
    				if(moment(start).format('d')!=moment(end).format('d') ) {
    					$('#ga_calendar').fullCalendar('unselect');
@@ -82,9 +82,9 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date('Y-m-d H:i
 <h6><?php echo Label::getLabel('LBL_General_Availability_Note'); ?></h6>
 <br />
 <button id='setUpGABtn' class="btn btn--secondary"><?php echo Label::getLabel('LBL_Save'); ?></button>
-
+<span class="-gap"></span>
 <div class="calendar-view -no-padding">
-
+<span> <?php echo MyDate::displayTimezoneString();?> </span>
 <div id='ga_calendar'></div>
 </div>
 <script>

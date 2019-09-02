@@ -120,6 +120,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			/* 'ut.user_timezone as teacherTimeZone', */
 			'IFNULL(teachercountry_lang.country_name, teachercountry.country_code) as teacherCountryName',
 			'slns.slesson_date',
+			'slns.slesson_end_date',
 			'slns.slesson_start_time',
 			'slns.slesson_end_time',
 			'slns.slesson_status',
@@ -236,7 +237,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$srch->joinLesson();
 		$srch->joinWordLanguage();
 		$srch->joinWordDefinitionLanguage();
-        if($lessonId){
+        if($lessonId) {
             $srch->addCondition('sflashcard_slesson_id', '=', $lessonId);
         }
 		$srch->addCondition( 'sflashcard_learner_id', '=', UserAuthentication::getLoggedUserId() );
@@ -294,11 +295,11 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$user_timezone = MyDate::getUserTimeZone();
 		$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 		$this->set('user_timezone',$user_timezone); 
-		$this->set('nowDate',$nowDate);
+		$this->set('nowDate',$nowDate); 
 		$this->_template->render(false,false);
 	}
 
-	public function calendarJsonData() {
+	public function calendarJsonData(){
 		$cssClassNamesArr = ScheduledLesson::getStatusArr();
 		$srch = new ScheduledLessonSearch();
 		$srch->addMultipleFields(
@@ -330,12 +331,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 					"start"	=>	$slesson_start_time,
 					"end"	=>	$slesson_end_time,
 					'lid'	=>	$row['slesson_learner_id'],
+
 					'liFname'	=>	substr($row['user_first_name'],0,1),
 					'classType'	=>	$row['slesson_status'],
 					'className'	=>	$cssClassNamesArr[$row['slesson_status']]
-				);
-				
-				if ( true == User::isProfilePicUploaded( $row['user_id'] ) ) {
+					); 
+                if ( true == User::isProfilePicUploaded( $row['user_id'] ) ) {
                     $teacherUrl = CommonHelper::generateFullUrl('Teachers','view', array($row['user_id']));                    
                     $img = CommonHelper::generateFullUrl('Image','User', array( $row['user_id'] )); 
                     $jsonArr[$k]['imgTag'] = '<a href="'.$teacherUrl.'"><img src="'.$img.'" /></a>';
@@ -648,9 +649,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'{learner_name}' => $lessonRow['learnerFullName'],
 			'{teacher_name}' => $lessonRow['teacherFullName'],
 			'{lesson_name}' => $lessonRow['teacherTeachLanguageName'],
-			'{lesson_date}' => $post['date'],
-			'{lesson_start_time}' => $post['startTime'],
-			'{lesson_end_time}' => $post['endTime'],
+			'{lesson_date}' => date('Y-m-d', $SelectedDateTimeStamp),
+			'{lesson_start_time}' => date('H:i:s', $SelectedDateTimeStamp ),
+			'{lesson_end_time}' =>  date('H:i:s', $endDateTimeStamp ) ,
 			'{learner_comment}'	=>	'',
 			'{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
 		);
@@ -1187,18 +1188,20 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'slns.slesson_status'
 			));
 			
+			
+			
 		$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
 		$srch->addCondition( 'slns.slesson_learner_id',' = ', UserAuthentication::getLoggedUserId() );
 		$srch->addCondition( 'slns.slesson_date',' = ', date('Y-m-d', strtotime( $startDateTime )) );
 
+
 		$cnd = $srch->addCondition( 'slns.slesson_start_time',' >= ',date('H:i:s', strtotime( $startDateTime )),'AND' );
         $cnd->attachCondition('slns.slesson_start_time','<=',date('H:i:s', strtotime( $endDateTime )),'AND');
-		
+
 		$cnd1 = $cnd->attachCondition( 'slns.slesson_end_time',' >= ', date('H:i:s', strtotime( $startDateTime )),'OR' );
-        $cnd1->attachCondition('slns.slesson_end_time','<=',date('H:i:s', strtotime( $endDateTime )),'AND');    
-        
+        $cnd1->attachCondition('slns.slesson_end_time','<=',date('H:i:s', strtotime( $endDateTime )),'AND');        
 		$rs = $srch->getResultSet();
-		$data = FatApp::getDb()->fetchAll( $rs );
+		$data = FatApp::getDb()->fetchAll($rs);
         $this->set('count',count($data));
 		$this->_template->render(false, false, 'json-success.php');
     }

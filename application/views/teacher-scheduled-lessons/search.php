@@ -1,8 +1,8 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
 
 MyDate::setUserTimeZone(); 
 $user_timezone = MyDate::getUserTimeZone();
- 
+
 $referer = preg_replace("(^https?://)", "", $referer );
 foreach( $lessonArr as $key=>$lessons ){ ?>
 <div class="col-list-group">
@@ -11,7 +11,7 @@ foreach( $lessonArr as $key=>$lessons ){ ?>
 <?php } ?>
 <div class="col-list-container">
 <?php foreach( $lessons as $lesson ){ ?>
-	<div class="col-list">
+	<div class="col-list">   
 		<div class="d-lg-flex align-items-center">
 			<div class="col-xl-4 col-lg-4 col-md-12">
 				<div class="avtar avtar--normal" data-text="<?php echo CommonHelper::getFirstChar($lesson['learnerFname']); ?>">

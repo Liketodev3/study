@@ -32,25 +32,27 @@
             unselectAuto: true,
 			editable: false,
 			nowIndicator:true,
+			now:'<?php echo $nowDate; ?>',
 			eventOverlap: false,
 			slotEventOverlap : false,
 			defaultTimedEventDuration : "<?php echo $bookingSnapDuration; ?>",
 			snapDuration : "<?php echo $bookingSnapDuration; ?>",
 			allDaySlot: false,
-			timezone: "<?php echo MyDate::getTimeZone(); ?>",
-			<?php if( 'free_trial' == $action ) { ?>
+			timezone: "<?php echo $user_timezone; ?>",
+			<?php if( 'free_trial' == $action ){ ?>
 			select: function (start, end, jsEvent, view ) {
 				
 				$("body").css( {"pointer-events": "none"} );
 				$("body").css( {"cursor": "wait"} );
+				
 				//==================================//
 					var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
 					var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
-					
+		
 					if ( selectedDateTime < validSelectDateTime ) {	
-						$("body").css( {"cursor": "default"} );
-						$("body").css( {"pointer-events": "initial"} );
-						if ( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
+							$("body").css( {"cursor": "default"} );
+							$("body").css( {"pointer-events": "initial"} );
+						if( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
 							$.systemMessage('<?php echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--success');	
 								setTimeout(function() {  
 									$.systemMessage.close();
@@ -62,18 +64,18 @@
 					}
 				//================================//
 				
-				if ( getEventsByTime( start, end ).length > 1 ) {
+				if( getEventsByTime( start, end ).length > 1 ){
 					$('#d_calendar').fullCalendar('refetchEvents');
 				}
 				
-				if ( moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0 ) {
+				if( moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0 ) {
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
 					return false;
 				}
 				
-				if ( moment(start).format('d') != moment(end).format('d') ) {
+				if( moment(start).format('YYYY-MM-DD HH:mm:ss') > moment(end).format('YYYY-MM-DD HH:mm:ss') ) {
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
@@ -95,9 +97,9 @@
 				newEvent.title = '';
 				newEvent.startTime = moment(start).format('HH:mm:ss');
 				newEvent.endTime = moment(end).format('HH:mm:ss');
-				newEvent.start = moment(end).format('YYYY-MM-DD')+" "+ moment(start).format('HH:mm:ss');
-				newEvent.end = moment(end).format('YYYY-MM-DD')+" "+moment(end).format('HH:mm:ss');
-				newEvent.date = moment(end).format('YYYY-MM-DD');
+				newEvent.start = moment(start).format('YYYY-MM-DD HH:mm:ss');
+				newEvent.end = moment(end).format('YYYY-MM-DD HH:mm:ss');
+				newEvent.date = moment(start).format('YYYY-MM-DD');
 				newEvent.day = moment(start).format('d');
 				newEvent.className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
 				newEvent.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>';
@@ -115,7 +117,6 @@
 				fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[<?php echo $teacher_id; ?>]), newEvent, function(doc) {
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
-					
 					var res = JSON.parse(doc);
 					if( res.msg == 1 ){
 						$('#d_calendar').fullCalendar('renderEvent',newEvent);
@@ -168,8 +169,11 @@
 									rendering:'background',
 									selectable: true,
 									dow:[$(this).attr('day')]
-								});
+								  });
 							});
+							
+							console.log( events );
+							
 							
 							fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
 								var doc2 = JSON.parse(doc2);
@@ -294,7 +298,7 @@
 		
 			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 				//console.log(event.start.isBefore(moment()));
-				if(moment().diff(moment(event.start)) >= 0) {
+				if(moment('<?php echo $nowDate; ?>').diff(moment(event.start)) >= 0) {
 					$("#d_calendar").fullCalendar("refetchEvents");
 					return false;
 				}

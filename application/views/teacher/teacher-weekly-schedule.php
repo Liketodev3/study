@@ -4,6 +4,8 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
 ?>
 <script>
    $(document).ready(function() {
+	//moment().tz.setDefault("America/New_York");
+	
    	$("#setUpWeeklyAvailability").click(function(){
    		var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
    			return 	{
@@ -34,10 +36,11 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    		slotEventOverlap : false,
    		forceEventDuration : true,
    		defaultTimedEventDuration : "00:30:00",
-		timezone: "<?php echo $user_timezone; ?>",
+		timezoneParam: 'timezone',
+		timezone: '<?php echo $user_timezone; ?>',
    		allDaySlot: false,
    		select: function (start, end, jsEvent, view ) {
-			if(moment().diff(moment(start)) >= 0) {
+			if(moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0) {
    				$('#w_calendar').fullCalendar('unselect');
    				return false;
    			}
@@ -66,8 +69,8 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    				if(doc == "[]")
    				{
 				data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };	
-   				
-				$.ajax({
+					
+   				$.ajax({
    				url: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonDataForWeekly'); ?>",
 				data : data,
 				method : 'POST',
@@ -90,8 +93,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    					}else if(classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>"){
    						var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
    					}
-   					  
-					events.push({
+   					events.push({
    						title: $(this).attr('title'),
    						start: $(this).attr('start'),
    						end: $(this).attr('end'),
@@ -102,8 +104,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    						className: className,
    						editable: false,
    						//dow:[$(this).attr('day')]
-   					  });  
-					  
+   					  });
    					});
    					callback(events);
    					}
@@ -125,7 +126,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    					var classType = $(this).attr('classType');
    					if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
    						var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
-   						if(moment('<?php echo $nowDate; ?>') > moment(e.start)) {
+   						 if(moment('<?php echo $nowDate; ?>') > moment(e.start)) {
    							var editable = false;
    						}
    						else{
@@ -183,6 +184,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    	eventResize: function(event, delta, revertFunc) {},
    	});
    });
+   
 </script>
 <button id="setUpWeeklyAvailability" class="btn btn--secondary"><?php echo Label::getLabel( 'LBL_Save' );?></button>
 <span class="-gap"></span>

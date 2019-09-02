@@ -354,7 +354,7 @@ class Order extends MyAppModel{
 			$dateFrom = MyDate::changeDateTimezone( $dateFrom, $user_timezone, $systemTimeZone);
 			$dateFrom = date('Y-m-d', strtotime( $dateFrom ));
             $srch->addCondition('o.order_date_added', '>=', $dateFrom . ' 00:00:00');
-		}
+        }
 
         $dateTo = $filter['date_to'];
         if (!empty($dateTo)) {

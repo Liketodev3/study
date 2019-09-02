@@ -6,7 +6,8 @@ class TeacherGeneralAvailability extends MyAppModel{
 		parent::__construct ( static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id );
 	}
 	
-	public static function getGenaralAvailabilityJsonArr( $userId, $post ='', $requestBtTeacher = false ) {
+	public static function getGenaralAvailabilityJsonArr($userId, $post ='', $requestBtTeacher = false) {
+		
 		$userId = FatUtility::int($userId);
 		if( $userId < 1 ){
 			trigger_error(Label::getLabel('LBL_Invalid_Request'));
@@ -25,7 +26,8 @@ class TeacherGeneralAvailability extends MyAppModel{
 		
 		$user_timezone = MyDate::getUserTimeZone();
 		
-		if (!empty( $post )) {
+		
+		if(!empty( $post )) {
 			$nowDate = $post['WeekEnd'];
 			$startDate = $post['WeekStart'];
 			$endDate = $post['WeekEnd'];
@@ -115,14 +117,14 @@ class TeacherGeneralAvailability extends MyAppModel{
 			}
 			$i++;
 		}
-			
+		
 		return $jsonArr;
-		} else {
+		} else{
 			return;
 		}
 	}
 	
-	public function deleteTeacherGeneralAvailability( $tgavl_id, $userId ) {
+	public function deleteTeacherGeneralAvailability( $tgavl_id, $userId ){
 		$userId = FatUtility::int($userId);
 		$tgavl_id = FatUtility::int($tgavl_id);
 		
@@ -155,6 +157,7 @@ class TeacherGeneralAvailability extends MyAppModel{
 		}
 		
 		$postJson = json_decode($post['data']);
+		
 		$db = FatApp::getDb();
 		$weekendDate = date( 'Y-m-d', strtotime( 'next Saturday +1 day' ) );
 		//$deleteWeeklyFutrureWeeksRecords = $db->deleteRecords(TeacherWeeklySchedule::DB_TBL,array('smt'=>'twsch_user_id = ? and (twsch_start_time > ?)','vals'=>array($userId,$weekendDate)));
@@ -174,8 +177,9 @@ class TeacherGeneralAvailability extends MyAppModel{
         # sort by event_type desc and then title asc
         array_multisort($sort['day'], SORT_ASC, $sort['start'], SORT_ASC,$postJson);
         /* ] */
-
-        foreach($postJson as $k=>$postObj){
+		
+		
+        foreach($postJson as $k=>$postObj) {
         /*[ Clubbing the continuous timeslots */            
             if($k>0 AND ($postJson[$k-1]->day == $postObj->day) AND ($postJson[$k-1]->endTime == $postObj->startTime)){
                 $postJsonArr[count($postJsonArr)-1]->endTime = $postObj->endTime;
@@ -184,8 +188,8 @@ class TeacherGeneralAvailability extends MyAppModel{
         /* ] */            
             $postJsonArr[] = $postObj;
         }
-		if ( $deleteRecords ) {
-			
+		if( $deleteRecords ){
+			/* code added  on 12-07-2019 */
 			$user_timezone = MyDate::getUserTimeZone();
 			$systemTimeZone = MyDate::getTimeZone();
 			
@@ -195,28 +199,31 @@ class TeacherGeneralAvailability extends MyAppModel{
 			$Year = date('Y', strtotime($nowDate));
 			$gendate = new DateTime( $nowDate );
 			
-			foreach( $postJsonArr as $val ){
+			
+			foreach ( $postJsonArr as $val ) {
 				$startDate = $gendate->setISODate($Year, $weekNumber, $val->day);
 				$date = $gendate->format('Y-m-d '. $val->startTime );
 				
 				if ( $val->endTime == "00:00" ) {
 					$date1 = $gendate->format('Y-m-d '. $val->endTime );
 					$endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime( $date1 )));
-				} else {
+				} else{
 					$endDate = $gendate->format('Y-m-d '. $val->endTime );
 				}
-				
+				/* code added  on 12-07-2019 */
 				$tgavl_start = MyDate::changeDateTimezone( $date,  $user_timezone,  $systemTimeZone);
 				$tgavl_end = MyDate::changeDateTimezone(  $endDate,   $user_timezone,   $systemTimeZone);
 				$tgavl_start_time = date('H:i:00', strtotime($tgavl_start));
 				$tgavl_end_time = date('H:i:00', strtotime($tgavl_end));
+			
 				$day = MyDate::getDayNumber( $tgavl_start );
-				
+			
 				$insertArr = array('tgavl_day'=>$day,'tgavl_user_id'=>$userId,'tgavl_start_time'=>$tgavl_start_time,'tgavl_end_time'=>$tgavl_end_time, 'tgavl_date' => $tgavl_start );
-					if (!$db->insertFromArray(TeacherGeneralAvailability::DB_TBL,$insertArr)) {
-						$this->error = $db->getError();
-						return false;
-					}
+				
+				if(!$db->insertFromArray(TeacherGeneralAvailability::DB_TBL,$insertArr)){
+					$this->error = $db->getError();
+					return false;
+				}
 			}
 		}
 		return true;

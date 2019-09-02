@@ -1,4 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+
 $user_timezone = MyDate::getUserTimeZone();
 $curDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 
@@ -42,7 +43,7 @@ function endLessonButtonAction(){
 }
 
   var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>'; 
-  var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';       
+  var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>'; 
   var chat_id = '<?php echo $chatId; ?>';
   var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';  
   var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
@@ -145,8 +146,7 @@ function endLessonButtonAction(){
 				$("#end_lesson_time_div").hide();
 			}
 		});
-	});
-	
+	});	
 </script>
 <section class="section section--grey section--page">
    <div class="screen">
@@ -278,7 +278,7 @@ function endLessonButtonAction(){
                         <h6><?php echo Label::getLabel('LBL_Lesson_Details'); ?></h6>
                         <div class="schedule-list">
                            <ul>
-							<?php 
+                              <?php 
 								$sdate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date($lessonData['slesson_date'] .' '. $lessonData['slesson_start_time']), true , $user_timezone );
                                  $date = DateTime::createFromFormat('Y-m-d', $sdate);
                                  //if($date && ($date->format('Y-m-d') === $lessonData['slesson_date'])){ 
@@ -294,8 +294,8 @@ function endLessonButtonAction(){
                                  </span>
                               </li>
                               <?php } ?>
-						   
-							  <li>
+							  
+                              <li>
                                  <span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
                                  <span class="span-right"><?php echo $statusArr[$lessonData['slesson_status']]; ?></span>
                               </li>
@@ -307,7 +307,7 @@ function endLessonButtonAction(){
 									echo TeachingLanguage::getLangById($lessonData['slesson_slanguage_id']);
 								 ?><br>
                                  <?php 
-									if( $lessonData['slesson_date'] != "0000-00-00" ){
+									if( date('Y-m-d', strtotime($startTime)) != "0000-00-00" ){
 										$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
 										$arrReplacements = array(
 											'{n}'	=>	$lessonData['op_lesson_duration'],

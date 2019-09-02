@@ -35,20 +35,20 @@
 			allDaySlot: false,
 			timezone: "<?php echo $user_timezone; ?>",
 			select: function (start, end, jsEvent, view ) {
-				
 				$("body").css( {"pointer-events": "none"} );
 				$("body").css( {"cursor": "wait"} );
 				
 				//==================================//
-				var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
-				var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
+					var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
+					//var duration = '<?php echo $teacherBookingBefore;?>';
+					var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
 			
-					if ( selectedDateTime >=  moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
+					if( selectedDateTime >=  moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
 						if ( selectedDateTime < validSelectDateTime ) {
 							$("body").css( {"cursor": "default"} );
 							$("body").css( {"pointer-events": "initial"} );	
 							
-							if ( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
+							if( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
 								
 								$.systemMessage('<?php echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--success');	
 									setTimeout(function() {  
@@ -60,25 +60,25 @@
 							$('#calendar').fullCalendar('unselect');
 							return false;
 						}
-					} 
+					}
 				//================================//
 				
-				if (getEventsByTime( start, end ).length > 1) {
+				if(getEventsByTime( start, end ).length > 1)
+				{
+					//alert(1);
 					$('#d_calendar').fullCalendar('refetchEvents');
 				}
-				if (moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0) {
-					
+				if(moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0) {
+					//alert(2);
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
-					
 					$('#d_calendar').fullCalendar('unselect');
 					return false;
 				}
-				if (moment(start).format('d')!=moment(end).format('d') ) {
-					
+				if(moment(start).format('YYYY-MM-DD HH:mm:ss') > moment(end).format('YYYY-MM-DD HH:mm:ss') ) {
+					//alert(3);
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
-					
 					$('#d_calendar').fullCalendar('unselect');
 					return false;
 				}
@@ -86,10 +86,11 @@
 				var duration = moment.duration(moment(end).diff(moment(start)));
 				var minutesDiff = duration.asMinutes();
 				var minutes = "<?php echo ($action=="free_trial") ? 30 : 60 ?>";
-				if (minutesDiff > minutes) {
+				if(minutesDiff > minutes)
+				{
+					//alert(4);
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
-					
 					$('#d_calendar').fullCalendar('unselect');
 					$('.tooltipevent').remove();
 					return false;
@@ -100,9 +101,9 @@
 				newEvent.title = '';
 				newEvent.startTime = moment(start).format('HH:mm:ss');
 				newEvent.endTime = moment(end).format('HH:mm:ss');
-				newEvent.start =moment(end).format('YYYY-MM-DD')+" "+ moment(start).format('HH:mm:ss');
-				newEvent.end = moment(end).format('YYYY-MM-DD')+" "+moment(end).format('HH:mm:ss');
-				newEvent.date = moment(end).format('YYYY-MM-DD');
+				newEvent.start = moment(start).format('YYYY-MM-DD HH:mm:ss');
+				newEvent.end = moment(end).format('YYYY-MM-DD HH:mm:ss');
+				newEvent.date = moment(start).format('YYYY-MM-DD');
 				newEvent.day = moment(start).format('d');
 				newEvent.className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
 				newEvent.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>';
@@ -119,17 +120,20 @@
 				newEvent.weekEnd = moment(endOfWeek).format('YYYY-MM-DD HH:mm:ss');
 				
 				fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[<?php echo $teacher_id; ?>]), newEvent, function(doc) {
-					
-					$("body").css( {"cursor": "default"} );
-					$("body").css( {"pointer-events": "initial"} );
-					
-                    $("#d_calendar").fullCalendar("refetchEvents");
-					var res = JSON.parse(doc);
-					if ( res.msg == 1 )
+                   $("body").css( {"cursor": "default"} );
+				   $("body").css( {"pointer-events": "initial"} );
+				   var res = JSON.parse(doc);
+					if ( res.msg == 1 ) {
 						$('#d_calendar').fullCalendar('renderEvent',newEvent);
-					if ( res.msg == 0 )
+					}
+					if ( res.msg == 0 ) {
 						$('.tooltipevent').remove();
+					}
 				});
+				
+				
+				
+			
 			},
 			eventLimit: true,
 			defaultDate: '<?php echo date('Y-m-d'); ?>',
@@ -138,7 +142,7 @@
 				fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData',[<?php echo $teacher_id; ?>]), data, function(doc) {
 					if(doc == "[]")
 					{
-						var data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };
+						data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };
 						fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData',[<?php echo $teacher_id; ?>]), data, function(doc) {
 						var doc = JSON.parse(doc);
 						var events = [];
@@ -149,31 +153,29 @@
 							className: 'past_current_day testPast',
 							editable: false,
 							rendering:'background'
-							
 							});
 						$(doc).each(function(i,e) {
-							var classType = $(this).attr('classType');
-							if ( classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>" ) {
-								var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
-							} else if ( classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>") {
-								var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
-							}
-						
-							events.push({
-								title: $(this).attr('title'),
-								start: $(this).attr('start'),
-								end: $(this).attr('end'),
-								color: $(this).attr('color'),
-								day: $(this).attr('day'),
-								_id: $(this).attr('_id'),
-								action: 'fromGeneralAvailability',
-								classType: $(this).attr('classType'),
-								className: className,
-								editable: false,
-								rendering:'background',
-								selectable: true,
-								dow:[$(this).attr('day')]
-							});  
+						var classType = $(this).attr('classType');
+						if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
+							var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
+						}else if(classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>"){
+							var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
+						}
+						events.push({
+							title: $(this).attr('title'),
+							start: $(this).attr('start'),
+							end: $(this).attr('end'),
+							color: $(this).attr('color'),
+							day: $(this).attr('day'),
+							_id: $(this).attr('_id'),
+							action: 'fromGeneralAvailability',
+							classType: $(this).attr('classType'),
+							className: className,
+							editable: false,
+							rendering:'background',
+							selectable: true,
+							dow:[$(this).attr('day')]
+						  });
 						});
 						fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
 							var doc2 = JSON.parse(doc2);
@@ -184,53 +186,54 @@
 									end: $(this).attr('end'),
 									className: $(this).attr('className'),
 									color: "var(--color-secondary)",
-								});
+									
+							  });
 							}); 
 							callback(events);
 						});
 					});
-					} else {
-						var doc = JSON.parse(doc);
-						var events = [];
-						events.push({
+					}
+					else{
+					var doc = JSON.parse(doc);
+					var events = [];
+					events.push({
 							title: '',
 							start: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
 							end: moment('<?php echo $nowDate; ?>'),
 							className: 'past_current_day testPast',
 							editable: false,
 							rendering:'background'
-						});
-					
-						$(doc).each(function(i,e) {
-							var classType = $(this).attr('classType');
-							if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
-								var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
-								if(moment() > moment(e.start)) {
-									var editable = false;
-								}
-								else{
-									var editable = true;
-								}
-							}else if(classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>"){
-								var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
+							});
+					$(doc).each(function(i,e) {
+						var classType = $(this).attr('classType');
+						if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
+							var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
+							 if(moment('<?php echo $nowDate; ?>') > moment(e.start)) {
 								var editable = false;
 							}
-							events.push({
-								title: $(this).attr('title'),
-								start: $(this).attr('start'),
-								end: $(this).attr('end'),
-								color: $(this).attr('color'),
-								day: $(this).attr('day'),
-								_id: $(this).attr('_id'),
-								action: 'fromWeeklySchedule',
-								classType: $(this).attr('classType'),
-								className: className,
-								rendering:'background',
-								editable: editable,
-								selectable: editable,
-							});
-						});
-						fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
+							else{
+								var editable = true;
+							}
+						}else if(classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>"){
+							var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
+							 var editable = false;
+						}
+					  events.push({
+						title: $(this).attr('title'),
+						start: $(this).attr('start'),
+						end: $(this).attr('end'),
+						color: $(this).attr('color'),
+						day: $(this).attr('day'),
+						_id: $(this).attr('_id'),
+						action: 'fromWeeklySchedule',
+						classType: $(this).attr('classType'),
+						className: className,
+						rendering:'background',
+						editable: editable,
+						selectable: editable,
+					  });
+					});
+					fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
 							var doc2 = JSON.parse(doc2);
 							$(doc2).each(function(i,e) {
 								events.push({
@@ -247,7 +250,7 @@
 					}
 				});
 			  },
-			  eventRender: function(event, element) {
+			eventRender: function(event, element) {
 				if(isNaN(event._id) && event.className != "sch_data"){ 
 					element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
 				}
@@ -264,16 +267,16 @@
 				}
 			});
 			var eventEnd = moment(event.end);
-			var NOW = moment();
-			if(moment(event.end).format('YYYY-MM-DD HH:mm') < moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm') && event.className != "sch_data"){
+			var NOW = moment();	
+			if(moment(event.end).format('YYYY-MM-DD HH:mm') < moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm') && event.className != "sch_data"){	
 				return false;
 			}
 		},
 		eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 			console.log(event.start.isBefore(moment('<?php echo $nowDate; ?>')));
-			if( moment('<?php echo $nowDate; ?>').diff(moment(event.start)) >= 0 ) {
-				$("#d_calendar").fullCalendar("refetchEvents");
-				return false;
+			if(moment('<?php echo $nowDate; ?>').diff(moment(event.start)) >= 0) {
+			 $("#d_calendar").fullCalendar("refetchEvents");
+			 return false;
 			}
 		},
 		
@@ -337,3 +340,9 @@
 <span> <?php echo MyDate::displayTimezoneString();?> </span>
 <div id='d_calendar'></div>
 </div>
+
+<style>
+.unavailable {
+	background :#000;
+}
+</style>

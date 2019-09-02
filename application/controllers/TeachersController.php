@@ -422,9 +422,11 @@ class TeachersController extends MyAppController {
 		if (  '' ==  $teacherBookingBefore  ) {
 			$teacherBookingBefore = 0;
 		}
+		
 		$this->set('teacherBookingBefore',$teacherBookingBefore); 
 		$this->set('user_timezone',$user_timezone); 
 		$this->set('nowDate',$nowDate);
+		
 
 		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
 		$this->set( 'lPackageId', $lPackageId );
@@ -454,24 +456,28 @@ class TeachersController extends MyAppController {
 		
 		$endDateTime = MyDate::changeDateTimezone( $post['end'],  $user_timezone,  $systemTimeZone);
 		$date = MyDate::changeDateTimezone( $post['date'] .' '. $post['startTime'],  $user_timezone,  $systemTimeZone);
+		
 		$day = MyDate::getDayNumber($startDateTime );
 		
 		if(strtotime( $startDateTime ) < strtotime( date('Y-m-d H:i:s') )){
             FatUtility::dieJsonSuccess(0);
         }
+		
 		$originalDayNumber = $post['day'];
+		
 		$tWsch = new TeacherWeeklySchedule();
 		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime, $date, $day, $originalDayNumber, $post['weekStart'], $post['weekEnd'] );
-		FatUtility::dieJsonSuccess($checkAvialSlots);
+		FatUtility::dieJsonSuccess($checkAvialSlots); 
 	}
 
-	public function getTeacherGeneralAvailabilityJsonData($userId = 0){
+	public function getTeacherGeneralAvailabilityJsonData($userId = 0) {
 		$userId = FatUtility::int($userId);
-		$post = FatApp::getPostedData();
+		$post = FatApp::getPostedData();	
+		
 		if( $userId < 1 ){
 			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
 		}
-		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr( $userId, $post );
+		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, $post);
 		echo FatUtility::convertToJson($jsonArr);
 	}
 
@@ -495,16 +501,23 @@ class TeachersController extends MyAppController {
 		$srch->addCondition( 'slns.slesson_teacher_id',' = ', $userId );
 		$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
 		$rs = $srch->getResultSet();
-		//echo $srch->getQuery();
 		$data = FatApp::getDb()->fetchAll($rs);
 		$jsonArr = array();
+		
+		
+		$user_timezone = MyDate::getUserTimeZone();
+		
 		foreach($data as $data){
+			
+			$slesson_start_time = MyDate::format( date('Y-m-d H:i:s', strtotime( $data['slesson_date'] .' '. $data['slesson_start_time'] )), true, true, $user_timezone );
+			$slesson_end_time = MyDate::format( date('Y-m-d H:i:s', strtotime( $data['slesson_date'] .' '. $data['slesson_end_time'] )), true, true, $user_timezone );
+			
 			$jsonArr[] = array(
-			"title"=>$data['teacherTeachLanguageName'],
-			"start"=>$data['slesson_date']." ".$data['slesson_start_time'],
-			"end"=>$data['slesson_date']." ".$data['slesson_end_time'],
-			"className"=>"sch_data",
-			"classType"=>"0",
+				"title"=>$data['teacherTeachLanguageName'],
+				"start"=>$slesson_start_time,
+				"end"=>$slesson_end_time,
+				"className"=>"sch_data",
+				"classType"=>"0",
 			);
 		}
 		echo FatUtility::convertToJson($jsonArr);
@@ -522,49 +535,33 @@ class TeachersController extends MyAppController {
 
 		$weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId,$post['start'],$post['end']);
 		$_serchEndDate = date('Y-m-d 00:00:00', strtotime($post['end']));
+		
 		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
 		$jsonArr = array();
-		if( !empty($weeklySchRows) ){
-			foreach( $weeklySchRows as $row){
+		if ( !empty($weeklySchRows) ) {
+			/* code added on 15-07-2019 */
+			$user_timezone = MyDate::getUserTimeZone();
+		
+			
+			foreach( $weeklySchRows as $row) {
+				$twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['twsch_end_date'].' '. $row['twsch_end_time'], true, $user_timezone );
+				$twsch_start_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['twsch_date'].' '. $row['twsch_start_time'], true, $user_timezone );
+				$twsch_date = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', $row['twsch_date'] .' '. $row['twsch_start_time'] , true, $user_timezone );
+				if( ( strtotime( $twsch_start_time ) >=  strtotime( $post['start'] ) ) && (strtotime( $twsch_end_time ) <= strtotime( $_serchEndDate ) ) )  {
+				
 				$jsonArr[] = array(
 					"title"	=>	"",
-					"date"	=>	$row['twsch_date'],
-					"start"	=>	$row['twsch_date']." ".$row['twsch_start_time'],
-					"end"	=>	$row['twsch_date']." ".$row['twsch_end_time'],
+					"date"	=>	$twsch_date,
+					"start"	=>	$twsch_start_time,
+					"end"	=>	$twsch_end_time,
 					'_id'	=>	$row['twsch_id'],
 					'classType'	=>	$row['twsch_is_available'],
 					'className'	=>	$cssClassNamesArr[$row['twsch_is_available']]
 					);
+					
+				}	
 			}
 		}
-		
-		if( !empty($weeklySchRows) ){
-		//============ code added  on 12-07-2019 =============//
-			 $user_timezone = MyDate::getUserTimeZone($userId);
-		//===================================================//
-			foreach( $weeklySchRows as $row){ 
-				$twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['twsch_end_date'].' '. $row['twsch_end_time'], true, $user_timezone );
-				 
-				$twsch_start_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $row['twsch_date'].' '. $row['twsch_start_time'], true, $user_timezone );
-				
-				$startDate = date('Y-m-d', strtotime($twsch_start_time));
-				$endDate = date('Y-m-d', strtotime($twsch_end_time));
-				
-				if( ( strtotime( $twsch_start_time ) >=  strtotime( $post['start'] .' 00:00:00 '  ) ) && (strtotime( $twsch_end_time ) <= strtotime( $_serchEndDate ) ) )  {
-					$jsonArr[] = array(
-						"title"	=>	"",
-						"date"	=>	date('Y-m-d', strtotime($twsch_start_time)),
-						"start"	=>	$twsch_start_time,
-						"end"	=>	$twsch_end_time,
-						'_id'	=>	$row['twsch_id'],
-						'classType'	=>	$row['twsch_is_available'],
-						'className'	=>	$cssClassNamesArr[$row['twsch_is_available']] 
-					);
-				}
-			}
-		}
-		
-		
 		echo FatUtility::convertToJson($jsonArr);
 	}
 
@@ -708,6 +705,7 @@ class TeachersController extends MyAppController {
 		$timeSlots = FatApp::getPostedData('filterTimeSlots', FatUtility::VAR_STRING, array());
 		if( $timeSlots  ){
 		 $formatedArr = CommonHelper::formatTimeSlotArr($timeSlots);
+		 
 				if($formatedArr){
 					foreach($formatedArr as $key=>$formatedVal){
 						/*	if($key==0){

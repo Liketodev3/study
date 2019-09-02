@@ -59,8 +59,8 @@
            },
    	});
    });
-</script>
+</script> 
 <div class="calendar-view">
-	<span><?php echo MyDate::displayTimezoneString();?></span>
-	<div id='listing_calendar'></div>
+<span> <?php echo MyDate::displayTimezoneString();?> </span>
+<div id='listing_calendar'></div>
 </div>
