@@ -280,13 +280,19 @@
 		
 		<!-- Report [ -->
 		<?php if (
-			$objPrivilege->canViewTopLangReport(AdminAuthentication::getLoggedAdminId(), true)
+			$objPrivilege->canViewTopLangReport(AdminAuthentication::getLoggedAdminId(), true) ||
+			$objPrivilege->canViewTeacherPerformanceReport(AdminAuthentication::getLoggedAdminId(), true)
 			) { ?>			
-		<li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Reports',$adminLangId);?></a>
+		<li class="haschild">
+			<a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Reports',$adminLangId);?></a>
 			<ul>
 			<?php if ( $objPrivilege->canViewTopLangReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
 				<li><a href="<?php echo CommonHelper::generateUrl('TopLanguagesReport'); ?>"><?php echo Label::getLabel('LBL_Top_Languages',$adminLangId);?></a></li>
-			<?php } ?>	
+			<?php } ?>
+
+			<?php if ( $objPrivilege->canViewTeacherPerformanceReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
+				<li><a href="<?php echo CommonHelper::generateUrl('TeacherPerformanceReport'); ?>"><?php echo Label::getLabel('LBL_Teacher_Performance',$adminLangId);?></a></li>
+			<?php } ?>			
 			</ul>
 		</li>
 		<?php } ?>

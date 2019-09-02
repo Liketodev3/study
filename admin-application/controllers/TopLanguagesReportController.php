@@ -33,6 +33,7 @@ class TopLanguagesReportController extends AdminBaseController {
 		
 		$srch = AdminStatistic::LessonLanguagesObject($this->adminLangId);
 		$srch->addGroupBy('slesson_slanguage_id');
+		$srch->joinTable( User::DB_TBL, 'INNER JOIN', 'ul.user_id = slns.slesson_learner_id', 'ul' );
 		if ( empty($orderDate) ) {
 			$date_from = FatApp::getPostedData('date_from', FatUtility::VAR_DATE, '') ;
 			if ( !empty($date_from) ) {
@@ -45,14 +46,23 @@ class TopLanguagesReportController extends AdminBaseController {
 			}						
 		} else {
 			$this->set( 'orderDate', $orderDate );
+			
 			$srch->addCondition('slesson_added_on', '>=', $orderDate. ' 00:00:00');
 			$srch->addCondition('slesson_added_on', '<=', $orderDate. ' 23:59:59');
-		}		
+		}
+		if ( isset($post['country_id']) && $post['country_id'] > 0 ) {
+			$srch->addCondition( 'ul.user_country_id', '=', $post['country_id'] );
+			$this->set( 'country_id', $post['country_id'] );
+		}
+		
+		
 		
 		$srch->addOrder('lessonsSold','desc');
 		$srch->setPageNumber($page);
 		$srch->setPageSize($pagesize);
 		$rs = $srch->getResultSet();
+		//echo $srch->getQuery();
+		
 		$arr_listing = $db->fetchAll($rs);
 		
 		$this->set("arr_listing",$arr_listing);
@@ -64,7 +74,7 @@ class TopLanguagesReportController extends AdminBaseController {
 		$this->_template->render(false,false);
 	}
 	
-	public function viewSchedules( $langId ) {
+	public function viewSchedules( $langId, $countryid = 0 ) {
 		
 		$srch = new ScheduledLessonSearch();
 		$srch->joinTeacher();
@@ -72,6 +82,11 @@ class TopLanguagesReportController extends AdminBaseController {
 		$srch->joinTeacherSettings();
 		$srch->joinLessonLanguage( $this->adminLangId );
 		$srch->addCondition( 'slns.slesson_slanguage_id',' = ', $langId );
+		if ( $countryid > 0 ) {
+			$srch->addCondition( 'ul.user_country_id', '=', $countryid );
+		}
+		
+		
 		$srch->addMultipleFields(
 			array(
 			'slns.slesson_id',
@@ -83,10 +98,11 @@ class TopLanguagesReportController extends AdminBaseController {
 			));
 		
 		$rs = $srch->getResultSet();
+		//echo $srch->getQuery();
 		$data = FatApp::getDb()->fetchAll($rs);
 		if ( $data == false ) { 
 			Message::addErrorMessage('Error: Lessons not allocated yet.');
-			FatApp::redirectUser(FatUtility::generateUrl("TopLanguagesReport"));
+			//FatApp::redirectUser(FatUtility::generateUrl("TopLanguagesReport"));
 		}
 		 
 		
@@ -104,6 +120,25 @@ class TopLanguagesReportController extends AdminBaseController {
 		if(empty($orderDate)){	
 			$frm->addDateField(Label::getLabel('LBL_Date_From',$this->adminLangId), 'date_from','',array('readonly' => 'readonly','class' => 'small dateTimeFld field--calender' ));
 			$frm->addDateField(Label::getLabel('LBL_Date_To',$this->adminLangId), 'date_to' , '', array('readonly' => 'readonly','class' => 'small dateTimeFld field--calender'));
+			
+			$srch = Country::getSearchObject(false, $this->adminLangId);
+			$srch->addFld('c.* , c_l.country_name');
+			$srch->addCondition('c.country_active', '=', 1);
+			$rs      = $srch->getResultSet();
+			$countriesList = array();
+			$countriesListOptions = array();
+			if ($rs) {
+				$countriesList = FatApp::getDb()->fetchAll($rs);
+				if ( !empty( $countriesList ) ) {
+					foreach ( $countriesList as $_country ) {
+						$countriesListOptions[$_country['country_id']] = $_country['country_name'];
+					}
+				}
+			}
+			
+			$frm->addSelectBox( Label::getLabel('LBL_Country', $this->adminLangId), 'country_id', $countriesListOptions );
+			
+			
 			$fld_submit = $frm->addSubmitButton('','btn_submit',Label::getLabel('LBL_Search',$this->adminLangId));
 			$fld_cancel = $frm->addButton("","btn_clear",Label::getLabel('LBL_Clear_Search',$this->adminLangId),array('onclick'=>'clearSearch();'));
 			$fld_submit->attachField($fld_cancel);

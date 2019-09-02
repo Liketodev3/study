@@ -51,7 +51,9 @@ class AdminPrivilege
     const PRIVILEGE_READ = 1;
     const PRIVILEGE_WRITE = 2;
 	
+	
 	const SECTION_TOP_LANGUAGES_REPORT = 46;
+	const SECTION_TEACHER_PERFORMANCE_REPORT = 47;
 	
     private static $instance = null;
     private $loadedPermissions = array();
@@ -120,6 +122,7 @@ class AdminPrivilege
 			static::SECTION_SALES_REPORT => Label::getLabel('MSG_Sales_Report',CommonHelper::getLangId()),			
 			static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs',CommonHelper::getLangId()),
 			static::SECTION_TOP_LANGUAGES_REPORT => Label::getLabel('MSG_Top_Languages_Report',CommonHelper::getLangId()),
+			static::SECTION_TEACHER_PERFORMANCE_REPORT => Label::getLabel('MSG_Teacher_Performance_Report',CommonHelper::getLangId()),
 			static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs',CommonHelper::getLangId()),			
 			static::SECTION_FAQ_CATEGORY => Label::getLabel('MSG_Manage_faq_Categories',CommonHelper::getLangId()),			
         );
@@ -650,5 +653,14 @@ class AdminPrivilege
 	public function canViewTopLangReport( $adminId = 0, $returnResult = false ){
 		return $this->checkPermission( $adminId, static::SECTION_TOP_LANGUAGES_REPORT, static::PRIVILEGE_READ, $returnResult);
 	}	
+	
+	public function canEditTeacherPerformanceReport( $adminId = 0, $returnResult = false ){
+		return $this->checkPermission( $adminId, static::SECTION_TEACHER_PERFORMANCE_REPORT, static::PRIVILEGE_WRITE, $returnResult);
+	}
+
+	public function canViewTeacherPerformanceReport( $adminId = 0, $returnResult = false ){
+		return $this->checkPermission( $adminId, static::SECTION_TEACHER_PERFORMANCE_REPORT, static::PRIVILEGE_READ, $returnResult);
+	}
+	
 	
 }

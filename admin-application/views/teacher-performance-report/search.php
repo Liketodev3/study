@@ -2,9 +2,10 @@
 
 $arr_flds = array(
 	'listserial'=>Label::getLabel('LBL_Sr_no.',$adminLangId),
-	'languageName'=>Label::getLabel('LBL_Language_Name',$adminLangId),
-	'lessonsSold'=>Label::getLabel('LBL_No._of_Sold_Lessons',$adminLangId),
-	'action' => Label::getLabel('LBL_Action', $adminLangId) 
+	'user_name'=>Label::getLabel('LBL_Name',$adminLangId),
+	'teacherTotLessons'=>Label::getLabel('LBL_No._of_Sold_Lessons',$adminLangId),
+	'studentIds'=>Label::getLabel('LBL_No._Students',$adminLangId),
+	'teacher_rating' => Label::getLabel('LBL_Rating', $adminLangId) 
 );
 	
 
@@ -17,6 +18,7 @@ foreach ($arr_flds as $val) {
 }
 
 $sr_no = $page==1?0:$pageSize*($page-1);
+
 foreach ($arr_listing as $sn=>$row){ 
 	$sr_no++;
 	$tr = $tbl->appendElement('tr');
@@ -27,20 +29,36 @@ foreach ($arr_listing as $sn=>$row){
 			case 'listserial':
 				$td->appendElement('plaintext', array(), $sr_no);
 			break;
-			case 'languageName':
+			case 'user_name':
 				$td->appendElement('plaintext', array(), $row[$key] ,true);
 			break;
-			case 'lessonsSold':
+			case 'teacherTotLessons':
 				$td->appendElement('plaintext', array(), $row[$key] ,true);
 			break;
-			case 'action':
-				if (isset( $country_id ) ) {
-					$queryArray = array( $row['slesson_slanguage_id'],  $country_id );
+			case 'teacher_rating':
+				$rating = '<ul class="rating list-inline">';
+				for($j=1;$j<=5;$j++) {					
+					$class = ($j<=round($row[$key]))?"active":"in-active";
+					$fillColor = ($j<=round($row[$key]))?"#ff3a59":"#474747";
+					$rating.='<li class="'.$class.'">
+					<svg xml:space="preserve" enable-background="new 0 0 70 70" viewBox="0 0 70 70" height="18px" width="18px" y="0px" x="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" id="Layer_1" version="1.1">
+					<g><path d="M51,42l5.6,24.6L35,53.6l-21.6,13L19,42L0,25.4l25.1-2.2L35,0l9.9,23.2L70,25.4L51,42z M51,42" fill="'.$fillColor.'" /></g></svg>
+					
+				  </li>';
+				}	
+				$rating .='</ul>';
+				$td->appendElement('plaintext', array(), $rating ,true);    
+			break;
+			
+			case 'studentIds':
+				if ( $row[$key] !='' ) {
+					$idsArray = explode(',', $row[$key]);
 				} else {
-					$queryArray = array( $row['slesson_slanguage_id'] );
+					$idsArray = array();
 				}
-				$td->appendElement("a",array('href'=>CommonHelper::generateUrl('TopLanguagesReport','viewSchedules', $queryArray), 'class'=>'button small green','title'=>Label::getLabel('LBL_View_Schedules',$adminLangId)), Label::getLabel('LBL_View_Schedules', $adminLangId), true);
+				$td->appendElement('plaintext', array(), count($idsArray) ,true);
 			break;
+			
 			default:
 				$td->appendElement('plaintext', array(), $row[$key], true);
 			break;
