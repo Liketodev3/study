@@ -220,15 +220,18 @@ class TeacherWeeklySchedule extends MyAppModel{
 			));
 		$srch->addCondition( 'slns.slesson_teacher_id',' = ', $userId );
 		
-		$cnd = $srch->addCondition( 'mysql_func_CONCAT(slns.slesson_date," ", slns.slesson_start_time )',' >= ', $startTime, 'AND', true );
-        $cnd->attachCondition('mysql_func_CONCAT(slns.slesson_date," ", slns.slesson_start_time )','<=',$endTime,'AND', true);
+		$cnd = $srch->addCondition( 'mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )',' >= ', $startTime,'AND', true );
+        $cnd->attachCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )','<=',$endTime,'AND', true);
 
-		$cnd1 = $cnd->attachCondition( 'mysql_func_CONCAT(slns.slesson_end_date," ", slns.slesson_end_time )',' >= ', $startTime,'AND', true );
-        $cnd1->attachCondition('mysql_func_CONCAT(slns.slesson_end_date," ", slns.slesson_end_time )','<=',$endTime,'AND', true );
+		$cnd1 = $cnd->attachCondition( 'mysql_func_CONCAT(slns.slesson_end_date," ", slns.slesson_end_time )',' >= ', $startTime,'OR', true );
+        $cnd1->attachCondition('mysql_func_CONCAT(slns.slesson_end_date," ", slns.slesson_end_time )','<=',$endTime,'AND', true);
+		
         
 		$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
 		
 		$res = $srch->getResultSet();
+		//echo $srch->getQuery();
+		//die();
 		$resC = $res->totalRecords();        
         if ($resC > 0) {
             return 0;

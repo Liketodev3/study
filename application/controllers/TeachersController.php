@@ -496,6 +496,7 @@ class TeachersController extends MyAppController {
 			'slns.slesson_date',
 			'slns.slesson_start_time',
 			'slns.slesson_end_time',
+			'slns.slesson_end_date'
 			//'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName'
 			));
 		$srch->addCondition( 'slns.slesson_teacher_id',' = ', $userId );
