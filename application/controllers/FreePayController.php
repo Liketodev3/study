@@ -64,6 +64,8 @@ class FreePayController extends MyAppController{
 		}
 		
 		$orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
+		
+		
 		if( !$orderPaymentObj->chargeFreeOrder() ){
 			Message::addErrorMessage( $orderPaymentObj->getError() );
 			if( $isAjaxCall ){
@@ -83,6 +85,7 @@ class FreePayController extends MyAppController{
 			'slesson_learner_id'	=>	$orderInfo['order_user_id'],
 			'slesson_slanguage_id'	=>	$orderInfo['op_slanguage_id'],
 			'slesson_date'	=>	date('Y-m-d', strtotime($cartData['startDateTime'])),
+			'slesson_end_date'	=>	date('Y-m-d', strtotime($cartData['endDateTime'])),
 			'slesson_start_time'	=>	date('H:i:s', strtotime($cartData['startDateTime'])),
 			'slesson_end_time'	=>	date('H:i:s', strtotime($cartData['endDateTime'])),
 			'slesson_status'	=>	ScheduledLesson::STATUS_SCHEDULED
