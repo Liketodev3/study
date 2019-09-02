@@ -509,10 +509,11 @@ class TeachersController extends MyAppController {
 		
 		foreach($data as $data){
 			
-			$slesson_start_time = MyDate::format( date('Y-m-d H:i:s', strtotime( $data['slesson_date'] .' '. $data['slesson_start_time'] )), true, true, $user_timezone );
-			$slesson_end_time = MyDate::format( date('Y-m-d H:i:s', strtotime( $data['slesson_date'] .' '. $data['slesson_end_time'] )), true, true, $user_timezone );
+			$slesson_start_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $data['slesson_date'].' '. $data['slesson_start_time'], true, $user_timezone );
 			
-			$jsonArr[] = array(
+			$slesson_end_time = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $data['slesson_end_date'].' '. $data['slesson_end_time'], true, $user_timezone );
+			
+			$jsonArr[] = array( 
 				"title"=>$data['teacherTeachLanguageName'],
 				"start"=>$slesson_start_time,
 				"end"=>$slesson_end_time,
@@ -523,7 +524,7 @@ class TeachersController extends MyAppController {
 		echo FatUtility::convertToJson($jsonArr);
 	}
 
-	public function getTeacherWeeklyScheduleJsonData($userId = 0){
+	public function getTeacherWeeklyScheduleJsonData($userId = 0) {
 		$userId = FatUtility::int($userId);
 		$post = FatApp::getPostedData();
 		if ( false === $post ) {
