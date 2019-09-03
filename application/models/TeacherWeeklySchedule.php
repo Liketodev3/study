@@ -257,7 +257,7 @@ class TeacherWeeklySchedule extends MyAppModel{
 		
 		if ( $gaCount > 0 ) {
 			
-			$weekStartDateDB = $gARows[0]['tgavl_date'];
+			$weekStartDateDB = '2018-01-07';
 			$weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStart);
 			
 			foreach ( $gARows as $row ) {
@@ -375,7 +375,7 @@ class TeacherWeeklySchedule extends MyAppModel{
 		
 		$generalAvail = 0;
 		if ( $gaCount > 0 ) {
-			$weekStartDateDB = $gARows[0]['tgavl_date'];
+			$weekStartDateDB = '2018-01-07';
 			$weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStart);
 			
 			foreach ( $gARows as $row ) {
