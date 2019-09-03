@@ -173,7 +173,12 @@ class UserSearch extends SearchBase {
 		}
 		$this->addGroupBy('sl.slesson_teacher_id');
 		$this->addFld( 'count(DISTINCT sl.slesson_id) as teacherTotLessons' );
-		$this->addFld( 'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) AS teacherSchLessons' );		
+		//$this->addFld( 'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) AS teacherSchLessons' );	
+
+		$this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_COMPLETED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as teacherSchLessons');
+		
+		$this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as teacherCancelledLessons');
+		
 		$this->addFld( 'GROUP_CONCAT(DISTINCT slesson_learner_id) as studentIds' );		
 	}
 

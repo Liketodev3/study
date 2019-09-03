@@ -35,6 +35,11 @@ class HomeController extends AdminBaseController
 			$statsObj = new AdminStatistic();
 			$dashboardInfo["stats"]["totalUsers"] = $statsObj->getStats('total_members');
 			$dashboardInfo["stats"]["totalLessons"] = $statsObj->getStats('total_lessons');
+			$dashboardInfo["stats"]["totalCompletedLessons"] = $statsObj->getStats('total_lessons', ScheduledLesson::STATUS_COMPLETED);
+			$dashboardInfo["stats"]["totalCancelledLessons"] = $statsObj->getStats('total_lessons', ScheduledLesson::STATUS_CANCELLED);
+			$dashboardInfo["stats"]["totalNeedtoScheduleLessons"] = $statsObj->getStats('total_lessons', ScheduledLesson::STATUS_NEED_SCHEDULING);
+			
+		
 			$dashboardInfo["stats"]["totalSales"] = $statsObj->getStats('total_sales');			
 			$dashboardInfo["stats"]["totalEarnings"] = $statsObj->getStats('total_earnings');
 			//print_r($dashboardInfo["stats"]["totalEarnings"]); die;

@@ -77,7 +77,7 @@ class AdminStatistic extends MyAppModel{
 		}
 	}
 	
-	function getStats($type) {
+	function getStats($type, $lessonStatus =0) {
 		$type = strtolower($type);
 		switch($type) {
 			case 'total_members':
@@ -110,7 +110,9 @@ class AdminStatistic extends MyAppModel{
 			case 'total_lessons':				
 				$srch = new ScheduledLessonSearch(true);
 				$srch->doNotLimitRecords();
-				
+				if ( $lessonStatus > 0 ) {
+					$srch->addCondition('slesson_status', '=',$lessonStatus );
+				}
 				$srchObj1 = clone $srch;
 				$srchObj1->addFld(array('1 AS num_days','count(slesson_id)'));
 				$srchObj1->addDirectCondition('DATE(slesson_added_on) = DATE(NOW())');
@@ -291,7 +293,6 @@ class AdminStatistic extends MyAppModel{
 		
 		$srch = new ScheduledLessonSearch();
 		$srch->joinLessonLanguage($langId);
-		$srch->addMultipleFields(array('IFNULL(tlanguage_name , tlanguage_Identifier) as languageName','count(slesson_id) as lessonsSold', 'slesson_slanguage_id'));	
 		return $srch;
 
 	}

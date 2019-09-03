@@ -24,36 +24,54 @@ class TopLanguagesReportController extends AdminBaseController {
 		$this->objPrivilege->canViewTopLangReport();
 		$db = FatApp::getDb();
 		$orderDate = FatApp::getPostedData('orderDate') ;
-		
 		$srchFrm = $this->getSearchForm($orderDate);
 		
 		$post = $srchFrm->getFormDataFromArray( FatApp::getPostedData() );
 		$page = (empty($post['page']) || $post['page'] <= 0) ? 1 : intval($post['page']);
 		$pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
 		
-		$srch = AdminStatistic::LessonLanguagesObject($this->adminLangId);
+		$srch = AdminStatistic::LessonLanguagesObject($this->adminLangId, $post);
 		$srch->addGroupBy('slesson_slanguage_id');
 		$srch->joinTable( User::DB_TBL, 'INNER JOIN', 'ul.user_id = slns.slesson_learner_id', 'ul' );
+		
+		if ( isset($post['country_id']) && $post['country_id'] > 0 ) {
+			$srch->addCondition( 'ul.user_country_id', '=', $post['country_id'] );
+			$this->set( 'country_id', $post['country_id'] );
+			$joinQuery = ' INNER JOIN `tbl_users` AS countUl ON countUl.user_id = slesson_learner_id  where slesson_slanguage_id = slns.slesson_slanguage_id AND countUl.user_country_id = '. $post['country_id'];
+		} else {
+			$joinQuery =' WHERE slesson_slanguage_id = slns.slesson_slanguage_id';
+		}
+		$joinQueryCancelled = $joinQuery;
+		
 		if ( empty($orderDate) ) {
 			$date_from = FatApp::getPostedData('date_from', FatUtility::VAR_DATE, '') ;
 			if ( !empty($date_from) ) {
 				$srch->addCondition('slesson_added_on', '>=', $date_from. ' 00:00:00');
+				$joinQuery .=' AND slesson_ended_on >="'. $date_from. ' 00:00:00"';
 			}
 			
 			$date_to = FatApp::getPostedData('date_to', FatUtility::VAR_DATE, '') ;
 			if ( !empty($date_to) ) {
 				$srch->addCondition('slesson_added_on', '<=', $date_to. ' 23:59:59');
+				$joinQuery .=' AND slesson_ended_on <="'. $date_to. ' 23:59:59"';
 			}						
 		} else {
 			$this->set( 'orderDate', $orderDate );
-			
 			$srch->addCondition('slesson_added_on', '>=', $orderDate. ' 00:00:00');
 			$srch->addCondition('slesson_added_on', '<=', $orderDate. ' 23:59:59');
 		}
-		if ( isset($post['country_id']) && $post['country_id'] > 0 ) {
-			$srch->addCondition( 'ul.user_country_id', '=', $post['country_id'] );
-			$this->set( 'country_id', $post['country_id'] );
-		}
+		//echo $joinQuery;
+		
+		
+		$srch->addMultipleFields(
+			array(
+				'IFNULL(tlanguage_name , tlanguage_Identifier) as languageName',
+				'count(slesson_id) as lessonsSold', 
+				'slesson_slanguage_id',
+				'(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_COMPLETED .'",1,null)) from '. ScheduledLesson::DB_TBL . $joinQuery . ' ) as completedLessons',
+				'(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED.'",1,null)) from '. ScheduledLesson::DB_TBL . $joinQueryCancelled . ' ) as cancelledLessons'
+			)
+		);
 		
 		
 		
@@ -62,8 +80,9 @@ class TopLanguagesReportController extends AdminBaseController {
 		$srch->setPageSize($pagesize);
 		$rs = $srch->getResultSet();
 		//echo $srch->getQuery();
-		
+		//die();
 		$arr_listing = $db->fetchAll($rs);
+		//$arr_listing = array();
 		
 		$this->set("arr_listing",$arr_listing);
 		$this->set('pageCount', $srch->pages());

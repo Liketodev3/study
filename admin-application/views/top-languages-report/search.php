@@ -4,6 +4,8 @@ $arr_flds = array(
 	'listserial'=>Label::getLabel('LBL_Sr_no.',$adminLangId),
 	'languageName'=>Label::getLabel('LBL_Language_Name',$adminLangId),
 	'lessonsSold'=>Label::getLabel('LBL_No._of_Sold_Lessons',$adminLangId),
+	'completedLessons'=>Label::getLabel('LBL_Completed_Lessons',$adminLangId),
+	'cancelledLessons'=>Label::getLabel('LBL_Cancelled_Lessons',$adminLangId),
 	'action' => Label::getLabel('LBL_Action', $adminLangId) 
 );
 	

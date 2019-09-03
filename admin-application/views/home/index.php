@@ -15,7 +15,7 @@
 	<div class="container container-fluid">
 		<div class="gap"></div>
 		<div class="row">
-			<div class="col-lg-3 col-md-3 col-sm-3">
+			<div class="col-lg-4 col-md-4 col-sm-4">
 				<div class="box box--white box--stats">
 					<div class="box__body">
 						<img src="<?php echo CONF_WEBROOT_URL ?>images/stats_icon_1.svg" alt="" class="stats__icon">
@@ -33,7 +33,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-3 col-md-3 col-sm-3">
+			<div class="col-lg-4 col-md-4 col-sm-4">
 				<div class="box box--white box--stats">
 					<div class="box__body">
 						<img src="<?php echo CONF_WEBROOT_URL ?>images/stats_icon_2.svg" alt="" class="stats__icon">
@@ -50,7 +50,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-3 col-md-3 col-sm-3">
+			<div class="col-lg-4 col-md-4 col-sm-4">
 				<div class="box box--white box--stats">
 					<div class="box__body">
 						<img src="<?php echo CONF_WEBROOT_URL ?>images/stats_icon_3.svg" alt="" class="stats__icon">
@@ -67,6 +67,11 @@
 					</div>
 				</div>
 			</div>
+			
+		</div>
+		
+		<div class="gap"></div>
+		<div class="row">
 			<div class="col-lg-3 col-md-3 col-sm-3">
 				<div class="box box--white box--stats">
 					<div class="box__body">
@@ -84,7 +89,61 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3">
+				<div class="box box--white box--stats">
+					<div class="box__body">
+						<img src="<?php echo CONF_WEBROOT_URL ?>images/stats_icon_4.svg" alt="" class="stats__icon">
+						<h6 class="-txt-uppercase">
+							<?php echo Label::getLabel('LBL_Completed_lessons',$adminLangId); ?>
+						</h6>
+						<h3 class="counter" data-currency="0" data-count="<?php echo $dashboardInfo["stats"]["totalCompletedLessons"]['-1']?>">0</h3>
+						<p>
+							<?php echo Label::getLabel('LBL_This_Month',$adminLangId); ?>- <strong>
+								<?php echo $dashboardInfo["stats"]["totalCompletedLessons"]['30']?></strong></p>
+						<?php if($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)){?>
+						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons');?>" class="stats__link"></a>
+						<?php }?>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3">
+				<div class="box box--white box--stats">
+					<div class="box__body">
+						<img src="<?php echo CONF_WEBROOT_URL ?>images/stats_icon_4.svg" alt="" class="stats__icon">
+						<h6 class="-txt-uppercase">
+							<?php echo Label::getLabel('LBL_Cancelled_lessons',$adminLangId); ?>
+						</h6>
+						<h3 class="counter" data-currency="0" data-count="<?php echo $dashboardInfo["stats"]["totalCancelledLessons"]['-1']?>">0</h3>
+						<p>
+							<?php echo Label::getLabel('LBL_This_Month',$adminLangId); ?>- <strong>
+								<?php echo $dashboardInfo["stats"]["totalCancelledLessons"]['30']?></strong></p>
+						<?php if($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)){?>
+						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons');?>" class="stats__link"></a>
+						<?php }?>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3">
+				<div class="box box--white box--stats">
+					<div class="box__body">
+						<img src="<?php echo CONF_WEBROOT_URL ?>images/stats_icon_4.svg" alt="" class="stats__icon">
+						<h6 class="-txt-uppercase">
+							<?php echo Label::getLabel('LBL_Need_to_be_Schedule_lessons',$adminLangId); ?>
+						</h6>
+						<h3 class="counter" data-currency="0" data-count="<?php echo $dashboardInfo["stats"]["totalNeedtoScheduleLessons"]['-1']?>">0</h3>
+						<p>
+							<?php echo Label::getLabel('LBL_This_Month',$adminLangId); ?>- <strong>
+								<?php echo $dashboardInfo["stats"]["totalNeedtoScheduleLessons"]['30']?></strong></p>
+						<?php if($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)){?>
+						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons');?>" class="stats__link"></a>
+						<?php }?>
+					</div>
+				</div>
+			</div>
 		</div>
+		
+		
+		
 		<div class="gap"></div>
 		<div class="grid grid--tabled">
 			<div class="grid__left">

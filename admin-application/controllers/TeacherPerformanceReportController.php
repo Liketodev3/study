@@ -3,7 +3,7 @@ class TeacherPerformanceReportController extends AdminBaseController {
 	private $canView;
 	private $canEdit;
 	
-	public function __construct($action){ 
+	public function __construct($action) { 
 		parent::__construct($action);
 		$this->admin_id = AdminAuthentication::getLoggedAdminId();
 		$this->canView = $this->objPrivilege->canViewTeacherPerformanceReport($this->admin_id,true);
@@ -32,19 +32,14 @@ class TeacherPerformanceReportController extends AdminBaseController {
 		$pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
 		
 		$srch = new UserSearch( false );
-		$srch->setTeacherDefinedCriteria(true);
-		$srch->joinUserSpokenLanguages( $this->adminLangId );
-		$srch->joinUserCountry( $this->adminLangId );
-		$srch->joinUserSettings();
-		$srch->joinUserAvailibility();
-		
-		$srch->joinUserLang( $this->adminLangId );        
+		$srch->addCondition( 'user_is_teacher', '=', 1 );
 		$srch->joinTeacherLessonData();
 		$srch->joinRatingReview();
-		$srch->addMultipleFields( array('CONCAT(user_first_name, " ", user_last_name) as user_name','ulg.*','IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info','utls.*') );
+		$srch->addMultipleFields( array('CONCAT(user_first_name, " ", user_last_name) as user_name') );
 		
 		if( isset($post['country_id']) && $post['country_id'] > 0 ) {
 			$srch->addCondition( 'user_country_id', '=', $post['country_id'] );
+			
 		}
         
 		$srch->setPageSize($pagesize);
@@ -54,6 +49,8 @@ class TeacherPerformanceReportController extends AdminBaseController {
 		$db = FatApp::getDb();
 		$teachersList = $db->fetchAll($rs);
 		$totalRecords = $srch->recordCount();
+		//echo $srch->getQuery();
+		//die();
 		
 		$this->set("arr_listing",$teachersList);
 		$this->set('pageCount', $srch->pages());
