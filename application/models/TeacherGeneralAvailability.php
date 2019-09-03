@@ -38,7 +38,7 @@ class TeacherGeneralAvailability extends MyAppModel{
 		
 		if( !empty( $rows ) ) {
 			
-			$weekStartDateDB = $rows[0]['tgavl_date'];
+			$weekStartDateDB = '2018-01-07';
 			$weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $startDate);
 			
 		foreach($rows as $row)
@@ -195,23 +195,26 @@ class TeacherGeneralAvailability extends MyAppModel{
 			
 			$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 			
-			$weekNumber = date('W', strtotime($nowDate));
-			$Year = date('Y', strtotime($nowDate));
-			$gendate = new DateTime( $nowDate );
-			
+			//$weekNumber = date('W', strtotime($nowDate));
+			//$Year = date('Y', strtotime($nowDate));
+			//$gendate = new DateTime( $nowDate );
 			
 			foreach ( $postJsonArr as $val ) {
-				$startDate = $gendate->setISODate($Year, $weekNumber, $val->day);
-				$date = $gendate->format('Y-m-d '. $val->startTime );
+				
+				$gendate = new DateTime();
+				$gendate->setISODate(2018,2, $val->day);
+				$day = $gendate->format('d');
+				$dayNum = $day;
+				$startDate = "2018-01-".$dayNum." ". date('H:i:s',strtotime($val->startTime));
+				$endDate = "2018-01-".$dayNum." ". date('H:i:s',strtotime($val->endTime));
+				//$startDate = $gendate->setISODate($Year, $weekNumber, $val->day);
+				//$date = $gendate->format('Y-m-d '. $val->startTime );
 				
 				if ( $val->endTime == "00:00" ) {
-					$date1 = $gendate->format('Y-m-d '. $val->endTime );
-					$endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime( $date1 )));
-				} else{
-					$endDate = $gendate->format('Y-m-d '. $val->endTime );
-				}
+					$endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime( $endDate )));
+				} 
 				/* code added  on 12-07-2019 */
-				$tgavl_start = MyDate::changeDateTimezone( $date,  $user_timezone,  $systemTimeZone);
+				$tgavl_start = MyDate::changeDateTimezone( $startDate,  $user_timezone,  $systemTimeZone);
 				$tgavl_end = MyDate::changeDateTimezone(  $endDate,   $user_timezone,   $systemTimeZone);
 				$tgavl_start_time = date('H:i:00', strtotime($tgavl_start));
 				$tgavl_end_time = date('H:i:00', strtotime($tgavl_end));
