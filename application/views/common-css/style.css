@@ -2949,6 +2949,7 @@
         min-height: 1%;
         margin: 0;
     }
+	
 }
 
 .attachment-file {
@@ -6833,7 +6834,7 @@ div.tagsinput div {
     }
 
     .schedule-list li:nth-child(2) {
-        padding-left: 60px;
+       /* padding-left: 60px;*/
     }
 
     .section--content {
@@ -7234,3 +7235,6 @@ div.tagsinput div {
     background: #f79232;
 }
 .myTeacherTable .profile-info__right{width:100%;}
+.field_resp_block a{margin-left:5px;}
+.field_cover label.field_resp_block {
+display: block;}

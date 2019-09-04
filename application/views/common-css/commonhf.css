@@ -1664,7 +1664,8 @@ body {
     padding: 14px 10px 12px 10px;
 }
 
-.list-onethird li label {
+.list-onethird li label,
+.field_cover label {
     display: flex;
 }
 

@@ -28,9 +28,10 @@
 	
 	/* [ */
 	$fldAgree = $frm->getField('agree');
+	$fldAgree->addWrapperAttribute('id', 'termLabelWrapper');
 	$termLink ='';
 	$termLink .= ' <a target="_blank" class = "-link-underline" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a>';
-	$fldAgree->htmlAfterField = $termLink;
+	//$fldAgree->htmlAfterField = $termLink;
 	
 	/* ] */
 	
@@ -43,3 +44,10 @@
 		<p><?php echo Label::getLabel('LBL_Already_have_an_account?'); ?> <a href="javascript:void(0);" onClick="logInFormPopUp()" class="-link-underline"><?php echo Label::getLabel('LBL_Sign_In'); ?></a></p>
 	</div>
 </div>
+
+<script>
+$(document).ready(function(){
+	$('#termLabelWrapper label').addClass('field_resp_block');
+$('#termLabelWrapper label').append('<?php echo $termLink; ?>');
+})
+</script>
