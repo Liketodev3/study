@@ -36,7 +36,14 @@ if ( $lesson['is_trial'] == 1 ) {
 			<div class="col-xl-6 col-lg-6 col-md-12">
 				<div class="schedule-list">
 					<ul>
-						<?php 
+						<?php
+						if( $lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING  && $lesson['is_trial'] == 1 ) {
+							?>
+						<li>
+							<h6 class="-color-secondary"><?php echo Label::getLabel('LBL_Trial_Lesson'); ?></h6>
+						</li>	
+						<?php	
+						}
 						$date = DateTime::createFromFormat('Y-m-d', $lesson['slesson_date']);
 						if($date && ($date->format('Y-m-d') === $lesson['slesson_date'])){ ?>
 							<li>
