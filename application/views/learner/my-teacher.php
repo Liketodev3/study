@@ -1,5 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<section class="section section--details">
+<section class="section section--grey section--details">
 	 <div class="container container--narrow">
 		<div class="row justify-content-center">
 			<div class="col-xl-10 col-lg-10">
