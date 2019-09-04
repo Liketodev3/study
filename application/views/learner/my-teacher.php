@@ -87,12 +87,15 @@
 							
 							<!-- [-->
 							<div class="col-xl-3 col-lg-3 col-md-8 col-sm-12 offset-min-12">
-								<div class="box-highlighted">
-									<div class="row justify-content-between">
+								
+								<div class="box-highlighted box-language">
+									<div class="row d-block justify-content-between">
 										<div class="col"><strong><?php echo Label::getLabel('LBL_Teaches:'); ?></strong></div>
-										<div class="col -align-right"><?php echo CommonHelper::getTeachLangs($teacher['utl_slanguage_ids']); ?></div>
+										<div class="col"><?php echo CommonHelper::getTeachLangs($teacher['utl_slanguage_ids'], '', 1); ?></div>
 									</div>
 								</div>
+								
+								
 								<div class="box-highlighted">
 									<div class="row justify-content-between">
 										<div class="col"><strong><?php echo Label::getLabel('LBL_Students:'); ?></strong></div>
