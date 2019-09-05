@@ -14,7 +14,9 @@ $("document").ready(function(){
 	
 	setUpTeacherQualification = function( frm ){
 		if ( !$(frm).validate() ){ return; }
-        $(frm.btn_submit).attr('disabled','disabled'); 		
+        $(frm.btn_submit).attr('disabled','disabled'); 
+		var dv = $("#frm_fat_id_frmQualification");	
+			
 		var formData = new FormData(frm);
 		$.ajax({
 			url: fcom.makeUrl('TeacherRequest', 'setUpTeacherQualification'),
@@ -24,21 +26,24 @@ $("document").ready(function(){
 			contentType: false,
 			//dataType: 'json',
 			processData: false,
+			beforeSend: function(){
+				$(dv).html(fcom.getLoader());
+			},
 			success: function (data, textStatus, jqXHR) {
 				var data = JSON.parse(data);
 				if(data.status==0){
 					$.mbsmessage(data.msg,true, 'alert alert--danger');
                     $(frm.btn_submit).attr('disabled',''); 
 				} else {
-					$.systemMessage(data.msg,false);
+					$.systemMessage(data.msg,true, 'alert alert--danger');
                     $(frm.btn_submit).attr('disabled',''); 
 					reloadQualificationList();
 					$(document).trigger('close.facebox');
 			   }
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-			$.mbsmessage(jqXHR.msg, true,'alert alert--danger');
-            $(frm.btn_submit).attr('disabled',''); 
+				$.mbsmessage(jqXHR.msg, true,'alert alert--danger');
+				$(frm.btn_submit).attr('disabled',''); 
 			}
 		});
 	};
