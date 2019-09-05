@@ -41,7 +41,7 @@ class LearnerTeachersController extends LearnerBaseController {
 			'IFNULL(teachercountry_lang.country_name, teachercountry.country_code) as teacherCountryName',
 			'(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_SCHEDULED.'",1,null)) from '. ScheduledLesson::DB_TBL .' where slesson_teacher_id= ut.user_id AND slesson_learner_id = '. UserAuthentication::getLoggedUserId() .' ) as scheduledLessonCount',
 			'(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_NEED_SCHEDULING.'",1,null)) from '. ScheduledLesson::DB_TBL .' where slesson_teacher_id= ut.user_id AND slesson_learner_id = '. UserAuthentication::getLoggedUserId() .' ) as unScheduledLessonCount',
-			'(select COUNT(IF(slesson_date < "' . date('Y-m-d') . '" AND slesson_date != "0000-00-00", 1, null)) from '. ScheduledLesson::DB_TBL .' where slesson_teacher_id= ut.user_id AND slesson_learner_id = '. UserAuthentication::getLoggedUserId() .' ) as pastLessonCount',
+			'(select COUNT(IF(CONCAT( slesson_date, " ", slesson_start_time ) < "' . date('Y-m-d H:i:s') . '" AND slesson_date != "0000-00-00", 1, null)) from '. ScheduledLesson::DB_TBL .' where slesson_teacher_id= ut.user_id AND slesson_learner_id = '. UserAuthentication::getLoggedUserId() .' ) as pastLessonCount',
 			
 			'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
 			//'IFNULL(top_single_lesson_price, ts.us_single_lesson_amount ) as singleLessonAmount',
@@ -67,6 +67,8 @@ class LearnerTeachersController extends LearnerBaseController {
 		}
 		
 		$rs = $srch->getResultSet();
+		//echo $srch->getQuery();
+		
 		$teachers = FatApp::getDb()->fetchAll($rs);
 		
 		$this->set('teachers',$teachers);
