@@ -7226,6 +7226,9 @@ div.tagsinput div {
 	display : inline;
 }
 
+.language .more_listing ul li a{
+	word-break: break-all;
+}
 /*==========================New CSS for button with new class=================*/
 .btn--status-correct {
     background: #14892c;

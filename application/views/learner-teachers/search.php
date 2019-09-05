@@ -42,12 +42,12 @@
 							if( $teacher['teacherTeachLanguageName'] !='' && !empty( $teacher['teacherTeachLanguageName'] ) ) { 
 								$teachLangs = explode(',',$teacher['teacherTeachLanguageName']);
 								//print_r( $languages );
-								if( count ( $teachLangs ) > 2 ) {
+								if( count ( $teachLangs ) > 1 ) {
 									$first_array = array_slice($teachLangs,0, 1);
 									$second_array = array_slice($teachLangs,1, count( $teachLangs ));
 							?>
 							<div class="language">
-							<p class="my_teacher_lang_heading"><span><?php echo Label::getLabel('LBL_Teaches:'); ?></span></p>
+							<p class="my_teacher_lang_heading"><span><?php echo Label::getLabel('LBL_Teaches:'); ?></span> </p>
 							<?php  foreach( $first_array as $teachLang) {  ?>
 									<span class="main-language"><?php echo $teachLang; ?></span>
 								<?php } ?>
@@ -66,7 +66,7 @@
 						<?php 
 		
 							} else {
-								echo ' <p><span>'. Label::getLabel('LBL_Teaches:') . '</span>'. $teacher['teacherTeachLanguageName'] .' </p>';  
+								echo ' <p><span>'. Label::getLabel('LBL_Teaches:') . '</span> '. $teacher['teacherTeachLanguageName'] .' </p>';  
 							}
 						}
 						?>
