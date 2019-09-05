@@ -291,7 +291,7 @@ class AdminStatistic extends MyAppModel{
 
 	public static function LessonLanguagesObject($langId = 0){
 		
-		$srch = new ScheduledLessonSearch();
+		$srch = new ScheduledLessonSearch(false);
 		$srch->joinLessonLanguage($langId);
 		return $srch;
 

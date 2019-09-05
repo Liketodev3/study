@@ -20,6 +20,70 @@ class TopLanguagesReportController extends AdminBaseController {
 		$this->_template->render();
 	}
 	
+	public function viewSchedules( $langId, $countryid = 0 ) {
+		$this->objPrivilege->canViewTopLangReport();
+		$frmSearch = $this->getScheduleSearchForm($langId, $countryid );
+		$this->set('frmSearch',$frmSearch);
+		$this->set('SLangId',$langId);	
+		$this->set('countryid',$countryid);	
+		$this->_template->render();
+	}
+	
+	public function searchSchedule() {
+		$this->objPrivilege->canViewTopLangReport();
+		$db = FatApp::getDb();
+		$langId = FatApp::getPostedData('langId') ;
+		$countryid = FatApp::getPostedData('countryid') ;
+		$srchFrm = $this->getScheduleSearchForm($langId, $countryid );
+		
+		$post = $srchFrm->getFormDataFromArray( FatApp::getPostedData() );
+		$page = (empty($post['page']) || $post['page'] <= 0) ? 1 : intval($post['page']);
+		$pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+		$page = (empty($post['page']) || $post['page'] <= 0) ? 1 : intval($post['page']);
+		$pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+		
+		$srch = new ScheduledLessonSearch(false);
+		$srch->joinTeacher();
+		$srch->joinLearner();
+		$srch->joinTeacherSettings();
+		$srch->joinLessonLanguage( $this->adminLangId );
+		$srch->addCondition( 'slns.slesson_slanguage_id',' = ', $langId );
+		if ( $countryid > 0 ) {
+			$srch->addCondition( 'ul.user_country_id', '=', $countryid );
+		}
+		
+		$srch->addMultipleFields(
+			array(
+			'slns.slesson_id',
+			'slns.slesson_date',
+			'slns.slesson_status',
+			'IFNULL(sl.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
+			'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_username',
+			'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_username',
+			));
+		
+		$srch->setPageNumber($page);
+		$srch->setPageSize($pagesize);
+		$rs = $srch->getResultSet();
+		//echo $srch->getQuery();
+		$data = FatApp::getDb()->fetchAll($rs);
+		
+		if ( $data == false ) { 
+			Message::addErrorMessage('Error: Lessons not allocated yet.');
+			//FatApp::redirectUser(FatUtility::generateUrl("TopLanguagesReport"));
+		}
+		
+		$statusArr = ScheduledLesson::getStatusArr();
+        $this->set( 'arr_listing', $data );
+        $this->set( 'status_arr', $statusArr );
+		$this->set('pageCount', $srch->pages());
+		$this->set('recordCount', $srch->recordCount());
+		$this->set('page', $page);
+		$this->set('pageSize', $pagesize);
+		$this->set('postedData', $post);
+		$this->_template->render(false,false);
+	}
+	
 	public function search() {
 		$this->objPrivilege->canViewTopLangReport();
 		$db = FatApp::getDb();
@@ -29,6 +93,7 @@ class TopLanguagesReportController extends AdminBaseController {
 		$post = $srchFrm->getFormDataFromArray( FatApp::getPostedData() );
 		$page = (empty($post['page']) || $post['page'] <= 0) ? 1 : intval($post['page']);
 		$pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+		
 		
 		$srch = AdminStatistic::LessonLanguagesObject($this->adminLangId, $post);
 		$srch->addGroupBy('slesson_slanguage_id');
@@ -93,44 +158,13 @@ class TopLanguagesReportController extends AdminBaseController {
 		$this->_template->render(false,false);
 	}
 	
-	public function viewSchedules( $langId, $countryid = 0 ) {
-		
-		$srch = new ScheduledLessonSearch();
-		$srch->joinTeacher();
-		$srch->joinLearner();
-		$srch->joinTeacherSettings();
-		$srch->joinLessonLanguage( $this->adminLangId );
-		$srch->addCondition( 'slns.slesson_slanguage_id',' = ', $langId );
-		if ( $countryid > 0 ) {
-			$srch->addCondition( 'ul.user_country_id', '=', $countryid );
-		}
-		
-		
-		$srch->addMultipleFields(
-			array(
-			'slns.slesson_id',
-			'slns.slesson_date',
-			'slns.slesson_status',
-			'IFNULL(sl.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
-			'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_username',
-			'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_username',
-			));
-		
-		$rs = $srch->getResultSet();
-		//echo $srch->getQuery();
-		$data = FatApp::getDb()->fetchAll($rs);
-		if ( $data == false ) { 
-			Message::addErrorMessage('Error: Lessons not allocated yet.');
-			//FatApp::redirectUser(FatUtility::generateUrl("TopLanguagesReport"));
-		}
-		 
-		
-		$statusArr = ScheduledLesson::getStatusArr();
-        $this->set( 'arr_listing', $data );
-        $this->set( 'status_arr', $statusArr );
-        $this->_template->render();
+	private function getScheduleSearchForm($langId, $countryid){
+		$frm = new Form('frmScheduleReportSearch');
+		$frm->addHiddenField('','page');
+		$frm->addHiddenField('','langId', $langId);
+		$frm->addHiddenField('','countryid', $countryid);
+		return $frm;
 	}
-	
 	
 	private function getSearchForm($orderDate = ''){
 		$frm = new Form('frmSalesReportSearch');
