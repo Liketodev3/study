@@ -32,10 +32,10 @@ $("document").ready(function(){
 			success: function (data, textStatus, jqXHR) {
 				var data = JSON.parse(data);
 				if(data.status==0){
-					$.mbsmessage(data.msg,true, 'alert alert--danger');
+					$.mbsmessage(data.msg, true, 'alert alert--danger');
                     $(frm.btn_submit).attr('disabled',''); 
 				} else {
-					$.systemMessage(data.msg,true, 'alert alert--danger');
+					$.mbsmessage(data.msg, true, 'alert alert--success');
                     $(frm.btn_submit).attr('disabled',''); 
 					reloadQualificationList();
 					$(document).trigger('close.facebox');

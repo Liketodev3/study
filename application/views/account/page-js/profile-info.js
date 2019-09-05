@@ -318,7 +318,7 @@ $(document).ready(function(){
 	
 	setUpTeacherQualification = function(frm){
 		if (!$(frm).validate()) return false;	
-        
+        var dv = $("#frm_fat_id_frmQualification");	
         $(frm.btn_submit).attr('disabled','disabled'); 
 		var formData = new FormData(frm);
 			$.ajax({
@@ -328,6 +328,9 @@ $(document).ready(function(){
                 mimeType: "multipart/form-data",
                 contentType: false,
 				processData: false,
+				beforeSend: function(){
+					$(dv).html(fcom.getLoader());
+				},
                 success: function (data, textStatus, jqXHR) {
 					var data=JSON.parse(data);
 					
