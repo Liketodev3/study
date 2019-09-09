@@ -112,7 +112,7 @@ class ScheduledLessonSearch extends SearchBase {
 		$this->joinTable( User::DB_TBL_CRED, 'INNER JOIN', 'lcred.credential_user_id = slns.slesson_learner_id', 'lcred' );
 	}
 	
-	public function joinTeacherOfferPrice( $teacherId ){
+	public function joinTeacherOfferPrice( $teacherId ) {
 		$teacherId = FatUtility::int($teacherId);
 		if( $teacherId < 1 ){
 			trigger_error( "Invalid Request", E_USER_ERROR );

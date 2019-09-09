@@ -187,4 +187,463 @@ CREATE TABLE `tbl_faq_categories_lang` (
 
 ALTER TABLE `tbl_faq_categories_lang`
 ADD PRIMARY KEY (`faqcatlang_faqcat_id`,`faqcatlang_lang_id`);
+
+
+--------
+--------
+
+CREATE TABLE `tbl_cron_schedules` (
+  `cron_id` int(11) NOT NULL,
+  `cron_name` varchar(255) NOT NULL,
+  `cron_command` varchar(255) NOT NULL,
+  `cron_duration` int(11) NOT NULL COMMENT 'Minutes',
+  `cron_active` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `tbl_cron_schedules`
+  ADD PRIMARY KEY (`cron_id`);
+ ALTER TABLE `tbl_cron_schedules`
+  MODIFY `cron_id` int(11) NOT NULL AUTO_INCREMENT; 
   
+----------  
+  
+CREATE TABLE `tbl_cron_log` (
+  `cronlog_id` int(11) NOT NULL,
+  `cronlog_cron_id` int(11) NOT NULL,
+  `cronlog_started_at` datetime NOT NULL,
+  `cronlog_ended_at` datetime NOT NULL,
+  `cronlog_details` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `tbl_cron_log`
+--
+ALTER TABLE `tbl_cron_log`
+  ADD PRIMARY KEY (`cronlog_id`),
+  ADD KEY `cronlog_cron_id` (`cronlog_cron_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tbl_cron_log`
+--
+ALTER TABLE `tbl_cron_log`
+  MODIFY `cronlog_id` int(11) NOT NULL AUTO_INCREMENT;  
+  
+  
+INSERT INTO `tbl_cron_schedules` (`cron_id`, `cron_name`, `cron_command`, `cron_duration`, `cron_active`) VALUES
+(1, 'lesson one day reminder', 'Cronjob/lessonOneDayReminder', 1440, 1),
+(2, 'lesson 30 mints reminder', 'Cronjob/lessonHalfHourReminder', 1, 1);  
+
+INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES ('lesson_one_day_reminder_learner', '1', 'One Day Reminder for learner', 'Lesson Reminder at {website_name}', '<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#f5f5f5" style="font-family:Arial; color:#333; line-height:26px;"> 
+        
+        
+	<tbody>            
+		<tr>      
+                
+			<td style="background:#e84c3d;padding:30px 0;"></td>    
+            
+		</tr>    
+        
+            
+		<tr>      
+                
+			<td style="background:#e84c3d;padding:0 0 0;">          
+                    
+				<!--
+				header start here
+				-->
+				                       
+              
+                    
+				<table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="background: #fff;border-bottom: 1px solid #eee;">              
+                        
+					<tbody>                            
+						<tr>                  
+                                
+							<td style="padding:20px 40px;"><a href="#" style="display: block;">{Company_Logo}</a></td>                  
+                                
+							<td style="text-align:right;padding: 40px;">                      {social_media_icons}
+                      </td>              
+                            
+						</tr>          
+                        
+					</tbody>                    
+				</table>          
+                    
+				<!--
+				header end here
+				-->
+				                       
+          </td>    
+            
+		</tr>    
+        
+       
+        
+            
+		<tr>      
+                
+			<td>                    
+				<!--
+				page body start here
+				-->
+				                       
+              
+                    
+				<table width="600" border="0" align="center" cellpadding="0" cellspacing="0">             
+                  
+                        
+					<tbody>                        
+						<tr>                      
+							<td style="background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;">                          
+								<table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">                              
+                              
+									<tbody>
+										<tr>                                  
+											<td style="padding:20px 0 60px;">                                     <img src="icon-account.png" alt="" />                                     
+												<h2 style="margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;">Lesson Start Reminder!</h2>                                  </td>                              
+										</tr>                             
+                          
+									</tbody>
+								</table>                      </td>                  
+						</tr>                  
+                  
+						<tr>                      
+							<td style="background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; ">                          
+								<table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">                              
+                              
+									<tbody>
+										<tr>                                  
+											<td style="padding:60px 0 70px;">                                      
+												<h3 style="margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;">Dear {user_full_name}</h3>                                  One Day Remaining to start your lesson  on&nbsp;&nbsp;<a href="{website_url}">{website_name}</a>.. 
+Just follow this link below to view the lesson.
+                                  <br />
+												<br />
+												                                  <a href="{lesson_url}" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View Lesson</a>                                  </td>                              
+										</tr> 
+										<tr>
+										</tr>
+									</tbody>
+								</table>
+								<table width="100%" cellspacing="0" cellpadding="10" border="1" align="center">                              
+    
+									<tbody border="1">
+										<tr>
+											<th></th>
+											<th>Start Time</th>
+											<th>End Time</th>
+										</tr>
+										<tr>
+											<td>{with_user_full_name}</td>
+											<td>{lesson_start_date} - {lesson_start_time}</td>
+											<td>{lesson_end_date} - {lesson_end_time}</td>
+										</tr>
+									</tbody>
+								</table></td>
+						</tr>                          
+					</tbody>
+				</table>                      </td>                  
+		</tr>                  
+                 
+                
+              
+	</tbody>                    
+</table>          
+                    
+<!--
+page body end here
+-->
+                              
+            
+		    
+        
+        
+            
+		      
+                
+			          
+                    
+<!--
+page footer start here
+-->
+                       
+              
+                    
+<table width="600" border="0" align="center" cellpadding="0" cellspacing="0">              
+                        
+	<tbody>                            
+		<tr>                                
+			<td style="height:30px;"></td>                            
+		</tr>              
+                            
+		<tr>                  
+                                
+			<td style="background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;">                      
+                                    
+				<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">                          
+                                        
+					<tbody>                                            
+						<tr>                              
+                                                
+							<td style="padding:30px 0; font-size:20px; color:#000;">                                  Need more help?<br />
+								                                                     <a href="{contact_us_url}" style="color:#e84c3d;">We‘re here, ready to talk</a>                              </td>                          
+                                            
+						</tr>                          
+                          
+                                        
+					</tbody>                                    
+				</table>                  </td>              
+                            
+		</tr>              
+                            
+		<tr>                  
+                                
+			<td style="padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;">                      
+                                    
+				<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">                          
+                                        
+					<tbody>                                            
+						<tr>                              
+                                                
+							<td style="padding:20px 0 30px; font-size:13px; color:#999;">                                  Be sure to add <a href="#" style="color: #e84c3d">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br />
+								                                                    <br />
+								                                                    &copy; 2018, {website_name}. All Rights Reserved.
+                                      
+                                  </td>                          
+                                            
+						</tr>                          
+                          
+                                        
+					</tbody>                                    
+				</table>                  </td>              
+                            
+		</tr>              
+                  
+                            
+		<tr>                  
+                                
+			<td style="padding:0; height:50px;"></td>              
+                            
+		</tr>              
+                  
+              
+                        
+	</tbody>                    
+</table>          
+                    
+<!--
+page footer end here
+-->', '{user_fist_name} First Name of the email receiver.<br> {user_last_name} Last Name of the email receiver.<br> {user_full_name} Name of the email receiver.<br> {website_name} Name of our website<br> {social_media_icons} <br> {contact_us_url} <br> {lesson_url}  Lesson Url <br> {lesson_start_date} Lesson Start Date <br> {lesson_end_date} Lesson end date <br> {lesson_start_time} lesson start time <br> {lesson_end_time} Lesson End time <br> {with_user_full_name} other user <br>', '1');
+
+INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES ('lesson_one_day_reminder_teacher', '1', 'One Day Reminder for Teacher', 'Lesson Reminder at {website_name}', '<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#f5f5f5" style="font-family:Arial; color:#333; line-height:26px;"> 
+        
+        
+	<tbody>            
+		<tr>      
+                
+			<td style="background:#e84c3d;padding:30px 0;"></td>    
+            
+		</tr>    
+        
+            
+		<tr>      
+                
+			<td style="background:#e84c3d;padding:0 0 0;">          
+                    
+				<!--
+				header start here
+				-->
+				                       
+              
+                    
+				<table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="background: #fff;border-bottom: 1px solid #eee;">              
+                        
+					<tbody>                            
+						<tr>                  
+                                
+							<td style="padding:20px 40px;"><a href="#" style="display: block;">{Company_Logo}</a></td>                  
+                                
+							<td style="text-align:right;padding: 40px;">                      {social_media_icons}
+                      </td>              
+                            
+						</tr>          
+                        
+					</tbody>                    
+				</table>          
+                    
+				<!--
+				header end here
+				-->
+				                       
+          </td>    
+            
+		</tr>    
+        
+       
+        
+            
+		<tr>      
+                
+			<td>                    
+				<!--
+				page body start here
+				-->
+				                       
+              
+                    
+				<table width="600" border="0" align="center" cellpadding="0" cellspacing="0">             
+                  
+                        
+					<tbody>                        
+						<tr>                      
+							<td style="background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;">                          
+								<table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">                              
+                              
+									<tbody>
+										<tr>                                  
+											<td style="padding:20px 0 60px;">                                     <img src="icon-account.png" alt="" />                                     
+												<h2 style="margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;">Lesson Start Reminder!</h2>                                  </td>                              
+										</tr>                             
+                          
+									</tbody>
+								</table>                      </td>                  
+						</tr>                  
+                  
+						<tr>                      
+							<td style="background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; ">                          
+								<table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">                              
+                              
+									<tbody>
+										<tr>                                  
+											<td style="padding:60px 0 70px;">                                      
+												<h3 style="margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;">Dear {user_full_name}</h3>                                  One Day Remaining to start your lesson  on&nbsp;&nbsp;<a href="{website_url}">{website_name}</a>.. 
+Just follow this link below to view the lesson.
+                                  <br />
+												<br />
+												                                  <a href="{lesson_url}" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View Lesson</a>                                  </td>                              
+										</tr> 
+										<tr>
+										</tr>
+									</tbody>
+								</table>
+								<table width="100%" cellspacing="0" cellpadding="10" border="1" align="center">                              
+    
+									<tbody border="1">
+										<tr>
+											<th></th>
+											<th>Start Time</th>
+											<th>End Time</th>
+										</tr>
+										<tr>
+											<td>{with_user_full_name}</td>
+											<td>{lesson_start_date} - {lesson_start_time}</td>
+											<td>{lesson_end_date} - {lesson_end_time}</td>
+										</tr>
+									</tbody>
+								</table></td>
+						</tr>                          
+					</tbody>
+				</table>                      </td>                  
+		</tr>                  
+                 
+                
+              
+	</tbody>                    
+</table>          
+                    
+<!--
+page body end here
+-->
+                              
+            
+		    
+        
+        
+            
+		      
+                
+			          
+                    
+<!--
+page footer start here
+-->
+                       
+              
+                    
+<table width="600" border="0" align="center" cellpadding="0" cellspacing="0">              
+                        
+	<tbody>                            
+		<tr>                                
+			<td style="height:30px;"></td>                            
+		</tr>              
+                            
+		<tr>                  
+                                
+			<td style="background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;">                      
+                                    
+				<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">                          
+                                        
+					<tbody>                                            
+						<tr>                              
+                                                
+							<td style="padding:30px 0; font-size:20px; color:#000;">                                  Need more help?<br />
+								                                                     <a href="{contact_us_url}" style="color:#e84c3d;">We‘re here, ready to talk</a>                              </td>                          
+                                            
+						</tr>                          
+                          
+                                        
+					</tbody>                                    
+				</table>                  </td>              
+                            
+		</tr>              
+                            
+		<tr>                  
+                                
+			<td style="padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;">                      
+                                    
+				<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">                          
+                                        
+					<tbody>                                            
+						<tr>                              
+                                                
+							<td style="padding:20px 0 30px; font-size:13px; color:#999;">                                  Be sure to add <a href="#" style="color: #e84c3d">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br />
+								                                                    <br />
+								                                                    &copy; 2018, {website_name}. All Rights Reserved.
+                                      
+                                  </td>                          
+                                            
+						</tr>                          
+                          
+                                        
+					</tbody>                                    
+				</table>                  </td>              
+                            
+		</tr>              
+                  
+                            
+		<tr>                  
+                                
+			<td style="padding:0; height:50px;"></td>              
+                            
+		</tr>              
+                  
+              
+                        
+	</tbody>                    
+</table>          
+                    
+<!--
+page footer end here
+-->', '{user_fist_name} First Name of the email receiver.<br> {user_last_name} Last Name of the email receiver.<br> {user_full_name} Name of the email receiver.<br> {website_name} Name of our website<br> {social_media_icons} <br> {contact_us_url} <br> {lesson_url}  Lesson Url <br> {lesson_start_date} Lesson Start Date <br> {lesson_end_date} Lesson end date <br> {lesson_start_time} lesson start time <br> {lesson_end_time} Lesson End time <br> {with_user_full_name} other user <br>', '1');
+
+
+ALTER TABLE `tbl_scheduled_lessons` 
+ADD `slesson_reminder_one` INT(11) NOT NULL AFTER `slesson_added_on`, 
+ADD `slesson_reminder_two` INT(11) NOT NULL AFTER `slesson_reminder_one`;

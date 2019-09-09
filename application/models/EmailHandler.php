@@ -576,6 +576,18 @@ class EmailHandler extends FatModel {
 		return false;
 	}
 	
-    
-        
+	public function sendLessonReminderMail(  $templete, $langId, $data ){		
+		
+		$LearnerVars = array(
+			'{user_first_name}' => $data['user_first_name'],
+			'{user_last_name}' => $data['user_last_name'],
+			'{user_full_name}' => $data['user_full_name'],
+			'{lessons_details}' => $data['lessons_details'],
+		);
+		
+		if ( self::sendMailTpl( $data['user_email'], $templete, $langId, $LearnerVars)) {
+			return true;
+		}
+		return false;
+	}     
 }
