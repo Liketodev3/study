@@ -3,7 +3,7 @@ if ( $languages && count($languages) > 1 ) { ?>
 <a href="javascript:void(0)"  class="nav__dropdown-trigger nav__dropdown-trigger-js"><?php echo $languages[$siteLangId]['language_name']; ?></a>
 <div class="nav__dropdown-target nav__dropdown-target-js -skin">
 	<div class="closeButton -hide-desktop -show-mobile">
-		<span class="closeNavigation ">&times;</span>
+		<span class="closeNavigation " onClick="closeNavigation()">&times;</span>
 	</div>
 	<br />
 	<nav class="nav nav--vertical">
@@ -15,5 +15,3 @@ if ( $languages && count($languages) > 1 ) { ?>
 	</nav>
 </div>
 <?php } ?>
-
-

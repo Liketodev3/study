@@ -404,13 +404,11 @@ $(document).ready(function(){
 			// $.mbsmessage(ans.msg, false, 'alert alert--success');
 		// }); */
 	// }
+	
+	closeNavigation = function(){
+		$('.subheader .nav__dropdown a').removeClass('is-active');
+		$('.subheader .nav__dropdown-target').fadeOut();
+	}
+	
 
 })(jQuery);
-
-/*******************/
-jQuery(document).ready(function($){
-	$('body').on('click', '.closeNavigation', function(){
-		$('.subheader .nav__dropdown a').removeClass('is-active');
-		$('.subheader .nav__dropdown-target').fadeOut();	
-	})
-})

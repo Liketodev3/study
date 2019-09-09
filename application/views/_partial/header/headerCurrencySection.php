@@ -4,7 +4,7 @@ if ( $currencies && count($currencies) > 1 ) { ?>
 <div class="nav__dropdown-target nav__dropdown-target-js -skin">
 	
 	<div class="closeButton -hide-desktop -show-mobile">
-		<span class="closeNavigation ">&times;</span>
+		<span class="closeNavigation " onClick="closeNavigation()">&times;</span>
 	</div>
 	<br />
    <nav class="nav nav--vertical">
