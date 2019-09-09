@@ -7,7 +7,8 @@
 				<div class="col-xl-3 col-lg-3 col-md-6">
 					<?php $this->includeTemplate( '_partial/footer/footerSocialMedia.php' ); ?>
 					
-					<?php $this->includeTemplate( '_partial/footer/footerLanguageCurrencySection.php' ); ?>
+					<?php //$this->includeTemplate( '_partial/footer/footerLanguageCurrencySection.php' ); 
+					?>
 				</div>            
 				<div class="col-xl-2 col-lg-2 col-md-3">
 					<div class="toggle-group">
