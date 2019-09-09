@@ -6,8 +6,7 @@ class CronController extends MyAppController {
         parent::__construct($action);
     }
 
-    public function index($id = 0)
-    {
+    public function index($id = 0) {
         $db = FatApp::getDb();
 
         $allCrons = Cron::getAllRecords(true, $id);
@@ -45,11 +44,6 @@ class CronController extends MyAppController {
     {
         $allCrons = Cron::getAllRecords(true);
         $found = false;
-		
-		echo'<pre>';
-		print_r( $allCrons );
-		echo'</pre>';
-		
 		foreach ($allCrons as $row) {
             if (strtolower($row['cron_command']) == strtolower('cronjob/'.$cron_command)) {
                 $cron = new Cron($row ['cron_id']);
