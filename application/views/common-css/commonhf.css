@@ -221,6 +221,7 @@ body {
 /*========================HEADER============================*/
 .header {
     padding: 20px 0;
+	padding-top:0px;
     position: fixed;
     left: 0;
     right: 0;
@@ -253,6 +254,7 @@ body {
 @media (max-width: 767px) {
     .header {
         padding: 10px 0;
+		padding-top:0px;
     }
 }
 
@@ -511,6 +513,7 @@ body {
         background: #fff;
         color: #333;
         padding: 10px 0;
+		padding-top: 0px;
         box-shadow: 3.536px 3.536px 8px 0px rgba(0, 0, 0, 0.08);
     }
 
@@ -731,7 +734,7 @@ body {
 
 /*+========================BANNER============================*/
 .body {
-    padding: 80px 0 0;
+    padding: 100px 0 0;
 }
 
 .banner {
@@ -853,7 +856,7 @@ body {
     }
 
     .body {
-        padding: 55px 0 0;
+        padding: 90px 0 0;
     }
 
     .nav.nav--primary > ul > li.nav__dropdown.is-active .nav__dropdown-target,
@@ -1349,7 +1352,7 @@ body {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 110%;
+    /*bottom: 110%;*/
     display: none;
 }
 

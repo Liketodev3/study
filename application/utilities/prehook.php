@@ -21,6 +21,10 @@ FatApp::setViewDataProvider('_partial/header/headerLanguageArea.php', array('Com
 FatApp::setViewDataProvider('_partial/header/headerUserLoginArea.php', array('Common', 'headerUserLoginArea'));
 
 FatApp::setViewDataProvider('_partial/footer/footerLanguageCurrencySection.php', array('Common', 'footerLanguageCurrencySection'));
+
+FatApp::setViewDataProvider('_partial/header/headerLanguageSection.php', array('Common', 'footerLanguageCurrencySection'));
+FatApp::setViewDataProvider('_partial/header/headerCurrencySection.php', array('Common', 'footerLanguageCurrencySection'));
+
 FatApp::setViewDataProvider('_partial/footer/footerSocialMedia.php', array('Common', 'footerSocialMedia'));
 
 FatApp::setViewDataProvider('guest-user/_partial/learner-social-media-signup.php', array('Common', 'learnerSocialMediaSignUp'));
