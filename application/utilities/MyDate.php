@@ -34,6 +34,10 @@ class MyDate extends FatDate{
 	}
 	
 	public static function convertTimeFromSystemToUserTimezone( $format, $dateTime, $showtime, $timeZone ) {
+		if($timeZone == '') {
+			$timeZone = self::getTimeZone();
+		}
+		
 		$changedDate = self::format( date('Y-m-d H:i:s', strtotime( $dateTime )), $showtime, true, $timeZone);
 		return date($format, strtotime( $changedDate ));
 	}

@@ -13,9 +13,9 @@ class Cronjob extends FatModel
 		$langId = CommonHelper::getLangId();
 		$srch = $this->getLessonsData();
 		$srch->addCondition('slns.slesson_date', '=', date('Y-m-d', strtotime('+1 days', strtotime(date('Y-m-d')))) );
+		$srch->addCondition('slns.slesson_reminder_one', '=', 0 );
 		$rs = $srch->getResultSet();
 		$lessons = FatApp::getDb()->fetchAll($rs);
-		
 		if ( empty($lessons )) {
             return Label::getLabel('MSG_No_Record_Found',  $langId );
         } 
@@ -30,8 +30,10 @@ class Cronjob extends FatModel
 	public function lessonHalfHourReminder() {
 		$langId = CommonHelper::getLangId();
 		$srch = $this->getLessonsData();
-		$srch->addCondition('slns.slesson_date', '>=', date('Y-m-d', strtotime('+30 mints', strtotime(date('Y-m-d')))) );
-		$srch->addCondition('slns.slesson_date', '<', date('Y-m-d', strtotime('+40 mints', strtotime(date('Y-m-d')))) );
+		
+		$srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>',  date('Y-m-d H:i:s') , 'AND',true );
+		$srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '<=',  date('Y-m-d H:i:s', strtotime('+ 30 minutes', strtotime(date('Y-m-d H:i:s')))) , 'AND',true );
+		$srch->addCondition('slns.slesson_reminder_two', '=', 0 );
 		$rs = $srch->getResultSet();
 		$lessons = FatApp::getDb()->fetchAll($rs);
 		
@@ -39,7 +41,7 @@ class Cronjob extends FatModel
             return Label::getLabel('MSG_No_Record_Found',  $langId );
         } 
 		
-		if ( $this->prepareDataForReminder( $lessons , 'daily' )) {
+		if ( $this->prepareDataForReminder( $lessons , 'hourly' )) {
 			return Label::getLabel('MSG_Success', $langId );
 		} else {
 			return Label::getLabel('MSG_Error', $langId );
@@ -97,10 +99,15 @@ class Cronjob extends FatModel
 		foreach ( $LessonArr as $lessons ) {
 			$lessonsData = '';
 			$data = array();
-			
+			if ( $userType == 'teacher' ) {
+				$tommorowDate =  MyDate::convertTimeFromSystemToUserTimezone( 'd F, Y', $lessons[0]['slesson_date'] .'  '.$lessons[0]['slesson_start_time'] , true, $lessons[0]['teacherTimezone'] );
+			} else {
+				$tommorowDate =  MyDate::convertTimeFromSystemToUserTimezone( 'd F, Y', $lessons[0]['slesson_date'] .'  '.$lessons[0]['slesson_start_time'] , true, $lessons[0]['LearnerTimezone'] );
+			}
+			 
 			$lessonsData = ' <table width="100%" cellspacing="0" cellpadding="5" border="1"   align="center">
 				<thead>
-					<tr><th colspan="4">'. date('d F, Y', strtotime($lessons[0]['slesson_date'])) .'</th></tr>
+					<tr><th colspan="4">'. $tommorowDate .'</th></tr>
 				</thead>
 				<tbody>
 					<tr>
@@ -112,21 +119,25 @@ class Cronjob extends FatModel
 			foreach ( $lessons as $lesson ) {
 				$teacherLessonIds[] = $lesson['slesson_id'];
 				$teacherLink = CommonHelper::generateFullUrl($controller, 'view', array( $lesson['slesson_id'] ));
-				$lesson_start_time = date('h:i A', strtotime( $lesson['slesson_start_time']));
-				$lesson_end_time = date('h:i A', strtotime( $lesson['slesson_end_time']));
-				$lesson_start_date = date('d F, Y', strtotime($lesson['slesson_date']));
-				$lesson_end_date = date('d F, Y', strtotime($lesson['slesson_end_date']));
-				
-				if ( $userType == 'learner' ) {
+				if ( $userType == 'teacher' ) {
+					$lesson_start_time = MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_date'].'  '.$lesson['slesson_start_time'] , true, $lesson['teacherTimezone'] );
+					
+					$lesson_end_time = MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_end_date'].'  '.$lesson['slesson_end_time'] , true, $lesson['teacherTimezone'] );
+					
 					$lessonsData .='<tr>
-						<td>'. $lesson['teacherFullName'] .'</td>
+						<td>'. $lesson['learnerFullName'] .'</td>
 						<td>'. $lesson_start_time .'</td>
 						<td>'. $lesson_end_time .'</td>
 						<td><a href="'. $teacherLink .'" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
 					</tr>';
 				} else {
+					
+					$lesson_start_time = MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_date'].'  '.$lesson['slesson_start_time'] , true, $lesson['LearnerTimezone'] );
+					
+					$lesson_end_time = MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_end_date'].'  '.$lesson['slesson_end_time'] , true, $lesson['LearnerTimezone'] );
+					
 					$lessonsData .='<tr>
-						<td>'. $lesson['learnerFullName'] .'</td>
+						<td>'. $lesson['teacherFullName'] .'</td>
 						<td>'. $lesson_start_time .'</td>
 						<td>'. $lesson_end_time .'</td>
 						<td><a href="'. $teacherLink .'" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
@@ -178,10 +189,15 @@ class Cronjob extends FatModel
 			'slns.slesson_teacher_id as teacherId',
 			'ut.user_first_name as teacherFname',
 			'ut.user_last_name as teacherLname',
+			'ut.user_timezone as teacherTimezone',
+			
 			'tcred.credential_email as teacherEmail',
 			'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
 			'ul.user_first_name as LearnerFname',
 			'ul.user_last_name as LearnerLname',
+			'ul.user_timezone as LearnerTimezone',
+			
+			
 			'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
 			'lcred.credential_email as learnerEmail',
 			'slns.slesson_date',
@@ -194,7 +210,6 @@ class Cronjob extends FatModel
 			'op_lpackage_is_free_trial as is_trial',
 			'op_lesson_duration'
 		));
-		$srch->addCondition('slns.slesson_reminder_one', '=', 0 );
 		$srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED );
 		return $srch;
 	}
