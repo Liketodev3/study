@@ -85,7 +85,7 @@ class Cronjob extends FatModel
 	
 	private function sendEmailToUsers( $LessonArr, $userType ) {
 		
-		$template = 'coming_up_lesson_reminder'
+		$template = 'coming_up_lesson_reminder';
 		if ( $userType == 'teacher' ) {
 			
 			$controller = 'teacherScheduledLessons';
