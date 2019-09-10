@@ -5129,6 +5129,10 @@ div.tagsinput div {
         border-bottom: 5px solid #333;
         top: 12px;
     }
+    
+    .subheader .nav.nav--primary > ul > li.nav__dropdown > a.is-active:after {
+		border-bottom: 0px solid #333;
+	}
 
     .nav.nav--primary-offset > ul > li .nav__dropdown-target {
         min-width: 100%;
@@ -5156,7 +5160,7 @@ div.tagsinput div {
 
     body.is-landing .body,
     .body {
-        padding-top: 100px;
+        padding-top: 110px;
     }
 
     .media-group .media.media--small {
