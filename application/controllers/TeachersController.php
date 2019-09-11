@@ -805,20 +805,21 @@ class TeachersController extends MyAppController {
 		$slangId = 0;
 		$slangName = '';
 		if($teachLangId){
-			$srch = new SpokenLanguageSearch( $this->siteLangId );
-			$srch->addCondition('slanguage_id', '=', $teachLangId);
+			$srch = new TeachingLanguageSearch( $this->siteLangId );
+			$srch->addCondition('tlanguage_id', '=', $teachLangId);
 			$srch->addMultipleFields(
 				array(
-					'slanguage_id',
-					'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name'
+					'tlanguage_id',
+					'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'
 					)
 				);
 
 			$rs    = $srch->getResultSet();
 			$languages = FatApp::getDb()->fetch( $rs );
+			
 			if($languages){
-				$slangId = $languages['slanguage_id'];
-				$slangName = $languages['slanguage_name'];
+				$slangId = $languages['tlanguage_id'];
+				$slangName = $languages['tlanguage_name'];
 			}
 		}
 		$frm = new Form( 'frmTeacherSrch' );
