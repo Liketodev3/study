@@ -150,6 +150,7 @@ class UserSearch extends SearchBase {
 		$slSrch->doNotLimitRecords();
 		$slSrch->addMultipleFields( array('utsl_user_id', 'GROUP_CONCAT( IFNULL(slanguage_name, slanguage_identifier) ) as spoken_language_names', 'GROUP_CONCAT(utsl_slanguage_id) as spoken_language_ids',  'GROUP_CONCAT(utsl_proficiency) as spoken_languages_proficiency') );
 		$slSrch->addGroupBy('utsl_user_id');
+		$slSrch->addCondition('slanguage_active', '=', 1);
 		
 		$this->joinTable( "(" . $slSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utsl.utsl_user_id', 'utsl' );
 	}
