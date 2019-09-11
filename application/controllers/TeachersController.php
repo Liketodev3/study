@@ -77,6 +77,9 @@ class TeachersController extends MyAppController {
 		$this->set( 'html', $html);
 
 		$startRecord = ( $page - 1 ) * $pageSize + 1 ;
+		if( $totalRecords < 1 ) {
+			$startRecord = 0;
+		}
 		$endRecord = $page * $pageSize;
 		if ($totalRecords < $endRecord) { $endRecord = $totalRecords; }
 		$this->set( 'startRecord', $startRecord );
