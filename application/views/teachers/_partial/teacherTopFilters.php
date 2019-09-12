@@ -113,12 +113,6 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 							Language :  <?php echo $keywordlanguage; ?>	 </a>
 				</li>
 			<?php } ?>
-			<?php if ( $teachLagId > 0 ) { ?>
-				<li>
-					<a href="javascript:void(0);" class="language_keyword tag__clickable " onclick="removeFilterLangId('language_keyword',this)">
-							Language :  <?php echo $searchLang; ?>	 </a>
-				</li>
-			<?php } ?>
 			</ul>
 		</div>
 	</div>

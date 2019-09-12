@@ -3,7 +3,7 @@
 <!--header section [-->
 <?php 
 /* Teacher Top Filters [ */
-$this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage, 'teachLagId' => $teachLagId, 'searchLang' => $searchLang ) ); 
+$this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage ) ); 
 /* ] */
 ?>
 
@@ -32,8 +32,8 @@ $this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeac
                 <p><?php echo Label::getLabel('LBL_Showing'); ?> <span id="start_record">{xx}</span>-<span id="end_record">{xx}</span> <?php echo Label::getLabel('LBL_of'); ?> <span id="total_records">{xx}</span> <?php echo Label::getLabel('LBL_teachers'); ?></p>
             </div>
         </div>
-
-        <div class="row d-block -clearfix">
+		
+		<div class="row d-block -clearfix">
             <?php 
 			/* Left Side Filters Side Bar [ */
 			$this->includeTemplate('teachers/_partial/teacherLeftFilters.php'); 

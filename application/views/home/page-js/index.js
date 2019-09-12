@@ -34,7 +34,8 @@ $("document").ready(function(){
 		'select': function( event, ui) { 
 			event.preventDefault();
 			$('input[name=\'language\']').val( ui.item.label );
-			window.location.href = window.location.href + "teachers/index/" + ui.item.value;
+			$('#homeSearchForm').submit();
+			//window.location.href = window.location.href + "teachers/index/" + ui.item.value;
 		}
 	});	
 

@@ -2,14 +2,7 @@
 class TeachersController extends MyAppController {
 
 	public function index($teachLangId=0) {
-		//$json = array();
-		$searchLang = '';
-		if ( $teachLangId > 0 ) {
-			$searchLang = TeachingLanguage::getLangById($teachLangId);
-		}
-		
-		
-		$keyword = FatApp::getQueryStringData('language');
+		$keyword = FatApp::getPostedData('language');
 		$frmSrch = $this->getTeacherSearchForm($teachLangId, $keyword);
 		$this->set( 'frmTeacherSrch', $frmSrch );
 		$daysArr = array(
@@ -23,8 +16,6 @@ class TeachersController extends MyAppController {
 						);
 		$timeSlotArr = TeacherGeneralAvailability::timeSlotArr();
 		$this->set( 'keywordlanguage', $keyword );
-		$this->set( 'teachLagId', $teachLangId );
-		$this->set( 'searchLang', $searchLang );
 		$this->set( 'daysArr', $daysArr );
 		$this->set( 'timeSlotArr', $timeSlotArr );
 		$this->_template->addJs('js/enscroll-0.6.2.min.js');
@@ -44,9 +35,6 @@ class TeachersController extends MyAppController {
 
 		$frmSrch = $this->getTeacherSearchForm();
 		$post = $frmSrch->getFormDataFromArray( FatApp::getPostedData() );
-		//$keyword = $post['teach_lang_keyword'];
-		
-		
 
 		if( false === $post ){
 			Message::addErrorMessage($frmSrch->getValidationErrors());
@@ -631,6 +619,8 @@ class TeachersController extends MyAppController {
 
 		
 		$teachLanguageName = FatApp::getPostedData('teach_lang_keyword');
+		$_SESSION['search_filters'] = FatApp::getPostedData();
+		
 		$srch = new UserSearch( false );
 		$srch->setTeacherDefinedCriteria(true);
 		$srch->joinUserSpokenLanguages( $this->siteLangId );

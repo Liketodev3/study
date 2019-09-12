@@ -292,13 +292,6 @@ function htmlEncode(value){
 		searchTeachers(document.frmTeacherSrch);
 	}
 	
-	removeFilterLangId = function( id, obj ){
-		$('.'+id).parent("li").remove();
-		$('input[name=\'teach_language_id\']').val('');
-		$('input[name=\'teach_language_name\']').val('');
-		searchTeachers(document.frmTeacherSrch);
-	}
-	
 	addPricefilter = function(){
 		$('.price').parent("li").remove();
 		if( !$('#searched-filters').find('a').hasClass('price') ){

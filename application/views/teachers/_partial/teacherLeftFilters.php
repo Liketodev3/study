@@ -1,4 +1,20 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php
+echo'<pre>';
+print_r( $_SESSION );
+echo'</pre>';
+
+$spokenLanguage_filter = array();
+$filters  = array();
+
+if( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] )) {
+	$filters = $_SESSION['search_filters'];
+	if( isset($filters['spokenLanguage']) && !empty( $filters['spokenLanguage'] ) ) {
+		$spokenLanguage_filter	= explode(',', $filters['spokenLanguage']);
+	}
+}
+?>
+
 <div class="col-xl-3 col-lg-12 -float-left">
 
     <div class="tabled-box">
@@ -51,7 +67,7 @@
 										<?php foreach($spokenLangsArr as $spokenLangId => $spokenLangName ){ ?>
 										<li>
 											<label class="checkbox" id="spokenLanguage_<?php echo $spokenLangId; ?>">
-												<input type="checkbox" name="filterSpokenLanguage[]" value="<?php echo $spokenLangId; ?>">
+												<input type="checkbox" name="filterSpokenLanguage[]" value="<?php echo $spokenLangId; ?>" <?php if( in_array($spokenLangId, $spokenLanguage_filter )){ echo 'checked'; }  ?>  >
 												<i class="input-helper"></i> <?php echo $spokenLangName; ?>
 											</label>
 										</li>
