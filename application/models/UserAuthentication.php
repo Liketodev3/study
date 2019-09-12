@@ -252,7 +252,7 @@ class UserAuthentication extends FatModel {
 		}
 				
 		if (isset ( $_SESSION [static::SESSION_ELEMENT_NAME] )
-				&& $_SESSION [static::SESSION_ELEMENT_NAME] ['user_ip'] == $ip 
+				
 				&& is_numeric ( $_SESSION [static::SESSION_ELEMENT_NAME] ['user_id'] ) 
 				&& 0 < $_SESSION [static::SESSION_ELEMENT_NAME] ['user_id'] ) {
 				

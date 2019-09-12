@@ -20,7 +20,7 @@ class AdminAuthentication extends FatModel
         if ($ip == '') {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
-        if (isset($_SESSION[static::SESSION_ELEMENT_NAME]) && FatUtility::int($_SESSION[static::SESSION_ELEMENT_NAME]['admin_id']) > 0 && $_SESSION[static::SESSION_ELEMENT_NAME]['admin_ip'] == $ip) {
+        if (isset($_SESSION[static::SESSION_ELEMENT_NAME]) && FatUtility::int($_SESSION[static::SESSION_ELEMENT_NAME]['admin_id']) > 0 ) {
             return true;
         }
         return false;
