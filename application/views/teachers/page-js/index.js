@@ -163,6 +163,8 @@ function htmlEncode(value){
 	
 	searchTeachers = function(frm){
 		var data = fcom.frmData(frm);
+		//alert( data );
+		
 		var dv = $("#teachersListingContainer");
 		$(dv).html(fcom.getLoader());
 		
@@ -270,8 +272,8 @@ function htmlEncode(value){
 	addFilter = function( id, obj ){ 
 		var click = "onclick=removeFilter('"+id+"',this)";
 		var filter = htmlEncode($(obj).closest("div.block__body-target-js").siblings("div.block__head-trigger-js").text());
-		
 		$filterVal = htmlEncode($(obj).parent().text());
+		
 		if(!$('#searched-filters').find('a').hasClass(id)){
 			id += ' tag__clickable';
 			$('#searched-filters').append("<li><a href='javascript:void(0);' class=\' " + id + " \'" + click + ">"+ filter + ": " + $filterVal+"</a></li>");
@@ -281,6 +283,19 @@ function htmlEncode(value){
 	removeFilter = function( id, obj ){
 		$('.'+id).parent("li").remove();
 		$('#'+id).find('input[type=\'checkbox\']').attr('checked', false);
+		searchTeachers(document.frmTeacherSrch);
+	}
+	
+	removeFilterCustom = function( id, obj ){
+		$('.'+id).parent("li").remove();
+		$('input[name=\'teach_lang_keyword\']').val('');
+		searchTeachers(document.frmTeacherSrch);
+	}
+	
+	removeFilterLangId = function( id, obj ){
+		$('.'+id).parent("li").remove();
+		$('input[name=\'teach_language_id\']').val('');
+		$('input[name=\'teach_language_name\']').val('');
 		searchTeachers(document.frmTeacherSrch);
 	}
 	

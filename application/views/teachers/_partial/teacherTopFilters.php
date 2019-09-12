@@ -22,8 +22,9 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 							</svg>
 						</span>
 						<?php 
+						echo $frmTeacherSrch->getFieldHtml('teach_lang_keyword'); 
 						echo $frmTeacherSrch->getFieldHtml('teach_language_name'); 
-						echo $frmTeacherSrch->getFieldHtml( 'teach_language_id' );
+						echo $frmTeacherSrch->getFieldHtml('teach_language_id');
 						?>
 						
                     </div>
@@ -105,8 +106,19 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 <div class="section__tags">
 	<div class="container container--fixed">
 		<div class="tag-list">
-			<ul id="searched-filters">
-				
+			<ul id="searched-filters"> 
+			<?php if ( $keywordlanguage !='' ) { ?>
+				<li>
+					<a href="javascript:void(0);" class="language_keyword tag__clickable " onclick="removeFilterCustom('language_keyword',this)">
+							Language :  <?php echo $keywordlanguage; ?>	 </a>
+				</li>
+			<?php } ?>
+			<?php if ( $teachLagId > 0 ) { ?>
+				<li>
+					<a href="javascript:void(0);" class="language_keyword tag__clickable " onclick="removeFilterLangId('language_keyword',this)">
+							Language :  <?php echo $searchLang; ?>	 </a>
+				</li>
+			<?php } ?>
 			</ul>
 		</div>
 	</div>

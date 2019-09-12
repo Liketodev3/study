@@ -2,7 +2,15 @@
 class TeachersController extends MyAppController {
 
 	public function index($teachLangId=0) {
-		$frmSrch = $this->getTeacherSearchForm($teachLangId);
+		//$json = array();
+		$searchLang = '';
+		if ( $teachLangId > 0 ) {
+			$searchLang = TeachingLanguage::getLangById($teachLangId);
+		}
+		
+		
+		$keyword = FatApp::getQueryStringData('language');
+		$frmSrch = $this->getTeacherSearchForm($teachLangId, $keyword);
 		$this->set( 'frmTeacherSrch', $frmSrch );
 		$daysArr = array(
 						0 => Label::getLabel('LBL_Sunday'),
@@ -14,6 +22,9 @@ class TeachersController extends MyAppController {
 						6 => Label::getLabel('LBL_Saturday')
 						);
 		$timeSlotArr = TeacherGeneralAvailability::timeSlotArr();
+		$this->set( 'keywordlanguage', $keyword );
+		$this->set( 'teachLagId', $teachLangId );
+		$this->set( 'searchLang', $searchLang );
 		$this->set( 'daysArr', $daysArr );
 		$this->set( 'timeSlotArr', $timeSlotArr );
 		$this->_template->addJs('js/enscroll-0.6.2.min.js');
@@ -29,10 +40,13 @@ class TeachersController extends MyAppController {
 	}
 
 	public function teachersList(){
-		//$json = array();
+		
 
 		$frmSrch = $this->getTeacherSearchForm();
 		$post = $frmSrch->getFormDataFromArray( FatApp::getPostedData() );
+		//$keyword = $post['teach_lang_keyword'];
+		
+		
 
 		if( false === $post ){
 			Message::addErrorMessage($frmSrch->getValidationErrors());
@@ -56,7 +70,10 @@ class TeachersController extends MyAppController {
 		$srch->addMultipleFields( array('ulg.*','IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info','utls.*') );        
 		$srch->setPageSize($pageSize);
 		$srch->setPageNumber( $page );
-		//$srch->addCondition('slanguage_active','=',applicationConstants::ACTIVE);        
+		//$srch->addCondition('slanguage_active','=',applicationConstants::ACTIVE);       
+		//echo $srch->getQuery();
+		//die();
+		
 		$rs = $srch->getResultSet();
 		$db = FatApp::getDb();
 		$teachersList = $db->fetchAll($rs);
@@ -612,10 +629,12 @@ class TeachersController extends MyAppController {
 
 	private function searchTeachers( &$srch ){
 
+		
+		$teachLanguageName = FatApp::getPostedData('teach_lang_keyword');
 		$srch = new UserSearch( false );
 		$srch->setTeacherDefinedCriteria(true);
 		$srch->joinUserSpokenLanguages( $this->siteLangId );
-		//$srch->joinUserTeachLanguage( $this->siteLangId );
+		$srch->joinUserTeachingLanguages( $this->siteLangId, $teachLanguageName);
 		$srch->joinUserCountry( $this->siteLangId );
 		$srch->joinUserSettings( );
 		$srch->joinUserAvailibility( );
@@ -625,20 +644,7 @@ class TeachersController extends MyAppController {
 		}else{
 			$srch->addFld('0 as uft_id');
 		}
-		/*$teachLanguageName = FatApp::getPostedData( 'teach_language_name', FatUtility::VAR_STRING, NULL );
-		if( !empty($teachLanguageName) ){
-			$cnd = $srch->addCondition( 'slanguage_name', 'LIKE', '%' . $teachLanguageName . '%' );
-			$cnd->attachCondition( 'slanguage_identifier', 'LIKE', '%' . $teachLanguageName . '%' );
-		}*/
-
-		/* [ */
-		$keyword = FatApp::getPostedData( 'keyword', FatUtility::VAR_STRING, NULL );
-		if( !empty($keyword) ){
-			$cnd = $srch->addCondition( 'user_first_name', 'LIKE', '%'. $keyword .'%' );
-			$cnd->attachCondition( 'user_last_name', 'LIKE', '%'. $keyword .'%' );
-			$cnd->attachCondition( 'user_profile_info', 'LIKE', '%' . $keyword . '%' );
-		}
-		/* ] */
+		
 
 		/* [ */
 		$spokenLanguage = FatApp::getPostedData('spokenLanguage', FatUtility::VAR_STRING, NULL);
@@ -804,7 +810,7 @@ class TeachersController extends MyAppController {
 		) );
 	}
 
-	private function getTeacherSearchForm($teachLangId = 0){
+	private function getTeacherSearchForm($teachLangId = 0, $techLangKeyword = ''){
 		$slangId = 0;
 		$slangName = '';
 		if($teachLangId){
@@ -828,6 +834,7 @@ class TeachersController extends MyAppController {
 		$frm = new Form( 'frmTeacherSrch' );
 		$frm->addTextBox( '', 'teach_language_name', $slangName, array( 'placeholder' => Label::getLabel('LBL_Teaches:Select_Language') ) );
 		$frm->addHiddenField( '', 'teach_language_id', $slangId );
+		$frm->addHiddenField( '', 'teach_lang_keyword', $techLangKeyword );
 		$frm->addTextBox( '', 'teach_availability', '', array( 'placeholder' => Label::getLabel('LBL_Availiblity') ) );
 		$frm->addTextBox( '', 'keyword', '', array( 'placeholder' => Label::getLabel('LBL_Search_Teacher\'s_Name') ) );
 		$fld = $frm->addHiddenField('', 'page', 1);

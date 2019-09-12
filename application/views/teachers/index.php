@@ -3,7 +3,7 @@
 <!--header section [-->
 <?php 
 /* Teacher Top Filters [ */
-$this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr ) ); 
+$this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage, 'teachLagId' => $teachLagId, 'searchLang' => $searchLang ) ); 
 /* ] */
 ?>
 

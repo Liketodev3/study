@@ -12,7 +12,7 @@
 		<h1><?php echo Label::getLabel('LBL_Slider_Title_Text'); ?></h1>
 		<p><?php echo Label::getLabel('LBL_Slider_Description_Text'); ?></p>
 		<div class="search-form">
-			<form method="POST" class="form" action="/teachers" >
+			<form method="get" class="form" action="/teachers" >
                 <input type="text" name="language" placeholder="<?php echo Label::getLabel('LBL_I_am_learning...'); ?>">
                 <input type="submit" value="<?php echo Label::getLabel('LBL_Get_Started?'); ?>">
 			</form>

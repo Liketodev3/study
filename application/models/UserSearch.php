@@ -236,5 +236,32 @@ class UserSearch extends SearchBase {
 		$rs = $this->getResultSet();        
 		return $teachersList = $db->fetchAll($rs);
     }
+	
+	public function joinUserTeachingLanguages( $langId = 0 , $keyword = ''){
+		$langId = FatUtility::int($langId);
+		if( $langId < 1 ){
+			$langId = CommonHelper::getLangId();
+		}
+		
+		$langId = FatUtility::int($langId);
+		if( $langId < 1 ){
+			$langId = CommonHelper::getLangId();
+		}
+		$this->joinTable( UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'u.user_id = utsl1.utl_us_user_id', 'utsl1' );
+		
+		$this->joinTable( TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl1.utl_slanguage_id' );
+		
+		$this->joinTable( TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl1.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId , 'sl_lang' );
+		
+		$this->addMultipleFields( array('utsl1.utl_us_user_id', 'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName') );
+		
+		$this->addCondition( 'tlanguage_active', '=', '1' );
+		
+		if( !empty( $keyword ) ) {
+			$cnd = $this->addCondition( 'tlanguage_name', 'LIKE', '%' . $keyword . '%' );
+			$cnd->attachCondition( 'tlanguage_identifier', 'LIKE', '%' . $keyword . '%' );
+		}
+	}
+	
     
 }

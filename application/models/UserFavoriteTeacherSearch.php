@@ -52,7 +52,7 @@ class UserFavoriteTeacherSearch extends SearchBase {
 		if( $langId < 1 ){
 			$langId = CommonHelper::getLangId();
 		}
-		$this->joinTable( UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'ut.user_id = utsl.utl_us_user_id', 'utsl' );
+		$this->joinTable( UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'us.user_id = utsl.utl_us_user_id', 'utsl' );
 		
 		$this->joinTable( TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl.utl_slanguage_id' );
 		
