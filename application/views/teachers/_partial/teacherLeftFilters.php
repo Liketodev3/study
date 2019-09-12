@@ -1,19 +1,4 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<?php
-echo'<pre>';
-print_r( $_SESSION );
-echo'</pre>';
-
-$spokenLanguage_filter = array();
-$filters  = array();
-
-if( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] )) {
-	$filters = $_SESSION['search_filters'];
-	if( isset($filters['spokenLanguage']) && !empty( $filters['spokenLanguage'] ) ) {
-		$spokenLanguage_filter	= explode(',', $filters['spokenLanguage']);
-	}
-}
-?>
 
 <div class="col-xl-3 col-lg-12 -float-left">
 
@@ -85,29 +70,28 @@ if( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] 
 						<div class="block__head block__head-trigger block__head-trigger-js is-active"><h6><?php echo Label::getLabel( 'LBL_Price' ); ?></h6></div>
 						<div class="block__body block__body-target block__body-target-js" style="">
 							<div class="range range--primary">
-								<input type="text" id="price_range" value="<?php echo floor($filterDefaultMinValue); ?>-<?php echo ceil($filterDefaultMaxValue); ?>" name="price_range" />
-								<input type="hidden" value="<?php echo floor($filterDefaultMinValue); ?>" name="filterDefaultMinValue" id="filterDefaultMinValue" />
-								<input type="hidden" value="<?php echo ceil($filterDefaultMaxValue); ?>" name="filterDefaultMaxValue" id="filterDefaultMaxValue" />
+								<input type="text" id="price_range" value="<?php echo floor($minPrice); ?>-<?php echo ceil($maxPrice); ?>" name="price_range" />
+								<input type="hidden" value="<?php echo floor($minPrice); ?>" name="filterDefaultMinValue" id="filterDefaultMinValue" />
+								<input type="hidden" value="<?php echo ceil($maxPrice); ?>" name="filterDefaultMaxValue" id="filterDefaultMaxValue" />
 							</div>
 							<div class="slide__fields form">
 								<ul>
-									<li><span class="rsText"><?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?></span><input value="<?php echo floor($priceArr['minPrice']); ?>" name="priceFilterMinValue" type="text"></li>
+									<li><span class="rsText"><?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?></span><input value="<?php echo floor($minPrice); ?>" name="priceFilterMinValue" type="text"></li>
 									
 									
-									<li><span class="rsText"><?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft(); ?></span><input value="<?php echo ceil($priceArr['maxPrice']); ?>" class="input-filter form-control " name="priceFilterMaxValue" type="text">
+									<li><span class="rsText"><?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft(); ?></span><input value="<?php echo ceil($maxPrice); ?>" class="input-filter form-control " name="priceFilterMaxValue" type="text">
 									</li>
 								</ul>
 							</div>
 						</div>
 					</div>
 					<?php } ?>
-						<?php $preferenceTypeArr = Preference::getPreferenceTypeArr( CommonHelper::getLangId() );  	
-
-					foreach($preferenceTypeArr as $key=>$preferenceType){ 
-					if(!isset($allPreferences[$key])){
-						continue;
-					}
-					?>
+					<?php $preferenceTypeArr = Preference::getPreferenceTypeArr( CommonHelper::getLangId() );  	
+					foreach ($preferenceTypeArr as $key=>$preferenceType) { 
+						if(!isset($allPreferences[$key])){
+							continue;
+						}
+					 ?>
 						<div class="block">
                         <div class="block__head block__head-trigger block__head-trigger-js">
                             <h6><?php echo $preferenceType; ?></h6>
@@ -119,7 +103,7 @@ if( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] 
 									<?php foreach($allPreferences[$key] as $preference){ ?>
                                         <li>										
 											<label class="checkbox" id="skill_<?php echo $preference['preference_id']; ?>">
-												<input type="checkbox" name="filterPreferences[]" value="<?php echo $preference['preference_id']; ?>">
+												<input type="checkbox" name="filterPreferences[]" value="<?php echo $preference['preference_id']; ?>" <?php if( in_array($preference['preference_id'], $preferenceFilter_filter )){ echo 'checked'; }  ?> >
 												<i class="input-helper"></i> <?php echo $preference['preference_titles']; ?>
 											</label>										
                                         </li>
@@ -130,7 +114,7 @@ if( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] 
                             </div>
                         </div>
                     </div>
-<?php } ?>
+					<?php } ?>
 					<?php if( isset($fromArr) && !empty($fromArr) ){ ?>
                     <div class="block">
                         <div class="block__head block__head-trigger block__head-trigger-js">
@@ -143,7 +127,7 @@ if( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] 
 										<?php foreach($fromArr as $from){ ?>
                                         <li>
                                             <label class="checkbox" id="fromcountry_<?php echo $from['user_country_id'] ?>">
-                                                <input type="checkbox" name="filterFromCountry[]" value="<?php echo $from['user_country_id'] ?>">
+                                                <input type="checkbox" name="filterFromCountry[]" value="<?php echo $from['user_country_id'] ?>" <?php if( in_array($from['user_country_id'], $fromCountry_filter )){ echo 'checked'; }  ?> >
                                                 <i class="input-helper"></i> <?php echo $from['country_name']; ?>
                                             </label>
                                         </li>
@@ -169,7 +153,7 @@ if( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] 
 										foreach( $genderArr as $gender ){ ?>
                                         <li>
                                             <label class="checkbox" id="gender_<?php echo $gender['user_gender']; ?>">
-                                                <input type="checkbox" name="filterGender[]" value="<?php echo $gender['user_gender']; ?>">
+                                                <input type="checkbox" name="filterGender[]" value="<?php echo $gender['user_gender']; ?>" <?php if( in_array($gender['user_gender'], $gender_filter )){ echo 'checked'; }  ?> >
                                                 <i class="input-helper"></i> <?php echo $genderConstants[ $gender['user_gender'] ]; ?>
                                             </label>
                                         </li>
@@ -230,8 +214,8 @@ $(document).ready(function(){
 		keyboard: true,
 		min: min,
 		max: max,
-		from: min,
-		to: max,
+		from: parseInt(<?php echo $minPrice;  ?>),
+		to: parseInt(<?php echo $maxPrice;?>),
 		type: 'double',
 		prettify_enabled: true,
 		prettify_separator: ',',

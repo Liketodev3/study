@@ -2,6 +2,45 @@
 
 <!--header section [-->
 <?php 
+$minPrice = 0;
+$maxPrice = 0;
+if( isset($priceArr) && $priceArr  ) {
+	$minPrice = floor( $filterDefaultMinValue );
+	$maxPrice = floor($filterDefaultMaxValue );
+}
+
+$spokenLanguage_filter = array();
+$preferenceFilter_filter = array();
+$fromCountry_filter = array();
+$gender_filter = array();
+$filters  = array();
+
+if ( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] )) {
+	$filters = $_SESSION['search_filters'];
+	
+	if ( isset($filters['spokenLanguage']) && !empty( $filters['spokenLanguage'] ) ) {
+		$spokenLanguage_filter = explode(',', $filters['spokenLanguage']);
+	}
+	
+	if ( isset($filters['minPriceRange']) && !empty( $filters['minPriceRange'] ) && isset($filters['maxPriceRange']) && !empty( $filters['maxPriceRange'] )  ) {
+		$minPrice = floor($filters['minPriceRange']);
+		$maxPrice = floor($filters['maxPriceRange']);
+	}
+	
+	if ( isset($filters['preferenceFilter']) && !empty( $filters['preferenceFilter'] ) ) {
+		$preferenceFilter_filter = explode(',', $filters['preferenceFilter']);
+	}
+	
+	if ( isset($filters['fromCountry']) && !empty( $filters['fromCountry'] ) ) {
+		$fromCountry_filter = explode(',', $filters['fromCountry']);
+	}
+	
+	if ( isset($filters['gender']) && !empty( $filters['gender'] ) ) {
+		$gender_filter = explode(',', $filters['gender']);
+	}
+}
+
+
 /* Teacher Top Filters [ */
 $this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage ) ); 
 /* ] */

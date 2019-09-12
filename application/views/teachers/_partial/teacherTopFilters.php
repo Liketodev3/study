@@ -113,6 +113,7 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 							Language :  <?php echo $keywordlanguage; ?>	 </a>
 				</li>
 			<?php } ?>
+			<li><a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilter(this)">Price: $8 - $15</a></li>
 			</ul>
 		</div>
 	</div>
