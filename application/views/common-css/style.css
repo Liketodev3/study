@@ -7248,23 +7248,23 @@ display: block;}
 
 /*************/
 .subheader{
-	background: var(--color-secondary);
-	margin-bottom: 10px;
+	border-bottom:1px solid #e0e0e0;
+	margin-bottom: 18px;
 }
 .subheader .nav.nav--primary > ul > li.nav__dropdown > a {
-	color: var(--color-light);
+	color: #777;
 }
 .subheader .nav.nav--primary > ul > li.nav__dropdown > a:after {
-	border-top: 5px solid #fff !important;
-	top: 15px;
+	border-top: 5px solid #777 !important;
+	top: 12px;
 }
 .subheader .textRignt{
 	text-align: right;
 }
 .subheader .nav.nav--primary > ul > li > a {
 	font-size: 0.9rem;
-	height: 35px;
-	line-height: 35px;
+	height: 30px;
+	line-height: 30px;
 }
 .closeNavigation  {
 	font-size: 40px;

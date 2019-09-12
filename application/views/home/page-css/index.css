@@ -51,7 +51,7 @@
     font-size: 1.2rem;
     margin: 0;
     margin-left: 10px;
-    background: var(--color-primary);
+    background: var(--color-secondary);
 }
 
 .search-form .form input[type="submit"]:hover,
@@ -217,7 +217,7 @@
 }
 
 .card-more-content a {
-    color: var(--color-primary);
+    color: var(--color-secondary);
     font-weight: 600;
 }
 
@@ -497,7 +497,7 @@
 }
 
 .quote-thumbs .slick-current .quote-thumb {
-    border-color: var(--color-primary);
+    border-color: var(--color-secondary);
 }
 
 .quote-white {
@@ -741,7 +741,7 @@
 }
 
 .border-box .box-body .rating .svg {
-    fill: var(--color-primary)
+    fill: var(--color-secondary)
 }
 
 .border-box .box-body .rating.no-rating .svg svg {

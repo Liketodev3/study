@@ -32,10 +32,9 @@ class TeachersController extends MyAppController {
 
 	public function teachersList(){
 		
-
 		$frmSrch = $this->getTeacherSearchForm();
 		$post = $frmSrch->getFormDataFromArray( FatApp::getPostedData() );
-
+		
 		if( false === $post ){
 			Message::addErrorMessage($frmSrch->getValidationErrors());
 			FatUtility::dieWithError( Message::getHtml() );

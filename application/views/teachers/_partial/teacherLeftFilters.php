@@ -1,8 +1,13 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
 
+if ( $minPrice == 0 && $maxPrice == 0 ) {
+	$minPrice = floor( $filterDefaultMinValue );
+	$maxPrice = floor($filterDefaultMaxValue );
+}
+
+?>
 <div class="col-xl-3 col-lg-12 -float-left">
-
-    <div class="tabled-box">
+	<div class="tabled-box">
         <ul>
             <li>
                 <div class="sort-by">

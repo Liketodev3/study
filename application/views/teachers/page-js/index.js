@@ -112,8 +112,14 @@ $("document").ready(function(){
 		},
 		'select': function( event, ui) { 
 			event.preventDefault();
-			$('input[name=\'teach_language_name\']').val( ui.item.label );		
-			window.location.href = "/teachers/index/" + ui.item.value;
+			$('input[name=\'teach_language_name\']').val( ui.item.label );	
+			$('input[name=\'teach_lang_keyword\']').val( ui.item.label );
+			$('#frm_fat_id_frmTeacherSrch').submit();
+			$('.language_keyword').parent("li").remove();
+			$('#searched-filters').append("<li><a href='javascript:void(0);' class= 'language_keyword tag__clickable' onclick='removeFilterCustom(\"language_keyword\",this)' >Language: " + ui.item.label +"</a></li>");
+			
+			//addFilter ( 'language_keyword', this );
+			//window.location.href = "/teachers/index/" + ui.item.value;
 		}
 	}).bind('focus', function () {
         $(this).autocomplete("search");
@@ -289,6 +295,7 @@ function htmlEncode(value){
 	removeFilterCustom = function( id, obj ){
 		$('.'+id).parent("li").remove();
 		$('input[name=\'teach_lang_keyword\']').val('');
+		$('input[name=\'teach_language_name\']').val('');
 		searchTeachers(document.frmTeacherSrch);
 	}
 	
@@ -313,7 +320,23 @@ function htmlEncode(value){
 		delete searchArr['currency'];
  */		searchTeachers(document.frmTeacherSrch);	
 		$('.price').parent("li").remove();
+		
 	}
+	removePriceFilterCustom = function(e, minPrice,maxPrice){	
+		//updatePriceFilter();
+		/* delete searchArr['price_min_range'];
+		delete searchArr['price_max_range'];
+		delete searchArr['currency'];
+ */		$('input[name="priceFilterMinValue"]').val(minPrice);				
+		$('input[name="priceFilterMaxValue"]').val(maxPrice);
+		var $range = $("#price_range");
+		range = $range.data("ionRangeSlider");		
+		updateRange(minPrice,maxPrice);
+		range.reset(); 
+		$('.price').parent("li").remove();
+		searchTeachers(document.frmTeacherSrch);
+	}
+	
 	
 	updatePriceFilter = function(minPrice,maxPrice){
 		if( typeof minPrice == 'undefined' || typeof maxPrice == 'undefined' ){

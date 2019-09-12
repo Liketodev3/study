@@ -4,11 +4,6 @@
 <?php 
 $minPrice = 0;
 $maxPrice = 0;
-if( isset($priceArr) && $priceArr  ) {
-	$minPrice = floor( $filterDefaultMinValue );
-	$maxPrice = floor($filterDefaultMaxValue );
-}
-
 $spokenLanguage_filter = array();
 $preferenceFilter_filter = array();
 $fromCountry_filter = array();
@@ -42,7 +37,7 @@ if ( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters']
 
 
 /* Teacher Top Filters [ */
-$this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage ) ); 
+$this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice  ) ); 
 /* ] */
 ?>
 
@@ -75,7 +70,7 @@ $this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeac
 		<div class="row d-block -clearfix">
             <?php 
 			/* Left Side Filters Side Bar [ */
-			$this->includeTemplate('teachers/_partial/teacherLeftFilters.php'); 
+			$this->includeTemplate('teachers/_partial/teacherLeftFilters.php', array( 'spokenLanguage_filter' => $spokenLanguage_filter, 'preferenceFilter_filter'=> $preferenceFilter_filter, 'fromCountry_filter' => $fromCountry_filter, 'gender_filter' => $gender_filter, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice )); 
 			/* ] */
 			?>
 
