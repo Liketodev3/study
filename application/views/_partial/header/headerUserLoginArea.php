@@ -47,11 +47,11 @@ if( UserAuthentication::isUserLogged() ){ ?>
 <?php } else { ?>
 
 <li class="-hide-mobile">
-	<a href="javascript:void(0)" onClick="logInFormPopUp();"><?php echo Label::getLabel('LBL_Login'); ?><img src="<?php echo CONF_WEBROOT_URL; ?>images/user.svg" alt="<?php echo Label::getLabel('LBL_Login'); ?>" class="-hide-desktop -show-mobile"></a>
+	<a href="javascript:void(0)" onClick="signUpFormPopUp();"><?php echo Label::getLabel('LBL_Sign_Up'); ?><img src="<?php echo CONF_WEBROOT_URL; ?>images/user.svg" alt="<?php echo Label::getLabel('LBL_Sign_Up'); ?>" class="-hide-desktop -show-mobile"></a>
 </li>
 
 <li class="user-click">
-	<a href="javascript:void(0)" onClick="signUpFormPopUp();" class="btn btn--primary"><?php echo Label::getLabel('LBL_Sign_Up'); ?><span class="svg-icon user-icon">
+	<a href="javascript:void(0)" onClick="logInFormPopUp();" class="btn btn--primary"><?php echo Label::getLabel('LBL_Login'); ?><span class="svg-icon user-icon">
 
                                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="38" viewBox="0 0 40 38">
                                             <path id="Forma_1" data-name="Forma 1" class="cls-1" d="M19.934,21.326A10.663,10.663,0,1,0,9.228,10.647,10.695,10.695,0,0,0,19.934,21.326Zm0-18.541a7.862,7.862,0,1,1-7.882,7.862A7.9,7.9,0,0,1,19.934,2.784ZM1.412,38H38.588A1.4,1.4,0,0,0,40,36.591a13.431,13.431,0,0,0-13.432-13.4H13.432A13.431,13.431,0,0,0,0,36.591,1.4,1.4,0,0,0,1.412,38Zm12.02-11.99H26.568a10.592,10.592,0,0,1,10.509,9.172H2.923A10.62,10.62,0,0,1,13.432,26.01Z" />

@@ -4,7 +4,7 @@
                 <div class="section-title">
                     <h2><?php echo Label::getLabel('LBL_Upcoming_Scheduled_Lessons'); ?></h2>
                 </div>
-                <div class="vert-carousel">
+                <div class="<?php if( count($lessons) > 4 ): ?> vert-carousel <?php endif; ?>">
                 <?php foreach($lessons as $lesson){ ?>
                     <div class="repeat-listing -border">
                         <div class="row justify-content-between">

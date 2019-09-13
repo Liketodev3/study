@@ -1412,7 +1412,7 @@ class CommonHelper extends FatUtility{
 			<div class="language">
 				<?php  foreach( $first_array as $teachLang) {  ?>
 						<span class="main-language"><?php echo $teachLang; ?></span>
-					<?php } ?>
+				<?php } ?>
 				<ul>
 					<li><span class="plus">+</span>			   
 							<div class="more_listing">				
@@ -1428,13 +1428,18 @@ class CommonHelper extends FatUtility{
 		<?php 
 		return;
 		} else {
-			return $teachLangsStr = implode($teachLangs,', ');      
+			echo'<div class="language">';
+			foreach( $teachLangs as $teachLang) {  ?>
+				<span class="main-language"><?php echo $teachLang; ?></span>
+		<?php 
+			}
+			echo'</div>';
+			//return $teachLangsStr = implode($teachLangs,', ');  
+		return;			
 		}
 		
 		}
-		return $teachLangsStr = implode($teachLangs,', ');
-		
-         
+		return $teachLangsStr = implode($teachLangs,', ');   
     }
     
 }
