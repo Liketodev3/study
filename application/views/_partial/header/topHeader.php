@@ -1,26 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 
 <header id="header" class="header">
-<div class="subheader">
-<div class="container container--fixed">
-	<div class="row">
-		<div class="col-lg-8 col-sm-8 col-6">
-		</div>
-		<div class="col-lg-4 col-sm-4 col-6 textRignt">
-			<nav class="nav nav--primary nav--actions -display-inline">
-				<ul>
-					<li class="nav__dropdown">
-						<?php $this->includeTemplate( '_partial/header/headerLanguageSection.php' );	?>
-					</li>	
-					<li class="nav__dropdown">
-						<?php $this->includeTemplate( '_partial/header/headerCurrencySection.php' );	?>
-					</li>
-				</ul>
-			</nav>
-		</div>
-	</div>
-</div>
-</div>
     <div class="container container--fixed">
         <div class="d-flex justify-content-between align-items-center">
             <div class="header__left">
@@ -50,6 +30,9 @@
                 <div class="header__actionList -display-inline">
                     <nav class="nav nav--primary nav--actions -display-inline">
                         <ul>
+							<li class="nav__dropdown -hide-mobile">
+								<?php $this->includeTemplate( '_partial/header/headerLanguageArea.php' );	?>
+							</li>
 							<?php if(UserAuthentication::isUserLogged()){ 
 								$msgCnt = CommonHelper::getUnreadMsgCount();
 								$unreadNotifications = CommonHelper::getUnreadNotifications(true);

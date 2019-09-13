@@ -2,7 +2,7 @@
 
 <?php 
 if( $languages && count($languages) > 1 ){ ?>
-<a href="javascript:void(0)"  class="nav__dropdown-trigger nav__dropdown-trigger-js"><?php echo Label::getLabel("LBL_Site_Language"); ?></a>
+<a href="javascript:void(0)"  class="nav__dropdown-trigger nav__dropdown-trigger-js"><?php echo $languages[$siteLangId]['language_name']; ?> </a>
 <div class="nav__dropdown-target nav__dropdown-target-js -skin">
    <nav class="nav nav--vertical">
 		<ul>

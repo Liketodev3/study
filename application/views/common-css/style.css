@@ -2312,7 +2312,7 @@
 }
 
 .menu-vertical li a .menu-icon .-color-fill {
-    fill: var(--color-primary);
+    fill: var(--color-main);
 }
 
 .tab-swticher {
@@ -5041,7 +5041,6 @@ div.tagsinput div {
         background: #fff;
         color: #333;
         padding: 10px 0;
-		padding-top: 0px;
         box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.07);
     }
 
@@ -5160,7 +5159,7 @@ div.tagsinput div {
 
     body.is-landing .body,
     .body {
-        padding-top: 110px;
+        padding-top: 80px;
     }
 
     .media-group .media.media--small {
@@ -7099,8 +7098,8 @@ div.tagsinput div {
 
 /*==============================OVERWRITE CSS FROM OTHERS========================*/
 .checkbox .input-helper:after {
-    border-bottom-color: var(--color-primary);
-    border-left-color: var(--color-primary);
+    border-bottom-color: var(--color-main);
+    border-left-color: var(--color-main);
 }
 
 .box-language .col:first-child {
@@ -7247,39 +7246,7 @@ div.tagsinput div {
 display: block;}
 
 /*************/
-.subheader{
-	border-bottom:1px solid #e0e0e0;
-	margin-bottom: 18px;
+.footer .settings .settings__target {
+	z-index : 99;
 }
-.subheader .nav.nav--primary > ul > li.nav__dropdown > a {
-	color: #777;
-}
-.subheader .nav.nav--primary > ul > li.nav__dropdown > a:after {
-	border-top: 5px solid #777 !important;
-	top: 12px;
-}
-.subheader .textRignt{
-	text-align: right;
-}
-.subheader .nav.nav--primary > ul > li > a {
-	font-size: 0.9rem;
-	height: 30px;
-	line-height: 30px;
-}
-.closeNavigation  {
-	font-size: 40px;
-}
-@media (max-width: 767px) {
-	.subheader .nav.nav--primary > ul > li.nav__dropdown > a {
-		padding-right: 20px;
-	}
-	.subheader .nav.nav--actions > ul > li > a {
-		font-size: 1rem;
-		width: auto;
-	}
-	.subheader .-show-mobile {
-		display: block !important;
-		text-align: right;
-		margin-right: 15px;
-	}
-}
+
