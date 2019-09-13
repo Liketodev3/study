@@ -299,6 +299,12 @@ function htmlEncode(value){
 		searchTeachers(document.frmTeacherSrch);
 	}
 	
+	removeFilterUser = function( id, obj ){
+		$('.'+id).parent("li").remove();
+		$('input[name=\'keyword\']').val('');
+		searchTeachers(document.frmTeacherSrch);
+	}
+	
 	addPricefilter = function(){
 		$('.price').parent("li").remove();
 		if( !$('#searched-filters').find('a').hasClass('price') ){

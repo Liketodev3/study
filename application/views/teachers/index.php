@@ -4,6 +4,7 @@
 <?php 
 $minPrice = 0;
 $maxPrice = 0;
+$keyword = '';
 $spokenLanguage_filter = array();
 $preferenceFilter_filter = array();
 $fromCountry_filter = array();
@@ -37,11 +38,15 @@ if ( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters']
 	if ( isset($filters['teach_lang_keyword']) && !empty( $filters['teach_lang_keyword'] ) ) {
 		$keywordlanguage = $filters['teach_lang_keyword'];
 	}
+	if ( isset($filters['keyword']) && !empty( $filters['keyword'] ) ) {
+		$keyword = $filters['keyword'];
+	}
+	
 }
 
 
 /* Teacher Top Filters [ */
-$this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice  ) ); 
+$this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice , 'keyword' => $keyword ) ); 
 /* ] */
 ?>
 

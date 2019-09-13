@@ -618,8 +618,8 @@ class TeachersController extends MyAppController {
 
 		
 		$teachLanguageName = FatApp::getPostedData('teach_lang_keyword');
-		$_SESSION['search_filters'] = FatApp::getPostedData();
-		
+		$postedData = FatApp::getPostedData();
+		$_SESSION['search_filters'] = $postedData;
 		$srch = new UserSearch( false );
 		$srch->setTeacherDefinedCriteria(true);
 		$srch->joinUserSpokenLanguages( $this->siteLangId );
@@ -634,7 +634,6 @@ class TeachersController extends MyAppController {
 			$srch->addFld('0 as uft_id');
 		}
 		
-
 		/* [ */
 		$spokenLanguage = FatApp::getPostedData('spokenLanguage', FatUtility::VAR_STRING, NULL);
 		if( !empty($spokenLanguage) ){
@@ -780,6 +779,12 @@ class TeachersController extends MyAppController {
 			}
 		}
 		/* ] */
+		
+		if ( isset($postedData['keyword']) && !empty( $postedData['keyword'] ) ) {
+			$cond = $srch->addCondition('user_first_name', 'LIKE', '%'. $postedData['keyword'] .'%');
+			$cond->attachCondition('user_last_name', 'LIKE', '%'. $postedData['keyword'] .'%');
+		}
+		
 		$srch->addOrder('user_id','DESC');
 		$srch->addGroupBy('user_id');
 		$srch->addMultipleFields( array(
@@ -802,6 +807,7 @@ class TeachersController extends MyAppController {
 	private function getTeacherSearchForm($teachLangId = 0, $techLangKeyword = ''){
 		$slangId = 0;
 		$slangName = '';
+		$keyword = '';
 		if($teachLangId){
 			$srch = new TeachingLanguageSearch( $this->siteLangId );
 			$srch->addCondition('tlanguage_id', '=', $teachLangId);
@@ -825,6 +831,11 @@ class TeachersController extends MyAppController {
 				$slangName = $_SESSION['search_filters']['teach_lang_keyword'];
 				$techLangKeyword = $_SESSION['search_filters']['teach_lang_keyword'];
 			}
+			
+			if ( isset($_SESSION['search_filters']['keyword']) && !empty( $_SESSION['search_filters']['keyword'] ) ) {
+				$keyword = $_SESSION['search_filters']['keyword'];
+			}
+			
 		}	
 		
 		$frm = new Form( 'frmTeacherSrch' );
@@ -832,7 +843,7 @@ class TeachersController extends MyAppController {
 		$frm->addHiddenField( '', 'teach_language_id', $slangId );
 		$frm->addHiddenField( '', 'teach_lang_keyword', $techLangKeyword );
 		$frm->addTextBox( '', 'teach_availability', '', array( 'placeholder' => Label::getLabel('LBL_Availiblity') ) );
-		$frm->addTextBox( '', 'keyword', '', array( 'placeholder' => Label::getLabel('LBL_Search_Teacher\'s_Name') ) );
+		$frm->addTextBox( '', 'keyword', $keyword, array( 'placeholder' => Label::getLabel('LBL_Search_Teacher\'s_Name') ) );
 		$fld = $frm->addHiddenField('', 'page', 1);
 		$fld->requirements()->setIntPositive();
 		$frm->addSubmitButton( '', 'btnTeacherSrchSubmit', '' );

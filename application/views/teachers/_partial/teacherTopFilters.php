@@ -118,6 +118,13 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 					<a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilterCustom(this, '<?= ceil($priceArr['minPrice']);?>', '<?= ceil($priceArr['maxPrice']);?>')">
 					Price: <?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?><?= CommonHelper::displayMoneyFormat(($minPrice)??0,false,false,false);?> - <?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?><?= CommonHelper::displayMoneyFormat(($maxPrice)??0,false,false,false);?></a></li>
 			<?php } ?>	
+			<?php if ( $keyword !='' ) { ?>
+				<li>
+					<a href="javascript:void(0);" class="userKeyword tag__clickable " onclick="removeFilterUser('userKeyword',this)">
+							User :  <?php echo $keyword; ?>	 </a>
+				</li>
+			<?php } ?>
+			
 			</ul>
 		</div>
 	</div>
