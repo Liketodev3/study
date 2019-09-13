@@ -820,6 +820,13 @@ class TeachersController extends MyAppController {
 				$slangName = $languages['tlanguage_name'];
 			}
 		}
+		if ( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] )) {
+			if ( isset($_SESSION['search_filters']['teach_lang_keyword']) && !empty( $_SESSION['search_filters']['teach_lang_keyword'] ) ) {
+				$slangName = $_SESSION['search_filters']['teach_lang_keyword'];
+				$techLangKeyword = $_SESSION['search_filters']['teach_lang_keyword'];
+			}
+		}	
+		
 		$frm = new Form( 'frmTeacherSrch' );
 		$frm->addTextBox( '', 'teach_language_name', $slangName, array( 'placeholder' => Label::getLabel('LBL_Teaches:Select_Language') ) );
 		$frm->addHiddenField( '', 'teach_language_id', $slangId );
