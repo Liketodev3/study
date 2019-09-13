@@ -1,7 +1,8 @@
 /*+========================ROOT============================*/
 :root {
-    --color-primary: #e84c3d;
+    --color-primary: #3d91e8;
     --color-secondary: #e84c3d;
+    --color-main: #e84c3d;
     --color-black: #1a1a1a;
     --color-light: #fff;
     --color-dark: #333;
@@ -82,6 +83,7 @@ p {
 
 
 /*========================BUTTONS==============================*/
+/* .header .btn.btn--primary{background: var(--color-main);} */
 .btn.btn--primary:hover {
     background: var(--color-black);
 }
@@ -284,7 +286,7 @@ body {
 }
 
 .nav.nav--primary > ul > li > a:hover {
-    color: var(--color-primary)
+    color: var(--color-main)
 }
 
 .nav.nav--primary > ul > li.nav__dropdown > a {
@@ -323,7 +325,7 @@ body {
 }
 
 .nav.nav--vertical li.is-active a {
-    color: var(--color-primary);
+    color: var(--color-main);
     font-weight: 600;
 }
 
@@ -546,7 +548,7 @@ body {
     top: -2px;
     padding: 1px 3px;
     border-radius: 2px;
-    background: var(--color-primary);
+    background: var(--color-main);
     font-size: 11px;
     color: #fff;
     min-width: 20px;
@@ -590,7 +592,7 @@ body {
 }
 
 .nav.nav--primary > ul > li.nav__dropdown.nav__dropdown--notification .count {
-    background: var(--color-primary);
+    background: var(--color-main);
 }
 
 .nav.nav--primary > ul > li.nav__dropdown.nav__dropdown--notification > a {
@@ -1048,7 +1050,7 @@ body {
 
 .slick-dots li.slick-active button {
     background: rgba(255, 255, 255, 1);
-    border-color: var(--color-primary);
+    border-color: var(--color-main);
     margin-top: -15px;
 }
 
@@ -1208,7 +1210,7 @@ body {
 }
 
 .tabs-vertical ul li.is-active .tab-info h3 {
-    color: var(--color-primary);
+    color: var(--color-main);
 }
 
 @media (max-width: 1200px) {
@@ -1328,7 +1330,7 @@ body {
 }
 
 .social-links li a:hover {
-    border-color: var(--color-primary)
+    border-color: var(--color-main)
 }
 
 /*Social Links]*/
@@ -1430,7 +1432,7 @@ body {
 
 .footer-inline li a:hover,
 .links--vertical li a:hover {
-    color: var(--color-primary)
+    color: var(--color-main)
 }
 
 /*Footer Inline]*/
@@ -1628,7 +1630,7 @@ body {
     }
 
     .social-links li a {
-        background: var(--color-primary);
+        background: var(--color-main);
     }
 
     .social-links {

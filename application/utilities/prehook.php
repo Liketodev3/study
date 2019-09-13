@@ -30,6 +30,7 @@ FatApp::setViewDataProvider('_partial/footer/footerSocialMedia.php', array('Comm
 FatApp::setViewDataProvider('guest-user/_partial/learner-social-media-signup.php', array('Common', 'learnerSocialMediaSignUp'));
 
 FatApp::setViewDataProvider('teachers/_partial/teacherLeftFilters.php', array('Common', 'teacherLeftFilters'));
+FatApp::setViewDataProvider('teachers/_partial/teacherTopFilters.php', array('Common', 'teacherLeftFilters'));
 FatApp::setViewDataProvider('_partial/blogSidePanel.php', array('Common', 'blogSidePanelArea'));
 FatApp::setViewDataProvider('_partial/blogTopFeaturedCategories.php', array('Common', 'blogTopFeaturedCategories'));
 FatApp::setViewDataProvider('_partial/headerNavigation.php', array('Navigation', 'headerNavigation'));
