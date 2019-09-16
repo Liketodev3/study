@@ -81,12 +81,14 @@ class UsersController extends AdminBaseController
         if (!empty($user_regdate_to)) {
             $srch->addCondition('user_added_on', '<=', $user_regdate_to . ' 23:59:59');
         }
+		$srch->joinTable( TeacherRequest::DB_TBL, 'LEFT JOIN', 'tr.utrequest_user_id = user_id', 'tr' );
         $srch->addFld(array(
             'user_is_learner',
             'user_is_teacher',
 			'user_first_name',
 			'user_last_name',
-			'user_registered_initially_for'
+			'user_registered_initially_for',
+			'tr.utrequest_status'
         ));
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);

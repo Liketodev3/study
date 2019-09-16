@@ -73,6 +73,10 @@ foreach ($arr_listing as $sn=>$row){
 					$userTypeStr = Label::getLabel('LBL_Signing_up_for_{user-type}');
 					$userTypeStr = str_replace( "{user-type}", User::getUserTypesArr( $adminLangId )[User::USER_TEACHER_DASHBOARD], $userTypeStr );
 					$str .= '<span class="label label-danger">' . $userTypeStr .'</span>';
+				} elseif( $row['utrequest_status'] == 0  && $row['utrequest_status'] !='') {
+					$userTypeStr = Label::getLabel('LBL_Signing_up_for_{user-type}');
+					$userTypeStr = str_replace( "{user-type}", User::getUserTypesArr( $adminLangId )[User::USER_TEACHER_DASHBOARD], $userTypeStr );
+					$str .= '<span class="label label-danger">' . $userTypeStr .'</span>';
 				}
 				
 				$td->appendElement('plaintext', array(), $str  ,true);

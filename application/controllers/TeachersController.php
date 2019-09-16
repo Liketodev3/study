@@ -245,7 +245,7 @@ class TeachersController extends MyAppController {
         $tLangsrch->addCondition('utl_us_user_id','=',$teacher_id);
 		$rs = $tLangsrch->getResultSet();
 		$tLangs = FatApp::getDb()->fetch($rs);
-        $teachLanguages = SpokenLanguage::getAllLangs($this->siteLangId,true);  
+        $teachLanguages = TeachingLanguage::getAllLangs($this->siteLangId,true);  
         if(!empty($tLangs['utl_slanguage_ids'])){
             $tLangidsArr = explode(',',$tLangs['utl_slanguage_ids']);
             $tlangArr = array_intersect_key($teachLanguages, array_flip($tLangidsArr));

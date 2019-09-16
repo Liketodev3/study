@@ -175,7 +175,7 @@ class Common {
 		$prefSrch = clone $teacherSrchObj;		
 		$prefSrch->joinTable( Preference::DB_TBL_USER_PREF, 'INNER JOIN', 'u.user_id = utp.utpref_user_id', 'utp' );		
 		$prefSrch->joinTable( Preference::DB_TBL, 'INNER JOIN', 'utp.utpref_preference_id = p.preference_id', 'p' );		
-		$prefSrch->joinTable( Preference::DB_TBL_LANG, 'LEFT OUTER JOIN','pl.preferencelang_preference_id = p.preference_id AND pl.preferencelang_lang_id = ' . CommonHelper::getCurrencyId(), 'pl');		
+		$prefSrch->joinTable( Preference::DB_TBL_LANG, 'LEFT OUTER JOIN','pl.preferencelang_preference_id = p.preference_id AND pl.preferencelang_lang_id = ' . CommonHelper::getLangId(), 'pl');		
 		$prefSrch->addGroupBy( 'preference_id' );		
 		$prefSrch->addMultipleFields( array('preference_id', 'preference_type', 'IFNULL(preference_title, preference_identifier) as preference_titles') );
 		$prefRs = $prefSrch->getResultSet();

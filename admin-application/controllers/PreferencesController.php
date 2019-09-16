@@ -147,6 +147,7 @@ class PreferencesController extends AdminBaseController
         }
         $langFrm  = $this->getLangForm($preferenceId, $lang_id);
         $langData = Preference::getAttributesByLangId($lang_id, $preferenceId);
+		$langData['preferencelang_title'] = $langData['preference_title'];
         if ($langData) {
             $langFrm->fill($langData);
         }
