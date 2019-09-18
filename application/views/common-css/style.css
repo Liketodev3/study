@@ -7126,6 +7126,7 @@ div.tagsinput div {
 	content:","; 
 	position:absolute; 
 }
+.box-language .language span.main-language:last-child:after{content:"";}
 
 .box-language .language ul, .border-box .language ul, .my_teacher_langauges .language ul {
     margin-left: 0px;
@@ -7209,10 +7210,10 @@ div.tagsinput div {
 
 .border-box .language span{
 	background: var(--color-grey-light);
-    padding: 5px;
+    padding: 3px 6px;
     font-size: 0.857rem;
     color: var(--color-dark);
-    margin: 5px;
+    margin: 0 5px;
 }
 
 .border-box .box-body .tags .language li {

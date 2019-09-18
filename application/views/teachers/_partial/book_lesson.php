@@ -41,7 +41,7 @@ if( !empty( $teacher['teachLanguages'] ) ) {
 		<?php } ?>
 		
 	</div>*/ ?>
-	<span class="-gap-10"></span>
+	
 	<?php } ?>
 
 	<div class="box-btn-group">
