@@ -759,8 +759,13 @@ class TeachersController extends MyAppController {
 		/* ] */
 
 		/* [ */
-		$sortBy = FatApp::getPostedData('sortBy', FatUtility::VAR_STRING, 'popularity');
-		$sortOrder = FatApp::getPostedData('sortOrder', FatUtility::VAR_STRING, 'asc');
+		$filterSortBy = FatApp::getPostedData('sortBy', FatUtility::VAR_STRING, 'popularity_desc');
+		$filterSortBy = explode( '_', $filterSortBy );
+		
+		$sortBy = $filterSortBy[0]; 
+		$sortOrder = $filterSortBy[1]; 
+		
+		//$sortOrder = FatApp::getPostedData('sortOrder', FatUtility::VAR_STRING, 'asc');
 		if( !in_array($sortOrder,array('asc','desc')) ){
 			$sortOrder = 'asc';
 		}
@@ -771,10 +776,10 @@ class TeachersController extends MyAppController {
 			$sortOrder = isset($sortByArr[1]) ? $sortByArr[1] : $sortOrder;
 			switch($sortBy){
 				case 'price':
-					$srch->addOrder('us_bulk_lesson_amount',$sortOrder);
+					$srch->addOrder('minPrice',$sortOrder);
 				break;
 				case 'popularity':
-					//$srch->addOrder('selprod_sold_count',$sortOrder);
+					$srch->addOrder('teacher_rating',$sortOrder);
 				break;
 			}
 		}
