@@ -56,7 +56,7 @@ class TeacherWeeklySchedule extends MyAppModel{
 		$systemTimeZone = MyDate::getTimeZone();
 		//echo $date;
 		//die();
-		if( $endTime == '00:00:00' ) {
+		if( strtotime($date .' '. $endTime) <= strtotime($date .' '.$startTime) ) {
 			$_endDate = date( 'Y-m-d', strtotime('+1 days',strtotime($date) ) );
 		} else { 
 			$_endDate = $date;
@@ -150,7 +150,7 @@ class TeacherWeeklySchedule extends MyAppModel{
 				if( strtotime($val->date) >= strtotime(date('Y-m-d')) && isset($val->classtype) )
 				{
 					
-					if( strtotime($val->end) < strtotime($val->start) ) {
+					if( strtotime($val->date .' '.$val->end) <= strtotime($val->date .' '. $val->start) ) {
 						//$date = date('Y-m-d', strtotime('-1 day', strtotime($val->date)));
 						$endDate = date('Y-m-d', strtotime('+1 day', strtotime($val->date)));
 					} else {
@@ -175,7 +175,7 @@ class TeacherWeeklySchedule extends MyAppModel{
 			} else { 
 					/* code added  on 12-07-2019 */
 					//changeDateTimezone(string  $date, string  $fromTimezone, string  $toTimezone) //== change timezone
-					if( strtotime($val->end) < strtotime($val->start) ) {
+					if( strtotime($val->date .' '. $val->end) <= strtotime($val->date .' '. $val->start) ) {
 						$endDate = date('Y-m-d', strtotime('+1 day', strtotime($val->date)));
 					} else {
 						$endDate = $val->date;

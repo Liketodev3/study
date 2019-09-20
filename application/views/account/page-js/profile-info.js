@@ -285,7 +285,7 @@ $(document).ready(function(){
 				start: moment(e.start).format('HH:mm:ss'),
 				end: moment(e.end).format('HH:mm:ss'),
 				day: moment(e.start).format('d'),
-				date: moment(e.end).format('YYYY-MM-DD'),
+				date: moment(e.start).format('YYYY-MM-DD'),
 				_id: e._id,
 				action: e.action,
 				classtype: e.classType,

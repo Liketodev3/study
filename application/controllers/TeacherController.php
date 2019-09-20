@@ -557,7 +557,7 @@ class TeacherController extends TeacherBaseController {
 	public function getTeacherGeneralAvailabilityJsonData(){
 		$userId = UserAuthentication::getLoggedUserId();
 		$post = FatApp::getPostedData();
-		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr( $userId, $post, $requestBtTeacher = true );
+		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr( $userId, $post );
 		echo FatUtility::convertToJson( $jsonArr );
 	}
 	

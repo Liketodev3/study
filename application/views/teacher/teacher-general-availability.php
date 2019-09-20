@@ -61,7 +61,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date('Y-m-d H:i
    				$('#ga_calendar').fullCalendar('renderEvent',newEvent);
    			},
    			eventLimit: true, 
-   			defaultDate: '2018-01-07',
+   			defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
    			events: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonData'); ?>",
    			eventRender: function(event, element) {
    				if(isNaN(event._id)){ 
