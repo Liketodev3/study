@@ -779,6 +779,9 @@ class TeachersController extends MyAppController {
 					$srch->addOrder('minPrice',$sortOrder);
 				break;
 				case 'popularity':
+					$srch->addOrder('studentIdsCnt',$sortOrder);
+					$srch->addOrder('teacherTotLessons',$sortOrder);
+					$srch->addOrder('totReviews',$sortOrder);
 					$srch->addOrder('teacher_rating',$sortOrder);
 				break;
 			}
