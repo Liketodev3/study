@@ -103,8 +103,8 @@
 }
 
 .block__media {
-    height: 76px;
-    width: 76px;
+    /*height: 76px;*/
+    width: 110px;
     display: -moz-flex;
     display: -webkit-flex;
     display: -ms-flex;
@@ -516,7 +516,8 @@
 
 .quote-white p {
     max-height: 100px;
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
+    overflow-y: auto;
 }
 
 .quote-slider .slick-arrow {

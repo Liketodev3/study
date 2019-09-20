@@ -7250,4 +7250,7 @@ display: block;}
 .footer .settings .settings__target {
 	z-index : 99;
 }
+.btn_faq {
+	margin-top: 10px;
+}
 
