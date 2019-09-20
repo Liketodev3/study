@@ -15,7 +15,7 @@
 		</tr>
 		<?php foreach( $teachers as $teacher ){
 			
-				$teacherDetailPageUrl = CommonHelper::generateUrl('Learner', 'my-teacher', array($teacher['teacherId']) ); ?>
+				$teacherDetailPageUrl = CommonHelper::generateUrl('Learner', 'my-teacher', array($teacher['user_url_name']) ); ?>
 		<tr>
 			<td width="25%">
 				<span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Teacher');?></span>

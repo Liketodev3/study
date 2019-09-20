@@ -241,6 +241,7 @@ class TeacherRequestsController extends AdminBaseController{
 			$user = new User( $requestRow['utrequest_user_id'] );
 			$userUpdateDataArr = array(
 				'user_is_teacher'	=>	1,
+				'user_preferred_dashboard' => User::USER_TEACHER_DASHBOARD,
 				'user_first_name'	=>	$requestRow['utrvalue_user_first_name'],
 				'user_last_name'	=>	$requestRow['utrvalue_user_last_name'],
 				'user_gender'		=>	$requestRow['utrvalue_user_gender'],

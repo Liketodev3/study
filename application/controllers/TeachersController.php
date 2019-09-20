@@ -146,7 +146,8 @@ class TeachersController extends MyAppController {
         die(json_encode($json));
 	}
 	/******/
-	public function view( $teacher_id ){
+	//public function view( $teacher_id ){
+	public function view( $user_name ){	
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
@@ -156,7 +157,20 @@ class TeachersController extends MyAppController {
 		//$this->_template->addJs('js/popper.min.js');
 		//$this->_template->addJs('js/bootstrap.min.js');
 		//$this->_template->addCss('css/bootstrap.min.css');
-
+		
+		$srchTeacher = new UserSearch( );
+		$srchTeacher->addMultipleFields(array(
+											'user_id'
+											)
+										);
+		$srchTeacher->addCondition('user_url_name', '=', $user_name);
+		$srchTeacher->setPageSize(1);
+		$rsTeacher = $srchTeacher->getResultSet();
+		$teacherData = FatApp::getDb()->fetch( $rsTeacher );
+		if( empty($teacherData) ){
+			FatUtility::exitWithErrorCode(404);
+		}
+		$teacher_id = $teacherData['user_id'];
 		$teacher_id = FatUtility::int( $teacher_id );
 
 		/* preferences/skills[ */
@@ -797,6 +811,7 @@ class TeachersController extends MyAppController {
 		$srch->addGroupBy('user_id');
 		$srch->addMultipleFields( array(
 			'user_id',
+			'user_url_name',
 			'user_first_name',
 			'user_last_name',
 			'user_country_id',

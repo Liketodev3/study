@@ -36,6 +36,7 @@ class LearnerTeachersController extends LearnerBaseController {
 			'slns.slesson_teacher_id as teacherId',
 			'slns.slesson_slanguage_id as languageID',
 			'slns.slesson_learner_id as learnerId',
+			'ut.user_url_name as user_url_name',
 			'ut.user_first_name as teacherFname',
 			'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
 			'IFNULL(teachercountry_lang.country_name, teachercountry.country_code) as teacherCountryName',

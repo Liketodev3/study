@@ -175,7 +175,11 @@ class User extends MyAppModel {
 	}
 
 	public static function getDashboardActiveTab(){
-		$activeTab = User::USER_LEARNER_DASHBOARD;
+		if ( self::isTeacher()) {
+			$activeTab = User::USER_TEACHER_DASHBOARD;
+		} else {
+			$activeTab = User::USER_LEARNER_DASHBOARD;
+		}
 		if( isset( $_SESSION[UserAuthentication::SESSION_ELEMENT_NAME]['activeTab'] ) && $_SESSION[UserAuthentication::SESSION_ELEMENT_NAME]['activeTab'] > 0 ){
 			$activeTab = $_SESSION[UserAuthentication::SESSION_ELEMENT_NAME]['activeTab'];
 		}
@@ -663,11 +667,11 @@ class User extends MyAppModel {
 
 	public static function getPreferedDashbordRedirectUrl( $preferredDashboard = "", $detectReferrerUrl = true ) {
 		$redirectUrl = "";
-		if ( isset($_SESSION['referer_page_url']) && true == $detectReferrerUrl ) {
+		/* if ( isset($_SESSION['referer_page_url']) && true == $detectReferrerUrl ) {
             $redirectUrl = $_SESSION['referer_page_url'];
             unset($_SESSION['referer_page_url']);
 			return $redirectUrl;
-        }
+        } */
 
 		if( "" == $preferredDashboard ){
 			$userRow = User::getAttributesById( UserAuthentication::getLoggedUserId(), array('user_preferred_dashboard') );
@@ -675,7 +679,8 @@ class User extends MyAppModel {
 		}
         switch ( $preferredDashboard ) {
             case User::USER_LEARNER_DASHBOARD :
-                $redirectUrl = CommonHelper::generateFullUrl('learner');
+                //$redirectUrl = CommonHelper::generateFullUrl('learner');
+				$redirectUrl = CommonHelper::generateFullUrl('teachers');
             break;
             case User::USER_TEACHER_DASHBOARD :
                 $redirectUrl = CommonHelper::generateFullUrl('teacher');
@@ -720,6 +725,7 @@ class User extends MyAppModel {
 		}
 		$srch->addMultipleFields( array(
 			'user_id',
+			'user_url_name',
 			'user_first_name',
 			'user_last_name',
 			'concat(user_first_name, " ", user_last_name) as user_full_name',
@@ -851,6 +857,7 @@ class User extends MyAppModel {
 		$srch->joinUserTeachLanguages( $langId );
 		$srch->addMultipleFields(array(
 			'uft_teacher_id',
+			'user_url_name',
 			'user_first_name',
 			'user_last_name',
 			'user_country_id',

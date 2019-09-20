@@ -33,7 +33,13 @@ if( !empty( $teacher['teachLanguages'] ) ) {
 } else {
 	$teacherLanguage = 1;
 }
+
+
+$langId = CommonHelper::getLangId();
+$websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_STRING, '');
 ?>
+<title><?php echo $teacher['user_full_name'] .' - '. implode(', ', $teacher['teachLanguages'] ) .' - '. $websiteName ; ?></title>
+
 <section class="section section--gray section--details">
 	 <div class="container container--narrow">
 		<div class="breadcrumb">

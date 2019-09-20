@@ -647,3 +647,7 @@ page footer end here
 ALTER TABLE `tbl_scheduled_lessons` 
 ADD `slesson_reminder_one` INT(11) NOT NULL AFTER `slesson_added_on`, 
 ADD `slesson_reminder_two` INT(11) NOT NULL AFTER `slesson_reminder_one`;
+
+
+ALTER TABLE `tbl_users` ADD `user_url_name` VARCHAR(150) NULL DEFAULT NULL AFTER `user_id`;
+INSERT INTO `tbl_url_rewrites` (`urlrewrite_id`, `urlrewrite_original`, `urlrewrite_custom`) VALUES (NULL, 'teachers/view', 'teachers/urlparameter');

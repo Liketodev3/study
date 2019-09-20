@@ -62,7 +62,23 @@ class LearnerController extends LearnerBaseController {
 		$this->_template->render(false,false);	
 	}
 
-	public function myTeacher($teacherId){
+	//public function myTeacher($teacherId){
+	public function myTeacher($user_name){	
+		$srchTeacher = new UserSearch( );
+		$srchTeacher->addMultipleFields(array(
+											'user_id'
+											)
+										);
+		$srchTeacher->addCondition('user_url_name', '=', $user_name);
+		$srchTeacher->setPageSize(1);
+		$rsTeacher = $srchTeacher->getResultSet();
+		$teacherData = FatApp::getDb()->fetch( $rsTeacher );
+		if( empty($teacherData) ){
+			FatUtility::exitWithErrorCode(404);
+		}
+		$teacherId = $teacherData['user_id'];
+	
+	
 		$teacherId = FatUtility::int( $teacherId );
 		$srch = new UserSearch( );
 		$srch->setTeacherDefinedCriteria();
@@ -77,7 +93,8 @@ class LearnerController extends LearnerBaseController {
 		$srch->setPageSize(1);
 		$srch->addCondition( 'user_id', '=', $teacherId );
 		$srch->addMultipleFields( array( 
-			'user_id', 
+			'user_id',
+			'user_url_name',
 			'user_first_name',
 			'user_last_name',
 			'CONCAT(user_first_name," ", user_last_name) as user_full_name',

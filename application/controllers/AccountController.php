@@ -184,6 +184,7 @@ class AccountController extends LoggedUserController {
 
 		$userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array(
 			'user_id',
+			'user_url_name',
 			'user_first_name',
 			'user_last_name',
 			'user_gender',
@@ -382,6 +383,15 @@ class AccountController extends LoggedUserController {
 	private function getProfileInfoForm($teacher=false){
 		$frm = new Form('frmProfileInfo');
 		$frm->addHTML('','personal_information','');
+		if($teacher){
+			$frm->addHiddenField('', 'user_id', 'user_id');
+			$fldUname = $frm->addTextBox(Label::getLabel('LBL_Username'),'user_url_name');
+			$fldUname->setUnique('tbl_users', 'user_url_name', 'user_id', 'user_id', 'user_id');
+			$fldUname->requirements()->setRequired();
+			$fldUname->requirements()->setCharOnly();
+		}
+		
+		
 		$fldFname = $frm->addTextBox(Label::getLabel('LBL_First_Name'),'user_first_name');
         $fldFname->requirements()->setCharOnly();
 		$fldLname = $frm->addTextBox(Label::getLabel('LBL_Last_Name'),'user_last_name');

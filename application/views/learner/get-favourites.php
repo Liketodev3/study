@@ -9,7 +9,7 @@
 				<th><?php echo Label::getLabel('LBL_Action'); ?></th>			
 		</tr>
 		<?php $i=1; foreach($favouritesData['Favourites'] as $favourite){ 
-			  $teacherDetailPageUrl = CommonHelper::generateUrl('Teachers', 'view', array($favourite['uft_teacher_id']) );		
+			   $teacherDetailPageUrl = CommonHelper::generateUrl('Teachers').'/'. $favourite['user_url_name'];		
 		?>
 <tr>
                                         <td width="35%">

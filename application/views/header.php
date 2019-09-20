@@ -20,7 +20,15 @@ $commonHead1DataArr = array(
 $this->includeTemplate( '_partial/header/commonHead1.php', $commonHead1DataArr );
 /* ] */
 
-echo $this->writeMetaTags();
+/** Remove meta from teacher profile page **/
+$__controller = FatApp::getController();
+$__action = FatApp::getAction();
+if ( $__controller =='TeachersController' && $__action =='view'  ){
+	echo '';
+} else {
+	echo $this->writeMetaTags();
+}
+/***********/
 echo $this->getJsCssIncludeHtml(!CONF_DEVELOPMENT_MODE);
 
 

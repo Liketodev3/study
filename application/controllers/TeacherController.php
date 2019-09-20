@@ -11,6 +11,7 @@ class TeacherController extends TeacherBaseController {
 		if( true != User::isTeacherProfileCompleted() ){
 			Message::addInfo( Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page') );
             $this->set('viewProfile',false);
+			FatApp::redirectUser(CommonHelper::generateUrl('account', 'profileInfo'));
 		}else{
                         $this->set('viewProfile',true);
         }
