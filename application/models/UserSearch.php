@@ -227,13 +227,15 @@ class UserSearch extends SearchBase {
     public function getTopRatedTeachers(){
 		$this->addMultipleFields( array('u.*','utls.*','cl.*') );
         $this->setTeacherDefinedCriteria();
+		$this->addGroupBy('u.user_id');
 		$this->joinRatingReview( );
         $this->joinUserCountry(CommonHelper::getLangId());
         //$this->addHaving('teacher_rating','>',0);
-        $this->addOrder('teacher_rating','desc');
+        $this->addOrder('teacher_rating','DESC');
  		$this->setPageSize(6);
 		$db = FatApp::getDb();
-		$rs = $this->getResultSet();        
+		$rs = $this->getResultSet();
+		//echo $this->getQuery();
 		return $teachersList = $db->fetchAll($rs);
     }
 	
