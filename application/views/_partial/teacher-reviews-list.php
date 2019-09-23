@@ -25,10 +25,10 @@
 					<p>
 						<span class='lessText'><?php echo CommonHelper::truncateCharacters($review['tlreview_description'],200,'','',true);?></span>
 						<?php if(strlen($review['tlreview_description']) > 200) { ?>
-						<span class='moreText' hidden>
+						<span class='moreText moreTextHide' >
 						<?php echo nl2br($review['tlreview_description']); ?>
 						</span>
-						<a class="readMore link--arrow" href="javascript:void(0);"> <?php echo Label::getLabel('Lbl_SHOW_MORE') ; ?> </a>
+						<a class="readMore link--arrow" href="javascript:void(0);"><?php echo Label::getLabel('Lbl_SHOW_MORE') ; ?></a>
 						<?php } ?>
 					</p>
 					</div>
@@ -56,3 +56,14 @@
                    
 	<?php 
 }?>
+
+<script>
+$(document).ready(function(){
+	$('body').on('click', '.readMore', function(){
+			$(this).siblings('.moreText').toggleClass('moreTextHide');
+			$(this).siblings('.lessText').toggleClass('lessTexthide');
+			var $el = $(this);
+			$el.text($el.text() == "Show More" ? "Less More": "Show More");
+	})
+})
+</script>
