@@ -321,6 +321,8 @@ class TeachersController extends MyAppController {
 		$srch->joinTeacher();
 		$srch->joinLearner();
 		$srch->joinTeacherLessonRating();
+		$srch->joinScheduledLesson();
+		$srch->joinLessonLanguage( CommonHelper::getLangId() );
 		//$srch->addCondition('tlrating_rating_type','=',TeacherLessonRating::TYPE_LESSON);
 		$srch->addCondition('tlr.tlreview_teacher_user_id', '=', $teacherId);
 		$srch->addCondition('tlr.tlreview_status', '=', TeacherLessonReview::STATUS_APPROVED);
@@ -332,7 +334,9 @@ class TeachersController extends MyAppController {
 					'tlreview_postedby_user_id',
 					'ul.user_first_name as lname',
 					'ut.user_first_name as tname',
-					'(select count(slesson_id) from  '. ScheduledLesson::DB_TBL .' where slesson_teacher_id = ut.user_id AND slesson_learner_id = ul.user_id ) as lessonCount'
+					'(select count(slesson_id) from  '. ScheduledLesson::DB_TBL .' where slesson_teacher_id = ut.user_id AND slesson_learner_id = ul.user_id ) as lessonCount',
+					'IFNULL(tlanguage_name, tlanguage_identifier) as lessonLanguage'
+					
 					
 				));
 		$srch->addGroupBy('tlr.tlreview_id');
@@ -348,6 +352,8 @@ class TeachersController extends MyAppController {
 			break;
 		}
 		//echo $srch->getQuery();
+		//die();
+		
 		$records = FatApp::getDb()->fetchAll($srch->getResultSet());
 		$this->set('reviewsList',$records);
 		$this->set('page', $page);
