@@ -19,13 +19,13 @@
 	echo $frm->getFormHtml(); ?>
 
 	<div class="-align-center">
-		<a href="<?php echo CommonHelper::generateUrl('GuestUser','ForgotPasswordForm'); ?>" class="-link-underline"><?php echo Label::getLabel('LBL_Forgot_Password?'); ?></a>
+		<a href="<?php echo CommonHelper::generateUrl('GuestUser','ForgotPasswordForm'); ?>" class="-link-underline link-color"><?php echo Label::getLabel('LBL_Forgot_Password?'); ?></a>
 	</div>
 
 	<hr>
 	
 	<div class="-align-center">
-		<p><?php echo Label::getLabel('LBL_Don\'t_have_an_account?'); ?> <a href="javascript:void(0)" onclick="signUpFormPopUp();" class="-link-underline"><?php echo Label::getLabel('LBL_Sign_Up'); ?></a></p>
+		<p><?php echo Label::getLabel('LBL_Don\'t_have_an_account?'); ?> <a href="javascript:void(0)" onclick="signUpFormPopUp();" class="-link-underline link-color"><?php echo Label::getLabel('LBL_Sign_Up'); ?></a></p>
 	</div>
 
 </div>

@@ -23,12 +23,11 @@
 						<p><strong><?php echo $langName;?> </strong> (1 <?php echo Label::getLabel('Lbl_Lessons');?> )</p>
 						<h5><?php echo $review['tlreview_title']; ?></h5>
 					<p>
-						<span class='lessText'><?php echo CommonHelper::truncateCharacters($review['tlreview_description'],200,'','',true);?></span>
-						<?php if(strlen($review['tlreview_description']) > 200) { ?>
+						<span class='lessText'><?php echo CommonHelper::truncateCharacters($review['tlreview_description'],200,'','',true);?></span><?php if(strlen($review['tlreview_description']) > 200) { ?><span class='lessText' >...</span>
 						<span class='moreText moreTextHide' >
 						<?php echo nl2br($review['tlreview_description']); ?>
 						</span>
-						<a class="readMore link--arrow" href="javascript:void(0);"><?php echo Label::getLabel('Lbl_SHOW_MORE') ; ?></a>
+						<a class="readMore link--arrow link-color" href="javascript:void(0);">( <?php echo Label::getLabel('Lbl_SHOW_MORE') ; ?> )</a> 
 						<?php } ?>
 					</p>
 					</div>
@@ -63,7 +62,7 @@ $(document).ready(function(){
 			$(this).siblings('.moreText').toggleClass('moreTextHide');
 			$(this).siblings('.lessText').toggleClass('lessTexthide');
 			var $el = $(this);
-			$el.text($el.text() == "Show More" ? "Show Less": "Show More");
+			$el.text($el.text() == "( Show More )" ? "( Show Less )": "( Show More )");
 	})
 })
 </script>

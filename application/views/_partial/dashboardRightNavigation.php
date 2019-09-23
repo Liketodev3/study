@@ -53,7 +53,7 @@
 									<?php }?>
 									</ul>
 								</div>
-                                    <a href="<?php echo CommonHelper::generateUrl('LearnerTeachers') ?>" class="-link-underline"><?php echo Label::getLabel('LBL_See_All_Teachers'); ?></a>
+                                    <a href="<?php echo CommonHelper::generateUrl('LearnerTeachers') ?>" class="-link-underline link-color"><?php echo Label::getLabel('LBL_See_All_Teachers'); ?></a>
 							</div>
 						<?php } ?>
                     </div>

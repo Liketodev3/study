@@ -7262,6 +7262,9 @@ display: block;}
 	display : none;
 }
 
+.link-color {
+	color: var(--color-primary);
+}
 .readMore {
-	color: var(--color-main);
+	float : right;
 }
