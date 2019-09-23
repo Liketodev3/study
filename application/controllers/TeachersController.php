@@ -324,7 +324,17 @@ class TeachersController extends MyAppController {
 		//$srch->addCondition('tlrating_rating_type','=',TeacherLessonRating::TYPE_LESSON);
 		$srch->addCondition('tlr.tlreview_teacher_user_id', '=', $teacherId);
 		$srch->addCondition('tlr.tlreview_status', '=', TeacherLessonReview::STATUS_APPROVED);
-		$srch->addMultipleFields(array('tlreview_id',"ROUND(AVG(tlrating_rating),2) as prod_rating" ,'tlreview_title','tlreview_description','tlreview_posted_on','tlreview_postedby_user_id','ul.user_first_name as lname','ut.user_first_name as tname' ));
+		$srch->addMultipleFields(array(
+					'tlreview_id',"ROUND(AVG(tlrating_rating),2) as prod_rating" ,
+					'tlreview_title',
+					'tlreview_description',
+					'tlreview_posted_on',
+					'tlreview_postedby_user_id',
+					'ul.user_first_name as lname',
+					'ut.user_first_name as tname',
+					'(select count(slesson_id) from  '. ScheduledLesson::DB_TBL .' where slesson_teacher_id = ut.user_id AND slesson_learner_id = ul.user_id ) as lessonCount'
+					
+				));
 		$srch->addGroupBy('tlr.tlreview_id');
 		//$srch->addGroupBy('ul.user_id');
 		$srch->setPageNumber($page);
