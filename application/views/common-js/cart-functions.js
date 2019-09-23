@@ -1,5 +1,10 @@
 var cart = {
 	add: function( teacherId, lpackageId, startDateTime, endDateTime, languageId ){
+		if( isUserLogged() == 0 ){
+			logInFormPopUp();
+			return false;
+		}
+		
 		if( startDateTime == undefined ){
 			startDateTime = '';
 		}

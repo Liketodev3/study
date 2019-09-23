@@ -197,6 +197,32 @@ class User extends MyAppModel {
 	public static function canAccessTeacherDashboard(){
 		return static::isTeacher();
 	}
+	
+	public static function isLearnerProfileCompleted( $userId = 0 ){
+		$userId = FatUtility::int( $userId );
+		if( $userId <= 0 ){
+			$userId = UserAuthentication::getLoggedUserId();
+		}
+
+		$srch = new UserSearch();
+		$srch->joinUserSettings();
+		$srch->addCondition( 'user_id', '=', $userId );
+		$srch->setPageSize(1);
+		$srch->addMultiplefields( array(
+			'user_timezone'
+			) );
+			
+		$rs = $srch->getResultSet();
+		$teacherRow = FatApp::getDb()->fetch( $rs );
+
+		if( empty($teacherRow['user_timezone']) ){
+				return false;
+		}
+
+		return true;
+	}
+	
+	
 
 	public static function isTeacherProfileCompleted( $userId = 0 ){
 		$userId = FatUtility::int( $userId );
@@ -667,11 +693,11 @@ class User extends MyAppModel {
 
 	public static function getPreferedDashbordRedirectUrl( $preferredDashboard = "", $detectReferrerUrl = true ) {
 		$redirectUrl = "";
-		/* if ( isset($_SESSION['referer_page_url']) && true == $detectReferrerUrl ) {
+		if ( isset($_SESSION['referer_page_url']) && true == $detectReferrerUrl ) {
             $redirectUrl = $_SESSION['referer_page_url'];
             unset($_SESSION['referer_page_url']);
 			return $redirectUrl;
-        } */
+        }
 
 		if( "" == $preferredDashboard ){
 			$userRow = User::getAttributesById( UserAuthentication::getLoggedUserId(), array('user_preferred_dashboard') );

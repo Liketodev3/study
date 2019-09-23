@@ -1,3 +1,15 @@
+function isUserLogged(){
+	var isUserLogged = 0;
+	$.ajax({
+		url: fcom.makeUrl('GuestUser','checkAjaxUserLoggedIn'),
+		async: false,
+		dataType: 'json',
+	}).done(function(ans) {
+		isUserLogged = parseInt( ans.isUserLogged );
+	});
+	return isUserLogged;
+}
+
 
 function getSortedReviews(elm){
 	if($(elm).length){
@@ -51,6 +63,14 @@ $("document").ready(function(){
 });
 
 function viewCalendar( teacherId, action, languageId){	
+
+	if( action == 'free_trial' ) {
+		if( isUserLogged() == 0 ){
+			logInFormPopUp();
+			return false;
+		}
+	}
+
 	fcom.ajax(fcom.makeUrl('Teachers', 'viewCalendar',[teacherId, languageId]), 'action='+action, function(t) {			
 		$.facebox( t,'facebox-medium');
 	});

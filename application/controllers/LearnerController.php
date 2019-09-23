@@ -6,6 +6,10 @@ class LearnerController extends LearnerBaseController {
 	}
 	
 	public function index(){
+		if( true != User::isLearnerProfileCompleted() ){
+			Message::addInfo( Label::getLabel('LBL_Please_Update_Your_Timezone') );
+			FatApp::redirectUser(CommonHelper::generateUrl('account', 'profileInfo'));
+		}
 		$this->_template->addCss('css/custom-full-calendar.css');
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
