@@ -3,9 +3,11 @@ $profileFrm->setFormTagAttribute('id', 'profileInfoFrm');
 $profileFrm->setFormTagAttribute('class','form');
 $profileFrm->setFormTagAttribute('onsubmit', 'setUpProfileInfo(this); return(false);');
 
+if( $profileFrm->getField('user_url_name') ) {
 $user_url_name = $profileFrm->getField('user_url_name');
 $user_url_name->developerTags['col'] = 12;
 $user_url_name->htmlAfterField = '<p class="user_url_string">'. CommonHelper::generateFullUrl('teachers','') .'/<span class="user_url_name_span">'. $user_url_name->value .'</span></p>';
+}
 
 $profileFrm->developerTags['colClassPrefix'] = 'col-md-';
 $profileFrm->developerTags['fld_default_col'] = 6;
