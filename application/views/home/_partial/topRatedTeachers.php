@@ -11,7 +11,7 @@
                             <span class="box-pic">
                                 <a href="<?php echo CommonHelper::generateUrl('Teachers','View', array( $topRatedTeacher['user_id'] )) ?>"><img src="<?php echo CommonHelper::generateUrl('Image','User', array( $topRatedTeacher['user_id'] )) ?>"></a></span>
                             <div class="box-body">
-                                <h4 class="title"> <a href="<?php echo CommonHelper::generateUrl('Teachers','View', array( $topRatedTeacher['user_id'] )) ?>"><?php echo $topRatedTeacher['user_first_name'].' '.$topRatedTeacher['user_last_name']; ?></a></h4>
+                                <h4 class="title"> <a href="<?php echo CommonHelper::generateUrl('Teachers').'/'. $topRatedTeacher['user_url_name']?>"><?php echo $topRatedTeacher['user_first_name'].' '.$topRatedTeacher['user_last_name']; ?></a></h4>
                                 <span class="location"><?php echo $topRatedTeacher['country_name']; ?></span>
                                 <div class="rating <?php echo ($topRatedTeacher['teacher_rating']>0)?'':'no-rating'?>">
                                     <i class="svg">
