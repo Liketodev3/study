@@ -63,7 +63,7 @@ $(document).ready(function(){
 			$(this).siblings('.moreText').toggleClass('moreTextHide');
 			$(this).siblings('.lessText').toggleClass('lessTexthide');
 			var $el = $(this);
-			$el.text($el.text() == "Show More" ? "Less More": "Show More");
+			$el.text($el.text() == "Show More" ? "Show Less": "Show More");
 	})
 })
 </script>

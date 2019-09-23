@@ -7261,3 +7261,7 @@ display: block;}
 .moreTextHide, .lessTexthide{
 	display : none;
 }
+
+.readMore {
+	color: var(--color-main);
+}
