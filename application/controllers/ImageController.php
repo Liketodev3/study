@@ -483,13 +483,14 @@ class ImageController extends FatController{
     public function showLanguageFlagImage($sLanguageId){
         $sLanguageId = FatUtility::int($sLanguageId);
         $langId = FatUtility::int($langId);       
-        $w = 470;
-        $h = 367;           
+        //$w = 470;
+        //$h = 367;           
 		$default_image = 'no_image_user.jpg';
         $imgType = AttachedFile::FILETYPE_FLAG_TEACHING_LANGUAGES;
         $fileRow = AttachedFile::getAttachment( $imgType, $sLanguageId,0,$langId,true,0 );
         $image_name = isset($fileRow['afile_physical_path']) ?  $fileRow['afile_physical_path'] : '';
-        AttachedFile::displayImage( $image_name, $w, $h,$default_image);
+        //AttachedFile::displayImage( $image_name, $w, $h,$default_image);
+        AttachedFile::displayOriginalImage( $image_name, $default_image);
     }    
     
 }
