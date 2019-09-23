@@ -213,7 +213,8 @@
     position: relative;
     display: block;
     content: "";
-    padding-bottom: 62.5%;
+    /*padding-bottom: 62.5%;*/
+    padding-bottom: 80%;
 }
 
 .section--gray .media img,

@@ -455,7 +455,7 @@ class ImageController extends FatController{
             
             case BannerLocation::BLOCK_HOW_IT_WORKS:
             $w = 800;
-            $h = 500;           
+            $h = 600;           
             break;            
         }
         if($secondary){
