@@ -371,6 +371,11 @@ $(document).ready(function(){
 
 	generateThread = function( id ){
 		//var data = 'threadId='+id;
+		if( isUserLogged() == 0 ){
+			logInFormPopUp();
+			return false;
+		}
+		
 		fcom.updateWithAjax( fcom.makeUrl('Messages','initiate/'+id), '',function(ans){
 			$.mbsmessage.close();
 			if( ans.redirectUrl ){
