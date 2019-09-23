@@ -96,7 +96,8 @@
                         <p><?php echo Label::getLabel('LBL_All_Rights_Reserved'); ?></p>
                     </li>
                     <li>
-                        <p><?php echo MyDate::getDateAndTimeDisclaimer(); ?></p>
+                        <p><?php //echo MyDate::getDateAndTimeDisclaimer(); 
+						?></p>
                     </li>
                 </ul>
             </div>                        

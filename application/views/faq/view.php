@@ -43,12 +43,13 @@
 						<span class="-gap"></span-->
 <div class="box__footer -padding-30">
                                     <div class="row align-items-center">
-                                        <div class="col-xl-6 col-lg-12 col-md-12 -hide-mobile">
+                                        <div class="col-xl-5 col-lg-12 col-md-12 -hide-mobile">
                                          
                                         </div>
-                                        <div class="col-xl-6 col-lg-12 col-md-12">
-                                            <span class="-display-inline"><?php echo Label::getLabel('LBL_Have_more_questions?');?></span> 
-                                            <a href="<?php echo CommonHelper::generateUrl('Contact'); ?>" class="btn btn--secondary -display-inline btn_faq" style="vertical-align: middle;"><?php echo Label::getLabel('LBL_Submit_a_Request');?></a>
+										
+										<div class="col-xl-7 col-lg-12 col-md-12">
+                                           <span class="-display-inline"><?php echo Label::getLabel('LBL_Have_more_questions?');?></span>  &nbsp;&nbsp;
+											<a href="<?php echo CommonHelper::generateUrl('Contact'); ?>" class="btn btn--secondary -display-inline " style="vertical-align: middle;"><?php echo Label::getLabel('LBL_Submit_a_Request');?></a>
                                         </div>
                                     </div>
                                 </div>					   
