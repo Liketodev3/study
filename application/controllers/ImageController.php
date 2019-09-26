@@ -491,6 +491,14 @@ class ImageController extends FatController{
         $image_name = isset($fileRow['afile_physical_path']) ?  $fileRow['afile_physical_path'] : '';
         //AttachedFile::displayImage( $image_name, $w, $h,$default_image);
         AttachedFile::displayOriginalImage( $image_name, $default_image);
-    }    
+    }  
+	
+	public function editorImage( $fileNamewithPath ) {
+		AttachedFile::displayOriginalImage( 'editor/'. $fileNamewithPath );
+	}
+	public function editorImages($dirPath, $fileNamewithPath ) {
+		AttachedFile::displayOriginalImage( 'editor/'. $fileNamewithPath );
+	}
+	
     
 }

@@ -6,8 +6,8 @@
 	
 	/*assetmanager\server\delfile.php use path_for_images variable for admin-application folder*/
 	
-	$teacherSession = 'WeYakYakUserSession';
-	$adminSession = 'WeYakYakAdmin';
+	$teacherSession = UserAuthentication::SESSION_ELEMENT_NAME;
+	$adminSession = AdminAuthentication::SESSION_ELEMENT_NAME;
 	
 	$is_teacher_for_file_manager = 0;
 	$is_admin_for_file_manager = 0;
