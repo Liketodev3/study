@@ -87,9 +87,15 @@ $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account
 	}); */
 	
 	$(document).ready(function(){
+		$('input[name="user_url_name"]').on('keypress', function(e) {
+			if (e.which == 32) {
+				return false;
+			}
+		});	
+		
 		$('input[name="user_url_name"]').on('keyup', function(){
 			var user_name = $(this).val();
 			$('.user_url_name_span').html(user_name);
-		})
+		});
 	})
 </script>

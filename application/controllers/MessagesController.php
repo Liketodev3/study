@@ -173,7 +173,7 @@ class MessagesController extends LoggedUserController {
 
     private function sendMessageForm($langId) {
         $frm = new Form('frmSendMessage');
-        $fld = $frm->addTextarea('', 'message_text', '')->requirements();
+        $fld = $frm->addTextarea('Message', 'message_text', '')->requirements();
         $fld->setRequired(true);
         $fld->setLength(0, 1000);
         $frm->addHiddenField('', 'message_thread_id');
@@ -305,6 +305,34 @@ class MessagesController extends LoggedUserController {
         if (!$insertId = $tObj->addThreadMessages($data)) {
             FatUtility::dieWithError(Label::getLabel($tObj->getError(), $this->siteLangId));
         }
+		
+		/****/
+		$toUserDate = User::getAttributesById( $messageSendTo, array('user_first_name','user_last_name') );
+		$fromUserData = User::getAttributesById( $userId, array('user_first_name','user_last_name') );
+		
+		$db = FatApp::getDb();
+		$userSrch = User::getSearchObject(true);
+		$userSrch->addMultipleFields(array('credential_email'));
+		$userSrch->addCondition('credential_user_id','=',$messageSendTo);
+		$userRs = $userSrch->getResultSet();
+		$_userData = $db->fetch($userRs);
+		$toUserEmail = $_userData['credential_email'];
+		
+		$tpl = 'new_message_arrived';
+		$vars = array(
+			'{from_user_name}' => $fromUserData['user_first_name']." ".$fromUserData['user_last_name'],
+			'{to_user_name}' => $toUserDate['user_first_name']." ".$toUserDate['user_last_name'],
+			'{message}' => $post['message_text'],
+			'{action}' => Label::getLabel('MSG_New_Message_Arrived', $this->siteLangId),
+		);
+		
+		if( !EmailHandler::sendMailTpl( $toUserEmail, $tpl ,$this->siteLangId, $vars ) ){
+			Message::addErrorMessage(Label::getLabel('LBL_Mail_not_sent', $this->siteLangId));
+		}
+		
+		/****/
+		
+		
         $msg = Label::getLabel('MSG_Message_Submitted_Successfully!', $this->siteLangId);
         $this->set('threadId', $threadId);
         $this->set('messageId', $insertId);

@@ -4122,8 +4122,10 @@ div.tagsinput div {
 }
 
 .message-container .scrollbar {
-    max-height: 350px;
-    min-height: 350px;
+    /*max-height: 350px;
+    min-height: 350px;*/
+	max-height: 320px;
+    min-height: 320px;
 }
 
 .message-head {
@@ -7269,4 +7271,14 @@ display: block;}
 }
 .readMore {
 	float : right;
+}
+
+.links--vertical.footer_contact_details li {
+	  
+		font-size: 0.857rem !important;
+		color: #fff !important;
+}
+.messageCheckbox {
+	text-align :right;
+	margin-top: 15px;
 }

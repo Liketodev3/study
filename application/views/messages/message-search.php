@@ -57,6 +57,9 @@
 												$frm->setFormTagAttribute('class', 'form'); 
 												$frm->developerTags['colClassPrefix'] = 'col-md-';
 												$frm->developerTags['fld_default_col'] = 12;
+												$messageBox = $frm->getField('message_text');
+												$messageBox->htmlAfterField = '<p class="messageCheckbox"><label class="field_label"><input type="checkbox" name="is_enter" class="is_enter" value="false" > &nbsp; Send Message on Enter Press </label></p>';
+												
 												echo $frm->getFormHtml(); ?>
                                     <!--form class="form">
                                         <div class="row">
@@ -97,12 +100,20 @@
     });  
     }
     $(document).ready(function(){
-        $('textarea[name=message_text]').keydown(function(event) {
-            // enter has keyCode = 13, change it if you want to use another button
-            if (event.keyCode == 13 && !event.shiftKey) {
-                $('#frm_fat_id_frmSendMessage').submit();
-            }
-        });        
+		if( sessionStorage.getItem('is_enter') == true || sessionStorage.getItem('is_enter') == "true") {
+			$('input[name=is_enter]').prop('checked', true);
+		} else {
+			$('input[name=is_enter]').prop('checked', false);
+		}
+		
+	    $('textarea[name=message_text]').keydown(function(event) {
+			if (event.keyCode == 13 && !event.shiftKey && $('input[name=is_enter]').is(':checked')) {
+				sessionStorage.setItem('is_enter', true);
+				$('#frm_fat_id_frmSendMessage').submit();
+            } else {
+				sessionStorage.setItem('is_enter', false);
+			}
+		});        
     })
 
-</script>                                
+</script> 
