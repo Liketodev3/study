@@ -336,9 +336,10 @@ class Cart extends FatModel {
 			);
 			
 			if ( $couponInfo['coupon_discount_in_percent'] == applicationConstants::PERCENTAGE ) {
-				if ( $cartSubTotal > $couponInfo['coupon_max_discount_value'] ) {
+				/*if ( $cartSubTotal > $couponInfo['coupon_max_discount_value'] ) {
 					$cartSubTotal = $couponInfo['coupon_max_discount_value'];
-				}
+				}*/
+				$cartSubTotal = $cartSubTotal * $couponInfo['coupon_discount_value'] / 100 ;
 			} else if( $couponInfo['coupon_discount_in_percent'] == applicationConstants::FLAT ) {
 				if ( $cartSubTotal > $couponInfo["coupon_discount_value"] ) {
 				$cartSubTotal = $couponInfo["coupon_discount_value"];
