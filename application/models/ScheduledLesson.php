@@ -10,6 +10,21 @@ class ScheduledLesson extends MyAppModel{
 	const STATUS_UPCOMING = 6;
     const STATUS_ISSUE_REPORTED = 7;
 	
+	const LESSION_ISSUE_OPTIONS = array(
+		1 => 'Student was late',
+		2 => 'Student was absent',
+		3 => 'Student left early',
+		4 => 'Teacher was absent',
+		5 => 'Teacher was late',
+		6 => 'Teacher left early',
+		7 => 'Student related technical difficulties',
+		8 => 'Teacher related technical difficulties',
+		9 => 'Site related technical difficulties',
+		10 => 'Lesson status should be Completed',
+		11 => 'other',
+	);
+	
+	
 	public function __construct( $id = 0 ) {
 		parent::__construct ( static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id );
 	}
@@ -24,7 +39,8 @@ class ScheduledLesson extends MyAppModel{
 			static::STATUS_NEED_SCHEDULING	=>	Label::getLabel('LBL_Need_to_be_scheduled', $langId),
 			static::STATUS_COMPLETED	=>	Label::getLabel('LBL_Completed', $langId),
 			static::STATUS_CANCELLED	=>	Label::getLabel('LBL_Cancelled', $langId),
-			static::STATUS_UPCOMING	=>	Label::getLabel('LBL_Upcoming', $langId)
+			static::STATUS_UPCOMING	=>	Label::getLabel('LBL_Upcoming', $langId),
+			static::STATUS_ISSUE_REPORTED	=>	Label::getLabel('LBL_Issue_Reported', $langId)
 		);
 	}
 	

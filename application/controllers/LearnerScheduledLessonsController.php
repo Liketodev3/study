@@ -690,11 +690,17 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 
 	public function getIssueReportedFrm(){
 		$frm = new Form('issueReportedFrm');
+		/***************/
+		$arr_options = ScheduledLesson::LESSION_ISSUE_OPTIONS;
+		$fldIssue = $frm->addCheckBoxes(Label::getLabel('LBL_Issue_To_Report'), 'issues_to_report',  $arr_options, array());
+		$fldIssue->requirement->setSelectionRange(1, 11);
+		/***************/
 		$fld = $frm->addTextArea( Label::getLabel('LBL_Comment'),'issue_reported_msg','');
 		$fld->requirement->setRequired(true);
 		$fld = $frm->addHiddenField( '', 'slesson_id' );
 		$fld->requirements()->setRequired();
 		$fld->requirements()->setIntPositive();
+		
 		$frm->addSubmitButton( '', 'submit', Label::getLabel('LBL_Send') );
 		return $frm;
 	}
@@ -712,6 +718,11 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$post = $frm->getFormDataFromArray( FatApp::getPostedData() );
 		if (false === $post) {
 			FatUtility::dieJsonError( $frm->getValidationErrors() );
+		}
+		
+		$_reason_ids = $post['issues_to_report'];
+		if ( empty( $_reason_ids )) {
+			FatUtility::dieJsonError(Label::getLabel('LBL_Please_Choose_Issue_to_Report'));
 		}
 
 		$lessonId = $post['slesson_id'];
@@ -755,15 +766,25 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		 ] */
 
 		$reportedArr = array();
+		
+		//echo "<pre>"; print_r( $post ); echo "</pre>"; exit;
+		
 		$reportedArr['issrep_comment'] = $post['issue_reported_msg'];
 		$reportedArr['issrep_reported_by'] = User::USER_TYPE_LEANER;
 		$reportedArr['issrep_slesson_id'] = $lessonId;
-        $record = new IssuesReported();
+		$reportedArr['issrep_issues_to_report'] = implode(',', $_reason_ids );
+		
+		$record = new IssuesReported();
         $record->assignValues($reportedArr);
         if(!$record->save()) {
 			Message::addErrorMessage($record->getError());			
 			FatUtility::dieJsonError($record->getError());
         }
+		
+		$reason_html = '';
+		foreach ( $_reason_ids as $_id ) {
+			$reason_html .= ScheduledLesson::LESSION_ISSUE_OPTIONS[$_id].'<br />';
+		}
 
 		/* [ */
 		$tpl = 'learner_issue_reported_email';
@@ -771,11 +792,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'{learner_name}' => $lessonRow['learnerFullName'],
 			'{teacher_name}' => $lessonRow['teacherFullName'],
 			'{lesson_name}' => $lessonRow['teacherTeachLanguageName'],
+			'{lesson_issue_reason}' => $reason_html,
 			'{learner_comment}' => $post['issue_reported_msg'],
 			'{lesson_date}' => $lessonRow['slesson_date'],
 			'{lesson_start_time}' => $lessonRow['slesson_start_time'],
 			'{lesson_end_time}' => $lessonRow['slesson_end_time'],
-			//'{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_ISSUE_REPORTED],
+			'{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_ISSUE_REPORTED],
 		);
 
 		if( !EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], $tpl ,$this->siteLangId, $vars) ){
