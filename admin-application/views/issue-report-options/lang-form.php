@@ -2,19 +2,15 @@
 $langFrm->setFormTagAttribute('class', 'web_form form_horizontal layout--'.$formLayout);
 $langFrm->setFormTagAttribute('onsubmit', 'setupLangIssueReport(this); return(false);');
 $langFrm->developerTags['colClassPrefix'] = 'col-md-';
-$langFrm->developerTags['fld_default_col'] = 12; 	
-
+$langFrm->developerTags['fld_default_col'] = 12;
 ?>
 <section class="section">
 <div class="sectionhead">
-   
-    <h4><?php echo Label::getLabel('LBL_Teaching_language_Setup',$adminLangId); ?></h4>
+	<h4><?php echo Label::getLabel('LBL_Teaching_language_Setup',$adminLangId); ?></h4>
 </div>
 <div class="sectionbody space">
-<div class="row">	
-
+<div class="row">
 <div class="col-sm-12">
-	<h1><?php //echo Label::getLabel('LBL_TeachingLanguage_Setup',$adminLangId); ?></h1>
 	<div class="tabs_nav_container responsive flat">
 		<ul class="tabs_nav">
 			<li><a href="javascript:void(0);" onclick="editOptionForm(<?php echo $optId ?>);"><?php echo Label::getLabel('LBL_General',$adminLangId); ?></a></li>
@@ -25,7 +21,6 @@ $langFrm->developerTags['fld_default_col'] = 12;
 				<?php }
 				}
 			?>
-			<li><a href="javascript:void(0);" <?php if( $optId > 0 ){?> onclick="mediaForm(<?php echo $optId ?>);" <?php }?>><?php echo Label::getLabel('LBL_Media',$adminLangId);?></a></li>
 		</ul>
 		<div class="tabs_panel_wrap">
 			<div class="tabs_panel">

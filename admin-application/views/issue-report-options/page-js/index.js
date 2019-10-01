@@ -46,51 +46,44 @@ $(document).ready(function(){
 	
 	IssueReoprtOptionForm = function(id) {
 		fcom.displayProcessing();
-		//$.facebox(function() {
-			fcom.ajax(fcom.makeUrl('IssueReportOptions', 'form', [id]), '', function(t) {
-				//$.facebox(t,'faceboxWidth');
-				fcom.updateFaceboxContent(t);
-			});
-		//});
+		fcom.ajax(fcom.makeUrl('IssueReportOptions', 'form', [id]), '', function(t) {
+			fcom.updateFaceboxContent(t);
+		});
 	};
-	editTeachingLanguageFormNew = function(tLangId){
-		$.facebox(function() {	editOptionForm(tLangId);
+	editOptionFormNew = function(optId){
+		$.facebox(function() {	
+			editOptionForm(optId);
 		});
 	};
 	
-	editOptionForm = function(tLangId){
+	editOptionForm = function(optId){
 		fcom.displayProcessing();
-		//$.facebox(function() {
-			fcom.ajax(fcom.makeUrl('TeachingLanguage', 'form', [tLangId]), '', function(t) {
-				//$.facebox(t,'faceboxWidth');
-				fcom.updateFaceboxContent(t);
-			});
-		//});
+		fcom.ajax(fcom.makeUrl('IssueReportOptions', 'form', [optId]), '', function(t) {
+			fcom.updateFaceboxContent(t);
+		});
 	};
 	
 	setupIssueOption = function (frm){
 		if (!$(frm).validate()) return;		
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('IssueReportOptions', 'setup'), data, function(t) {			
-			//$.mbsmessage.close();
 			reloadList();
-			if (t.langId>0) {
+			if (t.langId > 0) {
 				editOptionLangForm(t.optId, t.langId);
 				return ;
 			}
-				
 			$(document).trigger('close.facebox');
 		});
 	}
 	
-	editOptionLangForm = function(optId,langId){
+	editOptionLangForm = function(optId,langId) {
 		fcom.displayProcessing();
-			fcom.ajax(fcom.makeUrl('IssueReportOptions', 'langForm', [optId, langId]), '', function(t) {
-				fcom.updateFaceboxContent(t);
-			});
+		fcom.ajax(fcom.makeUrl('IssueReportOptions', 'langForm', [optId, langId]), '', function(t) {
+			fcom.updateFaceboxContent(t);
+		});
 	};
 	
-	setupLangIssueReport = function (frm){
+	setupLangIssueReport = function (frm) {
 		if (!$(frm).validate()) return;		
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('IssueReportOptions', 'langSetup'), data, function(t) {
@@ -104,34 +97,31 @@ $(document).ready(function(){
 		});
 	};
 	
-	deleteRecord = function(id){
+	deleteRecord = function(id) {
 		if(!confirm(langLbl.confirmDelete)){return;}
-		data='tLangId='+id;
-		fcom.updateWithAjax(fcom.makeUrl('TeachingLanguage', 'deleteRecord'),data,function(res){		
+		data='optId='+id;
+		fcom.updateWithAjax(fcom.makeUrl('IssueReportOptions', 'deleteRecord'),data,function(res){		
 			reloadList();
 		});
 	};
 	
 	activeStatus = function(obj){
-		
 		if(!confirm(langLbl.confirmUpdateStatus)){
 			e.preventDefault();
 			return;
 		}
-		var tLangId = parseInt(obj.value);
-		if(tLangId < 1){
-
-			//$.mbsmessage(langLbl.invalidRequest,true,'alert--danger');
+		var optId = parseInt(obj.value);
+		if(optId < 1){
 			fcom.displayErrorMessage(langLbl.invalidRequest);
 			return false;
 		}
-		data='tLangId='+tLangId+"&status="+active;
-		fcom.ajax(fcom.makeUrl('TeachingLanguage','changeStatus'),data,function(res){
-		var ans =$.parseJSON(res);
+		data='optId='+optId+"&status="+active;
+		fcom.ajax(fcom.makeUrl('IssueReportOptions','changeStatus'),data,function(res) {
+		var ans = $.parseJSON(res);
 			if(ans.status == 1){
 				$(obj).removeClass("inactive");
 				$(obj).addClass("active");
-				$(".status_"+tLangId).attr('onclick','inactiveStatus(this)');
+				$(".status_"+optId).attr('onclick','inactiveStatus(this)');
 				fcom.displaySuccessMessage(ans.msg);				
 			}else{
 				fcom.displayErrorMessage(ans.msg);				
@@ -145,20 +135,18 @@ $(document).ready(function(){
 		e.preventDefault();
 		return;
 	}
-	var tLangId = parseInt(obj.value);
-	if(tLangId < 1){
-
-		//$.mbsmessage(langLbl.invalidRequest,true,'alert--danger');
+	var optId = parseInt(obj.value);
+	if(optId < 1){
 		fcom.displayErrorMessage(langLbl.invalidRequest);
 		return false;
 	}
-	data='tLangId='+tLangId+"&status="+inActive;
+	data='optId='+optId+"&status="+inActive;
 	fcom.ajax(fcom.makeUrl('IssueReportOptions','changeStatus'),data,function(res){
 	var ans =$.parseJSON(res);
 		if(ans.status == 1){
 			$(obj).removeClass("active");
 				$(obj).addClass("inactive");
-				$(".status_"+tLangId).attr('onclick','activeStatus(this)');
+				$(".status_"+optId).attr('onclick','activeStatus(this)');
 			fcom.displaySuccessMessage(ans.msg);				
 		}else{
 			fcom.displayErrorMessage(ans.msg);				
