@@ -36,16 +36,21 @@ $(function() {
 	
 	issueResolveSetup = function( frm ) {
 		if (!$(frm).validate()) return;	
+		var issue_id = $('input[name="issue_id"]').val();
+		var slesson_id = $('input[name="slesson_id"]').val();
 		var data = fcom.frmData(frm);
+		
 		fcom.updateWithAjax(fcom.makeUrl('TeacherIssueReported', 'issueResolveSetup'), data , function(t) {	
-			$.facebox.close();	
-			issueResolveStepTwo( frm );
-			//location.reload();	
+			//$.facebox.close();	
+			issueResolveStepTwo( issue_id, slesson_id );
 		});	
+		
 	}
 	
-	issueResolveStepTwo = function( frm ) {
-		alert('working okay');
+	issueResolveStepTwo = function( issueId, slesson_id ) {
+		fcom.ajax(fcom.makeUrl('TeacherIssueReported','issueResolveStepTwo',[issueId, slesson_id]),'',function(t){
+			$.facebox( t,'facebox-medium');
+		}); 	
 	}
 	
 	

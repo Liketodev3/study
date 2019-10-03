@@ -7,6 +7,14 @@ class IssuesReported extends MyAppModel{
 	const STATUS_PROGRESS = 1;
 	const STATUS_RESOLVED = 2;
 	
+	const RESOLVE_TYPE = array(
+		1 => 'Reset Lesson to: Unscheduled',
+		2 => 'Mark Lesson as: Completed',
+		3 => 'Mark Lesson as: Completed and issue a student a 50% refund',
+		4 => 'Mark Lesson as: Completed and issue a student a 100% refund',
+	);
+	
+	
 	public function __construct( $id = 0 ) {
 		parent::__construct ( static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id );
 	}
@@ -90,10 +98,10 @@ class IssuesReported extends MyAppModel{
 		return false;
 	}
 	
-	public static function isAlreadyResolved($lessonId,$userType){
+	public static function isAlreadyResolved($lessonId){
 		$srch = new SearchBase(static::DB_TBL);
 		$srch->addCondition( 'issrep_slesson_id',' = ', $lessonId );
-		$srch->addCondition( 'issrep_status',' IN ', '('. self::STATUS_PROGRESS .', '. self::STATUS_RESOLVED .')' );
+		$srch->addCondition( 'issrep_status',' IN ', array( self::STATUS_PROGRESS, self::STATUS_RESOLVED ));
 		$rs = $srch->getResultSet();
 		$issueRow = FatApp::getDb()->fetch($rs);
 		if( $issueRow ){

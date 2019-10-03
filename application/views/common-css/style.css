@@ -7282,3 +7282,20 @@ display: block;}
 	text-align :right;
 	margin-top: 15px;
 }
+
+.IssueBlockquote {
+	border-left: 3px solid;
+	border-color: var(--color-primary);
+	padding-left: 15px;
+	margin-bottom : 30px;
+}
+.IssueBlockquote h6 {
+	margin-bottom: 15px;
+}
+.IssueBlockquote ul {
+	list-style : disc;
+	list-style-position: inside;
+}
+.IssueBlockquote ul li {
+	padding : 3px;
+}
