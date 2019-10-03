@@ -691,9 +691,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 	public function getIssueReportedFrm(){
 		$frm = new Form('issueReportedFrm');
 		/***************/
-		$arr_options = ScheduledLesson::LESSION_ISSUE_OPTIONS;
+		$arr_options = IssueReportOptions::getOptionsArray( $this->siteLangId );
 		$fldIssue = $frm->addCheckBoxes(Label::getLabel('LBL_Issue_To_Report'), 'issues_to_report',  $arr_options, array());
-		$fldIssue->requirement->setSelectionRange(1, 11);
+		$fldIssue->requirement->setSelectionRange(1, count( $arr_options ));
 		/***************/
 		$fld = $frm->addTextArea( Label::getLabel('LBL_Comment'),'issue_reported_msg','');
 		$fld->requirement->setRequired(true);
@@ -740,6 +740,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$srch->addCondition( 'slesson_id', '=', $lessonId );
 		$srch->addFld(
 			array(
+				'ut.user_id as teacher_id',
 				'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
 				'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
 				//'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
@@ -754,21 +755,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
 		}
 
-		/* [
-		$sLessonArr = array(
-			'slesson_status'	=>	ScheduledLesson::STATUS_ISSUE_REPORTED,
-		);
-		$sLessonObj = new ScheduledLesson( $lessonRow['slesson_id'] );
-		$sLessonObj->assignValues( $sLessonArr );
-		if( !$sLessonObj->save() ){
-			FatUtility::dieJsonError($sLessonObj->getError());
-		}
-		 ] */
-
 		$reportedArr = array();
-		
-		//echo "<pre>"; print_r( $post ); echo "</pre>"; exit;
-		
 		$reportedArr['issrep_comment'] = $post['issue_reported_msg'];
 		$reportedArr['issrep_reported_by'] = User::USER_TYPE_LEANER;
 		$reportedArr['issrep_slesson_id'] = $lessonId;
@@ -781,9 +768,14 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			FatUtility::dieJsonError($record->getError());
         }
 		
+		$sLessonObj = new ScheduledLesson( $lessonRow['slesson_id'] );
+		$sLessonObj->holdPayment( $lessonRow['teacher_id'], $lessonId );
+		
 		$reason_html = '';
+		$issues_options = IssueReportOptions::getOptionsArray( $this->siteLangId );
+		
 		foreach ( $_reason_ids as $_id ) {
-			$reason_html .= ScheduledLesson::LESSION_ISSUE_OPTIONS[$_id].'<br />';
+			$reason_html .= $issues_options[$_id].'<br />';
 		}
 
 		/* [ */
@@ -806,8 +798,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		}
 		/* ] */
 
-		Message::addMessage(Label::getLabel( 'LBL_Lesson_Updated_Successfully!', $this->siteLangId ));		
-		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Updated_Successfully!'));
+		Message::addMessage(Label::getLabel( 'LBL_Lesson_Issue_Reported_Successfully!', $this->siteLangId ));		
+		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Reported_Successfully!'));
 	}
 
 	private function getLessonFeedbackForm( $lessonId ,$langId){

@@ -6,7 +6,7 @@ $langFrm->developerTags['fld_default_col'] = 12;
 ?>
 <section class="section">
 <div class="sectionhead">
-	<h4><?php echo Label::getLabel('LBL_Teaching_language_Setup',$adminLangId); ?></h4>
+	<h4><?php echo Label::getLabel('LBL_Issue_Report_Options_Setup',$adminLangId); ?></h4>
 </div>
 <div class="sectionbody space">
 <div class="row">

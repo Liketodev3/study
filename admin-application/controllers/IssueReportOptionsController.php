@@ -1,14 +1,12 @@
 <?php 
 class IssueReportOptionsController extends AdminBaseController
 {
-    public function __construct($action)
-    {
+    public function __construct($action) {
 		parent::__construct($action);
         $this->objPrivilege->canViewPreferences();
     }
     
-	public function index()
-    {
+	public function index() {
         $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditPreferences($this->admin_id, true);
 		$frmSearch = $this->getSearchForm();
@@ -17,14 +15,13 @@ class IssueReportOptionsController extends AdminBaseController
         $this->_template->render();
     }
     
-	public function search()
-    {
+	public function search() {
 		$data       = FatApp::getPostedData();
 		$searchForm = $this->getSearchForm();
 		$post       = $searchForm->getFormDataFromArray($data);
 		
 		$issoptobj = new IssueReportOptions( $this->adminLangId );
-        $srch = $issoptobj->getPreferencesArr($this->adminLangId, false);
+        $srch = $issoptobj->getAllOptions($this->adminLangId, false);
         $srch->addMultipleFields(array(
             'tissueopt_id',
             'tissueopt_active',
@@ -41,7 +38,7 @@ class IssueReportOptionsController extends AdminBaseController
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
         }
-		//echo "<pre>"; print_r( $records ); echo "</pre>"; exit;
+		
 		$adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditPreferences($this->admin_id, true);
         $this->set("canEdit", $canEdit);
@@ -50,8 +47,7 @@ class IssueReportOptionsController extends AdminBaseController
         $this->_template->render(false, false);
     }
     
-	public function form($optId)
-    {
+	public function form($optId) {
         $optId = FatUtility::int($optId);
         $frm           = $this->getForm($optId);
         if (0 < $optId) {
@@ -71,8 +67,7 @@ class IssueReportOptionsController extends AdminBaseController
         $this->_template->render(false, false);
     }
     
-	public function setup()
-    {
+	public function setup() {
         $this->objPrivilege->canEditPreferences();
         $frm  = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
@@ -108,8 +103,7 @@ class IssueReportOptionsController extends AdminBaseController
         $this->_template->render(false, false, 'json-success.php');
     }
     
-	public function langForm($optId = 0, $lang_id = 0)
-    {
+	public function langForm($optId = 0, $lang_id = 0) {
         $optId = FatUtility::int($optId);
         $lang_id       = FatUtility::int($lang_id);
         if ($optId == 0 || $lang_id == 0) {
@@ -128,8 +122,7 @@ class IssueReportOptionsController extends AdminBaseController
         $this->_template->render(false, false);
     }
     
-	public function langSetup()
-    {
+	public function langSetup() {
         $this->objPrivilege->canEditPreferences();
         $post          = FatApp::getPostedData();
         $optId = $post['tissueopt_id'];
@@ -165,8 +158,7 @@ class IssueReportOptionsController extends AdminBaseController
         $this->_template->render(false, false, 'json-success.php');
     }
     
-	public function changeStatus()
-    {
+	public function changeStatus() {
         $this->objPrivilege->canEditPreferences();
         $optId = FatApp::getPostedData('optId', FatUtility::VAR_INT, 0);
         $status = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
@@ -191,8 +183,7 @@ class IssueReportOptionsController extends AdminBaseController
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
     
-	public function deleteRecord()
-    {
+	public function deleteRecord() {
         $this->objPrivilege->canEditPreferences();
         $optId = FatApp::getPostedData('optId', FatUtility::VAR_INT, 0);
         if ($optId < 1) {
@@ -244,12 +235,11 @@ class IssueReportOptionsController extends AdminBaseController
 	
 	private function getSearchForm() {
         $frm = new Form('frmIssueReoprtOptions');
-        $f1 = $frm->addTextBox(Label::getLabel('LBL_Language_Identifier', $this->adminLangId), 'keyword', '');
+        $f1 = $frm->addTextBox(Label::getLabel('LBL_Option_Identifier', $this->adminLangId), 'keyword', '');
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
-	
-    
+	 
  }

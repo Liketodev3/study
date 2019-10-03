@@ -10,21 +10,6 @@ class ScheduledLesson extends MyAppModel{
 	const STATUS_UPCOMING = 6;
     const STATUS_ISSUE_REPORTED = 7;
 	
-	const LESSION_ISSUE_OPTIONS = array(
-		1 => 'Student was late',
-		2 => 'Student was absent',
-		3 => 'Student left early',
-		4 => 'Teacher was absent',
-		5 => 'Teacher was late',
-		6 => 'Teacher left early',
-		7 => 'Student related technical difficulties',
-		8 => 'Teacher related technical difficulties',
-		9 => 'Site related technical difficulties',
-		10 => 'Lesson status should be Completed',
-		11 => 'other',
-	);
-	
-	
 	public function __construct( $id = 0 ) {
 		parent::__construct ( static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id );
 	}
@@ -91,7 +76,8 @@ class ScheduledLesson extends MyAppModel{
 				'utxn_comments' => sprintf(Label::getLabel('LBL_LessonId:_%s_Payment', CommonHelper::getLangId()), $this->getMainTableRecordId()),
 				'utxn_status' => Transaction::STATUS_COMPLETED,
 				'utxn_type' => Transaction::TYPE_LOADED_MONEY_TO_WALLET,
-				'utxn_credit' => $data['op_commission_charged']
+				'utxn_credit' => $data['op_commission_charged'],
+				'utxn_slesson_id' => $data['slesson_id'],
 			);
 
 			if (!$tObj->addTransaction($data)) {
@@ -140,4 +126,13 @@ class ScheduledLesson extends MyAppModel{
 			return true;
 		}
     }
+	
+	public function holdPayment( $user_id, $lesson_id ) {
+		$db = FatApp::getDb();
+		if( !$db->updateFromArray(Transaction::DB_TBL,array('utxn_status'=>Transaction::STATUS_PENDING), array('smt'=>'utxn_user_id = ? and utxn_slesson_id = ?','vals'=>array( $user_id, $lesson_id ))) ) {
+			return false;
+		}
+		return true;
+	}
+	
 }

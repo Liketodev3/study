@@ -9,15 +9,33 @@ class IssueReportOptions extends MyAppModel{
 		parent::__construct ( static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id );
 	}
 		
-	public function getPreferencesArr( $langId ){
+	public function getAllOptions( $langId ){
 		$srch = new IssueReportOptionsSearch($langId);
-		$srch->addMultipleFields( array(
-			self::DB_TBL_PREFIX .'id', 
-			self::DB_TBL_LANG_PREFIX .'title', 
-		) );
 		$srch->addOrder(self::DB_TBL_PREFIX . 'display_order', 'asc');
-		
 		return $srch;
+	}
+	
+	public static function getOptionsArray( $langId ) {
+		$srch = new IssueReportOptionsSearch( $langId );
+        $srch->addMultipleFields(array(
+            'tissueopt_id',
+            'IFNULL(tissueoptlang_title, tissueopt_identifier) as optLabel',
+        )); 
+		
+		$rs = $srch->getResultSet();
+		$records = array();
+        if ($rs) {
+            $records = FatApp::getDb()->fetchAll($rs);
+		}
+		if ( empty( $records ) ) {
+			return $records;
+		}
+		$optionArray = array();
+		foreach ( $records as $record ) {
+			$optionArray[$record['tissueopt_id']] = $record['optLabel'];
+		}
+		return $optionArray;
+		
 	}
 	
 	public function deleteOption($optId){

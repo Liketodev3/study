@@ -91,8 +91,13 @@ $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account
 			if (e.which == 32) {
 				return false;
 			}
+		});
+		$('input[name="user_url_name"]').on('change', function(e) {
+			var user_name = $(this).val();
+			var user_name = user_name.replace(" ",'');
+			$(this).val(user_name);
+			$('.user_url_name_span').html(user_name);
 		});	
-		
 		$('input[name="user_url_name"]').on('keyup', function(){
 			var user_name = $(this).val();
 			$('.user_url_name_span').html(user_name);
