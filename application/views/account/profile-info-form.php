@@ -94,7 +94,8 @@ $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account
 		});
 		$('input[name="user_url_name"]').on('change', function(e) {
 			var user_name = $(this).val();
-			var user_name = user_name.replace(" ",'');
+			//var user_name = user_name.replace(" ",'');
+			user_name = user_name.replace(/ /g, "");
 			$(this).val(user_name);
 			$('.user_url_name_span').html(user_name);
 		});	
