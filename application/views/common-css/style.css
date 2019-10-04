@@ -7299,3 +7299,6 @@ display: block;}
 .IssueBlockquote ul li {
 	padding : 3px;
 }
+.text-right {
+	text-align : right;
+}

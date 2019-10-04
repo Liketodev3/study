@@ -770,6 +770,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		
 		$sLessonObj = new ScheduledLesson( $lessonRow['slesson_id'] );
 		$sLessonObj->holdPayment( $lessonRow['teacher_id'], $lessonId );
+		$sLessonObj->changeLessonStatus( $lessonId, ScheduledLesson::STATUS_ISSUE_REPORTED );
+		
 		
 		$reason_html = '';
 		$issues_options = IssueReportOptions::getOptionsArray( $this->siteLangId );
@@ -797,15 +799,41 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
 		}
 		/* ] */
-
+		
+		$userNotification = new UserNotifications($lessonRow['teacherId']);
+        $userNotification->sendIssueRefundNotification( $lessonId, IssuesReported::ISSUE_REPORTED_NOTIFICATION );
+		
 		Message::addMessage(Label::getLabel( 'LBL_Lesson_Issue_Reported_Successfully!', $this->siteLangId ));		
 		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Reported_Successfully!'));
 	}
+	
+	public function issueDetails( $issueId ) {
+		$issueId = FatUtility::int($issueId);
+		$srch = IssuesReported::getSearchObject();
+		$srch->addCondition('issrep_id', '=', $issueId );
+		$srch->addMultipleFields(array(
+			'i.*',
+			'slesson_id',
+			'slesson_learner_id',
+			'slesson_date',
+			'slesson_start_time',
+			'slesson_status',
+			'slesson_slanguage_id',
+			'op_lesson_duration',
+			'op_lpackage_is_free_trial',
+		));
+		$rs = $srch->getResultSet();
+		$issuesReportedDetails = FatApp::getDb()->fetch($rs);
+		$this->set( 'issueDeatils',$issuesReportedDetails );
+		$this->set('issues_options', IssueReportOptions::getOptionsArray( $this->siteLangId ));
+		$this->set('resolve_type_options', IssuesReported::RESOLVE_TYPE);
+		$this->_template->render(false,false);
+	}
+	
 
 	private function getLessonFeedbackForm( $lessonId ,$langId){
 
 		$frm = new Form('frmLessonFeedback');
-
 		$ratingAspects = TeacherLessonRating::getRatingAspectsArr();
 		foreach($ratingAspects as $aspectVal => $aspectLabel){
 			$fld=$frm->addSelectBox($aspectLabel, "review_rating[$aspectVal]", array("1"=>"1","2"=>"2","3"=>"3","4"=>"4","5"=>"5"), "", array('class'=>"star-rating"), Label::getLabel('L_Rate'));
@@ -1245,5 +1273,22 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
         }        
    		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Learner_Join_Time_Marked!'));
     }
+	
+	public function reportIssueToAdmin($issueId) {
+		$reportedArr = array();
+		$reportedArr['issrep_status'] = IssuesReported::STATUS_PROGRESS;
+		$reportedArr['issrep_is_for_admin'] = 1;
+		
+		$record = new IssuesReported( $issueId );
+        $record->assignValues( $reportedArr );
+        if (!$record->save()) {
+			Message::addErrorMessage($record->getError());			
+			FatUtility::dieJsonError($record->getError());
+        }
+		
+		Message::addMessage(Label::getLabel( 'LBL_Lesson_Issue_Reported_to_the_Support', $this->siteLangId ));		
+		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Reported_to_the_Support!'));
+		
+	}
     
 }

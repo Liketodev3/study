@@ -1,10 +1,11 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<?php if( !empty( $issuesReported ) ) { ?>
+<?php if( !empty( $issuesReported ) ) { 
+$user_timezone = MyDate::getUserTimeZone();
+?>
     <div class="col-list-group">
 		<div class="col-list-container">
 		<?php 
 		foreach( $issuesReported as $_issue ){ 
-		$user_timezone = $_issue['user_timezone'];
 		?>
 	<div class="col-list">   
 		<div class="d-lg-flex align-items-center">
@@ -68,7 +69,7 @@
 									<a href="javascript:void(0);" onclick="resolveIssue('<?php echo $_issue['issrep_id']; ?>', '<?php echo $_issue['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></a>
 								</li>
 							<?php } ?>	
-							<?php if( $_issue['issrep_status'] == 1 ) { ?>
+							<?php if( $_issue['issrep_status'] == 1 && $issuesReported['issrep_issues_resolve_type'] == '' ) { ?>
 								<li>
 									<a href="javascript:void(0);" onclick="issueResolveStepTwo('<?php echo $_issue['issrep_id']; ?>', '<?php echo $_issue['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></a>
 								</li>

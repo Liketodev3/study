@@ -96,6 +96,8 @@ class TeacherIssueReportedController extends TeacherBaseController {
 		$issuesReportedDetails = FatApp::getDb()->fetch($rs);
 		$this->set( 'issueDeatils',$issuesReportedDetails );
 		$this->set('issues_options', IssueReportOptions::getOptionsArray( $this->siteLangId ));
+		$this->set('resolve_type_options', IssuesReported::RESOLVE_TYPE);
+		
 		$this->_template->render(false,false);
 	}
 	
@@ -174,95 +176,169 @@ class TeacherIssueReportedController extends TeacherBaseController {
 	
 	}
 	
-	public function searchLessons(&$srch, $post = array()) {
-		$srch = new ScheduledLessonSearch(false);
-		$srch->joinOrder();
-		$srch->joinOrderProducts();
-		$srch->joinTeacher();
-		$srch->joinLearner();
-		$srch->joinLearnerCountry( $this->siteLangId );
-		$srch->addCondition( 'slns.slesson_teacher_id',' = ', UserAuthentication::getLoggedUserId() );
-		$srch->addCondition( 'order_is_paid',' = ', Order::ORDER_IS_PAID );
-		
-		$srch->joinTeacherSettings();
-		//$srch->joinTeacherTeachLanguage( $this->siteLangId );
-		$srch->addOrder('slesson_date','DESC');
-		$srch->addOrder('slesson_status','ASC');
-		
-		$srch->addMultipleFields(array(
-			'slns.slesson_id',
-			'slns.slesson_learner_id as learnerId',
-			'slns.slesson_teacher_id as teacherId',
-			'slns.slesson_slanguage_id',
-			'ul.user_first_name as learnerFname',
-			'ul.user_last_name as learnerLname',
-			'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
-			/* 'ul.user_timezone as learnerTimeZone', */
-			'IFNULL(learnercountry_lang.country_name, learnercountry.country_code) as learnerCountryName',
-			'slns.slesson_date',
-			'slns.slesson_end_date',
-			'slns.slesson_start_time',
-			'slns.slesson_end_time',
-			'slns.slesson_status',
-			'slns.slesson_is_teacher_paid',
-			//'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
-			'"-" as teacherTeachLanguageName',
-			'op_lpackage_is_free_trial as is_trial',
-			'op_lesson_duration'
-		));
-	}
-	
-	
 	public function issueResolveSetupStepTwo() {
-		$frm = $this->getIssueReportedFrm();
+		$frm = $this->getIssueReportedFrmStepTwo();
 		$post = $frm->getFormDataFromArray( FatApp::getPostedData() );
 		
 		if (false === $post) {
 			FatUtility::dieJsonError( $frm->getValidationErrors() );
 		}
 		
-		$_reason_ids = $post['issues_to_report'];
 		$lessonId = $post['slesson_id'];
 		$issueId = $post['issue_id'];
 		$issue_resolve_type = $post['issue_resolve_type'];
 		$issuesReportedDetails = self::getIssueDetails($issueId);
 		
+		/*********************/
+		$lesson_status = ScheduledLesson::STATUS_NEED_SCHEDULING;
+		$paymentStatus = Transaction::STATUS_DECLINED;
+		$_refund_percentage = 0;
+		$refundAmount = 0;
+		
+		$srch = Transaction::getSearchObject();
+		$srch->addCondition( 'utxn_slesson_id', '=', $lessonId );
+		$srch->addCondition( 'utxn_user_id', '=',  UserAuthentication::getLoggedUserId() );
+		$srch->joinTable( ScheduledLesson::DB_TBL, 'LEFT JOIN', 'utxn.utxn_slesson_id = slsn.slesson_id', 'slsn' );
+		$srch->joinTable( User::DB_TBL, 'LEFT JOIN', 'ut.user_id = slsn.slesson_teacher_id', 'ut' );
+		$srch->joinTable( User::DB_TBL, 'LEFT JOIN', 'ul.user_id = slsn.slesson_learner_id', 'ul' );
+		$srch->joinTable( User::DB_TBL_CRED, 'LEFT JOIN', 'lcred.credential_user_id = ul.user_id', 'lcred' );
+		$srch->joinTable( TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tLang.tlanguage_id = slsn.slesson_slanguage_id', 'tLang' );
+		$srch->joinTable( TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tLangLang.tlanguagelang_tlanguage_id = tLang.tlanguage_id AND tlanguagelang_lang_id = '. $this->siteLangId , 'tLangLang' );
+		$srch->addFld(
+			array(
+				'utxn.*',
+				'slsn.*',
+				'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+				'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+				'lcred.credential_email as learner_email',
+				'ul.user_timezone as lerner_timezone',
+				'IFNULL(tLangLang.tlanguage_name, tLang.tlanguage_identifier) as teacherTeachLanguageName'
+            )
+		);
+		
+		$rs = $srch->getResultSet();
+		$transactionDetails = FatApp::getDb()->fetch($rs);
+		$lessonAmount = $transactionDetails['utxn_credit'];
+		$lerner_id = $transactionDetails['slesson_learner_id'];
+		$teacherPayment = $lessonAmount;
+		
+		switch( $issue_resolve_type ) {
+			case 1 : // Reset Lesson to: Unscheduled
+				$lesson_status = ScheduledLesson::STATUS_NEED_SCHEDULING;
+				$paymentStatus = Transaction::STATUS_REFUND;
+			break;
+			
+			case 2 : // Mark Lesson as: Completed
+				$lesson_status = ScheduledLesson::STATUS_COMPLETED;
+				$paymentStatus = Transaction::STATUS_COMPLETED;
+			break;
+				
+			case 3 : // Mark Lesson as: Completed and issue a student a 50% refund
+				$lesson_status = ScheduledLesson::STATUS_COMPLETED;
+				$paymentStatus = Transaction::STATUS_COMPLETED;
+				$_refund_percentage = 50;
+			break;
+				
+			case 4 : // Mark Lesson as: Completed and issue a student a 100% refund
+				$lesson_status = ScheduledLesson::STATUS_COMPLETED;
+				$paymentStatus = Transaction::STATUS_COMPLETED;
+				$_refund_percentage = 100;
+			break;
+			
+		}
+		
+		if ( $_refund_percentage > 0 ) {
+			$tObj = new Transaction( $lerner_id );
+			$data = array(
+				'utxn_user_id' => $lerner_id,
+				'utxn_date' => date('Y-m-d H:i:s'),
+				'utxn_comments' => $transactionDetails['utxn_comments']. ' - Refunded',
+				'utxn_status' => Transaction::STATUS_COMPLETED,
+				'utxn_type' => Transaction::TYPE_ISSUE_REFUND,
+				'utxn_slesson_id' => $lessonId
+			);
+			$refundAmount = $lessonAmount *  $_refund_percentage / 100;
+			$data['utxn_credit'] = $refundAmount;
+			
+			if (!$tObj->addTransaction($data)) {
+				Message::addErrorMessage($tObj->getError());
+				FatUtility::dieJsonError(Message::getHtml());
+			}
+		}
+		/******************/
+		$tObjTeach = new Transaction( UserAuthentication::getLoggedUserId(), $transactionDetails['utxn_id'] );
+		$teachData = array(
+			'utxn_user_id' => UserAuthentication::getLoggedUserId(),
+			'utxn_date' => date('Y-m-d H:i:s'),
+			'utxn_comments' => $transactionDetails['utxn_comments']. ' - Issue Resolved',
+			'utxn_status' => $paymentStatus,
+			'utxn_slesson_id' => $lessonId,
+			'utxn_debit' => $refundAmount
+		);
+			
+		if (!$tObjTeach->addTransaction($teachData)) {
+			Message::addErrorMessage($tObjTeach->getError());
+			FatUtility::dieJsonError(Message::getHtml());
+		}
+		
+		/******************/
 		$reportedArr = array();
 		$reportedArr['issrep_status'] = IssuesReported::STATUS_RESOLVED;
-		$reportedArr['issrep_issues_resolve'] = $post['issue_resolve_type'];
+		$reportedArr['issrep_issues_resolve_type'] = $post['issue_resolve_type'];
 		$reportedArr['issrep_updated_on'] = date('Y-m-d H:i:s');
 		
 		$record = new IssuesReported( $issueId );
 		$record->assignValues( $reportedArr );
 		
-        if ( !$record->save() ) {
+		if ( !$record->save() ) { 
 			Message::addErrorMessage($record->getError());			
 			FatUtility::dieJsonError($record->getError());
         }
 		
-		/*********************/
-		switch( $issue_resolve_type ) {
-			case 1 :
-			
-			break;
-			
-			case 2 :
-			
-			break;
-			
-		}
-		
-		
+		$sLessonObj = new ScheduledLesson( $lessonId );
+		$sLessonObj->changeLessonStatus( $lessonId, $lesson_status );
 		
 		$reason_html = '';
+		$teacherReasonHtml = '';
+		$_reason_ids = $issuesReportedDetails['issrep_issues_to_report'];
+		$_reason_ids = explode(',', $_reason_ids);
+		$teaher_reason_ids = $issuesReportedDetails['issrep_issues_resolve'];
+		$teaher_reason_ids = explode(',', $teaher_reason_ids);
 		$issues_options = IssueReportOptions::getOptionsArray( $this->siteLangId );
 		
 		foreach ( $_reason_ids as $_id ) {
 			$reason_html .= $issues_options[$_id].'<br />';
 		}
+		foreach ( $teaher_reason_ids as $_trId ) {
+			$teacherReasonHtml .= $issues_options[$_trId].'<br />';
+		}
+		$resolveArray = IssuesReported::RESOLVE_TYPE;
+		
+		$tpl = 'teacher_issue_resolved_email';
+		$vars = array(
+			'{learner_name}' => $transactionDetails['learnerFullName'],
+			'{teacher_name}' => $transactionDetails['teacherFullName'],
+			'{lesson_name}' => $transactionDetails['teacherTeachLanguageName'],
+			'{lesson_issue_reason}' => $reason_html,
+			'{teacher_issue_reason}' => $teacherReasonHtml,
+			'{learner_comment}' => $issuesReportedDetails['issrep_comment'],
+			'{teacher_comment}' => $issuesReportedDetails['issrep_resolve_comments'],
+			'{lesson_date}' => $transactionDetails['slesson_date'],
+			'{lesson_start_time}' => $transactionDetails['slesson_start_time'],
+			'{lesson_end_time}' => $transactionDetails['slesson_end_time'],
+			'{issue_resolve_type}' => $resolveArray[$issue_resolve_type]
+		);
 
-		Message::addMessage(Label::getLabel( 'LBL_Lesson_Issue_Updated_Successfully!', $this->siteLangId ));		
-		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Reported_Successfully!'));
+		if( !EmailHandler::sendMailTpl($transactionDetails['learner_email'], $tpl ,$this->siteLangId, $vars) ){
+			Message::addErrorMessage(Label::getLabel( 'LBL_Mail_not_sent!', $this->siteLangId ));					
+			FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
+		}
+		
+		$userNotification = new UserNotifications( $lerner_id );
+        $userNotification->sendIssueRefundNotification( $lessonId, IssuesReported::ISSUE_RESOLVE_NOTIFICATION );
+		
+		Message::addMessage(Label::getLabel( 'LBL_Lesson_Issue_Resolved_Successfully!', $this->siteLangId ));		
+		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Resolved_Successfully!'));
 	
 	}
 	
@@ -287,8 +363,6 @@ class TeacherIssueReportedController extends TeacherBaseController {
 		$arr_options = IssuesReported::RESOLVE_TYPE;
 		$fldIssue = $frm->addRadioButtons( Label::getLabel('LBL_How_would_you_like_to_resolve_this?'), 'issue_resolve_type',  $arr_options );
 		$fldIssue->requirement->setRequired(true);
-		$fld = $frm->addTextArea( Label::getLabel('LBL_Comment'),'issue_reported_msg','');
-		$fld->requirement->setRequired(true);
 		$fld = $frm->addHiddenField( '', 'issue_id' );
 		$fld = $frm->addHiddenField( '', 'slesson_id' );
 		$fld->requirements()->setRequired();

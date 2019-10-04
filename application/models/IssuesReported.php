@@ -10,10 +10,12 @@ class IssuesReported extends MyAppModel{
 	const RESOLVE_TYPE = array(
 		1 => 'Reset Lesson to: Unscheduled',
 		2 => 'Mark Lesson as: Completed',
-		3 => 'Mark Lesson as: Completed and issue a student a 50% refund',
-		4 => 'Mark Lesson as: Completed and issue a student a 100% refund',
+		3 => 'Mark Lesson as: Completed and issue student a 50% refund',
+		4 => 'Mark Lesson as: Completed and issue student a 100% refund',
 	);
 	
+	const ISSUE_REPORTED_NOTIFICATION = 1;
+	const ISSUE_RESOLVE_NOTIFICATION = 2;
 	
 	public function __construct( $id = 0 ) {
 		parent::__construct ( static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id );
@@ -24,7 +26,7 @@ class IssuesReported extends MyAppModel{
 		$srch->joinTable( ScheduledLesson::DB_TBL, 'INNER JOIN', 'i.issrep_slesson_id = sl.slesson_id', 'sl' );
 		$srch->joinTable( Order::DB_TBL, 'INNER JOIN', 'o.order_id = sl.slesson_order_id', 'o' );
 		$srch->joinTable( 'tbl_order_products', 'INNER JOIN', 'op.op_order_id = o.order_id', 'op' );
-		$srch->joinTable( User::DB_TBL, 'INNER JOIN', 'CASE WHEN i.issrep_reported_by = '.USER::USER_TYPE_LEANER.' THEN sl.slesson_learner_id  ELSE sl.slesson_teacher_id END = u.user_id', 'u' );
+		$srch->joinTable( User::DB_TBL, 'INNER JOIN', 'CASE WHEN i.issrep_reported_by = '. USER::USER_TYPE_LEANER .' THEN sl.slesson_learner_id  ELSE sl.slesson_teacher_id END = u.user_id', 'u' );
 		return $srch;
 	}
 

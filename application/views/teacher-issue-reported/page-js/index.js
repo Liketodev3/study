@@ -53,6 +53,14 @@ $(function() {
 		}); 	
 	}
 	
+	issueResolveSetupStepTwo = function( frm ) {
+		if (!$(frm).validate()) return;	
+		var data = fcom.frmData(frm);
+		fcom.updateWithAjax(fcom.makeUrl('TeacherIssueReported', 'issueResolveSetupStepTwo'), data , function(t) {	
+			$.facebox.close();	
+			window.location.reload();
+		});	
+	}
 	
 	searchStudents(document.frmSrch);
 });

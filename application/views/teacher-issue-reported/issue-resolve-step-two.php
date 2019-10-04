@@ -3,7 +3,7 @@ $frm->setFormTagAttribute('id', 'bankInfoFrm');
 $frm->setFormTagAttribute('class','form');
 $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 12;
-$frm->setFormTagAttribute('onsubmit', 'issueResolveSetup(this); return(false);');
+$frm->setFormTagAttribute('onsubmit', 'issueResolveSetupStepTwo(this); return(false);');
 ?>
 <div class="box -padding-20">
 <h4><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></h4>
@@ -20,8 +20,7 @@ $frm->setFormTagAttribute('onsubmit', 'issueResolveSetup(this); return(false);')
 	}
 	?>
 	<hr />
-	<p><?php echo nl2br($issueDeatils['issrep_resolve_comments']); ?></p>
-	
+	<p><?php echo nl2br($issueDeatils['issrep_resolve_comments']); ?></p>	
 </blockquote>
 <?php echo $frm->getFormHtml(); ?>
 </div>

@@ -135,4 +135,14 @@ class ScheduledLesson extends MyAppModel{
 		return true;
 	}
 	
+	public function changeLessonStatus ( $lesson_id, $status ) {
+		$lesson_id = FatUtility::int($lesson_id);
+		$status = FatUtility::int($status);
+		$db = FatApp::getDb();
+		if( !$db->updateFromArray(self::DB_TBL, array('slesson_status'=>$status ), array('smt'=>'slesson_id = ?','vals'=>array( $lesson_id ))) ) {
+			return false;
+		}
+		return true;
+	}
+	
 }

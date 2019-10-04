@@ -76,7 +76,13 @@ class NotificationsController extends LoggedUserController {
                 break;				
             case UserNotifications::NOTICATION_FOR_WALLET_CREDIT_ON_LESSON_COMPLETE:
                 $notificationRedirectUrl = CommonHelper::generateUrl('Wallet');
-                break;								
+                break;
+			case UserNotifications::NOTICATION_FOR_ISSUE_REFUND:
+                $notificationRedirectUrl = CommonHelper::generateUrl('TeacherIssueReported');
+                break;
+			case UserNotifications::NOTICATION_FOR_ISSUE_RESOLVE:
+                $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', array($notificationRecordId));
+                break;
         }
         if ($notificationRead == UserNotifications::NOTIFICATION_NOT_READ) {
             $userNotification = new UserNotifications(UserAuthentication::getLoggedUserId());
