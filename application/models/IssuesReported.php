@@ -7,6 +7,16 @@ class IssuesReported extends MyAppModel{
 	const STATUS_PROGRESS = 1;
 	const STATUS_RESOLVED = 2;
 	
+	const RESOLVE_TYPE = array(
+		1 => 'Reset Lesson to: Unscheduled',
+		2 => 'Mark Lesson as: Completed',
+		3 => 'Mark Lesson as: Completed and issue student a 50% refund',
+		4 => 'Mark Lesson as: Completed and issue student a 100% refund',
+	);
+	
+	const ISSUE_REPORTED_NOTIFICATION = 1;
+	const ISSUE_RESOLVE_NOTIFICATION = 2;
+	
 	public function __construct( $id = 0 ) {
 		parent::__construct ( static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id );
 	}
@@ -15,7 +25,8 @@ class IssuesReported extends MyAppModel{
 		$srch = new SearchBase(static::DB_TBL, 'i');
 		$srch->joinTable( ScheduledLesson::DB_TBL, 'INNER JOIN', 'i.issrep_slesson_id = sl.slesson_id', 'sl' );
 		$srch->joinTable( Order::DB_TBL, 'INNER JOIN', 'o.order_id = sl.slesson_order_id', 'o' );
-		$srch->joinTable( User::DB_TBL, 'INNER JOIN', 'CASE WHEN i.issrep_reported_by = '.USER::USER_TYPE_LEANER.' THEN sl.slesson_learner_id  ELSE sl.slesson_teacher_id END = u.user_id', 'u' );
+		$srch->joinTable( 'tbl_order_products', 'INNER JOIN', 'op.op_order_id = o.order_id', 'op' );
+		$srch->joinTable( User::DB_TBL, 'INNER JOIN', 'CASE WHEN i.issrep_reported_by = '. USER::USER_TYPE_LEANER .' THEN sl.slesson_learner_id  ELSE sl.slesson_teacher_id END = u.user_id', 'u' );
 		return $srch;
 	}
 
@@ -81,6 +92,18 @@ class IssuesReported extends MyAppModel{
 		$srch = new SearchBase(static::DB_TBL);
 		$srch->addCondition( 'issrep_slesson_id',' = ', $lessonId );
 		$srch->addCondition( 'issrep_reported_by',' = ', $userType );
+		$rs = $srch->getResultSet();
+		$issueRow = FatApp::getDb()->fetch($rs);
+		if( $issueRow ){
+			return true;
+		}		
+		return false;
+	}
+	
+	public static function isAlreadyResolved($lessonId){
+		$srch = new SearchBase(static::DB_TBL);
+		$srch->addCondition( 'issrep_slesson_id',' = ', $lessonId );
+		$srch->addCondition( 'issrep_status',' IN ', array( self::STATUS_PROGRESS, self::STATUS_RESOLVED ));
 		$rs = $srch->getResultSet();
 		$issueRow = FatApp::getDb()->fetch($rs);
 		if( $issueRow ){

@@ -366,13 +366,22 @@ function endLessonButtonAction(){
 										<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lessonData['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
 										<?php }  ?>
 										
-										<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ) { ?>
+										<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ) { 
+										if ( $lessonData['issrep_id'] < 1 ) { 
+										?>
 										<li><a href="javascript:void(0);" onclick="issueReported('<?php echo $lessonData['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Reported'); ?></a></li>
+										
+										<?php }?>
 										
 										<?php if( $countReviews == 0 ){ ?>
 										<li><a href="javascript:void(0);" onclick="lessonFeedback('<?php echo $lessonData['slesson_id'];  ?>');"><?php echo Label::getLabel('LBL_Rate_Lesson'); ?></a></li>
 										<?php } 
 										} ?>
+										
+										<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lessonData['issrep_id'] > 0 ) { ?>
+										<li><a href="javascript:void(0);" onclick="issueDetails('<?php echo $lessonData['issrep_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Details'); ?></a></li>
+										<?php } ?>
+										
 										
 										<?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
 										<li><a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lessonData['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Reschedule'); ?></a></li>

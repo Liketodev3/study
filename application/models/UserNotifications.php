@@ -10,6 +10,8 @@ class UserNotifications extends FatModel {
     const NOTICATION_FOR_SCHEDULED_LESSON_BY_LEARNER = 2;
     const NOTICATION_FOR_SCHEDULED_LESSON_BY_TEACHER = 3;
     const NOTICATION_FOR_WALLET_CREDIT_ON_LESSON_COMPLETE = 4;  
+	const NOTICATION_FOR_ISSUE_REFUND = 5;
+	const NOTICATION_FOR_ISSUE_RESOLVE = 6;
 
     private $userId = 0;
     private $recordId = 0;
@@ -710,5 +712,33 @@ class UserNotifications extends FatModel {
         SmsHandler::archiveSms($phoneNo, '', $title);
         return true;
     }
+	
+	
+	public function sendIssueRefundNotification($lessonId, $_step) {
+        
+        $this->recordId = $lessonId;
+        $this->subRecordId = UserAuthentication::getLoggedUserId();
+		$title = '';
+		$description = '';
+		switch( $_step ) {
+			case IssuesReported::ISSUE_REPORTED_NOTIFICATION : 
+				$this->type = self::NOTICATION_FOR_ISSUE_REFUND;
+				$title = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER", CommonHelper::getLangId());
+				$description = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER_DESCRIPTION", CommonHelper::getLangId());
+			break;
+			
+			case IssuesReported::ISSUE_RESOLVE_NOTIFICATION :
+				$this->type = self::NOTICATION_FOR_ISSUE_RESOLVE;			
+				$title = Label::getLabel("LABEL_LESSON_ISSUE_RESOLVED_BY_TEACHER", CommonHelper::getLangId());
+				$description = Label::getLabel("LABEL_LESSON_RESOLVED_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());
+			
+			break;
+		}
+		
+		if (!$this->addNotification($title, $description)) {
+            return false;
+        }
+        return true;
+    } 
 
 }

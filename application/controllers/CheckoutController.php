@@ -188,7 +188,6 @@ class CheckoutController extends LoggedUserController{
 	
 	public function confirmOrder(){
 		$cartData = $this->cartObj->getCart( $this->siteLangId );
-		
 		$criteria = array( 
 			'isUserLogged' => true, 
 			'hasItems' =>  true,
@@ -293,7 +292,7 @@ class CheckoutController extends LoggedUserController{
 			'op_lpackage_is_free_trial'	=>	$cartData['lpackage_is_free_trial'],
 			'op_lesson_duration'	=>	$op_lesson_duration,
 			'op_teacher_id'	=>	$cartData['user_id'],
-			'op_qty'	=>	1,
+			'op_qty'	=>	$cartData['lpackage_lessons'],
 			'op_commission_charged'	=>	$cartData['op_commission_charged'],
 			'op_commission_percentage'	=>	$cartData['op_commission_percentage'],
 			'op_unit_price'	=>	$cartData['itemPrice'],

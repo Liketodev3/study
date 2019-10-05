@@ -107,3 +107,16 @@
 				location.reload();	
 		});	
 	};
+	
+	issueDetails = function(issueId){
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','issueDetails',[issueId]),'',function(t){
+			$.facebox( t,'facebox-medium');
+		});
+	}
+	
+	reportIssueToAdmin = function(issueId) {
+		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'reportIssueToAdmin', [issueId]),'' , function(t) {	
+			$.facebox.close();				
+			location.reload();	
+		});	
+	}

@@ -5,6 +5,8 @@ class Transaction extends MyAppModel{
 	
 	const STATUS_PENDING = 0;
 	const STATUS_COMPLETED = 1;
+	const STATUS_REFUND = 2;
+	const STATUS_DECLINED = 3;
 
 	const WITHDRAWL_STATUS_PENDING = 0;	
 	const WITHDRAWL_STATUS_COMPLETED = 1;	
@@ -46,7 +48,9 @@ class Transaction extends MyAppModel{
 		}
 		return array(
 			static::STATUS_PENDING => Label::getLabel('LBL_Pending',$langId),
-			static::STATUS_COMPLETED => Label::getLabel('LBL_Completed',$langId)					
+			static::STATUS_COMPLETED => Label::getLabel('LBL_Completed',$langId),
+			static::STATUS_REFUND => Label::getLabel('LBL_Refunded',$langId),
+			static::STATUS_DECLINED => Label::getLabel('LBL_Declined',$langId)				
 		);
 	}
 

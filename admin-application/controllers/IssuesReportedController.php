@@ -65,6 +65,7 @@ class IssuesReportedController extends AdminBaseController
 			'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',
 			) 
 		);
+		$srch->addCondition('issrep_is_for_admin', '=', 1);
 		
 		if (isset($post['issrep_status']) AND $post['issrep_status'] > -1) {
 			$status = FatUtility::int($post['issrep_status']);
@@ -110,9 +111,9 @@ class IssuesReportedController extends AdminBaseController
 		$issRepObj = new IssuesReported($issue_id);
 		$srch = $issRepObj->getIssueDetails();
 		$srch->joinTable( UserSetting::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = us.us_user_id', 'us' );
-		$srch->joinTable( SpokenLanguage::DB_TBL, 'INNER JOIN', 'us.us_teach_slanguage_id = s.slanguage_id', 's' );
+		$srch->joinTable( TeachingLanguage::DB_TBL, 'INNER JOIN', 'sl.slesson_slanguage_id = tlang.tlanguage_id', 'tlang' );
 		if ( $this->adminLangId > 0) {
-			$srch->joinTable( SpokenLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN','sll.slanguagelang_slanguage_id = s.slanguage_id AND sll.slanguagelang_lang_id = ' . $this->adminLangId, 'sll');
+			$srch->joinTable( TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN','sll.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND sll.tlanguagelang_lang_id = ' . $this->adminLangId, 'sll');
 		}
 		$srch->joinTable( User::DB_TBL, 'INNER JOIN', 'sl.slesson_learner_id = ul.user_id', 'ul' );        
 		$srch->joinTable( User::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = ut.user_id', 'ut' );        
@@ -129,7 +130,7 @@ class IssuesReportedController extends AdminBaseController
 			'sl.slesson_teacher_end_time',
 			'sl.slesson_ended_by',
 			'sl.slesson_ended_on',
-			'sll.slanguage_name',
+			'IFNULL(sll.tlanguage_name, tlang.tlanguage_identifier) as tlanguage_name',
 			'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',
 			'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_username',
 			'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_username',
@@ -143,6 +144,7 @@ class IssuesReportedController extends AdminBaseController
         $this->set("callHistory", $callHistory);
         $this->set("statusArr", $issueStatusArr);
         $this->set("issueDetail", $issueDetail);
+		$this->set('issues_options', IssueReportOptions::getOptionsArray( $this->adminLangId ));
         $this->_template->render(false, false);
     }	
 	

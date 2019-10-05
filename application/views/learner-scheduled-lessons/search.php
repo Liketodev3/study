@@ -16,7 +16,6 @@ $action = '';
 if ( $lesson['is_trial'] == 1 ) {
 	$action = 'free_trial';
 } 
-
 ?>
 	<div class="col-list">
 		<div class="d-lg-flex align-items-center">
@@ -110,9 +109,16 @@ if ( $lesson['is_trial'] == 1 ) {
 								<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
 								<?php }  ?>
 
-								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) { ?>
-								<li><a href="javascript:void(0);" onclick="issueReported('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Reported'); ?></a></li>
+								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ) { 
+									if ( $lesson['issrep_id'] < 1 ) { ?>
+										<li><a href="javascript:void(0);" onclick="issueReported('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Reported'); ?></a></li>
+									<?php }?>
+								
 								<li><a href="javascript:void(0);" onclick="lessonFeedback('<?php echo $lesson['slesson_id'];  ?>');"><?php echo Label::getLabel('LBL_Rate_Lesson'); ?></a></li>
+								<?php } ?>
+								
+								<?php if( $lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lesson['issrep_id'] > 0) { ?>
+								<li><a href="javascript:void(0);" onclick="issueDetails('<?php echo $lesson['issrep_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Details'); ?></a></li>
 								<?php } ?>
 								
 								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>

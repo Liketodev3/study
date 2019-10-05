@@ -1,6 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php 
 $endedBy = isset(User::getUserTypesArr($adminLangId)[$issueDetail['slesson_ended_by']])?User::getUserTypesArr($adminLangId)[$issueDetail['slesson_ended_by']]:"NA";
+
 ?>
 <section class="section">
     <div class="sectionhead">
@@ -8,17 +9,46 @@ $endedBy = isset(User::getUserTypesArr($adminLangId)[$issueDetail['slesson_ended
     </div>
     <div class="sectionbody">
         <table class="table table--details">
-          
-            <tbody><tr>
-              <td width="50%"><strong><?php echo Label::getLabel('LBL_Comment',$adminLangId); ?>:</strong>  <?php echo $issueDetail['issrep_comment']; ?></td>
-              <td><strong><?php echo Label::getLabel('LBL_Reported_By',$adminLangId); ?>:</strong> <?php echo $issueDetail['reporter_username'].' ('.User::getUserTypesArr($adminLangId)[$issueDetail['issrep_reported_by']].')'; ?></td>
+			<tbody>
+			<tr>
+				<td width="50%"><strong><?php echo Label::getLabel('LBL_Reason_by_Learner',$adminLangId); ?>:</strong>  </td>
+				<td>
+					<?php  $_reasonIds = explode(',', $issueDetail['issrep_issues_to_report']);
+						foreach( $_reasonIds as $_ids ) {
+							echo $issues_options[$_ids]. '<br />';
+						}
+					?>
+				
+				</td>
+            </tr>
+			<tr>
+				<td width="50%"><strong><?php echo Label::getLabel('LBL_Comment',$adminLangId); ?>:</strong>  <?php echo $issueDetail['issrep_comment']; ?></td>
+				<td><strong><?php echo Label::getLabel('LBL_Reported_By',$adminLangId); ?>:</strong> <?php echo $issueDetail['reporter_username'].' ('.User::getUserTypesArr($adminLangId)[$issueDetail['issrep_reported_by']].')'; ?></td>
               
             </tr>
             <tr>
-            <td><strong><?php echo Label::getLabel('LBL_Reported_Time',$adminLangId); ?>:</strong> <?php echo $issueDetail['issrep_added_on']; ?></td>
-              <td><strong><?php echo Label::getLabel('LBL_Issue_Status',$adminLangId); ?>:</strong> <?php echo $statusArr[$issueDetail['issrep_status']]; ?></td>
-            </tr>                                   
-        </tbody></table>
+				<td><strong><?php echo Label::getLabel('LBL_Reported_Time',$adminLangId); ?>:</strong> <?php echo $issueDetail['issrep_added_on']; ?></td>
+				<td><strong><?php echo Label::getLabel('LBL_Issue_Status',$adminLangId); ?>:</strong> <?php echo $statusArr[$issueDetail['issrep_status']]; ?></td>
+            </tr> 
+			<?php if($issueDetail['issrep_issues_resolve'] !='') { ?>
+			<tr>
+				<td width="50%"><strong><?php echo Label::getLabel('LBL_Reason_by_Teacher',$adminLangId); ?>:</strong>  </td>
+				<td>
+					<?php  $_reasonIds = explode(',', $issueDetail['issrep_issues_resolve']);
+						foreach( $_reasonIds as $_ids ) {
+							echo $issues_options[$_ids]. '<br />';
+						}
+					?>
+				
+				</td>
+            </tr>
+			<?php } ?>
+			<tr>
+				<td width="50%"><strong><?php echo Label::getLabel('LBL_Teacher_Comment',$adminLangId); ?>:</strong>  <?php echo $issueDetail['issrep_resolve_comments']; ?></td>
+				<td><strong><?php echo Label::getLabel('LBL_Teacher_Resolve_by',$adminLangId); ?>:</strong> <?php echo IssuesReported::RESOLVE_TYPE[$issueDetail['issrep_issues_resolve_type']] ; ?></td>
+            </tr> 
+			</tbody>
+		</table>
     </div>
 </section>
 <section class="section">
@@ -41,7 +71,7 @@ $endedBy = isset(User::getUserTypesArr($adminLangId)[$issueDetail['slesson_ended
             <tr>
               <td ><strong><?php echo Label::getLabel('LBL_Learner_Join_Time',$adminLangId); ?>:</strong>  <?php echo $issueDetail['slesson_learner_join_time']; ?></td>
               <td><strong><?php echo Label::getLabel('LBL_Learner_end_Time',$adminLangId); ?>:</strong> <?php echo $issueDetail['slesson_learner_end_time']; ?></td>
-              <td ><strong><?php echo Label::getLabel('LBL_Language',$adminLangId); ?>:</strong>  <?php echo $issueDetail['slanguage_name']; ?></td>              
+              <td ><strong><?php echo Label::getLabel('LBL_Language',$adminLangId); ?>:</strong>  <?php echo $issueDetail['tlanguage_name']; ?></td>              
             </tr>                                   
             <tr>
               <td ><strong><?php echo Label::getLabel('LBL_Lesson_Ended_By',$adminLangId); ?>:</strong>  <?php echo $endedBy; ?></td>

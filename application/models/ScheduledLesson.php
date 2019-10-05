@@ -24,7 +24,8 @@ class ScheduledLesson extends MyAppModel{
 			static::STATUS_NEED_SCHEDULING	=>	Label::getLabel('LBL_Need_to_be_scheduled', $langId),
 			static::STATUS_COMPLETED	=>	Label::getLabel('LBL_Completed', $langId),
 			static::STATUS_CANCELLED	=>	Label::getLabel('LBL_Cancelled', $langId),
-			static::STATUS_UPCOMING	=>	Label::getLabel('LBL_Upcoming', $langId)
+			static::STATUS_UPCOMING	=>	Label::getLabel('LBL_Upcoming', $langId),
+			static::STATUS_ISSUE_REPORTED	=>	Label::getLabel('LBL_Issue_Reported', $langId)
 		);
 	}
 	
@@ -75,7 +76,8 @@ class ScheduledLesson extends MyAppModel{
 				'utxn_comments' => sprintf(Label::getLabel('LBL_LessonId:_%s_Payment', CommonHelper::getLangId()), $this->getMainTableRecordId()),
 				'utxn_status' => Transaction::STATUS_COMPLETED,
 				'utxn_type' => Transaction::TYPE_LOADED_MONEY_TO_WALLET,
-				'utxn_credit' => $data['op_commission_charged']
+				'utxn_credit' => $data['op_commission_charged'],
+				'utxn_slesson_id' => $data['slesson_id'],
 			);
 
 			if (!$tObj->addTransaction($data)) {
@@ -124,4 +126,23 @@ class ScheduledLesson extends MyAppModel{
 			return true;
 		}
     }
+	
+	public function holdPayment( $user_id, $lesson_id ) {
+		$db = FatApp::getDb();
+		if( !$db->updateFromArray(Transaction::DB_TBL,array('utxn_status'=>Transaction::STATUS_PENDING), array('smt'=>'utxn_user_id = ? and utxn_slesson_id = ?','vals'=>array( $user_id, $lesson_id ))) ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public function changeLessonStatus ( $lesson_id, $status ) {
+		$lesson_id = FatUtility::int($lesson_id);
+		$status = FatUtility::int($status);
+		$db = FatApp::getDb();
+		if( !$db->updateFromArray(self::DB_TBL, array('slesson_status'=>$status ), array('smt'=>'slesson_id = ?','vals'=>array( $lesson_id ))) ) {
+			return false;
+		}
+		return true;
+	}
+	
 }

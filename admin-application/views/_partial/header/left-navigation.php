@@ -100,12 +100,14 @@
 				<?php }?>
 				
 				<?php 
-				/* code added on 30-07-2019 Teaching Languages Separate */
-				if ($objPrivilege->canEditTeachingLanguage(AdminAuthentication::getLoggedAdminId(), true)) { ?>
+				
+				if ($objPrivilege->canViewTeachingLanguage(AdminAuthentication::getLoggedAdminId(), true)) { ?>
 					<li><a href="<?php echo CommonHelper::generateUrl('teachingLanguage'); ?>"><?php echo Label::getLabel('LBL_Teaching_Language',$adminLangId);?></a></li>	
-				<?php }
-				/*----*/
-				?>
+				<?php } ?>
+				
+				<?php if ($objPrivilege->canViewPreferences(AdminAuthentication::getLoggedAdminId(), true)) { ?>
+					<li><a href="<?php echo CommonHelper::generateUrl('issueReportOptions'); ?>"><?php echo Label::getLabel('LBL_Issue_Report_Options',$adminLangId);?></a></li>	
+				<?php } ?>
 				
 				
 				

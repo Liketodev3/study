@@ -29,7 +29,7 @@ class WalletController extends LoggedUserController {
 		$balSrch->doNotLimitRecords();
 		$balSrch->addMultipleFields( array('utxn.*',"utxn_credit - utxn_debit as bal") );
 		$balSrch->addCondition('utxn_user_id', '=', $userId);
-		$balSrch->addCondition('utxn_status', '=',  applicationConstants::ACTIVE );
+		//$balSrch->addCondition('utxn_status', '=',  applicationConstants::ACTIVE );
 		$qryUserPointsBalance = $balSrch->getQuery();
 		/* ] */
 

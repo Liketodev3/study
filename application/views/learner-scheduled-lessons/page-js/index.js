@@ -144,7 +144,6 @@ $(function() {
 		$(frm.page).val(page);
 		searchLessons(frm);
 	};
-	
 	searchLessons(document.frmSrch);
 });
 
