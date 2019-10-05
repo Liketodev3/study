@@ -871,7 +871,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			FatUtility::dieWithError(Message::getHtml());
         }        
         
-
 		$lFeedbackSrch = new TeacherLessonReviewSearch();
 		$lFeedbackSrch->doNotCalculateRecords();
 		$lFeedbackSrch->doNotLimitRecords();
@@ -1274,7 +1273,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
    		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Learner_Join_Time_Marked!'));
     }
 	
-	public function reportIssueToAdmin($issueId) {
+	public function reportIssueToAdmin( $issueId, $lessonId ) {
 		$reportedArr = array();
 		$reportedArr['issrep_status'] = IssuesReported::STATUS_PROGRESS;
 		$reportedArr['issrep_is_for_admin'] = 1;
@@ -1285,6 +1284,40 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			Message::addErrorMessage($record->getError());			
 			FatUtility::dieJsonError($record->getError());
         }
+		
+		$srch = new ScheduledLessonSearch();
+		$srch->addCondition( 'slesson_id', '=', $lessonId );
+		$srch->addCondition( 'slesson_learner_id', '=',  UserAuthentication::getLoggedUserId() );
+		$srch->joinTable( User::DB_TBL, 'LEFT JOIN', 'ut.user_id = slns.slesson_teacher_id', 'ut' );
+		$srch->joinTable( User::DB_TBL, 'LEFT JOIN', 'ul.user_id = slns.slesson_learner_id', 'ul' );
+		$srch->joinTable( TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tLang.tlanguage_id = slns.slesson_slanguage_id', 'tLang' );
+		$srch->joinTable( TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tLangLang.tlanguagelang_tlanguage_id = tLang.tlanguage_id AND tlanguagelang_lang_id = '. $this->siteLangId , 'tLangLang' );
+		$srch->addFld(
+			array(
+				'slns.*',
+				'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+				'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+				'IFNULL(tLangLang.tlanguage_name, tLang.tlanguage_identifier) as teacherTeachLanguageName'
+            )
+		);
+		
+		$rs = $srch->getResultSet();
+		$lessonRow = FatApp::getDb()->fetch($rs);
+		
+		$tpl = 'admin_new_issue_reported_email';
+		$vars = array(
+			'{learner_name}' => $lessonRow['learnerFullName'],
+			'{teacher_name}' => $lessonRow['teacherFullName'],
+			'{lesson_name}' => $lessonRow['teacherTeachLanguageName'],
+			'{lesson_date}' => $lessonRow['slesson_date'],
+			'{lesson_start_time}' => $lessonRow['slesson_start_time'],
+			'{lesson_end_time}' => $lessonRow['slesson_end_time']	
+		);
+		
+		if ( !EmailHandler::sendMailTpl(FatApp::getConfig('CONF_SITE_OWNER_EMAIL',FatUtility::VAR_STRING, 'yocoach@dummyid.com'), $tpl ,$this->siteLangId, $vars) ) {
+			Message::addErrorMessage(Label::getLabel( 'LBL_Mail_not_sent!', $this->siteLangId ));					
+			FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
+		}
 		
 		Message::addMessage(Label::getLabel( 'LBL_Lesson_Issue_Reported_to_the_Support', $this->siteLangId ));		
 		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Reported_to_the_Support!'));
