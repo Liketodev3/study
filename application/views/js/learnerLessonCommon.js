@@ -112,11 +112,11 @@
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','issueDetails',[issueId]),'',function(t){
 			$.facebox( t,'facebox-medium');
 		});
-	}
+	};
 	
 	reportIssueToAdmin = function(issueId, lessonId) {
 		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'reportIssueToAdmin', [issueId, lessonId]),'' , function(t) {	
 			$.facebox.close();				
 			location.reload();	
 		});	
-	}
+	};
