@@ -58,7 +58,7 @@
 				<tr>
 					<td><?php echo Label::getLabel('LBL_Reported_Issue_Resolve_Type'); ?></td> 
 					<td>
-						<?php echo $resolve_type_options[$issueDeatils['issrep_issues_resolve_type']]; ?>
+						<?php if( $issueDeatils['issrep_issues_resolve_type'] > 0 ) : echo $resolve_type_options[$issueDeatils['issrep_issues_resolve_type']]; endif; ?>
 					</td>
 				</tr>
 			</tbody>

@@ -69,7 +69,7 @@ $user_timezone = MyDate::getUserTimeZone();
 									<a href="javascript:void(0);" onclick="resolveIssue('<?php echo $_issue['issrep_id']; ?>', '<?php echo $_issue['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></a>
 								</li>
 							<?php } ?>	
-							<?php if( $_issue['issrep_status'] == 1 && $issuesReported['issrep_issues_resolve_type'] == '' ) { ?>
+							<?php if( $_issue['issrep_status'] == 1 && $issuesReported['issrep_issues_resolve_type'] < 1 ) { ?>
 								<li>
 									<a href="javascript:void(0);" onclick="issueResolveStepTwo('<?php echo $_issue['issrep_id']; ?>', '<?php echo $_issue['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></a>
 								</li>

@@ -194,11 +194,14 @@ class TeacherIssueReportedController extends TeacherBaseController {
 		$paymentStatus = Transaction::STATUS_DECLINED;
 		$_refund_percentage = 0;
 		$refundAmount = 0;
+		$refundAmountTeacher = 0;
 		
 		$srch = Transaction::getSearchObject();
 		$srch->addCondition( 'utxn_slesson_id', '=', $lessonId );
 		$srch->addCondition( 'utxn_user_id', '=',  UserAuthentication::getLoggedUserId() );
 		$srch->joinTable( ScheduledLesson::DB_TBL, 'LEFT JOIN', 'utxn.utxn_slesson_id = slsn.slesson_id', 'slsn' );
+		$srch->joinTable( Order::DB_TBL, 'LEFT JOIN', 'slsn.slesson_order_id = o.order_id', 'o' );
+		$srch->joinTable( OrderProduct::DB_TBL, 'LEFT JOIN', 'o.order_id = op.op_order_id', 'op' );
 		$srch->joinTable( User::DB_TBL, 'LEFT JOIN', 'ut.user_id = slsn.slesson_teacher_id', 'ut' );
 		$srch->joinTable( User::DB_TBL, 'LEFT JOIN', 'ul.user_id = slsn.slesson_learner_id', 'ul' );
 		$srch->joinTable( User::DB_TBL_CRED, 'LEFT JOIN', 'lcred.credential_user_id = ul.user_id', 'lcred' );
@@ -208,6 +211,8 @@ class TeacherIssueReportedController extends TeacherBaseController {
 			array(
 				'utxn.*',
 				'slsn.*',
+				'o.order_net_amount as order_total',
+				'op.op_qty as total_lessons',
 				'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
 				'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
 				'lcred.credential_email as learner_email',
@@ -218,7 +223,8 @@ class TeacherIssueReportedController extends TeacherBaseController {
 		
 		$rs = $srch->getResultSet();
 		$transactionDetails = FatApp::getDb()->fetch($rs);
-		$lessonAmount = $transactionDetails['utxn_credit'];
+		$lessonAmount = $transactionDetails['order_total'] / $transactionDetails['total_lessons'] ;
+		$lessonAmountTeacher = $transactionDetails['utxn_credit'];
 		$lerner_id = $transactionDetails['slesson_learner_id'];
 		$teacherPayment = $lessonAmount;
 		
@@ -259,8 +265,9 @@ class TeacherIssueReportedController extends TeacherBaseController {
 			);
 			$refundAmount = $lessonAmount *  $_refund_percentage / 100;
 			$data['utxn_credit'] = $refundAmount;
+			$refundAmountTeacher = $lessonAmountTeacher * $_refund_percentage / 100;
 			
-			if (!$tObj->addTransaction($data)) {
+			if (!$tObj->addTransaction($data)) { 
 				Message::addErrorMessage($tObj->getError());
 				FatUtility::dieJsonError(Message::getHtml());
 			}
@@ -273,7 +280,7 @@ class TeacherIssueReportedController extends TeacherBaseController {
 			'utxn_comments' => $transactionDetails['utxn_comments']. ' - Issue Resolved',
 			'utxn_status' => $paymentStatus,
 			'utxn_slesson_id' => $lessonId,
-			'utxn_debit' => $refundAmount
+			'utxn_debit' => $refundAmountTeacher
 		);
 			
 		if (!$tObjTeach->addTransaction($teachData)) {
