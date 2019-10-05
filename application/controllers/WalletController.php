@@ -34,7 +34,7 @@ class WalletController extends LoggedUserController {
 		/* ] */
 
 		$srch = Transaction::getSearchObject( false, false);
-		$srch->joinTable('(' . $qryUserPointsBalance . ')', 'JOIN', 'tqupb.utxn_id <= utxn.utxn_id', 'tqupb');
+		$srch->joinTable('(' . $qryUserPointsBalance . ')', 'JOIN', 'tqupb.utxn_id <= utxn.utxn_id AND tqupb.utxn_status = '. applicationConstants::ACTIVE, 'tqupb');
 		$srch->addMultipleFields(array('utxn.*',"SUM(tqupb.bal) balance"));
 		$srch->addCondition('utxn.utxn_user_id','=',$userId);
 		$srch->setPageNumber($page);
