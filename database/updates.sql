@@ -656,6 +656,79 @@ INSERT INTO `tbl_url_rewrites` (`urlrewrite_id`, `urlrewrite_original`, `urlrewr
 INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES ('new_message_arrived', '1', 'New Message Arrived', 'New Message Arrived at {website_name}', '<div style="margin:0; padding:0;background: #ecf0f1;"><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#ecf0f1" style="font-family:Arial; color:#333; line-height:26px;"><tbody><tr><td style="background:#ff3a59;padding:30px 0 10px;"><!--header start here--> <table width="600" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td><a href="{website_url}">{Company_Logo}</a></td><td style="text-align:right;">{social_media_icons}</td></tr></tbody></table><!--header end here--> </td></tr><tr><td style="background:#ff3a59;"><!--page title start here--> <table width="600" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td style="background:#fff;padding:20px 0 10px; text-align:center;"><h4 style="font-weight:normal; text-transform:uppercase; color:#999;margin:0; padding:10px 0; font-size:18px;"></h4><h2 style="margin:0; font-size:34px; padding:0;">{action}!</h2></td></tr></tbody></table><!--page title end here--> </td></tr><tr><td><!--page body start here--> <table width="600" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td style="background:#fff;padding:0 30px; text-align:center; color:#999;vertical-align:top;"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td style="padding:20px 0 30px;"><strong style="font-size:18px;color:#333;">Dear{to_user_name}</strong><br/><a href="{website_url}">{website_name}</a>.</td></tr><tr><td style="padding:20px 0 30px;">{from_user_name}has sent you a message:<br/></td></tr><tr><td style="padding:20px 0 30px;">Message: <br/>{message}</td></tr><!--section footer--> <tr><td style="padding:30px 0;border-top:1px solid #ddd; ">Get in touch if you have any questions regarding our Services.<br/>Feel free to contact us 24/7. We are here to help.<br/><br/>All the best,<br/>The{website_name}Team<br/></td></tr><!--section footer--> </tbody></table></td></tr></tbody></table><!--page body end here--> </td></tr><tr><td><!--page footer start here--> <table width="600" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td style="height:30px;"></td></tr><tr><td style="background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td style="padding:30px 0; font-size:20px; color:#000;">Need more help?<br/> <a href="{contact_us_url}" style="color:#ff3a59;">We are here, ready to talk</a></td></tr></tbody></table></td></tr><tr><td style="padding:0; color:#999;vertical-align:top; line-height:20px;"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td style="padding:20px 0 30px; text-align:center; font-size:13px; color:#999;"><br/><br/>{website_name}Inc.<!--if these emails get annoying, please feel free to <a href="#" style="text-decoration:underline; color:#666;">unsubscribe</a>.--></td></tr></tbody></table></td></tr><tr><td style="padding:0; height:50px;"></td></tr></tbody></table><!--page footer end here--> </td></tr></tbody></table></div>', '{to_user_name}<br />{from_user_name}<br />{message}<br />{action}', '1');
 
 
-ALTER TABLE `tbl_issues_reported` ADD `issrep_issues_to_report` VARCHAR(255) NOT NULL AFTER `issrep_id`;
 
 INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES ('teacher_issue_resolved_email', '1', 'Teacher Issue Resolved Email', 'Teacher Issue Resolved Email at {website_name}', '<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#f5f5f5" style="font-family:Arial; color:#333; line-height:26px;"><tbody><tr><td style="background:#e84c3d;padding:30px 0;"></td></tr><tr><td style="background:#e84c3d;padding:0 0 0;"><!--header start here--><table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="background: #fff;border-bottom: 1px solid #eee;"><tbody><tr><td style="padding:20px 40px;"><a href="#" style="display: block;">{Company_Logo}</a></td><td style="text-align:right;padding: 40px;">{social_media_icons}</td></tr></tbody></table><!--header end here--></td></tr><tr><td><!--page body start here--><table width="600" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td style="background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;"><table width="100%" cellspacing="0" cellpadding="0" border="0" align="center"><tbody><tr><td style="padding:20px 0 60px;"><img src="icon-account.png" alt=""/><h5 style="margin: 0;padding: 0; text-transform: uppercase; font-size: 16px;font-weight: 500;color: #333;"></h5><h2 style="margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;">Teacher Resolved The Issue</h2></td></tr></tbody></table></td></tr><tr><td style="background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; "><table width="100%" cellspacing="0" cellpadding="0" border="0" align="center"><tbody><tr><td style="padding:60px 0 70px;"><h3 style="margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;">Dear{learner_name}</h3><p style="line-height: 1.5;"> Teacher ({teacher_name}) has resolved the issue with ({lesson_name}) which is scheduled on{lesson_date}{lesson_start_time}-{lesson_end_time}</p><p style="line-height: 1.5; margin-bottom: 0px;"><strong>Teacher Comment:</strong></p><p style="line-height: 1.5; margin-top: 0px;">{teacher_comment}</p><p><strong>Issue Reason By Teacher:</strong><br/>{teacher_issue_reason}</p><p><strong>Resolve Type : </strong>{issue_resolve_type}</p></td></tr></tbody></table></td></tr></tbody></table><!--page body end here--></td></tr><tr><td><!--page footer start here--><table width="600" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td style="height:30px;"></td></tr><tr><td style="background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td style="padding:30px 0; font-size:20px; color:#000;"> Need more help?<br/><a href="{contact_us_url}" style="color:#e84c3d;">We‘re here, ready to talk</a></td></tr></tbody></table></td></tr><tr><td style="padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td style="padding:20px 0 30px; font-size:13px; color:#999;"> Be sure to add <a href="#" style="color: #e84c3d">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br/><br/> &copy; 2018,{website_name}. All Rights Reserved. </td></tr></tbody></table></td></tr><tr><td style="padding:0; height:50px;"></td></tr></tbody></table><!--page footer end here--></td></tr></tbody></table>', '{learner_name}<br />{teacher_name}<br />{lesson_name}<br />{lesson_issue_reason}<br />{teacher_issue_reason}<br />{learner_comment}<br />{teacher_comment}<br />{lesson_date}<br />{lesson_start_time}<br />{lesson_end_time}<br />{issue_resolve_type}', '1');
+
+
+CREATE TABLE `tbl_issue_report_options` (
+  `tissueopt_id` int(255) NOT NULL,
+  `tissueopt_identifier` varchar(255) NOT NULL,
+  `tissueopt_display_order` int(11) NOT NULL,
+  `tissueopt_active` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+INSERT INTO `tbl_issue_report_options` (`tissueopt_id`, `tissueopt_identifier`, `tissueopt_display_order`, `tissueopt_active`) VALUES
+(1, 'Student was late', 0, 1),
+(2, 'Student was absent', 0, 1),
+(3, 'Student left early', 0, 1),
+(4, 'Teacher was absent', 0, 1),
+(5, 'Teacher was late', 0, 1),
+(6, 'Teacher left early', 0, 1),
+(7, 'Student related technical difficulties', 0, 1),
+(8, 'Teacher related technical difficulties', 0, 1),
+(9, 'Site related technical difficulties', 0, 1),
+(10, 'Lesson status should be Completed', 0, 1),
+(11, 'other', 0, 1);
+
+
+ALTER TABLE `tbl_issue_report_options`
+  ADD PRIMARY KEY (`tissueopt_id`);
+
+ALTER TABLE `tbl_issue_report_options`
+  MODIFY `tissueopt_id` int(255) NOT NULL AUTO_INCREMENT;
+
+
+CREATE TABLE `tbl_issue_report_options_lang` (
+  `tissueoptlang_tissueopt_id` int(11) NOT NULL,
+  `tissueoptlang_lang_id` int(11) NOT NULL,
+  `tissueoptlang_title` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `tbl_issue_report_options_lang` (`tissueoptlang_tissueopt_id`, `tissueoptlang_lang_id`, `tissueoptlang_title`) VALUES
+(1, 1, 'Student was late'),
+(1, 2, 'كان الطالب متأخرا'),
+(2, 1, 'Student was absent'),
+(2, 2, 'Student was absent'),
+(3, 1, 'Student left early'),
+(3, 2, 'Student left early'),
+(4, 1, 'Teacher was absent'),
+(4, 2, 'Teacher was absent'),
+(5, 1, 'Teacher was late'),
+(5, 2, 'Teacher was late'),
+(6, 1, 'Teacher left early'),
+(6, 2, 'Teacher left early'),
+(7, 1, 'Student related technical difficulties'),
+(7, 2, 'Student related technical difficulties'),
+(8, 1, 'Teacher related technical difficulties'),
+(8, 2, 'Teacher related technical difficulties'),
+(9, 1, 'Site related technical difficulties'),
+(9, 2, 'Site related technical difficulties'),
+(10, 1, 'Lesson status should be Completed'),
+(10, 2, 'Lesson status should be Completed'),
+(11, 1, 'other'),
+(11, 2, 'other');
+
+ALTER TABLE `tbl_issue_report_options_lang`
+  ADD PRIMARY KEY (`tissueoptlang_tissueopt_id`,`tissueoptlang_lang_id`);
+
+
+ALTER TABLE `tbl_issue_report_options_lang`
+  MODIFY `tissueoptlang_tissueopt_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+  
+ALTER TABLE `tbl_issues_reported` ADD `issrep_is_for_admin` INT(11) NOT NULL DEFAULT '0' AFTER `issrep_id`; 
+ALTER TABLE `tbl_issues_reported` ADD `issrep_issues_to_report` VARCHAR(255) NOT NULL AFTER `issrep_slesson_id`;
+ALTER TABLE `tbl_issues_reported` ADD `issrep_issues_resolve` VARCHAR(255) NOT NULL AFTER `issrep_status`;
+ALTER TABLE `tbl_issues_reported` ADD `issrep_issues_resolve_type` INT(11) NOT NULL AFTER `issrep_issues_resolve`;
+ALTER TABLE `tbl_issues_reported` ADD `issrep_resolve_comments` LONGTEXT NOT NULL AFTER `issrep_issues_resolve_type`;
