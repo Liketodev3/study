@@ -171,7 +171,7 @@ class TeacherIssueReportedController extends TeacherBaseController {
 			$reason_html .= $issues_options[$_id].'<br />';
 		}
 
-		Message::addMessage(Label::getLabel( 'LBL_Lesson_Issue_Updated_Successfully!', $this->siteLangId ));		
+		//Message::addMessage(Label::getLabel( 'LBL_Lesson_Issue_Updated_Successfully!', $this->siteLangId ));		
 		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Reported_Successfully!'));
 	
 	}

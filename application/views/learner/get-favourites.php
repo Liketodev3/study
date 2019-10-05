@@ -28,8 +28,7 @@
 													</a>
 
 													<div class="profile-info__right">
-														<h6><a href="<?php echo $teacherDetailPageUrl; ?>"><?php echo $favourite['user_first_name'].' '.$favourite['user_last_name']; ?></a></h6><br>
-														<span><?php echo Label::getLabel('LBL_Teaches:'); ?> </span>
+														<h6><a href="<?php echo $teacherDetailPageUrl; ?>"><?php echo $favourite['user_first_name'].' '.$favourite['user_last_name']; ?></a></h6>
 														
 														<div class="my_teacher_langauges">
 							
@@ -37,7 +36,7 @@
 							if( $favourite['teacherTeachLanguageName'] !='' && !empty( $favourite['teacherTeachLanguageName'] ) ) {
 								$teachLangs = explode(',',$favourite['teacherTeachLanguageName']);
 								//print_r( $languages );
-								if( count ( $teachLangs ) > 2 ) {
+								if( count ( $teachLangs ) > 1 ) {
 									$first_array = array_slice($teachLangs,0, 1);
 									$second_array = array_slice($teachLangs,1, count( $teachLangs ));
 							?>
@@ -60,13 +59,17 @@
 								</ul>
 							</div> 
 						<?php 
-		
-							} else {
-								echo ' <strong>'. $favourite['teacherTeachLanguageName'] .' </strong>';    
-							}
+						} else {
+								echo'<div class="language">';
+									foreach( $teachLangs as $teachLang) {  ?>
+										<span class="main-language"><?php echo $teachLang; ?></span>
+									<?php 
+									}
+									echo'</div>';   
+								}
 						}
 						?>
-							</div>
+						</div>
 														
 														
 														
