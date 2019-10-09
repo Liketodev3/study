@@ -508,20 +508,20 @@ class EmailHandler extends FatModel {
 	public function buyerGiftcardData($giftcardlist)
 		{
 		$langId = CommonHelper::getLangId();
-		$html = "<table>";
+		$html = '<table style="border:1px solid #ddd; border-collapse:collapse; text-align: left;" cellspacing="0" cellpadding="0" border="0">';
 		$html.= "<tr>";
-		$html.= "<th>" . Label::getLabel('LBL_Giftcard_Code', $langId) . "</th>";
-		$html.= "<th>" . Label::getLabel('LBL_Giftcard_Recipient_Name', $langId) . "</th>";
-		$html.= "<th>" . Label::getLabel('LBL_Giftcard_Amount', $langId) . "</th>";
-		$html.= "<th>" . Label::getLabel('LBL_Giftcard_Exipre_Date', $langId) . "</th></tr>";
+		$html.= "<th style='padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;' width='153'>" . Label::getLabel('LBL_Giftcard_Code', $langId) . "</th>";
+		$html.= "<th style='padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;' width='153'>" . Label::getLabel('LBL_Giftcard_Recipient_Name', $langId) . "</th>";
+		$html.= "<th style='padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;' width='153'>" . Label::getLabel('LBL_Giftcard_Amount', $langId) . "</th>";
+		$html.= "<th style='padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;' width='153'>" . Label::getLabel('LBL_Giftcard_Exipre_Date', $langId) . "</th></tr>";
 		foreach($giftcardlist as $giftcard)
 			{
 			$currencyData = Currency::getAttributesById($giftcard['currency']);
 			$html.= "<tr>";
-			$html.= "<td><span style='border:3px dotted #ddd;padding:5px 10px;font-weight:bold'>" . $giftcard['code'] . "</span></td>";
-			$html.= "<td>" . $giftcard['recipient_name'] . "<br/>" . $giftcard['gcrecipient_email'] . "</td>";
-			$html.= "<td>" . $currencyData['currency_symbol_left'] . " " . $giftcard['amount'] . "</td>";
-			$html.= "<td>" . $giftcard['expireon'] . "</td></tr>";
+			$html.= "<td style='padding:10px;font-size:13px;border:1px solid #ddd; color:#333;' width='153'><span style='border:3px dotted #ddd;padding:5px 10px;font-weight:bold'>" . $giftcard['code'] . "</span></td>";
+			$html.= "<td style='padding:10px;font-size:13px;border:1px solid #ddd; color:#333;' width='153'>" . $giftcard['recipient_name'] . "<br/>" . $giftcard['gcrecipient_email'] . "</td>";
+			$html.= "<td style='padding:10px;font-size:13px;border:1px solid #ddd; color:#333;' width='153'>" . $currencyData['currency_symbol_left'] . " " . $giftcard['amount'] . "</td>";
+			$html.= "<td style='padding:10px;font-size:13px;border:1px solid #ddd; color:#333;' width='153'>" . $giftcard['expireon'] . "</td></tr>";
 			}
 
 		$html.= "</table>";

@@ -107,16 +107,16 @@ class Cronjob extends FatModel
 				$tommorowDate =  MyDate::convertTimeFromSystemToUserTimezone( 'd F, Y', $lessons[0]['slesson_date'] .'  '.$lessons[0]['slesson_start_time'] , true, $lessons[0]['LearnerTimezone'] );
 			}
 			 
-			$lessonsData = ' <table width="100%" cellspacing="0" cellpadding="5" border="1"   align="center">
+			$lessonsData = ' <table style="border:1px solid #ddd; border-collapse:collapse;" cellspacing="0" cellpadding="0" border="0" >
 				<thead>
-					<tr><th colspan="4">'. $tommorowDate .'</th></tr>
+					<tr><th colspan="4" style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" >'. $tommorowDate .'</th></tr>
 				</thead>
 				<tbody>
 					<tr>
-						<th> '. $user .' </th>
-						<th> Start </th>
-						<th> End  </th>
-						<th> </th>
+						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> '. $user .' </th>
+						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> Start </th>
+						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> End  </th>
+						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> </th>
 					</tr>';
 			foreach ( $lessons as $lesson ) {
 				$teacherLessonIds[] = $lesson['slesson_id'];
@@ -127,10 +127,10 @@ class Cronjob extends FatModel
 					$lesson_end_time = MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_end_date'].'  '.$lesson['slesson_end_time'] , true, $lesson['teacherTimezone'] );
 					
 					$lessonsData .='<tr>
-						<td>'. $lesson['learnerFullName'] .'</td>
-						<td>'. $lesson_start_time .'</td>
-						<td>'. $lesson_end_time .'</td>
-						<td><a href="'. $teacherLink .'" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
+						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson['learnerFullName'] .'</td>
+						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson_start_time .'</td>
+						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson_end_time .'</td>
+						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153"><a href="'. $teacherLink .'" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
 					</tr>';
 				} else {
 					
@@ -139,16 +139,16 @@ class Cronjob extends FatModel
 					$lesson_end_time = MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_end_date'].'  '.$lesson['slesson_end_time'] , true, $lesson['LearnerTimezone'] );
 					
 					$lessonsData .='<tr>
-						<td>'. $lesson['teacherFullName'] .'</td>
-						<td>'. $lesson_start_time .'</td>
-						<td>'. $lesson_end_time .'</td>
-						<td><a href="'. $teacherLink .'" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
+						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson['teacherFullName'] .'</td>
+						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson_start_time .'</td>
+						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson_end_time .'</td>
+						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153"><a href="'. $teacherLink .'" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
 					</tr>';
 				}
 				
 				
 			}
-			$lessonsData .= '</tbody></tabale>';
+			$lessonsData .= '</tbody></table><br />';
 			
 			if ( $userType == 'teacher' ) {
 				$data = array('user_email' => $lessons[0]['teacherEmail'],
