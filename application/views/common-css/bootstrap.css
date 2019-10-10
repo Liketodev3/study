@@ -3457,7 +3457,7 @@ img {
 }
 
 .-style-bold {
-    font-weight: 700;
+    font-weight:500;
 }
 
 .-clear-right {
@@ -4042,7 +4042,7 @@ select[disabled] {
 .table th {
     text-align: left;
     padding: 15px 10px;
-    border-bottom: 2px solid #eee;
+    border-bottom: 2px solid #eee; font-weight:600;
 }
 
 .table td {
@@ -4053,10 +4053,12 @@ select[disabled] {
     vertical-align: middle;
 }
 
+
 .table td:first-child,
 .table th:first-child {
     padding-left: 0;
 }
+.table td:first-child.-style-bold{vertical-align:top; color:#333;}
 
 .table td:last-child,
 .table th:last-child {

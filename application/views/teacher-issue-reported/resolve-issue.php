@@ -3,6 +3,9 @@ $frm->setFormTagAttribute('id', 'bankInfoFrm');
 $frm->setFormTagAttribute('class','form');
 $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 12;
+$selectFld = $frm->getField('issues_to_report');
+$selectFld->setOptionListTagAttribute('class', 'listing listing--vertical listing--selection');
+
 $frm->setFormTagAttribute('onsubmit', 'issueResolveSetup(this); return(false);');
 ?>
 <div class="box -padding-20">

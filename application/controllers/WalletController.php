@@ -29,17 +29,19 @@ class WalletController extends LoggedUserController {
 		$balSrch->doNotLimitRecords();
 		$balSrch->addMultipleFields( array('utxn.*',"utxn_credit - utxn_debit as bal") );
 		$balSrch->addCondition('utxn_user_id', '=', $userId);
-		//$balSrch->addCondition('utxn_status', '=',  applicationConstants::ACTIVE );
+		$balSrch->addCondition('utxn_status', '=',  applicationConstants::ACTIVE );
 		$qryUserPointsBalance = $balSrch->getQuery();
 		/* ] */
 
 		$srch = Transaction::getSearchObject( false, false);
-		$srch->joinTable('(' . $qryUserPointsBalance . ')', 'JOIN', 'tqupb.utxn_id <= utxn.utxn_id AND tqupb.utxn_status = '. applicationConstants::ACTIVE, 'tqupb');
+		$srch->joinTable('(' . $qryUserPointsBalance . ')', 'LEFT JOIN', 'tqupb.utxn_id <= utxn.utxn_id', 'tqupb');
 		$srch->addMultipleFields(array('utxn.*',"SUM(tqupb.bal) balance"));
 		$srch->addCondition('utxn.utxn_user_id','=',$userId);
 		$srch->setPageNumber($page);
 		$srch->setPageSize($pageSize);
 		$srch->addGroupBy('utxn.utxn_id');
+		//echo $srch->getQuery();
+		//die();
 
 		/* $dateOrder = FatApp::getPostedData( 'date_order', FatUtility::VAR_STRING, "DESC" ); */
 		$srch->addOrder( 'utxn.utxn_date', 'DESC' );

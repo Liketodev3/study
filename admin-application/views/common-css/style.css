@@ -1916,7 +1916,7 @@ padding: 18px 38px;
 }
 
 .headerwrap .one_third_grid.logo img {
-    height: 35px;
+    width: 100px;
     display: block;
 }
 

@@ -4808,10 +4808,12 @@ div.tagsinput div {
 }
 
 
+.listing--selection li label .errorlist{order:3;margin-left:10px;}
+
 /****************************************** media queries *****************************************************/
 
 @media(min-width:1199px) {
-
+	.table-cols td:first-child{width:25%;}
     /*.nav ul > li > a:hover,.nav ul > li:hover > a{background: #fff; color: #333;z-index: 3;border-color: #333;}*/
     .nav ul > li.nav__dropdown:hover > a {
         background: none;
@@ -7309,3 +7311,5 @@ display: block;}
 	color: #fff;
 	font-size : 1.2rem;
 }
+
+
