@@ -180,7 +180,8 @@ class Transaction extends MyAppModel{
 	static function formatTransactionComments($txnComments){
 		$strComments = $txnComments;
 		$strComments = preg_replace('/<\/?a[^>]*>/','',$strComments);
-		return $strComments;
+		//return $strComments;
+		return html_entity_decode($strComments);
 	}	
 
 	public function getAttributesBywithdrawlId($withdrawalId,$attr = null){
@@ -210,5 +211,37 @@ class Transaction extends MyAppModel{
 		
 		return false;
 	}    
+	
+	public static function transactionDetailsWithLesson($lessonId) {
+		$srch = self::getSearchObject();
+		$srch->addCondition('utxn_slesson_id', '=', $lessonId);
+		$srch->addCondition('utxn_user_id', '=',  UserAuthentication::getLoggedUserId());
+		$srch->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'utxn.utxn_slesson_id = slsn.slesson_id', 'slsn' );
+		$srch->joinTable(Order::DB_TBL, 'LEFT JOIN', 'slsn.slesson_order_id = o.order_id', 'o');
+		$srch->joinTable(OrderProduct::DB_TBL, 'LEFT JOIN', 'o.order_id = op.op_order_id', 'op');
+		$srch->joinTable(User::DB_TBL, 'LEFT JOIN', 'ut.user_id = slsn.slesson_teacher_id', 'ut');
+		$srch->joinTable(User::DB_TBL, 'LEFT JOIN', 'ul.user_id = slsn.slesson_learner_id', 'ul');
+		$srch->joinTable(User::DB_TBL_CRED, 'LEFT JOIN', 'lcred.credential_user_id = ul.user_id', 'lcred' );
+		$srch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tLang.tlanguage_id = slsn.slesson_slanguage_id', 'tLang' );
+		$srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tLangLang.tlanguagelang_tlanguage_id = tLang.tlanguage_id AND tlanguagelang_lang_id = '. CommonHelper::getLangId(), 'tLangLang');
+		$srch->addFld(
+			array(
+				'utxn.*',
+				'slsn.*',
+				'o.order_net_amount as order_total',
+				'op.op_qty as total_lessons',
+				'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+				'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+				'lcred.credential_email as learner_email',
+				'ul.user_timezone as lerner_timezone',
+				'IFNULL(tLangLang.tlanguage_name, tLang.tlanguage_identifier) as teacherTeachLanguageName'
+            )
+		);
+		
+		$rs = $srch->getResultSet();
+		$transactionDetails = FatApp::getDb()->fetch($rs);
+		return $transactionDetails;
+	}
+	
 	
 }

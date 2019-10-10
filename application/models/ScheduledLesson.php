@@ -73,7 +73,7 @@ class ScheduledLesson extends MyAppModel{
 			$data = array(
 				'utxn_user_id' => $data['slesson_teacher_id'],
 				'utxn_date' => date('Y-m-d H:i:s'),
-				'utxn_comments' => sprintf(Label::getLabel('LBL_LessonId:_%s_Payment', CommonHelper::getLangId()), $this->getMainTableRecordId()),
+				'utxn_comments' => sprintf(Label::getLabel('LBL_LessonId:_%s_Payment_Received', CommonHelper::getLangId()), $this->getMainTableRecordId()),
 				'utxn_status' => Transaction::STATUS_COMPLETED,
 				'utxn_type' => Transaction::TYPE_LOADED_MONEY_TO_WALLET,
 				'utxn_credit' => $data['op_commission_charged'],

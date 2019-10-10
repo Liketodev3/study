@@ -214,10 +214,44 @@ class PurchasedLessonsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-
-        $assignValues = array('slesson_status' => $status);
-
-        $record = new ScheduledLesson($slesson_id);
+		/*[ pay for completed lesson*/
+		if ( $status == 3 ) {
+			$srch = new ScheduledLessonSearch(false);
+			$srch->addCondition( 'slesson_id', '=', $slesson_id );
+			$rs = $srch->getResultSet();
+			$lessonRow = FatApp::getDb()->fetch( $rs );
+			if( empty($lessonRow) ){
+				FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+			}
+			
+			if ($lessonRow['slesson_is_teacher_paid'] == 0) {
+				$db = FatApp::getDb();
+				$db->startTransaction();
+				$dataUpdateArr = array(
+					'slesson_ended_on'	=>	date('Y-m-d H:i:s')
+				);
+				
+				$lessonObj = new ScheduledLesson($slesson_id);
+				if ($lessonObj->payTeacherCommission()) {
+					$userNotification = new UserNotifications($lessonRow['slesson_teacher_id']);
+					$userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);								
+					$dataUpdateArr['slesson_is_teacher_paid'] = 1;
+				}
+				$sLessonObj = new ScheduledLesson( $lessonRow['slesson_id'] );
+				$sLessonObj->assignValues( $dataUpdateArr );
+				if ( !$sLessonObj->save() ) {
+					$db->rollbackTransaction();			
+					FatUtility::dieJsonError($sLessonObj->getError());
+				}
+				$db->commitTransaction();
+			}
+			
+		}
+		
+		/*]*/
+		
+		$assignValues = array('slesson_status' => $status);
+		$record = new ScheduledLesson($slesson_id);
         $record->assignValues($assignValues);
         if (!$record->save()) {
             Message::addErrorMessage($record->getError());
