@@ -99,12 +99,24 @@ foreach( $lessonArr as $key=>$lessons ){ ?>
 									<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
 								<?php } 
 								
-								if($lesson['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) { ?>
-									<li><a href="javascript:void(0);" onclick="issueReported('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Reported'); ?></a></li>
-									<li><a href="#"><?php echo Label::getLabel('LBL_Rate_Lesson'); ?></a></li>
-								<?php } 
+								if( $lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lesson['issrep_id'] > 0) { ?>
+								<li><a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $lesson['issrep_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Details'); ?></a></li>
+								<?php } ?>
+								<?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) { ?>
+								<?php if( $lesson['issrep_status'] == 0 ) { ?>
+									<li>
+										<a href="javascript:void(0);" onclick="resolveIssue('<?php echo $lesson['issrep_id']; ?>', '<?php echo $lesson['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></a>
+									</li>
+								<?php } ?>	
+								<?php if( $lesson['issrep_status'] == 1 && $lesson['issrep_issues_resolve_type'] < 1 ) { ?>
+									<li>
+										<a href="javascript:void(0);" onclick="issueResolveStepTwo('<?php echo $lesson['issrep_id']; ?>', '<?php echo $lesson['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></a>
+									</li>
+								<?php } ?>
 								
-								if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
+								<?php }?>
+								
+								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
 									<li><a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lesson['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Reschedule'); ?></a></li>
 									<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
 								<?php }

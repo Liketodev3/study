@@ -78,7 +78,7 @@ class NotificationsController extends LoggedUserController {
                 $notificationRedirectUrl = CommonHelper::generateUrl('Wallet');
                 break;
 			case UserNotifications::NOTICATION_FOR_ISSUE_REFUND:
-                $notificationRedirectUrl = CommonHelper::generateUrl('TeacherIssueReported');
+                $notificationRedirectUrl = CommonHelper::generateUrl('TeacherScheduledLessons', 'view',array($notificationRecordId) );
                 break;
 			case UserNotifications::NOTICATION_FOR_ISSUE_RESOLVE:
                 $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', array($notificationRecordId));

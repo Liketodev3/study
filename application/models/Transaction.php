@@ -243,5 +243,13 @@ class Transaction extends MyAppModel{
 		return $transactionDetails;
 	}
 	
+	public function changeStatusByLessonId($lessonId, $status) {
+		$db = FatApp::getDb();
+		if (!$db->updateFromArray(self::DB_TBL, array('utxn_status'=>$status ), array('smt'=>'utxn_slesson_id = ?','vals'=>array($lessonId)))) {
+			return false;
+		}
+		return true;
+	}
+	
 	
 }

@@ -6,6 +6,7 @@ class TeacherIssueReportedController extends TeacherBaseController {
 	}
 	
 	public function index() {
+		$this->_template->addJs('js/teacherLessonCommon.js');
 		$frmSrch = $this->getSearchForm();
 		$this->set('frmSrch', $frmSrch);
 		$this->set('statusArr',ScheduledLesson::getStatusArr());

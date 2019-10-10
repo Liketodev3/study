@@ -204,26 +204,27 @@ class PurchasedLessonsController extends AdminBaseController
         }
         $slesson_id = FatApp::getPostedData('slesson_id', FatUtility::VAR_INT, 0);
         $status = FatApp::getPostedData('slesson_status', FatUtility::VAR_INT, 0);
+		
         if (1 > $slesson_id || 1 > $status) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
+		
+		$srch = new ScheduledLessonSearch(false);
+		$srch->addCondition( 'slesson_id', '=', $slesson_id );
+		$rs = $srch->getResultSet();
+		$lessonRow = FatApp::getDb()->fetch( $rs );
+		if( empty($lessonRow) ){
+			FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+		}
 
-        $data = ScheduledLesson::getAttributesById($slesson_id, array('slesson_id', 'slesson_status'));
+        /*$data = ScheduledLesson::getAttributesById($slesson_id, array('slesson_id', 'slesson_status'));
         if (false == $data) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
-        }
+        }*/
 		/*[ pay for completed lesson*/
-		if ( $status == 3 ) {
-			$srch = new ScheduledLessonSearch(false);
-			$srch->addCondition( 'slesson_id', '=', $slesson_id );
-			$rs = $srch->getResultSet();
-			$lessonRow = FatApp::getDb()->fetch( $rs );
-			if( empty($lessonRow) ){
-				FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
-			}
-			
+		if ( $status == ScheduledLesson::STATUS_COMPLETED ) {
 			if ($lessonRow['slesson_is_teacher_paid'] == 0) {
 				$db = FatApp::getDb();
 				$db->startTransaction();
@@ -244,8 +245,18 @@ class PurchasedLessonsController extends AdminBaseController
 					FatUtility::dieJsonError($sLessonObj->getError());
 				}
 				$db->commitTransaction();
+			} else {
+				$trnObj = new Transaction($lessonRow['slesson_teacher_id']);
+				if (!$trnObj->changeStatusByLessonId($slesson_id, Transaction::STATUS_COMPLETED)) {
+					FatUtility::dieJsonError($trnObj->getError());
+				}
 			}
 			
+		} elseif ( $status == ScheduledLesson::STATUS_CANCELLED ) {
+			$trnObj = new Transaction($lessonRow['slesson_teacher_id']);
+			if (!$trnObj->changeStatusByLessonId($slesson_id, Transaction::STATUS_DECLINED)) {
+				FatUtility::dieJsonError($trnObj->getError());
+			}
 		}
 		
 		/*]*/
@@ -260,7 +271,8 @@ class PurchasedLessonsController extends AdminBaseController
         $this->set('msg', 'Updated Successfully.');
         $this->set('slessonId', $slesson_id);
         $this->_template->render(false, false, 'json-success.php');
-    }	
+    }
+	
 	public function updateOrderStatus(){
         if(!$this->canEdit){
             FatUtility::dieJsonError($this->unAuthorizeAccess);            

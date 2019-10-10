@@ -28,11 +28,11 @@ class TeacherScheduledLessonsController extends TeacherBaseController {
 		
 		$srch = new stdClass();
 		$this->searchLessons( $srch, $post );
-		$srch->joinIssueReported(User::USER_TYPE_TEACHER);		
+		$srch->joinIssueReported(User::USER_TYPE_LEANER);		
 		
 		$srch->addFld( array(
 			'IFNULL(iss.issrep_status,0) AS issrep_status',
-			'IFNULL(iss.issrep_id,0) AS issrep_id'	
+			'IFNULL(iss.issrep_id,0) AS issrep_id'
 			) 
 		);        
 		
@@ -174,7 +174,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController {
 		$srch->doNotCalculateRecords();
 		$srch->addCondition( 'slns.slesson_id',' = ', $lessonId );
 		$srch->joinTeacherCountry( $this->siteLangId );
-		$srch->joinIssueReported(User::USER_TYPE_TEACHER);		
+		$srch->joinIssueReported(User::USER_TYPE_LEANER);		
 		
 		$srch->addFld( array(
 			'slns.slesson_teacher_id as teacherId',
@@ -185,7 +185,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController {
 			//'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
 			'"-" as teacherTeachLanguageName',            
 			'IFNULL(iss.issrep_status,0) AS issrep_status',
-			'IFNULL(iss.issrep_id,0) AS issrep_id'	
+			//'IFNULL(iss.issrep_id,0) AS issrep_id',
+			'iss.*'
 			) 
 		);
 		
