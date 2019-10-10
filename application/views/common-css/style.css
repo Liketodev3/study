@@ -7302,3 +7302,10 @@ display: block;}
 .text-right {
 	text-align : right;
 }
+.issueReportLink {
+	margin-top: 20px;
+}
+.issueReportLink a {
+	color: #fff;
+	font-size : 1.2rem;
+}

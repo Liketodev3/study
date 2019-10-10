@@ -231,7 +231,7 @@ class TeacherIssueReportedController extends TeacherBaseController {
 		switch( $issue_resolve_type ) {
 			case 1 : // Reset Lesson to: Unscheduled
 				$lesson_status = ScheduledLesson::STATUS_NEED_SCHEDULING;
-				$paymentStatus = Transaction::STATUS_REFUND;
+				$paymentStatus = Transaction::STATUS_COMPLETED;
 			break;
 			
 			case 2 : // Mark Lesson as: Completed
@@ -263,6 +263,7 @@ class TeacherIssueReportedController extends TeacherBaseController {
 				'utxn_type' => Transaction::TYPE_ISSUE_REFUND,
 				'utxn_slesson_id' => $lessonId
 			);
+			
 			$refundAmount = $lessonAmount *  $_refund_percentage / 100;
 			$data['utxn_credit'] = $refundAmount;
 			$refundAmountTeacher = $lessonAmountTeacher * $_refund_percentage / 100;
@@ -303,7 +304,30 @@ class TeacherIssueReportedController extends TeacherBaseController {
         }
 		
 		$sLessonObj = new ScheduledLesson( $lessonId );
-		$sLessonObj->changeLessonStatus( $lessonId, $lesson_status );
+		$lessonData = array();
+		
+		if ( $issue_resolve_type == 1 ) {
+			$lessonData['slesson_date'] = '';
+			$lessonData['slesson_end_date'] = '';
+			$lessonData['slesson_start_time'] = '';
+			$lessonData['slesson_end_time'] = '';
+			$lessonData['slesson_teacher_join_time'] = '';
+			$lessonData['slesson_learner_join_time'] = '';
+			$lessonData['slesson_teacher_end_time'] = '';
+			$lessonData['slesson_learner_end_time'] = '';
+			$lessonData['slesson_ended_by'] = 0;
+			$lessonData['slesson_ended_on'] = '';
+			$lessonData['slesson_reminder_one'] = 0;
+			$lessonData['slesson_reminder_two'] = 0;
+		}
+		$lessonData['slesson_status'] = $lesson_status;
+		$sLessonObj->assignValues( $lessonData );
+		if ( !$sLessonObj->save() ) { 
+			Message::addErrorMessage($sLessonObj->getError());			
+			FatUtility::dieJsonError($sLessonObj->getError());
+        }
+		
+		//$sLessonObj->changeLessonStatus( $lessonId, $lesson_status );
 		
 		$reason_html = '';
 		$teacherReasonHtml = '';

@@ -410,7 +410,7 @@ $('#end_lesson_timer').countdowntimer({
 										<?php } */ ?>
 										
 										<?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) { ?>
-										<li><a href="javascript:void(0);" onclick="issueReported('<?php echo $lessonData['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Reported'); ?></a></li>
+										<!--<li><a href="javascript:void(0);" onclick="issueReported('<?php echo $lessonData['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Reported'); ?></a></li> -->
 										<?php } ?>
 										
 										<?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
