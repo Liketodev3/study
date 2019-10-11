@@ -51,7 +51,7 @@ class MyDate extends FatDate{
 				$userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array( 'user_timezone') );
 				$user_timezone = $userRow['user_timezone'];
 			} else {	
-				$user_timezone = $_COOKIE['weyakyak_timezone'];
+				$user_timezone = $_COOKIE['user_timezone'];
 			}
 		}
 		
@@ -67,7 +67,7 @@ class MyDate extends FatDate{
 			$userDataRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array( 'user_timezone') );	
 			$user_timezone = $userDataRow['user_timezone'];
 			if ( !empty( $user_timezone ) ) {
-				setcookie("weyakyak_timezone", $user_timezone, time() + 365*24*60*60, "/");
+				setcookie("user_timezone", $user_timezone, time() + 365*24*60*60, "/");
 			}
 		}
 	}

@@ -706,7 +706,11 @@ class User extends MyAppModel {
         switch ( $preferredDashboard ) {
             case User::USER_LEARNER_DASHBOARD :
                 //$redirectUrl = CommonHelper::generateFullUrl('learner');
-				$redirectUrl = CommonHelper::generateFullUrl('teachers');
+				if (true != User::isLearnerProfileCompleted()) {
+					$redirectUrl = CommonHelper::generateFullUrl('learner');
+				} else {
+					$redirectUrl = CommonHelper::generateFullUrl('teachers');
+				}
             break;
             case User::USER_TEACHER_DASHBOARD :
                 $redirectUrl = CommonHelper::generateFullUrl('teacher');

@@ -57,9 +57,23 @@ class GuestUserController extends MyAppController
 			$termsAndConditionsLinkHref = 'javascript:void(0)';
 		}
 		$this->set( 'termsAndConditionsLinkHref', $termsAndConditionsLinkHref );
+		
 		/* ] */
-
-        $this->_template->render(true, true, 'guest-user/registration-form.php');
+		
+		/* [ */
+		
+		$cPPageSrch = ContentPage::getSearchObject($this->siteLangId);
+		$cPPageSrch->addCondition('cpage_id','=',FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE' , FatUtility::VAR_INT , 0));
+		$cpppage = FatApp::getDb()->fetch($cPPageSrch->getResultSet());
+		if(!empty($cpppage) && is_array($cpppage)){
+			$privacyPolicyLinkHref = CommonHelper::generateUrl('Cms','view',array($cpppage['cpage_id']));
+		} else {
+			$privacyPolicyLinkHref = 'javascript:void(0)';
+		}
+		$this->set( 'privacyPolicyLinkHref', $privacyPolicyLinkHref );
+		
+		/* ] */
+		$this->_template->render(true, true, 'guest-user/registration-form.php');
     }
 
 	public function signUpFormPopUp()
@@ -104,6 +118,19 @@ class GuestUserController extends MyAppController
 		}
 		$this->set( 'termsAndConditionsLinkHref', $termsAndConditionsLinkHref );
 		/* ] */
+		
+		/*[*/
+		$cPPageSrch = ContentPage::getSearchObject($this->siteLangId);
+		$cPPageSrch->addCondition('cpage_id','=',FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE' , FatUtility::VAR_INT , 0));
+		$cpppage = FatApp::getDb()->fetch($cPPageSrch->getResultSet());
+		if(!empty($cpppage) && is_array($cpppage)){
+			$privacyPolicyLinkHref = CommonHelper::generateUrl('Cms','view',array($cpppage['cpage_id']));
+		} else {
+			$privacyPolicyLinkHref = 'javascript:void(0)';
+		}
+		$this->set('privacyPolicyLinkHref', $privacyPolicyLinkHref);
+		/*]*/
+		
 
 		$json['html'] = $this->_template->render( false, false, 'guest-user/sign-up-form-pop-up.php', true, false);
 		FatUtility::dieJsonSuccess($json);
@@ -143,6 +170,7 @@ class GuestUserController extends MyAppController
 			$user_preferred_dashboard = User::USER_TEACHER_DASHBOARD;
 			$user_registered_initially_for = User::USER_TYPE_TEACHER;
 		}
+		$post['user_timezone'] = $_COOKIE['user_timezone'];
 		$post['user_preferred_dashboard'] = $user_preferred_dashboard;
 		$post['user_registered_initially_for'] = $user_registered_initially_for;
 		$user->assignValues( $post );
@@ -404,7 +432,7 @@ class GuestUserController extends MyAppController
         $termsConditionLabel = Label::getLabel('LBL_I_accept_to_the');
         $fld                 = $frm->addCheckBox($termsConditionLabel, 'agree', 1);
         $fld->requirements()->setRequired();
-        $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Terms_Condition_is_mandatory.'));
+        $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Terms_and_Condition_and_Privacy_Policy_are_mandatory.'));
 		$frm->addHiddenField( '', 'user_preferred_dashboard', User::USER_LEARNER_DASHBOARD );
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Register'));
         return $frm;

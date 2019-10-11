@@ -16,10 +16,14 @@
 	
 	/* [ */
 	$fldAgree = $frm->getField('agree');
+	$fldAgree->addWrapperAttribute('id', 'termLabelWrapper');
 	$termLink ='';
-	$termLink .= ' <a target="_blank" class = "-link-underline" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a>';
-	$fldAgree->htmlAfterField = $termLink;
+	$termLink .= ' <a target="_blank" class = "-link-underline link-color" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a> and <a href="'. $privacyPolicyLinkHref .'" target="_blank" class = "-link-underline link-color" >'. Label::getLabel('LBL_Privacy_Policy') . '</a>';
+	//$fldAgree->htmlAfterField = $termLink;
+	
 	/* ] */
+	
+	
 ?>
 <section class="section section--page">
 	<div class="container container--fixed">
@@ -41,3 +45,9 @@
 		</div>
 	</div>
 </section>
+<script>
+$(document).ready(function(){
+	$('#termLabelWrapper label').addClass('field_resp_block');
+$('#termLabelWrapper label').append('<?php echo $termLink; ?>');
+})
+</script>

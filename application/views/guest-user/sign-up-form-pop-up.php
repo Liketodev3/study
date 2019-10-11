@@ -30,21 +30,15 @@
 	$fldAgree = $frm->getField('agree');
 	$fldAgree->addWrapperAttribute('id', 'termLabelWrapper');
 	$termLink ='';
-	$termLink .= ' <a target="_blank" class = "-link-underline link-color" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a>';
+	$termLink .= ' <a target="_blank" class = "-link-underline link-color" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a> and <a href="'. $privacyPolicyLinkHref .'" target="_blank" class = "-link-underline link-color" >'. Label::getLabel('LBL_Privacy_Policy') . '</a>';
 	//$fldAgree->htmlAfterField = $termLink;
-	
 	/* ] */
-	
-	
 	//$fldAgree->changeCaption( '<a href="">terms</a>' );
-	
 	echo $frm->getFormHtml(); ?>
-	
 	<div class="-align-center">
 		<p><?php echo Label::getLabel('LBL_Already_have_an_account?'); ?> <a href="javascript:void(0);" onClick="logInFormPopUp()" class="-link-underline link-color"><?php echo Label::getLabel('LBL_Sign_In'); ?></a></p>
 	</div>
 </div>
-
 <script>
 $(document).ready(function(){
 	$('#termLabelWrapper label').addClass('field_resp_block');

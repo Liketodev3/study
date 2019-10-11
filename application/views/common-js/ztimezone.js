@@ -13,12 +13,12 @@ function getCookie(key) {
 //=== function to get timezone /== use functions from jstz.min.js file
 
 $(document).ready(function() {
-	var weyakyak_timezone  = getCookie('weyakyak_timezone');
+	var user_timezone  = getCookie('user_timezone');
 	var tz = jstz.determine();
 	var timezone = tz.name();
 	
-	if(	( weyakyak_timezone == null || weyakyak_timezone =='' || weyakyak_timezone == undefined ) || weyakyak_timezone != timezone ) {
-		setCookie('weyakyak_timezone', timezone);
+	if(	( user_timezone == null || user_timezone =='' || user_timezone == undefined ) || user_timezone != timezone ) {
+		setCookie('user_timezone', timezone);
 	}	
 	  
 });
