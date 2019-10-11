@@ -97,7 +97,9 @@ $(document).ready(function(){
 		if (!$(frm).validate()) return;		
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileInfo'), data, function(t) {					
-			//$.mbsmessage.close();			
+			setTimeout(function() {  
+				$.systemMessage.close();
+			}, 3000);
             getLangProfileInfoForm(1);
 			return ;
 		});	
