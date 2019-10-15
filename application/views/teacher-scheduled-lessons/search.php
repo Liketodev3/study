@@ -100,7 +100,7 @@ foreach( $lessonArr as $key=>$lessons ){ ?>
 								<?php } 
 								
 								if( $lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lesson['issrep_id'] > 0) { ?>
-								<li><a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $lesson['issrep_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Details'); ?></a></li>
+								<li><a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Details'); ?></a></li>
 								<?php } ?>
 								<?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) { ?>
 								<?php if( $lesson['issrep_status'] == 0 ) { ?>

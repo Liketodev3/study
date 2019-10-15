@@ -427,7 +427,7 @@ $('#end_lesson_timer').countdowntimer({
 										<?php } ?>
 										<?php if ($lessonData['issrep_id'] > 0) { ?>
 											<li>
-												<a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $lessonData['issrep_id']; ?>')"><?php echo Label::getLabel('LBL_Issue_Details'); ?></a>
+												<a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $lessonData['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Issue_Details'); ?></a>
 											</li>	
 										<?php } ?>
 										
