@@ -1,5 +1,5 @@
 <?php
-class IssuesReported extends MyAppModel{
+class IssuesReported extends MyAppModel {
 	const DB_TBL = 'tbl_issues_reported';
 	const DB_TBL_PREFIX = 'issrep_';
 	
@@ -100,9 +100,9 @@ class IssuesReported extends MyAppModel{
 		return false;
 	}
 	
-	public static function isAlreadyResolved($lessonId){
+	public static function isAlreadyResolved($issrep_id) {
 		$srch = new SearchBase(static::DB_TBL);
-		$srch->addCondition( 'issrep_slesson_id',' = ', $lessonId );
+		$srch->addCondition( 'issrep_id',' = ', $issrep_id );
 		$srch->addCondition( 'issrep_status',' IN ', array( self::STATUS_PROGRESS, self::STATUS_RESOLVED ));
 		$rs = $srch->getResultSet();
 		$issueRow = FatApp::getDb()->fetch($rs);

@@ -728,9 +728,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$lessonId = $post['slesson_id'];
 
 		/* [ check If Already reorted */
-		if(IssuesReported::isAlreadyReported($lessonId,User::USER_TYPE_LEANER)){
+		/* if(IssuesReported::isAlreadyReported($lessonId,User::USER_TYPE_LEANER)){
 			FatUtility::dieJsonError( Label::getLabel('LBL_Issue_Already_Reported') );				
-		}
+		} */
 		/* ] */		
 		
 		$srch = new stdClass();
@@ -771,8 +771,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$sLessonObj = new ScheduledLesson( $lessonRow['slesson_id'] );
 		$sLessonObj->holdPayment( $lessonRow['teacher_id'], $lessonId );
 		$sLessonObj->changeLessonStatus( $lessonId, ScheduledLesson::STATUS_ISSUE_REPORTED );
-		
-		
 		$reason_html = '';
 		$issues_options = IssueReportOptions::getOptionsArray( $this->siteLangId );
 		
@@ -807,10 +805,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Reported_Successfully!'));
 	}
 	
-	public function issueDetails( $issueId ) {
-		$issueId = FatUtility::int($issueId);
+	public function issueDetails( $issueLessonId ) {
+		$issueLessonId = FatUtility::int($issueLessonId);
 		$srch = IssuesReported::getSearchObject();
-		$srch->addCondition('issrep_id', '=', $issueId );
+		$srch->addCondition('issrep_slesson_id', '=', $issueLessonId );
 		$srch->addMultipleFields(array(
 			'i.*',
 			'slesson_id',
@@ -822,9 +820,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'op_lesson_duration',
 			'op_lpackage_is_free_trial',
 		));
+		$srch->addOrder('issrep_id', 'ASC');
 		$rs = $srch->getResultSet();
-		$issuesReportedDetails = FatApp::getDb()->fetch($rs);
-		$this->set( 'issueDeatils',$issuesReportedDetails );
+		$issuesReportedDetails = FatApp::getDb()->fetchAll($rs);
+		$this->set('issueDeatils',$issuesReportedDetails );
 		$this->set('issues_options', IssueReportOptions::getOptionsArray( $this->siteLangId ));
 		$this->set('resolve_type_options', IssuesReported::RESOLVE_TYPE);
 		$this->_template->render(false,false);

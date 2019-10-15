@@ -55,7 +55,7 @@ $user_timezone = MyDate::getUserTimeZone();
 			<div class="col-xl-2 col-lg-2 col-md-4 col-positioned">
 				<div class="select-box toggle-group">
 					<div class="buttons-toggle">
-						<a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $_issue['issrep_id']; ?>')" class="btn btn--secondary"><?php echo Label::getLabel('LBL_View'); ?></a>
+						<a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $_issue['slesson_id']; ?>')" class="btn btn--secondary"><?php echo Label::getLabel('LBL_View'); ?></a>
 						<?php if( $_issue['issrep_status'] == 0 || ( $_issue['issrep_status'] == 1 && $_issue['issrep_issues_resolve_type'] < 1 )) { ?>
 							<a href="javascript:void(0)" class="btn btn--secondary btn--dropdown toggle__trigger-js"></a>
 						<?php } ?>	

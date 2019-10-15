@@ -73,10 +73,10 @@ class TeacherIssueReportedController extends TeacherBaseController {
 		$this->_template->render(false, false);
 	}
 	
-	public function issueDetails($issueId) {
-		$issueId = FatUtility::int($issueId);
+	public function issueDetails($issueLessonId) {
+		$issueLessonId = FatUtility::int($issueLessonId);
 		$srch = IssuesReported::getSearchObject();
-		$srch->addCondition('issrep_id', '=', $issueId );
+		$srch->addCondition('issrep_slesson_id', '=', $issueLessonId );
 		$srch->addMultipleFields(array(
 			'i.*',
 			'user_first_name',
@@ -90,8 +90,10 @@ class TeacherIssueReportedController extends TeacherBaseController {
 			'op_lesson_duration',
 			'op_lpackage_is_free_trial',
 		));
+		
+		$srch->addOrder('issrep_id', 'ASC');
 		$rs = $srch->getResultSet();
-		$issuesReportedDetails = FatApp::getDb()->fetch($rs);
+		$issuesReportedDetails = FatApp::getDb()->fetchAll($rs);
 		$this->set('issueDeatils', $issuesReportedDetails);
 		$this->set('issues_options', IssueReportOptions::getOptionsArray($this->siteLangId));
 		$this->set('resolve_type_options', IssuesReported::RESOLVE_TYPE);
@@ -143,7 +145,7 @@ class TeacherIssueReportedController extends TeacherBaseController {
 		$lessonId = $post['slesson_id'];
 
 		/* [ check If Already resolved */
-		if (IssuesReported::isAlreadyResolved($lessonId)) {
+		if (IssuesReported::isAlreadyResolved($post['issue_id'])) {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Issue_Already_Resolved_/_inprogress'));				
 		}
 		/* ] */		

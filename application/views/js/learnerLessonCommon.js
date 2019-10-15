@@ -108,8 +108,8 @@
 		});	
 	};
 	
-	issueDetails = function(issueId){
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','issueDetails',[issueId]),'',function(t){
+	issueDetails = function(issueLessonId) {
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','issueDetails',[issueLessonId]),'',function(t){
 			$.facebox( t,'facebox-medium');
 		});
 	};

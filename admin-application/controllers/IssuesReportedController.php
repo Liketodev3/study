@@ -102,21 +102,22 @@ class IssuesReportedController extends AdminBaseController
         $this->_template->render(false, false, null, false, false);
     }
 
-    public function viewDetail($issue_id) {
-        $issue_id = FatUtility::int($issue_id);
+    public function viewDetail($issueLessonId) {
+        $issueLessonId = FatUtility::int($issueLessonId);
 		$statusArr = ScheduledLesson::getStatusArr();
-        if (1 > $issue_id) {
+        if (1 > $issueLessonId) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-		$issRepObj = new IssuesReported($issue_id);
-		$srch = $issRepObj->getIssueDetails();
-		$srch->joinTable( UserSetting::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = us.us_user_id', 'us' );
-		$srch->joinTable( TeachingLanguage::DB_TBL, 'INNER JOIN', 'sl.slesson_slanguage_id = tlang.tlanguage_id', 'tlang' );
+		$issRepObj = new IssuesReported();
+		$srch = $issRepObj->getSearchObject();
+		$srch->addCondition('issrep_slesson_id', '=', $issueLessonId);
+		$srch->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = us.us_user_id', 'us');
+		$srch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'sl.slesson_slanguage_id = tlang.tlanguage_id', 'tlang');
 		if ( $this->adminLangId > 0) {
 			$srch->joinTable( TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN','sll.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND sll.tlanguagelang_lang_id = ' . $this->adminLangId, 'sll');
 		}
-		$srch->joinTable( User::DB_TBL, 'INNER JOIN', 'sl.slesson_learner_id = ul.user_id', 'ul' );        
-		$srch->joinTable( User::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = ut.user_id', 'ut' );        
+		$srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sl.slesson_learner_id = ul.user_id', 'ul');        
+		$srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = ut.user_id', 'ut');        
 
 		$srch->addMultipleFields( array(
 			"i.*",
@@ -136,10 +137,10 @@ class IssuesReportedController extends AdminBaseController
 			'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_username',
 			) 
 		);		
-        $rs      = $srch->getResultSet();
-        $issueDetail = FatApp::getDb()->fetch($rs);
+        $rs = $srch->getResultSet();
+        $issueDetail = FatApp::getDb()->fetchAll($rs);
 		//$commet_teacher_id = $issueDetail['issrep_slesson_id'].'_'.$issueDetail['slesson_teacher_id'];
-		$callHistory = IssuesReported::getCallHistory($issueDetail['slesson_teacher_id']);
+		$callHistory = IssuesReported::getCallHistory($issueDetail[0]['slesson_teacher_id']);
 		$issueStatusArr = IssuesReported::getStatusArr($this->adminLangId);		
         $this->set("callHistory", $callHistory);
         $this->set("statusArr", $issueStatusArr);

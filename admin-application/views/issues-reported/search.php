@@ -63,7 +63,7 @@ foreach ($arr_listing as $sn=>$row){
 					$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
               		
 					$innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"viewDetail(".$row['issrep_id'].")"),Label::getLabel('LBL_View',$adminLangId), true);
+					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"viewDetail(". $row['issrep_slesson_id'] .")"),Label::getLabel('LBL_View',$adminLangId), true);
 
 					$innerLi=$innerUl->appendElement("li");
 					$innerLi->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 

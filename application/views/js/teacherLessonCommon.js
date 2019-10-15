@@ -90,8 +90,8 @@ listLessonPlans = function(id){
 		});
 	};	
 	
-		issueReportedDetails = function( issueId ) {
-		fcom.ajax(fcom.makeUrl('TeacherIssueReported','issueDetails',[issueId]),'',function(t){
+		issueReportedDetails = function( issueLessonId ) {
+		fcom.ajax(fcom.makeUrl('TeacherIssueReported','issueDetails',[issueLessonId]),'',function(t){
 			$.facebox( t,'facebox-medium');
 		}); 
 	};

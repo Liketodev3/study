@@ -48,7 +48,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 	var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';  
 	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
 	var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
-	$(document).ready(function(){
+	$(document).ready(function() {
 		if(sessionStorage.getItem('cometChatUserExists') == chat_group_id)
 		{
 		   joinLessonButtonAction();
@@ -57,7 +57,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 		
 	});
 	
-   function checkEveryMinuteStatus(){
+   function checkEveryMinuteStatus() {
 	   checkEveryMinuteStatusVar = setInterval(function(){
 			fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','checkEveryMinuteStatus',['<?php echo $lessonData['slesson_id'] ?>']),'',function(t){
 				var t = JSON.parse(t);
@@ -79,7 +79,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 					});
 				}
 				 
-				if(t.slesson_status > 1 && sessionStorage.getItem('cometChatUserExists')!=null){
+				if(t.slesson_status > 1 && sessionStorage.getItem('cometChatUserExists')!=null) {
                 $.confirm({
                     title: 'Confirm!',
                     content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',
@@ -397,7 +397,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 																				</li>
 																				<?php }  ?>
 																				<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ) { 
-										if ( $lessonData['issrep_id'] < 1 ) { 
+										if ( $lessonData['issrep_id'] < 1 || $lessonData['issrep_status'] == IssuesReported::STATUS_RESOLVED ) { 
 										?>
 																				<li>
 																					<a href="javascript:void(0);" onclick="issueReported('<?php echo $lessonData['slesson_id']; ?>')" >
@@ -415,7 +415,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 										} ?>
 																				<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lessonData['issrep_id'] > 0 ) { ?>
 																				<li>
-																					<a href="javascript:void(0);" onclick="issueDetails('<?php echo $lessonData['issrep_id']; ?>')" >
+																					<a href="javascript:void(0);" onclick="issueDetails('<?php echo $lessonData['slesson_id']; ?>')" >
 																						<?php echo Label::getLabel('LBL_Issue_Details'); ?>
 																					</a>
 																				</li>
