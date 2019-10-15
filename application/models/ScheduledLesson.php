@@ -25,7 +25,7 @@ class ScheduledLesson extends MyAppModel{
 			static::STATUS_COMPLETED	=>	Label::getLabel('LBL_Completed', $langId),
 			static::STATUS_CANCELLED	=>	Label::getLabel('LBL_Cancelled', $langId),
 			static::STATUS_UPCOMING	=>	Label::getLabel('LBL_Upcoming', $langId),
-			static::STATUS_ISSUE_REPORTED	=>	Label::getLabel('LBL_Issue_Reported', $langId)
+			static::STATUS_ISSUE_REPORTED	=>	Label::getLabel('LBL_Issue_Reported_Status', $langId)
 		);
 	}
 	

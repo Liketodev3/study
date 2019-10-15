@@ -24,7 +24,7 @@ foreach ($arrListing as $sn => $row){
 	foreach ($arr_flds as $key=>$val){
         $width = '';
         if($key=='utxn_comments'){
-            $width = '20%';
+            $width = '40%';
         }
 		$td = $tr->appendElement('td',array('width'=>$width));
 		$td->appendElement('span', array('class'=>'td__caption -hide-desktop -show-mobile'), $val, true);
