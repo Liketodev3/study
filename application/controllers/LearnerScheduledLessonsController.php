@@ -53,7 +53,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			}
 		}
 		/* ] */
-
+		//$srch->addGroupBy('slesson_id');
 		$rs = $srch->getResultSet();
 		$lessons = FatApp::getDb()->fetchAll($rs);
 		
