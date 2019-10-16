@@ -313,6 +313,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'slns.slesson_status',
 			'ut.user_first_name',
 			'ut.user_id',
+			'ut.user_url_name'
 			));
 		$srch->addCondition( 'slns.slesson_learner_id',' = ', UserAuthentication::getLoggedUserId() );
 		$srch->joinTeacher();
@@ -337,7 +338,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 					'className'	=>	$cssClassNamesArr[$row['slesson_status']]
 					); 
                 if ( true == User::isProfilePicUploaded( $row['user_id'] ) ) {
-                    $teacherUrl = CommonHelper::generateFullUrl('Teachers','view', array($row['user_id']));                    
+                    //$teacherUrl = CommonHelper::generateFullUrl('Teachers','view', array($row['user_id']));
+					$teacherUrl = CommonHelper::generateUrl('Teachers').'/'. $row['user_url_name'];                    
                     $img = CommonHelper::generateFullUrl('Image','User', array( $row['user_id'] )); 
                     $jsonArr[$k]['imgTag'] = '<a href="'.$teacherUrl.'"><img src="'.$img.'" /></a>';
                 } else {

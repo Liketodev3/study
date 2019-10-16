@@ -32,6 +32,7 @@ class ScheduledLessonSearch extends SearchBase {
 	
 	public function joinIssueReported($userType){
 		$this->joinTable( IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = slns.slesson_id AND iss.issrep_reported_by = '.$userType, 'iss' );
+		$this->addOrder('iss.issrep_id', 'DESC');
 	}
 	
 	public function joinTeacherCountry( $langId = 0 ){
