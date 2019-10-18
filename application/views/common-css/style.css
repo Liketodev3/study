@@ -7315,4 +7315,7 @@ display: block;}
 	max-height : 300px;
 	overflow-y : auto;
 }
+.issueDetailPopup {
+	overflow-y : auto;
+}
 

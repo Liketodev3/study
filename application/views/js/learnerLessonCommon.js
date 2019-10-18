@@ -110,7 +110,7 @@
 	
 	issueDetails = function(issueLessonId) {
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','issueDetails',[issueLessonId]),'',function(t){
-			$.facebox( t,'facebox-medium');
+			$.facebox( t,'facebox-medium issueDetailPopup');
 		});
 	};
 	

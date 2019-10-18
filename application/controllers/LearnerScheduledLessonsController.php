@@ -35,7 +35,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 
         $srch->addFld(array(
             'IFNULL(iss.issrep_status,0) AS issrep_status',
-            'IFNULL(iss.issrep_id,0) AS issrep_id'
+            'IFNULL(iss.issrep_id,0) AS issrep_id',
+			'IFNULL(iss.issrep_issues_resolve_type,0) AS issrep_issues_resolve_by'
         ));
 
 		$page = $post['page'];

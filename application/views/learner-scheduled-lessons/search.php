@@ -113,7 +113,7 @@ foreach ( $lessons as $lesson ) {
 								<?php }  ?>
 
 								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ) { 
-									if ( $lesson['issrep_id'] < 1 || $lesson['issrep_status'] == IssuesReported::STATUS_RESOLVED ) { ?> 
+									if ( $lesson['issrep_id'] < 1 || $lesson['issrep_status'] == IssuesReported::STATUS_RESOLVED && ($lesson['issrep_issues_resolve_by'] != 3 && $lesson['issrep_issues_resolve_by'] != 4 ) ) { ?> 
 										<li><a href="javascript:void(0);" onclick="issueReported('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Reported'); ?></a></li>
 									<?php }?>
 								
