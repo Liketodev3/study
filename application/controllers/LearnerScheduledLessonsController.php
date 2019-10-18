@@ -198,7 +198,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'IFNULL(learnercountry_lang.country_name, learnercountry.country_code) as learnerCountryName',
 			/* 'ul.user_timezone as learnerTimeZone', */
 			'IFNULL(iss.issrep_status,0) AS issrep_status',
-			'IFNULL(iss.issrep_id,0) AS issrep_id'
+			'IFNULL(iss.issrep_id,0) AS issrep_id',
+			'IFNULL(iss.issrep_issues_resolve_type,0) AS issrep_issues_resolve_by'
 		));
 
 		$rs = $srch->getResultSet();

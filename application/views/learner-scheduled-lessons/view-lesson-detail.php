@@ -397,7 +397,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 																				</li>
 																				<?php }  ?>
 																				<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ) { 
-										if ( $lessonData['issrep_id'] < 1 || $lessonData['issrep_status'] == IssuesReported::STATUS_RESOLVED ) { 
+										if ( $lessonData['issrep_id'] < 1 || $lessonData['issrep_status'] == IssuesReported::STATUS_RESOLVED && ($lesson['issrep_issues_resolve_by'] != 3 && $lesson['issrep_issues_resolve_by'] != 4 ) ) { 
 										?>
 																				<li>
 																					<a href="javascript:void(0);" onclick="issueReported('<?php echo $lessonData['slesson_id']; ?>')" >
