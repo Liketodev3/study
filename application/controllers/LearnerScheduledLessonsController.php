@@ -1276,10 +1276,11 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
    		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Learner_Join_Time_Marked!'));
     }
 	
-	public function reportIssueToAdmin( $issueId, $lessonId ) {
+	public function reportIssueToAdmin($issueId, $lessonId, $escalated_by) {
 		$reportedArr = array();
 		$reportedArr['issrep_status'] = IssuesReported::STATUS_PROGRESS;
 		$reportedArr['issrep_is_for_admin'] = 1;
+		$reportedArr['issrep_escalated_by'] = $escalated_by;
 		
 		$record = new IssuesReported( $issueId );
         $record->assignValues( $reportedArr );
@@ -1290,11 +1291,17 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		
 		$srch = new ScheduledLessonSearch();
 		$srch->addCondition( 'slesson_id', '=', $lessonId );
-		$srch->addCondition( 'slesson_learner_id', '=',  UserAuthentication::getLoggedUserId() );
+		
 		$srch->joinTable( User::DB_TBL, 'LEFT JOIN', 'ut.user_id = slns.slesson_teacher_id', 'ut' );
 		$srch->joinTable( User::DB_TBL, 'LEFT JOIN', 'ul.user_id = slns.slesson_learner_id', 'ul' );
 		$srch->joinTable( TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tLang.tlanguage_id = slns.slesson_slanguage_id', 'tLang' );
 		$srch->joinTable( TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tLangLang.tlanguagelang_tlanguage_id = tLang.tlanguage_id AND tlanguagelang_lang_id = '. $this->siteLangId , 'tLangLang' );
+		if ($escalated_by == USER::USER_TYPE_TEACHER) {
+			$srch->addCondition( 'slesson_teacher_id', '=',  UserAuthentication::getLoggedUserId() );
+		}else {
+			$srch->addCondition( 'slesson_learner_id', '=',  UserAuthentication::getLoggedUserId() );
+		}
+		
 		$srch->addFld(
 			array(
 				'slns.*',
@@ -1306,9 +1313,15 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		
 		$rs = $srch->getResultSet();
 		$lessonRow = FatApp::getDb()->fetch($rs);
+		if ($escalated_by == USER::USER_TYPE_TEACHER) {
+			$escalated_by = $lessonRow['teacherFullName'];
+		} else {
+			$escalated_by = $lessonRow['learnerFullName'];
+		}
 		
 		$tpl = 'admin_new_issue_reported_email';
 		$vars = array(
+			'{escalated_by}' => $escalated_by,
 			'{learner_name}' => $lessonRow['learnerFullName'],
 			'{teacher_name}' => $lessonRow['teacherFullName'],
 			'{lesson_name}' => $lessonRow['teacherTeachLanguageName'],

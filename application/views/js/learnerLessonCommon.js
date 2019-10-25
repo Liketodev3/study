@@ -114,8 +114,8 @@
 		});
 	};
 	
-	reportIssueToAdmin = function(issueId, lessonId) {
-		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'reportIssueToAdmin', [issueId, lessonId]),'' , function(t) {	
+	reportIssueToAdmin = function(issueId, lessonId, escalated_by) {
+		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'reportIssueToAdmin', [issueId, lessonId, escalated_by]),'', function(t) {	
 			$.facebox.close();				
 			location.reload();	
 		});	

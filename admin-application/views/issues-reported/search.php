@@ -4,7 +4,8 @@ $arr_flds = array(
 	'listserial'=> Label::getLabel('LBL_S.No.',$adminLangId),
 	'slesson_order_id'=>Label::getLabel('LBL_Order_Id',$adminLangId),
 	'issrep_slesson_id'=>Label::getLabel('LBL_Lesson_Id',$adminLangId),
-	'issrep_reported_by'=> Label::getLabel('LBL_Reported_By',$adminLangId),	
+	'issrep_reported_by'=> Label::getLabel('LBL_Reported_By',$adminLangId),
+	'issrep_escalated_by'=> Label::getLabel('LBL_Escalated_By',$adminLangId),
 	'reporter_username'	=> Label::getLabel('LBL_Reporter',$adminLangId),
 	//'language'=>Label::getLabel('LBL_Language',$adminLangId),		
 	'issrep_status'=>Label::getLabel('LBL_Status',$adminLangId),	
@@ -28,10 +29,17 @@ foreach ($arr_listing as $sn=>$row){
 			case 'listserial':
 				$td->appendElement('plaintext', array(), $sr_no);
 			break;
+			
 			case 'issrep_reported_by':
 				$str = User::getUserTypesArr($adminLangId)[$row[$key]];
 				$td->appendElement('plaintext', array(), $str, true);
 			break;
+			
+			case 'issrep_escalated_by':
+				$str = User::getUserTypesArr($adminLangId)[$row[$key]];
+				$td->appendElement('plaintext', array(), $str, true);
+			break;
+			
 			case 'issrep_status':
 				if($row[$key] == IssuesReported::STATUS_RESOLVED){
 					$issueStatusArr = IssuesReported::getStatusArr($adminLangId,true);
@@ -50,6 +58,7 @@ foreach ($arr_listing as $sn=>$row){
 				}
 				$td->appendHtmlElement($select);				
 			break;
+			
 			case 'action':
 				//$td->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['issrep_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'View Schedules',true);
 				/*$ul = $td->appendElement("ul",array("class"=>"actions"));
@@ -70,6 +79,7 @@ foreach ($arr_listing as $sn=>$row){
 					'title'=>Label::getLabel('LBL_Transactions',$adminLangId),"onclick"=>"transactions(".$row['issrep_slesson_id'].",".$row['issrep_id'].")"),Label::getLabel('LBL_Transactions',$adminLangId), true);
 				
 			break;
+			
 			default:
 				$td->appendElement('plaintext', array(), $row[$key], true);
 			break;

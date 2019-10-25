@@ -1,39 +1,35 @@
 <?php 
 class IssuesReportedController extends AdminBaseController
 {
-    public function __construct($action)
-    {
+    public function __construct($action) {
 		parent::__construct($action);				
 		$this->objPrivilege->canViewIssuesReported();		
     }
     
-    public function index()
-    {
+    public function index() {
         $frmSearch = $this->getIssuesReportedForm();
-        $data      = FatApp::getPostedData();
-
-        $frmSearch->fill($data);
-
-        $this->set('frmSearch', $frmSearch);
+        $data = FatApp::getPostedData();
+		$frmSearch->fill($data);
+		$this->set('frmSearch', $frmSearch);
         $this->_template->render();
     }
 	
     private function getIssuesReportedForm()
     {
-        $frm          = new Form('frmIssuesReportedSearch');
+        $frm = new Form('frmIssuesReportedSearch');
 		$status_options  = array(
-            '-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)
+			'-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)
         ) + IssuesReported::getStatusArr($this->adminLangId);
 		$user_options  = array(
             '0' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)
         ) + User::getUserTypesArr($this->adminLangId);
 
-        $keyword      = $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', array(
+        $keyword = $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', array(
             'id' => 'keyword',
             'autocomplete' => 'off'
         ));
 
-		$keyword      = $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', array(
+		$keyword = $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', array(
             'id' => 'keyword',
             'autocomplete' => 'off'
         ));		
@@ -52,12 +48,11 @@ class IssuesReportedController extends AdminBaseController
 	
     public function search()
     {
-        $pagesize  = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $frmSearch = $this->getIssuesReportedForm();
-        $data      = FatApp::getPostedData();
-        $post      = $frmSearch->getFormDataFromArray($data);
-
-        $page      = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
+        $data = FatApp::getPostedData();
+        $post = $frmSearch->getFormDataFromArray($data);
+		$page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
 		$srch = IssuesReported::getSearchObject();
 		$srch->addMultipleFields( array(
 			"i.*",
