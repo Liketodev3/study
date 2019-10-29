@@ -1314,14 +1314,14 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$rs = $srch->getResultSet();
 		$lessonRow = FatApp::getDb()->fetch($rs);
 		if ($escalated_by == USER::USER_TYPE_TEACHER) {
-			$escalated_by = $lessonRow['teacherFullName'];
+			$escalated_by_user = $lessonRow['teacherFullName'];
 		} else {
-			$escalated_by = $lessonRow['learnerFullName'];
+			$escalated_by_user = $lessonRow['learnerFullName'];
 		}
 		
 		$tpl = 'admin_new_issue_reported_email';
 		$vars = array(
-			'{escalated_by}' => $escalated_by,
+			'{escalated_by}' => $escalated_by_user,
 			'{learner_name}' => $lessonRow['learnerFullName'],
 			'{teacher_name}' => $lessonRow['teacherFullName'],
 			'{lesson_name}' => $lessonRow['teacherTeachLanguageName'],

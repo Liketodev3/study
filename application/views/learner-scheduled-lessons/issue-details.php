@@ -92,7 +92,7 @@ if ( strtotime($_time_valid_for_support )  > strtotime(date('Y-m-d H:i:s')) && $
 ?>
 	<div class="-padding-20 -no-padding-top">
 		<p>
-			<span class="-display-inline"><?php echo Label::getLabel('LBL_Not_Happy_with_teacher_solution?'); ?> &nbsp; </span><a href="javascript:void(0);" class="-link-underline -color-secondary" onclick="reportIssueToAdmin('<?php echo $lastIssue['issrep_id'];?>', '<?php echo $lastIssue['issrep_slesson_id']; ?>', '<?php echo USER::USER_TYPE_TEACHER?>');"><?php echo Label::getLabel('LBL_Report_Issue_to_Support_Team'); ?></a>
+			<span class="-display-inline"><?php echo Label::getLabel('LBL_Not_Happy_with_teacher_solution?'); ?> &nbsp; </span><a href="javascript:void(0);" class="-link-underline -color-secondary" onclick="reportIssueToAdmin('<?php echo $lastIssue['issrep_id'];?>', '<?php echo $lastIssue['issrep_slesson_id']; ?>', '<?php echo USER::USER_TYPE_LEANER?>');"><?php echo Label::getLabel('LBL_Report_Issue_to_Support_Team'); ?></a>
 		</p>
 	</div>
 <?php } ?>
