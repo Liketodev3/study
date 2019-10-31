@@ -34,7 +34,7 @@
 					<div class="col-xl-9 col-lg-9 col-md-9 col-sm-8">
 						<div class="box-list__head row justify-content-between">
 							<div class="col-xl-9 col-lg-9 col-md-8">
-								<h3 class="-display-inline"><a href="<?php echo $teacherUrl; ?>"><?php echo $teacher['user_first_name']; ?></a></h3>
+								<h3 class="-display-inline"><a href="<?php echo $teacherUrl; ?>"><?php echo $teacher['user_first_name']." ". $teacher['user_last_name']; ?></a></h3>
 								
 								<?php if( $teacher['user_country_id'] > 0 ){ ?>
 								<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($teacher['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>

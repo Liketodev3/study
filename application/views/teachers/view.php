@@ -38,7 +38,7 @@ if( !empty( $teacher['teachLanguages'] ) ) {
 $langId = CommonHelper::getLangId();
 $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_STRING, '');
 ?>
-<title><?php echo $teacher['user_full_name'] .' - '. implode(', ', $teacher['teachLanguages'] ) .' - '. $websiteName ; ?></title>
+<title><?php echo Label::getLabel('LBL_Learn') ." ". implode(', ', $teacher['teachLanguages'] ) . " ". Label::getLabel('LBL_from') . " ". $teacher['user_full_name'] ." ". Label::getLabel('LBL_on')." ". $websiteName;?></title>
 
 <section class="section section--gray section--details">
 	 <div class="container container--narrow">

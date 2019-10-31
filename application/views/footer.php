@@ -59,19 +59,19 @@
                         <div class="toggle__target toggle__target-js">
                             <ul class="links--vertical">
                                 <li>
-                                    <a href="#">
+                                    <a href="javascript:void(0);">
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon01.svg">
                                         <?php echo FatApp::getConfig('CONF_CONTACT_EMAIL');?>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="javascript:void(0);">
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon02.svg">
                                         <?php echo Label::getLabel('LBL_Call_Us'); ?>: <?php echo FatApp::getConfig('CONF_SITE_PHONE');?>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="javascript:void(0);">
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon03.svg">
                                         <?php echo FatApp::getConfig('CONF_ADDRESS_'.CommonHelper::getLangId());?>
                                     </a>

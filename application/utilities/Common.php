@@ -27,7 +27,7 @@ class Common {
 
 		$srch->joinTeacherSettings();
 		$srch->joinTeacherTeachLanguageView( CommonHelper::getLangId() );
-		$srch->addOrder('slesson_date','DESC');
+		$srch->addOrder('slesson_date','ASC');
 		$srch->addOrder('slesson_status','ASC');
 		$srch->addMultipleFields(array(
 			'slns.slesson_id',
@@ -35,6 +35,7 @@ class Common {
 			'slns.slesson_learner_id as learnerId',
 			'slns.slesson_teacher_id as teacherId',
 			'ut.user_first_name as teacherFname',
+			'ut.user_url_name as user_url_name',
 			'ut.user_last_name as teacherLname',
 			'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
 			/* 'ut.user_timezone as teacherTimeZone', */
@@ -48,8 +49,8 @@ class Common {
 			'op_lpackage_is_free_trial as is_trial',
 			'op_lesson_duration'
 		));
-        $srch->addCondition( 'slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );        
-        //$srch->addCondition('slns.slesson_date', '>=', date('Y-m-d') );
+        $srch->addCondition('slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED);        
+        $srch->addCondition('mysql_func_CONCAT(slns.slesson_date," ",slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'),'AND', true );
 		$srch->setPageSize(10);
 		$srch->setPageNumber(1);
 
