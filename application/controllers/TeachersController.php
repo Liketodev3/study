@@ -821,6 +821,7 @@ class TeachersController extends MyAppController {
 		if ( isset($postedData['keyword']) && !empty( $postedData['keyword'] ) ) {
 			$cond = $srch->addCondition('user_first_name', 'LIKE', '%'. $postedData['keyword'] .'%');
 			$cond->attachCondition('user_last_name', 'LIKE', '%'. $postedData['keyword'] .'%');
+			$cond->attachCondition('mysql_func_CONCAT(user_first_name," ",user_last_name)', 'LIKE', '%'. $postedData['keyword'] .'%','OR', true);
 		}
 		
 		$srch->addOrder('user_id','DESC');
