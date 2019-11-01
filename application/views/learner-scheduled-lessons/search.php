@@ -4,10 +4,23 @@ $referer = preg_replace("(^https?://)", "", $referer );
 MyDate::setUserTimeZone(); 
 $user_timezone = MyDate::getUserTimeZone();
 
+$date = new DateTime("now", new DateTimeZone($user_timezone));
+$curDate = $date->format('Y-m-d');
+$nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
+
+
 foreach( $lessonArr as $key=>$lessons ){ ?>
 <div class="col-list-group">
 <?php if ($key!='0000-00-00') {  ?>
-<h6><?php  echo date('l, F d, Y',strtotime($key)); ?></h6>
+<h6><?php  
+if (strtotime($curDate) == strtotime($key)) {
+	echo Label::getLabel('LBL_Today');
+} elseif(strtotime($nextDate) == strtotime($key)) {
+	echo Label::getLabel('LBL_Tommorrow');
+} else {
+	echo date('l, F d, Y',strtotime($key));
+}
+?></h6>
 <?php } ?>
 <div class="col-list-container">
 <?php

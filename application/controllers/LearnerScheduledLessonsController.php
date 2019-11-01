@@ -108,7 +108,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 
 		$srch->joinTeacherSettings();
 		//$srch->joinTeacherTeachLanguage( $this->siteLangId );
-		$srch->addOrder('slesson_date','DESC');
+		$srch->addOrder('slesson_date','ASC');
 		$srch->addOrder('slesson_status','ASC');
 		$srch->addMultipleFields(array(
 			'slns.slesson_id',
@@ -147,6 +147,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			elseif( $post['status'] == ScheduledLesson::STATUS_UPCOMING ){
 				$srch->addCondition('slns.slesson_date', '>=', date('Y-m-d') );
 			} else {
+				if($post['status'] == ScheduledLesson::STATUS_SCHEDULED) {
+					$srch->addCondition('mysql_func_CONCAT(slns.slesson_date," ",slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
+				}
 				$srch->addCondition('slns.slesson_status','=',$post['status']);
 			}
 		}
