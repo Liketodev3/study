@@ -7318,4 +7318,13 @@ display: block;}
 .issueDetailPopup {
 	overflow-y : auto;
 }
-
+.links--vertical.footer_contact_details li {
+	font-size: 0.857rem !important;
+	color: #fff !important;
+	display:flex;
+	line-height: 1.5;
+	
+}
+.links--vertical.footer_contact_details li img{
+	margin-right: 10px;
+}

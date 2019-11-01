@@ -57,24 +57,24 @@
                     <div class="toggle-group">
                         <h5 class="toggle__trigger toggle__trigger-js"><?php echo Label::getLabel('LBL_Contact_Info'); ?></h5>
                         <div class="toggle__target toggle__target-js">
-                            <ul class="links--vertical">
+                            <ul class="links--vertical footer_contact_details">
                                 <li>
-                                    <a href="javascript:void(0);">
+                                    
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon01.svg">
                                         <?php echo FatApp::getConfig('CONF_CONTACT_EMAIL');?>
-                                    </a>
+                                    
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0);">
+                                    
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon02.svg">
                                         <?php echo Label::getLabel('LBL_Call_Us'); ?>: <?php echo FatApp::getConfig('CONF_SITE_PHONE');?>
-                                    </a>
+                                    
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0);">
+                                    
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon03.svg">
                                         <?php echo FatApp::getConfig('CONF_ADDRESS_'.CommonHelper::getLangId());?>
-                                    </a>
+                                    
                                 </li>
                             </ul>
                         </div>
