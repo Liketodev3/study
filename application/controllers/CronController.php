@@ -25,9 +25,9 @@ class CronController extends MyAppController {
             if ($success !== false) {
                 $cron->markFinished($logId, 'Response Got: ' . $success);
             } else {
-                $cron->markFinished($logId, 'Marked finished with error ');
+                $cron->markFinished($logId, 'Marked finished with error');
             }
-            echo 'Ended';
+            //echo 'Ended';
         }
         Cron::clearOldLog();
     }
@@ -37,7 +37,7 @@ class CronController extends MyAppController {
         $found = false;
 		foreach ($allCrons as $row) {
             if (strtolower($row['cron_command']) == strtolower('lessonreminder/'.$cron_command.'/'.$type)) {
-                $cron = new Cron($row ['cron_id']);
+                $cron = new Cron($row['cron_id']);
                 $found = true;
 				$arr = explode('/', $row['cron_command']);
                 $class = $arr[0];

@@ -1,10 +1,9 @@
 <?php
 class CustomController extends MyAppController {
-	
-	public function paymentFailed(){
+	public function paymentFailed() {
 		$textMessage = Label::getLabel('MSG_learner_failure_order_{contact-us-page-url}');
 		$contactUsPageUrl = CommonHelper::generateUrl('contact');
-		$textMessage = str_replace('{contact-us-page-url}', '<a href="'.$contactUsPageUrl.'">'.Label::getLabel('LBL_Contact_Us').'</a>' , $textMessage);
+		$textMessage = str_replace('{contact-us-page-url}', '<a href="'.$contactUsPageUrl.'">'. Label::getLabel('LBL_Contact_Us') .'</a>', $textMessage);
 		
 		/* if(FatApp::getConfig('CONF_MAINTAIN_WALLET_ON_PAYMENT_FAILURE',FatUtility::VAR_INT,applicationConstants::NO) && isset( $_SESSION['cart_order_id']) &&  $_SESSION['cart_order_id']>0){
 			$cartOrderId = $_SESSION['cart_order_id'];
@@ -31,7 +30,7 @@ class CustomController extends MyAppController {
 			}
 			$cartObj->updateUserCart();
 		} */
-		$this->set('textMessage',$textMessage);
+		$this->set('textMessage', $textMessage);
 		/* if(CommonHelper::isAppUser()){
 			$this->set('exculdeMainHeaderDiv', true);
 			$this->_template->render(false,false);
@@ -40,17 +39,15 @@ class CustomController extends MyAppController {
 		/* } */
 	}
 	
-	public function paymentSuccess($orderId=null){
-		
+	public function paymentSuccess($orderId = null) {
 		$textMessage = Label::getLabel('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}');
-		
 		$arrReplace = array(
-			'{dashboard-url}'	=>	CommonHelper::generateUrl('learner'),
-			'{contact-us-page-url}'	=>	CommonHelper::generateUrl('custom','contactUs'),
+			'{dashboard-url}' => CommonHelper::generateUrl('learner'),
+			'{contact-us-page-url}' => CommonHelper::generateUrl('custom', 'contactUs'),
 		);
 		
-		foreach( $arrReplace as $key => $val ){
-			$textMessage = str_replace( $key, $val, $textMessage );
+		foreach ($arrReplace as $key => $val) {
+			$textMessage = str_replace($key, $val, $textMessage);
 		}
 		
 		/* Clear cart upon successfull redirection from Payment gateway[ */
@@ -62,14 +59,14 @@ class CustomController extends MyAppController {
 			unset($_SESSION['cart_user_id']);
 		} */
 		/* ] */
-        if($orderId){
+        if ($orderId) {
             $orderObj = new Order();
             $order = $orderObj->getOrderById($orderId);
-            if(isset($order['order_type'])){
-                $this->set('orderType',$order['order_type']);
+            if (isset($order['order_type'])) {
+                $this->set('orderType', $order['order_type']);
             }
         }
-		$this->set('textMessage',$textMessage);
+		$this->set('textMessage', $textMessage);
 		/* if(CommonHelper::isAppUser()){
 			$this->set('exculdeMainHeaderDiv', true);
 			$this->_template->render(false,false);
@@ -78,7 +75,7 @@ class CustomController extends MyAppController {
 		/* } */
 	}
 
-	public function paymentCancel(){
+	public function paymentCancel() {
 		FatApp::redirectUser(CommonHelper::generateFullUrl('Custom', 'paymentFailed')); 
 		/* echo FatApp::getConfig('CONF_MAINTAIN_WALLET_ON_PAYMENT_CANCEL',FatUtility::VAR_INT,applicationConstants::NO);
 		echo $_SESSION['cart_order_id'];
@@ -111,6 +108,4 @@ class CustomController extends MyAppController {
 
 		FatApp::redirectUser(CommonHelper::generateFullUrl('Checkout')); */
 	}
-
-	
 }
