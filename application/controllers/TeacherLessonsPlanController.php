@@ -10,25 +10,25 @@ class TeacherLessonsPlanController extends TeacherBaseController {
 		$this->_template->addCss('css/jquery.tagsinput.min.css');
 		$this->_template->addJs('js/jquery-confirm.min.js');
 		$this->_template->addCss('css/jquery-confirm.min.css');                
-		$this->set('statusArr',LessonPlan::getDifficultyArr());
+		$this->set('statusArr', LessonPlan::getDifficultyArr());
 		$this->_template->render();
 	}
 	
 	public function getFrm(){
 		$frm = new Form('lessonPlanFrm');
-		$frm->addRequiredField(Label::getLabel('LBl_Title'),'tlpn_title');
-		$frm->addTextarea(Label::getLabel('LBl_Description'),'tlpn_description');
-		$frm->addSelectBox(Label::getLabel('LBl_Difficulty_Level'),'tlpn_level',LessonPlan::getDifficultyArr())->requirement->setRequired(true);
-		$fld = $frm->addFileUpload(Label::getLabel('LBl_Plan_Files'),'tlpn_file[]',array('multiple'=>'multiple','id'=>'tlpn_file'));
+		$frm->addRequiredField(Label::getLabel('LBl_Title'), 'tlpn_title');
+		$frm->addTextarea(Label::getLabel('LBl_Description'), 'tlpn_description');
+		$frm->addSelectBox(Label::getLabel('LBl_Difficulty_Level'), 'tlpn_level', LessonPlan::getDifficultyArr())->requirement->setRequired(true);
+		$fld = $frm->addFileUpload(Label::getLabel('LBl_Plan_Files'), 'tlpn_file[]', array('multiple' => 'multiple', 'id' => 'tlpn_file'));
 		$fld->htmlAfterField = "<small>".Label::getLabel('LBL_NOTE:_Allowed_Lesson_File_types!')."</small>";		
-		$frm->addHtml('','tlpn_file_display','',array('id'=>'tlpn_file_display'));        
+		$frm->addHtml('', 'tlpn_file_display', '', array('id' => 'tlpn_file_display'));        
 		$fld = $frm->addRequiredField(Label::getLabel('LBl_Tags'),'tlpn_tags','',array('id'=>'tlpn_tags'));
 		$fld->htmlAfterField = "<small>".Label::getLabel('LBL_NOTE:_Press_enter_inside_text_box_to_create_tag!')."</small>";
 		$fld = $frm->addTextarea(Label::getLabel('LBl_Links'),'tlpn_links');
 		$fld->htmlAfterField = "<small>".Label::getLabel('LBl_Links')."</small>";        
 		$frm->addFileUpload(Label::getLabel('LBl_Plan_Banner_Image'),'tlpn_image');
-		$frm->addHiddenField('','tlpn_id');
-		$frm->addSubmitButton('','submit','Save');
+		$frm->addHiddenField('', 'tlpn_id');
+		$frm->addSubmitButton('', 'submit', 'Save');
 		return $frm;
 	}
 	

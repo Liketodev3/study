@@ -27,11 +27,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		if (false === $post) {
 			FatUtility::dieWithError($frmSrch->getValidationErrors());
 		}
-
 		$srch = new stdClass();
 		$this->searchLessons($srch, $post);
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
-
         $srch->addFld(array(
             'IFNULL(iss.issrep_status,0) AS issrep_status',
             'IFNULL(iss.issrep_id,0) AS issrep_id',
@@ -49,7 +47,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		if (isset(FatApp::getPostedData()['teacherId'])) {
 			$teacherId = FatApp::getPostedData('teacherId', FatUtility::VAR_INT, 0);
 			if ($teacherId > 0) {
-				$srch->addCondition('slns.slesson_teacher_id',' = ', FatApp::getPostedData()['teacherId']);
+				$srch->addCondition('slns.slesson_teacher_id', ' = ', FatApp::getPostedData()['teacherId']);
 			}
 		}
 		/* ] */
@@ -60,8 +58,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$user_timezone = MyDate::getUserTimeZone();
 		foreach ($lessons as $lesson) {
 			$key = $lesson['slesson_date'];
-			if ( $lesson['slesson_date'] != '0000-00-00' ) {
-				$key  = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $lesson['slesson_date'] .' '. $lesson['slesson_start_time'],true, $user_timezone );
+			if ($lesson['slesson_date'] != '0000-00-00') {
+				$key = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $lesson['slesson_date'] .' '. $lesson['slesson_start_time'], true, $user_timezone);
 			}
 			$lessonArr[$key][] = $lesson;
 		}
@@ -99,8 +97,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$srch->joinTeacher();
 		$srch->joinLearner();
 		$srch->joinTeacherCountry($this->siteLangId);
-		$srch->addCondition('slns.slesson_learner_id',' = ', UserAuthentication::getLoggedUserId());
-		$srch->addCondition('order_is_paid',' = ', Order::ORDER_IS_PAID);
+		$srch->addCondition('slns.slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
+		$srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
 		$srch->joinTeacherSettings();
 		//$srch->joinTeacherTeachLanguage( $this->siteLangId );
 		$srch->addOrder('slesson_date', 'ASC');
@@ -131,7 +129,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			$keywordsArr = array_unique(array_filter(explode(' ', $post['keyword'])));
 			foreach ($keywordsArr as $keyword) {
 				$cnd = $srch->addCondition('ut.user_first_name', 'like', '%'.$keyword.'%');
-				$cnd->attachCondition( 'ut.user_last_name', 'like', '%'.$keyword.'%');
+				$cnd->attachCondition('ut.user_last_name', 'like', '%'.$keyword.'%');
 			}
 		}
 
@@ -140,10 +138,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
                 $srch->addCondition('issrep_id', '>', 0);
             } elseif ($post['status'] == ScheduledLesson::STATUS_UPCOMING) {
 				$srch->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
+				$srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
 			} else {
-				if ($post['status'] == ScheduledLesson::STATUS_SCHEDULED) {
-					$srch->addCondition('mysql_func_CONCAT(slns.slesson_date," ",slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
-				}
 				$srch->addCondition('slns.slesson_status', '=', $post['status']);
 			}
 		}
@@ -170,7 +166,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$this->_template->addCss('css/jquery.countdownTimer.css');
 		$this->_template->addCss(array('css/star-rating.css'));
 		$this->_template->addJs(array('js/jquery.barrating.min.js'));
-		$this->set('lessonId',$lessonRow['slesson_id']);
+		$this->set('lessonId', $lessonRow['slesson_id']);
 		$this->_template->render();
 	}
 
@@ -182,7 +178,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$srch = new stdClass();
 		$this->searchLessons($srch);
 		$srch->doNotCalculateRecords();
-		$srch->addCondition('slns.slesson_id', ' = ', $lessonId);
+		$srch->addCondition('slns.slesson_id', '=', $lessonId);
 		$srch->joinIssueReported(User::USER_TYPE_LEANER);
 		$srch->joinLearnerCountry($this->siteLangId);
 		$srch->addFld(array(
@@ -287,17 +283,18 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$srch = new ScheduledLessonSearch();
 		$srch->addMultipleFields(
 			array(
-			'slns.slesson_teacher_id',
-			'slns.slesson_learner_id',
-			'slns.slesson_date',
-			'slns.slesson_end_date',
-			'slns.slesson_start_time',
-			'slns.slesson_end_time',
-			'slns.slesson_status',
-			'ut.user_first_name',
-			'ut.user_id',
-			'ut.user_url_name'
-		));
+				'slns.slesson_teacher_id',
+				'slns.slesson_learner_id',
+				'slns.slesson_date',
+				'slns.slesson_end_date',
+				'slns.slesson_start_time',
+				'slns.slesson_end_time',
+				'slns.slesson_status',
+				'ut.user_first_name',
+				'ut.user_id',
+				'ut.user_url_name'
+			)
+		);
 		$srch->addCondition('slns.slesson_learner_id', ' = ', UserAuthentication::getLoggedUserId());
 		$srch->joinTeacher();
 		$rs = $srch->getResultSet();
@@ -341,13 +338,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$fld = $frm->addHiddenField('', 'slesson_id');
 		$fld->requirements()->setRequired();
 		$fld->requirements()->setIntPositive();
-		$frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Send') );
+		$frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Send'));
 		return $frm;
 	}
 
 	public function cancelLesson($lessonId) {
 		$lessonId = FatUtility::int($lessonId);
-		$lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_learner_id','slesson_date','slesson_start_time'));
+		$lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_learner_id', 'slesson_date', 'slesson_start_time'));
 		if ($lessonRow['slesson_learner_id'] != UserAuthentication::getLoggedUserId()) {
 			Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
 			FatUtility::dieWithError(Message::getHtml());
@@ -361,7 +358,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
         } else {
             $frm = $this->getCancelLessonFrm();            
         }        
-		$frm->fill(array('slesson_id' => $lessonId ));
+		$frm->fill(array('slesson_id' => $lessonId));
 		$this->set('frm', $frm);
 		$this->_template->render(false, false);
 	}
@@ -500,7 +497,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'{lesson_end_time}' => $lessonRow['slesson_end_time'],
 			'{action}' => Label::getLabel('LBL_Rescheduled'),
 		);
-		if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], $tpl ,$this->siteLangId, $vars)) {
+		if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], $tpl, $this->siteLangId, $vars)) {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
 		}
         $userNotification = new UserNotifications($lessonRow['teacherId']);
@@ -521,8 +518,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		MyDate::setUserTimeZone(); 
 		$user_timezone = MyDate::getUserTimeZone();
 		$nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
-		$teacherBookingBefore = current( UserSetting::getUserSettings($teacher_id) )['us_booking_before']; 
-		if ('' ==  $teacherBookingBefore ) {
+		$teacherBookingBefore = current(UserSetting::getUserSettings($teacher_id))['us_booking_before']; 
+		if ('' ==  $teacherBookingBefore) {
 			$teacherBookingBefore = 0;
 		}
 		$this->set('teacherBookingBefore', $teacherBookingBefore);
@@ -573,7 +570,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 				'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
 				'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
 				//'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
-							'"-" as teacherTeachLanguageName',            
+				'"-" as teacherTeachLanguageName',            
                 'tcred.credential_email as teacherEmailId',
 				'tcred.credential_user_id as teacherId',
 			)
@@ -589,7 +586,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'slesson_date' => date('Y-m-d', $SelectedDateTimeStamp),
 			'slesson_end_date' => date('Y-m-d', $endDateTimeStamp),
 			'slesson_start_time' => date('H:i:s', $SelectedDateTimeStamp),
-			'slesson_end_time' => date('H:i:s', $endDateTimeStamp) ,
+			'slesson_end_time' => date('H:i:s', $endDateTimeStamp),
 			'slesson_status' => ScheduledLesson::STATUS_SCHEDULED
 		);
 
@@ -631,7 +628,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		));
 		$srch->joinTable('tbl_scheduled_lessons_to_teachers_lessons_plan', 'inner join', 'tlpn_id = ltp_tlpn_id');
 		//$srch->addCondition( 'tlpn_user_id',' = ', UserAuthentication::getLoggedUserId() );
-		$srch->addCondition('ltp_slessonid',' = ', $lessonId);
+		$srch->addCondition('ltp_slessonid', '=', $lessonId);
 		$rs = $srch->getResultSet();
 		$rows = FatApp::getDb()->fetch($rs);
 		$this->set('statusArr', LessonPlan::getDifficultyArr());
@@ -692,13 +689,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 				'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
 				'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
 				//'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
-							'"-" as teacherTeachLanguageName',            
+				'"-" as teacherTeachLanguageName',            
                 'tcred.credential_email as teacherEmailId'
 			)
 		);
 
 		$rs = $srch->getResultSet();
-		$lessonRow = FatApp::getDb()->fetch( $rs );
+		$lessonRow = FatApp::getDb()->fetch($rs);
 		if (empty($lessonRow)) {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
 		}
@@ -706,7 +703,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$reportedArr['issrep_comment'] = $post['issue_reported_msg'];
 		$reportedArr['issrep_reported_by'] = User::USER_TYPE_LEANER;
 		$reportedArr['issrep_slesson_id']= $lessonId;
-		$reportedArr['issrep_issues_to_report'] = implode(',', $_reason_ids );
+		$reportedArr['issrep_issues_to_report'] = implode(',', $_reason_ids);
 		$record = new IssuesReported();
         $record->assignValues($reportedArr);
         if (!$record->save()) {
@@ -736,7 +733,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_ISSUE_REPORTED],
 		);
 
-		if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], $tpl ,$this->siteLangId, $vars)) {
+		if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], $tpl, $this->siteLangId, $vars)) {
 			Message::addErrorMessage(Label::getLabel('LBL_Mail_not_sent!', $this->siteLangId));					
 			FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
 		}
@@ -751,7 +748,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 	public function issueDetails($issueLessonId) {
 		$issueLessonId = FatUtility::int($issueLessonId);
 		$srch = IssuesReported::getSearchObject();
-		$srch->addCondition('issrep_slesson_id', '=', $issueLessonId );
+		$srch->addCondition('issrep_slesson_id', '=', $issueLessonId);
 		$srch->addMultipleFields(array(
 			'i.*',
 			'slesson_id',
@@ -766,7 +763,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$srch->addOrder('issrep_id', 'ASC');
 		$rs = $srch->getResultSet();
 		$issuesReportedDetails = FatApp::getDb()->fetchAll($rs);
-		$this->set('issueDeatils', $issuesReportedDetails );
+		$this->set('issueDeatils', $issuesReportedDetails);
 		$this->set('issues_options', IssueReportOptions::getOptionsArray($this->siteLangId));
 		$this->set('resolve_type_options', IssuesReported::RESOLVE_TYPE);
 		$this->_template->render(false, false);
@@ -836,7 +833,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$userId = UserAuthentication::getLoggedUserId();
 		$row = ScheduledLesson::getAttributesById($lessonId, array('slesson_teacher_id'));
 		$teacherId = $row['slesson_teacher_id'];
-		$frm = $this->getLessonFeedbackForm( $lessonId, $this->siteLangId);
+		$frm = $this->getLessonFeedbackForm($lessonId, $this->siteLangId);
 		$post = $frm->getFormDataFromArray(FatApp::getPostedData());
 		if (false === $post) {
 			Message::addErrorMessage($frm->getValidationErrors());
@@ -866,7 +863,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 				$selProdRating = new TeacherLessonRating();
 				$ratingRow = array(
 					'tlrating_tlreview_id' => $spreviewId, 
-					'tlrating_rating_type'=> $ratingAspect,
+					'tlrating_rating_type' => $ratingAspect,
 					'tlrating_rating' => $ratingValue
 				);
 				$selProdRating->assignValues($ratingRow);
@@ -939,7 +936,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		if (!$db->deleteRecords(FlashCard::DB_TBL_SHARED, array(
 			'smt'=>'sflashcard_flashcard_id = ?',
 			'vals'=>array($row['flashcard_id'])
-		))){
+		))) {
 			FatUtility::dieJsonError($db->getError());
 		}
 		if(!$db->deleteRecords(FlashCard::DB_TBL, array(
@@ -970,141 +967,127 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		return $frm;
 	}
 
-	public function flashCardForm(){
+	public function flashCardForm() {
 		$post = FatApp::getPostedData();
-		$flashCardId = FatApp::getPostedData( 'flashcardId', FatUtility::VAR_INT, 0 );
-		$lessonId = FatApp::getPostedData( 'lessonId', FatUtility::VAR_INT, 0 );
-
-		if( $lessonId <= 0 ){
-			Message::addErrorMessage( Label::getLabel('LBL_Invalid_Request') );
-			FatUtility::dieWithError( Message::getHtml() );
+		$flashCardId = FatApp::getPostedData('flashcardId', FatUtility::VAR_INT, 0);
+		$lessonId = FatApp::getPostedData('lessonId', FatUtility::VAR_INT, 0);
+		if ($lessonId <= 0) {
+			Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
+			FatUtility::dieWithError(Message::getHtml());
 		}
-
 		$frm = $this->getFlashcardFrm();
 		$frmData['slesson_id'] = $lessonId;
-		if( $flashCardId > 0 ){
-			$frmData =  $frmData + FlashCard::getAttributesById( $flashCardId );
+		if ($flashCardId > 0) {
+			$frmData = $frmData + FlashCard::getAttributesById($flashCardId);
 		}
 		$frm->fill($frmData);
-		$this->set('frm',$frm);
-		$this->_template->render(false,false);
+		$this->set('frm', $frm);
+		$this->_template->render(false, false);
 	}
 
-	public function setupFlashCard(){
+	public function setupFlashCard() {
 		$frm = $this->getFlashcardFrm();
 		$post = $frm->getFormDataFromArray(FatApp::getPostedData());
 		if (false === $post) {
-			FatUtility::dieJsonError( $frm->getValidationErrors() );
+			FatUtility::dieJsonError($frm->getValidationErrors());
 		}
-
 		$lessonId = $post['slesson_id'];
-		$lessonRow = ScheduledLesson::getAttributesById( $lessonId, array('slesson_teacher_id', 'slesson_learner_id') );
-		if( empty($lessonRow) || $lessonRow['slesson_learner_id'] != UserAuthentication::getLoggedUserId() ){
-			FatUtility::dieJsonError( Label::getLabel('LBL_Invalid_Request') );
+		$lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_teacher_id', 'slesson_learner_id'));
+		if (empty($lessonRow) || $lessonRow['slesson_learner_id'] != UserAuthentication::getLoggedUserId()) {
+			FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
 		}
-
 		$flashCardId = $post['flashcard_id'];
-
 		$post['flashcard_user_id'] = UserAuthentication::getLoggedUserId();
 		$post['flashcard_created_by_user_id'] = UserAuthentication::getLoggedUserId();
-
-		$flashCardObj = new FlashCard( $flashCardId );
+		$flashCardObj = new FlashCard($flashCardId);
 		$flashCardObj->assignValues($post);
 		if (!$flashCardObj->save($post)) {
-			FatUtility::dieJsonError( $flashCardObj->getError() );
+			FatUtility::dieJsonError($flashCardObj->getError());
 		}
-
-		if( 0 == $flashCardId ){
+		if (0 == $flashCardId) {
 			$db = FatApp::getDb();
 			$flashcardId = $flashCardObj->getMainTableRecordId();
-
-			$db->insertFromArray(FlashCard::DB_TBL_SHARED,array(
-				'sflashcard_flashcard_id'	=>	$flashcardId,
-				'sflashcard_learner_id'	=>	$lessonRow['slesson_learner_id'],
-				'sflashcard_teacher_id'	=>	$lessonRow['slesson_teacher_id'],
-				'sflashcard_slesson_id'	=>	$lessonId,
+			$db->insertFromArray(FlashCard::DB_TBL_SHARED, array(
+				'sflashcard_flashcard_id' => $flashcardId,
+				'sflashcard_learner_id' => $lessonRow['slesson_learner_id'],
+				'sflashcard_teacher_id' => $lessonRow['slesson_teacher_id'],
+				'sflashcard_slesson_id' => $lessonId,
 			));
-			if($db->getError()){
-				FatUtility::dieJsonError( $db->getError() );
+			if ($db->getError()) {
+				FatUtility::dieJsonError($db->getError());
 			}
 		}
-
 		$this->set('msg', Label::getLabel("LBL_Flashcard_Saved_Successfully!"));
 		$this->_template->render(false, false, 'json-success.php');
 	}
 
-	public function startLessonAuthentication( $lessonId ){
+	public function startLessonAuthentication($lessonId) {
 		$srch = new ScheduledLessonSearch(false);
 		$srch->addMultipleFields(
 			array(
-			'slns.slesson_id'
-			));
-		$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
-		$srch->addCondition( 'slns.slesson_learner_id',' = ', UserAuthentication::getLoggedUserId() );
-		$srch->addCondition( 'slns.slesson_id',' = ', $lessonId );
-		$srch->addCondition( 'slns.slesson_date',' = ', date('Y-m-d') );
-		$srch->addCondition( 'slns.slesson_start_time',' <= ', date('H:i:s') );
-		$srch->addCondition( 'slns.slesson_end_time',' >= ', date('H:i:s') );
+				'slns.slesson_id'
+			)
+		);
+		$srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+		$srch->addCondition('slns.slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
+		$srch->addCondition('slns.slesson_id', '=', $lessonId);
+		$srch->addCondition('slns.slesson_date', '=', date('Y-m-d'));
+		$srch->addCondition('slns.slesson_start_time', '<=', date('H:i:s'));
+		$srch->addCondition('slns.slesson_end_time', '>=', date('H:i:s'));
 		$rs = $srch->getResultSet();
 		echo $count = $srch->recordCount();
 	}
 
-	public function endLessonSetup( ){
-		$lessonId = FatApp::getPostedData('lessonId', FatUtility::VAR_INT, 0 );
-
-		if( $lessonId < 1 ){
+	public function endLessonSetup(){
+		$lessonId = FatApp::getPostedData('lessonId', FatUtility::VAR_INT, 0);
+		if ($lessonId < 1) {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
 		}
-
 		/* [ */
 		$srch = new stdClass();
-		$this->searchLessons( $srch );
+		$this->searchLessons($srch);
 		$srch->joinTeacherCredentials();
 		$srch->doNotCalculateRecords();
-		$srch->addCondition( 'slesson_id', '=', $lessonId );
-
+		$srch->addCondition('slesson_id', '=', $lessonId);
 		$rs = $srch->getResultSet();
-		$lessonRow = FatApp::getDb()->fetch( $rs );
-		if( empty($lessonRow) ){
+		$lessonRow = FatApp::getDb()->fetch($rs);
+		if (empty($lessonRow)) {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
 		}
 		/* ] */
-
-		if( $lessonRow['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ){
+		if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
 			FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Re-schedule_requested!'));
 		}
-        
-		if( $lessonRow['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ){
-            $sLessonObj = new ScheduledLesson( $lessonRow['slesson_id'] );
-            $sLessonObj->assignValues( array('slesson_learner_end_time'=>date('Y-m-d H:i:s')) );
-            if( !$sLessonObj->save() ){
+		if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) {
+            $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
+            $sLessonObj->assignValues(array('slesson_learner_end_time'=> date('Y-m-d H:i:s')));
+            if (!$sLessonObj->save()) {
                 FatUtility::dieJsonError($sLessonObj->getError());
             }
 			FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Already_Ended_by_Teacher!'));
 		}
 
 		$dataUpdateArr = array(
-			'slesson_status'	=>	ScheduledLesson::STATUS_COMPLETED,
-			'slesson_ended_by'	=>	User::USER_TYPE_LEANER,
-			'slesson_ended_on'	=>	date('Y-m-d H:i:s'),
-			'slesson_learner_end_time'	=>	date('Y-m-d H:i:s'),
+			'slesson_status' => ScheduledLesson::STATUS_COMPLETED,
+			'slesson_ended_by' => User::USER_TYPE_LEANER,
+			'slesson_ended_on' => date('Y-m-d H:i:s'),
+			'slesson_learner_end_time' => date('Y-m-d H:i:s'),
 		);
 
 		$db = FatApp::getDb();
 		$db->startTransaction();
 
-		if($lessonRow['slesson_is_teacher_paid'] == 0){
+		if ($lessonRow['slesson_is_teacher_paid'] == 0) {
 			$lessonObj = new ScheduledLesson($lessonId);
-			if($lessonObj->payTeacherCommission()){
+			if ($lessonObj->payTeacherCommission()) {
 				$userNotification = new UserNotifications($lessonRow['teacherId']);
 				$userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);								
 				$dataUpdateArr['slesson_is_teacher_paid'] = 1;
 			}
-		}		
-		
-		$sLessonObj = new ScheduledLesson( $lessonRow['slesson_id'] );
-		$sLessonObj->assignValues( $dataUpdateArr );
-		if( !$sLessonObj->save() ){
+		}			
+		$sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
+		$sLessonObj->assignValues($dataUpdateArr);
+		if (!$sLessonObj->save()) {
 			$db->rollbackTransaction();			
 			FatUtility::dieJsonError($sLessonObj->getError());
 		}
@@ -1112,17 +1095,18 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Ended_Successfully!'));
 	}
 
-	public function checkEveryMinuteStatus( $lessonId ){
+	public function checkEveryMinuteStatus($lessonId) {
 		$srch = new ScheduledLessonSearch();
 		$srch->addMultipleFields(
 			array(
-			'slns.slesson_status'
-			));
+				'slns.slesson_status'
+			)
+		);
 		//$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
-		$srch->addCondition( 'slns.slesson_learner_id',' = ', UserAuthentication::getLoggedUserId() );
-		$srch->addCondition( 'slns.slesson_id',' = ', $lessonId );
-		$srch->addCondition( 'slns.slesson_date',' <= ', date('Y-m-d') );
-		$srch->addCondition( 'slns.slesson_start_time',' <= ', date('H:i:s') );
+		$srch->addCondition('slns.slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
+		$srch->addCondition('slns.slesson_id', '=', $lessonId);
+		$srch->addCondition('slns.slesson_date', '<=', date('Y-m-d'));
+		$srch->addCondition('slns.slesson_start_time', '<=', date('H:i:s'));
 		//$srch->addCondition( 'slns.slesson_end_time',' >= ', date('H:i:s') );
 		$rs = $srch->getResultSet();
 		$data = FatApp::getDb()->fetch($rs);
@@ -1133,32 +1117,25 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$post = FatApp::getPostedData();
 		$user_timezone = MyDate::getUserTimeZone();
 		$systemTimeZone = MyDate::getTimeZone();
-		$startDateTime = MyDate::changeDateTimezone( $post['date'].' '. $post['startTime'] , $user_timezone, $systemTimeZone);
-		$endDateTime = MyDate::changeDateTimezone( $post['date'].' '.$post['endTime'], $user_timezone, $systemTimeZone);
-		
-		
+		$startDateTime = MyDate::changeDateTimezone($post['date'].' '. $post['startTime'], $user_timezone, $systemTimeZone);
+		$endDateTime = MyDate::changeDateTimezone($post['date'].' '.$post['endTime'], $user_timezone, $systemTimeZone);
 		$db = FatApp::getDb();
-		if( empty($post)) {
+		if (empty($post)) {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
 		}        
 		$srch = new ScheduledLessonSearch();
 		$srch->addMultipleFields(
 			array(
-			'slns.slesson_status'
-			));
-			
-			
-			
-		$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
-		$srch->addCondition( 'slns.slesson_learner_id',' = ', UserAuthentication::getLoggedUserId() );
-		$srch->addCondition( 'slns.slesson_date',' = ', date('Y-m-d', strtotime( $startDateTime )) );
-
-
-		$cnd = $srch->addCondition( 'slns.slesson_start_time',' >= ',date('H:i:s', strtotime( $startDateTime )),'AND' );
-        $cnd->attachCondition('slns.slesson_start_time','<=',date('H:i:s', strtotime( $endDateTime )),'AND');
-
-		$cnd1 = $cnd->attachCondition( 'slns.slesson_end_time',' >= ', date('H:i:s', strtotime( $startDateTime )),'OR' );
-        $cnd1->attachCondition('slns.slesson_end_time','<=',date('H:i:s', strtotime( $endDateTime )),'AND');        
+				'slns.slesson_status'
+			)
+		);
+		$srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+		$srch->addCondition('slns.slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
+		$srch->addCondition('slns.slesson_date', '=', date('Y-m-d', strtotime($startDateTime)));
+		$cnd = $srch->addCondition('slns.slesson_start_time', '>=', date('H:i:s', strtotime($startDateTime)), 'AND');
+        $cnd->attachCondition('slns.slesson_start_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
+		$cnd1 = $cnd->attachCondition('slns.slesson_end_time', '>=', date('H:i:s', strtotime($startDateTime)), 'OR');
+        $cnd1->attachCondition('slns.slesson_end_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');        
 		$rs = $srch->getResultSet();
 		$data = FatApp::getDb()->fetchAll($rs);
         $this->set('count',count($data));
@@ -1166,25 +1143,26 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
     }
 
     public function markLearnerJoinTime(){
-		$lessonId = FatApp::getPostedData('lessonId', FatUtility::VAR_INT, 0 );
-		if( $lessonId < 1 ){
+		$lessonId = FatApp::getPostedData('lessonId', FatUtility::VAR_INT, 0);
+		if ($lessonId < 1) {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
 		}
 		$srch = new ScheduledLessonSearch(false);
 		$srch->addMultipleFields(
 			array(
-			'slns.slesson_status',
-			'slns.slesson_learner_join_time'
-			));
-		$srch->addCondition( 'slns.slesson_learner_id',' = ', UserAuthentication::getLoggedUserId() );
-		$srch->addCondition( 'slns.slesson_id',' = ', $lessonId );
-		$srch->addCondition( 'slns.slesson_learner_join_time',' = ', '0000-00-00' );
+				'slns.slesson_status',
+				'slns.slesson_learner_join_time'
+			)
+		);
+		$srch->addCondition('slns.slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
+		$srch->addCondition('slns.slesson_id', '=', $lessonId);
+		$srch->addCondition('slns.slesson_learner_join_time', '=', '0000-00-00');
 		$rs = $srch->getResultSet();
 		$data = FatApp::getDb()->fetch($rs);
-        if($data){
-            $sLessonObj = new ScheduledLesson( $lessonId );
-            $sLessonObj->assignValues( array('slesson_learner_join_time'=>date('Y-m-d H:i:s')) );
-            if( !$sLessonObj->save() ){
+        if ($data) {
+            $sLessonObj = new ScheduledLesson($lessonId);
+            $sLessonObj->assignValues(array('slesson_learner_join_time' => date('Y-m-d H:i:s')));
+            if (!$sLessonObj->save()) {
                 FatUtility::dieJsonError($sLessonObj->getError());
             }
         }        
@@ -1196,25 +1174,22 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 		$reportedArr['issrep_status'] = IssuesReported::STATUS_PROGRESS;
 		$reportedArr['issrep_is_for_admin'] = 1;
 		$reportedArr['issrep_escalated_by'] = $escalated_by;
-		
-		$record = new IssuesReported( $issueId );
-        $record->assignValues( $reportedArr );
+		$record = new IssuesReported($issueId);
+        $record->assignValues($reportedArr);
         if (!$record->save()) {
 			Message::addErrorMessage($record->getError());			
 			FatUtility::dieJsonError($record->getError());
         }
-		
 		$srch = new ScheduledLessonSearch();
-		$srch->addCondition( 'slesson_id', '=', $lessonId );
-		
-		$srch->joinTable( User::DB_TBL, 'LEFT JOIN', 'ut.user_id = slns.slesson_teacher_id', 'ut' );
-		$srch->joinTable( User::DB_TBL, 'LEFT JOIN', 'ul.user_id = slns.slesson_learner_id', 'ul' );
-		$srch->joinTable( TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tLang.tlanguage_id = slns.slesson_slanguage_id', 'tLang' );
-		$srch->joinTable( TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tLangLang.tlanguagelang_tlanguage_id = tLang.tlanguage_id AND tlanguagelang_lang_id = '. $this->siteLangId , 'tLangLang' );
+		$srch->addCondition('slesson_id', '=', $lessonId);	
+		$srch->joinTable(User::DB_TBL, 'LEFT JOIN', 'ut.user_id = slns.slesson_teacher_id', 'ut');
+		$srch->joinTable(User::DB_TBL, 'LEFT JOIN', 'ul.user_id = slns.slesson_learner_id', 'ul');
+		$srch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tLang.tlanguage_id = slns.slesson_slanguage_id', 'tLang');
+		$srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tLangLang.tlanguagelang_tlanguage_id = tLang.tlanguage_id AND tlanguagelang_lang_id = '. $this->siteLangId , 'tLangLang');
 		if ($escalated_by == USER::USER_TYPE_TEACHER) {
-			$srch->addCondition( 'slesson_teacher_id', '=',  UserAuthentication::getLoggedUserId() );
+			$srch->addCondition('slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
 		}else {
-			$srch->addCondition( 'slesson_learner_id', '=',  UserAuthentication::getLoggedUserId() );
+			$srch->addCondition('slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
 		}
 		
 		$srch->addFld(
@@ -1242,17 +1217,15 @@ class LearnerScheduledLessonsController extends LearnerBaseController {
 			'{lesson_name}' => $lessonRow['teacherTeachLanguageName'],
 			'{lesson_date}' => $lessonRow['slesson_date'],
 			'{lesson_start_time}' => $lessonRow['slesson_start_time'],
-			'{lesson_end_time}' => $lessonRow['slesson_end_time']	
+			'{lesson_end_time}' => $lessonRow['slesson_end_time']
 		);
 		
-		if ( !EmailHandler::sendMailTpl(FatApp::getConfig('CONF_SITE_OWNER_EMAIL',FatUtility::VAR_STRING, 'yocoach@dummyid.com'), $tpl ,$this->siteLangId, $vars) ) {
-			Message::addErrorMessage(Label::getLabel( 'LBL_Mail_not_sent!', $this->siteLangId ));					
+		if (!EmailHandler::sendMailTpl(FatApp::getConfig('CONF_SITE_OWNER_EMAIL', FatUtility::VAR_STRING, 'yocoach@dummyid.com'), $tpl, $this->siteLangId, $vars)) {
+			Message::addErrorMessage(Label::getLabel('LBL_Mail_not_sent!', $this->siteLangId));					
 			FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
 		}
 		
-		Message::addMessage(Label::getLabel( 'LBL_Lesson_Issue_Reported_to_the_Support', $this->siteLangId ));		
+		Message::addMessage(Label::getLabel('LBL_Lesson_Issue_Reported_to_the_Support', $this->siteLangId));		
 		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Reported_to_the_Support!'));
-		
 	}
-    
 }

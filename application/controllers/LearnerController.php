@@ -172,9 +172,8 @@ class LearnerController extends LearnerBaseController {
 			}
 			$action = 'R'; //Removed from favorite
 			//$this->set('msg', Label::getLabel('LBL_Teacher_has_been_removed_from_favourite_list', $this->siteLangId) );
-			Message::addMessage(Label::getLabel('LBL_Teacher_has_been_removed_from_favourite_list', $this->siteLangId));				
+			Message::addMessage(Label::getLabel('LBL_Teacher_has_been_removed_from_favourite_list', $this->siteLangId));
 		}
-
 		$this->set('action', $action);
 		$this->_template->render(false, false, 'json-success.php');
 	}	

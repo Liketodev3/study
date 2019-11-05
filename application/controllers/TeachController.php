@@ -5,11 +5,11 @@ class TeachController extends MyAppController {
 		parent::__construct($action);
 	}
 	
-	public function index(){
-		FatApp::redirectUser( FatUtility::generateUrl('Teach', 'apply') );
+	public function index() {
+		FatApp::redirectUser(FatUtility::generateUrl('Teach', 'apply'));
 	}
 	
-	public function apply(){
+	public function apply() {
 		$this->_template->render();
 	}
 }
