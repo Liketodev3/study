@@ -7328,3 +7328,14 @@ display: block;}
 .links--vertical.footer_contact_details li img{
 	margin-right: 10px;
 }
+#loaderCalendar {
+	position: absolute;
+    width: 100%;
+    background: rgba(255,255,255,0.5);
+    z-index: 4;
+    height: 100%;
+}
+
+#loaderCalendar .loader {
+	margin-top: 30%;
+}

@@ -41,7 +41,7 @@
 			timezone: "<?php echo $user_timezone; ?>",
 			<?php if( 'free_trial' == $action ){ ?>
 			select: function (start, end, jsEvent, view ) {
-				
+				$("#loaderCalendar").show();
 				$("body").css( {"pointer-events": "none"} );
 				$("body").css( {"cursor": "wait"} );
 				
@@ -50,6 +50,7 @@
 					var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
 		
 					if ( selectedDateTime < validSelectDateTime ) {	
+							$("#loaderCalendar").hide();
 							$("body").css( {"cursor": "default"} );
 							$("body").css( {"pointer-events": "initial"} );
 						if( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
@@ -69,6 +70,7 @@
 				}
 				
 				if( moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0 ) {
+					$("#loaderCalendar").hide();
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
@@ -76,6 +78,7 @@
 				}
 				
 				if( moment(start).format('YYYY-MM-DD HH:mm:ss') > moment(end).format('YYYY-MM-DD HH:mm:ss') ) {
+					$("#loaderCalendar").hide();
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
@@ -86,6 +89,7 @@
 				var minutesDiff = duration.asMinutes();
 				var minutes = "<?php echo $bookingMinutesDuration ?>";
 				if ( minutesDiff > minutes ) {
+					$("#loaderCalendar").hide();
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
@@ -115,6 +119,7 @@
 				newEvent.weekEnd = moment(endOfWeek).format('YYYY-MM-DD HH:mm:ss');
 				
 				fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[<?php echo $teacher_id; ?>]), newEvent, function(doc) {
+					$("#loaderCalendar").hide();
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					var res = JSON.parse(doc);
@@ -337,11 +342,13 @@
 	});
 	
 </script>
-
+<div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
 <div class="calendar-view">
 <?php if( 'free_trial' != $action ){ ?>
 <h4><?php echo Label::getLabel('Lbl_View_Availibility_(Click_Buy_to_Book)'); ?></h4>
 <?php } ?>
+
 <span> <?php echo MyDate::displayTimezoneString();?> </span>
+
 <div id='d_calendar'></div>
 </div>
