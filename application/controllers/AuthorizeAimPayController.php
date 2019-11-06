@@ -1,70 +1,60 @@
 <?php
-class AuthorizeAimPayController extends PaymentController{
+class AuthorizeAimPayController extends PaymentController {
 	
 	private $keyName = "AuthorizeAim";
 /*	private $testEnvironmentUrl = 'https://test.authorize.net/gateway/transact.dll';
 	private $liveEnvironmentUrl = 'https://secure.authorize.net/gateway/transact.dll';*/
     private $testEnvironmentUrl = "https://apitest.authorize.net/xml/v1/request.api";
     private $liveEnvironmentUrl = "https://api.authorize.net/xml/v1/request.api";    
-	
-	public function charge( $orderId = '' ){
-		
-		if( empty($orderId) ){
+	public function charge($orderId = '') {
+		if (empty($orderId)) {
 			FatUtility::exitWIthErrorCode(404);
 		}
-		
 		$pmObj = new PaymentSettings($this->keyName);
-		if (!$paymentSettings = $pmObj->getPaymentSettings()){
+		if (!$paymentSettings = $pmObj->getPaymentSettings()) {
 			Message::addErrorMessage($pmObj->getError());
 			CommonHelper::redirectUserReferer();
 		}
-		
-		$orderPaymentObj = new OrderPayment($orderId,$this->siteLangId);
+		$orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
 		$paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
 		$orderInfo = $orderPaymentObj->getOrderById($orderId);
-		
-		if( !$orderInfo['order_id'] ){
+		if (!$orderInfo['order_id']) {
 			FatUtility::exitWIthErrorCode(404);
-		} elseif ( $orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING ){
+		} elseif ($orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
 			$frm = $this->getPaymentForm($orderId); 
 			$this->set('frm', $frm);
 			$this->set('paymentAmount', $paymentAmount);
 		} else {
-			$this->set('error', Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED',$this->siteLangId));
+			$this->set('error', Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId));
 		}
 		
 		$cancelBtnUrl = CommonHelper::getPaymentCancelPageUrl();
-		if( $orderInfo['order_type'] == Order::TYPE_WALLET_RECHARGE ){
+		if ($orderInfo['order_type'] == Order::TYPE_WALLET_RECHARGE) {
 			$cancelBtnUrl = CommonHelper::getPaymentFailurePageUrl();
 		}
-		
-		$this->set( 'cancelBtnUrl', $cancelBtnUrl );
+		$this->set('cancelBtnUrl', $cancelBtnUrl);
 		$this->set('orderInfo', $orderInfo);
 		$this->set('paymentAmount', $paymentAmount);
 		$this->set('exculdeMainHeaderDiv', true);
 		$this->_template->addCss('css/payment.css');
-		$this->_template->render(true,false);
+		$this->_template->render(true, false);
 	}
 	
 	public function send($orderId) {
-		
 		$pmObj=new PaymentSettings($this->keyName);
 		$paymentSettings=$pmObj->getPaymentSettings();
-		
 		$post = FatApp::getPostedData();
 		$orderPaymentObj=new OrderPayment($orderId,$this->siteLangId);
 		/* Retrieve Payment to charge corresponding to your order */
 		$orderPaymentAamount=$orderPaymentObj->getOrderPaymentGatewayAmount();
-
-		if ($orderPaymentAamount>0){
+		if ($orderPaymentAamount>0) {
 			/* Retrieve Primary Info corresponding to your order */
 			//$orderInfo=$orderPaymentObj->getOrderPrimaryinfo();
-			
 			$orderSrch = new OrderSearch();
 			$orderSrch->joinUser();
 			$orderSrch->joinUserCredentials();
 			$orderSrch->addCondition('order_id', '=', $orderId);
-			$orderSrch->addMultipleFields( array(
+			$orderSrch->addMultipleFields(array(
 				'order_id', 
 				'order_language_id', 
 				'order_currency_code', 
@@ -72,13 +62,11 @@ class AuthorizeAimPayController extends PaymentController{
 				'cred.credential_email as user_email',
 				'order_language_code',
 				'"FATbit_SP" as paypal_bn'
-			) );
+			));
 			$orderRs = $orderSrch->getResultSet();
-			$orderInfo = FatApp::getDb()->fetch( $orderRs );
-
-			$orderActualPaid = number_format(round($orderPaymentAamount,2),2,".","");
-			$actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE',FatUtility::VAR_BOOLEAN,false) == true)?$this->liveEnvironmentUrl:$this->testEnvironmentUrl; 
-		
+			$orderInfo = FatApp::getDb()->fetch($orderRs);
+			$orderActualPaid = number_format(round($orderPaymentAamount, 2), 2, ".", "");
+			$actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE',FatUtility::VAR_BOOLEAN,false) == true)?$this->liveEnvironmentUrl:$this->testEnvironmentUrl;
 			/*$data = array();
 			$data['x_login'] = $paymentSettings['login_id'];
 			$data['x_tran_key'] = $paymentSettings['transaction_key'];
@@ -136,8 +124,7 @@ class AuthorizeAimPayController extends PaymentController{
 			curl_setopt($curl, CURLOPT_TIMEOUT, 10);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data, '', '&'));
 			$response = curl_exec($curl);*/
-			$orderPaymentGatewayDescription=sprintf(Label::getLabel("MSG_Order_Payment_Gateway_Description",$this->siteLangId),FatApp::getConfig("CONF_WEBSITE_NAME_".$orderInfo["order_language_id"]),$orderInfo['order_id']);            
-            $data = array(
+			$orderPaymentGatewayDescription = sprintf(Label::getLabel("MSG_Order_Payment_Gateway_Description", $this->siteLangId), FatApp::getConfig("CONF_WEBSITE_NAME_". $orderInfo["order_language_id"]), $orderInfo['order_id']);$data = array(
                 "createTransactionRequest" => array(
                     "merchantAuthentication" => array(
                         "name" => $paymentSettings['login_id'],
@@ -199,11 +186,11 @@ class AuthorizeAimPayController extends PaymentController{
             );         
 
             $response = $this->executeCurl($data, $actionUrl);            
-            mail('raghav.vashishth@fatbit.in','',serialize($response));
+            mail('raghav.vashishth@fatbit.in', '', serialize($response));
             $json = array();
             if ($response['status'] == 0) {
                 $json['error'] = Label::getLabel('LBL_Payment_cannot_be_processed_right_now._Please_try_after_some_time.');
-            } elseif ( !empty($response['response']['transactionResponse']['errors']) || $response['response']['transactionResponse']['responseCode'] != 1 ) {
+            } elseif (!empty($response['response']['transactionResponse']['errors']) || $response['response']['transactionResponse']['responseCode'] != 1) {
             $errorMsg = isset($response['response']['transactionResponse']['errors'][0]['errorText'])?$response['response']['transactionResponse']['errors'][0]['errorText']:current($response['response']['messages']['message'])['text'];
                 $json['error'] = $errorMsg;
             } elseif ($response['status'] == 1) {
@@ -231,11 +218,9 @@ class AuthorizeAimPayController extends PaymentController{
                     if (isset($response['response']['transactionResponse']['accountType'])) {
                         $message .= 'Account Type: ' . $response['response']['transactionResponse']['accountType'] . "\n";
                     }
-
-
-                    //if (!$paymentSettings['md5_hash'] || (strtoupper($responseInfo[38]) == strtoupper(md5($paymentSettings['md5_hash'].$paymentSettings['login_id'].$responseInfo[7] . $orderActualPaid)))) {
+					//if (!$paymentSettings['md5_hash'] || (strtoupper($responseInfo[38]) == strtoupper(md5($paymentSettings['md5_hash'].$paymentSettings['login_id'].$responseInfo[7] . $orderActualPaid)))) {
                     /* Recording Payment in DB */
-                    if (!$orderPaymentObj->addOrderPayment($this->keyName, $response['response']['transactionResponse']['transId'], $orderPaymentAamount, $message,serialize($response))) {
+                    if (!$orderPaymentObj->addOrderPayment($this->keyName, $response['response']['transactionResponse']['transId'], $orderPaymentAamount, $message, serialize($response))) {
        					$orderPaymentObj->addOrderPaymentComments(serialize($response));
                         $json['error'] = "Invalid Action";
                     }
@@ -249,36 +234,35 @@ class AuthorizeAimPayController extends PaymentController{
                     $json['error'] = $errorMsg;
                 }
             } else {
-				$json['error'] = Label::getLabel('MSG_EMPTY_GATEWAY_RESPONSE',$this->siteLangId);
+				$json['error'] = Label::getLabel('MSG_EMPTY_GATEWAY_RESPONSE', $this->siteLangId);
 			}
 		}	
 		else{
-			$json['error'] = Label::getLabel('MSG_Invalid_Request',$this->siteLangId);
+			$json['error'] = Label::getLabel('MSG_Invalid_Request', $this->siteLangId);
 		}
-		
 		echo json_encode($json);
 	}
 	
-	public function checkCardType(){
+	public function checkCardType() {
 		$post = FatApp::getPostedData();
 		$res=CommonHelper::validate_cc_number($post['cc']);
-		echo json_encode($res); exit;
+		echo json_encode($res); 
+		exit;
 	}
 	
-	private function getPaymentForm($orderId = ''){
-		
-		$frm = new Form('frmPaymentForm',array('id'=>'frmPaymentForm','action'=>CommonHelper::generateUrl('AuthorizeAimPay','send',array($orderId)), 'class' =>"form form--normal"));
-		$frm->addRequiredField(Label::getLabel('LBL_ENTER_CREDIT_CARD_NUMBER',$this->siteLangId), 'cc_number');
-		$frm->addRequiredField(Label::getLabel('LBL_CARD_HOLDER_NAME',$this->siteLangId), 'cc_owner');
+	private function getPaymentForm($orderId = '') {
+		$frm = new Form('frmPaymentForm',array('id' => 'frmPaymentForm', 'action' => CommonHelper::generateUrl('AuthorizeAimPay', 'send', array($orderId)), 'class' => "form form--normal"));
+		$frm->addRequiredField(Label::getLabel('LBL_ENTER_CREDIT_CARD_NUMBER', $this->siteLangId), 'cc_number');
+		$frm->addRequiredField(Label::getLabel('LBL_CARD_HOLDER_NAME', $this->siteLangId), 'cc_owner');
 		$data['months'] = applicationConstants::getMonthsArr($this->siteLangId);
 		$today = getdate();
 		$data['year_expire'] = array();
 		for ($i = $today['year']; $i < $today['year'] + 11; $i++) {
 			$data['year_expire'][strftime('%Y', mktime(0, 0, 0, 1, 1, $i))] = strftime('%Y', mktime(0, 0, 0, 1, 1, $i));
 		}
-		$frm->addSelectBox( Label::getLabel('LBL_EXPIRY_MONTH',$this->siteLangId), 'cc_expire_date_month',$data['months'], '', array(), '' );
-		$frm->addSelectBox( Label::getLabel('LBL_EXPIRY_YEAR',$this->siteLangId), 'cc_expire_date_year', $data['year_expire'], '', array(), '' );
-		$fld = $frm->addPasswordField(Label::getLabel('LBL_CVV_SECURITY_CODE',$this->siteLangId), 'cc_cvv');
+		$frm->addSelectBox(Label::getLabel('LBL_EXPIRY_MONTH', $this->siteLangId), 'cc_expire_date_month', $data['months'], '', array(), '');
+		$frm->addSelectBox(Label::getLabel('LBL_EXPIRY_YEAR', $this->siteLangId), 'cc_expire_date_year', $data['year_expire'], '', array(), '');
+		$fld = $frm->addPasswordField(Label::getLabel('LBL_CVV_SECURITY_CODE', $this->siteLangId), 'cc_cvv');
         $fld->requirements()->setRequired(true);
         $fld->requirements()->setLength(3,5);
 		/* $frm->addCheckBox(Label::getLabel('LBL_SAVE_THIS_CARD_FOR_FASTER_CHECKOUT',$this->siteLangId), 'cc_save_card','1'); */
@@ -286,8 +270,7 @@ class AuthorizeAimPayController extends PaymentController{
 		return $frm;
 	}
 
-    private function executeCurl($data, $url)
-    {
+    private function executeCurl($data, $url) {
         $data_string = json_encode($data);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -304,7 +287,6 @@ class AuthorizeAimPayController extends PaymentController{
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         $response = curl_exec($ch);
-
         if (curl_error($ch)) {
             return ['status' => 0, 'error' => 'CURL ERROR: ' . curl_errno($curl) . '::' . curl_error($curl)];
         } else {
@@ -312,6 +294,6 @@ class AuthorizeAimPayController extends PaymentController{
             $response = preg_replace("/^$bom/", '', $response);
             return ['status' => 1, 'response' => json_decode($response, true)];
         }
-    }    
+    }
 	
 }

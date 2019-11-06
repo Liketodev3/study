@@ -1,43 +1,39 @@
 <?php
 class TeacherStudentsController extends TeacherBaseController {
 	
-	public function __construct($action){
+	public function __construct($action) {
 		parent::__construct($action);
 	}
 	
-	public function index(){
+	public function index() {
 		$frmSrch = $this->getSearchForm();
-		$this->set( 'frmSrch', $frmSrch );
-		$this->set('statusArr',ScheduledLesson::getStatusArr());
+		$this->set('frmSrch', $frmSrch );
+		$this->set('statusArr', ScheduledLesson::getStatusArr());
 		$this->_template->render();
 	}
 	
-	public function search(){
+	public function search() {
 		$frmSrch = $this->getSearchForm();
-		$post = $frmSrch->getFormDataFromArray( FatApp::getPostedData() );
-		
-		if( false === $post ){
-			FatUtility::dieWithError( $frmSrch->getValidationErrors() );
+		$post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
+		if (false === $post) {
+			FatUtility::dieWithError($frmSrch->getValidationErrors());
 		}
-		
 		$srch = new ScheduledLessonSearch(false);
 		$srch->joinOrder();
 		$srch->joinOrderProducts();
 		$srch->joinLearner();
 		$srch->joinTeacher();
 		$srch->joinTeacherSettings();
-		$srch->joinTeacherTeachLanguageView( $this->siteLangId );
-		$srch->joinTeacherOfferPrice( UserAuthentication::getLoggedUserId() );
-		$srch->addCondition( 'slesson_teacher_id',' = ', UserAuthentication::getLoggedUserId() );
-		$srch->addGroupBy('slesson_learner_id','slesson_status');
-		
+		$srch->joinTeacherTeachLanguageView($this->siteLangId);
+		$srch->joinTeacherOfferPrice(UserAuthentication::getLoggedUserId());
+		$srch->addCondition('slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
+		$srch->addGroupBy('slesson_learner_id', 'slesson_status');
 		$page = $post['page'];
 		$pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
 		$srch->setPageSize($pageSize);
-		$srch->setPageNumber( $page );
-		$srch->addOrder( 'order_date_added', 'DESC' );
-		$srch->addOrder( 'ul.user_first_name' );
-		
+		$srch->setPageNumber($page);
+		$srch->addOrder('order_date_added', 'DESC');
+		$srch->addOrder('ul.user_first_name');
 		$srch->addMultipleFields(array(
 			'slns.slesson_id',
 			'slns.slesson_learner_id as learnerId',
@@ -53,127 +49,115 @@ class TeacherStudentsController extends TeacherBaseController {
 			'IFNULL(top_bulk_lesson_price, ts.us_bulk_lesson_amount ) as bulkLessonAmount',
 		));
 		
-		if( !empty($post['keyword']) ){
-			$keywordsArr = array_unique(array_filter( explode( ' ', $post['keyword'] ) ));
-			foreach( $keywordsArr as $keyword ){
+		if (!empty($post['keyword'])) {
+			$keywordsArr = array_unique(array_filter(explode(' ', $post['keyword'])));
+			foreach ($keywordsArr as $keyword) {
 				$cnd = $srch->addCondition('ul.user_first_name', 'like', '%'.$keyword.'%');
-				$cnd->attachCondition( 'ul.user_last_name', 'like', '%'.$keyword.'%');
+				$cnd->attachCondition('ul.user_last_name', 'like', '%'.$keyword.'%');
 			}
 		}
 		
 		$rs = $srch->getResultSet();
 		$students = FatApp::getDb()->fetchAll($rs);
-		$this->set('students',$students);
-		
+		$this->set('students', $students);
 		/* [ */
 		$totalRecords = $srch->recordCount();
 		$pagingArr = array(
-			'pageCount'	=>	$srch->pages(),
-			'page'	=>	$page,
-			'pageSize'	=>	$pageSize,
-			'recordCount'	=>	$totalRecords,
+			'pageCount' => $srch->pages(),
+			'page' => $page,
+			'pageSize' => $pageSize,
+			'recordCount' => $totalRecords,
 		);
-		$this->set( 'postedData', $post );
-		$this->set( 'pagingArr', $pagingArr );
-		
-		$startRecord = ( $page - 1 ) * $pageSize + 1 ;
+		$this->set('postedData', $post);
+		$this->set('pagingArr', $pagingArr);
+		$startRecord = ($page - 1) * $pageSize + 1;
 		$endRecord = $page * $pageSize;
 		if ($totalRecords < $endRecord) {
 			$endRecord = $totalRecords; 
 		}
-		$this->set( 'startRecord', $startRecord );
-		$this->set( 'endRecord', $endRecord );
-		$this->set( 'totalRecords', $totalRecords );
+		$this->set('startRecord', $startRecord);
+		$this->set('endRecord', $endRecord);
+		$this->set('totalRecords', $totalRecords);
 		/* ] */
-		
-		$this->_template->render(false,false);
+		$this->_template->render(false, false);
 	}
 	
-	public function offerPriceForm(){
+	public function offerPriceForm() {
 		$frm = $this->getOfferPriceForm();
-		$frm->fill( array('top_learner_id' => FatApp::getPostedData('top_learner_id', FatUtility::VAR_INT, 0) ) );
-		$this->set('frm',$frm);
-		$this->_template->render(false,false);
+		$frm->fill(array('top_learner_id' => FatApp::getPostedData('top_learner_id', FatUtility::VAR_INT, 0)));
+		$this->set('frm', $frm);
+		$this->_template->render(false, false);
 	}
 	
-	public function setUpOfferPrice(){
+	public function setUpOfferPrice() {
 		$frmSrch = $this->getOfferPriceForm();
-		$post = $frmSrch->getFormDataFromArray( FatApp::getPostedData() );
-		
-		if( false === $post ){
-			FatUtility::dieWithError( $frmSrch->getValidationErrors() );
+		$post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
+		if (false === $post) {
+			FatUtility::dieWithError($frmSrch->getValidationErrors());
 		}
-		
 		$post['top_teacher_id'] = UserAuthentication::getLoggedUserId();
 		$teacherOffer = new TeacherOfferPrice();
-		if( !$teacherOffer->saveData($post) ){
-			FatUtility::dieWithError( $teacherOffer->getError() );
+		if (!$teacherOffer->saveData($post)) {
+			FatUtility::dieWithError($teacherOffer->getError());
 		}
-		
 		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Price_Locked_Successfully!'));
 	}
 	
-	private function getOfferPriceForm(){
+	private function getOfferPriceForm() {
 		$frm = new Form('frmOfferPrice');
-		$fld = $frm->addRequiredField(Label::getLabel('LBL_Single_Lesson_Price'),'top_single_lesson_price');
+		$fld = $frm->addRequiredField(Label::getLabel('LBL_Single_Lesson_Price'), 'top_single_lesson_price');
 		$fld->requirements()->setFloatPositive();
-		$fld = $frm->addRequiredField(Label::getLabel('LBL_Bulk_Lesson_Price'),'top_bulk_lesson_price');
+		$fld = $frm->addRequiredField(Label::getLabel('LBL_Bulk_Lesson_Price'), 'top_bulk_lesson_price');
 		$fld->requirements()->setFloatPositive();
-		$fld = $frm->addHiddenField( '', 'top_learner_id' );
+		$fld = $frm->addHiddenField('', 'top_learner_id');
 		$fld->requirements()->setInt();
 		$fld->requirements()->setRequired();
-		$frm->addSubmitButton( '', 'btn_submit', Label::getLabel('LBL_Save') );
+		$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save'));
 		return $frm;
 	}
 	
-	public function unlockOfferPrice(){
-		$learnerId = FatApp::getPostedData( 'learnerId', FatUtility::VAR_INT, 0 );
-		
-		if( $learnerId < 1 ){
-			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+	public function unlockOfferPrice() {
+		$learnerId = FatApp::getPostedData('learnerId', FatUtility::VAR_INT, 0);
+		if ($learnerId < 1) {
+			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
 		}
-		
 		$teacherOffer = new TeacherOfferPrice();
-		if( !$teacherOffer->removeOffer( $learnerId, UserAuthentication::getLoggedUserId() ) ){
-			FatUtility::dieWithError( $teacherOffer->getError() );
+		if (!$teacherOffer->removeOffer($learnerId, UserAuthentication::getLoggedUserId())) {
+			FatUtility::dieWithError($teacherOffer->getError());
 		}
-		
 		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Price_Unlocked_Successfully!'));
 	}
 	
-	public function getMessageToLearnerFrm(){
+	public function getMessageToLearnerFrm() {
 		$frm = new Form('messageToLearnerFrm');
-		$fld = $frm->addTextArea('Comment','msg_to_learner','',array('style'=>'width:300px;'));
+		$fld = $frm->addTextArea('Comment', 'msg_to_learner', '', array('style' => 'width:300px;'));
 		$fld->requirement->setRequired(true);
-		$frm->addSubmitButton('','submit','Send');
+		$frm->addSubmitButton('', 'submit', 'Send');
 		return $frm;
 	}
 	
-	public function sendMessageToLearner( $learnerId = 0 ){
+	public function sendMessageToLearner($learnerId = 0) {
 		$learnerId = FatUtility::int($learnerId);
 		$frm = $this->getMessageToLearnerFrm();
-		$frm->addHiddenField('','slesson_learner_id',$learnerId);
-		$this->set('frm',$frm);
-		$this->_template->render(false,false);
+		$frm->addHiddenField('', 'slesson_learner_id', $learnerId);
+		$this->set('frm', $frm);
+		$this->_template->render(false, false);
 	}
 	
-	public function messageToLearnerSetup(){
+	public function messageToLearnerSetup() {
 		$db = FatApp::getDb();
 		$post = FatApp::getPostedData();
-		if(empty($post))
-		{
+		if (empty($post)) {
 			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
 		}
 		$learnerId = $post['slesson_learner_id'];
-		$teacherData = User::getAttributesById(UserAuthentication::getLoggedUserId(), array('user_first_name','user_last_name'));
-		$learnerData = User::getAttributesById($learnerId, array('user_first_name','user_last_name'));
-		
+		$teacherData = User::getAttributesById(UserAuthentication::getLoggedUserId(), array('user_first_name', 'user_last_name'));
+		$learnerData = User::getAttributesById($learnerId, array('user_first_name', 'user_last_name'));
 		$userSrch = User::getSearchObject(true);
 		$userSrch->addMultipleFields(array('credential_email'));
-		$userSrch->addCondition('credential_user_id','=',$learnerId);
+		$userSrch->addCondition('credential_user_id', '=', $learnerId);
 		$userRs = $userSrch->getResultSet();
 		$userData = $db->fetch($userRs);
-		
 		$tpl = 'teacher_message_to_learner_email';
 		$vars = array(
 			'{learner_name}' => $learnerData['user_first_name']." ".$learnerData['user_last_name'],
@@ -181,11 +165,9 @@ class TeacherStudentsController extends TeacherBaseController {
 			'{teacher_message}' => $post['msg_to_learner'],
 			'{action}' => 'Message To Learner',
 		);
-		
-		if(!EmailHandler::sendMailTpl($userData['credential_email'], $tpl ,$this->siteLangId, $vars)){
+		if (!EmailHandler::sendMailTpl($userData['credential_email'], $tpl, $this->siteLangId, $vars)) {
 			FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
 		}
 		FatUtility::dieJsonSuccess(Label::getLabel('LBL_Message_Sent_Successfully!'));
 	}
-	
 }

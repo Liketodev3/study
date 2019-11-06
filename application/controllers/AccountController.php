@@ -1,34 +1,31 @@
 <?php
 class AccountController extends LoggedUserController {
-
-	public function __construct($action){
+	public function __construct($action) {
 		parent::__construct($action);
 		$this->_template->addJs('js/jquery-confirm.min.js');
 		$this->_template->addCss('css/jquery-confirm.min.css');
 	}
 
-	public function index(){
-		switch( User::getDashboardActiveTab() ){
+	public function index() {
+		switch (User::getDashboardActiveTab()) {
 			case User::USER_LEARNER_DASHBOARD:
-				FatApp::redirectUser( CommonHelper::generateUrl('learner') );
+				FatApp::redirectUser(CommonHelper::generateUrl('learner'));
 			break;
-
 			case User::USER_TEACHER_DASHBOARD:
-				FatApp::redirectUser( CommonHelper::generateUrl('teacher') );
+				FatApp::redirectUser(CommonHelper::generateUrl('teacher'));
 			break;
 			default:
-				FatApp::redirectUser( CommonHelper::generateUrl('learner') );
+				FatApp::redirectUser(CommonHelper::generateUrl('learner'));
 			break;
 		}
 	}
 
-	public function changePassword(){
+	public function changePassword() {
 		$this->_template->render();
 	}
 
-	public function changePasswordForm(){
+	public function changePasswordForm() {
 		$frm = $this->getChangePasswordForm();
-
 		$this->set('frm', $frm);
 		$this->_template->render(false, false);
 	}
@@ -42,87 +39,72 @@ class AccountController extends LoggedUserController {
 		$this->_template->render(false, false);
 	}
 	
-
-	public function setUpPassword(){
+	public function setUpPassword() {
 		$pwdFrm = $this->getChangePasswordForm();
 		$post = $pwdFrm->getFormDataFromArray(FatApp::getPostedData());
-
-		if( false === $post ){
+		if (false === $post) {
 			Message::addErrorMessage($pwdFrm->getValidationErrors());
-			FatUtility::dieWithError( Message::getHtml() );
+			FatUtility::dieWithError(Message::getHtml());
 		}
-
-		if($post['new_password'] != $post['conf_new_password']){
+		if ($post['new_password'] != $post['conf_new_password']) {
 			Message::addErrorMessage(Label::getLabel('MSG_New_Password_Confirm_Password_does_not_match'));
 			FatUtility::dieWithError( Message::getHtml() );
 		}
-
-		if( true !== CommonHelper::validatePassword($post['new_password'])){
+		if ( true !== CommonHelper::validatePassword($post['new_password'])) {
 			Message::addErrorMessage(
 				Label::getLabel('MSG_PASSWORD_MUST_BE_EIGHT_CHARACTERS_LONG_AND_ALPHANUMERIC')
 			);
-			FatUtility::dieWithError( Message::getHtml() );
+			FatUtility::dieWithError(Message::getHtml());
 		}
-
 		$userObj = new User(UserAuthentication::getLoggedUserId());
-		$srch = $userObj->getUserSearchObj(array('user_id','credential_password'));
+		$srch = $userObj->getUserSearchObj(array('user_id', 'credential_password'));
 		$rs = $srch->getResultSet();
-		$userRow = FatApp::getDb()->fetch($rs,'user_id');
-
-		if ( false == $userRow ) {
+		$userRow = FatApp::getDb()->fetch($rs, 'user_id');
+		if (false == $userRow) {
 			Message::addErrorMessage(Label::getLabel('MSG_INVALID_REQUEST'));
 			FatUtility::dieWithError( Message::getHtml() );
 		}
-
 		if ($userRow['credential_password'] != UserAuthentication::encryptPassword($post['current_password'])) {
 			Message::addErrorMessage(Label::getLabel('MSG_YOUR_CURRENT_PASSWORD_MIS_MATCHED'));
 			FatUtility::dieWithError( Message::getHtml() );
 		}
-
 		if (!$userObj->setLoginPassword($post['new_password'])) {
 			Message::addErrorMessage(Label::getLabel('MSG_Password_could_not_be_set'). $userObj->getError());
-			FatUtility::dieWithError( Message::getHtml() );
+			FatUtility::dieWithError(Message::getHtml());
 		}
-
 		$this->set('msg', Label::getLabel('MSG_Password_changed_successfully'));
 		$this->_template->render(false, false, 'json-success.php');
 	}
 	
 	public function setUpEmail() {
-		
 		$EmailFrm = $this->getChangeEmailForm();
 		$post = $EmailFrm->getFormDataFromArray(FatApp::getPostedData());
-
-		if ( false === $post ) {
+		if (false === $post) {
 			Message::addErrorMessage($EmailFrm->getValidationErrors());
 			FatUtility::dieWithError( Message::getHtml() );
 		}
 		$userObj = new User(UserAuthentication::getLoggedUserId());
-		
-		$srch = $userObj->getUserSearchObj(array('user_id','user_first_name', 'user_last_name', 'credential_password'));
+		$srch = $userObj->getUserSearchObj(array('user_id', 'user_first_name', 'user_last_name', 'credential_password'));
 		$rs = $srch->getResultSet();
-		$userRow = FatApp::getDb()->fetch($rs,'user_id');
-		
-		$userData = array('user_email' => $post['new_email'],
-						  'user_first_name' => $userRow['user_first_name'],
-						  'user_last_name' => $userRow['user_last_name']
-					);
-					
+		$userRow = FatApp::getDb()->fetch($rs, 'user_id');
+		$userData = array(
+			'user_email' => $post['new_email'],
+			'user_first_name' => $userRow['user_first_name'],
+			'user_last_name' => $userRow['user_last_name']
+		);
 		if ($userRow['credential_password'] != UserAuthentication::encryptPassword($post['current_password'])) {
 			Message::addErrorMessage(Label::getLabel('MSG_YOUR_CURRENT_PASSWORD_MIS_MATCHED'));
-			FatUtility::dieWithError( Message::getHtml() );
-		}			
-					
-					
+			FatUtility::dieWithError(Message::getHtml());
+		}
+		
 		$_token = $userObj->prepareUserVerificationCode();			
-		if ( !$this->sendEmailChangeVerificationLink($_token, $userData)) {
+		if (!$this->sendEmailChangeVerificationLink($_token, $userData)) {
 			Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset'). $emailChangeReqObj->getError());
 			FatUtility::dieWithError( Message::getHtml() );
 		}
 		
 		$emailChangeReqObj = new UserEmailChangeRequest();
-		$emailChangeReqObj->deleteOldLinkforUser( UserAuthentication::getLoggedUserId() );
-		
+		$emailChangeReqObj->deleteOldLinkforUser(UserAuthentication::getLoggedUserId());
 		$postData = array(
 			'uecreq_user_id' => UserAuthentication::getLoggedUserId(),
 			'uecreq_email' => $post['new_email'],
@@ -136,42 +118,36 @@ class AccountController extends LoggedUserController {
 		$emailChangeReqObj->assignValues($postData);
 		if (!$emailChangeReqObj->save()) {
 			Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset'). $emailChangeReqObj->getError());
-			FatUtility::dieWithError( Message::getHtml() );
+			FatUtility::dieWithError(Message::getHtml());
 		}
-		
 		$this->set('msg', Label::getLabel('MSG_Please_verify_your_email'));
 		$this->_template->render(false, false, 'json-success.php');
 	}
 
-	public function removeProfileImage(){
+	public function removeProfileImage() {
 		$userId = UserAuthentication::getLoggedUserId();
-
-		if( 1 > $userId ){
+		if (1 > $userId) {
 			Message::addErrorMessage(Label::getLabel('MSG_INVALID_REQUEST_ID'));
-			FatUtility::dieWithError( Message::getHtml() );
+			FatUtility::dieWithError(Message::getHtml());
 		}
-
 		$fileHandlerObj = new AttachedFile();
-		if( !$fileHandlerObj->deleteFile( AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId)){
+		if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId)) {
 			Message::addErrorMessage($fileHandlerObj->getError());
-			FatUtility::dieWithError( Message::getHtml() );
+			FatUtility::dieWithError(Message::getHtml());
 		}
-
-		if( !$fileHandlerObj->deleteFile( AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, $userId)){
+		if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, $userId)) {
 			Message::addErrorMessage($fileHandlerObj->getError());
-			FatUtility::dieWithError( Message::getHtml() );
+			FatUtility::dieWithError(Message::getHtml());
 		}
-
-		$this->set('msg',Label::getLabel('MSG_File_deleted_successfully'));
+		$this->set('msg', Label::getLabel('MSG_File_deleted_successfully'));
 		$this->_template->render(false, false, 'json-success.php');
 	}
 
-	public function profileInfo(){
+	public function profileInfo() {
 		$this->_template->addJs('js/jquery.form.js');
 		$this->_template->addJs('js/cropper.js');
 		$this->_template->addCss('css/cropper.css');
 		$this->_template->addCss('css/custom-full-calendar.css');
-
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
@@ -181,7 +157,6 @@ class AccountController extends LoggedUserController {
 	public function profileInfoForm(){
 		$profileImgFrm = $this->getProfileImageForm();
 		$stateId = 0;
-
 		$userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array(
 			'user_id',
 			'user_url_name',
@@ -193,40 +168,36 @@ class AccountController extends LoggedUserController {
             'user_is_teacher',
 			 'user_timezone',
 			'user_profile_info'
-		) );
-		$userRow['user_phone'] = ( $userRow['user_phone'] == 0 ) ? '' : $userRow['user_phone'];
+		));
+		$userRow['user_phone'] = ($userRow['user_phone'] == 0) ? '' : $userRow['user_phone'];
 		$profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
-        if($userRow['user_is_teacher']){
-         $userRow['us_video_link'] = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_video_link'];
-		 
-		 $userRow['us_booking_before'] = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_booking_before']; //== code added on 23-08-2019
+        if ($userRow['user_is_teacher']) {
+			$userRow['us_video_link'] = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_video_link'];
+			$userRow['us_booking_before'] = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_booking_before']; //== code added on 23-08-2019
         }
 		$profileFrm->fill($userRow);
-
-		$this->set( 'isProfilePicUploaded', User::isProfilePicUploaded() );
+		$this->set('isProfilePicUploaded', User::isProfilePicUploaded());
 		$this->set('userRow', $userRow);
 		$this->set('profileFrm', $profileFrm);
 		$this->set('profileImgFrm', $profileImgFrm);
-		$this->set('languages', Language::getAllNames(false) );
+		$this->set('languages', Language::getAllNames(false));
 		$this->_template->render(false, false);
 	}
 
-    public function userLangForm($lang_id = 0)
-    {
+    public function userLangForm($lang_id = 0) {
         $lang_id = FatUtility::int($lang_id);
         if ($lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
         $langFrm  = $this->getUserLangForm($lang_id);
 		$srch = new SearchBase(User::DB_TBL_LANG);
-		$srch->addMultipleFields(array('userlang_lang_id','userlang_user_profile_Info'));
-		$srch->addCondition('userlang_lang_id','=',$lang_id);
-		$srch->addCondition('userlang_user_id','=',UserAuthentication::getLoggedUserId());
+		$srch->addMultipleFields(array('userlang_lang_id', 'userlang_user_profile_Info'));
+		$srch->addCondition('userlang_lang_id', '=', $lang_id);
+		$srch->addCondition('userlang_user_id', '=', UserAuthentication::getLoggedUserId());
 		$srch->doNotCalculateRecords();
 		$srch->setPageSize(1);
 		$rs = $srch->getResultSet();
 		$langData = FatApp::getDb()->fetch($rs);
-
         if ($langData) {
             $langFrm->fill($langData);
         }
@@ -237,28 +208,26 @@ class AccountController extends LoggedUserController {
         $this->_template->render(false, false);
     }
 
-    private function getUserLangForm($lang_id = 0)
-    {
+    private function getUserLangForm($lang_id = 0) {
         $frm = new Form('frmUserLang');
         $frm->addHiddenField('', 'userlang_lang_id', $lang_id);
         $fld = $frm->addTextArea(Label::getLabel('LBL_Biography', $lang_id), 'userlang_user_profile_Info');
-        $fld->requirements()->setLength(1,500);
+        $fld->requirements()->setLength(1, 500);
         $fld->requirements()->setRequired();
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $lang_id));
         return $frm;
     }
 
-    public function setUpProfileLangInfo(){
+    public function setUpProfileLangInfo() {
         $post = FatApp::getPostedData();
         $frm  = $this->getUserLangForm($post['userlang_lang_id']);
         $post = $frm->getFormDataFromArray($post);
 
-		if ( false === $post ) {
+		if (false === $post) {
 			Message::addErrorMessage(current($frm->getValidationErrors()));
-			FatUtility::dieWithError( Message::getHtml() );
+			FatUtility::dieWithError(Message::getHtml());
 		}
-
-        $data     = array(
+        $data = array(
             'userlang_user_id' => UserAuthentication::getLoggedUserId(),
             'userlang_lang_id' => $post['userlang_lang_id'],
             'userlang_user_profile_Info' => $post['userlang_user_profile_Info']
@@ -268,110 +237,93 @@ class AccountController extends LoggedUserController {
             Message::addErrorMessage($userObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $newTabLangId = 0;
-        $languages    = Language::getAllNames();
+        $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
             if (!$row = User::getAttributesByLangId($langId, UserAuthentication::getLoggedUserId())) {
                 $newTabLangId = $langId;
                 break;
             }
         }
-
 		$this->set('msg', Label::getLabel('MSG_Setup_successful'));
         //$this->set('stateId', $stateId);
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
-
     }
 
-	public function setUpProfileImage(){
+	public function setUpProfileImage() {
 		$userId = UserAuthentication::getLoggedUserId();
-
 		$post = FatApp::getPostedData();
-		if( empty($post) ){
+		if (empty($post)) {
 			Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported'));
 			FatUtility::dieJsonError(Message::getHtml());
 		}
 
-		if($post['action'] == "demo_avatar"){
+		if ($post['action'] == "demo_avatar") {
 			if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
 				Message::addErrorMessage(Label::getLabel('MSG_Please_select_a_file'));
 				FatUtility::dieJsonError(Message::getHtml());
 			}
-
 			$fileHandlerObj = new AttachedFile();
-
-			if(!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId, 0,$_FILES['user_profile_image']['name'], -1, $unique_record = true)
-			){
+			if(!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)
+			) {
 				Message::addErrorMessage($fileHandlerObj->getError());
 				FatUtility::dieJsonError( Message::getHtml() );
 			}
-			$this->set('file',CommonHelper::generateFullUrl('Image','user',array($userId,'croped',true)).'?'.time());
+			$this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'croped', true)).'?'.time());
 		}
 
-		if($post['action'] == "avatar"){
+		if ($post['action'] == "avatar") {
 			if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
 				Message::addErrorMessage(Label::getLabel('MSG_Please_select_a_file'));
 				FatUtility::dieJsonError(Message::getHtml());
 			}
-
 			$fileHandlerObj = new AttachedFile();
-
-			if(!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, $userId, 0,$_FILES['user_profile_image']['name'], -1, $unique_record = true)
-			){
+			if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)
+			) {
 				Message::addErrorMessage($fileHandlerObj->getError());
-				FatUtility::dieJsonError( Message::getHtml() );
+				FatUtility::dieJsonError(Message::getHtml());
 			}
-
 			$data = json_decode(stripslashes($post['img_data']));
-			CommonHelper::crop($data,CONF_UPLOADS_PATH .$res);
-			$this->set('file',CommonHelper::generateFullUrl('Image','user',array($userId,'croped',true)).'?'.time());
+			CommonHelper::crop($data, CONF_UPLOADS_PATH .$res);
+			$this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'croped', true)).'?'.time());
 		}
-
 		$this->set('msg', Label::getLabel('MSG_File_uploaded_successfully'));
 		$this->_template->render(false, false, 'json-success.php');
 	}
 
-	public function setUpProfileInfo(){
-   		$isTeacher = User::getAttributesById(UserAuthentication::getLoggedUserId(), 'user_is_teacher' );
-
+	public function setUpProfileInfo() {
+   		$isTeacher = User::getAttributesById(UserAuthentication::getLoggedUserId(), 'user_is_teacher');
 		$frm = $this->getProfileInfoForm($isTeacher);
 		$post = FatApp::getPostedData();
 		$post = $frm->getFormDataFromArray($post);
-
-		if ( false === $post ) {
+		if (false === $post) {
 			Message::addErrorMessage(current($frm->getValidationErrors()));
-			FatUtility::dieWithError( Message::getHtml() );
+			FatUtility::dieWithError(Message::getHtml());
 		}
-
         $db = FatApp::getDb();
         $db->startTransaction();
-
-        if($isTeacher){
-			
+        if ($isTeacher) {
 			$bookingDurationOptions = array(0, 12, 24);
-			if ( !in_array($post['us_booking_before'], $bookingDurationOptions ) ) {
+			if (!in_array($post['us_booking_before'], $bookingDurationOptions)) {
 				Message::addErrorMessage('Invalid Selection of Booking Field');
-				FatUtility::dieWithError( Message::getHtml() ); 
+				FatUtility::dieWithError(Message::getHtml()); 
 			} //  code added on 23-08-2019
 			
             $record = new TableRecord( UserSetting::DB_TBL );
-            $record->assignValues(array('us_video_link'=>$post['us_video_link'], 'us_booking_before' => $post['us_booking_before'])); //  code added on 23-08-2019
-            if( !$record->update(array('smt'=>'us_user_id=?', 'vals'=>array(UserAuthentication::getLoggedUserId()))) ){
+            $record->assignValues(array('us_video_link' => $post['us_video_link'], 'us_booking_before' => $post['us_booking_before'])); //  code added on 23-08-2019
+            if (!$record->update(array('smt' => 'us_user_id=?', 'vals' => array(UserAuthentication::getLoggedUserId())))) {
        			$db->rollbackTransaction();
                 $this->error = $record->getError();
                 return false;
             }
         }
-
-
-		$user = new User( UserAuthentication::getLoggedUserId() );
+		$user = new User(UserAuthentication::getLoggedUserId());
 		$user->assignValues($post);
-		if ( !$user->save() ) {
+		if (!$user->save()) {
 			$db->rollbackTransaction();
 			Message::addErrorMessage($user->getError());
-			FatUtility::dieWithError( Message::getHtml() );
+			FatUtility::dieWithError(Message::getHtml());
 		}
         $uaObj = new UserAuthentication();
         $uaObj->updateSessionData($post);
@@ -380,128 +332,109 @@ class AccountController extends LoggedUserController {
 		$this->_template->render(false, false, 'json-success.php');
 	}
 
-	private function getProfileInfoForm($teacher=false){
+	private function getProfileInfoForm($teacher = false) {
 		$frm = new Form('frmProfileInfo');
-		$frm->addHTML('','personal_information','');
-		if($teacher){
+		$frm->addHTML('', 'personal_information', '');
+		if ($teacher) {
 			$frm->addHiddenField('', 'user_id', 'user_id');
-			$fldUname = $frm->addTextBox(Label::getLabel('LBL_Username'),'user_url_name');
+			$fldUname = $frm->addTextBox(Label::getLabel('LBL_Username'), 'user_url_name');
 			$fldUname->setUnique('tbl_users', 'user_url_name', 'user_id', 'user_id', 'user_id');
 			$fldUname->requirements()->setRequired();
 			$fldUname->requirements()->setCharOnly();
 		}
-		
-		
-		$fldFname = $frm->addTextBox(Label::getLabel('LBL_First_Name'),'user_first_name');
+		$fldFname = $frm->addTextBox(Label::getLabel('LBL_First_Name'), 'user_first_name');
         $fldFname->requirements()->setCharOnly();
-		$fldLname = $frm->addTextBox(Label::getLabel('LBL_Last_Name'),'user_last_name');
+		$fldLname = $frm->addTextBox(Label::getLabel('LBL_Last_Name'), 'user_last_name');
         $fldLname->requirements()->setCharOnly();
-		$frm->addRadioButtons(Label::getLabel('LBL_Gender'),'user_gender', User::getGenderArr());
+		$frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'user_gender', User::getGenderArr());
 		$fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
-        if($teacher){
-            $frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'),'us_video_link','');
+        if ($teacher) {
+            $frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'), 'us_video_link', '');
         }
-
 		$countryObj = new Country();
 		$countriesArr = $countryObj->getCountriesArr($this->siteLangId);
-		$fld = $frm->addSelectBox(Label::getLabel('LBL_Country'),'user_country_id',$countriesArr,FatApp::getConfig('CONF_COUNTRY',FatUtility::VAR_INT,0),array(),Label::getLabel('LBL_Select'));
+		$fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'user_country_id', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
 		$fld->requirement->setRequired(true);
-
 		$timezonesArr = timezone_identifiers_list();
 		$optionArr = array();
-		foreach($timezonesArr as $key=>$val){
+		foreach ($timezonesArr as $key=>$val) {
 			$optionArr[$val] = $val;
 		}
-
-		$fld2 = $frm->addSelectBox(Label::getLabel('LBL_TimeZone'),'user_timezone',$optionArr,FatApp::getConfig('CONF_COUNTRY',FatUtility::VAR_INT,0),array(),Label::getLabel('LBL_Select'));
+		$fld2 = $frm->addSelectBox(Label::getLabel('LBL_TimeZone'), 'user_timezone', $optionArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
 		$fld2->requirement->setRequired(true);
-		
-		if($teacher){ //== check if user is teacher 
+		if ($teacher) { //== check if user is teacher 
 			$bookingOptionArr = array(0 => 'Immediate', 12 => '12 Hours', 24 => '24 Hours');
-			
-			$fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'),'us_booking_before',$bookingOptionArr,'us_booking_before',array(),Label::getLabel('LBL_Select'));
-			
+			$fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'), 'us_booking_before', $bookingOptionArr, 'us_booking_before', array(), Label::getLabel('LBL_Select'));
 			$fld3->requirement->setRequired(true);
 		}
-		
-
 		$fld = $frm->addTextArea(Label::getLabel('LBL_Biography'), 'user_profile_info');
-        $fld->requirements()->setLength(1,500);                                                $fld->requirements()->setLength(1,500);
+        $fld->requirements()->setLength(1, 500);
+		$fld->requirements()->setLength(1, 500);
 		$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
 		return $frm;
 	}
 
-	private function getProfileImageForm(){
-		$frm = new Form('frmProfile',array('id'=>'frmProfile'));
-		$frm->addFileUpload(Label::getLabel('LBL_Profile_Picture'), 'user_profile_image',array('onchange'=>'popupImage(this)','accept'=>'image/*'));
-		$frm->addHiddenField('', 'update_profile_img', Label::getLabel('LBL_Update_Profile_Picture'), array('id'=>'update_profile_img'));
-		$frm->addHiddenField('', 'rotate_left', Label::getLabel('LBL_Rotate_Left'), array('id'=>'rotate_left'));
-		$frm->addHiddenField('', 'rotate_right', Label::getLabel('LBL_Rotate_Right'), array('id'=>'rotate_right'));
-		$frm->addHiddenField('', 'remove_profile_img', 0, array('id'=>'remove_profile_img'));
-		$frm->addHiddenField('', 'action', 'avatar', array('id'=>'avatar-action'));
-		$frm->addHiddenField('', 'img_data', '', array('id'=>'img_data'));
+	private function getProfileImageForm() {
+		$frm = new Form('frmProfile', array('id' => 'frmProfile'));
+		$frm->addFileUpload(Label::getLabel('LBL_Profile_Picture'), 'user_profile_image', array('onchange' => 'popupImage(this)', 'accept' => 'image/*'));
+		$frm->addHiddenField('', 'update_profile_img', Label::getLabel('LBL_Update_Profile_Picture'), array('id' => 'update_profile_img'));
+		$frm->addHiddenField('', 'rotate_left', Label::getLabel('LBL_Rotate_Left'), array('id' => 'rotate_left'));
+		$frm->addHiddenField('', 'rotate_right', Label::getLabel('LBL_Rotate_Right'), array('id' => 'rotate_right'));
+		$frm->addHiddenField('', 'remove_profile_img', 0, array('id' => 'remove_profile_img'));
+		$frm->addHiddenField('', 'action', 'avatar', array('id' => 'avatar-action'));
+		$frm->addHiddenField('', 'img_data', '', array('id' => 'img_data'));
 		return $frm;
 	}
 
-	private function getChangePasswordForm(){
+	private function getChangePasswordForm() {
 		$frm = new Form('changePwdFrm');
-		$curPwd = $frm->addPasswordField( Label::getLabel('LBL_CURRENT_PASSWORD'), 'current_password' );
+		$curPwd = $frm->addPasswordField(Label::getLabel('LBL_CURRENT_PASSWORD'), 'current_password');
 		$curPwd->requirements()->setRequired();
-
-		$newPwd = $frm->addPasswordField( Label::getLabel('LBL_NEW_PASSWORD'), 'new_password' );
+		$newPwd = $frm->addPasswordField(Label::getLabel('LBL_NEW_PASSWORD'), 'new_password');
 		$newPwd->requirements()->setRequired();
 		$newPwd->requirements()->setRegularExpressionToValidate("^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%-_]{8,15}$");
-
 		$newPwd->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Valid_password'));
-		$conNewPwd = $frm->addPasswordField( Label::getLabel('LBL_CONFIRM_NEW_PASSWORD'), 'conf_new_password' );
+		$conNewPwd = $frm->addPasswordField(Label::getLabel('LBL_CONFIRM_NEW_PASSWORD'), 'conf_new_password');
 		$conNewPwdReq = $conNewPwd->requirements();
 		$conNewPwdReq->setRequired();
 		$conNewPwdReq->setCompareWith('new_password','eq');
-
 		$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
 		return $frm;
 	}
 	
-	private function getChangeEmailForm(){
+	private function getChangeEmailForm() {
 		$frm = new Form('changeEmailFrm');
-		
 		$userObj = new User(UserAuthentication::getLoggedUserId());
 		$srch = $userObj->getUserSearchObj(array('credential_email'));
 		$rs = $srch->getResultSet();
 		$userRow = FatApp::getDb()->fetch($rs);
 		$user_email = $userRow['credential_email'];
-		
 		$frm->addHiddenField('', 'user_id', UserAuthentication::getLoggedUserId() );
-		$curEmail= $frm->addEmailField( Label::getLabel('LBL_CURRENT_EMAIL'), 'user_email', $user_email );
+		$curEmail= $frm->addEmailField(Label::getLabel('LBL_CURRENT_EMAIL'), 'user_email', $user_email);
 		$curEmail->requirements()->setRequired();
 		$curEmail->addFieldTagAttribute('readonly', 'true');
-		
-		$newEmail = $frm->addEmailField( Label::getLabel('LBL_NEW_EMAIL'), 'new_email' );
+		$newEmail = $frm->addEmailField(Label::getLabel('LBL_NEW_EMAIL'), 'new_email');
 		$newEmail->setUnique('tbl_user_credentials', 'credential_email', 'credential_user_id', 'user_id', 'user_id');
-		$newEmail->requirements()->setRequired();
-		
-		$curPwd = $frm->addPasswordField( Label::getLabel('LBL_CURRENT_PASSWORD'), 'current_password' );
+		$newEmail->requirements()->setRequired();	
+		$curPwd = $frm->addPasswordField(Label::getLabel('LBL_CURRENT_PASSWORD'), 'current_password');
 		$curPwd->requirements()->setRequired();
-		
 		$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
 		return $frm;
 	}
 	
-	private function sendEmailChangeVerificationLink( $_token, $data )
-    {
-        $link = CommonHelper::generateFullUrl('GuestUser', 'verifyEmail', array( $_token ));
-        $data	= array(
+	private function sendEmailChangeVerificationLink($_token, $data) {
+        $link = CommonHelper::generateFullUrl('GuestUser', 'verifyEmail', array($_token));
+        $data = array(
             'user_first_name' => $data['user_first_name'],
             'user_last_name' => $data['user_last_name'],
             'user_email' => $data['user_email'],
             'link' => $link,
         );
-        $email	= new EmailHandler();
+        $email = new EmailHandler();
         if (true !== $email->sendEmailChangeVerificationLink($this->siteLangId, $data)) {
             return false;
         }
         return true;
     }
-	
 }
