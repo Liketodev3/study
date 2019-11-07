@@ -1,30 +1,34 @@
 <?php
-class BibleContent extends MyAppModel {
-
+class BibleContent extends MyAppModel
+{
     const DB_TBL = "tbl_bible_content";
     const DB_TBL_PREFIX = "biblecontent_";
     const DB_TBL_LANG = "tbl_bible_content_lang";
     const DB_TBL_LANG_PREFIX = "biblecontentlang_";
 
-    public function __construct($id = 0) {
+    public function __construct($id = 0)
+    {
         parent::__construct(self::DB_TBL, self::DB_TBL_PREFIX . "id", $id);
     }
 
-    public static function getSearchObject() {
+    public static function getSearchObject()
+    {
         $srch = new SearchBase(static::DB_TBL);
         return $srch;
     }
 
-    public static function getList($langId = 0) {
+    public static function getList($langId = 0)
+    {
         $srch = self::getSearchObject();
         $srch->addCondition(self::DB_TBL_PREFIX . "active", '=', 1);
-		if ($langId) {
-			$srch->joinTable( self::DB_TBL_LANG, 'LEFT OUTER JOIN', 'biblecontent_id = biblecontentlang_biblecontent_id AND biblecontentlang_lang_id='.$langId );		
-		}
-		return $srch;
-    }	
+        if ($langId) {
+            $srch->joinTable(self::DB_TBL_LANG, 'LEFT OUTER JOIN', 'biblecontent_id = biblecontentlang_biblecontent_id AND biblecontentlang_lang_id='.$langId);
+        }
+        return $srch;
+    }
 
-    public static function getBibleContentById($id) {
+    public static function getBibleContentById($id)
+    {
         $srch = self::getSearchObject();
         $srch->addCondition(self::DB_TBL_PREFIX . "id", '=', $id);
         $rs = $srch->getResultSet();

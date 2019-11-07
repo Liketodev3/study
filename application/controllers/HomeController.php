@@ -1,21 +1,22 @@
 <?php
-class HomeController extends MyAppController {
-	
-	public function index() {
-		if (UserAuthentication::isUserLogged()) {
-			if (User::isTeacher()) {
-				FatApp::redirectUser(CommonHelper::generateUrl('Account'));
-			}
-			FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
-		}
+class HomeController extends MyAppController
+{
+    public function index()
+    {
+        if (UserAuthentication::isUserLogged()) {
+            if (User::isTeacher()) {
+                FatApp::redirectUser(CommonHelper::generateUrl('Account'));
+            }
+            FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
+        }
         $db = FatApp::getDb();
         /* Main Slides[ */
         $srchSlide = new SlideSearch($this->siteLangId);
         $srchSlide->doNotCalculateRecords();
         $srchSlide->joinAttachedFile();
         $srchSlide->addMultipleFields(
-            array('slide_id', 'slide_record_id', 'slide_type', 'IFNULL(slide_title, slide_identifier) as slide_title', 
-            'slide_target', 'slide_url') 
+            array('slide_id', 'slide_record_id', 'slide_type', 'IFNULL(slide_title, slide_identifier) as slide_title',
+            'slide_target', 'slide_url')
         );
 
         $totalSlidesPageSize = FatApp::getConfig('CONF_TOTAL_SLIDES_HOME_PAGE', FatUtility::VAR_INT, 4);
@@ -35,28 +36,30 @@ class HomeController extends MyAppController {
         }
         $slides = array_merge($ppcSlides, $adminSlides);
         $this->set('slides', $slides);
-        /* ] */        
-		$this->_template->render(); 
-	}
-	
-	public function setSiteDefaultLang( $langId = 0) {
-		$langId = FatUtility::int($langId); 
-		if (0 < $langId ) { 
-			$languages = Language::getAllNames();
-			if (array_key_exists($langId,$languages)) { 		
-				setcookie('defaultSiteLang', $langId, time()+3600*24*10, CONF_WEBROOT_URL);
-			}
-		}
-	}
-	
-	public function setSiteDefaultCurrency($currencyId = 0) {
-		$currencyId = FatUtility::int($currencyId); 
-		$currencyObj = new Currency();
-		if (0 < $currencyId ) {
-			$currencies = Currency::getCurrencyAssoc($this->siteLangId);
-			if(array_key_exists($currencyId, $currencies)){ 		
-				setcookie('defaultSiteCurrency', $currencyId, time()+3600*24*10, CONF_WEBROOT_URL);
-			}				
-		}
-	}
+        /* ] */
+        $this->_template->render();
+    }
+
+    public function setSiteDefaultLang($langId = 0)
+    {
+        $langId = FatUtility::int($langId);
+        if (0 < $langId) {
+            $languages = Language::getAllNames();
+            if (array_key_exists($langId, $languages)) {
+                setcookie('defaultSiteLang', $langId, time()+3600*24*10, CONF_WEBROOT_URL);
+            }
+        }
+    }
+
+    public function setSiteDefaultCurrency($currencyId = 0)
+    {
+        $currencyId = FatUtility::int($currencyId);
+        $currencyObj = new Currency();
+        if (0 < $currencyId) {
+            $currencies = Currency::getCurrencyAssoc($this->siteLangId);
+            if (array_key_exists($currencyId, $currencies)) {
+                setcookie('defaultSiteCurrency', $currencyId, time()+3600*24*10, CONF_WEBROOT_URL);
+            }
+        }
+    }
 }

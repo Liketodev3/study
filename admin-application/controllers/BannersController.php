@@ -62,10 +62,10 @@ class BannersController extends AdminBaseController
         $srch->addCondition('blocation_id','=',$bLocationId);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $rs = $srch->getResultSet();		
-        $data = array();		
+        $rs = $srch->getResultSet();
+        $data = array();
         if($rs){
-        $data = FatApp::getDb()->fetch($rs);			
+        $data = FatApp::getDb()->fetch($rs);
         } */
         if (empty($data)) {
             FatUtility::dieWithError($this->str_invalid_request);
@@ -116,10 +116,10 @@ class BannersController extends AdminBaseController
         $srch->addCondition('blocation_id','=',$bLocationId);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $rs = $srch->getResultSet();		
-        $data = array();		
+        $rs = $srch->getResultSet();
+        $data = array();
         if($rs){
-        $data = FatApp::getDb()->fetch($rs);						
+        $data = FatApp::getDb()->fetch($rs);
         } */
         $this->_template->addJs('js/responsive-img.min.js');
         $this->set('data', $data);
@@ -412,9 +412,9 @@ class BannersController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_request_Or_Inactive_Record', $this->adminLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-        if($secondary){
+        if ($secondary) {
             $imgType = AttachedFile::FILETYPE_BANNER_SECOND_IMAGE;
-        }else{
+        } else {
             $imgType = AttachedFile::FILETYPE_BANNER;
         }
         if (!false == $bannerDetail) {
@@ -452,25 +452,25 @@ class BannersController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError($this->str_invalid_request);
         }
-        /* if (!isset($post['file_type']) || FatUtility::int($post['file_type']) == 0 ) {			
+        /* if (!isset($post['file_type']) || FatUtility::int($post['file_type']) == 0 ) {
         Message::addErrorMessage($this->str_invalid_request);
-        FatUtility::dieJsonError( Message::getHtml() );	
+        FatUtility::dieJsonError( Message::getHtml() );
         }
-        
+
         $file_type = $post['file_type'];
         $allowedFileTypeArr = array(AttachedFile::FILETYPE_BANNER);
-        
+
         if(!in_array($file_type,$allowedFileTypeArr)){
         Message::addErrorMessage($this->str_invalid_request);
-        FatUtility::dieJsonError( Message::getHtml() );	
+        FatUtility::dieJsonError( Message::getHtml() );
         } */
         if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
             Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
             FatUtility::dieJsonError(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
         }
-        if($post['banner_image']=='banner_image_secondary'){
+        if ($post['banner_image']=='banner_image_secondary') {
             $imgType = AttachedFile::FILETYPE_BANNER_SECOND_IMAGE;
-        }else{
+        } else {
             $imgType = AttachedFile::FILETYPE_BANNER;
         }
         $fileHandlerObj = new AttachedFile();
@@ -494,10 +494,10 @@ class BannersController extends AdminBaseController
         }
         $fileHandlerObj = new AttachedFile();
 
-        if($secondary){
+        if ($secondary) {
             $imgType = AttachedFile::FILETYPE_BANNER_SECOND_IMAGE;
-        }else{
-            $imgType = AttachedFile::FILETYPE_BANNER;            
+        } else {
+            $imgType = AttachedFile::FILETYPE_BANNER;
         }
 
         if (!$fileHandlerObj->deleteFile($imgType, $banner_id, 0, 0, $lang_id, $screen)) {
@@ -515,9 +515,9 @@ class BannersController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        /* if (!FatApp::getDb()->deleteRecords('tbl_banners', array('smt'=>'banner_id = ?', 'vals'=>array($banner_id)))) {			
+        /* if (!FatApp::getDb()->deleteRecords('tbl_banners', array('smt'=>'banner_id = ?', 'vals'=>array($banner_id)))) {
         Message::addErrorMessage(FatApp::getDb()->getError());
-        FatUtility::dieJsonError( Message::getHtml() );	
+        FatUtility::dieJsonError( Message::getHtml() );
         } */
         $bannerObj = new Banner($banner_id);
         if (!$bannerObj->deleteRecord(true)) {
@@ -678,13 +678,13 @@ class BannersController extends AdminBaseController
             'data-banner_id' => $banner_id,
             'data-blocation_id' => $blocation_id
         ));
-        if($blocation_id == BannerLocation::BLOCK_FIRST_AFTER_HOMESLIDER){
+        if ($blocation_id == BannerLocation::BLOCK_FIRST_AFTER_HOMESLIDER) {
             $fld = $frm->addButton(Label::getLabel('LBL_Banner_Image_(Small)', $this->adminLangId), 'banner_image_secondary', Label::getLabel('LBL_Upload_File', $this->adminLangId), array(
                 'class' => 'bannerFile-Js',
                 'id' => 'banner_image_secondary',
                 'data-banner_id' => $banner_id,
                 'data-blocation_id' => $blocation_id
-            ));            
+            ));
         }
         return $frm;
     }
@@ -699,17 +699,17 @@ class BannersController extends AdminBaseController
             0 => ''
         ) + $screenTypesArr;
     }
-    public function Thumb($bannerId, $langId = 0, $screen = 0,$secondary=false)
+    public function Thumb($bannerId, $langId = 0, $screen = 0, $secondary=false)
     {
-        $this->showBanner($bannerId, $langId, 100, 100, $screen,$secondary);
+        $this->showBanner($bannerId, $langId, 100, 100, $screen, $secondary);
     }
-    public function showBanner($bannerId, $langId, $w = '200', $h = '200', $screen = 0,$secondary = false)
+    public function showBanner($bannerId, $langId, $w = '200', $h = '200', $screen = 0, $secondary = false)
     {
         $bannerId   = FatUtility::int($bannerId);
         $langId     = FatUtility::int($langId);
-        if($secondary){
-            $imgType = AttachedFile::FILETYPE_BANNER_SECOND_IMAGE;            
-        }else{
+        if ($secondary) {
+            $imgType = AttachedFile::FILETYPE_BANNER_SECOND_IMAGE;
+        } else {
             $imgType = AttachedFile::FILETYPE_BANNER;
         }
         $fileRow    = AttachedFile::getAttachment($imgType, $bannerId, 0, $langId, true, $screen);

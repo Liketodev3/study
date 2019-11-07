@@ -369,7 +369,7 @@ class FaqCategoriesController extends AdminBaseController
         return $frm;
     }
 
-	private function getForm()
+    private function getForm()
     {
         $this->objPrivilege->canEditFaqCategory();
         $langId = $this->adminLangId;

@@ -10,7 +10,7 @@ class UsersController extends AdminBaseController
     public function index()
     {
         $frmSearch = $this->getUserSearchForm();
-        $data      = FatApp::getPostedData();
+        $data = FatApp::getPostedData();
         if ($data) {
             $data['user_id'] = $data['id'];
             unset($data['id']);
@@ -26,14 +26,14 @@ class UsersController extends AdminBaseController
         $canEdit   = $this->objPrivilege->canEditUsers(AdminAuthentication::getLoggedAdminId(), true);
         $pagesize  = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $frmSearch = $this->getUserSearchForm();
-        $data      = FatApp::getPostedData();
-        $post      = $frmSearch->getFormDataFromArray($data);
-        $page      = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
+        $data = FatApp::getPostedData();
+        $post = $frmSearch->getFormDataFromArray($data);
+        $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         if ($page < 2) {
             $page = 1;
         }
         $userObj = new User();
-        $srch    = $userObj->getUserSearchObj(null, true);
+        $srch = $userObj->getUserSearchObj(null, true);
         $srch->addOrder('u.user_id', 'DESC');
         $srch->addOrder('credential_active', 'DESC');
         $user_id = FatApp::getPostedData('user_id', FatUtility::VAR_INT, -1);
@@ -42,13 +42,13 @@ class UsersController extends AdminBaseController
         } else {
             $keyword = FatApp::getPostedData('keyword', null, '');
             if (!empty($keyword)) {
-				$keywordsArr = array_unique(array_filter( explode( ' ', $keyword ) ));
-				foreach( $keywordsArr as $kw ){
-					$cnd = $srch->addCondition('u.user_first_name', 'like', '%'.$kw.'%');
-					$cnd->attachCondition( 'u.user_last_name', 'like', '%'.$kw.'%');
-					$cnd->attachCondition( 'uc.credential_username', 'like', '%'.$kw.'%');
-					$cnd->attachCondition( 'uc.credential_email', 'like', '%'.$kw.'%');
-				}
+                $keywordsArr = array_unique(array_filter(explode(' ', $keyword)));
+                foreach ($keywordsArr as $kw) {
+                    $cnd = $srch->addCondition('u.user_first_name', 'like', '%'.$kw.'%');
+                    $cnd->attachCondition('u.user_last_name', 'like', '%'.$kw.'%');
+                    $cnd->attachCondition('uc.credential_username', 'like', '%'.$kw.'%');
+                    $cnd->attachCondition('uc.credential_email', 'like', '%'.$kw.'%');
+                }
 
                 /* $cnd = $srch->addCondition('uc.credential_username', 'like', '%' . $keyword . '%');
                 $cnd->attachCondition('uc.credential_email', 'like', '%' . $keyword . '%', 'OR');
@@ -81,19 +81,19 @@ class UsersController extends AdminBaseController
         if (!empty($user_regdate_to)) {
             $srch->addCondition('user_added_on', '<=', $user_regdate_to . ' 23:59:59');
         }
-		$srch->joinTable( TeacherRequest::DB_TBL, 'LEFT JOIN', 'tr.utrequest_user_id = user_id', 'tr' );
+        $srch->joinTable(TeacherRequest::DB_TBL, 'LEFT JOIN', 'tr.utrequest_user_id = user_id', 'tr');
         $srch->addFld(array(
             'user_is_learner',
             'user_is_teacher',
-			'user_first_name',
-			'user_last_name',
-			'user_registered_initially_for',
-			'tr.utrequest_status'
+            'user_first_name',
+            'user_last_name',
+            'user_registered_initially_for',
+            'tr.utrequest_status'
         ));
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         //echo $srch->getQuery();
-        $rs      = $srch->getResultSet();
+        $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs, 'user_id');
         $adminId = AdminAuthentication::getLoggedAdminId();
         $this->set("arr_listing", $records);
@@ -110,7 +110,7 @@ class UsersController extends AdminBaseController
     {
         $this->objPrivilege->canEditUsers();
         $userObj = new User($userId);
-        $user    = $userObj->getUserInfo(array(
+        $user = $userObj->getUserInfo(array(
             'credential_username',
             'credential_password'
         ), false, false);
@@ -126,13 +126,13 @@ class UsersController extends AdminBaseController
         FatApp::redirectUser(CommonHelper::generateUrl('account', '', array(), '/'));
     }
 
-	public function setup()
+    public function setup()
     {
         $this->objPrivilege->canEditUsers();
-        $frm                   = $this->getForm();
-        $post                  = FatApp::getPostedData();
+        $frm = $this->getForm();
+        $post = FatApp::getPostedData();
         //$user_state_id         = FatUtility::int($post['user_state_id']);
-        $post                  = $frm->getFormDataFromArray($post);
+        $post = $frm->getFormDataFromArray($post);
         //$post['user_state_id'] = $user_state_id;
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -152,7 +152,7 @@ class UsersController extends AdminBaseController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-	public function form($user_id = 0)
+    public function form($user_id = 0)
     {
         $this->objPrivilege->canEditUsers();
         $user_id = FatUtility::int($user_id);
@@ -160,7 +160,7 @@ class UsersController extends AdminBaseController
         $stateId = 0;
         if (0 < $user_id) {
             $userObj = new User($user_id);
-            $srch    = $userObj->getUserSearchObj();
+            $srch = $userObj->getUserSearchObj();
             $srch->addMultipleFields(array(
                 'u.*'
             ));
@@ -184,13 +184,13 @@ class UsersController extends AdminBaseController
         $this->_template->render(false, false);
     }
 
-	public function view($user_id = 0)
+    public function view($user_id = 0)
     {
         $user_id = FatUtility::int($user_id);
         $stateId = 0;
         if (0 < $user_id) {
             $userObj = new User($user_id);
-            $srch    = $userObj->getUserSearchObj();
+            $srch = $userObj->getUserSearchObj();
             $srch->addMultipleFields(array(
                 'u.*',
                 'country_name',
@@ -207,24 +207,24 @@ class UsersController extends AdminBaseController
                 FatUtility::dieWithError($this->str_invalid_request);
             }
         }
-		$stateId = $data['user_state_id'];
+        $stateId = $data['user_state_id'];
         $this->set('stateId', $stateId);
         $this->set('user_id', $user_id);
         $this->set('data', $data);
         $this->_template->render(false, false);
     }
 
-	public function transaction($userId = 0)
+    public function transaction($userId = 0)
     {
         $userId = FatUtility::int($userId);
         if (1 > $userId) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-        $post     = FatApp::getPostedData();
-        $page     = (empty($post['page']) || $post['page'] <= 0) ? 1 : $post['page'];
-        $page     = (empty($page) || $page <= 0) ? 1 : FatUtility::int($page);
-        $srch     = Transaction::getSearchObject();
+        $post = FatApp::getPostedData();
+        $page = (empty($post['page']) || $post['page'] <= 0) ? 1 : $post['page'];
+        $page = (empty($page) || $page <= 0) ? 1 : FatUtility::int($page);
+        $srch = Transaction::getSearchObject();
         $srch->addCondition('utxn.utxn_user_id', '=', $userId);
         $balSrch = Transaction::getSearchObject();
         $balSrch->doNotCalculateRecords();
@@ -245,7 +245,7 @@ class UsersController extends AdminBaseController
         $srch->addGroupBy('utxn.utxn_id');
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-        $rs      = $srch->getResultSet();
+        $rs = $srch->getResultSet();
         $records = array();
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
@@ -261,7 +261,7 @@ class UsersController extends AdminBaseController
         $this->_template->render(false, false);
     }
 
-	public function addUserTransaction($userId = 0)
+    public function addUserTransaction($userId = 0)
     {
         $userId = FatUtility::int($userId);
         if (1 > $userId) {
@@ -276,10 +276,10 @@ class UsersController extends AdminBaseController
         $this->_template->render(false, false);
     }
 
-	public function setupUserTransaction()
+    public function setupUserTransaction()
     {
         $this->objPrivilege->canEditUsers();
-        $frm  = $this->addUserTransactionForm($this->adminLangId);
+        $frm = $this->addUserTransactionForm($this->adminLangId);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -311,26 +311,26 @@ class UsersController extends AdminBaseController
         $emailNotificationObj = new EmailHandler();
         $emailNotificationObj->sendTxnNotification($tObj->getMainTableRecordId(), $this->adminLangId);
         /* ] */
-		$userNotification = new UserNotifications($userId);
-		$userNotification->sendWalletCreditNotification();
+        $userNotification = new UserNotifications($userId);
+        $userNotification->sendWalletCreditNotification();
         $this->set('userId', $userId);
         $this->set('msg', $this->str_setup_successful);
         $this->_template->render(false, false, 'json-success.php');
     }
 
-	public function changePasswordForm($user_id)
+    public function changePasswordForm($user_id)
     {
         $this->objPrivilege->canEditUsers();
         $user_id = FatUtility::int($user_id);
-        $frm     = $this->getChangePasswordForm($user_id);
+        $frm = $this->getChangePasswordForm($user_id);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
 
-	public function updatePassword()
+    public function updatePassword()
     {
         $pwdFrm = $this->getChangePasswordForm();
-        $post   = $pwdFrm->getFormDataFromArray(FatApp::getPostedData());
+        $post = $pwdFrm->getFormDataFromArray(FatApp::getPostedData());
         if (!$pwdFrm->validate($post)) {
             Message::addErrorMessage($pwdFrm->getValidationErrors());
             FatUtility::dieJsonError(Message::getHtml());
@@ -339,7 +339,7 @@ class UsersController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('LBL_New_Password_and_Confirm_new_password_does_not_match', $this->adminLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
-        if ( true !== CommonHelper::validatePassword($post['new_password'])) {
+        if (true !== CommonHelper::validatePassword($post['new_password'])) {
             Message::addErrorMessage(Label::getLabel('MSG_PASSWORD_MUST_BE_EIGHT_CHARACTERS_LONG_AND_ALPHANUMERIC', $this->adminLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
@@ -349,10 +349,10 @@ class UsersController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $userObj = new User($user_id);
-        $srch    = $userObj->getUserSearchObj(array(
+        $srch = $userObj->getUserSearchObj(array(
             'user_id'
         ));
-        $rs      = $srch->getResultSet();
+        $rs = $srch->getResultSet();
         if (!$rs) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
@@ -379,7 +379,7 @@ class UsersController extends AdminBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         $userObj = new User();
-        $srch    = $userObj->getTeacherRequestsObj($requestId);
+        $srch = $userObj->getTeacherRequestsObj($requestId);
         $srch->addFld('tusr.*');
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
@@ -401,14 +401,14 @@ class UsersController extends AdminBaseController
 
     public function autoCompleteJson()
     {
-        $pagesize        = 20;
-        $post            = FatApp::getPostedData();
+        $pagesize = 20;
+        $post = FatApp::getPostedData();
         $skipDeletedUser = true;
         if (isset($post['deletedUser']) && $post['deletedUser'] == true) {
             $skipDeletedUser = false;
         }
         $userObj = new User();
-        $srch    = $userObj->getUserSearchObj(array(
+        $srch = $userObj->getUserSearchObj(array(
             'u.user_first_name',
             'u.user_last_name',
             'u.user_id',
@@ -443,12 +443,12 @@ class UsersController extends AdminBaseController
             $srch->addCondition('uc.credential_verified', '=', $credential_verified);
         }
         $srch->setPageSize($pagesize);
-        $rs    = $srch->getResultSet();
-        $db    = FatApp::getDb();
+        $rs = $srch->getResultSet();
+        $db = FatApp::getDb();
         $users = $db->fetchAll($rs, 'user_id');
-        $json  = array();
+        $json = array();
         foreach ($users as $key => $user) {
-			$user_full_name = strip_tags(html_entity_decode($user['user_first_name'], ENT_QUOTES, 'UTF-8')).' '.strip_tags(html_entity_decode($user['user_last_name'], ENT_QUOTES, 'UTF-8'));
+            $user_full_name = strip_tags(html_entity_decode($user['user_first_name'], ENT_QUOTES, 'UTF-8')).' '.strip_tags(html_entity_decode($user['user_last_name'], ENT_QUOTES, 'UTF-8'));
             $json[] = array(
                 'id' => $key,
                 'name' => $user_full_name,
@@ -469,9 +469,9 @@ class UsersController extends AdminBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         $userObj = new User($userId);
-        $srch    = $userObj->getUserSearchObj();
-        $rs      = $srch->getResultSet();
-        $data    = FatApp::getDb()->fetch($rs);
+        $srch = $userObj->getUserSearchObj();
+        $rs = $srch->getResultSet();
+        $data = FatApp::getDb()->fetch($rs);
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
@@ -487,7 +487,7 @@ class UsersController extends AdminBaseController
     {
         $this->objPrivilege->canEditUsers();
         $userId  = FatApp::getPostedData('userId', FatUtility::VAR_INT);
-        $v       = FatApp::getPostedData('v', FatUtility::VAR_INT);
+        $v = FatApp::getPostedData('v', FatUtility::VAR_INT);
         $userObj = new User($userId);
         if (!$userObj->activateAccount($v)) {
             Message::addErrorMessage($userObj->getError());
@@ -500,24 +500,24 @@ class UsersController extends AdminBaseController
     private function getForm($user_id = 0)
     {
         $user_id = FatUtility::int($user_id);
-        $frm     = new Form('frmUser', array(
+        $frm = new Form('frmUser', array(
             'id' => 'frmUser'
         ));
         $frm->addHiddenField('', 'user_id', $user_id);
         $frm->addTextBox(Label::getLabel('LBL_Username', $this->adminLangId), 'credential_username', '');
         $fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name', $this->adminLangId), 'user_first_name');
-        $fld->requirements()->setCharOnly();        
+        $fld->requirements()->setCharOnly();
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Last_Name', $this->adminLangId), 'user_last_name');
-        $fld->requirements()->setCharOnly();                
-       /*$frm->addDateField(Label::getLabel('LBL_Date_Of_Birth', $this->adminLangId), 'user_dob', '', array(
-            'readonly' => 'readonly'
-        ));*/
-		$fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
+        $fld->requirements()->setCharOnly();
+        /*$frm->addDateField(Label::getLabel('LBL_Date_Of_Birth', $this->adminLangId), 'user_dob', '', array(
+             'readonly' => 'readonly'
+         ));*/
+        $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
         $frm->addTextBox(Label::getLabel('LBL_Email', $this->adminLangId), 'credential_email', '');
-        $countryObj   = new Country();
+        $countryObj = new Country();
         $countriesArr = $countryObj->getCountriesArr($this->adminLangId);
-        $fld          = $frm->addSelectBox(Label::getLabel('LBL_Country', $this->adminLangId), 'user_country_id', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 223));
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Country', $this->adminLangId), 'user_country_id', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 223));
         $fld->requirement->setRequired(true);
         //$frm->addSelectBox(Label::getLabel('LBL_State', $this->adminLangId), 'user_state_id', array());
         //$frm->addTextBox(Label::getLabel('LBL_City', $this->adminLangId), 'user_city');
@@ -527,13 +527,13 @@ class UsersController extends AdminBaseController
     private function getChangePasswordForm($user_id = 0)
     {
         $user_id = FatUtility::int($user_id);
-        $frm     = new Form('changePwdFrm');
+        $frm = new Form('changePwdFrm');
         $frm->addHiddenField('', 'user_id', $user_id);
         $newPwd = $frm->addPasswordField(Label::getLabel('LBL_New_Password', $this->adminLangId), 'new_password', '', array(
             'id' => 'new_password'
         ));
         $newPwd->requirements()->setRequired();
-        $conNewPwd    = $frm->addPasswordField(Label::getLabel('LBL_Confirm_New_Password', $this->adminLangId), 'conf_new_password', '', array(
+        $conNewPwd = $frm->addPasswordField(Label::getLabel('LBL_Confirm_New_Password', $this->adminLangId), 'conf_new_password', '', array(
             'id' => 'conf_new_password'
         ));
         $conNewPwdReq = $conNewPwd->requirements();

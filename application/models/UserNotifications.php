@@ -1,7 +1,7 @@
 <?php
 
-class UserNotifications extends FatModel {
-
+class UserNotifications extends FatModel
+{
     const DB_TBL = "tbl_notifications";
     const DB_TBL_PREFIX = "notification_";
     const NOTIFICATION_NOT_READ = 0;
@@ -9,9 +9,9 @@ class UserNotifications extends FatModel {
     const NOTICATION_FOR_TEACHER_APPROVAL = 1;
     const NOTICATION_FOR_SCHEDULED_LESSON_BY_LEARNER = 2;
     const NOTICATION_FOR_SCHEDULED_LESSON_BY_TEACHER = 3;
-    const NOTICATION_FOR_WALLET_CREDIT_ON_LESSON_COMPLETE = 4;  
-	const NOTICATION_FOR_ISSUE_REFUND = 5;
-	const NOTICATION_FOR_ISSUE_RESOLVE = 6;
+    const NOTICATION_FOR_WALLET_CREDIT_ON_LESSON_COMPLETE = 4;
+    const NOTICATION_FOR_ISSUE_REFUND = 5;
+    const NOTICATION_FOR_ISSUE_RESOLVE = 6;
 
     private $userId = 0;
     private $recordId = 0;
@@ -19,7 +19,8 @@ class UserNotifications extends FatModel {
     private $type = 0;
     private $userInfo = array();
 
-    public function __construct($userId) {
+    public function __construct($userId)
+    {
         $this->userId = $userId;
         $user = new User($this->userId);
         if (!$user->loadFromDb()) {
@@ -28,13 +29,15 @@ class UserNotifications extends FatModel {
         $this->userInfo = $user->getFlds();
     }
 
-    public function sendNotifcationMetaData($type, $recordId,$subRecordId=0) {
+    public function sendNotifcationMetaData($type, $recordId, $subRecordId=0)
+    {
         $this->type = $type;
         $this->recordId = $recordId;
         $this->subRecordId = $subRecordId;
     }
 
-    public function sendTeacherApprovalNotification() {
+    public function sendTeacherApprovalNotification()
+    {
         $this->type = self::NOTICATION_FOR_TEACHER_APPROVAL;
         $this->recordId = 0;
         $title = Label::getLabel("LABEL_TEACHER_REQUEST_APPROVED", CommonHelper::getLangId());
@@ -45,34 +48,35 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendWalletCreditNotification( $lessonId = 0 ) {
+    public function sendWalletCreditNotification($lessonId = 0)
+    {
         $this->type = self::NOTICATION_FOR_WALLET_CREDIT_ON_LESSON_COMPLETE;
         $this->recordId = $lessonId;
-		if($lessonId){
-			$title = Label::getLabel("LABEL_WALLET_CREDIT", CommonHelper::getLangId());
-			$description = sprintf(Label::getLabel('LBL_LessonId:_%s_Wallet_Credit_Notification', CommonHelper::getLangId()), $lessonId);
-		} else {
-			$title = Label::getLabel("LABEL_WALLET_CREDIT", CommonHelper::getLangId());
-			$description = Label::getLabel("LABEL_WALLET_CREDIT_DESCRIPTION", CommonHelper::getLangId());
-		}
+        if ($lessonId) {
+            $title = Label::getLabel("LABEL_WALLET_CREDIT", CommonHelper::getLangId());
+            $description = sprintf(Label::getLabel('LBL_LessonId:_%s_Wallet_Credit_Notification', CommonHelper::getLangId()), $lessonId);
+        } else {
+            $title = Label::getLabel("LABEL_WALLET_CREDIT", CommonHelper::getLangId());
+            $description = Label::getLabel("LABEL_WALLET_CREDIT_DESCRIPTION", CommonHelper::getLangId());
+        }
         if (!$this->addNotification($title, $description)) {
             return false;
         }
         return true;
     }
-	
-    public function sendSchLessonByTeacherNotification($lessonId, $reschedule = false) {
+
+    public function sendSchLessonByTeacherNotification($lessonId, $reschedule = false)
+    {
         $this->type = self::NOTICATION_FOR_SCHEDULED_LESSON_BY_TEACHER;
         $this->recordId = $lessonId;
-        $this->subRecordId = UserAuthentication::getLoggedUserId();		
-		if($reschedule){
-			$title = Label::getLabel("LABEL_LESSON_RESCHEDULE_REQUEST_BY_TEACHER", CommonHelper::getLangId());
-			$description = Label::getLabel("LABEL_LESSON_RESCHEDULE_REQUEST_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());			
-		}
-		else{
-			$title = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_TEACHER", CommonHelper::getLangId());
-			$description = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());			
-		}
+        $this->subRecordId = UserAuthentication::getLoggedUserId();
+        if ($reschedule) {
+            $title = Label::getLabel("LABEL_LESSON_RESCHEDULE_REQUEST_BY_TEACHER", CommonHelper::getLangId());
+            $description = Label::getLabel("LABEL_LESSON_RESCHEDULE_REQUEST_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());
+        } else {
+            $title = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_TEACHER", CommonHelper::getLangId());
+            $description = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());
+        }
 
         if (!$this->addNotification($title, $description)) {
             return false;
@@ -80,52 +84,55 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendSchLessonByLearnerNotification($lessonId, $reschedule = false) {
+    public function sendSchLessonByLearnerNotification($lessonId, $reschedule = false)
+    {
         $this->type = self::NOTICATION_FOR_SCHEDULED_LESSON_BY_LEARNER;
         $this->recordId = $lessonId;
         $this->subRecordId = UserAuthentication::getLoggedUserId();
-		if($reschedule){
-			$title = Label::getLabel("LABEL_LESSON_RESCHEDULE_REQUEST_BY_LEARNER", CommonHelper::getLangId());
-			$description = Label::getLabel("LABEL_LESSON_RESCHEDULE_REQUEST_LEARNER_DESCRIPTION", CommonHelper::getLangId());			
-		}
-		else{
-			$title = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_LEARNER", CommonHelper::getLangId());
-			$description = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_LEARNER_DESCRIPTION", CommonHelper::getLangId());			
-		}
+        if ($reschedule) {
+            $title = Label::getLabel("LABEL_LESSON_RESCHEDULE_REQUEST_BY_LEARNER", CommonHelper::getLangId());
+            $description = Label::getLabel("LABEL_LESSON_RESCHEDULE_REQUEST_LEARNER_DESCRIPTION", CommonHelper::getLangId());
+        } else {
+            $title = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_LEARNER", CommonHelper::getLangId());
+            $description = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_LEARNER_DESCRIPTION", CommonHelper::getLangId());
+        }
 
         if (!$this->addNotification($title, $description)) {
             return false;
         }
         return true;
-    }    
+    }
 
- 	public static function deleteNotifications($recordId){
-		$db = FatApp::getDb();
-		if(!$db->query("UPDATE tbl_notifications SET notification_deleted = 1 WHERE notification_id in (".$recordId.")")){
-			return false;
-		}
-		return true;
-	}	
+    public static function deleteNotifications($recordId)
+    {
+        $db = FatApp::getDb();
+        if (!$db->query("UPDATE tbl_notifications SET notification_deleted = 1 WHERE notification_id in (".$recordId.")")) {
+            return false;
+        }
+        return true;
+    }
 
-	public static function changeNotifyStatus($status,$recordId){
-		$db = FatApp::getDb();
-		if(!$db->query("UPDATE tbl_notifications SET notification_read = ".$status." WHERE notification_id in (".$recordId.")")){
-			return false;
-		}
-		return true;
-	}	
-    
-    public function sendBuyerCancelOrderNotification($orderId,$comment,$orderUserId) {
+    public static function changeNotifyStatus($status, $recordId)
+    {
+        $db = FatApp::getDb();
+        if (!$db->query("UPDATE tbl_notifications SET notification_read = ".$status." WHERE notification_id in (".$recordId.")")) {
+            return false;
+        }
+        return true;
+    }
+
+    public function sendBuyerCancelOrderNotification($orderId, $comment, $orderUserId)
+    {
         $this->type = self::NOTICATION_FOR_ORDER_RECIEVED;
         $this->recordId = $orderId;
-		$userCompanyName  = User::getAttributesById($orderUserId,'user_company_name');
-        $title = sprintf(Label::getLabel("LABEL_ORDER_NO_%s_HAS_BEEN_CANCELLED_BY_%s", CommonHelper::getLangId()), $orderId,$userCompanyName);
+        $userCompanyName  = User::getAttributesById($orderUserId, 'user_company_name');
+        $title = sprintf(Label::getLabel("LABEL_ORDER_NO_%s_HAS_BEEN_CANCELLED_BY_%s", CommonHelper::getLangId()), $orderId, $userCompanyName);
         $description = sprintf("Reason: %s", $comment);
 
         $this->sendFCMNotificationToUsers($title, $description);
 
         $orderStatus = Orders::getOrderStatus($orderId, CommonHelper::getLangId());
-      
+
 
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
@@ -133,27 +140,26 @@ class UserNotifications extends FatModel {
         }
 
         $emailHandler = new EmailHandler();
-		/*
+        /*
         if ($this->isEmailNotificationAllowed() && !$emailHandler->orderStatusUpdateEmailToSeller($orderId,$comment)) {
             //return false;
         }
-		*/
+        */
         if (!$this->addNotification($title, $description)) {
             return false;
         }
         return true;
     }
-    
-
- 
-    public function sendOrderProductInStockNotification($sellerProductId,$productName,$sellerName) {
 
 
+
+    public function sendOrderProductInStockNotification($sellerProductId, $productName, $sellerName)
+    {
         $this->recordId = $sellerProductId;
-      
+
         $title = sprintf(Label::getLabel("LABEL_INSTOCK_NOTIFICATION_TITLE_%s", CommonHelper::getLangId()), $productName);
-        $description = sprintf(Label::getLabel("LABEL_INSTOCK__NOTIFICATION_DESCRIPTION_FOR_Product_Name_%s_BY_SELLER_%s", CommonHelper::getLangId()),$sellerName, $productName);
-		
+        $description = sprintf(Label::getLabel("LABEL_INSTOCK__NOTIFICATION_DESCRIPTION_FOR_Product_Name_%s_BY_SELLER_%s", CommonHelper::getLangId()), $sellerName, $productName);
+
 
         $this->sendFCMNotificationToUsers($title, $description);
 
@@ -163,7 +169,7 @@ class UserNotifications extends FatModel {
             // return false;
         }
 
-    
+
 
         if (!$this->addNotification($title, $description)) {
             return false;
@@ -171,7 +177,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendOrderReceiveNotification($orderId, $data = array()) {
+    public function sendOrderReceiveNotification($orderId, $data = array())
+    {
         $this->type = self::NOTICATION_FOR_ORDER_RECIEVED;
         $this->recordId = $orderId;
 
@@ -200,7 +207,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendOrderPlacedNotification($orderId, $data = array()) {
+    public function sendOrderPlacedNotification($orderId, $data = array())
+    {
         $this->type = self::NOTICATION_FOR_ORDER_STATUS_UPDATE;
         $this->recordId = $orderId;
 
@@ -229,7 +237,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendOrderReviewNotificationToSeller($orderId, $data = array()) {
+    public function sendOrderReviewNotificationToSeller($orderId, $data = array())
+    {
         return true;
         $this->type = self::NOTICATION_FOR_REVIEW_STATUS_UPDATED_TO_SELLER;
         $this->recordId = $orderId;
@@ -257,7 +266,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendOrderReviewStatusUpdateNotification($orderId, $data = array()) {
+    public function sendOrderReviewStatusUpdateNotification($orderId, $data = array())
+    {
         return true;
         $this->type = self::NOTICATION_FOR_REVIEW_STATUS_UPDATED_TO_BUYER;
         $this->recordId = $orderId;
@@ -285,7 +295,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendOrderStatusUpdateNotification($orderId, $data = array()) {
+    public function sendOrderStatusUpdateNotification($orderId, $data = array())
+    {
         $this->type = self::NOTICATION_FOR_ORDER_STATUS_UPDATE;
         $this->recordId = $orderId;
         $statusName = $data['statusName'];
@@ -314,7 +325,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendOrderNotUpdatedNotification($orderList = array()) {
+    public function sendOrderNotUpdatedNotification($orderList = array())
+    {
         $this->type = self::NOTICATION_FOR_ORDER_NOT_UPDATED;
         $this->recordId = 0;
 
@@ -343,7 +355,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendNotificationForUnfulfilledOrders($orderList = array()) {
+    public function sendNotificationForUnfulfilledOrders($orderList = array())
+    {
         $this->type = self::NOTICATION_FOR_ORDER_NOT_COMPLETED;
         $this->recordId = 0;
 
@@ -364,7 +377,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendOrderDataUpdateNotification($orderId, $data = array()) {
+    public function sendOrderDataUpdateNotification($orderId, $data = array())
+    {
         $this->type = self::NOTICATION_FOR_ORDER_UPDATE;
         $this->recordId = $orderId;
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_YOUR_ORDER_DATA_CHANGED_%s", CommonHelper::getLangId()), $orderId);
@@ -391,7 +405,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendLicenseExpiryNotification() {
+    public function sendLicenseExpiryNotification()
+    {
         $latestLicenseInfo = UserLicense::getUserLatestLicenseInfo($this->userId);
         $this->type = self::NOTICATION_FOR_LICENSE_EXPIRY;
         if (!$latestLicenseInfo['license_expiry_date']) {
@@ -421,7 +436,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendOrderDeliveryDateUpdateNotification($orderId, $data = array()) {
+    public function sendOrderDeliveryDateUpdateNotification($orderId, $data = array())
+    {
         $this->type = self::NOTICATION_FOR_ORDER_DELIVERY_DATE_UPDATE;
         $this->recordId = $orderId;
 
@@ -448,8 +464,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendLoyaltyVoucherStatusUpdatedNotification($loyaltyVoucherId) {
-
+    public function sendLoyaltyVoucherStatusUpdatedNotification($loyaltyVoucherId)
+    {
         $this->recordId = $loyaltyVoucherId;
         $langId = CommonHelper::getLangId();
 
@@ -502,8 +518,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendLoyaltyPointsAwardedNotification($rewtrxId) {
-
+    public function sendLoyaltyPointsAwardedNotification($rewtrxId)
+    {
         $this->recordId = $rewtrxId;
         $langId = CommonHelper::getLangId();
 
@@ -545,8 +561,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendSurveyNotification(int $surveyId) {
-
+    public function sendSurveyNotification(int $surveyId)
+    {
         $this->recordId = $surveyId;
         $langId = CommonHelper::getLangId();
 
@@ -577,22 +593,25 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public static function getUserNotifications($userId) {
+    public static function getUserNotifications($userId)
+    {
         $srch = new SearchBase(self::DB_TBL);
         $srch->addCondition(self::DB_TBL_PREFIX . "user_id", '=', $userId);
         $srch->addOrder(self::DB_TBL_PREFIX . "id", 'DESC');
-		$srch->addCondition('notification_deleted', '=', 0);		
+        $srch->addCondition('notification_deleted', '=', 0);
         return $srch;
     }
 
-    public static function getUserNotificationsByNotificationId($userId, $notiId) {
+    public static function getUserNotificationsByNotificationId($userId, $notiId)
+    {
         $srch = self::getUserNotifications($userId);
         $srch->addCondition(self::DB_TBL_PREFIX . "id", '=', $notiId);
 
         return FatApp::getDb()->fetch($srch->getResultSet());
     }
 
-    public static function getUserUnreadNotifications($userId) {
+    public static function getUserUnreadNotifications($userId)
+    {
         $srch = new SearchBase(self::DB_TBL);
         $srch->addCondition(self::DB_TBL_PREFIX . "user_id", '=', $userId);
         $srch->addCondition(self::DB_TBL_PREFIX . "read", '=', self::NOTIFICATION_NOT_READ);
@@ -600,7 +619,8 @@ class UserNotifications extends FatModel {
         return $srch->recordCount();
     }
 
-    private function getUserFcmIdList() {
+    private function getUserFcmIdList()
+    {
         $srch = new SearchBase(UserAuthentication::DB_TBL_USER_AUTH);
         $srch->addCondition('uauth_user_id', '=', $this->userId);
         $srch->addCondition('uauth_type', '=', UserAuthentication::TYPE_INTERNAL_API);
@@ -611,7 +631,8 @@ class UserNotifications extends FatModel {
         return FatApp::getDb()->fetchAllAssoc($rs);
     }
 
-    public function addNotification($title, $description) {
+    public function addNotification($title, $description)
+    {
         $saveData = array(
             'notification_user_id' => $this->userId,
             'notification_title' => $title,
@@ -630,8 +651,8 @@ class UserNotifications extends FatModel {
         return false;
     }
 
-    public function markRead($notificationId) {
-
+    public function markRead($notificationId)
+    {
         $saveData = array(
             'notification_read' => UserNotifications::NOTIFICATION_READ,
         );
@@ -646,15 +667,18 @@ class UserNotifications extends FatModel {
         return false;
     }
 
-    private function isPushNotificationAllowed() {
+    private function isPushNotificationAllowed()
+    {
         return ($this->userInfo['user_notification_inapp'] == 1 ? true : false);
     }
 
-    private function isSmsNotificationAllowed() {
+    private function isSmsNotificationAllowed()
+    {
         return ($this->userInfo['user_notification_sms'] == 1 ? true : false);
     }
 
-    private function getUserPhoneNo() {
+    private function getUserPhoneNo()
+    {
         $userPhoneNo = $this->userInfo['user_phone'];
         if (strlen($userPhoneNo) < 10) {
             $userPhoneNo = "0" . $userPhoneNo;
@@ -663,12 +687,13 @@ class UserNotifications extends FatModel {
         return FatApp::getConfig("CONF_SMS_PHONE_CODE") . $userPhoneNo;
     }
 
-    private function isEmailNotificationAllowed() {
+    private function isEmailNotificationAllowed()
+    {
         return ($this->userInfo['user_notification_email'] == 1 ? true : false);
     }
 
-    public function getUnreadOrderNotificationCount() {
-
+    public function getUnreadOrderNotificationCount()
+    {
         $srch = new SearchBase(self::DB_TBL);
         $srch->addCondition(self::DB_TBL_PREFIX . 'user_id', '=', $this->userId);
         $srch->addCondition(self::DB_TBL_PREFIX . 'read', '=', self::NOTIFICATION_NOT_READ);
@@ -686,8 +711,8 @@ class UserNotifications extends FatModel {
      * Added by Prinka : To implement the pop-up notification even when push notif is disabled for the user
      *
      */
-    public function sendFCMNotificationToUsers($title, $description, $forcePush = false) {
-
+    public function sendFCMNotificationToUsers($title, $description, $forcePush = false)
+    {
         $fcmList = $this->getUserFcmIdList();
 
         foreach ($fcmList as $fcmId) {
@@ -704,7 +729,8 @@ class UserNotifications extends FatModel {
         return true;
     }
 
-    public function sendSmsNotification($phoneNo, $title) {
+    public function sendSmsNotification($phoneNo, $title)
+    {
         $smsModel = new Sms();
         if (!$smsModel->sendSms($phoneNo, $title)) {
             return false;
@@ -712,33 +738,32 @@ class UserNotifications extends FatModel {
         SmsHandler::archiveSms($phoneNo, '', $title);
         return true;
     }
-	
-	
-	public function sendIssueRefundNotification($lessonId, $_step) {
-        
+
+
+    public function sendIssueRefundNotification($lessonId, $_step)
+    {
         $this->recordId = $lessonId;
         $this->subRecordId = UserAuthentication::getLoggedUserId();
-		$title = '';
-		$description = '';
-		switch( $_step ) {
-			case IssuesReported::ISSUE_REPORTED_NOTIFICATION : 
-				$this->type = self::NOTICATION_FOR_ISSUE_REFUND;
-				$title = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER", CommonHelper::getLangId());
-				$description = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER_DESCRIPTION", CommonHelper::getLangId());
-			break;
-			
-			case IssuesReported::ISSUE_RESOLVE_NOTIFICATION :
-				$this->type = self::NOTICATION_FOR_ISSUE_RESOLVE;			
-				$title = Label::getLabel("LABEL_LESSON_ISSUE_RESOLVED_BY_TEACHER", CommonHelper::getLangId());
-				$description = Label::getLabel("LABEL_LESSON_RESOLVED_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());
-			
-			break;
-		}
-		
-		if (!$this->addNotification($title, $description)) {
+        $title = '';
+        $description = '';
+        switch ($_step) {
+            case IssuesReported::ISSUE_REPORTED_NOTIFICATION:
+                $this->type = self::NOTICATION_FOR_ISSUE_REFUND;
+                $title = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER", CommonHelper::getLangId());
+                $description = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER_DESCRIPTION", CommonHelper::getLangId());
+            break;
+
+            case IssuesReported::ISSUE_RESOLVE_NOTIFICATION:
+                $this->type = self::NOTICATION_FOR_ISSUE_RESOLVE;
+                $title = Label::getLabel("LABEL_LESSON_ISSUE_RESOLVED_BY_TEACHER", CommonHelper::getLangId());
+                $description = Label::getLabel("LABEL_LESSON_RESOLVED_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());
+
+            break;
+        }
+
+        if (!$this->addNotification($title, $description)) {
             return false;
         }
         return true;
-    } 
-
+    }
 }

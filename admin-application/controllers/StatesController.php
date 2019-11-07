@@ -20,7 +20,7 @@ class StatesController extends AdminBaseController
     {
         $frm = new Form('frmSearch');
         $frm->addTextBox(Label::getLabel('LBL_Keyword', $this->adminLangId), 'keyword');
-        $countryObj   = new Country();
+        $countryObj = new Country();
         $countriesArr = $countryObj->getCountriesArr($this->adminLangId, true);
         $frm->addSelectBox(Label::getLabel('LBL_Country', $this->adminLangId), 'country', $countriesArr);
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
@@ -30,12 +30,12 @@ class StatesController extends AdminBaseController
     }
     public function search()
     {
-        $pagesize         = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-        $searchForm       = $this->getSearchForm();
-        $data             = FatApp::getPostedData();
-        $page             = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
-        $post             = $searchForm->getFormDataFromArray($data);
-        $srch             = State::getSearchObject(false, $this->adminLangId);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $searchForm = $this->getSearchForm();
+        $data = FatApp::getPostedData();
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
+        $post = $searchForm->getFormDataFromArray($data);
+        $srch = State::getSearchObject(false, $this->adminLangId);
         $countrySearchObj = Country::getSearchObject(false, $this->adminLangId);
         $countrySearchObj->doNotCalculateRecords();
         $countrySearchObj->doNotLimitRecords();
@@ -57,7 +57,7 @@ class StatesController extends AdminBaseController
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-        $rs      = $srch->getResultSet();
+        $rs = $srch->getResultSet();
         $records = array();
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
@@ -78,7 +78,7 @@ class StatesController extends AdminBaseController
     {
         $this->objPrivilege->canEditStates();
         $stateId = FatUtility::int($stateId);
-        $frm     = $this->getForm($stateId);
+        $frm = $this->getForm($stateId);
         if (0 < $stateId) {
             $data = State::getAttributesById($stateId, array(
                 'state_id',
@@ -100,7 +100,7 @@ class StatesController extends AdminBaseController
     public function setup()
     {
         $this->objPrivilege->canEditStates();
-        $frm  = $this->getForm();
+        $frm = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -124,7 +124,7 @@ class StatesController extends AdminBaseController
                 }
             }
         } else {
-            $stateId      = $record->getMainTableRecordId();
+            $stateId = $record->getMainTableRecordId();
             $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         $this->set('msg', $this->str_setup_successful);
@@ -139,7 +139,7 @@ class StatesController extends AdminBaseController
         if ($stateId == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $langFrm  = $this->getLangForm($stateId, $lang_id);
+        $langFrm = $this->getLangForm($stateId, $lang_id);
         $langData = State::getAttributesByLangId($lang_id, $stateId);
         if ($langData) {
             $langFrm->fill($langData);
@@ -154,18 +154,18 @@ class StatesController extends AdminBaseController
     public function langSetup()
     {
         $this->objPrivilege->canEditStates();
-        $post    = FatApp::getPostedData();
+        $post = FatApp::getPostedData();
         $stateId = $post['state_id'];
         $lang_id = $post['lang_id'];
         if ($stateId == 0 || $lang_id == 0) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $frm  = $this->getLangForm($stateId, $lang_id);
+        $frm = $this->getLangForm($stateId, $lang_id);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         unset($post['state_id']);
         unset($post['lang_id']);
-        $data     = array(
+        $data = array(
             'statelang_lang_id' => $lang_id,
             'statelang_state_id' => $stateId,
             'state_name' => $post['state_name']
@@ -176,7 +176,7 @@ class StatesController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $newTabLangId = 0;
-        $languages    = Language::getAllNames();
+        $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
             if (!$row = State::getAttributesByLangId($langId, $stateId)) {
                 $newTabLangId = $langId;
@@ -191,11 +191,11 @@ class StatesController extends AdminBaseController
     private function getForm($stateId = 0)
     {
         $stateId = FatUtility::int($stateId);
-        $frm     = new Form('frmState');
+        $frm = new Form('frmState');
         $frm->addHiddenField('', 'state_id', $stateId);
         $frm->addRequiredField(Label::getLabel('LBL_State_Identifier', $this->adminLangId), 'state_identifier');
         $frm->addRequiredField(Label::getLabel('LBL_State_Code', $this->adminLangId), 'state_code');
-        $countryObj   = new Country();
+        $countryObj = new Country();
         $countriesArr = $countryObj->getCountriesArr($this->adminLangId, true);
         $frm->addSelectBox(Label::getLabel('LBL_Country', $this->adminLangId), 'state_country_id', $countriesArr, '', array(), '');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);

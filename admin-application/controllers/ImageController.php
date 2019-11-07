@@ -30,5 +30,4 @@ class ImageController extends FatController
         break;
         } */
     }
-	
 }

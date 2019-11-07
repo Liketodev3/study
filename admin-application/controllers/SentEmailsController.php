@@ -16,15 +16,15 @@ class SentEmailsController extends AdminBaseController
         if (!FatUtility::isAjaxCall()) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $srchFrm      = $this->sentEmailSearchForm();
-        $post         = $srchFrm->getFormDataFromArray(FatApp::getPostedData());
-        $page         = (empty($post['page']) || $post['page'] <= 0) ? 1 : intval($post['page']);
-        $pagesize     = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $srchFrm = $this->sentEmailSearchForm();
+        $post = $srchFrm->getFormDataFromArray(FatApp::getPostedData());
+        $page = (empty($post['page']) || $post['page'] <= 0) ? 1 : intval($post['page']);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $sentEmailObj = new SentEmail();
-        $srch         = $sentEmailObj->getSearchObject(true);
+        $srch = $sentEmailObj->getSearchObject(true);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-        $rs          = $srch->getResultSet();
+        $rs = $srch->getResultSet();
         $arr_listing = FatApp::getDb()->fetchAll($rs);
         $this->set("arr_listing", $arr_listing);
         $this->set('pageCount', $srch->pages());
@@ -34,7 +34,7 @@ class SentEmailsController extends AdminBaseController
         $this->set('postedData', $post);
         $this->_template->render(false, false);
     }
-    function view($id)
+    public function view($id)
     {
         $row_data = SentEmail::getAttributesById($id);
         $this->set('data', $row_data);

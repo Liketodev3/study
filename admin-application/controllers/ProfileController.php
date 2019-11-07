@@ -287,5 +287,4 @@ class ProfileController extends AdminBaseController
         ));
         return $frm;
     }
-	
 }

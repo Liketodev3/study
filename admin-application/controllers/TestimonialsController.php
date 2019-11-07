@@ -33,7 +33,7 @@ class TestimonialsController extends AdminBaseController
             't_l.testimonial_text'
         ));
         $srch->addOrder('testimonial_active', 'desc');
-        $rs      = $srch->getResultSet();
+        $rs = $srch->getResultSet();
         $records = array();
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
@@ -48,7 +48,7 @@ class TestimonialsController extends AdminBaseController
     public function form($testimonialId)
     {
         $testimonialId = FatUtility::int($testimonialId);
-        $frm           = $this->getForm($testimonialId);
+        $frm = $this->getForm($testimonialId);
         if (0 < $testimonialId) {
             $data = Testimonial::getAttributesById($testimonialId, array(
                 'testimonial_id',
@@ -69,7 +69,7 @@ class TestimonialsController extends AdminBaseController
     public function setup()
     {
         $this->objPrivilege->canEditTestimonial();
-        $frm  = $this->getForm();
+        $frm = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -97,7 +97,7 @@ class TestimonialsController extends AdminBaseController
             }
         } else {
             $testimonialId = $record->getMainTableRecordId();
-            $newTabLangId  = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
+            $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         if ($newTabLangId == 0 && !$this->isMediaUploaded($testimonialId)) {
             $this->set('openMediaForm', true);
@@ -110,11 +110,11 @@ class TestimonialsController extends AdminBaseController
     public function langForm($testimonialId = 0, $lang_id = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
-        $lang_id       = FatUtility::int($lang_id);
+        $lang_id = FatUtility::int($lang_id);
         if ($testimonialId == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $langFrm  = $this->getLangForm($testimonialId, $lang_id);
+        $langFrm = $this->getLangForm($testimonialId, $lang_id);
         $langData = Testimonial::getAttributesByLangId($lang_id, $testimonialId);
         if ($langData) {
             $langFrm->fill($langData);
@@ -129,19 +129,19 @@ class TestimonialsController extends AdminBaseController
     public function langSetup()
     {
         $this->objPrivilege->canEditTestimonial();
-        $post          = FatApp::getPostedData();
+        $post = FatApp::getPostedData();
         $testimonialId = $post['testimonial_id'];
-        $lang_id       = $post['lang_id'];
+        $lang_id = $post['lang_id'];
         if ($testimonialId == 0 || $lang_id == 0) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $frm  = $this->getLangForm($testimonialId, $lang_id);
+        $frm = $this->getLangForm($testimonialId, $lang_id);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-		if( false === $post ){
-			Message::addErrorMessage($frm->getValidationErrors());
-			FatUtility::dieWithError( Message::getHtml() );	
-		}
+        if (false === $post) {
+            Message::addErrorMessage($frm->getValidationErrors());
+            FatUtility::dieWithError(Message::getHtml());
+        }
         unset($post['testimonial_id']);
         unset($post['lang_id']);
         $data = array(
@@ -150,13 +150,13 @@ class TestimonialsController extends AdminBaseController
             'testimonial_title' => $post['testimonial_title'],
             'testimonial_text' => $post['testimonial_text']
         );
-        $obj  = new Testimonial($testimonialId);
+        $obj = new Testimonial($testimonialId);
         if (!$obj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($obj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
         $newTabLangId = 0;
-        $languages    = Language::getAllNames();
+        $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
             if (!$row = Testimonial::getAttributesByLangId($langId, $testimonialId)) {
                 $newTabLangId = $langId;
@@ -189,7 +189,7 @@ class TestimonialsController extends AdminBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         //$status = ($data['testimonial_active'] == applicationConstants::ACTIVE) ? applicationConstants::INACTIVE : applicationConstants::ACTIVE;
-        $obj    = new Testimonial($testimonialId);
+        $obj = new Testimonial($testimonialId);
         if (!$obj->changeStatus($status)) {
             Message::addErrorMessage($obj->getError());
             FatUtility::dieWithError(Message::getHtml());
@@ -221,9 +221,9 @@ class TestimonialsController extends AdminBaseController
     public function media($testimonialId = 0)
     {
         $this->objPrivilege->canEditTestimonial();
-        $testimonialId       = FatUtility::int($testimonialId);
+        $testimonialId = FatUtility::int($testimonialId);
         $testimonialMediaFrm = $this->getMediaForm($testimonialId);
-        $testimonialImages   = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_TESTIMONIAL_IMAGE, $testimonialId, 0, -1);
+        $testimonialImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_TESTIMONIAL_IMAGE, $testimonialId, 0, -1);
         //$bannerTypeArr = applicationConstants::bannerTypeArr();
         $this->set('languages', Language::getAllNames());
         $this->set('testimonialId', $testimonialId);
@@ -252,7 +252,7 @@ class TestimonialsController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $testimonialId = FatApp::getPostedData('testimonialId', FatUtility::VAR_INT, 0);
-        $lang_id       = FatApp::getPostedData('lang_id', FatUtility::VAR_INT, 0);
+        $lang_id = FatApp::getPostedData('lang_id', FatUtility::VAR_INT, 0);
         if (!$testimonialId) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
@@ -275,7 +275,7 @@ class TestimonialsController extends AdminBaseController
     public function removeTestimonialImage($testimonialId = 0, $lang_id = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
-        $lang_id       = FatUtility::int($lang_id);
+        $lang_id = FatUtility::int($lang_id);
         if (!$testimonialId) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
@@ -291,7 +291,7 @@ class TestimonialsController extends AdminBaseController
     private function getForm($testimonialId = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
-        $frm           = new Form('frmTestimonial');
+        $frm = new Form('frmTestimonial');
         $frm->addHiddenField('', 'testimonial_id', $testimonialId);
         $frm->addRequiredField(Label::getLabel('LBL_Testimonial_Identifier', $this->adminLangId), 'testimonial_identifier');
         $frm->addRequiredField(Label::getLabel('LBL_Testimonial_User_Name', $this->adminLangId), 'testimonial_user_name');
@@ -320,9 +320,9 @@ class TestimonialsController extends AdminBaseController
     public function image($recordId, $langId = 0, $sizeType = '', $afile_id = 0, $displayUniversalImage = true)
     {
         $default_image = 'user_deafult_image.jpg';
-        $recordId      = FatUtility::int($recordId);
-        $afile_id      = FatUtility::int($afile_id);
-        $langId        = FatUtility::int($langId);
+        $recordId = FatUtility::int($recordId);
+        $afile_id = FatUtility::int($afile_id);
+        $langId = FatUtility::int($langId);
         if ($afile_id > 0) {
             $res = AttachedFile::getAttributesById($afile_id);
             if (!false == $res && $res['afile_type'] == AttachedFile::FILETYPE_TESTIMONIAL_IMAGE) {

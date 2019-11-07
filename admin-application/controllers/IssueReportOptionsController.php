@@ -1,53 +1,57 @@
-<?php 
+<?php
 class IssueReportOptionsController extends AdminBaseController
 {
-    public function __construct($action) {
-		parent::__construct($action);
+    public function __construct($action)
+    {
+        parent::__construct($action);
         $this->objPrivilege->canViewPreferences();
     }
-    
-	public function index() {
+
+    public function index()
+    {
         $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditPreferences($this->admin_id, true);
-		$frmSearch = $this->getSearchForm();
-		$this->set('frmSearch', $frmSearch);
+        $frmSearch = $this->getSearchForm();
+        $this->set('frmSearch', $frmSearch);
         $this->set("canEdit", $canEdit);
         $this->_template->render();
     }
-    
-	public function search() {
-		$data       = FatApp::getPostedData();
-		$searchForm = $this->getSearchForm();
-		$post       = $searchForm->getFormDataFromArray($data);
-		
-		$issoptobj = new IssueReportOptions( $this->adminLangId );
+
+    public function search()
+    {
+        $data       = FatApp::getPostedData();
+        $searchForm = $this->getSearchForm();
+        $post       = $searchForm->getFormDataFromArray($data);
+
+        $issoptobj = new IssueReportOptions($this->adminLangId);
         $srch = $issoptobj->getAllOptions($this->adminLangId, false);
         $srch->addMultipleFields(array(
             'tissueopt_id',
             'tissueopt_active',
             'tissueopt_display_order',
             'IFNULL(tissueoptlang_title, tissueopt_identifier) as optLabel',
-        )); 
-		
-		if (!empty($post['keyword'])) {
+        ));
+
+        if (!empty($post['keyword'])) {
             $srch->addCondition('tissueopt_identifier', 'like', '%' . $post['keyword'] . '%');
-        } 
-		
-		$rs = $srch->getResultSet();
-		$records = array();
+        }
+
+        $rs = $srch->getResultSet();
+        $records = array();
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
         }
-		
-		$adminId = AdminAuthentication::getLoggedAdminId();
+
+        $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditPreferences($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->set("arr_listing", $records);
         $this->set('recordCount', $srch->recordCount());
         $this->_template->render(false, false);
     }
-    
-	public function form($optId) {
+
+    public function form($optId)
+    {
         $optId = FatUtility::int($optId);
         $frm           = $this->getForm($optId);
         if (0 < $optId) {
@@ -66,8 +70,9 @@ class IssueReportOptionsController extends AdminBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-    
-	public function setup() {
+
+    public function setup()
+    {
         $this->objPrivilege->canEditPreferences();
         $frm  = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
@@ -77,7 +82,7 @@ class IssueReportOptionsController extends AdminBaseController
         }
         $optId = $post['tissueopt_id'];
         unset($post['tissueopt_id']);
-       
+
         $record = new IssueReportOptions($optId);
         $record->assignValues($post);
         if (!$record->save()) {
@@ -87,7 +92,7 @@ class IssueReportOptionsController extends AdminBaseController
         $newTabLangId = 0;
         if ($optId > 0) {
             $languages = Language::getAllNames();
-			foreach ($languages as $langId => $langName) {
+            foreach ($languages as $langId => $langName) {
                 if (!$row = IssueReportOptions::getAttributesByLangId($langId, $optId)) {
                     $newTabLangId = $langId;
                     break;
@@ -102,8 +107,9 @@ class IssueReportOptionsController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
-    
-	public function langForm($optId = 0, $lang_id = 0) {
+
+    public function langForm($optId = 0, $lang_id = 0)
+    {
         $optId = FatUtility::int($optId);
         $lang_id       = FatUtility::int($lang_id);
         if ($optId == 0 || $lang_id == 0) {
@@ -121,8 +127,9 @@ class IssueReportOptionsController extends AdminBaseController
         $this->set('formLayout', Language::getLayoutDirection($lang_id));
         $this->_template->render(false, false);
     }
-    
-	public function langSetup() {
+
+    public function langSetup()
+    {
         $this->objPrivilege->canEditPreferences();
         $post          = FatApp::getPostedData();
         $optId = $post['tissueopt_id'];
@@ -139,7 +146,7 @@ class IssueReportOptionsController extends AdminBaseController
             'tissueoptlang_lang_id' => $lang_id,
             'tissueoptlang_title' => $post['tissueoptlang_title']
         );
-        $obj  = new IssueReportOptions( $optId );
+        $obj  = new IssueReportOptions($optId);
         if (!$obj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($obj->getError());
             FatUtility::dieJsonError(Message::getHtml());
@@ -157,8 +164,9 @@ class IssueReportOptionsController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
-    
-	public function changeStatus() {
+
+    public function changeStatus()
+    {
         $this->objPrivilege->canEditPreferences();
         $optId = FatApp::getPostedData('optId', FatUtility::VAR_INT, 0);
         $status = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
@@ -174,7 +182,7 @@ class IssueReportOptionsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-       
+
         $obj = new IssueReportOptions($optId);
         if (!$obj->changeStatus($status)) {
             Message::addErrorMessage($obj->getError());
@@ -182,8 +190,9 @@ class IssueReportOptionsController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
-    
-	public function deleteRecord() {
+
+    public function deleteRecord()
+    {
         $this->objPrivilege->canEditPreferences();
         $optId = FatApp::getPostedData('optId', FatUtility::VAR_INT, 0);
         if ($optId < 1) {
@@ -197,8 +206,9 @@ class IssueReportOptionsController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
-	
-	private function getForm( $sLangId = 0 ) {
+
+    private function getForm($sLangId = 0)
+    {
         $sLangId = FatUtility::int($sLangId);
         $frm           = new Form('frmIssueReoprtOption');
         $frm->addHiddenField('', 'tissueopt_id', $sLangId);
@@ -208,8 +218,9 @@ class IssueReportOptionsController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
-    
-	private function getLangForm($optId = 0, $lang_id = 0) {
+
+    private function getLangForm($optId = 0, $lang_id = 0)
+    {
         $frm = new Form('frmIssueReoprtOption');
         $frm->addHiddenField('', 'tissueopt_id', $optId);
         $frm->addHiddenField('', 'lang_id', $lang_id);
@@ -218,22 +229,24 @@ class IssueReportOptionsController extends AdminBaseController
         return $frm;
     }
 
-	public function updateOrder() {
-		$post = FatApp::getPostedData();
-		
-		if (!empty($post)) {
-			$optObj = new IssueReportOptions();
-			if(!$optObj->updateOrder($post['IssueReportOptions'])){
-				Message::addErrorMessage($optObj->getError());
-				FatUtility::dieJsonError( Message::getHtml() );
-			}
-			
-			$this->set('msg', Label::getLabel('LBL_Order_Updated_Successfully',$this->adminLangId));
-			$this->_template->render(false, false, 'json-success.php');
-        } 
-	}
-	
-	private function getSearchForm() {
+    public function updateOrder()
+    {
+        $post = FatApp::getPostedData();
+
+        if (!empty($post)) {
+            $optObj = new IssueReportOptions();
+            if (!$optObj->updateOrder($post['IssueReportOptions'])) {
+                Message::addErrorMessage($optObj->getError());
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+
+            $this->set('msg', Label::getLabel('LBL_Order_Updated_Successfully', $this->adminLangId));
+            $this->_template->render(false, false, 'json-success.php');
+        }
+    }
+
+    private function getSearchForm()
+    {
         $frm = new Form('frmIssueReoprtOptions');
         $f1 = $frm->addTextBox(Label::getLabel('LBL_Option_Identifier', $this->adminLangId), 'keyword', '');
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
@@ -241,5 +254,4 @@ class IssueReportOptionsController extends AdminBaseController
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
-	 
- }
+}

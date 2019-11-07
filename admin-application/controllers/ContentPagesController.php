@@ -1,5 +1,4 @@
-<?php
-class ContentPagesController extends AdminBaseController
+<?php class ContentPagesController extends AdminBaseController
 {
     public function __construct($action)
     {
@@ -8,7 +7,6 @@ class ContentPagesController extends AdminBaseController
     }
     public function index()
     {
-        
         $frmSearch = $this->getSearchForm();
         $adminId   = AdminAuthentication::getLoggedAdminId();
         $canEdit   = $this->objPrivilege->canEditContentPages($adminId, true);
@@ -19,7 +17,6 @@ class ContentPagesController extends AdminBaseController
     }
     public function search()
     {
-        
         $pagesize   = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $searchForm = $this->getSearchForm();
         $data       = FatApp::getPostedData();
@@ -55,7 +52,6 @@ class ContentPagesController extends AdminBaseController
     }
     public function form($cpage_id = 0)
     {
-        
         $cpage_id = FatUtility::int($cpage_id);
         $blockFrm = $this->getForm($cpage_id);
         if (0 < $cpage_id) {
@@ -113,7 +109,6 @@ class ContentPagesController extends AdminBaseController
     }
     public function langForm($cpage_id = 0, $lang_id = 0, $cpage_layout = 0)
     {
-        
         $cpage_id = FatUtility::int($cpage_id);
         $lang_id  = FatUtility::int($lang_id);
         if ($cpage_id == 0 || $lang_id == 0) {
@@ -131,7 +126,7 @@ class ContentPagesController extends AdminBaseController
             ));
             $srch->addCondition('cpblocklang_cpage_id', '=', $cpage_id);
             $srch->addCondition('cpblocklang_lang_id', '=', $lang_id);
-			//echo $srch->getQuery();
+            //echo $srch->getQuery();
             $srchRs    = $srch->getResultSet();
             $blockData = FatApp::getDb()->fetchAll($srchRs, 'cpblocklang_block_id');
             foreach ($blockData as $blockKey => $blockContent) {
@@ -233,7 +228,6 @@ class ContentPagesController extends AdminBaseController
     }
     public function autoComplete()
     {
-        
         $srch = ContentPage::getSearchObject($this->adminLangId);
         $post = FatApp::getPostedData();
         if (!empty($post['keyword'])) {
@@ -267,7 +261,6 @@ class ContentPagesController extends AdminBaseController
     }
     private function getForm($cpage_id = 0)
     {
-        
         $cpage_id = FatUtility::int($cpage_id);
         $frm      = new Form('frmBlock');
         $frm->addHiddenField('', 'cpage_id', 0);
@@ -363,26 +356,27 @@ class ContentPagesController extends AdminBaseController
         $this->set('msg', Label::getLabel('LBL_Deleted_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
-	public function cpageBackgroundImage( $cpageId, $langId = 0, $sizeType = ''){
-		$cpageId = FatUtility::int($cpageId);
-		$langId = FatUtility::int($langId);
-		$file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_CPAGE_BACKGROUND_IMAGE, $cpageId, 0, $langId );
-		$image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
+    public function cpageBackgroundImage($cpageId, $langId = 0, $sizeType = '')
+    {
+        $cpageId = FatUtility::int($cpageId);
+        $langId = FatUtility::int($langId);
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_CPAGE_BACKGROUND_IMAGE, $cpageId, 0, $langId);
+        $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
 
-		switch( strtoupper( $sizeType ) ){
-			case 'THUMB':
-				$w = 100;
-				$h = 100;
-				AttachedFile::displayImage( $image_name, $w, $h );
-			break;
-			case 'COLLECTION_PAGE':
-				$w = 45;
-				$h = 41;
-				AttachedFile::displayImage( $image_name, $w, $h );
-			break;
-			default:
-				AttachedFile::displayOriginalImage( $image_name );
-			break;
-		}
-	}
+        switch (strtoupper($sizeType)) {
+            case 'THUMB':
+                $w = 100;
+                $h = 100;
+                AttachedFile::displayImage($image_name, $w, $h);
+            break;
+            case 'COLLECTION_PAGE':
+                $w = 45;
+                $h = 41;
+                AttachedFile::displayImage($image_name, $w, $h);
+            break;
+            default:
+                AttachedFile::displayOriginalImage($image_name);
+            break;
+        }
+    }
 }

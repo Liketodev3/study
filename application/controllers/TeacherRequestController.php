@@ -10,17 +10,17 @@ class TeacherRequestController extends MyAppController {
 			$this->userId = UserAuthentication::getGuestTeacherUserId();
 		} else {
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access'));
-			CommonHelper::redirectUserReferer();			
+			CommonHelper::redirectUserReferer();
 		}
 	}
-	
+
 	public function index() {
 		$srch = new TeacherRequestSearch();
 		$srch->joinUsers();
 		$srch->addCondition('utrequest_user_id', '=', $this->userId);
-		$srch->addMultiplefields(array( 
-			'utrequest_attempts', 
-			'utrequest_id', 
+		$srch->addMultiplefields(array(
+			'utrequest_attempts',
+			'utrequest_id',
 			'utrequest_status',
 			'concat(user_first_name, " ", user_last_name) as user_name',
 			'utrequest_reference'
@@ -33,7 +33,7 @@ class TeacherRequestController extends MyAppController {
 		$this->set('teacherRequestRow', $teacherRequestRow);
 		$this->_template->render();
 	}
-	
+
 	public function form() {
 		$teacherRequestRow = TeacherRequest::getData($this->userId);
 		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_APPROVED) {
@@ -42,7 +42,7 @@ class TeacherRequestController extends MyAppController {
 			}
 			FatApp::redirectUser(CommonHelper::generateUrl('Teacher'));
 		}
-		
+
 		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_PENDING)) {
 			FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
 		}
@@ -52,7 +52,7 @@ class TeacherRequestController extends MyAppController {
 			FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
 		}
 		/* ] */
-		$frm = $this->getForm();		
+		$frm = $this->getForm();
 		$userDetails = User::getAttributesById($this->userId,array('user_first_name','user_last_name'));
 		if ($userDetails) {
 			$assignArray = array();
@@ -69,8 +69,8 @@ class TeacherRequestController extends MyAppController {
 		$this->set('frm', $frm);
 		$this->_template->render(true, true, 'teacher-request/form.php');
 	}
-	
-	public function setUpTeacherApproval() {	
+
+	public function setUpTeacherApproval() {
 		/* check if maximum attempts reached [ */
 		if (true === TeacherRequest::isMadeMaximumAttempts($this->userId)) {
 			$msg1 = Label::getLabel('MSG_You_already_consumed_max_attempts');
@@ -90,14 +90,14 @@ class TeacherRequestController extends MyAppController {
 
 		if (false === $post) {
 			if (FatUtility::isAjaxCall()) {
-				FatUtility::dieWithError(current($frm->getValidationErrors()));	
+				FatUtility::dieWithError(current($frm->getValidationErrors()));
 			}
 			Message::addErrorMessage(current($frm->getValidationErrors()));
 			$this->form();
 			return;
 		}
 		/* ] */
-		
+
 		/* file handling[ */
 		if (!is_uploaded_file($_FILES['user_profile_pic']['tmp_name'])) {
 			if (FatUtility::isAjaxCall()) {
@@ -107,7 +107,7 @@ class TeacherRequestController extends MyAppController {
 			$this->form();
 			return;
 		}
-		
+
 		$userId = $this->userId;
 		$fileHandlerObj = new AttachedFile();
 		/* Profile Pic[ */
@@ -144,7 +144,7 @@ class TeacherRequestController extends MyAppController {
 			$this->form();
 			return;
 		}
-		
+
 		$successMsg =  Label::getLabel('MSG_Teacher_Approval_Request_Setup_Successful');
 		if (FatUtility::isAjaxCall()) {
 			$this->set('redirectUrl', CommonHelper::generateUrl('TeacherRequest'));
@@ -154,27 +154,27 @@ class TeacherRequestController extends MyAppController {
 		Message::addMessage($successMsg);
 		FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
 	}
-	
+
 	public function searchTeacherQualification() {
 		$srch = new UserQualificationSearch();
 		$srch->addCondition('uqualification_user_id', '=', $this->userId);
-		$srch->addMultiplefields( 
+		$srch->addMultiplefields(
 			array(
-				'uqualification_id', 
-				'uqualification_title', 
-				'uqualification_experience_type', 
-				'uqualification_start_year', 
+				'uqualification_id',
+				'uqualification_title',
+				'uqualification_experience_type',
+				'uqualification_start_year',
 				'uqualification_end_year',
 				'uqualification_institute_address',
 				'uqualification_institute_name',
 			));
 		$rs = $srch->getResultSet();
-		$rows = FatApp::getDb()->fetchAll($rs);		
+		$rows = FatApp::getDb()->fetchAll($rs);
 		$this->set("userId", $this->userId);
 		$this->set("rows", $rows);
 		$this->_template->render(false, false);
 	}
-	
+
 	public function teacherQualificationForm() {
 		$uqualification_id = FatApp::getPostedData('uqualification_id', FatUtility::VAR_INT, 0);
 		$frm = $this->getTeacherQualificationForm();
@@ -189,15 +189,15 @@ class TeacherRequestController extends MyAppController {
 		$this->set('frm', $frm);
 		$this->_template->render(false, false);
 	}
-	
+
 	public function setUpTeacherQualification() {
 		$frm = $this->getTeacherQualificationForm();
 		$post = $frm->getFormDataFromArray(FatApp::getPostedData());
 		if (false === $post) {
 			Message::addErrorMessage(current($frm->getValidationErrors()));
-			FatUtility::dieJsonError(Message::getHtml());	
+			FatUtility::dieJsonError(Message::getHtml());
 		}
-		
+
 		$uqualification_id = FatApp::getPostedData('uqualification_id', FatUtility::VAR_INT, 0);
 		$qualification  = new UserQualification($uqualification_id);
 		$post['uqualification_user_id'] = $this->userId;
@@ -205,39 +205,39 @@ class TeacherRequestController extends MyAppController {
         $db->startTransaction();
 		$qualification->assignValues($post);
 		if (true !== $qualification->save()) {
-       		$db->rollbackTransaction();		
+       		$db->rollbackTransaction();
 			Message::addErrorMessage($qualification->getError());
 			FatUtility::dieJsonError(Message::getHtml());
 		}
-		
+
 		if (!empty($_FILES['certificate']['tmp_name'])) {
 			if (!is_uploaded_file($_FILES['certificate']['tmp_name'])) {
-           		$db->rollbackTransaction();		
+           		$db->rollbackTransaction();
 				Message::addErrorMessage(Label::getLabel('LBL_Please_select_a_file'));
 				FatUtility::dieJsonError(Message::getHtml());
 			}
-			
+
 			$uqualification_id = $qualification->getMainTableRecordId();
 			$fileHandlerObj = new AttachedFile();
 			$res = $fileHandlerObj->saveDoc($_FILES['certificate']['tmp_name'], AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $post['uqualification_user_id'], $uqualification_id, $_FILES['certificate']['name'], -1, $unique_record = true);
 			if (!$res) {
-                $db->rollbackTransaction();		                
+                $db->rollbackTransaction();
 				Message::addErrorMessage($fileHandlerObj->getError());
 				FatUtility::dieJsonError(Message::getHtml());
 			}
 		}
-		$db->commitTransaction();		
+		$db->commitTransaction();
 		$this->set('msg', Label::getLabel('MSG_Qualification_Setup_Successful'));
 		$this->_template->render(false, false, 'json-success.php');
 	}
-	
+
 	public function deleteTeacherQualification() {
 		$uqualification_id = FatApp::getPostedData('uqualification_id', FatUtility::VAR_INT, 0);
 		if ($uqualification_id < 1) {
 			Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
 			FatUtility::dieWithError(Message::getHtml());
 		}
-		
+
 		/* [ */
 		$srch = new UserQualificationSearch();
 		$srch->addCondition('uqualification_user_id', '=', $this->userId);
@@ -258,7 +258,7 @@ class TeacherRequestController extends MyAppController {
 		$this->set('msg', Label::getLabel('MSG_Qualification_Removed_Successfuly'));
 		$this->_template->render(false, false, 'json-success.php');
 	}
-	
+
 	public function downloadResume($subRecordId) {
 		$subRecordId = FatUtility::int($subRecordId);
 		if ($subRecordId < 1) {
@@ -266,14 +266,14 @@ class TeacherRequestController extends MyAppController {
 			FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', 'form'));
 		}
 		$fileRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $this->userId, $subRecordId);
-		
+
 		if (!$fileRow || $fileRow['afile_physical_path'] == "") {
 			Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
 			FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', 'form'));
 		}
 		AttachedFile::downloadFile($fileRow['afile_name'], $fileRow['afile_physical_path']);
 	}
-	
+
 	private function getForm($profilePic = true) {
 		$langId = $this->siteLangId;
 		/* [ */
@@ -283,20 +283,20 @@ class TeacherRequestController extends MyAppController {
 		$frm = new Form('frmTeacherApprovalForm');
 		$frm->addHtml('', 'general_fields_heading', '');
 		$fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'utrvalue_user_first_name');
-        $fld->requirements()->setCharOnly();                        
+        $fld->requirements()->setCharOnly();
 		$fld = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'utrvalue_user_last_name');
-        $fld->requirements()->setCharOnly();                        
+        $fld->requirements()->setCharOnly();
 		$fld = $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'utrvalue_user_gender', User::getGenderArr($langId), User::GENDER_MALE);
 		$fld->requirements()->setRequired();
 		$fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone_Number'), 'utrvalue_user_phone');
-        $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);		
+        $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
         if ($profilePic) {
             $fld = $frm->addFileUpload(Label::getLabel('LBL_Profile_Picture'), 'user_profile_pic');
-            $fld->requirements()->setRequired();        
-            $fld->htmlAfterField = "<small>".Label::getLabel('LBL_User_Profile_Image_Dimension')."</small>"; 
+            $fld->requirements()->setRequired();
+            $fld->htmlAfterField = "<small>".Label::getLabel('LBL_User_Profile_Image_Dimension')."</small>";
         }
 		$fld = $frm->addFileUpload(Label::getLabel('LBL_Photo_Id'), 'user_photo_id');
-        $fld->htmlAfterField = "<small>".Label::getLabel('LBL_Photo_Id_Type')."</small>";         
+        $fld->htmlAfterField = "<small>".Label::getLabel('LBL_Photo_Id_Type')."</small>";
 		$frm->addHtml('', 'introduction_fields_heading', '');
 		$frm->addTextBox(Label::getLabel('LBL_Video_Youtube_Link'), 'utrvalue_user_video_link');
 		$frm->addHtml('', 'about_me_fields_heading', '');
@@ -309,7 +309,7 @@ class TeacherRequestController extends MyAppController {
 		$fld = $frm->addSelectBox(Label::getLabel('LBL_Languages_You_Speak'), 'utrvalue_user_language_speak[]', $spokenLanguagesArr);
 		$fld->requirements()->setRequired();
 		$fldProficiency = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utrvalue_user_language_speak_proficiency[]', SpokenLanguage::getProficiencyArr($langId));
-		$fldProficiency->requirements()->setRequired();	
+		$fldProficiency->requirements()->setRequired();
 		$fld = $frm->addHtml('', 'add_anotherspoken_language', '');
 		/* Resume[ */
 		$frm->addHtml('', 'resume_fields_heading', '');

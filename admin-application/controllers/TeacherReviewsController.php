@@ -1,11 +1,12 @@
 <?php
 
-class TeacherReviewsController extends AdminBaseController {
-
+class TeacherReviewsController extends AdminBaseController
+{
     private $canView;
     private $canEdit;
 
-    public function __construct($action) {
+    public function __construct($action)
+    {
         parent::__construct($action);
         $this->admin_id = AdminAuthentication::getLoggedAdminId();
         $this->canView = $this->objPrivilege->canViewTeacherReviews($this->admin_id, true);
@@ -14,29 +15,26 @@ class TeacherReviewsController extends AdminBaseController {
         $this->set("canEdit", $this->canEdit);
     }
 
-    public function index($sellerId = 0) {
+    public function index($sellerId = 0)
+    {
         $sellerId = FatUtility::int($sellerId);
         $this->objPrivilege->canViewTeacherReviews();
-
         $srchFrm = $this->getSearchForm();
         $srchFrm->fill(array('seller_id' => $sellerId));
-
         $this->set("frmSearch", $srchFrm);
         $this->_template->render();
     }
 
-    public function search() {
+    public function search()
+    {
         $this->objPrivilege->canViewTeacherReviews();
-
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-
         $searchForm = $this->getSearchForm();
         $data = FatApp::getPostedData();
         $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $post = $searchForm->getFormDataFromArray($data);
         $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
-
         $srch = new TeacherLessonReviewSearch($this->adminLangId);
         $srch->joinLearner();
         $srch->joinTeacher($this->adminLangId);
@@ -80,19 +78,19 @@ class TeacherReviewsController extends AdminBaseController {
         $srch->setPageSize($pagesize);
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs);
-		if($records){
-			foreach($records as $k=>$record){
-				$avgRatingSrch = TeacherLessonRating::getSearchObj();
-				$avgRatingSrch->addCondition('tlrating_tlreview_id', '=', $record['tlreview_id']);
-				$avgRatingSrch->addMultipleFields(array('AVG(tlrating_rating) as average_rating'));
-				$avgRatingSrch->doNotCalculateRecords();
-				$avgRatingSrch->doNotLimitRecords();
-				$avgRatingRs = $avgRatingSrch->getResultSet();
-				$avgRatingData = FatApp::getDb()->fetch($avgRatingRs);				
-				$records[$k]['average_rating'] = $avgRatingData['average_rating'];
-			}
-		}
-//print_r($records); die;
+        if ($records) {
+            foreach ($records as $k=>$record) {
+                $avgRatingSrch = TeacherLessonRating::getSearchObj();
+                $avgRatingSrch->addCondition('tlrating_tlreview_id', '=', $record['tlreview_id']);
+                $avgRatingSrch->addMultipleFields(array('AVG(tlrating_rating) as average_rating'));
+                $avgRatingSrch->doNotCalculateRecords();
+                $avgRatingSrch->doNotLimitRecords();
+                $avgRatingRs = $avgRatingSrch->getResultSet();
+                $avgRatingData = FatApp::getDb()->fetch($avgRatingRs);
+                $records[$k]['average_rating'] = $avgRatingData['average_rating'];
+            }
+        }
+        //print_r($records); die;
         $this->set("arr_listing", $records);
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
@@ -103,7 +101,8 @@ class TeacherReviewsController extends AdminBaseController {
         $this->_template->render(false, false);
     }
 
-    public function view($tlreview_id = 0) {
+    public function view($tlreview_id = 0)
+    {
         $tlreview_id = FatUtility::int($tlreview_id);
         if (1 > $tlreview_id) {
             dieWithError($this->str_invalid_request);
@@ -116,10 +115,8 @@ class TeacherReviewsController extends AdminBaseController {
         $srch->addMultipleFields(array('sl.slesson_order_id as tlreview_order_id', 'ul.user_first_name as reviewed_by', 'tlreview_id', 'tlreview_posted_on', 'tlreview_status', 'tlreview_title', 'tlreview_description'));
         $srch->addOrder('tlreview_posted_on', 'DESC');
         $srch->addCondition('tlreview_id', '=', $tlreview_id);
-
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetch($rs);
-
         $avgRatingSrch = TeacherLessonRating::getSearchObj();
         $avgRatingSrch->addCondition('tlrating_tlreview_id', '=', $tlreview_id);
         $avgRatingSrch->addMultipleFields(array('AVG(tlrating_rating) as average_rating'));
@@ -127,19 +124,15 @@ class TeacherReviewsController extends AdminBaseController {
         $avgRatingSrch->doNotLimitRecords();
         $avgRatingRs = $avgRatingSrch->getResultSet();
         $avgRatingData = FatApp::getDb()->fetch($avgRatingRs);
-
         $ratingSrch = TeacherLessonRating::getSearchObj();
         $ratingSrch->addCondition('tlrating_tlreview_id', '=', $tlreview_id);
         $ratingSrch->addMultipleFields(array('tlrating_tlreview_id', 'tlrating_rating_type', 'tlrating_rating'));
         $ratingSrch->doNotCalculateRecords();
         $ratingSrch->doNotLimitRecords();
-
         $ratingRs = $ratingSrch->getResultSet();
         $ratingData = FatApp::getDb()->fetchAll($ratingRs);
-
         $frm = $this->reviewRequestForm();
         $frm->fill($records);
-
         $this->set("data", $records);
         $this->set("ratingData", $ratingData);
         $this->set("avgRatingData", $avgRatingData);
@@ -148,10 +141,11 @@ class TeacherReviewsController extends AdminBaseController {
         $this->_template->render(false, false);
     }
 
-    public function updateStatus($tlreview_id = 0) {
+    public function updateStatus($tlreview_id = 0)
+    {
         $tlreview_id = FatApp::getPostedData('tlreview_id', FatUtility::VAR_INT, 0);
         $status = FatApp::getPostedData('tlreview_status', FatUtility::VAR_INT, 0);
-        if (1 > $tlreview_id ) {
+        if (1 > $tlreview_id) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
@@ -168,7 +162,6 @@ class TeacherReviewsController extends AdminBaseController {
           } */
 
         $assignValues = array('tlreview_status' => $status);
-
         $record = new TeacherLessonReview($tlreview_id);
         $record->assignValues($assignValues);
         if (!$record->save()) {
@@ -193,7 +186,8 @@ class TeacherReviewsController extends AdminBaseController {
         $this->_template->render(false, false, 'json-success.php');
     }
 
-    private function getSearchForm() {
+    private function getSearchForm()
+    {
         $frm = new Form('frmSearch');
         $frm->addHiddenField('', 'reviewed_by_id');
         $frm->addHiddenField('', 'teacher_id', 0);
@@ -211,14 +205,13 @@ class TeacherReviewsController extends AdminBaseController {
         return $frm;
     }
 
-    private function reviewRequestForm() {
+    private function reviewRequestForm()
+    {
         $frm = new Form('reviewRequestForm');
-
         $statusArr = TeacherLessonReview::getReviewStatusArr($this->adminLangId);
         $frm->addSelectBox('Status', 'tlreview_status', $statusArr, '')->requirements()->setRequired();
         $frm->addHiddenField('', 'tlreview_id', 0);
         $frm->addSubmitButton('', 'btn_submit', 'Update');
         return $frm;
     }
-
 }

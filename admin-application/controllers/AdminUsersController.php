@@ -12,7 +12,6 @@ class AdminUsersController extends AdminBaseController
     }
     public function search()
     {
-        
         $srch = AdminUsers::getSearchObject(false);
         $srch->addFld('*');
         $rs      = $srch->getResultSet();
@@ -31,7 +30,6 @@ class AdminUsersController extends AdminBaseController
     }
     public function form($adminId = 0)
     {
-        
         $adminId = FatUtility::int($adminId);
         $frm     = $this->getForm($adminId);
         if (0 < $adminId) {
@@ -75,7 +73,6 @@ class AdminUsersController extends AdminBaseController
     }
     public function changePassword($adminId = 0)
     {
-        
         $adminId = FatUtility::int($adminId);
         $frm     = $this->getChangePasswordForm($adminId);
         if (0 >= $adminId) {
@@ -226,17 +223,16 @@ class AdminUsersController extends AdminBaseController
     }
     private function getForm($adminId = 0)
     {
-        
         $adminId = FatUtility::int($adminId);
         $frm     = new Form('frmAdminUser');
-        $frm->addHiddenField('', 'admin_id', $adminId, array('id' => 'admin_id') );
+        $frm->addHiddenField('', 'admin_id', $adminId, array('id' => 'admin_id'));
         $frm->addRequiredField(Label::getLabel('LBL_Full_Name', $this->adminLangId), 'admin_name');
-        $fld = $frm->addTextBox(Label::getLabel('LBL_Username', $this->adminLangId), 'admin_username','');
+        $fld = $frm->addTextBox(Label::getLabel('LBL_Username', $this->adminLangId), 'admin_username', '');
         $fld->setUnique(AdminUsers::DB_TBL, 'admin_username', 'admin_id', 'admin_id', 'admin_id');
         $fld->requirements()->setRequired();
         $fld->requirements()->setUsername();
-        $emailFld = $frm->addRequiredField(Label::getLabel('LBL_Email', $this->adminLangId), 'admin_email','');
-        $emailFld->setUnique( AdminUsers::DB_TBL, 'admin_email', 'admin_id', 'admin_id', 'admin_id');
+        $emailFld = $frm->addRequiredField(Label::getLabel('LBL_Email', $this->adminLangId), 'admin_email', '');
+        $emailFld->setUnique(AdminUsers::DB_TBL, 'admin_email', 'admin_id', 'admin_id', 'admin_id');
         if ($adminId == 0) {
             $fld = $frm->addPasswordField(Label::getLabel('LBL_Password', $this->adminLangId), 'password');
             $fld->requirements()->setRequired();
@@ -252,7 +248,6 @@ class AdminUsersController extends AdminBaseController
     }
     private function getAllAccessForm()
     {
-        
         $permissionArr = AdminPrivilege::getPermissionArr();
         $frm           = new Form('frmAllAccess');
         $frm->setFormTagAttribute('class', 'web_form form_horizontal');

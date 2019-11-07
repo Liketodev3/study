@@ -1,7 +1,6 @@
 <?php
 class LabelController extends AdminBaseController
 {
-   
     public function __construct($action)
     {
         $ajaxCallArray = array(
@@ -13,13 +12,12 @@ class LabelController extends AdminBaseController
             die($this->str_invalid_Action);
         }
         parent::__construct($action);
-		$this->objPrivilege->canViewLanguageLabel();
-       
+        $this->objPrivilege->canViewLanguageLabel();
     }
     public function index()
     {
         $frmSearch = $this->getSearchForm();
-		$adminId = AdminAuthentication::getLoggedAdminId();
+        $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit  = $this->objPrivilege->canEditLanguageLabel($adminId, true);
         $this->set("canEdit", $canEdit);
         $this->set("frmSearch", $frmSearch);
@@ -27,7 +25,6 @@ class LabelController extends AdminBaseController
     }
     public function search()
     {
-        
         $pagesize   = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $searchForm = $this->getSearchForm();
         $data       = FatApp::getPostedData();
@@ -37,10 +34,10 @@ class LabelController extends AdminBaseController
             $page = 1;
         }
         $post = $searchForm->getFormDataFromArray($data);
-		if( false === $post ){
-			Message::addErrorMessage($searchForm->getValidationErrors());
-			FatUtility::dieWithError( Message::getHtml() );	
-		}
+        if (false === $post) {
+            Message::addErrorMessage($searchForm->getValidationErrors());
+            FatUtility::dieWithError(Message::getHtml());
+        }
         $srch = Label::getSearchObject();
         $srch->joinTable('tbl_languages', 'inner join', 'label_lang_id = language_id and language_active = ' . applicationConstants::ACTIVE);
         $srch->addOrder('lbl.' . Label::DB_TBL_PREFIX . 'lang_id', 'ASC');
@@ -54,8 +51,8 @@ class LabelController extends AdminBaseController
         $srch->addCondition('lbl.label_lang_id', '=', $this->adminLangId);
         $rs      = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs);
-		
-		$adminId = AdminAuthentication::getLoggedAdminId();
+
+        $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit  = $this->objPrivilege->canEditLanguageLabel($adminId, true);
         $this->set("canEdit", $canEdit);
         $this->set("arr_listing", $records);
@@ -68,7 +65,6 @@ class LabelController extends AdminBaseController
     }
     public function form($label_id)
     {
-        
         $label_id = FatUtility::int($label_id);
         if ($label_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
@@ -141,21 +137,19 @@ class LabelController extends AdminBaseController
         $this->set('msg', $this->str_setup_successful);
         $this->_template->render(false, false, 'json-success.php');
     }
-  
+
     private function getSearchForm()
     {
-        
         $frm        = new Form('frmLabelsSearch');
         $f1         = $frm->addTextBox(Label::getLabel('LBL_Keyword', $this->adminLangId), 'keyword', '');
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
-        $frm->addHiddenField('', 'page', 1);        
+        $frm->addHiddenField('', 'page', 1);
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
     private function getForm($label_key)
     {
-        
         $frm = new Form('frmLabels');
         $frm->addHiddenField('', 'label_key', $label_key);
         $languages = Language::getAllNames();

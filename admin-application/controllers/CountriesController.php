@@ -5,11 +5,11 @@ class CountriesController extends AdminBaseController
     {
         parent::__construct($action);
         $this->objPrivilege->canViewCountries();
-	}
+    }
     public function index()
     {
         $search = $this->getSearchForm();
-		$this->set("canEdit",$this->objPrivilege->canEditCountries(AdminAuthentication::getLoggedAdminId(),true));
+        $this->set("canEdit", $this->objPrivilege->canEditCountries(AdminAuthentication::getLoggedAdminId(), true));
         $this->set("search", $search);
         $this->_template->addJs('js/import-export.js');
         $this->_template->render();
@@ -45,9 +45,9 @@ class CountriesController extends AdminBaseController
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
         }
-		$adminId = AdminAuthentication::getLoggedAdminId();
-		$canEdit = $this->objPrivilege->canEditCountries($adminId,true);
-		$this->set("canEdit",$canEdit);
+        $adminId = AdminAuthentication::getLoggedAdminId();
+        $canEdit = $this->objPrivilege->canEditCountries($adminId, true);
+        $this->set("canEdit", $canEdit);
         $this->set('activeInactiveArr', applicationConstants::getActiveInactiveArr($this->adminLangId));
         $this->set("arr_listing", $records);
         $this->set('pageCount', $srch->pages());
@@ -221,85 +221,102 @@ class CountriesController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
-	
-	public function media( $country_id = 0 ){
-		$this->objPrivilege->canEditCountries();	
-		$country_id = FatUtility::int($country_id);
-		$countryMediaFrm = $this->getMediaForm( $country_id );
-		$this->set('languages', Language::getAllNames());
-		$this->set('country_id', $country_id);
-		$this->set('countryMediaFrm', $countryMediaFrm);
-		$this->_template->render(false, false);
-	}
-	
-	public function images( $country_id ){
-		$country_id = FatUtility::int($country_id);
-		$countryImages = AttachedFile::getMultipleAttachments( AttachedFile::FILETYPE_COUNTRY_FLAG, $country_id ,0,0,false);
-		$this->set('images', $countryImages);
-		$this->set("canEdit",$this->objPrivilege->canEditCountries(AdminAuthentication::getLoggedAdminId(),true));
-		$this->_template->render(false, false);
-	}
-	
-	public function setUpFlagImage(){
-		$this->objPrivilege->canEditCountries();	
-		$post = FatApp::getPostedData();
-		if( empty($post) ){
-			Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported',$this->adminLangId));
-			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported',$this->adminLangId));
-		}
-		$country_id = FatApp::getPostedData( 'country_id', FatUtility::VAR_INT, 0 );
-		if ( !$country_id  ) {
-			Message::addErrorMessage( $this->str_invalid_request_id );
-			FatUtility::dieWithError( $this->str_invalid_request_id  );	
-		}
-		
-		if ( !is_uploaded_file( $_FILES['file']['tmp_name'] ) ) {
-			Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File',$this->adminLangId));
-			FatUtility::dieWithError(Label::getLabel('MSG_Please_Select_A_File',$this->adminLangId));
-		}
-		
-		$fileHandlerObj = new AttachedFile();
-		$fileHandlerObj->deleteFile( $fileHandlerObj::FILETYPE_COUNTRY_FLAG, $country_id, 0, 0, 0 );
-		
-		if(!$res = $fileHandlerObj->saveAttachment($_FILES['file']['tmp_name'], $fileHandlerObj::FILETYPE_COUNTRY_FLAG, 
-		$country_id, 0,  $_FILES['file']['name'], -1, $unique_record = true, 0)
-		){
-			Message::addErrorMessage($fileHandlerObj->getError());
-			FatUtility::dieWithError( $fileHandlerObj->getError() );
-		}
-		
-		$this->set('countryId',$country_id);
-		$this->set('file',$_FILES['file']['name']);
-		$this->set('msg', $_FILES['file']['name']. Label::getLabel('MSG_File_Uploaded_Successfully',$this->adminLangId));
-		$this->_template->render(false, false, 'json-success.php');	
-	}
-	
-	public function deleteFlagImage( $country_id = 0){
-		$country_id = FatUtility::int($country_id);
-		if( !$country_id  ){
-			Message::addErrorMessage($this->str_invalid_request);
-			FatUtility::dieJsonError( Message::getHtml() );	
-		}
-		
-		$fileHandlerObj = new AttachedFile();
-		if( !$fileHandlerObj->deleteFile( AttachedFile::FILETYPE_COUNTRY_FLAG, $country_id, 0, 0, 0 )){
-			Message::addErrorMessage($fileHandlerObj->getError());
-			FatUtility::dieJsonError( Message::getHtml() );
-		}
-		
-		$this->set('msg',Label::getLabel('MSG_Deleted_Successfully',$this->adminLangId));
-		$this->_template->render(false, false, 'json-success.php');
-	}
-	
-	private function getMediaForm( $country_id ){
-		$frm = new Form('frmCountryMedia');
-		$frm->addHTML( '', 'country_flag_heading', '' );
-		$frm->addHiddenField( '', 'country_id', $country_id );
-		$frm->addButton(Label::getLabel('Lbl_Flag',$this->adminLangId), 'flag',Label::getLabel('LBL_Upload_Flag',$this->adminLangId),
-					array('class'=>'uploadFile-Js','id'=>'flag','data-file_type'=>AttachedFile::FILETYPE_COUNTRY_FLAG,'data-country_id' => $country_id ));
-		
-		$frm->addHtml( '', 'country_flag_display_div', '' );
-		
-		return $frm;
-	}
+
+    public function media($country_id = 0)
+    {
+        $this->objPrivilege->canEditCountries();
+        $country_id = FatUtility::int($country_id);
+        $countryMediaFrm = $this->getMediaForm($country_id);
+        $this->set('languages', Language::getAllNames());
+        $this->set('country_id', $country_id);
+        $this->set('countryMediaFrm', $countryMediaFrm);
+        $this->_template->render(false, false);
+    }
+
+    public function images($country_id)
+    {
+        $country_id = FatUtility::int($country_id);
+        $countryImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_COUNTRY_FLAG, $country_id, 0, 0, false);
+        $this->set('images', $countryImages);
+        $this->set("canEdit", $this->objPrivilege->canEditCountries(AdminAuthentication::getLoggedAdminId(), true));
+        $this->_template->render(false, false);
+    }
+
+    public function setUpFlagImage()
+    {
+        $this->objPrivilege->canEditCountries();
+        $post = FatApp::getPostedData();
+        if (empty($post)) {
+            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported', $this->adminLangId));
+            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported', $this->adminLangId));
+        }
+        $country_id = FatApp::getPostedData('country_id', FatUtility::VAR_INT, 0);
+        if (!$country_id) {
+            Message::addErrorMessage($this->str_invalid_request_id);
+            FatUtility::dieWithError($this->str_invalid_request_id);
+        }
+
+        if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
+            Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
+            FatUtility::dieWithError(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
+        }
+
+        $fileHandlerObj = new AttachedFile();
+        $fileHandlerObj->deleteFile($fileHandlerObj::FILETYPE_COUNTRY_FLAG, $country_id, 0, 0, 0);
+
+        if (!$res = $fileHandlerObj->saveAttachment(
+            $_FILES['file']['tmp_name'],
+            $fileHandlerObj::FILETYPE_COUNTRY_FLAG,
+            $country_id,
+            0,
+            $_FILES['file']['name'],
+            -1,
+            $unique_record = true,
+            0
+        )
+        ) {
+            Message::addErrorMessage($fileHandlerObj->getError());
+            FatUtility::dieWithError($fileHandlerObj->getError());
+        }
+
+        $this->set('countryId', $country_id);
+        $this->set('file', $_FILES['file']['name']);
+        $this->set('msg', $_FILES['file']['name']. Label::getLabel('MSG_File_Uploaded_Successfully', $this->adminLangId));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+
+    public function deleteFlagImage($country_id = 0)
+    {
+        $country_id = FatUtility::int($country_id);
+        if (!$country_id) {
+            Message::addErrorMessage($this->str_invalid_request);
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $fileHandlerObj = new AttachedFile();
+        if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_COUNTRY_FLAG, $country_id, 0, 0, 0)) {
+            Message::addErrorMessage($fileHandlerObj->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+    
+    private function getMediaForm($country_id)
+    {
+        $frm = new Form('frmCountryMedia');
+        $frm->addHTML('', 'country_flag_heading', '');
+        $frm->addHiddenField('', 'country_id', $country_id);
+        $frm->addButton(
+            Label::getLabel('Lbl_Flag', $this->adminLangId),
+            'flag',
+            Label::getLabel('LBL_Upload_Flag', $this->adminLangId),
+            array('class'=>'uploadFile-Js','id'=>'flag','data-file_type'=>AttachedFile::FILETYPE_COUNTRY_FLAG,'data-country_id' => $country_id )
+        );
+
+        $frm->addHtml('', 'country_flag_display_div', '');
+
+        return $frm;
+    }
 }

@@ -220,7 +220,7 @@ class AdminBaseController extends FatController
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
-    
+
     protected function renderJsonError($msg = '')
     {
         $this->set('msg', $msg);

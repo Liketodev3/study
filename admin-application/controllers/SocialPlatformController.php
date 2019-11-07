@@ -12,12 +12,11 @@ class SocialPlatformController extends AdminBaseController
     }
     public function search()
     {
-        
         $srch = SocialPlatform::getSearchObject($this->adminLangId, false);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addCondition('splatform_user_id', '=', 0);
-        $rs      = $srch->getResultSet();
+        $rs = $srch->getResultSet();
         $records = array();
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
@@ -30,9 +29,8 @@ class SocialPlatformController extends AdminBaseController
     }
     public function form($splatform_id = 0)
     {
-        
         $splatform_id = FatUtility::int($splatform_id);
-        $frm          = $this->getForm();
+        $frm = $this->getForm();
         if (0 < $splatform_id) {
             $data = SocialPlatform::getAttributesById($splatform_id);
             if ($data === false) {
@@ -57,7 +55,7 @@ class SocialPlatformController extends AdminBaseController
         $splatform_id = $post['splatform_id'];
         unset($post['splatform_id']);
         $data_to_be_save = $post;
-        $recordObj       = new SocialPlatform($splatform_id);
+        $recordObj = new SocialPlatform($splatform_id);
         $recordObj->assignValues($data_to_be_save, true);
         if (!$recordObj->save()) {
             Message::addErrorMessage($recordObj->getError());
@@ -65,7 +63,7 @@ class SocialPlatformController extends AdminBaseController
         }
         $splatform_id = $recordObj->getMainTableRecordId();
         $newTabLangId = 0;
-        $languages    = Language::getAllNames();
+        $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
             if (!$row = SocialPlatform::getAttributesByLangId($langId, $splatform_id)) {
                 $newTabLangId = $langId;
@@ -82,9 +80,8 @@ class SocialPlatformController extends AdminBaseController
     }
     public function langForm($splatform_id = 0, $lang_id = 0)
     {
-        
         $splatform_id = FatUtility::int($splatform_id);
-        $lang_id      = FatUtility::int($lang_id);
+        $lang_id = FatUtility::int($lang_id);
         if ($splatform_id == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
@@ -103,14 +100,14 @@ class SocialPlatformController extends AdminBaseController
     public function langSetup()
     {
         $this->objPrivilege->canEditSocialPlatforms();
-        $post         = FatApp::getPostedData();
+        $post = FatApp::getPostedData();
         $splatform_id = FatUtility::int($post['splatform_id']);
-        $lang_id      = $post['lang_id'];
+        $lang_id = $post['lang_id'];
         if ($splatform_id == 0 || $lang_id == 0) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $frm  = $this->getLangForm($splatform_id, $lang_id);
+        $frm = $this->getLangForm($splatform_id, $lang_id);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         unset($post['splatform_id']);
         unset($post['lang_id']);
@@ -119,13 +116,13 @@ class SocialPlatformController extends AdminBaseController
             'splatformlang_lang_id' => $lang_id,
             'splatform_title' => $post['splatform_title']
         );
-        $socialObj      = new SocialPlatform($splatform_id);
+        $socialObj = new SocialPlatform($splatform_id);
         if (!$socialObj->updateLangData($lang_id, $data_to_update)) {
             Message::addErrorMessage($socialObj->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
         $newTabLangId = 0;
-        $languages    = Language::getAllNames();
+        $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
             if (!$row = SocialPlatform::getAttributesByLangId($langId, $splatform_id)) {
                 $newTabLangId = $langId;
@@ -142,7 +139,7 @@ class SocialPlatformController extends AdminBaseController
     }
     public function mediaForm($splatform_id)
     {
-        $splatform_id    = FatUtility::int($splatform_id);
+        $splatform_id = FatUtility::int($splatform_id);
         $splatformDetail = SocialPlatform::getAttributesById($splatform_id);
         if (false == $splatformDetail) {
             Message::addErrorMessage($this->str_invalid_request_id);
@@ -215,7 +212,7 @@ class SocialPlatformController extends AdminBaseController
     {
         $this->objPrivilege->canEditSocialPlatforms();
         $splatformId = FatApp::getPostedData('splatformId', FatUtility::VAR_INT, 0);
-        $status      = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
+        $status = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
         if (0 >= $splatformId) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
@@ -245,13 +242,12 @@ class SocialPlatformController extends AdminBaseController
     }
     private function getForm()
     {
-        
         $frm = new Form('frmSocialPlatform');
         $frm->addHiddenField('', 'splatform_id', 0);
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Identifier', $this->adminLangId), 'splatform_identifier');
         $fld->setUnique('tbl_navigations', 'splatform_identifier', 'splatform_id', 'splatform_id', 'splatform_id');
         $frm->addRequiredField(Label::getLabel('LBL_URL', $this->adminLangId), 'splatform_url');
-        $activeInactiveArr   = applicationConstants::getActiveInactiveArr($this->adminLangId);
+        $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'splatform_active', $activeInactiveArr, '', array(), '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
@@ -280,8 +276,8 @@ class SocialPlatformController extends AdminBaseController
     {
         $default_image = 'brand_deafult_image.jpg';
         $splatform_id  = FatUtility::int($splatform_id);
-        $file_row      = AttachedFile::getAttachment(AttachedFile::FILETYPE_SOCIAL_PLATFORM_IMAGE, $splatform_id);
-        $image_name    = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_SOCIAL_PLATFORM_IMAGE, $splatform_id);
+        $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         switch (strtoupper($sizeType)) {
             case 'THUMB':
                 $w = 200;

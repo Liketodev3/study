@@ -20,14 +20,14 @@ class PreferencesController extends AdminBaseController
     public function index($type = 0)
     {
         $adminId = AdminAuthentication::getLoggedAdminId();
-		$frmSearch = $this->getSearchForm($type);
+        $frmSearch = $this->getSearchForm($type);
         $canEdit = $this->objPrivilege->canEditPreferences($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->set("type", $type);
-		$this->set('frmSearch', $frmSearch);
+        $this->set('frmSearch', $frmSearch);
         $this->_template->render();
     }
-	
+
     public function search()
     {
         $pagesize   = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
@@ -39,7 +39,7 @@ class PreferencesController extends AdminBaseController
         if (!empty($post['keyword'])) {
             $srch->addCondition('preference_identifier', 'like', '%' . $post['keyword'] . '%');
         }
-		 if ($post['type'] > 0) {
+        if ($post['type'] > 0) {
             $srch->addCondition('preference_type', '=', $post['type']);
         }
         $page = (empty($page) || $page <= 0) ? 1 : $page;
@@ -58,13 +58,13 @@ class PreferencesController extends AdminBaseController
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
         $this->set('page', $page);
-		$this->set("type", $post['type']);
+        $this->set("type", $post['type']);
         $this->set('pageSize', $pagesize);
         $this->set('postedData', $post);
         $this->_template->render(false, false);
     }
-	
-	 private function getSearchForm($type = 0)
+
+    private function getSearchForm($type = 0)
     {
         $frm        = new Form('frmPreferenceSearch');
         $f1         = $frm->addTextBox(Label::getLabel('LBL_Preference_Identifier', $this->adminLangId), 'keyword', '');
@@ -74,8 +74,8 @@ class PreferencesController extends AdminBaseController
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
-	
-    public function form($preferenceId,$type = 0)
+
+    public function form($preferenceId, $type = 0)
     {
         $preferenceId = FatUtility::int($preferenceId);
         $frm           = $this->getForm($preferenceId);
@@ -83,15 +83,15 @@ class PreferencesController extends AdminBaseController
             $data = Preference::getAttributesById($preferenceId, array(
                 'preference_id',
                 'preference_identifier',
-               
+
             ));
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
             $frm->fill($data);
         }
-		$fldType=$frm->getField('type');
-		$fldType->value=$type;
+        $fldType=$frm->getField('type');
+        $fldType->value=$type;
         $this->set('languages', Language::getAllNames());
         $this->set('preference_id', $preferenceId);
         $this->set('frm', $frm);
@@ -107,11 +107,11 @@ class PreferencesController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $preferenceId = $post['preference_id'];
-		if(!empty($post['type'])){
-			$post['preference_type']=$post['type'];
-		}
+        if (!empty($post['type'])) {
+            $post['preference_type']=$post['type'];
+        }
         unset($post['preference_id']);
-       
+
         $record = new Preference($preferenceId);
         $record->assignValues($post);
         if (!$record->save()) {
@@ -131,14 +131,14 @@ class PreferencesController extends AdminBaseController
             $preferenceId = $record->getMainTableRecordId();
             $newTabLangId  = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
-       
+
         $this->set('msg', $this->str_setup_successful);
         $this->set('preferenceId', $preferenceId);
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
-    
-	public function langForm($preferenceId = 0, $lang_id = 0)
+
+    public function langForm($preferenceId = 0, $lang_id = 0)
     {
         $preferenceId = FatUtility::int($preferenceId);
         $lang_id       = FatUtility::int($lang_id);
@@ -147,7 +147,7 @@ class PreferencesController extends AdminBaseController
         }
         $langFrm  = $this->getLangForm($preferenceId, $lang_id);
         $langData = Preference::getAttributesByLangId($lang_id, $preferenceId);
-		$langData['preferencelang_title'] = $langData['preference_title'];
+        $langData['preferencelang_title'] = $langData['preference_title'];
         if ($langData) {
             $langFrm->fill($langData);
         }
@@ -190,13 +190,13 @@ class PreferencesController extends AdminBaseController
                 break;
             }
         }
-      
+
         $this->set('msg', $this->str_setup_successful);
         $this->set('preferenceId', $preferenceId);
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
-  
+
     public function deleteRecord()
     {
         $this->objPrivilege->canEditPreferences();
@@ -205,16 +205,16 @@ class PreferencesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
-		$deleteRecord = new Preference();
-        if(!$deleteRecord->deletePreference($preference_id)){
-			FatUtility::dieWithError($deleteRecord->getError());
-		}
+        $deleteRecord = new Preference();
+        if (!$deleteRecord->deletePreference($preference_id)) {
+            FatUtility::dieWithError($deleteRecord->getError());
+        }
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
 
 
 
-   
+
     private function getForm($preferenceId = 0)
     {
         $preferenceId = FatUtility::int($preferenceId);
@@ -234,20 +234,19 @@ class PreferencesController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
-	
-	public function updateOrder()
-	{
-		$post = FatApp::getPostedData();
-		if (!empty($post)) {
-			$prefObj = new Preference();
-			if(!$prefObj->updateOrder($post['preferences'])){
-				Message::addErrorMessage($prefObj->getError());
-				FatUtility::dieJsonError( Message::getHtml() );
-			}
-			
-			$this->set('msg', Label::getLabel('LBL_Order_Updated_Successfully',$this->adminLangId));
-			$this->_template->render(false, false, 'json-success.php');
-        } 
-	}
- 
+
+    public function updateOrder()
+    {
+        $post = FatApp::getPostedData();
+        if (!empty($post)) {
+            $prefObj = new Preference();
+            if (!$prefObj->updateOrder($post['preferences'])) {
+                Message::addErrorMessage($prefObj->getError());
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+
+            $this->set('msg', Label::getLabel('LBL_Order_Updated_Successfully', $this->adminLangId));
+            $this->_template->render(false, false, 'json-success.php');
+        }
+    }
 }

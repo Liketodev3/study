@@ -1,49 +1,54 @@
 <?php
-class TeacherLessonReview extends MyAppModel {
-	const DB_TBL = 'tbl_teacher_lesson_reviews';
-	const DB_TBL_PREFIX = 'tlreview_';
-	
-	const STATUS_PENDING = 0;
-	const STATUS_APPROVED = 1;
-	const STATUS_CANCELLED = 2;
-	
-	public function __construct($id = 0) {
-		parent::__construct ( static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id );
-	}
-	
-	public static function getReviewStatusArr($langId){
-		$langId = FatUtility::int($langId);
-		if($langId == 0){ 
-			trigger_error(Label::getLabel('MSG_Language_Id_not_specified.',$this->commonLangId), E_USER_ERROR);				
-		}
-		$arr = array(
-			static::STATUS_PENDING => Label::getLabel('LBL_Pending'),
-			static::STATUS_APPROVED => Label::getLabel('LBL_Approved'),
-			static::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled'),					
-		);
-		return $arr;
-	}
-	
-	
-	public static function getTeacherTotalReviews($userId,$lessonId = 0 ){
-		$userId = FatUtility::int($userId);
-		$lessonId = FatUtility::int($lessonId);
-		$srch = new TeacherLessonReviewSearch();
-		$srch->joinLearner();
-		$srch->joinTeacher();
-		$srch->addMultipleFields(array('count(*) as numOfReviews'));
-		$srch->doNotCalculateRecords();
-		$srch->doNotLimitRecords();
-		$srch->addCondition('tlreview_teacher_user_id','=',$userId);
-		if($lessonId > 0)
-		{
-			$srch->addCondition('tlreview_lesson_id','=',$lessonId);
-		}
-		$srch->addGroupby('tlreview_teacher_user_id');
-		//$srch->addCondition('tlr.tlreview_status', '=', static::STATUS_APPROVED); 
-		$rs = $srch->getResultSet();			
-		$record = FatApp::getDb()->fetch($rs);
-		if($record == false) { return 0;}
-		return $record['numOfReviews'];
-	}
+class TeacherLessonReview extends MyAppModel
+{
+    const DB_TBL = 'tbl_teacher_lesson_reviews';
+    const DB_TBL_PREFIX = 'tlreview_';
+
+    const STATUS_PENDING = 0;
+    const STATUS_APPROVED = 1;
+    const STATUS_CANCELLED = 2;
+
+    public function __construct($id = 0)
+    {
+        parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
+    }
+
+    public static function getReviewStatusArr($langId)
+    {
+        $langId = FatUtility::int($langId);
+        if ($langId == 0) {
+            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
+        }
+        $arr = array(
+            static::STATUS_PENDING => Label::getLabel('LBL_Pending'),
+            static::STATUS_APPROVED => Label::getLabel('LBL_Approved'),
+            static::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled'),
+        );
+        return $arr;
+    }
+
+
+    public static function getTeacherTotalReviews($userId, $lessonId = 0)
+    {
+        $userId = FatUtility::int($userId);
+        $lessonId = FatUtility::int($lessonId);
+        $srch = new TeacherLessonReviewSearch();
+        $srch->joinLearner();
+        $srch->joinTeacher();
+        $srch->addMultipleFields(array('count(*) as numOfReviews'));
+        $srch->doNotCalculateRecords();
+        $srch->doNotLimitRecords();
+        $srch->addCondition('tlreview_teacher_user_id', '=', $userId);
+        if ($lessonId > 0) {
+            $srch->addCondition('tlreview_lesson_id', '=', $lessonId);
+        }
+        $srch->addGroupby('tlreview_teacher_user_id');
+        //$srch->addCondition('tlr.tlreview_status', '=', static::STATUS_APPROVED);
+        $rs = $srch->getResultSet();
+        $record = FatApp::getDb()->fetch($rs);
+        if ($record == false) {
+            return 0;
+        }
+        return $record['numOfReviews'];
+    }
 }

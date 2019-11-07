@@ -20,7 +20,7 @@ class AdminUsers extends MyAppModel
     {
         $srch = new SearchBase('tbl_admin_permissions');
         $srch->addCondition('admperm_admin_id', '=', $admperm_admin_id);
-        $rs  = $srch->getResultSet();
+        $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetchAll($rs, 'admperm_section_id');
         if (!empty($row)) {
             return $row;
