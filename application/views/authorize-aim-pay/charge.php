@@ -1,10 +1,22 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php
+$sign = '';
+if ( $paymentAmount < 0 ) {
+	$val = abs($val);
+	$sign = '-';
+}
+$currencySymbolLeft = CommonHelper::getCurrencySymbolLeft();
+$currencySymbolRight = CommonHelper::getCurrencySymbolRight();
+?>
+
 <div class="payment-page">
   <div class="cc-payment">
     <div class="logo-payment"><img src="<?php echo CommonHelper::generateFullUrl('Image','paymentPageLogo',array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.$siteLangId) ?>" title="<?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.$siteLangId) ?>" /></div>
     <div class="reff row">
       <div class="col-lg-6 col-md-6 col-sm-12">
-        <p class=""><?php echo Label::getLabel('LBL_Payable_Amount',$siteLangId);?> : <strong><?php echo CommonHelper::displayMoneyFormat($paymentAmount)?></strong> </p>
+        <p class=""><?php echo Label::getLabel('LBL_Payable_Amount',$siteLangId);?> : <strong><?php 
+		//echo CommonHelper::displayMoneyFormat($paymentAmount)
+		echo $sign.$currencySymbolLeft.$paymentAmount.$currencySymbolRight; ?></strong> </p>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12">
         <p class=""><?php echo Label::getLabel('LBL_Order_Invoice',$siteLangId);?>: <strong><?php echo $orderInfo["order_id"] ; ?></strong></p>
@@ -112,7 +124,10 @@
           </div>
         </div>
       </div> */ ?>
-      <div class="total-pay"><?php echo CommonHelper::displayMoneyFormat($paymentAmount)?> <small>(<?php echo Label::getLabel('LBL_Total_Payable',$siteLangId);?>)</small> </div>
+      <div class="total-pay"><?php
+	  //echo CommonHelper::displayMoneyFormat($paymentAmount)
+		echo $sign.$currencySymbolLeft.$paymentAmount.$currencySymbolRight;
+	  ?> <small>(<?php echo Label::getLabel('LBL_Total_Payable',$siteLangId);?>)</small> </div>
       <div class="row">
         <div class="col-md-12">
           <div class="field-set">

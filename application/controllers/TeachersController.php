@@ -643,7 +643,7 @@ class TeachersController extends MyAppController {
 		/* Week Day [ */
 		$weekDays = FatApp::getPostedData('filterWeekDays', FatUtility::VAR_STRING, array());
 		if ($weekDays) {
-			srch->addCondition('ta.tgavl_day', 'IN', $weekDays);
+			$srch->addCondition('ta.tgavl_day', 'IN', $weekDays);
 		}
 		/* ] */
 		/* Time Slot [ */

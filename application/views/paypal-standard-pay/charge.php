@@ -1,4 +1,14 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php
+$sign = '';
+if ( $paymentAmount < 0 ) {
+	$val = abs($val);
+	$sign = '-';
+}
+$currencySymbolLeft = CommonHelper::getCurrencySymbolLeft();
+$currencySymbolRight = CommonHelper::getCurrencySymbolRight();
+?>
+
 <section class="section section--grey section--page -pattern">
 	<div class="container container--fixed">
 		<div class="page-panel -clearfix">
@@ -15,7 +25,9 @@
 							</div>						
 							<div class="message-display">
 								<p class="">
-								<?php echo Label::getLabel('LBL_Payable_Amount',$siteLangId);?> : <strong><?php echo CommonHelper::displayMoneyFormat($paymentAmount)?></strong> </p>
+								<?php echo Label::getLabel('LBL_Payable_Amount',$siteLangId);?> : <strong><?php //echo CommonHelper::displayMoneyFormat($paymentAmount)
+								echo $sign.$currencySymbolLeft.$paymentAmount.$currencySymbolRight;
+								?></strong> </p>
 
 								<p class="">
 								<?php echo Label::getLabel('LBL_Order_Invoice',$siteLangId);?>: <strong><?php echo $orderInfo["order_id"] ;/* displayNotApplicable($orderInfo["order_id"]) */?></strong> </p>
