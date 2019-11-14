@@ -7,7 +7,7 @@ class FaqController extends MyAppController
         $srch->addMultipleFields(array(
             'faq_id',
             'faq_category',
-            'faq_title',
+            'IFNULL(faq_title, faq_identifier) as faq_title',
         ));
         $srch->joinTable(Faq::DB_TBL_LANG, 'LEFT OUTER JOIN', 'faqlang_faq_id=faq_id AND faqlang_lang_id = ' . $this->siteLangId);
         $srch->setPageSize(50);
@@ -18,7 +18,7 @@ class FaqController extends MyAppController
             $finaldata[$val['faq_category']][] = $val;
         }
         $this->set('finaldata', $finaldata);
-        $this->set('typeArr', Faq::getFaqCategoryArr());
+        $this->set('typeArr', Faq::getFaqCategoryArr($this->siteLangId));
         $this->_template->render();
     }
 

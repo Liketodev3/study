@@ -16,14 +16,14 @@ class Faq extends MyAppModel
         $this->db = FatApp::getDb();
     }
 
-    public static function getFaqCategoryArr()
+    public static function getFaqCategoryArr($langid = 0)
     {
         /* return array(
             static::CATEGORY_GENERAL_QUERIES	=>	Label::getLabel('LBL_General_Queries'),
             static::CATEGORY_APPLICATION	=>	Label::getLabel('LBL_Application_/_Requirements'),
             static::CATEGORY_PAYMENTS	=>	Label::getLabel('LBL_Payments'),
         ); */
-        $srch = FaqCategory::getSearchObject();
+        $srch = FaqCategory::getSearchObject($langid);
         $srch->addCondition('faqcat_active', '=', 1);
         $srch->addOrder('faqcat_display_order', 'ASC');
         $rs = $srch->getResultSet();
