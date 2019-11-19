@@ -43,7 +43,7 @@ class TeacherRequestController extends MyAppController {
 			FatApp::redirectUser(CommonHelper::generateUrl('Teacher'));
 		}
 
-		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_PENDING)) {
+		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_PENDING) {
 			FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
 		}
 		/* check if maximum attempts reached [ */
