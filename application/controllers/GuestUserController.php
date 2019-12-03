@@ -878,6 +878,8 @@ class GuestUserController extends MyAppController
 
     public function loginGoogle($userType = User::USER_TYPE_LEANER)
     {
+		//echo "<pre>"; print_r($userType); echo "</pre>"; exit;
+		
         require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
@@ -929,7 +931,9 @@ class GuestUserController extends MyAppController
                 }
                 $userObj->setMainTableRecordId($row['user_id']);
                 $arr = array(
-                    'user_googleplus_id' => $userGoogleId
+                    'user_googleplus_id' => $userGoogleId,
+					'user_preferred_dashboard' => $preferredDashboard,
+                    'user_registered_initially_for' => $userType,
                 );
                 if (!$userObj->setUserInfo($arr)) {
                     Message::addErrorMessage(Label::getLabel($userObj->getError()));
@@ -995,7 +999,7 @@ class GuestUserController extends MyAppController
         }
         //FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
 		$redirectUrl = CommonHelper::generateUrl('Teachers');
-		if ($user_type == User::USER_TYPE_TEACHER) {
+		if ($userType == User::USER_TYPE_TEACHER) {
 			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
 		}
 		FatApp::redirectUser($redirectUrl);
