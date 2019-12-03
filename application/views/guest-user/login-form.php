@@ -4,6 +4,12 @@
 	$frm->developerTags['fld_default_col'] = 12;
 	$frm->setFormTagAttribute('onsubmit', 'setUpLogin(this); return(false);');
 ?>
+<?php 
+$userTypeArray = array('userType' => User::USER_TYPE_LEANER);
+if(isset($userType) && !empty($userType)) {
+	$userTypeArray = array('userType' => $userType);
+}
+?>
 <section class="section section--gray section--page">
 	<div class="container container--fixed">
 		<div class="row justify-content-center">
@@ -14,7 +20,7 @@
 					</div>
 					<div class="box__body -padding-40">
 					
-						<?php $this->includeTemplate( 'guest-user/_partial/learner-social-media-signup.php' );	?>
+						<?php $this->includeTemplate( 'guest-user/_partial/learner-social-media-signup.php', $userTypeArray );	?>
 						<?php echo $frm->getFormHtml(); ?>
 						
 						<div class="-align-center">
