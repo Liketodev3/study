@@ -632,11 +632,11 @@ class GuestUserController extends MyAppController
         $userLastName = $post['last_name'];
         $user_type = $post['type'];
 		$preferredDashboard = User::USER_LEARNER_DASHBOARD;
-		$userIsTeacher = 0;
+		//$userIsTeacher = 0;
 		
 		if($user_type == User::USER_TYPE_TEACHER) {
 			$preferredDashboard = User::USER_TEACHER_DASHBOARD;
-			$userIsTeacher = 1;
+			//$userIsTeacher = 1;
 		}
 		
 		
@@ -688,7 +688,7 @@ class GuestUserController extends MyAppController
                 'user_first_name' => $user_first_name,
                 'user_last_name' => $user_last_name,
                 'user_is_learner' => 1,
-                'user_is_teacher' => $userIsTeacher,
+                //'user_is_teacher' => $userIsTeacher,
                 'user_facebook_id' => $userFacebookId,
                 'user_preferred_dashboard' => $preferredDashboard,
                 'user_registered_initially_for' => $user_type,
@@ -736,10 +736,17 @@ class GuestUserController extends MyAppController
             Message::addErrorMessage(Label::getLabel($authentication->getError()));
             FatUtility::dieWithError(Message::getHtml());
         }
+		
+		
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_code']);
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_access_token']);
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_user_id']);
-        $this->set('url', User::getPreferedDashbordRedirectUrl());
+		
+		$redirectUrl = User::getPreferedDashbordRedirectUrl();
+		if ($user_type == User::USER_TYPE_TEACHER) {
+			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
+		}
+        $this->set('url', $redirectUrl);
         $this->set('msg', Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
