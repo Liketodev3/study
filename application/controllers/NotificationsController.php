@@ -78,6 +78,13 @@ class NotificationsController extends LoggedUserController
             case UserNotifications::NOTICATION_FOR_ISSUE_RESOLVE:
                 $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', array($notificationRecordId));
             break;
+			case UserNotifications::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER:
+                $notificationRedirectUrl = CommonHelper::generateUrl('TeacherScheduledLessons', 'view', array($notificationRecordId));
+            break;
+            case UserNotifications::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_LEARNER:
+                $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', array($notificationRecordId));
+            break;
+			
         }
         if ($notificationRead == UserNotifications::NOTIFICATION_NOT_READ) {
             $userNotification = new UserNotifications(UserAuthentication::getLoggedUserId());

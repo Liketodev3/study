@@ -12,6 +12,8 @@ class UserNotifications extends FatModel
     const NOTICATION_FOR_WALLET_CREDIT_ON_LESSON_COMPLETE = 4;
     const NOTICATION_FOR_ISSUE_REFUND = 5;
     const NOTICATION_FOR_ISSUE_RESOLVE = 6;
+    const NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER = 7;
+    const NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_LEARNER = 8;
 
     private $userId = 0;
     private $recordId = 0;
@@ -766,4 +768,27 @@ class UserNotifications extends FatModel
         }
         return true;
     }
+	
+	public function sendSchLessonUpdateNotificationByAdmin($lessonId, $userId ,$status, $updateFor)
+    {
+        $lessonStatusArray = ScheduledLesson::getStatusArr();
+		if ($updateFor == USER::USER_TYPE_LEANER) {
+			$this->type = self::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_LEARNER;
+		} else {
+			$this->type = self::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER;
+		}
+		
+        $this->recordId = $lessonId;
+        $this->subRecordId = $userId;
+       
+        $title = Label::getLabel("LABEL_LESSON_STATUS_UPDATED", CommonHelper::getLangId());
+		
+        $description = sprintf(Label::getLabel("LABEL_LESSON_STATUS_UPDATED_TO_%s", CommonHelper::getLangId()), $lessonStatusArray[$status]);
+			
+		if (!$this->addNotification($title, $description)) {
+            return false;
+        }
+        return true;
+    }
+	
 }

@@ -223,6 +223,8 @@ class PurchasedLessonsController extends AdminBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
 
+		//echo "<pre>"; print_r($lessonRow); echo "</pre>"; exit;
+		
         /*$data = ScheduledLesson::getAttributesById($slesson_id, array('slesson_id', 'slesson_status'));
         if (false == $data) {
             Message::addErrorMessage($this->str_invalid_request);
@@ -272,6 +274,14 @@ class PurchasedLessonsController extends AdminBaseController
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
+		/*[ notifications to users */
+		$userNotification = new UserNotifications($lessonRow['slesson_teacher_id']);
+        $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['slesson_learner_id'], $status, User::USER_TYPE_TEACHER);
+		
+		$userNotification = new UserNotifications($lessonRow['slesson_learner_id']);
+        $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['slesson_teacher_id'],  $status, User::USER_TYPE_LEANER);
+		/*]*/
+		
         $this->set('msg', 'Updated Successfully.');
         $this->set('slessonId', $slesson_id);
         $this->_template->render(false, false, 'json-success.php');
