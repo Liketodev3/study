@@ -20,7 +20,7 @@ class GuestUserController extends MyAppController
         $frm->setFormTagAttribute('name', 'frmLoginPopUp');
         $frm->setFormTagAttribute('id', 'frmLoginPopUp');
         $this->set('frm', $frm);
-        $this->set('userType', USER::USER_TYPE_LEANER);
+        $this->set('userType', User::USER_TYPE_LEANER);
         $this->_template->render(false, false);
     }
     public function setUpLogin()
@@ -993,7 +993,13 @@ class GuestUserController extends MyAppController
             }
             unset($_SESSION['access_token']);
         }
-        FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
+        //FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
+		$redirectUrl = CommonHelper::generateUrl('Teachers');
+		if ($user_type == User::USER_TYPE_TEACHER) {
+			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
+		}
+		FatApp::redirectUser($redirectUrl);
+		
     }
 
     public function forgotPasswordForm()
