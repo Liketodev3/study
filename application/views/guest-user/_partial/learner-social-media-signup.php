@@ -8,7 +8,7 @@
 	  </span> <?php echo Label::getLabel('LBL_Facebook'); ?>
 	</a>
 	
-	<a class="btn btn--social-gp btn--block" href="<?php echo CommonHelper::generateUrl('GuestUser', 'socialMediaLogin',array('google')); ?>">
+	<a class="btn btn--social-gp btn--block" href="<?php echo CommonHelper::generateUrl('GuestUser', 'socialMediaLogin',array('google', $userType)); ?>">
 		<span class="svg-icon">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 510 510" style="enable-background:new 0 0 510 510;" xml:space="preserve" width="18px" height="18px">
             <g>
@@ -49,7 +49,7 @@
 	function getUserData()
 	{
 		FB.api('/me?fields=id,name,email, first_name, last_name', function(response) {
-			response['type'] = <?php echo User::USER_TYPE_LEANER; ?>;
+			response['type'] = <?php echo $userType; ?>;
 			fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'loginFacebook'), response, function(t) {
 				location.href = t.url;
 			});

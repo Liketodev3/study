@@ -20,6 +20,7 @@ class GuestUserController extends MyAppController
         $frm->setFormTagAttribute('name', 'frmLoginPopUp');
         $frm->setFormTagAttribute('id', 'frmLoginPopUp');
         $this->set('frm', $frm);
+        $this->set('userType', USER::USER_TYPE_LEANER);
         $this->_template->render(false, false);
     }
     public function setUpLogin()
@@ -77,6 +78,8 @@ class GuestUserController extends MyAppController
         $json['status'] = true;
         $json['msg'] = '';
         $post = FatApp::getPostedData();
+		$userType = User::USER_TYPE_LEANER;
+		
         if (UserAuthentication::isUserLogged()) {
             if ($post['signUpType'] == "teacher") {
                 $user_preferred_dashboard = User::USER_TEACHER_DASHBOARD;
@@ -90,6 +93,7 @@ class GuestUserController extends MyAppController
         $user_preferred_dashboard = User::USER_LEARNER_DASHBOARD;
         if ($post['signUpType'] == "teacher") {
             $user_preferred_dashboard = User::USER_TEACHER_DASHBOARD;
+			$userType = User::USER_TYPE_TEACHER;
         }
         $frm = $this->getSignUpForm();
         $frm->setFormTagAttribute('name', 'frmRegisterPopUp');
@@ -116,6 +120,7 @@ class GuestUserController extends MyAppController
         } else {
             $privacyPolicyLinkHref = 'javascript:void(0)';
         }
+		$this->set('userType', $userType);
         $this->set('privacyPolicyLinkHref', $privacyPolicyLinkHref);
         /*]*/
         $json['html'] = $this->_template->render(false, false, 'guest-user/sign-up-form-pop-up.php', true, false);
@@ -467,13 +472,13 @@ class GuestUserController extends MyAppController
         return true;
     }
 
-    public function socialMediaLogin($oauthProvider)
+    public function socialMediaLogin($oauthProvider, $userType = User::USER_TYPE_LEANER)
     {
         if (isset($oauthProvider)) {
             if ($oauthProvider == 'googleplus') {
                 FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginGoogleplus'));
             } elseif ($oauthProvider == 'google') {
-                FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginGoogle'));
+                FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginGoogle', array($userType)));
             } elseif ($oauthProvider == 'facebook') {
                 FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginFacebook'));
             } else {
@@ -626,6 +631,15 @@ class GuestUserController extends MyAppController
         $userFirstName = $post['first_name'];
         $userLastName = $post['last_name'];
         $user_type = $post['type'];
+		$preferredDashboard = User::USER_LEARNER_DASHBOARD;
+		$userIsTeacher = 0;
+		
+		if($user_type == User::USER_TYPE_TEACHER) {
+			$preferredDashboard = User::USER_TEACHER_DASHBOARD;
+			$userIsTeacher = 1;
+		}
+		
+		
         $facebookName = $userFirstName.' '.$userLastName;
         // User info ok? Let's print it (Here we will be adding the login and registering routines)
         $db = FatApp::getDb();
@@ -674,9 +688,10 @@ class GuestUserController extends MyAppController
                 'user_first_name' => $user_first_name,
                 'user_last_name' => $user_last_name,
                 'user_is_learner' => 1,
+                'user_is_teacher' => $userIsTeacher,
                 'user_facebook_id' => $userFacebookId,
-                'user_preferred_dashboard' => User::USER_LEARNER_DASHBOARD,
-                'user_registered_initially_for' => User::USER_TYPE_LEANER,
+                'user_preferred_dashboard' => $preferredDashboard,
+                'user_registered_initially_for' => $user_type,
             );
             $userObj->assignValues($userData);
             if (!$userObj->save()) {
@@ -854,7 +869,7 @@ class GuestUserController extends MyAppController
         FatApp::redirectUser(User::getPreferedDashbordRedirectUrl());
     }
 
-    public function loginGoogle()
+    public function loginGoogle($userType = User::USER_TYPE_LEANER)
     {
         require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
@@ -884,6 +899,12 @@ class GuestUserController extends MyAppController
         $userGoogleId = $user['id'];
         $userGoogleName = $user['name'];
         if (isset($userGoogleEmail) && (!empty($userGoogleEmail))) {
+			$preferredDashboard = User::USER_LEARNER_DASHBOARD;
+			if ($userType == User::USER_TYPE_TEACHER) {
+				$preferredDashboard = User::USER_TEACHER_DASHBOARD;
+			}
+			
+			
             $db = FatApp::getDb();
             $userObj = new User();
             $srch = $userObj->getUserSearchObj(array(
@@ -916,9 +937,10 @@ class GuestUserController extends MyAppController
                     'user_first_name' => $user_first_name,
                     'user_last_name' => $user_last_name,
                     'user_is_learner' => 1,
+                    'user_is_teacher' => 1,
                     'user_googleplus_id' => $userGoogleId,
-                    'user_preferred_dashboard' => User::USER_LEARNER_DASHBOARD,
-                    'user_registered_initially_for' => User::USER_TYPE_LEANER,
+                    'user_preferred_dashboard' => $preferredDashboard,
+                    'user_registered_initially_for' => $userType,
                 );
                 $userObj->assignValues($userData);
                 if (!$userObj->save()) {

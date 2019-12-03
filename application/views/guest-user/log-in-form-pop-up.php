@@ -1,8 +1,15 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php 
+$userTypeArray = array('userType' => User::USER_TYPE_LEANER);
+if(isset($userType) && !empty($userType)) {
+	$userTypeArray = array('userType' => $userType);
+}
+?>
+
 <div class="box box--narrow">
 	<h2 class="-align-center"><?php echo Label::getLabel('LBL_Login'); ?></h2>
 	
-	<?php $this->includeTemplate( 'guest-user/_partial/learner-social-media-signup.php' );	?>
+	<?php $this->includeTemplate( 'guest-user/_partial/learner-social-media-signup.php', $userTypeArray);	?>
 
 	<?php 
 	$frm->setFormTagAttribute( 'class', 'form' );
