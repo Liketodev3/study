@@ -48,7 +48,10 @@
 					?>
 
                                  
-                                 <h2><a href="<?php echo CommonHelper::generateUrl('Blog','postDetail',array($blogPost['post_id'])); ?>" title="<?php echo $blogPost['post_title']; ?>" ><?php echo CommonHelper::truncateCharacters($blogPost['post_title'] , 50,'','',true); ?></a></h2>
+                                 <h2><a href="<?php echo CommonHelper::generateUrl('Blog','postDetail',array($blogPost['post_id'])); ?>" title="<?php echo $blogPost['post_title']; ?>" >
+								 <?php echo CommonHelper::truncateCharacters($blogPost['post_title'] , 50,'','',true); 
+								 echo (strlen($blogPost['post_title']) > 50)? '...': '';
+								 ?></a></h2>
                                  
                                  <div class="blog__actions">
                                    
