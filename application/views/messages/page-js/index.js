@@ -68,6 +68,8 @@ function getThread(id){
 function sendMessage(frm){
 if (!$(frm).validate()) return;	
 var data = fcom.frmData(frm);
+var dv = ".message-details-dv";
+$(dv).html(fcom.getLoader());
 fcom.ajax(fcom.makeUrl('Messages', 'sendMessage'), data, function(t) {						
     var data=JSON.parse(t);
 	getThread(data.threadId);

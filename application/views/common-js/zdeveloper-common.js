@@ -392,6 +392,8 @@ $(document).ready(function(){
 	sendMessage = function(frm){
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
+		var dv = "#frm_fat_id_frmSendMessage";
+		$(dv).html(fcom.getLoader());
 		fcom.updateWithAjax(fcom.makeUrl('Messages', 'sendMessage'), data, function(t) {
 		window.location.href = fcom.makeUrl('Messages');
 		});
