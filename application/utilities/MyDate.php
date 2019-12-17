@@ -61,7 +61,7 @@ class MyDate extends FatDate
         }
 
         if (empty($user_timezone)) {
-            $user_timezone = self::getTimeZone();
+            $user_timezone = $_COOKIE['user_timezone'];
         }
 
         return $user_timezone;
