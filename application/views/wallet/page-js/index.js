@@ -55,7 +55,8 @@ $(document).ready(function(){
 
 		fcom.updateWithAjax(fcom.makeUrl('Wallet','reedemGiftcard'), data1, function(res1){
             $(document).trigger('close.facebox');            
-			searchCredits(document.frmCreditSrch);
+			//searchCredits(document.frmCreditSrch);
+			document.location.reload();
 		});
 	};	
 
