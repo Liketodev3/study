@@ -132,17 +132,20 @@ class GiftcardController extends LoggedUserController
         $loggedInUserPhone = UserAuthentication::isUserLogged() === true ? $userInfo['user_phone'] : '';
         $buyerName = $frm->addRequiredField("Buyer Name", 'gcbuyer_name', $loggedInUserName, array(
             'title'=>'Buyer Name',
-            'placeholder' => Label::getLabel('LBL_Buyer_Name')
+            'placeholder' => Label::getLabel('LBL_Buyer_Name'),
+			'readonly' => 'true'
         ));
         $buyerName->requirements()->setRequired();
         $buyerEmail = $frm->addEmailField("Buyer Email", 'gcbuyer_email', $loggedInUserEmail, array(
             'title'=>'Buyer Email',
-            'placeholder' => Label::getLabel('LBL_Buyer_Email')
+            'placeholder' => Label::getLabel('LBL_Buyer_Email'),
+			'readonly' => 'true'
         ));
         //$buyerEmail->requirements()->setRequired();
         $buyerPhone = $frm->addRequiredField("Buyer Phone No.", 'gcbuyer_phone', $loggedInUserPhone, array(
             'title'=>'Buyer Phone',
             'placeholder' => Label::getLabel('LBL_Buyer_Phone')
+			
         ));
         $buyerPhone->requirements()->setRequired();
         $frm->addRequiredField("Recipient Name", 'gcrecipient_name', '', array(

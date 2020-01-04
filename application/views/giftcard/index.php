@@ -57,7 +57,7 @@ $submitFld->setWrapperAttribute('class','col-md-4');
 						<?php echo Label::getLabel('LBL_Gift_card',$siteLangId); ?>
 					  </div>
 						<div class="brand-logo">
-						<img src="<?php echo CONF_WEBROOT_URL; ?>images/logo-white.svg" alt="">
+						<img src="<?php echo FatUtility::generateFullUrl('Image','siteWhiteLogo',array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="">
 					  </div>
 					</div>
         </div>
