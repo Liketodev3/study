@@ -623,7 +623,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
         );
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], 'learner_schedule_email', $this->siteLangId, $vars)) {
-            FatUtility::dieJsonError(getLabel('LBL_Mail_not_sent!'));
+            FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
         }
 
         $userNotification = new UserNotifications($lessonRow['teacherId']);
