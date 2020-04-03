@@ -686,7 +686,8 @@ class TeachersController extends MyAppController {
 		$maxPriceRange = FatApp::getPostedData('maxPriceRange', FatUtility::VAR_FLOAT, 0);
 		if (!empty($maxPriceRange))  {
 			$maxPriceRangeInDefaultCurrency =  CommonHelper::getDefaultCurrencyValue($maxPriceRange, false, false);
-			$srch->addCondition('maxPrice', '<=', $maxPriceRangeInDefaultCurrency);
+			//$srch->addCondition('maxPrice', '<=', $maxPriceRangeInDefaultCurrency);
+			$srch->addCondition('minPrice', '<=', $maxPriceRangeInDefaultCurrency);
 		}
 		/* ] */
 		/* [ */

@@ -7339,3 +7339,15 @@ display: block;}
 #loaderCalendar .loader {
 	margin-top: 30%;
 }
+
+.box-hint{
+    width: 15px;
+    height: 15px;
+    border: 1px solid #dcdcdc;
+    display: inline-block;
+    margin-right: 10px;
+    margin-left:10px;
+    line-height: 1;	
+}
+.available-box {background : rgba(20, 224, 110, 0.3);}
+.booked-box {background : var(--color-secondary);}
