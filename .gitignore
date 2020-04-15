@@ -6,4 +6,4 @@
 /public/cache/*
 /public/.htaccess
 /.htaccess
-/library/*
+/library/core

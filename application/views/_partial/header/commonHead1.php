@@ -22,10 +22,17 @@ echo $str = '<script type="text/javascript">
 		) . ';
 		var CONF_AUTO_CLOSE_SYSTEM_MESSAGES = ' . FatApp::getConfig("CONF_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 0) . ';
 		var CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = ' . FatApp::getConfig("CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 3) . ';
+		var layoutDirection ="'.$layoutDirection.'";
 		var currencySymbolLeft = "' . $currencySymbolLeft . '";
 		var currencySymbolRight = "' . $currencySymbolRight . '";
 		if( CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES <= 0  ){
 			CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = 3;
 		}
 	</script>' . "\r\n";
+	if ($layoutDirection == 'rtl') {
+		?>
+		<style>body{direction: rtl;}</style>
+		<?php
+	}
+	
 ?>
