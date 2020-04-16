@@ -76,18 +76,18 @@ $this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeac
             </div>
         </div>
 		
-		<div class="row d-block -clearfix">
+		<div class="row -clearfix">
             <?php 
 			/* Left Side Filters Side Bar [ */
-			$this->includeTemplate('teachers/_partial/teacherLeftFilters.php', array( 'spokenLanguage_filter' => $spokenLanguage_filter, 'preferenceFilter_filter'=> $preferenceFilter_filter, 'fromCountry_filter' => $fromCountry_filter, 'gender_filter' => $gender_filter, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice )); 
+			$this->includeTemplate('teachers/_partial/teacherLeftFilters.php', array( 'spokenLanguage_filter' => $spokenLanguage_filter, 'preferenceFilter_filter'=> $preferenceFilter_filter, 'fromCountry_filter' => $fromCountry_filter, 'gender_filter' => $gender_filter, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice, 'siteLangId' => $siteLangId )); 
 			/* ] */
 			?>
 
-            <div class="col-xl-9 col-lg-12 order-2 -float-right" id="teachersListingContainer">
+            <div class="col-xl-9 col-lg-12 -float-right" id="teachersListingContainer">
 
             </div>
 
-            <div class="col-xl-3 col-lg-12 -float-left">
+            <div class="col-xl-3 col-lg-12 -float-left d-block d-xl-none">
                 <div class="box box--cta -padding-30 -align-center">
                     <h4 class="-text-bold"><?php echo Label::getLabel('LBL_Want_to_be_a_teacher?'); ?></h4>
                     <p><?php $str = Label::getLabel( 'LBL_If_you\'re_interested_in_being_a_teacher_on_{sitename},_please_apply_here.' ); 

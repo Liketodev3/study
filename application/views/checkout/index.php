@@ -1,4 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 <section class="section section--grey section--page" >
 	<div class="container container--narrow">
 
@@ -6,7 +7,7 @@
 			<h2><?php echo Label::getLabel('LBL_Checkout'); ?></h2>
 		</div>
 		<div class="section__body">
-			<div class="row d-block -clearfix">
+			<div class="row d-block <?php echo (strtolower($layoutDirection) !="rtl")? "d-block" : ""; ?> -clearfix">
 
 				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right">
 					<div class="box -align-center" style="margin-bottom: 30px;">

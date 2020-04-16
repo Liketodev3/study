@@ -175,6 +175,15 @@ if ( $minPrice == 0 && $maxPrice == 0 ) {
             </div>
         </div>
     </div>
+	<div class="box box--cta -padding-30 -align-center d-none d-xl-block">
+		<h4 class="-text-bold"><?php echo Label::getLabel('LBL_Want_to_be_a_teacher?'); ?></h4>
+		<p><?php $str = Label::getLabel( 'LBL_If_you\'re_interested_in_being_a_teacher_on_{sitename},_please_apply_here.' ); 
+		$siteName = FatApp::getConfig( 'CONF_WEBSITE_NAME_'.$siteLangId, FatUtility::VAR_STRING, '' );
+		$str = str_replace( "{sitename}", $siteName, $str );
+		echo $str;
+		?></p>
+		<a href="javascript:void(0)" onClick="signUpFormPopUp('teacher');" class="btn btn--primary btn--block"><?php echo Label::getLabel('LBL_Apply_to_be_a_teacher'); ?></a>
+    </div>
 
 </div>
 
