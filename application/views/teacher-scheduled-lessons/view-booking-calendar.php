@@ -1,4 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 <script>
 	function getEventsByTime( start, stop ) {
 	   var json = JSON.stringify($("#d_calendar").fullCalendar("clientEvents").map(function(e) {
@@ -25,6 +26,10 @@
 			  },
 			defaultView: 'agendaWeek',
 			selectable: true,
+			<?php if (strtolower($layoutDirection ) == 'rtl') { ?>
+			rtl : true,
+			isRTL : true,
+			<?php } ?>
 			editable: false,
 			nowIndicator:true,
 			eventOverlap: false,

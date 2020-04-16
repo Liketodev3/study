@@ -1,4 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 <script type="text/javascript">
 
 	function getEventsByTime( start, stop ) {
@@ -29,6 +30,10 @@
 			},
 			defaultView: 'agendaWeek',
 			selectable: true,
+			<?php if (strtolower($layoutDirection ) == 'rtl') { ?>
+			rtl : true,
+			isRTL : true,
+			<?php } ?>
             unselectAuto: true,
 			editable: false,
 			nowIndicator:true,

@@ -1,4 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 <script>
    function isOverlapping(start,end){
        var array = $("#listing_calendar").fullCalendar('clientEvents');
@@ -26,6 +27,10 @@
    	$('#listing_calendar').fullCalendar({
    		
    			selectable: true,
+			<?php if (strtolower($layoutDirection ) == 'rtl') { ?>
+			rtl : true,
+			isRTL : true,
+			<?php } ?>
    			editable: false,
    			selectOverlap: false,
    			eventOverlap: false,

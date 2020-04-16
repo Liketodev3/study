@@ -50,6 +50,7 @@ _carousel.each(function () {
     _this.slick({
         slidesToShow: parseInt(_slidesToShow.length > 0 ? _slidesToShow[0] : "3"),
         slidesToScroll: 1,
+		rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
         arrows: _this.data("arrows"),
         dots: _this.data("dots"),
         infinite: true,
@@ -82,6 +83,7 @@ _carousel.each(function () {
     
 $('.vert-carousel').slick({
     slidesToShow: 3,
+	rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
@@ -91,6 +93,7 @@ $('.vert-carousel').slick({
     
 $('.quote-slider').slick({
     slidesToShow: 1,
+	rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
     slidesToScroll: 1,
     arrows: true,
     infinite: false,
@@ -109,6 +112,7 @@ $('.quote-slider').slick({
 $('.quote-thumbs').slick({
     slidesToShow: 3,
     slidesToScroll: 1,
+	rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
     asNavFor: '.quote-slider',
     dots: false,
     centerMode: true,

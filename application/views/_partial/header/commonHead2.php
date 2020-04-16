@@ -4,8 +4,11 @@ if(isset($includeEditor) && $includeEditor){ ?>
 <script src="<?php echo CONF_WEBROOT_URL; ?>innovas/scripts/common/webfont.js" type="text/javascript"></script>
 <?php } ?>
 </head>
+<?php
+$layoutDirection = CommonHelper::getLayoutDirection();
+?>
 
-<body class="<?php echo $htmlBodyClassesString; ?>">
+<body class="<?php echo $htmlBodyClassesString; ?>" <?php echo (strtolower($layoutDirection) == 'rtl') ? 'dir="rtl"' : "" ;?>>
     <?php $errorClass = '';
 	if( Message::getMessageCount() > 0 ){
 		$errorClass = " alert--success";

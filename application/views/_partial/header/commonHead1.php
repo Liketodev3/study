@@ -29,10 +29,4 @@ echo $str = '<script type="text/javascript">
 			CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = 3;
 		}
 	</script>' . "\r\n";
-	if ($layoutDirection == 'rtl') {
-		?>
-		<style>body{direction: rtl;}</style>
-		<?php
-	}
-	
 ?>
