@@ -49,7 +49,7 @@
                             </div>
                             <div class="tabled__cell">
                             <span class="-color-light"><?php echo Label::getLabel('LBL_Duration'); ?></span><br>
-                            <?php echo ($cartData['lpackage_is_free_trial'])?FatApp::getConfig( 'conf_trial_lesson_duration', FatUtility::VAR_INT, 30 ):FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60); ?> Mins/Lesson
+                            <?php echo ($cartData['lpackage_is_free_trial'])?FatApp::getConfig( 'conf_trial_lesson_duration', FatUtility::VAR_INT, 30 ):FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60); ?> <?php echo Label::getLabel('LBL_Mins/Lesson'); ?>
                             </div>
                         </div>
 					</div>

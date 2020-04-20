@@ -34,7 +34,7 @@ $submitFld->setWrapperAttribute('class','col-md-4');
 	  <div class="page-head">
 				   <div class="d-flex justify-content-between align-items-center">
 						 <div><h1><?php echo Label::getLabel('LBL_Giftcards_Purchased'); ?></h1></div>
-						 <div><a href="javascript:void(0);" onclick="$('#addGiftcardFrm').toggle()" class="btn btn--secondary btn--small">Send Gift Card</a></div>						 
+						 <div><a href="javascript:void(0);" onclick="$('#addGiftcardFrm').toggle()" class="btn btn--secondary btn--small"><?php echo Label::getLabel('LBL_Send_Gift_Card',$siteLangId); ?></a></div>						 
 					</div>
 				 </div>
 				 
