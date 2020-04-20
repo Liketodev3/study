@@ -12,7 +12,7 @@
 				</div>            
 				<div class="col-xl-2 col-lg-2 col-md-3">
 					<div class="toggle-group">
-						<h5 class="toggle__trigger toggle__trigger-js"><?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.CommonHelper::getLangId());?></h5>
+						<h5 class="toggle__trigger toggle__trigger-js"><?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.CommonHelper::getLangId(), null, '');?></h5>
 						<div class="toggle__target toggle__target-js">
 							<ul class="links--vertical">
 								<?php $this->includeTemplate( '_partial/footerNavigation.php'); ?>
@@ -61,19 +61,19 @@
                                 <li>
                                     
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon01.svg">
-                                        <?php echo FatApp::getConfig('CONF_CONTACT_EMAIL');?>
+                                        <?php echo FatApp::getConfig('CONF_CONTACT_EMAIL', null, '');?>
                                     
                                 </li>
                                 <li>
                                     
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon02.svg">
-                                        <?php echo Label::getLabel('LBL_Call_Us'); ?>: <?php echo FatApp::getConfig('CONF_SITE_PHONE');?>
+                                        <?php echo Label::getLabel('LBL_Call_Us'); ?>: <?php echo FatApp::getConfig('CONF_SITE_PHONE', null, '');?>
                                     
                                 </li>
                                 <li>
                                     
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon03.svg">
-                                        <?php echo FatApp::getConfig('CONF_ADDRESS_'.CommonHelper::getLangId());?>
+                                        <?php echo FatApp::getConfig('CONF_ADDRESS_'.CommonHelper::getLangId(), null, '');?>
                                     
                                 </li>
                             </ul>
@@ -90,7 +90,7 @@
 
                 <ul class="fineprint-listing">
                     <li>
-                        <p>&copy;<?php echo date("Y"); ?> <?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.CommonHelper::getLangId()); ?></p>
+                        <p>&copy;<?php echo date("Y"); ?> <?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.CommonHelper::getLangId(), null, ''); ?></p>
                     </li>
                     <li>
                         <p><?php echo Label::getLabel('LBL_All_Rights_Reserved'); ?></p>

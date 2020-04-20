@@ -735,7 +735,7 @@ class TeacherController extends TeacherBaseController
     {
         $frm = new Form('frmOrderSrch');
         $frm->addTextBox(Label::getLabel('LBL_Keyword', $langId), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Keyword', $langId)));
-        $frm->addSelectBox('Status', 'status', array(-2 => Label::getLabel('LBL_Does_Not_Matter', $langId)) + Order::getPaymentStatusArr($langId), '', array('placeholder' => 'Select Status'), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $langId), 'status', array(-2 => Label::getLabel('LBL_Does_Not_Matter', $langId)) + Order::getPaymentStatusArr($langId), '', array('placeholder' => 'Select Status'), '');
         $frm->addDateField(Label::getLabel('LBL_Date_From', $langId), 'date_from', '', array('placeholder' => '', 'readonly' => 'readonly'));
         $frm->addDateField(Label::getLabel('LBL_Date_To', $langId), 'date_to', '', array('placeholder' => '', 'readonly' => 'readonly'));
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', 'Submit', array('class' => 'btn btn--primary'));

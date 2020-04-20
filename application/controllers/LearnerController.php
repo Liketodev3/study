@@ -197,8 +197,8 @@ class LearnerController extends LearnerBaseController
     {
         $frm = new Form('frmFavSrch');
         $frm->addTextBox(Label::getLabel('LBL_Keyword', $langId), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Keyword', $langId)));
-        $fld_submit = $frm->addSubmitButton(Label::getLabel('LBL_Submit', $langId), 'btn_submit', 'Submit', array('class' => 'btn btn--primary'));
-        $fld_cancel = $frm->addResetButton(Label::getLabel('LBL_Clear', $langId), "btn_clear", "Clear", array('onclick' => 'clearSearch();', 'class' =>'btn--clear'));
+        $fld_submit = $frm->addSubmitButton('', 'btn_submit', 'Submit', array('class' => 'btn btn--primary'));
+        $fld_cancel = $frm->addResetButton('', "btn_clear", "Clear", array('onclick' => 'clearSearch();', 'class' =>'btn--clear'));
         $fld_submit->attachField($fld_cancel);
         $frm->addHiddenField('', 'page', 1);
         return $frm;
