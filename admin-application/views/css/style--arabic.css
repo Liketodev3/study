@@ -71,3 +71,5 @@ background: url(../images/icon--info.svg) no-repeat calc(100% - 15px) 15px #02b4
 .table th{text-align: right;}
 .grid__right{border-left: none;border-right: 1px solid #e3e7ed;}
 .grid__right .box__head .actions.right{right: auto;left: -10px;}
+.stats__icon {right: auto; left: 20px;}
+.box--stats .box__body {padding: 15px;}
