@@ -73,3 +73,5 @@ background: url(../images/icon--info.svg) no-repeat calc(100% - 15px) 15px #02b4
 .grid__right .box__head .actions.right{right: auto;left: -10px;}
 .stats__icon {right: auto; left: 20px;}
 .box--stats .box__body {padding: 15px;}
+.section .sectionhead .actions {right:auto; left:20px;}
+.section .sectionhead .actions.actions--centered .dropwrap{left:0px; right: auto;}
