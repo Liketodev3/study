@@ -58,7 +58,7 @@
 												$frm->developerTags['colClassPrefix'] = 'col-md-';
 												$frm->developerTags['fld_default_col'] = 12;
 												$messageBox = $frm->getField('message_text');
-												$messageBox->htmlAfterField = '<p class="messageCheckbox"><label class="field_label"><input type="checkbox" name="is_enter" class="is_enter" value="false" > &nbsp; Send Message on Enter Press </label></p>';
+												$messageBox->htmlAfterField = '<p class="messageCheckbox"><label class="field_label"><input type="checkbox" name="is_enter" class="is_enter" value="false" > &nbsp; '. Label::getLabel('LBL_Send_Message_on_Enter_Press') .'</label></p>';
 												
 												echo $frm->getFormHtml(); ?>
                                     <!--form class="form">

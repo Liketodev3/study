@@ -53,8 +53,8 @@ class MessagesController extends LoggedUserController
     private function getSearchForm($langId)
     {
         $frm = new Form('frmMessageSrch');
-        $frm->addTextBox('From', 'keyword');
-        $frm->addSelectBox('Status', 'is_unread', array(0 => 'Read', 1 => 'Unread'));
+        $frm->addTextBox(Label::getLabel("LBL_From", $langId), 'keyword');
+        $frm->addSelectBox(Label::getLabel("LBL_Status", $langId), 'is_unread', array(0 => Label::getLabel("LBL_Read", $langId), 1 => Label::getLabel("LBL_Unread", $langId)));
         $frm->addHiddenField('', 'page');
         $fldSubmit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel("LBL_Submit", $langId));
         $fldCancel = $frm->addResetButton("", "btn_clear", Label::getLabel("LBL_Clear", $langId), array('onclick' =>  'clearSearch();', 'class' => 'btn--clear'));
@@ -158,7 +158,7 @@ class MessagesController extends LoggedUserController
     private function sendMessageForm($langId)
     {
         $frm = new Form('frmSendMessage');
-        $fld = $frm->addTextarea('Message', 'message_text', '')->requirements();
+        $fld = $frm->addTextarea(Label::getLabel("LBL_Message", $langId), 'message_text', '')->requirements();
         $fld->setRequired(true);
         $fld->setLength(0, 1000);
         $frm->addHiddenField('', 'message_thread_id');
