@@ -42,7 +42,7 @@ class IssuesReportedController extends AdminBaseController
         $frm->addHiddenField('', 'page', 1);
         $frm->addHiddenField('', 'slesson_teacher_id', 0);
         $frm->addHiddenField('', 'slesson_learner_id', 0);
-        $fld_submit = $frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
+        $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         $fld_submit->attachField($fld_cancel);
         return $frm;

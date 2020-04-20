@@ -225,7 +225,7 @@ class GiftcardsController extends AdminBaseController
         $frm->addRequiredField(Label::getLabel('LBL_Payment_Method', $this->adminLangId), 'opayment_method');
         $frm->addRequiredField(Label::getLabel('LBL_Txn_ID', $this->adminLangId), 'opayment_gateway_txn_id');
         $frm->addRequiredField(Label::getLabel('LBL_Amount', $this->adminLangId), 'opayment_amount')->requirements()->setFloatPositive(true);
-        $frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
 
         return $frm;
     }
@@ -245,7 +245,7 @@ class GiftcardsController extends AdminBaseController
         $frm->addTextBox('', 'price_to', '', array('placeholder' => 'Order To ['.$currencySymbol.']' ));
         $frm->addHiddenField('', 'page');
         $frm->addHiddenField('', 'user_id');
-        $fld_submit=$frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
+        $fld_submit=$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         $fld_submit->attachField($fld_cancel);
 

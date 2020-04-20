@@ -419,7 +419,7 @@ class BlogPostCategoriesController extends AdminBaseController
         $frm->addHiddenField('', 'bpcategory_parent', 0, array('id'=>'bpcategory_parent'));
         $frm->addTextBox(Label::getLabel('LBL_Keyword', $this->adminLangId), 'keyword', '', array('class'=>'search-input'));
 
-        $fld_submit=$frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
+        $fld_submit=$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         $fld_submit->attachField($fld_cancel);
         return $frm;

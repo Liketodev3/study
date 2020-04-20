@@ -23,7 +23,7 @@ class TransferbankSettingsController extends PaymentSettingsController
     {
         $frm = new Form('frmPaymentMethods');
         $frm->addTextArea(Label::getLabel('LBL_Bank_Details', $this->adminLangId), 'bank_details');
-        $frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
 }

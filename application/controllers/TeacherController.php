@@ -56,7 +56,7 @@ class TeacherController extends TeacherBaseController
             }
         }
         //$frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'),'us_video_link','');
-        $frm->addSubmitButton('&nbsp;', 'submit', Label::getLabel('LBL_SAVE_CHANGES'));
+        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_SAVE_CHANGES'));
         return $frm;
     }
 
@@ -229,7 +229,7 @@ class TeacherController extends TeacherBaseController
                 //$fld->developerTags['col']=2;
             }
         }
-        $frm->addSubmitButton('&nbsp;', 'submit', Label::getLabel('LBL_SAVE_CHANGES'));
+        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_SAVE_CHANGES'));
         $frm->addHtml('', 'add_more_div', '');
         return $frm;
     }
@@ -734,7 +734,7 @@ class TeacherController extends TeacherBaseController
     private function getOrderSearchForm($langId)
     {
         $frm = new Form('frmOrderSrch');
-        $frm->addTextBox('Keyword', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Keyword', $langId)));
+        $frm->addTextBox(Label::getLabel('LBL_Keyword', $langId), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Keyword', $langId)));
         $frm->addSelectBox('Status', 'status', array(-2 => Label::getLabel('LBL_Does_Not_Matter', $langId)) + Order::getPaymentStatusArr($langId), '', array('placeholder' => 'Select Status'), '');
         $frm->addDateField(Label::getLabel('LBL_Date_From', $langId), 'date_from', '', array('placeholder' => '', 'readonly' => 'readonly'));
         $frm->addDateField(Label::getLabel('LBL_Date_To', $langId), 'date_to', '', array('placeholder' => '', 'readonly' => 'readonly'));

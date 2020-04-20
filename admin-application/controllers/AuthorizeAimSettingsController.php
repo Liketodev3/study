@@ -25,7 +25,7 @@ class AuthorizeAimSettingsController extends PaymentSettingsController
         $frm->addRequiredField(Label::getLabel('LBL_Login_ID', $this->adminLangId), 'login_id');
         $frm->addRequiredField(Label::getLabel('LBL_Transaction_Key', $this->adminLangId), 'transaction_key');
         $frm->addTextBox(Label::getLabel('LBL_MD5_Hash', $this->adminLangId), 'md5_hash');
-        $frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
 }

@@ -49,12 +49,12 @@ class LearnerController extends LearnerBaseController
     private function getOrderSearchForm($langId)
     {
         $frm = new Form('frmOrderSrch');
-        $frm->addTextBox('Keyword', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Keyword', $langId)));
+        $frm->addTextBox(Label::getLabel('LBL_Keyword', $langId), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Keyword', $langId)));
         $frm->addSelectBox('Status', 'status', array(-2 => Label::getLabel('LBL_Does_Not_Matter', $langId)) + Order::getPaymentStatusArr($langId), '', array('placeholder' => 'Select Status'), '');
         $frm->addDateField(Label::getLabel('LBL_Date_From', $langId), 'date_from', '', array('placeholder' => '', 'readonly' => 'readonly'));
         $frm->addDateField(Label::getLabel('LBL_Date_To', $langId), 'date_to', '', array('placeholder' => '', 'readonly' => 'readonly'));
-        $fld_submit = $frm->addSubmitButton('&nbsp;', 'btn_submit', 'Submit', array('class' => 'btn btn--primary'));
-        $fld_cancel = $frm->addResetButton("&nbsp;", "btn_clear", "Clear", array('onclick' => 'clearSearch();', 'class' =>'btn--clear'));
+        $fld_submit = $frm->addSubmitButton('', 'btn_submit', 'Submit', array('class' => 'btn btn--primary'));
+        $fld_cancel = $frm->addResetButton("", "btn_clear", "Clear", array('onclick' => 'clearSearch();', 'class' =>'btn--clear'));
         $frm->addHiddenField('', 'page', 1);
         $fld_submit->attachField($fld_cancel);
         return $frm;
@@ -196,9 +196,9 @@ class LearnerController extends LearnerBaseController
     private function getFavouriteSearchForm($langId)
     {
         $frm = new Form('frmFavSrch');
-        $frm->addTextBox('Keyword', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Keyword', $langId)));
-        $fld_submit = $frm->addSubmitButton('&nbsp;', 'btn_submit', 'Submit', array('class' => 'btn btn--primary'));
-        $fld_cancel = $frm->addResetButton("&nbsp;", "btn_clear", "Clear", array('onclick' => 'clearSearch();', 'class' =>'btn--clear'));
+        $frm->addTextBox(Label::getLabel('LBL_Keyword', $langId), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Keyword', $langId)));
+        $fld_submit = $frm->addSubmitButton(Label::getLabel('LBL_Submit', $langId), 'btn_submit', 'Submit', array('class' => 'btn btn--primary'));
+        $fld_cancel = $frm->addResetButton(Label::getLabel('LBL_Clear', $langId), "btn_clear", "Clear", array('onclick' => 'clearSearch();', 'class' =>'btn--clear'));
         $fld_submit->attachField($fld_cancel);
         $frm->addHiddenField('', 'page', 1);
         return $frm;
