@@ -7370,7 +7370,12 @@ body[dir="rtl"] .page-panel__right, body[dir="rtl"] .page-panel__inner-r{
 body[dir="rtl"] .page-panel__right {
 	padding-right: 30px;
 }
-
+body[dir="rtl"] .course_flag_card .flag-icon {margin-left: 20px;}
+body[dir="rtl"] .date-format .date {margin-left: 15px; margin-right:0px;}
+body[dir="rtl"] .search-form .form input[type="submit"], body[dir="rtl"]  .footer-subscribe .form input[type="submit"]{
+    margin-right: 10px; margin-left:0px;}
+body[dir="rtl"] .cta-wrap .btn{margin-right: 30px; margin-left:0px;}
+body[dir="rtl"] .form-filters .form__element .form__input{padding-right: 50px;}
 body[dir="rtl"] input[type="submit"] {
 	margin-left : 10px;
 }
@@ -7405,5 +7410,5 @@ body[dir="rtl"] .page-panel__right {
 body[dir="rtl"] .nav.nav--primary-offset {
 	right:0px;
 	text-align : right;
-}
+} 
 }
