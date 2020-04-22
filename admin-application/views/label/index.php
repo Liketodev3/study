@@ -12,31 +12,46 @@
 						</div>
 					</div>
 				</div>
-
 				<section class="section searchform_filter">
 					<div class="sectionhead">
-						<h4> <?php echo Label::getLabel('LBL_Search',$adminLangId); ?></h4>
+						<h4> <?php echo Label::getLabel('LBL_Search',$adminLangId); ?></h4>						
 					</div>
 					<div class="sectionbody space togglewrap" style="display:none;">
 						<?php 
-						$frmSearch->setFormTagAttribute ( 'onsubmit', 'searchLabels(this); return(false);');
-						$frmSearch->setFormTagAttribute ( 'id', 'frmLabelsSearch' );
-						$frmSearch->setFormTagAttribute ( 'class', 'web_form' );
-						$frmSearch->developerTags['colClassPrefix'] = 'col-md-';					
-						$frmSearch->developerTags['fld_default_col'] = 6;					
-
-						$btn = $frmSearch->getField('btn_clear');
-						$btn->setFieldTagAttribute('onClick','clearSearch()');
-						echo  $frmSearch->getFormHtml();
+							$frmSearch->setFormTagAttribute ( 'onsubmit', 'searchLabels(this); return(false);');
+							$frmSearch->setFormTagAttribute ( 'id', 'frmLabelsSearch' );
+							$frmSearch->setFormTagAttribute ( 'class', 'web_form' );
+							$frmSearch->developerTags['colClassPrefix'] = 'col-md-';					
+							$frmSearch->developerTags['fld_default_col'] = 6;					
+							$btn = $frmSearch->getField('btn_clear');
+							$btn->setFieldTagAttribute('onClick','clearSearch()');
+							echo  $frmSearch->getFormHtml();
 						?>    
 					</div>
 				</section> 
-
 				<section class="section">
-				
+					<div class="sectionhead">
+						<h4><?php echo Label::getLabel('LBL_Language_labels_List',$adminLangId); ?> </h4>	
+						<?php
+							$ul = new HtmlElement( "ul",array("class"=>"actions actions--centered") );
+							$li = $ul->appendElement("li",array('class'=>'droplink'));
+							$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit', $adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
+							$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
+							$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
+							if( $canEdit ){
+								$innerLiImport=$innerUl->appendElement('li');            
+								$innerLiImport->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Import', $adminLangId),"onclick"=>"importLabels(0)"),Label::getLabel('LBL_Import', $adminLangId), true);
+							}
+							$innerLiImport=$innerUl->appendElement('li');            
+							$innerLiImport->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Export', $adminLangId),"onclick"=>"exportLabels(0)"),Label::getLabel('LBL_Export', $adminLangId), true);
+							echo $ul->getHtml();
+						?>
+					</div>
 					<div class="sectionbody">
 						<div class="tablewrap" >
-							<div id="listing"> <?php echo Label::getLabel('LBL_processing...',$adminLangId); ?></div>
+							<div id="listing"> 
+								<?php echo Label::getLabel('LBL_processing...',$adminLangId); ?>
+							</div>
 						</div> 
 					</div>
 				</section>
