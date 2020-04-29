@@ -656,12 +656,12 @@
 
 .slide__fields li .rsText {
     position: absolute;
-    left: 20px;
+    left: 17px;
     top: 0;
     bottom: 0;
     line-height: 50px;
     color: #999;
-    font-size: 1.1rem;
+    font-size: 0.90rem;
 }
 
 .box-list {
@@ -2951,7 +2951,7 @@
         min-height: 1%;
         margin: 0;
     }
-	
+
 }
 
 .attachment-file {
@@ -5012,7 +5012,7 @@ div.tagsinput div {
     /* .page-panel__inner-l .col-list .col-positioned {position: absolute;right: 10px;top: 10px;}
 .page-panel__inner-l .col-list [class*="col-"].col-positioned {text-align: right;}
 .page-panel__inner-l .schedule-list li {width: 50%;margin: 0 -2px;vertical-align: top;}
-.page-panel__inner-l .col-list [class*="col-lg-"]{-ms-flex: 0 0 100%;flex: 0 0 100%;max-width: 100%;} 
+.page-panel__inner-l .col-list [class*="col-lg-"]{-ms-flex: 0 0 100%;flex: 0 0 100%;max-width: 100%;}
 .page-panel__inner-l .col-list > .d-lg-flex{display: block!important;}  */
     .screen__center-content {
         width: 95%;
@@ -5134,7 +5134,7 @@ div.tagsinput div {
         border-bottom: 5px solid #333;
         top: 12px;
     }
-    
+
     .subheader .nav.nav--primary > ul > li.nav__dropdown > a.is-active:after {
 		border-bottom: 0px solid #333;
 	}
@@ -6044,7 +6044,7 @@ div.tagsinput div {
 
 
 
-    /*.show-setting-js .settings-group{position: fixed;left: 0;right: 0;top: 0; bottom: 0;z-index: 100;background: #fff;padding: 50px;display: block;}    
+    /*.show-setting-js .settings-group{position: fixed;left: 0;right: 0;top: 0; bottom: 0;z-index: 100;background: #fff;padding: 50px;display: block;}
 .settings-group .btn.btn--bordered-inverse{color: #333; border-color: #333;}
 .settings{margin: 0 0 10px 0;}
 .settings .settings__target{bottom: auto;position: relative;left: auto;right:auto;border: 1px solid #333;margin: 10px 0;text-align: center;}*/
@@ -7119,18 +7119,18 @@ div.tagsinput div {
     margin: 0;
     width: 100%;
 }
-.box-language .language span, .border-box .language span, .my_teacher_langauges .language span{    
+.box-language .language span, .border-box .language span, .my_teacher_langauges .language span{
 	float: left;
     line-height: 24px;
-	margin: 0px 3px; 
+	margin: 0px 3px;
 	position:relative;
 	    font-size: 0.9rem;
 }
 .my_teacher_langauges .language span:first-child{margin-left:0;}
 .my_teacher_langauges .language ul li span.plus{margin-left:5px;}
 .box-language .language span.main-language:after {
-	content:","; 
-	position:absolute; 
+	content:",";
+	position:absolute;
 }
 .box-language .language span.main-language:last-child:after{content:"";}
 
@@ -7276,7 +7276,7 @@ display: block;}
 }
 
 .links--vertical.footer_contact_details li {
-	  
+
 		font-size: 0.857rem !important;
 		color: #fff !important;
 }
@@ -7323,7 +7323,7 @@ display: block;}
 	color: #fff !important;
 	display:flex;
 	line-height: 1.5;
-	
+
 }
 .links--vertical.footer_contact_details li img{
 	margin-right: 10px;
@@ -7347,7 +7347,7 @@ display: block;}
     display: inline-block;
     margin-right: 10px;
     margin-left:10px;
-    line-height: 1;	
+    line-height: 1;
 }
 .available-box {background : rgba(20, 224, 110, 0.3);}
 .booked-box {background : var(--color-secondary);}
@@ -7410,5 +7410,5 @@ body[dir="rtl"] .page-panel__right {
 body[dir="rtl"] .nav.nav--primary-offset {
 	right:0px;
 	text-align : right;
-} 
+}
 }
