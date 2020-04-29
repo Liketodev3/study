@@ -266,6 +266,7 @@ class TeachersController extends MyAppController {
 		$frmReviewSearch->fill(array('tlreview_teacher_user_id' => $teacher_id, 'teach_lang_name' => $teacher['teachlanguage_name']));
 		$this->set('frmReviewSearch', $frmReviewSearch);
 		$teacher['preferences'] = $teacherPreferences;
+		$teacher['proficiencyArr'] = SpokenLanguage::getProficiencyArr( CommonHelper::getLangId() );
 		$this->set('teacher', $teacher);
 		$this->_template->render();
 	}

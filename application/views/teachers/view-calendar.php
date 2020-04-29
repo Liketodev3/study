@@ -15,13 +15,13 @@
 		}));
 	   return json;
 	}
-	
+
 	$(document).ready(function() {
-		
+
 		$(document).bind('close.facebox', function() {
 			$('.tooltipevent').remove();
 		});
-		
+
 		$('#d_calendar').fullCalendar({
 			header: {
 				left: 'title',
@@ -49,31 +49,32 @@
 				//$("#loaderCalendar").show();
 				$("body").css( {"pointer-events": "none"} );
 				$("body").css( {"cursor": "wait"} );
-				
+
 				//==================================//
+
 					var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
 					var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
-		
-					if ( selectedDateTime < validSelectDateTime ) {	
+
+					if ( selectedDateTime < validSelectDateTime ) {
 							//$("#loaderCalendar").hide();
-							$("body").css( {"cursor": "default"} );
-							$("body").css( {"pointer-events": "initial"} );
+
 						if( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
-							$.systemMessage('<?php echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--success');	
-								setTimeout(function() {  
+							$.systemMessage('<?php echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--danger');
+								setTimeout(function() {
 									$.systemMessage.close();
 								}, 3000);
 						}
-					
+						$("body").css( {"cursor": "default"} );
+						$("body").css( {"pointer-events": "initial"} );
 						$('#calendar').fullCalendar('unselect');
 						return false;
 					}
 				//================================//
-				
+
 				if( getEventsByTime( start, end ).length > 1 ){
 					$('#d_calendar').fullCalendar('refetchEvents');
 				}
-				
+
 				if( moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0 ) {
 					//$("#loaderCalendar").hide();
 					$("body").css( {"cursor": "default"} );
@@ -81,7 +82,7 @@
 					$('#d_calendar').fullCalendar('unselect');
 					return false;
 				}
-				
+
 				if( moment(start).format('YYYY-MM-DD HH:mm:ss') > moment(end).format('YYYY-MM-DD HH:mm:ss') ) {
 					//$("#loaderCalendar").hide();
 					$("body").css( {"cursor": "default"} );
@@ -89,7 +90,7 @@
 					$('#d_calendar').fullCalendar('unselect');
 					return false;
 				}
-				
+
 				var duration = moment.duration( moment(end).diff(moment(start)) );
 				var minutesDiff = duration.asMinutes();
 				var minutes = "<?php echo $bookingMinutesDuration ?>";
@@ -101,7 +102,7 @@
 					$('.tooltipevent').remove();
 					return false;
 				}
-				
+
 				var newEvent = new Object();
 				newEvent.title = '';
 				newEvent.startTime = moment(start).format('HH:mm:ss');
@@ -115,14 +116,14 @@
 				newEvent.allday = 'false';
 				newEvent.maxTime = "<?php echo $bookingSnapDuration; ?>";
 				newEvent.eventOverlap = false;
-				
+				console.log(newEvent);
 				var currentDate = $('#calendar').fullCalendar('getDate');
 				var beginOfWeek = moment(start).startOf('week').format('YYYY-MM-DD HH:mm:ss');
 				var endOfWeek = moment(start).endOf('week').format('YYYY-MM-DD HH:mm:ss');
-				
+
 				newEvent.weekStart = moment(beginOfWeek).format('YYYY-MM-DD HH:mm:ss');
 				newEvent.weekEnd = moment(endOfWeek).format('YYYY-MM-DD HH:mm:ss');
-				
+
 				fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[<?php echo $teacher_id; ?>]), newEvent, function(doc) {
 					//$("#loaderCalendar").hide();
 					$("body").css( {"cursor": "default"} );
@@ -141,7 +142,7 @@
 			defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
 			events: function( start, end, timezone, callback ) {
 				var data = { start:moment(start).format('YYYY-MM-DD HH:mm:ss'), end:moment(end).format('YYYY-MM-DD HH:mm:ss') };
-				
+
 				fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData',[<?php echo $teacher_id; ?>]), data, function(doc) {
 					if( doc == "[]" ){
 						var data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };
@@ -156,7 +157,7 @@
 								editable: false,
 								rendering:'background'
 							});
-							
+
 							$(doc).each(function(i,e) {
 								var classType = $(this).attr('classType');
 								if( classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>" ){
@@ -164,7 +165,7 @@
 								} else if( classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>" ){
 									var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
 								}
-								
+
 								events.push({
 									title: $(this).attr('title'),
 									start: $(this).attr('start'),
@@ -181,10 +182,10 @@
 									dow:[$(this).attr('day')]
 								  });
 							});
-							
+
 							console.log( events );
-							
-							
+
+
 							fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
 								var doc2 = JSON.parse(doc2);
 								$(doc2).each(function(i,e) {
@@ -194,17 +195,16 @@
 										end: $(this).attr('end'),
 										className: $(this).attr('className'),
 										color: "var(--color-secondary)",
-										
+
 									});
-								}); 
+								});
 								callback(events);
 							});
 						});
-						
+
 					} else {
 						var doc = JSON.parse(doc);
 						var events = [];
-						
 						events.push({
 							title: '',
 							start: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
@@ -213,8 +213,17 @@
 							editable: false,
 							rendering:'background'
 						});
-						
+
+						var validSelectDateTime = moment().add('<?php echo $teacherBookingBefore; ?>' ,'hours');
+						console.log(moment().add('<?php echo $teacherBookingBefore;?>' ,'hours'));
+						console.log(validSelectDateTime);
 						$(doc).each(function(i,e) {
+
+
+							if(  validSelectDateTime > moment(e.end) ) {
+								return;
+							}
+							e.start =  validSelectDateTime.format('YYYY-MM-DD HH:mm:ss');
 							var classType = $(this).attr('classType');
 							if( classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>" ){
 								var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
@@ -227,7 +236,7 @@
 								var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
 								var editable = false;
 							}
-							
+
 							events.push({
 								title: $(this).attr('title'),
 								start: $(this).attr('start'),
@@ -243,10 +252,10 @@
 								selectable: editable,
 							});
 						});
-						
+
 						fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
 							var doc2 = JSON.parse(doc2);
-							
+
 							$(doc2).each(function(i,e) {
 								events.push({
 								title: $(this).attr('title'),
@@ -258,38 +267,38 @@
 								selectable: false,
 								});
 							});
-							
+
 							callback(events);
 						});
 					}
 				});
 			},
-			
+
 			eventRender: function(event, element) {
 				if( isNaN(event._id) && event.className != "sch_data" ){
 					element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
 				} else {
 					var eventData = JSON.stringify({"start" :moment( event.start).format('YYYY-MM-DD HH:mm:ss'),"end" : moment(event.end).format('YYYY-MM-DD HH:mm:ss'),"_id":event._id,"classType":event.classType,"day":event.day});
-					
+
 					if( event.classType != 0  && event.className != "sch_data"){
 						element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherWeeklySchedule(" + eventData + ");'>X</span>" );
 					}
 				}
-				
+
 				element.find(".closeon").click(function() {
-					if(isNaN(event._id)){				
+					if(isNaN(event._id)){
 						$('#d_calendar').fullCalendar('removeEvents',event._id);
 						$('.tooltipevent').remove();
 					}
 				});
-				
+
 				var eventEnd = moment(event.end);
 				var NOW = moment('<?php echo $nowDate; ?>');
 				if(moment(event.end).format('YYYY-MM-DD HH:mm') < moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm') && event.className != "sch_data"){
 					return false;
 				}
 			},
-			
+
 			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 				//console.log(event.start.isBefore(moment()));
 				if( moment('<?php echo $nowDate; ?>').diff(moment(event.start)) >= 0) {
@@ -297,15 +306,15 @@
 					return false;
 				}
 			},
-		
+
 			eventMouseout: function(calEvent, jsEvent) {
 				$(this).css('z-index', 8);
 			},
-			
+
 			eventResize: function(event, delta, revertFunc) {
 				return false;
 			},
-		
+
 			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 				//console.log(event.start.isBefore(moment()));
 				if(moment('<?php echo $nowDate; ?>').diff(moment(event.start)) >= 0) {
@@ -313,7 +322,7 @@
 					return false;
 				}
 			},
-	
+
 			eventMouseover: function(calEvent, jsEvent) {
 				var monthName = moment(calEvent.start).format('MMMM');
 				var date = monthName+" "+moment(calEvent.start).format('DD, YYYY');
@@ -324,9 +333,9 @@
 				var price = "<?php echo CommonHelper::displayMoneyFormat( $userRow['us_single_lesson_amount']); ?>";
                 <?php if( 'free_trial' == $action ){ ?>
 				//var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:void();" class="-link-close"></a> <?php echo Label::getLabel('LBL_Date:')?> ' + date + '  <br /><?php echo Label::getLabel('LBL_Time:')?> ' + start + '-' + end + ' <br /><?php 		if( 'free_trial' != $action ){ echo Label::getLabel('LBL_Price::')?> '+ price +'<br /><?php } ?> <a onClick="cart.add(&quot;<?php echo $teacher_id; ?>&quot;, <?php echo $lPackageId; ?>, &quot;'+ selectedStartDateTime +'&quot;, &quot;'+ selectedEndDateTime +'&quot; );" id="btn" class="btn btn--secondary"><?php echo Label::getLabel('LBL_Book_Lesson'); ?></a></div>';
-           var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><div class="booking-view"><h3 class="-display-inline"><?php echo $teacher_name?></h3><span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($teacher_country_id, 'DEFAULT') ); ?>" alt=""></span><div class="inline-list"><span class="inline-list__value highlight"><strong>Date</strong> &nbsp; &nbsp; '+date+' at '+start+'-'+end+'</span><?php 		if( 'free_trial' != $action ){?><span class="inline-list__value"><strong>Price</strong> &nbsp; &nbsp;   '+ price +'</span> <?php }?></div></div><div class="-align-center"><a href="javascript:void(0)" onClick="cart.add(&quot;<?php echo $teacher_id; ?>&quot;, <?php echo $lPackageId; ?>, &quot;'+ selectedStartDateTime +'&quot;, &quot;'+ selectedEndDateTime +'&quot;, &quot;'+ '<?php echo $languageId;?>' +'&quot; );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Book_Lesson'); ?></a></div><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:void();" class="-link-close"></a></div>';   
+           var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><div class="booking-view"><h3 class="-display-inline"><?php echo $teacher_name?></h3><span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($teacher_country_id, 'DEFAULT') ); ?>" alt=""></span><div class="inline-list"><span class="inline-list__value highlight"><strong>Date</strong> &nbsp; &nbsp; '+date+' at '+start+'-'+end+'</span><?php 		if( 'free_trial' != $action ){?><span class="inline-list__value"><strong>Price</strong> &nbsp; &nbsp;   '+ price +'</span> <?php }?></div></div><div class="-align-center"><a href="javascript:void(0)" onClick="cart.add(&quot;<?php echo $teacher_id; ?>&quot;, <?php echo $lPackageId; ?>, &quot;'+ selectedStartDateTime +'&quot;, &quot;'+ selectedEndDateTime +'&quot;, &quot;'+ '<?php echo $languageId;?>' +'&quot; );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Book_Lesson'); ?></a></div><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:void();" class="-link-close"></a></div>';
 
-           
+
 				<?php } ?>
 				if( calEvent.className != "sch_data" ){
 					$("body").append(tooltip);
@@ -340,12 +349,12 @@
 				}
 			}
 	});
-	
+
 	$(".fc-today-button,button.fc-prev-button,button.fc-next-button").click(function() {
 			$('.tooltipevent').remove();
 		});
 	});
-	
+
 </script>
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
 <div class="calendar-view">
@@ -355,8 +364,8 @@
 		<h4><?php echo Label::getLabel('Lbl_View_Availibility'); ?></h4>
 	</div>
 	<div class="col-sm-6">
-		<p style="text-align:right;"><span class="box-hint available-box">&nbsp;</span><?php echo Label::getLabel('Lbl_Available'); ?> <span class="box-hint booked-box">&nbsp;</span><?php echo Label::getLabel('Lbl_Booked'); ?></p>  
-	</div>    
+		<p style="text-align:right;"><span class="box-hint available-box">&nbsp;</span><?php echo Label::getLabel('Lbl_Available'); ?> <span class="box-hint booked-box">&nbsp;</span><?php echo Label::getLabel('Lbl_Booked'); ?></p>
+	</div>
 </div>
 <?php } ?>
 
