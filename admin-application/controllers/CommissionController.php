@@ -65,8 +65,8 @@ class CommissionController extends AdminBaseController
 
             if ($data['commsetting_user_id'] > 0) {
                 $userObj = new User($data['commsetting_user_id']);
-                $res = $userObj->getUserInfo();
-                $data['user_name'] = isset($res['credential_username'])?$res['credential_username']:'';
+                $res = $userObj->getUserInfo(['credential_email','user_last_name','user_first_name'],false,false);
+                $data['user_name'] = isset($res['credential_email'])? ($res['user_first_name'].' '.$res['user_last_name']." (".$res['credential_email'].")") :'';
             }
             $frm->fill($data);
         }
@@ -180,13 +180,15 @@ class CommissionController extends AdminBaseController
     {
         $this->objPrivilege->canViewCommissionSettings();
         $userObj = new User();
-        $srch = $userObj->getUserSearchObj(array('u.user_first_name','u.user_id','u.user_last_name'));
+        $srch = $userObj->getUserSearchObj(array('u.user_first_name','u.user_id','u.user_last_name','uc.credential_email'));
+
         $srch->addCondition('user_is_teacher', '=', 1);
 
         $post = FatApp::getPostedData();
         if (!empty($post['keyword'])) {
             $srch->addCondition('u.user_first_name', 'LIKE', '%' . $post['keyword'] . '%')
-            ->attachCondition('u.user_last_name', 'LIKE', '%' . $post['keyword'] . '%');
+            ->attachCondition('u.user_last_name', 'LIKE', '%' . $post['keyword'] . '%')
+            ->attachCondition('uc.credential_email', 'LIKE', '%' . $post['keyword'] . '%');
         }
 
         $rs = $srch->getResultSet();
@@ -196,7 +198,7 @@ class CommissionController extends AdminBaseController
         foreach ($users as $key => $user) {
             $json[] = array(
                 'id' => $key,
-                'name'      => strip_tags(html_entity_decode($user['user_first_name'].' '.$user['user_last_name'], ENT_QUOTES, 'UTF-8'))
+                'name'      => strip_tags(html_entity_decode($user['user_first_name'].' '.$user['user_last_name']." (".$user['credential_email'].")", ENT_QUOTES, 'UTF-8'))
             );
         }
         die(json_encode($json));

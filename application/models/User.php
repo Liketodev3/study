@@ -87,6 +87,7 @@ class User extends MyAppModel
 
     public function getUserInfo($attr = null, $isActive = true, $isVerified = true)
     {
+        
         if (($this->getMainTableRecordId() < 1)) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED', $this->commonLangId);
             return false;
