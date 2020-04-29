@@ -1,10 +1,9 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 
 $spokenLanguagesArr = explode(",", $spoken_language_names);
 $totalSpokenLanguages = count($spokenLanguagesArr) - 1;
 $spokenLanguagesProficiencyArr = explode(",", $spoken_languages_proficiency);
 
-$proficiencyArr = SpokenLanguage::getProficiencyArr( CommonHelper::getLangId() );
 ?>
 <div class="txt-inline">
 	<span class="txt-inline__tag -color-secondary">
@@ -14,8 +13,8 @@ $proficiencyArr = SpokenLanguage::getProficiencyArr( CommonHelper::getLangId() )
 		</span>
 		<?php echo Label::getLabel('LBL_Speaks'); ?>
 	</span> &nbsp;&nbsp;
-	<?php 
-	
+	<?php
+
 	foreach( $spokenLanguagesArr as $index => $spokenLangName ){
 		?>
 		<span class="txt-inline__tag"><?php echo $spokenLangName; ?><strong>(<?php echo $proficiencyArr[$spokenLanguagesProficiencyArr[$index]]; ?>)</strong></span><?php echo ($index < $totalSpokenLanguages) ? ',' : ''; ?>

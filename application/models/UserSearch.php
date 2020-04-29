@@ -30,7 +30,7 @@ class UserSearch extends SearchBase
         } */
     }
 
-    public function setTeacherDefinedCriteria($langCheck = true)
+    public function setTeacherDefinedCriteria($langCheck = true, $addUserSettingJoin = true)
     {
         $this->joinCredentials();
 
@@ -41,7 +41,9 @@ class UserSearch extends SearchBase
         $this->addCondition('credential_verified', '=', 1);
 
         /* additional conditions[ */
-        $this->joinUserSettings();
+        if($addUserSettingJoin) {
+            $this->joinUserSettings();
+        }
         //$this->addCondition( 'us_single_lesson_amount', '>', 0 );
         //$this->addCondition( 'us_bulk_lesson_amount', '>', 0 );
         /* teachLanguage[ */
@@ -173,7 +175,7 @@ class UserSearch extends SearchBase
         $this->joinTable(TeacherGeneralAvailability::DB_TBL, 'INNER JOIN', 'u.user_id = tgavl_user_id', 'ta');
     }
 
-    public function joinTeacherLessonData($userId = 0)
+    public function joinTeacherLessonData($userId = 0, $getCompletedScheduledLesson = true, $getCanCelledScheduledLesson = true)
     {
         if ($userId) {
             $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'u.user_id = sl.slesson_teacher_id AND sl.slesson_teacher_id = '.$userId, 'sl');
@@ -186,10 +188,13 @@ class UserSearch extends SearchBase
         $this->addGroupBy('sl.slesson_teacher_id');
         $this->addFld('count(DISTINCT sl.slesson_id) as teacherTotLessons');
         //$this->addFld( 'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) AS teacherSchLessons' );
+        if($getCompletedScheduledLesson) {
+            $this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_COMPLETED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as teacherSchLessons');
+        }
 
-        $this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_COMPLETED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as teacherSchLessons');
-
-        $this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as teacherCancelledLessons');
+        if($getCanCelledScheduledLesson) {
+            $this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as teacherCancelledLessons');
+        }
 
         $this->addFld('GROUP_CONCAT(DISTINCT slesson_learner_id) as studentIds');
     }
@@ -226,9 +231,24 @@ class UserSearch extends SearchBase
         $this->joinTable(User::DB_TBL_LANG, 'LEFT OUTER JOIN', 'ulg.'.User::DB_TBL_LANG_PREFIX.'user_id = u.user_id and ulg.'.User::DB_TBL_LANG_PREFIX.'lang_id = '.$langId, 'ulg');
     }
 
-    public function getMyTeachLangQry()
+    public function getMyTeachLangQry($addJoinTeachLangTable = false, $langId = 0, $keyword = '')
     {
         $tlangSrch = new SearchBase(UserToLanguage::DB_TBL_TEACH, 'utl');
+        if($addJoinTeachLangTable) {
+
+            $langId = FatUtility::int($langId);
+            if ($langId < 1) {
+                $langId = CommonHelper::getLangId();
+            }
+            $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utl.utl_slanguage_id');
+            $tlangSrch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utl.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'sl_lang');
+            $tlangSrch->addCondition('tlanguage_active', '=', '1');
+            $tlangSrch->addMultipleFields(array('GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
+            if (!empty($keyword)) {
+                $cnd = $tlangSrch->addCondition('tlanguage_name', 'LIKE', '%' . $keyword . '%');
+                $cnd->attachCondition('tlanguage_identifier', 'LIKE', '%' . $keyword . '%');
+            }
+        }
         $tlangSrch->addMultipleFields(array('utl_us_user_id','GROUP_CONCAT(utl_id) as utl_ids','max(utl_single_lesson_amount) as maxPrice','min(utl_bulk_lesson_amount) as minPrice','GROUP_CONCAT(utl_slanguage_id) as utl_slanguage_ids'));
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
@@ -262,10 +282,6 @@ class UserSearch extends SearchBase
             $langId = CommonHelper::getLangId();
         }
 
-        $langId = FatUtility::int($langId);
-        if ($langId < 1) {
-            $langId = CommonHelper::getLangId();
-        }
         $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'u.user_id = utsl1.utl_us_user_id', 'utsl1');
 
         $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl1.utl_slanguage_id');

@@ -83,7 +83,7 @@ ALTER TABLE `tbl_teaching_languages`
 --
 ALTER TABLE `tbl_teaching_languages`
   MODIFY `tlanguage_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-  
+
   --
 -- Table structure for table `tbl_teaching_languages_lang`
 --
@@ -123,7 +123,7 @@ INSERT INTO `tbl_teaching_languages_lang` (`tlanguagelang_tlanguage_id`, `tlangu
 --
 ALTER TABLE `tbl_teaching_languages_lang`
   ADD PRIMARY KEY (`tlanguagelang_tlanguage_id`,`tlanguagelang_lang_id`);
-  
+
 INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES ('user_email_change_verification', '1', 'User Email Change Verification Link', 'Email Verification at {website_name}', '<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#f5f5f5\" style=\"font-family:Arial; color:#333; line-height:26px;\"> \r\n        \r\n        \r\n	<tbody>            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:30px 0;\"></td>    \r\n            \r\n		</tr>    \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:0 0 0;\">          \r\n                    \r\n				<!--\r\n				header start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #fff;border-bottom: 1px solid #eee;\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:20px 40px;\"><a href=\"#\" style=\"display: block;\">{Company_Logo}</a></td>                  \r\n                                \r\n							<td style=\"text-align:right;padding: 40px;\">                      {social_media_icons}\r\n                      </td>              \r\n                            \r\n						</tr>          \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				header end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n       \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>                    \r\n				<!--\r\n				page body start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">             \r\n                  \r\n                        \r\n					<tbody>                        \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;\">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:20px 0 60px;\">                                     <img src=\"icon-account.png\" alt=\"\" />                                     \r\n												<h2 style=\"margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;\">Account Verification!</h2>                                  </td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                  \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; \">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:60px 0 70px;\">                                      \r\n												<h3 style=\"margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;\">Dear {user_full_name}</h3>                                  Please Verify Your Email to Change Email on&nbsp;&nbsp;<a href=\"{website_url}\">{website_name}</a>.. \r\nJust follow this link below to confirm your email address.\r\n                                  <br />\r\n												<br />\r\n												                                  <a href=\"{verification_url}\" style=\"background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;\">Verify Account</a>                                  </td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                 \r\n                \r\n              \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page body end here\r\n				-->\r\n				                          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>          \r\n                    \r\n				<!--\r\n				page footer start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                                \r\n							<td style=\"height:30px;\"></td>                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:30px 0; font-size:20px; color:#000;\">                                  Need more help?<br />\r\n												                                                     <a href=\"{contact_us_url}\" style=\"color:#e84c3d;\">We‘re here, ready to talk</a>                              </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:20px 0 30px; font-size:13px; color:#999;\">                                  Be sure to add <a href=\"#\" style=\"color: #e84c3d\">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br />\r\n												                                                    <br />\r\n												                                                    &copy; 2018, {website_name}. All Rights Reserved.\r\n                                      \r\n                                  </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                  \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0; height:50px;\"></td>              \r\n                            \r\n						</tr>              \r\n                  \r\n              \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page footer end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n        \r\n        \r\n	</tbody>    \r\n</table>', '{user_fist_name} First Name of the email receiver.<br> {user_last_name} Last Name of the email receiver.<br> {user_full_name} Name of the email receiver.<br> {website_name} Name of our website<br> {verification_url} Url to verify email<br> {social_media_icons} <br> {contact_us_url} <br>', '1');
 
 CREATE TABLE `tbl_user_email_change_request` (
@@ -153,11 +153,11 @@ ALTER TABLE `tbl_user_email_change_request`
 --
 ALTER TABLE `tbl_user_email_change_request`
   MODIFY `uecreq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-  
+
 ALTER TABLE `tbl_user_settings` ADD `us_booking_before` INT(20) NULL DEFAULT NULL AFTER `us_teach_slanguage_id`;
 ALTER TABLE `tbl_scheduled_lessons` ADD `slesson_end_date` DATE NOT NULL AFTER `slesson_date`;
 ALTER TABLE `tbl_teachers_weekly_schedule` ADD `twsch_end_date` DATE NOT NULL AFTER `twsch_date`;
-ALTER TABLE `tbl_teachers_general_availability` ADD `tgavl_date` DATE NULL DEFAULT NULL AFTER `tgavl_end_time`;  
+ALTER TABLE `tbl_teachers_general_availability` ADD `tgavl_date` DATE NULL DEFAULT NULL AFTER `tgavl_end_time`;
 
 ALTER TABLE `tbl_teaching_languages` ADD `tlanguage_display_order` INT(11) NOT NULL AFTER `tlanguage_active`;
 ALTER TABLE `tbl_spoken_languages` ADD `slanguage_display_order` INT(11) NOT NULL AFTER `slanguage_active`;
@@ -173,8 +173,8 @@ CREATE TABLE `tbl_faq_categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `tbl_faq_categories`
-ADD PRIMARY KEY (`faqcat_id`);  
-  
+ADD PRIMARY KEY (`faqcat_id`);
+
 ALTER TABLE `tbl_faq_categories`
 MODIFY `faqcat_id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -203,10 +203,10 @@ CREATE TABLE `tbl_cron_schedules` (
 ALTER TABLE `tbl_cron_schedules`
   ADD PRIMARY KEY (`cron_id`);
  ALTER TABLE `tbl_cron_schedules`
-  MODIFY `cron_id` int(11) NOT NULL AUTO_INCREMENT; 
-  
-----------  
-  
+  MODIFY `cron_id` int(11) NOT NULL AUTO_INCREMENT;
+
+----------
+
 CREATE TABLE `tbl_cron_log` (
   `cronlog_id` int(11) NOT NULL,
   `cronlog_cron_id` int(11) NOT NULL,
@@ -234,18 +234,18 @@ ALTER TABLE `tbl_cron_log`
 -- AUTO_INCREMENT for table `tbl_cron_log`
 --
 ALTER TABLE `tbl_cron_log`
-  MODIFY `cronlog_id` int(11) NOT NULL AUTO_INCREMENT;  
-  
-  
+  MODIFY `cronlog_id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 INSERT INTO `tbl_cron_schedules` (`cron_id`, `cron_name`, `cron_command`, `cron_duration`, `cron_active`) VALUES
 (1, 'lesson one day reminder', 'LessonReminder/sendLessonReminder/1', 1440, 1),
-(2, 'lesson 30 mints reminder', 'LessonReminder/sendLessonReminder/2', 1, 1);   
+(2, 'lesson 30 mints reminder', 'LessonReminder/sendLessonReminder/2', 1, 1);
 
 INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES ('coming_up_lesson_reminder', '1', 'Scheduled lesson(s) Reminder', 'Lesson Reminder at {website_name}', '<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#f5f5f5" style="font-family:Arial; color:#333; line-height:26px;"> <tbody> <tr> <td style="background:#e84c3d;padding:30px 0;"></td></tr><tr> <td style="background:#e84c3d;padding:0 0 0;"><!--header start here--> <table width="600" border="0" align="center" cellpadding="0" cellspacing="0" style="background: #fff;border-bottom: 1px solid #eee;"> <tbody> <tr> <td style="padding:20px 40px;"><a href="#" style="display: block;">{Company_Logo}</a></td><td style="text-align:right;padding: 40px;">{social_media_icons}</td></tr></tbody> </table><!--header end here--> </td></tr><tr> <td><!--page body start here--> <table width="600" border="0" align="center" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;"> <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center"> <tbody><tr> <td style="padding:20px 0 60px;"> <img src="icon-account.png" alt=""/> <h2 style="margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;">Scheduled Lesson Reminder!</h2> </td></tr></tbody></table> </td></tr><tr> <td style="background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; "> <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center"> <tbody><tr> <td style="padding:60px 0 70px;"> <h3 style="margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;">Dear{user_full_name}</h3> You have scheduled lesson(s) on &nbsp;&nbsp;<a href="{website_url}">{website_name}</a><br/></td></tr><tr></tr></tbody></table>{lessons_details}</td></tr></tbody></table> </td></tr></tbody> </table> <table width="600" border="0" align="center" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="height:30px;"></td></tr><tr> <td style="background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;"> <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="padding:30px 0; font-size:20px; color:#000;"> Need more help?<br/> <a href="{contact_us_url}" style="color:#e84c3d;">We‘re here, ready to talk</a> </td></tr></tbody> </table> </td></tr><tr> <td style="padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;"> <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="padding:20px 0 30px; font-size:13px; color:#999;"> Be sure to add <a href="#" style="color: #e84c3d">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br/> <br/> &copy; 2018,{website_name}. All Rights Reserved. </td></tr></tbody> </table> </td></tr><tr> <td style="padding:0; height:50px;"></td></tr></tbody> </table><!--page footer end here-->', '{user_fist_name} First Name of the email receiver.<br> {user_last_name} Last Name of the email receiver.<br> {user_full_name} Name of the email receiver.<br> {website_name} Name of our website<br> {social_media_icons} <br> {contact_us_url} <br>', '1');
 
 
-ALTER TABLE `tbl_scheduled_lessons` 
-ADD `slesson_reminder_one` INT(11) NOT NULL AFTER `slesson_added_on`, 
+ALTER TABLE `tbl_scheduled_lessons`
+ADD `slesson_reminder_one` INT(11) NOT NULL AFTER `slesson_added_on`,
 ADD `slesson_reminder_two` INT(11) NOT NULL AFTER `slesson_reminder_one`;
 
 
@@ -325,9 +325,9 @@ ALTER TABLE `tbl_issue_report_options_lang`
 
 ALTER TABLE `tbl_issue_report_options_lang`
   MODIFY `tissueoptlang_tissueopt_id` int(11) NOT NULL AUTO_INCREMENT;
-  
-  
-ALTER TABLE `tbl_issues_reported` ADD `issrep_is_for_admin` INT(11) NOT NULL DEFAULT '0' AFTER `issrep_id`; 
+
+
+ALTER TABLE `tbl_issues_reported` ADD `issrep_is_for_admin` INT(11) NOT NULL DEFAULT '0' AFTER `issrep_id`;
 ALTER TABLE `tbl_issues_reported` ADD `issrep_issues_to_report` VARCHAR(255) NOT NULL AFTER `issrep_slesson_id`;
 ALTER TABLE `tbl_issues_reported` ADD `issrep_issues_resolve` VARCHAR(255) NOT NULL AFTER `issrep_status`;
 ALTER TABLE `tbl_issues_reported` ADD `issrep_issues_resolve_type` INT(11) NOT NULL AFTER `issrep_issues_resolve`;
@@ -338,3 +338,12 @@ INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `et
 /* 25-10-2019 */
 
 ALTER TABLE `tbl_issues_reported` ADD `issrep_escalated_by` INT(11) NOT NULL AFTER `issrep_updated_on`;
+
+ALTER TABLE `tbl_user_credentials` ADD INDEX( `credential_active`, `credential_verified`, `user_country_id`, `user_is_teacher`);
+ALTER TABLE `tbl_teaching_languages_lang` ADD INDEX( `tlanguage_name`);
+ALTER TABLE `tbl_teaching_languages` ADD INDEX( `tlanguage_identifier`);
+ALTER TABLE `tbl_user_to_spoken_languages` ADD INDEX( `utsl_slanguage_id`);
+ALTER TABLE `tbl_user_teach_languages` ADD INDEX( `utl_single_lesson_amount`, `utl_bulk_lesson_amount`);
+ALTER TABLE `tbl_scheduled_lessons` ADD INDEX( `slesson_teacher_id`);
+ALTER TABLE `tbl_scheduled_lessons` ADD INDEX( `slesson_status`);
+ALTER TABLE `tbl_teacher_lesson_reviews` ADD INDEX( `tlreview_teacher_user_id`, `tlreview_status`);

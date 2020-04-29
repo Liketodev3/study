@@ -3,23 +3,23 @@
 <?php if( $teachers ){ ?>
 	<div class="result-container" >
 	<?php
-
+	$proficiencyArr = SpokenLanguage::getProficiencyArr( CommonHelper::getLangId() );
 	foreach( $teachers as $teacher ){
 		$teacherUrl = CommonHelper::generateUrl('Teachers').'/'. $teacher['user_url_name'];
 		?>
 		<div class="box box-list -padding-30 -hover-shadow -transition">
 			<div class="box__content">
 				<div class="row">
-				
+
 					<div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 -align-center">
 						<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
-							<?php 
+							<?php
 							if( true == User::isProfilePicUploaded( $teacher['user_id'] ) ){
-								$img = CommonHelper::generateUrl('Image','User', array( $teacher['user_id'] )); 
+								$img = CommonHelper::generateUrl('Image','User', array( $teacher['user_id'] ));
 								echo '<a href="'.$teacherUrl.'"><img src="'.$img.'" /></a>';
 							}
 							?>
-							
+
 							<?php /* if( $teacher['is_online'] ){ ?>
 							<span class="tag-online"></span>
 							<?php } */ ?>
@@ -30,31 +30,31 @@
 							<h6><?php echo CommonHelper::displayMoneyFormat( $teacher['minPrice'] ); ?></h6>
 						</div>
 					</div>
-					
+
 					<div class="col-xl-9 col-lg-9 col-md-9 col-sm-8">
 						<div class="box-list__head row justify-content-between">
 							<div class="col-xl-9 col-lg-9 col-md-8">
 								<h3 class="-display-inline"><a href="<?php echo $teacherUrl; ?>"><?php echo $teacher['user_first_name']." ". $teacher['user_last_name']; ?></a></h3>
-								
+
 								<?php if( $teacher['user_country_id'] > 0 ){ ?>
 								<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($teacher['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>
 								<?php } ?>
 
 								<div class="ratings -display-inline">
                                     <span class="ratings__star -display-inline">
-                                        <?php //if(round($teacher['teacher_rating'])){ 
+                                        <?php //if(round($teacher['teacher_rating'])){
                                         for($i=0;$i<round($teacher['teacher_rating']);$i++){ ?>
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/star-filled.svg" alt="">
-                                        <?php } 
+                                        <?php }
                                         for($i=0;$i< 5-round($teacher['teacher_rating']);$i++){ ?>
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/star-empty.svg" alt="">
-                                        <?php } //} ?>    
+                                        <?php } //} ?>
                                     </span>
 									<?php if($teacher['totReviews']){ ?><span class="ratings__count -display-inline"><a href="<?php echo $teacherUrl; ?>" class="-link-underline"><?php echo $teacher['totReviews'].' '.Label::getLabel('LBL_Reviews');; ?></a></span>
 									<?php } ?>
 								</div>
 							</div>
-							
+
 							<div class="col-auto">
 								<a href="javascript:void(0)" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>)" class="btn btn--small btn--bordered btn--fav <?php echo($teacher['uft_id'])?'is-active':'';?>">
 								<span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="12" viewBox="0 0 14 12">
@@ -64,19 +64,21 @@
 							</div>
 
 						</div>
-						
+
 						<div class="box-list__body">
 							<div class="grid-group">
-								<div class="grid"><span><?php echo Label::getLabel('LBL_Teaches'); ?>: <strong><?php echo CommonHelper::getTeachLangs($teacher['utl_slanguage_ids']); ?></strong></span></div>
+								<!-- <div class="grid"><span><?php //echo Label::getLabel('LBL_Teaches'); ?>: <strong><?php //echo CommonHelper::getTeachLangs($teacher['utl_slanguage_ids']); ?></strong></span></div> -->
+								<div class="grid"><span><?php echo Label::getLabel('LBL_Teaches'); ?>: <strong><?php echo $teacher['teacherTeachLanguageName']; ?></strong></span></div>
 								<div class="grid"><span><?php echo Label::getLabel('LBL_From'); ?>: <strong><?php echo $teacher['user_country_name']; ?></strong></span></div>
 								<div class="grid"><span><?php echo Label::getLabel('LBL_Lessons'); ?>: <strong><?php echo $teacher['teacherTotLessons']; ?></strong></span></div>
 								<div class="grid"><span><?php echo Label::getLabel('LBL_Students'); ?>: <strong><?php echo $teacher['studentIdsCnt']; ?></strong></span></div>
 							</div>
-							
-							
+
+
 							<?php
 							/* Spoken Languages[ */
-							$this->includeTemplate('teachers/_partial/spokenLanguages.php', $teacher, false); 
+							$teacher['proficiencyArr'] =  $proficiencyArr;
+							$this->includeTemplate('teachers/_partial/spokenLanguages.php', $teacher, false);
 							/* ] */
 							?>
 
@@ -85,7 +87,7 @@
 								<p><?php  echo nl2br( $teacher['user_profile_info'] ); ?></p>
 							</div>
 							<?php } else { echo '<p></p>'; } ?>
-							
+
 							<a href="javascript:void(0)" onClick="viewCalendar(<?php echo $teacher['user_id']?>,'paid');" class="btn btn--bordered box__action-js">
 								<span class="svg-icon">
 								<svg xmlns="http://www.w3.org/2000/svg" width="14.844" height="16" viewBox="0 0 14.844 16">
@@ -106,7 +108,7 @@
 
 				</div>
 			</div>
-			
+
 			<?php
 			/* <div class="box__slip -skin box__slip-js">
 				<a href="javascript:void(0)" class="-link-close box__actions-close-js"></a>
@@ -238,7 +240,7 @@
 					<!--tab_2 start here-->
 					<div id="tab_2" class="tabs-content-js">
 						<div class="video">
-							
+
 						</div>
 					</div>
 					<!--tab_2 end here-->
@@ -246,7 +248,7 @@
 				</div>
 			</div> */
 			?>
-			
+
 		</div>
 <?php
 	}
@@ -260,7 +262,7 @@
 			'name' => 'frmTeacherSearchPaging'
 	) );
 	$this->includeTemplate('_partial/pagination.php', $pagingArr,false);
-	
+
 } else {
 	?>
 	<div class="box -padding-30" style="margin-bottom: 30px;">
@@ -275,5 +277,5 @@
 		</div>
 	</div>
 	<?php
-	
+
 } ?>

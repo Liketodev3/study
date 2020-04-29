@@ -47,11 +47,12 @@ class TeachersController extends MyAppController {
 		$srch = new stdClass();
 		$this->searchTeachers($srch);
 		$srch->joinUserLang($this->siteLangId);
-		$srch->joinTeacherLessonData();
+		$srch->joinTeacherLessonData(0,false, false);
 		$srch->joinRatingReview();
 		$srch->addMultipleFields(array('ulg.*', 'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info', 'utls.*'));
 		$srch->setPageSize($pageSize);
 		$srch->setPageNumber($page);
+		// echo $srch->getQuery(); die();
 		$rs = $srch->getResultSet();
 		$db = FatApp::getDb();
 		$teachersList = $db->fetchAll($rs);
@@ -62,7 +63,7 @@ class TeachersController extends MyAppController {
 			'pageSize' => $pageSize,
 			'recordCount' => $totalRecords,
 		);
-		//echo $srch->getQuery(); die();
+
 		$this->set('teachers', $teachersList);
 		$post['page'] = $page;
 		$this->set('postedData', $post);
@@ -573,11 +574,13 @@ class TeachersController extends MyAppController {
 		$postedData = FatApp::getPostedData();
 		$_SESSION['search_filters'] = $postedData;
 		$srch = new UserSearch(false);
-		$srch->setTeacherDefinedCriteria(true);
+		$srch->setTeacherDefinedCriteria(false,false);
+		$tlangSrch = $srch->getMyTeachLangQry(true, $this->siteLangId, $teachLanguageName);
+		$srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_us_user_id', 'utls');
 		$srch->joinUserSpokenLanguages($this->siteLangId);
-		$srch->joinUserTeachingLanguages($this->siteLangId, $teachLanguageName);
+		// $srch->joinUserTeachingLanguages($this->siteLangId, $teachLanguageName);
 		$srch->joinUserCountry($this->siteLangId);
-		$srch->joinUserSettings();
+		// $srch->joinUserSettings();
 		$srch->joinUserAvailibility();
 		if (UserAuthentication::isUserLogged()) {
 			$srch->joinFavouriteTeachers(UserAuthentication::getLoggedUserId());
@@ -687,7 +690,7 @@ class TeachersController extends MyAppController {
 		if (!empty($maxPriceRange))  {
 			$maxPriceRangeInDefaultCurrency =  CommonHelper::getDefaultCurrencyValue($maxPriceRange, false, false);
 			//$srch->addCondition('maxPrice', '<=', $maxPriceRangeInDefaultCurrency);
-			$srch->addCondition('minPrice', '<=', $maxPriceRangeInDefaultCurrency);
+			$srch->addCondition('maxPrice', '<=', $maxPriceRangeInDefaultCurrency);
 		}
 		/* ] */
 		/* [ */
@@ -731,11 +734,12 @@ class TeachersController extends MyAppController {
 			'user_country_id',
 			'country_name as user_country_name',
 			'user_profile_info',
-			'us_single_lesson_amount',
-			'us_bulk_lesson_amount',
+			// 'us_single_lesson_amount',
+			// 'us_bulk_lesson_amount',
 			//'IFNULL(slanguage_name, slanguage_identifier) as teachlanguage_name',
 			'utsl.spoken_language_names',
 			'utsl.spoken_languages_proficiency',
+			'utls.teacherTeachLanguageName',
             'utl_ids',
             'utl_slanguage_ids'
 		));
