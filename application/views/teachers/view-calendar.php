@@ -46,6 +46,8 @@
 			timezone: "<?php echo $user_timezone; ?>",
 			<?php if( 'free_trial' == $action ){ ?>
 			select: function (start, end, jsEvent, view ) {
+				console.log(view);
+				console.log(jsEvent);
 				//$("#loaderCalendar").show();
 				// $("body").css( {"pointer-events": "none"} );
 				// $("body").css( {"cursor": "wait"} );
@@ -113,7 +115,6 @@
 				newEvent.allday = 'false';
 				newEvent.maxTime = "<?php echo $bookingSnapDuration; ?>";
 				newEvent.eventOverlap = false;
-				console.log(newEvent);
 				var currentDate = $('#calendar').fullCalendar('getDate');
 				var beginOfWeek = moment(start).startOf('week').format('YYYY-MM-DD HH:mm:ss');
 				var endOfWeek = moment(start).endOf('week').format('YYYY-MM-DD HH:mm:ss');
@@ -154,8 +155,14 @@
 								editable: false,
 								rendering:'background'
 							});
-
+							var generalvalidSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore; ?>' ,'hours');
 							$(doc).each(function(i,e) {
+								if(  validSelectDateTime > moment(e.end) ) {
+									return;
+								}
+								if( generalvalidSelectDateTime.format('YYYY-MM-DD HH:mm:ss') > moment(e.start).format('YYYY-MM-DD HH:mm:ss') ) {
+									e.start =  generalvalidSelectDateTime.format('YYYY-MM-DD HH:mm:ss');
+								}
 								var classType = $(this).attr('classType');
 								if( classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>" ){
 									var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
@@ -221,9 +228,7 @@
 							}
 
 							if( validSelectDateTime.format('YYYY-MM-DD HH:mm:ss') > moment(e.start).format('YYYY-MM-DD HH:mm:ss') ) {
-
 								e.start =  validSelectDateTime.format('YYYY-MM-DD HH:mm:ss');
-
 							}
 							var classType = $(this).attr('classType');
 							if( classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>" ){
