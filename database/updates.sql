@@ -339,6 +339,7 @@ INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `et
 
 ALTER TABLE `tbl_issues_reported` ADD `issrep_escalated_by` INT(11) NOT NULL AFTER `issrep_updated_on`;
 
+/* 29-04-2020  for teach listing optimization*/
 ALTER TABLE `tbl_user_credentials` ADD INDEX( `credential_active`, `credential_verified`, `user_country_id`, `user_is_teacher`);
 ALTER TABLE `tbl_teaching_languages_lang` ADD INDEX( `tlanguage_name`);
 ALTER TABLE `tbl_teaching_languages` ADD INDEX( `tlanguage_identifier`);
@@ -347,3 +348,7 @@ ALTER TABLE `tbl_user_teach_languages` ADD INDEX( `utl_single_lesson_amount`, `u
 ALTER TABLE `tbl_scheduled_lessons` ADD INDEX( `slesson_teacher_id`);
 ALTER TABLE `tbl_scheduled_lessons` ADD INDEX( `slesson_status`);
 ALTER TABLE `tbl_teacher_lesson_reviews` ADD INDEX( `tlreview_teacher_user_id`, `tlreview_status`);
+
+/* 30-04-2020 cookie message text */
+UPDATE `tbl_configurations` SET `conf_val` = 'Cookies Policy Text Will go here...' WHERE `tbl_configurations`.`conf_name` like '%CONF_COOKIES_TEXT%';
+UPDATE `tbl_configurations` SET `conf_val` = '3' WHERE `tbl_configurations`.`conf_name` = 'CONF_COOKIES_BUTTON_LINK';

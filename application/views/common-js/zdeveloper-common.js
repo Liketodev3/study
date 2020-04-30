@@ -154,11 +154,11 @@ $(document).ready(function(){
 				} else {
 					$(".header").removeClass("is-fixed");
 				}
-			}); 
+			});
 
-		
+
 		}
-		
+
 	},
 
 	toggleNavDropDownForDevices = function(){
@@ -191,6 +191,14 @@ $(document).ready(function(){
 			})
 		}
 
+		$(".cc-cookie-accept-js").click(function () {
+		fcom.ajax(fcom.makeUrl('Custom', 'updateUserCookies'), '', function (t) {
+				$(".cookie-alert").hide('slow');
+				$(".cookie-alert").remove();
+		});
+});
+
+
         //When page loads...
         $(".tabs-content-js").hide(); //Hide all content
         $(".tabs-js li:first").addClass("is-active").show(); //Activate first tab
@@ -206,8 +214,8 @@ $(document).ready(function(){
 
             $(activeTab).fadeIn(); //Fade in the active ID content
             return true;
-        });        
-        
+        });
+
         e(".toggle__trigger-js").click(function () {
                 var t = e(this).parents(".toggle-group").children(".toggle__target-js").is(":hidden");
                 e(".toggle-group .toggle__target-js").hide();
@@ -216,8 +224,8 @@ $(document).ready(function(){
                     e(this).parents(".toggle-group").children(".toggle__target-js").toggle().parents(".toggle-group").children(".toggle__trigger-js").addClass("is-active")
                 }
 
-            });        
-        
+            });
+
         $(document.body).on('click', ".toggle__trigger-js", function(){
 			var t = e(this).parents(".toggle-group").children(".toggle__target-js").is(":hidden");
 			e(".toggle-group .toggle__target-js").hide();
@@ -375,7 +383,7 @@ $(document).ready(function(){
 			logInFormPopUp();
 			return false;
 		}
-		
+
 		fcom.updateWithAjax( fcom.makeUrl('Messages','initiate/'+id), '',function(ans){
 			$.mbsmessage.close();
 			if( ans.redirectUrl ){
@@ -411,11 +419,11 @@ $(document).ready(function(){
 			// $.mbsmessage(ans.msg, false, 'alert alert--success');
 		// }); */
 	// }
-	
+
 	closeNavigation = function(){
 		$('.subheader .nav__dropdown a').removeClass('is-active');
 		$('.subheader .nav__dropdown-target').fadeOut();
 	}
-	
+
 
 })(jQuery);

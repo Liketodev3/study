@@ -77,6 +77,11 @@ class CustomController extends MyAppController
         $this->_template->render();
         /* } */
     }
+        public function updateUserCookies()
+        {
+            $_SESSION['cookies_enabled']= true;
+            return true;
+        }
 
     public function paymentCancel()
     {

@@ -6,10 +6,10 @@
 			<div class="row">
 				<div class="col-xl-3 col-lg-3 col-md-6">
 					<?php $this->includeTemplate( '_partial/footer/footerSocialMedia.php' ); ?>
-					
-					<?php $this->includeTemplate( '_partial/footer/footerLanguageCurrencySection.php' ); 
+
+					<?php $this->includeTemplate( '_partial/footer/footerLanguageCurrencySection.php' );
 					?>
-				</div>            
+				</div>
 				<div class="col-xl-2 col-lg-2 col-md-3">
 					<div class="toggle-group">
 						<h5 class="toggle__trigger toggle__trigger-js"><?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.CommonHelper::getLangId(), null, '');?></h5>
@@ -31,12 +31,12 @@
 								<li><a href="#">Japanese Tutors</a></li>
 								<li><a href="#">Arabic Tutors</a></li>
 								<li><a href="#">All Tutors</a></li>-->
-								<?php $this->includeTemplate( '_partial/tutorListNavigation.php'); ?>								
+								<?php $this->includeTemplate( '_partial/tutorListNavigation.php'); ?>
 							</ul>
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="col-xl-2 col-lg-2 col-md-3">
 					<div class="toggle-group">
 						<h5 class="toggle__trigger toggle__trigger-js"><?php echo Label::getLabel('LBL_More_Links'); ?></h5>
@@ -59,27 +59,27 @@
                         <div class="toggle__target toggle__target-js">
                             <ul class="links--vertical footer_contact_details">
                                 <li>
-                                    
+
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon01.svg">
                                         <?php echo FatApp::getConfig('CONF_CONTACT_EMAIL', null, '');?>
-                                    
+
                                 </li>
                                 <li>
-                                    
+
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon02.svg">
                                         <?php echo Label::getLabel('LBL_Call_Us'); ?>: <?php echo FatApp::getConfig('CONF_SITE_PHONE', null, '');?>
-                                    
+
                                 </li>
                                 <li>
-                                    
+
                                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon03.svg">
                                         <?php echo FatApp::getConfig('CONF_ADDRESS_'.CommonHelper::getLangId(), null, '');?>
-                                    
+
                                 </li>
                             </ul>
                         </div>
                     </div>
-                </div>				
+                </div>
 			</div>
 		</div>
             <div class="footer-inline -singleTopBorder">
@@ -96,15 +96,27 @@
                         <p><?php echo Label::getLabel('LBL_All_Rights_Reserved'); ?></p>
                     </li>
                     <li>
-                        <p><?php //echo MyDate::getDateAndTimeDisclaimer(); 
+                        <p><?php //echo MyDate::getDateAndTimeDisclaimer();
 						?></p>
                     </li>
                 </ul>
-            </div>                        
-            </div>        
+            </div>
+            </div>
 	</section>
-	
+
 </footer>
+<?php if (FatApp::getConfig('CONF_ENABLE_COOKIES', FatUtility::VAR_INT, 1) && !CommonHelper::getUserCookiesEnabled()) { ?>
+<div class="cc-window cc-banner cc-type-info cc-theme-block cc-bottom cookie-alert no-print">
+    <?php if (FatApp::getConfig('CONF_COOKIES_TEXT_'.$siteLangId, FatUtility::VAR_STRING, '')) { ?>
+	<div class="box-cookies">
+		<span id="cookieconsent:desc" class="cc-message">
+		<?php echo FatUtility::decodeHtmlEntities(FatApp::getConfig('CONF_COOKIES_TEXT_'.$siteLangId, FatUtility::VAR_STRING, ''));?>
+		<a href="<?php echo CommonHelper::generateUrl('cms', 'view', array(FatApp::getConfig('CONF_COOKIES_BUTTON_LINK', FatUtility::VAR_INT)));?>"><?php echo Label::getLabel('LBL_Read_More', $siteLangId);?></a></span>
+		<span class="cc-close cc-cookie-accept-js"><?php echo Label::getLabel('LBL_Accept_Cookies', $siteLangId);?></span>
+	</div>
+	<?php } ?>
+</div>
+<?php }?>
 <!--footer end here-->
 
 <a href="javascript:void(0)" class="scroll-top-js gototop" title="Back to Top"></a>
