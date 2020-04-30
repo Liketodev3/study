@@ -47,17 +47,14 @@
 			<?php if( 'free_trial' == $action ){ ?>
 			select: function (start, end, jsEvent, view ) {
 				//$("#loaderCalendar").show();
-				$("body").css( {"pointer-events": "none"} );
-				$("body").css( {"cursor": "wait"} );
+				// $("body").css( {"pointer-events": "none"} );
+				// $("body").css( {"cursor": "wait"} );
 
 				//==================================//
-
 					var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
 					var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
 
 					if ( selectedDateTime < validSelectDateTime ) {
-							//$("#loaderCalendar").hide();
-
 						if( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
 							$.systemMessage('<?php echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--danger');
 								setTimeout(function() {
@@ -66,7 +63,7 @@
 						}
 						$("body").css( {"cursor": "default"} );
 						$("body").css( {"pointer-events": "initial"} );
-						$('#calendar').fullCalendar('unselect');
+						$('#d_calendar').fullCalendar('unselect');
 						return false;
 					}
 				//================================//
@@ -214,16 +211,20 @@
 							rendering:'background'
 						});
 
-						var validSelectDateTime = moment().add('<?php echo $teacherBookingBefore; ?>' ,'hours');
-						console.log(moment().add('<?php echo $teacherBookingBefore;?>' ,'hours'));
-						console.log(validSelectDateTime);
+						var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore; ?>' ,'hours');
+						console.log(validSelectDateTime.format('YYYY-MM-DD HH:mm:ss'));
 						$(doc).each(function(i,e) {
 
 
 							if(  validSelectDateTime > moment(e.end) ) {
 								return;
 							}
-							e.start =  validSelectDateTime.format('YYYY-MM-DD HH:mm:ss');
+
+							if( validSelectDateTime.format('YYYY-MM-DD HH:mm:ss') > moment(e.start).format('YYYY-MM-DD HH:mm:ss') ) {
+
+								e.start =  validSelectDateTime.format('YYYY-MM-DD HH:mm:ss');
+
+							}
 							var classType = $(this).attr('classType');
 							if( classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>" ){
 								var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
@@ -323,7 +324,7 @@
 				}
 			},
 
-			eventMouseover: function(calEvent, jsEvent) {
+			eventClick: function(calEvent, jsEvent) {
 				var monthName = moment(calEvent.start).format('MMMM');
 				var date = monthName+" "+moment(calEvent.start).format('DD, YYYY');
 				var start = moment(calEvent.start).format('HH:mm A');
@@ -332,8 +333,8 @@
 				var selectedEndDateTime = moment(calEvent.end).format('YYYY-MM-DD HH:mm:ss');
 				var price = "<?php echo CommonHelper::displayMoneyFormat( $userRow['us_single_lesson_amount']); ?>";
                 <?php if( 'free_trial' == $action ){ ?>
-				//var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:void();" class="-link-close"></a> <?php echo Label::getLabel('LBL_Date:')?> ' + date + '  <br /><?php echo Label::getLabel('LBL_Time:')?> ' + start + '-' + end + ' <br /><?php 		if( 'free_trial' != $action ){ echo Label::getLabel('LBL_Price::')?> '+ price +'<br /><?php } ?> <a onClick="cart.add(&quot;<?php echo $teacher_id; ?>&quot;, <?php echo $lPackageId; ?>, &quot;'+ selectedStartDateTime +'&quot;, &quot;'+ selectedEndDateTime +'&quot; );" id="btn" class="btn btn--secondary"><?php echo Label::getLabel('LBL_Book_Lesson'); ?></a></div>';
-           var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><div class="booking-view"><h3 class="-display-inline"><?php echo $teacher_name?></h3><span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($teacher_country_id, 'DEFAULT') ); ?>" alt=""></span><div class="inline-list"><span class="inline-list__value highlight"><strong>Date</strong> &nbsp; &nbsp; '+date+' at '+start+'-'+end+'</span><?php 		if( 'free_trial' != $action ){?><span class="inline-list__value"><strong>Price</strong> &nbsp; &nbsp;   '+ price +'</span> <?php }?></div></div><div class="-align-center"><a href="javascript:void(0)" onClick="cart.add(&quot;<?php echo $teacher_id; ?>&quot;, <?php echo $lPackageId; ?>, &quot;'+ selectedStartDateTime +'&quot;, &quot;'+ selectedEndDateTime +'&quot;, &quot;'+ '<?php echo $languageId;?>' +'&quot; );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Book_Lesson'); ?></a></div><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:void();" class="-link-close"></a></div>';
+				//var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:void();" class="-link-close"></a> <?php echo Label::getLabel('LBL_Date:')?> ' + date + '  <br /><?php echo Label::getLabel('LBL_Time:')?> ' + start + '-' + end + ' <br /><?php 		if( 'free_trial' != $action ){ echo Label::getLabel('LBL_Price::')?> '+ price +'<br /><?php } ?> <a onClick="cart.add(&quot;<?php echo $teacher_id; ?>&quot;, <?php //echo $lPackageId; ?>, &quot;'+ selectedStartDateTime +'&quot;, &quot;'+ selectedEndDateTime +'&quot; );" id="btn" class="btn btn--secondary"><?php echo Label::getLabel('LBL_Book_Lesson'); ?></a></div>';
+           var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><div class="booking-view"><h3 class="-display-inline"><?php echo $teacher_name?></h3><span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($teacher_country_id, 'DEFAULT') ); ?>" alt=""></span><div class="inline-list"><span class="inline-list__value highlight"><strong>Date</strong> &nbsp; &nbsp; '+date+' at '+start+'-'+end+'</span><?php 		if( 'free_trial' != $action ){?><span class="inline-list__value"><strong>Price</strong> &nbsp; &nbsp;   '+ price +'</span> <?php }?></div></div><div class="-align-center"><a href="javascript:void(0)" onClick="cart.add(&quot;<?php echo $teacher_id; ?>&quot;, <?php echo $lPackageId; ?>, &quot;'+ selectedStartDateTime +'&quot;, &quot;'+ selectedEndDateTime +'&quot;, &quot;'+ '<?php echo $languageId;?>' +'&quot; );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Book_Lesson'); ?></a></div><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:void(0);" class="-link-close"></a></div>';
 
 
 				<?php } ?>
