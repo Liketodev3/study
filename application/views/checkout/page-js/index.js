@@ -9,7 +9,7 @@ $("document").ready(function(){
 (function() {
 	loadFinancialSummary = function(){
 		$(financialSummaryDiv).html( fcom.getLoader() );
-		fcom.ajax(fcom.makeUrl('Checkout', 'listFinancialSummary'), '', function(ans) {			
+		fcom.ajax(fcom.makeUrl('Checkout', 'listFinancialSummary'), '', function(ans) {
 		var ans = JSON.parse(ans);
 			$(financialSummaryDiv).html(ans.html);
 			if(ans.couponApplied > 0){
@@ -17,17 +17,25 @@ $("document").ready(function(){
 			}
 		});
 	};
-	
+
 	loadPaymentSummary = function(){
 		$(paymentDiv).html( fcom.getLoader() );
-		
 		fcom.ajax(fcom.makeUrl('Checkout', 'paymentSummary'), '', function(ans) {
-			$(paymentDiv).html(ans);
-			
+			try {
+					data = JSON.parse(ans);
+					if( data.redirectUrl != '' ){
+						window.location.href = data.redirectUrl;
+					}
+						return false;
+			} catch (e) {
+					$(paymentDiv).html(ans);
+			}
+
+
 			//$("#payment_methods_tab  li:first a").trigger('click');
 		});
 	};
-	
+
 	walletSelection = function(el){
 		var wallet = ( $(el).is(":checked") ) ? 1 : 0;
 		var data = 'payFromWallet=' + wallet;
@@ -36,7 +44,7 @@ $("document").ready(function(){
 			loadFinancialSummary();
 		});
 	};
-	
+
 	confirmOrder = function( frm ){
 		var data = fcom.frmData(frm);
 		//$("#checkout-left-side").addClass('form--processing');
@@ -48,46 +56,46 @@ $("document").ready(function(){
 		return false;
 	}
 
-	$(document).on('click','.coupon-input',function(){		
+	$(document).on('click','.coupon-input',function(){
 		$(couponDiv).html( fcom.getLoader() );
 		fcom.ajax(fcom.makeUrl('Checkout', 'getCouponForm'), '', function(ans) {
 			$(couponDiv).html(ans);
-			$("input[name='coupon_code']").focus();			
-		});		
-	});	
+			$("input[name='coupon_code']").focus();
+		});
+	});
 
 	applyPromoCode  = function(frm){
-		if (!$(frm).validate()) return;	
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		
+
 		fcom.updateWithAjax(fcom.makeUrl('Cart','applyPromoCode'),data,function(res){
 			$("#facebox .close").trigger('click');
 			$.systemMessage.close();
-			loadFinancialSummary();			
+			loadFinancialSummary();
 			loadPaymentSummary();
 		});
 	};
-	
+
 	triggerApplyCoupon = function(coupon_code){
 		document.frmPromoCoupons.coupon_code.value = coupon_code;
 		applyPromoCode(document.frmPromoCoupons);
 		return false;
 	};
-	 
+
 	removePromoCode  = function(){
 		fcom.updateWithAjax(fcom.makeUrl('Cart','removePromoCode'),'',function(res){
-		loadFinancialSummary();	
+		loadFinancialSummary();
 		loadPaymentSummary();
-		});	
+		});
 	};
-	
+
     redeemGiftcardForm = function () {
         $.facebox(function () {
             fcom.ajax(fcom.makeUrl('wallet', 'giftcard-redeem-form'),'', function (t) {
                 $.facebox(t, 'faceboxWidth');
             });
         });
-    };	
+    };
 	giftcardRedeem = function(frm1){
 		if (!$(frm1).validate()) return;
 			var data1 = fcom.frmData(frm1);
@@ -95,7 +103,7 @@ $("document").ready(function(){
 		fcom.updateWithAjax(fcom.makeUrl('Wallet','reedemGiftcard'), data1, function(res1){
 			searchCredits(document.frmCreditSrch);
 		});
-	};	
+	};
 
 
 	addToCart =  function( teacherId, lpackageId, languageId ,startDateTime, endDateTime ){
@@ -105,9 +113,9 @@ $("document").ready(function(){
 		if( endDateTime == undefined ){
 			endDateTime = '';
 		}
-		
+
 		var data = 'teacher_id=' + teacherId + '&languageId=' + languageId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId + '&checkoutPage=1';
-		
+
 		fcom.updateWithAjax( fcom.makeUrl('Cart','add'), data ,function(ans){
 			if( ans.redirectUrl ){
 				//fcom.waitAndRedirect( ans.redirectUrl );
@@ -118,13 +126,12 @@ $("document").ready(function(){
 	};
 
 	getLangPackages =  function( teacherId, languageId ){
-		
+
 		var data = 'teacher_id=' + teacherId + '&languageId=' + languageId ;
-		addToCart(teacherId,2,languageId);
-		fcom.ajax( fcom.makeUrl('Checkout','getLanguagePackages'), data ,function(ans){ 
+		fcom.ajax( fcom.makeUrl('Checkout','getLanguagePackages'), data ,function(ans){
 			$('#lsn-pckgs').html(ans);
 		});
-        
-	};    
-	
+
+	};
+
 })();

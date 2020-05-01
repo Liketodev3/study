@@ -42,8 +42,8 @@
                         <div class="tabled">
                             <div class="tabled__cell">
                             <span class="-color-light"><?php echo Label::getLabel('LBL_Language'); ?></span><br>
-							<?php if(isset($teachLanguages[$cartData['languageId']])) { 
-								echo $teachLanguages[$cartData['languageId']]; 
+							<?php if(isset($teachLanguages[$cartData['languageId']])) {
+								echo $teachLanguages[$cartData['languageId']];
 							} ?>
 
                             </div>
@@ -64,13 +64,13 @@
 
 						<div class="selection-list">
 							<ul>
-								<?php 
+								<?php
 
                                 foreach($teachLanguages as $key=>$teachLanguage){ ?>
 								<li class="<?php echo ($cartData['languageId'] == $key) ? 'is-active' : ''; ?>">
 									<label class="selection">
 										<span class="radio">
-											<input onClick="getLangPackages('<?php echo $cartData['user_id'] ?>', '<?php echo $key; ?>');" type="radio"  name="language" value="<?php echo $key; ?>" <?php echo ($cartData['languageId'] == $key) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
+											<input onClick="addToCart('<?php echo $cartData['user_id'] ?>',2,'<?php echo $key; ?>'); getLangPackages('<?php echo $cartData['user_id'] ?>', '<?php echo $key; ?>');" type="radio"  name="language" value="<?php echo $key; ?>" <?php echo ($cartData['languageId'] == $key) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
 										</span>
 										<span class="selection__item">
 											<?php echo $teachLanguage; ?> <small class="-float-right"> </small>
@@ -112,7 +112,7 @@
 </section>
 
 <script type="text/javascript">
-<?php 
+<?php
 	if( $cartData['orderNetAmount'] > 0 ){
 		echo 'loadPaymentSummary();';
 	}
