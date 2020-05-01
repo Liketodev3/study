@@ -4057,6 +4057,7 @@ div.tagsinput div {
 .window__left {
     width: 400px;
     border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
 }
 
 .window__left .scrollbar {
