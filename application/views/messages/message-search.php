@@ -7,11 +7,11 @@
                                                 <div class="msg-list align-items-center">
                                                    <div class="msg-list__left">
                                                        <div class="avtar avtar--small avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($otherUserDetail['user_first_name']); ?>">
-                                                           <?php 
+                                                           <?php
 															if( true == User::isProfilePicUploaded($otherUserDetail['user_id']) ){
 																echo '<img src="'.CommonHelper::generateUrl('Image','user', array( $otherUserDetail['user_id'] )).'?'.time().'" />';
 															}
-														?>	
+														?>
                                                         </div>
                                                    </div>
                                                    <div class="msg-list__right">
@@ -24,42 +24,42 @@
                                             </div>
                                         </div>
                                     </div>
-                                
+
                                         <div class="message-container">
                                      <div class="scrollbar scrollbar-js">
 <?php if ($arrListing){
-	foreach($arrListing as $row){ ?>									 
+	foreach($arrListing as $row){ ?>
                                           <div class="message-row <?php echo ($row['message_from_user_id']==$userId)?"my-message":"" ?>">
                                                 <aside class="grid_1">
                                                     <div class="avtar avtar--small" data-text="<?php echo CommonHelper::getFirstChar($row['message_from_name']); ?>">
-														<?php 
+														<?php
 															if( true == User::isProfilePicUploaded($row['message_from_user_id']) ){
 																echo '<img src="'.CommonHelper::generateUrl('Image','user', array( $row['message_from_user_id'] )).'?'.time().'" />';
 															}
-														?>													
+														?>
 													</div>
                                                 </aside>
                                                 <aside class="grid_2">
                                                     <div class="secionreviews">
                                                         <p class="reviewtxt"><?php echo nl2br($row['message_text']);?></p>
-                                                    </div>   
-                                                    <span class="datetext"><?php echo FatDate::format($row['message_date'],true);?></span> 
+                                                    </div>
+                                                    <span class="datetext"><?php echo FatDate::format($row['message_date'],true);?></span>
                                                 </aside>
                                             </div>
 <?php } }?>
-                                            
-                                    </div> 
-                                </div> 
+
+                                    </div>
+                                </div>
 
                                     <div class="message-reply">
-<?php 
+<?php
 												$frm->setFormTagAttribute('onSubmit','sendMessage(this); return false;');
-												$frm->setFormTagAttribute('class', 'form'); 
+												$frm->setFormTagAttribute('class', 'form');
 												$frm->developerTags['colClassPrefix'] = 'col-md-';
 												$frm->developerTags['fld_default_col'] = 12;
 												$messageBox = $frm->getField('message_text');
-												$messageBox->htmlAfterField = '<p class="messageCheckbox"><label class="field_label"><input type="checkbox" name="is_enter" class="is_enter" value="false" > &nbsp; '. Label::getLabel('LBL_Send_Message_on_Enter_Press') .'</label></p>';
-												
+												$messageBox->htmlAfterField = '<p class="messageCheckbox"><label class="field_label"><input type="checkbox" onChange="updatesessionStorage(this);"  name="is_enter" class="is_enter" value="false" > &nbsp; '. Label::getLabel('LBL_Send_Message_on_Enter_Press') .'</label></p>';
+
 												echo $frm->getFormHtml(); ?>
                                     <!--form class="form">
                                         <div class="row">
@@ -91,29 +91,34 @@
                                 </div>
                                      </div>
                                 </div>
-                                
+
 <script>
-    if($(window).width()>1199){    
+    if($(window).width()>1199){
     $('.scrollbar-js').enscroll({
         verticalTrackClass: 'scrollbar-track',
         verticalHandleClass: 'scrollbar-handle'
-    });  
+    });
+    }
+    function updatesessionStorage(obj) {
+        checked = false;
+        if($(obj).is(":checked")) {
+            checked = true;
+        }
+        localStorage.setItem('is_enter', checked);
     }
     $(document).ready(function(){
-		if( sessionStorage.getItem('is_enter') == true || sessionStorage.getItem('is_enter') == "true") {
+		if( localStorage.getItem('is_enter') == true || localStorage.getItem('is_enter') == "true") {
 			$('input[name=is_enter]').prop('checked', true);
 		} else {
 			$('input[name=is_enter]').prop('checked', false);
 		}
-		
+
 	    $('textarea[name=message_text]').keydown(function(event) {
-			if (event.keyCode == 13 && !event.shiftKey && $('input[name=is_enter]').is(':checked')) {
-				sessionStorage.setItem('is_enter', true);
+                is_enter =  localStorage.getItem('is_enter');
+			if (event.keyCode == 13 && !event.shiftKey && (is_enter== "true" || is_enter == true)) {
 				$('#frm_fat_id_frmSendMessage').submit();
-            } else {
-				sessionStorage.setItem('is_enter', false);
-			}
-		});        
+            }
+		});
     })
 
-</script> 
+</script>
