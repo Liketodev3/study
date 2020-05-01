@@ -352,3 +352,7 @@ ALTER TABLE `tbl_teacher_lesson_reviews` ADD INDEX( `tlreview_teacher_user_id`, 
 /* 30-04-2020 cookie message text */
 UPDATE `tbl_configurations` SET `conf_val` = 'Cookies Policy Text Will go here...' WHERE `tbl_configurations`.`conf_name` like '%CONF_COOKIES_TEXT%';
 UPDATE `tbl_configurations` SET `conf_val` = '3' WHERE `tbl_configurations`.`conf_name` = 'CONF_COOKIES_BUTTON_LINK';
+--  also update the database COLLATE
+ALTER TABLE  tbl_thread_messages CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE `tbl_thread_messages` CHANGE `message_text` `message_text` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
