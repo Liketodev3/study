@@ -1,22 +1,23 @@
 $(function() {
 	var dv = '#listItemsLessons';
-	searchLessons = function(frm){	
+var isSetupAjaxrun = false;
+	searchLessons = function(frm){
 		var data = fcom.frmData(frm);
 		fcom.ajax(fcom.makeUrl('TeacherLessonsPlan','getListing'),data,function(t){
 			$(dv).html(t);
 		});
 	};
-	
-	
-	add = function(id){	
+
+
+	add = function(id){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('TeacherLessonsPlan','add',[id]),'',function(t){
 			searchLessons('');
 			$.facebox( t,'facebox-medium');
-		}); 
+		});
 	};
-	
-	remove = function(id){	
+
+	remove = function(id){
 
         $.confirm({
             title: 'Confirm!',
@@ -32,19 +33,19 @@ $(function() {
                     searchLessons('');
                     });
                     }
-                },                        
+                },
                 Quit: {
                     text: 'Quit',
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){
                     }
-                }                        
+                }
             }
-        });      
+        });
 	};
-	
-	removeLesson = function(id){	
+
+	removeLesson = function(id){
 
         $.confirm({
             title: 'Confirm!',
@@ -55,32 +56,32 @@ $(function() {
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
-                        fcom.updateWithAjax(fcom.makeUrl('TeacherLessonsPlan', 'removeLessonSetup'), 'lessonPlanId='+id , function(t) {		
-                                $.facebox.close();				
-                                searchLessons('');	
+                        fcom.updateWithAjax(fcom.makeUrl('TeacherLessonsPlan', 'removeLessonSetup'), 'lessonPlanId='+id , function(t) {
+                                $.facebox.close();
+                                searchLessons('');
                         });
                     }
-                },                        
+                },
                 Quit: {
                     text: 'Quit',
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){
                     }
-                }                        
+                }
             }
-        });    
+        });
 	};
-	
-	removeLessonSetup = function(lessonPlanId){	
-		fcom.updateWithAjax(fcom.makeUrl('TeacherLessonsPlan', 'removeLessonSetup'), 'lessonPlanId='+lessonPlanId , function(t) {		
-				$.facebox.close();				
-				searchLessons('');	
-		});	
+
+	removeLessonSetup = function(lessonPlanId){
+		fcom.updateWithAjax(fcom.makeUrl('TeacherLessonsPlan', 'removeLessonSetup'), 'lessonPlanId='+lessonPlanId , function(t) {
+				$.facebox.close();
+				searchLessons('');
+		});
 	};
-	
-	removeFile = function(celement,id){	
-    
+
+	removeFile = function(celement,id){
+
         $.confirm({
             title: 'Confirm!',
             content: langLbl.confirmRemove,
@@ -92,23 +93,26 @@ $(function() {
                     action: function(){
                         fcom.ajax(fcom.makeUrl('TeacherLessonsPlan','removeFile',[id]),'',function(t){
                             $(celement).parent().remove();
-                        }); 
+                        });
                     }
-                },                        
+                },
                 Quit: {
                     text: 'Quit',
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){
                     }
-                }                        
+                }
             }
-        });    
+        });
 	};
-	
+
 	setup = function(frm){
 		if (!$(frm).validate()) return false;
-		var formData = new FormData(frm); 
+		$('body').find('.facebox-medium,.close').hide();
+		if(isSetupAjaxrun) {return true;}
+		isSetupAjaxrun = true;
+		var formData = new FormData(frm);
 		$.ajax({
 			url: fcom.makeUrl('TeacherLessonsPlan', 'setup'),
 			type: 'POST',
@@ -116,47 +120,52 @@ $(function() {
 			mimeType: "multipart/form-data",
 			contentType: false,
 			processData: false,
+			async:false,
 			success: function (data, textStatus, jqXHR) {
-				var data=JSON.parse(data);
-				
+					isSetupAjaxrun = false;
+					var data=JSON.parse(data);
+
 				if(data.status==0)
 				{
+					$('body').find('.facebox-medium,.close').show();
 					$.mbsmessage(data.msg,true,'alert alert--danger');
 					return false;
 				}
+					$.facebox.close();
 					$.mbsmessage(data.msg,true,'alert alert--success');
 					searchLessons('');
-					$.facebox.close();
+
 					setTimeout(function(){
 						$.mbsmessage.close();
 					},2000);
+
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
+				isSetupAjaxrun = false;
+				$('body').find('.facebox-medium,.close').show();
 				$.mbsmessage(jqXHR.msg, true,'alert alert--danger');
 			}
-		});
+		},{});
 	};
-	
-	requestReschedule = function(id){	
+
+	requestReschedule = function(id){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('TeacherLessonsPlan','requestReschedule',[id]),'',function(t){
 			searchLessons('');
 			$.facebox( t,'facebox-medium');
-		}); 
+		});
 	};
-	
-	requestRescheduleSetup = function(frm){	
+
+	requestRescheduleSetup = function(frm){
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('TeacherLessonsPlan', 'requestRescheduleSetup'), data , function(t) {		
-				$.facebox.close();				
-				searchLessons('');	
-		});	
+		fcom.updateWithAjax(fcom.makeUrl('TeacherLessonsPlan', 'requestRescheduleSetup'), data , function(t) {
+				$.facebox.close();
+				searchLessons('');
+		});
 	};
-	
+
 	$("input#resetFormLessonListing").click(function(){
 		searchLessons('');
 	});
 	searchLessons('');
 });
-
-
