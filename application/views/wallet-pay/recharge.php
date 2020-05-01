@@ -53,16 +53,16 @@
                                         <div class="row">
                                             <div class="col-xl-4 col-lg-4 col-md-4">
 											<?php if($paymentMethods){ ?>
-                                            <div class="tabs-gray tabs-js">
-                                                <ul>
+                                            <div class="tabs-gray">
+                                                <ul id="paymentListTab-js">
 												<?php foreach($paymentMethods as $k=>$paymentMethod){ ?>
-                                                    <li class="<?php if($k==0){ echo 'is-active'; }?>"><a href="#tab_<?php echo $k;?>"><?php echo $paymentMethod['pmethod_name']; ?></a></li>
+                                                    <li class="<?php if($k==0){ echo 'is-active'; }?>" ><a href="#tab_<?php echo $k;?>"><?php echo $paymentMethod['pmethod_name']; ?></a></li>
 												<?php } ?>
                                                 </ul>
                                             </div>
 											<?php } ?>
                                         </div>
-                                            <div class="col-xl-8 col-lg-8 col-md-8">
+	                                            <div class="col-xl-8 col-lg-8 col-md-8" id="paymentMethodData-js">
                              				<?php foreach($paymentMethods as $k=>$paymentMethod){ ?>
                                                  <div id="tab_<?php echo $k;?>" class="tabs-content-js">
                                                      <div>
@@ -93,9 +93,17 @@
 </section>
 
 <script type="text/javascript">
+$("#paymentListTab-js a").click(function(e) {
+	e.preventDefault();
+	var tabId = $(this).attr('href');
+	$("#paymentListTab-js li").removeClass('is-active');
+	$(this).parent('li').addClass('is-active');
+	$('.tabs-content-js').hide();
+	$(tabId).show();
+});
 <?php
-	if( $orderInfo['order_net_amount'] > 0 ){
-		echo 'loadPaymentSummary();';
-	}
+	// if( $orderInfo['order_net_amount'] > 0 ){
+	// 	echo 'loadPaymentSummary();';
+	// }
 ?>
 </script>
