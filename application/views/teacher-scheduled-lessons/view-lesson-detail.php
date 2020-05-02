@@ -1,4 +1,4 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 
 $user_timezone = MyDate::getUserTimeZone();
 $curDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
@@ -7,7 +7,19 @@ $startTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($l
 
 $endTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($lessonData['slesson_end_date'] .' '. $lessonData['slesson_end_time']), true , $user_timezone );
 $chatId = UserAuthentication::getLoggedUserId();
+$teacherImageTag = '';
+$teacherImage = '';
+$studentImageTag = '';
+$studentImage = '';
+if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
+    $studentImage = CommonHelper::generateUrl('Image','user', array( $lessonData['learnerId'] )).'?'.time();
+    $studentImageTag =  '<img src="'.$studentImage.'" />';
+}
 
+if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
+    $teacherImage = CommonHelper::generateUrl('Image','user', array( $lessonData['teacherId'] )).'?'.time();
+    $teacherImageTag  = '<img src="'.$teacherImage.'" />';
+}
 ?>
 <script type="text/javascript">
     jQuery(document).ready(function () {
@@ -26,7 +38,7 @@ $chatId = UserAuthentication::getLoggedUserId();
 		checkNewFlashCards();
 <?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
 		$("#end_lesson_time_div").show();
-<?php }?>        
+<?php }?>
 	}
 
 	function endLessonButtonAction(){
@@ -41,21 +53,21 @@ $chatId = UserAuthentication::getLoggedUserId();
 		$("#end_lesson_time_div").hide();
 	}
 
-	var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>'; 
-    var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';     
+	var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
+    var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
 	var chat_id = '<?php echo $chatId; ?>';
-	var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';  
+	var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';
 	var chat_name = '<?php echo $lessonData['teacherFname']; ?>';
 	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
 
-	var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
+	var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","avatarURL":"<?php echo $teacherImage; ?>","role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
 
-	var CometJsonLearnerData = [{"userId":"<?php echo $lessonData['learnerId']; ?>","fname":"<?php echo $lessonData['learnerFname']; ?>","role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_LEANER]; ?>"}];
+	var CometJsonLearnerData = [{"userId":"<?php echo $lessonData['learnerId']; ?>","fname":"<?php echo $lessonData['learnerFname']; ?>","avatarURL":"<?php echo $studentImage; ?>", "role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_LEANER]; ?>"}];
 
 	var CometJsonData = CometJsonTeacherData.concat(CometJsonLearnerData);
 
 	var CometJsonFriendData = {"lessonId":"<?php echo $lessonData['slesson_id'] ?>","userId":"<?php echo $chatId;?>","friendId":"<?php echo $lessonData['learnerId']; ?>"};
-  
+
 	function checkEveryMinuteStatus(){
 	   checkEveryMinuteStatusVar = setInterval(function(){
 			fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','checkEveryMinuteStatus',['<?php echo $lessonData['slesson_id'] ?>']),'',function(t){
@@ -65,7 +77,7 @@ $chatId = UserAuthentication::getLoggedUserId();
                 $.confirm({
                     title: 'Confirm!',
                     content: '<?php echo Label::getLabel('LBL_Learner_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also!'); ?>',
-                    autoClose: 'Quit|10000',                                        
+                    autoClose: 'Quit|10000',
                     buttons: {
                         Proceed: {
                             text: 'Proceed',
@@ -75,31 +87,31 @@ $chatId = UserAuthentication::getLoggedUserId();
                                 endLessonButtonAction();
                                 viewLessonDetail();
                             }
-                        },                        
+                        },
                         Quit: {
                             text: 'Quit',
                             btnClass: 'btn btn--secondary',
                             keys: ['enter', 'shift'],
                             action: function(){
                             }
-                        }                        
+                        }
                     }
-                }); 
+                });
 				}
 			});
 		},60000);
 	}
-	
+
 	function checkNewFlashCards(){
 		checkNewFlashCardsVar = setInterval(function(){
 			/*fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','searchFlashCards'),'',function(t){
 				var t = JSON.parse(t);
 				$('#flashCardListing').html(t.html);
 			});*/
-			searchFlashCards(document.frmFlashCardSrch);			
+			searchFlashCards(document.frmFlashCardSrch);
 		},30000)
 	}
-	
+
 	$(function(){
 		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
 		$('#start_lesson_timer').countdowntimer({
@@ -117,7 +129,7 @@ $chatId = UserAuthentication::getLoggedUserId();
 			}
 		});
 		<?php } ?>
-$('#end_lesson_timer').countdowntimer({ 
+$('#end_lesson_timer').countdowntimer({
 			startDate : "<?php echo $curDate; ?>",
 			dateAndTime : "<?php echo $endTime; ?>",
 			size : "lg",
@@ -138,7 +150,7 @@ $('#end_lesson_timer').countdowntimer({
                                     action: function(){
                                         endLessonSetup('<?php echo $lessonData['slesson_id']; ?>');
                                     }
-                                },                        
+                                },
                                 Quit: {
                                     text: '<?php echo Label::getLabel('LBL_Continue'); ?>',
                                     btnClass: 'btn btn--secondary',
@@ -146,13 +158,13 @@ $('#end_lesson_timer').countdowntimer({
                                     action: function(){
                                         sessionStorage.setItem('showEndLessonNotification',0);
                                     }
-                                }                        
+                                }
                             }
-                        });                   
+                        });
 				}
 				$("#end_lesson_time_div").hide();
 			}
-		});		
+		});
 	});
 
 /*$( window ).load(function() {
@@ -175,7 +187,7 @@ $('#end_lesson_timer').countdowntimer({
                                     action: function(){
                                         endLessonSetup('<?php echo $lessonData['slesson_id']; ?>');
                                     }
-                                },                        
+                                },
                                 Quit: {
                                     text: '<?php echo Label::getLabel('LBL_Continue'); ?>',
                                     btnClass: 'btn btn--secondary',
@@ -183,23 +195,23 @@ $('#end_lesson_timer').countdowntimer({
                                     action: function(){
                                         sessionStorage.setItem('showEndLessonNotification',0);
                                     }
-                                }                        
+                                }
                             }
-                        });                   
+                        });
 				}
 				$("#end_lesson_time_div").hide();
 			}
 		});
 });    */
-    
-    
+
+
 </script>
 
 <section class="section section--grey section--page">
 	<div class="screen">
       <div class="screen__left" style="background-image:url(<?php echo CONF_WEBROOT_URL ?>images/2000x900_1.jpg">
          <div class="screen__center-content">
-		 
+
             <?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ) { ?>
             <div class="alert alert--info" role="alert">
                <a class="close" href="javascript:void(0)"></a>
@@ -207,7 +219,7 @@ $('#end_lesson_timer').countdowntimer({
             </div>
             <span class="-gap"></span>
             <?php } ?>
-			
+
             <?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) { ?>
             <div class="alert alert--info" role="alert">
                <a class="close" href="javascript:void(0)"></a>
@@ -215,7 +227,7 @@ $('#end_lesson_timer').countdowntimer({
             </div>
             <span class="-gap"></span>
             <?php } ?>
-			
+
 			<?php /*if($lessonData['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) { ?>
             <div class="alert alert--info" role="alert">
                <a class="close" href="javascript:void(0)"></a>
@@ -223,7 +235,7 @@ $('#end_lesson_timer').countdowntimer({
             </div>
             <span class="-gap"></span>
             <?php }*/ ?>
-			
+
             <?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_CANCELLED) { ?>
             <div class="alert alert--info" role="alert">
                <a class="close" href="javascript:void(0)"></a>
@@ -231,26 +243,26 @@ $('#end_lesson_timer').countdowntimer({
             </div>
             <span class="-gap"></span>
             <?php } ?>
-			
+
             <a href="javascript:void(0);" style="display:none;" class="btn btn--secondary btn--xlarge join_lesson_now" id="joinL" onclick="createUserCometChat(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>
-                <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ) { ?>            
+                <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ) { ?>
                     <a href="<?php echo CommonHelper::generateUrl('teacher'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
-                <?php } ?>                      			
+                <?php } ?>
             <div class="timer">
                <span id="start_lesson_timer"></span>
             </div>
-			
+
          </div>
-		 
+
          <div class="screen-chat screen-chat-js" style="display:none;">
             <div class="chat-container">
-              
+
                <div id="cometChatBox" class="cometChatBox"></div>
             </div>
          </div>
-		 
+
       </div>
-      
+
 	  <div class="screen__right">
          <div class="tab-horizontal tabs-js">
             <ul>
@@ -262,67 +274,61 @@ $('#end_lesson_timer').countdowntimer({
             <div id="tab1" class="tabs-content-js">
                <div class="col-list col-list--full -no-padding">
                   <div class="">
-                     
+
 					 <div class="col-xl-12">
-					 
+
                         <h6><?php echo Label::getLabel('LBL_Learner_Details'); ?></h6>
 						<div class="d-flex align-items-center">
 						 <div>
 							<div class="avtar avtar--small" data-text="<?php echo CommonHelper::getFirstChar($lessonData['learnerFname']); ?>">
-                           <?php 
-							if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
-								$img = CommonHelper::generateUrl('Image','user', array( $lessonData['learnerId'] )).'?'.time(); 
-								echo '<img src="'.$img.'" />';
-							}
+                           <?php
+                                echo $studentImageTag;
                               ?>
                         </div>
 						 </div>
 						 <div>
 						 <h6><?php echo $lessonData['learnerFullName']; ?></h6>
                         <p><?php echo $lessonData['learnerCountryName']; ?> <br>
-                           <?php 
+                           <?php
                               /* echo $lessonData['learnerTimeZone']."<br />";
                               echo CommonHelper::getDateOrTimeByTimeZone($lessonData['learnerTimeZone'],'H:i A P'); */ ?>
                         </p>
 						 </div>
-						
-                        
+
+
 						 </div>
                      </div>
-                    
-					 
+
+
                      <hr>
-					 
+
                      <div class="col-xl-12">
                         <h6><?php echo Label::getLabel('LBL_Teacher_Details'); ?></h6>
 						<div class="d-flex align-items-center">
 						 <div>
 						<div class="avtar avtar--small" data-text="<?php echo CommonHelper::getFirstChar($lessonData['teacherFname']); ?>">
-                           <?php 
-							if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
-								$img = CommonHelper::generateUrl('Image','user', array( $lessonData['teacherId'] )).'?'.time(); 
-								echo '<img src="'.$img.'" />';
-							}
+                           <?php
+							echo $teacherImageTag;
                               ?>
                         </div>
                         </div>
 						<div>
                         <h6><?php echo $lessonData['teacherFullName']; ?></h6>
                         <p><?php echo $lessonData['teacherCountryName']; ?> <br>
-                           <?php /* echo $lessonData['teacherTimeZone']."<br />"; 
+                           <?php /* echo $lessonData['teacherTimeZone']."<br />";
                               echo CommonHelper::getDateOrTimeByTimeZone($lessonData['teacherTimeZone'],'H:i A P'); */ ?>
                         </p>
                      </div>
                      </div>
                      </div>
-					 
+
                      <hr>
-					 
+
                      <div class="col-xl-12">
                         <h6><?php echo Label::getLabel('LBL_Lesson_Details'); ?></h6>
                         <div class="schedule-list">
                            <ul>
-                              <?php 
+                              <?php
                                 $sdate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date($lessonData['slesson_date'] .' '. $lessonData['slesson_start_time']), true , $user_timezone );
                                 $date = DateTime::createFromFormat('Y-m-d', $sdate);
 								if ($date && ($date->format('Y-m-d') === $sdate )) {
@@ -331,7 +337,7 @@ $('#end_lesson_timer').countdowntimer({
 									<span class="span-left"><?php echo Label::getLabel('LBL_Schedule'); ?></span>
 									<span class="span-right">
 										<h4>
-										<?php echo date('h:i A',strtotime($startTime)); ?> - 
+										<?php echo date('h:i A',strtotime($startTime)); ?> -
 										<?php echo date('h:i A',strtotime($endTime)); ?>
 										</h4>
 										<?php echo date('l, F d, Y',strtotime($startTime)); ?>
@@ -342,14 +348,14 @@ $('#end_lesson_timer').countdowntimer({
 									<span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
 									<span class="span-right"><?php echo $statusArr[$lessonData['slesson_status']]; ?></span>
 								</li>
-							  
+
                               <li>
                                  <span class="span-left"><?php echo Label::getLabel('LBL_Details'); ?></span>
                                  <span class="span-right">
-                                 <?php //echo $lessonData['teacherTeachLanguageName']; 
+                                 <?php //echo $lessonData['teacherTeachLanguageName'];
 									echo TeachingLanguage::getLangById($lessonData['slesson_slanguage_id']);
 								 ?><br>
-                                 <?php 
+                                 <?php
 									if( date('Y-m-d', strtotime($startTime)) != "0000-00-00" ){
 										$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
 										$arrReplacements = array(
@@ -367,8 +373,8 @@ $('#end_lesson_timer').countdowntimer({
 							</ul>
                         </div>
                      </div>
-					 
-					<?php if( $lessonData['issrep_id'] ){ ?>					 
+
+					<?php if( $lessonData['issrep_id'] ){ ?>
                      <hr>
                      <div class="col-xl-12">
                         <h6><?php echo Label::getLabel('LBL_Issue_Status'); ?></h6>
@@ -377,20 +383,20 @@ $('#end_lesson_timer').countdowntimer({
                               <li>
                                  <span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
                                  <span class="span-right"><?php echo IssuesReported::getStatusArr()[$lessonData['issrep_status']]; ?></span>
-                              </li>						   
+                              </li>
 						   </ul>
 						</div>
 					 </div>
-					<?php } ?>	
-					
+					<?php } ?>
+
                      <hr>
-					 
+
 					  <div class="col-xl-12">
 					   <div class="d-flex align-items-center justify-content-between">
                            <div id="end_lesson_time_div" style="display:none;">
                             <div class="timer timer--small">
                                 <span id="end_lesson_timer"></span>
-                                
+
                             </div>
                             </div>
 <div class="select-box select-box--up toggle-group" id="lesson_actions">
@@ -405,17 +411,17 @@ $('#end_lesson_timer').countdowntimer({
 										<!--li><a href="javascript:void(0);" onclick="viewBookingCalendar('<?php echo $lessonData['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Schedule'); ?></a></li>
 										<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lessonData['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li-->
 										<?php } */ ?>
-										
+
 										<?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) { ?>
 										<!--<li><a href="javascript:void(0);" onclick="issueReported('<?php echo $lessonData['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Reported'); ?></a></li> -->
 										<?php } ?>
-										
+
 										<?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
 										<li><a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lessonData['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Reschedule'); ?></a></li>
 										<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lessonData['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
 										<?php } ?>
-										
-										<?php 
+
+										<?php
 										$countRel=ScheduledLessonSearch::countPlansRelation($lessonData['slesson_id']);
 										if($countRel > 0){
 										?>
@@ -428,31 +434,31 @@ $('#end_lesson_timer').countdowntimer({
 										<?php if ($lessonData['issrep_id'] > 0) { ?>
 											<li>
 												<a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $lessonData['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Issue_Details'); ?></a>
-											</li>	
+											</li>
 										<?php } ?>
-										
+
 										<?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) { ?>
 										<?php if( $lessonData['issrep_status'] == 0 ) { ?>
 											<li>
 												<a href="javascript:void(0);" onclick="resolveIssue('<?php echo $lessonData['issrep_id']; ?>', '<?php echo $lessonData['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></a>
 											</li>
-										<?php } ?>	
+										<?php } ?>
 										<?php if( $lessonData['issrep_status'] == 1 && $lessonData['issrep_issues_resolve_type'] < 1 ) { ?>
 											<li>
 												<a href="javascript:void(0);" onclick="issueResolveStepTwo('<?php echo $lessonData['issrep_id']; ?>', '<?php echo $lessonData['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></a>
 											</li>
 										<?php } ?>
-										
+
 										<?php }?>
-										
-										
+
+
 									</ul>
 								</div>
 							</div>
-						</div>                            
+						</div>
 						 <div>
 						 <a href="javascript:void(0);" style="display:none;" class="btn btn--primary btn--large btn--sticky end_lesson_now" id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?></a>
-						
+
 					</div>
 					</div>
 					</div>
@@ -460,7 +466,7 @@ $('#end_lesson_timer').countdowntimer({
 				</div>
                </div>
             </div>
-			
+
             <div id="tab2" class="tabs-content-js">
 			   <div class="box" >
                   <div class="box-head">
@@ -474,20 +480,20 @@ $('#end_lesson_timer').countdowntimer({
                            </div>
                         </div>
                      </div>
-					 
+
                      <div class="form-search form-search--single">
-						<?php 
+						<?php
 							$frmSrchFlashCard->addFormTagAttribute( 'onsubmit', 'searchFlashCards(this); return false;' );
-							$fldBtnSubmit = $frmSrchFlashCard->getField('btn_submit'); 
+							$fldBtnSubmit = $frmSrchFlashCard->getField('btn_submit');
 							$fldBtnSubmit->addFieldTagAttribute( 'class', 'form__action' );
-							
-							echo $frmSrchFlashCard->getFormTag(); 
+
+							echo $frmSrchFlashCard->getFormTag();
 							echo $frmSrchFlashCard->getFieldHtml('lesson_id');
 							echo $frmSrchFlashCard->getFieldHtml('page');
 							?>
 							<div class="form__element">
 								<?php echo $frmSrchFlashCard->getFieldHtml('keyword'); ?>
-								
+
 								<span class="form__action-wrap">
 									<?php echo $frmSrchFlashCard->getFieldHtml('btn_submit'); ?>
 									<span class="svg-icon">
@@ -499,15 +505,15 @@ $('#end_lesson_timer').countdowntimer({
 							</div>
                         </form>
                      </div>
-					 
+
 					<div class="box-body" id="flashCardListing"></div>
-					
+
                   </div>
 			  </div>
 			</div>
-			
+
 			</div>
-			
+
             </div>
          </div>
       </div>
@@ -520,14 +526,14 @@ jQuery(document).ready(function (e) {
 	   joinLessonButtonAction();
 	   createChatBox();
 	}
-	
+
 	/*function t(t) {
 		e(t).bind("click", function (t) {
 			t.preventDefault();
 			e(this).parent().fadeOut()
 		})
 	}
-	
+
 	e(".toggle__trigger-js").click(function () {
 		var t = e(this).parents(".toggle-group").children(".toggle__target-js").is(":hidden");
 		e(".toggle-group .toggle__target-js").hide();
@@ -536,30 +542,30 @@ jQuery(document).ready(function (e) {
 			e(this).parents(".toggle-group").children(".toggle__target-js").toggle().parents(".toggle-group").children(".toggle__trigger-js").addClass("is-active")
 		}
 	});
-	
+
 	e(document).bind("click", function (t) {
 		var n = e(t.target);
 		if (!n.parents().hasClass("toggle-group")) e(".toggle-group .toggle__target-js").hide();
 	});
-	
+
 	e(document).bind("click", function (t) {
 		var n = e(t.target);
 		if (!n.parents().hasClass("toggle-group")) e(".toggle-group .toggle__trigger-js").removeClass("is-active");
 	});*/
-	
+
 	$('body').addClass('is-screen-on');
 	$(".tabs-content-js").hide();
-	$(".tabs-js li:first").addClass("is-active").show(); 
+	$(".tabs-js li:first").addClass("is-active").show();
 	$(".tabs-content-js:first").show();
-	
+
 	$(".tabs-js li").click(function() {
-		$(".tabs-js li").removeClass("is-active"); 
-		$(this).addClass("is-active"); 
-		$(".tabs-content-js").hide(); 
-		var activeTab = $(this).find("a").attr("href"); 
+		$(".tabs-js li").removeClass("is-active");
+		$(this).addClass("is-active");
+		$(".tabs-content-js").hide();
+		var activeTab = $(this).find("a").attr("href");
 		$(activeTab).fadeIn();
 		return false;
 	});
-}); 
+});
 
 </script>
