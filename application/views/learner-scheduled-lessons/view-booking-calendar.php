@@ -1,5 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
+<?php $teacherBookingBefore = (!empty($teacherBookingBefore)) ? $teacherBookingBefore : 0; ?>
 <script>
 	function getEventsByTime( start, stop ) {
 	   var json = JSON.stringify($("#d_calendar").fullCalendar("clientEvents").map(function(e) {
@@ -45,7 +46,7 @@
 				//
 				//==================================//
 					var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
-					//var duration = '<?php echo $teacherBookingBefore;?>';
+					//var duration = '<?php //echo $teacherBookingBefore;?>';
 					var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
 
 					if( selectedDateTime >=  moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {

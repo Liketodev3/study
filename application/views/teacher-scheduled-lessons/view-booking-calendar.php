@@ -1,5 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
+<?php $teacherBookingBefore = (!empty($teacherBookingBefore)) ? $teacherBookingBefore : 0; ?>
 <script>
 	function getEventsByTime( start, stop ) {
 	   var json = JSON.stringify($("#d_calendar").fullCalendar("clientEvents").map(function(e) {
@@ -51,7 +52,7 @@
 					$('#d_calendar').fullCalendar('unselect');
 					return false;
 				}
-				
+
 				var duration = moment.duration(moment(end).diff(moment(start)));
 				var minutesDiff = duration.asMinutes();
 				var minutes = "<?php echo ($action=="free_trial") ? 30 : 60 ?>";
@@ -60,9 +61,9 @@
 					$('#d_calendar').fullCalendar('unselect');
 					$('.tooltipevent').remove();
 					return false;
-					
+
 				}
-				
+
 				var newEvent = new Object();
 				newEvent.title = '';
 				newEvent.startTime = moment(start).format('HH:mm:ss');
@@ -84,10 +85,10 @@
 					if(res.msg == 0)
 					$('.tooltipevent').remove();
 				});
-				
-				
-				
-			
+
+
+
+
 			},
 			 eventLimit: true,
 			defaultDate: '<?php echo date('Y-m-d'); ?>',
@@ -107,7 +108,14 @@
 							editable: false,
 							rendering:'background'
 							});
+							var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore; ?>' ,'hours');
 						$(doc).each(function(i,e) {
+							if(  validSelectDateTime > moment(e.end) ) {
+								return;
+							}
+							if( validSelectDateTime.format('YYYY-MM-DD HH:mm:ss') > moment(e.start).format('YYYY-MM-DD HH:mm:ss') ) {
+								e.start =  validSelectDateTime.format('YYYY-MM-DD HH:mm:ss');
+							}
 						var classType = $(this).attr('classType');
 						if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
 							var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?> bg-ee';
@@ -139,9 +147,9 @@
 									end: $(this).attr('end'),
 									className: $(this).attr('className'),
 									color: "var(--color-secondary)",
-									
+
 							  });
-							}); 
+							});
 							callback(events);
 						});
 					});
@@ -157,7 +165,14 @@
 							editable: false,
 							rendering:'background'
 							});
-					$(doc).each(function(i,e) {
+							var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore; ?>' ,'hours');
+						$(doc).each(function(i,e) {
+							if(  validSelectDateTime > moment(e.end) ) {
+								return;
+							}
+							if( validSelectDateTime.format('YYYY-MM-DD HH:mm:ss') > moment(e.start).format('YYYY-MM-DD HH:mm:ss') ) {
+								e.start =  validSelectDateTime.format('YYYY-MM-DD HH:mm:ss');
+							}
 						var classType = $(this).attr('classType');
 						if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
 							var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
@@ -195,16 +210,16 @@
 									end: $(this).attr('end'),
 									className: $(this).attr('className'),
 									color: "var(--color-secondary)",
-									
+
 							  });
-							}); 
+							});
 							callback(events);
 						});
 					}
 				});
 			  },
 			eventRender: function(event, element) {
-				if(isNaN(event._id) && event.className != "sch_data"){  
+				if(isNaN(event._id) && event.className != "sch_data"){
 					element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
 				}
 				else{
@@ -214,7 +229,7 @@
 					}
 				}
 			element.find(".closeon").click(function() {
-				if(isNaN(event._id)){				
+				if(isNaN(event._id)){
 					$('#d_calendar').fullCalendar('removeEvents',event._id);
 					$('.tooltipevent').remove();
 				}
@@ -232,7 +247,7 @@
 			 return false;
 			}
 		},
-		
+
 		eventMouseout: function(calEvent, jsEvent) {
 			$(this).css('z-index', 8);
 		},
@@ -240,17 +255,17 @@
 			return false;
 
 		},
-		
+
 	eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 		console.log(event.start.isBefore(moment()));
 		if(moment().diff(moment(event.start)) >= 0) {
 		 $("#d_calendar").fullCalendar("refetchEvents");
 		 return false;
 		}
-		
+
 	},
 	eventMouseover: function(calEvent, jsEvent) {
-		
+
 		var newEvent = new Object();
 		newEvent.title = '';
 		newEvent.startTime = moment(calEvent.start).format('HH:mm:ss');
@@ -262,8 +277,8 @@
 		newEvent.className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
 		newEvent.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>';
 		newEvent.lessonId = '<?php echo $lessonId; ?>';
-		
-		
+
+
 		var monthName = moment(calEvent.start).format('MMMM');
 		var date = monthName+" "+moment(calEvent.start).format('DD, YYYY');
 		var start = moment(calEvent.start).format('HH:mm A');

@@ -1,11 +1,11 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $user_timezone = MyDate::getUserTimeZone();
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 ?>
 <script>
    $(document).ready(function() {
 	//moment().tz.setDefault("America/New_York");
-	
+
    	$("#setUpWeeklyAvailability").click(function(){
    		var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
    			return 	{
@@ -58,7 +58,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    			newEvent.allday = 'false';
    			$('#w_calendar').fullCalendar('renderEvent',newEvent);
    		},
-   		eventLimit: true, 
+   		eventLimit: true,
    		defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
    		events: function(start, end, timezone, callback) {
    			$.ajax({
@@ -68,8 +68,8 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    				success: function(doc) {
    				if(doc == "[]")
    				{
-				data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };	
-					
+				data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };
+
    				$.ajax({
    				url: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonDataForWeekly'); ?>",
 				data : data,
@@ -154,7 +154,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    			});
    		  },
    		eventRender: function(event, element) {
-   			if(isNaN(event._id)){ 
+   			if(isNaN(event._id)){
    				element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
    			}
    			else{
@@ -164,7 +164,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    				//}
    			}
    		element.find(".closeon").click(function() {
-   			if(isNaN(event._id)){				
+   			if(isNaN(event._id)){
    				$('#w_calendar').fullCalendar('removeEvents',event._id);
    			}
    		});
@@ -184,7 +184,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    	eventResize: function(event, delta, revertFunc) {},
    	});
    });
-   
+
 </script>
 <button id="setUpWeeklyAvailability" class="btn btn--secondary"><?php echo Label::getLabel( 'LBL_Save' );?></button>
 <span class="-gap"></span>

@@ -157,9 +157,10 @@
 							});
 							var generalvalidSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore; ?>' ,'hours');
 							$(doc).each(function(i,e) {
-								if(  validSelectDateTime > moment(e.end) ) {
+								if(  generalvalidSelectDateTime > moment(e.end) ) {
 									return;
 								}
+
 								if( generalvalidSelectDateTime.format('YYYY-MM-DD HH:mm:ss') > moment(e.start).format('YYYY-MM-DD HH:mm:ss') ) {
 									e.start =  generalvalidSelectDateTime.format('YYYY-MM-DD HH:mm:ss');
 								}
@@ -219,7 +220,6 @@
 						});
 
 						var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore; ?>' ,'hours');
-						console.log(validSelectDateTime.format('YYYY-MM-DD HH:mm:ss'));
 						$(doc).each(function(i,e) {
 
 
