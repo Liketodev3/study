@@ -110,6 +110,7 @@ var isSetupAjaxrun = false;
 	setup = function(frm){
 		if (!$(frm).validate()) return false;
 		$('body').find('.facebox-medium,.close').hide();
+		$('body').find("#facebox_overlay").html(fcom.getLoader());
 		if(isSetupAjaxrun) {return true;}
 		isSetupAjaxrun = true;
 		var formData = new FormData(frm);
@@ -127,6 +128,7 @@ var isSetupAjaxrun = false;
 
 				if(data.status==0)
 				{
+					$('body').find('.-padding-20').remove();
 					$('body').find('.facebox-medium,.close').show();
 					$.mbsmessage(data.msg,true,'alert alert--danger');
 					return false;
@@ -142,6 +144,7 @@ var isSetupAjaxrun = false;
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				isSetupAjaxrun = false;
+				$('body').find('.-padding-20').remove();
 				$('body').find('.facebox-medium,.close').show();
 				$.mbsmessage(jqXHR.msg, true,'alert alert--danger');
 			}
