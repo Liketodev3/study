@@ -4,9 +4,9 @@ $arr_flds = array(
 	'listserial'=> Label::getLabel('LBL_S.No.',$adminLangId),
 	'user'=>Label::getLabel('LBL_User',$adminLangId),
 	'type'	=> Label::getLabel('LBL_User_Type',$adminLangId),
-	'user_added_on'=>Label::getLabel('LBL_Reg._Date',$adminLangId),		
+	'user_added_on'=>Label::getLabel('LBL_Reg._Date',$adminLangId),
 	'credential_active'=>Label::getLabel('LBL_Status',$adminLangId),
-	'credential_verified'=>Label::getLabel('LBL_verified',$adminLangId),	
+	'credential_verified'=>Label::getLabel('LBL_verified',$adminLangId),
 	'action' => Label::getLabel('LBL_Action',$adminLangId),
 );
 $tbl = new HtmlElement('table', array('width'=>'100%', 'class'=>'table table-responsive'));
@@ -17,10 +17,10 @@ foreach ($arr_flds as $val) {
 
 $sr_no = $page==1 ? 0: $pageSize*($page-1);
 foreach ($arr_listing as $sn=>$row){
-	
+
 	$sr_no++;
 	$tr = $tbl->appendElement('tr', array( ) );
-	
+
 	foreach ( $arr_flds as $key => $val ){
 		$td = $tr->appendElement('td');
 		switch ($key){
@@ -55,7 +55,7 @@ foreach ($arr_listing as $sn=>$row){
                     $str = $strTxt;
                 }
 				$td->appendElement('plaintext', array(), $str,true);
-			break;	
+			break;
 			case 'user_regdate':
 				$td->appendElement('plaintext',array(),MyDate::format($row[$key],true));
 			break;
@@ -68,7 +68,7 @@ foreach ($arr_listing as $sn=>$row){
 				if( $row['user_is_teacher'] ){
 					$str .= $arr[User::USER_TYPE_TEACHER].'<br/>';
 				}
-				
+
 				if( $row['user_registered_initially_for'] == User::USER_TEACHER_DASHBOARD && 0 == $row['user_is_teacher'] ){
 					$userTypeStr = Label::getLabel('LBL_Signing_up_for_{user-type}');
 					$userTypeStr = str_replace( "{user-type}", User::getUserTypesArr( $adminLangId )[User::USER_TEACHER_DASHBOARD], $userTypeStr );
@@ -78,42 +78,43 @@ foreach ($arr_listing as $sn=>$row){
 					$userTypeStr = str_replace( "{user-type}", User::getUserTypesArr( $adminLangId )[User::USER_TEACHER_DASHBOARD], $userTypeStr );
 					$str .= '<span class="label label-danger">' . $userTypeStr .'</span>';
 				}
-				
+
 				$td->appendElement('plaintext', array(), $str  ,true);
-				
+
 			break;
-			case 'credential_verified':				
+			case 'credential_verified':
 				$yesNoArr = applicationConstants::getYesNoArr($adminLangId);
 				$str = isset($row[$key])?$yesNoArr[$row[$key]]:'';
 				$td->appendElement('plaintext',array(),$str, true);
-			break;				 
+			break;
 			case 'action':
 				$ul = $td->appendElement("ul",array("class"=>"actions actions--centered"));
-				if($canEdit){		
-					$li = $ul->appendElement("li",array('class'=>'droplink'));						
+				if($canEdit){
+					$li = $ul->appendElement("li",array('class'=>'droplink'));
     			    $li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
-					$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));	
+					$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
 					$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
-              		
-					$innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"viewUserForm(".$row['user_id'].")"),Label::getLabel('LBL_View',$adminLangId), true);		
 
 					$innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"userForm(".$row['user_id'].")"),Label::getLabel('LBL_Edit',$adminLangId), true);	
-					
+					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"viewUserForm(".$row['user_id'].")"),Label::getLabel('LBL_View',$adminLangId), true);
+
+					$innerLi=$innerUl->appendElement('li');
+					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"userForm(".$row['user_id'].")"),Label::getLabel('LBL_Edit',$adminLangId), true);
+
 					/* $innerLi=$innerUl->appendElement('li');
 					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Rewards',$adminLangId),"onclick"=>"rewards(".$row['user_id'].")"),Label::getLabel('LBL_Rewards',$adminLangId), true); */
 
 					$innerLi=$innerUl->appendElement("li");
-					$innerLi->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 
-					'title'=>Label::getLabel('LBL_Transactions',$adminLangId),"onclick"=>"transactions(".$row['user_id'].")"),Label::getLabel('LBL_Transactions',$adminLangId), true);					
-					
+					$innerLi->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green',
+					'title'=>Label::getLabel('LBL_Transactions',$adminLangId),"onclick"=>"transactions(".$row['user_id'].")"),Label::getLabel('LBL_Transactions',$adminLangId), true);
+
 					/* $innerLi=$innerUl->appendElement('li');
 					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Change_Password',$adminLangId),"onclick"=>"changePasswordForm(".$row['user_id'].")"),Label::getLabel('LBL_Change_Password',$adminLangId), true); */
-					
+
 					$innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>CommonHelper::generateUrl('Users','login',array($row['user_id'])),'target'=>'_blank','class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Log_into_store',$adminLangId)),Label::getLabel('LBL_Log_into_Profile',$adminLangId), true);					
-					
+					// $innerLi->appendElement('a', array('href'=>CommonHelper::generateUrl('Users','login',array($row['user_id'])),'target'=>'_blank','class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Log_into_store',$adminLangId)),Label::getLabel('LBL_Log_into_Profile',$adminLangId), true);
+					$innerLi->appendElement('a', array('href'=>"javascript:void(0)",'onClick'=>"userLogin(".$row['user_id'].")",'class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Log_into_store',$adminLangId)),Label::getLabel('LBL_Log_into_Profile',$adminLangId), true);					
+
 					/* $innerLi=$innerUl->appendElement('li');
 					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Email_User',$adminLangId),"onclick"=>"sendMailForm(".$row['user_id'].")"),Label::getLabel('LBL_Email_User',$adminLangId), true); */
 				}

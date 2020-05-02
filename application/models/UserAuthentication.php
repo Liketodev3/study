@@ -157,9 +157,12 @@ class UserAuthentication extends FatModel
             $this->error = Label::getLabel('ERR_INVALID_USERNAME_OR_PASSWORD', $this->commonLangId);
             return false;
         }
-        if (!$isAdmin) {
+
             if ($row['credential_verified'] != applicationConstants::YES) {
-                $this->error = str_replace("{clickhere}", '<a href="javascript:void(0)" onclick="resendEmailVerificationLink('."'".$username."'".')">'.Label::getLabel('LBL_Click_Here', $this->commonLangId).'</a>', Label::getLabel('MSG_Your_Account_verification_is_pending_{clickhere}', $this->commonLangId));
+                $this->error =  Label::getLabel('ERR_Account_verification_is_pending', $this->commonLangId);
+                if (!$isAdmin) {
+                    $this->error = str_replace("{clickhere}", '<a href="javascript:void(0)" onclick="resendEmailVerificationLink('."'".$username."'".')">'.Label::getLabel('LBL_Click_Here', $this->commonLangId).'</a>', Label::getLabel('MSG_Your_Account_verification_is_pending_{clickhere}', $this->commonLangId));
+                }
                 /* if ( FatUtility::isAjaxCall() ) {
                     $json['status'] = 0;
                     $json['msg'] = $this->error;
@@ -170,10 +173,9 @@ class UserAuthentication extends FatModel
             }
 
             if ($row['credential_active'] != applicationConstants::ACTIVE) {
-                $this->error = Label::getLabel('ERR_YOUR_ACCOUNT_HAS_BEEN_DEACTIVATED_OR_NOT_ACTIVE', $this->commonLangId);
+                $this->error = Label::getLabel('ERR_ACCOUNT_HAS_BEEN_DEACTIVATED_OR_NOT_ACTIVE', $this->commonLangId);
                 return false;
             }
-        }
 
         $rowUser = User::getAttributesById($row['credential_user_id']);
 

@@ -114,14 +114,25 @@ class UsersController extends AdminBaseController
             'credential_username',
             'credential_password'
         ), false, false);
+        $isAjaxRequest =  FatUtility::isAjaxCall();
         if (!$user) {
+
             Message::addErrorMessage($this->str_invalid_request);
+            if($isAjaxRequest) {
+                FatUtility::dieJsonError(Message::getHtml());
+            }
             FatApp::redirectUser(CommonHelper::generateUrl('Users'));
         }
         $userAuthObj = new UserAuthentication();
         if (!$userAuthObj->login($user['credential_username'], $user['credential_password'], $_SERVER['REMOTE_ADDR'], false, true) === true) {
-            Message::addErrorMessage($userObj->getError());
+            Message::addErrorMessage($userAuthObj->getError());
+            if($isAjaxRequest) {
+                FatUtility::dieJsonError(Message::getHtml());
+            }
             FatApp::redirectUser(CommonHelper::generateUrl('Users'));
+        }
+        if($isAjaxRequest) {
+            FatUtility::dieJsonSuccess(Label::getLabel("MSG_LOGIN_SUCCESSFULL"));
         }
         FatApp::redirectUser(CommonHelper::generateUrl('account', '', array(), '/'));
     }

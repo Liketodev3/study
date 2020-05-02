@@ -1,13 +1,13 @@
 $(document).ready(function(){
-	
+
 	searchUsers(document.frmUserSearch);
-	
+
 	$(document).on('click',function(){
 		$('.autoSuggest').empty();
 	});
-	
+
 	$('input[name=\'keyword\']').autocomplete({
-		'source': function(request, response) {		
+		'source': function(request, response) {
 			$.ajax({
 				url: fcom.makeUrl('Users', 'autoCompleteJson'),
 				data: {keyword: request, fIsAjax:1},
@@ -25,16 +25,16 @@ $(document).ready(function(){
 			$("input[name='keyword']").val( item['name'] );
 		}
 	});
-	
+
 	$('input[name=\'keyword\']').keyup(function(){
 		$('input[name=\'user_id\']').val('');
 	});
-	
+
 	//redirect user to login page
 	$(document).on('click','ul.linksvertical li a.redirect--js',function(event){
 		event.stopPropagation();
-	});	
-	
+	});
+
 });
 
 (function() {
@@ -42,109 +42,117 @@ $(document).ready(function(){
 	var transactionUserId = 0;
 	var active = 1;
 	var inActive = 0;
-	
-	goToSearchPage = function(page) {	
+
+	goToSearchPage = function(page) {
 		if(typeof page == undefined || page == null){
 			page = 1;
-		}		
-		var frm = document.frmUserSearchPaging;		
+		}
+		var frm = document.frmUserSearchPaging;
 		$(frm.page).val(page);
 		searchUsers(frm);
 	};
-		
+	userLogin = function(userId) {
+		fcom.updateWithAjax(fcom.makeUrl('Users', 'login', [userId]), '', function(t) {
+			if(t.status == 1) {
+				$.systemMessage.close();
+					window.open(fcom.makeUrl('account', '', [],'/'),"_blank");
+			}
+		});
+	};
+
 	searchUsers = function(form,page){
 		if (!page) {
 			page = currentPage;
 		}
-		currentPage = page;	
+		currentPage = page;
 		/*[ this block should be before dv.html('... anything here.....') otherwise it will through exception in ie due to form being removed from div 'dv' while putting html*/
 		var data = '';
 		if (form) {
 			data = fcom.frmData(form);
 		}
-		/*]*/	
-		
+		/*]*/
+
 		$("#userListing").html(fcom.getLoader());
-		
+
 		fcom.ajax(fcom.makeUrl('Users','search'),data,function(res){
 			$("#userListing").html(res);
 		});
 	};
-		
+
 	reloadUserList = function() {
 		searchUsers(document.frmUserSearchPaging, currentPage);
 	};
-	
+
 	fillSuggetion = function(v) {
 		$('#keyword').val(v);
 		$('.autoSuggest').hide();
-	};	
-	
+	};
+
 	viewUserForm = function(id) {
-		var frm = document.frmUserSearchPaging;		
+		var frm = document.frmUserSearchPaging;
 		$.facebox(function() {
-			fcom.ajax(fcom.makeUrl('Users', 'view', [id]), '', function(t) {				
+			fcom.ajax(fcom.makeUrl('Users', 'view', [id]), '', function(t) {
 				fcom.updateFaceboxContent(t);
 			});
 		});
 	};
 
 	userForm = function (id){
-		fcom.displayProcessing();	
-		fcom.ajax(fcom.makeUrl('Users', 'form', [id]), '', function(t) {				
+		fcom.displayProcessing();
+		fcom.ajax(fcom.makeUrl('Users', 'form', [id]), '', function(t) {
 			fcom.updateFaceboxContent(t);
 		});
 	};
-		
+
 	transactions = function(userId){
 		transactionUserId = userId;
 		$.facebox(function() {
 			addTransaction(userId);
 		});
 	};
-	
+
 	addTransaction = function(userId){
 		fcom.ajax(fcom.makeUrl('Users', 'transaction', [userId]), '', function(t) {
 			$('#facebox').height($(window).height() - 46).css('overflow-y','auto');
 			fcom.updateFaceboxContent(t);
-		});		
+		});
 	};
-	
-	goToTransactionPage = function(page) {	
+
+	goToTransactionPage = function(page) {
 		if(typeof page == undefined || page == null){
 			page = 1;
-		}		
-		var frm = document.frmTransactionSearchPaging;	
+		}
+		var frm = document.frmTransactionSearchPaging;
 		$(frm.page).val(page);
-		data = fcom.frmData(frm);	
+		data = fcom.frmData(frm);
 	};
-	
+
 	updateTransaction = function(data) {
 		fcom.displayProcessing();
 		fcom.ajax(fcom.makeUrl('Users', 'transaction', [transactionUserId]), data, function(t) {
 			fcom.updateFaceboxContent(t);
-		});			
+		});
 	};
-	
+
 	addUserTransaction = function(userId){
 		fcom.displayProcessing();
 		fcom.ajax(fcom.makeUrl('Users', 'addUserTransaction', [userId]), '', function(t) {
 			fcom.updateFaceboxContent(t);
 		});
 	};
-	
+
 	setupUserTransaction = function(frm){
-		if (!$(frm).validate()) return;	
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Users', 'setupUserTransaction'), data, function(t) {						
+		fcom.updateWithAjax(fcom.makeUrl('Users', 'setupUserTransaction'), data, function(t) {
  			if(t.userId > 0) {
 				addTransaction(t.userId);
-			} 			
-		});	
+			}
+		});
 	};
-	
+
 	setupUsers = function(frm){
-		if (!$(frm).validate()) return;		
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Users', 'setup'), data, function(t) {
 			$(document).trigger('close.facebox');
@@ -196,15 +204,15 @@ $(document).ready(function(){
 		});
 		$.systemMessage.close();
 	};
-	
+
 	clearUserSearch = function(){
 		document.frmUserSearch.reset();
 		document.frmUserSearch.user_id.value = '';
 		searchUsers( document.frmUserSearch );
 	};
-	
+
 	getCountryStates = function(countryId,stateId,dv){
-		fcom.displayProcessing();		
+		fcom.displayProcessing();
 		fcom.ajax(fcom.makeUrl('Users','getStates',[countryId,stateId]),'',function(res){
 			$(dv).empty();
 			$(dv).append(res);

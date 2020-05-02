@@ -80,7 +80,7 @@ class GuestUserController extends MyAppController
         $json['msg'] = '';
         $post = FatApp::getPostedData();
 		$userType = User::USER_TYPE_LEANER;
-		
+
         if (UserAuthentication::isUserLogged()) {
             if ($post['signUpType'] == "teacher") {
                 $user_preferred_dashboard = User::USER_TEACHER_DASHBOARD;
@@ -634,13 +634,13 @@ class GuestUserController extends MyAppController
         $user_type = $post['type'];
 		$preferredDashboard = User::USER_LEARNER_DASHBOARD;
 		//$userIsTeacher = 0;
-		
+
 		if($user_type == User::USER_TYPE_TEACHER) {
 			$preferredDashboard = User::USER_TEACHER_DASHBOARD;
 			//$userIsTeacher = 1;
 		}
-		
-		
+
+
         $facebookName = $userFirstName.' '.$userLastName;
         // User info ok? Let's print it (Here we will be adding the login and registering routines)
         $db = FatApp::getDb();
@@ -737,12 +737,12 @@ class GuestUserController extends MyAppController
             Message::addErrorMessage(Label::getLabel($authentication->getError()));
             FatUtility::dieWithError(Message::getHtml());
         }
-		
-		
+
+
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_code']);
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_access_token']);
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_user_id']);
-		
+
 		$redirectUrl = User::getPreferedDashbordRedirectUrl();
 		if ($user_type == User::USER_TYPE_TEACHER) {
 			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
@@ -915,8 +915,8 @@ class GuestUserController extends MyAppController
 			if ($_SESSION['user_type'] == User::USER_TYPE_TEACHER) {
 				$preferredDashboard = User::USER_TEACHER_DASHBOARD;
 			}
-			
-			
+
+
             $db = FatApp::getDb();
             $userObj = new User();
             $srch = $userObj->getUserSearchObj(array(
@@ -1006,7 +1006,7 @@ class GuestUserController extends MyAppController
 			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
 		}
 		FatApp::redirectUser($redirectUrl);
-		
+
     }
 
     public function forgotPasswordForm()
