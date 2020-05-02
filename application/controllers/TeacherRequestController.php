@@ -87,7 +87,6 @@ class TeacherRequestController extends MyAppController {
 		/* Validation[ */
 		$frm = $this->getForm(false);
 		$post = $frm->getFormDataFromArray(FatApp::getPostedData());
-
 		if (false === $post) {
 			if (FatUtility::isAjaxCall()) {
 				FatUtility::dieWithError(current($frm->getValidationErrors()));
@@ -99,7 +98,7 @@ class TeacherRequestController extends MyAppController {
 		/* ] */
 
 		/* file handling[ */
-		if (!is_uploaded_file($_FILES['user_profile_pic']['tmp_name'])) {
+		if (empty($_FILES['user_profile_pic']['tmp_name']) || !is_uploaded_file($_FILES['user_profile_pic']['tmp_name'])) {
 			if (FatUtility::isAjaxCall()) {
 				FatUtility::dieWithError(Label::getLabel('MSG_Please_select_a_Profile_Pic'));
 			}
@@ -122,7 +121,7 @@ class TeacherRequestController extends MyAppController {
 		}
 		/* ] */
 		/* Proof File[ */
-		if ($_FILES['user_photo_id']['tmp_name'] != "") {
+		if (!empty($_FILES['user_photo_id']['tmp_name'])) {
 			$fileHandlerObj = new AttachedFile();
 			if (!$fileHandlerObj->saveDoc($_FILES['user_photo_id']['tmp_name'], $fileHandlerObj::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, $userId, 0, $_FILES['user_photo_id']['name'], -1, true)) {
 				if (FatUtility::isAjaxCall()) {

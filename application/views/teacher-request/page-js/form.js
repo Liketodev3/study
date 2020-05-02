@@ -11,12 +11,12 @@ $("document").ready(function(){
 			});
 		});
 	};
-	
+
 	setUpTeacherQualification = function( frm ){
 		if ( !$(frm).validate() ){ return; }
-        $(frm.btn_submit).attr('disabled','disabled'); 
-		var dv = $("#frm_fat_id_frmQualification");	
-			
+        $(frm.btn_submit).attr('disabled','disabled');
+		var dv = $("#frm_fat_id_frmQualification");
+
 		var formData = new FormData(frm);
 		$.ajax({
 			url: fcom.makeUrl('TeacherRequest', 'setUpTeacherQualification'),
@@ -33,51 +33,90 @@ $("document").ready(function(){
 				var data = JSON.parse(data);
 				if(data.status==0){
 					$.mbsmessage(data.msg, true, 'alert alert--danger');
-                    $(frm.btn_submit).attr('disabled',''); 
+                    $(frm.btn_submit).attr('disabled','');
 				} else {
 					$.mbsmessage(data.msg, true, 'alert alert--success');
-                    $(frm.btn_submit).attr('disabled',''); 
+                    $(frm.btn_submit).attr('disabled','');
 					reloadQualificationList();
 					$(document).trigger('close.facebox');
 			   }
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				$.mbsmessage(jqXHR.msg, true,'alert alert--danger');
-				$(frm.btn_submit).attr('disabled',''); 
+				$(frm.btn_submit).attr('disabled','');
 			}
 		});
 	};
-	
+
 	searchTeacherQualification = function(){
 		var dv = $('#resume_listing');
 		$(dv).html( fcom.getLoader() );
-		
+
 		fcom.ajax( fcom.makeUrl('TeacherRequest', 'searchTeacherQualification'),'',function(res){
 			$(dv).html(res);
 		});
 	};
-	
+
 	reloadQualificationList = function(){
 		searchTeacherQualification();
 	};
-	
+
 	deleteTeacherQualification = function( uqualification_id ){
 		if(!confirm(langLbl.confirmRemove)){return;}
-		
+
 		fcom.updateWithAjax( fcom.makeUrl('TeacherRequest','deleteTeacherQualification'),'&uqualification_id='+uqualification_id,function(){
 			reloadQualificationList();
 			$(document).trigger('close.facebox');
 		});
 	};
-	
-	/* setUpTeacherApproval = function( frm ){
+
+	 setUpTeacherApproval = function( frm ){
 		if ( !$(frm).validate() ){ return; }
-		fcom.updateWithAjax(fcom.makeUrl('TeacherRequest', 'setUpTeacherApproval'), fcom.frmData(frm), function(res) {
-			if( res.redirectUrl ){
-				window.location.href = res.redirectUrl;
-				return;
+		data =  new FormData(frm);
+		console.log(frm.user_profile_pic.files);
+		if(frm.user_profile_pic.files.lenght > 0) {
+
+			data.append('user_profile_pic',frm.user_profile_pic.files[0]);
+		}
+		if(frm.user_photo_id.files.lenght > 0) {
+			data.append('user_photo_id',frm.user_photo_id.files[0]);
+		}
+			data.append('fIsAjax',1);
+			data.append('fOutMode','json');
+		$.ajax({
+			method: "POST",
+			url: fcom.makeUrl('TeacherRequest', 'setUpTeacherApproval'),
+			processData: false,
+			contentType: false,
+			data: data,
+			async: false,
+			success: function (result) {
+				try {
+					result = JSON.parse(result);
+					if (result.status != 1) {
+						$(document).trigger('close.mbsmessage');
+						$.mbsmessage(result.msg,true, 'alert alert--danger');
+						return false;
+					}
+					$.mbsmessage(result.msg,true, 'alert alert--success');
+					if( result.redirectUrl ){
+						setTimeout(function(){ window.location.href = ans.redirectUrl }, 2000);
+					}
+						return;
+					}
+				} catch (e) {
+					$.mbsmessage(e,true, 'alert alert--danger');
+				}
+				console.log(result);
 			}
 		});
-	} */
-	
+		// fcom.updateWithAjax(fcom.makeUrl('TeacherRequest', 'setUpTeacherApproval'), fcom.frmData(frm), function(res) {
+		// 	return false;
+		// 	// if( res.redirectUrl ){
+		// 	// 	window.location.href = res.redirectUrl;
+		// 	// 	return;
+		// 	// }
+		// },{contentType: false,processData: false});
+	}
+
 })(jQuery);

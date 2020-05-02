@@ -1,5 +1,6 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $frm->setFormTagAttribute( 'class', 'form' );
+$frm->setFormTagAttribute( 'onsubmit', 'setUpTeacherApproval(this); return false;' );
 $frm->developerTags['colClassPrefix'] = 'col-sm-';
 $frm->developerTags['fld_default_col'] = 12;
 
@@ -69,7 +70,7 @@ $frm->setFormTagAttribute( 'action', CommonHelper::generateUrl( 'TeacherRequest'
 				<div class="box -skin">
 					<div class="box__head -align-center">
 						<h1><?php echo Label::getLabel('LBL_Teacher_Application'); ?></h1>
-						<p><?php 
+						<p><?php
 						$str = Label::getLabel('LBL_Thank_you_for_applying_to_teach_on_{website-name}');
 						$str = str_replace( "{website-name}", "<strong>".$websiteName."</strong>", $str );
 						echo $str; ?> </p>
@@ -89,52 +90,52 @@ $("document").ready(function(){
 	$("select[name='utrvalue_user_teach_slanguage_id[]']").closest(".row").addClass("teach_language_row");
 	$("select[name='utrvalue_user_teach_slanguage_id[]']").closest(".row").addClass("row--addons");
 	$("#resume_fields_heading").closest('.row').addClass('row--head');
-	
+
 	addNewLanguageRow = function(){
-		
+
 		var rowStr = '<div class="row spoken_language_row row--addons">';
-		
+
 		rowStr += '<div class="col-sm-5"><div class="field-set">';
 		rowStr += '<div class="caption-wraper"><label class="field_label"><?php echo Label::getLabel('LBL_Languages_you_speak'); ?><span class="spn_must_field">*</span></label></div>';
 		rowStr += '<div class="field-wraper"><div class="field_cover"><?php echo $frm->getFieldHtml( 'utrvalue_user_language_speak[]' ); ?></div></div>';
-		
+
 		rowStr += '</div></div>';
-		
+
 		rowStr += '<div class="col-sm-5"><div class="field-set">';
 		rowStr += '<div class="caption-wraper"><label class="field_label"><?php echo Label::getLabel('LBL_Languages_Proficiency'); ?><span class="spn_must_field">*</span></label></div>';
-		
+
 		rowStr += '<div class="field-wraper"><div class="field_cover"><?php echo $frm->getFieldHtml( 'utrvalue_user_language_speak_proficiency[]' ); ?></div></div>';
-		
+
 		rowStr += '</div></div>';
-		
+
 		rowStr += '<div class="col-sm-2"><label class="field_label -display-block"></label>';
-		
+
 		rowStr += '<a title="<?php echo Label::getLabel('LBL_Delete'); ?>" href="javascript:void(0)" class="inline-action inline-action--minus remove-row-js" onClick="removeLanguageRow(this);">-</a></div>';
-		
+
 		rowStr += '</div>';
-		
+
 		$(".spoken_language_row:last").after(rowStr);
 	};
 
 	addNewTeachLanguageRow = function(){
-		
+
 		var rowStr = '<div class="row teach_language_row row--addons">';
-		
+
 		rowStr += '<div class="col-sm-10"><div class="field-set">';
 		rowStr += '<div class="caption-wraper"><label class="field_label"><?php echo Label::getLabel('LBL_What_Language_Do_You_Want_To_Teach'); ?><span class="spn_must_field">*</span></label></div>';
 		rowStr += '<div class="field-wraper"><div class="field_cover"><?php echo $frm->getFieldHtml( 'utrvalue_user_teach_slanguage_id[]' ); ?></div></div>';
-		
+
 		rowStr += '</div></div>';
-		
+
 		rowStr += '<div class="col-sm-2"><label class="field_label -display-block"></label>';
-		
+
 		rowStr += '<a title="<?php echo Label::getLabel('LBL_Delete'); ?>" href="javascript:void(0)" class="inline-action inline-action--minus remove-row-js" onClick="removeTeachLanguageRow(this);">-</a></div>';
-		
+
 		rowStr += '</div>';
-		
+
 		$(".teach_language_row:last").after(rowStr);
 	};
-	
+
 	removeLanguageRow = function( e ){
 		$(e).closest(".spoken_language_row").remove();
 	};
