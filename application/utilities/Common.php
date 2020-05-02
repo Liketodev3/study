@@ -304,6 +304,7 @@ class Common
         $frm = new Form('frmNewsLetter');
         $frm->setRequiredStarWith('');
         $fld1 = $frm->addEmailField('', 'email');
+        $fld1->requirements()->setRequired();
         $fld2 = $frm->addSubmitButton('', 'btnSubmit', Label::getLabel('LBL_Subscribe', $langId));
         $fld1->attachField($fld2);
         $frm->setJsErrorDisplay('afterfield');

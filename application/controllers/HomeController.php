@@ -36,6 +36,7 @@ class HomeController extends MyAppController
         }
         $slides = array_merge($ppcSlides, $adminSlides);
         $this->set('slides', $slides);
+        $this->set('newsLetterForm', Common::getNewsLetterForm(CommonHelper::getLangId()));
         /* ] */
         $this->_template->render();
     }
