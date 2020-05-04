@@ -11,13 +11,14 @@ $teacherImageTag = '';
 $teacherImage = '';
 $studentImageTag = '';
 $studentImage = '';
+$baseSeoUrl = CommonHelper::generateUrl('Teachers').'/';
 if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
-    $studentImage = CommonHelper::generateUrl('Image','user', array( $lessonData['learnerId'] )).'?'.time();
+    $studentImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['learnerId'])).'?'.time();
     $studentImageTag =  '<img src="'.$studentImage.'" />';
 }
 
 if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
-    $teacherImage = CommonHelper::generateUrl('Image','user', array( $lessonData['teacherId'] )).'?'.time();
+    $teacherImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['teacherId'] )).'?'.time();
     $teacherImageTag  = '<img src="'.$teacherImage.'" />';
 }
 ?>
@@ -60,9 +61,9 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 	var chat_name = '<?php echo $lessonData['teacherFname']; ?>';
 	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
 
-	var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","avatarURL":"<?php echo $teacherImage; ?>","role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
+	var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","avatarURL":"<?php echo $teacherImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['teacherUrlName']; ?>", "role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
 
-	var CometJsonLearnerData = [{"userId":"<?php echo $lessonData['learnerId']; ?>","fname":"<?php echo $lessonData['learnerFname']; ?>","avatarURL":"<?php echo $studentImage; ?>", "role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_LEANER]; ?>"}];
+	var CometJsonLearnerData = [{"userId":"<?php echo $lessonData['learnerId']; ?>","fname":"<?php echo $lessonData['learnerFname']; ?>","avatarURL":"<?php echo $studentImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['learnerUrlName']; ?>","role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_LEANER]; ?>"}];
 
 	var CometJsonData = CometJsonTeacherData.concat(CometJsonLearnerData);
 

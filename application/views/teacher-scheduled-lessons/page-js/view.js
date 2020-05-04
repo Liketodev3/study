@@ -129,7 +129,7 @@ $(function() {
 			$.ajax({
 			  method: "POST",
 			  url: "https://api.cometondemand.net/api/v2/createUser",
-			  data: { UID:val.userId,name:val.fname,"role":val.role },
+			  data: { UID:val.userId,name:val.fname,avatarURL:val.avatarURL,profileURL:val.profileURL,role:val.role },
 			  beforeSend: function (xhr) {
 				xhr.setRequestHeader('api-key', chat_api_key);
 				},
@@ -137,7 +137,6 @@ $(function() {
 			.done(function( msg ) {
 				  if(typeof(msg.success) != "undefined" && msg.success !== null)
 				  {
-
 					  $.mbsmessage( msg.success.message,true, 'alert alert--success');
 					  //createGroup(CometJsonFriendData.userId,CometJsonFriendData.friendId);
 				  }

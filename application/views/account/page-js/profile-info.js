@@ -1,17 +1,17 @@
 $(document).ready(function(){
 	profileInfoForm();
-	
+
 	$(".tabs-inline ul li a").on('click',function(){
 		$('.tabs-inline ul li').removeClass('is-active');
 		$(this).parent('li').addClass('is-active');
 	});
-	
+
 });
 
 (function() {
 	var runningAjaxReq = false;
 	var dv = '#profileInfoFrmBlock';
-	
+
 	checkRunningAjax = function(){
 		if( runningAjaxReq == true ){
 			console.log(runningAjaxMsg);
@@ -19,117 +19,143 @@ $(document).ready(function(){
 		}
 		runningAjaxReq = true;
 	};
-	
-	changePasswordForm = function(){				
+
+	changePasswordForm = function(){
 		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Account', 'changePasswordForm'), '', function(t) {			
+		fcom.ajax(fcom.makeUrl('Account', 'changePasswordForm'), '', function(t) {
 			$(dv).html(t);
 		});
 	};
-	
-	changeEmailForm = function(){				
+
+	changeEmailForm = function(){
 		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Account', 'changeEmailForm'), '', function(t) {			
+		fcom.ajax(fcom.makeUrl('Account', 'changeEmailForm'), '', function(t) {
 			$(dv).html(t);
 		});
 	};
-	
+
 	bankInfoForm = function(){
 		$(dv).html(fcom.getLoader());
-		
+
 		fcom.ajax(fcom.makeUrl('Teacher','bankInfoForm'),'',function(t){
 			$(dv).html(t);
 			$('#innerTabs > li').removeClass('is-active');
 			$('#innerTabs > li:nth-child(2)').addClass('is-active');
 		});
 	};
-	
+
 	setUpBankInfo = function(frm){
-		if (!$(frm).validate()) return;		
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpBankInfo'), data, function(t) {	
-			bankInfoForm();						
+		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpBankInfo'), data, function(t) {
+			bankInfoForm();
 		});
 	};
-	
+
 	paypalEmailAddressForm = function(){
 		$(dv).html(fcom.getLoader());
-		
+
 		fcom.ajax(fcom.makeUrl('Teacher','paypalEmailAddressForm'),'',function(t){
 			$(dv).html(t);
 			$('#innerTabs > li').removeClass('is-active');
 			$('#innerTabs > li:nth-child(1)').addClass('is-active');
 		});
 	};
-	
+
 	setUpPaypalInfo = function(frm){
-		if (!$(frm).validate()) return;		
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpPaypalInfo'), data, function(t) {	
-			paypalEmailAddressForm();						
+		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpPaypalInfo'), data, function(t) {
+			paypalEmailAddressForm();
 		});
 	};
-	
+
 	setUpPassword = function (frm){
-		if (!$(frm).validate()) return;	
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpPassword'), data, function(t) {						
-			changePasswordForm();			
-		});	
+		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpPassword'), data, function(t) {
+			changePasswordForm();
+		});
 	};
-	
+
 	setUpEmail = function (frm){
-		if (!$(frm).validate()) return;	
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpEmail'), data, function(t) {						
-			changeEmailForm();			
-		});	
+		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpEmail'), data, function(t) {
+			changeEmailForm();
+		});
 	};
-	
-	profileInfoForm = function(){				
+
+	profileInfoForm = function(){
 		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Account', 'ProfileInfoForm'), '', function(t) {			
+		fcom.ajax(fcom.makeUrl('Account', 'ProfileInfoForm'), '', function(t) {
 			$(dv).html(t);
 		});
 	};
-	
+
 	setUpProfileInfo = function(frm){
-		if (!$(frm).validate()) return;		
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileInfo'), data, function(t) {					
-			setTimeout(function() {  
+		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileInfo'), data, function(t) {
+			setTimeout(function() {
 				$.systemMessage.close();
 			}, 3000);
+			name = frm.user_first_name.value + " "+frm.user_last_name.value;
+			userSeoUrl = userSeoBaseUrl+frm.user_url_name.value;
+			updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
             getLangProfileInfoForm(1);
 			return ;
-		});	
+		});
 	};
-	
-	teacherPreferencesForm = function(){				
+
+	teacherPreferencesForm = function(){
 		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherPreferencesForm'), '', function(t) {			
+		fcom.ajax(fcom.makeUrl('Teacher', 'teacherPreferencesForm'), '', function(t) {
 			$(dv).html(t);
 		});
 	};
-	
+
 	setupTeacherPreferences  = function(frm){
-		if (!$(frm).validate()) return;		
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function(t) {					
-			//$.mbsmessage.close();			
-		});	
+		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function(t) {
+			//$.mbsmessage.close();
+		});
 	};
-	
-	teacherLanguagesForm = function(){				
+
+	teacherLanguagesForm = function(){
 		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherLanguagesForm'), '', function(t) {			
+		fcom.ajax(fcom.makeUrl('Teacher', 'teacherLanguagesForm'), '', function(t) {
 			$(dv).html(t);
 		});
 	};
-		
+
+	updateCometChatUser = function(userId, name, avatarURL, profileURL){
+		var settings = {
+			"async": true,
+			"crossDomain": true,
+			"url": "https://api.cometondemand.net/api/v2/updateUser",
+			"method": "POST",
+			"headers": {
+			"api-key": chat_api_key,
+			"content-type": "application/x-www-form-urlencoded",
+			},
+			"data": {
+			"UID": userId,
+			"name": name,
+			"avatarURL": avatarURL,
+			"profileURL": profileURL,
+			}
+		}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+	};
+
 	setupTeacherLanguages  = function(frm){
-		if (!$(frm).validate()) return;		
-		var data = fcom.frmData(frm);        
+		if (!$(frm).validate()) return;
+		var data = fcom.frmData(frm);
         $.confirm({
             title: 'Confirm!',
             content: langLbl.languageUpdateAlert,
@@ -139,62 +165,62 @@ $(document).ready(function(){
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
-                        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function(t) {					
+                        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function(t) {
                             //$.mbsmessage.close();
                             teacherLanguagesForm();
                         });
                     }
-                },                        
+                },
                 Quit: {
                     text: 'Quit',
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){
                     }
-                }                        
+                }
             }
-        });        
+        });
 	};
-	
+
 	setPreferredDashboad = function (id){
-		fcom.updateWithAjax(fcom.makeUrl('Account','setPrefferedDashboard',[id]),'',function(res){			
+		fcom.updateWithAjax(fcom.makeUrl('Account','setPrefferedDashboard',[id]),'',function(res){
 		});
 	};
-	
-	
+
+
 	teacherSettingsForm = function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','settingsInfoForm'),'',function(t){
 			$(dv).html(t);
 		});
 	};
-	
+
 	setUpTeacherSettings = function(frm){
-		if (!$(frm).validate()) return;		
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpSettings'), data, function(t) {	
-			teacherSettingsForm();						
+		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpSettings'), data, function(t) {
+			teacherSettingsForm();
 		});
 	};
-	
+
 	teacherQualification = function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','teacherQualification'),'',function(t){
 			console.log(dv);
 			$(dv).html(t);
-			
+
 		});
 	};
-	
+
 	teacherGeneralAvailability = function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','teacherGeneralAvailability'),'',function(t){
 			$(dv).html(t);
 		});
 	};
-	
-	
-	deleteLanguageRow = function(id){        
+
+
+	deleteLanguageRow = function(id){
         $.confirm({
             title: 'Confirm!',
             content: langLbl.confirmRemove,
@@ -204,23 +230,23 @@ $(document).ready(function(){
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
-                        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteLanguageRow',[id]), '' , function(t) {		
-                            teacherLanguagesForm();		 
+                        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteLanguageRow',[id]), '' , function(t) {
+                            teacherLanguagesForm();
                         });
                     }
-                },                        
+                },
                 Quit: {
                     text: 'Quit',
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){
                     }
-                }                        
+                }
             }
         });
 	};
 
-	deleteTeachLanguageRow = function(id){        
+	deleteTeachLanguageRow = function(id){
         $.confirm({
             title: 'Confirm!',
             content: langLbl.confirmRemove,
@@ -230,55 +256,55 @@ $(document).ready(function(){
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
-                        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeachLanguageRow',[id]), '' , function(t) {		
-                            teacherLanguagesForm();		 
+                        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeachLanguageRow',[id]), '' , function(t) {
+                            teacherLanguagesForm();
                         });
                     }
-                },                        
+                },
                 Quit: {
                     text: 'Quit',
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){
                     }
-                }                        
+                }
             }
         });
 	};
-	
+
 	teacherWeeklySchedule = function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','teacherWeeklySchedule'),'',function(t){
 			console.log(dv);
 			$(dv).html(t);
-			
+
 		});
 	};
-	
+
 	setupTeacherWeeklySchedule  = function(frm){
-		$(dv).html(fcom.getLoader());        
-		 fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data='+frm, function(t) {			
-            teacherWeeklySchedule()         
+		$(dv).html(fcom.getLoader());
+		 fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data='+frm, function(t) {
+            teacherWeeklySchedule()
 			//$("#w_calendar").fullCalendar("refetchEvents");
-		});	
+		});
 	};
-	
+
 	setupTeacherGeneralAvailability  = function(frm){
-		$(dv).html(fcom.getLoader());                
-		 fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherGeneralAvailability'), 'data='+frm, function(t) {					
+		$(dv).html(fcom.getLoader());
+		 fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherGeneralAvailability'), 'data='+frm, function(t) {
 			teacherGeneralAvailability();
             //$("#ga_calendar").fullCalendar("refetchEvents");
-		});	
+		});
 	};
-	
+
 	deleteTeacherGeneralAvailability  = function(id){
 		 if(confirm(langLbl['confirmRemove'])){
-			 fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherGeneralAvailability',[id]), '' , function(t) {		
-				$('#ga_calendar').fullCalendar('removeEvents',id);			 
-			});	
+			 fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherGeneralAvailability',[id]), '' , function(t) {
+				$('#ga_calendar').fullCalendar('removeEvents',id);
+			});
 		 }
 	};
-	
+
 	deleteTeacherWeeklySchedule  = function(eventData){
 		 if(confirm(langLbl['confirmRemove'])){
 			var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
@@ -293,9 +319,9 @@ $(document).ready(function(){
 				classtype: e.classType,
 			};
 			}));
-			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data='+json, function(t) {					
-				fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherWeeklySchedule'), 'data='+JSON.stringify(eventData) , function(t) {		
-					$("#w_calendar").fullCalendar("refetchEvents");				
+			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data='+json, function(t) {
+				fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherWeeklySchedule'), 'data='+JSON.stringify(eventData) , function(t) {
+					$("#w_calendar").fullCalendar("refetchEvents");
 				});
 			});
 		 }
@@ -306,10 +332,10 @@ $(document).ready(function(){
 		fcom.ajax(fcom.makeUrl('Teacher','teacherPreferences'),'',function(t){
 			console.log(dv);
 			$(dv).html(t);
-			
+
 		});
 	};
-	
+
 	teacherQualificationForm = function(id){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','teacherQualificationForm',[id]),'',function(t){
@@ -317,11 +343,11 @@ $(document).ready(function(){
 			teacherQualification();
 		});
 	};
-	
+
 	setUpTeacherQualification = function(frm){
-		if (!$(frm).validate()) return false;	
-        var dv = $("#frm_fat_id_frmQualification");	
-        $(frm.btn_submit).attr('disabled','disabled'); 
+		if (!$(frm).validate()) return false;
+        var dv = $("#frm_fat_id_frmQualification");
+        $(frm.btn_submit).attr('disabled','disabled');
 		var formData = new FormData(frm);
 			$.ajax({
                 url: fcom.makeUrl('Teacher', 'setUpTeacherQualification'),
@@ -335,15 +361,15 @@ $(document).ready(function(){
 				},
                 success: function (data, textStatus, jqXHR) {
 					var data=JSON.parse(data);
-					
+
 					if(data.status==0)
 					{
 						$.mbsmessage(data.msg,true,'alert alert--danger');
-                        $(frm.btn_submit).removeAttr("disabled");                        
+                        $(frm.btn_submit).removeAttr("disabled");
 						return false;
 					}
 						$.mbsmessage(data.msg,true,'alert alert--success');
-                        $(frm.btn_submit).removeAttr("disabled");                                               
+                        $(frm.btn_submit).removeAttr("disabled");
 						teacherQualification();
 						$.facebox.close();
 						setTimeout(function(){
@@ -352,42 +378,48 @@ $(document).ready(function(){
 				},
                 error: function (jqXHR, textStatus, errorThrown) {
 					$.mbsmessage(jqXHR.msg, true,'alert alert--danger');
-                    $(frm.btn_submit).removeAttr("disabled");                                          
+                    $(frm.btn_submit).removeAttr("disabled");
 				}
             });
 	};
-	
+
 	deleteTeacherQualification = function(id){
 		if(confirm(langLbl['confirmRemove'])){
-			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherQualification',[id]), '', function(t) {					
+			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherQualification',[id]), '', function(t) {
 				teacherQualification();
 				$.facebox.close();
-			});	
+			});
 		}
 	};
-	
+
 	removeProfileImage = function(){
 		fcom.ajax(fcom.makeUrl('Account','removeProfileImage'),'',function(t){
 			profileInfoForm();
+			name = userData.user_first_name + " "+userData.user_last_name;
+			userSeoUrl =  userSeoBaseUrl+userData.user_url_name;
+			updateCometChatUser(userData.user_id, name, '', userSeoUrl);
 		});
 	};
-	
+
 	sumbmitProfileImage = function(){
 		$("#frmProfile").ajaxSubmit({
 			delegation: true,
 			success: function(json){
 				json = $.parseJSON(json);
+				name = userData.user_first_name + " "+userData.user_last_name;
+				userSeoUrl = userSeoBaseUrl+userData.user_url_name;
+				updateCometChatUser(userData.user_id, name, userImage , userSeoUrl);
 				profileInfoForm();
 				$(document).trigger('close.facebox');
 			}
 		});
 	};
-	
-	$(document).on('click', '[data-method]', function () { 
+
+	$(document).on('click', '[data-method]', function () {
 		var data = $(this).data(),
           $target,
           result;
-	
+
       if (data.method) {
         data = $.extend({}, data); // Clone a new one
         if (typeof data.target !== 'undefined') {
@@ -412,10 +444,10 @@ $(document).ready(function(){
             console.log(e.message);
           }
         }
-		
+
       }
     });
-	
+
 	var $image ;
 	cropImage = function(obj){
 		$image = obj;
@@ -437,27 +469,27 @@ $(document).ready(function(){
 					'"height":' + e.height,
 					'"width":' + e.width,
 					'"rotate":' + e.rotate + '}'
-					].join();					
-				$("#img_data").val(json);				
+					].join();
+				$("#img_data").val(json);
 			  },
 			built: function () {
 			$(this).cropper("zoom", 0.5);
-		  },		 
+		  },
 		})
 	};
-	
+
 	popupImage = function(input){
 		$.facebox( fcom.getLoader());
-		
+
 		wid = $(window).width();
 		if(wid > 767){
-			wid = 500; 
+			wid = 500;
 		}else{
 			wid = 280;
 		}
-		
+
 		var defaultform = "#frmProfile";
-		$("#avatar-action").val("demo_avatar");		
+		$("#avatar-action").val("demo_avatar");
 		$(defaultform).ajaxSubmit({
 			delegation: true,
 			success: function(json){
@@ -465,7 +497,7 @@ $(document).ready(function(){
 				if(json.status == 1){
 					$("#avatar-action").val("avatar");
 					var fn = "sumbmitProfileImage();";
-					
+
 					$.facebox('<div class="popup__body"><div class="img-container "><img alt="Picture" src="" class="img_responsive" id="new-img" /></div><div class="img-description"><div class="rotator-info">Use Mouse Scroll to Adjust Image</div><div class="-align-center rotator-actions"><a href="javascript:void(0)" class="btn btn--primary btn--sm" title="'+$("#rotate_left").val()+'" data-option="-90" data-method="rotate">'+$("#rotate_left").val()+'</a>&nbsp;<a onclick='+fn+' href="javascript:void(0)" class="btn btn--secondary btn--sm">'+$("#update_profile_img").val()+'</a>&nbsp;<a href="javascript:void(0)" class="btn btn--primary btn--sm rotate-right" title="'+$("#rotate_right").val()+'" data-option="90" data-method="rotate">'+$("#rotate_right").val()+'</a></div></div></div>','');
 					$('#new-img').attr('src', json.file);
 					$('#new-img').width(wid);
@@ -488,14 +520,13 @@ $(document).ready(function(){
     };
 
 	setUpProfileLangInfo  = function(frm){
-		if (!$(frm).validate()) return;		
+		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileLangInfo'), data, function(t) {					
+		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileLangInfo'), data, function(t) {
 			if (t.langId>0) {
 				getLangProfileInfoForm(t.langId);
 				return ;
 			}
-		});	
-	};    
-})();	
-
+		});
+	};
+})();

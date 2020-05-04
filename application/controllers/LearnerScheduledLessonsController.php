@@ -114,6 +114,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'slns.slesson_teacher_id as teacherId',
             'ut.user_first_name as teacherFname',
             'ut.user_last_name as teacherLname',
+            'ut.user_url_name',
             'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
             /* 'ut.user_timezone as teacherTimeZone', */
             'IFNULL(teachercountry_lang.country_name, teachercountry.country_code) as teacherCountryName',
@@ -190,6 +191,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addFld(array(
             'ul.user_first_name as learnerFname',
             'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+            'ul.user_url_name',
             'IFNULL(learnercountry_lang.country_name, learnercountry.country_code) as learnerCountryName',
             /* 'ul.user_timezone as learnerTimeZone', */
             'IFNULL(iss.issrep_status,0) AS issrep_status',

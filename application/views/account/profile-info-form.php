@@ -23,7 +23,16 @@ $user_gender = $profileFrm->getField('user_gender');
 $user_gender->setOptionListTagAttribute( 'class', 'list-inline list-inline--onehalf' );
 
 $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account','setUpProfileImage'));
+$jsonUserRow = FatUtility::convertToJson($userRow);
 ?>
+<script>
+var userData = <?php echo $jsonUserRow ?>;
+var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
+var  userSeoBaseUrl = '<?php echo CommonHelper::generateFullUrl('teachers','').'/'; ?>';
+var userImage = '<?php echo CommonHelper::generateFullUrl('Image','user',array( $userRow['user_id'])); ?>';
+
+console.log(userData);
+</script>
 	 <div class="section-head">
 		 <div class="d-flex justify-content-between align-items-center">
 			 <div><h4 class="page-heading"><?php echo Label::getLabel('LBL_General'); ?></h4></div>
@@ -42,38 +51,38 @@ $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account
 	<div class="col-lg-4 -align-center order-md-2">
 		<div class="preview preview--profile">
 			<h5><?php echo Label::getLabel('LBL_Change_Avataar'); ?></h5>
-			
+
 			<div class="avtar avtar--large avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($userRow['user_first_name']); ?>">
-				<?php 
+				<?php
 				if( true == User::isProfilePicUploaded() ){
 					echo '<img src="'.CommonHelper::generateUrl('Image','user', array( $userRow['user_id'] )).'?'.time().'" />';
 				}
 				?>
 			</div>
-			
+
 			<span class="-gap"></span>
 			<div class="btngroup--fix">
 				<?php echo $profileImgFrm->getFormTag();	?>
-				<span class="btn btn--primary btn--sm btn--fileupload">	
-					<?php 
-					echo $profileImgFrm->getFieldHtml('user_profile_image'); 
-					echo ( true == $isProfilePicUploaded ) ? Label::getLabel('LBL_Change'): Label::getLabel('LBL_Upload'); 
+				<span class="btn btn--primary btn--sm btn--fileupload">
+					<?php
+					echo $profileImgFrm->getFieldHtml('user_profile_image');
+					echo ( true == $isProfilePicUploaded ) ? Label::getLabel('LBL_Change'): Label::getLabel('LBL_Upload');
 					?>
 				</span>
-				<?php 
-				echo $profileImgFrm->getFieldHtml('update_profile_img'); 
-				echo $profileImgFrm->getFieldHtml('rotate_left'); 
-				echo $profileImgFrm->getFieldHtml('rotate_right'); 
-				echo $profileImgFrm->getFieldHtml('remove_profile_img'); 
-				echo $profileImgFrm->getFieldHtml('action'); 
-				echo $profileImgFrm->getFieldHtml('img_data'); 				
-				?>						
+				<?php
+				echo $profileImgFrm->getFieldHtml('update_profile_img');
+				echo $profileImgFrm->getFieldHtml('rotate_left');
+				echo $profileImgFrm->getFieldHtml('rotate_right');
+				echo $profileImgFrm->getFieldHtml('remove_profile_img');
+				echo $profileImgFrm->getFieldHtml('action');
+				echo $profileImgFrm->getFieldHtml('img_data');
+				?>
 				</form>
 				<?php echo $profileImgFrm->getExternalJS();?>
 				 <?php if( true == $isProfilePicUploaded ){ ?>
 					<a class="btn btn--secondary btn--sm" href="javascript:void(0)" onClick="removeProfileImage()"><?php echo Label::getLabel('LBL_Remove');?></a>
 				 <?php } ?>
-				<div id="dispMessage"></div> 
+				<div id="dispMessage"></div>
 			</div>
 		</div>
 	</div>
@@ -85,7 +94,7 @@ $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account
 	/* $(document).ready(function(){
 		getCountryStates($( "#user_country_id" ).val(),<?php echo $stateId ;?>,'#user_state_id');
 	}); */
-	
+
 	$(document).ready(function(){
 		$('input[name="user_url_name"]').on('keypress', function(e) {
 			if (e.which == 32) {
@@ -97,7 +106,7 @@ $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account
 			user_name = user_name.replace(/ /g, "");
 			$(this).val(user_name);
 			$('.user_url_name_span').html(user_name);
-		});	
+		});
 		$('input[name="user_url_name"]').on('keyup', function(){
 			var user_name = $(this).val();
 			$('.user_url_name_span').html(user_name);
