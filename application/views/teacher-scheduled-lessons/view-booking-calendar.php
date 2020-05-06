@@ -1,7 +1,19 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
-<?php $teacherBookingBefore = (!empty($teacherBookingBefore)) ? $teacherBookingBefore : 0; ?>
+<?php $teacherBookingBefore = (!empty($teacherBookingBefore)) ? $teacherBookingBefore : 0;
+$myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
+$nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
+?>
 <script>
+var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
+var timeInterval;
+var seconds = 2;
+clearInterval(timeInterval);
+timeInterval = setInterval(currentTimer, 1000);
+function currentTimer() {
+	$('body').find(".fc-left").html("<h6>"+myTimeZoneLabel+":- "+moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A')+"</h6>");
+	seconds++;
+}
 	function getEventsByTime( start, stop ) {
 	   var json = JSON.stringify($("#d_calendar").fullCalendar("clientEvents").map(function(e) {
 			return 	{

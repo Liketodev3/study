@@ -1,8 +1,18 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $user_timezone = MyDate::getUserTimeZone();
-$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date('Y-m-d H:i:s'), true , $user_timezone );
+$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
+$myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 ?>
 <script>
+	var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
+    var timeInterval;
+	var seconds = 2;
+	clearInterval(timeInterval);
+	timeInterval = setInterval(currentTimer, 1000);
+	function currentTimer() {
+		$('body').find(".fc-right").html("<h6>"+myTimeZoneLabel+":- "+moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A')+"</h6>");
+		seconds++;
+	}
    function isOverlapping(start,end){
        var array = $("#ga_calendar").fullCalendar('clientEvents');
        for(i in array){
@@ -13,7 +23,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date('Y-m-d H:i
        return false;
    }
    $(document).ready(function() {
-	   
+
    	$("#setUpGABtn").click(function(){
    		var json = JSON.stringify($("#ga_calendar").fullCalendar("clientEvents").map(function(e) {
 			return 	{
@@ -27,7 +37,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date('Y-m-d H:i
    		}));
    		setupTeacherGeneralAvailability(json);
    	});
-	
+
    	$('#ga_calendar').fullCalendar({
    		  header: {
    				left: '',
@@ -60,18 +70,18 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date('Y-m-d H:i
    				newEvent.allday = 'false';
    				$('#ga_calendar').fullCalendar('renderEvent',newEvent);
    			},
-   			eventLimit: true, 
+   			eventLimit: true,
    			defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
    			events: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonData'); ?>",
    			eventRender: function(event, element) {
-   				if(isNaN(event._id)){ 
+   				if(isNaN(event._id)){
    					element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
    				}
    				else{
    					element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+event._id+");'>X</span>" );
    				}
                element.find(".closeon").click(function() {
-   				if(isNaN(event._id)){				
+   				if(isNaN(event._id)){
    					$('#ga_calendar').fullCalendar('removeEvents',event._id);
    				}
                });

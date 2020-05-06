@@ -1,8 +1,18 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $user_timezone = MyDate::getUserTimeZone();
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
+$myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 ?>
 <script>
+    var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
+    var timeInterval;
+	var seconds = 2;
+	clearInterval(timeInterval);
+	timeInterval = setInterval(currentTimer, 1000);
+	function currentTimer() {
+		$('body').find(".fc-left").html("<h6>"+myTimeZoneLabel+":- "+moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A')+"</h6>");
+		seconds++;
+	}
    $(document).ready(function() {
 	//moment().tz.setDefault("America/New_York");
 
@@ -21,9 +31,9 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
    	});
    	$('#w_calendar').fullCalendar({
    		header: {
-   			left: 'title',
+   			left: 'time',
    			center: '',
-   			right: 'prev,next today'
+   			right: 'title prev,next today'
    		},
    		defaultView: 'agendaWeek',
    		selectable: true,

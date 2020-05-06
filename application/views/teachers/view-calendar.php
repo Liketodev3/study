@@ -1,7 +1,11 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');?>
 <?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
+<?php
+$myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
+$nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
+?>
 <script type="text/javascript">
-
+	var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
 	function getEventsByTime( start, stop ) {
 	   var json = JSON.stringify($("#d_calendar").fullCalendar("clientEvents").map(function(e) {
 			return 	{
@@ -15,18 +19,27 @@
 		}));
 	   return json;
 	}
+	var timeInterval;
+	var seconds = 2;
+	clearInterval(timeInterval);
+	timeInterval = setInterval(currentTimer, 1000);
+	function currentTimer() {
+		$('body').find(".fc-left").html("<h6>"+myTimeZoneLabel+":- "+moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A')+"</h6>");
+		seconds++;
+	}
 
 	$(document).ready(function() {
+
+
 
 		$(document).bind('close.facebox', function() {
 			$('.tooltipevent').remove();
 		});
-
-		$('#d_calendar').fullCalendar({
+		var calendarObj  = $('#d_calendar').fullCalendar({
 			header: {
-				left: 'title',
+				left: 'time',
 				center: '',
-				right: 'prev,next today'
+				right: 'title prev,next today'
 			},
 			defaultView: 'agendaWeek',
 			selectable: true,
@@ -37,7 +50,7 @@
             unselectAuto: true,
 			editable: false,
 			nowIndicator:true,
-			now:'<?php echo $nowDate; ?>',
+			now:'<?php echo date('Y-m-d H:i:s', strtotime($nowDate)); ?>',
 			eventOverlap: false,
 			slotEventOverlap : false,
 			defaultTimedEventDuration : "<?php echo $bookingSnapDuration; ?>",
@@ -376,6 +389,7 @@
 <?php } ?>
 
 <span> <?php echo MyDate::displayTimezoneString();?> </span>
+<!-- (<span id="currentTime"> </span>) -->
 
 <div id='d_calendar'></div>
 </div>

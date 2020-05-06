@@ -1,5 +1,4 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
-
 $user_timezone = MyDate::getUserTimeZone();
 $curDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 
