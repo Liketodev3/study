@@ -23,8 +23,6 @@ class TeachersController extends MyAppController {
 		$this->_template->addJs('js/fullcalendar.min.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
 		$this->_template->addCss('css/custom-full-calendar.css');
-		$this->_template->addJs('js/jquery.countdownTimer.min.js');
-        $this->_template->addCss('css/jquery.countdownTimer.css');
 		$this->_template->addJs('js/ion.rangeSlider.js');
 		$this->_template->addCss('css/ion.rangeSlider.css');
 		$this->_template->addCss('css/ion.rangeSlider.skinHTML5.css');
