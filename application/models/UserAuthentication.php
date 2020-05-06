@@ -241,7 +241,11 @@ class UserAuthentication extends FatModel
         $rs = $srch->getResultSet();
         return $db->fetch($rs);
     }
-
+    public static function logout()
+    {
+        unset($_SESSION[UserAuthentication::SESSION_ELEMENT_NAME]);
+        UserAuthentication::clearLoggedUserLoginCookie();
+    }
     public static function clearLoggedUserLoginCookie()
     {
         if (!isset($_COOKIE[static::WEYAKYAKUSER_COOKIE_NAME])) {

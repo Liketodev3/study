@@ -6,6 +6,13 @@ class MyAppController extends FatController
         parent::__construct($action);
         $this->action = $action;
         if (FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && (get_class($this) != "MaintenanceController") && (get_class($this)!='Home' && $action!='setLanguage')) {
+            if(UserAuthentication::isUserLogged()) {
+                UserAuthentication::logout();
+            }
+            if (FatUtility::isAjaxCall()) {
+                Message::addErrorMessage(Label::getLabel(Label::getLabel('MSG_Maintenance_Mode_Text')));
+                FatUtility::dieWithError(Message::getHtml());
+            }
             FatApp::redirectUser(CommonHelper::generateUrl('maintenance'));
         }
         CommonHelper::initCommonVariables();
