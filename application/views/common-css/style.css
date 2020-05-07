@@ -441,6 +441,8 @@
     pointer-events: none;
 }
 
+body[dir="rtl"]  .form-filters .form__element:after{left: 24px; right:auto;}
+
 .form-filters .form__element .svg-icon {
     width: 20px;
     height: 20px;
@@ -449,6 +451,8 @@
     left: 24px;
     top: 22px;
 }
+
+body[dir="rtl"] .form-filters .form__element .svg-icon{right: 24px; left:auto;}
 
 .form__element .form__input {
     border-radius: 0;
