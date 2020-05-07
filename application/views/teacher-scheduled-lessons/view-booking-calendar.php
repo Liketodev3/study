@@ -8,6 +8,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
 var timeInterval;
 var seconds = 2;
+var checkSlotAvailabiltAjaxRun = false;
 clearInterval(timeInterval);
 timeInterval = setInterval(currentTimer, 1000);
 function currentTimer() {
@@ -52,16 +53,22 @@ function currentTimer() {
 			allDaySlot: false,
 			timezone: "<?php echo MyDate::getTimeZone(); ?>",
 			select: function (start, end, jsEvent, view ) {
+				if(checkSlotAvailabiltAjaxRun) {
+					return false;
+				}
+				checkSlotAvailabiltAjaxRun = true;
 				if(getEventsByTime( start, end ).length > 1)
 				{
 					$('#d_calendar').fullCalendar('refetchEvents');
 				}
 				if(moment().diff(moment(start)) >= 0) {
 					$('#d_calendar').fullCalendar('unselect');
+					checkSlotAvailabiltAjaxRun =  false;
 					return false;
 				}
 				if(moment(start).format('d')!=moment(end).format('d') ) {
 					$('#d_calendar').fullCalendar('unselect');
+					checkSlotAvailabiltAjaxRun =  false;
 					return false;
 				}
 
@@ -72,6 +79,7 @@ function currentTimer() {
 				{
 					$('#d_calendar').fullCalendar('unselect');
 					$('.tooltipevent').remove();
+					checkSlotAvailabiltAjaxRun =  false;
 					return false;
 
 				}
@@ -91,16 +99,13 @@ function currentTimer() {
 				newEvent.maxTime = "01:00:00";
 				newEvent.eventOverlap = false;
 				fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[<?php echo $teacher_id; ?>]), newEvent, function(doc) {
+					checkSlotAvailabiltAjaxRun =  false;
 					var res = JSON.parse(doc);
 					if(res.msg == 1)
 					$('#d_calendar').fullCalendar('renderEvent',newEvent);
 					if(res.msg == 0)
 					$('.tooltipevent').remove();
 				});
-
-
-
-
 			},
 			 eventLimit: true,
 			defaultDate: '<?php echo date('Y-m-d'); ?>',

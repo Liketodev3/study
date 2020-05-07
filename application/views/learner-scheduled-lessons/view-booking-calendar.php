@@ -8,6 +8,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 	var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
 	var timeInterval;
 	var seconds = 2;
+	var checkSlotAvailabiltAjaxRun = false;
 	clearInterval(timeInterval);
 	timeInterval = setInterval(currentTimer, 1000);
 	function currentTimer() {
@@ -27,6 +28,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 		}));
 	   return json;
 	}
+
 	$(document).ready(function() {
 		$(document).bind('close.facebox', function() {
 			$('.tooltipevent').remove();
@@ -53,6 +55,10 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 			allDaySlot: false,
 			timezone: "<?php echo $user_timezone; ?>",
 			select: function (start, end, jsEvent, view ) {
+				if(checkSlotAvailabiltAjaxRun) {
+					return false;
+				}
+				checkSlotAvailabiltAjaxRun = true;
 				// $("body").css( {"pointer-events": "none"} );
 				// $("body").css( {"cursor": "wait"} );
 				//
@@ -76,6 +82,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 							}
 
 							$('#calendar').fullCalendar('unselect');
+							checkSlotAvailabiltAjaxRun =  false;
 							return false;
 						}
 					}
@@ -91,6 +98,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
+					checkSlotAvailabiltAjaxRun =  false;
 					return false;
 				}
 				if(moment(start).format('YYYY-MM-DD HH:mm:ss') > moment(end).format('YYYY-MM-DD HH:mm:ss') ) {
@@ -98,6 +106,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
+					checkSlotAvailabiltAjaxRun =  false;
 					return false;
 				}
 
@@ -111,6 +120,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
 					$('.tooltipevent').remove();
+					checkSlotAvailabiltAjaxRun =  false;
 					return false;
 
 				}
@@ -138,6 +148,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 				newEvent.weekEnd = moment(endOfWeek).format('YYYY-MM-DD HH:mm:ss');
 
 				fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[<?php echo $teacher_id; ?>]), newEvent, function(doc) {
+					checkSlotAvailabiltAjaxRun = false;
                    $("body").css( {"cursor": "default"} );
 				   $("body").css( {"pointer-events": "initial"} );
 				   var res = JSON.parse(doc);
@@ -148,9 +159,6 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 						$('.tooltipevent').remove();
 					}
 				});
-
-
-
 
 			},
 			eventLimit: true,
