@@ -3865,10 +3865,14 @@ body.is-screen-on .header .container {
     background: var(--color-secondary) !important;
 }
 
+.timer .size_lg{ font-size:24px; padding: 0 10px;}
+@media(min-width:768px) {
 .timer .size_lg {
     font-size: 50px;
-    padding: 0 10px;
+    
 }
+}
+
 
 .timer.timer--small .colorDefinition {
     background: #000 !important;
