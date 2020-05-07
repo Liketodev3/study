@@ -340,7 +340,7 @@ INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `et
 ALTER TABLE `tbl_issues_reported` ADD `issrep_escalated_by` INT(11) NOT NULL AFTER `issrep_updated_on`;
 
 /* 29-04-2020  for teach listing optimization*/
-ALTER TABLE `tbl_user_credentials` ADD INDEX( `credential_active`, `credential_verified`, `user_country_id`, `user_is_teacher`);
+ALTER TABLE `tbl_user_credentials` ADD INDEX( `credential_active`, `credential_verified`);
 ALTER TABLE `tbl_users` ADD INDEX(`user_country_id`, `user_is_teacher`);
 ALTER TABLE `tbl_teaching_languages_lang` ADD INDEX( `tlanguage_name`);
 ALTER TABLE `tbl_teaching_languages` ADD INDEX( `tlanguage_identifier`);
