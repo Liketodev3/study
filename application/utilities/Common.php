@@ -167,9 +167,9 @@ class Common
     {
         $frmFilters = new Form('teacherFilters');
         $filterSortBy = array(
-            'popularity_desc'=>	Label::getLabel('LBL_Sort_By_Popularity'),
-            'price_asc'	=>	Label::getLabel('LBL_Sort_By_Price_Low_to_High'),
-            'price_desc'=>	Label::getLabel('LBL_Sort_By_Price_High_to_Low'),
+            'popularity_desc'=>	Label::getLabel('LBL_By_Popularity'),
+            'price_asc'	=>	Label::getLabel('LBL_By_Price_Low_to_High'),
+            'price_desc'=>	Label::getLabel('LBL_By_Price_High_to_Low'),
         );
         $frmFilters->addSelectBox('', 'filterSortBy', $filterSortBy, 'popularity_desc', array(), '');
 
