@@ -3893,6 +3893,7 @@ select[disabled] {
 body[dir="rtl"] .checkbox input, body[dir="rtl"]  .radio input{    right: 0;     left: auto;}
 body[dir="rtl"] .checkbox .input-helper:before, body[dir="rtl"] .radio .input-helper:before{right: 0;     left: auto;}
 body[dir="rtl"] .checkbox .input-helper:after{    right: 4px;     left: auto;}
+body[dir="rtl"] .checkbox, body[dir="rtl"] .radio{    padding: 0 30px 0 0;}
 
 
 .message-display {
@@ -4424,7 +4425,7 @@ body[dir="rtl"] .checkbox .input-helper:after{    right: 4px;     left: auto;}
     margin: -5px 0 0 -3px;
 }
 
-body[dir="rtl"] .pagination li.is-next a:before {right: 50%; left: auto; border-right: 5px solid #000;}
+body[dir="rtl"] .pagination li.is-next a:before {right: 50%; left: auto; border-right: 5px solid #000; border-left: 0px;}
 
 .pagination li.is-last a:before {
     position: absolute;
