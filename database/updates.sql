@@ -341,6 +341,7 @@ ALTER TABLE `tbl_issues_reported` ADD `issrep_escalated_by` INT(11) NOT NULL AFT
 
 /* 29-04-2020  for teach listing optimization*/
 ALTER TABLE `tbl_user_credentials` ADD INDEX( `credential_active`, `credential_verified`, `user_country_id`, `user_is_teacher`);
+ALTER TABLE `tbl_users` ADD INDEX(`user_country_id`, `user_is_teacher`);
 ALTER TABLE `tbl_teaching_languages_lang` ADD INDEX( `tlanguage_name`);
 ALTER TABLE `tbl_teaching_languages` ADD INDEX( `tlanguage_identifier`);
 ALTER TABLE `tbl_user_to_spoken_languages` ADD INDEX( `utsl_slanguage_id`);
