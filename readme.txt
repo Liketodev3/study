@@ -1,10 +1,10 @@
-Release Version: TV-1.0.1.20200508
+Release Version: TV-1.1.0.20200508
 Release Date: 2020/05/08
 
 New Features: N/A
 
 Enhancements:
-
+. Develop a feature of Export/Import of Labels management.
 
 Fixes:
 . #036840 - Default Currency symbol should come while setting up the price
