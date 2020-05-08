@@ -1,0 +1,25 @@
+/*========================ARROWS============================*/
+body[dir="rtl"] .arrow-link {
+    padding-left: 20px;
+}
+
+body[dir="rtl"] .arrow-link:after {
+    left: 5px;
+    right: auto;
+    -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+body[dir="rtl"] .arrow-link:hover:after {
+    left: 0;
+    right: auto;
+}
+
+
+/*+========================NAVIGATION PRIMARY============================*/
+body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown > a:after {
+    left: 5px;
+    right: auto;
+}

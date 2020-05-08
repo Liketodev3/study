@@ -105,6 +105,7 @@
     -webkit-transition: all 0.3s ease-in-out 0s;
     transition: all 0.3s ease-in-out 0s;
 }
+
 /*cookies end*/
 /* section */
 
@@ -271,7 +272,7 @@ html.show-facebox body {
     top: 0;
     bottom: 0;
     margin: auto;
-	padding: 0 6px;
+    padding: 0 6px;
 }
 
 
@@ -444,7 +445,10 @@ html.show-facebox body {
     pointer-events: none;
 }
 
-body[dir="rtl"]  .form-filters .form__element:after{left: 24px; right:auto;}
+body[dir="rtl"] .form-filters .form__element:after {
+    left: 24px;
+    right: auto;
+}
 
 .form-filters .form__element .svg-icon {
     width: 20px;
@@ -455,7 +459,10 @@ body[dir="rtl"]  .form-filters .form__element:after{left: 24px; right:auto;}
     top: 22px;
 }
 
-body[dir="rtl"] .form-filters .form__element .svg-icon{right: 24px; left:auto;}
+body[dir="rtl"] .form-filters .form__element .svg-icon {
+    right: 24px;
+    left: auto;
+}
 
 .form__element .form__input {
     border-radius: 0;
@@ -3868,12 +3875,21 @@ body.is-screen-on .header .container {
     background: var(--color-secondary) !important;
 }
 
-.timer .size_lg{ font-size:24px; padding: 0 10px;}
-@media(min-width:768px) {
 .timer .size_lg {
+<<<<<<< Updated upstream
     font-size: 50px;
 
+=======
+    font-size: 24px;
+    padding: 0 10px;
+>>>>>>> Stashed changes
 }
+
+@media(min-width:768px) {
+    .timer .size_lg {
+        font-size: 50px;
+
+    }
 }
 
 
@@ -4178,7 +4194,7 @@ div.tagsinput div {
 .message-container .scrollbar {
     /*max-height: 350px;
     min-height: 350px;*/
-	max-height: 320px;
+    max-height: 320px;
     min-height: 320px;
 }
 
@@ -4869,12 +4885,18 @@ div.tagsinput div {
 }
 
 
-.listing--selection li label .errorlist{order:3;margin-left:10px;}
+.listing--selection li label .errorlist {
+    order: 3;
+    margin-left: 10px;
+}
 
 /****************************************** media queries *****************************************************/
 
 @media(min-width:1199px) {
-	.table-cols td:first-child{width:25%;}
+    .table-cols td:first-child {
+        width: 25%;
+    }
+
     /*.nav ul > li > a:hover,.nav ul > li:hover > a{background: #fff; color: #333;z-index: 3;border-color: #333;}*/
     .nav ul > li.nav__dropdown:hover > a {
         background: none;
@@ -5197,8 +5219,8 @@ div.tagsinput div {
     }
 
     .subheader .nav.nav--primary > ul > li.nav__dropdown > a.is-active:after {
-		border-bottom: 0px solid #333;
-	}
+        border-bottom: 0px solid #333;
+    }
 
     .nav.nav--primary-offset > ul > li .nav__dropdown-target {
         min-width: 100%;
@@ -6905,7 +6927,7 @@ div.tagsinput div {
     }
 
     .schedule-list li:nth-child(2) {
-       /* padding-left: 60px;*/
+        /* padding-left: 60px;*/
     }
 
     .section--content {
@@ -7174,31 +7196,51 @@ div.tagsinput div {
 }
 
 /*===========================Increasing languages======================*/
-.box-language .language, .border-box .language , .my_teacher_langauges .language{
+.box-language .language,
+.border-box .language,
+.my_teacher_langauges .language {
     display: inline-block;
     position: relative;
     margin: 0;
     width: 100%;
 }
-.box-language .language span, .border-box .language span, .my_teacher_langauges .language span{
-	float: left;
-    line-height: 24px;
-	margin: 0px 3px;
-	position:relative;
-	    font-size: 0.9rem;
-}
-.my_teacher_langauges .language span:first-child{margin-left:0;}
-.my_teacher_langauges .language ul li span.plus{margin-left:5px;}
-.box-language .language span.main-language:after {
-	content:",";
-	position:absolute;
-}
-.box-language .language span.main-language:last-child:after{content:"";}
 
-.box-language .language ul, .border-box .language ul, .my_teacher_langauges .language ul {
+.box-language .language span,
+.border-box .language span,
+.my_teacher_langauges .language span {
+    float: left;
+    line-height: 24px;
+    margin: 0px 3px;
+    position: relative;
+    font-size: 0.9rem;
+}
+
+.my_teacher_langauges .language span:first-child {
+    margin-left: 0;
+}
+
+.my_teacher_langauges .language ul li span.plus {
+    margin-left: 5px;
+}
+
+.box-language .language span.main-language:after {
+    content: ",";
+    position: absolute;
+}
+
+.box-language .language span.main-language:last-child:after {
+    content: "";
+}
+
+.box-language .language ul,
+.border-box .language ul,
+.my_teacher_langauges .language ul {
     margin-left: 0px;
 }
-.box-language .language .more_listing ul:after, .border-box .language .more_listing ul:after, .my_teacher_langauges .language .more_listing ul:after{
+
+.box-language .language .more_listing ul:after,
+.border-box .language .more_listing ul:after,
+.my_teacher_langauges .language .more_listing ul:after {
     content: "";
     width: 0;
     height: 0;
@@ -7213,9 +7255,14 @@ div.tagsinput div {
 
 
 
-.box-language .language ul li, .border-box .language ul li, .my_teacher_langauges .language ul li{    position: relative;
+.box-language .language ul li,
+.border-box .language ul li,
+.my_teacher_langauges .language ul li {
+    position: relative;
 }
-.box-language .language .plus, .my_teacher_langauges .language .plus {
+
+.box-language .language .plus,
+.my_teacher_langauges .language .plus {
     background: var(--color-secondary);
     border-radius: 3px;
     padding: 0px 9px;
@@ -7226,12 +7273,12 @@ div.tagsinput div {
     cursor: pointer;
     height: 24px;
     position: relative;
-	line-height: 24px;
+    line-height: 24px;
 }
 
 
 
-.border-box .language .plus{
+.border-box .language .plus {
     background: var(--color-secondary);
     border-radius: 3px;
     padding: 1px 9px;
@@ -7247,7 +7294,9 @@ div.tagsinput div {
 
 
 
-.box-language .language .more_listing, .border-box .language .more_listing, .my_teacher_langauges .language .more_listing{
+.box-language .language .more_listing,
+.border-box .language .more_listing,
+.my_teacher_langauges .language .more_listing {
     display: none;
     width: 150px;
     position: absolute;
@@ -7255,28 +7304,34 @@ div.tagsinput div {
     padding-top: 35px;
 }
 
-.box-language .language ul li:hover .more_listing, .border-box .language ul li:hover .more_listing, .my_teacher_langauges .language ul li:hover .more_listing {
+.box-language .language ul li:hover .more_listing,
+.border-box .language ul li:hover .more_listing,
+.my_teacher_langauges .language ul li:hover .more_listing {
     display: block;
 }
 
-.box-language .language .more_listing ul , .border-box .language .more_listing ul, .my_teacher_langauges .language .more_listing ul {
+.box-language .language .more_listing ul,
+.border-box .language .more_listing ul,
+.my_teacher_langauges .language .more_listing ul {
     background: var(--color-secondary);
     margin-top: 20px;
     z-index: 555;
     border-radius: 2px;
     margin: 0px;
     position: relative;
-	padding: 6px;
+    padding: 6px;
 }
 
-.box-language .language .more_listing li a, .border-box .language .more_listing li a, .my_teacher_langauges .language .more_listing li a {
+.box-language .language .more_listing li a,
+.border-box .language .more_listing li a,
+.my_teacher_langauges .language .more_listing li a {
     color: #fff;
     display: block;
     padding: 5px 7px;
 }
 
-.border-box .language span{
-	background: var(--color-grey-light);
+.border-box .language span {
+    background: var(--color-grey-light);
     padding: 3px 6px;
     font-size: 0.857rem;
     color: var(--color-dark);
@@ -7284,22 +7339,25 @@ div.tagsinput div {
 }
 
 .border-box .box-body .tags .language li {
-	background: transparent;
+    background: transparent;
     padding: 0px;
     color: var(--color-dark);
     margin: 0px;
 }
+
 .border-box .language .more_listing {
-	padding-top : 45px;
+    padding-top: 45px;
 }
 
 
 .my_teacher_lang_heading {
-	display : inline;
+    display: inline;
 }
-.language .more_listing ul li a{
-	word-break: break-all;
+
+.language .more_listing ul li a {
+    word-break: break-all;
 }
+
 /*==========================New CSS for button with new class=================*/
 .btn--status-correct {
     background: #14892c;
@@ -7308,168 +7366,259 @@ div.tagsinput div {
 .btn--status-top {
     background: #f79232;
 }
-.myTeacherTable .profile-info__right{width:100%;}
-.field_resp_block a{margin-left:5px;}
+
+.myTeacherTable .profile-info__right {
+    width: 100%;
+}
+
+.field_resp_block a {
+    margin-left: 5px;
+}
+
 .field_cover label.field_resp_block {
-display: block;}
+    display: block;
+}
 
 /*************/
 .footer .settings .settings__target {
-	z-index : 99;
+    z-index: 99;
 }
+
 .btn_faq {
-	margin-top: 10px;
+    margin-top: 10px;
 }
+
 .user_url_string {
-	margin-top: 10px;
+    margin-top: 10px;
     margin-bottom: 0;
 }
 
-.moreTextHide, .lessTexthide{
-	display : none;
+.moreTextHide,
+.lessTexthide {
+    display: none;
 }
 
 .link-color {
-	color: var(--color-primary);
+    color: var(--color-primary);
 }
+
 .readMore {
-	float : right;
+    float: right;
 }
 
 .links--vertical.footer_contact_details li {
 
-		font-size: 0.857rem !important;
-		color: #fff !important;
+    font-size: 0.857rem !important;
+    color: #fff !important;
 }
+
 .messageCheckbox {
-	text-align :right;
-	margin-top: 15px;
+    text-align: right;
+    margin-top: 15px;
 }
 
 .IssueBlockquote {
-	border-left: 3px solid;
-	border-color: var(--color-primary);
-	padding-left: 15px;
-	margin-bottom : 30px;
+    border-left: 3px solid;
+    border-color: var(--color-primary);
+    padding-left: 15px;
+    margin-bottom: 30px;
 }
+
 .IssueBlockquote h6 {
-	margin-bottom: 15px;
+    margin-bottom: 15px;
 }
+
 .IssueBlockquote ul {
-	list-style : disc;
-	list-style-position: inside;
+    list-style: disc;
+    list-style-position: inside;
 }
+
 .IssueBlockquote ul li {
-	padding : 3px;
+    padding: 3px;
 }
+
 .text-right {
-	text-align : right;
+    text-align: right;
 }
+
 .issueReportLink {
-	margin-top: 20px;
+    margin-top: 20px;
 }
+
 .issueReportLink a {
-	color: #fff;
-	font-size : 1.2rem;
+    color: #fff;
+    font-size: 1.2rem;
 }
+
 .isuueOptions {
-	max-height : 300px;
-	overflow-y : auto;
+    max-height: 300px;
+    overflow-y: auto;
 }
+
 .issueDetailPopup {
-	overflow-y : auto;
+    overflow-y: auto;
 }
+
 .links--vertical.footer_contact_details li {
-	font-size: 0.857rem !important;
-	color: #fff !important;
-	display:flex;
-	line-height: 1.5;
+    font-size: 0.857rem !important;
+    color: #fff !important;
+    display: flex;
+    line-height: 1.5;
 
 }
-.links--vertical.footer_contact_details li img{
-	margin-right: 10px;
+
+.links--vertical.footer_contact_details li img {
+    margin-right: 10px;
 }
+
 #loaderCalendar {
-	position: absolute;
+    position: absolute;
     width: 100%;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
     z-index: 4;
     height: 100%;
 }
 
 #loaderCalendar .loader {
-	margin-top: 30%;
+    margin-top: 30%;
 }
 
-.box-hint{
+.box-hint {
     width: 15px;
     height: 15px;
     border: 1px solid #dcdcdc;
     display: inline-block;
     margin-right: 10px;
-    margin-left:10px;
+    margin-left: 10px;
     line-height: 1;
 }
-.available-box {background : rgba(20, 224, 110, 0.3);}
-.booked-box {background : var(--color-secondary);}
+
+.available-box {
+    background: rgba(20, 224, 110, 0.3);
+}
+
+.booked-box {
+    background: var(--color-secondary);
+}
 
 /*********  RTL ********/
-body[dir="rtl"] input[type="text"], body[dir="rtl"] input[type="email"], body[dir="rtl"] input[type="phone"], body[dir="rtl"] input[type="search"], body[dir="rtl"] input[type="password"], body[dir="rtl"] textarea, body[dir="rtl"] select, body[dir="rtl"] input[type="number"], body[dir="rtl"] input[type="file"] {
-	padding: 0 30px;
+body[dir="rtl"] input[type="text"],
+body[dir="rtl"] input[type="email"],
+body[dir="rtl"] input[type="phone"],
+body[dir="rtl"] input[type="search"],
+body[dir="rtl"] input[type="password"],
+body[dir="rtl"] textarea,
+body[dir="rtl"] select,
+body[dir="rtl"] input[type="number"],
+body[dir="rtl"] input[type="file"] {
+    padding: 0 30px;
 }
-body[dir="rtl"] .links--vertical.footer_contact_details li img {margin-left: 10px; margin-right:0px;}
-body[dir="rtl"] .profile-info .profile-info__right, body[dir="rtl"] .msg-list__right{padding-right: 20px;}
-body[dir="rtl"] .tick-listing.tick-listing--onehalf li {padding-right: 20px;}
-body[dir="rtl"] .tick-listing li:before {right: 0px; left:auto;}
-body[dir="rtl"] .page-panel__left, body[dir="rtl"] .page-panel__inner-l{
-	float : right;
+
+body[dir="rtl"] .links--vertical.footer_contact_details li img {
+    margin-left: 10px;
+    margin-right: 0px;
 }
-body[dir="rtl"] .page-panel__right, body[dir="rtl"] .page-panel__inner-r{
-	float : left;
-	padding: 0 0px 0 0px;
+
+body[dir="rtl"] .profile-info .profile-info__right,
+body[dir="rtl"] .msg-list__right {
+    padding-right: 20px;
 }
+
+body[dir="rtl"] .tick-listing.tick-listing--onehalf li {
+    padding-right: 20px;
+}
+
+body[dir="rtl"] .tick-listing li:before {
+    right: 0px;
+    left: auto;
+}
+
+body[dir="rtl"] .page-panel__left,
+body[dir="rtl"] .page-panel__inner-l {
+    float: right;
+}
+
+body[dir="rtl"] .page-panel__right,
+body[dir="rtl"] .page-panel__inner-r {
+    float: left;
+    padding: 0 0px 0 0px;
+}
+
 body[dir="rtl"] .page-panel__right {
-	padding-right: 30px;
+    padding-right: 30px;
 }
-body[dir="rtl"] .course_flag_card .flag-icon {margin-left: 20px;}
-body[dir="rtl"] .date-format .date {margin-left: 15px; margin-right:0px;}
-body[dir="rtl"] .search-form .form input[type="submit"], body[dir="rtl"]  .footer-subscribe .form input[type="submit"]{
-    margin-right: 10px; margin-left:0px;}
-body[dir="rtl"] .cta-wrap .btn{margin-right: 30px; margin-left:0px;}
-body[dir="rtl"] .form-filters .form__element .form__input{padding-right: 50px;}
+
+body[dir="rtl"] .course_flag_card .flag-icon {
+    margin-left: 20px;
+}
+
+body[dir="rtl"] .date-format .date {
+    margin-left: 15px;
+    margin-right: 0px;
+}
+
+body[dir="rtl"] .search-form .form input[type="submit"],
+body[dir="rtl"] .footer-subscribe .form input[type="submit"] {
+    margin-right: 10px;
+    margin-left: 0px;
+}
+
+body[dir="rtl"] .cta-wrap .btn {
+    margin-right: 30px;
+    margin-left: 0px;
+}
+
+body[dir="rtl"] .form-filters .form__element .form__input {
+    padding-right: 50px;
+}
+
 body[dir="rtl"] input[type="submit"] {
-	margin-left : 10px;
+    margin-left: 10px;
 }
-body[dir="rtl"] .page-panel__inner-l{
-	padding-left : 30px;
+
+body[dir="rtl"] .page-panel__inner-l {
+    padding-left: 30px;
 }
+
 body[dir="rtl"] .border-box .box-body {
-	margin-left: 0px;
+    margin-left: 0px;
     margin-right: 15px;
 }
-body[dir="rtl"] .box-language .language span, body[dir="rtl"] .border-box .language span, body[dir="rtl"] .my_teacher_langauges .language span {
-	float : right;
+
+body[dir="rtl"] .box-language .language span,
+body[dir="rtl"] .border-box .language span,
+body[dir="rtl"] .my_teacher_langauges .language span {
+    float: right;
 }
+
 body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown.nav__dropdown--account .nav__dropdown-target {
     left: 0;
     right: auto;
 }
+
 body[dir="rtl"] .col-list .avtar {
-	margin-left : 15px;
-	margin-right : 0px;
+    margin-left: 15px;
+    margin-right: 0px;
 }
-body[dir="rtl"] .form-search .form__action-wrap { right: auto; left:0px; }
+
+body[dir="rtl"] .form-search .form__action-wrap {
+    right: auto;
+    left: 0px;
+}
 
 @media (max-width: 1200px) {
-body[dir="rtl"] .page-panel__inner-l {
-    padding-right: 0px;
-    padding-left: 30px;
-}
-body[dir="rtl"] .page-panel__right {
-	padding-right:0px !important;
-}
-body[dir="rtl"] .nav.nav--primary-offset {
-	right:0px;
-	text-align : right;
-}
+    body[dir="rtl"] .page-panel__inner-l {
+        padding-right: 0px;
+        padding-left: 30px;
+    }
+
+    body[dir="rtl"] .page-panel__right {
+        padding-right: 0px !important;
+
+    }
+
+    body[dir="rtl"] .nav.nav--primary-offset {
+        right: 0px;
+        text-align: right;
+    }
 }
