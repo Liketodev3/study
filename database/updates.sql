@@ -357,3 +357,7 @@ UPDATE `tbl_configurations` SET `conf_val` = '3' WHERE `tbl_configurations`.`con
 ALTER TABLE  tbl_thread_messages CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 ALTER TABLE `tbl_thread_messages` CHANGE `message_text` `message_text` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+
+-- bug 036840 
+UPDATE `tbl_language_labels` SET `label_caption` = 'Single Lesson Rate (USD) (Each lesson is one hour)' WHERE `tbl_language_labels`.`label_key` LIKE 'M_Single_Lesson_Rate'
+UPDATE `tbl_language_labels` SET `label_caption` = 'Single Lesson Rate When Purchase in Bulk (USD)' WHERE `tbl_language_labels`.`label_key` LIKE 'M_Bulk_Lesson_Rate'
