@@ -10,7 +10,7 @@ Fixes:
 . #036840 - Default Currency symbol should come while setting up the price
 . #036948 - Changes on the View Availability
 . #036671 - Currency symbol overlapping the price filter input in find teacher page
-. update the 
+. update the Newsletter form title label
 
 
 
