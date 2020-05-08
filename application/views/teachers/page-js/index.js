@@ -38,10 +38,18 @@ $("document").ready(function(){
 		}
 		searchTeachers( frm );
 	});
+	var priceFilterMinValue = 	$("input[name='priceFilterMinValue']").val();
+	var priceFilterMaxValue = 	$("input[name='priceFilterMaxValue']").val();
 	$("input[name='priceFilterMinValue'], input[name='priceFilterMaxValue']").focus(function(){
-				$(this).parent('li').find('.rsText').hide(500);
+		 priceFilterMinValue = 	$("input[name='priceFilterMinValue']").val();
+		 priceFilterMaxValue = 	$("input[name='priceFilterMaxValue']").val();
+			$(this).val('');
 	}).blur(function(){
-				$(this).parent('li').find('.rsText').show(500);
+		if(	$(this).val() == "") {
+			$("input[name='priceFilterMinValue']").val(priceFilterMinValue);
+			$("input[name='priceFilterMaxValue']").val(priceFilterMaxValue);
+		}
+			// $(this).parent('li').find('.rsText').show(500);
 	})
 
 	$("input[name='filterTimeSlots[]']").change(function(){
