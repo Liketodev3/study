@@ -55,5 +55,54 @@ $(document).ready(function(){
 		searchLabels(document.frmLabelsSearch);
 	};
 	
+	exportLabels = function(){
+		document.frmLabelsSearch.action = fcom.makeUrl( 'Label', 'export' );
+		document.frmLabelsSearch.submit();		
+	};
 	
+	importLabels = function(){
+		$.facebox(function() {
+			fcom.ajax(fcom.makeUrl('Label', 'importLabelsForm'), '', function(t) {
+				$.facebox(t,'faceboxWidth');
+			});
+		});
+	};
+	
+	submitImportLaeblsUploadForm = function ()
+	{
+		var data = new FormData(  );
+		$inputs = $('#frmImportLabels input[type=text],#frmImportLabels select,#frmImportLabels input[type=hidden]');
+		$inputs.each(function() { data.append( this.name,$(this).val());});	
+		
+		$.each( $('#import_file')[0].files, function(i, file) {
+			$('#fileupload_div').html(fcom.getLoader());
+			data.append('import_file', file);
+			$.ajax({
+				url : fcom.makeUrl('Label', 'uploadLabelsImportedFile'),
+				type: "POST",
+				data : data,
+				processData: false,
+				contentType: false,
+				success: function(t){					
+					try {
+						var ans = $.parseJSON(t);
+						if( ans.status == 1 ){
+							fcom.displaySuccessMessage(ans.msg);
+							reloadList();
+							$(document).trigger('close.facebox');
+						} else {
+							fcom.displayErrorMessage(ans.msg);
+							$('#fileupload_div').html('');
+						}						
+					}
+					catch(exc){
+						fcom.displayErrorMessage(t);
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					alert("Error Occured.");
+				}
+			});
+		});		
+	};	
 })()	
