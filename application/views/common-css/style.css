@@ -7492,3 +7492,8 @@ html.show-facebox body {
 .calendar-view .fc-toolbar .fc-left h6 {
  color: #519cea;
  }
+ 
+ .calendar-view .fc-toolbar .fc-right h2 {
+    font-size: 1.3rem;
+    line-height: 35px;
+}

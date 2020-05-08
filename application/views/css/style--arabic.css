@@ -25,6 +25,11 @@ body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown > a:after {
 }
 
 
+/*==================TEACHERS LIST===================*/
+body[dir="rtl"] .border-box .box-body .rating .rate-value
+{     margin-right: 5px;}
+
+
 body[dir="rtl"] input[type="text"],
 body[dir="rtl"] input[type="email"],
 body[dir="rtl"] input[type="phone"],
