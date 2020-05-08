@@ -186,6 +186,9 @@
     min-height: 450px;
 }
 
+html.show-facebox body {
+  overflow-y: hidden;
+}
 .section--content h2 {
     font-weight: normal;
     margin-bottom: 30px;
@@ -3869,7 +3872,7 @@ body.is-screen-on .header .container {
 @media(min-width:768px) {
 .timer .size_lg {
     font-size: 50px;
-    
+
 }
 }
 
@@ -4509,6 +4512,13 @@ div.tagsinput div {
 .calendar-view .fc-toolbar .fc-left h2 {
     font-size: 1.3rem;
     line-height: 35px;
+}
+.calendar-view .fc-toolbar .fc-right h2 {
+    font-size: 1.3rem;
+    line-height: 35px;
+}
+.calendar-view .fc-toolbar .fc-left h6 {
+  color: #519cea;
 }
 
 .calendar-view .fc-unthemed th {

@@ -389,16 +389,16 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 </script>
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
 <div class="calendar-view">
-<?php if( 'free_trial' != $action ){ ?>
+<?php //if( 'free_trial' != $action ){ ?>
 <div class="row">
 	<div class="col-sm-6">
-		<h4><?php echo Label::getLabel('Lbl_View_Availibility'); ?></h4>
+		<h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
 	</div>
 	<div class="col-sm-6">
 		<p style="text-align:right;"><span class="box-hint available-box">&nbsp;</span><?php echo Label::getLabel('Lbl_Available'); ?> <span class="box-hint booked-box">&nbsp;</span><?php echo Label::getLabel('Lbl_Booked'); ?></p>
 	</div>
 </div>
-<?php } ?>
+<?php //} ?>
 
 <span> <?php echo MyDate::displayTimezoneString();?> </span>
 <!-- (<span id="currentTime"> </span>) -->

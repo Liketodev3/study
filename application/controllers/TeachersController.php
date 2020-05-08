@@ -354,6 +354,7 @@ class TeachersController extends MyAppController {
 		$srch->addMultipleFields(array(
 			/* 'user_timezone', */
 			'user_first_name',
+			'CONCAT(user_first_name," ",user_last_name) as user_full_name',
 			'user_country_id',
 			'us_single_lesson_amount',
 			'us_bulk_lesson_amount',
