@@ -1,3 +1,19 @@
+Release Version: TV-1.0.1.20200508
+Release Date: 2020/05/08
+
+New Features: N/A
+
+Enhancements:
+
+
+Fixes:
+. #036840 - Default Currency symbol should come while setting up the price
+. #036948 - Changes on the View Availability
+. #036671 - Currency symbol overlapping the price filter input in find teacher page
+. update the 
+
+
+
 Release Version: TV-1.0.0.20200507
 Release Date: 2020/05/07
 

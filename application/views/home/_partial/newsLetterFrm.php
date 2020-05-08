@@ -2,7 +2,7 @@
             <div class="container container--fixed">
                 <div class="footer-subscribe">
                     <div class="section-title">
-                        <h2><?php echo Label::getLabel('LBL_We’d_love_to_send_you_our_Newsletter', $siteLangId); ?></h2>
+                        <h2><?php echo Label::getLabel("LBL_We’d_love_to_send_you_our_Newsletter", $siteLangId); ?></h2>
                     </div>
                     <?php
                         $newsLetterForm->setFormTagAttribute("onsubmit","setUpNewsLetter(this); return false;");
