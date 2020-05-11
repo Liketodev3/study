@@ -361,3 +361,7 @@ ALTER TABLE `tbl_thread_messages` CHANGE `message_text` `message_text` TEXT CHAR
 -- bug 036840
 UPDATE `tbl_language_labels` SET `label_caption` = 'Single Lesson Rate (USD) (Each lesson is one hour)' WHERE `tbl_language_labels`.`label_key` LIKE 'M_Single_Lesson_Rate';
 UPDATE `tbl_language_labels` SET `label_caption` = 'Single Lesson Rate When Purchase in Bulk (USD)' WHERE `tbl_language_labels`.`label_key` LIKE 'M_Bulk_Lesson_Rate';
+
+-- bug 036971 11-may-2020
+ALTER TABLE `tbl_spoken_languages` ADD `slanguage_display_order` INT NOT NULL AFTER `slanguage_flag`;
+ALTER TABLE `tbl_teaching_languages` ADD `tlanguage_display_order` INT NOT NULL AFTER `tlanguage_flag`;

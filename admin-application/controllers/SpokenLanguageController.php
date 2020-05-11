@@ -1,4 +1,4 @@
-<?php
+    <?php
 class SpokenLanguageController extends AdminBaseController
 {
     public function __construct($action)
@@ -35,6 +35,7 @@ class SpokenLanguageController extends AdminBaseController
             $srch->addCondition('slanguage_identifier', 'like', '%' . $post['keyword'] . '%');
         }
 
+        $srch->addOrder('slanguage_display_order', 'asc');
         $srch->addOrder('slanguage_active', 'desc');
         $rs = $srch->getResultSet();
         $records = array();

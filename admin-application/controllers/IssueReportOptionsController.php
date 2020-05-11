@@ -31,7 +31,7 @@ class IssueReportOptionsController extends AdminBaseController
             'tissueopt_display_order',
             'IFNULL(tissueoptlang_title, tissueopt_identifier) as optLabel',
         ));
-
+        $srch->addOrder('tissueopt_display_order','asc');
         if (!empty($post['keyword'])) {
             $srch->addCondition('tissueopt_identifier', 'like', '%' . $post['keyword'] . '%');
         }

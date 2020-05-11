@@ -35,6 +35,7 @@ class TeachingLanguageController extends AdminBaseController
             $srch->addCondition('tlanguage_identifier', 'like', '%' . $post['keyword'] . '%');
         }
 
+        $srch->addOrder('tlanguage_display_order', 'asc');
         $srch->addOrder('tlanguage_active', 'desc');
         $rs = $srch->getResultSet();
         $records = array();

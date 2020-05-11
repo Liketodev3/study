@@ -139,7 +139,9 @@ class TeacherController extends TeacherBaseController
         $db = FatApp::getDb();
         $srch = new SpokenLanguageSearch($this->siteLangId);
         $srch->addMultiplefields(array('slanguagelang_slanguage_id', 'slanguage_name'));
+        $srch->addOrder('slanguage_display_order','asc');
         $srch->addChecks();
+
         $rs=$srch->getResultSet();
         $rows = $db->fetchAll($rs);
         /*
@@ -161,6 +163,7 @@ class TeacherController extends TeacherBaseController
         /***** Get Teaching Languages ******/
         $tlSrch = new TeachingLanguageSearch($this->siteLangId);
         $tlSrch->addMultiplefields(array('tlanguagelang_tlanguage_id', 'tlanguage_name'));
+        $tlSrch->addOrder('tlanguage_display_order','asc');
         $tlRs=$tlSrch->getResultSet();
         /* [ For Multiple Teaching Languages */
         $tlSrch->addChecks();

@@ -42,6 +42,7 @@ class PreferencesController extends AdminBaseController
         if ($post['type'] > 0) {
             $srch->addCondition('preference_type', '=', $post['type']);
         }
+        $srch->addOrder('preference_display_order','asc');
         $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
