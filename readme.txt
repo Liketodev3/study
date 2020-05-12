@@ -2,6 +2,7 @@ Release Version: TV-1.1.0.20200508
 Release Date: 2020/05/08
 
 New Features: N/A
+* Added stripe payment gateway
 
 Enhancements:
 . Develop a feature of Export/Import of Labels management.
