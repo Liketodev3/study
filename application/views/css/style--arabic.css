@@ -1,3 +1,8 @@
+body[dir="rtl"] select{background-position: 15px center}
+body[dir="rtl"] .block__head-trigger:after{    right: auto;     left: 20px;}
+body[dir="rtl"] .box-list__head .ratings{    margin: 0 30px 0 0;}
+body[dir="rtl"] .btn .svg-icon{    margin: 0 0 0 5px;}
+
 /*========================ARROWS============================*/
 body[dir="rtl"] .arrow-link {
     padding-left: 20px;
