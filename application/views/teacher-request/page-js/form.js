@@ -83,6 +83,7 @@ $("document").ready(function(){
 		}
 			data.append('fIsAjax',1);
 			data.append('fOutMode','json');
+		$.systemMessage(langLbl.processing,'alert--process');
 		$.ajax({
 			method: "POST",
 			url: fcom.makeUrl('TeacherRequest', 'setUpTeacherApproval'),
@@ -100,12 +101,12 @@ $("document").ready(function(){
 					}
 					$.mbsmessage(result.msg,true, 'alert alert--success');
 					if( result.redirectUrl ){
-						setTimeout(function(){ window.location.href = ans.redirectUrl }, 2000);
-					}
-						return;
+						setTimeout(function(){ window.location.href = result.redirectUrl }, 2000);
+							return;
 					}
 				} catch (e) {
 					$.mbsmessage(e,true, 'alert alert--danger');
+						return;
 				}
 				console.log(result);
 			}
