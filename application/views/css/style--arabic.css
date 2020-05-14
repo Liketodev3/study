@@ -81,6 +81,16 @@ body[dir="rtl"] .box.box--narrow .field_label .-link-underline {
 
 body[dir="rtl"] .field_cover label.field_resp_block {
     float: right;
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;
+    /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    /* NEW - Chrome */
+    display: flex;
+    /* NEW, Spec - Opera 12.1, Firefox 20+ */
 }
 
 body[dir="rtl"] .field_resp_block a {
@@ -88,7 +98,7 @@ body[dir="rtl"] .field_resp_block a {
     margin-right: 5px;
 }
 
-.box.box--narrow p {
+body[dir="rtl"] .box.box--narrow p {
     display: -webkit-box;
     /* OLD - iOS 6-, Safari 3.1-6 */
     display: -moz-box;
@@ -101,6 +111,41 @@ body[dir="rtl"] .field_resp_block a {
     /* NEW, Spec - Opera 12.1, Firefox 20+ */
     justify-content: center;
 }
+
+
+/*=======================TEACHER DETAIL====================*/
+body[dir="rtl"] .box__profile-head .location {
+    padding: 0 20px 0 0;
+}
+
+body[dir="rtl"] .box__profile-head .location .svg-icon {
+    left: auto;
+    right: 0;
+}
+
+body[dir="rtl"] .ratings .ratings__count {
+    margin-right: 10px;
+}
+
+body[dir="rtl"] .-align-right {
+    text-align: left !important;
+}
+
+body[dir="rtl"] .box.box--toggle p strong {
+    float: right;
+    margin-left: 5px;
+}
+
+body[dir="rtl"] .box-language .col:first-child {
+    text-align: right;
+}
+
+body[dir="rtl"] .content-repeated .avtar {
+    float: right;
+    margin: 0 0 0 15px;
+}
+
+
 
 body[dir="rtl"] input[type="text"],
 body[dir="rtl"] input[type="email"],
