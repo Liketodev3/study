@@ -146,6 +146,9 @@ body[dir="rtl"] .content-repeated .avtar {
 }
 
 
+/*===================Teacher Calendar================*/
+#facebox .content h4{    text-align: right;}
+
 
 body[dir="rtl"] input[type="text"],
 body[dir="rtl"] input[type="email"],
