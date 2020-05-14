@@ -1,7 +1,19 @@
-body[dir="rtl"] select{background-position: 15px center}
-body[dir="rtl"] .block__head-trigger:after{    right: auto;     left: 20px;}
-body[dir="rtl"] .box-list__head .ratings{    margin: 0 30px 0 0;}
-body[dir="rtl"] .btn .svg-icon{    margin: 0 0 0 5px;}
+body[dir="rtl"] select {
+    background-position: 15px center
+}
+
+body[dir="rtl"] .block__head-trigger:after {
+    right: auto;
+    left: 20px;
+}
+
+body[dir="rtl"] .box-list__head .ratings {
+    margin: 0 30px 0 0;
+}
+
+body[dir="rtl"] .btn .svg-icon {
+    margin: 0 0 0 5px;
+}
 
 /*========================ARROWS============================*/
 body[dir="rtl"] .arrow-link {
@@ -31,9 +43,64 @@ body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown > a:after {
 
 
 /*==================TEACHERS LIST===================*/
-body[dir="rtl"] .border-box .box-body .rating .rate-value
-{     margin-right: 5px;}
+body[dir="rtl"] .border-box .box-body .rating .rate-value {
+    margin-right: 5px;
+}
 
+
+body[dir="rtl"] .slide__fields li .rsText {
+    right: 17px;
+    left: auto;
+}
+
+
+/*===================APPY TO TEACH================*/
+body[dir="rtl"] .group.group--social .btn .svg-icon {
+    right: 15px;
+}
+
+body[dir="rtl"] .spn_must_field {
+    margin: 0 5px 0 0;
+}
+
+body[dir="rtl"] .group.group--social .btn {
+    float: right;
+}
+
+body[dir="rtl"] .group.group--social .btn.btn--social-gp {
+    float: left;
+}
+
+body[dir="rtl"] .box.box--narrow .field_label {
+    text-align: right;
+}
+
+body[dir="rtl"] .box.box--narrow .field_label .-link-underline {
+    float: left !important;
+}
+
+body[dir="rtl"] .field_cover label.field_resp_block {
+    float: right;
+}
+
+body[dir="rtl"] .field_resp_block a {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.box.box--narrow p {
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;
+    /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    /* NEW - Chrome */
+    display: flex;
+    /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    justify-content: center;
+}
 
 body[dir="rtl"] input[type="text"],
 body[dir="rtl"] input[type="email"],
@@ -155,4 +222,3 @@ body[dir="rtl"] .form-search .form__action-wrap {
         text-align: right;
     }
 }
-
