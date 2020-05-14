@@ -51,12 +51,11 @@ class Preference extends MyAppModel
         $srch = new PreferenceSearch($langId);
         $srch->addMultipleFields(array(
             'preference_id',
-            'preference_title',
+            'IFNULL(preference_title,preference_identifier) as preference_title',
             'preference_type'));
         $srch->addOrder('preference_display_order', 'asc');
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
-
         $tempRows = array();
         foreach ($rows as $row) {
             $tempRows[$row['preference_type']][] = $row;

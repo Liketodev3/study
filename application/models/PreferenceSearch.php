@@ -16,7 +16,7 @@ class PreferenceSearch extends SearchBase
                 'pl'
             );
         }
-        
+
         if (true === $doNotCalculateRecords) {
             $this->doNotCalculateRecords();
         }
