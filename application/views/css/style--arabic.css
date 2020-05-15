@@ -439,15 +439,16 @@ body[dir="rtl"] .form-search .form__action-wrap {
     left: 0px;
 }
 @media (min-width: 1200px){
-body[dir="rtl"] .page-panel__left,
-body[dir="rtl"] .page-panel__inner-l {
+body[dir="rtl"] .page-panel__left{
     float: right;
+
 }
 }
 @media (min-width: 1024px){
 body[dir="rtl"] .page-panel__inner-l {
     padding-left: 30px;
 	    padding-right: 0;
+		 float: right;
 }
 
 }
