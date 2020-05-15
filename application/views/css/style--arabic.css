@@ -15,6 +15,10 @@ body[dir="rtl"] .btn .svg-icon {
     margin: 0 0 0 5px;
 }
 
+body[dir="rtl"] .-clear-right {
+    float: left !important;
+}
+
 /*========================ARROWS============================*/
 body[dir="rtl"] .arrow-link {
     padding-left: 20px;
@@ -147,9 +151,16 @@ body[dir="rtl"] .content-repeated .avtar {
 
 
 /*===================Teacher Calendar================*/
-body[dir="rtl"] #facebox .content h4{    text-align: right;}
-.calendar-view{     display: block;   text-align: right;}
-.fc-toolbar .fc-left {
+body[dir="rtl"] #facebox .content h4 {
+    text-align: right;
+}
+
+body[dir="rtl"] .calendar-view {
+    display: block;
+    text-align: right;
+}
+
+body[dir="rtl"] .fc-toolbar .fc-left {
     float: right;
 }
 
@@ -157,24 +168,95 @@ body[dir="rtl"] .fc-toolbar .fc-right {
     float: left;
 }
 
-body[dir="rtl"] .fc .fc-toolbar>*>* {
+body[dir="rtl"] .fc .fc-toolbar > * > * {
     float: right;
     margin-right: .75em;
 }
 
-body[dir="rtl"] .fc .fc-button-group>* {
+body[dir="rtl"] .fc .fc-button-group > * {
     float: right;
 }
 
+body[dir="rtl"] .calendar-view .fc-event-container .fc-day-grid-event .fc-content .avtar {
+    float: right;
+    margin-left: 10px;
+}
+
+body[dir="rtl"] .calendar-view .fc-day-grid-event .fc-time {
+    padding: 0 10px 0 0;
+}
+
+
+
 /*==========================DASHBOARD===================*/
-body[dir="rtl"] .menu-vertical li a .menu-icon{    right: 15px; left:auto;}
-body[dir="rtl"] .menu-vertical li a{    padding: 22px 55px 22px 15px;}
-body[dir="rtl"] .tab-swticher .btn{    float: right;}
-body[dir="rtl"] .tabled .tabled__cell{    border-left: 1px solid #e5e5e5;}
-body[dir="rtl"] .myTeacherTable .profile-info__right{text-align:right;}
-body[dir="rtl"] .box-language .language, .border-box .language, .my_teacher_langauges .language{text-align:right;}
-body[dir="rtl"] .box-language .language .more_listing, .border-box .language .more_listing, .my_teacher_langauges .language .more_listing{left:auto;    right: -22px;}
-body[dir="rtl"] .box-language .language .more_listing ul:after, .border-box .language .more_listing ul:after, .my_teacher_langauges .language .more_listing ul:after{    left: 11px; right:auto;}
+body[dir="rtl"] .menu-vertical li a .menu-icon {
+    right: 15px;
+    left: auto;
+}
+
+body[dir="rtl"] .menu-vertical li a {
+    padding: 22px 55px 22px 15px;
+}
+
+body[dir="rtl"] .tab-swticher .btn {
+    float: right;
+}
+
+body[dir="rtl"] .tabled .tabled__cell {
+    border-left: 1px solid #e5e5e5;
+}
+
+body[dir="rtl"] .myTeacherTable .profile-info__right {
+    text-align: right;
+}
+
+body[dir="rtl"] .box-language .language,
+body[dir="rtl"] .border-box .language,
+body[dir="rtl"] .my_teacher_langauges .language {
+    text-align: right;
+}
+
+body[dir="rtl"] .box-language .language .more_listing,
+body[dir="rtl"] .border-box .language .more_listing,
+body[dir="rtl"] .my_teacher_langauges .language .more_listing {
+    left: auto;
+    right: -22px;
+}
+
+body[dir="rtl"] .box-language .language .more_listing ul:after,
+body[dir="rtl"] .border-box .language .more_listing ul:after,
+body[dir="rtl"] .my_teacher_langauges .language .more_listing ul:after {
+    left: 11px;
+    right: auto;
+}
+
+body[dir="rtl"] .grids-wrap .wrap--yellow .icon__wallet {
+    float: right;
+    margin: 0 0 0 20px;
+}
+
+body[dir="rtl"] .fld-date {
+    background-position: 10px;
+}
+
+body[dir="rtl"] .ui-datepicker .ui-datepicker-buttonpane button {
+    float: left
+}
+
+body[dir="rtl"] .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
+    float: right
+}
+
+body[dir="rtl"] .label.label--success {
+    padding-right: 26px;
+    background-position: 90%;
+}
+
+body[dir="rtl"] .radio .input-helper:after {
+    left: auto;
+    right: 5px;
+}
+
 
 body[dir="rtl"] input[type="text"],
 body[dir="rtl"] input[type="email"],
