@@ -295,7 +295,7 @@ class CommonHelper extends FatUtility
         return $number;
     }
 
-    public static function displayMoneyFormat($val, $numberFormat = true, $showInConfiguredDefaultCurrency = false, $displaySymbol = true, $stringFormat = false)
+    public static function displayMoneyFormat($val, $numberFormat = true, $showInConfiguredDefaultCurrency = false, $displaySymbol = true, $stringFormat = false,$cunvertValue = true)
     {
         $currencyValue = self::getCurrencyValue();
         $currencySymbolLeft = self::getCurrencySymbolLeft();
@@ -311,8 +311,10 @@ class CommonHelper extends FatUtility
             $currencySymbolLeft = $currencyData['currency_symbol_left'];
             $currencySymbolRight = $currencyData['currency_symbol_right'];
         }
+        if($cunvertValue) {
+            $val = $val * $currencyValue;
+        }
 
-        $val = $val * $currencyValue;
 
         $sign = '';
         if ($val < 0) {

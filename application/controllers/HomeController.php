@@ -59,6 +59,12 @@ class HomeController extends MyAppController
         if (0 < $currencyId) {
             $currencies = Currency::getCurrencyAssoc($this->siteLangId);
             if (array_key_exists($currencyId, $currencies)) {
+                if(isset($_SESSION['search_filters']['minPriceRange'])) {
+                    unset($_SESSION['search_filters']['minPriceRange']);
+                }
+                if(isset($_SESSION['search_filters']['maxPriceRange'])) {
+                    unset($_SESSION['search_filters']['maxPriceRange']);
+                }
                 setcookie('defaultSiteCurrency', $currencyId, time()+3600*24*10, CONF_WEBROOT_URL);
             }
         }

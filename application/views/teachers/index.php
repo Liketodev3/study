@@ -1,7 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 
 <!--header section [-->
-<?php 
+<?php
 $minPrice = 0;
 $maxPrice = 0;
 $keyword = '';
@@ -10,28 +10,26 @@ $preferenceFilter_filter = array();
 $fromCountry_filter = array();
 $gender_filter = array();
 $filters  = array();
-
-
 if ( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] )) {
 	$filters = $_SESSION['search_filters'];
-	
+
 	if ( isset($filters['spokenLanguage']) && !empty( $filters['spokenLanguage'] ) ) {
 		$spokenLanguage_filter = explode(',', $filters['spokenLanguage']);
 	}
-	
-	if ( isset($filters['minPriceRange']) && !empty( $filters['minPriceRange'] ) && isset($filters['maxPriceRange']) && !empty( $filters['maxPriceRange'] )  ) {
-		$minPrice = floor($filters['minPriceRange']);
-		$maxPrice = floor($filters['maxPriceRange']);
+
+	if ( isset($filters['minPriceRange']) && isset($filters['maxPriceRange']) ) {
+		$minPrice =  FatUtility::float($filters['minPriceRange']);
+		$maxPrice =  FatUtility::float($filters['maxPriceRange']);
 	}
-	
+
 	if ( isset($filters['preferenceFilter']) && !empty( $filters['preferenceFilter'] ) ) {
 		$preferenceFilter_filter = explode(',', $filters['preferenceFilter']);
 	}
-	
+
 	if ( isset($filters['fromCountry']) && !empty( $filters['fromCountry'] ) ) {
 		$fromCountry_filter = explode(',', $filters['fromCountry']);
 	}
-	
+
 	if ( isset($filters['gender']) && !empty( $filters['gender'] ) ) {
 		$gender_filter = explode(',', $filters['gender']);
 	}
@@ -41,17 +39,17 @@ if ( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters']
 	if ( isset($filters['keyword']) && !empty( $filters['keyword'] ) ) {
 		$keyword = $filters['keyword'];
 	}
-	
+
 }
 
 
 /* Teacher Top Filters [ */
-$this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice , 'keyword' => $keyword ) ); 
+$this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice , 'keyword' => $keyword ) );
 /* ] */
 ?>
 
 
-<?php 
+<?php
 /* <div class="section__tags">
 	<div class="container container--fixed">
 		<div class="tag-list">
@@ -75,11 +73,11 @@ $this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeac
                 <p><?php echo Label::getLabel('LBL_Showing'); ?> <span id="start_record">{xx}</span>-<span id="end_record">{xx}</span> <?php echo Label::getLabel('LBL_of'); ?> <span id="total_records">{xx}</span> <?php echo Label::getLabel('LBL_teachers'); ?></p>
             </div>
         </div>
-		
+
 		<div class="row -clearfix">
-            <?php 
+            <?php
 			/* Left Side Filters Side Bar [ */
-			$this->includeTemplate('teachers/_partial/teacherLeftFilters.php', array( 'spokenLanguage_filter' => $spokenLanguage_filter, 'preferenceFilter_filter'=> $preferenceFilter_filter, 'fromCountry_filter' => $fromCountry_filter, 'gender_filter' => $gender_filter, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice, 'siteLangId' => $siteLangId )); 
+			$this->includeTemplate('teachers/_partial/teacherLeftFilters.php', array( 'spokenLanguage_filter' => $spokenLanguage_filter, 'preferenceFilter_filter'=> $preferenceFilter_filter, 'fromCountry_filter' => $fromCountry_filter, 'gender_filter' => $gender_filter, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice, 'siteLangId' => $siteLangId ));
 			/* ] */
 			?>
 
@@ -90,7 +88,7 @@ $this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeac
             <div class="col-xl-3 col-lg-12 -float-left d-block d-xl-none">
                 <div class="box box--cta -padding-30 -align-center">
                     <h4 class="-text-bold"><?php echo Label::getLabel('LBL_Want_to_be_a_teacher?'); ?></h4>
-                    <p><?php $str = Label::getLabel( 'LBL_If_you\'re_interested_in_being_a_teacher_on_{sitename},_please_apply_here.' ); 
+                    <p><?php $str = Label::getLabel( 'LBL_If_you\'re_interested_in_being_a_teacher_on_{sitename},_please_apply_here.' );
 					 $siteName = FatApp::getConfig( 'CONF_WEBSITE_NAME_'.$siteLangId, FatUtility::VAR_STRING, '' );
 					 $str = str_replace( "{sitename}", $siteName, $str );
 					 echo $str;

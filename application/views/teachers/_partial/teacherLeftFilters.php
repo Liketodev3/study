@@ -1,8 +1,7 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
-
-if ( $minPrice == 0 && $maxPrice == 0 ) {
-	$minPrice = floor( $filterDefaultMinValue );
-	$maxPrice = floor($filterDefaultMaxValue );
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+if (empty($minPrice) && empty($maxPrice)) {
+	$minPrice = $filterDefaultMinValue;
+	$maxPrice = $filterDefaultMaxValue;
 }
 
 ?>
@@ -68,31 +67,31 @@ if ( $minPrice == 0 && $maxPrice == 0 ) {
 						</div>
 					</div>
 					<?php } ?>
-					
-					
+
+
 					<?php if( isset($priceArr) && $priceArr ){ ?>
 					<div class="block">
 						<div class="block__head block__head-trigger block__head-trigger-js is-active"><h6><?php echo Label::getLabel( 'LBL_Price' ); ?></h6></div>
 						<div class="block__body block__body-target block__body-target-js" style="">
 							<div class="range range--primary">
-								<input type="text" id="price_range" value="<?php echo floor($minPrice); ?>-<?php echo ceil($maxPrice); ?>" name="price_range" />
-								<input type="hidden" value="<?php echo floor($minPrice); ?>" name="filterDefaultMinValue" id="filterDefaultMinValue" />
-								<input type="hidden" value="<?php echo ceil($maxPrice); ?>" name="filterDefaultMaxValue" id="filterDefaultMaxValue" />
+								<input type="text" id="price_range" value="<?php echo $minPrice; ?>-<?php echo $maxPrice; ?>" name="price_range" />
+								<input type="hidden" value="<?php echo $minPrice; ?>" name="filterDefaultMinValue" id="filterDefaultMinValue" />
+								<input type="hidden" value="<?php echo $maxPrice; ?>" name="filterDefaultMaxValue" id="filterDefaultMaxValue" />
 							</div>
 							<div class="slide__fields form">
 								<ul>
-									<li><span class="rsText"><?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?></span><input value="<?php echo floor($minPrice); ?>" name="priceFilterMinValue" type="text"></li>
-									
-									
-									<li><span class="rsText"><?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft(); ?></span><input value="<?php echo ceil($maxPrice); ?>" class="input-filter form-control " name="priceFilterMaxValue" type="text">
+									<li><span class="rsText"><?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?></span><input value="<?php echo $minPrice; ?>" name="priceFilterMinValue" type="text"></li>
+
+
+									<li><span class="rsText"><?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft(); ?></span><input value="<?php echo $maxPrice; ?>" class="input-filter form-control " name="priceFilterMaxValue" type="text">
 									</li>
 								</ul>
 							</div>
 						</div>
 					</div>
 					<?php } ?>
-					<?php $preferenceTypeArr = Preference::getPreferenceTypeArr( CommonHelper::getLangId() );  	
-					foreach ($preferenceTypeArr as $key=>$preferenceType) { 
+					<?php $preferenceTypeArr = Preference::getPreferenceTypeArr( CommonHelper::getLangId() );
+					foreach ($preferenceTypeArr as $key=>$preferenceType) {
 						if(!isset($allPreferences[$key])){
 							continue;
 						}
@@ -106,11 +105,11 @@ if ( $minPrice == 0 && $maxPrice == 0 ) {
                                 <div class="listing listing--vertical">
                                     <ul>
 									<?php foreach($allPreferences[$key] as $preference){ ?>
-                                        <li>										
+                                        <li>
 											<label class="checkbox" id="skill_<?php echo $preference['preference_id']; ?>">
 												<input type="checkbox" name="filterPreferences[]" value="<?php echo $preference['preference_id']; ?>" <?php if( in_array($preference['preference_id'], $preferenceFilter_filter )){ echo 'checked'; }  ?> >
 												<i class="input-helper"></i> <?php echo $preference['preference_titles']; ?>
-											</label>										
+											</label>
                                         </li>
 									<?php } ?>
 
@@ -153,7 +152,7 @@ if ( $minPrice == 0 && $maxPrice == 0 ) {
                             <div class="scrollbar scrollbar-js">
                                 <div class="listing listing--vertical">
                                     <ul>
-										<?php 
+										<?php
 										$genderConstants = User::getGenderArr();
 										foreach( $genderArr as $gender ){ ?>
                                         <li>
@@ -177,7 +176,7 @@ if ( $minPrice == 0 && $maxPrice == 0 ) {
     </div>
 	<div class="box box--cta -padding-30 -align-center d-none d-xl-block">
 		<h4 class="-text-bold"><?php echo Label::getLabel('LBL_Want_to_be_a_teacher?'); ?></h4>
-		<p><?php $str = Label::getLabel( 'LBL_If_you\'re_interested_in_being_a_teacher_on_{sitename},_please_apply_here.' ); 
+		<p><?php $str = Label::getLabel( 'LBL_If_you\'re_interested_in_being_a_teacher_on_{sitename},_please_apply_here.' );
 		$siteName = FatApp::getConfig( 'CONF_WEBSITE_NAME_'.$siteLangId, FatUtility::VAR_STRING, '' );
 		$str = str_replace( "{sitename}", $siteName, $str );
 		echo $str;
@@ -195,23 +194,23 @@ $(document).ready(function(){
 			$(this).removeClass('is-active');
 			$(this).siblings('.block__body-target-js').slideUp();return false;
 		}
-		
+
 		$('.block__head-trigger-js').removeClass('is-active');
 		$(this).addClass("is-active");
 		$('.block__body-target-js').slideUp();
 		$(this).siblings('.block__body-target-js').slideDown();
 	});
-	
-	
+
+
 	$('.scrollbar-js').enscroll({
 		verticalTrackClass: 'scrollbar-track',
 		verticalHandleClass: 'scrollbar-handle'
 	});
-	
+
 	<?php if( isset($priceArr) && $priceArr ){ ?>
 	var range,
-	min = Math.floor(<?php echo $filterDefaultMinValue; ?>),
-    max = Math.floor(<?php echo $filterDefaultMaxValue; ?>),
+	min = <?php echo $filterDefaultMinValue; ?>,
+    max = <?php echo $filterDefaultMaxValue; ?>,
     from,
     to;
 	var $from = $('input[name="priceFilterMinValue"]');
@@ -221,15 +220,20 @@ $(document).ready(function(){
 		$from.prop("value", from);
 		$to.prop("value", to);
 	};
-
+	step = 2;
+	if(0 < min && 1 > min) {
+		step = 0.02;
+	}
+	console.log(step,'step');
 	$("#price_range").ionRangeSlider({
 		hide_min_max: true,
 		hide_from_to: true,
 		keyboard: true,
 		min: min,
 		max: max,
-		from: parseInt(<?php echo $minPrice;  ?>),
-		to: parseInt(<?php echo $maxPrice;?>),
+		from: <?php echo $minPrice;  ?>,
+		to: <?php echo $maxPrice;?>,
+		step : step,
 		type: 'double',
 		prettify_enabled: true,
 		prettify_separator: ',',
@@ -237,7 +241,7 @@ $(document).ready(function(){
 		// grid_num: 1,
 		prefix: '<?php echo $currencySymbolLeft; ?>',
 		postfix: '<?php echo $currencySymbolRight; ?>',
-		
+
 		input_values_separator: '-',
 		onFinish: function () {
 			var minMaxArr = $("#price_range").val().split('-');
@@ -281,7 +285,7 @@ $(document).ready(function(){
 			from = max;
 		}
 
-		updateValues();    
+		updateValues();
 		updateRange();
 	});
 
@@ -296,7 +300,7 @@ $(document).ready(function(){
 		if (to < min) {
 			to = min;
 		}
-		updateValues();    
+		updateValues();
 		updateRange();
 	});
 <?php } ?>

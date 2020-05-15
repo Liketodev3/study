@@ -576,6 +576,7 @@ class TeachersController extends MyAppController {
 		$teachLanguageName = FatApp::getPostedData('teach_lang_keyword');
 		$postedData = FatApp::getPostedData();
 		$_SESSION['search_filters'] = $postedData;
+
 		$srch = new UserSearch(false);
 		$srch->setTeacherDefinedCriteria(false,false);
 		$tlangSrch = $srch->getMyTeachLangQry(true, $this->siteLangId, $teachLanguageName);

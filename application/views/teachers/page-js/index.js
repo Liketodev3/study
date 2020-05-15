@@ -322,8 +322,9 @@ function htmlEncode(value){
 		$('.price').parent("li").remove();
 		if( !$('#searched-filters').find('a').hasClass('price') ){
 			var filterCaption = htmlEncode($("#price_range").closest("div.block__body-target-js").siblings("div.block__head-trigger-js").text());
-
-			$('#searched-filters').append('<li><a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilter(this)" >'+ filterCaption + ': ' +currencySymbolLeft+$("input[name=priceFilterMinValue]").val()+currencySymbolRight+' - '+currencySymbolLeft+$("input[name=priceFilterMaxValue]").val()+currencySymbolRight+'</a></li>');
+			var varcurrencySymbolLeft = $('<textarea />').html(currencySymbolLeft).text();
+			var varcurrencySymbolRight = $('<textarea />').html(currencySymbolRight).text();
+			$('#searched-filters').append('<li><a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilter(this)" >'+ filterCaption + ': ' +varcurrencySymbolLeft+$("input[name=priceFilterMinValue]").val()+varcurrencySymbolRight+' - '+varcurrencySymbolLeft+$("input[name=priceFilterMaxValue]").val()+varcurrencySymbolRight+'</a></li>');
 		}
 		/* searchArr['price_min_range'] = $("input[name=priceFilterMinValue]").val();
 		searchArr['price_max_range'] = $("input[name=priceFilterMaxValue]").val();

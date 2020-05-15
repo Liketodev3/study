@@ -113,10 +113,10 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 							<?php echo Label::getLabel('LBL_Language'); ?> :  <?php echo $keywordlanguage; ?>	 </a>
 				</li>
 			<?php } ?>
-			<?php if ( ( $minPrice > 0 &&  $maxPrice >0 ) && ( $minPrice != $priceArr['minPrice']  && $maxPrice != $priceArr['maxPrice']  ) ) { ?>
+			<?php if ( ( isset($minPrice) && isset($maxPrice) ) && ($minPrice != 0 && $maxPrice != 0) && ( $minPrice != $priceArr['minPrice']  || $maxPrice != $priceArr['maxPrice']  ) ) { ?>
 				<li>
-					<a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilterCustom(this, '<?= ceil($priceArr['minPrice']);?>', '<?= ceil($priceArr['maxPrice']);?>')">
-					<?php echo Label::getLabel('LBL_Price'); ?>: <?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?><?= CommonHelper::displayMoneyFormat(($minPrice)??0,false,false,false);?> - <?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?><?= CommonHelper::displayMoneyFormat(($maxPrice)??0,false,false,false);?></a></li>
+					<a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilterCustom(this, '<?= ($priceArr['minPrice']);?>', '<?= ($priceArr['maxPrice']);?>')">
+					<?php echo Label::getLabel('LBL_Price'); ?>: <?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?><?= CommonHelper::displayMoneyFormat(($minPrice)??0,false,false,false,false,false);?> - <?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?><?= CommonHelper::displayMoneyFormat(($maxPrice)??0,false,false,false,false,false);?></a></li>
 			<?php } ?>
 			<?php if ( $keyword !='' ) { ?>
 				<li>
