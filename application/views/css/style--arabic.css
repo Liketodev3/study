@@ -24,6 +24,7 @@ body[dir="rtl"] #facebox .close {
     right: auto;
 }
 
+body[dir="rtl"] .gototop{    left: 16px; right:auto;}
 
 body[dir="rtl"] .form .field_label,
 body[dir="rtl"] .form {
@@ -217,6 +218,8 @@ body[dir="rtl"] .content-repeated:last-child [class*="col-"]:last-child {
     text-align: right;
 }
 
+body[dir="rtl"] .box-highlighted .col{text-align:right;}
+
 /*==========================DASHBOARD===================*/
 body[dir="rtl"] .menu-vertical li a .menu-icon {
     right: 15px;
@@ -391,11 +394,6 @@ body[dir="rtl"] .date-format .date {
     margin-right: 0px;
 }
 
-body[dir="rtl"] .search-form .form input[type="submit"],
-body[dir="rtl"] .footer-subscribe .form input[type="submit"] {
-    margin-right: 10px;
-    margin-left: 0px;
-}
 
 body[dir="rtl"] .cta-wrap .btn {
     margin-right: 30px;
@@ -453,12 +451,15 @@ body[dir="rtl"] .page-panel__inner-l {
 
 }
 
-@media (max-width: 400px){
-body[dir="rtl"] .tab-swticher-small.tab-swticher {
+
+@media (min-width: 768px){
+body[dir="rtl"] .search-form .form input[type="submit"],
+body[dir="rtl"] .footer-subscribe .form input[type="submit"] {
     margin-right: 10px;
-	margin-left:0;
+    margin-left: 0px;
 }
 }
+
 
 @media (max-width: 1024px) {
 
@@ -471,4 +472,16 @@ body[dir="rtl"] .tab-swticher-small.tab-swticher {
         right: 0px;
         text-align: right;
     }
+}
+
+@media (max-width: 767px){
+	.box__head-trigger:after{    right: auto;     left: 20px}
+	
+}
+
+@media (max-width: 400px){
+body[dir="rtl"] .tab-swticher-small.tab-swticher {
+    margin-right: 10px;
+	margin-left:0;
+}
 }
