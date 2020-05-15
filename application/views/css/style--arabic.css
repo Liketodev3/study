@@ -371,10 +371,6 @@ body[dir="rtl"] .tick-listing li:before {
     left: auto;
 }
 
-body[dir="rtl"] .page-panel__left,
-body[dir="rtl"] .page-panel__inner-l {
-    float: right;
-}
 
 body[dir="rtl"] .page-panel__right,
 body[dir="rtl"] .page-panel__inner-r {
@@ -447,6 +443,16 @@ body[dir="rtl"] .form-search .form__action-wrap {
 body[dir="rtl"] .page-panel__inner-l {
     padding-left: 30px;
 	    padding-right: 0;
+}
+body[dir="rtl"] .page-panel__left,
+body[dir="rtl"] .page-panel__inner-l {
+    float: right;
+}
+}
+
+@media (max-width: 400px){
+body[dir="rtl"] .tab-swticher-small.tab-swticher {
+    margin-right: 10px;
 }
 }
 
