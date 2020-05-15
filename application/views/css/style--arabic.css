@@ -21,10 +21,23 @@ body[dir="rtl"] .-clear-right {
 
 body[dir="rtl"] #facebox .close {
     left: 0;
-	right:auto;
+    right: auto;
 }
 
-body[dir="rtl"] .form .field_label {
+
+body[dir="rtl"] .form .field_label,
+body[dir="rtl"] .form {
+    text-align: right;
+}
+
+body[dir="rtl"] .label.label--default {
+    padding-right: 26px;
+    background-position: 90%;
+    padding-left: 10px;
+}
+
+body[dir="rtl"] .table th,
+body[dir="rtl"] .table td {
     text-align: right;
 }
 
@@ -262,6 +275,7 @@ body[dir="rtl"] .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-cu
 body[dir="rtl"] .label.label--success {
     padding-right: 26px;
     background-position: 90%;
+    padding-left: 10px;
 }
 
 body[dir="rtl"] .radio .input-helper:after {
