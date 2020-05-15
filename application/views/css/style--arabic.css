@@ -147,7 +147,24 @@ body[dir="rtl"] .content-repeated .avtar {
 
 
 /*===================Teacher Calendar================*/
-#facebox .content h4{    text-align: right;}
+body[dir="rtl"] #facebox .content h4{    text-align: right;}
+.calendar-view{     display: block;   text-align: right;}
+.fc-toolbar .fc-left {
+    float: right;
+}
+
+body[dir="rtl"] .fc-toolbar .fc-right {
+    float: left;
+}
+
+body[dir="rtl"] .fc .fc-toolbar>*>* {
+    float: right;
+    margin-right: .75em;
+}
+
+body[dir="rtl"] .fc .fc-button-group>* {
+    float: right;
+}
 
 
 body[dir="rtl"] input[type="text"],
