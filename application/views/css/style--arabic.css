@@ -179,6 +179,7 @@ body[dir="rtl"] .fc .fc-button-group > * {
 
 body[dir="rtl"] .calendar-view .fc-event-container .fc-day-grid-event .fc-content .avtar {
     float: right;
+	    margin-right: 0;
     margin-left: 10px;
 }
 
@@ -278,6 +279,9 @@ body[dir="rtl"] .buttons-toggle .btn:last-child {
     border-radius: 3px 0 0 3px;
     margin-right: 1px;
 }
+
+.select-box .select-box__target{    left: 0; right:auto;}
+.select-box .select-box__target .listing li{    text-align: right;}
 
 /*===========NOtification=============*/
 body[dir="rtl"] .nav__dropdown-action .count {
