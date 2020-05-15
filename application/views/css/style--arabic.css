@@ -293,7 +293,7 @@ body[dir="rtl"] .col-list .avtar {
 }
 
 body[dir="rtl"] .col-list [class*="col-"].col-positioned {
-    text-align: left;
+    text-align: right;
 }
 
 body[dir="rtl"] .col-list [class*="col-"]:first-child {
