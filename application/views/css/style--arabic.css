@@ -19,6 +19,14 @@ body[dir="rtl"] .-clear-right {
     float: left !important;
 }
 
+body[dir="rtl"] #facebox .close {
+    left: 0;
+}
+
+body[dir="rtl"] .form .field_label {
+    text-align: right;
+}
+
 /*========================ARROWS============================*/
 body[dir="rtl"] .arrow-link {
     padding-left: 20px;
@@ -117,7 +125,7 @@ body[dir="rtl"] .box.box--narrow p {
 }
 
 
-/*=======================TEACHER DETAIL====================*/
+/*=======================TEACHER====================*/
 body[dir="rtl"] .box__profile-head .location {
     padding: 0 20px 0 0;
 }
@@ -150,7 +158,6 @@ body[dir="rtl"] .content-repeated .avtar {
 }
 
 
-/*===================Teacher Calendar================*/
 body[dir="rtl"] #facebox .content h4 {
     text-align: right;
 }
@@ -179,7 +186,7 @@ body[dir="rtl"] .fc .fc-button-group > * {
 
 body[dir="rtl"] .calendar-view .fc-event-container .fc-day-grid-event .fc-content .avtar {
     float: right;
-	    margin-right: 0;
+    margin-right: 0;
     margin-left: 10px;
 }
 
@@ -187,7 +194,10 @@ body[dir="rtl"] .calendar-view .fc-day-grid-event .fc-time {
     padding: 0 10px 0 0;
 }
 
-
+body[dir="rtl"] .box .box__head,
+body[dir="rtl"] .content-repeated:last-child [class*="col-"]:last-child {
+    text-align: right;
+}
 
 /*==========================DASHBOARD===================*/
 body[dir="rtl"] .menu-vertical li a .menu-icon {
@@ -280,8 +290,14 @@ body[dir="rtl"] .buttons-toggle .btn:last-child {
     margin-right: 1px;
 }
 
-.select-box .select-box__target{    left: 0; right:auto;}
-.select-box .select-box__target .listing li{    text-align: right;}
+.select-box .select-box__target {
+    left: 0;
+    right: auto;
+}
+
+.select-box .select-box__target .listing li {
+    text-align: right;
+}
 
 /*===========NOtification=============*/
 body[dir="rtl"] .nav__dropdown-action .count {
