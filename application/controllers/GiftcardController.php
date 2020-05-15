@@ -145,7 +145,7 @@ class GiftcardController extends LoggedUserController
         $buyerPhone = $frm->addRequiredField("Buyer Phone No.", 'gcbuyer_phone', $loggedInUserPhone, array(
             'title'=>'Buyer Phone',
             'placeholder' => Label::getLabel('LBL_Buyer_Phone')
-			
+
         ));
         $buyerPhone->requirements()->setRequired();
         $frm->addRequiredField("Recipient Name", 'gcrecipient_name', '', array(
@@ -154,7 +154,7 @@ class GiftcardController extends LoggedUserController
         $frm->addRequiredField("Recipient Email", 'gcrecipient_email', '', array(
             'placeholder' => Label::getLabel('LBL_Recipient_Email')
         ));
-        $frm->addSubmitButton('', 'save', 'Send Gift Card', array(
+        $frm->addSubmitButton('', 'save',Label::getLabel('LBL_Send_Gift_Card'), array(
             'class' => 'btn btn--primary',
             'onclick' => 'validateCustomFields()'
         ));

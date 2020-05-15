@@ -1,4 +1,4 @@
-<?php 
+<?php
 if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?>
 	<div class="tab-swticher">
 		<a href="<?php echo CommonHelper::generateUrl('Teacher'); ?>" class="btn btn--large is-active"><?php echo User::getUserDashboardArr()[User::USER_TEACHER_DASHBOARD]; ?></a>
@@ -18,7 +18,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				</span>
 			<?php echo Label::getLabel('LBL_Dashboard'); ?></a>
 		</li>
-		
+
 		<li class="<?php echo ( $controllerName == "TeacherScheduledLessons" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>">
 				<span class="menu-icon">
@@ -29,7 +29,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				</span>
 			<?php echo Label::getLabel('LBL_Lessons'); ?></a>
 		</li>
-		
+
 		<li class="<?php echo ( $controllerName == "TeacherStudents" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('TeacherStudents'); ?>">
 				<span class="menu-icon">
@@ -41,7 +41,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 			<?php echo Label::getLabel('LBL_Students'); ?>
 			</a>
 		</li>
-		
+
 		<li class="<?php echo ( $controllerName == "TeacherIssueReported" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('TeacherIssueReported'); ?>">
 				<span class="menu-icon">
@@ -65,7 +65,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				<?php echo Label::getLabel('LBL_FlashCards'); ?>
 			</a>
 		</li>
-		
+
 		<li class="<?php echo ( $controllerName == "Giftcard" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('Giftcard'); ?>">
 				<span class="menu-icon">
@@ -76,8 +76,8 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				</span>
 				<?php echo Label::getLabel('LBL_Buy_Giftcard'); ?>
 			</a>
-		</li>			
-		
+		</li>
+
 		<li class="<?php echo ( $controllerName == "Wallet" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('Wallet'); ?>">
 				<span class="menu-icon">
@@ -89,7 +89,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				<?php echo Label::getLabel('LBL_Wallet'); ?>
 			</a>
 		</li>
-		
+
 		<li class="<?php echo ( $controllerName == "Teacher" AND $actionName == "orders" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('Teacher','orders'); ?>">
 				<span class="menu-icon">
@@ -102,7 +102,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				<?php echo Label::getLabel('LBL_Orders'); ?>
 			</a>
 		</li>
-		
+
 		<?php /* <li class="<?php echo ( $controllerName == "TeacherCourses" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('TeacherCourses'); ?>">
 				<span class="menu-icon">
@@ -114,7 +114,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				<?php echo Label::getLabel('LBL_Courses'); ?>
 			</a>
 		</li>*/ ?>
-		
+
 		<li class="<?php echo ( $controllerName == "TeacherLessonsPlan" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('TeacherLessonsPlan'); ?>">
 				<span class="menu-icon">
@@ -137,10 +137,10 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				</span>
 				<?php echo Label::getLabel('LBL_Messages'); ?>
 			</a>
-		</li>	*/ ?>	
-		
-		
-  
+		</li>	*/ ?>
+
+
+
 		<!--<li class="-hide-desktop -show-responsive">-->
 		<li class="<?php echo ( $controllerName == "Account" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('Account','ProfileInfo');?>">
@@ -153,7 +153,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				<?php echo Label::getLabel('LBL_Settings'); ?>
 				</a>
 			</li>
-			
+
 			<li  class="<?php echo ( $controllerName == "TeacherReports" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('TeacherReports'); ?>">
 				<span class="menu-icon">
@@ -165,7 +165,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				<?php echo Label::getLabel('LBL_Reports'); ?>
 			</a>
 		</li>
-	  
+
 		<li class="-hide-desktop -show-responsive">
 			<a href="<?php echo CommonHelper::generateUrl('GuestUser','logout');?>">
 			<span class="menu-icon">

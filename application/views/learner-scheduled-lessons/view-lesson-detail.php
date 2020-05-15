@@ -1,4 +1,4 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 
 $user_timezone = MyDate::getUserTimeZone();
 $curDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
@@ -28,7 +28,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 		$('.screen-chat-js').show();
 		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
 			$("#end_lesson_time_div").show();
-		<?php }?>        
+		<?php }?>
 	}
 
 	function endLessonButtonAction() {
@@ -42,10 +42,10 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 		$("#end_lesson_time_div").hide();
 	}
 
-	var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>'; 
-	var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>'; 
+	var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
+	var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
 	var chat_id = '<?php echo $chatId; ?>';
-	var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';  
+	var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';
 	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
 	var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
 	$(document).ready(function() {
@@ -54,9 +54,9 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 		   joinLessonButtonAction();
 			createChatBox();
 		}
-		
+
 	});
-	
+
    function checkEveryMinuteStatus() {
 	   checkEveryMinuteStatusVar = setInterval(function(){
 			fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','checkEveryMinuteStatus',['<?php echo $lessonData['slesson_id'] ?>']),'',function(t){
@@ -78,38 +78,38 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 						}
 					});
 				}
-				 
+
 				if(t.slesson_status > 1 && sessionStorage.getItem('cometChatUserExists')!=null) {
                 $.confirm({
-                    title: 'Confirm!',
+                    title: langLbl.Confirm,
                     content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',
-                    autoClose: 'Quit|10000',                    
+                    autoClose: langLbl.Quit+'|10000',
                     buttons: {
                         Proceed: {
-                            text: 'Proceed',
+                            text: langLbl.Proceed,
                             btnClass: 'btn btn--primary',
                             keys: ['enter', 'shift'],
                             action: function(){
                                 endLessonButtonAction();
                                 viewLessonDetail();
                             }
-                        },                        
+                        },
                         Quit: {
-                            text: 'Quit',
+                            text: langLbl.Quit,
                             btnClass: 'btn btn--secondary',
                             keys: ['enter', 'shift'],
                             action: function(){
                             }
-                        }                        
+                        }
                     }
-                });                    
+                });
 
 				}
-				
+
 			});
 		},60000);
 	}
-	
+
 	function checkNewFlashCards(){
 		checkNewFlashCardsVar = setInterval(function(){
 			/*fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','searchFlashCards',['<?php echo $lessonData['slesson_id'] ?>']),'',function(t){
@@ -118,7 +118,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 			searchFlashCards(document.frmFlashCardSrch);
 		},30000)
 	}
-	
+
 	$(function(){
 		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
 		$('#start_lesson_timer').countdowntimer({
@@ -136,7 +136,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 			}
 		});
 		<?php } ?>
-		
+
 		$('#end_lesson_timer').countdowntimer({
 			startDate : "<?php echo $curDate; ?>",
 			dateAndTime : "<?php echo $endTime; ?>",
@@ -145,7 +145,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 				$("#end_lesson_time_div").hide();
 			}
 		});
-	});	
+	});
 </script>
 <section class="section section--grey section--page">
 	<div class="screen">
@@ -182,7 +182,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 					</p>
 				</div>
 				<span class="-gap"></span>
-				<?php } 
+				<?php }
 				if ( $lessonData['slesson_status'] == ScheduledLesson::STATUS_CANCELLED ) { ?>
 				<div class="alert alert--info" role="alert">
 					<a class="close" href="javascript:void(0)"></a>
@@ -244,9 +244,9 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 									<div>
 										<div class="avtar avtar--small" data-text="
 											<?php echo CommonHelper::getFirstChar($lessonData['learnerFname']); ?>">
-											<?php 
+											<?php
 									if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
-										$img = CommonHelper::generateUrl('Image','user', array( $lessonData['learnerId'] )).'?'.time(); 
+										$img = CommonHelper::generateUrl('Image','user', array( $lessonData['learnerId'] )).'?'.time();
 										echo '
 											<img src="'.$img.'" />';
 									}
@@ -268,9 +268,9 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 											<div>
 												<div class="avtar avtar--small" data-text="
 													<?php echo CommonHelper::getFirstChar($lessonData['teacherFname']); ?>">
-													<?php 
+													<?php
 									if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
-										$img = CommonHelper::generateUrl('Image','user', array( $lessonData['teacherId'] )).'?'.time(); 
+										$img = CommonHelper::generateUrl('Image','user', array( $lessonData['teacherId'] )).'?'.time();
 										echo '
 													<img src="'.$img.'" />';
 									}
@@ -290,10 +290,10 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 												</h6>
 												<div class="schedule-list">
 													<ul>
-														<?php 
+														<?php
 								$sdate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', date($lessonData['slesson_date'] .' '. $lessonData['slesson_start_time']), true , $user_timezone );
                                  $date = DateTime::createFromFormat('Y-m-d', $sdate);
-                                 //if($date && ($date->format('Y-m-d') === $lessonData['slesson_date'])){ 
+                                 //if($date && ($date->format('Y-m-d') === $lessonData['slesson_date'])){
                                  if($date && ($date->format('Y-m-d') === $sdate )){ ?>
 														<li>
 															<span class="span-left">
@@ -301,8 +301,8 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 															</span>
 															<span class="span-right">
 																<h4>
-																	<?php echo date('h:i A',strtotime($startTime)); ?> - 
-                                       
+																	<?php echo date('h:i A',strtotime($startTime)); ?> -
+
 																	<?php echo date('h:i A',strtotime($endTime)); ?>
 																</h4>
 																<?php echo date('l, F d, Y',strtotime($startTime)); ?>
@@ -322,11 +322,11 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 																<?php echo Label::getLabel('LBL_Details'); ?>
 															</span>
 															<span class="span-right">
-																<?php //echo $lessonData['teacherTeachLanguageName']; 
+																<?php //echo $lessonData['teacherTeachLanguageName'];
 									echo TeachingLanguage::getLangById($lessonData['slesson_slanguage_id']);
 								 ?>
 																<br>
-																	<?php 
+																	<?php
 									if( date('Y-m-d', strtotime($startTime)) != "0000-00-00" ){
 										$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
 										$arrReplacements = array(
@@ -396,8 +396,8 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 																					</a>
 																				</li>
 																				<?php }  ?>
-																				<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ) { 
-										if ( $lessonData['issrep_id'] < 1 || $lessonData['issrep_status'] == IssuesReported::STATUS_RESOLVED && ($lessonData['issrep_issues_resolve_by'] != 3 && $lessonData['issrep_issues_resolve_by'] != 4 ) ) { 
+																				<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ) {
+										if ( $lessonData['issrep_id'] < 1 || $lessonData['issrep_status'] == IssuesReported::STATUS_RESOLVED && ($lessonData['issrep_issues_resolve_by'] != 3 && $lessonData['issrep_issues_resolve_by'] != 4 ) ) {
 										?>
 																				<li>
 																					<a href="javascript:void(0);" onclick="issueReported('<?php echo $lessonData['slesson_id']; ?>')" >
@@ -411,7 +411,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 																						<?php echo Label::getLabel('LBL_Rate_Lesson'); ?>
 																					</a>
 																				</li>
-																				<?php } 
+																				<?php }
 										} ?>
 																				<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lessonData['issrep_id'] > 0 ) { ?>
 																				<li>
@@ -432,7 +432,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 																					</a>
 																				</li>
 																				<?php } ?>
-																				<?php 
+																				<?php
 										$countRel=ScheduledLessonSearch::countPlansRelation($lessonData['slesson_id']);
 										if( $countRel > 0 ){
 										?>
@@ -441,7 +441,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 																						<?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?>
 																					</a>
 																				</li>
-																				
+
 																				<?php } ?>
 																			</ul>
 																		</div>
@@ -457,7 +457,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 														<br>
 															<br>
 																<br>
-																
+
 																</div>
 															</div>
 														</div>
@@ -479,12 +479,12 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 																		</div>
 																	</div>
 																	<div class="form-search form-search--single">
-																		<?php 
+																		<?php
 							$frmSrchFlashCard->addFormTagAttribute( 'onsubmit', 'searchFlashCards(this); return false;' );
-							$fldBtnSubmit = $frmSrchFlashCard->getField('btn_submit'); 
+							$fldBtnSubmit = $frmSrchFlashCard->getField('btn_submit');
 							$fldBtnSubmit->addFieldTagAttribute( 'class', 'form__action' );
-							
-							echo $frmSrchFlashCard->getFormTag(); 
+
+							echo $frmSrchFlashCard->getFormTag();
 							echo $frmSrchFlashCard->getFieldHtml('lesson_id');
 							echo $frmSrchFlashCard->getFieldHtml('page');
 							?>
@@ -511,20 +511,20 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 										</div>
 									</section>
 <script type="text/javascript">
-	jQuery(document).ready(function (e) {	
+	jQuery(document).ready(function (e) {
 		$('body').addClass('is-screen-on');
 		$(".tabs-content-js").hide();
-		$(".tabs-js li:first").addClass("is-active").show(); 
+		$(".tabs-js li:first").addClass("is-active").show();
 		$(".tabs-content-js:first").show();
-		
+
 		$(".tabs-js li").click(function() {
-			$(".tabs-js li").removeClass("is-active"); 
-			$(this).addClass("is-active"); 
-			$(".tabs-content-js").hide(); 
-			var activeTab = $(this).find("a").attr("href"); 
+			$(".tabs-js li").removeClass("is-active");
+			$(this).addClass("is-active");
+			$(".tabs-content-js").hide();
+			var activeTab = $(this).find("a").attr("href");
 			$(activeTab).fadeIn();
 			return false;
 		});
-	}); 
+	});
 
 </script>

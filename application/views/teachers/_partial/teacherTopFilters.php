@@ -21,12 +21,12 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 							<path d="M251.286,196.714a4.008,4.008,0,1,1,2.826-1.174A3.849,3.849,0,0,1,251.286,196.714Zm8.241,2.625-3.063-3.062a6.116,6.116,0,0,0,1.107-3.563,6.184,6.184,0,0,0-.5-2.442,6.152,6.152,0,0,0-3.348-3.348,6.271,6.271,0,0,0-4.884,0,6.152,6.152,0,0,0-3.348,3.348,6.259,6.259,0,0,0,0,4.884,6.152,6.152,0,0,0,3.348,3.348,6.274,6.274,0,0,0,6-.611l3.063,3.053a1.058,1.058,0,0,0,.8.34,1.143,1.143,0,0,0,.813-1.947h0Z" transform="translate(-245 -186.438)"/>
 							</svg>
 						</span>
-						<?php 
-						echo $frmTeacherSrch->getFieldHtml('teach_lang_keyword'); 
-						echo $frmTeacherSrch->getFieldHtml('teach_language_name'); 
+						<?php
+						echo $frmTeacherSrch->getFieldHtml('teach_lang_keyword');
+						echo $frmTeacherSrch->getFieldHtml('teach_language_name');
 						echo $frmTeacherSrch->getFieldHtml('teach_language_id');
 						?>
-						
+
                     </div>
 
                     <div class="form__element form__element-js">
@@ -39,9 +39,9 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 								<div class="form__target -skin -padding-20">
                                      <div class="row">
                                          <div class="col-6">
-                                             <p><strong>Days of the Week</strong></p>
+                                             <p><strong><?php echo Label::getLabel('LBL_Days_of_the_Week'); ?></strong></p>
                                              <div class="listing listing--vertical">
-											 <div class="block__head-trigger-js" style="display:none;">Availibility</div>
+											 <div class="block__head-trigger-js" style="display:none;"><?php echo Label::getLabel('LBL_Availibility'); ?></div>
 												 <div class="block__body-target-js">
 												 <ul>
 													<?php foreach($daysArr as $dayId => $dayName ){ ?>
@@ -57,10 +57,10 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
                                             </div>
                                          </div>
                                          <div class="col-6">
-                                             <p><strong>Time of Day - 24hrs</strong></p>
+                                             <p><strong><?php echo Label::getLabel('LBL_Time_of_Day_-_24hrs'); ?></strong></p>
                                              <div class="listing listing--vertical">
-											 <div class="block__head-trigger-js" style="display:none;">Availibility</div>
-												 <div class="block__body-target-js">											 
+											 <div class="block__head-trigger-js" style="display:none;"><?php echo Label::getLabel('LBL_Availibility'); ?></div>
+												 <div class="block__body-target-js">
 												<ul>
 												 <?php foreach($timeSlotArr as $timeSlotId => $timeSlotName ){ ?>
 													<li>
@@ -70,12 +70,12 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 														</label>
 													</li>
 													<?php } ?>
-												</ul>	
+												</ul>
                                             </div>
                                             </div>
                                          </div>
                                      </div>
-                                 </div>						
+                                 </div>
                     </div>
                 </div>
             </div>
@@ -85,7 +85,7 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
                     <div class="form__element">
 						<?php echo $frmTeacherSrch->getFieldHtml( 'keyword' ); ?>
                         <span class="form__action-wrap">
-							<?php 
+							<?php
 							echo $frmTeacherSrch->getFieldHtml('page');
 							echo $frmTeacherSrch->getFieldHtml( 'btnTeacherSrchSubmit' ); ?>
 							<span class="svg-icon">
@@ -106,27 +106,27 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 <div class="section__tags">
 	<div class="container container--fixed">
 		<div class="tag-list">
-			<ul id="searched-filters"> 
+			<ul id="searched-filters">
 			<?php if ( $keywordlanguage !='' ) { ?>
 				<li>
 					<a href="javascript:void(0);" class="language_keyword tag__clickable " onclick="removeFilterCustom('language_keyword',this)">
-							Language :  <?php echo $keywordlanguage; ?>	 </a>
+							<?php echo Label::getLabel('LBL_Language'); ?> :  <?php echo $keywordlanguage; ?>	 </a>
 				</li>
 			<?php } ?>
 			<?php if ( ( $minPrice > 0 &&  $maxPrice >0 ) && ( $minPrice != $priceArr['minPrice']  && $maxPrice != $priceArr['maxPrice']  ) ) { ?>
 				<li>
 					<a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilterCustom(this, '<?= ceil($priceArr['minPrice']);?>', '<?= ceil($priceArr['maxPrice']);?>')">
-					Price: <?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?><?= CommonHelper::displayMoneyFormat(($minPrice)??0,false,false,false);?> - <?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?><?= CommonHelper::displayMoneyFormat(($maxPrice)??0,false,false,false);?></a></li>
-			<?php } ?>	
+					<?php echo Label::getLabel('LBL_Price'); ?>: <?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?><?= CommonHelper::displayMoneyFormat(($minPrice)??0,false,false,false);?> - <?php echo CommonHelper::getCurrencySymbolRight()?CommonHelper::getCurrencySymbolRight():CommonHelper::getCurrencySymbolLeft();?><?= CommonHelper::displayMoneyFormat(($maxPrice)??0,false,false,false);?></a></li>
+			<?php } ?>
 			<?php if ( $keyword !='' ) { ?>
 				<li>
 					<a href="javascript:void(0);" class="userKeyword tag__clickable " onclick="removeFilterUser('userKeyword',this)">
-							User :  <?php echo $keyword; ?>	 </a>
+						<?php echo Label::getLabel('LBL_User'); ?>	 :  <?php echo $keyword; ?>	 </a>
 				</li>
 			<?php } ?>
-			
+
 			</ul>
 		</div>
 	</div>
-</div> 
+</div>
 </form>

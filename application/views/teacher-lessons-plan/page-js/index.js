@@ -20,11 +20,11 @@ var isSetupAjaxrun = false;
 	remove = function(id){
 
         $.confirm({
-            title: 'Confirm!',
+            title: langLbl.Confirm!,
             content: langLbl.confirmRemove,
             buttons: {
                 Proceed: {
-                    text: 'Proceed',
+                    text: langLbl.Proceed,
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
@@ -35,7 +35,7 @@ var isSetupAjaxrun = false;
                     }
                 },
                 Quit: {
-                    text: 'Quit',
+	                    text: langLbl.Quit,
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){
@@ -48,11 +48,11 @@ var isSetupAjaxrun = false;
 	removeLesson = function(id){
 
         $.confirm({
-            title: 'Confirm!',
+            title: langLbl.Confirm,
             content: 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!',
             buttons: {
                 Proceed: {
-                    text: 'Proceed',
+                    text: langLbl.Proceed,
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
@@ -63,7 +63,7 @@ var isSetupAjaxrun = false;
                     }
                 },
                 Quit: {
-                    text: 'Quit',
+                    text: langLbl.Quit,
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){
@@ -83,11 +83,11 @@ var isSetupAjaxrun = false;
 	removeFile = function(celement,id){
 
         $.confirm({
-            title: 'Confirm!',
+            title: langLbl.Confirm,
             content: langLbl.confirmRemove,
             buttons: {
                 Proceed: {
-                    text: 'Proceed',
+                    text: langLbl.Proceed,
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
@@ -97,7 +97,7 @@ var isSetupAjaxrun = false;
                     }
                 },
                 Quit: {
-                    text: 'Quit',
+                    text: langLbl.Quit,
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){

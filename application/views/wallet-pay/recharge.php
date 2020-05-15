@@ -43,8 +43,8 @@
 				<div class="col-xl-8 col-lg-8 col-md-12">
                             <div class="box" style="margin-bottom: 30px;">
                                 <div class="-padding-20">
-                                    <h3>Payment</h3>
-                                    <p class="-no-margin-bottom">Pick a payment method.</p>
+                                    <h3><?php echo Label::getLabel('LBL_Payment'); ?></h3>
+                                    <p class="-no-margin-bottom"><?php echo Label::getLabel('LBL_Pick_a_payment_method.'); ?></p>
                                 </div>
 
                                 <div class="payments-container payments-container-js">
@@ -67,11 +67,11 @@
                                                  <div id="tab_<?php echo $k;?>" class="tabs-content-js">
                                                      <div>
                                                        <?php /*<div class="icon-payment"><img src="images/paypal.png" alt="" ></div>*/ ?>
-                                                        <h5>Proceed With <?php echo $paymentMethod['pmethod_name']; ?></h5><br>
+                                                        <h5><?php echo Label::getLabel('LBL_Proceed_With'); ?> <?php echo $paymentMethod['pmethod_name']; ?></h5><br>
                                                         <p><?php echo $paymentMethod['pmethod_description']; ?><br><br></p>
-                                                        <h6>Net Payable : <?php echo CommonHelper::displayMoneyFormat($orderInfo['order_net_amount']); ?> </h6>
+                                                        <h6><?php echo Label::getLabel('LBL_Net_Payable'); ?> : <?php echo CommonHelper::displayMoneyFormat($orderInfo['order_net_amount']); ?> </h6>
                                                         <span class="-gap"></span>
-                                                        <a href="<?php echo CommonHelper::generateUrl($paymentMethod['pmethod_code'].'Pay', 'charge', array($orderInfo['order_id']) ); ?>" class="btn btn--secondary btn--large">Make Payment</a>
+                                                        <a href="<?php echo CommonHelper::generateUrl($paymentMethod['pmethod_code'].'Pay', 'charge', array($orderInfo['order_id']) ); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Net_Payable_:'); ?></a>
                                                      </div>
                                                 </div>
 												<?php } ?>

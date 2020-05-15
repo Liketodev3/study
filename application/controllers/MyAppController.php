@@ -56,10 +56,19 @@ class MyAppController extends FatController
             'mustBeBetween' => Label::getLabel('VLBL_must_be_between'),
             'mustBeBetween' => Label::getLabel('VLBL_must_be_between'),
             'and' => Label::getLabel('VLBL_and'),
+            'Quit' => Label::getLabel('LBL_Quit'),
+            'Reschedule' => Label::getLabel('LBL_Reschedule'),
+            'chargelearner' => Label::getLabel('LBL_Charge_Learner'),
+            'bookedSlotAlert' => Label::getLabel('VLBL_You_have_already_booked_this_slot._Do_you_want_to_continue?'),
+            'endLessonAlert' => Label::getLabel('VLBL_Are_you_sure_to_end_this_Lesson?'),
+            'Proceed' => Label::getLabel('LBL_Proceed'),
+            'Confirm' => Label::getLabel('LBL_Confirm'),
             'pleaseSelect' => Label::getLabel('VLBL_Please_select'),
+
             //'siteCurrencyId' => $this->siteCurrencyId,
             //'controllerName' => $controllerName,
         );
+
         $languages = Language::getAllNames(false);
         foreach ($languages as $val) {
             $jsVariables['language'.$val['language_id']] = $val['language_layout_direction'];
@@ -81,7 +90,7 @@ class MyAppController extends FatController
         $frm = new Form('frmQualification');
         $fld = $frm->addHiddenField('', 'uqualification_id', 0);
         $fld->requirements()->setInt();
-        $fld = $frm->addSelectBox(Label::getLabel('LBL_Experience_Type'), 'uqualification_experience_type', UserQualification::getExperienceTypeArr());
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Experience_Type'), 'uqualification_experience_type', UserQualification::getExperienceTypeArr(),'',[],Label::getLabel('LBL_Select'));
         $fld->requirements()->setRequired();
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Title'), 'uqualification_title', '', array('placeholder' =>  Label::getLabel('LBL_Eg:_B.A._English')));
         $fld->requirements()->setLength(1, 100);

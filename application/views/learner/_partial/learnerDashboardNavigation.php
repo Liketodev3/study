@@ -18,7 +18,7 @@
 				<?php echo Label::getLabel('LBL_Dashboard'); ?>
 			</a>
 		</li>
-		
+
 		<li class="<?php echo ( $controllerName == "LearnerScheduledLessons" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons'); ?>">
 				<span class="menu-icon">
@@ -42,7 +42,7 @@
 				<?php echo Label::getLabel('LBL_Teachers'); ?>
 			</a>
 		</li>
-		
+
 		<li class="<?php echo ( $controllerName == "FlashCards" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('FlashCards'); ?>">
 				<span class="menu-icon">
@@ -54,7 +54,7 @@
 				<?php echo Label::getLabel('LBL_FlashCards'); ?>
 			</a>
 		</li>
-		
+
 		<li class="<?php echo ( $controllerName == "Giftcard" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('Giftcard'); ?>">
 				<span class="menu-icon">
@@ -101,7 +101,7 @@
 				</span>
 				<?php echo Label::getLabel('LBL_Messages'); ?>
 			</a>
-		</li>*/ ?>		
+		</li>*/ ?>
 		<li class="<?php echo ( $controllerName == "Learner" AND $action == "favourites" ) ? 'is-active' : ''; ?>">
 		<a href="<?php echo CommonHelper::generateUrl('Learner','favourites'); ?>">
 			<span class="menu-icon">
@@ -114,7 +114,7 @@
 			<?php echo Label::getLabel('LBL_Favourites'); ?>
 		</a>
 		</li>
-		
+
 		<!--<li class="-hide-desktop -show-responsive">-->
 		<li class="<?php echo ( $controllerName == "Account" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('Account','ProfileInfo');?>">

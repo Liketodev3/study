@@ -381,7 +381,7 @@ class AccountController extends LoggedUserController
         $fld2 = $frm->addSelectBox(Label::getLabel('LBL_TimeZone'), 'user_timezone', $optionArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
         $fld2->requirement->setRequired(true);
         if ($teacher) { //== check if user is teacher
-            $bookingOptionArr = array(0 => 'Immediate', 12 => '12 Hours', 24 => '24 Hours');
+            $bookingOptionArr = array(0 => Label::getLabel('LBL_Immediate'), 12 => Label::getLabel('LBL_12_Hours'), 24 => Label::getLabel('LBL_24_Hours'));
             $fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'), 'us_booking_before', $bookingOptionArr, 'us_booking_before', array(), Label::getLabel('LBL_Select'));
             $fld3->requirement->setRequired(true);
         }
