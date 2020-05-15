@@ -163,11 +163,11 @@ $(function() {
 	endLesson = function (lessonId) {
 
                 $.confirm({
-                    title: 'Confirm!',
-                    content: 'Are you sure to end this Lesson?',
+                    title: langLbl.Confirm,
+                    content: langLbl.endLessonAlert,
                     buttons: {
                         Charge: {
-                            text: 'Charge Learner',
+                            text: langLbl.chargelearner,
                             btnClass: 'btn btn--primary',
                             keys: ['enter', 'shift'],
                             action: function(){
@@ -179,7 +179,7 @@ $(function() {
                             }
                         },
                          Reschedule: {
-                            text: 'Reschedule',
+                            text: langLbl.Reschedule,
                             btnClass: 'btn btn--primary',
                             keys: ['enter', 'shift'],
                             action: function(){
@@ -192,7 +192,7 @@ $(function() {
                             }
                         },
                         Quit: {
-                            text: 'Quit',
+                            text: langLbl.Quit,
                             btnClass: 'btn btn--secondary',
                             keys: ['enter', 'shift'],
                             action: function(){

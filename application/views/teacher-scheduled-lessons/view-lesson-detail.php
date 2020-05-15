@@ -75,12 +75,12 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 				if(t.slesson_status > 1){
 
                 $.confirm({
-                    title: 'Confirm!',
+                    title: langLbl.Confirm,
                     content: '<?php echo Label::getLabel('LBL_Learner_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also!'); ?>',
-                    autoClose: 'Quit|10000',
+                    autoClose: langLbl.Quit+'|10000',
                     buttons: {
                         Proceed: {
-                            text: 'Proceed',
+                            text: langLbl.Proceed,
                             btnClass: 'btn btn--primary',
                             keys: ['enter', 'shift'],
                             action: function(){
@@ -89,7 +89,7 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
                             }
                         },
                         Quit: {
-                            text: 'Quit',
+                            text: langLbl.Quit,
                             btnClass: 'btn btn--secondary',
                             keys: ['enter', 'shift'],
                             action: function(){
@@ -139,9 +139,9 @@ $('#end_lesson_timer').countdowntimer({
                         $('.jconfirm-closeIcon').trigger('click');
                         $.confirm({
                             closeIcon: true,
-                            title: 'Confirm!',
+                            title: langLbl.Confirm,
                             content: '<?php echo Label::getLabel('LBL_Duration_assigned_to_this_lesson_is_completed_now_do_you_want_to_continue?'); ?>',
-                            autoClose: 'Quit|8000',
+                            autoClose: langLbl.Quit+'|8000',
                             buttons: {
                                 Proceed: {
                                     text: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',

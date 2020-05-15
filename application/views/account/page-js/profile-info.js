@@ -157,11 +157,11 @@ $.ajax(settings).done(function (response) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
         $.confirm({
-            title: 'Confirm!',
+            title: langLbl.Confirm,
             content: langLbl.languageUpdateAlert,
             buttons: {
                 Proceed: {
-                    text: 'Proceed',
+                    text: langLbl.Proceed,
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
@@ -172,7 +172,7 @@ $.ajax(settings).done(function (response) {
                     }
                 },
                 Quit: {
-                    text: 'Quit',
+                    text: langLbl.Quit,
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){
@@ -222,11 +222,11 @@ $.ajax(settings).done(function (response) {
 
 	deleteLanguageRow = function(id){
         $.confirm({
-            title: 'Confirm!',
+            title: langLbl.Confirm,
             content: langLbl.confirmRemove,
             buttons: {
                 Proceed: {
-                    text: 'Proceed',
+                    text: langLbl.Proceed,
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
@@ -236,7 +236,7 @@ $.ajax(settings).done(function (response) {
                     }
                 },
                 Quit: {
-                    text: 'Quit',
+                    text:  langLbl.Quit,
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){
@@ -248,11 +248,11 @@ $.ajax(settings).done(function (response) {
 
 	deleteTeachLanguageRow = function(id){
         $.confirm({
-            title: 'Confirm!',
+            title: langLbl.Confirm,
             content: langLbl.confirmRemove,
             buttons: {
                 Proceed: {
-                    text: 'Proceed',
+                    text: langLbl.Proceed,
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
@@ -262,7 +262,7 @@ $.ajax(settings).done(function (response) {
                     }
                 },
                 Quit: {
-                    text: 'Quit',
+                    text: langLbl.Quit,
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function(){

@@ -199,11 +199,11 @@ class TeacherController extends TeacherBaseController
             }
         }
         if (empty($userTeachingLang)) {
-            $frm->addSelectBox(Label::getLabel('LBL_Language_To_Teach'), 'teach_lang_id[]', $teacherTeachLangArr, array(), array())->requirements()->setRequired();
+            $frm->addSelectBox(Label::getLabel('LBL_Language_To_Teach'), 'teach_lang_id[]', $teacherTeachLangArr, array(), array(),Label::getLabel('LBL_Select'))->requirements()->setRequired();
         }
         foreach ($userToTeachLangRows as $userToTeachLangRow) {
             if (isset($teacherTeachLangArr[$userToTeachLangRow['utl_slanguage_id']])) {
-                $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Language_I_Teach'), 'teach_lang_id[]', $teacherTeachLangArr, array($userToTeachLangRow['utl_slanguage_id']), array())->requirements()->setRequired();
+                $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Language_I_Teach'), 'teach_lang_id[]', $teacherTeachLangArr, array($userToTeachLangRow['utl_slanguage_id']), array(),Label::getLabel('LBL_Select'))->requirements()->setRequired();
                 $fld1->developerTags['col'] = 10;
                 $fld = $frm->addHtml('', 'add_minus_teach_button', '<label class="field_label -display-block"></label><a class="inline-action teachLang inline-action--minus" onclick="deleteTeachLanguageRow('.$userToTeachLangRow['utl_slanguage_id'].');" href="javascript:void(0);">'.Label::getLabel('LBL_REMOVE').'</a>');
                 $fld->developerTags['col'] = 2;
@@ -218,15 +218,15 @@ class TeacherController extends TeacherBaseController
         }
 
         if (empty($userSpokenLang)) {
-            $frm->addSelectBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id[]', $langArr, array(), array('class' => 'utsl_slanguage_id'))->requirements()->setRequired();
-            $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency[]', $profArr, array(), array('class' => 'utsl_proficiency'))->requirements()->setRequired();
+            $frm->addSelectBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id[]', $langArr, array(), array('class' => 'utsl_slanguage_id'),Label::getLabel('LBL_Select'))->requirements()->setRequired();
+            $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency[]', $profArr, array(), array('class' => 'utsl_proficiency'), Label::getLabel('LBL_Select'))->requirements()->setRequired();
         }
 
         foreach ($userToLangRows as $userToLangRow) {
             if (isset($langArr[$userToLangRow['utsl_slanguage_id']])) {
-                $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id[]', $langArr, array($userToLangRow['utsl_slanguage_id']), array('class' => 'utsl_slanguage_id'))->requirements()->setRequired();
+                $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id[]', $langArr, array($userToLangRow['utsl_slanguage_id']), array('class' => 'utsl_slanguage_id'),Label::getLabel('LBL_Select'))->requirements()->setRequired();
                 $fld1->developerTags['col'] = 5;
-                $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency[]', $profArr, array($userToLangRow['utsl_proficiency']), array('class' => 'utsl_proficiency'))->requirements()->setRequired();
+                $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency[]', $profArr, array($userToLangRow['utsl_proficiency']), array('class' => 'utsl_proficiency'),Label::getLabel('LBL_Select'))->requirements()->setRequired();
                 $fld1->developerTags['col'] = 5;
                 $fld = $frm->addHtml('', 'add_minus_button', '<label class="field_label -display-block"></label><a class="inline-action spokenLang inline-action--minus" onclick="deleteLanguageRow('.$userToLangRow['utsl_slanguage_id'].');" href="javascript:void(0);">'.Label::getLabel('LBL_REMOVE').'</a>');
                 //$fld->developerTags['col']=2;
