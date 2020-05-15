@@ -257,6 +257,19 @@ body[dir="rtl"] .radio .input-helper:after {
     right: 5px;
 }
 
+/*=============LEARNER=============*/
+body[dir="rtl"] .col-list .avtar{    float: right;}
+body[dir="rtl"] .col-list [class*="col-"].col-positioned {
+    text-align: left;
+}
+
+/*===========NOtification=============*/
+body[dir="rtl"] .nav__dropdown-action .count{    left: -6px; right:auto;}
+body[dir="rtl"] .list-container .list p{    text-align: right;}
+body[dir="rtl"] .list-container .list__content, body[dir="rtl"] .list-container .list__media{float:right}
+
+
+
 
 body[dir="rtl"] input[type="text"],
 body[dir="rtl"] input[type="email"],
