@@ -21,6 +21,7 @@ body[dir="rtl"] .-clear-right {
 
 body[dir="rtl"] #facebox .close {
     left: 0;
+	right:auto;
 }
 
 body[dir="rtl"] .form .field_label {
