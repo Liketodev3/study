@@ -30,7 +30,7 @@ body[dir="rtl"] .form {
     text-align: right;
 }
 
-body[dir="rtl"] .label.label--default {
+body[dir="rtl"] .label.label--default, body[dir="rtl"] .label.label--primary, body[dir="rtl"] .label.label--process {
     padding-right: 26px;
     background-position: 90%;
     padding-left: 10px;
@@ -40,6 +40,10 @@ body[dir="rtl"] .table th,
 body[dir="rtl"] .table td {
     text-align: right;
 }
+body[dir="rtl"] .attachment-file{    padding: 0 30px 0 0;     vertical-align: middle;}
+body[dir="rtl"] .attachment-file .inline-icon{    right: 0;
+    top: 0px;
+    left: auto;}
 
 /*========================ARROWS============================*/
 body[dir="rtl"] .arrow-link {
@@ -374,7 +378,7 @@ body[dir="rtl"] .page-panel__inner-l {
 
 body[dir="rtl"] .page-panel__right,
 body[dir="rtl"] .page-panel__inner-r {
-    float: left;
+   /*  float: left; */
     padding: 0 0px 0 0px;
 }
 
@@ -407,6 +411,7 @@ body[dir="rtl"] .form-filters .form__element .form__input {
 }
 
 body[dir="rtl"] input[type="submit"] {
+    margin-right: 0;
     margin-left: 10px;
 }
 
