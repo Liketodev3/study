@@ -166,6 +166,15 @@ body[dir="rtl"] .fc .fc-button-group>* {
     float: right;
 }
 
+/*==========================DASHBOARD===================*/
+body[dir="rtl"] .menu-vertical li a .menu-icon{    right: 15px; left:auto;}
+body[dir="rtl"] .menu-vertical li a{    padding: 22px 55px 22px 15px;}
+body[dir="rtl"] .tab-swticher .btn{    float: right;}
+body[dir="rtl"] .tabled .tabled__cell{    border-left: 1px solid #e5e5e5;}
+body[dir="rtl"] .myTeacherTable .profile-info__right{text-align:right;}
+body[dir="rtl"] .box-language .language, .border-box .language, .my_teacher_langauges .language{text-align:right;}
+body[dir="rtl"] .box-language .language .more_listing, .border-box .language .more_listing, .my_teacher_langauges .language .more_listing{left:auto;    right: -22px;}
+body[dir="rtl"] .box-language .language .more_listing ul:after, .border-box .language .more_listing ul:after, .my_teacher_langauges .language .more_listing ul:after{    left: 11px; right:auto;}
 
 body[dir="rtl"] input[type="text"],
 body[dir="rtl"] input[type="email"],
