@@ -258,15 +258,45 @@ body[dir="rtl"] .radio .input-helper:after {
 }
 
 /*=============LEARNER=============*/
-body[dir="rtl"] .col-list .avtar{    float: right;}
+body[dir="rtl"] .col-list .avtar {
+    float: right;
+}
+
 body[dir="rtl"] .col-list [class*="col-"].col-positioned {
     text-align: left;
 }
 
+body[dir="rtl"] .col-list [class*="col-"]:first-child {
+    border-left: 1px solid #ddd;
+}
+
+body[dir="rtl"] .buttons-toggle .btn {
+    float: right;
+}
+
+body[dir="rtl"] .buttons-toggle .btn:last-child {
+    border-radius: 3px 0 0 3px;
+    margin-right: 1px;
+}
+
 /*===========NOtification=============*/
-body[dir="rtl"] .nav__dropdown-action .count{    left: -6px; right:auto;}
-body[dir="rtl"] .list-container .list p{    text-align: right;}
-body[dir="rtl"] .list-container .list__content, body[dir="rtl"] .list-container .list__media{float:right}
+body[dir="rtl"] .nav__dropdown-action .count {
+    left: -6px;
+    right: auto;
+}
+
+body[dir="rtl"] .list-container .list p {
+    text-align: right;
+}
+
+body[dir="rtl"] .list-container .list__content {
+    padding: 0 15px 0 0;
+}
+
+body[dir="rtl"] .list-container .list__content,
+body[dir="rtl"] .list-container .list__media {
+    float: right
+}
 
 
 
