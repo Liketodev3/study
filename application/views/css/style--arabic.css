@@ -304,6 +304,9 @@ body[dir="rtl"] .radio .input-helper:after {
     right: 5px;
 }
 
+body[dir="rtl"]  .selection-list ul li .selection{    padding: 15px 40px 15px 15px;}
+body[dir="rtl"]  .selection-list ul li .selection .radio{    right: 10px;     left: auto;}
+
 /*=============LEARNER=============*/
 body[dir="rtl"] .col-list .avtar {
     float: right;
