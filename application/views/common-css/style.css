@@ -4504,6 +4504,7 @@ div.tagsinput div {
     background: #fff;
     padding: 20px;
 }
+.calendar-view p{text-align:right}
 
 .calendar-view .fc-state-default {
     background: #fff;
