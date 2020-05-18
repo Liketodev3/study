@@ -22,39 +22,6 @@ SET time_zone = "+00:00";
 -- Database: `yocoach87h1y172_demo_yocch`
 --
 
-DELIMITER $$
---
--- Functions
---
-CREATE DEFINER=`yocoach87h1y172`@`localhost` FUNCTION `GETBLOGCATCODE` (`id` INT) RETURNS VARCHAR(255) CHARSET utf8 BEGIN
-				DECLARE code VARCHAR(255);
-				DECLARE catid INT(11);
-
-				SET catid = id;
-				SET code = '';
-				WHILE catid > 0  AND LENGTH(code) < 240 DO
-					SET code = CONCAT(RIGHT(CONCAT('000000', catid), 6), '_', code);
-					SELECT bpcategory_parent INTO catid FROM tbl_blog_post_categories WHERE bpcategory_id = catid;
-				END WHILE;
-				RETURN code;
-			END$$
-
-CREATE DEFINER=`yocoach87h1y172`@`localhost` FUNCTION `GETBLOGCATORDERCODE` (`id` INT) RETURNS VARCHAR(255) CHARSET utf8 BEGIN
-				DECLARE code VARCHAR(255);
-				DECLARE catid INT(11);
-				DECLARE myorder INT(11);
-				SET catid = id;
-				SET code = '';
-				set myorder = 0;
-				WHILE catid > 0   AND LENGTH(code) < 240 DO
-					SELECT bpcategory_parent, bpcategory_display_order  INTO catid, myorder FROM tbl_blog_post_categories WHERE bpcategory_id = catid;
-					SET code = CONCAT(RIGHT(CONCAT('000000', myorder), 6), code);
-				END WHILE;
-				RETURN code;
-			END$$
-
-DELIMITER ;
-
 -- --------------------------------------------------------
 
 --
@@ -7613,7 +7580,7 @@ INSERT INTO `tbl_user_settings` (`us_user_id`, `us_is_trial_lesson_enabled`, `us
 (17, 1, 0, 0.00, 0.00, 'zvdfgdfgddfd', 0, 0),
 (18, 1, 0, 0.00, 0.00, '', 0, 12),
 (21, 1, 0, 0.00, 0.00, '', 0, 0),
-(22, 1, 0, 0.00, 0.00, '', 0, 24)
+(22, 1, 0, 0.00, 0.00, '', 0, 24);
 
 -- --------------------------------------------------------
 
