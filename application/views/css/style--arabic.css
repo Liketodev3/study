@@ -198,6 +198,21 @@ body[dir="rtl"] .calendar-view {
     text-align: right;
 }
 
+body[dir="rtl"] .calendar-view p {
+    text-align: left;
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;
+    /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    /* NEW - Chrome */
+    display: flex;
+    /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    align-items: center;
+}
+
 body[dir="rtl"] .fc-toolbar .fc-left {
     float: right;
 }
@@ -304,8 +319,14 @@ body[dir="rtl"] .radio .input-helper:after {
     right: 5px;
 }
 
-body[dir="rtl"]  .selection-list ul li .selection{    padding: 15px 40px 15px 15px;}
-body[dir="rtl"]  .selection-list ul li .selection .radio{    right: 10px;     left: auto;}
+body[dir="rtl"] .selection-list ul li .selection {
+    padding: 15px 40px 15px 15px;
+}
+
+body[dir="rtl"] .selection-list ul li .selection .radio {
+    right: 10px;
+    left: auto;
+}
 
 /*=============LEARNER=============*/
 body[dir="rtl"] .col-list .avtar {
@@ -358,9 +379,19 @@ body[dir="rtl"] .list-container .list__media {
 }
 
 /*==============CHECKOUT PAGE=================*/
-body[dir="rtl"] .table-total th{    text-align: right;}	
-body[dir="rtl"] .label-select{    padding: 20px 60px 20px 20px;}
-body[dir="rtl"] .label-select .checkbox, .label-select .radio{    right: 25px; left: auto;}
+body[dir="rtl"] .table-total th {
+    text-align: right;
+}
+
+body[dir="rtl"] .label-select {
+    padding: 20px 60px 20px 20px;
+}
+
+body[dir="rtl"] .label-select .checkbox,
+.label-select .radio {
+    right: 25px;
+    left: auto;
+}
 
 
 body[dir="rtl"] input[type="text"],
@@ -500,7 +531,7 @@ body[dir="rtl"] .form-search .form__action-wrap {
 @media (max-width: 767px) {
     body[dir="rtl"] .box__head-trigger:after {
         right: auto;
-        left: 20px
+        left: 20px;
     }
 
 
