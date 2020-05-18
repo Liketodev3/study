@@ -197,7 +197,7 @@ $(document).ready(function(){
 
 		$('.block__head-trigger-js').removeClass('is-active');
 		$(this).addClass("is-active");
-		$('.block__body-target-js').slideUp();
+		$(this).siblings('.block__body-target-js').slideUp();
 		$(this).siblings('.block__body-target-js').slideDown();
 	});
 
