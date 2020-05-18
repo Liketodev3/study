@@ -3457,7 +3457,7 @@ img {
 }
 
 .-style-bold {
-    font-weight:500;
+    font-weight: 500;
 }
 
 .-clear-right {
@@ -3890,10 +3890,27 @@ select[disabled] {
     transform: scale(0);
 }
 
-body[dir="rtl"] .checkbox input, body[dir="rtl"]  .radio input{    right: 0;     left: auto;}
-body[dir="rtl"] .checkbox .input-helper:before, body[dir="rtl"] .radio .input-helper:before{right: 0;     left: auto;}
-body[dir="rtl"] .checkbox .input-helper:after{    right: 4px;     left: auto;}
-body[dir="rtl"] .checkbox, body[dir="rtl"] .radio{    padding: 0 30px 0 0;}
+body[dir="rtl"] .checkbox input,
+body[dir="rtl"] .radio input {
+    right: 0;
+    left: auto;
+}
+
+body[dir="rtl"] .checkbox .input-helper:before,
+body[dir="rtl"] .radio .input-helper:before {
+    right: 0;
+    left: auto;
+}
+
+body[dir="rtl"] .checkbox .input-helper:after {
+    right: 4px;
+    left: auto;
+}
+
+body[dir="rtl"] .checkbox,
+body[dir="rtl"] .radio {
+    padding: 0 30px 0 0;
+}
 
 
 .message-display {
@@ -4046,7 +4063,8 @@ body[dir="rtl"] .checkbox, body[dir="rtl"] .radio{    padding: 0 30px 0 0;}
 .table th {
     text-align: left;
     padding: 15px 10px;
-    border-bottom: 2px solid #eee; font-weight:600;
+    border-bottom: 2px solid #eee;
+    font-weight: 600;
 }
 
 .table td {
@@ -4062,7 +4080,11 @@ body[dir="rtl"] .checkbox, body[dir="rtl"] .radio{    padding: 0 30px 0 0;}
 .table th:first-child {
     padding-left: 0;
 }
-.table td:first-child.-style-bold{vertical-align:top; color:#333;}
+
+.table td:first-child.-style-bold {
+    vertical-align: top;
+    color: #333;
+}
 
 .table td:last-child,
 .table th:last-child {
@@ -4425,7 +4447,12 @@ body[dir="rtl"] .checkbox, body[dir="rtl"] .radio{    padding: 0 30px 0 0;}
     margin: -5px 0 0 -3px;
 }
 
-body[dir="rtl"] .pagination li.is-next a:before {right: 50%; left: auto; border-right: 5px solid #000; border-left: 0px;}
+body[dir="rtl"] .pagination li.is-next a:before {
+    right: 50%;
+    left: auto;
+    border-right: 5px solid #000;
+    border-left: 0px;
+}
 
 .pagination li.is-last a:before {
     position: absolute;
@@ -4857,5 +4884,6 @@ body[dir="rtl"] .pagination li.is-next a:before {right: 50%; left: auto; border-
     .table tr td .td__data {
         width: 100%;
         padding-top: 5px;
+
     }
 }

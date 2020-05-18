@@ -1,32 +1,130 @@
-#facebox {position: absolute;top: 0;left: 0;z-index: 999;text-align: left;}
-#facebox .popup {position: relative;}
-#facebox .content {display: block;min-width:450px;background: #fff; border-radius:3px;}
-#facebox .close {width: 35px;height: 35px;position: absolute;top:-35px;right:0;transform: none;}
-#facebox .close img{display: none;}
-#facebox .close:after{color: #fff;content: "+"; position: absolute;left: 0;right: 0;top: 0; bottom: 0;margin: auto;font-size:2rem; font-weight: 300;transform: rotate(45deg);-webkit-transform: rotate(45deg);-ms-transform: rotate(45deg);    line-height: 1.2;text-align: center;}
-
-#facebox .loading {text-align: center;}
-#facebox .image {text-align: center;}
-
-#facebox_overlay {position: fixed;top: 0px;left: 0px;height: 100%;width: 100%;}
-#facebox .scrollbar {max-height: 700px;}
-.facebox_hide {z-index: -100;}
-.facebox_overlayBG {background-color: #000;z-index: 99;opacity:0.7;}
-
-
-
-@media(min-width:1199px){
-    #facebox .content.facebox-medium{min-width:800px;max-width:800px;}
+#facebox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    text-align: left;
 }
-@media(max-width:1199px){
-    #facebox .scrollbar{overflow: auto;}
-	#facebox{left:30px!important;right:30px!important;}
-}
-@media(max-width:1023px){
 
-	#facebox{left:10px!important;right:10px!important;}
+#facebox .popup {
+    position: relative;
 }
-@media(max-width:767px){
-	#facebox .content{min-width:1%;width:100%;}
-	#facebox{left:0!important; right:0!important;padding:10px;}
+
+#facebox .content {
+    display: block;
+    min-width: 450px;
+    background: #fff;
+    border-radius: 3px;
+}
+
+#facebox .close {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    top: -35px;
+    right: 0;
+    transform: none;
+}
+
+#facebox .close img {
+    display: none;
+}
+
+#facebox .close:after {
+    color: #fff;
+    content: "+";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    font-size: 2rem;
+    font-weight: 300;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    line-height: 1.2;
+    text-align: center;
+}
+
+#facebox .loading {
+    text-align: center;
+}
+
+#facebox .image {
+    text-align: center;
+}
+
+#facebox_overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+#facebox .scrollbar {
+    max-height: 700px;
+}
+
+.facebox_hide {
+    z-index: -100;
+}
+
+.facebox_overlayBG {
+    background-color: #000;
+    z-index: 99;
+    opacity: 0.7;
+}
+
+
+
+@media(min-width:1199px) {
+    #facebox .content.facebox-medium {
+        min-width: 800px;
+        max-width: 800px;
+    }
+}
+
+@media(max-width:1199px) {
+    #facebox .scrollbar {
+        overflow: auto;
+    }
+
+    #facebox {
+        left: 30px !important;
+        right: 30px !important;
+    }
+}
+
+@media(max-width:1023px) {
+
+    #facebox {
+        left: 10px !important;
+        right: 10px !important;
+    }
+}
+
+@media(max-width:767px) {
+    #facebox .content {
+        min-width: 1%;
+        width: 100%;
+    }
+
+    #facebox {
+        left: 0 !important;
+        right: 0 !important;
+        padding: 10px;
+        overflow: auto;
+        max-height: 90vh;
+    }
+
+    #facebox .close {
+        top: 0;
+    }
+
+    #facebox .close:after {
+        color: #000;
+    }
 }

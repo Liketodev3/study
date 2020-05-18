@@ -151,6 +151,7 @@ body {
     display: inline-block;
 }
 
+
 .arrow-link:after {
     content: "";
     position: absolute;
@@ -169,6 +170,8 @@ body {
     -ms-transition: .3s ease-in-out all;
     transition: .3s ease-in-out all;
 }
+
+
 
 .arrow-link:hover:after {
     right: 0;
@@ -255,7 +258,7 @@ body {
 @media (max-width: 767px) {
     .header {
         padding: 10px 0;
-		
+
     }
 }
 
@@ -307,6 +310,7 @@ body {
     border-right: 4px solid transparent;
     border-top: 5px solid #333;
 }
+
 
 
 /*+========================HEADER SUB NAVIGATION============================*/
