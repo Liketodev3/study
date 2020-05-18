@@ -28,5 +28,9 @@
 }
 @media(max-width:767px){
 	#facebox .content{min-width:1%;width:100%;}
-	#facebox{left:0!important; right:0!important;padding:10px;}
+	#facebox{left:0!important; right:0!important;padding:10px;
+    top: 0!important;
+    bottom: 0!important;
+	overflow:auto;
+}
 }
