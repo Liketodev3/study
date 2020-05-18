@@ -496,6 +496,12 @@ body[dir="rtl"] .form-search .form__action-wrap {
         right: auto;
         left: 20px
     }
+	
+	#facebox {
+    top: 0!important;
+    bottom: 0!important;
+	overflow:auto;
+}
 
 }
 
