@@ -357,7 +357,10 @@ body[dir="rtl"] .list-container .list__media {
     float: right
 }
 
-
+/*==============CHECKOUT PAGE=================*/
+body[dir="rtl"] .table-total th{    text-align: right;}	
+body[dir="rtl"] .label-select{    padding: 20px 60px 20px 20px;}
+body[dir="rtl"] .label-select .checkbox, .label-select .radio{    right: 25px; left: auto;}
 
 
 body[dir="rtl"] input[type="text"],
