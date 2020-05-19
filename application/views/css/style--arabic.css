@@ -141,6 +141,7 @@ body[dir="rtl"] .field_resp_block a {
     margin-right: 5px;
 }
 
+
 body[dir="rtl"] .box.box--narrow p {
     display: -webkit-box;
     /* OLD - iOS 6-, Safari 3.1-6 */
@@ -221,10 +222,18 @@ body[dir="rtl"] .fc-toolbar .fc-right {
     float: left;
 }
 
+body[dir="rtl"] .fc .fc-toolbar>*>* {
+	margin-left:0;
+	}
+
 body[dir="rtl"] .fc .fc-toolbar > * > * {
     float: right;
     margin-right: .75em;
 }
+
+body[dir="rtl"] .fc .fc-toolbar > * > *:last-child {
+	margin-right:0;
+	}
 
 body[dir="rtl"] .fc .fc-button-group > * {
     float: right;
