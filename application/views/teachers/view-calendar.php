@@ -395,7 +395,14 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 		<h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
 	</div>
 	<div class="col-sm-6">
-		<p><span class="box-hint available-box">&nbsp;</span><?php echo Label::getLabel('Lbl_Available'); ?> <span class="box-hint booked-box">&nbsp;</span><?php echo Label::getLabel('Lbl_Booked'); ?></p>
+		<div class="cal-status">
+			<span class="box-hint available-box">&nbsp;</span>
+			<p><?php echo Label::getLabel('Lbl_Available'); ?></p>
+		</div>
+		<div class="cal-status">
+			<span class="box-hint available-box">&nbsp;</span>
+			<p><?php echo Label::getLabel('Lbl_Booked'); ?></p>
+		</div>
 	</div>
 </div>
 <?php //} ?>
