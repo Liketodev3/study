@@ -1,3 +1,21 @@
+Release Version: TV-1.1.1.20200519
+Release Date: 2020/05/19
+
+New Features: N/A
+
+Enhancements: N/A
+
+Fixes:
+. #037122 - if user change the language then skill Preferences not visible
+. #037118 - validation error message showing wrong error message
+. #037094 - Filters are not working fine in case the currency is changed
+. #036971 - Admin > Reordering doesn't work on the admin
+. RTL Design Tweaks
+. Top Steering : Base copy issues
+. Checkout page css issue
+. Login Popup Scrolling issue
+
+
 Release Version: TV-1.1.0.20200508
 Release Date: 2020/05/08
 
