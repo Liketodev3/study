@@ -400,7 +400,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 			<p><?php echo Label::getLabel('Lbl_Available'); ?></p>
 		</div>
 		<div class="cal-status">
-			<span class="box-hint available-box">&nbsp;</span>
+			<span class="box-hint booked-box">&nbsp;</span>
 			<p><?php echo Label::getLabel('Lbl_Booked'); ?></p>
 		</div>
 	</div>
