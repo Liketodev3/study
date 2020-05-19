@@ -20,7 +20,7 @@ var isSetupAjaxrun = false;
 	remove = function(id){
 
         $.confirm({
-            title: langLbl.Confirm!,
+            title: langLbl.Confirm,
             content: langLbl.confirmRemove,
             buttons: {
                 Proceed: {
