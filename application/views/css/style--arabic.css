@@ -222,7 +222,7 @@ body[dir="rtl"] .fc-toolbar .fc-right {
     float: left;
 }
 
-body[dir="rtl"] .fc .fc-toolbar>*>* {
+body[dir="rtl"] .fc .fc-toolbar>*>*{
 	margin-left:0;
 	}
 
@@ -231,7 +231,7 @@ body[dir="rtl"] .fc .fc-toolbar > * > * {
     margin-right: .75em;
 }
 
-body[dir="rtl"] .fc .fc-toolbar > * > *:last-child {
+body[dir="rtl"] .fc .fc-toolbar .fc-left > * > *:last-child {
 	margin-right:0;
 	}
 
