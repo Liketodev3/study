@@ -1623,7 +1623,7 @@ body {
         padding-right: 0;
     }
 
-    .links--vertical li a {
+    .links--vertical li a, .is-landing .section ul li {
         color: var(--color-dark)
     }
 

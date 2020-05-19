@@ -4,6 +4,9 @@
     left: 0;
     z-index: 999;
     text-align: left;
+	max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #facebox .popup {
