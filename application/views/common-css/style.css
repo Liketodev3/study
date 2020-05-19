@@ -7427,6 +7427,12 @@ div.tagsinput div {
     color: #fff !important;
 }
 
+@media (max-width: 767px) {
+.links--vertical.footer_contact_details li {
+color: var(--color-dark)!important; 
+}
+}
+
 .messageCheckbox {
     text-align: right;
     margin-top: 15px;
