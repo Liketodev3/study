@@ -4529,6 +4529,7 @@ div.tagsinput div {
     display: flex;
     /* NEW, Spec - Opera 12.1, Firefox 20+ */
 	    align-items: center;
+		margin-bottom:10px;
 	
 }
 
