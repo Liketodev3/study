@@ -16,24 +16,52 @@
     background: #fff;
     border-radius: 3px;
 }
-
-@media (min-width: 1199px) {
+@media (min-width: 320px) {
 	
-	#facebox .content {
-	max-height: 80vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-	}
+ #facebox .content {
+        overflow: auto;
+        max-height: 80vh!important;
+    } 
 }
 
 @media (min-width: 767px) {
 	
 	#facebox .content {
-	max-height: 60vh;
+	max-height: 60vh!important;
     overflow-y: auto;
     overflow-x: hidden;
 	}
 }
+
+@media (min-width: 1024px) {
+	
+	#facebox .content {
+	max-height: 50vh!important;
+    overflow-y: auto;
+    overflow-x: hidden;
+	}
+}
+
+@media (min-width: 1300px) {
+	
+	#facebox .content {
+	max-height: 70vh!important;
+    overflow-y: auto;
+    overflow-x: hidden;
+	}
+}
+
+
+@media (min-width: 1500px) {
+	
+	#facebox .content {
+	max-height: 80vh!important;
+    overflow-y: auto;
+    overflow-x: hidden;
+	}
+}
+
+
 
 #facebox .close {
     width: 35px;
@@ -130,13 +158,6 @@
         width: 100%;
     }
 
-    #facebox {
-        left: 0 !important;
-        right: 0 !important;
-        padding: 10px;
-        overflow: auto;
-        max-height: 90vh;
-    }
 
     #facebox .close {
         top: 0;
