@@ -503,6 +503,9 @@ body[dir="rtl"] .fc-unthemed .fc-popover .fc-header .fc-close
 	    left: 0;
 }
 
+body[dir="rtl"] .header__logo{    margin: 0 0 0 20px;}
+body[dir="rtl"] .toggle--nav{    margin:0 0 0 10px;}
+
 @media (min-width: 1200px) {
     body[dir="rtl"] .page-panel__left {
         float: right;
