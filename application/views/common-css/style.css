@@ -6948,6 +6948,16 @@ div.tagsinput div {
     .section--content {
         padding: 0;
     }
+	
+	.tabled-box {
+		margin-bottom:25px;
+    }
+
+
+    .tabled-box ul li {
+        display: block !important;
+    }
+	.sort-by{    margin: 0 0 10px;}
 }
 
 @media(max-width:600px) {

@@ -497,6 +497,12 @@ body[dir="rtl"] .form-search .form__action-wrap {
     left: 0px;
 }
 
+body[dir="rtl"] .fc-unthemed .fc-popover .fc-header .fc-close
+{
+	right:auto;
+	    left: 0;
+}
+
 @media (min-width: 1200px) {
     body[dir="rtl"] .page-panel__left {
         float: right;
