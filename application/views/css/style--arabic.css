@@ -505,6 +505,7 @@ body[dir="rtl"] .fc-unthemed .fc-popover .fc-header .fc-close
 
 body[dir="rtl"] .header__logo{    margin: 0 0 0 20px;}
 body[dir="rtl"] .toggle--nav{    margin:0 0 0 10px;}
+body[dir="rtl"] .nav.nav--primary > ul > li{ padding: 0 5px 0 0;}
 
 @media (min-width: 1200px) {
     body[dir="rtl"] .page-panel__left {
