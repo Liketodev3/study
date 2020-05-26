@@ -268,6 +268,19 @@ class PurchasedLessonsController extends AdminBaseController
         /*]*/
 
         $assignValues = array('slesson_status' => $status);
+		if($status == ScheduledLesson::STATUS_NEED_SCHEDULING) {
+			$assignValues['slesson_date'] = '';
+			$assignValues['slesson_end_date'] = '';
+			$assignValues['slesson_start_time'] = '';
+			$assignValues['slesson_end_time'] = '';
+			$assignValues['slesson_teacher_join_time'] = '';
+			$assignValues['slesson_learner_join_time'] = '';
+			$assignValues['slesson_teacher_end_time'] = '';
+			$assignValues['slesson_learner_end_time'] = '';
+			$assignValues['slesson_ended_by'] = '';
+			$assignValues['slesson_ended_on'] = '';
+		}
+		
         $record = new ScheduledLesson($slesson_id);
         $record->assignValues($assignValues);
         if (!$record->save()) {

@@ -565,8 +565,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $teacher_id = FatApp::getPostedData('teacherId', FatUtility::VAR_INT, 0);
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
-        $startTime = MyDate::changeDateTimezone($post['date'].' '. $post['startTime'], $user_timezone, $systemTimeZone);
-        $endTime = MyDate::changeDateTimezone($post['date'].' '. $post['endTime'], $user_timezone, $systemTimeZone);
+        $startTime = MyDate::changeDateTimezone($post['startTime'], $user_timezone, $systemTimeZone);
+        $endTime = MyDate::changeDateTimezone($post['endTime'], $user_timezone, $systemTimeZone);
         $teacherBookingBefore = current(UserSetting::getUserSettings($teacher_id))['us_booking_before'];
         if ('' == FatUtility::int($teacherBookingBefore)) {
             $teacherBookingBefore = 0;
@@ -1153,8 +1153,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $post = FatApp::getPostedData();
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
-        $startDateTime = MyDate::changeDateTimezone($post['date'].' '. $post['startTime'], $user_timezone, $systemTimeZone);
-        $endDateTime = MyDate::changeDateTimezone($post['date'].' '.$post['endTime'], $user_timezone, $systemTimeZone);
+        $startDateTime = MyDate::changeDateTimezone($post['startTime'], $user_timezone, $systemTimeZone);
+        $endDateTime = MyDate::changeDateTimezone($post['endTime'], $user_timezone, $systemTimeZone);
         $db = FatApp::getDb();
         if (empty($post)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));

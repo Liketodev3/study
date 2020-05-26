@@ -121,7 +121,7 @@
 	 </tbody></table>
 <?php
  	echo FatUtility::createHiddenFormFromData ( $postedData, array (
-			'name' => 'frmOrderSearchPaging'
+			'name' => 'frmFavSearchPaging'
 	) );
 	$this->includeTemplate('_partial/pagination.php', $favouritesData['pagingArr'],false); ?>	 
 	 </div>
