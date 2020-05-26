@@ -4504,8 +4504,9 @@ div.tagsinput div {
     background: #fff;
     padding: 20px;
 }
-.calendar-view [class*="col-"]:last-child{   
-	display: -webkit-box;
+
+.calendar-view [class*="col-"]:last-child {
+    display: -webkit-box;
     /* OLD - iOS 6-, Safari 3.1-6 */
     display: -moz-box;
     /* OLD - Firefox 19- (buggy but mostly works) */
@@ -4515,25 +4516,28 @@ div.tagsinput div {
     /* NEW - Chrome */
     display: flex;
     /* NEW, Spec - Opera 12.1, Firefox 20+ */
-    justify-content: flex-end;}
-	
-.calendar-view .cal-status{
-	display: -webkit-box;
-    /* OLD - iOS 6-, Safari 3.1-6 */
-    display: -moz-box;
-    /* OLD - Firefox 19- (buggy but mostly works) */
-    display: -ms-flexbox;
-    /* TWEENER - IE 10 */
-    display: -webkit-flex;
-    /* NEW - Chrome */
-    display: flex;
-    /* NEW, Spec - Opera 12.1, Firefox 20+ */
-	    align-items: center;
-		margin-bottom:10px;
-	
+    justify-content: flex-end;
 }
 
-.calendar-view p{margin:0;}
+.calendar-view .cal-status {
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;
+    /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    /* NEW - Chrome */
+    display: flex;
+    /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    align-items: center;
+    margin-bottom: 10px;
+
+}
+
+.calendar-view p {
+    margin: 0;
+}
 
 .calendar-view .fc-state-default {
     background: #fff;
@@ -5170,8 +5174,8 @@ div.tagsinput div {
 
     .header__logo {
         width: 100px;
-       /*  height: 50px; */
-	   height:auto;
+        /*  height: 50px; */
+        height: auto;
         margin: 0;
     }
 
@@ -6949,16 +6953,19 @@ div.tagsinput div {
     .section--content {
         padding: 0;
     }
-	
-	.tabled-box {
-		margin-bottom:25px;
+
+    .tabled-box {
+        margin-bottom: 25px;
     }
 
 
     .tabled-box ul li {
         display: block !important;
     }
-	.sort-by{    margin: 0 0 10px;}
+
+    .sort-by {
+        margin: 0 0 10px;
+    }
 }
 
 @media(max-width:600px) {
