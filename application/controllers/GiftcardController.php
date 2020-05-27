@@ -242,6 +242,7 @@ class GiftcardController extends LoggedUserController
         $pmRs = $pmSrch->getResultSet();
         $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
         $this->set('userDetails', $userDetails);
+        $this->set('orderId', $orderId);
         $this->set('paymentMethods', $paymentMethods);
         $this->_template->render(true, true);
 

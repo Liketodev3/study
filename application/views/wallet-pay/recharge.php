@@ -1,4 +1,4 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); //print_r($paymentMethods); die; ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <section class="section section--grey section--page" >
 	<div class="container container--narrow">
 
@@ -19,10 +19,6 @@
 									echo '<img src="'.$img.'" />';
 								}
 								?>
-
-								<?php /* if( $cartData['is_online'] ){ ?>
-								<span class="tag-online"></span>
-								<?php } */ ?>
 							</div>
 
 							<span class="-gap"></span>
@@ -31,10 +27,7 @@
 							<?php if( $userDetails['user_country_id'] > 0 ){ ?>
 							<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userDetails['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>
 							<?php } ?>
-							<br><?php
-							/* echo CommonHelper::getDateOrTimeByTimeZone( $userDetails['user_timezone'], 'h:i A'  );
-							echo " (GMT ".CommonHelper::getDateOrTimeByTimeZone( $userDetails['user_timezone'], ' P' ).")"; */
-							?> </p>
+							<br></p>
 						</div>
 					</div>
 
@@ -54,28 +47,15 @@
                                             <div class="col-xl-4 col-lg-4 col-md-4">
 											<?php if($paymentMethods){ ?>
                                             <div class="tabs-gray">
-                                                <ul id="paymentListTab-js">
+												<ul id="payment_methods_tab">
 												<?php foreach($paymentMethods as $k=>$paymentMethod){ ?>
-                                                    <li class="<?php if($k==0){ echo 'is-active'; }?>" ><a href="#tab_<?php echo $k;?>"><?php echo $paymentMethod['pmethod_name']; ?></a></li>
+													<li class="<?php if($k==0){ echo 'is-active'; }?>" ><a href="<?php echo CommonHelper::generateUrl('Checkout', 'paymentTab', array($paymentMethod['pmethod_id'],$orderId) ); ?>"><?php echo $paymentMethod['pmethod_name']; ?></a></li>
 												<?php } ?>
-                                                </ul>
+												</ul>
                                             </div>
 											<?php } ?>
                                         </div>
-	                                            <div class="col-xl-8 col-lg-8 col-md-8" id="paymentMethodData-js">
-                             				<?php foreach($paymentMethods as $k=>$paymentMethod){ ?>
-                                                 <div id="tab_<?php echo $k;?>" class="tabs-content-js">
-                                                     <div>
-                                                       <?php /*<div class="icon-payment"><img src="images/paypal.png" alt="" ></div>*/ ?>
-                                                        <h5><?php echo Label::getLabel('LBL_Proceed_With'); ?> <?php echo $paymentMethod['pmethod_name']; ?></h5><br>
-                                                        <p><?php echo $paymentMethod['pmethod_description']; ?><br><br></p>
-                                                        <h6><?php echo Label::getLabel('LBL_Net_Payable'); ?> : <?php echo CommonHelper::displayMoneyFormat($orderInfo['order_net_amount']); ?> </h6>
-                                                        <span class="-gap"></span>
-                                                        <a href="<?php echo CommonHelper::generateUrl($paymentMethod['pmethod_code'].'Pay', 'charge', array($orderInfo['order_id']) ); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Net_Payable_:'); ?></a>
-                                                     </div>
-                                                </div>
-												<?php } ?>
-
+	                                        <div class="col-xl-8 col-lg-8 col-md-8" id="tabs-container">
                                             </div>
                                         </div>
                                     </div>
@@ -91,19 +71,3 @@
 
 	</div>
 </section>
-
-<script type="text/javascript">
-$("#paymentListTab-js a").click(function(e) {
-	e.preventDefault();
-	var tabId = $(this).attr('href');
-	$("#paymentListTab-js li").removeClass('is-active');
-	$(this).parent('li').addClass('is-active');
-	$('.tabs-content-js').hide();
-	$(tabId).show();
-});
-<?php
-	// if( $orderInfo['order_net_amount'] > 0 ){
-	// 	echo 'loadPaymentSummary();';
-	// }
-?>
-</script>

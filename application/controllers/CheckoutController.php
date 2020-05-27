@@ -155,14 +155,29 @@ class CheckoutController extends LoggedUserController{
 		$this->_template->render(false, false, 'json-success.php');
 	}
 
-	public function paymentTab( $pmethodId ){
-		$pmethodId = FatUtility::int( $pmethodId );
+	public function paymentTab($pmethod_id, $order_id = ''){
+		$pmethodId = FatUtility::int( $pmethod_id );
 		if( !$pmethodId ){
 			FatUtility::dieWithError( Label::getLabel("MSG_Invalid_Request!", $this->siteLangId) );
 		}
 
 		if( !UserAuthentication::isUserLogged() ){
 			FatUtility::dieWithError( Label::getLabel('MSG_Your_Session_seems_to_be_expired.', $this->siteLangId) );
+		}
+		$orderInfo = [];
+		$netAmmount =0;
+		if(!empty($order_id)) {
+			$srch = Order::getSearchObject();
+	        $srch->doNotCalculateRecords();
+	        $srch->doNotLimitRecords();
+	        $srch->addCondition('order_id', '=', $order_id);
+	        $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PENDING);
+	        $rs = $srch->getResultSet();
+	        $orderInfo = FatApp::getDb()->fetch($rs);
+	        if (!$orderInfo) {
+	            FatUtility::dieWithError(Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId));
+	        }
+			$netAmmount =  $orderInfo['order_net_amount'];
 		}
 
 		/* [ */
@@ -181,36 +196,28 @@ class CheckoutController extends LoggedUserController{
 
 		/* [ */
 		$frm = $this->getPaymentTabForm( $this->siteLangId );
+		if(!empty($order_id)) {
+			$frm->fill(array('order_id' => $order_id,'order_type' => $orderInfo['order_type']));
+		}
 		/* $controller = $paymentMethod['pmethod_code'].'Pay';
 		$frm->setFormTagAttribute( 'action', CommonHelper::generateUrl( $controller, 'charge', array( $orderInfo['order_id']) ) ); */
 		$frm->fill(array( 'pmethod_id' => $pmethodId ) );
 		$this->set( 'frm', $frm );
 		/* ] */
-		$cartData = $this->cartObj->getCart($this->siteLangId);
-		$this->set('cartData', $cartData);
+		$cartData = [];
+		if(empty($order_id)) {
+			$cartData = $this->cartObj->getCart($this->siteLangId);
+			$netAmmount = $cartData['orderPaymentGatewayCharges'];
+			$this->set('cartData', $cartData);
+		}
+		$this->set('netAmmount', $netAmmount);
 		$this->_template->render( false, false, '', false, false );
 	}
 
 	public function confirmOrder(){
-		$cartData = $this->cartObj->getCart( $this->siteLangId );
-		//echo "<pre>"; print_r($cartData); echo "</pre>"; exit;
-
-		$criteria = array(
-			'isUserLogged' => true,
-			'hasItems' =>  true,
-		);
-		if( !$this->isEligibleForNextStep( $criteria ) ){
-			if( Message::getErrorCount() ){
-				$errMsg = Message::getHtml();
-			} else {
-				Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
-				$errMsg = Message::getHtml();
-			}
-			FatUtility::dieWithError( $errMsg );
-		}
-
-		$pmethodId = FatApp::getPostedData( 'pmethod_id', FatUtility::VAR_INT, 0 );
-
+		$order_type = FatApp::getPostedData('order_type', FatUtility::VAR_INT, 0);
+        $pmethodId = FatApp::getPostedData('pmethod_id', FatUtility::VAR_INT, 0);
+        $order_id = FatApp::getPostedData("order_id", FatUtility::VAR_STRING, "");
 		/* [ */
 		if( $pmethodId > 0 ){
 			$pmSrch = PaymentMethods::getSearchObject( $this->siteLangId );
@@ -224,14 +231,64 @@ class CheckoutController extends LoggedUserController{
 				Message::addErrorMessage( Label::getLabel("MSG_Selected_Payment_method_not_found!") );
 				FatUtility::dieWithError( Message::getHtml() );
 			}
-
-			/* if( $cartData['orderPaymentGatewayCharges'] < 1 ){
-				Message::addErrorMessage( Label::getLabel('LBL_Invalid_Request') );
-				FatUtility::dieWithError( Message::getHtml() );
-			} */
 		}
 		/* ] */
+		/* Loading Money to wallet[ */
+		if ($order_type == Order::TYPE_WALLET_RECHARGE || $order_type == Order::TYPE_GIFTCARD) {
+			$criteria = array( 'isUserLogged' => true );
+			if (!$this->isEligibleForNextStep($criteria)) {
+				if (Message::getErrorCount()) {
+					$errMsg = Message::getHtml();
+				}else {
+					Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
+					$errMsg = Message::getHtml();
+				}
+				FatUtility::dieWithError($error);
+			}
+			$user_id = UserAuthentication::getLoggedUserId();
 
+			if ($order_id == '') {
+				Message::addErrorMessage(Label::getLabel("MSG_INVALID_Request"));
+				FatUtility::dieWithError(Message::getHtml());
+			}
+			$orderObj = new Order();
+			$srch = Order::getSearchObject();
+			$srch->doNotCalculateRecords();
+			$srch->doNotLimitRecords();
+			$srch->addCondition('order_id', '=', $order_id);
+			$srch->addCondition('order_user_id', '=', $user_id);
+			$srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PENDING);
+			$srch->addCondition('order_type', '=', $order_type);
+			$rs = $srch->getResultSet();
+			$orderInfo = FatApp::getDb()->fetch($rs);
+
+			if (!$orderInfo) {
+				Message::addErrorMessage(Label::getLabel("MSG_INVALID_ORDER_PAID_CANCELLED"));
+				FatUtility::dieWithError(Message::getHtml());
+			}
+
+			$orderObj->updateOrderInfo($order_id, array('order_pmethod_id' => $pmethodId));
+			$controller = $paymentMethod['pmethod_code'].'Pay';
+			$redirectUrl = CommonHelper::generateUrl($controller, 'charge', array($order_id));
+			$this->set('msg', Label::getLabel('LBL_Processing...'));
+			$this->set('redirectUrl', $redirectUrl);
+			$this->_template->render(false, false, 'json-success.php');
+		}
+
+		$cartData = $this->cartObj->getCart( $this->siteLangId );
+		$criteria = array(
+			'isUserLogged' => true,
+			'hasItems' =>  true,
+		);
+		if( !$this->isEligibleForNextStep( $criteria ) ){
+		if( Message::getErrorCount() ){
+			$errMsg = Message::getHtml();
+		} else {
+			Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
+			$errMsg = Message::getHtml();
+		}
+			FatUtility::dieWithError( $errMsg );
+		}
 		/* if( $cartData['cartWalletSelected'] && $cartData['orderPaymentGatewayCharges'] == 0 ){
 			Message::addErrorMessage( Label::getLabel('MSG_Try_to_pay_using_wallet_balance_as_amount_for_payment_gateway_is_not_enough.') );
 			FatUtility::dieWithError( Message::getHtml() );
@@ -379,6 +436,7 @@ class CheckoutController extends LoggedUserController{
 		$frm->setFormTagAttribute('id', 'frmPaymentTabForm');
 		$frm->addSubmitButton( '', 'btn_submit', Label::getLabel('LBL_Confirm_Payment', $langId) );
 		$frm->addHiddenField( '', 'order_type' );
+		$frm->addHiddenField( '', 'order_id' );
 		$frm->addHiddenField('','pmethod_id');
 		return $frm;
 	}

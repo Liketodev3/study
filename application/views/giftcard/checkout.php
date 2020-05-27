@@ -54,29 +54,16 @@
                                             <div class="col-xl-4 col-lg-4 col-md-4">
 											<?php if($paymentMethods){ ?>
                                             <div class="tabs-gray tabs-js">
-                                                <ul>
+												<ul id="payment_methods_tab">
 												<?php foreach($paymentMethods as $k=>$paymentMethod){ ?>
-                                                    <li class="<?php if($k==0){ echo 'is-active'; }?>" data-href="#tab_<?php echo $k;?>"><a href="#tab_<?php echo $k;?>"><?php echo $paymentMethod['pmethod_name']; ?></a></li>
+													<li class="<?php if($k==0){ echo 'is-active'; }?>" ><a href="<?php echo CommonHelper::generateUrl('Checkout', 'paymentTab', array($paymentMethod['pmethod_id'],$orderId) ); ?>"><?php echo $paymentMethod['pmethod_name']; ?></a></li>
 												<?php } ?>
-                                                </ul>
+												</ul>
                                             </div>
 											<?php } ?>
                                         </div>
-                                            <div class="col-xl-8 col-lg-8 col-md-8">
-                             				<?php foreach($paymentMethods as $k=>$paymentMethod){ ?>
-                                                 <div id="tab_<?php echo $k;?>" class="tabs-content-js">
-                                                     <div>
-                                                       <?php /*<div class="icon-payment"><img src="images/paypal.png" alt="" ></div>*/ ?>
-                                                        <h5><?php echo Label::getLabel('LBL_Proceed_with'); ?> <?php echo $paymentMethod['pmethod_name']; ?></h5><br>
-                                                        <p><?php echo $paymentMethod['pmethod_description']; ?><br><br></p>
-                                                        <h6><?php echo Label::getLabel('LBL_Net_Payable'); ?> : <?php echo CommonHelper::displayMoneyFormat($orderInfo['order_net_amount']); ?> </h6>
-                                                        <span class="-gap"></span>
-                                                        <a href="<?php echo CommonHelper::generateUrl($paymentMethod['pmethod_code'].'Pay', 'charge', array($orderInfo['order_id']) ); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Make_Payment'); ?></a>
-                                                     </div>
-                                                </div>
-												<?php } ?>
-
-                                            </div>
+										<div class="col-xl-8 col-lg-8 col-md-8" id="tabs-container">
+										</div>
                                         </div>
                                     </div>
 
