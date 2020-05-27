@@ -33,7 +33,7 @@
 							<li class="nav__dropdown -hide-mobile">
 								<?php $this->includeTemplate( '_partial/header/headerLanguageArea.php' );	?>
 							</li>
-							<?php if(UserAuthentication::isUserLogged()){ 
+							<?php if(UserAuthentication::isUserLogged()){
 								$msgCnt = CommonHelper::getUnreadMsgCount();
 								$unreadNotifications = CommonHelper::getUnreadNotifications(true);
 								$unreadNotificationsCnt = CommonHelper::getUnreadNotifications();
@@ -71,8 +71,8 @@
 echo '<div class="avtar avtar--xsmall -display-inline" data-text="A"></div>';
 			}else{ ?>
                                                         <div class="avtar avtar--xsmall -display-inline" data-text="A">
-                                                            <?php 
-				if( true == User::isProfilePicUploaded($notifications['noti_sub_record_id']) ){ 
+                                                            <?php
+				if( true == User::isProfilePicUploaded($notifications['noti_sub_record_id']) ){
                 $picId = ($notifications['noti_sub_record_id']==0)?UserAuthentication::getLoggedUserId():$notifications['noti_sub_record_id'];
 ?>
 
@@ -92,7 +92,7 @@ echo '<div class="avtar avtar--xsmall -display-inline" data-text="A"></div>';
 
                                         </div>
                                         <div class="list-container__footer">
-                                            <a href="<?php echo CommonHelper::generateUrl('Notifications'); ?>" class="btn btn--secondary btn--block">View All</a>
+                                            <a href="<?php echo CommonHelper::generateUrl('Notifications'); ?>" class="btn btn--secondary btn--block"><?php echo Label::getLabel("LBL_View_all"); ?></a>
                                         </div>
                                     </div>
                                 </div>
@@ -100,7 +100,7 @@ echo '<div class="avtar avtar--xsmall -display-inline" data-text="A"></div>';
                             </li>
                             <?php } ?>
 							<?php $this->includeTemplate( '_partial/header/headerUserLoginArea.php' );	?>
-							
+
                         </ul>
                     </nav>
                 </div>
