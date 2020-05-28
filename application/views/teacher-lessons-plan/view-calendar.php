@@ -24,7 +24,7 @@
    		setupTeacherGeneralAvailability(json);
    	});
    	$('#listing_calendar').fullCalendar({
-   		
+
    			selectable: true,
    			editable: false,
    			selectOverlap: false,
@@ -39,11 +39,11 @@
    					return false;
    				}
    			},
-   			eventLimit: true, 
-   			
+   			eventLimit: true,
+
    			events: "<?php echo CommonHelper::generateUrl('ScheduledLessons','calendarJsonData'); ?>",
    			eventRender: function(event, element) {
-   				if(isNaN(event._id)){ 
+   				if(isNaN(event._id)){
 					var imgUrl = fcom.makeUrl('Image','user',[event.lid])+'<?php echo time(); ?>';
 					element.find(".fc-content").prepend( '	<div style="width:10px;height:10px;" class="avtar avtar--normal" data-text="'+event.liFname+'"></div>' );
    				}
@@ -51,7 +51,7 @@
    				//	element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+event._id+");'>X</span>" );
    				}
                element.find(".closeon").click(function() {
-   				if(isNaN(event._id)){				
+   				if(isNaN(event._id)){
    					$('#listing_calendar').fullCalendar('removeEvents',event._id);
    				}
                });
