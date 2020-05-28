@@ -93,6 +93,7 @@ $("document").ready(function(){
 			async: false,
 			success: function (result) {
 				try {
+					$.systemMessage.close();
 					result = JSON.parse(result);
 					if (result.status != 1) {
 						$(document).trigger('close.mbsmessage');
