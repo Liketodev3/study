@@ -136,7 +136,7 @@ class UrlRewritingController extends AdminBaseController
         }
 
         $obj = new UrlRewrite($urlrewrite_id);
-        if (!$obj->deleteRecord(true)) {
+        if (!$obj->deleteRecord(false)) {
             Message::addErrorMessage($obj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
