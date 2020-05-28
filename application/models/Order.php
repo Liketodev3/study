@@ -33,7 +33,7 @@ class Order extends MyAppModel
                 static::DB_TBL_LANG,
                 'LEFT OUTER JOIN',
                 'o_l.orderlang_order_id = o.order_id
-			AND orderlang_lang_id = ' . $langId,
+			     AND orderlang_lang_id = ' . $langId,
                 'o_l'
             );
         }

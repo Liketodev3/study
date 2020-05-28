@@ -240,7 +240,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 								<h6>
 									<?php echo Label::getLabel('LBL_Learner_Details'); ?>
 								</h6>
-								<div class="d-flex align-items-center">
+								<div class="d-sm-flex align-items-center">
 									<div>
 										<div class="avtar avtar--small" data-text="
 											<?php echo CommonHelper::getFirstChar($lessonData['learnerFname']); ?>">
@@ -386,7 +386,10 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 																			<ul>
 																				<?php  if($lessonData['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
 																				<li>
-																					<a href="javascript:void(0);" onclick="viewBookingCalendar('<?php echo $lessonData['slesson_id']; ?>')">
+                                                                                    <?php
+                                                                                    $is_trail = ($lessonData['is_trial']) ? 'free_trial' : '';
+                                                                                    ?>
+																					<a href="javascript:void(0);" onclick="viewBookingCalendar('<?php echo $lessonData['slesson_id']; ?>','<?php echo $is_trail; ?>')">
 																						<?php echo Label::getLabel('LBL_Schedule'); ?>
 																					</a>
 																				</li>

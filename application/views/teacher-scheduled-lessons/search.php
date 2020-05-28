@@ -1,6 +1,6 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 
-MyDate::setUserTimeZone(); 
+MyDate::setUserTimeZone();
 $user_timezone = MyDate::getUserTimeZone();
 
 $date = new DateTime("now", new DateTimeZone($user_timezone));
@@ -11,7 +11,7 @@ $referer = preg_replace("(^https?://)", "", $referer );
 foreach( $lessonArr as $key=>$lessons ){ ?>
 <div class="col-list-group">
 <?php if($key!='0000-00-00'){ ?>
-<h6><?php  
+<h6><?php
 if (strtotime($curDate) == strtotime($key)) {
 	echo Label::getLabel('LBL_Today');
 } elseif(strtotime($nextDate) == strtotime($key)) {
@@ -23,36 +23,36 @@ if (strtotime($curDate) == strtotime($key)) {
 <?php } ?>
 <div class="col-list-container">
 <?php foreach( $lessons as $lesson ){ ?>
-	<div class="col-list">   
+	<div class="col-list">
 		<div class="d-lg-flex align-items-center">
 			<div class="col-xl-4 col-lg-4 col-md-12">
 				<div class="avtar avtar--normal" data-text="<?php echo CommonHelper::getFirstChar($lesson['learnerFname']); ?>">
-					<?php 
+					<?php
 					if( true == User::isProfilePicUploaded( $lesson['learnerId'] ) ){
-						$img = CommonHelper::generateUrl('Image','user', array( $lesson['learnerId'] )).'?'.time(); 
-						echo '<img src="'.$img.'" />'; 
+						$img = CommonHelper::generateUrl('Image','user', array( $lesson['learnerId'] )).'?'.time();
+						echo '<img src="'.$img.'" />';
 					} ?>
 				</div>
 				<h6><?php echo $lesson['learnerFname']; ?></h6>
 				<p><?php echo $lesson['learnerCountryName']; ?> <br>
 				<?php /* echo CommonHelper::getDateOrTimeByTimeZone($lesson['learnerTimeZone'],'H:i A P'); */ ?></p>
 			</div>
-			
+
 			<div class="col-xl-6 col-lg-6 col-md-12">
 				<div class="schedule-list">
 					<ul>
-						<?php 
+						<?php
 						$date = DateTime::createFromFormat('Y-m-d', $lesson['slesson_date']);
 						if($date && ($date->format('Y-m-d') === $lesson['slesson_date'])){ ?>
 							<li>
 								<span class="span-left"><?php echo Label::getLabel('LBL_Schedule'); ?></span>
 								<span class="span-right">
 									<h4>
-									<?php 
+									<?php
 										echo MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_start_time'], true , $user_timezone );
-									?>  
+									?>
 									</h4>
-									<?php 
+									<?php
 										echo MyDate::convertTimeFromSystemToUserTimezone( 'l, F d, Y', $lesson['slesson_date'].' '. $lesson['slesson_start_time'], true , $user_timezone );
 									?>
 								</span>
@@ -62,17 +62,17 @@ if (strtotime($curDate) == strtotime($key)) {
 							<span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
 							<span class="span-right"><?php echo $statusArr[$lesson['slesson_status']]; ?></span>
 						</li>
-                        <?php if( $lesson['issrep_id'] ){ ?>					
+                        <?php if( $lesson['issrep_id'] ){ ?>
                             <li>
                                 <span class="span-left"><?php echo Label::getLabel('LBL_Issue_Status'); ?></span>
                                 <span class="span-right"><?php echo IssuesReported::getStatusArr()[$lesson['issrep_status']]; ?></span>
-                            </li>                        
-                        <?php } ?>	
+                            </li>
+                        <?php } ?>
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Details'); ?></span>
 							<span class="span-right">
 								<?php echo empty($teachLanguages[$lesson['slesson_slanguage_id']])?'':$teachLanguages[$lesson['slesson_slanguage_id']] ; ?><br>
-								<?php 
+								<?php
 								if( $lesson['slesson_date'] != "0000-00-00" ){
 									$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
 									$arrReplacements = array(
@@ -93,12 +93,12 @@ if (strtotime($curDate) == strtotime($key)) {
 					</ul>
 				</div>
 			</div>
-			
+
 			<div class="col-xl-2 col-lg-2 col-md-4 col-positioned">
 				<div class="select-box toggle-group">
 					<div class="buttons-toggle">
 						<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons','view',[$lesson['slesson_id']]); ?>" class="btn btn--secondary"><?php echo Label::getLabel('LBL_View'); ?></a>
-						<?php if($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('teacher-scheduled-lessons'))){ ?>						
+						<?php if($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('teacher-scheduled-lessons'))){ ?>
 								<a href="javascript:void(0)" class="btn btn--secondary btn--dropdown toggle__trigger-js"></a>
 						<?php }?>
 					</div>
@@ -109,8 +109,8 @@ if (strtotime($curDate) == strtotime($key)) {
 								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
 									<?php /* <li><a href="javascript:void(0);" onclick="viewBookingCalendar('<?php echo $lesson['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Schedule'); ?></a></li>*/ ?>
 									<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
-								<?php } 
-								
+								<?php }
+
 								if( $lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lesson['issrep_id'] > 0) { ?>
 								<li><a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Details'); ?></a></li>
 								<?php } ?>
@@ -119,20 +119,20 @@ if (strtotime($curDate) == strtotime($key)) {
 									<li>
 										<a href="javascript:void(0);" onclick="resolveIssue('<?php echo $lesson['issrep_id']; ?>', '<?php echo $lesson['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></a>
 									</li>
-								<?php } ?>	
+								<?php } ?>
 								<?php if( $lesson['issrep_status'] == 1 && $lesson['issrep_issues_resolve_type'] < 1 ) { ?>
 									<li>
 										<a href="javascript:void(0);" onclick="issueResolveStepTwo('<?php echo $lesson['issrep_id']; ?>', '<?php echo $lesson['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></a>
 									</li>
 								<?php } ?>
-								
+
 								<?php }?>
-								
+
 								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
 									<li><a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lesson['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Reschedule'); ?></a></li>
 									<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
 								<?php }
-								
+
 								$countRel=ScheduledLessonSearch::countPlansRelation($lesson['slesson_id']);
 								if($countRel > 0){
 								?>
@@ -149,12 +149,12 @@ if (strtotime($curDate) == strtotime($key)) {
 			</div>
 		</div>
 	</div>
-	
+
 <?php } ?>
 </div>
 </div>
 <?php }
-if ( empty($lessons) ) { 
+if ( empty($lessons) ) {
 	$this->includeTemplate('_partial/no-record-found.php');
 } else {
 	echo FatUtility::createHiddenFormFromData ( $postedData, array (
@@ -163,27 +163,27 @@ if ( empty($lessons) ) {
 	if ($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('teacher-scheduled-lessons'))) {
 		$this->includeTemplate('_partial/pagination.php', $pagingArr,false);
 	} else {
-		echo "<div class='load-more -align-center'><a href='".CommonHelper::generateFullUrl('teacher-scheduled-lessons')."' class='btn btn--bordered btn--xlarge'>View all</a></div>";
+		echo "<div class='load-more -align-center'><a href='".CommonHelper::generateFullUrl('teacher-scheduled-lessons')."' class='btn btn--bordered btn--xlarge'>".Label::getLabel('LBL_View_all')."</a></div>";
 	}
 }
-?>					
+?>
 <script type="text/javascript">
 jQuery(document).ready(function () {
 	/*$(".toggle__trigger-js").click(function () {
 		var t = $(this).parents(".toggle-group").children(".toggle__target-js").is(":hidden");
 		$(".toggle-group .toggle__target-js").hide();
 		$(".toggle-group .toggle__trigger-js").removeClass("is-active");
-		
+
 		if (t) {
 			$(this).parents(".toggle-group").children(".toggle__target-js").toggle().parents(".toggle-group").children(".toggle__trigger-js").addClass("is-active")
 		}
 	});
-	
+
 	$(document).bind("click", function (t) {
 		var n = $(t.target);
 		if (!n.parents().hasClass("toggle-group")) $(".toggle-group .toggle__target-js").hide();
 	});
-	
+
 	$(document).bind("click", function (t) {
 		var n = $(t.target);
 		if (!n.parents().hasClass("toggle-group")) $(".toggle-group .toggle__trigger-js").removeClass("is-active");

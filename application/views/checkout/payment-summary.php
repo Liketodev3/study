@@ -6,7 +6,7 @@
 
 <?php if( $userWalletBalance > 0 && $cartData['orderNetAmount'] > 0 ){ ?>
 <div class="label-select">
-	
+
 	<label class="label-trigger-js">
 		<span class="checkbox">
 			<input onChange="walletSelection(this)" type="checkbox" <?php echo ($cartData["cartWalletSelected"]) ? 'checked="checked"' : ''; ?> name="pay_from_wallet" id="pay_from_wallet" /><i class="input-helper"></i>
@@ -30,7 +30,7 @@
 						<h5><?php echo CommonHelper::displayMoneyFormat($cartData['orderNetAmount']); ?></h5>
 					</div>
 				</li>
-				
+
 				<li>
 					<div class="boxwhite">
 					<p><?php echo Label::getLabel('LBL_Amount_in_your_wallet'); ?></p>
@@ -42,16 +42,16 @@
 					echo CommonHelper::displayMoneyFormat($remainingWalletBalance); ?></i>
 					</p>
 				</li>
-				
+
 				<?php if( $userWalletBalance >= $cartData['orderNetAmount']){ /* ?>
 				<li>
-					<?php 
+					<?php
 					$btnSubmitFld = $WalletPaymentForm->getField('btn_submit');
 					$btnSubmitFld->addFieldTagAttribute('class', 'btn btn--secondary btn--large');
-					
+
 					$WalletPaymentForm->developerTags['colClassPrefix'] = 'col-md-';
 					$WalletPaymentForm->developerTags['fld_default_col'] = 12;
-					echo $WalletPaymentForm->getFormHtml(); 
+					echo $WalletPaymentForm->getFormHtml();
 					?>
 				</li>
 				<?php */ } else { ?>
@@ -62,7 +62,7 @@
 						</div>
 					</li>
 				<?php } ?>
-				
+
 			</ul>
 		</div>
 	</div>
@@ -78,12 +78,12 @@
 			<div class="col-xl-4 col-lg-4 col-md-4">
 				<div class="tabs-gray">
 					<ul id="payment_methods_tab">
-						<?php 
+						<?php
 						if( $paymentMethods ){
 							$count = 1;
 							foreach( $paymentMethods as $key => $val ){ ?>
 							<li class="<?php echo ($count == 1) ? 'is-active' : ''; ?>"><a class="<?php echo ($count == 1) ? 'is-active' : ''; ?>" href="<?php echo CommonHelper::generateUrl('Checkout', 'paymentTab', array($val['pmethod_id']) ); ?>"><?php echo $val['pmethod_name']; ?></a></li>
-							<?php 
+							<?php
 							$count++;
 							}
 						} ?>
@@ -125,7 +125,7 @@ function loadTab( tabObj ){
 		//$(containerId).fadeIn('fast');
 	}); */
 }
-</script>  
+</script>
 <?php } else {
 						$this->includeTemplate('checkout/_partial/processWithNoPayment.php', $this->variables);
 					}

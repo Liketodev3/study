@@ -251,6 +251,12 @@ class TeachersController extends MyAppController {
 		$teacher['lessonPackages'] = $lessonPackages;
 		$teacher['teachLanguages'] = $tlangArr;
 		/* ] */
+		$teacher['isAlreadyPurchasedFreeTrial'] = false;
+		if(UserAuthentication::isUserLogged()) {
+			$teacher['isAlreadyPurchasedFreeTrial'] = LessonPackage::isAlreadyPurchasedFreeTrial(UserAuthentication::getLoggedUserId(), $teacher_id);
+		}
+		// var_dump($teacher['isAlreadyPurchasedFreeTrial']);
+		// die;
 		$teacherLessonReviewObj = new TeacherLessonReviewSearch();
 		$teacherLessonReviewObj->joinTeacherLessonRating();
 		$teacherLessonReviewObj->doNotCalculateRecords();

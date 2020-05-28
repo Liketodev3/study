@@ -115,7 +115,7 @@ $("document").ready(function(){
 		}
 
 		var data = 'teacher_id=' + teacherId + '&languageId=' + languageId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId + '&checkoutPage=1';
-
+		$('.cart-lang-id-js').html(teachLanguages[languageId]);
 		fcom.updateWithAjax( fcom.makeUrl('Cart','add'), data ,function(ans){
 			if( ans.redirectUrl ){
 				//fcom.waitAndRedirect( ans.redirectUrl );

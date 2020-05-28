@@ -20,8 +20,8 @@
    clearInterval(timeInterval);
    timeInterval = setInterval(currentTimer, 1000);
    function currentTimer() {
-       $('body').find(".fc-left").html("<h6>"+myTimeZoneLabel+":- "+moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A')+"</h6>");
-       seconds++;
+     $('body').find(".fc-left h6 span.timer").html(moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A'));
+     seconds++;
    }
 
    $(document).ready(function() {
@@ -38,15 +38,6 @@
    		}));
    		setupTeacherGeneralAvailability(json);
    	});
-
-    var timeInterval;
-    var seconds = 2;
-    clearInterval(timeInterval);
-    timeInterval = setInterval(currentTimer, 1000);
-    function currentTimer() {
-        $('body').find(".fc-left").html("<h6>"+myTimeZoneLabel+":- "+moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A')+"</h6>");
-        seconds++;
-    }
 
    	$('#listing_calendar').fullCalendar({
 
@@ -90,6 +81,7 @@
                });
            },
    	});
+        $('body').find(".fc-left").html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'></span></h6>");
    });
 </script>
 <div class="calendar-view">

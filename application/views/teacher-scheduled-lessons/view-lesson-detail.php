@@ -392,14 +392,14 @@ $('#end_lesson_timer').countdowntimer({
                      <hr>
 
 					  <div class="col-xl-12">
-					   <div class="d-flex align-items-center justify-content-between">
+					   <div class="d-sm-flex align-items-center justify-content-between">
                            <div id="end_lesson_time_div" style="display:none;">
                             <div class="timer timer--small">
                                 <span id="end_lesson_timer"></span>
 
                             </div>
                             </div>
-<div class="select-box select-box--up toggle-group" id="lesson_actions">
+                        <div class="select-box select-box--up toggle-group" id="lesson_actions">
 							<div class="buttons-toggle">
 								<a class="btn btn--large btn--secondary" href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lessonData['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?></a>
 								<a href="javascript:void(0)" class="btn btn--large btn--secondary btn--dropdown toggle__trigger-js"></a>

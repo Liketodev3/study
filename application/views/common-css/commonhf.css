@@ -1623,8 +1623,8 @@ body {
         padding-right: 0;
     }
 
-    .links--vertical li a {
-        color: var(--color-dark)
+    .links--vertical li a, .links--vertical.footer_contact_details li {
+        color: var(--color-dark)!important; 
     }
 
     .links--vertical li:first-child {

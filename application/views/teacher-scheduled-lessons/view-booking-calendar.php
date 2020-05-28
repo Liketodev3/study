@@ -9,12 +9,12 @@ var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
 var timeInterval;
 var seconds = 2;
 var checkSlotAvailabiltAjaxRun = false;
-clearInterval(timeInterval);
-timeInterval = setInterval(currentTimer, 1000);
-function currentTimer() {
-	$('body').find(".fc-left").html("<h6>"+myTimeZoneLabel+":- "+moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A')+"</h6>");
-	seconds++;
-}
+	clearInterval(timeInterval);
+	timeInterval = setInterval(currentTimer, 1000);
+	function currentTimer() {
+	  $('body').find(".fc-left h6 span.timer").html(moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A'));
+	  seconds++;
+	}
 	function getEventsByTime( start, stop ) {
 	   var json = JSON.stringify($("#d_calendar").fullCalendar("clientEvents").map(function(e) {
 			return 	{
@@ -48,6 +48,9 @@ function currentTimer() {
 			nowIndicator:true,
 			eventOverlap: false,
 			slotEventOverlap : false,
+			selectLongPressDelay:50,
+			eventLongPressDelay:50,
+			longPressDelay:50,
 			defaultTimedEventDuration : "01:00:00",
 			snapDuration : "<?php echo ($action=="free_trial") ? '0:30:00' : '01:00:00' ?>",
 			allDaySlot: false,
@@ -281,7 +284,7 @@ function currentTimer() {
 		}
 
 	},
-	eventMouseover: function(calEvent, jsEvent) {
+	eventClick: function(calEvent, jsEvent) {
 
 		var newEvent = new Object();
 		newEvent.title = '';
@@ -315,9 +318,10 @@ function currentTimer() {
 		}
 	}
 	});
-	$(".fc-today-button,button.fc-prev-button,button.fc-next-button").click(function() {
+		$(".fc-today-button,button.fc-prev-button,button.fc-next-button").click(function() {
 			$('.tooltipevent').remove();
 		});
+		$('body').find(".fc-left").html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'></span></h6>");
 	});
 </script>
 <div class="calendar-view">

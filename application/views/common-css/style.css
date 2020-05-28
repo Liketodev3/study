@@ -7445,6 +7445,8 @@ div.tagsinput div {
     color: #fff !important;
 }
 
+
+
 .messageCheckbox {
     text-align: right;
     margin-top: 15px;
@@ -7502,6 +7504,12 @@ div.tagsinput div {
 
 .links--vertical.footer_contact_details li img {
     margin-right: 10px;
+}
+
+@media (max-width: 767px) {
+.links--vertical.footer_contact_details li {
+color: var(--color-dark)!important; 
+}
 }
 
 #loaderCalendar {

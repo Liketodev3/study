@@ -1,5 +1,8 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
+<script>
+var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
+</script>
 <section class="section section--grey section--page" >
 	<div class="container container--narrow">
 
@@ -42,10 +45,11 @@
                         <div class="tabled">
                             <div class="tabled__cell">
                             <span class="-color-light"><?php echo Label::getLabel('LBL_Language'); ?></span><br>
+							<span class="cart-lang-id-js">
 							<?php if(isset($teachLanguages[$cartData['languageId']])) {
 								echo $teachLanguages[$cartData['languageId']];
 							} ?>
-
+							</span>
                             </div>
                             <div class="tabled__cell">
                             <span class="-color-light"><?php echo Label::getLabel('LBL_Duration'); ?></span><br>

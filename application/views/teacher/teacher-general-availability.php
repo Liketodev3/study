@@ -10,8 +10,8 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 	clearInterval(timeInterval);
 	timeInterval = setInterval(currentTimer, 1000);
 	function currentTimer() {
-		$('body').find(".fc-right").html("<h6>"+myTimeZoneLabel+":- "+moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A')+"</h6>");
-		seconds++;
+	  $('body').find(".fc-left h6 span.timer").html(moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A'));
+	  seconds++;
 	}
    function isOverlapping(start,end){
        var array = $("#ga_calendar").fullCalendar('clientEvents');
@@ -50,6 +50,9 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    			selectOverlap: false,
    			eventOverlap: false,
    			slotEventOverlap : false,
+			selectLongPressDelay:50,
+			eventLongPressDelay:50,
+			longPressDelay:50,
    			allDaySlot: false,
    			columnHeaderFormat :"ddd",
 			timezone: '<?php echo $user_timezone; ?>',
@@ -87,6 +90,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
                });
            },
    	});
+	$('body').find(".fc-left").html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'></span></h6>");
    });
 </script>
 <h6><?php echo Label::getLabel('LBL_General_Availability_Note'); ?></h6>

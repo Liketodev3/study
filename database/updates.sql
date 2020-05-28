@@ -365,3 +365,7 @@ UPDATE `tbl_language_labels` SET `label_caption` = 'Single Lesson Rate When Purc
 -- bug 036971 11-may-2020
 ALTER TABLE `tbl_spoken_languages` ADD `slanguage_display_order` INT NOT NULL AFTER `slanguage_flag`;
 ALTER TABLE `tbl_teaching_languages` ADD `tlanguage_display_order` INT NOT NULL AFTER `tlanguage_flag`;
+
+ALTER TABLE `tbl_flashcards` CHANGE `flashcard_notes` `flashcard_notes` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+
+UPDATE `tbl_configurations` SET `conf_val` = 'UTC' WHERE `tbl_configurations`.`conf_name` = 'CONF_TIMEZONE';

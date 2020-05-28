@@ -275,11 +275,9 @@ class TeacherWeeklySchedule extends MyAppModel
 
                 $_startDate = date('Y-m-d H:i:s', strtotime('+ '. $weekDiff .' weeks', strtotime($date)));
                 $_endDate = date('Y-m-d H:i:s', strtotime('+ '. $weekDiff .' weeks', strtotime($endDate)));
-
                 if (strtotime($_endDate) <= strtotime($_startDate)) {
                     $_endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime($_endDate)));
                 }
-
                 if (strtotime($_startDate) <= strtotime($startTime) && strtotime($_endDate) >= strtotime($endTime)) {
                     $generalAvail++;
                 }

@@ -135,6 +135,16 @@ class ConfigurationsController extends AdminBaseController
                 unset($post['CONF_USE_SSL']);
             }
         }
+        if (array_key_exists('CONF_TIMEZONE', $post)) {
+            unset($post['CONF_TIMEZONE']);
+        }
+        if (array_key_exists('CONF_CURRENCY', $post)) {
+            $data = Currency::getAttributesById($post['CONF_CURRENCY']);
+            if (empty($data) || ($data['currency_value'] * 1) != 1) {
+                Message::addErrorMessage(Labels::getLabel('MSG_Please_set_default_currency_value_to_1', $this->adminLangId));
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+        }
 
         if (!$record->update($post)) {
             Message::addErrorMessage($record->getError());
@@ -466,7 +476,7 @@ class ConfigurationsController extends AdminBaseController
                     ''
                 );
 
-                $frm->addSelectBox(Label::getLabel('LBL_Timezone', $this->adminLangId), 'CONF_TIMEZONE', Configurations::dateTimeZoneArr(), false, array(), '');
+                $frm->addSelectBox(Label::getLabel('LBL_Timezone', $this->adminLangId), 'CONF_TIMEZONE', Configurations::dateTimeZoneArr(), false, array('disabled'=>true), '');
 
                 $countryObj = new Country();
                 $countriesArr = $countryObj->getCountriesArr($this->adminLangId);

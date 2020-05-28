@@ -9,10 +9,10 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 	var seconds = 2;
 	clearInterval(timeInterval);
 	timeInterval = setInterval(currentTimer, 1000);
-	function currentTimer() {
-		$('body').find(".fc-left").html("<h6>"+myTimeZoneLabel+":- "+moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A')+"</h6>");
-		seconds++;
-	}
+    function currentTimer() {
+      $('body').find(".fc-left h6 span.timer").html(moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A'));
+      seconds++;
+    }
    $(document).ready(function() {
 	//moment().tz.setDefault("America/New_York");
 
@@ -45,6 +45,9 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    		eventOverlap: false,
    		slotEventOverlap : false,
    		forceEventDuration : true,
+        selectLongPressDelay:50,
+        eventLongPressDelay:50,
+        longPressDelay:50,
    		defaultTimedEventDuration : "00:30:00",
 		timezoneParam: 'timezone',
 		timezone: '<?php echo $user_timezone; ?>',
@@ -193,6 +196,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    	},
    	eventResize: function(event, delta, revertFunc) {},
    	});
+    $('body').find(".fc-left").html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'></span></h6>");
    });
 
 </script>
