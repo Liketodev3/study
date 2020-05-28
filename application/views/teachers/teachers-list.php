@@ -67,8 +67,12 @@
 
 						<div class="box-list__body">
 							<div class="grid-group">
+								<?php
+								$teacherTeachLanguageName =	explode(",",$teacher['teacherTeachLanguageName']);
+								$teacherTeachLanguageName  = "<strong>".implode(", </strong><strong>",$teacherTeachLanguageName)."</strong>";
+								?>
 								<!-- <div class="grid"><span><?php //echo Label::getLabel('LBL_Teaches'); ?>: <strong><?php //echo CommonHelper::getTeachLangs($teacher['utl_slanguage_ids']); ?></strong></span></div> -->
-								<div class="grid"><span><?php echo Label::getLabel('LBL_Teaches'); ?>: <strong><?php echo $teacher['teacherTeachLanguageName']; ?></strong></span></div>
+								<div class="grid"><span><?php echo Label::getLabel('LBL_Teaches'); ?>: <?php echo $teacherTeachLanguageName; ?></span></div>
 								<div class="grid"><span><?php echo Label::getLabel('LBL_From'); ?>: <strong><?php echo $teacher['user_country_name']; ?></strong></span></div>
 								<div class="grid"><span><?php echo Label::getLabel('LBL_Lessons'); ?>: <strong><?php echo $teacher['teacherTotLessons']; ?></strong></span></div>
 								<div class="grid"><span><?php echo Label::getLabel('LBL_Students'); ?>: <strong><?php echo $teacher['studentIdsCnt']; ?></strong></span></div>
