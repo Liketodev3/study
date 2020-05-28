@@ -183,8 +183,11 @@ class TeacherIssueReportedController extends TeacherBaseController
         $_refund_percentage = 0;
         $refundAmount = 0;
         $refundAmountTeacher = 0;
+        $lessonAmount = 0;
         $transactionDetails = Transaction::transactionDetailsWithLesson($lessonId);
-        $lessonAmount = $transactionDetails['order_total'] / $transactionDetails['total_lessons'] ;
+         if(!empty($transactionDetails['order_total']) && !empty($transactionDetails['total_lessons'])) {
+             $lessonAmount = $transactionDetails['order_total'] / $transactionDetails['total_lessons'] ;
+         }
         $lessonAmountTeacher = $transactionDetails['utxn_credit'];
         $lerner_id = $transactionDetails['slesson_learner_id'];
         $teacherPayment = $lessonAmount;
