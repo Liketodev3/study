@@ -367,3 +367,5 @@ ALTER TABLE `tbl_spoken_languages` ADD `slanguage_display_order` INT NOT NULL AF
 ALTER TABLE `tbl_teaching_languages` ADD `tlanguage_display_order` INT NOT NULL AFTER `tlanguage_flag`;
 
 ALTER TABLE `tbl_flashcards` CHANGE `flashcard_notes` `flashcard_notes` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+
+UPDATE `tbl_configurations` SET `conf_val` = 'UTC' WHERE `tbl_configurations`.`conf_name` = 'CONF_TIMEZONE';
