@@ -214,6 +214,10 @@ body[dir="rtl"] .calendar-view p {
     align-items: center;
 }
 
+
+body[dir="rtl"] .calendar-view .fc-toolbar .fc-left h6 span{ float: right;
+    margin-left: 10px;}
+
 body[dir="rtl"] .fc-toolbar .fc-left {
     float: right;
 }
@@ -222,9 +226,9 @@ body[dir="rtl"] .fc-toolbar .fc-right {
     float: left;
 }
 
-body[dir="rtl"] .fc .fc-toolbar>*>*{
-	margin-left:0;
-	}
+body[dir="rtl"] .fc .fc-toolbar > * > * {
+    margin-left: 0;
+}
 
 body[dir="rtl"] .fc .fc-toolbar > * > * {
     float: right;
@@ -232,8 +236,8 @@ body[dir="rtl"] .fc .fc-toolbar > * > * {
 }
 
 body[dir="rtl"] .fc .fc-toolbar .fc-left > * > *:last-child {
-	margin-right:0;
-	}
+    margin-right: 0;
+}
 
 body[dir="rtl"] .fc .fc-button-group > * {
     float: right;
@@ -495,6 +499,36 @@ body[dir="rtl"] .col-list .avtar {
 body[dir="rtl"] .form-search .form__action-wrap {
     right: auto;
     left: 0px;
+}
+
+body[dir="rtl"] .fc-unthemed .fc-popover .fc-header .fc-close {
+    right: auto;
+    left: 0;
+}
+
+body[dir="rtl"] .header__logo {
+    margin: 0 0 0 20px;
+}
+
+body[dir="rtl"] .toggle--nav {
+    margin: 0 0 0 10px;
+}
+
+body[dir="rtl"] .nav.nav--primary > ul > li {
+    padding: 0 5px 0 0;
+    margin: 0;
+}
+
+/*System Messages*/
+#mbsmessage .content:before,
+.system_message .content:before {
+    left: auto;
+    right: 0;
+}
+
+#mbsmessage .div_msg,
+.system_message .div_msg {
+    padding: 0 35px 0 20px;
 }
 
 @media (min-width: 1200px) {
