@@ -338,10 +338,10 @@ button.ui-button::-moz-focus-inner {
 	top: 1px;
 }*/
 .ui-datepicker .ui-datepicker-prev {
-	left: 2px;
+	left: -14px;
 }
 .ui-datepicker .ui-datepicker-next {
-	right: 2px;
+	right: -14px;
 }
 /*.ui-datepicker .ui-datepicker-prev-hover {
 	left: 1px;
@@ -370,6 +370,12 @@ button.ui-button::-moz-focus-inner {
 @media(min-width:567px) {
 	.ui-datepicker .ui-datepicker-title {
 	margin: 0 2.3em;}
+	.ui-datepicker .ui-datepicker-prev {
+	left: 2px;
+}
+.ui-datepicker .ui-datepicker-next {
+	right: 2px;
+}
 }
 
 .ui-datepicker select.ui-datepicker-month,
