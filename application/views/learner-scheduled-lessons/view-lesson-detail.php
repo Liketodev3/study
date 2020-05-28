@@ -240,7 +240,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 								<h6>
 									<?php echo Label::getLabel('LBL_Learner_Details'); ?>
 								</h6>
-								<div class="d-flex align-items-center">
+								<div class="d-sm-flex align-items-center">
 									<div>
 										<div class="avtar avtar--small" data-text="
 											<?php echo CommonHelper::getFirstChar($lessonData['learnerFname']); ?>">
