@@ -214,6 +214,10 @@ body[dir="rtl"] .calendar-view p {
     align-items: center;
 }
 
+
+body[dir="rtl"] .calendar-view .fc-toolbar .fc-left h6 span{ float: right;
+    margin-left: 10px;}
+
 body[dir="rtl"] .fc-toolbar .fc-left {
     float: right;
 }

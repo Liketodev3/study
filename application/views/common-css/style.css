@@ -7548,6 +7548,7 @@ html.show-facebox body {
 
 .calendar-view .fc-toolbar .fc-left h6 {
     color: #519cea;
+	margin-right:0 !important;
 }
 
 .calendar-view .fc-toolbar .fc-right h2 {
