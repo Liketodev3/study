@@ -371,7 +371,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 													<?php } ?>
 													<hr>
 														<div class="col-xl-12">
-															<div class="d-flex align-items-center justify-content-between">
+															<div class="timer-block d-sm-flex align-items-center justify-content-between">
 																<div id="end_lesson_time_div" style="display:none;">
 																	<div class="timer timer--small">
 																		<span id="end_lesson_timer"></span>
