@@ -59,6 +59,7 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 	var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';
 	var chat_name = '<?php echo $lessonData['teacherFname']; ?>';
 	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
+    var chat_avatar = "<?php echo $teacherImage; ?>";
 
 	var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","avatarURL":"<?php echo $teacherImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['teacherUrlName']; ?>", "role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
 

@@ -10,6 +10,10 @@ $endTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($les
 //$chatId = $lessonData['slesson_id']."_".UserAuthentication::getLoggedUserId()."_learner";
 $chatId = UserAuthentication::getLoggedUserId();
 $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacherId'],$lessonData['slesson_id']);
+$studentImage = '';
+if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
+    $studentImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['learnerId'])).'?'.time();
+}
 ?>
 <script>
     jQuery(document).ready(function () {
@@ -48,6 +52,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 	var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';
 	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
 	var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
+    var chat_avatar = "<?php echo $studentImage; ?>";
 	$(document).ready(function() {
 		if(sessionStorage.getItem('cometChatUserExists') == chat_group_id)
 		{
