@@ -1392,6 +1392,15 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 }
 
 
+@media(max-width:568px) {
+.timer-block .select-box .buttons-toggle{display: flex;}
+.timer-block .select-box .buttons-toggle .btn:first-child{    width: 100%;}
+.timer-block .timer.timer--small{    display: block;     text-align: center;}
+.timer-block .btn.end_lesson_now{    width: 100%;
+    text-align: center;  margin-top: 10px; }
+}
+
+
 .form .select-box .select-box__value {
     min-height: 50px;
     padding: 16px 40px 12px 20px;
