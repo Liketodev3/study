@@ -1,4 +1,4 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $totReviews = FatUtility::int($reviews['totReviews']);
 $avgRating = FatUtility::convertToType($reviews['prod_rating'],FatUtility::VAR_FLOAT);
 $rated_1 = FatUtility::int($reviews['rated_1']);
@@ -49,43 +49,43 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
 				<li><?php echo $teacher['user_full_name']; ?></li>
 			</ul>
 		</div>
-		
+
 		<div class="row">
 			<div class="col-xl-8 col-lg-8">
 				<div class="box -padding-30">
 					<div class="box__profile-head">
 						<div class="row">
-							
+
 							<!-- Image[ -->
 							<div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 -align-center">
 								<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
-									<?php 
+									<?php
 									if( true == User::isProfilePicUploaded( $teacher['user_id'] ) ){
-										$img = CommonHelper::generateUrl('Image','User', array( $teacher['user_id'] )); 
+										$img = CommonHelper::generateUrl('Image','User', array( $teacher['user_id'] ));
 										echo '<img src="'.$img.'" />';
 									}
 									?>
 									<?php /* if( $teacher['is_online'] ){ ?>
 									<span class="tag-online"></span>
 									<?php } */ ?>
-								</div> 
+								</div>
 							</div>
 							<!-- ] -->
-							
+
 							<div class="col-xl-5 col-lg-8 col-md-8 col-sm-8">
 								<h3 class="-display-inline"><?php echo $teacher['user_full_name']; ?></h3>
-								
+
 								<?php if( $teacher['user_country_id'] > 0 ){ ?>
 								<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($teacher['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>
 								<?php } ?>
-								
+
 								<!-- User Location[ -->
 								<div class="location">
 									<span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="11.625" height="15.969" viewBox="0 0 11.625 15.969">
 									<path d="M462.04,225.016a5.805,5.805,0,0,0-5.81,5.788c0,3.96,5.2,9.774,5.421,10.02a0.524,0.524,0,0,0,.778,0c0.221-.246,5.42-6.06,5.42-10.02A5.8,5.8,0,0,0,462.04,225.016Zm0,8.7a2.912,2.912,0,1,1,2.923-2.912A2.921,2.921,0,0,1,462.04,233.716Z" transform="translate(-456.219 -225.031)"/>
 									</svg></span>
-									<?php echo ($teacher['user_state_name'] != '' ) ? $teacher['user_state_name'].', ' : ''; ?> <?php echo $teacher['user_country_name']; ?> 
-									<?php 
+									<?php echo ($teacher['user_state_name'] != '' ) ? $teacher['user_state_name'].', ' : ''; ?> <?php echo $teacher['user_country_name']; ?>
+									<?php
 									/* echo CommonHelper::getDateOrTimeByTimeZone( $teacher['user_timezone'], 'h:i A'  );
 									echo " (GMT ".CommonHelper::getDateOrTimeByTimeZone( $teacher['user_timezone'], ' P' ).")"; */
 									?>
@@ -95,27 +95,27 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
                                 <div class="box__price -margin-tb-15">
                                 <?php echo Label::getLabel('LBL_Hourly_Rate'); ?>
                                 <h6><?php echo CommonHelper::displayMoneyFormat( $teacher['minPrice'] ); ?> - <?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></h6>
-                                </div>	
-								                       
+                                </div>
+
 								<!-- Reviews[ -->
 								<div class="ratings -margin-b-15">
                                     <span class="ratings__star -display-inline">
-<?php // if(round($avgRating)){ 
+<?php // if(round($avgRating)){
     for($i=0;$i<round($avgRating);$i++){ ?>
         <img src="<?php echo CONF_WEBROOT_URL; ?>images/star-filled.svg" alt="">
-    <?php } 
+    <?php }
     for($i=0;$i< 5-round($avgRating);$i++){ ?>
         <img src="<?php echo CONF_WEBROOT_URL; ?>images/star-empty.svg" alt="">
-<?php } //} ?>    
+<?php } //} ?>
 
                                     </span>
-								<?php if($totReviews) { ?>  
+								<?php if($totReviews) { ?>
 									<span class="ratings__count -display-inline"><a href="#itemRatings" class="-link-underline"><?php echo $totReviews.' '.Label::getLabel('Lbl_Reviews'); ?></a></span>
 								<?php }?>
 								</div>
 
 								<!-- ]-->
-								
+
 								<!-- Favorite[ -->
 								<a href="javascript:void(0)" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>)" class="btn btn--small btn--bordered btn--fav <?php echo($teacher['uft_id'])?'is-active':'';?>">
 									<span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="12" viewBox="0 0 14 12">
@@ -124,7 +124,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
 									<?php echo Label::getLabel('LBL_Favorite'); ?>
 								</a>
 								<!-- ] -->
-								
+
 								<!-- Sharing[ -->
 								<div class="toggle-dropdown">
 									<a href="javascript:void(0)" class="btn btn--small btn--bordered toggle-dropdown__link-js">
@@ -147,7 +147,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
 								</div>
 								<!-- ] -->
 							</div>
-							
+
 							<!-- [-->
 							<div class="col-xl-4 col-lg-8 col-md-8 col-sm-12 offset-min-12">
 								<div class="box-highlighted box-language">
@@ -170,19 +170,19 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
 								</div>
 							</div>
 							<!-- ] -->
-							
+
 						</div>
 					</div>
 
 					<hr>
-					
+
 					<div class="box__profile-body">
 						<?php
 						/* Spoken Languages[ */
-						$this->includeTemplate('teachers/_partial/spokenLanguages.php', $teacher, false); 
+						$this->includeTemplate('teachers/_partial/spokenLanguages.php', $teacher, false);
 						/* ] */
 						?>
-						
+
 						<div class="content-inline">
 							<p class="-small-title"><strong><?php echo Label::getLabel('LBL_About_Me'); ?></strong></p>
 							<p><?php echo $teacher['user_profile_info']; ?></p>
@@ -190,72 +190,72 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
 						</div>
 					</div>
 				</div>
-				
+
 				<?php $this->includeTemplate('teachers/_partial/preferencesSkills.php', $teacher, false); ?>
-				
+
 				<div class="box box--toggle">
 					<div class="box__head box__head-trigger box__head-trigger-js"><h4><?php echo Label::getLabel('LBL_Resume'); ?></h4></div>
 					<div class="box__body box__body-target box__body-target-js -padding-30" id="qualificationsList">
 					</div>
 				</div>
-				
+
 				<div class="box box--toggle">
 					<div class="box__head box__head-trigger box__head-trigger-js"><h4><?php echo Label::getLabel('Lbl_Ratings');?></h4></div>
 					<div class="box__body box__body-target box__body-target-js -padding-30">
-					  
+
 					   <div class="ratings -display-inline">
                             <span class="ratings__star -display-inline">
-                                <?php if(round($avgRating)){ 
+                                <?php if(round($avgRating)){
                                 for($i=0;$i<round($avgRating);$i++){ ?>
                                 <img src="<?php echo CONF_WEBROOT_URL; ?>images/star-filled.svg" alt="">
-                                <?php } 
+                                <?php }
                                 for($i=0;$i< 5-round($avgRating);$i++){ ?>
                                 <img src="<?php echo CONF_WEBROOT_URL; ?>images/star-empty.svg" alt="">
-                                <?php } } ?>    
+                                <?php } } ?>
                             </span>
 						  <h6><?php echo $avgRating;?> <?php echo Label::getLabel('Lbl_Average');?></h6>
 						  <p><?php echo $totReviews; ?> <?php echo Label::getLabel('Lbl_ratings');?>, <span id="reviewsTotal"><?php echo $reviews['totStudents']; ?></span> <?php echo Label::getLabel('Lbl_students');?></p>
 						</div>
 						<span class="-gap"></span>
-					
+
 						<?php echo $frmReviewSearch->getFormHtml(); ?>
 						<div id="itemRatings"></div>
 						<div id="loadMoreReviewsBtnDiv"></div>
 					</div>
 				</div>
-				
+
 			</div>
-			
-			
+
+
 			<div class="col-xl-4 col-lg-4">
-				<?php 
+				<?php
 				if( $teacher['us_video_link'] != '' ){
-					$youTubeVideoArr = explode( "?v=", $teacher['us_video_link'] );	
+					$youTubeVideoArr = explode( "?v=", $teacher['us_video_link'] );
 					if( count($youTubeVideoArr) > 1 ){
 					?>
 					<div class="video -margin-b-30">
 					<iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $youTubeVideoArr[1]; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 					</div>
-					<?php } 
+					<?php }
 				}
-					
-				if( $teacher['isFreeTrialEnabled'] ){  ?>
+
+				if( $teacher['isFreeTrialEnabled'] && !$teacher['isAlreadyPurchasedFreeTrial']){  ?>
 				 <div class="box box--cta -padding-30">
 					<h4 class="-text-bold"><?php echo Label::getLabel('LBL_FREE_Trail'); ?></h4>
 					 <p><?php echo Label::getLabel( 'LBL_Book_your_trial_FREE_for_30_Mins_only' ); ?></p>
 					 <a href="javascript:void(0)" onclick="viewCalendar('<?php echo $teacher['user_id']; ?>','free_trial', '<?php echo $teacherLanguage;?>');" class="btn btn--primary btn--large btn--block"><?php echo Label::getLabel( 'LBL_Book_Free_Trial' ); ?></a>
 				 </div>
 				 <?php } ?>
-				 
+
 				 <?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher), false); ?>
-				 
-				 
+
+
 				 <hr class="-no-margin">
 				 <div class="box box--cta -padding-30 -no-margin-top">
 					 <h4 class="-text-bold"><strong><?php echo Label::getLabel('LBL_View_Availability'); ?></strong></h4>
 					<a href="javascript:void(0);" onclick="viewCalendar('<?php echo $teacher['user_id']; ?>','paid')" class="btn btn--secondary btn--large btn--block"><?php echo Label::getLabel('LBL_Availability'); ?></a>
 				 </div>
-				 
+
 			</div>
 		</div>
 	 </div>
