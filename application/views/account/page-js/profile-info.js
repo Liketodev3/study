@@ -101,9 +101,13 @@ $(document).ready(function(){
 				$.systemMessage.close();
 			}, 3000);
 			name = frm.user_first_name.value + " "+frm.user_last_name.value;
-			userSeoUrl = userSeoBaseUrl+frm.user_url_name.value;
+			userSeoUrl = '';
+			if(frm.user_url_name) {
+					userSeoUrl = userSeoBaseUrl+frm.user_url_name.value;
+			}
+
 			updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
-            getLangProfileInfoForm(1);
+      getLangProfileInfoForm(1);
 			return ;
 		});
 	};
