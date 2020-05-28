@@ -90,7 +90,7 @@ $("document").ready(function(){
 			processData: false,
 			contentType: false,
 			data: data,
-			async: false,
+			// async: false,
 			success: function (result) {
 				try {
 					$.systemMessage.close();
