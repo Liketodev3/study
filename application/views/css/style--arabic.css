@@ -363,12 +363,17 @@ body[dir="rtl"] .buttons-toggle .btn:last-child {
     margin-right: 1px;
 }
 
-.select-box .select-box__target {
+body[dir="rtl"]  .select-box .select-box__target {
     left: 0;
-    right: auto;
 }
 
-.select-box .select-box__target .listing li {
+@media (min-width: 1024px){
+body[dir="rtl"]  .select-box .select-box__target {
+	right:auto;
+}
+}
+
+body[dir="rtl"]  .select-box .select-box__target .listing li {
     text-align: right;
 }
 
@@ -569,6 +574,8 @@ body[dir="rtl"] .nav.nav--primary > ul > li {
         right: 0px;
         text-align: right;
     }
+	
+
 }
 
 @media (max-width: 767px) {
@@ -577,7 +584,7 @@ body[dir="rtl"] .nav.nav--primary > ul > li {
         left: 20px;
     }
 
-
+  body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown > a.nav__dropdown-trigger{    padding-right: 20px;}
 
 }
 
@@ -586,4 +593,14 @@ body[dir="rtl"] .nav.nav--primary > ul > li {
         margin-right: 10px;
         margin-left: 0;
     }
+}
+
+@media (min-width: 767px)  and (max-width: 1024px) {
+	body[dir="rtl"] .col-list [class*="col-"].col-positioned {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+	right:auto;
+    max-width: fit-content;
+}
 }

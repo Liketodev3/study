@@ -7566,3 +7566,17 @@ html.show-facebox body {
     font-size: 1.3rem;
     line-height: 35px;
 }
+
+
+@media (max-width: 992px){
+	
+    .col-list .col-positioned {
+        position: relative;
+        right: auto;
+        top: auto;
+        padding-top: 0;
+    }
+	
+	
+
+}
