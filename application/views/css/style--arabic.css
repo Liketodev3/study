@@ -585,6 +585,7 @@ body[dir="rtl"] .nav.nav--primary > ul > li {
     }
 
   body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown > a.nav__dropdown-trigger{    padding-right: 20px;}
+  body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown.nav__dropdown--account > a.nav__dropdown-trigger{    padding-right: 0;}
 
 }
 
