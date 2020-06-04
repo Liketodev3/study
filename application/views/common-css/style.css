@@ -468,6 +468,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 
 .form-filters .form__element .form__input {
     padding-left: 50px;
+	    cursor: default;
 }
 
 .form-search .form__action {
@@ -4462,7 +4463,8 @@ div.tagsinput div {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: calc(100% - 170px);
+       /*  height: calc(100% - 170px); */
+        height:calc(100% - 225px);
         width: 100%;
         padding: 80px 0 0;
         overflow: auto;
@@ -4470,6 +4472,7 @@ div.tagsinput div {
 
     .message-container .scrollbar {
         max-height: 650px;
+		
     }
 }
 
@@ -4496,9 +4499,6 @@ div.tagsinput div {
         height: 60px;
     }
 
-    .message-container .scrollbar {
-        max-height: 400px;
-    }
 }
 
 /* ] */
@@ -7576,4 +7576,8 @@ html.show-facebox body {
 
 
 }
+@media (max-width:767px){
+.tooltipevent{left:50%!important; transform:translateX(-50%) !important;}
+}
 
+.message-container .scrollbar{overflow-y:auto;}
