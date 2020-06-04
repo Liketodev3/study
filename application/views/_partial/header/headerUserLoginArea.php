@@ -43,6 +43,7 @@ if( UserAuthentication::isUserLogged() ){ ?>
 			
 			
 		</div>
+		<span class="overlay overlay-dasboard"></span>
 </li>
 <?php } else { ?>
 
