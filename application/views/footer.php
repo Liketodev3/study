@@ -122,3 +122,11 @@
 <a href="javascript:void(0)" class="scroll-top-js gototop" title="Back to Top"></a>
 </body>
 </html>
+<?php
+if (FatApp::getConfig('CONF_ENABLE_LIVECHAT', FatUtility::VAR_STRING, '')) {
+    echo FatApp::getConfig('CONF_LIVE_CHAT_CODE', FatUtility::VAR_STRING, '');
+}
+if (FatApp::getConfig('CONF_SITE_TRACKER_CODE', FatUtility::VAR_STRING, '')) {
+    echo FatApp::getConfig('CONF_SITE_TRACKER_CODE', FatUtility::VAR_STRING, '');
+}
+?>
