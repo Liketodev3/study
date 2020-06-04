@@ -369,3 +369,6 @@ ALTER TABLE `tbl_teaching_languages` ADD `tlanguage_display_order` INT NOT NULL 
 ALTER TABLE `tbl_flashcards` CHANGE `flashcard_notes` `flashcard_notes` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 
 UPDATE `tbl_configurations` SET `conf_val` = 'UTC' WHERE `tbl_configurations`.`conf_name` = 'CONF_TIMEZONE';
+
+--bug 037666  04-june-2020 
+ALTER TABLE `tbl_configurations` CHANGE `conf_val` `conf_val` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
