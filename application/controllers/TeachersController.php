@@ -21,7 +21,11 @@ class TeachersController extends MyAppController {
 		$this->_template->addJs('js/enscroll-0.6.2.min.js');
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
+		$this->_template->addJs('js/daygrid.min.js');
+		$this->_template->addJs('js/timegrid.min.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
+		$this->_template->addCss('css/daygrid.min.css');
+		$this->_template->addCss('css/timegrid.min.css');
 		$this->_template->addCss('css/custom-full-calendar.css');
 		$this->_template->addJs('js/ion.rangeSlider.js');
 		$this->_template->addCss('css/ion.rangeSlider.css');
@@ -138,8 +142,11 @@ class TeachersController extends MyAppController {
 	public function view($user_name) {
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
+		$this->_template->addJs('js/daygrid.min.js');
+		$this->_template->addJs('js/timegrid.min.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
-		$this->_template->addCss('css/custom-full-calendar.css');
+		$this->_template->addCss('css/daygrid.min.css');
+		$this->_template->addCss('css/timegrid.min.css');
 		//$this->_template->addJs('js/popper.min.js');
 		//$this->_template->addJs('js/bootstrap.min.js');
 		//$this->_template->addCss('css/bootstrap.min.css');
@@ -406,7 +413,11 @@ class TeachersController extends MyAppController {
 		if ($lPackageId <= 0) {
 			FatUtility::dieWithError(Label::getLabel('LBL_Packages_are_not_configured_by_admin'));
 		}
-		$bookingSnapDuration = floor($bookingMinutesDuration / 60).':'.($bookingMinutesDuration - floor($bookingMinutesDuration / 60) * 60).':00';
+		$mint = floor($bookingMinutesDuration / 60);
+		$mint =  ($mint > 9) ?  $mint : '0'.$mint;
+		$second = ($bookingMinutesDuration - floor($bookingMinutesDuration / 60) * 60);
+		$second =  ($second > 9) ?  $second : '0'.$second;
+		$bookingSnapDuration = $mint.':'.$second.':00';
 		$this->set('bookingMinutesDuration', $bookingMinutesDuration);
 		$this->set('bookingSnapDuration', $bookingSnapDuration);
 		MyDate::setUserTimeZone();
