@@ -215,8 +215,10 @@ body[dir="rtl"] .calendar-view p {
 }
 
 
-body[dir="rtl"] .calendar-view .fc-toolbar .fc-left h6 span{ float: right;
-    margin-left: 10px;}
+body[dir="rtl"] .calendar-view .fc-toolbar .fc-left h6 span {
+    float: right;
+    margin-left: 10px;
+}
 
 body[dir="rtl"] .fc-toolbar .fc-left {
     float: right;
@@ -363,17 +365,17 @@ body[dir="rtl"] .buttons-toggle .btn:last-child {
     margin-right: 1px;
 }
 
-body[dir="rtl"]  .select-box .select-box__target {
+body[dir="rtl"] .select-box .select-box__target {
     left: 0;
 }
 
-@media (min-width: 1024px){
-body[dir="rtl"]  .select-box .select-box__target {
-	right:auto;
-}
+@media (min-width: 1024px) {
+    body[dir="rtl"] .select-box .select-box__target {
+        right: auto;
+    }
 }
 
-body[dir="rtl"]  .select-box .select-box__target .listing li {
+body[dir="rtl"] .select-box .select-box__target .listing li {
     text-align: right;
 }
 
@@ -524,6 +526,28 @@ body[dir="rtl"] .nav.nav--primary > ul > li {
     margin: 0;
 }
 
+/*CMS PAGE*/
+body[dir="rtl"] .section--icons .icon {
+    float: right;
+    margin: 0 20px 0 40px
+}
+
+body[dir="rtl"] .accordian__title {
+    padding: 30px 30px 30px 80px;
+    text-align: right;
+}
+
+body[dir="rtl"] .accordian__title:before {
+    right: auto;
+    left: 30px;
+    text-align: left;
+}
+
+body[dir="rtl"] .accordian__body {
+    padding: 0 30px 20px 20px;
+    text-align: right;
+}
+
 /*System Messages*/
 #mbsmessage .content:before,
 .system_message .content:before {
@@ -574,7 +598,7 @@ body[dir="rtl"] .nav.nav--primary > ul > li {
         right: 0px;
         text-align: right;
     }
-	
+
 
 }
 
@@ -584,8 +608,13 @@ body[dir="rtl"] .nav.nav--primary > ul > li {
         left: 20px;
     }
 
-  body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown > a.nav__dropdown-trigger{    padding-right: 20px;}
-  body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown.nav__dropdown--account > a.nav__dropdown-trigger{    padding-right: 0;}
+    body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown > a.nav__dropdown-trigger {
+        padding-right: 20px;
+    }
+
+    body[dir="rtl"] .nav.nav--primary > ul > li.nav__dropdown.nav__dropdown--account > a.nav__dropdown-trigger {
+        padding-right: 0;
+    }
 
 }
 
@@ -596,12 +625,12 @@ body[dir="rtl"] .nav.nav--primary > ul > li {
     }
 }
 
-@media (min-width: 767px)  and (max-width: 1024px) {
-	body[dir="rtl"] .col-list [class*="col-"].col-positioned {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-	right:auto;
-    max-width: fit-content;
-}
+@media (min-width: 767px) and (max-width: 1024px) {
+    body[dir="rtl"] .col-list [class*="col-"].col-positioned {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        right: auto;
+        max-width: fit-content;
+    }
 }
