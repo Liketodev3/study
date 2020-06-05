@@ -1,7 +1,7 @@
-/*! jQuery UI - v1.12.0 - 2016-07-08
+/*! jQuery UI - v1.12.1 - 2016-09-14
 * http://jqueryui.com
 * Includes: core.css, accordion.css, autocomplete.css, menu.css, button.css, controlgroup.css, checkboxradio.css, datepicker.css, dialog.css, draggable.css, resizable.css, progressbar.css, selectable.css, selectmenu.css, slider.css, sortable.css, spinner.css, tabs.css, tooltip.css, theme.css
-* To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Arial%2CHelvetica%2Csans-serif&fsDefault=1em&fwDefault=normal&cornerRadius=3px&bgColorHeader=e9e9e9&bgTextureHeader=flat&borderColorHeader=dddddd&fcHeader=333333&iconColorHeader=444444&bgColorContent=ffffff&bgTextureContent=flat&borderColorContent=dddddd&fcContent=333333&iconColorContent=444444&bgColorDefault=f6f6f6&bgTextureDefault=flat&borderColorDefault=c5c5c5&fcDefault=454545&iconColorDefault=777777&bgColorHover=ededed&bgTextureHover=flat&borderColorHover=cccccc&fcHover=2b2b2b&iconColorHover=555555&bgColorActive=007fff&bgTextureActive=flat&borderColorActive=003eff&fcActive=ffffff&iconColorActive=ffffff&bgColorHighlight=fffa90&bgTextureHighlight=flat&borderColorHighlight=dad55e&fcHighlight=777620&iconColorHighlight=777620&bgColorError=fddfdf&bgTextureError=flat&borderColorError=f1a899&fcError=5f3f3f&iconColorError=cc0000&bgColorOverlay=aaaaaa&bgTextureOverlay=flat&bgImgOpacityOverlay=0&opacityOverlay=30&bgColorShadow=666666&bgTextureShadow=flat&bgImgOpacityShadow=0&opacityShadow=30&thicknessShadow=5px&offsetTopShadow=0px&offsetLeftShadow=0px&cornerRadiusShadow=8px
+* To view and modify this theme, visit http://jqueryui.com/themeroller/?bgShadowXPos=&bgOverlayXPos=&bgErrorXPos=&bgHighlightXPos=&bgContentXPos=&bgHeaderXPos=&bgActiveXPos=&bgHoverXPos=&bgDefaultXPos=&bgShadowYPos=&bgOverlayYPos=&bgErrorYPos=&bgHighlightYPos=&bgContentYPos=&bgHeaderYPos=&bgActiveYPos=&bgHoverYPos=&bgDefaultYPos=&bgShadowRepeat=&bgOverlayRepeat=&bgErrorRepeat=&bgHighlightRepeat=&bgContentRepeat=&bgHeaderRepeat=&bgActiveRepeat=&bgHoverRepeat=&bgDefaultRepeat=&iconsHover=url(%22images%2Fui-icons_555555_256x240.png%22)&iconsHighlight=url(%22images%2Fui-icons_777620_256x240.png%22)&iconsHeader=url(%22images%2Fui-icons_444444_256x240.png%22)&iconsError=url(%22images%2Fui-icons_cc0000_256x240.png%22)&iconsDefault=url(%22images%2Fui-icons_777777_256x240.png%22)&iconsContent=url(%22images%2Fui-icons_444444_256x240.png%22)&iconsActive=url(%22images%2Fui-icons_ffffff_256x240.png%22)&bgImgUrlShadow=&bgImgUrlOverlay=&bgImgUrlHover=&bgImgUrlHighlight=&bgImgUrlHeader=&bgImgUrlError=&bgImgUrlDefault=&bgImgUrlContent=&bgImgUrlActive=&opacityFilterShadow=Alpha(Opacity%3D30)&opacityFilterOverlay=Alpha(Opacity%3D30)&opacityShadowPerc=30&opacityOverlayPerc=30&iconColorHover=%23555555&iconColorHighlight=%23777620&iconColorHeader=%23444444&iconColorError=%23cc0000&iconColorDefault=%23777777&iconColorContent=%23444444&iconColorActive=%23ffffff&bgImgOpacityShadow=0&bgImgOpacityOverlay=0&bgImgOpacityError=95&bgImgOpacityHighlight=55&bgImgOpacityContent=75&bgImgOpacityHeader=75&bgImgOpacityActive=65&bgImgOpacityHover=75&bgImgOpacityDefault=75&bgTextureShadow=flat&bgTextureOverlay=flat&bgTextureError=flat&bgTextureHighlight=flat&bgTextureContent=flat&bgTextureHeader=flat&bgTextureActive=flat&bgTextureHover=flat&bgTextureDefault=flat&cornerRadius=3px&fwDefault=normal&ffDefault=Arial%2CHelvetica%2Csans-serif&fsDefault=1em&cornerRadiusShadow=8px&thicknessShadow=5px&offsetLeftShadow=0px&offsetTopShadow=0px&opacityShadow=.3&bgColorShadow=%23666666&opacityOverlay=.3&bgColorOverlay=%23aaaaaa&fcError=%235f3f3f&borderColorError=%23f1a899&bgColorError=%23fddfdf&fcHighlight=%23777620&borderColorHighlight=%23dad55e&bgColorHighlight=%23fffa90&fcContent=%23333333&borderColorContent=%23dddddd&bgColorContent=%23ffffff&fcHeader=%23333333&borderColorHeader=%23dddddd&bgColorHeader=%23e9e9e9&fcActive=%23ffffff&borderColorActive=%23003eff&bgColorActive=%23007fff&fcHover=%232b2b2b&borderColorHover=%23cccccc&bgColorHover=%23ededed&fcDefault=%23454545&borderColorDefault=%23c5c5c5&bgColorDefault=%23f6f6f6
 * Copyright jQuery Foundation and other contributors; Licensed MIT */
 
 /* Layout helpers
@@ -107,13 +107,8 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	cursor: default;background: #fff;
-border-radius: 3px;padding:20px;
-box-shadow: 0 0 5px 4px rgba(0,0,0,0.05);border:none!important;
+	cursor: default;
 }
-.ui-autocomplete  li.ui-state-focus{margin:0!important;background:rgba(0,0,0,0.02);color: var(--color-secondary);}
-.ui-autocomplete  li{font-size: 0.9rem;margin: 15px 0 0;color: #888;padding:10px 15px;}
-.ui-autocomplete  li:first-child{margin-top:0;}
 .ui-menu {
 	list-style: none;
 	padding: 0;
@@ -329,26 +324,26 @@ button.ui-button::-moz-focus-inner {
 .ui-datepicker .ui-datepicker-prev,
 .ui-datepicker .ui-datepicker-next {
 	position: absolute;
-	top:6px;
+	top: 2px;
 	width: 1.8em;
 	height: 1.8em;
 }
-/*.ui-datepicker .ui-datepicker-prev-hover,
+.ui-datepicker .ui-datepicker-prev-hover,
 .ui-datepicker .ui-datepicker-next-hover {
 	top: 1px;
-}*/
+}
 .ui-datepicker .ui-datepicker-prev {
-	left: -14px;
+	left: 2px;
 }
 .ui-datepicker .ui-datepicker-next {
-	right: -14px;
+	right: 2px;
 }
-/*.ui-datepicker .ui-datepicker-prev-hover {
+.ui-datepicker .ui-datepicker-prev-hover {
 	left: 1px;
 }
 .ui-datepicker .ui-datepicker-next-hover {
 	right: 1px;
-}*/
+}
 .ui-datepicker .ui-datepicker-prev span,
 .ui-datepicker .ui-datepicker-next span {
 	display: block;
@@ -359,7 +354,7 @@ button.ui-button::-moz-focus-inner {
 	margin-top: -8px;
 }
 .ui-datepicker .ui-datepicker-title {
-	margin: 0 1em;
+	margin: 0 2.3em;
 	line-height: 1.8em;
 	text-align: center;
 }
@@ -367,20 +362,9 @@ button.ui-button::-moz-focus-inner {
 	font-size: 1em;
 	margin: 1px 0;
 }
-@media(min-width:567px) {
-	.ui-datepicker .ui-datepicker-title {
-	margin: 0 2.3em;}
-	.ui-datepicker .ui-datepicker-prev {
-	left: 2px;
-}
-.ui-datepicker .ui-datepicker-next {
-	right: 2px;
-}
-}
-
 .ui-datepicker select.ui-datepicker-month,
 .ui-datepicker select.ui-datepicker-year {
-	width: 48%;height: 30px; padding-left: 5px; line-height:30px;
+	width: 45%;
 }
 .ui-datepicker table {
 	width: 100%;
@@ -391,12 +375,12 @@ button.ui-button::-moz-focus-inner {
 .ui-datepicker th {
 	padding: .7em .3em;
 	text-align: center;
-	font-weight: 500;text-transform: uppercase;color: #666;
+	font-weight: bold;
 	border: 0;
 }
 .ui-datepicker td {
 	border: 0;
-	padding: 0;border: 1px solid #eee;
+	padding: 1px;
 }
 .ui-datepicker td span,
 .ui-datepicker td a {
@@ -411,7 +395,7 @@ button.ui-button::-moz-focus-inner {
 	padding: 0 .2em;
 	border-left: 0;
 	border-right: 0;
-	border-bottom: 0;border-top: none;
+	border-bottom: 0;
 }
 .ui-datepicker .ui-datepicker-buttonpane button {
 	float: right;
@@ -735,11 +719,11 @@ button.ui-button::-moz-focus-inner {
 	float: right;
 	margin-top: 0;
 }
-.ui-slider {border: none!important;
+.ui-slider {
 	position: relative;
 	text-align: left;
 }
-.ui-slider .ui-slider-handle {border-radius: 100%;border: none!important;background: #c4c8cc!important;
+.ui-slider .ui-slider-handle {
 	position: absolute;
 	z-index: 2;
 	width: 1.2em;
@@ -748,7 +732,7 @@ button.ui-button::-moz-focus-inner {
 	-ms-touch-action: none;
 	touch-action: none;
 }
-.ui-slider .ui-slider-range {border: none!important;background: #0064ca!important;
+.ui-slider .ui-slider-range {
 	position: absolute;
 	z-index: 1;
 	font-size: .7em;
@@ -763,11 +747,11 @@ button.ui-button::-moz-focus-inner {
 	filter: inherit;
 }
 
-.ui-slider-horizontal {background: #e9e9e9!important;
-	height: 6px;
+.ui-slider-horizontal {
+	height: .8em;
 }
 .ui-slider-horizontal .ui-slider-handle {
-	top: -.4em;
+	top: -.3em;
 	margin-left: -.6em;
 }
 .ui-slider-horizontal .ui-slider-range {
@@ -896,6 +880,7 @@ button.ui-button::-moz-focus-inner {
 body .ui-tooltip {
 	border-width: 2px;
 }
+
 /* Component containers
 ----------------------------------*/
 .ui-widget {
@@ -949,7 +934,6 @@ html .ui-button.ui-state-disabled:active {
 	font-weight: normal;
 	color: #454545;
 }
-/*
 .ui-state-default a,
 .ui-state-default a:link,
 .ui-state-default a:visited,
@@ -986,7 +970,6 @@ a.ui-button:focus {
 	color: #2b2b2b;
 	text-decoration: none;
 }
-*/
 
 .ui-visual-focus {
 	box-shadow: 0 0 3px 1px rgb(94, 158, 214);
@@ -997,8 +980,8 @@ a.ui-button:focus {
 a.ui-button:active,
 .ui-button:active,
 .ui-button.ui-state-active:hover {
-/*	border: 1px solid #003eff;*/
-	background: #54d1f1;
+	border: 1px solid #003eff;
+	background: #007fff;
 	font-weight: normal;
 	color: #ffffff;
 }
@@ -1082,32 +1065,31 @@ a.ui-button:active,
 }
 .ui-icon,
 .ui-widget-content .ui-icon {
-	background-image: url(admin/images/ui-icons_222222_256x240.png);
+	background-image: url("images/ui-icons_444444_256x240.png");
 }
 .ui-widget-header .ui-icon {
-	background-image: url(admin/images/ui-icons_222222_256x240.png);
-}
-.ui-button .ui-icon {
-	background-image: url(admin/images/ui-icons_777777_256x240.png);
+	background-image: url("images/ui-icons_444444_256x240.png");
 }
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon,
 .ui-button:hover .ui-icon,
-.ui-button:focus .ui-icon,
-.ui-state-default .ui-icon {
-	background-image: url(admin/images/ui-icons_222222_256x240.png);
+.ui-button:focus .ui-icon {
+	background-image: url("images/ui-icons_555555_256x240.png");
 }
 .ui-state-active .ui-icon,
 .ui-button:active .ui-icon {
-	background-image: url(admin/images/ui-icons_ffffff_256x240.png);
+	background-image: url("images/ui-icons_ffffff_256x240.png");
 }
 .ui-state-highlight .ui-icon,
 .ui-button .ui-state-highlight.ui-icon {
-	background-image: url(admin/images/ui-icons_777620_256x240.png);
+	background-image: url("images/ui-icons_777620_256x240.png");
 }
 .ui-state-error .ui-icon,
 .ui-state-error-text .ui-icon {
-	background-image: url(admin/images/ui-icons_cc0000_256x240.png);
+	background-image: url("images/ui-icons_cc0000_256x240.png");
+}
+.ui-button .ui-icon {
+	background-image: url("images/ui-icons_777777_256x240.png");
 }
 
 /* positioning */
@@ -1321,54 +1303,10 @@ a.ui-button:active,
 /* Overlays */
 .ui-widget-overlay {
 	background: #aaaaaa;
-	opacity: .3;
-	filter: Alpha(Opacity=30); /* support: IE8 */
+	opacity: .003;
+	filter: Alpha(Opacity=.3); /* support: IE8 */
 }
 .ui-widget-shadow {
 	-webkit-box-shadow: 0px 0px 5px #666666;
 	box-shadow: 0px 0px 5px #666666;
 }
-
-
-
-.ui-datepicker{border: none!important;box-shadow:0 0 35px 10px rgba(0, 0, 0, 0.1);padding: 15px;border-radius: 5px!important;width: auto;}
-@media(min-width:567px) {
-.ui-datepicker{min-width:400px;}
-}
-
-.ui-datepicker-header.ui-widget-header{background: none; border: none;}
-.ui-datepicker-month, .ui-datepicker-year{margin: 0 2px!important;}
-
-.ui-datepicker td .ui-state-default{background: none; border: none;text-align: center;padding:10px;}
-.ui-datepicker td.ui-datepicker-current-day{background: #54d1f1;}
-.ui-datepicker td.ui-datepicker-current-day:before{position: absolute;left: -4px; top: -4px; right: -4px;bottom: -4px;content: "";background:var(--color-primary);}
-.ui-datepicker td{position: relative;}
-.ui-datepicker td > a{position: relative;}
-
-.ui-datepicker td.ui-datepicker-today .ui-state-active{background: #fff;}
-.ui-datepicker td.ui-datepicker-today .ui-state-active:before{display: none;}
-.ui-datepicker td.ui-datepicker-today .ui-state-active > a{color: #54d1f1;}
-.ui-datepicker td.ui-datepicker-current-day .ui-state-active > a{color: #54d1f1;}
-.ui-datepicker td.ui-datepicker-current-day.ui-datepicker-today{background: none;}
-.ui-datepicker td.ui-datepicker-current-day.ui-datepicker-today:before{display: none;}
-
-/*.ui-datepicker td.ui-datepicker-today {background: #333;}
-.ui-datepicker td.ui-datepicker-today:before {position: absolute;left: -4px; top: -4px; right: -4px;bottom: -4px;content: "";background: #333;box-shadow:0 0 15px 5px rgba(0, 0, 0, 0.1);}*/
-.ui-datepicker td.ui-datepicker-today a{background: #f9f5fe !important;font-weight: 700;color: var(--color-secondary);}
-
-.ui-datepicker .ui-datepicker-buttonpane button{opacity: 1; padding: 8px 20px;font-weight: normal!important;border: none;
-background: var(--color-secondary);
-color: #ffffff;-webkit-transition:  0.5s all ease;
--moz-transition:  0.5s all ease;
--o-transition:  0.5s all ease;
-transition: 0.5s all ease;}/* 
-
-.ui-datepicker .ui-datepicker-buttonpane button:hover{box-shadow: 0 0 8px rgba(84, 209, 241, 0.40), 0 8px 16px rgba(84, 209, 241, 0.66);} */
-
-/*.ui-datepicker-other-month{background-color: rgba(0, 0, 0, 0.05);}*/
-
-
-
-.dropdown-menu{box-shadow:0 0 35px 10px rgba(0, 0, 0, 0.1);background: #fff; border-radius: 5px; padding: 0;position:absolute;top: 100%;min-width: 300px;z-index: 2;display: none;list-style: none;max-height: 200px;overflow: auto;}
-.dropdown-menu li{border-bottom: 1px solid rgba(0,0,0,0.1);}
-.dropdown-menu li a{display: block;padding: 10px;color: inherit;}
