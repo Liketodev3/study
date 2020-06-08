@@ -165,10 +165,12 @@ $(document).ready(function(){
 		if( $(window).width() < 1200 ){
 			$('.nav__dropdown-trigger-js').click(function(){
 				if($(this).hasClass('is-active')){
+					$('html').removeClass('show-dashboard-js');
 					$(this).removeClass('is-active');
 					$(this).siblings('.nav__dropdown-target-js').slideUp();return false;
 				}
 				$('.nav__dropdown-trigger-js').removeClass('is-active');
+				$('html').addClass('show-dashboard-js');
 				$(this).addClass("is-active");
 				$('.nav__dropdown-target-js').slideUp();
 				$(this).siblings('.nav__dropdown-target-js').slideDown();
