@@ -370,5 +370,10 @@ ALTER TABLE `tbl_flashcards` CHANGE `flashcard_notes` `flashcard_notes` TEXT CHA
 
 UPDATE `tbl_configurations` SET `conf_val` = 'UTC' WHERE `tbl_configurations`.`conf_name` = 'CONF_TIMEZONE';
 
---bug 037666  04-june-2020 
+
+--bug 037666  04-june-2020
 ALTER TABLE `tbl_configurations` CHANGE `conf_val` `conf_val` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+
+-- #037844 -8-june-2020
+
+UPDATE `tbl_configurations` SET `conf_val` = 'Y-m-d' WHERE `tbl_configurations`.`conf_name` = 'CONF_DATEPICKER_FORMAT';
