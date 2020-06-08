@@ -301,7 +301,7 @@ function htmlEncode(value){
 
 	removeFilter = function( id, obj ){
 		$('.'+id).parent("li").remove();
-		$('#'+id).find('input[type=\'checkbox\']').attr('checked', false);
+		$('#'+id).find('input[type=\'checkbox\']').prop('checked', false);
 		searchTeachers(document.frmTeacherSrch);
 	}
 
