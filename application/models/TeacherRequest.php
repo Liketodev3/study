@@ -35,14 +35,12 @@ class TeacherRequest extends MyAppModel
         }
         $srch = new TeacherRequestSearch();
         $srch->addCondition('utrequest_user_id', '=', $userId);
-        // $srch->addMultiplefields(array( 'utrequest_id', 'utrequest_attempts'));
-        $srch->addMultiplefields(array( 'count(utrequest_id) as totalRequest'));
+        $srch->addMultiplefields(array( 'utrequest_id', 'utrequest_attempts'));
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
 
         $maxAttempts = FatApp::getConfig('CONF_MAX_TEACHER_REQUEST_ATTEMPT', FatUtility::VAR_INT, 3);
-        // if ($row && $row['utrequest_attempts'] >= $maxAttempts) {
-        if ($row && $row['totalRequest'] >= $maxAttempts) {
+        if ($row && $row['utrequest_attempts'] >= $maxAttempts) {
             return true;
         }
 
@@ -58,7 +56,6 @@ class TeacherRequest extends MyAppModel
         $srch = new TeacherRequestSearch();
         $srch->addCondition('utrequest_user_id', '=', $userId);
         $srch->addMultiplefields(array( 'utrequest_attempts', 'utrequest_id', 'utrequest_status'));
-        $srch->addOrder('utrequest_id','desc');
         $rs = $srch->getResultSet();
         if ($row = FatApp::getDb()->fetch($rs)) {
             return $row;
@@ -91,7 +88,7 @@ class TeacherRequest extends MyAppModel
         /* ] */
 
         /* save teacher approval request values[ */
-        // FatApp::getDb()->deleteRecords(TeacherRequestValue::DB_TBL, array( 'smt' => 'utrvalue_utrequest_id = ?', 'vals' => array( $utrequest_id ) ));
+        FatApp::getDb()->deleteRecords(TeacherRequestValue::DB_TBL, array( 'smt' => 'utrvalue_utrequest_id = ?', 'vals' => array( $utrequest_id ) ));
 
         $requestValues = $post;
 
