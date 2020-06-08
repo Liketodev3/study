@@ -73,6 +73,10 @@ class UsersController extends AdminBaseController
             case User::USER_TYPE_TEACHER:
                 $srch->addCondition('u.user_is_teacher', '=', applicationConstants::YES);
                 break;
+            case User::USER_TYPE_LEARNER_TEACHER:
+                $srch->addCondition('u.user_is_teacher', '=', applicationConstants::YES);
+                $srch->addCondition('u.user_is_learner', '=', applicationConstants::YES);
+                break;
         }
 
         $user_regdate_from = FatApp::getPostedData('user_regdate_from', FatUtility::VAR_DATE, '');
