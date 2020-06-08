@@ -376,6 +376,8 @@
     display: none;
 }
 
+
+
 .box--narrow {
     padding: 30px;
     min-width: 450px;
@@ -5216,7 +5218,7 @@ div.tagsinput div {
         visibility: visible;
     }
 
-    html.show-nav-js {
+    html.show-nav-js, html.show-dashboard-js {
         position: fixed;
         left: 0;
         right: 0;
@@ -5224,9 +5226,11 @@ div.tagsinput div {
         bottom: 0;
     }
 
-    html.show-nav-js .overlay--nav {
+    html.show-nav-js .overlay--nav, html.show-dashboard-js .overlay {
         display: block;
     }
+	
+	
 
     .nav.nav--primary-offset > ul > li {
         display: block;
@@ -7581,3 +7585,9 @@ html.show-facebox body {
 }
 
 .message-container .scrollbar{overflow-y:auto;}
+
+@media (max-width:767px){
+html.show-dashboard-js .overlay {
+        display: none;
+    }
+}
