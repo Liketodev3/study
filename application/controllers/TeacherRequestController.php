@@ -25,6 +25,7 @@ class TeacherRequestController extends MyAppController {
 			'concat(user_first_name, " ", user_last_name) as user_name',
 			'utrequest_reference'
 		));
+		$srch->addOrder('utrequest_id','desc');
 		$rs = $srch->getResultSet();
 		$teacherRequestRow = FatApp::getDb()->fetch($rs);
 		if (!$teacherRequestRow) {
