@@ -23,6 +23,7 @@ class UsersController extends AdminBaseController
 
     public function search()
     {
+
         $canEdit   = $this->objPrivilege->canEditUsers(AdminAuthentication::getLoggedAdminId(), true);
         $pagesize  = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $frmSearch = $this->getUserSearchForm();
@@ -73,7 +74,9 @@ class UsersController extends AdminBaseController
                 $srch->addCondition('u.user_is_teacher', '=', applicationConstants::YES);
                 break;
         }
+
         $user_regdate_from = FatApp::getPostedData('user_regdate_from', FatUtility::VAR_DATE, '');
+
         if (!empty($user_regdate_from)) {
             $srch->addCondition('user_added_on', '>=', $user_regdate_from . ' 00:00:00');
         }
@@ -101,7 +104,7 @@ class UsersController extends AdminBaseController
         $this->set('canEdit', $canEdit);
         $this->set('page', $page);
         $this->set('pageSize', $pagesize);
-        $this->set('postedData', $post);
+        $this->set('postedData', $data);
         $this->set('recordCount', $srch->recordCount());
         $this->_template->render(false, false);
     }
