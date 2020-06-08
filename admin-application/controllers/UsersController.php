@@ -104,7 +104,7 @@ class UsersController extends AdminBaseController
         $this->set('canEdit', $canEdit);
         $this->set('page', $page);
         $this->set('pageSize', $pagesize);
-        $this->set('postedData', $data);
+        $this->set('postedData', $post);
         $this->set('recordCount', $srch->recordCount());
         $this->_template->render(false, false);
     }
