@@ -108,9 +108,11 @@ class TeacherRequestsController extends AdminBaseController
                 'utrvalue_user_profile_info',
                 'utrvalue_user_teach_slanguage_id',
                 'utrvalue_user_language_speak',
-                'utrvalue_user_language_speak_proficiency'
+                'utrvalue_user_language_speak_proficiency',
+                'count(utrequest_id) as totalRequest'
                 )
         );
+        $srch->addGroupBy('utrequest_id');
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
 
@@ -124,14 +126,28 @@ class TeacherRequestsController extends AdminBaseController
 
         $this->set('row', $row);
 
+
+
         /* photoId Proof row[ */
         $photo_id_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, $row['utrequest_user_id']);
         $this->set('photo_id_row', $photo_id_row);
+        /* ] */
+        $otherRequest = [];
+        /* previous request  data[ */
+        if($row['totalRequest'] > 0) {
+            $srch = new TeacherRequestSearch();
+            $srch->addCondition('utrequest_user_id', '=', $row['utrequest_user_id']);
+            $srch->addCondition('utrequest_id', '!=', $utrequest_id);
+            $srch->addOrder('utrequest_id','desc');
+            $rs = $srch->getResultSet();
+            $otherRequest = FatApp::getDb()->fetchAll($rs);
+        }
         /* ] */
 
         $this->set('spokenLanguagesArr', SpokenLanguage::getAllLangs($this->adminLangId));
         $this->set('TeachingLanguagesArr', TeachingLanguage::getAllLangs($this->adminLangId));
         $this->set('spokenLanguageProfArr', SpokenLanguage::getProficiencyArr($this->adminLangId));
+        $this->set('otherRequest', $otherRequest);
         $this->_template->render(false, false);
     }
 
@@ -186,7 +202,7 @@ class TeacherRequestsController extends AdminBaseController
         }
 
         $utrequest_id = FatApp::getPostedData('utrequest_id', FatUtility::VAR_INT, 0);
-
+        $comment =  FatApp::getPostedData('utrequest_comments', FatUtility::VAR_STRING, '');
         /* [ */
         $srch = new TeacherRequestSearch();
         $srch->joinUserCredentials();
@@ -220,15 +236,18 @@ class TeacherRequestsController extends AdminBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         /* ] */
-
+        $requestRow['utrequest_comments'] = $comment;
         $statusArr = TeacherRequest::getStatusArr($this->adminLangId);
         unset($statusArr[TeacherRequest::STATUS_PENDING]);
-
+        if($requestRow['utrequest_status'] != TeacherRequest::STATUS_PENDING) {
+            Message::addErrorMessage(Label::getLabel('LBL_Request_Status_Already_Changed', $this->adminLangId));
+            FatUtility::dieWithError(Message::getHtml());
+        }
         if ($post['utrequest_status'] == $requestRow['utrequest_status']) {
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Status_Request', $this->adminLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-
+        $post['utrequest_status_change_date'] =  date('Y-m-d H:i:s');
         $TeacherRequest = new TeacherRequest($utrequest_id);
         $TeacherRequest->assignValues($post);
         if (!$TeacherRequest->save()) {

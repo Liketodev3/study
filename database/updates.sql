@@ -377,3 +377,7 @@ ALTER TABLE `tbl_configurations` CHANGE `conf_val` `conf_val` TEXT CHARACTER SET
 -- #037844 -8-june-2020
 
 UPDATE `tbl_configurations` SET `conf_val` = 'Y-m-d' WHERE `tbl_configurations`.`conf_name` = 'CONF_DATEPICKER_FORMAT';
+-- #037966 8-june-2020
+ALTER TABLE `tbl_user_teacher_requests` DROP INDEX `ututrequest_user_id`;
+
+ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_status_change_date`  DATETIME NOT NULL AFTER `utrequest_status`;

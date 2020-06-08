@@ -25,8 +25,11 @@ class TeacherRequestController extends MyAppController {
 			'concat(user_first_name, " ", user_last_name) as user_name',
 			'utrequest_reference'
 		));
+		$srch->addOrder('utrequest_id','desc');
 		$rs = $srch->getResultSet();
 		$teacherRequestRow = FatApp::getDb()->fetch($rs);
+		// print_r($teacherRequestRow);
+		// die;
 		if (!$teacherRequestRow) {
 			FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', 'form'));
 		}
@@ -54,6 +57,7 @@ class TeacherRequestController extends MyAppController {
 		/* ] */
 		$frm = $this->getForm();
 		$userDetails = User::getAttributesById($this->userId,array('user_first_name','user_last_name'));
+
 		if ($userDetails) {
 			$assignArray = array();
 			$assignArray['utrvalue_user_first_name'] = $userDetails['user_first_name'];
@@ -87,6 +91,7 @@ class TeacherRequestController extends MyAppController {
 		/* Validation[ */
 		$frm = $this->getForm(false);
 		$post = $frm->getFormDataFromArray(FatApp::getPostedData());
+
 		if (false === $post) {
 			if (FatUtility::isAjaxCall()) {
 				FatUtility::dieWithError(current($frm->getValidationErrors()));
