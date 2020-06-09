@@ -528,6 +528,7 @@ class ConfigurationsController extends AdminBaseController
                 $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Determines_how_many_items_are_shown_per_page_(user_listing,_categories,_etc)", $this->adminLangId).".</small>";
 
                 $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Teacher_Dashboard', $this->adminLangId).'</h3>');
+
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_No._Of_Lessons_plans", $this->adminLangId), "CONF_TEACHER_NO_OF_LESSON");
                 $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Enter_the_value_with_comma_Separated_used_in_teacher_dashboard_for_My_couses_page_No._Of_Lessons_plans)", $this->adminLangId).".</small>";
 
@@ -540,6 +541,9 @@ class ConfigurationsController extends AdminBaseController
                 $fld3->requirements()->setRange(0, 100);
                 $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Refund_to_learner_In_Less_than_24_Hours_(In_Percentage)", $this->adminLangId).".</small>";
 
+                $maxAttemptFld =  $frm->addIntegerField(Label::getLabel("LBL_MAX_TEACHER_REQUEST_ATTEMPT", $this->adminLangId), "CONF_MAX_TEACHER_REQUEST_ATTEMPT");
+                $maxAttemptFld->requirements()->setRange(0, 10);
+                
                 $frm->addHtml('', 'Account', '<h3>'.Label::getLabel("LBL_Account", $this->adminLangId).'</h3>');
                 $fld5 = $frm->addCheckBox(
                     Label::getLabel("LBL_Activate_Admin_Approval_After_Registration_(Sign_Up)", $this->adminLangId),
