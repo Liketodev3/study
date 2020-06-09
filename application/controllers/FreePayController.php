@@ -24,6 +24,10 @@ class FreePayController extends MyAppController
         $srch->addCondition('order_id', '=', $orderId);
         $srch->addCondition('order_user_id', '=', $userId);
         $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PENDING);
+        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'op.op_teacher_id = tu.user_id', 'tu');
+        $srch->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'tu.user_id = cred.credential_user_id', 'cred');
+        $srch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'op.op_slanguage_id = tlang.tlanguage_id', 'tlang');
+        $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'ttlang.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND tlanguagelang_lang_id = ' . $this->siteLangId, 'ttlang');
         $srch->addMultipleFields(array(
             'order_id',
             'order_user_id',
@@ -31,6 +35,11 @@ class FreePayController extends MyAppController
             'order_wallet_amount_charge',
             'op_teacher_id',
             'op_slanguage_id',
+            'cred.credential_email',
+            'CONCAT(tu.user_first_name, " ", tu.user_last_name) as teacherFullName',
+            'IFNULL(tlanguage_name, tlanguage_identifier) AS teacherTeachLanguageName',
+            'tu.user_timezone'
+
         ));
         $rs = $srch->getResultSet();
         $orderInfo = FatApp::getDb()->fetch($rs);
@@ -80,6 +89,8 @@ class FreePayController extends MyAppController
             'slesson_end_time' => date('H:i:s', strtotime($cartData['endDateTime'])),
             'slesson_status' => ScheduledLesson::STATUS_SCHEDULED
         );
+        $getlearnerFullName = User::getAttributesById(UserAuthentication::getLoggedUserId(),['CONCAT(user_first_name," ",user_last_name) as learnerFullName']);
+
 
             $sLessonObj = new ScheduledLesson();
             $sLessonObj->assignValues($sLessonArr);
@@ -90,11 +101,26 @@ class FreePayController extends MyAppController
                 }
                 CommonHelper::redirectUserReferer();
             }
+
+
         }
+        $lessonId = $sLessonObj->getMainTableRecordId();
         /* ] */
         $cartObj = new Cart();
         $cartObj->clear();
         $cartObj->updateUserCart();
+        $emailData =  [];
+        $emailData = [
+          'teacherFullName' => $orderInfo['teacherFullName'],
+          'startDate' => MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $cartData['startDateTime'],false, $orderInfo['user_timezone']),
+          'startTime' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $cartData['startDateTime'],true, $orderInfo['user_timezone']),
+          'endTime' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $cartData['endDateTime'],true, $orderInfo['user_timezone']),
+          'teacherTeachLanguageName' => $orderInfo['teacherTeachLanguageName'],
+          'learnerFullName' => $getlearnerFullName['learnerFullName'],
+        ];
+        EmailHandler::sendlearnerScheduleEmail($orderInfo['credential_email'],$emailData,$this->siteLangId);
+        $userNotification = new UserNotifications($orderInfo['op_teacher_id']);
+        $userNotification->sendSchLessonByLearnerNotification($lessonId);
         if ($isAjaxCall) {
             $this->set('redirectUrl', CommonHelper::generateUrl('Custom', 'paymentSuccess'));
             $this->set('msg', Label::getLabel("MSG_Payment_from_wallet_made_successfully", $this->siteLangId));

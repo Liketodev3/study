@@ -59,8 +59,6 @@ class EmailHandler extends FatModel
             $body = str_replace($key, $val, $body);
         }
 
-            // print_r($body);
-            // die;
 
         if (FatApp::getConfig('CONF_SEND_SMTP_EMAIL')) {
             if (!$sendEmail = static::sendSmtpEmail($to, $subject, $body, '', $tpl, $langId, '', $smtp_arr)) {
@@ -252,6 +250,24 @@ class EmailHandler extends FatModel
         );
 
         if (self::sendMailTpl($data['credential_email'], $tpl, $langId, $vars)) {
+            return true;
+        }
+        return false;
+    }
+    public static function sendlearnerScheduleEmail($to, $data, $langId)
+    {
+        $tpl = 'learner_schedule_email';
+        $vars = array(
+            '{learner_name}' => $data['learnerFullName'],
+            '{teacher_name}' => $data['teacherFullName'],
+            '{lesson_name}' => $data['teacherTeachLanguageName'],
+            '{lesson_date}' => $data['startDate'], //y-m-d
+            '{lesson_start_time}' =>  $data['startTime'], // H:i:s
+            '{lesson_end_time}' => $data['endTime'], // H:i:s
+            '{learner_comment}' => '',
+            '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
+        );
+        if (self::sendMailTpl($to, $tpl, $langId, $vars)) {
             return true;
         }
         return false;
