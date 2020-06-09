@@ -139,8 +139,6 @@ class TeachersController extends MyAppController {
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
-		$this->_template->addCss('css/daygrid.min.css');
-		$this->_template->addCss('css/timegrid.min.css');
 		//$this->_template->addJs('js/popper.min.js');
 		//$this->_template->addJs('js/bootstrap.min.js');
 		//$this->_template->addCss('css/bootstrap.min.css');
