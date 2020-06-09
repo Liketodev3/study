@@ -20,8 +20,12 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
     $teacherImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['teacherId'] )).'?'.time();
     $teacherImageTag  = '<img src="'.$teacherImage.'" />';
 }
+
 ?>
 <script type="text/javascript">
+langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
+
+console.log(langLbl.chargelearner);
     jQuery(document).ready(function () {
         if( sessionStorage.getItem('cometChatUserExists') != null){
             if(sessionStorage.getItem('cometChatUserExists')  != '<?php echo "LESSON-".$lessonData['slesson_id']; ?>'){
@@ -115,13 +119,17 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 
 	$(function(){
 		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
+
+        $("#lesson_actions").hide();
+        var showLessonBtn = true;
 		$('#start_lesson_timer').countdowntimer({
 			startDate : "<?php echo $curDate; ?>",
 			dateAndTime : "<?php echo $startTime; ?>",
 			size : "lg",
 			timeUp : function(){
 				fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','startLessonAuthentication',[CometJsonFriendData.lessonId]),'',function(t){
-					if(t != 0){
+                    if(t != 0){
+                        showLessonBtn = false;
 						$(".join_lesson_now").show();
 						$("#lesson_actions").hide();
 					}
@@ -129,8 +137,11 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 				$("#start_lesson_timer").hide();
 			}
 		});
+        if(showLessonBtn) {
+            $("#lesson_actions").show();
+        }
 		<?php } ?>
-$('#end_lesson_timer').countdowntimer({
+        $('#end_lesson_timer').countdowntimer({
 			startDate : "<?php echo $curDate; ?>",
 			dateAndTime : "<?php echo $endTime; ?>",
 			size : "lg",
@@ -204,6 +215,7 @@ $('#end_lesson_timer').countdowntimer({
 			}
 		});
 });    */
+
 
 
 </script>
