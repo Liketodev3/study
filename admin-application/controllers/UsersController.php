@@ -88,15 +88,28 @@ class UsersController extends AdminBaseController
         if (!empty($user_regdate_to)) {
             $srch->addCondition('user_added_on', '<=', $user_regdate_to . ' 23:59:59');
         }
-        $srch->joinTable(TeacherRequest::DB_TBL, 'LEFT JOIN', 'tr.utrequest_user_id = user_id', 'tr');
+        $latestTeacherRequest =   new SearchBase(TeacherRequest::DB_TBL, 'ltr');;
+        $latestTeacherRequest->addFld(array('max(ltr.utrequest_id) latestRequestId'));
+        $latestTeacherRequest->addGroupBy('ltr.utrequest_user_id');
+        $latestTeacherRequest->doNotCalculateRecords();
+        $latestTeacherRequest->doNotLimitRecords();
+
+        $teacherRequest = new TeacherRequestSearch(false);
+        $teacherRequest->doNotCalculateRecords();
+        $teacherRequest->doNotLimitRecords();
+
+        $teacherRequest->joinTable("(".$latestTeacherRequest->getQuery().")",'INNER JOIN','lastrequest.latestRequestId = tr.utrequest_id','lastrequest');
+        $srch->joinTable("(".$teacherRequest->getQuery().")", 'LEFT JOIN', 'utr.latestRequestId = user_id', 'utr');
+
         $srch->addFld(array(
-            'user_is_learner',
-            'user_is_teacher',
-            'user_first_name',
-            'user_last_name',
-            'user_registered_initially_for',
-            'tr.utrequest_status'
-        ));
+                  'user_is_learner',
+                  'user_is_teacher',
+                  'user_first_name',
+                  'user_last_name',
+                  'user_registered_initially_for',
+                  'utr.utrequest_status'
+              ));
+              
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         //echo $srch->getQuery();
