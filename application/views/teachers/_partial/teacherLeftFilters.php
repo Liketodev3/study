@@ -154,7 +154,11 @@ if (empty($minPrice) && empty($maxPrice)) {
                                     <ul>
 										<?php
 										$genderConstants = User::getGenderArr();
-										foreach( $genderArr as $gender ){ ?>
+										foreach( $genderArr as $gender ){
+											if(!array_key_exists($gender['user_gender'],$genderConstants)) {
+												continue;
+											}
+										?>
                                         <li>
                                             <label class="checkbox" id="gender_<?php echo $gender['user_gender']; ?>">
                                                 <input type="checkbox" name="filterGender[]" value="<?php echo $gender['user_gender']; ?>" <?php if( in_array($gender['user_gender'], $gender_filter )){ echo 'checked'; }  ?> >

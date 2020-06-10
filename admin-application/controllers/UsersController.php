@@ -113,7 +113,6 @@ class UsersController extends AdminBaseController
 
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-        //echo $srch->getQuery();
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs, 'user_id');
         $adminId = AdminAuthentication::getLoggedAdminId();
