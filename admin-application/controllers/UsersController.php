@@ -109,7 +109,7 @@ class UsersController extends AdminBaseController
                   'user_registered_initially_for',
                   'utr.utrequest_status'
               ));
-              
+
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         //echo $srch->getQuery();
