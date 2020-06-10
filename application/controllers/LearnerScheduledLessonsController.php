@@ -105,6 +105,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
         $srch->joinTeacherSettings();
         //$srch->joinTeacherTeachLanguage( $this->siteLangId );
+        // $srch->joinTeacherTeachLanguageView( $this->siteLangId );
         $srch->addOrder('slesson_date', 'ASC');
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addMultipleFields(array(
@@ -124,8 +125,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'slns.slesson_end_time',
             'slns.slesson_status',
             'slns.slesson_is_teacher_paid',
-            //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
-            '"-" as teacherTeachLanguageName',
+             '"-" as teacherTeachLanguageName',
+            // 'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration'
         ));
@@ -585,12 +586,14 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->joinTeacherCredentials();
         $srch->doNotCalculateRecords();
         $srch->addCondition('slesson_id', '=', $lessonId);
+        $srch->joinTeacherTeachLanguage($this->siteLangId);
         $srch->addFld(
             array(
                 'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
                 'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
-                //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
-                '"-" as teacherTeachLanguageName',
+                'ut.user_timezone as teacherTimeZone',
+                'IFNULL(tl_l.tlanguage_name, t_t_lang.tlanguage_identifier) as teacherTeachLanguageName',
+                //'"-" as teacherTeachLanguageName',
                 'tcred.credential_email as teacherEmailId',
                 'tcred.credential_user_id as teacherId',
             )
@@ -619,12 +622,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{learner_name}' => $lessonRow['learnerFullName'],
             '{teacher_name}' => $lessonRow['teacherFullName'],
             '{lesson_name}' => $lessonRow['teacherTeachLanguageName'],
-            '{lesson_date}' => date('Y-m-d', $SelectedDateTimeStamp),
-            '{lesson_start_time}' => date('H:i:s', $SelectedDateTimeStamp),
-            '{lesson_end_time}' => date('H:i:s', $endDateTimeStamp) ,
+            '{lesson_date}' => MyDate::convertTimeFromSystemToUserTimezone('Y-m-d',  date('Y-m-d H:i:s', $SelectedDateTimeStamp),false, $lessonRow['teacherTimeZone']),
+            '{lesson_start_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', date('Y-m-d H:i:s', $SelectedDateTimeStamp), true, $lessonRow['teacherTimeZone']),
+            '{lesson_end_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', date('Y-m-d H:i:s', $endDateTimeStamp), true, $lessonRow['teacherTimeZone']),
             '{learner_comment}' => '',
             '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
         );
+
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], 'learner_schedule_email', $this->siteLangId, $vars)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
         }

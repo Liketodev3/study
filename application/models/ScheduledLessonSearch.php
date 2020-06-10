@@ -79,15 +79,14 @@ class ScheduledLessonSearch extends SearchBase
 
     public function joinTeacherTeachLanguage($langId = 0)
     {
-        if (false === $this->isTeacherSettingsJoined) {
-            trigger_error("First use 'joinTeacherSettings' before joining 'joinTeacherTeachLanguage'", E_USER_ERROR);
-        }
-
         $langId = FatUtility::int($langId);
-        $this->joinTable(SpokenLanguage::DB_TBL, 'INNER JOIN', 't_sl.slanguage_id = ts.us_teach_slanguage_id', 't_sl');
+        if ($langId < 1) {
+            $langId = CommonHelper::getLangId();
+        }
+        $this->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 't_t_lang.tlanguage_id = slns.slesson_slanguage_id', 't_t_lang');
 
         if ($langId > 0) {
-            $this->joinTable(SpokenLanguage::DB_TBL_LANG, 'LEFT JOIN', 't_sl.slanguage_id = t_sl_l.slanguagelang_slanguage_id AND slanguagelang_lang_id = '.$langId, 't_sl_l');
+            $this->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tl_l.tlanguagelang_tlanguage_id = t_t_lang.tlanguage_id AND tl_l.tlanguagelang_lang_id = '.$langId, 'tl_l');
         }
     }
 
