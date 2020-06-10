@@ -126,6 +126,8 @@ class LearnerController extends LearnerBaseController
         if (empty($teacher)) {
             FatUtility::exitWithErrorCode(404);
         }
+        $proficiencyArr = SpokenLanguage::getProficiencyArr( CommonHelper::getLangId() );
+        $teacher['proficiencyArr'] = $proficiencyArr;
         $this->set('teacher', $teacher);
         $this->_template->render();
     }

@@ -69,6 +69,7 @@ class UsersController extends AdminBaseController
         switch ($type) {
             case User::USER_TYPE_LEANER:
                 $srch->addCondition('u.user_is_learner', '=', applicationConstants::YES);
+                $srch->addCondition('u.user_is_teacher', '=', applicationConstants::NO);
                 break;
             case User::USER_TYPE_TEACHER:
                 $srch->addCondition('u.user_is_teacher', '=', applicationConstants::YES);
