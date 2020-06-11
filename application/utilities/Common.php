@@ -246,12 +246,12 @@ class Common
         /* ] */
 
         /* gender[ */
-        $genderSrch = clone $teacherSrchObj;
-        $genderSrch->addGroupBy('user_gender');
-        $genderSrch->addMultipleFields(array('user_gender'));
-        $genderRs = $genderSrch->getResultSet();
-        $genderArr = FatApp::getDb()->fetchAll($genderRs);
-        $template->set('genderArr', $genderArr);
+        // $genderSrch = clone $teacherSrchObj;
+        // $genderSrch->addGroupBy('user_gender');
+        // $genderSrch->addMultipleFields(array('user_gender'));
+        // $genderRs = $genderSrch->getResultSet();
+        // $genderArr = FatApp::getDb()->fetchAll($genderRs);
+        $template->set('genderArr',  User::getGenderArr());
         /* ] */
 
         $template->set('frmFilters', $frmFilters);

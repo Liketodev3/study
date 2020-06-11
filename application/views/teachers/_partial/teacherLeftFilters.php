@@ -143,7 +143,8 @@ if (empty($minPrice) && empty($maxPrice)) {
                     </div>
 					<?php } ?>
 
-					<?php if( isset($genderArr) && !empty($genderArr) ){ ?>
+					<?php
+					if( isset($genderArr) && !empty($genderArr) ){ ?>
                     <div class="block">
                         <div class="block__head block__head-trigger block__head-trigger-js">
                             <h6><?php echo Label::getLabel('LBL_Gender'); ?></h6>
@@ -153,16 +154,13 @@ if (empty($minPrice) && empty($maxPrice)) {
                                 <div class="listing listing--vertical">
                                     <ul>
 										<?php
-										$genderConstants = User::getGenderArr();
-										foreach( $genderArr as $gender ){
-											if(!array_key_exists($gender['user_gender'],$genderConstants)) {
-												continue;
-											}
+										//$genderConstants = User::getGenderArr();
+										foreach( $genderArr as $k => $gender ){
 										?>
                                         <li>
-                                            <label class="checkbox" id="gender_<?php echo $gender['user_gender']; ?>">
-                                                <input type="checkbox" name="filterGender[]" value="<?php echo $gender['user_gender']; ?>" <?php if( in_array($gender['user_gender'], $gender_filter )){ echo 'checked'; }  ?> >
-                                                <i class="input-helper"></i> <?php echo $genderConstants[ $gender['user_gender'] ]; ?>
+                                            <label class="checkbox" id="gender_<?php echo $k; ?>">
+                                                <input type="checkbox" name="filterGender[]" value="<?php echo $k; ?>" <?php if( in_array($k, $gender_filter )){ echo 'checked'; }  ?> >
+                                                <i class="input-helper"></i> <?php echo $gender; ?>
                                             </label>
                                         </li>
 										<?php } ?>
