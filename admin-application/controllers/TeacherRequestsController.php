@@ -40,23 +40,42 @@ class TeacherRequestsController extends AdminBaseController
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
 
-        if (!empty($post['keyword'])) {
-            $cnd = $srch->addCondition('utrequest_reference', '=', '%' . $post['keyword'] . '%', 'AND');
-            $cnd->attachCondition('user_first_name', 'like', '%' . $post['keyword'] . '%', 'OR');
-            $cnd->attachCondition('user_last_name', 'like', '%' . $post['keyword'] . '%', 'OR');
-            $cnd->attachCondition('credential_email', 'like', '%' . $post['keyword'] . '%', 'OR');
-            $cnd->attachCondition('credential_username', 'like', '%' . $post['keyword'] . '%', 'OR');
-            $cnd->attachCondition('utrequest_reference', 'like', '%' . $post['keyword'] . '%', 'OR');
-        }
+
+        $laterstRecordsrch = new SearchBase('tbl_user_teacher_requests','str');
+        $laterstRecordsrch->joinTable(User::DB_TBL, 'INNER JOIN', 'su.user_id = str.utrequest_user_id', 'su');
+        $laterstRecordsrch->doNotCalculateRecords();
+        $laterstRecordsrch->doNotLimitRecords();
+        $laterstRecordsrch->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'su.user_id = scred.credential_user_id', 'scred');
+        $laterstRecordsrch->addMultipleFields(array('max(str.utrequest_id) as maxId'));
+
+       if (!empty($post['keyword'])) {
+           $cnd = $laterstRecordsrch->addCondition('utrequest_reference', '=', '%' . $post['keyword'] . '%', 'AND');
+           $cnd->attachCondition('mysql_func_concat(`user_first_name`," ",`user_last_name`)', 'like', '%' . $post['keyword'] . '%', 'OR',true);
+           $cnd->attachCondition('user_last_name', 'like', '%' . $post['keyword'] . '%', 'OR');
+           $cnd->attachCondition('credential_email', 'like', '%' . $post['keyword'] . '%', 'OR');
+           $cnd->attachCondition('credential_username', 'like', '%' . $post['keyword'] . '%', 'OR');
+           $cnd->attachCondition('utrequest_reference', 'like', '%' . $post['keyword'] . '%', 'OR');
+       }
+        $laterstRecordsrch->addGroupBy('str.utrequest_user_id');
+
+
         if (!empty($post['date_from'])) {
-            $srch->addCondition('tr.utrequest_date', '>=', $post['date_from'] . ' 00:00:00');
+            if ($post['status'] > -1) {
+                $laterstRecordsrch->addCondition('str.utrequest_status', '=', $post['status']);
+            }
+            $laterstRecordsrch->addCondition('str.utrequest_date', '>=', $post['date_from'] . ' 00:00:00');
         }
         if ($post['status'] > -1) {
+            // $laterstRecordsrch->addCondition('str.utrequest_status', '=', $post['status']);
             $srch->addCondition('tr.utrequest_status', '=', $post['status']);
         }
         if (!empty($post['date_to'])) {
-            $srch->addCondition('tr.utrequest_date', '<=', $post['date_to'] . ' 23:59:59');
+            if ($post['status'] > -1) {
+                $laterstRecordsrch->addCondition('str.utrequest_status', '=', $post['status']);
+            }
+            $laterstRecordsrch->addCondition('str.utrequest_date', '<=', $post['date_to'] . ' 23:59:59');
         }
+        $srch->joinTable("(".$laterstRecordsrch->getQuery().")", 'INNER JOIN', 'latestR.maxId = tr.utrequest_id', 'latestR');
         $rs	= $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
         $this->set('canEditTeacherApprovalRequests', $this->objPrivilege->canEditTeacherApprovalRequests(AdminAuthentication::getLoggedAdminId(), true));
