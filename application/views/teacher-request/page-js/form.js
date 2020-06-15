@@ -1,3 +1,5 @@
+var teacherQualificationAjax = false;
+var setUpTeacherApprovalAjax = false;
 $("document").ready(function(){
 	searchTeacherQualification();
 });
@@ -14,6 +16,9 @@ $("document").ready(function(){
 
 	setUpTeacherQualification = function( frm ){
 		if ( !$(frm).validate() ){ return; }
+		if(teacherQualificationAjax) {
+			return false;
+		}
         $(frm.btn_submit).attr('disabled','disabled');
 		var dv = $("#frm_fat_id_frmQualification");
 
@@ -30,6 +35,7 @@ $("document").ready(function(){
 				$(dv).html(fcom.getLoader());
 			},
 			success: function (data, textStatus, jqXHR) {
+				teacherQualificationAjax = false;
 				var data = JSON.parse(data);
 				if(data.status==0){
 					$.mbsmessage(data.msg, true, 'alert alert--danger');
@@ -72,6 +78,10 @@ $("document").ready(function(){
 
 	 setUpTeacherApproval = function( frm ){
 		if ( !$(frm).validate() ){ return; }
+		if(setUpTeacherApprovalAjax) {
+			return false;
+		}
+		setUpTeacherApprovalAjax = true;
 		data =  new FormData(frm);
 		console.log(frm.user_profile_pic.files);
 		if(frm.user_profile_pic.files.lenght > 0) {
@@ -96,6 +106,7 @@ $("document").ready(function(){
 					$.systemMessage.close();
 					result = JSON.parse(result);
 					if (result.status != 1) {
+						setUpTeacherApprovalAjax = false;
 						$(document).trigger('close.mbsmessage');
 						$.mbsmessage(result.msg,true, 'alert alert--danger');
 						return false;
@@ -106,6 +117,7 @@ $("document").ready(function(){
 							return;
 					}
 				} catch (e) {
+					setUpTeacherApprovalAjax = false;
 					$.mbsmessage(e,true, 'alert alert--danger');
 						return;
 				}
