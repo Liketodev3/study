@@ -18,6 +18,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 
    	$("#setUpWeeklyAvailability").click(function(){
    		var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
+            console.log(e);
    			return 	{
    				start: moment(e.start).format('HH:mm:ss'),
    				end: moment(e.end).format('HH:mm:ss'),
@@ -29,6 +30,60 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    		}));
    		setupTeacherWeeklySchedule(json);
    	});
+
+    function mergeEvents() {
+        allevents = $("#w_calendar").fullCalendar("clientEvents");
+        if(allevents.length == 1) {
+            return;
+        }
+        $.each(allevents, function( i, eItem )
+        {
+            eventmerge =  false;
+            if(eItem ===null || typeof eItem == 'undefined')
+            {
+                return;
+            }
+            var start =  eItem.start;
+            var end =  eItem.end;
+            var eventId =  eItem._id;
+            var action =  eItem.action;
+            $.each(allevents, function( index, eventitem )
+            {
+                // if start time of new event (2nd slot) is end time of existing event (1st slot)
+                if( moment(start).format('YYYY-MM-DD HH:mm') == moment(eventitem.end).format('YYYY-MM-DD HH:mm') )
+                {
+                    eventmerge = true;
+                    eventitem.end = end;
+                }
+                // if end time of new event (1st slot) is start time of existing event (2nd slot)
+                else if( moment(end).format('YYYY-MM-DD HH:mm') == moment(eventitem.start).format('YYYY-MM-DD HH:mm') )
+                {
+                    eventmerge = true;
+                    // existing event gets start data of new merging event
+                    eventitem.start = start;
+                }
+
+                if(eventmerge)
+                {
+                    eventData = eventitem;
+                    // find event object in calendar
+                    eventitem.start = eventitem.start;
+                    eventitem.end = eventitem.end;
+                    if(Number.isInteger(eventId)) {
+                        eventitem._id = eventId;
+                    }
+                    // if(action == 'fromGeneralAvailability') {
+                    //     eventitem.action = action;
+                    // }
+                    $('#w_calendar').fullCalendar('updateEvent', eventitem);
+                    $('#w_calendar').fullCalendar('removeEvents', eventId);
+
+                    // break each loop
+                    return false;
+                }
+            });
+        });
+    }
    	$('#w_calendar').fullCalendar({
    		header: {
    			left: 'time',
@@ -53,6 +108,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 		timezone: '<?php echo $user_timezone; ?>',
    		allDaySlot: false,
    		select: function (start, end, jsEvent, view ) {
+            
 			if(moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0) {
    				$('#w_calendar').fullCalendar('unselect');
    				return false;
@@ -70,6 +126,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    			newEvent.date = moment(start).format('YYYY-MM-DD');
    			newEvent.allday = 'false';
    			$('#w_calendar').fullCalendar('renderEvent',newEvent);
+            mergeEvents();
    		},
    		eventLimit: true,
    		defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
@@ -90,15 +147,15 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    				success: function(doc) {
    					var doc = JSON.parse(doc);
    					var events = [];
-   					events.push({
-   						title: '',
-   						start: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
-   						date: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD'),
-   						end: moment('<?php echo $nowDate; ?>'),
-   						className: 'past_current_day',
-   						editable: false,
-   						rendering:'background'
-   						});
+   					// events.push({
+   					// 	title: '',
+   					// 	start: moment('<?php //echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
+   					// 	date: moment('<?php //echo $nowDate; ?>').format('YYYY-MM-DD'),
+   					// 	end: moment('<?php //echo $nowDate; ?>'),
+   					// 	className: 'past_current_day',
+   					// 	editable: false,
+   					// 	rendering:'background'
+   					// 	});
    					$(doc).each(function(i,e) {
    					var classType = $(this).attr('classType');
    					if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
@@ -115,7 +172,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    						action: 'fromGeneralAvailability',
    						classType: $(this).attr('classType'),
    						className: className,
-   						editable: false,
+   						editable: true,
    						//dow:[$(this).attr('day')]
    					  });
    					});
@@ -126,15 +183,15 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    				else{
    				var doc = JSON.parse(doc);
    				var events = [];
-   				events.push({
-   						title: '',
-   						start: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
-						date: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD'),
-   						end: moment('<?php echo $nowDate; ?>'),
-   						className: 'past_current_day',
-   						editable: false,
-   						rendering:'background'
-   						});
+   				// events.push({
+   				// 		title: '',
+   				// 		start: moment('<?php //echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
+				// 		date: moment('<?php //echo $nowDate; ?>').format('YYYY-MM-DD'),
+   				// 		end: moment('<?php //echo $nowDate; ?>'),
+   				// 		className: 'past_current_day',
+   				// 		editable: false,
+   				// 		rendering:'background'
+   				// 		});
    				$(doc).each(function(i,e) {
    					var classType = $(this).attr('classType');
    					if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
