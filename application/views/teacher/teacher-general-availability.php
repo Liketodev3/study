@@ -35,8 +35,8 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 				classtype: e.classType,
 			};
    		}));
-		console.log(json,'json');
-   		// setupTeacherGeneralAvailability(json);
+		//console.log(json,'json');
+   		 setupTeacherGeneralAvailability(json);
    	});
 	function mergeEvents() {
 		allevents = $("#ga_calendar").fullCalendar("clientEvents");
@@ -133,7 +133,14 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    			},
    			eventLimit: true,
    			defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
-   			events: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonData'); ?>",
+   			//events: "<?php //echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonData'); ?>",
+   			events: function( start, end, timezone, callback ) {
+				var data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };
+				fcom.ajax(fcom.makeUrl('Teacher', 'getTeacherGeneralAvailabilityJsonData'), data , function(doc) {
+					var doc = JSON.parse(doc);
+					callback(doc);
+				});
+			},
    			eventRender: function(event, element) {
    				if(isNaN(event._id)){
    					element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );

@@ -159,8 +159,8 @@ class TeacherGeneralAvailability extends MyAppModel
         $db = FatApp::getDb();
         $weekendDate = date('Y-m-d', strtotime('next Saturday +1 day'));
         //$deleteWeeklyFutrureWeeksRecords = $db->deleteRecords(TeacherWeeklySchedule::DB_TBL,array('smt'=>'twsch_user_id = ? and (twsch_start_time > ?)','vals'=>array($userId,$weekendDate)));
-$deleteRecords = true;
-        // $deleteRecords = $db->deleteRecords(TeacherGeneralAvailability::DB_TBL, array('smt'=>'tgavl_user_id = ?','vals'=>array($userId)));
+        //$deleteRecords = true;
+         $deleteRecords = $db->deleteRecords(TeacherGeneralAvailability::DB_TBL, array('smt'=>'tgavl_user_id = ?','vals'=>array($userId)));
 
         $postJsonArr = array();
 
@@ -219,15 +219,13 @@ $deleteRecords = true;
                 $day = MyDate::getDayNumber($tgavl_start);
 
                 $insertArr = array('tgavl_day'=>$day,'tgavl_user_id'=>$userId,'tgavl_start_time'=>$tgavl_start_time,'tgavl_end_time'=>$tgavl_end_time, 'tgavl_date' => $tgavl_start );
-                print_r($insertArr);
-                // die;
-                // if (!$db->insertFromArray(TeacherGeneralAvailability::DB_TBL, $insertArr)) {
-                //     $this->error = $db->getError();
-                //     return false;
-                // }
+
+                if (!$db->insertFromArray(TeacherGeneralAvailability::DB_TBL, $insertArr)) {
+                    $this->error = $db->getError();
+                    return false;
+                }
             }
         }
-         die;
         return true;
     }
 
