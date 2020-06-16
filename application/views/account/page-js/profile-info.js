@@ -309,28 +309,6 @@ $.ajax(settings).done(function (response) {
 		 }
 	};
 
-	deleteTeacherWeeklySchedule  = function(eventData){
-		 if(confirm(langLbl['confirmRemove'])){
-			var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
-			console.log(e.className);
-			return 	{
-				start: moment(e.start).format('HH:mm:ss'),
-				end: moment(e.end).format('HH:mm:ss'),
-				day: moment(e.start).format('d'),
-				date: moment(e.start).format('YYYY-MM-DD'),
-				_id: e._id,
-				action: e.action,
-				classtype: e.classType,
-			};
-			}));
-			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data='+json, function(t) {
-				fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherWeeklySchedule'), 'data='+JSON.stringify(eventData) , function(t) {
-					$("#w_calendar").fullCalendar("refetchEvents");
-				});
-			});
-		 }
-	};
-
 	teacherPreferences = function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','teacherPreferences'),'',function(t){

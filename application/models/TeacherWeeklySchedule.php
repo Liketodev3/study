@@ -19,7 +19,7 @@ class TeacherWeeklySchedule extends MyAppModel
         );
     }
 
-    public static function getWeeklyScheduleJsonArr($userId, $start, $end)
+    public static function getWeeklyScheduleJsonArr($userId, $start, $end, $isAvailabel = false)
     {
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
@@ -46,6 +46,9 @@ class TeacherWeeklySchedule extends MyAppModel
 
         $srch->addCondition('twsch_date', 'between', array($start,$newEndDate ));
         $srch->addCondition('twsch_date', '>=', date('Y-m-d'));
+        if($isAvailabel) {
+            $srch->addCondition('twsch_is_available', '=', self::AVAILABLE);
+        }
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetchAll($rs);
     }
@@ -132,8 +135,12 @@ class TeacherWeeklySchedule extends MyAppModel
             return false;
         }
         $postJson = json_decode($post['data']);
-        $db = FatApp::getDb();
         $postJsonArr = array();
+        $dateArray = [];
+        $postDataId = [];
+        /* code added  on 12-07-2019 */
+        $user_timezone = MyDate::getUserTimeZone();
+        $systemTimeZone = MyDate::getTimeZone();
         foreach ($postJson as $k=>$postObj) {
             /*[ Clubbing the continuous timeslots */
             if ($k>0 and ($postJson[$k-1]->date == $postObj->date) and ($postJson[$k-1]->start == $postObj->start)) {
@@ -141,15 +148,28 @@ class TeacherWeeklySchedule extends MyAppModel
                 continue;
             }
             /* ] */
+            $date =  date('Y-m-d',strtotime(MyDate::changeDateTimezone($postObj->date, $user_timezone, $systemTimeZone)));
+            $dateArray[$date] = $date;
+            $postDataId[$postObj->_id] = $postObj->_id;
             $postJsonArr[] = $postObj;
+
         }
-        /* code added  on 12-07-2019 */
-        $user_timezone = MyDate::getUserTimeZone();
-        $systemTimeZone = MyDate::getTimeZone();
+        $db = FatApp::getDb();
+        $srch = new TeacherWeeklyScheduleSearch();
+        $srch->addMultipleFields(array('twsch_id','twsch_is_available'));
+        $srch->addCondition('twsch_user_id', '=', $userId);
+        $srch->addCondition('twsch_date', 'IN', $dateArray);
+        $srch->doNotLimitRecords();
+        $srch->doNotCalculateRecords();
+        $rs = $srch->getResultSet();
+        $dateRecordId = $db->fetchAllAssoc($rs);
+        $needToDelete = array_diff_key($dateRecordId,$postDataId);
 
+        $db->startTransaction();
 
+        $deleteDateArray = [];
         foreach ($postJsonArr as $val) {
-            //echo strtotime($val->end);
+
             if (preg_match('/_fc/', $val->_id) || $val->action == "fromGeneralAvailability") {
 
                 //if( strtotime($val->date) >= strtotime(date('Y-m-d')) && $val->start != '00:00:00'  )
@@ -167,10 +187,10 @@ class TeacherWeeklySchedule extends MyAppModel
                     $twsch_date = MyDate::changeDateTimezone($val->date .' '. $val->start, $user_timezone, $systemTimeZone);
                     $twsch_end_date = MyDate::changeDateTimezone($endDate .' '. $val->end, $user_timezone, $systemTimeZone);
 
-
                     $insertArr = array('twsch_user_id'=>$userId, 'twsch_start_time'=>$twsch_start_time,'twsch_end_time'=>$twsch_end_time,"twsch_is_available"=>$val->classtype,'twsch_date'=>date('Y-m-d', strtotime($twsch_date)),'twsch_end_date'=>date('Y-m-d', strtotime($twsch_end_date)));
 
-                    if (!$db->insertFromArray(TeacherWeeklySchedule::DB_TBL, $insertArr)) {
+                    if (!$db->insertFromArray(TeacherWeeklySchedule::DB_TBL, $insertArr,false)) {
+                        $db->rollbackTransaction();
                         $this->error = $db->getError();
                         return false;
                     }
@@ -194,11 +214,20 @@ class TeacherWeeklySchedule extends MyAppModel
                 $updateWhereArr = array('smt'=>'twsch_id = ? and twsch_user_id = ?','vals'=>array($val->_id,$userId));
 
                 if (!$db->updateFromArray(TeacherWeeklySchedule::DB_TBL, $updateArr, $updateWhereArr)) {
+                     $db->rollbackTransaction();
                     $this->error = $db->getError();
                     return false;
                 }
             }
         }
+        if(!empty($needToDelete)) {
+             if(!$db->query('DELETE FROM '.TeacherWeeklySchedule::DB_TBL.' WHERE twsch_user_id = '.$userId.' and twsch_id IN ('.implode(",",array_keys($needToDelete)).')')){
+                 $db->rollbackTransaction();
+                 $this->error = $db->getError();
+                 return false;
+             }
+        }
+        $db->commitTransaction();
         return true;
     }
 

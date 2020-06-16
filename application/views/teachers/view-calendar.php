@@ -72,7 +72,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 					// $("#loaderCalendar").show();
 					// $("body").css( {"pointer-events": "none"} );
 					// $("body").css( {"cursor": "wait"} );
-
+						console.log(view);
 					//==================================//
 						var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
 						var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
@@ -398,6 +398,10 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 		<h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
 	</div>
 	<div class="col-sm-6">
+		<div class="cal-status">
+			<span class="box-hint disabled-box">&nbsp;</span>
+			<p><?php echo Label::getLabel('Lbl_Disabled'); ?></p>
+		</div>
 		<div class="cal-status">
 			<span class="box-hint available-box">&nbsp;</span>
 			<p><?php echo Label::getLabel('Lbl_Available'); ?></p>

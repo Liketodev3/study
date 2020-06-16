@@ -35,8 +35,65 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 				classtype: e.classType,
 			};
    		}));
-   		setupTeacherGeneralAvailability(json);
+		console.log(json,'json');
+   		// setupTeacherGeneralAvailability(json);
    	});
+	function mergeEvents() {
+		allevents = $("#ga_calendar").fullCalendar("clientEvents");
+		if(allevents.length == 1) {
+			return;
+		}
+		// debugger;
+		$.each(allevents, function( i, eItem )
+		{
+			eventmerge =  false;
+			if(eItem ===null || typeof eItem == 'undefined')
+			{
+				return;
+			}
+			var start =  eItem.start;
+			var end =  eItem.end;
+			var eventId =  eItem._id;
+			$.each(allevents, function( index, eventitem )
+			{
+				if(eventId == eventitem._id){
+					return;
+				}
+				// if start time of new event (2nd slot) is end time of existing event (1st slot)
+				if( moment(start).format('YYYY-MM-DD HH:mm') == moment(eventitem.end).format('YYYY-MM-DD HH:mm') )
+				{
+					eventmerge = true;
+					eventitem.end = end;
+
+				}
+				// if end time of new event (1st slot) is start time of existing event (2nd slot)
+				else if( moment(end).format('YYYY-MM-DD HH:mm') == moment(eventitem.start).format('YYYY-MM-DD HH:mm') )
+				{
+					eventmerge = true;
+					// existing event gets start data of new merging event
+					eventitem.start = start;
+				}
+
+				if(eventmerge)
+				{
+					eventData = eventitem;
+					// find event object in calendar
+					eventId = parseInt(eventId);
+					eventitemId =  eventitem._id;
+					if(eventId && Number.isInteger(eventId)) {
+						eventitem._id = eventId;
+					}else{
+						eventitemId = eItem._id;
+					}
+					 $('#ga_calendar').fullCalendar('updateEvent', eventitem);
+					$('#ga_calendar').fullCalendar('removeEvents', eventitemId);
+
+					// break each loop
+					return;
+				}
+			});
+		});
+	}
 
    	$('#ga_calendar').fullCalendar({
    		  header: {
@@ -57,7 +114,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    			columnHeaderFormat :"ddd",
 			timezone: '<?php echo $user_timezone; ?>',
    			select: function (start, end, jsEvent, view ) {
-   				if(moment(start).format('d')!=moment(end).format('d') ) {
+   				if(moment(start).format('d') != moment(end).format('d') ) {
    					$('#ga_calendar').fullCalendar('unselect');
    					return false;
    				}
@@ -72,6 +129,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    				newEvent.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>',
    				newEvent.allday = 'false';
    				$('#ga_calendar').fullCalendar('renderEvent',newEvent);
+				mergeEvents();
    			},
    			eventLimit: true,
    			defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
@@ -88,6 +146,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    					$('#ga_calendar').fullCalendar('removeEvents',event._id);
    				}
                });
+			   mergeEvents();
            },
    	});
 	$('body').find(".fc-left").html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'></span></h6>");

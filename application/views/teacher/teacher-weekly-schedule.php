@@ -31,11 +31,50 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    		setupTeacherWeeklySchedule(json);
    	});
 
+    deleteTeacherWeeklySchedule  = function(eventData){
+         if(confirm(langLbl['confirmRemove'])){
+             var edata = $("#w_calendar").fullCalendar("clientEvents",eventData._id);
+             if(!edata.length) {
+                 return;
+             }
+             edata = edata[0];
+            // $('#w_calendar').fullCalendar('removeEvents', eventData._id);
+
+            edata.classType = <?php echo TeacherWeeklySchedule::UNAVAILABLE ?>;
+            if(typeof eventData.classType !== 'undefined' && eventData.classType == <?php echo TeacherWeeklySchedule::UNAVAILABLE ?>) {
+                edata.classType = <?php echo TeacherWeeklySchedule::AVAILABLE ?>;
+                edata.className = ['<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>'];
+                edata.editable = true;
+             }
+            // console.log(edata,'edata');
+             $("#w_calendar").fullCalendar('updateEvent',edata);
+             mergeEvents();
+
+            var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
+            return 	{
+                start: moment(e.start).format('HH:mm:ss'),
+                end: moment(e.end).format('HH:mm:ss'),
+                day: moment(e.start).format('d'),
+                date: moment(e.start).format('YYYY-MM-DD'),
+                _id: e._id,
+                action: e.action,
+                classtype: e.classType,
+            };
+            }));
+            fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data='+json, function(t) {
+                $("#w_calendar").fullCalendar("refetchEvents");
+                // fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherWeeklySchedule'), 'data='+JSON.stringify(eventData) , function(t) {
+                // });
+            });
+         }
+    };
+
     function mergeEvents() {
         allevents = $("#w_calendar").fullCalendar("clientEvents");
         if(allevents.length == 1) {
             return;
         }
+        // debugger;
         $.each(allevents, function( i, eItem )
         {
             eventmerge =  false;
@@ -47,13 +86,25 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
             var end =  eItem.end;
             var eventId =  eItem._id;
             var action =  eItem.action;
+
+            if(typeof eItem.classType !== 'undefined' && eItem.classType == <?php  echo TeacherWeeklySchedule::UNAVAILABLE; ?>) {
+                return;
+            }
+
             $.each(allevents, function( index, eventitem )
             {
+                if(eventId == eventitem._id){
+                    return;
+                }
+                if(typeof eItem.classType !== 'undefined' && eventitem.classType == <?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>) {
+                    return;
+                }
                 // if start time of new event (2nd slot) is end time of existing event (1st slot)
                 if( moment(start).format('YYYY-MM-DD HH:mm') == moment(eventitem.end).format('YYYY-MM-DD HH:mm') )
                 {
                     eventmerge = true;
                     eventitem.end = end;
+
                 }
                 // if end time of new event (1st slot) is start time of existing event (2nd slot)
                 else if( moment(end).format('YYYY-MM-DD HH:mm') == moment(eventitem.start).format('YYYY-MM-DD HH:mm') )
@@ -67,19 +118,27 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
                 {
                     eventData = eventitem;
                     // find event object in calendar
-                    eventitem.start = eventitem.start;
-                    eventitem.end = eventitem.end;
-                    if(Number.isInteger(eventId)) {
+
+                    eventId = parseInt(eventId);
+                    console.log(eventitem);
+                    console.log(eventitem._id,eventId);
+                    eventitemId =  eventitem._id;
+                    if(eventId && Number.isInteger(eventId)) {
                         eventitem._id = eventId;
+                        eventitem.className = eItem.className;
+                        eventitem.classType = eItem.classType;
+                    }else{
+                        eventitemId = eItem._id;
                     }
-                    // if(action == 'fromGeneralAvailability') {
-                    //     eventitem.action = action;
-                    // }
-                    $('#w_calendar').fullCalendar('updateEvent', eventitem);
-                    $('#w_calendar').fullCalendar('removeEvents', eventId);
+                    eventitem.action = '';
+                    eventitem.classType = <?php echo TeacherWeeklySchedule::AVAILABLE; ?>;
+                    eventitem.className = ['<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>'];
+                    eventitem.editable = true;
+                     $('#w_calendar').fullCalendar('updateEvent', eventitem);
+                    $('#w_calendar').fullCalendar('removeEvents', eventitemId);
 
                     // break each loop
-                    return false;
+                    return;
                 }
             });
         });
@@ -108,7 +167,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 		timezone: '<?php echo $user_timezone; ?>',
    		allDaySlot: false,
    		select: function (start, end, jsEvent, view ) {
-            
+
 			if(moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0) {
    				$('#w_calendar').fullCalendar('unselect');
    				return false;
@@ -172,7 +231,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    						action: 'fromGeneralAvailability',
    						classType: $(this).attr('classType'),
    						className: className,
-   						editable: true,
+   						editable: false,
    						//dow:[$(this).attr('day')]
    					  });
    					});
@@ -228,9 +287,11 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    				element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
    			}
    			else{
-   				var eventData=JSON.stringify({"start" :moment( event.start).format('HH:mm:ss'),"end" : moment(event.end).format('HH:mm:ss'),"_id":event._id,"classType":event.classType,"date":moment( event.start).format('YYYY-MM-DD'),"day": moment(event.start).format('d'),});
+   				var eventData=JSON.stringify({
+                        "start" :moment( event.start).format('HH:mm:ss'),"end" : moment(event.end).format('HH:mm:ss'),"_id":event._id,"classType":event.classType,"date":moment( event.start).format('YYYY-MM-DD'),
+                        "day": moment(event.start).format('d')});
    				//if(event.classType != <?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>){
-   					element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherWeeklySchedule("+eventData+");'>X</span>" );
+                element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherWeeklySchedule("+eventData+");'>X</span>" );
    				//}
    			}
    		element.find(".closeon").click(function() {
@@ -240,6 +301,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    		});
    		var eventEnd = moment(event.end);
    		var NOW = moment('<?php echo $nowDate; ?>');
+        mergeEvents();
    		if(moment(event.end).format('YYYY-MM-DD HH:mm') < moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm')){
    			return false;
    		}
