@@ -76,12 +76,12 @@ class SalesReportController extends AdminBaseController
 
         /* $srch->addMultipleFields(array('DATE(order_date_added) as order_date','count(op_id) as totOrders','SUM(op_qty) as totQtys','SUM(op_refund_qty) as totRefundedQtys','SUM(op_qty - op_refund_qty) as netSoldQty','sum((op_commission_charged - op_refund_commission)) as totalSalesEarnings','sum(op_refund_amount) as totalRefundedAmount','op.op_qty','op.op_unit_price','op_other_charges','sum(( op_unit_price * op_qty ) + op_other_charges - op_refund_amount) as orderNetAmount','(SUM(optax.opcharge_amount)) as taxTotal','(SUM(opship.opcharge_amount)) as shippingTotal')); */
         $srch->addCondition('o.order_type', '=', Order::TYPE_LESSON_BOOKING);
+        $srch->addCondition('o.order_is_paid', '=', Order::ORDER_IS_PAID);
         $srch->addOrder('order_date', 'desc');
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         $rs = $srch->getResultSet();
         $arr_listing = $db->fetchAll($rs);
-
         $this->set("arr_listing", $arr_listing);
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
