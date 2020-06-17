@@ -32,24 +32,26 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    	});
 
     deleteTeacherWeeklySchedule  = function(eventData){
-         if(confirm(langLbl['confirmRemove'])){
-             var edata = $("#w_calendar").fullCalendar("clientEvents",eventData._id);
-             if(!edata.length) {
-                 return;
-             }
-             edata = edata[0];
-            // $('#w_calendar').fullCalendar('removeEvents', eventData._id);
+        $.mbsmessage.close();
+        confirmMessage = '<?php echo Label::getLabel( 'LBL_Do_you_want_to_disable_the_slot' ); ?>';
+        var edata = $("#w_calendar").fullCalendar("clientEvents",eventData._id);
+        if(!edata.length) {
+            return;
+        }
+        edata = edata[0];
+       // $('#w_calendar').fullCalendar('removeEvents', eventData._id);
+       edata.classType = <?php echo TeacherWeeklySchedule::UNAVAILABLE ?>;
+       if(typeof eventData.classType !== 'undefined' && eventData.classType == <?php echo TeacherWeeklySchedule::UNAVAILABLE ?>) {
+           edata.classType = <?php echo TeacherWeeklySchedule::AVAILABLE ?>;
+           edata.className = ['<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>'];
+           edata.editable = true;
+           confirmMessage = '<?php echo Label::getLabel( 'LBL_Do_you_want_to_enable_the_slot_again' ); ?>';
+        }
 
-            edata.classType = <?php echo TeacherWeeklySchedule::UNAVAILABLE ?>;
-            if(typeof eventData.classType !== 'undefined' && eventData.classType == <?php echo TeacherWeeklySchedule::UNAVAILABLE ?>) {
-                edata.classType = <?php echo TeacherWeeklySchedule::AVAILABLE ?>;
-                edata.className = ['<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>'];
-                edata.editable = true;
-             }
+         if(confirm(confirmMessage)){
             // console.log(edata,'edata');
              $("#w_calendar").fullCalendar('updateEvent',edata);
              mergeEvents();
-
             var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
             return 	{
                 start: moment(e.start).format('HH:mm:ss'),
