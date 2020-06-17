@@ -537,8 +537,21 @@ class TeacherController extends TeacherBaseController
         if (false === $post) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId, $post['start'], $post['end']);
-        $_serchEndDate = date('Y-m-d 00:00:00', strtotime($post['end']));
+        
+        if(empty($post['start']) || empty($post['end'])){
+            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
+        }
+
+        $startDate = $post['start']." 00:00:00";
+		$endDate = $post['end']." 23:59:59";
+		$user_timezone = MyDate::getUserTimeZone();
+		$systemTimeZone = MyDate::getTimeZone();
+		$startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+		$endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
+		$startDate = date('Y-m-d',strtotime($startDate));
+		$endDate = date('Y-m-d',strtotime($endDate));
+		$weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId,$startDate,$endDate);
+		$_serchEndDate = $endDate." 00:00:00";
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
         $jsonArr = array();
         if (!empty($weeklySchRows)) {
