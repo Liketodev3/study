@@ -879,17 +879,17 @@ class GuestUserController extends MyAppController
 
     public function loginGoogle($userType = User::USER_TYPE_LEANER)
     {
-		//echo "<pre>"; print_r($userType); echo "</pre>"; exit;
-		if(!isset($_SESSION['user_type'])) {
+		// echo "<pre>"; print_r($userType); echo "</pre>"; exit;
+		// if(!isset($_SESSION['user_type'])) {
 		    $_SESSION['user_type'] = $userType;
-		}
+		// }
         require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
         $client->setScopes(['email','profile']); // set scope during user login
         $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
         $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
-        $currentPageUri = CommonHelper::generateFullUrl('GuestUser', 'loginGoogle', array(), '', false);
+        $currentPageUri = CommonHelper::generateFullUrl('GuestUser', 'loginGoogle', array($userType), '', false);
         $client->setRedirectUri($currentPageUri);
         $client->setDeveloperKey(FatApp::getConfig("CONF_GOOGLEPLUS_DEVELOPER_KEY")); // Developer key
         $oauth2 =new Google_Service_Oauth2($client); // Call the OAuth2 class for get email address
@@ -912,8 +912,11 @@ class GuestUserController extends MyAppController
         $userGoogleName = $user['name'];
         if (isset($userGoogleEmail) && (!empty($userGoogleEmail))) {
 			$preferredDashboard = User::USER_LEARNER_DASHBOARD;
+            	// echo "<pre>"; print_r($userType); echo "</pre>"; exit;
+                $userType = User::USER_TYPE_LEANER;
 			if ($_SESSION['user_type'] == User::USER_TYPE_TEACHER) {
 				$preferredDashboard = User::USER_TEACHER_DASHBOARD;
+                $userType =   User::USER_TYPE_TEACHER;
 			}
 
 
@@ -935,8 +938,8 @@ class GuestUserController extends MyAppController
                 $userObj->setMainTableRecordId($row['user_id']);
                 $arr = array(
                     'user_googleplus_id' => $userGoogleId,
-					'user_preferred_dashboard' => $preferredDashboard,
-                    'user_registered_initially_for' => $userType,
+					// 'user_preferred_dashboard' => $preferredDashboard,
+                    // 'user_registered_initially_for' => $userType,
                 );
                 if (!$userObj->setUserInfo($arr)) {
                     Message::addErrorMessage(Label::getLabel($userObj->getError()));
@@ -951,7 +954,7 @@ class GuestUserController extends MyAppController
                     'user_first_name' => $user_first_name,
                     'user_last_name' => $user_last_name,
                     'user_is_learner' => 1,
-                    'user_is_teacher' => 1,
+                    // 'user_is_teacher' => 1,
                     'user_googleplus_id' => $userGoogleId,
                     'user_preferred_dashboard' => $preferredDashboard,
                     'user_registered_initially_for' => $userType,
