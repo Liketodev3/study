@@ -477,7 +477,7 @@ class GuestUserController extends MyAppController
     {
         if (isset($oauthProvider)) {
             if ($oauthProvider == 'googleplus') {
-                FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginGoogleplus'));
+                FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginGoogleplus', array($userType)));
             } elseif ($oauthProvider == 'google') {
                 FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginGoogle', array($userType)));
             } elseif ($oauthProvider == 'facebook') {
@@ -633,12 +633,12 @@ class GuestUserController extends MyAppController
         $userLastName = $post['last_name'];
         $user_type = $post['type'];
 		$preferredDashboard = User::USER_LEARNER_DASHBOARD;
-		//$userIsTeacher = 0;
-
 		if($user_type == User::USER_TYPE_TEACHER) {
 			$preferredDashboard = User::USER_TEACHER_DASHBOARD;
 			//$userIsTeacher = 1;
-		}
+		}else {
+            $user_type = User::USER_TYPE_LEANER;
+        }
 
 
         $facebookName = $userFirstName.' '.$userLastName;
@@ -648,19 +648,20 @@ class GuestUserController extends MyAppController
         $srch = $userObj->getUserSearchObj(array('user_id', 'user_facebook_id', 'credential_email', 'credential_active', 'user_deleted'), false, false);
         if (!empty($facebookEmail)) {
             $srch->addCondition('credential_email', '=', $facebookEmail);
-        } else {
-            if (empty($userFacebookId)) {
-                Message::addErrorMessage(Labels::getLabel("MSG_THERE_WAS_SOME_PROBLEM_IN_AUTHENTICATING_YOUR_ACCOUNT_WITH_FACEBOOK,_PLEASE_TRY_WITH_DIFFERENT_LOGIN_OPTIONS", $this->siteLangId));
-                unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_code']);
-                unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_access_token']);
-                unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_user_id']);
-                $url = CommonHelper::generateUrl('GuestUser', 'loginForm');
-                $this->set('url', $url);
-                $this->set('msg', Labels::getLabel('MSG_Invalid_login', $this->siteLangId));
-                $this->_template->render(false, false, 'json-success.php');
-            }
-            $srch->addCondition('user_facebook_id', '=', $userFacebookId);
-        }
+        // }
+        // else {
+        //     if (empty($userFacebookId)) {
+        //         Message::addErrorMessage(Labels::getLabel("MSG_THERE_WAS_SOME_PROBLEM_IN_AUTHENTICATING_YOUR_ACCOUNT_WITH_FACEBOOK,_PLEASE_TRY_WITH_DIFFERENT_LOGIN_OPTIONS", $this->siteLangId));
+        //         unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_code']);
+        //         unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_access_token']);
+        //         unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_user_id']);
+        //         $url = CommonHelper::generateUrl('GuestUser', 'loginForm');
+        //         $this->set('url', $url);
+        //         $this->set('msg', Labels::getLabel('MSG_Invalid_login', $this->siteLangId));
+        //         $this->_template->render(false, false, 'json-success.php');
+        //     }
+        //     $srch->addCondition('user_facebook_id', '=', $userFacebookId);
+        // }
         $rs = $srch->getResultSet();
         $row = $db->fetch($rs);
         if ($row) {
@@ -750,6 +751,11 @@ class GuestUserController extends MyAppController
         $this->set('url', $redirectUrl);
         $this->set('msg', Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId));
         $this->_template->render(false, false, 'json-success.php');
+        }
+        Message::addErrorMessage(Label::getLabel("MSG_UNABLE_To_FETCH_YOUR_EMAIL_ID"));
+        $this->set('url', CommonHelper::generateUrl());
+        $this->set('msg', Message::getHtml());
+        $this->_template->render(false, false, 'json-error.php', true, false);
     }
 
     public function configureEmail()
@@ -757,20 +763,20 @@ class GuestUserController extends MyAppController
         $this->_template->render();
     }
 
-    public function loginGoogleplus()
+    public function loginGoogleplus($userType = User::USER_TYPE_LEANER)
     {
         require_once CONF_INSTALLATION_PATH . 'library/googleplus/Google_Client.php'; // include the required calss files for google login
         require_once CONF_INSTALLATION_PATH . 'library/googleplus/contrib/Google_PlusService.php';
         require_once CONF_INSTALLATION_PATH . 'library/googleplus/contrib/Google_Oauth2Service.php';
         $client = new Google_Client();
-        $client->setApplicationName('weyakyak'); // Set your applicatio name
+        $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
         $client->setScopes(array(
             'https://www.googleapis.com/auth/userinfo.email',
             'https://www.googleapis.com/auth/plus.me'
         )); // set scope during user login
         $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID", FatUtility::VAR_STRING, '')); // paste the client id which you get from google API Console
         $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET", FatUtility::VAR_STRING, '')); // set the client secret
-        $currentPageUri = CommonHelper::generateFullUrl('GuestUser', 'loginGoogleplus', array(), '', false);
+        $currentPageUri = CommonHelper::generateFullUrl('GuestUser', 'loginGoogleplus', array($userType), '', false);
         $client->setRedirectUri($currentPageUri);
         $client->setDeveloperKey(FatApp::getConfig("CONF_GOOGLEPLUS_DEVELOPER_KEY", FatUtility::VAR_STRING, '')); // Developer key
         $plus = new Google_PlusService($client);
@@ -794,13 +800,18 @@ class GuestUserController extends MyAppController
         $userGoogleplusId = $user['id'];
         $userGoogleplusName = $user['email'];
         if (isset($userGoogleplusEmail) && (!empty($userGoogleplusEmail))) {
+
+            if ($userType == User::USER_TYPE_TEACHER) {
+				$preferredDashboard = User::USER_TEACHER_DASHBOARD;
+                $userType =   User::USER_TYPE_TEACHER;
+			}else{
+                $preferredDashboard = User::USER_LEARNER_DASHBOARD;
+                $userType = User::USER_TYPE_LEANER;
+            }
+
             $db = FatApp::getDb();
             $userObj = new User();
-            $srch = $userObj->getUserSearchObj(array(
-                'user_id',
-                'credential_email',
-                'credential_active'
-            ));
+            $srch = $userObj->getUserSearchObj(array('user_id', 'user_googleplus_id', 'credential_email', 'credential_active', 'user_deleted'));
             $srch->addCondition('credential_email', '=', $userGoogleplusEmail);
             $rs = $srch->getResultSet();
             $row = $db->fetch($rs);
@@ -827,8 +838,8 @@ class GuestUserController extends MyAppController
                     'user_last_name' => $user_last_name,
                     'user_is_learner' => 1,
                     'user_googleplus_id' => $userGoogleplusId,
-                    'user_preferred_dashboard' => User::USER_LEARNER_DASHBOARD,
-                    'user_registered_initially_for' => User::USER_TYPE_LEANER,
+                    'user_preferred_dashboard' => $userType,
+                    'user_registered_initially_for' => $userType,
                 );
                 $userObj->assignValues($userData);
                 if (!$userObj->save()) {
@@ -873,23 +884,26 @@ class GuestUserController extends MyAppController
                 CommonHelper::redirectUserReferer();
             }
             unset($_SESSION['access_token']);
+            $redirectUrl = CommonHelper::generateUrl('Teachers');
+    		if ($userType == User::USER_TYPE_TEACHER) {
+    			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
+    		}
+    		FatApp::redirectUser($redirectUrl);
         }
-        FatApp::redirectUser(User::getPreferedDashbordRedirectUrl());
+        Message::addErrorMessage(Label::getLabel("MSG_UNABLE_To_FETCH_YOUR_EMAIL_ID"));
+        FatApp::redirectUser(CommonHelper::generateUrl());
     }
 
     public function loginGoogle($userType = User::USER_TYPE_LEANER)
     {
-		//echo "<pre>"; print_r($userType); echo "</pre>"; exit;
-		if(!isset($_SESSION['user_type'])) {
-		    $_SESSION['user_type'] = $userType;
-		}
+
         require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
         $client->setScopes(['email','profile']); // set scope during user login
         $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
         $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
-        $currentPageUri = CommonHelper::generateFullUrl('GuestUser', 'loginGoogle', array(), '', false);
+        $currentPageUri = CommonHelper::generateFullUrl('GuestUser', 'loginGoogle', array($userType), '', false);
         $client->setRedirectUri($currentPageUri);
         $client->setDeveloperKey(FatApp::getConfig("CONF_GOOGLEPLUS_DEVELOPER_KEY")); // Developer key
         $oauth2 =new Google_Service_Oauth2($client); // Call the OAuth2 class for get email address
@@ -911,16 +925,19 @@ class GuestUserController extends MyAppController
         $userGoogleId = $user['id'];
         $userGoogleName = $user['name'];
         if (isset($userGoogleEmail) && (!empty($userGoogleEmail))) {
-			$preferredDashboard = User::USER_LEARNER_DASHBOARD;
-			if ($_SESSION['user_type'] == User::USER_TYPE_TEACHER) {
+
+			if ($userType == User::USER_TYPE_TEACHER) {
 				$preferredDashboard = User::USER_TEACHER_DASHBOARD;
-			}
-
-
+                $userType =   User::USER_TYPE_TEACHER;
+			}else{
+                $preferredDashboard = User::USER_LEARNER_DASHBOARD;
+                $userType = User::USER_TYPE_LEANER;
+            }
             $db = FatApp::getDb();
             $userObj = new User();
             $srch = $userObj->getUserSearchObj(array(
                 'user_id',
+                'user_preferred_dashboard',
                 'credential_email',
                 'credential_active'
             ));
@@ -935,12 +952,13 @@ class GuestUserController extends MyAppController
                 $userObj->setMainTableRecordId($row['user_id']);
                 $arr = array(
                     'user_googleplus_id' => $userGoogleId,
-					'user_preferred_dashboard' => $preferredDashboard,
-                    'user_registered_initially_for' => $userType,
                 );
                 if (!$userObj->setUserInfo($arr)) {
                     Message::addErrorMessage(Label::getLabel($userObj->getError()));
                     FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
+                }
+                if($row['user_preferred_dashboard'] == User::USER_TEACHER_DASHBOARD) {
+                    $userType = User::USER_TYPE_TEACHER;
                 }
             } else {
                 $db->startTransaction();
@@ -951,17 +969,18 @@ class GuestUserController extends MyAppController
                     'user_first_name' => $user_first_name,
                     'user_last_name' => $user_last_name,
                     'user_is_learner' => 1,
-                    'user_is_teacher' => 1,
                     'user_googleplus_id' => $userGoogleId,
                     'user_preferred_dashboard' => $preferredDashboard,
                     'user_registered_initially_for' => $userType,
                 );
                 $userObj->assignValues($userData);
+
                 if (!$userObj->save()) {
                     Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $userObj->getError());
                     $db->rollbackTransaction();
                     FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
                 }
+
                 $username = str_replace(" ", "", $userGoogleName) . $userGoogleId;
                 if (!$userObj->setLoginCredentials($username, $userGoogleEmail, uniqid(), 1, 1)) {
                     Message::addErrorMessage(Label::getLabel("MSG_LOGIN_CREDENTIALS_COULD_NOT_BE_SET") . $userObj->getError());
@@ -999,14 +1018,14 @@ class GuestUserController extends MyAppController
                 FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
             }
             unset($_SESSION['access_token']);
+            $redirectUrl = CommonHelper::generateUrl('Teachers');
+    		if ($userType == User::USER_TYPE_TEACHER) {
+    			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
+    		}
+            FatApp::redirectUser($redirectUrl);
         }
-        //FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
-		$redirectUrl = CommonHelper::generateUrl('Teachers');
-		if ($_SESSION['user_type'] == User::USER_TYPE_TEACHER) {
-			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
-		}
-		FatApp::redirectUser($redirectUrl);
-
+        Message::addErrorMessage(Label::getLabel("MSG_UNABLE_To_FETCH_YOUR_EMAIL_ID"));
+        FatApp::redirectUser(CommonHelper::generateUrl());
     }
 
     public function forgotPasswordForm()
