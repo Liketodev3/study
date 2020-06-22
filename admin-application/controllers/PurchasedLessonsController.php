@@ -224,7 +224,7 @@ class PurchasedLessonsController extends AdminBaseController
         }
 
 		//echo "<pre>"; print_r($lessonRow); echo "</pre>"; exit;
-		
+
         /*$data = ScheduledLesson::getAttributesById($slesson_id, array('slesson_id', 'slesson_status'));
         if (false == $data) {
             Message::addErrorMessage($this->str_invalid_request);
@@ -277,11 +277,11 @@ class PurchasedLessonsController extends AdminBaseController
 		/*[ notifications to users */
 		$userNotification = new UserNotifications($lessonRow['slesson_teacher_id']);
         $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['slesson_learner_id'], $status, User::USER_TYPE_TEACHER);
-		
+
 		$userNotification = new UserNotifications($lessonRow['slesson_learner_id']);
         $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['slesson_teacher_id'],  $status, User::USER_TYPE_LEANER);
 		/*]*/
-		
+
         $this->set('msg', 'Updated Successfully.');
         $this->set('slessonId', $slesson_id);
         $this->_template->render(false, false, 'json-success.php');
@@ -292,14 +292,92 @@ class PurchasedLessonsController extends AdminBaseController
         if (!$this->canEdit) {
             FatUtility::dieJsonError($this->unAuthorizeAccess);
         }
+        $db = FatApp::getDb();
+        $db->startTransaction();
         $data = FatApp::getPostedData();
-        $assignValues = array('order_is_paid' => $data['order_is_paid']);
-        if (!FatApp::getDb()->updateFromArray(Order::DB_TBL, $assignValues, array('smt' => 'order_id = ?', 'vals' => array($data['order_id'])))) {
-            $this->error = Label::getLabel("LBL_SYSTEM_ERROR", CommonHelper::getLangId());
+        $orderSearch =  new OrderSearch();
+        $orderSearch->addMultipleFields([
+            'order_id',
+            'order_is_paid',
+            'order_user_id',
+            'order_net_amount',
+            'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) scheduledLessonsCount',
+        ]);
+        $orderSearch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sl.slesson_order_id = o.order_id', 'sl');
+        $orderSearch->addCondition('o.order_id', '=', FatApp::getPostedData('order_id',FatUtility::VAR_STRING,''));
+        $orderSearch->addGroupBy('sl.slesson_order_id');
+        $resultSet = $orderSearch->getResultSet();
+        $orderInfo =  $db->fetch($resultSet);
+        if(empty($orderInfo)) {
+            $this->error = Label::getLabel("LBL_Invalid_Request", CommonHelper::getLangId());
+            if(FatUtility::isAjaxCall()) {
+                // Message::addErrorMessage($this->error);
+                FatUtility::dieJsonError($this->error);
+            }
             return false;
         }
 
-        $this->set('msg', 'Updated Successfully.');
+        if($data['order_is_paid'] == Order::ORDER_IS_PENDING && $orderInfo['order_is_paid'] == Order::ORDER_IS_CANCELLED) {
+            $this->error = Label::getLabel("LBL_Order_already_cancelled", CommonHelper::getLangId());
+            if(FatUtility::isAjaxCall()) {
+                // Message::addErrorMessage($this->error);
+                FatUtility::dieJsonError($this->error);
+            }
+            return false;
+        }
+
+        if($data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['scheduledLessonsCount'] > 0) {
+            $this->error = Label::getLabel("LBL_You_are_not_cancelled_the_request_because_some_lesson_are_scheduled", CommonHelper::getLangId());
+            if(FatUtility::isAjaxCall()) {
+                // Message::addErrorMessage($this->error);
+                FatUtility::dieJsonError($this->error);
+            }
+            return false;
+        }
+        $assignValues = array('order_is_paid' => $data['order_is_paid']);
+        if (!$db->updateFromArray(Order::DB_TBL, $assignValues, array('smt' => 'order_id = ?', 'vals' => array($data['order_id'])))) {
+            $db->rollbackTransaction();
+            $this->error = Label::getLabel("LBL_SYSTEM_ERROR", CommonHelper::getLangId());
+            if(FatUtility::isAjaxCall()) {
+                // Message::addErrorMessage($this->error);
+                FatUtility::dieJsonError($this->error);
+            }
+            return false;
+        }
+        /* [ */
+        if($data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['order_net_amount'] > 0) {
+            $transObj = new Transaction($orderInfo["order_user_id"]);
+            $formattedOrderId = "#".$orderInfo["order_id"];
+
+            $utxn_comments = Label::getLabel('LBL_Order_Refund:_{order-id}');
+            $utxn_comments = str_replace("{order-id}", $formattedOrderId, $utxn_comments);
+
+            $txnDataArr = array(
+                'utxn_user_id'	=>	$orderInfo["order_user_id"],
+                'utxn_date' => date('Y-m-d H:i:s'),
+                'utxn_credit'	=>	$orderInfo['order_net_amount'],
+                'utxn_status'	=>	Transaction::STATUS_COMPLETED,
+                'utxn_order_id'	=>	$orderInfo["order_id"],
+                'utxn_comments'	=>	$utxn_comments,
+                'utxn_type'		=>	Transaction::TYPE_ORDER_CANCELLED_REFUND
+            );
+            if (!$transObj->addTransaction($txnDataArr)) {
+                    $db->rollbackTransaction();
+                    $this->error = $transObj->getError();
+                    if(FatUtility::isAjaxCall()) {
+                        // Message::addErrorMessage($this->error);
+                        FatUtility::dieJsonError($this->error);
+                    }
+                    return false;
+            }
+        }
+        $db->commitTransaction();
+
+        if(FatUtility::isAjaxCall()) {
+            // Message::addMessage(Label::getLabel('LBL_Updated_Successfully.'));
+            FatUtility::dieJsonSuccess(Label::getLabel('LBL_Updated_Successfully.'));
+        }
+        $this->set('msg', Label::getLabel('LBL_Updated_Successfully.'));
         $this->_template->render(false, false, 'json-success.php');
     }
 }
