@@ -102,9 +102,10 @@ $(document).ready(function(){
 		searchPuchasedLessons( document.frmPurchasedLessonsSearch );
 	};
 
-	updateOrderStatus = function(id,value){
-
-		if(!confirm("Do you really want to update status?")){return;}
+	updateOrderStatus = function(obj, id,value,oldValue){
+		var currentValue = $(obj).val();
+		console.log(currentValue,'currentValue');
+		if(!confirm("Do you really want to update status?")){  $(obj).val(oldValue); return false; }
 		if(id === null){
 			$.mbsmessage('Invalid Request!');
 			return false;
@@ -115,6 +116,7 @@ $(document).ready(function(){
 				  $.mbsmessage( res.msg,true, 'alert alert--success');
 					searchPuchasedLessons(document.frmPurchasedLessonsSearch);
 			}else{
+				 $(obj).val(oldValue);
 				  $.mbsmessage( res.msg,true, 'alert alert--danger');
 			}
 		});

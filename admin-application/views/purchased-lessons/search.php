@@ -5,9 +5,9 @@ $arr_flds = array(
 	'order_id'=>Label::getLabel('LBL_Order_Id',$adminLangId),
 	'learner_username'=>Label::getLabel('LBL_Learner',$adminLangId),
 	'teacher_username'	=> Label::getLabel('LBL_Teacher',$adminLangId),
-	'language'=>Label::getLabel('LBL_Language',$adminLangId),		
+	'language'=>Label::getLabel('LBL_Language',$adminLangId),
 	'op_lpackage_is_free_trial'=>Label::getLabel('LBL_Free_trial',$adminLangId),
-	'order_is_paid'=>Label::getLabel('LBL_Status',$adminLangId),	
+	'order_is_paid'=>Label::getLabel('LBL_Status',$adminLangId),
 	'action' => Label::getLabel('LBL_View_Lessons',$adminLangId),
 );
 $tbl = new HtmlElement('table', array('width'=>'100%', 'class'=>'table table-responsive'));
@@ -18,10 +18,10 @@ foreach ($arr_flds as $val) {
 
 $sr_no = $page==1 ? 0: $pageSize*($page-1);
 foreach ($arr_listing as $sn=>$row){
-	
+
 	$sr_no++;
 	$tr = $tbl->appendElement('tr', array( ) );
-	
+
 	foreach ( $arr_flds as $key => $val ){
 		$td = $tr->appendElement('td');
 		switch ($key){
@@ -31,7 +31,7 @@ foreach ($arr_listing as $sn=>$row){
 			case 'order_is_paid':
 					$status = Order::getPaymentStatusArr($adminLangId);
 					if($canEdit){
-						$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['order_id'],'name'=>'order_is_paid','onchange'=>"updateOrderStatus('".$row['order_id']."',this.value)"));
+						$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['order_id'],'name'=>'order_is_paid','onchange'=>"updateOrderStatus(this,'".$row['order_id']."',this.value,'".$row[$key]."')"));
 						foreach($status as $status_key=>$status_value){
 							if($status_key == $row[$key]){
 								$select->appendElement('option',array('value'=>$status_key,'selected'=>'selected'), $status_value);
@@ -57,17 +57,17 @@ foreach ($arr_listing as $sn=>$row){
             if($row['order_is_paid'] == Order::ORDER_IS_PAID){
 				$td->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'View Schedules',true);
             }else{
-				$td->appendElement('plaintext', array(), 'N/A');               
+				$td->appendElement('plaintext', array(), 'N/A');
             }
 				/*$ul = $td->appendElement("ul",array("class"=>"actions actions--centered"));
 				if($canEdit){
-					$li = $ul->appendElement("li",array('class'=>'droplink'));						
+					$li = $ul->appendElement("li",array('class'=>'droplink'));
     			    $li->appendElement('a', array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
-					$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));	
+					$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
 					$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
 
 					$innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['order_id'])),'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),Label::getLabel('LBL_View',$adminLangId), true);							
+					$innerLi->appendElement('a', array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['order_id'])),'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),Label::getLabel('LBL_View',$adminLangId), true);
 				}*/
 			break;
 			default:
