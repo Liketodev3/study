@@ -301,7 +301,9 @@ class PurchasedLessonsController extends AdminBaseController
             'order_is_paid',
             'order_user_id',
             'order_net_amount',
+            'count(sl.slesson_order_id) as totalLessons',
             'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) scheduledLessonsCount',
+            'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_NEED_SCHEDULING.' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
         ]);
         $orderSearch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sl.slesson_order_id = o.order_id', 'sl');
         $orderSearch->addCondition('o.order_id', '=', FatApp::getPostedData('order_id',FatUtility::VAR_STRING,''));
@@ -316,7 +318,14 @@ class PurchasedLessonsController extends AdminBaseController
             }
             return false;
         }
-
+        if($data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['needToscheduledLessonsCount'] != $orderInfo['totalLessons']){
+            $this->error = Label::getLabel("LBL_You_are_not_cancelled_the_order", CommonHelper::getLangId());
+            if(FatUtility::isAjaxCall()) {
+                // Message::addErrorMessage($this->error);
+                FatUtility::dieJsonError($this->error);
+            }
+            return false;
+        }
         if($data['order_is_paid'] == Order::ORDER_IS_PENDING && $orderInfo['order_is_paid'] == Order::ORDER_IS_CANCELLED) {
             $this->error = Label::getLabel("LBL_Order_already_cancelled", CommonHelper::getLangId());
             if(FatUtility::isAjaxCall()) {
@@ -327,7 +336,7 @@ class PurchasedLessonsController extends AdminBaseController
         }
 
         if($data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['scheduledLessonsCount'] > 0) {
-            $this->error = Label::getLabel("LBL_You_are_not_cancelled_the_request_because_some_lesson_are_scheduled", CommonHelper::getLangId());
+            $this->error = Label::getLabel("LBL_You_are_not_cancelled_the_order_because_some_lesson_are_scheduled", CommonHelper::getLangId());
             if(FatUtility::isAjaxCall()) {
                 // Message::addErrorMessage($this->error);
                 FatUtility::dieJsonError($this->error);
@@ -346,6 +355,16 @@ class PurchasedLessonsController extends AdminBaseController
         }
         /* [ */
         if($data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['order_net_amount'] > 0) {
+            $assignValues = array('slesson_status' => ScheduledLesson::STATUS_CANCELLED);
+            if (!$db->updateFromArray(ScheduledLesson::DB_TBL, $assignValues, array('smt' => 'slesson_order_id = ?', 'vals' => array($data['order_id'])))) {
+                $db->rollbackTransaction();
+                $this->error = $db->getError();
+                if(FatUtility::isAjaxCall()) {
+                    FatUtility::dieJsonError($this->error);
+                }
+                return false;
+            }
+
             $transObj = new Transaction($orderInfo["order_user_id"]);
             $formattedOrderId = "#".$orderInfo["order_id"];
 
