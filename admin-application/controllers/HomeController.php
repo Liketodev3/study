@@ -41,6 +41,8 @@ class HomeController extends AdminBaseController
 
             $dashboardInfo["stats"]["totalSales"] = $statsObj->getStats('total_sales');
             $dashboardInfo["stats"]["totalEarnings"] = $statsObj->getStats('total_earnings');
+            // print_r($dashboardInfo["stats"]["totalSales"]);
+            // die;
             //print_r($dashboardInfo["stats"]["totalEarnings"]); die;
             $dashboardInfo['topLessonLanguage'] = $statsObj->getTopLessonLanguages('YEARLY');
 

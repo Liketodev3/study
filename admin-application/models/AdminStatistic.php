@@ -41,7 +41,7 @@ class AdminStatistic extends MyAppModel
                 foreach ($last12Months as $key=>$val) {
                     $srchObj = clone $srch;
                     $srchObj->addDirectCondition("month(`order_date_added` ) = $val[monthCount] and year(`order_date_added` )= $val[year]");
-                    $srchObj->addMultipleFields(array('order_net_amount  - (COUNT(slesson_id) * op_commission_charged ) as  Earnings','op_id'));
+                    $srchObj->addMultipleFields(array('order_net_amount  - (op_qty * op_commission_charged ) as  Earnings','op_id'));
                     $rs = $srchObj->getResultSet();
                     $row = $this->db->fetchAll($rs);
                     if ($row) {
