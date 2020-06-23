@@ -15,6 +15,7 @@ class AdminStatistic extends MyAppModel
                 $srch = new OrderProductSearch();
                 $srch->joinorders();
                 $srch->addCondition('o.order_type', '=', Order::TYPE_LESSON_BOOKING);
+                $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
                 $srch->doNotCalculateRecords();
                 $srch->doNotLimitRecords();
                 foreach ($last12Months as $key=>$val) {
@@ -31,6 +32,7 @@ class AdminStatistic extends MyAppModel
                 $srch = new OrderProductSearch();
                 $srch->joinorders();
                 $srch->addCondition('o.order_type', '=', Order::TYPE_LESSON_BOOKING);
+                $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
                 $srch->addGroupBy('op.op_id');
                 $srch->joinScheduleLesson();
                 $srch->doNotCalculateRecords();
