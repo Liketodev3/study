@@ -18,6 +18,6 @@
                 <input type="submit" value="<?php echo Label::getLabel('LBL_Get_Started?'); ?>">
 			</form>
 		</div>
-        <a href="#" class="banner-link banner_link_how_works"><?php echo Label::getLabel('LBL_How_it_Works?'); ?></a>        
+        <a href="#" class="banner-link banner_link_how_works"><?php echo Label::getLabel('LBL_How_it_Works?'); ?></a>
 	</div>
 </section>

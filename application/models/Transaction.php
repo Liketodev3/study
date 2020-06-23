@@ -19,7 +19,7 @@ class Transaction extends MyAppModel
     const TYPE_LOADED_MONEY_TO_WALLET = 3;
     const TYPE_MONEY_WITHDRAWN = 4;
     const TYPE_ISSUE_REFUND = 5;
-    const TYPE_ORDER_CANCELLED_REFUND = 5;
+    const TYPE_ORDER_CANCELLED_REFUND = 6;
 
     const CREDIT_TYPE = 1;
     const DEBIT_TYPE = 2;
