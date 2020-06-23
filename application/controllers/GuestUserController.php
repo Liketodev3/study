@@ -665,21 +665,30 @@ class GuestUserController extends MyAppController
         $rs = $srch->getResultSet();
         $row = $db->fetch($rs);
         if ($row) {
+            // print_r(var_dump($row));
+
             if ($row['credential_active'] != applicationConstants::ACTIVE) {
-                Message::addErrorMessage(Label::getLabel("ERR_YOUR_ACCOUNT_HAS_BEEN_DEACTIVATED"));
-                CommonHelper::redirectUserReferer();
+
+                // Message::addErrorMessage(Label::getLabel("ERR_YOUR_ACCOUNT_HAS_BEEN_DEACTIVATED"));
+                $this->set('url', CommonHelper::redirectUserReferer(true));
+                $this->set('msg', Label::getLabel("ERR_YOUR_ACCOUNT_HAS_BEEN_DEACTIVATED"));
+                $this->_template->render(false, false, 'json-error.php');
             }
             if ($row['user_deleted'] == applicationConstants::YES) {
-                Message::addErrorMessage(Label::getLabel("ERR_USER_INACTIVE_OR_DELETED"));
-                CommonHelper::redirectUserReferer();
+                $this->set('url', CommonHelper::redirectUserReferer(true));
+                $this->set('msg', Label::getLabel("ERR_USER_INACTIVE_OR_DELETED"));
+                $this->_template->render(false, false, 'json-error.php');
             }
+
             $userObj->setMainTableRecordId($row['user_id']);
             $arr = array(
                 'user_facebook_id' => $userFacebookId
             );
             if (!$userObj->setUserInfo($arr)) {
                 Message::addErrorMessage(Label::getLabel($userObj->getError()));
-                CommonHelper::redirectUserReferer();
+                $this->set('url', CommonHelper::redirectUserReferer(true));
+                $this->set('msg', Message::getHtml());
+                $this->_template->render(false, false, 'json-error.php');
             }
         } else {
             $userNameArr = explode(" ", $facebookName);
@@ -697,15 +706,18 @@ class GuestUserController extends MyAppController
             );
             $userObj->assignValues($userData);
             if (!$userObj->save()) {
-                Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $userObj->getError());
                 $db->rollbackTransaction();
-                CommonHelper::redirectUserReferer();
+                // Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $userObj->getError());
+                $this->set('url', CommonHelper::redirectUserReferer(true));
+                $this->set('msg', Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $userObj->getError());
+                $this->_template->render(false, false, 'json-error.php');
             }
             $username = str_replace(" ", "", $facebookName) . $userFacebookId;
             if (!$userObj->setLoginCredentials($username, $facebookEmail, uniqid(), 1, 1)) {
-                Message::addErrorMessage(Label::getLabel("MSG_LOGIN_CREDENTIALS_COULD_NOT_BE_SET") . $userObj->getError());
                 $db->rollbackTransaction();
-                CommonHelper::redirectUserReferer();
+                $this->set('url', CommonHelper::redirectUserReferer(true));
+                $this->set('msg', Label::getLabel("MSG_LOGIN_CREDENTIALS_COULD_NOT_BE_SET") . $userObj->getError());
+                $this->_template->render(false, false, 'json-error.php');
             }
             $userData['user_username'] = $username;
             $userData['user_email'] = $facebookEmail;
@@ -717,9 +729,10 @@ class GuestUserController extends MyAppController
                 $userId = $userObj->getMainTableRecordId();
                 $userObj = new User($userId);
                 if (!$this->userWelcomeEmailRegistration($userObj, $data)) {
-                    Message::addErrorMessage(Label::getLabel("MSG_WELCOME_EMAIL_COULD_NOT_BE_SENT"));
                     $db->rollbackTransaction();
-                    FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
+                    $this->set('url', CommonHelper::redirectUserReferer(true));
+                    $this->set('msg', Label::getLabel("MSG_WELCOME_EMAIL_COULD_NOT_BE_SENT"));
+                    $this->_template->render(false, false, 'json-error.php');
                 }
             }
             $db->commitTransaction();
@@ -730,13 +743,17 @@ class GuestUserController extends MyAppController
             'credential_password'
         ));
         if (!$userInfo || ($userInfo && $userInfo['user_facebook_id'] != $userFacebookId)) {
-            Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET"));
-            CommonHelper::redirectUserReferer();
+            // Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET"));
+            $this->set('url', CommonHelper::redirectUserReferer(true));
+            $this->set('msg',Label::getLabel("MSG_USER_COULD_NOT_BE_SET"));
+            $this->_template->render(false, false, 'json-error.php');
         }
         $authentication = new UserAuthentication();
         if (!$authentication->login($userInfo['credential_username'], $userInfo['credential_password'], $_SERVER['REMOTE_ADDR'], false)) {
-            Message::addErrorMessage(Label::getLabel($authentication->getError()));
-            FatUtility::dieWithError(Message::getHtml());
+            // Message::addErrorMessage(Label::getLabel($authentication->getError()));
+            $this->set('url', CommonHelper::redirectUserReferer(true));
+            $this->set('msg', Label::getLabel($authentication->getError()));
+            $this->_template->render(false, false, 'json-error.php');
         }
 
 
@@ -752,10 +769,10 @@ class GuestUserController extends MyAppController
         $this->set('msg', Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId));
         $this->_template->render(false, false, 'json-success.php');
         }
-        Message::addErrorMessage(Label::getLabel("MSG_UNABLE_To_FETCH_YOUR_EMAIL_ID"));
+        // Message::addErrorMessage(Label::getLabel("MSG_UNABLE_To_FETCH_YOUR_EMAIL_ID"));
         $this->set('url', CommonHelper::generateUrl());
-        $this->set('msg', Message::getHtml());
-        $this->_template->render(false, false, 'json-error.php', true, false);
+        $this->set('msg', Label::getLabel("MSG_UNABLE_To_FETCH_YOUR_EMAIL_ID"));
+        $this->_template->render(false, false, 'json-error.php');
     }
 
     public function configureEmail()
