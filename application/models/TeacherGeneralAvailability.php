@@ -116,7 +116,7 @@ class TeacherGeneralAvailability extends MyAppModel
 
             return $jsonArr;
         } else {
-            return;
+            return $jsonArr;
         }
     }
 
