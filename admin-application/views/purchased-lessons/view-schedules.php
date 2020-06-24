@@ -96,7 +96,7 @@ foreach ($arr_listing as $sn=>$row){
 				$td->appendElement('plaintext', array(), $str,true);
 			break;
 			case 'slesson_start_time':
-				$startTime = ($row[$key] == "00:00:00") ?  Label::getLabel('LBL_N/A') : date('h:i A',strtotime($row[$key]));
+				$startTime = ($row[$key] == "00:00:00") ?  Label::getLabel("LBL_N/A") : date('h:i A',strtotime($row[$key]));
 				$td->appendElement('plaintext', array(), $startTime,true);
 			break;
 			case 'slesson_ended_on':
