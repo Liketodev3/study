@@ -311,11 +311,12 @@ $(document).ready(function(){
 
 	setUpSignUp = function( frm ){
 		if ( !$(frm).validate() ){ return; }
-		fcom.ajax(fcom.makeUrl('GuestUser', 'setUpSignUp'), fcom.frmData(frm), function(res) {
+			fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'setUpSignUp'), fcom.frmData(frm), function(res) {
 			if( res.redirectUrl ){
 				window.location.href = res.redirectUrl;
 				return;
 			}
+				$.facebox(res.msg, '');
 		});
 	};
 

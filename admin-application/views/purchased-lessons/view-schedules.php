@@ -28,8 +28,8 @@ $arr_flds = array(
 		'slesson_id'=>Label::getLabel('LBL_Lesson_Id',$adminLangId),
 		'slesson_date'=>Label::getLabel('LBL_Lesson_Date',$adminLangId),
 		'slesson_start_time'=>Label::getLabel('LBL_Lesson_Start_Time', $adminLangId),
-		'slesson_ended_on'=>Label::getLabel('LBL_Lesson_Ended_On',$adminLangId),        
-		'slesson_ended_by'=>Label::getLabel('LBL_Lesson_Ended_By',$adminLangId),		
+		'slesson_ended_on'=>Label::getLabel('LBL_Lesson_Ended_On',$adminLangId),
+		'slesson_ended_by'=>Label::getLabel('LBL_Lesson_Ended_By',$adminLangId),
 		'teacherTeachLanguageName'=>Label::getLabel('LBL_Language',$adminLangId),
 		'slesson_status'=>Label::getLabel('LBL_Status',$adminLangId),
 		'action' => Label::getLabel('LBL_Action',$adminLangId),
@@ -42,10 +42,10 @@ foreach ($arr_flds as $val) {
 
 $sr_no = 0;
 foreach ($arr_listing as $sn=>$row){
-	/* echo '<pre>';
-	print_r( $row );
-	echo '</pre>';
-	die(); */
+	// echo '<pre>';
+	// print_r( $row );
+	// echo '</pre>';
+	// die();
 	$sr_no++;
 	$tr = $tbl->appendElement('tr');
 
@@ -66,9 +66,9 @@ foreach ($arr_listing as $sn=>$row){
 						$active = '';
 						$statusAct = 'activeStatus(this)';
 					}
-					
+
 					$statusClass = ( $canEdit === false ) ? 'disabled' : '';
-					$str='<label class="statustab -txt-uppercase">                 
+					$str='<label class="statustab -txt-uppercase">
                      <input '.$active.' type="checkbox" id="switch'.$row['lpackage_id'].'" value="'.$row['lpackage_id'].'" onclick="'.$statusAct.'" class="switch-labels status_'.$row['lpackage_id'].'"/>
                     <i class="switch-handles '.$statusClass.'"></i></label>';
 					$td->appendElement('plaintext', array(), $str,true);
@@ -89,20 +89,23 @@ foreach ($arr_listing as $sn=>$row){
 				$td->appendElement('plaintext', array(), applicationConstants::getYesNoArr($adminLangId)[$row[$key]],true);
 			break;
 			case 'slesson_ended_by':
-				$str = '-NA-';
+				$str = Label::getLabel('LBL_N/A');
 				if($row[$key]){
 					$str = User::getUserTypesArr($adminLangId)[$row[$key]];
-				}				
+				}
 				$td->appendElement('plaintext', array(), $str,true);
 			break;
 			case 'slesson_start_time':
-				$td->appendElement('plaintext', array(), date('h:i A',strtotime($row[$key])),true);
+				$startTime = ($row[$key] == "00:00:00") ?  Label::getLabel('LBL_N/A') : date('h:i A',strtotime($row[$key]));
+				$td->appendElement('plaintext', array(), $startTime,true);
 			break;
 			case 'slesson_ended_on':
-				$td->appendElement('plaintext', array(), date('h:i A',strtotime($row[$key])),true);
+				$endTime = ($row[$key] == "0000-00-00 00:00:00") ?  Label::getLabel('LBL_N/A') : date('h:i A',strtotime($row[$key]));
+ 				$td->appendElement('plaintext', array(), $endTime,true);
 			break;
 			case 'slesson_date':
-				$td->appendElement('plaintext', array(), date('l, F d, Y',strtotime($row[$key])),true);
+				$date = ($row[$key] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : date('l, F d, Y',strtotime($row[$key]));
+				$td->appendElement('plaintext', array(), $date,true);
 			break;
 			case 'slanguage_name':
 				$str = $row[$key];
@@ -112,7 +115,7 @@ foreach ($arr_listing as $sn=>$row){
 					$minutes = round(abs($to_time - $from_time) / 60,2);
 					$isTrial = ( $minutes == 30 ) ? ' Trial ' : ' ';
 					$str.= "<br>".$minutes." Minutes".$isTrial."Lesson";
-				} 
+				}
 				$td->appendElement('plaintext', array(), $str ,true);
 			break;
 			case 'lpackage_identifier':
@@ -138,10 +141,10 @@ foreach ($arr_listing as $sn=>$row){
 if (count($arr_listing) == 0){
 	$tbl->appendElement('tr')->appendElement('td', array('colspan'=>count($arr_flds)), Label::getLabel('LBL_No_Records_Found',$adminLangId));
 }
-echo $tbl->getHtml(); ?>							
-							
+echo $tbl->getHtml(); ?>
+
 							</div>
-						</div> 
+						</div>
 					</div>
 				</section>
 		</div>
