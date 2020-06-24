@@ -148,10 +148,11 @@ class GiftcardController extends LoggedUserController
 
         ));
         $buyerPhone->requirements()->setRequired();
+        $buyerPhone->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
         $frm->addRequiredField("Recipient Name", 'gcrecipient_name', '', array(
             'placeholder' => Label::getLabel('LBL_Recipient_Name')
         ));
-        $frm->addRequiredField("Recipient Email", 'gcrecipient_email', '', array(
+        $frm->addEmailField("Recipient Email", 'gcrecipient_email', '', array(
             'placeholder' => Label::getLabel('LBL_Recipient_Email')
         ));
         $frm->addSubmitButton('', 'save',Label::getLabel('LBL_Send_Gift_Card'), array(
