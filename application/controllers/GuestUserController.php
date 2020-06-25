@@ -77,7 +77,7 @@ class GuestUserController extends MyAppController
     {
         $json = array();
         $json['status'] = true;
-        $json['msg'] = '';
+        $json['msg'] = Label::getLabel('LBL_Request_Processing..');
         $post = FatApp::getPostedData();
 		$userType = User::USER_TYPE_LEANER;
 
