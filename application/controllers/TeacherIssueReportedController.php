@@ -338,6 +338,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         $arr_options = IssueReportOptions::getOptionsArray($this->siteLangId);
         $fldIssue = $frm->addCheckBoxes(Label::getLabel('LBL_Issue_To_Resolve'), 'issues_to_report', $arr_options, array());
         $fldIssue->requirement->setSelectionRange(1, count($arr_options));
+        $fldIssue->requirement->setCustomErrorMessage(Label::getLabel('LBL_Issue_To_Resolve').' '.Label::getLabel('LBL_is_Mandatory'));
         $fld = $frm->addTextArea(Label::getLabel('LBL_Comment'), 'issue_reported_msg', '');
         $fld->requirement->setRequired(true);
         $fld = $frm->addHiddenField('', 'issue_id');
