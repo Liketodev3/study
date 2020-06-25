@@ -381,3 +381,6 @@ UPDATE `tbl_configurations` SET `conf_val` = 'Y-m-d' WHERE `tbl_configurations`.
 ALTER TABLE `tbl_user_teacher_requests` DROP INDEX `ututrequest_user_id`;
 
 ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_status_change_date`  DATETIME NOT NULL AFTER `utrequest_status`;
+
+-- #036446 25-june-2020
+UPDATE `tbl_configurations` SET `conf_val` = 'H:i:s' WHERE `tbl_configurations`.`conf_name` = 'CONF_DATE_FORMAT_TIME';
