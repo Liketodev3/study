@@ -197,7 +197,7 @@ $(document).ready(function(){
 			$(this).siblings('.block__body-target-js').slideUp();return false;
 		}
 
-		$('.block__head-trigger-js').removeClass('is-active');
+		$(this).find('.block__head-trigger-js').removeClass('is-active');
 		$(this).addClass("is-active");
 		$(this).siblings('.block__body-target-js').slideUp();
 		$(this).siblings('.block__body-target-js').slideDown();
