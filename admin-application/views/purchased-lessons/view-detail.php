@@ -44,7 +44,7 @@
 										</label>
 										:
 										<strong>
-											<?php echo ($lessonRow['slesson_start_time'] == "00:00:00") ?  Label::getLabel('LBL_N/A') : $lessonRow['slesson_start_time']; ?>
+											<?php echo ($lessonRow['slesson_start_time'] == "00:00:00" && $lessonRow['slesson_date'] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : date('h:i A',strtotime($lessonRow['slesson_start_time'])); ?>
 										</strong>
 									</div>
 								</div>
@@ -60,7 +60,7 @@
 										</label>
 										:
 										<strong>
-											<?php echo ($lessonRow['slesson_end_time'] == "00:00:00") ?  Label::getLabel('LBL_N/A') : $lessonRow['slesson_end_time']; ?>
+											<?php echo ($lessonRow['slesson_end_time'] == "00:00:00" && $lessonRow['slesson_date'] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : date('h:i A',strtotime($lessonRow['slesson_end_time'])) ; ?>
 										</strong>
 									</div>
 								</div>
