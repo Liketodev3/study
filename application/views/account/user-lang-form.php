@@ -8,9 +8,9 @@ $langFrm->developerTags['fld_default_col'] = 12;
 ?>
      <div class="tabs-small tabs-offset tabs-scroll-js">
                                     <ul>
-                                        <li><a href="javascript::void(0)" onclick="profileInfoForm()" ><?php echo Label::getLabel('LBL_General'); ?></a></li>
+                                        <li><a href="javascript:void(0)" onclick="profileInfoForm()" ><?php echo Label::getLabel('LBL_General'); ?></a></li>
                                         			<?php foreach( $languages as $langId => $language ){ ?>
-                                                        <li class="<?php echo ($langId == $lang_id)?'is-active':'' ?>"><a href="javascript::void(0)" onclick="getLangProfileInfoForm(<?php echo $langId; ?>)" ><?php echo $language['language_name']; ?></a></li>
+                                                        <li class="<?php echo ($langId == $lang_id)?'is-active':'' ?>"><a href="javascript:void(0)" onclick="getLangProfileInfoForm(<?php echo $langId; ?>)" ><?php echo $language['language_name']; ?></a></li>
                                                     <?php } ?>
                                     </ul>
                                 </div>

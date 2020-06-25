@@ -130,7 +130,7 @@ foreach ($arr_listing as $sn=>$row){
 			case 'action':
 				$ul = $td->appendElement("ul",array("class"=>"actions"));
 				$li = $ul->appendElement("li");
-				$li->appendElement('a', array('href'=>'javascript::void(0)', 'class'=>'button small green','title'=>'View Order Detail','onclick'=>'viewDetail('.$row['slesson_id'].');'),'<i class="ion-eye icon"></i>', true);
+				$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>'View Order Detail','onclick'=>'viewDetail('.$row['slesson_id'].');'),'<i class="ion-eye icon"></i>', true);
 			break;
 			default:
 				$td->appendElement('plaintext', array(), $row[$key],true);

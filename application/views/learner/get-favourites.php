@@ -112,7 +112,7 @@
                                         <td>
                                             <span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Action'); ?></span>
                                             <span class="td__data">
-                                                <a href="javascript::void(0)" onclick="toggleTeacherFavorite(<?php echo $favourite['uft_teacher_id']; ?>)" class="btn btn--small btn--secondary"><?php echo Label::getLabel('LBL_Unfavorite'); ?></a>
+                                                <a href="javascript:void(0)" onclick="toggleTeacherFavorite(<?php echo $favourite['uft_teacher_id']; ?>)" class="btn btn--small btn--secondary"><?php echo Label::getLabel('LBL_Unfavorite'); ?></a>
                                             </span>
                                         </td>
                                     </tr>

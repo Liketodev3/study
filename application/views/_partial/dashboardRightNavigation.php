@@ -44,7 +44,7 @@
 									<ul>
 									<?php foreach($teacherIds as $teacherId){ ?>
 										<li>
-											<a href="javascript::void(0)">
+											<a href="javascript:void(0)">
 												<figure class="avtar avtar--small" data-text="A">
 													<img src="<?php echo CommonHelper::generateUrl('image','user',array($teacherId)) ?>" alt="">
 												</figure>

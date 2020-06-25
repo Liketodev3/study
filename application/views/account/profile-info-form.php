@@ -41,9 +41,9 @@ console.log(userData);
                                      <div id="langForm">
      <div class="tabs-small tabs-offset tabs-scroll-js">
                                     <ul>
-                                        <li class="is-active"><a href="javascript::void(0)" onclick="profileInfoForm()" ><?php echo Label::getLabel('LBL_General'); ?></a></li>
+                                        <li class="is-active"><a href="javascript:void(0)" onclick="profileInfoForm()" ><?php echo Label::getLabel('LBL_General'); ?></a></li>
                                         			<?php foreach( $languages as $langId => $language ){ ?>
-                                                        <li><a href="javascript::void(0)" onclick="getLangProfileInfoForm(<?php echo $langId; ?>)" ><?php echo $language['language_name']; ?></a></li>
+                                                        <li><a href="javascript:void(0)" onclick="getLangProfileInfoForm(<?php echo $langId; ?>)" ><?php echo $language['language_name']; ?></a></li>
                                                     <?php } ?>
                                     </ul>
                                 </div>

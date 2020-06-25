@@ -63,7 +63,7 @@ foreach ($arr_listing as $sn=>$row){
 				//$td->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['issrep_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'View Schedules',true);
 				/*$ul = $td->appendElement("ul",array("class"=>"actions"));
 				$li = $ul->appendElement("li");
-				$li->appendElement('a', array('href'=>'javascript::void(0)', 'class'=>'button small green','title'=>'View Issue Detail','onclick'=>'viewDetail('.$row['issrep_id'].')'),'<i class="ion-eye icon"></i>', true);*/
+				$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>'View Issue Detail','onclick'=>'viewDetail('.$row['issrep_id'].')'),'<i class="ion-eye icon"></i>', true);*/
 
 				$ul = $td->appendElement("ul",array("class"=>"actions actions--centered"));
 					$li = $ul->appendElement("li",array('class'=>'droplink'));						

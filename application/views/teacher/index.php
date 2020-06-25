@@ -129,7 +129,7 @@
                                 <ul>
 								<?php foreach($studentIds as $studentId){ ?>
                                     <li>
-                                        <a href="javascript::void(0)">
+                                        <a href="javascript:void(0)">
                                             <figure class="avtar avtar--small" data-text="A">
                                                 <img src="<?php echo CommonHelper::generateUrl('image','user',array($studentId)) ?>" alt="">
                                             </figure>

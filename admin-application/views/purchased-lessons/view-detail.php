@@ -26,8 +26,10 @@
 									<div class="caption-wraper">
 										<label class="field_label">
 											<?php echo Label::getLabel('LBL_Session_Date',$adminLangId); ?>
-										</label>
-										: <strong><?php echo FatDate::format($lessonRow['slesson_date']); ?></strong>
+										</label> :
+										<strong>
+											<?php echo ($lessonRow['slesson_date'] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : FatDate::format($lessonRow['slesson_date']); ?>
+										</strong>
 									</div>
 								</div>
 							</div>
@@ -40,7 +42,10 @@
 										<label class="field_label">
 											<?php echo Label::getLabel('LBL_Scheduled_Start_Time',$adminLangId); ?>
 										</label>
-										: <strong><?php echo $lessonRow['slesson_start_time']; ?></strong>
+										:
+										<strong>
+											<?php echo ($lessonRow['slesson_start_time'] == "00:00:00") ?  Label::getLabel('LBL_N/A') : $lessonRow['slesson_start_time']; ?>
+										</strong>
 									</div>
 								</div>
 							</div>
@@ -53,7 +58,10 @@
 										<label class="field_label">
 											<?php echo Label::getLabel('LBL_Scheduled_End_Time',$adminLangId); ?>
 										</label>
-										: <strong><?php echo $lessonRow['slesson_end_time']; ?></strong>
+										:
+										<strong>
+											<?php echo ($lessonRow['slesson_end_time'] == "00:00:00") ?  Label::getLabel('LBL_N/A') : $lessonRow['slesson_end_time']; ?>
+										</strong>
 									</div>
 								</div>
 							</div>

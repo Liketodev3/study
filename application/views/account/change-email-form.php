@@ -32,8 +32,8 @@ $frm->setFormTagAttribute('onsubmit', 'setUpEmail(this); return(false);');
 </div>
 <div class="tabs-small tabs-offset tabs-scroll-js">
     <ul>
-        <li><a href="javascript::void(0)" onclick="changePasswordForm()" ><?php echo Label::getLabel('LBL_Password'); ?></a></li>
-		<li class="is-active"><a href="javascript::void(0)" onclick="changeEmailForm()" ><?php echo Label::getLabel('LBL_Email'); ?></a></li>
+        <li><a href="javascript:void(0)" onclick="changePasswordForm()" ><?php echo Label::getLabel('LBL_Password'); ?></a></li>
+		<li class="is-active"><a href="javascript:void(0)" onclick="changeEmailForm()" ><?php echo Label::getLabel('LBL_Email'); ?></a></li>
     </ul>
 </div>
 <?php echo $frm->getFormHtml();
