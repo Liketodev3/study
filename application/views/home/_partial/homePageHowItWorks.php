@@ -68,7 +68,7 @@ $bannerDet = current($secondBlockdata['banners']); ?>
                             $bannerBtnCaption =  (!empty($banners['banner_btn_caption']))  ? $banners['banner_btn_caption'] : Label::getLabel('LBL_View');
                                 if(!empty($banners['banner_btn_url'])) {
                                 ?>
-                                    <a href="<?php echo $banners['banner_btn_url']; ?>" class="btn btn--primary banner-btn-url"><?php echo $bannerBtnCaption; ?></a>
+                                    <a href="<?php echo $banners['banner_btn_url']; ?>" target="<?php echo  $banners['banner_target']; ?>"  class="btn btn--primary banner-btn-url"><?php echo $bannerBtnCaption; ?></a>
                                 <?php
                                 }
                             ?>

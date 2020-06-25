@@ -583,7 +583,7 @@ class BannersController extends AdminBaseController
         $frm->addHiddenField('', 'banner_blocation_id');
         $frm->addHiddenField('', 'banner_id');
         $frm->addHiddenField('', 'banner_type');
-        $frm->addTextBox(Label::getLabel('LBL_Url', $this->adminLangId), 'banner_url');
+        //$frm->addTextBox(Label::getLabel('LBL_Url', $this->adminLangId), 'banner_url');
         $linkTargetsArr = applicationConstants::getLinkTargetsArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Open_In', $this->adminLangId), 'banner_target', $linkTargetsArr, '', array(), '');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);

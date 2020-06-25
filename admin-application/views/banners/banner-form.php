@@ -5,8 +5,8 @@ $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 12;
 
 
-$urlField = $frm->getField('banner_url');
-$urlField->addFieldTagAttribute('placeholder','http://');
+// $urlField = $frm->getField('banner_url');
+// $urlField->addFieldTagAttribute('placeholder','http://');
 
 ?>
 
@@ -16,13 +16,13 @@ $urlField->addFieldTagAttribute('placeholder','http://');
 		<h4><?php echo Label::getLabel('LBL_Banner_Setup',$adminLangId); ?></h4>
 	</div>
 	<div class="sectionbody space">
-		<div class="row">		
+		<div class="row">
 <div class="col-sm-12">
 	<div class="tabs_nav_container responsive flat">
 		<ul class="tabs_nav">
 			<li><a class="active" href="javascript:void(0)" onclick="bannerForm(<?php echo $blocation_id ?>,<?php echo $banner_id ?>);"><?php echo Label::getLabel('LBL_General',$adminLangId); ?></a></li>
-			<?php 
-			$inactive = ($banner_id == 0)?'fat-inactive':'';	
+			<?php
+			$inactive = ($banner_id == 0)?'fat-inactive':'';
 			foreach($languages as $langId=>$langName){?>
 				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if( $banner_id > 0 ){ ?> onclick="bannerLangForm(<?php echo $blocation_id ?>,<?php echo $banner_id ?>, <?php echo $langId;?>);" <?php } ?>><?php echo Label::getLabel('LBL_'.$langName,$adminLangId); ?></a></li>
 			<?php } ?>
