@@ -1,10 +1,14 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 	$frm->setFormTagAttribute( 'class', 'form' );
 	$frm->developerTags['colClassPrefix'] = 'col-sm-';
 	$frm->developerTags['fld_default_col'] = 12;
+	$fldPassword = $frm->getField( 'password' );
+	$fldPassword->changeCaption('');
+	$fldPassword->captionWrapper = array(Label::getLabel('LBL_Password'), '<a onClick="toggleLoginPassword(this)" href="javascript:void(0)" class="-link-underline -float-right link-color" data-show-caption="'. Label::getLabel('LBL_Show_Password') .'" data-hide-caption="'. Label::getLabel('LBL_Hide_Password') .'">'.Label::getLabel('LBL_Show_Password').'</a>');
+
 	$frm->setFormTagAttribute('onsubmit', 'setUpLogin(this); return(false);');
 ?>
-<?php 
+<?php
 $userTypeArray = array('userType' => User::USER_TYPE_LEANER);
 if(isset($userType) && !empty($userType)) {
 	$userTypeArray = array('userType' => $userType);
@@ -18,11 +22,11 @@ if(isset($userType) && !empty($userType)) {
 					<div class="box__head -align-center">
 						<h4 class="-border-title"><?php echo Label::getLabel('LBL_Login'); ?></h4>
 					</div>
-					<div class="box__body -padding-40">
-					
+					<div class="box__body -padding-40 div-login-form">
+
 						<?php $this->includeTemplate( 'guest-user/_partial/learner-social-media-signup.php', $userTypeArray );	?>
 						<?php echo $frm->getFormHtml(); ?>
-						
+
 						<div class="-align-center">
 						<a href="<?php echo CommonHelper::generateUrl('GuestUser','ForgotPasswordForm'); ?>" class="-link-underline"><?php echo Label::getLabel('LBL_Forgot_Password?'); ?></a>
 						</div>

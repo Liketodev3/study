@@ -366,6 +366,16 @@ $(document).ready(function(){
 			$(e).html( $(e).attr("data-hide-caption") );
 		}
 	};
+	toggleLoginPassword = function( e ){
+		var passType = $("input[name='password']").attr("type");
+		if( passType == "text" ){
+			$("input[name='password']").attr("type", "password");
+			$(e).html( $(e).attr("data-show-caption") );
+		} else {
+			$("input[name='password']").attr("type", "text");
+			$(e).html( $(e).attr("data-hide-caption") );
+		}
+	};
 
 	toggleTeacherFavorite = function( teacher_id,el){
 		if( isUserLogged() == 0 ){

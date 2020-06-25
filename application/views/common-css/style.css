@@ -3090,7 +3090,9 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 .box.box--narrow .field_label .-link-underline {
     font-weight: normal;
 }
-
+.div-login-form .field_label .-link-underline {
+    font-weight: normal;
+}
 /* .box.box--narrow .field_label:empty{display: none;} */
 
 
@@ -5981,6 +5983,10 @@ div.tagsinput div {
     }
 
     .box.box--narrow .-float-right {
+        float: right !important;
+    }
+
+    .div-login-form .-float-right {
         float: right !important;
     }
 
