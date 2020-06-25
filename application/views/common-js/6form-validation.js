@@ -297,7 +297,6 @@
             if (this.field.attr('data-fat-arr-index')) {
             	clname += '_' + this.field.attr('data-fat-arr-index');
             }
-
             $('.'+clname).remove();
 
             var obj = this,
@@ -390,7 +389,12 @@
                     break;
                 case 2:
                 	if(field.attr('type') && field.attr('type').toLowerCase()==='checkbox') {
-                		field.parent().before(errorlist.empty());
+                    if(field.parents('.form__list--check').length > 0) {
+                      	field.parents('.form__list--check').before(errorlist.empty());
+                    }else{
+                      		field.parent().before(errorlist.empty());
+                    }
+
                 	}
                 	else {
                 		field.before(errorlist.empty());
@@ -398,7 +402,12 @@
                     break;
                 case 3:
                 	if(field.attr('type') && field.attr('type').toLowerCase()==='checkbox') {
-                		field.parent().after(errorlist.empty());
+                		// field.parent().after(errorlist.empty());
+                    if(field.parents('.form__list--check').length > 0) {
+                        field.parents('.form__list--check').before(errorlist.empty());
+                    }else{
+                          field.parent().before(errorlist.empty());
+                    }
                 	}
                 	else {
                 		field.after(errorlist.empty());

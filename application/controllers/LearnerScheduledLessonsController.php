@@ -668,8 +668,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $frm = new Form('issueReportedFrm');
         /***************/
         $arr_options = IssueReportOptions::getOptionsArray($this->siteLangId);
-        $fldIssue = $frm->addCheckBoxes(Label::getLabel('LBL_Issue_To_Report'), 'issues_to_report', $arr_options, array());
+        $fldIssue = $frm->addCheckBoxes(Label::getLabel('LBL_Issue_To_Report'), 'issues_to_report', $arr_options);
         $fldIssue->requirement->setSelectionRange(1, count($arr_options));
+        $fldIssue->requirement->setCustomErrorMessage(Label::getLabel('LBL_Issue_To_Report').' '.Label::getLabel('LBL_is_Mandatory'));
         /***************/
         $fld = $frm->addTextArea(Label::getLabel('LBL_Comment'), 'issue_reported_msg', '');
         $fld->requirement->setRequired(true);
