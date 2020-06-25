@@ -141,7 +141,7 @@ class ConfigurationsController extends AdminBaseController
         if (array_key_exists('CONF_CURRENCY', $post)) {
             $data = Currency::getAttributesById($post['CONF_CURRENCY']);
             if (empty($data) || ($data['currency_value'] * 1) != 1) {
-                Message::addErrorMessage(Labels::getLabel('MSG_Please_set_default_currency_value_to_1', $this->adminLangId));
+                Message::addErrorMessage(Label::getLabel('MSG_Please_set_default_currency_value_to_1', $this->adminLangId));
                 FatUtility::dieJsonError(Message::getHtml());
             }
         }
@@ -543,7 +543,7 @@ class ConfigurationsController extends AdminBaseController
 
                 $maxAttemptFld =  $frm->addIntegerField(Label::getLabel("LBL_MAX_TEACHER_REQUEST_ATTEMPT", $this->adminLangId), "CONF_MAX_TEACHER_REQUEST_ATTEMPT");
                 $maxAttemptFld->requirements()->setRange(0, 10);
-                
+
                 $frm->addHtml('', 'Account', '<h3>'.Label::getLabel("LBL_Account", $this->adminLangId).'</h3>');
                 $fld5 = $frm->addCheckBox(
                     Label::getLabel("LBL_Activate_Admin_Approval_After_Registration_(Sign_Up)", $this->adminLangId),
