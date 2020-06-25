@@ -52,6 +52,9 @@ class TeachersController extends MyAppController {
 		$srch->addMultipleFields(array('ulg.*', 'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info', 'utls.*'));
 		$srch->setPageSize($pageSize);
 		$srch->setPageNumber($page);
+		if (UserAuthentication::isUserLogged()) {
+			$srch->addCondition('user_id','!=',UserAuthentication::getLoggedUserId());
+		}
 		// echo $srch->getQuery(); die();
 		$rs = $srch->getResultSet();
 		$db = FatApp::getDb();
