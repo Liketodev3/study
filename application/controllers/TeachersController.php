@@ -338,6 +338,7 @@ class TeachersController extends MyAppController {
 		$json['startRecord'] = !empty($records)?($page-1)*$pageSize + 1 :0;
 		$json['recordsToDisplay'] = count($records);
 		$json['totalRecords'] = $srch->recordCount();
+		$json['msg'] =  Label::getLabel('LBL_Request_Processing..');
 		$json['html'] = $this->_template->render(false, false, '_partial/teacher-reviews-list.php', true, false);
 		$json['loadMoreBtnHtml'] = $this->_template->render(false, false, '_partial/load-more-teacher-reviews-btn.php', true, false);
 		FatUtility::dieJsonSuccess($json);
@@ -347,7 +348,6 @@ class TeachersController extends MyAppController {
 		$teacher_id = FatUtility::int($teacher_id);
 		$languageId = FatUtility::int($languageId);
 		if ($teacher_id < 1) {
-			echo 1;
 			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
 		}
 		$srch = new UserSearch();

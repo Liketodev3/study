@@ -104,6 +104,7 @@ function searchQualifications( user_id ){
 
 		//
 		fcom.updateWithAjax(fcom.makeUrl('Teachers','getTeacherReviews'), data+"teacherId=", function(ans){
+				
 			if( ans.status == 1 ){
 				$.mbsmessage.close();
 			}
