@@ -372,6 +372,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addFld(
             array(
                 'lcred.credential_email as learnerEmailId',
+                'slesson_status',
                 'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName'
             )
         );
@@ -380,6 +381,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $lessonRow = FatApp::getDb()->fetch($rs);
         if (!$lessonRow) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+        }
+        if($lessonRow['slesson_status'] == ScheduledLesson::STATUS_CANCELLED) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Lesson_Already_Cancelled'));
         }
         /* ] */
         $db = FatApp::getDb();

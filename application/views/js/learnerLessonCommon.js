@@ -1,3 +1,4 @@
+var isLessonCancelAjaxRun = false;
 	lessonFeedback = function (lessonId){
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','lessonFeedback',[lessonId]),'',function(t){
 			$.facebox( t,'facebox-medium');
@@ -85,6 +86,10 @@
 	};
 
 	cancelLessonSetup = function(frm){
+		if(isLessonCancelAjaxRun) {
+			return false;
+		}
+		isLessonCancelAjaxRun = true;
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'cancelLessonSetup'), data , function(t) {

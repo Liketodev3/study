@@ -400,7 +400,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
                 //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
                 '"-" as teacherTeachLanguageName',
-                'tcred.credential_email as teacherEmailId'
+                'tcred.credential_email as teacherEmailId',
+                'slesson_status'
             )
         );
 
@@ -408,6 +409,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $lessonRow = FatApp::getDb()->fetch($rs);
         if (empty($lessonRow)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+        }
+        if($lessonRow['slesson_status'] == ScheduledLesson::STATUS_CANCELLED) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Lesson_Already_Cancelled'));
         }
         /* ] */
         /* update lesson status[ */
