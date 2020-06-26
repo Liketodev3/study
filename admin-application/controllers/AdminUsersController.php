@@ -266,7 +266,8 @@ class AdminUsersController extends AdminBaseController
         $frm->addHiddenField('', 'admin_id', $adminId);
         $fld = $frm->addPasswordField(Label::getLabel('LBL_New_Password', $this->adminLangId), 'password');
         $fld->requirements()->setRequired(true);
-        $fld->requirements()->setLength(4, 20);
+        $fld->requirements()->setPassword();
+        // $fld->requirements()->setLength(4, 20);
         $fld = $frm->addPasswordField(Label::getLabel('LBL_Confirm_Password', $this->adminLangId), 'confirm_password');
         $fld->requirements()->setRequired();
         $fld->requirements()->setCompareWith('password', 'eq', '');
