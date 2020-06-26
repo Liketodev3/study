@@ -49,7 +49,7 @@ class ProfileController extends AdminBaseController
     private function getProfileInfoForm()
     {
         $frm = new Form('frmProfileInfo');
-        $frm->addHiddenField('', ' admin_id', $this->admin_id);
+        $frm->addHiddenField('', ' admin_id', $this->admin_id,['id'=>'admin_id']);
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Username', $this->adminLangId), 'admin_username', '');
         $fld->setUnique('tbl_admin', 'admin_username', 'admin_id', 'admin_id', 'admin_id');
         $fld->requirements()->setUsername();
