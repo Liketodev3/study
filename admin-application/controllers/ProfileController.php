@@ -53,7 +53,7 @@ class ProfileController extends AdminBaseController
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Username', $this->adminLangId), 'admin_username', '');
         $fld->setUnique('tbl_admin', 'admin_username', 'admin_id', 'admin_id', 'admin_id');
         $fld->requirements()->setUsername();
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Email', $this->adminLangId), 'admin_email', '');
+        $fld = $frm->addEmailField(Label::getLabel('LBL_Email', $this->adminLangId), 'admin_email', '');
         $fld->setUnique('tbl_admin', 'admin_email', 'admin_id', 'admin_id', 'admin_id');
         $frm->addRequiredField(Label::getLabel('LBL_Full_Name', $this->adminLangId), 'admin_name');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES', $this->adminLangId));

@@ -231,7 +231,7 @@ class AdminUsersController extends AdminBaseController
         $fld->setUnique(AdminUsers::DB_TBL, 'admin_username', 'admin_id', 'admin_id', 'admin_id');
         $fld->requirements()->setRequired();
         $fld->requirements()->setUsername();
-        $emailFld = $frm->addRequiredField(Label::getLabel('LBL_Email', $this->adminLangId), 'admin_email', '');
+        $emailFld = $frm->addEmailField(Label::getLabel('LBL_Email', $this->adminLangId), 'admin_email', '');
         $emailFld->setUnique(AdminUsers::DB_TBL, 'admin_email', 'admin_id', 'admin_id', 'admin_id');
         if ($adminId == 0) {
             $fld = $frm->addPasswordField(Label::getLabel('LBL_Password', $this->adminLangId), 'password');
