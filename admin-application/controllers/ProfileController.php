@@ -52,6 +52,7 @@ class ProfileController extends AdminBaseController
         $frm->addHiddenField('', ' admin_id', $this->admin_id);
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Username', $this->adminLangId), 'admin_username', '');
         $fld->setUnique('tbl_admin', 'admin_username', 'admin_id', 'admin_id', 'admin_id');
+        $fld->requirements()->setUsername();
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Email', $this->adminLangId), 'admin_email', '');
         $fld->setUnique('tbl_admin', 'admin_email', 'admin_id', 'admin_id', 'admin_id');
         $frm->addRequiredField(Label::getLabel('LBL_Full_Name', $this->adminLangId), 'admin_name');
@@ -274,7 +275,7 @@ class ProfileController extends AdminBaseController
             'id' => 'new_password'
         ));
         $newPwd->requirements()->setRequired();
-        $newPwd->requirements()->setLength(8, 20);
+        $newPwd->requirements()->setPassword();
         $conNewPwd    = $frm->addPasswordField(Label::getLabel('LBL_Confirm_New_Password', $this->adminLangId), 'conf_new_password', '', array(
             'id' => 'conf_new_password'
         ));
