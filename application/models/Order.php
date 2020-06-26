@@ -366,14 +366,21 @@ class Order extends MyAppModel
         }
         $page = (empty($filter['page']) || $filter['page'] <= 0) ? 1 : FatUtility::int($filter['page']);
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
-        if ($filter['keyword']) {
-            $srch->addCondition('o.order_id', 'LIKE', '%'.$filter['keyword'].'%');
-        }
+
 
         if ($filter['keyword']) {
-            $srch->addCondition('o.order_id', 'LIKE', '%'.$filter['keyword'].'%');
-        }
+            $srch->addCondition('o.order_id', 'LIKE', '%'.$filter['keyword'].'%','OR');
+            switch ($userType) {
+                case User::USER_TYPE_LEANER:
+                    $srch->addHaving('teacher_name','LIKE', '%'.$filter['keyword'].'%','OR');
+                    break;
+                case User::USER_TYPE_TEACHER:
+                    $srch->addHaving('learner_name','LIKE', '%'.$filter['keyword'].'%','OR');
+                    break;
+            }
 
+        }
+        
         $systemTimeZone = MyDate::getTimeZone();
         $user_timezone = MyDate::getUserTimeZone();
 

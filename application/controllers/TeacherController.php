@@ -537,7 +537,7 @@ class TeacherController extends TeacherBaseController
         if (false === $post) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
-        
+
         if(empty($post['start']) || empty($post['end'])){
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
