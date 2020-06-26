@@ -159,8 +159,9 @@ class GiftcardController extends LoggedUserController
             'class' => 'btn btn--primary',
             'onclick' => 'validateCustomFields()'
         ));
-        $frm->addResetButton('', 'clear', 'Clear', array(
-            'class' => 'btn btn--third'
+        $frm->addButton('', 'clear', 'Clear', array(
+            'class' => 'btn btn--third',
+            'onclick' => 'cleardata()'
         ));
         return $frm;
     }

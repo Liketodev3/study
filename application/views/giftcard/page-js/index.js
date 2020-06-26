@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var frm = document.frmGiftcardSrch;	
+	var frm = document.frmGiftcardSrch;
     cartListing(frm);
 });
 
@@ -23,6 +23,13 @@ function cardUpdate(obj) {
 		}
 
 }
+function cleardata() {
+	document.giftcardForm.reset();
+cardUpdate(document.giftcardForm.giftcard_price);
+
+}
+
+
 
 function validateCustomFields() {
     var error = 0;
@@ -102,8 +109,8 @@ removeCartItem = function(price) {
 goToSearchPage = function(page) {
 	if(typeof page == undefined || page == null){
 		page = 1;
-	}		
-	var frm = document.frmSearchPaging;		
+	}
+	var frm = document.frmSearchPaging;
 	$(frm.page).val(page);
 	cartListing(frm);
 };
@@ -111,8 +118,8 @@ goToSearchPage = function(page) {
 clearSearch = function(){
 	document.frmGiftcardSrch.reset();
 	cartListing(document.frmGiftcardSrch);
-};		
-	
+};
+
 var testPattern = function(value, pattern) {
     var regExp = new RegExp(pattern, "");
     return regExp.test(value);
