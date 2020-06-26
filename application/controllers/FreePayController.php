@@ -101,26 +101,25 @@ class FreePayController extends MyAppController
                 }
                 CommonHelper::redirectUserReferer();
             }
-
-
+            $lessonId = $sLessonObj->getMainTableRecordId();
+            $cartObj = new Cart();
+            $cartObj->clear();
+            $cartObj->updateUserCart();
+            $emailData =  [];
+            $emailData = [
+              'teacherFullName' => $orderInfo['teacherFullName'],
+              'startDate' => MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $cartData['startDateTime'],false, $orderInfo['user_timezone']),
+              'startTime' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $cartData['startDateTime'],true, $orderInfo['user_timezone']),
+              'endTime' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $cartData['endDateTime'],true, $orderInfo['user_timezone']),
+              'teacherTeachLanguageName' => $orderInfo['teacherTeachLanguageName'],
+              'learnerFullName' => $getlearnerFullName['learnerFullName'],
+            ];
+            EmailHandler::sendlearnerScheduleEmail($orderInfo['credential_email'],$emailData,$this->siteLangId);
+            $userNotification = new UserNotifications($orderInfo['op_teacher_id']);
+            $userNotification->sendSchLessonByLearnerNotification($lessonId);
         }
-        $lessonId = $sLessonObj->getMainTableRecordId();
+
         /* ] */
-        $cartObj = new Cart();
-        $cartObj->clear();
-        $cartObj->updateUserCart();
-        $emailData =  [];
-        $emailData = [
-          'teacherFullName' => $orderInfo['teacherFullName'],
-          'startDate' => MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $cartData['startDateTime'],false, $orderInfo['user_timezone']),
-          'startTime' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $cartData['startDateTime'],true, $orderInfo['user_timezone']),
-          'endTime' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $cartData['endDateTime'],true, $orderInfo['user_timezone']),
-          'teacherTeachLanguageName' => $orderInfo['teacherTeachLanguageName'],
-          'learnerFullName' => $getlearnerFullName['learnerFullName'],
-        ];
-        EmailHandler::sendlearnerScheduleEmail($orderInfo['credential_email'],$emailData,$this->siteLangId);
-        $userNotification = new UserNotifications($orderInfo['op_teacher_id']);
-        $userNotification->sendSchLessonByLearnerNotification($lessonId);
         if ($isAjaxCall) {
             $this->set('redirectUrl', CommonHelper::generateUrl('Custom', 'paymentSuccess'));
             $this->set('msg', Label::getLabel("MSG_Payment_from_wallet_made_successfully", $this->siteLangId));
