@@ -270,14 +270,18 @@ class TeacherController extends TeacherBaseController
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieWithError(Message::getHtml());
         }
+
         //unset($post['teach_lang_id']);
+        $userTechLangObj = UserToLanguage::getUserTeachlanguages(UserAuthentication::getLoggedUserId());
+        $userTechLangObj->addCondition('utl_slanguage_id','IN',$post['teach_lang_id']);
+        $userTechLangObj->addMultipleFields(['utl_id','utl_slanguage_id']);
+        $resultSet =  $userTechLangObj->getResultSet($userTechLangObj);
+        $userTechLangData =  FatApp::getDb()->fetchAllAssoc($resultSet);
         $db->startTransaction();
-        if (!$db->deleteRecords('tbl_user_teach_languages', array('smt' => 'utl_us_user_id = ? ', 'vals' => array(UserAuthentication::getLoggedUserId())))) {
-            $db->rollbackTransaction();
-            Message::addErrorMessage(Label::getLabel($db->getError()));
-            FatUtility::dieJsonError(Message::getHtml());
-        }
         foreach ($post['teach_lang_id'] as $tlang) {
+            if(in_array($tlang,$userTechLangData)) {
+                continue;
+            }
             $insertArr = array('utl_slanguage_id' => $tlang, 'utl_us_user_id' => UserAuthentication::getLoggedUserId());
             if (!$db->insertFromArray('tbl_user_teach_languages', $insertArr, false, array(), $insertArr)) {
                 $db->rollbackTransaction();
