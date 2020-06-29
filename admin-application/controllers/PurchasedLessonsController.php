@@ -32,12 +32,12 @@ class PurchasedLessonsController extends AdminBaseController
             '-2' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)
         ) + Order::getPaymentStatusArr($this->adminLangId);
         $keyword      = $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', array(
-            'id' => 'keyword',
+            'id' => 'teacher',
             'autocomplete' => 'off'
         ));
 
         $keyword      = $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', array(
-            'id' => 'keyword',
+            'id' => 'learner',
             'autocomplete' => 'off'
         ));
         $frm->addSelectBox(Label::getLabel('LBL_Free_Trial', $this->adminLangId), 'op_lpackage_is_free_trial', $arr_options, -1, array(), '');

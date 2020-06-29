@@ -26,6 +26,13 @@ $(document).ready(function(){
 		}
 	});
 
+		$('#teacher,#learner').blur(function () {
+				$(this).next('.dropdown-menu').hide();
+		});
+			$('body,.menutrigger').click(function () {
+					$('.dropdown-menu').hide();
+	});
+
 	$('input[name=\'teacher\']').keyup(function(){
 		$('input[name=\'op_teacher_id\']').val('');
 	});
