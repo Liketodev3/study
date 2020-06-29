@@ -1,3 +1,4 @@
+var isRuningTeacherFavoriteAjax =  false;
 function getCountryStates( countryId, stateId, dv ){
 	fcom.ajax(fcom.makeUrl('GuestUser','getStates',[countryId,stateId]),'',function(res){
 		$(dv).empty();
@@ -378,6 +379,12 @@ $(document).ready(function(){
 	};
 
 	toggleTeacherFavorite = function( teacher_id,el){
+		if(isRuningTeacherFavoriteAjax) {
+			return false;
+		}
+
+		isRuningTeacherFavoriteAjax = true;
+
 		if( isUserLogged() == 0 ){
 			logInFormPopUp();
 			return false;
@@ -386,6 +393,7 @@ $(document).ready(function(){
 		$.mbsmessage.close();
 		fcom.updateWithAjax(fcom.makeUrl('Learner', 'toggleTeacherFavorite'), data, function(ans) {
 			location.reload();
+			//isRuningTeacherFavoriteAjax = false;
 			/*console.log(ans); return false;
 			if( ans.status ){
 				if( ans.action == 'A' ){
