@@ -189,7 +189,7 @@ class AuthorizeAimPayController extends PaymentController
             );
 
             $response = $this->executeCurl($data, $actionUrl);
-            mail('raghav.vashishth@fatbit.in', '', serialize($response));
+            // mail('raghav.vashishth@fatbit.in', '', serialize($response));
             $json = array();
             if ($response['status'] == 0) {
                 $json['error'] = Label::getLabel('LBL_Payment_cannot_be_processed_right_now._Please_try_after_some_time.');
