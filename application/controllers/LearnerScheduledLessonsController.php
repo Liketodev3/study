@@ -360,8 +360,18 @@ class LearnerScheduledLessonsController extends LearnerBaseController
     public function cancelLesson($lessonId)
     {
         $lessonId = FatUtility::int($lessonId);
-        $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_learner_id', 'slesson_date', 'slesson_start_time'));
-        if ($lessonRow['slesson_learner_id'] != UserAuthentication::getLoggedUserId()) {
+        $scheduledLessonObj =  new ScheduledLessonSearch();
+        $scheduledLessonObj->joinLearner();
+        $scheduledLessonObj->joinOrder();
+        $scheduledLessonObj->joinOrderProducts();
+        $scheduledLessonObj->addMultipleFields(['slesson_learner_id', 'slesson_date', 'slesson_start_time','op_lpackage_is_free_trial']);
+        $scheduledLessonObj->addCondition('slesson_id', '=', $lessonId);
+        $scheduledLessonObj->addCondition('slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
+        $scheduledLessonObj->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
+        $resultSet =  $scheduledLessonObj->getResultSet();
+        $lessonRow = FatApp::getDb()->fetch($resultSet);
+        // $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_learner_id', 'slesson_date', 'slesson_start_time'));
+        if (empty($lessonRow)) {
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatUtility::dieWithError(Message::getHtml());
         }
@@ -369,11 +379,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $to_time = strtotime($lessonRow['slesson_date'].' '.$lessonRow['slesson_start_time']);
         $from_time = strtotime(date('Y-m-d H:i:s'));
         $diff = round(($to_time - $from_time) / 3600, 2);
-        if ($diff<24) {
-            $frm = $this->getCancelLessonFrm(true);
-        } else {
-            $frm = $this->getCancelLessonFrm();
+        $deductionNote  = false;
+        if ($diff < 24) {
+            $deductionNote = ($lessonRow['op_lpackage_is_free_trial'] == applicationConstants::YES) ? false : true;
         }
+        $frm = $this->getCancelLessonFrm($deductionNote);
+
         $frm->fill(array('slesson_id' => $lessonId));
         $this->set('frm', $frm);
         $this->_template->render(false, false);
