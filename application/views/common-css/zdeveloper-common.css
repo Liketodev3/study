@@ -1,3 +1,7 @@
 a.banner-btn-url{
   margin-top: 1rem;
 }
+
+input[name=teach_language_name].ui-autocomplete-loading {
+      background: none;
+}
