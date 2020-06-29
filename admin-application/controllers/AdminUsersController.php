@@ -119,7 +119,7 @@ class AdminUsersController extends AdminBaseController
         $this->objPrivilege->canEditAdminUsers();
         $adminId = FatApp::getPostedData('adminId', FatUtility::VAR_INT, 0);
         $status  = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
-        if (0 >= $adminId) {
+        if (1 >= $adminId) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
