@@ -181,9 +181,10 @@ function htmlEncode(value){
 	};
 
 	searchTeachers = function(frm){
+		if (!$(frm).validate()) return;
+		
 		var data = fcom.frmData(frm);
 		//alert( data );
-
 		var dv = $("#teachersListingContainer");
 		$(dv).html(fcom.getLoader());
 

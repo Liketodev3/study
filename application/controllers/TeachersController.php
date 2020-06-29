@@ -795,7 +795,8 @@ class TeachersController extends MyAppController {
 		$frm->addHiddenField('', 'teach_language_id', $slangId);
 		$frm->addHiddenField('', 'teach_lang_keyword', $techLangKeyword );
 		$frm->addTextBox('', 'teach_availability', '', array('placeholder' => Label::getLabel('LBL_Availiblity')));
-		$frm->addTextBox('', 'keyword', $keyword, array('placeholder' => Label::getLabel('LBL_Search_Teacher\'s_Name')));
+		$keyword =  $frm->addTextBox('', 'keyword', $keyword, array('placeholder' => Label::getLabel('LBL_Search_Teacher\'s_Name')));
+		$keyword->requirements()->setLength(0,15);
 		$fld = $frm->addHiddenField('', 'page', 1);
 		$fld->requirements()->setIntPositive();
 		$frm->addSubmitButton('', 'btnTeacherSrchSubmit', '');

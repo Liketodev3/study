@@ -130,3 +130,6 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 	</div>
 </div>
 </form>
+<?php
+    echo $frmTeacherSrch->getExternalJS();
+?>
