@@ -1141,7 +1141,7 @@ class GuestUserController extends MyAppController
         /* $fld_np->htmlAfterField = '<span class="text--small">' . sprintf(Label::getLabel('LBL_Example_password', $siteLangId), 'User@123') . '</span>'; */
         $fld_np->requirements()->setRequired();
         $fld_np->requirements()->setRegularExpressionToValidate("^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%-_]{8,15}$");
-        $fld_np->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Valid_password', $siteLangId));
+        $fld_np->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_Valid_password', $siteLangId));
         $fld_cp = $frm->addPasswordField(Label::getLabel('LBL_CONFIRM_NEW_PASSWORD', $siteLangId), 'confirm_pwd');
         $fld_cp->requirements()->setRequired();
         $fld_cp->requirements()->setCompareWith('new_pwd', 'eq', '');

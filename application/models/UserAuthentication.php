@@ -401,7 +401,8 @@ class UserAuthentication extends FatModel
         $srch->doNotLimitRecords();
         $rs = $srch->getResultSet();
         if (!$row = $db->fetch($rs, 'user_id')) {
-            $this->error = Label::getLabel('ERR_INVALID_USERNAME', $this->commonLangId);
+            // $this->error = Label::getLabel('ERR_INVALID_USERNAME', $this->commonLangId);
+            $this->error = Label::getLabel('ERR_INVALID_CREDENTIAL', $this->commonLangId);
             return false;
         }
 
