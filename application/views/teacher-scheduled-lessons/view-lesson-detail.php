@@ -24,6 +24,7 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 ?>
 <script type="text/javascript">
 $("#lesson_actions").hide();
+console.log('hide-1','lesson_actions');
 var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
 var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
 var chat_id = '<?php echo $chatId; ?>';
@@ -53,6 +54,7 @@ console.log(langLbl.chargelearner);
     });
 	function joinLessonButtonAction(){
         $("#lesson_actions").hide();
+        console.log('hide-2','lesson_actions');
 		$("#joinL").hide();
 		$("#endL").show();
 		$('.screen-chat-js').show();
@@ -68,6 +70,7 @@ console.log(langLbl.chargelearner);
 		$("#joinL").show();
 		$("#endL").hide();
         $("#lesson_actions").show();
+        console.log('show-1','lesson_actions');
 		$('.screen-chat-js').hide();
 		searchFlashCards(document.frmFlashCardSrch);
 		clearInterval(checkEveryMinuteStatusVar);
@@ -133,7 +136,7 @@ console.log(langLbl.chargelearner);
 
 	$(function(){
 		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
-        $("#lesson_actions").show();
+
         var showLessonBtn = true;
 		$('#start_lesson_timer').countdowntimer({
 			startDate : "<?php echo $curDate; ?>",
@@ -145,13 +148,20 @@ console.log(langLbl.chargelearner);
                         showLessonBtn = false;
 						$(".join_lesson_now").show();
 						$("#lesson_actions").hide();
-					}
+                        console.log('hide-3','lesson_actions');
+					}else{
+                        $("#lesson_actions").show();
+                    }
 				});
 				$("#start_lesson_timer").hide();
 			}
 		});
         if(showLessonBtn) {
-            $("#lesson_actions").show();
+            if($('#start_lesson_timer').is(":visible")){
+                    $("#lesson_actions").show();
+            }
+
+            // console.log('show-2','lesson_actions');
         }
 		<?php } ?>
         $('#end_lesson_timer').countdowntimer({

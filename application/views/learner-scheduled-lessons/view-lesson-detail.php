@@ -36,8 +36,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
                 }
         }
         <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
-            $("#lesson_actions").show();
-			// $("#end_lesson_time_div").show();
+                $("#lesson_actions").show();
 		<?php }?>
     });
 	function joinLessonButtonAction() {
@@ -132,7 +131,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 
 	$(function(){
 		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
-        $("#lesson_actions").show();
+        var showLessonBtn = true;
 		$('#start_lesson_timer').countdowntimer({
 			startDate : "<?php echo $curDate; ?>",
 			dateAndTime : "<?php echo $startTime; ?>",
@@ -140,14 +139,21 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 			timeUp : function(){
 				fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','startLessonAuthentication',['<?php echo $lessonData['slesson_id'] ?>']),'',function(t){
 					if(t != 0){
+                        showLessonBtn = false;
 						$(".join_lesson_now").show();
 						$("#lesson_actions").hide();
-					}
+					}else{
+                            $("#lesson_actions").show();
+                    }
 				});
 				$("#start_lesson_timer").hide();
 			}
 		});
-
+        if(showLessonBtn) {
+            if($('#start_lesson_timer').is(":visible")){
+                $("#lesson_actions").show();
+            }
+        }
 		<?php } ?>
 
 		$('#end_lesson_timer').countdowntimer({
