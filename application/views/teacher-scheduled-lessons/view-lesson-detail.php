@@ -23,6 +23,14 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 
 ?>
 <script type="text/javascript">
+$("#lesson_actions").hide();
+var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
+var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
+var chat_id = '<?php echo $chatId; ?>';
+var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';
+var chat_name = '<?php echo $lessonData['teacherFname']; ?>';
+var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
+var chat_avatar = "<?php echo $teacherImage; ?>";
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
 
 console.log(langLbl.chargelearner);
@@ -31,9 +39,20 @@ console.log(langLbl.chargelearner);
             if(sessionStorage.getItem('cometChatUserExists')  != '<?php echo "LESSON-".$lessonData['slesson_id']; ?>'){
                 sessionStorage.removeItem('cometChatUserExists');
             }
+            else if( sessionStorage.getItem('cometChatUserExists') == chat_group_id ){
+               joinLessonButtonAction();
+               createChatBox();
+            }
         }
+
+        <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
+            $("#lesson_actions").show();
+			// $("#end_lesson_time_div").show();
+		<?php }?>
+
     });
 	function joinLessonButtonAction(){
+        $("#lesson_actions").hide();
 		$("#joinL").hide();
 		$("#endL").show();
 		$('.screen-chat-js').show();
@@ -48,6 +67,7 @@ console.log(langLbl.chargelearner);
 	function endLessonButtonAction(){
 		$("#joinL").show();
 		$("#endL").hide();
+        $("#lesson_actions").show();
 		$('.screen-chat-js').hide();
 		searchFlashCards(document.frmFlashCardSrch);
 		clearInterval(checkEveryMinuteStatusVar);
@@ -57,13 +77,7 @@ console.log(langLbl.chargelearner);
 		$("#end_lesson_time_div").hide();
 	}
 
-	var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
-    var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
-	var chat_id = '<?php echo $chatId; ?>';
-	var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';
-	var chat_name = '<?php echo $lessonData['teacherFname']; ?>';
-	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
-    var chat_avatar = "<?php echo $teacherImage; ?>";
+
 
 	var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","avatarURL":"<?php echo $teacherImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['teacherUrlName']; ?>", "role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
 
@@ -119,8 +133,7 @@ console.log(langLbl.chargelearner);
 
 	$(function(){
 		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
-
-        $("#lesson_actions").hide();
+        $("#lesson_actions").show();
         var showLessonBtn = true;
 		$('#start_lesson_timer').countdowntimer({
 			startDate : "<?php echo $curDate; ?>",
@@ -373,7 +386,7 @@ console.log(langLbl.chargelearner);
 
                             </div>
                             </div>
-                        <div class="select-box select-box--up toggle-group" id="lesson_actions">
+                        <div class="select-box select-box--up toggle-group" id="lesson_actions" style="display:none">
 							<div class="buttons-toggle">
 								<a class="btn btn--large btn--secondary" href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lessonData['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?></a>
 								<a href="javascript:void(0)" class="btn btn--large btn--secondary btn--dropdown toggle__trigger-js"></a>
@@ -496,10 +509,7 @@ console.log(langLbl.chargelearner);
 
 <script type="text/javascript">
 jQuery(document).ready(function (e) {
-	if( sessionStorage.getItem('cometChatUserExists') == chat_group_id ){
-	   joinLessonButtonAction();
-	   createChatBox();
-	}
+
 
 	/*function t(t) {
 		e(t).bind("click", function (t) {

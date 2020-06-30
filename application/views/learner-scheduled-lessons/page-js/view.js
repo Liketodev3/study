@@ -176,12 +176,12 @@ $(function() {
 				  if(typeof(msg.success) != "undefined" && msg.success !== null)
 				  {
 					   //addFriendsCometUsers(learnerId,teacherId);
-					   joinLessonButtonAction();
-					   sessionStorage.setItem('cometChatUserExists',chat_group_id);
-                       markLearnerJoinTime();
-					   createChatBox();
-					   location.reload();
-					  $.mbsmessage( msg.success.message,true, 'alert alert--success');
+						joinLessonButtonAction();
+						sessionStorage.setItem('cometChatUserExists',chat_group_id);
+						markLearnerJoinTime();
+						createChatBox();
+						location.reload();
+						$.mbsmessage( msg.success.message,true, 'alert alert--success');
 				}
 				  else{
 					  checkEveryMinuteStatus();
