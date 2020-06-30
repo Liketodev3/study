@@ -18,7 +18,8 @@ class AuthorizeAimPayController extends PaymentController
         }
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
-        $orderInfo = $orderPaymentObj->getOrderById($orderId);
+        // $orderInfo = $orderPaymentObj->getOrderById($orderId);
+        $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
         if (!$orderInfo['order_id']) {
             FatUtility::exitWIthErrorCode(404);
         } elseif ($orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
@@ -53,25 +54,25 @@ class AuthorizeAimPayController extends PaymentController
         $oPObj =  $orderPaymentObj->getOrderPayment($this->keyName);
         $resultset =  $oPObj->getResultSet();
         $orderPayment = FatApp::getDb()->fetch($resultset);
-
         if ($orderPaymentAamount > 0 && empty($orderPayment)) {
             /* Retrieve Primary Info corresponding to your order */
             //$orderInfo=$orderPaymentObj->getOrderPrimaryinfo();
-            $orderSrch = new OrderSearch();
-            $orderSrch->joinUser();
-            $orderSrch->joinUserCredentials();
-            $orderSrch->addCondition('order_id', '=', $orderId);
-            $orderSrch->addMultipleFields(array(
-                'order_id',
-                'order_language_id',
-                'order_currency_code',
-                'u.user_first_name as user_first_name',
-                'cred.credential_email as user_email',
-                'order_language_code',
-                '"FATbit_SP" as paypal_bn'
-            ));
-            $orderRs = $orderSrch->getResultSet();
-            $orderInfo = FatApp::getDb()->fetch($orderRs);
+            // $orderSrch = new OrderSearch();
+            // $orderSrch->joinUser();
+            // $orderSrch->joinUserCredentials();
+            // $orderSrch->addCondition('order_id', '=', $orderId);
+            // $orderSrch->addMultipleFields(array(
+            //     'order_id',
+            //     'order_language_id',
+            //     'order_currency_code',
+            //     'u.user_first_name as user_first_name',
+            //     'cred.credential_email as user_email',
+            //     'order_language_code',
+            //     '"FATbit_SP" as paypal_bn'
+            // ));
+            // $orderRs = $orderSrch->getResultSet();
+            // $orderInfo = FatApp::getDb()->fetch($orderRs);
+            $orderInfo =  $orderPaymentObj->getOrderPrimaryinfo();
             $orderActualPaid = number_format(round($orderPaymentAamount, 2), 2, ".", "");
             $actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true)?$this->liveEnvironmentUrl:$this->testEnvironmentUrl;
             /*$data = array();

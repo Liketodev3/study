@@ -178,6 +178,7 @@ class Order extends MyAppModel
             'order_is_wallet_selected',
             'order_wallet_amount_charge',
             'order_currency_code',
+            'order_language_code',
             'order_language_id',
             'order_discount_coupon_code',
             'order_discount_total',
@@ -380,7 +381,7 @@ class Order extends MyAppModel
             }
 
         }
-        
+
         $systemTimeZone = MyDate::getTimeZone();
         $user_timezone = MyDate::getUserTimeZone();
 

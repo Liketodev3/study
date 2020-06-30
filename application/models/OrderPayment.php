@@ -22,6 +22,33 @@ class OrderPayment extends Order
         $this->orderAttributes = $this->getOrderById($this->paymentOrderId);
     }
 
+    public function getOrderPrimaryinfo()
+    {
+        $orderInfo = $this->orderAttributes;
+        $userObj = new User($orderInfo["order_user_id"]);
+        $userInfo = $userObj->getUserInfo(array('user_first_name', 'credential_email', 'user_phone'), true, true, true);
+
+        $currencyArr = Currency::getCurrencyAssoc($this->orderLangId);
+        $orderCurrencyCode = !empty($currencyArr[FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)]) ? $currencyArr[FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)] : '';
+
+        $arrOrder = array(
+            "order_id" => $orderInfo["order_id"],
+            "invoice" => $orderInfo["order_id"],
+            "customer_id" => $orderInfo["order_user_id"],
+            "user_name" => $userInfo["user_first_name"],
+            "user_email" => $userInfo["credential_email"],
+            "order_currency_code" => $orderCurrencyCode,
+            "order_type" => $orderInfo['order_type'],
+            "order_is_paid" => $orderInfo["order_is_paid"],
+            "order_language_id" => $orderInfo["order_language_id"],
+            "order_language_code" => $orderInfo["order_language_code"],
+            "site_system_name" => FatApp::getConfig("CONF_WEBSITE_NAME_" . $orderInfo["order_language_id"]),
+            "site_system_admin_email" => FatApp::getConfig("CONF_SITE_OWNER_EMAIL", FatUtility::VAR_STRING, ''),
+            "order_wallet_amount_charge" => $orderInfo['order_wallet_amount_charge'],
+            "paypal_bn" => "FATbit_SP",
+        );
+        return $arrOrder;
+    }
     public function chargeFreeOrder($amountToBeCharge = 0)
     {
         if ($amountToBeCharge > 0) {
