@@ -292,4 +292,15 @@ class OrderPayment extends Order
         }
         return true;
     }
+
+    public function getOrderPayment($paymentMethodName = '')
+    {
+        $srch = new SearchBase(Order::DB_TBL_ORDER_PAYMENTS, 'op');
+        $srch->addCondition('opayment_order_id','=',$this->paymentOrderId);
+        if(!empty($paymentMethodName)) {
+            $srch->addCondition('opayment_method','=',$paymentMethodName);
+        }
+        return $srch;
+
+    }
 }

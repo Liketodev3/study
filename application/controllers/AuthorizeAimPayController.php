@@ -46,10 +46,15 @@ class AuthorizeAimPayController extends PaymentController
         $pmObj=new PaymentSettings($this->keyName);
         $paymentSettings=$pmObj->getPaymentSettings();
         $post = FatApp::getPostedData();
-        $orderPaymentObj=new OrderPayment($orderId, $this->siteLangId);
+        $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         /* Retrieve Payment to charge corresponding to your order */
         $orderPaymentAamount=$orderPaymentObj->getOrderPaymentGatewayAmount();
-        if ($orderPaymentAamount>0) {
+
+        $oPObj =  $orderPaymentObj->getOrderPayment($this->keyName);
+        $resultset =  $oPObj->getResultSet();
+        $orderPayment = FatApp::getDb()->fetch($resultset);
+
+        if ($orderPaymentAamount > 0 && empty($orderPayment)) {
             /* Retrieve Primary Info corresponding to your order */
             //$orderInfo=$orderPaymentObj->getOrderPrimaryinfo();
             $orderSrch = new OrderSearch();
