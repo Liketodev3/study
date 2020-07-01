@@ -113,6 +113,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             'slns.slesson_start_time',
             'slns.slesson_end_time',
             'slns.slesson_status',
+            'slesson_order_id',
             'slns.slesson_is_teacher_paid',
             //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
             '"-" as teacherTeachLanguageName',
@@ -125,6 +126,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             foreach ($keywordsArr as $keyword) {
                 $cnd = $srch->addCondition('ul.user_first_name', 'like', '%'.$keyword.'%');
                 $cnd->attachCondition('ul.user_last_name', 'like', '%'.$keyword.'%');
+                $cnd->attachCondition('slesson_order_id', 'like', '%'.$keyword.'%');
             }
         }
 
