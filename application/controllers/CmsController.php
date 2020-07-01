@@ -27,12 +27,11 @@ class CmsController extends MyAppController
             $srch->addCondition('cpblocklang_lang_id', '=', $this->siteLangId);
             $srchRs = $srch->getResultSet();
             $blockData = FatApp::getDb()->fetchAll($srchRs, 'cpblocklang_block_id');
-            if(UserAuthentication::isUserLogged()) {
-                $requestData = TeacherRequest::getData(UserAuthentication::getLoggedUserId(true));
-                if(isset($requestData['utrequest_status'])){
-                    $teacherRequestStatus = $requestData['utrequest_status'];
-                }
-
+        }
+        if(UserAuthentication::isUserLogged()) {
+            $requestData = TeacherRequest::getData(UserAuthentication::getLoggedUserId(true));
+            if(isset($requestData['utrequest_status'])){
+                $teacherRequestStatus = $requestData['utrequest_status'];
             }
 
         }
