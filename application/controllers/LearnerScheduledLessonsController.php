@@ -37,7 +37,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'IFNULL(iss.issrep_status,0) AS issrep_status',
             'IFNULL(iss.issrep_id,0) AS issrep_id',
             'IFNULL(iss.issrep_issues_resolve_type,0) AS issrep_issues_resolve_by',
-            'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime'
+            'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime',
+            'slesson_order_id'
         ));
         // $srch->addOrder('slesson_status', 'ASC');
 		$srch->addOrder('startDateTime', 'ASC');
@@ -138,6 +139,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             foreach ($keywordsArr as $keyword) {
                 $cnd = $srch->addCondition('ut.user_first_name', 'like', '%'.$keyword.'%');
                 $cnd->attachCondition('ut.user_last_name', 'like', '%'.$keyword.'%');
+                $cnd->attachCondition('slesson_order_id', 'like', '%'.$keyword.'%');
             }
         }
 

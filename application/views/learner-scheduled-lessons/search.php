@@ -43,6 +43,7 @@ foreach ( $lessons as $lesson ) {
 				</div>
 				<h6><?php echo $lesson['teacherFname']; ?></h6>
 				<p><?php echo $lesson['teacherCountryName']; ?> <br>
+				<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['slesson_order_id']; ?> <br>
 				<?php /* echo CommonHelper::getDateOrTimeByTimeZone($lesson['teacherTimeZone'],'H:i A P'); */ ?></p>
 			</div>
 
