@@ -7,10 +7,13 @@
     <div class="banner__media"><img src="<?php echo CommonHelper::generateUrl('image','cpageBackgroundImage', array($cPage['cpage_id'], $siteLangId, '', 0, false),CONF_WEBROOT_URL); ?>" alt="" /></div>
     <div class="banner__content banner__content--centered">
         <h1><?php echo $cPage['cpage_image_title']; ?></h1>
-        <p><?php echo $cPage['cpage_image_content']; ?><p> <a href="javascript:void(0)" onclick="signUpFormPopUp('teacher')" class="btn btn--primary btn--large"><?php echo Label::getLabel('LBL_Start_Teaching');?></a>
+        <p><?php echo $cPage['cpage_image_content']; ?></p>
+        <?php if($teacherRequestStatus == null || $teacherRequestStatus == TeacherRequest::STATUS_CANCELLED) { ?>
+         <a href="javascript:void(0)" onclick="signUpFormPopUp('teacher')" class="btn btn--primary btn--large"><?php echo Label::getLabel('LBL_Start_Teaching');?></a>
+        <?php } ?>
     </div>
 </section>
-<?php 
+<?php
 	if($blockData){ ?>
 <div class="container--cms">
     <?php if(isset ($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_1])  && $blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_1]['cpblocklang_text']){?>
