@@ -111,7 +111,8 @@ class FreePayController extends MyAppController
               'startDate' => MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $cartData['startDateTime'],false, $orderInfo['user_timezone']),
               'startTime' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $cartData['startDateTime'],true, $orderInfo['user_timezone']),
               'endTime' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $cartData['endDateTime'],true, $orderInfo['user_timezone']),
-              'teacherTeachLanguageName' => $orderInfo['teacherTeachLanguageName'],
+              // 'teacherTeachLanguageName' => $orderInfo['teacherTeachLanguageName'],
+              'teacherTeachLanguageName' => Label::getLabel('LBL_N/A', $this->siteLangId),
               'learnerFullName' => $getlearnerFullName['learnerFullName'],
             ];
             EmailHandler::sendlearnerScheduleEmail($orderInfo['credential_email'],$emailData,$this->siteLangId);

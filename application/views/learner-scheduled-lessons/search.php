@@ -88,8 +88,11 @@ foreach ( $lessons as $lesson ) {
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Details'); ?></span>
 							<span class="span-right">
-							<?php echo empty($teachLanguages[$lesson['slesson_slanguage_id']])?'':$teachLanguages[$lesson['slesson_slanguage_id']] ; ?><br>
 							<?php
+							if($lesson['is_trial'] == applicationConstants::NO) {
+								echo empty($teachLanguages[$lesson['slesson_slanguage_id']]) ? '': $teachLanguages[$lesson['slesson_slanguage_id']] ; ?>
+								<br>
+							<?php }
 							if( $lesson['slesson_date'] != "0000-00-00" ){
 								$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
 								$arrReplacements = array(

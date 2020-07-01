@@ -8,6 +8,7 @@
 	    'slesson_start_time'=>Label::getLabel('LBL_Lesson_Start_Time', $adminLangId),
 	    'slesson_ended_on'=>Label::getLabel('LBL_Lesson_Ended_On',$adminLangId),
 	    'slesson_ended_by'=>Label::getLabel('LBL_Lesson_Ended_By',$adminLangId),
+		'op_lpackage_is_free_trial'=>Label::getLabel('LBL_Free_trial',$adminLangId),
 	    'teacherTeachLanguageName'=>Label::getLabel('LBL_Language',$adminLangId),
 	    'slesson_status'=>Label::getLabel('LBL_Status',$adminLangId),
 	    'action' => Label::getLabel('LBL_Action',$adminLangId),
@@ -53,8 +54,12 @@
 		          $str = (!empty($row[$key])) ? $userType[$row[$key]] : Label::getLabel('LBL_N/A');
 		          $td->appendElement('plaintext', array(), $str,true);
 		        break;
-				case 'lpackage_is_free_trial':
+				case 'op_lpackage_is_free_trial':
 				  $td->appendElement('plaintext', array(), $yesAndNoArr[$row[$key]],true);
+				break;
+				case 'teacherTeachLanguageName':
+					$text =  ($row['op_lpackage_is_free_trial'])  ? Label::getLabel('LBL_N/A',$adminLangId) : $row[$key] ;
+				  $td->appendElement('plaintext', array(), $text,true);
 				break;
 				case 'slesson_status':
 					$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['slesson_id'],'name'=>'order_is_paid','onchange'=>"updateScheduleStatus('".$row['slesson_id']."',this.value)"));

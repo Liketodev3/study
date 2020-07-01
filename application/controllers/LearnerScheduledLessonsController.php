@@ -640,7 +640,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $vars = array(
             '{learner_name}' => $lessonRow['learnerFullName'],
             '{teacher_name}' => $lessonRow['teacherFullName'],
-            '{lesson_name}' => $lessonRow['teacherTeachLanguageName'],
+            '{lesson_name}' => ($lessonRow['is_trial'] == applicationConstants::NO) ? $lessonRow['teacherTeachLanguageName'] : Label::getLabel('LBL_N/A', $this->siteLangId),
             '{lesson_date}' => MyDate::convertTimeFromSystemToUserTimezone('Y-m-d',  date('Y-m-d H:i:s', $SelectedDateTimeStamp),false, $lessonRow['teacherTimeZone']),
             '{lesson_start_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', date('Y-m-d H:i:s', $SelectedDateTimeStamp), true, $lessonRow['teacherTimeZone']),
             '{lesson_end_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', date('Y-m-d H:i:s', $endDateTimeStamp), true, $lessonRow['teacherTimeZone']),
