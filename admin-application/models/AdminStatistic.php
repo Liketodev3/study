@@ -113,6 +113,7 @@ class AdminStatistic extends MyAppModel
 
             case 'total_lessons':
                 $srch = new ScheduledLessonSearch(true);
+                $srch->joinOrder();
                 $srch->doNotLimitRecords();
                 if ($lessonStatus > 0) {
                     $srch->addCondition('slesson_status', '=', $lessonStatus);
@@ -139,6 +140,8 @@ class AdminStatistic extends MyAppModel
                 $sql = $srchObj1->getQuery() ." UNION ALL ".$srchObj7->getQuery() ." UNION ALL ".$srchObj30->getQuery() ." UNION ALL ".$srchObj90->getQuery() ." UNION ALL ".$srchObjAll->getQuery();
 
                 $rs = $this->db->query($sql);
+                // echo $sql;
+                // die;
                 return  $this->db->fetchAllAssoc($rs);
             break;
 
@@ -148,7 +151,7 @@ class AdminStatistic extends MyAppModel
                 $srch->doNotCalculateRecords();
                 $srch->doNotLimitRecords();
                 $srch->addCondition('o.order_type', '=', Order::TYPE_LESSON_BOOKING);
-                $cnd = $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
+                    $cnd = $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
                 $srch->addMultipleFields(array('SUM((order_net_amount )) AS totalsales,SUM(0) totalcommission'));
 
                 $srchObj1 = clone $srch;

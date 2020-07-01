@@ -1,11 +1,11 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); /* CommonHelper::printArray(json_encode( array_values($dashboardInfo['signupsChartData']) ));die; */?>
 <script type="text/javascript">
 	$SalesChartKey = <?php echo json_encode( array_keys($dashboardInfo['salesChartData']));?>;
-	$SalesChartVal = <?php  echo json_encode( array_values($dashboardInfo['salesChartData']) );?>;	
+	$SalesChartVal = <?php  echo json_encode( array_values($dashboardInfo['salesChartData']) );?>;
 	$signupsKey = <?php echo json_encode( array_keys($dashboardInfo['signupsChartData']));?>;
-	$signupsVal = <?php  echo json_encode( array_values($dashboardInfo['signupsChartData']) );?>;	
+	$signupsVal = <?php  echo json_encode( array_values($dashboardInfo['signupsChartData']) );?>;
 	$earningsKey = <?php echo json_encode( array_keys($dashboardInfo['earningsChartData']));?>;
-	$earningsVal = <?php  echo json_encode( array_values($dashboardInfo['earningsChartData']) );?>;	
+	$earningsVal = <?php  echo json_encode( array_values($dashboardInfo['earningsChartData']) );?>;
 </script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <?php if($canView){?>
@@ -67,9 +67,9 @@
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
-		
+
 		<div class="gap"></div>
 		<div class="row">
 			<div class="col-lg-3 col-md-3 col-sm-3">
@@ -84,7 +84,7 @@
 							<?php echo Label::getLabel('LBL_This_Month',$adminLangId); ?>- <strong>
 								<?php echo $dashboardInfo["stats"]["totalLessons"]['30']?></strong></p>
 						<?php if($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)){?>
-						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons');?>" class="stats__link"></a>
+						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons','viewSchedules');?>" class="stats__link"></a>
 						<?php }?>
 					</div>
 				</div>
@@ -101,7 +101,7 @@
 							<?php echo Label::getLabel('LBL_This_Month',$adminLangId); ?>- <strong>
 								<?php echo $dashboardInfo["stats"]["totalCompletedLessons"]['30']?></strong></p>
 						<?php if($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)){?>
-						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons');?>" class="stats__link"></a>
+						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons','viewSchedules', [ScheduledLesson::STATUS_COMPLETED]); ?>" class="stats__link"></a>
 						<?php }?>
 					</div>
 				</div>
@@ -118,7 +118,7 @@
 							<?php echo Label::getLabel('LBL_This_Month',$adminLangId); ?>- <strong>
 								<?php echo $dashboardInfo["stats"]["totalCancelledLessons"]['30']?></strong></p>
 						<?php if($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)){?>
-						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons');?>" class="stats__link"></a>
+						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons','viewSchedules', [ScheduledLesson::STATUS_CANCELLED]) ?>" class="stats__link"></a>
 						<?php }?>
 					</div>
 				</div>
@@ -135,15 +135,15 @@
 							<?php echo Label::getLabel('LBL_This_Month',$adminLangId); ?>- <strong>
 								<?php echo $dashboardInfo["stats"]["totalNeedtoScheduleLessons"]['30']?></strong></p>
 						<?php if($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)){?>
-						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons');?>" class="stats__link"></a>
+						<a href="<?php echo CommonHelper::generateUrl('purchasedLessons','viewSchedules',[ScheduledLesson::STATUS_NEED_SCHEDULING]); ?>" class="stats__link"></a>
 						<?php }?>
 					</div>
 				</div>
 			</div>
 		</div>
-		
-		
-		
+
+
+
 		<div class="gap"></div>
 		<div class="grid grid--tabled">
 			<div class="grid__left">

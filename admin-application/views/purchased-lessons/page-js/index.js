@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	searchPuchasedLessons(document.frmPurchasedLessonsSearch);
+	searchOrderPuchasedLessons(document.orderPurchasedLessonsSearchForm);
 
 	$(document).on('click',function(){
 		$('.autoSuggest').empty();
@@ -80,10 +80,10 @@ $(document).ready(function(){
 		}
 		var frm = document.frmUserSearchPaging;
 		$(frm.page).val(page);
-		searchPuchasedLessons(frm);
+		searchOrderPuchasedLessons(frm);
 	};
 
-	searchPuchasedLessons = function(form,page){
+	searchOrderPuchasedLessons = function(form,page){
 		if (!page) {
 			page = currentPage;
 		}
@@ -103,10 +103,10 @@ $(document).ready(function(){
 	};
 
 	clearUserSearch = function(){
-		document.frmPurchasedLessonsSearch.reset();
-		document.frmPurchasedLessonsSearch.order_user_id.value = '';
-		document.frmPurchasedLessonsSearch.op_teacher_id.value = '';
-		searchPuchasedLessons( document.frmPurchasedLessonsSearch );
+		document.orderPurchasedLessonsSearchForm.reset();
+		document.orderPurchasedLessonsSearchForm.order_user_id.value = '';
+		document.orderPurchasedLessonsSearchForm.op_teacher_id.value = '';
+		searchOrderPuchasedLessons( document.orderPurchasedLessonsSearchForm );
 	};
 
 	updateOrderStatus = function(obj, id,value,oldValue){
@@ -121,7 +121,7 @@ $(document).ready(function(){
 			res = $.parseJSON(json);
 			if(res.status == "1"){
 				  $.mbsmessage( res.msg,true, 'alert alert--success');
-					searchPuchasedLessons(document.frmPurchasedLessonsSearch);
+					searchOrderPuchasedLessons(document.orderPurchasedLessonsSearchForm);
 			}else{
 				 $(obj).val(oldValue);
 				  $.mbsmessage( res.msg,true, 'alert alert--danger');

@@ -55,7 +55,7 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			case 'action':
             if($row['order_is_paid'] == Order::ORDER_IS_PAID){
-				$td->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'View Schedules',true);
+				$td->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array("all",$row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'View Schedules',true);
             }else{
 				$td->appendElement('plaintext', array(), 'N/A');
             }

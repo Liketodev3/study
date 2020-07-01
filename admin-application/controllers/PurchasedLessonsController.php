@@ -13,7 +13,7 @@ class PurchasedLessonsController extends AdminBaseController
 
     public function index()
     {
-        $frmSearch = $this->getPurchasedLessonsForm();
+        $frmSearch = $this->getOrderPurchasedLessonsForm();
         $data      = FatApp::getPostedData();
         if ($data) {
             $frmSearch->fill($data);
@@ -22,9 +22,9 @@ class PurchasedLessonsController extends AdminBaseController
         $this->_template->render();
     }
 
-    protected function getPurchasedLessonsForm()
+    protected function getOrderPurchasedLessonsForm()
     {
-        $frm          = new Form('frmPurchasedLessonsSearch');
+        $frm          = new Form('orderPurchasedLessonsSearchForm');
         $arr_options  = array(
             '-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)
         ) + applicationConstants::getYesNoArr($this->adminLangId);
@@ -52,10 +52,130 @@ class PurchasedLessonsController extends AdminBaseController
         return $frm;
     }
 
+    private function getPurchasedLessonsSearchForm($status = "all", $orderId = null)
+    {
+        $frm = new Form('purchasedLessonsSearchForm');
+        $isFreeTrialOption  = array('-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)) + applicationConstants::getYesNoArr($this->adminLangId);
+        $lessonStatusOption = array('-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)) + ScheduledLesson::getStatusArr();
+        $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', array('id' => 'teacher','autocomplete' => 'off'));
+
+        $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', array('id' => 'learner','autocomplete' => 'off'));
+
+        $frm->addSelectBox(Label::getLabel('LBL_Free_Trial', $this->adminLangId), 'op_lpackage_is_free_trial', $isFreeTrialOption, -1, array(), '');
+
+        $statusFld = $frm->addSelectBox(Label::getLabel('Lesson_Status', $this->adminLangId), 'slesson_status', $lessonStatusOption, -1, array(), '');
+        if($status != "all" && array_key_exists($status, $lessonStatusOption)) {
+            $statusFld->value = $status;
+        }
+
+        $frm->addHiddenField('', 'page', 1);
+        $frm->addHiddenField('', 'slesson_teacher_id', '');
+        $frm->addHiddenField('', 'slesson_learner_id', '');
+        $orderIdFld =  $frm->addHiddenField('', 'slesson_order_id', '');
+        if(!empty($orderId)) {
+            $orderIdFld->value = $orderId;
+        }
+
+        $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
+        $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
+        $fld_submit->attachField($fld_cancel);
+        return $frm;
+    }
+
+    public function purchasedLessonsSearch()
+    {
+        $searchFrm = $this->getPurchasedLessonsSearchForm();
+        $postData = FatApp::getPostedData();
+        $data = $searchFrm->getFormDataFromArray($postData);
+        $pagesize  = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+
+        $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
+        $scheduledLessonSearchObj = new ScheduledLessonSearch(false);
+        $scheduledLessonSearchObj->joinTeacher();
+        $scheduledLessonSearchObj->joinLearner();
+        $scheduledLessonSearchObj->joinIssueReported();
+        $scheduledLessonSearchObj->joinOrder();
+        $scheduledLessonSearchObj->joinOrderProducts();
+        $scheduledLessonSearchObj->joinTeacherTeachLanguage();
+        $scheduledLessonSearchObj->addMultipleFields(array(
+                'slesson_id',
+               'op_lpackage_is_free_trial',
+                'slesson_status',
+                'slesson_ended_by',
+                'slesson_date',
+                'slesson_end_date',
+                'slesson_ended_on',
+                'slesson_start_time',
+                'slesson_end_time',
+                'slesson_teacher_join_time',
+                'slesson_learner_join_time',
+                'slesson_teacher_end_time',
+                'slesson_learner_end_time',
+                'slesson_added_on',
+                'order_is_paid',
+                'IFNULL(iss.issrep_status,0) AS issrep_status',
+                 'IFNULL(iss.issrep_id,0) AS issrep_id',
+                 'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_name',
+                 'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_name',
+               'IFNULL(tl_l.tlanguage_name, t_t_lang.tlanguage_identifier) as teacherTeachLanguageName',
+            ));
+        if (!empty($data['slesson_teacher_id'])) {
+            $teacherId = FatUtility::int($data['slesson_teacher_id']);
+            $scheduledLessonSearchObj->addCondition('slesson_teacher_id', '=', $teacherId);
+        }
+        if (!empty($data['slesson_learner_id'])) {
+            $learnerId = FatUtility::int($data['slesson_learner_id']);
+            $scheduledLessonSearchObj->addCondition('slesson_learner_id', '=', $learnerId);
+        }
+        if (!empty($data['slesson_order_id'])) {
+            $scheduledLessonSearchObj->addCondition('slesson_order_id', '=', $data['slesson_order_id']);
+        }
+
+        // if ($data['op_lpackage_is_free_trial'] >= 0) {
+        //     $learnerId = FatUtility::int($data['op_lpackage_is_free_trial']);
+        //     $scheduledLessonSearchObj->addCondition('op_lpackage_is_free_trial', '=', $learnerId);
+        // }
+
+        if ($data['slesson_status'] > 0) {
+            $status = FatUtility::int($data['slesson_status']);
+            switch ($status) {
+                case ScheduledLesson::STATUS_ISSUE_REPORTED:
+                $scheduledLessonSearchObj->addCondition('issrep_id', '>', 0);
+                break;
+                case ScheduledLesson::STATUS_UPCOMING:
+                    $scheduledLessonSearchObj->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
+                    $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+                break;
+                case ScheduledLesson::STATUS_SCHEDULED:
+                    $scheduledLessonSearchObj->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
+                    $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', $status);
+                break;
+                default:
+                    $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', $status);
+                break;
+            }
+        }
+        $scheduledLessonSearchObj->addOrder('slesson_date', 'desc');
+        $scheduledLessonSearchObj->setPageNumber($page);
+        $scheduledLessonSearchObj->setPageSize($pagesize);
+        $resultSet = $scheduledLessonSearchObj->getResultSet();
+
+        $records = FatApp::getDb()->fetchAll($resultSet);
+        // echo $scheduledLessonSearchObj->getQuery();
+        // die;
+        $this->set("arr_listing", $records);
+        $this->set('pageCount', $scheduledLessonSearchObj->pages());
+        $this->set('page', $page);
+        $this->set('pageSize', $pagesize);
+        $this->set('postedData', $data);
+        $this->set('recordCount', $scheduledLessonSearchObj->recordCount());
+        $this->_template->render(false, false, null, false, false);
+    }
+
     public function search()
     {
         $pagesize  = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-        $frmSearch = $this->getPurchasedLessonsForm();
+        $frmSearch = $this->getOrderPurchasedLessonsForm();
         $data      = FatApp::getPostedData();
         $post      = $frmSearch->getFormDataFromArray($data);
 
@@ -117,39 +237,13 @@ class PurchasedLessonsController extends AdminBaseController
         $this->_template->render(false, false, null, false, false);
     }
 
-    public function viewSchedules($orderId)
+    public function viewSchedules($status = "all", $orderId = null)
     {
-        $srch = new ScheduledLessonSearch();
-        $srch->joinTeacher();
-        $srch->joinTeacherSettings();
-        $srch->joinLessonLanguage($this->adminLangId);
-        $srch->addCondition('slns.slesson_order_id', ' = ', $orderId);
-        //echo $srch->getQuery(); die();
-        $srch->addMultipleFields(
-            array(
-            'slns.slesson_id',
-            'slns.slesson_date',
-            'slns.slesson_start_time',
-            'slns.slesson_end_time',
-            'slns.slesson_ended_by',
-            'slns.slesson_ended_on',
-            'slns.slesson_status',
-            'IFNULL(sl.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
-            )
-        );
-        //$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
-        $rs = $srch->getResultSet();
-        //echo $srch->getQuery();
-        //die();
-
-        $data = FatApp::getDb()->fetchAll($rs);
-        if ($data == false || $orderId == null) {
-            Message::addErrorMessage('Error: Lessons not allocated yet.');
-            FatApp::redirectUser(FatUtility::generateUrl("PurchasedLessons"));
+        if(empty($status)) {
+            $status = "all";
         }
-        $statusArr = ScheduledLesson::getStatusArr();
-        $this->set('arr_listing', $data);
-        $this->set('status_arr', $statusArr);
+        $searchForm =  $this->getPurchasedLessonsSearchForm($status,$orderId);
+        $this->set('searchForm', $searchForm);
         $this->_template->render();
     }
 
