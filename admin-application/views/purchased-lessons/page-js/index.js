@@ -26,10 +26,10 @@ $(document).ready(function(){
 		}
 	});
 
-		$('#teacher,#learner').blur(function () {
-				$(this).next('.dropdown-menu').hide();
-		});
-			$('body,.menutrigger').click(function () {
+		// $('#teacher,#learner').blur(function () {
+		// 		$(this).next('.dropdown-menu').hide();
+		// });
+			$('.menutrigger').click(function () {
 					$('.dropdown-menu').hide();
 	});
 
