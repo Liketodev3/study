@@ -155,7 +155,9 @@ class TeacherGeneralAvailability extends MyAppModel
         }
 
         $postJson = json_decode($post['data']);
-
+        if(empty($postJson)) {
+            return true;
+        }
         $db = FatApp::getDb();
         $weekendDate = date('Y-m-d', strtotime('next Saturday +1 day'));
         //$deleteWeeklyFutrureWeeksRecords = $db->deleteRecords(TeacherWeeklySchedule::DB_TBL,array('smt'=>'twsch_user_id = ? and (twsch_start_time > ?)','vals'=>array($userId,$weekendDate)));
