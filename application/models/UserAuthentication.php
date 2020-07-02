@@ -1,9 +1,9 @@
 <?php
 class UserAuthentication extends FatModel
 {
-    const SESSION_ELEMENT_NAME = 'weYakYakUserSession';
-    const SESSION_GUEST_USER_ELEMENT_NAME = 'weYakYakGuestUserSession';
-    const WEYAKYAKUSER_COOKIE_NAME = '_uweyakyak';
+    const SESSION_ELEMENT_NAME = 'yoCoachUserSession';
+    const SESSION_GUEST_USER_ELEMENT_NAME = 'yoCoachGuestUserSession';
+    const WEYAKYAKUSER_COOKIE_NAME = '_uyocoach';
 
     const DB_TBL_USER_PRR = 'tbl_user_password_reset_requests';
     const DB_TBL_UPR_PREFIX = 'uprr_';
