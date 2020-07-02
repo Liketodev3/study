@@ -29,14 +29,15 @@
                 <div class="sectionbody">
                 <?php
                   $paidAmount =array();
-                  /*foreach ($order["payments"] as $key=>$row) {
-                  $paidAmount[] = $row['opayment_amount'];
-                  $pendingAmount =  $order["order_net_amount"] - array_sum($paidAmount);
-                }*/
-				 $pendingAmount =  $order["order_net_amount"] - array_sum($paidAmount);
-                if(empty($paidAmount)){
-                  $pendingAmount = $order["order_net_amount"];
-                }
+                  $pendingAmount  =  0;
+                  $totalPaidAmount =   array_sum(array_column($order["payments"],'opayment_amount'));
+                        // foreach ($order["payments"] as $key=>$row) {
+                        //     $paidAmount[] = $row['opayment_amount'];
+                        //     $pendingAmount =  $order["order_net_amount"] - array_sum($paidAmount);
+                        // }
+                        if($totalPaidAmount < $order["order_net_amount"]) {
+                            $pendingAmount =  $order["order_net_amount"] - $totalPaidAmount;
+                        }
                 ?>
 				            <table class="table table--details">
                         <tr>
@@ -46,7 +47,7 @@
                         </tr>
                         <tr>
                           <td><strong><?php echo Label::getLabel('LBL_Order_Amount',$adminLangId); ?>: </strong> <?php echo CommonHelper::displayMoneyFormat($order["order_net_amount"], true, true); ?> </td>
-                          <td><strong><?php echo Label::getLabel('LBL_Order_Amount_Paid',$adminLangId); ?>: </strong><?php echo CommonHelper::displayMoneyFormat(array_sum($paidAmount), true, true); ?></td>
+                          <td><strong><?php echo Label::getLabel('LBL_Order_Amount_Paid',$adminLangId); ?>: </strong><?php echo CommonHelper::displayMoneyFormat($totalPaidAmount, true, true); ?></td>
 
                           <td><strong><?php echo Label::getLabel('LBL_Order_Amount_Pending',$adminLangId); ?>: </strong><?php echo CommonHelper::displayMoneyFormat($pendingAmount, true, true); ?></td>
                         </tr>

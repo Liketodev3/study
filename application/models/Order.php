@@ -436,4 +436,38 @@ class Order extends MyAppModel
         $dataArr['pagingArr'] = $pagingArr;
         return $dataArr;
     }
+
+
+    public function getOrderPayments($criteria = array())
+    {
+        if (count($criteria) == 0) {
+            return array();
+        }
+
+        $srch = new SearchBase(static::DB_TBL_ORDER_PAYMENTS, 'opayment');
+
+        foreach ($criteria as $key => $val) {
+            if (strval($val) == '') {
+                continue;
+            }
+            switch ($key) {
+                case 'id':
+                    $srch->addCondition('opayment.opayment_id', '=', intval($val));
+                    break;
+                case 'order_id':
+                    $srch->addCondition('opayment.opayment_order_id', '=', $val);
+                    break;
+            }
+        }
+
+        $srch->doNotLimitRecords();
+        $srch->doNotCalculateRecords(true);
+        $srch->addOrder('opayment_id');
+
+        $row = FatApp::getDb()->fetchAll($srch->getResultSet(), 'opayment_id');
+        if ($row == false) {
+            return array();
+        }
+        return $row;
+    }
 }
