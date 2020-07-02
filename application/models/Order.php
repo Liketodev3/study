@@ -367,16 +367,16 @@ class Order extends MyAppModel
         }
         $page = (empty($filter['page']) || $filter['page'] <= 0) ? 1 : FatUtility::int($filter['page']);
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
-
+        $srch->addCondition('o.order_type', '=', self::TYPE_LESSON_BOOKING);
 
         if ($filter['keyword']) {
-            $srch->addCondition('o.order_id', 'LIKE', '%'.$filter['keyword'].'%','OR');
+            $condition = $srch->addCondition('o.order_id', 'LIKE', '%'.$filter['keyword'].'%');
             switch ($userType) {
                 case User::USER_TYPE_LEANER:
-                    $srch->addHaving('teacher_name','LIKE', '%'.$filter['keyword'].'%','OR');
+                    $condition->attachCondition('CONCAT(`t`.`user_first_name`," ",`t`.`user_last_name`)','LIKE', '%'.$filter['keyword'].'%','OR');
                     break;
                 case User::USER_TYPE_TEACHER:
-                    $srch->addHaving('learner_name','LIKE', '%'.$filter['keyword'].'%','OR');
+                    $condition->attachCondition('CONCAT(`u`.`user_first_name`," ",`u`.`user_last_name`)','LIKE', '%'.$filter['keyword'].'%','OR');
                     break;
             }
 
@@ -389,19 +389,21 @@ class Order extends MyAppModel
 
         $dateFrom = $filter['date_from'];
         if (!empty($dateFrom)) {
+            $dateFrom = $dateFrom . ' 00:00:00';
             $dateFrom = MyDate::changeDateTimezone($dateFrom, $user_timezone, $systemTimeZone);
-            $dateFrom = date('Y-m-d', strtotime($dateFrom));
-            $srch->addCondition('o.order_date_added', '>=', $dateFrom . ' 00:00:00');
+            $dateFrom = date('Y-m-d H:i:s', strtotime($dateFrom));
+            $srch->addCondition('o.order_date_added', '>=', $dateFrom);
         }
 
         $dateTo = $filter['date_to'];
         if (!empty($dateTo)) {
+            $dateTo = $dateTo. ' 23:59:59';
             $dateTo = MyDate::changeDateTimezone($dateTo, $user_timezone, $systemTimeZone);
-            $dateTo = date('Y-m-d', strtotime($dateTo));
-            $srch->addCondition('o.order_date_added', '<=', $dateTo . ' 23:59:59');
+            $dateTo = date('Y-m-d H:i:s', strtotime($dateTo));
+            $srch->addCondition('o.order_date_added', '<=', $dateTo);
         }
 
-        $srch->addCondition('o.order_type', '=', self::TYPE_LESSON_BOOKING);
+
         $srch->addMultipleFields(
             array(
             'order_id',
@@ -421,7 +423,8 @@ class Order extends MyAppModel
         $srch->setPageNumber($page);
         $srch->setPageSize($pageSize);
         $rs = $srch->getResultSet();
-
+        // echo $srch->getQuery();
+        // die;
         $pagingArr = array(
             'pageCount'	=>	$srch->pages(),
             'page'	=>	$page,
