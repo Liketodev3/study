@@ -307,13 +307,17 @@ class TeacherController extends TeacherBaseController
     public function teacherQualificationForm($uqualification_id = 0)
     {
         $uqualification_id =  FatUtility::int($uqualification_id);
-        $experienceFrm = $this->getTeacherQualificationForm();
+        $experienceFrm = $this->getTeacherQualificationForm(true);
         if ($uqualification_id > 0) {
             $srch = new UserQualificationSearch();
             $srch->addCondition('uqualification_user_id', '=', UserAuthentication::getLoggedUserId());
             $srch->addCondition('uqualification_id', '=', $uqualification_id);
             $rs = $srch->getResultSet();
             $row = FatApp::getDb()->fetch($rs);
+            $file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, UserAuthentication::getLoggedUserId() , $uqualification_id);
+            $certificateRequried =  (empty($file_row)) ? true : false;
+            $field = $experienceFrm->getField('certificate');
+            $field->requirements()->setRequired($certificateRequried);
             $experienceFrm->fill($row);
         }
         $this->set('experienceFrm', $experienceFrm);
@@ -339,6 +343,17 @@ class TeacherController extends TeacherBaseController
             FatUtility::dieJsonError($qualification->getError());
         }
 
+        $file_row = [];
+		if($uqualification_id > 0) {
+			$file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, UserAuthentication::getLoggedUserId() ,$uqualification_id);
+		}
+
+		if(empty($file_row) && empty($_FILES['certificate']['tmp_name'])) {
+			$db->rollbackTransaction();
+			Message::addErrorMessage(Label::getLabel('MSG_Please_upload_certificate'));
+			FatUtility::dieJsonError(Message::getHtml());
+		}
+
         if (!empty($_FILES['certificate']['tmp_name'])) {
             if (!is_uploaded_file($_FILES['certificate']['tmp_name'])) {
                 $db->rollbackTransaction();
@@ -346,7 +361,7 @@ class TeacherController extends TeacherBaseController
             }
             $uqualification_id = $qualification->getMainTableRecordId();
             $fileHandlerObj = new AttachedFile();
-            $res = $fileHandlerObj->saveDoc($_FILES['certificate']['tmp_name'], AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $post['uqualification_user_id'], $uqualification_id, $_FILES['certificate']['name'], -1, $unique_record = true);
+            $res = $fileHandlerObj->saveDoc($_FILES['certificate']['tmp_name'], AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $post['uqualification_user_id'], $uqualification_id, $_FILES['certificate']['name'], -1, $unique_record = true,0,$_FILES['certificate']['type']);
             if (!$res) {
                 $db->rollbackTransaction();
                 FatUtility::dieJsonError($fileHandlerObj->getError());

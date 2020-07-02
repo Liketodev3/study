@@ -85,7 +85,7 @@ class MyAppController extends FatController
         $this->set('action', $this->action);
     }
 
-    protected function getTeacherQualificationForm()
+    protected function getTeacherQualificationForm($isCertiRequried = false)
     {
         $frm = new Form('frmQualification');
         $fld = $frm->addHiddenField('', 'uqualification_id', 0);
@@ -112,6 +112,7 @@ class MyAppController extends FatController
         $fld2->requirements()->setRequired();
         $fld2->requirements()->setCompareWith('uqualification_start_year', 'ge');
         $fld = $frm->addFileUpload(Label::getLabel('LBL_Upload_Certificate'), 'certificate');
+        $fld->requirements()->setRequired($isCertiRequried);
         $fld->htmlAfterField = "<small>".Label::getLabel('LBL_NOTE:_Allowed_Certificate_Extentions!')."</small>";
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
         return $frm;

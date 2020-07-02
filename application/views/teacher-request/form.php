@@ -11,7 +11,7 @@ $language_fields_heading = $frm->getField( 'language_fields_heading' );
 $language_fields_heading->value = '<h5>' . Label::getLabel('LBL_Languages') . '</h5>';
 
 $resume_fields_heading = $frm->getField( 'resume_fields_heading' );
-$resume_fields_heading->value = '<div id="resume_fields_heading" class="d-flex justify-content-between align-items-center"><div><h5 style="margin-bottom: 0;">'. Label::getLabel('LBL_Resume') .'</h5></div><div><a onclick="teacherQualificationForm(0);" href="javascript:void(0)" class="btn btn--secondary btn--small">' . Label::getLabel('LBL_Add_New') . '</a></div></div>';
+$resume_fields_heading->value = '<div id="resume_fields_heading" class="d-flex justify-content-between align-items-center"><div><h5 style="margin-bottom: 0;">'. Label::getLabel('LBL_Resume') .'<span class="spn_must_field">*</span></h5></div><div><a onclick="teacherQualificationForm(0);" href="javascript:void(0)" class="btn btn--secondary btn--small">' . Label::getLabel('LBL_Add_New') . '</a></div></div>';
 
 $utrvalue_user_language_teach = $frm->getField('utrvalue_user_teach_slanguage_id[]');
 $utrvalue_user_language_teach->developerTags['col'] = 10;

@@ -1,3 +1,4 @@
+var isRuningTeacherQualificationFormAjax = false;
 $(document).ready(function(){
 	profileInfoForm();
 
@@ -323,6 +324,7 @@ $.ajax(settings).done(function (response) {
 	};
 
 	teacherQualificationForm = function(id){
+	isRuningTeacherQualificationFormAjax = false;
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','teacherQualificationForm',[id]),'',function(t){
 			$.facebox( t,'facebox-medium');
@@ -332,6 +334,10 @@ $.ajax(settings).done(function (response) {
 
 	setUpTeacherQualification = function(frm){
 		if (!$(frm).validate()) return false;
+		if(isRuningTeacherQualificationFormAjax) {
+			return false;
+		}
+			isRuningTeacherQualificationFormAjax = true;
         var dv = $("#frm_fat_id_frmQualification");
         $(frm.btn_submit).attr('disabled','disabled');
 		var formData = new FormData(frm);
@@ -341,31 +347,34 @@ $.ajax(settings).done(function (response) {
                 data: formData,
                 mimeType: "multipart/form-data",
                 contentType: false,
-				processData: false,
-				beforeSend: function(){
-					$(dv).html(fcom.getLoader());
-				},
+									processData: false,
+									beforeSend: function(){
+										$(dv).html(fcom.getLoader());
+									},
                 success: function (data, textStatus, jqXHR) {
-					var data=JSON.parse(data);
 
-					if(data.status==0)
-					{
-						$.mbsmessage(data.msg,true,'alert alert--danger');
-                        $(frm.btn_submit).removeAttr("disabled");
-						return false;
-					}
-						$.mbsmessage(data.msg,true,'alert alert--success');
-                        $(frm.btn_submit).removeAttr("disabled");
-						teacherQualification();
-						$.facebox.close();
-						setTimeout(function(){
-							$.mbsmessage.close();
-						},2000);
-				},
+									var data=JSON.parse(data);
+
+									if(data.status==0)
+									{
+											isRuningTeacherQualificationFormAjax  = false;
+										$.mbsmessage(data.msg,true,'alert alert--danger');
+				                        $(frm.btn_submit).removeAttr("disabled");
+										return false;
+									}
+										$.mbsmessage(data.msg,true,'alert alert--success');
+				             $(frm.btn_submit).removeAttr("disabled");
+										teacherQualification();
+										$.facebox.close();
+										setTimeout(function(){
+											$.mbsmessage.close();
+										},2000);
+								},
                 error: function (jqXHR, textStatus, errorThrown) {
-					$.mbsmessage(jqXHR.msg, true,'alert alert--danger');
-                    $(frm.btn_submit).removeAttr("disabled");
-				}
+									isRuningTeacherQualificationFormAjax  = false;
+													$.mbsmessage(jqXHR.msg, true,'alert alert--danger');
+			                    $(frm.btn_submit).removeAttr("disabled");
+							}
             });
 	};
 

@@ -19,6 +19,7 @@ $("document").ready(function(){
 		if(teacherQualificationAjax) {
 			return false;
 		}
+		teacherQualificationAjax = true;
         $(frm.btn_submit).attr('disabled','disabled');
 		var dv = $("#frm_fat_id_frmQualification");
 

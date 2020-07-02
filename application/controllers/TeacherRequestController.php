@@ -101,7 +101,18 @@ class TeacherRequestController extends MyAppController {
 			return;
 		}
 		/* ] */
-
+		$srch = new UserQualificationSearch();
+		$srch->addCondition('uqualification_user_id', '=', $this->userId);
+		$srch->addMultiplefields(['uqualification_id','uqualification_user_id']);
+		$rs = $srch->getResultSet();
+		if(empty($rs->totalRecords())) {
+			if (FatUtility::isAjaxCall()) {
+				FatUtility::dieWithError(Label::getLabel('MSG_please_upload_Your_Resume'));
+			}
+			Message::addErrorMessage(Label::getLabel('MSG_please_upload_Your_Resume'));
+			$this->form();
+			return;
+		}
 		/* file handling[ */
 		if (empty($_FILES['user_profile_pic']['tmp_name']) || !is_uploaded_file($_FILES['user_profile_pic']['tmp_name'])) {
 			if (FatUtility::isAjaxCall()) {
@@ -181,7 +192,7 @@ class TeacherRequestController extends MyAppController {
 
 	public function teacherQualificationForm() {
 		$uqualification_id = FatApp::getPostedData('uqualification_id', FatUtility::VAR_INT, 0);
-		$frm = $this->getTeacherQualificationForm();
+		$frm = $this->getTeacherQualificationForm(true);
 		if ($uqualification_id > 0) {
 			$srch = new UserQualificationSearch();
 			$srch->addCondition('uqualification_user_id', '=', $this->userId);
@@ -189,6 +200,10 @@ class TeacherRequestController extends MyAppController {
 			$rs = $srch->getResultSet();
 			$row = FatApp::getDb()->fetch($rs);
 			$frm->fill($row);
+			$file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $this->userId , $uqualification_id);
+			$field = $frm->getField('certificate');
+			$certificateRequried =  (empty($file_row)) ? true : false;
+			$field->requirements()->setRequired($certificateRequried);
 		}
 		$this->set('frm', $frm);
 		$this->_template->render(false, false);
@@ -214,6 +229,17 @@ class TeacherRequestController extends MyAppController {
 			FatUtility::dieJsonError(Message::getHtml());
 		}
 
+		/* file handling[ */
+		$file_row = [];
+		if($uqualification_id > 0) {
+			$file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $this->userId ,$uqualification_id);
+		}
+		if(empty($file_row) && empty($_FILES['certificate']['tmp_name'])) {
+			$db->rollbackTransaction();
+			Message::addErrorMessage(Label::getLabel('MSG_Please_upload_certificate'));
+			FatUtility::dieJsonError(Message::getHtml());
+		}
+
 		if (!empty($_FILES['certificate']['tmp_name'])) {
 			if (!is_uploaded_file($_FILES['certificate']['tmp_name'])) {
            		$db->rollbackTransaction();
@@ -223,7 +249,7 @@ class TeacherRequestController extends MyAppController {
 
 			$uqualification_id = $qualification->getMainTableRecordId();
 			$fileHandlerObj = new AttachedFile();
-			$res = $fileHandlerObj->saveDoc($_FILES['certificate']['tmp_name'], AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $post['uqualification_user_id'], $uqualification_id, $_FILES['certificate']['name'], -1, $unique_record = true);
+			$res = $fileHandlerObj->saveDoc($_FILES['certificate']['tmp_name'], AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $post['uqualification_user_id'], $uqualification_id, $_FILES['certificate']['name'], -1, $unique_record = true,0,$_FILES['certificate']['type']);
 			if (!$res) {
                 $db->rollbackTransaction();
 				Message::addErrorMessage($fileHandlerObj->getError());
