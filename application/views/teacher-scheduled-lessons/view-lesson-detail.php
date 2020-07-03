@@ -25,159 +25,155 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 <script type="text/javascript">
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
 
-console.log(langLbl.chargelearner);
-    jQuery(document).ready(function () {
-        if( sessionStorage.getItem('cometChatUserExists') != null){
-            if(sessionStorage.getItem('cometChatUserExists')  != '<?php echo "LESSON-".$lessonData['slesson_id']; ?>'){
-                sessionStorage.removeItem('cometChatUserExists');
-            }
-        }
-    });
-	function joinLessonButtonAction(){
-		$("#joinL").hide();
-		$("#endL").show();
-		$('.screen-chat-js').show();
-		checkEveryMinuteStatus();
-		searchFlashCards(document.frmFlashCardSrch);
-		checkNewFlashCards();
-<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
-		$("#end_lesson_time_div").show();
-<?php }?>
-	}
+var lesson_joined = '<?php echo $lessonData['has_joined'] ?>'
+var lesson_completed = '<?php echo $lessonData['has_completed'] ?>'
 
-	function endLessonButtonAction(){
-		$("#joinL").show();
-		$("#endL").hide();
-		$('.screen-chat-js').hide();
-		searchFlashCards(document.frmFlashCardSrch);
-		clearInterval(checkEveryMinuteStatusVar);
-		clearInterval(checkNewFlashCardsVar);
-		sessionStorage.removeItem('cometChatUserExists');
-		sessionStorage.removeItem('showEndLessonNotification');
-		$("#end_lesson_time_div").hide();
-	}
+function joinLessonButtonAction(){
+    $("#joinL").hide();
+    $("#endL").show();
+    $('.screen-chat-js').show();
+    checkEveryMinuteStatus();
+    searchFlashCards(document.frmFlashCardSrch);
+    checkNewFlashCards();
+    <?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
+    $("#end_lesson_time_div").show();
+    <?php }?>
+}
 
-	var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
-    var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
-	var chat_id = '<?php echo $chatId; ?>';
-	var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';
-	var chat_name = '<?php echo $lessonData['teacherFname']; ?>';
-	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
-    var chat_avatar = "<?php echo $teacherImage; ?>";
+function endLessonButtonAction(){
+    $("#joinL").show();
+    $("#endL").hide();
+    $('.screen-chat-js').hide();
+    searchFlashCards(document.frmFlashCardSrch);
+    clearInterval(checkEveryMinuteStatusVar);
+    clearInterval(checkNewFlashCardsVar);
+    sessionStorage.removeItem('showEndLessonNotification');
+    $("#end_lesson_time_div").hide();
+}
 
-	var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","avatarURL":"<?php echo $teacherImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['teacherUrlName']; ?>", "role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
+var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
+var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
+var chat_id = '<?php echo $chatId; ?>';
+var chat_group_id = '<?php echo "YoCoach-LESSON-".$lessonData['slesson_id']; ?>';
+var chat_name = '<?php echo $lessonData['teacherFname']; ?>';
+var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
+var chat_avatar = "<?php echo $teacherImage; ?>";
+var chat_friends = "<?php echo $lessonData['learnerId']; ?>";
 
-	var CometJsonLearnerData = [{"userId":"<?php echo $lessonData['learnerId']; ?>","fname":"<?php echo $lessonData['learnerFname']; ?>","avatarURL":"<?php echo $studentImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['learnerUrlName']; ?>","role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_LEANER]; ?>"}];
+var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","avatarURL":"<?php echo $teacherImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['teacherUrlName']; ?>", "role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
 
-	var CometJsonData = CometJsonTeacherData.concat(CometJsonLearnerData);
+var CometJsonLearnerData = [{"userId":"<?php echo $lessonData['learnerId']; ?>","fname":"<?php echo $lessonData['learnerFname']; ?>","avatarURL":"<?php echo $studentImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['learnerUrlName']; ?>","role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_LEANER]; ?>"}];
 
-	var CometJsonFriendData = {"lessonId":"<?php echo $lessonData['slesson_id'] ?>","userId":"<?php echo $chatId;?>","friendId":"<?php echo $lessonData['learnerId']; ?>"};
+var CometJsonData = CometJsonTeacherData.concat(CometJsonLearnerData);
 
-	function checkEveryMinuteStatus(){
-	   checkEveryMinuteStatusVar = setInterval(function(){
-			fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','checkEveryMinuteStatus',['<?php echo $lessonData['slesson_id'] ?>']),'',function(t){
-				var t = JSON.parse(t);
-				if(t.slesson_status > 1){
+var CometJsonFriendData = {"lessonId":"<?php echo $lessonData['slesson_id'] ?>","userId":"<?php echo $chatId;?>","friendId":"<?php echo $lessonData['learnerId']; ?>"};
 
-                $.confirm({
-                    title: langLbl.Confirm,
-                    content: '<?php echo Label::getLabel('LBL_Learner_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also!'); ?>',
-                    autoClose: langLbl.Quit+'|10000',
-                    buttons: {
-                        Proceed: {
-                            text: langLbl.Proceed,
-                            btnClass: 'btn btn--primary',
-                            keys: ['enter', 'shift'],
-                            action: function(){
-                                endLessonButtonAction();
-                                viewLessonDetail();
-                            }
-                        },
-                        Quit: {
-                            text: langLbl.Quit,
-                            btnClass: 'btn btn--secondary',
-                            keys: ['enter', 'shift'],
-                            action: function(){
-                            }
+if(lesson_joined && !lesson_completed){
+    joinLesson(CometJsonData, CometJsonFriendData);
+}
+
+function checkEveryMinuteStatus(){
+   checkEveryMinuteStatusVar = setInterval(function(){
+        fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','checkEveryMinuteStatus',['<?php echo $lessonData['slesson_id'] ?>']),'',function(t){
+            var t = JSON.parse(t);
+            if(t.slesson_status > 1){
+
+            $.confirm({
+                title: langLbl.Confirm,
+                content: '<?php echo Label::getLabel('LBL_Learner_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also!'); ?>',
+                autoClose: langLbl.Quit+'|10000',
+                buttons: {
+                    Proceed: {
+                        text: langLbl.Proceed,
+                        btnClass: 'btn btn--primary',
+                        keys: ['enter', 'shift'],
+                        action: function(){
+                            endLessonButtonAction();
+                            viewLessonDetail();
+                        }
+                    },
+                    Quit: {
+                        text: langLbl.Quit,
+                        btnClass: 'btn btn--secondary',
+                        keys: ['enter', 'shift'],
+                        action: function(){
                         }
                     }
-                });
-				}
-			});
-		},60000);
-	}
+                }
+            });
+            }
+        });
+    },60000);
+}
 
-	function checkNewFlashCards(){
-		checkNewFlashCardsVar = setInterval(function(){
-			/*fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','searchFlashCards'),'',function(t){
-				var t = JSON.parse(t);
-				$('#flashCardListing').html(t.html);
-			});*/
-			searchFlashCards(document.frmFlashCardSrch);
-		},30000)
-	}
+function checkNewFlashCards(){
+    checkNewFlashCardsVar = setInterval(function(){
+        /*fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','searchFlashCards'),'',function(t){
+            var t = JSON.parse(t);
+            $('#flashCardListing').html(t.html);
+        });*/
+        searchFlashCards(document.frmFlashCardSrch);
+    },30000)
+}
 
-	$(function(){
-		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
+$(function(){
+    <?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
 
-        $("#lesson_actions").hide();
-        var showLessonBtn = true;
-		$('#start_lesson_timer').countdowntimer({
-			startDate : "<?php echo $curDate; ?>",
-			dateAndTime : "<?php echo $startTime; ?>",
-			size : "lg",
-			timeUp : function(){
-				fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','startLessonAuthentication',[CometJsonFriendData.lessonId]),'',function(t){
-                    if(t != 0){
-                        showLessonBtn = false;
-						$(".join_lesson_now").show();
-						$("#lesson_actions").hide();
-					}
-				});
-				$("#start_lesson_timer").hide();
-			}
-		});
-        if(showLessonBtn) {
-            $("#lesson_actions").show();
+    $("#lesson_actions").hide();
+    var showLessonBtn = true;
+    $('#start_lesson_timer').countdowntimer({
+        startDate : "<?php echo $curDate; ?>",
+        dateAndTime : "<?php echo $startTime; ?>",
+        size : "lg",
+        timeUp : function(){
+            fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','startLessonAuthentication',[CometJsonFriendData.lessonId]),'',function(t){
+                if(t != 0){
+                    showLessonBtn = false;
+                    $(".join_lesson_now").show();
+                    $("#lesson_actions").hide();
+                }
+            });
+            $("#start_lesson_timer").hide();
         }
-		<?php } ?>
-        $('#end_lesson_timer').countdowntimer({
-			startDate : "<?php echo $curDate; ?>",
-			dateAndTime : "<?php echo $endTime; ?>",
-			size : "lg",
-			timeUp : function(){
-				if(sessionStorage.getItem('cometChatUserExists')!=null)
-				{
-                        $('.jconfirm-closeIcon').trigger('click');
-                        $.confirm({
-                            closeIcon: true,
-                            title: langLbl.Confirm,
-                            content: '<?php echo Label::getLabel('LBL_Duration_assigned_to_this_lesson_is_completed_now_do_you_want_to_continue?'); ?>',
-                            autoClose: langLbl.Quit+'|8000',
-                            buttons: {
-                                Proceed: {
-                                    text: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
-                                    btnClass: 'btn btn--primary',
-                                    keys: ['enter', 'shift'],
-                                    action: function(){
-                                        endLessonSetup('<?php echo $lessonData['slesson_id']; ?>');
-                                    }
-                                },
-                                Quit: {
-                                    text: '<?php echo Label::getLabel('LBL_Continue'); ?>',
-                                    btnClass: 'btn btn--secondary',
-                                    keys: ['enter', 'shift'],
-                                    action: function(){
-                                        sessionStorage.setItem('showEndLessonNotification',0);
-                                    }
-                                }
-                            }
-                        });
-				}
-				$("#end_lesson_time_div").hide();
-			}
-		});
-	});
+    });
+    if(showLessonBtn) {
+        $("#lesson_actions").show();
+    }
+    <?php } ?>
+    $('#end_lesson_timer').countdowntimer({
+        startDate : "<?php echo $curDate; ?>",
+        dateAndTime : "<?php echo $endTime; ?>",
+        size : "lg",
+        timeUp : function(){
+            $('.jconfirm-closeIcon').trigger('click');
+            $.confirm({
+                closeIcon: true,
+                title: langLbl.Confirm,
+                content: '<?php echo Label::getLabel('LBL_Duration_assigned_to_this_lesson_is_completed_now_do_you_want_to_continue?'); ?>',
+                autoClose: langLbl.Quit+'|8000',
+                buttons: {
+                    Proceed: {
+                        text: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
+                        btnClass: 'btn btn--primary',
+                        keys: ['enter', 'shift'],
+                        action: function(){
+                            endLessonSetup('<?php echo $lessonData['slesson_id']; ?>');
+                        }
+                    },
+                    Quit: {
+                        text: '<?php echo Label::getLabel('LBL_Continue'); ?>',
+                        btnClass: 'btn btn--secondary',
+                        keys: ['enter', 'shift'],
+                        action: function(){
+                            sessionStorage.setItem('showEndLessonNotification',0);
+                        }
+                    }
+                }
+            });
+            $("#end_lesson_time_div").hide();
+        }
+    });
+});
 
 </script>
 
@@ -218,7 +214,7 @@ console.log(langLbl.chargelearner);
             <span class="-gap"></span>
             <?php } ?>
 
-            <a href="javascript:void(0);" style="display:none;" class="btn btn--secondary btn--xlarge join_lesson_now" id="joinL" onclick="createUserCometChat(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>
+            <a href="javascript:void(0);" style="display:none;" class="btn btn--secondary btn--xlarge join_lesson_now" id="joinL" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>
                 <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ) { ?>
                     <a href="<?php echo CommonHelper::generateUrl('teacher'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
                 <?php } ?>
@@ -496,37 +492,6 @@ console.log(langLbl.chargelearner);
 
 <script type="text/javascript">
 jQuery(document).ready(function (e) {
-	if( sessionStorage.getItem('cometChatUserExists') == chat_group_id ){
-	   joinLessonButtonAction();
-	   createChatBox();
-	}
-
-	/*function t(t) {
-		e(t).bind("click", function (t) {
-			t.preventDefault();
-			e(this).parent().fadeOut()
-		})
-	}
-
-	e(".toggle__trigger-js").click(function () {
-		var t = e(this).parents(".toggle-group").children(".toggle__target-js").is(":hidden");
-		e(".toggle-group .toggle__target-js").hide();
-		e(".toggle-group .toggle__trigger-js").removeClass("is-active");
-		if (t) {
-			e(this).parents(".toggle-group").children(".toggle__target-js").toggle().parents(".toggle-group").children(".toggle__trigger-js").addClass("is-active")
-		}
-	});
-
-	e(document).bind("click", function (t) {
-		var n = e(t.target);
-		if (!n.parents().hasClass("toggle-group")) e(".toggle-group .toggle__target-js").hide();
-	});
-
-	e(document).bind("click", function (t) {
-		var n = e(t.target);
-		if (!n.parents().hasClass("toggle-group")) e(".toggle-group .toggle__trigger-js").removeClass("is-active");
-	});*/
-
 	$('body').addClass('is-screen-on');
 	$(".tabs-content-js").hide();
 	$(".tabs-js li:first").addClass("is-active").show();

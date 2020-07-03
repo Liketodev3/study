@@ -1211,6 +1211,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addMultipleFields(
             array(
                 'slns.slesson_status',
+                'slns.slesson_teacher_join_time',
                 'slns.slesson_learner_join_time'
             )
         );
@@ -1220,6 +1221,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $rs = $srch->getResultSet();
         $data = FatApp::getDb()->fetch($rs);
         if ($data) {
+            if($data['slesson_teacher_join_time']<=0){
+                FatUtility::dieJsonError(Label::getLabel("LBL_Please_Wait._Let_teacher_join"));
+            }
             $sLessonObj = new ScheduledLesson($lessonId);
             $sLessonObj->assignValues(array('slesson_learner_join_time' => date('Y-m-d H:i:s')));
             if (!$sLessonObj->save()) {

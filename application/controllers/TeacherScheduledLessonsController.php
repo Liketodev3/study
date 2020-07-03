@@ -187,6 +187,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
             '"-" as teacherTeachLanguageName',
             'IFNULL(iss.issrep_status,0) AS issrep_status',
+            'slesson_teacher_join_time AS has_joined',
+            'slesson_teacher_end_time AS has_completed',
             //'IFNULL(iss.issrep_id,0) AS issrep_id',
             'iss.*'
         ));

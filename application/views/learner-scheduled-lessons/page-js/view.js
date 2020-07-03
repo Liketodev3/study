@@ -11,11 +11,6 @@ $(function() {
 		});
 	};
 
-	markLearnerJoinTime = function(){
-        fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'markLearnerJoinTime'), 'lessonId='+lessonId , function(t) {
-        });
-    };
-
 	goToFlashCardSearchPage = function(page) {
 		if(typeof page == undefined || page == null){
 			page = 1;
@@ -137,58 +132,20 @@ $(function() {
 			});
 	};
 
-	/* createUserCometChatApi = function(CometJsonData,CometJsonFriendData){
-		$(CometJsonData).each(function(i,val){
-			$.ajax({
-			  method: "POST",
-			  url: "https://api.cometondemand.net/api/v2/createUser",
-			  data: { UID:val.userId,name:val.fname,"role":val.role },
-			  beforeSend: function (xhr) {
-				xhr.setRequestHeader('api-key', '50978xedfcf997f213f06970117bcaf0ef3301');
-				},
-			})
-			.done(function( msg ) {
-				  if(typeof(msg.success) != "undefined" && msg.success !== null)
-				  {
-
-					  $.mbsmessage( msg.success.message,true, 'alert alert--success');
-					  addFriendsCometUsers(CometJsonFriendData.userId,CometJsonFriendData.friendId);
-				  }
-				  else{
-					  //$.mbsmessage( msg.failed.message,true, 'alert alert--danger');
-					  addFriendsCometUsers(CometJsonFriendData.userId,CometJsonFriendData.friendId);
-				  }
-				});
-			});
-	} */
-
-	checkUSerExistInCometChatApi = function(learnerId,teacherId){
-		$.ajax({
-			  method: "POST",
-			  url: "https://api.cometondemand.net/api/v2/getGroupMessages",
-			  //data: { UID:learnerId },
-			  data: { GUIDs:chat_group_id },
-			  beforeSend: function (xhr) {
-				xhr.setRequestHeader('api-key', chat_api_key);
-				},
-			})
-			.done(function( msg ) {
-				  if(typeof(msg.success) != "undefined" && msg.success !== null)
-				  {
-					   //addFriendsCometUsers(learnerId,teacherId);
-					   joinLessonButtonAction();
-					   sessionStorage.setItem('cometChatUserExists',chat_group_id);
-                       markLearnerJoinTime();
-					   createChatBox();
-					   location.reload();
-					  $.mbsmessage( msg.success.message,true, 'alert alert--success');
-				}
-				  else{
-					  checkEveryMinuteStatus();
-					  $.mbsmessage( "Wait Let the Teacher Initiate the lesson from His/Her End!",true, 'alert alert--danger');
-				  }
-				});
-
+	joinLesson = function(learnerId,teacherId){
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'markLearnerJoinTime'), 'lessonId='+lessonId , function(t) {
+            var ans = $.parseJSON(t);
+            if(ans.status){
+                joinLessonButtonAction();
+                createChatBox();
+                // location.reload();
+                $.mbsmessage( msg.success.message,true, 'alert alert--success');
+            }
+            else{
+                checkEveryMinuteStatus();
+                $.mbsmessage( ans.msg ,true, 'alert alert--danger');
+            }
+        });
 	};
 	endLesson = function (lessonId) {
                 $.confirm({

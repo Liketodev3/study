@@ -285,7 +285,6 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 											<div>
 												<h6><?php echo $lessonData['teacherFullName']; ?></h6>
 												<p> <?php echo $lessonData['teacherCountryName']; ?> </p>
-												</div>
 											</div>
 										</div>
 										<hr>
