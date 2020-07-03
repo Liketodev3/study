@@ -199,7 +199,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             /* 'ul.user_timezone as learnerTimeZone', */
             'IFNULL(iss.issrep_status,0) AS issrep_status',
             'IFNULL(iss.issrep_id,0) AS issrep_id',
-            'IFNULL(iss.issrep_issues_resolve_type,0) AS issrep_issues_resolve_by'
+            'IFNULL(iss.issrep_issues_resolve_type,0) AS issrep_issues_resolve_by',
+            'slesson_learner_join_time',
+            'slesson_learner_end_time',
         ));
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);

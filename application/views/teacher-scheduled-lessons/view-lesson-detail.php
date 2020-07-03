@@ -25,8 +25,8 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 <script type="text/javascript">
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
 
-var lesson_joined = '<?php echo $lessonData['has_joined'] ?>'
-var lesson_completed = '<?php echo $lessonData['has_completed'] ?>'
+var lesson_joined = '<?php echo $lessonData['slesson_teacher_join_time']>0 ?>';
+var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time']>0 ?>';
 
 function joinLessonButtonAction(){
     $("#joinL").hide();

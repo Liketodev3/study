@@ -16,13 +16,10 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 }
 ?>
 <script>
-    jQuery(document).ready(function () {
-        if( sessionStorage.getItem('cometChatUserExists') != null){
-            if(sessionStorage.getItem('cometChatUserExists')  != '<?php echo "LESSON-".$lessonData['slesson_id']; ?>'){
-                sessionStorage.removeItem('cometChatUserExists');
-            }
-        }
-    });
+var lesson_joined = '<?php echo $lessonData['slesson_learner_join_time']>0 ?>';
+var lesson_completed = '<?php echo $lessonData['slesson_learner_end_time']>0 ?>';
+var teacherId = '<?php echo $lessonData['teacherId']>0 ?>';
+
 	function joinLessonButtonAction() {
 		$("#joinL").hide();
 		$("#endL").show();
@@ -53,14 +50,9 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
 	var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
     var chat_avatar = "<?php echo $studentImage; ?>";
-	$(document).ready(function() {
-		if(sessionStorage.getItem('cometChatUserExists') == chat_group_id)
-		{
-		   joinLessonButtonAction();
-			createChatBox();
-		}
-
-	});
+	if(lesson_joined && !lesson_completed){
+        joinLesson(chat_id, teacherId);
+    }
 
    function checkEveryMinuteStatus() {
 	   checkEveryMinuteStatusVar = setInterval(function(){
@@ -154,7 +146,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 </script>
 <section class="section section--grey section--page">
 	<div class="screen">
-		<div class="screen__left" style="background-image:url(/images/2000x900_1.jpg">
+		<div class="screen__left" style="background-image:url(<?php echo CONF_WEBROOT_URL ?>images/2000x900_1.jpg">
 			<div class="screen__center-content">
 				<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ) { ?>
 				<div class="alert alert--info" role="alert">
@@ -198,7 +190,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 				</div>
 				<span class="-gap"></span>
 				<?php } ?>
-				<a href="javascript:void(0);" style="display:none;" class="btn btn--secondary btn--xlarge join_lesson_now" id="joinL" onclick="checkUSerExistInCometChatApi('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');">
+				<a href="javascript:void(0);" style="display:none;" class="btn btn--secondary btn--xlarge join_lesson_now" id="joinL" onclick="joinLesson('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');">
 					<?php echo Label::getLabel('LBL_Join_Lesson'); ?>
 				</a>
 				<?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ) { ?>
