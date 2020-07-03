@@ -402,6 +402,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
         }
+        $db->commitTransaction();
         /* send an email to learner[ */
         $vars = array(
             '{learner_name}' => $lessonRow['learnerFullName'],
@@ -412,7 +413,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             '{lesson_start_time}' => $lessonRow['slesson_start_time'],
             '{lesson_end_time}' => $lessonRow['slesson_end_time'],
         );
-        $db->commitTransaction();
+
         if (!EmailHandler::sendMailTpl($lessonRow['learnerEmailId'], 'teacher_cancelled_email', $this->siteLangId, $vars)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
         }

@@ -104,13 +104,21 @@ class ScheduledLesson extends MyAppModel
         $srch->addCondition('op.op_lpackage_is_free_trial', ' = ', 0);
         $rs = $srch->getResultSet();
         $data = FatApp::getDb()->fetch($rs);
-        if ($data) {
+        if ($data && $data['order_net_amount'] > 0) {
             $to_time = strtotime($data['slesson_date'].' '.$data['slesson_start_time']);
             $from_time = strtotime(date('Y-m-d H:i:s'));
             $diff = round(($to_time - $from_time) / 3600, 2);
-
-            if ($learner and $diff<24) {
-                $data['op_unit_price'] = (FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $data['op_unit_price']) / 100;
+            $orderNetAmount =  $data['order_net_amount'];
+            if($learner && !empty($data['order_discount_total'])) {
+                $this->error = Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon', CommonHelper::getLangId());
+                return false;
+            }
+            $perUnitAmount = $data['op_unit_price'];
+            if(!empty($data['order_discount_total'])) {
+                $perUnitAmount = round(($data['order_net_amount'] / $data['op_qty']),2);
+            }
+            if ($learner and $diff < 24) {
+                $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
             }
             $tObj = new Transaction($data['slesson_learner_id']);
             $data = array(
@@ -119,7 +127,7 @@ class ScheduledLesson extends MyAppModel
                 'utxn_comments' => sprintf(Label::getLabel('LBL_LessonId:_%s_Refund_Payment', CommonHelper::getLangId()), $this->getMainTableRecordId()),
                 'utxn_status' => Transaction::STATUS_COMPLETED,
                 'utxn_type' => Transaction::TYPE_LOADED_MONEY_TO_WALLET,
-                'utxn_credit' => $data['op_unit_price']
+                'utxn_credit' => $perUnitAmount
             );
 
             if (!$tObj->addTransaction($data)) {

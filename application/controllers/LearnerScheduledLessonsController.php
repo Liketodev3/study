@@ -418,6 +418,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             )
         );
 
+        $db = FatApp::getDb();
+        $db->startTransaction();
+
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
         if (empty($lessonRow)) {
@@ -431,6 +434,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
         $sLessonObj->assignValues(array('slesson_status' =>	ScheduledLesson::STATUS_CANCELLED));
         if (!$sLessonObj->save()) {
+            $db->rollbackTransaction();
             Message::addErrorMessage($sLessonObj->getError());
             FatUtility::dieJsonError($sLessonObj->getError());
         }
@@ -440,6 +444,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
         }
+            $db->commitTransaction();
         /* send email to teacher[ */
         $vars = array(
             '{learner_name}' => $lessonRow['learnerFullName'],
