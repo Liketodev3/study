@@ -161,34 +161,35 @@ $.ajax(settings).done(function (response) {
 	setupTeacherLanguages  = function(frm){
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function(t) {
-				//$.mbsmessage.close();
-				teacherLanguagesForm();
-		});
-        // $.confirm({
-        //     title: langLbl.Confirm,
-        //     content: langLbl.languageUpdateAlert,
-        //     buttons: {
-        //         Proceed: {
-        //             text: langLbl.Proceed,
-        //             btnClass: 'btn btn--primary',
-        //             keys: ['enter', 'shift'],
-        //             action: function(){
-        //                 fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function(t) {
-        //                     //$.mbsmessage.close();
-        //                     teacherLanguagesForm();
-        //                 });
-        //             }
-        //         },
-        //         Quit: {
-        //             text: langLbl.Quit,
-        //             btnClass: 'btn btn--secondary',
-        //             keys: ['enter', 'shift'],
-        //             action: function(){
-        //             }
-        //         }
-        //     }
-        // });
+		// fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function(t) {
+		// 		//$.mbsmessage.close();
+		// 		teacherLanguagesForm();
+		// });
+        $.confirm({
+            title: langLbl.Confirm,
+            content: langLbl.languageUpdateAlert,
+            buttons: {
+                Proceed: {
+                    text: langLbl.Proceed,
+                    btnClass: 'btn btn--primary',
+                    keys: ['enter', 'shift'],
+                    action: function(){
+                        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function(t) {
+                            //$.mbsmessage.close();
+                            teacherLanguagesForm();
+														// $("#teacher-tech-lang-price-js").click();
+                        });
+                    }
+                },
+                Quit: {
+                    text: langLbl.Quit,
+                    btnClass: 'btn btn--secondary',
+                    keys: ['enter', 'shift'],
+                    action: function(){
+                    }
+                }
+            }
+        });
 	};
 
 	setPreferredDashboad = function (id){

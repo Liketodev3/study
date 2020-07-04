@@ -33,7 +33,7 @@ class MyAppController extends FatController
         $jsVariables = array(
             'confirmUnLockPrice' => Label::getLabel('LBL_Are_you_sure_to_unlock_this_price!'),
             'confirmRemove' => Label::getLabel('LBL_Do_you_want_to_remove'),
-            'languageUpdateAlert' => Label::getLabel('LBL_On_Submit_Price_Needs_To_Set_Again'),
+            'languageUpdateAlert' => Label::getLabel('LBL_On_Submit_Price_Needs_To_Be_Set'),
             'layoutDirection' => CommonHelper::getLayoutDirection(),
             'processing' => Label::getLabel('LBL_Processing...'),
             'requestProcessing' => Label::getLabel('LBL_Request_Processing...'),
