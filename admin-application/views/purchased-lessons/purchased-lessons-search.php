@@ -62,7 +62,7 @@
 				  $td->appendElement('plaintext', array(), $text,true);
 				break;
 				case 'slesson_status':
-					$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['slesson_id'],'name'=>'order_is_paid','onchange'=>"updateScheduleStatus('".$row['slesson_id']."',this.value)"));
+					$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['slesson_id'],'name'=>'order_is_paid','onchange'=>"updateScheduleStatus(this, '".$row['slesson_id']."',this.value,'".$row[$key]."')"));
 					foreach($statusArr as $status_key => $status_value){
 						$option = $select->appendElement('option',array('value'=>$status_key), $status_value);
 						  if($status_key == $row[$key]){

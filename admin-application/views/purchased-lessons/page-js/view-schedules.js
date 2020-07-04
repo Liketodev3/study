@@ -9,9 +9,9 @@
 		});
 	};
 
-	updateScheduleStatus = function(id,value){
-
-		if(!confirm("Do you really want to update status?")){return;}
+	updateScheduleStatus = function(obj,id,value,oldValue){
+		// var currentValue = $(obj).val();
+		if(!confirm("Do you really want to update status?")){ $(obj).val(oldValue); return;}
 		if(id === null){
 			$.mbsmessage('Invalid Request!');
 			return false;
