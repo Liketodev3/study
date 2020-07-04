@@ -470,4 +470,22 @@ class Order extends MyAppModel
         }
         return $row;
     }
+
+    public function getLessonsByOrderId($orderId)
+    {
+        $orderSearch =  new OrderSearch();
+        $orderSearch->addMultipleFields([
+            'order_id',
+            'order_is_paid',
+            'order_user_id',
+            'order_net_amount',
+            'order_discount_total',
+        ]);
+        $orderSearch->joinOrderProduct();
+        $orderSearch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sl.slesson_order_id = o.order_id', 'sl');
+        $orderSearch->addCondition('o.order_id', '=', $orderId);
+        // $orderSearch->addGroupBy('sl.slesson_order_id');
+        return $orderSearch;
+
+    }
 }

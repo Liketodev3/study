@@ -344,12 +344,18 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         echo FatUtility::convertToJson($jsonArr);
     }
 
-    private function getCancelLessonFrm($deductionNote = false)
+    private function getCancelLessonFrm($deductionNote = false,$showCouponRefundNote = false, $orderId = '')
     {
         $frm = new Form('cancelFrm');
         $fld = $frm->addTextArea(Label::getLabel('LBL_Comment'), 'cancel_lesson_msg', '');
         if ($deductionNote) {
             $frm->addHtml('', 'note_text', '<small>'.sprintf(Label::getLabel('LBL_Note:_Refund_Would_Be_%s_Percent.', $this->siteLangId), FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10)).'</small>');
+        }
+        if($showCouponRefundNote) {
+            $label = Label::getLabel('LBL_Note:_If_you_cancelled_this_lesson_you_total_order_will_cancelled_becuase_you_puchase_this_order_with_discount.', $this->siteLangId);
+            $label .= "<br> ".sprintf(Label::getLabel('LBL_Order_Id:_%s'),$orderId);
+            $frm->addHtml('', 'coupon_refund_note_text', '<small>'.$label.'</small>');
+
         }
         $fld->requirement->setRequired(true);
         $fld = $frm->addHiddenField('', 'slesson_id');
@@ -366,7 +372,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $scheduledLessonObj->joinLearner();
         $scheduledLessonObj->joinOrder();
         $scheduledLessonObj->joinOrderProducts();
-        $scheduledLessonObj->addMultipleFields(['slesson_learner_id', 'slesson_date', 'slesson_start_time','op_lpackage_is_free_trial']);
+        $scheduledLessonObj->addMultipleFields(['slesson_learner_id', 'slesson_date','slesson_order_id','slesson_start_time','op_lpackage_is_free_trial',]);
         $scheduledLessonObj->addCondition('slesson_id', '=', $lessonId);
         $scheduledLessonObj->addCondition('slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
         $scheduledLessonObj->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
@@ -378,6 +384,25 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
 
+        $orderObj =  new Order;
+        $orderSearch = $orderObj->getLessonsByOrderId($lessonRow['slesson_order_id']);
+        $orderSearch->addMultipleFields([
+            'count(sl.slesson_order_id) as totalLessons',
+            'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_NEED_SCHEDULING.' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
+        ]);
+        $orderSearch->addGroupBy('sl.slesson_order_id');
+        $resultSet = $orderSearch->getResultSet();
+        $orderInfo =  FatApp::getDb()->fetch($resultSet);
+        if(empty($orderInfo)) {
+            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
+            FatUtility::dieWithError(Message::getHtml());
+        }
+
+        if(!empty($orderInfo['order_discount_total']) && $orderInfo['totalLessons'] != $orderInfo['needToscheduledLessonsCount']) {
+            Message::addErrorMessage(Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon'));
+            FatUtility::dieWithError(Message::getHtml());
+        }
+        $showCouponRefundNote = (!empty($orderInfo['order_discount_total'])) ? true : false;
         $to_time = strtotime($lessonRow['slesson_date'].' '.$lessonRow['slesson_start_time']);
         $from_time = strtotime(date('Y-m-d H:i:s'));
         $diff = round(($to_time - $from_time) / 3600, 2);
@@ -385,10 +410,11 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if ($diff < 24) {
             $deductionNote = ($lessonRow['op_lpackage_is_free_trial'] == applicationConstants::YES) ? false : true;
         }
-        $frm = $this->getCancelLessonFrm($deductionNote);
+        $frm = $this->getCancelLessonFrm($deductionNote, $showCouponRefundNote, $lessonRow['slesson_order_id']);
 
         $frm->fill(array('slesson_id' => $lessonId));
         $this->set('frm', $frm);
+        $this->set($showCouponRefundNote, $showCouponRefundNote);
         $this->_template->render(false, false);
     }
 
@@ -431,27 +457,20 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Lesson_Already_Cancelled'));
         }
 
-        $orderSearch =  new OrderSearch();
+        $orderObj =  new Order;
+        $orderSearch = $orderObj->getLessonsByOrderId($lessonRow['slesson_order_id']);
         $orderSearch->addMultipleFields([
-            'order_id',
-            'order_is_paid',
-            'order_user_id',
-            'order_net_amount',
-            'order_discount_total',
             'count(sl.slesson_order_id) as totalLessons',
-            'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_CANCELLED.' THEN 1 ELSE 0 END) cancelledLessonsCount',
             'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_NEED_SCHEDULING.' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
         ]);
-        $orderSearch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sl.slesson_order_id = o.order_id', 'sl');
-        $orderSearch->addCondition('o.order_id', '=', $lessonRow['slesson_order_id']);
         $orderSearch->addGroupBy('sl.slesson_order_id');
         $resultSet = $orderSearch->getResultSet();
         $orderInfo =  $db->fetch($resultSet);
         if(empty($orderInfo)) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request", CommonHelper::getLangId()));
         }
-        $totalCancelledAndNeedToscheduledLesson =  $orderInfo['needToscheduledLessonsCount'] + $orderInfo['cancelledLessonsCount'];
-        if(!empty($orderInfo['order_discount_total']) && $orderInfo['totalLessons'] != $totalCancelledAndNeedToscheduledLesson) {
+
+        if(!empty($orderInfo['order_discount_total']) && $orderInfo['totalLessons'] != $orderInfo['needToscheduledLessonsCount']) {
             FatUtility::dieJsonError(Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon', CommonHelper::getLangId()));
         }
         /* ] */
