@@ -34,6 +34,7 @@ getStatisticalData = function(type){
 	});
 }
 $(document).ready(function(){
+
 	setUpJsTabs();
 
 	setUpGoToTop();
@@ -49,6 +50,8 @@ $(document).ready(function(){
 	toggleHeaderCurrencyLanguageForDevices();
 
 	toggleFooterCurrencyLanguage();
+
+
 
 	if($.datepicker){
 
@@ -307,6 +310,10 @@ $(document).ready(function(){
 				return;
 			}
 			$.facebox(ans.html, '');
+			if($("#frmRegisterPopUp #termLabelWrapper").length > 0) {
+					$("#frmRegisterPopUp #termLabelWrapper").find('.field-set').first().addClass('form__list--check');
+			}
+
 		});
 	};
 
