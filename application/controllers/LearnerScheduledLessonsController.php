@@ -414,7 +414,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         $frm->fill(array('slesson_id' => $lessonId));
         $this->set('frm', $frm);
-        $this->set($showCouponRefundNote, $showCouponRefundNote);
+        $this->set('showCouponRefundAlert', $showCouponRefundNote);
         $this->_template->render(false, false);
     }
 
