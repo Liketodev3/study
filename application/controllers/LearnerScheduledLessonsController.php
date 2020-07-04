@@ -414,7 +414,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
                 '"-" as teacherTeachLanguageName',
                 'tcred.credential_email as teacherEmailId',
-                'slesson_status'
+                'slesson_status',
+                'slesson_order_id'
             )
         );
 
@@ -428,6 +429,30 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         if($lessonRow['slesson_status'] == ScheduledLesson::STATUS_CANCELLED) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Lesson_Already_Cancelled'));
+        }
+
+        $orderSearch =  new OrderSearch();
+        $orderSearch->addMultipleFields([
+            'order_id',
+            'order_is_paid',
+            'order_user_id',
+            'order_net_amount',
+            'order_discount_total',
+            'count(sl.slesson_order_id) as totalLessons',
+            'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_CANCELLED.' THEN 1 ELSE 0 END) cancelledLessonsCount',
+            'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_NEED_SCHEDULING.' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
+        ]);
+        $orderSearch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sl.slesson_order_id = o.order_id', 'sl');
+        $orderSearch->addCondition('o.order_id', '=', $lessonRow['slesson_order_id']);
+        $orderSearch->addGroupBy('sl.slesson_order_id');
+        $resultSet = $orderSearch->getResultSet();
+        $orderInfo =  $db->fetch($resultSet);
+        if(empty($orderInfo)) {
+            FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request", CommonHelper::getLangId()));
+        }
+        $totalCancelledAndNeedToscheduledLesson =  $orderInfo['needToscheduledLessonsCount'] + $orderInfo['cancelledLessonsCount'];
+        if(!empty($orderInfo['order_discount_total']) && $orderInfo['totalLessons'] != $totalCancelledAndNeedToscheduledLesson) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon', CommonHelper::getLangId()));
         }
         /* ] */
         /* update lesson status[ */

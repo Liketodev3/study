@@ -108,11 +108,11 @@ class ScheduledLesson extends MyAppModel
             $to_time = strtotime($data['slesson_date'].' '.$data['slesson_start_time']);
             $from_time = strtotime(date('Y-m-d H:i:s'));
             $diff = round(($to_time - $from_time) / 3600, 2);
-            $orderNetAmount =  $data['order_net_amount'];
-            if($learner && !empty($data['order_discount_total'])) {
-                $this->error = Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon', CommonHelper::getLangId());
-                return false;
-            }
+            //$orderNetAmount =  $data['order_net_amount'];
+            // if($learner && !empty($data['order_discount_total'])) {
+            //     $this->error = Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon', CommonHelper::getLangId());
+            //     return false;
+            // }
             $perUnitAmount = $data['op_unit_price'];
             if(!empty($data['order_discount_total'])) {
                 $perUnitAmount = round(($data['order_net_amount'] / $data['op_qty']),2);
