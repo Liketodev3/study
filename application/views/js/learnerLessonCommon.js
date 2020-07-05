@@ -80,10 +80,16 @@ var isLessonCancelAjaxRun = false;
 	};
 
 	cancelLesson = function(id){
+		isLessonCancelAjaxRun = false;
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','cancelLesson',[id]),'',function(t){
-			$.facebox( t,'facebox-medium');
+			$.facebox( t,'facebox-medium cancelLesson');
 		});
 	};
+	
+	closeCancelLessonPopup  = function(obj){
+		$.facebox.close();
+		isLessonCancelAjaxRun = false;
+	}
 
 	cancelLessonSetup = function(frm){
 		if(isLessonCancelAjaxRun) {
@@ -104,7 +110,7 @@ var isLessonCancelAjaxRun = false;
 				/* ] */
 				return ;
 			}
-
+			$.mbsmessage(ans.msg,true, 'alert alert--success');
 			$.facebox.close();
 			location.reload();
 		},{fOutMode:'json'});

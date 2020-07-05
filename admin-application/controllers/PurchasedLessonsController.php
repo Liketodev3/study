@@ -425,7 +425,7 @@ class PurchasedLessonsController extends AdminBaseController
             }
             return false;
         }
-
+		$orderInfo['order_net_amount'] =  FatUtility::float($orderInfo['order_net_amount']);
         if($data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['needToscheduledLessonsCount'] != $orderInfo['totalLessons']){
             $this->error = Label::getLabel("LBL_You_are_not_cancelled_the_order", CommonHelper::getLangId());
             if(FatUtility::isAjaxCall()) {

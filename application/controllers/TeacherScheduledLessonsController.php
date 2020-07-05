@@ -30,7 +30,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
 
         $srch = new stdClass();
-        $this->searchLessons($srch, $post);
+        $this->searchLessons($srch, $post, true);
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
         $srch->addFld(
             array(
@@ -83,7 +83,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->_template->render(false, false);
     }
 
-    private function searchLessons(&$srch, $post = array())
+    private function searchLessons(&$srch, $post = array(), $getCancelledOrder = false)
     {
         $srch = new ScheduledLessonSearch(false);
         $srch->joinOrder();
@@ -91,14 +91,18 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->joinTeacher();
         $srch->joinLearner();
         $srch->joinLearnerCountry($this->siteLangId);
+		$orderIsPaidCondition =  $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
+		if($getCancelledOrder) {
+			 $orderIsPaidCondition->attachCondition('order_is_paid','=',Order::ORDER_IS_CANCELLED,'OR');
+		}
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
-        $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
         $srch->joinTeacherSettings();
         //$srch->joinTeacherTeachLanguage( $this->siteLangId );
         $srch->addOrder('slesson_date', 'ASC');
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addMultipleFields(array(
             'slns.slesson_id',
+			'order_is_paid',
             'slns.slesson_learner_id as learnerId',
             'slns.slesson_teacher_id as teacherId',
             'slns.slesson_slanguage_id',

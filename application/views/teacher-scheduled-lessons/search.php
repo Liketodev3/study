@@ -63,6 +63,15 @@ if (strtotime($curDate) == strtotime($key)) {
 							<span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
 							<span class="span-right"><?php echo $statusArr[$lesson['slesson_status']]; ?></span>
 						</li>
+						
+						<?php if($lesson['order_is_paid'] == Order::ORDER_IS_CANCELLED) {?>
+						<li>
+							<span class="span-left"><?php echo Label::getLabel('LBL_Order_Status'); ?></span>
+							<span class="span-right"><?php echo Label::getLabel('LBL_Canceled'); ?></span>
+						</li><br><br>
+								
+						<?php } ?>
+						
                         <?php if( $lesson['issrep_id'] ){ ?>
                             <li>
                                 <span class="span-left"><?php echo Label::getLabel('LBL_Issue_Status'); ?></span>
@@ -95,7 +104,7 @@ if (strtotime($curDate) == strtotime($key)) {
 					</ul>
 				</div>
 			</div>
-
+		<?php if($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
 			<div class="col-xl-2 col-lg-2 col-md-4 col-positioned">
 				<div class="select-box toggle-group">
 					<div class="buttons-toggle">
@@ -149,6 +158,7 @@ if (strtotime($curDate) == strtotime($key)) {
 					</div>
 				</div>
 			</div>
+			<?php } ?>
 		</div>
 	</div>
 

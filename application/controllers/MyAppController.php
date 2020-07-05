@@ -64,6 +64,7 @@ class MyAppController extends FatController
             'Proceed' => Label::getLabel('LBL_Proceed'),
             'Confirm' => Label::getLabel('LBL_Confirm'),
             'pleaseSelect' => Label::getLabel('VLBL_Please_select'),
+			'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
 
             //'siteCurrencyId' => $this->siteCurrencyId,
             //'controllerName' => $controllerName,
