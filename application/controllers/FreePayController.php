@@ -102,9 +102,6 @@ class FreePayController extends MyAppController
                 CommonHelper::redirectUserReferer();
             }
             $lessonId = $sLessonObj->getMainTableRecordId();
-            $cartObj = new Cart();
-            $cartObj->clear();
-            $cartObj->updateUserCart();
             $emailData =  [];
             $emailData = [
               'teacherFullName' => $orderInfo['teacherFullName'],
@@ -119,7 +116,8 @@ class FreePayController extends MyAppController
             $userNotification = new UserNotifications($orderInfo['op_teacher_id']);
             $userNotification->sendSchLessonByLearnerNotification($lessonId);
         }
-
+		$cartObj->clear();
+		$cartObj->updateUserCart();
         /* ] */
         if ($isAjaxCall) {
             $this->set('redirectUrl', CommonHelper::generateUrl('Custom', 'paymentSuccess'));

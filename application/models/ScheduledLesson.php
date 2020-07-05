@@ -169,7 +169,7 @@ class ScheduledLesson extends MyAppModel
                 $perUnitAmount = round(($data['order_net_amount'] / $data['op_qty']),2);
             }
 			
-            if ($learner && $isDiscountApply && $diff < 24 ) {
+            if ($learner && !$isDiscountApply && $diff < 24 ) {
                 $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
             }
 			
@@ -182,20 +182,22 @@ class ScheduledLesson extends MyAppModel
                 $perUnitAmount = round(($perUnitAmount * $orderInfo['needToscheduledLessonsCount']),2);
 				
             }
-			
-            $tObj = new Transaction($data['slesson_learner_id']);
-            $data = array(
-                'utxn_user_id' => $data['slesson_learner_id'],
-                'utxn_date' => date('Y-m-d H:i:s'),
-                'utxn_comments' => $utxn_comments,
-                'utxn_status' => Transaction::STATUS_COMPLETED,
-                'utxn_type' => $transactionType,
-                'utxn_credit' => $perUnitAmount
-            );
+			//if($perUnitAmount > 0) {
+				$tObj = new Transaction($data['slesson_learner_id']);
+				$data = array(
+					'utxn_user_id' => $data['slesson_learner_id'],
+					'utxn_date' => date('Y-m-d H:i:s'),
+					'utxn_comments' => $utxn_comments,
+					'utxn_status' => Transaction::STATUS_COMPLETED,
+					'utxn_type' => $transactionType,
+					'utxn_credit' => $perUnitAmount
+				);
 
-            if (!$tObj->addTransaction($data)) {
-                trigger_error($tObj->getError(), E_USER_ERROR);
-            }
+				if (!$tObj->addTransaction($data)) {
+					trigger_error($tObj->getError(), E_USER_ERROR);
+					return false;
+				}
+			//}
             return true;
         } else {
             return true;
