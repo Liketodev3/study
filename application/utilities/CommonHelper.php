@@ -295,6 +295,26 @@ class CommonHelper extends FatUtility
         return $number;
     }
 
+    public static function convertExistingToOtherCurrency($currCurrencyId, $val, $otherCurrencyId, $numberFormat = true)
+    {
+        $currencyData = Currency::getAttributesById(
+            $currCurrencyId,
+            array('currency_value')
+        );
+        $currencyValue = $currencyData['currency_value'];
+        $val = $val / $currencyValue;
+
+        $currencyData = Currency::getAttributesById($otherCurrencyId, array('currency_value'));
+        $currencyValue = $currencyData['currency_value'];
+        $val = $val * $currencyValue;
+
+        if ($numberFormat) {
+            $val = number_format($val, 2);
+        }
+
+        return $val;
+    }
+
     public static function displayMoneyFormat($val, $numberFormat = true, $showInConfiguredDefaultCurrency = false, $displaySymbol = true, $stringFormat = false,$cunvertValue = true)
     {
         $currencyValue = self::getCurrencyValue();

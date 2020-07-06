@@ -15,12 +15,42 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
     $studentImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['learnerId'])).'?'.time();
 }
 ?>
-<script>
-var lesson_joined = '<?php echo $lessonData['slesson_learner_join_time']>0 ?>';
-var lesson_completed = '<?php echo $lessonData['slesson_learner_end_time']>0 ?>';
-var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 
+<script>
+
+    var lesson_joined = '<?php echo $lessonData['slesson_learner_join_time']>0 ?>';
+    var lesson_completed = '<?php echo $lessonData['slesson_learner_end_time']>0 ?>';
+    var teacherId = '<?php echo $lessonData['teacherId'] ?>';
+
+    var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
+    var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
+    var chat_id = '<?php echo $chatId; ?>';
+    var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';
+    var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
+    var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
+    var chat_avatar = "<?php echo $studentImage; ?>";
+
+    if(lesson_joined && !lesson_completed){
+        joinLesson(chat_id, teacherId);
+    }
+
+    jQuery(document).ready(function () {
+        if( sessionStorage.getItem('cometChatUserExists') != null){
+            if(sessionStorage.getItem('cometChatUserExists')  != '<?php echo "LESSON-".$lessonData['slesson_id']; ?>'){
+
+                sessionStorage.removeItem('cometChatUserExists');
+            }
+            else if( sessionStorage.getItem('cometChatUserExists') == chat_group_id ){
+                   joinLessonButtonAction();
+                   createChatBox();
+                }
+        }
+        <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
+                $("#lesson_actions").show();
+		<?php }?>
+    });
 	function joinLessonButtonAction() {
+            $("#lesson_actions").hide();
 		$("#joinL").hide();
 		$("#endL").show();
 		checkEveryMinuteStatus();
@@ -28,12 +58,14 @@ var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 		searchFlashCards(document.frmFlashCardSrch);
 		$('.screen-chat-js').show();
 		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
+            $("#lesson_actions").hide();
 			$("#end_lesson_time_div").show();
 		<?php }?>
 	}
 
 	function endLessonButtonAction() {
 		$("#joinL").show();
+        $("#lesson_actions").show();
 		$("#endL").hide();
 		searchFlashCards(document.frmFlashCardSrch);
 		clearInterval(checkEveryMinuteStatusVar);
@@ -43,16 +75,8 @@ var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 		$("#end_lesson_time_div").hide();
 	}
 
-	var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
-	var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
-	var chat_id = '<?php echo $chatId; ?>';
-	var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';
-	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
-	var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
-    var chat_avatar = "<?php echo $studentImage; ?>";
-	if(lesson_joined && !lesson_completed){
-        joinLesson(chat_id, teacherId);
-    }
+
+
 
    function checkEveryMinuteStatus() {
 	   checkEveryMinuteStatusVar = setInterval(function(){
@@ -118,6 +142,7 @@ var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 
 	$(function(){
 		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
+        var showLessonBtn = true;
 		$('#start_lesson_timer').countdowntimer({
 			startDate : "<?php echo $curDate; ?>",
 			dateAndTime : "<?php echo $startTime; ?>",
@@ -125,13 +150,21 @@ var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 			timeUp : function(){
 				fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','startLessonAuthentication',['<?php echo $lessonData['slesson_id'] ?>']),'',function(t){
 					if(t != 0){
+                        showLessonBtn = false;
 						$(".join_lesson_now").show();
 						$("#lesson_actions").hide();
-					}
+					}else{
+                            $("#lesson_actions").show();
+                    }
 				});
 				$("#start_lesson_timer").hide();
 			}
 		});
+        if(showLessonBtn) {
+            if($('#start_lesson_timer').is(":visible")){
+                $("#lesson_actions").show();
+            }
+        }
 		<?php } ?>
 
 		$('#end_lesson_timer').countdowntimer({
@@ -318,23 +351,25 @@ var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 																<?php echo Label::getLabel('LBL_Details'); ?>
 															</span>
 															<span class="span-right">
-																<?php //echo $lessonData['teacherTeachLanguageName'];
-									echo TeachingLanguage::getLangById($lessonData['slesson_slanguage_id']);
-								 ?>
-																<br>
+																<?php
+                                                                    if($lessonData['is_trial'] == applicationConstants::NO) {
+                                                                    //echo $lessonData['teacherTeachLanguageName'];
+									                                echo TeachingLanguage::getLangById($lessonData['slesson_slanguage_id']); ?>
+                                                                    <br>
 																	<?php
-									if( date('Y-m-d', strtotime($startTime)) != "0000-00-00" ){
-										$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
-										$arrReplacements = array(
-											'{n}'	=>	$lessonData['op_lesson_duration'],
-											'{trial-or-paid}'	=>	($lessonData['is_trial']) ? Label::getLabel('LBL_Trial') : '',
-										);
-										foreach( $arrReplacements as $key => $val ){
-											$str = str_replace( $key, $val, $str );
-										}
-										echo $str;
-									}
-                                   ?>
+                                                                    }
+                                									if( date('Y-m-d', strtotime($startTime)) != "0000-00-00" ){
+                                										$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
+                                										$arrReplacements = array(
+                                											'{n}'	=>	$lessonData['op_lesson_duration'],
+                                											'{trial-or-paid}'	=>	($lessonData['is_trial']) ? Label::getLabel('LBL_Trial') : '',
+                                										);
+                                										foreach( $arrReplacements as $key => $val ){
+                                											$str = str_replace( $key, $val, $str );
+                                										}
+                                										echo $str;
+                                									}
+                                                                   ?>
 																</span>
 															</li>
 														</ul>
@@ -368,7 +403,7 @@ var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 																		<span id="end_lesson_timer"></span>
 																	</div>
 																</div>
-																<div class="select-box select-box--up toggle-group" id="lesson_actions">
+																<div class="select-box select-box--up toggle-group" id="lesson_actions" style="display:none">
 																	<div class="buttons-toggle">
 																		<a class="btn btn--large btn--secondary" href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lessonData['slesson_id']; ?>')">
 																			<?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?>

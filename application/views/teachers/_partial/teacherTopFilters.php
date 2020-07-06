@@ -7,7 +7,9 @@ $frmTeacherSrch->getField( 'teach_language_name')->setFieldTagAttribute('class',
 $frmTeacherSrch->getField( 'teach_availability' )->setFieldTagAttribute('class', 'form__input form__input-js');
 $frmTeacherSrch->getField( 'teach_availability' )->setFieldTagAttribute('autocomplete', 'off');
 $frmTeacherSrch->getField( 'teach_availability' )->setFieldTagAttribute('readonly', 'readonly');
-$frmTeacherSrch->getField( 'keyword' )->setFieldTagAttribute('class', 'form__input');
+$keywordfld =   $frmTeacherSrch->getField( 'keyword' );
+$keywordfld->setFieldTagAttribute('class', 'form__input');
+$keywordfld->setFieldTagAttribute('id', 'keyword');
 $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class', 'form__action');
 ?>
 <section class="section section--search">

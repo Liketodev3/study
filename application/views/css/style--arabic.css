@@ -122,6 +122,10 @@ body[dir="rtl"] .box.box--narrow .field_label .-link-underline {
     float: left !important;
 }
 
+body[dir="rtl"] .div-login-form .field_label .-link-underline {
+  float: left !important;
+}
+
 body[dir="rtl"] .field_cover label.field_resp_block {
     float: right;
     display: -webkit-box;
@@ -359,6 +363,8 @@ body[dir="rtl"] .col-list [class*="col-"]:first-child {
 body[dir="rtl"] .buttons-toggle .btn {
     float: right;
 }
+
+
 
 body[dir="rtl"] .buttons-toggle .btn:last-child {
     border-radius: 3px 0 0 3px;

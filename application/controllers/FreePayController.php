@@ -102,23 +102,22 @@ class FreePayController extends MyAppController
                 CommonHelper::redirectUserReferer();
             }
             $lessonId = $sLessonObj->getMainTableRecordId();
-            $cartObj = new Cart();
-            $cartObj->clear();
-            $cartObj->updateUserCart();
             $emailData =  [];
             $emailData = [
               'teacherFullName' => $orderInfo['teacherFullName'],
               'startDate' => MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $cartData['startDateTime'],false, $orderInfo['user_timezone']),
               'startTime' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $cartData['startDateTime'],true, $orderInfo['user_timezone']),
               'endTime' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $cartData['endDateTime'],true, $orderInfo['user_timezone']),
-              'teacherTeachLanguageName' => $orderInfo['teacherTeachLanguageName'],
+              // 'teacherTeachLanguageName' => $orderInfo['teacherTeachLanguageName'],
+              'teacherTeachLanguageName' => Label::getLabel('LBL_N/A', $this->siteLangId),
               'learnerFullName' => $getlearnerFullName['learnerFullName'],
             ];
             EmailHandler::sendlearnerScheduleEmail($orderInfo['credential_email'],$emailData,$this->siteLangId);
             $userNotification = new UserNotifications($orderInfo['op_teacher_id']);
             $userNotification->sendSchLessonByLearnerNotification($lessonId);
         }
-
+		$cartObj->clear();
+		$cartObj->updateUserCart();
         /* ] */
         if ($isAjaxCall) {
             $this->set('redirectUrl', CommonHelper::generateUrl('Custom', 'paymentSuccess'));

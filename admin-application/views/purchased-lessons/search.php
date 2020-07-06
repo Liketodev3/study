@@ -53,9 +53,13 @@ foreach ($arr_listing as $sn=>$row){
 				$str = $row[$key] ? 'Yes' : 'No';
 				$td->appendElement('plaintext', array(), $str, true);
 			break;
+			case 'language':
+				$str = ($row['op_lpackage_is_free_trial']) ? Label::getLabel('LBL_N/A',$adminLangId) : $row[$key] ;
+				$td->appendElement('plaintext', array(), $str, true);
+			break;
 			case 'action':
             if($row['order_is_paid'] == Order::ORDER_IS_PAID){
-				$td->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'View Schedules',true);
+				$td->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array("all",$row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'View Schedules',true);
             }else{
 				$td->appendElement('plaintext', array(), 'N/A');
             }

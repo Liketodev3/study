@@ -178,6 +178,7 @@ class Order extends MyAppModel
             'order_is_wallet_selected',
             'order_wallet_amount_charge',
             'order_currency_code',
+            'order_language_code',
             'order_language_id',
             'order_discount_coupon_code',
             'order_discount_total',
@@ -366,21 +367,21 @@ class Order extends MyAppModel
         }
         $page = (empty($filter['page']) || $filter['page'] <= 0) ? 1 : FatUtility::int($filter['page']);
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
-
+        $srch->addCondition('o.order_type', '=', self::TYPE_LESSON_BOOKING);
 
         if ($filter['keyword']) {
-            $srch->addCondition('o.order_id', 'LIKE', '%'.$filter['keyword'].'%','OR');
+            $condition = $srch->addCondition('o.order_id', 'LIKE', '%'.$filter['keyword'].'%');
             switch ($userType) {
                 case User::USER_TYPE_LEANER:
-                    $srch->addHaving('teacher_name','LIKE', '%'.$filter['keyword'].'%','OR');
+                    $condition->attachCondition('CONCAT(`t`.`user_first_name`," ",`t`.`user_last_name`)','LIKE', '%'.$filter['keyword'].'%','OR');
                     break;
                 case User::USER_TYPE_TEACHER:
-                    $srch->addHaving('learner_name','LIKE', '%'.$filter['keyword'].'%','OR');
+                    $condition->attachCondition('CONCAT(`u`.`user_first_name`," ",`u`.`user_last_name`)','LIKE', '%'.$filter['keyword'].'%','OR');
                     break;
             }
 
         }
-        
+
         $systemTimeZone = MyDate::getTimeZone();
         $user_timezone = MyDate::getUserTimeZone();
 
@@ -388,19 +389,21 @@ class Order extends MyAppModel
 
         $dateFrom = $filter['date_from'];
         if (!empty($dateFrom)) {
+            $dateFrom = $dateFrom . ' 00:00:00';
             $dateFrom = MyDate::changeDateTimezone($dateFrom, $user_timezone, $systemTimeZone);
-            $dateFrom = date('Y-m-d', strtotime($dateFrom));
-            $srch->addCondition('o.order_date_added', '>=', $dateFrom . ' 00:00:00');
+            $dateFrom = date('Y-m-d H:i:s', strtotime($dateFrom));
+            $srch->addCondition('o.order_date_added', '>=', $dateFrom);
         }
 
         $dateTo = $filter['date_to'];
         if (!empty($dateTo)) {
+            $dateTo = $dateTo. ' 23:59:59';
             $dateTo = MyDate::changeDateTimezone($dateTo, $user_timezone, $systemTimeZone);
-            $dateTo = date('Y-m-d', strtotime($dateTo));
-            $srch->addCondition('o.order_date_added', '<=', $dateTo . ' 23:59:59');
+            $dateTo = date('Y-m-d H:i:s', strtotime($dateTo));
+            $srch->addCondition('o.order_date_added', '<=', $dateTo);
         }
 
-        $srch->addCondition('o.order_type', '=', self::TYPE_LESSON_BOOKING);
+
         $srch->addMultipleFields(
             array(
             'order_id',
@@ -420,7 +423,8 @@ class Order extends MyAppModel
         $srch->setPageNumber($page);
         $srch->setPageSize($pageSize);
         $rs = $srch->getResultSet();
-
+        // echo $srch->getQuery();
+        // die;
         $pagingArr = array(
             'pageCount'	=>	$srch->pages(),
             'page'	=>	$page,
@@ -431,5 +435,57 @@ class Order extends MyAppModel
         $dataArr['Orders'] = FatApp::getDb()->fetchAll($rs);
         $dataArr['pagingArr'] = $pagingArr;
         return $dataArr;
+    }
+
+
+    public function getOrderPayments($criteria = array())
+    {
+        if (count($criteria) == 0) {
+            return array();
+        }
+
+        $srch = new SearchBase(static::DB_TBL_ORDER_PAYMENTS, 'opayment');
+
+        foreach ($criteria as $key => $val) {
+            if (strval($val) == '') {
+                continue;
+            }
+            switch ($key) {
+                case 'id':
+                    $srch->addCondition('opayment.opayment_id', '=', intval($val));
+                    break;
+                case 'order_id':
+                    $srch->addCondition('opayment.opayment_order_id', '=', $val);
+                    break;
+            }
+        }
+
+        $srch->doNotLimitRecords();
+        $srch->doNotCalculateRecords(true);
+        $srch->addOrder('opayment_id');
+
+        $row = FatApp::getDb()->fetchAll($srch->getResultSet(), 'opayment_id');
+        if ($row == false) {
+            return array();
+        }
+        return $row;
+    }
+
+    public function getLessonsByOrderId($orderId)
+    {
+        $orderSearch =  new OrderSearch();
+        $orderSearch->addMultipleFields([
+            'order_id',
+            'order_is_paid',
+            'order_user_id',
+            'order_net_amount',
+            'order_discount_total',
+        ]);
+        $orderSearch->joinOrderProduct();
+        $orderSearch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sl.slesson_order_id = o.order_id', 'sl');
+        $orderSearch->addCondition('o.order_id', '=', $orderId);
+        // $orderSearch->addGroupBy('sl.slesson_order_id');
+        return $orderSearch;
+
     }
 }

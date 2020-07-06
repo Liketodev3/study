@@ -11,19 +11,25 @@ $fldSubmit->setFieldTagAttribute( 'class', 'btn btn--secondary btn--large' );
 <div>
 	<!--<div class="icon-payment"><img src="images/paypal.png" alt="" ></div>
 	<br><br>-->
-	<h5><?php
+	<h5>
+	<?php
 		$headingStr = Label::getLabel('LBL_Pay_using_{payment-method-name}');
 		echo str_replace( '{payment-method-name}', $paymentMethod["pmethod_name"], $headingStr);
-	?></h5><br>
+	?>
+	</h5><br>
 	<p><?php echo $paymentMethod["pmethod_description"]?><br/><br/></p>
 	<h6><?php
 		echo Label::getLabel('LBL_Net_Payable_:');
-		echo CommonHelper::displayMoneyFormat( $netAmmount ); ?></h6>
+		echo CommonHelper::displayMoneyFormat( $netAmmount ); ?>
+		<?php if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) { ?>
+		<p><?php echo CommonHelper::currencyDisclaimer($siteLangId, $netAmmount); ?></p>
+		<?php } ?>
+	</h6>
 	<span class="-gap"></span>
 	<?php
-	if( !isset($error) ){
-		echo $frm->getFormHtml();
-	}
+		if( !isset($error) ){
+			echo $frm->getFormHtml();
+		}
 	?>
 </div>
 <script type="text/javascript">

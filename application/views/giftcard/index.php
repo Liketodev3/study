@@ -114,10 +114,11 @@ $clearFld->setFieldTagAttribute('id','clear');
           <div>
             <fieldset>  <?php echo $formData->getFieldHtml('save'); ?>
             <?php echo $formData->getFieldHtml('clear'); ?>
-            <?php echo $formData->getExternalJs(); ?>
-</fieldset>
+
+        </fieldset>
           </div>
         </form>
+        <?php echo $formData->getExternalJs(); ?>
         </div>
 
 		</div>

@@ -120,10 +120,10 @@ class GiftcardController extends LoggedUserController
     {
         $frm = new Form('giftcardForm');
         $frm->setFormTagAttribute('class', 'form login-form-front');
-        $giftcardPrice = $frm->addFloatField("Giftcard Amount", 'giftcard_price', '', array('placeholder'=>Label::getLabel('LBL_Giftcard_Amount'), "onkeyup" => "cardUpdate(this)"));
+        $giftcardPrice = $frm->addFloatField("Giftcard Amount", 'giftcard_price', '', array('placeholder'=>Label::getLabel('LBL_Giftcard_Amount'), "onkeyup" => "cardUpdate(this)",'id'=>"giftcard_price"));
         $giftcardPrice->requirements()->setRequired();
-        $giftcardPrice->requirements()->setRange(1, 9999999);
-        $giftcardPrice->requirements()->setFloatPositive();
+        $giftcardPrice->requirements()->setLength(1,6);
+        // $giftcardPrice->requirements()->setFloatPositive();
         $giftcardPrice->requirements()->setRegularExpressionToValidate("^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$");
         $userObj = new User($this->user_id);
         $userInfo = $userObj->getUserInfo($this->user_id);

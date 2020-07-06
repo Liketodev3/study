@@ -80,10 +80,16 @@ var isLessonCancelAjaxRun = false;
 	};
 
 	cancelLesson = function(id){
+		isLessonCancelAjaxRun = false;
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','cancelLesson',[id]),'',function(t){
-			$.facebox( t,'facebox-medium');
+			$.facebox( t,'facebox-medium cancelLesson');
 		});
 	};
+	
+	closeCancelLessonPopup  = function(obj){
+		$.facebox.close();
+		isLessonCancelAjaxRun = false;
+	}
 
 	cancelLessonSetup = function(frm){
 		if(isLessonCancelAjaxRun) {
@@ -92,10 +98,27 @@ var isLessonCancelAjaxRun = false;
 		isLessonCancelAjaxRun = true;
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'cancelLessonSetup'), data , function(t) {
-				$.facebox.close();
-				location.reload();
-		});
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','cancelLessonSetup'),data,function(ans){
+			isLessonCancelAjaxRun = false;
+			if (ans.status != 1) {
+				$(document).trigger('close.mbsmessage');
+				$.mbsmessage(ans.msg,true, 'alert alert--danger');
+				/* Custom Code[ */
+				if( ans.redirectUrl ){
+					setTimeout(function(){ window.location.href = ans.redirectUrl }, 3000);
+				}
+				/* ] */
+				return ;
+			}
+			$.mbsmessage(ans.msg,true, 'alert alert--success');
+			$.facebox.close();
+			location.reload();
+		},{fOutMode:'json'});
+
+		// fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'cancelLessonSetup'), data , function(t) {
+		// 		$.facebox.close();
+		// 		location.reload();
+		// });
 	};
 
 	issueReported = function(id){

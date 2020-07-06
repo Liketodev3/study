@@ -36,21 +36,22 @@ class PaypalStandardPayController extends PaymentController
         $paymentSettings = $pmObj->getPaymentSettings();
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $paymentGatewayCharge = $orderPaymentObj->getOrderPaymentGatewayAmount();
-        $orderSrch = new OrderSearch();
-        $orderSrch->joinUser();
-        $orderSrch->joinUserCredentials();
-        $orderSrch->addCondition('order_id', '=', $orderId);
-        $orderSrch->addMultipleFields(array(
-            'order_id',
-            'order_language_id',
-            'order_currency_code',
-            'u.user_first_name as learner_first_name',
-            'cred.credential_email as learner_email',
-            'order_language_code',
-            '"FATbit_SP" as paypal_bn'
-        ));
-        $orderRs = $orderSrch->getResultSet();
-        $orderInfo = FatApp::getDb()->fetch($orderRs);
+        // $orderSrch = new OrderSearch();
+        // $orderSrch->joinUser();
+        // $orderSrch->joinUserCredentials();
+        // $orderSrch->addCondition('order_id', '=', $orderId);
+        // $orderSrch->addMultipleFields(array(
+        //     'order_id',
+        //     'order_language_id',
+        //     'order_currency_code',
+        //     'u.user_first_name as learner_first_name',
+        //     'cred.credential_email as learner_email',
+        //     'order_language_code',
+        //     '"FATbit_SP" as paypal_bn'
+        // ));
+        // $orderRs = $orderSrch->getResultSet();
+
+        $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
         $actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true) ? $this->liveEnvironmentUrl : $this->testEnvironmentUrl;
         $frm = new Form('frmPayPalStandard', array('id'=>'frmPayPalStandard', 'action'=>$actionUrl));
         $frm->addHiddenField('', 'cmd', "_cart");
@@ -69,14 +70,14 @@ class PaypalStandardPayController extends PaymentController
         $frm->addHiddenField('', 'amount_1', $paymentGatewayCharge);
         $frm->addHiddenField('', 'quantity_1', 1);
         $frm->addHiddenField('', 'currency_code', $orderInfo["order_currency_code"]);
-        $frm->addHiddenField('', 'first_name', $orderInfo["learner_first_name"]);
+        $frm->addHiddenField('', 'first_name', $orderInfo["user_name"]);
         $frm->addHiddenField('', 'address1', '');
         $frm->addHiddenField('', 'address2', '');
         $frm->addHiddenField('', 'city', '');
         $frm->addHiddenField('', 'zip', '');
         $frm->addHiddenField('', 'country', '');
         $frm->addHiddenField('', 'address_override', 0);
-        $frm->addHiddenField('', 'email', $orderInfo['learner_email']);
+        $frm->addHiddenField('', 'email', $orderInfo['user_email']);
         $frm->addHiddenField('', 'invoice', $orderInfo['order_id']);
         $frm->addHiddenField('', 'lc', $orderInfo['order_language_code']);
         $frm->addHiddenField('', 'rm', 2);
@@ -107,7 +108,8 @@ class PaypalStandardPayController extends PaymentController
 
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
-        $orderInfo = $orderPaymentObj->getOrderById($orderId);
+        // $orderInfo = $orderPaymentObj->getOrderById($orderId);
+        $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
         /* To check for valid currencies accepted by paypal gateway [ */
         if (count($this->currenciesAccepted) && !in_array($orderInfo["order_currency_code"], $this->currenciesAccepted)) {
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_ORDER_CURRENCY_PASSED_TO_GATEWAY', $this->siteLangId));

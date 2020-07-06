@@ -12,11 +12,13 @@ function cartListing(frm) {
 }
 
 function cardUpdate(obj) {
-
+		$(document.giftcardForm).validate();
     var $this = $(obj).val();
-
     if (!isNaN($this)) {
-        $(".giftcardPrice").html('');
+				if($("#giftcard_price").next('ul.errorlist').length > 0) {
+					return;
+				}
+				$(".giftcardPrice").html('');
         $(".giftcardPrice").html($this);
     }else{
 			$(obj).val('');
@@ -25,7 +27,7 @@ function cardUpdate(obj) {
 }
 function cleardata() {
 	document.giftcardForm.reset();
-cardUpdate(document.giftcardForm.giftcard_price);
+	$(".giftcardPrice").html('');
 
 }
 
@@ -33,69 +35,70 @@ cardUpdate(document.giftcardForm.giftcard_price);
 
 function validateCustomFields() {
     var error = 0;
-    $(".recipient_name").each(function() {
-
-        if ($.trim($(this).val()) == '') {
-
-            $(this).val($.trim($(this).val()));
-            $(this).css("border", "1px solid red");
-
-            if (parseInt($(this).next(".errorlist").length) == 0) {
-                $("<ul class='errorlist'><li><a href='javascript:void(0)'>Recipient Name is mandatory.</a></li></ul>").insertAfter($(this));
-            }
-            error++;
-        } else {
-            if (error > 0) {
-                error--;
-            }
-
-            $(this).css("border", "1px solid var(--border-color)");
-            $(this).next(".errorlist").remove();
-
-        }
-
-    });
-
-    $(".recipient_email").each(function() {
-
-        if ($.trim($(this).val()) == '') {
-
-            $(this).val($.trim($(this).val()));
-            $(this).css("border", "1px solid red");
-
-            if (parseInt($(this).next(".errorlist").length) == 0) {
-                $("<ul class='errorlist'><li><a href='javascript:void(0)'>Recipient Email is mandatory.</a></li></ul>").insertAfter($(this));
-            }
-
-            error++;
-        } else if (!testPattern($.trim($(this).val()), "^((?:(?:(?:[a-zA-Z0-9][\\.\\-\\+_]?)*)[a-zA-Z0-9])+)\\@((?:(?:(?:[a-zA-Z0-9][\\.\\-_]?){0,62})[a-zA-Z0-9])+)\\.([a-zA-Z0-9]{2,6})$")) {
-
-            $(this).css("border", "1px solid red");
-            if (parseInt($(this).next(".errorlist").length) == 0) {
-                $("<ul class='errorlist'><li><a href='javascript:void(0)'>Please enter valid email ID for Recipient Email.</a></li></ul>").insertAfter($(this));
-            } else {
-                $(this).next(".errorlist").remove();
-                $("<ul class='errorlist'><li><a href='javascript:void(0)'>Please enter valid email ID for Recipient Email.</a></li></ul>").insertAfter($(this));
-            }
-
-            error++;
-        } else {
-            if (error > 0) {
-                error--;
-            }
-
-            $(this).css("border", "1px solid var(--border-color)");
-            $(this).next(".errorlist").remove();
-
-        }
-
-    });
-
-    if (error > 0) {
-        $('#frm_fat_id_giftcardForm').attr('onsubmit', 'return false;');
-    } else {
-        $('#frm_fat_id_giftcardForm').attr('onsubmit', 'return true;');
-    }
+			if (!$(document.giftcardForm).validate()) return;
+    // $(".recipient_name").each(function() {
+		//
+    //     if ($.trim($(this).val()) == '') {
+		//
+    //         $(this).val($.trim($(this).val()));
+    //         $(this).css("border", "1px solid red");
+		//
+    //         if (parseInt($(this).next(".errorlist").length) == 0) {
+    //             $("<ul class='errorlist'><li><a href='javascript:void(0)'>Recipient Name is mandatory.</a></li></ul>").insertAfter($(this));
+    //         }
+    //         error++;
+    //     } else {
+    //         if (error > 0) {
+    //             error--;
+    //         }
+		//
+    //         $(this).css("border", "1px solid var(--border-color)");
+    //         $(this).next(".errorlist").remove();
+		//
+    //     }
+		//
+    // });
+		//
+    // $(".recipient_email").each(function() {
+		//
+    //     if ($.trim($(this).val()) == '') {
+		//
+    //         $(this).val($.trim($(this).val()));
+    //         $(this).css("border", "1px solid red");
+		//
+    //         if (parseInt($(this).next(".errorlist").length) == 0) {
+    //             $("<ul class='errorlist'><li><a href='javascript:void(0)'>Recipient Email is mandatory.</a></li></ul>").insertAfter($(this));
+    //         }
+		//
+    //         error++;
+    //     } else if (!testPattern($.trim($(this).val()), "^((?:(?:(?:[a-zA-Z0-9][\\.\\-\\+_]?)*)[a-zA-Z0-9])+)\\@((?:(?:(?:[a-zA-Z0-9][\\.\\-_]?){0,62})[a-zA-Z0-9])+)\\.([a-zA-Z0-9]{2,6})$")) {
+		//
+    //         $(this).css("border", "1px solid red");
+    //         if (parseInt($(this).next(".errorlist").length) == 0) {
+    //             $("<ul class='errorlist'><li><a href='javascript:void(0)'>Please enter valid email ID for Recipient Email.</a></li></ul>").insertAfter($(this));
+    //         } else {
+    //             $(this).next(".errorlist").remove();
+    //             $("<ul class='errorlist'><li><a href='javascript:void(0)'>Please enter valid email ID for Recipient Email.</a></li></ul>").insertAfter($(this));
+    //         }
+		//
+    //         error++;
+    //     } else {
+    //         if (error > 0) {
+    //             error--;
+    //         }
+		//
+    //         $(this).css("border", "1px solid var(--border-color)");
+    //         $(this).next(".errorlist").remove();
+		//
+    //     }
+		//
+    // });
+		//
+    // if (error > 0) {
+    //     $('#frm_fat_id_giftcardForm').attr('onsubmit', 'return false;');
+    // } else {
+    //     $('#frm_fat_id_giftcardForm').attr('onsubmit', 'return true;');
+    // }
 
 }
 

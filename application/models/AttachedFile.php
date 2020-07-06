@@ -225,7 +225,12 @@ class AttachedFile extends MyAppModel
             'image/jpeg',
             'image/jpg',
         );
-        if (!in_array(mime_content_type($fl), $mimtypeArr)) {
+
+        if(empty($mimeType)) {
+            $mimeType = mime_content_type($fl);
+        }
+
+        if (!in_array($mimeType,$mimtypeArr)) {
             $this->error = Label::getLabel('MSG_UNRECOGNISED_FILE', $this->commonLangId);
             return false;
         }
