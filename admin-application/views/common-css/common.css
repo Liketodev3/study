@@ -8,3 +8,43 @@ background: #f3f6f8;
 padding-top: 10px;
 padding-bottom: 2px;
 }
+
+.attachment-file {
+    position: relative;
+    padding: 0 0 0 30px;
+    color: inherit;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-height: 24px;
+    display: inline-block;
+}
+.-hide-desktop {
+    display: none !important;
+}
+
+.attachment-file .inline-icon {
+    position: absolute;
+    left: 0;
+    top: 2px;
+}
+
+.inline-icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.inline-icon .svg-icon {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 100%;
+    overflow: hidden;
+}

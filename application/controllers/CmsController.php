@@ -17,6 +17,7 @@ class CmsController extends MyAppController
             FatUtility::exitWithErrorCode(404);
         }
         $blockData = array();
+        $teacherRequestStatus = null;
         if ($cPage['cpage_layout']==ContentPage::CONTENT_PAGE_LAYOUT1_TYPE) {
             $srch = new searchBase(ContentPage::DB_TBL_CONTENT_PAGES_BLOCK_LANG);
             $srch->doNotCalculateRecords();
@@ -27,8 +28,16 @@ class CmsController extends MyAppController
             $srchRs = $srch->getResultSet();
             $blockData = FatApp::getDb()->fetchAll($srchRs, 'cpblocklang_block_id');
         }
+        if(UserAuthentication::isUserLogged()) {
+            $requestData = TeacherRequest::getData(UserAuthentication::getLoggedUserId(true));
+            if(isset($requestData['utrequest_status'])){
+                $teacherRequestStatus = $requestData['utrequest_status'];
+            }
+
+        }
         $this->set('blockData', $blockData);
         $this->set('cPage', $cPage);
+        $this->set('teacherRequestStatus', $teacherRequestStatus);
         if ($isAppUser) {
             $this->set('isAppUser', $isAppUser);
             $this->_template->render(false, false);

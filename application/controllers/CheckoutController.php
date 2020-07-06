@@ -301,10 +301,12 @@ class CheckoutController extends LoggedUserController{
 
 		/* addOrder[ */
 		$order_id = isset($_SESSION['shopping_cart']["order_id"]) ? $_SESSION['shopping_cart']["order_id"] : false;
-		$orderNetAmount = $cartData["orderNetAmount"] * CommonHelper::getCurrencyValue();
-		$walletAmountCharge = $cartData["walletAmountCharge"] * CommonHelper::getCurrencyValue();
-		$coupon_discount_total = $cartData['cartDiscounts']['coupon_discount_total'] * CommonHelper::getCurrencyValue();
-
+		// $orderNetAmount = $cartData["orderNetAmount"] * CommonHelper::getCurrencyValue();
+		$orderNetAmount = $cartData["orderNetAmount"];
+		// $walletAmountCharge = $cartData["walletAmountCharge"] * CommonHelper::getCurrencyValue();
+		$walletAmountCharge = $cartData["walletAmountCharge"];
+		// $coupon_discount_total = $cartData['cartDiscounts']['coupon_discount_total'] * CommonHelper::getCurrencyValue();
+		$coupon_discount_total = $cartData['cartDiscounts']['coupon_discount_total'];
 		$orderData = array(
 			'order_id' => $order_id,
 			'order_type' => Order::TYPE_LESSON_BOOKING,
@@ -343,7 +345,8 @@ class CheckoutController extends LoggedUserController{
             else {
                 $teacherCommission = $cartData['itemPrice'];
             }
-			$teacherCommission = $teacherCommission * CommonHelper::getCurrencyValue();
+			// $teacherCommission = $teacherCommission * CommonHelper::getCurrencyValue();
+			$teacherCommission = $teacherCommission;
 
             /*$maxCommission = FatApp::getConfig('CONF_MAX_COMMISSION', FatUtility::VAR_INT, 0);
             if($maxCommission > 0 AND $maxCommission <= $teacherCommission){
@@ -403,7 +406,7 @@ class CheckoutController extends LoggedUserController{
 
 		$userId = UserAuthentication::getLoggedUserId();
 		$userWalletBalance = User::getUserBalance($userId);
-		$userWalletBalance = $userWalletBalance * CommonHelper::getCurrencyValue();
+		// $userWalletBalance = $userWalletBalance * CommonHelper::getCurrencyValue();
 
 		if ( $orderNetAmount > 0 && $cartData['cartWalletSelected'] && ($userWalletBalance >= $orderNetAmount) && !$pmethodId ) {
 			$redirectUrl = CommonHelper::generateUrl('WalletPay','Charge', array($order->getOrderId()) );

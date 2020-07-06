@@ -38,6 +38,23 @@ $("document").ready(function(){
 		}
 		searchTeachers( frm );
 	});
+
+     $('input[name=\'keyword\']').change(function(e){
+               if (!$(document.frmTeacherSrch).validate()){
+                       e.preventDefault();
+                       return;
+               }
+
+     });
+
+     $('input[name=\'btnTeacherSrchSubmit\']').click(function(e){
+               if (!$(document.frmTeacherSrch).validate()){
+                       e.preventDefault();
+                       return;
+               }
+     });
+
+
 	var priceFilterMinValue = 	$("input[name='priceFilterMinValue']").val();
 	var priceFilterMaxValue = 	$("input[name='priceFilterMaxValue']").val();
 	$("input[name='priceFilterMinValue'], input[name='priceFilterMaxValue']").focus(function(){
@@ -180,9 +197,16 @@ function htmlEncode(value){
 		});
 	};
 
+	removeTecherNameValidation = function(){
+			if($("#keyword").hasClass('error')){
+				$("#keyword").val('');
+					$("#keyword").next('ul.errorlist').remove();
+						$("#keyword").removeClass('error');
+			}
+		};
+
 	searchTeachers = function(frm){
-		if (!$(frm).validate()) return;
-		
+		removeTecherNameValidation();
 		var data = fcom.frmData(frm);
 		//alert( data );
 		var dv = $("#teachersListingContainer");

@@ -2,15 +2,15 @@
 <section class="section section--grey section--page">
 	<div class="container container--fixed">
 		<div class="page-panel -clearfix">
-			
+
 			<!--panel left start here-->
 			<div class="page-panel__left">
 				<?php $this->includeTemplate('account/_partial/dashboardNavigation.php'); ?>
 			</div>
             <!--panel left end here-->
-			
+
 			<div class="page-panel__right">
-				
+
 				<!--page-head start here-->
 				<div class="page-head">
 					<div class="d-flex justify-content-between align-items-center">
@@ -47,7 +47,7 @@
 								</a>
 							</li>
 							<li class="">
-								<a href="javascript:void(0);" onClick="teacherSettingsForm()">
+								<a href="javascript:void(0);" id="teacher-tech-lang-price-js" onClick="teacherSettingsForm()">
 								<?php echo Label::getLabel('LBL_Price');?>
 								</a>
 							</li>
@@ -87,7 +87,7 @@
 					</div>
 				</div>
 
-				<?php 
+				<?php
 				/* <div class="cols--group">
 					<!--div class="panel__head">
 					<h2><?php echo Label::getLabel('LBL_Profile');?></h2>
@@ -97,7 +97,7 @@
 					</div-->
 				</div> */
 				?>
-				
+
 			</div>
 		</div>
 	</div>

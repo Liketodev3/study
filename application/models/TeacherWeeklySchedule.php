@@ -135,9 +135,13 @@ class TeacherWeeklySchedule extends MyAppModel
             return false;
         }
         $postJson = json_decode($post['data']);
+        if(empty($postJson)) {
+            return true;
+        }
         $postJsonArr = array();
         $dateArray = [];
         $postDataId = [];
+        $needToDelete = [];
         /* code added  on 12-07-2019 */
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
@@ -154,16 +158,19 @@ class TeacherWeeklySchedule extends MyAppModel
             $postJsonArr[] = $postObj;
 
         }
-        $db = FatApp::getDb();
-        $srch = new TeacherWeeklyScheduleSearch();
-        $srch->addMultipleFields(array('twsch_id','twsch_is_available'));
-        $srch->addCondition('twsch_user_id', '=', $userId);
-        $srch->addCondition('twsch_date', 'IN', $dateArray);
-        $srch->doNotLimitRecords();
-        $srch->doNotCalculateRecords();
-        $rs = $srch->getResultSet();
-        $dateRecordId = $db->fetchAllAssoc($rs);
-        $needToDelete = array_diff_key($dateRecordId,$postDataId);
+        if(!empty($dateArray)) {
+            $db = FatApp::getDb();
+            $srch = new TeacherWeeklyScheduleSearch();
+            $srch->addMultipleFields(array('twsch_id','twsch_is_available'));
+            $srch->addCondition('twsch_user_id', '=', $userId);
+            $srch->addCondition('twsch_date', 'IN', $dateArray);
+            $srch->doNotLimitRecords();
+            $srch->doNotCalculateRecords();
+            $rs = $srch->getResultSet();
+            $dateRecordId = $db->fetchAllAssoc($rs);
+            $needToDelete = array_diff_key($dateRecordId,$postDataId);
+        }
+
 
         $db->startTransaction();
 

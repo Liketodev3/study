@@ -43,6 +43,7 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 							?> </p>
 						</div>
                         <div class="tabled">
+                            <?php if($cartData['lpackage_is_free_trial'] == applicationConstants::NO){ ?>
                             <div class="tabled__cell">
                             <span class="-color-light"><?php echo Label::getLabel('LBL_Language'); ?></span><br>
 							<span class="cart-lang-id-js">
@@ -51,6 +52,7 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 							} ?>
 							</span>
                             </div>
+                            <?php } ?>
                             <div class="tabled__cell">
                             <span class="-color-light"><?php echo Label::getLabel('LBL_Duration'); ?></span><br>
                             <?php echo ($cartData['lpackage_is_free_trial'])?FatApp::getConfig( 'conf_trial_lesson_duration', FatUtility::VAR_INT, 30 ):FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60); ?> <?php echo Label::getLabel('LBL_Mins/Lesson'); ?>

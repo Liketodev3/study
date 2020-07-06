@@ -35,6 +35,7 @@ if (strtotime($curDate) == strtotime($key)) {
 				</div>
 				<h6><?php echo $lesson['learnerFname']; ?></h6>
 				<p><?php echo $lesson['learnerCountryName']; ?> <br>
+					<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['slesson_order_id']; ?> <br>
 				<?php /* echo CommonHelper::getDateOrTimeByTimeZone($lesson['learnerTimeZone'],'H:i A P'); */ ?></p>
 			</div>
 
@@ -62,6 +63,15 @@ if (strtotime($curDate) == strtotime($key)) {
 							<span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
 							<span class="span-right"><?php echo $statusArr[$lesson['slesson_status']]; ?></span>
 						</li>
+						
+						<?php if($lesson['order_is_paid'] == Order::ORDER_IS_CANCELLED) {?>
+						<li>
+							<span class="span-left"><?php echo Label::getLabel('LBL_Order_Status'); ?></span>
+							<span class="span-right"><?php echo Label::getLabel('LBL_Canceled'); ?></span>
+						</li><br><br>
+								
+						<?php } ?>
+						
                         <?php if( $lesson['issrep_id'] ){ ?>
                             <li>
                                 <span class="span-left"><?php echo Label::getLabel('LBL_Issue_Status'); ?></span>
@@ -71,8 +81,9 @@ if (strtotime($curDate) == strtotime($key)) {
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Details'); ?></span>
 							<span class="span-right">
-								<?php echo empty($teachLanguages[$lesson['slesson_slanguage_id']])?'':$teachLanguages[$lesson['slesson_slanguage_id']] ; ?><br>
-								<?php
+								<?php if($lesson['is_trial'] == applicationConstants::NO) {
+									 echo empty($teachLanguages[$lesson['slesson_slanguage_id']])?'':$teachLanguages[$lesson['slesson_slanguage_id']] ; ?><br>
+								<?php }
 								if( $lesson['slesson_date'] != "0000-00-00" ){
 									$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
 									$arrReplacements = array(
@@ -93,7 +104,7 @@ if (strtotime($curDate) == strtotime($key)) {
 					</ul>
 				</div>
 			</div>
-
+		<?php if($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
 			<div class="col-xl-2 col-lg-2 col-md-4 col-positioned">
 				<div class="select-box toggle-group">
 					<div class="buttons-toggle">
@@ -147,6 +158,7 @@ if (strtotime($curDate) == strtotime($key)) {
 					</div>
 				</div>
 			</div>
+			<?php } ?>
 		</div>
 	</div>
 

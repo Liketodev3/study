@@ -481,4 +481,19 @@ class TeacherRequestsController extends AdminBaseController
                 break;
         }
     }
+
+        public function downloadResume($userId, $subRecordId) {
+          $subRecordId = FatUtility::int($subRecordId);
+          if ($subRecordId < 1) {
+              Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
+              FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequests'));
+          }
+          $fileRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $userId, $subRecordId);
+
+          if (!$fileRow || $fileRow['afile_physical_path'] == "") {
+              Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
+              FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequests'));
+          }
+          AttachedFile::downloadFile($fileRow['afile_name'], $fileRow['afile_physical_path']);
+    }
 }

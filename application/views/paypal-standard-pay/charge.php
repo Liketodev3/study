@@ -22,15 +22,16 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
 								<h1 class="-color-secondary">We're redirecting you!!</h1>
 								<h4>Please wait...</h4>
 								</div>
-							</div>						
+							</div>
 							<div class="message-display">
-								<p class="">
-								<?php echo Label::getLabel('LBL_Payable_Amount',$siteLangId);?> : <strong><?php //echo CommonHelper::displayMoneyFormat($paymentAmount)
-								echo $sign.$currencySymbolLeft.$paymentAmount.$currencySymbolRight;
-								?></strong> </p>
+								<p class=""><?php echo Label::getLabel('LBL_Payable_Amount',$siteLangId);?> : <strong><?php echo CommonHelper::displayMoneyFormat($paymentAmount)?></strong> </p>
+								<?php if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) { ?>
+									<p><?php echo CommonHelper::currencyDisclaimer($siteLangId, $paymentAmount); ?></p>
+								<?php } ?>
 
 								<p class="">
-								<?php echo Label::getLabel('LBL_Order_Invoice',$siteLangId);?>: <strong><?php echo $orderInfo["order_id"] ;/* displayNotApplicable($orderInfo["order_id"]) */?></strong> </p>
+									<?php echo Label::getLabel('LBL_Order_Invoice',$siteLangId);?>: <strong><?php echo $orderInfo["order_id"] ;/* displayNotApplicable($orderInfo["order_id"]) */?></strong>
+								</p>
 							</div>
 							<div class="-align-center">
 								<div class="payment-from">
@@ -55,5 +56,5 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
 <script type="text/javascript">
 	$(function(){
 		setTimeout(function(){ $('form[name="frmPayPalStandard"]').submit() }, 5000);
-	}); 
-</script> 
+	});
+</script>

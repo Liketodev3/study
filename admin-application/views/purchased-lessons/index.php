@@ -19,11 +19,11 @@
 							<h4> <?php echo Label::getLabel('LBL_Search...',$adminLangId); ?></h4>
 						</div>
 						<div class="sectionbody space togglewrap" style="display:none;">
-							<?php 
-							$frmSearch->setFormTagAttribute ( 'onsubmit', 'searchPuchasedLessons(this,1); return(false);');
+							<?php
+							$frmSearch->setFormTagAttribute ( 'onsubmit', 'searchOrderPuchasedLessons(this,1); return(false);');
 							$frmSearch->setFormTagAttribute ( 'class', 'web_form' );
-							$frmSearch->developerTags['colClassPrefix'] = 'col-md-';					
-							$frmSearch->developerTags['fld_default_col'] = 6;					
+							$frmSearch->developerTags['colClassPrefix'] = 'col-md-';
+							$frmSearch->developerTags['fld_default_col'] = 6;
 
 							$fld = $frmSearch->getField('btn_clear');
 							$fld->addFieldTagAttribute('onclick','clearUserSearch()');
@@ -31,9 +31,9 @@
 								?>
 						</div>
 					</section>
-                   
+
                     <section class="section">
-						
+
 						<div class="sectionbody">
 							<div class="tablewrap">
 								<div id="userListing">
@@ -42,7 +42,7 @@
 							</div>
 						</div>
 					</section>
-			 
+
 				</div>
 			</div>
 		</div>

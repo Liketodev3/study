@@ -385,5 +385,6 @@ ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_status_change_date`  DATE
 -- #036446 25-june-2020
 UPDATE `tbl_configurations` SET `conf_val` = 'H:i:s' WHERE `tbl_configurations`.`conf_name` = 'CONF_DATE_FORMAT_TIME';
 
+INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_YOCOACH_VERSION', 'V1.0', 0);
 
 INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES (NULL, 'Stripe', 'stripe', '1', '1'); 

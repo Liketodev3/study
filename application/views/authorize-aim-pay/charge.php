@@ -13,16 +13,17 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
   <div class="cc-payment">
     <div class="logo-payment"><img src="<?php echo CommonHelper::generateFullUrl('Image','paymentPageLogo',array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.$siteLangId) ?>" title="<?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.$siteLangId) ?>" /></div>
     <div class="reff row">
-      <div class="col-lg-6 col-md-6 col-sm-12">
-        <p class=""><?php echo Label::getLabel('LBL_Payable_Amount',$siteLangId);?> : <strong><?php 
-		//echo CommonHelper::displayMoneyFormat($paymentAmount)
-		echo $sign.$currencySymbolLeft.$paymentAmount.$currencySymbolRight; ?></strong> </p>
+      <div class="col-lg-8 col-md-8 col-sm-12">
+		  <p class=""><?php echo Label::getLabel('LBL_Payable_Amount',$siteLangId);?> : <strong><?php echo CommonHelper::displayMoneyFormat($paymentAmount)?></strong> </p>
+	  	<?php if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) { ?>
+	  		<p><?php echo CommonHelper::currencyDisclaimer($siteLangId, $paymentAmount); ?></p>
+	  	<?php } ?>
       </div>
-      <div class="col-lg-6 col-md-6 col-sm-12">
+      <div class="col-lg-4 col-md-4 col-sm-12">
         <p class=""><?php echo Label::getLabel('LBL_Order_Invoice',$siteLangId);?>: <strong><?php echo $orderInfo["order_id"] ; ?></strong></p>
       </div>
     </div>
-	<div id="body" class="body">	
+	<div id="body" class="body">
     <div class="payment-from">
       <?php if (!isset($error)):
 			$frm->setFormTagAttribute('onsubmit', 'sendPayment(this); return(false);');
@@ -113,7 +114,7 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
                   <?php
 					$fld = $frm->getField('cc_save_card');
 					$fld->addFieldTagAttribute('onclick','alert("|SAVE THIS CARD| Not Functional!");return false;');
-					$fldHtml = $fld->getHTML();  
+					$fldHtml = $fld->getHTML();
 					$fldHtml = str_replace("<label >","",$fldHtml);
 					$fldHtml = str_replace("</label>","",$fldHtml);
 					echo $fldHtml;
@@ -124,10 +125,8 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
           </div>
         </div>
       </div> */ ?>
-      <div class="total-pay"><?php
-	  //echo CommonHelper::displayMoneyFormat($paymentAmount)
-		echo $sign.$currencySymbolLeft.$paymentAmount.$currencySymbolRight;
-	  ?> <small>(<?php echo Label::getLabel('LBL_Total_Payable',$siteLangId);?>)</small> </div>
+	  <div class="total-pay"><?php echo CommonHelper::displayMoneyFormat($paymentAmount)?> <small>(<?php echo Label::getLabel('LBL_Total_Payable',$siteLangId);?>)</small> </div>
+
       <div class="row">
         <div class="col-md-12">
           <div class="field-set">
