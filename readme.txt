@@ -110,8 +110,6 @@ Fixes:
 
 
 
-
->>>>>>> origin/BR-TV-1.2.0.20200705
 Release Version: TV-1.1.1.20200519
 Release Date: 2020/05/19
 
