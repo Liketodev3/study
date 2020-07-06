@@ -50,39 +50,37 @@ if(lesson_joined && !lesson_completed){
     joinLesson(CometJsonData, CometJsonFriendData);
 }
 
+jQuery(document).ready(function () {
+    <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
+    $("#lesson_actions").show();
+    <?php }?>
+});
 
-	jQuery(document).ready(function () {
-        <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
-            $("#lesson_actions").show();
-	<?php }?>
+function joinLessonButtonAction(){
+    $("#lesson_actions").hide();
+    $("#joinL").hide();
+    $("#endL").show();
+    $('.screen-chat-js').show();
+    checkEveryMinuteStatus();
+    searchFlashCards(document.frmFlashCardSrch);
+    checkNewFlashCards();
+    <?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
+    $("#end_lesson_time_div").show();
+    <?php }?>
+}
 
-    	});
-
-	function joinLessonButtonAction(){
-        $("#lesson_actions").hide();
-		$("#joinL").hide();
-		$("#endL").show();
-		$('.screen-chat-js').show();
-		checkEveryMinuteStatus();
-		searchFlashCards(document.frmFlashCardSrch);
-		checkNewFlashCards();
-		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
-				$("#end_lesson_time_div").show();
-		<?php }?>
-	}
-
-	function endLessonButtonAction(){
-		$("#joinL").show();
-		$("#endL").hide();
-       		 $("#lesson_actions").show();
-		$('.screen-chat-js').hide();
-		searchFlashCards(document.frmFlashCardSrch);
-		clearInterval(checkEveryMinuteStatusVar);
-		clearInterval(checkNewFlashCardsVar);
-		sessionStorage.removeItem('cometChatUserExists');
-		sessionStorage.removeItem('showEndLessonNotification');
-		$("#end_lesson_time_div").hide();
-	}
+function endLessonButtonAction(){
+    $("#joinL").show();
+    $("#endL").hide();
+    $("#lesson_actions").show();
+    $('.screen-chat-js').hide();
+    searchFlashCards(document.frmFlashCardSrch);
+    clearInterval(checkEveryMinuteStatusVar);
+    clearInterval(checkNewFlashCardsVar);
+    sessionStorage.removeItem('cometChatUserExists');
+    sessionStorage.removeItem('showEndLessonNotification');
+    $("#end_lesson_time_div").hide();
+}
 
 function checkEveryMinuteStatus(){
 	   checkEveryMinuteStatusVar = setInterval(function(){
