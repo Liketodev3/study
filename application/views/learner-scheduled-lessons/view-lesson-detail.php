@@ -18,7 +18,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 <script>
 var lesson_joined = '<?php echo $lessonData['slesson_learner_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['slesson_learner_end_time']>0 ?>';
-var teacherId = '<?php echo $lessonData['teacherId']>0 ?>';
+var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 
 	function joinLessonButtonAction() {
 		$("#joinL").hide();

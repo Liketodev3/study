@@ -136,10 +136,11 @@ $(function() {
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'markLearnerJoinTime'), 'lessonId='+lessonId , function(t) {
             var ans = $.parseJSON(t);
             if(ans.status){
+                addFriendsCometUsers(learnerId,teacherId);
                 joinLessonButtonAction();
                 createChatBox();
                 // location.reload();
-                $.mbsmessage( msg.success.message,true, 'alert alert--success');
+                $.mbsmessage( ans.msg,true, 'alert alert--success');
             }
             else{
                 checkEveryMinuteStatus();
