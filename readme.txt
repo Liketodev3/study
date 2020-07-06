@@ -1,3 +1,11 @@
+
+New Features:
+    * Added stripe payment gateway
+
+Enhancements: N/A
+
+Fixes:
+====================================
 Release Version: TV-1.1.1.20200519
 Release Date: 2020/05/19
 
