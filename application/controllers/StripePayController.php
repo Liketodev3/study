@@ -17,7 +17,7 @@ class StripePayController extends PaymentController
 
     public function charge($orderId)
     {
-        if (empty(trim($orderId))) {echo 1;die;
+        if (empty(trim($orderId))) {
             FatUtility::exitWIthErrorCode(404);
         }
 
@@ -46,7 +46,7 @@ class StripePayController extends PaymentController
 		$payableAmount = $this->formatPayableAmount($paymentAmount);
         $orderInfo = $orderPaymentObj->getOrderById($orderId);
 
-        if (!$orderInfo['order_id']) {echo 2;die;
+        if (!$orderInfo['order_id']) {
             FatUtility::exitWithErrorCode(404);
         } elseif ($orderInfo && $orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
             $checkPayment = $this->doPayment($payableAmount, $orderId);
