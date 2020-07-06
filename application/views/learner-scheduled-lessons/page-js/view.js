@@ -108,33 +108,13 @@ $(function() {
 		var chat_script = document.getElementsByTagName('script')[0]; chat_script.parentNode.insertBefore(chat_js, chat_script);
 	};
 
-	addFriendsCometUsers = function(learnerId,teacherId){
-		$.ajax({
-		  method: "POST",
-		  url: "https://api.cometondemand.net/api/v2/addFriends",
-		  data: { UID:learnerId,friendsUID:teacherId},
-		  beforeSend: function (xhr) {
-			xhr.setRequestHeader('api-key', chat_api_key);
-			},
-		})
-		.done(function( msg ) {
-            if(typeof(msg.success) != "undefined" && msg.success !== null)
-            {
-                $.mbsmessage( msg.success.message,true, 'alert alert--success');
-                createChatBox();  
-            }
-        });
-	};
-
 	joinLesson = function(learnerId,teacherId){
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'markLearnerJoinTime'), 'lessonId='+lessonId , function(t) {
             var ans = $.parseJSON(t);
             if(ans.status){
-                addFriendsCometUsers(learnerId,teacherId);
                 joinLessonButtonAction();
                 createChatBox();
-                // location.reload();
-                $.mbsmessage( ans.msg,true, 'alert alert--success');
+                // $.mbsmessage( ans.msg,true, 'alert alert--success');
             }
             else{
                 checkEveryMinuteStatus();
@@ -143,33 +123,33 @@ $(function() {
         });
 	};
 	endLesson = function (lessonId) {
-                $.confirm({
-                    title: langLbl.Confirm,
-                    content: langLbl.endLessonAlert,
-                    buttons: {
-                        Proceed: {
-                            text: langLbl.Procee,
-                            btnClass: 'btn btn--primary',
-                            keys: ['enter', 'shift'],
-                            action: function(){
-                                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'endLessonSetup'), 'lessonId='+lessonId , function(t) {
-                                        clearInterval(checkEveryMinuteStatusVar);
-                                        $('.screen-chat-js').hide();
-                                        endLessonButtonAction();
-                                        $.facebox.close();
-                                        viewLessonDetail();
-                                });
-                            }
-                        },
-                        Quit: {
-                            text: langLbl.Quit,
-                            btnClass: 'btn btn--secondary',
-                            keys: ['enter', 'shift'],
-                            action: function(){
-                            }
-                        }
+        $.confirm({
+            title: langLbl.Confirm,
+            content: langLbl.endLessonAlert,
+            buttons: {
+                Proceed: {
+                    text: langLbl.Procee,
+                    btnClass: 'btn btn--primary',
+                    keys: ['enter', 'shift'],
+                    action: function(){
+                        fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'endLessonSetup'), 'lessonId='+lessonId , function(t) {
+                                clearInterval(checkEveryMinuteStatusVar);
+                                $('.screen-chat-js').hide();
+                                endLessonButtonAction();
+                                $.facebox.close();
+                                viewLessonDetail();
+                        });
                     }
-                });
+                },
+                Quit: {
+                    text: langLbl.Quit,
+                    btnClass: 'btn btn--secondary',
+                    keys: ['enter', 'shift'],
+                    action: function(){
+                    }
+                }
+            }
+        });
 	};
 	endLessonSetup = function(lessonId){
         fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'endLessonSetup'), 'lessonId='+lessonId , function(t) {

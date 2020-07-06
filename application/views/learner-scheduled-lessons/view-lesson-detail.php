@@ -29,28 +29,19 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
     var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
     var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
     var chat_avatar = "<?php echo $studentImage; ?>";
+    var chat_friends = "<?php echo $lessonData['teacherId']; ?>";
 
     if(lesson_joined && !lesson_completed){
         joinLesson(chat_id, teacherId);
     }
 
     jQuery(document).ready(function () {
-        if( sessionStorage.getItem('cometChatUserExists') != null){
-            if(sessionStorage.getItem('cometChatUserExists')  != '<?php echo "LESSON-".$lessonData['slesson_id']; ?>'){
-
-                sessionStorage.removeItem('cometChatUserExists');
-            }
-            else if( sessionStorage.getItem('cometChatUserExists') == chat_group_id ){
-                   joinLessonButtonAction();
-                   createChatBox();
-                }
-        }
         <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
-                $("#lesson_actions").show();
+        $("#lesson_actions").show();
 		<?php }?>
     });
 	function joinLessonButtonAction() {
-            $("#lesson_actions").hide();
+        $("#lesson_actions").hide();
 		$("#joinL").hide();
 		$("#endL").show();
 		checkEveryMinuteStatus();
@@ -70,37 +61,20 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 		searchFlashCards(document.frmFlashCardSrch);
 		clearInterval(checkEveryMinuteStatusVar);
 		clearInterval(checkNewFlashCardsVar);
-		sessionStorage.removeItem('cometChatUserExists');
 		$('.screen-chat-js').hide();
 		$("#end_lesson_time_div").hide();
 	}
 
-
-
-
-   function checkEveryMinuteStatus() {
+    function checkEveryMinuteStatus() {
 	   checkEveryMinuteStatusVar = setInterval(function(){
 			fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','checkEveryMinuteStatus',['<?php echo $lessonData['slesson_id'] ?>']),'',function(t){
 				var t = JSON.parse(t);
-				if (t.slesson_status == 1 && sessionStorage.getItem('cometChatUserExists')===null)
+				if (!lesson_joined && !lesson_completed && t.has_teacher_joined == 1)
 				{
-					$.ajax({
-					  method: "POST",
-					  url: "https://api.cometondemand.net/api/v2/getUser",
-					  data: { UID:chat_id },
-					  beforeSend: function (xhr) {
-						xhr.setRequestHeader('api-key', chat_api_key);
-						},
-					})
-					.done(function( msg ) {
-						if(typeof(msg.success) != "undefined" && msg.success !== null)
-						{
-							$.mbsmessage( '<?php echo Label::getLabel('LBL_Teacher_Has_Joined_Now_you_can_also_Join_The_Lesson!'); ?>',true, 'alert alert--success');
-						}
-					});
+                    $.mbsmessage( '<?php echo Label::getLabel('LBL_Teacher_Has_Joined_Now_you_can_also_Join_The_Lesson!'); ?>',true, 'alert alert--success');
 				}
 
-				if(t.slesson_status > 1 && sessionStorage.getItem('cometChatUserExists')!=null) {
+				if(t.slesson_status > 1) {
                 $.confirm({
                     title: langLbl.Confirm,
                     content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',

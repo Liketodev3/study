@@ -46,6 +46,8 @@ var CometJsonData = CometJsonTeacherData.concat(CometJsonLearnerData);
 
 var CometJsonFriendData = {"lessonId":"<?php echo $lessonData['slesson_id'] ?>","userId":"<?php echo $chatId;?>","friendId":"<?php echo $lessonData['learnerId']; ?>"};
 
+createUserCometChatApi(CometJsonData,CometJsonFriendData);
+
 if(lesson_joined && !lesson_completed){
     joinLesson(CometJsonData, CometJsonFriendData);
 }
@@ -77,8 +79,6 @@ function endLessonButtonAction(){
     searchFlashCards(document.frmFlashCardSrch);
     clearInterval(checkEveryMinuteStatusVar);
     clearInterval(checkNewFlashCardsVar);
-    sessionStorage.removeItem('cometChatUserExists');
-    sessionStorage.removeItem('showEndLessonNotification');
     $("#end_lesson_time_div").hide();
 }
 
@@ -160,34 +160,31 @@ function checkEveryMinuteStatus(){
 			dateAndTime : "<?php echo $endTime; ?>",
 			size : "lg",
 			timeUp : function(){
-				if(sessionStorage.getItem('cometChatUserExists')!=null)
-				{
-                        $('.jconfirm-closeIcon').trigger('click');
-                        $.confirm({
-                            closeIcon: true,
-                            title: langLbl.Confirm,
-                            content: '<?php echo Label::getLabel('LBL_Duration_assigned_to_this_lesson_is_completed_now_do_you_want_to_continue?'); ?>',
-                            autoClose: langLbl.Quit+'|8000',
-                            buttons: {
-                                Proceed: {
-                                    text: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
-                                    btnClass: 'btn btn--primary',
-                                    keys: ['enter', 'shift'],
-                                    action: function(){
-                                        endLessonSetup('<?php echo $lessonData['slesson_id']; ?>');
-                                    }
-                                },
-                                Quit: {
-                                    text: '<?php echo Label::getLabel('LBL_Continue'); ?>',
-                                    btnClass: 'btn btn--secondary',
-                                    keys: ['enter', 'shift'],
-                                    action: function(){
-                                        sessionStorage.setItem('showEndLessonNotification',0);
-                                    }
-                                }
+                $('.jconfirm-closeIcon').trigger('click');
+                $.confirm({
+                    closeIcon: true,
+                    title: langLbl.Confirm,
+                    content: '<?php echo Label::getLabel('LBL_Duration_assigned_to_this_lesson_is_completed_now_do_you_want_to_continue?'); ?>',
+                    autoClose: langLbl.Quit+'|8000',
+                    buttons: {
+                        Proceed: {
+                            text: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
+                            btnClass: 'btn btn--primary',
+                            keys: ['enter', 'shift'],
+                            action: function(){
+                                endLessonSetup('<?php echo $lessonData['slesson_id']; ?>');
                             }
-                        });
-				}
+                        },
+                        Quit: {
+                            text: '<?php echo Label::getLabel('LBL_Continue'); ?>',
+                            btnClass: 'btn btn--secondary',
+                            keys: ['enter', 'shift'],
+                            action: function(){
+                                
+                            }
+                        }
+                    }
+                });
 				$("#end_lesson_time_div").hide();
 			}
 		});

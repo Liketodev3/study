@@ -1209,6 +1209,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch = new ScheduledLessonSearch();
         $srch->addMultipleFields(
             array(
+                'IF(slns.slesson_teacher_join_time>0, 1, 0) as has_teacher_joined',
                 'slns.slesson_status'
             )
         );

@@ -13,8 +13,7 @@ $(function() {
 		});
 	};
 	markTeacherJoinTime = function(){
-        fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'markTeacherJoinTime'), 'lessonId='+lessonId , function(t) {
-        });
+        fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'markTeacherJoinTime'), 'lessonId='+lessonId, function(t){});
     }
 	goToFlashCardSearchPage = function(page) {
 		if(typeof page == undefined || page == null){
@@ -81,7 +80,8 @@ $(function() {
 				return false;
 			}
 			joinLessonButtonAction();
-            createUserCometChatApi(CometJsonData,CometJsonFriendData);
+            createChatBox();
+            markTeacherJoinTime();
 		});
     };
     
@@ -94,52 +94,9 @@ $(function() {
 			  beforeSend: function (xhr) {
 				xhr.setRequestHeader('api-key', chat_api_key);
 				},
-			})
-			.done(function( msg ) {
-                if(typeof(msg.success) != "undefined" && msg.success !== null)
-                {
-                    $.mbsmessage( msg.success.message,true, 'alert alert--success');
-                }
-            });
-        });
-        addFriend(CometJsonFriendData.userId,CometJsonFriendData.friendId);
-	};
-    
-    addFriend = function(learnerId,teacherId){
-		$.ajax({
-            method: "POST",
-            url: "https://api.cometondemand.net/api/v2/addFriends",
-            data: { UID:learnerId,friendsUID:teacherId},
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('api-key', chat_api_key);
-            },
-		})
-		.done(function( msg ) {
-            if(typeof(msg.success) != "undefined" && msg.success !== null)
-            {
-                $.mbsmessage( msg.success.message,true, 'alert alert--success');
-            }
-            createChatBox();
-            markTeacherJoinTime();            
+			});
         });
 	};
-    
-    getMessages = function(learnerId,teacherId){
-        $.ajax({
-            method: "POST",
-            url: "https://api.cometondemand.net/api/v2/getMessages",
-            data: { UIDs:teacherId,withUIDs:learnerId},
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('api-key', chat_api_key);
-            },
-		})
-		.done(function( msg ) {
-            if(typeof(msg.success) != "undefined" && msg.success !== null)
-            {
-                $.mbsmessage( msg.success.message,true, 'alert alert--success');
-            }            
-        });
-    };
 
 	endLesson = function (lessonId) {
         $.confirm({
