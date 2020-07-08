@@ -103,7 +103,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addMultipleFields(array(
             'slns.slesson_id',
 			'order_is_paid',
-            'slns.slesson_learner_id as learnerId',
+            'sld.sldetail_learner_id as learnerId',
             'slns.slesson_teacher_id as teacherId',
             'slns.slesson_slanguage_id',
             'ul.user_first_name as learnerFname',
@@ -117,7 +117,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             'slns.slesson_start_time',
             'slns.slesson_end_time',
             'slns.slesson_status',
-            'slesson_order_id',
+            'sld.sldetail_learner_status',
+            'sld.sldetail_order_id',
             'slns.slesson_is_teacher_paid',
             //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
             '"-" as teacherTeachLanguageName',

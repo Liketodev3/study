@@ -31,9 +31,14 @@ class OrderProductSearch extends SearchBase
         $this->joinTable(Order::DB_TBL, 'INNER JOIN', 'op.op_order_id = o.order_id', 'o');
     }
 
+    public function joinScheduleLessonDetails()
+    {
+        $this->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'o.order_id = sld.sldetail_order_id', 'sld');
+    }
+    
     public function joinScheduleLesson()
     {
-        $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'o.order_id = sl.slesson_order_id AND sl.slesson_is_teacher_paid = '.applicationConstants::YES, 'sl');
+        $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id AND sl.slesson_is_teacher_paid = '.applicationConstants::YES, 'sl');
     }
 
     public function addOrderIdCondition($orderId)

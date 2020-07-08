@@ -99,7 +99,7 @@ class PurchasedLessonsController extends AdminBaseController
         $scheduledLessonSearchObj->joinTeacherTeachLanguage();
         $scheduledLessonSearchObj->addMultipleFields(array(
                 'slesson_id',
-               'op_lpackage_is_free_trial',
+                'op_lpackage_is_free_trial',
                 'slesson_status',
                 'slesson_ended_by',
                 'slesson_date',
@@ -108,27 +108,27 @@ class PurchasedLessonsController extends AdminBaseController
                 'slesson_start_time',
                 'slesson_end_time',
                 'slesson_teacher_join_time',
-                'slesson_learner_join_time',
+                'sldetail_learner_join_time',
                 'slesson_teacher_end_time',
-                'slesson_learner_end_time',
+                'sldetail_learner_end_time',
                 'slesson_added_on',
                 'order_is_paid',
                 'IFNULL(iss.issrep_status,0) AS issrep_status',
-                 'IFNULL(iss.issrep_id,0) AS issrep_id',
-                 'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_name',
-                 'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_name',
+                'IFNULL(iss.issrep_id,0) AS issrep_id',
+                'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_name',
+                'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_name',
                'IFNULL(tl_l.tlanguage_name, t_t_lang.tlanguage_identifier) as teacherTeachLanguageName',
             ));
         if (!empty($data['slesson_teacher_id'])) {
             $teacherId = FatUtility::int($data['slesson_teacher_id']);
             $scheduledLessonSearchObj->addCondition('slesson_teacher_id', '=', $teacherId);
         }
-        if (!empty($data['slesson_learner_id'])) {
-            $learnerId = FatUtility::int($data['slesson_learner_id']);
-            $scheduledLessonSearchObj->addCondition('slesson_learner_id', '=', $learnerId);
+        if (!empty($data['sldetail_learner_id'])) {
+            $learnerId = FatUtility::int($data['sldetail_learner_id']);
+            $scheduledLessonSearchObj->addCondition('sldetail_learner_id', '=', $learnerId);
         }
         if (!empty($data['slesson_order_id'])) {
-            $scheduledLessonSearchObj->addCondition('slesson_order_id', '=', $data['slesson_order_id']);
+            $scheduledLessonSearchObj->addCondition('sldetail_order_id', '=', $data['slesson_order_id']);
         }
 
         // if ($data['op_lpackage_is_free_trial'] >= 0) {

@@ -179,11 +179,13 @@ class UserSearch extends SearchBase
     {
         if ($userId) {
             $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'u.user_id = sl.slesson_teacher_id AND sl.slesson_teacher_id = '.$userId, 'sl');
+            $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
             $this->addGroupBy('sl.slesson_teacher_id');
         } else {
             $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'u.user_id = sl.slesson_teacher_id', 'sl');
+            $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
             $this->addGroupBy('sl.slesson_teacher_id');
-            $this->addFld('count(DISTINCT slesson_learner_id) as studentIdsCnt');
+            $this->addFld('count(DISTINCT sldetail_learner_id) as studentIdsCnt');
         }
         $this->addGroupBy('sl.slesson_teacher_id');
         $this->addFld('count(DISTINCT sl.slesson_id) as teacherTotLessons');
@@ -195,23 +197,24 @@ class UserSearch extends SearchBase
         if($getCanCelledScheduledLesson) {
             $this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as teacherCancelledLessons');
         }
-
-        $this->addFld('GROUP_CONCAT(DISTINCT slesson_learner_id) as studentIds');
+        
+        $this->addFld('GROUP_CONCAT(DISTINCT sldetail_learner_id) as studentIds');
     }
 
     public function joinLearnerLessonData($userId)
     {
         if ($userId) {
-            $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'u.user_id = sl.slesson_learner_id AND sl.slesson_learner_id = '.$userId, 'sl');
-            $this->addGroupBy('sl.slesson_learner_id');
+            $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'u.user_id = sld.sldetail_learner_id AND sld.sldetail_learner_id = '.$userId, 'sld');
+            $this->addGroupBy('sld.sldetail_learner_id');
         } else {
-            $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'u.user_id = sl.slesson_learner_id', 'sl');
-            $this->addGroupBy('sl.slesson_learner_id');
+            $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'u.user_id = sld.sldetail_learner_id', 'sld');
+            $this->addGroupBy('sld.sldetail_learner_id');
             $this->addFld('count(DISTINCT slesson_teacher_id) as teacherIdsCnt');
         }
-        $this->addGroupBy('slesson_learner_id');
-        $this->addFld('count(slesson_id) as learnerTotLessons');
-        $this->addFld('SUM(CASE WHEN slesson_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) AS learnerSchLessons');
+        $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sl');
+        $this->addGroupBy('sldetail_learner_id');
+        $this->addFld('count(sldetail_id) as learnerTotLessons');
+        $this->addFld('SUM(CASE WHEN sldetail_learner_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) AS learnerSchLessons');
         $this->addFld('GROUP_CONCAT(DISTINCT slesson_teacher_id) as teacherIds');
     }
 

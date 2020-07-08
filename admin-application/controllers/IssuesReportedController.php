@@ -35,13 +35,13 @@ class IssuesReportedController extends AdminBaseController
             'id' => 'keyword',
             'autocomplete' => 'off'
         ));
-        $frm->addTextBox(Label::getLabel('LBL_Order_Id', $this->adminLangId), 'slesson_order_id');
+        $frm->addTextBox(Label::getLabel('LBL_Order_Id', $this->adminLangId), 'sldetail_order_id');
         $frm->addSelectBox(Label::getLabel('LBL_Issue_Status', $this->adminLangId), 'issrep_status', $status_options, -1, array(), '');
         $frm->addSelectBox(Label::getLabel('LBL_Reported_By', $this->adminLangId), 'issrep_reported_by', $user_options, 0, array(), '');
 
         $frm->addHiddenField('', 'page', 1);
         $frm->addHiddenField('', 'slesson_teacher_id', 0);
-        $frm->addHiddenField('', 'slesson_learner_id', 0);
+        $frm->addHiddenField('', 'sldetail_learner_id', 0);
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         $fld_submit->attachField($fld_cancel);
@@ -59,7 +59,7 @@ class IssuesReportedController extends AdminBaseController
         $srch->addMultipleFields(
             array(
             "i.*",
-            'sl.slesson_order_id',
+            'sld.sldetail_order_id',
             'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',
             )
         );
@@ -73,16 +73,16 @@ class IssuesReportedController extends AdminBaseController
             $status = FatUtility::int($post['issrep_reported_by']);
             $srch->addCondition('issrep_reported_by', '=', $status);
         }
-        if (isset($post['slesson_order_id']) and $post['slesson_order_id'] != null) {
-            $srch->addCondition('slesson_order_id', 'LIKE', '%'.$post['slesson_order_id'].'%');
+        if (isset($post['sldetail_order_id']) and $post['sldetail_order_id'] != null) {
+            $srch->addCondition('sldetail_order_id', 'LIKE', '%'.$post['sldetail_order_id'].'%');
         }
         if (isset($post['slesson_teacher_id']) and $post['slesson_teacher_id'] > 0) {
             $user_is_teacher = FatUtility::int($post['slesson_teacher_id']);
             $srch->addCondition('slesson_teacher_id', '=', $user_is_teacher);
         }
-        if (isset($post['slesson_learner_id']) and $post['slesson_learner_id'] > 0) {
-            $user_is_learner = FatUtility::int($post['slesson_learner_id']);
-            $srch->addCondition('slesson_learner_id', '=', $user_is_learner);
+        if (isset($post['sldetail_learner_id']) and $post['sldetail_learner_id'] > 0) {
+            $user_is_learner = FatUtility::int($post['sldetail_learner_id']);
+            $srch->addCondition('sldetail_learner_id', '=', $user_is_learner);
         }
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -115,16 +115,16 @@ class IssuesReportedController extends AdminBaseController
         if ($this->adminLangId > 0) {
             $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'sll.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND sll.tlanguagelang_lang_id = ' . $this->adminLangId, 'sll');
         }
-        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sl.slesson_learner_id = ul.user_id', 'ul');
+        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sld.sldetail_learner_id = ul.user_id', 'ul');
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = ut.user_id', 'ut');
 
         $srch->addMultipleFields(
             array(
             "i.*",
             "us.*",
-            'sl.slesson_order_id',
+            'sld.sldetail_order_id',
             'sl.slesson_teacher_id',
-            'sl.slesson_learner_id',
+            'sld.sldetail_learner_id',
             'sl.slesson_learner_join_time',
             'sl.slesson_teacher_join_time',
             'sl.slesson_learner_end_time',

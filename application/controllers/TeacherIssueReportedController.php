@@ -29,7 +29,7 @@ class TeacherIssueReportedController extends TeacherBaseController
             'i.*',
             'user_first_name',
             'slesson_id',
-            'slesson_learner_id',
+            'sldetail_learner_id',
             'slesson_date',
             'slesson_start_time',
             'user_timezone',

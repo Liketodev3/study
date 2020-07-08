@@ -4,7 +4,7 @@ class ScheduledLessonSearch extends SearchBase
     private $isTeacherSettingsJoined;
     private $isOrderJoined;
 
-    public function __construct($doNotCalculateRecords = true)
+    public function __construct($doNotCalculateRecords = true, $joinDetails = true)
     {
         parent::__construct(ScheduledLesson::DB_TBL, 'slns');
 
@@ -13,6 +13,10 @@ class ScheduledLessonSearch extends SearchBase
 
         if (true === $doNotCalculateRecords) {
             $this->doNotCalculateRecords();
+        }
+        
+        if($joinDetails === true){
+            $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = slns.slesson_id', 'sld');
         }
     }
 
@@ -23,7 +27,7 @@ class ScheduledLessonSearch extends SearchBase
 
     public function joinLearner()
     {
-        $this->joinTable(User::DB_TBL, 'INNER JOIN', 'ul.user_id = slns.slesson_learner_id', 'ul');
+        $this->joinTable(User::DB_TBL, 'INNER JOIN', 'ul.user_id = sld.sldetail_learner_id', 'ul');
     }
 
     public function joinTeacherSettings()
@@ -105,7 +109,7 @@ class ScheduledLessonSearch extends SearchBase
         if (true === $this->isOrderJoined) {
             return;
         }
-        $this->joinTable(Order::DB_TBL, 'INNER JOIN', 'o.order_id = slns.slesson_order_id AND o.order_type = ' . Order::TYPE_LESSON_BOOKING, 'o');
+        $this->joinTable(Order::DB_TBL, 'INNER JOIN', 'o.order_id = sld.sldetail_order_id AND o.order_type = ' . Order::TYPE_LESSON_BOOKING, 'o');
         $this->isOrderJoined = true;
     }
 
@@ -134,7 +138,7 @@ class ScheduledLessonSearch extends SearchBase
             trigger_error("Invalid Request", E_USER_ERROR);
         }
 
-        $this->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'slesson_learner_id = top_learner_id AND top_teacher_id = '.$teacherId, 'top');
+        $this->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'sldetail_learner_id = top_learner_id AND top_teacher_id = '.$teacherId, 'top');
     }
 
     public function joinLearnerOfferPrice($learnerId)

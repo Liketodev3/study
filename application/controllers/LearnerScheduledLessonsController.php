@@ -38,7 +38,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'IFNULL(iss.issrep_id,0) AS issrep_id',
             'IFNULL(iss.issrep_issues_resolve_type,0) AS issrep_issues_resolve_by',
             'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime',
-            'slesson_order_id'
+            'sldetail_order_id'
         ));
         // $srch->addOrder('slesson_status', 'ASC');
 		$srch->addOrder('startDateTime', 'ASC');
@@ -110,7 +110,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 		if($getCancelledOrder) {
 			 $orderIsPaidCondition->attachCondition('order_is_paid','=',Order::ORDER_IS_CANCELLED,'OR');
 		}
-        $srch->addCondition('slns.slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
+        $srch->addCondition('sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
        
         $srch->joinTeacherSettings();
         //$srch->joinTeacherTeachLanguage( $this->siteLangId );
@@ -121,7 +121,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'slns.slesson_id',
             'slns.slesson_slanguage_id',
 			'order_is_paid',
-            'slns.slesson_learner_id as learnerId',
+            'sldetail_learner_id as learnerId',
             'slns.slesson_teacher_id as teacherId',
             'ut.user_first_name as teacherFname',
             'ut.user_last_name as teacherLname',
@@ -146,7 +146,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             foreach ($keywordsArr as $keyword) {
                 $cnd = $srch->addCondition('ut.user_first_name', 'like', '%'.$keyword.'%');
                 $cnd->attachCondition('ut.user_last_name', 'like', '%'.$keyword.'%');
-                $cnd->attachCondition('slesson_order_id', 'like', '%'.$keyword.'%');
+                $cnd->attachCondition('sldetail_order_id', 'like', '%'.$keyword.'%');
             }
         }
 
@@ -384,7 +384,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $scheduledLessonObj->joinLearner();
         $scheduledLessonObj->joinOrder();
         $scheduledLessonObj->joinOrderProducts();
-        $scheduledLessonObj->addMultipleFields(['slesson_learner_id', 'slesson_date','slesson_order_id','slesson_start_time','op_lpackage_is_free_trial','order_net_amount']);
+        $scheduledLessonObj->addMultipleFields(['slesson_learner_id', 'slesson_date','sldetail_order_id','slesson_start_time','op_lpackage_is_free_trial','order_net_amount']);
         $scheduledLessonObj->addCondition('slesson_id', '=', $lessonId);
         $scheduledLessonObj->addCondition('slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
         $scheduledLessonObj->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
@@ -399,14 +399,14 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 		$lessonRow['order_net_amount'] =   FatUtility::float($lessonRow['order_net_amount']);
 		
         $orderObj =  new Order;
-        $orderSearch = $orderObj->getLessonsByOrderId($lessonRow['slesson_order_id']);
+        $orderSearch = $orderObj->getLessonsByOrderId($lessonRow['sldetail_order_id']);
         $orderSearch->addMultipleFields([
-            'count(sl.slesson_order_id) as totalLessons',
+            'count(sldetail_order_id) as totalLessons',
             'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_NEED_SCHEDULING.' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
 			'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_CANCELLED.' THEN 1 ELSE 0 END) canceledLessonsCount',
 
         ]);
-        $orderSearch->addGroupBy('sl.slesson_order_id');
+        $orderSearch->addGroupBy('sldetail_order_id');
         $resultSet = $orderSearch->getResultSet();
         $orderInfo =  FatApp::getDb()->fetch($resultSet);
         if(empty($orderInfo)) {
@@ -427,7 +427,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if ($diff < 24 && $lessonRow['order_net_amount'] > 0) {
             $deductionNote = ($lessonRow['op_lpackage_is_free_trial'] == applicationConstants::YES) ? false : true;
         }
-        $frm = $this->getCancelLessonFrm($deductionNote, $showCouponRefundNote, $lessonRow['slesson_order_id']);
+        $frm = $this->getCancelLessonFrm($deductionNote, $showCouponRefundNote, $lessonRow['sldetail_order_id']);
 
         $frm->fill(array('slesson_id' => $lessonId));
         $this->set('frm', $frm);
@@ -458,7 +458,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 '"-" as teacherTeachLanguageName',
                 'tcred.credential_email as teacherEmailId',
                 'slesson_status',
-                'slesson_order_id'
+                'sldetail_order_id'
             )
         );
 

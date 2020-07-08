@@ -98,7 +98,7 @@ class TopLanguagesReportController extends AdminBaseController
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch = AdminStatistic::LessonLanguagesObject($this->adminLangId, $post);
         $srch->addGroupBy('slesson_slanguage_id');
-        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'ul.user_id = slns.slesson_learner_id', 'ul');
+        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'ul.user_id = sld.sldetail_learner_id', 'ul');
 
         if (isset($post['country_id']) && $post['country_id'] > 0) {
             $srch->addCondition('ul.user_country_id', '=', $post['country_id']);
