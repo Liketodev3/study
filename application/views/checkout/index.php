@@ -23,10 +23,6 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 									echo '<img src="'.$img.'" />';
 								}
 								?>
-
-								<?php /* if( $cartData['is_online'] ){ ?>
-								<span class="tag-online"></span>
-								<?php } */ ?>
 							</div>
 
 							<span class="-gap"></span>
@@ -36,11 +32,7 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 							<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($cartData['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>
 							<?php } ?>
 
-							<p class="-no-margin-bottom"><?php echo ($cartData['user_state_name'] != ''  ) ? $cartData['user_state_name'].', ' : ''; echo $cartData['user_country_name']; ?>
-							<br><?php
-							/* echo CommonHelper::getDateOrTimeByTimeZone( $cartData['user_timezone'], 'h:i A'  );
-							echo " (GMT ".CommonHelper::getDateOrTimeByTimeZone( $cartData['user_timezone'], ' P' ).")"; */
-							?> </p>
+							<p class="-no-margin-bottom"><?php echo ($cartData['user_state_name'] != ''  ) ? $cartData['user_state_name'].', ' : ''; echo $cartData['user_country_name']; ?></p>
 						</div>
                         <div class="tabled">
                             <?php if($cartData['lpackage_is_free_trial'] == applicationConstants::NO){ ?>
@@ -101,15 +93,14 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 
 				<div class="col-xl-8 col-lg-8 col-md-12">
 					<div class="box" style="margin-bottom: 30px;" id="checkout-left-side">
-					<?php
-					if( $cartData['orderNetAmount'] > 0 ){ ?>
-						<div id="paymentDiv">
-						</div>
-						<?php
-					} else {
-						$this->includeTemplate('checkout/_partial/processWithNoPayment.php', $this->variables);
-					}
-					?>
+                        <div id="paymentDiv">
+        					<?php
+                            $cartData['orderNetAmount']  = FatUtility::float($cartData['orderNetAmount']);
+        					if(0 >= $cartData['orderNetAmount']){
+                                $this->includeTemplate('checkout/_partial/processWithNoPayment.php', $this->variables);
+        					}
+                            ?>
+                        </div>
 					</div>
 				</div>
 		</div>
