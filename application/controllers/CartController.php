@@ -23,6 +23,7 @@ class CartController extends MyAppController
         $weekEnd = FatApp::getPostedData('weekEnd', FatUtility::VAR_STRING, '');
         /* ] */
 
+        $grpclsId = FatApp::getPostedData('grpcls_id', FatUtility::VAR_INT, 0);
         $teacher_id = FatApp::getPostedData('teacher_id', FatUtility::VAR_INT, 0);
         $lpackageId = FatApp::getPostedData('lpackageId', FatUtility::VAR_INT, 0);
         $languageId = FatApp::getPostedData('languageId', FatUtility::VAR_INT, 1);
@@ -50,7 +51,7 @@ class CartController extends MyAppController
             $startDateTime = MyDate::changeDateTimezone($startDateTime, $user_timezone, $systemTimeZone);
             $endDateTime = MyDate::changeDateTimezone($endDateTime, $user_timezone, $systemTimeZone);
 
-            if (!TeacherWeeklySchedule::isSlotAvailable($teacher_id, $startDateTime, $endDateTime, $weekStart, $weekEnd)) {
+            if (!TeacherWeeklySchedule::isSlotAvailable($teacher_id, $startDateTime, $endDateTime, $weekStart)) {
                 FatUtility::dieWithError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
             }
         }
@@ -74,7 +75,7 @@ class CartController extends MyAppController
 
         /* add to cart[ */
         $cart = new Cart();
-        if (!$cart->add($teacher_id, $lpackageId, $languageId, $startDateTime, $endDateTime)) {
+        if (!$cart->add($teacher_id, $lpackageId, $languageId, $startDateTime, $endDateTime, $grpclsId)) {
             FatUtility::dieWithError($cart->getError());
         }
         /* ] */

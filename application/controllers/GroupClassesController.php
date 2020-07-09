@@ -8,7 +8,6 @@ class GroupClassesController extends MyAppController
         $this->_template->addJs('js/jquery.datetimepicker.js');
         $this->_template->addCss('css/jquery.datetimepicker.css');
         $this->_template->addCss('css/classes.css');
-        $this->_template->addCss('css/switch.css');
 		$this->_template->render();
 	}
 

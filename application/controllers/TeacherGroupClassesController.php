@@ -12,7 +12,6 @@ class TeacherGroupClassesController extends TeacherBaseController
         $this->_template->addCss('css/jquery.datetimepicker.css');
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
-        $this->_template->addCss('css/switch.css');
         $this->_template->render();
     }
 
@@ -47,8 +46,6 @@ class TeacherGroupClassesController extends TeacherBaseController
             array(
                 'grpcls_id',
                 'grpcls_title',
-                'grpcls_max_learner',
-                'grpcls_min_learner',
                 'grpcls_entry_fee',
                 'grpcls_start_datetime',
                 'grpcls_end_datetime',
@@ -88,6 +85,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         if ($totalRecords < $endRecord) {
             $endRecord = $totalRecords;
         }
+        
         $teachLanguages = TeachingLanguage::getAllLangs($this->siteLangId);
         $this->set('teachLanguages', $teachLanguages);
         $this->set('startRecord', $startRecord);
@@ -292,88 +290,6 @@ class TeacherGroupClassesController extends TeacherBaseController
         
         FatUtility::dieJsonSuccess(Label::getLabel("LBL_Class_Cancelled_Successfully!"));
     }
-    
-    public function InterestList()
-    {
-        $post = FatApp::getPostedData();
-        $grpClsId = FatApp::getPostedData('grpcls_id', FatUtility::VAR_INT, 0);
-        $user_id = UserAuthentication::getLoggedUserId();
-        
-        if(!$grpClsId){
-            Message::addErrorMessage(Label::getLabel('LBL_Invalid_request', $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
-        }
-        
-        $clsDetails = TeacherGroupClasses::getAttributesById($grpClsId, array('grpcls_teacher_id'));
-        
-        if($clsDetails['grpcls_teacher_id']!=$user_id){
-            Message::addErrorMessage(Label::getLabel('LBL_Unauthorized', $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
-        }
-        
-        $srch2 = new RequestedTimeslotsFollowersSearch();
-        $srch2->doNotCalculateRecords(true);
-        $srch2->addFld('COUNT(reqslfol_reqts_id)');
-        $srch2->addDirectCondition('reqslfol_reqts_id=reqts_id');
-        
-        $reqtsSrch = new RequestedTimeslotsSearch();
-        $reqtsSrch->addCondition('reqts_grpcls_id', '=', $grpClsId);
-        $reqtsSrch->addMultipleFields(
-            array(
-                'reqts_id',
-                'reqts_time',
-                'reqts_added_by',
-                'reqts_status',
-                '('.$srch2->getQuery().') total_followers'
-            )
-        );
-        
-        $rs = $reqtsSrch->getResultSet();
-        $rows = FatApp::getDb()->fetchAll($rs);
-        
-        $this->set('postedData', $post);
-		$this->set('rows', $rows);
-        
-        $this->_template->render(false, false);
-    }
-    
-    public function changeInterstListStatus()
-    {
-        $post = FatApp::getPostedData();
-        if ($post === false) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
-        }
-        
-        $id = FatUtility::int($post['id']);
-        $status = FatUtility::int($post['status']);
-        if ($id<1) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
-        }
-        
-        $user_id = UserAuthentication::getLoggedUserId();
-        
-        $reqts = RequestedTimeslots::getAttributesById($id, array('reqts_id', 'reqts_grpcls_id'));
-        if(empty($reqts)){
-            FatUtility::dieJsonError(Label::getLabel('LBL_Time_not_exist'));
-        }
-        if($reqts['reqts_id']!=$id){
-            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
-        }
-        
-        $clsDetails = TeacherGroupClasses::getAttributesById($reqts['reqts_grpcls_id'], array('grpcls_teacher_id'));
-        
-        if($clsDetails['grpcls_teacher_id']!=$user_id){
-            Message::addErrorMessage(Label::getLabel('LBL_Unauthorized', $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
-        }
-        
-        $reqTSObj = new RequestedTimeslots($id);
-        if (true !== $reqTSObj->changeStatus($status)) {
-            FatUtility::dieJsonError($reqTSObj->getError());
-        }
-        
-        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Status_Updated_Successfully!'));
-    }
 	
 	private function getFrm()
     {
@@ -382,9 +298,8 @@ class TeacherGroupClassesController extends TeacherBaseController
         $frm->addHiddenField('', 'grpcls_id');
         $frm->addRequiredField(Label::getLabel('LBl_Title'), 'grpcls_title');
         $frm->addTextArea(Label::getLabel('LBl_DESCRIPTION'), 'grpcls_description')->requirements()->setRequired(true);
-        $fld = $frm->addIntegerField(Label::getLabel('LBl_Min_No._Of_Learners'), 'grpcls_min_learner', '', array('id' => 'grpcls_min_learner'));
-        $fld->requirements()->setRange(1,9999);
         $fld = $frm->addIntegerField(Label::getLabel('LBl_Max_No._Of_Learners'), 'grpcls_max_learner', '', array('id' => 'grpcls_max_learner'));
+        $fld->requirements()->setRequired(false);
         $fld->requirements()->setRange(1,9999);
         $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->siteLangId))->requirements()->setRequired(true);
         $fld = $frm->addFloatField(Label::getLabel('LBl_Entry_fee'), 'grpcls_entry_fee', '', array('id' => 'grpcls_entry_fee'));

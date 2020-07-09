@@ -23,7 +23,7 @@ class LearnerTeachersController extends LearnerBaseController
         }
 
         $srch = new ScheduledLessonSearch(false);
-        $srch->addCondition('slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
+        $srch->addCondition('sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->addGroupBy('slesson_teacher_id', 'slesson_status');
@@ -37,14 +37,14 @@ class LearnerTeachersController extends LearnerBaseController
         $srch->addMultipleFields(array(
             'slns.slesson_teacher_id as teacherId',
             'slns.slesson_slanguage_id as languageID',
-            'slns.slesson_learner_id as learnerId',
+            'sld.sldetail_learner_id as learnerId',
             'ut.user_url_name as user_url_name',
             'ut.user_first_name as teacherFname',
             'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
             'IFNULL(teachercountry_lang.country_name, teachercountry.country_code) as teacherCountryName',
-            '(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_SCHEDULED.'",1,null)) from '. ScheduledLesson::DB_TBL .' where slesson_teacher_id= ut.user_id AND slesson_learner_id = '. UserAuthentication::getLoggedUserId() .' ) as scheduledLessonCount',
-            '(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_NEED_SCHEDULING.'",1,null)) from '. ScheduledLesson::DB_TBL .' where slesson_teacher_id= ut.user_id AND slesson_learner_id = '. UserAuthentication::getLoggedUserId() .' ) as unScheduledLessonCount',
-            '(select COUNT(IF(CONCAT( slesson_date, " ", slesson_start_time ) < "' . date('Y-m-d H:i:s') . '" AND slesson_date != "0000-00-00", 1, null)) from '. ScheduledLesson::DB_TBL .' where slesson_teacher_id= ut.user_id AND slesson_learner_id = '. UserAuthentication::getLoggedUserId() .' ) as pastLessonCount',
+            '(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_SCHEDULED.'",1,null)) from '. ScheduledLesson::DB_TBL .' where slesson_teacher_id= ut.user_id AND sldetail_learner_id = '. UserAuthentication::getLoggedUserId() .' ) as scheduledLessonCount',
+            '(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_NEED_SCHEDULING.'",1,null)) from '. ScheduledLesson::DB_TBL .' where slesson_teacher_id= ut.user_id AND sldetail_learner_id = '. UserAuthentication::getLoggedUserId() .' ) as unScheduledLessonCount',
+            '(select COUNT(IF(CONCAT( slesson_date, " ", slesson_start_time ) < "' . date('Y-m-d H:i:s') . '" AND slesson_date != "0000-00-00", 1, null)) from '. ScheduledLesson::DB_TBL .' where slesson_teacher_id= ut.user_id AND sldetail_learner_id = '. UserAuthentication::getLoggedUserId() .' ) as pastLessonCount',
             'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
             //'IFNULL(top_single_lesson_price, ts.us_single_lesson_amount ) as singleLessonAmount',
             //'IFNULL(top_bulk_lesson_price, ts.us_bulk_lesson_amount ) as bulkLessonAmount',
@@ -67,7 +67,7 @@ class LearnerTeachersController extends LearnerBaseController
             }
         }
         $rs = $srch->getResultSet();
-        //echo $srch->getQuery();
+        // echo $srch->getQuery();die;
         $teachers = FatApp::getDb()->fetchAll($rs);
         $this->set('teachers', $teachers);
         $srch = LessonPackage::getSearchObject($this->siteLangId);

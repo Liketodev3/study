@@ -473,3 +473,11 @@ ALTER TABLE `tbl_scheduled_lesson_details`
 --
 ALTER TABLE `tbl_scheduled_lesson_details`
   MODIFY `sldetail_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+ALTER TABLE `tbl_commission_settings` ADD `commsetting_is_grpcls` TINYINT NOT NULL AFTER `commsetting_is_mandatory`; 
+
+ALTER TABLE `tbl_commission_settings` DROP INDEX `commsetting_user_id`, ADD UNIQUE `commsetting_user_id` (`commsetting_user_id`, `commsetting_is_grpcls`) USING BTREE;
+
+ALTER TABLE `tbl_commission_setting_history` ADD `csh_commsetting_is_grpcls` TINYINT NOT NULL AFTER `csh_commsetting_is_mandatory`; 
+
+ALTER TABLE `tbl_order_products` ADD `op_grpcls_id` INT NOT NULL AFTER `op_invoice_number`; 

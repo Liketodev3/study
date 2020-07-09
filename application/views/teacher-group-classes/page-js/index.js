@@ -86,25 +86,6 @@ $(function() {
 		$(frm.page).val(page);
 		searchGroupClasses(frm);
 	};
-    
-    showInterestList = function(grpcls_id){
-        if( isUserLogged() == 0 ){
-			logInFormPopUp();
-			return false;
-		}
-        fcom.getLoader();
-        fcom.ajax(fcom.makeUrl('TeacherGroupClasses', 'InterestList'), {grpcls_id:grpcls_id}, function(res){
-            fcom.updateFaceboxContent(res);
-            jQuery('#time').datetimepicker();
-        });
-    };
 
 	searchGroupClasses(document.frmSrch);
 });
-
-function changeInterstListStatus(el, id){
-    fcom.updateWithAjax( fcom.makeUrl('TeacherGroupClasses', 'changeInterstListStatus'), {id: id, status: Number($(el).hasClass('inactive'))}, function(res){
-        $(el).toggleClass('active');
-        $(el).toggleClass('inactive');
-    });        
-}

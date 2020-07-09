@@ -30,6 +30,18 @@
 				<?php echo Label::getLabel('LBL_Lessons'); ?>
 			</a>
 		</li>
+        
+        <li class="<?php echo ( $controllerName == "LearnerClasses" ) ? 'is-active' : ''; ?>">
+			<a href="<?php echo CommonHelper::generateUrl('LearnerGroupClasses'); ?>">
+				<span class="menu-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 105 105">
+					<path class="-color-fill" d="M27,27H75v5H27V27Zm0,11H75v5H27V38Zm0,11H75v5H27V49Zm0,11H75v5H27V60Zm0,11H75v5H27V71Z" transform="translate(1.5 1.5)"/>
+					<path fill="#000"  d="M6,99V3H96V99H6ZM91,8H11V94H91V8Z" transform="translate(1.5 1.5)"/>
+					</svg>
+				</span>
+				<?php echo Label::getLabel('LBL_Group_Classes'); ?>
+			</a>
+		</li>
 
 		<li class="<?php echo ( $controllerName == "LearnerTeachers" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('LearnerTeachers'); ?>">

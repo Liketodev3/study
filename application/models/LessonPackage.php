@@ -62,7 +62,8 @@ class LessonPackage extends MyAppModel
 
         $srch = new OrderProductSearch(0, true, false);
         $srch->joinOrders();
-        $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'o.order_id = sl.slesson_order_id', 'sl');
+        $srch->joinScheduleLessonDetails();
+        $srch->joinScheduleLesson();
         $srch->setPageSize(1);
         $srch->addCondition('order_user_id', '=', $learnerId);
         $srch->addCondition('op_teacher_id', '=', $teacherId);
@@ -87,5 +88,18 @@ class LessonPackage extends MyAppModel
             return true;
         }
         return false;
+    }
+    
+    public static function getPackagesWithoutTrial($langId)
+    {
+        $srch = self::getSearchObject($langId);
+		$srch->addCondition('lpackage_is_free_trial', '=', 0);
+		$srch->addMultipleFields(array(
+			'lpackage_id',
+			'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',
+			'lpackage_lessons'
+        ));
+		$rs = $srch->getResultSet();
+		return FatApp::getDb()->fetchAll($rs);
     }
 }

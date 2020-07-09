@@ -39,7 +39,7 @@ var isLessonCancelAjaxRun = false;
 
     var slot = 0;
 
-    setUpLessonSchedule = function(teacherId,lessonId,startTime,endTime,date){
+    setUpLessonSchedule = function(teacherId,lDetailId,startTime,endTime,date){
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','isSlotTaken'),'&startTime='+startTime+'&endTime='+endTime+'&date='+date,function(t){
             t = JSON.parse(t);
             slot = t.count;
@@ -54,7 +54,7 @@ var isLessonCancelAjaxRun = false;
                             btnClass: 'btn btn--primary',
                             keys: ['enter', 'shift'],
                             action: function(){
-                                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), 'teacherId='+teacherId +'&lessonId='+lessonId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
+                                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), 'teacherId='+teacherId +'&lDetailId='+lDetailId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
                                 $.facebox.close();
                                 location.reload();
                                 });
@@ -70,7 +70,7 @@ var isLessonCancelAjaxRun = false;
                     }
                 });
             }else{
-                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), 'teacherId='+teacherId+'&lessonId='+lessonId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
+                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), 'teacherId='+teacherId+'&lDetailId='+lDetailId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
                     $.facebox.close();
                     location.reload();
                 });

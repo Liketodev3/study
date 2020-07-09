@@ -482,7 +482,8 @@ class Order extends MyAppModel
             'order_discount_total',
         ]);
         $orderSearch->joinOrderProduct();
-        $orderSearch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sl.slesson_order_id = o.order_id', 'sl');
+        $orderSearch->joinScheduledLessonDetail();
+        $orderSearch->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', 'sl.slesson_id = sld.sldetail_slesson_id', 'sl');
         $orderSearch->addCondition('o.order_id', '=', $orderId);
         // $orderSearch->addGroupBy('sl.slesson_order_id');
         return $orderSearch;

@@ -95,8 +95,13 @@ class OrderSearch extends SearchBase
         $this->joinTable(Giftcard::DB_TBL, 'INNER JOIN', 'gift.giftcard_op_id = op.op_id', 'gift');
     }
 
+    public function joinScheduledLessonDetail()
+    {
+        $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_order_id = o.order_id', 'sld');
+    }
+
     public function joinScheduledLesson()
     {
-        $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', 'sl.slesson_order_id = o.order_id AND sl.slesson_is_teacher_paid = '.applicationConstants::YES, 'sl');
+        $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', 'sl.slesson_id = sld.sldetail_slesson_id AND sl.slesson_is_teacher_paid = '.applicationConstants::YES, 'sl');
     }
 }

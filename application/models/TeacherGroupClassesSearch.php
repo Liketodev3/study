@@ -184,7 +184,6 @@ class TeacherGroupClassesSearch extends SearchBase
                 'grpcls_id',
                 'grpcls_title',
                 'grpcls_max_learner',
-                'grpcls_min_learner',
                 'grpcls_entry_fee',
                 'grpcls_start_datetime',
                 'grpcls_end_datetime',

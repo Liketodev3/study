@@ -4,7 +4,7 @@ $(function() {
 
 	viewLessonDetail = function(){
 		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','viewLessonDetail',[lessonId]),'',function(t){
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','viewLessonDetail',[lDetailId]),'',function(t){
 			$(dv).html(t);
 			frmFlashCardSrch = document.frmFlashCardSrch;
 			searchFlashCards( frmFlashCardSrch );

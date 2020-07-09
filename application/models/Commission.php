@@ -35,12 +35,14 @@ class Commission extends MyAppModel
         $assignValues = array(
             'commsetting_user_id' => $data['commsetting_user_id'],
             'commsetting_fees' => $data['commsetting_fees'],
+            'commsetting_is_grpcls' => $data['commsetting_is_grpcls'],
             'commsetting_deleted' => 0,
         );
         if ($this->mainTableRecordId > 0) {
             $assignValues['commsetting_id'] = $this->mainTableRecordId;
         }
         if ($this->db->insertFromArray(static::DB_TBL, $assignValues, false, array(), $assignValues)) {
+            $this->mainTableRecordId = $this->mainTableRecordId ? $this->mainTableRecordId : $this->db->getInsertId();
             return true;
         }
         $this->error = $this->db->getError();
@@ -109,17 +111,23 @@ class Commission extends MyAppModel
         return $row['commsetting_id'];
     }
 
-    public static function getTeacherCommission($userId)
+    public static function getTeacherCommission($userId, $grpclsId=0)
     {
         $srch = self::getSearchObject();
         $srch->addCondition('commsetting_user_id', '=', $userId);
         $srch->addCondition('commsetting_deleted', '=', applicationConstants::NO);
+        if($grpclsId>0){
+            $srch->addCondition('commsetting_is_grpcls', '=', applicationConstants::YES);
+        }
         $srch->addMultipleFields(array('commsetting_id', 'commsetting_fees'));
         $rs = $srch->getResultSet();
         if (!$row = FatApp::getDb()->fetch($rs)) {
             $srch = self::getSearchObject();
             $srch->addCondition('commsetting_user_id', '=', 0);
             $srch->addCondition('commsetting_deleted', '=', applicationConstants::NO);
+            if($grpclsId>0){
+                $srch->addCondition('commsetting_is_grpcls', '=', applicationConstants::YES);
+            }
             $srch->addMultipleFields(array('commsetting_id', 'commsetting_fees'));
             $rs = $srch->getResultSet();
             if (!$row = FatApp::getDb()->fetch($rs)) {

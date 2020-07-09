@@ -238,7 +238,7 @@ class TeacherWeeklySchedule extends MyAppModel
         return true;
     }
 
-    public function checkCalendarTimeSlotAvailability($userId, $startTime, $endTime, $date, $day, $originalDayNumber, $weekStart, $weekEnd)
+    public function checkCalendarTimeSlotAvailability($userId, $startTime, $endTime, $weekStart)
     {
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
@@ -351,7 +351,7 @@ class TeacherWeeklySchedule extends MyAppModel
         return 0;
     }
 
-    public static function isSlotAvailable($teacherId, $startDateTime, $endDateTime, $weekStart, $weekEnd)
+    public static function isSlotAvailable($teacherId, $startDateTime, $endDateTime, $weekStart)
     {
         $teacherId = FatUtility::int($teacherId);
         if ($teacherId < 1) {

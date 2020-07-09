@@ -15,6 +15,30 @@ class ScheduledLessonDetailsSearch extends SearchBase
         $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id=sl.slesson_id', 'sl');
     }
     
+    public function joinTeacher()
+    {
+        $this->joinTable(User::DB_TBL, 'INNER JOIN', 'ut.user_id = sl.slesson_teacher_id', 'ut');
+    }
+    
+    public function joinLearner()
+    {
+        $this->joinTable(User::DB_TBL, 'INNER JOIN', 'ul.user_id = sld.sldetail_learner_id', 'ul');
+    }
+    
+    public function joinLearnerCredentials()
+    {
+        $this->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'lcred.credential_user_id = sld.sldetail_learner_id', 'lcred');
+    }
+    
+    public function joinLessonLanguage()
+    {
+        $langId = CommonHelper::getLangId();
+        $this->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'sl.slesson_slanguage_id = tlang.tlanguage_id', 'tlang');
+        if ($langId > 0) {
+            $this->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 't_sl_l.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND tlanguagelang_lang_id = ' . $langId, 't_sl_l');
+        }
+    }
+    
     public function getRefundPercentage($sldetailId):int
     {
         $this->joinScheduledLesson();

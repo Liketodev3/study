@@ -37,6 +37,11 @@ class TeacherLessonReviewSearch extends SearchBase
     {
         $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', 'tlr.tlreview_lesson_id = sl.slesson_id', 'sl');
     }
+
+    public function joinScheduleLessonDetails()
+    {
+        $this->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id=sl.slesson_id', 'sld');
+    }
     public function joinLessonLanguage($langId = 0)
     {
         $langId = FatUtility::int($langId);

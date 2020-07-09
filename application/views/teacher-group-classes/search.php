@@ -30,17 +30,9 @@ $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate))); ?>
                         <span class="td__data">
                         <p>
                         <?php echo $class['grpcls_title']; ?><br>
-                        <strong><?php echo Label::getLabel('LBL_Min_Learners'); ?>:</strong>
-                        <?php echo $class['grpcls_min_learner']; ?>&nbsp;&nbsp;&nbsp;
-                        
-                        <strong><?php echo Label::getLabel('LBL_Max_Learners'); ?>:</strong>
-                        <?php echo $class['grpcls_max_learner']; ?><br>
                         
                         <strong><?php echo Label::getLabel('LBL_Booked_Seats'); ?>:</strong>
                         <?php echo $class['total_learners']; ?>&nbsp;&nbsp;&nbsp;
-                        
-                        <strong><?php echo Label::getLabel('LBL_Vacant_Seats'); ?>:</strong>
-                        <?php echo $class['grpcls_max_learner']-$class['total_learners']; ?><br>
                         
                         <strong><?php echo Label::getLabel('LBL_Entry_fee'); ?>:</strong>
                         <?php echo $class['grpcls_entry_fee']; ?>
@@ -70,9 +62,7 @@ $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate))); ?>
                             <a class="btn btn--gray btn--disabled btn--small" href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Can_not_edit_old_classes') ?>"><?php echo Label::getLabel("LBL_Edit") ?></a>
                             <?php endif; ?>
                             <a class="btn btn--secondary btn--small" href="javascript:void(0);" onclick="cancelClass('<?php echo $class['grpcls_id'];  ?>');"><?php echo Label::getLabel("LBL_Cancel") ?></a>
-                            <a class="btn btn--small" href="javascript:void(0);" onclick="removeClass(this, '<?php echo $class['grpcls_id'];  ?>');"><?php echo Label::getLabel("LBL_Delete") ?></a>
                         <?php endif; ?>
-                        <a class="btn btn--primary btn--small" href="javascript:void(0);" onclick="showInterestList('<?php echo $class['grpcls_id'];  ?>');"><?php echo Label::getLabel("LBL_Interest_List") ?></a>
                     </td>
                 </tr>
                 <?php } ?>

@@ -1,6 +1,7 @@
 
 New Features:
     *Task-74784: 1-1 class
+    *Task-73154: Group class
 
 Enhancements: N/A
 

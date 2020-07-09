@@ -378,13 +378,6 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $srch->addCondition('slns.slesson_id', ' = ', $lessonId);
-        $srch->addFld(
-            array(
-                'lcred.credential_email as learnerEmailId',
-                'slesson_status',
-                'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName'
-            )
-        );
 
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
@@ -397,6 +390,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         /* ] */
         $db = FatApp::getDb();
         $db->startTransaction();
+        
         /* update lesson status[ */
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
         $sLessonObj->assignValues(array('slesson_status' => ScheduledLesson::STATUS_CANCELLED));
@@ -405,25 +399,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError($sLessonObj->getError());
         }
         /* ] */
-        if (!$sLessonObj->refundToLearner()) {
+        
+        if (!$sLessonObj->cancelLessonByTeacher($post['cancel_lesson_msg'])) {
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
         }
+        
         $db->commitTransaction();
-        /* send an email to learner[ */
-        $vars = array(
-            '{learner_name}' => $lessonRow['learnerFullName'],
-            '{teacher_name}' => $lessonRow['teacherFullName'],
-            '{lesson_name}' => $lessonRow['teacherTeachLanguageName'],
-            '{teacher_comment}' => $post['cancel_lesson_msg'],
-            '{lesson_date}' => FatDate::format($lessonRow['slesson_date']),
-            '{lesson_start_time}' => $lessonRow['slesson_start_time'],
-            '{lesson_end_time}' => $lessonRow['slesson_end_time'],
-        );
-
-        if (!EmailHandler::sendMailTpl($lessonRow['learnerEmailId'], 'teacher_cancelled_email', $this->siteLangId, $vars)) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
-        }
         /* ] */
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Cancelled_Successfully!'));
     }
@@ -488,6 +470,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $dataArr = array(
             'slesson_status' => ScheduledLesson::STATUS_NEED_SCHEDULING,
             'slesson_date' => '0000-00-00',
+            'slesson_end_date' => '0000-00-00',
             'slesson_start_time' => '00:00:00',
             'slesson_end_time' => '00:00:00'
         );
@@ -496,22 +479,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError($sLessonObj->getError());
         }
         /* ] */
-        /* send email to learner[ */
-        $vars = array(
-            '{learner_name}' => $lessonRow['learnerFullName'],
-            '{teacher_name}' => $lessonRow['teacherFullName'],
-            '{lesson_name}' => $lessonRow['teacherTeachLanguageName'],
-            '{teacher_comment}' => $post['reschedule_lesson_msg'],
-            '{lesson_date}' => FatDate::format($lessonRow['slesson_date']),
-            '{lesson_start_time}' => $lessonRow['slesson_start_time'],
-            '{lesson_end_time}' => $lessonRow['slesson_end_time'],
-            '{action}' => Label::getLabel('LBL_Rescheduled'),
-        );
-
-        if (!EmailHandler::sendMailTpl($lessonRow['learnerEmailId'], 'teacher_reschedule_email', $this->siteLangId, $vars)) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
+        if (!$sLessonObj->rescheduleLessonByTeacher($post['reschedule_lesson_msg'])) {
+            FatUtility::dieJsonError($sLessonObj->getError());
         }
-        /* ] */
 
         $userNotification = new UserNotifications($lessonRow['learnerId']);
         $userNotification->sendSchLessonByTeacherNotification($lessonId, true);

@@ -18,8 +18,8 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 
 <script>
 
-    var lesson_joined = '<?php echo $lessonData['slesson_learner_join_time']>0 ?>';
-    var lesson_completed = '<?php echo $lessonData['slesson_learner_end_time']>0 ?>';
+    var lesson_joined = '<?php echo $lessonData['sldetail_learner_join_time']>0 ?>';
+    var lesson_completed = '<?php echo $lessonData['sldetail_learner_end_time']>0 ?>';
     var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 
     var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
@@ -36,7 +36,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
     }
 
     jQuery(document).ready(function () {
-        <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
+        <?php if( $lessonData['sldetail_learner_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
         $("#lesson_actions").show();
 		<?php }?>
     });
@@ -48,7 +48,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 		checkNewFlashCards();
 		searchFlashCards(document.frmFlashCardSrch);
 		$('.screen-chat-js').show();
-		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
+		<?php if( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
             $("#lesson_actions").hide();
 			$("#end_lesson_time_div").show();
 		<?php }?>
@@ -74,7 +74,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
                     $.mbsmessage( '<?php echo Label::getLabel('LBL_Teacher_Has_Joined_Now_you_can_also_Join_The_Lesson!'); ?>',true, 'alert alert--success');
 				}
 
-				if(t.slesson_status > 1) {
+				if(t.sldetail_learner_status > 1) {
                 $.confirm({
                     title: langLbl.Confirm,
                     content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',
@@ -115,7 +115,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 	}
 
 	$(function(){
-		<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
+		<?php if( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
         var showLessonBtn = true;
 		$('#start_lesson_timer').countdowntimer({
 			startDate : "<?php echo $curDate; ?>",
@@ -155,7 +155,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 	<div class="screen">
 		<div class="screen__left" style="background-image:url(<?php echo CONF_WEBROOT_URL ?>images/2000x900_1.jpg">
 			<div class="screen__center-content">
-				<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ) { ?>
+				<?php if( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ) { ?>
 				<div class="alert alert--info" role="alert">
 					<a class="close" href="javascript:void(0)"></a>
 					<p>
@@ -165,7 +165,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 				</div>
 				<span class="-gap"></span>
 				<?php } ?>
-				<?php if ( $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED && $countReviews == 0 ) { ?>
+				<?php if ( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED && $countReviews == 0 ) { ?>
 				<div class="alert alert--info" role="alert">
 					<p>
 						<?php echo Label::getLabel('LBL_Note'); ?>:
@@ -187,7 +187,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 				</div>
 				<span class="-gap"></span>
 				<?php }
-				if ( $lessonData['slesson_status'] == ScheduledLesson::STATUS_CANCELLED ) { ?>
+				if ( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_CANCELLED ) { ?>
 				<div class="alert alert--info" role="alert">
 					<a class="close" href="javascript:void(0)"></a>
 					<p>
@@ -200,13 +200,13 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 				<a href="javascript:void(0);" style="display:none;" class="btn btn--secondary btn--xlarge join_lesson_now" id="joinL" onclick="joinLesson('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');">
 					<?php echo Label::getLabel('LBL_Join_Lesson'); ?>
 				</a>
-				<?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ) { ?>
+				<?php if( $lessonData['sldetail_learner_status'] != ScheduledLesson::STATUS_SCHEDULED ) { ?>
 				<a href="<?php echo CommonHelper::generateUrl('learner'); ?>" class="btn btn--secondary btn--large">
 					<?php echo Label::getLabel('LBL_Go_to_Dashboard'); ?>
 				</a>
 				<?php } ?>
 				<?php
-				if ( $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED &&  $lessonData['issrep_id'] < 1 ) { ?>
+				if ( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED &&  $lessonData['issrep_id'] < 1 ) { ?>
 				<p class="issueReportLink"><a href="javascript:void(0);" onclick="issueReported('<?php echo $lessonData['slesson_id']; ?>')" >
 					<?php echo Label::getLabel('LBL_Click_here_to_report_an_Issue'); ?>
 				</a></p>
@@ -317,7 +317,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 																<?php echo Label::getLabel('LBL_Status'); ?>
 															</span>
 															<span class="span-right">
-																<?php echo $statusArr[$lessonData['slesson_status']]; ?>
+																<?php echo $statusArr[$lessonData['sldetail_learner_status']]; ?>
 															</span>
 														</li>
 														<li>
@@ -382,14 +382,14 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 																		<a class="btn btn--large btn--secondary" href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lessonData['slesson_id']; ?>')">
 																			<?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?>
 																		</a>
-																		<?php  if($lessonData['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) { ?>
+																		<?php  if($lessonData['sldetail_learner_status'] != ScheduledLesson::STATUS_CANCELLED) { ?>
 																		<a href="javascript:void(0)" class="btn btn--large  btn--secondary btn--dropdown toggle__trigger-js"></a>
 																		<?php } ?>
 																	</div>
 																	<div class="select-box__target -skin toggle__target-js" style="display:none;" >
 																		<div class="listing listing--vertical">
 																			<ul>
-																				<?php  if($lessonData['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
+																				<?php  if($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
 																				<li>
                                                                                     <?php
                                                                                     $is_trail = ($lessonData['is_trial']) ? 'free_trial' : '';
@@ -404,7 +404,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 																					</a>
 																				</li>
 																				<?php }  ?>
-																				<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ) {
+																				<?php if( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED ) {
 										if ( $lessonData['issrep_id'] < 1 || $lessonData['issrep_status'] == IssuesReported::STATUS_RESOLVED && ($lessonData['issrep_issues_resolve_by'] != 3 && $lessonData['issrep_issues_resolve_by'] != 4 ) ) {
 										?>
 																				<li>
@@ -421,14 +421,14 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 																				</li>
 																				<?php }
 										} ?>
-																				<?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lessonData['issrep_id'] > 0 ) { ?>
+																				<?php if( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lessonData['issrep_id'] > 0 ) { ?>
 																				<li>
 																					<a href="javascript:void(0);" onclick="issueDetails('<?php echo $lessonData['slesson_id']; ?>')" >
 																						<?php echo Label::getLabel('LBL_Issue_Details'); ?>
 																					</a>
 																				</li>
 																				<?php } ?>
-																				<?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
+																				<?php if($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
 																				<li>
 																					<a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lessonData['slesson_id']; ?>')">
 																						<?php echo Label::getLabel('LBL_Reschedule'); ?>
