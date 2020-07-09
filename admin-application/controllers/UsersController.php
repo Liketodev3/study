@@ -100,7 +100,7 @@ class UsersController extends AdminBaseController
         $teacherRequest->doNotLimitRecords();
 
         $teacherRequest->joinTable("(".$latestTeacherRequest->getQuery().")",'INNER JOIN','lastrequest.latestRequestId = tr.utrequest_id','lastrequest');
-        $srch->joinTable("(".$teacherRequest->getQuery().")", 'LEFT JOIN', 'utr.latestRequestId = user_id', 'utr');
+        $srch->joinTable("(".$teacherRequest->getQuery().")", 'LEFT JOIN', 'utr.utrequest_user_id = user_id', 'utr');
 
         $srch->addFld(array(
                   'user_is_learner',
@@ -108,7 +108,9 @@ class UsersController extends AdminBaseController
                   'user_first_name',
                   'user_last_name',
                   'user_registered_initially_for',
-                  'utr.utrequest_status'
+                  'utr.utrequest_status',
+                  'utr.utrequest_id',
+                   'utr.utrequest_user_id'
               ));
 
         $srch->setPageNumber($page);

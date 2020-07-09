@@ -14,7 +14,7 @@ $th = $tbl->appendElement('thead')->appendElement('tr');
 foreach ($arr_flds as $val) {
 	$e = $th->appendElement('th', array(), $val);
 }
-
+$userTypeArray = User::getUserTypesArr( $adminLangId );
 $sr_no = $page==1 ? 0: $pageSize*($page-1);
 foreach ($arr_listing as $sn=>$row){
 
@@ -69,16 +69,16 @@ foreach ($arr_listing as $sn=>$row){
 					$str .= $arr[User::USER_TYPE_TEACHER].'<br/>';
 				}
 
-				if( $row['user_registered_initially_for'] == User::USER_TEACHER_DASHBOARD && 0 == $row['user_is_teacher'] ){
-					$userTypeStr = Label::getLabel('LBL_Signing_up_for_{user-type}');
-					$userTypeStr = str_replace( "{user-type}", User::getUserTypesArr( $adminLangId )[User::USER_TEACHER_DASHBOARD], $userTypeStr );
-					$str .= '<span class="label label-danger">' . $userTypeStr .'</span>';
-				} elseif( $row['utrequest_status'] == 0  && $row['utrequest_status'] !='') {
-					$userTypeStr = Label::getLabel('LBL_Signing_up_for_{user-type}');
-					$userTypeStr = str_replace( "{user-type}", User::getUserTypesArr( $adminLangId )[User::USER_TEACHER_DASHBOARD], $userTypeStr );
-					$str .= '<span class="label label-danger">' . $userTypeStr .'</span>';
-				}
+				$userTypeStr = Label::getLabel('LBL_Signing_up_for_{user-type}');
+				$userTypeStr = str_replace( "{user-type}", $userTypeArray[User::USER_TEACHER_DASHBOARD], $userTypeStr );
+				$signUpForStr = '<span class="label label-danger">' . $userTypeStr .'</span>';
 
+				if($row['utrequest_id'] > 0 && $row['utrequest_status'] == TeacherRequest::STATUS_PENDING) {
+					$str .= "sdsd";
+				}elseif ($row['user_registered_initially_for'] == User::USER_TEACHER_DASHBOARD && $row['user_is_teacher'] == applicationConstants::NO) {
+					$str .=$signUpForStr;
+				}
+				
 				$td->appendElement('plaintext', array(), $str  ,true);
 
 			break;
@@ -113,7 +113,7 @@ foreach ($arr_listing as $sn=>$row){
 
 					$innerLi=$innerUl->appendElement('li');
 					// $innerLi->appendElement('a', array('href'=>CommonHelper::generateUrl('Users','login',array($row['user_id'])),'target'=>'_blank','class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Log_into_store',$adminLangId)),Label::getLabel('LBL_Log_into_Profile',$adminLangId), true);
-					$innerLi->appendElement('a', array('href'=>"javascript:void(0)",'onClick'=>"userLogin(".$row['user_id'].")",'class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Log_into_store',$adminLangId)),Label::getLabel('LBL_Log_into_Profile',$adminLangId), true);					
+					$innerLi->appendElement('a', array('href'=>"javascript:void(0)",'onClick'=>"userLogin(".$row['user_id'].")",'class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Log_into_store',$adminLangId)),Label::getLabel('LBL_Log_into_Profile',$adminLangId), true);
 
 					/* $innerLi=$innerUl->appendElement('li');
 					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Email_User',$adminLangId),"onclick"=>"sendMailForm(".$row['user_id'].")"),Label::getLabel('LBL_Email_User',$adminLangId), true); */
