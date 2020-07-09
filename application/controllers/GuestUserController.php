@@ -280,7 +280,7 @@ class GuestUserController extends MyAppController
         }
         $userObj = new User($userId);
         $userData = User::getAttributesById($userId, array(
-            'user_id'
+            'user_id',
         ));
         if (!$userData || $userData['user_id'] != $userId) {
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_CODE'));
@@ -297,6 +297,12 @@ class GuestUserController extends MyAppController
         $srch->addCondition('credential_user_id', '=', $userId);
         $rs = $srch->getResultSet();
         $userCredentialRow = $db->fetch($rs);
+
+        if (applicationConstants::ACTIVE === $userCredentialRow['credential_verified']) {
+            Message::addErrorMessage(Label::getLabel('MSG_Your_Account_Is_Already_Verified'));
+            FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
+        }
+
         if (applicationConstants::ACTIVE !== $userCredentialRow['credential_active']) {
             $active = FatApp::getConfig('CONF_ADMIN_APPROVAL_REGISTRATION', FatUtility::VAR_INT, 1) ? 0 : 1;
             if (0 === $userObj->activateAccount($active)) {
@@ -304,12 +310,15 @@ class GuestUserController extends MyAppController
                 Message::addErrorMessage(Label::getLabel('MSG_INVALID_CODE'));
                 FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
             }
-        }
+         }
+
         if (true !== $userObj->verifyAccount()) {
             $db->rollbackTransaction();
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_CODE'));
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
         }
+        
+        $db->commitTransaction();
         $userdata = $userObj->getUserInfo(array(
             'credential_email',
             'credential_password',
@@ -327,7 +336,6 @@ class GuestUserController extends MyAppController
                 FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
             }
         }
-        $db->commitTransaction();
         /* if (1 === FatApp::getConfig('CONF_AUTO_LOGIN_REGISTRATION', FatUtility::VAR_INT, 1)) {
             $authentication = new UserAuthentication();
             if (true !== $authentication->login($userdata['credential_email'], $userdata['credential_password'], $_SERVER['REMOTE_ADDR'], false)) {
