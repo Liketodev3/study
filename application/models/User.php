@@ -797,21 +797,29 @@ class User extends MyAppModel
             $srch->addFld('country_code as countryName');
         }
         if ($isTeacherDashboard) {
-            $srch->joinTeacherLessonData($this->getMainTableRecordId());
+            $srch->joinTeacherLessonData($this->getMainTableRecordId(), false, false);
         } else {
             $srch->joinLearnerLessonData($this->getMainTableRecordId());
         }
+        $srch->joinTable(Order::DB_TBL, 'INNER JOIN', 'o.order_id = sl.slesson_order_id and o.order_type = '.Order::TYPE_LESSON_BOOKING, 'o');
         $srch->addMultipleFields(array(
             'user_id',
             'user_url_name',
             'user_first_name',
             'user_last_name',
             'concat(user_first_name, " ", user_last_name) as user_full_name',
+            'COUNT(sl.slesson_id) AS teacherTotLessons',
+            // 'SUM(IF(slesson_status="'.ScheduledLesson::STATUS_COMPLETED.'",1,0)) as completedLessons',
+            'SUM(IF(slesson_status="'.ScheduledLesson::STATUS_SCHEDULED.'",1,0)) as teacherSchLessons',
+            'SUM(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED.'",1,0)) as cancelledLessons',
             'user_timezone',
             'user_country_id'
             ));
 
         $srch->addCondition('user_id', '=', $this->getMainTableRecordId());
+        $srch->addCondition('order_type', 'IN', [Order::ORDER_IS_PAID,Order::ORDER_IS_CANCELLED]);
+        // echo $srch->getQuery();
+        // die;
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetch($rs);
     }

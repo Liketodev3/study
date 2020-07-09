@@ -143,11 +143,11 @@ class PurchasedLessonsController extends AdminBaseController
                 $scheduledLessonSearchObj->addCondition('issrep_id', '>', 0);
                 break;
                 case ScheduledLesson::STATUS_UPCOMING:
-                    $scheduledLessonSearchObj->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
+                    $scheduledLessonSearchObj->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
+                    // $scheduledLessonSearchObj->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
                     $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
                 break;
                 case ScheduledLesson::STATUS_SCHEDULED:
-                    $scheduledLessonSearchObj->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
                     $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', $status);
                 break;
                 default:

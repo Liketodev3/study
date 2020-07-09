@@ -111,7 +111,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 			 $orderIsPaidCondition->attachCondition('order_is_paid','=',Order::ORDER_IS_CANCELLED,'OR');
 		}
         $srch->addCondition('slns.slesson_learner_id', '=', UserAuthentication::getLoggedUserId());
-       
+
         $srch->joinTeacherSettings();
         //$srch->joinTeacherTeachLanguage( $this->siteLangId );
         // $srch->joinTeacherTeachLanguageView( $this->siteLangId );
@@ -154,7 +154,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             if ($post['status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) {
                 $srch->addCondition('issrep_id', '>', 0);
             } elseif ($post['status'] == ScheduledLesson::STATUS_UPCOMING) {
-                $srch->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
+                // $srch->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
+                $srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
                 $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
             } else {
                 $srch->addCondition('slns.slesson_status', '=', $post['status']);
@@ -369,7 +370,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $fld->requirements()->setRequired();
         $fld->requirements()->setIntPositive();
         $submitBtn =  $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Approve'));
-		
+
 		$cancelBtn = $frm->addResetButton('', 'reset', Label::getLabel('LBL_Cancel'));
 		$submitBtn->attachField($cancelBtn);
         return $frm;
@@ -393,9 +394,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatUtility::dieWithError(Message::getHtml());
         }
-		
+
 		$lessonRow['order_net_amount'] =   FatUtility::float($lessonRow['order_net_amount']);
-		
+
         $orderObj =  new Order;
         $orderSearch = $orderObj->getLessonsByOrderId($lessonRow['slesson_order_id']);
         $orderSearch->addMultipleFields([
@@ -471,7 +472,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if($lessonRow['slesson_status'] == ScheduledLesson::STATUS_CANCELLED) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Lesson_Already_Cancelled'));
         }
-		
+
         /* ] */
         /* update lesson status[ */
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
@@ -486,7 +487,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 			$db->rollbackTransaction();
 			FatUtility::dieJsonError($sLessonObj->getError());
 		}
-		
+
          $db->commitTransaction();
         /* send email to teacher[ */
         $vars = array(

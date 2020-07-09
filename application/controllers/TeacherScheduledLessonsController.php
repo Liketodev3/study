@@ -138,12 +138,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             if ($post['status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) {
                 $srch->addCondition('issrep_id', '>', 0);
             } elseif ($post['status'] == ScheduledLesson::STATUS_UPCOMING) {
-                $srch->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
+                // $srch->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
+                $srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
                 $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
             } else {
-                if ($post['status'] == ScheduledLesson::STATUS_SCHEDULED) {
-                    $srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
-                }
+                // if ($post['status'] == ScheduledLesson::STATUS_SCHEDULED) {
+                //     $srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
+                // }
                 $srch->addCondition('slns.slesson_status', '=', $post['status']);
             }
         }
