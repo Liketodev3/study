@@ -49,7 +49,7 @@ class OrderPayment extends Order
         );
         return $arrOrder;
     }
-    public function chargeFreeOrder($amountToBeCharge = 0)
+    public function chargeFreeOrder($amountToBeCharge = 0, $isFreeTrial = false)
     {
         if ($amountToBeCharge > 0) {
             $this->error = Label::getLabel('MSG_Invalid_Order');
@@ -63,7 +63,12 @@ class OrderPayment extends Order
         $transObj = new Transaction($orderInfo["order_user_id"]);
         $formattedOrderId = "#".$orderInfo["order_id"];
 
-        $utxn_comments = Label::getLabel('LBL_Teacher_Free_Trial_Booked_for_Order:_{order-id}', $langId);
+        $utxn_comments = Label::getLabel('LBL_ORDER_PLACED_{order-id}', $langId);
+        
+        if($isFreeTrial) {
+            $utxn_comments = Label::getLabel('LBL_Teacher_Free_Trial_Booked_for_Order:_{order-id}', $langId);
+        }
+
         $utxn_comments = str_replace("{order-id}", $formattedOrderId, $utxn_comments);
 
         $db = FatApp::getDb();

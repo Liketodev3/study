@@ -65,7 +65,8 @@ class FreePayController extends MyAppController
             FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentFailure', array($orderId)));
         }
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
-        if (!$orderPaymentObj->chargeFreeOrder()) {
+        $isFreeTrial = ($cartData['lpackage_is_free_trial'] == applicationConstants::YES);
+        if (!$orderPaymentObj->chargeFreeOrder(0, $isFreeTrial)) {
             Message::addErrorMessage($orderPaymentObj->getError());
             if ($isAjaxCall) {
                 FatUtility::dieWithError(Message::getHtml());
