@@ -77,8 +77,12 @@ function endLessonButtonAction(){
     $("#lesson_actions").show();
     $('.screen-chat-js').hide();
     searchFlashCards(document.frmFlashCardSrch);
-    clearInterval(checkEveryMinuteStatusVar);
+    if(checkEveryMinuteStatusVar){
+        clearInterval(checkEveryMinuteStatusVar);
+    }
+    if(checkNewFlashCardsVar){
     clearInterval(checkNewFlashCardsVar);
+    }
     $("#end_lesson_time_div").hide();
 }
 

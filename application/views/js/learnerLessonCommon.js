@@ -1,6 +1,6 @@
 var isLessonCancelAjaxRun = false;
-	lessonFeedback = function (lessonId){
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','lessonFeedback',[lessonId]),'',function(t){
+	lessonFeedback = function (lDetailId){
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','lessonFeedback',[lDetailId]),'',function(t){
 			$.facebox( t,'facebox-medium');
 		});
 	};
@@ -25,8 +25,8 @@ var isLessonCancelAjaxRun = false;
 	if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'requestRescheduleSetup'), data , function(t) {
-				$.facebox.close();
-				location.reload();
+            $.facebox.close();
+            location.reload();
 		});
 	};
 
@@ -136,14 +136,14 @@ var isLessonCancelAjaxRun = false;
 		});
 	};
 
-	issueDetails = function(issueLessonId) {
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','issueDetails',[issueLessonId]),'',function(t){
+	issueDetails = function(issuelDetailId) {
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','issueDetails',[issuelDetailId]),'',function(t){
 			$.facebox( t,'facebox-medium issueDetailPopup');
 		});
 	};
 
-	reportIssueToAdmin = function(issueId, lessonId, escalated_by) {
-		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'reportIssueToAdmin', [issueId, lessonId, escalated_by]),'', function(t) {
+	reportIssueToAdmin = function(issueId, lDetailId, escalated_by) {
+		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'reportIssueToAdmin', [issueId, lDetailId, escalated_by]),'', function(t) {
 			$.facebox.close();
 			location.reload();
 		});

@@ -102,6 +102,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addMultipleFields(array(
             'slns.slesson_id',
+			'slesson_grpcls_id',
 			'order_is_paid',
             'sld.sldetail_learner_id as learnerId',
             'slns.slesson_teacher_id as teacherId',
@@ -1072,6 +1073,16 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
         $db = FatApp::getDb();
         $db->startTransaction();
+        
+        if($lessonRow['slesson_grpcls_id']>0){
+            $tGrpClsObj = new TeacherGroupClasses($lessonRow['slesson_grpcls_id']);
+            $tGrpClsObj->assignValues(array('grpcls_status' => TeacherGroupClasses::STATUS_COMPLETED));
+            if (!$tGrpClsObj->save()) {
+                $db->rollbackTransaction();
+                FatUtility::dieJsonError($tGrpClsObj->getError());
+            }
+        }
+        
         if ($lessonRow['slesson_is_teacher_paid'] == 0) {
             $lessonObj = new ScheduledLesson($lessonId);
             if ($lessonObj->payTeacherCommission()) {

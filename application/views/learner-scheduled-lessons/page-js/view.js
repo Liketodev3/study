@@ -20,15 +20,15 @@ $(function() {
 		searchFlashCards(frm);
 	};
 
-	scheduleLessonSetup = function(lessonId,startTime,endTime,date){
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'scheduleLessonSetup'), 'lessonId='+lessonId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
+	scheduleLessonSetup = function(lDetailId,startTime,endTime,date){
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'scheduleLessonSetup'), 'lDetailId='+lDetailId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
 			$.facebox.close();
 			viewLessonDetail();
 		});
 	};
 
-	/*lessonFeedback = function(lessonId){
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','lessonFeedback',[lessonId]),'',function(t){
+	/*lessonFeedback = function(lDetailId){
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','lessonFeedback',[lDetailId]),'',function(t){
 			$.facebox( t,'facebox-medium');
 		});
 	};
@@ -56,8 +56,8 @@ $(function() {
 		});
 	};
 
-	flashCardForm = function( lessonId, flashcardId ){
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','flashCardForm'),'flashcardId='+flashcardId + '&lessonId='+lessonId,function(t){
+	flashCardForm = function( lDetailId, flashcardId ){
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','flashCardForm'),'flashcardId='+flashcardId + '&lDetailId='+lDetailId,function(t){
 			$.facebox( t,'facebox-medium');
 		});
 	};
@@ -109,7 +109,7 @@ $(function() {
 	};
 
 	joinLesson = function(learnerId,teacherId){
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'markLearnerJoinTime'), 'lessonId='+lessonId , function(t) {
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'markLearnerJoinTime'), 'lDetailId='+lDetailId , function(t) {
             var ans = $.parseJSON(t);
             if(ans.status){
                 joinLessonButtonAction();
@@ -122,7 +122,7 @@ $(function() {
             }
         });
 	};
-	endLesson = function (lessonId) {
+	endLesson = function (lDetailId) {
         $.confirm({
             title: langLbl.Confirm,
             content: langLbl.endLessonAlert,
@@ -132,8 +132,8 @@ $(function() {
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function(){
-                        fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'endLessonSetup'), 'lessonId='+lessonId , function(t) {
-                                clearInterval(checkEveryMinuteStatusVar);
+                        fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'endLessonSetup'), 'lDetailId='+lDetailId , function(t) {
+                                // clearInterval(checkEveryMinuteStatusVar);
                                 $('.screen-chat-js').hide();
                                 endLessonButtonAction();
                                 $.facebox.close();
@@ -151,8 +151,8 @@ $(function() {
             }
         });
 	};
-	endLessonSetup = function(lessonId){
-        fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'endLessonSetup'), 'lessonId='+lessonId , function(t) {
+	endLessonSetup = function(lDetailId){
+        fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'endLessonSetup'), 'lDetailId='+lDetailId , function(t) {
             clearInterval(checkEveryMinuteStatusVar);
             $('.screen-chat-js').hide();
             endLessonButtonAction();
@@ -175,25 +175,25 @@ $(function() {
 		});
 	};
 
-	assignLessonPlanToLessons = function(lessonId,planId){
-		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'assignLessonPlanToLessons'), 'ltp_slessonid='+lessonId+'&ltp_tlpn_id='+planId , function(t) {
+	assignLessonPlanToLessons = function(lDetailId,planId){
+		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'assignLessonPlanToLessons'), 'ltp_slDetailId='+lDetailId+'&ltp_tlpn_id='+planId , function(t) {
 				$.facebox.close();
 				viewLessonDetail();
 		});
 	};
 
-	removeAssignedLessonPlan = function(lessonId){
+	removeAssignedLessonPlan = function(lDetailId){
 		if(confirm(langLbl.confirmRemove))
 		{
-			fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'removeAssignedLessonPlan'), 'ltp_slessonid='+lessonId , function(t) {
+			fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'removeAssignedLessonPlan'), 'ltp_slDetailId='+lDetailId , function(t) {
 					$.facebox.close();
 					viewLessonDetail();
 			});
 		}
 	};
 
-	viewAssignedLessonPlan = function(lessonId){
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'viewAssignedLessonPlan',[lessonId]), '', function(t) {
+	viewAssignedLessonPlan = function(lDetailId){
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'viewAssignedLessonPlan',[lDetailId]), '', function(t) {
 			$.facebox( t,'facebox-medium');
 		});
 	};
