@@ -43,6 +43,8 @@ class User extends MyAppModel
     const USER_NOTICATION_NUMBER_24 = 24;
     const USER_NOTICATION_NUMBER_48 = 48;
 
+
+
     public function __construct($userId = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $userId);
@@ -242,9 +244,7 @@ class User extends MyAppModel
         return true;
     }
 
-
-
-    public static function isTeacherProfileCompleted($userId = 0)
+    public static function getTeacherProfileProgress($userId = 0)
     {
         $userId = FatUtility::int($userId);
         if ($userId <= 0) {
@@ -252,63 +252,95 @@ class User extends MyAppModel
         }
 
         $srch = new UserSearch();
-        $srch->joinUserSettings();
-        $srch->joinUserSpokenLanguages();
+        //$srch->joinUserSettings();
+        //$srch->joinUserSpokenLanguages();
         $srch->addCondition('user_id', '=', $userId);
         $srch->setPageSize(1);
         $srch->addMultiplefields(array(
-            'user_country_id',
-            'us_single_lesson_amount',
-            'us_bulk_lesson_amount',
-            'uqualification_id',
-            'utpref_user_id',
-            'utl_us_user_id'
+            'if(user_country_id > 0,1,0) as userCountryId',
+            'if(user_timezone != "",1,0) as userTimeZone',
+            'if(count(DISTINCT uqualification_id) > 0,1,0) as uqualificationCount',
+            'if(count(DISTINCT tgavl_id),1,0) as generalAvailabilityCount',
+            'if(count(DISTINCT utsl_slanguage_id),1,0) as slanguageCount',
+            'if(count(DISTINCT utpref_preference_id),1,0) as preferenceCount',
+            'if(count(DISTINCT utl_id),1,0) as teachLangCount',
             ));
 
         /* qualification/experience[ */
-        $qSrch = new UserQualificationSearch();
-        $qSrch->addMultipleFields(array('uqualification_user_id', 'uqualification_id'));
-        $qSrch->addCondition('uqualification_active', '=', 1);
-        $qSrch->addGroupBy('uqualification_user_id');
-        $srch->joinTable("(" . $qSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = uqualification_user_id', 'utqual');
+    //    $qSrch = new UserQualificationSearch();
+        // $qSrch->addMultipleFields(array('uqualification_user_id', 'uqualification_id'));
+        // $qSrch->addCondition('uqualification_active', '=', 1);
+        // $qSrch->addGroupBy('uqualification_user_id');
+        // $srch->joinTable("(" . $qSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = uqualification_user_id', 'utqual');
         /* ] */
+
+
+        $srch->joinTable(UserQualification::DB_TBL, 'LEFT JOIN', 'user_id = uqualification_user_id and uqualification_active = '.applicationConstants::YES, 'utqual');
+
+        $spokenSrch = new searchBase(UserToLanguage::DB_TBL);
+        $spokenSrch->doNotCalculateRecords();
+        $spokenSrch->doNotLimitRecords();
+        $spokenSrch->addMultipleFields(array('utsl_slanguage_id','utsl_user_id'));
+        $spokenSrch->joinTable(SpokenLanguage::DB_TBL, 'INNER JOIN' , 'utsl_slanguage_id = slanguage_id');
+        $spokenSrch->addCondition('slanguage_active', '=', applicationConstants::YES);
+
+        $srch->joinTable("(" . $spokenSrch->getQuery() . ")", 'LEFT JOIN', 'utsl_user_id = user_id', 'uSpokenL');
 
         /* user preferences/skills[ */
         $skillSrch = new UserToPreferenceSearch();
-        $skillSrch->addMultipleFields(array('utpref_user_id','GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids'));
-        $skillSrch->addGroupBy('utpref_user_id');
-        $srch->joinTable("(" . $skillSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utpref_user_id', 'utpref');
+        $skillSrch->joinTable(Preference::DB_TBL, 'INNER JOIN' , 'preference_id = utpref_preference_id');
+        $skillSrch->addMultipleFields(array('utpref_user_id','utpref_preference_id'));
+        $srch->joinTable("(" . $skillSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utpref.utpref_user_id', 'utpref');
         /* ] */
 
         /* teachLanguage[ */
         $tlangSrch = new SearchBase(UserToLanguage::DB_TBL_TEACH, 'utl');
-        $tlangSrch->addMultipleFields(array('utl_us_user_id','GROUP_CONCAT(utl_id) as utl_ids'));
+        $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utl_slanguage_id','tl');
+        $tlangSrch->addMultipleFields(array('utl_us_user_id','utl_id'));
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
         $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);
         $tlangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
         $tlangSrch->addCondition('utl_slanguage_id', '>', 0);
-        $tlangSrch->addGroupBy('utl_us_user_id');
+        $tlangSrch->addCondition('tlanguage_active', '=', applicationConstants::YES);
 
         $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utl_us_user_id', 'utls');
         /* ] */
 
+        $srch->joinTable(TeacherGeneralAvailability::DB_TBL, 'LEFT JOIN', 'user_id = tgavl_user_id', 'tga');
+
+        $srch->addGroupBy('user_id');
+        $srch->addGroupBy('uqualification_user_id');
         $rs = $srch->getResultSet();
         $teacherRow = FatApp::getDb()->fetch($rs);
 
-        if (
-            $teacherRow['user_country_id'] == 0 ||
-            //$teacherRow['us_single_lesson_amount'] == 0 ||
-            //$teacherRow['us_bulk_lesson_amount'] == 0 ||
-            empty($teacherRow['utl_us_user_id']) ||
-            empty($teacherRow['uqualification_id']) ||
-            empty($teacherRow['utpref_user_id'])
-            ) {
-            return false;
-        }
+        $teacherRowCount = count($teacherRow);
+        $teacherFieldSum = array_sum($teacherRow);
+        $profileProgressCount = round( ( ($teacherFieldSum * 100 ) / $teacherRowCount ),2);
 
-        return true;
+        $teacherRow += [
+            'totalFields' => $teacherRowCount,
+            'totalFilledFields' => $teacherFieldSum,
+            'percentage' => $profileProgressCount,
+            'isProfileCompleted' => ($teacherRowCount != $teacherFieldSum) ? false : true,
+        ];
+        return $teacherRow;
+
+        // if (
+        //     $teacherRow['userCountryId'] == 0 ||
+        //     empty($teacherRow['userTimeZone']) ||
+        //     empty($teacherRow['uqualificationCount']) ||
+        //     empty($teacherRow['generalAvailabilityCount']) ||
+        //     empty($teacherRow['slanguageCount']) ||
+        //     empty($teacherRow['preferenceCount']) ||
+        //     empty($teacherRow['teachLangCount'])
+        //     ) {
+        //     return false;
+        // }
+
+        //return true;
     }
+
 
     public static function isTeacherRequestApproved()
     {

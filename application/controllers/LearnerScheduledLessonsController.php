@@ -17,6 +17,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->_template->addCss('css/fullcalendar.min.css');
         $this->_template->addCss(array('css/star-rating.css'));
         $this->_template->addJs(array('js/jquery.barrating.min.js'));
+        $this->_template->addJs('js/jquery.countdownTimer.min.js');
+        $this->_template->addCss('css/jquery.countdownTimer.css');
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
         $this->_template->render();

@@ -8,8 +8,9 @@ class TeacherController extends TeacherBaseController
 
     public function index()
     {
+        $teacherProfileProgress = User::getTeacherProfileProgress();
         /* Validate Teacher has filled complete profile[ */
-        if (true != User::isTeacherProfileCompleted()) {
+        if (false == $teacherProfileProgress['isProfileCompleted']) {
             Message::addInfo(Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'));
             $this->set('viewProfile', false);
             FatApp::redirectUser(CommonHelper::generateUrl('account', 'profileInfo'));

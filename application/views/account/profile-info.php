@@ -17,6 +17,7 @@
 						<div>
 							<h1><?php echo Label::getLabel('LBL_Dashboard'); ?></h1>
 						</div>
+						
 						<!--<div>
 							<div class="tab-swticher tab-swticher-small">
 								<a href="dashboard_list.html" class="btn btn--large">List</a>

@@ -918,6 +918,8 @@ class CommonHelper extends FatUtility
         } else {
             $str = str_replace("{default-currency-symbol}", ' $ ', $str);
         }
+        $labelstr =  Label::getLabel('LBL_All_Purchases_are_in_{default-currency-code}._Foreign_transaction_fees_might_apply,_according_to_your_bank\'s_policies');
+        $str = $str. "<br>". str_replace("{default-currency-code}", self::getCurrencyCode(),$labelstr);
         return $str;
     }
 

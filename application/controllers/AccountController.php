@@ -4,6 +4,7 @@ class AccountController extends LoggedUserController
     public function __construct($action)
     {
         parent::__construct($action);
+        User::getTeacherProfileProgress();
         $this->_template->addJs('js/jquery-confirm.min.js');
         $this->_template->addCss('css/jquery-confirm.min.css');
     }

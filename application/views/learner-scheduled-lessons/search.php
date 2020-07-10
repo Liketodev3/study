@@ -7,6 +7,7 @@ $user_timezone = MyDate::getUserTimeZone();
 $date = new DateTime("now", new DateTimeZone($user_timezone));
 $curDate = $date->format('Y-m-d');
 $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
+$curDateTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s A', date('Y-m-d H:i:s'), true , $user_timezone );
 
 
 foreach( $lessonArr as $key=>$lessons ){ ?>
@@ -44,11 +45,11 @@ foreach ( $lessons as $lesson ) {
 				<h6><?php echo $lesson['teacherFname']; ?></h6>
 				<p><?php echo $lesson['teacherCountryName']; ?> <br>
 				<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['slesson_order_id']; ?> <br>
-				
+
 				<?php /* echo CommonHelper::getDateOrTimeByTimeZone($lesson['teacherTimeZone'],'H:i A P'); */ ?></p>
 			</div>
 
-			<div class="col-xl-6 col-lg-6 col-md-12">
+			<div class="col-xl-6 col-lg-6 col-md-12 ">
 				<div class="schedule-list">
 					<ul>
 						<?php
@@ -80,15 +81,15 @@ foreach ( $lessons as $lesson ) {
 							<span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
 							<span class="span-right"><?php echo $statusArr[$lesson['slesson_status']]; ?></span>
 						</li>
-						
+
 						<?php if($lesson['order_is_paid'] == Order::ORDER_IS_CANCELLED) {?>
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Order_Status'); ?></span>
 							<span class="span-right"><?php echo Label::getLabel('LBL_Canceled'); ?></span>
 						</li><br><br>
-								
+
 						<?php } ?>
-						
+
                         <?php if( $lesson['issrep_id'] ){ ?>
                             <li>
                                 <span class="span-left"><?php echo Label::getLabel('LBL_Issue_Status'); ?></span>
@@ -98,7 +99,7 @@ foreach ( $lessons as $lesson ) {
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Details'); ?></span>
 							<span class="span-right">
-					
+
 							<?php
 							if($lesson['is_trial'] == applicationConstants::NO) {
 								echo empty($teachLanguages[$lesson['slesson_slanguage_id']]) ? '': $teachLanguages[$lesson['slesson_slanguage_id']] ; ?>
@@ -119,9 +120,22 @@ foreach ( $lessons as $lesson ) {
 						</li>
 					</ul>
 				</div>
+
 			</div>
 			<?php if($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
 			<div class="col-xl-2 col-lg-2 col-md-4 col-positioned">
+				<?php
+					if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
+						$endTimer = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s A', date($lesson['slesson_date']." ". $lesson['slesson_start_time']), true , $user_timezone );
+					?>
+					<div class="timer">
+						<span class="countdowntimer" id="countdowntimer-<?php echo $lesson['slesson_id']?>" data-startTime="<?php echo $curDateTime; ?>"  data-endTime="<?php echo $endTimer; ?>"></span>
+					</div>
+				<?php
+					}
+				?>
+
+				<br>
 				<div class="select-box toggle-group">
 					<div class="buttons-toggle">
 						<a href="<?php echo CommonHelper::generateFullUrl('LearnerScheduledLessons','view',array($lesson['slesson_id'])); ?>" class="btn btn--secondary"><?php echo Label::getLabel('LBL_View'); ?></a>
@@ -192,6 +206,26 @@ if ( empty($lessons) ) {
 ?>
 <script type="text/javascript">
 jQuery(document).ready(function () {
+	$('.countdowntimer').each(function (i) {
+		console.log($(this).attr('data-startTime'),'data-startTime');
+		console.log($(this).attr('data-endTime'),'data-endTime');
+		var countdowntimerid = $(this).attr('id');
+		$("#"+countdowntimerid).countdowntimer({
+				startDate : $(this).attr('data-startTime'),
+				dateAndTime : $(this).attr('data-endTime'),
+				size : "sm",
+			});
+	});
+	// $('.countdowntimer').countdowntimer({
+	// 		startDate : function () {
+	// 			console.log($(this),'sdsdsd');
+	// 			return $(this).attr('data-startTime');
+	// 		},
+	// 		dateAndTime : function () {
+	// 			return $(this).attr('data-endTime');
+	// 		},
+	// 		size : "sm",
+	// 	});
 	/*$(".toggle__trigger-js").click(function () {
         var t = $(this).parents(".toggle-group").children(".toggle__target-js").is(":hidden");
         $(".toggle-group .toggle__target-js").hide();
