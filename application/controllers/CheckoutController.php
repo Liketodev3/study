@@ -363,7 +363,7 @@ class CheckoutController extends LoggedUserController{
 			'op_lesson_duration' => $op_lesson_duration,
 			'op_teacher_id' => $cartData['user_id'],
 			//'op_qty' => 1,
-			'op_qty'	=>	$cartData['lpackage_lessons'],
+			'op_qty'	=>	$cartData['grpcls_id']==0 ? $cartData['lpackage_lessons'] : 1,
 			'op_commission_charged' => $cartData['op_commission_charged'],
 			'op_commission_percentage' => $cartData['op_commission_percentage'],
 			'op_unit_price' => $cartData['itemPrice'],

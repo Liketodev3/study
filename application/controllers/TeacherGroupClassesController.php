@@ -182,7 +182,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         $tGrpClsSrchObj->addCondition('grpcls_teacher_id', '=', $teacher_id);
         $tGrpClsSrchObj->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
         $cnd = $tGrpClsSrchObj->addCondition('grpcls_start_datetime', '<=', $post['grpcls_start_datetime']);
-        $cnd->attachCondition('grpcls_end_datetime', '>=', $post['grpcls_start_datetime'], 'AND');
+        $cnd->attachCondition('grpcls_end_datetime', '>', $post['grpcls_start_datetime'], 'AND');
         
         $cnd2 = $cnd->attachCondition('grpcls_start_datetime', '<=', $post['grpcls_end_datetime']);
         $cnd2->attachCondition('grpcls_end_datetime', '>=', $post['grpcls_end_datetime'], 'AND');
@@ -303,7 +303,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         $fld->requirements()->setRange(1,9999);
         $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->siteLangId))->requirements()->setRequired(true);
         $fld = $frm->addFloatField(Label::getLabel('LBl_Entry_fee'), 'grpcls_entry_fee', '', array('id' => 'grpcls_entry_fee'));
-        $fld->requirements()->setIntPositive(true);
+        $fld->requirements()->setPositive(true);
         $start_time_fld = $frm->addRequiredField(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', array('id' => 'grpcls_start_datetime', 'autocomplete' => 'off'));
         $end_time_fld = $frm->addRequiredField(Label::getLabel('LBl_End_Time'), 'grpcls_end_datetime', '', array('id' => 'grpcls_end_datetime', 'autocomplete' => 'off'));
 		$end_time_fld->requirements()->setCompareWith('grpcls_start_datetime', 'gt', Label::getLabel('LBl_Start_Time'));

@@ -27,6 +27,7 @@ langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel
 
 var lesson_joined = '<?php echo $lessonData['slesson_teacher_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time']>0 ?>';
+var slesson_id = '<?php echo $lessonData['slesson_id'] ?>';
 
 $("#lesson_actions").hide();
 var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
@@ -88,9 +89,9 @@ function endLessonButtonAction(){
 
 function checkEveryMinuteStatus(){
     checkEveryMinuteStatusVar = setInterval(function(){
-        fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','checkEveryMinuteStatus',['<?php echo $lessonData['slesson_id'] ?>']),'',function(t){
+        fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','checkEveryMinuteStatus',[slesson_id]),'',function(t){
             var t = JSON.parse(t);
-            if(t.slesson_status > 1){
+            if(t.sldetail_learner_status > 1){
 
             $.confirm({
                 title: langLbl.Confirm,
@@ -102,7 +103,7 @@ function checkEveryMinuteStatus(){
                         btnClass: 'btn btn--primary',
                         keys: ['enter', 'shift'],
                         action: function(){
-                            endLessonButtonAction();
+                            endLesson(slesson_id);
                             viewLessonDetail();
                         }
                     },

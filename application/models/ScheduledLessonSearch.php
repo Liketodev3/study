@@ -291,4 +291,19 @@ class ScheduledLessonSearch extends SearchBase
 		
         return $row;
     }
+    
+    public function getLessonsByClass($grpclsId)
+    {
+        $db = FatApp::getDb();
+        $this->addMultipleFields(
+            array(
+                'slesson_id'
+            )
+        );
+        $this->addCondition('slesson_grpcls_id', '=', $grpclsId);
+        $cnd = $this->addCondition('slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+        $cnd->attachCondition('slesson_status', '=', ScheduledLesson::STATUS_NEED_SCHEDULING);
+        $rs = $this->getResultSet();
+        return $db->fetchAll($rs);
+    }
 }
