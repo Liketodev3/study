@@ -33,7 +33,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
 
         $srch = new stdClass();
-        $this->searchLessons($srch, $post, true);
+        $this->searchLessons($srch, $post, true, false);
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
         $srch->addFld(
             array(
@@ -42,13 +42,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime',
             '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then 0 ELSE 1 END ) as upcomingLessonOrder',
             '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then CONCAT(slns.slesson_date, " ", slns.slesson_start_time) ELSE NOW() END ) as passedLessonsOrder',
-
-            )
+			)
         );
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addOrder('upcomingLessonOrder', 'DESC');
 		$srch->addOrder('passedLessonsOrder', 'DESC');
         $srch->addOrder('startDateTime', 'ASC');
+		$srch->addOrder('slesson_id', 'DESC');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
@@ -91,7 +91,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->_template->render(false, false);
     }
 
-    private function searchLessons(&$srch, $post = array(), $getCancelledOrder = false)
+    private function searchLessons(&$srch, $post = array(), $getCancelledOrder = false, $addLessonDateOrder = true)
     {
         $srch = new ScheduledLessonSearch(false);
         $srch->joinOrder();
@@ -106,7 +106,10 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
         $srch->joinTeacherSettings();
         //$srch->joinTeacherTeachLanguage( $this->siteLangId );
-        // $srch->addOrder('slesson_date', 'ASC');
+		if($addLessonDateOrder) {
+			$srch->addOrder('slesson_date', 'ASC');
+		}
+        
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addMultipleFields(array(
             'slns.slesson_id',
