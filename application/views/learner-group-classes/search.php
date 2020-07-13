@@ -86,7 +86,7 @@ foreach ( $lessons as $lesson ) {
 
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
-							<span class="span-right"><?php echo ($lesson['slesson_grpcls_id']>0 && $lesson['grpcls_status']!=TeacherGroupClasses::STATUS_ACTIVE) ? $grpStatusesAr[$lesson['grpcls_status']] : $statusArr[$lesson['slesson_status']]; ?></span>
+							<span class="span-right"><?php echo ($lesson['slesson_grpcls_id']>0 && $lesson['grpcls_status']!=TeacherGroupClasses::STATUS_ACTIVE) ? $grpStatusesAr[$lesson['grpcls_status']] : $statusArr[$lesson['sldetail_learner_status']]; ?></span>
 						</li>
                         <?php if( $lesson['issrep_id'] ){ ?>
                             <li>

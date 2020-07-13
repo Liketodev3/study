@@ -16,6 +16,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 }
 
 $canEnd = ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $endTime<$curDate);
+$chat_group_id = $lessonData['slesson_grpcls_id']>0 ? $lessonData['grpcls_title'] : "LESSON-".$lessonData['slesson_id'];
 ?>
 <script>
 var lesson_joined = '<?php echo $lessonData['sldetail_learner_join_time']>0 ?>';
@@ -26,7 +27,7 @@ var canEnd = '<?php echo $canEnd ?>';
 var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
 var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
 var chat_id = '<?php echo $chatId; ?>';
-var chat_group_id = '<?php echo "LESSON-".$lessonData['sldetail_id']; ?>';
+var chat_group_id = '<?php echo $chat_group_id; ?>';
 var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
 var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
 var chat_avatar = "<?php echo $studentImage; ?>";
@@ -83,7 +84,7 @@ function checkEveryMinuteStatus() {
                 $.mbsmessage( '<?php echo Label::getLabel('LBL_Teacher_Has_Joined_Now_you_can_also_Join_The_Lesson!'); ?>',true, 'alert alert--success');
             }
 
-            if(slesson_status>1 && t.sldetail_learner_status == 1) {
+            if(t.slesson_status>1 && t.sldetail_learner_status == 1) {
             $.confirm({
                 title: langLbl.Confirm,
                 content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',

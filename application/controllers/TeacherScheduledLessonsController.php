@@ -31,6 +31,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
         $srch = new stdClass();
         $this->searchLessons($srch, $post, true);
+        // list on lessons not classes in lessons list
+        $srch->addCondition('slesson_grpcls_id', '=', 0); 
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
         $srch->addFld(
             array(
@@ -154,7 +156,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     public function view($lessonId)
     {
         $lessonId = FatUtility::int($lessonId);
-        $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_id', 'slesson_teacher_id'));
+        $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_id', 'slesson_teacher_id', 'slesson_grpcls_id'));
         if (!$lessonRow) {
             FatUtility::exitWithErrorCode(404);
         }
@@ -169,6 +171,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->_template->addCss('css/fullcalendar.min.css');
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $this->_template->addCss('css/jquery.countdownTimer.css');
+        $this->set('lessonRow', $lessonRow);
         $this->set('lessonId', $lessonRow['slesson_id']);
         $this->_template->render();
     }
@@ -181,11 +184,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
         $srch = new stdClass();
         $this->searchLessons($srch);
+        $srch->joinGroupClass();
         $srch->doNotCalculateRecords();
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
         $srch->joinTeacherCountry($this->siteLangId);
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
         $srch->addFld(array(
+            'grpcls_title',
             'slns.slesson_teacher_id as teacherId',
             'ut.user_first_name as teacherFname',
             'ut.user_url_name as teacherUrlName',

@@ -32,6 +32,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         $srch = new stdClass();
         $this->searchLessons($srch, $post, true);
+        // list on lessons not classes in lessons list, group list is added seperately
+        $srch->addCondition('slesson_grpcls_id', '=', 0); 
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
         $srch->addFld(array(
             'IFNULL(iss.issrep_status,0) AS issrep_status',
@@ -159,8 +161,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             } elseif ($post['status'] == ScheduledLesson::STATUS_UPCOMING) {
                 $srch->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
                 $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+                $srch->addCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
             } else {
-                $srch->addCondition('slns.slesson_status', '=', $post['status']);
+                $cnd = $srch->addCondition('slns.slesson_status', '=', $post['status']);
+                $cnd->attachCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
             }
         }
     }
@@ -176,7 +180,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::exitWithErrorCode(404);
         }
         $lessonId = $lessonDetailRow['sldetail_slesson_id'];
-        $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_id'));
+        $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_id', 'slesson_grpcls_id'));
         if (!$lessonRow || $lessonRow['slesson_id']!=$lessonId) {
             FatUtility::exitWithErrorCode(404);
         }
@@ -195,6 +199,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->_template->addCss('css/jquery.countdownTimer.css');
         $this->_template->addCss(array('css/star-rating.css'));
         $this->_template->addJs(array('js/jquery.barrating.min.js'));
+        $this->set('lessonRow', $lessonRow);
         $this->set('lessonId', $lessonRow['slesson_id']);
         $this->set('lDetailId', $lDetailId);
         $this->_template->render();
@@ -222,11 +227,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         $srch = new stdClass();
         $this->searchLessons($srch);
+        $srch->joinGroupClass();
         $srch->doNotCalculateRecords();
         $srch->addCondition('sld.sldetail_id', '=', $lDetailId);
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
         $srch->joinLearnerCountry($this->siteLangId);
         $srch->addFld(array(
+            'grpcls_title',
             'ul.user_first_name as learnerFname',
             'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
             'ul.user_url_name',

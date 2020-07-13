@@ -68,12 +68,27 @@ $(function() {
 		$("#cometChatBox").html('<div id="cometchat_embed_synergy_container" style="width:'+chat_width+';height:'+chat_height+';max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;"></div>');
 		var chat_js = document.createElement('script'); chat_js.type = 'text/javascript'; chat_js.src = '//fast.cometondemand.net/'+chat_appid+'x_xchatx_xcorex_xembedcode.js';
 		chat_js.onload = function() {
-		var chat_iframe = {};chat_iframe.module="synergy";chat_iframe.style="min-height:"+chat_height+";min-width:"+chat_width+";";chat_iframe.width=chat_width.replace('px','');chat_iframe.height=chat_height.replace('px','');chat_iframe.src='//'+chat_appid+'.cometondemand.net/cometchat_embedded.php?guid='+chat_group_id; if(typeof(addEmbedIframe)=="function"){addEmbedIframe(chat_iframe);}
+		var chat_iframe = {};chat_iframe.module="synergy";chat_iframe.style="min-height:"+chat_height+";min-width:"+chat_width+";";chat_iframe.width=chat_width.replace('px','');chat_iframe.height=chat_height.replace('px','');chat_iframe.src='//'+chat_appid+'.cometondemand.net/cometchat_embedded.php'+(is_grpcls=='1' ? '?guid='+chat_group_id : ''); if(typeof(addEmbedIframe)=="function"){addEmbedIframe(chat_iframe);}
 		}
 		var chat_script = document.getElementsByTagName('script')[0]; chat_script.parentNode.insertBefore(chat_js, chat_script);
 	};
     
+    createGroup = function(){
+		$.ajax({
+            method: "POST",
+            url: "https://api.cometondemand.net/api/v2/createGroup",
+            data: { GUID:chat_group_id,name:chat_group_id,type:4},
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('api-key', chat_api_key);
+			},
+		});
+	};
+	
+    
     joinLesson = function(CometJsonData,CometJsonFriendData){
+        if(is_grpcls=='1'){
+            createGroup();
+        }
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','startLessonAuthentication',[CometJsonFriendData.lessonId]),'',function(t){
 			if(t == 0){
 				$.mbsmessage( "Cannot Start The lesson Now!",true, 'alert alert--danger');

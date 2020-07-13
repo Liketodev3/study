@@ -21,6 +21,8 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
     $teacherImageTag  = '<img src="'.$teacherImage.'" />';
 }
 
+$chat_group_id = $lessonData['slesson_grpcls_id']>0 ? $lessonData['grpcls_title'] : "LESSON-".$lessonData['slesson_id'];
+
 ?>
 <script type="text/javascript">
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
@@ -33,7 +35,7 @@ $("#lesson_actions").hide();
 var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
 var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
 var chat_id = '<?php echo $chatId; ?>';
-var chat_group_id = '<?php echo "LESSON-".$lessonData['slesson_id']; ?>';
+var chat_group_id = '<?php echo $chat_group_id ?>';
 var chat_name = '<?php echo $lessonData['teacherFname']; ?>';
 var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
 var chat_avatar = "<?php echo $teacherImage; ?>";

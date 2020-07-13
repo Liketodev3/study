@@ -528,7 +528,7 @@ class ConfigurationsController extends AdminBaseController
                 $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Determines_how_many_items_are_shown_per_page_(user_listing,_categories,_etc)", $this->adminLangId).".</small>";
                 
                 $frm->addHtml('', 'Grpcls', '<h3>'.Label::getLabel('LBL_Group_Class', $this->adminLangId).'</h3>');
-                $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Cancellation_Fee_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_CLASS_REFUND_PERCENTAGE");
+                $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Cancellation_Refund_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_CLASS_REFUND_PERCENTAGE");
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Booking_Time_Span(Minutes)", $this->adminLangId), "CONF_CLASS_BOOKING_GAP");
 
                 $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Teacher_Dashboard', $this->adminLangId).'</h3>');

@@ -249,7 +249,11 @@ class ScheduledLessonDetails extends MyAppModel
         }
         
         if ($learner && !$isDiscountApply && $diff < 24 ) {
-            $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
+            if($data['slesson_grpcls_id']>0){
+                $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_CLASS_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
+            }else{
+                $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
+            }
         }
         
         if($learner && $data['order_discount_total'] > 0) {

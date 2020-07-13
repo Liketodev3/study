@@ -257,7 +257,7 @@ class ScheduledLessonSearch extends SearchBase
         $srch->addCondition('slns.slesson_date', '=', date('Y-m-d', strtotime($startDateTime)));
         $cnd = $srch->addCondition('slns.slesson_start_time', '=', date('H:i:s', strtotime($startDateTime)), 'AND');
         $cnd->attachCondition('slns.slesson_start_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
-        $cnd1 = $cnd->attachCondition('slns.slesson_end_time', '>=', date('H:i:s', strtotime($startDateTime)), 'OR');
+        $cnd1 = $cnd->attachCondition('slns.slesson_end_time', '>', date('H:i:s', strtotime($startDateTime)), 'OR');
         $cnd1->attachCondition('slns.slesson_end_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
         // echo $srch->getQuery();die;
         $rs = $srch->getResultSet();
