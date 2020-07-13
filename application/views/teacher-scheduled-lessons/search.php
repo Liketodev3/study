@@ -7,7 +7,7 @@ $date = new DateTime("now", new DateTimeZone($user_timezone));
 $curDate = $date->format('Y-m-d');
 $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
 
-$curDateTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s A', date('Y-m-d H:i:s'), true , $user_timezone );
+$curDateTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 
 
 $referer = preg_replace("(^https?://)", "", $referer );
@@ -112,8 +112,8 @@ if (strtotime($curDate) == strtotime($key)) {
 				<div class="schedule-list">
 					<ul>
 					<?php
-					$lessonsStarttime = date('Y-m-d H:i:s',strtotime($lesson['slesson_date']." ". $lesson['slesson_start_time']));
-						$timerEndTimer = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s A', $lessonsStarttime, true , $user_timezone );
+						$lessonsStartTime = $lesson['slesson_date']." ". $lesson['slesson_start_time'];
+						$timerEndTimer = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', $lessonsStartTime, true , $user_timezone );
 						if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
 							if(strtotime($timerEndTimer) > strtotime($curDateTime)) {
 						?>
