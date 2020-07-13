@@ -27,7 +27,79 @@ $(document).ready(function(){
 			$(dv).html(t);
 		});
 	};
-
+	
+	getTeacherProfileProgress = function(){
+		
+		fcom.ajax(fcom.makeUrl('Teacher', 'getTeacherProfileProgress'), '', function(data) {
+			if(!userIsTeacher) {
+				return;
+			}
+			if(data && data.teacherProfileProgress) {
+				if(!data.teacherProfileProgress.isProfileCompleted){
+					$.systemMessage(langLbl.teacherProfileIncompleteMsg, 'alert alert--warning');
+					setTimeout(function() {
+						$.systemMessage.close();
+					}, 4100);
+					
+				}
+				$.each(data.teacherProfileProgress,function( key, value ){
+						switch (key) {
+							case 'generalAvailabilityCount':
+							value =  parseInt(value);
+								if(0 >= value) {
+									$('.general-availability-js').addClass('-color-secondary');
+								}else{
+									$('.general-availability-js').removeClass('-color-secondary');
+								}
+							break;
+							case 'userCountryId':
+							case 'userTimeZone':
+							value =  parseInt(value);
+								if(0 >= value) {
+									$('.profile-Info-js').addClass('-color-secondary');
+								}else{
+									$('.general-availability-js').removeClass('-color-secondary');
+								}
+							break;
+							case 'uqualificationCount':
+							value =  parseInt(value);
+								if(0 >= value) {
+									$('.teacher-qualification-js').addClass('-color-secondary');
+								}else{
+									$('.teacher-qualification-js').removeClass('-color-secondary');
+								}
+							break;
+							case 'teachLangCount':
+							value =  parseInt(value);
+								if(0 >= value) {
+									$('.teacher-tech-lang-price-js').addClass('-color-secondary');
+								}else{
+									$('.teacher-tech-lang-price-js').removeClass('-color-secondary');
+								}
+							break;
+							case 'slanguageCount':
+							value =  parseInt(value);
+								if(0 >= value) {
+									$('.teacher-lang-form-js').addClass('-color-secondary');
+								}else{
+									$('.teacher-lang-form-js').removeClass('-color-secondary');
+								}
+							break;
+							case 'preferenceCount':
+							value =  parseInt(value);
+								if(0 >= value) {
+									$('.teacher-preferences-js').addClass('-color-secondary');
+								}else{
+									$('.teacher-preferences-js').removeClass('-color-secondary');
+								}
+							break;
+						}
+				});
+			}
+			
+		},{fOutMode:'json'});
+	}
+	
 	changeEmailForm = function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Account', 'changeEmailForm'), '', function(t) {
@@ -91,6 +163,9 @@ $(document).ready(function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Account', 'ProfileInfoForm'), '', function(t) {
 			$(dv).html(t);
+			if(userIsTeacher) {
+				getTeacherProfileProgress();
+			}
 		});
 	};
 
@@ -107,8 +182,8 @@ $(document).ready(function(){
 					userSeoUrl = userSeoBaseUrl+frm.user_url_name.value;
 			}
 
-			updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
-      getLangProfileInfoForm(1);
+		updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
+		getLangProfileInfoForm(1);
 			return ;
 		});
 	};
@@ -117,6 +192,9 @@ $(document).ready(function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher', 'teacherPreferencesForm'), '', function(t) {
 			$(dv).html(t);
+			if(userIsTeacher) {
+				getTeacherProfileProgress();
+			}
 		});
 	};
 
@@ -125,6 +203,9 @@ $(document).ready(function(){
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function(t) {
 			//$.mbsmessage.close();
+			if(userIsTeacher) {
+				getTeacherProfileProgress();
+			}
 		});
 	};
 
@@ -132,6 +213,9 @@ $(document).ready(function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher', 'teacherLanguagesForm'), '', function(t) {
 			$(dv).html(t);
+			if(userIsTeacher) {
+				getTeacherProfileProgress();
+			}
 		});
 	};
 
@@ -194,6 +278,9 @@ $.ajax(settings).done(function (response) {
 
 	setPreferredDashboad = function (id){
 		fcom.updateWithAjax(fcom.makeUrl('Account','setPrefferedDashboard',[id]),'',function(res){
+			if(userIsTeacher) {
+				getTeacherProfileProgress();
+			}
 		});
 	};
 
@@ -216,8 +303,10 @@ $.ajax(settings).done(function (response) {
 	teacherQualification = function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','teacherQualification'),'',function(t){
-			console.log(dv);
 			$(dv).html(t);
+			if(userIsTeacher) {
+				getTeacherProfileProgress();
+			}
 
 		});
 	};
@@ -226,6 +315,10 @@ $.ajax(settings).done(function (response) {
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','teacherGeneralAvailability'),'',function(t){
 			$(dv).html(t);
+			if(userIsTeacher) {
+				getTeacherProfileProgress();
+			}
+			
 		});
 	};
 
@@ -285,7 +378,6 @@ $.ajax(settings).done(function (response) {
 	teacherWeeklySchedule = function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','teacherWeeklySchedule'),'',function(t){
-			console.log(dv);
 			$(dv).html(t);
 
 		});
@@ -326,10 +418,12 @@ $.ajax(settings).done(function (response) {
 
 	teacherQualificationForm = function(id){
 	isRuningTeacherQualificationFormAjax = false;
-		$(dv).html(fcom.getLoader());
+		$.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
 		fcom.ajax(fcom.makeUrl('Teacher','teacherQualificationForm',[id]),'',function(t){
+			$.mbsmessage.close();
+			$.systemMessage.close()
 			$.facebox( t,'facebox-medium');
-			teacherQualification();
+			//teacherQualification();
 		});
 	};
 

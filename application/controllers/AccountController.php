@@ -162,7 +162,9 @@ class AccountController extends LoggedUserController
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addCss('css/fullcalendar.min.css');
+		$this->set('userIsTeacher', User::isTeacher());
         $this->_template->render();
+		 
     }
 
     public function profileInfoForm()

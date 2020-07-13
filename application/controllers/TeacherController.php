@@ -134,7 +134,17 @@ class TeacherController extends TeacherBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-
+	
+	public function getTeacherProfileProgress() {
+		 $teacherProfileProgress = User::getTeacherProfileProgress();
+		 $this->set('teacherProfileProgress', $teacherProfileProgress);
+		 if($teacherProfileProgress['isProfileCompleted'] == false) {
+			
+			$this->set('msg',Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'));
+		 }
+        $this->_template->render(false, false, 'json-success.php');
+	}
+	
     private function getTeacherLanguagesForm()
     {
         $frm = new Form('frmTeacherLanguages');

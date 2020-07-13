@@ -244,10 +244,10 @@ class User extends MyAppModel
         return true;
     }
 
-    public static function getTeacherProfileProgress($userId = 0)
+    public static function getTeacherProfileProgress(int $userId = 0) : array
     {
-        $userId = FatUtility::int($userId);
-        if ($userId <= 0) {
+        //$userId = FatUtility::int($userId);
+        if (0 >= $userId) {
             $userId = UserAuthentication::getLoggedUserId();
         }
 
@@ -264,7 +264,7 @@ class User extends MyAppModel
             'if(count(DISTINCT utsl_slanguage_id),1,0) as slanguageCount',
             'if(count(DISTINCT utpref_preference_id),1,0) as preferenceCount',
             'if(count(DISTINCT utl_id),1,0) as teachLangCount',
-            ));
+        ));
 
         /* qualification/experience[ */
     //    $qSrch = new UserQualificationSearch();

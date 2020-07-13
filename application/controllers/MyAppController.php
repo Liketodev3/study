@@ -65,6 +65,8 @@ class MyAppController extends FatController
             'Confirm' => Label::getLabel('LBL_Confirm'),
             'pleaseSelect' => Label::getLabel('VLBL_Please_select'),
 			'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
+			'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
+			
 
             //'siteCurrencyId' => $this->siteCurrencyId,
             //'controllerName' => $controllerName,

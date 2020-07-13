@@ -1,4 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<script>
+	var userIsTeacher =  <?php echo $userIsTeacher; ?>;
+</script>
 <section class="section section--grey section--page">
 	<div class="container container--fixed">
 		<div class="page-panel -clearfix">
@@ -31,40 +34,40 @@
 				<div class="tabs-inline tabs-scroll-js">
 					<ul>
 						<li class="is-active">
-							<a href="javascript:void(0);" onClick="profileInfoForm()">
-								<?php echo Label::getLabel('LBL_General');?>
+							<a href="javascript:void(0);" class="profile-Info-js" onClick="profileInfoForm()">
+								<?php echo Label::getLabel('LBL_General');?><span class="spn_must_field">*</span>
 							</a>
 						</li>
 
 						<?php if( User::isTeacher() ){ ?>
 							<li class="">
-								<a href="javascript:void(0);" onClick="teacherGeneralAvailability()">
-									<?php echo Label::getLabel('LBL_Availability');?>
+								<a href="javascript:void(0);" class="general-availability-js" onClick="teacherGeneralAvailability()">
+									<?php echo Label::getLabel('LBL_Availability');?><span class="spn_must_field">*</span>
 								</a>
 							</li>
 							<li class="">
-								<a href="javascript:void(0);" onClick="teacherWeeklySchedule()">
+								<a href="javascript:void(0);"  onClick="teacherWeeklySchedule()">
 								<?php echo Label::getLabel('LBL_Weekly_Schedule');?>
 								</a>
 							</li>
 							<li class="">
-								<a href="javascript:void(0);" id="teacher-tech-lang-price-js" onClick="teacherSettingsForm()">
-								<?php echo Label::getLabel('LBL_Price');?>
+								<a href="javascript:void(0);" class="teacher-tech-lang-price-js" id="teacher-tech-lang-price-js" onClick="teacherSettingsForm()">
+								<?php echo Label::getLabel('LBL_Price');?><span class="spn_must_field">*</span>
 								</a>
 							</li>
 							<li class="">
-								<a href="javascript:void(0);" onClick="teacherQualification()">
-								<?php echo Label::getLabel('LBL_Experience');?>
+								<a href="javascript:void(0);" class="teacher-qualification-js" onClick="teacherQualification()">
+								<?php echo Label::getLabel('LBL_Experience');?><span class="spn_must_field">*</span>
 								</a>
 							</li>
 							<li class="">
-								<a href="javascript:void(0);" onClick="teacherPreferencesForm()">
-								<?php echo Label::getLabel('LBL_Skills');?>
+								<a href="javascript:void(0);" class="teacher-preferences-js" onClick="teacherPreferencesForm()">
+								<?php echo Label::getLabel('LBL_Skills');?><span class="spn_must_field">*</span>
 								</a>
 							</li>
 							<li class="">
-								<a href="javascript:void(0);" onClick="teacherLanguagesForm()">
-								<?php echo Label::getLabel('LBL_Languages');?>
+								<a href="javascript:void(0);" class="teacher-lang-form-js" onClick="teacherLanguagesForm()">
+								<?php echo Label::getLabel('LBL_Languages');?><span class="spn_must_field">*</span>
 								</a>
 							</li>
 							<li class="">
