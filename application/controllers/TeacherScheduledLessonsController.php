@@ -13,8 +13,11 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->_template->addJs('js/teacherLessonCommon.js');
         $this->_template->addCss('css/custom-full-calendar.css');
         $this->_template->addJs('js/moment.min.js');
+        $this->_template->addJs('js/jquery.countdownTimer.min.js');
+        $this->_template->addCss('css/jquery.countdownTimer.css');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addCss('css/fullcalendar.min.css');
+
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
         $this->_template->render();
@@ -36,11 +39,16 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             array(
             'IFNULL(iss.issrep_status,0) AS issrep_status',
             'IFNULL(iss.issrep_id,0) AS issrep_id',
-            'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime'
+            'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime',
+            '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then 0 ELSE 1 END ) as upcomingLessonOrder',
+            '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then CONCAT(slns.slesson_date, " ", slns.slesson_start_time) ELSE NOW() END ) as passedLessonsOrder',
+
             )
         );
-        // $srch->addOrder('slesson_status', 'ASC');
-		$srch->addOrder('startDateTime', 'ASC');
+        $srch->addOrder('slesson_status', 'ASC');
+        $srch->addOrder('upcomingLessonOrder', 'DESC');
+		$srch->addOrder('passedLessonsOrder', 'DESC');
+        $srch->addOrder('startDateTime', 'ASC');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
@@ -98,7 +106,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
         $srch->joinTeacherSettings();
         //$srch->joinTeacherTeachLanguage( $this->siteLangId );
-        $srch->addOrder('slesson_date', 'ASC');
+        // $srch->addOrder('slesson_date', 'ASC');
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addMultipleFields(array(
             'slns.slesson_id',

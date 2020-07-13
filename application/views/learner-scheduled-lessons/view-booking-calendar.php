@@ -57,10 +57,20 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 			snapDuration : "<?php echo ($action=="free_trial") ? '0:30:00' : '01:00:00' ?>",
 			allDaySlot: false,
 			timezone: "<?php echo $user_timezone; ?>",
+			loading :function( isLoading, view ) {
+	            if(isLoading == true){
+	                 $("#loaderCalendar").show();
+	            }else{
+	                 $("#loaderCalendar").hide();
+	            }
+
+	        },
 			select: function (start, end, jsEvent, view ) {
 				if(checkSlotAvailabiltAjaxRun) {
 					return false;
 				}
+				$('body #d_calendar .closeon').click();
+				$("#loaderCalendar").show();
 				checkSlotAvailabiltAjaxRun = true;
 				// $("body").css( {"pointer-events": "none"} );
 				// $("body").css( {"cursor": "wait"} );
@@ -84,20 +94,21 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 
 							}
 
-							$('#calendar').fullCalendar('unselect');
+							$('#d_calendar').fullCalendar('unselect');
 							checkSlotAvailabiltAjaxRun =  false;
 							return false;
 						}
 					}
 				//================================//
 
-				if(getEventsByTime( start, end ).length > 1)
-				{
-					//alert(1);
-					$('#d_calendar').fullCalendar('refetchEvents');
-				}
+				// if(getEventsByTime( start, end ).length > 1)
+				// {
+				// 	//alert(1);
+				// 	//$('#d_calendar').fullCalendar('refetchEvents');
+				// }
 				if(moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0) {
 					//alert(2);
+					$("#loaderCalendar").hide();
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
@@ -106,6 +117,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 				}
 				if(moment(start).format('YYYY-MM-DD HH:mm:ss') > moment(end).format('YYYY-MM-DD HH:mm:ss') ) {
 					//alert(3);
+					$("#loaderCalendar").hide();
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
@@ -119,6 +131,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 				if(minutesDiff > minutes)
 				{
 					//alert(4);
+					$("#loaderCalendar").hide();
 					$("body").css( {"cursor": "default"} );
 				    $("body").css( {"pointer-events": "initial"} );
 					$('#d_calendar').fullCalendar('unselect');
@@ -151,6 +164,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 				newEvent.weekEnd = moment(endOfWeek).format('YYYY-MM-DD HH:mm:ss');
 
 				fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[<?php echo $teacher_id; ?>]), newEvent, function(doc) {
+					$("#loaderCalendar").hide();
 					checkSlotAvailabiltAjaxRun = false;
                    $("body").css( {"cursor": "default"} );
 				   $("body").css( {"pointer-events": "initial"} );
@@ -382,6 +396,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 	});
 
 </script>
+<div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
 <div class="calendar-view">
 <div class="row">
 <div class="col-sm-6">

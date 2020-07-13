@@ -49,7 +49,7 @@ foreach ( $lessons as $lesson ) {
 				<?php /* echo CommonHelper::getDateOrTimeByTimeZone($lesson['teacherTimeZone'],'H:i A P'); */ ?></p>
 			</div>
 
-			<div class="col-xl-6 col-lg-6 col-md-12 ">
+			<div class="col-xl-4 col-lg-4 col-md-12 ">
 				<div class="schedule-list">
 					<ul>
 						<?php
@@ -123,18 +123,32 @@ foreach ( $lessons as $lesson ) {
 
 			</div>
 			<?php if($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
-			<div class="col-xl-2 col-lg-2 col-md-4 col-positioned">
-				<?php
-					if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
-						$endTimer = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s A', date($lesson['slesson_date']." ". $lesson['slesson_start_time']), true , $user_timezone );
+			<div class="col-xl-4 col-lg-4 col-md-12 col-positioned">
+				<div class="schedule-list ">
+					<ul>
+					<?php
+						$timerEndTimer = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s',strtotime($lesson['slesson_date']." ". $lesson['slesson_start_time'])), true , $user_timezone );
+						if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
+							if(strtotime($timerEndTimer) > strtotime($curDateTime)) {
+						?>
+						<li class="timer">
+							<span class="span-right">
+								<span class="-color-secondary"> <?php echo Label::getLabel('LBL_Lesson_Starts_in'); ?></span>
+								<span class="countdowntimer" id="countdowntimer-<?php echo $lesson['slesson_id']?>" data-startTime="<?php echo $curDateTime; ?>"  data-endTime="<?php echo $timerEndTimer; ?>"></span>
+							</span>
+						</li>
+					<?php
+						}else{
+						?>
+						<li class="span-right">
+							<span class="-color-secondary"><?php echo Label::getLabel('LBL_Lesson_time_has_passed'); ?></span>
+						</li>
+						<?php
+							}
+						}
 					?>
-					<div class="timer">
-						<span class="countdowntimer" id="countdowntimer-<?php echo $lesson['slesson_id']?>" data-startTime="<?php echo $curDateTime; ?>"  data-endTime="<?php echo $endTimer; ?>"></span>
-					</div>
-				<?php
-					}
-				?>
-
+				</ul>
+				</div>
 				<br>
 				<div class="select-box toggle-group">
 					<div class="buttons-toggle">
@@ -207,8 +221,6 @@ if ( empty($lessons) ) {
 <script type="text/javascript">
 jQuery(document).ready(function () {
 	$('.countdowntimer').each(function (i) {
-		console.log($(this).attr('data-startTime'),'data-startTime');
-		console.log($(this).attr('data-endTime'),'data-endTime');
 		var countdowntimerid = $(this).attr('id');
 		$("#"+countdowntimerid).countdowntimer({
 				startDate : $(this).attr('data-startTime'),
@@ -216,16 +228,6 @@ jQuery(document).ready(function () {
 				size : "sm",
 			});
 	});
-	// $('.countdowntimer').countdowntimer({
-	// 		startDate : function () {
-	// 			console.log($(this),'sdsdsd');
-	// 			return $(this).attr('data-startTime');
-	// 		},
-	// 		dateAndTime : function () {
-	// 			return $(this).attr('data-endTime');
-	// 		},
-	// 		size : "sm",
-	// 	});
 	/*$(".toggle__trigger-js").click(function () {
         var t = $(this).parents(".toggle-group").children(".toggle__target-js").is(":hidden");
         $(".toggle-group .toggle__target-js").hide();

@@ -56,23 +56,32 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 				now:'<?php echo date('Y-m-d H:i:s', strtotime($nowDate)); ?>',
 				eventOverlap: false,
 				slotEventOverlap : false,
-					forceEventDuration : true,
+				forceEventDuration : true,
 				defaultTimedEventDuration : "<?php echo $bookingSnapDuration; ?>",
 				snapDuration : "<?php echo $bookingSnapDuration; ?>",
 				allDaySlot: false,
 				timezone: "<?php echo $user_timezone; ?>",
+				loading :function( isLoading, view ) {
+
+					if(isLoading == true){
+						 $("#loaderCalendar").show();
+					}else{
+						 $("#loaderCalendar").hide();
+					}
+
+				},
 				<?php if( 'free_trial' == $action ){ ?>
 				select: function (start, end, jsEvent, view ) {
 
+					//console.log(jsEvent,'jsEvent');
 					if(checkSlotAvailabiltAjaxRun) {
 						return false;
 					}
 					checkSlotAvailabiltAjaxRun = true;
-					// console.log(jsEvent);
-					// $("#loaderCalendar").show();
+					$('body #d_calendar .closeon').click();
+					$("#loaderCalendar").show();
 					// $("body").css( {"pointer-events": "none"} );
 					// $("body").css( {"cursor": "wait"} );
-						console.log(view);
 					//==================================//
 						var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
 						var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
@@ -93,9 +102,9 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 						}
 					//================================//
 
-					if( getEventsByTime( start, end ).length > 1 ){
-						$('#d_calendar').fullCalendar('refetchEvents');
-					}
+					// if( getEventsByTime( start, end ).length > 1 ){
+					// 	// $('#d_calendar').fullCalendar('refetchEvents');
+					// }
 
 					if( moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0 ) {
 						$("#loaderCalendar").hide();
@@ -197,7 +206,6 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 									} else if( classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>" ){
 										var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
 									}
-
 									events.push({
 										title: $(this).attr('title'),
 										start: $(this).attr('start'),
@@ -214,9 +222,6 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 										dow:[$(this).attr('day')]
 									  });
 								});
-
-								console.log( events );
-
 
 								fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
 									var doc2 = JSON.parse(doc2);
@@ -333,7 +338,6 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 				},
 
 				eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
-					//console.log(event.start.isBefore(moment()));
 					if( moment('<?php echo $nowDate; ?>').diff(moment(event.start)) >= 0) {
 						$("#d_calendar").fullCalendar("refetchEvents");
 						return false;
@@ -349,7 +353,6 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 				},
 
 				eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
-					//console.log(event.start.isBefore(moment()));
 					if(moment('<?php echo $nowDate; ?>').diff(moment(event.start)) >= 0) {
 						$("#d_calendar").fullCalendar("refetchEvents");
 						return false;

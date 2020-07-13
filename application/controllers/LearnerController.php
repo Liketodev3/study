@@ -16,6 +16,8 @@ class LearnerController extends LearnerBaseController
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addCss('css/fullcalendar.min.css');
+        $this->_template->addJs('js/jquery.countdownTimer.min.js');
+        $this->_template->addCss('css/jquery.countdownTimer.css');
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
         $userObj = new User(UserAuthentication::getLoggedUserId());

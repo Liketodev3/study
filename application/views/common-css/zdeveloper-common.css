@@ -5,3 +5,7 @@ a.banner-btn-url{
 input[name=teach_language_name].ui-autocomplete-loading {
       background: none;
 }
+
+.calendar-view {
+  position : relative;
+}
