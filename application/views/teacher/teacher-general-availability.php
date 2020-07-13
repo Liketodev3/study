@@ -46,7 +46,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 		// debugger;
 		$.each(allevents, function( i, eItem )
 		{
-			eventmerge =  false;
+
 			if(eItem ===null || typeof eItem == 'undefined')
 			{
 				return;
@@ -56,6 +56,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 			var eventId =  eItem._id;
 			$.each(allevents, function( index, eventitem )
 			{
+				eventmerge =  false;
 				if(eventId == eventitem._id){
 					return;
 				}
@@ -141,6 +142,16 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 					callback(doc);
 				});
 			},
+			eventAfterAllRender : function(view) {
+				mergeEvents();
+			},
+			loading :function( isLoading, view ) {
+	            if(isLoading == true){
+	                 $("#loaderCalendar").show();
+	            }else{
+	                 $("#loaderCalendar").hide();
+	            }
+	        },
    			eventRender: function(event, element) {
    				if(isNaN(event._id)){
    					element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
@@ -153,7 +164,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    					$('#ga_calendar').fullCalendar('removeEvents',event._id);
    				}
                });
-			   mergeEvents();
+			   // mergeEvents();
            },
    	});
 	$('body').find(".fc-left").html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'></span></h6>");
@@ -164,6 +175,9 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 <button id='setUpGABtn' class="btn btn--secondary"><?php echo Label::getLabel('LBL_Save'); ?></button>
 <span class="-gap"></span>
 <div class="calendar-view -no-padding">
+<div id="loaderCalendar" style="display: none;">
+    <div class="loader"></div>
+</div>
 <span> <?php echo MyDate::displayTimezoneString();?> </span>
 <div id='ga_calendar'></div>
 </div>

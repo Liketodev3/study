@@ -7531,13 +7531,19 @@ color: var(--color-dark)!important;
 #loaderCalendar {
     position: absolute;
     width: 100%;
-    background: rgba(255, 255, 255, 0.5);
-    z-index: 4;
+    background: rgba(255,255,255, 0.5);
     height: 100%;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-#loaderCalendar .loader {
-    margin-top: 30%;
+
+
+.loader {
+    width: 90px;
+    height: 90px;
 }
 
 .box-hint {
