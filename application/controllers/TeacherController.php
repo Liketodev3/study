@@ -22,6 +22,8 @@ class TeacherController extends TeacherBaseController
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addCss('css/fullcalendar.min.css');
+        $this->_template->addJs('js/jquery.countdownTimer.min.js');
+        $this->_template->addCss('css/jquery.countdownTimer.css');
         $userObj = new User(UserAuthentication::getLoggedUserId());
         $userDetails = $userObj->getDashboardData(CommonHelper::getLangId(), true);
         $durationArr = Statistics::getDurationTypesArr(CommonHelper::getLangId());
