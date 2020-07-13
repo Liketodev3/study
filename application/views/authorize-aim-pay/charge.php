@@ -15,9 +15,7 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
     <div class="reff row">
       <div class="col-lg-8 col-md-8 col-sm-12">
 		  <p class=""><?php echo Label::getLabel('LBL_Payable_Amount',$siteLangId);?> : <strong><?php echo CommonHelper::displayMoneyFormat($paymentAmount)?></strong> </p>
-	  	<?php if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) { ?>
-	  		<p><?php echo CommonHelper::currencyDisclaimer($siteLangId, $paymentAmount); ?></p>
-	  	<?php } ?>
+	  
       </div>
       <div class="col-lg-4 col-md-4 col-sm-12">
         <p class=""><?php echo Label::getLabel('LBL_Order_Invoice',$siteLangId);?>: <strong><?php echo $orderInfo["order_id"] ; ?></strong></p>
@@ -136,6 +134,10 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
             <div class="field-wraper">
               <div class="field_cover"> <?php echo $frm->getFieldHtml('btn_submit'); ?> <a href="<?php echo $cancelBtnUrl; ?>" class="btn btn--large"><?php echo Label::getLabel('LBL_Cancel',$siteLangId);?></a> </div>
             </div>
+			<span class="-gap -hide-mobile"></span>
+			<?php if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) { ?>
+				<p class="-color-secondary"><?php echo CommonHelper::currencyDisclaimer($siteLangId, $paymentAmount); ?></p>
+			<?php } ?>
           </div>
         </div>
       </div>

@@ -25,13 +25,12 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
 							</div>
 							<div class="message-display">
 								<p class=""><?php echo Label::getLabel('LBL_Payable_Amount',$siteLangId);?> : <strong><?php echo CommonHelper::displayMoneyFormat($paymentAmount)?></strong> </p>
-								<?php if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) { ?>
-									<p><?php echo CommonHelper::currencyDisclaimer($siteLangId, $paymentAmount); ?></p>
-								<?php } ?>
-
 								<p class="">
 									<?php echo Label::getLabel('LBL_Order_Invoice',$siteLangId);?>: <strong><?php echo $orderInfo["order_id"] ;/* displayNotApplicable($orderInfo["order_id"]) */?></strong>
 								</p>
+								<?php if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) { ?>
+									<p class="-color-secondary"><?php echo CommonHelper::currencyDisclaimer($siteLangId, $paymentAmount); ?></p>
+								<?php } ?>
 							</div>
 							<div class="-align-center">
 								<div class="payment-from">

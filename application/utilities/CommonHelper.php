@@ -912,14 +912,13 @@ class CommonHelper extends FatUtility
 
     public static function currencyDisclaimer($langId, $amount = 0)
     {
-        $str = Label::getLabel('LBL_Note_charged_in_currency_disclaimer_{default-currency-symbol}', $langId);
+        $str = Label::getLabel('LBL_*_Note_:_charged_in_currency_disclaimer_{default-currency-symbol}', $langId);
         if ($amount) {
             $str = str_replace("{default-currency-symbol}", static::displayMoneyFormat($amount, true, true), $str);
         } else {
             $str = str_replace("{default-currency-symbol}", ' $ ', $str);
         }
-        $labelstr =  Label::getLabel('LBL_All_Purchases_are_in_{default-currency-code}._Foreign_transaction_fees_might_apply,_according_to_your_bank\'s_policies');
-        $str = $str. "<br>". str_replace("{default-currency-code}", self::getCurrencyCode(),$labelstr);
+        
         return $str;
     }
 
@@ -1326,6 +1325,16 @@ class CommonHelper extends FatUtility
         }
         trigger_error(Label::getLabel('ERR_Default_currency_not_specified.', CommonHelper::getLangId()), E_USER_ERROR);
     }
+	
+	  public static function getDefaultCurrencyData()
+    {
+        $row = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY'));
+        if (!empty($row)) {
+            return $row;
+        }
+        trigger_error(Label::getLabel('ERR_Default_currency_not_specified.', CommonHelper::getLangId()), E_USER_ERROR);
+    }
+
 
     public static function logData($str)
     {

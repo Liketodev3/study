@@ -89,6 +89,12 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right" >
 					<div class="box" style="margin-bottom: 30px;" id="financialSummaryListing">
 					</div>
+					<p class="-color-secondary">
+						<?php 
+						 $labelstr =  Label::getLabel('LBL_*_All_Purchases_are_in_{default-currency-code}._Foreign_transaction_fees_might_apply,_according_to_your_bank\'s_policies');
+						  echo  str_replace("{default-currency-code}", CommonHelper::getDefaultCurrencyData()['currency_code'],$labelstr);
+						?>
+					</p>
 				</div>
 
 				<div class="col-xl-8 col-lg-8 col-md-12">
