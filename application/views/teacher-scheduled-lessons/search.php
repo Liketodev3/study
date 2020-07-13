@@ -112,7 +112,8 @@ if (strtotime($curDate) == strtotime($key)) {
 				<div class="schedule-list">
 					<ul>
 					<?php
-						$timerEndTimer = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s A', date($lesson['slesson_date']." ". $lesson['slesson_start_time']), true , $user_timezone );
+					$lessonsStarttime = date('Y-m-d H:i:s',strtotime($lesson['slesson_date']." ". $lesson['slesson_start_time']));
+						$timerEndTimer = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s A', $lessonsStarttime, true , $user_timezone );
 						if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
 							if(strtotime($timerEndTimer) > strtotime($curDateTime)) {
 						?>

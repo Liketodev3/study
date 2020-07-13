@@ -124,10 +124,10 @@ foreach ( $lessons as $lesson ) {
 			</div>
 			<?php if($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
 			<div class="col-xl-4 col-lg-4 col-md-12 col-positioned">
-				<div class="schedule-list">
+				<div class="schedule-list ">
 					<ul>
 					<?php
-						$timerEndTimer = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s A', date($lesson['slesson_date']." ". $lesson['slesson_start_time']), true , $user_timezone );
+						$timerEndTimer = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s',strtotime($lesson['slesson_date']." ". $lesson['slesson_start_time'])), true , $user_timezone );
 						if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
 							if(strtotime($timerEndTimer) > strtotime($curDateTime)) {
 						?>
