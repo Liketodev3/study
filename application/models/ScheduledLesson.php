@@ -113,7 +113,7 @@ class ScheduledLesson extends MyAppModel
         }
         return true;
     }
-    
+
     public function cancelLessonByTeacher($reason='')
     {
         $lessonDetailRows = ScheduledLessonDetails::getScheduledRecordsByLessionId($this->getMainTableRecordId());
@@ -122,23 +122,23 @@ class ScheduledLesson extends MyAppModel
 		foreach($lessonDetailRows as $lessonDetailRow){
             // CommonHelper::printArray($lessonDetailRow);die;
 			$sLessonDetailObj = new ScheduledLessonDetails($lessonDetailRow['sldetail_id']);
-        
+
             if (!$sLessonDetailObj->refundToLearner()) {
                 $this->error = $sLessonDetailObj->getError();
                 return false;
             }
-                
+
 			if (!$sLessonDetailObj->changeStatus(ScheduledLesson::STATUS_CANCELLED)) {
 				$this->error = $sLessonDetailObj->getError();
                 return false;
 			}
-            
+
             $start_date = $lessonDetailRow['slesson_date'];
             $start_time = $lessonDetailRow['slesson_start_time'];
             $end_time = $lessonDetailRow['slesson_end_time'];
-            
+
             $user_timezone = $lessonDetailRow['learnerTz'];
-            
+
             if($start_time){
                 $start_time = $start_date.' '.$start_time;
                 $end_time = $start_date.' '.$end_time;
@@ -146,7 +146,7 @@ class ScheduledLesson extends MyAppModel
                 $start_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $start_time, true, $user_timezone);
                 $end_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $end_time, true, $user_timezone);
             }
-            
+
             /* send an email to learner[ */
             $vars = array(
                 '{learner_name}'    => $lessonDetailRow['learnerFullName'],
@@ -165,11 +165,11 @@ class ScheduledLesson extends MyAppModel
 		}
         return true;
     }
-    
+
     public function rescheduleLessonByTeacher($reason='')
     {
         $lessonDetailRows = ScheduledLessonDetails::getScheduledRecordsByLessionId($this->getMainTableRecordId());
-        
+
         /* update status for every learner [ */
 		foreach($lessonDetailRows as $lessonDetailRow)
         {
@@ -179,13 +179,13 @@ class ScheduledLesson extends MyAppModel
                 $this->error = $sLessonDetailObj->getError();
                 return false;
             }
-            
+
             $start_date = $lessonDetailRow['slesson_date'];
             $start_time = $lessonDetailRow['slesson_start_time'];
             $end_time = $lessonDetailRow['slesson_end_time'];
-            
+
             $user_timezone = $lessonDetailRow['learnerTz'];
-            
+
             if($start_time){
                 $start_time = $start_date.' '.$start_time;
                 $end_time = $start_date.' '.$end_time;
@@ -193,7 +193,7 @@ class ScheduledLesson extends MyAppModel
                 $start_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $start_time, true, $user_timezone);
                 $end_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $end_time, true, $user_timezone);
             }
-            
+
             /* send email to learner[ */
             $vars = array(
                 '{learner_name}'    => $lessonDetailRow['learnerFullName'],

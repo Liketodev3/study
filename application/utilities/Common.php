@@ -32,7 +32,7 @@ class Common
         $srch->addMultipleFields(array(
             'slns.slesson_id',
             'slns.slesson_slanguage_id',
-            'slns.slesson_learner_id as learnerId',
+            'sld.sldetail_learner_id as learnerId',
             'slns.slesson_teacher_id as teacherId',
             'ut.user_first_name as teacherFname',
             'ut.user_url_name as user_url_name',

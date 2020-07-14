@@ -36,7 +36,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->searchLessons($srch, $post, true, false);
         // list on lessons not classes in lessons list
         $srch->addCondition('slesson_grpcls_id', '=', 0);
-        
+
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
         $srch->addFld(
             array(
@@ -146,7 +146,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             foreach ($keywordsArr as $keyword) {
                 $cnd = $srch->addCondition('ul.user_first_name', 'like', '%'.$keyword.'%');
                 $cnd->attachCondition('ul.user_last_name', 'like', '%'.$keyword.'%');
-                $cnd->attachCondition('slesson_order_id', 'like', '%'.$keyword.'%');
+                $cnd->attachCondition('sldetail_order_id', 'like', '%'.$keyword.'%');
             }
         }
 
@@ -314,7 +314,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addMultipleFields(
             array(
                 'slns.slesson_teacher_id',
-                'slns.slesson_learner_id',
+                // 'slns.slesson_learner_id',
+                'sld.sldetail_learner_id',
                 'slns.slesson_date',
                 'slns.slesson_end_date',
                 'slns.slesson_start_time',
@@ -340,7 +341,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
                     "date" => $slesson_date,
                     "start" => $slesson_start_time,
                     "end" => $slesson_end_time,
-                    'lid' => $row['slesson_learner_id'],
+                    'lid' => $row['sldetail_learner_id'],
                     'liFname' => substr($row['user_first_name'], 0, 1),
                     'classType' => $row['slesson_status'],
                     'className' => $cssClassNamesArr[$row['slesson_status']]
@@ -979,13 +980,19 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError($frm->getValidationErrors());
         }
         $lessonId = $post['slesson_id'];
-        $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_teacher_id', 'slesson_learner_id'));
+        $scheduledLessonObj =  new ScheduledLessonSearch(false);
+        $scheduledLessonObj->addMultipleFields(['slesson_teacher_id', 'sld.sldetail_learner_id']);
+        $scheduledLessonObj->addCondition('slesson_id', '=', $lessonId);
+        $scheduledLessonObj->setPageSize(1);
+        $resultSet =  $scheduledLessonObj->getResultSet();
+        $lessonRow = FatApp::getDb()->fetch($resultSet);
+
         if (empty($lessonRow) || $lessonRow['slesson_teacher_id'] != UserAuthentication::getLoggedUserId()) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
 
         $flashCardId = $post['flashcard_id'];
-        $post['flashcard_user_id'] = $lessonRow['slesson_learner_id'];
+        $post['flashcard_user_id'] = $lessonRow['sldetail_learner_id'];
         $post['flashcard_created_by_user_id'] = UserAuthentication::getLoggedUserId();
         $flashCardObj = new FlashCard($flashCardId);
         $flashCardObj->assignValues($post);
@@ -998,7 +1005,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             $flashcardId = $flashCardObj->getMainTableRecordId();
             $db->insertFromArray(FlashCard::DB_TBL_SHARED, array(
                 'sflashcard_flashcard_id' => $flashcardId,
-                'sflashcard_learner_id' => $lessonRow['slesson_learner_id'],
+                'sflashcard_learner_id' => $lessonRow['sldetail_learner_id'],
                 'sflashcard_teacher_id' => $lessonRow['slesson_teacher_id'],
                 'sflashcard_slesson_id' => $lessonId,
             ));

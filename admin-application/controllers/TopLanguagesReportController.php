@@ -96,6 +96,7 @@ class TopLanguagesReportController extends AdminBaseController
         $post = $srchFrm->getFormDataFromArray(FatApp::getPostedData());
         $page = (empty($post['page']) || $post['page'] <= 0) ? 1 : intval($post['page']);
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+
         $srch = AdminStatistic::LessonLanguagesObject($this->adminLangId, $post);
         $srch->addGroupBy('slesson_slanguage_id');
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'ul.user_id = sld.sldetail_learner_id', 'ul');
@@ -103,7 +104,7 @@ class TopLanguagesReportController extends AdminBaseController
         if (isset($post['country_id']) && $post['country_id'] > 0) {
             $srch->addCondition('ul.user_country_id', '=', $post['country_id']);
             $this->set('country_id', $post['country_id']);
-            $joinQuery = ' INNER JOIN `tbl_users` AS countUl ON countUl.user_id = slesson_learner_id  where slesson_slanguage_id = slns.slesson_slanguage_id AND countUl.user_country_id = '. $post['country_id'];
+            $joinQuery = ' INNER JOIN `tbl_users` AS countUl ON countUl.user_id = sld.sldetail_learner_id  where slesson_slanguage_id = slns.slesson_slanguage_id AND countUl.user_country_id = '. $post['country_id'];
         } else {
             $joinQuery =' WHERE slesson_slanguage_id = slns.slesson_slanguage_id';
         }

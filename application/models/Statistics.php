@@ -45,6 +45,7 @@ class Statistics extends MyAppModel
                 //$srch = new SearchBase(Order::DB_TBL, 'o');
                 $srch = new OrderSearch();
                 $srch->joinOrderProduct();
+                $srch->joinScheduledLessonDetail();
                 $srch->joinScheduledLesson();
                 $srch->addCondition('op_teacher_id', '=', $this->userId);
                 $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
@@ -57,6 +58,7 @@ class Statistics extends MyAppModel
             case static::TYPE_LAST_WEEK:
                 $srch = new OrderSearch();
                 $srch->joinOrderProduct();
+                $srch->joinScheduledLessonDetail();
                 $srch->joinScheduledLesson();
                 $srch->addCondition('op_teacher_id', '=', $this->userId);
                 $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
@@ -69,6 +71,7 @@ class Statistics extends MyAppModel
             case static::TYPE_THIS_MONTH:
                 $srch = new OrderSearch();
                 $srch->joinOrderProduct();
+                $srch->joinScheduledLessonDetail();
                 $srch->joinScheduledLesson();
                 $srch->addCondition('op_teacher_id', '=', $this->userId);
                 $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
@@ -82,6 +85,7 @@ class Statistics extends MyAppModel
             case static::TYPE_LAST_MONTH:
                 $srch = new OrderSearch();
                 $srch->joinOrderProduct();
+                $srch->joinScheduledLessonDetail();
                 $srch->joinScheduledLesson();
                 $srch->addCondition('op_teacher_id', '=', $this->userId);
                 $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
@@ -94,6 +98,7 @@ class Statistics extends MyAppModel
             case static::TYPE_LAST_YEAR:
                 $srch = new OrderSearch();
                 $srch->joinOrderProduct();
+                $srch->joinScheduledLessonDetail();
                 $srch->joinScheduledLesson();
                 $srch->addCondition('op_teacher_id', '=', $this->userId);
                 $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);

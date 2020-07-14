@@ -80,9 +80,9 @@ class FreePayController extends MyAppController
         /* add schedulaed lessons[ */
         if ($cartData['lpackage_is_free_trial']) { //== only for free trial
             $sLessonArr = array(
-            'slesson_order_id' => $orderId,
+            //'slesson_order_id' => $orderId,
             'slesson_teacher_id' => $orderInfo['op_teacher_id'],
-            'slesson_learner_id' => $orderInfo['order_user_id'],
+            //'slesson_learner_id' => $orderInfo['order_user_id'],
             'slesson_slanguage_id' => $orderInfo['op_slanguage_id'],
             'slesson_date' => date('Y-m-d', strtotime($cartData['startDateTime'])),
             'slesson_end_date' => date('Y-m-d', strtotime($cartData['endDateTime'])),
@@ -92,17 +92,40 @@ class FreePayController extends MyAppController
         );
         $getlearnerFullName = User::getAttributesById(UserAuthentication::getLoggedUserId(),['CONCAT(user_first_name," ",user_last_name) as learnerFullName']);
 
+            $db =  FatApp::getDb();
+            $db->startTransaction();
 
             $sLessonObj = new ScheduledLesson();
             $sLessonObj->assignValues($sLessonArr);
             if (!$sLessonObj->save()) {
+                $db->rollbackTransaction();
                 Message::addErrorMessage($sLessonObj->getError());
                 if ($isAjaxCall) {
                     FatUtility::dieWithError(Message::getHtml());
                 }
                 CommonHelper::redirectUserReferer();
             }
+
             $lessonId = $sLessonObj->getMainTableRecordId();
+            $sLessonDetailAr = array(
+                'sldetail_slesson_id' => $lessonId,
+                'sldetail_order_id'	=>	$orderId,
+                'sldetail_learner_id' => $orderInfo['order_user_id'],
+                'sldetail_learner_status' => ScheduledLesson::STATUS_SCHEDULED
+            );
+
+            $slDetailsObj = new ScheduledLessonDetails();
+            $slDetailsObj->assignValues($sLessonDetailAr);
+
+            if (!$slDetailsObj->save()) {
+                $db->rollbackTransaction();
+                Message::addErrorMessage($slDetailsObj->getError());
+                if ($isAjaxCall) {
+                    FatUtility::dieWithError(Message::getHtml());
+                }
+                CommonHelper::redirectUserReferer();
+            }
+            $db->commitTransaction();
             $emailData =  [];
             $emailData = [
               'teacherFullName' => $orderInfo['teacherFullName'],

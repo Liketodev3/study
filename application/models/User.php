@@ -833,7 +833,7 @@ class User extends MyAppModel
         } else {
             $srch->joinLearnerLessonData($this->getMainTableRecordId());
         }
-        $srch->joinTable(Order::DB_TBL, 'INNER JOIN', 'o.order_id = sl.slesson_order_id and o.order_type = '.Order::TYPE_LESSON_BOOKING, 'o');
+        $srch->joinTable(Order::DB_TBL, 'LEFT JOIN', 'o.order_id = sld.sldetail_order_id and o.order_type = '.Order::TYPE_LESSON_BOOKING.' and order_is_paid IN ('.Order::ORDER_IS_PAID.','.Order::ORDER_IS_CANCELLED.')', 'o');
         $srch->addMultipleFields(array(
             'user_id',
             'user_url_name',
@@ -849,7 +849,7 @@ class User extends MyAppModel
             ));
 
         $srch->addCondition('user_id', '=', $this->getMainTableRecordId());
-        $srch->addCondition('order_type', 'IN', [Order::ORDER_IS_PAID,Order::ORDER_IS_CANCELLED]);
+        // $srch->addCondition('order_type', 'IN', [Order::ORDER_IS_PAID,Order::ORDER_IS_CANCELLED]);
         // echo $srch->getQuery();
         // die;
         $rs = $srch->getResultSet();

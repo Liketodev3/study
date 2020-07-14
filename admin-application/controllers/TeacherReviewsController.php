@@ -40,15 +40,16 @@ class TeacherReviewsController extends AdminBaseController
         $srch->joinTeacher($this->adminLangId);
         $srch->joinTeacherLessonRating();
         $srch->joinScheduledLesson();
+        $srch->joinScheduleLessonDetails();
         $srch->addMultipleFields(array('tlreview_lesson_id',
             'ul.user_id as learner_user_id', 'ul.user_first_name as learner_name', 'ul.user_phone as learner_phone', 'uc.credential_email as learner_email_id',
             'ut.user_id as teacher_user_id', 'ut.user_first_name as teacher_name', 'ut.user_phone as teacher_phone', 'usc.credential_email as teacher_email_id',
-            'tlreview_id', 'tlreview_posted_on', 'tlreview_status', 'tlrating_rating','sl.slesson_order_id as tlreview_order_id'));
+            'tlreview_id', 'tlreview_posted_on', 'tlreview_status', 'tlrating_rating','sld.sldetail_order_id as tlreview_order_id'));
         $srch->addOrder('tlreview_posted_on', 'DESC');
         $srch->addGroupBy('tlreview_id');
 
         if (!empty($post['tlreview_order_id'])) {
-            $srch->addCondition('slesson_order_id', '=', $post['tlreview_order_id']);
+            $srch->addCondition('sld.sldetail_order_id', '=', $post['tlreview_order_id']);
         }
 
         if ($post['reviewed_by_id'] > 0) {
@@ -111,8 +112,9 @@ class TeacherReviewsController extends AdminBaseController
         $srch = new TeacherLessonReviewSearch($this->adminLangId);
         $srch->joinLearner();
         $srch->joinScheduledLesson();
+        $srch->joinScheduleLessonDetails();
         //$srch->joinSelProdRatingByType(SelProdRating::TYPE_PRODUCT);
-        $srch->addMultipleFields(array('sl.slesson_order_id as tlreview_order_id', 'ul.user_first_name as reviewed_by', 'tlreview_id', 'tlreview_posted_on', 'tlreview_status', 'tlreview_title', 'tlreview_description'));
+        $srch->addMultipleFields(array('sld.sldetail_order_id as tlreview_order_id', 'ul.user_first_name as reviewed_by', 'tlreview_id', 'tlreview_posted_on', 'tlreview_status', 'tlreview_title', 'tlreview_description'));
         $srch->addOrder('tlreview_posted_on', 'DESC');
         $srch->addCondition('tlreview_id', '=', $tlreview_id);
         $rs = $srch->getResultSet();

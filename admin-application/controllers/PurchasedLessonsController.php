@@ -70,8 +70,8 @@ class PurchasedLessonsController extends AdminBaseController
 
         $frm->addHiddenField('', 'page', 1);
         $frm->addHiddenField('', 'slesson_teacher_id', '');
-        $frm->addHiddenField('', 'slesson_learner_id', '');
-        $orderIdFld =  $frm->addHiddenField('', 'slesson_order_id', '');
+        $frm->addHiddenField('', 'sldetail_learner_id', '');
+        $orderIdFld =  $frm->addHiddenField('', 'sldetail_order_id', '');
         if(!empty($orderId)) {
             $orderIdFld->value = $orderId;
         }
@@ -127,8 +127,8 @@ class PurchasedLessonsController extends AdminBaseController
             $learnerId = FatUtility::int($data['sldetail_learner_id']);
             $scheduledLessonSearchObj->addCondition('sldetail_learner_id', '=', $learnerId);
         }
-        if (!empty($data['slesson_order_id'])) {
-            $scheduledLessonSearchObj->addCondition('sldetail_order_id', '=', $data['slesson_order_id']);
+        if (!empty($data['sldetail_order_id'])) {
+            $scheduledLessonSearchObj->addCondition('sldetail_order_id', '=', $data['sldetail_order_id']);
         }
 
         // if ($data['op_lpackage_is_free_trial'] >= 0) {
@@ -268,7 +268,7 @@ class PurchasedLessonsController extends AdminBaseController
 
         $srch->addMultipleFields(array(
             'slns.slesson_id',
-            'slns.slesson_learner_id as learnerId',
+            'sld.sldetail_learner_id as learnerId',
             'ul.user_first_name as learnerFname',
             'ul.user_last_name as learnerLname',
             'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
@@ -283,6 +283,7 @@ class PurchasedLessonsController extends AdminBaseController
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration'
         ));
+
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
 
@@ -382,11 +383,11 @@ class PurchasedLessonsController extends AdminBaseController
         }
         $db->commitTransaction();
 		/*[ notifications to users */
-		$userNotification = new UserNotifications($lessonRow['slesson_teacher_id']);
-        $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['slesson_learner_id'], $status, User::USER_TYPE_TEACHER);
+		$userNotification = new UserNotifications($lessonRow['sldetail_learner_id']);
+        $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['sldetail_learner_id '], $status, User::USER_TYPE_TEACHER);
 
-		$userNotification = new UserNotifications($lessonRow['slesson_learner_id']);
-        $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['slesson_teacher_id'],  $status, User::USER_TYPE_LEANER);
+		$userNotification = new UserNotifications($lessonRow['sldetail_learner_id']);
+        $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['sldetail_learner_id '],  $status, User::USER_TYPE_LEANER);
 		/*]*/
 
         $this->set('msg', 'Updated Successfully.');
@@ -403,20 +404,26 @@ class PurchasedLessonsController extends AdminBaseController
         $db->startTransaction();
         $data = FatApp::getPostedData();
         $orderSearch =  new OrderSearch();
+        $orderSearch->joinScheduledLessonDetail();
+        $orderSearch->joinScheduledLesson();
         $orderSearch->addMultipleFields([
             'order_id',
             'order_is_paid',
             'order_user_id',
             'order_net_amount',
-            'count(sl.slesson_order_id) as totalLessons',
-            'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) scheduledLessonsCount',
-            'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_NEED_SCHEDULING.' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
+            'sldetail_order_id',
+            'slesson_id',
+            'count(sld.sldetail_order_id) as totalLessons',
+            'SUM(CASE WHEN sld.sldetail_learner_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) scheduledLessonsCount',
+            'SUM(CASE WHEN sld.sldetail_learner_status = '.ScheduledLesson::STATUS_NEED_SCHEDULING.' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
         ]);
-        $orderSearch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sl.slesson_order_id = o.order_id', 'sl');
+        //$orderSearch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sld.sldetail_order_id = o.order_id', 'sl');
         $orderSearch->addCondition('o.order_id', '=', FatApp::getPostedData('order_id',FatUtility::VAR_STRING,''));
-        $orderSearch->addGroupBy('sl.slesson_order_id');
+        $orderSearch->addGroupBy('sld.sldetail_order_id');
         $resultSet = $orderSearch->getResultSet();
         $orderInfo =  $db->fetch($resultSet);
+        // print_r($orderInfo);
+        // die;
         if(empty($orderInfo)) {
             $this->error = Label::getLabel("LBL_Invalid_Request", CommonHelper::getLangId());
             if(FatUtility::isAjaxCall()) {
@@ -466,7 +473,8 @@ class PurchasedLessonsController extends AdminBaseController
         /* [ */
         if($data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['order_net_amount'] > 0) {
             $assignValues = array('slesson_status' => ScheduledLesson::STATUS_CANCELLED);
-            if (!$db->updateFromArray(ScheduledLesson::DB_TBL, $assignValues, array('smt' => 'slesson_order_id = ?', 'vals' => array($data['order_id'])))) {
+
+            if (!$db->updateFromArray(ScheduledLesson::DB_TBL, $assignValues, array('smt' => 'slesson_id = ?', 'vals' => array($orderInfo['slesson_id'])))) {
                 $db->rollbackTransaction();
                 $this->error = $db->getError();
                 if(FatUtility::isAjaxCall()) {
@@ -474,6 +482,17 @@ class PurchasedLessonsController extends AdminBaseController
                 }
                 return false;
             }
+
+            $assignValues = array('sldetail_learner_status' => ScheduledLesson::STATUS_CANCELLED);
+            if (!$db->updateFromArray(ScheduledLessonDetails::DB_TBL, $assignValues, array('smt' => 'sldetail_order_id = ?', 'vals' => array($data['order_id'])))) {
+                $db->rollbackTransaction();
+                $this->error = $db->getError();
+                if(FatUtility::isAjaxCall()) {
+                    FatUtility::dieJsonError($this->error);
+                }
+                return false;
+            }
+
 
             $transObj = new Transaction($orderInfo["order_user_id"]);
             $formattedOrderId = "#".$orderInfo["order_id"];

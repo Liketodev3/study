@@ -14,12 +14,12 @@ class ScheduledLessonSearch extends SearchBase
         if (true === $doNotCalculateRecords) {
             $this->doNotCalculateRecords();
         }
-        
+
         if($joinDetails === true){
             $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = slns.slesson_id', 'sld');
         }
     }
-    
+
     public static function getSearchLessonsObj($langId)
     {
         $srch = new self(false);
@@ -66,7 +66,7 @@ class ScheduledLessonSearch extends SearchBase
         // echo $srch->getQuery();die;
         return $srch;
     }
-    
+
     public function joinGroupClass()
     {
         $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
@@ -242,7 +242,7 @@ class ScheduledLessonSearch extends SearchBase
 
         $this->addMultipleFields(array('utsl.utl_us_user_id', 'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
     }
-    
+
     public static function isSlotBooked($teacherId, $startDateTime, $endDateTime)
     {
         $teacherId = FatUtility::int($teacherId);
@@ -263,7 +263,7 @@ class ScheduledLessonSearch extends SearchBase
         $rs = $srch->getResultSet();
         return $srch->recordCount()>0;
     }
-    
+
     public static function getLessonInfoByGrpClsid($grpclsId, $attr = null)
     {
         $grpclsId = FatUtility::int($grpclsId);
@@ -288,10 +288,10 @@ class ScheduledLessonSearch extends SearchBase
         if (is_string($attr)) {
             return $row[$attr];
         }
-		
+
         return $row;
     }
-    
+
     public function getLessonsByClass($grpclsId)
     {
         $db = FatApp::getDb();

@@ -81,7 +81,7 @@ class TeacherIssueReportedController extends TeacherBaseController
             'i.*',
             'user_first_name',
             'slesson_id',
-            'slesson_learner_id',
+            'sldetail_learner_id',
             'slesson_date',
             'slesson_start_time',
             'user_timezone',
@@ -189,7 +189,7 @@ class TeacherIssueReportedController extends TeacherBaseController
              $lessonAmount = $transactionDetails['order_total'] / $transactionDetails['total_lessons'] ;
          }
         $lessonAmountTeacher = $transactionDetails['utxn_credit'];
-        $lerner_id = $transactionDetails['slesson_learner_id'];
+        $lerner_id = $transactionDetails['sldetail_learner_id'];
         $teacherPayment = $lessonAmount;
         $transactionComment = $transactionDetails['utxn_comments'];
         switch ($issue_resolve_type) {
@@ -220,7 +220,8 @@ class TeacherIssueReportedController extends TeacherBaseController
                 $transactionComment = sprintf(Label::getLabel('LBL_LessonId:_%s_Payment_Received_(_%s&percnt;_Refunded_)', $this->siteLangId), $lessonId, 100);
             break;
         }
-
+        $db = FatApp::getDb();
+        $db->startTransaction();
         if ($_refund_percentage > 0) {
             $tObj = new Transaction($lerner_id);
             $data = array(
@@ -236,6 +237,7 @@ class TeacherIssueReportedController extends TeacherBaseController
             $data['utxn_credit'] = $refundAmount;
             $refundAmountTeacher = $lessonAmountTeacher * $_refund_percentage / 100;
             if (!$tObj->addTransaction($data)) {
+                $db->rollbackTransaction();
                 Message::addErrorMessage($tObj->getError());
                 FatUtility::dieJsonError(Message::getHtml());
             }
@@ -252,6 +254,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         );
 
         if (!$tObjTeach->addTransaction($teachData)) {
+            $db->rollbackTransaction();
             Message::addErrorMessage($tObjTeach->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
@@ -264,12 +267,14 @@ class TeacherIssueReportedController extends TeacherBaseController
         $record->assignValues($reportedArr);
 
         if (!$record->save()) {
+            $db->rollbackTransaction();
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError($record->getError());
         }
 
         $sLessonObj = new ScheduledLesson($lessonId);
         $lessonData = array();
+        $lessonDetailsData = array();
 
         if ($issue_resolve_type == 1) {
             $lessonData['slesson_date'] = '';
@@ -277,20 +282,38 @@ class TeacherIssueReportedController extends TeacherBaseController
             $lessonData['slesson_start_time'] = '';
             $lessonData['slesson_end_time'] = '';
             $lessonData['slesson_teacher_join_time'] = '';
-            $lessonData['slesson_learner_join_time'] = '';
+            // $lessonData['slesson_learner_join_time'] = '';
             $lessonData['slesson_teacher_end_time'] = '';
-            $lessonData['slesson_learner_end_time'] = '';
+            // $lessonData['slesson_learner_end_time'] = '';
             $lessonData['slesson_ended_by'] = 0;
             $lessonData['slesson_ended_on'] = '';
             $lessonData['slesson_reminder_one'] = 0;
             $lessonData['slesson_reminder_two'] = 0;
+
+            $lessonDetailsData['sldetail_learner_join_time'] = '';
+            $lessonDetailsData['sldetail_learner_end_time'] = '';
         }
         $lessonData['slesson_status'] = $lesson_status;
+        $lessonDetailsData['sldetail_learner_status'] = $lesson_status;
+
         $sLessonObj->assignValues($lessonData);
         if (!$sLessonObj->save()) {
+            $db->rollbackTransaction();
             Message::addErrorMessage($sLessonObj->getError());
             FatUtility::dieJsonError($sLessonObj->getError());
         }
+        if($transactionDetails['sldetail_id'] > 0){
+            $sLessonDetailObj = new ScheduledLessonDetails($transactionDetails['sldetail_id']);
+            $sLessonDetailObj->assignValues($lessonDetailsData);
+            if (!$sLessonDetailObj->save()) {
+                $db->rollbackTransaction();
+                Message::addErrorMessage($sLessonDetailObj->getError());
+                FatUtility::dieJsonError($sLessonDetailObj->getError());
+            }
+        }
+
+        $db->commitTransaction();
+
         //$sLessonObj->changeLessonStatus( $lessonId, $lesson_status );
         $reason_html = '';
         $teacherReasonHtml = '';
