@@ -28,19 +28,24 @@ $(document).ready(function(){
 		});
 	};
 
-	getTeacherProfileProgress = function(){
+	getTeacherProfileProgress = function(showMessage){
+		showMessage = (showMessage) ? showMessage :  true;
+		if(!userIsTeacher) {
+			return;
+		}
 
 		fcom.ajax(fcom.makeUrl('Teacher', 'getTeacherProfileProgress'), '', function(data) {
-			if(!userIsTeacher) {
-				return;
-			}
-			if(data && data.teacherProfileProgress) {
-				if(!data.teacherProfileProgress.isProfileCompleted){
-					$.systemMessage(langLbl.teacherProfileIncompleteMsg, 'alert alert--warning');
-					setTimeout(function() {
-						$.systemMessage.close();
-					}, 4100);
 
+			if(data && data.teacherProfileProgress) {
+				if(!data.teacherProfileProgress.isProfileCompleted && showMessage){
+						setTimeout(function() {
+								$.systemMessage.close();
+								$.mbsmessage.close();
+								$.systemMessage(langLbl.teacherProfileIncompleteMsg, 'alert alert--warning');
+								setTimeout(function() {
+									$.systemMessage.close();
+								}, 950);
+						},600);
 				}
 				$.each(data.teacherProfileProgress,function( key, value ){
 						switch (key) {
@@ -183,6 +188,9 @@ $(document).ready(function(){
 			}
 
 		updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
+		if(userIsTeacher) {
+			getTeacherProfileProgress();
+		}
 		getLangProfileInfoForm(1);
 			return ;
 		});
@@ -289,6 +297,9 @@ $.ajax(settings).done(function (response) {
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','settingsInfoForm'),'',function(t){
 			$(dv).html(t);
+				if(userIsTeacher) {
+				  getTeacherProfileProgress();
+				}
 		});
 	};
 
@@ -402,7 +413,11 @@ $.ajax(settings).done(function (response) {
 	deleteTeacherGeneralAvailability  = function(id){
 		 if(confirm(langLbl['confirmRemove'])){
 			 fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherGeneralAvailability',[id]), '' , function(t) {
-				$('#ga_calendar').fullCalendar('removeEvents',id);
+					$('#ga_calendar').fullCalendar('removeEvents',id);
+					if(userIsTeacher) {
+					  getTeacherProfileProgress(false);
+					}
+
 			});
 		 }
 	};
