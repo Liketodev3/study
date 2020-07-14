@@ -4,7 +4,7 @@ class AccountController extends LoggedUserController
     public function __construct($action)
     {
         parent::__construct($action);
-        User::getTeacherProfileProgress();
+        
         $this->_template->addJs('js/jquery-confirm.min.js');
         $this->_template->addCss('css/jquery-confirm.min.css');
     }
@@ -164,7 +164,7 @@ class AccountController extends LoggedUserController
         $this->_template->addCss('css/fullcalendar.min.css');
 		$this->set('userIsTeacher', User::isTeacher());
         $this->_template->render();
-		 
+
     }
 
     public function profileInfoForm()
