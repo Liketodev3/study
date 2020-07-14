@@ -57,7 +57,7 @@ class CommissionController extends AdminBaseController
         if (0 < $commissionId) {
             $data = Commission::getAttributesById(
                 $commissionId,
-                array('commsetting_id','commsetting_user_id','commsetting_fees')
+                array('commsetting_id','commsetting_user_id','commsetting_fees','commsetting_is_grpcls')
             );
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
@@ -237,11 +237,13 @@ class CommissionController extends AdminBaseController
         $commissionId =  FatUtility::int($commissionId);
         $isMandatory = false;
         $notGlobal = true;
-        if ($data = Commission::getAttributesById($commissionId, array('commsetting_is_mandatory','commsetting_user_id'))) {
+        $isGrpCls = true;
+        if ($data = Commission::getAttributesById($commissionId, array('commsetting_is_mandatory','commsetting_user_id', 'commsetting_is_grpcls'))) {
             $isMandatory = $data['commsetting_is_mandatory'];
             if ($data['commsetting_user_id'] == 0) {
                 $notGlobal = false;
             }
+            $isGrpCls = $data['commsetting_is_grpcls'];
         }
         $frm = new Form('frmCommission');
         $frm->addHiddenField('', 'commsetting_id', $commissionId);
@@ -255,6 +257,9 @@ class CommissionController extends AdminBaseController
 
         $fld = $frm->addFloatField(Label::getLabel('LBL_Commission_fees_[%]', $this->adminLangId), 'commsetting_fees');
         $fld->requirements()->setRange(1, 100);
+        if ($notGlobal || $isGrpCls) {
+            $frm->addCheckBox(Label::getLabel('LBL_Is_Group_Class', $this->adminLangId), 'commsetting_is_grpcls', 1, ($isGrpCls && !$notGlobal ? array('disabled' => 'disabled') : array()));
+        }
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }

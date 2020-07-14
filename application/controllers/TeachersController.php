@@ -303,6 +303,7 @@ class TeachersController extends MyAppController {
 		$srch->joinLearner();
 		$srch->joinTeacherLessonRating();
 		$srch->joinScheduledLesson();
+		$srch->joinScheduleLessonDetails();
 		$srch->joinLessonLanguage(CommonHelper::getLangId());
 		//$srch->addCondition('tlrating_rating_type','=',TeacherLessonRating::TYPE_LESSON);
 		$srch->addCondition('tlr.tlreview_teacher_user_id', '=', $teacherId);
@@ -315,7 +316,7 @@ class TeachersController extends MyAppController {
 			'tlreview_postedby_user_id',
 			'ul.user_first_name as lname',
 			'ut.user_first_name as tname',
-			'(select count(slesson_id) from  '. ScheduledLesson::DB_TBL .' where slesson_teacher_id = ut.user_id AND slesson_learner_id = ul.user_id ) as lessonCount',
+			'(select count(slesson_id) from  '. ScheduledLesson::DB_TBL .' where slesson_teacher_id = ut.user_id AND sldetail_learner_id = ul.user_id ) as lessonCount',
 			'IFNULL(tlanguage_name, tlanguage_identifier) as lessonLanguage'
 		));
 		$srch->addGroupBy('tlr.tlreview_id');
@@ -458,7 +459,7 @@ class TeachersController extends MyAppController {
         }
 		$originalDayNumber = $post['day'];
 		$tWsch = new TeacherWeeklySchedule();
-		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime, $date, $day, $originalDayNumber, $post['weekStart'], $post['weekEnd']);
+		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime, $post['weekStart']);
 		FatUtility::dieJsonSuccess($checkAvialSlots);
 	}
 

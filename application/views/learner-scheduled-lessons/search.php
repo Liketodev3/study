@@ -44,7 +44,7 @@ foreach ( $lessons as $lesson ) {
 				</div>
 				<h6><?php echo $lesson['teacherFname']; ?></h6>
 				<p><?php echo $lesson['teacherCountryName']; ?> <br>
-				<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['slesson_order_id']; ?> <br>
+				<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['sldetail_order_id']; ?> <br>
 
 				<?php /* echo CommonHelper::getDateOrTimeByTimeZone($lesson['teacherTimeZone'],'H:i A P'); */ ?></p>
 			</div>
@@ -79,7 +79,7 @@ foreach ( $lessons as $lesson ) {
 
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
-							<span class="span-right"><?php echo $statusArr[$lesson['slesson_status']]; ?></span>
+							<span class="span-right"><?php echo $statusArr[$lesson['sldetail_learner_status']]; ?></span>
 						</li>
 
 						<?php if($lesson['order_is_paid'] == Order::ORDER_IS_CANCELLED) {?>
@@ -153,8 +153,8 @@ foreach ( $lessons as $lesson ) {
 				<br>
 				<div class="select-box toggle-group">
 					<div class="buttons-toggle">
-						<a href="<?php echo CommonHelper::generateFullUrl('LearnerScheduledLessons','view',array($lesson['slesson_id'])); ?>" class="btn btn--secondary"><?php echo Label::getLabel('LBL_View'); ?></a>
-						<?php if($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED AND $referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('learner-scheduled-lessons'))){ ?>
+						<a href="<?php echo CommonHelper::generateFullUrl('LearnerScheduledLessons','view',array($lesson['sldetail_id'])); ?>" class="btn btn--secondary"><?php echo Label::getLabel('LBL_View'); ?></a>
+						<?php if($lesson['sldetail_learner_status'] != ScheduledLesson::STATUS_CANCELLED AND $referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('learner-scheduled-lessons'))){ ?>
 						<a href="javascript:void(0)" class="btn btn--secondary btn--dropdown toggle__trigger-js"></a>
 						<?php }?>
 					</div>
@@ -162,36 +162,34 @@ foreach ( $lessons as $lesson ) {
 					<div class="select-box__target -skin toggle__target-js" style="display: none;">
 						<div class="listing listing--vertical">
 							<ul>
-								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
+								<?php if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
 
-								<li><a href="javascript:void(0);" onclick="viewBookingCalendar('<?php echo $lesson['slesson_id']; ?>', '<?php echo $action; ?>')"><?php echo Label::getLabel('LBL_Schedule'); ?></a></li>
+								<li><a href="javascript:void(0);" onclick="viewBookingCalendar('<?php echo $lesson['sldetail_id']; ?>', '<?php echo $action; ?>')"><?php echo Label::getLabel('LBL_Schedule'); ?></a></li>
 
-								<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
+								<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['sldetail_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
 								<?php }  ?>
 
-								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ) {
+								<?php if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED ) {
 									if ( $lesson['issrep_id'] < 1 || $lesson['issrep_status'] == IssuesReported::STATUS_RESOLVED && ($lesson['issrep_issues_resolve_by'] != 3 && $lesson['issrep_issues_resolve_by'] != 4 ) ) { ?>
-										<li><a href="javascript:void(0);" onclick="issueReported('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Reported'); ?></a></li>
+										<li><a href="javascript:void(0);" onclick="issueReported('<?php echo $lesson['sldetail_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Reported'); ?></a></li>
 									<?php }?>
 
-								<li><a href="javascript:void(0);" onclick="lessonFeedback('<?php echo $lesson['slesson_id'];  ?>');"><?php echo Label::getLabel('LBL_Rate_Lesson'); ?></a></li>
+								<li><a href="javascript:void(0);" onclick="lessonFeedback('<?php echo $lesson['sldetail_id'];  ?>');"><?php echo Label::getLabel('LBL_Rate_Lesson'); ?></a></li>
 								<?php } ?>
 
-								<?php if( $lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lesson['issrep_id'] > 0) { ?>
-								<li><a href="javascript:void(0);" onclick="issueDetails('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Details'); ?></a></li>
+								<?php if( $lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lesson['issrep_id'] > 0) { ?>
+								<li><a href="javascript:void(0);" onclick="issueDetails('<?php echo $lesson['sldetail_id']; ?>')" ><?php echo Label::getLabel('LBL_Issue_Details'); ?></a></li>
 								<?php } ?>
 
-								<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
-								<li><a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lesson['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_Reschedule'); ?></a></li>
-								<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
+								<?php if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
+								<li><a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lesson['sldetail_id']; ?>')"><?php echo Label::getLabel('LBL_Reschedule'); ?></a></li>
+								<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['sldetail_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
 								<?php } ?>
 								<?php
-								$countRel=ScheduledLessonSearch::countPlansRelation($lesson['slesson_id']);
+								$countRel=ScheduledLessonSearch::countPlansRelation($lesson['sldetail_id']);
 								if( $countRel > 0 ){
 								?>
-									<li><a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>')"><?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?></a></li>
-									<!--li><a href="javascript:void(0);" onclick="changeLessonPlan('<?php //echo $lessonData['slesson_id']; ?>')" ><?php //echo Label::getLabel('LBL_Change_Plan'); ?></a></li>
-									<li><a href="javascript:void(0);" onclick="removeAssignedLessonPlan('<?php //echo $lessonData['slesson_id']; ?>')" ><?php //echo Label::getLabel('LBL_Remove_Plan'); ?></a></li-->
+									<li><a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['sldetail_id']; ?>')"><?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?></a></li>
 								<?php } ?>
 							</ul>
 						</div>

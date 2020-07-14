@@ -94,116 +94,6 @@ class ScheduledLesson extends MyAppModel
         }
     }
 
-    public function refundToLearner($learner=false, $addCancelledLessonCount = false)
-    {
-		 $db = FatApp::getDb();
-        $srch = new ScheduledLessonSearch();
-        $srch->joinOrder();
-        $srch->joinOrderProducts();
-        $srch->addCondition('slns.slesson_id', ' = ', $this->getMainTableRecordId());
-        $srch->addCondition('slns.slesson_is_teacher_paid', ' = ', 0);
-        $srch->addCondition('op.op_lpackage_is_free_trial', ' = ', 0);
-        $rs = $srch->getResultSet();
-        $data = $db->fetch($rs);
-        if ($data) {
-			$utxn_comments = sprintf(Label::getLabel('LBL_LessonId:_%s_Refund_Payment', CommonHelper::getLangId()), $this->getMainTableRecordId());
-			$transactionType =  Transaction::TYPE_LOADED_MONEY_TO_WALLET;
-			//coupon order case 
-			$isDiscountApply =  false;
-			$data['order_discount_total']  = FatUtility::float($data['order_discount_total']);
-			$data['order_net_amount']  = FatUtility::float($data['order_net_amount']);
-			if($learner && $data['order_discount_total'] > 0) {
-				$orderObj =  new Order;
-				$orderSearch = $orderObj->getLessonsByOrderId($data['slesson_order_id']);
-				$orderSearch->addMultipleFields([
-					'count(sl.slesson_order_id) as totalLessons',
-					'order_user_id',
-					'order_id',
-					'order_net_amount',
-					'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_NEED_SCHEDULING.' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
-					'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_CANCELLED.' THEN 1 ELSE 0 END) canceledLessonsCount',
-				]);
-				$orderSearch->addGroupBy('sl.slesson_order_id');
-				$resultSet = $orderSearch->getResultSet();
-				$orderInfo =  $db->fetch($resultSet);
-				if(empty($orderInfo)) {
-					$this->error =  Label::getLabel('LBL_Invalid_Request');
-					return false;
-				}
-				// plus 1 beacuse 1 lesson alredy marked cancelled in learner scheduled lesson controller 
-				$totalCanceledAndNeedToScheduledCount = $orderInfo['needToscheduledLessonsCount'];
-				if($addCancelledLessonCount) {
-					$totalCanceledAndNeedToScheduledCount += $orderInfo['canceledLessonsCount'];
-				}
-				//if user buy order with discount and user scheduled his 1 or more Lessons he has not able to cancel the lesson
-				if($orderInfo['totalLessons'] != $totalCanceledAndNeedToScheduledCount) {
-					$this->error =  Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon');
-					return false;
-				}
-				$orderAssignValues = array('order_is_paid' => Order::ORDER_IS_CANCELLED);
-				if (!$db->updateFromArray(Order::DB_TBL, $orderAssignValues, array('smt' => 'order_id = ?', 'vals' => array($orderInfo['order_id'])))) {
-					$this->error = $db->getError();
-					return false;
-				}
-				$assignValues = array('slesson_status' => ScheduledLesson::STATUS_CANCELLED);
-				if (!$db->updateFromArray(ScheduledLesson::DB_TBL, $assignValues, array('smt' => 'slesson_order_id = ?', 'vals' => array($orderInfo['order_id'])))) {
-					$this->error =  $db->getError();
-					return false;
-				}
-				
-				$formattedOrderId = "#".$orderInfo["order_id"];
-				$utxn_comments = Label::getLabel('LBL_Order_Refund:_{order-id}');
-				$utxn_comments = str_replace("{order-id}", $formattedOrderId, $utxn_comments);
-				$transactionType = Transaction::TYPE_ORDER_CANCELLED_REFUND;
-				$isDiscountApply =  true;
-			}
-			
-			
-            $to_time = strtotime($data['slesson_date'].' '.$data['slesson_start_time']);
-            $from_time = strtotime(date('Y-m-d H:i:s'));
-            $diff = round(($to_time - $from_time) / 3600, 2);
-            
-			$perUnitAmount = $data['op_unit_price'];
-			
-            if(!$learner && $data['order_discount_total'] > 0) {
-                $perUnitAmount = round(($data['order_net_amount'] / $data['op_qty']),2);
-            }
-			
-            if ($learner && !$isDiscountApply && $diff < 24 ) {
-                $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
-            }
-			
-			if($learner && $data['order_discount_total'] > 0) {
-				//  refund only need to scheduled lesson  ammount 
-				$perUnitAmount =  round(($data['order_net_amount'] / $data['op_qty']),2);
-				if($addCancelledLessonCount) {
-					$orderInfo['needToscheduledLessonsCount'] += 1;
-				}
-                $perUnitAmount = round(($perUnitAmount * $orderInfo['needToscheduledLessonsCount']),2);
-				
-            }
-			//if($perUnitAmount > 0) {
-				$tObj = new Transaction($data['slesson_learner_id']);
-				$data = array(
-					'utxn_user_id' => $data['slesson_learner_id'],
-					'utxn_date' => date('Y-m-d H:i:s'),
-					'utxn_comments' => $utxn_comments,
-					'utxn_status' => Transaction::STATUS_COMPLETED,
-					'utxn_type' => $transactionType,
-					'utxn_credit' => $perUnitAmount
-				);
-
-				if (!$tObj->addTransaction($data)) {
-					trigger_error($tObj->getError(), E_USER_ERROR);
-					return false;
-				}
-			//}
-            return true;
-        } else {
-            return true;
-        }
-    }
-
     public function holdPayment($user_id, $lesson_id)
     {
         $db = FatApp::getDb();
@@ -223,5 +113,105 @@ class ScheduledLesson extends MyAppModel
         }
         return true;
     }
-	
+    
+    public function cancelLessonByTeacher($reason='')
+    {
+        $lessonDetailRows = ScheduledLessonDetails::getScheduledRecordsByLessionId($this->getMainTableRecordId());
+        
+        /* update status for every learner and refund [ */
+		foreach($lessonDetailRows as $lessonDetailRow){
+            // CommonHelper::printArray($lessonDetailRow);die;
+			$sLessonDetailObj = new ScheduledLessonDetails($lessonDetailRow['sldetail_id']);
+        
+            if (!$sLessonDetailObj->refundToLearner()) {
+                $this->error = $sLessonDetailObj->getError();
+                return false;
+            }
+                
+			if (!$sLessonDetailObj->changeStatus(ScheduledLesson::STATUS_CANCELLED)) {
+				$this->error = $sLessonDetailObj->getError();
+                return false;
+			}
+            
+            $start_date = $lessonDetailRow['slesson_date'];
+            $start_time = $lessonDetailRow['slesson_start_time'];
+            $end_time = $lessonDetailRow['slesson_end_time'];
+            
+            $user_timezone = $lessonDetailRow['learnerTz'];
+            
+            if($start_time){
+                $start_time = $start_date.' '.$start_time;
+                $end_time = $start_date.' '.$end_time;
+                $start_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $start_time, true, $user_timezone);
+                $start_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $start_time, true, $user_timezone);
+                $end_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $end_time, true, $user_timezone);
+            }
+            
+            /* send an email to learner[ */
+            $vars = array(
+                '{learner_name}'    => $lessonDetailRow['learnerFullName'],
+                '{teacher_name}'    => $lessonDetailRow['teacherFullName'],
+                '{lesson_name}'     => $lessonDetailRow['teacherTeachLanguageName'],
+                '{teacher_comment}' => $reason,
+                '{lesson_date}'     => FatDate::format($start_date),
+                '{lesson_start_time}' => $start_time,
+                '{lesson_end_time}' => $end_time,
+            );
+
+            if (!EmailHandler::sendMailTpl($lessonDetailRow['learnerEmailId'], 'teacher_cancelled_email', CommonHelper::getLangId(), $vars)) {
+                $this->error = Label::getLabel('LBL_Mail_not_sent!');
+                return false;
+            }
+		}
+        return true;
+    }
+    
+    public function rescheduleLessonByTeacher($reason='')
+    {
+        $lessonDetailRows = ScheduledLessonDetails::getScheduledRecordsByLessionId($this->getMainTableRecordId());
+        
+        /* update status for every learner [ */
+		foreach($lessonDetailRows as $lessonDetailRow)
+        {
+            $sLessonDetailObj = new ScheduledLessonDetails($lessonDetailRow['sldetail_id']);
+            $sLessonDetailObj->assignValues(array('sldetail_learner_status' =>	ScheduledLesson::STATUS_NEED_SCHEDULING));
+            if (!$sLessonDetailObj->save()) {
+                $this->error = $sLessonDetailObj->getError();
+                return false;
+            }
+            
+            $start_date = $lessonDetailRow['slesson_date'];
+            $start_time = $lessonDetailRow['slesson_start_time'];
+            $end_time = $lessonDetailRow['slesson_end_time'];
+            
+            $user_timezone = $lessonDetailRow['learnerTz'];
+            
+            if($start_time){
+                $start_time = $start_date.' '.$start_time;
+                $end_time = $start_date.' '.$end_time;
+                $start_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $start_time, true, $user_timezone);
+                $start_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $start_time, true, $user_timezone);
+                $end_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $end_time, true, $user_timezone);
+            }
+            
+            /* send email to learner[ */
+            $vars = array(
+                '{learner_name}'    => $lessonDetailRow['learnerFullName'],
+                '{teacher_name}'    => $lessonDetailRow['teacherFullName'],
+                '{lesson_name}'     => $lessonDetailRow['teacherTeachLanguageName'],
+                '{teacher_comment}' => $reason,
+                '{lesson_date}'     => FatDate::format($start_date),
+                '{lesson_start_time}' => $start_time,
+                '{lesson_end_time}' => $end_time,
+                '{action}' => Label::getLabel('LBL_Rescheduled'),
+            );
+
+            if (!EmailHandler::sendMailTpl($lessonDetailRow['learnerEmailId'], 'teacher_reschedule_email', CommonHelper::getLangId(), $vars)) {
+                $this->error = Label::getLabel('LBL_Mail_not_sent!');
+                return false;
+            }
+            /* ] */
+        }
+        return true;
+    }
 }

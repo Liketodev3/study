@@ -30,7 +30,7 @@ class TeacherStudentsController extends TeacherBaseController
         $srch->joinTeacherTeachLanguageView($this->siteLangId);
         $srch->joinTeacherOfferPrice(UserAuthentication::getLoggedUserId());
         $srch->addCondition('slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
-        $srch->addGroupBy('slesson_learner_id', 'slesson_status');
+        $srch->addGroupBy('sldetail_learner_id', 'slesson_status');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
@@ -39,7 +39,7 @@ class TeacherStudentsController extends TeacherBaseController
         $srch->addOrder('ul.user_first_name');
         $srch->addMultipleFields(array(
             'slns.slesson_id',
-            'slns.slesson_learner_id as learnerId',
+            'sld.sldetail_learner_id as learnerId',
             'slns.slesson_teacher_id as teacherId',
             'ul.user_first_name as learnerFname',
             'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',

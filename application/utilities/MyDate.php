@@ -48,7 +48,7 @@ class MyDate extends FatDate
 
     public static function getUserTimeZone($userId = 0)
     {
-        if (0 > $userId) {
+        if ($userId > 0) {
             $userRow = User::getAttributesById($userId, array( 'user_timezone'));
             $user_timezone = $userRow['user_timezone'];
         } else {

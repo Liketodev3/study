@@ -337,7 +337,7 @@ class CheckoutController extends LoggedUserController{
 		if( $cartData['lpackage_is_free_trial'] ){
 			$op_lesson_duration = FatApp::getConfig( 'conf_trial_lesson_duration', FatUtility::VAR_INT, 30 );
 		}else{
-			$commissionDetails = Commission::getTeacherCommission($cartData['user_id']);
+			$commissionDetails = Commission::getTeacherCommission($cartData['user_id'], $cartData['grpcls_id']);
 			if ($commissionDetails) {
 				$cartData['op_commission_percentage'] = $commissionDetails['commsetting_fees'];
                 $teacherCommission = ( (100 - $commissionDetails['commsetting_fees']) * $cartData['itemPrice'] ) / 100;
@@ -356,13 +356,14 @@ class CheckoutController extends LoggedUserController{
 		}
 
 		$products[$cartData['lpackage_id']] = array(
+            'op_grpcls_id' => $cartData['grpcls_id'],
 			'op_lpackage_id' => $cartData['lpackage_id'],
 			'op_lpackage_lessons' => $cartData['lpackage_lessons'],
 			'op_lpackage_is_free_trial' => $cartData['lpackage_is_free_trial'],
 			'op_lesson_duration' => $op_lesson_duration,
 			'op_teacher_id' => $cartData['user_id'],
 			//'op_qty' => 1,
-			'op_qty'	=>	$cartData['lpackage_lessons'],
+			'op_qty'	=>	$cartData['grpcls_id']==0 ? $cartData['lpackage_lessons'] : 1,
 			'op_commission_charged' => $cartData['op_commission_charged'],
 			'op_commission_percentage' => $cartData['op_commission_percentage'],
 			'op_unit_price' => $cartData['itemPrice'],
@@ -496,6 +497,10 @@ class CheckoutController extends LoggedUserController{
 			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
 		}
 		$cartData = $this->cartObj->getCart( $this->siteLangId );
+        // if buying group class, then show no packages
+        if($cartData['grpcls_id']>0){
+            die('');
+        }
 		$srch = LessonPackage::getSearchObject( $this->siteLangId );
 		$srch->addCondition( 'lpackage_is_free_trial', '=', 0 );
 		$srch->addMultipleFields(array(

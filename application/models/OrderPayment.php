@@ -183,6 +183,7 @@ class OrderPayment extends Order
         $orderProductSrch->addCondition('op_order_id', '=', $this->paymentOrderId);
         $orderProductSrch->addMultipleFields(array(
             'op_teacher_id',
+            'op_grpcls_id',
             'op_slanguage_id',
             'op_lpackage_lessons',
             'op_lpackage_is_free_trial'
@@ -221,23 +222,54 @@ class OrderPayment extends Order
             /* and for free trial made entry from freepaycontroller */
             /* add schedulaed lessons[ */
             if ($orderProductRow) {
-                for ($i = 0; $i < $orderInfo['op_lpackage_lessons']; $i++) {
+                $counter = $orderInfo['op_lpackage_lessons']>0 ? $orderInfo['op_lpackage_lessons'] : 1;
+                for ($i = 0; $i < $counter; $i++) {
                     if ($orderInfo['op_lpackage_is_free_trial'] == 0) {
+                        $slesson_id = 0;
+						$slesson_date = '0000-00-00';
+						$slesson_end_date = '0000-00-00';
+						$slesson_start_time = '00:00:00';
+						$slesson_end_time = '00:00:00';
+						$slesson_status = ScheduledLesson::STATUS_NEED_SCHEDULING;
+						if($orderInfo['op_grpcls_id']>0){
+							$slesson_id = ScheduledLessonSearch::getLessonInfoByGrpClsid($orderInfo['op_grpcls_id'], 'slesson_id');
+							$grpClsDetails = TeacherGroupClasses::getAttributesById($orderInfo['op_grpcls_id']);
+							$slesson_date = date('Y-m-d', strtotime($grpClsDetails['grpcls_start_datetime']));
+							$slesson_end_date = date('Y-m-d', strtotime($grpClsDetails['grpcls_end_datetime']));
+							$slesson_start_time = date('H:i:s', strtotime($grpClsDetails['grpcls_start_datetime']));
+							$slesson_end_time = date('H:i:s', strtotime($grpClsDetails['grpcls_end_datetime']));
+							$slesson_status = ScheduledLesson::STATUS_SCHEDULED;
+						}
                         $sLessonArr = array(
-                        'slesson_order_id'	=>	$this->paymentOrderId,
-                        'slesson_teacher_id'	=>	$orderInfo['op_teacher_id'],
-                        'slesson_learner_id'	=>	$orderInfo['order_user_id'],
-                        'slesson_slanguage_id'	=>	$orderInfo['op_slanguage_id'],
-                        'slesson_date'	=>	'0000-00-00',
-                        'slesson_start_time'	=>	'0000-00-00 00:00:00',
-                        'slesson_end_time'	=>	'0000-00-00 00:00:00',
-                        'slesson_status'	=>	ScheduledLesson::STATUS_NEED_SCHEDULING
-                    );
-
-                        $sLessonObj = new ScheduledLesson();
-                        $sLessonObj->assignValues($sLessonArr);
-                        if (!$sLessonObj->save()) {
-                            $this->error = $sLessonObj->getError();
+							'slesson_teacher_id'	=>	$orderInfo['op_teacher_id'],
+							'slesson_grpcls_id'	    =>	$orderInfo['op_grpcls_id'],
+							'slesson_slanguage_id'	=>	$orderInfo['op_slanguage_id'],
+							'slesson_date'	        =>	$slesson_date,
+							'slesson_end_date'	    =>	$slesson_end_date,
+							'slesson_start_time'	=>	$slesson_start_time,
+							'slesson_end_time'	    =>	$slesson_end_time,
+							'slesson_status'	    =>	$slesson_status
+						);
+						
+						if($slesson_id<1){
+							$sLessonObj = new ScheduledLesson();
+							$sLessonObj->assignValues($sLessonArr);
+							if (!$sLessonObj->save()) {
+								$this->error = $sLessonObj->getError();
+								return false;
+							}
+							$slesson_id = $sLessonObj->getMainTableRecordId();
+						}
+						$sLessonDetailAr = array(
+							'sldetail_slesson_id'	=>	$slesson_id,
+							'sldetail_order_id'	=>	$this->paymentOrderId,
+							'sldetail_learner_id'	=>	$orderInfo['order_user_id'],
+							'sldetail_learner_status'	=>	$slesson_status
+						);
+						$slDetailsObj = new ScheduledLessonDetails();
+                        $slDetailsObj->assignValues($sLessonDetailAr);
+                        if (!$slDetailsObj->save()) {
+                            $this->error = $slDetailsObj->getError();
                             return false;
                         }
                     }

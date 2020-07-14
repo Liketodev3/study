@@ -27,9 +27,9 @@ $(document).ready(function(){
 			$(dv).html(t);
 		});
 	};
-	
+
 	getTeacherProfileProgress = function(){
-		
+
 		fcom.ajax(fcom.makeUrl('Teacher', 'getTeacherProfileProgress'), '', function(data) {
 			if(!userIsTeacher) {
 				return;
@@ -40,7 +40,7 @@ $(document).ready(function(){
 					setTimeout(function() {
 						$.systemMessage.close();
 					}, 4100);
-					
+
 				}
 				$.each(data.teacherProfileProgress,function( key, value ){
 						switch (key) {
@@ -96,10 +96,10 @@ $(document).ready(function(){
 						}
 				});
 			}
-			
+
 		},{fOutMode:'json'});
 	}
-	
+
 	changeEmailForm = function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Account', 'changeEmailForm'), '', function(t) {
@@ -318,7 +318,7 @@ $.ajax(settings).done(function (response) {
 			if(userIsTeacher) {
 				getTeacherProfileProgress();
 			}
-			
+
 		});
 	};
 

@@ -7,7 +7,7 @@ class StripePayController extends PaymentController
     private $error = false;
 
     private $paymentSettings = false;
-   
+
     protected function allowedCurrenciesArr()
     {
         return [
@@ -17,7 +17,7 @@ class StripePayController extends PaymentController
 
     public function charge($orderId)
     {
-        if (empty(trim($orderId))) {echo 1;die;
+        if (empty(trim($orderId))) {
             FatUtility::exitWIthErrorCode(404);
         }
 
@@ -46,7 +46,7 @@ class StripePayController extends PaymentController
 		$payableAmount = $this->formatPayableAmount($paymentAmount);
         $orderInfo = $orderPaymentObj->getOrderById($orderId);
 
-        if (!$orderInfo['order_id']) {echo 2;die;
+        if (!$orderInfo['order_id']) {
             FatUtility::exitWithErrorCode(404);
         } elseif ($orderInfo && $orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
             $checkPayment = $this->doPayment($payableAmount, $orderId);
@@ -123,7 +123,7 @@ class StripePayController extends PaymentController
     private function doPayment($payment_amount, $orderId)
     {
         $this->paymentSettings = $this->getPaymentSettings();
-		
+
 		$orderSrch = new OrderSearch();
 		$orderSrch->joinUser();
 		$orderSrch->joinUserCredentials();
@@ -137,14 +137,14 @@ class StripePayController extends PaymentController
 			'order_language_code',
 			'"FATbit_SP" as paypal_bn'
 		));
-        
+
 		$orderRs = $orderSrch->getResultSet();
 		$orderInfo = FatApp::getDb()->fetch($orderRs);
 		// echo '<pre>'.$payment_amount;print_r($orderInfo);die;
         if ($payment_amount == null || !$this->paymentSettings || $orderInfo['order_id'] == null) {
             return false;
         }
-		
+
         $checkPayment = false;
         if (strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
             try {
@@ -171,7 +171,7 @@ class StripePayController extends PaymentController
                           "source" => $stripeToken,
                         )
                     );
-					
+
                     $charge = \Stripe\Charge::create(
                         array(
                         "customer" => $customer->id,
@@ -179,7 +179,7 @@ class StripePayController extends PaymentController
                         'currency' => $orderInfo["order_currency_code"]
                         )
                     );
-					
+
                     $charge = $charge->__toArray();
 
                     if (isset($charge['status'])) {

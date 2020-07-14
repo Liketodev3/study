@@ -34,6 +34,7 @@ class AdminStatistic extends MyAppModel
                 $srch->addCondition('o.order_type', '=', Order::TYPE_LESSON_BOOKING);
                 $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
                 $srch->addGroupBy('op.op_id');
+                $srch->joinScheduleLessonDetails();
                 $srch->joinScheduleLesson();
                 $srch->doNotCalculateRecords();
                 $srch->doNotLimitRecords();

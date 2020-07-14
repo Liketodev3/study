@@ -38,7 +38,7 @@ if (strtotime($curDate) == strtotime($key)) {
 				</div>
 				<h6><?php echo $lesson['learnerFname']; ?></h6>
 				<p><?php echo $lesson['learnerCountryName']; ?> <br>
-					<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['slesson_order_id']; ?> <br>
+					<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['sldetail_order_id']; ?> <br>
 				<?php /* echo CommonHelper::getDateOrTimeByTimeZone($lesson['learnerTimeZone'],'H:i A P'); */ ?></p>
 			</div>
 

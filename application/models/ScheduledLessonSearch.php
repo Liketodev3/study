@@ -4,7 +4,7 @@ class ScheduledLessonSearch extends SearchBase
     private $isTeacherSettingsJoined;
     private $isOrderJoined;
 
-    public function __construct($doNotCalculateRecords = true)
+    public function __construct($doNotCalculateRecords = true, $joinDetails = true)
     {
         parent::__construct(ScheduledLesson::DB_TBL, 'slns');
 
@@ -14,7 +14,64 @@ class ScheduledLessonSearch extends SearchBase
         if (true === $doNotCalculateRecords) {
             $this->doNotCalculateRecords();
         }
+        
+        if($joinDetails === true){
+            $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = slns.slesson_id', 'sld');
+        }
     }
+    
+    public static function getSearchLessonsObj($langId)
+    {
+        $srch = new self(false);
+		$srch->joinGroupClass();
+        $srch->joinOrder();
+        $srch->joinOrderProducts();
+        $srch->joinTeacher();
+        $srch->joinLearner();
+        $srch->joinTeacherCountry($langId);
+        $cnd = $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
+        $cnd->attachCondition('order_is_paid', '=', Order::ORDER_IS_CANCELLED);
+        $srch->joinTeacherSettings();
+        $srch->addOrder('slesson_date', 'ASC');
+        $srch->addOrder('slesson_status', 'ASC');
+        $srch->addMultipleFields(array(
+            'slns.slesson_id',
+            'slns.slesson_grpcls_id',
+            'grpcls.grpcls_title',
+            'grpcls_slanguage_id',
+            'grpcls.grpcls_status',
+            'sld.sldetail_id',
+            'sld.sldetail_order_id',
+            'slns.slesson_slanguage_id',
+            'sld.sldetail_learner_id as learnerId',
+            'slns.slesson_teacher_id as teacherId',
+            'ut.user_first_name as teacherFname',
+            'ut.user_last_name as teacherLname',
+            'ut.user_url_name',
+            'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+            'IFNULL(teachercountry_lang.country_name, teachercountry.country_code) as teacherCountryName',
+            'slns.slesson_date',
+            'slns.slesson_end_date',
+            'slns.slesson_start_time',
+            'slns.slesson_end_time',
+            'slns.slesson_status',
+            'sld.sldetail_learner_status',
+            'slns.slesson_is_teacher_paid',
+             '"-" as teacherTeachLanguageName',
+            'op_lpackage_is_free_trial as is_trial',
+            'op_lesson_duration',
+            'order_is_paid'
+        ));
+
+        // echo $srch->getQuery();die;
+        return $srch;
+    }
+    
+    public function joinGroupClass()
+    {
+        $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
+    }
+
 
     public function joinTeacher()
     {
@@ -23,7 +80,7 @@ class ScheduledLessonSearch extends SearchBase
 
     public function joinLearner()
     {
-        $this->joinTable(User::DB_TBL, 'INNER JOIN', 'ul.user_id = slns.slesson_learner_id', 'ul');
+        $this->joinTable(User::DB_TBL, 'INNER JOIN', 'ul.user_id = sld.sldetail_learner_id', 'ul');
     }
 
     public function joinTeacherSettings()
@@ -105,7 +162,7 @@ class ScheduledLessonSearch extends SearchBase
         if (true === $this->isOrderJoined) {
             return;
         }
-        $this->joinTable(Order::DB_TBL, 'INNER JOIN', 'o.order_id = slns.slesson_order_id AND o.order_type = ' . Order::TYPE_LESSON_BOOKING, 'o');
+        $this->joinTable(Order::DB_TBL, 'INNER JOIN', 'o.order_id = sld.sldetail_order_id AND o.order_type = ' . Order::TYPE_LESSON_BOOKING, 'o');
         $this->isOrderJoined = true;
     }
 
@@ -124,7 +181,7 @@ class ScheduledLessonSearch extends SearchBase
 
     public function joinLearnerCredentials()
     {
-        $this->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'lcred.credential_user_id = slns.slesson_learner_id', 'lcred');
+        $this->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'lcred.credential_user_id = sld.sldetail_learner_id', 'lcred');
     }
 
     public function joinTeacherOfferPrice($teacherId)
@@ -134,7 +191,7 @@ class ScheduledLessonSearch extends SearchBase
             trigger_error("Invalid Request", E_USER_ERROR);
         }
 
-        $this->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'slesson_learner_id = top_learner_id AND top_teacher_id = '.$teacherId, 'top');
+        $this->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'sldetail_learner_id = top_learner_id AND top_teacher_id = '.$teacherId, 'top');
     }
 
     public function joinLearnerOfferPrice($learnerId)
@@ -184,5 +241,69 @@ class ScheduledLessonSearch extends SearchBase
         $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'sl_lang');
 
         $this->addMultipleFields(array('utsl.utl_us_user_id', 'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
+    }
+    
+    public static function isSlotBooked($teacherId, $startDateTime, $endDateTime)
+    {
+        $teacherId = FatUtility::int($teacherId);
+        $srch = new self(false);
+        $srch->addMultipleFields(
+            array(
+                'slns.slesson_id'
+            )
+        );
+        $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+        $srch->addCondition('slns.slesson_teacher_id', '=', $teacherId);
+        $srch->addCondition('slns.slesson_date', '=', date('Y-m-d', strtotime($startDateTime)));
+        $cnd = $srch->addCondition('slns.slesson_start_time', '=', date('H:i:s', strtotime($startDateTime)), 'AND');
+        $cnd->attachCondition('slns.slesson_start_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
+        $cnd1 = $cnd->attachCondition('slns.slesson_end_time', '>', date('H:i:s', strtotime($startDateTime)), 'OR');
+        $cnd1->attachCondition('slns.slesson_end_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
+        // echo $srch->getQuery();die;
+        $rs = $srch->getResultSet();
+        return $srch->recordCount()>0;
+    }
+    
+    public static function getLessonInfoByGrpClsid($grpclsId, $attr = null)
+    {
+        $grpclsId = FatUtility::int($grpclsId);
+        $srch = new self();
+        $srch->addCondition('slesson_grpcls_id', '=', $grpclsId);
+
+        if (null != $attr) {
+            if (is_array($attr)) {
+                $srch->addMultipleFields($attr);
+            } elseif (is_string($attr)) {
+                $srch->addFld($attr);
+            }
+        }
+
+        $rs = $srch->getResultSet();
+        $row = FatApp::getDb()->fetch($rs);
+
+        if (!is_array($row)) {
+            return false;
+        }
+
+        if (is_string($attr)) {
+            return $row[$attr];
+        }
+		
+        return $row;
+    }
+    
+    public function getLessonsByClass($grpclsId)
+    {
+        $db = FatApp::getDb();
+        $this->addMultipleFields(
+            array(
+                'slesson_id'
+            )
+        );
+        $this->addCondition('slesson_grpcls_id', '=', $grpclsId);
+        $cnd = $this->addCondition('slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+        $cnd->attachCondition('slesson_status', '=', ScheduledLesson::STATUS_NEED_SCHEDULING);
+        $rs = $this->getResultSet();
+        return $db->fetchAll($rs);
     }
 }

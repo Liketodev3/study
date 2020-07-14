@@ -25,7 +25,11 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			case 'commsetting_user_id':
             if($row['commsetting_user_id'] == 0){
-                $str = "<span class='label label-success'>GLOBAL COMMISSION</span>";
+                $txt = Label::getLabel('LBL_One_to_One_COMMISSION');
+                if($row['commsetting_is_grpcls'] == 1){
+                    $txt = Label::getLabel('LBL_GROUP_CLASS_COMMISSION');
+                }
+                $str = "<span class='label label-success'>$txt</span>";
    				$td->appendElement('plaintext', array(), $str,true);
             }else{
 				$td->appendElement('plaintext', array(), CommonHelper::displayText($row['vendor']),true);

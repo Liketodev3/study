@@ -1,3 +1,14 @@
+
+New Features:
+    *Task-74784: 1-1 class
+    *Task-73154: Group class
+
+Enhancements: N/A
+
+Fixes:
+
+================================
+
 Release Version: TV-1.3.0.20200706
 Release Date: 2020/07/06
 

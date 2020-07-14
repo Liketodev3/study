@@ -388,3 +388,96 @@ UPDATE `tbl_configurations` SET `conf_val` = 'H:i:s' WHERE `tbl_configurations`.
 INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_YOCOACH_VERSION', 'V1.0', 0);
 
 INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES (NULL, 'Stripe', 'stripe', '1', '1'); 
+
+
+--
+-- Table structure for table `tbl_group_classes`
+--
+
+CREATE TABLE `tbl_group_classes` (
+  `grpcls_id` int(11) NOT NULL,
+  `grpcls_slanguage_id` int(11) NOT NULL,
+  `grpcls_title` varchar(255) NOT NULL,
+  `grpcls_description` mediumtext NOT NULL,
+  `grpcls_teacher_id` int(11) NOT NULL,
+  `grpcls_max_learner` int(11) NOT NULL,
+  `grpcls_entry_fee` float(10,2) NOT NULL,
+  `grpcls_start_datetime` datetime NOT NULL,
+  `grpcls_end_datetime` datetime NOT NULL,
+  `grpcls_added_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `grpcls_status` int(11) NOT NULL,
+  `grpcls_deleted` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `tbl_group_classes`
+--
+ALTER TABLE `tbl_group_classes`
+  ADD PRIMARY KEY (`grpcls_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tbl_group_classes`
+--
+ALTER TABLE `tbl_group_classes`
+  MODIFY `grpcls_id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+ALTER TABLE `tbl_scheduled_lessons`
+  DROP `slesson_order_id`,
+  DROP `slesson_learner_id`,
+  DROP `slesson_learner_join_time`,
+  DROP `slesson_learner_end_time`;
+  
+ALTER TABLE `tbl_scheduled_lessons` ADD `slesson_grpcls_id` INT NOT NULL AFTER `slesson_id`; 
+
+
+--
+-- Table structure for table `tbl_scheduled_lesson_details`
+--
+
+CREATE TABLE `tbl_scheduled_lesson_details` (
+  `sldetail_id` int(11) NOT NULL,
+  `sldetail_slesson_id` int(11) NOT NULL,
+  `sldetail_learner_id` int(11) NOT NULL,
+  `sldetail_order_id` varchar(15) NOT NULL,
+  `sldetail_learner_join_time` datetime NOT NULL,
+  `sldetail_learner_end_time` datetime NOT NULL,
+  `sldetail_learner_status` tinyint(4) NOT NULL,
+  `sldetail_added_on` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `tbl_scheduled_lesson_details`
+--
+ALTER TABLE `tbl_scheduled_lesson_details`
+  ADD PRIMARY KEY (`sldetail_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tbl_scheduled_lesson_details`
+--
+ALTER TABLE `tbl_scheduled_lesson_details`
+  MODIFY `sldetail_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+ALTER TABLE `tbl_commission_settings` ADD `commsetting_is_grpcls` TINYINT NOT NULL AFTER `commsetting_is_mandatory`; 
+
+ALTER TABLE `tbl_commission_settings` DROP INDEX `commsetting_user_id`, ADD UNIQUE `commsetting_user_id` (`commsetting_user_id`, `commsetting_is_grpcls`) USING BTREE;
+
+ALTER TABLE `tbl_commission_setting_history` ADD `csh_commsetting_is_grpcls` TINYINT NOT NULL AFTER `csh_commsetting_is_mandatory`; 
+
+ALTER TABLE `tbl_order_products` ADD `op_grpcls_id` INT NOT NULL AFTER `op_invoice_number`; 

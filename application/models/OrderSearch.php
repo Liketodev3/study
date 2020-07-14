@@ -55,7 +55,8 @@ class OrderSearch extends SearchBase
     public function joinTeacherLessonLanguage($langId = 0)
     {
         $this->joinTable(User::DB_TBL, 'INNER JOIN', 'op.op_teacher_id = t.user_id', 't');
-        $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'o.order_id = slns.slesson_order_id', 'slns');
+        $this->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'o.order_id = sld.sldetail_order_id', 'sld');
+        $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id = slns.slesson_id', 'slns');
         $this->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'slns.slesson_slanguage_id = tlang.tlanguage_id', 'tlang');
         if ($langId > 0) {
             $this->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'sl.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl');
@@ -94,8 +95,13 @@ class OrderSearch extends SearchBase
         $this->joinTable(Giftcard::DB_TBL, 'INNER JOIN', 'gift.giftcard_op_id = op.op_id', 'gift');
     }
 
+    public function joinScheduledLessonDetail()
+    {
+        $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_order_id = o.order_id', 'sld');
+    }
+
     public function joinScheduledLesson()
     {
-        $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', 'sl.slesson_order_id = o.order_id AND sl.slesson_is_teacher_paid = '.applicationConstants::YES, 'sl');
+        $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', 'sl.slesson_id = sld.sldetail_slesson_id AND sl.slesson_is_teacher_paid = '.applicationConstants::YES, 'sl');
     }
 }

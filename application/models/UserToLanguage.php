@@ -25,4 +25,66 @@ class UserToLanguage extends MyAppModel
         }
         return $srch;
     }
+    
+    public static function getTeachingAssoc($teacherId, $langId = 0)
+    {
+        $langId = FatUtility::int($langId);
+        if ($langId < 1) {
+            $langId = CommonHelper::getLangId();
+        }
+
+        $TeachingLangSrch = new SearchBase(self::DB_TBL_TEACH, 'tt');
+        
+        $TeachingLangSrch->joinTable(
+            TeachingLanguage::DB_TBL,
+            'LEFT OUTER JOIN',
+            'tl.tlanguage_id = tt.utl_slanguage_id',
+            'tl'
+        );
+        
+        $TeachingLangSrch->joinTable(
+            TeachingLanguage::DB_TBL.'_lang',
+            'LEFT OUTER JOIN',
+            'tl_l.tlanguagelang_tlanguage_id = tl.tlanguage_id AND tl_l.tlanguagelang_lang_id = '.$langId,
+            'tl_l'
+        );
+        $TeachingLangSrch->addCondition('utl_us_user_id', '=', $teacherId);
+        
+        $TeachingLangSrch->doNotCalculateRecords();
+        $TeachingLangSrch->addMultiplefields(array('tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'));
+        $rs = $TeachingLangSrch->getResultSet();
+        $teachingLanguagesArr = FatApp::getDb()->fetchAllAssoc($rs);
+        return $teachingLanguagesArr;
+    }
+    
+    public static function getAttributesByUserAndLangId($recordId, $langId, $attr = null)
+    {
+        $recordId = FatUtility::convertToType($recordId, FatUtility::VAR_INT);
+        $db = FatApp::getDb();
+
+        $srch = new SearchBase(static::DB_TBL_TEACH);
+        $srch->addCondition(static::DB_TBL_TEACH_PREFIX . 'us_user_id', '=', $recordId);
+        $srch->addCondition(static::DB_TBL_TEACH_PREFIX . 'slanguage_id', '=', $langId);
+
+        if (null != $attr) {
+            if (is_array($attr)) {
+                $srch->addMultipleFields($attr);
+            } elseif (is_string($attr)) {
+                $srch->addFld($attr);
+            }
+        }
+
+        $rs = $srch->getResultSet();
+        $row = $db->fetch($rs);
+
+        if (!is_array($row)) {
+            return false;
+        }
+
+        if (is_string($attr)) {
+            return $row[$attr];
+        }
+
+        return $row;
+    }
 }
