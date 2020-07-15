@@ -1,7 +1,8 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 if (empty($minPrice) && empty($maxPrice)) {
-	$minPrice = $filterDefaultMinValue;
-	$maxPrice = $filterDefaultMaxValue;
+	$minPrice = round($filterDefaultMinValue,2);
+	$maxPrice = round($filterDefaultMaxValue,2);
+	// $maxPrice = $filterDefaultMaxValue;
 }
 
 ?>

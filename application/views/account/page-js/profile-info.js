@@ -98,6 +98,16 @@ $(document).ready(function(){
 									$('.teacher-preferences-js').removeClass('-color-secondary');
 								}
 							break;
+							case 'percentage':
+								$('.teacher-profile-progress-bar-js').attr("aria-valuenow",value);
+									value = value+"%";
+									$('.teacher-profile-progress-bar-js').css({"width": value});
+							break;
+							case 'totalFields':
+							case 'totalFilledFields':
+									value =  data.teacherProfileProgress.totalFilledFields+"/"+data.teacherProfileProgress.totalFields;
+									$('.progress-count-js').text(value);
+							break;
 						}
 				});
 			}
