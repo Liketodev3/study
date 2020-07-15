@@ -33,6 +33,7 @@
 				  </svg>
 			   </span>
 			</a>
+            <?php if($flashCard['flashcard_created_by_user_id']==UserAuthentication::getLoggedUserId()): ?>
 			<a href="javascript:void(0);" onclick="removeFlashcard(<?php echo $flashCard['flashcard_id']; ?>);" class="btn btn--small btn--action">
 			   <span class="svg-icon">
 				  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" >
@@ -49,6 +50,7 @@
 				  </svg>
 			   </span>
 			</a>
+            <?php endif; ?>
    <?php } ?>
 		 <a href="javascript:void(0);" onclick="viewFlashCard(<?php echo $flashCard['flashcard_id']; ?>)" class="btn btn--small btn--action">
 		 <span class="svg-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"

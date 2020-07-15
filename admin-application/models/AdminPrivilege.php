@@ -46,6 +46,7 @@ class AdminPrivilege
     const SECTION_TEACHER_REVIEWS = 41;
     const SECTION_COMMISSION = 42;
     const SECTION_SALES_REPORT = 43;
+    const SECTION_GROUP_CLASSES = 44;
 
     const PRIVILEGE_NONE = 0;
     const PRIVILEGE_READ = 1;
@@ -125,6 +126,7 @@ class AdminPrivilege
             static::SECTION_TEACHER_PERFORMANCE_REPORT => Label::getLabel('MSG_Teacher_Performance_Report', CommonHelper::getLangId()),
             static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs', CommonHelper::getLangId()),
             static::SECTION_FAQ_CATEGORY => Label::getLabel('MSG_Manage_faq_Categories', CommonHelper::getLangId()),
+            static::SECTION_GROUP_CLASSES => Label::getLabel('MSG_Manage_GROUP_CLASSES', CommonHelper::getLangId()),
         );
         return $arr;
     }
@@ -693,5 +695,14 @@ class AdminPrivilege
     public function canViewTeacherPerformanceReport($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_TEACHER_PERFORMANCE_REPORT, static::PRIVILEGE_READ, $returnResult);
+    }
+    public function canEditGroupClasses($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_GROUP_CLASSES, static::PRIVILEGE_WRITE, $returnResult);
+    }
+
+    public function canViewGroupClasses($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_GROUP_CLASSES, static::PRIVILEGE_READ, $returnResult);
     }
 }

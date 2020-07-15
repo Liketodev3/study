@@ -47,6 +47,7 @@ class TeacherGroupClassesSearch extends SearchBase
                 'grpcls_end_datetime',
                 'grpcls_max_learner',
                 'grpcls_status',
+                'grpcls_added_on',
                 'IFNULL(tlanguage_name, tlanguage_identifier) as teacher_language',
                 // 'count(DISTINCT sldetail_learner_id) as total_learners'
                 '('.$srch2->getQuery().') as total_learners'
@@ -63,7 +64,7 @@ class TeacherGroupClassesSearch extends SearchBase
         if (isset($postedData['keyword']) && !empty($postedData['keyword'])) {
 			$srch->addCondition('grpcls_title', 'LIKE', '%'. $postedData['keyword'] .'%');
 		}
-        if (isset($postedData['status']) && !empty($postedData['status'])) {
+        if (isset($postedData['status']) && $postedData['status']!=="") {
 			$srch->addCondition('grpcls_status', '=', $postedData['status']);
 		}
         

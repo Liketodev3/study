@@ -1,9 +1,10 @@
 <?php
-class TeacherGroupClassesController extends TeacherBaseController
+class GroupClassesController extends AdminBaseController
 {
     public function __construct($action)
     {
         parent::__construct($action);
+        $this->objPrivilege->canViewGroupClasses();
     }
 
     public function index()
@@ -23,47 +24,43 @@ class TeacherGroupClassesController extends TeacherBaseController
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
-        
-        $srch2 = new SearchBase('tbl_scheduled_lesson_details');
-        $srch2->joinTable('tbl_scheduled_lessons', 'INNER JOIN', 'slesson_id=sldetail_slesson_id');
-        $srch2->addDirectCondition('slesson_grpcls_id=grpcls_id');
-        $cnd = $srch2->addCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_NEED_SCHEDULING);
-        $cnd->attachCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
-        $srch2->doNotCalculateRecords();
-        $srch2->doNotLimitRecords();
-        $srch2->addFld('COUNT(DISTINCT sldetail_learner_id)');
-        
-        $srch3 = new SearchBase('tbl_scheduled_lessons');
-        $srch3->addDirectCondition('slesson_grpcls_id=grpcls_id');
-        $srch3->doNotCalculateRecords();
-        $srch3->doNotLimitRecords();
-        $srch3->addFld('slesson_teacher_join_time>0');
 
-        $teacher_id = UserAuthentication::getLoggedUserId();
-        $srch = new TeacherGroupClassesSearch(false);
-        $srch->joinScheduledLesson();
-        $srch->addMultipleFields(
-            array(
-                'grpcls_id',
-                'grpcls_title',
-                'grpcls_entry_fee',
-                'grpcls_start_datetime',
-                'grpcls_end_datetime',
-                'grpcls_status',
-                'slesson_id',
-                '('.$srch2->getQuery().') total_learners',
-                '('.$srch3->getQuery().') is_joined'
-            )
-        );
-        // echo $srch->getQuery();die;
+        $srch = TeacherGroupClassesSearch::getSearchObj($this->adminLangId);
+        // $srch->joinTeacher();
+        // $srch->joinTeacherCredentials();
         
-        $srch->addCondition('grpcls_teacher_id', '=', $teacher_id);
+        $keyword = FatApp::getPostedData('teacher', null, '');
+        $user_id = FatApp::getPostedData('teacher_id', FatUtility::VAR_INT, -1);
+        if ($user_id > 0) {
+            $srch->addCondition('ut.user_id', '=', $user_id);
+        } else {
+            if (!empty($keyword)) {
+                $keywordsArr = array_unique(array_filter(explode(' ', $keyword)));
+                foreach ($keywordsArr as $kw) {
+                    $cnd = $srch->addCondition('ut.user_first_name', 'like', '%'.$kw.'%');
+                    $cnd->attachCondition('ut.user_last_name', 'like', '%'.$kw.'%');
+                    $cnd->attachCondition('tcred.credential_username', 'like', '%'.$kw.'%');
+                    $cnd->attachCondition('tcred.credential_email', 'like', '%'.$kw.'%');
+                }
+            }
+        }
+        if($post['grpcls_start_datetime']){
+            $srch->addCondition('grpcls_start_datetime', '>=', $post['grpcls_start_datetime']);
+        }
+        if($post['grpcls_end_datetime']){
+            $srch->addCondition('grpcls_end_datetime', '<=', $post['grpcls_end_datetime']);
+        }
+        
+        if($post['added_on']){
+            $srch->addCondition('grpcls_added_on', 'LIKE', $post['added_on'].'%');
+        }
         
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
+        $srch->addOrder('grpcls_start_datetime', 'DESC');
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-		// echo $srch->getQuery();die;
+		
         $rs = $srch->getResultSet();
         $classes = FatApp::getDb()->fetchAll($rs);
 		
@@ -71,22 +68,18 @@ class TeacherGroupClassesController extends TeacherBaseController
         
 		/* [ */
         $totalRecords = $srch->recordCount();
-        $pagingArr = array(
-            'pageCount' => $srch->pages(),
-            'page' => $page,
-            'pageSize' => $pageSize,
-            'recordCount' => $totalRecords,
-        );
-        
         $this->set('postedData', $post);
-        $this->set('pagingArr', $pagingArr);
+        $this->set('pageCount', $srch->pages());
+        $this->set('page', $page);
+        $this->set('pageSize', $pageSize);
+        $this->set('postedData', $post);
+        $this->set('recordCount', $srch->recordCount());
         $startRecord = ($page - 1) * $pageSize + 1 ;
         $endRecord = $page * $pageSize;
         if ($totalRecords < $endRecord) {
             $endRecord = $totalRecords;
         }
-        
-        $teachLanguages = TeachingLanguage::getAllLangs($this->siteLangId);
+        $teachLanguages = TeachingLanguage::getAllLangs($this->adminLangId);
         $this->set('teachLanguages', $teachLanguages);
         $this->set('startRecord', $startRecord);
         $this->set('endRecord', $endRecord);
@@ -98,17 +91,15 @@ class TeacherGroupClassesController extends TeacherBaseController
         $this->set('classStatusArr', TeacherGroupClasses::getStatusArr());
         $this->_template->render(false, false);
     }
-
+    
     public function form($classId = 0)
     {
-        $frm = $this->getFrm();
         $classId = FatUtility::int($classId);
-        $teacher_id = UserAuthentication::getLoggedUserId();
         if ($classId > 0) {
-			$user_timezone = MyDate::getUserTimeZone();
-			$systemTimeZone = MyDate::getTimeZone();
             $data = TeacherGroupClasses::getAttributesById($classId);
             
+            $teacher_id = $data['grpcls_teacher_id'];
+            $frm = $this->getFrm($teacher_id);
             $isSlotBooked = ScheduledLessonSearch::isSlotBooked($teacher_id, $data['grpcls_start_datetime'], $data['grpcls_end_datetime']);
 		
             if($isSlotBooked){
@@ -122,11 +113,11 @@ class TeacherGroupClassesController extends TeacherBaseController
                 $fld->requirements()->setRequired(false);
             }
             
-			$data['grpcls_start_datetime'] = MyDate::changeDateTimezone($data['grpcls_start_datetime'], $systemTimeZone, $user_timezone);
-			$data['grpcls_end_datetime'] = MyDate::changeDateTimezone($data['grpcls_end_datetime'], $systemTimeZone, $user_timezone);
             $frm->fill($data);
+        }else{
+            die('Invalid request');
         }
-        $this->set('userId', UserAuthentication::getLoggedUserId());
+        $this->set('userId', $teacher_id);
         $this->set('classId', $classId);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
@@ -134,26 +125,24 @@ class TeacherGroupClassesController extends TeacherBaseController
 
     public function setup()
     {
-        $teacher_id = UserAuthentication::getLoggedUserId();
-        $frm = $this->getFrm();
         $post = FatApp::getPostedData();
         $grpcls_id = FatApp::getPostedData('grpcls_id', FatUtility::VAR_INT, 0);
         
-		$user_timezone = MyDate::getUserTimeZone();
-        $systemTimeZone = MyDate::getTimeZone();
-        
         if($grpcls_id>0){
-            $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpcls_id, $teacher_id);
+            $class_details = TeacherGroupClasses::getAttributesById($grpcls_id);
             if(empty($class_details)){
                 FatUtility::dieJsonError(Label::getLabel("LBL_Unauthorized"));
             }
-            
+            $teacher_id = $class_details['grpcls_teacher_id'];
+            $frm = $this->getFrm($teacher_id);
             $isSlotBooked = ScheduledLessonSearch::isSlotBooked($teacher_id, $class_details['grpcls_start_datetime'], $class_details['grpcls_end_datetime']);
 		
             if($isSlotBooked){
-                $post['grpcls_start_datetime'] = MyDate::changeDateTimezone($class_details['grpcls_start_datetime'], $systemTimeZone, $user_timezone);
-                $post['grpcls_end_datetime'] = MyDate::changeDateTimezone($class_details['grpcls_end_datetime'], $systemTimeZone, $user_timezone);
+                $post['grpcls_start_datetime'] = $class_details['grpcls_start_datetime'];
+                $post['grpcls_end_datetime'] = $class_details['grpcls_end_datetime'];
             }
+        }else{
+            die('Invalid request');
         }
         
         $post = $frm->getFormDataFromArray($post);
@@ -171,30 +160,8 @@ class TeacherGroupClassesController extends TeacherBaseController
         }
        
         $post['grpcls_teacher_id'] = $teacher_id;
-		
-		$post['grpcls_start_datetime'] = MyDate::changeDateTimezone($post['grpcls_start_datetime'], $user_timezone, $systemTimeZone);
-		$post['grpcls_end_datetime'] = MyDate::changeDateTimezone($post['grpcls_end_datetime'], $user_timezone, $systemTimeZone);
-		
-        $tGrpClsSrchObj = new TeacherGroupClassesSearch();
-        if($grpcls_id>0){
-            $tGrpClsSrchObj->addCondition('grpcls_id', '!=', $grpcls_id);
-        }
-        $tGrpClsSrchObj->addCondition('grpcls_teacher_id', '=', $teacher_id);
-        $tGrpClsSrchObj->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-        $cnd = $tGrpClsSrchObj->addCondition('grpcls_start_datetime', '<=', $post['grpcls_start_datetime']);
-        $cnd->attachCondition('grpcls_end_datetime', '>', $post['grpcls_start_datetime'], 'AND');
         
-        $cnd2 = $cnd->attachCondition('grpcls_start_datetime', '<=', $post['grpcls_end_datetime']);
-        $cnd2->attachCondition('grpcls_end_datetime', '>=', $post['grpcls_end_datetime'], 'AND');
-        
-        $rs = $tGrpClsSrchObj->getResultSet();
-        if(FatApp::getDb()->fetch($rs)){
-            FatUtility::dieJsonError(Label::getLabel('LBL_A_class_already_exist_in_selected_time'));
-        }
-        
-        $current_time = MyDate::changeDateTimezone(null, $user_timezone, $systemTimeZone);
-        
-        if($post['grpcls_start_datetime']<$current_time){
+        if($post['grpcls_start_datetime']<date('Y-m-d H:i:s')){
             FatUtility::dieJsonError(Label::getLabel('LBL_Can_not_add_time_for_old_date'));
         }
         
@@ -226,7 +193,8 @@ class TeacherGroupClassesController extends TeacherBaseController
         if($isAvailable){
             $msg = Label::getLabel('LBL_Slot_is_already_added_for_1_to_1_class_whichever_first_booked_will_be_booked!');
         }
-        FatUtility::dieJsonSuccess($msg);
+        $this->set('msg', $msg);
+        $this->_template->render(false, false, 'json-success.php');
     }
 
     public function removeClass($grpclsId)
@@ -236,16 +204,43 @@ class TeacherGroupClassesController extends TeacherBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         
-        $teacher_id = UserAuthentication::getLoggedUserId();
-        $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpclsId, $teacher_id);
+        $class_details = TeacherGroupClasses::getAttributesById($grpclsId);
         if(empty($class_details)){
-            FatUtility::dieJsonError(Label::getLabel("LBL_Unauthorized"));
+            FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
+        
+        $db = FatApp::getDb();
+        $db->startTransaction();
+        
+        /* update all lesson status for this class[ */
+        $sLessonSrchObj = new ScheduledLessonSearch();
+        $lessons = $sLessonSrchObj->getLessonsByClass($grpclsId);
+        foreach($lessons as $lesson){
+            if($lesson['slesson_status']==ScheduledLesson::STATUS_SCHEDULED){
+                $sLessonObj = new ScheduledLesson($lesson['slesson_id']);
+                $sLessonObj->assignValues(array('slesson_status' => ScheduledLesson::STATUS_CANCELLED));
+                if (!$sLessonObj->save()) {
+                    $db->rollbackTransaction();
+                    FatUtility::dieJsonError($sLessonObj->getError());
+                }
+                
+                if (!$sLessonObj->cancelLessonByTeacher('')) {
+                    $db->rollbackTransaction();
+                    FatUtility::dieJsonError($sLessonObj->getError());
+                }
+            }
+        }
+        /* ] */
+        
         $teacherGroupClassObj = new TeacherGroupClasses($grpclsId);
         $teacherGroupClassObj->deleteClass();
         if ($teacherGroupClassObj->getError()) {
+            $db->rollbackTransaction();
             FatUtility::dieJsonError($teacherGroupClassObj->getError());
         }
+        
+        $db->commitTransaction();
+        
         FatUtility::dieJsonSuccess(Label::getLabel("LBL_Class_Deleted_Successfully!"));
     }
     
@@ -257,10 +252,9 @@ class TeacherGroupClassesController extends TeacherBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         
-        $teacher_id = UserAuthentication::getLoggedUserId();
-        $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpclsId, $teacher_id);
+        $class_details = TeacherGroupClasses::getAttributesById($grpclsId);
         if(empty($class_details)){
-            FatUtility::dieJsonError(Label::getLabel("LBL_Unauthorized"));
+            FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
         
         $db = FatApp::getDb();
@@ -277,16 +271,18 @@ class TeacherGroupClassesController extends TeacherBaseController
         $sLessonSrchObj = new ScheduledLessonSearch();
         $lessons = $sLessonSrchObj->getLessonsByClass($grpclsId);
         foreach($lessons as $lesson){
-            $sLessonObj = new ScheduledLesson($lesson['slesson_id']);
-            $sLessonObj->assignValues(array('slesson_status' => ScheduledLesson::STATUS_CANCELLED));
-            if (!$sLessonObj->save()) {
-                $db->rollbackTransaction();
-                FatUtility::dieJsonError($sLessonObj->getError());
-            }
-            
-            if (!$sLessonObj->cancelLessonByTeacher('')) {
-                $db->rollbackTransaction();
-                FatUtility::dieJsonError($sLessonObj->getError());
+            if($lesson['slesson_status']==ScheduledLesson::STATUS_SCHEDULED){
+                $sLessonObj = new ScheduledLesson($lesson['slesson_id']);
+                $sLessonObj->assignValues(array('slesson_status' => ScheduledLesson::STATUS_CANCELLED));
+                if (!$sLessonObj->save()) {
+                    $db->rollbackTransaction();
+                    FatUtility::dieJsonError($sLessonObj->getError());
+                }
+                
+                if (!$sLessonObj->cancelLessonByTeacher('')) {
+                    $db->rollbackTransaction();
+                    FatUtility::dieJsonError($sLessonObj->getError());
+                }
             }
         }
         /* ] */
@@ -295,32 +291,72 @@ class TeacherGroupClassesController extends TeacherBaseController
         
         FatUtility::dieJsonSuccess(Label::getLabel("LBL_Class_Cancelled_Successfully!"));
     }
-	
-	private function getFrm()
+    
+    public function viewJoinedLearners($grpclsId)
     {
-        $teacher_id = UserAuthentication::getLoggedUserId();
-        $frm = new Form('groupClassesFrm');
-        $frm->addHiddenField('', 'grpcls_id');
-        $frm->addRequiredField(Label::getLabel('LBl_Title'), 'grpcls_title');
-        $frm->addTextArea(Label::getLabel('LBl_DESCRIPTION'), 'grpcls_description')->requirements()->setRequired(true);
-        $fld = $frm->addIntegerField(Label::getLabel('LBl_Max_No._Of_Learners'), 'grpcls_max_learner', '', array('id' => 'grpcls_max_learner'));
-        $fld->requirements()->setRequired(false);
-        $fld->requirements()->setRange(1,9999);
-        $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->siteLangId))->requirements()->setRequired(true);
-        $fld = $frm->addFloatField(Label::getLabel('LBl_Entry_fee'), 'grpcls_entry_fee', '', array('id' => 'grpcls_entry_fee'));
-        $fld->requirements()->setPositive(true);
-        $start_time_fld = $frm->addRequiredField(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', array('id' => 'grpcls_start_datetime', 'autocomplete' => 'off'));
-        $end_time_fld = $frm->addRequiredField(Label::getLabel('LBl_End_Time'), 'grpcls_end_datetime', '', array('id' => 'grpcls_end_datetime', 'autocomplete' => 'off'));
-		$end_time_fld->requirements()->setCompareWith('grpcls_start_datetime', 'gt', Label::getLabel('LBl_Start_Time'));
-        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
-        return $frm;
+        $srch = new ScheduledLessonSearch(false);
+        $srch->joinGroupClass();
+        $srch->joinOrder();
+        $srch->joinOrderProducts();
+        $srch->joinTeacher();
+        $srch->joinLearner();
+        $srch->joinLearnerCountry($this->adminLangId);
+        $srch->addCondition('grpcls.grpcls_id', '=', $grpclsId);
+        $srch->joinTeacherSettings();
+        $srch->addOrder('slesson_date', 'ASC');
+        $srch->addOrder('slesson_status', 'ASC');
+        $srch->addMultipleFields(array(
+            'sld.sldetail_learner_id as learnerId',
+            'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+            'IFNULL(learnercountry_lang.country_name, learnercountry.country_code) as learnerCountryName',
+            'slns.slesson_date',
+            'slns.slesson_end_date',
+            'slns.slesson_start_time',
+            'slns.slesson_end_time',
+            'slns.slesson_status',
+            'sld.sldetail_order_id',
+            'sld.sldetail_learner_status',
+            'sld.sldetail_added_on',
+        ));
+        $rs = $srch->getResultSet();
+        $lessons = FatApp::getDb()->fetchAll($rs);
+        $this->set('lessons', $lessons);
+        $this->set('statusArr', ScheduledLesson::getStatusArr());
+        $this->_template->render(false, false);
     }
     
     protected function getSearchForm()
     {
         $frm = new Form('frmSrch');
+        $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_By_Keyword')));
+        $frm->addHiddenField('', 'teacher_id');
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
+        $start_time_fld = $frm->addTextBox(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', array('id' => 'grpcls_start_datetime', 'autocomplete' => 'off'));
+        $end_time_fld = $frm->addTextBox(Label::getLabel('LBl_End_Time'), 'grpcls_end_datetime', '', array('id' => 'grpcls_end_datetime', 'autocomplete' => 'off'));
+        $frm->addTextBox(Label::getLabel('LBl_Teacher'), 'teacher');
+        $frm->addSelectBox(Label::getLabel('LBl_Status'), 'status', TeacherGroupClasses::getStatusArr());
+        $frm->addDateField(Label::getLabel('LBl_Added_On'), 'added_on');
+        $btnSubmit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search'));
+        $btnReset = $frm->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset'));
+        $btnSubmit->attachField($btnReset);
+        return $frm;
+    }
+    private function getFrm($teacher_id)
+    {
+        $frm = new Form('groupClassesFrm');
+        $frm->addHiddenField('', 'grpcls_id');
+        $frm->addRequiredField(Label::getLabel('LBl_Title'), 'grpcls_title');
+        $frm->addTextArea(Label::getLabel('LBl_DESCRIPTION'), 'grpcls_description')->requirements()->setRequired(true);
+        $fld = $frm->addIntegerField(Label::getLabel('LBl_Max_No._Of_Learners'), 'grpcls_max_learner', '', array('id' => 'grpcls_max_learner'));
+        $fld->requirements()->setRange(1,9999);
+        $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->adminLangId))->requirements()->setRequired(true);
+        $fld = $frm->addFloatField(Label::getLabel('LBl_Entry_fee'), 'grpcls_entry_fee', '', array('id' => 'grpcls_entry_fee'));
+        $fld->requirements()->setIntPositive(true);
+        $start_time_fld = $frm->addRequiredField(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', array('id' => 'grpcls_start_datetime', 'autocomplete' => 'off'));
+        $end_time_fld = $frm->addRequiredField(Label::getLabel('LBl_End_Time'), 'grpcls_end_datetime', '', array('id' => 'grpcls_end_datetime', 'autocomplete' => 'off'));
+		$end_time_fld->requirements()->setCompareWith('grpcls_start_datetime', 'gt', Label::getLabel('LBl_Start_Time'));
+        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
         return $frm;
     }
 }

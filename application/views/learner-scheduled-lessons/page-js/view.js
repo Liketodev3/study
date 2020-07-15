@@ -56,8 +56,8 @@ $(function() {
 		});
 	};
 
-	flashCardForm = function( lDetailId, flashcardId ){
-		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','flashCardForm'),'flashcardId='+flashcardId + '&lDetailId='+lDetailId,function(t){
+	flashCardForm = function( lessonId, flashcardId ){
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','flashCardForm'),'flashcardId='+flashcardId + '&lessonId='+lessonId,function(t){
 			$.facebox( t,'facebox-medium');
 		});
 	};

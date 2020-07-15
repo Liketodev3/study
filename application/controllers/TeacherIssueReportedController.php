@@ -123,7 +123,10 @@ class TeacherIssueReportedController extends TeacherBaseController
     {
         $issueId = FatUtility::int($issueId);
         $issuesReportedDetails = self::getIssueDetails($issueId);
-        $frm = $this->getIssueReportedFrmStepTwo();
+        
+        
+        
+        $frm = $this->getIssueReportedFrmStepTwo($slesson_id);
         $frm->fill(array('issue_id' => $issueId, 'slesson_id' => $slesson_id));
         $this->set('frm', $frm);
         $this->set('issueDeatils', $issuesReportedDetails);
@@ -169,11 +172,14 @@ class TeacherIssueReportedController extends TeacherBaseController
 
     public function issueResolveSetupStepTwo()
     {
-        $frm = $this->getIssueReportedFrmStepTwo();
+        $slessonId = FatApp::getPostedData('slesson_id', FatUtility::VAR_INT, 0);
+        
+        $frm = $this->getIssueReportedFrmStepTwo($slessonId);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             FatUtility::dieJsonError($frm->getValidationErrors());
         }
+        CommonHelper::printArray($post);die;
         $lessonId = $post['slesson_id'];
         $issueId = $post['issue_id'];
         $issue_resolve_type = $post['issue_resolve_type'];
@@ -192,6 +198,13 @@ class TeacherIssueReportedController extends TeacherBaseController
         $lerner_id = $transactionDetails['sldetail_learner_id'];
         $teacherPayment = $lessonAmount;
         $transactionComment = $transactionDetails['utxn_comments'];
+        
+        $arr_options = IssuesReported::RESOLVE_TYPE;
+        
+        if($lesson_details['slesson_grpcls_id']>0){
+            unset($arr_options[IssuesReported::RESOLVE_TYPE_LESSON_UNSCHEDULED]);
+        }
+        
         switch ($issue_resolve_type) {
             case 1: // Reset Lesson to: Unscheduled
                 $lesson_status = ScheduledLesson::STATUS_NEED_SCHEDULING;
@@ -372,10 +385,18 @@ class TeacherIssueReportedController extends TeacherBaseController
         return $frm;
     }
 
-    private function getIssueReportedFrmStepTwo()
+    private function getIssueReportedFrmStepTwo($slesson_id=0)
     {
         $frm = new Form('issueResolveFrmStepTwo');
         $arr_options = IssuesReported::RESOLVE_TYPE;
+        
+        if($slesson_id>0){
+            $lesson_details = ScheduledLesson::getAttributesById($slesson_id, array('slesson_grpcls_id'));
+            if($lesson_details['slesson_grpcls_id']>0){
+                unset($arr_options[IssuesReported::RESOLVE_TYPE_LESSON_UNSCHEDULED]);
+            }
+        }
+        
         $fldIssue = $frm->addRadioButtons(Label::getLabel('LBL_How_would_you_like_to_resolve_this?'), 'issue_resolve_type', $arr_options);
         $fldIssue->requirement->setRequired(true);
         $fld = $frm->addHiddenField('', 'issue_id');

@@ -295,10 +295,11 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if ($lessonId) {
             $srch->addCondition('sflashcard_slesson_id', '=', $lessonId);
         }
-        $srch->addCondition('sflashcard_learner_id', '=', UserAuthentication::getLoggedUserId());
+        // $srch->addCondition('sflashcard_learner_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addOrder('flashcard_id', 'DESC');
         $srch->addMultipleFields(array(
             'flashcard_id',
+            'flashcard_created_by_user_id',
             'flashcard_title',
             'wordLang.slanguage_code as wordLanguageCode',
             'flashcard_pronunciation',
@@ -1197,7 +1198,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $frm->addTextBox(Label::getLabel('LBL_Pronunciation'), 'flashcard_pronunciation');
         $fld = $frm->addHiddenField('', 'flashcard_id', 0);
         $fld->requirements()->setInt();
-        $fld = $frm->addHiddenField('', 'sldetail_id', 0);
+        // $fld = $frm->addHiddenField('', 'sldetail_id', 0);
         $fld = $frm->addHiddenField('', 'slesson_id', 0);
         $fld->requirements()->setInt();
         $frm->addTextArea(Label::getLabel('LBL_Notes'), 'flashcard_notes');
@@ -1209,33 +1210,18 @@ class LearnerScheduledLessonsController extends LearnerBaseController
     {
         $post = FatApp::getPostedData();
         $flashCardId = FatApp::getPostedData('flashcardId', FatUtility::VAR_INT, 0);
-        $lDetailId = $post['lDetailId'];
-        if (1 > $lDetailId) {
+        $lessonId = $post['lessonId'];
+        if (1 > $lessonId) {
             FatUtility::exitWithErrorCode(404);
         }
-        $lessonDetailRow = ScheduledLessonDetails::getAttributesById($lDetailId, array('sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id'));
-        if (!$lessonDetailRow || $lessonDetailRow['sldetail_id']!=$lDetailId) {
-            FatUtility::exitWithErrorCode(404);
-        }
-        $lessonId = $lessonDetailRow['sldetail_slesson_id'];
+        
         $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_id'));
         if (!$lessonRow || $lessonRow['slesson_id']!=$lessonId) {
             FatUtility::exitWithErrorCode(404);
         }
 
-        if ($lessonDetailRow['sldetail_learner_id'] != UserAuthentication::getLoggedUserId()) {
-            Message::addErrorMessage(Label::getLabel('LBL_Access_Denied'));
-            FatApp::redirectUser(CommonHelper::generateUrl('LearnerScheduledLessons'));
-        }
-        /*
-        $lessonId = FatApp::getPostedData('lessonId', FatUtility::VAR_INT, 0);
-        if ($lessonId <= 0) {
-            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
-            FatUtility::dieWithError(Message::getHtml());
-        } */
         $frm = $this->getFlashcardFrm();
         $frmData['slesson_id'] = $lessonId;
-        $frmData['sldetail_id'] = $lDetailId;
         if ($flashCardId > 0) {
             $frmData = $frmData + FlashCard::getAttributesById($flashCardId);
         }
@@ -1251,24 +1237,25 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if (false === $post) {
             FatUtility::dieJsonError($frm->getValidationErrors());
         }
-        $lDetailId = $post['sldetail_id'];
+        /* $lDetailId = $post['sldetail_id'];
         if (1 > $lDetailId) {
             FatUtility::exitWithErrorCode(404);
         }
         $lessonDetailRow = ScheduledLessonDetails::getAttributesById($lDetailId, array('sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id'));
         if (!$lessonDetailRow || $lessonDetailRow['sldetail_id']!=$lDetailId) {
             FatUtility::exitWithErrorCode(404);
-        }
-        $lessonId = $lessonDetailRow['sldetail_slesson_id'];
+        } */
+        $lessonId = $post['slesson_id'];//$lessonDetailRow['sldetail_slesson_id'];
         $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_id', 'slesson_teacher_id'));
         if (!$lessonRow || $lessonRow['slesson_id']!=$lessonId) {
             FatUtility::exitWithErrorCode(404);
         }
-
-        if ($lessonDetailRow['sldetail_learner_id'] != UserAuthentication::getLoggedUserId()) {
+        
+        // anyone can edit
+        /* if ($lessonDetailRow['sldetail_learner_id'] != UserAuthentication::getLoggedUserId()) {
             Message::addErrorMessage(Label::getLabel('LBL_Access_Denied'));
             FatApp::redirectUser(CommonHelper::generateUrl('LearnerScheduledLessons'));
-        }
+        } */
 
         $flashCardId = $post['flashcard_id'];
         $post['flashcard_user_id'] = UserAuthentication::getLoggedUserId();
@@ -1283,7 +1270,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $flashcardId = $flashCardObj->getMainTableRecordId();
             $db->insertFromArray(FlashCard::DB_TBL_SHARED, array(
                 'sflashcard_flashcard_id' => $flashcardId,
-                'sflashcard_learner_id' => $lessonDetailRow['sldetail_learner_id'],
+                'sflashcard_learner_id' => UserAuthentication::getLoggedUserId(),
                 'sflashcard_teacher_id' => $lessonRow['slesson_teacher_id'],
                 'sflashcard_slesson_id' => $lessonId,
             ));
@@ -1398,6 +1385,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addMultipleFields(
             array(
                 'IF(slns.slesson_teacher_join_time>0, 1, 0) as has_teacher_joined',
+                'IF(sld.sldetail_learner_join_time>0, 1, 0) as has_learner_joined',
                 'sld.sldetail_learner_status',
                 'slns.slesson_status'
             )

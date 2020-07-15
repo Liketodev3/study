@@ -26,6 +26,7 @@ $chat_group_id = $lessonData['slesson_grpcls_id']>0 ? $lessonData['grpcls_title'
 ?>
 <script type="text/javascript">
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
+var is_time_up = '<?php echo $endTime<$curDate ?>';
 
 var lesson_joined = '<?php echo $lessonData['slesson_teacher_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time']>0 ?>';
@@ -160,41 +161,48 @@ $(function(){
         }
     }
     <?php } ?>
-    $('#end_lesson_timer').countdowntimer({
-        startDate : "<?php echo $curDate; ?>",
-        dateAndTime : "<?php echo $endTime; ?>",
-        size : "lg",
-        timeUp : function(){
-            if(lesson_completed) return;
-            $('.jconfirm-closeIcon').trigger('click');
-            $.confirm({
-                closeIcon: true,
-                title: langLbl.Confirm,
-                content: '<?php echo Label::getLabel('LBL_Duration_assigned_to_this_lesson_is_completed_now_do_you_want_to_continue?'); ?>',
-                autoClose: langLbl.Quit+'|8000',
-                buttons: {
-                    Proceed: {
-                        text: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
-                        btnClass: 'btn btn--primary',
-                        keys: ['enter', 'shift'],
-                        action: function(){
-                            endLessonSetup('<?php echo $lessonData['slesson_id']; ?>');
-                        }
-                    },
-                    Quit: {
-                        text: '<?php echo Label::getLabel('LBL_Continue'); ?>',
-                        btnClass: 'btn btn--secondary',
-                        keys: ['enter', 'shift'],
-                        action: function(){
-                            
-                        }
-                    }
+    
+    if(is_time_up=='1'){
+        endLessonConfirm();
+    }else{   
+        $('#end_lesson_timer').countdowntimer({
+            startDate : "<?php echo $curDate; ?>",
+            dateAndTime : "<?php echo $endTime; ?>",
+            size : "lg",
+            timeUp : function(){
+                endLessonConfirm();
+            }
+        });
+    }
+});
+
+function endLessonConfirm(){
+    $.confirm({
+        closeIcon: true,
+        title: langLbl.Confirm,
+        content: '<?php echo Label::getLabel('LBL_Duration_assigned_to_this_lesson_is_completed_now_do_you_want_to_continue?'); ?>',
+        autoClose: langLbl.Quit+'|8000',
+        buttons: {
+            Proceed: {
+                text: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
+                btnClass: 'btn btn--primary',
+                keys: ['enter', 'shift'],
+                action: function(){
+                    endLessonSetup('<?php echo $lessonData['slesson_id']; ?>');
                 }
-            });
-            $("#end_lesson_time_div").hide();
+            },
+            Quit: {
+                text: '<?php echo Label::getLabel('LBL_Continue'); ?>',
+                btnClass: 'btn btn--secondary',
+                keys: ['enter', 'shift'],
+                action: function(){
+                    
+                }
+            }
         }
     });
-});
+    $("#end_lesson_time_div").hide();
+}
 </script>
 
 <section class="section section--grey section--page">

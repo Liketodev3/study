@@ -50,6 +50,10 @@
 		</li>
 
 		<?php } ?>
+        
+        <?php if($objPrivilege->canViewGroupClasses(AdminAuthentication::getLoggedAdminId(), true)){ ?>
+        <li><a href="<?php echo CommonHelper::generateUrl('GroupClasses');?>"><?php echo Label::getLabel('LBL_Group_Classes',$adminLangId);?></a></li>
+        <?php } ?>
 
 		<?php if( $objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true) || $objPrivilege->canViewIssuesReported(AdminAuthentication::getLoggedAdminId(), true) || $objPrivilege->canViewGiftcards(AdminAuthentication::getLoggedAdminId(), true)){ ?>
 				<li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Orders',$adminLangId);?></a>

@@ -297,7 +297,8 @@ class ScheduledLessonSearch extends SearchBase
         $db = FatApp::getDb();
         $this->addMultipleFields(
             array(
-                'slesson_id'
+                'slesson_id',
+                'slesson_status'
             )
         );
         $this->addCondition('slesson_grpcls_id', '=', $grpclsId);

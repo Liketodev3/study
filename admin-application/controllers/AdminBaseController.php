@@ -122,7 +122,8 @@ class AdminBaseController extends FatController
             'pleaseSelect' => Label::getLabel('VLBL_Please_select', $this->adminLangId),
             'to' => Label::getLabel('VLBL_to', $this->adminLangId),
             'options' => Label::getLabel('VLBL_options', $this->adminLangId),
-            'confirmRestoreBackup' => Label::getLabel('LBL_Do_you_want_to_restore_database_to_this_record', $this->adminLangId)
+            'confirmRestoreBackup' => Label::getLabel('LBL_Do_you_want_to_restore_database_to_this_record', $this->adminLangId),
+            'confirmCancel' => Label::getLabel('LBL_Do_you_want_to_cancel'),
         );
         $languages                    = Language::getAllNames(false);
         foreach ($languages as $val) {

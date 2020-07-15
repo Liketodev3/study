@@ -7,12 +7,17 @@ class IssuesReported extends MyAppModel
     const STATUS_OPEN = 0;
     const STATUS_PROGRESS = 1;
     const STATUS_RESOLVED = 2;
+    
+    const RESOLVE_TYPE_LESSON_UNSCHEDULED = 1;
+    const RESOLVE_TYPE_LESSON_COMPLETED = 2;
+    const RESOLVE_TYPE_LESSON_COMPLETED_HALF_REFUND = 3;
+    const RESOLVE_TYPE_LESSON_COMPLETED_FULL_REFUND = 4;
 
     const RESOLVE_TYPE = array(
-        1 => 'Reset Lesson to: Unscheduled',
-        2 => 'Mark Lesson as: Completed',
-        3 => 'Mark Lesson as: Completed and issue student a 50% refund',
-        4 => 'Mark Lesson as: Completed and issue student a 100% refund',
+        self::RESOLVE_TYPE_LESSON_UNSCHEDULED           => 'Reset Lesson to: Unscheduled',
+        self::RESOLVE_TYPE_LESSON_COMPLETED             => 'Mark Lesson as: Completed',
+        self::RESOLVE_TYPE_LESSON_COMPLETED_HALF_REFUND => 'Mark Lesson as: Completed and issue student a 50% refund',
+        self::RESOLVE_TYPE_LESSON_COMPLETED_FULL_REFUND => 'Mark Lesson as: Completed and issue student a 100% refund',
     );
 
     const ISSUE_REPORTED_NOTIFICATION = 1;

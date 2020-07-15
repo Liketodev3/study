@@ -79,7 +79,7 @@ function checkEveryMinuteStatus() {
    checkEveryMinuteStatusVar = setInterval(function(){
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','checkEveryMinuteStatus',['<?php echo $lessonData['sldetail_id'] ?>']),'',function(t){
             var t = JSON.parse(t);
-            if (!lesson_joined && !lesson_completed && t.has_teacher_joined == 1)
+            if (!lesson_joined && !lesson_completed && t.has_teacher_joined == 1 && !t.has_learner_joined)
             {
                 $.mbsmessage( '<?php echo Label::getLabel('LBL_Teacher_Has_Joined_Now_you_can_also_Join_The_Lesson!'); ?>',true, 'alert alert--success');
             }
@@ -390,9 +390,12 @@ $(function(){
                                         </div>
                                         <div class="select-box select-box--up toggle-group" id="lesson_actions" style="display:none">
                                             <div class="buttons-toggle">
+                                                <?php  if($lessonData['slesson_grpcls_id'] == 0): ?>
                                                 <a class="btn btn--large btn--secondary" href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lessonData['sldetail_id']; ?>')">
                                                     <?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?>
                                                 </a>
+                                                <?php endif; ?>
+                                                
                                                 <?php  if($lessonData['sldetail_learner_status'] != ScheduledLesson::STATUS_CANCELLED) { ?>
                                                 <a href="javascript:void(0)" class="btn btn--large  btn--secondary btn--dropdown toggle__trigger-js"></a>
                                                 <?php } ?>
@@ -492,7 +495,7 @@ $(function(){
                                         </h5>
                                     </div>
                                     <div>
-                                        <a class="btn btn--secondary btn--small" href="javascript:void(0)" onclick="flashCardForm(<?php echo $lessonData['sldetail_id'] ?>, 0, <?php echo $lessonData['learnerId'] ?>, <?php echo $lessonData['teacherId'] ?>)">
+                                        <a class="btn btn--secondary btn--small" href="javascript:void(0)" onclick="flashCardForm(<?php echo $lessonData['slesson_id'] ?>, 0, <?php echo $lessonData['learnerId'] ?>, <?php echo $lessonData['teacherId'] ?>)">
                                             <?php echo Label::getLabel('LBL_Add_New'); ?>
                                         </a>
                                     </div>

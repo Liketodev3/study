@@ -257,6 +257,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addOrder('flashcard_id', 'DESC');
         $srch->addMultipleFields(array(
             'flashcard_id',
+            'flashcard_created_by_user_id',
             'flashcard_title',
             'wordLang.slanguage_code as wordLanguageCode',
             'flashcard_pronunciation',
