@@ -481,3 +481,10 @@ ALTER TABLE `tbl_commission_settings` DROP INDEX `commsetting_user_id`, ADD UNIQ
 ALTER TABLE `tbl_commission_setting_history` ADD `csh_commsetting_is_grpcls` TINYINT NOT NULL AFTER `csh_commsetting_is_mandatory`; 
 
 ALTER TABLE `tbl_order_products` ADD `op_grpcls_id` INT NOT NULL AFTER `op_invoice_number`; 
+
+ALTER TABLE `tbl_user_settings` ADD `us_google_access_token` VARCHAR(255) NOT NULL AFTER `us_booking_before`; 
+ALTER TABLE `tbl_user_settings` ADD `us_google_access_token_expiry` DATETIME NOT NULL AFTER `us_google_access_token`;
+
+ALTER TABLE `tbl_scheduled_lessons` ADD `slesson_teacher_google_calendar_id` VARCHAR(255) NOT NULL AFTER `slesson_is_teacher_paid`; 
+
+ALTER TABLE `tbl_scheduled_lesson_details` ADD `sldetail_learner_google_calendar_id` VARCHAR(255) NOT NULL AFTER `sldetail_learner_status`; 

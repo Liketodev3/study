@@ -41,6 +41,8 @@ class UserSetting extends MyAppModel
                 'us_video_link',
                 'us_booking_before', //== code added on 23-08-2019
                 'us_teach_slanguage_id',
+                'us_google_access_token',
+                'us_google_access_token_expiry',
                 'utl.*'
                 )
         );

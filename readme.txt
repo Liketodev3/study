@@ -2,6 +2,7 @@
 New Features:
     *Task-74784: 1-1 class
     *Task-73154: Group class
+    *Task-75315: Google Calendar
 
 Enhancements: N/A
 

@@ -17,6 +17,12 @@ class TeacherController extends TeacherBaseController
         } else {
             $this->set('viewProfile', true);
         }
+        
+        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        if(!$token || SocialMedia::isGoogleAccessTokenExpired($token)){
+            Message::addInfo(Label::getLabel('LBL_Please_Authenticate_google_to_be_able_to_post_on_google_calendar'));
+        }
+        
         /* ] */
         $this->_template->addCss('css/custom-full-calendar.css');
         $this->_template->addJs('js/moment.min.js');
