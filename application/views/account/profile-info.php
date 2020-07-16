@@ -20,7 +20,18 @@
 						<div>
 							<h1><?php echo Label::getLabel('LBL_Dashboard'); ?></h1>
 						</div>
-						
+						<div>
+
+						</div>
+						<?php if($userIsTeacher){ ?>
+						<div class="progress-wrapper d-flex align-items-center">
+							<span class="profile-progress"><?php echo Label::getLabel('LBL_Profile_progress');?></span>
+							<div class="progress">
+								<div class="progress-bar active progress-bar-striped progress-bar-animated teacher-profile-progress-bar-js" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+							</div>
+							<span class="txt progress-count-js"></span>
+						</div>
+					<?php } ?>
 						<!--<div>
 							<div class="tab-swticher tab-swticher-small">
 								<a href="dashboard_list.html" class="btn btn--large">List</a>
