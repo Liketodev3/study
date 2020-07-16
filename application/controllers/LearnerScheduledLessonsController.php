@@ -738,6 +738,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         $lessonDetailRow = ScheduledLessonDetails::getAttributesById($lDetailId, array('sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id'));
+
         if (!$lessonDetailRow || $lessonDetailRow['sldetail_id']!=$lDetailId) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
@@ -767,8 +768,20 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if ($difference < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Teacher_Disable_the_Booking_before').' '. $teacherBookingBefore .' Hours');
         }
+
+        $userIds  = array($teacher_id, UserAuthentication::getLoggedUserId() );
+        $scheduledLessonSearchObj = new ScheduledLessonSearch();
+        $scheduledLessonSearchObj->checkUserLessonBooking($userIds, $startTime, $endTime);
+        $scheduledLessonSearchObj->setPageSize(1);
+        $getResultSet = $scheduledLessonSearchObj->getResultSet();
+        $scheduledLessonData = $db->fetchAll($getResultSet);
+        if(!empty($scheduledLessonData)) {
+                FatUtility::dieJsonError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
+        }
+
         $srch = new stdClass();
         $this->searchLessons($srch);
+
         $srch->joinTeacherCredentials();
         $srch->doNotCalculateRecords();
         $srch->addCondition('sldetail_id', '=', $lDetailId);
@@ -825,7 +838,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], 'learner_schedule_email', $this->siteLangId, $vars)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
         }
-        
+
         // share on student google calendar
         $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
         if($token){
@@ -846,7 +859,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $sLessonDetailObj->save();
             }
         }
-        
+
         // share on teacher google calendar
         $token = current(UserSetting::getUserSettings($lessonRow['teacherId']))['us_google_access_token'];
         if($token){
@@ -1460,16 +1473,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $startDateTime = MyDate::changeDateTimezone($post['date'].' '. $post['startTime'], $user_timezone, $systemTimeZone);
         $endDateTime = MyDate::changeDateTimezone($post['date'].' '.$post['endTime'], $user_timezone, $systemTimeZone);
         $db = FatApp::getDb();
-        $srch = new ScheduledLessonSearch();
-        $userIds  = array( $teacher_id, UserAuthentication::getLoggedUserId() );
+
+        $userIds  = array($teacherId, UserAuthentication::getLoggedUserId() );
+        $scheduledLessonSearchObj = new ScheduledLessonSearch();
         $scheduledLessonSearchObj->checkUserLessonBooking($userIds, $startDateTime, $endDateTime);
+        $scheduledLessonSearchObj->setPageSize(1);
         $getResultSet = $scheduledLessonSearchObj->getResultSet();
-        $scheduledLessonData =$db->fetch($getResultSet);
-
-        if(!empty($scheduledLessonData)){
-            FatUtility::dieWithError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
-        }
-
+        $scheduledLessonData = $db->fetchAll($getResultSet);
         // $srch->addMultipleFields(
         //     array(
         //         'slesson_status',
@@ -1485,7 +1495,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         // $cnd1->attachCondition('slns.slesson_end_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
         // $rs = $srch->getResultSet();
         // $data = FatApp::getDb()->fetchAll($rs);
-        $this->set('count', count($data));
+        $this->set('count', count($scheduledLessonData));
         $this->_template->render(false, false, 'json-success.php');
     }
 

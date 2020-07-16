@@ -55,7 +55,7 @@ class CartController extends MyAppController
             $scheduledLessonSearchObj->checkUserLessonBooking($userIds, $startDateTime, $endDateTime);
             $getResultSet = $scheduledLessonSearchObj->getResultSet();
             $scheduledLessonData =$db->fetch($getResultSet);
-            
+
             if(!empty($scheduledLessonData)){
                 FatUtility::dieWithError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
             }
