@@ -174,6 +174,7 @@ foreach ( $lessons as $lesson ) {
 							</svg>
 						</a>
 					</li>
+					<?php if($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED AND $referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('learner-scheduled-lessons'))){ ?>
 					<?php if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
 						<li>
 							<a href="javascript:void(0);" onclick="viewBookingCalendar('<?php echo $lesson['sldetail_id']; ?>', '<?php echo $action; ?>')" class="" title="<?php echo Label::getLabel('LBL_Schedule_Lesson'); ?>">
@@ -260,7 +261,7 @@ foreach ( $lessons as $lesson ) {
 						</a>
 					</li>
 					<?php } ?>
-
+					<?php } ?>
 				</ul>
 			</div>
 			<?php } ?>

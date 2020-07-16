@@ -657,12 +657,31 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         );
 
         $lessonId = $lessonRow['slesson_id'];
-
+        $db =  FatApp::getDb();
+        $db->startTransaction();
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
         $sLessonObj->assignValues($sLessonArr);
         if (!$sLessonObj->save()) {
+            $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
         }
+
+        $rsLessonLogArr = array(
+            'reschleslog_slesson_id' => $lessonRow['slesson_id'],
+            'reschleslog_reschedule_by' => UserAuthentication::getLoggedUserId(),
+            'reschleslog_user_type' => User::USER_TYPE_LEANER,
+            'reschleslog_comment' => $post['reschedule_lesson_msg'],
+        );
+
+        $rsLessonLogObj = new RescheduledLessonLog();
+        $rsLessonLogObj->assignValues($rsLessonLogArr);
+
+        if (!$rsLessonLogObj->save()) {
+            $db->rollbackTransaction();
+            FatUtility::dieJsonError($rsLessonLogObj->getError());
+        }
+
+        $db->commitTransaction();
         $tpl = 'learner_reschedule_email';
         $vars = array(
             '{learner_name}' => $lessonRow['learnerFullName'],

@@ -387,7 +387,7 @@ UPDATE `tbl_configurations` SET `conf_val` = 'H:i:s' WHERE `tbl_configurations`.
 
 INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_YOCOACH_VERSION', 'V1.0', 0);
 
-INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES (NULL, 'Stripe', 'stripe', '1', '1'); 
+INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES (NULL, 'Stripe', 'stripe', '1', '1');
 
 
 --
@@ -435,8 +435,8 @@ ALTER TABLE `tbl_scheduled_lessons`
   DROP `slesson_learner_id`,
   DROP `slesson_learner_join_time`,
   DROP `slesson_learner_end_time`;
-  
-ALTER TABLE `tbl_scheduled_lessons` ADD `slesson_grpcls_id` INT NOT NULL AFTER `slesson_id`; 
+
+ALTER TABLE `tbl_scheduled_lessons` ADD `slesson_grpcls_id` INT NOT NULL AFTER `slesson_id`;
 
 
 --
@@ -473,18 +473,53 @@ ALTER TABLE `tbl_scheduled_lesson_details`
 --
 ALTER TABLE `tbl_scheduled_lesson_details`
   MODIFY `sldetail_id` int(11) NOT NULL AUTO_INCREMENT;
-  
-ALTER TABLE `tbl_commission_settings` ADD `commsetting_is_grpcls` TINYINT NOT NULL AFTER `commsetting_is_mandatory`; 
+
+ALTER TABLE `tbl_commission_settings` ADD `commsetting_is_grpcls` TINYINT NOT NULL AFTER `commsetting_is_mandatory`;
 
 ALTER TABLE `tbl_commission_settings` DROP INDEX `commsetting_user_id`, ADD UNIQUE `commsetting_user_id` (`commsetting_user_id`, `commsetting_is_grpcls`) USING BTREE;
 
-ALTER TABLE `tbl_commission_setting_history` ADD `csh_commsetting_is_grpcls` TINYINT NOT NULL AFTER `csh_commsetting_is_mandatory`; 
+ALTER TABLE `tbl_commission_setting_history` ADD `csh_commsetting_is_grpcls` TINYINT NOT NULL AFTER `csh_commsetting_is_mandatory`;
 
-ALTER TABLE `tbl_order_products` ADD `op_grpcls_id` INT NOT NULL AFTER `op_invoice_number`; 
+ALTER TABLE `tbl_order_products` ADD `op_grpcls_id` INT NOT NULL AFTER `op_invoice_number`;
 
-ALTER TABLE `tbl_user_settings` ADD `us_google_access_token` VARCHAR(255) NOT NULL AFTER `us_booking_before`; 
+ALTER TABLE `tbl_user_settings` ADD `us_google_access_token` VARCHAR(255) NOT NULL AFTER `us_booking_before`;
 ALTER TABLE `tbl_user_settings` ADD `us_google_access_token_expiry` DATETIME NOT NULL AFTER `us_google_access_token`;
 
-ALTER TABLE `tbl_scheduled_lessons` ADD `slesson_teacher_google_calendar_id` VARCHAR(255) NOT NULL AFTER `slesson_is_teacher_paid`; 
+ALTER TABLE `tbl_scheduled_lessons` ADD `slesson_teacher_google_calendar_id` VARCHAR(255) NOT NULL AFTER `slesson_is_teacher_paid`;
 
-ALTER TABLE `tbl_scheduled_lesson_details` ADD `sldetail_learner_google_calendar_id` VARCHAR(255) NOT NULL AFTER `sldetail_learner_status`; 
+ALTER TABLE `tbl_scheduled_lesson_details` ADD `sldetail_learner_google_calendar_id` VARCHAR(255) NOT NULL AFTER `sldetail_learner_status`;
+
+-- task id 74969 - date 16-july TV-1.3.0.20200706
+
+--
+-- Table structure for table `lesson_reschedule_log`
+--
+
+CREATE TABLE `tbl_reschedule_lesson_log` (
+  `reschleslog_id` int(11) NOT NULL,
+  `reschleslog_slesson_id` int(11) NOT NULL,
+  `reschleslog_reschedule_by` int(11) NOT NULL,
+  `reschleslog_user_type` int(11) NOT NULL,
+  `reschleslog_comment` TEXT NOT NULL,
+  `reschleslog_added_on` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `lesson_reschedule_log`
+--
+ALTER TABLE `tbl_reschedule_lesson_log`
+  ADD PRIMARY KEY (`reschleslog_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `lesson_reschedule_log`
+--
+ALTER TABLE `tbl_reschedule_lesson_log`
+  MODIFY `reschleslog_id` int(11) NOT NULL AUTO_INCREMENT;

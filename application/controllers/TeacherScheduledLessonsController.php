@@ -465,6 +465,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError($frm->getValidationErrors());
         }
         $lessonId = $post['slesson_id'];
+        $db = FatApp::getDb();
         /* [ */
         $srch = new stdClass();
         $this->searchLessons($srch);
@@ -481,7 +482,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             )
         );
         $rs = $srch->getResultSet();
-        $lessonRow = FatApp::getDb()->fetch($rs);
+        $lessonRow = $db->fetch($rs);
         if (!$lessonRow) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
@@ -496,13 +497,34 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             'slesson_end_time' => '00:00:00'
         );
         $sLessonObj->assignValues($dataArr);
+        $db->startTransaction();
         if (!$sLessonObj->save()) {
+            $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
         }
+
+        $rsLessonLogArr = array(
+            'reschleslog_slesson_id' => $lessonRow['slesson_id'],
+            'reschleslog_reschedule_by' => UserAuthentication::getLoggedUserId(),
+            'reschleslog_user_type' => User::USER_TYPE_TEACHER,
+            'reschleslog_comment' => $post['reschedule_lesson_msg'],
+        );
+
+        $rsLessonLogObj = new RescheduledLessonLog();
+        $rsLessonLogObj->assignValues($rsLessonLogArr);
+
+        if (!$rsLessonLogObj->save()) {
+            $db->rollbackTransaction();
+            FatUtility::dieJsonError($rsLessonLogObj->getError());
+        }
+
         /* ] */
         if (!$sLessonObj->rescheduleLessonByTeacher($post['reschedule_lesson_msg'])) {
+            $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
         }
+
+        $db->commitTransaction();
 
         $userNotification = new UserNotifications($lessonRow['learnerId']);
         $userNotification->sendSchLessonByTeacherNotification($lessonId, true);
