@@ -180,14 +180,17 @@ class AccountController extends LoggedUserController
             'user_phone',
             'user_country_id',
             'user_is_teacher',
-             'user_timezone',
+            'user_timezone',
             'user_profile_info'
         ));
         $userRow['user_phone'] = ($userRow['user_phone'] == 0) ? '' : $userRow['user_phone'];
         $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
         if ($userRow['user_is_teacher']) {
-            $userRow['us_video_link'] = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_video_link'];
-            $userRow['us_booking_before'] = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_booking_before']; //== code added on 23-08-2019
+            $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
+            $userRow['us_video_link'] = $user_settings['us_video_link'];
+            $userRow['us_booking_before'] = $user_settings['us_booking_before']; //== code added on 23-08-2019
+            $userRow['us_google_access_token'] = $user_settings['us_google_access_token'];
+            $userRow['us_google_access_token_expiry'] = $user_settings['us_google_access_token_expiry'];
         }
         $profileFrm->fill($userRow);
         $this->set('isProfilePicUploaded', User::isProfilePicUploaded());
@@ -460,5 +463,41 @@ class AccountController extends LoggedUserController
             return false;
         }
         return true;
+    }
+    
+    public function GoogleCalendarAuthorize()
+    {
+        require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
+        $client = new Google_Client();
+        $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
+        $client->setScopes([ 'https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
+        $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
+        $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
+        $currentPageUri = CommonHelper::generateFullUrl('Account', 'GoogleCalendarAuthorize', array(), '', false);
+        $client->setRedirectUri($currentPageUri);
+        $client->setAccessType("offline");
+        $client->setApprovalPrompt("force");
+        $client->setDeveloperKey(FatApp::getConfig("CONF_GOOGLEPLUS_DEVELOPER_KEY")); // Developer key
+        $oauth2 =new Google_Service_Oauth2($client); // Call the OAuth2 class for get email address
+        if (isset($_GET['code'])) {
+            $client->authenticate($_GET['code']); // Authenticate
+            $_SESSION['access_token'] = $client->getAccessToken(); // get the access token here
+            FatApp::redirectUser($currentPageUri);
+        }
+        if (isset($_SESSION['access_token'])) {
+            $client->setAccessToken($_SESSION['access_token']);
+        }
+        if (!$client->getAccessToken()) {
+            $authUrl = $client->createAuthUrl();
+            FatApp::redirectUser($authUrl);
+        }
+        
+        $data = array(
+            'us_google_access_token'        => $client->getRefreshToken(), 
+            'us_google_access_token_expiry' => date('Y-m-d H:i:s', strtotime('+60 days'))
+        );
+        $usrStngObj = new UserSetting(UserAuthentication::getLoggedUserId());
+        $usrStngObj->saveData($data);
+        FatApp::redirectUser(CommonHelper::generateUrl('Account', 'ProfileInfo'));
     }
 }

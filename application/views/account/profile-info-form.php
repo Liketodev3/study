@@ -36,6 +36,7 @@ console.log(userData);
 	 <div class="section-head">
 		 <div class="d-flex justify-content-between align-items-center">
 			 <div><h4 class="page-heading"><?php echo Label::getLabel('LBL_General'); ?></h4></div>
+             <a href="<?php echo CommonHelper::generateUrl('Account', 'GoogleCalendarAuthorize') ?>" class="btn"><?php echo Label::getLabel('LBL_Google_Authorization') ?></a>
 		 </div>
 	 </div>
                                      <div id="langForm">

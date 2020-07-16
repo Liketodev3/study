@@ -797,7 +797,9 @@ class GuestUserController extends MyAppController
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
         $client->setScopes(array(
             'https://www.googleapis.com/auth/userinfo.email',
-            'https://www.googleapis.com/auth/plus.me'
+            'https://www.googleapis.com/auth/plus.me',
+            'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/calendar.events'
         )); // set scope during user login
         $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID", FatUtility::VAR_STRING, '')); // paste the client id which you get from google API Console
         $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET", FatUtility::VAR_STRING, '')); // set the client secret
@@ -820,6 +822,7 @@ class GuestUserController extends MyAppController
         }
         $user = $oauth2->userinfo->get();
         //echo "<pre>"; print_r($oauth2->userinfo);die();
+        
         $_SESSION['access_token'] = $client->getAccessToken();
         $userGoogleplusEmail = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
         $userGoogleplusId = $user['id'];
@@ -903,6 +906,7 @@ class GuestUserController extends MyAppController
                 Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET"));
                 CommonHelper::redirectUserReferer();
             }
+            
             $authentication = new UserAuthentication();
             if (!$authentication->login($userInfo['credential_username'], $userInfo['credential_password'], $_SERVER['REMOTE_ADDR'], false)) {
                 Message::addErrorMessage(Label::getLabel($authentication->getError()));
@@ -925,11 +929,13 @@ class GuestUserController extends MyAppController
         require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
-        $client->setScopes(['email','profile']); // set scope during user login
+        $client->setScopes(['email','profile', 'https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
         $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
         $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
         $currentPageUri = CommonHelper::generateFullUrl('GuestUser', 'loginGoogle', array($userType), '', false);
         $client->setRedirectUri($currentPageUri);
+        $client->setAccessType("offline");
+        $client->setApprovalPrompt("force");
         $client->setDeveloperKey(FatApp::getConfig("CONF_GOOGLEPLUS_DEVELOPER_KEY")); // Developer key
         $oauth2 =new Google_Service_Oauth2($client); // Call the OAuth2 class for get email address
         if (isset($_GET['code'])) {
@@ -944,6 +950,8 @@ class GuestUserController extends MyAppController
             $authUrl = $client->createAuthUrl();
             FatApp::redirectUser($authUrl);
         }
+        // unset($_SESSION['access_token']);
+        // var_dump($client->getRefreshToken());die;
         $user = $oauth2->userinfo->get();
         $_SESSION['access_token'] = $client->getAccessToken();
         $userGoogleEmail = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
@@ -1028,6 +1036,10 @@ class GuestUserController extends MyAppController
                 }
                 $db->commitTransaction();
             }
+            
+            $usrStngObj = new UserSetting($userObj->getMainTableRecordId());
+            $usrStngObj->saveData(array('us_google_access_token' => $client->getRefreshToken()));
+            
             $userInfo = $userObj->getUserInfo(array(
                 'user_googleplus_id',
                 'credential_username',

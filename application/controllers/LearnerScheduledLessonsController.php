@@ -176,8 +176,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
                 $srch->addCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
             } else {
-                $cnd = $srch->addCondition('slns.slesson_status', '=', $post['status']);
-                $cnd->attachCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+                $srch->addCondition('slns.slesson_status', '=', $post['status']);
+                $srch->addCondition('sld.sldetail_learner_status', '=', $post['status']);
             }
         }
     }
@@ -824,6 +824,47 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], 'learner_schedule_email', $this->siteLangId, $vars)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
+        }
+        
+        // share on student google calendar
+        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        if($token){
+            $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($lessonRow['sldetail_id']));
+            $google_cal_data = array(
+                'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId),
+                'summary' => sprintf(Label::getLabel("LBL_LESSON-%s"), $lessonRow['slesson_id']),
+                'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
+                'url' => $view_url,
+                'start_time' => date('c', $SelectedDateTimeStamp),
+                'end_time' => date('c',$endDateTimeStamp),
+                'timezone' => MyDate::getTimeZone(),
+            );
+            // CommonHelper::printArray($google_cal_data);die;
+            $calId = SocialMedia::addEventOnGoogleCalendar($token, $google_cal_data);
+            if($calId){
+                $sLessonDetailObj->setFldValue('sldetail_learner_google_calendar_id', $calId);
+                $sLessonDetailObj->save();
+            }
+        }
+        
+        // share on teacher google calendar
+        $token = current(UserSetting::getUserSettings($lessonRow['teacherId']))['us_google_access_token'];
+        if($token){
+            $view_url = CommonHelper::generateFullUrl('TeacherScheduledLessons', 'view', array($lessonRow['slesson_id']));
+            $google_cal_data = array(
+                'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId),
+                'summary' => sprintf(Label::getLabel("LBL_LESSON-%s"), $lessonRow['slesson_id']),
+                'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
+                'url' => $view_url,
+                'start_time' => date('c', $SelectedDateTimeStamp),
+                'end_time' => date('c',$endDateTimeStamp),
+                'timezone' => MyDate::getTimeZone(),
+            );
+            $calId = SocialMedia::addEventOnGoogleCalendar($token, $google_cal_data);
+            if($calId){
+                $sLessonObj->setFldValue('slesson_teacher_google_calendar_id', $calId);
+                $sLessonObj->save();
+            }
         }
 
         $userNotification = new UserNotifications($lessonRow['teacherId']);
