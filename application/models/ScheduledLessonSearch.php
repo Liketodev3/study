@@ -16,7 +16,7 @@ class ScheduledLessonSearch extends SearchBase
         }
 
         if($joinDetails === true){
-            $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = slns.slesson_id', 'sld');
+            $this->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id = slns.slesson_id', 'sld');
         }
     }
 
@@ -307,4 +307,25 @@ class ScheduledLessonSearch extends SearchBase
         $rs = $this->getResultSet();
         return $db->fetchAll($rs);
     }
+
+    public function checkUserLessonBooking(array $userIds, string $startDateTime, string $endDateTime) : object
+    {
+        if(empty($userIds)){
+            trigger_error(Label::getLabel('LBL_User_id_Requried'),E_USER_ERROR);
+        }
+
+        $userFieldCnd = $this->addCondition('slns.slesson_teacher_id', ' IN ', $userIds);
+        $userFieldCnd->attachCondition('sld.sldetail_learner_id', ' IN ', $userIds,' OR ');
+
+       $startDateTimeCnd = $this->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', ' <= ', $startDateTime, ' AND ', true);
+       $startDateTimeCnd->attachCondition('mysql_func_CONCAT(slns.slesson_end_date, " ", slns.slesson_end_time )', ' >= ', $startDateTime, ' AND ', true);
+
+        $endDateTimeCnd = $this->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', ' <= ', $endDateTime, ' OR ', true);
+        $endDateTimeCnd->attachCondition('mysql_func_CONCAT(slns.slesson_end_date, " ", slns.slesson_end_time )', ' >= ', $endDateTime, ' AND ', true);
+
+        $this->addCondition('slns.slesson_status', ' IN ', [ScheduledLesson::STATUS_SCHEDULED,ScheduledLesson::STATUS_COMPLETED]);
+
+        $this->addMultipleFields(array('slns.slesson_date', 'slns.slesson_start_time', 'slns.slesson_end_time','slns.slesson_id','sld.sldetail_order_id','sld.sldetail_learner_id'));
+        return $this;
+   }
 }

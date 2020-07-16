@@ -117,7 +117,7 @@ class ScheduledLesson extends MyAppModel
     public function cancelLessonByTeacher($reason='')
     {
         $lessonDetailRows = ScheduledLessonDetails::getScheduledRecordsByLessionId($this->getMainTableRecordId());
-        
+
         /* update status for every learner and refund [ */
 		foreach($lessonDetailRows as $lessonDetailRow){
             // CommonHelper::printArray($lessonDetailRow);die;

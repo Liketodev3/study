@@ -459,7 +459,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $orderSearch->addGroupBy('sldetail_order_id');
         $resultSet = $orderSearch->getResultSet();
         $orderInfo =  FatApp::getDb()->fetch($resultSet);
-        
+
         if(empty($orderInfo)) {
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatUtility::dieWithError(Message::getHtml());
@@ -1214,7 +1214,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if (1 > $lessonId) {
             FatUtility::exitWithErrorCode(404);
         }
-        
+
         $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_id'));
         if (!$lessonRow || $lessonRow['slesson_id']!=$lessonId) {
             FatUtility::exitWithErrorCode(404);
@@ -1250,7 +1250,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if (!$lessonRow || $lessonRow['slesson_id']!=$lessonId) {
             FatUtility::exitWithErrorCode(404);
         }
-        
+
         // anyone can edit
         /* if ($lessonDetailRow['sldetail_learner_id'] != UserAuthentication::getLoggedUserId()) {
             Message::addErrorMessage(Label::getLabel('LBL_Access_Denied'));
@@ -1406,28 +1406,44 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $post = FatApp::getPostedData();
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
+        $date =  FatApp::getPostedData('date',FatUtility::VAR_DATE,'');
+        $startTime = FatApp::getPostedData('startTime',FatUtility::VAR_STRING,'');
+        $endTime = FatApp::getPostedData('endTime',FatUtility::VAR_STRING,'');
+        $teacherId= FatApp::getPostedData('teacherId',FatUtility::VAR_INT,0);
+
+        if(empty($startTime) || empty($endTime) || empty($teacherId) || empty($date)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+        }
+
+
         $startDateTime = MyDate::changeDateTimezone($post['date'].' '. $post['startTime'], $user_timezone, $systemTimeZone);
         $endDateTime = MyDate::changeDateTimezone($post['date'].' '.$post['endTime'], $user_timezone, $systemTimeZone);
         $db = FatApp::getDb();
-        if (empty($post)) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
-        }
         $srch = new ScheduledLessonSearch();
-        $srch->addMultipleFields(
-            array(
-                'slesson_status',
-                'sld.sldetail_learner_status'
-            )
-        );
-        $srch->addCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
-        $srch->addCondition('sld.sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
-        $srch->addCondition('slns.slesson_date', '=', date('Y-m-d', strtotime($startDateTime)));
-        $cnd = $srch->addCondition('slns.slesson_start_time', '>=', date('H:i:s', strtotime($startDateTime)), 'AND');
-        $cnd->attachCondition('slns.slesson_start_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
-        $cnd1 = $cnd->attachCondition('slns.slesson_end_time', '>=', date('H:i:s', strtotime($startDateTime)), 'OR');
-        $cnd1->attachCondition('slns.slesson_end_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
-        $rs = $srch->getResultSet();
-        $data = FatApp::getDb()->fetchAll($rs);
+        $userIds  = array( $teacher_id, UserAuthentication::getLoggedUserId() );
+        $scheduledLessonSearchObj->checkUserLessonBooking($userIds, $startDateTime, $endDateTime);
+        $getResultSet = $scheduledLessonSearchObj->getResultSet();
+        $scheduledLessonData =$db->fetch($getResultSet);
+
+        if(!empty($scheduledLessonData)){
+            FatUtility::dieWithError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
+        }
+
+        // $srch->addMultipleFields(
+        //     array(
+        //         'slesson_status',
+        //         'sld.sldetail_learner_status'
+        //     )
+        // );
+        // $srch->addCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+        // $srch->addCondition('sld.sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
+        // $srch->addCondition('slns.slesson_date', '=', date('Y-m-d', strtotime($startDateTime)));
+        // $cnd = $srch->addCondition('slns.slesson_start_time', '>=', date('H:i:s', strtotime($startDateTime)), 'AND');
+        // $cnd->attachCondition('slns.slesson_start_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
+        // $cnd1 = $cnd->attachCondition('slns.slesson_end_time', '>=', date('H:i:s', strtotime($startDateTime)), 'OR');
+        // $cnd1->attachCondition('slns.slesson_end_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
+        // $rs = $srch->getResultSet();
+        // $data = FatApp::getDb()->fetchAll($rs);
         $this->set('count', count($data));
         $this->_template->render(false, false, 'json-success.php');
     }

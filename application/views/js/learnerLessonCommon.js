@@ -40,7 +40,8 @@ var isLessonCancelAjaxRun = false;
     var slot = 0;
 
     setUpLessonSchedule = function(teacherId,lDetailId,startTime,endTime,date){
-        fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','isSlotTaken'),'&startTime='+startTime+'&endTime='+endTime+'&date='+date,function(t){
+
+        fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','isSlotTaken'),'teacherId='+teacherId +'&startTime='+startTime+'&endTime='+endTime+'&date='+date,function(t){
             t = JSON.parse(t);
             slot = t.count;
 
@@ -85,7 +86,7 @@ var isLessonCancelAjaxRun = false;
 			$.facebox( t,'facebox-medium cancelLesson');
 		});
 	};
-	
+
 	closeCancelLessonPopup  = function(obj){
 		$.facebox.close();
 		isLessonCancelAjaxRun = false;

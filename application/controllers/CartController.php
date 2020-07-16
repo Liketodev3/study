@@ -31,7 +31,7 @@ class CartController extends MyAppController
         if ($teacher_id == UserAuthentication::getLoggedUserId()) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
-
+        $db =  FatApp::getDb();
         /* [ */
         $srch = new UserSearch();
         $srch->setTeacherDefinedCriteria();
@@ -39,7 +39,7 @@ class CartController extends MyAppController
         $srch->setPageSize(1);
         $srch->addMultipleFields(array('user_id'));
         $rs = $srch->getResultSet();
-        $teacher = FatApp::getDb()->fetch($rs);
+        $teacher = $db->fetch($rs);
         if (!$teacher) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
@@ -50,6 +50,15 @@ class CartController extends MyAppController
             $systemTimeZone = MyDate::getTimeZone();
             $startDateTime = MyDate::changeDateTimezone($startDateTime, $user_timezone, $systemTimeZone);
             $endDateTime = MyDate::changeDateTimezone($endDateTime, $user_timezone, $systemTimeZone);
+            $scheduledLessonSearchObj = new ScheduledLessonSearch(false);
+            $userIds  = array( $teacher_id, UserAuthentication::getLoggedUserId() );
+            $scheduledLessonSearchObj->checkUserLessonBooking($userIds, $startDateTime, $endDateTime);
+            $getResultSet = $scheduledLessonSearchObj->getResultSet();
+            $scheduledLessonData =$db->fetch($getResultSet);
+            
+            if(!empty($scheduledLessonData)){
+                FatUtility::dieWithError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
+            }
 
             if (!TeacherWeeklySchedule::isSlotAvailable($teacher_id, $startDateTime, $endDateTime, $weekStart)) {
                 FatUtility::dieWithError(Label::getLabel('LBL_Requested_Slot_is_not_available'));

@@ -248,40 +248,23 @@ class TeacherWeeklySchedule extends MyAppModel
         if ($startTime>$endTime) {
             return 0;
         }
+        
+        $db = FatApp::getDb();
 
-        $srch = new ScheduledLessonSearch();
-        $srch->joinTeacher();
-        $srch->joinTeacherSettings();
-        $srch->addMultipleFields(
-            array(
-            'slns.slesson_date',
-            'slns.slesson_start_time',
-            'slns.slesson_end_time'
-            )
-        );
-        $srch->addCondition('slns.slesson_teacher_id', ' = ', $userId);
+        $srch = new ScheduledLessonSearch(false);
+        $userIds  = array( $userId, UserAuthentication::getLoggedUserId() );
+        $srch->checkUserLessonBooking($userIds, $startTime, $endTime);
+        $getResultSet = $srch->getResultSet();
+        $scheduledLessonData =$db->fetch($getResultSet);
 
-        $cnd = $srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', ' >= ', $startTime, 'AND', true);
-        $cnd->attachCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '<=', $endTime, 'AND', true);
-
-        $cnd1 = $cnd->attachCondition('mysql_func_CONCAT(slns.slesson_end_date," ", slns.slesson_end_time )', ' >= ', $startTime, 'OR', true);
-        $cnd1->attachCondition('mysql_func_CONCAT(slns.slesson_end_date," ", slns.slesson_end_time )', '<=', $endTime, 'AND', true);
-
-
-        $srch->addCondition('slns.slesson_status', ' = ', ScheduledLesson::STATUS_SCHEDULED);
-
-        $res = $srch->getResultSet();
-        //echo $srch->getQuery();
-        //die();
-        $resC = $res->totalRecords();
-        if ($resC > 0) {
+        if(!empty($scheduledLessonData)){
             return 0;
         }
 
         $searchStartTime = date('H:i:s', strtotime($startTime));
         $searchEndTime = date('H:i:s', strtotime($endTime));
 
-        $db = FatApp::getDb();
+
         $gaSrch = new TeacherGeneralAvailabilitySearch();
         $gaSrch->addCondition('tgavl_user_id', '=', $userId);
         $gaSrch->addOrder('tgavl_date', 'ASC');
