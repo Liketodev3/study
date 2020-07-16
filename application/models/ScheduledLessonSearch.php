@@ -184,16 +184,14 @@ class ScheduledLessonSearch extends SearchBase
         $this->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'lcred.credential_user_id = sld.sldetail_learner_id', 'lcred');
     }
 
-    public function joinRescheduleLessonLog()
+    public function joinLessonRescheduleLog()
     {
-        $searchObj =  SearchBase(RescheduledLessonLog::DB_TBL,'reschleslog');
-        $searchObj->doNotCalculateRecords();
-        $searchObj->doNotLimitRecords();
-        $searchObj->addMultipleFields(array('max(reschleslog.reschleslog_id) as maxId'));
-        $searchObj->addGroupBy('reschleslog.reschleslog_slesson_id');
-        $this->joinTable("(".$searchObj->getQuery().")", 'INNER JOIN', 'latestR.maxId = tr.utrequest_id', 'latestR');
+        $getLessonRescheduleLogObj = LessonRescheduleLog::getLatestLessonRescheduleLog();
+		$getLessonRescheduleLogObj->addMultipleFields(array('lreschlog.*'));
+		$getLessonRescheduleLogObj->doNotCalculateRecords();
+        $getLessonRescheduleLogObj->doNotLimitRecords();
+		$this->joinTable("(".$getLessonRescheduleLogObj->getQuery().")", 'LEFT JOIN', 'lrsl.lesreschlog_slesson_id = slns.slesson_id', 'lrsl');
 
-        $this->joinTable(RescheduledLessonLog::DB_TBL, 'LEFT JOIN', 'rsll.reschleslog_slesson_id = slns.slesson_id', 'rsll');
     }
 
 

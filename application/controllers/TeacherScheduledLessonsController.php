@@ -503,19 +503,19 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError($sLessonObj->getError());
         }
 
-        $rsLessonLogArr = array(
-            'reschleslog_slesson_id' => $lessonRow['slesson_id'],
-            'reschleslog_reschedule_by' => UserAuthentication::getLoggedUserId(),
-            'reschleslog_user_type' => User::USER_TYPE_TEACHER,
-            'reschleslog_comment' => $post['reschedule_lesson_msg'],
+        $lessonResLogArr = array(
+            'lesreschlog_slesson_id' => $lessonRow['slesson_id'],
+            'lesreschlog_reschedule_by' => UserAuthentication::getLoggedUserId(),
+            'lesreschlog_user_type' => User::USER_TYPE_TEACHER,
+            'lesreschlog_comment' => $post['reschedule_lesson_msg'],
         );
 
-        $rsLessonLogObj = new RescheduledLessonLog();
-        $rsLessonLogObj->assignValues($rsLessonLogArr);
+        $lessonResLogObj = new LessonRescheduleLog();
+        $lessonResLogObj->assignValues($lessonResLogArr);
 
-        if (!$rsLessonLogObj->save()) {
+        if (!$lessonResLogObj->save()) {
             $db->rollbackTransaction();
-            FatUtility::dieJsonError($rsLessonLogObj->getError());
+            FatUtility::dieJsonError($lessonResLogObj->getError());
         }
 
         /* ] */

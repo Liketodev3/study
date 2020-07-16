@@ -37,22 +37,25 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         // list on lessons not classes in lessons list, group list is added seperately
         $srch->addCondition('slesson_grpcls_id', '=', 0);
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
+		$srch->joinLessonRescheduleLog();
         $srch->addFld(array(
             'IFNULL(iss.issrep_status,0) AS issrep_status',
             'IFNULL(iss.issrep_id,0) AS issrep_id',
+			'IFNULL(lrsl.lesreschlog_id,0) as lessonReschedulelogId',
             'IFNULL(iss.issrep_issues_resolve_type,0) AS issrep_issues_resolve_by',
             'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime',
             '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then 0 ELSE 1 END ) as upcomingLessonOrder',
             '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then CONCAT(slns.slesson_date, " ", slns.slesson_start_time) ELSE NOW() END ) as passedLessonsOrder',
             'sldetail_order_id',
         ));
-        $or =  $srch->addOrder('slesson_status', 'ASC');
+		
+
+		$srch->addOrder('slesson_status', 'ASC');
 		$srch->addOrder('upcomingLessonOrder', 'DESC');
 		$srch->addOrder('passedLessonsOrder', 'DESC');
 		$srch->addOrder('startDateTime', 'ASC');
 		$srch->addOrder('slesson_id', 'DESC');
-        // echo $srch->getQuery();
-        // die;
+
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
@@ -73,6 +76,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 		//die;
         $rs = $srch->getResultSet();
         $lessons = FatApp::getDb()->fetchAll($rs);
+		print_r($lessons);
+		die;
         $lessonArr = array();
         $user_timezone = MyDate::getUserTimeZone();
         foreach ($lessons as $lesson) {
@@ -666,19 +671,19 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError($sLessonObj->getError());
         }
 
-        $rsLessonLogArr = array(
-            'reschleslog_slesson_id' => $lessonRow['slesson_id'],
-            'reschleslog_reschedule_by' => UserAuthentication::getLoggedUserId(),
-            'reschleslog_user_type' => User::USER_TYPE_LEANER,
-            'reschleslog_comment' => $post['reschedule_lesson_msg'],
+        $lessonResLogArr = array(
+            'lesreschlog_slesson_id' => $lessonRow['slesson_id'],
+            'lesreschlog_reschedule_by' => UserAuthentication::getLoggedUserId(),
+            'lesreschlog_user_type' => User::USER_TYPE_LEANER,
+            'lesreschlog_comment' => $post['reschedule_lesson_msg'],
         );
 
-        $rsLessonLogObj = new RescheduledLessonLog();
-        $rsLessonLogObj->assignValues($rsLessonLogArr);
+        $lessonResLogObj = new LessonRescheduleLog();
+        $lessonResLogObj->assignValues($lessonResLogArr);
 
-        if (!$rsLessonLogObj->save()) {
+        if (!$lessonResLogObj->save()) {
             $db->rollbackTransaction();
-            FatUtility::dieJsonError($rsLessonLogObj->getError());
+            FatUtility::dieJsonError($lessonResLogObj->getError());
         }
 
         $db->commitTransaction();
@@ -1479,7 +1484,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $post = FatApp::getPostedData();
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
-        $date =  FatApp::getPostedData('date',FatUtility::VAR_DATE,'');
+        $date =  FatApp::getPostedData('date',FatUtility::VAR_STRING,'');
         $startTime = FatApp::getPostedData('startTime',FatUtility::VAR_STRING,'');
         $endTime = FatApp::getPostedData('endTime',FatUtility::VAR_STRING,'');
         $teacherId= FatApp::getPostedData('teacherId',FatUtility::VAR_INT,0);
