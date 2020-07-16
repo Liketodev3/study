@@ -17,7 +17,8 @@ $commonHeadData = array(
 
 $this->includeTemplate( '_partial/header/common-head.php', $commonHeadData, false);
 echo $this->writeMetaTags();
-echo $this->getJsCssIncludeHtml(!CONF_DEVELOPMENT_MODE);
+// echo $this->getJsCssIncludeHtml(!CONF_DEVELOPMENT_MODE);
+echo $this->getJsCssIncludeHtml(false);
 $commonHeadHtmlData = array(
 	'bodyClass'         =>   $bodyClass,
 	'includeEditor'	    =>   $includeEditor
