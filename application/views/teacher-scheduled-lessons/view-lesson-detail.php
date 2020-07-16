@@ -22,11 +22,11 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 }
 
 $chat_group_id = $lessonData['slesson_grpcls_id']>0 ? $lessonData['grpcls_title'] : "LESSON-".$lessonData['slesson_id'];
-
+$canEnd = ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $endTime < $curDate);
 ?>
 <script type="text/javascript">
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
-var is_time_up = '<?php echo $endTime<$curDate ?>';
+var is_time_up = '<?php echo $endTime > 0 && $endTime<$curDate ?>';
 
 var lesson_joined = '<?php echo $lessonData['slesson_teacher_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time']>0 ?>';
@@ -42,6 +42,8 @@ var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>'
 var chat_avatar = "<?php echo $teacherImage; ?>";
 var chat_friends = "<?php echo $lessonData['learnerId']; ?>";
 
+var canEnd = '<?php echo $canEnd ?>';
+
 var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","avatarURL":"<?php echo $teacherImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['teacherUrlName']; ?>", "role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
 
 var CometJsonLearnerData = [{"userId":"<?php echo $lessonData['learnerId']; ?>","fname":"<?php echo $lessonData['learnerFname']; ?>","avatarURL":"<?php echo $studentImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['learnerUrlName']; ?>","role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_LEANER]; ?>"}];
@@ -52,9 +54,14 @@ var CometJsonFriendData = {"lessonId":"<?php echo $lessonData['slesson_id'] ?>",
 
 createUserCometChatApi(CometJsonData,CometJsonFriendData);
 
-if(lesson_joined && !lesson_completed){
+if(!is_time_up && lesson_joined && !lesson_completed){
     joinLesson(CometJsonData, CometJsonFriendData);
 }
+
+if(canEnd){
+    $("#endL").show();
+}
+
 
 jQuery(document).ready(function () {
     <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
@@ -161,10 +168,10 @@ $(function(){
         }
     }
     <?php } ?>
-    
+
     if(is_time_up=='1'){
         endLessonConfirm();
-    }else{   
+    }else{
         $('#end_lesson_timer').countdowntimer({
             startDate : "<?php echo $curDate; ?>",
             dateAndTime : "<?php echo $endTime; ?>",
@@ -202,6 +209,7 @@ function endLessonConfirm(){
             }
         }
     });
+    $("#endL").show();
     $("#end_lesson_time_div").hide();
 }
 </script>
