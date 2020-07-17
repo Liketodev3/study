@@ -495,13 +495,13 @@ ALTER TABLE `tbl_scheduled_lesson_details` ADD `sldetail_learner_google_calendar
 -- Table structure for table `lesson_reschedule_log`
 --
 
-CREATE TABLE `tbl_reschedule_lesson_log` (
-  `reschleslog_id` int(11) NOT NULL,
-  `reschleslog_slesson_id` int(11) NOT NULL,
-  `reschleslog_reschedule_by` int(11) NOT NULL,
-  `reschleslog_user_type` int(11) NOT NULL,
-  `reschleslog_comment` TEXT NOT NULL,
-  `reschleslog_added_on` datetime NOT NULL
+CREATE TABLE `tbl_lesson_reschedule_log` (
+  `lesreschlog_id` int(11) NOT NULL,
+  `lesreschlog_slesson_id` int(11) NOT NULL,
+  `lesreschlog_reschedule_by` int(11) NOT NULL,
+  `lesreschlog_user_type` int(11) NOT NULL,
+  `lesreschlog_comment` TEXT NOT NULL,
+  `lesreschlog_added_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -511,8 +511,8 @@ CREATE TABLE `tbl_reschedule_lesson_log` (
 --
 -- Indexes for table `lesson_reschedule_log`
 --
-ALTER TABLE `tbl_reschedule_lesson_log`
-  ADD PRIMARY KEY (`reschleslog_id`);
+ALTER TABLE `tbl_lesson_reschedule_log`
+  ADD PRIMARY KEY (`lesreschlog_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -521,5 +521,5 @@ ALTER TABLE `tbl_reschedule_lesson_log`
 --
 -- AUTO_INCREMENT for table `lesson_reschedule_log`
 --
-ALTER TABLE `tbl_reschedule_lesson_log`
-  MODIFY `reschleslog_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tbl_lesson_reschedule_log`
+  MODIFY `lesreschlog_id` int(11) NOT NULL AUTO_INCREMENT;
