@@ -395,8 +395,8 @@ body {
     .nav.nav--primary > ul > li.nav__dropdown.nav__dropdown--account .nav__dropdown-target {
 		    left: auto;
     right: 0;}
-	
-	
+
+
 
     html.show-nav-js .nav.nav--primary-offset {
         opacity: 1;
@@ -541,7 +541,7 @@ body {
     .nav.nav--primary > ul > li.nav__dropdown.nav__dropdown--account .nav__dropdown-target {
         right: 0;
         left: auto;
-		
+
     }
 }
 
@@ -718,7 +718,7 @@ body {
 }
 
 .group.group--social .btn {
-    margin: 0 0;
+    /* margin: 0 0; */
     float: left;
     width: 48%;
 }
@@ -730,7 +730,13 @@ body {
 .group.group--social .btn .svg-icon {
     position: absolute;
     left: 15px;
-    top: 12px;
+    top: 8px;
+}
+
+.group.group--social a img {
+  width: 48%;
+height: 48px;
+max-width: 100%;
 }
 
 
@@ -1625,7 +1631,7 @@ body {
     }
 
     .links--vertical li a, .links--vertical.footer_contact_details li {
-        color: var(--color-dark)!important; 
+        color: var(--color-dark)!important;
     }
 
     .links--vertical li:first-child {
@@ -1695,7 +1701,7 @@ body {
     .footer-bottom .toggle__target {
         display: block !important;
     }
-@media only screen and (min-width: 768px) and (max-width: 1024px) {		
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
 html.show-dashboard-js .overlay{     z-index: 0;     top: 60px;}
 }
 }

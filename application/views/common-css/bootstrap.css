@@ -3665,8 +3665,11 @@ img {
 .btn--social-fb {
     background-color: #3a5795;
     border-color: #3a5795;
-    height: 50px;
-    line-height: 50px;
+    height: 43px;
+    line-height: 41px;
+    margin-top: 2px;
+    margin-right: 5px;
+
 }
 
 .btn--social-gp {
@@ -3685,7 +3688,7 @@ img {
 .btn--social-fb .svg-icon,
 .btn--social-gp .svg-icon {
     width: 24px;
-    height: 24px;
+    height: 26px;
     display: inline-block;
     vertical-align: middle;
     margin: 0 5px 0 0;

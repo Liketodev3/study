@@ -8,18 +8,8 @@
 	  </span> <?php echo Label::getLabel('LBL_Facebook'); ?>
 	</a>
 
-	<a class="btn btn--social-gp btn--block" href="<?php echo CommonHelper::generateUrl('GuestUser', 'socialMediaLogin',array('google', $userType)); ?>">
-		<span class="svg-icon">
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 510 510" style="enable-background:new 0 0 510 510;" xml:space="preserve" width="18px" height="18px">
-            <g>
-            <g>
-            <path fill="#f14336" d="M286.875,229.5v63.75h150.45c-15.3,89.25-86.7,153-175.95,153c-104.55,0-191.25-86.7-191.25-191.25
-            s86.7-191.25,191.25-191.25c53.55,0,99.45,22.95,132.6,58.65l45.9-45.9c-45.9-45.9-107.1-76.5-178.5-76.5
-            c-140.25,0-255,114.75-255,255s114.75,255,255,255s242.25-114.75,242.25-255v-25.5H286.875z"></path>
-            </g>
-            </g>
-            </svg>
-	  </span> <?php echo Label::getLabel('LBL_Google'); ?>
+	<a class="" href="<?php echo CommonHelper::generateUrl('GuestUser', 'socialMediaLogin',array('google', $userType)); ?>">
+        <img src="<?php echo CONF_WEBROOT_URL; ?>images/google_login_btn.png"/>
 	</a>
 	<span class="-gap"></span>
 	<p class="-align-center"><?php echo Label::getLabel('LBL_Or'); ?></p>
