@@ -1,4 +1,5 @@
 var isLessonCancelAjaxRun = false;
+var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
 	lessonFeedback = function (lDetailId){
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','lessonFeedback',[lDetailId]),'',function(t){
 			$.facebox( t,'facebox-medium');
@@ -40,10 +41,27 @@ var isLessonCancelAjaxRun = false;
     var slot = 0;
 
     setUpLessonSchedule = function(teacherId,lDetailId,startTime,endTime,date){
+				rescheduleReason = '';
+				if(isRescheduleRequest) {
+						var rescheduleReason = $('#reschedule-reason-js').val();
+						if($.trim(rescheduleReason) == ""){
+							alert(langLbl.requriedRescheduleMesssage);
+							return false;
+						}
+				}
+					console.log(isRescheduleRequest,'isRescheduleRequest');
+
 
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','isSlotTaken'),'teacherId='+teacherId +'&startTime='+startTime+'&endTime='+endTime+'&date='+date,function(t){
             t = JSON.parse(t);
             slot = t.count;
+
+						var ajaxData = 'teacherId='+teacherId +'&lDetailId='+lDetailId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date;
+
+						if(isRescheduleRequest){
+							ajaxData += '&rescheduleReason='+rescheduleReason+'&isRescheduleRequest='+isRescheduleRequest;
+
+						}
 
             if(slot > 0){
                 $.confirm({
@@ -55,7 +73,8 @@ var isLessonCancelAjaxRun = false;
                             btnClass: 'btn btn--primary',
                             keys: ['enter', 'shift'],
                             action: function(){
-                                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), 'teacherId='+teacherId +'&lDetailId='+lDetailId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
+
+                                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function(doc) {
                                 $.facebox.close();
                                 location.reload();
                                 });
@@ -71,7 +90,8 @@ var isLessonCancelAjaxRun = false;
                     }
                 });
             }else{
-                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), 'teacherId='+teacherId+'&lDetailId='+lDetailId+'&startTime='+startTime+'&endTime='+endTime+'&date='+date, function(doc) {
+							
+                fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function(doc) {
                     $.facebox.close();
                     location.reload();
                 });

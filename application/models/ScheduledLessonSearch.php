@@ -3,6 +3,7 @@ class ScheduledLessonSearch extends SearchBase
 {
     private $isTeacherSettingsJoined;
     private $isOrderJoined;
+    private $isScheduledLessonDetailJoined;
 
     public function __construct($doNotCalculateRecords = true, $joinDetails = true)
     {
@@ -10,6 +11,7 @@ class ScheduledLessonSearch extends SearchBase
 
         $this->isTeacherSettingsJoined = false;
         $this->isOrderJoined = false;
+        $this->isScheduledLessonDetailJoined = false;
 
         if (true === $doNotCalculateRecords) {
             $this->doNotCalculateRecords();
@@ -17,6 +19,7 @@ class ScheduledLessonSearch extends SearchBase
 
         if($joinDetails === true){
             $this->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id = slns.slesson_id', 'sld');
+            $this->isScheduledLessonDetailJoined = true;
         }
     }
 
@@ -70,6 +73,14 @@ class ScheduledLessonSearch extends SearchBase
     public function joinGroupClass()
     {
         $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
+    }
+
+    public function joinScheduledLessonDetail()
+    {
+        if($this->isScheduledLessonDetailJoined === false) {
+            $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
+            $this->isScheduledLessonDetailJoined =  true;
+        }
     }
 
 

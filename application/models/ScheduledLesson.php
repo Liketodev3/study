@@ -10,6 +10,7 @@ class ScheduledLesson extends MyAppModel
     const STATUS_CANCELLED = 4;
     const STATUS_UPCOMING = 6;
     const STATUS_ISSUE_REPORTED = 7;
+    const STATUS_RESCHEDULED = 8;
 
     public function __construct($id = 0)
     {
@@ -28,7 +29,8 @@ class ScheduledLesson extends MyAppModel
             static::STATUS_COMPLETED	=>	Label::getLabel('LBL_Completed', $langId),
             static::STATUS_CANCELLED	=>	Label::getLabel('LBL_Cancelled', $langId),
             static::STATUS_UPCOMING	=>	Label::getLabel('LBL_Upcoming', $langId),
-            static::STATUS_ISSUE_REPORTED	=>	Label::getLabel('LBL_Issue_Reported_Status', $langId)
+            static::STATUS_ISSUE_REPORTED	=>	Label::getLabel('LBL_Issue_Reported_Status', $langId),
+            static::STATUS_RESCHEDULED	=>	Label::getLabel('LBL_Rescheduled', $langId),
         );
     }
 

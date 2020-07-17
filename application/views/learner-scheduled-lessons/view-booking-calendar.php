@@ -3,8 +3,10 @@
 <?php $teacherBookingBefore = (!empty($teacherBookingBefore)) ? $teacherBookingBefore : 0;
 $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
+$isRescheduleRequest = (!empty($isRescheduleRequest));
 ?>
 <script>
+	var isRescheduleRequest = <?php  echo (!empty($isRescheduleRequest)) ? 1 : 0 ; ?>;
 	var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
 	var timeInterval;
 	var seconds = 2;
@@ -398,10 +400,25 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 </script>
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
 <div class="calendar-view">
+
+	<?php if($isRescheduleRequest) { ?>
+	<div class="box">
+	<h4><?php echo Label::getLabel('Lbl_Reschedule_Reason'); ?><span class="spn_must_field">*</span></h4>
+		<?php
+		$commentField =  $rescheduleRequestfrm->getField('reschedule_lesson_msg');
+		$commentField->addFieldTagAttribute('placeholder',Label::getLabel('Lbl_Reschedule_Reason_*'));
+		$commentField->addFieldTagAttribute('id','reschedule-reason-js');
+		echo $commentField->getHTML(); ?>
+	</div>
+	<br>
+	<br>
+ <?php } ?>
+
 <div class="row">
 <div class="col-sm-6">
 	<h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
 </div>
+
 <div class="col-sm-6">
 	<div class="col-sm-6">
 		<div class="cal-status">
@@ -418,9 +435,13 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 		</div>
 	</div>
 </div>
+
 </div>
+
 <span> <?php echo MyDate::displayTimezoneString();?> </span>
+
 <div id='d_calendar'></div>
+
 </div>
 
 <style>

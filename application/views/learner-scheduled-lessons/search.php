@@ -8,8 +8,11 @@ $date = new DateTime("now", new DateTimeZone($user_timezone));
 $curDate = $date->format('Y-m-d');
 $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
 $curDateTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
+?>
 
+<span class="-color-primary text-right"><?php echo Label::getLabel('LBL_Pending_for_Reschedule'); ?></span>
 
+<?php
 foreach( $lessonArr as $key=>$lessons ){ ?>
 <div class="col-list-group">
 <?php if ($key!='0000-00-00') {  ?>
@@ -30,7 +33,15 @@ foreach ( $lessons as $lesson ) {
 	if ( $lesson['is_trial'] == 1 ) {
 		$action = 'free_trial';
 	}
-	//echo "<pre>"; print_r( $lesson ); echo "</pre>";
+	$lessonsStatus = $statusArr[$lesson['sldetail_learner_status']];
+	$lesson['lessonReschedulelogId'] =  FatUtility::int($lesson['lessonReschedulelogId']);
+
+	if($lesson['lessonReschedulelogId'] > 0) {
+		$lessonsStatus = Label::getLabel('LBL_Rescheduled');
+		if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
+			$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
+		}
+	}
 ?>
 	<div class="col-list">
 		<div class="d-lg-flex align-items-center">
@@ -67,7 +78,8 @@ foreach ( $lessons as $lesson ) {
 								<span class="span-right">
 									<h4>
 									<?php
-										echo MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_start_time'], true , $user_timezone );
+										echo MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_start_time'], true , $user_timezone ).' - ';
+										echo MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_end_time'], true , $user_timezone );
 									?>
 									</h4>
 									<?php
@@ -79,7 +91,7 @@ foreach ( $lessons as $lesson ) {
 
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
-							<span class="span-right"><?php echo $statusArr[$lesson['sldetail_learner_status']]; ?></span>
+							<span class="span-right"><?php echo $lessonsStatus; ?></span>
 						</li>
 
 						<?php if($lesson['order_is_paid'] == Order::ORDER_IS_CANCELLED) {?>
@@ -106,15 +118,16 @@ foreach ( $lessons as $lesson ) {
 								<br>
 							<?php }
 							if( $lesson['slesson_date'] != "0000-00-00" ){
-								$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
-								$arrReplacements = array(
-									'{n}'	=>	$lesson['op_lesson_duration'],
-									'{trial-or-paid}'	=>	($lesson['is_trial']) ? Label::getLabel('LBL_Trial') : '',
-								);
-								foreach( $arrReplacements as $key => $val ){
-									$str = str_replace( $key, $val, $str );
-								}
-								echo $str;
+								// $str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
+								// $str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
+								// $arrReplacements = array(
+								// 	'{n}'	=>	$lesson['op_lesson_duration'],
+								// 	'{trial-or-paid}'	=>	($lesson['is_trial']) ? Label::getLabel('LBL_Trial') : '',
+								// );
+								// foreach( $arrReplacements as $key => $val ){
+								// 	$str = str_replace( $key, $val, $str );
+								// }
+								// echo $str;
 							} ?>
 							</span>
 						</li>

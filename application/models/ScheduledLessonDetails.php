@@ -15,6 +15,11 @@ class ScheduledLessonDetails extends MyAppModel
         return $srch;
     }
 
+    public static function tblFld($key)
+    {
+        return static::DB_TBL_PREFIX . $key;
+    }
+
     public function save()
     {
         if ($this->getMainTableRecordId() == 0) {
@@ -57,6 +62,34 @@ class ScheduledLessonDetails extends MyAppModel
         return $srch;
     }
 
+    public static function getLessonDetailSearchObj() : object
+    {
+        $srch = self::getSearchObj();
+        $srch->joinScheduledLesson();
+        $srch->joinTeacher();
+        $srch->joinOrder();
+        $srch->joinLearner();
+        $srch->joinTeacherCredentials();
+        $srch->joinLessonLanguage();
+        $srch->addMultipleFields(
+            array(
+                'sldetail_id',
+                'slesson_date',
+                'slesson_start_time',
+                'slesson_end_time',
+                'slesson_status',
+                'slesson_id',
+                'sldetail_learner_status',
+                'ul.user_id as learnerId',
+                'ut.user_id as teacherId',
+                'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+                'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+                'IFNULL(t_sl_l.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
+            )
+        );
+        return $srch;
+    }
+
 	public static function getScheduledRecordsByLessionId($recordId, $attr = null)
     {
         $db = FatApp::getDb();
@@ -73,6 +106,8 @@ class ScheduledLessonDetails extends MyAppModel
                 'slesson_date',
                 'slesson_start_time',
                 'slesson_end_time',
+                'slesson_status',
+                'sldetail_learner_status',
                 'ul.user_id as learnerId',
                 'ul.user_first_name as learnerFname',
                 'ul.user_last_name as learnerLname',
@@ -85,7 +120,7 @@ class ScheduledLessonDetails extends MyAppModel
         );
         $cnd = $srch->addCondition(static::tblFld('learner_status'), '=', ScheduledLesson::STATUS_SCHEDULED);
         $cnd->attachCondition(static::tblFld('learner_status'), '=', ScheduledLesson::STATUS_NEED_SCHEDULING);
-        // echo $srch->getQuery();die;
+        echo $srch->getQuery();die;
 
         $rs = $srch->getResultSet();
         $rows = $db->fetchAll($rs);
