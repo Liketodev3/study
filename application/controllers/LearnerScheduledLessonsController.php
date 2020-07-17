@@ -715,7 +715,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'slesson_date' => '',
             'slesson_end_date' => '',
             'slesson_start_time' => '',
-            'slesson_end_time' => ''
+            'slesson_end_time' => '',
+            'slesson_teacher_join_time' => '',
         );
 
         $lessonId = $lessonRow['slesson_id'];
@@ -849,7 +850,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                             );
         $getResultSet =  $getLessonDetailObj->getResultSet();
         $lessonDetail  = $db->fetch($getResultSet);
-
         if(empty($lessonDetail)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }

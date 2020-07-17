@@ -111,3 +111,6 @@ input[name=teach_language_name].ui-autocomplete-loading {
 .profile-progress {
   padding-right: 10px;
 }
+.search-lesson-listing{
+  padding-bottom: 10px;
+}

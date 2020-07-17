@@ -8,11 +8,18 @@ $date = new DateTime("now", new DateTimeZone($user_timezone));
 $curDate = $date->format('Y-m-d');
 $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
 $curDateTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
-?>
-
-<span class="-color-primary text-right"><?php echo Label::getLabel('LBL_Pending_for_Reschedule'); ?></span>
-
+if(!empty($lessonArr)) { ?>
+<div class="col-md-12 text-right">
+<strong class="-color-primary span-right"><span class="spn_must_field">*</span> <?php
+$label =  Label::getLabel('LBL_All_times_listed_are_in_your_selected_{timezone}');
+$getTimeZoneString = MyDate::displayTimezoneString(false);
+$label = str_replace('{timezone}', $getTimeZoneString, $label);
+echo $label;
+?></strong>
+</div>
 <?php
+}
+
 foreach( $lessonArr as $key=>$lessons ){ ?>
 <div class="col-list-group">
 <?php if ($key!='0000-00-00') {  ?>

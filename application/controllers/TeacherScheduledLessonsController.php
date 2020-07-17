@@ -494,7 +494,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             'slesson_date' => '0000-00-00',
             'slesson_end_date' => '0000-00-00',
             'slesson_start_time' => '00:00:00',
-            'slesson_end_time' => '00:00:00'
+            'slesson_end_time' => '00:00:00',
+            'slesson_teacher_join_time' => '00:00:00',
         );
         $sLessonObj->assignValues($dataArr);
         $db->startTransaction();

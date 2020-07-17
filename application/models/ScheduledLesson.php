@@ -176,7 +176,10 @@ class ScheduledLesson extends MyAppModel
 		foreach($lessonDetailRows as $lessonDetailRow)
         {
             $sLessonDetailObj = new ScheduledLessonDetails($lessonDetailRow['sldetail_id']);
-            $sLessonDetailObj->assignValues(array('sldetail_learner_status' =>	ScheduledLesson::STATUS_NEED_SCHEDULING));
+            $sLessonDetailObj->assignValues(array(
+                'sldetail_learner_status' =>	ScheduledLesson::STATUS_NEED_SCHEDULING,
+                'sldetail_learner_join_time' =>	'',
+            ));
             if (!$sLessonDetailObj->save()) {
                 $this->error = $sLessonDetailObj->getError();
                 return false;

@@ -87,10 +87,14 @@ class MyDate extends FatDate
         return $number;
     }
 
-    public static function displayTimezoneString()
+    public static function displayTimezoneString($echoTimeZone =  true)
     {
         $user_timezone = self::getUserTimeZone();
-        echo "Timezone :  GMT".CommonHelper::getDateOrTimeByTimeZone($user_timezone, ' P')."";
+        $string =  Label::getLabel("LBL_Timezone_:").' GMT'.CommonHelper::getDateOrTimeByTimeZone($user_timezone, ' P')."";
+        if($echoTimeZone) {
+            echo $string;
+        }
+        return $string;
     }
 
     public static function getDatesFromRange($start, $end, $format = 'Y-m-d')
