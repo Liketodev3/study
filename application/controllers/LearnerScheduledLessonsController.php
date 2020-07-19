@@ -252,6 +252,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch = new stdClass();
         $this->searchLessons($srch);
         $srch->joinGroupClass();
+		$srch->joinLessonRescheduleLog();
         $srch->doNotCalculateRecords();
         $srch->addCondition('sld.sldetail_id', '=', $lDetailId);
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
@@ -260,6 +261,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'grpcls_title',
             'ul.user_first_name as learnerFname',
             'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+			'IFNULL(lrsl.lesreschlog_id,0) as lessonReschedulelogId',
             'ul.user_url_name',
             'IFNULL(learnercountry_lang.country_name, learnercountry.country_code) as learnerCountryName',
             /* 'ul.user_timezone as learnerTimeZone', */

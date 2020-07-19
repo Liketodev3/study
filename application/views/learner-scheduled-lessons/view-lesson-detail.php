@@ -17,6 +17,17 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
 
 $canEnd = ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $endTime<$curDate);
 $chat_group_id = $lessonData['slesson_grpcls_id']>0 ? $lessonData['grpcls_title'] : "LESSON-".$lessonData['slesson_id'];
+
+$lessonsStatus = $statusArr[$lessonData['sldetail_learner_status']];
+	$lessonData['lessonReschedulelogId'] =  FatUtility::int($lessonData['lessonReschedulelogId']);
+
+	if($lessonData['lessonReschedulelogId'] > 0) {
+		$lessonsStatus = Label::getLabel('LBL_Rescheduled');
+		if($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
+			$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
+		}
+	}
+	
 ?>
 <script>
 var is_time_up = '<?php echo $endTime > 0 && $endTime<$curDate ?>';
@@ -329,7 +340,7 @@ $(function(){
                                                     <?php echo Label::getLabel('LBL_Status'); ?>
                                                 </span>
                                                 <span class="span-right">
-                                                    <?php echo $statusArr[$lessonData['sldetail_learner_status']]; ?>
+                                                    <?php echo $lessonsStatus; ?>
                                                 </span>
                                             </li>
                                             <li>

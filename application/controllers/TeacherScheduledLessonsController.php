@@ -209,6 +209,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->searchLessons($srch);
         $srch->joinGroupClass();
         $srch->doNotCalculateRecords();
+		$srch->joinLessonRescheduleLog();
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
         $srch->joinTeacherCountry($this->siteLangId);
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
@@ -217,6 +218,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             'slns.slesson_teacher_id as teacherId',
             'ut.user_first_name as teacherFname',
             'ut.user_url_name as teacherUrlName',
+			'IFNULL(lrsl.lesreschlog_id,0) as lessonReschedulelogId',
             'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
             'IFNULL(teachercountry_lang.country_name, teachercountry.country_code) as teacherCountryName',
             /* 'ut.user_timezone as teacherTimeZone', */

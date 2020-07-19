@@ -23,6 +23,16 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 
 $chat_group_id = $lessonData['slesson_grpcls_id']>0 ? $lessonData['grpcls_title'] : "LESSON-".$lessonData['slesson_id'];
 $canEnd = ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $endTime < $curDate);
+
+$lessonsStatus = $statusArr[$lessonData['sldetail_learner_status']];
+$lessonData['lessonReschedulelogId'] =  FatUtility::int($lessonData['lessonReschedulelogId']);
+
+if($lessonData['lessonReschedulelogId'] > 0) {
+	$lessonsStatus = Label::getLabel('LBL_Rescheduled');
+	if($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
+		$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
+	}
+}
 ?>
 <script type="text/javascript">
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
@@ -341,7 +351,7 @@ function endLessonConfirm(){
                                             <?php } ?>
                                             <li>
                                                 <span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
-                                                <span class="span-right"><?php echo $statusArr[$lessonData['slesson_status']]; ?></span>
+                                                <span class="span-right"><?php echo $lessonsStatus; ?></span>
                                             </li>
 
                                           <li>
