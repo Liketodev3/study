@@ -38,7 +38,7 @@ if($lessonData['lessonReschedulelogId'] > 0 &&
 ?>
 <script type="text/javascript">
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
-var is_time_up = '<?php echo $endTime > 0 && $endTime<$curDate ?>';
+var is_time_up = '<?php echo $endTime > 0 && $endTime < $curDate ?>';
 
 var lesson_joined = '<?php echo $lessonData['slesson_teacher_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time']>0 ?>';
@@ -64,13 +64,16 @@ var CometJsonData = CometJsonTeacherData.concat(CometJsonLearnerData);
 
 var CometJsonFriendData = {"lessonId":"<?php echo $lessonData['slesson_id'] ?>","userId":"<?php echo $chatId;?>","friendId":"<?php echo $lessonData['learnerId']; ?>"};
 
+var checkEveryMinuteStatusVar = null;
+var checkNewFlashCardsVar = null;
 createUserCometChatApi(CometJsonData,CometJsonFriendData);
 
 if(!is_time_up && lesson_joined && !lesson_completed){
     joinLesson(CometJsonData, CometJsonFriendData);
 }
 
-if(canEnd){
+if(canEnd && !lesson_completed ){
+	console.log('isTeacherEndLesson');
     $("#endL").show();
 }
 
@@ -95,7 +98,7 @@ function joinLessonButtonAction(){
 }
 
 function endLessonButtonAction(){
-    $("#joinL").show();
+    $("#joinL").hide();
     $("#endL").hide();
     $("#lesson_actions").show();
     $('.screen-chat-js').hide();
@@ -113,7 +116,7 @@ function checkEveryMinuteStatus(){
     checkEveryMinuteStatusVar = setInterval(function(){
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','checkEveryMinuteStatus',[slesson_id]),'',function(t){
             var t = JSON.parse(t);
-            if(t.sldetail_learner_status > 1){
+            if(t.sldetail_learner_status > 1 && !isTeacherEndLesson){
 
             $.confirm({
                 title: langLbl.Confirm,
@@ -181,7 +184,7 @@ $(function(){
     }
     <?php } ?>
 
-    if(is_time_up=='1'){
+    if(is_time_up == '1' && !lesson_completed){
         endLessonConfirm();
     }else{
         $('#end_lesson_timer').countdowntimer({
@@ -189,6 +192,7 @@ $(function(){
             dateAndTime : "<?php echo $endTime; ?>",
             size : "lg",
             timeUp : function(){
+				
                 if(lesson_completed) return;
                 endLessonConfirm();
             }

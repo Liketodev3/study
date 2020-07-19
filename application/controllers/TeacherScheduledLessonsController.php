@@ -1102,12 +1102,17 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->searchLessons($srch);
         $srch->doNotCalculateRecords();
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
+        $srch->addMultipleFields(['slesson_teacher_end_time']);
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
         if (empty($lessonRow)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         /* ] */
+		 if ($lessonRow['slesson_teacher_end_time'] > 0) {
+			 FatUtility::dieJsonError(Label::getLabel('LBL_You_already_end_lesson!'));
+		 }
+		 
         $to_time = strtotime($lessonRow['slesson_date'].' '.$lessonRow['slesson_start_time']);
         $from_time = strtotime(date('Y-m-d H:i:s'));
         $diff = round(abs($to_time - $from_time) / 60, 2);
