@@ -40,7 +40,9 @@ if (strtotime($curDate) == strtotime($key)) {
 	$lessonsStatus = $statusArr[$lesson['sldetail_learner_status']];
 	$lesson['lessonReschedulelogId'] =  FatUtility::int($lesson['lessonReschedulelogId']);
 
-	if($lesson['lessonReschedulelogId'] > 0) {
+	if($lesson['lessonReschedulelogId'] > 0 && 
+		( $lesson['sldetail_learner_status']== ScheduledLesson::STATUS_NEED_SCHEDULING ||
+		$lesson['sldetail_learner_status']== ScheduledLesson::STATUS_SCHEDULED ) ) {
 		$lessonsStatus = Label::getLabel('LBL_Rescheduled');
 		if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
 			$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');

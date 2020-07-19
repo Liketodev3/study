@@ -28,19 +28,23 @@ class TeacherLessonReview extends MyAppModel
     }
 
 
-    public static function getTeacherTotalReviews($userId, $lessonId = 0)
+    public static function getTeacherTotalReviews($teachcerId, $lessonId = 0, $postedBy = null)
     {
-        $userId = FatUtility::int($userId);
+        $teachcerId = FatUtility::int($teachcerId);
         $lessonId = FatUtility::int($lessonId);
+        $postedBy = FatUtility::int($postedBy);
         $srch = new TeacherLessonReviewSearch();
         $srch->joinLearner();
         $srch->joinTeacher();
         $srch->addMultipleFields(array('count(*) as numOfReviews'));
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $srch->addCondition('tlreview_teacher_user_id', '=', $userId);
+        $srch->addCondition('tlreview_teacher_user_id', '=', $teachcerId);
         if ($lessonId > 0) {
             $srch->addCondition('tlreview_lesson_id', '=', $lessonId);
+        }
+		if ($postedBy != null) {
+            $srch->addCondition('tlreview_postedby_user_id', '=', $postedBy);
         }
         $srch->addGroupby('tlreview_teacher_user_id');
         //$srch->addCondition('tlr.tlreview_status', '=', static::STATUS_APPROVED);

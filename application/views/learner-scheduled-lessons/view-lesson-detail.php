@@ -1,4 +1,5 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+<?php 
+defined('SYSTEM_INIT') or die('Invalid Usage.');
 
 $user_timezone = MyDate::getUserTimeZone();
 $curDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
@@ -7,26 +8,29 @@ $startTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($l
 
 $endTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($lessonData['slesson_end_date'] .' '. $lessonData['slesson_end_time']), true , $user_timezone );
 
-//$chatId = $lessonData['sldetail_id']."_".UserAuthentication::getLoggedUserId()."_learner";
 $chatId = UserAuthentication::getLoggedUserId();
-$countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacherId'],$lessonData['sldetail_id']);
+$countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacherId'],$lessonData['slesson_id'],$chatId);
 $studentImage = '';
+
 if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
     $studentImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['learnerId'])).'?'.time();
 }
 
 $canEnd = ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $endTime<$curDate);
-$chat_group_id = $lessonData['slesson_grpcls_id']>0 ? $lessonData['grpcls_title'] : "LESSON-".$lessonData['slesson_id'];
+$chat_group_id = $lessonData['slesson_grpcls_id'] >0 ? $lessonData['grpcls_title'] : "LESSON-".$lessonData['slesson_id'];
 
 $lessonsStatus = $statusArr[$lessonData['sldetail_learner_status']];
-	$lessonData['lessonReschedulelogId'] =  FatUtility::int($lessonData['lessonReschedulelogId']);
+$lessonData['lessonReschedulelogId'] =  FatUtility::int($lessonData['lessonReschedulelogId']);
 
-	if($lessonData['lessonReschedulelogId'] > 0) {
-		$lessonsStatus = Label::getLabel('LBL_Rescheduled');
-		if($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
-			$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
-		}
+if($lessonData['lessonReschedulelogId'] > 0 && ( 
+	$lessonData['sldetail_learner_status']== ScheduledLesson::STATUS_NEED_SCHEDULING ||
+	$lessonData['sldetail_learner_status']== ScheduledLesson::STATUS_SCHEDULED ) ) {
+	$lessonsStatus = Label::getLabel('LBL_Rescheduled');
+	if($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
+		$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
 	}
+}
+	
 	
 ?>
 <script>

@@ -27,7 +27,9 @@ $canEnd = ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED &&
 $lessonsStatus = $statusArr[$lessonData['sldetail_learner_status']];
 $lessonData['lessonReschedulelogId'] =  FatUtility::int($lessonData['lessonReschedulelogId']);
 
-if($lessonData['lessonReschedulelogId'] > 0) {
+if($lessonData['lessonReschedulelogId'] > 0 && 
+	($lessonData['sldetail_learner_status']== ScheduledLesson::STATUS_NEED_SCHEDULING ||
+	$lessonData['sldetail_learner_status']== ScheduledLesson::STATUS_SCHEDULED) ) {
 	$lessonsStatus = Label::getLabel('LBL_Rescheduled');
 	if($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
 		$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');

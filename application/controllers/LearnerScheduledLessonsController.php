@@ -833,8 +833,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         $getLessonDetailObj->addCondition(ScheduledLessonDetails::tblFld('id'),'=', $lDetailId);
         $getLessonDetailObj->addCondition(ScheduledLessonDetails::tblFld('learner_id'),'=', UserAuthentication::getLoggedUserId());
-        $getLessonDetailObj->addCondition(ScheduledLessonDetails::tblFld('learner_join_time'), '=', 0);
-        $getLessonDetailObj->addCondition('slesson_teacher_join_time', '=', 0);
+       // $getLessonDetailObj->addCondition(ScheduledLessonDetails::tblFld('learner_join_time'), '=', 0);
+       // $getLessonDetailObj->addCondition('slesson_teacher_join_time', '=', 0);
         $getLessonDetailObj->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
 
         $getLessonDetailObj->addCondition(ScheduledLessonDetails::tblFld('learner_status'), 'IN', $lessonsStatus);
