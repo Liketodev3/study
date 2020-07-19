@@ -36,17 +36,23 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->searchLessons($srch, $post, true, false);
         // list on lessons not classes in lessons list
         $srch->addCondition('slesson_grpcls_id', '=', 0);
-
+		$srch->joinLessonRescheduleLog();
         $srch->joinIssueReported(User::USER_TYPE_LEANER);
         $srch->addFld(
             array(
             'IFNULL(iss.issrep_status,0) AS issrep_status',
             'IFNULL(iss.issrep_id,0) AS issrep_id',
+			'IFNULL(lrsl.lesreschlog_id,0) as lessonReschedulelogId',
             'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime',
             '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then 0 ELSE 1 END ) as upcomingLessonOrder',
             '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then CONCAT(slns.slesson_date, " ", slns.slesson_start_time) ELSE NOW() END ) as passedLessonsOrder',
 			)
         );
+		
+		 if (!empty($post['status']) && $post['status'] == ScheduledLesson::STATUS_RESCHEDULED) {
+            $srch->addCondition('lrsl.lesreschlog_id', '>', '0');
+        }
+		
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addOrder('upcomingLessonOrder', 'DESC');
 		$srch->addOrder('passedLessonsOrder', 'DESC');
@@ -151,17 +157,21 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
 
         if (isset($post) && !empty($post['status'])) {
-            if ($post['status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) {
-                $srch->addCondition('issrep_id', '>', 0);
-            } elseif ($post['status'] == ScheduledLesson::STATUS_UPCOMING) {
-                // $srch->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
-                $srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
-                $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
-            } else {
-                // if ($post['status'] == ScheduledLesson::STATUS_SCHEDULED) {
-                //     $srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
-                // }
-                $srch->addCondition('slns.slesson_status', '=', $post['status']);
+			 switch ($post['status']) {
+                case ScheduledLesson::STATUS_ISSUE_REPORTED:
+                    $srch->addCondition('issrep_id', '>', 0);
+                break;
+                case ScheduledLesson::STATUS_UPCOMING:
+                    $srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
+                    $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+                    $srch->addCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+                break;
+                case ScheduledLesson::STATUS_RESCHEDULED:
+                break;
+                default:
+                    $srch->addCondition('slns.slesson_status', '=', $post['status']);
+                    $srch->addCondition('sld.sldetail_learner_status', '=', $post['status']);
+                break;
             }
         }
     }

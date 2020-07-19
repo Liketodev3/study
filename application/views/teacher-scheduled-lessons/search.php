@@ -35,7 +35,19 @@ if (strtotime($curDate) == strtotime($key)) {
 ?></h6>
 <?php } ?>
 <div class="col-list-container">
-<?php foreach( $lessons as $lesson ){ ?>
+<?php foreach( $lessons as $lesson ){ 
+
+	$lessonsStatus = $statusArr[$lesson['sldetail_learner_status']];
+	$lesson['lessonReschedulelogId'] =  FatUtility::int($lesson['lessonReschedulelogId']);
+
+	if($lesson['lessonReschedulelogId'] > 0) {
+		$lessonsStatus = Label::getLabel('LBL_Rescheduled');
+		if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
+			$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
+		}
+	}
+	
+?>
 	<div class="col-list">
 		<div class="d-lg-flex align-items-center">
 			<div class="col-xl-4 col-lg-4 col-md-12">
@@ -74,7 +86,7 @@ if (strtotime($curDate) == strtotime($key)) {
 						<?php } ?>
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Status'); ?></span>
-							<span class="span-right"><?php echo $statusArr[$lesson['slesson_status']]; ?></span>
+							<span class="span-right"><?php echo $lessonsStatus; ?></span>
 						</li>
 
 						<?php if($lesson['order_is_paid'] == Order::ORDER_IS_CANCELLED) {?>

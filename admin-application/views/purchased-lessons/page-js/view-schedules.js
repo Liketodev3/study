@@ -21,6 +21,7 @@
 			if(res.status == "1"){
 				  $.mbsmessage( res.msg,true, 'alert alert--success');
 			}else{
+					$(obj).val(oldValue);
 				  $.mbsmessage( res.msg,true, 'alert alert--danger');
 			}
 		});

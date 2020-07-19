@@ -21,6 +21,7 @@
 	$userType = User::getUserTypesArr($adminLangId);
 	$yesAndNoArr = applicationConstants::getYesNoArr($adminLangId);
 	$statusArr = ScheduledLesson::getStatusArr();
+	unset($statusArr[ScheduledLesson::STATUS_RESCHEDULED]);
 	foreach ($arr_flds as $val) {
 		$e = $th->appendElement('th', array(), $val);
 	}

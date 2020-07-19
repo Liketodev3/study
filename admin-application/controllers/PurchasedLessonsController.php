@@ -307,16 +307,17 @@ class PurchasedLessonsController extends AdminBaseController
 
         $slesson_id = FatApp::getPostedData('slesson_id', FatUtility::VAR_INT, 0);
         $status = FatApp::getPostedData('slesson_status', FatUtility::VAR_INT, 0);
-
-        if (1 > $slesson_id || 1 > $status) {
-            Message::addErrorMessage($this->str_invalid_request_id);
-            FatUtility::dieJsonError(Message::getHtml());
+		$statusArr = ScheduledLesson::getStatusArr();
+		unset($statusArr[ScheduledLesson::STATUS_RESCHEDULED]);
+        if (1 > $slesson_id ||  !array_key_exists($status,$statusArr)) {
+             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
 
         $srch = new ScheduledLessonSearch(false);
         $srch->addCondition('slesson_id', '=', $slesson_id);
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
+		
         if (empty($lessonRow)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
@@ -386,10 +387,10 @@ class PurchasedLessonsController extends AdminBaseController
         $db->commitTransaction();
 		/*[ notifications to users */
 		$userNotification = new UserNotifications($lessonRow['sldetail_learner_id']);
-        $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['sldetail_learner_id '], $status, User::USER_TYPE_TEACHER);
+        $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['sldetail_learner_id'], $status, User::USER_TYPE_TEACHER);
 
-		$userNotification = new UserNotifications($lessonRow['sldetail_learner_id']);
-        $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['sldetail_learner_id '],  $status, User::USER_TYPE_LEANER);
+		//$userNotification = new UserNotifications($lessonRow['sldetail_learner_id']);
+        //$userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['sldetail_learner_id '],  $status, User::USER_TYPE_LEANER);
 		/*]*/
 
         $this->set('msg', 'Updated Successfully.');
