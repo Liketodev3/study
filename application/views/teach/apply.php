@@ -12,7 +12,7 @@
 <section class="section section--white section--icons">
 	<div class="container container--narrow">
 		<div class="-align-center section__head">
-			<h2>Why Teach on Weyakyak?</h2>
+			<h2>Why Teach on yoCoach?</h2>
 		</div>
 
 		<div class="section__body">
@@ -59,9 +59,9 @@
 
 					<div class="accordian-group">
 						<div class="accordian accordian-js is-active">
-							<div class="accordian__title accordian__title-js">What is We Yak Yak?</div>
+							<div class="accordian__title accordian__title-js">What is yoCoach?</div>
 							<div class="accordian__body accordian__body-js" style="display: block;">
-								<p>We Yak Yak is an online language-learning platform that connects language learners with qualified language teachers for private sessions through live video chat.</p>
+								<p>yoCoach is an online language-learning platform that connects language learners with qualified language teachers for private sessions through live video chat.</p>
 							</div>
 						</div>
 						<div class="accordian accordian-js">
@@ -71,7 +71,7 @@
 							</div>
 						</div>
 						<div class="accordian accordian-js">
-							<div class="accordian__title accordian__title-js">How do I apply to teach on WeYakYak?</div>
+							<div class="accordian__title accordian__title-js">How do I apply to teach on yoCoach?</div>
 							<div class="accordian__body accordian__body-js" style="display: none;">
 								<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the standard dummy text of the industry since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularized in the 1960s with the release of Letraset</p>
 							</div>

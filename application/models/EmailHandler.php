@@ -200,7 +200,7 @@ class EmailHandler extends FatModel
             '{user_email}' => $data['user_email'],
         );
 
-        if (self::sendMailTpl(FatApp::getConfig('CONF_SITE_OWNER_EMAIL', FatUtility::VAR_STRING, 'weyakyak_admin@dummyid.com'), $tpl, $langId, $vars)) {
+        if (self::sendMailTpl(FatApp::getConfig('CONF_SITE_OWNER_EMAIL', FatUtility::VAR_STRING, 'yocoach_admin@dummyid.com'), $tpl, $langId, $vars)) {
             return true;
         }
         return false;
@@ -214,7 +214,7 @@ class EmailHandler extends FatModel
             '{user_first_name}' => $d['user_first_name'],
             '{user_last_name}' => $d['user_last_name'],
             '{user_full_name}' => $d['user_first_name'] . ' ' . $d['user_last_name'],
-            '{contact_us_email}' => FatApp::getConfig('CONF_CONTACT_EMAIL', FatUtility::VAR_STRING, 'weyakyak_contact_us@dummyid.com'),
+            '{contact_us_email}' => FatApp::getConfig('CONF_CONTACT_EMAIL', FatUtility::VAR_STRING, 'yocoach_contact_us@dummyid.com'),
         );
 
         if (self::sendMailTpl($d['user_email'], $tpl, $langId, $vars)) {

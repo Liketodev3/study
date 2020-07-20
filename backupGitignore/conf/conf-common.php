@@ -13,7 +13,7 @@ define('CONF_UPLOADS_PATH', CONF_INSTALLATION_PATH . 'user-uploads' . DIRECTORY_
 define('CONF_FRONT_END_APPLICATION_DIR', 'application/' );
 define('GIFTCARD_EXPIRATION_DAYS',"+ 30 days");
 define('GIFTCARD_ORDER_LIMIT',"5");
-define('ENCRYPTION_SALT',"WEYAKYAK");
+define('ENCRYPTION_SALT',"YOCOACH");
 
 if(file_exists(CONF_INSTALLATION_PATH.'conf/'.$_SERVER['SERVER_NAME'].'.php')){
 	require_once(CONF_INSTALLATION_PATH.'conf/'.$_SERVER['SERVER_NAME'].'.php');

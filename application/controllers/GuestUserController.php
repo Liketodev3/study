@@ -317,7 +317,7 @@ class GuestUserController extends MyAppController
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_CODE'));
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
         }
-        
+
         $db->commitTransaction();
         $userdata = $userObj->getUserInfo(array(
             'credential_email',
@@ -392,7 +392,7 @@ class GuestUserController extends MyAppController
             'uauth_last_ip' => CommonHelper::getClientIp()
         );
         if (UserAuthentication::saveLoginToken($values)) {
-            $cookieName = UserAuthentication::WEYAKYAKUSER_COOKIE_NAME;
+            $cookieName = UserAuthentication::YOCOACHUSER_COOKIE_NAME;
             $cookres = setcookie($cookieName, $token, $expiry, CONF_WEBROOT_URL);
             return true;
         }
@@ -822,7 +822,7 @@ class GuestUserController extends MyAppController
         }
         $user = $oauth2->userinfo->get();
         //echo "<pre>"; print_r($oauth2->userinfo);die();
-        
+
         $_SESSION['access_token'] = $client->getAccessToken();
         $userGoogleplusEmail = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
         $userGoogleplusId = $user['id'];
@@ -906,7 +906,7 @@ class GuestUserController extends MyAppController
                 Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET"));
                 CommonHelper::redirectUserReferer();
             }
-            
+
             $authentication = new UserAuthentication();
             if (!$authentication->login($userInfo['credential_username'], $userInfo['credential_password'], $_SERVER['REMOTE_ADDR'], false)) {
                 Message::addErrorMessage(Label::getLabel($authentication->getError()));
@@ -1036,10 +1036,10 @@ class GuestUserController extends MyAppController
                 }
                 $db->commitTransaction();
             }
-            
+
             $usrStngObj = new UserSetting($userObj->getMainTableRecordId());
             $usrStngObj->saveData(array('us_google_access_token' => $client->getRefreshToken()));
-            
+
             $userInfo = $userObj->getUserInfo(array(
                 'user_googleplus_id',
                 'credential_username',

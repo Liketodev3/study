@@ -1,7 +1,7 @@
 <?php
 class User extends MyAppModel
 {
-    const ADMIN_SESSION_ELEMENT_NAME = 'weYakYakAdmin';
+    const ADMIN_SESSION_ELEMENT_NAME = 'yoCoachAdmin';
 
     const DB_TBL = 'tbl_users';
     const DB_TBL_PREFIX = 'user_';
