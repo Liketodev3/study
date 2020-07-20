@@ -50,7 +50,7 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
 						}
 				}
 				$.mbsmessage.close();
-				$.mbsmessage(langLbl.requestProcessing, true,'alert alert--process');
+				$.mbsmessage(langLbl.requestProcessing, false,'alert alert--process');
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','isSlotTaken'),'teacherId='+teacherId +'&startTime='+startTime+'&endTime='+endTime+'&date='+date,function(t){
             t = JSON.parse(t);
             slot = t.count;
