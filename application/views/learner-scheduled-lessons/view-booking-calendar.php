@@ -178,7 +178,7 @@ $isRescheduleRequest = (!empty($isRescheduleRequest));
 						$('.tooltipevent').remove();
 					}
 					if(res.msg && res.msg  != ""){
-						$.mbsmessage(res.msg,true,'alert alert--danger');
+						$.mbsmessage(res.msg, true,'alert alert--danger');
 					}
 				});
 

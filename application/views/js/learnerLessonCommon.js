@@ -73,7 +73,7 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
                             btnClass: 'btn btn--primary',
                             keys: ['enter', 'shift'],
                             action: function(){
-																$.mbsmessage(langLbl.requestProcessing,true,'alert alert--process');
+																$.mbsmessage(langLbl.requestProcessing, false,'alert alert--process');
                                 fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function(doc) {
                                 $.facebox.close();
                                 location.reload();
