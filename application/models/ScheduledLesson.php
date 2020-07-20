@@ -134,6 +134,19 @@ class ScheduledLesson extends MyAppModel
 				$this->error = $sLessonDetailObj->getError();
                 return false;
 			}
+            
+            // remove from learner google calendar
+            $token = current(UserSetting::getUserSettings($lessonDetailRow['learnerId']))['us_google_access_token'];
+            if($token){
+                $sLessonDetailObj->loadFromDb();
+                $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
+                
+                if($oldCalId){
+                    SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
+                }
+                $sLessonDetailObj->setFldValue('sldetail_learner_google_calendar_id', '');
+                $sLessonDetailObj->save();
+            }
 
             $start_date = $lessonDetailRow['slesson_date'];
             $start_time = $lessonDetailRow['slesson_start_time'];
@@ -183,6 +196,19 @@ class ScheduledLesson extends MyAppModel
             if (!$sLessonDetailObj->save()) {
                 $this->error = $sLessonDetailObj->getError();
                 return false;
+            }
+            
+            // remove from learner google calendar
+            $token = current(UserSetting::getUserSettings($lessonDetailRow['learnerId']))['us_google_access_token'];
+            if($token){
+                $sLessonDetailObj->loadFromDb();
+                $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
+                
+                if($oldCalId){
+                    SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
+                }
+                $sLessonDetailObj->setFldValue('sldetail_learner_google_calendar_id', '');
+                $sLessonDetailObj->save();
             }
 
             $start_date = $lessonDetailRow['slesson_date'];

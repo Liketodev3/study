@@ -67,4 +67,22 @@ class SocialMedia
         $client->refreshToken($token);
         return $client->isAccessTokenExpired();
     }
+    
+    public static function deleteEventOnGoogleCalendar($token, $eventId)
+    {
+        require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
+        $client = new Google_Client();
+        $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
+        $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
+        $client->refreshToken($token);
+        try{
+            $service = new Google_Service_Calendar($client);
+            $calendarId = 'primary';
+            $service->events->delete($calendarId, $eventId);
+        }catch(exception $e){
+            $msg = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
 }

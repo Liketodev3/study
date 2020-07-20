@@ -120,7 +120,7 @@ class ScheduledLessonDetails extends MyAppModel
         );
         $cnd = $srch->addCondition(static::tblFld('learner_status'), '=', ScheduledLesson::STATUS_SCHEDULED);
         $cnd->attachCondition(static::tblFld('learner_status'), '=', ScheduledLesson::STATUS_NEED_SCHEDULING);
-        echo $srch->getQuery();die;
+        // echo $srch->getQuery();die;
 
         $rs = $srch->getResultSet();
         $rows = $db->fetchAll($rs);
