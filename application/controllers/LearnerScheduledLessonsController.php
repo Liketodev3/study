@@ -550,6 +550,19 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonDetailObj->getError());
         }
+        
+        // remove from student google calendar
+        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        if($token){
+            $sLessonDetailObj->loadFromDb();
+            $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
+            
+            if($oldCalId){
+                SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
+            }
+            $sLessonDetailObj->setFldValue('sldetail_learner_google_calendar_id', '');
+            $sLessonDetailObj->save();
+        }
         /* ] */
 
         /* Also update lesson status for 1 to 1[ */
@@ -561,6 +574,19 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 				FatUtility::dieJsonError($sLessonObj->getError());
 			}
 		}
+        // remove from teacher google calendar
+        $token = current(UserSetting::getUserSettings($lessonRow['teacherId']))['us_google_access_token'];
+        if($token){
+            $sLessonObj->loadFromDb();
+            $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
+            
+            if($oldCalId){
+                SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
+            }
+            
+            $sLessonObj->setFldValue('slesson_teacher_google_calendar_id', '');
+            $sLessonObj->save();
+        }
         /* ] */
 
 		if (!$sLessonDetailObj->refundToLearner(true, true)) {
@@ -951,6 +977,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         // share on student google calendar
         $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
         if($token){
+            $sLessonDetailObj->loadFromDb();
+            $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
+            
+            if($oldCalId){
+                SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
+            }
             $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($lessonDetail['sldetail_id']));
             $google_cal_data = array(
                 'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId),
@@ -972,6 +1004,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         // share on teacher google calendar
         $token = current(UserSetting::getUserSettings($lessonDetail['teacherId']))['us_google_access_token'];
         if($token){
+            $sLessonObj->loadFromDb();
+            $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
+            
+            if($oldCalId){
+                SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
+            }
             $view_url = CommonHelper::generateFullUrl('TeacherScheduledLessons', 'view', array($lessonDetail['slesson_id']));
             $google_cal_data = array(
                 'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId),

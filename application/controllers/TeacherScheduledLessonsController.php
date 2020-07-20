@@ -437,6 +437,19 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
         }
+        
+        // remove from teacher google calendar
+        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        if($token){
+            $sLessonObj->loadFromDb();
+            $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
+            
+            if($oldCalId){
+                SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
+            }
+            $sLessonObj->setFldValue('slesson_teacher_google_calendar_id', '');
+            $sLessonObj->save();
+        }
 
         $db->commitTransaction();
         /* ] */
@@ -514,6 +527,19 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if (!$sLessonObj->save()) {
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
+        }
+        
+        // remove from teacher google calendar
+        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        if($token){
+            $sLessonObj->loadFromDb();
+            $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
+            
+            if($oldCalId){
+                SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
+            }
+            $sLessonObj->setFldValue('slesson_teacher_google_calendar_id', '');
+            $sLessonObj->save();
         }
 
         $lessonResLogArr = array(
