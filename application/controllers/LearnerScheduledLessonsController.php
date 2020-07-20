@@ -550,13 +550,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonDetailObj->getError());
         }
-        
+
         // remove from student google calendar
         $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
         if($token){
             $sLessonDetailObj->loadFromDb();
             $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
-            
+
             if($oldCalId){
                 SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
             }
@@ -579,11 +579,11 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if($token){
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
-            
+
             if($oldCalId){
                 SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
             }
-            
+
             $sLessonObj->setFldValue('slesson_teacher_google_calendar_id', '');
             $sLessonObj->save();
         }
@@ -882,7 +882,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
 
-        if(($lessonDetail['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) && (empty($rescheduleReason) || empty($rescheduleReason))){
+        if(($lessonDetail['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) && (empty($isRescheduleRequest) || empty($rescheduleReason))){
             FatUtility::dieJsonError(Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'));
         }
 
@@ -922,7 +922,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'slesson_end_date' => date('Y-m-d', $endDateTimeStamp),
             'slesson_start_time' => date('H:i:s', $SelectedDateTimeStamp),
             'slesson_end_time' => date('H:i:s', $endDateTimeStamp),
-            'slesson_status' => ScheduledLesson::STATUS_SCHEDULED
+            'slesson_status' => ScheduledLesson::STATUS_SCHEDULED,
+            'slesson_teacher_join_time' => '',
+            'slesson_teacher_end_time' => '',
         );
 
         $sLessonObj = new ScheduledLesson($lessonDetail['slesson_id']);
@@ -933,7 +935,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
 
         $sLessonDetailObj = new ScheduledLessonDetails($lessonDetail['sldetail_id']);
-        $sLessonDetailObj->assignValues(array('sldetail_learner_status'=> ScheduledLesson::STATUS_SCHEDULED));
+        $sLessonDetailObj->assignValues(array('sldetail_learner_status'=> ScheduledLesson::STATUS_SCHEDULED,
+                                                'sldetail_learner_join_time'=>'',
+                                                'sldetail_learner_end_time'=>'',
+                                            ));
         if (!$sLessonDetailObj->save()) {
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonDetailObj->getError());
@@ -979,7 +984,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if($token){
             $sLessonDetailObj->loadFromDb();
             $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
-            
+
             if($oldCalId){
                 SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
             }
@@ -1006,7 +1011,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if($token){
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
-            
+
             if($oldCalId){
                 SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
             }

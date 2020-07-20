@@ -460,7 +460,14 @@ class TeachersController extends MyAppController {
 		$originalDayNumber = $post['day'];
 		$tWsch = new TeacherWeeklySchedule();
 		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime, $post['weekStart']);
-		FatUtility::dieJsonSuccess($checkAvialSlots);
+		$returnArray = [
+			'status' => $checkAvialSlots,
+		];
+		if(!empty($tWsch->getError())){
+			$returnArray['msg'] = $tWsch->getError();
+		}
+
+		FatUtility::dieJsonSuccess($returnArray);
 	}
 
 	public function getTeacherGeneralAvailabilityJsonData($userId = 0) {

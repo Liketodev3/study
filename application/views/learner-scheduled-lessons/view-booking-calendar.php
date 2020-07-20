@@ -171,11 +171,14 @@ $isRescheduleRequest = (!empty($isRescheduleRequest));
                    $("body").css( {"cursor": "default"} );
 				   $("body").css( {"pointer-events": "initial"} );
 				   var res = JSON.parse(doc);
-					if ( res.msg == 1 ) {
+					if ( res.status == 1 ) {
 						$('#d_calendar').fullCalendar('renderEvent',newEvent);
 					}
-					if ( res.msg == 0 ) {
+					if ( res.status == 0 ) {
 						$('.tooltipevent').remove();
+					}
+					if(res.msg && res.msg  != ""){
+						$.mbsmessage(res.msg,true,'alert alert--danger');
 					}
 				});
 

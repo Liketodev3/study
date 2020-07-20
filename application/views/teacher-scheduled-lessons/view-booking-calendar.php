@@ -104,10 +104,15 @@ var checkSlotAvailabiltAjaxRun = false;
 				fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[<?php echo $teacher_id; ?>]), newEvent, function(doc) {
 					checkSlotAvailabiltAjaxRun =  false;
 					var res = JSON.parse(doc);
-					if(res.msg == 1)
-					$('#d_calendar').fullCalendar('renderEvent',newEvent);
-					if(res.msg == 0)
-					$('.tooltipevent').remove();
+					if(res.status == 1){
+						$('#d_calendar').fullCalendar('renderEvent',newEvent);
+					}
+					if(res.status == 0){
+						$('.tooltipevent').remove();
+					}
+					if(res.msg && res.msg  != ""){
+						$.mbsmessage(res.msg,true,'alert alert--danger');
+					}
 				});
 			},
 			 eventLimit: true,

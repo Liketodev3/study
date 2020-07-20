@@ -240,6 +240,7 @@ class TeacherWeeklySchedule extends MyAppModel
 
     public function checkCalendarTimeSlotAvailability($userId, $startTime, $endTime, $weekStart)
     {
+        $this->error = '';
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
             $this->error =  Label::getLabel('LBL_Invalid_Request');
@@ -248,7 +249,7 @@ class TeacherWeeklySchedule extends MyAppModel
         if ($startTime>$endTime) {
             return 0;
         }
-        
+
         $db = FatApp::getDb();
 
         $srch = new ScheduledLessonSearch(false);
@@ -256,8 +257,8 @@ class TeacherWeeklySchedule extends MyAppModel
         $srch->checkUserLessonBooking($userIds, $startTime, $endTime);
         $getResultSet = $srch->getResultSet();
         $scheduledLessonData =$db->fetch($getResultSet);
-
         if(!empty($scheduledLessonData)){
+            $this->error = Label::getLabel('LBL_Either_You_or_teacher_not_available_for_this_slot');
             return 0;
         }
 

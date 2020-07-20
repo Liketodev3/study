@@ -49,9 +49,8 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
 							return false;
 						}
 				}
-					console.log(isRescheduleRequest,'isRescheduleRequest');
-
-
+				$.mbsmessage.close();
+				$.mbsmessage(langLbl.requestProcessing, true,'alert alert--process');
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','isSlotTaken'),'teacherId='+teacherId +'&startTime='+startTime+'&endTime='+endTime+'&date='+date,function(t){
             t = JSON.parse(t);
             slot = t.count;
@@ -64,6 +63,7 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
 						}
 
             if(slot > 0){
+								$.mbsmessage.close();
                 $.confirm({
                     title: langLbl.Confirm,
                     content: langLbl.bookedSlotAlert,
@@ -73,7 +73,7 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
                             btnClass: 'btn btn--primary',
                             keys: ['enter', 'shift'],
                             action: function(){
-
+																$.mbsmessage(langLbl.requestProcessing,true,'alert alert--process');
                                 fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function(doc) {
                                 $.facebox.close();
                                 location.reload();
@@ -90,8 +90,9 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
                     }
                 });
             }else{
-							
+
                 fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function(doc) {
+										$.mbsmessage.close();
                     $.facebox.close();
                     location.reload();
                 });
