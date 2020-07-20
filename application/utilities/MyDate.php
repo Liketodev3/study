@@ -93,6 +93,7 @@ class MyDate extends FatDate
         $string =  Label::getLabel("LBL_Timezone_:").' GMT'.CommonHelper::getDateOrTimeByTimeZone($user_timezone, ' P')."";
         if($echoTimeZone) {
             echo $string;
+            return;
         }
         return $string;
     }
