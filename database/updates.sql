@@ -523,3 +523,7 @@ ALTER TABLE `tbl_lesson_reschedule_log`
 --
 ALTER TABLE `tbl_lesson_reschedule_log`
   MODIFY `lesreschlog_id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- task 72959 / 20-JULY-2020 / TV-2.0.0.20200720
+
+ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_payment_method` INT NOT NULL AFTER `withdrawal_amount`;

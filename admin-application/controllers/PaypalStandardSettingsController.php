@@ -33,6 +33,12 @@ class PaypalStandardSettingsController extends PaymentSettingsController
         $frm->addSelectBox(Label::getLabel('LBL_Order_Status_(Completed)', $this->adminLangId), 'order_status_completed', $paymentGatewayStatus)->requirement->setRequired(true);
         $frm->addSelectBox(Label::getLabel('LBL_Order_Status_(Others)', $this->adminLangId), 'order_status_others', $paymentGatewayStatus)->requirement->setRequired(true);
 
+        $fld = $frm->addTextBox(Label::getLabel('LBL_Client_Id',$this->adminLangId), 'paypal_client_id');
+		$fld->htmlAfterField = '<small>'. Label::getLabel('LBL_Required_for_Paypal_Payout', $this->adminLangId) .'</small>';
+
+		$fld1 = $frm->addTextBox(Label::getLabel('LBL_Client_Secret',$this->adminLangId), 'paypal_client_secret');
+		$fld1->htmlAfterField = '<small>'. Label::getLabel('LBL_Required_for_Paypal_Payout', $this->adminLangId) .'</small>';
+
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }

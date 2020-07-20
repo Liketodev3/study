@@ -43,6 +43,9 @@ class User extends MyAppModel
     const USER_NOTICATION_NUMBER_24 = 24;
     const USER_NOTICATION_NUMBER_48 = 48;
 
+    const WITHDRAWAL_METHOD_TYPE_BANK = 1;
+    const WITHDRAWAL_METHOD_TYPE_PAYPAL = 2;
+
 
 
     public function __construct($userId = 0)
@@ -139,6 +142,20 @@ class User extends MyAppModel
             static::USER_NOTICATION_NUMBER_12	=>	Label::getLabel('LBL_12_Hours', $langId),
             static::USER_NOTICATION_NUMBER_24	=>	Label::getLabel('LBL_24_Hours', $langId),
             static::USER_NOTICATION_NUMBER_48	=>	Label::getLabel('LBL_48_Hours', $langId),
+
+        );
+    }
+
+    public static function getWithdrawlMethodArray($langId = 0)
+    {
+        $langId = FatUtility::int($langId);
+        if ($langId < 1) {
+            $langId = CommonHelper::getLangId();
+        }
+
+        return array(
+            static::WITHDRAWAL_METHOD_TYPE_BANK	=>	Label::getLabel('LBL_Bank_Payout', $langId),
+            static::WITHDRAWAL_METHOD_TYPE_PAYPAL	=>	Label::getLabel('LBL_Paypal_Payout', $langId),
 
         );
     }
@@ -674,7 +691,7 @@ class User extends MyAppModel
         }
 
         $srch = new SearchBase(static::DB_TBL_USR_BANK_INFO, 'tub');
-        $srch->addMultipleFields(array('ub_bank_name','ub_account_holder_name','ub_account_number','ub_ifsc_swift_code','ub_bank_address'));
+        $srch->addMultipleFields(array('ub_bank_name','ub_account_holder_name','ub_account_number','ub_ifsc_swift_code','ub_bank_address','ub_paypal_email_address'));
         $srch->addCondition(static::DB_TBL_USR_BANK_INFO_PREFIX.'user_id', '=', $this->getMainTableRecordId());
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
