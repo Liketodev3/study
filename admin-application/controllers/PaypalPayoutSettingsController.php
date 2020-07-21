@@ -1,8 +1,8 @@
 <?php
 
-class StripeSettingsController extends PaymentSettingsController
+class PaypalPayoutSettingsController extends PaymentSettingsController
 {
-    private $keyName = "Stripe";
+    private $keyName = "PaypalPayout";
 
     public function index()
     {
@@ -23,8 +23,8 @@ class StripeSettingsController extends PaymentSettingsController
     private function getSettingsForm()
     {
         $frm = new Form('frmPaymentMethods');
-        $frm->addRequiredField(Label::getLabel('LBL_Secret_Key', $this->adminLangId), 'privateKey');
-        $frm->addRequiredField(Label::getLabel('LBL_Publishable_Key', $this->adminLangId), 'publishableKey');
+        $frm->addRequiredField(Label::getLabel('LBL_Client_Id', $this->adminLangId), 'paypal_client_id');
+        $frm->addRequiredField(Label::getLabel('LBL_Client_Secret', $this->adminLangId), 'paypal_client_secret');
         $frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }

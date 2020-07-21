@@ -79,20 +79,14 @@ class WithdrawalRequestsController extends AdminBaseController
         }
 
         $type = FatApp::getPostedData('type', FatUtility::VAR_INT, 0);
+
         if ($type > 0) {
-            if ($type == User::USER_TYPE_SELLER) {
-                $srch->addCondition('user_is_supplier', '=', applicationConstants::YES);
+            if ($type == User::USER_TYPE_LEANER) {
+                $srch->addCondition('user_is_learner', '=', applicationConstants::YES);
+                $srch->addCondition('user_is_teacher', '=', applicationConstants::NO);
             }
-            if ($type == User::USER_TYPE_BUYER) {
-                $srch->addCondition('user_is_buyer', '=', applicationConstants::YES);
-            }
-
-            if ($type == User::USER_TYPE_ADVERTISER) {
-                $srch->addCondition('user_is_advertiser', '=', applicationConstants::YES);
-            }
-
-            if ($type == User::USER_TYPE_AFFILIATE) {
-                $srch->addCondition('user_is_affiliate', '=', applicationConstants::YES);
+            if ($type == User::USER_TYPE_TEACHER) {
+                $srch->addCondition('user_is_teacher', '=', applicationConstants::YES);
             }
         }
 
@@ -140,9 +134,27 @@ class WithdrawalRequestsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
+        $db = FatApp::getDb();
+        $db->startTransaction();
+
+        switch ($records['withdrawal_payment_method']) {
+            case User::WITHDRAWAL_METHOD_TYPE_BANK:
+            break;
+            case User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
+                $keyName = "PaypalStandard";
+                $pmObj = new PaymentSettings($keyName);
+                $paymentSettings = $pmObj->getPaymentSettings();
+                $paypal_client_id = $paymentSettings['paypal_client_id'];
+                $paypal_client_secret = $paymentSettings['paypal_client_secret'];
+                if (empty($paypal_client_id) || empty($paypal_client_secret)) {
+                    Message::addErrorMessage(Label::getLabel('LBL_Paypal_Client_id_And_Secret_is_required_for_payout',$this->adminLangId));
+                    FatUtility::dieWithError(Message::getHtml());
+                }
+            break;
+        }
 
         $assignFields = array('withdrawal_status'=>$status);
-        if (!FatApp::getDb()->updateFromArray(
+        if (!->updateFromArray(
             User::DB_TBL_USR_WITHDRAWAL_REQ,
             $assignFields,
             array('smt' => 'withdrawal_id=?','vals' => array($withdrawalId))
@@ -184,6 +196,11 @@ class WithdrawalRequestsController extends AdminBaseController
 
         $this->set('msg', Label::getLabel('LBL_Status_Updated_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
+    }
+
+    private function releasePayout(array $withDrawalRecords)
+    {
+        // code...
     }
 
     private function getSearchForm($langId)

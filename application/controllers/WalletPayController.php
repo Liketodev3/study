@@ -79,6 +79,7 @@ class WalletPayController extends LoggedUserController
         $pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
         $pmSrch->doNotCalculateRecords();
         $pmSrch->doNotLimitRecords();
+        $pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
         $pmSrch->addMultipleFields(array('pmethod_id', 'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name', 'pmethod_code', 'pmethod_description'));
         $pmRs = $pmSrch->getResultSet();
         $paymentMethods = FatApp::getDb()->fetchAll($pmRs);

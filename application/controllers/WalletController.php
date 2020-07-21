@@ -265,13 +265,12 @@ class WalletController extends LoggedUserController
                 $frm->addRequiredField(Label::getLabel('LBL_Account_Number', $langId), 'ub_account_number');
                 $frm->addRequiredField(Label::getLabel('LBL_IFSC_Swift_Code', $langId), 'ub_ifsc_swift_code');
                 $frm->addTextArea(Label::getLabel('LBL_Bank_Address', $langId), 'ub_bank_address');
-                $frm->addTextArea(Label::getLabel('LBL_Other_Info_Instructions', $langId), 'withdrawal_comments');
             break;
             case  User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
                 $frm->addRequiredField(Label::getLabel('LBL_Paypal_Email', $langId), 'ub_paypal_email_address');
             break;
         }
-
+        $frm->addTextArea(Label::getLabel('LBL_Other_Info_Instructions', $langId), 'withdrawal_comments');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Send_Request', $langId));
         $frm->addButton("", "btn_cancel", Label::getLabel("LBL_Cancel", $langId));
         return $frm;
@@ -324,8 +323,9 @@ class WalletController extends LoggedUserController
         }
 
         $userObj = new User($userId);
-        
-        if (!$userObj->updateBankInfo($post)) {
+        $saveInfoFunction  =  ($payoutMethodType == User::WITHDRAWAL_METHOD_TYPE_BANK) ? 'updateBankInfo' : 'updatePaypalInfo';
+
+        if (!$userObj->$saveInfoFunction($post)) {
             Message::addErrorMessage(Label::getLabel($userObj->getError(), $this->siteLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }

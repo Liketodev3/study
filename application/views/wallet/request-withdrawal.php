@@ -21,6 +21,11 @@
 			$ifscFld->setWrapperAttribute('class','col-sm-12');
 			$ifscFld->developerTags['col'] = 12;
 			break;
+		case User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
+			$commentFld = $frm->getField('withdrawal_comments');
+			$commentFld->setWrapperAttribute('class','col-sm-12 col-lg-12');
+			$commentFld->developerTags['col'] = 12;
+			break;
 	}
 
 

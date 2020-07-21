@@ -739,6 +739,7 @@ class User extends MyAppModel
 
     public function updatePaypalInfo($data = array())
     {
+
         if (($this->getMainTableRecordId() < 1)) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED');
             return false;
@@ -921,32 +922,39 @@ class User extends MyAppModel
         $assignFields = array(
             'withdrawal_user_id'=>$userId,
             'withdrawal_amount'=>$data['withdrawal_amount'],
-
-            'withdrawal_bank'=>$data['ub_bank_name'],
-            'withdrawal_account_holder_name'=>$data['ub_account_holder_name'],
-            'withdrawal_account_number'=>$data['ub_account_number'],
-            'withdrawal_ifc_swift_code'=>$data['ub_ifsc_swift_code'],
-            'withdrawal_bank_address'=>$data['ub_bank_address'],
-
+            'withdrawal_payment_method'=>$data['withdrawal_payment_method'],
             'withdrawal_comments'=>$data['withdrawal_comments'],
             'withdrawal_status'=>0,
-            'withdrawal_request_date'=>date('Y-m-d H:i:s'),
+            'withdrawal_request_date'=>date('Y-m-d H:i:s')
         );
 
+        switch ($data['withdrawal_payment_method']) {
+    		case User::WITHDRAWAL_METHOD_TYPE_BANK:
+                $assignFields += array(
+                    'withdrawal_bank'=>$data['ub_bank_name'],
+                    'withdrawal_account_holder_name'=>$data['ub_account_holder_name'],
+                    'withdrawal_account_number'=>$data['ub_account_number'],
+                    'withdrawal_ifc_swift_code'=>$data['ub_ifsc_swift_code'],
+                    'withdrawal_bank_address'=>$data['ub_bank_address'],
+                );
+    			break;
+    		case User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
+                $assignFields += array(
+                    'withdrawal_paypal_email_id'=>$data['ub_paypal_email_address'],
+                );
+    			break;
+    	}
         $broken = false;
 
         if (FatApp::getDb()->startTransaction() && FatApp::getDb()->insertFromArray(static::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields)) {
             $withdrawRequestId = FatApp::getDb()->getInsertId();
-
             $formattedRequestValue = '#'.str_pad($withdrawRequestId, 6, '0', STR_PAD_LEFT);
-
             $txnArray["utxn_user_id"] = $userId;
             $txnArray["utxn_debit"] = $data["withdrawal_amount"];
             $txnArray["utxn_status"] = Transaction::STATUS_PENDING;
             $txnArray["utxn_comments"] = Label::getLabel('LBL_Funds_Withdrawn', $langId).'. '.Label::getLabel('LBL_Request_ID', $langId).' '.$formattedRequestValue;
             $txnArray["utxn_withdrawal_id"] = $withdrawRequestId;
             $txnArray['utxn_type']	=	Transaction::TYPE_MONEY_WITHDRAWN;
-
             $transObj = new Transaction($userId);
             if ($txnId = $transObj->addTransaction($txnArray)) {
                 /*
