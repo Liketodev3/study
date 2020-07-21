@@ -13,6 +13,8 @@ class Transaction extends MyAppModel
     const WITHDRAWL_STATUS_COMPLETED = 1;
     const WITHDRAWL_STATUS_APPROVED = 2;
     const WITHDRAWL_STATUS_DECLINED = 3;
+	const WITHDRAWL_STATUS_PAYOUT_SENT = 4;
+	const WITHDRAWL_STATUS_PAYOUT_FAILED = 5;
 
     const TYPE_LESSON_BOOKING = 1;
     const TYPE_GIFTCARD_REDEEM_TO_WALLET = 2;
@@ -55,7 +57,9 @@ class Transaction extends MyAppModel
             static::STATUS_PENDING => Label::getLabel('LBL_Pending', $langId),
             static::STATUS_COMPLETED => Label::getLabel('LBL_Completed', $langId),
             static::STATUS_REFUND => Label::getLabel('LBL_Refunded', $langId),
-            static::STATUS_DECLINED => Label::getLabel('LBL_Declined', $langId)
+            static::STATUS_DECLINED => Label::getLabel('LBL_Declined', $langId),
+			static::WITHDRAWL_STATUS_PAYOUT_SENT => Label::getLabel('LBL_Withdrawal_Payout_Sent', $langId),
+			static::WITHDRAWL_STATUS_PAYOUT_FAILED => Label::getLabel('LBL_Withdrawal_Payout_Failed', $langId),
         );
     }
 

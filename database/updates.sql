@@ -552,3 +552,6 @@ CREATE TABLE `tbl_payment_gateway_fee` (
 
 
 ALTER TABLE `tbl_payment_gateway_fee` ADD UNIQUE( `pgfee_pmethod_id`, `pgfee_currency_id`);
+
+
+INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES (NULL, 'Paypal Payout', '2', 'PaypalPayout', '1', '3');

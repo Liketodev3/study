@@ -85,7 +85,7 @@ class PaymentSettings
         $paymentMethodSettings = $this->getPaymentMethodFieldsById($paymentMethod["pmethod_id"]);
 
         $paymentSettings = array();
-
+		$paymentSettings['pmethod_id'] =  $paymentMethod["pmethod_id"];
         foreach ($paymentMethodSettings as $pkey => $pval) {
             $paymentSettings[$pval["paysetting_key"]] = $pval["paysetting_value"];
         }

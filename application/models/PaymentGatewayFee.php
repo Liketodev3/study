@@ -27,6 +27,20 @@ class PaymentGatewayFee extends MyAppModel
 
         return $srch;
     }
+	
+	public static function getGatewayFee(int $pMethodId, int $currancyId) : float
+    {
+        $srch = static::getSearchObject();
+		$srch->addCondition('pgfee_pmethod_id', '=', $pMethodId);
+		$srch->addCondition('pgfee_currency_id', '=', $currancyId);
+		$srch->addMultipleFields(['pgfee.*']);
+		$resultSet = $srch->getResultSet();
+		$data =   FatApp::getDb()->fetch($resultSet);
+		if(empty($data['pgfee_fee'])) {
+			return 0.00;
+		}
+        return FatUtility::float($data['pgfee_fee']);
+    }
 
     public function setupFee(float $fee) : bool
     {

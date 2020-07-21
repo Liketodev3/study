@@ -2,22 +2,21 @@
 
 class PaypalPayoutSettingsController extends PaymentSettingsController
 {
-    private $keyName = "PaypalPayout";
-
+   
     public function index()
     {
-        $paymentSettings = $this->getPaymentSettings($this->keyName);
+        $paymentSettings = $this->getPaymentSettings(PaypalPayout::KEY_NAME);
         $frm = $this->getSettingsForm();
         $frm->fill($paymentSettings);
         $this->set('frm', $frm);
-        $this->set('paymentMethod', $this->keyName);
+        $this->set('paymentMethod', PaypalPayout::KEY_NAME);
         $this->_template->render(false, false);
     }
 
     public function setup()
     {
         $frm = $this->getSettingsForm();
-        $this->setUpPaymentSettings($frm, $this->keyName);
+        $this->setUpPaymentSettings($frm, PaypalPayout::KEY_NAME);
     }
 
     private function getSettingsForm()
