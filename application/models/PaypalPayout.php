@@ -59,7 +59,7 @@ class PaypalPayout {
 
 		if (empty($clientid) || empty($clientsecret)) {
 			$this->isError= true;
-			$this->error = Label::getLabel('LBL_Paypal_Client_id_And_Secret_is_required_for_payout');
+			$this->error = Label::getLabel('MSG_Paypal_Client_id_And_Secret_is_required_for_payout');
 			return array();
 		}
 
@@ -134,7 +134,7 @@ class PaypalPayout {
 
 		if (empty($paymentSettings['paypal_client_id']) || empty($paymentSettings['paypal_client_secret'])) {
 			$this->isError= true;
-			$this->error = Label::getLabel('LBL_Paypal_Client_id_And_Secret_is_required_for_payout');
+			$this->error = Label::getLabel('MSG_Paypal_Client_id_And_Secret_is_required_for_payout');
 			return array();
 		}
 		return $paymentSettings;
@@ -177,8 +177,8 @@ class PaypalPayout {
 		$requestData = array(
 			"sender_batch_header" => array(
 				"sender_batch_id" => $sender_batch_id,
-				"email_subject" => Label::getLabel('LBL_You_have_a_payout!!'),
-				"email_message" => Label::getLabel('LBL_You_have_a_Received_a_payout')
+				"email_subject" => Label::getLabel('MSG_You_have_a_payout!!'),
+				"email_message" => Label::getLabel('MSG_You_have_a_Received_a_payout')
 			),
 			"items" => array(
 			array(
@@ -187,7 +187,7 @@ class PaypalPayout {
 					"value" => $amount,
 					"currency" => $currencyData['currency_code']
 				),
-				"note" => Label::getLabel('LBL_Transaction_Fee_Charged_: ').FatUtility::float($gatewayFee),
+				"note" => Label::getLabel('MSG_Transaction_Fee_Charged_: ').FatUtility::float($gatewayFee),
 				"sender_item_id" => strtotime(date('Ymd')).'_'.$recordData['withdrawal_id'],
 				"receiver" => $recordData['withdrawal_paypal_email_id'],
 			))
