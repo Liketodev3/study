@@ -258,10 +258,10 @@ class PaymentMethodsController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $srch = PaymentGatewayFee::getSearchObject();
+        $srch = PaymentMethodTransactionFee::getSearchObject();
         $srch->joinTable(Currency::DB_TBL_LANG, 'LEFT JOIN', 'curr_l.'.Currency::DB_TBL_LANG_PREFIX.'currency_id = curr.'.Currency::tblFld('id').' and curr_l.'.Currency::DB_TBL_LANG_PREFIX.'lang_id = '.$this->adminLangId, 'curr_l');
 
-        $srch->addMultipleFields(['currency_name','currency_code','pgfee.*']);
+        $srch->addMultipleFields(['currency_name','currency_code','pmtfee.*']);
         // $srch->doNotCalculateRecords();
         // $srch->doNotLimitRecords();
         $rs = $srch->getResultSet();
@@ -277,7 +277,7 @@ class PaymentMethodsController extends AdminBaseController
     public function setupPaymentMethodFee()
     {
         $this->objPrivilege->canEditPaymentMethods();
-        $pMethodId = FatApp::getPostedData('pgfee_pmethod_id',FatUtility::VAR_INT,0);
+        $pMethodId = FatApp::getPostedData('pmtfee_pmethod_id',FatUtility::VAR_INT,0);
         $getPMethodDetail =  PaymentMethods::getAttributesById($pMethodId,['pmethod_id']);
 
         if($getPMethodDetail === false){
@@ -291,9 +291,9 @@ class PaymentMethodsController extends AdminBaseController
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $paymentMethodFeeObj =  new PaymentGatewayFee($pMethodId, $post['pgfee_currency_id']);
+        $paymentMethodFeeObj =  new PaymentMethodTransactionFee($pMethodId, $post['pmtfee_currency_id']);
 
-        if($paymentMethodFeeObj->setupFee($post['pgfee_fee']) === false){
+        if($paymentMethodFeeObj->setupFee($post['pmtfee_fee']) === false){
             Message::addErrorMessage($paymentMethodFeeObj->getValidationErrors());
             FatUtility::dieJsonError(Message::getHtml());
         }
@@ -304,11 +304,11 @@ class PaymentMethodsController extends AdminBaseController
     private function getPaymentMethodFeeForm(int $pMethodId) : object
     {
         $frm = new Form('frmGatewayFee');
-        $frm->addHiddenField('', 'pgfee_pmethod_id', $pMethodId);
-        $fld = $frm->addFloatField(Label::getLabel('LBL_Method_Fee', $this->adminLangId), 'pgfee_fee');
+        $frm->addHiddenField('', 'pmtfee_pmethod_id', $pMethodId);
+        $fld = $frm->addFloatField(Label::getLabel('LBL_Method_Fee', $this->adminLangId), 'pmtfee_fee');
         $fld->requirements()->setFloatPositive();
         $currancyList =  Currency::getCurrencyAssoc($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Currency', $this->adminLangId), 'pgfee_currency_id', $currancyList, '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Currency', $this->adminLangId), 'pmtfee_currency_id', $currancyList, '', array(), '');
         $submitFild = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         $resetBtn =  $frm->addResetButton('', 'btn_clear', Label::getLabel('LBL_Reset', $this->adminLangId));
         $submitFild->attachField($resetBtn);

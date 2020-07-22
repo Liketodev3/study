@@ -163,7 +163,7 @@ class PaypalPayout {
 			return false;
         }
 
-		$gatewayFee = PaymentGatewayFee::getGatewayFee($settings['pmethod_id'], $currencyData['currency_id']);
+		$gatewayFee = PaymentMethodTransactionFee::getGatewayFee($settings['pmethod_id'], $currencyData['currency_id']);
 		$amount = $recordData['withdrawal_amount'] - $gatewayFee;
 		$amount = FatUtility::float($amount);
 		if(0 >= $amount){
@@ -212,7 +212,7 @@ class PaypalPayout {
 				return false;
 		}
 		$db = FatApp::getDb();
-		$assignFields = array('withdrawal_status'=>Transaction::WITHDRAWL_STATUS_PAYOUT_SENT, 'withdrawal_response'=> json_encode($response));
+		$assignFields = array('withdrawal_status'=>Transaction::WITHDRAWL_STATUS_PAYOUT_SENT, 'withdrawal_transaction_fee'=> $gatewayFee, 'withdrawal_response'=> json_encode($response));
 		if (!$db->updateFromArray(User::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields, array('smt'=>'withdrawal_id=?', 'vals'=>array($recordData['withdrawal_id'])))) {
 			$this->isError = true;
 			$this->error = $db->getError();

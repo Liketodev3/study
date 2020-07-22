@@ -33,7 +33,7 @@ $resetBtn->addFieldTagAttribute('onClick','resetGatewayFeeForm()');
 $arr_flds = array(
 		'listserial'=>Label::getLabel('LBL_Sr._No',$adminLangId),
 		'currency_code'=>Label::getLabel('LBL_Currency',$adminLangId),
-		'pgfee_fee'=> Label::getLabel('LBL_Fee',$adminLangId),
+		'pmtfee_fee'=> Label::getLabel('LBL_Fee',$adminLangId),
 		'action'=> Label::getLabel('LBL_Action',$adminLangId),
 	);
 
@@ -46,7 +46,7 @@ $paymentMethodType =  PaymentMethods::getTypeArray();
 $sr_no = 0;
 foreach ($arr_listing as $sn=>$row){
 	$sr_no++;
-	$tr = $tbl->appendElement('tr',array( 'id' => $row['pgfee_pmethod_id'].'-'.$row['pgfee_currency_id'], 'class' => '' ));
+	$tr = $tbl->appendElement('tr',array( 'id' => $row['pmtfee_pmethod_id'].'-'.$row['pmtfee_currency_id'], 'class' => '' ));
 	foreach ($arr_flds as $key=>$val){
 		$td = $tr->appendElement('td');
 		switch ($key){
@@ -58,8 +58,8 @@ foreach ($arr_listing as $sn=>$row){
 				$txt .= (!empty($row['currency_name'])) ? ' ('.$row['currency_name'].')' : '';
 				$td->appendElement('plaintext', array(), $txt);
 			break;
-			case 'pgfee_fee':
-				$td->appendElement('plaintext', array(), $row['pgfee_fee']);
+			case 'pmtfee_fee':
+				$td->appendElement('plaintext', array(), $row['pmtfee_fee']);
 			break;
 
 			case 'action':
@@ -70,7 +70,7 @@ foreach ($arr_listing as $sn=>$row){
 					$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
 					$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
 					$innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"editFeeForm(this,".$row['pgfee_currency_id'].",".$row['pgfee_fee'].")" ),Label::getLabel('LBL_Edit',$adminLangId), true);
+					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"editFeeForm(this,".$row['pmtfee_currency_id'].",".$row['pmtfee_fee'].")" ),Label::getLabel('LBL_Edit',$adminLangId), true);
 				}
 			break;
 		}

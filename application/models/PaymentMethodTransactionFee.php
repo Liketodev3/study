@@ -1,8 +1,8 @@
 <?php
-class PaymentGatewayFee extends MyAppModel
+class PaymentMethodTransactionFee extends MyAppModel
 {
-    const DB_TBL = 'tbl_payment_gateway_fee';
-    const DB_TBL_PREFIX = 'pgfee_';
+    const DB_TBL = 'tbl_payment_method_transaction_fee';
+    const DB_TBL_PREFIX = 'pmtfee_';
 
     private $currancyId;
     private $pMethodId;
@@ -15,40 +15,40 @@ class PaymentGatewayFee extends MyAppModel
 
     public static function getSearchObject(bool $joinPaymentMethod = true, bool $joinCurrancy = true) :  object
     {
-        $srch = new SearchBase(static::DB_TBL, 'pgfee');
+        $srch = new SearchBase(static::DB_TBL, 'pmtfee');
 
         if ($joinPaymentMethod) {
-            $srch->joinTable(PaymentMethods::DB_TBL,'INNER JOIN','pgfee_pmethod_id = pmethod_id','pm');
+            $srch->joinTable(PaymentMethods::DB_TBL,'INNER JOIN','pmtfee_pmethod_id = pmethod_id','pm');
         }
 
         if ($joinCurrancy) {
-            $srch->joinTable(Currency::DB_TBL,'INNER JOIN','pgfee_currency_id = currency_id','curr');
+            $srch->joinTable(Currency::DB_TBL,'INNER JOIN','pmtfee_currency_id = currency_id','curr');
         }
 
         return $srch;
     }
-	
+
 	public static function getGatewayFee(int $pMethodId, int $currancyId) : float
     {
         $srch = static::getSearchObject();
-		$srch->addCondition('pgfee_pmethod_id', '=', $pMethodId);
-		$srch->addCondition('pgfee_currency_id', '=', $currancyId);
-		$srch->addMultipleFields(['pgfee.*']);
+		$srch->addCondition('pmtfee_pmethod_id', '=', $pMethodId);
+		$srch->addCondition('pmtfee_currency_id', '=', $currancyId);
+		$srch->addMultipleFields(['pmtfee.*']);
 		$resultSet = $srch->getResultSet();
 		$data =   FatApp::getDb()->fetch($resultSet);
-		if(empty($data['pgfee_fee'])) {
+		if(empty($data['pmtfee_fee'])) {
 			return 0.00;
 		}
-        return FatUtility::float($data['pgfee_fee']);
+        return FatUtility::float($data['pmtfee_fee']);
     }
 
     public function setupFee(float $fee) : bool
     {
         $tableRecordObj =  new TableRecord(self::DB_TBL);
         $fields = array(
-                'pgfee_pmethod_id' => $this->pMethodId,
-                'pgfee_currency_id' => $this->currancyId,
-                'pgfee_fee' => $fee,
+                'pmtfee_pmethod_id' => $this->pMethodId,
+                'pmtfee_currency_id' => $this->currancyId,
+                'pmtfee_fee' => $fee,
             );
         $tableRecordObj->setFlds($fields);
 

@@ -544,14 +544,18 @@ UPDATE `tbl_payment_methods` SET `pmethod_type` = '1' WHERE `tbl_payment_methods
 -- Table structure for table `tbl_payment_gateway_fee`
 --
 
-CREATE TABLE `tbl_payment_gateway_fee` (
-  `pgfee_pmethod_id` int(11) NOT NULL,
-  `pgfee_currency_id` int(11) NOT NULL,
-  `pgfee_fee` decimal(12,8) NOT NULL
+CREATE TABLE `tbl_payment_method_transaction_fee` (
+  `pmtfee_pmethod_id` int(11) NOT NULL,
+  `pmtfee_currency_id` int(11) NOT NULL,
+  `pmtfee_fee` decimal(12,8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-ALTER TABLE `tbl_payment_gateway_fee` ADD UNIQUE( `pgfee_pmethod_id`, `pgfee_currency_id`);
+ALTER TABLE `tbl_payment_method_transaction_fee` ADD UNIQUE( `pmtfee_pmethod_id`, `pmtfee_currency_id`);
 
 
 INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES (NULL, 'Paypal Payout', '2', 'PaypalPayout', '1', '3');
+
+-- task 72959 / 22-JULY-2020 / TV-2.0.0.20200720
+
+ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_transaction_fee` DECIMAL(10,4) NOT NULL AFTER `withdrawal_comments`;

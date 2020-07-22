@@ -50,22 +50,22 @@ $(document).ready(function(){
 		var data = fcom.frmData(frm);
 		fcom.displayProcessing();
 		fcom.updateWithAjax(fcom.makeUrl('PaymentMethods', 'setupPaymentMethodFee'), data, function(t) {
-			var pmethodId =  parseInt($("[name='pgfee_pmethod_id']").val());
+			var pmethodId =  parseInt($("[name='pmtfee_pmethod_id']").val());
 			getPaymentMethodFee(pmethodId);
 		})
 	};
 
 	editFeeForm  = function(trObj, currency_id, fee){
-		document.frmGatewayFee.pgfee_currency_id.setAttribute('disabled',true);
-		document.frmGatewayFee.pgfee_fee.value = fee;
-		document.frmGatewayFee.pgfee_currency_id.value = currency_id;
+		document.frmGatewayFee.pmtfee_currency_id.setAttribute('disabled',true);
+		document.frmGatewayFee.pmtfee_fee.value = fee;
+		document.frmGatewayFee.pmtfee_currency_id.value = currency_id;
 		$('.paymentMethodFeeList').animate({
 			 scrollTop: $("#pmFeesectionhead-js").offset().top
 	 }, 800);
 	};
 
 	resetGatewayFeeForm  = function(){
-		document.frmGatewayFee.pgfee_currency_id.removeAttribute('disabled');
+		document.frmGatewayFee.pmtfee_currency_id.removeAttribute('disabled');
 		document.frmGatewayFee.reset();
 	};
 
