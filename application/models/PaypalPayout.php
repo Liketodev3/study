@@ -163,7 +163,7 @@ class PaypalPayout {
 			return false;
         }
 
-		$gatewayFee = PaymentGatewayFee::getGatewayFee($currencyData['currency_id'], $settings['pmethod_id']);
+		$gatewayFee = PaymentGatewayFee::getGatewayFee($settings['pmethod_id'], $currencyData['currency_id']);
 		$amount = $recordData['withdrawal_amount'] - $gatewayFee;
 		$amount = FatUtility::float($amount);
 		if(0 >= $amount){
