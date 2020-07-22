@@ -3,7 +3,7 @@
 class PaypalPayoutController extends PaymentController
 {
     public function callback() {
-        
+
 		$webhookData = file_get_contents('php://input');
 		$webhookData = json_decode($webhookData, true);
 		$event_type = $webhookData['event_type'];
