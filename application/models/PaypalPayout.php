@@ -94,7 +94,7 @@ class PaypalPayout {
 			return array();
 		}
 
-		return $result;
+		return $accessTokenResponse;
 	}
 		//releasePayout
 	public function sendRequest(string $token, array $requestData) : array
