@@ -57,9 +57,7 @@ class Transaction extends MyAppModel
             static::STATUS_PENDING => Label::getLabel('LBL_Pending', $langId),
             static::STATUS_COMPLETED => Label::getLabel('LBL_Completed', $langId),
             static::STATUS_REFUND => Label::getLabel('LBL_Refunded', $langId),
-            static::STATUS_DECLINED => Label::getLabel('LBL_Declined', $langId),
-			static::WITHDRAWL_STATUS_PAYOUT_SENT => Label::getLabel('LBL_Withdrawal_Payout_Sent', $langId),
-			static::WITHDRAWL_STATUS_PAYOUT_FAILED => Label::getLabel('LBL_Withdrawal_Payout_Failed', $langId),
+            static::STATUS_DECLINED => Label::getLabel('LBL_Declined', $langId)
         );
     }
 
@@ -73,7 +71,9 @@ class Transaction extends MyAppModel
             static::WITHDRAWL_STATUS_PENDING => Label::getLabel('LBL_Withdrawal_Request_Pending', $langId),
             static::WITHDRAWL_STATUS_COMPLETED => Label::getLabel('LBL_Withdrawal_Request_Completed', $langId),
             static::WITHDRAWL_STATUS_APPROVED => Label::getLabel('LBL_Withdrawal_Request_Approved', $langId),
-            static::WITHDRAWL_STATUS_DECLINED => Label::getLabel('LBL_Withdrawal_Request_Declined', $langId)
+            static::WITHDRAWL_STATUS_DECLINED => Label::getLabel('LBL_Withdrawal_Request_Declined', $langId),
+            static::WITHDRAWL_STATUS_PAYOUT_SENT => Label::getLabel('LBL_Withdrawal_Payout_Sent', $langId),
+            static::WITHDRAWL_STATUS_PAYOUT_FAILED => Label::getLabel('LBL_Withdrawal_Payout_Failed', $langId)
         );
         return $arr;
     }
