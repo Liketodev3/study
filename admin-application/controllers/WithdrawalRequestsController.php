@@ -135,9 +135,9 @@ class WithdrawalRequestsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
-		
+
 		if($records['withdrawal_payment_method'] ==  User::WITHDRAWAL_METHOD_TYPE_PAYPAL && $status == Transaction::WITHDRAWL_STATUS_APPROVED) {
-			  
+
 			$payoutObj =  new PaypalPayout();
 			if($payoutObj->releasePayout($records) == false){
 				Message::addErrorMessage($payoutObj->getError());
@@ -146,7 +146,8 @@ class WithdrawalRequestsController extends AdminBaseController
 			$this->set('msg', Label::getLabel('LBL_Status_Updated_Successfully', $this->adminLangId));
 			$this->_template->render(false, false, 'json-success.php');
 		}
-		 $db = FatApp::getDb();
+
+        $db = FatApp::getDb();
         $db->startTransaction();
         $assignFields = array('withdrawal_status'=>$status);
         if (!$db->updateFromArray(
@@ -193,14 +194,14 @@ class WithdrawalRequestsController extends AdminBaseController
 				Message::addErrorMessage($transObj->getError());
 				FatUtility::dieJsonError(Message::getHtml());
             }
-			
+
 			$db->commitTransaction();
 			$emailNotificationObj = new EmailHandler();
             $emailNotificationObj->sendTxnNotification($txnId, $this->adminLangId);
         }
-		
+
 		$db->commitTransaction();
-		
+
         $this->set('msg', Label::getLabel('LBL_Status_Updated_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }

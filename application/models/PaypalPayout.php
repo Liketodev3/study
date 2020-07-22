@@ -1,19 +1,19 @@
 <?php
 class PaypalPayout {
-	
-	
+
+
 	const ACCESS_TOKEN_URL_TEST = 'https://api.sandbox.paypal.com/v1/oauth2/token';
 	const ACCESS_TOKEN_URL_LIVE = 'https://api.sandbox.paypal.com/v1/oauth2/token';
-	
+
 	const PAYOUT_URL_TEST = 'https://api.sandbox.paypal.com/v1/payments/payouts';
 	const PAYOUT_URL_LIVE = 'https://api.paypal.com/v1/payments/payouts';
-	
+
 	const KEY_NAME =  'PaypalPayout';
 
     private $error;
 	private $isError;
     private $commonLangId;
-	
+
 	 private $currenciesAccepted = array(
         'Australian Dollar' => 'AUD',
         'Brazilian Real' => 'BRL',
@@ -39,7 +39,7 @@ class PaypalPayout {
         'Thai Baht' => 'THB',
         'U.S. Dollar' => 'USD',
     );
-	
+
     public function __construct() {
         $this->error = '';
         $this->isError = false;
@@ -86,17 +86,17 @@ class PaypalPayout {
 			return array();
 		}
 		curl_close($ch);
-		
+
 		$accessTokenResponse = json_decode($result, true);
 		if (!array_key_exists('access_token', $accessTokenResponse)) {
 			$this->isError= true;
 			$this->error =  $accessTokenResponse['error'].' : '.$accessTokenResponse['error_description'];
 			return array();
 		}
-		
+
 		return $result;
 	}
-//releasePayout
+		//releasePayout
 	public function sendRequest(string $token, array $requestData) : array
 	{
 		$requestData = json_encode($requestData);
@@ -122,7 +122,7 @@ class PaypalPayout {
 			return array();
 		}
 		curl_close($ch);
-		
+
 		return json_decode($result, true);
 	}
 
@@ -131,7 +131,7 @@ class PaypalPayout {
 	{
 		$pmObj = new PaymentSettings(self::KEY_NAME);
 		$paymentSettings = $pmObj->getPaymentSettings();
-		
+
 		if (empty($paymentSettings['paypal_client_id']) || empty($paymentSettings['paypal_client_secret'])) {
 			$this->isError= true;
 			$this->error = Label::getLabel('LBL_Paypal_Client_id_And_Secret_is_required_for_payout');
@@ -139,41 +139,41 @@ class PaypalPayout {
 		}
 		return $paymentSettings;
 	}
-	
+
 	public function releasePayout(array $recordData) : bool
 	{
 		$settings =  $this->getSettings();
 		if($this->isError()){
 			return false;
 		}
-		
+
 		$accessTokenResponse = $this->accessToken($settings['paypal_client_id'], $settings['paypal_client_secret']);
-		
+
 		if($this->isError()) {
 			return false;
 		}
-		
+
 		$access_token = $accessTokenResponse['access_token'];
-		
+
 		$currencyData = Currency::getDefaultCurrencyData();
-		
+
 		if (!in_array($currencyData["currency_code"], $this->currenciesAccepted)) {
 			$this->isError= true;
 			$this->error = Label::getLabel('MSG_INVALID_ORDER_CURRENCY_PASSED_TO_GATEWAY');
 			return false;
         }
-		
+
 		$gatewayFee = PaymentGatewayFee::getGatewayFee($currencyData['currency_id'], $settings['pmethod_id']);
 		$amount = $recordData['withdrawal_amount'] - $gatewayFee;
-		
+
 		if(0 >= $amount){
 			$this->isError = true;
 			$this->error = Label::getLabel('MSG_Withdrawal_amount_is_zero_after_adding_gateway_fee');
 			return false;
 		}
-		
+
 		$sender_batch_id = "Payout_".strtotime(date('Ymd')).'_'.$recordData['withdrawal_id'];
-		
+
 		$requestData = array(
 			"sender_batch_header" => array(
 				"sender_batch_id" => $sender_batch_id,
@@ -193,15 +193,15 @@ class PaypalPayout {
 			))
 		);
 		$response =  $this->sendRequest($access_token, $requestData);
-		
+
 		if($this->isError()) {
 			$this->isError = true;
 			$this->error = $this->getError();
 			return false;
 		}
-		
+
 		if (!array_key_exists('batch_header', $response)) {
-			
+
 				if (array_key_exists('message', $response)) {
 					$message = $response['name'].' : '. $response['message'];
 				} else {
