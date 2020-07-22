@@ -183,11 +183,11 @@ class PaypalPayout {
 			array(
 				"recipient_type" => "EMAIL",
 				"amount" => array(
-					"value" => $amount,
+					"value" => (string) $amount,
 					"currency" => $currencyData['currency_code']
 				),
 				"note" => $note,
-				"sender_item_id" => strtotime(date('Ymd')).'_'.$recordData['withdrawal_id'],
+				"sender_item_id" => time().'_'.$recordData['withdrawal_id'],
 				"receiver" => $recordData['withdrawal_paypal_email_id'],
 			))
 		);
