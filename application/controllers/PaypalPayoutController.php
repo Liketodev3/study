@@ -10,40 +10,36 @@ class PaypalPayoutController extends PaymentController
 
 		switch($event_type) {
 			case "PAYMENT.PAYOUTS-ITEM.SUCCEEDED":
-				$requestData = $webhookData['resource'];
 				$withdrawStatus = Transaction::WITHDRAWL_STATUS_COMPLETED;
 				$trxnStatus = Transaction::STATUS_COMPLETED;
-				if (!$this->updatePayoutWithdrawRequest($requestData, $withdrawStatus, $trxnStatus)) {
+				if (!$this->updatePayoutWithdrawRequest($webhookData, $withdrawStatus, $trxnStatus)) {
 					Message::addErrorMessage('Error');
 					FatUtility::dieJsonError(Message::getHtml());
 				}
 			break;
 
 			case "PAYMENT.PAYOUTS-ITEM.CANCELED":
-				$requestData = $webhookData['resource'];
 				$withdrawStatus = Transaction::WITHDRAWL_STATUS_DECLINED;
 				$trxnStatus = Transaction::STATUS_DECLINED;
-				if (!$this->updatePayoutWithdrawRequest($requestData, $withdrawStatus, $trxnStatus)) {
+				if (!$this->updatePayoutWithdrawRequest($webhookData, $withdrawStatus, $trxnStatus)) {
 					Message::addErrorMessage('Error');
 					FatUtility::dieJsonError(Message::getHtml());
 				}
 			break;
 
 			case "PAYMENT.PAYOUTS-ITEM.DENIED":
-				$requestData = $webhookData['resource'];
 				$withdrawStatus = Transaction::WITHDRAWL_STATUS_DECLINED;
 				$trxnStatus = Transaction::STATUS_DECLINED;
-				if (!$this->updatePayoutWithdrawRequest($requestData, $withdrawStatus, $trxnStatus)) {
+				if (!$this->updatePayoutWithdrawRequest($webhookData, $withdrawStatus, $trxnStatus)) {
 					Message::addErrorMessage('Error');
 					FatUtility::dieJsonError(Message::getHtml());
 				}
 			break;
 
 			case "PAYMENT.PAYOUTS-ITEM.FAILED":
-				$requestData = $webhookData['resource'];
 				$withdrawStatus = Transaction::WITHDRAWL_STATUS_PAYOUT_FAILED;
 				$trxnStatus = Transaction::STATUS_DECLINED;
-				if (!$this->updatePayoutWithdrawRequest($requestData, $withdrawStatus, $trxnStatus)) {
+				if (!$this->updatePayoutWithdrawRequest($webhookData, $withdrawStatus, $trxnStatus)) {
 					Message::addErrorMessage('Error');
 					FatUtility::dieJsonError(Message::getHtml());
 				}
@@ -57,10 +53,10 @@ class PaypalPayoutController extends PaymentController
 		if (empty($requestData)) {
 			return false;
 		}
-		$transaction_id = $requestData['transaction_id'];
-		$payout_item_id = $requestData['payout_item_id'];
-		$payout_batch_id = $requestData['payout_batch_id'];
-		$sender_batch_id = $requestData['sender_batch_id'];
+		$transaction_id = $requestData['resource']['transaction_id'];
+		$payout_item_id = $requestData['resource']['payout_item_id'];
+		$payout_batch_id = $requestData['resource']['payout_batch_id'];
+		$sender_batch_id = $requestData['resource']['sender_batch_id'];
 		$arryId = explode('_', $sender_batch_id);
 		$withdrawalId = end($arryId);
 		$withdrawalId = FatUtility::int($withdrawalId);
