@@ -51,7 +51,7 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			case 'withdrawal_transaction_fee':
 				$fee =  $row['withdrawal_transaction_fee'];
-				if($row['withdrawal_status'] == Transaction::WITHDRAWL_STATUS_PENDING){
+				if($row['withdrawal_status'] == Transaction::WITHDRAWL_STATUS_PENDING && $row['withdrawal_payment_method'] == User::WITHDRAWAL_METHOD_TYPE_PAYPAL){
 					$fee =  $payoutFee;
 				}
 				$td->appendElement('plaintext', array(), CommonHelper::displayMoneyFormat($fee,true,true));
