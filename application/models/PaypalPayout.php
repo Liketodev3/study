@@ -165,7 +165,7 @@ class PaypalPayout {
 
 		$gatewayFee = PaymentGatewayFee::getGatewayFee($currencyData['currency_id'], $settings['pmethod_id']);
 		$amount = $recordData['withdrawal_amount'] - $gatewayFee;
-
+		$amount = FatUtility::float($amount);
 		if(0 >= $amount){
 			$this->isError = true;
 			$this->error = Label::getLabel('MSG_Withdrawal_amount_is_zero_after_adding_gateway_fee');
@@ -187,7 +187,7 @@ class PaypalPayout {
 					"value" => $amount,
 					"currency" => $currencyData['currency_code']
 				),
-				"note" => Label::getLabel('LBL_Transaction_Fee_Charged_:'). $gatewayFee ,
+				"note" => Label::getLabel('LBL_Transaction_Fee_Charged_: ').FatUtility::float($gatewayFee),
 				"sender_item_id" => strtotime(date('Ymd')).'_'.$recordData['withdrawal_id'],
 				"receiver" => $recordData['withdrawal_paypal_email_id'],
 			))
