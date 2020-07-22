@@ -1,4 +1,4 @@
-<?php
+    <?php
 class WalletController extends LoggedUserController
 {
     public function __construct($action)
@@ -252,12 +252,16 @@ class WalletController extends LoggedUserController
 
     private function getWithdrawalForm($payoutMethodType, $langId)
     {
+
+
         $frm = new Form('frmWithdrawal');
-        $frm->addSelectBox(Label::getLabel('LBL_Payout_Type'),'withdrawal_payment_method',User::getWithdrawlMethodArray(),$payoutMethodType,[],'');
-        $fld  = $frm->addRequiredField(Label::getLabel('LBL_Amount_to_be_Withdrawn', $langId).' ['.commonHelper::getDefaultCurrencySymbol().']', 'withdrawal_amount');
-        $fld->requirement->setFloat(true);
+        $fld = $frm->addRadioButtons(Label::getLabel('LBL_Payout_Type'),'withdrawal_payment_method',User::getWithdrawlMethodArray(),$payoutMethodType);
+
+        $withdrawalAmountFld  = $frm->addRequiredField(Label::getLabel('LBL_Amount_to_be_Withdrawn', $langId).' ['.commonHelper::getDefaultCurrencySymbol().']', 'withdrawal_amount');
+        $withdrawalAmountFld->requirement->setFloat(true);
         $walletBalance = User::getUserBalance(UserAuthentication::getLoggedUserId());
-        $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Current_Wallet_Balance", $langId) .' '.CommonHelper::displayMoneyFormat($walletBalance, true, true)."</small>";
+        $withdrawalAmountAfterHTML =  "<small>".Label::getLabel("LBL_Current_Wallet_Balance", $langId) .' '.CommonHelper::displayMoneyFormat($walletBalance, true, true)."</small>";
+
         switch ($payoutMethodType) {
             case  User::WITHDRAWAL_METHOD_TYPE_BANK:
                 $frm->addRequiredField(Label::getLabel('LBL_Bank_Name', $langId), 'ub_bank_name');
@@ -267,9 +271,19 @@ class WalletController extends LoggedUserController
                 $frm->addTextArea(Label::getLabel('LBL_Bank_Address', $langId), 'ub_bank_address');
             break;
             case  User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
+
+                $paypalPayoutObj = new PaypalPayout;
+                $paypalPayoutSetting = $paypalPayoutObj->getSettings();
+                $payoutId = (!empty($paypalPayoutSetting['pmethod_id'])) ? $paypalPayoutSetting['pmethod_id'] : 0;
+                $payoutFee = PaymentMethodTransactionFee::getGatewayFee($payoutId, FatApp::getConfig('CONF_CURRENCY'));
+
+                $withdrawalAmountAfterHTML .= "<small class='-color-secondary transaction-fee'>".Label::getLabel("LBL_Transaction_Fee", $langId).' '.CommonHelper::displayMoneyFormat($payoutFee, true, true)."</small>";
                 $frm->addRequiredField(Label::getLabel('LBL_Paypal_Email', $langId), 'ub_paypal_email_address');
             break;
         }
+
+        $withdrawalAmountFld->htmlAfterField = $withdrawalAmountAfterHTML;
+
         $frm->addTextArea(Label::getLabel('LBL_Other_Info_Instructions', $langId), 'withdrawal_comments');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Send_Request', $langId));
         $frm->addButton("", "btn_cancel", Label::getLabel("LBL_Cancel", $langId));

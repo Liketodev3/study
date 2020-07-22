@@ -97,10 +97,17 @@ class WithdrawalRequestsController extends AdminBaseController
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs);
 
+        $paypalPayoutObj = new PaypalPayout;
+        $paypalPayoutSetting = $paypalPayoutObj->getSettings();
+        $payoutId = (!empty($paypalPayoutSetting['pmethod_id'])) ? $paypalPayoutSetting['pmethod_id'] : 0;
+
+        $payoutFee = PaymentMethodTransactionFee::getGatewayFee($payoutId, FatApp::getConfig('CONF_CURRENCY'));
+
         $this->set("arr_listing", $records);
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
         $this->set('page', $page);
+        $this->set('payoutFee', $payoutFee);
         $this->set('pageSize', $pagesize);
         $this->set('postedData', $post);
         $this->set('statusArr', Transaction::getWithdrawlStatusArr($this->adminLangId));

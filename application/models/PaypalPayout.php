@@ -1,7 +1,6 @@
 <?php
 class PaypalPayout {
 
-
 	const ACCESS_TOKEN_URL_TEST = 'https://api.sandbox.paypal.com/v1/oauth2/token';
 	const ACCESS_TOKEN_URL_LIVE = 'https://api.sandbox.paypal.com/v1/oauth2/token';
 
@@ -172,8 +171,8 @@ class PaypalPayout {
 			return false;
 		}
 
-		$sender_batch_id = "Payout_".strtotime(date('Ymd')).'_'.$recordData['withdrawal_id'];
-
+		$sender_batch_id = "Payout_".time().'_'.$recordData['withdrawal_id'];
+		$note =  Label::getLabel('MSG_Transaction_Fee_Charged_:').' '.CommonHelper::displayMoneyFormat($gatewayFee,true,true);
 		$requestData = array(
 			"sender_batch_header" => array(
 				"sender_batch_id" => $sender_batch_id,
@@ -187,13 +186,12 @@ class PaypalPayout {
 					"value" => $amount,
 					"currency" => $currencyData['currency_code']
 				),
-				"note" => Label::getLabel('MSG_Transaction_Fee_Charged_:').' '.FatUtility::float($gatewayFee),
+				"note" => $note,
 				"sender_item_id" => strtotime(date('Ymd')).'_'.$recordData['withdrawal_id'],
 				"receiver" => $recordData['withdrawal_paypal_email_id'],
 			))
 		);
 		$response =  $this->sendRequest($access_token, $requestData);
-
 		if($this->isError()) {
 			$this->isError = true;
 			$this->error = $this->getError();
@@ -212,12 +210,22 @@ class PaypalPayout {
 				return false;
 		}
 		$db = FatApp::getDb();
-		$assignFields = array('withdrawal_status'=>Transaction::WITHDRAWL_STATUS_PAYOUT_SENT, 'withdrawal_transaction_fee'=> $gatewayFee, 'withdrawal_response'=> json_encode($response));
+		$assignFields = array(
+							  'withdrawal_status'=>Transaction::WITHDRAWL_STATUS_PAYOUT_SENT,
+							  'withdrawal_transaction_fee'=> $gatewayFee,
+							   'withdrawal_response'=> json_encode($response)
+						   );
 		if (!$db->updateFromArray(User::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields, array('smt'=>'withdrawal_id=?', 'vals'=>array($recordData['withdrawal_id'])))) {
 			$this->isError = true;
 			$this->error = $db->getError();
 			return false;
 		}
+		$note = "<br /><small class=\"transaction-fee\">".$note."<small>";
+		if($gatewayFee > 0){
+			$query = "UPDATE ".Transaction::DB_TBL." set `utxn_comments` = CONCAT(`utxn_comments`,' ', '".$note."') where utxn_withdrawal_id = ".$recordData['withdrawal_id'];
+			$db->query($query);
+		}
+
 		return true;
 	}
 

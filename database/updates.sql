@@ -541,7 +541,7 @@ ALTER TABLE `tbl_payment_methods` ADD `pmethod_type` INT NOT NULL COMMENT 'payme
 UPDATE `tbl_payment_methods` SET `pmethod_type` = '1' WHERE `tbl_payment_methods`.`pmethod_type` = 0;
 
 --
--- Table structure for table `tbl_payment_gateway_fee`
+-- Table structure for table `tbl_payment_method_transaction_fee`
 --
 
 CREATE TABLE `tbl_payment_method_transaction_fee` (

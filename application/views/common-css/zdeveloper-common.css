@@ -114,3 +114,7 @@ input[name=teach_language_name].ui-autocomplete-loading {
 .search-lesson-listing{
   padding-bottom: 10px;
 }
+
+small.transaction-fee{
+  color: var(--color-secondary);
+}

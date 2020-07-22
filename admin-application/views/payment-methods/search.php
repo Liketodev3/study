@@ -76,7 +76,7 @@ foreach ($arr_listing as $sn=>$row){
 
 					if($row['pmethod_type'] == PaymentMethods::TYPE_PAYMENT_METHOD_PAYOUT){
 						$innerLi=$innerUl->appendElement('li');
-						$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Payment_Method_fee',$adminLangId),"onclick"=>"getPaymentMethodFee(".$row['pmethod_id'].")"),Label::getLabel('LBL_Method_Fee',$adminLangId), true);
+						$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Transaction_Fee',$adminLangId),"onclick"=>"getPaymentMethodFee(".$row['pmethod_id'].")"),Label::getLabel('LBL_Method_Fee',$adminLangId), true);
 
 					}
 

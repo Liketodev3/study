@@ -36,7 +36,8 @@ class WithdrawalRequestsSearch extends SearchBase
         $srch->addCondition('txn.utxn_status', '=', Transaction::STATUS_COMPLETED);
         $srch->addMultipleFields(array('txn.utxn_user_id as userId',"SUM(utxn_credit - utxn_debit) as user_balance"));
         $qryUserBalance = $srch->getQuery();
-        
+
         $this->joinTable('('.$qryUserBalance.')', 'LEFT OUTER JOIN', 'tu.user_id = tqub.userId', 'tqub');
     }
+
 }

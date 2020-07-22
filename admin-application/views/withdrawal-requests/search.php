@@ -3,9 +3,10 @@
 $arr_flds = array(
 		'listserial'=>Label::getLabel('LBL_ID',$adminLangId),
 		'user_details'=>Label::getLabel('LBL_User_Details',$adminLangId),
-		'user_balance' => Label::getLabel('LBL_Balance',$adminLangId),
-		'withdrawal_amount' => Label::getLabel('LBL_Amount',$adminLangId),
-		//'withdrawal_payment_method'	=>	Label::getLabel( 'LBL_Withdrawal_Mode', $adminLangId ),
+		//'user_balance' => Label::getLabel('LBL_Balance',$adminLangId),
+		'withdrawal_transaction_fee' => Label::getLabel('LBL_Transaction_Fee',$adminLangId),
+		'withdrawal_amount' => Label::getLabel('LBL_Withdrawal_Request_Amount',$adminLangId),
+		// 'withdrawal_payment_method'	=>	Label::getLabel( 'LBL_Withdrawal_Mode', $adminLangId ),
 		'account_details' => Label::getLabel('LBL_Account_Details',$adminLangId),
 		'withdrawal_request_date' => Label::getLabel('LBL_Date',$adminLangId),
 		'withdrawal_status' => Label::getLabel('LBL_Status',$adminLangId),
@@ -47,6 +48,13 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			case 'user_balance':
 				$td->appendElement('plaintext', array(), CommonHelper::displayMoneyFormat($row['user_balance'],true,true));
+			break;
+			case 'withdrawal_transaction_fee':
+				$fee =  $row['withdrawal_transaction_fee'];
+				if($row['withdrawal_status'] == Transaction::WITHDRAWL_STATUS_PENDING){
+					$fee =  $payoutFee;
+				}
+				$td->appendElement('plaintext', array(), CommonHelper::displayMoneyFormat($fee,true,true));
 			break;
 			case 'withdrawal_amount':
 				$td->appendElement('plaintext', array(), CommonHelper::displayMoneyFormat($row['withdrawal_amount'],true,true));
