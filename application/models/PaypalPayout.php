@@ -187,7 +187,7 @@ class PaypalPayout {
 					"value" => $amount,
 					"currency" => $currencyData['currency_code']
 				),
-				"note" => Label::getLabel('LBL_Transaction_Fee_Charged_:', $this->adminLangId). $gatewayFee ,
+				"note" => Label::getLabel('LBL_Transaction_Fee_Charged_:'). $gatewayFee ,
 				"sender_item_id" => strtotime(date('Ymd')).'_'.$recordData['withdrawal_id'],
 				"receiver" => $recordData['withdrawal_paypal_email_id'],
 			))
