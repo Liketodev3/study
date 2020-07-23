@@ -18,7 +18,7 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
 
 	requestReschedule = function(id){
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','requestReschedule',[id]),'',function(t){
-			$.facebox( t,'facebox-medium');
+			$.facebox( t,'facebox-medium booking-calendar-pop-js');
 		});
 	};
 
@@ -34,7 +34,7 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
 	viewBookingCalendar = function(id, action=''){
 		var data = {'action' : action };
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','viewBookingCalendar',[id]),data ,function(t){
-			$.facebox( t,'facebox-medium');
+			$.facebox( t,'facebox-medium booking-calendar-pop-js');
 		});
 	};
 
@@ -46,6 +46,9 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
 						var rescheduleReason = $('#reschedule-reason-js').val();
 						if($.trim(rescheduleReason) == ""){
 							alert(langLbl.requriedRescheduleMesssage);
+							$('.booking-calendar-pop-js').animate({
+									scrollTop: $("#loaderCalendar").offset().top
+							}, 500);
 							return false;
 						}
 				}
