@@ -222,6 +222,9 @@ class PurchasedLessonsController extends AdminBaseController
         }
         $srch->addOrder('order_date_added', 'desc');
         //$srch->addCondition('order_is_paid', '!=', Order::ORDER_IS_PENDING);
+        
+        $srch->addCondition('slesson_grpcls_id', '=', 0);
+        
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         $rs      = $srch->getResultSet();

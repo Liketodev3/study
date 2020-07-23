@@ -75,13 +75,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
                                             $from_time_by_user_timezone = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $class['grpcls_start_datetime'], true, $user_timezone);
                                             $to_time_by_user_timezone = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $class['grpcls_end_datetime'], true, $user_timezone);
                                             ?>
-                                            <span class="lable-txt cls_time" rev="<?php echo $from_time_by_user_timezone.' - '.$to_time_by_user_timezone ?>"><?php echo $from_time_by_teach_timezone.' - '.$to_time_by_teach_timezone ?></span>
-                                        </div>
-                                        <div class="switch-timzone">
-                                            <label class="statustab inactive" onclick="changeTz(this)">
-                                                <span data-off="Active" data-on="Inactive" class="switch-labels"></span>
-                                                <span class="switch-handles"></span><?php echo Label::getLabel("LBL_Your_Timezone") ?>
-                                            </label>
+                                            <span class="lable-txt cls_time"><?php echo $from_time_by_user_timezone.' - '.$to_time_by_user_timezone ?></span>
                                         </div>
                                     </li>
                                 </ul>
