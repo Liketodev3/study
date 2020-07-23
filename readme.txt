@@ -1,3 +1,14 @@
+
+
+New Features:
+
+Enhancements: N/A
+
+Fixes:
+    * Bug-040391: Google Authorize
+
+==============================================
+
 Release Version: TV-2.0.0.20200720
 Release Date: 2020/07/20
 
