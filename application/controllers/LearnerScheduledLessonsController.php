@@ -50,6 +50,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         ));
         if (!empty($post['status']) && $post['status'] == ScheduledLesson::STATUS_RESCHEDULED) {
             $srch->addCondition('lrsl.lesreschlog_id', '>', '0');
+            $srch->addCondition('slns.slesson_status', 'IN', [ScheduledLesson::STATUS_SCHEDULED,ScheduledLesson::STATUS_NEED_SCHEDULING]);
         }
 
 		$srch->addOrder('slesson_status', 'ASC');

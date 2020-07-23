@@ -48,11 +48,12 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then CONCAT(slns.slesson_date, " ", slns.slesson_start_time) ELSE NOW() END ) as passedLessonsOrder',
 			)
         );
-		
+
 		 if (!empty($post['status']) && $post['status'] == ScheduledLesson::STATUS_RESCHEDULED) {
             $srch->addCondition('lrsl.lesreschlog_id', '>', '0');
+            $srch->addCondition('slns.slesson_status', 'IN', [ScheduledLesson::STATUS_SCHEDULED,ScheduledLesson::STATUS_NEED_SCHEDULING]);
         }
-		
+
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addOrder('upcomingLessonOrder', 'DESC');
 		$srch->addOrder('passedLessonsOrder', 'DESC');
@@ -437,13 +438,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
         }
-        
+
         // remove from teacher google calendar
         $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
         if($token){
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
-            
+
             if($oldCalId){
                 SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
             }
@@ -528,13 +529,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
         }
-        
+
         // remove from teacher google calendar
         $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
         if($token){
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
-            
+
             if($oldCalId){
                 SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
             }
@@ -1138,7 +1139,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 		 if ($lessonRow['slesson_teacher_end_time'] > 0) {
 			 FatUtility::dieJsonError(Label::getLabel('LBL_You_already_end_lesson!'));
 		 }
-		 
+
         $to_time = strtotime($lessonRow['slesson_date'].' '.$lessonRow['slesson_start_time']);
         $from_time = strtotime(date('Y-m-d H:i:s'));
         $diff = round(abs($to_time - $from_time) / 60, 2);
