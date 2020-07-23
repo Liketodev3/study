@@ -531,7 +531,7 @@ class TeacherController extends TeacherBaseController
                 $frm->addCheckBoxes($titleArr[$key], 'pref_'.$key, $optionsArr, '', array('class' => 'list-onethird list-onethird--bg'));
             }
         }
-        $frm->addSubmitButton('', 'submit', 'Save Changes');
+        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save_Changes'));
         return $frm;
     }
 
