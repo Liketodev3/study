@@ -91,28 +91,41 @@ $endedBy = isset(User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_b
     </div>
     <div class="sectionbody">
         <table class="table table--details">
-
-            <tbody><tr>
+            <tbody>
+            <tr>
               <td ><strong><?php echo Label::getLabel('LBL_Lesson_Id',$adminLangId); ?>:</strong>  <?php echo $lastIssue['issrep_slesson_id']; ?></td>
               <td><strong><?php echo Label::getLabel('LBL_Order_Id',$adminLangId); ?>:</strong> <?php echo $lastIssue['sldetail_order_id']; ?></td>
-              <td ><strong><?php echo Label::getLabel('LBL_Teacher_Name',$adminLangId); ?>:</strong>  <?php echo $lastIssue['teacher_username']; ?></td>
+              <td><strong><?php echo Label::getLabel('LBL_Free_Trail',$adminLangId); ?>:</strong> <?php echo applicationConstants::getYesNoArr()[$lastIssue['op_lpackage_is_free_trial']]; ?></td>
+              <td ></td>
             </tr>
             <tr>
+            <td ><strong><?php echo Label::getLabel('LBL_Order_Net_Amount',$adminLangId); ?>:</strong>  <?php echo CommonHelper::displayMoneyFormat($lastIssue['order_net_amount'], true, true); ?></td>
+              <td ><strong><?php echo Label::getLabel('LBL_Order_Discount_Total',$adminLangId); ?>:</strong>   <?php echo CommonHelper::displayMoneyFormat($lastIssue['order_discount_total'], true, true); ?></td>
+              <td ><strong><?php echo Label::getLabel('LBL_Lesson_Price',$adminLangId); ?>:</strong>   <?php echo CommonHelper::displayMoneyFormat($lastIssue['op_unit_price'], true, true); ?></td>
+              <td><strong><?php echo Label::getLabel('LBL_Total_Lesson',$adminLangId); ?>:</strong> <?php echo $lastIssue['op_qty']; ?></td>
+              <td ></td>
+            </tr>
+            <tr>
+                <td ><strong><?php echo Label::getLabel('LBL_Teacher_Name',$adminLangId); ?>:</strong>  <?php echo $lastIssue['teacher_username']; ?></td>
               <td ><strong><?php echo Label::getLabel('LBL_Learner_Name',$adminLangId); ?>:</strong>  <?php echo $lastIssue['learner_username']; ?></td>
               <td><strong><?php echo Label::getLabel('LBL_Teacher_Join_Time',$adminLangId); ?>:</strong> <?php echo $lastIssue['slesson_teacher_join_time']; ?></td>
               <td ><strong><?php echo Label::getLabel('LBL_Teacher_End_Time',$adminLangId); ?>:</strong>  <?php echo $lastIssue['slesson_teacher_end_time']; ?></td>
+
             </tr>
             <tr>
-              <td ><strong><?php echo Label::getLabel('LBL_Learner_Join_Time',$adminLangId); ?>:</strong>  <?php echo $lastIssue['slesson_learner_join_time']; ?></td>
-              <td><strong><?php echo Label::getLabel('LBL_Learner_end_Time',$adminLangId); ?>:</strong> <?php echo $lastIssue['slesson_learner_end_time']; ?></td>
+              <td ><strong><?php echo Label::getLabel('LBL_Learner_Join_Time',$adminLangId); ?>:</strong>  <?php echo $lastIssue['sldetail_learner_join_time']; ?></td>
+              <td><strong><?php echo Label::getLabel('LBL_Learner_end_Time',$adminLangId); ?>:</strong> <?php echo $lastIssue['sldetail_learner_end_time']; ?></td>
               <td ><strong><?php echo Label::getLabel('LBL_Language',$adminLangId); ?>:</strong>  <?php echo $lastIssue['tlanguage_name']; ?></td>
+              <td ></td>
             </tr>
             <tr>
               <td ><strong><?php echo Label::getLabel('LBL_Lesson_Ended_By',$adminLangId); ?>:</strong>  <?php echo $endedBy; ?></td>
               <td><strong><?php echo Label::getLabel('LBL_Completed_On',$adminLangId); ?>:</strong> <?php echo $lastIssue['slesson_ended_on']; ?></td>
               <td ><strong><?php echo Label::getLabel('LBL_Lesson_Call_History',$adminLangId); ?>:</strong>  <?php foreach($callHistory as $call){ if($call->GUID != "LESSON-".$lastIssue['issrep_slesson_id']) { continue; } ?>
-													<strong><?php echo 'Call Type: '.$call->call_type.' Duration: '.$call->duration.' From: '.date('h:i:s', $call->start_time).' To: '.date('h:i:s', $call->end_time); ?></strong> <br>
-												<?php } ?></td>
+								<strong><?php echo 'Call Type: '.$call->call_type.' Duration: '.$call->duration.' From: '.date('h:i:s', $call->start_time).' To: '.date('h:i:s', $call->end_time); ?></strong> <br>
+												<?php } ?>
+                </td>
+                <td ></td>
             </tr>
         </tbody></table>
     </div>

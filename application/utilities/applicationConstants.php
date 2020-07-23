@@ -113,7 +113,7 @@ class applicationConstants
         );
     }
 
-    public static function getYesNoArr($langId)
+    public static function getYesNoArr($langId = 0)
     {
         $langId = FatUtility::int($langId);
         if ($langId < 1) {
