@@ -6,6 +6,7 @@ Enhancements: N/A
 
 Fixes:
     * Bug-040391: Google Authorize
+    * Bug-040466: For Learner removed reschedule/cancel options for cancelled class
 
 ==============================================
 
