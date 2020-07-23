@@ -17,12 +17,12 @@ class TeacherController extends TeacherBaseController
         } else {
             $this->set('viewProfile', true);
         }
-        
+
         $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
         if(!$token || SocialMedia::isGoogleAccessTokenExpired($token)){
             Message::addInfo(Label::getLabel('LBL_Please_Authenticate_google_to_be_able_to_post_on_google_calendar'));
         }
-        
+
         /* ] */
         $this->_template->addCss('css/custom-full-calendar.css');
         $this->_template->addJs('js/moment.min.js');
@@ -34,6 +34,7 @@ class TeacherController extends TeacherBaseController
         $userDetails = $userObj->getDashboardData(CommonHelper::getLangId(), true);
         $durationArr = Statistics::getDurationTypesArr(CommonHelper::getLangId());
         $frmSrch = $this->getSearchForm();
+        $frmSrch->fill(['status'=>ScheduledLesson::STATUS_UPCOMING]);
         $this->set('frmSrch', $frmSrch);
         $this->set('durationArr', $durationArr);
         $this->set('userDetails', $userDetails);
@@ -140,17 +141,17 @@ class TeacherController extends TeacherBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-	
+
 	public function getTeacherProfileProgress() {
 		 $teacherProfileProgress = User::getTeacherProfileProgress();
 		 $this->set('teacherProfileProgress', $teacherProfileProgress);
 		 if($teacherProfileProgress['isProfileCompleted'] == false) {
-			
+
 			$this->set('msg',Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'));
 		 }
         $this->_template->render(false, false, 'json-success.php');
 	}
-	
+
     private function getTeacherLanguagesForm()
     {
         $frm = new Form('frmTeacherLanguages');
