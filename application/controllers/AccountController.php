@@ -470,7 +470,7 @@ class AccountController extends LoggedUserController
         require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
-        $client->setScopes([ 'https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
+        $client->setScopes([ 'email','profile', 'https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
         $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
         $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
         $currentPageUri = CommonHelper::generateFullUrl('Account', 'GoogleCalendarAuthorize', array(), '', false);
@@ -498,6 +498,9 @@ class AccountController extends LoggedUserController
         );
         $usrStngObj = new UserSetting(UserAuthentication::getLoggedUserId());
         $usrStngObj->saveData($data);
+        
+        unset($_SESSION['access_token']);
+        
         FatApp::redirectUser(CommonHelper::generateUrl('Account', 'ProfileInfo'));
     }
 }

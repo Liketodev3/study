@@ -120,7 +120,7 @@ foreach ( $lessons as $lesson ) {
 				<div class="select-box toggle-group">
 					<div class="buttons-toggle">
 						<a href="<?php echo CommonHelper::generateFullUrl('LearnerScheduledLessons','view',array($lesson['sldetail_id'])); ?>" class="btn btn--secondary"><?php echo Label::getLabel('LBL_View'); ?></a>
-						<?php if((( $lesson['slesson_grpcls_id']>0 AND $lesson['grpcls_status'] == TeacherGroupClasses::STATUS_CANCELLED AND $lesson['order_is_paid'] == Order::ORDER_IS_PAID) OR ($lesson['sldetail_learner_status'] != ScheduledLesson::STATUS_CANCELLED AND $lesson['sldetail_learner_status'] != ScheduledLesson::STATUS_COMPLETED)) AND $referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('LearnerGroupClasses'))){ ?>
+						<?php if(( ($lesson['sldetail_learner_status'] != ScheduledLesson::STATUS_CANCELLED AND $lesson['sldetail_learner_status'] != ScheduledLesson::STATUS_COMPLETED)) AND $referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('LearnerGroupClasses'))){ ?>
 						<a href="javascript:void(0)" class="btn btn--secondary btn--dropdown toggle__trigger-js"></a>
 						<?php }?>
 					</div>
@@ -151,13 +151,6 @@ foreach ( $lessons as $lesson ) {
 								<?php /* <li><a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lesson['sldetail_id']; ?>')"><?php echo Label::getLabel('LBL_Reschedule'); ?></a></li>*/ ?>
 								
 								<li><a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['sldetail_id']; ?>')" ><?php echo Label::getLabel('LBL_Cancel'); ?></a></li>
-								<?php } ?>
-                                
-								<?php if($lesson['slesson_grpcls_id']>0 && $lesson['grpcls_status'] == TeacherGroupClasses::STATUS_CANCELLED AND $lesson['order_is_paid'] == Order::ORDER_IS_PAID ){ ?>
-                                    <?php if( !empty($lessonPackage) ){ ?>
-                                    <li><a href="javascript:void(0);"  onClick="cart.add( '<?php echo $lesson['teacherId']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','','<?php echo $lesson['grpcls_slanguage_id']; ?>', '0', '<?php echo $lesson['sldetail_id'] ?>' )"><?php echo Label::getLabel('LBL_Reschedule'); ?></a></li>
-                                    <?php } ?>
-                                    <li><a href="<?php echo CommonHelper::generateUrl('LearnerOrders', 'refund', array($lesson['sldetail_order_id'],$lesson['sldetail_id'])) ?>"><?php echo Label::getLabel('LBL_Refund'); ?></a></li>
 								<?php } ?>
 								
 								<?php

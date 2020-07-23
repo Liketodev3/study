@@ -1,3 +1,15 @@
+
+
+New Features:
+
+Enhancements: N/A
+
+Fixes:
+    * Bug-040391: Google Authorize
+    * Bug-040466: For Learner removed reschedule/cancel options for cancelled class
+
+==============================================
+
 Release Version: TV-2.0.0.20200720
 Release Date: 2020/07/20
 
