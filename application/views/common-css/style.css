@@ -2348,7 +2348,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 .menu-vertical li a {
     display: block;
     padding: 22px 15px 22px 55px;
-    font-size: 1.0rem;
+    font-size: 1.1rem;
     font-weight: 400;
     position: relative;
 }
@@ -2861,7 +2861,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 .tabs-inline li a {
     display: block;
     padding: 20px 0;
-    font-size: 1.08rem;
+    font-size: 1.1rem;
     border-bottom: 2px solid transparent;
 }
 
@@ -7608,4 +7608,41 @@ html.show-facebox body {
 html.show-dashboard-js .overlay {
         display: none;
     }
+}
+
+/* added on 23rd July 2020  */
+.profile-progress{
+	font-weight: 500;
+	font-size: 13px;
+	color:#000;
+}
+.progress--top{display:flex;width:100%;padding-bottom:4px;justify-content:space-between;}
+.progress-wrapper{max-width:180px;}
+.search-lesson-listing strong{font-weight:500;font-size:13px;}
+strong.span-right{font-weight:500;font-size:13px;}
+.schedule-list .timer .label{font-weight:500;font-size:13px;}
+@media screen and (max-width:767px){
+	ul.actions{
+		justify-content:flex-start;
+		padding-top:15px;
+	}
+	ul.actions li {
+		margin: 0 5px 4px 0;
+	}
+	.progress-wrapper{
+		margin:10px 0;
+	}
+}
+@media screen and (max-width:575px){
+	.progress-wrapper{
+		flex-wrap:wrap;
+	}
+	.progress-wrapper .profile-progress{
+		width:100%;
+	}
+	.progress-wrapper .progress {width: 200px;}
+	.profile-progress {
+		padding-right: 0;
+		padding-bottom: 10px;
+	}
 }
