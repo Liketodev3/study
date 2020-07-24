@@ -1149,13 +1149,18 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Re-schedule_request_sent_successfully!'));
         }
-        if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) {
+        if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_COMPLETED || $lessonRow['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) {
             $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
             $sLessonObj->assignValues(array('slesson_teacher_end_time' => date('Y-m-d H:i:s')));
             if (!$sLessonObj->save()) {
                 FatUtility::dieJsonError($sLessonObj->getError());
             }
-            FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Already_Ended_by_Learner!'));
+            $msg = 'LBL_Lesson_Already_Ended';
+            if($lessonRow['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED){
+                $msg .='_And_Issue_Reported';
+            }
+            $msg .= '_By_Learner!';
+            FatUtility::dieJsonSuccess(Label::getLabel($msg));
         }
 
         $dataUpdateArr = array(
