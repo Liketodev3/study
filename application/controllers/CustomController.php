@@ -68,6 +68,12 @@ class CustomController extends MyAppController
             if (isset($order['order_type'])) {
                 $this->set('orderType', $order['order_type']);
             }
+            $orderObj = $orderObj->getLessonsByOrderId($orderId);
+            $orderObj->addFld('slesson_grpcls_id');
+            $orderObj->doNotCalculateRecords(true);
+            $orderObj->doNotLimitRecords(true);
+            $lessonInfo = FatApp::getDb()->fetch($orderObj->getResultSet());
+            $this->set('lessonInfo', $lessonInfo);
         }
         $this->set('textMessage', $textMessage);
         /* if(CommonHelper::isAppUser()){

@@ -16,7 +16,7 @@
 			$.mbsmessage('Invalid Request!');
 			return false;
 		}
-		fcom.ajax(fcom.makeUrl('PurchasedLessons','updateStatusSetup'),{"slesson_id":id, "slesson_status" : value},function(json){
+		fcom.ajax(fcom.makeUrl('PurchasedLessons','updateStatusSetup'),{"sldetail_id":id, "slesson_status" : value},function(json){
 			res = $.parseJSON(json);
 			if(res.status == "1"){
 				  $.mbsmessage( res.msg,true, 'alert alert--success');

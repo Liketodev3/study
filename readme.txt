@@ -7,6 +7,11 @@ Enhancements: N/A
 Fixes:
     * Bug-040391: Google Authorize
     * Bug-040466: For Learner removed reschedule/cancel options for cancelled class
+    * Bug-040460: Show group classes in orders->view schedules
+    * Bug-040458: Showing group classes info in orders
+    * Bug-040473: Navigate to class list if buy group class
+    * Bug-040476: Icons changes for learner group class list
+    * Bug-040471: Lesson cancel update refund amount in database
 
 ==============================================
 
