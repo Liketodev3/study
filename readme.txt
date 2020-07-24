@@ -10,6 +10,7 @@ Fixes:
     * Bug-040460: Show group classes in orders->view schedules
     * Bug-040458: Showing group classes info in orders
     * Bug-040473: Navigate to class list if buy group class
+    * Bug-040476: Icons changes for learner group class list
 
 ==============================================
 

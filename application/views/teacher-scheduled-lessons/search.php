@@ -154,7 +154,7 @@ foreach( $lessons as $lesson ){
 						}else{
 						?>
 						<li class="span-right">
-							<span class="-color-secondary"><?php echo Label::getLabel('LBL_Lesson_time_has_passed'); ?></span>
+							<span class="-color-secondary"><?php echo Label::getLabel('LBL_Lesson_start_time_has_passed'); ?></span>
 						</li>
 						<?php
 							}
