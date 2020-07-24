@@ -32,6 +32,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
    	});
 
     deleteTeacherWeeklySchedule  = function(eventData){
+        console.log('Hello');
         $.mbsmessage.close();
         confirmMessage = '<?php echo Label::getLabel( 'LBL_Do_you_want_to_disable_the_slot' ); ?>';
         var edata = $("#w_calendar").fullCalendar("clientEvents",eventData._id);
@@ -40,6 +41,7 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
         }
         edata = edata[0];
        // $('#w_calendar').fullCalendar('removeEvents', eventData._id);
+       edata.className = ['<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>'];
        edata.classType = <?php echo TeacherWeeklySchedule::UNAVAILABLE ?>;
        if(typeof eventData.classType !== 'undefined' && eventData.classType == <?php echo TeacherWeeklySchedule::UNAVAILABLE ?>) {
            edata.classType = <?php echo TeacherWeeklySchedule::AVAILABLE ?>;
@@ -49,25 +51,26 @@ $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
         }
 
          if(confirm(confirmMessage)){
-            // console.log(edata,'edata');
+            console.log(edata,'edata');
              $("#w_calendar").fullCalendar('updateEvent',edata);
              mergeEvents();
-            var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
-            return 	{
-                start: moment(e.start).format('HH:mm:ss'),
-                end: moment(e.end).format('HH:mm:ss'),
-                day: moment(e.start).format('d'),
-                date: moment(e.start).format('YYYY-MM-DD'),
-                _id: e._id,
-                action: e.action,
-                classtype: e.classType,
-            };
-            }));
-            fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data='+json, function(t) {
-                $("#w_calendar").fullCalendar("refetchEvents");
-                // fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherWeeklySchedule'), 'data='+JSON.stringify(eventData) , function(t) {
-                // });
-            });
+             return;
+            // var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
+            // return 	{
+            //     start: moment(e.start).format('HH:mm:ss'),
+            //     end: moment(e.end).format('HH:mm:ss'),
+            //     day: moment(e.start).format('d'),
+            //     date: moment(e.start).format('YYYY-MM-DD'),
+            //     _id: e._id,
+            //     action: e.action,
+            //     classtype: e.classType,
+            // };
+            // }));
+            // fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data='+json, function(t) {
+            //     $("#w_calendar").fullCalendar("refetchEvents");
+            //     // fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherWeeklySchedule'), 'data='+JSON.stringify(eventData) , function(t) {
+            //     // });
+            // });
          }
     };
 
