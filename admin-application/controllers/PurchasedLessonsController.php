@@ -42,6 +42,7 @@ class PurchasedLessonsController extends AdminBaseController
         ));
         $frm->addSelectBox(Label::getLabel('LBL_Free_Trial', $this->adminLangId), 'op_lpackage_is_free_trial', $arr_options, -1, array(), '');
         $frm->addSelectBox(Label::getLabel('Payment Status', $this->adminLangId), 'order_is_paid', $arr_options1, -2, array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Class_Type', $this->adminLangId), 'class_type', ApplicationConstants::getClassTypes($this->adminLangId));
 
         $frm->addHiddenField('', 'page', 1);
         $frm->addHiddenField('', 'order_user_id', '');
@@ -190,9 +191,12 @@ class PurchasedLessonsController extends AdminBaseController
         $srch->joinOrderProduct();
         $srch->joinUser();
         $srch->joinTeacherLessonLanguage($this->adminLangId);
+        $srch->joinGroupClass();
         $srch->addMultipleFields(
             array(
             'order_id',
+            'grpcls_id',
+			'grpcls.grpcls_title',
             'order_user_id',
             'op_teacher_id',
             'op_lpackage_is_free_trial',
@@ -219,6 +223,13 @@ class PurchasedLessonsController extends AdminBaseController
         if (isset($post['op_lpackage_is_free_trial']) and $post['op_lpackage_is_free_trial'] > -1) {
             $is_trial = FatUtility::int($post['op_lpackage_is_free_trial']);
             $srch->addCondition('op_lpackage_is_free_trial', '=', $is_trial);
+        }
+        if (!empty($post['class_type'])) {
+            if($post['class_type']==applicationConstants::CLASS_TYPE_GROUP){
+                $srch->addCondition('grpcls_id', '>', 0);
+            }else{
+                $srch->addDirectCondition('grpcls_id IS NULL');
+            }
         }
         $srch->addOrder('order_date_added', 'desc');
         //$srch->addCondition('order_is_paid', '!=', Order::ORDER_IS_PENDING);
@@ -262,6 +273,7 @@ class PurchasedLessonsController extends AdminBaseController
 
         /* [ */
         $srch = new ScheduledLessonSearch(false);
+        $srch->joinGroupClass();
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->joinTeacher();
@@ -273,6 +285,8 @@ class PurchasedLessonsController extends AdminBaseController
 
         $srch->addMultipleFields(array(
             'slns.slesson_id',
+            'grpcls.grpcls_title',
+            'grpcls.grpcls_description',
             'sld.sldetail_learner_id as learnerId',
             'ul.user_first_name as learnerFname',
             'ul.user_last_name as learnerLname',

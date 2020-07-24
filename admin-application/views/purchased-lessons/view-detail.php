@@ -7,6 +7,33 @@
 		<div class="tabs_nav_container responsive flat">
 			<div class="tabs_panel_wrap">
 				<div class="tabs_panel">
+                        <?php if($lessonRow['grpcls_title']): ?>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="field-set">
+									<div class="caption-wraper">
+										<label class="field_label">
+											<?php echo Label::getLabel('LBL_Class_Title', $adminLangId); ?>
+										</label>
+										: <strong><?php echo CommonHelper::displayNotApplicable($lessonRow['grpcls_title']); ?></strong>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="field-set">
+									<div class="caption-wraper">
+										<label class="field_label">
+											<?php echo Label::getLabel('LBL_Class_Description',$adminLangId); ?>
+										</label>
+										: <strong><?php echo CommonHelper::displayNotApplicable($lessonRow['grpcls_description']); ?></strong>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <?php endif; ?>
+                        
 						<div class="row">
 							<div class="col-md-12">
 								<div class="field-set">
