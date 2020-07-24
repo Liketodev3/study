@@ -30,10 +30,10 @@ class PreferencesController extends AdminBaseController
 
     public function search()
     {
-        $pagesize   = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        // $pagesize   = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $searchForm = $this->getSearchForm();
         $data       = FatApp::getPostedData();
-        $page       = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
+        // $page       = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $post       = $searchForm->getFormDataFromArray($data);
         $srch       = new PreferenceSearch($this->adminLangId);
         if (!empty($post['keyword'])) {
@@ -43,24 +43,26 @@ class PreferencesController extends AdminBaseController
             $srch->addCondition('preference_type', '=', $post['type']);
         }
         $srch->addOrder('preference_display_order','asc');
-        $page = (empty($page) || $page <= 0) ? 1 : $page;
-        $page = FatUtility::int($page);
-        $srch->setPageNumber($page);
-        $srch->setPageSize($pagesize);
+        $srch->doNotLimitRecords();
+        // $page = (empty($page) || $page <= 0) ? 1 : $page;
+        // $page = FatUtility::int($page);
+        // $srch->setPageNumber($page);
+        // $srch->setPageSize($pagesize);
         $rs      = $srch->getResultSet();
         $records = array();
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
         }
+
         $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditPreferences($adminId, true);
         $this->set("canEdit", $canEdit);
         $this->set("arr_listing", $records);
-        $this->set('pageCount', $srch->pages());
-        $this->set('recordCount', $srch->recordCount());
-        $this->set('page', $page);
+        // $this->set('pageCount', $srch->pages());
+        // $this->set('recordCount', $srch->recordCount());
+        // $this->set('page', $page);
         $this->set("type", $post['type']);
-        $this->set('pageSize', $pagesize);
+        // $this->set('pageSize', $pagesize);
         $this->set('postedData', $post);
         $this->_template->render(false, false);
     }
