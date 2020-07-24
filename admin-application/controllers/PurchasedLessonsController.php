@@ -136,7 +136,7 @@ class PurchasedLessonsController extends AdminBaseController
         //     $scheduledLessonSearchObj->addCondition('op_lpackage_is_free_trial', '=', $learnerId);
         // }
         
-        $scheduledLessonSearchObj->addCondition('slesson_grpcls_id', '=', 0);
+        // $scheduledLessonSearchObj->addCondition('slesson_grpcls_id', '=', 0);
 
         if ($data['slesson_status'] > 0) {
             $status = FatUtility::int($data['slesson_status']);
@@ -223,7 +223,7 @@ class PurchasedLessonsController extends AdminBaseController
         $srch->addOrder('order_date_added', 'desc');
         //$srch->addCondition('order_is_paid', '!=', Order::ORDER_IS_PENDING);
         
-        $srch->addCondition('slesson_grpcls_id', '=', 0);
+        // $srch->addCondition('slesson_grpcls_id', '=', 0);
         
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
