@@ -523,3 +523,6 @@ ALTER TABLE `tbl_lesson_reschedule_log`
 --
 ALTER TABLE `tbl_lesson_reschedule_log`
   MODIFY `lesreschlog_id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+ALTER TABLE `tbl_order_products` ADD `op_refund_qty` INT NOT NULL AFTER `op_commission_percentage`, ADD `op_total_refund_amount` DECIMAL(10,2) NOT NULL AFTER `op_refund_qty`; 

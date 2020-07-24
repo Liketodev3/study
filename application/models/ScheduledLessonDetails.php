@@ -304,6 +304,10 @@ class ScheduledLessonDetails extends MyAppModel
             $perUnitAmount = round(($perUnitAmount * $orderInfo['needToscheduledLessonsCount']),2);
 
         }
+        
+        $opObj = new OrderProduct($data['op_id']);
+        $opObj->refund(1, $perUnitAmount);
+        
         //if($perUnitAmount > 0) {
             $tObj = new Transaction($data['sldetail_learner_id']);
             $data = array(
