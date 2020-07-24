@@ -4,6 +4,8 @@
 $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
 $isRescheduleRequest = (!empty($isRescheduleRequest));
+$getAllMonthName =  CommonHelper::getAllMonthName();
+$weekDayName =  CommonHelper::dayNames();
 ?>
 <script>
 	var isRescheduleRequest = <?php  echo (!empty($isRescheduleRequest)) ? 1 : 0 ; ?>;
@@ -41,8 +43,17 @@ $isRescheduleRequest = (!empty($isRescheduleRequest));
 				center: '',
 				right: 'prev,next today'
 			  },
+			  buttonText :{
+				  today:    '<?php echo Label::getLabel('LBL_Today'); ?>',
+			  },
 			defaultView: 'agendaWeek',
 			selectable: true,
+			monthNames: <?php echo  json_encode($getAllMonthName['monthNames']); ?>,
+			monthNamesShort: <?php echo  json_encode($getAllMonthName['monthNamesShort']); ?>,
+
+			dayNames: <?php echo  json_encode($weekDayName['dayNames']); ?>,
+			dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>,
+
 			<?php if (strtolower($layoutDirection ) == 'rtl') { ?>
 			rtl : true,
 			isRTL : true,

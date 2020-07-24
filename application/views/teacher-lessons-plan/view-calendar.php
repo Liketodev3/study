@@ -1,4 +1,7 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+    $getAllMonthName =  CommonHelper::getAllMonthName();
+    $weekDayName =  CommonHelper::dayNames();
+ ?>
 <script>
    function isOverlapping(start,end){
        var array = $("#listing_calendar").fullCalendar('clientEvents');
@@ -26,6 +29,13 @@
    	$('#listing_calendar').fullCalendar({
 
    			selectable: true,
+            monthNames: <?php echo  json_encode($getAllMonthName['monthNames']); ?>,
+            monthNamesShort: <?php echo  json_encode($getAllMonthName['monthNamesShort']); ?>,
+            dayNames: <?php echo  json_encode($weekDayName['dayNames']); ?>,
+            dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>,
+            buttonText :{
+                today:    '<?php echo Label::getLabel('LBL_Today'); ?>',
+            },
    			editable: false,
    			selectOverlap: false,
    			eventOverlap: false,
