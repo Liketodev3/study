@@ -426,7 +426,7 @@ $isRescheduleRequest = (!empty($isRescheduleRequest));
 	<div class="col-sm-6">
 		<div class="cal-status">
 			<span class="box-hint disabled-box">&nbsp;</span>
-			<p><?php echo Label::getLabel('Lbl_Disabled'); ?></p>
+			<p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
 		</div>
 		<div class="cal-status">
 			<span class="box-hint available-box">&nbsp;</span>
