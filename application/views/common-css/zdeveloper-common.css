@@ -120,3 +120,7 @@ input[name=teach_language_name].ui-autocomplete-loading {
 .search-lesson-listing{
   padding-bottom: 10px;
 }
+
+.btn.disabled {
+  cursor: not-allowed;
+}

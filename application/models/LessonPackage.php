@@ -63,7 +63,7 @@ class LessonPackage extends MyAppModel
         $srch = new OrderProductSearch(0, true, false);
         $srch->joinOrders();
         $srch->joinScheduleLessonDetails();
-        $srch->joinScheduleLesson();
+        $srch->joinScheduleLesson(false);
         $srch->setPageSize(1);
         $srch->addCondition('order_user_id', '=', $learnerId);
         $srch->addCondition('op_teacher_id', '=', $teacherId);
@@ -89,7 +89,7 @@ class LessonPackage extends MyAppModel
         }
         return false;
     }
-    
+
     public static function getPackagesWithoutTrial($langId)
     {
         $srch = self::getSearchObject($langId);
