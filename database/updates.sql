@@ -523,3 +523,7 @@ ALTER TABLE `tbl_lesson_reschedule_log`
 --
 ALTER TABLE `tbl_lesson_reschedule_log`
   MODIFY `lesreschlog_id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- TV-2.0.0.20200720 , bug 040354, 24-july-2020
+
+ALTER TABLE `tbl_configurations` CHANGE `conf_val` `conf_val` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
