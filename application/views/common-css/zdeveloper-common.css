@@ -124,3 +124,4 @@ input[name=teach_language_name].ui-autocomplete-loading {
 .btn.disabled {
   cursor: not-allowed;
 }
+.div_info li a{text-decoration: underline; color:var(--color-primary); cursor: pointer;}
