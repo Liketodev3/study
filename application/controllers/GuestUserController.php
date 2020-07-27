@@ -764,7 +764,7 @@ class GuestUserController extends MyAppController
 		if ($user_type == User::USER_TYPE_TEACHER) {
 			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
 		}
-        $message = Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId)
+        $message = Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId);
 		if (empty($userInfo['user_email'])) {
             $message = Labels::getLabel('MSG_PLEASE_CONFIGURE_YOUR_EMAIL', $this->siteLangId);
 		     $redirectUrl = CommonHelper::generateUrl('GuestUser','configureEmail');
@@ -779,6 +779,69 @@ class GuestUserController extends MyAppController
     public function configureEmail()
     {
         $this->_template->render();
+    }
+
+    public function changeEmailForm()
+    {
+        $frm = $this->getChangeEmailForm(false);
+        $this->set('frm', $frm);
+        $this->set('siteLangId', $this->siteLangId);
+        $this->_template->render(false, false, 'account/change-email-form.php');
+    }
+
+    public function updateEmail()
+    {
+        $emailFrm = $this->getChangeEmailForm(false);
+        $post = $emailFrm->getFormDataFromArray(FatApp::getPostedData());
+
+        if (false === $post) {
+            $message = current($emailFrm->getValidationErrors());
+            LibHelper::dieJsonError($message);
+        }
+
+        if ($post['new_email'] != $post['conf_new_email']) {
+            $message = Labels::getLabel('MSG_New_email_confirm_email_does_not_match', $this->siteLangId);
+            LibHelper::dieJsonError($message);
+        }
+
+        $userObj = new User(UserAuthentication::getLoggedUserId());
+        $srch = $userObj->getUserSearchObj(array('user_id', 'credential_email', 'user_first_name','user_last_name'));
+        $rs = $srch->getResultSet();
+
+        if (!$rs) {
+            $message = Labels::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
+            LibHelper::dieJsonError($message);
+        }
+
+        $data = FatApp::getDb()->fetch($rs, 'user_id');
+        if ($data === false || $data['credential_email'] != '') {
+            $message = Labels::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
+            LibHelper::dieJsonError($message);
+        }
+
+        /* if ($data['credential_password'] != UserAuthentication::encryptPassword($post['current_password'])) {
+        Message::addErrorMessage(Labels::getLabel('MSG_YOUR_CURRENT_PASSWORD_MIS_MATCHED',$this->siteLangId));
+        FatUtility::dieJsonError( Message::getHtml() );
+        } */
+
+
+        if (FatApp::getConfig('CONF_WELCOME_EMAIL_REGISTRATION', FatUtility::VAR_INT, 1) && $facebookEmail) {
+            $data['user_email'] = $facebookEmail;
+            $data['user_first_name'] = $user_first_name;
+            $data['user_last_name'] = $user_last_name;
+            $userId = $userObj->getMainTableRecordId();
+            $userObj = new User($userId);
+            if (!$this->userWelcomeEmailRegistration($userObj, $data)) {
+                $db->rollbackTransaction();
+                $this->set('url', CommonHelper::redirectUserReferer(true));
+                $this->set('msg', Label::getLabel("MSG_WELCOME_EMAIL_COULD_NOT_BE_SENT"));
+                $this->_template->render(false, false, 'json-error.php');
+            }
+        }
+
+        $this->set('msg', Labels::getLabel('MSG_UPDATE_EMAIL_REQUEST_SENT_SUCCESSFULLY._YOU_NEED_TO_VERIFY_YOUR_NEW_EMAIL_ADDRESS_BEFORE_ACCESSING_OTHER_MODULES', $this->siteLangId));
+        
+        $this->_template->render(false, false, 'json-success.php');
     }
 
     public function loginGoogleplus($userType = User::USER_TYPE_LEANER)

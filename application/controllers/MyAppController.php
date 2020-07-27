@@ -90,7 +90,7 @@ class MyAppController extends FatController
         $this->set('action', $this->action);
     }
 
-    protected function getChangeEmailForm()
+    protected function getChangeEmailForm($passwordField = true)
     {
         $frm = new Form('changeEmailFrm');
         $userObj = new User(UserAuthentication::getLoggedUserId());
@@ -105,8 +105,11 @@ class MyAppController extends FatController
         $newEmail = $frm->addEmailField(Label::getLabel('LBL_NEW_EMAIL'), 'new_email');
         $newEmail->setUnique('tbl_user_credentials', 'credential_email', 'credential_user_id', 'user_id', 'user_id');
         $newEmail->requirements()->setRequired();
-        $curPwd = $frm->addPasswordField(Label::getLabel('LBL_CURRENT_PASSWORD'), 'current_password');
-        $curPwd->requirements()->setRequired();
+        if($passwordField){
+            $curPwd = $frm->addPasswordField(Label::getLabel('LBL_CURRENT_PASSWORD'), 'current_password');
+            $curPwd->requirements()->setRequired();
+        }
+
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         return $frm;
     }
