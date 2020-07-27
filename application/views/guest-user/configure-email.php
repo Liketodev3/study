@@ -17,7 +17,7 @@ Please contact wemaster <a href="mailto:<?php echo FatApp::getConfig('conf_site_
         <div class="container">
             <div class="section-head section--white--head section--head--center mb-0">
                 <div class="section__heading">
-                    <h2 class="mb-0 pageTitle-js"><?php echo Labels::getLabel('LBL_CONFIGURE_YOUR_DETAILS', $siteLangId);?></h2>
+                    <h2 class="mb-0 pageTitle-js"><?php echo Label::getLabel('LBL_CONFIGURE_YOUR_DETAILS', $siteLangId);?></h2>
                 </div>
             </div>
         </div>
@@ -29,23 +29,10 @@ Please contact wemaster <a href="mailto:<?php echo FatApp::getConfig('conf_site_
                     <div class="row justify-content-center">
                         <div class="col-md-5">
                             <div class="border rounded p-4 h-100">
-                                <h6><?php echo Labels::getLabel('LBL_UPDATE_EMAIL', $siteLangId);?></h6>
-                                <div id="changeEmailFrmBlock"><?php echo Labels::getLabel('LBL_Loading..', $siteLangId); ?></div>
+                                <h6><?php echo Label::getLabel('LBL_UPDATE_EMAIL', $siteLangId);?></h6>
+                                <div id="changeEmailFrmBlock"><?php echo Label::getLabel('LBL_Loading..', $siteLangId); ?></div>
                             </div>
                         </div>
-                        <?php if (true === $canSendSms) { ?>
-                        <div class="col">
-                            <div class="or-wrap">
-                                <div class="or or-vertical"><?php echo Labels::getLabel('LBL__OR_', $siteLangId); ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="border rounded p-4 h-100">
-                                <h6><?php echo Labels::getLabel('LBL_UPDATE_PHONE_NUMBER', $siteLangId);?></h6>
-                                <div id="changePhoneFrmBlock"><?php echo Labels::getLabel('LBL_Loading..', $siteLangId); ?></div>
-                            </div>
-                        </div>
-                        <?php } ?>
                     </div>
                 </div>
             </div>
