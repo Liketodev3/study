@@ -30,7 +30,7 @@ Fixes:
     * #040435 - Teacher >> dashboard >> DAtes are not coming correct >> they are coming sme.
     * #040436 - Teacher >> setting >> if teacher edit his/her availability and donot save >> then also it get save
     * #040445 - If learner donot add >> Reschedule Reason* >> page should redirect to reschedule reason text box.
-    * ##040447 - if teacher cancel lesson >> from selecting reschedule filter from lesson menu >> IN both learner and teacher side>> cancel record show in both reschedule filter and cancel filter.
+    * #040447 - if teacher cancel lesson >> from selecting reschedule filter from lesson menu >> IN both learner and teacher side>> cancel record show in both reschedule filter and cancel filter.
 
 ==============================================
 
