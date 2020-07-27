@@ -184,7 +184,7 @@ class MessagesController extends LoggedUserController
             FatUtility::dieWithError(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
         }
         $otherUserId = ($threadUsers[0]==$userId) ? $threadUsers[1] : $threadUsers[0];
-        $otherUserDetail = User::getAttributesById($otherUserId, array('user_id', 'user_first_name', 'user_last_name', 'user_is_teacher'));
+        $otherUserDetail = User::getAttributesById($otherUserId, array('user_id', 'user_first_name', 'user_last_name', 'user_is_teacher','user_url_name'));
         $page = (empty($post['page']) || $post['page'] <= 0) ? 1 : FatUtility::int($post['page']);
         $pagesize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch = new MessageSearch();
