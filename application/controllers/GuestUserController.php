@@ -643,11 +643,9 @@ class GuestUserController extends MyAppController
 		$preferredDashboard = User::USER_LEARNER_DASHBOARD;
 		if($user_type == User::USER_TYPE_TEACHER) {
 			$preferredDashboard = User::USER_TEACHER_DASHBOARD;
-			//$userIsTeacher = 1;
 		}else {
             $user_type = User::USER_TYPE_LEANER;
         }
-
 
         $facebookName = $userFirstName.' '.$userLastName;
         // User info ok? Let's print it (Here we will be adding the login and registering routines)
@@ -656,28 +654,24 @@ class GuestUserController extends MyAppController
         $srch = $userObj->getUserSearchObj(array('user_id', 'user_facebook_id', 'credential_email', 'credential_active', 'user_deleted'), false, false);
         if (!empty($facebookEmail)) {
             $srch->addCondition('credential_email', '=', $facebookEmail);
-        // }
-        // else {
-        //     if (empty($userFacebookId)) {
-        //         Message::addErrorMessage(Labels::getLabel("MSG_THERE_WAS_SOME_PROBLEM_IN_AUTHENTICATING_YOUR_ACCOUNT_WITH_FACEBOOK,_PLEASE_TRY_WITH_DIFFERENT_LOGIN_OPTIONS", $this->siteLangId));
-        //         unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_code']);
-        //         unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_access_token']);
-        //         unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_user_id']);
-        //         $url = CommonHelper::generateUrl('GuestUser', 'loginForm');
-        //         $this->set('url', $url);
-        //         $this->set('msg', Labels::getLabel('MSG_Invalid_login', $this->siteLangId));
-        //         $this->_template->render(false, false, 'json-success.php');
-        //     }
-        //     $srch->addCondition('user_facebook_id', '=', $userFacebookId);
-        // }
+        }
+        else {
+            if (empty($userFacebookId)) {
+                Message::addErrorMessage(Labels::getLabel("MSG_THERE_WAS_SOME_PROBLEM_IN_AUTHENTICATING_YOUR_ACCOUNT_WITH_FACEBOOK,_PLEASE_TRY_WITH_DIFFERENT_LOGIN_OPTIONS", $this->siteLangId));
+                unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_code']);
+                unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_access_token']);
+                unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_user_id']);
+                $url = CommonHelper::generateUrl('GuestUser', 'loginForm');
+                $this->set('url', $url);
+                $this->set('msg', Labels::getLabel('MSG_Invalid_login', $this->siteLangId));
+                $this->_template->render(false, false, 'json-success.php');
+            }
+            $srch->addCondition('user_facebook_id', '=', $userFacebookId);
+        }
         $rs = $srch->getResultSet();
         $row = $db->fetch($rs);
         if ($row) {
-            // print_r(var_dump($row));
-
             if ($row['credential_active'] != applicationConstants::ACTIVE) {
-
-                // Message::addErrorMessage(Label::getLabel("ERR_YOUR_ACCOUNT_HAS_BEEN_DEACTIVATED"));
                 $this->set('url', CommonHelper::redirectUserReferer(true));
                 $this->set('msg', Label::getLabel("ERR_YOUR_ACCOUNT_HAS_BEEN_DEACTIVATED"));
                 $this->_template->render(false, false, 'json-error.php');
@@ -707,7 +701,6 @@ class GuestUserController extends MyAppController
                 'user_first_name' => $user_first_name,
                 'user_last_name' => $user_last_name,
                 'user_is_learner' => 1,
-                //'user_is_teacher' => $userIsTeacher,
                 'user_facebook_id' => $userFacebookId,
                 'user_preferred_dashboard' => $preferredDashboard,
                 'user_registered_initially_for' => $user_type,
@@ -715,7 +708,6 @@ class GuestUserController extends MyAppController
             $userObj->assignValues($userData);
             if (!$userObj->save()) {
                 $db->rollbackTransaction();
-                // Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $userObj->getError());
                 $this->set('url', CommonHelper::redirectUserReferer(true));
                 $this->set('msg', Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $userObj->getError());
                 $this->_template->render(false, false, 'json-error.php');
@@ -748,7 +740,8 @@ class GuestUserController extends MyAppController
         $userInfo = $userObj->getUserInfo(array(
             'user_facebook_id',
             'credential_username',
-            'credential_password'
+            'credential_password',
+            'user_email',
         ));
         if (!$userInfo || ($userInfo && $userInfo['user_facebook_id'] != $userFacebookId)) {
             // Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET"));
@@ -758,12 +751,10 @@ class GuestUserController extends MyAppController
         }
         $authentication = new UserAuthentication();
         if (!$authentication->login($userInfo['credential_username'], $userInfo['credential_password'], $_SERVER['REMOTE_ADDR'], false)) {
-            // Message::addErrorMessage(Label::getLabel($authentication->getError()));
             $this->set('url', CommonHelper::redirectUserReferer(true));
             $this->set('msg', Label::getLabel($authentication->getError()));
             $this->_template->render(false, false, 'json-error.php');
         }
-
 
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_code']);
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_access_token']);
@@ -773,14 +764,16 @@ class GuestUserController extends MyAppController
 		if ($user_type == User::USER_TYPE_TEACHER) {
 			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
 		}
+        $message = Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId)
+		if (empty($userInfo['user_email'])) {
+            $message = Labels::getLabel('MSG_PLEASE_CONFIGURE_YOUR_EMAIL', $this->siteLangId);
+		     $redirectUrl = CommonHelper::generateUrl('GuestUser','configureEmail');
+		}
+
         $this->set('url', $redirectUrl);
-        $this->set('msg', Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId));
+        $this->set('msg', $message);
         $this->_template->render(false, false, 'json-success.php');
-        }
-        // Message::addErrorMessage(Label::getLabel("MSG_UNABLE_To_FETCH_YOUR_EMAIL_ID"));
-        $this->set('url', CommonHelper::generateUrl());
-        $this->set('msg', Label::getLabel("MSG_UNABLE_To_FETCH_YOUR_EMAIL_ID"));
-        $this->_template->render(false, false, 'json-error.php');
+
     }
 
     public function configureEmail()
