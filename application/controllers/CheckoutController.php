@@ -501,6 +501,13 @@ class CheckoutController extends LoggedUserController{
         if($cartData['grpcls_id']>0){
             die('');
         }
+		$teacherOfferClassObj = new TeacherOfferPrice();
+		$srchdata =  $teacherOfferClassObj->getOffer(UserAuthentication::getLoggedUserId(),$post['teacher_id']);
+		$srchdata->doNotCalculateRecords();
+		$srchdata->setPageSize(1);
+		$rs = $srchdata->getResultSet();
+		$teachcerOffer = FatApp::getDb()->fetch($rs);
+
 		$srch = LessonPackage::getSearchObject( $this->siteLangId );
 		$srch->addCondition( 'lpackage_is_free_trial', '=', 0 );
 		$srch->addMultipleFields(array(
@@ -512,6 +519,7 @@ class CheckoutController extends LoggedUserController{
 		$lessonPackages = FatApp::getDb()->fetchAll($rs);
         $data = UserSetting::getUserSettings( $post['teacher_id'],$post['languageId'] );
         $this->set('cartData',$cartData);
+		$this->set('teachcerOffer',$teachcerOffer);
         $this->set('languageId',$post['languageId']);
         $this->set('lessonPackages',$lessonPackages);
         $this->set('selectedLang',current($data));
