@@ -373,13 +373,13 @@ class PurchasedLessonsController extends AdminBaseController
                     FatUtility::dieJsonError($trnObj->getError());
                 }
             }
-        } elseif ($status == ScheduledLesson::STATUS_CANCELLED) {
+        } /* elseif ($status == ScheduledLesson::STATUS_CANCELLED) {
             $lessonDetailsObj = new ScheduledLessonDetails($sldetailId);
             if(!$lessonDetailsObj->refundToLearner()){
                 $db->rollbackTransaction();
                 FatUtility::dieJsonError($lessonDetailsObj->getError());
             }
-        }
+        } */
 
         /*]*/
         

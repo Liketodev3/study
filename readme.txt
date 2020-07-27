@@ -1,3 +1,12 @@
+New Features:
+
+Enhancements: N/A
+
+Fixes:
+    * Bug-039524: Hide Schedule,upcoming, issue reported status change for admin
+
+======================================
+
 Release Version: TV-2.0.1.20200727
 Release Date: 2020/07/27
 
