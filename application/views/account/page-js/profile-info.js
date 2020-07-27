@@ -422,13 +422,12 @@ $.ajax(settings).done(function (response) {
 
 	deleteTeacherGeneralAvailability  = function(id){
 		 if(confirm(langLbl['confirmRemove'])){
-			 fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherGeneralAvailability',[id]), '' , function(t) {
-					$('#ga_calendar').fullCalendar('removeEvents',id);
-					if(userIsTeacher) {
-					  getTeacherProfileProgress(false);
-					}
-
-			});
+			 	$('#ga_calendar').fullCalendar('removeEvents',id);
+			//  fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherGeneralAvailability',[id]), '' , function(t) {
+			// 		if(userIsTeacher) {
+			// 		  getTeacherProfileProgress(false);
+			// 		}
+			// });
 		 }
 	};
 

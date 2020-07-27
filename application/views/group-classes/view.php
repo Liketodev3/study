@@ -75,13 +75,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
                                             $from_time_by_user_timezone = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $class['grpcls_start_datetime'], true, $user_timezone);
                                             $to_time_by_user_timezone = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $class['grpcls_end_datetime'], true, $user_timezone);
                                             ?>
-                                            <span class="lable-txt cls_time" rev="<?php echo $from_time_by_user_timezone.' - '.$to_time_by_user_timezone ?>"><?php echo $from_time_by_teach_timezone.' - '.$to_time_by_teach_timezone ?></span>
-                                        </div>
-                                        <div class="switch-timzone">
-                                            <label class="statustab inactive" onclick="changeTz(this)">
-                                                <span data-off="Active" data-on="Inactive" class="switch-labels"></span>
-                                                <span class="switch-handles"></span><?php echo Label::getLabel("LBL_Your_Timezone") ?>
-                                            </label>
+                                            <span class="lable-txt cls_time"><?php echo $from_time_by_user_timezone.' - '.$to_time_by_user_timezone ?></span>
                                         </div>
                                     </li>
                                 </ul>
@@ -100,9 +94,9 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
                                     <?php if($class['is_in_class']): ?>
                                     <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_ALREADY_IN_CLASS') ?>" class="btn btn--gray btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                                     <?php elseif($class['total_learners']>=$class['grpcls_max_learner']): ?>
-                                    <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_CLASS_FULL') ?>" class="btn disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
+                                    <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_CLASS_FULL') ?>" class="btn btn--gray btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                                     <?php elseif($class['grpcls_start_datetime']<date('Y-m-d H:i:s', strtotime('+'.$min_booking_time. ' minutes'))): ?>
-                                    <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Booking_Close_For_This_Class') ?>" class="btn btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
+                                    <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Booking_Close_For_This_Class') ?>" class="btn btn--gray btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                                     <?php elseif(UserAuthentication::isUserLogged() && $class['grpcls_teacher_id']==UserAuthentication::getLoggedUserId()): ?>
                                     <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Can_not_join_own_classes') ?>" class="btn btn--gray btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                                     <?php elseif( $class['grpcls_status']!=TeacherGroupClasses::STATUS_ACTIVE): ?>

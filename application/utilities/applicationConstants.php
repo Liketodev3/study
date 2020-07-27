@@ -68,6 +68,9 @@ class applicationConstants
     const DIGITAL_DOWNLOAD_LINK = 1;
 
     const PHONE_NO_REGEX = "^\d{10}$";
+    
+    const CLASS_TYPE_GROUP = 'group';
+    const CLASS_TYPE_1_TO_1 = '1to1';
 
     public static function getWeightUnitsArr($langId)
     {
@@ -113,7 +116,7 @@ class applicationConstants
         );
     }
 
-    public static function getYesNoArr($langId)
+    public static function getYesNoArr($langId = 0)
     {
         $langId = FatUtility::int($langId);
         if ($langId < 1) {
@@ -415,6 +418,13 @@ class applicationConstants
             '10' => Label::getLabel('LBL_October', $langId),
             '11' => Label::getLabel('LBL_November', $langId),
             '12' => Label::getLabel('LBL_December', $langId),
+        );
+    }
+    
+    public static function getClassTypes($langId){
+        return array(
+            self::CLASS_TYPE_GROUP => Label::getLabel('LBL_Group_Class', $langId),
+            self::CLASS_TYPE_1_TO_1 => Label::getLabel('LBL_One_to_One_Class', $langId)
         );
     }
 }

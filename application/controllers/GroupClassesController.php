@@ -55,7 +55,7 @@ class GroupClassesController extends MyAppController
         $min_booking_time = FatApp::getConfig('CONF_CLASS_BOOKING_GAP', FatUtility::VAR_INT, 60);
         $this->set('min_booking_time', $min_booking_time);
         $this->_template->addCss('css/classes.css');
-        //$this->_template->addCss('css/switch.css');
+        // $this->_template->addCss('css/switch.css');
 		$this->_template->render();
 	}
 

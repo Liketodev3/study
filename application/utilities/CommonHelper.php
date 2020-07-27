@@ -918,7 +918,7 @@ class CommonHelper extends FatUtility
         } else {
             $str = str_replace("{default-currency-symbol}", ' $ ', $str);
         }
-        
+
         return $str;
     }
 
@@ -1325,7 +1325,7 @@ class CommonHelper extends FatUtility
         }
         trigger_error(Label::getLabel('ERR_Default_currency_not_specified.', CommonHelper::getLangId()), E_USER_ERROR);
     }
-	
+
 	  public static function getDefaultCurrencyData()
     {
         $row = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY'));
@@ -1506,6 +1506,66 @@ class CommonHelper extends FatUtility
         $records = FatApp::getDb()->fetchAll($rs, 'thread_id');
         $recordCount = $srch->recordCount();
         return $recordCount;
+    }
+
+    public static function getAllMonthName() : array
+    {
+        return array(
+                'monthNames' => [
+                        Label::getLabel('LBL_January'),
+                        Label::getLabel('LBL_February'),
+                        Label::getLabel('LBL_March'),
+                        Label::getLabel('LBL_April'),
+                        Label::getLabel('LBL_May'),
+                        Label::getLabel('LBL_June'),
+                        Label::getLabel('LBL_July'),
+                        Label::getLabel('LBL_August'),
+                        Label::getLabel('LBL_September'),
+                        Label::getLabel('LBL_October'),
+                        Label::getLabel('LBL_November'),
+                        Label::getLabel('LBL_December'),
+                    ],
+                'monthNamesShort' => [
+                        Label::getLabel('LBL_Jan'),
+                        Label::getLabel('LBL_Feb'),
+                        Label::getLabel('LBL_Mar'),
+                        Label::getLabel('LBL_Apr'),
+                        Label::getLabel('LBL_May'),
+                        Label::getLabel('LBL_Jun'),
+                        Label::getLabel('LBL_Jul'),
+                        Label::getLabel('LBL_Aug'),
+                        Label::getLabel('LBL_Sep'),
+                        Label::getLabel('LBL_Oct'),
+                        Label::getLabel('LBL_Nov'),
+                        Label::getLabel('LBL_Dec'),
+                    ],
+
+        );
+
+    }
+
+    public static function dayNames() : array
+    {
+        return [
+                    'dayNames' => [
+                            Label::getLabel('LBL_Sunday'),
+                            Label::getLabel('LBL_Monday'),
+                            Label::getLabel('LBL_Tuesday'),
+                            Label::getLabel('LBL_Wednesday'),
+                            Label::getLabel('LBL_Thursday'),
+                            Label::getLabel('LBL_Friday'),
+                            Label::getLabel('LBL_Saturday')
+                        ],
+                    'dayNamesShort' => [
+                            Label::getLabel('LBL_Sun'),
+                            Label::getLabel('LBL_Mon'),
+                            Label::getLabel('LBL_Tue'),
+                            Label::getLabel('LBL_Wed'),
+                            Label::getLabel('LBL_Thu'),
+                            Label::getLabel('LBL_Fri'),
+                            Label::getLabel('LBL_Sat')
+                        ],
+                ];
     }
 
     public static function getUnreadNotifications($limit=false)

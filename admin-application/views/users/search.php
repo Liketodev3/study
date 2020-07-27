@@ -74,11 +74,11 @@ foreach ($arr_listing as $sn=>$row){
 				$signUpForStr = '<span class="label label-danger">' . $userTypeStr .'</span>';
 
 				if($row['utrequest_id'] > 0 && $row['utrequest_status'] == TeacherRequest::STATUS_PENDING) {
-					$str .= "sdsd";
+					$str .=$signUpForStr;
 				}elseif ($row['user_registered_initially_for'] == User::USER_TEACHER_DASHBOARD && $row['user_is_teacher'] == applicationConstants::NO) {
 					$str .=$signUpForStr;
 				}
-				
+
 				$td->appendElement('plaintext', array(), $str  ,true);
 
 			break;

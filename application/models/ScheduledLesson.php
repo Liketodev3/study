@@ -110,9 +110,18 @@ class ScheduledLesson extends MyAppModel
         $lesson_id = FatUtility::int($lesson_id);
         $status = FatUtility::int($status);
         $db = FatApp::getDb();
-        if (!$db->updateFromArray(self::DB_TBL, array('slesson_status'=>$status ), array('smt'=>'slesson_id = ?','vals'=>array( $lesson_id )))) {
+
+        $coustomQuery = "UPDATE ".ScheduledLesson::DB_TBL." as sl INNER JOIN ".ScheduledLessonDetails::DB_TBL." as sld ON ( sl.slesson_id = sld.sldetail_slesson_id ) ";
+        $coustomQuery .= " SET  sld.sldetail_learner_status = ".$status." , sl.slesson_status = ".$status;
+        $coustomQuery .= " where sl.slesson_id = '".$lesson_id."'";
+
+        if (!$db->query($coustomQuery)) {
+            $this->error =  $db->getError();
             return false;
         }
+        // if (!$db->updateFromArray(self::DB_TBL, array('slesson_status'=>$status ), array('smt'=>'slesson_id = ?','vals'=>array( $lesson_id )))) {
+        //     return false;
+        // }
         return true;
     }
 
@@ -134,13 +143,13 @@ class ScheduledLesson extends MyAppModel
 				$this->error = $sLessonDetailObj->getError();
                 return false;
 			}
-            
+
             // remove from learner google calendar
             $token = current(UserSetting::getUserSettings($lessonDetailRow['learnerId']))['us_google_access_token'];
             if($token){
                 $sLessonDetailObj->loadFromDb();
                 $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
-                
+
                 if($oldCalId){
                     SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
                 }
@@ -197,13 +206,13 @@ class ScheduledLesson extends MyAppModel
                 $this->error = $sLessonDetailObj->getError();
                 return false;
             }
-            
+
             // remove from learner google calendar
             $token = current(UserSetting::getUserSettings($lessonDetailRow['learnerId']))['us_google_access_token'];
             if($token){
                 $sLessonDetailObj->loadFromDb();
                 $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
-                
+
                 if($oldCalId){
                     SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
                 }

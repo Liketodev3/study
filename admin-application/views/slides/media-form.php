@@ -9,7 +9,7 @@ $screenFld = $slideMediaFrm->getField('slide_screen');
 $screenFld->addFieldTagAttribute('class', 'prefDimensions-js');
 $langFld = $slideMediaFrm->getField('lang_id');
 $langFld->addFieldTagAttribute('class', 'language-js');
-$htmlAfterField = '<div style="margin-top:15px;" class="preferredDimensions-js">'. sprintf(Label::getLabel('LBL_Preferred_Dimensions_%s',$adminLangId),'1920 x 550').'</div>';
+$htmlAfterField = '<div style="margin-top:15px;" class="preferredDimensions-js">'. sprintf(Label::getLabel('LBL_Preferred_Dimensions_%s',$adminLangId),'1920 x 800').'</div>';
 $htmlAfterField .= '<div id="image-listing"></div>';
 $fld1->htmlAfterField = $htmlAfterField;
 ?>

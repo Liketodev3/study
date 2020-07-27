@@ -12,7 +12,7 @@ class OrderProductSearch extends SearchBase
                 OrderProduct::DB_TBL.'_lang',
                 'LEFT OUTER JOIN',
                 'op.op_id = opl.oplang_op_id
-			AND opl.oplang_lang_id = '.$langId,
+					AND opl.oplang_lang_id = '.$langId,
                 'opl'
             );
         }
@@ -35,10 +35,15 @@ class OrderProductSearch extends SearchBase
     {
         $this->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'o.order_id = sld.sldetail_order_id', 'sld');
     }
-    
-    public function joinScheduleLesson()
+
+    public function joinScheduleLesson($addTeacherPaidCondition = true)
     {
-        $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id AND sl.slesson_is_teacher_paid = '.applicationConstants::YES, 'sl');
+        $onCondition = 'sld.sldetail_slesson_id = sl.slesson_id';
+        if($addTeacherPaidCondition){
+            $onCondition .= ' AND sl.slesson_is_teacher_paid = '.applicationConstants::YES;
+        }
+
+        $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN',$onCondition, 'sl');
     }
 
     public function addOrderIdCondition($orderId)

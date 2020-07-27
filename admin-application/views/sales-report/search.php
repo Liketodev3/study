@@ -5,6 +5,7 @@ $arrFlds1 = array(
 	'order_date'=>Label::getLabel('LBL_Date',$adminLangId),
 	'totOrders'=>Label::getLabel('LBL_No._of_Orders',$adminLangId),
 	'orderNetAmount'=>Label::getLabel('LBL_Order_Net_Amount',$adminLangId),
+	'op_total_refund_amount'=>Label::getLabel('LBL_Order_Refund_Amount',$adminLangId),
 );
 $arrFlds2  = array(
 	'listserial'=>Label::getLabel('LBL_Sr_no.',$adminLangId),
@@ -51,6 +52,7 @@ foreach ($arr_listing as $sn=>$row){
 			case 'orderNetAmount':
 			case 'taxTotal':
 			case 'shippingTotal':
+            case 'op_total_refund_amount':
 				$td->appendElement('plaintext', array(), CommonHelper::displayMoneyFormat($row[$key],true,true));
 			break;
 			default:

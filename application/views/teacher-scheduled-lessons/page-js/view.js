@@ -72,7 +72,7 @@ $(function() {
 		}
 		var chat_script = document.getElementsByTagName('script')[0]; chat_script.parentNode.insertBefore(chat_js, chat_script);
 	};
-    
+
     createGroup = function(){
 		$.ajax({
             method: "POST",
@@ -83,15 +83,15 @@ $(function() {
 			},
 		});
 	};
-	
-    
+
+
     joinLesson = function(CometJsonData,CometJsonFriendData){
         if(is_grpcls=='1'){
             createGroup();
         }
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','startLessonAuthentication',[CometJsonFriendData.lessonId]),'',function(t){
 			if(t == 0){
-				$.mbsmessage( "Cannot Start The lesson Now!",true, 'alert alert--danger');
+				$.mbsmessage( canStartAlertLabel,true, 'alert alert--danger');
 				return false;
 			}
 			joinLessonButtonAction();
@@ -99,7 +99,7 @@ $(function() {
             markTeacherJoinTime();
 		});
     };
-    
+
 	createUserCometChatApi = function(CometJsonData,CometJsonFriendData){
 		$(CometJsonData).each(function(i,val){
 			$.ajax({

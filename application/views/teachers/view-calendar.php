@@ -3,6 +3,8 @@
 <?php
 $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
+$getAllMonthName =  CommonHelper::getAllMonthName();
+$weekDayName =  CommonHelper::dayNames();
 ?>
 <script type="text/javascript">
 	var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
@@ -41,6 +43,9 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 					center: '',
 					right: 'title prev,next today'
 				},
+				buttonText :{
+						 today:    '<?php echo Label::getLabel('LBL_Today'); ?>',
+					 },
 				defaultView: 'agendaWeek',
 				selectable: true,
 				<?php if (strtolower($layoutDirection ) == 'rtl') { ?>
@@ -48,6 +53,11 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 				isRTL : true,
 				<?php } ?>
 	            unselectAuto: true,
+				monthNames: <?php echo  json_encode($getAllMonthName['monthNames']); ?>,
+				monthNamesShort: <?php echo  json_encode($getAllMonthName['monthNamesShort']); ?>,
+				
+				dayNames: <?php echo  json_encode($weekDayName['dayNames']); ?>,
+				dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>,
 				editable: false,
 				nowIndicator:true,
 				selectLongPressDelay:50,
@@ -406,7 +416,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 	<div class="col-sm-6">
 		<div class="cal-status">
 			<span class="box-hint disabled-box">&nbsp;</span>
-			<p><?php echo Label::getLabel('Lbl_Disabled'); ?></p>
+			<p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
 		</div>
 		<div class="cal-status">
 			<span class="box-hint available-box">&nbsp;</span>

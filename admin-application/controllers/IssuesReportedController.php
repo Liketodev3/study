@@ -125,9 +125,9 @@ class IssuesReportedController extends AdminBaseController
             'sld.sldetail_order_id',
             'sl.slesson_teacher_id',
             'sld.sldetail_learner_id',
-            'sl.slesson_learner_join_time',
+            'sld.sldetail_learner_join_time',
             'sl.slesson_teacher_join_time',
-            'sl.slesson_learner_end_time',
+            'sld.sldetail_learner_end_time',
             'sl.slesson_teacher_end_time',
             'sl.slesson_ended_by',
             'sl.slesson_ended_on',
@@ -135,8 +135,15 @@ class IssuesReportedController extends AdminBaseController
             'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',
             'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_username',
             'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_username',
+            'order_net_amount',
+            'order_discount_total',
+            'op_qty',
+            'op_lpackage_is_free_trial',
+            'op_unit_price',
             )
         );
+        // echo $srch->getQuery();
+        // die;
         $rs = $srch->getResultSet();
         $issueDetail = FatApp::getDb()->fetchAll($rs);
         //$commet_teacher_id = $issueDetail['issrep_slesson_id'].'_'.$issueDetail['slesson_teacher_id'];

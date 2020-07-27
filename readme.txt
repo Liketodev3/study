@@ -1,3 +1,39 @@
+Release Version: TV-2.0.1.20200727
+Release Date: 2020/07/27
+
+New Features:
+
+Enhancements: N/A
+
+Fixes:
+    * Bug-040391: Google Authorize
+    * Bug-040466: For Learner removed reschedule/cancel options for cancelled class
+    * Bug-040460: Show group classes in orders->view schedules
+    * Bug-040458: Showing group classes info in orders
+    * Bug-040473: Navigate to class list if buy group class
+    * Bug-040476: Icons changes for learner group class list
+    * Bug-040471: Lesson cancel update refund amount in database
+    * Bug-040550: Added grey class with disabled button in view Group class
+    * #039572 - Admin Panel >> Cms >> video content >> then add content >> text on above page is Bible Content need to change that
+    * #039646 - In admin> As per added 10 pagination >> but in teacher preference section >> pagination is not showing after 10 items.
+    * #039935 - the recommended home page slider is 1920x800
+    * #040230 - Admin > Issue Reported Status > View > Display the lesson price
+    * #040320 - Register teacher >> not verified and approved yet >> on admin show sdsd text in user type.
+    * #040349 - Calendar Arabic version
+    * #040350 - Teacher Dashboard>Settings>Skills
+    * #040352 - Teacher Dashboard>Settings>Languages>
+    * #040354 - General settings> SEO> Google Analytics tracking code is not being saved properly
+    * #040355 - Teacher dashboard>Lesson Plan> language label missing
+    * #040403 - Message > Add an option to buy lessons >>.> not updated
+    * #040406 - Teacher dashboard >> need to show upcoming lessons only >> now need to schedule also there.
+    * #040419 - Signup as learner >> after signup sigin page appear>> verify user>> login through sign in >> page navigate to Teacher application form
+    * #040435 - Teacher >> dashboard >> DAtes are not coming correct >> they are coming sme.
+    * #040436 - Teacher >> setting >> if teacher edit his/her availability and donot save >> then also it get save
+    * #040445 - If learner donot add >> Reschedule Reason* >> page should redirect to reschedule reason text box.
+    * #040447 - if teacher cancel lesson >> from selecting reschedule filter from lesson menu >> IN both learner and teacher side>> cancel record show in both reschedule filter and cancel filter.
+
+==============================================
+
 Release Version: TV-2.0.0.20200720
 Release Date: 2020/07/20
 

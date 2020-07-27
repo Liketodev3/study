@@ -2,6 +2,7 @@
 <?php
 $arr_flds = array(
 	'listserial'=> Label::getLabel('LBL_S.No.',$adminLangId),
+    'class_type'=>Label::getLabel('LBL_Class_Type',$adminLangId),
 	'order_id'=>Label::getLabel('LBL_Order_Id',$adminLangId),
 	'learner_username'=>Label::getLabel('LBL_Learner',$adminLangId),
 	'teacher_username'	=> Label::getLabel('LBL_Teacher',$adminLangId),
@@ -27,6 +28,10 @@ foreach ($arr_listing as $sn=>$row){
 		switch ($key){
 			case 'listserial':
 				$td->appendElement('plaintext', array(), $sr_no);
+			break;
+			case 'class_type':
+                $class_types = ApplicationConstants::getClassTypes($adminLangId);
+				$td->appendElement('plaintext', array(), (isset($row['grpcls_id']) && $row['grpcls_id']>0) ? $class_types[ApplicationConstants::CLASS_TYPE_GROUP] : $class_types[ApplicationConstants::CLASS_TYPE_1_TO_1]);
 			break;
 			case 'order_is_paid':
 					$status = Order::getPaymentStatusArr($adminLangId);

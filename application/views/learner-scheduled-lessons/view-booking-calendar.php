@@ -4,6 +4,8 @@
 $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
 $isRescheduleRequest = (!empty($isRescheduleRequest));
+$getAllMonthName =  CommonHelper::getAllMonthName();
+$weekDayName =  CommonHelper::dayNames();
 ?>
 <script>
 	var isRescheduleRequest = <?php  echo (!empty($isRescheduleRequest)) ? 1 : 0 ; ?>;
@@ -41,8 +43,17 @@ $isRescheduleRequest = (!empty($isRescheduleRequest));
 				center: '',
 				right: 'prev,next today'
 			  },
+			  buttonText :{
+				  today:    '<?php echo Label::getLabel('LBL_Today'); ?>',
+			  },
 			defaultView: 'agendaWeek',
 			selectable: true,
+			monthNames: <?php echo  json_encode($getAllMonthName['monthNames']); ?>,
+			monthNamesShort: <?php echo  json_encode($getAllMonthName['monthNamesShort']); ?>,
+
+			dayNames: <?php echo  json_encode($weekDayName['dayNames']); ?>,
+			dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>,
+
 			<?php if (strtolower($layoutDirection ) == 'rtl') { ?>
 			rtl : true,
 			isRTL : true,
@@ -323,12 +334,12 @@ $isRescheduleRequest = (!empty($isRescheduleRequest));
 						element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherWeeklySchedule("+eventData+");'>X</span>" );
 					}
 				}
-			element.find(".closeon").click(function() {
-				if(isNaN(event._id)){
-					$('#d_calendar').fullCalendar('removeEvents',event._id);
-					$('.tooltipevent').remove();
-				}
-			});
+				element.find(".closeon").click(function() {
+					if(isNaN(event._id)){
+						$('#d_calendar').fullCalendar('removeEvents',event._id);
+						$('.tooltipevent').remove();
+					}
+				});
 			var eventEnd = moment(event.end);
 			var NOW = moment();
 			if(moment(event.end).format('YYYY-MM-DD HH:mm') < moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm') && event.className != "sch_data"){
@@ -381,7 +392,7 @@ $isRescheduleRequest = (!empty($isRescheduleRequest));
 		var selectedStartDateTime = moment(calEvent.start).format('YYYY-MM-DD HH:mm:ss');
 		var selectedEndDateTime = moment(calEvent.end).format('YYYY-MM-DD HH:mm:ss');
 		//var tooltip = '<div class="tooltipevent" style="width:170px;height:70px;background:#ccc;position:absolute;z-index:10001;"><span onclick="$(&apos;.tooltipevent&apos;).remove();" >X</span>Date: '+date+'  <br />Time: '+start+'-'+end+'<a onClick="setUpLessonSchedule(&quot;<?php echo $lessonId; ?>&quot;, &quot;'+ newEvent.startTime +'&quot;, &quot;'+ newEvent.endTime +'&quot;, &quot;'+ newEvent.date +'&quot; );" style="margin-left:35px;" id="btn" class="btn btn--secondary">Confirm It!</a></div>';
-            var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><div class="booking-view"><h3 class="-display-inline"><?php echo $userRow['user_first_name']; ?></h3><span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userRow['user_country_id'], 'DEFAULT') ); ?>" alt=""></span><div class="inline-list"><span class="inline-list__value highlight"><strong>Date</strong> &nbsp; &nbsp; '+date+' at '+start+'-'+end+'</span></div></div><div class="-align-center"><a href="javascript:void(0)" onClick="setUpLessonSchedule(&quot;<?php echo $teacher_id; ?>&quot;, &quot;<?php echo $lDetailId; ?>&quot;, &quot;'+ newEvent.startTime +'&quot;, &quot;'+ newEvent.endTime +'&quot;, &quot;'+ newEvent.date +'&quot; );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Confirm_It!'); ?></a></div><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:void();" class="-link-close"></a></div>';
+            var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><div class="booking-view"><h3 class="-display-inline"><?php echo $userRow['user_first_name']; ?></h3><span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userRow['user_country_id'], 'DEFAULT') ); ?>" alt=""></span><div class="inline-list"><span class="inline-list__value highlight"><strong>Date</strong> &nbsp; &nbsp; '+date+' at '+start+'-'+end+'</span></div></div><div class="-align-center"><a href="javascript:void(0);" onClick="setUpLessonSchedule(&quot;<?php echo $teacher_id; ?>&quot;, &quot;<?php echo $lDetailId; ?>&quot;, &quot;'+ newEvent.startTime +'&quot;, &quot;'+ newEvent.endTime +'&quot;, &quot;'+ newEvent.date +'&quot; );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Confirm_It!'); ?></a></div><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:void();" class="-link-close"></a></div>';
 		if(calEvent.className != "sch_data"){
 			$("body").append(tooltip);
 			$('.tooltipevent').css('top', jsEvent.pageY - 110);
@@ -426,7 +437,7 @@ $isRescheduleRequest = (!empty($isRescheduleRequest));
 	<div class="col-sm-6">
 		<div class="cal-status">
 			<span class="box-hint disabled-box">&nbsp;</span>
-			<p><?php echo Label::getLabel('Lbl_Disabled'); ?></p>
+			<p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
 		</div>
 		<div class="cal-status">
 			<span class="box-hint available-box">&nbsp;</span>

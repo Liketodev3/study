@@ -104,4 +104,9 @@ class OrderSearch extends SearchBase
     {
         $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', 'sl.slesson_id = sld.sldetail_slesson_id AND sl.slesson_is_teacher_paid = '.applicationConstants::YES, 'sl');
     }
+    
+	public function joinGroupClass()
+    {
+        $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
+    }
 }

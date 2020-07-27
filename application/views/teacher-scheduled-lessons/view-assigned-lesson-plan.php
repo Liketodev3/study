@@ -15,14 +15,14 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="content-repeated">
             <div class="row">
                 <div class="col-xl-4 col-lg-4 col-sm-4">
                     <p class="-small-title"><strong><?php echo Label::getLabel('LBL_Description'); ?></strong></p>
                 </div>
                 <div class="col-xl-8 col-lg-8 col-sm-8">
-                   <?php echo  $data['tlpn_description']; ?>
+                   <?php echo  (!empty($data['tlpn_description'])) ? $data['tlpn_description'] : Label::getLabel('LBL_N/A'); ?>
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="content-repeated">
             <div class="row">
                 <div class="col-xl-4 col-lg-4 col-sm-4">
@@ -67,20 +67,20 @@
                         $files = '<div class="field-set filelink">';
                         foreach($file_rows as $file_row){
                             $files .='<span class="tag"><span><a target="_blank" href='.CommonHelper::generateFullUrl('TeacherLessonsPlan','getFileById',array($file_row['afile_id'])).'?'.time().'>'.ucwords($file_row['afile_name']).'&nbsp;</a></span></span>&nbsp;';
-                        } 
+                        }
                         $files .= "</div>";
                         }else{
                             $files='';
                         }
                         echo "<p>".$files."<p>";
-                    } ?>                   
+                    } ?>
                 </div>
             </div>
         </div>
-        
+
     </div>
     </div>
-    
+
 
 <?php } else{ ?>
 
@@ -94,7 +94,7 @@
                                 </div>
 
                                 <h5><?php echo Label::getLabel('LBL_No_Result_Found!!');?></h5>
-          
+
                             </div>
                         </div>
                     </div>

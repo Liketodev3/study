@@ -559,3 +559,9 @@ INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_
 -- task 72959 / 22-JULY-2020 / TV-2.0.0.20200720
 
 ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_transaction_fee` DECIMAL(10,4) NOT NULL AFTER `withdrawal_comments`;
+
+  -- TV-2.0.0.20200720 , bug 040354, 24-july-2020
+
+ALTER TABLE `tbl_configurations` CHANGE `conf_val` `conf_val` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+ALTER TABLE `tbl_order_products` ADD `op_refund_qty` INT NOT NULL AFTER `op_commission_percentage`, ADD `op_total_refund_amount` DECIMAL(10,2) NOT NULL AFTER `op_refund_qty`;

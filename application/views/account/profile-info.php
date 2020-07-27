@@ -16,7 +16,7 @@
 
 				<!--page-head start here-->
 				<div class="page-head">
-					<div class="d-flex justify-content-between align-items-center">
+					<div class="d-flex justify-content-md-between align-items-md-center flex-column flex-md-row">
 						<div>
 							<h1><?php echo Label::getLabel('LBL_Dashboard'); ?></h1>
 						</div>
@@ -24,12 +24,14 @@
 
 						</div>
 						<?php if($userIsTeacher){ ?>
-						<div class="progress-wrapper d-flex align-items-center">
-							<span class="profile-progress"><?php echo Label::getLabel('LBL_Profile_progress');?></span>
+						<div class="progress-wrapper d-flex align-items-center flex-column">
+							<div class="progress--top">
+								<span class="profile-progress"><span class="spn_must_field">*</span> <?php echo Label::getLabel('LBL_Profile_progress');?></span>
+								<span class="txt progress-count-js"></span>
+							</div>
 							<div class="progress">
 								<div class="progress-bar active progress-bar-striped progress-bar-animated teacher-profile-progress-bar-js" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
 							</div>
-							<span class="txt progress-count-js"></span>
 						</div>
 					<?php } ?>
 						<!--<div>
