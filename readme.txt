@@ -4,6 +4,7 @@ Enhancements: N/A
 
 Fixes:
     * Bug-039524: Hide Schedule,upcoming, issue reported status change for admin
+    * Bug-040593: Cancel order update admin revenue on dashboard
 
 ======================================
 

@@ -153,7 +153,7 @@ class AdminStatistic extends MyAppModel
                 $srch->doNotLimitRecords();
                 $srch->addCondition('o.order_type', '=', Order::TYPE_LESSON_BOOKING);
                     $cnd = $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
-                $srch->addMultipleFields(array('SUM((order_net_amount )) AS totalsales,SUM(0) totalcommission'));
+                $srch->addMultipleFields(array('SUM(order_net_amount )-SUM(op_total_refund_amount) AS totalsales,SUM(0) totalcommission'));
 
                 $srchObj1 = clone $srch;
                 $srchObj1->addFld(array('1 AS num_days'));
