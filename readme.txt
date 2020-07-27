@@ -12,6 +12,7 @@ Fixes:
     * Bug-040473: Navigate to class list if buy group class
     * Bug-040476: Icons changes for learner group class list
     * Bug-040471: Lesson cancel update refund amount in database
+    * Bug-040550: Added grey class with disabled button in view Group class 
 
 ==============================================
 
