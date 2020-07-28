@@ -635,7 +635,7 @@ class GuestUserController extends MyAppController
     public function loginFacebook()
     {
         $post = FatApp::getPostedData();
-        $facebookEmail = isset($post['email']) ? $post['email'] : '';
+        $facebookEmail = isset($post['email']) ? $post['email'] : NULL;
         $userFacebookId = $post['id'];
         $userFirstName = $post['first_name'];
         $userLastName = $post['last_name'];
@@ -661,10 +661,10 @@ class GuestUserController extends MyAppController
         }
         else {
             if (empty($userFacebookId)) {
-                Message::addErrorMessage(Labels::getLabel("MSG_THERE_WAS_SOME_PROBLEM_IN_AUTHENTICATING_YOUR_ACCOUNT_WITH_FACEBOOK,_PLEASE_TRY_WITH_DIFFERENT_LOGIN_OPTIONS", $this->siteLangId));
+                Message::addErrorMessage(Label::getLabel("MSG_THERE_WAS_SOME_PROBLEM_IN_AUTHENTICATING_YOUR_ACCOUNT_WITH_FACEBOOK,_PLEASE_TRY_WITH_DIFFERENT_LOGIN_OPTIONS", $this->siteLangId));
                 $url = CommonHelper::generateUrl('GuestUser', 'loginForm');
                 $this->set('url', $url);
-                $this->set('msg', Labels::getLabel('MSG_Invalid_login', $this->siteLangId));
+                $this->set('msg', Label::getLabel('MSG_Invalid_login', $this->siteLangId));
                 $this->_template->render(false, false, 'json-success.php');
             }
             $srch->addCondition('user_facebook_id', '=', $userFacebookId);
@@ -766,9 +766,9 @@ class GuestUserController extends MyAppController
 			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
 		}
         $message = Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId);
-		if (empty($userInfo['user_email'])) {
-            $message = Labels::getLabel('MSG_PLEASE_CONFIGURE_YOUR_EMAIL', $this->siteLangId);
-		     $redirectUrl = CommonHelper::generateUrl('GuestUser','configureEmail');
+		if (empty($userInfo['credential_email'])) {
+            $message = Label::getLabel('MSG_PLEASE_CONFIGURE_YOUR_EMAIL', $this->siteLangId);
+		   $redirectUrl = CommonHelper::generateUrl('GuestUser','configureEmail');
 		}
 
         $this->set('url', $redirectUrl);
@@ -780,6 +780,15 @@ class GuestUserController extends MyAppController
     public function configureEmail()
    {
        UserAuthentication::checkLogin();
+
+       $userObj = new User(UserAuthentication::getLoggedUserId());
+       $srch = $userObj->getUserSearchObj(array('user_id', 'credential_email', 'user_first_name','user_last_name'));
+       $rs = $srch->getResultSet();
+       $data = FatApp::getDb()->fetch($rs);
+       if ($data === false || !empty($data['credential_email'])) {
+           FatApp::redirectUser(CommonHelper::generateUrl('GuestUser','loginForm'));
+       }
+
        $frm = $this->getConfigureEmailForm();
        $this->set('frm', $frm);
        $this->set('siteLangId', $this->siteLangId);
@@ -826,13 +835,13 @@ class GuestUserController extends MyAppController
         $rs = $srch->getResultSet();
 
         if (!$rs) {
-            $message = Labels::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
+            $message = Label::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
             FatUtility::dieJsonError($message);
         }
 
-        $data = FatApp::getDb()->fetch($rs, 'user_id');
-        if ($data === false || $data['credential_email'] != '') {
-            $message = Labels::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
+        $data = FatApp::getDb()->fetch($rs);
+        if ($data === false || !empty($data['credential_email'])) {
+            $message = Label::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
             FatUtility::dieJsonError($message);
         }
         $db =  FatApp::getDb();
