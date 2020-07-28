@@ -63,15 +63,17 @@ $("document").ready(function(){
 });
 
 function viewCalendar( teacherId, action, languageId){
-
+	$.systemMessage(langLbl.requestProcessing,'alert alert--process');
 	if( action == 'free_trial' ) {
 		if( isUserLogged() == 0 ){
+			$.systemMessage.close();
 			logInFormPopUp();
 			return false;
 		}
 	}
 
 	fcom.ajax(fcom.makeUrl('Teachers', 'viewCalendar',[teacherId, languageId]), 'action='+action, function(t) {
+			$.systemMessage.close();
 		$.facebox( t,'facebox-medium');
 	});
 }
@@ -104,7 +106,7 @@ function searchQualifications( user_id ){
 
 		//
 		fcom.updateWithAjax(fcom.makeUrl('Teachers','getTeacherReviews'), data+"teacherId=", function(ans){
-				
+
 			if( ans.status == 1 ){
 				$.mbsmessage.close();
 			}
