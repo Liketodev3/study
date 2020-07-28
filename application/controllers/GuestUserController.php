@@ -779,7 +779,8 @@ class GuestUserController extends MyAppController
 
     public function configureEmail()
    {
-       $frm = $this->getConfigureEmailForm(false);
+       UserAuthentication::checkLogin();
+       $frm = $this->getConfigureEmailForm();
        $this->set('frm', $frm);
        $this->set('siteLangId', $this->siteLangId);
        $this->_template->render();
