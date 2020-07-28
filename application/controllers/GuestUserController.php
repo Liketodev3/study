@@ -768,7 +768,7 @@ class GuestUserController extends MyAppController
         $message = Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId);
 		if (empty($userInfo['user_email'])) {
             $message = Label::getLabel('MSG_PLEASE_CONFIGURE_YOUR_EMAIL', $this->siteLangId);
-		     $redirectUrl = CommonHelper::generateUrl('GuestUser','configureEmail');
+		   $redirectUrl = CommonHelper::generateUrl('GuestUser','configureEmail');
 		}
 
         $this->set('url', $redirectUrl);
@@ -786,10 +786,10 @@ class GuestUserController extends MyAppController
        $rs = $srch->getResultSet();
        $data = FatApp::getDb()->fetch($rs, 'user_id');
        if ($data === false || $data['credential_email'] != '') {
-           $message = Label::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
-           FatUtility::dieJsonError($message);
+           $message = Label::getLabel('MSG_PLEASE_CONFIGURE_YOUR_EMAIL', $this->siteLangId);
+           $redirectUrl = CommonHelper::generateUrl('GuestUser','loginForm');
        }
-       
+
        $frm = $this->getConfigureEmailForm();
        $this->set('frm', $frm);
        $this->set('siteLangId', $this->siteLangId);
