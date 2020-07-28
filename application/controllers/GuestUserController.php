@@ -635,7 +635,7 @@ class GuestUserController extends MyAppController
     public function loginFacebook()
     {
         $post = FatApp::getPostedData();
-        $facebookEmail = isset($post['email']) ? $post['email'] : '';
+        $facebookEmail = isset($post['email']) ? $post['email'] : NULL;
         $userFacebookId = $post['id'];
         $userFirstName = $post['first_name'];
         $userLastName = $post['last_name'];
@@ -785,7 +785,7 @@ class GuestUserController extends MyAppController
        $srch = $userObj->getUserSearchObj(array('user_id', 'credential_email', 'user_first_name','user_last_name'));
        $rs = $srch->getResultSet();
        $data = FatApp::getDb()->fetch($rs);
-       if ($data === false || !empty(!$data['credential_email'])) {
+       if ($data === false || !empty($data['credential_email'])) {
            FatApp::redirectUser(CommonHelper::generateUrl('GuestUser','loginForm'));
        }
 
