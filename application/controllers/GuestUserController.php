@@ -647,6 +647,10 @@ class GuestUserController extends MyAppController
             $user_type = User::USER_TYPE_LEANER;
         }
 
+        unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_code']);
+        unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_access_token']);
+        unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_user_id']);
+
         $facebookName = $userFirstName.' '.$userLastName;
         // User info ok? Let's print it (Here we will be adding the login and registering routines)
         $db = FatApp::getDb();
@@ -658,9 +662,6 @@ class GuestUserController extends MyAppController
         else {
             if (empty($userFacebookId)) {
                 Message::addErrorMessage(Labels::getLabel("MSG_THERE_WAS_SOME_PROBLEM_IN_AUTHENTICATING_YOUR_ACCOUNT_WITH_FACEBOOK,_PLEASE_TRY_WITH_DIFFERENT_LOGIN_OPTIONS", $this->siteLangId));
-                unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_code']);
-                unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_access_token']);
-                unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_user_id']);
                 $url = CommonHelper::generateUrl('GuestUser', 'loginForm');
                 $this->set('url', $url);
                 $this->set('msg', Labels::getLabel('MSG_Invalid_login', $this->siteLangId));
@@ -777,36 +778,46 @@ class GuestUserController extends MyAppController
     }
 
     public function configureEmail()
-    {
-        $this->_template->render();
-        $frm = $this->getChangeEmailForm(false);
-        $this->set('frm', $frm);
-        $this->set('siteLangId', $this->siteLangId);
-        $this->_template->render();
-    }
+   {
+       $frm = $this->getConfigureEmailForm(false);
+       $this->set('frm', $frm);
+       $this->set('siteLangId', $this->siteLangId);
+       $this->_template->render();
+   }
 
-    public function changeEmailForm()
-    {
-        $frm = $this->getChangeEmailForm(false);
-        $this->set('frm', $frm);
-        $this->set('siteLangId', $this->siteLangId);
-        $this->
-        $this->_template->render(false, false, 'account/change-email-form.php');
-    }
+   private function getConfigureEmailForm()
+   {
+       $frm = new Form('changeEmailFrm');
+
+       $frm->addHiddenField('', 'user_id', UserAuthentication::getLoggedUserId());
+
+       $newEmail = $frm->addEmailField(
+           Label::getLabel('LBL_NEW_EMAIL'),
+           'new_email'
+       );
+       $newEmail->setUnique('tbl_user_credentials', 'credential_email', 'credential_user_id', 'user_id', 'user_id');
+       $newEmail->requirements()->setRequired();
+
+       $conNewEmail = $frm->addEmailField(
+           Label::getLabel('LBL_CONFIRM_NEW_EMAIL'),
+           'conf_new_email'
+       );
+       $conNewEmailReq = $conNewEmail->requirements();
+       $conNewEmailReq->setRequired();
+       $conNewEmailReq->setCompareWith('new_email', 'eq');
+       $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE'));
+       return $frm;
+   }
+
 
     public function updateEmail()
     {
-        $emailFrm = $this->getChangeEmailForm(false);
+        $emailFrm = $this->getConfigureEmailForm(false);
         $post = $emailFrm->getFormDataFromArray(FatApp::getPostedData());
 
         if (false === $post) {
             $message = current($emailFrm->getValidationErrors());
-            LibHelper::dieJsonError($message);
-        }
-
-        if ($post['new_email'] != $post['conf_new_email']) {
-            $message = Labels::getLabel('MSG_New_email_confirm_email_does_not_match', $this->siteLangId);
-            LibHelper::dieJsonError($message);
+            FatUtility::dieJsonError($message);
         }
 
         $userObj = new User(UserAuthentication::getLoggedUserId());
@@ -815,38 +826,67 @@ class GuestUserController extends MyAppController
 
         if (!$rs) {
             $message = Labels::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
-            LibHelper::dieJsonError($message);
+            FatUtility::dieJsonError($message);
         }
 
         $data = FatApp::getDb()->fetch($rs, 'user_id');
         if ($data === false || $data['credential_email'] != '') {
             $message = Labels::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
-            LibHelper::dieJsonError($message);
+            FatUtility::dieJsonError($message);
+        }
+        $db =  FatApp::getDb();
+        $db->startTransaction();
+        $_token = $userObj->prepareUserVerificationCode();
+        $emailChangeReqObj = new UserEmailChangeRequest();
+        $emailChangeReqObj->deleteOldLinkforUser(UserAuthentication::getLoggedUserId());
+        $postData = array(
+            'uecreq_user_id' => UserAuthentication::getLoggedUserId(),
+            'uecreq_email' => $post['new_email'],
+            'uecreq_token' => $_token,
+            'uecreq_status' => 0,
+            'uecreq_created' => date('Y-m-d H:i:s'),
+            'uecreq_updated' => date('Y-m-d H:i:s'),
+            'uecreq_expire' => date('Y-m-d H:i:s', strtotime('+ 24 hours', strtotime(date('Y-m-d H:i:s'))))
+        );
+
+        $emailChangeReqObj->assignValues($postData);
+        if (!$emailChangeReqObj->save()) {
+            $db->rollbackTransaction();
+            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset'). $emailChangeReqObj->getError());
+            FatUtility::dieWithError(Message::getHtml());
         }
 
-        /* if ($data['credential_password'] != UserAuthentication::encryptPassword($post['current_password'])) {
-        Message::addErrorMessage(Labels::getLabel('MSG_YOUR_CURRENT_PASSWORD_MIS_MATCHED',$this->siteLangId));
-        FatUtility::dieJsonError( Message::getHtml() );
-        } */
+        $userData = array(
+            'user_email' => $post['new_email'],
+            'user_first_name' => $data['user_first_name'],
+            'user_last_name' => $data['user_last_name']
+        );
 
-
-        if (FatApp::getConfig('CONF_WELCOME_EMAIL_REGISTRATION', FatUtility::VAR_INT, 1) && $facebookEmail) {
-            $data['user_email'] = $facebookEmail;
-            $data['user_first_name'] = $user_first_name;
-            $data['user_last_name'] = $user_last_name;
-            $userId = $userObj->getMainTableRecordId();
-            $userObj = new User($userId);
-            if (!$this->userWelcomeEmailRegistration($userObj, $data)) {
-                $db->rollbackTransaction();
-                $this->set('url', CommonHelper::redirectUserReferer(true));
-                $this->set('msg', Label::getLabel("MSG_WELCOME_EMAIL_COULD_NOT_BE_SENT"));
-                $this->_template->render(false, false, 'json-error.php');
-            }
+        if (!$this->sendEmailChangeVerificationLink($_token, $userData)) {
+            $db->rollbackTransaction();
+            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset'). $emailChangeReqObj->getError());
+            FatUtility::dieWithError(Message::getHtml());
         }
+        $db->commitTransaction();
 
-        $this->set('msg', Labels::getLabel('MSG_UPDATE_EMAIL_REQUEST_SENT_SUCCESSFULLY._YOU_NEED_TO_VERIFY_YOUR_NEW_EMAIL_ADDRESS_BEFORE_ACCESSING_OTHER_MODULES', $this->siteLangId));
-
+        $this->set('msg', Label::getLabel('MSG_UPDATE_EMAIL_REQUEST_SENT_SUCCESSFULLY._YOU_NEED_TO_VERIFY_YOUR_NEW_EMAIL_ADDRESS_BEFORE_ACCESSING_OTHER_MODULES'));
         $this->_template->render(false, false, 'json-success.php');
+    }
+
+    private function sendEmailChangeVerificationLink($_token, $data)
+    {
+        $link = CommonHelper::generateFullUrl('GuestUser', 'verifyEmail', array($_token));
+        $data = array(
+            'user_first_name' => $data['user_first_name'],
+            'user_last_name' => $data['user_last_name'],
+            'user_email' => $data['user_email'],
+            'link' => $link,
+        );
+        $email = new EmailHandler();
+        if (true !== $email->sendEmailChangeVerificationLink($this->siteLangId, $data)) {
+            return false;
+        }
+        return true;
     }
 
     public function loginGoogleplus($userType = User::USER_TYPE_LEANER)

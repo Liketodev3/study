@@ -1,15 +1,12 @@
 $(document).ready(function(){
-	changeEmailForm();
+	//changeEmailForm();
 });
 
 (function() {
 	var runningAjaxReq = false;
-	var dv = '#changeEmailFrmBlock';
-	var phoneNumberdv = '#changePhoneFrmBlock';
 
 	checkRunningAjax = function(){
 		if( runningAjaxReq == true ){
-			console.log(runningAjaxMsg);
 			return;
 		}
 		runningAjaxReq = true;
@@ -26,7 +23,7 @@ $(document).ready(function(){
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'updateEmail'), data, function(t) {
-			changeEmailForm();
+			location.reload();
 		});
     };
 

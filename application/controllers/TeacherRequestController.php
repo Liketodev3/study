@@ -68,6 +68,19 @@ class TeacherRequestController extends MyAppController {
 			$post = $frm->getFormDataFromArray(FatApp::getPostedData());
 			$frm->fill($post);
 		}
+        
+        /* [ */
+        $cPageSrch = ContentPage::getSearchObject($this->siteLangId);
+        $cPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_TERMS_AND_CONDITIONS_PAGE', FatUtility::VAR_INT, 0));
+        $cpage = FatApp::getDb()->fetch($cPageSrch->getResultSet());
+        if (!empty($cpage) && is_array($cpage)) {
+            $termsAndConditionsLinkHref = CommonHelper::generateUrl('Cms', 'view', array($cpage['cpage_id']));
+        } else {
+            $termsAndConditionsLinkHref = 'javascript:void(0)';
+        }
+        $this->set('termsAndConditionsLinkHref', $termsAndConditionsLinkHref);
+        /* ] */
+        
 		$websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId, FatUtility::VAR_STRING, '');
 		$this->set('websiteName', $websiteName);
 		$this->set('frm', $frm);
