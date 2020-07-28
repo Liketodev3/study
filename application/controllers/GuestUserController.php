@@ -787,7 +787,7 @@ class GuestUserController extends MyAppController
        $data = FatApp::getDb()->fetch($rs);
        if ($data === false || !empty(!$data['credential_email'])) {
            $message = Label::getLabel('MSG_PLEASE_CONFIGURE_YOUR_EMAIL', $this->siteLangId);
-           $redirectUrl = CommonHelper::generateUrl('GuestUser','loginForm');
+           FatApp::redirectUser(CommonHelper::generateUrl('GuestUser','loginForm'));
        }
 
        $frm = $this->getConfigureEmailForm();
