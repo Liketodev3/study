@@ -779,6 +779,10 @@ class GuestUserController extends MyAppController
     public function configureEmail()
     {
         $this->_template->render();
+        $frm = $this->getChangeEmailForm(false);
+        $this->set('frm', $frm);
+        $this->set('siteLangId', $this->siteLangId);
+        $this->_template->render();
     }
 
     public function changeEmailForm()
@@ -786,6 +790,7 @@ class GuestUserController extends MyAppController
         $frm = $this->getChangeEmailForm(false);
         $this->set('frm', $frm);
         $this->set('siteLangId', $this->siteLangId);
+        $this->
         $this->_template->render(false, false, 'account/change-email-form.php');
     }
 
@@ -840,7 +845,7 @@ class GuestUserController extends MyAppController
         }
 
         $this->set('msg', Labels::getLabel('MSG_UPDATE_EMAIL_REQUEST_SENT_SUCCESSFULLY._YOU_NEED_TO_VERIFY_YOUR_NEW_EMAIL_ADDRESS_BEFORE_ACCESSING_OTHER_MODULES', $this->siteLangId));
-        
+
         $this->_template->render(false, false, 'json-success.php');
     }
 

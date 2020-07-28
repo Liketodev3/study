@@ -7621,6 +7621,9 @@ html.show-dashboard-js .overlay {
 .search-lesson-listing strong{font-weight:500;font-size:13px;}
 strong.span-right{font-weight:500;font-size:13px;}
 .schedule-list .timer .label{font-weight:500;font-size:13px;}
+
+
+
 @media screen and (max-width:767px){
 	ul.actions{
 		justify-content:flex-start;
@@ -7634,6 +7637,7 @@ strong.span-right{font-weight:500;font-size:13px;}
 	}
 }
 @media screen and (max-width:575px){
+  .alert a{display:block;margin-top:5px;}
 	.progress-wrapper{
 		flex-wrap:wrap;
 	}

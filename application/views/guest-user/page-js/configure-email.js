@@ -15,12 +15,12 @@ $(document).ready(function(){
 		runningAjaxReq = true;
 	};
 
-	changeEmailForm = function(){
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('GuestUser', 'changeEmailForm'), '', function(t) {
-			$(dv).html(t);
-		});
-    };
+	// changeEmailForm = function(){
+	// 	$(dv).html(fcom.getLoader());
+	// 	fcom.ajax(fcom.makeUrl('GuestUser', 'changeEmailForm'), '', function(t) {
+	// 		$(dv).html(t);
+	// 	});
+  //   };
 
 	updateEmail = function (frm){
 		if (!$(frm).validate()) return;

@@ -3,41 +3,10 @@
 	<div class="container container--fixed">
 		<div class="row justify-content-center">
 			<div class="col-sm-9 col-lg-5 col-xl-5">
-Please contact wemaster <a href="mailto:<?php echo FatApp::getConfig('conf_site_owner_email') ?>"><?php echo FatApp::getConfig('conf_site_owner_email') ?></a>
+				Please contact wemaster <a href="mailto:<?php echo FatApp::getConfig('conf_site_owner_email') ?>"><?php echo FatApp::getConfig('conf_site_owner_email') ?></a>
 			</div>
 		</div>
 	</div>
 </section>
-
-
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<?php /* $this->includeTemplate('_partial/dashboardNavigation.php'); */ ?>
-<div id="body" class="body" role="main">
-    <section class="bg-second pt-3 pb-3">
-        <div class="container">
-            <div class="section-head section--white--head section--head--center mb-0">
-                <div class="section__heading">
-                    <h2 class="mb-0 pageTitle-js"><?php echo Label::getLabel('LBL_CONFIGURE_YOUR_DETAILS', $siteLangId);?></h2>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-9">
-                    <div class="row justify-content-center">
-                        <div class="col-md-5">
-                            <div class="border rounded p-4 h-100">
-                                <h6><?php echo Label::getLabel('LBL_UPDATE_EMAIL', $siteLangId);?></h6>
-                                <div id="changeEmailFrmBlock"><?php echo Label::getLabel('LBL_Loading..', $siteLangId); ?></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
-    </section>
-</div>
+<h6><?php echo Label::getLabel('LBL_UPDATE_EMAIL', $siteLangId);?></h6>
+<div id="changeEmailFrmBlock"><?php echo Label::getLabel('LBL_Loading..', $siteLangId); ?></div>
