@@ -7,6 +7,13 @@ $(function() {
 		var data = fcom.frmData(frm);
 		fcom.ajax(fcom.makeUrl('LearnerGroupClasses','search'),data,function(t){
 			$(dv).html(t);
+            $('.countdowntimer').each(function (i) {
+                $(this).countdowntimer({
+                    startDate : $(this).data('starttime'),
+                    dateAndTime : $(this).data('endtime'),
+                    size : "sm",
+                });
+            });
 		});
 	};
 

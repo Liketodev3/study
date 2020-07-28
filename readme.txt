@@ -7,6 +7,7 @@ Fixes:
     * Bug-040593: Cancel order update admin revenue on dashboard
     * Bug-040595: Added Google authorization link for msg to auto post on Google Calendar
     * Bug-040590: In teacher Application form, terms & condition link added
+    * Bug-040601: Showing time to start class
 
 ======================================
 
