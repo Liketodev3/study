@@ -780,6 +780,16 @@ class GuestUserController extends MyAppController
     public function configureEmail()
    {
        UserAuthentication::checkLogin();
+
+       $userObj = new User(UserAuthentication::getLoggedUserId());
+       $srch = $userObj->getUserSearchObj(array('user_id', 'credential_email', 'user_first_name','user_last_name'));
+       $rs = $srch->getResultSet();
+       $data = FatApp::getDb()->fetch($rs, 'user_id');
+       if ($data === false || $data['credential_email'] != '') {
+           $message = Label::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
+           FatUtility::dieJsonError($message);
+       }
+       
        $frm = $this->getConfigureEmailForm();
        $this->set('frm', $frm);
        $this->set('siteLangId', $this->siteLangId);
