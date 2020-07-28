@@ -742,7 +742,7 @@ class GuestUserController extends MyAppController
             'user_facebook_id',
             'credential_username',
             'credential_password',
-            'user_email',
+            'credential_email',
         ));
         if (!$userInfo || ($userInfo && $userInfo['user_facebook_id'] != $userFacebookId)) {
             // Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET"));
