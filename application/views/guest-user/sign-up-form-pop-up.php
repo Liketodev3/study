@@ -32,10 +32,17 @@ if(isset($userType) && !empty($userType)) {
 	$fldPassword->captionWrapper = ( array( Label::getLabel('LBL_Password') . '<span class="spn_must_field">*</span><a onClick="togglePassword(this)" href="javascript:void(0)" class="-link-underline -float-right link-color" data-show-caption="'. Label::getLabel('LBL_Show_Password') .'" data-hide-caption="'. Label::getLabel('LBL_Hide_Password') .'">'.Label::getLabel('LBL_Show_Password'), '</a>') );
 
 	/* [ */
-	$fldAgree = $frm->getField('agree');
-	$fldAgree->addWrapperAttribute('id', 'termLabelWrapper');
-	$termLink ='';
-	$termLink .= ' <a target="_blank" class = "-link-underline link-color" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a> and <a href="'. $privacyPolicyLinkHref .'" target="_blank" class = "-link-underline link-color" >'. Label::getLabel('LBL_Privacy_Policy') . '</a>';
+
+$termLink = ' <a target="_blank" class = "-link-underline link-color" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a> and <a href="'. $privacyPolicyLinkHref .'" target="_blank" class = "-link-underline link-color" >'. Label::getLabel('LBL_Privacy_Policy') . '</a>';
+$terms_caption = '<span>'.$termLink.'</span>';
+$frm->getField('agree')->addWrapperAttribute('class', 'terms_wrap');
+$frm->getField('agree')->htmlAfterField = $terms_caption;
+
+	// $fldAgree = $frm->getField('agree');
+	// $fldAgree->addWrapperAttribute('id', 'termLabelWrapper');
+	// $fldAgree->fieldWrapper = ['<span>']
+	// $termLink ='';
+	// $termLink .= '<a target="_blank" class = "-link-underline link-color" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a> and <a href="'. $privacyPolicyLinkHref .'" target="_blank" class = "-link-underline link-color" >'. Label::getLabel('LBL_Privacy_Policy') . '</a>';
 	//$fldAgree->htmlAfterField = $termLink;
 	/* ] */
 	//$fldAgree->changeCaption( '<a href="">terms</a>' );
@@ -48,5 +55,6 @@ if(isset($userType) && !empty($userType)) {
 $(document).ready(function(){
 	$('#termLabelWrapper label').addClass('field_resp_block');
 $('#termLabelWrapper label').append('<?php echo $termLink; ?>');
+
 })
 </script>

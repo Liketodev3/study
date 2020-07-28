@@ -13,22 +13,22 @@ $frm->setFormTagAttribute('onsubmit', 'setUpEmail(this); return(false);');
 			<h4 class="page-heading"><?php echo Label::getLabel('LBL_Change_Password_or_Email'); ?></h4>
 		</div>
 	</div>
-	<?php if( !empty( $userPendingRequest ) ) { 
+	<?php if( !empty( $userPendingRequest ) ) {
 	?>
 	<div class="system_message alert--positioned-top-full alert  alert--warning" style="">
         <a class="closeMsg" href="javascript:void(0)"></a>
         <div class="content">
             <div class="div_info">
 				<ul>
-					<li><?php echo Label::getLabel('LBL_Email_Verification_pending_for_email_change'); ?></li>
+					<li><?php echo Label::getLabel('LBL_Email_Verification_Pending_for_email_change'); ?></li>
 				</ul>
-			</div>        
+			</div>
 		</div>
-    </div>	
+    </div>
 	<?php
 	}
 	?>
-	
+
 </div>
 <div class="tabs-small tabs-offset tabs-scroll-js">
     <ul>

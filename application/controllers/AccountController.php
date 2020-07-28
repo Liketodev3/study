@@ -4,7 +4,7 @@ class AccountController extends LoggedUserController
     public function __construct($action)
     {
         parent::__construct($action);
-        
+
         $this->_template->addJs('js/jquery-confirm.min.js');
         $this->_template->addCss('css/jquery-confirm.min.css');
     }
@@ -428,27 +428,6 @@ class AccountController extends LoggedUserController
         return $frm;
     }
 
-    private function getChangeEmailForm()
-    {
-        $frm = new Form('changeEmailFrm');
-        $userObj = new User(UserAuthentication::getLoggedUserId());
-        $srch = $userObj->getUserSearchObj(array('credential_email'));
-        $rs = $srch->getResultSet();
-        $userRow = FatApp::getDb()->fetch($rs);
-        $user_email = $userRow['credential_email'];
-        $frm->addHiddenField('', 'user_id', UserAuthentication::getLoggedUserId());
-        $curEmail= $frm->addEmailField(Label::getLabel('LBL_CURRENT_EMAIL'), 'user_email', $user_email);
-        $curEmail->requirements()->setRequired();
-        $curEmail->addFieldTagAttribute('readonly', 'true');
-        $newEmail = $frm->addEmailField(Label::getLabel('LBL_NEW_EMAIL'), 'new_email');
-        $newEmail->setUnique('tbl_user_credentials', 'credential_email', 'credential_user_id', 'user_id', 'user_id');
-        $newEmail->requirements()->setRequired();
-        $curPwd = $frm->addPasswordField(Label::getLabel('LBL_CURRENT_PASSWORD'), 'current_password');
-        $curPwd->requirements()->setRequired();
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
-        return $frm;
-    }
-
     private function sendEmailChangeVerificationLink($_token, $data)
     {
         $link = CommonHelper::generateFullUrl('GuestUser', 'verifyEmail', array($_token));
@@ -464,7 +443,7 @@ class AccountController extends LoggedUserController
         }
         return true;
     }
-    
+
     public function GoogleCalendarAuthorize()
     {
         require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
@@ -491,16 +470,16 @@ class AccountController extends LoggedUserController
             $authUrl = $client->createAuthUrl();
             FatApp::redirectUser($authUrl);
         }
-        
+
         $data = array(
-            'us_google_access_token'        => $client->getRefreshToken(), 
+            'us_google_access_token'        => $client->getRefreshToken(),
             'us_google_access_token_expiry' => date('Y-m-d H:i:s', strtotime('+60 days'))
         );
         $usrStngObj = new UserSetting(UserAuthentication::getLoggedUserId());
         $usrStngObj->saveData($data);
-        
+
         unset($_SESSION['access_token']);
-        
+
         FatApp::redirectUser(CommonHelper::generateUrl('Account', 'ProfileInfo'));
     }
 }
