@@ -510,6 +510,20 @@ class PurchasedLessonsController extends AdminBaseController
                 }
                 return false;
             }
+            
+            $schLesDetSrchObj = new ScheduledLessonDetailsSearch();
+            $schLesDetSrchObj->addFld('sldetail_id');
+            $schLesDetSrchObj->addCondition('sldetail_order_id', '=', $data['order_id']);
+            $schLesDetSrchObj->addCondition('sldetail_learner_status', '!=', ScheduledLesson::STATUS_CANCELLED);
+            $schLesDetSrchObj->addCondition('sldetail_learner_status', '!=', ScheduledLesson::STATUS_COMPLETED);
+            $lesDetails = FatApp::getDb()->fetchAll($schLesDetSrchObj->getResultSet());
+            foreach($lesDetails as $lesDetail){
+                $schLesDetObj = new ScheduledLessonDetails($lesDetail['sldetail_id']);
+                if(!$schLesDetObj->refundToLearner()){
+                    $db->rollbackTransaction();
+                    FatUtility::dieJsonError($db->getError());
+                }
+            }
 
             $assignValues = array('sldetail_learner_status' => ScheduledLesson::STATUS_CANCELLED);
             if (!$db->updateFromArray(ScheduledLessonDetails::DB_TBL, $assignValues, array('smt' => 'sldetail_order_id = ?', 'vals' => array($data['order_id'])))) {
@@ -519,17 +533,6 @@ class PurchasedLessonsController extends AdminBaseController
                     FatUtility::dieJsonError($this->error);
                 }
                 return false;
-            }
-            
-            $schLesDetSrchObj = new ScheduledLessonDetailsSearch();
-            $schLesDetSrchObj->addFld('sldetail_id');
-            $schLesDetSrchObj->addCondition('sldetail_order_id', '=', $data['order_id']);
-            $schLesDetSrchObj->addCondition('sldetail_status', '!=', ScheduledLesson::STATUS_CANCELLED);
-            $schLesDetSrchObj->addCondition('sldetail_status', '!=', ScheduledLesson::STATUS_COMPLETED);
-            $lesDetails = FatApp::getDb()->fetchAll($schLesDetSrchObj->getResultSet());
-            foreach($lesDetails as $lesDetail){
-                $schLesDetObj = new ScheduledLessonDetails($lesDetail['sldetail_id']);
-                $schLesDetObj->refundToLearner();
             }
         }
         $db->commitTransaction();

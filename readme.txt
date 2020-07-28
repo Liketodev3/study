@@ -8,6 +8,7 @@ Fixes:
     * Bug-040595: Added Google authorization link for msg to auto post on Google Calendar
     * Bug-040590: In teacher Application form, terms & condition link added
     * Bug-040601: Showing time to start class
+    * Bug-040600: Cancel order from admin
 
 ======================================
 
