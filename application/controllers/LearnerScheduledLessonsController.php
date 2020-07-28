@@ -36,7 +36,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->searchLessons($srch, $post, true, false);
         // list on lessons not classes in lessons list, group list is added seperately
         $srch->addCondition('slesson_grpcls_id', '=', 0);
-        $srch->joinIssueReported(User::USER_TYPE_LEANER);
+        // $srch->joinIssueReported(User::USER_TYPE_LEANER);
+        $srch->joinIssueReported(UserAuthentication::getLoggedUserId());
 		$srch->joinLessonRescheduleLog();
         $srch->addFld(array(
             'IFNULL(iss.issrep_status,0) AS issrep_status',
@@ -256,7 +257,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 		$srch->joinLessonRescheduleLog();
         $srch->doNotCalculateRecords();
         $srch->addCondition('sld.sldetail_id', '=', $lDetailId);
-        $srch->joinIssueReported(User::USER_TYPE_LEANER);
+        // $srch->joinIssueReported(User::USER_TYPE_LEANER);
+        $srch->joinIssueReported(UserAuthentication::getLoggedUserId());
         $srch->joinLearnerCountry($this->siteLangId);
         $srch->addFld(array(
             'grpcls_title',
@@ -1136,7 +1138,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         $reportedArr = array();
         $reportedArr['issrep_comment'] = $post['issue_reported_msg'];
-        $reportedArr['issrep_reported_by'] = User::USER_TYPE_LEANER;
+        $reportedArr['issrep_reported_by'] = UserAuthentication::getLoggedUserId();
         $reportedArr['issrep_slesson_id']= $lessonId;
         $reportedArr['issrep_issues_to_report'] = implode(',', $_reason_ids);
         $record = new IssuesReported();
@@ -1186,6 +1188,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $issueLessonId = ScheduledLessonDetails::getAttributesById($issueLessonDetailId, 'sldetail_slesson_id');
         $srch = IssuesReported::getSearchObject();
         $srch->addCondition('issrep_slesson_id', '=', $issueLessonId);
+        $srch->addCondition('issrep_reported_by', '=', UserAuthentication::getLoggedUserId());
         $srch->addMultipleFields(array(
             'i.*',
             'slesson_id',
@@ -1197,7 +1200,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'op_lesson_duration',
             'op_lpackage_is_free_trial',
         ));
+        $srch->addGroupBy('issrep_id');
         $srch->addOrder('issrep_id', 'ASC');
+        
         $rs = $srch->getResultSet();
         $issuesReportedDetails = FatApp::getDb()->fetchAll($rs);
         $this->set('issueDeatils', $issuesReportedDetails);

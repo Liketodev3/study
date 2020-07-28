@@ -713,7 +713,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         /* save issue reported[ */
         $reportedArr = array();
         $reportedArr['issrep_comment'] = $post['issue_reported_msg'];
-        $reportedArr['issrep_reported_by'] = User::USER_TYPE_TEACHER;
+        $reportedArr['issrep_reported_by'] = UserAuthentication::getLoggedUserId();
         $reportedArr['issrep_slesson_id'] = $lessonId;
         $record = new IssuesReported();
         $record->assignValues($reportedArr);
@@ -1149,6 +1149,16 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Re-schedule_request_sent_successfully!'));
         }
+        
+        if ($lessonRow['slesson_is_teacher_paid'] == 0) {
+            $lessonObj = new ScheduledLesson($lessonId);
+            if ($lessonObj->payTeacherCommission()) {
+                $userNotification = new UserNotifications($lessonRow['teacherId']);
+                $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
+                $dataUpdateArr['slesson_is_teacher_paid'] = 1;
+            }
+        }
+        
         if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_COMPLETED || $lessonRow['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) {
             $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
             $sLessonObj->assignValues(array('slesson_teacher_end_time' => date('Y-m-d H:i:s')));
@@ -1181,15 +1191,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
                 FatUtility::dieJsonError($tGrpClsObj->getError());
             }
         }
-
-        if ($lessonRow['slesson_is_teacher_paid'] == 0) {
-            $lessonObj = new ScheduledLesson($lessonId);
-            if ($lessonObj->payTeacherCommission()) {
-                $userNotification = new UserNotifications($lessonRow['teacherId']);
-                $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
-                $dataUpdateArr['slesson_is_teacher_paid'] = 1;
-            }
-        }
+        
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
         $sLessonObj->assignValues($dataUpdateArr);
         if (!$sLessonObj->save()) {
