@@ -59,6 +59,12 @@ $introduction_fields_heading->value = '<h5>' . Label::getLabel('LBL_Introduction
 $about_me_fields_heading = $frm->getField( 'about_me_fields_heading' );
 $about_me_fields_heading->value = '<h5>' . Label::getLabel('LBL_Biography') . '</h5>';
 
+$termLink = ' <a target="_blank" class = "-link-underline link-color" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a>';
+$terms_caption = '<span>'.$termLink.'</span>';
+$frm->getField('terms')->changeCaption(Label::getLabel('LBL_Accept_Teacher_Approval'));
+$frm->getField('terms')->addWrapperAttribute('class', 'terms_wrap');
+$frm->getField('terms')->htmlAfterField = $terms_caption;
+
 //$frm->setFormTagAttribute( 'onsubmit', 'setUpTeacherApproval(this); return false;' );
 $frm->setFormTagAttribute( 'action', CommonHelper::generateUrl( 'TeacherRequest', 'setUpTeacherApproval' ) );
 ?>
