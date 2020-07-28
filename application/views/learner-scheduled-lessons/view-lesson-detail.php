@@ -239,6 +239,7 @@ $(function(){
 				</a></p>
 				<?php } ?>
 				<div class="timer">
+                    <h4 class="timer-head"><?php echo Label::getLabel('LBL_Starts_In'); ?></h4>
 					<span id="start_lesson_timer"></span>
 				</div>
 			</div>
@@ -406,6 +407,7 @@ $(function(){
                                         </div>
 
                                         <div id="lesson_actions" style="display:none">
+                                            <h6 class="pb-3"><?php echo Label::getLabel('LBL_Actions');?></h6>
                                             <ul class="actions">
                                                 <?php  if($lessonData['slesson_grpcls_id'] == 0): ?>
                                                 <li><a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lessonData['sldetail_id']; ?>')" title="<?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?>">

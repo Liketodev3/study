@@ -271,6 +271,7 @@ function endLessonConfirm(){
                         <a href="<?php echo CommonHelper::generateUrl('teacher'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
                     <?php } ?>
                 <div class="timer">
+                    <h4 class="timer-head"><?php echo Label::getLabel('LBL_Starts_In'); ?></h4>
                    <span id="start_lesson_timer"></span>
                 </div>
 
@@ -413,6 +414,7 @@ function endLessonConfirm(){
                                             </div>
                                         </div>
                                     <div id="lesson_actions" style="display:none">
+                                        <h6 class="pb-3"><?php echo Label::getLabel('LBL_Actions');?></h6>
                                         <ul class="actions">
                                             <li>
                         						<a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lessonData['slesson_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?>">

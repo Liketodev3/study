@@ -7540,7 +7540,9 @@ color: var(--color-dark)!important;
 }
 
 
-
+ul.actions li {
+  margin: 0 10px 4px 0;
+}
 .loader {
     width: 90px;
     height: 90px;
@@ -7622,19 +7624,42 @@ html.show-dashboard-js .overlay {
 strong.span-right{font-weight:500;font-size:13px;}
 .schedule-list .timer .label{font-weight:500;font-size:13px;}
 .terms_wrap  label{display: inline-block;}
+.fc-toolbar.fc-header-toolbar{margin-top:20px;}
+.calendar-view .fc-toolbar .fc-left h6{padding-top:5px;}
+.ml-0{margin-left:0;}
+.timer-head{font-size: 2.2rem;
+margin-bottom: 25px;
+color: #fff;}
 
 
+@media screen and (min-width:1200px) and (max-width:1599px){
+  .schedule-list .timer .span-right{
+    flex-direction: column;
+    align-items: flex-end!important;
+    text-align: right;
+  }
+  .schedule-list .timer .span-right .label{margin-right:0;padding-right:0;}
+  .col-list-container .col-list [class*="col-"] {padding: 15px 5px;}
+}
 @media screen and (max-width:767px){
 	ul.actions{
 		justify-content:flex-start;
 		padding-top:15px;
 	}
-	ul.actions li {
-		margin: 0 5px 4px 0;
+  ul.actions li {
+		margin: 0 10px 4px 0;
 	}
 	.progress-wrapper{
 		margin:10px 0;
 	}
+  .schedule-list .timer .span-right{
+    align-items: flex-start!important;
+    justify-content: flex-start!important;
+    padding-left: 0;
+  }
+  .schedule-list .timer .span-right .label{
+    padding-lefT:0;
+  }
 }
 @media screen and (max-width:575px){
   .alert a{display:block;margin-top:5px;}
@@ -7649,6 +7674,9 @@ strong.span-right{font-weight:500;font-size:13px;}
 		padding-right: 0;
 		padding-bottom: 10px;
 	}
+  .calendar-view .fc-toolbar .fc-right{float:left;margin-top:10px;}
+  .fc-toolbar.fc-header-toolbar {
+	margin-top: 10px;}
 }
 @media screen and (max-width:400px){
     .terms_wrap  label{margin-bottom:10px;}
