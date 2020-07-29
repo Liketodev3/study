@@ -768,7 +768,7 @@ class UserNotifications extends FatModel
         }
         return true;
     }
-	
+
 	public function sendSchLessonUpdateNotificationByAdmin($lessonId, $userId ,$status, $updateFor)
     {
         $lessonStatusArray = ScheduledLesson::getStatusArr();
@@ -777,18 +777,18 @@ class UserNotifications extends FatModel
 		} else {
 			$this->type = self::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER;
 		}
-		
+
         $this->recordId = $lessonId;
         $this->subRecordId = $userId;
-       
+
         $title = Label::getLabel("LABEL_LESSON_STATUS_UPDATED", CommonHelper::getLangId());
-		
+
         $description = sprintf(Label::getLabel("LABEL_LESSON_STATUS_UPDATED_TO_%s", CommonHelper::getLangId()), $lessonStatusArray[$status]);
-			
+
 		if (!$this->addNotification($title, $description)) {
             return false;
         }
         return true;
     }
-	
+
 }

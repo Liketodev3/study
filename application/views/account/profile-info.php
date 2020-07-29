@@ -26,7 +26,7 @@
 						<?php if($userIsTeacher){ ?>
 						<div class="progress-wrapper d-flex align-items-center flex-column">
 							<div class="progress--top">
-								<span class="profile-progress"><?php echo Label::getLabel('LBL_Profile_progress');?></span>
+								<span class="profile-progress"><span class="spn_must_field">*</span> <?php echo Label::getLabel('LBL_Profile_progress');?></span>
 								<span class="txt progress-count-js"></span>
 							</div>
 							<div class="progress">

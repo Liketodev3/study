@@ -2,8 +2,8 @@
 <div class="message-details message-details-js">
                                     <div class="message-body">
                                         <div class="message-head">
-                                        <div class="row">
-                                            <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10">
+                                        <div class="row justify-content-between align-items-center">
+                                            <div class="">
                                                 <div class="msg-list align-items-center">
                                                    <div class="msg-list__left">
                                                        <div class="avtar avtar--small avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($otherUserDetail['user_first_name']); ?>">
@@ -19,8 +19,14 @@
                                                    </div>
                                                </div>
                                             </div>
-                                            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
-                                                <a href="javascript:void(0)" onclick = 'closethread()' class="-link-close msg-close-js"></a>
+
+                                            <div class="">
+                                                <?php if($otherUserDetail['user_is_teacher'] == applicationConstants::YES){
+                                                        $teacherUrl = CommonHelper::generateUrl('Teachers').'/'. $otherUserDetail['user_url_name'];
+                                                ?>
+                                                    <a href='<?php echo $teacherUrl; ?>' class="btn btn--small btn--secondary view-teacher-link"><?php echo Label::getLabel('LBL_View_Teacher') ?></a>
+                                                <?php } ?>
+                                                <a href="javascript:void(0)" onclick = 'closethread()' class="-link-close msg-close-js -top"></a>
                                             </div>
                                         </div>
                                     </div>

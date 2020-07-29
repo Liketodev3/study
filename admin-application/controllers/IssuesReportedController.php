@@ -37,7 +37,7 @@ class IssuesReportedController extends AdminBaseController
         ));
         $frm->addTextBox(Label::getLabel('LBL_Order_Id', $this->adminLangId), 'sldetail_order_id');
         $frm->addSelectBox(Label::getLabel('LBL_Issue_Status', $this->adminLangId), 'issrep_status', $status_options, -1, array(), '');
-        $frm->addSelectBox(Label::getLabel('LBL_Reported_By', $this->adminLangId), 'issrep_reported_by', $user_options, 0, array(), '');
+        // $frm->addSelectBox(Label::getLabel('LBL_Reported_By', $this->adminLangId), 'issrep_reported_by', $user_options, 0, array(), '');
 
         $frm->addHiddenField('', 'page', 1);
         $frm->addHiddenField('', 'slesson_teacher_id', 0);
@@ -69,10 +69,10 @@ class IssuesReportedController extends AdminBaseController
             $status = FatUtility::int($post['issrep_status']);
             $srch->addCondition('issrep_status', '=', $status);
         }
-        if (isset($post['issrep_reported_by']) and $post['issrep_reported_by'] > 0) {
+        /* if (isset($post['issrep_reported_by']) and $post['issrep_reported_by'] > 0) {
             $status = FatUtility::int($post['issrep_reported_by']);
             $srch->addCondition('issrep_reported_by', '=', $status);
-        }
+        } */
         if (isset($post['sldetail_order_id']) and $post['sldetail_order_id'] != null) {
             $srch->addCondition('sldetail_order_id', 'LIKE', '%'.$post['sldetail_order_id'].'%');
         }
@@ -88,6 +88,7 @@ class IssuesReportedController extends AdminBaseController
         $srch->setPageSize($pagesize);
         $srch->addOrder('issrep_status', 'ASC');
         $srch->addOrder('issrep_added_on', 'DESC');
+        $srch->addGroupBy('issrep_id');
         $rs      = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs);
         $adminId = AdminAuthentication::getLoggedAdminId();
@@ -142,6 +143,7 @@ class IssuesReportedController extends AdminBaseController
             'op_unit_price',
             )
         );
+        $srch->addGroupBy('issrep_id');
         // echo $srch->getQuery();
         // die;
         $rs = $srch->getResultSet();
@@ -214,7 +216,7 @@ class IssuesReportedController extends AdminBaseController
             'slesson_id' => $lessonId,
             'issue_id' => $issueId
         ));
-        $reporterName = $issueDetail['reporter_username']." (".User::getUserTypesArr($this->adminLangId)[$issueDetail['issrep_reported_by']].")";
+        $reporterName = $issueDetail['reporter_username'];
         $this->set('reporterName', $reporterName);
         $this->set('lessonId', $lessonId);
         $this->set('issueId', $issueId);

@@ -405,10 +405,10 @@ class User extends MyAppModel
         );
 
         if (null != $active) {
-            $arrFlds [static::DB_TBL_CRED_PREFIX.'active'] = $active;
+            $arrFlds[static::DB_TBL_CRED_PREFIX.'active'] = $active;
         }
         if (null != $verified) {
-            $arrFlds [static::DB_TBL_CRED_PREFIX.'verified'] = $verified;
+            $arrFlds[static::DB_TBL_CRED_PREFIX.'verified'] = $verified;
         }
 
         $record->setFldValue(static::DB_TBL_CRED_PREFIX.'user_id', $this->getMainTableRecordId());

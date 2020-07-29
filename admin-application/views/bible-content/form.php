@@ -7,7 +7,7 @@ $frm->setFormTagAttribute('class', 'web_form form_horizontal');
 $frm->setFormTagAttribute('onsubmit','return false;');
 ?>
 <div class="col-sm-12">
-    <h1>Bible Content</h1>
+    <h1><?php echo Label::getLabel('LBL_Video_Content'); ?></h1>
     <div class="tabs_nav_container responsive flat">
 		<ul class="tabs_nav">
 			<li><a class="active" href="javascript:void(0)" onclick="addForm(<?php echo $contentId ?>);"><?php echo Label::getLabel('LBL_General',$adminLangId); ?></a></li>

@@ -429,14 +429,14 @@ $weekDayName =  CommonHelper::dayNames();
  <?php } ?>
 
 <div class="row">
-<div class="col-sm-6">
+<div class="col-sm-5">
 	<h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
 </div>
 
-<div class="col-sm-6">
-	<div class="col-sm-6">
+<!-- <div class="col-sm-6"> -->
+	<div class="col-sm-7 justify-content-sm-end justify-content-start">
 		<div class="cal-status">
-			<span class="box-hint disabled-box">&nbsp;</span>
+			<span class="ml-0 box-hint disabled-box">&nbsp;</span>
 			<p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
 		</div>
 		<div class="cal-status">
@@ -448,7 +448,7 @@ $weekDayName =  CommonHelper::dayNames();
 			<p><?php echo Label::getLabel('Lbl_Booked'); ?></p>
 		</div>
 	</div>
-</div>
+<!-- </div> -->
 
 </div>
 

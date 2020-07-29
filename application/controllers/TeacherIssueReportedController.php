@@ -40,6 +40,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         ));
         $srch->addOrder('issrep_status', 'ASC');
         $srch->addOrder('issrep_id', 'DESC');
+        $srch->addGroupBy('issrep_id');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
@@ -91,6 +92,7 @@ class TeacherIssueReportedController extends TeacherBaseController
             'op_lpackage_is_free_trial',
         ));
         $srch->addOrder('issrep_id', 'ASC');
+        $srch->addGroupBy('issrep_id');
         $rs = $srch->getResultSet();
         $issuesReportedDetails = FatApp::getDb()->fetchAll($rs);
         $this->set('issueDeatils', $issuesReportedDetails);
@@ -113,7 +115,8 @@ class TeacherIssueReportedController extends TeacherBaseController
         $srch = IssuesReported::getSearchObject();
         $srch->addCondition('issrep_id', '=', $issueId);
         $srch->addMultipleFields(array(
-            'i.*'
+            'i.*',
+            'sldetail_id'
         ));
         $rs = $srch->getResultSet();
         $issuesReportedDetails = FatApp::getDb()->fetch($rs);
@@ -192,6 +195,10 @@ class TeacherIssueReportedController extends TeacherBaseController
         $refundAmountTeacher = 0;
         $lessonAmount = 0;
         $transactionDetails = Transaction::transactionDetailsWithLesson($lessonId);
+        if(empty($transactionDetails)){
+            $msg = Label::getLabel('LBL_Complete_Class_first_to_resolve_issue', $this->siteLangId);
+            FatUtility::dieJsonError($msg);
+        }
          if(!empty($transactionDetails['order_total']) && !empty($transactionDetails['total_lessons'])) {
              $lessonAmount = $transactionDetails['order_total'] / $transactionDetails['total_lessons'] ;
          }
@@ -364,7 +371,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         }
 
         $userNotification = new UserNotifications($lerner_id);
-        $userNotification->sendIssueRefundNotification($lessonId, IssuesReported::ISSUE_RESOLVE_NOTIFICATION);
+        $userNotification->sendIssueRefundNotification($issuesReportedDetails['sldetail_id'], IssuesReported::ISSUE_RESOLVE_NOTIFICATION);
         Message::addMessage(Label::getLabel('LBL_Lesson_Issue_Resolved_Successfully!', $this->siteLangId));
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Resolved_Successfully!'));
     }

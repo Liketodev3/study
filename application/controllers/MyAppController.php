@@ -90,6 +90,30 @@ class MyAppController extends FatController
         $this->set('action', $this->action);
     }
 
+    protected function getChangeEmailForm($passwordField = true)
+    {
+        $frm = new Form('changeEmailFrm');
+        $userObj = new User(UserAuthentication::getLoggedUserId());
+        $srch = $userObj->getUserSearchObj(array('credential_email'));
+        $rs = $srch->getResultSet();
+        $userRow = FatApp::getDb()->fetch($rs);
+        $user_email = $userRow['credential_email'];
+        $frm->addHiddenField('', 'user_id', UserAuthentication::getLoggedUserId());
+        $curEmail= $frm->addEmailField(Label::getLabel('LBL_CURRENT_EMAIL'), 'user_email', $user_email);
+        $curEmail->requirements()->setRequired();
+        $curEmail->addFieldTagAttribute('readonly', 'true');
+        $newEmail = $frm->addEmailField(Label::getLabel('LBL_NEW_EMAIL'), 'new_email');
+        $newEmail->setUnique('tbl_user_credentials', 'credential_email', 'credential_user_id', 'user_id', 'user_id');
+        $newEmail->requirements()->setRequired();
+        if($passwordField){
+            $curPwd = $frm->addPasswordField(Label::getLabel('LBL_CURRENT_PASSWORD'), 'current_password');
+            $curPwd->requirements()->setRequired();
+        }
+
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
+        return $frm;
+    }
+
     protected function getTeacherQualificationForm($isCertiRequried = false)
     {
         $frm = new Form('frmQualification');

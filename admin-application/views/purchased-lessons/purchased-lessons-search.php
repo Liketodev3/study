@@ -11,6 +11,7 @@
 		'op_lpackage_is_free_trial'=>Label::getLabel('LBL_Free_trial',$adminLangId),
 	    'teacherTeachLanguageName'=>Label::getLabel('LBL_Language',$adminLangId),
 	    'slesson_status'=>Label::getLabel('LBL_Status',$adminLangId),
+	    'slesson_change_status'=>Label::getLabel('LBL_Change_Status',$adminLangId),
 	    'action' => Label::getLabel('LBL_Action',$adminLangId),
 	  );
 
@@ -60,15 +61,20 @@
 				break;
 				case 'teacherTeachLanguageName':
 					$text =  ($row['op_lpackage_is_free_trial'])  ? Label::getLabel('LBL_N/A',$adminLangId) : $row[$key] ;
-				  $td->appendElement('plaintext', array(), $text,true);
+                    $td->appendElement('plaintext', array(), $text,true);
 				break;
 				case 'slesson_status':
-					$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['sldetail_id'],'name'=>'order_is_paid','onchange'=>"updateScheduleStatus(this, '".$row['sldetail_id']."',this.value,'".$row[$key]."')"));
-					foreach($statusArr as $status_key => $status_value){
+                    $td->appendElement('plaintext', array(), $statusArr[$row[$key]], true);
+                break;    
+				case 'slesson_change_status':
+					$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['sldetail_id'],'name'=>'order_is_paid','onchange'=>"updateScheduleStatus(this, '".$row['sldetail_id']."',this.value,'".$row['slesson_status']."')"));
+					$option = $select->appendElement('option',array('value'=> ''), Label::getLabel('LBL_Change_Status',$adminLangId));
+                    $selectStatusArr = $statusArr;
+                    unset($selectStatusArr[ScheduledLesson::STATUS_SCHEDULED]);
+                    unset($selectStatusArr[ScheduledLesson::STATUS_UPCOMING]);
+                    unset($selectStatusArr[ScheduledLesson::STATUS_ISSUE_REPORTED]);
+                    foreach($selectStatusArr as $status_key => $status_value){
 						$option = $select->appendElement('option',array('value'=>$status_key), $status_value);
-						  if($status_key == $row[$key]){
-							$option->setAttribute('selected','selected');
-						  }
 					}
 					$td->appendHtmlElement($select);
 				break;

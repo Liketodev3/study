@@ -35,7 +35,8 @@ class IssuesReported extends MyAppModel
         $srch->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
         $srch->joinTable(Order::DB_TBL, 'INNER JOIN', 'o.order_id = sld.sldetail_order_id', 'o');
         $srch->joinTable('tbl_order_products', 'INNER JOIN', 'op.op_order_id = o.order_id', 'op');
-        $srch->joinTable(User::DB_TBL, 'INNER JOIN', '(CASE WHEN i.issrep_reported_by = '. USER::USER_TYPE_LEANER .' THEN sld.sldetail_learner_id  ELSE sl.slesson_teacher_id END) = u.user_id', 'u');
+        // $srch->joinTable(User::DB_TBL, 'INNER JOIN', '(CASE WHEN i.issrep_reported_by = '. USER::USER_TYPE_LEANER .' THEN sld.sldetail_learner_id  ELSE sl.slesson_teacher_id END) = u.user_id', 'u');
+        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'i.issrep_reported_by = u.user_id', 'u');
         return $srch;
     }
 

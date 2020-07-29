@@ -124,3 +124,13 @@ input[name=teach_language_name].ui-autocomplete-loading {
 .btn.disabled {
   cursor: not-allowed;
 }
+.div_info li a{text-decoration: underline; color:var(--color-primary); cursor: pointer;}
+a.view-teacher-link{margin-right:35px;}
+.-link-close.-top{top:17px;}
+@media screen and (max-width:767px){
+  a.view-teacher-link {
+    margin-right: 45px;
+  }
+  .-link-close.-top{right:0px;}
+  .message-head{padding-left:30px;}
+}
