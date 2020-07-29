@@ -410,7 +410,7 @@ class PurchasedLessonsController extends AdminBaseController
         $db->commitTransaction();
 		/*[ notifications to users */
 		$userNotification = new UserNotifications($lessonRow['sldetail_learner_id']);
-        $userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['sldetail_learner_id'], $status, User::USER_TYPE_TEACHER);
+        $userNotification->sendSchLessonUpdateNotificationByAdmin($sldetailId, $lessonRow['sldetail_learner_id'], $status, User::USER_TYPE_TEACHER);
 
 		//$userNotification = new UserNotifications($lessonRow['sldetail_learner_id']);
         //$userNotification->sendSchLessonUpdateNotificationByAdmin($slesson_id, $lessonRow['sldetail_learner_id '],  $status, User::USER_TYPE_LEANER);
