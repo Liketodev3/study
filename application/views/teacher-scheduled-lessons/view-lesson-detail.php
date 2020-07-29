@@ -42,9 +42,9 @@ var is_time_up = '<?php echo $endTime > 0 && $endTime < $curDate ?>';
 
 var lesson_joined = '<?php echo $lessonData['slesson_teacher_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time']>0 ?>';
+var lesson_status_completed = '<?php echo $lessonData['slesson_status']==ScheduledLesson::STATUS_COMPLETED ?>';
 var slesson_id = '<?php echo $lessonData['slesson_id'] ?>';
 
-$("#lesson_actions").hide();
 var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
 var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
 var chat_id = '<?php echo $chatId; ?>';
@@ -68,17 +68,20 @@ var checkEveryMinuteStatusVar = null;
 var checkNewFlashCardsVar = null;
 createUserCometChatApi(CometJsonData,CometJsonFriendData);
 
-if(!is_time_up && lesson_joined && !lesson_completed){
+if(!is_time_up && lesson_joined && !lesson_status_completed){
     joinLesson(CometJsonData, CometJsonFriendData);
 }
 
+if(lesson_status_completed==1){
+    $('.timer').hide();
+}
+
 if(canEnd && !lesson_completed ){
-	console.log('isTeacherEndLesson');
     $("#endL").show();
 }
 
-
 jQuery(document).ready(function () {
+    $("#lesson_actions").hide();
     <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
     $("#lesson_actions").show();
     <?php }?>
@@ -116,7 +119,7 @@ function checkEveryMinuteStatus(){
     checkEveryMinuteStatusVar = setInterval(function(){
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','checkEveryMinuteStatus',[slesson_id]),'',function(t){
             var t = JSON.parse(t);
-            if(t.sldetail_learner_status > 1 && !isTeacherEndLesson){
+            if(t.sldetail_learner_status <= 1 || t.slesson_teacher_end_time>0) return;
 
             $.confirm({
                 title: langLbl.Confirm,
@@ -141,7 +144,6 @@ function checkEveryMinuteStatus(){
                     }
                 }
             });
-            }
         });
     },60000);
 }

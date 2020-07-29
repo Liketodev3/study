@@ -1104,7 +1104,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addMultipleFields(
             array(
                 // 'slns.slesson_status'
-                'IF(slesson_grpcls_id>0, sld.sldetail_learner_status, 0) as sldetail_learner_status'
+                'slesson_teacher_end_time',
+                'IF(slesson_grpcls_id=0, sld.sldetail_learner_status, 0) as sldetail_learner_status'
             )
         );
         //$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );

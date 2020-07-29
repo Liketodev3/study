@@ -53,6 +53,10 @@ if(!is_time_up && lesson_joined && !lesson_completed){
     joinLesson(chat_id, teacherId);
 }
 
+if(lesson_completed==1){
+    $('.timer').hide();
+}
+
 if(canEnd){
     $("#endL").show();
 }
