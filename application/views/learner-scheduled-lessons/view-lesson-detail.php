@@ -16,7 +16,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
     $studentImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['learnerId'])).'?'.time();
 }
 
-$canEnd = ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $endTime<$curDate);
+$canEnd = ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $endTime < $curDate);
 $chat_group_id = $lessonData['slesson_grpcls_id'] >0 ? $lessonData['grpcls_title'] : "LESSON-".$lessonData['slesson_id'];
 
 $lessonsStatus = $statusArr[$lessonData['sldetail_learner_status']];

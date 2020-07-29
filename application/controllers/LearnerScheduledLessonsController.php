@@ -1516,7 +1516,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 'slns.slesson_id'
             )
         );
-        $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+        $srch->addCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
         $srch->addCondition('sld.sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addCondition('sld.sldetail_id', '=', $lDetailId);
         $srch->addCondition('slns.slesson_date', '=', date('Y-m-d'));
