@@ -39,6 +39,7 @@ var lesson_joined = '<?php echo $lessonData['sldetail_learner_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['sldetail_learner_end_time']>0 ?>';
 var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 var canEnd = '<?php echo $canEnd ?>';
+var sldetail_id = "<?php echo $lessonData['sldetail_id']; ?>";
 
 var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
 var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
@@ -48,6 +49,9 @@ var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>'
 var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
 var chat_avatar = "<?php echo $studentImage; ?>";
 var chat_friends = "<?php echo $lessonData['teacherId']; ?>";
+
+
+
 
 if(!is_time_up && lesson_joined && !lesson_completed){
     joinLesson(chat_id, teacherId);
@@ -70,6 +74,7 @@ function joinLessonButtonAction() {
     $("#lesson_actions").hide();
     $("#joinL").hide();
     $("#endL").show();
+	console.log('here');
     checkEveryMinuteStatus();
     checkNewFlashCards();
     searchFlashCards(document.frmFlashCardSrch);
@@ -86,25 +91,28 @@ function endLessonButtonAction() {
     $("#endL").hide();
     searchFlashCards(document.frmFlashCardSrch);
     if(typeof checkEveryMinuteStatusVar!="undefined"){
-    clearInterval(checkEveryMinuteStatusVar);
+		clearInterval(checkEveryMinuteStatusVar);
     }
     if(typeof checkNewFlashCardsVar!="undefined"){
-    clearInterval(checkNewFlashCardsVar);
+		clearInterval(checkNewFlashCardsVar);
     }
     $('.screen-chat-js').hide();
     $("#end_lesson_time_div").hide();
 }
 
 function checkEveryMinuteStatus() {
+	if(typeof checkEveryMinuteStatusVar!="undefined"){
+		return;
+	}
    checkEveryMinuteStatusVar = setInterval(function(){
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','checkEveryMinuteStatus',['<?php echo $lessonData['sldetail_id'] ?>']),'',function(t){
             var t = JSON.parse(t);
-            if (!lesson_joined && !lesson_completed && t.has_teacher_joined == 1 && !t.has_learner_joined)
+            if (!lesson_joined && !lesson_completed && t.has_teacher_joined == 1 && t.has_learner_joined == 0)
             {
                 $.mbsmessage( '<?php echo Label::getLabel('LBL_Teacher_Has_Joined_Now_you_can_also_Join_The_Lesson!'); ?>',true, 'alert alert--success');
             }
 
-            if(t.slesson_status>1 && t.sldetail_learner_status == 1) {
+            if(t.slesson_status > 1 && t.sldetail_learner_status == 1) {
             $.confirm({
                 title: langLbl.Confirm,
                 content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',
@@ -115,8 +123,7 @@ function checkEveryMinuteStatus() {
                         btnClass: 'btn btn--primary',
                         keys: ['enter', 'shift'],
                         action: function(){
-                            endLessonButtonAction();
-                            viewLessonDetail();
+							endLesson(sldetail_id);
                         }
                     },
                     Quit: {
@@ -158,20 +165,20 @@ $(function(){
                 if(t != 0){
                     showLessonBtn = false;
                     $(".join_lesson_now").show();
-                    $("#lesson_actions").hide();
-                }else{
-                        $("#lesson_actions").show();
+					$("#lesson_actions").hide();
+					checkEveryMinuteStatus();
                 }
             });
             $("#start_lesson_timer").parent().hide();
         }
     });
-    if(showLessonBtn) {
-        if($('#start_lesson_timer').parent().is(":visible")){
-            $("#lesson_actions").show();
-        }
-    }
+	
+	if($('.timer.start-lesson-timer').is(":visible")){
+		$("#lesson_actions").show();
+	}
     <?php } ?>
+	
+
 
     $('#end_lesson_timer').countdowntimer({
         startDate : "<?php echo $curDate; ?>",
