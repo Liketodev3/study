@@ -1042,8 +1042,21 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Scheduled_Successfully!'));
     }
 
-    public function viewAssignedLessonPlan($lessonId)
+    public function viewAssignedLessonPlan($lDetailId)
     {
+        $lDetailId = FatUtility::int($lDetailId);
+        if (1 > $lDetailId) {
+            FatUtility::exitWithErrorCode(404);
+        }
+        $lessonDetailRow = ScheduledLessonDetails::getAttributesById($lDetailId, array('sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id'));
+        if (!$lessonDetailRow || $lessonDetailRow['sldetail_id']!=$lDetailId) {
+            FatUtility::exitWithErrorCode(404);
+        }
+        $lessonId = $lessonDetailRow['sldetail_slesson_id'];
+        $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_id', 'slesson_teacher_id'));
+        if (!$lessonRow || $lessonRow['slesson_id']!=$lessonId) {
+            FatUtility::exitWithErrorCode(404);
+        }
         $lessonId = FatUtility::int($lessonId);
         $srch = new LessonPlanSearch(false);
         $srch->addMultipleFields(array(
