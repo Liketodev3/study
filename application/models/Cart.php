@@ -168,8 +168,9 @@ class Cart extends FatModel
                 'us_single_lesson_amount',
                 'us_teach_slanguage_id',
                 'us_bulk_lesson_amount',
-                'top_single_lesson_price',
-                'top_bulk_lesson_price',
+                'top_teacher_id',
+                'IFNULL(top_single_lesson_price,0) as topSingleLessonPrice',
+                'IFNULL(top_bulk_lesson_price,0) as topBulkLessonPrice',
                 'utl.*'
 
             ));
@@ -182,13 +183,13 @@ class Cart extends FatModel
         //echo $teacherSrch->getQuery(); die;
         $rs = $teacherSrch->getResultSet();
         $teacher = FatApp::getDb()->fetch($rs);
-        //print_r($teacher); die;
+        // print_r($teacher); die;
         if (!$teacher) {
             $this->removeCartKey($key);
         }
         $lPackageId = $cartData['lpackageId'];
         $grpcls_id = $cartData['grpcls_id'];
-        if($lPackageId>0){
+        if($lPackageId > 0){
             $srch = LessonPackage::getSearchObject($langId);
             $srch->addCondition('lpackage_id', '=', $lPackageId);
             $srch->addMultipleFields(array('lpackage_id', 'lpackage_lessons', 'lpackage_is_free_trial', 'lpackage_identifier as lpackage_title'));
@@ -200,9 +201,10 @@ class Cart extends FatModel
             if ($lessonPackageRow['lpackage_is_free_trial'] == 1) {
                 $itemPrice = 0;
             } else {
-                if (isset($teacher['top_single_lesson_price']) && isset($teacher['top_bulk_lesson_price'])) {
-                    $teacher['utl_bulk_lesson_amount'] = $teacher['top_bulk_lesson_price'];
-                    $teacher['utl_single_lesson_amount'] = $teacher['top_single_lesson_price'];
+
+                if (!empty($teacher['top_teacher_id']) && isset($teacher['topSingleLessonPrice']) && isset($teacher['topBulkLessonPrice'])) {
+                    $teacher['utl_bulk_lesson_amount'] = $teacher['topBulkLessonPrice'];
+                    $teacher['utl_single_lesson_amount'] = $teacher['topSingleLessonPrice'];
                 }
                 $itemPrice = (($lessonPackageRow['lpackage_lessons'] > 1) ? $teacher['utl_bulk_lesson_amount'] : $teacher['utl_single_lesson_amount']);
             }
