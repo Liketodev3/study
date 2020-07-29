@@ -115,7 +115,8 @@ class TeacherIssueReportedController extends TeacherBaseController
         $srch = IssuesReported::getSearchObject();
         $srch->addCondition('issrep_id', '=', $issueId);
         $srch->addMultipleFields(array(
-            'i.*'
+            'i.*',
+            'sldetail_id'
         ));
         $rs = $srch->getResultSet();
         $issuesReportedDetails = FatApp::getDb()->fetch($rs);
@@ -370,7 +371,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         }
 
         $userNotification = new UserNotifications($lerner_id);
-        $userNotification->sendIssueRefundNotification($lessonId, IssuesReported::ISSUE_RESOLVE_NOTIFICATION);
+        $userNotification->sendIssueRefundNotification($issuesReportedDetails['sldetail_id'], IssuesReported::ISSUE_RESOLVE_NOTIFICATION);
         Message::addMessage(Label::getLabel('LBL_Lesson_Issue_Resolved_Successfully!', $this->siteLangId));
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Resolved_Successfully!'));
     }

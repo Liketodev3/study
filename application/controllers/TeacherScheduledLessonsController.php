@@ -609,6 +609,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             array(
                 'lcred.credential_user_id as learnerId',
                 'lcred.credential_email as learnerEmailId',
+                'sldetail_id',
                 'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName'
             )
         );
@@ -648,7 +649,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
         /* ] */
         $userNotification = new UserNotifications($lessonRow['learnerId']);
-        $userNotification->sendSchLessonByTeacherNotification($lessonId);
+        $userNotification->sendSchLessonByTeacherNotification($lessonRow['sldetail_id']);
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Scheduled_Successfully!'));
     }
 
