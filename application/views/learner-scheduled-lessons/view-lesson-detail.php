@@ -147,11 +147,13 @@ function checkNewFlashCards(){
 $(function(){
     <?php if( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
     var showLessonBtn = true;
+	$('.timer.start-lesson-timer').show();
     $('#start_lesson_timer').countdowntimer({
         startDate : "<?php echo $curDate; ?>",
         dateAndTime : "<?php echo $startTime; ?>",
         size : "lg",
         timeUp : function(){
+			$('.timer.start-lesson-timer').hide();
             fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','startLessonAuthentication',['<?php echo $lessonData['sldetail_id'] ?>']),'',function(t){
                 if(t != 0){
                     showLessonBtn = false;
@@ -242,7 +244,7 @@ $(function(){
 					<?php echo Label::getLabel('LBL_Click_here_to_report_an_Issue'); ?>
 				</a></p>
 				<?php } ?>
-				<div class="timer">
+				<div class="timer start-lesson-timer" style="display:none;">
                     <h4 class="timer-head"><?php echo Label::getLabel('LBL_Starts_In'); ?></h4>
 					<span id="start_lesson_timer"></span>
 				</div>

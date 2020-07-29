@@ -1,7 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $user_timezone = MyDate::getUserTimeZone();
 $curDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
-
 $startTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($lessonData['slesson_date'] .' '. $lessonData['slesson_start_time']), true , $user_timezone );
 
 $endTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($lessonData['slesson_end_date'] .' '. $lessonData['slesson_end_time']), true , $user_timezone );
@@ -42,7 +41,7 @@ var is_time_up = '<?php echo $endTime > 0 && $endTime < $curDate ?>';
 
 var lesson_joined = '<?php echo $lessonData['slesson_teacher_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time']>0 ?>';
-var lesson_status_completed = '<?php echo $lessonData['slesson_status']==ScheduledLesson::STATUS_COMPLETED ?>';
+var lesson_status_completed = '<?php echo $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ?>';
 var slesson_id = '<?php echo $lessonData['slesson_id'] ?>';
 
 var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
@@ -73,7 +72,7 @@ if(!is_time_up && lesson_joined && !lesson_status_completed){
 }
 
 if(lesson_status_completed==1){
-    $('.timer').hide();
+    ///$('.timer').hide();
 }
 
 if(canEnd && !lesson_completed ){
@@ -160,13 +159,14 @@ function checkNewFlashCards(){
 
 $(function(){
     <?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
-
+	$('.timer.start-lesson-timer').show();
     var showLessonBtn = true;
     $('#start_lesson_timer').countdowntimer({
         startDate : "<?php echo $curDate; ?>",
         dateAndTime : "<?php echo $startTime; ?>",
         size : "lg",
         timeUp : function(){
+			$('.timer.start-lesson-timer').hide();
             fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','startLessonAuthentication',[CometJsonFriendData.lessonId]),'',function(t){
                 if(t != 0){
                     showLessonBtn = false;
@@ -187,6 +187,7 @@ $(function(){
     <?php } ?>
 
     if(is_time_up == '1' && !lesson_completed){
+		console.log('hello');
         endLessonConfirm();
     }else{
         $('#end_lesson_timer').countdowntimer({
@@ -272,7 +273,7 @@ function endLessonConfirm(){
                     <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ) { ?>
                         <a href="<?php echo CommonHelper::generateUrl('teacher'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
                     <?php } ?>
-                <div class="timer">
+                <div class="timer start-lesson-timer" style="display:none;">
                     <h4 class="timer-head"><?php echo Label::getLabel('LBL_Starts_In'); ?></h4>
                    <span id="start_lesson_timer"></span>
                 </div>
