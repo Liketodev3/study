@@ -161,11 +161,11 @@ $(function(){
                         $("#lesson_actions").show();
                 }
             });
-            $("#start_lesson_timer").hide();
+            $("#start_lesson_timer").parent().hide();
         }
     });
     if(showLessonBtn) {
-        if($('#start_lesson_timer').is(":visible")){
+        if($('#start_lesson_timer').parent().is(":visible")){
             $("#lesson_actions").show();
         }
     }
