@@ -4,24 +4,24 @@
 		<footer id="footer">
 			<p><?php echo FatApp::getConfig("CONF_WEBSITE_NAME_".$adminLangId, FatUtility::VAR_STRING, 'Copyright &copy; '.date('Y').' <a href="javascript:void(0);">FATbit.com'); echo " ".FatApp::getConfig("CONF_YOCOACH_VERSION", FatUtility::VAR_STRING, 'V1.0')?> </p>
 		</footer>
-		<!--footer start here-->    
-    
-    
-  
+		<!--footer start here-->
+
+
+
 	</div>
-	<?php $haveMsg = false; 
+	<?php $haveMsg = false;
 	if( Message::getMessageCount() || Message::getErrorCount() ){
 		$haveMsg = true;
 	}
-	
+
 	?>
 <div  class="alert alert--positioned " <?php if($haveMsg) echo 'style="display:block"';?>>
 	<div class="close"></div>
 	<div class="sysmsgcontent content ">
-		<?php 
-		
-		if( $haveMsg ){ 
-			
+		<?php
+
+		if( $haveMsg ){
+
 			echo html_entity_decode( Message::getHtml() );
 		} ?>
 	</div>
@@ -39,8 +39,8 @@
 		</script>
 		<?php } ?>
 	<!--wrapper end here-->
-		
-	<?php if( AdminAuthentication::isAdminLogged() ){ ?>	
+
+	<?php if( AdminAuthentication::isAdminLogged() ){ ?>
 	<!--div class="color_pallete">
 		<a href="#" class="pallete_control"><i class="ion-android-settings icon"></i></a>
 		<div class="controlwrap">
@@ -56,7 +56,12 @@
 				<li class="brown"><a href="javascript:void(0)" class="color_brown"></a></li>
 			</ul>
 		</div>
-	</div-->    
+	</div-->
 	<?php } ?>
 </body>
 </html>
+<?php
+$autoRestartOn =  FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1);
+if($autoRestartOn == applicationConstants::YES && CommonHelper::demoUrl()) {
+	$this->includeTemplate( 'restore-system/page-content.php');
+}

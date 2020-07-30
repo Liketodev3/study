@@ -5,5 +5,6 @@
 /index.php
 /public/cache/*
 /public/.htaccess
+/public/settings.php
 /.htaccess
 /library/core

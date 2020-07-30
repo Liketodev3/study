@@ -13,6 +13,7 @@ class GuestUserController extends MyAppController
     }
     public function logInFormPopUp()
     {
+        $userLoginData = array('username' => 'danielparker@dummyid.com', 'password' => 'test@123');
         if (UserAuthentication::isUserLogged()) {
             Message::addErrorMessage(Label::getLabel('MSG_Already_Logged_in,_Please_try_after_reloading_the_page'));
             FatUtility::dieWithError(Message::getHtml());
@@ -431,11 +432,18 @@ class GuestUserController extends MyAppController
 
     private function getLoginForm()
     {
+        $userName = '';
+        $pass = '';
+        if (CommonHelper::demoUrl()) {
+            $userName = 'danielparker@dummyid.com';
+            $pass = 'test@123';
+        }
+
         $frm = new Form('frmLogin');
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Email'), 'username', '', array(
+        $fld = $frm->addRequiredField(Label::getLabel('LBL_Email'), 'username', $userName, array(
             'placeholder' => Label::getLabel('LBL_EMAIL_ADDRESS')
         ));
-        $pwd = $frm->addPasswordField(Label::getLabel('LBL_Password'), 'password', '', array(
+        $pwd = $frm->addPasswordField(Label::getLabel('LBL_Password'), 'password', $pass, array(
             'placeholder' => Label::getLabel('LBL_PASSWORD')
         ));
         $pwd->requirements()->setRequired();
