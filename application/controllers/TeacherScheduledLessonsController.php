@@ -213,7 +213,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 		$srch->joinLessonRescheduleLog();
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
         $srch->joinTeacherCountry($this->siteLangId);
-        $srch->joinIssueReported(User::USER_TYPE_LEANER);
+        // $srch->joinIssueReported();
         $srch->addFld(array(
             'grpcls_title',
             'slns.slesson_teacher_id as teacherId',
@@ -225,11 +225,11 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             /* 'ut.user_timezone as teacherTimeZone', */
             //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
             '"-" as teacherTeachLanguageName',
-            'IFNULL(iss.issrep_status,0) AS issrep_status',
             //'IFNULL(iss.issrep_id,0) AS issrep_id',
             'slesson_teacher_join_time',
             'slesson_teacher_end_time',
-            'iss.*'
+            // 'IFNULL(iss.issrep_status,0) AS issrep_status',
+            // 'iss.*'
         ));
 
         $rs = $srch->getResultSet();
@@ -238,11 +238,16 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons'));
         }
+        
+        $issRepObj = new IssuesReported();
+        $is_issue_reported = !empty($issRepObj->getIssuesByLessonId($lessonId));
+        
         /* flashCardSearch Form[ */
         $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
         $frmSrchFlashCard->fill(array('lesson_id' => $lessonRow['slesson_id']));
         $this->set('frmSrchFlashCard', $frmSrchFlashCard);
         /* ] */
+        $this->set('is_issue_reported', $is_issue_reported);
         $this->set('lessonData', $lessonRow);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
         $this->_template->render(false, false);

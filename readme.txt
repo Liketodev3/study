@@ -11,6 +11,7 @@ Fixes:
     * Bug-040600: Cancel order from admin
     * Bug-040642: Changes in report issue
     * Bug-040642: Fixed showing learner side lesson plan
+    * Bug-040692: Changes in report issue for group class
 
 ======================================
 

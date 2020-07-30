@@ -1160,10 +1160,14 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError($record->getError());
         }
+        
+        $schLesDet = new ScheduledLessonDetails($lDetailId);
+        $schLesDet->setFldValue('sldetail_learner_status', '=', ScheduledLesson::STATUS_ISSUE_REPORTED);
+        $schLesDet->save();
 
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
         $sLessonObj->holdPayment($lessonRow['teacher_id'], $lessonId);
-        $sLessonObj->changeLessonStatus($lessonId, ScheduledLesson::STATUS_ISSUE_REPORTED);
+        // $sLessonObj->changeLessonStatus($lessonId, ScheduledLesson::STATUS_ISSUE_REPORTED);
         $reason_html = '';
         $issues_options = IssueReportOptions::getOptionsArray($this->siteLangId);
         foreach ($_reason_ids as $_id) {
