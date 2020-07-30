@@ -199,7 +199,7 @@ class AuthorizeAimPayController extends PaymentController
             $json = array();
             if ($response['status'] == 0) {
                 $json['error'] = Label::getLabel('LBL_Payment_cannot_be_processed_right_now._Please_try_after_some_time.');
-            } elseif (!empty($response['response']['transactionResponse']['errors']) || $response['response']['transactionResponse']['responseCode'] != 1) {
+            } elseif ((!empty($response['response']['transactionResponse']['errors'])) || ( (!empty($response['response']['transactionResponse']['responseCode'])) && $response['response']['transactionResponse']['responseCode'] != 1)) {
                 $errorMsg = isset($response['response']['transactionResponse']['errors'][0]['errorText'])?$response['response']['transactionResponse']['errors'][0]['errorText']:current($response['response']['messages']['message'])['text'];
                 $json['error'] = $errorMsg;
             } elseif ($response['status'] == 1) {
