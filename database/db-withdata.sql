@@ -6071,7 +6071,7 @@ CREATE TABLE `tbl_social_platforms` (
 
 INSERT INTO `tbl_social_platforms` (`splatform_id`, `splatform_user_id`, `splatform_identifier`, `splatform_url`, `splatform_active`) VALUES
 (1, 0, 'Facebook', 'https://www.facebook.com/YoCoach/', 1),
-(2, 0, 'Twitter', 'https://twitter.com/we_yak', 1),
+(2, 0, 'Twitter', 'https://twitter.com/Yocoach', 1),
 (3, 0, 'Instagram', 'https://www.instagram.com/YoCoach/', 1),
 (4, 0, 'Pinterest', 'https://www.pinterest.com/YoCoach/pins', 1),
 (5, 0, 'YouTube', 'https://www.youtube.com/user/', 1);

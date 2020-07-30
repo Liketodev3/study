@@ -1,0 +1,1 @@
+a:4:{s:5:"value";a:3:{i:0;a:2:{s:12:"languageName";s:7:"English";s:11:"lessonsSold";i:3;}i:1;a:2:{s:12:"languageName";s:6:"Arabic";s:11:"lessonsSold";i:3;}i:2;a:2:{s:12:"languageName";s:6:"German";s:11:"lessonsSold";i:1;}}s:10:"write_time";s:10:"1596094254";s:10:"expired_in";i:86400;s:12:"expired_time";i:1596180654;}

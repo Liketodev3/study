@@ -796,7 +796,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('conf_trial_lesson_duration', '30', 0),
 ('CONF_TWITTER_API_KEY', '', 0),
 ('CONF_TWITTER_API_SECRET', '', 0),
-('CONF_TWITTER_USERNAME', 'https://twitter.com/we_yak', 0),
+('CONF_TWITTER_USERNAME', 'https://twitter.com/Yocoach', 0),
 ('CONF_USE_SSL', '0', 0),
 ('CONF_WEBSITE_NAME_1', 'Yo!Coach', 0),
 ('CONF_WEBSITE_NAME_2', '', 0),
@@ -4923,7 +4923,7 @@ CREATE TABLE `tbl_social_platforms` (
 
 INSERT INTO `tbl_social_platforms` (`splatform_id`, `splatform_user_id`, `splatform_identifier`, `splatform_url`, `splatform_active`) VALUES
 (1, 0, 'Facebook', 'https://www.facebook.com/yoCoach/', 1),
-(2, 0, 'Twitter', 'https://twitter.com/we_yak', 1),
+(2, 0, 'Twitter', 'https://twitter.com/Yocoach', 1),
 (3, 0, 'Instagram', 'https://www.instagram.com/yoCoach/', 1),
 (4, 0, 'Pintrest', 'https://www.pinterest.com/yoCoach/pins/', 1),
 (5, 0, 'YouTube', 'https://www.youtube.com/user/thepoodlegirl/featured?view_as=subscriber', 1);
