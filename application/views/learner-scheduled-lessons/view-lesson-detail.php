@@ -478,7 +478,7 @@ $(function(){
                             							</a>
                             						</li>
                                                 <?php } ?>
-                                                <?php if($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
+                                                <?php if($lessonData['slesson_grpcls_id']<=0 && $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
                                                     <li>
                             							<a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lessonData['sldetail_id']; ?>')" title="<?php echo Label::getLabel('LBL_Reschedule_Lesson'); ?>">
                             								<svg version="1.1" width="30px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
