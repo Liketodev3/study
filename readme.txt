@@ -14,6 +14,7 @@ Fixes:
     * Bug-040692: Changes in report issue for group class
     * Bug-040787: Fixed group class payment to teacher
     * Bug-040814: changed DB Table structure
+    * Bug-040833: Hide report to admin after 100% refund
 
 ======================================
 
