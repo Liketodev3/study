@@ -37,7 +37,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         // list on lessons not classes in lessons list
         $srch->addCondition('slesson_grpcls_id', '=', 0);
 		$srch->joinLessonRescheduleLog();
-        $srch->joinIssueReported(User::USER_TYPE_LEANER);
+        $srch->joinIssueReported();
         $srch->addFld(
             array(
             'IFNULL(iss.issrep_status,0) AS issrep_status',

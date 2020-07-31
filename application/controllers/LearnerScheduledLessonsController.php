@@ -1162,7 +1162,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         
         $schLesDet = new ScheduledLessonDetails($lDetailId);
-        $schLesDet->setFldValue('sldetail_learner_status', '=', ScheduledLesson::STATUS_ISSUE_REPORTED);
+        $schLesDet->setFldValue('sldetail_learner_status', ScheduledLesson::STATUS_ISSUE_REPORTED);
         $schLesDet->save();
 
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
