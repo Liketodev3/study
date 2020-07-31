@@ -33,7 +33,7 @@ CREATE TABLE `tbl_abusive_words` (
   `abusive_id` int(11) NOT NULL,
   `abusive_keyword` varchar(100) NOT NULL,
   `abusive_lang_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -48,7 +48,7 @@ CREATE TABLE `tbl_admin` (
   `admin_email` varchar(150) NOT NULL,
   `admin_name` varchar(100) NOT NULL,
   `admin_active` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_admin`
@@ -70,7 +70,7 @@ CREATE TABLE `tbl_admin_auth_token` (
   `admauth_browser` mediumtext NOT NULL,
   `admauth_last_access` datetime NOT NULL,
   `admauth_last_ip` varchar(16) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='To store admin cookies information, Remember Me functionalit';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='To store admin cookies information, Remember Me functionalit';
 
 -- --------------------------------------------------------
 
@@ -82,7 +82,7 @@ CREATE TABLE `tbl_admin_password_reset_requests` (
   `aprr_admin_id` int(10) NOT NULL,
   `aprr_token` varchar(50) NOT NULL,
   `aprr_expiry` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -94,7 +94,7 @@ CREATE TABLE `tbl_admin_permissions` (
   `admperm_admin_id` int(11) NOT NULL,
   `admperm_section_id` int(11) NOT NULL,
   `admperm_value` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -113,7 +113,7 @@ CREATE TABLE `tbl_attached_files` (
   `afile_name` varchar(200) NOT NULL COMMENT 'For display Only',
   `afile_display_order` int(11) NOT NULL,
   `afile_downloaded_times` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_attached_files`
@@ -408,7 +408,7 @@ CREATE TABLE `tbl_banners` (
   `banner_active` tinyint(1) NOT NULL,
   `banner_deleted` tinyint(1) NOT NULL,
   `banner_display_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_banners`
@@ -437,7 +437,7 @@ CREATE TABLE `tbl_banners_lang` (
   `banner_description` text NOT NULL,
   `banner_btn_caption` varchar(255) NOT NULL,
   `banner_btn_url` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_banners_lang`
@@ -471,7 +471,7 @@ CREATE TABLE `tbl_banner_locations` (
   `blocation_banner_width` decimal(13,2) NOT NULL,
   `blocation_banner_height` decimal(13,2) NOT NULL,
   `blocation_active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_banner_locations`
@@ -491,7 +491,7 @@ CREATE TABLE `tbl_banner_locations_lang` (
   `blocationlang_blocation_id` int(11) NOT NULL,
   `blocationlang_lang_id` int(11) NOT NULL,
   `blocation_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_banner_locations_lang`
@@ -518,9 +518,13 @@ CREATE TABLE `tbl_bible_content` (
   `biblecontent_url` varchar(250) NOT NULL,
   `biblecontent_display_order` int(11) NOT NULL,
   `biblecontent_active` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+
+INSERT INTO `tbl_bible_content` (`biblecontent_id`, `biblecontent_title`, `biblecontent_type`, `biblecontent_url`, `biblecontent_display_order`, `biblecontent_active`) VALUES
+(1, 'Start Your Entrepreneurship Journey in E-Learning Business', 0, 'https://www.youtube.com/embed/nGM8mY22eec', 0, 1);
+
 
 --
 -- Table structure for table `tbl_bible_content_lang`
@@ -530,9 +534,13 @@ CREATE TABLE `tbl_bible_content_lang` (
   `biblecontentlang_biblecontent_id` int(11) NOT NULL,
   `biblecontentlang_lang_id` int(11) NOT NULL,
   `biblecontentlang_biblecontent_title` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+
+INSERT INTO `tbl_bible_content_lang` (`biblecontentlang_biblecontent_id`, `biblecontentlang_lang_id`, `biblecontentlang_biblecontent_title`) VALUES
+(1, 1, 'Start Your Entrepreneurship Journey in E-Learning Business'),
+(1, 2, 'ابدأ رحلتك في ريادة الأعمال في مجال التعلم الإلكتروني');
 
 --
 -- Table structure for table `tbl_blog_contributions`
@@ -547,7 +555,7 @@ CREATE TABLE `tbl_blog_contributions` (
   `bcontributions_status` tinyint(1) NOT NULL,
   `bcontributions_added_on` datetime NOT NULL,
   `bcontributions_user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -565,7 +573,7 @@ CREATE TABLE `tbl_blog_post` (
   `post_updated_on` datetime NOT NULL,
   `post_view_count` bigint(20) NOT NULL,
   `post_deleted` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -581,7 +589,7 @@ CREATE TABLE `tbl_blog_post_categories` (
   `bpcategory_featured` tinyint(1) NOT NULL,
   `bpcategory_active` tinyint(1) NOT NULL,
   `bpcategory_deleted` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -593,7 +601,7 @@ CREATE TABLE `tbl_blog_post_categories_lang` (
   `bpcategorylang_bpcategory_id` int(11) NOT NULL,
   `bpcategorylang_lang_id` int(11) NOT NULL,
   `bpcategory_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -613,7 +621,7 @@ CREATE TABLE `tbl_blog_post_comments` (
   `bpcomment_added_on` datetime NOT NULL,
   `bpcomment_user_ip` varchar(20) NOT NULL,
   `bpcomment_user_agent` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -628,7 +636,7 @@ CREATE TABLE `tbl_blog_post_lang` (
   `post_title` varchar(255) NOT NULL,
   `post_short_description` mediumtext NOT NULL,
   `post_description` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -639,7 +647,7 @@ CREATE TABLE `tbl_blog_post_lang` (
 CREATE TABLE `tbl_blog_post_to_category` (
   `ptc_bpcategory_id` int(11) NOT NULL,
   `ptc_post_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -654,7 +662,7 @@ CREATE TABLE `tbl_commission_settings` (
   `commsetting_is_mandatory` tinyint(1) NOT NULL,
   `commsetting_is_grpcls` tinyint(4) NOT NULL,
   `commsetting_deleted` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_commission_settings`
@@ -679,7 +687,7 @@ CREATE TABLE `tbl_commission_setting_history` (
   `csh_commsetting_is_grpcls` tinyint(4) NOT NULL,
   `csh_commsetting_deleted` tinyint(1) NOT NULL,
   `csh_added_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_commission_setting_history`
@@ -699,7 +707,7 @@ CREATE TABLE `tbl_configurations` (
   `conf_name` varchar(50) NOT NULL,
   `conf_val` mediumtext NOT NULL,
   `conf_common` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_configurations`
@@ -832,7 +840,7 @@ CREATE TABLE `tbl_content_pages` (
   `cpage_identifier` varchar(255) NOT NULL,
   `cpage_layout` tinyint(4) NOT NULL,
   `cpage_deleted` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_content_pages`
@@ -860,7 +868,7 @@ CREATE TABLE `tbl_content_pages_block_lang` (
   `cpblocklang_cpage_id` int(11) NOT NULL,
   `cpblocklang_block_id` int(11) NOT NULL,
   `cpblocklang_text` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_content_pages_block_lang`
@@ -906,7 +914,7 @@ CREATE TABLE `tbl_content_pages_lang` (
   `cpage_content` mediumtext NOT NULL,
   `cpage_image_title` varchar(255) NOT NULL,
   `cpage_image_content` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_content_pages_lang`
@@ -944,7 +952,7 @@ CREATE TABLE `tbl_countries` (
   `country_active` tinyint(1) NOT NULL,
   `country_currency_id` int(11) NOT NULL,
   `country_language_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_countries`
@@ -1162,7 +1170,7 @@ CREATE TABLE `tbl_countries_lang` (
   `countrylang_country_id` int(11) NOT NULL,
   `countrylang_lang_id` int(11) NOT NULL,
   `country_name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_countries_lang`
@@ -1394,7 +1402,7 @@ CREATE TABLE `tbl_coupons` (
   `coupon_uses_coustomer` int(11) NOT NULL,
   `coupon_active` tinyint(1) NOT NULL,
   `coupon_deleted` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1409,7 +1417,7 @@ CREATE TABLE `tbl_coupons_history` (
   `couponhistory_user_id` int(11) NOT NULL,
   `couponhistory_amount` double(12,2) NOT NULL,
   `couponhistory_added_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1422,7 +1430,7 @@ CREATE TABLE `tbl_coupons_hold` (
   `couponhold_coupon_id` int(11) NOT NULL,
   `couponhold_user_id` int(11) NOT NULL,
   `couponhold_added_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1434,7 +1442,7 @@ CREATE TABLE `tbl_coupons_hold_pending_order` (
   `ochold_order_id` varchar(15) NOT NULL,
   `ochold_coupon_id` int(11) NOT NULL,
   `ochold_added_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1447,7 +1455,7 @@ CREATE TABLE `tbl_coupons_lang` (
   `couponlang_lang_id` int(11) NOT NULL,
   `coupon_title` varchar(255) NOT NULL,
   `coupon_description` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1461,7 +1469,7 @@ CREATE TABLE `tbl_courses_categories` (
   `ccategory_active` tinyint(1) NOT NULL,
   `ccategory_deleted` tinyint(1) NOT NULL,
   `ccategory_added_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1473,7 +1481,7 @@ CREATE TABLE `tbl_courses_categories_lang` (
   `ccategorylang_ccategory_id` int(11) NOT NULL,
   `ccategorylang_lang_id` int(11) NOT NULL,
   `ccategory_title` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1487,7 +1495,7 @@ CREATE TABLE `tbl_cron_log` (
   `cronlog_started_at` datetime NOT NULL,
   `cronlog_ended_at` datetime NOT NULL,
   `cronlog_details` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1501,7 +1509,7 @@ CREATE TABLE `tbl_cron_schedules` (
   `cron_command` varchar(255) NOT NULL,
   `cron_duration` int(11) NOT NULL COMMENT 'Minutes',
   `cron_active` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_cron_schedules`
@@ -1527,7 +1535,7 @@ CREATE TABLE `tbl_currencies` (
   `currency_is_default` tinyint(1) NOT NULL,
   `currency_date_modified` datetime NOT NULL,
   `currency_display_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_currencies`
@@ -1550,7 +1558,7 @@ CREATE TABLE `tbl_currencies_lang` (
   `currencylang_currency_id` int(11) NOT NULL,
   `currencylang_lang_id` int(11) NOT NULL,
   `currency_name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_currencies_lang`
@@ -1579,7 +1587,7 @@ CREATE TABLE `tbl_email_archives` (
   `emailarchive_body` text NOT NULL,
   `emailarchive_headers` mediumtext NOT NULL,
   `emailarchive_sent_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1595,7 +1603,7 @@ CREATE TABLE `tbl_email_templates` (
   `etpl_body` text NOT NULL,
   `etpl_replacements` mediumtext NOT NULL,
   `etpl_status` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_email_templates`
@@ -1653,7 +1661,7 @@ CREATE TABLE `tbl_failed_giftcard_attempts` (
   `giftcard_attempt_code` varchar(15) NOT NULL,
   `giftcard_attempt_ip` varchar(16) NOT NULL,
   `giftcard_attempt_time` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1665,7 +1673,7 @@ CREATE TABLE `tbl_failed_login_attempts` (
   `attempt_username` varchar(150) NOT NULL,
   `attempt_ip` varchar(50) NOT NULL,
   `attempt_time` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1679,7 +1687,7 @@ CREATE TABLE `tbl_faq` (
   `faq_category` tinyint(1) NOT NULL,
   `faq_active` tinyint(1) NOT NULL,
   `faq_added_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1695,7 +1703,7 @@ CREATE TABLE `tbl_faq_categories` (
   `faqcat_deleted` tinyint(1) NOT NULL,
   `faqcat_display_order` int(11) NOT NULL,
   `faqcat_featured` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1707,7 +1715,7 @@ CREATE TABLE `tbl_faq_categories_lang` (
   `faqcatlang_faqcat_id` int(11) NOT NULL,
   `faqcatlang_lang_id` int(11) NOT NULL,
   `faqcat_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1720,7 +1728,7 @@ CREATE TABLE `tbl_faq_lang` (
   `faqlang_lang_id` int(11) NOT NULL,
   `faq_title` varchar(255) NOT NULL,
   `faq_description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1741,7 +1749,7 @@ CREATE TABLE `tbl_flashcards` (
   `flashcard_accuracy` tinyint(2) NOT NULL,
   `flashcard_accuracy_added_on` datetime NOT NULL,
   `flashcard_added_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1755,7 +1763,7 @@ CREATE TABLE `tbl_giftcard_buyers` (
   `gcbuyer_name` varchar(200) NOT NULL,
   `gcbuyer_email` varchar(100) NOT NULL,
   `gcbuyer_phone` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1767,7 +1775,7 @@ CREATE TABLE `tbl_giftcard_recipients` (
   `gcrecipient_op_id` int(11) NOT NULL,
   `gcrecipient_email` varchar(100) NOT NULL,
   `gcrecipient_name` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1785,7 +1793,7 @@ CREATE TABLE `tbl_gift_cards` (
   `giftcard_expiry_date` date NOT NULL COMMENT 'Gift Card Expiry date',
   `giftcard_utxn_id` varchar(200) NOT NULL,
   `giftcard_status` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1806,7 +1814,7 @@ CREATE TABLE `tbl_group_classes` (
   `grpcls_added_on` datetime NOT NULL DEFAULT current_timestamp(),
   `grpcls_status` int(11) NOT NULL,
   `grpcls_deleted` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1818,7 +1826,7 @@ CREATE TABLE `tbl_issues_reported` (
   `issrep_id` bigint(20) NOT NULL,
   `issrep_is_for_admin` int(11) NOT NULL DEFAULT 0,
   `issrep_slesson_id` int(11) NOT NULL,
-  `issrep_reported_by` tinyint(4) NOT NULL,
+  `issrep_reported_by` int(11) NOT NULL,
   `issrep_issues_to_report` varchar(255) NOT NULL,
   `issrep_comment` varchar(255) NOT NULL,
   `issrep_status` tinyint(4) NOT NULL,
@@ -1828,7 +1836,7 @@ CREATE TABLE `tbl_issues_reported` (
   `issrep_added_on` datetime NOT NULL DEFAULT current_timestamp(),
   `issrep_updated_on` datetime NOT NULL,
   `issrep_escalated_by` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1841,7 +1849,7 @@ CREATE TABLE `tbl_issue_report_options` (
   `tissueopt_identifier` varchar(255) NOT NULL,
   `tissueopt_display_order` int(11) NOT NULL,
   `tissueopt_active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_issue_report_options`
@@ -1870,7 +1878,7 @@ CREATE TABLE `tbl_issue_report_options_lang` (
   `tissueoptlang_tissueopt_id` int(11) NOT NULL,
   `tissueoptlang_lang_id` int(11) NOT NULL,
   `tissueoptlang_title` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_issue_report_options_lang`
@@ -1914,7 +1922,7 @@ CREATE TABLE `tbl_languages` (
   `language_active` tinyint(1) NOT NULL DEFAULT 1,
   `language_css` varchar(10) NOT NULL,
   `language_layout_direction` varchar(3) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_languages`
@@ -1922,7 +1930,7 @@ CREATE TABLE `tbl_languages` (
 
 INSERT INTO `tbl_languages` (`language_id`, `language_code`, `language_flag`, `language_name`, `language_active`, `language_css`, `language_layout_direction`) VALUES
 (1, 'EN', 'gb.png', 'English', 1, '', 'ltr'),
-(2, 'AR', 'ar.png', 'Arabic', 1, '', 'rtl');
+(2, 'AR', 'ar.png', 'Arabic (عربى)', 1, '', 'rtl');
 
 -- --------------------------------------------------------
 
@@ -1935,7 +1943,7 @@ CREATE TABLE `tbl_language_labels` (
   `label_key` varchar(255) NOT NULL,
   `label_lang_id` int(11) NOT NULL,
   `label_caption` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_language_labels`
@@ -5698,7 +5706,7 @@ CREATE TABLE `tbl_lesson_packages` (
   `lpackage_added_on` datetime NOT NULL,
   `lpackage_is_free_trial` tinyint(1) NOT NULL,
   `lpackage_active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_lesson_packages`
@@ -5723,7 +5731,7 @@ CREATE TABLE `tbl_lesson_packages_lang` (
   `lpackagelang_lpackage_id` int(11) NOT NULL,
   `lpackagelang_lang_id` int(11) NOT NULL,
   `lpackage_title` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_lesson_packages_lang`
@@ -5756,7 +5764,7 @@ CREATE TABLE `tbl_lesson_reschedule_log` (
   `lesreschlog_user_type` int(11) NOT NULL,
   `lesreschlog_comment` text NOT NULL,
   `lesreschlog_added_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -5773,7 +5781,7 @@ CREATE TABLE `tbl_meta_tags` (
   `meta_identifier` varchar(200) NOT NULL,
   `meta_default` tinyint(1) NOT NULL,
   `meta_advanced` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_meta_tags`
@@ -5795,7 +5803,7 @@ CREATE TABLE `tbl_meta_tags_lang` (
   `meta_keywords` mediumtext NOT NULL,
   `meta_description` mediumtext NOT NULL,
   `meta_other_meta_tags` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_meta_tags_lang`
@@ -5818,7 +5826,7 @@ CREATE TABLE `tbl_navigations` (
   `nav_is_multilevel` tinyint(1) NOT NULL,
   `nav_type` tinyint(1) NOT NULL,
   `nav_deleted` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_navigations`
@@ -5841,7 +5849,7 @@ CREATE TABLE `tbl_navigations_lang` (
   `navlang_nav_id` int(11) NOT NULL,
   `navlang_lang_id` int(11) NOT NULL,
   `nav_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_navigations_lang`
@@ -5870,7 +5878,7 @@ CREATE TABLE `tbl_navigation_links` (
   `nlink_deleted` tinyint(1) NOT NULL,
   `nlink_url` varchar(100) NOT NULL,
   `nlink_display_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_navigation_links`
@@ -5902,7 +5910,7 @@ CREATE TABLE `tbl_navigation_links_lang` (
   `nlinklang_nlink_id` int(11) NOT NULL,
   `nlinklang_lang_id` int(11) NOT NULL,
   `nlink_caption` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_navigation_links_lang`
@@ -5954,7 +5962,7 @@ CREATE TABLE `tbl_notifications` (
   `notification_read` tinyint(1) NOT NULL COMMENT '0=>Not Read ,1 =>Read',
   `notification_added_on` datetime NOT NULL DEFAULT current_timestamp(),
   `notification_deleted` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -5982,7 +5990,7 @@ CREATE TABLE `tbl_orders` (
   `order_pmethod_id` int(11) NOT NULL,
   `order_date_added` datetime NOT NULL,
   `order_date_updated` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -5999,7 +6007,7 @@ CREATE TABLE `tbl_order_payments` (
   `opayment_comments` text NOT NULL,
   `opayment_gateway_response` text NOT NULL,
   `opayment_date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6025,7 +6033,7 @@ CREATE TABLE `tbl_order_products` (
   `op_refund_qty` int(11) NOT NULL,
   `op_total_refund_amount` decimal(10,2) NOT NULL,
   `op_orderstatus_id` int(11) NOT NULL COMMENT 'from table tbl_order_statuses'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6038,7 +6046,7 @@ CREATE TABLE `tbl_order_products_lang` (
   `oplang_lang_id` int(11) NOT NULL,
   `oplang_order_id` varchar(15) NOT NULL,
   `op_lpackage_title` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6052,7 +6060,7 @@ CREATE TABLE `tbl_order_statuses` (
   `orderstatus_type` tinyint(4) NOT NULL,
   `orderstatus_priority` int(11) NOT NULL,
   `orderstatus_is_active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_order_statuses`
@@ -6072,7 +6080,7 @@ CREATE TABLE `tbl_order_statuses_lang` (
   `orderstatuslang_orderstatus_id` int(11) NOT NULL,
   `orderstatuslang_lang_id` int(11) NOT NULL,
   `orderstatus_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_order_statuses_lang`
@@ -6098,7 +6106,7 @@ CREATE TABLE `tbl_order_status_history` (
   `oshistory_customer_notified` tinyint(1) NOT NULL,
   `oshistory_tracking_number` varchar(255) NOT NULL,
   `oshistory_comments` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6112,7 +6120,7 @@ CREATE TABLE `tbl_payment_methods` (
   `pmethod_code` varchar(100) NOT NULL,
   `pmethod_active` tinyint(1) NOT NULL,
   `pmethod_display_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_payment_methods`
@@ -6134,7 +6142,7 @@ CREATE TABLE `tbl_payment_methods_lang` (
   `pmethodlang_lang_id` int(11) NOT NULL,
   `pmethod_name` varchar(200) NOT NULL,
   `pmethod_description` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_payment_methods_lang`
@@ -6154,7 +6162,7 @@ CREATE TABLE `tbl_payment_method_settings` (
   `paysetting_pmethod_id` int(11) NOT NULL,
   `paysetting_key` varchar(100) NOT NULL,
   `paysetting_value` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_payment_method_settings`
@@ -6182,7 +6190,7 @@ CREATE TABLE `tbl_preferences` (
   `preference_type` int(11) NOT NULL,
   `preference_identifier` varchar(200) NOT NULL,
   `preference_display_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_preferences`
@@ -6220,7 +6228,7 @@ CREATE TABLE `tbl_preferences_lang` (
   `preferencelang_preference_id` int(11) NOT NULL,
   `preferencelang_lang_id` int(11) NOT NULL,
   `preference_title` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_preferences_lang`
@@ -6287,13 +6295,14 @@ CREATE TABLE `tbl_scheduled_lessons` (
   `slesson_ended_by` tinyint(4) NOT NULL,
   `slesson_ended_on` datetime NOT NULL,
   `slesson_status` tinyint(1) NOT NULL COMMENT 'defined in model',
+  `slesson_has_issue` TINYINT(4) NOT NULL,
   `slesson_comments` text NOT NULL,
   `slesson_is_teacher_paid` tinyint(4) NOT NULL,
   `slesson_teacher_google_calendar_id` varchar(255) NOT NULL,
   `slesson_added_on` datetime NOT NULL,
   `slesson_reminder_one` int(11) NOT NULL,
   `slesson_reminder_two` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6304,7 +6313,7 @@ CREATE TABLE `tbl_scheduled_lessons` (
 CREATE TABLE `tbl_scheduled_lessons_to_teachers_lessons_plan` (
   `ltp_slessonid` int(11) NOT NULL,
   `ltp_tlpn_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6322,7 +6331,7 @@ CREATE TABLE `tbl_scheduled_lesson_details` (
   `sldetail_learner_status` tinyint(4) NOT NULL,
   `sldetail_learner_google_calendar_id` varchar(255) NOT NULL,
   `sldetail_added_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6335,7 +6344,7 @@ CREATE TABLE `tbl_shared_flashcards` (
   `sflashcard_learner_id` int(11) NOT NULL,
   `sflashcard_teacher_id` int(11) NOT NULL,
   `sflashcard_slesson_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6352,7 +6361,7 @@ CREATE TABLE `tbl_slides` (
   `slide_target` varchar(100) NOT NULL,
   `slide_active` tinyint(1) NOT NULL,
   `slide_display_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_slides`
@@ -6372,7 +6381,7 @@ CREATE TABLE `tbl_slides_lang` (
   `slidelang_slide_id` int(11) NOT NULL,
   `slidelang_lang_id` int(11) NOT NULL,
   `slide_title` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_slides_lang`
@@ -6396,7 +6405,7 @@ CREATE TABLE `tbl_social_platforms` (
   `splatform_identifier` varchar(255) NOT NULL,
   `splatform_url` varchar(255) NOT NULL,
   `splatform_active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_social_platforms`
@@ -6419,7 +6428,7 @@ CREATE TABLE `tbl_social_platforms_lang` (
   `splatformlang_splatform_id` int(11) NOT NULL,
   `splatformlang_lang_id` int(11) NOT NULL,
   `splatform_title` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_social_platforms_lang`
@@ -6446,7 +6455,7 @@ CREATE TABLE `tbl_spoken_languages` (
   `slanguage_flag` varchar(100) NOT NULL,
   `slanguage_display_order` int(11) NOT NULL,
   `slanguage_active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='same table used for teaching languages and spoken languages';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='same table used for teaching languages and spoken languages';
 
 -- --------------------------------------------------------
 
@@ -6458,7 +6467,7 @@ CREATE TABLE `tbl_spoken_languages_lang` (
   `slanguagelang_slanguage_id` int(11) NOT NULL,
   `slanguagelang_lang_id` int(11) NOT NULL,
   `slanguage_name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6472,7 +6481,7 @@ CREATE TABLE `tbl_states` (
   `state_country_id` int(11) NOT NULL,
   `state_identifier` varchar(100) NOT NULL,
   `state_active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_states`
@@ -6495,7 +6504,7 @@ CREATE TABLE `tbl_states_lang` (
   `statelang_state_id` int(11) NOT NULL,
   `statelang_lang_id` int(11) NOT NULL,
   `state_name` varchar(150) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_states_lang`
@@ -6526,7 +6535,7 @@ CREATE TABLE `tbl_teachers_general_availability` (
   `tgavl_start_time` time NOT NULL,
   `tgavl_end_time` time NOT NULL,
   `tgavl_date` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6542,7 +6551,7 @@ CREATE TABLE `tbl_teachers_lessons_plan` (
   `tlpn_level` int(11) NOT NULL COMMENT 'beginner, intermediate, advanced, defined in model',
   `tlpn_tags` text NOT NULL,
   `tlpn_links` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6558,7 +6567,7 @@ CREATE TABLE `tbl_teachers_weekly_schedule` (
   `twsch_start_time` time NOT NULL,
   `twsch_end_time` time NOT NULL,
   `twsch_is_available` tinyint(2) NOT NULL COMMENT 'available/unavailable, defined in model'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6575,7 +6584,7 @@ CREATE TABLE `tbl_teacher_courses` (
   `tcourse_category` int(11) NOT NULL,
   `tcourse_no_of_lessons` int(11) NOT NULL,
   `tcourse_level` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6586,7 +6595,7 @@ CREATE TABLE `tbl_teacher_courses` (
 CREATE TABLE `tbl_teacher_courses_to_teachers_lessons_plan` (
   `ctp_tcourse_id` int(11) NOT NULL,
   `ctp_tlpn_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6598,7 +6607,7 @@ CREATE TABLE `tbl_teacher_lesson_rating` (
   `tlrating_tlreview_id` int(11) NOT NULL,
   `tlrating_rating_type` int(11) NOT NULL,
   `tlrating_rating` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6616,7 +6625,7 @@ CREATE TABLE `tbl_teacher_lesson_reviews` (
   `tlreview_posted_on` datetime NOT NULL,
   `tlreview_status` tinyint(4) NOT NULL,
   `tlreview_lang_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6629,7 +6638,7 @@ CREATE TABLE `tbl_teacher_offer_price` (
   `top_learner_id` int(11) NOT NULL,
   `top_single_lesson_price` decimal(10,2) NOT NULL,
   `top_bulk_lesson_price` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6644,7 +6653,7 @@ CREATE TABLE `tbl_teaching_languages` (
   `tlanguage_flag` varchar(100) NOT NULL,
   `tlanguage_display_order` int(11) NOT NULL,
   `tlanguage_active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='same table used for teaching languages and spoken languages';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='same table used for teaching languages and spoken languages';
 
 -- --------------------------------------------------------
 
@@ -6656,7 +6665,7 @@ CREATE TABLE `tbl_teaching_languages_lang` (
   `tlanguagelang_tlanguage_id` int(11) NOT NULL,
   `tlanguagelang_lang_id` int(11) NOT NULL,
   `tlanguage_name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6671,7 +6680,7 @@ CREATE TABLE `tbl_testimonials` (
   `testimonial_deleted` tinyint(1) NOT NULL,
   `testimonial_added_on` datetime NOT NULL,
   `testimonial_user_name` varchar(150) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6684,7 +6693,7 @@ CREATE TABLE `tbl_testimonials_lang` (
   `testimoniallang_lang_id` int(11) NOT NULL,
   `testimonial_title` varchar(255) NOT NULL,
   `testimonial_text` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6695,7 +6704,7 @@ CREATE TABLE `tbl_testimonials_lang` (
 CREATE TABLE `tbl_threads` (
   `thread_id` bigint(20) NOT NULL,
   `thread_start_date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6712,7 +6721,7 @@ CREATE TABLE `tbl_thread_messages` (
   `message_date` datetime NOT NULL,
   `message_is_unread` tinyint(1) NOT NULL DEFAULT 1,
   `message_deleted` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6723,7 +6732,7 @@ CREATE TABLE `tbl_thread_messages` (
 CREATE TABLE `tbl_thread_users` (
   `threaduser_id` bigint(20) NOT NULL,
   `threaduser_thread_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6735,7 +6744,7 @@ CREATE TABLE `tbl_url_rewrites` (
   `urlrewrite_id` int(11) NOT NULL,
   `urlrewrite_original` varchar(255) NOT NULL,
   `urlrewrite_custom` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `tbl_url_rewrites`
@@ -6778,7 +6787,7 @@ CREATE TABLE `tbl_users` (
   `user_registered_initially_for` int(11) NOT NULL COMMENT 'user type defined in user model',
   `user_added_on` datetime NOT NULL,
   `user_deleted` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6790,7 +6799,7 @@ CREATE TABLE `tbl_users_lang` (
   `userlang_user_id` int(11) NOT NULL,
   `userlang_lang_id` int(11) NOT NULL,
   `userlang_user_profile_Info` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6806,7 +6815,7 @@ CREATE TABLE `tbl_user_auth_token` (
   `uauth_browser` mediumtext NOT NULL,
   `uauth_last_access` datetime NOT NULL,
   `uauth_last_ip` varchar(16) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='To store cookies information';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='To store cookies information';
 
 -- --------------------------------------------------------
 
@@ -6822,7 +6831,7 @@ CREATE TABLE `tbl_user_bank_details` (
   `ub_ifsc_swift_code` varchar(100) NOT NULL,
   `ub_bank_address` mediumtext NOT NULL,
   `ub_paypal_email_address` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6835,7 +6844,7 @@ CREATE TABLE `tbl_user_cart` (
   `usercart_type` int(11) NOT NULL,
   `usercart_details` longtext NOT NULL,
   `usercart_added_date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6850,7 +6859,7 @@ CREATE TABLE `tbl_user_credentials` (
   `credential_password` varchar(100) NOT NULL,
   `credential_active` tinyint(4) NOT NULL,
   `credential_verified` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6867,7 +6876,7 @@ CREATE TABLE `tbl_user_email_change_request` (
   `uecreq_updated` datetime NOT NULL,
   `uecreq_expire` datetime NOT NULL,
   `uecreq_token` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6879,7 +6888,7 @@ CREATE TABLE `tbl_user_email_verification` (
   `uev_user_id` int(11) NOT NULL,
   `uev_token` varchar(50) NOT NULL,
   `uev_email` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6891,7 +6900,7 @@ CREATE TABLE `tbl_user_favourite_teachers` (
   `uft_id` int(11) NOT NULL,
   `uft_user_id` int(11) NOT NULL,
   `uft_teacher_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6903,7 +6912,7 @@ CREATE TABLE `tbl_user_password_reset_requests` (
   `uprr_user_id` int(11) NOT NULL,
   `uprr_token` varchar(255) NOT NULL,
   `uprr_expiry` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6922,7 +6931,7 @@ CREATE TABLE `tbl_user_qualifications` (
   `uqualification_start_year` int(11) NOT NULL,
   `uqualification_end_year` int(11) NOT NULL,
   `uqualification_active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6941,7 +6950,7 @@ CREATE TABLE `tbl_user_settings` (
   `us_booking_before` int(20) DEFAULT NULL,
   `us_google_access_token` varchar(255) NOT NULL,
   `us_google_access_token_expiry` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6958,7 +6967,7 @@ CREATE TABLE `tbl_user_teacher_requests` (
   `utrequest_status_change_date` datetime NOT NULL,
   `utrequest_comments` mediumtext NOT NULL,
   `utrequest_attempts` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6978,7 +6987,7 @@ CREATE TABLE `tbl_user_teacher_request_values` (
   `utrvalue_user_teach_slanguage_id` varchar(255) NOT NULL,
   `utrvalue_user_language_speak` varchar(255) NOT NULL,
   `utrvalue_user_language_speak_proficiency` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6992,7 +7001,7 @@ CREATE TABLE `tbl_user_teach_languages` (
   `utl_slanguage_id` int(11) NOT NULL,
   `utl_single_lesson_amount` decimal(10,2) NOT NULL,
   `utl_bulk_lesson_amount` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -7007,7 +7016,7 @@ CREATE TABLE `tbl_user_timetables` (
   `utimetable_start_time` time NOT NULL,
   `utimetable_end_time` time NOT NULL,
   `utimetable_is_available` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='teacher availability calendar';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='teacher availability calendar';
 
 -- --------------------------------------------------------
 
@@ -7018,7 +7027,7 @@ CREATE TABLE `tbl_user_timetables` (
 CREATE TABLE `tbl_user_to_preference` (
   `utpref_user_id` int(11) NOT NULL,
   `utpref_preference_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -7030,7 +7039,7 @@ CREATE TABLE `tbl_user_to_spoken_languages` (
   `utsl_user_id` int(11) NOT NULL,
   `utsl_slanguage_id` int(11) NOT NULL,
   `utsl_proficiency` int(11) NOT NULL COMMENT 'defined in spoken language model'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -7051,7 +7060,7 @@ CREATE TABLE `tbl_user_transactions` (
   `utxn_withdrawal_id` int(11) NOT NULL,
   `utxn_type` int(11) NOT NULL COMMENT 'defined in transactions model',
   `utxn_slesson_id` int(11) NOT NULL COMMENT 'In Case Of Issue Report'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -7071,7 +7080,7 @@ CREATE TABLE `tbl_user_withdrawal_requests` (
   `withdrawal_comments` mediumtext NOT NULL,
   `withdrawal_request_date` datetime NOT NULL,
   `withdrawal_status` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables
