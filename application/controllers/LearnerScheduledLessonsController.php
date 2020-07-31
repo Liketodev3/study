@@ -144,6 +144,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'slns.slesson_id',
             'slns.slesson_grpcls_id',
             'slns.slesson_slanguage_id',
+            'slns.slesson_has_issue',
 			'order_is_paid',
             'sldetail_learner_id as learnerId',
             'slns.slesson_teacher_id as teacherId',
@@ -1130,6 +1131,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addCondition('sldetail_id', '=', $lDetailId);
         $srch->addFld(
             array(
+                'sldetail_order_id',
                 'ut.user_id as teacher_id',
                 'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
                 'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
@@ -1164,9 +1166,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $schLesDet = new ScheduledLessonDetails($lDetailId);
         $schLesDet->setFldValue('sldetail_learner_status', ScheduledLesson::STATUS_ISSUE_REPORTED);
         $schLesDet->save();
-
+        
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
-        $sLessonObj->holdPayment($lessonRow['teacher_id'], $lessonId);
+        $sLessonObj->setFldValue('slesson_has_issue', applicationConstants::YES);
+        $sLessonObj->save();
+        
+        $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
+        $sLessonObj->holdPayment($lessonRow['teacher_id'], $lessonId, $lessonRow['sldetail_order_id']);
         // $sLessonObj->changeLessonStatus($lessonId, ScheduledLesson::STATUS_ISSUE_REPORTED);
         $reason_html = '';
         $issues_options = IssueReportOptions::getOptionsArray($this->siteLangId);

@@ -117,7 +117,8 @@ class ScheduledLesson extends MyAppModel
     public function holdPayment($user_id, $lesson_id)
     {
         $db = FatApp::getDb();
-        if (!$db->updateFromArray(Transaction::DB_TBL, array('utxn_status'=>Transaction::STATUS_PENDING), array('smt'=>'utxn_user_id = ? and utxn_slesson_id = ?','vals'=>array( $user_id, $lesson_id )))) {
+        $update_cond = array('smt'=>'utxn_user_id = ? and utxn_slesson_id = ? AND utxn_status=?','vals'=>array( $user_id, $lesson_id, Transaction::STATUS_COMPLETED));
+        if (!$db->updateFromArray(Transaction::DB_TBL, array('utxn_status'=>Transaction::STATUS_PENDING), $update_cond, false, array(), '', 1)) {
             return false;
         }
         return true;

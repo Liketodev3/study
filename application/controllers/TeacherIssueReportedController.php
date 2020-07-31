@@ -106,7 +106,6 @@ class TeacherIssueReportedController extends TeacherBaseController
         $slesson_id = FatUtility::int($slesson_id);
         $issRepObj = new IssuesReported();
         $issRows = $issRepObj->getIssuesByLessonId($slesson_id);
-        // CommonHelper::printArray($issRows);die;
         $users = array();
         foreach($issRows as $issRow){
             if($issueId>0 && $issRow['issrep_id']!=$issueId) continue;
@@ -298,6 +297,7 @@ class TeacherIssueReportedController extends TeacherBaseController
             $lessonData['slesson_teacher_join_time'] = '';
             // $lessonData['slesson_learner_join_time'] = '';
             $lessonData['slesson_teacher_end_time'] = '';
+            $lessonData['slesson_has_issue'] = applicationConstants::NO;
             // $lessonData['slesson_learner_end_time'] = '';
             $lessonData['slesson_ended_by'] = 0;
             $lessonData['slesson_ended_on'] = '';
