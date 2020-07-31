@@ -12,6 +12,7 @@ Fixes:
     * Bug-040642: Changes in report issue
     * Bug-040642: Fixed showing learner side lesson plan
     * Bug-040692: Changes in report issue for group class
+    * Bug-040787: Fixed group class payment to teacher
 
 ======================================
 
