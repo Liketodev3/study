@@ -529,3 +529,5 @@ ALTER TABLE `tbl_lesson_reschedule_log`
 ALTER TABLE `tbl_configurations` CHANGE `conf_val` `conf_val` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 
 ALTER TABLE `tbl_order_products` ADD `op_refund_qty` INT NOT NULL AFTER `op_commission_percentage`, ADD `op_total_refund_amount` DECIMAL(10,2) NOT NULL AFTER `op_refund_qty`;
+
+ALTER TABLE `tbl_issues_reported` CHANGE `issrep_reported_by` `issrep_reported_by` INT NOT NULL; 
