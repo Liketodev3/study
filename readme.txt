@@ -1,4 +1,7 @@
-New Features:
+Release Version: TV-2.0.2.20200731
+Release Date: 2020/07/31
+
+New Features: N/A
 
 Enhancements: N/A
 
@@ -32,7 +35,7 @@ Fixes:
     * #040693 - View cancel lesson >> show start in >> text >> need to remove that
     * #040839 - Show Class action buttons even after class completed
     * #040840 - Hidden options to resolve issue if already resolved for teacher.
-======================================
+======================================================================================================================
 
 Release Version: TV-2.0.1.20200727
 Release Date: 2020/07/27

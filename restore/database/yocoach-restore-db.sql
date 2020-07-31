@@ -1026,7 +1026,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('CONF_TWITTER_API_KEY', '', 0),
 ('CONF_TWITTER_API_SECRET', '', 0),
 ('CONF_TWITTER_USERNAME', '', 0),
-('CONF_USE_SSL', '0', 0),
+('CONF_USE_SSL', '1', 0),
 ('CONF_WEBSITE_NAME_1', 'Yo!Coach', 0),
 ('CONF_WEBSITE_NAME_2', 'Yo!Coach', 0),
 ('CONF_WELCOME_EMAIL_REGISTRATION', '1', 0),
@@ -8007,7 +8007,7 @@ INSERT INTO `tbl_user_credentials` (`credential_user_id`, `credential_username`,
 (18, 'sophiamunn@dummyid.com', 'sophiamunn@dummyid.com', '7eeafb019651b93d15b93751dda65682', 1, 1),
 (19, 'brianbrown@dummyid.com', 'brianbrown@dummyid.com', '39480603dca9a2da775fba825f1cd7f7', 1, 1),
 (20, 'marialena@dummyid.com', 'marialena@dummyid.com', '7eeafb019651b93d15b93751dda65682', 1, 1),
-(21, 'danielparker@dummyid.com', 'danielparker@dummyid.com', 'daa367e5fcba7c4504bf9c4747140ab2', 1, 1),
+(21, 'danielparker@dummyid.com', 'danielparker@dummyid.com', 'a6cf35f99990880429c6a57aea8443a4', 1, 1),
 (22, 'sarahpalin@dummyid.com', 'sarahpalin@dummyid.com', 'c66eadf2f74ec4df7d3ddbaa064f1736', 1, 1);
 
 -- --------------------------------------------------------
