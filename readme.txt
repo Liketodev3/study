@@ -30,7 +30,8 @@ Fixes:
     * #040684 - Both side in Need to schedule lesson >> view lesson >> show start time blank >> can we remove that in need to schedule state.
     * #040688 - Notifications not working fine >> ids are changed >> learner side also lesson id coming for teacher.
     * #040693 - View cancel lesson >> show start in >> text >> need to remove that
-
+    * #040839 - Show Class action buttons even after class completed
+    * #040840 - Hidden options to resolve issue if already resolved for teacher.
 ======================================
 
 Release Version: TV-2.0.1.20200727

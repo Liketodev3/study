@@ -8,6 +8,7 @@ class TeacherGroupClassesController extends TeacherBaseController
 
     public function index()
     {
+        $this->_template->addJs('js/teacherLessonCommon.js');
         $this->_template->addJs('js/jquery.datetimepicker.js');
         $this->_template->addCss('css/jquery.datetimepicker.css');
         $frmSrch = $this->getSearchForm();
@@ -42,8 +43,10 @@ class TeacherGroupClassesController extends TeacherBaseController
         $teacher_id = UserAuthentication::getLoggedUserId();
         $srch = new TeacherGroupClassesSearch(false);
         $srch->joinScheduledLesson();
+        $srch->joinIssueReported();
         $srch->addMultipleFields(
             array(
+                'issrep_id',
                 'grpcls_id',
                 'grpcls_title',
                 'grpcls_entry_fee',
@@ -58,6 +61,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         // echo $srch->getQuery();die;
         
         $srch->addCondition('grpcls_teacher_id', '=', $teacher_id);
+        $srch->addGroupBy('grpcls_id');
         
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);

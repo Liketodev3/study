@@ -24,10 +24,14 @@ $frm->setFormTagAttribute('onsubmit', 'issueResolveSetup(this); return(false);')
                 <div class="field-wraper">
                     <div class="field_cover">
                         <?php //echo $frm->getFieldHtml('issues_users') ?>
+                        <?php $can_resolve = false; ?>
                         <ul class="list-accordion">
                             <?php foreach($issRows as $issRow): ?>
+                            <?php if($issRow['issrep_status']==IssuesReported::STATUS_OPEN){
+                                $can_resolve = true;
+                            } ?>
                             <li>
-                                <label><span class="checkbox"><input type="checkbox" name="issues_users[]" value="<?php echo $issRow['issrep_id'] ?>" checked="checked"><i class="input-helper"></i></span></label>
+                                <label><span class="checkbox"><input type="checkbox" name="issues_users[]" value="<?php echo $issRow['issrep_id'] ?>" <?php echo $issRow['issrep_status']==IssuesReported::STATUS_OPEN ? 'checked="checked"' : 'disabled="disabled"'; ?>><i class="input-helper"></i></span></label>
                                 <div class="iss_accordion"><?php echo $issRow['user_full_name'] ?> <a href="javascript:;" class="-color-primary"><?php echo Label::getLabel("LBL_Details") ?></a></div>
                                 <div class="panel">
                                     <div class="box">
@@ -124,6 +128,7 @@ $frm->setFormTagAttribute('onsubmit', 'issueResolveSetup(this); return(false);')
              </div>
           </div>
        </div>
+       <?php if($can_resolve===true): ?>
        <div class="row">
           <div class="col-md-12">
              <div class="field-set">
@@ -169,6 +174,7 @@ $frm->setFormTagAttribute('onsubmit', 'issueResolveSetup(this); return(false);')
              <?php echo $frm->getFieldHtml('slesson_id') ?>
           </div>
        </div>
+       <?php endif; ?>
     </form>
     <?php echo $frm->getExternalJs(); ?>
 </div>
