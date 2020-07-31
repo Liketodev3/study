@@ -81,7 +81,7 @@ $lastIssue = end($issueDeatils);
 		?>	
 		</div>
 	</div>
-<?php
+<?php if($lastIssue['issrep_issues_resolve_type']!=IssuesReported::RESOLVE_TYPE_LESSON_COMPLETED_FULL_REFUND){
 $_time_valid_for_support = date('Y-m-d H:i:s');
 if( $lastIssue['issrep_updated_on'] != '0000-00-00 00:00:00' ) {
 	$resolve_datetime = $lastIssue['issrep_updated_on'];
@@ -95,5 +95,6 @@ if ( strtotime($_time_valid_for_support )  > strtotime(date('Y-m-d H:i:s')) && $
 			<span class="-display-inline"><?php echo Label::getLabel('LBL_Not_Happy_with_teacher_solution?'); ?> &nbsp; </span><a href="javascript:void(0);" class="-link-underline -color-secondary" onclick="reportIssueToAdmin('<?php echo $lastIssue['issrep_id'];?>', '<?php echo $lastIssue['issrep_slesson_id']; ?>', '<?php echo USER::USER_TYPE_LEANER?>');"><?php echo Label::getLabel('LBL_Report_Issue_to_Support_Team'); ?></a>
 		</p>
 	</div>
+<?php } ?>
 <?php } ?>
 </div>

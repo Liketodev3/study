@@ -37,7 +37,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         // list on lessons not classes in lessons list
         $srch->addCondition('slesson_grpcls_id', '=', 0);
 		$srch->joinLessonRescheduleLog();
-        $srch->joinIssueReported(User::USER_TYPE_LEANER);
+        $srch->joinIssueReported();
         $srch->addFld(
             array(
             'IFNULL(iss.issrep_status,0) AS issrep_status',
@@ -1157,6 +1157,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Re-schedule_request_sent_successfully!'));
         }
+        
+        $dataUpdateArr = array();
 
         if ($lessonRow['slesson_is_teacher_paid'] == 0) {
             $lessonObj = new ScheduledLesson($lessonId);
@@ -1181,12 +1183,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonSuccess(Label::getLabel($msg));
         }
 
-        $dataUpdateArr = array(
+        $dataUpdateArr1 = array(
             'slesson_status' => ScheduledLesson::STATUS_COMPLETED,
             'slesson_ended_by' => User::USER_TYPE_TEACHER,
             'slesson_ended_on' => date('Y-m-d H:i:s'),
             'slesson_teacher_end_time' => date('Y-m-d H:i:s'),
         );
+        $dataUpdateArr = array_merge($dataUpdateArr, $dataUpdateArr1);
 
         $db = FatApp::getDb();
         $db->startTransaction();

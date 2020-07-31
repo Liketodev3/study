@@ -12,6 +12,24 @@ Fixes:
     * Bug-040642: Changes in report issue
     * Bug-040642: Fixed showing learner side lesson plan
     * Bug-040692: Changes in report issue for group class
+    * Bug-040787: Fixed group class payment to teacher
+    * Bug-040814: changed DB Table structure
+    * Bug-040833: Hide report to admin after 100% refund
+    * Bug-040834: Hide report button once issue reported
+    * #040403 - Message > Add an option to buy lessons >>.> not updated
+    * #040406 - Teacher dashboard >> need to show upcoming lessons only >> now need to schedule also there.
+    * #040419 - Signup as learner >> after signup sigin page appear>> verify user>> login through sign in >> page navigate to Teacher application form
+    * #040435 - Teacher >> dashboard >> DAtes are not coming correct >> they are coming sme.
+    * #040436 - Teacher >> setting >> if teacher edit his/her availability and donot save >> then also it get save
+    * #040445 - If learner donot add >> Reschedule Reason* >> page should redirect to reschedule reason text box.
+    * #040447 - if teacher cancel lesson >> from selecting reschedule filter from lesson menu >> IN both learner and teacher side>> cancel record show in both reschedule filter and cancel filter.
+    * #040449 - Teacher >> learner both side >> view test plan >> donot show description if not enetered by teacher >> as its mandatory field.
+    * #040599 - Admin >> Dashboard >> sales earning >> keep on increasing on 50% refund also.
+    * #040619 - Teacher >> dashboard >> need to set ui for dates >> can they be in 2 lines so that easy to understandPFA.
+    * #040682 - Teacher >> reschedule the lesson >> at learner side >> click on notification >> open notification >> show access denied message.
+    * #040684 - Both side in Need to schedule lesson >> view lesson >> show start time blank >> can we remove that in need to schedule state.
+    * #040688 - Notifications not working fine >> ids are changed >> learner side also lesson id coming for teacher.
+    * #040693 - View cancel lesson >> show start in >> text >> need to remove that
 
 ======================================
 
@@ -41,14 +59,6 @@ Fixes:
     * #040352 - Teacher Dashboard>Settings>Languages>
     * #040354 - General settings> SEO> Google Analytics tracking code is not being saved properly
     * #040355 - Teacher dashboard>Lesson Plan> language label missing
-    * #040403 - Message > Add an option to buy lessons >>.> not updated
-    * #040406 - Teacher dashboard >> need to show upcoming lessons only >> now need to schedule also there.
-    * #040419 - Signup as learner >> after signup sigin page appear>> verify user>> login through sign in >> page navigate to Teacher application form
-    * #040435 - Teacher >> dashboard >> DAtes are not coming correct >> they are coming sme.
-    * #040436 - Teacher >> setting >> if teacher edit his/her availability and donot save >> then also it get save
-    * #040445 - If learner donot add >> Reschedule Reason* >> page should redirect to reschedule reason text box.
-    * #040447 - if teacher cancel lesson >> from selecting reschedule filter from lesson menu >> IN both learner and teacher side>> cancel record show in both reschedule filter and cancel filter.
-
 ==============================================
 
 Release Version: TV-2.0.0.20200720

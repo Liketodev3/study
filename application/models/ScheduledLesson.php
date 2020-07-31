@@ -70,17 +70,37 @@ class ScheduledLesson extends MyAppModel
         $srch = new ScheduledLessonSearch();
         $srch->joinOrder();
         $srch->joinOrderProducts();
+        $srch->joinLearner();
+        $srch->addMultipleFields(
+            array(
+                'slesson_id',
+                'slesson_grpcls_id',
+                'slesson_teacher_id',
+                'op_commission_charged',
+                'CONCAT(user_first_name, " ", user_last_name) as user_full_name'
+            )
+        );
         $srch->addCondition('slns.slesson_id', ' = ', $this->getMainTableRecordId());
         $srch->addCondition('slns.slesson_is_teacher_paid', ' = ', 0);
         $srch->addCondition('op.op_lpackage_is_free_trial', ' = ', 0);
+        $cnd = $srch->addCondition('slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+        $cnd = $srch->addCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+        $cnd->attachCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_COMPLETED);
         $rs = $srch->getResultSet();
-        $data = FatApp::getDb()->fetch($rs);
-        if ($data) {
+        $rows = FatApp::getDb()->fetchAll($rs);
+        
+        if (empty($rows)) return false;
+        
+        foreach($rows as $data){
             $tObj = new Transaction($data['slesson_teacher_id']);
+            $comment = sprintf(Label::getLabel('LBL_LessonId:_%s_Payment_Received', CommonHelper::getLangId()), $this->getMainTableRecordId());
+            if($data['slesson_grpcls_id']){
+                $comment = sprintf(Label::getLabel('LBL_Group_Class_Payment_Received_for_user:_%s', CommonHelper::getLangId()), $data['user_full_name']);
+            }
             $data = array(
                 'utxn_user_id' => $data['slesson_teacher_id'],
                 'utxn_date' => date('Y-m-d H:i:s'),
-                'utxn_comments' => sprintf(Label::getLabel('LBL_LessonId:_%s_Payment_Received', CommonHelper::getLangId()), $this->getMainTableRecordId()),
+                'utxn_comments' => $comment,
                 'utxn_status' => Transaction::STATUS_COMPLETED,
                 'utxn_type' => Transaction::TYPE_LOADED_MONEY_TO_WALLET,
                 'utxn_credit' => $data['op_commission_charged'],
@@ -90,16 +110,15 @@ class ScheduledLesson extends MyAppModel
             if (!$tObj->addTransaction($data)) {
                 trigger_error($tObj->getError(), E_USER_ERROR);
             }
-            return true;
-        } else {
-            return false;
         }
+        return true;
     }
 
     public function holdPayment($user_id, $lesson_id)
     {
         $db = FatApp::getDb();
-        if (!$db->updateFromArray(Transaction::DB_TBL, array('utxn_status'=>Transaction::STATUS_PENDING), array('smt'=>'utxn_user_id = ? and utxn_slesson_id = ?','vals'=>array( $user_id, $lesson_id )))) {
+        $update_cond = array('smt'=>'utxn_user_id = ? and utxn_slesson_id = ? AND utxn_status=?','vals'=>array( $user_id, $lesson_id, Transaction::STATUS_COMPLETED));
+        if (!$db->updateFromArray(Transaction::DB_TBL, array('utxn_status'=>Transaction::STATUS_PENDING), $update_cond, false, array(), '', 1)) {
             return false;
         }
         return true;

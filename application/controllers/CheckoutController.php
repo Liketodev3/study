@@ -336,7 +336,7 @@ class CheckoutController extends LoggedUserController{
 
 		if( $cartData['lpackage_is_free_trial'] ){
 			$op_lesson_duration = FatApp::getConfig( 'conf_trial_lesson_duration', FatUtility::VAR_INT, 30 );
-		}else if($orderNetAmount > 0){
+		}else {
 			$commissionDetails = Commission::getTeacherCommission($cartData['user_id'], $cartData['grpcls_id']);
 			if ($commissionDetails) {
 				$cartData['op_commission_percentage'] = $commissionDetails['commsetting_fees'];

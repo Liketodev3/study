@@ -187,7 +187,6 @@ $(function(){
     <?php } ?>
 
     if(is_time_up == '1' && !lesson_completed){
-		console.log('hello');
         endLessonConfirm();
     }else{
         $('#end_lesson_timer').countdowntimer({
