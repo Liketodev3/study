@@ -59,6 +59,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 		$srch->addOrder('passedLessonsOrder', 'DESC');
         $srch->addOrder('startDateTime', 'ASC');
 		$srch->addOrder('slesson_id', 'DESC');
+		$srch->addGroupBy('slesson_id');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
