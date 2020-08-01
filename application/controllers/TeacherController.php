@@ -582,8 +582,10 @@ class TeacherController extends TeacherBaseController
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
 
-        $startDate = $post['start']." 00:00:00";
-		$endDate = $post['end']." 23:59:59";
+        /*$startDate = $post['start']." 00:00:00";
+		$endDate = $post['end']." 23:59:59";*/
+        $startDate = $post['start'];
+		$endDate = $post['end'];
 		$user_timezone = MyDate::getUserTimeZone();
 		$systemTimeZone = MyDate::getTimeZone();
 		$startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);

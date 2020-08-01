@@ -1162,15 +1162,15 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError($record->getError());
         }
-        
+
         $schLesDet = new ScheduledLessonDetails($lDetailId);
         $schLesDet->setFldValue('sldetail_learner_status', ScheduledLesson::STATUS_ISSUE_REPORTED);
         $schLesDet->save();
-        
+
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
         $sLessonObj->setFldValue('slesson_has_issue', applicationConstants::YES);
         $sLessonObj->save();
-        
+
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
         $sLessonObj->holdPayment($lessonRow['teacher_id'], $lessonId, $lessonRow['sldetail_order_id']);
         // $sLessonObj->changeLessonStatus($lessonId, ScheduledLesson::STATUS_ISSUE_REPORTED);
@@ -1225,7 +1225,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         ));
         $srch->addGroupBy('issrep_id');
         $srch->addOrder('issrep_id', 'ASC');
-        
+
         $rs = $srch->getResultSet();
         $issuesReportedDetails = FatApp::getDb()->fetchAll($rs);
         $this->set('issueDeatils', $issuesReportedDetails);

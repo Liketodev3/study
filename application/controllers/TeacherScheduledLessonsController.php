@@ -239,10 +239,10 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons'));
         }
-        
+
         $issRepObj = new IssuesReported();
         $is_issue_reported = !empty($issRepObj->getIssuesByLessonId($lessonId));
-        
+
         /* flashCardSearch Form[ */
         $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
         $frmSrchFlashCard->fill(array('lesson_id' => $lessonRow['slesson_id']));
@@ -1158,7 +1158,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Re-schedule_request_sent_successfully!'));
         }
-        
+
         $dataUpdateArr = array();
 
         if ($lessonRow['slesson_is_teacher_paid'] == 0) {

@@ -139,7 +139,7 @@ $weekDayName =  CommonHelper::dayNames();
                     }else{
                         eventitemId = eItem._id;
                     }
-                    eventitem.action = '';
+                    //eventitem.action = '';
                     eventitem.classType = <?php echo TeacherWeeklySchedule::AVAILABLE; ?>;
                     eventitem.className = ['<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>'];
                     eventitem.editable = true;
@@ -216,14 +216,15 @@ $weekDayName =  CommonHelper::dayNames();
 
         },
    		events: function(start, end, timezone, callback) {
+
    			$.ajax({
    			  url: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherWeeklyScheduleJsonData'); ?>",
-   			  data:{start:moment(start).format('YYYY-MM-DD'),end:moment(end).format('YYYY-MM-DD')},
+   			  data:{start:moment(start).format('YYYY-MM-DD HH:mm:ss'),end:moment(end).format('YYYY-MM-DD HH:mm:ss')},
    			  method:'post',
    				success: function(doc) {
    				if(doc == "[]")
    				{
-				data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };
+				data = { WeekStart:moment(start).format('YYYY-MM-DD HH:mm:ss'), WeekEnd:moment(end).format('YYYY-MM-DD HH:mm:ss') };
 
    				$.ajax({
    				url: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonDataForWeekly'); ?>",
@@ -232,15 +233,7 @@ $weekDayName =  CommonHelper::dayNames();
    				success: function(doc) {
    					var doc = JSON.parse(doc);
    					var events = [];
-   					// events.push({
-   					// 	title: '',
-   					// 	start: moment('<?php //echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
-   					// 	date: moment('<?php //echo $nowDate; ?>').format('YYYY-MM-DD'),
-   					// 	end: moment('<?php //echo $nowDate; ?>'),
-   					// 	className: 'past_current_day',
-   					// 	editable: false,
-   					// 	rendering:'background'
-   					// 	});
+
    					$(doc).each(function(i,e) {
    					var classType = $(this).attr('classType');
    					if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
@@ -268,15 +261,7 @@ $weekDayName =  CommonHelper::dayNames();
    				else{
    				var doc = JSON.parse(doc);
    				var events = [];
-   				// events.push({
-   				// 		title: '',
-   				// 		start: moment('<?php //echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
-				// 		date: moment('<?php //echo $nowDate; ?>').format('YYYY-MM-DD'),
-   				// 		end: moment('<?php //echo $nowDate; ?>'),
-   				// 		className: 'past_current_day',
-   				// 		editable: false,
-   				// 		rendering:'background'
-   				// 		});
+   			
    				$(doc).each(function(i,e) {
    					var classType = $(this).attr('classType');
    					if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
