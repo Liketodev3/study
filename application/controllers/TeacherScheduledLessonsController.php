@@ -421,7 +421,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
-        if (!$lessonRow) {
+        $statusArray =  [ScheduledLesson::STATUS_COMPLETED , ScheduledLesson::STATUS_ISSUE_REPORTED];
+        if (!$lessonRow || in_array($lessonRow['slesson_status'], $statusArray)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         if($lessonRow['slesson_status'] == ScheduledLesson::STATUS_CANCELLED) {

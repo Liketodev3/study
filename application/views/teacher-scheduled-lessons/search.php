@@ -196,7 +196,7 @@ foreach( $lessons as $lesson ){
 						</li>
 					<?php } ?>
 
-					<?php /* if( $lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lesson['issrep_id'] > 0) { ?>
+					<?php if( $lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lesson['issrep_id'] > 0) { ?>
 						<li>
 							<a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $lesson['slesson_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_Issue_Details'); ?>">
 								<svg version="1.1"  width="35px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -222,7 +222,8 @@ foreach( $lessons as $lesson ){
 								</svg>
 							</a>
 						</li>
-					<?php } */ ?>
+					<?php }
+					 ?>
 					<?php if( $lesson['issrep_id']>0 && $lesson['issrep_status'] == 0) { ?>
 						<li>
 							<a href="javascript:void(0);"  onclick="resolveIssue('<?php echo $lesson['slesson_id'].','.$lesson['issrep_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_Check_And_Resolve_Issue'); ?>">
