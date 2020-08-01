@@ -42,4 +42,19 @@ class TeacherOfferPrice extends MyAppModel
         }
         return true;
     }
+
+    public function getOffer(int $learnerId, int $teacherId ) : object
+    {
+		// $learnerId = FatUtility::int( $learnerId );
+		// $teacherId = FatUtility::int( $teacherId );
+		if( 0 > $learnerId || 0 > $teacherId ){
+			$this->error = Label::getLabel( 'LBL_Invalid_Request' );
+			return false;
+		}
+
+		$srch = new SearchBase(self::DB_TBL, 'us');
+		$srch->addCondition( 'top_learner_id','=',$learnerId );
+		$srch->addCondition( 'top_teacher_id','=',$teacherId );
+		return $srch;
+	}
 }

@@ -37,7 +37,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         // list on lessons not classes in lessons list
         $srch->addCondition('slesson_grpcls_id', '=', 0);
 		$srch->joinLessonRescheduleLog();
-        $srch->joinIssueReported(User::USER_TYPE_LEANER);
+        $srch->joinIssueReported();
         $srch->addFld(
             array(
             'IFNULL(iss.issrep_status,0) AS issrep_status',
@@ -59,6 +59,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 		$srch->addOrder('passedLessonsOrder', 'DESC');
         $srch->addOrder('startDateTime', 'ASC');
 		$srch->addOrder('slesson_id', 'DESC');
+		$srch->addGroupBy('slesson_id');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
@@ -213,7 +214,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 		$srch->joinLessonRescheduleLog();
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
         $srch->joinTeacherCountry($this->siteLangId);
-        $srch->joinIssueReported(User::USER_TYPE_LEANER);
+        // $srch->joinIssueReported();
         $srch->addFld(array(
             'grpcls_title',
             'slns.slesson_teacher_id as teacherId',
@@ -225,11 +226,11 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             /* 'ut.user_timezone as teacherTimeZone', */
             //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
             '"-" as teacherTeachLanguageName',
-            'IFNULL(iss.issrep_status,0) AS issrep_status',
             //'IFNULL(iss.issrep_id,0) AS issrep_id',
             'slesson_teacher_join_time',
             'slesson_teacher_end_time',
-            'iss.*'
+            // 'IFNULL(iss.issrep_status,0) AS issrep_status',
+            // 'iss.*'
         ));
 
         $rs = $srch->getResultSet();
@@ -238,11 +239,16 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons'));
         }
+        
+        $issRepObj = new IssuesReported();
+        $is_issue_reported = !empty($issRepObj->getIssuesByLessonId($lessonId));
+        
         /* flashCardSearch Form[ */
         $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
         $frmSrchFlashCard->fill(array('lesson_id' => $lessonRow['slesson_id']));
         $this->set('frmSrchFlashCard', $frmSrchFlashCard);
         /* ] */
+        $this->set('is_issue_reported', $is_issue_reported);
         $this->set('lessonData', $lessonRow);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
         $this->_template->render(false, false);
@@ -503,6 +509,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addFld(
             array(
                 'lcred.credential_user_id as learnerId',
+                'sld.sldetail_id',
                 'lcred.credential_email as learnerEmailId',
                 'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName'
             )
@@ -567,7 +574,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $db->commitTransaction();
 
         $userNotification = new UserNotifications($lessonRow['learnerId']);
-        $userNotification->sendSchLessonByTeacherNotification($lessonId, true);
+        $userNotification->sendSchLessonByTeacherNotification($lessonRow['sldetail_id'], true);
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Re-schedule_request_sent_successfully!'));
     }
 
@@ -608,6 +615,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             array(
                 'lcred.credential_user_id as learnerId',
                 'lcred.credential_email as learnerEmailId',
+                'sldetail_id',
                 'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName'
             )
         );
@@ -647,7 +655,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
         /* ] */
         $userNotification = new UserNotifications($lessonRow['learnerId']);
-        $userNotification->sendSchLessonByTeacherNotification($lessonId);
+        $userNotification->sendSchLessonByTeacherNotification($lessonRow['sldetail_id']);
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Scheduled_Successfully!'));
     }
 
@@ -713,7 +721,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         /* save issue reported[ */
         $reportedArr = array();
         $reportedArr['issrep_comment'] = $post['issue_reported_msg'];
-        $reportedArr['issrep_reported_by'] = User::USER_TYPE_TEACHER;
+        $reportedArr['issrep_reported_by'] = UserAuthentication::getLoggedUserId();
         $reportedArr['issrep_slesson_id'] = $lessonId;
         $record = new IssuesReported();
         $record->assignValues($reportedArr);
@@ -1104,7 +1112,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addMultipleFields(
             array(
                 // 'slns.slesson_status'
-                'IF(slesson_grpcls_id>0, sld.sldetail_learner_status, 0) as sldetail_learner_status'
+                'slesson_teacher_end_time',
+                'IF(slesson_grpcls_id=0, sld.sldetail_learner_status, 0) as sldetail_learner_status'
             )
         );
         //$srch->addCondition( 'slns.slesson_status',' = ', ScheduledLesson::STATUS_SCHEDULED );
@@ -1149,6 +1158,18 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Re-schedule_request_sent_successfully!'));
         }
+        
+        $dataUpdateArr = array();
+
+        if ($lessonRow['slesson_is_teacher_paid'] == 0) {
+            $lessonObj = new ScheduledLesson($lessonId);
+            if ($lessonObj->payTeacherCommission()) {
+                $userNotification = new UserNotifications($lessonRow['teacherId']);
+                $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
+                $dataUpdateArr['slesson_is_teacher_paid'] = 1;
+            }
+        }
+
         if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_COMPLETED || $lessonRow['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) {
             $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
             $sLessonObj->assignValues(array('slesson_teacher_end_time' => date('Y-m-d H:i:s')));
@@ -1163,12 +1184,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonSuccess(Label::getLabel($msg));
         }
 
-        $dataUpdateArr = array(
+        $dataUpdateArr1 = array(
             'slesson_status' => ScheduledLesson::STATUS_COMPLETED,
             'slesson_ended_by' => User::USER_TYPE_TEACHER,
             'slesson_ended_on' => date('Y-m-d H:i:s'),
             'slesson_teacher_end_time' => date('Y-m-d H:i:s'),
         );
+        $dataUpdateArr = array_merge($dataUpdateArr, $dataUpdateArr1);
 
         $db = FatApp::getDb();
         $db->startTransaction();
@@ -1182,14 +1204,6 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             }
         }
 
-        if ($lessonRow['slesson_is_teacher_paid'] == 0) {
-            $lessonObj = new ScheduledLesson($lessonId);
-            if ($lessonObj->payTeacherCommission()) {
-                $userNotification = new UserNotifications($lessonRow['teacherId']);
-                $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
-                $dataUpdateArr['slesson_is_teacher_paid'] = 1;
-            }
-        }
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
         $sLessonObj->assignValues($dataUpdateArr);
         if (!$sLessonObj->save()) {

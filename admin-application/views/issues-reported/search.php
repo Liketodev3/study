@@ -6,7 +6,7 @@ $arr_flds = array(
 	'issrep_slesson_id'=>Label::getLabel('LBL_Lesson_Id',$adminLangId),
 	'issrep_reported_by'=> Label::getLabel('LBL_Reported_By',$adminLangId),
 	'issrep_escalated_by'=> Label::getLabel('LBL_Escalated_By',$adminLangId),
-	'reporter_username'	=> Label::getLabel('LBL_Reporter',$adminLangId),
+	// 'reporter_username'	=> Label::getLabel('LBL_Reporter',$adminLangId),
 	//'language'=>Label::getLabel('LBL_Language',$adminLangId),
 	'issrep_status'=>Label::getLabel('LBL_Status',$adminLangId),
 	'action' => Label::getLabel('LBL_Action',$adminLangId),
@@ -31,8 +31,8 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 
 			case 'issrep_reported_by':
-				$str = User::getUserTypesArr($adminLangId)[$row[$key]];
-				$td->appendElement('plaintext', array(), $str, true);
+				// $str = User::getUserTypesArr($adminLangId)[$row[$key]];
+				$td->appendElement('plaintext', array(), $row['reporter_username'], true);
 			break;
 
 			case 'issrep_escalated_by':

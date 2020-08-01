@@ -52,4 +52,5 @@ class DummyController extends MyAppController
 		}
 		echo 'Created All the Procedures.';
 	}
+
 }

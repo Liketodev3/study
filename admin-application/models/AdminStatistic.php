@@ -153,7 +153,7 @@ class AdminStatistic extends MyAppModel
                 $srch->doNotLimitRecords();
                 $srch->addCondition('o.order_type', '=', Order::TYPE_LESSON_BOOKING);
                     $cnd = $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
-                $srch->addMultipleFields(array('SUM((order_net_amount )) AS totalsales,SUM(0) totalcommission'));
+                $srch->addMultipleFields(array('SUM(order_net_amount )-SUM(op_total_refund_amount) AS totalsales,SUM(0) totalcommission'));
 
                 $srchObj1 = clone $srch;
                 $srchObj1->addFld(array('1 AS num_days'));
@@ -294,7 +294,9 @@ class AdminStatistic extends MyAppModel
         $orderSrch = new OrderSearch();
         $orderSrch->joinOrderProduct($langId);
         //$orderSrch->joinScheduledLesson();
-        $orderSrch->addMultipleFields(array('DATE(order_date_added) as order_date','SUM(order_net_amount) as orderNetAmount', 'SUM(op_total_refund_amount) as op_total_refund_amount','count(op_id) as totOrders','SUM((op.op_qty * op.op_unit_price ) - op_total_refund_amount - ((op.op_qty-op_refund_qty) * op_commission_charged)) as  Earnings'));
+        $orderSrch->addMultipleFields(array('DATE(order_date_added) as order_date','SUM(order_net_amount) as orderNetAmount', 'SUM(op_total_refund_amount) as op_total_refund_amount','count(op_id) as totOrders',
+        'SUM(order_net_amount - op_total_refund_amount - ((op.op_qty-op_refund_qty) * op_commission_charged)) as  Earnings'));
+        
         return $orderSrch;
     }
 

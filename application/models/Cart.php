@@ -88,7 +88,7 @@ class Cart extends FatModel
             }
         }
         /* ] */
-        
+
         /* validate group class id */
         if($grpcls_id>0){
 			$classDetails = TeacherGroupClasses::getAttributesById($grpcls_id, array('grpcls_id', 'grpcls_teacher_id', 'grpcls_start_datetime', 'grpcls_end_datetime', 'grpcls_max_learner', 'grpcls_status'));
@@ -96,12 +96,12 @@ class Cart extends FatModel
 				$this->error = Label::getLabel('LBL_Invalid_Request');
 				return false;
 			}
-            
+
             if ($classDetails['grpcls_status'] != TeacherGroupClasses::STATUS_ACTIVE) {
 				$this->error = Label::getLabel('LBL_Class_Not_active');
 				return false;
 			}
-            
+
             //60 mins booking gap
             $time_to_book = FatApp::getConfig('CONF_CLASS_BOOKING_GAP', FatUtility::VAR_INT, 60);
             $validDate = date('Y-m-d H:i:s', strtotime('+'.$time_to_book. ' minutes', strtotime(date('Y-m-d H:i:s'))));
@@ -111,18 +111,18 @@ class Cart extends FatModel
                 FatUtility::dieJsonError(Label::getLabel('LBL_Booking_Close_For_This_Class'));
 				return false;
             }
-            
+
             if($this->cart_user_id==$classDetails['grpcls_teacher_id']){
                 $this->error = Label::getLabel('LBL_Can_not_join_own_classes');
 				return false;
             }
-            
+
             $isBooked = TeacherGroupClassesSearch::isClassBookedByUser($grpcls_id, $this->cart_user_id);
             if($isBooked){
                 $this->error = Label::getLabel('LBL_You_already_booked_this_class');
 				return false;
             }
-            
+
             $bookedSeatsCount = TeacherGroupClassesSearch::totalSeatsBooked($grpcls_id);
             if($classDetails['grpcls_max_learner']>0 && $bookedSeatsCount>=$classDetails['grpcls_max_learner']){
                 $this->error = Label::getLabel('LBL_Class_Full');
@@ -133,7 +133,7 @@ class Cart extends FatModel
         $key = base64_encode(serialize($key));
         $this->SYSTEM_ARR['cart'][$key] = array(
             'teacher_id' => $teacher_id,
-            'grpcls_id'              => $grpcls_id,
+            'grpcls_id'  => $grpcls_id,
             'startDateTime' => $startDateTime,
             'endDateTime' => $endDateTime,
             'lpackageId' => $lpackageId,
@@ -168,8 +168,9 @@ class Cart extends FatModel
                 'us_single_lesson_amount',
                 'us_teach_slanguage_id',
                 'us_bulk_lesson_amount',
-                'top_single_lesson_price',
-                'top_bulk_lesson_price',
+                'top_teacher_id',
+                'IFNULL(top_single_lesson_price,0) as topSingleLessonPrice',
+                'IFNULL(top_bulk_lesson_price,0) as topBulkLessonPrice',
                 'utl.*'
 
             ));
@@ -182,13 +183,13 @@ class Cart extends FatModel
         //echo $teacherSrch->getQuery(); die;
         $rs = $teacherSrch->getResultSet();
         $teacher = FatApp::getDb()->fetch($rs);
-        //print_r($teacher); die;
+        // print_r($teacher); die;
         if (!$teacher) {
             $this->removeCartKey($key);
         }
         $lPackageId = $cartData['lpackageId'];
         $grpcls_id = $cartData['grpcls_id'];
-        if($lPackageId>0){
+        if($lPackageId > 0){
             $srch = LessonPackage::getSearchObject($langId);
             $srch->addCondition('lpackage_id', '=', $lPackageId);
             $srch->addMultipleFields(array('lpackage_id', 'lpackage_lessons', 'lpackage_is_free_trial', 'lpackage_identifier as lpackage_title'));
@@ -200,9 +201,10 @@ class Cart extends FatModel
             if ($lessonPackageRow['lpackage_is_free_trial'] == 1) {
                 $itemPrice = 0;
             } else {
-                if (!empty($teacher['top_single_lesson_price']) && !empty($teacher['top_bulk_lesson_price'])) {
-                    $teacher['utl_bulk_lesson_amount'] = $teacher['top_bulk_lesson_price'];
-                    $teacher['utl_single_lesson_amount'] = $teacher['top_single_lesson_price'];
+
+                if (!empty($teacher['top_teacher_id']) && isset($teacher['topSingleLessonPrice']) && isset($teacher['topBulkLessonPrice'])) {
+                    $teacher['utl_bulk_lesson_amount'] = $teacher['topBulkLessonPrice'];
+                    $teacher['utl_single_lesson_amount'] = $teacher['topSingleLessonPrice'];
                 }
                 $itemPrice = (($lessonPackageRow['lpackage_lessons'] > 1) ? $teacher['utl_bulk_lesson_amount'] : $teacher['utl_single_lesson_amount']);
             }

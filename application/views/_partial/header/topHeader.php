@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <div class="header__left">
                 <a href="javascript:void(0)" class="toggle toggle--nav toggle--nav-js"><span></span></a>
-                <div class="header__logo -display-inline"><a href="<?php echo CommonHelper::generateUrl(); ?>"><img src="<?php echo FatUtility::generateFullUrl('Image','siteLogo',array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt=""></a>
+                <div class="header__logo -display-inline"><a href="<?php echo CommonHelper::generateUrl(); ?>"><img src="<?php echo CommonHelper::generateFullUrl('Image','siteLogo',array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt=""></a>
                 </div>
                 <span class="overlay overlay--nav toggle--nav-js"></span>
                 <nav class="nav nav--primary  nav--primary-offset -display-inline">

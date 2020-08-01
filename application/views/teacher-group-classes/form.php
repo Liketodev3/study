@@ -20,8 +20,8 @@ $submit->developerTags['col'] =2;
 	<!--page-head start here-->
 	 
 	    <div class="d-flex justify-content-between align-items-center">
-			 <div><h4>Add Group Class</h4></div>
-			 <div><a class="btn btn--small" href="javascript:void(0);" onclick="searchGroupClasses(document.frmSrch);">Cancel</a></div>
+			 <div><h4><?php echo Label::getLabel("LBL_Add_Group_Class") ?></h4></div>
+			 <div><a class="btn btn--small" href="javascript:void(0);" onclick="searchGroupClasses(document.frmSrch);"><?php echo Label::getLabel("LBL_Cancel") ?></a></div>
 		</div>
 		<span class="-gap"></span>
 	 <!--page-head end here-->

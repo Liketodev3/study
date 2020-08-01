@@ -55,7 +55,7 @@ $weekDayName =  CommonHelper::dayNames();
 	            unselectAuto: true,
 				monthNames: <?php echo  json_encode($getAllMonthName['monthNames']); ?>,
 				monthNamesShort: <?php echo  json_encode($getAllMonthName['monthNamesShort']); ?>,
-				
+
 				dayNames: <?php echo  json_encode($weekDayName['dayNames']); ?>,
 				dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>,
 				editable: false,
@@ -410,12 +410,12 @@ $weekDayName =  CommonHelper::dayNames();
 <div class="calendar-view">
 <?php //if( 'free_trial' != $action ){ ?>
 <div class="row">
-	<div class="col-sm-6">
+	<div class="col-sm-5">
 		<h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
 	</div>
-	<div class="col-sm-6">
+	<div class="col-sm-7 justify-content-sm-end justify-content-start">
 		<div class="cal-status">
-			<span class="box-hint disabled-box">&nbsp;</span>
+			<span class="ml-0 box-hint disabled-box">&nbsp;</span>
 			<p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
 		</div>
 		<div class="cal-status">

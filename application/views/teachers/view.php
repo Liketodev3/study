@@ -244,7 +244,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
 					$btnText =  "LBL_You_already_have_availed_the_Trial";
 					if( $teacher['isFreeTrialEnabled'] && !$teacher['isAlreadyPurchasedFreeTrial']){
 						$disabledText = "";
-						$onclick = "onclick='viewCalendar(".$teacher['user_id'].",'free_trial',".$teacherLanguage.")'";
+						$onclick = "onclick=\"viewCalendar(".$teacher['user_id'].",'free_trial',".$teacherLanguage.")\"";
 						$btnClass = 'btn-primary';
 						$btnText =  "LBL_Book_Free_Trial";
 					}

@@ -40,6 +40,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         ));
         $srch->addOrder('issrep_status', 'ASC');
         $srch->addOrder('issrep_id', 'DESC');
+        $srch->addGroupBy('issrep_id');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
@@ -91,6 +92,7 @@ class TeacherIssueReportedController extends TeacherBaseController
             'op_lpackage_is_free_trial',
         ));
         $srch->addOrder('issrep_id', 'ASC');
+        $srch->addGroupBy('issrep_id');
         $rs = $srch->getResultSet();
         $issuesReportedDetails = FatApp::getDb()->fetchAll($rs);
         $this->set('issueDeatils', $issuesReportedDetails);
@@ -99,13 +101,24 @@ class TeacherIssueReportedController extends TeacherBaseController
         $this->_template->render(false, false);
     }
 
-    public function resolveIssue($issueId, $slesson_id)
+    public function resolveIssue( $slesson_id, $issueId=0 )
     {
-        $issueId = FatUtility::int($issueId);
         $slesson_id = FatUtility::int($slesson_id);
-        $frm = $this->getIssueReportedFrm();
-        $frm->fill(array('issue_id' => $issueId, 'slesson_id' => $slesson_id));
+        $issRepObj = new IssuesReported();
+        $issRows = $issRepObj->getIssuesByLessonId($slesson_id);
+        $users = array();
+        foreach($issRows as $issRow){
+            if($issueId>0 && $issRow['issrep_id']!=$issueId) continue;
+            $users[$issRow['issrep_id']] = $issRow['user_full_name'];
+        }
+        
+        $frm = $this->getIssueReportedFrm($slesson_id, $users);
+        $frm->fill(array( 'slesson_id' => $slesson_id));
         $this->set('frm', $frm);
+        
+        $this->set('issRows', $issRows);
+        $this->set('issues_options', IssueReportOptions::getOptionsArray($this->siteLangId));
+        $this->set('resolve_type_options', IssuesReported::RESOLVE_TYPE);
         $this->_template->render(false, false);
     }
     public static function getIssueDetails($issueId)
@@ -113,76 +126,58 @@ class TeacherIssueReportedController extends TeacherBaseController
         $srch = IssuesReported::getSearchObject();
         $srch->addCondition('issrep_id', '=', $issueId);
         $srch->addMultipleFields(array(
-            'i.*'
+            'i.*',
+            'sldetail_id'
         ));
         $rs = $srch->getResultSet();
         $issuesReportedDetails = FatApp::getDb()->fetch($rs);
         return $issuesReportedDetails;
     }
 
-    public function issueResolveStepTwo($issueId, $slesson_id)
-    {
-        $issueId = FatUtility::int($issueId);
-        $issuesReportedDetails = self::getIssueDetails($issueId);
-
-
-
-        $frm = $this->getIssueReportedFrmStepTwo($slesson_id);
-        $frm->fill(array('issue_id' => $issueId, 'slesson_id' => $slesson_id));
-        $this->set('frm', $frm);
-        $this->set('issueDeatils', $issuesReportedDetails);
-        $this->set('issues_options', IssueReportOptions::getOptionsArray($this->siteLangId));
-        $this->_template->render(false, false);
-    }
-
     public function issueResolveSetup()
     {
-        $frm = $this->getIssueReportedFrm();
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+        $post = FatApp::getPostedData();
+        $frm = $this->getIssueReportedFrm($post['slesson_id'], array_flip($post['issues_users']));
+        $post = $frm->getFormDataFromArray($post);
+        
         if (false === $post) {
-            FatUtility::dieJsonError($frm->getValidationErrors());
+            FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
         $_reason_ids = $post['issues_to_report'];
         if (empty($_reason_ids)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Please_Choose_Issue_to_Report'));
         }
         $lessonId = $post['slesson_id'];
-        /* [ check If Already resolved */
-        if (IssuesReported::isAlreadyResolved($post['issue_id'])) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Issue_Already_Resolved_/_inprogress'));
+        
+        foreach($post['issues_users'] as $issue_id){
+            /* [ check If Already resolved */
+            if (IssuesReported::isAlreadyResolved($issue_id)) {
+                FatUtility::dieJsonError(Label::getLabel('LBL_Issue_Already_Resolved_/_inprogress'));
+            }
+            /* ] */
+            $reportedArr = array();
+            $reportedArr['issrep_status'] = IssuesReported::STATUS_PROGRESS;
+            $reportedArr['issrep_resolve_comments'] = $post['issue_reported_msg'];
+            $reportedArr['issrep_issues_resolve'] = implode(',', $_reason_ids);
+            $record = new IssuesReported($issue_id);
+            $record->assignValues($reportedArr);
+            if (!$record->save()) {
+                Message::addErrorMessage($record->getError());
+                FatUtility::dieJsonError($record->getError());
+            }
+            $this->changeIssueStatus($issue_id, $post);
         }
-        /* ] */
-        $reportedArr = array();
-        $reportedArr['issrep_status'] = IssuesReported::STATUS_PROGRESS;
-        $reportedArr['issrep_resolve_comments'] = $post['issue_reported_msg'];
-        $reportedArr['issrep_issues_resolve'] = implode(',', $_reason_ids);
-        $record = new IssuesReported($post['issue_id']);
-        $record->assignValues($reportedArr);
-        if (!$record->save()) {
-            Message::addErrorMessage($record->getError());
-            FatUtility::dieJsonError($record->getError());
-        }
-        $reason_html = '';
-        $issues_options = IssueReportOptions::getOptionsArray($this->siteLangId);
-        foreach ($_reason_ids as $_id) {
-            $reason_html .= $issues_options[$_id].'<br />';
-        }
+        
         //Message::addMessage(Label::getLabel( 'LBL_Lesson_Issue_Updated_Successfully!', $this->siteLangId ));
-        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Reported_Successfully!'));
+        $issueIds = $post['issues_users'];
+        $msg = Label::getLabel('LBL_Lesson_Issue_Reported_Successfully!');
+        FatUtility::dieJsonSuccess($msg);
+        // FatUtility::dieJsonSuccess(array('issueIds' => $issueIds, 'msg' => $msg));
     }
-
-    public function issueResolveSetupStepTwo()
+    
+    private function changeIssueStatus($issueId, $post)
     {
-        $slessonId = FatApp::getPostedData('slesson_id', FatUtility::VAR_INT, 0);
-
-        $frm = $this->getIssueReportedFrmStepTwo($slessonId);
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-        if (false === $post) {
-            FatUtility::dieJsonError($frm->getValidationErrors());
-        }
-        // CommonHelper::printArray($post);die;
         $lessonId = $post['slesson_id'];
-        $issueId = $post['issue_id'];
         $issue_resolve_type = $post['issue_resolve_type'];
         $issuesReportedDetails = self::getIssueDetails($issueId);
         $lesson_status = ScheduledLesson::STATUS_NEED_SCHEDULING;
@@ -192,6 +187,10 @@ class TeacherIssueReportedController extends TeacherBaseController
         $refundAmountTeacher = 0;
         $lessonAmount = 0;
         $transactionDetails = Transaction::transactionDetailsWithLesson($lessonId);
+        if(empty($transactionDetails)){
+            $msg = Label::getLabel('LBL_Complete_Class_first_to_resolve_issue', $this->siteLangId);
+            FatUtility::dieJsonError($msg);
+        }
          if(!empty($transactionDetails['order_total']) && !empty($transactionDetails['total_lessons'])) {
              $lessonAmount = $transactionDetails['order_total'] / $transactionDetails['total_lessons'] ;
          }
@@ -298,6 +297,7 @@ class TeacherIssueReportedController extends TeacherBaseController
             $lessonData['slesson_teacher_join_time'] = '';
             // $lessonData['slesson_learner_join_time'] = '';
             $lessonData['slesson_teacher_end_time'] = '';
+            $lessonData['slesson_has_issue'] = applicationConstants::NO;
             // $lessonData['slesson_learner_end_time'] = '';
             $lessonData['slesson_ended_by'] = 0;
             $lessonData['slesson_ended_on'] = '';
@@ -364,47 +364,40 @@ class TeacherIssueReportedController extends TeacherBaseController
         }
 
         $userNotification = new UserNotifications($lerner_id);
-        $userNotification->sendIssueRefundNotification($lessonId, IssuesReported::ISSUE_RESOLVE_NOTIFICATION);
-        Message::addMessage(Label::getLabel('LBL_Lesson_Issue_Resolved_Successfully!', $this->siteLangId));
-        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Resolved_Successfully!'));
+        $userNotification->sendIssueRefundNotification($issuesReportedDetails['sldetail_id'], IssuesReported::ISSUE_RESOLVE_NOTIFICATION);
+        
     }
 
-    private function getIssueReportedFrm()
+    private function getIssueReportedFrm($slesson_id, $users=array())
     {
         $frm = new Form('issueResolveFrm');
+        // $frm->setJsErrorDisplay(0);
         $arr_options = IssueReportOptions::getOptionsArray($this->siteLangId);
+        $users = $frm->addCheckBoxes(Label::getLabel('LBL_Select_Users_To_Resolve_issue'), 'issues_users', $users, array_keys($users));
+        $users->requirements()->setRequired(true);
         $fldIssue = $frm->addCheckBoxes(Label::getLabel('LBL_Issue_To_Resolve'), 'issues_to_report', $arr_options, array());
         $fldIssue->requirement->setSelectionRange(1, count($arr_options));
         $fldIssue->requirement->setCustomErrorMessage(Label::getLabel('LBL_Issue_To_Resolve').' '.Label::getLabel('LBL_is_Mandatory'));
-        $fld = $frm->addTextArea(Label::getLabel('LBL_Comment'), 'issue_reported_msg', '');
-        $fld->requirement->setRequired(true);
-        $fld = $frm->addHiddenField('', 'issue_id');
-        $fld = $frm->addHiddenField('', 'slesson_id');
-        $fld->requirements()->setRequired();
-        $fld->requirements()->setIntPositive();
-        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Next'));
-        return $frm;
-    }
-
-    private function getIssueReportedFrmStepTwo($slesson_id=0)
-    {
-        $frm = new Form('issueResolveFrmStepTwo');
+        
         $arr_options = IssuesReported::RESOLVE_TYPE;
-
         if($slesson_id>0){
             $lesson_details = ScheduledLesson::getAttributesById($slesson_id, array('slesson_grpcls_id'));
             if($lesson_details['slesson_grpcls_id']>0){
                 unset($arr_options[IssuesReported::RESOLVE_TYPE_LESSON_UNSCHEDULED]);
             }
         }
-
-        $fldIssue = $frm->addRadioButtons(Label::getLabel('LBL_How_would_you_like_to_resolve_this?'), 'issue_resolve_type', $arr_options);
-        $fldIssue->requirement->setRequired(true);
+        $fldIssueResType = $frm->addSelectBox(Label::getLabel('LBL_How_would_you_like_to_resolve_this?'), 'issue_resolve_type', $arr_options);
+        $fldIssueResType->requirement->setRequired(true);
+        
+        $fld = $frm->addTextArea(Label::getLabel('LBL_Comment'), 'issue_reported_msg', '');
+        $fld->requirement->setRequired(true);
+        
+        
         $fld = $frm->addHiddenField('', 'issue_id');
         $fld = $frm->addHiddenField('', 'slesson_id');
         $fld->requirements()->setRequired();
         $fld->requirements()->setIntPositive();
-        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Resolve'));
+        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Next'));
         return $frm;
     }
 }

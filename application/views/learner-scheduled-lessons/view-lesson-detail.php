@@ -16,7 +16,7 @@ if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
     $studentImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['learnerId'])).'?'.time();
 }
 
-$canEnd = ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $endTime<$curDate);
+$canEnd = ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $endTime < $curDate);
 $chat_group_id = $lessonData['slesson_grpcls_id'] >0 ? $lessonData['grpcls_title'] : "LESSON-".$lessonData['slesson_id'];
 
 $lessonsStatus = $statusArr[$lessonData['sldetail_learner_status']];
@@ -39,6 +39,7 @@ var lesson_joined = '<?php echo $lessonData['sldetail_learner_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['sldetail_learner_end_time']>0 ?>';
 var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 var canEnd = '<?php echo $canEnd ?>';
+var sldetail_id = "<?php echo $lessonData['sldetail_id']; ?>";
 
 var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
 var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
@@ -49,8 +50,15 @@ var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
 var chat_avatar = "<?php echo $studentImage; ?>";
 var chat_friends = "<?php echo $lessonData['teacherId']; ?>";
 
+
+
+
 if(!is_time_up && lesson_joined && !lesson_completed){
     joinLesson(chat_id, teacherId);
+}
+
+if(lesson_completed==1){
+    $('.timer').hide();
 }
 
 if(canEnd){
@@ -66,6 +74,7 @@ function joinLessonButtonAction() {
     $("#lesson_actions").hide();
     $("#joinL").hide();
     $("#endL").show();
+	console.log('here');
     checkEveryMinuteStatus();
     checkNewFlashCards();
     searchFlashCards(document.frmFlashCardSrch);
@@ -82,25 +91,28 @@ function endLessonButtonAction() {
     $("#endL").hide();
     searchFlashCards(document.frmFlashCardSrch);
     if(typeof checkEveryMinuteStatusVar!="undefined"){
-    clearInterval(checkEveryMinuteStatusVar);
+		clearInterval(checkEveryMinuteStatusVar);
     }
     if(typeof checkNewFlashCardsVar!="undefined"){
-    clearInterval(checkNewFlashCardsVar);
+		clearInterval(checkNewFlashCardsVar);
     }
     $('.screen-chat-js').hide();
     $("#end_lesson_time_div").hide();
 }
 
 function checkEveryMinuteStatus() {
+	if(typeof checkEveryMinuteStatusVar!="undefined"){
+		return;
+	}
    checkEveryMinuteStatusVar = setInterval(function(){
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','checkEveryMinuteStatus',['<?php echo $lessonData['sldetail_id'] ?>']),'',function(t){
             var t = JSON.parse(t);
-            if (!lesson_joined && !lesson_completed && t.has_teacher_joined == 1 && !t.has_learner_joined)
+            if (!lesson_joined && !lesson_completed && t.has_teacher_joined == 1 && t.has_learner_joined == 0)
             {
                 $.mbsmessage( '<?php echo Label::getLabel('LBL_Teacher_Has_Joined_Now_you_can_also_Join_The_Lesson!'); ?>',true, 'alert alert--success');
             }
 
-            if(t.slesson_status>1 && t.sldetail_learner_status == 1) {
+            if(t.slesson_status > 1 && t.sldetail_learner_status == 1) {
             $.confirm({
                 title: langLbl.Confirm,
                 content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',
@@ -111,8 +123,7 @@ function checkEveryMinuteStatus() {
                         btnClass: 'btn btn--primary',
                         keys: ['enter', 'shift'],
                         action: function(){
-                            endLessonButtonAction();
-                            viewLessonDetail();
+							endLesson(sldetail_id);
                         }
                     },
                     Quit: {
@@ -143,29 +154,31 @@ function checkNewFlashCards(){
 $(function(){
     <?php if( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
     var showLessonBtn = true;
+	$('.timer.start-lesson-timer').show();
     $('#start_lesson_timer').countdowntimer({
         startDate : "<?php echo $curDate; ?>",
         dateAndTime : "<?php echo $startTime; ?>",
         size : "lg",
         timeUp : function(){
+			$('.timer.start-lesson-timer').hide();
             fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','startLessonAuthentication',['<?php echo $lessonData['sldetail_id'] ?>']),'',function(t){
                 if(t != 0){
                     showLessonBtn = false;
                     $(".join_lesson_now").show();
-                    $("#lesson_actions").hide();
-                }else{
-                        $("#lesson_actions").show();
+					$("#lesson_actions").hide();
+					checkEveryMinuteStatus();
                 }
             });
-            $("#start_lesson_timer").hide();
+            $("#start_lesson_timer").parent().hide();
         }
     });
-    if(showLessonBtn) {
-        if($('#start_lesson_timer').is(":visible")){
-            $("#lesson_actions").show();
-        }
-    }
+	
+	if($('.timer.start-lesson-timer').is(":visible")){
+		$("#lesson_actions").show();
+	}
     <?php } ?>
+	
+
 
     $('#end_lesson_timer').countdowntimer({
         startDate : "<?php echo $curDate; ?>",
@@ -238,7 +251,8 @@ $(function(){
 					<?php echo Label::getLabel('LBL_Click_here_to_report_an_Issue'); ?>
 				</a></p>
 				<?php } ?>
-				<div class="timer">
+				<div class="timer start-lesson-timer" style="display:none;">
+                    <h4 class="timer-head"><?php echo Label::getLabel('LBL_Starts_In'); ?></h4>
 					<span id="start_lesson_timer"></span>
 				</div>
 			</div>
@@ -406,6 +420,7 @@ $(function(){
                                         </div>
 
                                         <div id="lesson_actions" style="display:none">
+                                            <h6 class="pb-3"><?php echo Label::getLabel('LBL_Actions');?></h6>
                                             <ul class="actions">
                                                 <?php  if($lessonData['slesson_grpcls_id'] == 0): ?>
                                                 <li><a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lessonData['sldetail_id']; ?>')" title="<?php echo Label::getLabel('LBL_View_Lesson_Plan'); ?>">
@@ -463,7 +478,7 @@ $(function(){
                             							</a>
                             						</li>
                                                 <?php } ?>
-                                                <?php if($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
+                                                <?php if($lessonData['slesson_grpcls_id']<=0 && $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
                                                     <li>
                             							<a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lessonData['sldetail_id']; ?>')" title="<?php echo Label::getLabel('LBL_Reschedule_Lesson'); ?>">
                             								<svg version="1.1" width="30px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"

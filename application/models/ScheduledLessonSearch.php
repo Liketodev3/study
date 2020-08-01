@@ -103,10 +103,12 @@ class ScheduledLessonSearch extends SearchBase
         $this->isTeacherSettingsJoined = true;
     }
 
-    public function joinIssueReported()
+    public function joinIssueReported($user_id=0)
     {
-        $this->joinTable(' ( SELECT MAX(issrep_id) max_id, issrep_slesson_id FROM '. IssuesReported::DB_TBL .' GROUP BY issrep_slesson_id )', 'LEFT JOIN', 'i_max.issrep_slesson_id = slns.slesson_id', 'i_max');
-        $this->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_id = i_max.max_id', 'iss');
+        // $this->joinTable(' ( SELECT MAX(issrep_id) max_id, issrep_slesson_id FROM '. IssuesReported::DB_TBL .' GROUP BY issrep_slesson_id )', 'LEFT JOIN', 'i_max.issrep_slesson_id = slns.slesson_id', 'i_max');
+        // $this->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_id = i_max.max_id', 'iss');
+        $this->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = slns.slesson_id'.($user_id> 0 ? ' AND issrep_reported_by='.$user_id : ''), 'iss');
+
     }
 
     public function joinTeacherCountry($langId = 0)
@@ -338,12 +340,17 @@ class ScheduledLessonSearch extends SearchBase
 
         $userFieldCnd = $this->addCondition('slns.slesson_teacher_id', ' IN ', $userIds);
         $userFieldCnd->attachCondition('sld.sldetail_learner_id', ' IN ', $userIds,' OR ');
-
-       $startDateTimeCnd = $this->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', ' <= ', $startDateTime, ' AND ', true);
-       $startDateTimeCnd->attachCondition('mysql_func_CONCAT(slns.slesson_end_date, " ", slns.slesson_end_time )', ' >= ', $startDateTime, ' AND ', true);
-
-        $endDateTimeCnd = $this->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', ' <= ', $endDateTime, ' OR ', true);
-        $endDateTimeCnd->attachCondition('mysql_func_CONCAT(slns.slesson_end_date, " ", slns.slesson_end_time )', ' >= ', $endDateTime, ' AND ', true);
+        $directStr = " ( ";
+        $directStr .=  " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) <= '".$startDateTime."' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) >= '".$startDateTime."' ) ";
+        $directStr .=  " OR ";
+        $directStr .= " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) <= '".$endDateTime."' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) >= '".$endDateTime."' ) ";
+        $directStr .= " ) ";
+        $this->addDirectCondition($directStr);
+        // $startDateTimeCnd = $this->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', ' <= ', $startDateTime, ' and ( ', true);
+        // $startDateTimeCnd->attachCondition('mysql_func_CONCAT(slns.slesson_end_date, " ", slns.slesson_end_time )', ' >= ', $startDateTime, " and ", true);
+        //
+        // $endDateTimeCnd = $this->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', ' <= ', $endDateTime, " or ", true);
+        // $endDateTimeCnd->attachCondition('mysql_func_CONCAT(slns.slesson_end_date, " ", slns.slesson_end_time )', ' >= ', $endDateTime, "  and ", true);
 
         $this->addCondition('slns.slesson_status', ' IN ', [ScheduledLesson::STATUS_SCHEDULED,ScheduledLesson::STATUS_COMPLETED]);
 

@@ -15,7 +15,8 @@ class LearnerController extends LearnerBaseController
 
         $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
         if(!$token || SocialMedia::isGoogleAccessTokenExpired($token)){
-            Message::addInfo(Label::getLabel('LBL_Please_Authenticate_google_to_be_able_to_post_on_google_calendar'));
+            $link = " <a href='".CommonHelper::generateUrl('account', 'profileInfo')."'>".Label::getLabel('LBL_Click_Here')."</a>";
+            Message::addInfo(sprintf(Label::getLabel('LBL_Please_Authenticate_google_to_be_able_to_post_on_google_calendar_%s'), $link));
         }
 
         $this->_template->addCss('css/custom-full-calendar.css');

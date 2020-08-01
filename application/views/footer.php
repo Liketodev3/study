@@ -123,10 +123,17 @@
 </body>
 </html>
 <?php
+
 if (FatApp::getConfig('CONF_ENABLE_LIVECHAT', FatUtility::VAR_STRING, '')) {
     echo FatApp::getConfig('CONF_LIVE_CHAT_CODE', FatUtility::VAR_STRING, '');
 }
 if (FatApp::getConfig('CONF_SITE_TRACKER_CODE', FatUtility::VAR_STRING, '')) {
     echo FatApp::getConfig('CONF_SITE_TRACKER_CODE', FatUtility::VAR_STRING, '');
 }
+
+$autoRestartOn =  FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1);
+if($autoRestartOn == applicationConstants::YES && CommonHelper::demoUrl()) {
+	$this->includeTemplate( 'restore-system/page-content.php');
+}
+
 ?>

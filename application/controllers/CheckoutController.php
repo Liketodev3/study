@@ -338,7 +338,7 @@ class CheckoutController extends LoggedUserController{
 
 		if( $cartData['lpackage_is_free_trial'] ){
 			$op_lesson_duration = FatApp::getConfig( 'conf_trial_lesson_duration', FatUtility::VAR_INT, 30 );
-		}else{
+		}else {
 			$commissionDetails = Commission::getTeacherCommission($cartData['user_id'], $cartData['grpcls_id']);
 			if ($commissionDetails) {
 				$cartData['op_commission_percentage'] = $commissionDetails['commsetting_fees'];
@@ -503,6 +503,13 @@ class CheckoutController extends LoggedUserController{
         if($cartData['grpcls_id']>0){
             die('');
         }
+		$teacherOfferClassObj = new TeacherOfferPrice();
+		$srchdata =  $teacherOfferClassObj->getOffer(UserAuthentication::getLoggedUserId(),$post['teacher_id']);
+		$srchdata->doNotCalculateRecords();
+		$srchdata->setPageSize(1);
+		$rs = $srchdata->getResultSet();
+		$teachcerOffer = FatApp::getDb()->fetch($rs);
+
 		$srch = LessonPackage::getSearchObject( $this->siteLangId );
 		$srch->addCondition( 'lpackage_is_free_trial', '=', 0 );
 		$srch->addMultipleFields(array(
@@ -514,6 +521,7 @@ class CheckoutController extends LoggedUserController{
 		$lessonPackages = FatApp::getDb()->fetchAll($rs);
         $data = UserSetting::getUserSettings( $post['teacher_id'],$post['languageId'] );
         $this->set('cartData',$cartData);
+		$this->set('teachcerOffer',$teachcerOffer);
         $this->set('languageId',$post['languageId']);
         $this->set('lessonPackages',$lessonPackages);
         $this->set('selectedLang',current($data));

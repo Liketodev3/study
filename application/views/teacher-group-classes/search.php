@@ -52,10 +52,13 @@ $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate))); ?>
                     </td>
 
                     <td width="21%">
+                        <?php if($class['slesson_id']): ?>
+                        <a class="btn btn--primary btn--small" href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons', 'view', array($class['slesson_id'])) ?>"><?php echo ($class['is_joined'] ? Label::getLabel("LBL_View_Class") : Label::getLabel("LBL_Start_Class")) ?></a>
+                        <?php if($class['issrep_id']>0): ?>
+                        <a class="btn btn--small" href="javascript:void(0);" onclick="resolveIssue('<?php echo $class['slesson_id']; ?>')"><?php echo Label::getLabel("LBL_Class_Issue_details") ?></a>
+                        <?php endif; ?>
+                        <?php endif; ?>
                         <?php if($class['grpcls_status']==TeacherGroupClasses::STATUS_ACTIVE): ?>
-                            <?php if($class['slesson_id']): ?>
-                            <a class="btn btn--primary btn--small" href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons', 'view', array($class['slesson_id'])) ?>"><?php echo ($class['is_joined'] ? Label::getLabel("LBL_View_Class") : Label::getLabel("LBL_Start_Class")) ?></a>
-                            <?php endif; ?>
                             <?php if($class['grpcls_start_datetime']>date('Y-m-d H:i:s')): ?>
                             <a class="btn btn--primary btn--small" href="javascript:void(0);" onclick="form('<?php echo $class['grpcls_id'];  ?>');"><?php echo Label::getLabel("LBL_Edit") ?></a>
                             <?php else: ?>
