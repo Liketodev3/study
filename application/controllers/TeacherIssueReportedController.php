@@ -137,6 +137,11 @@ class TeacherIssueReportedController extends TeacherBaseController
     public function issueResolveSetup()
     {
         $post = FatApp::getPostedData();
+        
+        if (empty($post['issues_users'])) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Please_Select_User_to_resolve_issue'));
+        }
+
         $frm = $this->getIssueReportedFrm($post['slesson_id'], array_flip($post['issues_users']));
         $post = $frm->getFormDataFromArray($post);
         
