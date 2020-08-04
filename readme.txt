@@ -8,6 +8,7 @@ Enhancements: N/A
 Bug Fixes:
     *Bug-#040861: Disabled group class price update after booking
     *Bug-#040860: Group Class learners limit, managed from admin
+    * #040854 - learner end lesson >> before 5 min >> teacher refresh the page >> teacher don't get option to end the class.
 
 ==============================================================================================================================
 Installation steps:
