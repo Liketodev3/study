@@ -1555,37 +1555,50 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->joinTeacherCredentials();
         $srch->doNotCalculateRecords();
         $srch->addCondition('sldetail_id', '=', $lDetailId);
+        $srch->addMultipleFields(['slesson_teacher_end_time','slesson_ended_by','sldetail_learner_end_time']);
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
+
         if (empty($lessonRow)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
-        /* ] */
+
         if ($lessonRow['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Re-schedule_requested!'));
         }
-        if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) {
-            $sLessonDetailObj = new ScheduledLessonDetails($lessonRow['sldetail_id']);
-            $sLessonDetailObj->assignValues(array('sldetail_learner_status' => ScheduledLesson::STATUS_COMPLETED, 'sldetail_learner_end_time'=> date('Y-m-d H:i:s')));
-            if (!$sLessonDetailObj->save()) {
-                FatUtility::dieJsonError($sLessonDetailObj->getError());
+        
+        $dataUpdateArr = [];
+
+        if($lessonRow['slesson_grpcls_id'] == 0 && $lessonRow['sldetail_learner_end_time'] > 0){
+            if($lessonRow['slesson_ended_by'] == User::USER_TYPE_LEANER){
+                FatUtility::dieJsonError(Label::getLabel('LBL_You_already_end_lesson!'));
             }
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Already_Ended_by_Teacher!'));
         }
+        /* ] */
+        //
+        // if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) {
+        //     $sLessonDetailObj = new ScheduledLessonDetails($lessonRow['sldetail_id']);
+        //     $sLessonDetailObj->assignValues(array('sldetail_learner_status' => ScheduledLesson::STATUS_COMPLETED, 'sldetail_learner_end_time'=> date('Y-m-d H:i:s')));
+        //     if (!$sLessonDetailObj->save()) {
+        //         FatUtility::dieJsonError($sLessonDetailObj->getError());
+        //     }
+        //     FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Already_Ended_by_Teacher!'));
+        // }
 
         $db = FatApp::getDb();
         $db->startTransaction();
 
         // if its a 1 to 1 class
-        if ($lessonRow['slesson_grpcls_id']==0 ){
+        if ($lessonRow['slesson_grpcls_id'] == 0 ){
             $dataUpdateArr = array(
                 'slesson_status' => ScheduledLesson::STATUS_COMPLETED,
                 'slesson_ended_by' => User::USER_TYPE_LEANER,
                 'slesson_ended_on' => date('Y-m-d H:i:s'),
+                'slesson_teacher_end_time' => date('Y-m-d H:i:s'),
             );
 
             $lessonId = $lessonRow['slesson_id'];
-
             // pay teacher
             if ( $lessonRow['slesson_is_teacher_paid'] == 0) {
                 $lessonObj = new ScheduledLesson($lessonId);
@@ -1603,6 +1616,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $db->rollbackTransaction();
                 FatUtility::dieJsonError($sLessonObj->getError());
             }
+
         }
 
 		$lessionDetailUpdateArr = array(
