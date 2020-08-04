@@ -20,7 +20,7 @@ CREATE TABLE `tbl_payment_method_transaction_fee` (
   `pmtfee_pmethod_id` int(11) NOT NULL,
   `pmtfee_currency_id` int(11) NOT NULL,
   `pmtfee_fee` decimal(12,8) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 ALTER TABLE `tbl_payment_method_transaction_fee` ADD UNIQUE( `pmtfee_pmethod_id`, `pmtfee_currency_id`);
