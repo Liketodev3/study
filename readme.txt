@@ -6,6 +6,7 @@ Enhancements: N/A
 
 Bug Fixes:
         *Bug-#040861: Disabled group class price update after booking
+        *Bug-#040860: Group Class learners limit, managed from admin
 =============================================
 
 Release Number: RV-2.0
