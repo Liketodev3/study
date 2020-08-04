@@ -124,6 +124,10 @@ class TeacherGroupClassesController extends TeacherBaseController
                 $fld->setFieldTagAttribute('disabled', 'disabled');
                 $fld->setFieldTagAttribute('title', Label::getLabel("LBL_End_Time_can_not_change_for_Booked_Class"));
                 $fld->requirements()->setRequired(false);
+                $fld = $frm->getField('grpcls_entry_fee');
+                $fld->setFieldTagAttribute('disabled', 'disabled');
+                $fld->setFieldTagAttribute('title', Label::getLabel("LBL_Price_can_not_change_for_Booked_Class"));
+                $fld->requirements()->setRequired(false);
             }
             
 			$data['grpcls_start_datetime'] = MyDate::changeDateTimezone($data['grpcls_start_datetime'], $systemTimeZone, $user_timezone);
@@ -157,6 +161,7 @@ class TeacherGroupClassesController extends TeacherBaseController
             if($isSlotBooked){
                 $post['grpcls_start_datetime'] = MyDate::changeDateTimezone($class_details['grpcls_start_datetime'], $systemTimeZone, $user_timezone);
                 $post['grpcls_end_datetime'] = MyDate::changeDateTimezone($class_details['grpcls_end_datetime'], $systemTimeZone, $user_timezone);
+                $post['grpcls_entry_fee'] = $class_details['grpcls_entry_fee'];
             }
         }
         
@@ -309,7 +314,8 @@ class TeacherGroupClassesController extends TeacherBaseController
         $frm->addTextArea(Label::getLabel('LBl_DESCRIPTION'), 'grpcls_description')->requirements()->setRequired(true);
         $fld = $frm->addIntegerField(Label::getLabel('LBl_Max_No._Of_Learners'), 'grpcls_max_learner', '', array('id' => 'grpcls_max_learner'));
         $fld->requirements()->setRequired(false);
-        $fld->requirements()->setRange(1,9999);
+        $max_learners = FatApp::getConfig('CONF_GROUP_CLASS_MAX_LEARNERS', FatUtility::VAR_INT, 9999);
+        $fld->requirements()->setRange(1, $max_learners);
         $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->siteLangId))->requirements()->setRequired(true);
         $fld = $frm->addFloatField(Label::getLabel('LBl_Entry_fee'), 'grpcls_entry_fee', '', array('id' => 'grpcls_entry_fee'));
         $fld->requirements()->setPositive(true);

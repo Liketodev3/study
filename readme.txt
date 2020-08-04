@@ -1,5 +1,18 @@
 This file shares the details of YoCoach version and features.
 
+
+New Features:
+
+Enhancements: N/A
+
+Bug Fixes:
+    *Bug-#040861: Disabled group class price update after booking
+    *Bug-#040860: Group Class learners limit, managed from admin
+=============================================
+
+Release Number: RV-2.0
+Release Date: 2020/07/31
+
 New Features:
 
 Enhancements:
