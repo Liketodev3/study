@@ -543,6 +543,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if (empty($lessonRow)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
+
+        $statusArray =  [ScheduledLesson::STATUS_COMPLETED , ScheduledLesson::STATUS_ISSUE_REPORTED];
+        if (!$lessonRow || in_array($lessonRow['sldetail_learner_status'], $statusArray)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+        }
+
         if($lessonRow['sldetail_learner_status'] == ScheduledLesson::STATUS_CANCELLED) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Lesson_Already_Cancelled'));
         }
