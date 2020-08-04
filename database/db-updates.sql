@@ -1,8 +1,8 @@
 -- task 72959 / 1-AUG-2020 / RV-2.0
 
-ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_payment_method` INT NOT NULL AFTER `withdrawal_amount`;
+ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_payment_method_id` INT NOT NULL AFTER `withdrawal_amount`;
 
-UPDATE `tbl_user_withdrawal_requests` SET `withdrawal_payment_method` = '1' WHERE `tbl_user_withdrawal_requests`.`withdrawal_payment_method` = 0;
+-- UPDATE `tbl_user_withdrawal_requests` SET `withdrawal_payment_method_id` = '1' WHERE `tbl_user_withdrawal_requests`.`withdrawal_payment_method_id` = 0;
 
 ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_paypal_email_id` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `withdrawal_status`;
 
@@ -27,3 +27,8 @@ ALTER TABLE `tbl_payment_method_transaction_fee` ADD UNIQUE( `pmtfee_pmethod_id`
 
 
 INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES (NULL, 'Paypal Payout', '2', 'PaypalPayout', '1', '3');
+
+ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_transaction_fee` DECIMAL(10,4) NOT NULL AFTER `withdrawal_amount`;
+
+
+INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES (NULL, 'Bank Payout', '2', 'BankPayout', '1', '4');

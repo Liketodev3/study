@@ -146,19 +146,23 @@ class User extends MyAppModel
         );
     }
 
-    public static function getWithdrawlMethodArray($langId = 0)
+    public static function getWithdrawlMethodArray() : array
     {
-        $langId = FatUtility::int($langId);
-        if ($langId < 1) {
-            $langId = CommonHelper::getLangId();
-        }
 
         return array(
-            static::WITHDRAWAL_METHOD_TYPE_BANK	=>	Label::getLabel('LBL_Bank_Payout', $langId),
-            static::WITHDRAWAL_METHOD_TYPE_PAYPAL	=>	Label::getLabel('LBL_Paypal_Payout', $langId),
+            static::WITHDRAWAL_METHOD_TYPE_BANK	=>	Label::getLabel('LBL_Bank_Payout'),
+            static::WITHDRAWAL_METHOD_TYPE_PAYPAL	=>	Label::getLabel('LBL_Paypal_Payout'),
 
         );
     }
+
+    public static function getWithdrawlMethodKey() : array
+    {
+        return array(
+            static::WITHDRAWAL_METHOD_TYPE_PAYPAL	=>	'PaypalPayout',
+        );
+    }
+
 
     public static function getUserTypesArr($langId = 0)
     {
@@ -919,6 +923,8 @@ class User extends MyAppModel
             'withdrawal_request_date'=>date('Y-m-d H:i:s'),
             'withdrawal_user_id'=>$userId,
         ); */
+        print_r($data);
+        die;
         $assignFields = array(
             'withdrawal_user_id'=>$userId,
             'withdrawal_amount'=>$data['withdrawal_amount'],
@@ -928,7 +934,7 @@ class User extends MyAppModel
             'withdrawal_request_date'=>date('Y-m-d H:i:s')
         );
 
-        switch ($data['withdrawal_payment_method']) {
+        switch ($data['withdrawal_payment_method_type']) {
     		case User::WITHDRAWAL_METHOD_TYPE_BANK:
                 $assignFields += array(
                     'withdrawal_bank'=>$data['ub_bank_name'],

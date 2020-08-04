@@ -10,7 +10,7 @@
 
 	$frm->setFormTagAttribute('onsubmit', 'setupWithdrawalReq(this); return(false);');
 
-	$methodTypeFld = $frm->getField('withdrawal_payment_method');
+	$methodTypeFld = $frm->getField('withdrawal_payment_method_type');
 	$methodTypeFld->setOptionListTagAttribute( 'class', 'list-inline list-inline--onehalf' );
 	$methodTypeFld->setWrapperAttribute('class','col-sm-12 col-lg-12');
 	$methodTypeFld->developerTags['col'] = 12;

@@ -71,8 +71,9 @@ foreach ($arr_listing as $sn=>$row){
 					$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
 					$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
 
-					$innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"editGatewayForm(".$row['pmethod_id'].")"),Label::getLabel('LBL_Edit',$adminLangId), true);
+						$innerLi=$innerUl->appendElement('li');
+						$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"editGatewayForm(".$row['pmethod_id'].")"),Label::getLabel('LBL_Edit',$adminLangId), true);
+
 
 					if($row['pmethod_type'] == PaymentMethods::TYPE_PAYMENT_METHOD_PAYOUT){
 						$innerLi=$innerUl->appendElement('li');
@@ -80,9 +81,7 @@ foreach ($arr_listing as $sn=>$row){
 
 					}
 
-
-
-					if( strtolower($row['pmethod_code']) != "cashondelivery" ){
+					if(strtolower($row['pmethod_code']) != strtolower(PaymentMethods::BANK_PAYOUT_KEY)){
 						$innerLi=$innerUl->appendElement('li');
 						$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Settings',$adminLangId),"onclick"=>"settingsForm('".$row['pmethod_code']."')"),Label::getLabel('LBL_Settings',$adminLangId), true);
 					}

@@ -218,14 +218,20 @@ class WalletController extends LoggedUserController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-    public function requestWithdrawal($payoutMethodType = User::WITHDRAWAL_METHOD_TYPE_BANK)
+    public function requestWithdrawal($payoutMethodId = null)
     {
-        $withdrawlMethodArray =  User::getWithdrawlMethodArray();
-        if(!array_key_exists($payoutMethodType,$withdrawlMethodArray)){
+        $withdrawlMethodArray =  PaymentMethods::getPayoutMethods();
+        if(empty($withdrawlMethodArray) || ($payoutMethod != null && !array_key_exists($payoutMethodId,$withdrawlMethodArray))){
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_REQUEST'));
             FatUtility::dieWithError(Message::getHtml());
         }
-        $frm = $this->getWithdrawalForm($payoutMethodType, $this->siteLangId);
+
+        if($payoutMethod == null) {
+            current
+        }else{
+            $withdrawlMethodArray
+        }
+        $frm = $this->getWithdrawalForm($payoutMethodId, $this->siteLangId);
         $userId = UserAuthentication::getLoggedUserId();
         $balance = User::getUserBalance($userId);
         $lastWithdrawal = User::getUserLastWithdrawalRequest($userId);
@@ -250,12 +256,11 @@ class WalletController extends LoggedUserController
         $this->_template->render(false, false);
     }
 
-    private function getWithdrawalForm($payoutMethodType, $langId)
+    private function getWithdrawalForm($payoutMethodId, $langId)
     {
 
-
         $frm = new Form('frmWithdrawal');
-        $fld = $frm->addRadioButtons(Label::getLabel('LBL_Payout_Type'),'withdrawal_payment_method',User::getWithdrawlMethodArray(),$payoutMethodType);
+        $fld = $frm->addRadioButtons(Label::getLabel('LBL_Payout_Type'),'withdrawal_payment_method_type',User::getWithdrawlMethodArray(),$payoutMethodType);
 
         $withdrawalAmountFld  = $frm->addRequiredField(Label::getLabel('LBL_Amount_to_be_Withdrawn', $langId).' ['.commonHelper::getDefaultCurrencySymbol().']', 'withdrawal_amount');
         $withdrawalAmountFld->requirement->setFloat(true);
@@ -269,16 +274,16 @@ class WalletController extends LoggedUserController
                 $frm->addRequiredField(Label::getLabel('LBL_Account_Number', $langId), 'ub_account_number');
                 $frm->addRequiredField(Label::getLabel('LBL_IFSC_Swift_Code', $langId), 'ub_ifsc_swift_code');
                 $frm->addTextArea(Label::getLabel('LBL_Bank_Address', $langId), 'ub_bank_address');
+                $frm->addHiddenField('','withdrawal_payment_method',0);
             break;
             case  User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
-
                 $paypalPayoutObj = new PaypalPayout;
                 $paypalPayoutSetting = $paypalPayoutObj->getSettings();
                 $payoutId = (!empty($paypalPayoutSetting['pmethod_id'])) ? $paypalPayoutSetting['pmethod_id'] : 0;
                 $payoutFee = PaymentMethodTransactionFee::getGatewayFee($payoutId, FatApp::getConfig('CONF_CURRENCY'));
-
                 $withdrawalAmountAfterHTML .= "<small class='-color-secondary transaction-fee'>".Label::getLabel("LBL_Transaction_Fee", $langId).' '.CommonHelper::displayMoneyFormat($payoutFee, true, true)."</small>";
                 $frm->addRequiredField(Label::getLabel('LBL_Paypal_Email', $langId), 'ub_paypal_email_address');
+                $frm->addHiddenField('','withdrawal_payment_method',$payoutId);
             break;
         }
 
@@ -309,7 +314,7 @@ class WalletController extends LoggedUserController
             Message::addErrorMessage(sprintf(Label::getLabel('MSG_Withdrawal_Request_Minimum_Balance_Less', $this->siteLangId), CommonHelper::displayMoneyFormat($minimumWithdrawLimit)));
             FatUtility::dieJSONError(Message::getHtml());
         }
-        $payoutMethodType =  FatApp::getPostedData('withdrawal_payment_method',FatUtility::VAR_INT,0);
+        $payoutMethodType =  FatApp::getPostedData('withdrawal_payment_method_type',FatUtility::VAR_INT,0);
         $withdrawlMethodArray =  User::getWithdrawlMethodArray();
 
         if(!array_key_exists($payoutMethodType,$withdrawlMethodArray)){
