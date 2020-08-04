@@ -34,12 +34,16 @@ if($lessonData['lessonReschedulelogId'] > 0 && (
 
 ?>
 <script>
+
 var is_time_up = '<?php echo $endTime > 0 && $endTime<$curDate ?>';
+var learnerLessonStatus = '<?php echo $lessonData['sldetail_learner_status']; ?>';
 var lesson_joined = '<?php echo $lessonData['sldetail_learner_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['sldetail_learner_end_time']>0 ?>';
 var teacherId = '<?php echo $lessonData['teacherId'] ?>';
 var canEnd = '<?php echo $canEnd ?>';
 var sldetail_id = "<?php echo $lessonData['sldetail_id']; ?>";
+var groupClassId =  <?php echo $lessonData['slesson_grpcls_id']; ?>;
+var isGroupClass = (groupClassId > 0) ? true : false;
 
 var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
 var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
@@ -112,32 +116,45 @@ function checkEveryMinuteStatus() {
                 $.mbsmessage( '<?php echo Label::getLabel('LBL_Teacher_Has_Joined_Now_you_can_also_Join_The_Lesson!'); ?>',true, 'alert alert--success');
             }
 
-            if(t.slesson_status > 1 && t.sldetail_learner_status == 1) {
-            $.confirm({
-                title: langLbl.Confirm,
-                content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',
-                autoClose: langLbl.Quit+'|10000',
-                buttons: {
-                    Proceed: {
-                        text: langLbl.Proceed,
-                        btnClass: 'btn btn--primary',
-                        keys: ['enter', 'shift'],
-                        action: function(){
-							endLesson(sldetail_id);
+            if(t.slesson_status > 1 && learnerLessonStatus == 1) {
+                if(!isGroupClass){
+                    $.alert({
+                        title: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
+                        content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson!'); ?>',
+                        useBootstrap: false,
+                        boxWidth: '20%',
+                         escapeKey: false,
+                        onClose: function () {
+                            $.mbsmessage.close(); location.reload();
+                        },
+                    });
+                    setTimeout(function(){ $.mbsmessage.close(); location.reload(); }, 1500);
+                    return;
+                }else{
+                    $.confirm({
+                        title: langLbl.Confirm,
+                        content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',
+                        autoClose: langLbl.Quit+'|10000',
+                        buttons: {
+                            Proceed: {
+                                text: langLbl.Proceed,
+                                btnClass: 'btn btn--primary',
+                                keys: ['enter', 'shift'],
+                                action: function(){
+        							endLesson(sldetail_id);
+                                }
+                            },
+                            Quit: {
+                                text: langLbl.Quit,
+                                btnClass: 'btn btn--secondary',
+                                keys: ['enter', 'shift'],
+                                action: function(){
+                                }
+                            }
                         }
-                    },
-                    Quit: {
-                        text: langLbl.Quit,
-                        btnClass: 'btn btn--secondary',
-                        keys: ['enter', 'shift'],
-                        action: function(){
-                        }
-                    }
+                    });
                 }
-            });
-
             }
-
         });
     },60000);
 }
@@ -172,12 +189,12 @@ $(function(){
             $("#start_lesson_timer").parent().hide();
         }
     });
-	
+
 	if($('.timer.start-lesson-timer').is(":visible")){
 		$("#lesson_actions").show();
 	}
     <?php } ?>
-	
+
 
 
     $('#end_lesson_timer').countdowntimer({

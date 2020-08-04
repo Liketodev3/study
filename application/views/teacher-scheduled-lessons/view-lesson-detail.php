@@ -38,11 +38,18 @@ if($lessonData['lessonReschedulelogId'] > 0 &&
 <script type="text/javascript">
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
 var is_time_up = '<?php echo $endTime > 0 && $endTime < $curDate ?>';
-
+var lessonsStatus = <?php echo $lessonData['slesson_status']; ?>;
 var lesson_joined = '<?php echo $lessonData['slesson_teacher_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time']>0 ?>';
 var lesson_status_completed = '<?php echo $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ?>';
 var slesson_id = '<?php echo $lessonData['slesson_id'] ?>';
+var lessonStatus = <?php echo $lessonData['slesson_status']; ?>;
+const STATUS_SCHEDULED =  <?php echo ScheduledLesson::STATUS_SCHEDULED; ?>;
+const STATUS_COMPLETED =  <?php echo ScheduledLesson::STATUS_COMPLETED; ?>;
+const STATUS_ISSUE_REPORTED =  <?php echo ScheduledLesson::STATUS_ISSUE_REPORTED; ?>;
+
+var groupClassId =  <?php echo $lessonData['slesson_grpcls_id']; ?>;
+var isGroupClass = (groupClassId > 0) ? true : false;
 
 var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
 var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
@@ -118,31 +125,21 @@ function checkEveryMinuteStatus(){
     checkEveryMinuteStatusVar = setInterval(function(){
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','checkEveryMinuteStatus',[slesson_id]),'',function(t){
             var t = JSON.parse(t);
-            if(t.sldetail_learner_status <= 1 || t.slesson_teacher_end_time>0) return;
-
-            $.confirm({
-                title: langLbl.Confirm,
-                content: '<?php echo Label::getLabel('LBL_Learner_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also!'); ?>',
-                autoClose: langLbl.Quit+'|10000',
-                buttons: {
-                    Proceed: {
-                       text: langLbl.Proceed,
-                        btnClass: 'btn btn--primary',
-                        keys: ['enter', 'shift'],
-                        action: function(){
-                            endLesson(slesson_id);
-                            viewLessonDetail();
-                        }
+            if(!isGroupClass && lessonStatus == STATUS_SCHEDULED && (t.sldetail_learner_status == STATUS_COMPLETED || t.sldetail_learner_status == STATUS_ISSUE_REPORTED)) {
+                $.alert({
+                    title: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
+                    content: '<?php echo Label::getLabel('LBL_Learner_Ends_The_Lesson!'); ?>',
+                    useBootstrap: false,
+                    boxWidth: '20%',
+                     escapeKey: false,
+                    onClose: function () {
+                        $.mbsmessage.close(); location.reload();
                     },
-                    Quit: {
-                        text: langLbl.Quit,
-                        btnClass: 'btn btn--secondary',
-                        keys: ['enter', 'shift'],
-                        action: function(){
-                        }
-                    }
-                }
-            });
+                });
+                setTimeout(function(){ $.mbsmessage.close(); location.reload(); }, 1500);
+            }
+
+
         });
     },60000);
 }

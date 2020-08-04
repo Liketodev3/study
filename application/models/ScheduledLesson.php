@@ -88,9 +88,9 @@ class ScheduledLesson extends MyAppModel
         $cnd->attachCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_COMPLETED);
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
-        
+
         if (empty($rows)) return false;
-        
+
         foreach($rows as $data){
             $tObj = new Transaction($data['slesson_teacher_id']);
             $comment = sprintf(Label::getLabel('LBL_LessonId:_%s_Payment_Received', CommonHelper::getLangId()), $this->getMainTableRecordId());
