@@ -14,9 +14,9 @@ Release Number: RV-2.0
 Release Date: 2020/07/31
 
 New Features:
-
+  * task-72959 :- Integrate Paypal Payouts API
 Enhancements:
-  
+
 Bug Fixes:
 
 

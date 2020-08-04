@@ -27,6 +27,17 @@ class Currency extends MyAppModel
         }
         return $srch;
     }
+	
+	public static function getDefaultCurrencyData() : array
+    {
+        $row = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY'));
+        if (empty($row)) {
+			trigger_error(Label::getLabel('ERR_Default_currency_not_specified.', CommonHelper::getLangId()), E_USER_ERROR);
+        }
+		return $row;  
+    }
+	
+	
 
     public static function getListingObj($langId, $attr = null)
     {

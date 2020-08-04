@@ -43,6 +43,9 @@ class User extends MyAppModel
     const USER_NOTICATION_NUMBER_24 = 24;
     const USER_NOTICATION_NUMBER_48 = 48;
 
+    const WITHDRAWAL_METHOD_TYPE_BANK = 1;
+    const WITHDRAWAL_METHOD_TYPE_PAYPAL = 2;
+
 
 
     public function __construct($userId = 0)
@@ -139,6 +142,20 @@ class User extends MyAppModel
             static::USER_NOTICATION_NUMBER_12	=>	Label::getLabel('LBL_12_Hours', $langId),
             static::USER_NOTICATION_NUMBER_24	=>	Label::getLabel('LBL_24_Hours', $langId),
             static::USER_NOTICATION_NUMBER_48	=>	Label::getLabel('LBL_48_Hours', $langId),
+
+        );
+    }
+
+    public static function getWithdrawlMethodArray($langId = 0)
+    {
+        $langId = FatUtility::int($langId);
+        if ($langId < 1) {
+            $langId = CommonHelper::getLangId();
+        }
+
+        return array(
+            static::WITHDRAWAL_METHOD_TYPE_BANK	=>	Label::getLabel('LBL_Bank_Payout', $langId),
+            static::WITHDRAWAL_METHOD_TYPE_PAYPAL	=>	Label::getLabel('LBL_Paypal_Payout', $langId),
 
         );
     }
@@ -674,7 +691,7 @@ class User extends MyAppModel
         }
 
         $srch = new SearchBase(static::DB_TBL_USR_BANK_INFO, 'tub');
-        $srch->addMultipleFields(array('ub_bank_name','ub_account_holder_name','ub_account_number','ub_ifsc_swift_code','ub_bank_address'));
+        $srch->addMultipleFields(array('ub_bank_name','ub_account_holder_name','ub_account_number','ub_ifsc_swift_code','ub_bank_address','ub_paypal_email_address'));
         $srch->addCondition(static::DB_TBL_USR_BANK_INFO_PREFIX.'user_id', '=', $this->getMainTableRecordId());
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -722,6 +739,7 @@ class User extends MyAppModel
 
     public function updatePaypalInfo($data = array())
     {
+
         if (($this->getMainTableRecordId() < 1)) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED');
             return false;
@@ -904,32 +922,39 @@ class User extends MyAppModel
         $assignFields = array(
             'withdrawal_user_id'=>$userId,
             'withdrawal_amount'=>$data['withdrawal_amount'],
-
-            'withdrawal_bank'=>$data['ub_bank_name'],
-            'withdrawal_account_holder_name'=>$data['ub_account_holder_name'],
-            'withdrawal_account_number'=>$data['ub_account_number'],
-            'withdrawal_ifc_swift_code'=>$data['ub_ifsc_swift_code'],
-            'withdrawal_bank_address'=>$data['ub_bank_address'],
-
+            'withdrawal_payment_method'=>$data['withdrawal_payment_method'],
             'withdrawal_comments'=>$data['withdrawal_comments'],
             'withdrawal_status'=>0,
-            'withdrawal_request_date'=>date('Y-m-d H:i:s'),
+            'withdrawal_request_date'=>date('Y-m-d H:i:s')
         );
 
+        switch ($data['withdrawal_payment_method']) {
+    		case User::WITHDRAWAL_METHOD_TYPE_BANK:
+                $assignFields += array(
+                    'withdrawal_bank'=>$data['ub_bank_name'],
+                    'withdrawal_account_holder_name'=>$data['ub_account_holder_name'],
+                    'withdrawal_account_number'=>$data['ub_account_number'],
+                    'withdrawal_ifc_swift_code'=>$data['ub_ifsc_swift_code'],
+                    'withdrawal_bank_address'=>$data['ub_bank_address'],
+                );
+    			break;
+    		case User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
+                $assignFields += array(
+                    'withdrawal_paypal_email_id'=>$data['ub_paypal_email_address'],
+                );
+    			break;
+    	}
         $broken = false;
 
         if (FatApp::getDb()->startTransaction() && FatApp::getDb()->insertFromArray(static::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields)) {
             $withdrawRequestId = FatApp::getDb()->getInsertId();
-
             $formattedRequestValue = '#'.str_pad($withdrawRequestId, 6, '0', STR_PAD_LEFT);
-
             $txnArray["utxn_user_id"] = $userId;
             $txnArray["utxn_debit"] = $data["withdrawal_amount"];
             $txnArray["utxn_status"] = Transaction::STATUS_PENDING;
             $txnArray["utxn_comments"] = Label::getLabel('LBL_Funds_Withdrawn', $langId).'. '.Label::getLabel('LBL_Request_ID', $langId).' '.$formattedRequestValue;
             $txnArray["utxn_withdrawal_id"] = $withdrawRequestId;
             $txnArray['utxn_type']	=	Transaction::TYPE_MONEY_WITHDRAWN;
-
             $transObj = new Transaction($userId);
             if ($txnId = $transObj->addTransaction($txnArray)) {
                 /*

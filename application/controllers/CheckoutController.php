@@ -129,7 +129,7 @@ class CheckoutController extends LoggedUserController{
 				'pmethod_code',
 				'pmethod_description'
 				));
-
+		$pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
 		$pmRs = $pmSrch->getResultSet();
 		$paymentMethods = FatApp::getDb()->fetchAll($pmRs);
 		/* ] */
@@ -185,7 +185,8 @@ class CheckoutController extends LoggedUserController{
 		$pmSrch->doNotCalculateRecords();
 		$pmSrch->doNotLimitRecords();
 		$pmSrch->addMultipleFields(array('pmethod_id', 'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name', 'pmethod_code', 'pmethod_description'));
-		$pmSrch->addCondition('pmethod_id','=',$pmethodId);
+		$pmSrch->addCondition('pmethod_id','=', $pmethodId);
+		$pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
 		$pmRs = $pmSrch->getResultSet();
 		$paymentMethod = FatApp::getDb()->fetch($pmRs);
 		if( !$paymentMethod ){
@@ -225,6 +226,7 @@ class CheckoutController extends LoggedUserController{
 			$pmSrch->doNotLimitRecords();
 			$pmSrch->addMultipleFields(array('pmethod_id', 'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name', 'pmethod_code', 'pmethod_description'));
 			$pmSrch->addCondition('pmethod_id','=',$pmethodId);
+			$pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
 			$pmRs = $pmSrch->getResultSet();
 			$paymentMethod = FatApp::getDb()->fetch($pmRs);
 			if( !$paymentMethod ){

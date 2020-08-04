@@ -79,20 +79,14 @@ class WithdrawalRequestsController extends AdminBaseController
         }
 
         $type = FatApp::getPostedData('type', FatUtility::VAR_INT, 0);
+
         if ($type > 0) {
-            if ($type == User::USER_TYPE_SELLER) {
-                $srch->addCondition('user_is_supplier', '=', applicationConstants::YES);
+            if ($type == User::USER_TYPE_LEANER) {
+                $srch->addCondition('user_is_learner', '=', applicationConstants::YES);
+                $srch->addCondition('user_is_teacher', '=', applicationConstants::NO);
             }
-            if ($type == User::USER_TYPE_BUYER) {
-                $srch->addCondition('user_is_buyer', '=', applicationConstants::YES);
-            }
-
-            if ($type == User::USER_TYPE_ADVERTISER) {
-                $srch->addCondition('user_is_advertiser', '=', applicationConstants::YES);
-            }
-
-            if ($type == User::USER_TYPE_AFFILIATE) {
-                $srch->addCondition('user_is_affiliate', '=', applicationConstants::YES);
+            if ($type == User::USER_TYPE_TEACHER) {
+                $srch->addCondition('user_is_teacher', '=', applicationConstants::YES);
             }
         }
 
@@ -103,10 +97,17 @@ class WithdrawalRequestsController extends AdminBaseController
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs);
 
+        $paypalPayoutObj = new PaypalPayout;
+        $paypalPayoutSetting = $paypalPayoutObj->getSettings();
+        $payoutId = (!empty($paypalPayoutSetting['pmethod_id'])) ? $paypalPayoutSetting['pmethod_id'] : 0;
+
+        $payoutFee = PaymentMethodTransactionFee::getGatewayFee($payoutId, FatApp::getConfig('CONF_CURRENCY'));
+
         $this->set("arr_listing", $records);
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
         $this->set('page', $page);
+        $this->set('payoutFee', $payoutFee);
         $this->set('pageSize', $pagesize);
         $this->set('postedData', $post);
         $this->set('statusArr', Transaction::getWithdrawlStatusArr($this->adminLangId));
@@ -131,23 +132,38 @@ class WithdrawalRequestsController extends AdminBaseController
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $rs = $srch->getResultSet();
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetch($rs);
+		$records = FatApp::getDb()->fetch($rs);
+        if (empty($records)) {
+             Message::addErrorMessage($this->str_invalid_request);
+            FatUtility::dieJsonError(Message::getHtml());
         }
 
-        if (1 > $withdrawalId || !in_array($status, $allowedStatusUpdateArr) || $records['withdrawal_status']!= Transaction::WITHDRAWL_STATUS_PENDING) {
+        if (1 > $withdrawalId || !in_array($status, $allowedStatusUpdateArr) || $records['withdrawal_status'] != Transaction::WITHDRAWL_STATUS_PENDING) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
 
+		if($records['withdrawal_payment_method'] ==  User::WITHDRAWAL_METHOD_TYPE_PAYPAL && $status == Transaction::WITHDRAWL_STATUS_APPROVED) {
+
+			$payoutObj =  new PaypalPayout();
+			if($payoutObj->releasePayout($records) == false){
+				Message::addErrorMessage($payoutObj->getError());
+				FatUtility::dieJsonError(Message::getHtml());
+			 }
+			$this->set('msg', Label::getLabel('LBL_Status_Updated_Successfully', $this->adminLangId));
+			$this->_template->render(false, false, 'json-success.php');
+		}
+
+        $db = FatApp::getDb();
+        $db->startTransaction();
         $assignFields = array('withdrawal_status'=>$status);
-        if (!FatApp::getDb()->updateFromArray(
+        if (!$db->updateFromArray(
             User::DB_TBL_USR_WITHDRAWAL_REQ,
             $assignFields,
             array('smt' => 'withdrawal_id=?','vals' => array($withdrawalId))
         )) {
-            Message::addErrorMessage(FatApp::getDb()->getError());
+			$db->rollbackTransaction();
+            Message::addErrorMessage($db->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
 
@@ -158,11 +174,15 @@ class WithdrawalRequestsController extends AdminBaseController
         }*/
 
 
-        $rs = FatApp::getDb()->updateFromArray(
+        if (!$db->updateFromArray(
             Transaction::DB_TBL,
             array("utxn_status"=>Transaction::STATUS_COMPLETED),
             array('smt'=>'utxn_withdrawal_id=?','vals'=>array($withdrawalId))
-        );
+        )){
+			$db->rollbackTransaction();
+            Message::addErrorMessage($db->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+		}
 
 
         if ($status == Transaction::WITHDRAWL_STATUS_DECLINED) {
@@ -174,16 +194,28 @@ class WithdrawalRequestsController extends AdminBaseController
             $txnArray["utxn_status"] = Transaction::STATUS_COMPLETED;
             $txnArray["utxn_withdrawal_id"] = $txnDetail["utxn_withdrawal_id"];
             $txnArray["utxn_type"] = Transaction::TYPE_MONEY_WITHDRAWN;
-            $txnArray["utxn_comments"] = sprintf(Label::getLabel('MSG_Withdrawal_Request_Declined_Amount_Refunded', $this->adminLangId), $formattedRequestValue);
-
-            if ($txnId = $transObj->addTransaction($txnArray)) {
-                $emailNotificationObj = new EmailHandler();
-                $emailNotificationObj->sendTxnNotification($txnId, $this->adminLangId);
+            $txnArray["utxn_comments"] = Label::getLabel('MSG_Withdrawal_Request_Declined_Amount_Refunded', $this->adminLangId).' '.Label::getLabel('LBL_Request_ID').' '.$formattedRequestValue;
+			$txnId = $transObj->addTransaction($txnArray);
+            if ($txnId == false) {
+                $db->rollbackTransaction();
+				Message::addErrorMessage($transObj->getError());
+				FatUtility::dieJsonError(Message::getHtml());
             }
+
+			$db->commitTransaction();
+			$emailNotificationObj = new EmailHandler();
+            $emailNotificationObj->sendTxnNotification($txnId, $this->adminLangId);
         }
+
+		$db->commitTransaction();
 
         $this->set('msg', Label::getLabel('LBL_Status_Updated_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
+    }
+
+    private function releasePayout(array $withDrawalRecords)
+    {
+        // code...
     }
 
     private function getSearchForm($langId)

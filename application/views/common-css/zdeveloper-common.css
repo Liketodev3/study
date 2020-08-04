@@ -121,6 +121,10 @@ input[name=teach_language_name].ui-autocomplete-loading {
   padding-bottom: 10px;
 }
 
+small.transaction-fee{
+  color: var(--color-secondary);
+}
+
 .btn.disabled {
   cursor: not-allowed;
 }

@@ -50,7 +50,7 @@ class GroupClassesController extends MyAppController
 		if (empty($classData)) {
 			FatUtility::exitWithErrorCode(404);
 		}
-		
+
 		$this->set('class', $classData);
         $min_booking_time = FatApp::getConfig('CONF_CLASS_BOOKING_GAP', FatUtility::VAR_INT, 60);
         $this->set('min_booking_time', $min_booking_time);
@@ -58,24 +58,24 @@ class GroupClassesController extends MyAppController
         // $this->_template->addCss('css/switch.css');
 		$this->_template->render();
 	}
-    
+
     public function InterestList()
     {
         $post = FatApp::getPostedData();
         $grpClsId = FatApp::getPostedData('grpcls_id', FatUtility::VAR_INT, 0);
         $user_id = UserAuthentication::getLoggedUserId();
-        
+
         if(!$grpClsId){
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_request', $this->siteLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-        
+
         $srch2 = new RequestedTimeslotsFollowersSearch();
         $srch2->doNotCalculateRecords(true);
         $srch2->addFld('IF(reqslfol_reqts_id>0, 1, 0)');
         $srch2->addDirectCondition('reqslfol_reqts_id=reqts_id');
         $srch2->addCondition('reqslfol_followed_by', '=', $user_id);
-        
+
         $reqtsSrch = new RequestedTimeslotsSearch();
         $reqtsSrch->addCondition('reqts_grpcls_id', '=', $grpClsId);
         $reqtsSrch->addCondition('reqts_status', '=', ApplicationConstants::ACTIVE);
@@ -87,58 +87,58 @@ class GroupClassesController extends MyAppController
                 '('.$srch2->getQuery().') is_followed'
             )
         );
-        
+
         $rs = $reqtsSrch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
-        
+
         $this->set('postedData', $post);
 		$this->set('rows', $rows);
-        
+
         $frm = $this->getInterstForm();
         $frm->fill(array('grpcls_id' => $grpClsId));
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-    
+
     public function followInterest()
     {
         $id = FatApp::getPostedData('id', FatUtility::VAR_INT, 0);
         if($id<1){
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_request'));
         }
-        
+
         // validate id
         $interest_details = RequestedTimeslots::getAttributesById($id, array('reqts_id', 'reqts_added_by'));
         if(empty($interest_details) || $interest_details['reqts_id']!=$id){
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_request'));
         }
-        
+
         $user_id = UserAuthentication::getLoggedUserId();
-        
+
         if($interest_details['reqts_added_by']==$user_id){
             FatUtility::dieJsonError(Label::getLabel('LBL_You_can_not_follow_your_own_slot'));
         }
-        
+
         $reqtsFolSrch = new RequestedTimeslotsFollowersSearch();
         $is_exist = $reqtsFolSrch->isTimeSlotsFollowedByUser($id, $user_id);
         if($is_exist){
             FatUtility::dieJsonError(Label::getLabel('LBL_already_followed'));
         }
-        
+
         $data = array(
             'reqslfol_reqts_id' => $id,
-            'reqslfol_followed_by' => $user_id, 
+            'reqslfol_followed_by' => $user_id,
         );
-        
+
         $reqTSFolObj = new RequestedTimeslotsFollowers();
         $reqTSFolObj->assignValues($data);
         if (true !== $reqTSFolObj->save()) {
             FatUtility::dieJsonError($reqTSFolObj->getError());
         }
-        
+
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Time_Slot_Followed_Successfully!'));
     }
-    
+
     public function setupInterestList()
     {
         $frm = $this->getInterstForm();
@@ -146,32 +146,32 @@ class GroupClassesController extends MyAppController
         if ($post === false) {
             FatUtility::dieJsonError(($frm->getValidationErrors()));
         }
-        
+
         $user_id = UserAuthentication::getLoggedUserId();
-        
+
 		$user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
-		
+
 		$reqts_time = MyDate::changeDateTimezone($post['time'], $user_timezone, $systemTimeZone);
         $reqtsSrch = new RequestedTimeslotsSearch();
         $is_exist = $reqtsSrch->isTimeSlotsAvailableForGroup($post['grpcls_id'], $reqts_time);
         if($is_exist){
             FatUtility::dieJsonError(Label::getLabel('LBL_Same_Time_already_added'));
         }
-        
+
         $data = array(
-            'reqts_grpcls_id' => $post['grpcls_id'], 
+            'reqts_grpcls_id' => $post['grpcls_id'],
             'reqts_time' => $reqts_time,
-            'reqts_added_by' => $user_id, 
-            'reqts_status' => ApplicationConstants::ACTIVE, 
+            'reqts_added_by' => $user_id,
+            'reqts_status' => ApplicationConstants::ACTIVE,
         );
-        
+
         $reqTSObj = new RequestedTimeslots();
         $reqTSObj->assignValues($data);
         if (true !== $reqTSObj->save()) {
             FatUtility::dieJsonError($reqTSObj->getError());
         }
-        
+
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Time_Suggested_Successfully!'));
     }
 
@@ -187,7 +187,7 @@ class GroupClassesController extends MyAppController
 		$frm->addSubmitButton('', 'btnSrchSubmit', '');
 		return $frm;
 	}
-    
+
     private function getInterstForm()
     {
         $frm = new Form('frmInterest');

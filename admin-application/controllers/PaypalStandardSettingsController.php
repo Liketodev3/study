@@ -32,8 +32,8 @@ class PaypalStandardSettingsController extends PaymentSettingsController
         $frm->addSelectBox(Label::getLabel('LBL_Order_Status_(Processed)', $this->adminLangId), 'order_status_processed', $paymentGatewayStatus)->requirement->setRequired(true);
         $frm->addSelectBox(Label::getLabel('LBL_Order_Status_(Completed)', $this->adminLangId), 'order_status_completed', $paymentGatewayStatus)->requirement->setRequired(true);
         $frm->addSelectBox(Label::getLabel('LBL_Order_Status_(Others)', $this->adminLangId), 'order_status_others', $paymentGatewayStatus)->requirement->setRequired(true);
-
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
+
         return $frm;
     }
 }

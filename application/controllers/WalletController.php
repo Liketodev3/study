@@ -1,4 +1,4 @@
-<?php
+    <?php
 class WalletController extends LoggedUserController
 {
     public function __construct($action)
@@ -218,9 +218,14 @@ class WalletController extends LoggedUserController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-    public function requestWithdrawal()
+    public function requestWithdrawal($payoutMethodType = User::WITHDRAWAL_METHOD_TYPE_BANK)
     {
-        $frm = $this->getWithdrawalForm($this->siteLangId);
+        $withdrawlMethodArray =  User::getWithdrawlMethodArray();
+        if(!array_key_exists($payoutMethodType,$withdrawlMethodArray)){
+            Message::addErrorMessage(Label::getLabel('MSG_INVALID_REQUEST'));
+            FatUtility::dieWithError(Message::getHtml());
+        }
+        $frm = $this->getWithdrawalForm($payoutMethodType, $this->siteLangId);
         $userId = UserAuthentication::getLoggedUserId();
         $balance = User::getUserBalance($userId);
         $lastWithdrawal = User::getUserLastWithdrawalRequest($userId);
@@ -241,21 +246,44 @@ class WalletController extends LoggedUserController
         $data = $userObj->getUserBankInfo();
         $frm->fill($data);
         $this->set('frm', $frm);
+        $this->set('payoutMethodType', $payoutMethodType);
         $this->_template->render(false, false);
     }
 
-    private function getWithdrawalForm($langId)
+    private function getWithdrawalForm($payoutMethodType, $langId)
     {
+
+
         $frm = new Form('frmWithdrawal');
-        $fld  = $frm->addRequiredField(Label::getLabel('LBL_Amount_to_be_Withdrawn', $langId).' ['.commonHelper::getDefaultCurrencySymbol().']', 'withdrawal_amount');
-        $fld->requirement->setFloat(true);
+        $fld = $frm->addRadioButtons(Label::getLabel('LBL_Payout_Type'),'withdrawal_payment_method',User::getWithdrawlMethodArray(),$payoutMethodType);
+
+        $withdrawalAmountFld  = $frm->addRequiredField(Label::getLabel('LBL_Amount_to_be_Withdrawn', $langId).' ['.commonHelper::getDefaultCurrencySymbol().']', 'withdrawal_amount');
+        $withdrawalAmountFld->requirement->setFloat(true);
         $walletBalance = User::getUserBalance(UserAuthentication::getLoggedUserId());
-        $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Current_Wallet_Balance", $langId) .' '.CommonHelper::displayMoneyFormat($walletBalance, true, true)."</small>";
-        $frm->addRequiredField(Label::getLabel('LBL_Bank_Name', $langId), 'ub_bank_name');
-        $frm->addRequiredField(Label::getLabel('LBL_Account_Holder_Name', $langId), 'ub_account_holder_name');
-        $frm->addRequiredField(Label::getLabel('LBL_Account_Number', $langId), 'ub_account_number');
-        $frm->addRequiredField(Label::getLabel('LBL_IFSC_Swift_Code', $langId), 'ub_ifsc_swift_code');
-        $frm->addTextArea(Label::getLabel('LBL_Bank_Address', $langId), 'ub_bank_address');
+        $withdrawalAmountAfterHTML =  "<small>".Label::getLabel("LBL_Current_Wallet_Balance", $langId) .' '.CommonHelper::displayMoneyFormat($walletBalance, true, true)."</small>";
+
+        switch ($payoutMethodType) {
+            case  User::WITHDRAWAL_METHOD_TYPE_BANK:
+                $frm->addRequiredField(Label::getLabel('LBL_Bank_Name', $langId), 'ub_bank_name');
+                $frm->addRequiredField(Label::getLabel('LBL_Account_Holder_Name', $langId), 'ub_account_holder_name');
+                $frm->addRequiredField(Label::getLabel('LBL_Account_Number', $langId), 'ub_account_number');
+                $frm->addRequiredField(Label::getLabel('LBL_IFSC_Swift_Code', $langId), 'ub_ifsc_swift_code');
+                $frm->addTextArea(Label::getLabel('LBL_Bank_Address', $langId), 'ub_bank_address');
+            break;
+            case  User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
+
+                $paypalPayoutObj = new PaypalPayout;
+                $paypalPayoutSetting = $paypalPayoutObj->getSettings();
+                $payoutId = (!empty($paypalPayoutSetting['pmethod_id'])) ? $paypalPayoutSetting['pmethod_id'] : 0;
+                $payoutFee = PaymentMethodTransactionFee::getGatewayFee($payoutId, FatApp::getConfig('CONF_CURRENCY'));
+
+                $withdrawalAmountAfterHTML .= "<small class='-color-secondary transaction-fee'>".Label::getLabel("LBL_Transaction_Fee", $langId).' '.CommonHelper::displayMoneyFormat($payoutFee, true, true)."</small>";
+                $frm->addRequiredField(Label::getLabel('LBL_Paypal_Email', $langId), 'ub_paypal_email_address');
+            break;
+        }
+
+        $withdrawalAmountFld->htmlAfterField = $withdrawalAmountAfterHTML;
+
         $frm->addTextArea(Label::getLabel('LBL_Other_Info_Instructions', $langId), 'withdrawal_comments');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Send_Request', $langId));
         $frm->addButton("", "btn_cancel", Label::getLabel("LBL_Cancel", $langId));
@@ -281,9 +309,17 @@ class WalletController extends LoggedUserController
             Message::addErrorMessage(sprintf(Label::getLabel('MSG_Withdrawal_Request_Minimum_Balance_Less', $this->siteLangId), CommonHelper::displayMoneyFormat($minimumWithdrawLimit)));
             FatUtility::dieJSONError(Message::getHtml());
         }
+        $payoutMethodType =  FatApp::getPostedData('withdrawal_payment_method',FatUtility::VAR_INT,0);
+        $withdrawlMethodArray =  User::getWithdrawlMethodArray();
 
-        $frm = $this->getWithdrawalForm($this->siteLangId);
+        if(!array_key_exists($payoutMethodType,$withdrawlMethodArray)){
+            Message::addErrorMessage(Label::getLabel('MSG_INVALID_REQUEST'));
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $frm = $this->getWithdrawalForm($payoutMethodType, $this->siteLangId);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+
 
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -301,7 +337,9 @@ class WalletController extends LoggedUserController
         }
 
         $userObj = new User($userId);
-        if (!$userObj->updateBankInfo($post)) {
+        $saveInfoFunction  =  ($payoutMethodType == User::WITHDRAWAL_METHOD_TYPE_BANK) ? 'updateBankInfo' : 'updatePaypalInfo';
+
+        if (!$userObj->$saveInfoFunction($post)) {
             Message::addErrorMessage(Label::getLabel($userObj->getError(), $this->siteLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
