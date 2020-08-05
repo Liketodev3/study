@@ -99,6 +99,8 @@ class AdminPrivilege
             static::SECTION_SLIDES => Label::getLabel('MSG_Home_Page_Slide_Management', CommonHelper::getLangId()),
             static::SECTION_BANNERS => Label::getLabel('MSG_Banners', CommonHelper::getLangId()),
             static::SECTION_TEACHER_PREFFERENCES => Label::getLabel('MSG_Teacher_Preferences', CommonHelper::getLangId()),
+            static::SECTION_SPOKEN_LANGUAGES => Label::getLabel('MSG_Spoken_Languages', CommonHelper::getLangId()),
+            static::SECTION_TEACHING_LANGUAGES => Label::getLabel('MSG_Teaching_Languages', CommonHelper::getLangId()),
             static::SECTION_GENERAL_SETTINGS => Label::getLabel('MSG_General_Settings', CommonHelper::getLangId()),
             static::SECTION_PAYMENT_METHODS => Label::getLabel('MSG_Payment_Methods', CommonHelper::getLangId()),
             static::SECTION_CURRENCY_MANAGEMENT => Label::getLabel('MSG_Currency_Management', CommonHelper::getLangId()),
