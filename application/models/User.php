@@ -923,19 +923,17 @@ class User extends MyAppModel
             'withdrawal_request_date'=>date('Y-m-d H:i:s'),
             'withdrawal_user_id'=>$userId,
         ); */
-        print_r($data);
-        die;
         $assignFields = array(
             'withdrawal_user_id'=>$userId,
             'withdrawal_amount'=>$data['withdrawal_amount'],
-            'withdrawal_payment_method'=>$data['withdrawal_payment_method'],
+            'withdrawal_payment_method_id'=>$data['withdrawal_payment_method_id'],
             'withdrawal_comments'=>$data['withdrawal_comments'],
             'withdrawal_status'=>0,
             'withdrawal_request_date'=>date('Y-m-d H:i:s')
         );
 
-        switch ($data['withdrawal_payment_method_type']) {
-    		case User::WITHDRAWAL_METHOD_TYPE_BANK:
+        switch ($data['pmethod_code']) {
+    		case PaymentMethods::BANK_PAYOUT_KEY:
                 $assignFields += array(
                     'withdrawal_bank'=>$data['ub_bank_name'],
                     'withdrawal_account_holder_name'=>$data['ub_account_holder_name'],
@@ -944,7 +942,7 @@ class User extends MyAppModel
                     'withdrawal_bank_address'=>$data['ub_bank_address'],
                 );
     			break;
-    		case User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
+    		case PaypalPayout::KEY_NAME:
                 $assignFields += array(
                     'withdrawal_paypal_email_id'=>$data['ub_paypal_email_address'],
                 );

@@ -262,6 +262,7 @@ class PaymentMethodsController extends AdminBaseController
         $srch->joinTable(Currency::DB_TBL_LANG, 'LEFT JOIN', 'curr_l.'.Currency::DB_TBL_LANG_PREFIX.'currency_id = curr.'.Currency::tblFld('id').' and curr_l.'.Currency::DB_TBL_LANG_PREFIX.'lang_id = '.$this->adminLangId, 'curr_l');
 
         $srch->addMultipleFields(['currency_name','currency_code','pmtfee.*']);
+        $srch->addCondition('pmethod_id','=',$pMethodId);
         // $srch->doNotCalculateRecords();
         // $srch->doNotLimitRecords();
         $rs = $srch->getResultSet();

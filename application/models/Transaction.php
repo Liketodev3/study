@@ -273,4 +273,12 @@ class Transaction extends MyAppModel
         }
         return true;
     }
+
+    public static function updateTransactionFeeMessage(int $withdrawalId, $fee)
+    {
+        $chargedNote =  Label::getLabel('MSG_Transaction_Fee_Charged_:').' '.CommonHelper::displayMoneyFormat($fee,true,true);
+        $note = "<br /><small class=\"transaction-fee\">".$chargedNote."<small>";
+        $query = "UPDATE ".Transaction::DB_TBL." set `utxn_comments` = CONCAT(`utxn_comments`,' ', '".$note."') where utxn_withdrawal_id = ".$withdrawalId;
+        FatApp::getDb()->query($query);
+    }
 }

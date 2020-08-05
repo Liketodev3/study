@@ -19,7 +19,7 @@ $frmRechargeWallet->developerTags['fld_default_col'] = 12;
                             <div class="d-lg-flex d-md-flex d-sm-flex justify-content-between align-items-center">
                                 <div><h1><?php echo Label::getLabel('LBL_My_Wallet'); ?></h1></div>
 								<div>
-                                    <a href="javascript:void(0)" onclick="withdrwalRequestForm(<?php echo User::WITHDRAWAL_METHOD_TYPE_BANK; ?>)" class="btn btn--secondary btn--small"><?php echo Label::getLabel('LBL_Request_Withdrawal'); ?></a>
+                                    <a href="javascript:void(0)" onclick="withdrwalRequestForm()" class="btn btn--secondary btn--small"><?php echo Label::getLabel('LBL_Request_Withdrawal'); ?></a>
                                     <a href="javascript:void(0)" onclick="redeemGiftcardForm()" class="btn btn--secondary btn--small"><?php echo Label::getLabel('Redeem_Gift_Card'); ?></a>
                                 </div>
                             </div>

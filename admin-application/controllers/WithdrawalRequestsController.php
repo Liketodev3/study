@@ -43,9 +43,15 @@ class WithdrawalRequestsController extends AdminBaseController
         $srch = new WithdrawalRequestsSearch();
         $srch->joinUsers(true);
         $srch->joinForUserBalance();
+        $srch->joinPayoutMethodJoin();
+        $srch->joinPayoutMethodFee();
         $srch->addOrder('withdrawal_id', 'DESC');
-        $srch->addMultipleFields(array('tuwr.*','user_first_name','user_last_name','user_is_learner','user_is_teacher','credential_email as user_email','credential_username as user_username',
-        'user_balance'));
+        $srch->addMultipleFields(array('tuwr.*','user_first_name','user_last_name','user_is_learner',
+                'user_is_teacher','credential_email as user_email','credential_username as user_username',
+                'user_balance',
+                'pmethod_code',
+                'IFNULL(pmtfee_fee,0) AS pmtfee'
+    ));
 
         if ($post['keyword']) {
             $cond = $srch->addCondition('credential_username', 'like', '%'.$post['keyword'].'%');
@@ -96,18 +102,11 @@ class WithdrawalRequestsController extends AdminBaseController
         $srch->setPageSize($pagesize);
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs);
-
-        $paypalPayoutObj = new PaypalPayout;
-        $paypalPayoutSetting = $paypalPayoutObj->getSettings();
-        $payoutId = (!empty($paypalPayoutSetting['pmethod_id'])) ? $paypalPayoutSetting['pmethod_id'] : 0;
-
-        $payoutFee = PaymentMethodTransactionFee::getGatewayFee($payoutId, FatApp::getConfig('CONF_CURRENCY'));
-
         $this->set("arr_listing", $records);
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
         $this->set('page', $page);
-        $this->set('payoutFee', $payoutFee);
+        // $this->set('payoutFee', $payoutFee);
         $this->set('pageSize', $pagesize);
         $this->set('postedData', $post);
         $this->set('statusArr', Transaction::getWithdrawlStatusArr($this->adminLangId));
@@ -128,7 +127,15 @@ class WithdrawalRequestsController extends AdminBaseController
         $status = FatUtility::int($post['status']);
         $allowedStatusUpdateArr = array(Transaction::WITHDRAWL_STATUS_APPROVED,Transaction::WITHDRAWL_STATUS_DECLINED);
         $srch = new WithdrawalRequestsSearch();
+        $srch->joinPayoutMethodJoin();
+        $srch->joinPayoutMethodFee();
         $srch->addCondition('withdrawal_id', '=', $withdrawalId);
+        $srch->addMultipleFields(array(
+                'tuwr.*',
+                'pmethod_id',
+                'pmethod_code',
+                'IFNULL(pmtfee_fee,0) AS pmtfee'
+            ));
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $rs = $srch->getResultSet();
@@ -142,21 +149,32 @@ class WithdrawalRequestsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
+        $currencyId = FatApp::getConfig('CONF_CURRENCY');
+        $gatewayFee = $records['pmtfee'];
+        $gatewayFee = FatUtility::float($gatewayFee);
+        $amount = $records['withdrawal_amount'] - $gatewayFee;
+        if(0 >= $amount){
+			$this->isError = true;
+			$this->error = Label::getLabel('MSG_Withdrawal_amount_is_zero_after_adding_gateway_fee');
+			return false;
+		}
+        $records['gatewayFee'] = $gatewayFee;
+        $records['amount'] =  $amount;
+		if($records['pmethod_code'] ==  PaypalPayout::KEY_NAME && $status == Transaction::WITHDRAWL_STATUS_APPROVED) {
 
-		if($records['withdrawal_payment_method'] ==  User::WITHDRAWAL_METHOD_TYPE_PAYPAL && $status == Transaction::WITHDRAWL_STATUS_APPROVED) {
-
-			$payoutObj =  new PaypalPayout();
+            $payoutObj =  new PaypalPayout();
 			if($payoutObj->releasePayout($records) == false){
 				Message::addErrorMessage($payoutObj->getError());
 				FatUtility::dieJsonError(Message::getHtml());
 			 }
+
 			$this->set('msg', Label::getLabel('LBL_Status_Updated_Successfully', $this->adminLangId));
 			$this->_template->render(false, false, 'json-success.php');
 		}
 
         $db = FatApp::getDb();
         $db->startTransaction();
-        $assignFields = array('withdrawal_status'=>$status);
+        $assignFields = array('withdrawal_status'=>$status,'withdrawal_transaction_fee'=> $gatewayFee);
         if (!$db->updateFromArray(
             User::DB_TBL_USR_WITHDRAWAL_REQ,
             $assignFields,
@@ -174,9 +192,7 @@ class WithdrawalRequestsController extends AdminBaseController
         }*/
 
 
-        if (!$db->updateFromArray(
-            Transaction::DB_TBL,
-            array("utxn_status"=>Transaction::STATUS_COMPLETED),
+        if (!$db->updateFromArray(Transaction::DB_TBL,array("utxn_status"=>Transaction::STATUS_COMPLETED),
             array('smt'=>'utxn_withdrawal_id=?','vals'=>array($withdrawalId))
         )){
 			$db->rollbackTransaction();
@@ -184,6 +200,9 @@ class WithdrawalRequestsController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
 		}
 
+        if($status == Transaction::WITHDRAWL_STATUS_APPROVED && $gatewayFee > 0){
+            Transaction::updateTransactionFeeMessage($withdrawalId, $gatewayFee);
+        }
 
         if ($status == Transaction::WITHDRAWL_STATUS_DECLINED) {
             $transObj = new Transaction($records['withdrawal_user_id']);
@@ -211,11 +230,6 @@ class WithdrawalRequestsController extends AdminBaseController
 
         $this->set('msg', Label::getLabel('LBL_Status_Updated_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
-    }
-
-    private function releasePayout(array $withDrawalRecords)
-    {
-        // code...
     }
 
     private function getSearchForm($langId)

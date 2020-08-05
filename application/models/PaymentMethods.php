@@ -66,34 +66,34 @@ class PaymentMethods extends MyAppModel
             return false;
         }
     }
-    // public static function getPayoutMethodsWithSettings()
-    // {
-    //         $srchObj = self::getPayoutMethodsSrchObj();
-    // }
-    public static function getPayoutMethods(int $langId = 0) : array
+
+    public static function getPayoutMethods( bool $isActive = true) : array
     {
-        $paymentMethod = PaymentMethods::getSearchObject();
-        $paymentMethod->addMultipleFields(array(
+        $paymentMethodObj = PaymentMethods::getSearchObject();
+        $paymentMethodObj->addMultipleFields(array(
             'pmethod_id','pmethod_code',
             'paysetting_key','paysetting_value',
             'IFNULL(pmethod_name,pmethod_identifier) as pmName'
 
         ));
-        $paymentMethod->addCondition('pmethod_type', '=', self::TYPE_PAYMENT_METHOD_PAYOUT);
-        $paymentMethod->addCondition('pmethod_active', '=', applicationConstants::YES);
-        if ($langId > 0) {
-            $srch->joinTable(
+        $paymentMethodObj->addCondition('pmethod_type', '=', self::TYPE_PAYMENT_METHOD_PAYOUT);
+        if($isActive) {
+            $paymentMethodObj->addCondition('pmethod_active', '=', applicationConstants::YES);
+        }
+        $paymentMethodObj->doNotLimitRecords();
+        $langId = CommonHelper::getLangId();
+            $paymentMethodObj->joinTable(
                 static::DB_LANG_TBL,
                 'LEFT JOIN',
                 'pm_l.pmethodlang_'.static::DB_TBL_PREFIX.'id = pm.'.static::DB_TBL_PREFIX.'id and pm_l.pmethodlang_lang_id = '.$langId,
                 'pm_l'
             );
-        }
-        $paymentMethod->joinTable(PaymentSettings::DB_PAYMENT_METHOD_SETTINGS_TBL, 'left join', 'paysetting_pmethod_id = pmethod_id');
-        $rs = $paymentMethod->getResultSet();
+
+        $paymentMethodObj->joinTable(PaymentSettings::DB_PAYMENT_METHOD_SETTINGS_TBL, 'left join', 'paysetting_pmethod_id = pmethod_id');
+        $rs = $paymentMethodObj->getResultSet();
         $resultData =  FatApp::getDb()->fetchAll($rs);
         if(empty($resultData)) {
-            $this->error = Label::getLabel('LBL_No_Payment_Method_Active');
+            // $this->error = Label::getLabel('LBL_No_Payment_Method_Active');
             return array();
         }
         $paymentMethod = array();
@@ -102,6 +102,7 @@ class PaymentMethods extends MyAppModel
                 $paymentMethod[$value['pmethod_id']] = [
                         'pmethod_id' => $value['pmethod_id'],
                         'pmethod_code' => $value['pmethod_code'],
+                        'pmName' => $value['pmName'],
                 ];
             }
             if(!empty($value['paysetting_key'])) {

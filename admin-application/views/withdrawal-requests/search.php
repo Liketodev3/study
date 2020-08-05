@@ -51,8 +51,8 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			case 'withdrawal_transaction_fee':
 				$fee =  $row['withdrawal_transaction_fee'];
-				if($row['withdrawal_status'] == Transaction::WITHDRAWL_STATUS_PENDING && $row['withdrawal_payment_method'] == User::WITHDRAWAL_METHOD_TYPE_PAYPAL){
-					$fee =  $payoutFee;
+				if($row['withdrawal_status'] == Transaction::WITHDRAWL_STATUS_PENDING){
+					$fee =  $row['pmtfee'];
 				}
 				$td->appendElement('plaintext', array(), CommonHelper::displayMoneyFormat($fee,true,true));
 			break;
@@ -65,15 +65,15 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			case 'account_details':
 				$txt = '';
-				switch ($row["withdrawal_payment_method"]) {
-					case User::WITHDRAWAL_METHOD_TYPE_BANK:
+				switch ($row["pmethod_code"]) {
+					case PaymentMethods::BANK_PAYOUT_KEY:
 						$txt .= '<strong>'.Label::getLabel('LBL_Bank_Name',$adminLangId).': </strong>'.$row["withdrawal_bank"].'<br>';
 						$txt .= '<strong>'.Label::getLabel('LBL_A/C_Name',$adminLangId).': </strong>'.$row["withdrawal_account_holder_name"].'<br>';
 						$txt .= '<strong>'.Label::getLabel('LBL_A/C_Number',$adminLangId).': </strong>'.$row["withdrawal_account_number"].'<br>';
 						$txt .= '<strong>'.Label::getLabel('LBL_IFSC_Code/Swift_Code',$adminLangId).': </strong>'.$row["withdrawal_ifc_swift_code"].'<br>';
 						$txt .= '<strong>'.Label::getLabel('LBL_Bank_Address',$adminLangId).': </strong>'.$row["withdrawal_bank_address"].'<br>';
 					break;
-					case User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
+					case PaypalPayout::KEY_NAME:
 						$txt .= '<strong>'.Label::getLabel('LBL_Paypal_Email',$adminLangId).': </strong>'.$row["withdrawal_paypal_email_id"].'<br>';
 					break;
 				}

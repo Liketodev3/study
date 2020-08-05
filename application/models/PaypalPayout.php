@@ -162,15 +162,15 @@ class PaypalPayout {
 			return false;
         }
 
-		$gatewayFee = PaymentMethodTransactionFee::getGatewayFee($settings['pmethod_id'], $currencyData['currency_id']);
-		$amount = $recordData['withdrawal_amount'] - $gatewayFee;
-		$amount = FatUtility::float($amount);
-		if(0 >= $amount){
-			$this->isError = true;
-			$this->error = Label::getLabel('MSG_Withdrawal_amount_is_zero_after_adding_gateway_fee');
-			return false;
-		}
-
+		//$gatewayFee = PaymentMethodTransactionFee::getGatewayFee($settings['pmethod_id'], $currencyData['currency_id']);
+		// $amount = $recordData['withdrawal_amount'] - $gatewayFee;
+		// $amount = FatUtility::float($amount);
+		// if(0 >= $amount){
+		// 	$this->isError = true;
+		// 	$this->error = Label::getLabel('MSG_Withdrawal_amount_is_zero_after_adding_gateway_fee');
+		// 	return false;
+		// }
+		$gatewayFee =  $recordData['gatewayFee'];
 		$sender_batch_id = "Payout_".time().'_'.$recordData['withdrawal_id'];
 		$note =  Label::getLabel('MSG_Transaction_Fee_Charged_:').' '.CommonHelper::displayMoneyFormat($gatewayFee,true,true);
 		$requestData = array(
@@ -183,7 +183,8 @@ class PaypalPayout {
 			array(
 				"recipient_type" => "EMAIL",
 				"amount" => array(
-					"value" => (string) $amount,
+					// "value" => (string) $amount,
+					"value" => (string) $recordData['amount'],
 					"currency" => $currencyData['currency_code']
 				),
 				"note" => $note,
@@ -220,10 +221,9 @@ class PaypalPayout {
 			$this->error = $db->getError();
 			return false;
 		}
-		$note = "<br /><small class=\"transaction-fee\">".$note."<small>";
+
 		if($gatewayFee > 0){
-			$query = "UPDATE ".Transaction::DB_TBL." set `utxn_comments` = CONCAT(`utxn_comments`,' ', '".$note."') where utxn_withdrawal_id = ".$recordData['withdrawal_id'];
-			$db->query($query);
+			Transaction::updateTransactionFeeMessage($recordData['withdrawal_id'], $gatewayFee);
 		}
 
 		return true;
