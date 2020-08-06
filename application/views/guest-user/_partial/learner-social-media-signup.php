@@ -8,8 +8,14 @@
 	  </span> <?php echo Label::getLabel('LBL_Facebook'); ?>
 	</a>
 
+	<!--a class="" href="< ?php echo CommonHelper::generateUrl('GuestUser', 'socialMediaLogin',array('google', $userType)); ?>">
+        <img src="< ?php echo CONF_WEBROOT_URL; ?>images/google_login_btn.png"/>
+	</a-->
 	<a class="" href="<?php echo CommonHelper::generateUrl('GuestUser', 'socialMediaLogin',array('google', $userType)); ?>">
-        <img src="<?php echo CONF_WEBROOT_URL; ?>images/google_login_btn.png"/>
+        <div class="google-btn">
+			<img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/btn_google.svg"/>
+			<span>Sign in with Google</span>
+		</div>
 	</a>
 	<span class="-gap"></span>
 	<p class="-align-center"><?php echo Label::getLabel('LBL_Or'); ?></p>
