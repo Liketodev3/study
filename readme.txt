@@ -10,6 +10,7 @@ Bug Fixes:
     *Bug-#040860: Group Class learners limit, managed from admin
     * #040854 - learner end lesson >> before 5 min >> teacher refresh the page >> teacher don't get option to end the class.
     *Bug-#041046: Show only relevant language for class
+    *Bug-#041048: Removed reschedule option for group class
 
 ==============================================================================================================================
 Installation steps:
