@@ -29,6 +29,7 @@ class CheckoutController extends LoggedUserController{
 		/* ] */
 
 		$cartData = $this->cartObj->getCart( $this->siteLangId );
+        
         /* Languages [ */
         $userSrchObj = new UserSearch();
         $tLangsrch = $userSrchObj->getMyTeachLangQry();

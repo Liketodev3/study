@@ -106,13 +106,19 @@ $("document").ready(function(){
 	};
 
 
-	addToCart =  function( teacherId, lpackageId, languageId ,startDateTime, endDateTime ){
+	addToCart =  function( teacherId, lpackageId, languageId ,startDateTime, endDateTime, grpclsId ){
 		if( startDateTime == undefined ){
 			startDateTime = '';
 		}
 		if( endDateTime == undefined ){
 			endDateTime = '';
 		}
+        if( grpclsId == undefined ){
+			grpclsId = 0;
+		}
+        if(parseInt(grpclsId)>0){
+            return false;
+        }
 
 		var data = 'teacher_id=' + teacherId + '&languageId=' + languageId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId + '&checkoutPage=1';
 		$('.cart-lang-id-js').html(teachLanguages[languageId]);
