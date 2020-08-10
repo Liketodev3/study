@@ -38,6 +38,7 @@ class ConfigurationsController extends AdminBaseController
         $frm->fill($record);
 
         $this->set('frm', $frm);
+        $this->set('canEdit', $this->objPrivilege->canEditGeneralSettings(AdminAuthentication::getLoggedAdminId(), true));
         $this->set('frmType', $frmType);
         $this->set('dispLangTab', $dispLangTab);
         $this->set('lang_id', 0);
@@ -65,6 +66,7 @@ class ConfigurationsController extends AdminBaseController
         }
         $this->set('languages', Language::getAllNames());
         $this->set('frm', $frm);
+        $this->set('canEdit', $this->objPrivilege->canEditGeneralSettings(AdminAuthentication::getLoggedAdminId(), true));
         $this->set('dispLangTab', $dispLangTab);
         $this->set('lang_id', $langId);
         $this->set('frmType', $frmType);
@@ -315,6 +317,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function removeSiteAdminLogo($lang_id = 0)
     {
+        $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
 
         $fileHandlerObj = new AttachedFile();
@@ -329,6 +332,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function removeDesktopLogo($lang_id = 0)
     {
+        $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_FRONT_LOGO, 0, 0, 0, $lang_id)) {
@@ -342,6 +346,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function removeEmailLogo($lang_id = 0)
     {
+        $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_EMAIL_LOGO, 0, 0, 0, $lang_id)) {
@@ -355,6 +360,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function removeFavicon($lang_id = 0)
     {
+        $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_FAVICON, 0, 0, 0, $lang_id)) {
@@ -368,6 +374,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function removeSocialFeedImage($lang_id = 0)
     {
+        $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE, 0, 0, 0, $lang_id)) {
@@ -381,6 +388,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function removePaymentPageLogo($lang_id = 0)
     {
+        $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, 0, 0, 0, $lang_id)) {
@@ -394,6 +402,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function removeWatermarkImage($lang_id = 0)
     {
+        $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_WATERMARK_IMAGE, 0, 0, 0, $lang_id)) {
@@ -407,6 +416,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function removeAppleTouchIcon($lang_id = 0)
     {
+        $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_APPLE_TOUCH_ICON, 0, 0, 0, $lang_id)) {
@@ -420,6 +430,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function removeMobileLogo($lang_id = 0)
     {
+        $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_MOBILE_LOGO, 0, 0, 0, $lang_id)) {
@@ -433,6 +444,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function removeCollectionBgImage($lang_id = 0)
     {
+        $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
 
         $fileHandlerObj = new AttachedFile();
@@ -890,34 +902,15 @@ class ConfigurationsController extends AdminBaseController
 
             case Configurations::FORM_MEDIA:
                 $admin_logo_fld = $frm->addButton('Admin Logo', 'admin_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'admin_logo', 'data-file_type' => AttachedFile::FILETYPE_ADMIN_LOGO));
-                $admin_logo_fld->htmlAfterField = sprintf(Label::getLabel('LBL_Admin_logo_size', $this->adminLangId), '142*45');
-
                 $front_white_logo_fld = $frm->addButton('Desktop White Logo', 'front_white_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'front_white_logo', 'data-file_type' => AttachedFile::FILETYPE_FRONT_WHITE_LOGO));
-                $front_white_logo_fld->htmlAfterField = sprintf(Label::getLabel('LBL_Desktop_logo_size', $this->adminLangId), '168*37');
-
                 $front_logo_fld = $frm->addButton('Desktop Logo', 'front_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'front_logo', 'data-file_type' => AttachedFile::FILETYPE_FRONT_LOGO));
-                $front_logo_fld->htmlAfterField = sprintf(Label::getLabel('LBL_Desktop_logo_size', $this->adminLangId), '168*37');
-
                 $email_logo_fld = $frm->addButton('Email Template Logo', 'email_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'email_logo', 'data-file_type' => AttachedFile::FILETYPE_EMAIL_LOGO));
-                $email_logo_fld->htmlAfterField = sprintf(Label::getLabel('LBL_Email_Template_logo_size', $this->adminLangId), '168*37');
-
                 $favicon_fld = $frm->addButton('Website Favicon', 'favicon', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'favicon', 'data-file_type' => AttachedFile::FILETYPE_FAVICON));
-
                 $social_logo_fld = $frm->addButton('Social Media Logo', 'social_feed_image', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'social_feed_image', 'data-file_type' => AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE));
-                $social_logo_fld->htmlAfterField = sprintf(Label::getLabel('LBL_Social_Media_logo_size', $this->adminLangId), '168*37');
-
                 $payment_logo_fld = $frm->addButton('Payment Page Logo', 'payment_page_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'payment_page_logo', 'data-file_type' => AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO));
-                $payment_logo_fld->htmlAfterField = sprintf(Label::getLabel('LBL_Payment_Page_logo_size', $this->adminLangId), '168*37');
-
                 $watermark_fld = $frm->addButton('Watermark', 'watermark', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'watermark', 'data-file_type' => AttachedFile::FILETYPE_WATERMARK_IMAGE));
-                $watermark_fld->htmlAfterField = sprintf(Label::getLabel('LBL_Watermark_Image_logo_size', $this->adminLangId), '168*37');
-
                 $appletouch_fld = $frm->addButton('Apple Touch Icon', 'apple_touch_icon', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'apple_touch_icon', 'data-file_type' => AttachedFile::FILETYPE_APPLE_TOUCH_ICON));
-                $appletouch_fld->htmlAfterField = sprintf(Label::getLabel('LBL_Apple_Touch_logo_size', $this->adminLangId), '168*37');
-
                 $mobilelogo_fld = $frm->addButton('Mobile Logo', 'mobile_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'mobile_logo', 'data-file_type' => AttachedFile::FILETYPE_MOBILE_LOGO));
-                $mobilelogo_fld->htmlAfterField = sprintf(Label::getLabel('LBL_Mobile_logo_size', $this->adminLangId), '168*37');
-
             break;
 
             case  Configurations::FORM_SERVER:

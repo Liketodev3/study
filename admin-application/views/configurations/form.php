@@ -9,6 +9,12 @@ if($lang_id > 0){
 else{
 	$frm->setFormTagAttribute('onsubmit', 'setup(this); return(false);');
 }
+
+if(!$canEdit){
+    $submitBtn = $frm->getField('btn_submit');
+    $frm->removeField($submitBtn);
+}
+
 	$tbid = isset($tabId)?$tabId:'tabs_'.$frmType;
 switch ($frmType){
 	case Configurations::FORM_GENERAL:
@@ -50,57 +56,127 @@ switch ($frmType){
 		$paymentPageLogo= $frm->getField('payment_page_logo');
 		$appleTouchIcon= $frm->getField('apple_touch_icon');
 		$mobileLogo= $frm->getField('mobile_logo');
-
-		$adminLogoFld->htmlAfterField =  '<span class = "uploadimage--info" >Dimensions 142*45</span>';
-		$desktopLogoFld->htmlAfterField = '<span class = "uploadimage--info" >Dimensions 168*37</span>';
-		$desktopWhiteLogoFld->htmlAfterField = '<span class = "uploadimage--info" >Dimensions 168*37</span>';
-
-		$emailLogoFld->htmlAfterField = '<span class = "uploadimage--info" >Dimensions 168*37</span>';
-		$socialFeedImgFld->htmlAfterField = '<span class = "uploadimage--info" >Dimensions 160*240</span>';
-		$faviconFld->htmlAfterField = '<span class = "uploadimage--info" >Dimensions 16*16</span>';
-		$mobileLogo->htmlAfterField = '<span class = "uploadimage--info" >&nbsp;</span>';
-		$appleTouchIcon->htmlAfterField = '<span class = "uploadimage--info" >&nbsp;</span>';
-		$paymentPageLogo->htmlAfterField = '<span class = "uploadimage--info" >&nbsp;</span>';
-		$watermarkFld->htmlAfterField = '<span class = "uploadimage--info" >&nbsp;</span>';
-
+        
+        if($canEdit){
+            $adminLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Admin_logo_size', $adminLangId), '142*45');
+            $adminLogoFld->htmlAfterField .=  '<span class = "uploadimage--info" >Dimensions 142*45</span>';
+            
+            $desktopLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Desktop_logo_size', $adminLangId), '168*37');
+            $desktopLogoFld->htmlAfterField .= '<span class = "uploadimage--info" >Dimensions 168*37</span>';
+            
+            $desktopWhiteLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Desktop_logo_size', $adminLangId), '168*37');
+            $desktopWhiteLogoFld->htmlAfterField .= '<span class = "uploadimage--info" >Dimensions 168*37</span>';
+            
+            $emailLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Email_Template_logo_size', $adminLangId), '168*37');
+            $emailLogoFld->htmlAfterField .= '<span class = "uploadimage--info" >Dimensions 168*37</span>';
+            
+            $socialFeedImgFld->htmlAfterField = sprintf(Label::getLabel('LBL_Social_Media_logo_size', $adminLangId), '168*37');
+            $socialFeedImgFld->htmlAfterField .= '<span class = "uploadimage--info" >Dimensions 160*240</span>';
+            
+            $faviconFld->htmlAfterField .= '<span class = "uploadimage--info" >Dimensions 16*16</span>';
+            
+            $mobileLogo->htmlAfterField = sprintf(Label::getLabel('LBL_Mobile_logo_size', $adminLangId), '168*37');
+            $mobileLogo->htmlAfterField .= '<span class = "uploadimage--info" >&nbsp;</span>';
+            
+            $appleTouchIcon->htmlAfterField = sprintf(Label::getLabel('LBL_Apple_Touch_logo_size', $adminLangId), '168*37');
+            $appleTouchIcon->htmlAfterField .= '<span class = "uploadimage--info" >&nbsp;</span>';
+            
+            $paymentPageLogo->htmlAfterField = sprintf(Label::getLabel('LBL_Payment_Page_logo_size', $adminLangId), '168*37');
+            $paymentPageLogo->htmlAfterField .= '<span class = "uploadimage--info" >&nbsp;</span>';
+            
+            $watermarkFld->htmlAfterField = sprintf(Label::getLabel('LBL_Watermark_Image_logo_size', $adminLangId), '168*37');
+            $watermarkFld->htmlAfterField .= '<span class = "uploadimage--info" >&nbsp;</span>';
+        }else{
+            $adminLogoFld->setFieldTagAttribute('class', 'hide');
+            $desktopLogoFld->setFieldTagAttribute('class', 'hide');
+            $desktopWhiteLogoFld->setFieldTagAttribute('class', 'hide');
+            $emailLogoFld->setFieldTagAttribute('class', 'hide');
+            $socialFeedImgFld->setFieldTagAttribute('class', 'hide');
+            $faviconFld->setFieldTagAttribute('class', 'hide');
+            $mobileLogo->setFieldTagAttribute('class', 'hide');
+            $appleTouchIcon->setFieldTagAttribute('class', 'hide');
+            $paymentPageLogo->setFieldTagAttribute('class', 'hide');
+            $watermarkFld->setFieldTagAttribute('class', 'hide');
+        }
+        
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_ADMIN_LOGO, 0, 0, $lang_id ) ){
-			$adminLogoFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','siteAdminLogo',array($lang_id)).'?'.time().'"> <a  class="remove--img" href="javascript:void(0);" onclick="removeSiteAdminLogo('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+			$adminLogoFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','siteAdminLogo',array($lang_id)).'?'.time().'"> ';
+            if($canEdit){
+                $adminLogoFld->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeSiteAdminLogo('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+            }
+            $adminLogoFld->htmlAfterField .= '</div><br>';
 		}
 
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_FRONT_WHITE_LOGO, 0, 0, $lang_id ) ){
-			$desktopWhiteLogoFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','siteWhiteLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> <a  class="remove--img" href="javascript:void(0);" onclick="removeDesktopLogo('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+			$desktopWhiteLogoFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','siteWhiteLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
+            if($canEdit){
+                $desktopWhiteLogoFld->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeDesktopLogo('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+            }
+            $desktopWhiteLogoFld->htmlAfterField .= '</div><br>';
 		}
 
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_FRONT_LOGO, 0, 0, $lang_id ) ){
-			$desktopLogoFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','siteLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> <a  class="remove--img" href="javascript:void(0);" onclick="removeDesktopLogo('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+			$desktopLogoFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','siteLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
+            if($canEdit){
+                $desktopLogoFld->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeDesktopLogo('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+            }
+            $desktopLogoFld->htmlAfterField .= '</div><br>';
 		}
 
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, 0, 0, $lang_id ) ){
-			$paymentPageLogo->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','paymentPageLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a  class="remove--img" href="javascript:void(0);" onclick="removePaymentPageLogo('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+			$paymentPageLogo->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','paymentPageLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
+            if($canEdit){
+                $paymentPageLogo->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removePaymentPageLogo('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+            }
+            $paymentPageLogo->htmlAfterField .= '</div><br>';
 		}
 
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_WATERMARK_IMAGE, 0, 0, $lang_id ) ){
-			$watermarkFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','watermarkImage',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> <a  class="remove--img" href="javascript:void(0);" onclick="removeWatermarkImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+			$watermarkFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','watermarkImage',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
+            if($canEdit){
+                $watermarkFld->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeWatermarkImage('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+            }
+            $watermarkFld->htmlAfterField .= '</div><br>';
 		}
 
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_EMAIL_LOGO, 0, 0, $lang_id ) ){
-			$emailLogoFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','emailLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a  class="remove--img" href="javascript:void(0);" onclick="removeEmailLogo('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+			$emailLogoFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','emailLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
+            if($canEdit){
+                $emailLogoFld->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeEmailLogo('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+            }
+            $emailLogoFld->htmlAfterField .= '</div><br>';
 		}
 
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_FAVICON, 0, 0, $lang_id ) ){
-			$faviconFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','favicon',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> <a  class="remove--img" href="javascript:void(0);" onclick="removeFavicon('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+			$faviconFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','favicon',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
+            if($canEdit){
+                $faviconFld->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeFavicon('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+            }
+            $faviconFld->htmlAfterField .= '</div><br>';
 		}
 
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE, 0, 0, $lang_id ) ){
-			$socialFeedImgFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','socialFeed',array($lang_id , 'THUMB'), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a  class="remove--img" href="javascript:void(0);" onclick="removeSocialFeedImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+			$socialFeedImgFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','socialFeed',array($lang_id , 'THUMB'), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
+            if($canEdit){
+                $socialFeedImgFld->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeSocialFeedImage('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+            }
+            $socialFeedImgFld->htmlAfterField .= '</div><br>';
 		}
 
 		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_APPLE_TOUCH_ICON, 0, 0, $lang_id ) ){
-			$appleTouchIcon->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','appleTouchIcon',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a  class="remove--img" href="javascript:void(0);" onclick="removeAppleTouchIcon('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+			$appleTouchIcon->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','appleTouchIcon',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
+            if($canEdit){
+                $appleTouchIcon->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeAppleTouchIcon('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+            }
+            $appleTouchIcon->htmlAfterField .= '</div><br>';
 		}
 
 		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_MOBILE_LOGO, 0, 0, $lang_id ) ){
-			$mobileLogo->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','mobileLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a  class="remove--img" href="javascript:void(0);" onclick="removeMobileLogo('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+			$mobileLogo->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','mobileLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
+            if($canEdit){
+                $mobileLogo->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeMobileLogo('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+            }
+            $mobileLogo->htmlAfterField .= '</div><br>';
 		}
 	break;
 
