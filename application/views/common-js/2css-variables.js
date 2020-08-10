@@ -13,7 +13,7 @@ var cssVarPoly = {
     // Edge supports supports, so check for actual variable support
     if (window.CSS && window.CSS.supports && window.CSS.supports('(--foo: red)')) {
       // this browser does support variables, abort
-      console.log('your browser supports CSS variables, aborting and letting the native support handle things.');
+      // console.log('your browser supports CSS variables, aborting and letting the native support handle things.');
       return;
     } else {
       // edge barfs on console statements if the console is not open... lame!

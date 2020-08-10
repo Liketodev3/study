@@ -227,7 +227,7 @@ $(document).ready(function(){
 	if(0 < min && 1 > min) {
 		step = 0.02;
 	}
-	console.log(step,'step');
+
 	$("#price_range").ionRangeSlider({
 		hide_min_max: true,
 		hide_from_to: true,

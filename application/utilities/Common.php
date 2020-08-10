@@ -315,4 +315,14 @@ class Common
         $frm->setJsErrorDisplay('afterfield');
         return $frm;
     }
+
+    public static function doesStringStartWith(string $string, string $piece) : bool
+    {
+        return substr($string, 0, strlen($piece)) == $piece;
+    }
+
+    public static function getUriFromPath($path)
+    {
+        return self::doesStringStartWith($path, CONF_WEBROOT_URL) ? substr($path, strlen(CONF_WEBROOT_URL)) : ltrim($path, '/');
+    }
 }
