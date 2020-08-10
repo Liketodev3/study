@@ -897,7 +897,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError(Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'));
         }
 
-        $teacher_id = FatApp::getPostedData($lessonDetail['teacherId'], FatUtility::VAR_INT, 0);
+        $teacher_id = $lessonDetail['teacherId'];
 
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
@@ -915,7 +915,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if ($difference < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Teacher_Disable_the_Booking_before').' '. $teacherBookingBefore .' Hours');
         }
-
 
         $userIds  = array($teacher_id, UserAuthentication::getLoggedUserId() );
         $scheduledLessonSearchObj = new ScheduledLessonSearch();
@@ -953,6 +952,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if (!$sLessonDetailObj->save()) {
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonDetailObj->getError());
+        }
+        
+        if($cls = TeacherGroupClassesSearch::getTeacherClassByTime($teacher_id, date('Y-m-d H:i:s', $SelectedDateTimeStamp), date('Y-m-d H:i:s', $endDateTimeStamp))){
+            $grpclsId = $cls['grpcls_id'];
+            $grpclsObj = new TeacherGroupClasses($grpclsId);
+            $grpclsObj->cancelClass();
         }
 
         if($lessonDetail['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $rescheduleReason) {

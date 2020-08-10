@@ -273,7 +273,7 @@ class TeacherGroupClassesSearch extends SearchBase
         $srch->addCondition('grpcls_teacher_id', '=', $teacherId);
         $cnd = $srch->addCondition('grpcls_start_datetime', '>=', date('Y-m-d H:i:s', strtotime($startDateTime)), 'AND');
         $cnd->attachCondition('grpcls_start_datetime', '<=', date('Y-m-d H:i:s', strtotime($endDateTime)), 'AND');
-        $cnd1 = $cnd->attachCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s', strtotime($startDateTime)), 'OR');
+        $cnd1 = $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s', strtotime($startDateTime)), 'OR');
         $cnd1->attachCondition('grpcls_end_datetime', '<=', date('Y-m-d H:i:s', strtotime($endDateTime)), 'AND');
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetch($rs);

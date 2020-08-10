@@ -90,7 +90,7 @@ class FreePayController extends MyAppController
             'slesson_end_time' => date('H:i:s', strtotime($cartData['endDateTime'])),
             'slesson_status' => ScheduledLesson::STATUS_SCHEDULED
         );
-        $getlearnerFullName = User::getAttributesById(UserAuthentication::getLoggedUserId(),['CONCAT(user_first_name," ",user_last_name) as learnerFullName']);
+            $getlearnerFullName = User::getAttributesById(UserAuthentication::getLoggedUserId(),['CONCAT(user_first_name," ",user_last_name) as learnerFullName']);
 
             $db =  FatApp::getDb();
             $db->startTransaction();
@@ -125,6 +125,13 @@ class FreePayController extends MyAppController
                 }
                 CommonHelper::redirectUserReferer();
             }
+            
+            if($cls = TeacherGroupClassesSearch::getTeacherClassByTime($orderInfo['op_teacher_id'], date('Y-m-d H:i:s', strtotime($cartData['startDateTime'])), date('Y-m-d H:i:s', strtotime($cartData['endDateTime'])))){
+                $grpclsId = $cls['grpcls_id'];
+                $grpclsObj = new TeacherGroupClasses($grpclsId);
+                $grpclsObj->cancelClass();
+            }
+            
             $db->commitTransaction();
             $emailData =  [];
             $emailData = [

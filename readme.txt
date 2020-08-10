@@ -11,6 +11,7 @@ Bug Fixes:
     * #040854 - learner end lesson >> before 5 min >> teacher refresh the page >> teacher don't get option to end the class.
     *Bug-#041046: Show only relevant language for class
     *Bug-#041048: Removed reschedule option for group class
+    *Bug-#041217: Cancelled class for 1-1 bookings
 
 ==============================================================================================================================
 Installation steps:
