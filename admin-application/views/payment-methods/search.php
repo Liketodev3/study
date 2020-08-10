@@ -39,7 +39,7 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			case 'pmethod_active':
 				$active = "active";
-				$statusAct='';
+				$statucAct='';
 					if($row['pmethod_active']==applicationConstants::YES &&  $canEdit === true ) {
 						$active = 'active';
 						$statucAct='inactiveStatus(this)';
