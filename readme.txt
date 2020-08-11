@@ -13,7 +13,7 @@ Bug Fixes:
     *Bug-#041048: Removed reschedule option for group class
     *Bug-#041217: Cancelled class for 1-1 bookings
     *Bug-#041061: Fixed edit settings permission issue
-    *Bug-#041059: Fixed sub-admin payment methods error
+    *Bug-#041219: Class cancelled by admin, reflect in front
 
 ==============================================================================================================================
 Installation steps:

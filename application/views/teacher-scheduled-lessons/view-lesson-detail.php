@@ -74,7 +74,7 @@ var checkEveryMinuteStatusVar = null;
 var checkNewFlashCardsVar = null;
 createUserCometChatApi(CometJsonData,CometJsonFriendData);
 
-if(!is_time_up && lesson_joined && !lesson_status_completed){
+if(!is_time_up && lesson_joined && !lesson_status_completed && lessonsStatus!='<?php echo ScheduledLesson::STATUS_CANCELLED ?>'){
     joinLesson(CometJsonData, CometJsonFriendData);
 }
 
@@ -125,6 +125,9 @@ function checkEveryMinuteStatus(){
     checkEveryMinuteStatusVar = setInterval(function(){
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','checkEveryMinuteStatus',[slesson_id]),'',function(t){
             var t = JSON.parse(t);
+            if(t.slesson_status == '<?php echo ScheduledLesson::STATUS_CANCELLED ?>'){
+                location.reload();
+            }
             if(!isGroupClass && lessonStatus == STATUS_SCHEDULED && (t.sldetail_learner_status == STATUS_COMPLETED || t.sldetail_learner_status == STATUS_ISSUE_REPORTED)) {
                 $.alert({
                     title: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',

@@ -57,7 +57,7 @@ var chat_friends = "<?php echo $lessonData['teacherId']; ?>";
 
 
 
-if(!is_time_up && lesson_joined && !lesson_completed){
+if(!is_time_up && lesson_joined && !lesson_completed && learnerLessonStatus!='<?php echo ScheduledLesson::STATUS_CANCELLED ?>'){
     joinLesson(chat_id, teacherId);
 }
 
@@ -114,6 +114,11 @@ function checkEveryMinuteStatus() {
             if (!lesson_joined && !lesson_completed && t.has_teacher_joined == 1 && t.has_learner_joined == 0)
             {
                 $.mbsmessage( '<?php echo Label::getLabel('LBL_Teacher_Has_Joined_Now_you_can_also_Join_The_Lesson!'); ?>',true, 'alert alert--success');
+            }
+            
+            if(t.slesson_status == '<?php echo ScheduledLesson::STATUS_CANCELLED ?>'){
+                location.reload();
+                return;
             }
 
             if(t.slesson_status > 1 && learnerLessonStatus == 1) {
