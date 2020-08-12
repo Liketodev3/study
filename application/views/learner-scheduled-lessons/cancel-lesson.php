@@ -8,7 +8,7 @@ $cancelBtn = $frm->getField('reset');
 $cancelBtn->setFieldTagAttribute('onclick','closeCancelLessonPopup(this); return(false);');
 $frm->setFormTagAttribute('onsubmit', 'cancelLessonSetup(this); return(false);');
 
-if($lessonRow['slesson_grpcls_id']>0){
+if($lessonRow['slesson_grpcls_id']>0 && $frm->getField('note_text')){
     $frm->getField('note_text')->value = '<spam class="-color-primary">'.sprintf(Label::getLabel('LBL_Note:_Refund_Would_Be_%s_Percent.', $siteLangId), FatApp::getConfig('CONF_LEARNER_CLASS_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10)).'</spam>';
 }
 

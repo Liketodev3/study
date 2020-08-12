@@ -15,6 +15,7 @@ Bug Fixes:
     *Bug-#041061: Fixed edit settings permission issue
     *Bug-#041219: Class cancelled by admin, reflect in front
     *Bug-#041343: Removed Need to be scheduled option from admin->orders
+    *Bug-#041342: Fixed warning on cancel plan
 
 ==============================================================================================================================
 Installation steps:

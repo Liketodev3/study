@@ -468,6 +468,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $orderObj =  new Order;
         $orderSearch = $orderObj->getLessonsByOrderId($lessonRow['sldetail_order_id']);
         $orderSearch->addMultipleFields([
+            'slesson_grpcls_id',
             'count(sldetail_order_id) as totalLessons',
             'SUM(CASE WHEN sld.sldetail_learner_status = '.ScheduledLesson::STATUS_NEED_SCHEDULING.' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
 			'SUM(CASE WHEN sld.sldetail_learner_status = '.ScheduledLesson::STATUS_CANCELLED.' THEN 1 ELSE 0 END) canceledLessonsCount',
@@ -483,7 +484,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
 		$orderInfo['order_discount_total']  = FatUtility::float($orderInfo['order_discount_total']);
 		$totalCanceledAndNeedToScheduledCount = $orderInfo['needToscheduledLessonsCount'] + $orderInfo['canceledLessonsCount'];;
-        if(!empty($orderInfo['order_discount_total']) && $orderInfo['totalLessons'] != $totalCanceledAndNeedToScheduledCount) {
+        
+        if(!empty($orderInfo['order_discount_total']) && $orderInfo['slesson_grpcls_id']==0 && $orderInfo['totalLessons'] != $totalCanceledAndNeedToScheduledCount) {
             Message::addErrorMessage(Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon'));
             FatUtility::dieWithError(Message::getHtml());
         }
