@@ -73,6 +73,9 @@
                     unset($selectStatusArr[ScheduledLesson::STATUS_SCHEDULED]);
                     unset($selectStatusArr[ScheduledLesson::STATUS_UPCOMING]);
                     unset($selectStatusArr[ScheduledLesson::STATUS_ISSUE_REPORTED]);
+                    if($row['slesson_grpcls_id']>0){
+                        unset($selectStatusArr[ScheduledLesson::STATUS_NEED_SCHEDULING]);
+                    }
                     foreach($selectStatusArr as $status_key => $status_value){
 						$option = $select->appendElement('option',array('value'=>$status_key), $status_value);
 					}

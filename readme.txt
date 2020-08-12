@@ -14,6 +14,7 @@ Bug Fixes:
     *Bug-#041217: Cancelled class for 1-1 bookings
     *Bug-#041061: Fixed edit settings permission issue
     *Bug-#041219: Class cancelled by admin, reflect in front
+    *Bug-#041343: Removed Need to be scheduled option from admin->orders
 
 ==============================================================================================================================
 Installation steps:

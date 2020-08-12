@@ -101,6 +101,7 @@ class PurchasedLessonsController extends AdminBaseController
         $scheduledLessonSearchObj->addMultipleFields(array(
                 'sldetail_id',
                 'slesson_id',
+                'slesson_grpcls_id',
                 'op_lpackage_is_free_trial',
                 'slesson_status',
                 'slesson_ended_by',
