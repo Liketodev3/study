@@ -60,18 +60,25 @@ $(document).ready(function(){
 		});
 	};
 
-    withdrwalRequestForm = function (type) {
-
+    withdrwalRequestForm = function (methodId) {
+			postData = '';
+			if(typeof methodId != 'undefined') {
+				postData = 'methodId='+methodId;
+			}
         $.facebox(function () {
-            fcom.ajax(fcom.makeUrl('Wallet', 'requestWithdrawal',[type]),'', function (t) {
+            fcom.ajax(fcom.makeUrl('Wallet', 'requestWithdrawal'),postData, function (t) {
                 $.facebox(t, 'facebox-medium request-Withdrawal-js');
             });
         });
     };
-    getWithdrwalRequestForm = function (type) {
+
+    getWithdrwalRequestForm = function (methodId) {
 					$('.request-Withdrawal-js').html( fcom.getLoader() );
-        // $.facebox(function () {
-            fcom.ajax(fcom.makeUrl('Wallet', 'requestWithdrawal',[type]),'', function (t) {
+					postData = '';
+					if(typeof methodId != 'undefined') {
+						postData = 'methodId='+methodId;
+					}
+            fcom.ajax(fcom.makeUrl('Wallet', 'requestWithdrawal'),postData, function (t) {
                 $('.request-Withdrawal-js').html(t);
             });
     };

@@ -10,19 +10,21 @@
 
 	$frm->setFormTagAttribute('onsubmit', 'setupWithdrawalReq(this); return(false);');
 
-	$methodTypeFld = $frm->getField('withdrawal_payment_method_type');
+	$methodTypeFld = $frm->getField('withdrawal_payment_method_id');
 	$methodTypeFld->setOptionListTagAttribute( 'class', 'list-inline list-inline--onehalf' );
 	$methodTypeFld->setWrapperAttribute('class','col-sm-12 col-lg-12');
 	$methodTypeFld->developerTags['col'] = 12;
 	$methodTypeFld->addFieldTagAttribute('onChange','getWithdrwalRequestForm(this.value);');
 
-	switch ($payoutMethodType) {
-		case User::WITHDRAWAL_METHOD_TYPE_BANK:
-			$ifscFld = $frm->getField('ub_ifsc_swift_code');
-			$ifscFld->setWrapperAttribute('class','col-sm-12');
-			$ifscFld->developerTags['col'] = 12;
+	$pmethodCodeFld =  $frm->getField('pmethod_code');
+	$pmethodCode =  $pmethodCodeFld->value;
+	switch ($pmethodCode) {
+		case PaymentMethods::BANK_PAYOUT_KEY:
+		$ifscFld = $frm->getField('ub_ifsc_swift_code');
+		$ifscFld->setWrapperAttribute('class','col-sm-12 col-lg-12');
+		$ifscFld->developerTags['col'] = 12;
 			break;
-		case User::WITHDRAWAL_METHOD_TYPE_PAYPAL:
+		case PaypalPayout::KEY_NAME:
 			$commentFld = $frm->getField('withdrawal_comments');
 			$commentFld->setWrapperAttribute('class','col-sm-12 col-lg-12');
 			$commentFld->developerTags['col'] = 12;
