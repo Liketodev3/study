@@ -89,6 +89,10 @@
                 </ul>
 
                 <ul class="fineprint-listing">
+					<li class="card-brand-logos">
+						<img src="<?php echo CONF_WEBROOT_URL; ?>images/PayGate-Card-Brand-Logos.jpg">
+
+					</li>
                     <li>
                         <p>
                             <?php if (CommonHelper::demoUrl()) {
