@@ -71,6 +71,7 @@ class PayGatePayController extends PaymentController
         $this->set('paymentAmount', $paymentAmount);
         $this->set('siteLangId', $this->siteLangId);
         $this->set('exculdeMainHeaderDiv', false);
+        $this->set('orderInfo', $orderInfo);
         $this->_template->render(true, false);
     }
 
@@ -136,10 +137,10 @@ class PayGatePayController extends PaymentController
         $checksum = FatApp::getPostedData('CHECKSUM',FatUtility::VAR_STRING,'');
        
         $data = array(
+                'PAYGATE_ID' => $this->settings['paygateId'],
                 'PAY_REQUEST_ID' => $payRequestId,
                 'TRANSACTION_STATUS' => $transactionStatus,
-                'REFERENCE' => $orderId,
-                'PAYGATE_ID' => $this->settings['paygateId'],
+                'REFERENCE' => $orderId  
         );
 
         $this->validateChecksum($checksum, $data, $this->settings['encryptionKey']);

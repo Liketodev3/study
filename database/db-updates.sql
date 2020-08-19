@@ -1,0 +1,2 @@
+REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('PayGate payweb-3', 'PayGate', 1, 5, 1);
+REPLACE INTO `tbl_payment_methods_lang` (`pmethodlang_pmethod_id`, `pmethodlang_lang_id`, `pmethod_name`, `pmethod_description`) VALUES ('6', '1', 'PayGate payweb-3', 'PayGate payweb-3 Payment Gateway Description will go here.');
