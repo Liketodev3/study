@@ -192,7 +192,7 @@ class PayGatePayController extends PaymentController
         $queryData = array(
 			'PAYGATE_ID'     => $settings['paygateId'],
 			'PAY_REQUEST_ID' => $payRequestId,
-			'REFERENCE'      => $payRequestId
+			'REFERENCE'      => $orderId
         );
         
         $checksum =  $this->generateChecksum($queryData, $settings['encryptionKey']);
