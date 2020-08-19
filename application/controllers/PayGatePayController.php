@@ -48,7 +48,7 @@ class PayGatePayController extends PaymentController
         $paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
 
         $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
-        if(empty($orderInfo) && $orderInfo["order_is_paid"] != Order::ORDER_IS_PENDING) {
+        if(empty($orderInfo) || $orderInfo["order_is_paid"] != Order::ORDER_IS_PENDING) {
 
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId));
             CommonHelper::redirectUserReferer();
@@ -94,7 +94,7 @@ class PayGatePayController extends PaymentController
                             'LOCALE' => strtolower($orderInfo['order_language_code']),
                             'COUNTRY' => 'USA', // need
                             'EMAIL'  => $orderInfo['user_email'],
-                            'NOTIFY_URL' =>  CommonHelper::generateNoAuthUrl('PayGatePay', 'callback')
+                            'NOTIFY_URL' =>  CommonHelper::generateFullUrl('PayGatePay', 'callback')
                         );
         $checksum  = $this->generateChecksum($requestData, $settings['encryptionKey']);
         $requestData['CHECKSUM'] = $checksum;
@@ -183,7 +183,7 @@ class PayGatePayController extends PaymentController
 
         $orderInfo = $orderPayment->getOrderPrimaryinfo();
 
-        if( empty( $orderInfo ) ) {
+        if( empty( $orderInfo ) ||  $orderInfo["order_is_paid"] != Order::ORDER_IS_PENDING) {
            die(Label::getLabel('MSG_INVALID_REQUEST', $this->siteLangId));
         }
         
@@ -204,9 +204,9 @@ class PayGatePayController extends PaymentController
         {
 			die($this->getError());
         }
-        if(isset($queryResponseData['status'])) {
-            $status =  $queryResponseData['status'];
-            switch ($queryResponseData['status']) {
+        if(isset($queryResponseData['TRANSACTION_STATUS'])) {
+            $status =  $queryResponseData['TRANSACTION_STATUS'];
+            switch ($queryResponseData['TRANSACTION_STATUS']) {
                 case self::STATUS_APPROVED:
                     $status = Order::ORDER_IS_PAID;
                 break;
