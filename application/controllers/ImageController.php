@@ -479,8 +479,8 @@ class ImageController extends FatController
         $image_name = isset($fileRow['afile_physical_path']) ?  $fileRow['afile_physical_path'] : '';
         switch (strtoupper($sizeType)) {
             case 'NORMAL':
-                $w = 360;
-                $h = 280;
+                $w = 357;
+                $h = 277;
             break;
             default:
                 $w = 470;
