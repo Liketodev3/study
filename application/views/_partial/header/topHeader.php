@@ -76,7 +76,7 @@ echo '<div class="avtar avtar--xsmall -display-inline" data-text="A"></div>';
                 $picId = ($notifications['noti_sub_record_id']==0)?UserAuthentication::getLoggedUserId():$notifications['noti_sub_record_id'];
 ?>
 
-                                                            <img src="<?php echo CommonHelper::generateUrl('Image','user',array($picId,'MINI',true),CONF_WEBROOT_FRONT_URL); ?>">
+                                                            <img src="<?php echo CommonHelper::generateUrl('Image','user',array($picId,'MINI',true),CONF_WEBROOT_FRONT_URL); ?>" alt="">
                                                             <?php 				} ?> </div>
                                                         <?php			} ?>
 

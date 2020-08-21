@@ -5,9 +5,9 @@ if( UserAuthentication::isUserLogged() ){ ?>
 <li class="nav__dropdown nav__dropdown--account">
     <a href="javascript:void(0)" class="nav__dropdown-trigger nav__dropdown-trigger-js">
         <div class="avtar avtar--xsmall -display-inline" data-text="<?php echo CommonHelper::getFirstChar(UserAuthentication::getLoggedUserAttribute('user_first_name')); ?>">
-			<?php 
+			<?php
 			if( true == User::isProfilePicUploaded() ){
-				echo '<img src="'.CommonHelper::generateUrl('Image','user', array( UserAuthentication::getLoggedUserId() )).'?'.time().'" />';
+				echo '<img src="'.CommonHelper::generateUrl('Image','user', array( UserAuthentication::getLoggedUserId() )).'?'.time().'" alt="" />';
 			}
 			?>
         </div>
@@ -21,27 +21,27 @@ if( UserAuthentication::isUserLogged() ){ ?>
 						<li class="<?php echo ( "Teacher" == $controllerName ) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('Teacher'); ?>"><?php echo Label::getLabel('LBL_Dashboard'); ?></a></li>
 						<li class="<?php echo ( "TeacherStudents" == $controllerName ) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('TeacherStudents'); ?>"><?php echo Label::getLabel('LBL_My_Students'); ?></a></li>
 						<li class="<?php echo ( "TeacherScheduledLessons" == $controllerName ) ? 'is-active' : ''; ?>" ><a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>"><?php echo Label::getLabel('LBL_Lessons'); ?></a></li>
-						
-					<?php } 
-			
+
+					<?php }
+
 					if( User::canViewLearnerTab() && User::getDashboardActiveTab() == User::USER_LEARNER_DASHBOARD ){ ?>
 						<li class="<?php echo ( "Learner" == $controllerName ) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('Learner'); ?>"><?php echo Label::getLabel('LBL_Dashboard'); ?></a></li>
 						<li class="<?php echo ( "LearnerTeachers" == $controllerName ) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('LearnerTeachers'); ?>"><?php echo Label::getLabel('LBL_My_Teachers'); ?></a></li>
 						<li class="<?php echo ( "LearnerScheduledLessons" == $controllerName ) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons'); ?>"><?php echo Label::getLabel('LBL_Lessons'); ?></a></li>
 					<?php } ?>
-					
+
 					<li class="<?php echo ( "Account" == $controllerName && "profileInfo" == $action ) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('Account','ProfileInfo');?>"><?php echo Label::getLabel('LBL_Settings'); ?></a></li>
 					<li><a href="<?php echo CommonHelper::generateUrl('GuestUser','logout');?>"><?php echo Label::getLabel('LBL_Logout'); ?></a></li>
 				</ul>
 			</nav>
 			<!--desktop account nav end here-->
-			
+
 			<!--responsive account nav start here-->
-            <?php $this->includeTemplate('account/_partial/dashboardNavigation.php', array('doNotShowSwitcher' => true)); ?> 	
+            <?php $this->includeTemplate('account/_partial/dashboardNavigation.php', array('doNotShowSwitcher' => true)); ?>
 			<!--responsive account nav end here-->
-			
-			
-			
+
+
+
 		</div>
 		<span class="overlay overlay-dasboard"></span>
 </li>

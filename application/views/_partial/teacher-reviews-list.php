@@ -1,21 +1,21 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 	if($reviewsList){
-		foreach($reviewsList as $review){ 
+		foreach($reviewsList as $review){
 	?>
 		<div class="content-repeated-container">
 			<div class="content-repeated">
 				<div class="row">
 					<div class="col-xl-4 col-lg-4 col-sm-4">
-						
+
 						 <div class="avtar avtar--xsmall" data-text="<?php echo CommonHelper::getFirstChar($review['lname']); ?>">
-							<?php 
+							<?php
 							if( true == User::isProfilePicUploaded( $review['tlreview_postedby_user_id'] ) ){
-								$img = CommonHelper::generateUrl('Image','user', array( $review['tlreview_postedby_user_id'] )).'?'.time(); 
-									echo '<img src="'.$img.'" />';
+								$img = CommonHelper::generateUrl('Image','user', array( $review['tlreview_postedby_user_id'] )).'?'.time();
+									echo '<img src="'.$img.'" alt="" />';
 							}
 							?>
 						</div>
-	
+
 						<h6 class="-small-title"><?php echo CommonHelper::displayName($review['lname']); ?></h6>
 						<p><?php echo Label::getLabel('Lbl_On_Date') , ' ',FatDate::format($review['tlreview_posted_on']); ?></p>
 					</div>
@@ -27,19 +27,19 @@
 						<span class='moreText moreTextHide' >
 						<?php echo nl2br($review['tlreview_description']); ?>
 						</span>
-						<a class="readMore link--arrow link-color" href="javascript:void(0);">( <?php echo Label::getLabel('Lbl_SHOW_MORE') ; ?> )</a> 
+						<a class="readMore link--arrow link-color" href="javascript:void(0);">( <?php echo Label::getLabel('Lbl_SHOW_MORE') ; ?> )</a>
 						<?php } ?>
 					</p>
 					</div>
 				</div>
 			</div>
-			
+
 </div>
 	<?php }  ?>
 <?php echo FatUtility::createHiddenFormFromData ( $postedData, array ('name' => 'frmSearchReviewsPaging') );
 	} else{
 	?>
-	
+
                         <div class="box -padding-30" style="margin-bottom: 30px;">
                             <div class="message-display">
                                 <div class="message-display__icon">
@@ -49,11 +49,11 @@
                                 </div>
 
                                 <h5><?php echo Label::getLabel('Lbl_No_Result_Found!!');?></h5>
-                                
+
                             </div>
                         </div>
-                   
-	<?php 
+
+	<?php
 }?>
 
 <script>
