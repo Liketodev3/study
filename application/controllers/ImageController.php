@@ -448,8 +448,10 @@ class ImageController extends FatController
                 $h = 367;
             break;
             case BannerLocation::BLOCK_SECOND_AFTER_HOMESLIDER:
-                $w = 800;
-                $h = 500;
+                // $w = 800;
+                // $h = 500;
+                $w = 110;
+                $h = 69;
             break;
             case BannerLocation::BLOCK_HOW_IT_WORKS:
                 $w = 800;
