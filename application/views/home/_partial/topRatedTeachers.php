@@ -9,7 +9,7 @@
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                         <div class="border-box">
                             <span class="box-pic">
-                                <a href="<?php echo CommonHelper::generateUrl('Teachers').'/'. $topRatedTeacher['user_url_name'];?>"><img src="<?php echo CommonHelper::generateUrl('Image','User', array( $topRatedTeacher['user_id'] )) ?>" alt=""></a></span>
+                                <a href="<?php echo CommonHelper::generateUrl('Teachers').'/'. $topRatedTeacher['user_url_name'];?>"><img src="<?php echo CommonHelper::generateUrl('Image','User', array( $topRatedTeacher['user_id'],'normal' )) ?>" alt=""></a></span>
                             <div class="box-body">
                                 <h4 class="title"> <a href="<?php echo CommonHelper::generateUrl('Teachers').'/'. $topRatedTeacher['user_url_name'];?>"><?php echo $topRatedTeacher['user_first_name'].' '.$topRatedTeacher['user_last_name']; ?></a></h4>
                                 <span class="location"><?php echo $topRatedTeacher['country_name']; ?></span>
