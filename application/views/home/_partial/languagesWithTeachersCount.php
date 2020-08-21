@@ -9,9 +9,9 @@
                 <?php foreach($allLanguages as $language){ ?>
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-5">
                         <div class="course_card_container">
-                            <figure class="course-selector-image"><img src="<?php echo CommonHelper::generateUrl('Image','showLanguageImage',array($language['tlanguage_id'])); ?>" alt=""></figure>
+                            <figure class="course-selector-image"><img alt="" src="<?php echo CommonHelper::generateUrl('Image','showLanguageImage',array($language['tlanguage_id'])); ?>" ></figure>
                             <div class="course_flag_card">
-                                <img class="flag-icon" src="<?php echo CommonHelper::generateUrl('Image','showLanguageFlagImage',array($language['tlanguage_id'])); ?>" alt="">
+                                <img class="flag-icon"  alt="" src="<?php echo CommonHelper::generateUrl('Image','showLanguageFlagImage',array($language['tlanguage_id'])); ?>">
                                 <div class="course-info">
                                     <h4><?php echo $language['tlanguage_name'] ?></h4>
                                     <p><?php echo $language['teacherCount'].' '.Label::getLabel('Lbl_Teachers'); ?></p>
