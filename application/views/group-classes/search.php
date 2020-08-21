@@ -13,23 +13,23 @@
                         <ul class="card-listing" id="cls_<?php echo $class['grpcls_id'] ?>">
                             <li>
                                 <div class="card-type">
-                                <img src="<?php echo CONF_WEBROOT_URL ?>images/retina/bookico.svg">
+                                <img alt="" src="<?php echo CONF_WEBROOT_URL ?>images/retina/bookico.svg">
                                     <span class="card-lable"><?php echo Label::getLabel("LBL_Language") ?>:</span>
                                     <span class="lable-txt"><?php echo $class['teacher_language'] ?></span>
                                 </div>
                             </li>
                             <li>
                                 <div class="card-type">
-                                <img src="<?php echo CONF_WEBROOT_URL ?>images/retina/price-ico.svg">
+                                <img alt="" src="<?php echo CONF_WEBROOT_URL ?>images/retina/price-ico.svg">
                                     <span class="card-lable"><?php echo Label::getLabel("LBL_Price") ?>:</span>
                                     <span class="lable-txt"><?php echo CommonHelper::displayMoneyFormat($class['grpcls_entry_fee']) ?></span>
                                 </div>
                             </li>
                             <li>
                                 <div class="card-type">
-                                <img src="<?php echo CONF_WEBROOT_URL ?>images/retina/cal-ico.svg">
+                                <img alt="" src="<?php echo CONF_WEBROOT_URL ?>images/retina/cal-ico.svg">
                                     <span class="card-lable"><?php echo Label::getLabel("LBL_Date") ?>:</span>
-                                    <?php 
+                                    <?php
                                     $date_by_teach_timezone = MyDate::convertTimeFromSystemToUserTimezone('M d, Y', $class['grpcls_start_datetime'], true, $class['teacher_timezone']);
                                     $user_timezone = MyDate::getUserTimeZone();
                                     $date_by_user_timezone = MyDate::convertTimeFromSystemToUserTimezone('M d, Y', $class['grpcls_start_datetime'], true, $user_timezone);
@@ -39,9 +39,9 @@
                             </li>
                             <li class="timezone">
                                 <div class="card-type">
-                                <img src="<?php echo CONF_WEBROOT_URL ?>images/retina/time-ico.svg">
+                                <img alt="" src="<?php echo CONF_WEBROOT_URL ?>images/retina/time-ico.svg">
                                     <span class="card-lable"><?php echo Label::getLabel("LBL_Time") ?>:</span>
-                                    <?php 
+                                    <?php
                                     $from_time_by_teach_timezone = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $class['grpcls_start_datetime'], true, $class['teacher_timezone']);
                                     $to_time_by_teach_timezone = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $class['grpcls_end_datetime'], true, $class['teacher_timezone']);
                                     $user_timezone = MyDate::getUserTimeZone();
@@ -68,7 +68,7 @@
 
             <div class="bottom-card -align-center">
                 <a href="<?php echo CommonHelper::generateUrl('GroupClasses', 'view', array($class['grpcls_id'])); ?>" class="arrow-link"><?php echo Label::getLabel("LBL_View_Detail") ?></a>
-                <div class="twobtn-actions"> 
+                <div class="twobtn-actions">
                 <?php if($class['is_in_class']): ?>
                 <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_ALREADY_IN_CLASS') ?>" class="btn btn--gray btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                 <?php elseif($class['grpcls_max_learner']>0 && $class['total_learners']>=$class['grpcls_max_learner']): ?>

@@ -13,7 +13,7 @@
 	</a-->
 	<a class="" href="<?php echo CommonHelper::generateUrl('GuestUser', 'socialMediaLogin',array('google', $userType)); ?>">
         <div class="google-btn">
-			<img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/btn_google.svg"/>
+			<img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/retina/btn_google.svg"/>
 			<span>Sign in with Google</span>
 		</div>
 	</a>

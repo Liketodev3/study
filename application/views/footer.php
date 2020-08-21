@@ -60,19 +60,19 @@
                             <ul class="links--vertical footer_contact_details">
                                 <li>
 
-                                        <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon01.svg">
+                                        <img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon01.svg">
                                         <?php echo FatApp::getConfig('CONF_CONTACT_EMAIL', null, '');?>
 
                                 </li>
                                 <li>
 
-                                        <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon02.svg">
+                                        <img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon02.svg">
                                         <?php echo Label::getLabel('LBL_Call_Us'); ?>: <?php echo FatApp::getConfig('CONF_SITE_PHONE', null, '');?>
 
                                 </li>
                                 <li>
 
-                                        <img src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon03.svg">
+                                        <img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon03.svg">
                                         <?php echo FatApp::getConfig('CONF_ADDRESS_'.CommonHelper::getLangId(), null, '');?>
 
                                 </li>

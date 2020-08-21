@@ -26,35 +26,35 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
                                 <ul class="card-listing" id="cls_<?php echo $class['grpcls_id'] ?>">
                                     <li>
                                         <div class="card-type">
-                                        <img src="<?php echo CONF_WEBROOT_URL ?>images/retina/bookico.svg">
+                                        <img alt="" src="<?php echo CONF_WEBROOT_URL ?>images/retina/bookico.svg">
                                             <span class="card-lable"><?php echo Label::getLabel("LBL_Language") ?>:</span>
                                             <span class="lable-txt"><?php echo $class['teacher_language'] ?></span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="card-type">
-                                            <img src="<?php echo CONF_WEBROOT_URL ?>images/retina/seats.svg">
+                                            <img alt="" src="<?php echo CONF_WEBROOT_URL ?>images/retina/seats.svg">
                                             <span class="card-lable"><?php echo Label::getLabel("LBL_Available_Seats") ?>:</span>
                                             <span class="lable-txt"><?php echo $class['grpcls_max_learner']-$class['total_learners'] ?></span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="card-type">
-                                            <img src="<?php echo CONF_WEBROOT_URL ?>images/retina/total-seats.svg">
+                                            <img alt="" src="<?php echo CONF_WEBROOT_URL ?>images/retina/total-seats.svg">
                                             <span class="card-lable"><?php echo Label::getLabel("LBL_Total_Seats") ?>:</span>
                                             <span class="lable-txt"><?php echo $class['grpcls_max_learner'] ?></span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="card-type">
-                                        <img src="<?php echo CONF_WEBROOT_URL ?>images/retina/price-ico.svg">
+                                        <img alt="" src="<?php echo CONF_WEBROOT_URL ?>images/retina/price-ico.svg">
                                             <span class="card-lable"><?php echo Label::getLabel("LBL_Price") ?>:</span>
                                             <span class="lable-txt"><?php echo CommonHelper::displayMoneyFormat($class['grpcls_entry_fee']) ?></span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="card-type">
-                                        <img src="<?php echo CONF_WEBROOT_URL ?>images/retina/cal-ico.svg">
+                                        <img alt="" src="<?php echo CONF_WEBROOT_URL ?>images/retina/cal-ico.svg">
                                             <span class="card-lable"><?php echo Label::getLabel("LBL_Date") ?>:</span>
                                             <?php 
                                             $date_by_teach_timezone = MyDate::convertTimeFromSystemToUserTimezone('M d, Y', $class['grpcls_start_datetime'], true, $class['teacher_timezone']);
@@ -66,7 +66,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
                                     </li>
                                     <li class="timezone">
                                         <div class="card-type">
-                                        <img src="<?php echo CONF_WEBROOT_URL ?>images/retina/time-ico.svg">
+                                        <img alt="" src="<?php echo CONF_WEBROOT_URL ?>images/retina/time-ico.svg">
                                             <span class="card-lable"><?php echo Label::getLabel("LBL_Time") ?>:</span>
                                             <?php 
                                             $from_time_by_teach_timezone = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $class['grpcls_start_datetime'], true, $class['teacher_timezone']);

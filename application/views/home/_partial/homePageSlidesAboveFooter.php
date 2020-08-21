@@ -26,7 +26,7 @@
                     <div class="quote-thumbs">
                     <?php	foreach( $testimonials as $listItem ){ ?>
                         <div class="quote-thumb">
-                            <img src="<?php echo CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'],0)); ?>">
+                            <img src="<?php echo CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'],0)); ?>" alt="">
                         </div>
                     <?php } ?>
                     </div>
