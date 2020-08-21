@@ -4,7 +4,7 @@
 		<div class="sidebar_inner">
 		<div class="profilewrap">
 			<div class="profilecover">
-				<figure class="profilepic"><img id="leftmenuimgtag"  src="<?php echo CommonHelper::generateUrl('profile', 'profileImage', array(AdminAuthentication::getLoggedAdminId(), "THUMB", true )).'?'.time(); ?>" alt=""></figure>
+				<figure class="profilepic"><img id="leftmenuimgtag" alt=""  src="<?php echo CommonHelper::generateUrl('profile', 'profileImage', array(AdminAuthentication::getLoggedAdminId(), "THUMB", true )).'?'.time(); ?>" alt=""></figure>
 				<span class="profileinfo"><?php echo Label::getLabel('LBL_Welcome',$adminLangId);?> <?php echo $adminName; ?></span>
 			</div>
 
@@ -50,7 +50,7 @@
 		</li>
 
 		<?php } ?>
-        
+
         <?php if($objPrivilege->canViewGroupClasses(AdminAuthentication::getLoggedAdminId(), true)){ ?>
         <li><a href="<?php echo CommonHelper::generateUrl('GroupClasses');?>"><?php echo Label::getLabel('LBL_Group_Classes',$adminLangId);?></a></li>
         <?php } ?>

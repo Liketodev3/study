@@ -11,20 +11,20 @@
                     <?php	foreach( $testimonials as $listItem ){ ?>
                         <div class="quote-main">
                             <div class="quote-large">
-                                <img src="<?php echo CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'],0)); ?>">
+                                <img src="<?php echo CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'],0)); ?>" alt="">
                             </div>
                             <div class="quote-white">
                                 <p><?php echo $listItem['testimonial_text']; ?></p>
                                 <span class="quote-footer">
                                     <h5 class="title"><?php echo $listItem['testimonial_user_name']; ?></h5>
-                                   
+
                                 </span>
                             </div>
                         </div>
                     <?php } ?>
                     </div>
                     <div class="quote-thumbs">
-                    <?php	foreach( $testimonials as $listItem ){ ?>                    
+                    <?php	foreach( $testimonials as $listItem ){ ?>
                         <div class="quote-thumb">
                             <img src="<?php echo CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'],0)); ?>">
                         </div>

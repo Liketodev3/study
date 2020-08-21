@@ -5,7 +5,7 @@
                     <h2><?php echo Label::getLabel('LBL_Upcoming_Scheduled_Lessons'); ?></h2>
                 </div>
                 <div class="<?php if( count($lessons) > 4 ): ?> vert-carousel <?php endif; ?>">
-                <?php foreach($lessons as $lesson){ 
+                <?php foreach($lessons as $lesson){
 				$teacherUrl = CommonHelper::generateUrl('Teachers').'/'. $lesson['user_url_name'];
 				?>
                     <div class="repeat-listing -border">
@@ -23,7 +23,7 @@
                                 <p><?php echo date('M d,Y', strtotime($lesson['slesson_date'])).', '.$lesson['slesson_start_time'].' - '.$lesson['slesson_end_time']; ?></p>
                             </div>
                             <div class="col-auto selector-pic">
-                                <a href="<?php echo $teacherUrl; ?>" target="_blank"><figure><img src="<?php echo CommonHelper::generateUrl('Image','User', array( $lesson['teacherId'] )); ?>"></figure></a>
+                                <a href="<?php echo $teacherUrl; ?>" target="_blank"><figure><img src="<?php echo CommonHelper::generateUrl('Image','User', array( $lesson['teacherId'] )); ?>" alt=""></figure></a>
                             </div>
                         </div>
 
@@ -40,4 +40,4 @@
                 </div>
             </div>
         </section>
-<?php } ?>        
+<?php } ?>

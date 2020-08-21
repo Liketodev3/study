@@ -1,6 +1,6 @@
-<?php 
+<?php
 	$path_for_images = '';
-	require_once $_SESSION['WYSIWYGFileManagerRequirements'];	
+	require_once $_SESSION['WYSIWYGFileManagerRequirements'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -11,8 +11,8 @@
         #inpFolder {
 	        border:1px inset #ddd;
 	        font-size:12px;
-	        -moz-border-radius:3px; 
-	        -webkit-border-radius:3px; 
+	        -moz-border-radius:3px;
+	        -webkit-border-radius:3px;
 	        padding-left:7px;
             }
     </style>
@@ -62,7 +62,7 @@
                 var filename = file.substr(file.lastIndexOf("/") + 1);
 				var filepath = file.replace('/editor/editor-image','');
 				if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) != -1) {
-                    $("#preview_id").html("<table><tr><td><a id='idFile' href='" + file + "' target='_blank' rel='"+filepath+"'><img id='imgFile' src='" + file + "' style='width:70px;padding:4px;border:#cccccc 1px solid;background:#ffffff;margin-bottom:3px' /></a></td><td style='padding-left:20px;width:100%;text-align:left;'>" + filename + "<br /><a id='lnkDelFile' style='font-weight:normal;font-size:10px;color:#c90000;word-spacing:2px;white-space:nowrap;' href='javascript:deleteFile()'>DELETE FILE</a></td></tr></table>");
+                    $("#preview_id").html("<table><tr><td><a id='idFile' href='" + file + "' target='_blank' rel='"+filepath+"'><img id='imgFile' src='" + file + "' alt='' style='width:70px;padding:4px;border:#cccccc 1px solid;background:#ffffff;margin-bottom:3px' /></a></td><td style='padding-left:20px;width:100%;text-align:left;'>" + filename + "<br /><a id='lnkDelFile' style='font-weight:normal;font-size:10px;color:#c90000;word-spacing:2px;white-space:nowrap;' href='javascript:deleteFile()'>DELETE FILE</a></td></tr></table>");
                     if (fullpath) { fileurl = window.location.protocol + "//" + window.location.host + file }
                     else { fileurl = file };
                     try {
@@ -88,7 +88,7 @@
                     //folder is selected
                     //$("#preview_id").html("");
                 }
-				
+
                 var active_folder = file.substr(0, file.lastIndexOf('/')); /* ex. /images/sample */
                 $("#active_folder").val(active_folder);
                 $("#folder_id").html(active_folder.replace(base, '') + "/   &nbsp;&nbsp;&nbsp; <a id='lnkDelFolder' href='javascript:deleteFolder()' style='display:none;font-weight:normal;font-size:10px;color:#c90000;word-spacing:2px'>DELETE&nbsp;FOLDER</a>");
@@ -124,7 +124,7 @@
                 });
             }
         }
-        
+
         function deleteFolder() {
             if (confirm("Are you sure you want to delete this folder?")) {
                 $.post('server/delfolder.php', { folder: $("#active_folder").val() },
@@ -135,7 +135,7 @@
 
                     refresh();
                 });
-            } 
+            }
         }
 
         function panelFolder() {
@@ -152,10 +152,10 @@
                 });
         }
 
-            
+
         function refresh() {
 			renderTree(true)
-  //          if (base == $("#active_folder").val()) {                
+  //          if (base == $("#active_folder").val()) {
   ///              renderTree(true); /*Refresh Root*/
   //          }
   //          var rel = $("#active_folder").val() + '/';
@@ -168,9 +168,9 @@
             jQuery("#divNewFolder").hide();
             jQuery("#divPreview").hide();
             panelUpload();
-            $("#divUpload").slideToggle(750, 'easeOutBounce');                    
+            $("#divUpload").slideToggle(750, 'easeOutBounce');
         }
-		
+
 		$(document).delegate('#File1' , 'change', function(){
 			$(document.frmImgUpload).ajaxSubmit({
 				url: 'server/upload.php',
@@ -179,7 +179,7 @@
 				})
 			});
 		});
-        
+
 		function panelUpload() {
             $("#divUpload").html("<h3 style='margin-top:0px'>Upload Files</h3><input id='File1' name='Filedata' type='file' />");
 			/* $('#File1').live('change', function(){
@@ -190,14 +190,14 @@
 					})
 				});
 			}); */
-			
+
             /* $("#File1").uploadify({
                 'uploader': 'uploadify/uploadify.swf',
                 'script': 'server/upload.php',
                 'cancelImg': 'uploadify/cancel.png',
                 'folder': $("#active_folder").val(),
                 'multi': true,
-                'auto': true,                
+                'auto': true,
                 'onComplete': function (event, ID, fileObj, response, data) {
                     //alert('There are ' + data.fileCount + ' files remaining in the queue.');
                     refresh();
@@ -218,12 +218,12 @@
     <input id="active_folder" name="folder" type="hidden" />
 
     <div style="padding:15px;background:#fcfcfc;border-bottom:#f7f7f7 1px solid;border-right:#f7f7f7 1px solid">
-        
+
         <div style="margin-top:5px;margin-bottom:5px;">
           <?php  /*  <a id="lnkNewFolder" href="javascript:panelFolder()" style="margin-right:10px;font-size:10px;color:#000;">NEW FOLDER</a> */ ?>
             <a id="lnkUpload" href="javascript:upload()" style="margin-right:10px;font-size:10px;color:#000;">Upload</a>
         </div>
-	
+
         <div id="divPreview" style="margin-top:15px;padding:15px;padding-bottom:14px;border:#f3f3f3 1px solid;background:#fefefe;">
             <div style="font-weight:bold;font-size:12pt;margin-bottom:5px;"> <?php /*Folder: <span id="folder_id">/</span> &nbsp;  */ ?> <a href="javascript:refresh()" style="margin-right:10px;font-size:10px;color:#000;font-weight:normal;">Refresh</a></div>
             <div id="preview_id"></div>
@@ -242,8 +242,8 @@
 
     <div id="container_id" style="padding:15px;">
     </div>
-    
-    
+
+
     </form>
 </body>
 </html>

@@ -5,11 +5,11 @@
                     <h2><?php echo Label::getLabel('Lbl_Top_Rated_Teachers'); ?></h2>
                 </div>
                 <div class="row justify-content-center align-items-center">
-                <?php foreach($topRatedTeachers as $topRatedTeacher){ ?> 
+                <?php foreach($topRatedTeachers as $topRatedTeacher){ ?>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                         <div class="border-box">
                             <span class="box-pic">
-                                <a href="<?php echo CommonHelper::generateUrl('Teachers').'/'. $topRatedTeacher['user_url_name'];?>"><img src="<?php echo CommonHelper::generateUrl('Image','User', array( $topRatedTeacher['user_id'] )) ?>"></a></span>
+                                <a href="<?php echo CommonHelper::generateUrl('Teachers').'/'. $topRatedTeacher['user_url_name'];?>"><img src="<?php echo CommonHelper::generateUrl('Image','User', array( $topRatedTeacher['user_id'] )) ?>" alt=""></a></span>
                             <div class="box-body">
                                 <h4 class="title"> <a href="<?php echo CommonHelper::generateUrl('Teachers').'/'. $topRatedTeacher['user_url_name'];?>"><?php echo $topRatedTeacher['user_first_name'].' '.$topRatedTeacher['user_last_name']; ?></a></h4>
                                 <span class="location"><?php echo $topRatedTeacher['country_name']; ?></span>
@@ -27,16 +27,16 @@
                                 </div>
 
                                 <ul class="tags">
-                                
+
                                 <?php echo CommonHelper::getTeachLangs($topRatedTeacher['utl_slanguage_ids'],true); ?>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                <?php } ?>    
+                <?php } ?>
             </div>
             <div class="align-center card-more-content">
                 <a href="/teachers" class="arrow-link"><?php echo Label::getLabel('LBL_Browse_All_Teachers'); ?></a>
-            </div>            
+            </div>
         </section>
 <?php }?>

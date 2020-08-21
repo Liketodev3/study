@@ -122,7 +122,7 @@ class BibleContentController extends AdminBaseController
             $videoUrl = $data['biblecontent_url'];
             $videoData = CommonHelper::getVideoDetail($videoUrl);
             if ($videoData['video_thumb']) {
-                $frm->getField('biblecontent_url')->attachField($frm->addHtml('', 'video_display', '<img id="displayVideo" width="100" height="100" src=' . $videoData['video_thumb'] . '>'));
+                $frm->getField('biblecontent_url')->attachField($frm->addHtml('', 'video_display', '<img id="displayVideo" alt="" width="100" height="100" src=' . $videoData['video_thumb'] . '>'));
             }
 
             $frm->fill($data);
