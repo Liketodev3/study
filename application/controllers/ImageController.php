@@ -468,16 +468,25 @@ class ImageController extends FatController
         AttachedFile::displayImage($image_name, $w, $h, '', '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
     }
 
-    public function showLanguageImage($sLanguageId)
+    public function showLanguageImage($sLanguageId, $sizeType = '', $langId = 0)
     {
         $sLanguageId = FatUtility::int($sLanguageId);
         $langId = FatUtility::int($langId);
-        $w = 470;
-        $h = 367;
+
         $default_image = 'no_image_user.jpg';
         $imgType = AttachedFile::FILETYPE_TEACHING_LANGUAGES;
         $fileRow = AttachedFile::getAttachment($imgType, $sLanguageId, 0, $langId, true, 0);
         $image_name = isset($fileRow['afile_physical_path']) ?  $fileRow['afile_physical_path'] : '';
+        switch (strtoupper($sizeType)) {
+            case 'NORMAL':
+                $w = 360;
+                $h = 280;
+            break;
+            default:
+                $w = 470;
+                $h = 367;
+            break;
+        }
         AttachedFile::displayImage($image_name, $w, $h, $default_image);
     }
 
