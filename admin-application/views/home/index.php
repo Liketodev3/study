@@ -1,5 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); /* CommonHelper::printArray(json_encode( array_values($dashboardInfo['signupsChartData']) ));die; */?>
-<script type="text/javascript">
+<script >
 	$SalesChartKey = <?php echo json_encode( array_keys($dashboardInfo['salesChartData']));?>;
 	$SalesChartVal = <?php  echo json_encode( array_values($dashboardInfo['salesChartData']) );?>;
 	$signupsKey = <?php echo json_encode( array_keys($dashboardInfo['signupsChartData']));?>;
@@ -7,7 +7,7 @@
 	$earningsKey = <?php echo json_encode( array_keys($dashboardInfo['earningsChartData']));?>;
 	$earningsVal = <?php  echo json_encode( array_values($dashboardInfo['earningsChartData']) );?>;
 </script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script  src="https://www.google.com/jsapi"></script>
 <?php if($canView){?>
 
 <!--main panel start here-->
@@ -240,6 +240,6 @@
 	</div>
 </div>
 <?php }?>
-<script type="text/javascript">
+<script >
 	var dataCurrency = '<?php echo CommonHelper::getCurrencySymbol(true); ?>';
 </script>

@@ -602,7 +602,7 @@ echo $frmSrchFlashCard->getFieldHtml('page');
         </div>
     </div>
 </section>
-<script type="text/javascript">
+<script >
 	jQuery(document).ready(function (e) {
 		$('body').addClass('is-screen-on');
 		$(".tabs-content-js").hide();

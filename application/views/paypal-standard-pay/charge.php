@@ -52,7 +52,7 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
 		</div>
 	</div>
 </section>
-<script type="text/javascript">
+<script >
 	$(function(){
 		setTimeout(function(){ $('form[name="frmPayPalStandard"]').submit() }, 5000);
 	});

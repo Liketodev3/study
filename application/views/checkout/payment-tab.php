@@ -32,7 +32,7 @@ $fldSubmit->setFieldTagAttribute( 'class', 'btn btn--secondary btn--large' );
 		}
 	?>
 </div>
-<script type="text/javascript">
+<script >
 $("document").ready(function(){
 	<?php if( isset($error) ){ ?>
 		$.systemMessage(<?php echo $error; ?>);

@@ -3,7 +3,7 @@
    <div class="progress__bar" style="width: 15%;"></div>
 </div-->
 <?php /* if( $currentReviewedCount == 0 ){ ?>
-<script type="text/javascript">
+<script >
 	//jQuery(document).trigger('close.facebox');
 	//loadFlashCardReviewSection();
 	reviewResult();
@@ -48,7 +48,7 @@
   .other-front .box__caption{border: 2px gray solid;padding:15px;width:100%;background:#fff;}
   
 </style>
-<script type="text/javascript">
+<script >
 $(function(){
 	currentReviewedCount = $("#currentReviewedCount").html();
 	allFCardCounts = $("#allFCardCounts").html();

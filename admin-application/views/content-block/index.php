@@ -28,7 +28,7 @@
 </div>
 </div>
 <?php if($epage_id > 0){?>
-<script type="text/javascript">
+<script >
 	$(document).ready(function(){
 		addBlockForm(<?php echo $epage_id; ?>);
 	});

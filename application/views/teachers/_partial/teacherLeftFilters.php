@@ -189,7 +189,7 @@ if (empty($minPrice) && empty($maxPrice)) {
 
 </div>
 
-<script type="text/javascript">
+<script >
 
 $(document).ready(function(){
 	$('.block__head-trigger-js').click(function(){

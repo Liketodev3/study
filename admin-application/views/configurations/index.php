@@ -54,7 +54,7 @@
 			</div>
 		</div>
 	</div>
-<script type="text/javascript">
+<script >
 	var YES = <?php echo applicationConstants::YES; ?>;
 	var NO = <?php echo applicationConstants::NO; ?>;
 </script>

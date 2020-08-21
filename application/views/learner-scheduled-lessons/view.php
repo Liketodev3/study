@@ -1,5 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<script type="text/javascript">
+<script >
 var lDetailId = '<?php echo $lDetailId; ?>';
 var is_grpcls = '<?php echo $lessonRow['slesson_grpcls_id']>0 ?>';
 </script>

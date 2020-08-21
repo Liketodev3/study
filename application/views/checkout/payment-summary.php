@@ -97,7 +97,7 @@
 	<span class="-gap"></span>
 </div>
 
-<script type="text/javascript">
+<script >
 var containerId = '#tabs-container';
 var tabsId = '#payment_methods_tab';
 $(document).ready(function(){

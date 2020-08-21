@@ -606,7 +606,7 @@ HTML5 implies text/css and text/javascript as defaults. This can be safely done 
 **Not recommended**
 ```
 <link rel="stylesheet" href="main.css" type="text/css">
-<script src="main.js" type="text/javascript"></script>
+<script src="main.js" ></script>
 ```
 
 **Recommended**

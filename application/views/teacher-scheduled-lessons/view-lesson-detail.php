@@ -35,7 +35,7 @@ if($lessonData['lessonReschedulelogId'] > 0 &&
 	}
 }
 ?>
-<script type="text/javascript">
+<script >
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
 var is_time_up = '<?php echo $endTime > 0 && $endTime < $curDate ?>';
 var lessonsStatus = <?php echo $lessonData['slesson_status']; ?>;
@@ -577,7 +577,7 @@ function endLessonConfirm(){
     </div>
 </section>
 
-<script type="text/javascript">
+<script >
 jQuery(document).ready(function (e) {
 	$('body').addClass('is-screen-on');
 	$(".tabs-content-js").hide();

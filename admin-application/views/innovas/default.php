@@ -13,7 +13,7 @@ echo "Content: " . $_POST["txtContent"];
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <script language="javascript" src='scripts/innovaeditor.js'></script>
+    <script  src='scripts/innovaeditor.js'></script>
 
     <link href="styles/simple.css" rel="stylesheet" type="text/css" />
 </head>
@@ -27,7 +27,7 @@ Default Example | <a href="default_full.htm">More Examples</a> | <a href="docs.h
     <p>Hello World!</p>
 </textarea>
 
-<script language="javascript" type="text/javascript">
+<script  >
 
     var oEdit1 = new InnovaEditor("oEdit1");
 

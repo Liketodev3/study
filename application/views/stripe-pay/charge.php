@@ -3,8 +3,8 @@
 if (isset($stripe)) {
     if (isset($stripe['secret_key']) && isset($stripe['publishable_key'])) {
         if (!empty($stripe['secret_key']) && !empty($stripe['publishable_key'])) { ?>
-            <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-            <script type="text/javascript">
+            <script  src="https://js.stripe.com/v2/"></script>
+            <script >
                 var publishable_key = '<?php echo $stripe['publishable_key']; ?>';
             </script>
         <?php }

@@ -10,18 +10,18 @@
     </script>
     <script>writeTitle()</script>
 
-    <script src="jquery-1.7.min.js" type="text/javascript"></script>
+    <script src="jquery-1.7.min.js" ></script>
 
     <!--Slider-->
     <link href="fd-slider/css/skin.css" rel="stylesheet" type="text/css" />
-    <script src="fd-slider/js/fd-slider.js" type="text/javascript"></script>
+    <script src="fd-slider/js/fd-slider.js" ></script>
 
     <!--Spectrum-->
-    <script src="spectrum/spectrum.js" type="text/javascript"></script>
+    <script src="spectrum/spectrum.js" ></script>
     <link href="spectrum/spectrum.css" rel="stylesheet" type="text/css" />
 
     <!--MiniColors-->
-    <script src="minicolors/jquery.miniColors.min.js" type="text/javascript"></script>
+    <script src="minicolors/jquery.miniColors.min.js" ></script>
     <link href="minicolors/jquery.miniColors.css" rel="stylesheet" type="text/css" />
 
     <style type="text/css">
@@ -79,8 +79,8 @@
     }
     </style>
 
-    <script src="common.js" type="text/javascript"></script>
-    <script language="javascript" type="text/javascript">
+    <script src="common.js" ></script>
+    <script  >
         var arrFonts = ['Abel','Abril Fatface','Aclonica','Actor','Aldrich','Alike','Alice','Allan','Allerta','Allerta Stencil','Amaranth','Andika','Anonymous Pro','Antic','Anton','Architects Daughter','Arimo','Artifika',
         'Arvo','Asset','Astloch','Aubrey','Bangers','Bentham','Bevan','Bigshot One','Black Ops One','Bowlby One','Bowlby One SC','Brawler','Cabin','Cabin Sketch','Calligraffitti','Candal',
         'Cantarell','Cardo','Carme','Carter One','Changa One','Cedarville Cursive','Cherry Cream Soda','Chewy','Coda','Comfortaa','Coming Soon','Copse','Corben','Cousine','Coustard',
@@ -592,7 +592,7 @@
         <td style="padding-bottom:7px;font-size:10px;letter-spacing:1px">
             <span id="lblLineHeight">LINE HEIGHT:</span> <span id="valLineHeight"></span><br />
             <input name="inpLineHeight" id="inpLineHeight" type="range" min="0" max="100" step="1" title="Range: 0 to 100 in steps of 1" value="14" />
-	        <script language="javascript">
+	        <script >
 	            var i1 = 0;
 	            /*fdSlider.createSlider({
 	            inp: document.getElementById("inpLineHeight"),
@@ -614,7 +614,7 @@
         <td style="padding-bottom:7px;font-size:10px;letter-spacing:1px">
             <span id="lblLetterSpacing">LETTER SPACING:</span> <span id="valLetterSpacing"></span><br />
             <input name="inpCharSpacing" id="inpCharSpacing" type="range" min="0" max="100" step="1" title="Range: 0 to 100 in steps of 1" value="0" />
-	        <script language="javascript">
+	        <script >
 	            var i2 = 0;
 	            fdSlider.addEvent(document.getElementById("inpCharSpacing"), "change", function (e) {
 	                if (i2 == 2) { I_FormatText('letter-spacing', $("#inpCharSpacing").val() + 'px'); $("#valLetterSpacing").html($("#inpCharSpacing").val() + 'px') }
@@ -627,7 +627,7 @@
         <td style="padding-bottom:7px;font-size:10px;letter-spacing:1px">
             <span id="lblWordSpacing">WORD SPACING:</span> <span id="valWordSpacing"></span><br />
             <input name="inpWordSpacing" id="inpWordSpacing" type="range" min="0" max="30" step="1" title="Range: 0 to 30 in steps of 1" value="0" />
-	        <script language="javascript">
+	        <script >
 	            var i3 = 0;
 	            fdSlider.addEvent(document.getElementById("inpWordSpacing"), "change", function (e) {
 	                if (i3 == 2) { I_FormatText('word-spacing', $("#inpWordSpacing").val() + 'px'); $("#valWordSpacing").html($("#inpWordSpacing").val() + 'px') }

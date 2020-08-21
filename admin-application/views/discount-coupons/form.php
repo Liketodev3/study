@@ -52,7 +52,7 @@ $cType_fld->requirements()->addOnChangerequirementUpdate(DiscountCoupons::TYPE_S
 	</div>
 </div>
 </div></div></section>
-<script type="text/javascript">
+<script >
 $(document).ready(function(){
 	callCouponDiscountIn(<?php echo $couponDiscountIn; ?>);
 });

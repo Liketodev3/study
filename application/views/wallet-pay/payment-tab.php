@@ -17,7 +17,7 @@ $frm->setFormTagAttribute('onsubmit', 'confirmOrder(this); return(false);');
 <?php if( strtolower($paymentMethod['pmethod_code']) == "cashondelivery" && FatApp::getConfig('CONF_RECAPTCHA_SITEKEY',FatUtility::VAR_STRING,'')!= '' && FatApp::getConfig('CONF_RECAPTCHA_SECRETKEY',FatUtility::VAR_STRING,'')!= ''){ ?>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <?php } ?>
-<script type="text/javascript">
+<script >
 	$("document").ready(function(){
 		<?php if( isset($error) ){ ?>
 			$.systemMessage(<?php echo $error; ?>);

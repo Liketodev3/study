@@ -113,7 +113,7 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 	</div>
 </section>
 
-<script type="text/javascript">
+<script >
 <?php
 	if( $cartData['orderNetAmount'] > 0 ){
 		echo 'loadPaymentSummary();';

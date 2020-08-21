@@ -48,7 +48,7 @@
 	</div>
 </div>
 
-<script type="text/javascript">
+<script >
 	var STATUS_APPROVED = <?php echo TeacherRequest::STATUS_APPROVED; ?>;
 	var STATUS_CANCELLED = <?php echo TeacherRequest::STATUS_CANCELLED; ?>;
 </script>

@@ -44,7 +44,7 @@ $nlink_urlFld->setWrapperAttribute('id', 'nlink_url_div');
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
+<script >
 $(document).ready(function(){
 	callPageTypePopulate( $("select[name='nlink_type']") );
 });

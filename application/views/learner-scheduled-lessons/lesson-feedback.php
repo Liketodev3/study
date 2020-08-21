@@ -10,7 +10,7 @@ $frm->developerTags['fld_default_col'] = 12;
 </div>
 <div class="gap"></div>
 
-<script type="text/javascript">
+<script >
 	$(document).ready(function () {
 		$('.star-rating').barrating({ showSelectedRating:false });
 	});

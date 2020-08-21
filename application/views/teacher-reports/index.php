@@ -1,5 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script  src="https://www.google.com/jsapi"></script>
 <section class="section section--grey section--page">
     <?php //$this->includeTemplate('_partial/dashboardTop.php'); ?>
         <div class="container container--fixed">
@@ -78,7 +78,7 @@
 <div class="gap"></div>
 
 <!-- load Google AJAX API -->																	
-<script type="text/javascript">
+<script >
     function showSalesGraph(elem){
         $('.sales-graph').hide();
          $('#'+elem).show();

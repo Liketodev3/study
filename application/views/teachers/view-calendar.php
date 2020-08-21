@@ -6,7 +6,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 $getAllMonthName =  CommonHelper::getAllMonthName();
 $weekDayName =  CommonHelper::dayNames();
 ?>
-<script type="text/javascript">
+<script >
 	var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
 	var checkSlotAvailabiltAjaxRun =  false;
 	function getEventsByTime( start, stop ) {

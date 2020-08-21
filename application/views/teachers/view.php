@@ -268,7 +268,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
 		</div>
 	 </div>
  </section>
- <script type="text/javascript">
+ <script >
  $(document).ready(function(){
 	 searchQualifications(<?php echo $teacher['user_id']; ?>);
  });

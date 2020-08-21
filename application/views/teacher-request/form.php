@@ -88,7 +88,7 @@ $frm->setFormTagAttribute( 'action', CommonHelper::generateUrl( 'TeacherRequest'
 	</div>
 </section>
 
-<script type="text/javascript">
+<script >
 $("document").ready(function(){
 	$("select[name='utrvalue_user_language_speak_proficiency[]']").closest(".row").addClass("spoken_language_row");
 	$("select[name='utrvalue_user_language_speak_proficiency[]']").closest(".row").addClass("row--addons");

@@ -23,7 +23,7 @@ if($lessonPlanId > 0){
 <div class="box -padding-20">
 	<?php echo $frm->getFormHtml(); ?>
 </div>
-<script type="text/javascript">
+<script >
 	$(document).ready(function(){
 		$('#tlpn_tags').tagsInput();
 	});

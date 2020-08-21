@@ -85,9 +85,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
     <!-- OPTIONAL: This section is required only if using Google Fonts Dialog AND required on the page where the content is published -->
-    <script src="scripts/common/jquery-1.7.min.js" type="text/javascript"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js" type="text/javascript"></script>
-    <script src="scripts/common/webfont.js" type="text/javascript"></script>
+    <script src="scripts/common/jquery-1.7.min.js" ></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js" ></script>
+    <script src="scripts/common/webfont.js" ></script>
 
     <link href="styles/default.css" rel="stylesheet" type="text/css" />
 

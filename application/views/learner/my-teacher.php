@@ -159,7 +159,7 @@
 		</div>
 	 </div>
  </section>
- <script type="text/javascript">
+ <script >
  $(document).ready(function(){
 	 searchLessons(<?php echo $teacher['user_id']; ?>);
  });

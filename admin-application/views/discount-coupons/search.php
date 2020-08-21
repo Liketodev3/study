@@ -102,7 +102,7 @@ $pagingArr=array('pageCount'=>$pageCount,'page'=>$page,'recordCount'=>$recordCou
 $this->includeTemplate('_partial/pagination.php', $pagingArr,false);	
 ?>
 
-<script type="text/javascript">
+<script >
 var DISCOUNT_IN_PERCENTAGE = '<?php echo applicationConstants::PERCENTAGE; ?>';
 var DISCOUNT_IN_FLAT = '<?php echo applicationConstants::FLAT; ?>';
 

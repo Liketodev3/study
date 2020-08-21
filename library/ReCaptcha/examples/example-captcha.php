@@ -119,7 +119,7 @@ else:
             <p>Example input B: <input type="text" name="ex-b" value="bar"></p>
 
             <div class="g-recaptcha" data-sitekey="<?php echo $siteKey; ?>"></div>
-            <script type="text/javascript"
+            <script 
                     src="https://www.google.com/recaptcha/api.js?hl=<?php echo $lang; ?>">
             </script>
             <p><input type="submit" value="Submit" /></p>

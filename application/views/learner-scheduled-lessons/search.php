@@ -308,7 +308,7 @@ if ( empty($lessons) ) {
 	}
 }
 ?>
-<script type="text/javascript">
+<script >
 jQuery(document).ready(function () {
 	$('.countdowntimer').each(function (i) {
 		var countdowntimerid = $(this).attr('id');

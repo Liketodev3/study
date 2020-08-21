@@ -13,7 +13,7 @@ $preferredDimensionsStr = '<small class="text--small">'.sprintf(Label::getLabel(
 $htmlAfterField = $preferredDimensionsStr;
 $img_fld->htmlAfterField = $htmlAfterField; 
 ?>
-<script type="text/javascript">
+<script >
 	$(function() {
 		$("#sortable").sortable({
 		  stop: function () {

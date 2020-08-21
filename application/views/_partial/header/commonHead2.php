@@ -1,7 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 if(isset($includeEditor) && $includeEditor){ ?>
-<script language="javascript" type="text/javascript" src="<?php echo CONF_WEBROOT_URL; ?>innovas/scripts/innovaeditor.js"></script>
-<script src="<?php echo CONF_WEBROOT_URL; ?>innovas/scripts/common/webfont.js" type="text/javascript"></script>
+<script   src="<?php echo CONF_WEBROOT_URL; ?>innovas/scripts/innovaeditor.js"></script>
+<script src="<?php echo CONF_WEBROOT_URL; ?>innovas/scripts/common/webfont.js" ></script>
 <?php } ?>
 </head>
 <?php
@@ -38,7 +38,7 @@ $layoutDirection = CommonHelper::getLayoutDirection();
         </div>
     </div>
     <?php /* if( $haveMsg ){ */ ?>
-    <script type="text/javascript">
+    <script >
         $("document").ready(function() {
             if (CONF_AUTO_CLOSE_SYSTEM_MESSAGES == 1) {
                 var time = CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES * 1000;

@@ -5,17 +5,16 @@
 	<meta charset="utf-8">
 	<meta name="description" content="">
 	<meta name="author" content="">
-	<!--<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">-->
 	<?php
 	if( isset($includeEditor) && $includeEditor == true ){
 		$extendEditorJs	= 'true';
 	}else{
 		$extendEditorJs	= 'false';
 	}
-	echo $str = '<script type="text/javascript">
+	echo $str = '<script >
 		var SITE_ROOT_URL = "' . CommonHelper::generateFullUrl('','',array(),CONF_WEBROOT_FRONT_URL) . '" ;
 		var langLbl = ' . json_encode(
-			$jsVariables 
+			$jsVariables
 		) . ';
 		var CONF_AUTO_CLOSE_SYSTEM_MESSAGES = ' . FatApp::getConfig("CONF_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 0) . ';
 		var layoutDirection ="'.$layoutDirection.'";
@@ -25,11 +24,10 @@
 			CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = 3;
 		}
 		</script>' . "\r\n";;
-		
+
 
 	 if( AttachedFile::getAttachment( AttachedFile::FILETYPE_FAVICON, 0, 0, $adminLangId ) ){ ?>
 	<link rel="shortcut icon" href="<?php echo CommonHelper::generateUrl('image', 'favicon', array($adminLangId), CONF_WEBROOT_FRONT_URL) ?>">
 	<?php } ?>
-	
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,500i,700,700i,900,900i" rel="stylesheet"> 
-	
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,500i,700,700i,900,900i" rel="stylesheet">

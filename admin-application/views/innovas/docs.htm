@@ -21,14 +21,14 @@
 <h3>Usage</h3>
 <p>1. Include the Editor script file (in the <b>&lt;head&gt;</b> section of your web page).</p>
 <pre>
-        &lt;script language="javascript" type="text/javascript" src='scripts/innovaeditor.js'>&lt;/script>
+        &lt;script   src='scripts/innovaeditor.js'>&lt;/script>
 </pre>
 
 <p>2. <b>[Optional]</b>  Include Google Font integration scripts (This section is required only if using Google Fonts Dialog or if <b>FontDialog</b> or <b>CompleteTextDialog</b> buttons is used.</p>
 <pre>
-        &lt;script src="scripts/common/jquery-1.7.min.js" type="text/javascript">&lt;/script>
-        &lt;script src="http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js" type="text/javascript">&lt;/script>
-        &lt;script src="scripts/common/webfont.js" type="text/javascript">&lt;/script>
+        &lt;script src="scripts/common/jquery-1.7.min.js" >&lt;/script>
+        &lt;script src="http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js" >&lt;/script>
+        &lt;script src="scripts/common/webfont.js" >&lt;/script>
 </pre>
 
 <p>3. Initialize the Editor below any <b>&lt;textarea&gt;</b> you’d like to replace.</p>
@@ -36,7 +36,7 @@
 <pre>
         &lt;textarea id="txtContent" rows="4" cols="30"></textarea>
 
-        &lt;script language="javascript" type="text/javascript">
+        &lt;script  >
             var oEdit1 = new InnovaEditor("oEdit1");
 
             /*Apply stylesheet for the editing content*/
@@ -92,9 +92,9 @@ When you display/publish your content result anywhere on your web sites, please 
 
 <p>2. <b>[Optional]</b> Include Google Font integration scripts (This section is required only if using Google Fonts Dialog or if <b>FontDialog</b> or <b>CompleteTextDialog</b> buttons is used).</p>
 <pre>
-        &lt;script src="scripts/common/jquery-1.7.min.js" type="text/javascript">&lt;/script>
-        &lt;script src="http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js" type="text/javascript">&lt;/script>
-        &lt;script src="scripts/common/webfont.js" type="text/javascript">&lt;/script>
+        &lt;script src="scripts/common/jquery-1.7.min.js" >&lt;/script>
+        &lt;script src="http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js" >&lt;/script>
+        &lt;script src="scripts/common/webfont.js" >&lt;/script>
 </pre>
 
 <h3>Using File Browser</h3>
@@ -497,11 +497,11 @@ To enable "Open in a Lightbox" in the Link & Image Dialog:
 <p>Then please find FancyBox script in <b>/AddOns/fancybox13/</b> folder in the package and copy the folder into <b>scripts/common/</b> (or anywhere on your site).<br />
 Include the FancyBox script into your page (where your content is published) using:</p>
 <pre>
-        &lt;script src="scripts/common/fancybox13/jquery.easing-1.3.pack.js" type="text/javascript">&lt;/script>
-        &lt;script src="scripts/common/fancybox13/jquery.mousewheel-3.0.2.pack.js" type="text/javascript">&lt;/script>
-        &lt;script src="scripts/common/fancybox13/jquery.fancybox-1.3.1.pack.js" type="text/javascript">&lt;/script>
+        &lt;script src="scripts/common/fancybox13/jquery.easing-1.3.pack.js" >&lt;/script>
+        &lt;script src="scripts/common/fancybox13/jquery.mousewheel-3.0.2.pack.js" >&lt;/script>
+        &lt;script src="scripts/common/fancybox13/jquery.fancybox-1.3.1.pack.js" >&lt;/script>
         &lt;link href="scripts/common/fancybox13/jquery.fancybox-1.3.1.css" rel="stylesheet" type="text/css" />
-        &lt;script language="javascript" type="text/javascript">
+        &lt;script  >
             $(document).ready(function () {
                 $('a[rel=lightbox]').fancybox();
             });
@@ -514,8 +514,8 @@ Include the FancyBox script into your page (where your content is published) usi
 You can localize the Editor to be displayed in specific language by adding a language include file before the Editor javascript include, for example:
 </p>
 <pre>
-    &lt;script language="Javascript" src="<span style="color:#c90000">scripts/language/da-DK/editor_lang.js</span>">&lt;/script>
-    &lt;script language="Javascript" src="scripts/innovaeditor.js">&lt;/script>
+    &lt;script  src="<span style="color:#c90000">scripts/language/da-DK/editor_lang.js</span>">&lt;/script>
+    &lt;script  src="scripts/innovaeditor.js">&lt;/script>
 </pre>
 <p>
 The current available language files are located in folder <b>scripts/language/</b>.  If no language file specified, English version will be used.
@@ -546,7 +546,7 @@ Editor by default replace several special characters with entity code.
 The list is defined in <strong>oUtil.spcCharCode</strong> property. You can override this property using new <strong>oEdit1.loadSpecialCharCode()</strong> function, for example:
 </p>
 <pre>
-    &lt;script language="Javascript">
+    &lt;script >
     	oEdit1.loadSpecialCharCode([[169, "&amp;copy;"], [163, "&amp;pound;"], [174, "&amp;reg;"], [233, "&amp;eacute;"], [201, "&amp;Eacute;"], [8364, "&amp;euro;"], [8220, "\""]]);
     &lt;/script>
 </pre>
@@ -571,7 +571,7 @@ The list is defined in <strong>oUtil.spcCharCode</strong> property. You can over
 	For example:
 </p>
 <pre>
-    &lt;script language="Javascript">
+    &lt;script >
     	oEdit1.styleSelectorPrefix = "is_";
     &lt;/script>
 </pre>
@@ -580,7 +580,7 @@ This make editor list only rules started with ".is_" such as .is_title{}, .is_he
 rules will be listed. It is possible to specify multiple prefixes, each value should be comma separated withtout space in between.
 </p>
 <pre>
-    &lt;script language="Javascript">
+    &lt;script >
     	oEdit1.styleSelectorPrefix = "is_,ic_,bb_";
     &lt;/script>
 </pre>

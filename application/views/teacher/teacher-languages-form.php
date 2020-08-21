@@ -38,7 +38,7 @@ $utsl_proficiency->developerTags['col'] = 5;*/
         <?php echo $frm->getFormHtml();?>
     </div>
 </div>
-<script type="text/javascript">
+<script >
 $("document").ready(function(){
 	$("select[name='utsl_slanguage_id[]']").closest(".row").addClass("row--addons spoken_language_row");
 	$(".spokenLang").closest(".row").addClass("row--addons spoken_language_row");

@@ -20,7 +20,7 @@
     </table>
 	</div>
 </section>
-<script language="javascript">
+<script >
 	$(document).ready(function() {
 		getCountryStates($("#user_country_id").val(), <?php echo $stateId ;?>, '#user_state_id');
 	});

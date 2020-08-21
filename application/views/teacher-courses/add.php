@@ -25,7 +25,7 @@ $submit->developerTags['col'] =2;
 
 	<?php echo $frm->getFormHtml(); ?>
 </div>
-<script type="text/javascript">
+<script >
 	$(document).ready(function(){
 		$('#tcourse_tags').tagsInput();
 	});

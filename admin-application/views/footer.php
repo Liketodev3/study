@@ -27,7 +27,7 @@
 	</div>
 </div>
 		<?php if( $haveMsg ){ ?>
-		<script type="text/javascript">
+		<script >
 			$("document").ready(function(){
 				if( CONF_AUTO_CLOSE_SYSTEM_MESSAGES == 1 ){
 					var time = CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES * 1000;

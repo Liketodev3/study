@@ -361,7 +361,7 @@ class MetaTagsController extends AdminBaseController
         $frm->addTextarea(Label::getLabel('LBL_Meta_Keywords', $this->adminLangId), 'meta_keywords')->requirements()->setRequired(true);
         $frm->addTextarea(Label::getLabel('LBL_Meta_Description', $this->adminLangId), 'meta_description')->requirements()->setRequired(true);
         $fld = $frm->addTextarea(Label::getLabel('LBL_Other_Meta_Tags', $this->adminLangId), 'meta_other_meta_tags');
-        $fld->htmlAfterField = '<small>'.Label::getLabel('LBL_For_Example:', $this->adminLangId).' '.htmlspecialchars('<meta name="copyright" content="text">').'</small>';
+        $fld->htmlAfterField = '<small>'.Label::getLabel('LBL_For_Example:', $this->adminLangId).' '.htmlspecialchars(' <meta name="copyright" content="text">').'</small>';
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }

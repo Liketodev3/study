@@ -18,7 +18,7 @@ $frm->setFormTagAttribute('onsubmit', 'setupCommission(this); return(false);');
 		</div>
 	</div>						
 </section>
-<script type="text/javascript">
+<script >
 $("document").ready(function(){
 	$('input[name=\'user_name\']').autocomplete({
 		'source': function(request, response) {			
