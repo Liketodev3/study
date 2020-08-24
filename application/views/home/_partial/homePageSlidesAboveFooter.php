@@ -11,7 +11,7 @@
                     <?php	foreach( $testimonials as $listItem ){ ?>
                         <div class="quote-main">
                             <div class="quote-large">
-                                <img src="<?php echo CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'],0)); ?>" alt="">
+                                <img src="<?php echo CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'], 0, 'NORMAL')); ?>" alt="">
                             </div>
                             <div class="quote-white">
                                 <p><?php echo $listItem['testimonial_text']; ?></p>
@@ -26,7 +26,7 @@
                     <div class="quote-thumbs">
                     <?php	foreach( $testimonials as $listItem ){ ?>
                         <div class="quote-thumb">
-                            <img src="<?php echo CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'],0)); ?>" alt="">
+                            <img src="<?php echo CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'], 0, 'THUMB')); ?>" alt="">
                         </div>
                     <?php } ?>
                     </div>

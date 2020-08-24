@@ -426,8 +426,13 @@ class ImageController extends FatController
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
             break;
             case 'THUMB':
-                $w = 61;
-                $h = 61;
+                $w = 128;
+                $h = 80;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+            break;
+            case 'NORMAL':
+                $w = 625;
+                $h = 391;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
             break;
             default:
