@@ -163,7 +163,7 @@ class FatTemplate {
 
 	}
 
-	public function includeTemplate($tplPath, $variables = array(), $convertVariablesToHtmlentities = true) {
+	public function includeTemplate($tplPath, $variables = array(), $convertVariablesToHtmlentities = true, $returnContent = false) {
 		$template = new FatTemplate('', '');
 
 		FatApplication::getInstance()->setVariablesToTemplateFromProvider($tplPath, $template);
@@ -172,7 +172,10 @@ class FatTemplate {
 			$template->set($key, $val);
 		}
 
-		$template->render(false, false, $tplPath, false, $convertVariablesToHtmlentities);
+		$template = $template->render(false, false, $tplPath, $returnContent, $convertVariablesToHtmlentities);
+		if($returnContent) {
+			return $template;
+		}
 	}
 
 	/** Display Template **/
