@@ -2,9 +2,11 @@
 <?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 <section class="banner banner--main">
 	<div class="caraousel caraousel--single caraousel--single-js" <?php echo (strtolower($layoutDirection) == 'rtl') ? 'dir="rtl"': ""; ?>>
-		<?php foreach($slides as $slide){ ?>
+		<?php foreach($slides as $slide){
+			$image =  FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'slide', array( $slide['slide_id'], 0, $siteLangId ), CONF_WEBROOT_FRONT_URL), CONF_IMG_CACHE_TIME, '.png');
+		?>
 		<div>
-			<div class="caraousel__item"><a href="<?php echo $slide['slide_url']?>" target="<?php echo $slide['slide_target']?>"><img src="<?php echo CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], 0, $siteLangId)); ?>" alt=""></a></div>
+			<div class="caraousel__item"><a href="<?php echo $slide['slide_url']?>" target="<?php echo $slide['slide_target']?>"><img src="<?php echo $image; ?>" alt=""></a></div>
 		</div>
         <?php } ?>
 	</div>

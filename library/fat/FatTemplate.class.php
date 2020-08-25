@@ -148,12 +148,12 @@ class FatTemplate {
 					$last_updated = max($last_updated, $time);
 				}
 				else {
-					$str .= '<script   defer
+					$str .= '<script
 							src="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'js', array(), $use_root_url, false) . '&f=' . rawurlencode($val) . '&min=0&sid=' . $time , CONF_DEF_CACHE_TIME, '.js'). '" ></script>' . "\n";
 				}
 			}
 			if ( $mergeFiles ) {
-				$str .= '<script defer
+				$str .= '<script
 						src="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'js', array(), $use_root_url, false) . '&f=' . rawurlencode(implode(',', $this->arr_page_js)) . '&min=1&sid=' . $last_updated , CONF_DEF_CACHE_TIME, '.js'). '" ></script>' . "\n";
 			}
 		}
@@ -163,7 +163,7 @@ class FatTemplate {
 
 	}
 
-	public function includeTemplate($tplPath, $variables = array(), $convertVariablesToHtmlentities = true, $returnContent = false) {
+	public function includeTemplate($tplPath, $variables = array(), $convertVariablesToHtmlentities = true) {
 		$template = new FatTemplate('', '');
 
 		FatApplication::getInstance()->setVariablesToTemplateFromProvider($tplPath, $template);
@@ -172,10 +172,7 @@ class FatTemplate {
 			$template->set($key, $val);
 		}
 
-		$template = $template->render(false, false, $tplPath, $returnContent, $convertVariablesToHtmlentities);
-		if($returnContent) {
-			return $template;
-		}
+		$template->render(false, false, $tplPath, false, $convertVariablesToHtmlentities);
 	}
 
 	/** Display Template **/
