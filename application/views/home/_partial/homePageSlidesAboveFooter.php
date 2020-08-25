@@ -26,9 +26,11 @@
                     <?php } ?>
                     </div>
                     <div class="quote-thumbs">
-                    <?php	foreach( $testimonials as $listItem ){ ?>
+                    <?php	foreach( $testimonials as $listItem ){
+                        $testimonialThumImage =  FatCache::getCachedUrl(CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'], 0, 'THUMB')), CONF_IMG_CACHE_TIME, '.jpg');
+                        ?>
                         <div class="quote-thumb">
-                            <img src="<?php echo $testimonialImage; ?>" alt="">
+                            <img src="<?php echo $testimonialThumImage; ?>" alt="">
                         </div>
                     <?php } ?>
                     </div>
