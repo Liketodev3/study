@@ -255,23 +255,23 @@ class ImageController extends FatController
             AttachedFile::displayImage('', '', '', $default_image);
         }
 
-        switch ($sizeType) {
-            case 'normal':
+        switch (strtoupper($sizeType)) {
+            case 'NORMAL':
                 $w = 100;
                 $h = 100;
-                AttachedFile::displayImage($fileRow['afile_physical_path'], $w, $h);
+                AttachedFile::displayImage($fileRow['afile_physical_path'], $w, $h, '' ,'', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
             break;
-            case 'small':
+            case 'SMALL':
                 $w = 60;
                 $h = 60;
-                AttachedFile::displayImage($fileRow['afile_physical_path'], $w, $h);
+                AttachedFile::displayImage($fileRow['afile_physical_path'], $w, $h, '' ,'', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
             break;
-            case 'extrasmall':
+            case 'EXTRASMALL':
                 $w = 60;
                 $h = 60;
             break;
             default:
-                AttachedFile::displayOriginalImage($fileRow['afile_physical_path']);
+                AttachedFile::displayOriginalImage($fileRow['afile_physical_path'],'','', true);
             break;
         }
 

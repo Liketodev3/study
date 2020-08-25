@@ -9,7 +9,7 @@
                     <span class="quote__mark"><img src="images/retina/quotes.svg" alt=""></span>
                     <div class="quote-slider">
                     <?php	foreach( $testimonials as $listItem ) {
-                        $testimonialImage =  FatCache::getCachedUrl(CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'], 0, 'NORMAL')), CONF_IMG_CACHE_TIME, '.jpg');
+                        $testimonialImage =  FatCache::getCachedUrl(CommonHelper::generateUrl('Image','testimonial',array($listItem['testimonial_id'], 0, 'NORMAL')), CONF_IMG_CACHE_TIME, '.jpg');
                     ?>
                         <div class="quote-main">
                             <div class="quote-large">
@@ -27,7 +27,7 @@
                     </div>
                     <div class="quote-thumbs">
                     <?php	foreach( $testimonials as $listItem ){
-                        $testimonialThumImage =  FatCache::getCachedUrl(CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'], 0, 'THUMB')), CONF_IMG_CACHE_TIME, '.jpg');
+                        $testimonialThumImage =  FatCache::getCachedUrl(CommonHelper::generateUrl('Image','testimonial',array($listItem['testimonial_id'], 0, 'THUMB')), CONF_IMG_CACHE_TIME, '.jpg');
                         ?>
                         <div class="quote-thumb">
                             <img src="<?php echo $testimonialThumImage; ?>" alt="">
