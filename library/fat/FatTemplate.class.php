@@ -68,14 +68,12 @@ class FatTemplate {
 				if ($mergeFiles) {
 					$last_updated = max ( $last_updated, $time );
 				} else {
-					$str .= '<link rel="stylesheet" type="text/css"
-						href="' . FatCache::getCachedUrl(FatUtility::generateUrl ( 'JsCss', 'cssCommon', array (), $use_root_url, false ) . '&f=' . rawurlencode ( $fl ) . '&min=0&sid=' . $time, CONF_DEF_CACHE_TIME, '.css' ). '" />' . "\n";
+					$str .= '<link rel="stylesheet" type="text/css" href="' . FatCache::getCachedUrl(FatUtility::generateUrl ( 'JsCss', 'cssCommon', array (), $use_root_url, false ) . '&f=' . rawurlencode ( $fl ) . '&min=0&sid=' . $time, CONF_DEF_CACHE_TIME, '.css' ). '" />' . "\n";
 				}
 			}
 
 			if ($mergeFiles) {
-				$str .= '<link rel="stylesheet" type="text/css"
-						href="' . FatCache::getCachedUrl(FatUtility::generateUrl ( 'JsCss', 'cssCommon', array (), $use_root_url, false ) . '&min=1&sid=' . $last_updated, CONF_DEF_CACHE_TIME, '.css') . '" />' . "\n";
+				$str .= '<link rel="stylesheet" type="text/css" href="' . FatCache::getCachedUrl(FatUtility::generateUrl ( 'JsCss', 'cssCommon', array (), $use_root_url, false ) . '&min=1&sid=' . $last_updated, CONF_DEF_CACHE_TIME, '.css') . '" />' . "\n";
 			}
 		}
 			asort($this->arr_page_css);
@@ -87,14 +85,12 @@ class FatTemplate {
 					$last_updated = max($last_updated, $time);
 				}
 				else {
-					$str .= '<link rel="stylesheet" type="text/css"
-							href="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'css', array(), $use_root_url, false) . '&f=' . rawurlencode($val) . '&min=0&sid=' . $time , CONF_DEF_CACHE_TIME, '.css'). '" />' . "\n";
+					$str .= '<link rel="stylesheet" type="text/css" href="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'css', array(), $use_root_url, false) . '&f=' . rawurlencode($val) . '&min=0&sid=' . $time , CONF_DEF_CACHE_TIME, '.css'). '" />' . "\n";
 				}
 			}
 			if ( $mergeFiles ) {
 
-				$str .= '<link rel="stylesheet" type="text/css"
-						href="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'css', array(), $use_root_url, false) . '&f=' . rawurlencode(implode(',', $this->arr_page_css)) . '&min=1&sid=' . $last_updated, CONF_DEF_CACHE_TIME, '.css') . '" />' . "\n";
+				$str .= '<link rel="stylesheet" type="text/css" href="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'css', array(), $use_root_url, false) . '&f=' . rawurlencode(implode(',', $this->arr_page_css)) . '&min=1&sid=' . $last_updated, CONF_DEF_CACHE_TIME, '.css') . '" />' . "\n";
 			}
 		}
 		/* Include CSS Ends */
@@ -130,14 +126,12 @@ class FatTemplate {
 					$last_updated = max($last_updated, $time);
 				}
 				else {
-					$str .= '<script
-							src="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'jsCommon', array(), $use_root_url, false) . '&f=' . rawurlencode($fl) . '&min=0&sid=' . $time, CONF_DEF_CACHE_TIME, '.js') . '"></script>' . "\n";
+					$str .= '<script src="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'jsCommon', array(), $use_root_url, false) . '&f=' . rawurlencode($fl) . '&min=0&sid=' . $time, CONF_DEF_CACHE_TIME, '.js') . '"></script>' . "\n";
 				}
 			}
 
 			if ( $mergeFiles ) {
-				$str .= '<script
-							src="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'jsCommon', array(), $use_root_url, false) . '&min=0&sid=' . $last_updated , CONF_DEF_CACHE_TIME, '.js'). '"></script>' . "\n";
+				$str .= '<script src="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'jsCommon', array(), $use_root_url, false) . '&min=0&sid=' . $last_updated , CONF_DEF_CACHE_TIME, '.js'). '"></script>' . "\n";
 			}
 		}
 		if ( count($this->arr_page_js) > 0 ) {
@@ -148,13 +142,11 @@ class FatTemplate {
 					$last_updated = max($last_updated, $time);
 				}
 				else {
-					$str .= '<script
-							src="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'js', array(), $use_root_url, false) . '&f=' . rawurlencode($val) . '&min=0&sid=' . $time , CONF_DEF_CACHE_TIME, '.js'). '" ></script>' . "\n";
+					$str .= '<script src="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'js', array(), $use_root_url, false) . '&f=' . rawurlencode($val) . '&min=0&sid=' . $time , CONF_DEF_CACHE_TIME, '.js'). '" ></script>' . "\n";
 				}
 			}
 			if ( $mergeFiles ) {
-				$str .= '<script
-						src="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'js', array(), $use_root_url, false) . '&f=' . rawurlencode(implode(',', $this->arr_page_js)) . '&min=1&sid=' . $last_updated , CONF_DEF_CACHE_TIME, '.js'). '" ></script>' . "\n";
+				$str .= '<script src="' . FatCache::getCachedUrl(FatUtility::generateUrl('JsCss', 'js', array(), $use_root_url, false) . '&f=' . rawurlencode(implode(',', $this->arr_page_js)) . '&min=1&sid=' . $last_updated , CONF_DEF_CACHE_TIME, '.js'). '" ></script>' . "\n";
 			}
 		}
 		/* Include JS Ends */
