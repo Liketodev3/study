@@ -5,7 +5,9 @@
                     <h2><?php echo Label::getLabel('Lbl_Top_Rated_Teachers'); ?></h2>
                 </div>
                 <div class="row justify-content-center align-items-center">
-                <?php foreach($topRatedTeachers as $topRatedTeacher){ ?>
+                <?php foreach($topRatedTeachers as $topRatedTeacher){
+                    $teacherImnage =  FatCache::getCachedUrl(CommonHelper::generateUrl('Image','User', array( $topRatedTeacher['user_id'],'NORMAL' )),  CONF_IMG_CACHE_TIME, '.jpg');
+                ?>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                         <div class="border-box">
                             <span class="box-pic">

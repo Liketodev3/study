@@ -8,10 +8,12 @@
                 <div class="quote-slider-wrap">
                     <span class="quote__mark"><img src="images/retina/quotes.svg" alt=""></span>
                     <div class="quote-slider">
-                    <?php	foreach( $testimonials as $listItem ){ ?>
+                    <?php	foreach( $testimonials as $listItem ) {
+                        $testimonialImage =  FatCache::getCachedUrl(CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'], 0, 'NORMAL')), CONF_IMG_CACHE_TIME, '.jpg')
+                    ?>
                         <div class="quote-main">
                             <div class="quote-large">
-                                <img src="<?php echo CommonHelper::generateFullUrl('Image','testimonial',array($listItem['testimonial_id'], 0, 'NORMAL')); ?>" alt="">
+                                <img src="<?php echo $testimonialImage; ?>" alt="">
                             </div>
                             <div class="quote-white">
                                 <p><?php echo $listItem['testimonial_text']; ?></p>
