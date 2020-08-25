@@ -11,17 +11,8 @@
                 <nav class="nav nav--primary  nav--primary-offset -display-inline">
                     <ul>
                         <?php $this->includeTemplate( '_partial/headerNavigation.php'); ?>
-                        <li class="nav__dropdown">
-                            <a href="javascript:void(0)" class="nav__dropdown-trigger nav__dropdown-trigger-js"><?php echo Label::getLabel("Label_More", CommonHelper::getLangId()); ?> </a>
-                            <div class="nav__dropdown-target nav__dropdown-target-js -skin">
-                                <nav class="nav nav--vertical">
-                                    <ul>
-                                        <?php $this->includeTemplate( '_partial/headerNavigationMore.php'); ?>
 
-                                    </ul>
-                                </nav>
-                            </div>
-                        </li>
+                        <?php $this->includeTemplate( '_partial/headerNavigationMore.php'); ?>  
 					</ul>
                 </nav>
 

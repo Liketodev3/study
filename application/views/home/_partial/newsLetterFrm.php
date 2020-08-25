@@ -18,7 +18,7 @@
         </section>
 
 
-<script type = "text/javascript" >
+<script>
     (function() {
         setUpNewsLetter = function(frm) {
             var data = fcom.frmData(frm);
