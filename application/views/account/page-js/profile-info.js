@@ -63,7 +63,7 @@ $(document).ready(function(){
 								if(0 >= value) {
 									$('.profile-Info-js').addClass('-color-secondary');
 								}else{
-									$('.general-availability-js').removeClass('-color-secondary');
+									$('.profile-Info-js').removeClass('-color-secondary');
 								}
 							break;
 							case 'uqualificationCount':

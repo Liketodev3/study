@@ -4,6 +4,8 @@ $profileFrm->setFormTagAttribute('class','form');
 $profileFrm->setFormTagAttribute('onsubmit', 'setUpProfileInfo(this); return(false);');
 
 if( $profileFrm->getField('user_url_name') ) {
+$userIdFld = $profileFrm->getField('user_id');
+$userIdFld->addFieldTagAttribute('id','user_id');
 $user_url_name = $profileFrm->getField('user_url_name');
 $user_url_name->developerTags['col'] = 12;
 $user_url_name->htmlAfterField = '<p class="user_url_string">'. CommonHelper::generateFullUrl('teachers','') .'/<span class="user_url_name_span">'. $user_url_name->value .'</span></p>';
@@ -22,8 +24,7 @@ $user_profile_info->developerTags['col'] = 12;
 $user_gender = $profileFrm->getField('user_gender');
 $user_gender->setOptionListTagAttribute( 'class', 'list-inline list-inline--onehalf' );
 
-$userIdFld = $profileFrm->getField('user_id');
-$userIdFld->addFieldTagAttribute('id','user_id');
+
 
 $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account','setUpProfileImage'));
 $jsonUserRow = FatUtility::convertToJson($userRow);
