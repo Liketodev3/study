@@ -32,7 +32,7 @@
 												<div class="col-xl-4 col-lg-5 col-md-5">
 													<div class="form form--small">
 														<select id="earningMonth" onchange="getStatisticalData(1)">
-															<?php foreach($durationArr as $key=>$duration){?>
+															<?php foreach($durationArr as $key => $duration){?>
 																<option value="<?php echo $key; ?>"><?php echo $duration; ?></option>
 															<?php }?>
 														</select>
@@ -89,10 +89,11 @@
 google.load('visualization', '1', {'packages':['corechart', 'bar']});
     google.setOnLoadCallback(createChart2);
    window.onresize = createChart2;
-	  function createChart2() {  console.log(1);
+	  function createChart2() {  
+          console.log(1,'SDSD');
         var data = new google.visualization.DataTable();
-		fcom.ajax(fcom.makeUrl('TeacherReports','getReportingData'), '', function(res){
-
+		//fcom.ajax(fcom.makeUrl('TeacherReports','getReportingData'), '', function(res){
+            // console.log(res,'getReportingData');
 
         data.addColumn('string', '<?php echo Label::getLabel('LBL_Duration', $siteLangId); ?>');
         //data.addColumn('number', '<?php echo Label::getLabel('LBL_New_Users_Earnings', $siteLangId); ?>');
@@ -114,7 +115,7 @@ google.load('visualization', '1', {'packages':['corechart', 'bar']});
 
         var chart = new google.visualization.ColumnChart(document.getElementById('reportListing'));
         chart.draw(data, options);
-				});
+				//});
     }
 	
 

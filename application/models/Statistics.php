@@ -146,9 +146,12 @@ class Statistics extends MyAppModel
         $type = strtolower($type);
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
-        $nowDate = MyDate::changeDateTimezone(date('Y-m-d H:i:s'), $user_timezone, $systemTimeZone);
+        //$nowDate = MyDate::changeDateTimezone(date('Y-m-d H:i:s'), $user_timezone, $systemTimeZone);
+        $nowDate = date('Y-m-d H:i:s');
+        $nowDateTimestamp =time();
         switch ($type) {
             case static::TYPE_TODAY:
+                $startDate =  MyDate::changeDateTimezone(date('Y-m-d', $nowDateTimestamp).' 12:00:00', $user_timezone, $systemTimeZone);
                 $srch = new ScheduledLessonSearch();
                 $srch->joinOrder();
                 $srch->addCondition('slesson_teacher_id', '=', $this->userId);
@@ -156,19 +159,30 @@ class Statistics extends MyAppModel
                 $srch->addMultipleFields(array('count(slesson_id) as lessonCount, MIN(order_date_added) as fromDate, MAX(order_date_added) as toDate'));
                 $srch->addCondition('mysql_func_DATE(order_date_added)', '=', 'mysql_func_DATE("'. $nowDate .'")', 'AND', true);
                 $rs = $srch->getResultSet();
-                return $this->db->fetch($rs);
+                $data = $this->db->fetch($rs);
+                $data['fromDate'] = $startDate;
+                $data['toDate'] = $nowDate;
+                return $data;
                 break;
             case static::TYPE_LAST_WEEK:
+                $startDate =  date('Y-m-d H:i:s',strtotime('-1 week',$nowDateTimestamp));
+                $endDate =  $nowDate;
                 $srch = new ScheduledLessonSearch();
                 $srch->joinOrder();
                 $srch->addCondition('slesson_teacher_id', '=', $this->userId);
                 $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
                 $srch->addMultipleFields(array('count(slesson_id) as lessonCount, MIN(order_date_added) as fromDate, MAX(order_date_added) as toDate'));
-                $srch->addCondition('mysql_func_YEARWEEK(order_date_added)', '=', 'mysql_func_YEARWEEK("'. $nowDate .'")', 'AND', true);
+                // $srch->addCondition('mysql_func_YEARWEEK(order_date_added)', '=', 'mysql_func_YEARWEEK("'. $nowDate .'")', 'AND', true);
+                $srch->addCondition('order_date_added','>=',$startDate,'AND', true);
+                $srch->addCondition('order_date_added','<=',$endDate,'AND', true);
                 $rs = $srch->getResultSet();
-                return $this->db->fetch($rs);
+                $data = $this->db->fetch($rs);
+                $data['fromDate'] = $startDate;
+                $data['toDate'] = $endDate;
+                return $data;
                 break;
             case static::TYPE_THIS_MONTH:
+                $startDate =  MyDate::changeDateTimezone(date('Y-m',$nowDateTimestamp).'-01 12:00:00', $user_timezone, $systemTimeZone);
                 $srch = new ScheduledLessonSearch();
                 $srch->joinOrder();
                 $srch->addCondition('slesson_teacher_id', '=', $this->userId);
@@ -176,9 +190,16 @@ class Statistics extends MyAppModel
                 $srch->addMultipleFields(array('count(slesson_id) as lessonCount, MIN(order_date_added) as fromDate, MAX(order_date_added) as toDate'));
                 $srch->addCondition('mysql_func_MONTH(order_date_added)', '=', 'mysql_func_MONTH("'. $nowDate .'")', 'AND', true);
                 $rs = $srch->getResultSet();
-                return $this->db->fetch($rs);
+                $data = $this->db->fetch($rs);
+                $data['fromDate'] = $startDate;
+                $data['toDate'] = $nowDate;
+                return $data;
                 break;
             case static::TYPE_LAST_MONTH:
+                $startDate = date('Y-m-d',strtotime('first day of previous month',$nowDateTimestamp));
+                $endDate =  date('Y-m-d',strtotime('last day of previous month',$nowDateTimestamp)).' 23:59:59';
+                $startDate =   MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+                $endDate =   MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
                 $srch = new ScheduledLessonSearch();
                 $srch->joinOrder();
                 $srch->addCondition('slesson_teacher_id', '=', $this->userId);
@@ -186,16 +207,27 @@ class Statistics extends MyAppModel
                 $srch->addMultipleFields(array('count(slesson_id) as lessonCount, MIN(order_date_added) as fromDate, MAX(order_date_added) as toDate'));
                 $srch->addCondition('mysql_func_MONTH(order_date_added)', '=', 'mysql_func_MONTH("'. $nowDate .'" - INTERVAL 1 MONTH)', 'AND', true);
                 $rs = $srch->getResultSet();
-                return $this->db->fetch($rs);
+                $data = $this->db->fetch($rs);
+                $data['fromDate'] = $startDate;
+                $data['toDate'] = $endDate;
+                return $data;
                 break;
             case static::TYPE_LAST_YEAR:
+                $startDate = date('Y-m-d',strtotime('last year January 1st',$nowDateTimestamp));
+                $endDate =  date('Y-m-d',strtotime('last year December 31st',$nowDateTimestamp)).' 23:59:59';
+                $startDate =   MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+                $endDate =   MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
                 $srch = new ScheduledLessonSearch();
                 $srch->joinOrder();
                 $srch->addCondition('slesson_teacher_id', '=', $this->userId);
                 $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
+                $srch->addCondition('mysql_func_YEAR(order_date_added)', '=', 'mysql_func_YEAR("'. $nowDate .'" - INTERVAL 1 YEAR)', 'AND', true);
                 $srch->addMultipleFields(array('count(slesson_id) as lessonCount, MIN(order_date_added) as fromDate, MAX(order_date_added) as toDate'));
                 $rs = $srch->getResultSet();
-                return $this->db->fetch($rs);
+                $data = $this->db->fetch($rs);
+                $data['fromDate'] = $startDate;
+                $data['toDate'] = $endDate;
+                return $data;
                 break;
         }
     }
@@ -207,25 +239,29 @@ class Statistics extends MyAppModel
         foreach ($last12Months as $key => $val) {
             $srch = new OrderSearch();
             $srch->joinOrderProduct();
+            $srch->joinScheduledLessonDetail();
+            $srch->joinScheduledLesson();
             $srch->addCondition('op_teacher_id', '=', $this->userId);
-            $srch->addMultipleFields(array('SUM(order_net_amount) as Sales','op_order_id'));
+            $srch->addMultipleFields(array('SUM(op_commission_charged) as Sales','op_order_id'));
             $srch->addCondition('mysql_func_month(order_date_added)', '=', $val['monthCount'], 'AND', true);
             $srch->addCondition('mysql_func_year(order_date_added)', '=', $val['year'], 'AND', true);
+            $srch->addCondition('slesson_is_teacher_paid', '=', applicationConstants::YES);
             //$srch->addHaving('mysql_func_count(DISTINCT order_user_id)', '>', 1,'AND',true);
             $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
             $rs = $srch->getResultSet();
             $row = $this->db->fetch($rs);
 
-            $srch = new OrderSearch();
-            $srch->joinOrderProduct();
-            $srch->addCondition('op_teacher_id', '=', $this->userId);
-            $srch->addMultipleFields(array('SUM(order_net_amount) as Sales','op_order_id'));
-            $srch->addCondition('mysql_func_month(order_date_added)', '=', $val['monthCount'], 'AND', true);
-            $srch->addCondition('mysql_func_year(order_date_added)', '=', $val['year'], 'AND', true);
-            $srch->addHaving('mysql_func_count(DISTINCT order_user_id)', '=', 1, 'AND', true);
-            $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
-            $rs = $srch->getResultSet();
-            $rownew = $this->db->fetch($rs);
+            // $srch = new OrderSearch();
+            // $srch->joinOrderProduct();
+            // $srch->addCondition('op_teacher_id', '=', $this->userId);
+            // $srch->addMultipleFields(array('SUM(order_net_amount) as Sales','op_order_id'));
+            // $srch->addCondition('mysql_func_month(order_date_added)', '=', $val['monthCount'], 'AND', true);
+            // $srch->addCondition('mysql_func_year(order_date_added)', '=', $val['year'], 'AND', true);
+            // $srch->addHaving('mysql_func_count(DISTINCT order_user_id)', '=', 1, 'AND', true);
+            // $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
+            // $srch->addCondition('slesson_is_teacher_paid', '=', applicationConstants::YES);
+            // $rs = $srch->getResultSet();
+            // $rownew = $this->db->fetch($rs);
 
             //$sales_data[] = array("duration" => $val['monthShort'] . "-" . $val['yearShort'], "OldCustomersValue" => round($row["Sales"], 2), "NewCustomersValue" => round($rownew["Sales"], 2));
             $sales_data[] = array("duration" => $val['monthShort'] . "-" . $val['yearShort'], "OldCustomersValue" => round($row["Sales"], 2));
