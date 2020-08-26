@@ -692,11 +692,13 @@ class ConfigurationsController extends AdminBaseController
                 //$fld = $frm->addTextBox(Label::getLabel("LBL_Google_Map_API_Key",$this->adminLangId),'CONF_GOOGLEMAP_API_KEY');
                 //$fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_Google_map_api_key_used_to_get_user_current_location.",$this->adminLangId)."</small>";
 
-                $frm->addHtml('', 'Comet Chat API Keys', '<h3>'.Label::getLabel("LBL_Comet_chat_Api_Key", $this->adminLangId).'</h3>');
+                $frm->addHtml('','comet_chat_api_keys', '<h3>'.Label::getLabel("LBL_Comet_chat_Api_Key", $this->adminLangId).'</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Comet_Chat_Api_Key", $this->adminLangId), 'CONF_COMET_CHAT_API_KEY');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Comet_Chat_App_ID", $this->adminLangId), 'CONF_COMET_CHAT_APP_ID');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Comet_Chat_Auth", $this->adminLangId), 'CONF_COMET_CHAT_AUTH');
-                //$fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_Google_map_api_key_used_to_get_user_current_location.",$this->adminLangId)."</small>";
+
+                $frm->addHtml('', 'lessonspace_api_key', '<h3>'.Label::getLabel("LBL_Lessonspace_API_Key", $this->adminLangId).'</h3>');
+                $fld = $frm->addTextBox(Label::getLabel("LBL_Lessonspace_Api_Key", $this->adminLangId), 'CONF_LESSONSPACE_API_KEY');
 
                 $frm->addHtml('', 'Newsletter', '<h3>'.Label::getLabel("LBL_Newsletter_Subscription", $this->adminLangId).'</h3>');
 
