@@ -22,6 +22,9 @@ $user_profile_info->developerTags['col'] = 12;
 $user_gender = $profileFrm->getField('user_gender');
 $user_gender->setOptionListTagAttribute( 'class', 'list-inline list-inline--onehalf' );
 
+$userIdFld = $profileFrm->getField('user_id');
+$userIdFld->addFieldTagAttribute('id','user_id');
+
 $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account','setUpProfileImage'));
 $jsonUserRow = FatUtility::convertToJson($userRow);
 ?>

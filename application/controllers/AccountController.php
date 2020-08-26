@@ -363,7 +363,9 @@ class AccountController extends LoggedUserController
             $fldUname = $frm->addTextBox(Label::getLabel('LBL_Username'), 'user_url_name');
             $fldUname->setUnique('tbl_users', 'user_url_name', 'user_id', 'user_id', 'user_id');
             $fldUname->requirements()->setRequired();
-            $fldUname->requirements()->setCharOnly();
+            $fldUname->requirements()->setLength(3,35);
+            $fldUname->requirements()->setRegularExpressionToValidate('^[A-Za-z0-9_\-!@#\$\&]{3,35}$');
+            // $fldUname->requirements()->setUsername();
         }
         $fldFname = $frm->addTextBox(Label::getLabel('LBL_First_Name'), 'user_first_name');
         $fldFname->requirements()->setCharOnly();
