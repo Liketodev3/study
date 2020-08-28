@@ -122,4 +122,13 @@ class MyDate extends FatDate
         return floor($first->diff($second)->days/7);
         //return round($first->diff($second)->days/7);
     }
+
+    public static function getOffset(string $timeZone = 'UTC') : string
+    {
+        $dateTimeZone = new DateTimeZone($timeZone);
+        
+        $dateTime = new DateTime("now", $dateTimeZone);
+        
+       return $dateTime->format('P');
+    }
 }

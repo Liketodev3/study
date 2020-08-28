@@ -68,30 +68,37 @@ $(function() {
 			$("#cometChatBox").html('<div id="cometchat_embed_synergy_container" style="width:'+chat_width+';height:'+chat_height+';max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;"></div>');
 			var chat_js = document.createElement('script'); chat_js.type = 'text/javascript'; chat_js.src = '//fast.cometondemand.net/'+chat_appid+'x_xchatx_xcorex_xembedcode.js';
 			chat_js.onload = function() {
-			var chat_iframe = {};chat_iframe.module="synergy";chat_iframe.style="min-height:"+chat_height+";min-width:"+chat_width+";";chat_iframe.width=chat_width.replace('px','');chat_iframe.height=chat_height.replace('px','');chat_iframe.src='//'+chat_appid+'.cometondemand.net/cometchat_embedded.php'+(is_grpcls=='1' ? '?guid='+chat_group_id : ''); if(typeof(addEmbedIframe)=="function"){addEmbedIframe(chat_iframe);}
+				var chat_iframe = {};chat_iframe.module="synergy";chat_iframe.style="min-height:"+chat_height+";min-width:"+chat_width+";";chat_iframe.width=chat_width.replace('px','');chat_iframe.height=chat_height.replace('px','');chat_iframe.src='//'+chat_appid+'.cometondemand.net/cometchat_embedded.php'+(is_grpcls=='1' ? '?guid='+chat_group_id : ''); if(typeof(addEmbedIframe)=="function"){addEmbedIframe(chat_iframe);}
 			}
 			var chat_script = document.getElementsByTagName('script')[0]; chat_script.parentNode.insertBefore(chat_js, chat_script);
-	}
+			return true;
+		}
 
 	createLessonspaceBox = function(){
-		fcom.ajax(fcom.makeUrl('les','launchLessonSpace',[CometJsonFriendData.lessonId]),'',function(t){
-			if(t == 0){
-				$.mbsmessage( canStartAlertLabel,true, 'alert alert--danger');
+		fcom.ajax(fcom.makeUrl('Lessonspace','launch',[CometJsonFriendData.lessonId, 1]), '',function(result) {
+
+			if(result.status == 0){
+				$.mbsmessage( result.msg , true, 'alert alert--danger');
 				return false;
+			}else if(result.status == 1) {
+				let html = '<div id="cometchat_embed_synergy_container" style="width:'+chat_width+';height:'+chat_height+';max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;">';
+				html += '<iframe  style="width:100%;height:100%;" src="'+result.url+'" allow="camera; microphone; display-capture" frameborder="0"></iframe>';
+				html += '</div>';
+				$("#cometChatBox").html(html);
+				return true;
 			}
-			joinLessonButtonAction();
-            createChatBox();
-            markTeacherJoinTime();
-		});
+			
+
+		},{fOutMode:'json'});
 	}
 
 	createChatBox = function(){
-			switch (activeMeatingTool) {
-				case cometChatMeatingTool:
-					createCometChatBox();
+			switch (activeMeetingTool) {
+				case cometChatMeetingTool:
+					return createCometChatBox();
 				break;
-				case lessonspaceMeatingTool:
-					createLessonspaceBox();
+				case lessonspaceMeetingTool:
+					return createLessonspaceBox();
 				break;
 				default:
 					$.systemMessage('Someting went worngs', 'alert alert--danger');
@@ -117,7 +124,8 @@ $(function() {
 
 
     joinLesson = function(CometJsonData,CometJsonFriendData){
-        if(is_grpcls=='1' && activeMeatingTool != ){
+
+        if(is_grpcls=='1' && activeMeetingTool != lessonspaceMeetingTool){
             createGroup();
         }
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','startLessonAuthentication',[CometJsonFriendData.lessonId]),'',function(t){
@@ -126,8 +134,11 @@ $(function() {
 				return false;
 			}
 			joinLessonButtonAction();
-            createChatBox();
-            markTeacherJoinTime();
+
+            if(createChatBox()){
+				markTeacherJoinTime();
+			}
+           
 		});
     };
 
