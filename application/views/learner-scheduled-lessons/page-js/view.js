@@ -111,7 +111,7 @@ $(function() {
 		}
 
 	createLessonspaceBox = function(){
-		fcom.ajax(fcom.makeUrl('Lessonspace','launch',[lessonId, 2]), '',function(result) {
+		fcom.ajax(fcom.makeUrl('Lessonspace','launch',[lessonId, 0]), '',function(result) {
 			if(result.status == 0){
 				$.mbsmessage( result.msg , true, 'alert alert--danger');
 				return false;

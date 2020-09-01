@@ -596,8 +596,17 @@ class ConfigurationsController extends AdminBaseController
 
                 $fld = $frm->addIntegerField(Label::getLabel("LBL_Minimum_Interval_[Days]", $this->adminLangId), 'CONF_MIN_INTERVAL_WITHDRAW_REQUESTS', '');
                 $fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_minimum_interval_in_days_between_two_withdrawal_requests.", $this->adminLangId)."</small>";
+              
+                $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Meeting_TOOL', $this->adminLangId).'</h3>');
 
+                $lessonSpace =  FatApp::getConfig('CONF_MEETING_TOOL_LESSONSPACE', FatUtility::VAR_INT, 2);
+                $cometChatMeetingTool =  FatApp::getConfig('CONF_MEETING_TOOL_COMET_CHAT', FatUtility::VAR_INT, 1);
+                $activeMeetingTool =  FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_INT, 2);
 
+                $optionArray =  array($lessonSpace => Label::getLabel('LBL_LESSONSPACE', $this->adminLangId) , $cometChatMeetingTool =>  Label::getLabel('LBL_COMET_CHAT', $this->adminLangId) );
+
+                $frm->addRadioButtons('', "CONF_ACTIVE_MEETING_TOOL", $optionArray, $activeMeetingTool);
+        
                 $frm->addHtml('', 'Checkout', '<h3>'.Label::getLabel("LBL_Checkout", $this->adminLangId).'</h3>');
                 $srch = new OrderStatusSearch($this->adminLangId);
                 $srch->addMultipleFields(array('orderstatus_id', 'IFNULL(orderstatus_name, orderstatus_identifier) as  orderstatus_name'));
