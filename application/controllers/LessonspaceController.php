@@ -22,16 +22,18 @@ class LessonspaceController extends LoggedUserController
 
             $lessonUrl =  $lessonMeetingDetail->getUserLessonUrl();
 
-            if(empty($lessonUrl)){
-                FatUtility::dieJsonError($lessonMeetingDetail->getError());
+            // if(empty($lessonUrl)){
+            //     FatUtility::dieJsonError($lessonMeetingDetail->getError());
+            // }
+            if(!empty($lessonUrl)){
+                
+                $jsonArray = [
+                    'msg' => Label::getLabel('LBL_Lesson_URL'),
+                    'url' =>  $lessonUrl
+                ];
+
+                FatUtility::dieJsonSuccess($jsonArray);
             }
-
-            $jsonArray = [
-                'msg' => Label::getLabel('LBL_Lesson_URL'),
-                'url' =>  $lessonUrl
-            ];
-
-            FatUtility::dieJsonSuccess($jsonArray);
         }
 
         $lessonFormatData = $this->formatLessonData($lessonData);
@@ -128,9 +130,11 @@ class LessonspaceController extends LoggedUserController
             $scheduledLessonSearch->addCondition('sld.sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
             $scheduledLessonSearch->addCondition('slns.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
         }
+        $scheduledLessonSearch->getQuery();
+
         $resultSet =  $scheduledLessonSearch->getResultSet();
         $lessonData = FatApp::getDb()->fetch($resultSet);
-        
+     
         if(empty($lessonData)) {
            return array();
         }
