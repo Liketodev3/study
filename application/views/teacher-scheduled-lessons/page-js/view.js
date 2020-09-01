@@ -75,6 +75,7 @@ $(function() {
 		}
 
 	createLessonspaceBox = function(){
+		
 		fcom.ajax(fcom.makeUrl('Lessonspace','launch',[CometJsonFriendData.lessonId, 1]), '',function(result) {
 
 			if(result.status == 0){
@@ -87,9 +88,9 @@ $(function() {
 				$("#cometChatBox").html(html);
 				return true;
 			}
-			
 
 		},{fOutMode:'json'});
+
 	}
 
 	createChatBox = function(){
@@ -134,10 +135,9 @@ $(function() {
 				return false;
 			}
 			joinLessonButtonAction();
-
-            if(createChatBox()){
-				markTeacherJoinTime();
-			}
+            createChatBox()
+			markTeacherJoinTime();
+			
            
 		});
     };

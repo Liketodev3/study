@@ -128,7 +128,7 @@ class LessonspaceController extends LoggedUserController
                                                         'CONCAT(ut.user_first_name," ",ut.user_last_name) as userName',
                                                     ]);
             $scheduledLessonSearch->addCondition('sld.sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
-            $scheduledLessonSearch->addCondition('slns.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+            $scheduledLessonSearch->addCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
         }
         $scheduledLessonSearch->getQuery();
 
