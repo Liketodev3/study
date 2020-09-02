@@ -53,6 +53,11 @@ var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>'
 var chat_avatar = "<?php echo $teacherImage; ?>";
 var chat_friends = "<?php echo $lessonData['learnerId']; ?>";
 
+
+var activeMeetingTool =  '<?php echo FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_INT, 2); ?>';
+var cometChatMeetingTool = '<?php echo FatApp::getConfig('CONF_MEETING_TOOL_COMET_CHAT', FatUtility::VAR_INT, 1); ?>';
+var lessonspaceMeetingTool = '<?php echo FatApp::getConfig('CONF_MEETING_TOOL_LESSONSPACE', FatUtility::VAR_INT, 2); ?>';
+
 var canEnd = '<?php echo $canEnd ?>';
 
 var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","avatarURL":"<?php echo $teacherImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['teacherUrlName']; ?>", "role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
@@ -65,7 +70,10 @@ var CometJsonFriendData = {"lessonId":"<?php echo $lessonData['slesson_id'] ?>",
 
 var checkEveryMinuteStatusVar = null;
 var checkNewFlashCardsVar = null;
-createUserCometChatApi(CometJsonData,CometJsonFriendData);
+if(activeMeetingTool == cometChatMeetingTool) {
+    createUserCometChatApi(CometJsonData,CometJsonFriendData);
+}
+
 
 if(!is_time_up && lesson_joined && !lesson_status_completed){
     joinLesson(CometJsonData, CometJsonFriendData);
