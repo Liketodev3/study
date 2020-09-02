@@ -278,8 +278,8 @@ class User extends MyAppModel
         $srch->addCondition('user_id', '=', $userId);
         $srch->setPageSize(1);
         $srch->addMultiplefields(array(
-            'if(user_country_id > 0,1,0) as userCountryId',
-            'if(user_timezone != "",1,0) as userTimeZone',
+            'if(user_country_id > 0 && user_timezone != "",1,0) as userProfile',
+            // 'if(user_timezone != "",1,0) as userTimeZone',
             'if(count(DISTINCT uqualification_id) > 0,1,0) as uqualificationCount',
             'if(count(DISTINCT tgavl_id),1,0) as generalAvailabilityCount',
             'if(count(DISTINCT utsl_slanguage_id),1,0) as slanguageCount',

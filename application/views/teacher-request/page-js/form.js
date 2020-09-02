@@ -79,7 +79,7 @@ $("document").ready(function(){
 
 	 setUpTeacherApproval = function( frm ){
 		if ( !$(frm).validate() ){ 
-			$("html, body").animate({ scrollTop:  $(".error").eq(0).offset().top-100 }, "slow");
+			$("html, body").animate({ scrollTop:  $(".error").eq(0).offset().top - 100 }, "slow");
 			return; 
 		}
 		if(setUpTeacherApprovalAjax) {

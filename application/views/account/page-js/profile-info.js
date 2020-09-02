@@ -57,8 +57,9 @@ $(document).ready(function(){
 									$('.general-availability-js').removeClass('-color-secondary');
 								}
 							break;
-							case 'userCountryId':
-							case 'userTimeZone':
+							// case 'userCountryId':
+							case 'userProfile':
+							// case 'userTimeZone':
 							value =  parseInt(value);
 								if(0 >= value) {
 									$('.profile-Info-js').addClass('-color-secondary');
@@ -185,7 +186,10 @@ $(document).ready(function(){
 	};
 
 	setUpProfileInfo = function(frm){
-		if (!$(frm).validate()) return;
+		if (!$(frm).validate()) {
+			$("html, body").animate({ scrollTop:  $(".error").eq(0).offset().top-100 }, "slow");
+			return;
+		}
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileInfo'), data, function(t) {
 			setTimeout(function() {
@@ -244,8 +248,8 @@ $(document).ready(function(){
 			"url": "https://api.cometondemand.net/api/v2/updateUser",
 			"method": "POST",
 			"headers": {
-			"api-key": chat_api_key,
-			"content-type": "application/x-www-form-urlencoded",
+				"api-key": chat_api_key,
+				"content-type": "application/x-www-form-urlencoded",
 			},
 			"data": {
 			"UID": userId,
