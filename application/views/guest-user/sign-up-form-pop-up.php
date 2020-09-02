@@ -35,7 +35,7 @@ if(isset($userType) && !empty($userType)) {
 
 $termLink = ' <a target="_blank" class = "-link-underline link-color" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a> and <a href="'. $privacyPolicyLinkHref .'" target="_blank" class = "-link-underline link-color" >'. Label::getLabel('LBL_Privacy_Policy') . '</a>';
 $terms_caption = '<span>'.$termLink.'</span>';
-$frm->getField('agree')->addWrapperAttribute('class', 'terms_wrap');
+$frm->getField('agree')->addWrapperAttribute('class', 'terms_wrap form__list--check');
 $frm->getField('agree')->htmlAfterField = $terms_caption;
 
 	// $fldAgree = $frm->getField('agree');
