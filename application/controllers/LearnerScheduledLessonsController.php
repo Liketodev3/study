@@ -518,6 +518,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         /* [ */
         $srch = new stdClass();
         $this->searchLessons($srch);
+        $srch->joinLessonLanguage($this->siteLangId);
         $srch->joinTeacherCredentials();
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -529,8 +530,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
                 'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
                 'ut.user_timezone as teacherTz',
-                //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
-                '"-" as teacherTeachLanguageName',
+                // 'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
+                'IFNULL(tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
+                // '"-" as teacherTeachLanguageName',
                 'tcred.credential_email as teacherEmailId',
                 'sldetail_learner_status',
                 'sldetail_order_id'
@@ -627,7 +629,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $vars = array(
             '{learner_name}'    => $lessonRow['learnerFullName'],
             '{teacher_name}'    => $lessonRow['teacherFullName'],
-            '{lesson_name}'     => $lessonRow['teacherTeachLanguageName'],
+            '{lesson_name}'     => ($lessonRow['is_trial'] == applicationConstants::NO) ? $lessonRow['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial', $this->siteLangId),
             '{learner_comment}' => $post['cancel_lesson_msg'],
             '{lesson_date}'     => FatDate::format($start_date),
             '{lesson_start_time}' => $start_time,
@@ -985,7 +987,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $vars = array(
             '{learner_name}' => $lessonDetail['learnerFullName'],
             '{teacher_name}' => $lessonDetail['teacherFullName'],
-            '{lesson_name}' => ($lessonDetail['op_lpackage_is_free_trial'] == applicationConstants::NO) ? $lessonDetail['teacherTeachLanguageName'] : Label::getLabel('LBL_N/A', $this->siteLangId),
+            '{lesson_name}' => ($lessonDetail['op_lpackage_is_free_trial'] == applicationConstants::NO) ? $lessonDetail['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial', $this->siteLangId),
             '{lesson_date}' => MyDate::convertTimeFromSystemToUserTimezone('Y-m-d',  date('Y-m-d H:i:s', $SelectedDateTimeStamp),false, $lessonDetail['teacherTimeZone']),
             '{lesson_start_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', date('Y-m-d H:i:s', $SelectedDateTimeStamp), true, $lessonDetail['teacherTimeZone']),
             '{lesson_end_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', date('Y-m-d H:i:s', $endDateTimeStamp), true, $lessonDetail['teacherTimeZone']),

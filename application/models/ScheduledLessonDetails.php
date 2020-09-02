@@ -97,6 +97,8 @@ class ScheduledLessonDetails extends MyAppModel
         $srch->joinScheduledLesson();
         $srch->joinTeacher();
         $srch->joinLearner();
+        $srch->joinOrder();
+        $srch->joinOrderProduct();
         $srch->joinLearnerCredentials();
         $srch->joinLessonLanguage();
 
@@ -107,6 +109,7 @@ class ScheduledLessonDetails extends MyAppModel
                 'slesson_start_time',
                 'slesson_end_time',
                 'slesson_status',
+                'op.op_lpackage_is_free_trial',
                 'sldetail_learner_status',
                 'ul.user_id as learnerId',
                 'ul.user_first_name as learnerFname',

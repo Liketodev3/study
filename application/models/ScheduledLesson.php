@@ -194,7 +194,7 @@ class ScheduledLesson extends MyAppModel
             $vars = array(
                 '{learner_name}'    => $lessonDetailRow['learnerFullName'],
                 '{teacher_name}'    => $lessonDetailRow['teacherFullName'],
-                '{lesson_name}'     => $lessonDetailRow['teacherTeachLanguageName'],
+                '{lesson_name}'     => ($lessonDetailRow['op_lpackage_is_free_trial'] == applicationConstants::NO) ? $lessonDetailRow['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial'),
                 '{teacher_comment}' => $reason,
                 '{lesson_date}'     => FatDate::format($start_date),
                 '{lesson_start_time}' => $start_time,
@@ -209,7 +209,7 @@ class ScheduledLesson extends MyAppModel
         return true;
     }
 
-    public function rescheduleLessonByTeacher($reason='')
+    public function rescheduleLessonByTeacher( $reason = '')
     {
         $lessonDetailRows = ScheduledLessonDetails::getScheduledRecordsByLessionId($this->getMainTableRecordId());
 
@@ -257,7 +257,7 @@ class ScheduledLesson extends MyAppModel
             $vars = array(
                 '{learner_name}'    => $lessonDetailRow['learnerFullName'],
                 '{teacher_name}'    => $lessonDetailRow['teacherFullName'],
-                '{lesson_name}'     => $lessonDetailRow['teacherTeachLanguageName'],
+                '{lesson_name}'     => ($lessonDetailRow['op_lpackage_is_free_trial'] == applicationConstants::NO) ? $lessonDetailRow['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial'),
                 '{teacher_comment}' => $reason,
                 '{lesson_date}'     => FatDate::format($start_date),
                 '{lesson_start_time}' => $start_time,
