@@ -16,7 +16,7 @@ class LessonspaceController extends LoggedUserController
 
         $lessonData['isTeacher'] =  ($isTeacher == applicationConstants::YES);
 
-        $lessonMeetingDetail =  new LessonMeetingDetail(0, $lessonId, UserAuthentication::getLoggedUserId());
+        $lessonMeetingDetail =  new LessonMeetingDetail($lessonId, UserAuthentication::getLoggedUserId());
 
         if($lessonData['isUserJoinLesson'] > 0) {
 
@@ -50,8 +50,10 @@ class LessonspaceController extends LoggedUserController
         if(!$lessonMeetingDetail->addDeatils( LessonMeetingDetail::URL_KEY, $lessonData['client_url'])) {
              FatUtility::dieJsonError( $lessonMeetingDetail->getError() );
         }
+        
+        $lessonMeetingDetail =  new LessonMeetingDetail($lessonId, UserAuthentication::getLoggedUserId());
 
-        if(!$lessonMeetingDetail->addDeatils( 'LEESON_ROOM_ID', $lessonData['room_id'])) {
+        if(!$lessonMeetingDetail->addDeatils('LEESON_ROOM_ID', $lessonData['room_id'])) {
 
             $db->rollbackTransaction();
             FatUtility::dieJsonError( $lessonMeetingDetail->getError() );

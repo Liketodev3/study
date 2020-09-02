@@ -9,7 +9,7 @@ class LessonMeetingDetail extends MyAppModel
     private $lessonId;
     private $userId;
 
-    public function __construct( int $id = 0, int $lessonId = 0, int $userId = 0)
+    public function __construct(int $lessonId, int $userId, int $id = 0 )
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
         $this->lessonId =  $lessonId;
