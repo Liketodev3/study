@@ -159,7 +159,7 @@ class WithdrawalRequestsController extends AdminBaseController
 			return false;
 		}
         $records['gatewayFee'] = $gatewayFee;
-        $records['amount'] =  $amount;
+        $records['amount'] =  round($amount,2);
 		if($records['pmethod_code'] ==  PaypalPayout::KEY_NAME && $status == Transaction::WITHDRAWL_STATUS_APPROVED) {
 
             $payoutObj =  new PaypalPayout();

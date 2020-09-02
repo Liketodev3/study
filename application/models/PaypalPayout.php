@@ -173,6 +173,7 @@ class PaypalPayout {
 		$gatewayFee =  $recordData['gatewayFee'];
 		$sender_batch_id = "Payout_".time().'_'.$recordData['withdrawal_id'];
 		$note =  Label::getLabel('MSG_Transaction_Fee_Charged_:').' '.CommonHelper::displayMoneyFormat($gatewayFee,true,true);
+		$amount =  round($recordData['amount'],2);
 		$requestData = array(
 			"sender_batch_header" => array(
 				"sender_batch_id" => $sender_batch_id,
