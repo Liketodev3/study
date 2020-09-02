@@ -85,11 +85,17 @@ class LessonspaceController extends LoggedUserController
        $unixeEndTime = strtotime($endTime);
        $startTime = date('Y-m-d',$unixStartTime).'T'.date('H:i:s',$unixStartTime).$getTimeZoneOffset;
        $endTime = date('Y-m-d',$unixeEndTime).'T'.date('H:i:s',$unixeEndTime).$getTimeZoneOffset;
+       $image = '';
+       if( true == User::isProfilePicUploaded( UserAuthentication::getLoggedUserId() ) ){
+        $image = CommonHelper::generateFullUrl('Image','user', array( UserAuthentication::getLoggedUserId() )).'?'.time();
+
+    }
         return  [
             "id" => Lessonspace::LESSON_ID_PREFIX.$lessonData['slesson_id'],
             "user" => [
                 'name' => $lessonData['userName'],
                 'leader' => $lessonData['isTeacher'],
+                'profile_picture' =>  $image
             ],
             'timeouts' => [
                 "not_before" => $startTime,
