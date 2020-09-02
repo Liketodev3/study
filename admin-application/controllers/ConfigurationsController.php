@@ -605,7 +605,7 @@ class ConfigurationsController extends AdminBaseController
 
                 $optionArray =  array($lessonSpace => Label::getLabel('LBL_LESSONSPACE', $this->adminLangId) , $cometChatMeetingTool =>  Label::getLabel('LBL_COMET_CHAT', $this->adminLangId) );
 
-                $frm->addRadioButtons('', "CONF_ACTIVE_MEETING_TOOL", $optionArray, $activeMeetingTool);
+                $frm->addRadioButtons('', "CONF_ACTIVE_MEETING_TOOL", $optionArray, $activeMeetingTool,array('class' => 'list-inline list-inline--onehalf'));
         
                 $frm->addHtml('', 'Checkout', '<h3>'.Label::getLabel("LBL_Checkout", $this->adminLangId).'</h3>');
                 $srch = new OrderStatusSearch($this->adminLangId);
