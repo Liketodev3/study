@@ -131,7 +131,7 @@ class LessonspaceController extends LoggedUserController
             $scheduledLessonSearch->addMultipleFields([
                                                         'IF(sldetail_learner_join_time > 0, 1, 0) as isUserJoinLesson', 
                                                         'ul.user_timezone as userTimeZone',
-                                                        'CONCAT(ut.user_first_name," ",ut.user_last_name) as userName',
+                                                        'CONCAT(ul.user_first_name," ",ul.user_last_name) as userName',
                                                     ]);
             $scheduledLessonSearch->addCondition('sld.sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
             $scheduledLessonSearch->addCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
