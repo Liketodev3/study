@@ -70,7 +70,7 @@ $this->includeTemplate('teachers/_partial/teacherTopFilters.php', array('frmTeac
         <div class="row">
             <div class="col-xl-3 col-lg-12"></div>
             <div class="col-xl-9 col-lg-12">
-                <p><?php echo Label::getLabel('LBL_Showing'); ?> <span id="start_record">{xx}</span>-<span id="end_record">{xx}</span> <?php echo Label::getLabel('LBL_of'); ?> <span id="total_records">{xx}</span> <?php echo Label::getLabel('LBL_teachers'); ?></p>
+                <p class="d-none"><?php echo Label::getLabel('LBL_Showing'); ?> <span id="start_record">{xx}</span>-<span id="end_record">{xx}</span> <?php echo Label::getLabel('LBL_of'); ?> <span id="total_records">{xx}</span> <?php echo Label::getLabel('LBL_teachers'); ?></p>
             </div>
         </div>
 

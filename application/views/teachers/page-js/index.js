@@ -207,6 +207,7 @@ function htmlEncode(value){
 
 	searchTeachers = function(frm){
 		removeTecherNameValidation();
+        $('#start_record').parent('p').addClass('d-none');
 		var data = fcom.frmData(frm);
 		//alert( data );
 		var dv = $("#teachersListingContainer");
@@ -288,6 +289,7 @@ function htmlEncode(value){
 				$('#end_record').html(ans.endRecord);
 			}
 			$(dv).html( ans.html );
+            $('#start_record').parent('p').removeClass('d-none');
 		});
 	};
 
