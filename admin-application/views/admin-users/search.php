@@ -44,7 +44,7 @@ foreach ($arr_listing as $sn=>$row){
 					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Change_Password',$adminLangId),"onclick"=>"changePasswordForm(".$row['admin_id'].")"),Label::getLabel('LBL_Change_Password',$adminLangId), true);
 
 
-					if($row['admin_id'] > 1 && $row['admin_id'] != $adminLoggedInId){
+					if($row['admin_id'] > 1 && $row['admin_id'] != $adminLoggedInId && $canViewAdminPermissions===true){
 
 						$innerLi=$innerUl->appendElement('li');
 						$innerLi->appendElement('a', array('href'=>CommonHelper::generateUrl('AdminUsers', 'permissions', array($row['admin_id'])),'class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Permissions',$adminLangId)),Label::getLabel('LBL_Permissions',$adminLangId), true);
@@ -55,7 +55,7 @@ foreach ($arr_listing as $sn=>$row){
 				}
 			break;
 			case 'admin_active':
-			if ($row['admin_id'] > 1) {
+			if ($row['admin_id'] > 1 && $row['admin_id'] != $adminLoggedInId) {
 					$active = "active";
 					$statucAct='';
 					if($row['admin_active']==applicationConstants::YES &&  $canEdit === true ) {

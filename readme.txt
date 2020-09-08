@@ -35,6 +35,8 @@ Bug Fixes:
     *Bug-#040861 - Once Teacher create a group class>> and set a entry fee is $2 and one learner book its class, >After that teacher can edit a class and change the amount to $200. then its wrong.
     *Bug-#040853 - Complete lesson show >> cancel button >> need to remove that.
     #040833 - Teacher side show >> report an issue to support team .>>after teacher made 100% refund. 
+    *Bug-#042741 - Teacher Listing top pagination hide before content load
+    *Bug-#042738 - Fixed subadmin permissions issue
 
 ==============================================================================================================================
 Installation steps:

@@ -21,7 +21,9 @@ class AdminUsersController extends AdminBaseController
         }
         $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditAdminUsers($this->admin_id, true);
+        $canViewAdminPermissions = $this->objPrivilege->canViewAdminPermissions($this->admin_id, true);
         $this->set("canEdit", $canEdit);
+        $this->set("canViewAdminPermissions", $canViewAdminPermissions);
         $this->set('activeInactiveArr', applicationConstants::getActiveInactiveArr($this->adminLangId));
         $this->set("arr_listing", $records);
         $this->set('recordCount', $srch->recordCount());
