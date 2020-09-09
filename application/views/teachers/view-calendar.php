@@ -9,6 +9,7 @@ $weekDayName =  CommonHelper::dayNames();
 <script >
 	var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
 	var checkSlotAvailabiltAjaxRun =  false;
+	var action = '<?php echo $action; ?>';
 	function getEventsByTime( start, stop ) {
 	   var json = JSON.stringify($("#d_calendar").fullCalendar("clientEvents").map(function(e) {
 			return 	{
@@ -47,7 +48,7 @@ $weekDayName =  CommonHelper::dayNames();
 						 today:    '<?php echo Label::getLabel('LBL_Today'); ?>',
 					 },
 				defaultView: 'agendaWeek',
-				selectable: true,
+				selectable: (action === 'free_trial') ? true : false,
 				<?php if (strtolower($layoutDirection ) == 'rtl') { ?>
 				rtl : true,
 				isRTL : true,
