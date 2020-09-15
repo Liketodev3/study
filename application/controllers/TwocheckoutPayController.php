@@ -37,9 +37,12 @@ class TwocheckoutPayController extends PaymentController
             FatUtility::exitWIthErrorCode(404);
         } elseif ($orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
             $frm = $this->getPaymentForm($orderId);
+            $frm->getField('country')->value = $orderInfo['user_country_id'];
+            $frm->getField('cc_owner')->value = $orderInfo['user_name'];
+
             $this->set('frm', $frm);
 
-            if ($this->paymentType != 'HOSTED') {
+            if ($this->paymentType == 'API') {
                 $this->set('sellerId', $this->settings['sellerId']);
                 $this->set('publishableKey', $this->settings['publishableKey']);
                 $this->set('transaction_mode', 'production');
@@ -59,47 +62,8 @@ class TwocheckoutPayController extends PaymentController
         $this->set('paymentType', $this->paymentType);
         $this->set('orderInfo', $orderInfo);
         $this->set('exculdeMainHeaderDiv', true);
-        if (FatUtility::isAjaxCall()) {
-            $json['html'] = $this->_template->render(false, false, 'twocheckout-pay/charge-ajax.php', true, false);
-            FatUtility::dieJsonSuccess($json);
-        }
         $this->_template->addCss('css/payment.css');
         $this->_template->render(true, false);
-    }
-
-    /**
-     * Description: This method will be called when the payment type is HOSTED CHECKOUT i.e. $paymentType has HOSTED value.
-     */
-    public function callback()
-    {
-        $post = FatApp::getPostedData();
-        $orderId = $post['li_0_product_id']; //in our case it is order id (hosted checkout case)
-        //$orderPaymentAmount = $request['total'];
-        $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
-        $orderPaymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
-        $hashSecretWord = $this->settings['hashSecretWord']; //2Checkout Secret Word
-        $hashSid = $this->settings['sellerId']; //2Checkout account number
-        $hashOrder = $post['order_number']; //2Checkout Order Number
-        $hashTotal = $orderPaymentAmount; //Sale total to validate against
-        $StringToHash = strtoupper(md5($hashSecretWord . $hashSid . $hashOrder . $hashTotal));
-
-        if ($StringToHash == $post['key']) {
-            if ($post['credit_card_processed'] == 'Y') {
-                $message = '';
-                $message .= '2Checkout Order Number: ' . $post['order_number'] . "\n";
-                $message .= '2Checkout Invoice Id: ' . $post['invoice_id'] . "\n";
-                $message .= 'Merchant Order Id: ' . $post['merchant_order_id'] . "\n";
-                $message .= 'Pay Method: ' . $post['pay_method'] . "\n";
-                $message .= 'Description: ' . $post['li_0_name'] . "\n";
-                $message .= 'Hash Match: ' . 'Keys matched' . "\n";
-                /* Recording Payment in DB */
-                $orderPaymentObj->addOrderPayment($this->settings["plugin_code"], $post['invoice_id'], $orderPaymentAmount, Label::getLabel("LBL_Received_Payment", $this->siteLangId), $message);
-                /* End Recording Payment in DB */
-                FatApp::redirectUser(CommonHelper::generateUrl('custom', 'paymentSuccess', array($orderId)));
-            }
-        }
-        Message::addErrorMessage(Label::getLabel('MSG_ERROR_INVALID_ACCESS', $this->siteLangId));
-        FatApp::redirectUser(CommonHelper::getPaymentFailurePageUrl());
     }
 
     /**
@@ -107,13 +71,17 @@ class TwocheckoutPayController extends PaymentController
      */
     public function send($orderId)
     {
-        $post = FatApp::getPostedData();
+        $frm = $this->getPaymentForm($orderId);
+        if(!$post = $frm->getFormDataFromArray(FatApp::getPostedData())){
+            FatUtility::dieWithError(current($frm->getValidationErrors()));
+        }
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         /* Retrieve Payment to charge corresponding to your order */
         $orderPaymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
         if ($orderPaymentAmount > 0) {
             /* Retrieve Primary Info corresponding to your order */
             $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
+
             $order_actual_paid = number_format(round($orderPaymentAmount, 2), 2, ".", "");
             $params = array (
                 'sellerId' => $this->settings['sellerId'],
@@ -125,16 +93,15 @@ class TwocheckoutPayController extends PaymentController
                 'billingAddr' => 
                 array (
                   'name' => FatUtility::decodeHtmlEntities($post['cc_owner'], ENT_QUOTES, 'UTF-8'),
-                  "addrLine1" => '530, Phase 2', // @todo
-                  "city" => 'Mohali', // @todo
-                  "state" => 'Punjab', //@todo
-                  "zipCode" => '160055',// @todo
-                  'country' => 'USA', // @todo
+                  "addrLine1" => $post['addrLine1'],
+                  "city" => $post['city'],
+                  "state" => $post['state'],
+                  "zipCode" => $post['zipCode'],
+                  'country' => Country::getAttributesById($post['country'], 'country_code'),
                   'email' => $orderInfo['user_email'],
-                  'phoneNumber' => '5555555555',
-                ),
-                'demo' => true,
-              );
+                  'phoneNumber' => $orderInfo['user_phone'],
+                )
+            );
             
 
             if (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == false) {
@@ -225,6 +192,20 @@ class TwocheckoutPayController extends PaymentController
         $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_YEAR', $this->siteLangId), 'expYear', $data['year_expire'], '', array(), '');
         $fld = $frm->addPasswordField(Label::getLabel('LBL_CVV_SECURITY_CODE', $this->siteLangId), 'cvv');
         $fld->requirements()->setRequired(true);
+
+        $frm->addRequiredField(Label::getLabel('LBL_Address'), 'addrLine1');
+        $frm->addRequiredField(Label::getLabel('LBL_City'), 'city');
+        $frm->addRequiredField(Label::getLabel('LBL_State'), 'state');
+        $frm->addRequiredField(Label::getLabel('LBL_Zip'), 'zipCode');
+        
+        $country = new Country();
+        $countriesArr = $country->getCountriesArr($this->siteLangId);
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'country', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
+        $fld->requirement->setRequired(true);
+/* 
+        $frm->addEmailField(Label::getLabel('LBL_email'), 'user_email');
+        $frm->addTextBox(Label::getLabel('LBL_phone'), 'user_phone');
+         */
         /* $frm->addCheckBox(Label::getLabel('LBL_SAVE_THIS_CARD_FOR_FASTER_CHECKOUT',$this->siteLangId), 'cc_save_card','1'); */
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Pay_Now', $this->siteLangId));
 

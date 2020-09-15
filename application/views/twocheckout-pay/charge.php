@@ -45,7 +45,7 @@
                         echo $frm->getFormTag(); ?>
                         <?php echo $frm->getFieldHtml('token'); ?>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="field-set">
                                     <div class="caption-wraper">
                                         <label class="field_label"><?php echo Label::getLabel('LBL_ENTER_CREDIT_CARD_NUMBER', $siteLangId); ?></label>
@@ -55,10 +55,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="field-set">
                                     <div class="caption-wraper">
                                         <label class="field_label"><?php echo Label::getLabel('LBL_CARD_HOLDER_NAME', $siteLangId); ?></label>
@@ -69,13 +66,14 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-9">
                                 <div class="caption-wraper">
                                     <label class="field_label"> <?php echo Label::getLabel('LBL_CREDIT_CARD_EXPIRY', $siteLangId); ?> </label>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <div class="col-md-7">
                                         <div class="field-set">
                                             <div class="field-wraper">
                                                 <div class="field_cover">
@@ -87,7 +85,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <div class="col-md-5">
                                         <div class="field-set">
                                             <div class="field-wraper">
                                                 <div class="field_cover">
@@ -101,13 +99,71 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="field-set">
                                     <div class="caption-wraper">
-                                        <label class="field_label"><?php echo Label::getLabel('LBL_CVV_SECURITY_CODE', $siteLangId); ?></label>
+                                        <label class="field_label"><?php echo Label::getLabel('LBL_CVV', $siteLangId); ?></label>
                                     </div>
                                     <div class="field-wraper">
                                         <div class="field_cover"> <?php echo $frm->getFieldHtml('cvv'); ?> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="field-set">
+                                    <div class="caption-wraper">
+                                        <label class="field_label"><?php echo Label::getLabel('LBL_Address', $siteLangId); ?></label>
+                                    </div>
+                                    <div class="field-wraper">
+                                        <div class="field_cover"> <?php echo $frm->getFieldHtml('addrLine1'); ?> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="field-set">
+                                    <div class="caption-wraper">
+                                        <label class="field_label"><?php echo Label::getLabel('LBL_Country', $siteLangId); ?></label>
+                                    </div>
+                                    <div class="field-wraper">
+                                        <div class="field_cover"> <?php echo $frm->getFieldHtml('country'); ?> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="field-set">
+                                    <div class="caption-wraper">
+                                        <label class="field_label"><?php echo Label::getLabel('LBL_State', $siteLangId); ?></label>
+                                    </div>
+                                    <div class="field-wraper">
+                                        <div class="field_cover"> <?php echo $frm->getFieldHtml('state'); ?> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="field-set">
+                                    <div class="caption-wraper">
+                                        <label class="field_label"><?php echo Label::getLabel('LBL_City', $siteLangId); ?></label>
+                                    </div>
+                                    <div class="field-wraper">
+                                        <div class="field_cover"> <?php echo $frm->getFieldHtml('city'); ?> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="field-set">
+                                    <div class="caption-wraper">
+                                        <label class="field_label"><?php echo Label::getLabel('LBL_Zip', $siteLangId); ?></label>
+                                    </div>
+                                    <div class="field-wraper">
+                                        <div class="field_cover"> <?php echo $frm->getFieldHtml('zipCode'); ?> </div>
                                     </div>
                                 </div>
                             </div>
@@ -128,13 +184,7 @@
                                             $btn->addFieldTagAttribute('class', 'btn btn-primary');
                                             echo $frm->getFieldHtml('btn_submit');
                                             ?>
-                                            <?php if (FatUtility::isAjaxCall()) { ?>
-                                                <a href="javascript:void(0);" onclick="loadPaymentSummary()" class="btn btn-outline-primary">
-                                                    <?php echo Label::getLabel('LBL_Cancel', $siteLangId); ?>
-                                                </a>
-                                            <?php } else { ?>
-                                                <a href="<?php echo $cancelBtnUrl; ?>" class="btn btn-outline-primary"><?php echo Label::getLabel('LBL_Cancel', $siteLangId); ?></a>
-                                            <?php } ?>
+                                            <a href="<?php echo $cancelBtnUrl; ?>" class="btn btn--large"><?php echo Label::getLabel('LBL_Cancel', $siteLangId); ?></a>
                                         </div>
                                     </div>
                                 </div>
