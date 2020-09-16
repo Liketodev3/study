@@ -93,7 +93,7 @@ class CartController extends MyAppController
         if (isset($post['checkoutPage'])) {
             $this->set('msg', Label::getLabel('LBL_Package_Selected_Successfully.'));
         } else {
-            $this->set('msg', Label::getLabel('LBL_Redirecting_in_3_seconds.'));
+            /* $this->set('msg', Label::getLabel('LBL_Redirecting_in_3_seconds.')); */
         }
         $this->_template->render(false, false, 'json-success.php');
     }
