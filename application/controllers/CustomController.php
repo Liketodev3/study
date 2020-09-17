@@ -123,4 +123,36 @@ class CustomController extends MyAppController
 
         FatApp::redirectUser(CommonHelper::generateFullUrl('Checkout')); */
     }
+
+    
+    public function trialBookedSuccess($orderId = null)
+    {
+        $textMessage = Label::getLabel('MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}');
+        $arrReplace = array(
+            '{dashboard-url}' => CommonHelper::generateUrl('learner'),
+            '{contact-us-page-url}' => CommonHelper::generateUrl('contact'),
+        );
+
+        foreach ($arrReplace as $key => $val) {
+            $textMessage = str_replace($key, $val, $textMessage);
+        }
+        if ($orderId) {
+            $orderObj = new Order();
+            $order = $orderObj->getOrderById($orderId);
+            
+            if (isset($order['order_type'])) {
+                $this->set('orderType', $order['order_type']);
+            }
+            $orderObj = $orderObj->getLessonsByOrderId($orderId);
+            $orderObj->addFld('slesson_grpcls_id');
+            $orderObj->addFld('op_lpackage_is_free_trial');
+            $orderObj->doNotCalculateRecords(true);
+            $orderObj->doNotLimitRecords(true);
+            $lessonInfo = FatApp::getDb()->fetch($orderObj->getResultSet());
+            $this->set('lessonInfo', $lessonInfo);
+        }
+        $this->set('textMessage', $textMessage);
+        $this->set('heading', Label::getLabel('MSG_Success'));
+        $this->_template->render(true, true, 'custom/payment-success.php');
+    }
 }
