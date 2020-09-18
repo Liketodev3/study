@@ -48,7 +48,7 @@ class CustomRouter{
 			$url = $_SERVER['REQUEST_URI'];
 			$url_components = parse_url($url);
 			$path = $url_components['path'];
-			$uri = ltrim($path, '/');
+			$uri = Common::getUriFromPath($path);
 			$last_param = '';
 			$uri_segment = explode('/', $uri);
 			if ( count($uri_segment) > 1  ) {

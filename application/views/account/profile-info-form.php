@@ -31,7 +31,6 @@ var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>'
 var  userSeoBaseUrl = '<?php echo CommonHelper::generateFullUrl('teachers','').'/'; ?>';
 var userImage = '<?php echo CommonHelper::generateFullUrl('Image','user',array( $userRow['user_id'])); ?>';
 
-console.log(userData);
 </script>
 	 <div class="section-head">
 		 <div class="d-flex justify-content-between align-items-center">

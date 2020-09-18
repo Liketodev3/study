@@ -26,6 +26,7 @@ echo $str = '<script type="text/javascript">
 		var layoutDirection ="'.$layoutDirection.'";
 		var currencySymbolLeft = "' . $currencySymbolLeft . '";
 		var currencySymbolRight = "' . $currencySymbolRight . '";
+		const confWebRootUrl = "' . CONF_WEBROOT_URL . '";
 		if( CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES <= 0  ){
 			CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = 3;
 		}
