@@ -787,7 +787,7 @@ max-width: 100%;
 }
 
 .banner__content p {
-    font-family: 'Open Sans';
+    /* font-family: 'Open Sans'; */
     font-weight: 600;
     font-size: 1.2rem;
     color: #fff;
