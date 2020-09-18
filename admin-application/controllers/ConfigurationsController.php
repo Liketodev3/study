@@ -683,11 +683,12 @@ class ConfigurationsController extends AdminBaseController
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Facebook_App_Secret", $this->adminLangId), 'CONF_FACEBOOK_APP_SECRET');
                 $fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_Facebook_secret_key_used_for_authentication_and_other_Facebook_related_plugins_support.", $this->adminLangId)."</small>";
 
-                $fld = $frm->addTextBox(Label::getLabel("LBL_Twitter_APP_KEY", $this->adminLangId), 'CONF_TWITTER_API_KEY');
+                // commented with reference to bug #043111
+                /* $fld = $frm->addTextBox(Label::getLabel("LBL_Twitter_APP_KEY", $this->adminLangId), 'CONF_TWITTER_API_KEY');
                 $fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_application_ID_used_in_post.", $this->adminLangId)."</small>";
 
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Twitter_App_Secret", $this->adminLangId), 'CONF_TWITTER_API_SECRET');
-                $fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_Twitter_secret_key_used_for_authentication_and_other_Twitter_related_plugins_support.", $this->adminLangId)."</small>";
+                $fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_Twitter_secret_key_used_for_authentication_and_other_Twitter_related_plugins_support.", $this->adminLangId)."</small>"; */
 
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Google_Plus_Developer_Key", $this->adminLangId), 'CONF_GOOGLEPLUS_DEVELOPER_KEY');
                 $fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_google_plus_developer_key.", $this->adminLangId)."</small>";
