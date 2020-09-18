@@ -18,7 +18,7 @@
 				<div class="page-head">
 					<div class="d-flex justify-content-md-between align-items-md-center flex-column flex-md-row">
 						<div>
-							<h1><?php echo Label::getLabel('LBL_Dashboard'); ?></h1>
+							<h1><?php echo Label::getLabel('LBL_Settings'); ?></h1>
 						</div>
 						<div>
 
