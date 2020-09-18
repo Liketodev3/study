@@ -5,7 +5,7 @@ class CustomController extends MyAppController
     {
         $textMessage = Label::getLabel('MSG_learner_failure_order_{contact-us-page-url}');
         $contactUsPageUrl = CommonHelper::generateUrl('contact');
-        $textMessage = str_replace('{contact-us-page-url}', '<a href="'.$contactUsPageUrl.'">'. Label::getLabel('LBL_Contact_Us') .'</a>', $textMessage);
+        $textMessage = str_replace('{contact-us-page-url}', $contactUsPageUrl, $textMessage);
 
         /* if(FatApp::getConfig('CONF_MAINTAIN_WALLET_ON_PAYMENT_FAILURE',FatUtility::VAR_INT,applicationConstants::NO) && isset( $_SESSION['cart_order_id']) &&  $_SESSION['cart_order_id']>0){
             $cartOrderId = $_SESSION['cart_order_id'];
