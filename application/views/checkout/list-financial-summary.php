@@ -52,7 +52,7 @@
 				} ?>
 				</small></h6></td>
 			<td>
-				<h6 class="-color-secondary"><?php echo CommonHelper::displayMoneyFormat($cart['itemPrice'] * $cart['lpackage_lessons']); ?></h6></td>
+				<h6 class="-color-secondary"><?php echo CommonHelper::displayMoneyFormat($cart['cartTotal']); ?></h6></td>
 		</tr>
 		
 		<?php if( $cart['siteCommission'] > 0 ){ ?>

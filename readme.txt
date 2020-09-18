@@ -7,6 +7,7 @@ Enhancements: N/A
 Bug Fixes:
     *Bug-#040861: Fixed day time saving issue for updating teacher Availability
     *Bug-#043168: Failed payment page, fix contactus url 
+    *Bug-#043166: Group class price fix on checkout page 
     
 ------------------------------
 Release Version: TV-2.1.0.20200826
