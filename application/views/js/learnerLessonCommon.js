@@ -151,13 +151,14 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
 			$.facebox( t,'facebox-medium');
 		});
 	};
-
+    
 	issueReportedSetup = function(frm){
 		if (!$(frm).validate()) return;
+        $(frm).find('[type=submit]').attr('disabled', true);
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'issueReportedSetup'), data , function(t) {
-				$.facebox.close();
-				location.reload();
+            $.facebox.close();
+            location.reload();
 		});
 	};
 

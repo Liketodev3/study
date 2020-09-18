@@ -9,6 +9,7 @@ Bug Fixes:
     *Bug-#043168: Failed payment page, fix contactus url 
     *Bug-#043166: Group class price fix on checkout page 
     *Bug-#043165: Hide lessons count from reviews section
+    *Bug-#043161: Duplicate entries for issue report
     
 ------------------------------
 Release Version: TV-2.1.0.20200826

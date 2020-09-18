@@ -1133,12 +1133,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Please_Choose_Issue_to_Report'));
         }
         $lDetailId = $post['sldetail_id'];
-        /* [ check If Already reorted */
-        /* if(IssuesReported::isAlreadyReported($lessonId,User::USER_TYPE_LEANER)){
-            FatUtility::dieJsonError( Label::getLabel('LBL_Issue_Already_Reported') );
-        } */
-        /* ] */
-
+        
         $srch = new stdClass();
         $this->searchLessons($srch);
         $srch->joinTeacherCredentials();
@@ -1165,6 +1160,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
 
         $lessonId = $lessonRow['slesson_id'];
+        
+        /* [ check If Already reorted */
+        if(IssuesReported::isAlreadyReported($lessonId, UserAuthentication::getLoggedUserId())){
+            FatUtility::dieJsonError( Label::getLabel('LBL_Issue_Already_Reported') );
+        }
+        /* ] */
 
         $reportedArr = array();
         $reportedArr['issrep_comment'] = $post['issue_reported_msg'];
