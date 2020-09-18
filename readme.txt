@@ -1,5 +1,13 @@
 This file shares the details of YoCoach version and features.
 
+New Features: N/A
+  
+Enhancements: N/A
+
+Bug Fixes:
+    *Bug-#040861: Fixed day time saving issue for updating teacher Availability
+    
+------------------------------
 Release Version: TV-2.1.0.20200826
 Release Date: 2020/08/26
 

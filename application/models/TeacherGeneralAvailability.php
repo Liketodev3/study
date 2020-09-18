@@ -205,9 +205,11 @@ class TeacherGeneralAvailability extends MyAppModel
                 $day = $gendate->format('d');
                 $dayNum = $day;
                 $startDate = "2018-01-".$dayNum." ". date('H:i:s', strtotime($val->startTime));
-                $endDate = "2018-01-".$dayNum." ". date('H:i:s', strtotime($val->endTime));
-                //$startDate = $gendate->setISODate($Year, $weekNumber, $val->day);
-                //$date = $gendate->format('Y-m-d '. $val->startTime );
+                
+                $custom_tgavl_start = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+                
+                $startDate = date('Y-m-d H:i:s', strtotime($val->startTime));
+                $endDate = date('Y-m-d H:i:s', strtotime($val->endTime));
 
                 if ($val->endTime == "00:00") {
                     $endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime($endDate)));
@@ -220,7 +222,13 @@ class TeacherGeneralAvailability extends MyAppModel
 
                 $day = MyDate::getDayNumber($tgavl_start);
 
-                $insertArr = array('tgavl_day'=>$day,'tgavl_user_id'=>$userId,'tgavl_start_time'=>$tgavl_start_time,'tgavl_end_time'=>$tgavl_end_time, 'tgavl_date' => $tgavl_start );
+                $insertArr = array(
+                    'tgavl_day'         => $day,
+                    'tgavl_user_id'     => $userId,
+                    'tgavl_start_time'  => $tgavl_start_time,
+                    'tgavl_end_time'    => $tgavl_end_time, 
+                    'tgavl_date'        => $custom_tgavl_start 
+                );
 
                 if (!$db->insertFromArray(TeacherGeneralAvailability::DB_TBL, $insertArr)) {
                     $this->error = $db->getError();
