@@ -272,9 +272,62 @@ class OrderPayment extends Order
                             $this->error = $slDetailsObj->getError();
                             return false;
                         }
+                        
+                        $sldetailId = $slDetailsObj->getMainTableRecordId();
+                        
+                        if($orderInfo['op_grpcls_id']>0){
+                            // share on student google calendar
+                            $token = current(UserSetting::getUserSettings($orderInfo['order_user_id']))['us_google_access_token'];
+                            if($token){
+                                $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($sldetailId));
+                                $google_cal_data = array(
+                                    'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$defaultSiteLangId),
+                                    'summary' => sprintf(Label::getLabel("LBL_CLASS-%s"), $grpClsDetails['grpcls_title']),
+                                    'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
+                                    'url' => $view_url,
+                                    'start_time' => date('c', strtotime($slesson_date.' '.$slesson_start_time)),
+                                    'end_time' => date('c', strtotime($slesson_end_date.' '.$slesson_end_time)),
+                                    'timezone' => MyDate::getTimeZone(),
+                                );
+                                // CommonHelper::printArray($google_cal_data);die;
+                                $calId = SocialMedia::addEventOnGoogleCalendar($token, $google_cal_data);
+                                if($calId){
+                                    $sLessonDetailObj = new ScheduledLessonDetails($sldetailId);
+                                    $sLessonDetailObj->setFldValue('sldetail_learner_google_calendar_id', $calId);
+                                    $sLessonDetailObj->save();
+                                }
+                            }
+
+                            // share on teacher google calendar
+                            $token = current(UserSetting::getUserSettings($orderInfo['op_teacher_id']))['us_google_access_token'];
+                            if($token){
+                                $sLessonObj = new ScheduledLesson($slesson_id);
+                                $sLessonObj->loadFromDb();
+                                $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
+
+                                if(!$oldCalId){
+                                    $view_url = CommonHelper::generateFullUrl('TeacherScheduledLessons', 'view', array($slesson_id));
+                                    $google_cal_data = array(
+                                        'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$defaultSiteLangId),
+                                        'summary' => sprintf(Label::getLabel("LBL_CLASS-%s"), $grpClsDetails['grpcls_title']),
+                                        'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
+                                        'url' => $view_url,
+                                        'start_time' => date('c', strtotime($slesson_date.' '.$slesson_start_time)),
+                                        'end_time' => date('c', strtotime($slesson_end_date.' '.$slesson_end_time)),
+                                        'timezone' => MyDate::getTimeZone(),
+                                    );
+                                    $calId = SocialMedia::addEventOnGoogleCalendar($token, $google_cal_data);
+                                    if($calId){
+                                        $sLessonObj->setFldValue('slesson_teacher_google_calendar_id', $calId);
+                                        $sLessonObj->save();
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+            
             /* ] */
 
             /* $notificationData = array(

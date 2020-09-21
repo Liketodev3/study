@@ -3,6 +3,7 @@ This file shares the details of YoCoach version and features.
 Hotfixes
         * Bug-045964: Show only relevant language for class
         * Bug-046368: Update button sync with google calendar
+        * Bug-043080: show group class & trial lesson on google calendar
 
 
 Release Number: TV-2.6.20201120
