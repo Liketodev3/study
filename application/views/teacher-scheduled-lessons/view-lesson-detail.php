@@ -244,13 +244,24 @@ function endLessonConfirm(){
                 <span class="-gap"></span>
                 <?php } ?>
 
-                <?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) { ?>
-                <div class="alert alert--info" role="alert">
-                   <a class="close" href="javascript:void(0)"></a>
-                   <p><?php echo Label::getLabel('LBL_Note'); ?>:<?php echo Label::getLabel('LBL_This_lesson_is_completed._Encourage_your_learner_to_rate_it.'); ?> </p>
-                </div>
-                <span class="-gap"></span>
-                <?php } ?>
+                <?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED){
+                    if($countReviews<=0) { ?>
+                    <div class="alert alert--info" role="alert">
+                       <a class="close" href="javascript:void(0)"></a>
+                       <p><?php echo Label::getLabel('LBL_Note'); ?>:<?php echo Label::getLabel('LBL_This_lesson_is_completed._Encourage_your_learner_to_rate_it.'); ?> </p>
+                    </div>
+                    <span class="-gap"></span>
+                    <?php }else{ ?>
+                    <div class="alert alert--info" role="alert">
+                        <a class="close" href="javascript:void(0)"></a>
+                        <p>
+                            <?php echo Label::getLabel('LBL_Note'); ?>:
+                            <?php echo Label::getLabel('LBL_This_lesson_is_completed'); ?>
+                        </p>
+                    </div>
+                    <span class="-gap"></span>
+                    <?php }
+                } ?>
 
                 <?php /*if($lessonData['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) { ?>
                 <div class="alert alert--info" role="alert">

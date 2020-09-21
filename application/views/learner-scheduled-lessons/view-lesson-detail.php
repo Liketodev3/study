@@ -239,7 +239,7 @@ $(function(){
 					<?php echo Label::getLabel('LBL_Rate_it'); ?>
 				</a>
 				<?php } ?>
-				<?php if( $countReviews > 0 ) { ?>
+				<?php if( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED && $countReviews > 0 ) { ?>
 				<div class="alert alert--info" role="alert">
 					<a class="close" href="javascript:void(0)"></a>
 					<p>

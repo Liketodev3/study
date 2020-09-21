@@ -13,6 +13,7 @@ Bug Fixes:
     *Bug-#043111: Removed Twitter settings
     *Bug-#043080: Trial & Group Class on Google Calendar
     *Bug-#043081: Updated Title on Google Calendar
+    *Bug-#043163: After review hide encourge msg for teacher
     
 ------------------------------
 Release Version: TV-2.1.0.20200826
