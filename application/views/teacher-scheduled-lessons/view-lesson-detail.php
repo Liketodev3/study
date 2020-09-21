@@ -460,7 +460,8 @@ function endLessonConfirm(){
                         						</li>
                                             <?php } ?>
                                             <?php $countRel=ScheduledLessonSearch::countPlansRelation($lessonData['slesson_id']);
-                                                  if($countRel > 0){
+                                            if($lessonData['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) {
+                                            if($countRel > 0){
                                             ?>
                                                 <li>
                             						<a href="javascript:void(0);" onclick="changeLessonPlan('<?php echo $lessonData['slesson_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_Change_Lesson_Plan'); ?>">
@@ -487,7 +488,7 @@ function endLessonConfirm(){
                             							</svg>
                             						</a>
                             					</li>
-                                            <?php } ?>
+                                            <?php }} ?>
                                             <?php /* if ($lessonData['issrep_id'] > 0) { ?>
                                                 <li>
                         							<a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $lessonData['slesson_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_Issue_Details'); ?>">
