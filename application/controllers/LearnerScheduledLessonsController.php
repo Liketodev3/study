@@ -1009,10 +1009,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
             }
             $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($lessonDetail['sldetail_id']));
+            
+            $title = sprintf(Label::getLabel('LBL_%1$s_LESSON_Scheduled_with_%2$s'), ($lessonDetail['op_lpackage_is_free_trial'] == applicationConstants::NO ? $lessonDetail['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial', $this->siteLangId)), $lessonDetail['teacherFullName']);
+            
             $google_cal_data = array(
                 'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId),
-                'summary' => sprintf(Label::getLabel("LBL_LESSON-%s"), $lessonDetail['slesson_id']),
-                'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
+                'summary' => $title,
+                'description' => sprintf(Label::getLabel("LBL_Click_here_to_join_the_lesson:_%s"), $view_url),
                 'url' => $view_url,
                 'start_time' => date('c', $SelectedDateTimeStamp),
                 'end_time' => date('c',$endDateTimeStamp),
@@ -1036,9 +1039,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
             }
             $view_url = CommonHelper::generateFullUrl('TeacherScheduledLessons', 'view', array($lessonDetail['slesson_id']));
+            
+            $title = sprintf(Label::getLabel('LBL_%1$s_LESSON_Scheduled_by_%2$s'), ($lessonDetail['op_lpackage_is_free_trial'] == applicationConstants::NO ? $lessonDetail['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial', $this->siteLangId)), $lessonDetail['learnerFullName']);
+            
             $google_cal_data = array(
                 'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId),
-                'summary' => sprintf(Label::getLabel("LBL_LESSON-%s"), $lessonDetail['slesson_id']),
+                'summary' => $title,
                 'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
                 'url' => $view_url,
                 'start_time' => date('c', $SelectedDateTimeStamp),

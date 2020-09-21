@@ -282,8 +282,8 @@ class OrderPayment extends Order
                                 $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($sldetailId));
                                 $google_cal_data = array(
                                     'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$defaultSiteLangId),
-                                    'summary' => sprintf(Label::getLabel("LBL_CLASS-%s"), $grpClsDetails['grpcls_title']),
-                                    'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
+                                    'summary' => sprintf(Label::getLabel("LBL_Group_Class_Scheduled_for_%s"), $grpClsDetails['grpcls_title']),
+                                    'description' => sprintf(Label::getLabel("LBL_Click_here_to_join_the_class:_%s"), $view_url),
                                     'url' => $view_url,
                                     'start_time' => date('c', strtotime($slesson_date.' '.$slesson_start_time)),
                                     'end_time' => date('c', strtotime($slesson_end_date.' '.$slesson_end_time)),
@@ -309,8 +309,8 @@ class OrderPayment extends Order
                                     $view_url = CommonHelper::generateFullUrl('TeacherScheduledLessons', 'view', array($slesson_id));
                                     $google_cal_data = array(
                                         'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$defaultSiteLangId),
-                                        'summary' => sprintf(Label::getLabel("LBL_CLASS-%s"), $grpClsDetails['grpcls_title']),
-                                        'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
+                                        'summary' => sprintf(Label::getLabel("LBL_Group_Class_Scheduled_for_%s"), $grpClsDetails['grpcls_title']),
+                                        'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_class:_%s"), $view_url),
                                         'url' => $view_url,
                                         'start_time' => date('c', strtotime($slesson_date.' '.$slesson_start_time)),
                                         'end_time' => date('c', strtotime($slesson_end_date.' '.$slesson_end_time)),

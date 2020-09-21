@@ -132,10 +132,11 @@ class FreePayController extends MyAppController
             $token = current(UserSetting::getUserSettings($orderInfo['order_user_id']))['us_google_access_token'];
             if($token){
                 $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($sldetailId));
+                $title = sprintf(Label::getLabel('LBL_%1$s_LESSON_Scheduled_with_%2$s'), Label::getLabel('LBL_Trial', $this->siteLangId), $orderInfo['teacherFullName']);
                 $google_cal_data = array(
                     'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId),
-                    'summary' => sprintf(Label::getLabel("LBL_Trial_LESSON-%s"), $lessonId),
-                    'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
+                    'summary' => $title,
+                    'description' => sprintf(Label::getLabel("LBL_Click_here_to_join_the_lesson:_%s"), $view_url),
                     'url' => $view_url,
                     'start_time' => date('c', strtotime($cartData['startDateTime'])),
                     'end_time' => date('c', strtotime($cartData['endDateTime'])),
@@ -158,9 +159,11 @@ class FreePayController extends MyAppController
                     SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
                 }
                 $view_url = CommonHelper::generateFullUrl('TeacherScheduledLessons', 'view', array($lessonId));
+                $title = sprintf(Label::getLabel('LBL_%1$s_LESSON_Scheduled_by_%2$s'), Label::getLabel('LBL_Trial', $this->siteLangId), $getlearnerFullName['learnerFullName']);
+                
                 $google_cal_data = array(
                     'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId),
-                    'summary' => sprintf(Label::getLabel("LBL_Trial_LESSON-%s"), $lessonId),
+                    'summary' => $title,
                     'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
                     'url' => $view_url,
                     'start_time' => date('c', strtotime($cartData['startDateTime'])),
