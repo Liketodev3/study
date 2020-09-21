@@ -11,6 +11,7 @@ Bug Fixes:
     *Bug-#043165: Hide lessons count from reviews section
     *Bug-#043161: Duplicate entries for issue report
     *Bug-#043111: Removed Twitter settings
+    *Bug-#043080: Trial & Group Class on Google Calendar
     
 ------------------------------
 Release Version: TV-2.1.0.20200826
