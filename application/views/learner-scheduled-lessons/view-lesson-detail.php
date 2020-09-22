@@ -173,14 +173,40 @@ function checkNewFlashCards(){
     },30000)
 }
 
+function countDownTimer(fld, start, end, func){
+    var countDownDate = new Date(end).getTime();
+    var now = new Date(start).getTime()+1000;
+    
+    var worker = new Worker(siteConstants.webroot+'js/worker-time-interval.js');
+    worker.postMessage({'start':start, end: end});
+    
+    worker.onmessage = function(e){
+        $(fld).html( e.data);
+        $('.timer.start-lesson-timer').show();
+    };
+
+}
+
 $(function(){
     <?php if( $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
     var showLessonBtn = true;
-	$('.timer.start-lesson-timer').show();
-    $('#start_lesson_timer').countdowntimer({
+    countDownTimer('#start_lesson_timer', "<?php echo $curDate; ?>", "<?php echo $startTime; ?>", function(){
+        $('.timer.start-lesson-timer').hide();
+        fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','startLessonAuthentication',['<?php echo $lessonData['sldetail_id'] ?>']),'',function(t){
+            if(t != 0){
+                showLessonBtn = false;
+                $(".join_lesson_now").show();
+                $("#lesson_actions").hide();
+                checkEveryMinuteStatus();
+            }
+        });
+        $("#start_lesson_timer").parent().hide();
+    });
+    /* $('#start_lesson_timer').countdowntimer({
         startDate : "<?php echo $curDate; ?>",
         dateAndTime : "<?php echo $startTime; ?>",
         size : "lg",
+        displayFormat: "DHMS",
         timeUp : function(){
 			$('.timer.start-lesson-timer').hide();
             fcom.ajax(fcom.makeUrl('LearnerScheduledLessons','startLessonAuthentication',['<?php echo $lessonData['sldetail_id'] ?>']),'',function(t){
@@ -193,7 +219,7 @@ $(function(){
             });
             $("#start_lesson_timer").parent().hide();
         }
-    });
+    }); */
 
 	if($('.timer.start-lesson-timer').is(":visible")){
 		$("#lesson_actions").show();
@@ -206,6 +232,7 @@ $(function(){
         startDate : "<?php echo $curDate; ?>",
         dateAndTime : "<?php echo $endTime; ?>",
         size : "lg",
+        displayFormat: "DHMS",
         timeUp : function(){
             if(lesson_completed) return;
             $("#end_lesson_time_div").hide();
@@ -275,7 +302,7 @@ $(function(){
 				<?php } ?>
 				<div class="timer start-lesson-timer" style="display:none;">
                     <h4 class="timer-head"><?php echo Label::getLabel('LBL_Starts_In'); ?></h4>
-					<span id="start_lesson_timer"></span>
+					<span id="start_lesson_timer" class="style colorDefinition size_lg"></span>
 				</div>
 			</div>
 			<div class="screen-chat screen-chat-js" style="display:none;">
