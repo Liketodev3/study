@@ -71,6 +71,7 @@ class SpokenLanguage extends MyAppModel
         }
         $spokenLangSrch->doNotCalculateRecords();
         $spokenLangSrch->addMultiplefields(array('slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name'));
+        $spokenLangSrch->addOrder('slanguage_name');
         $rs = $spokenLangSrch->getResultSet();
         $spokenLanguagesArr = FatApp::getDb()->fetchAllAssoc($rs);
         return $spokenLanguagesArr;

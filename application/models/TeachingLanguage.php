@@ -71,6 +71,8 @@ class TeachingLanguage extends MyAppModel
         }
         $TeachingLangSrch->doNotCalculateRecords();
         $TeachingLangSrch->addMultiplefields(array('tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'));
+        $TeachingLangSrch->addOrder('tlanguage_name');
+        
         $rs = $TeachingLangSrch->getResultSet();
         $teachingLanguagesArr = FatApp::getDb()->fetchAllAssoc($rs);
         return $teachingLanguagesArr;
