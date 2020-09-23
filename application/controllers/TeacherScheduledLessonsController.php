@@ -243,7 +243,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $issRepObj = new IssuesReported();
         $is_issue_reported = !empty($issRepObj->getIssuesByLessonId($lessonId));
         
-        $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonRow['teacherId'],$lessonData['slesson_id'], $lessonRow['learnerId']);
+        $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonRow['teacherId'], $lessonRow['slesson_id'], $lessonRow['learnerId']);
 
         /* flashCardSearch Form[ */
         $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();

@@ -130,7 +130,7 @@ $(function() {
                         });
                     }
                 },
-                 Reschedule: {
+                Reschedule: {
                     text: langLbl.Reschedule,
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],

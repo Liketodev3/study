@@ -15,6 +15,7 @@ Bug Fixes:
     *Bug-#043081: Updated Title on Google Calendar
     *Bug-#043163: After review hide encourge msg for teacher
     *Bug-#043157: Hide attach lesson plan if lesson is cancelled
+    *Bug-#042728: Time gap and end lesson related issues
     
 ------------------------------
 Release Version: TV-2.1.0.20200826
