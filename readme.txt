@@ -18,6 +18,7 @@ Bug Fixes:
     *Bug-#042728: Time gap and end lesson related issues
     *Bug-#043338: Fixed header Link display order
     *Bug-#043357: Sorted languages alphabetical order
+    *Bug-#043323: Showing year from 1970
     
 ------------------------------
 Release Version: TV-2.1.0.20200826
