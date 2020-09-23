@@ -16,6 +16,7 @@ Bug Fixes:
     *Bug-#043163: After review hide encourge msg for teacher
     *Bug-#043157: Hide attach lesson plan if lesson is cancelled
     *Bug-#042728: Time gap and end lesson related issues
+    *Bug-#043338: Fixed header Link display order
     
 ------------------------------
 Release Version: TV-2.1.0.20200826

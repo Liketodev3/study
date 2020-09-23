@@ -54,6 +54,7 @@ class Navigation
             $cnd = $srch->addCondition('nlink_login_protected', '=', NavigationLinks::NAVLINK_LOGIN_BOTH);
             $cnd->attachCondition('nlink_login_protected', '=', NavigationLinks::NAVLINK_LOGIN_NO, 'OR');
         }
+        $srch->addOrder('nlink_display_order', 'ASC');
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
         $navigation = array();
