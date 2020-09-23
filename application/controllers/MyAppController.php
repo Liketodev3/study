@@ -129,10 +129,8 @@ class MyAppController extends FatController
         $fld->requirements()->setLength(1, 100);
         $fld = $frm->addTextArea(Label::getLabel('LBL_Description'), 'uqualification_description', '', array('placeholder' => Label::getLabel('LBL_Eg._Focus_in_Humanist_Literature')));
         $fld->requirements()->setLength(1, 500);
-        $yearArr = array();
-        for ($year = date('Y'); $year >= 1970 ; $year--) {
-            $yearArr[$year] = $year;
-        }
+        
+        $yearArr = range(date('Y'), 1970);
         
         $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Start_Year'), 'uqualification_start_year', $yearArr, '', array(), '');
         $fld1->requirements()->setRequired();
