@@ -158,7 +158,7 @@ class UserSearch extends SearchBase
         $slSrch->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = '. $langId, 'sl_lang');
         $slSrch->doNotCalculateRecords();
         $slSrch->doNotLimitRecords();
-        $slSrch->addMultipleFields(array('utsl_user_id', 'GROUP_CONCAT( IFNULL(slanguage_name, slanguage_identifier) ) as spoken_language_names', 'GROUP_CONCAT(utsl_slanguage_id) as spoken_language_ids',  'GROUP_CONCAT(utsl_proficiency) as spoken_languages_proficiency'));
+        $slSrch->addMultipleFields(array('utsl_user_id', 'GROUP_CONCAT( IFNULL(slanguage_name, slanguage_identifier) ORDER BY slanguage_name,slanguage_identifier ) as spoken_language_names', 'GROUP_CONCAT(utsl_slanguage_id) as spoken_language_ids',  'GROUP_CONCAT(utsl_proficiency) as spoken_languages_proficiency'));
         $slSrch->addGroupBy('utsl_user_id');
         $slSrch->addCondition('slanguage_active', '=', 1);
 
@@ -246,7 +246,7 @@ class UserSearch extends SearchBase
             $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utl.utl_slanguage_id');
             $tlangSrch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utl.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'sl_lang');
             $tlangSrch->addCondition('tlanguage_active', '=', '1');
-            $tlangSrch->addMultipleFields(array('GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
+            $tlangSrch->addMultipleFields(array('GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY tlanguage_name,tlanguage_identifier ) as teacherTeachLanguageName'));
             if (!empty($keyword)) {
                 $cnd = $tlangSrch->addCondition('tlanguage_name', 'LIKE', '%' . $keyword . '%');
                 $cnd->attachCondition('tlanguage_identifier', 'LIKE', '%' . $keyword . '%');
