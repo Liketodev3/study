@@ -20,6 +20,7 @@ Bug Fixes:
     *Bug-#043357: Sorted languages alphabetical order
     *Bug-#043323: Showing year from 1970
     *Bug-#043349: Sorted spoken/teach language in alphabetical order
+    *Bug-#043155: Added Language and upcoming filters in Group class
     
 ------------------------------
 Release Version: TV-2.1.0.20200826

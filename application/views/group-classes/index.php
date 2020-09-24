@@ -8,19 +8,29 @@ $frmSrch->getField( 'btnSrchSubmit' )->setFieldTagAttribute('class', 'form__acti
     <div class="container container--narrow">
         <div class="row justify-content-between align-items-center">
         
-            <div class="col-xl-5 col-lg-5 col-md-5">
+            <div class="col-xl-4 col-lg-4 col-md-4">
                 <h1><?php echo Label::getLabel("LBL_Group_Classes") ?></h1>
             </div>
-            <div class="col-xl-7 col-lg-7 col-md-7 justify-content-end d-flex">
+            <div class="col-xl-8 col-lg-8 col-md-8 justify-content-end d-flex">
                 <div class="form-search form-search--inline">
                     <?php echo $frmSrch->getFormTag(); ?>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="form__element">
+                            <?php echo $frmSrch->getFieldHtml('language'); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form__element">
+                            <?php echo $frmSrch->getFieldHtml('upcoming'); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form__element">
                             <?php echo $frmSrch->getFieldHtml('status'); ?>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form__element">
                                 <?php echo $frmSrch->getFieldHtml('keyword'); ?>
                                 <span class="form__action-wrap">
