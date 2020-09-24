@@ -21,6 +21,7 @@ Bug Fixes:
     *Bug-#043323: Showing year from 1970
     *Bug-#043349: Sorted spoken/teach language in alphabetical order
     *Bug-#043155: Added Language and upcoming filters in Group class
+    *Bug-#043148: Line break in biography on teacher profile
     
 ------------------------------
 Release Version: TV-2.1.0.20200826

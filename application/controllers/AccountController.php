@@ -393,9 +393,8 @@ class AccountController extends LoggedUserController
             $fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'), 'us_booking_before', $bookingOptionArr, 'us_booking_before', array(), Label::getLabel('LBL_Select'));
             $fld3->requirement->setRequired(true);
         }
-        $fld = $frm->addTextArea(Label::getLabel('LBL_Biography'), 'user_profile_info');
-        $fld->requirements()->setLength(1, 500);
-        $fld->requirements()->setLength(1, 500);
+        /* $fld = $frm->addTextArea(Label::getLabel('LBL_Biography'), 'user_profile_info');
+        $fld->requirements()->setLength(1, 500); */
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         return $frm;
     }

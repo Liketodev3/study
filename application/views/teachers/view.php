@@ -185,7 +185,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
 
 						<div class="content-inline">
 							<p class="-small-title"><strong><?php echo Label::getLabel('LBL_About_Me'); ?></strong></p>
-							<p><?php echo $teacher['user_profile_info']; ?></p>
+							<p><?php echo nl2br($teacher['user_profile_info']); ?></p>
 							<!--<a href="javascript:void(0)" class="btn btn--small btn--bordered btn--wide btn--arrow">Show More</a>-->
 						</div>
 					</div>
