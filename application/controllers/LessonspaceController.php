@@ -109,6 +109,7 @@ class LessonspaceController extends LoggedUserController
             ],
             "features" => [
                 'invite' => false,
+                'fullscreen' => false,
                 'endSession' => false
             ]
            
