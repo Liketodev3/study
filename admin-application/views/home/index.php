@@ -231,6 +231,73 @@
 			</div>
 		</div>
 		<div class="gap"></div>
+		<div class="row">
+
+			<div class="col-lg-6 col-md-6 col-sm-6">
+				<div class="box box--white box--height">
+					<div class="box__head">
+						<h4>
+							<?php echo Label::getLabel('LBL_Visitors_Statistics',$adminLangId);?>
+						</h4>
+					</div>
+					<div class="box__body space">
+						<div class="graph-container">
+							<div id="visitsGraph" class="ct-chart ct-perfect-fourth graph--visitor"></div>
+						</div>
+						<?php if($dashboardInfo['visitsCount']){ ?>
+						<ul class="horizontal_grids">
+							<li>
+								<?php echo $dashboardInfo['visitsCount']['today']?> <span>
+									<?php echo Label::getLabel('LBL_Today',$adminLangId); ?></span></li>
+							<li>
+								<?php echo $dashboardInfo['visitsCount']['weekly']?> <span>
+									<?php echo Label::getLabel('LBL_Weekly',$adminLangId); ?></span></li>
+							<li>
+								<?php echo $dashboardInfo['visitsCount']['lastMonth']?><span>
+									<?php echo Label::getLabel('LBL_last_Month',$adminLangId); ?></span></li>
+							<li>
+								<?php echo $dashboardInfo['visitsCount']['last3Month']?><span>
+									<?php echo Label::getLabel('LBL_Last_3_Months',$adminLangId); ?></span></li>
+						</ul>
+						<?php } ?>
+
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-6">
+				<div class="box box--white box--height">
+					<div class="box__head">
+						<h4>
+							<?php echo Label::getLabel('LBL_Traffic',$adminLangId); ?>
+						</h4>
+						<ul class="actions right">
+							<li class="droplink">
+								<a href="javascript:void(0)"><i class="ion-android-more-vertical icon"></i></a>
+								<div class="dropwrap">
+									<ul class="linksvertical">
+										<li><a href="javascript:void(0)" onClick="traficSource('today')">
+												<?php echo Label::getLabel('LBL_Today',$adminLangId); ?></a></li>
+										<li><a href="javascript:void(0)" onClick="traficSource('Weekly')">
+												<?php echo Label::getLabel('LBL_Weekly',$adminLangId); ?></a></li>
+										<li><a href="javascript:void(0)" onClick="traficSource('Monthly')">
+												<?php echo Label::getLabel('LBL_Monthly',$adminLangId); ?></a></li>
+										<li><a href="javascript:void(0)" onClick="traficSource('Yearly')">
+												<?php echo Label::getLabel('LBL_Yearly',$adminLangId); ?></a></li>
+									</ul>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="box__body ">
+						<!--<div class="graph-container"><img src="images/traffic_graph.jpg" style="margin:auto;" alt=""></div>-->
+						<div class="graph-container">
+							<div id="piechart" class="ct-chart ct-perfect-fourth graph--traffic"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
 	</div>
 </div>
 <?php }else{?>
@@ -242,4 +309,9 @@
 <?php }?>
 <script type="text/javascript">
 	var dataCurrency = '<?php echo CommonHelper::getCurrencySymbol(true); ?>';
+	var w = $('.tabs_panel_wrap').width();
+	google.load('visualization', '1', {
+		'packages': ['corechart', 'bar']
+	});
+	 
 </script>
