@@ -35,7 +35,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch = new stdClass();
         $this->searchLessons($srch, $post, true, false);
         // list on lessons not classes in lessons list
-        $srch->addCondition('slesson_grpcls_id', '=', 0);
+        if(empty($post['show_group_classes']) || $post['show_group_classes']==ApplicationConstants::NO){
+            $srch->addCondition('slesson_grpcls_id', '=', 0);
+        }
 		$srch->joinLessonRescheduleLog();
         $srch->joinIssueReported();
         $srch->addFld(
@@ -105,6 +107,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     private function searchLessons(&$srch, $post = array(), $getCancelledOrder = false, $addLessonDateOrder = true)
     {
         $srch = new ScheduledLessonSearch(false);
+        $srch->joinGroupClass();
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->joinTeacher();
@@ -124,6 +127,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addMultipleFields(array(
             'slns.slesson_id',
+            'grpcls_title',
 			'slesson_grpcls_id',
 			'order_is_paid',
             'sld.sldetail_learner_id as learnerId',
@@ -334,8 +338,10 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     {
         $cssClassNamesArr = ScheduledLesson::getStatusArr();
         $srch = new ScheduledLessonSearch();
+        $srch->joinGroupClass();
         $srch->addMultipleFields(
             array(
+                'slns.slesson_grpcls_id',
                 'slns.slesson_teacher_id',
                 // 'slns.slesson_learner_id',
                 'sld.sldetail_learner_id',
@@ -346,6 +352,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
                 'slns.slesson_status',
                 'ul.user_first_name',
                 'ul.user_id',
+                'grpcls.grpcls_title'
             )
         );
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
@@ -360,7 +367,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
                 $slesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['slesson_date'] .' '. $row['slesson_start_time'], true, $user_timezone);
                 $slesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['slesson_end_date'] .' '. $row['slesson_end_time'], true, $user_timezone);
                 $jsonArr[$k] = array(
-                    "title" => $row['user_first_name'],
+                    "is1to1" => $row['slesson_grpcls_id']==0,
+                    "title" => $row['grpcls_title'] ? $row['grpcls_title'] : $row['user_first_name'],
                     "date" => $slesson_date,
                     "start" => $slesson_start_time,
                     "end" => $slesson_end_time,

@@ -26,7 +26,7 @@ class LearnerController extends LearnerBaseController
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $this->_template->addCss('css/jquery.countdownTimer.css');
         $frmSrch = $this->getSearchForm();
-        $frmSrch->fill(['status'=>ScheduledLesson::STATUS_UPCOMING]);
+        $frmSrch->fill(['status'=>ScheduledLesson::STATUS_UPCOMING, 'show_group_classes'=>ApplicationConstants::YES]);
         $this->set('frmSrch', $frmSrch);
         $userObj = new User(UserAuthentication::getLoggedUserId());
         $userDetails = $userObj->getDashboardData(CommonHelper::getLangId());

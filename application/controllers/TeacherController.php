@@ -36,7 +36,7 @@ class TeacherController extends TeacherBaseController
         $userDetails = $userObj->getDashboardData(CommonHelper::getLangId(), true);
         $durationArr = Statistics::getDurationTypesArr(CommonHelper::getLangId());
         $frmSrch = $this->getSearchForm();
-        $frmSrch->fill(['status'=>ScheduledLesson::STATUS_UPCOMING]);
+        $frmSrch->fill(['status'=>ScheduledLesson::STATUS_UPCOMING, 'show_group_classes'=>ApplicationConstants::YES]);
         $this->set('frmSrch', $frmSrch);
         $this->set('durationArr', $durationArr);
         $this->set('userDetails', $userDetails);

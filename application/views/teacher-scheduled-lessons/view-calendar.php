@@ -82,11 +82,13 @@ $weekDayName =  CommonHelper::dayNames();
    				else{
    				//	element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+event._id+");'>X</span>" );
    				}
-               element.find(".closeon").click(function() {
-   				if(isNaN(event._id)){
-   					$('#listing_calendar').fullCalendar('removeEvents',event._id);
-   				}
-               });
+                element.find(".closeon").click(function() {
+                    if(isNaN(event._id)){
+                        $('#listing_calendar').fullCalendar('removeEvents',event._id);
+                    }
+                });
+                const title = $(element).find('.fc-title');
+                title.attr('title', title.text());
            },
    	});
     $('body').find(".fc-left").html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'></span></h6>");

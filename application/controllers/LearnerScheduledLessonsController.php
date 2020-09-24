@@ -35,7 +35,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch = new stdClass();
         $this->searchLessons($srch, $post, true, false);
         // list on lessons not classes in lessons list, group list is added seperately
-        $srch->addCondition('slesson_grpcls_id', '=', 0);
+        // $srch->addCondition('slesson_grpcls_id', '=', 0);
+        if(empty($post['show_group_classes']) || $post['show_group_classes']==ApplicationConstants::NO){
+            $srch->addCondition('slesson_grpcls_id', '=', 0);
+        }
         // $srch->joinIssueReported(User::USER_TYPE_LEANER);
         $srch->joinIssueReported(UserAuthentication::getLoggedUserId());
 		$srch->joinLessonRescheduleLog();
@@ -120,6 +123,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
     private function searchLessons(&$srch, $post = array(), $getCancelledOrder = false, $addLessonDateOrder = true)
     {
         $srch = new ScheduledLessonSearch(false);
+        $srch->joinGroupClass();
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->joinTeacher();
@@ -146,6 +150,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'slns.slesson_slanguage_id',
             'slns.slesson_has_issue',
 			'order_is_paid',
+            'grpcls_title',
             'sldetail_learner_id as learnerId',
             'slns.slesson_teacher_id as teacherId',
             'ut.user_first_name as teacherFname',
@@ -371,6 +376,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
     {
         $cssClassNamesArr = ScheduledLesson::getStatusArr();
         $srch = new ScheduledLessonSearch();
+        $srch->joinGroupClass();
         $srch->addMultipleFields(
             array(
                 'slns.slesson_teacher_id',
@@ -382,11 +388,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 'slns.slesson_status',
                 'ut.user_first_name',
                 'ut.user_id',
-                'ut.user_url_name'
+                'ut.user_url_name',
+                'grpcls.grpcls_title'
             )
         );
         $srch->addCondition('sld.sldetail_learner_id', ' = ', UserAuthentication::getLoggedUserId());
         $srch->joinTeacher();
+        $srch->addGroupBy('slesson_id');
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
         $jsonArr = array();
@@ -396,7 +404,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $slesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['slesson_date'] .' '. $row['slesson_start_time'], true, $user_timezone);
                 $slesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['slesson_end_date'] .' '. $row['slesson_end_time'], true, $user_timezone);
                 $jsonArr[$k] = array(
-                    "title" => $row['user_first_name'],
+                    "title" => $row['grpcls_title'] ? $row['grpcls_title'] : $row['user_first_name'],
                     "date" => $slesson_start_time,
                     "start" => $slesson_start_time,
                     "end" => $slesson_end_time,

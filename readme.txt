@@ -23,6 +23,7 @@ Bug Fixes:
     *Bug-#043155: Added Language and upcoming filters in Group class
     *Bug-#043148: Line break in biography on teacher profile
     *Bug-#043147: Changed hourly rate label to "Starts From"
+    *Bug-#042739: Group classes on Teacher and Learner dashboard
     
 ------------------------------
 Release Version: TV-2.1.0.20200826

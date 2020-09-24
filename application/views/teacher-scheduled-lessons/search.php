@@ -56,6 +56,10 @@ foreach( $lessons as $lesson ){
 	<div class="col-list">
 		<div class="d-lg-flex align-items-center">
 			<div class="col-xl-4 col-lg-4 col-md-12">
+                <?php if($lesson['slesson_grpcls_id']>0): //dashboard ?>
+                <h6><?php echo Label::getLabel('LBL_Group_Class') ?></h6>
+                <p><?php echo $lesson['grpcls_title']; ?></p>
+                <?php else: ?>
 				<div class="avtar avtar--normal" data-text="<?php echo CommonHelper::getFirstChar($lesson['learnerFname']); ?>">
 					<?php
 					if( true == User::isProfilePicUploaded( $lesson['learnerId'] ) ){
@@ -65,8 +69,8 @@ foreach( $lessons as $lesson ){
 				</div>
 				<h6><?php echo $lesson['learnerFname']; ?></h6>
 				<p><?php echo $lesson['learnerCountryName']; ?> <br>
-					<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['sldetail_order_id']; ?> <br>
-				<?php /* echo CommonHelper::getDateOrTimeByTimeZone($lesson['learnerTimeZone'],'H:i A P'); */ ?></p>
+                <?php endif; ?>
+                <p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['sldetail_order_id']; ?></p>
 			</div>
 
 			<div class="col-xl-4 col-lg-4 col-md-12">
