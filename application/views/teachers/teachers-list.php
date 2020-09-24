@@ -26,7 +26,7 @@
 						</div>
 						<span class="-gap"></span>
 						<div class="box__price">
-							<?php echo Label::getLabel('LBL_Hourly_Rate'); ?>
+							<?php echo Label::getLabel('LBL_Starts_from'); ?>
 							<h6><?php echo CommonHelper::displayMoneyFormat( $teacher['minPrice'] ); ?></h6>
 						</div>
 					</div>
