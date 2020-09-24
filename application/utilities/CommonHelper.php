@@ -1606,6 +1606,21 @@ class CommonHelper extends FatUtility
         return $list;
     }
 
+    public static function getActiveMeetingTool() : int
+    {
+        return FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_INT, 2);
+    }
+
+    public static function getCometChatMeetingTool() : int
+    {
+        return FatApp::getConfig('CONF_MEETING_TOOL_COMET_CHAT', FatUtility::VAR_INT, 1);
+    }
+
+    public static function getLessonspaceMeetingTool() : int
+    {
+        return FatApp::getConfig('CONF_MEETING_TOOL_LESSONSPACE', FatUtility::VAR_INT, 2);
+    }
+
     public static function getTeachLangs($ids=null, $homePagCal = false, $singleView = false)
     {
         if (empty($ids)) {

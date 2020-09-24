@@ -1,9 +1,4 @@
-Release Version: TV-1.0.0.20200902
-Release Date: 2020/09/02
-
 New Features:
-
-. Task-76383 - Integrate LessonSpace.
 
 Enhancements:
   

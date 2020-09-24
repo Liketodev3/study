@@ -1,6 +1,9 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <script>
 	var userIsTeacher =  <?php echo $userIsTeacher; ?>;
+	var activeMeetingTool =  '<?php echo CommonHelper::getActiveMeetingTool(); ?>';
+	var cometChatMeetingTool = '<?php echo  CommonHelper::getCometChatMeetingTool(); ?>';
+	var lessonspaceMeetingTool = '<?php echo CommonHelper::getLessonspaceMeetingTool(); ?>';
 </script>
 <section class="section section--grey section--page">
 	<div class="container container--fixed">
