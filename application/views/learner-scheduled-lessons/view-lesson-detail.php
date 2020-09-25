@@ -97,7 +97,7 @@ $isJoined = $lessonData['sldetail_learner_join_time']>0;
                    <p><?php echo Label::getLabel('LBL_Note'); ?>:<?php echo Label::getLabel('LBL_End_time_for_this_lesson_is_passed._Schedule_more_lessons.'); ?> </p>
                 </div>
                 <span class="-gap"></span>
-                <a href="<?php echo CommonHelper::generateUrl('teacher'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>                
+                <a href="<?php echo CommonHelper::generateUrl('account'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>                
                 <?php endif; ?>
                 
 				<a href="javascript:void(0);" <?php echo ($startTime>$curDate || $curDate>$endTime || !$isScheduled ? 'style="display:none;"' : '') ?> class="btn btn--secondary btn--xlarge join_lesson_now" id="joinL" onclick="joinLesson('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');">
