@@ -14,22 +14,20 @@
 </svg>
                             </div>
                             <span class="-gap"></span>
-                            <h1 class="-color-secondary"><?php echo Label::getLabel('MSG_Thankyou_for_Purchase'); ?></h1>
-                            <h4><?php echo Label::getLabel('MSG_Your_Order_has_been_successfully_Placed'); ?></h4>
+                            <h1 class="-color-secondary"><?php echo $heading ?? Label::getLabel('MSG_Thankyou_for_Purchase'); ?></h1>
+                            <div class="payment-success"><?php echo FatUtility::decodeHtmlEntities(($textMessage)) ?? Label::getLabel('MSG_Your_Order_has_been_successfully_Placed'); ?></div>
 
                             <?php if(isset($orderType) AND $orderType == Order::TYPE_WALLET_RECHARGE){ ?>
-                            <span class="-gap"></span>
                             <a href="<?php echo CommonHelper::generateUrl('wallet'); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_Wallet'); ?></a>
                             <?php } elseif(isset($orderType) AND $orderType == Order::TYPE_GIFTCARD) { ?>
-                            <span class="-gap"></span>
                             <a href="<?php echo CommonHelper::generateUrl('giftcard'); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_Giftcards_Purchased'); ?></a>                                            
                             <?php }elseif(!empty($lessonInfo) && $lessonInfo['slesson_grpcls_id']>0){?>
                             <h5><?php echo Label::getLabel('MSG_You_can_view_classes_here'); ?></h5>
-                            <span class="-gap"></span>
                             <a href="<?php echo CommonHelper::generateUrl('LearnerGroupClasses'); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Navigate_to_classes'); ?></a>
+                            <?php }elseif(!empty($lessonInfo) && ($lessonInfo['op_lpackage_is_free_trial'] == 1)){?>
+                            <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons'); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_my_Lessons'); ?></a>
                             <?php }else{?>
                             <h5><?php echo Label::getLabel('MSG_You_can_schedule_lessons_here'); ?></h5>
-                            <span class="-gap"></span>
                             <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons'); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_my_Lessons'); ?></a>
                             <?php } ?>
                         </div>

@@ -46,7 +46,7 @@
 p {
     color: var(--color-dark);
     font-size: 1rem;
-    font-family: 'Open Sans';
+    /* font-family: 'Open Sans'; */
     font-weight: 400;
 }
 
@@ -787,7 +787,7 @@ max-width: 100%;
 }
 
 .banner__content p {
-    font-family: 'Open Sans';
+    /* font-family: 'Open Sans'; */
     font-weight: 600;
     font-size: 1.2rem;
     color: #fff;

@@ -1,10 +1,12 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php
+defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <script>
-	var userIsTeacher =  <?php echo $userIsTeacher; ?>;
-	var activeMeetingTool =  '<?php echo CommonHelper::getActiveMeetingTool(); ?>';
-	var cometChatMeetingTool = '<?php echo  CommonHelper::getCometChatMeetingTool(); ?>';
-	var lessonspaceMeetingTool = '<?php echo CommonHelper::getLessonspaceMeetingTool(); ?>';
+var userIsTeacher = <?php echo $userIsTeacher?:0; ?>;
+var activeMeetingTool =  '<?php echo CommonHelper::getActiveMeetingTool(); ?>';
+var cometChatMeetingTool = '<?php echo  CommonHelper::getCometChatMeetingTool(); ?>';
+var lessonspaceMeetingTool = '<?php echo CommonHelper::getLessonspaceMeetingTool(); ?>';
 </script>
+
 <section class="section section--grey section--page">
 	<div class="container container--fixed">
 		<div class="page-panel -clearfix">

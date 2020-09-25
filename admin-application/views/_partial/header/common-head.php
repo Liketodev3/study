@@ -11,8 +11,11 @@
 	}else{
 		$extendEditorJs	= 'false';
 	}
-	echo $str = '<script >
-		var SITE_ROOT_URL = "' . CommonHelper::generateFullUrl('','',array(),CONF_WEBROOT_FRONT_URL) . '" ;
+
+	echo $str = '<script type="text/javascript">
+		var SITE_ROOT_URL = "' . CONF_WEBROOT_URL . '" ;
+		var SITE_ROOT_FRONT_URL = "' . CONF_WEBROOT_FRONTEND . '" ;
+
 		var langLbl = ' . json_encode(
 			$jsVariables
 		) . ';

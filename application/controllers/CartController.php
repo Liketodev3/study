@@ -89,11 +89,14 @@ class CartController extends MyAppController
         }
         /* ] */
 
+        $cartData = $cart->getCart( $this->siteLangId );
+        $freePackage = LessonPackage::getFreeTrialPackage();
+        if (!empty($freePackage) && ($freePackage['lpackage_id'] == $lpackageId)) {
+            $this->set('isFreeLesson', ($cartData['orderNetAmount'] == 0));
+        }
         $this->set('redirectUrl', CommonHelper::generateUrl('Checkout'));
         if (isset($post['checkoutPage'])) {
             $this->set('msg', Label::getLabel('LBL_Package_Selected_Successfully.'));
-        } else {
-            $this->set('msg', Label::getLabel('LBL_Redirecting_in_3_seconds.'));
         }
         $this->_template->render(false, false, 'json-success.php');
     }

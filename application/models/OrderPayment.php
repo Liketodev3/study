@@ -57,10 +57,10 @@ class OrderPayment extends Order
         }
 
         $langId = FatApp::getConfig('conf_default_site_lang');
-        $orderInfo = $this->orderAttributes;
+        /* $orderInfo = $this->orderAttributes; */
 
         /* [ */
-        $transObj = new Transaction($orderInfo["order_user_id"]);
+        /* $transObj = new Transaction($orderInfo["order_user_id"]);
         $formattedOrderId = "#".$orderInfo["order_id"];
 
         $utxn_comments = Label::getLabel('LBL_ORDER_PLACED_{order-id}', $langId);
@@ -87,7 +87,7 @@ class OrderPayment extends Order
         if (!$transObj->save()) {
             $this->error = $transObj->getError();
             return false;
-        }
+        } */
         /* ] */
 
         /* Send email to User[ */
@@ -96,16 +96,16 @@ class OrderPayment extends Order
         /* ] */
 
         if (!$this->addOrderPayment(
-            Label::getLabel('LBL_User_Wallet', $langId),
+            'NoCharge',
             'W-'.time(),
             $amountToBeCharge,
-            Label::getLabel("LBL_Received_Payment", $langId),
-            Label::getLabel('LBL_Payment_From_User_Wallet', $langId),
+            Label::getLabel("LBL_No_Charges", $langId),
+            Label::getLabel('LBL_No_Charges', $langId),
             true
         )) {
             return false;
         }
-        $db->commitTransaction();
+        /* $db->commitTransaction(); */
         return true;
     }
 

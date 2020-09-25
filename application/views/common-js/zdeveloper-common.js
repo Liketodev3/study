@@ -385,7 +385,7 @@ $(document).ready(function(){
 		}
 	};
 
-	toggleTeacherFavorite = function( teacher_id,el){
+	toggleTeacherFavorite = function(teacher_id, el){
 		if(isRuningTeacherFavoriteAjax) {
 			return false;
 		}
@@ -399,21 +399,16 @@ $(document).ready(function(){
 		var data = 'teacher_id='+teacher_id;
 		$.mbsmessage.close();
 		fcom.updateWithAjax(fcom.makeUrl('Learner', 'toggleTeacherFavorite'), data, function(ans) {
-			location.reload();
-			//isRuningTeacherFavoriteAjax = false;
-			/*console.log(ans); return false;
+			isRuningTeacherFavoriteAjax = false;
 			if( ans.status ){
 				if( ans.action == 'A' ){
 					$(el).addClass("is-active");
-					$( "[data-id="+teacher_id+"]").addClass("is-active");
-					$("[data-id="+teacher_id+"] span").attr('title', langLbl.RemoveProductFromFavourite);
 				} else if( ans.action == 'R' ){
-					$( "[data-id="+teacher_id+"]").removeClass("is-active");
-					$("[data-id="+teacher_id+"] span").attr('title', langLbl.AddProductToFavourite);
+					$(el).removeClass("is-active");
 				}
-			}*/
+			}
 		});
-
+		$(el).blur();
 	}
 
 	generateThread = function( id ){

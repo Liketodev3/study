@@ -35,7 +35,7 @@
 		<ul class="coupon-offers">
 			<?php $counter = 1; foreach( $couponsList as $coupon_id=>$coupon ){	?>
 			<li>
-				<div class="coupon-code" onClick="triggerApplyCoupon('<?php echo $coupon['coupon_code']; ?>');" title="<?php echo Label::getLabel("LBL_Click_to_apply_coupon",$siteLangId); ?>"><?php echo $coupon['coupon_code']; ?></div>
+				<a href="javascript:void(0);" class="coupon-code" onclick="triggerApplyCoupon('<?php echo $coupon['coupon_code']; ?>');" title="<?php echo Label::getLabel("LBL_Click_to_apply_coupon",$siteLangId); ?>"><?php echo $coupon['coupon_code']; ?></a>
 				<?php if( $coupon['coupon_description'] != '' ){ ?>
 				<p><?php echo $coupon['coupon_description'];?> </p>
 				<?php } ?>

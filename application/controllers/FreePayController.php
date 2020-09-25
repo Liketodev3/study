@@ -64,9 +64,10 @@ class FreePayController extends MyAppController
         if ($orderPaymentFinancials['order_payment_gateway_charge'] > 0) {
             FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentFailure', array($orderId)));
         }
+        
         $cartObj = new Cart();
         $cartData = $cartObj->getCart($this->siteLangId);
-        
+
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $isFreeTrial = ($cartData['lpackage_is_free_trial'] == applicationConstants::YES);
         if (!$orderPaymentObj->chargeFreeOrder(0, $isFreeTrial)) {
@@ -205,6 +206,9 @@ class FreePayController extends MyAppController
             $this->set('redirectUrl', CommonHelper::generateUrl('Custom', 'paymentSuccess'));
             $this->set('msg', Label::getLabel("MSG_Payment_from_wallet_made_successfully", $this->siteLangId));
             $this->_template->render(false, false, 'json-success.php');
+        }
+        if ($cartData['lpackage_is_free_trial']) {
+            FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'trialBookedSuccess', [$orderId]));
         }
         FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess'));
     }

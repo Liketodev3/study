@@ -89,7 +89,7 @@
         settings: {
             opacity: 0.2,
             overlay: true,
-            loadingImage: '/images/loading.gif',
+            loadingImage: confWebRootUrl + 'images/loading.gif',
             closeImage: '',
             imageTypes: ['png', 'jpg', 'jpeg', 'gif'],
             faceboxHtml: '\

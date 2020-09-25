@@ -7709,7 +7709,7 @@ color: #fff;}
     vertical-align: top;
     margin-top: 0;
     margin-right: 15px;float:none;}
-    .group.group--social{text-align:center;}
+.group.group--social{text-align:center;}
 @media screen and (max-width:1220px){
   .group.group--social .btn--social-fb.btn{
       margin-right: 5px;
@@ -7723,3 +7723,63 @@ color: #fff;}
   }
   .group.group--social .btn--social-fb.btn{margin-bottom:10px;}
 }
+
+.loading-wrapper {
+    background: rgba(0, 0, 0, 0.65);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    z-index: 11;
+    bottom: 0;
+    left: 0;
+    right: 0; }
+.loading-wrapper .loading {
+    width: 100px;
+    height: 80px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -40px;
+    margin-left: -50px; 
+}
+.loading-wrapper .loading .inner {
+    -webkit-animation: rotate 0.8s linear infinite;
+    animation: rotate 0.8s linear infinite;
+    margin-top: 20px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+}
+.loading-wrapper .loading .rotate-one {
+    left: 50%;
+    margin-left: -25px;
+    border-top: 2px solid #fff; 
+}
+.loading-wrapper .loading .rotate-two {
+    top: -10px;
+    left: 30px;
+    border-left: 2px solid #fff;
+}
+.loading-wrapper .loading .rotate-three 
+{
+    top: -10px;
+    right: 30px;
+    border-right: 2px solid #fff; 
+}
+
+@-webkit-keyframes rotate {
+    0% {
+      -webkit-transform: rotateZ(0deg); }
+    100% {
+      -webkit-transform: rotateZ(360deg); } 
+}
+  
+@keyframes rotate {
+    0% {
+      -webkit-transform: rotateZ(0deg);
+              transform: rotateZ(0deg); }
+    100% {
+      -webkit-transform: rotateZ(360deg);
+              transform: rotateZ(360deg); } }
