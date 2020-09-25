@@ -1,5 +1,7 @@
 This file shares the details of YoCoach version and features.
 
+Release Version: TV-2.1.1.20200925
+Release Date: 2020/09/25
 
 New Features:
     *Task-77527: Lesson Space Integration
