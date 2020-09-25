@@ -480,6 +480,7 @@ class Order extends MyAppModel
             'order_user_id',
             'order_net_amount',
             'order_discount_total',
+            'op_lpackage_is_free_trial'
         ]);
         $orderSearch->joinOrderProduct();
         $orderSearch->joinScheduledLessonDetail();
