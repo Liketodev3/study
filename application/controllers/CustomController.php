@@ -67,6 +67,10 @@ class CustomController extends MyAppController
             $order = $orderObj->getOrderById($orderId);
             if (isset($order['order_type'])) {
                 $this->set('orderType', $order['order_type']);
+                if($order['order_type'] == Order::TYPE_WALLET_RECHARGE){ 
+                    $this->set('heading', Label::getLabel('HEADING_Money_added_to_wallet'));
+                    $textMessage = Label::getLabel('MSG_Money_added_to_wallet');
+                }
             }
             $orderObj = $orderObj->getLessonsByOrderId($orderId);
             $orderObj->addFld('slesson_grpcls_id');
@@ -145,7 +149,6 @@ class CustomController extends MyAppController
             }
             $orderObj = $orderObj->getLessonsByOrderId($orderId);
             $orderObj->addFld('slesson_grpcls_id');
-            $orderObj->addFld('op_lpackage_is_free_trial');
             $orderObj->doNotCalculateRecords(true);
             $orderObj->doNotLimitRecords(true);
             $lessonInfo = FatApp::getDb()->fetch($orderObj->getResultSet());
