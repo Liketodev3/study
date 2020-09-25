@@ -2862,13 +2862,14 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     display: block;
     padding: 20px 0;
     font-size: 1.1rem;
-    border-bottom: 2px solid transparent;
+    border-bottom: 2px solid transparent; color:#999;
 }
 
 .tabs-inline li.is-active a {
     background: #fff;
-    font-weight: 600;
+    font-weight: 700;
     border-bottom-color: var(--color-secondary);
+    color:#000;
 }
 
 .tabs-offset {

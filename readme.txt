@@ -3,6 +3,8 @@ This file shares the details of YoCoach version and features.
 New Features:
 
 Enhancements:
+    *Task-73053: Refinements in showing my lessons
+    *Task-73053: Hide Request withdrawal from wallet for learner.
   
 Bug Fixes:
 
