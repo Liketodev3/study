@@ -2,6 +2,16 @@ This file shares the details of YoCoach version and features.
 
 New Features:
 
+    73053-update payment success message and remove extra space
+    73053-set response headers from controller
+    73053-to not reload page on (un)marking a teacher as favorite
+    73053-fix fonts on front end
+    73053-show pointer cursor on cupon code(checkout)
+    73053-fix broken contact us link on payment failed page
+    73053-free trial with 0 payment must not got to checkout page. No transaction enrty can happen with 0 amount.
+    73053-add loader on book session and remove "redirecting in 3 seconds" message
+    73053-fix webroot url usages
+
 Enhancements:
   
 Bug Fixes:
