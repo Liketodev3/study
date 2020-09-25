@@ -9,6 +9,7 @@ class JsCssController{
 	}
 
 	private function setHeaders($contentType) {
+		header_remove('X-Powered-By');
 		header('Content-Type: ' . $contentType);
 		header('Pragma: public' );
 		header('Cache-Control: public, max-age=2592000, stale-while-revalidate=604800');

@@ -1,14 +1,4 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
-	header('X-Frame-Options: SAMEORIGIN');
-	header('Strict-Transport-Security: max-age=10886400' );
-	header('X-XSS-Protection: 1; mode=block' );
-	header('X-Content-Type-Options: nosniff' );
-	header('Content-Security-Policy: policy-definition' );
-	header('Referrer-Policy: no-referrer-when-downgrade' );
-	header("Cache-Control: no-cache, must-revalidate");
-	header("Pragma: no-cache"); 
-	header("Cache-Control: max-age=86400");
-	header('Cache-Control: public' ); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 /** Filter Session Destroy **/
 $__controller = FatApp::getController();
 if ( $__controller !='TeachersController' && isset( $_SESSION['search_filters'] ) ) {
