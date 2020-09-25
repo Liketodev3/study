@@ -23,6 +23,9 @@
 			</div>
 			
 			<div class="col-xl-8 col-lg-12 col-md-12">
+               <?php if(empty($finaldata)){
+                   $this->includeTemplate('_partial/no-record-found.php');
+               } ?>
 			   <?php $i=1; foreach($finaldata as $key=>$data){ ?>
 				<div id="category_<?php echo $i; ?>" class="box box--faqs">
 				   <div class="-padding-30">

@@ -26,6 +26,7 @@ Bug Fixes:
     *Bug-#042739: Group classes on Teacher and Learner dashboard
     *Bug-#043384: Slot booking with single click
     *Bug-#043459: Fixed home page slider display order as set by admin
+    *Bug-#043460: Hide Disabled FAQs from frontend
     
 ------------------------------
 Release Version: TV-2.1.0.20200826

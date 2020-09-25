@@ -3,13 +3,13 @@ class FaqController extends MyAppController
 {
     public function index()
     {
-        $srch = new SearchBase(Faq::DB_TBL);
+        $srch = Faq::getSearchObject($this->siteLangId);
         $srch->addMultipleFields(array(
             'faq_id',
             'faq_category',
             'IFNULL(faq_title, faq_identifier) as faq_title',
         ));
-        $srch->joinTable(Faq::DB_TBL_LANG, 'LEFT OUTER JOIN', 'faqlang_faq_id=faq_id AND faqlang_lang_id = ' . $this->siteLangId);
+        
         $srch->setPageSize(50);
         $rs = $srch->getResultSet();
         $data = FatApp::getDb()->fetchAll($rs);
