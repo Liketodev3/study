@@ -278,15 +278,17 @@ class ConfigurationsController extends AdminBaseController
 
     public function redirect()
     {
-        require_once(CONF_INSTALLATION_PATH . 'library/analytics/analyticsapi.php');
+        require_once(CONF_INSTALLATION_PATH . 'library/analytics/AnalyticsAPI.php');
+
         $analyticArr = array(
             'clientId' => FatApp::getConfig("CONF_ANALYTICS_CLIENT_ID"),
             'clientSecretKey' => FatApp::getConfig("CONF_ANALYTICS_SECRET_KEY"),
             'redirectUri' => CommonHelper::generateFullUrl('configurations', 'redirect', array(), '', false),
             'googleAnalyticsID' => FatApp::getConfig("CONF_ANALYTICS_ID")
             );
+
         try {
-            $analytics = new Ykart_analytics($analyticArr);
+            $analytics = new AnalyticsAPI($analyticArr);
             $obj = FatApplication::getInstance();
             $get = $obj->getQueryStringVar();
         } catch (exception $e) {
@@ -526,7 +528,7 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Admin', $this->adminLangId).'</h3>');
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Default_Items_Per_Page", $this->adminLangId), "CONF_ADMIN_PAGESIZE");
                 $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Determines_how_many_items_are_shown_per_page_(user_listing,_categories,_etc)", $this->adminLangId).".</small>";
-                
+
                 $frm->addHtml('', 'Grpcls', '<h3>'.Label::getLabel('LBL_Group_Class', $this->adminLangId).'</h3>');
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Cancellation_Refund_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_CLASS_REFUND_PERCENTAGE");
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Booking_Time_Span(Minutes)", $this->adminLangId), "CONF_CLASS_BOOKING_GAP");
@@ -725,7 +727,7 @@ class ConfigurationsController extends AdminBaseController
                 $fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_Google_Analytics_ID._Ex._UA-xxxxxxx-xx.", $this->adminLangId)."</small>";
 
                 $accessToken = FatApp::getConfig("CONF_ANALYTICS_ACCESS_TOKEN", FatUtility::VAR_STRING, '');
-                require_once(CONF_INSTALLATION_PATH . 'library/analytics/analyticsapi.php');
+                require_once(CONF_INSTALLATION_PATH . 'library/analytics/AnalyticsAPI.php');
                 $analyticArr = array(
                     'clientId' => FatApp::getConfig("CONF_ANALYTICS_CLIENT_ID", FatUtility::VAR_STRING, ''),
                     'clientSecretKey' => FatApp::getConfig("CONF_ANALYTICS_SECRET_KEY", FatUtility::VAR_STRING, ''),
@@ -733,7 +735,7 @@ class ConfigurationsController extends AdminBaseController
                     'googleAnalyticsID' => FatApp::getConfig("CONF_ANALYTICS_ID", FatUtility::VAR_STRING, '')
                     );
                 try {
-                    $analytics = new Ykart_analytics($analyticArr);
+                    $analytics = new AnalyticsAPI($analyticArr);
                     $authUrl = $analytics->buildAuthUrl();
                 } catch (exception $e) {
                     $authUrl = '';

@@ -12,7 +12,7 @@
 		}
 	};
 
-	topReferers = function(interval){
+	/*topReferers = function(interval){
 		$('.topReferers').html('<li>'+fcom.getLoader()+'</li>');
 		data="rtype=top_referrers&interval="+interval;
 
@@ -37,7 +37,7 @@
 		fcom.ajax(fcom.makeUrl('home', 'dashboardStats'), data, function(t) {
 			$('.topProducts').html(t);
 		});
-	};
+	};*/
 
 	getTopLessonLanguage = function(interval){
 		$('.topLessonLanguage').html('<li>'+fcom.getLoader()+'</li>');
@@ -112,22 +112,6 @@
 			}
 		});
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 })();

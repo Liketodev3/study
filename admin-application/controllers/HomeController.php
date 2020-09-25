@@ -16,13 +16,6 @@ class HomeController extends AdminBaseController
         $this->set('configuredAnalytics', false);
         $this->set('objPrivilege', $this->objPrivilege);
 
-        $analyticArr = array(
-            'clientId' => FatApp::getConfig("CONF_ANALYTICS_CLIENT_ID", FatUtility::VAR_STRING, ''),
-            'clientSecretKey' => FatApp::getConfig("CONF_ANALYTICS_SECRET_KEY", FatUtility::VAR_STRING, ''),
-            'redirectUri' => CommonHelper::generateFullUrl('configurations', 'redirect', array(), '', false),
-            'googleAnalyticsID' => FatApp::getConfig("CONF_ANALYTICS_ID", FatUtility::VAR_STRING, '')
-        );
-
 
         // simple Caching with:
         phpFastCache::setup("storage", "files");
@@ -32,9 +25,10 @@ class HomeController extends AdminBaseController
 
         if ($dashboardInfo == null) {
 
-            include_once CONF_INSTALLATION_PATH . 'library/analytics/analyticsapi.php';
+            include_once CONF_INSTALLATION_PATH . 'library/analytics/AnalyticsAPI.php';
             try {
-                $analytics = new Ykart_analytics($analyticArr);
+
+                $analytics = new AnalyticsAPI();
                 $token = $analytics->getRefreshToken(FatApp::getConfig("CONF_ANALYTICS_ACCESS_TOKEN"));
 
                 $analytics->setAccessToken((isset($token['accessToken'])) ? $token['accessToken'] : '');
@@ -45,20 +39,21 @@ class HomeController extends AdminBaseController
                 } else {
                     $this->set('configuredAnalytics', true);
                 }
+
+                if ($accountId) {
+                    $statsInfo = $analytics->getVisitsByDate();
+
+                    $visitCount = $statsInfo['result'];
+                    foreach ($statsInfo['result'] as $key => $val) {
+                        $visitCount[$key] = $val['totalsForAllResults'];
+                    }
+
+                    $dashboardInfo['visitsCount'] = (isset($visitCount)) ? $visitCount : '';
+                }
+
             } catch (exception $e) {
                 /* Message::addErrorMessage(Labels::getLabel('LBL_Analytic_Id_does_not_exist_with_Configured_Account',$this->adminLangId)); */
                 //Message::addErrorMessage($e->getMessage());
-            }
-
-            if ($accountId) {
-                $statsInfo = $analytics->getVisitsByDate();
-
-                $visitCount = $statsInfo['result'];
-                foreach ($statsInfo['result'] as $key => $val) {
-                    $visitCount[$key] = $val['totalsForAllResults'];
-                }
-
-                $dashboardInfo['visitsCount'] = (isset($visitCount)) ? $visitCount : '';
             }
 
             $statsObj = new AdminStatistic();
@@ -116,13 +111,7 @@ class HomeController extends AdminBaseController
         $type = $post['rtype'];
         $interval = isset($post['interval'])?$post['interval']:'';
 
-        include_once CONF_INSTALLATION_PATH . 'library/analytics/analyticsapi.php';
-        $analyticArr = array(
-        'clientId' => FatApp::getConfig("CONF_ANALYTICS_CLIENT_ID"),
-        'clientSecretKey' => FatApp::getConfig("CONF_ANALYTICS_SECRET_KEY"),
-        'redirectUri' => CommonHelper::generateFullUrl('configurations', 'redirect', array(), '', false),
-        'googleAnalyticsID' => FatApp::getConfig("CONF_ANALYTICS_ID")
-        );
+        include_once CONF_INSTALLATION_PATH . 'library/analytics/AnalyticsAPI.php';
 
         phpFastCache::setup("storage", "files");
         phpFastCache::setup("path", CONF_UPLOADS_PATH."caching");
@@ -137,7 +126,7 @@ class HomeController extends AdminBaseController
 
             } else {
                 try {
-                    $analytics = new Ykart_analytics($analyticArr);
+                    $analytics = new AnalyticsAPI();
                     $token = $analytics->getRefreshToken(FatApp::getConfig("CONF_ANALYTICS_ACCESS_TOKEN"));
                     if (isset($token['accessToken'])) {
                         $analytics->setAccessToken($token['accessToken']);
@@ -151,11 +140,11 @@ class HomeController extends AdminBaseController
                     case 'TOP_REFERRERS':
                         $result = $analytics->getTopReferrers($interval, 9);
                         break;
-                    case 'TOP_SEARCH_KEYWORD':
+                    /*case 'TOP_SEARCH_KEYWORD':
                         //$result=$analytics->getSearchTerm($interval,9);
                         $statsObj = new Statistics();
                         $result = $statsObj->getTopSearchKeywords($interval, 10);
-                        break;
+                        break;*/
                     case 'TRAFFIC_SOURCE':
                         $result = $analytics->getTrafficSource($interval);
 
@@ -163,10 +152,10 @@ class HomeController extends AdminBaseController
                     case 'VISITORS_STATS':
                         $result = $analytics->getVisitsByDate();
                         break;
-                    case 'TOP_PRODUCTS':
+                    /*case 'TOP_PRODUCTS':
                         $statsObj = new Statistics();
                         $result = $statsObj->getTopProducts($interval, $this->adminLangId, 10);
-                        break;
+                        break;*/
                     }
                 } catch (exception $e) {
                     echo $e->getMessage();

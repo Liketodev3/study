@@ -1,18 +1,21 @@
 <?php
-require_once "config.php";
-Class Ykart_analytics
+
+require_once('GoogleAnalyticsAPI.class.php');
+
+Class AnalyticsAPI
 {
 	public function __construct($config = array())
 	{
-		global $analyticsApiConfig;
+		$analyticsApiConfig = self::goolgeAnalyticsAPiConfig();
 		$analyticsApiConfig = array_merge($analyticsApiConfig, $config);
 		$this->analyticsApiConfig=$analyticsApiConfig;
 
 		if($analyticsApiConfig['googleAnalyticsID']=='' || $analyticsApiConfig['clientSecretKey']=='' ||$analyticsApiConfig['clientId']==''){
 			throw new Exception('You must provide the Analytic Id,ClientId and Secret Key');
 		}
-		require_once('GoogleAnalyticsAPI.class.php');
+
 		$this->ga = new GoogleAnalyticsAPI();
+
 		$this->ga->auth->setClientId($analyticsApiConfig['clientId']);
 		// From the APIs console
 		$this->ga->auth->setClientSecret($analyticsApiConfig['clientSecretKey']); // From the APIs console
@@ -24,6 +27,17 @@ Class Ykart_analytics
 		$this->yearDate=date('Y-m-d',date(strtotime($this->endDate .'-1 year')));
 	}
 
+	public static function goolgeAnalyticsAPiConfig()
+	{
+		$analyticsApiConfig = array(
+			'clientId' => FatApp::getConfig("CONF_ANALYTICS_CLIENT_ID", FatUtility::VAR_STRING, ''),
+			'clientSecretKey' => FatApp::getConfig("CONF_ANALYTICS_SECRET_KEY", FatUtility::VAR_STRING, ''),
+			'redirectUri' => CommonHelper::generateFullUrl('configurations', 'redirect', array(), '', false),
+            'googleAnalyticsID' => FatApp::getConfig("CONF_ANALYTICS_ID", FatUtility::VAR_STRING, '')
+		);
+
+		return $analyticsApiConfig;
+	}
 
 	public function buildAuthUrl()
 	{
