@@ -18,6 +18,7 @@ class HomeController extends MyAppController
             array('slide_id', 'slide_record_id', 'slide_type', 'IFNULL(slide_title, slide_identifier) as slide_title',
             'slide_target', 'slide_url')
         );
+        $srchSlide->addOrder('slide_display_order');
 
         $totalSlidesPageSize = FatApp::getConfig('CONF_TOTAL_SLIDES_HOME_PAGE', FatUtility::VAR_INT, 4);
         $ppcSlidesPageSize = FatApp::getConfig('CONF_PPC_SLIDES_HOME_PAGE', FatUtility::VAR_INT, 4);
@@ -25,7 +26,7 @@ class HomeController extends MyAppController
         $adminSlides = array();
         $slidesSrch = new SearchBase('('.$srchSlide->getQuery().') as t');
         $slidesSrch->addMultipleFields(array('slide_id', 'slide_type', 'slide_record_id', 'slide_url', 'slide_target', 'slide_title'));
-        $slidesSrch->addOrder('', 'rand()');
+        // $slidesSrch->addOrder('', 'rand()');
         if ($totalSlidesPageSize > count($ppcSlides)) {
             $totalSlidesPageSize = $totalSlidesPageSize - count($ppcSlides);
             $adminSlideSrch = clone $slidesSrch;
