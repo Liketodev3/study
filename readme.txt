@@ -2,7 +2,8 @@ This file shares the details of YoCoach version and features.
 
 New Features: N/A
   
-Enhancements: N/A
+Enhancements: 
+    *Task-77527: Lesson Space Integration
 
 Bug Fixes:
     *Bug-#040861: Fixed day time saving issue for updating teacher Availability

@@ -34,10 +34,213 @@ if($lessonData['lessonReschedulelogId'] > 0 &&
 		$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
 	}
 }
-
 $isScheduled = $lessonData['slesson_status']==ScheduledLesson::STATUS_SCHEDULED;
 $isJoined = $lessonData['slesson_teacher_join_time']>0;
 ?>
+<script type="text/javascript">
+langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
+var is_time_up = '<?php echo $endTime > 0 && $endTime < $curDate ?>';
+
+var lesson_joined = '<?php echo $lessonData['slesson_teacher_join_time']>0 ?>';
+var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time']>0 ?>';
+var lesson_status_completed = '<?php echo $lessonData['slesson_status'] == ScheduledLesson::STATUS_COMPLETED ?>';
+var slesson_id = '<?php echo $lessonData['slesson_id'] ?>';
+
+var chat_appid = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_APP_ID'); ?>';
+var chat_auth = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_AUTH'); ?>';
+var chat_id = '<?php echo $chatId; ?>';
+var chat_group_id = '<?php echo $chat_group_id ?>';
+var chat_name = '<?php echo $lessonData['teacherFname']; ?>';
+var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
+var chat_avatar = "<?php echo $teacherImage; ?>";
+var chat_friends = "<?php echo $lessonData['learnerId']; ?>";
+
+
+var activeMeetingTool =  '<?php echo FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_INT, 2); ?>';
+var cometChatMeetingTool = '<?php echo FatApp::getConfig('CONF_MEETING_TOOL_COMET_CHAT', FatUtility::VAR_INT, 1); ?>';
+var lessonspaceMeetingTool = '<?php echo FatApp::getConfig('CONF_MEETING_TOOL_LESSONSPACE', FatUtility::VAR_INT, 2); ?>';
+
+var canEnd = '<?php echo $canEnd ?>';
+
+var CometJsonTeacherData = [{"userId":"<?php echo $chatId; ?>","fname":"<?php echo $lessonData['teacherFname']; ?>","avatarURL":"<?php echo $teacherImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['teacherUrlName']; ?>", "role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"}];
+
+var CometJsonLearnerData = [{"userId":"<?php echo $lessonData['learnerId']; ?>","fname":"<?php echo $lessonData['learnerFname']; ?>","avatarURL":"<?php echo $studentImage; ?>","profileURL":"<?php echo $baseSeoUrl.$lessonData['learnerUrlName']; ?>","role":"<?php echo User::getUserTypesArr()[User::USER_TYPE_LEANER]; ?>"}];
+
+var CometJsonData = CometJsonTeacherData.concat(CometJsonLearnerData);
+
+var CometJsonFriendData = {"lessonId":"<?php echo $lessonData['slesson_id'] ?>","userId":"<?php echo $chatId;?>","friendId":"<?php echo $lessonData['learnerId']; ?>"};
+
+var checkEveryMinuteStatusVar = null;
+var checkNewFlashCardsVar = null;
+if(activeMeetingTool == cometChatMeetingTool) {
+    createUserCometChatApi(CometJsonData,CometJsonFriendData);
+}
+
+
+if(!is_time_up && lesson_joined && !lesson_status_completed){
+    joinLesson(CometJsonData, CometJsonFriendData);
+}
+
+if(lesson_status_completed==1){
+    ///$('.timer').hide();
+}
+
+if(canEnd && !lesson_completed ){
+    $("#endL").show();
+}
+
+jQuery(document).ready(function () {
+    $("#lesson_actions").hide();
+    <?php if( $lessonData['slesson_status'] != ScheduledLesson::STATUS_SCHEDULED ){ ?>
+    $("#lesson_actions").show();
+    <?php }?>
+});
+
+function joinLessonButtonAction(){
+    $("#lesson_actions").hide();
+    $("#joinL").hide();
+    $("#endL").show();
+    $('.screen-chat-js').show();
+    checkEveryMinuteStatus();
+    searchFlashCards(document.frmFlashCardSrch);
+    checkNewFlashCards();
+    <?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
+    $("#end_lesson_time_div").show();
+    <?php }?>
+}
+
+function endLessonButtonAction(){
+    $("#joinL").hide();
+    $("#endL").hide();
+    $("#lesson_actions").show();
+    $('.screen-chat-js').hide();
+    searchFlashCards(document.frmFlashCardSrch);
+    if(checkEveryMinuteStatusVar){
+        clearInterval(checkEveryMinuteStatusVar);
+    }
+    if(checkNewFlashCardsVar){
+    clearInterval(checkNewFlashCardsVar);
+    }
+    $("#end_lesson_time_div").hide();
+}
+
+function checkEveryMinuteStatus(){
+    checkEveryMinuteStatusVar = setInterval(function(){
+        fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','checkEveryMinuteStatus',[slesson_id]),'',function(t){
+            var t = JSON.parse(t);
+            if(t.sldetail_learner_status <= 1 || t.slesson_teacher_end_time>0) return;
+
+            $.confirm({
+                title: langLbl.Confirm,
+                content: '<?php echo Label::getLabel('LBL_Learner_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also!'); ?>',
+                autoClose: langLbl.Quit+'|10000',
+                buttons: {
+                    Proceed: {
+                       text: langLbl.Proceed,
+                        btnClass: 'btn btn--primary',
+                        keys: ['enter', 'shift'],
+                        action: function(){
+                            endLesson(slesson_id);
+                            viewLessonDetail();
+                        }
+                    },
+                    Quit: {
+                        text: langLbl.Quit,
+                        btnClass: 'btn btn--secondary',
+                        keys: ['enter', 'shift'],
+                        action: function(){
+                        }
+                    }
+                }
+            });
+        });
+    },60000);
+}
+
+function checkNewFlashCards(){
+    checkNewFlashCardsVar = setInterval(function(){
+        /*fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','searchFlashCards'),'',function(t){
+            var t = JSON.parse(t);
+            $('#flashCardListing').html(t.html);
+        });*/
+        searchFlashCards(document.frmFlashCardSrch);
+    },30000)
+}
+
+$(function(){
+    <?php if( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED ){ ?>
+	$('.timer.start-lesson-timer').show();
+    var showLessonBtn = true;
+    $('#start_lesson_timer').countdowntimer({
+        startDate : "<?php echo $curDate; ?>",
+        dateAndTime : "<?php echo $startTime; ?>",
+        size : "lg",
+        timeUp : function(){
+			$('.timer.start-lesson-timer').hide();
+            fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','startLessonAuthentication',[CometJsonFriendData.lessonId]),'',function(t){
+                if(t != 0){
+                    showLessonBtn = false;
+                    $(".join_lesson_now").show();
+                    $("#lesson_actions").hide();
+                }else{
+                    $("#lesson_actions").show();
+                }
+            });
+            $("#start_lesson_timer").parent().hide();
+        }
+    });
+    if(showLessonBtn) {
+        if($('#start_lesson_timer').parent().is(":visible")){
+            $("#lesson_actions").show();
+        }
+    }
+    <?php } ?>
+
+    if(is_time_up == '1' && !lesson_completed){
+        endLessonConfirm();
+    }else{
+        $('#end_lesson_timer').countdowntimer({
+            startDate : "<?php echo $curDate; ?>",
+            dateAndTime : "<?php echo $endTime; ?>",
+            size : "lg",
+            timeUp : function(){
+
+                if(lesson_completed) return;
+                endLessonConfirm();
+            }
+        });
+    }
+});
+
+function endLessonConfirm(){
+    $.confirm({
+        closeIcon: true,
+        title: langLbl.Confirm,
+        content: '<?php echo Label::getLabel('LBL_Duration_assigned_to_this_lesson_is_completed_now_do_you_want_to_continue?'); ?>',
+        autoClose: langLbl.Quit+'|8000',
+        buttons: {
+            Proceed: {
+                text: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
+                btnClass: 'btn btn--primary',
+                keys: ['enter', 'shift'],
+                action: function(){
+                    endLessonSetup('<?php echo $lessonData['slesson_id']; ?>');
+                }
+            },
+            Quit: {
+                text: '<?php echo Label::getLabel('LBL_Continue'); ?>',
+                btnClass: 'btn btn--secondary',
+                keys: ['enter', 'shift'],
+                action: function(){
+
+                }
+            }
+        }
+    });
+    $("#endL").show();
+    $("#end_lesson_time_div").hide();
+}
+</script>
 <section class="section section--grey section--page">
 	<div class="screen">
         <div class="screen__left" style="background-image:url(<?php echo CONF_WEBROOT_URL ?>images/2000x900_1.jpg">

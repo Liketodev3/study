@@ -609,8 +609,17 @@ class ConfigurationsController extends AdminBaseController
 
                 $fld = $frm->addIntegerField(Label::getLabel("LBL_Minimum_Interval_[Days]", $this->adminLangId), 'CONF_MIN_INTERVAL_WITHDRAW_REQUESTS', '');
                 $fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_minimum_interval_in_days_between_two_withdrawal_requests.", $this->adminLangId)."</small>";
+              
+                $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Meeting_TOOL', $this->adminLangId).'</h3>');
 
+                $lessonSpace =  FatApp::getConfig('CONF_MEETING_TOOL_LESSONSPACE', FatUtility::VAR_INT, 2);
+                $cometChatMeetingTool =  FatApp::getConfig('CONF_MEETING_TOOL_COMET_CHAT', FatUtility::VAR_INT, 1);
+                $activeMeetingTool =  FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_INT, 2);
 
+                $optionArray =  array($lessonSpace => Label::getLabel('LBL_LESSONSPACE', $this->adminLangId) , $cometChatMeetingTool =>  Label::getLabel('LBL_COMET_CHAT', $this->adminLangId) );
+
+                $frm->addRadioButtons('', "CONF_ACTIVE_MEETING_TOOL", $optionArray, $activeMeetingTool,array('class' => 'list-inline list-inline--onehalf'));
+        
                 $frm->addHtml('', 'Checkout', '<h3>'.Label::getLabel("LBL_Checkout", $this->adminLangId).'</h3>');
                 $srch = new OrderStatusSearch($this->adminLangId);
                 $srch->addMultipleFields(array('orderstatus_id', 'IFNULL(orderstatus_name, orderstatus_identifier) as  orderstatus_name'));
@@ -706,11 +715,13 @@ class ConfigurationsController extends AdminBaseController
                 //$fld = $frm->addTextBox(Label::getLabel("LBL_Google_Map_API_Key",$this->adminLangId),'CONF_GOOGLEMAP_API_KEY');
                 //$fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_Google_map_api_key_used_to_get_user_current_location.",$this->adminLangId)."</small>";
 
-                $frm->addHtml('', 'Comet Chat API Keys', '<h3>'.Label::getLabel("LBL_Comet_chat_Api_Key", $this->adminLangId).'</h3>');
+                $frm->addHtml('','comet_chat_api_keys', '<h3>'.Label::getLabel("LBL_Comet_chat_Api_Key", $this->adminLangId).'</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Comet_Chat_Api_Key", $this->adminLangId), 'CONF_COMET_CHAT_API_KEY');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Comet_Chat_App_ID", $this->adminLangId), 'CONF_COMET_CHAT_APP_ID');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Comet_Chat_Auth", $this->adminLangId), 'CONF_COMET_CHAT_AUTH');
-                //$fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_Google_map_api_key_used_to_get_user_current_location.",$this->adminLangId)."</small>";
+
+                $frm->addHtml('', 'lessonspace_api_key', '<h3>'.Label::getLabel("LBL_Lessonspace_API_Key", $this->adminLangId).'</h3>');
+                $fld = $frm->addTextBox(Label::getLabel("LBL_Lessonspace_Api_Key", $this->adminLangId), 'CONF_LESSONSPACE_API_KEY');
 
                 $frm->addHtml('', 'Newsletter', '<h3>'.Label::getLabel("LBL_Newsletter_Subscription", $this->adminLangId).'</h3>');
 

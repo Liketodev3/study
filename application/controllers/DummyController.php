@@ -53,4 +53,47 @@ class DummyController extends MyAppController
 		echo 'Created All the Procedures.';
 	}
 
+	public function testCurl()
+	{
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+		CURLOPT_URL => "https://api.thelessonspace.com/v2/spaces/launch/",
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_ENCODING => "",
+		CURLOPT_MAXREDIRS => 10,
+		CURLOPT_TIMEOUT => 30,
+		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		CURLOPT_CUSTOMREQUEST => "POST",
+		CURLOPT_POSTFIELDS =>"{ \t\n\t\"user\" : {\"name\" : \"Priyanka-new\",\"leader\":false},\n\t\"timeouts\": {\n\t    \"not_before\": \"2020-08-27T13:46:17+05:30\",\n\t    \"not_after\": \"2020-08-27T13:50:17+05:30\"\n\t}\n}",
+		CURLOPT_HTTPHEADER => array(
+			"accept: application/json",
+			"authorization: Organisation 2f5884ec-3d29-4dc5-bcfb-e42da065bb38",
+			"cache-control: no-cache",
+			"content-type: application/json",
+			"postman-token: e8e4aa90-3c98-434b-8d62-412d9775a403"
+		),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+		echo "<br>";
+		echo  $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		echo "<br>";
+		curl_close($curl);
+		echo "<pre>";
+		if ($err) {
+			echo "cURL Error #:" . $err;
+		} else {
+			$response = json_decode($response,true);
+			print_r($response);
+			// if(is_array($response)) {
+			// 	$values = array_values($response);
+			// 	if(is_array($values[0]))
+			// }
+			print_r(array_values($response));
+			die;
+		}
+	}
+
 }

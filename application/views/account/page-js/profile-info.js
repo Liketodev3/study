@@ -195,13 +195,16 @@ $(document).ready(function(){
 			setTimeout(function() {
 				$.systemMessage.close();
 			}, 3000);
-			name = frm.user_first_name.value + " "+frm.user_last_name.value;
-			userSeoUrl = '';
-			if(frm.user_url_name) {
+
+			if(activeMeetingTool == cometChatMeetingTool) {
+				name = frm.user_first_name.value + " "+frm.user_last_name.value;
+				userSeoUrl = '';
+				if(frm.user_url_name) {
 					userSeoUrl = userSeoBaseUrl+frm.user_url_name.value;
+				}
+				updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
 			}
 
-		updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
 		if(userIsTeacher) {
 			getTeacherProfileProgress();
 		}
@@ -242,6 +245,9 @@ $(document).ready(function(){
 	};
 
 	updateCometChatUser = function(userId, name, avatarURL, profileURL){
+		if(activeMeetingTool != cometChatMeetingTool) {
+			return true;
+		}
 		var settings = {
 			"async": true,
 			"crossDomain": true,
@@ -259,9 +265,9 @@ $(document).ready(function(){
 			}
 		}
 
-$.ajax(settings).done(function (response) {
-  console.log(response);
-});
+			$.ajax(settings).done(function (response) {
+			console.log(response);
+			});
 	};
 
 	setupTeacherLanguages  = function(frm){
@@ -513,9 +519,13 @@ $.ajax(settings).done(function (response) {
 	removeProfileImage = function(){
 		fcom.ajax(fcom.makeUrl('Account','removeProfileImage'),'',function(t){
 			profileInfoForm();
-			name = userData.user_first_name + " "+userData.user_last_name;
-			userSeoUrl =  userSeoBaseUrl+userData.user_url_name;
-			updateCometChatUser(userData.user_id, name, '', userSeoUrl);
+
+			if(activeMeetingTool == cometChatMeetingTool) {
+				name = userData.user_first_name + " "+userData.user_last_name;
+				userSeoUrl =  userSeoBaseUrl+userData.user_url_name;
+				updateCometChatUser(userData.user_id, name, '', userSeoUrl);
+			}
+			
 		});
 	};
 
@@ -524,9 +534,13 @@ $.ajax(settings).done(function (response) {
 			delegation: true,
 			success: function(json){
 				json = $.parseJSON(json);
-				name = userData.user_first_name + " "+userData.user_last_name;
-				userSeoUrl = userSeoBaseUrl+userData.user_url_name;
-				updateCometChatUser(userData.user_id, name, userImage , userSeoUrl);
+
+				if(activeMeetingTool == cometChatMeetingTool) {
+					name = userData.user_first_name + " "+userData.user_last_name;
+					userSeoUrl = userSeoBaseUrl+userData.user_url_name;
+					updateCometChatUser(userData.user_id, name, userImage , userSeoUrl);
+				}
+
 				profileInfoForm();
 				$(document).trigger('close.facebox');
 			}
