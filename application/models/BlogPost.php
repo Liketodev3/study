@@ -50,7 +50,7 @@ class BlogPost extends MyAppModel
 
     public static function getBlogPostsUnderCategory($langId, $bpcategory_id)
     {
-        $srch = BlogPost::getSearchObject($langId);
+        $srch = BlogPost::getSearchObject($langId, true, true, true);
         $srch->addCondition('postlang_post_id', 'is not', 'mysql_func_null', 'and', true);
         $srch->addCondition('ptc_bpcategory_id', '=', $bpcategory_id);
         $srch->addGroupby('post_id');
