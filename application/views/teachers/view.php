@@ -238,11 +238,12 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
 					</div>
 					<?php }
 				}
+				if($teacher['isFreeTrialEnabled']) { 
 					$onclick = "";
 					$btnClass = "btn-secondary";
 					$disabledText = "disabled";
 					$btnText =  "LBL_You_already_have_availed_the_Trial";
-					if( $teacher['isFreeTrialEnabled'] && !$teacher['isAlreadyPurchasedFreeTrial']){
+					if(!$teacher['isAlreadyPurchasedFreeTrial']){
 						$disabledText = "";
 						$onclick = "onclick=\"viewCalendar(".$teacher['user_id'].",'free_trial',".$teacherLanguage.")\"";
 						$btnClass = 'btn-primary';
@@ -254,7 +255,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
 					 <p><?php echo Label::getLabel( 'LBL_Book_your_trial_FREE_for_30_Mins_only' ); ?></p>
 					 <button type="button" <?php echo $onclick; ?> class="btn <?php echo $btnClass.' '.$disabledText; ?> btn--large btn--block"  <?php echo $disabledText; ?> ><?php echo Label::getLabel( $btnText ); ?></button>
 				 </div>
-
+				<?php } ?>
 				 <?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher), false); ?>
 
 
