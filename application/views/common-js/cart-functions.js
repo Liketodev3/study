@@ -3,6 +3,7 @@ var cart = {
 		$('.loading-wrapper').show();
 		if( isUserLogged() == 0 ){
 			logInFormPopUp();
+			$('.loading-wrapper').hide();
 			return false;
 		}
 		
@@ -34,6 +35,7 @@ var cart = {
 					return;
 				}
 			}
+			$('.loading-wrapper').hide();
 			$.mbsmessage(resObj.msg,true, 'alert alert--danger');
 
 			
