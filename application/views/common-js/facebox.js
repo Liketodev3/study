@@ -136,7 +136,7 @@
         },
 
         close: function () {
-            $(document).trigger('close.facebox')
+            $(document).trigger('close.facebox');
             return false
         }
     })
