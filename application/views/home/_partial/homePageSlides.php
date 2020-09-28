@@ -4,7 +4,7 @@
 	<div class="caraousel caraousel--single caraousel--single-js" <?php echo (strtolower($layoutDirection) == 'rtl') ? 'dir="rtl"': ""; ?>>
 		<?php foreach($slides as $slide){ ?>
 		<div>
-			<div class="caraousel__item"><a href="<?php echo $slide['slide_url']?>" target="<?php echo $slide['slide_target']?>"><img src="<?php echo CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], 0, $siteLangId)); ?>" alt=""></a></div>
+			<div class="caraousel__item"><a href="<?php echo $slide['slide_url']?>" target="<?php echo $slide['slide_target']?>"><img src="<?php echo CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], 1, $siteLangId)); ?>" alt=""></a></div>
 		</div>
         <?php } ?>
 	</div>
