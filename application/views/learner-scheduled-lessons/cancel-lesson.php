@@ -14,6 +14,6 @@ if($lessonRow['slesson_grpcls_id']>0){
 
 ?>
 <div class="box -padding-20">
-	<h4><?php echo Label::getLabel('LBL_Cancel_Plan'); ?></h4>
+	<h4><?php echo Label::getLabel('LBL_Cancel_Lesson'); ?></h4>
 	<?php echo $frm->getFormHtml(); ?>
 </div>
