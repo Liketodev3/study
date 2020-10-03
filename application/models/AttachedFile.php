@@ -60,6 +60,12 @@ class AttachedFile extends MyAppModel
         return $arr;
     }
 
+    public static function setTimeParam($dateTime)
+    {
+        $time = strtotime($dateTime);
+        return ($time > 0) ? '?t=' . $time : '';
+    }
+    
     public static function checkSize($file, $compareSize)
     {
         $compareSize = FatUtility::convertToType($compareSize, FatUtility::VAR_FLOAT);
