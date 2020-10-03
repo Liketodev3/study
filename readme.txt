@@ -5,7 +5,7 @@ New Features:
 Enhancements:
   
 Bug Fixes:
-
+	#043538	Home Page Slider > On changing the home page slider, it is not being updated
 
 ==============================================================================================================================
 Installation steps:
