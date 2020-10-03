@@ -28,6 +28,7 @@ Bug Fixes:
     *Bug-#043459: Fixed home page slider display order as set by admin
     *Bug-#043460: Hide Disabled FAQs from frontend
     *Bug-#043461: Show only active blog posts count with Blog categories
+    *Bug-#043486: Updated images path for about us content block
     
 ------------------------------
 Release Version: TV-2.1.0.20200826
