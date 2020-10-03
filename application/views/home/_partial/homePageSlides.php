@@ -3,7 +3,7 @@
 <section class="banner banner--main">
 	<div class="caraousel caraousel--single caraousel--single-js" <?php echo (strtolower($layoutDirection) == 'rtl') ? 'dir="rtl"': ""; ?>>
 		<?php foreach($slides as $slide){ ?>
-		<div>
+
 			<?php
 				$desktop_url = '';
 				$tablet_url = '';
@@ -36,7 +36,7 @@
 					$defaultUrl = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], applicationConstants::SCREEN_DESKTOP, $siteLangId, 'DESKTOP')),CONF_IMG_CACHE_TIME, '.jpg');
 				}
 
-				$out = '<div class="caraousel__item">';
+				$out = '<div><div class="caraousel__item">';
 				if($haveUrl){
 					if($slide['promotion_id']>0){
 						$slideUrl =  CommonHelper::generateUrl('slides','track',array($slide['slide_id']));
@@ -56,7 +56,7 @@
 						<source data-aspect-ratio="10:3" srcset="'. $desktop_url .'">
 						<img data-aspect-ratio="10:3" srcset="'. $desktop_url .'" alt="">
 					</picture>
-				</div>';
+				</div></div>';
 
 				if( $haveUrl ){
 					$out .= '</a>';
@@ -68,7 +68,7 @@
 			<!--
 				<div class="caraousel__item"><a href="<?php echo $slide['slide_url']?>" target="<?php echo $slide['slide_target']?>"><img src="<?php echo CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], 1, $siteLangId)); ?>" alt=""></a></div>
 			-->
-		</div>
+
         <?php } ?>
 	</div>
 
