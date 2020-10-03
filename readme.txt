@@ -13,6 +13,8 @@ New Features:
     73053-fix webroot url usages
 
 Enhancements:
+    *Task-73053: Refinements in showing my lessons
+    *Task-73053: Hide Request withdrawal from wallet for learner.
   
 Bug Fixes:
 

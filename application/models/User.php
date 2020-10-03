@@ -1008,4 +1008,9 @@ class User extends MyAppModel
         $dataArr['pagingArr'] = $pagingArr;
         return $dataArr;
     }
+    
+    public static function canWithdraw($userId):bool
+    {
+        return (bool)self::getAttributesById($userId, 'user_is_teacher');
+    }
 }

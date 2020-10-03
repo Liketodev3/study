@@ -8,10 +8,12 @@ class WalletController extends LoggedUserController
 
     public function index()
     {
+        $userId = UserAuthentication::getLoggedUserId();
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
         $this->set('frmRechargeWallet', $this->getRechargeWalletForm());
-        $this->set('userTotalWalletBalance', User::getUserBalance(UserAuthentication::getLoggedUserId(), false));
+        $this->set('userTotalWalletBalance', User::getUserBalance($userId, false));
+        $this->set('can_withdraw', User::canWithdraw($userId));
         $this->_template->render();
     }
 
@@ -220,8 +222,12 @@ class WalletController extends LoggedUserController
 
     public function requestWithdrawal()
     {
-        $frm = $this->getWithdrawalForm($this->siteLangId);
         $userId = UserAuthentication::getLoggedUserId();
+        if (!User::canWithdraw($userId)) {
+           Message::addErrorMessage(Label::getLabel('MSG_Unauthorized'));
+           FatUtility::dieWithError(Message::getHtml());
+        }
+        $frm = $this->getWithdrawalForm($this->siteLangId);
         $balance = User::getUserBalance($userId);
         $lastWithdrawal = User::getUserLastWithdrawalRequest($userId);
         if ($lastWithdrawal && (strtotime($lastWithdrawal["withdrawal_request_date"] . "+". FatApp::getConfig("CONF_MIN_INTERVAL_WITHDRAW_REQUESTS", FatUtility::VAR_INT, 0)." days") - time()) > 0) {
@@ -267,6 +273,11 @@ class WalletController extends LoggedUserController
         $userId = UserAuthentication::getLoggedUserId();
         $balance = User::getUserBalance($userId);
         $lastWithdrawal = User::getUserLastWithdrawalRequest($userId);
+        
+        if (!User::canWithdraw($userId)) {
+           Message::addErrorMessage(Label::getLabel('MSG_Unauthorized'));
+           FatUtility::dieWithError(Message::getHtml());
+        }
 
         if ($lastWithdrawal && (strtotime($lastWithdrawal["withdrawal_request_date"] . "+".FatApp::getConfig("CONF_MIN_INTERVAL_WITHDRAW_REQUESTS")." days") - time()) > 0) {
             $nextWithdrawalDate = date('d M,Y', strtotime($lastWithdrawal["withdrawal_request_date"] . "+".FatApp::getConfig("CONF_MIN_INTERVAL_WITHDRAW_REQUESTS")." days"));

@@ -8,17 +8,7 @@ $date = new DateTime("now", new DateTimeZone($user_timezone));
 $curDate = $date->format('Y-m-d');
 $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
 $curDateTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
-if(!empty($lessonArr)) { ?>
-<div class="col-md-12 text-right">
-<strong class="-color-primary span-right"><span class="spn_must_field">*</span> <?php
-$label =  Label::getLabel('LBL_All_times_listed_are_in_your_selected_{timezone}');
-$getTimeZoneString = MyDate::displayTimezoneString(false);
-$label = str_replace('{timezone}', $getTimeZoneString, $label);
-echo $label;
-?></strong>
-</div>
-<?php
-}
+
 
 foreach( $lessonArr as $key=>$lessons ){ ?>
 <div class="col-list-group">
@@ -66,9 +56,7 @@ foreach ( $lessons as $lesson ) {
 				</div>
 				<h6><?php echo $lesson['teacherFname']; ?></h6>
 				<p><?php echo $lesson['teacherCountryName']; ?> <br>
-				<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['sldetail_order_id']; ?> <br>
-
-				<?php /* echo CommonHelper::getDateOrTimeByTimeZone($lesson['teacherTimeZone'],'H:i A P'); */ ?></p>
+				<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['sldetail_order_id']; ?></p>
 			</div>
 
 			<div class="col-xl-4 col-lg-4 col-md-12 ">

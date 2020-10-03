@@ -21,6 +21,11 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->_template->addCss('css/jquery.countdownTimer.css');
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
+        
+        $lessonStatuses = ScheduledLesson::getStatusArr();
+        $lessonStatuses += array(ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported'));
+        
+        $this->set('lessonStatuses', $lessonStatuses);        
         $this->_template->render();
     }
 
