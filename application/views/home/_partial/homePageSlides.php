@@ -12,18 +12,19 @@
             if( !$slideArr ){
                 continue;
             }else{
+                
                 foreach($slideArr as $slideScreen){
-                    $uploadedTime = AttachedFile::setTimeParam($slideScreen['afile_updated_at']);
+                //    $uploadedTime = AttachedFile::setTimeParam($slideScreen['afile_updated_at']);
                     switch($slideScreen['afile_screen']){
                         case applicationConstants::SCREEN_MOBILE:
-                            $mobile_url = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], applicationConstants::SCREEN_MOBILE, $siteLangId, 'MOBILE')).$uploadedTime,CONF_IMG_CACHE_TIME, '.jpg').",";
+                            $mobile_url = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], applicationConstants::SCREEN_MOBILE, $siteLangId, 'MOBILE')),CONF_IMG_CACHE_TIME, '.jpg').",";
                             break;
                         case applicationConstants::SCREEN_IPAD:
-                            $tablet_url = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], applicationConstants::SCREEN_IPAD, $siteLangId, 'TABLET')).$uploadedTime,
+                            $tablet_url = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], applicationConstants::SCREEN_IPAD, $siteLangId, 'TABLET')),
                             CONF_IMG_CACHE_TIME, '.jpg').",";
                             break;
                         case applicationConstants::SCREEN_DESKTOP:
-                            $defaultUrl =  FatCache::getCachedUrl(CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], applicationConstants::SCREEN_DESKTOP, $siteLangId, 'DESKTOP')).$uploadedTime,CONF_IMG_CACHE_TIME, '.jpg');
+                            $defaultUrl =  FatCache::getCachedUrl(CommonHelper::generateUrl('Image','slide',array($slide['slide_id'], applicationConstants::SCREEN_DESKTOP, $siteLangId, 'DESKTOP')),CONF_IMG_CACHE_TIME, '.jpg');
                             $desktop_url = $defaultUrl.",";
                             break;
                     }
