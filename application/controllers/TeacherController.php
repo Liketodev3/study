@@ -159,49 +159,17 @@ class TeacherController extends TeacherBaseController
         $frm = new Form('frmTeacherLanguages');
         $userId = UserAuthentication::getLoggedUserId();
         $db = FatApp::getDb();
-        $srch = new SpokenLanguageSearch($this->siteLangId);
-        $srch->addMultiplefields(array('slanguagelang_slanguage_id', 'slanguage_name'));
-        $srch->addOrder('slanguage_display_order','asc');
-        $srch->addChecks();
-
-        $rs=$srch->getResultSet();
-        $rows = $db->fetchAll($rs);
-        /*
-        $userSettingSrch = new UserSettingSearch();
-        $userSettingSrch->joinLanguageTable( $this->siteLangId );
-        $userSettingSrch->addCondition( 'us_user_id', '=', UserAuthentication::getLoggedUserId() );
-        $userSettingSrch->addMultiplefields(array('slanguage_name','us_teach_slanguage_id'));
-        $userSettingRs=$userSettingSrch->getResultSet();
-        $teacherTeachLangArr = $db->fetch($userSettingRs);
-          */
-
-        /* [ For Multiple Teaching Languages */
-        /*$srch = new SpokenLanguageSearch( $this->siteLangId );
-        $srch->addChecks();
-        $rs    = $srch->getResultSet();
-        $languages = FatApp::getDb()->fetchAll( $rs, 'slanguage_id' ); */
-
-
+        
         /***** Get Teaching Languages ******/
-        $tlSrch = new TeachingLanguageSearch($this->siteLangId);
-        $tlSrch->addMultiplefields(array('tlanguagelang_tlanguage_id', 'tlanguage_name'));
-        $tlSrch->addOrder('tlanguage_display_order','asc');
-        $tlRs=$tlSrch->getResultSet();
-        /* [ For Multiple Teaching Languages */
-        $tlSrch->addChecks();
-        $tlRs = $tlSrch->getResultSet();
-        $teachLanguages = FatApp::getDb()->fetchAll($tlRs, 'tlanguage_id');
+        $teacherTeachLangArr = TeachingLanguage::getAllLangs($this->siteLangId, true);
         /**********/
-        $teacherTeachLangArr = array();
-        foreach ($teachLanguages as $key => $language) {
-            $teacherTeachLangArr[$key] = $language['tlanguage_name'];
-        }
+        
+        /***** Get Spoken Languages ******/
+        $langArr = SpokenLanguage::getAllLangs($this->siteLangId, true);
         /* ] */
+        
         $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
-        $langArr = array();
-        foreach ($rows as $row) {
-            $langArr[$row['slanguagelang_slanguage_id']] = $row['slanguage_name'];
-        }
+        
         $userToTeachLangSrch = new SearchBase('tbl_user_teach_languages');
         $userToTeachLangSrch->addMultiplefields(array('utl_slanguage_id'));
         $userToTeachLangSrch->addCondition('utl_us_user_id', '=', $userId);
