@@ -369,6 +369,11 @@ class ImageController extends FatController
                 $w = 200;
                 $h = 100;
                 break;
+            case 'DESKTOP':
+                $w = 1903;
+                $h = 749;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+                break;
             default:
                 $w = 2000;
                 $h = 360;
