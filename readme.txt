@@ -30,6 +30,7 @@ Bug Fixes:
     *Bug-#043461: Show only active blog posts count with Blog categories
     *Bug-#043486: Updated images path for about us content block
     *Bug-#043739: Fixed image rotation issue
+    *Bug-#043738: Allow all characters for first name and last name
     
 ------------------------------
 Release Version: TV-2.1.0.20200826
