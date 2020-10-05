@@ -272,8 +272,8 @@ class AttachedFile extends MyAppModel
             $image_name = $uploadedFilePath . $image_name;
             $headers = FatApp::getApacheRequestHeaders();
             if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($image_name))) {
-                header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($image_name)).' GMT', true, 304);
-                exit;
+                // header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($image_name)).' GMT', true, 304);
+                // exit;
             }
             try {
                 $img = new ImageResize($image_name);
@@ -331,7 +331,7 @@ class AttachedFile extends MyAppModel
         }
         if ($cache) {
             $cacheKey = $_SERVER['REQUEST_URI'];
-            ob_get_clean();
+            // ob_get_clean();
             ob_start();
             if ($fileMimeType != '') {
                 header("content-type: ".$fileMimeType);

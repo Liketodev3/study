@@ -13,7 +13,7 @@ $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonData['teacher
 $studentImage = '';
 
 if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
-    $studentImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['learnerId'])).'?'.time();
+    $studentImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['learnerId'], 'normal', 1)).'?'.time();
 }
 
 $canEnd = ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $startTime < $curDate);
@@ -156,7 +156,7 @@ $isJoined = $lessonData['sldetail_learner_join_time']>0;
 											<?php echo CommonHelper::getFirstChar($lessonData['learnerFname']); ?>">
 											<?php
 									if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
-										$img = CommonHelper::generateUrl('Image','user', array( $lessonData['learnerId'] )).'?'.time();
+										$img = CommonHelper::generateUrl('Image','user', array( $lessonData['learnerId'], 'normal', 1 )).'?'.time();
 										echo '
 											<img src="'.$img.'" />';
 									}
@@ -180,7 +180,7 @@ $isJoined = $lessonData['sldetail_learner_join_time']>0;
                                             <?php echo CommonHelper::getFirstChar($lessonData['teacherFname']); ?>">
                                             <?php
                             if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
-                                $img = CommonHelper::generateUrl('Image','user', array( $lessonData['teacherId'] )).'?'.time();
+                                $img = CommonHelper::generateUrl('Image','user', array( $lessonData['teacherId'], 'normal', 1 )).'?'.time();
                                 echo '
                                             <img src="'.$img.'" />';
                             }

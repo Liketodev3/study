@@ -25,7 +25,7 @@
 							<div class="avtar avtar--small" data-text="<?php echo CommonHelper::getFirstChar($teacher['teacherFname']); ?>">
 								<?php 
 									if( true == User::isProfilePicUploaded( $teacher['teacherId'] ) ){
-										$img = CommonHelper::generateUrl('Image','user', array( $teacher['teacherId'] )).'?'.time(); 
+										$img = CommonHelper::generateUrl('Image','user', array( $teacher['teacherId'], 'normal', 1 )).'?'.time(); 
 										echo '<img src="'.$img.'" />';
 									}
 								?>

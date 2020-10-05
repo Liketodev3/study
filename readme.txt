@@ -29,6 +29,7 @@ Bug Fixes:
     *Bug-#043460: Hide Disabled FAQs from frontend
     *Bug-#043461: Show only active blog posts count with Blog categories
     *Bug-#043486: Updated images path for about us content block
+    *Bug-#043739: Fixed image rotation issue
     
 ------------------------------
 Release Version: TV-2.1.0.20200826
