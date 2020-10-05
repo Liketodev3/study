@@ -661,4 +661,5 @@ $(document).ready(function(){
 			}
 		});
 	};
+	// $("[name='user_timezone']").select2();
 })();

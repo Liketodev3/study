@@ -81,7 +81,7 @@
                                 <p class="-no-margin-bottom"><?php
                                     echo $userDetails['countryName']."<br>";
                                     echo CommonHelper::getDateOrTimeByTimeZone( $userDetails['user_timezone'], 'h:i A'  );
-								    echo " (GMT ".CommonHelper::getDateOrTimeByTimeZone( $userDetails['user_timezone'], ' P' ).")";
+								    echo " (".Label::getLabel('LBL_TIMEZONE_STRING')." ".CommonHelper::getDateOrTimeByTimeZone( $userDetails['user_timezone'], ' P' ).")";
 
                                 ?></p>
                                 <?php if($viewProfile){ ?>

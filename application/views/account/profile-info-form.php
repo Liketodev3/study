@@ -94,12 +94,15 @@ var userImage = '<?php echo CommonHelper::generateFullUrl('Image','user',array( 
 	 <?php echo $profileFrm->getFormHtml();?></div>
 	</div>
 </div>
+
+
 <script >
 	/* $(document).ready(function(){
 		getCountryStates($( "#user_country_id" ).val(),<?php echo $stateId ;?>,'#user_state_id');
 	}); */
 
 	$(document).ready(function(){
+		$("[name='user_timezone']").select2();
 		$('input[name="user_url_name"]').on('keypress', function(e) {
 			if (e.which == 32) {
 				return false;

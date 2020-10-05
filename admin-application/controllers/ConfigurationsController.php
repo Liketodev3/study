@@ -488,7 +488,7 @@ class ConfigurationsController extends AdminBaseController
                     ''
                 );
 
-                $frm->addSelectBox(Label::getLabel('LBL_Timezone', $this->adminLangId), 'CONF_TIMEZONE', Configurations::dateTimeZoneArr(), false, array('disabled'=>true), '');
+                $frm->addSelectBox(Label::getLabel('LBL_Timezone', $this->adminLangId), 'CONF_TIMEZONE', MyDate::timeZoneListing(), false, array('disabled'=>true), '');
 
                 $countryObj = new Country();
                 $countriesArr = $countryObj->getCountriesArr($this->adminLangId);

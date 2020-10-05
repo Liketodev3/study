@@ -50,7 +50,7 @@
 									<?php echo ($teacher['user_state_name'] != '' ) ? $teacher['user_state_name'].', ' : ''; ?> <?php echo $teacher['user_country_name']; ?> 
 									<?php 
 									 echo ", ".CommonHelper::getDateOrTimeByTimeZone( $teacher['user_timezone'], 'h:i A'  );
-									echo " (GMT ".CommonHelper::getDateOrTimeByTimeZone( $teacher['user_timezone'], ' P' ).")"; 
+									echo " (".Label::getLabel('LBL_TIMEZONE_STRING')." ".CommonHelper::getDateOrTimeByTimeZone( $teacher['user_timezone'], ' P' ).")"; 
 									?>
 								</div>
 								<span class="-gap"></span>

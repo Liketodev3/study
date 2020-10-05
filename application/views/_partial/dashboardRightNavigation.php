@@ -23,7 +23,7 @@
 								 if( $userDetails['user_timezone'] != '' ){
 									//echo CommonHelper::getDateOrTimeByTimeZone($userDetails['user_timezone'],' h:i:s A (P)');
                                     echo CommonHelper::getDateOrTimeByTimeZone( $userDetails['user_timezone'], 'h:i A'  );
-									echo " (GMT ".CommonHelper::getDateOrTimeByTimeZone( $userDetails['user_timezone'], ' P' ).")";
+									echo " (".Label::getLabel('LBL_TIMEZONE_STRING')." ".CommonHelper::getDateOrTimeByTimeZone( $userDetails['user_timezone'], ' P' ).")";
 								} ?></p>
                             </div>
 

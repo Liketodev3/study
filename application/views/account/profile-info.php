@@ -125,3 +125,5 @@ var lessonspaceMeetingTool = '<?php echo CommonHelper::getLessonspaceMeetingTool
 	</div>
 </section>
 <div class="gap"></div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/> 	

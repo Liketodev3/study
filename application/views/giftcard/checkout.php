@@ -31,10 +31,7 @@
 							<?php if( $userDetails['user_country_id'] > 0 ){ ?>
 							<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userDetails['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>
 							<?php } ?>
-							<br><?php
-							/* echo CommonHelper::getDateOrTimeByTimeZone( $userDetails['user_timezone'], 'h:i A'  );
-							echo " (GMT ".CommonHelper::getDateOrTimeByTimeZone( $userDetails['user_timezone'], ' P' ).")"; */
-							?> </p>
+							<br></p>
 						</div>
 					</div>
 
