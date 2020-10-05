@@ -23,7 +23,7 @@
                                 <p><?php echo date('M d,Y', strtotime($lesson['slesson_date'])).', '.$lesson['slesson_start_time'].' - '.$lesson['slesson_end_time']; ?></p>
                             </div>
                             <div class="col-auto selector-pic">
-                                <a href="<?php echo $teacherUrl; ?>" target="_blank"><figure><img src="<?php echo CommonHelper::generateUrl('Image','User', array( $lesson['teacherId'] )); ?>" alt=""></figure></a>
+                                <a href="<?php echo $teacherUrl; ?>" target="_blank"><figure><img src="<?php echo CommonHelper::generateUrl('Image','User', array( $lesson['teacherId'], 'normal', 1 )); ?>" alt=""></figure></a>
                             </div>
                         </div>
 

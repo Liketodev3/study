@@ -702,7 +702,7 @@ class CommonHelper extends FatUtility
         $src_img_w = $size_w;
         $src_img_h = $size_h;
 
-        $degrees = $data -> rotate;
+        $degrees = $data -> rotate + self::getCorrectImageOrientation($src);
 
         switch ($size['mime']) {
            case "image/gif":
@@ -793,6 +793,30 @@ class CommonHelper extends FatUtility
 
         imagedestroy($src_img);
         imagedestroy($dst_img);
+    }
+    
+    public static function getCorrectImageOrientation($filename) {
+        $deg = 0;
+        if (function_exists('exif_read_data')) {
+            $exif = exif_read_data($filename);
+            if($exif && isset($exif['Orientation'])) {
+                $orientation = $exif['Orientation'];
+                if($orientation != 1){
+                    switch ($orientation) {
+                        case 3:
+                            $deg = 180;
+                            break;
+                        case 6:
+                            $deg = 270;
+                            break;
+                        case 8:
+                            $deg = 90;
+                            break;
+                    }
+                }
+            }
+        }
+        return $deg;
     }
 
     public static function isRenderTemplateExist($template = '')

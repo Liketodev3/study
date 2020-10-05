@@ -235,9 +235,10 @@ class ImageController extends FatController
         }
     }
 
-    public function user($userId, $sizeType = 'default', $requestedForCroppedImage = 1)
+    public function user($userId, $sizeType = 'default', $requestedForCroppedImage = 0)
     {
         $userId = FatUtility::int($userId);
+        $requestedForCroppedImage = FatUtility::int($requestedForCroppedImage);
         if ($userId < 1) {
             trigger_error("User Id is not passed", E_USER_ERROR);
         }

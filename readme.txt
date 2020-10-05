@@ -1,5 +1,14 @@
 This file shares the details of YoCoach version and features.
 
+New Features:
+
+Enhancements:
+
+Bug Fixes:
+    *Bug-#043486: Updated images path for about us content block
+    *Bug-#043739: Fixed image rotation issue
+    *Bug-#043738: Allow all characters for first name and last name
+--------------------------------------
 Release Version: TV-2.1.1.20200925
 Release Date: 2020/09/25
 
