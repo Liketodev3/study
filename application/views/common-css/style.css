@@ -5228,9 +5228,10 @@ div.tagsinput div {
         bottom: 0;
     }
 
-    html.show-nav-js .overlay--nav, html.show-dashboard-js .overlay {
+    html.show-nav-js .overlay--nav{
         display: block;
     }
+
 
 
 
@@ -7607,9 +7608,9 @@ html.show-facebox body {
 @media (max-width:1024px){
 	.tooltipevent{ left:50%!important; transform:translateX(-50%) !important;
 -moz-transform:translateX(-50%) !important; -webkit-transform:translateX(-50%) !important;}
-html.show-dashboard-js .overlay {
-        display: none;
-    }
+/* html.show-dashboard-js .overlay { */
+        /* display: none; */
+    /* } */
 }
 
 /* added on 23rd July 2020  */

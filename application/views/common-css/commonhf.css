@@ -1703,7 +1703,9 @@ max-width: 100%;
     .footer-bottom .toggle__target {
         display: block !important;
     }
-@media only screen and (min-width: 768px) and (max-width: 1024px) {
-html.show-dashboard-js .overlay{     z-index: 0;     top: 60px;}
 }
-}
+    /* @media only screen and (min-width: 768px) and (max-width: 1024px) { */
+    /* html.show-dashboard-js .overlay{     z-index: 0;     top: 60px;} */
+    /* } */
+    
+
