@@ -197,6 +197,7 @@ $(document).ready(function(){
 		$('.toggle--nav-js').click(function() {
 			$(this).toggleClass("is-active");
 			$('html').toggleClass("show-nav-js");
+			$('html').removeClass("show-dashboard-js");
 		});
 	},
 
