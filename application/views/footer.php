@@ -58,24 +58,24 @@
                         <h5 class="toggle__trigger toggle__trigger-js"><?php echo Label::getLabel('LBL_Contact_Info'); ?></h5>
                         <div class="toggle__target toggle__target-js">
                             <ul class="links--vertical footer_contact_details">
+                                <?php if(FatApp::getConfig('CONF_CONTACT_EMAIL', null, '')): ?>
                                 <li>
-
-                                        <img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon01.svg">
-                                        <?php echo FatApp::getConfig('CONF_CONTACT_EMAIL', null, '');?>
-
+                                    <img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon01.svg">
+                                    <?php echo FatApp::getConfig('CONF_CONTACT_EMAIL', null, '');?>
                                 </li>
+                                <?php endif; ?>
+                                <?php if(FatApp::getConfig('CONF_SITE_PHONE', null, '')): ?>
                                 <li>
-
-                                        <img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon02.svg">
-                                        <?php echo Label::getLabel('LBL_Call_Us'); ?>: <?php echo FatApp::getConfig('CONF_SITE_PHONE', null, '');?>
-
+                                    <img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon02.svg">
+                                    <?php echo Label::getLabel('LBL_Call_Us'); ?>: <?php echo FatApp::getConfig('CONF_SITE_PHONE', null, ''); ?>
                                 </li>
+                                <?php endif; ?>
+                                <?php if(FatApp::getConfig('CONF_ADDRESS_'.CommonHelper::getLangId(), null, '')): ?>
                                 <li>
-
-                                        <img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon03.svg">
-                                        <?php echo FatApp::getConfig('CONF_ADDRESS_'.CommonHelper::getLangId(), null, '');?>
-
+                                    <img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/retina/contact-icon03.svg">
+                                    <?php echo FatApp::getConfig('CONF_ADDRESS_'.CommonHelper::getLangId(), null, ''); ?>
                                 </li>
+                                <?php endif; ?>
                             </ul>
                         </div>
                     </div>
