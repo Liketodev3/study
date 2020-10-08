@@ -78,8 +78,8 @@ class GroupClassesController extends MyAppController
 		$frm = new Form('frmTeacherSrch');
         $statuses = TeacherGroupClasses::getStatusArr($this->siteLangId);
         unset($statuses[TeacherGroupClasses::STATUS_PENDING]);
-		$frm->addSelectBox('', 'status', $statuses);
-		$frm->addSelectBox('', 'language', TeachingLanguage::getAllLangs($this->siteLangId));
+		$frm->addSelectBox('', 'status', $statuses, '', array(), Label::getLabel('LBL_ALL'));
+		$frm->addSelectBox('', 'language', TeachingLanguage::getAllLangs($this->siteLangId), '', array(), Label::getLabel('LBL_Choose_Language'));
 		$frm->addSelectBox('', 'upcoming', array(1=> Label::getLabel('LBL_Upcoming_Classes')));
 		$frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_Classes')));
 		$fld = $frm->addHiddenField('', 'page', 1);
