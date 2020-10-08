@@ -526,8 +526,8 @@ class ConfigurationsController extends AdminBaseController
             break;
 
             case Configurations::FORM_SEO:
-                $fld = $frm->addTextBox(Label::getLabel('LBL_Twitter_Username', $this->adminLangId), 'CONF_TWITTER_USERNAME');
-                $fld->htmlAfterField = '<small>'.Label::getLabel("LBL_This_is_required_for_Twitter_Card_code_SEO_Update", $this->adminLangId).'</small>';
+                /* $fld = $frm->addTextBox(Label::getLabel('LBL_Twitter_Username', $this->adminLangId), 'CONF_TWITTER_USERNAME');
+                $fld->htmlAfterField = '<small>'.Label::getLabel("LBL_This_is_required_for_Twitter_Card_code_SEO_Update", $this->adminLangId).'</small>'; */
 
                 $fld2 = $frm->addTextarea(Label::getLabel('LBL_Site_Tracker_Code', $this->adminLangId), 'CONF_SITE_TRACKER_CODE');
                 $fld2->htmlAfterField = '<small>'.Label::getLabel("LBL_This_is_the_site_tracker_script,_used_to_track_and_analyze_data_about_how_people_are_getting_to_your_website._e.g.,_Google_Analytics.", $this->adminLangId).' http://www.google.com/analytics/</small>';
