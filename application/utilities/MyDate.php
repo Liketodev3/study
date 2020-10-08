@@ -122,6 +122,14 @@ class MyDate extends FatDate
         return floor($first->diff($second)->days/7);
         //return round($first->diff($second)->days/7);
     }
+    
+    
+    public static function timeDiff($date1, $date2)
+    {
+        $first =  new DateTime($date1);
+        $second = new DateTime($date2);
+        return $first->diff($second);
+    }
 
     public static function getOffset(string $timeZone = 'UTC') : string
     {

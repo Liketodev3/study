@@ -183,6 +183,12 @@ class TeacherGroupClassesController extends TeacherBaseController
 		
 		$post['grpcls_start_datetime'] = MyDate::changeDateTimezone($post['grpcls_start_datetime'], $user_timezone, $systemTimeZone);
 		$post['grpcls_end_datetime'] = MyDate::changeDateTimezone($post['grpcls_end_datetime'], $user_timezone, $systemTimeZone);
+        
+        $time_diff = strtotime($post['grpcls_end_datetime'])-strtotime($post['grpcls_start_datetime']);
+        
+        if($time_diff/3600!=1){
+            FatUtility::dieJsonError(Label::getLabel("LBL_Group_Class_should_be_only_1_hour"));
+        }
 		
         $tGrpClsSrchObj = new TeacherGroupClassesSearch();
         if($grpcls_id>0){

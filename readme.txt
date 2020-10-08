@@ -15,6 +15,8 @@ Bug Fixes:
     *Bug-#043851: Fixed css/js issue for ipad black screen
     *Bug-#043910: Fixed lessons Count on Teacher Dashboard
     *Bug-#043898: Updated group class filter title
+    *Bug-#043847: Group class booking emails
+    
 --------------------------------------
 Release Version: TV-2.1.1.20200925
 Release Date: 2020/09/25

@@ -276,6 +276,30 @@ class OrderPayment extends Order
                         $sldetailId = $slDetailsObj->getMainTableRecordId();
                         
                         if($orderInfo['op_grpcls_id']>0){
+                            $tgrpcls = new TeacherGroupClassesSearch(false);
+                            $grpClsRow = $tgrpcls->getClassBasicDetails($orderInfo['op_grpcls_id'], $orderInfo['order_user_id']);
+                            $vars = array(
+                                '{learner_name}' => $grpClsRow['learner_full_name'],
+                                '{teacher_name}' => $grpClsRow['teacher_full_name'],
+                                '{class_name}' => $grpClsRow['grpcls_title'],
+                                '{class_date}' => MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $grpClsRow['grpcls_start_datetime'],false, $grpClsRow['teacherTimeZone']),
+                                '{class_start_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $grpClsRow['grpcls_start_datetime'], true, $grpClsRow['teacherTimeZone']),
+                                '{class_end_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $grpClsRow['grpcls_end_datetime'], true, $grpClsRow['teacherTimeZone']),
+                                '{learner_comment}' => '',
+                                '{status}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
+                            );
+
+                            if (!EmailHandler::sendMailTpl($grpClsRow['teacherEmailId'], 'learner_class_book_email', $defaultSiteLangId, $vars)) {
+                                FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
+                            }
+                            $vars['{class_date}'] = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $grpClsRow['grpcls_start_datetime'],false, $grpClsRow['learnerTimeZone']);
+                            $vars['{class_start_time}'] =  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $grpClsRow['grpcls_start_datetime'], true, $grpClsRow['learnerTimeZone']);
+                            $vars['{class_end_time}'] =  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $grpClsRow['grpcls_end_datetime'], true, $grpClsRow['learnerTimeZone']);
+                            
+                            if (!EmailHandler::sendMailTpl($grpClsRow['learnerEmailId'], 'class_book_email_confirmation', $defaultSiteLangId, $vars)) {
+                                FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
+                            }
+                            
                             // share on student google calendar
                             $token = current(UserSetting::getUserSettings($orderInfo['order_user_id']))['us_google_access_token'];
                             if($token){
