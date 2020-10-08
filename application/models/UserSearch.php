@@ -177,14 +177,14 @@ class UserSearch extends SearchBase
 
     public function joinTeacherLessonData($userId = 0, $getCompletedScheduledLesson = true, $getCanCelledScheduledLesson = true)
     {
+        $scheduledLessonDetailsSrch = new ScheduledLessonDetailsSearch();
+        $scheduledLessonDetailsSrch->addGroupBy('sld.sldetail_slesson_id');        
         if ($userId) {
             $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'u.user_id = sl.slesson_teacher_id AND sl.slesson_teacher_id = '.$userId, 'sl');
-            $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
-            $this->addGroupBy('sl.slesson_teacher_id');
+            $this->joinTable('('.$scheduledLessonDetailsSrch->getQuery().')', 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
         } else {
             $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'u.user_id = sl.slesson_teacher_id', 'sl');
             $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
-            $this->addGroupBy('sl.slesson_teacher_id');
             $this->addFld('count(DISTINCT sldetail_learner_id) as studentIdsCnt');
         }
         $this->addGroupBy('sl.slesson_teacher_id');

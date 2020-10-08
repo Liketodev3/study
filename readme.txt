@@ -13,6 +13,7 @@ Bug Fixes:
     *Bug-#043357 - Apply to teach > The language values should be displayed in alphabetical order
     *Bug-#043659 - TimeZone > Change the time zone drop down values
     *Bug-#043851: Fixed css/js issue for ipad black screen
+    *Bug-#043910: Fixed lessons Count on Teacher Dashboard
 --------------------------------------
 Release Version: TV-2.1.1.20200925
 Release Date: 2020/09/25
