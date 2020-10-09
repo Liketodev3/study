@@ -156,7 +156,7 @@ var isRescheduleRequest =  (isRescheduleRequest) ? true :  false;
 		if (!$(frm).validate()) return;
         $(frm).find('[type=submit]').attr('disabled', true);
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'issueReportedSetup'), data , function(t) {
+		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'issueReportedSetup'), data , function(t) {
             $.facebox.close();
             location.reload();
 		});
