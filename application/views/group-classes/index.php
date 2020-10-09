@@ -15,22 +15,18 @@ $frmSrch->getField( 'btnSrchSubmit' )->setFieldTagAttribute('class', 'form__acti
                 <div class="form-search form-search--inline">
                     <?php echo $frmSrch->getFormTag(); ?>
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form__element">
                             <?php echo $frmSrch->getFieldHtml('language'); ?>
                             </div>
                         </div>
+                        
                         <div class="col-md-3">
                             <div class="form__element">
-                            <?php echo $frmSrch->getFieldHtml('upcoming'); ?>
+                            <?php echo $frmSrch->getFieldHtml('custom_filter'); ?>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form__element">
-                            <?php echo $frmSrch->getFieldHtml('status'); ?>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form__element">
                                 <?php echo $frmSrch->getFieldHtml('keyword'); ?>
                                 <span class="form__action-wrap">

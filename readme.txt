@@ -18,6 +18,7 @@ Bug Fixes:
     *Bug-#043847: Group class booking emails
     *Bug-#043801: Hide from footer if location, phone, email is empty
     *Bug-#043773: Hide success msg before page reload, when learner report issue
+    *Bug-#043899: Added ongoing filter, removed status filter and updated no records label
     
 --------------------------------------
 Release Version: TV-2.1.1.20200925

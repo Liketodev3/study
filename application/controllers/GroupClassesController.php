@@ -30,9 +30,19 @@ class GroupClassesController extends MyAppController
         if (isset($post['language']) && $post['language']!=="") {
 			$srch->addCondition('grpcls_slanguage_id', '=', $post['language']);
 		}
-        if (isset($post['upcoming']) && $post['upcoming']!=="") {
-			$srch->addCondition('grpcls_end_datetime', '>', date('Y-m-d H:i:s'));
-		}
+        if(isset($post['custom_filter'])){
+            switch($post['custom_filter']){
+                case TeacherGroupClasses::FILTER_UPCOMING:
+                    $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+                    $srch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
+                    break;
+                case TeacherGroupClasses::FILTER_ONGOING:
+                    $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+                    $srch->addCondition('grpcls_start_datetime', '<=', date('Y-m-d H:i:s'));
+                    $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
+                    break;
+            }
+        }
         
 		$srch->setPageSize($pageSize);
 		$srch->setPageNumber($page);
@@ -76,12 +86,9 @@ class GroupClassesController extends MyAppController
     private function getSearchForm()
     {
 		$frm = new Form('frmTeacherSrch');
-        $statuses = TeacherGroupClasses::getStatusArr($this->siteLangId);
-        unset($statuses[TeacherGroupClasses::STATUS_PENDING]);
-		$frm->addSelectBox('', 'status', $statuses, '', array(), Label::getLabel('LBL_ALL'));
+		$frm->addSelectBox('', 'custom_filter', TeacherGroupClasses::getCustomFilterAr(), '', array(), Label::getLabel('LBL_ALL'));
 		$frm->addSelectBox('', 'language', TeachingLanguage::getAllLangs($this->siteLangId), '', array(), Label::getLabel('LBL_Choose_Language'));
-		$frm->addSelectBox('', 'upcoming', array(1=> Label::getLabel('LBL_Upcoming_Classes')));
-		$frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_Classes')));
+		$frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_Class')));
 		$fld = $frm->addHiddenField('', 'page', 1);
 		$fld->requirements()->setIntPositive();
 		$frm->addSubmitButton('', 'btnSrchSubmit', '');

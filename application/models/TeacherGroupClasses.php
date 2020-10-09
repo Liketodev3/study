@@ -8,10 +8,21 @@ class TeacherGroupClasses extends MyAppModel
     const STATUS_ACTIVE = 1;
     const STATUS_COMPLETED = 2;
     const STATUS_CANCELLED = 3;
+    
+    const FILTER_UPCOMING = 'upcoming';
+    const FILTER_ONGOING = 'ongoing';
 
     public function __construct($id = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
+    }
+    
+    public static function getCustomFilterAr()
+    {
+        return array(
+            static::FILTER_UPCOMING => Label::getLabel('LBL_Upcoming'),
+            static::FILTER_ONGOING  => Label::getLabel('LBL_OnGoing')
+        );
     }
     
     public function deleteClass()

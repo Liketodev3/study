@@ -2,7 +2,7 @@ $("document").ready(function(){
 	var frm = document.frmTeacherSrch;
 	search( frm );
     
-    $(document).on('change', '[name=language],[name=upcoming],[name=status]', function(){
+    $(document).on('change', '[name=language],[name=custom_filter],[name=status]', function(){
         search( frm );
     })
 });

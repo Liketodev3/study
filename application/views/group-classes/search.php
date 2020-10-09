@@ -103,7 +103,7 @@
 				</svg>
 			</div>
 
-			<h5><?php echo Label::getLabel('LBL_No_Result_found!!'); ?></h5>
+			<h5><?php echo Label::getLabel('LBL_No_classes_found'); ?></h5>
 		</div>
 	</div>
 <?php } ?>
