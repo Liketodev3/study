@@ -1704,4 +1704,28 @@ class CommonHelper extends FatUtility
         }
         return $teachLangsStr = implode($teachLangs, ', ');
     }
+
+    public static function setCookieParams()
+    {
+        $maxlifetime = 60 * 60 * 24 * 7;
+        $secure = FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false);
+        $httponly = true;
+        $samesite = 'none';
+        $path = CONF_WEBROOT_FRONT_URL;
+        $host = $_SERVER['HTTP_HOST'];
+
+        if (PHP_VERSION_ID < 70300) {
+            $cookieParamsStr = ($host == 'localhost') ? '' : '; samesite=' . $samesite . ($secure ? '; Secure' : '');
+            session_set_cookie_params($maxlifetime, $path . $cookieParamsStr, $host, $secure, $httponly);
+        } else {
+            session_set_cookie_params([
+                'lifetime' => $maxlifetime,
+                'path' => $path,
+                'domain' => $host,
+                'secure' => $secure,
+                'httponly' => $httponly,
+                'samesite' => $samesite
+            ]);
+        }
+    }
 }
