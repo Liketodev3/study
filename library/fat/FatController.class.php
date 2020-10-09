@@ -37,7 +37,7 @@ class FatController {
 		header('Strict-Transport-Security: max-age=10886400' );
 		header('X-XSS-Protection: 1; mode=block' );
 		header('X-Content-Type-Options: nosniff' );
-		header('Content-Security-Policy: policy-definition' );
+		/* header('Content-Security-Policy: policy-definition' ); */
 		header('Referrer-Policy: no-referrer-when-downgrade' );
 		header("Pragma: no-cache"); 
 		header('Cache-Control: no-cache, must-revalidate, public, max-age=86400' );
