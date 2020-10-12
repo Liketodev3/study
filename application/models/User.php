@@ -780,7 +780,8 @@ class User extends MyAppModel
             $srch->addGroupBy('uwr.withdrawal_user_id');
             $srch->addMultipleFields(array("SUM(withdrawal_amount) as withdrawal_amount"));
             $srch->addCondition('withdrawal_user_id', '=', $userId);
-            $srch->addCondition('withdrawal_status', '=', Transaction::WITHDRAWL_STATUS_PENDING);
+            $cnd = $srch->addCondition('withdrawal_status', '=', Transaction::WITHDRAWL_STATUS_PENDING);
+            $cnd->attachCondition('withdrawal_status', '=', Transaction::WITHDRAWL_STATUS_PAYOUT_SENT);
             $rs = $srch->getResultSet();
             if ($res = FatApp::getDb()->fetch($rs)) {
                 $userBalance = $userBalance - $res["withdrawal_amount"];
