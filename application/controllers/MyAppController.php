@@ -132,9 +132,9 @@ class MyAppController extends FatController
         
         $yearArr = range(date('Y'), 1970);
         
-        $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Start_Year'), 'uqualification_start_year', $yearArr, '', array(), '');
+        $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Start_Year'), 'uqualification_start_year', array_combine($yearArr, $yearArr), '', array(), '');
         $fld1->requirements()->setRequired();
-        $fld2 = $frm->addSelectBox(Label::getLabel('LBL_End_Year'), 'uqualification_end_year', $yearArr, '', array(), '');
+        $fld2 = $frm->addSelectBox(Label::getLabel('LBL_End_Year'), 'uqualification_end_year', array_combine($yearArr, $yearArr), '', array(), '');
         $fld2->requirements()->setRequired();
         $fld2->requirements()->setCompareWith('uqualification_start_year', 'ge');
         $fld = $frm->addFileUpload(Label::getLabel('LBL_Upload_Certificate'), 'certificate');
