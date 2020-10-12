@@ -10,8 +10,8 @@ Bug Fixes:
     *Bug-#043739: Fixed image rotation issue
     *Bug-#043738: Allow all characters for first name and last name
     *Bug-#043562: Teacher profile language sort
-    *Bug-#043357 - Apply to teach > The language values should be displayed in alphabetical order
-    *Bug-#043659 - TimeZone > Change the time zone drop down values
+    *Bug-#043357: Apply to teach > The language values should be displayed in alphabetical order
+    *Bug-#043659: TimeZone > Change the time zone drop down values
     *Bug-#043851: Fixed css/js issue for ipad black screen
     *Bug-#043910: Fixed lessons Count on Teacher Dashboard
     *Bug-#043898: Updated group class filter title
@@ -23,6 +23,7 @@ Bug Fixes:
     *Bug-#043882: Added loader in Gift card search
     *Bug-#043794: Fixed price filter issue
     *Bug-#043878: Multiple withdrawl requests
+    *Bug-#043790: fix contact us page links
     
 --------------------------------------
 Release Version: TV-2.1.1.20200925
