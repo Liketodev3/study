@@ -22,7 +22,6 @@ onmessage = function(e){
         if (distance < 0) {
             postMessage('');
             clearInterval(x);
-            func();
         }else{
             postMessage(html);
         }

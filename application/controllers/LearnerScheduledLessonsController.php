@@ -1490,7 +1490,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $frm = $this->getFlashcardFrm();
         $frmData['slesson_id'] = $lessonId;
         if ($flashCardId > 0) {
-            $frmData = $frmData + FlashCard::getAttributesById($flashCardId);
+            $frmData = $frmData + (array)FlashCard::getAttributesById($flashCardId);
         }
         $frm->fill($frmData);
         $this->set('frm', $frm);

@@ -21,7 +21,6 @@ $this->includeTemplate( '_partial/header/commonHead1.php', $commonHead1DataArr )
 /* ] */
 
 /** Remove meta from teacher profile page **/
-$__controller = FatApp::getController();
 $__action = FatApp::getAction();
 if ( $__controller =='TeachersController' && $__action =='view'  ){
 	echo '';
