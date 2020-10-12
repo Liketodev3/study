@@ -462,7 +462,7 @@ var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>'
 var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
 var chat_avatar = "<?php echo $studentImage; ?>";
 var chat_friends = "<?php echo $lessonData['teacherId']; ?>";
-var worker = new Worker(siteConstants.webroot+'js/worker-time-interval.js');
+var worker = new Worker(siteConstants.webroot+'js/worker-time-interval.js?');
 
 if(!is_time_up && lesson_joined && !lesson_completed && learnerLessonStatus!='<?php echo ScheduledLesson::STATUS_CANCELLED ?>'){
     joinLesson(chat_id, teacherId);
