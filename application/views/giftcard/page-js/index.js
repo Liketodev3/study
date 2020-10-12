@@ -5,6 +5,7 @@ $(document).ready(function() {
 
 var div = '#giftcardListing';
 function cartListing(frm) {
+    $(div).html(fcom.getLoader());
 	var data = fcom.frmData(frm);
     fcom.ajax(fcom.makeUrl('Giftcard', 'listing'), data, function(res) {
         $(div).html(res);

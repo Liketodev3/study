@@ -715,7 +715,7 @@ class TeachersController extends MyAppController {
 		if (!empty($maxPriceRange))  {
 			$maxPriceRangeInDefaultCurrency =  CommonHelper::getDefaultCurrencyValue($maxPriceRange, false, false);
 			//$srch->addCondition('maxPrice', '<=', $maxPriceRangeInDefaultCurrency);
-			$srch->addCondition('maxPrice', '<=', $maxPriceRangeInDefaultCurrency);
+			$srch->addCondition('minPrice', '<=', $maxPriceRangeInDefaultCurrency);
 		}
 		/* ] */
 		/* [ */

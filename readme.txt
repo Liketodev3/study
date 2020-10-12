@@ -19,6 +19,10 @@ Bug Fixes:
     *Bug-#043801: Hide from footer if location, phone, email is empty
     *Bug-#043773: Hide success msg before page reload, when learner report issue
     *Bug-#043899: Added ongoing filter, removed status filter and updated no records label
+    *Bug-#043904: Reload faviourite listing when clicked on unfavourite
+    *Bug-#043882: Added loader in Gift card search
+    *Bug-#043794: Fixed price filter issue
+    *Bug-#043878: Multiple withdrawl requests
     
 --------------------------------------
 Release Version: TV-2.1.1.20200925

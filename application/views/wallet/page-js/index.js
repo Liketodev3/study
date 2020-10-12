@@ -87,15 +87,17 @@ $(document).ready(function () {
         });
     };
 
-
-    setupWithdrawalReq = function (frm) {
-        if (!$(frm).validate()) return;
-        var data = fcom.frmData(frm);
-        fcom.updateWithAjax(fcom.makeUrl('Wallet', 'setupRequestWithdrawal'), data, function (t) {
+    var isWithdrawlReqAjaxRunning = false;
+	setupWithdrawalReq = function(frm){
+		if (!$(frm).validate() || isWithdrawlReqAjaxRunning==true) return;
+        isWithdrawlReqAjaxRunning = true;
+		var data = fcom.frmData(frm);
+		fcom.updateWithAjax(fcom.makeUrl('Wallet', 'setupRequestWithdrawal'), data, function(t) {
             $(document).trigger('close.facebox');
-            searchCredits(document.frmCreditSrch);
-        });
-    };
+			searchCredits(document.frmCreditSrch);
+            isWithdrawlReqAjaxRunning = false;
+		});
+	};
 
 
 })();

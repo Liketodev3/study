@@ -407,6 +407,9 @@ $(document).ready(function(){
 				} else if( ans.action == 'R' ){
 					$(el).removeClass("is-active");
 				}
+                if(typeof searchfavorites != 'undefined'){
+                    searchfavorites(document.frmFavSrch);
+                }
 			}
 		});
 		$(el).blur();
