@@ -264,7 +264,7 @@ class ScheduledLessonSearch extends SearchBase
 
         $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'sl_lang');
 
-        $this->addMultipleFields(array('utsl.utl_us_user_id', 'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
+        $this->addMultipleFields(array('utsl.utl_us_user_id', 'GROUP_CONCAT(DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY IFNULL(tlanguage_name, tlanguage_identifier) ASC) AS teacherTeachLanguageName'));
     }
 
     public static function isSlotBooked($teacherId, $startDateTime, $endDateTime)
