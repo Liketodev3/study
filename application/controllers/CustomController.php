@@ -46,7 +46,7 @@ class CustomController extends MyAppController
         $textMessage = Label::getLabel('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}');
         $arrReplace = array(
             '{dashboard-url}' => CommonHelper::generateUrl('learner'),
-            '{contact-us-page-url}' => CommonHelper::generateUrl('custom', 'contactUs'),
+            '{contact-us-page-url}' => CommonHelper::generateUrl('contact'),
         );
 
         foreach ($arrReplace as $key => $val) {
