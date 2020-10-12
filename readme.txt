@@ -24,6 +24,7 @@ Bug Fixes:
     *Bug-#043794: Fixed price filter issue
     *Bug-#043878: Multiple withdrawl requests
     
+    *Bug-#043772: Fix lesson end popup.
 --------------------------------------
 Release Version: TV-2.1.1.20200925
 Release Date: 2020/09/25
