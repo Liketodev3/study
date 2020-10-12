@@ -38,12 +38,20 @@ class MyDate extends FatDate
 
     public static function convertTimeFromSystemToUserTimezone($format, $dateTime, $showtime, $timeZone)
     {
+        if(substr($dateTime, 0, 10) === '0000-00-00'){
+            return $dateTime;
+        }
         if ($timeZone == '') {
             $timeZone = self::getTimeZone();
         }
 
         $changedDate = self::format(date('Y-m-d H:i:s', strtotime($dateTime)), $showtime, true, $timeZone);
         return date($format, strtotime($changedDate));
+    }
+
+    public static function timezoneConvertedTime($format, $dateTime, $showtime, $timeZone)
+    {
+        return static::convertTimeFromSystemToUserTimezone($format, $dateTime, $showtime, $timeZone);
     }
 
     public static function getUserTimeZone($userId = 0)
