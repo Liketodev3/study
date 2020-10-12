@@ -47,7 +47,7 @@ class ContactController extends MyAppController
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage($frm->getValidationErrors());
-            FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'ContactUs'));
+            FatApp::redirectUser(CommonHelper::generateUrl('contact'));
         }
         if (!CommonHelper::verifyCaptcha()) {
             Message::addErrorMessage(Label::getLabel('MSG_That_captcha_was_incorrect', $this->siteLangId));
