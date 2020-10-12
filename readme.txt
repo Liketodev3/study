@@ -22,6 +22,7 @@ Bug Fixes:
     *Bug-#043904: Reload faviourite listing when clicked on unfavourite
     *Bug-#043882: Added loader in Gift card search
     *Bug-#043794: Fixed price filter issue
+    *Bug-#043878: Multiple withdrawl requests
     
 --------------------------------------
 Release Version: TV-2.1.1.20200925

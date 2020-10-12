@@ -83,13 +83,15 @@ $(document).ready(function(){
             });
     };
 
-
+    var isWithdrawlReqAjaxRunning = false;
 	setupWithdrawalReq = function(frm){
-		if (!$(frm).validate()) return;
+		if (!$(frm).validate() || isWithdrawlReqAjaxRunning==true) return;
+        isWithdrawlReqAjaxRunning = true;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Wallet', 'setupRequestWithdrawal'), data, function(t) {
             $(document).trigger('close.facebox');
 			searchCredits(document.frmCreditSrch);
+            isWithdrawlReqAjaxRunning = false;
 		});
 	};
 
