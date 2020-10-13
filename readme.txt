@@ -31,6 +31,7 @@ Bug Fixes:
     *Bug-#043915: display report issue link for expired lessons.
     *Bug-#043876: Cancelled order/lesson not allowed to change status
     *Bug-#043815-send verification link on reset password option too
+    *Bug-#044114-remove category type from navigation dropdopwn
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925

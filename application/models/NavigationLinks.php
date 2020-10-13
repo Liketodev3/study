@@ -54,8 +54,7 @@ class NavigationLinks extends MyAppModel
         return array(
             static::NAVLINK_TYPE_CMS =>	Label::getLabel('LBL_CMS_Page', $langId),
             //static::NAVLINK_TYPE_CUSTOM_HTML =>	Label::getLabel('LBL_Custom_HTML', $langId),
-            static::NAVLINK_TYPE_EXTERNAL_PAGE	=>	Label::getLabel('LBL_External_Page', $langId),
-            static::NAVLINK_TYPE_CATEGORY_PAGE	=>	Label::getLabel('LBL_Product_Category_Page', $langId),
+            static::NAVLINK_TYPE_EXTERNAL_PAGE	=>	Label::getLabel('LBL_External_Page', $langId)
         );
     }
 
