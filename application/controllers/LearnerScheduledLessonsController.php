@@ -51,6 +51,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then 0 ELSE 1 END ) as upcomingLessonOrder',
             '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then CONCAT(slns.slesson_date, " ", slns.slesson_start_time) ELSE NOW() END ) as passedLessonsOrder',
             'sldetail_order_id',
+            'slesson_teacher_join_time'
         ));
         if (!empty($post['status']) && $post['status'] == ScheduledLesson::STATUS_RESCHEDULED) {
             $srch->addCondition('lrsl.lesreschlog_id', '>', '0');
