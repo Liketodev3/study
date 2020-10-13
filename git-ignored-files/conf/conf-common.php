@@ -18,7 +18,7 @@ define('ENCRYPTION_SALT',"YOCOACH");
 require_once(CONF_INSTALLATION_PATH.'public/settings.php');
 
 if ( strpos($_SERVER ['SERVER_NAME'], '.4livedemo.com') !== false) {
-    define ( 'CONF_CORE_LIB_PATH', '/home/fatlib/v2.0/' );
+    define ( 'CONF_CORE_LIB_PATH', '/home/fatlib/v2-7.2/' );
 } else {
 	define ( 'CONF_CORE_LIB_PATH', CONF_INSTALLATION_PATH . 'library/core/' );
 }
