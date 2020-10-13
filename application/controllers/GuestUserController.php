@@ -1208,9 +1208,15 @@ class GuestUserController extends MyAppController
         }
         $userAuthObj = new UserAuthentication();
         $row = $userAuthObj->getUserByEmailOrUserName($post['user_email_username'], '', false);
+
         if (!$row || false === $row) {
             Message::addErrorMessage(Label::getLabel($userAuthObj->getError()));
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'forgotPasswordForm'));
+        }
+        if ($row['credential_verified'] != applicationConstants::YES) {
+            Message::addErrorMessage(str_replace("{clickhere}", '<a href="javascript:void(0)" onclick="resendEmailVerificationLink('."'".$row['credential_email']."'".')">'.Label::getLabel('LBL_Click_Here', $this->siteLangId).'</a>', Label::getLabel('MSG_Your_Account_verification_is_pending_{clickhere}', $this->siteLangId)));
+            FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'forgotPasswordForm'));
+            return false;
         }
 
         if ($userAuthObj->checkUserPwdResetRequest($row['user_id'])) {
