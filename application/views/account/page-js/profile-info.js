@@ -542,6 +542,7 @@ $(document).ready(function(){
 				}
 
 				profileInfoForm();
+				$.mbsmessage(json.msg,true,'alert alert--success');
 				$(document).trigger('close.facebox');
 			}
 		});

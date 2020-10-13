@@ -282,7 +282,8 @@ class AccountController extends LoggedUserController
 
         if ($post['action'] == "demo_avatar") {
             if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
-                Message::addErrorMessage(Label::getLabel('MSG_Please_select_a_file'));
+                $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
+                Message::addErrorMessage(Label::getLabel($msgLblKey));
                 FatUtility::dieJsonError(Message::getHtml());
             }
             $fileHandlerObj = new AttachedFile();
@@ -291,12 +292,13 @@ class AccountController extends LoggedUserController
                 Message::addErrorMessage($fileHandlerObj->getError());
                 FatUtility::dieJsonError(Message::getHtml());
             }
-            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'croped', true)).'?'.time());
+            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId)).'?'.time());
         }
 
         if ($post['action'] == "avatar") {
             if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
-                Message::addErrorMessage(Label::getLabel('MSG_Please_select_a_file'));
+                $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
+                Message::addErrorMessage(Label::getLabel($msgLblKey));
                 FatUtility::dieJsonError(Message::getHtml());
             }
             $fileHandlerObj = new AttachedFile();

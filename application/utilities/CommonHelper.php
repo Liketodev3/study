@@ -797,7 +797,8 @@ class CommonHelper extends FatUtility
     
     public static function getCorrectImageOrientation($filename) {
         $deg = 0;
-        if (function_exists('exif_read_data')) {
+
+        if (function_exists('exif_read_data') && ((mime_content_type($filename) == 'image/jpeg') || (mime_content_type($filename) == 'image/tiff'))) {
             $exif = exif_read_data($filename);
             if($exif && isset($exif['Orientation'])) {
                 $orientation = $exif['Orientation'];
@@ -1728,4 +1729,35 @@ class CommonHelper extends FatUtility
             ]);
         }
     }
+
+    public static function getFileUploadErrorLblKeyFromCode(int $errorCode): string
+    {
+        switch ($errorCode) {
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE:
+                $message = 'ERR_FILE_SIZE_EXCEEDS_ALLOWED_SIZE';
+                break;
+            case UPLOAD_ERR_PARTIAL:
+                $message = 'ERR_The_uploaded_file_was_only_partially_uploaded';
+                break;
+            case UPLOAD_ERR_NO_FILE:
+                $message = 'ERR_No_file_was_uploaded';
+                break;
+            case UPLOAD_ERR_NO_TMP_DIR:
+                $message = 'ERR_Missing_a_temporary_folder';
+                break;
+            case UPLOAD_ERR_CANT_WRITE:
+                $message = 'ERR_Failed_to_write_file_to_disk';
+                break;
+            case UPLOAD_ERR_EXTENSION:
+                $message = 'ERR_File_upload_stopped_by_extension';
+                break;
+
+            default:
+                $message = 'ERR_Unknown_upload_error';
+                break;
+        }
+        return $message;
+    }
+
 }
