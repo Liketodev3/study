@@ -5,7 +5,7 @@ New Features:
 Enhancements:
 
 Bug Fixes:
-	*Bug-#043538: Home Page Slider > On changing the home page slider, it is not being updated
+    *Bug-#043538: Home Page Slider > On changing the home page slider, it is not being updated
     *Bug-#043486: Updated images path for about us content block
     *Bug-#043739: Fixed image rotation issue
     *Bug-#043738: Allow all characters for first name and last name
@@ -27,6 +27,7 @@ Bug Fixes:
     *Bug-#043772: Fix lesson end popup.
     *Bug-#043926: Sort My Teachers and the teaching langs.
     *Bug-#043894: fix filters on fav teachers page
+    *Bug-#043792: Error handling on posting a bigger image than allowed size.
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925
