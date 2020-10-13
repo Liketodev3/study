@@ -56,7 +56,7 @@ class LearnerTeachersController extends LearnerBaseController
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-        $srch->addOrder('order_date_added', 'DESC');
+        // $srch->addOrder('order_date_added', 'DESC');
         $srch->addOrder('ut.user_first_name');
 
         if (isset($post['keyword']) && !empty($post['keyword'])) {

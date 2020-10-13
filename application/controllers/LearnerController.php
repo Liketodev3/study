@@ -220,6 +220,9 @@ class LearnerController extends LearnerBaseController
     {
         $frm = $this->getFavouriteSearchForm($this->siteLangId);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+        if (false === $post) {
+            FatUtility::dieJsonError(current($frm->getValidationErrors()));
+        }
         $userObj = new User(UserAuthentication::getLoggedUserId());
         $favouritesData = $userObj->getFavourites($post, $this->siteLangId);
         $countryObj = new Country();

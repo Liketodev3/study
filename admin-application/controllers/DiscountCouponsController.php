@@ -369,7 +369,7 @@ class DiscountCouponsController extends AdminBaseController
         $frm->addHiddenField('', 'coupon_id', $coupon_id);
         $frm->addHiddenField('', 'lang_id', $lang_id);
         $frm->addRequiredField(Label::getLabel('LBL_Coupon_title', $this->adminLangId), 'coupon_title');
-        $frm->addTextArea(Label::getLabel('LBL_Coupon_Description', $this->adminLangId), 'coupon_description');
+        $frm->addTextArea(Label::getLabel('LBL_Coupon_Description', $this->adminLangId), 'coupon_description')->requirements()->setLength(0, 250);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }

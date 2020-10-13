@@ -1002,8 +1002,7 @@ class User extends MyAppModel
         $srch->addCondition('uft_user_id', '=', $this->getMainTableRecordId());
         $keyword = $filter['keyword'];
         if (!empty($keyword)) {
-            $cond = $srch->addCondition('user_first_name', 'like', '%'.$keyword.'%');
-            $cond->attachCondition('user_last_name', 'like', '%'.$keyword.'%', 'OR');
+            $srch->addCondition('mysql_func_concat(`user_first_name`," ",`user_last_name`)', 'like', '%' . $keyword . '%', 'AND',true);
         }
         $srch->addGroupBy('uft_teacher_id');
         $srch->joinTeachers();
