@@ -29,6 +29,7 @@ Bug Fixes:
     *Bug-#043894: fix filters on fav teachers page
     *Bug-#043792: Error handling on posting a bigger image than allowed size.
     *Bug-#043915: display report issue link for expired lessons.
+    *Bug-#043876: Cancelled order/lesson not allowed to change status
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925

@@ -67,15 +67,20 @@
                     $td->appendElement('plaintext', array(), $statusArr[$row[$key]], true);
                 break;    
 				case 'slesson_change_status':
-					$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['sldetail_id'],'name'=>'order_is_paid','onchange'=>"updateScheduleStatus(this, '".$row['sldetail_id']."',this.value,'".$row['slesson_status']."')"));
-					$option = $select->appendElement('option',array('value'=> ''), Label::getLabel('LBL_Change_Status',$adminLangId));
                     $selectStatusArr = $statusArr;
+                    if($row['slesson_status']==ScheduledLesson::STATUS_CANCELLED){
+                        $selectStatusArr = array(ScheduledLesson::STATUS_CANCELLED => $selectStatusArr[ScheduledLesson::STATUS_CANCELLED]);
+                    }
+					$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['sldetail_id'],'name'=>'order_is_paid','onchange'=>"updateScheduleStatus(this, '".$row['sldetail_id']."',this.value,'".$row['slesson_status']."')"));
+					// $option = $select->appendElement('option',array('value'=> ''), Label::getLabel('LBL_Change_Status',$adminLangId));
+                    
                     unset($selectStatusArr[ScheduledLesson::STATUS_SCHEDULED]);
                     unset($selectStatusArr[ScheduledLesson::STATUS_UPCOMING]);
                     unset($selectStatusArr[ScheduledLesson::STATUS_ISSUE_REPORTED]);
                     if($row['slesson_grpcls_id']>0){
                         unset($selectStatusArr[ScheduledLesson::STATUS_NEED_SCHEDULING]);
                     }
+                    
                     foreach($selectStatusArr as $status_key => $status_value){
 						$option = $select->appendElement('option',array('value'=>$status_key), $status_value);
 					}
