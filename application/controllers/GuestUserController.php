@@ -1410,4 +1410,20 @@ class GuestUserController extends MyAppController
         Message::addMessage(Label::getLabel('MSG_Email_Updated._Please_Login_again_in_your_profile_with_new_email'));
         $this->logout();
     }
+
+    public function cookieForm()
+    {
+        $cookieForm = $this->getCookieForm();
+        $this->set('cookieForm',$cookieForm);
+    }
+    private function getCookieForm()
+    {
+        $form =  new Form('cookieForm');
+        $form->addCheckBox(Label::getLabel('LBL_Necessary'), 'Necessary', '', array(), true, 0);
+        $form->addCheckBox(Label::getLabel('LBL_Preferences'), 'preferences', '', array(), true, 0);
+        $form->addCheckBox(Label::getLabel('LBL_Statistics'), 'statistics', '', array(), true, 0);
+        $form->addCheckBox(Label::getLabel('LBL_Marketing'), 'marketing', '', array(), true, 0);
+        $frm->addSubmitButton('','btn_submit', Label::getLabel('LBL_Allow', $siteLangId));
+    }
+
 }

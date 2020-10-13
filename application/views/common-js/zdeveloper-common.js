@@ -33,6 +33,12 @@ getStatisticalData = function(type){
 		}
 	});
 }
+changeCookies = function(){
+
+	fcom.ajax(fcom.makeUrl('TeacherReports','getStatisticalData'), function(res){
+		$.facebox( t,'facebox-medium cookies-popup');
+	});
+}
 $(document).ready(function(){
 
 	setUpJsTabs();

@@ -112,7 +112,9 @@
 		<span id="cookieconsent:desc" class="cc-message">
 		<?php echo FatUtility::decodeHtmlEntities(FatApp::getConfig('CONF_COOKIES_TEXT_'.$siteLangId, FatUtility::VAR_STRING, ''));?>
 		<a href="<?php echo CommonHelper::generateUrl('cms', 'view', array(FatApp::getConfig('CONF_COOKIES_BUTTON_LINK', FatUtility::VAR_INT)));?>"><?php echo Label::getLabel('LBL_Read_More', $siteLangId);?></a></span>
+		</span>
 		<span class="cc-close cc-cookie-accept-js"><?php echo Label::getLabel('LBL_Accept_Cookies', $siteLangId);?></span>
+		<a href="javascript:void(0)" class="btn  btn--bordered-inverse" onClick="changeCookie()"><?php echo Label::getLabel('LBL_Change_Cookies', $siteLangId);?></a>
 	</div>
 	<?php } ?>
 </div>
