@@ -27,6 +27,7 @@ Bug Fixes:
     *Bug-#043772: Fix lesson end popup.
     *Bug-#043926: Sort My Teachers and the teaching langs.
     *Bug-#043894: fix filters on fav teachers page
+    *Bug-#043876: Cancelled order/lesson not allowed to change status
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925

@@ -35,6 +35,9 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			case 'order_is_paid':
 					$status = Order::getPaymentStatusArr($adminLangId);
+                    if($row[$key]==Order::ORDER_IS_CANCELLED){
+                        $status = array(Order::ORDER_IS_CANCELLED => $status[Order::ORDER_IS_CANCELLED]);
+                    }
 					if($canEdit){
 						$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['order_id'],'name'=>'order_is_paid','onchange'=>"updateOrderStatus(this,'".$row['order_id']."',this.value,'".$row[$key]."')"));
 						foreach($status as $status_key=>$status_value){
