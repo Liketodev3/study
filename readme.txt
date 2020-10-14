@@ -30,10 +30,11 @@ Bug Fixes:
     *Bug-#043792: Error handling on posting a bigger image than allowed size.
     *Bug-#043915: display report issue link for expired lessons.
     *Bug-#043876: Cancelled order/lesson not allowed to change status
-    *Bug-#043815-send verification link on reset password option too
-    *Bug-#044114-remove category type from navigation dropdopwn
+    *Bug-#043815: send verification link on reset password option too
+    *Bug-#044114: remove category type from navigation dropdopwn
     *Bug-#043930: Fixed issue for change order status by admin, not reflect on statistics
     *Bug-#043896: Ui issues in group class search view
+    *Bug-#044126: sort langs on home page on the basis of teachers count + disaplay order
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925

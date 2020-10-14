@@ -118,6 +118,8 @@ class TeachingLanguage extends MyAppModel
         /* ] */
         $teachingLangSrch->doNotCalculateRecords();
         $teachingLangSrch->setPageSize(6);
+        $teachingLangSrch->addOrder('teacherCount', 'desc');
+        $teachingLangSrch->addOrder('tlanguage_display_order', 'asc');
         $rs = $teachingLangSrch->getResultSet();
         $teachingLanguagesArr = FatApp::getDb()->fetchAll($rs);
         return $teachingLanguagesArr;
