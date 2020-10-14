@@ -14,25 +14,24 @@
 			<!--panel right start here-->
 		   <div class="page-panel__right">
 
-				 <!--page-head start here-->
-				 <div class="page-head">
-				   <div class="d-flex justify-content-between align-items-center">
-						 <div><h1><?php echo Label::getLabel('LBL_My_Lessons'); ?></h1></div>
-						 <div>
-							 <div class="tab-swticher tab-swticher-small">
+                <!--page-head start here-->
+                <div class="page-head">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div><h1><?php echo Label::getLabel('LBL_My_Lessons'); ?></h1></div>
+                        <div>
+                            <div class="tab-swticher tab-swticher-small">
 								<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>" class="btn btn--large is-active list-js "><?php echo Label::getLabel('LBL_List'); ?></a>
 								<a onclick="viewCalendar();" href="javascript:void(0);" class="btn btn--large calender-js"><?php echo Label::getLabel('LBL_Calender'); ?></a>
-							 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<!--page-head end here-->
 
-						 </div>
-					 </div>
-				 </div>
-				 <!--page-head end here-->
-
-				 <!--page filters start here-->
-				 <div class="page-filters">
+				<!--page filters start here-->
+				<div class="page-filters">
 					<?php
-					$frmSrch->setFormTagAttribute ( 'onsubmit', 'searchLessons(this); return(false);');
+					$frmSrch->setFormTagAttribute ( 'onsubmit', 'searchAllStatusLessons(this); return(false);');
 					$frmSrch->setFormTagAttribute ( 'class', 'form form--small' );
 
 					$frmSrch->developerTags['colClassPrefix'] = 'col-md-';
@@ -40,6 +39,7 @@
 
 					$fldStatus = $frmSrch->getField( 'status' );
 					$fldStatus->developerTags['col'] = 3;
+                    $fldStatus->setWrapperAttribute('class', 'd-none');
 
 					$fldSubmit = $frmSrch->getField( 'btn_submit' );
 					$fldSubmit->developerTags['col'] = 4;
@@ -49,8 +49,39 @@
 					$btnReset->addFieldTagAttribute('onclick','clearSearch()');
 					echo $frmSrch->getFormHtml(); ?>
 
-				 </div>
-				 <!--page filters end here-->
+				</div>
+				<!--page filters end here-->
+                
+                <div class="col-md-12 text-right">
+                    <strong class="-color-primary span-right">
+                        <span class="spn_must_field">*</span> 
+                        <?php $label =  Label::getLabel('LBL_All_times_listed_are_in_your_selected_{timezone}');
+                        $getTimeZoneString = MyDate::displayTimezoneString(false);
+                        $label = str_replace('{timezone}', $getTimeZoneString, $label);
+                        echo $label; ?>
+                    </strong>
+                </div>
+                
+                <div class="-gap"></div>
+                
+                <div class="tabs-inline">
+					<ul class="lessons-list-tabs--js">
+                        <li class="is-active">
+							<a href="javascript:;" onClick="getLessonsByStatus(this, '')">
+								<?php echo Label::getLabel('L_ALL'); ?>
+							</a>
+						</li>
+                        <?php foreach($lessonStatuses as $key=>$status): ?>
+						<li class="">
+							<a href="javascript:;" onClick="getLessonsByStatus(this, <?php echo $key ?>)">
+								<?php echo $status; ?>
+							</a>
+						</li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                
+                <div class="-gap"></div>
 
 				<!--Lessons list view start here-->
 				<div class="col-list-group">

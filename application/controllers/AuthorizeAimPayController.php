@@ -55,83 +55,11 @@ class AuthorizeAimPayController extends PaymentController
         $resultset =  $oPObj->getResultSet();
         $orderPayment = FatApp::getDb()->fetch($resultset);
         if ($orderPaymentAamount > 0 && empty($orderPayment)) {
-            /* Retrieve Primary Info corresponding to your order */
-            //$orderInfo=$orderPaymentObj->getOrderPrimaryinfo();
-            // $orderSrch = new OrderSearch();
-            // $orderSrch->joinUser();
-            // $orderSrch->joinUserCredentials();
-            // $orderSrch->addCondition('order_id', '=', $orderId);
-            // $orderSrch->addMultipleFields(array(
-            //     'order_id',
-            //     'order_language_id',
-            //     'order_currency_code',
-            //     'u.user_first_name as user_first_name',
-            //     'cred.credential_email as user_email',
-            //     'order_language_code',
-            //     '"FATbit_SP" as paypal_bn'
-            // ));
-            // $orderRs = $orderSrch->getResultSet();
-            // $orderInfo = FatApp::getDb()->fetch($orderRs);
+    
             $orderInfo =  $orderPaymentObj->getOrderPrimaryinfo();
             $orderActualPaid = number_format(round($orderPaymentAamount, 2), 2, ".", "");
             $actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true)?$this->liveEnvironmentUrl:$this->testEnvironmentUrl;
-            /*$data = array();
-            $data['x_login'] = $paymentSettings['login_id'];
-            $data['x_tran_key'] = $paymentSettings['transaction_key'];
-            $data['x_version'] = '3.1';
-            $data['x_delim_data'] = 'true';
-            $data['x_delim_char'] = '|';
-            $data['x_encap_char'] = '"';
-            $data['x_relay_response'] = 'false';
-            $data['x_first_name'] = FatUtility::decodeHtmlEntities($orderInfo['user_first_name'], ENT_QUOTES, 'UTF-8');
-            //$data['x_company'] = FatUtility::decodeHtmlEntities($orderInfo['user_first_name'], ENT_QUOTES, 'UTF-8');
-            //$data['x_address'] = FatUtility::decodeHtmlEntities($orderInfo['customer_billing_address_1'], ENT_QUOTES, 'UTF-8').' '.FatUtility::decodeHtmlEntities($orderInfo['customer_billing_address_2'], ENT_QUOTES, 'UTF-8');
-            //$data['x_city'] = FatUtility::decodeHtmlEntities($orderInfo['customer_billing_city'], ENT_QUOTES, 'UTF-8');
-            //$data['x_state'] = FatUtility::decodeHtmlEntities($orderInfo['customer_billing_state'], ENT_QUOTES, 'UTF-8');
-            //$data['x_zip'] = FatUtility::decodeHtmlEntities($orderInfo['customer_billing_postcode'], ENT_QUOTES, 'UTF-8');
-            //$data['x_country'] = FatUtility::decodeHtmlEntities($orderInfo['customer_billing_country'], ENT_QUOTES, 'UTF-8');
-            //$data['x_phone'] = $orderInfo['customer_phone'];
-            /* $data['x_customer_ip'] = $this->request->server['REMOTE_ADDR']; */
-            /*$data['x_customer_ip'] = $_SERVER['REMOTE_ADDR'];
-            $data['x_email'] = $orderInfo['user_first_name'];
-            $orderPaymentGatewayDescription=sprintf(Label::getLabel("MSG_Order_Payment_Gateway_Description",$this->siteLangId),FatApp::getConfig("CONF_WEBSITE_NAME_".$orderInfo["order_language_id"]),$orderInfo['order_id']);
-            $data['x_description'] = FatUtility::decodeHtmlEntities($orderPaymentGatewayDescription, ENT_QUOTES, 'UTF-8');
-            $data['x_amount'] = $orderActualPaid;
-            $data['x_currency_code'] = $orderInfo["order_currency_code"];
-            $data['x_method'] = 'CC';
-            $data['x_type'] = 'AUTH_CAPTURE';
-            $data['x_card_num'] = str_replace(' ', '', $post['cc_number']);
-            $data['x_exp_date'] = $post['cc_expire_date_month'] . $post['cc_expire_date_year'];
-            $data['x_card_code'] = $post['cc_cvv'];
-            $data['x_invoice_num'] = $orderId;
-            $data['x_solution_id'] = 'A1000015';*/
-
-            /* Customer Shipping Address Fields[ */
-            //$data['x_ship_to_first_name'] = FatUtility::decodeHtmlEntities($orderInfo['customer_shipping_name'], ENT_QUOTES, 'UTF-8');
-            //$data['x_ship_to_company'] = FatUtility::decodeHtmlEntities($orderInfo['customer_shipping_name'], ENT_QUOTES, 'UTF-8');
-            //$data['x_ship_to_address'] = FatUtility::decodeHtmlEntities($orderInfo['customer_shipping_address_1'], ENT_QUOTES, 'UTF-8') . ' ' . FatUtility::decodeHtmlEntities($orderInfo['customer_shipping_address_2'], ENT_QUOTES, 'UTF-8');
-            //$data['x_ship_to_city'] = FatUtility::decodeHtmlEntities($orderInfo['customer_shipping_city'], ENT_QUOTES, 'UTF-8');
-            //$data['x_ship_to_state'] = FatUtility::decodeHtmlEntities($orderInfo['customer_shipping_state'], ENT_QUOTES, 'UTF-8');
-            //$data['x_ship_to_zip'] = FatUtility::decodeHtmlEntities($orderInfo['customer_shipping_postcode'], ENT_QUOTES, 'UTF-8');
-            //$data['x_ship_to_country'] = FatUtility::decodeHtmlEntities($orderInfo['customer_shipping_country'], ENT_QUOTES, 'UTF-8');
-            /* ] */
-
-            /*if (FatApp::getConfig('CONF_TRANSACTION_MODE',FatUtility::VAR_BOOLEAN,false) == true) {
-                $data['x_test_request'] = 'true';
-            }
-            */
-            /*$curl = curl_init($actionUrl);
-            curl_setopt($curl, CURLOPT_PORT, 443);
-            curl_setopt($curl, CURLOPT_HEADER, 0);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
-            curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
-            curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data, '', '&'));
-            $response = curl_exec($curl);*/
+        
             $orderPaymentGatewayDescription = sprintf(Label::getLabel("MSG_Order_Payment_Gateway_Description", $this->siteLangId), FatApp::getConfig("CONF_WEBSITE_NAME_". $orderInfo["order_language_id"]), $orderInfo['order_id']);
             $data = array(
                 "createTransactionRequest" => array(
@@ -163,26 +91,7 @@ class AuthorizeAimPayController extends PaymentController
                                 "unitPrice" => $orderActualPaid,
                             )
                         ),
-                        /*"customer"=> array(
-                            "email"=> $userData['user_email']
-                        ),
-                        "billTo" => array(
-                            "firstName"=> FatUtility::decodeHtmlEntities($userDetails['udetails_first_name'], ENT_QUOTES, 'UTF-8'),
-                            "lastName"=> FatUtility::decodeHtmlEntities($userDetails['udetails_last_name'], ENT_QUOTES, 'UTF-8'),
-                            "address"=> FatUtility::decodeHtmlEntities($orderBillingAddress['orderaddress_address'].' '.$orderBillingAddress['orderaddress_neareast_landmark'], ENT_QUOTES, 'UTF-8'),
-                            "city"=> FatUtility::decodeHtmlEntities($orderBillingAddress['city_name'], ENT_QUOTES, 'UTF-8'),
-                            "state"=> FatUtility::decodeHtmlEntities($orderBillingAddress['region_name'], ENT_QUOTES, 'UTF-8'),
-                            "zip"=> FatUtility::decodeHtmlEntities($orderBillingAddress['orderaddress_zipcode'], ENT_QUOTES, 'UTF-8'),
-                            "phoneNumber"=> $userDetails['udetails_phone']
-                        ),
-                        "shipTo" => array(
-                            "firstName"=> FatUtility::decodeHtmlEntities($userDetails['udetails_first_name'], ENT_QUOTES, 'UTF-8'),
-                            "lastName"=> FatUtility::decodeHtmlEntities($userDetails['udetails_last_name'], ENT_QUOTES, 'UTF-8'),
-                            "address"=> FatUtility::decodeHtmlEntities($orderDeliveryAddress['orderaddress_address'].' '.$orderDeliveryAddress['orderaddress_neareast_landmark'], ENT_QUOTES, 'UTF-8'),
-                            "city"=> FatUtility::decodeHtmlEntities($orderDeliveryAddress['city_name'], ENT_QUOTES, 'UTF-8'),
-                            "state"=> FatUtility::decodeHtmlEntities($orderDeliveryAddress['region_name'], ENT_QUOTES, 'UTF-8'),
-                            "zip"=> FatUtility::decodeHtmlEntities($orderDeliveryAddress['orderaddress_zipcode'], ENT_QUOTES, 'UTF-8')
-                        ),*/
+                    
                         "customerIP" => $_SERVER['REMOTE_ADDR'],
                         "transactionSettings"=> array(
                             "setting"=> array(
@@ -195,7 +104,7 @@ class AuthorizeAimPayController extends PaymentController
             );
 
             $response = $this->executeCurl($data, $actionUrl);
-            // mail('raghav.vashishth@fatbit.in', '', serialize($response));
+            
             $json = array();
             if ($response['status'] == 0) {
                 $json['error'] = Label::getLabel('LBL_Payment_cannot_be_processed_right_now._Please_try_after_some_time.');
@@ -299,7 +208,7 @@ class AuthorizeAimPayController extends PaymentController
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         $response = curl_exec($ch);
         if (curl_error($ch)) {
-            return ['status' => 0, 'error' => 'CURL ERROR: ' . curl_errno($curl) . '::' . curl_error($curl)];
+            return ['status' => 0, 'error' => 'CURL ERROR: ' . curl_errno($ch) . '::' . curl_error($ch)];
         } else {
             $bom = pack('H*', 'EFBBBF');
             $response = preg_replace("/^$bom/", '', $response);

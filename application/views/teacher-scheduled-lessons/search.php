@@ -9,17 +9,6 @@ $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
 
 $curDateTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 
-if(!empty($lessonArr)) { ?>
-<div class="col-md-12 text-right search-lesson-listing">
-<strong class="-color-primary"><span class="spn_must_field">*</span> <?php
-$label =  Label::getLabel('LBL_All_times_listed_are_in_your_selected_{timezone}');
-$getTimeZoneString = MyDate::displayTimezoneString(false);
-$label = str_replace('{timezone}', $getTimeZoneString, $label);
-echo $label;
-?></strong>
-</div>
-<?php
-}
 $referer = preg_replace("(^https?://)", "", $referer );
 foreach( $lessonArr as $key=>$lessons ){ ?>
 <div class="col-list-group">

@@ -82,3 +82,5 @@ INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `et
 
 
 UPDATE `tbl_language_labels` SET `label_caption` = 'Currently, there are no classes found per filtered criteria.' WHERE`label_key` = 'LBL_No_classes_found'; 
+
+UPDATE `tbl_url_rewrites` SET `urlrewrite_custom` = 'teachers/profile/urlparameter' WHERE `tbl_url_rewrites`.`urlrewrite_custom` = 'teachers/urlparameter';
