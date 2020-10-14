@@ -16,6 +16,7 @@ Enhancements:
     *Task-73053: Refinements in showing my lessons
     *Task-73053: Hide Request withdrawal from wallet for learner.
     *Task-73053: Font refinements
+    *Task-73053: Code refinement for teacher profile url
   
 Bug Fixes:
 
