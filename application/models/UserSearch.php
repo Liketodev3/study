@@ -251,6 +251,7 @@ class UserSearch extends SearchBase
                 $cnd = $tlangSrch->addCondition('tlanguage_name', 'LIKE', '%' . $keyword . '%');
                 $cnd->attachCondition('tlanguage_identifier', 'LIKE', '%' . $keyword . '%');
             }
+            $tlangSrch->addOrder('tlanguage_display_order');
         }
         $tlangSrch->addMultipleFields(array('utl_us_user_id','GROUP_CONCAT(utl_id) as utl_ids','max(utl_single_lesson_amount) as maxPrice','min(utl_bulk_lesson_amount) as minPrice','GROUP_CONCAT(utl_slanguage_id) as utl_slanguage_ids'));
         $tlangSrch->doNotCalculateRecords();

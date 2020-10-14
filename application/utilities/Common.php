@@ -185,6 +185,7 @@ class Common
         $prefSrch->joinTable(Preference::DB_TBL, 'INNER JOIN', 'utp.utpref_preference_id = p.preference_id', 'p');
         $prefSrch->joinTable(Preference::DB_TBL_LANG, 'LEFT OUTER JOIN', 'pl.preferencelang_preference_id = p.preference_id AND pl.preferencelang_lang_id = ' . CommonHelper::getLangId(), 'pl');
         $prefSrch->addGroupBy('preference_id');
+        $prefSrch->addOrder('preference_display_order');
         $prefSrch->addMultipleFields(array('preference_id', 'preference_type', 'IFNULL(preference_title, preference_identifier) as preference_titles'));
         $prefRs = $prefSrch->getResultSet();
         $teacherPreferences = FatApp::getDb()->fetchAll($prefRs);
@@ -202,7 +203,7 @@ class Common
         $spokenLangSrch->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = '. CommonHelper::getLangId(), 'sl_lang');
         $spokenLangSrch->addGroupBy('utsl_slanguage_id');
         $spokenLangSrch->addMultipleFields(array( 'slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name'));
-
+        $spokenLangSrch->addOrder('slanguage_display_order');
         $spokenLangRs = $spokenLangSrch->getResultSet();
         $spokenLangsArr = FatApp::getDb()->fetchAllAssoc($spokenLangRs);
         $template->set('spokenLangsArr', $spokenLangsArr);

@@ -34,6 +34,7 @@ Bug Fixes:
     *Bug-#044114-remove category type from navigation dropdopwn
     *Bug-#043930: Fixed issue for change order status by admin, not reflect on statistics
     *Bug-#043896: Ui issues in group class search view
+    *Bug-#044126: Sort teaching/spoken languages and teacher preferences
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925
