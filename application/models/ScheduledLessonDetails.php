@@ -208,8 +208,6 @@ class ScheduledLessonDetails extends MyAppModel
         return $row;
     }
 
-
-
     public function refundToLearner($learner=false, $addCancelledLessonCount = false)
     {
 		$db = FatApp::getDb();

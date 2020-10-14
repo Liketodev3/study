@@ -35,6 +35,7 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			case 'order_is_paid':
 					$status = Order::getPaymentStatusArr($adminLangId);
+                    unset($status[Order::ORDER_IS_PENDING]);
                     if($row[$key]==Order::ORDER_IS_CANCELLED){
                         $status = array(Order::ORDER_IS_CANCELLED => $status[Order::ORDER_IS_CANCELLED]);
                     }

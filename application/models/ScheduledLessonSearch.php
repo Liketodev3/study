@@ -75,15 +75,6 @@ class ScheduledLessonSearch extends SearchBase
         $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
     }
 
-    public function joinScheduledLessonDetail()
-    {
-        if($this->isScheduledLessonDetailJoined === false) {
-            $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
-            $this->isScheduledLessonDetailJoined =  true;
-        }
-    }
-
-
     public function joinTeacher()
     {
         $this->joinTable(User::DB_TBL, 'INNER JOIN', 'ut.user_id = slns.slesson_teacher_id', 'ut');
@@ -169,7 +160,6 @@ class ScheduledLessonSearch extends SearchBase
         }
     }
 
-
     public function joinOrder()
     {
         if (true === $this->isOrderJoined) {
@@ -204,9 +194,7 @@ class ScheduledLessonSearch extends SearchBase
 		$getLessonRescheduleLogObj->doNotCalculateRecords();
         $getLessonRescheduleLogObj->doNotLimitRecords();
 		$this->joinTable("(".$getLessonRescheduleLogObj->getQuery().")", 'LEFT JOIN', 'lrsl.lesreschlog_slesson_id = slns.slesson_id', 'lrsl');
-
     }
-
 
     public function joinTeacherOfferPrice($teacherId)
     {
@@ -245,6 +233,7 @@ class ScheduledLessonSearch extends SearchBase
         $count = $srchRelLsnToPln->recordCount();
         return $count;
     }
+    
     public function joinRatingReview()
     {
         $this->joinTable(TeacherLessonReview::DB_TBL, 'LEFT OUTER JOIN', 'ut.user_id = tlr.tlreview_teacher_user_id AND tlr.tlreview_status = '. TeacherLessonReview::STATUS_APPROVED, 'tlr');
@@ -252,6 +241,7 @@ class ScheduledLessonSearch extends SearchBase
         $this->addMultipleFields(array("ROUND(AVG(tlrating_rating),2) as teacher_rating","count(DISTINCT tlreview_id) as totReviews"));
     }
     /***************/
+    
     public function joinUserTeachLanguages($langId = 0)
     {
         $langId = FatUtility::int($langId);

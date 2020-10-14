@@ -519,38 +519,46 @@ class PurchasedLessonsController extends AdminBaseController
         /* [ */
         if($data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['order_net_amount'] > 0) {
             $assignValues = array('slesson_status' => ScheduledLesson::STATUS_CANCELLED);
-
-            if ($orderInfo['slesson_grpcls_id']==0 && !$db->updateFromArray(ScheduledLesson::DB_TBL, $assignValues, array('smt' => 'slesson_id = ?', 'vals' => array($orderInfo['slesson_id'])))) {
-                $db->rollbackTransaction();
-                $this->error = $db->getError();
-                if(FatUtility::isAjaxCall()) {
-                    FatUtility::dieJsonError($this->error);
+            
+            $scheduledLessonSrch = new ScheduledLessonSearch();
+            $scheduledLessonSrch->addMultipleFields(array(
+                'sldetail_id',
+                'slesson_id',
+                'slesson_grpcls_id',
+                'slesson_status',
+                'sldetail_learner_status',
+            ));
+            $scheduledLessonSrch->addCondition('sldetail_order_id', '=', $orderInfo['order_id']);
+            $scheduledLessonSrch->addCondition('sldetail_learner_status', '!=', ScheduledLesson::STATUS_CANCELLED);
+            $scheduledLessonSrch->addCondition('slesson_status', '!=', ScheduledLesson::STATUS_CANCELLED);
+            $orderLessons = FatApp::getDb()->fetchAll($scheduledLessonSrch->getResultSet());
+            
+            foreach($orderLessons as $orderLesson){
+                
+                if ($orderLesson['slesson_grpcls_id']==0 && !$db->updateFromArray(ScheduledLesson::DB_TBL, $assignValues, array('smt' => 'slesson_id = ?', 'vals' => array($orderLesson['slesson_id'])))) {
+                    $db->rollbackTransaction();
+                    $this->error = $db->getError();
+                    if(FatUtility::isAjaxCall()) {
+                        FatUtility::dieJsonError($this->error);
+                    }
+                    return false;
                 }
-                return false;
-            }
 
-            $schLesDetSrchObj = new ScheduledLessonDetailsSearch();
-            $schLesDetSrchObj->addFld('sldetail_id');
-            $schLesDetSrchObj->addCondition('sldetail_order_id', '=', $data['order_id']);
-            $schLesDetSrchObj->addCondition('sldetail_learner_status', '!=', ScheduledLesson::STATUS_CANCELLED);
-            $schLesDetSrchObj->addCondition('sldetail_learner_status', '!=', ScheduledLesson::STATUS_COMPLETED);
-            $lesDetails = FatApp::getDb()->fetchAll($schLesDetSrchObj->getResultSet());
-            foreach($lesDetails as $lesDetail){
-                $schLesDetObj = new ScheduledLessonDetails($lesDetail['sldetail_id']);
+                $schLesDetObj = new ScheduledLessonDetails($orderLesson['sldetail_id']);
                 if(!$schLesDetObj->refundToLearner()){
                     $db->rollbackTransaction();
                     FatUtility::dieJsonError($db->getError());
                 }
-            }
 
-            $assignValues = array('sldetail_learner_status' => ScheduledLesson::STATUS_CANCELLED);
-            if (!$db->updateFromArray(ScheduledLessonDetails::DB_TBL, $assignValues, array('smt' => 'sldetail_order_id = ?', 'vals' => array($data['order_id'])))) {
-                $db->rollbackTransaction();
-                $this->error = $db->getError();
-                if(FatUtility::isAjaxCall()) {
-                    FatUtility::dieJsonError($this->error);
+                $assignValues = array('sldetail_learner_status' => ScheduledLesson::STATUS_CANCELLED);
+                if (!$db->updateFromArray(ScheduledLessonDetails::DB_TBL, $assignValues, array('smt' => 'sldetail_order_id = ?', 'vals' => array($data['order_id'])))) {
+                    $db->rollbackTransaction();
+                    $this->error = $db->getError();
+                    if(FatUtility::isAjaxCall()) {
+                        FatUtility::dieJsonError($this->error);
+                    }
+                    return false;
                 }
-                return false;
             }
         }
         $db->commitTransaction();

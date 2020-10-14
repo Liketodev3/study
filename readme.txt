@@ -32,6 +32,7 @@ Bug Fixes:
     *Bug-#043876: Cancelled order/lesson not allowed to change status
     *Bug-#043815-send verification link on reset password option too
     *Bug-#044114-remove category type from navigation dropdopwn
+    *Bug-#043930: Fixed issue for change order status by admin, not reflect on statistics
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925
