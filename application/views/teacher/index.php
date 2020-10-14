@@ -85,7 +85,7 @@
 
                                 ?></p>
                                 <?php if($viewProfile){ ?>
-                                <p><a href="<?php echo CommonHelper::generateUrl('Teachers').'/'. $userDetails['user_url_name'] ?>" class="-link-underline link-color"> <?php echo Label::getLabel('LBL_View_Profile'); ?> </a></p>
+                                <p><a href="<?php echo CommonHelper::generateUrl('Teachers', 'profile').'/'. $userDetails['user_url_name'] ?>" class="-link-underline link-color"> <?php echo Label::getLabel('LBL_View_Profile'); ?> </a></p>
                                 <?php } ?>
                             </div>
 

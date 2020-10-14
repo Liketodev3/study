@@ -6,7 +6,7 @@
                 </div>
                 <div class="<?php if( count($lessons) > 4 ): ?> vert-carousel <?php endif; ?>">
                 <?php foreach($lessons as $lesson){ 
-				$teacherUrl = CommonHelper::generateUrl('Teachers').'/'. $lesson['user_url_name'];
+				$teacherUrl = CommonHelper::generateUrl('Teachers', 'profile').'/'. $lesson['user_url_name'];
 				?>
                     <div class="repeat-listing -border">
                         <div class="row justify-content-between">

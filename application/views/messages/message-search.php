@@ -22,7 +22,7 @@
 
                                             <div class="">
                                                 <?php if($otherUserDetail['user_is_teacher'] == applicationConstants::YES){
-                                                        $teacherUrl = CommonHelper::generateUrl('Teachers').'/'. $otherUserDetail['user_url_name'];
+                                                        $teacherUrl = CommonHelper::generateUrl('Teachers', 'profile').'/'. $otherUserDetail['user_url_name'];
                                                 ?>
                                                     <a href='<?php echo $teacherUrl; ?>' class="btn btn--small btn--secondary view-teacher-link"><?php echo Label::getLabel('LBL_View_Teacher') ?></a>
                                                 <?php } ?>
