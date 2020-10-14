@@ -116,6 +116,7 @@ class TeachingLanguage extends MyAppModel
         $skillSrch->addGroupBy('utpref_user_id');
         $teachingLangSrch->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
         /* ] */
+        $teachingLangSrch->addOrder('tlanguage_display_order');
         $teachingLangSrch->doNotCalculateRecords();
         $teachingLangSrch->setPageSize(6);
         $teachingLangSrch->addOrder('teacherCount', 'desc');
@@ -133,6 +134,7 @@ class TeachingLanguage extends MyAppModel
         $teachingLangSrch->doNotCalculateRecords();
         $teachingLangSrch->addMultipleFields(array('GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
         $teachingLangSrch->addCondition('tlanguage_id', '=', $tLangId);
+        $teachingLangSrch->addOrder('tlanguage_display_order');
         $rs = $teachingLangSrch->getResultSet();
         $teachingLanguagesArr = FatApp::getDb()->fetch($rs);
         return $teachingLanguagesArr['teacherTeachLanguageName'];

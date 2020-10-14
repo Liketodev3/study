@@ -115,6 +115,7 @@ class SpokenLanguage extends MyAppModel
         $skillSrch->addGroupBy('utpref_user_id');
         $spokenLangSrch->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
         /* ] */
+        $spokenLangSrch->addOrder('slanguage_display_order');
         $spokenLangSrch->doNotCalculateRecords();
         $spokenLangSrch->setPageSize(6);
         $rs = $spokenLangSrch->getResultSet();

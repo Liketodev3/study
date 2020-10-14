@@ -6,6 +6,11 @@ Enhancements:
 
     *Task-73053-show all learners for group class. Change sections placements
 
+    *Task-73053: Refinements in showing my lessons
+    *Task-73053: Hide Request withdrawal from wallet for learner.
+    *Task-73053: Font refinements
+    *Task-73053: Code refinement for teacher profile url
+    
 Bug Fixes:
     *Bug-#043538: Home Page Slider > On changing the home page slider, it is not being updated
     *Bug-#043486: Updated images path for about us content block
@@ -38,6 +43,8 @@ Bug Fixes:
     *Bug-#043896: Ui issues in group class search view
     *Bug-#044126: sort langs on home page on the basis of teachers count + disaplay order
 
+    *Bug-#044126: Sort teaching/spoken languages and teacher preferences
+    *Bug-#044155: Resume certificate optional
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925
@@ -56,7 +63,7 @@ Enhancements:
     *Task-73053: free trial with 0 payment must not got to checkout page. No transaction enrty can happen with 0 amount.
     *Task-73053: add loader on book session and remove "redirecting in 3 seconds" message
     *Task-73053: fix webroot url usages
-
+  
 Bug Fixes:
     *Bug-#040861: Fixed day time saving issue for updating teacher Availability
     *Bug-#043168: Failed payment page, fix contactus url 

@@ -5,9 +5,10 @@
                     <h2><?php echo Label::getLabel('LBL_Upcoming_Scheduled_Lessons'); ?></h2>
                 </div>
                 <div class="<?php if( count($lessons) > 4 ): ?> vert-carousel <?php endif; ?>">
-                <?php foreach($lessons as $lesson){
-				$teacherUrl = CommonHelper::generateUrl('Teachers').'/'. $lesson['user_url_name'];
-				?>
+
+                <?php foreach($lessons as $lesson){ 
+				$teacherUrl = CommonHelper::generateUrl('Teachers', 'profile').'/'. $lesson['user_url_name'];
+                ?>
                     <div class="repeat-listing -border">
                         <div class="row justify-content-between">
                             <div class="col-xl-2 col-md-2 date-format">

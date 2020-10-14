@@ -5,7 +5,7 @@
 	<?php
 	$proficiencyArr = SpokenLanguage::getProficiencyArr( CommonHelper::getLangId() );
 	foreach( $teachers as $teacher ){
-		$teacherUrl = CommonHelper::generateUrl('Teachers').'/'. $teacher['user_url_name'];
+		$teacherUrl = CommonHelper::generateUrl('Teachers', 'profile').'/'. $teacher['user_url_name'];
 		?>
 		<div class="box box-list -padding-30 -hover-shadow -transition">
 			<div class="box__content">

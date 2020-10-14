@@ -126,6 +126,7 @@ class TeachersController extends MyAppController {
             $cnd = $srch->addCondition('tlanguage_identifier', 'like', '%' . $keyword . '%');
             $cnd->attachCondition('tlanguage_name', 'like', '%' . $keyword . '%', 'OR');
         }
+        $srch->addOrder('tlanguage_display_order');
 		$rs = $srch->getResultSet();
         $languages = FatApp::getDb()->fetchAll($rs, 'tlanguage_id');
         $json = array();
@@ -137,15 +138,13 @@ class TeachersController extends MyAppController {
         }
         die(json_encode($json));
 	}
-	//public function view( $teacher_id ){
+
 	public function view($user_name) {
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
 		$this->_template->addCss('css/custom-full-calendar.css');
-		//$this->_template->addJs('js/popper.min.js');
-		//$this->_template->addJs('js/bootstrap.min.js');
-		//$this->_template->addCss('css/bootstrap.min.css');
+
 		$srchTeacher = new UserSearch();
 		$srchTeacher->addMultipleFields(array('user_id'));
 		$srchTeacher->addCondition('user_url_name', '=', $user_name);
@@ -261,15 +260,18 @@ class TeachersController extends MyAppController {
 		// var_dump($teacher['isAlreadyPurchasedFreeTrial']);
 		// die;
 		$teacherLessonReviewObj = new TeacherLessonReviewSearch();
+		$teacherLessonReviewObj->joinTeacher();
+		$teacherLessonReviewObj->joinLearner();
 		$teacherLessonReviewObj->joinTeacherLessonRating();
+		$teacherLessonReviewObj->joinScheduledLesson();
+		$teacherLessonReviewObj->joinScheduleLessonDetails();
 		$teacherLessonReviewObj->doNotCalculateRecords();
 		$teacherLessonReviewObj->doNotLimitRecords();
 		$teacherLessonReviewObj->addCondition('tlr.tlreview_status', '=', TeacherLessonReview::STATUS_APPROVED);
 		$teacherLessonReviewObj->addCondition('tlreview_teacher_user_id','=',$teacher_id);
 		$teacherLessonReviewObj->addMultipleFields(array("ROUND(AVG(tlrating_rating),2) as prod_rating","count(DISTINCT tlreview_id) as totReviews"));
-		$teacherLessonReviewObj->addMultipleFields(array('sum(if(tlrating_rating=1,1,0)) rated_1', 'sum(if(tlrating_rating=2,1,0)) rated_2', 'sum(if(tlrating_rating=3,1,0)) rated_3', 'sum(if(tlrating_rating=4,1,0)) rated_4', 'sum(if(tlrating_rating=5,1,0)) rated_5', 'COUNT(DISTINCT tlreview_postedby_user_id) as totStudents'));
+		$teacherLessonReviewObj->addMultipleFields(array('COUNT(DISTINCT tlreview_postedby_user_id) as totStudents'));
 		$reviews = FatApp::getDb()->fetch($teacherLessonReviewObj->getResultSet());
-		//print_r($reviews); die;
 		$this->set('reviews', $reviews);
 		$frmReviewSearch = $this->getTeacherReviewSearchForm(FatApp::getConfig('CONF_FRONTEND_PAGESIZE'));
 		$frmReviewSearch->fill(array('tlreview_teacher_user_id' => $teacher_id, 'teach_lang_name' => $teacher['teachlanguage_name']));
@@ -305,7 +307,7 @@ class TeachersController extends MyAppController {
 		$srch->joinScheduledLesson();
 		$srch->joinScheduleLessonDetails();
 		$srch->joinLessonLanguage(CommonHelper::getLangId());
-		//$srch->addCondition('tlrating_rating_type','=',TeacherLessonRating::TYPE_LESSON);
+
 		$srch->addCondition('tlr.tlreview_teacher_user_id', '=', $teacherId);
 		$srch->addCondition('tlr.tlreview_status', '=', TeacherLessonReview::STATUS_APPROVED);
 		$srch->addMultipleFields(array(
