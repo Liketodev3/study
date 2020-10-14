@@ -243,7 +243,7 @@ class TeacherRequestController extends MyAppController {
 		}
 
 		/* file handling[ */
-		$file_row = [];
+		/* $file_row = [];
 		if($uqualification_id > 0) {
 			$file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $this->userId ,$uqualification_id);
 		}
@@ -251,7 +251,7 @@ class TeacherRequestController extends MyAppController {
 			$db->rollbackTransaction();
 			Message::addErrorMessage(Label::getLabel('MSG_Please_upload_certificate'));
 			FatUtility::dieJsonError(Message::getHtml());
-		}
+		} */
 
 		if (!empty($_FILES['certificate']['tmp_name'])) {
 			if (!is_uploaded_file($_FILES['certificate']['tmp_name'])) {

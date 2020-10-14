@@ -333,7 +333,7 @@ class TeacherController extends TeacherBaseController
             FatUtility::dieJsonError($qualification->getError());
         }
 
-        $file_row = [];
+        /* $file_row = [];
 		if($uqualification_id > 0) {
 			$file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, UserAuthentication::getLoggedUserId() ,$uqualification_id);
 		}
@@ -342,7 +342,7 @@ class TeacherController extends TeacherBaseController
 			$db->rollbackTransaction();
 			Message::addErrorMessage(Label::getLabel('MSG_Please_upload_certificate'));
 			FatUtility::dieJsonError(Message::getHtml());
-		}
+		} */
 
         if (!empty($_FILES['certificate']['tmp_name'])) {
             if (!is_uploaded_file($_FILES['certificate']['tmp_name'])) {
