@@ -85,7 +85,13 @@ class CustomController extends MyAppController
     }
         public function updateUserCookies()
         {
-            $_SESSION['cookies_enabled']= true;
+            
+            if(UserAuthentication::isUserLogged()){
+                $UserCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+                $UserCookieConsent->saveOrUpdateSetting([], false);
+             }
+             
+            CommonHelper::setCookieConsent();
             return true;
         }
 

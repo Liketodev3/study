@@ -35,8 +35,16 @@ getStatisticalData = function(type){
 }
 changeCookies = function(){
 
-	fcom.ajax(fcom.makeUrl('TeacherReports','getStatisticalData'), function(res){
+	fcom.ajax(fcom.makeUrl('GuestUser','cookieForm'),'',function(t){
 		$.facebox( t,'facebox-medium cookies-popup');
+	});
+}
+saveCookieSetting = function(form){
+	if (!$(form).validate()) return;
+	var data = fcom.frmData(form);
+	fcom.updateWithAjax(fcom.makeUrl('GuestUser','saveCookieSetting'),data,function(t){
+		$('.cookie-alert').remove();
+		$.facebox.close();
 	});
 }
 $(document).ready(function(){

@@ -81,6 +81,7 @@ class MyAppController extends FatController
         if (CommonHelper::getLayoutDirection() == 'rtl') {
             $this->_template->addCss('css/style--arabic.css');
         }
+        $this->set('cookieConsent', CommonHelper::getCookieConsent());
         $this->set('currencySymbolLeft', CommonHelper::getCurrencySymbolLeft());
         $this->set('currencySymbolRight', CommonHelper::getCurrencySymbolRight());
         $this->set('siteLangId', $this->siteLangId);
@@ -88,6 +89,7 @@ class MyAppController extends FatController
         $this->set('jsVariables', $jsVariables);
         $this->set('controllerName', $controllerName);
         $this->set('action', $this->action);
+      
     }
 
     protected function getChangeEmailForm($passwordField = true)

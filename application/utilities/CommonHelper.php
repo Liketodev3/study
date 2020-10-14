@@ -1312,9 +1312,9 @@ class CommonHelper extends FatUtility
             );
     }
 
-    public static function getUserCookiesEnabled()
+    public static function getUserCookiesEnabled() : bool
     {
-        return (isset($_SESSION['cookies_enabled']) && $_SESSION['cookies_enabled']==true)?true:false;
+        return (!empty($_COOKIE[UserCookieConsent::COOKIE_NAME]));
     }
 
     public static function getDefaultCurrencySymbol()
@@ -1664,5 +1664,31 @@ class CommonHelper extends FatUtility
             }
         }
         return $teachLangsStr = implode($teachLangs, ', ');
+    }
+
+    public static function setCookieConsent(string $value = '')
+    {
+        if(empty($value)) {
+            $value = json_encode(UserCookieConsent::fieldsArrayWithDefultValue());
+        }
+        setcookie(UserCookieConsent::COOKIE_NAME, $value, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_URL);
+    }
+
+    public static function getCookieConsent() : array
+    {
+        $settings  = [];
+        if(!empty($_COOKIE[UserCookieConsent::COOKIE_NAME])) {
+            $settings =  json_decode($_COOKIE[UserCookieConsent::COOKIE_NAME], true);
+        }
+
+        if(UserAuthentication::isUserLogged()){
+           $UserCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+           $cookieSettings = $UserCookieConsent->getCookieSettings();
+           if(!empty($cookieSettings)) {
+                $settings =  json_decode($cookieSettings, true);
+               self::setCookieConsent($cookieSettings); 
+           }
+         }
+         return $settings;
     }
 }
