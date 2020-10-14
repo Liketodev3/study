@@ -36,7 +36,7 @@
 							<!-- ] -->
 							
 							<div class="col-xl-6 col-lg-6 col-md-8 col-sm-8">
-								<h3 class="-display-inline"><a href="<?php echo CommonHelper::generateUrl('teachers').'/'.$teacher['user_url_name']; ?>"><?php echo $teacher['user_full_name']; ?></a></h3>
+								<h3 class="-display-inline"><a href="<?php echo CommonHelper::generateUrl('teachers', 'profile').'/'.$teacher['user_url_name']; ?>"><?php echo $teacher['user_full_name']; ?></a></h3>
 								
 								<?php if( $teacher['user_country_id'] > 0 ){ ?>
 								<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($teacher['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>
@@ -108,7 +108,7 @@
 										<div class="col -align-right"><?php echo $teacher['teacherTotLessons']; ?></div>
 									</div>
 								</div>
-								<a href="<?php echo CommonHelper::generateUrl('teachers').'/'.$teacher['user_url_name']; ?>" class="btn btn--secondary btn--large btn--block"><?php echo Label::getLabel('LBL_View_Profile'); ?></a>
+								<a href="<?php echo CommonHelper::generateUrl('teachers', 'profile').'/'.$teacher['user_url_name']; ?>" class="btn btn--secondary btn--large btn--block"><?php echo Label::getLabel('LBL_View_Profile'); ?></a>
 							</div>
 							<!-- ] -->
 							

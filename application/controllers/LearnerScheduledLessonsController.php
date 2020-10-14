@@ -421,7 +421,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                     );
                 if (true == User::isProfilePicUploaded($row['user_id'])) {
                     //$teacherUrl = CommonHelper::generateFullUrl('Teachers','view', array($row['user_id']));
-                    $teacherUrl = CommonHelper::generateUrl('Teachers').'/'. $row['user_url_name'];
+                    $teacherUrl = CommonHelper::generateUrl('Teachers', 'profile').'/'. $row['user_url_name'];
                     $img = CommonHelper::generateFullUrl('Image', 'User', array($row['user_id']));
                     $jsonArr[$k]['imgTag'] = '<a href="'.$teacherUrl.'"><img src="'.$img.'" /></a>';
                 } else {

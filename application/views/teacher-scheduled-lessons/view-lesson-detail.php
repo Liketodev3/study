@@ -10,10 +10,11 @@ $teacherImageTag = '';
 $teacherImage = '';
 $studentImageTag = '';
 $studentImage = '';
-$baseSeoUrl = CommonHelper::generateUrl('Teachers') . '/';
-if (true == User::isProfilePicUploaded($lessonData['learnerId'])) {
-    $studentImage = CommonHelper::generateFullUrl('Image', 'user', array($lessonData['learnerId'])) . '?' . time();
-    $studentImageTag =  '<img src="' . $studentImage . '" />';
+
+$baseSeoUrl = CommonHelper::generateUrl('Teachers', 'profile').'/';
+if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
+    $studentImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['learnerId'])).'?'.time();
+    $studentImageTag =  '<img src="'.$studentImage.'" />';
 }
 
 if (true == User::isProfilePicUploaded($lessonData['teacherId'])) {
