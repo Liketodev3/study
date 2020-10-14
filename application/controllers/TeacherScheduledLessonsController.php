@@ -237,6 +237,12 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             // 'iss.*'
         ));
 
+        $srch->addGroupBy('slesson_id');
+        $srch->addMultipleFields([
+            'group_concat(CONCAT(ul.user_first_name, " ", ul.user_last_name) separator "^") AS learnerFullName',
+            'group_concat(IFNULL(learnercountry_lang.country_name, ifnull(learnercountry.country_code, "")) separator "^") AS learnerCountryName',
+        ]);
+        
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
         if (!$lessonRow) {

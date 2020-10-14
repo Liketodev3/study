@@ -4,6 +4,8 @@ New Features:
 
 Enhancements:
 
+    *Task-73053-show all learners for group class. Change sections placements
+
 Bug Fixes:
     *Bug-#043538: Home Page Slider > On changing the home page slider, it is not being updated
     *Bug-#043486: Updated images path for about us content block
@@ -35,6 +37,7 @@ Bug Fixes:
     *Bug-#043930: Fixed issue for change order status by admin, not reflect on statistics
     *Bug-#043896: Ui issues in group class search view
     *Bug-#044126: sort langs on home page on the basis of teachers count + disaplay order
+
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925

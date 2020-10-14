@@ -129,46 +129,6 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                 <div id="tab1" class="tabs-content-js">
                     <div class="col-list col-list--full -no-padding">
                         <div class="">
-                            <div class="col-xl-12">
-                                <h6><?php echo Label::getLabel('LBL_Learner_Details'); ?></h6>
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <div class="avtar avtar--small" data-text="<?php echo CommonHelper::getFirstChar($lessonData['learnerFname']); ?>">
-                                            <?php echo $studentImageTag; ?>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h6><?php echo $lessonData['learnerFullName']; ?></h6>
-                                        <p><?php echo $lessonData['learnerCountryName']; ?> <br>
-                                            <?php
-                                            /* echo $lessonData['learnerTimeZone']."<br />";
-                                              echo CommonHelper::getDateOrTimeByTimeZone($lessonData['learnerTimeZone'],'H:i A P'); */ ?>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <div class="col-xl-12">
-                                <h6><?php echo Label::getLabel('LBL_Teacher_Details'); ?></h6>
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <div class="avtar avtar--small" data-text="<?php echo CommonHelper::getFirstChar($lessonData['teacherFname']); ?>">
-                                            <?php echo $teacherImageTag; ?>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h6><?php echo $lessonData['teacherFullName']; ?></h6>
-                                        <p><?php echo $lessonData['teacherCountryName']; ?> <br>
-                                            <?php /* echo $lessonData['teacherTimeZone']."<br />";
-                                              echo CommonHelper::getDateOrTimeByTimeZone($lessonData['teacherTimeZone'],'H:i A P'); */ ?>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr>
 
                             <div class="col-xl-12">
                                 <h6><?php echo Label::getLabel('LBL_Lesson_Details'); ?></h6>
@@ -354,6 +314,49 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                                 </div>
                             </div>
 
+                            <hr>
+                            <div class="col-xl-12">
+                                <h6><?php echo ($lessonData['slesson_grpcls_id'] == 0) ? Label::getLabel('LBL_Learner_Details') :
+                                Label::getLabel('LBL_Learners'); ?></h6>
+                                <div class="d-flex align-items-center">
+                                    <?php if ($lessonData['slesson_grpcls_id'] == 0) { ?>
+                                        <div>
+                                            <div class="avtar avtar--small" data-text="<?php echo CommonHelper::getFirstChar($lessonData['learnerFname']); ?>">
+                                                <?php echo $studentImageTag; ?>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                    <div>
+                                        <?php if ($lessonData['slesson_grpcls_id'] == 0) { ?>
+                                            <h6><?php echo $lessonData['learnerFullName']; ?></h6>
+                                            <p><?php echo $lessonData['learnerCountryName']; ?></p>
+                                        <?php
+                                        } else {
+                                            $learnerNames = explode('^', $lessonData['learnerFullName']);
+                                            $numLearners = count($learnerNames);
+                                            $learnerCountries = explode('^', $lessonData['learnerCountryName']);
+                                        ?>
+                                            <ol>
+                                                <?php
+                                                for ($i = 0; $i < $numLearners; $i++) {
+                                                ?>
+                                                    <li>
+                                                        <span><?php echo $learnerNames[$i]; ?> <?php if($learnerCountries[$i]){ 
+                                                        echo '(' . $learnerCountries[$i] . ')';
+                                                        } ?></span>
+                                                    </li>
+                                                <?php
+                                                }
+                                                ?>
+                                            </ol>
+                                        <?php
+                                        }
+                                        ?>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -408,7 +411,6 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
 </section>
 
 <script>
-
     var curDate = "<?php echo $curDate; ?>";
     var startTime = "<?php echo $startTime; ?>";
     var endTime = "<?php echo $endTime; ?>";
@@ -625,7 +627,6 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
         $(".tabs-content-js:first").show();
 
         $(".tabs-js li").click(function() {
-            debugger;
             $(".tabs-js li").removeClass("is-active");
             $(this).addClass("is-active");
             $(".tabs-content-js").hide();
@@ -633,5 +634,6 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
             $(activeTab).fadeIn();
             return false;
         });
+        /* checkEveryMinuteStatus(); */
     });
 </script>
