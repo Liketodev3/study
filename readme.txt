@@ -33,6 +33,7 @@ Bug Fixes:
     *Bug-#043815-send verification link on reset password option too
     *Bug-#044114-remove category type from navigation dropdopwn
     *Bug-#043930: Fixed issue for change order status by admin, not reflect on statistics
+    *Bug-#043896: Ui issues in group class search view
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925

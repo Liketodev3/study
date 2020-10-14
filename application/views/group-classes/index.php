@@ -2,7 +2,8 @@
 <?php $frmSrch->setFormTagAttribute ( 'onSubmit', 'search(this); return(false);' );
 $frmSrch->setFormTagAttribute ( 'class', '' );
 $frmSrch->getField( 'btnSrchSubmit' )->setFieldTagAttribute('class', 'form__action');
- ?>
+$frmSrch->getField( 'keyword' )->setFieldTagAttribute('class', 'keyword-search');
+?>
  
  <section class="section section--search">
     <div class="container container--narrow">

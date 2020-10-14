@@ -488,10 +488,12 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     position: absolute;
     right: 0;
     top: 0;
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 50px;
 }
-
+.form-search--inline .keyword-search {
+    padding: 0 40px 0 20px;
+}
 .form-search .form__action-wrap .svg-icon {
     position: absolute;
     right: 0;
@@ -7784,3 +7786,5 @@ color: #fff;}
     100% {
       -webkit-transform: rotateZ(360deg);
               transform: rotateZ(360deg); } }
+
+
