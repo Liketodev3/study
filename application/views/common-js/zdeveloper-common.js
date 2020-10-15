@@ -223,11 +223,12 @@ $(document).ready(function(){
 		}
 
 		$(".cc-cookie-accept-js").click(function () {
-		fcom.ajax(fcom.makeUrl('Custom', 'updateUserCookies'), '', function (t) {
-				$(".cookie-alert").hide('slow');
-				$(".cookie-alert").remove();
+				fcom.ajax(fcom.makeUrl('Custom', 'updateUserCookies'), '', function (t) {
+						$(".cookie-alert").hide('slow');
+						$(".cookie-alert").remove();
+						$.facebox.close();
+				});
 		});
-});
 
 
         //When page loads...
