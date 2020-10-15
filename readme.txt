@@ -1,17 +1,31 @@
 This file shares the details of YoCoach version and features.
 
+Release Version: TV-2.2.0.20201015
+Release Date: 2020/10/15
+
+
 New Features:
+    *Task-77275: Google analytics stats on admin dashboard
 
 Enhancements:
 
-    *Task-73053-show all learners for group class. Change sections placements
+    *Task-73053:
+        - Show all learners for group class. Rearranged lession details elements.
+        - Refinements in showing my lessons
+        - Hide Request withdrawal from wallet for learner.
+        - Font refinements
+        - Code refinement for teacher profile url. Update teacher profile url
+        - Admin can swtich flashcards on/off.
+        - Optmize tutor search
+        - Remove email being sent on send message action.
+        - Clean email archives after every month.
+        - Update about us page content and remove third party api keys from db
+        - Showing home page slider images and certificate validation
+        - Hide trail btn if teacher disabled the free trail option
+        - Hide the rating section from user profile, if tutor has no rating
 
-    *Task-73053: Refinements in showing my lessons
-    *Task-73053: Hide Request withdrawal from wallet for learner.
-    *Task-73053: Font refinements
-    *Task-73053: Code refinement for teacher profile url
     
-Bug Fixes:
+Bug Resolved:
     *Bug-#043538: Home Page Slider > On changing the home page slider, it is not being updated
     *Bug-#043486: Updated images path for about us content block
     *Bug-#043739: Fixed image rotation issue
@@ -33,18 +47,23 @@ Bug Fixes:
     *Bug-#043790: fix contact us page links
     *Bug-#043772: Fix lesson end popup.
     *Bug-#043926: Sort My Teachers and the teaching langs.
-    *Bug-#043894: fix filters on fav teachers page
+    *Bug-#043894: Fix filters on fav teachers page
     *Bug-#043792: Error handling on posting a bigger image than allowed size.
-    *Bug-#043915: display report issue link for expired lessons.
+    *Bug-#043915: Display report issue link for expired lessons.
     *Bug-#043876: Cancelled order/lesson not allowed to change status
-    *Bug-#043815: send verification link on reset password option too
-    *Bug-#044114: remove category type from navigation dropdopwn
+    *Bug-#043815: Send verification link on reset password option too
+    *Bug-#044114: Remove category type from navigation dropdopwn
     *Bug-#043930: Fixed issue for change order status by admin, not reflect on statistics
     *Bug-#043896: Ui issues in group class search view
-    *Bug-#044126: sort langs on home page on the basis of teachers count + disaplay order
-
+    *Bug-#044126: Sort langs on home page on the basis of teachers count + disaplay order
     *Bug-#044126: Sort teaching/spoken languages and teacher preferences
     *Bug-#044155: Resume certificate optional
+    *Bug-#043905: security fixes such as:
+        - Remove invalid content-Security-Policy header
+        - Set cookie params
+    *Bug-#043884: Add loader on wallet page
+
+
 
 --------------------------------------
 Release Version: TV-2.1.1.20200925
