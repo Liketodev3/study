@@ -215,7 +215,7 @@ class TeacherRequestController extends MyAppController {
 			$frm->fill($row);
 			$file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $this->userId , $uqualification_id);
 			$field = $frm->getField('certificate');
-			$certificateRequried =  (empty($file_row)) ? true : false;
+			$certificateRequried =  false;//(empty($file_row)) ? true : false;
 			$field->requirements()->setRequired($certificateRequried);
 		}
 		$this->set('frm', $frm);

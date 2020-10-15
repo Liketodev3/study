@@ -305,7 +305,7 @@ class TeacherController extends TeacherBaseController
             $rs = $srch->getResultSet();
             $row = FatApp::getDb()->fetch($rs);
             $file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, UserAuthentication::getLoggedUserId() , $uqualification_id);
-            $certificateRequried =  (empty($file_row)) ? true : false;
+            $certificateRequried =  false;//(empty($file_row)) ? true : false;
             $field = $experienceFrm->getField('certificate');
             $field->requirements()->setRequired($certificateRequried);
             $experienceFrm->fill($row);

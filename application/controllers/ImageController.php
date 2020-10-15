@@ -373,13 +373,14 @@ class ImageController extends FatController
                 $w = 1903;
                 $h = 749;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
+                return;
                 break;
             default:
                 $w = 2000;
                 $h = 360;
                 break;
             }
-                AttachedFile::displayImage($image_name, $w, $h, $default_image,'', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
+            AttachedFile::displayImage($image_name, $w, $h, $default_image,'', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
         } else {
             AttachedFile::displayOriginalImage($image_name, $default_image, '',  true);
         }
