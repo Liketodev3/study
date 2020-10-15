@@ -116,7 +116,6 @@ class TeachingLanguage extends MyAppModel
         $skillSrch->addGroupBy('utpref_user_id');
         $teachingLangSrch->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
         /* ] */
-        $teachingLangSrch->addOrder('tlanguage_display_order');
         $teachingLangSrch->doNotCalculateRecords();
         $teachingLangSrch->setPageSize(6);
         $teachingLangSrch->addOrder('teacherCount', 'desc');

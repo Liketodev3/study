@@ -10,7 +10,7 @@ $teach_lang->developerTags['col'] = 6;
 ?>
 <div class="section-head">
  <div class="d-flex justify-content-between align-items-center">
-	 <div><h5 class="page-heading"><?php echo Label::getLabel('LBL_Resume'); ?></h5></div>
+	 <div><h5 class="page-heading"><?php echo Label::getLabel('LBL_Skills'); ?></h5></div>
  </div>
 </div>
 <?php echo $teacherPreferencesFrm->getFormHtml();?>
