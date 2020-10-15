@@ -261,11 +261,16 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         
         $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonRow['teacherId'], $lessonRow['slesson_id'], $lessonRow['learnerId']);
 
-        /* flashCardSearch Form[ */
-        $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
-        $frmSrchFlashCard->fill(array('lesson_id' => $lessonRow['slesson_id']));
-        $this->set('frmSrchFlashCard', $frmSrchFlashCard);
-        /* ] */
+        $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
+        if($flashCardEnabled){
+            /* flashCardSearch Form[ */
+            $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
+            $frmSrchFlashCard->fill(array('lesson_id' => $lessonRow['slesson_id']));
+            $this->set('frmSrchFlashCard', $frmSrchFlashCard);
+            /* ] */
+        }
+
+        $this->set('flashCardEnabled', $flashCardEnabled);
         $this->set('is_issue_reported', $is_issue_reported);
         $this->set('lessonData', $lessonRow);
         $this->set('countReviews', $countReviews);

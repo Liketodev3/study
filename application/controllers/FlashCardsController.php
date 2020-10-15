@@ -4,6 +4,9 @@ class FlashCardsController extends LoggedUserController
     public function __construct($action)
     {
         parent::__construct($action);
+        if(!FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true)){
+            FatUtility::exitWithErrorCode(404);
+        }
     }
 
     public function index()

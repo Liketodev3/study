@@ -123,7 +123,9 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
             <div class="tab-horizontal tabs-js">
                 <ul>
                     <li class="is-active"><a href="#tab1"><?php echo Label::getLabel('LBL_Info'); ?></a></li>
+                    <?php if($flashCardEnabled){ ?>
                     <li><a href="#tab2" id="li_tab2"><?php echo Label::getLabel('LBL_Flashcards'); ?></a></li>
+                    <?php } ?>
                 </ul>
             </div>
             <div class="tab-data-container">
@@ -361,7 +363,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                         </div>
                     </div>
                 </div>
-
+                <?php if($flashCardEnabled){ ?>
                 <div id="tab2" class="tabs-content-js">
                     <div class="box">
                         <div class="box-head">
@@ -406,12 +408,14 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                         </div>
                     </div>
                 </div>
+                <?php } ?>
             </div>
         </div>
     </div>
 </section>
 
 <script>
+    var flashCardEnabled = '<?php echo $flashCardEnabled?:0 ?>';
     var curDate = "<?php echo $curDate; ?>";
     var startTime = "<?php echo $startTime; ?>";
     var endTime = "<?php echo $endTime; ?>";
@@ -531,6 +535,9 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
     }
 
     function checkNewFlashCards() {
+        if((typeof flashCardEnabled !== typeof undefined) && !flashCardEnabled){
+            return;
+        }
         checkNewFlashCardsVar = setInterval(function() {
             searchFlashCards(document.frmFlashCardSrch);
         }, 30000)

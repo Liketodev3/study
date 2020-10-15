@@ -294,12 +294,16 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatApp::redirectUser(CommonHelper::generateUrl('LearnerScheduledLessons'));
         }
 
-        /* flashCardSearch Form[ */
-        $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
-        $frmSrchFlashCard->fill(array('lesson_id' => $lessonRow['slesson_id']));
-        $this->set('frmSrchFlashCard', $frmSrchFlashCard);
-        /* ] */
-
+        $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
+        if($flashCardEnabled){
+            /* flashCardSearch Form[ */
+            $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
+            $frmSrchFlashCard->fill(array('lesson_id' => $lessonRow['slesson_id']));
+            $this->set('frmSrchFlashCard', $frmSrchFlashCard);
+            /* ] */
+        }
+        
+        $this->set('flashCardEnabled', $flashCardEnabled);
         $this->set('lessonData', $lessonRow);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
         $this->_template->render(false, false);

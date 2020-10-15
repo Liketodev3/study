@@ -64,7 +64,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 			<?php echo Label::getLabel('LBL_Issue_Reported'); ?>
 			</a>
 		</li>
-
+		<?php if(FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true)){ ?>
 		<li class="<?php echo ( $controllerName == "FlashCards" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('FlashCards'); ?>">
 				<span class="menu-icon">
@@ -76,6 +76,7 @@ if( User::canViewTeacherTab() && User::canViewLearnerTab() && $showSwitcher ){ ?
 				<?php echo Label::getLabel('LBL_FlashCards'); ?>
 			</a>
 		</li>
+		<?php } ?>
 
 		<li class="<?php echo ( $controllerName == "Giftcard" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('Giftcard'); ?>">

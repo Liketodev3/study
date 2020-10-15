@@ -54,7 +54,7 @@
 				<?php echo Label::getLabel('LBL_Teachers'); ?>
 			</a>
 		</li>
-
+		<?php if(FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true)){ ?>
 		<li class="<?php echo ( $controllerName == "FlashCards" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('FlashCards'); ?>">
 				<span class="menu-icon">
@@ -66,7 +66,7 @@
 				<?php echo Label::getLabel('LBL_FlashCards'); ?>
 			</a>
 		</li>
-
+		<?php } ?>
 		<li class="<?php echo ( $controllerName == "Giftcard" ) ? 'is-active' : ''; ?>">
 			<a href="<?php echo CommonHelper::generateUrl('Giftcard'); ?>">
 				<span class="menu-icon">

@@ -95,3 +95,5 @@ CREATE EVENT event_clean_email_archives ON SCHEDULE EVERY 1 MONTH ENABLE
   DO 
   delete from tbl_email_archives
   WHERE `emailarchive_sent_on` < CURRENT_TIMESTAMP - INTERVAL 1 MONTH;
+
+INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ENABLE_FLASHCARD', 1, 0);

@@ -25,6 +25,9 @@ $(function() {
 	};
 
 	searchFlashCards = function(frm){
+		if((typeof flashCardEnabled !== typeof undefined) && !flashCardEnabled){
+            return;
+        }
 		$('#flashCardListing').html(fcom.getLoader());
 		var data = fcom.frmData(frm);
 		fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','searchFlashCards'),data,function(t){
