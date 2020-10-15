@@ -1411,42 +1411,5 @@ class GuestUserController extends MyAppController
         $this->logout();
     }
 
-    public function cookieForm()
-    {
-        $cookieForm = $this->getCookieForm();
-        $this->set('cookieForm',$cookieForm);
-        $this->_template->render(false, false);
-    }
-
-    private function getCookieForm()
-    {
-        $form =  new Form('cookieForm');
-        $checkboxValue =  applicationConstants::YES;
-        $form->addCheckBox(Label::getLabel('LBL_Necessary'), UserCookieConsent::COOKIE_NECESSARY_FIELD, $checkboxValue, array(), true, 0);
-        $form->addCheckBox(Label::getLabel('LBL_Preferences'), UserCookieConsent::COOKIE_PREFERENCES_FIELD, $checkboxValue, array(), true, 0);
-        $form->addCheckBox(Label::getLabel('LBL_Statistics'), UserCookieConsent::COOKIE_STATISTICS_FIELD, $checkboxValue, array(), true, 0);
-       // $form->addCheckBox(Label::getLabel('LBL_Marketing'), UserCookieConsent::COOKIE_MARKETING_FIELD, $checkboxValue, array(), true, 0);
-        $form->addSubmitButton('','btn_submit', Label::getLabel('LBL_Allow'));
-        return $form;
-    }
-
-    public function saveCookieSetting()
-    {
-        $cookieForm = $this->getCookieForm();
-
-         $data = $cookieForm->getFormDataFromArray(FatApp::getPostedData());
-         if ($data == false) {
-             Message::addErrorMessage(current($cookieForm->getValidationErrors()));
-             FatUtility::dieJsonError(Message::getHtml());
-         }
-         unset($data['btn_submit']);
-         if(UserAuthentication::isUserLogged()){
-            $UserCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
-            $UserCookieConsent->saveOrUpdateSetting($data, false);
-         }
-         $data = json_encode($data);
-         CommonHelper::setCookieConsent($data);
-         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Cookie_settings_update_successfully'));
-    }
 
 }

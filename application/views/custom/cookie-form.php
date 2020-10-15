@@ -32,4 +32,3 @@ $cookieForm->setFormTagAttribute('onsubmit', 'saveCookieSetting(this); return(fa
 		</div>
 	</div>
 </section>
-<?php //echo $cookieForm->getFormHtml();

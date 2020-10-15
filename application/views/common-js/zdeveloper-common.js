@@ -33,16 +33,16 @@ getStatisticalData = function(type){
 		}
 	});
 }
-changeCookies = function(){
+getCookieConsentForm = function(){
 
-	fcom.ajax(fcom.makeUrl('GuestUser','cookieForm'),'',function(t){
+	fcom.ajax(fcom.makeUrl('Custom','cookieForm'),'',function(t){
 		$.facebox( t,'facebox-medium cookies-popup');
 	});
 }
-saveCookieSetting = function(form){
+saveCookieSetting = function(form) {
 	if (!$(form).validate()) return;
 	var data = fcom.frmData(form);
-	fcom.updateWithAjax(fcom.makeUrl('GuestUser','saveCookieSetting'),data,function(t){
+	fcom.updateWithAjax(fcom.makeUrl('Custom','saveCookieSetting'),data,function(t){
 		$('.cookie-alert').remove();
 		$.facebox.close();
 	});

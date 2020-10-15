@@ -94,6 +94,11 @@
 									<?php echo Label::getLabel('LBL_Password_/_Email');?>
 								</a>
 							</li>
+							<li class="">
+								<a href="javascript:void(0);" onClick="getCookieConsentForm()">
+									<?php echo Label::getLabel('LBL_cookie_consent');?>
+								</a>
+							</li>
 					</ul>
 				</div>
 
@@ -103,17 +108,6 @@
 						<?php echo Label::getLabel('LBL_Loading..'); ?>
 					</div>
 				</div>
-
-				<?php
-				/* <div class="cols--group">
-					<!--div class="panel__head">
-					<h2><?php echo Label::getLabel('LBL_Profile');?></h2>
-					<?php  if( $showTeacherActivateButton ){ ?>
-					<a href="<?php echo CommonHelper::generateUrl('Teacher');?>" class="btn btn--secondary btn--sm panel__head_action" title="<?php echo Label::getLabel('LBL_Activate_Teacher_Account'); ?>" ><strong> <?php echo Label::getLabel('LBL_Activate_Teacher_Account'); ?></strong> </a>
-					<?php  } ?>
-					</div-->
-				</div> */
-				?>
 
 			</div>
 		</div>
