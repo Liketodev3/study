@@ -279,7 +279,7 @@ class MessagesController extends LoggedUserController
             FatUtility::dieWithError(Label::getLabel($tObj->getError(), $this->siteLangId));
         }
         /****/
-        $toUserDate = User::getAttributesById($messageSendTo, array('user_first_name', 'user_last_name'));
+        /* $toUserDate = User::getAttributesById($messageSendTo, array('user_first_name', 'user_last_name'));
         $fromUserData = User::getAttributesById($userId, array('user_first_name', 'user_last_name'));
         $db = FatApp::getDb();
         $userSrch = User::getSearchObject(true);
@@ -298,7 +298,7 @@ class MessagesController extends LoggedUserController
 
         if (!EmailHandler::sendMailTpl($toUserEmail, $tpl, $this->siteLangId, $vars)) {
             Message::addErrorMessage(Label::getLabel('LBL_Mail_not_sent', $this->siteLangId));
-        }
+        } */
         /****/
         $msg = Label::getLabel('MSG_Message_Submitted_Successfully!', $this->siteLangId);
         $this->set('threadId', $threadId);
