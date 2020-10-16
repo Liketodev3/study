@@ -1,6 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <script>
-	var userIsTeacher =  <?php echo $userIsTeacher; ?>;
+	var userIsTeacher =  <?php echo ($userIsTeacher) ? 1 : 0; ?>;
 </script>
 <section class="section section--grey section--page">
 	<div class="container container--fixed">

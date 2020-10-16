@@ -21,12 +21,13 @@ class CommonHelper extends FatUtility
         self::$_currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
 
         if (false === $isAdmin) {
-            if (isset($_COOKIE['defaultSiteLang'])) {
-                $languages = Language::getAllNames();
-                if (array_key_exists($_COOKIE['defaultSiteLang'], $languages)) {
-                    self::$_lang_id = FatUtility::int(trim($_COOKIE['defaultSiteLang']));
-                }
-            }
+            // if (isset($_COOKIE['defaultSiteLang'])) {
+            //     $languages = Language::getAllNames();
+            //     if (array_key_exists($_COOKIE['defaultSiteLang'], $languages)) {
+            //         self::$_lang_id = FatUtility::int(trim($_COOKIE['defaultSiteLang']));
+            //     }
+            // }
+            self::setSiteDefaultLang();
 
             if (isset($_COOKIE['defaultSiteCurrency'])) {
                 $currencies = Currency::getCurrencyAssoc(self::$_lang_id);
@@ -57,6 +58,39 @@ class CommonHelper extends FatUtility
         self::$_currency_code = $currencyData['currency_code'];
         self::$_currency_value = $currencyData['currency_value'];
         self::$_layout_direction = Language::getLayoutDirection(self::$_lang_id);
+    }
+
+    public static function setSiteDefaultLang()
+    {
+        $languages = array_map('strtoupper',Language::getAllCodesAssoc());
+        
+        $headerLang = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+        
+        $langId = array_search($headerLang, $languages);
+        if( $langId !== false){
+            self::$_lang_id = FatUtility::int($langId);
+        }
+        if (isset($_COOKIE['defaultSiteLang'])) {
+            if (array_key_exists($_COOKIE['defaultSiteLang'], $languages)) {
+                self::$_lang_id = FatUtility::int(trim($_COOKIE['defaultSiteLang']));
+            }
+        }
+
+        if (UserAuthentication::isUserLogged()) {
+           $userSetting = new UserSetting(UserAuthentication::getLoggedUserId(true));
+           $userSiteLangData = $userSetting->getUserSiteLang();
+           if(!empty($userSiteLangData['language_id'])){
+            self::$_lang_id = FatUtility::int($userSiteLangData['language_id']);
+            self::setDefaultSiteLangCookie(self::$_lang_id);
+           }
+        }
+
+       
+    }
+
+    public static function setDefaultSiteLangCookie(int $langId){
+
+        setcookie('defaultSiteLang', $langId, time()+3600*24*10, CONF_WEBROOT_URL);
     }
 
     public static function getLangId()

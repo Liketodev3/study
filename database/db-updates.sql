@@ -1,0 +1,1 @@
+ALTER TABLE `tbl_user_settings` ADD `us_site_lang` INT NOT NULL COMMENT 'the language which user preferred to view site content' AFTER `us_is_trial_lesson_enabled`;
