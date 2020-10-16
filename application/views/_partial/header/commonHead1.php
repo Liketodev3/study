@@ -4,7 +4,7 @@ if( $controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
 }
 ?>
 <!DOCTYPE html>
-<html prefix="og: http://ogp.me/ns#">
+<html prefix="og: http://ogp.me/ns#" class="<?php echo (FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1) && CommonHelper::demoUrl()) ? 'sticky-demo-header': '' ?>">
 <head>
 <meta charset="utf-8">
 <meta name="author" content="">

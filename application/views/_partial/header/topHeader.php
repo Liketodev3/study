@@ -1,7 +1,15 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 
 <header id="header" class="header">
+
+<?php
+if(FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1) && CommonHelper::demoUrl()) {
+    $this->includeTemplate( 'restore-system/header-bar.php');
+}
+?>
+<div class="main-bar">
     <div class="container container--fixed">
+
         <div class="d-flex justify-content-between align-items-center">
             <div class="header__left">
                 <a href="javascript:void(0)" class="toggle toggle--nav toggle--nav-js"><span></span></a>
@@ -59,6 +67,7 @@
                                                        </div>-->
 
                                                         <?php 	if( $notifications['noti_type'] == UserNotifications::NOTICATION_FOR_TEACHER_APPROVAL ){
+
 echo '<div class="avtar avtar--xsmall -display-inline" data-text="A"></div>';
 			}else{ ?>
                                                         <div class="avtar avtar--xsmall -display-inline" data-text="A">
@@ -97,6 +106,7 @@ echo '<div class="avtar avtar--xsmall -display-inline" data-text="A"></div>';
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </header>
 

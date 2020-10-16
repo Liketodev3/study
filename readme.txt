@@ -26,43 +26,50 @@ Enhancements:
 
     
 Bug Resolved:
-    *Bug-#043538: Home Page Slider > On changing the home page slider, it is not being updated
-    *Bug-#043486: Updated images path for about us content block
-    *Bug-#043739: Fixed image rotation issue
-    *Bug-#043738: Allow all characters for first name and last name
-    *Bug-#043562: Teacher profile language sort
-    *Bug-#043357: Apply to teach > The language values should be displayed in alphabetical order
-    *Bug-#043659: TimeZone > Change the time zone drop down values
-    *Bug-#043851: Fixed css/js issue for ipad black screen
-    *Bug-#043910: Fixed lessons Count on Teacher Dashboard
-    *Bug-#043898: Updated group class filter title
-    *Bug-#043847: Group class booking emails
-    *Bug-#043801: Hide from footer if location, phone, email is empty
-    *Bug-#043773: Hide success msg before page reload, when learner report issue
-    *Bug-#043899: Added ongoing filter, removed status filter and updated no records label
-    *Bug-#043904: Reload faviourite listing when clicked on unfavourite
-    *Bug-#043882: Added loader in Gift card search
-    *Bug-#043794: Fixed price filter issue
-    *Bug-#043878: Multiple withdrawl requests
-    *Bug-#043790: fix contact us page links
-    *Bug-#043772: Fix lesson end popup.
-    *Bug-#043926: Sort My Teachers and the teaching langs.
-    *Bug-#043894: Fix filters on fav teachers page
-    *Bug-#043792: Error handling on posting a bigger image than allowed size.
-    *Bug-#043915: Display report issue link for expired lessons.
-    *Bug-#043876: Cancelled order/lesson not allowed to change status
-    *Bug-#043815: Send verification link on reset password option too
-    *Bug-#044114: Remove category type from navigation dropdopwn
-    *Bug-#043930: Fixed issue for change order status by admin, not reflect on statistics
-    *Bug-#043896: Ui issues in group class search view
-    *Bug-#044126: Sort langs on home page on the basis of teachers count + disaplay order
-    *Bug-#044126: Sort teaching/spoken languages and teacher preferences
-    *Bug-#044155: Resume certificate optional
-    *Bug-#043905: security fixes such as:
-        - Remove invalid content-Security-Policy header
-        - Set cookie params
-    *Bug-#043884: Add loader on wallet page
-
+    *Bug:#044155: Resume certificate optional
+    *Bug:#044126: Admin > Languages > Sorting > It is not working
+    *Bug:#044114: Navigation management> Add a naviagtion page > Type 'Product Category Page' is not working
+    *Bug:#043930: "In Admin section >> when  user do any action on order status then its not totally impact on other feature like cancelled , earning,complted etc."
+    *Bug:#043926: In my teacher list>> in some search scenario/or refresh a page>> few teacher's position has changed.
+    *Bug:#043915: In teacher/learner end> why lessons whose time has been passed is showing in  schedule list.
+    *Bug:#043910: In teacher end Dashboard>>schedule lesson  and total lesson list are not match with actual.
+    *Bug:#043905: "Please check doc related to security concern,"
+    *Bug:#043904: In Favorite screen >> when user  unfavorite any teacher from favorite list then color of button is not changed and text of button is also not changed.
+    *Bug:#043903: In favorite list>>When user remove any teacher from favorite list then  teacher  is still showing in the screen.
+    *Bug:#043902: In discount coupon>> when user see add multiple lines description  in admin section then at front end its showing  with long scrolling page.
+    *Bug:#043899: In group class>> filters>> need to add one more option in status filter like Expired(whose time has passed).
+    *Bug:#043898: "In  group class - Filters> All filter default text is Select> Please add label according to language, status etc."
+    *Bug:#043896: Ui issues in group class search view
+    *Bug:#043894: Filter is not working properly in teacher screen.
+    *Bug:#043884: In request withdrwal form>> when user click on request withdrawal form then it take time to load.a
+    *Bug:#043882: In gift card purchase screen>> both teacher/learner end. loader not showing when user search any thing.
+    *Bug:#043881: "When learner open a account in ipad and view a schedule group class > now change the  browser from safari to chrome and stay on 15 seconds, do this scenario 2-3 times. now time  difference of left time is vary between teacher and learner."
+    *Bug:#043878: Suppose user have $115 in his account>>now user send request for 100 and approved from admin.
+    *Bug:#043876: "When learner buy a lesson and admin cancel the lesson after that >> in this  case refund goes to learner account. admin change the order status to ""paid"" but amount is not deduct from learner wallet"
+    *Bug:#043851: Blank screen for ipad
+    *Bug:#043847: In Group class >> when learner link through Google authorization  and book  a group class >> then scheduled group class  mail is not showing at learner end.
+    *Bug:#043815: "Sign up process is not working, when user reset the password without verification done."
+    *Bug:#043801: "Home Page > Footer > If the contact details are not added under contact info, remove the option."
+    *Bug:#043794: Find a Tech > Price Filter issues
+    *Bug:#043793: When user UPLOAD a  profile photo  via camera then picture is showing in  orientation issue and when user try to crop/rotate it then picture view hide.
+    *Bug:#043792: When user CHANGE  the profile photo in mobile resolution then error is showing
+    *Bug:#043791: When user purchase a lesson  then success message is showing  then redirection of link button is not correct.
+    *Bug:#043790: "When user purchase a lesson  then success message is showing then click on ""Web  Portal  Owner"" >> 404 error is showing."
+    *Bug:#043781: "Why ""Find a teacher"" button and ""Apply to teacher"" button interchange when user click on ""Find a teacher""."
+    *Bug:#043780: When user booked  a free trial  lesson then success message is showing with wrong alignment of text and button.
+    *Bug:#043773: When user report any issue and multiple press the submit button then  success message is showing twice.
+    *Bug:#043772: Suppose learner purchase 5 lessons(In bulk)  and schedule one lesson >>When teacher reschedule  a lesson>> end lesson pop up is showing again and again. or when teacher view the  reschedule lesson then this issue will happen. Or when teacher open a same u
+    *Bug:#043739: "On the landing page in the ""Top rated teachers"" section, the profile picture of one tutor shows upside-down (screen attached). It shows normally in the ""Find a teacher"" section."
+    *Bug:#043738: "Check the first name and last name fields in the sign up/login form? It shows an error that ""only letters are accepted"" if the user enters letters from polish alphabet like ""ą ę ś ć ź ó ł ń""."
+    *Bug:#043659: TimeZone > Change the time zone drop down values
+    *Bug:#043562: In teacher section>> settings>> language>> language(Speak and teach) in this section is not in alphabetical order.
+    *Bug:#043538: "Home Page Slider > On changing the home page slider, it is not being updated"
+    *Bug:#043486: About Us page > The images should be manageable
+    *Bug:#043207: Day time saving update teacher schedule
+    *Bug:#043124: Settings > The title is shown as 'Dashboard' instead of settings or profile
+    *Bug:#043111: Remove the twitter settings from the admin
+    *Bug:#041219: "When Any teacher(Teacher A) Create a group class and learner A and learner B Join a group class with Teacher A, Now admin cancel the  whole group class, but at front end, no notification , no updates are showing.and even leaner A and learner B can do chat"
+    *Bug:#041040: Security test report
 
 
 --------------------------------------
