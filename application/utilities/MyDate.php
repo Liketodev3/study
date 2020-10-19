@@ -48,6 +48,7 @@ class MyDate extends FatDate
 
     public static function getUserTimeZone($userId = 0)
     {
+        $user_timezone = '';
         if ($userId > 0) {
             $userRow = User::getAttributesById($userId, array( 'user_timezone'));
             $user_timezone = $userRow['user_timezone'];
@@ -55,13 +56,13 @@ class MyDate extends FatDate
             if (UserAuthentication::isUserLogged()) {
                 $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array( 'user_timezone'));
                 $user_timezone = $userRow['user_timezone'];
-            } else {
+            }elseif(!empty($_COOKIE['user_timezone'])){
                 $user_timezone = $_COOKIE['user_timezone'];
             }
         }
 
         if (empty($user_timezone)) {
-            $user_timezone = $_COOKIE['user_timezone'];
+            $user_timezone = FatApp::getConfig('CONF_TIMEZONE', FatUtility::VAR_STRING, date_default_timezone_get());
         }
 
         return $user_timezone;
@@ -72,7 +73,8 @@ class MyDate extends FatDate
         if (UserAuthentication::isUserLogged()) {
             $userDataRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array( 'user_timezone'));
             $user_timezone = $userDataRow['user_timezone'];
-            if (!empty($user_timezone)) {
+            $isActivePreferencesCookie =  (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
+            if (!empty($user_timezone) && $isActivePreferencesCookie) {
                 setcookie("user_timezone", $user_timezone, time() + 365*24*60*60, "/");
             }
         }

@@ -1438,35 +1438,7 @@ class CommonHelper extends FatUtility
         return $data;
     }
 
-    /* public static function	getTimeZoneDiff($user_tz){
-        $local_tz = new DateTimeZone(FatApp::getConfig('CONF_TIMEZONE'));
-        $local = new DateTime('now', $local_tz);
-
-
-        $user_tz = new DateTimeZone($user_tz);
-        $user = new DateTime('now', $user_tz);
-
-        $local_offset = $local->getOffset() / 3600;
-        $user_offset = $user->getOffset() / 3600;
-
-        $diff = $user_offset - $local_offset;
-        return $diff;
-    }
-
-    public static function getTimeByTimezone($user_timezone, $format='H:i A', $diff=false){
-            $timestamp = time();
-            $dt = new DateTime("now", new DateTimeZone($user_timezone));
-            $dt->setTimestamp($timestamp);
-            $time = $dt->format($format);
-            if($diff){
-                $tzDiff = self::getTimeZoneDiff($user_timezone);
-                if($tzDiff<0){
-                    return $time." (IST - ".abs($tzDiff).")";
-                 }
-                    return $time." (IST + ".abs($tzDiff).")";
-            }
-            return $time;
-    } */
+   
 
     public static function encryptId($string_to_encrypt)
     {
@@ -1682,12 +1654,15 @@ class CommonHelper extends FatUtility
         }
 
         if(UserAuthentication::isUserLogged()){
-           $UserCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
-           $cookieSettings = $UserCookieConsent->getCookieSettings();
+           $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+           $cookieSettings = $userCookieConsent->getCookieSettings();
            if(!empty($cookieSettings)) {
                 $settings =  json_decode($cookieSettings, true);
                self::setCookieConsent($cookieSettings); 
            }
+         }
+         if(empty($settings)) {
+            $settings = UserCookieConsent::fieldsArrayWithDefultValue();
          }
          return $settings;
     }

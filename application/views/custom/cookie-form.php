@@ -7,7 +7,8 @@ $cookieForm->setFormTagAttribute('autocomplete', 'off');
 $cookieForm->setFormTagAttribute('onsubmit', 'saveCookieSetting(this); return false;');
 $necessary = $cookieForm->getField(UserCookieConsent::COOKIE_NECESSARY_FIELD);
 $necessary->addFieldTagAttribute('disabled',true);
-
+$submitButton = $cookieForm->getField('btn_submit');
+$submitButton->addFieldTagAttribute('form','cookieForm');
 ?>
 
 <div class="tab-container cookie-consent">
@@ -19,9 +20,9 @@ $necessary->addFieldTagAttribute('disabled',true);
 	<div class="coookie-popup-body">
 		<div class="tabs-small tabs-offset tabs-scroll-js">
 			<ul>
-				<li><a href="#" class="tab-a is-active" data-id="tab_necessary"><?php echo Label::getLabel('LBL_Necessary'); ?></a></li>
-				<li><a href="#" class="tab-a" data-id="tab_preferences"><?php echo Label::getLabel('LBL_Preferences'); ?></a></li>
-				<li><a href="#" class="tab-a" data-id="tab_statistics"><?php echo Label::getLabel('LBL_Statistics'); ?></a></li>
+				<li><a href="javscript::void(0);" class="tab-a is-active" data-id="tab_necessary"><?php echo Label::getLabel('LBL_Necessary'); ?></a></li>
+				<li><a href="javscript::void(0);" class="tab-a" data-id="tab_preferences"><?php echo Label::getLabel('LBL_Preferences'); ?></a></li>
+				<li><a href="javscript::void(0);" class="tab-a" data-id="tab_statistics"><?php echo Label::getLabel('LBL_Statistics'); ?></a></li>
 			</ul>
 		</div>
 

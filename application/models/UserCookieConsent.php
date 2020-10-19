@@ -47,7 +47,7 @@ class UserCookieConsent extends MyAppModel
 
     public function saveOrUpdateSetting(array $settings = array(), $setSettingCookie =  true)
     {
-        $settings =  array_merge($settings, self::fieldsArrayWithDefultValue());
+        $settings =  array_merge(self::fieldsArrayWithDefultValue(), $settings);
         $tableRecor =  new TableRecord(self::DB_TBL);
         $settings =  json_encode($settings);
         $fields = array(

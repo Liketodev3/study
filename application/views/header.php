@@ -24,7 +24,8 @@ $commonHead1DataArr = array(
 	'canonicalUrl'	=>	isset($canonicalUrl) ? $canonicalUrl : '',
 	'currencySymbolLeft' => $currencySymbolLeft,
 	'currencySymbolRight' => $currencySymbolRight,
-	'layoutDirection' =>  CommonHelper::getLayoutDirection()
+	'layoutDirection' =>  CommonHelper::getLayoutDirection(),
+	'cookieConsent' =>  $cookieConsent
 );
 
 $this->includeTemplate( '_partial/header/commonHead1.php', $commonHead1DataArr );

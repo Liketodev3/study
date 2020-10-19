@@ -30,6 +30,8 @@ class MyAppController extends FatController
         $urlController = implode('-', $arr);
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
         /* ] */
+        $cookieConsent =  CommonHelper::getCookieConsent();
+        $this->cookieConsent =  $cookieConsent;
         $jsVariables = array(
             'confirmUnLockPrice' => Label::getLabel('LBL_Are_you_sure_to_unlock_this_price!'),
             'confirmRemove' => Label::getLabel('LBL_Do_you_want_to_remove'),
@@ -81,7 +83,8 @@ class MyAppController extends FatController
         if (CommonHelper::getLayoutDirection() == 'rtl') {
             $this->_template->addCss('css/style--arabic.css');
         }
-        $this->set('cookieConsent', CommonHelper::getCookieConsent());
+     
+        $this->set('cookieConsent', $cookieConsent);
         $this->set('currencySymbolLeft', CommonHelper::getCurrencySymbolLeft());
         $this->set('currencySymbolRight', CommonHelper::getCurrencySymbolRight());
         $this->set('siteLangId', $this->siteLangId);

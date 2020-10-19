@@ -106,7 +106,7 @@
 
 </footer>
 <?php
-if (FatApp::getConfig('CONF_ENABLE_COOKIES', FatUtility::VAR_INT, 1) && empty($cookieConsent)) { ?>
+if (FatApp::getConfig('CONF_ENABLE_COOKIES', FatUtility::VAR_INT, 1) && !CommonHelper::getUserCookiesEnabled()) { ?>
 <div class="cc-window cc-banner cc-type-info cc-theme-block cc-bottom cookie-alert no-print">
     <?php if (FatApp::getConfig('CONF_COOKIES_TEXT_'.$siteLangId, FatUtility::VAR_STRING, '')) { ?>
 	<div class="box-cookies">

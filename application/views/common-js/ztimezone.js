@@ -17,7 +17,7 @@ $(document).ready(function() {
 	var tz = jstz.determine();
 	var timezone = tz.name();
 	
-	if(	( user_timezone == null || user_timezone =='' || user_timezone == undefined ) || user_timezone != timezone ) {
+	if(	(( user_timezone == null || user_timezone =='' || user_timezone == undefined ) || user_timezone != timezone) && cookieConsent.preferences == 1) {
 		setCookie('user_timezone', timezone);
 	}	
 	  

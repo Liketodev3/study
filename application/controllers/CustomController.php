@@ -1,4 +1,7 @@
 <?php
+
+use function GuzzleHttp\json_encode;
+
 class CustomController extends MyAppController
 {
     public function paymentFailed()
@@ -62,6 +65,13 @@ class CustomController extends MyAppController
     public function cookieForm()
     {
         $cookieForm = $this->getCookieForm();
+        if(UserAuthentication::isUserLogged()){
+            $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+            $cookieSetting = $userCookieConsent->getCookieSettings();
+            $cookieSetting =  \json_decode($cookieSetting, true);
+            $cookieForm->fill($cookieSetting);
+         }
+
         $this->set('cookieForm',$cookieForm);
         $this->_template->render(false, false);
     }
@@ -70,11 +80,10 @@ class CustomController extends MyAppController
     {
         $form =  new Form('cookieForm');
         $checkboxValue =  applicationConstants::YES;
-        $form->addCheckBox(Label::getLabel('LBL_Necessary'), UserCookieConsent::COOKIE_NECESSARY_FIELD, $checkboxValue, array(), true, 0);
+        $form->addCheckBox(Label::getLabel('LBL_Necessary'), UserCookieConsent::COOKIE_NECESSARY_FIELD, $checkboxValue, array(), true, 1);
         $form->addCheckBox(Label::getLabel('LBL_Preferences'), UserCookieConsent::COOKIE_PREFERENCES_FIELD, $checkboxValue, array(), true, 0);
         $form->addCheckBox(Label::getLabel('LBL_Statistics'), UserCookieConsent::COOKIE_STATISTICS_FIELD, $checkboxValue, array(), true, 0);
-       // $form->addCheckBox(Label::getLabel('LBL_Marketing'), UserCookieConsent::COOKIE_MARKETING_FIELD, $checkboxValue, array(), true, 0);
-        $form->addSubmitButton('','btn_submit', Label::getLabel('LBL_Allow'));
+        $form->addSubmitButton('','btn_submit', Label::getLabel('LBL_Save_Cookie'));
         return $form;
     }
 
@@ -88,11 +97,13 @@ class CustomController extends MyAppController
              FatUtility::dieJsonError(Message::getHtml());
          }
          unset($data['btn_submit']);
+         unset($data['necessary']);
          if(UserAuthentication::isUserLogged()){
-            $UserCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
-            $UserCookieConsent->saveOrUpdateSetting($data, false);
+            $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+            $userCookieConsent->saveOrUpdateSetting($data, false);
          }
-         $data = json_encode($data);
+         
+         $data = \json_encode($data);
          CommonHelper::setCookieConsent($data);
          FatUtility::dieJsonSuccess(Label::getLabel('LBL_Cookie_settings_update_successfully'));
     }

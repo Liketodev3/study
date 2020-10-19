@@ -26,6 +26,7 @@ echo $str = '<script type="text/javascript">
 		var layoutDirection ="'.$layoutDirection.'";
 		var currencySymbolLeft = "' . $currencySymbolLeft . '";
 		var currencySymbolRight = "' . $currencySymbolRight . '";
+		var cookieConsent = ' . json_encode($cookieConsent) . ';
 		if( CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES <= 0  ){
 			CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = 3;
 		}
