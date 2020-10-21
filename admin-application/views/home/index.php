@@ -244,7 +244,7 @@
 						<div class="graph-container">
 							<div id="visitsGraph" class="ct-chart ct-perfect-fourth graph--visitor"></div>
 						</div>
-						<?php if($dashboardInfo['visitsCount']){ ?>
+						<?php if(isset($dashboardInfo['visitsCount'])){ ?>
 						<ul class="horizontal_grids">
 							<li>
 								<?php echo $dashboardInfo['visitsCount']['today']?> <span>
