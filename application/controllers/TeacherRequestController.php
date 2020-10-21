@@ -346,12 +346,12 @@ class TeacherRequestController extends MyAppController {
 		$fld = $frm->addTextArea(Label::getLabel('LBL_Write_about_yourself_and_your_qualifications'), 'utrvalue_user_profile_info');
         $fld->requirements()->setLength(1, 500);
 		$frm->addHtml('', 'language_fields_heading', '');
-		$fld = $frm->addSelectBox(Label::getLabel('LBL_What_Language_Do_You_Want_To_Teach?'), 'utrvalue_user_teach_slanguage_id[]', $teachingLanguagesArr);
+		$fld = $frm->addSelectBox(Label::getLabel('LBL_What_Language_Do_You_Want_To_Teach?'), 'utrvalue_user_teach_slanguage_id[]', $teachingLanguagesArr, [], [],Label::getLabel('LBL_Select'));
 		$fld->requirements()->setRequired();
 		$fld = $frm->addHtml('', 'add_anotherteach_language', '');
-		$fld = $frm->addSelectBox(Label::getLabel('LBL_Languages_You_Speak'), 'utrvalue_user_language_speak[]', $spokenLanguagesArr);
+		$fld = $frm->addSelectBox(Label::getLabel('LBL_Languages_You_Speak'), 'utrvalue_user_language_speak[]', $spokenLanguagesArr, [], [],Label::getLabel('LBL_Select'));
 		$fld->requirements()->setRequired();
-		$fldProficiency = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utrvalue_user_language_speak_proficiency[]', SpokenLanguage::getProficiencyArr($langId));
+		$fldProficiency = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utrvalue_user_language_speak_proficiency[]', SpokenLanguage::getProficiencyArr($langId), [], [],Label::getLabel('LBL_Select'));
 		$fldProficiency->requirements()->setRequired();
 		$fld = $frm->addHtml('', 'add_anotherspoken_language', '');
 		/* Resume[ */
