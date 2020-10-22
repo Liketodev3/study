@@ -1,5 +1,24 @@
 This file shares the details of YoCoach version and features.
 
+Release Version: TV-2.3.0.20201022
+Release Date: 2020/10/22
+
+
+Enhancements:
+    *Task-73053: fix live URL for paypal payout and cookie params for localhost
+    *Task-73053: add google analytics keys
+    *Task-76258: add demo information in header
+
+Bug Resolved:
+    *Bug:#044347-fix availability issues
+    *Bug:#044335-fix label issue in selectlist
+    *Bug:#044331-fix teaching lang save function
+    *Bug:#043738-fix undefined user_timezone index issue
+    *Bug:#044278-add loader while profile image uplaods
+
+
+--------------------------------------------------------------------------------------------------------------
+
 Release Version: TV-2.2.0.20201015
 Release Date: 2020/10/15
 
