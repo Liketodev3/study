@@ -6297,6 +6297,8 @@ CREATE TABLE `tbl_meta_tags` (
 INSERT INTO `tbl_meta_tags` (`meta_id`, `meta_controller`, `meta_action`, `meta_record_id`, `meta_subrecord_id`, `meta_identifier`, `meta_default`, `meta_advanced`) VALUES
 (1, 'Cms', 'view', 1, 0, 'About Us', 0, 0);
 
+INSERT INTO `tbl_meta_tags` (`meta_id`, `meta_controller`, `meta_action`, `meta_record_id`, `meta_subrecord_id`, `meta_identifier`, `meta_default`, `meta_advanced`) VALUES (2, 'Home', 'index', '0', '0', 'Home', '0', '1');
+
 -- --------------------------------------------------------
 
 --
@@ -6319,6 +6321,10 @@ CREATE TABLE `tbl_meta_tags_lang` (
 INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_title`, `meta_keywords`, `meta_description`, `meta_other_meta_tags`) VALUES
 (1, 1, 'About Us', 'About Us', 'About Us', '<meta name=\"copyright\" content=\"text\">'),
 (1, 2, 'About Us', 'About Us', 'About Us', '<meta name=\"copyright\" content=\"text\">');
+
+INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_title`, `meta_keywords`, `meta_description`, `meta_other_meta_tags`) VALUES ('2', '1', 'Yo!Coach Live Demo - Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '');
+
+INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_title`, `meta_keywords`, `meta_description`, `meta_other_meta_tags`) VALUES ('2', '2', 'Yo!Coach Live Demo - Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '');
 
 -- --------------------------------------------------------
 

@@ -1595,11 +1595,11 @@ class CommonHelper extends FatUtility
 
     public static function demoUrl() : bool
     {
-          if (strpos($_SERVER ['SERVER_NAME'], 'demo.yo-coach.com') !== false) {
-              return true;
-          }
-          return false;
-     }
+        if (strpos($_SERVER ['SERVER_NAME'], 'teach.yo-coach.com') !== false) {
+            return true;
+        }
+        return false;
+    }
 
     public static function getUnreadNotifications($limit=false)
     {

@@ -161,7 +161,7 @@ class GuestUserController extends MyAppController
             $user_preferred_dashboard = User::USER_TEACHER_DASHBOARD;
             $user_registered_initially_for = User::USER_TYPE_TEACHER;
         }
-        $post['user_timezone'] = $_COOKIE['user_timezone'];
+        $post['user_timezone'] = $_COOKIE['user_timezone'] ?? MyDate::getTimeZone();;
         $post['user_preferred_dashboard'] = $user_preferred_dashboard;
         $post['user_registered_initially_for'] = $user_registered_initially_for;
         $user->assignValues($post);

@@ -1,6 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <!doctype html>
-<html>
+<html class="<?php echo (FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1) && CommonHelper::demoUrl()) ? 'sticky-demo-header': '' ?>">
 <head>
 	<meta charset="utf-8">
 	<meta name="description" content="">

@@ -64,12 +64,12 @@ class MyDate extends FatDate
                 $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array( 'user_timezone'));
                 $user_timezone = $userRow['user_timezone'];
             } else {
-                $user_timezone = $_COOKIE['user_timezone'];
+                $user_timezone = $_COOKIE['user_timezone'] ?? self::getTimeZone();
             }
         }
 
         if (empty($user_timezone)) {
-            $user_timezone = $_COOKIE['user_timezone'];
+            $user_timezone = $_COOKIE['user_timezone'] ?? self::getTimeZone();
         }
 
         return $user_timezone;

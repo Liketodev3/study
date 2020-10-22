@@ -71,8 +71,6 @@ Bug Resolved:
     *Bug:#041040: Security test report
 
 
-
-
 --------------------------------------
 Release Version: TV-2.1.1.20200925
 Release Date: 2020/09/25
