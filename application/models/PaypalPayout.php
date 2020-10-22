@@ -2,7 +2,7 @@
 class PaypalPayout {
 
 	const ACCESS_TOKEN_URL_TEST = 'https://api.sandbox.paypal.com/v1/oauth2/token';
-	const ACCESS_TOKEN_URL_LIVE = 'https://api.sandbox.paypal.com/v1/oauth2/token';
+	const ACCESS_TOKEN_URL_LIVE = 'https://api.paypal.com/v1/oauth2/token';
 
 	const PAYOUT_URL_TEST = 'https://api.sandbox.paypal.com/v1/payments/payouts';
 	const PAYOUT_URL_LIVE = 'https://api.paypal.com/v1/payments/payouts';
@@ -62,7 +62,8 @@ class PaypalPayout {
 			return array();
 		}
 
-		$actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE',FatUtility::VAR_BOOLEAN,false) == true) ? self::ACCESS_TOKEN_URL_TEST : self::ACCESS_TOKEN_URL_LIVE;
+		$actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE',FatUtility::VAR_BOOLEAN,false) == true) ? self::ACCESS_TOKEN_URL_LIVE : self::ACCESS_TOKEN_URL_TEST;
+
 		//$result = false;
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $actionUrl);
