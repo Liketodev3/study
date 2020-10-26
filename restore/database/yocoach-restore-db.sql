@@ -870,8 +870,8 @@ CREATE TABLE `tbl_commission_settings` (
 --
 
 INSERT INTO `tbl_commission_settings` (`commsetting_id`, `commsetting_user_id`, `commsetting_fees`, `commsetting_is_mandatory`, `commsetting_is_grpcls`, `commsetting_deleted`) VALUES
-(1, 17, '200.00', 0, 0, 1),
-(3, 58, '50.00', 0, 0, 1),
+(1, 2, '20.00', 0, 0, 0),
+(2, 2, '15.00', 0, 1, 0),
 (4, 0, '12.00', 0, 0, 0),
 (5, 0, '10.00', 0, 1, 0);
 
@@ -6322,9 +6322,9 @@ INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_
 (1, 1, 'About Us', 'About Us', 'About Us', '<meta name=\"copyright\" content=\"text\">'),
 (1, 2, 'About Us', 'About Us', 'About Us', '<meta name=\"copyright\" content=\"text\">');
 
-INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_title`, `meta_keywords`, `meta_description`, `meta_other_meta_tags`) VALUES ('2', '1', 'Yo!Coach Live Demo - Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '');
+INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_title`, `meta_keywords`, `meta_description`, `meta_other_meta_tags`) VALUES ('2', '1', 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '');
 
-INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_title`, `meta_keywords`, `meta_description`, `meta_other_meta_tags`) VALUES ('2', '2', 'Yo!Coach Live Demo - Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '');
+INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_title`, `meta_keywords`, `meta_description`, `meta_other_meta_tags`) VALUES ('2', '2', 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '');
 
 -- --------------------------------------------------------
 
@@ -7037,11 +7037,11 @@ CREATE TABLE `tbl_social_platforms` (
 --
 
 INSERT INTO `tbl_social_platforms` (`splatform_id`, `splatform_user_id`, `splatform_identifier`, `splatform_url`, `splatform_active`) VALUES
-(1, 0, 'Facebook', 'https://www.facebook.com/onlineconsultationsoftware/', 1),
-(2, 0, 'Twitter', 'https://twitter.com/Yo_Coach_/', 1),
-(3, 0, 'Instagram', 'https://www.instagram.com/Yocoach/', 1),
+(1, 0, 'Facebook', 'https://www.facebook.com/yocoachelearning/', 1),
+(2, 0, 'Twitter', 'https://twitter.com/yo_coach_', 1),
+(3, 0, 'Instagram', 'https://www.instagram.com/YoCoach_Software/', 1),
 (4, 0, 'Pinterest', 'https://in.pinterest.com/YoCoach_/', 1),
-(5, 0, 'YouTube', 'https://www.youtube.com/', 1);
+(5, 0, 'YouTube', 'https://www.youtube.com/channel/UCNPly8tAtfBneXv1MfzjD4g', 1);
 -- --------------------------------------------------------
 
 --
@@ -8611,6 +8611,7 @@ INSERT INTO `tbl_user_transactions` (`utxn_id`, `utxn_user_id`, `utxn_date`, `ut
 (36, 26, '2019-10-09 05:34:58', '8.80', '0.00', 'Lessonid: 97 Payment', 1, '', 0, 0, 3, 0),
 (37, 26, '2019-10-09 06:48:06', '8.80', '0.00', 'Lessonid: 101 Payment', 1, '', 0, 0, 3, 0),
 (38, 25, '2019-11-05 12:54:48', '0.00', '90.00', 'Order Placed  #O1572958487', 1, 'O1572958487', 0, 0, 1, 0);
+(39, 21, '2019-11-05 13:54:48', '5000.00', '0.00', 'Loaded Money To Wallet.', 1, 'O1572958488', 0, 0, 3, 0);
 
 -- --------------------------------------------------------
 
