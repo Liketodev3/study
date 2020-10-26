@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'Axiforma';
+    src: url('../fonts/Axiforma-Bold.eot');
+    src: local('../fonts/Axiforma Bold'), local('Axiforma-Bold'),
+        url('../fonts/Axiforma-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Axiforma-Bold.woff') format('woff'),
+        url('../fonts/Axiforma-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
 /*+========================ROOT============================*/
 :root {
     --color-primary: #3d91e8;
@@ -43,6 +53,7 @@
 }
 
 /*========================MAIN/RANDOM============================*/
+
 p {
     color: var(--color-dark);
     font-size: 1rem;
@@ -126,7 +137,7 @@ textarea[disabled] {
 
 html,
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 hmtl {
@@ -141,7 +152,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6{
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Axiforma';
 }
 /*========================ARROWS============================*/
 
@@ -787,7 +798,7 @@ max-width: 100%;
 
 .banner__content p {
     /* font-family: 'Open Sans'; */
-    font-weight: 600;
+    font-weight: 500;
     font-size: 1.2rem;
     color: #fff;
 }
