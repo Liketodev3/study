@@ -72,7 +72,7 @@
 		<div class="search-form">
 			<form method="POST" class="form" action="<?php echo CONF_WEBROOT_URL; ?>teachers" name="homeSearchForm" id="homeSearchForm" >
                 <input type="text" name="language" placeholder="<?php echo Label::getLabel('LBL_I_am_learning...'); ?>">
-                <input type="submit" value="<?php echo Label::getLabel('LBL_Get_Started?'); ?>">
+                <input type="submit" value="<?php echo Label::getLabel('LBL_Search_for_teachers'); ?>">
 			</form>
 		</div>
         <a href="#" class="banner-link banner_link_how_works"><?php echo Label::getLabel('LBL_How_it_Works?'); ?></a>

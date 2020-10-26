@@ -107,3 +107,13 @@ REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUE
 
 REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('CONF_SITE_TRACKER_CODE', '<!-- Global site tag (gtag.js) - Google Analytics -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=UA-82212031-1\"></script>\r\n<script>\r\n window.dataLayer = window.dataLayer || [];\r\n function gtag(){dataLayer.push(arguments);}\r\n gtag(\'js\', new Date());\r\n gtag(\'config\', \'UA-82212031-1\');\r\n</script>>', 0);
+
+
+UPDATE `tbl_social_platforms` SET `splatform_url` = 'https://www.facebook.com/yocoachelearning/' WHERE `splatform_identifier` = 'Facebook';
+UPDATE `tbl_social_platforms` SET `splatform_url` = 'https://twitter.com/yo_coach_' WHERE `splatform_identifier` = 'Twitter';
+UPDATE `tbl_social_platforms` SET `splatform_url` = 'https://in.pinterest.com/YoCoach_/' WHERE `splatform_identifier` = 'Pinterest';
+UPDATE `tbl_social_platforms` SET `splatform_url` = 'https://www.instagram.com/YoCoach_Software/' WHERE `splatform_identifier` = 'Instagram';
+UPDATE `tbl_social_platforms` SET `splatform_url` = 'https://www.youtube.com/channel/UCNPly8tAtfBneXv1MfzjD4g' WHERE `splatform_identifier` = 'Youtube';
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
+('LBL_COPYRIGHT_TEXT', 1, 'Copyright {YEAR} {PRODUCT} Developed by {OWNER}.');

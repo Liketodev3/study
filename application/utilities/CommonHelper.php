@@ -1765,4 +1765,17 @@ class CommonHelper extends FatUtility
         return $message;
     }
 
+    public static function replaceStringData($str, $replacements = array(), $replaceTags = false)
+    {
+        foreach ($replacements as $key => $val) {
+            if ($replaceTags) {
+                $val = strip_tags($val);
+            }
+            $str = str_replace($key, $val, $str);
+            $str = str_replace(strtolower($key), $val, $str);
+            $str = str_replace(strtoupper($key), $val, $str);
+        }
+        return $str;
+    }
+
 }
