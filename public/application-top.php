@@ -29,7 +29,7 @@ FatApp::getDb()->query("SET time_zone = '" . $offset . "'");
 
 FatApp::getDb()->query("SET NAMES utf8mb4");
 
-CommonHelper::setCookieParams();
+// CommonHelper::setCookieParams();
 
 session_start();
 
