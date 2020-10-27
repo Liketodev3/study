@@ -242,6 +242,7 @@ class ConfigurationsController extends AdminBaseController
             AttachedFile::FILETYPE_WATERMARK_IMAGE,
             AttachedFile::FILETYPE_APPLE_TOUCH_ICON,
             AttachedFile::FILETYPE_MOBILE_LOGO,
+            AttachedFile::FILETYPE_BLOG_PAGE_IMAGE,
             );
 
         if (!in_array($file_type, $allowedFileTypeArr)) {
@@ -423,6 +424,19 @@ class ConfigurationsController extends AdminBaseController
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_MOBILE_LOGO, 0, 0, 0, $lang_id)) {
+            Message::addErrorMessage($fileHandlerObj->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+
+    public function removeBlogImage($lang_id = 0)
+    {
+        $lang_id = FatUtility::int($lang_id);
+        $fileHandlerObj = new AttachedFile();
+        if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, 0, 0, 0, $lang_id)) {
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
@@ -916,6 +930,9 @@ class ConfigurationsController extends AdminBaseController
 
                 $mobilelogo_fld = $frm->addButton('Mobile Logo', 'mobile_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'mobile_logo', 'data-file_type' => AttachedFile::FILETYPE_MOBILE_LOGO));
                 $mobilelogo_fld->htmlAfterField = sprintf(Label::getLabel('LBL_Mobile_logo_size', $this->adminLangId), '168*37');
+
+                $blogimg_fld = $frm->addButton('Blog Image', 'blog_img', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'blog_img', 'data-file_type' => AttachedFile::FILETYPE_BLOG_PAGE_IMAGE));
+                $blogimg_fld->htmlAfterField = sprintf(Label::getLabel('LBL_BLOG_PAGE_IMAGE_size', $this->adminLangId), '1600*480');
 
             break;
 

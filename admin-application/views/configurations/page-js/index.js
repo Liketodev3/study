@@ -169,8 +169,15 @@ $(document).ready(function(){
 		if( val == NO ){
 			$("input[name='CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES']").val(0);
 		}
-	}
+	};
 
+	removeBlogImage = function(lang_id){
+		if(!confirm(langLbl.confirmDeleteImage)){return;}
+		fcom.updateWithAjax(fcom.makeUrl('Configurations', 'removeBlogImage', [lang_id]), '', function(t) {
+			getLangForm( document.frmConfiguration.form_type.value, lang_id );
+		});
+	};
+	
 	
 })();	
 

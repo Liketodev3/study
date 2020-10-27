@@ -50,6 +50,9 @@ switch ($frmType){
 		$paymentPageLogo= $frm->getField('payment_page_logo');
 		$appleTouchIcon= $frm->getField('apple_touch_icon');
 		$mobileLogo= $frm->getField('mobile_logo');
+		$blogImg= $frm->getField('blog_img');
+
+		$blogImg->developerTags['col'] = 12;
 
 		$adminLogoFld->htmlAfterField =  '<span class = "uploadimage--info" >Dimensions 142*45</span>';
 		$desktopLogoFld->htmlAfterField = '<span class = "uploadimage--info" >Dimensions 168*37</span>';
@@ -101,6 +104,10 @@ switch ($frmType){
 
 		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_MOBILE_LOGO, 0, 0, $lang_id ) ){
 			$mobileLogo->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','mobileLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a  class="remove--img" href="javascript:void(0);" onclick="removeMobileLogo('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+		}
+		
+		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, 0, 0, $lang_id ) ){
+			$blogImg->htmlAfterField .= '<div class="uploaded--image" style="width:100%"><img src="'.FatUtility::generateFullUrl('Image','blog',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a class="remove--img" href="javascript:void(0);" onclick="removeBlogImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
 		}
 	break;
 
