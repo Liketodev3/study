@@ -173,6 +173,11 @@ class TeacherRequestController extends MyAppController {
 			return;
 		}
 
+        if($teacherRequest->getMainTableRecordId()){
+            $emailHandler = new EmailHandler($this->siteLangId);
+            $emailHandler->sendTeacherRequestEmailToAdmin($teacherRequest->getMainTableRecordId());
+        }
+		
 		$successMsg =  Label::getLabel('MSG_Teacher_Approval_Request_Setup_Successful');
 		if (FatUtility::isAjaxCall()) {
 			$this->set('redirectUrl', CommonHelper::generateUrl('TeacherRequest'));

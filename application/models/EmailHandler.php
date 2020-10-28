@@ -2,9 +2,9 @@
 class EmailHandler extends FatModel
 {
     private $commonLangId;
-    public function __construct()
+    public function __construct($langId = 0)
     {
-        $this->commonLangId = CommonHelper::getLangId();
+        $this->commonLangId = $langId ?: CommonHelper::getLangId();
     }
 
     public static function getMailTpl($tpl, $langId = 1)
@@ -611,6 +611,69 @@ class EmailHandler extends FatModel
         );
 
         if (self::sendMailTpl($data['user_email'], $templete, $langId, $LearnerVars)) {
+            return true;
+        }
+        return false;
+    }
+    
+    public function sendTeacherRequestEmailToAdmin($utrequest_id)
+    {
+        $srch = new TeacherRequestSearch();
+        $srch->joinTeacherRequestValues();
+        $srch->addCondition('utrequest_id', '=', $utrequest_id);
+        $srch->doNotCalculateRecords();
+        $srch->setPageSize(1);
+
+        $srch->addMultipleFields(
+            array(
+                'utrequest_id',
+                'utrequest_user_id',
+                'utrequest_reference',
+                'utrequest_date',
+                'utrequest_attempts',
+                'utrequest_comments',
+                'utrequest_status',
+                'utrvalue_user_first_name',
+                'utrvalue_user_last_name',
+                'utrvalue_user_gender',
+                'utrvalue_user_phone',
+                'utrvalue_user_video_link',
+                'utrvalue_user_profile_info',
+                'utrvalue_user_teach_slanguage_id',
+                'utrvalue_user_language_speak',
+                'utrvalue_user_language_speak_proficiency',
+                'count(utrequest_id) as totalRequest'
+                )
+        );
+        $srch->addGroupBy('utrequest_id');
+        $rs = $srch->getResultSet();
+        $reqData = FatApp::getDb()->fetch($rs);
+
+        if (!$reqData) {
+            $this->error = Label::getLabel('MSG_Invalid_Request', $this->commonLangId);
+            return false;
+        }
+        $subjectIds = json_decode($reqData['utrvalue_user_teach_slanguage_id']);
+
+        $teachingLanguagesArr = TeachingLanguage::getAllLangs($this->commonLangId);
+
+        $subjectNames = array_map(function ($n) use ($teachingLanguagesArr) {
+            return $teachingLanguagesArr[$n];
+        },
+            $subjectIds
+        );
+
+        $tpl = 'tpl_teacher_request_received';
+        $vars = array(
+                    '{refnum}' => $reqData['utrequest_reference'],
+                    '{name}' => $reqData['utrvalue_user_first_name'] .' ' . $reqData['utrvalue_user_last_name'],
+                    '{phone}' => $reqData['utrvalue_user_phone'],
+                    '{request_date}' => $reqData['utrequest_date'],
+                    '{subjects}' => implode(',', $subjectNames),
+                );
+
+        $to = FatApp::getConfig('CONF_SITE_OWNER_EMAIL');
+        if (self::sendMailTpl($to, $tpl, $this->commonLangId, $vars)) {
             return true;
         }
         return false;
