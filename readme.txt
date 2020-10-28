@@ -1,11 +1,19 @@
 This file shares the details of YoCoach version and features.
 
+Release Version: TV-2.3.1.20201028
+Release Date: 2020/10/28
+
+
 Bug fixes:
 
-#044574
-#044552
-#044573
+    Bug:#044574 - If admin will disable Paypal payouts if should not ask for Paypal email from teachers
+    Bug:#044552 - Blog page banner image should be manageable by the admin	
+    Bug:#044573 - Teacher approval email should go to admin's email
+    Bug:#044546 - Change "Get started" to "Search for teachers"
 
+Updates:
+    *Task-73053: Update fonts
+    *Task-76258: Updates for demo version
 
 ----------------------------------------------------------------------------------------
 
