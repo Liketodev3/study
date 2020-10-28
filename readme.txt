@@ -3,6 +3,8 @@ This file shares the details of YoCoach version and features.
 Bug fixes:
 
 #044574
+#044552
+#044573
 
 
 ----------------------------------------------------------------------------------------

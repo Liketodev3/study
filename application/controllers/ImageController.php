@@ -184,6 +184,28 @@ class ImageController extends FatController
         }
     }
 
+    public function blog($lang_id = 0, $sizeType = '')
+    {
+        $lang_id = FatUtility::int($lang_id);
+        $recordId = 0;
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, $recordId, 0, $lang_id);
+        $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
+        $default_image = '';
+
+        switch (strtoupper($sizeType)) {
+            case 'THUMB':
+                $w = 200;
+                $h = 60;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+            break;
+            default:
+                $h = 480;
+                $w = 1600;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+            break;
+        }
+    }
+
     public function paymentPageLogo($lang_id = 0, $sizeType = '')
     {
         $lang_id = FatUtility::int($lang_id);

@@ -56,36 +56,32 @@ switch ($frmType){
 		$paymentPageLogo= $frm->getField('payment_page_logo');
 		$appleTouchIcon= $frm->getField('apple_touch_icon');
 		$mobileLogo= $frm->getField('mobile_logo');
-        
+        $blogImg= $frm->getField('blog_img');
+
+		$blogImg->developerTags['col'] = 12;
+
         if($canEdit){
-            $adminLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Admin_logo_size', $adminLangId), '142*45');
-            $adminLogoFld->htmlAfterField .=  '<span class = "uploadimage--info" >Dimensions 142*45</span>';
+            $adminLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '142*45');
             
-            $desktopLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Desktop_logo_size', $adminLangId), '168*37');
-            $desktopLogoFld->htmlAfterField .= '<span class = "uploadimage--info" >Dimensions 168*37</span>';
+            $desktopLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
             
-            $desktopWhiteLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Desktop_logo_size', $adminLangId), '168*37');
-            $desktopWhiteLogoFld->htmlAfterField .= '<span class = "uploadimage--info" >Dimensions 168*37</span>';
+            $desktopWhiteLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
             
-            $emailLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Email_Template_logo_size', $adminLangId), '168*37');
-            $emailLogoFld->htmlAfterField .= '<span class = "uploadimage--info" >Dimensions 168*37</span>';
+            $emailLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
             
-            $socialFeedImgFld->htmlAfterField = sprintf(Label::getLabel('LBL_Social_Media_logo_size', $adminLangId), '168*37');
-            $socialFeedImgFld->htmlAfterField .= '<span class = "uploadimage--info" >Dimensions 160*240</span>';
+            $socialFeedImgFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '160*240');
             
-            $faviconFld->htmlAfterField .= '<span class = "uploadimage--info" >Dimensions 16*16</span>';
+            $faviconFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '16*16');
             
-            $mobileLogo->htmlAfterField = sprintf(Label::getLabel('LBL_Mobile_logo_size', $adminLangId), '168*37');
-            $mobileLogo->htmlAfterField .= '<span class = "uploadimage--info" >&nbsp;</span>';
+            $mobileLogo->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
+			
+			$blogImg->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '1600*480');
+
+            $appleTouchIcon->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '16*16');
             
-            $appleTouchIcon->htmlAfterField = sprintf(Label::getLabel('LBL_Apple_Touch_logo_size', $adminLangId), '168*37');
-            $appleTouchIcon->htmlAfterField .= '<span class = "uploadimage--info" >&nbsp;</span>';
+            $paymentPageLogo->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
             
-            $paymentPageLogo->htmlAfterField = sprintf(Label::getLabel('LBL_Payment_Page_logo_size', $adminLangId), '168*37');
-            $paymentPageLogo->htmlAfterField .= '<span class = "uploadimage--info" >&nbsp;</span>';
-            
-            $watermarkFld->htmlAfterField = sprintf(Label::getLabel('LBL_Watermark_Image_logo_size', $adminLangId), '168*37');
-            $watermarkFld->htmlAfterField .= '<span class = "uploadimage--info" >&nbsp;</span>';
+            $watermarkFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
         }else{
             $adminLogoFld->setFieldTagAttribute('class', 'hide');
             $desktopLogoFld->setFieldTagAttribute('class', 'hide');
@@ -177,6 +173,10 @@ switch ($frmType){
                 $mobileLogo->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeMobileLogo('.$lang_id.')" ><i class="ion-close-round"></i></a>';
             }
             $mobileLogo->htmlAfterField .= '</div><br>';
+		}
+		
+		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, 0, 0, $lang_id ) ){
+			$blogImg->htmlAfterField .= '<div class="uploaded--image" style="width:100%"><img src="'.FatUtility::generateFullUrl('Image','blog',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a class="remove--img" href="javascript:void(0);" onclick="removeBlogImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
 		}
 	break;
 

@@ -3,7 +3,7 @@ defined('SYSTEM_INIT') or die('Invalid Usage.');
 
 ?>
 <section class="banner <?php if(isset($bpCategoryId)){ }else{?>banner--main <?php }?>">
-    <div class="banner__media -hide-mobile"><img src="<?php echo CommonHelper::generateFullUrl() ?>images/2000x600.jpg" alt=""></div>
+    <div class="banner__media -hide-mobile"><img src="<?php echo CommonHelper::generateUrl('Image','blog', [$siteLangId]); ?>" alt=""></div>
     <div class="banner__content banner__content--centered">
         <h1><?php echo Label::getLabel('LBL_Blog');?></h1>
         <p><?php echo Label::getLabel('LBL_The_place_where_we_write_some_words');?></p>
