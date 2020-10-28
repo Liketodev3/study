@@ -129,7 +129,7 @@ $(document).ready(function(){
 		fcom.ajax(fcom.makeUrl('Teacher','bankInfoForm'),'',function(t){
 			$(dv).html(t);
 			$('#innerTabs > li').removeClass('is-active');
-			$('#innerTabs > li:nth-child(2)').addClass('is-active');
+			$('#innerTabs > li:nth-child(1)').addClass('is-active');
 		});
 	};
 
@@ -147,7 +147,7 @@ $(document).ready(function(){
 		fcom.ajax(fcom.makeUrl('Teacher','paypalEmailAddressForm'),'',function(t){
 			$(dv).html(t);
 			$('#innerTabs > li').removeClass('is-active');
-			$('#innerTabs > li:nth-child(1)').addClass('is-active');
+			$('#innerTabs > li:nth-child(2)').addClass('is-active');
 		});
 	};
 

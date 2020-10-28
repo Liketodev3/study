@@ -53,6 +53,13 @@ class PaypalPayout {
 		return $this->isError;
 	}
 
+	public static function isMethodActive()
+	{
+		$paymentSettings = new PaymentSettings(static::KEY_NAME);
+		$data = $paymentSettings->getPaymentSettings();
+		return (bool)($data['pmethod_active'] ?? false);
+	}
+
 	public function accessToken(string $clientid, string $clientsecret) : array
 	{
 

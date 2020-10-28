@@ -19,8 +19,8 @@ $ub_paypal_email_address->developerTags['col'] = 8;
 	</div>
 	<div class="tabs-small tabs-offset">
 		<ul id="innerTabs">
-			<li class="is-active"><a href="javascript:void(0);" onclick="paypalEmailAddressForm();"><?php echo Label::getLabel('LBL_Paypal'); ?></a></li>
 			<li><a href="javascript:void(0);" onclick="bankInfoForm();"><?php echo Label::getLabel('LBL_Bank_Account'); ?></a></li>
+			<li class="is-active"><a href="javascript:void(0);" onclick="paypalEmailAddressForm();"><?php echo Label::getLabel('LBL_Paypal'); ?></a></li>
 		</ul>
 	</div>
 		<?php echo $frm->getFormHtml();?>

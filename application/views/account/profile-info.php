@@ -89,7 +89,7 @@ var lessonspaceMeetingTool = '<?php echo CommonHelper::getLessonspaceMeetingTool
 								</a>
 							</li>
 							<li class="">
-								<a href="javascript:void(0);" onClick="paypalEmailAddressForm()">
+								<a href="javascript:void(0);" onClick="bankInfoForm()">
 								<?php echo Label::getLabel('LBL_Payments');?>
 								</a>
 							</li>

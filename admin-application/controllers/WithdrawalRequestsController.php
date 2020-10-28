@@ -154,9 +154,8 @@ class WithdrawalRequestsController extends AdminBaseController
         $gatewayFee = FatUtility::float($gatewayFee);
         $amount = $records['withdrawal_amount'] - $gatewayFee;
         if(0 >= $amount){
-			$this->isError = true;
-			$this->error = Label::getLabel('MSG_Withdrawal_amount_is_zero_after_adding_gateway_fee');
-			return false;
+            Message::addErrorMessage(Label::getLabel('MSG_Withdrawal_amount_is_zero_after_adding_gateway_fee'));
+            FatUtility::dieJsonError(Message::getHtml());
 		}
         $records['gatewayFee'] = $gatewayFee;
         $records['amount'] =  round($amount,2);

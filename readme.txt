@@ -1,5 +1,13 @@
 This file shares the details of YoCoach version and features.
 
+Bug fixes:
+
+#044574
+
+
+----------------------------------------------------------------------------------------
+
+
 Release Version: TV-2.3.0.20201022
 Release Date: 2020/10/22
 

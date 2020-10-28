@@ -710,6 +710,8 @@ class TeacherController extends TeacherBaseController
         $data = $userObj->getUserBankInfo();
         $frm->fill($data);
         $this->set('frm', $frm);
+        $this->set('activePaypalPayout', PaypalPayout::isMethodActive());
+
         $this->_template->render(false, false);
     }
 
