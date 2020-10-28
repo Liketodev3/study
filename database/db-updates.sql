@@ -96,7 +96,7 @@ CREATE EVENT event_clean_email_archives ON SCHEDULE EVERY 1 MONTH ENABLE
 INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ENABLE_FLASHCARD', 1, 0);
 
 
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.2.0.20201015' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.3.1.20201028' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
 
 
 REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
