@@ -115,6 +115,9 @@ class EmailHandler extends FatModel
             return false;
         }
         require_once(CONF_INSTALLATION_PATH . 'library/PHPMailer/PHPMailerAutoload.php');
+        if(!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))){
+            return true;
+        }
         $host = isset($smtp_arr["host"])?$smtp_arr["host"]:FatApp::getConfig("CONF_SMTP_HOST");
         $port = isset($smtp_arr["port"])?$smtp_arr["port"]:FatApp::getConfig("CONF_SMTP_PORT");
         $username = isset($smtp_arr["username"])?$smtp_arr["username"]:FatApp::getConfig("CONF_SMTP_USERNAME");
@@ -163,11 +166,12 @@ class EmailHandler extends FatModel
             return false;
         }
 
-        if (1 == FatApp::getConfig("CONF_SEND_EMAIL")) {
-            $subject = '=?UTF-8?B?'.base64_encode($subject).'?=';
-            if (!mail($to, $subject, $body, $headers)) {
-                return false;
-            }
+        if(!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))){
+            return true;
+        }
+        $subject = '=?UTF-8?B?'.base64_encode($subject).'?=';
+        if (!mail($to, $subject, $body, $headers)) {
+            return false;
         }
         return true;
     }
