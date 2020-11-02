@@ -163,7 +163,7 @@ $(document).ready(function(){
         /* for globally actions menus */
         $(document).on('click', '.droplink', function(event) { 
 			$(this).toggleClass("active");
-			return false;
+			// return false;
         });
 		$('html').click(function(){
             if($('.droplink').hasClass('active')){
