@@ -269,7 +269,11 @@ class TeacherController extends TeacherBaseController
         $userTechLangData =  FatApp::getDb()->fetchAllAssoc($resultSet); */
         $db->startTransaction();
 
-        if(!$db->deleteRecords('tbl_user_teach_languages', array('smt' => 'utl_us_user_id = ?', 'vals'=> array(UserAuthentication::getLoggedUserId())))){
+        if(
+            !$db->deleteRecords('tbl_user_teach_languages', array('smt' => 'utl_us_user_id = ?', 'vals'=> array(UserAuthentication::getLoggedUserId())))
+            ||
+            !$db->deleteRecords('tbl_user_to_spoken_languages', array('smt' => 'utsl_user_id = ?', 'vals'=> array(UserAuthentication::getLoggedUserId())))
+            ){
             $db->rollbackTransaction();
             Message::addErrorMessage(Label::getLabel($db->getError()));
             FatUtility::dieWithError(Message::getHtml());
