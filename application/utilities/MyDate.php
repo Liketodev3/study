@@ -38,6 +38,9 @@ class MyDate extends FatDate
 
     public static function convertTimeFromSystemToUserTimezone($format, $dateTime, $showtime, $timeZone)
     {
+        if(substr($dateTime, 0, 10) === '0000-00-00'){
+            return $dateTime;
+        }
         if ($timeZone == '') {
             $timeZone = self::getTimeZone();
         }

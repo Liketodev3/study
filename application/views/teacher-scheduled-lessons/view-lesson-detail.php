@@ -1,6 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $user_timezone = MyDate::getUserTimeZone();
-$curDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
+$curDateTime = date('Y-m-d H:i:s');
+$curDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', $curDateTime, true , $user_timezone );
 $startTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($lessonData['slesson_date'] .' '. $lessonData['slesson_start_time']), true , $user_timezone );
 
 $endTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($lessonData['slesson_end_date'] .' '. $lessonData['slesson_end_time']), true , $user_timezone );
@@ -21,7 +22,7 @@ if( true == User::isProfilePicUploaded( $lessonData['teacherId'] ) ){
 }
 
 $chat_group_id = $lessonData['slesson_grpcls_id']>0 ? $lessonData['grpcls_title'] : "LESSON-".$lessonData['slesson_id'];
-$canEnd = ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $endTime < $curDate);
+$canEnd = ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && ($endTime < $curDateTime));
 
 $lessonsStatus = $statusArr[$lessonData['sldetail_learner_status']];
 $lessonData['lessonReschedulelogId'] =  FatUtility::int($lessonData['lessonReschedulelogId']);
@@ -37,7 +38,7 @@ if($lessonData['lessonReschedulelogId'] > 0 &&
 ?>
 <script type="text/javascript">
 langLbl.chargelearner =  "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
-var is_time_up = '<?php echo $endTime > 0 && $endTime < $curDate ?>';
+var is_time_up = '<?php echo ($endTime > 0) && ($endTime < $curDateTime) ?>';
 
 var lesson_joined = '<?php echo $lessonData['slesson_teacher_join_time']>0 ?>';
 var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time']>0 ?>';
@@ -194,8 +195,9 @@ $(function(){
             dateAndTime : "<?php echo $endTime; ?>",
             size : "lg",
             timeUp : function(){
-
-                if(lesson_completed) return;
+                if(!canEnd || lesson_completed) {
+                    return;
+                }
                 endLessonConfirm();
             }
         });
