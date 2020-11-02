@@ -31,8 +31,8 @@ FatApp::getDb()->query("SET time_zone = '".$offset."'");
 
 FatApp::getDb()->query("SET NAMES utf8mb4");
 
-ini_set('session.cookie_httponly', true);
-ini_set('session.cookie_path', CONF_WEBROOT_FRONT_URL);
+CommonHelper::setSeesionCookieParams();
+
 session_start();
 
 /* --- Redirect SSL --- */

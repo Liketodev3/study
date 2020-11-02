@@ -1136,10 +1136,10 @@ class CommonHelper extends FatUtility
         return $result;
     }
 
-    public static function setCookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath = '', $cokieSubDomainName = '', $isCookieSecure = false, $isCookieHttpOnly = true)
+    public static function setCookie($cookieName, $cookieValue, $cookieExpiryTime = 60 * 60 * 24 * 7, $cookiePath = '', $cokieSubDomainName = '', $isCookieSecure = false, $isCookieHttpOnly = true)
     {
         $cookiePath = ($cookiePath == "") ? CONF_WEBROOT_URL : $cookiePath;
-
+        $secure = FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false);
         /* manipulating $cookieValue to make it array containg real data and storing creation datetime [ */
         /* */
         /* ] */
@@ -1665,5 +1665,34 @@ class CommonHelper extends FatUtility
             $settings = UserCookieConsent::fieldsArrayWithDefultValue();
          }
          return $settings;
+    }
+
+    public static function setSeesionCookieParams()
+    {
+        $maxlifetime = 60 * 60 * 24 * 7;
+        $secure = FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false);
+        $httponly = true;
+        $samesite = 'none';
+        $path = CONF_WEBROOT_FRONT_URL;
+        $host = $_SERVER['HTTP_HOST'];
+
+        if (PHP_VERSION_ID < 70300) {
+            $cookieParamsStr = $secure ? '; samesite=' . $samesite . '; Secure' : '';
+            session_set_cookie_params($maxlifetime, $path . $cookieParamsStr, $host, $secure, $httponly);
+        } else {
+            $cookieParamsArr = [
+                'lifetime' => $maxlifetime,
+                'path' => $path,
+                'domain' => $host,
+                'secure' => $secure,
+                'httponly' => $httponly
+            ];
+
+            if ($secure) {
+                $cookieParamsArr['samesite'] = $samesite;
+            }
+
+            session_set_cookie_params($cookieParamsArr);
+        }
     }
 }
