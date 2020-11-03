@@ -49,7 +49,12 @@ $(document).ready(function(){
 	};
 	
 	setupAdminUser = function (frm){
-		if (!$(frm).validate()) return;		
+		if (!$(frm).validate()) return;
+		var pwd = $("input[name=password]").val();
+		if(checkPassword(pwd)==false){
+			$.systemMessage('Your password must contain at least one special character and one digit and minimum 8 characters', 'alert--danger');
+			return false;
+		}
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('AdminUsers', 'setup'), data, function(t) {
 			reloadList();
@@ -66,7 +71,12 @@ $(document).ready(function(){
 	};
 	
 	setupChangePassword = function (frm){
-		if (!$(frm).validate()) return;		
+		if (!$(frm).validate()) return;
+		var pwd = $("input[name=password]").val();
+		if(checkPassword(pwd)==false){
+			$.systemMessage('Your password must contain at least one special character and one digit and minimum 8 characters', 'alert--danger');
+			return false;
+		}
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('AdminUsers', 'setupChangePassword'), data, function(t) {
 			reloadList();
@@ -132,4 +142,9 @@ $(document).ready(function(){
 		document.frmSearch.reset();
 		searchAdminUsers(document.frmSearch);
 	};
-})();	
+	checkPassword=function(str)
+	{
+		var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*).{8,}$/;
+		return re.test(str);
+	}
+})();
