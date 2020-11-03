@@ -139,7 +139,9 @@
 					<div class="tabs-inline tabs-js">
 						<ul>
 							<li class="is-active"><a href="javascript:void(0)" onClick="searchLessons(<?php echo $teacher['user_id']; ?>)"><?php echo Label::getLabel('LBL_My_Lessons'); ?></a></li>
-							<li><a href="javascript:void(0)" onClick="searchFlashCards(<?php echo $teacher['user_id']; ?>)" ><?php echo Label::getLabel('LBL_Flashcards'); ?></a></li>
+							<?php if(FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true)){ ?>
+								<li><a href="javascript:void(0)" onClick="searchFlashCards(<?php echo $teacher['user_id']; ?>)" ><?php echo Label::getLabel('LBL_Flashcards'); ?></a></li>
+							<?php } ?>
 						</ul>
 					</div>
 				</div>	
