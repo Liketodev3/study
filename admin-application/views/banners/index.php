@@ -28,16 +28,16 @@ $frmSearch->developerTags['fld_default_col'] = 4;
 		<div class="sectionhead">
 			<h4><?php echo Label::getLabel('LBL_Banner_Locations_List',$adminLangId); ?> </h4>
 			<?php 
-			
-							$ul = new HtmlElement( "ul",array("class"=>"actions actions--centered") );
-							$li = $ul->appendElement("li",array('class'=>'droplink'));
-							$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
-							$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
-							$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
-							$innerLiAddCat=$innerUl->appendElement('li');            
-							$innerLiAddCat->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('Lbl_Banner_Layouts_Instructions',$adminLangId),"onclick"=>"addBannersLayouts(0)"),Label::getLabel('Lbl_Banner_Layouts_Instructions',$adminLangId), true);
-							
-							echo $ul->getHtml();
+			/* 
+				$ul = new HtmlElement( "ul",array("class"=>"actions actions--centered") );
+				$li = $ul->appendElement("li",array('class'=>'droplink'));
+				$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
+				$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
+				$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
+				$innerLiAddCat=$innerUl->appendElement('li');            
+				$innerLiAddCat->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('Lbl_Banner_Layouts_Instructions',$adminLangId),"onclick"=>"addBannersLayouts(0)"),Label::getLabel('Lbl_Banner_Layouts_Instructions',$adminLangId), true);
+				
+				echo $ul->getHtml(); */
 			?>
 			<!--<a href="javascript:void(0)" onclick="bannersLayouts()" class="themebtn btn-default btn-sm"><?php echo Label::getLabel('Lbl_Banner_Layouts_Instructions',$adminLangId);?></a>-->				
 		</div>

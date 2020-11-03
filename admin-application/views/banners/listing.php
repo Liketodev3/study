@@ -43,7 +43,7 @@ $frmSearch->developerTags['fld_default_col'] = 4;
 							$innerLiAddBack=$innerUl->appendElement('li');            
 
 								$url=CommonHelper::generateUrl('banners');
-								$innerLiAddBack->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Back',$adminLangId),'onclick'=>'redirectBack("'.$url.'")'),Label::getLabel('LBL_Back',$adminLangId), true);
+								$innerLiAddBack->appendElement('a', array('href'=> $url,'class'=>'button small green','title'=>Label::getLabel('LBL_Back',$adminLangId)),Label::getLabel('LBL_Back',$adminLangId), true);
 							echo $ul->getHtml();
 					 ?>
 			</div>
