@@ -1136,22 +1136,30 @@ class CommonHelper extends FatUtility
         return $result;
     }
 
-    public static function setCookie($cookieName, $cookieValue, $cookieExpiryTime = 60 * 60 * 24 * 7, $cookiePath = CONF_WEBROOT_FRONT_URL, $cokieSubDomainName = '', $isCookieSecure = false, $isCookieHttpOnly = true, $options = [])
+    public static function setCookie($cookieName, $cookieValue, $cookieExpiryTime = 60 * 60 * 24 * 7, $cookiePath = CONF_WEBROOT_FRONT_URL, $cokieSubDomainName = '', $isCookieSecure = false, $isCookieHttpOnly = true, $samesite = '')
     {
         $cokieSubDomainName =  ($cokieSubDomainName == '') ? 	$_SERVER['HTTP_HOST'] : $cokieSubDomainName;
-
+        $cookieOptions = [];
         $secure = FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false);
-
+       
         $isCookieSecure = ($isCookieSecure && $secure) ? true : false;
 
-        if(empty($options['samesite']) && $isCookieSecure) {
-            $options['samesite'] =  'none';	
+        if(empty($samesite) && $isCookieSecure) {
+            $samesite =  'none';	
         }
+        $cookieOptions = [
+            'expires' => $cookieExpiryTime,
+            'path' => $cookiePath,
+            'domain' => $cokieSubDomainName,
+            'secure' => $secure,
+            'httponly' => $isCookieHttpOnly,
+            'samesite' => $samesite,
+        ];
         /* manipulating $cookieValue to make it array containg real data and storing creation datetime [ */
         /* */
         /* ] */
-
-        return setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly,$options);
+        return  setcookie ( $cookieName ,  $cookieValue ,  $cookieOptions);
+        // return setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly,$options);
         
     }
 
