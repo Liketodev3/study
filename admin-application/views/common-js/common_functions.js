@@ -665,3 +665,35 @@ function getNotifications (){
 		
 })();
 
+function selectAll(obj) {
+    var parentForm = obj.closest('form').attr('id');
+    $("#" + parentForm + " .selectItem--js").each(function () {
+        if (obj.prop("checked") == false) {
+            $(this).prop("checked", false);
+        } else {
+            $(this).prop("checked", true);
+        }
+    });
+
+    var faceboxActionBtns = (0 < $("#facebox").length && $("#facebox").is(":visible")) ? "#facebox " : '';
+
+    if ($(obj).prop("checked") == false) {
+        $(faceboxActionBtns + ".toolbar-btn-js").addClass('d-none');
+    } else {
+        $(faceboxActionBtns + ".toolbar-btn-js").removeClass('d-none');
+    }
+}
+function formAction(frm, callback) {
+    if (typeof $(".selectItem--js:checked").val() === 'undefined') {
+        $.systemMessage(langLbl.atleastOneRecord, 'alert--danger');
+        return false;
+    }
+
+    $.systemMessage.loading();
+    data = fcom.frmData(frm);
+
+    fcom.updateWithAjax(frm.action, data, function(resp) {
+        callback();
+        showActionsBtns();
+    });
+}
