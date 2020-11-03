@@ -1147,18 +1147,30 @@ class CommonHelper extends FatUtility
         if(empty($samesite) && $isCookieSecure) {
             $samesite =  'none';	
         }
-        $cookieOptions = [
-            'expires' => $cookieExpiryTime,
-            'path' => $cookiePath,
-            'domain' => $cokieSubDomainName,
-            'secure' => $secure,
-            'httponly' => $isCookieHttpOnly,
-            'samesite' => $samesite,
-        ];
+        if (PHP_VERSION_ID < 70300) {
+            
+            $cookiePath = ($samesite != '') ? $cookiePath.'; samesite='.$samesite :  $cookiePath;
+            return setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly);
+       
+        }else{
+            $cookieOptions = [
+                'expires' => $cookieExpiryTime,
+                'path' => $cookiePath,
+                'domain' => $cokieSubDomainName,
+                'secure' => $secure,
+                'httponly' => $isCookieHttpOnly,
+                'samesite' => $samesite,
+            ];
+            if($samesite != '') {
+                $cookieOptions['samesite'] =  $samesite;	
+            }
+            return  setcookie ( $cookieName ,  $cookieValue ,  $cookieOptions);
+        }
+       
         /* manipulating $cookieValue to make it array containg real data and storing creation datetime [ */
         /* */
         /* ] */
-        return  setcookie ( $cookieName ,  $cookieValue ,  $cookieOptions);
+       
         // return setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly,$options);
         
     }
