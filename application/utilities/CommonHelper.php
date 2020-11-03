@@ -1139,16 +1139,20 @@ class CommonHelper extends FatUtility
     public static function setCookie($cookieName, $cookieValue, $cookieExpiryTime = 60 * 60 * 24 * 7, $cookiePath = CONF_WEBROOT_FRONT_URL, $cokieSubDomainName = '', $isCookieSecure = false, $isCookieHttpOnly = true, $options = [])
     {
         $cokieSubDomainName =  ($cokieSubDomainName == '') ? 	$_SERVER['HTTP_HOST'] : $cokieSubDomainName;
+
         $secure = FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false);
-	$isCookieSecure = ($isCookieSecure && $secure) ? true : false;
-	if(empty($options['samesite']) && $isCookieSecure) {
-		$options['samesite'] =  'none';	
-	}
+
+        $isCookieSecure = ($isCookieSecure && $secure) ? true : false;
+
+        if(empty($options['samesite']) && $isCookieSecure) {
+            $options['samesite'] =  'none';	
+        }
         /* manipulating $cookieValue to make it array containg real data and storing creation datetime [ */
         /* */
         /* ] */
 
-        setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly,$options);
+        return setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly,$options);
+        
     }
 
     public static function writeFile($name, $data, &$response)
@@ -1647,7 +1651,7 @@ class CommonHelper extends FatUtility
         if(empty($value)) {
             $value = json_encode(UserCookieConsent::fieldsArrayWithDefultValue());
         }
-        setcookie(UserCookieConsent::COOKIE_NAME, $value, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_URL);
+        self::setCookie(UserCookieConsent::COOKIE_NAME, $value, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_URL,'', true);
     }
 
     public static function getCookieConsent() : array

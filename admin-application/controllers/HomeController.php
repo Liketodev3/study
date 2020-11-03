@@ -118,12 +118,12 @@ class HomeController extends AdminBaseController
         if (0 < $langId) {
             $languages = Language::getAllNames();
             if (array_key_exists($langId, $languages)) {
-                setcookie('defaultAdminSiteLang', $langId, time() + 3600 * 24 * 10, '/');
+                CommonHelper::setCookie('defaultAdminSiteLang', $langId, time() + 3600 * 24 * 10, CONF_WEBROOT_FRONT_URL, '', true);
             }
             $this->set('msg', Label::getLabel('Msg_Please_Wait_We_are_redirecting_you...', $this->adminLangId));
             $this->_template->render(false, false, 'json-success.php');
         }
-        Message::addErrorMessage(Label::getLabel('MSG_Please_select_any_language', $this - adminLangId));
+        Message::addErrorMessage(Label::getLabel('MSG_Please_select_any_language', $this->adminLangId));
         FatUtility::dieWithError(Message::getHtml());
     }
 }

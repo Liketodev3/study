@@ -269,7 +269,7 @@ class AdminAuthentication extends FatModel
                 )
             ));
         }
-        setcookie(static::ADMIN_REMEMBER_ME_COOKIE_NAME, '', time() - 3600, CONF_WEBROOT_FRONT_URL);
+        CommonHelper::setCookie(static::ADMIN_REMEMBER_ME_COOKIE_NAME, '', time() - 3600, CONF_WEBROOT_FRONT_URL, '', true);
         return true;
     }
 }

@@ -272,7 +272,7 @@ class UserAuthentication extends FatModel
             ));
         }
 
-        setcookie($_COOKIE[static::YOCOACHUSER_COOKIE_NAME], '', time() - 3600, CONF_WEBROOT_URL);
+        CommonHelper::setCookie($_COOKIE[static::YOCOACHUSER_COOKIE_NAME], '', time() - 3600, CONF_WEBROOT_URL, '', true);
         return true;
     }
 

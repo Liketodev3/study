@@ -69,9 +69,7 @@ class MyAppController extends FatController
             'pleaseSelect' => Label::getLabel('VLBL_Please_select'),
 			'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
 			'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
-			'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),
-
-
+			'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried')
             //'siteCurrencyId' => $this->siteCurrencyId,
             //'controllerName' => $controllerName,
         );

@@ -17,6 +17,7 @@ if( $controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link rel="canonical" href="<?php echo $canonicalUrl;?>" />
 <?php
+$SslUsed = ( FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false)) ? 1 : 0;
 echo $str = '<script type="text/javascript">
 		var langLbl = ' . json_encode(
 			$jsVariables
@@ -26,6 +27,7 @@ echo $str = '<script type="text/javascript">
 		var layoutDirection ="'.$layoutDirection.'";
 		var currencySymbolLeft = "' . $currencySymbolLeft . '";
 		var currencySymbolRight = "' . $currencySymbolRight . '";
+		var SslUsed = '. $SslUsed .';
 		var cookieConsent = ' . json_encode($cookieConsent) . ';
 		if( CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES <= 0  ){
 			CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = 3;
