@@ -679,16 +679,24 @@ class TeachersController extends MyAppController {
 		/* ] */
 		/* Time Slot [ */
 		$timeSlots = FatApp::getPostedData('filterTimeSlots', FatUtility::VAR_STRING, array());
+        
+        $systemTimeZone = MyDate::getTimeZone();
+        $user_timezone = MyDate::getUserTimeZone();
+        
 		if ($timeSlots) {
 			$formatedArr = CommonHelper::formatTimeSlotArr($timeSlots);
 			if ($formatedArr) {
 				foreach ($formatedArr as $key => $formatedVal) {
+                    $startTime = date('Y-m-d').' '.$formatedVal['startTime'];
+                    $endTime = date('Y-m-d').' '.$formatedVal['endTime'];
+                    $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $user_timezone, $systemTimeZone)));
+                    $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $user_timezone, $systemTimeZone)));
 					if ($key==0) {
-						$cnd = $srch->addCondition('tgavl_start_time', '<=', $formatedVal['startTime'], 'AND');
-						$cnd->attachCondition('tgavl_end_time', '>=', $formatedVal['startTime'], 'AND');
+						$cnd = $srch->addCondition('tgavl_start_time', '<=', $startTime, 'AND');
+						$cnd->attachCondition('tgavl_end_time', '>=', $startTime, 'AND');
 					} else {
-						$newSrch = $cnd->attachCondition('tgavl_start_time', '<=', $formatedVal['endTime'], 'OR');
-						$newSrch->attachCondition('tgavl_end_time', '>=', $formatedVal['endTime'], 'AND');
+						$newSrch = $cnd->attachCondition('tgavl_start_time', '<=', $endTime, 'OR');
+						$newSrch->attachCondition('tgavl_end_time', '>=', $endTime, 'AND');
 					}
 				}
 			}
