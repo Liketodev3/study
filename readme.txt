@@ -1,5 +1,29 @@
 This file shares the details of YoCoach version and features.
 
+Release Version: TV-2.4.0.20201104
+Release Date: 2020/11/04
+
+
+Bug fixes:
+
+    Bug:#044696 - Fix spoken langugaes save event
+    Bug:#044690 - Fix redirect issue on banners page	
+    Bug:#044574 - Make paypal email optional if switched off.
+    Bug:#044716 - Fix faq cat actions
+    Bug:#044709 - Teacher serach by availability
+    Bug:#044724 - Admin change user password to chck for valid password string
+    Bug:#044820 - remove banner layout instructions
+
+Updates:
+    *Task-77655 - GDPR compliance
+    *Task-73053 - Set dimensions in media settings
+    *Task-73053 - remove upcoming lessons list from homepage
+    *Task-73053 - apply switch on off flashcards for my tutors page
+    *Suggestion:#044720 - display general message instead of detailed error for frontend user
+
+
+-----------------------------
+
 Release Version: TV-2.3.1.20201028
 Release Date: 2020/10/28
 

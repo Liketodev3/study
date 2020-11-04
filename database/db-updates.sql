@@ -146,3 +146,5 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 , ('LBL_PREFERENCES_COOKIE_DESCRIPTION_TEXT', '1', 'These cookies enable the website to provide enhanced functionality and personalisation. If you do not allow these cookies then some or all of these services may not function properly.')
 , ('LBL_NECESSARY_COOKIE_DESCRIPTION_TEXT', '1', 'These cookies are necessary for the website to function and cannot be switched off in our systems. They are usually only set in response to actions made by you which amount to a request for services, such as setting your privacy preferences, logging in or filling in forms. You can set your browser to block or alert you about these cookies, but some parts of the site will not then work. These cookies do not store any personally identifiable information.')
 ;
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.4.0.20201104' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
