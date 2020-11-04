@@ -33,6 +33,20 @@ getStatisticalData = function(type){
 		}
 	});
 }
+getCookieConsentForm = function(){
+
+	fcom.ajax(fcom.makeUrl('Custom','cookieForm'),'',function(t){
+		$.facebox( t,'facebox-medium cookies-popup');
+	});
+}
+saveCookieSetting = function(form) {
+	if (!$(form).validate()) return;
+	var data = fcom.frmData(form);
+	fcom.updateWithAjax(fcom.makeUrl('Custom','saveCookieSetting'),data,function(t){
+		$('.cookie-alert').remove();
+		$.facebox.close();
+	});
+}
 $(document).ready(function(){
 
 	setUpJsTabs();
@@ -210,11 +224,12 @@ $(document).ready(function(){
 		}
 
 		$(".cc-cookie-accept-js").click(function () {
-		fcom.ajax(fcom.makeUrl('Custom', 'updateUserCookies'), '', function (t) {
-				$(".cookie-alert").hide('slow');
-				$(".cookie-alert").remove();
+				fcom.ajax(fcom.makeUrl('Custom', 'updateUserCookies'), '', function (t) {
+						$(".cookie-alert").hide('slow');
+						$(".cookie-alert").remove();
+						$.facebox.close();
+				});
 		});
-});
 
 
         //When page loads...

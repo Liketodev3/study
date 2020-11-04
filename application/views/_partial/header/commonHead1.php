@@ -23,7 +23,8 @@ if( $controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
 <link rel="canonical" href="<?php echo $canonicalUrl;?>" />
 
 <?php
-echo $str = '<script >
+$SslUsed = ( FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false)) ? 1 : 0;
+echo $str = '<script type="text/javascript">
 		var langLbl = ' . json_encode(
 			$jsVariables
 		) . ';
@@ -33,6 +34,8 @@ echo $str = '<script >
 		var currencySymbolLeft = "' . $currencySymbolLeft . '";
 		var currencySymbolRight = "' . $currencySymbolRight . '";
 		const confWebRootUrl = "' . CONF_WEBROOT_URL . '";
+		var SslUsed = '. $SslUsed .';
+		var cookieConsent = ' . json_encode($cookieConsent) . ';
 		if( CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES <= 0  ){
 			CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = 3;
 		}

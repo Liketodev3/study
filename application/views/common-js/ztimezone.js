@@ -2,8 +2,14 @@
 
 function setCookie(key, value) {
     var expires = new Date();
-    expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
-	document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+	expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
+	secure =  (SslUsed == 1) ? ' secure;' :'';
+	samesite = "";
+	if(secure){
+		samesite = " samesite=none;";
+	}
+	console.log(key + '=' + value + '; '+ secure+samesite+' expires=' + expires.toUTCString());
+	document.cookie = key + '=' + value + '; '+secure+samesite+' expires=' + expires.toUTCString();
 }
 function getCookie(key) {
     var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
@@ -17,7 +23,7 @@ $(document).ready(function() {
 	var tz = jstz.determine();
 	var timezone = tz.name();
 	
-	if(	( user_timezone == null || user_timezone =='' || user_timezone == undefined ) || user_timezone != timezone ) {
+	if(	(( user_timezone == null || user_timezone =='' || user_timezone == undefined ) || user_timezone != timezone) && cookieConsent.preferences == 1) {
 		setCookie('user_timezone', timezone);
 	}	
 	  

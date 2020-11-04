@@ -237,6 +237,7 @@ class AccountController extends LoggedUserController
         return $frm;
     }
 
+  
     public function setUpProfileLangInfo()
     {
         $post = FatApp::getPostedData();

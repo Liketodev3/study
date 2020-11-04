@@ -1161,15 +1161,43 @@ class CommonHelper extends FatUtility
         return $result;
     }
 
-    public static function setCookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath = '', $cokieSubDomainName = '', $isCookieSecure = false, $isCookieHttpOnly = true)
+    public static function setCookie($cookieName, $cookieValue, $cookieExpiryTime = 60 * 60 * 24 * 7, $cookiePath = CONF_WEBROOT_FRONT_URL, $cokieSubDomainName = '', $isCookieSecure = false, $isCookieHttpOnly = true, $samesite = '')
     {
-        $cookiePath = ($cookiePath == "") ? CONF_WEBROOT_URL : $cookiePath;
+        $cokieSubDomainName =  ($cokieSubDomainName == '') ? 	$_SERVER['HTTP_HOST'] : $cokieSubDomainName;
+        $cookieOptions = [];
+        $secure = FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false);
+       
+        $isCookieSecure = ($isCookieSecure && $secure) ? true : false;
 
+        if(empty($samesite) && $isCookieSecure) {
+            $samesite =  'none';	
+        }
+        if (PHP_VERSION_ID < 70300) {
+            
+            $cookiePath = ($samesite != '') ? $cookiePath.'; samesite='.$samesite :  $cookiePath;
+            return setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly);
+       
+        }else{
+            $cookieOptions = [
+                'expires' => $cookieExpiryTime,
+                'path' => $cookiePath,
+                'domain' => $cokieSubDomainName,
+                'secure' => $secure,
+                'httponly' => $isCookieHttpOnly,
+                'samesite' => $samesite,
+            ];
+            if($samesite != '') {
+                $cookieOptions['samesite'] =  $samesite;	
+            }
+            return  setcookie ( $cookieName ,  $cookieValue ,  $cookieOptions);
+        }
+       
         /* manipulating $cookieValue to make it array containg real data and storing creation datetime [ */
         /* */
         /* ] */
-
-        setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly);
+       
+        // return setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly,$options);
+        
     }
 
     public static function writeFile($name, $data, &$response)
@@ -1337,9 +1365,9 @@ class CommonHelper extends FatUtility
             );
     }
 
-    public static function getUserCookiesEnabled()
+    public static function getUserCookiesEnabled() : bool
     {
-        return (isset($_SESSION['cookies_enabled']) && $_SESSION['cookies_enabled']==true)?true:false;
+        return (!empty($_COOKIE[UserCookieConsent::COOKIE_NAME]));
     }
 
     public static function getDefaultCurrencySymbol()
@@ -1463,35 +1491,7 @@ class CommonHelper extends FatUtility
         return $data;
     }
 
-    /* public static function	getTimeZoneDiff($user_tz){
-        $local_tz = new DateTimeZone(FatApp::getConfig('CONF_TIMEZONE'));
-        $local = new DateTime('now', $local_tz);
-
-
-        $user_tz = new DateTimeZone($user_tz);
-        $user = new DateTime('now', $user_tz);
-
-        $local_offset = $local->getOffset() / 3600;
-        $user_offset = $user->getOffset() / 3600;
-
-        $diff = $user_offset - $local_offset;
-        return $diff;
-    }
-
-    public static function getTimeByTimezone($user_timezone, $format='H:i A', $diff=false){
-            $timestamp = time();
-            $dt = new DateTime("now", new DateTimeZone($user_timezone));
-            $dt->setTimestamp($timestamp);
-            $time = $dt->format($format);
-            if($diff){
-                $tzDiff = self::getTimeZoneDiff($user_timezone);
-                if($tzDiff<0){
-                    return $time." (IST - ".abs($tzDiff).")";
-                 }
-                    return $time." (IST + ".abs($tzDiff).")";
-            }
-            return $time;
-    } */
+   
 
     public static function encryptId($string_to_encrypt)
     {
@@ -1706,7 +1706,36 @@ class CommonHelper extends FatUtility
         return $teachLangsStr = implode($teachLangs, ', ');
     }
 
-    public static function setCookieParams()
+    public static function setCookieConsent(string $value = '')
+    {
+        if(empty($value)) {
+            $value = json_encode(UserCookieConsent::fieldsArrayWithDefultValue());
+        }
+        self::setCookie(UserCookieConsent::COOKIE_NAME, $value, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_URL,'', true);
+    }
+
+    public static function getCookieConsent() : array
+    {
+        $settings  = [];
+        if(!empty($_COOKIE[UserCookieConsent::COOKIE_NAME])) {
+            $settings =  json_decode($_COOKIE[UserCookieConsent::COOKIE_NAME], true);
+        }
+
+        if(UserAuthentication::isUserLogged()){
+           $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+           $cookieSettings = $userCookieConsent->getCookieSettings();
+           if(!empty($cookieSettings)) {
+                $settings =  json_decode($cookieSettings, true);
+               self::setCookieConsent($cookieSettings); 
+           }
+         }
+         if(empty($settings)) {
+            $settings = UserCookieConsent::fieldsArrayWithDefultValue();
+         }
+         return $settings;
+    }
+
+    public static function setSeesionCookieParams()
     {
         $maxlifetime = 60 * 60 * 24 * 7;
         $secure = FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false);

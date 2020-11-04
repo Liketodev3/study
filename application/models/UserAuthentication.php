@@ -181,12 +181,24 @@ class UserAuthentication extends FatModel
 
         $rowUser['user_ip'] = $ip;
         $rowUser['user_email'] = $row['credential_email'];
+        $userCookieeConsent = new UserCookieConsent($row['credential_user_id']);
+        $userCookieSettings = $userCookieeConsent->getCookieSettings();
+        
+        if(empty($userCookieSettings) && !empty($_COOKIE[UserCookieConsent::COOKIE_NAME])) {
+            $cookieSettings =  json_decode($_COOKIE[UserCookieConsent::COOKIE_NAME], true);
+            $userCookieeConsent->saveOrUpdateSetting($cookieSettings);
+        }
+
+        if(!empty($userCookieSettings)) {
+                CommonHelper::setCookieConsent($userCookieSettings);
+        }
+
         $this->setSession($rowUser);
         unset($_SESSION[UserAuthentication::SESSION_GUEST_USER_ELEMENT_NAME]);
         /* clear failed login attempt for the user [ */
         $this->clearFailedAttempt($ip, $username);
         /* ] */
-
+       
         return true;
     }
 
@@ -260,7 +272,7 @@ class UserAuthentication extends FatModel
             ));
         }
 
-        setcookie($_COOKIE[static::YOCOACHUSER_COOKIE_NAME], '', time() - 3600, CONF_WEBROOT_URL);
+        CommonHelper::setCookie($_COOKIE[static::YOCOACHUSER_COOKIE_NAME], '', time() - 3600, CONF_WEBROOT_URL, '', true);
         return true;
     }
 

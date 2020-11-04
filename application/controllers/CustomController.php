@@ -1,4 +1,7 @@
 <?php
+
+use function GuzzleHttp\json_encode;
+
 class CustomController extends MyAppController
 {
     public function paymentFailed()
@@ -7,38 +10,10 @@ class CustomController extends MyAppController
         $contactUsPageUrl = CommonHelper::generateUrl('contact');
         $textMessage = str_replace('{contact-us-page-url}', $contactUsPageUrl, $textMessage);
 
-        /* if(FatApp::getConfig('CONF_MAINTAIN_WALLET_ON_PAYMENT_FAILURE',FatUtility::VAR_INT,applicationConstants::NO) && isset( $_SESSION['cart_order_id']) &&  $_SESSION['cart_order_id']>0){
-            $cartOrderId = $_SESSION['cart_order_id'];
-            $orderObj = new Orders();
-            $orderDetail = $orderObj->getOrderById($cartOrderId);
-
-            $cartInfo = unserialize( $orderDetail['order_cart_data'] );
-            unset($cartInfo['shopping_cart']);
-
-            FatApp::getDb()->deleteRecords('tbl_user_cart', array('smt'=>'`usercart_user_id`=? and `usercarrt_type`=?', 'vals'=>array(UserAuthentication::getLoggedUserId(),CART::TYPE_PRODUCT)));
-            $cartObj = new Cart();
-            foreach($cartInfo as $key => $quantity){
-
-                $keyDecoded = unserialize( base64_decode($key) );
-
-                $selprod_id = 0;
-
-
-                if( strpos($keyDecoded, Cart::CART_KEY_PREFIX_PRODUCT ) !== FALSE ){
-                    $selprod_id = FatUtility::int(str_replace( Cart::CART_KEY_PREFIX_PRODUCT, '', $keyDecoded ));
-                }
-                $cartObj->add($selprod_id, $quantity);
-
-            }
-            $cartObj->updateUserCart();
-        } */
         $this->set('textMessage', $textMessage);
-        /* if(CommonHelper::isAppUser()){
-            $this->set('exculdeMainHeaderDiv', true);
-            $this->_template->render(false,false);
-        }else{ */
+
         $this->_template->render();
-        /* } */
+     
     }
 
     public function paymentSuccess($orderId = null)
@@ -52,16 +27,6 @@ class CustomController extends MyAppController
         foreach ($arrReplace as $key => $val) {
             $textMessage = str_replace($key, $val, $textMessage);
         }
-
-        /* Clear cart upon successfull redirection from Payment gateway[ */
-        /* if( $_SESSION['cart_user_id'] ){
-            $userId = (UserAuthentication::isUserLogged()) ? UserAuthentication::getLoggedUserId() : 0;
-            $cartObj = new Cart($userId);
-            $cartObj->clear();
-            $cartObj->updateUserCart();
-            unset($_SESSION['cart_user_id']);
-        } */
-        /* ] */
         if ($orderId) {
             $orderObj = new Order();
             $order = $orderObj->getOrderById($orderId);
@@ -80,52 +45,71 @@ class CustomController extends MyAppController
             $this->set('lessonInfo', $lessonInfo);
         }
         $this->set('textMessage', $textMessage);
-        /* if(CommonHelper::isAppUser()){
-            $this->set('exculdeMainHeaderDiv', true);
-            $this->_template->render(false,false);
-        }else{ */
+       
         $this->_template->render();
-        /* } */
     }
         public function updateUserCookies()
         {
-            $_SESSION['cookies_enabled']= true;
+            
+            if(UserAuthentication::isUserLogged()){
+                $UserCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+                $UserCookieConsent->saveOrUpdateSetting([], false);
+             }
+             
+            CommonHelper::setCookieConsent();
             return true;
         }
 
     public function paymentCancel()
     {
         FatApp::redirectUser(CommonHelper::generateFullUrl('Custom', 'paymentFailed'));
-        /* echo FatApp::getConfig('CONF_MAINTAIN_WALLET_ON_PAYMENT_CANCEL',FatUtility::VAR_INT,applicationConstants::NO);
-        echo $_SESSION['cart_order_id'];
-        if(FatApp::getConfig('CONF_MAINTAIN_WALLET_ON_PAYMENT_CANCEL',FatUtility::VAR_INT,applicationConstants::NO)&& isset( $_SESSION['cart_order_id']) &&  $_SESSION['cart_order_id']!=''){
-
-            $cartOrderId = $_SESSION['cart_order_id'];
-            $orderObj = new Orders();
-            $orderDetail = $orderObj->getOrderById($cartOrderId);
-
-            $cartInfo = unserialize( $orderDetail['order_cart_data'] );
-            unset($cartInfo['shopping_cart']);
-
-            FatApp::getDb()->deleteRecords('tbl_user_cart', array('smt'=>'`usercart_user_id`=? and `usercarrt_type`=?', 'vals'=>array(UserAuthentication::getLoggedUserId(),CART::TYPE_PRODUCT)));
-            $cartObj = new Cart();
-            foreach($cartInfo as $key => $quantity){
-
-                $keyDecoded = unserialize( base64_decode($key) );
-
-                $selprod_id = 0;
+    }
 
 
-                if( strpos($keyDecoded, Cart::CART_KEY_PREFIX_PRODUCT ) !== FALSE ){
-                    $selprod_id = FatUtility::int(str_replace( Cart::CART_KEY_PREFIX_PRODUCT, '', $keyDecoded ));
-                }
-                $cartObj->add($selprod_id, $quantity);
+    public function cookieForm()
+    {
+        $cookieForm = $this->getCookieForm();
+        if(UserAuthentication::isUserLogged()){
+            $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+            $cookieSetting = $userCookieConsent->getCookieSettings();
+            $cookieSetting =  \json_decode($cookieSetting, true);
+            $cookieForm->fill($cookieSetting);
+         }
 
-            }
-            $cartObj->updateUserCart();
-        }
+        $this->set('cookieForm',$cookieForm);
+        $this->_template->render(false, false);
+    }
 
-        FatApp::redirectUser(CommonHelper::generateFullUrl('Checkout')); */
+    protected function getCookieForm()
+    {
+        $form =  new Form('cookieForm');
+        $checkboxValue =  applicationConstants::YES;
+        $form->addCheckBox(Label::getLabel('LBL_Necessary'), UserCookieConsent::COOKIE_NECESSARY_FIELD, $checkboxValue, array(), true, 1);
+        $form->addCheckBox(Label::getLabel('LBL_Preferences'), UserCookieConsent::COOKIE_PREFERENCES_FIELD, $checkboxValue, array(), true, 0);
+        $form->addCheckBox(Label::getLabel('LBL_Statistics'), UserCookieConsent::COOKIE_STATISTICS_FIELD, $checkboxValue, array(), true, 0);
+        $form->addSubmitButton('','btn_submit', Label::getLabel('LBL_Save'));
+        return $form;
+    }
+
+    public function saveCookieSetting()
+    {
+        $cookieForm = $this->getCookieForm();
+
+         $data = $cookieForm->getFormDataFromArray(FatApp::getPostedData());
+         if ($data == false) {
+             Message::addErrorMessage(current($cookieForm->getValidationErrors()));
+             FatUtility::dieJsonError(Message::getHtml());
+         }
+         unset($data['btn_submit']);
+         unset($data['necessary']);
+         if(UserAuthentication::isUserLogged()){
+            $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+            $userCookieConsent->saveOrUpdateSetting($data, false);
+         }
+         
+         $data = \json_encode($data);
+         CommonHelper::setCookieConsent($data);
+         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Cookie_settings_update_successfully'));
     }
 
     

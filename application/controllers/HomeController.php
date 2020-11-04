@@ -44,11 +44,17 @@ class HomeController extends MyAppController
 
     public function setSiteDefaultLang($langId = 0)
     {
+        $isActivePreferencesCookie =  (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
+
+        if(!$isActivePreferencesCookie){
+            return false;
+        }
+        
         $langId = FatUtility::int($langId);
         if (0 < $langId) {
             $languages = Language::getAllNames();
             if (array_key_exists($langId, $languages)) {
-                setcookie('defaultSiteLang', $langId, time()+3600*24*10, CONF_WEBROOT_URL);
+                CommonHelper::setCookie('defaultSiteLang', $langId, time()+3600*24*10, CONF_WEBROOT_URL, '', true);
             }
         }
     }
@@ -66,7 +72,12 @@ class HomeController extends MyAppController
                 if(isset($_SESSION['search_filters']['maxPriceRange'])) {
                     unset($_SESSION['search_filters']['maxPriceRange']);
                 }
-                setcookie('defaultSiteCurrency', $currencyId, time()+3600*24*10, CONF_WEBROOT_URL);
+                $isActivePreferencesCookie =  (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
+        
+                if($isActivePreferencesCookie){
+                    CommonHelper::setCookie('defaultSiteCurrency', $currencyId, time()+3600*24*10, CONF_WEBROOT_URL, '', true);
+                }
+              
             }
         }
     }

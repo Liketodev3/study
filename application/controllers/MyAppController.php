@@ -30,6 +30,8 @@ class MyAppController extends FatController
         $urlController = implode('-', $arr);
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
         /* ] */
+        $cookieConsent =  CommonHelper::getCookieConsent();
+        $this->cookieConsent =  $cookieConsent;
         $jsVariables = array(
             'confirmUnLockPrice' => Label::getLabel('LBL_Are_you_sure_to_unlock_this_price!'),
             'confirmRemove' => Label::getLabel('LBL_Do_you_want_to_remove'),
@@ -67,9 +69,7 @@ class MyAppController extends FatController
             'pleaseSelect' => Label::getLabel('VLBL_Please_select'),
 			'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
 			'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
-			'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),
-
-
+			'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried')
             //'siteCurrencyId' => $this->siteCurrencyId,
             //'controllerName' => $controllerName,
         );
@@ -81,6 +81,8 @@ class MyAppController extends FatController
         if (CommonHelper::getLayoutDirection() == 'rtl') {
             $this->_template->addCss('css/style--arabic.css');
         }
+     
+        $this->set('cookieConsent', $cookieConsent);
         $this->set('currencySymbolLeft', CommonHelper::getCurrencySymbolLeft());
         $this->set('currencySymbolRight', CommonHelper::getCurrencySymbolRight());
         $this->set('siteLangId', $this->siteLangId);
@@ -88,6 +90,7 @@ class MyAppController extends FatController
         $this->set('jsVariables', $jsVariables);
         $this->set('controllerName', $controllerName);
         $this->set('action', $this->action);
+      
     }
 
     protected function getChangeEmailForm($passwordField = true)
@@ -113,7 +116,7 @@ class MyAppController extends FatController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         return $frm;
     }
-
+   
     protected function getTeacherQualificationForm($isCertiRequried = false)
     {
         $frm = new Form('frmQualification');

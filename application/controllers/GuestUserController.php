@@ -38,7 +38,7 @@ class GuestUserController extends MyAppController
             }
         }
         $userId = UserAuthentication::getLoggedUserId();
-        setcookie('uc_id', $userId, time() + 3600 * 24 * 30, CONF_WEBROOT_URL);
+        CommonHelper::setcookie('uc_id', $userId, time() + 3600 * 24 * 30, CONF_WEBROOT_URL, '', true);
         $this->set('redirectUrl', User::getPreferedDashbordRedirectUrl());
         $this->set('msg', Label::getLabel("MSG_LOGIN_SUCCESSFULL"));
         $this->_template->render(false, false, 'json-success.php');
@@ -394,7 +394,7 @@ class GuestUserController extends MyAppController
         );
         if (UserAuthentication::saveLoginToken($values)) {
             $cookieName = UserAuthentication::YOCOACHUSER_COOKIE_NAME;
-            $cookres = setcookie($cookieName, $token, $expiry, CONF_WEBROOT_URL);
+            $cookres = CommonHelper::setCookie($cookieName, $token, $expiry, CONF_WEBROOT_URL, '', true);
             return true;
         }
         return false;
@@ -1416,4 +1416,6 @@ class GuestUserController extends MyAppController
         Message::addMessage(Label::getLabel('MSG_Email_Updated._Please_Login_again_in_your_profile_with_new_email'));
         $this->logout();
     }
+
+
 }
