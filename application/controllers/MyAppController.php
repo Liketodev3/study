@@ -211,8 +211,8 @@ class MyAppController extends FatController
                 FatUtility::dieWithError(Message::getHtml());
             }
         } catch (Mailchimp_Error $e) {
-            Message::addErrorMessage($e->getMessage());
-            // Message::addErrorMessage( Label::getLabel('MSG_Error_while_subscribing_to_newsletter', $siteLangId) );
+            //Message::addErrorMessage($e->getMessage());
+            Message::addErrorMessage( Label::getLabel('MSG_Error_while_subscribing_to_newsletter', $siteLangId) );
             FatUtility::dieWithError(Message::getHtml());
         }
         $this->set('msg', Label::getLabel('MSG_Successfully_subscribed', $siteLangId));
