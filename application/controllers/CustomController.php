@@ -83,7 +83,7 @@ class CustomController extends MyAppController
         $form->addCheckBox(Label::getLabel('LBL_Necessary'), UserCookieConsent::COOKIE_NECESSARY_FIELD, $checkboxValue, array(), true, 1);
         $form->addCheckBox(Label::getLabel('LBL_Preferences'), UserCookieConsent::COOKIE_PREFERENCES_FIELD, $checkboxValue, array(), true, 0);
         $form->addCheckBox(Label::getLabel('LBL_Statistics'), UserCookieConsent::COOKIE_STATISTICS_FIELD, $checkboxValue, array(), true, 0);
-        $form->addSubmitButton('','btn_submit', Label::getLabel('LBL_Save_Cookie'));
+        $form->addSubmitButton('','btn_submit', Label::getLabel('LBL_Save'));
         return $form;
     }
 
