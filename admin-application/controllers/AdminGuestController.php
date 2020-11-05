@@ -22,6 +22,7 @@ class AdminGuestController extends FatController
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
         $jsVariables    = array(
             'processing' => Label::getLabel('LBL_Processing...', $this->adminLangId)
+            , 'isMandatory' => Label::getLabel('VLBL_is_mandatory', $this->adminLangId),
         );
         $this->set('controllerName', $controllerName);
         $this->set('jsVariables', $jsVariables);
