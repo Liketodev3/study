@@ -719,14 +719,20 @@ h1, h2, h3, h4, h5, h6{
     margin: 10px 0 10px;
     width: 100%;
     display: inline-block;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
-
+.group--social a span, .group--social a {
+    font-size: 13px;
+}
 .group.group--social .-gap {
     height: 15px;
+    font-weight: 500;
 }
 
 .group.group--social p {
-    margin: 0;
+    margin: 10px 0;
 }
 
 .group.group--social .btn {
