@@ -148,3 +148,5 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ;
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.4.0.20201104' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.4.1.20201105' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';

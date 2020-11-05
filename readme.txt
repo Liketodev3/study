@@ -1,5 +1,17 @@
 This file shares the details of YoCoach version and features.
 
+
+Release Version: TV-2.4.1.20201105
+Release Date: 2020/11/05
+
+
+Bug fixes:
+
+    Bug:#044927 - Login popup ui fix
+    Bug:#044929 - fix js valiation messages on admin login screen
+
+-----------------------------
+
 Release Version: TV-2.4.0.20201104
 Release Date: 2020/11/04
 
