@@ -69,6 +69,9 @@ class Zoom
         );
         
         $res = CommonHelper::curlReq($url, $api_data, $headers);
+        if(empty($res['id'])){
+            throw new Exception($res['message']);
+        }
         return $res['id'];
     }
     

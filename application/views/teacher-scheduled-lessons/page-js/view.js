@@ -127,13 +127,17 @@ $(function() {
         }else if(isLessonSpaceMeetingToolActive){
             return createLessonspaceBox();
         }else if(isZoomMettingToolActive){
+            if(!data){
+                $.systemMessage('Someting went wrong', 'alert alert--danger');
+                return false;
+            }
             if(typeof(joinFromApp)!='undefined' && joinFromApp==1){
                 window.location = data.join_url;
                 return;
             }
             return createZoomBox(data);
         }else{
-            $.systemMessage('Someting went worngs', 'alert alert--danger');
+            $.systemMessage('Someting went wrong', 'alert alert--danger');
             return false;				
 		}
 	};
@@ -158,7 +162,11 @@ $(function() {
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','startLessonAuthentication',[CometJsonFriendData.lessonId]),'',function(t){
             var res = JSON.parse(t);
 			if(res.status == 0){
-				$.mbsmessage( canStartAlertLabel,true, 'alert alert--danger');
+                if(res.msg){
+                    $.mbsmessage( res.msg, true, 'alert alert--danger');
+                }else{
+                    $.mbsmessage( canStartAlertLabel, true, 'alert alert--danger');
+                }
 				return false;
 			}
 			joinLessonButtonAction();

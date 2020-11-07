@@ -157,17 +157,24 @@ $(function() {
 
 	createChatBox = function(data, joinFromApp){
 		if(isCometChatMeetingToolActive){
+            joinLessonButtonAction();
             return createCometChatBox();
         }else if(isLessonSpaceMeetingToolActive){
+            joinLessonButtonAction();
             return createLessonspaceBox();
         }else if(isZoomMettingToolActive){
+            if(!data){
+                $.systemMessage('Someting went wrong', 'alert alert--danger');
+                return false;
+            }
+            joinLessonButtonAction();
             if(typeof(joinFromApp)!='undefined' && joinFromApp==1){
                 window.location = data.join_url;
                 return;
             }
             return createZoomBox(data);
         }else{
-            $.systemMessage('Someting went worngs', 'alert alert--danger');
+            $.systemMessage('Someting went wrong', 'alert alert--danger');
             return false;				
 		}
 	};
@@ -176,7 +183,6 @@ $(function() {
 		fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'markLearnerJoinTime'), 'lDetailId='+lDetailId , function(t) {
             var ans = $.parseJSON(t);
             if(ans.status){
-                joinLessonButtonAction();
                 createChatBox(ans.data, joinFromApp);
                 // $.mbsmessage( ans.msg,true, 'alert alert--success');
             }

@@ -1166,36 +1166,40 @@ class TeacherScheduledLessonsController extends TeacherBaseController
                 'last_name' => $lessonData['teacherLastName'],
                 'email'     => $lessonData['teacherEmail']
             );
-            $zoomTeacherId = $zoom->createUser($teacherData);
-            $startTime = $lessonData['slesson_date'].' '.$lessonData['slesson_start_time'];
-            
-            $teachingLangs = TeachingLanguage::getAllLangs($this->siteLangId);
-            
-            $meetingData = array(
-                'zoomTeacherId' => $zoomTeacherId,
-                'title'         => (!$lessonData['is_trial'] ? $teachingLangs[$lessonData['slesson_slanguage_id']] : Label::getLabel('LBL_Trial_Lesson')),
-                'start_time'    => $startTime,
-                'duration'      => $lessonData['op_lesson_duration'],
-                'description'   => '',
-            );
-            $meetingInfo = $zoom->createMeeting($meetingData);
-            
-            if(!$lessonMeetingDetail->addDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA, json_encode($meetingInfo))){
-                CommonHelper::dieJsonError($lessonMeetingDetail->getError());
-            }
-            
-            if($meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)){
-                $row = json_decode($meetingRow,true);
+            try{
+                $zoomTeacherId = $zoom->createUser($teacherData);
+                $startTime = $lessonData['slesson_date'].' '.$lessonData['slesson_start_time'];
+                
+                $teachingLangs = TeachingLanguage::getAllLangs($this->siteLangId);
+                
                 $meetingData = array(
-                    'id'        => $row['id'],
-                    'start_url' => $row['start_url'],
-                    'join_url'  => $row['join_url'],
-                    'username'  => $lessonData['teacherFullName'],
-                    'email'     => $lessonData['teacherEmail'],
-                    'role'      => Zoom::ROLE_HOST,
-                    'signature' => $zoom->generateSignature($row['id'], Zoom::ROLE_HOST)
+                    'zoomTeacherId' => $zoomTeacherId,
+                    'title'         => (!$lessonData['is_trial'] ? $teachingLangs[$lessonData['slesson_slanguage_id']] : Label::getLabel('LBL_Trial_Lesson')),
+                    'start_time'    => $startTime,
+                    'duration'      => $lessonData['op_lesson_duration'],
+                    'description'   => '',
                 );
-                CommonHelper::dieJsonSuccess(['data' => $meetingData, 'msg' => Label::getLabel('LBL_Joining._Please_Wait...')]);
+                $meetingInfo = $zoom->createMeeting($meetingData);
+                
+                if(!$lessonMeetingDetail->addDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA, json_encode($meetingInfo))){
+                    CommonHelper::dieJsonError($lessonMeetingDetail->getError());
+                }
+                
+                if($meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)){
+                    $row = json_decode($meetingRow,true);
+                    $meetingData = array(
+                        'id'        => $row['id'],
+                        'start_url' => $row['start_url'],
+                        'join_url'  => $row['join_url'],
+                        'username'  => $lessonData['teacherFullName'],
+                        'email'     => $lessonData['teacherEmail'],
+                        'role'      => Zoom::ROLE_HOST,
+                        'signature' => $zoom->generateSignature($row['id'], Zoom::ROLE_HOST)
+                    );
+                    CommonHelper::dieJsonSuccess(['data' => $meetingData, 'msg' => Label::getLabel('LBL_Joining._Please_Wait...')]);
+                }
+            }catch(exception $e){
+               CommonHelper::dieJsonError($e->getMessage()); 
             }
         }elseif($count>0){
             CommonHelper::dieJsonSuccess( Label::getLabel('LBL_Joining._Please_Wait...'));
