@@ -1755,12 +1755,35 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addCondition('sld.sldetail_id', '=', $lDetailId);
         $srch->addCondition('sld.sldetail_learner_join_time', '=', '0000-00-00');
         $rs = $srch->getResultSet();
-        $data = FatApp::getDb()->fetch($rs);
-        if ($data) {
-            if($data['slesson_teacher_join_time']<=0){
+        $lessonData = FatApp::getDb()->fetch($rs);
+        
+        if ($lessonData) {
+            if($lessonData['slesson_teacher_join_time']<=0){
                 FatUtility::dieJsonError(Label::getLabel("LBL_Please_Wait._Let_teacher_join"));
             }
-            $sLessonDetailObj = new ScheduledLessonDetails($data['sldetail_id']);
+            
+            $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT);
+            if(ApplicationConstants::MEETING_ZOOM == $activeMettingTool){
+                $lessonMeetingDetail =  new LessonMeetingDetail($lessonId, $lessonData['teacherId']);
+                
+                $zoom = new Zoom();
+
+                if(!$meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)){
+                    CommonHelper::dieJsonError(Label::getLabel('MSG_Please_Wait_Let_the_Teacher_Initiate_the_lesson_from_His/Her_End'));
+                }
+                $row = json_decode($meetingRow,true);
+                $meetingData = array(
+                    'id'        => $row['id'],
+                    'join_url'  => $row['join_url'],
+                    'username'  => $lessonData['learnerFullName'],
+                    'email'     => $lessonData['learnerEmail'],
+                    'role'      => Zoom::ROLE_ATTENDEE,
+                    'signature' => $zoom->generateSignature($row['id'], Zoom::ROLE_ATTENDEE)
+                );
+                CommonHelper::dieJsonSuccess(['data' => $meetingData, 'msg' => Label::getLabel('LBL_Joining._Please_Wait...')]);
+            }
+            
+            $sLessonDetailObj = new ScheduledLessonDetails($lessonData['sldetail_id']);
             $sLessonDetailObj->assignValues(array('sldetail_learner_join_time' => date('Y-m-d H:i:s')));
             if (!$sLessonDetailObj->save()) {
                 FatUtility::dieJsonError($sLessonDetailObj->getError());
