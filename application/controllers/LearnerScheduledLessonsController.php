@@ -1742,13 +1742,15 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if ($lDetailId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $srch = new ScheduledLessonSearch(false);
+        $srch = new stdClass();
+        $this->searchLessons($srch);
+        $srch->joinLearnerCredentials();
         $srch->addMultipleFields(
             array(
-                'sld.sldetail_id',
-                'slns.slesson_status',
                 'slns.slesson_teacher_join_time',
-                'sld.sldetail_learner_join_time'
+                'sld.sldetail_learner_join_time',
+                'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+                'lcred.credential_email as learnerEmail',
             )
         );
         $srch->addCondition('sld.sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
@@ -1762,12 +1764,14 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 FatUtility::dieJsonError(Label::getLabel("LBL_Please_Wait._Let_teacher_join"));
             }
             
+            $lessonId = $lessonData['slesson_id'];
+            
             $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT);
             if(ApplicationConstants::MEETING_ZOOM == $activeMettingTool){
                 $lessonMeetingDetail =  new LessonMeetingDetail($lessonId, $lessonData['teacherId']);
                 
                 $zoom = new Zoom();
-
+                
                 if(!$meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)){
                     CommonHelper::dieJsonError(Label::getLabel('MSG_Please_Wait_Let_the_Teacher_Initiate_the_lesson_from_His/Her_End'));
                 }

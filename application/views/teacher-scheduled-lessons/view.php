@@ -4,6 +4,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 
 $isCometChatMeetingToolActive = $activeMettingTool==ApplicationConstants::MEETING_COMET_CHAT;
 $isZoomMettingToolActive = $activeMettingTool==ApplicationConstants::MEETING_ZOOM;
+$isLessonSpaceMeetingToolActive = $activeMettingTool==ApplicationConstants::MEETING_LESSON_SPACE;
 if($isZoomMettingToolActive){ ?>
 <script src="<?php echo CONF_WEBROOT_URL ?>js/zoom_tool.js"></script>
 <?php } ?>
@@ -17,7 +18,7 @@ const STATUS_ISSUE_REPORTED =  <?php echo ScheduledLesson::STATUS_ISSUE_REPORTED
 
 var isCometChatMeetingToolActive = '<?php echo $isCometChatMeetingToolActive ?>';
 var isZoomMettingToolActive = '<?php echo $isZoomMettingToolActive ?>';
-var isLessonSpaceMeetingToolActive = '<?php echo $isZoomMettingToolActive ?>';
+var isLessonSpaceMeetingToolActive = '<?php echo $isLessonSpaceMeetingToolActive ?>';
 var testTool = window.testTool;
 
 const ZOOM_API_KEY = '<?php echo FatApp::getConfig('CONF_ZOOM_API_KEY') ?>';

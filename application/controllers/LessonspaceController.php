@@ -47,13 +47,13 @@ class LessonspaceController extends LoggedUserController
         $db =  FatApp::getDb();
         $db->startTransaction();
        
-        if(!$lessonMeetingDetail->addDeatils( LessonMeetingDetail::URL_KEY, $lessonData['client_url'])) {
+        if(!$lessonMeetingDetail->addDetails( LessonMeetingDetail::URL_KEY, $lessonData['client_url'])) {
              FatUtility::dieJsonError( $lessonMeetingDetail->getError() );
         }
         
         $lessonMeetingDetail =  new LessonMeetingDetail($lessonId, UserAuthentication::getLoggedUserId());
 
-        if(!$lessonMeetingDetail->addDeatils('LEESON_ROOM_ID', $lessonData['room_id'])) {
+        if(!$lessonMeetingDetail->addDetails('LEESON_ROOM_ID', $lessonData['room_id'])) {
 
             $db->rollbackTransaction();
             FatUtility::dieJsonError( $lessonMeetingDetail->getError() );

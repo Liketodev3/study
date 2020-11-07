@@ -17,8 +17,8 @@ var lessonId = '<?php echo $lessonId; ?>';
 var is_grpcls = '<?php echo $lessonRow['slesson_grpcls_id']>0 ?>';
 
 var isCometChatMeetingToolActive = '<?php echo $isCometChatMeetingToolActive ?>';
-var isZoomMettingToolActive = '<?php echo $isZoomMettingToolActive; ?>
-var isLessonSpaceMettingToolActive = '<?php echo $isLessonSpaceMeetingToolActive; ?>
+var isZoomMettingToolActive = '<?php echo $isZoomMettingToolActive; ?>';
+var isLessonSpaceMeetingToolActive = '<?php echo $isLessonSpaceMeetingToolActive; ?>';
 
 var testTool = window.testTool;
 

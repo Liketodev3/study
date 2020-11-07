@@ -43,7 +43,7 @@ class LessonMeetingDetail extends MyAppModel
         return $meetingData['lmeetdetail_value'];
     }
 
-    public function addDeatils( string $key , string $value = '' ) : bool
+    public function addDetails( string $key , string $value = '' ) : bool
     {
         $assigenValue = array(
             'lmeetdetail_key' => $key,

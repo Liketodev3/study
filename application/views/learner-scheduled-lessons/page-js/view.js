@@ -155,17 +155,17 @@ $(function() {
         joinLesson(learnerId, teacherId, 1);
     };
 
-	createChatBox = function(joinFromApp){
+	createChatBox = function(data, joinFromApp){
 		if(isCometChatMeetingToolActive){
             return createCometChatBox();
-        }else if(isLessonSpaceMeetingTool){
+        }else if(isLessonSpaceMeetingToolActive){
             return createLessonspaceBox();
         }else if(isZoomMettingToolActive){
             if(typeof(joinFromApp)!='undefined' && joinFromApp==1){
-                window.location = t.data.join_url;
+                window.location = data.join_url;
                 return;
             }
-            return createZoomBox(t.data);
+            return createZoomBox(data);
         }else{
             $.systemMessage('Someting went worngs', 'alert alert--danger');
             return false;				
@@ -177,7 +177,7 @@ $(function() {
             var ans = $.parseJSON(t);
             if(ans.status){
                 joinLessonButtonAction();
-                createChatBox(joinFromApp);
+                createChatBox(ans.data, joinFromApp);
                 // $.mbsmessage( ans.msg,true, 'alert alert--success');
             }
             else{

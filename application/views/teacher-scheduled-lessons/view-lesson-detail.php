@@ -488,7 +488,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
     }
 
 
-    if (!is_time_up && lesson_joined && !lesson_status_completed && lessonStatus != '<?php echo ScheduledLesson::STATUS_CANCELLED ?>') {
+    if (!isZoomMettingToolActive && !is_time_up && lesson_joined && !lesson_status_completed && lessonStatus != '<?php echo ScheduledLesson::STATUS_CANCELLED ?>') {
         joinLesson(CometJsonData, CometJsonFriendData);
     }
     var worker = new Worker(siteConstants.webroot + 'js/worker-time-interval.js?');

@@ -121,17 +121,17 @@ $(function() {
         joinLesson(CometJsonData, CometJsonFriendData, 1);
     };
     
-    createChatBox = function(){
+    createChatBox = function(data, joinFromApp){
 		if(isCometChatMeetingToolActive){
             return createCometChatBox();
-        }else if(isLessonSpaceMeetingTool){
+        }else if(isLessonSpaceMeetingToolActive){
             return createLessonspaceBox();
         }else if(isZoomMettingToolActive){
             if(typeof(joinFromApp)!='undefined' && joinFromApp==1){
-                window.location = t.data.join_url;
+                window.location = data.join_url;
                 return;
             }
-            return createZoomBox(t.data);
+            return createZoomBox(data);
         }else{
             $.systemMessage('Someting went worngs', 'alert alert--danger');
             return false;				
@@ -156,15 +156,14 @@ $(function() {
             createGroup();
         }
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','startLessonAuthentication',[CometJsonFriendData.lessonId]),'',function(t){
-			if(t == 0){
+            var res = JSON.parse(t);
+			if(res.status == 0){
 				$.mbsmessage( canStartAlertLabel,true, 'alert alert--danger');
 				return false;
 			}
 			joinLessonButtonAction();
-            createChatBox()
+            createChatBox(res.data, joinFromApp)
 			markTeacherJoinTime();
-			
-           
 		});
     };
 

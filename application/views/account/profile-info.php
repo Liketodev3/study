@@ -1,10 +1,11 @@
 <?php
-defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+defined('SYSTEM_INIT') or die('Invalid Usage.');
+$activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT);
+?>
 <script>
 var userIsTeacher = <?php echo $userIsTeacher?:0; ?>;
-var activeMeetingTool =  '<?php echo CommonHelper::getActiveMeetingTool(); ?>';
-var cometChatMeetingTool = '<?php echo  CommonHelper::getCometChatMeetingTool(); ?>';
-var lessonspaceMeetingTool = '<?php echo CommonHelper::getLessonspaceMeetingTool(); ?>';
+
+var isCometChatMeetingToolActive = '<?php echo $activeMettingTool == ApplicationConstants::MEETING_COMET_CHAT ?>';
 </script>
 
 <section class="section section--grey section--page">
