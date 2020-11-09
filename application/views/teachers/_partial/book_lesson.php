@@ -18,30 +18,7 @@ if( !empty( $teacher['teachLanguages'] ) ) {
 		$lessonPackage = array_shift( $lessonPackages );
 	?>
 	<h4 class="-text-bold"><?php echo Label::getLabel("LBL_Reserve_a_Session"); ?></h4>
-	<?php /* <div class="select-box toggle-group">
-
-		<a href="javascript:void(0)" class="select-box__value toggle__trigger-js">
-		<?php echo $lessonPackage['lpackage_title']; ?> <small class="-color-secondary"><?php echo ($lessonPackage['lpackage_lessons']>1)?CommonHelper::displayMoneyFormat( $teacher['us_bulk_lesson_amount'] ): CommonHelper::displayMoneyFormat(  $teacher['us_single_lesson_amount'] ) ; ?> / <?php echo Label::getLabel('LBL_Per_Hour'); ?></small></a>
-
-		<?php if( count($lessonPackages) ){
-		?>
-		<div class="select-box__target -skin toggle__target-js" style="display: none;">
-			<div class="listing listing--vertical">
-				<ul>
-					<?php foreach( $lessonPackages as $lpackage ){ ?>
-					<li>
-						<a href="javascript:void(0)" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lpackage['lpackage_id'] ?>' )">
-						<?php echo $lpackage['lpackage_title']; ?> <small class="-color-secondary"><?php echo ($lpackage['lpackage_lessons']>1)?CommonHelper::displayMoneyFormat( $teacher['us_bulk_lesson_amount'] ): CommonHelper::displayMoneyFormat(  $teacher['us_single_lesson_amount'] ) ; ?> / <?php echo Label::getLabel('LBL_Per_Hour'); ?></small>
-						</a>
-					</li>
-					<?php } ?>
-				</ul>
-			</div>
-		</div>
-		<?php } ?>
-
-	</div>*/ ?>
-
+	
 	<?php } ?>
 
 	<div class="box-btn-group">

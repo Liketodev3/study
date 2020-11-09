@@ -41,7 +41,7 @@
 							<?php 
 							if( $teacher['teacherTeachLanguageName'] !='' && !empty( $teacher['teacherTeachLanguageName'] ) ) { 
 								$teachLangs = explode(',',$teacher['teacherTeachLanguageName']);
-								//print_r( $languages );
+							
 								if( count ( $teachLangs ) > 1 ) {
 									$first_array = array_slice($teachLangs,0, 1);
 									$second_array = array_slice($teachLangs,1, count( $teachLangs ));

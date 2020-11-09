@@ -241,8 +241,6 @@ class PurchasedLessonsController extends AdminBaseController
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         $rs      = $srch->getResultSet();
-        //echo $srch->getQuery();
-        //die();
 
         $records = FatApp::getDb()->fetchAll($rs);
         $adminId = AdminAuthentication::getLoggedAdminId();
