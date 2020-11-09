@@ -48,8 +48,8 @@ class TeacherStudentsController extends TeacherBaseController
             'COUNT(IF(slns.slesson_status="'.ScheduledLesson::STATUS_NEED_SCHEDULING.'",1,null)) as unScheduledLessonCount',
             'COUNT(IF(slns.slesson_date < "'.date('Y-m-d').'"  AND slns.slesson_date != "0000-00-00", 1, null)) as pastLessonCount',
             'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
-            'IFNULL(top_single_lesson_price, ts.us_single_lesson_amount ) as singleLessonAmount',
-            'IFNULL(top_bulk_lesson_price, ts.us_bulk_lesson_amount ) as bulkLessonAmount',
+            'IFNULL(top_single_lesson_price,0) as singleLessonAmount',
+            'IFNULL(top_bulk_lesson_price, 0) as bulkLessonAmount',
         ));
 
         if (!empty($post['keyword'])) {

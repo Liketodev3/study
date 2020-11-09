@@ -218,8 +218,7 @@ class TeacherGroupClassesSearch extends SearchBase
         if($addUserSettingJoin) {
             $this->joinUserSettings();
         }
-        //$this->addCondition( 'us_single_lesson_amount', '>', 0 );
-        //$this->addCondition( 'us_bulk_lesson_amount', '>', 0 );
+       
         /* teachLanguage[ */
         if ($langCheck) {
             $tlangSrch = $this->getMyTeachLangQry();

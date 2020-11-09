@@ -179,8 +179,8 @@ class TeachersController extends MyAppController {
 			$srch->joinFavouriteTeachers(UserAuthentication::getLoggedUserId());
 			$srch->addFld('uft_id');
             /* find, if have added any offer price is locked with this teacher[ */
-            $srch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top_teacher_id = user_id AND top_learner_id = '.UserAuthentication::getLoggedUserId(), 'top');
-            $srch->addFld(array('top_single_lesson_price', 'top_bulk_lesson_price'));
+            // $srch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top_teacher_id = user_id AND top_learner_id = '.UserAuthentication::getLoggedUserId(), 'top');
+            // $srch->addFld(array('top_single_lesson_price', 'top_bulk_lesson_price'));
             /* ] */
         } else {
 			$srch->addFld('0 as uft_id');
@@ -201,8 +201,6 @@ class TeachersController extends MyAppController {
 			'utsl.spoken_languages_proficiency',
 			'us_video_link',
 			'us_is_trial_lesson_enabled',
-			'us_single_lesson_amount',
-			'us_bulk_lesson_amount',
 			'minPrice',
 			'maxPrice',
             'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
@@ -214,12 +212,8 @@ class TeachersController extends MyAppController {
 		if (empty($teacher)) {
 			FatUtility::exitWithErrorCode(404);
 		}
-		/* if offered price are locked with this teacher, then buying will be with that offered price[ */
-		if (isset($teacher['top_single_lesson_price']) && !empty($teacher['top_single_lesson_price']) && !empty($teacher['top_bulk_lesson_price'])) {
-			$teacher['us_bulk_lesson_amount'] = $teacher['top_bulk_lesson_price'];
-			$teacher['us_single_lesson_amount'] = $teacher['top_single_lesson_price'];
-		}
-		/* ] */
+	
+	
 		/* [ */
 		$isFreeTrialEnabled = false;
 		$freeTrialPackageRow = LessonPackage::getFreeTrialPackage($this->siteLangId);
@@ -358,31 +352,19 @@ class TeachersController extends MyAppController {
 		$srch->setTeacherDefinedCriteria();
 		$srch->setPageSize(1);
 		$srch->addCondition('user_id', '=', $teacher_id);
-		if (UserAuthentication::isUserLogged()) {
-            /* find, if have added any offer price is locked with this teacher[ */
-            $srch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top_teacher_id = user_id AND top_learner_id = '.UserAuthentication::getLoggedUserId(), 'top');
-            $srch->addFld(array('top_single_lesson_price', 'top_bulk_lesson_price'));
-            /* ] */
-        }
+		
 		$srch->addMultipleFields(array(
 			/* 'user_timezone', */
 			'user_first_name',
 			'CONCAT(user_first_name," ",user_last_name) as user_full_name',
 			'user_country_id',
-			'us_single_lesson_amount',
-			'us_bulk_lesson_amount',
 		));
 		$rs = $srch->getResultSet();
 		$userRow = FatApp::getDb()->fetch($rs);
 		if (!$userRow) {
 			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
 		}
-		/* if offered price are locked with this teacher, then buying will be with that offered price[ */
-		if (isset($userRow['top_single_lesson_price']) && !empty($userRow['top_single_lesson_price']) && !empty($userRow['top_bulk_lesson_price'])) {
-			$userRow['us_bulk_lesson_amount'] = $userRow['top_bulk_lesson_price'];
-			$userRow['us_single_lesson_amount'] = $userRow['top_single_lesson_price'];
-		}
-		/* ] */
+	
 		$allowedActionArr = array(
 			'free_trial',
 			'paid'
@@ -770,9 +752,6 @@ class TeachersController extends MyAppController {
 			'user_country_id',
 			'country_name as user_country_name',
 			'user_profile_info',
-			// 'us_single_lesson_amount',
-			// 'us_bulk_lesson_amount',
-			//'IFNULL(slanguage_name, slanguage_identifier) as teachlanguage_name',
 			'utsl.spoken_language_names',
 			'utsl.spoken_languages_proficiency',
 			'utls.teacherTeachLanguageName',

@@ -127,8 +127,6 @@ class LearnerController extends LearnerBaseController
             'utsl.spoken_languages_proficiency',
             'us_video_link',
             'us_is_trial_lesson_enabled',
-            'us_single_lesson_amount',
-            'us_bulk_lesson_amount',
             'utl_slanguage_ids'
         ));
         $rs = $srch->getResultSet();
