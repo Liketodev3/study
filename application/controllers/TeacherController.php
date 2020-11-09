@@ -549,12 +549,12 @@ class TeacherController extends TeacherBaseController
 		$endDate = $post['end'];
 		$user_timezone = MyDate::getUserTimeZone();
 		$systemTimeZone = MyDate::getTimeZone();
-		$startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
-		$endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
-		$startDate = date('Y-m-d',strtotime($startDate));
-		$endDate = date('Y-m-d',strtotime($endDate));
+        $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+        $endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
+        $_serchEndDate =    $post['end'];
 		$weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId,$startDate,$endDate);
-		$_serchEndDate = $endDate." 00:00:00";
+       
+
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
         $jsonArr = array();
         if (!empty($weeklySchRows)) {
@@ -567,7 +567,7 @@ class TeacherController extends TeacherBaseController
                 $startDate = date('Y-m-d', strtotime($twsch_start_time));
                 $endDate = date('Y-m-d', strtotime($twsch_end_time));
 
-                if ((strtotime($twsch_start_time) >=  strtotime($post['start'] .' 00:00:00 ')) && (strtotime($twsch_end_time) <= strtotime($_serchEndDate))) {
+                //if ((strtotime($twsch_start_time) >=  strtotime($post['start'] .' 00:00:00 ')) && (strtotime($twsch_end_time) <= strtotime($_serchEndDate))) {
                     $jsonArr[] = array(
                         "title" => "",
                         "date" => date('Y-m-d', strtotime($twsch_start_time)),
@@ -577,7 +577,7 @@ class TeacherController extends TeacherBaseController
                         'classType' => $row['twsch_is_available'],
                         'className' => $cssClassNamesArr[$row['twsch_is_available']]
                     );
-                }
+               // }
             }
         }
         echo FatUtility::convertToJson($jsonArr);

@@ -39,16 +39,13 @@ class TeacherWeeklySchedule extends MyAppModel
             )
         );
         $srch->addCondition('twsch_user_id', ' = ', $userId);
-
-        $date = $end;
-        $newdate = strtotime('-1 day', strtotime($date)) ;
-        $newEndDate = date('Y-m-d', $newdate);
-
-        $srch->addCondition('twsch_date', 'between', array($start,$newEndDate ));
+        $srch->addCondition('mysql_func_CONCAT(twsch_date," ",twsch_start_time)', '>=',$start, 'AND', true);
+        $srch->addCondition('mysql_func_CONCAT(twsch_end_date," ",twsch_end_time)', '<=', $end, 'AND', true);
         $srch->addCondition('twsch_date', '>=', date('Y-m-d'));
         if($isAvailabel) {
             $srch->addCondition('twsch_is_available', '=', self::AVAILABLE);
         }
+        $srch->addOrder('twsch_date','asc');
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetchAll($rs);
     }
