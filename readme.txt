@@ -1,6 +1,10 @@
 This file shares the details of YoCoach version and features.
 
+Bug fixes:
 
+    Bug:#045185- Fixed my teachers lessons count
+
+-----------------------------
 Release Version: TV-2.4.1.20201105
 Release Date: 2020/11/05
 

@@ -7,7 +7,7 @@
 			
 			<th><?php echo Label::getLabel('LBL_Teacher'); ?></th>
 			<th><?php echo Label::getLabel('LBL_Average_Rating'); ?></th>
-			<th><?php echo Label::getLabel('LBL_Price_Single/Bulk'); ?></th>
+			<th><?php echo Label::getLabel('LBL_Lock_(Single/Bulk_Price)'); ?></th>
 			<th><?php echo Label::getLabel('LBL_Scheduled'); ?></th>
 			<th><?php echo Label::getLabel('LBL_Past'); ?></th>
 			<th><?php echo Label::getLabel('LBL_Unscheduled'); ?></th>
@@ -81,10 +81,7 @@
             </td>
 
 			<td>
-				<span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Price_Single/Bulk');?></span>
-
-				
-				
+				<span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Lock_(Single/Bulk_Price)');?></span>				
 				
 				<span class="td__data">
 				<span class="-display-inline"><?php echo CommonHelper::displayMoneyFormat($teacher['singleLessonAmount']); ?> / <?php echo CommonHelper::displayMoneyFormat($teacher['bulkLessonAmount']); ?></span>

@@ -30,6 +30,7 @@ class TeacherStudentsController extends TeacherBaseController
         $srch->joinTeacherTeachLanguageView($this->siteLangId);
         $srch->joinTeacherOfferPrice(UserAuthentication::getLoggedUserId());
         $srch->addCondition('slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
+        $srch->addCondition('sldetail_learner_status', '!=', ScheduledLesson::STATUS_CANCELLED);
         $srch->addGroupBy('sldetail_learner_id', 'slesson_status');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
@@ -44,9 +45,9 @@ class TeacherStudentsController extends TeacherBaseController
             'ul.user_first_name as learnerFname',
             'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
             //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
-            'COUNT(IF(slns.slesson_status="'.ScheduledLesson::STATUS_SCHEDULED.'",1,null)) as scheduledLessonCount',
+            'COUNT(IF(slns.slesson_status="'.ScheduledLesson::STATUS_SCHEDULED.'", 1, null)) as scheduledLessonCount',
             'COUNT(IF(slns.slesson_status="'.ScheduledLesson::STATUS_NEED_SCHEDULING.'",1,null)) as unScheduledLessonCount',
-            'COUNT(IF(slns.slesson_date < "'.date('Y-m-d').'"  AND slns.slesson_date != "0000-00-00", 1, null)) as pastLessonCount',
+            'COUNT(IF(CONCAT(slesson_date, " ", slesson_start_time) < "'.date('Y-m-d H:i:s').'" AND slns.slesson_status!='.ScheduledLesson::STATUS_CANCELLED.' AND slns.slesson_date != "0000-00-00", 1, null)) as pastLessonCount',
             'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
             'IFNULL(top_single_lesson_price,0) as singleLessonAmount',
             'IFNULL(top_bulk_lesson_price, 0) as bulkLessonAmount',
