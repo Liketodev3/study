@@ -72,7 +72,9 @@
 								<?php echo Label::getLabel('L_ALL'); ?>
 							</a>
 						</li>
-                        <?php foreach($lessonStatuses as $key=>$status): ?>
+                        <?php unset($lessonStatuses[ScheduledLesson::STATUS_RESCHEDULED]);
+                        $lessonStatuses[ScheduledLesson::STATUS_SCHEDULED] = Label::getLabel('LBL_Scheduled/Rescheduled');
+                        foreach($lessonStatuses as $key=>$status): ?>
 						<li class="">
 							<a href="javascript:;" onClick="getLessonsByStatus(this, <?php echo $key ?>)">
 								<?php echo $status; ?>
