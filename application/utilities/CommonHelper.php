@@ -1810,7 +1810,7 @@ class CommonHelper extends FatUtility
     public static function htmlEntitiesDecode( $var ) 
     {
 		if (is_array($var)){
-			foreach ($var as $key=>$val) $var[$key] = htmlEntitiesDecode($val);
+			foreach ($var as $key=>$val) $var[$key] = self::htmlEntitiesDecode($val);
 		}
 		elseif (is_string($var) || is_numeric($var)) {
 			$var = html_entity_decode($var, ENT_COMPAT, 'UTF-8');
