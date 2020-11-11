@@ -734,16 +734,14 @@ class ConfigurationsController extends AdminBaseController
                 //$fld = $frm->addTextBox(Label::getLabel("LBL_Google_Map_API_Key",$this->adminLangId),'CONF_GOOGLEMAP_API_KEY');
                 //$fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_Google_map_api_key_used_to_get_user_current_location.",$this->adminLangId)."</small>";
 
+                $activeMeetingTool =  FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT);
+                $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Meeting_TOOL', $this->adminLangId).'</h3>');                
+                $toolFld = $frm->addRadioButtons(Label::getLabel("LBL_Deliver_Lesson_By", $this->adminLangId), "CONF_ACTIVE_MEETING_TOOL", ApplicationConstants::getMettingTools(), $activeMeetingTool, array('class' => 'list-inline list-inline--onehalf'));
                 
-                $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Meeting_TOOL', $this->adminLangId).'</h3>');
-
-                $lessonSpace =  FatApp::getConfig('CONF_MEETING_TOOL_LESSONSPACE', FatUtility::VAR_INT, 2);
-                $cometChatMeetingTool =  FatApp::getConfig('CONF_MEETING_TOOL_COMET_CHAT', FatUtility::VAR_INT, 1);
-                $activeMeetingTool =  FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_INT, 2);
-
-                $optionArray =  array($lessonSpace => Label::getLabel('LBL_LESSONSPACE', $this->adminLangId) , $cometChatMeetingTool =>  Label::getLabel('LBL_COMET_CHAT', $this->adminLangId) );
-
-                $frm->addRadioButtons('', "CONF_ACTIVE_MEETING_TOOL", $optionArray, $activeMeetingTool,array('class' => 'list-inline list-inline--onehalf'));
+                $frm->addHtml('', 'zoom_api_key', '<h3>'.Label::getLabel("LBL_Zoom_API_Keys", $this->adminLangId).'</h3>');
+                $frm->addTextBox(Label::getLabel("LBL_Zoom_Api_Key", $this->adminLangId), 'CONF_ZOOM_API_KEY');
+                $frm->addTextBox(Label::getLabel("LBL_Zoom_Api_Secret", $this->adminLangId), 'CONF_ZOOM_API_SECRET');
+                $frm->addTextBox(Label::getLabel("LBL_Zoom_JWT_Token", $this->adminLangId), 'CONF_ZOOM_JWT_TOKEN');
         
                 $frm->addHtml('','comet_chat_api_keys', '<h3>'.Label::getLabel("LBL_Comet_chat_Api_Key", $this->adminLangId).'</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Comet_Chat_Api_Key", $this->adminLangId), 'CONF_COMET_CHAT_API_KEY');

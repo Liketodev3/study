@@ -1631,21 +1631,6 @@ class CommonHelper extends FatUtility
         return $list;
     }
 
-    public static function getActiveMeetingTool() : int
-    {
-        return FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_INT, 2);
-    }
-
-    public static function getCometChatMeetingTool() : int
-    {
-        return FatApp::getConfig('CONF_MEETING_TOOL_COMET_CHAT', FatUtility::VAR_INT, 1);
-    }
-
-    public static function getLessonspaceMeetingTool() : int
-    {
-        return FatApp::getConfig('CONF_MEETING_TOOL_LESSONSPACE', FatUtility::VAR_INT, 2);
-    }
-
     public static function getTeachLangs($ids=null, $homePagCal = false, $singleView = false)
     {
         if (empty($ids)) {
@@ -1806,5 +1791,35 @@ class CommonHelper extends FatUtility
         }
         return $str;
     }
-
+    
+    public static function curlReq($url, $postData = [], $headers = [])
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        if(!empty($postData)){
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        }
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close ($ch);
+        return json_decode($response, true);
+    }
+    
+    public static function curlPutReq($url, $data = [], $headers = [])
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        if(!empty($data)){
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        }
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch , CURLINFO_HTTP_CODE);
+        curl_close ($ch);
+        return json_decode($response, true);
+    }
 }
