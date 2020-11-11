@@ -23,6 +23,7 @@ if( $controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
 <link rel="canonical" href="<?php echo $canonicalUrl;?>" />
 
 <?php
+$jsVariables = CommonHelper::htmlEntitiesDecode($jsVariables);
 $SslUsed = ( FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false)) ? 1 : 0;
 echo $str = '<script type="text/javascript">
 		var langLbl = ' . json_encode(
