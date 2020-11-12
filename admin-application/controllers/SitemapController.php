@@ -1,5 +1,4 @@
 <?php
-
 class SitemapController extends AdminBaseController
 {
     public function generate()
@@ -8,7 +7,9 @@ class SitemapController extends AdminBaseController
         
         $urls = Sitemap::getUrls($this->adminLangId);
         foreach($urls as $url){
-            $this->writeSitemapUrl($url, 'daily');
+            foreach($url as $val){
+                $this->writeSitemapUrl($val['url'], $val['frequency']);
+            }
         }
         /* ]*/
 

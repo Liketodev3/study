@@ -143,7 +143,8 @@ class CustomController extends MyAppController
         $this->_template->render(true, true, 'custom/payment-success.php');
     }
     
-    public function sitemap(){
-        
+    public function sitemap()
+    {
+        $this->_template->render();
     }
 }
