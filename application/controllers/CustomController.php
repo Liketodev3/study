@@ -142,4 +142,8 @@ class CustomController extends MyAppController
         $this->set('heading', Label::getLabel('MSG_Success'));
         $this->_template->render(true, true, 'custom/payment-success.php');
     }
+    
+    public function sitemap(){
+        
+    }
 }

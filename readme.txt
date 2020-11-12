@@ -3,6 +3,7 @@ This file shares the details of YoCoach version and features.
 Bug fixes:
 
     Bug:#045185- Fixed my teachers lessons count
+    Bug:#044974- Added Sitemap generate feature from admin
 
 -----------------------------
 Release Version: TV-2.4.1.20201105
