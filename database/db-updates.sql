@@ -157,3 +157,5 @@ ALTER TABLE `tbl_user_settings`
 
   REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('CONF_SITE_TRACKER_CODE', '<!-- Global site tag (gtag.js) - Google Analytics -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=UA-82212031-1\"></script>\r\n<script>\r\n window.dataLayer = window.dataLayer || [];\r\n function gtag(){dataLayer.push(arguments);}\r\n gtag(\'js\', new Date());\r\n gtag(\'config\', \'UA-82212031-1\');\r\n</script>', 0);
+
+UPDATE `tbl_url_rewrites` SET urlrewrite_custom = 'teachers/profile/urlparameter' WHERE `urlrewrite_original` LIKE 'teachers/view';
