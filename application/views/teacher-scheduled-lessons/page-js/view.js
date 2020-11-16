@@ -132,7 +132,7 @@ $(function() {
                 return false;
             }
             if(typeof(joinFromApp)!='undefined' && joinFromApp==1){
-                window.location = data.join_url;
+                window.location = data.start_url;
                 return;
             }
             return createZoomBox(data);
