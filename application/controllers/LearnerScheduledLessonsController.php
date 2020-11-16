@@ -1735,13 +1735,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->set('count', count($scheduledLessonData));
         $this->_template->render(false, false, 'json-success.php');
     }
-
-    public function markLearnerJoinTime()
+    
+    private function getStartedLessonDetails($lDetailId)
     {
-        $lDetailId = FatApp::getPostedData('lDetailId', FatUtility::VAR_INT, 0);
-        if ($lDetailId < 1) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
-        }
         $srch = new stdClass();
         $this->searchLessons($srch);
         $srch->joinLearnerCredentials();
@@ -1755,45 +1751,65 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         );
         $srch->addCondition('sld.sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addCondition('sld.sldetail_id', '=', $lDetailId);
-        $srch->addCondition('sld.sldetail_learner_join_time', '=', '0000-00-00');
         $rs = $srch->getResultSet();
-        $lessonData = FatApp::getDb()->fetch($rs);
+        return FatApp::getDb()->fetch($rs);
+    }
+    
+    private function getZoomMeetingDetails(array $lessonData) : array
+    {
+        $lessonMeetingDetail = new LessonMeetingDetail($lessonData['slesson_id'], $lessonData['teacherId']);
+        $meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA);
+        if(empty($meetingRow)) return array();
         
-        if ($lessonData) {
-            if($lessonData['slesson_teacher_join_time']<=0){
-                FatUtility::dieJsonError(Label::getLabel("LBL_Please_Wait._Let_teacher_join"));
-            }
-            
-            $lessonId = $lessonData['slesson_id'];
-            
-            $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT);
-            if(ApplicationConstants::MEETING_ZOOM == $activeMettingTool){
-                $lessonMeetingDetail =  new LessonMeetingDetail($lessonId, $lessonData['teacherId']);
-                
-                $zoom = new Zoom();
-                
-                if(!$meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)){
-                    CommonHelper::dieJsonError(Label::getLabel('MSG_Please_Wait_Let_the_Teacher_Initiate_the_lesson_from_His/Her_End'));
-                }
-                $row = json_decode($meetingRow,true);
-                $meetingData = array(
-                    'id'        => $row['id'],
-                    'join_url'  => $row['join_url'],
-                    'username'  => $lessonData['learnerFullName'],
-                    'email'     => $lessonData['learnerEmail'],
-                    'role'      => Zoom::ROLE_ATTENDEE,
-                    'signature' => $zoom->generateSignature($row['id'], Zoom::ROLE_ATTENDEE)
-                );
-                CommonHelper::dieJsonSuccess(['data' => $meetingData, 'msg' => Label::getLabel('LBL_Joining._Please_Wait...')]);
-            }
-            
-            $sLessonDetailObj = new ScheduledLessonDetails($lessonData['sldetail_id']);
-            $sLessonDetailObj->assignValues(array('sldetail_learner_join_time' => date('Y-m-d H:i:s')));
-            if (!$sLessonDetailObj->save()) {
-                FatUtility::dieJsonError($sLessonDetailObj->getError());
+        $row = json_decode($meetingRow, true);
+        if(empty($row)) return array();
+        
+        $zoom = new Zoom();
+        $meetingData = array(
+            'id'        => $row['id'],
+            'url'       => $row['join_url'],
+            'username'  => $lessonData['learnerFullName'],
+            'email'     => $lessonData['learnerEmail'],
+            'role'      => Zoom::ROLE_ATTENDEE,
+            'signature' => $zoom->generateSignature($row['id'], Zoom::ROLE_ATTENDEE)
+        );
+        return $meetingData;        
+    }
+
+    public function startLesson()
+    {
+        $lDetailId = FatApp::getPostedData('lDetailId', FatUtility::VAR_INT, 0);
+        if ($lDetailId < 1) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+        }
+        
+        // validate lesson, if it can be started
+        $lessonData = $this->getStartedLessonDetails($lDetailId);        
+        if(empty($lessonData)){
+            FatUtility::dieJsonSuccess(Label::getLabel('LBL_Invalid_Request'));
+        }
+        
+        // check if teacher has joined
+        if($lessonData['slesson_teacher_join_time']<=0){
+            FatUtility::dieJsonError(Label::getLabel("LBL_Please_Wait._Let_teacher_join"));
+        }
+        
+        // get meeting details
+        try{
+            $lesMettings = new LessonMeetings();        
+            $meetingData = $lesMettings->getMeetingData($lessonData);
+        }catch(Exception $e){
+            CommonHelper::dieJsonError($e->getMessage()); 
+        }
+        
+        // update learner join time
+        if($lessonData['sldetail_learner_join_time']<=0){
+            $schLessonDetails = new ScheduledLessonDetails($lDetailId);
+            if(!$schLessonDetails->markLearnerJoinTime()){
+                CommonHelper::dieJsonError($schLessonDetails->getError());
             }
         }
-        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Learner_Join_Time_Marked!'));
+        CommonHelper::dieJsonSuccess(['data' => $meetingData, 'msg' => Label::getLabel('LBL_Joining._Please_Wait...')]);
     }
 
     public function reportIssueToAdmin($issueId, $lessonId, $escalated_by)

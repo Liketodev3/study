@@ -59,7 +59,7 @@ class Zoom
                 "first_name" => $teacherData['first_name'],
                 "last_name" => $teacherData['last_name'],
                 "email" => $teacherData['email'],
-                "type" => 1,
+                "type" => 1, // const 
             )
         ));
 

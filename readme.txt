@@ -1,5 +1,11 @@
 This file shares the details of YoCoach version and features.
 
+Updates:
+    *Task-78843: Zoom Integration
+    *Task-78843: Code review changes
+    
+=================================
+
 Release Version: TV-2.3.1.20201028
 Release Date: 2020/10/28
 

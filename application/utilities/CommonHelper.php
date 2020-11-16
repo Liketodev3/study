@@ -1794,6 +1794,7 @@ class CommonHelper extends FatUtility
     
     public static function curlReq($url, $postData = [], $headers = [])
     {
+        // curl exception handling
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         if(!empty($postData)){

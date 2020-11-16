@@ -4,7 +4,8 @@ class LessonMeetingDetail extends MyAppModel
     const DB_TBL = 'tbl_lesson_meeting_details';
     const DB_TBL_PREFIX = 'lmeetdetail_';
 
-    const URL_KEY = "LEESON_URL";
+    const KEY_LP_URL = "LESSON_URL";
+    const KEY_LP_ROOM_ID = "LESSON_ROOM_ID";
     const KEY_ZOOM_ID = "ZOOM_ID";
     const KEY_ZOOM_START_URL = "ZOOM_START_URL";
     const KEY_ZOOM_JOIN_URL = "ZOOM_JOIN_URL";
@@ -68,6 +69,7 @@ class LessonMeetingDetail extends MyAppModel
         $lessonMeetingDetail->addCondition('lmeetdetail_key', '=', $key);
         $lessonMeetingDetail->addOrder('lmeetdetail_id', 'desc');
         $lessonMeetingDetail->setPageSize(1);
+        // echo $lessonMeetingDetail->getQuery();die;
         $resultSet  =  $lessonMeetingDetail->getResultSet();
         $meetingData =  FatApp::getDb()->fetch($resultSet);
         if(empty($meetingData['lmeetdetail_value'])) {
