@@ -120,7 +120,7 @@ $(function() {
             return false;
         }
         let html = '<div id="cometchat_embed_synergy_container" style="width:'+chat_width+';height:'+chat_height+';max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;">';
-        html += '<iframe  style="width:100%;height:100%;" src="'+data.url+'" allow="camera; microphone; display-capture" frameborder="0"></iframe>';
+        html += '<iframe  style="width:100%;height:100%;" src="'+data.url+'" allow="camera; microphone; fullscreen;display-capture" frameborder="0"></iframe>';
         html += '</div>';
         $("#lessonBox").html(html);
         return true;
@@ -130,7 +130,10 @@ $(function() {
         var chat_height = '100%';
 		var chat_width = '100%';
         
-        var meetingConfig = {mn: data.id, name: data.username, pwd: '', role: data.role, email: data.email, lang: 'en-US', signature: data.signature, leaveUrl:fcom.makeUrl('Zoom', 'leave'), china:0};
+        //for now only english supported
+        var userLang = 'en-US';//navigator.language || navigator.userLanguage; 
+        
+        var meetingConfig = {mn: data.id, name: data.username, pwd: '', role: data.role, email: data.email, lang: userLang, signature: data.signature, leaveUrl:fcom.makeUrl('Zoom', 'leave'), china:0};
         
         if (!meetingConfig.mn || !meetingConfig.name) {
             alert("Meeting number or username is empty");

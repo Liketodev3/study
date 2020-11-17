@@ -81,7 +81,7 @@ $(function() {
 
 	createLessonspaceBox = function(data){		
         let html = '<div id="cometchat_embed_synergy_container" style="width:'+chat_width+';height:'+chat_height+';max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;">';
-        html += '<iframe  style="width:100%;height:100%;" src="'+result.url+'" allow="camera; microphone; display-capture" frameborder="0"></iframe>';
+        html += '<iframe  style="width:100%;height:100%;" src="'+data.url+'" allow="camera; microphone; fullscreen; display-capture" frameborder="0"></iframe>';
         html += '</div>';
         $("#lessonBox").html(html);
         return true;
@@ -90,8 +90,11 @@ $(function() {
     createZoomBox = function(data){
         var chat_height = '100%';
 		var chat_width = '100%';
-        // lang?
-        var meetingConfig = {mn: data.id, name: data.username, pwd: '', role: data.role, email: data.email, lang: 'en-US', signature: data.signature, leaveUrl:fcom.makeUrl('Zoom', 'leave'), china:0};
+        
+        //for now only english supported
+        var userLang = 'en-US';//navigator.language || navigator.userLanguage; 
+        
+        var meetingConfig = {mn: data.id, name: data.username, pwd: '', role: data.role, email: data.email, lang: userLang, signature: data.signature, leaveUrl:fcom.makeUrl('Zoom', 'leave'), china:0};
         
         if (!meetingConfig.mn || !meetingConfig.name) {
             alert("Meeting number or username is empty");
@@ -134,21 +137,7 @@ $(function() {
 		}
 	};
 
-    createGroup = function(){
-		$.ajax({
-            method: "POST",
-            url: "https://api.cometondemand.net/api/v2/createGroup",
-            data: { GUID:chat_group_id,name:chat_group_id,type:4},
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('api-key', chat_api_key);
-			},
-		});
-	};
-
     joinLesson = function(CometJsonData,CometJsonFriendData, joinFromApp){
-        if(is_grpcls==YES && isCometChatMeetingToolActive){
-            createGroup();
-        }
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'startLesson', [CometJsonFriendData.lessonId]),'',function(t){
             var res = JSON.parse(t);
 			if(res.status == 0){
@@ -163,21 +152,8 @@ $(function() {
             createChatBox(res.data, joinFromApp);
 		});
     };
-
-	createUserCometChatApi = function(CometJsonData,CometJsonFriendData){
-		$(CometJsonData).each(function(i,val){
-			$.ajax({
-			  method: "POST",
-			  url: "https://api.cometondemand.net/api/v2/createUser",
-			  data: { UID:val.userId,name:val.fname,avatarURL:val.avatarURL,profileURL:val.profileURL,role:val.role },
-			  beforeSend: function (xhr) {
-				xhr.setRequestHeader('api-key', chat_api_key);
-				},
-			});
-        });
-	};
-
-	endLesson = function (lessonId) {
+    
+    endLesson = function (lessonId) {
         $.confirm({
             title: langLbl.Confirm,
             content: langLbl.endLessonAlert,
