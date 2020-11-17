@@ -5897,7 +5897,7 @@ INSERT INTO `tbl_navigation_links` (`nlink_id`, `nlink_nav_id`, `nlink_cpage_id`
 (62, 1, 0, 0, 'Blog', '_self', 2, 0, 0, 0, '{SITEROOT}blog', 4),
 (63, 1, 3, 0, 'Privacy And Policy', '_self', 0, 0, 0, 0, '', 3),
 (64, 4, 1, 0, 'About', '_self', 0, 0, 2, 0, '', 1),
-(68, 2, 0, 0, 'Apply to Teach', '_self', 2, 0, 0, 0, '{SITEROOT}apply-to-teach', 2),
+(68, 2, 0, 0, 'Apply to Teach', '_self', 2, 0, 0, 0, '{SITEROOT}apply-to-teach', 3),
 (69, 1, 2, 0, 'Terms and Conditions', '_self', 0, 0, 0, 0, '', 2),
 (70, 1, 0, 0, 'Apply to Teach', '_self', 2, 0, 0, 0, '{siteroot}apply-to-teach', 1),
 (71, 4, 0, 0, 'FAQs', '_self', 2, 0, 0, 0, '{siteroot}faq', 2),
