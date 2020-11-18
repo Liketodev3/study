@@ -159,3 +159,6 @@ ALTER TABLE `tbl_user_settings`
 ('CONF_SITE_TRACKER_CODE', '<!-- Global site tag (gtag.js) - Google Analytics -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=UA-82212031-1\"></script>\r\n<script>\r\n window.dataLayer = window.dataLayer || [];\r\n function gtag(){dataLayer.push(arguments);}\r\n gtag(\'js\', new Date());\r\n gtag(\'config\', \'UA-82212031-1\');\r\n</script>', 0);
 
 UPDATE `tbl_url_rewrites` SET urlrewrite_custom = 'teachers/profile/urlparameter' WHERE `urlrewrite_original` LIKE 'teachers/view';
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.5.0.20201118' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+

@@ -1,12 +1,25 @@
 This file shares the details of YoCoach version and features.
 
+Release Version: TV-2.5.0.20201118
+Release Date: 2020/11/18
+
+
 Updates:
     *Task-78843: Zoom Integration
-    *Task-78843: Code review changes
-    
+    *Task-78843: Refine cometchat and lessonspace.
+    *Task-73053: Remove the unwanted fields from user setting table
+    *Task-76944: Font family and size changes
+
 Bug fixes:
-    Bug:#045185- Fixed my teachers lessons count
     Bug:#044974- Added Sitemap generate feature from admin
+    Bug:#045259- Add misssing entries in users table for db-with-data
+    Bug:#044938- Fix login popup ui issue
+    Bug:#045267- Fix teacher lock price issue
+    Bug:#045018- Fix lang labels decoding issue
+    Bug:#043738- Remove charonly validation for name
+    Bug:#045185- Fix my teachers lessons count
+    Bug:#045020- Fix week calendar start date and end date issue
+
 
 -----------------------------
 Release Version: TV-2.4.1.20201105
