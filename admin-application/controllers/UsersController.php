@@ -156,7 +156,8 @@ class UsersController extends AdminBaseController
         if($isAjaxRequest) {
             FatUtility::dieJsonSuccess(Label::getLabel("MSG_LOGIN_SUCCESSFULL"));
         }
-        FatApp::redirectUser(CommonHelper::generateUrl('account', '', array(), '/'));
+        
+        FatApp::redirectUser(CommonHelper::generateUrl('account', '', array(), CONF_WEBROOT_FRONTEND));
     }
 
     public function setup()

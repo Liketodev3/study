@@ -1116,23 +1116,57 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->set('msg', Label::getLabel("LBL_Flashcard_Saved_Successfully!"));
         $this->_template->render(false, false, 'json-success.php');
     }
-
-    public function startLessonAuthentication($lessonId)
+    
+    private function getStartedLessonDetails($lessonId)
     {
-        $srch = new ScheduledLessonSearch(false);
+        $srch = new stdClass();
+        $this->searchLessons( $srch );
+        $srch->joinTeacherCredentials();
         $srch->addMultipleFields(
             array(
-                'slns.slesson_id'
+                'slns.slesson_id',
+                'op_id',
+                'tcred.credential_email as teacherEmail',
+                'ut.user_first_name as teacherFirstName',
+                'ut.user_last_name as teacherLastName',
+                'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+                'slesson_teacher_join_time'
             )
         );
         $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
-        $srch->addCondition('slns.slesson_date', '=', date('Y-m-d'));
+        // $srch->addCondition('slns.slesson_date', '=', date('Y-m-d'));
         $srch->addCondition('slns.slesson_start_time', '<=', date('H:i:s'));
         $srch->addCondition('slns.slesson_end_time', '>=', date('H:i:s'));
         $rs = $srch->getResultSet();
-        echo $count = $srch->recordCount();
+        return FatApp::getDb()->fetch($rs);
+    }
+
+    public function startLesson($lessonId)
+    {
+        // validate lesson, if it can be started
+        $lessonData = $this->getStartedLessonDetails($lessonId);
+        if(empty($lessonData)){
+            CommonHelper::dieJsonError(Label::getLabel('MSG_Cannot_Start_The_lesson_Now'));
+        }
+        
+        // get meeting details
+        try{
+            $lesMettings = new LessonMeetings();        
+            $meetingData = $lesMettings->getMeetingData($lessonData);
+        }catch(Exception $e){
+            CommonHelper::dieJsonError($e->getMessage()); 
+        }
+        
+        // update teacher join time
+        if($lessonData['slesson_teacher_join_time']<=0){
+            $schLesson = new ScheduledLesson($lessonId);
+            if(!$schLesson->markTeacherJoinTime()){
+                CommonHelper::dieJsonError($schLesson->getError());
+            }
+        }
+        CommonHelper::dieJsonSuccess(['data' => $meetingData, 'msg' => Label::getLabel('LBL_Joining._Please_Wait...')]);
     }
 
     public function checkEveryMinuteStatus($lessonId)
@@ -1162,6 +1196,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if ($lessonId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
+        // validate user too with lesson id.
         /* [ */
         $srch = new stdClass();
         $this->searchLessons($srch);
@@ -1209,6 +1244,17 @@ class TeacherScheduledLessonsController extends TeacherBaseController
                 $userNotification = new UserNotifications($lessonRow['teacherId']);
                 $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
                 $dataUpdateArr['slesson_is_teacher_paid'] = 1;
+            }
+        }
+        
+        $lessonMeetingDetail =  new LessonMeetingDetail($lessonId, $lessonRow['teacherId']);
+        if($meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)){
+            $meetingRow = json_decode($meetingRow,true);
+            try{
+                $zoom = new Zoom();
+                $endRes = $zoom->endMeeting($meetingRow['id']);
+            }catch(Exception $e){
+                // exception
             }
         }
 
@@ -1271,33 +1317,5 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     {
         $this->set('lesonId', $lessonId);
         $this->_template->render(false, false);
-    }
-
-    public function markTeacherJoinTime()
-    {
-        $lessonId = FatApp::getPostedData('lessonId', FatUtility::VAR_INT, 0);
-        if ($lessonId < 1) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
-        }
-        $srch = new ScheduledLessonSearch(false);
-        $srch->addMultipleFields(
-            array(
-            'slns.slesson_status',
-            'slns.slesson_teacher_join_time'
-        )
-        );
-        $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
-        $srch->addCondition('slns.slesson_id', '=', $lessonId);
-        $srch->addCondition('slns.slesson_teacher_join_time', '=', '0000-00-00');
-        $rs = $srch->getResultSet();
-        $data = FatApp::getDb()->fetch($rs);
-        if ($data) {
-            $sLessonObj = new ScheduledLesson($lessonId);
-            $sLessonObj->assignValues(array('slesson_teacher_join_time' => date('Y-m-d H:i:s')));
-            if (!$sLessonObj->save()) {
-                FatUtility::dieJsonError($sLessonObj->getError());
-            }
-        }
-        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Teacher_Join_Time_Marked!'));
     }
 }

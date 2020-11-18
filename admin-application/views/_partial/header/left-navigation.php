@@ -305,16 +305,21 @@
 		<?php } ?>
 
 		<!--  ] -->
-
-
-
-
-		<!--Admin Users[-->
+        
+        <!--Admin Users[-->
 		<?php if( $objPrivilege->canViewAdminUsers(AdminAuthentication::getLoggedAdminId(), true) || $objPrivilege->canViewAdminUsers(AdminAuthentication::getLoggedAdminId(), true) ){ ?>
 		<li><a href="<?php echo CommonHelper::generateUrl('AdminUsers')?>"><?php echo Label::getLabel('LBL_Manage_Admin_Users',$adminLangId);?></a>
 		</li>
 		<?php } ?>
 		<!-- ] -->
+        <li class="haschild">
+            <a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Sitemap', $adminLangId); ?></a>
+			<ul>
+                <li><a href="<?php echo CommonHelper::generateUrl('Sitemap', 'generate') ?>"><?php echo Label::getLabel('LBL_Update_Sitemap', $adminLangId); ?></a></li>
+                <li><a href="<?php echo CommonHelper::generateUrl('custom', 'sitemap', array(), CONF_WEBROOT_FRONT_URL) ?>" target="_blank"><?php echo Label::getLabel('LBL_View_Html', $adminLangId); ?></a></li>
+                <li><a href="<?php echo CONF_WEBROOT_FRONT_URL ?>sitemap.xml" target="_blank"><?php echo Label::getLabel('LBL_View_XML', $adminLangId); ?></a></li>
+            </ul>
+		</li>
 	</ul>
 	</div>
 </aside>

@@ -66,6 +66,10 @@ class applicationConstants
 
     const DIGITAL_DOWNLOAD_FILE = 0;
     const DIGITAL_DOWNLOAD_LINK = 1;
+    
+    const MEETING_COMET_CHAT = 'comet_chat';
+	const MEETING_ZOOM = 'zoom';
+	const MEETING_LESSON_SPACE = 'lesson_space';
 
     const PHONE_NO_REGEX = "^\d{10}$";
     
@@ -425,6 +429,15 @@ class applicationConstants
         return array(
             self::CLASS_TYPE_GROUP => Label::getLabel('LBL_Group_Class', $langId),
             self::CLASS_TYPE_1_TO_1 => Label::getLabel('LBL_One_to_One_Class', $langId)
+        );
+    }
+    
+    static function getMettingTools()
+    {
+        return array(
+          self::MEETING_COMET_CHAT => Label::getLabel('LBL_Comet_Chat'),
+          self::MEETING_ZOOM => Label::getLabel('LBL_Zoom'),
+          self::MEETING_LESSON_SPACE => Label::getLabel('LBL_Lesson_Space'),
         );
     }
 }

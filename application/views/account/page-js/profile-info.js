@@ -196,7 +196,7 @@ $(document).ready(function(){
 				$.systemMessage.close();
 			}, 3000);
 
-			if(activeMeetingTool == cometChatMeetingTool) {
+			if(isCometChatMeetingToolActive) {
 				name = frm.user_first_name.value + " "+frm.user_last_name.value;
 				userSeoUrl = '';
 				if(frm.user_url_name) {
@@ -246,7 +246,7 @@ $(document).ready(function(){
 	};
 
 	updateCometChatUser = function(userId, name, avatarURL, profileURL){
-		if(activeMeetingTool != cometChatMeetingTool) {
+		if(!isCometChatMeetingToolActive) {
 			return true;
 		}
 		var settings = {
@@ -266,9 +266,9 @@ $(document).ready(function(){
 			}
 		}
 
-			$.ajax(settings).done(function (response) {
-			console.log(response);
-			});
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
 	};
 
 	setupTeacherLanguages  = function(frm){
@@ -523,7 +523,7 @@ $(document).ready(function(){
 			$('.loading-wrapper').hide();
 			profileInfoForm();
 
-			if(activeMeetingTool == cometChatMeetingTool) {
+			if(isCometChatMeetingToolActive) {
 				name = userData.user_first_name + " "+userData.user_last_name;
 				userSeoUrl =  userSeoBaseUrl+userData.user_url_name;
 				updateCometChatUser(userData.user_id, name, '', userSeoUrl);
@@ -539,7 +539,7 @@ $(document).ready(function(){
 			success: function(json){
 				json = $.parseJSON(json);
 
-				if(activeMeetingTool == cometChatMeetingTool) {
+				if(isCometChatMeetingToolActive) {
 					name = userData.user_first_name + " "+userData.user_last_name;
 					userSeoUrl = userSeoBaseUrl+userData.user_url_name;
 					updateCometChatUser(userData.user_id, name, userImage , userSeoUrl);
