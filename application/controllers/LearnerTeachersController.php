@@ -63,9 +63,9 @@ class LearnerTeachersController extends LearnerBaseController
             '('.$schLesSrch->getQuery().') as scheduledLessonCount',
             '('.$pastLesSrch->getQuery().') as pastLessonCount',
             '('.$unSchLesSrch->getQuery().') as unScheduledLessonCount',
-            'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
-            '( select utl_single_lesson_amount from '. UserToLanguage::DB_TBL_TEACH .' WHERE utl_us_user_id = ut.user_id Limit 0, 1 ) as singleLessonAmount',
-            '( select utl_bulk_lesson_amount from '. UserToLanguage::DB_TBL_TEACH .' WHERE utl_us_user_id = ut.user_id Limit 0, 1 ) as bulkLessonAmount '
+            'IFNULL(top_single_lesson_price,0) AS singleLessonAmount',
+            'IFNULL(top_bulk_lesson_price,0) AS bulkLessonAmount',
+            'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice'
         ));
 
         $page = $post['page'];

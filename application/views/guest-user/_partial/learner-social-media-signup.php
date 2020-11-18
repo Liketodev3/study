@@ -18,8 +18,9 @@
 		</div>
 	</a>
 	<span class="-gap"></span>
-	<p class="-align-center"><?php echo Label::getLabel('LBL_Or'); ?></p>
 </div>
+<p class="-align-center"><?php echo Label::getLabel('LBL_Or'); ?></p>
+
 <script>
 /*Facebook Login API JS SDK*/
 
