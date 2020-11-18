@@ -46,10 +46,10 @@ class TeacherController extends TeacherBaseController
     {
         $db = FatApp::getDb();
         $srch = new TeachingLanguageSearch($this->siteLangId);
-        $srch->addMultiplefields(array('tlanguagelang_tlanguage_id', 'tlanguage_name'));
+        $srch->addMultiplefields(array('tlanguagelang_tlanguage_id', 'tlanguage_name','tlanguage_id'));
         $srch->addChecks();
         $rs=$srch->getResultSet();
-        $teachLangs = $db->fetchAll($rs, 'tlanguagelang_tlanguage_id');
+        $teachLangs = $db->fetchAll($rs, 'tlanguage_id');
         $frm = new Form('frmSettings');
         $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', 1);
         $lessonNotificationArr = User::getLessonNotificationArr($this->siteLangId);
@@ -159,12 +159,13 @@ class TeacherController extends TeacherBaseController
         $userId = UserAuthentication::getLoggedUserId();
         $db = FatApp::getDb();
         $srch = new SpokenLanguageSearch($this->siteLangId);
-        $srch->addMultiplefields(array('slanguagelang_slanguage_id', 'slanguage_name'));
+        $srch->addMultiplefields(array('slanguage_id', 'slanguage_name'));
         $srch->addOrder('slanguage_display_order','asc');
         $srch->addChecks();
 
         $rs=$srch->getResultSet();
         $rows = $db->fetchAll($rs);
+        
         /*
         $userSettingSrch = new UserSettingSearch();
         $userSettingSrch->joinLanguageTable( $this->siteLangId );
@@ -190,6 +191,7 @@ class TeacherController extends TeacherBaseController
         $tlSrch->addChecks();
         $tlRs = $tlSrch->getResultSet();
         $teachLanguages = FatApp::getDb()->fetchAll($tlRs, 'tlanguage_id');
+        
         /**********/
         $teacherTeachLangArr = array();
         foreach ($teachLanguages as $key => $language) {
@@ -199,13 +201,14 @@ class TeacherController extends TeacherBaseController
         $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
         $langArr = array();
         foreach ($rows as $row) {
-            $langArr[$row['slanguagelang_slanguage_id']] = $row['slanguage_name'];
+            $langArr[$row['slanguage_id']] = $row['slanguage_name'];
         }
         $userToTeachLangSrch = new SearchBase('tbl_user_teach_languages');
         $userToTeachLangSrch->addMultiplefields(array('utl_slanguage_id'));
         $userToTeachLangSrch->addCondition('utl_us_user_id', '=', $userId);
         $userToTeachLangRs=$userToTeachLangSrch->getResultSet();
         $userToTeachLangRows = $db->fetchAll($userToTeachLangRs);
+            // prx($userToTeachLangRows);
         $userToLangSrch = new SearchBase('tbl_user_to_spoken_languages');
         $userToLangSrch->addMultiplefields(array('utsl_slanguage_id','utsl_proficiency'));
         $userToLangSrch->addCondition('utsl_user_id', '=', $userId);
@@ -219,6 +222,7 @@ class TeacherController extends TeacherBaseController
                 $userTeachingLang[] = $userToTeachLangRow['utl_slanguage_id'];
             }
         }
+        
         if (empty($userTeachingLang)) {
             $frm->addSelectBox(Label::getLabel('LBL_Language_To_Teach'), 'teach_lang_id[]', $teacherTeachLangArr, array(), array(),Label::getLabel('LBL_Select'))->requirements()->setRequired();
         }
