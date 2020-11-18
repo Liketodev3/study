@@ -8,16 +8,29 @@ class Zoom
     
     public function __construct()
     {
-        $this->token = FatApp::getConfig('CONF_ZOOM_JWT_TOKEN');
-        $this->apiKey = FatApp::getConfig('CONF_ZOOM_API_KEY');
-        $this->apiSecret = FatApp::getConfig('CONF_ZOOM_API_SECRET');
+        $this->token = FatApp::getConfig('CONF_ZOOM_JWT_TOKEN', FatUtility::VAR_STRING, '');
+        $this->apiKey = FatApp::getConfig('CONF_ZOOM_API_KEY', FatUtility::VAR_STRING, '');
+        $this->apiSecret = FatApp::getConfig('CONF_ZOOM_API_SECRET', FatUtility::VAR_STRING, '');
+        
+        if(empty($this->token)) {
+            throw new Exception(Label::getLabel('LBL_ZOOM_API_TOKEN_NOT_DEFINED'));
+            return array();
+        }
+        if(empty($this->apiKey)) {
+            throw new Exception(Label::getLabel('LBL_ZOOM_API_KEY_NOT_DEFINED'));
+            return array();
+        }
+        if(empty($this->apiSecret)) {
+            throw new Exception(Label::getLabel('LBL_ZOOM_API_SECRET_NOT_DEFINED'));
+            return array();
+        }
     }
     
     public function checkUserAndGetUserId($email)
     {
         $page_number = 1;
         do{
-            $response = self::getUsers($page_number);
+            $response = $this->getUsers($page_number);
             $emailIds = array_column($response['users'], 'email');
             $idx = array_search($email,$emailIds);
             if($idx!==false){
@@ -33,17 +46,20 @@ class Zoom
     {
         $url = self::BASE_URL."/users/";
 
-        $api_data = http_build_query(array(
+        $params = array(
             "page_number" => $page_number,
             "page_size" => 300
-        ));
-        
-        $headers = array(
-            'Content-Type: application/json',
-            'Authorization: Bearer '.$this->token
         );
         
-        return CommonHelper::curlReq($url.'?'.$api_data, array(), $headers);
+        $curl = new Curl();
+        $curl_method = 'GET';
+        $curl->http_header('Content-Type', 'application/json');
+        $curl->http_header('Authorization', 'Bearer '.$this->token);
+        $response = $curl->request($curl_method, $url, $params);
+        if(!$response){
+            throw new Exception($curl->getError());
+        }
+        return json_decode($response, true);
     }
     
     public function createUser($teacherData)
@@ -53,22 +69,27 @@ class Zoom
         }
         $url = self::BASE_URL."/users";
 
-        $api_data = json_encode(array(
+        $params = json_encode(array(
             "action" => "custCreate",
             "user_info" => array( 
                 "first_name" => $teacherData['first_name'],
                 "last_name" => $teacherData['last_name'],
                 "email" => $teacherData['email'],
-                "type" => 1,
+                "type" => 1, // const 
             )
         ));
-
-        $headers = array(
-            'Content-Type: application/json',
-            'Authorization: Bearer '.$this->token
-        );
         
-        $res = CommonHelper::curlReq($url, $api_data, $headers);
+        $curl = new Curl();
+        $curl_method = 'POST';
+        $curl->http_header('Content-Type', 'application/json');
+        $curl->http_header('Authorization', 'Bearer '.$this->token);
+        $response = $curl->request($curl_method, $url, $params);
+        
+        if(!$response){
+            throw new Exception($curl->getError());
+        }
+        $res = json_decode($response, true);
+        
         if(empty($res['id'])){
             throw new Exception($res['message']);
         }
@@ -80,30 +101,25 @@ class Zoom
         // create User
         $url = self::BASE_URL."/users/$meeting_data[zoomTeacherId]/meetings";
 
-        $api_data = json_encode(array(
+        $params = json_encode(array(
             "topic"     => $meeting_data['title'],
             "type"      => 2, //always a scheduled meeting for now
             "start_time" => date('c', strtotime($meeting_data['start_time'])),
             "duration"  => $meeting_data['duration'],
             "timezone"  => MyDate::getTimeZone(),
-            "agenda"    => $meeting_data['description'],
-            /* "settings"  => array(
-                "approval_type" => 1, // manually approve
-                "registration_type" => 2,
-                'registrants_email_notification' => true,
-                'registrants_confirmation_email' => true,
-                "contact_name" => "Rahul Mittal",
-                "contact_email" => "rahul.mittal@fatbit.in",
-                "close_registration" => true,
-            ) */
+            "agenda"    => $meeting_data['description']
         ));
-        // CommonHelper::printArray($api_data);die;
 
-        $headers = array(
-            'Content-Type: application/json',
-            'Authorization: Bearer '.$this->token
-        );
-        return CommonHelper::curlReq($url, $api_data, $headers);
+        $curl = new Curl();
+        $curl_method = 'POST';
+        $curl->http_header('Content-Type', 'application/json');
+        $curl->http_header('Authorization', 'Bearer '.$this->token);
+        $response = $curl->request($curl_method, $url, $params);
+        
+        if(!$response){
+            throw new Exception($curl->getError());
+        }
+        return json_decode($response, true);
     }
     
     public function generateSignature($meeting_number, $role)
@@ -120,13 +136,16 @@ class Zoom
     {
         $url = self::BASE_URL."/meetings/".$meetingId;
 
-        $headers = array(
-            'Content-Type: application/json',
-            'Authorization: Bearer '.$this->token
-        );
+        $curl = new Curl();
+        $curl_method = 'GET';
+        $curl->http_header('Content-Type', 'application/json');
+        $curl->http_header('Authorization', 'Bearer '.$this->token);
+        $response = $curl->request($curl_method, $url);
         
-        $res = CommonHelper::curlReq($url, array(), $headers);
-        return $res;
+        if(!$response){
+            throw new Exception($curl->getError());
+        }
+        return json_decode($response, true);
     }
     
     public function endMeeting($meetingId)
@@ -139,15 +158,19 @@ class Zoom
         // CommonHelper::printArray($meetingData);die;
         $url = self::BASE_URL."/meetings/$meetingId/status";
 
-        $api_data = json_encode(array(
+        $params = json_encode(array(
             "action" => "end"
         ));
 
-        $headers = array(
-            'Content-Type: application/json',
-            'Authorization: Bearer '.$this->token
-        );
+        $curl = new Curl();
+        $curl_method = 'PUT';
+        $curl->http_header('Content-Type', 'application/json');
+        $curl->http_header('Authorization', 'Bearer '.$this->token);
+        $response = $curl->request($curl_method, $url);
         
-        return CommonHelper::curlPutReq($url, $api_data, $headers);
+        if(!$response){
+            throw new Exception($curl->getError());
+        }
+        return json_decode($response, true);
     }
 }

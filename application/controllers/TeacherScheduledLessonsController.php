@@ -1116,8 +1116,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->set('msg', Label::getLabel("LBL_Flashcard_Saved_Successfully!"));
         $this->_template->render(false, false, 'json-success.php');
     }
-
-    public function startLessonAuthentication($lessonId)
+    
+    private function getStartedLessonDetails($lessonId)
     {
         $srch = new stdClass();
         $this->searchLessons( $srch );
@@ -1125,10 +1125,12 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addMultipleFields(
             array(
                 'slns.slesson_id',
+                'op_id',
                 'tcred.credential_email as teacherEmail',
                 'ut.user_first_name as teacherFirstName',
                 'ut.user_last_name as teacherLastName',
-                'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName'
+                'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+                'slesson_teacher_join_time'
             )
         );
         $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
@@ -1138,73 +1140,33 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addCondition('slns.slesson_start_time', '<=', date('H:i:s'));
         $srch->addCondition('slns.slesson_end_time', '>=', date('H:i:s'));
         $rs = $srch->getResultSet();
-        $count = $srch->recordCount();
-        $lessonData = FatApp::getDb()->fetch($rs);
-        // CommonHelper::printArray($lessonData);die;
-        $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT);
-        if($count>0 && ApplicationConstants::MEETING_ZOOM==$activeMettingTool){
-            $lessonMeetingDetail =  new LessonMeetingDetail($lessonId, UserAuthentication::getLoggedUserId());
-            
-            $zoom = new Zoom();
-            
-            if($meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)){
-                $row = json_decode($meetingRow,true);
-                $meetingData = array(
-                    'id'        => $row['id'],
-                    'start_url' => $row['start_url'],
-                    'join_url'  => $row['join_url'],
-                    'username'  => $lessonData['teacherFullName'],
-                    'email'     => $lessonData['teacherEmail'],
-                    'role'      => Zoom::ROLE_HOST,
-                    'signature' => $zoom->generateSignature($row['id'], Zoom::ROLE_ATTENDEE)
-                );
-                CommonHelper::dieJsonSuccess(['data' => $meetingData, 'msg' => Label::getLabel('LBL_Joining._Please_Wait...')]);
-            }
-            
-            $teacherData = array(
-                'first_name'=> $lessonData['teacherFirstName'],
-                'last_name' => $lessonData['teacherLastName'],
-                'email'     => $lessonData['teacherEmail']
-            );
-            try{
-                $zoomTeacherId = $zoom->createUser($teacherData);
-                $startTime = $lessonData['slesson_date'].' '.$lessonData['slesson_start_time'];
-                
-                $teachingLangs = TeachingLanguage::getAllLangs($this->siteLangId);
-                
-                $meetingData = array(
-                    'zoomTeacherId' => $zoomTeacherId,
-                    'title'         => (!$lessonData['is_trial'] ? $teachingLangs[$lessonData['slesson_slanguage_id']] : Label::getLabel('LBL_Trial_Lesson')),
-                    'start_time'    => $startTime,
-                    'duration'      => $lessonData['op_lesson_duration'],
-                    'description'   => '',
-                );
-                $meetingInfo = $zoom->createMeeting($meetingData);
-                
-                if(!$lessonMeetingDetail->addDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA, json_encode($meetingInfo))){
-                    CommonHelper::dieJsonError($lessonMeetingDetail->getError());
-                }
-                
-                if($meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)){
-                    $row = json_decode($meetingRow,true);
-                    $meetingData = array(
-                        'id'        => $row['id'],
-                        'start_url' => $row['start_url'],
-                        'join_url'  => $row['join_url'],
-                        'username'  => $lessonData['teacherFullName'],
-                        'email'     => $lessonData['teacherEmail'],
-                        'role'      => Zoom::ROLE_HOST,
-                        'signature' => $zoom->generateSignature($row['id'], Zoom::ROLE_HOST)
-                    );
-                    CommonHelper::dieJsonSuccess(['data' => $meetingData, 'msg' => Label::getLabel('LBL_Joining._Please_Wait...')]);
-                }
-            }catch(exception $e){
-               CommonHelper::dieJsonError($e->getMessage()); 
-            }
-        }elseif($count>0){
-            CommonHelper::dieJsonSuccess( Label::getLabel('LBL_Joining._Please_Wait...'));
+        return FatApp::getDb()->fetch($rs);
+    }
+
+    public function startLesson($lessonId)
+    {
+        // validate lesson, if it can be started
+        $lessonData = $this->getStartedLessonDetails($lessonId);
+        if(empty($lessonData)){
+            CommonHelper::dieJsonError(Label::getLabel('MSG_Cannot_Start_The_lesson_Now'));
         }
-        CommonHelper::dieJsonError(Label::getLabel('MSG_Cannot_Start_The_lesson_Now'));
+        
+        // get meeting details
+        try{
+            $lesMettings = new LessonMeetings();        
+            $meetingData = $lesMettings->getMeetingData($lessonData);
+        }catch(Exception $e){
+            CommonHelper::dieJsonError($e->getMessage()); 
+        }
+        
+        // update teacher join time
+        if($lessonData['slesson_teacher_join_time']<=0){
+            $schLesson = new ScheduledLesson($lessonId);
+            if(!$schLesson->markTeacherJoinTime()){
+                CommonHelper::dieJsonError($schLesson->getError());
+            }
+        }
+        CommonHelper::dieJsonSuccess(['data' => $meetingData, 'msg' => Label::getLabel('LBL_Joining._Please_Wait...')]);
     }
 
     public function checkEveryMinuteStatus($lessonId)
@@ -1234,6 +1196,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if ($lessonId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
+        // validate user too with lesson id.
         /* [ */
         $srch = new stdClass();
         $this->searchLessons($srch);
@@ -1354,33 +1317,5 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     {
         $this->set('lesonId', $lessonId);
         $this->_template->render(false, false);
-    }
-
-    public function markTeacherJoinTime()
-    {
-        $lessonId = FatApp::getPostedData('lessonId', FatUtility::VAR_INT, 0);
-        if ($lessonId < 1) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
-        }
-        $srch = new ScheduledLessonSearch(false);
-        $srch->addMultipleFields(
-            array(
-            'slns.slesson_status',
-            'slns.slesson_teacher_join_time'
-        )
-        );
-        $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
-        $srch->addCondition('slns.slesson_id', '=', $lessonId);
-        $srch->addCondition('slns.slesson_teacher_join_time', '=', '0000-00-00');
-        $rs = $srch->getResultSet();
-        $data = FatApp::getDb()->fetch($rs);
-        if ($data) {
-            $sLessonObj = new ScheduledLesson($lessonId);
-            $sLessonObj->assignValues(array('slesson_teacher_join_time' => date('Y-m-d H:i:s')));
-            if (!$sLessonObj->save()) {
-                FatUtility::dieJsonError($sLessonObj->getError());
-            }
-        }
-        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Teacher_Join_Time_Marked!'));
     }
 }

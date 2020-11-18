@@ -327,4 +327,9 @@ class ScheduledLessonDetails extends MyAppModel
         //}
         return true;
     }
+    public function markLearnerJoinTime()
+    {
+        $this->assignValues(array('sldetail_learner_join_time' => date('Y-m-d H:i:s')));
+        return $this->save();
+    }
 }

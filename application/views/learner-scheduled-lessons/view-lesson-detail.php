@@ -495,7 +495,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
     var chat_friends = "<?php echo $lessonData['teacherId']; ?>";
     var worker = new Worker(siteConstants.webroot + 'js/worker-time-interval.js?');
 
-    if (!is_time_up && lesson_joined && !lesson_completed && learnerLessonStatus != '<?php echo ScheduledLesson::STATUS_CANCELLED ?>') {
+    if (!isZoomMettingToolActive && !is_time_up && lesson_joined && !lesson_completed && learnerLessonStatus != '<?php echo ScheduledLesson::STATUS_CANCELLED ?>') {
         joinLesson(chat_id, teacherId);
     }
 

@@ -1,7 +1,10 @@
 This file shares the details of YoCoach version and features.
 
+Updates:
+    *Task-78843: Zoom Integration
+    *Task-78843: Code review changes
+    
 Bug fixes:
-
     Bug:#045185- Fixed my teachers lessons count
     Bug:#044974- Added Sitemap generate feature from admin
 

@@ -18,6 +18,12 @@ class MyAppController extends FatController
         CommonHelper::initCommonVariables();
         $this->initCommonVariables();
     }
+    
+    public function test(){
+        echo 1;
+        CommonHelper::printArray($_GET);
+        CommonHelper::printArray(apache_request_headers());
+    }
 
     public function initCommonVariables()
     {
