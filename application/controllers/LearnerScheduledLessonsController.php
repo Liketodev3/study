@@ -1271,7 +1271,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $issuesReportedDetails = FatApp::getDb()->fetchAll($rs);
         $this->set('issueDeatils', $issuesReportedDetails);
         $this->set('issues_options', IssueReportOptions::getOptionsArray($this->siteLangId));
-        $this->set('resolve_type_options', IssuesReported::RESOLVE_TYPE);
+        $this->set('resolve_type_options', IssuesReported::getResolveTypeArray());
         $this->_template->render(false, false);
     }
     private function getLessonFeedbackForm($lessonId, $langId)

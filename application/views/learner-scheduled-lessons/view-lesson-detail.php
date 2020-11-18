@@ -41,8 +41,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                     <div class="alert alert--info" role="alert">
                         <a class="close" href="javascript:void(0)"></a>
                         <p>
-                            <?php echo Label::getLabel('LBL_Note'); ?>:
-                            <?php echo Label::getLabel('LBL_This_lesson_is_Unscheduled._schedule_it'); ?>
+                            <?php echo Label::getLabel('LBL_Note_This_lesson_is_Unscheduled._schedule_it'); ?>
                         </p>
                     </div>
                     <span class="-gap"></span>
@@ -51,8 +50,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                 <?php if ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED && $countReviews == 0) { ?>
                     <div class="alert alert--info" role="alert">
                         <p>
-                            <?php echo Label::getLabel('LBL_Note'); ?>:
-                            <?php echo Label::getLabel('LBL_This_lesson_is_completed._rate_it'); ?>
+                            <?php echo Label::getLabel('LBL_Note_This_lesson_is_completed._rate_it'); ?>
                         </p>
                     </div>
                     <span class="-gap"></span>
@@ -65,8 +63,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                     <div class="alert alert--info" role="alert">
                         <a class="close" href="javascript:void(0)"></a>
                         <p>
-                            <?php echo Label::getLabel('LBL_Note'); ?>:
-                            <?php echo Label::getLabel('LBL_This_lesson_is_completed'); ?>
+                            <?php echo Label::getLabel('LBL_Note_This_lesson_is_completed'); ?>
                         </p>
                     </div>
                     <span class="-gap"></span>
@@ -75,7 +72,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                 <?php if ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) { ?>
                     <div class="alert alert--info" role="alert">
                         <a class="close" href="javascript:void(0)"></a>
-                        <p><?php echo Label::getLabel('LBL_Note'); ?>:<?php echo Label::getLabel('LBL_An_Issue_Is_Reported.'); ?> </p>
+                        <p><?php echo Label::getLabel('LBL_Note_An_Issue_Is_Reported.'); ?> </p>
                     </div>
                     <span class="-gap"></span>
                 <?php } ?>
@@ -84,8 +81,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                     <div class="alert alert--info" role="alert">
                         <a class="close" href="javascript:void(0)"></a>
                         <p>
-                            <?php echo Label::getLabel('LBL_Note'); ?>:
-                            <?php echo Label::getLabel('LBL_This_Lesson_has_been_cancelled._Schedule_more_lessons'); ?>
+                            <?php echo Label::getLabel('LBL_Note_This_Lesson_has_been_cancelled._Schedule_more_lessons'); ?>
                         </p>
                     </div>
                     <span class="-gap"></span>
@@ -93,7 +89,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
 
                 <?php if (($curDate > $endTime) && ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED)) : ?>
                     <div class="alert alert--info" role="alert">
-                        <p><?php echo Label::getLabel('LBL_Note'); ?>:<?php echo Label::getLabel('LBL_End_time_for_this_lesson_is_passed._Schedule_more_lessons.'); ?> </p>
+                        <p><?php echo Label::getLabel('LBL_Note_End_time_for_this_lesson_is_passed._Schedule_more_lessons.'); ?> </p>
                     </div>
                     <span class="-gap"></span>
                     <a href="<?php echo CommonHelper::generateUrl('account'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>

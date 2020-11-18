@@ -56,7 +56,7 @@ $endedBy = isset(User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_b
 				<td><strong><?php echo Label::getLabel('LBL_Teacher_Resolve_by',$adminLangId); ?>:</strong>
 					<?php
 						foreach ( $issueDetail as $details ) {
-							echo IssuesReported::RESOLVE_TYPE[$details['issrep_issues_resolve_type']] .'<br />';
+							echo IssuesReported::getResolveTypeArray()[$details['issrep_issues_resolve_type']] .'<br />';
 							echo '<strong>Date:'. date('Y-m-d H:i A', strtotime( $details['issrep_updated_on'] )) .'</strong><br> ';
 						}
 					?>

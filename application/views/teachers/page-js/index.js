@@ -146,7 +146,7 @@ $("document").ready(function(){
 			$('input[name=\'teach_lang_keyword\']').val( ui.item.label );
 			$('#frm_fat_id_frmTeacherSrch').submit();
 			$('.language_keyword').parent("li").remove();
-			$('#searched-filters').append("<li><a href='javascript:void(0);' class= 'language_keyword tag__clickable' onclick='removeFilterCustom(\"language_keyword\",this)' >Language: " + ui.item.label +"</a></li>");
+			$('#searched-filters').append("<li><a href='javascript:void(0);' class= 'language_keyword tag__clickable' onclick='removeFilterCustom(\"language_keyword\",this)' >"+langLbl.language+" : " + ui.item.label +"</a></li>");
 
 			//addFilter ( 'language_keyword', this );
 			//window.location.href = "/teachers/index/" + ui.item.value;

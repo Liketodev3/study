@@ -49,7 +49,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                 <?php if ($lessonData['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
                     <div class="alert alert--info" role="alert">
                         <a class="close" href="javascript:void(0)"></a>
-                        <p><?php echo Label::getLabel('LBL_Note'); ?>:<?php echo Label::getLabel('LBL_This_lesson_is_Unscheduled._Encourage_your_student_to_schedule_it.'); ?> </p>
+                        <p><?php echo Label::getLabel('LBL_Note_This_lesson_is_Unscheduled._Encourage_your_student_to_schedule_it.'); ?> </p>
                     </div>
                     <span class="-gap"></span>
                 <?php } ?>
@@ -58,15 +58,14 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                     if ($countReviews <= 0) { ?>
                         <div class="alert alert--info" role="alert">
                             <a class="close" href="javascript:void(0)"></a>
-                            <p><?php echo Label::getLabel('LBL_Note'); ?>:<?php echo Label::getLabel('LBL_This_lesson_is_completed._Encourage_your_learner_to_rate_it.'); ?> </p>
+                            <p><?php echo Label::getLabel('LBL_Note_This_lesson_is_completed._Encourage_your_learner_to_rate_it.'); ?> </p>
                         </div>
                         <span class="-gap"></span>
                     <?php } else { ?>
                         <div class="alert alert--info" role="alert">
                             <a class="close" href="javascript:void(0)"></a>
                             <p>
-                                <?php echo Label::getLabel('LBL_Note'); ?>:
-                                <?php echo Label::getLabel('LBL_This_lesson_is_completed'); ?>
+                                <?php echo Label::getLabel('LBL_Note_This_lesson_is_completed'); ?>
                             </p>
                         </div>
                         <span class="-gap"></span>
@@ -76,7 +75,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                 <?php if ($lessonData['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED) { ?>
                     <div class="alert alert--info" role="alert">
                         <a class="close" href="javascript:void(0)"></a>
-                        <p><?php echo Label::getLabel('LBL_Note'); ?>:<?php echo Label::getLabel('LBL_An_Issue_Is_Reported.'); ?> </p>
+                        <p><?php echo Label::getLabel('LBL_Note_An_Issue_Is_Reported.'); ?> </p>
                     </div>
                     <span class="-gap"></span>
                     <a href="<?php echo CommonHelper::generateUrl('teacher'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
@@ -85,14 +84,14 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                 <?php if ($lessonData['slesson_status'] == ScheduledLesson::STATUS_CANCELLED) { ?>
                     <div class="alert alert--info" role="alert">
                         <a class="close" href="javascript:void(0)"></a>
-                        <p><?php echo Label::getLabel('LBL_Note'); ?>:<?php echo Label::getLabel('LBL_This_Lesson_has_been_cancelled._Schedule_more_lessons.'); ?> </p>
+                        <p><?php echo Label::getLabel('LBL_Note_This_Lesson_has_been_cancelled._Schedule_more_lessons.'); ?> </p>
                     </div>
                     <span class="-gap"></span>
                 <?php } ?>
 
                 <?php if ($curDate > $endTime && $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) : ?>
                     <div class="alert alert--info" role="alert">
-                        <p><?php echo Label::getLabel('LBL_Note'); ?>:<?php echo Label::getLabel('LBL_End_time_for_this_lesson_is_passed._Schedule_more_lessons.'); ?> </p>
+                        <p><?php echo Label::getLabel('LBL_Note_End_time_for_this_lesson_is_passed._Schedule_more_lessons.'); ?> </p>
                     </div>
                     <span class="-gap"></span>
                     <a href="<?php echo CommonHelper::generateUrl('teacher'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
