@@ -150,11 +150,8 @@ class LanguagesController extends AdminBaseController
 
     public function getLanguageFlags()
     {
-        $arrFlag = array();
-        $dir    = '..'.CONF_WEBROOT_FRONT_URL.'public/images/flags';
-        $arrFlags = array_diff(scandir($dir, 1), array(".", ".."));
-
-        return $arrFlags;
+        $dir = CONF_INSTALLATION_PATH.'public'. DIRECTORY_SEPARATOR.'images'. DIRECTORY_SEPARATOR.'flags';
+        return array_diff(scandir($dir, 1), array(".", ".."));
     }
 
     public function media($languageId)
