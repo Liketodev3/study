@@ -17,6 +17,7 @@ class FaqController extends MyAppController
         foreach ($data as $val) {
             $finaldata[$val['faq_category']][] = $val;
         }
+       
         $this->set('finaldata', $finaldata);
         $this->set('typeArr', Faq::getFaqCategoryArr($this->siteLangId));
         $this->_template->render();

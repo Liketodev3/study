@@ -13,19 +13,31 @@ class IssuesReported extends MyAppModel
     const RESOLVE_TYPE_LESSON_COMPLETED_HALF_REFUND = 3;
     const RESOLVE_TYPE_LESSON_COMPLETED_FULL_REFUND = 4;
 
-    const RESOLVE_TYPE = array(
-        self::RESOLVE_TYPE_LESSON_UNSCHEDULED           => 'Reset Lesson to: Unscheduled',
-        self::RESOLVE_TYPE_LESSON_COMPLETED             => 'Mark Lesson as: Completed',
-        self::RESOLVE_TYPE_LESSON_COMPLETED_HALF_REFUND => 'Mark Lesson as: Completed and issue student a 50% refund',
-        self::RESOLVE_TYPE_LESSON_COMPLETED_FULL_REFUND => 'Mark Lesson as: Completed and issue student a 100% refund',
-    );
+   
 
+  
     const ISSUE_REPORTED_NOTIFICATION = 1;
     const ISSUE_RESOLVE_NOTIFICATION = 2;
 
     public function __construct($id = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
+    }
+
+    public static function getResolveTypeArray(int $langId = 0) : array
+    {
+        if ($langId < 1) {
+            $langId = CommonHelper::getLangId();
+        }
+
+        return array(
+            
+            self::RESOLVE_TYPE_LESSON_UNSCHEDULED           => Label::getLabel('LBL_Reset_Lesson_to:_Unscheduled'),
+            self::RESOLVE_TYPE_LESSON_COMPLETED             =>  Label::getLabel('LBL_Mark_Lesson_as:_Completed'),
+            self::RESOLVE_TYPE_LESSON_COMPLETED_HALF_REFUND =>  Label::getLabel('LBL_Mark_Lesson_as:_Completed_and_issue_student_a_50%_refund'),
+            self::RESOLVE_TYPE_LESSON_COMPLETED_FULL_REFUND =>  Label::getLabel('LBL_Mark_Lesson_as:_Completed_and_issue_student_a_100%_refund')          
+        
+        );
     }
 
     public static function getSearchObject()

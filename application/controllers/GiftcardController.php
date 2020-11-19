@@ -120,7 +120,7 @@ class GiftcardController extends LoggedUserController
     {
         $frm = new Form('giftcardForm');
         $frm->setFormTagAttribute('class', 'form login-form-front');
-        $giftcardPrice = $frm->addFloatField("Giftcard Amount", 'giftcard_price', '', array('placeholder'=>Label::getLabel('LBL_Giftcard_Amount'), "onkeyup" => "cardUpdate(this)",'id'=>"giftcard_price"));
+        $giftcardPrice = $frm->addFloatField(Label::getLabel('LBL_Giftcard_Amount'), 'giftcard_price', '', array('placeholder'=>Label::getLabel('LBL_Giftcard_Amount'), "onkeyup" => "cardUpdate(this)",'id'=>"giftcard_price"));
         $giftcardPrice->requirements()->setRequired();
         $giftcardPrice->requirements()->setLength(1,6);
         // $giftcardPrice->requirements()->setFloatPositive();
@@ -130,29 +130,29 @@ class GiftcardController extends LoggedUserController
         $loggedInUserName = UserAuthentication::isUserLogged() === true ? $userInfo['user_last_name'].' '.$userInfo['user_first_name'] : '';
         $loggedInUserEmail = UserAuthentication::isUserLogged() === true ? $userInfo['credential_email'] : '';
         $loggedInUserPhone = UserAuthentication::isUserLogged() === true ? $userInfo['user_phone'] : '';
-        $buyerName = $frm->addRequiredField("Buyer Name", 'gcbuyer_name', $loggedInUserName, array(
+        $buyerName = $frm->addRequiredField(Label::getLabel('LBL_Buyer_Name'), 'gcbuyer_name', $loggedInUserName, array(
             'title'=>'Buyer Name',
             'placeholder' => Label::getLabel('LBL_Buyer_Name'),
 			'readonly' => 'true'
         ));
         $buyerName->requirements()->setRequired();
-        $buyerEmail = $frm->addEmailField("Buyer Email", 'gcbuyer_email', $loggedInUserEmail, array(
+        $buyerEmail = $frm->addEmailField(Label::getLabel('LBL_Buyer_Email'), 'gcbuyer_email', $loggedInUserEmail, array(
             'title'=>'Buyer Email',
             'placeholder' => Label::getLabel('LBL_Buyer_Email'),
 			'readonly' => 'true'
         ));
         //$buyerEmail->requirements()->setRequired();
-        $buyerPhone = $frm->addRequiredField("Buyer Phone No.", 'gcbuyer_phone', $loggedInUserPhone, array(
+        $buyerPhone = $frm->addRequiredField(Label::getLabel('LBL_Buyer_Phone'), 'gcbuyer_phone', $loggedInUserPhone, array(
             'title'=>'Buyer Phone',
             'placeholder' => Label::getLabel('LBL_Buyer_Phone')
 
         ));
         $buyerPhone->requirements()->setRequired();
         $buyerPhone->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
-        $frm->addRequiredField("Recipient Name", 'gcrecipient_name', '', array(
+        $frm->addRequiredField(Label::getLabel('LBL_Recipient_Name'), 'gcrecipient_name', '', array(
             'placeholder' => Label::getLabel('LBL_Recipient_Name')
         ));
-        $frm->addEmailField("Recipient Email", 'gcrecipient_email', '', array(
+        $frm->addEmailField(Label::getLabel('LBL_Recipient_Email'), 'gcrecipient_email', '', array(
             'placeholder' => Label::getLabel('LBL_Recipient_Email')
         ));
         $frm->addSubmitButton('', 'save',Label::getLabel('LBL_Send_Gift_Card'), array(

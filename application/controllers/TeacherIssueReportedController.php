@@ -97,7 +97,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         $issuesReportedDetails = FatApp::getDb()->fetchAll($rs);
         $this->set('issueDeatils', $issuesReportedDetails);
         $this->set('issues_options', IssueReportOptions::getOptionsArray($this->siteLangId));
-        $this->set('resolve_type_options', IssuesReported::RESOLVE_TYPE);
+        $this->set('resolve_type_options', IssuesReported::getResolveTypeArray());
         $this->_template->render(false, false);
     }
 
@@ -118,7 +118,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         
         $this->set('issRows', $issRows);
         $this->set('issues_options', IssueReportOptions::getOptionsArray($this->siteLangId));
-        $this->set('resolve_type_options', IssuesReported::RESOLVE_TYPE);
+        $this->set('resolve_type_options', IssuesReported::getResolveTypeArray());
         $this->_template->render(false, false);
     }
     public static function getIssueDetails($issueId)
@@ -204,7 +204,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         $teacherPayment = $lessonAmount;
         $transactionComment = $transactionDetails['utxn_comments'];
 
-        $arr_options = IssuesReported::RESOLVE_TYPE;
+        $arr_options = IssuesReported::getResolveTypeArray();
 
         if($transactionDetails['slesson_grpcls_id']>0){
             unset($arr_options[IssuesReported::RESOLVE_TYPE_LESSON_UNSCHEDULED]);
@@ -347,7 +347,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         foreach ($teaher_reason_ids as $_trId) {
             $teacherReasonHtml .= $issues_options[$_trId].'<br />';
         }
-        $resolveArray = IssuesReported::RESOLVE_TYPE;
+        $resolveArray = IssuesReported::getResolveTypeArray();
         $tpl = 'teacher_issue_resolved_email';
         $vars = array(
             '{learner_name}' => $transactionDetails['learnerFullName'],
@@ -384,7 +384,7 @@ class TeacherIssueReportedController extends TeacherBaseController
         $fldIssue->requirement->setSelectionRange(1, count($arr_options));
         $fldIssue->requirement->setCustomErrorMessage(Label::getLabel('LBL_Issue_To_Resolve').' '.Label::getLabel('LBL_is_Mandatory'));
         
-        $arr_options = IssuesReported::RESOLVE_TYPE;
+        $arr_options = IssuesReported::getResolveTypeArray();
         if($slesson_id>0){
             $lesson_details = ScheduledLesson::getAttributesById($slesson_id, array('slesson_grpcls_id'));
             if($lesson_details['slesson_grpcls_id']>0){

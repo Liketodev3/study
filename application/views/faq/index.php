@@ -31,7 +31,7 @@
 				   <div class="-padding-30">
 					   <div class="box__top">
 							<div class="d-flex justify-content-between align-items-center">
-								<h4><?php echo Faq::getFaqCategoryArr()[$key]; ?></h4>
+								<h4><?php echo $typeArr[$key]; ?></h4>
 								<a href="<?php echo CommonHelper::generateUrl('Faq','category',array($key)); ?>" class="-link-underline"><?php echo Label::getLabel('LBL_'.count($data).'_Articles') ?></a>
 							</div>
 						</div>
