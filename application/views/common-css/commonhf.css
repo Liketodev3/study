@@ -701,14 +701,6 @@ h1, h2, h3, h4, h5, h6{
     margin: 0 6px 0 0;
 }
 
-.group.group--social {
-    margin: 10px 0 10px;
-    width: 100%;
-    display: inline-block;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
 .group--social a span, .group--social a {
     font-size: 13px;
 }
@@ -736,11 +728,16 @@ h1, h2, h3, h4, h5, h6{
     left: 15px;
     top: 8px;
 }
-
-.group.group--social a img {
-  width: 48%;
-height: 48px;
-max-width: 100%;
+.group--social a {
+    margin-right: 5px;
+}
+.group--social a:last-child {
+    margin-right: 0;
+}
+.group--social{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 

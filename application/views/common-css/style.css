@@ -7716,7 +7716,7 @@ color: #fff;}
     vertical-align: top;
     margin-top: 0;
     margin-right: 15px;float:none;}
-.group.group--social{text-align:center;}
+
 @media screen and (max-width:1220px){
   .group.group--social .btn--social-fb.btn{
       margin-right: 5px;
@@ -7726,7 +7726,6 @@ color: #fff;}
   .group.group--social .btn--social-fb.btn,
   .group.group--social a{
     display:block;
-    margin:auto;
   }
   .group.group--social .btn--social-fb.btn{margin-bottom:10px;}
 }
