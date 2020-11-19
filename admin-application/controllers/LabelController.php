@@ -52,7 +52,7 @@ class LabelController extends AdminBaseController
             $cond = $srch->addCondition('lbl.label_key', 'like', '%' . $post['keyword'] . '%', 'AND');
             $cond->attachCondition('lbl.label_caption', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
-        $srch->addCondition('lbl.label_lang_id', '=', $this->adminLangId);
+        // $srch->addCondition('lbl.label_lang_id', '=', $this->adminLangId);
         $rs      = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs);
 
