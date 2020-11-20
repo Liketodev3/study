@@ -365,9 +365,9 @@ class AccountController extends LoggedUserController
             $fldUname->requirements()->setRequired();
             $fldUname->requirements()->setCharOnly();
         }
-        $fldFname = $frm->addTextBox(Label::getLabel('LBL_First_Name'), 'user_first_name');
+        $fldFname = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'user_first_name');
         // $fldFname->requirements()->setCharOnly();
-        $fldLname = $frm->addTextBox(Label::getLabel('LBL_Last_Name'), 'user_last_name');
+        $fldLname = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'user_last_name');
         // $fldLname->requirements()->setCharOnly();
         $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'user_gender', User::getGenderArr());
         $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
