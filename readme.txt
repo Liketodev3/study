@@ -1,14 +1,17 @@
 This file shares the details of YoCoach version and features.
 
-New Features:
+Release Number: TV-2.6.20201120
+Release Date: 2020/11/20
 
-Enhancements:
-  
-Bug Fixes:
+Fixes and updates:
+        * Bug-045421: fix lang labels search in admin panel and add labels in orders search form. fix unicode chars issue.
+        * Bug-045400: to not list gift card in admin panel if not checkedout
+        * Bug-045427: fix the speak lanuage issue
+        * Bug-045434: remove Warnings on add/edit interface of Manage lang section in admin
+        * Bug-044575: remove end lesson popups on rescheduled lesson
+        * Bug-044573: email admin on teacher request
+        * Bug-044552: admin can set blog image
 
-#044552
-#044573
-#044575
 
 ==============================================================================================================================
 Installation steps:
