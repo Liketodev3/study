@@ -331,9 +331,9 @@ class TeacherRequestController extends MyAppController {
 		$frm = new Form('frmTeacherApprovalForm');
 		$frm->addHtml('', 'general_fields_heading', '');
 		$fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'utrvalue_user_first_name');
-        $fld->requirements()->setCharOnly();
+        // $fld->requirements()->setCharOnly();
 		$fld = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'utrvalue_user_last_name');
-        $fld->requirements()->setCharOnly();
+        // $fld->requirements()->setCharOnly();
 		$fld = $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'utrvalue_user_gender', User::getGenderArr($langId), User::GENDER_MALE);
 		$fld->requirements()->setRequired();
 		$fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone_Number'), 'utrvalue_user_phone');

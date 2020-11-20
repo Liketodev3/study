@@ -99,7 +99,7 @@ class EmailHandler extends FatModel
         $headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
 
-        $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_".$langId) ."<".FatApp::getConfig("CONF_FROM_EMAIL").">" . "\r\nReply-to: ".FatApp::getConfig("CONF_REPLY_TO_EMAIL");
+        $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_".$langId, FatUtility::VAR_STRING, '') ."<".FatApp::getConfig("CONF_FROM_EMAIL").">" . "\r\nReply-to: ".FatApp::getConfig("CONF_REPLY_TO_EMAIL");
 
         if ($extra_headers != '') {
             $headers .= $extra_headers;
@@ -149,7 +149,7 @@ class EmailHandler extends FatModel
         $headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
 
-        $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_".$langId) ."<".FatApp::getConfig("CONF_FROM_EMAIL").">" . "\r\nReply-to: ".FatApp::getConfig("CONF_REPLY_TO_EMAIL");
+        $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_".$langId, FatUtility::VAR_STRING, '') ."<".FatApp::getConfig("CONF_FROM_EMAIL").">" . "\r\nReply-to: ".FatApp::getConfig("CONF_REPLY_TO_EMAIL");
 
         if ($extra_headers != '') {
             $headers .= $extra_headers;
@@ -360,7 +360,7 @@ class EmailHandler extends FatModel
         }
 
         return array(
-            '{website_name}'	=>	FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId),
+            '{website_name}'	=>	FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_STRING, ''),
             '{website_url}'		=>	CommonHelper::generateFullUrl('', '', array(), CONF_WEBROOT_FRONT_URL),
             '{Company_Logo}'	=>	'<img style="max-width: 160px;" src="' . CommonHelper::generateFullUrl('Image', 'emailLogo', array($langId), CONF_WEBROOT_FRONT_URL) . '" />',
             '{current_date}'	=>	date('M d, Y'),

@@ -539,9 +539,9 @@ class UsersController extends AdminBaseController
         $frm->addHiddenField('', 'user_id', $user_id);
         $frm->addTextBox(Label::getLabel('LBL_Username', $this->adminLangId), 'credential_username', '');
         $fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name', $this->adminLangId), 'user_first_name');
-        $fld->requirements()->setCharOnly();
+        // $fld->requirements()->setCharOnly();
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Last_Name', $this->adminLangId), 'user_last_name');
-        $fld->requirements()->setCharOnly();
+        // $fld->requirements()->setCharOnly();
         /*$frm->addDateField(Label::getLabel('LBL_Date_Of_Birth', $this->adminLangId), 'user_dob', '', array(
              'readonly' => 'readonly'
          ));*/

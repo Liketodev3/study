@@ -27,7 +27,7 @@ $commonHead1DataArr = array(
 	'layoutDirection' =>  CommonHelper::getLayoutDirection()
 );
 
-$this->includeTemplate( '_partial/header/commonHead1.php', $commonHead1DataArr );
+$this->includeTemplate( '_partial/header/commonHead1.php', $commonHead1DataArr, false);
 /* ] */
 
 /** Remove meta from teacher profile page **/

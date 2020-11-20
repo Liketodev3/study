@@ -366,9 +366,9 @@ class AccountController extends LoggedUserController
             $fldUname->requirements()->setCharOnly();
         }
         $fldFname = $frm->addTextBox(Label::getLabel('LBL_First_Name'), 'user_first_name');
-        $fldFname->requirements()->setCharOnly();
+        // $fldFname->requirements()->setCharOnly();
         $fldLname = $frm->addTextBox(Label::getLabel('LBL_Last_Name'), 'user_last_name');
-        $fldLname->requirements()->setCharOnly();
+        // $fldLname->requirements()->setCharOnly();
         $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'user_gender', User::getGenderArr());
         $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);

@@ -50,7 +50,7 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 													<li>
 														<label class="checkbox" id="weekDays_<?php echo $dayId; ?>">
 															<input type="checkbox" name="filterWeekDays[]" value="<?php echo $dayId; ?>">
-															<i class="input-helper"></i> <?php echo $dayName; ?>
+															<i class="input-helper"></i><?php echo FatUtility::decodeHtmlEntities($dayName); ?>
 														</label>
 													</li>
 													<?php } ?>

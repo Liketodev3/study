@@ -5,7 +5,7 @@ $teacherPreferencesFrm->setFormTagAttribute('onsubmit', 'setupTeacherPreferences
 $teacherPreferencesFrm->developerTags['colClassPrefix'] = 'col-md-';
 $teacherPreferencesFrm->developerTags['fld_default_col'] = 12;
 $teach_lang = $teacherPreferencesFrm->getField('teach_lang');
-$teach_lang->value = $teachLang;
+$teach_lang->value = CommonHelper::htmlEntitiesDecode($teachLang);
 $teach_lang->developerTags['col'] = 6;
 ?>
 <div class="section-head">
