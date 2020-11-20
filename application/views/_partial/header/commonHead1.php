@@ -27,7 +27,7 @@ $jsVariables = CommonHelper::htmlEntitiesDecode($jsVariables);
 $SslUsed = ( FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false)) ? 1 : 0;
 echo $str = '<script type="text/javascript">
 		var langLbl = ' . json_encode(
-			$jsVariables
+			CommonHelper::htmlEntitiesDecode($jsVariables)
 		) . ';
 		var CONF_AUTO_CLOSE_SYSTEM_MESSAGES = ' . FatApp::getConfig("CONF_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 0) . ';
 		var CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = ' . FatApp::getConfig("CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 3) . ';
@@ -41,4 +41,3 @@ echo $str = '<script type="text/javascript">
 			CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = 3;
 		}
 	</script>' . "\r\n";
-?>

@@ -410,7 +410,7 @@ class GuestUserController extends MyAppController
         $frm = new Form('frmRegister');
         $frm->addHiddenField('', 'user_id', 0);
         $fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'user_first_name');
-        // $fld->requirements()->setCharOnly(); //allow polish characters
+        // $fld->requirements()->setCharOnly();
         $fld =$frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'user_last_name');
         // $fld->requirements()->setCharOnly();
         $fld = $frm->addEmailField(Label::getLabel('LBL_Email_ID'), 'user_email', '', array('autocomplete="off"'));

@@ -99,7 +99,7 @@ class EmailHandler extends FatModel
         $headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
 
-        $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_".$langId) ."<".FatApp::getConfig("CONF_FROM_EMAIL").">" . "\r\nReply-to: ".FatApp::getConfig("CONF_REPLY_TO_EMAIL");
+        $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_".$langId, FatUtility::VAR_STRING, '') ."<".FatApp::getConfig("CONF_FROM_EMAIL").">" . "\r\nReply-to: ".FatApp::getConfig("CONF_REPLY_TO_EMAIL");
 
         if ($extra_headers != '') {
             $headers .= $extra_headers;
@@ -115,6 +115,9 @@ class EmailHandler extends FatModel
             return false;
         }
         require_once(CONF_INSTALLATION_PATH . 'library/PHPMailer/PHPMailerAutoload.php');
+        if(!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))){
+            return true;
+        }
         $host = isset($smtp_arr["host"])?$smtp_arr["host"]:FatApp::getConfig("CONF_SMTP_HOST");
         $port = isset($smtp_arr["port"])?$smtp_arr["port"]:FatApp::getConfig("CONF_SMTP_PORT");
         $username = isset($smtp_arr["username"])?$smtp_arr["username"]:FatApp::getConfig("CONF_SMTP_USERNAME");
@@ -146,7 +149,7 @@ class EmailHandler extends FatModel
         $headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
 
-        $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_".$langId) ."<".FatApp::getConfig("CONF_FROM_EMAIL").">" . "\r\nReply-to: ".FatApp::getConfig("CONF_REPLY_TO_EMAIL");
+        $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_".$langId, FatUtility::VAR_STRING, '') ."<".FatApp::getConfig("CONF_FROM_EMAIL").">" . "\r\nReply-to: ".FatApp::getConfig("CONF_REPLY_TO_EMAIL");
 
         if ($extra_headers != '') {
             $headers .= $extra_headers;
@@ -163,11 +166,12 @@ class EmailHandler extends FatModel
             return false;
         }
 
-        if (1 == FatApp::getConfig("CONF_SEND_EMAIL")) {
-            $subject = '=?UTF-8?B?'.base64_encode($subject).'?=';
-            if (!mail($to, $subject, $body, $headers)) {
-                return false;
-            }
+        if(!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))){
+            return true;
+        }
+        $subject = '=?UTF-8?B?'.base64_encode($subject).'?=';
+        if (!mail($to, $subject, $body, $headers)) {
+            return false;
         }
         return true;
     }
@@ -356,7 +360,7 @@ class EmailHandler extends FatModel
         }
 
         return array(
-            '{website_name}'	=>	FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId),
+            '{website_name}'	=>	FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_STRING, ''),
             '{website_url}'		=>	CommonHelper::generateFullUrl('', '', array(), CONF_WEBROOT_FRONT_URL),
             '{Company_Logo}'	=>	'<img style="max-width: 160px;" src="' . CommonHelper::generateFullUrl('Image', 'emailLogo', array($langId), CONF_WEBROOT_FRONT_URL) . '" />',
             '{current_date}'	=>	date('M d, Y'),

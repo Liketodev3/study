@@ -18,7 +18,7 @@ $commonHead1DataArr = array(
 	'cookieConsent' =>  $cookieConsent
 );
 
-$this->includeTemplate( '_partial/header/commonHead1.php', $commonHead1DataArr );
+$this->includeTemplate( '_partial/header/commonHead1.php', $commonHead1DataArr, false);
 /* ] */
 
 /** Remove meta from teacher profile page **/
