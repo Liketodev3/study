@@ -384,7 +384,7 @@ function getSlotBookingConfirmationBox(calEvent, jsEvent){
     newEvent.endTime = moment(calEvent.end).format('HH:mm:ss');
     newEvent.start = moment(calEvent.end).format('YYYY-MM-DD')+" "+ moment(calEvent.start).format('HH:mm:ss');
     newEvent.end = moment(calEvent.end).format('YYYY-MM-DD')+" "+moment(calEvent.end).format('HH:mm:ss');
-    newEvent.date = moment(calEvent.end).format('YYYY-MM-DD');
+    newEvent.date = moment(calEvent.start).format('YYYY-MM-DD');
     newEvent.day = moment(calEvent.start).format('d');
     newEvent.className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
     newEvent.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>';

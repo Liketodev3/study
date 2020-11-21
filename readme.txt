@@ -1,5 +1,9 @@
 This file shares the details of YoCoach version and features.
 
+Fixes and updates:
+    * Bug-045550: Duplicate bookings on booking at 11:30 PM
+
+------------------ 
 Release Number: TV-2.7.1.20201121
 Release Date: 2020/11/21
 
