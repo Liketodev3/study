@@ -761,8 +761,8 @@ class TeacherController extends TeacherBaseController
         $frm->addSelectBox(Label::getLabel('LBL_Status', $langId), 'status', array(-2 => Label::getLabel('LBL_Does_Not_Matter', $langId)) + Order::getPaymentStatusArr($langId), '', array('placeholder' => 'Select Status'), '');
         $frm->addDateField(Label::getLabel('LBL_Date_From', $langId), 'date_from', '', array('placeholder' => '', 'readonly' => 'readonly'));
         $frm->addDateField(Label::getLabel('LBL_Date_To', $langId), 'date_to', '', array('placeholder' => '', 'readonly' => 'readonly'));
-        $fld_submit = $frm->addSubmitButton('', 'btn_submit', 'Submit', array('class' => 'btn btn--primary'));
-        $fld_cancel = $frm->addResetButton("", "btn_clear", "Clear", array('onclick' => 'clearSearch();', 'class' =>'btn--clear'));
+        $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Submit', $langId), array('class' => 'btn btn--primary'));
+        $fld_cancel = $frm->addResetButton("", "btn_clear", Label::getLabel('LBL_Clear', $langId), array('onclick' => 'clearSearch();', 'class' =>'btn--clear'));
         $fld_submit->attachField($fld_cancel);
         $frm->addHiddenField('', 'page', 1);
         return $frm;
