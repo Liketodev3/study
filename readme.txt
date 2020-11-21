@@ -1,5 +1,9 @@
 This file shares the details of YoCoach version and features.
 
+Hotfixes
+        * Bug-045421: Add labels in orders search form of teacher dashboard
+
+
 Release Number: TV-2.6.20201120
 Release Date: 2020/11/20
 
