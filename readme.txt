@@ -1,5 +1,14 @@
 This file shares the details of YoCoach version and features.
 
+Release Number: TV-2.7.1.20201121
+Release Date: 2020/11/21
+
+    Fixes and updates:
+        * Bug-045421: add labels in orders search form of teacher
+
+------------------ 
+
+
 Release Number: TV-2.7.0.20201120
 Release Date: 2020/11/20
 
