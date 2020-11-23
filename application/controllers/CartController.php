@@ -9,11 +9,11 @@ class CartController extends MyAppController
     public function add()
     {
         if (!UserAuthentication::isUserLogged()) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Please_login_to_book'));
+            FatUtility::dieJsonError(Label::getLabel('LBL_Please_login_to_book'));
         }
         $post = FatApp::getPostedData();
         if (false == $post) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
 
         /* [ */
@@ -29,7 +29,7 @@ class CartController extends MyAppController
         $languageId = FatApp::getPostedData('languageId', FatUtility::VAR_INT, 1);
 
         if ($teacher_id == UserAuthentication::getLoggedUserId()) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         $db =  FatApp::getDb();
         /* [ */
@@ -41,7 +41,7 @@ class CartController extends MyAppController
         $rs = $srch->getResultSet();
         $teacher = $db->fetch($rs);
         if (!$teacher) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         /* ] */
         $teacher_id = $teacher['user_id'];
@@ -57,11 +57,11 @@ class CartController extends MyAppController
             $scheduledLessonData =$db->fetch($getResultSet);
 
             if(!empty($scheduledLessonData)){
-                FatUtility::dieWithError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
+                FatUtility::dieJsonError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
             }
 
             if (!TeacherWeeklySchedule::isSlotAvailable($teacher_id, $startDateTime, $endDateTime, $weekStart)) {
-                FatUtility::dieWithError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
+                FatUtility::dieJsonError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
             }
         }
 
@@ -85,7 +85,7 @@ class CartController extends MyAppController
         /* add to cart[ */
         $cart = new Cart();
         if (!$cart->add($teacher_id, $lpackageId, $languageId, $startDateTime, $endDateTime, $grpclsId)) {
-            FatUtility::dieWithError($cart->getError());
+            FatUtility::dieJsonError($cart->getError());
         }
         /* ] */
 
