@@ -13,7 +13,6 @@ class CustomController extends MyAppController
         $this->set('textMessage', $textMessage);
 
         $this->_template->render();
-     
     }
 
     public function paymentSuccess($orderId = null)
@@ -32,7 +31,7 @@ class CustomController extends MyAppController
             $order = $orderObj->getOrderById($orderId);
             if (isset($order['order_type'])) {
                 $this->set('orderType', $order['order_type']);
-                if($order['order_type'] == Order::TYPE_WALLET_RECHARGE){ 
+                if ($order['order_type'] == Order::TYPE_WALLET_RECHARGE) {
                     $this->set('heading', Label::getLabel('HEADING_Money_added_to_wallet'));
                     $textMessage = Label::getLabel('MSG_Money_added_to_wallet');
                 }
@@ -45,20 +44,20 @@ class CustomController extends MyAppController
             $this->set('lessonInfo', $lessonInfo);
         }
         $this->set('textMessage', $textMessage);
-       
+
         $this->_template->render();
     }
-        public function updateUserCookies()
-        {
-            
-            if(UserAuthentication::isUserLogged()){
-                $UserCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
-                $UserCookieConsent->saveOrUpdateSetting([], false);
-             }
-             
-            CommonHelper::setCookieConsent();
-            return true;
+    public function updateUserCookies()
+    {
+
+        if (UserAuthentication::isUserLogged()) {
+            $UserCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+            $UserCookieConsent->saveOrUpdateSetting([], false);
         }
+
+        CommonHelper::setCookieConsent();
+        return true;
+    }
 
     public function paymentCancel()
     {
@@ -69,14 +68,14 @@ class CustomController extends MyAppController
     public function cookieForm()
     {
         $cookieForm = $this->getCookieForm();
-        if(UserAuthentication::isUserLogged()){
+        if (UserAuthentication::isUserLogged()) {
             $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
             $cookieSetting = $userCookieConsent->getCookieSettings();
             $cookieSetting =  \json_decode($cookieSetting, true);
             $cookieForm->fill($cookieSetting);
-         }
+        }
 
-        $this->set('cookieForm',$cookieForm);
+        $this->set('cookieForm', $cookieForm);
         $this->_template->render(false, false);
     }
 
@@ -87,7 +86,7 @@ class CustomController extends MyAppController
         $form->addCheckBox(Label::getLabel('LBL_Necessary'), UserCookieConsent::COOKIE_NECESSARY_FIELD, $checkboxValue, array(), true, 1);
         $form->addCheckBox(Label::getLabel('LBL_Preferences'), UserCookieConsent::COOKIE_PREFERENCES_FIELD, $checkboxValue, array(), true, 0);
         $form->addCheckBox(Label::getLabel('LBL_Statistics'), UserCookieConsent::COOKIE_STATISTICS_FIELD, $checkboxValue, array(), true, 0);
-        $form->addSubmitButton('','btn_submit', Label::getLabel('LBL_Save'));
+        $form->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save'));
         return $form;
     }
 
@@ -95,24 +94,24 @@ class CustomController extends MyAppController
     {
         $cookieForm = $this->getCookieForm();
 
-         $data = $cookieForm->getFormDataFromArray(FatApp::getPostedData());
-         if ($data == false) {
-             Message::addErrorMessage(current($cookieForm->getValidationErrors()));
-             FatUtility::dieJsonError(Message::getHtml());
-         }
-         unset($data['btn_submit']);
-         unset($data['necessary']);
-         if(UserAuthentication::isUserLogged()){
+        $data = $cookieForm->getFormDataFromArray(FatApp::getPostedData());
+        if ($data == false) {
+            Message::addErrorMessage(current($cookieForm->getValidationErrors()));
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        unset($data['btn_submit']);
+        unset($data['necessary']);
+        if (UserAuthentication::isUserLogged()) {
             $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
             $userCookieConsent->saveOrUpdateSetting($data, false);
-         }
-         
-         $data = \json_encode($data);
-         CommonHelper::setCookieConsent($data);
-         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Cookie_settings_update_successfully'));
+        }
+
+        $data = \json_encode($data);
+        CommonHelper::setCookieConsent($data);
+        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Cookie_settings_update_successfully'));
     }
 
-    
+
     public function trialBookedSuccess($orderId = null)
     {
         $textMessage = Label::getLabel('MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}');
@@ -127,7 +126,7 @@ class CustomController extends MyAppController
         if ($orderId) {
             $orderObj = new Order();
             $order = $orderObj->getOrderById($orderId);
-            
+
             if (isset($order['order_type'])) {
                 $this->set('orderType', $order['order_type']);
             }
@@ -142,7 +141,7 @@ class CustomController extends MyAppController
         $this->set('heading', Label::getLabel('MSG_Success'));
         $this->_template->render(true, true, 'custom/payment-success.php');
     }
-    
+
     public function sitemap()
     {
         $this->_template->render();

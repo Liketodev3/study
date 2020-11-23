@@ -63,9 +63,6 @@ foreach ( $lessons as $lesson ) {
 				<h6><?php echo $lesson['teacherFname']; ?></h6>
 				<p><?php echo $lesson['teacherCountryName']; ?> <br>
                 <?php endif; ?>
-				
-				<p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['sldetail_order_id']; ?></p>
-
 			</div>
 
 			<div class="col-xl-4 col-lg-4 col-md-12 ">
@@ -117,7 +114,7 @@ foreach ( $lessons as $lesson ) {
                             </li>
                         <?php } ?>
 						<li>
-							<span class="span-left"><?php echo Label::getLabel('LBL_Details'); ?></span>
+							<span class="span-left"><?php echo Label::getLabel('LBL_Language'); ?></span>
 							<span class="span-right">
 
 							<?php
