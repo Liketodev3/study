@@ -1,7 +1,18 @@
 This file shares the details of YoCoach version and features.
 
-Fixes and updates:
+
+Release Number: TV-2.7.2.20201123
+
+Release Date: 2020/11/23
+
+Fixes:
     * Bug-045550: Duplicate bookings on booking at 11:30 PM
+    * Bug-045442: Fix login signup popup ui
+
+Updates:
+    * Task-73053: Remove/replace irrelevant labels/media from admin settings
+    * Task-73053: Refine learner lessons tabs
+
 
 ------------------ 
 Release Number: TV-2.7.1.20201121
