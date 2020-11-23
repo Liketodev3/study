@@ -22,7 +22,7 @@ var isLessonSpaceMeetingToolActive = '<?php echo $isLessonSpaceMeetingToolActive
 
 var testTool = window.testTool;
 
-const ZOOM_API_KEY = '<?php echo FatApp::getConfig('CONF_ZOOM_API_KEY') ?>';
+const ZOOM_API_KEY = '<?php echo FatApp::getConfig('CONF_ZOOM_API_KEY', FatUtility::VAR_STRING, '') ?>';
 </script>
 <div class="box -padding-20">
 	<div id="listItems"></div>
