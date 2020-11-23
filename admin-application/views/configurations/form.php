@@ -49,7 +49,7 @@ switch ($frmType){
 		$adminLogoFld = $frm->getField('admin_logo');
 		$desktopLogoFld = $frm->getField('front_logo');
 		$desktopWhiteLogoFld = $frm->getField('front_white_logo');
-		$watermarkFld = $frm->getField('watermark');
+		// $watermarkFld = $frm->getField('watermark');
 		$emailLogoFld = $frm->getField('email_logo');
 		$socialFeedImgFld = $frm->getField('social_feed_image');
 		$faviconFld = $frm->getField('favicon');
@@ -81,7 +81,7 @@ switch ($frmType){
             
             $paymentPageLogo->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
             
-            $watermarkFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
+            // $watermarkFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
         }else{
             $adminLogoFld->setFieldTagAttribute('class', 'hide');
             $desktopLogoFld->setFieldTagAttribute('class', 'hide');
@@ -92,7 +92,7 @@ switch ($frmType){
             $mobileLogo->setFieldTagAttribute('class', 'hide');
             $appleTouchIcon->setFieldTagAttribute('class', 'hide');
             $paymentPageLogo->setFieldTagAttribute('class', 'hide');
-            $watermarkFld->setFieldTagAttribute('class', 'hide');
+            // $watermarkFld->setFieldTagAttribute('class', 'hide');
         }
         
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_ADMIN_LOGO, 0, 0, $lang_id ) ){
@@ -127,13 +127,13 @@ switch ($frmType){
             $paymentPageLogo->htmlAfterField .= '</div><br>';
 		}
 
-		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_WATERMARK_IMAGE, 0, 0, $lang_id ) ){
+		/* if( AttachedFile::getAttachment( AttachedFile::FILETYPE_WATERMARK_IMAGE, 0, 0, $lang_id ) ){
 			$watermarkFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','watermarkImage',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
             if($canEdit){
                 $watermarkFld->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeWatermarkImage('.$lang_id.')" ><i class="ion-close-round"></i></a>';
             }
             $watermarkFld->htmlAfterField .= '</div><br>';
-		}
+		} */
 
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_EMAIL_LOGO, 0, 0, $lang_id ) ){
 			$emailLogoFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','emailLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';

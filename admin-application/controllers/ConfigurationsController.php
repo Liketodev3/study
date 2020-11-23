@@ -553,10 +553,8 @@ class ConfigurationsController extends AdminBaseController
 
                 $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Admin', $this->adminLangId).'</h3>');
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Default_Items_Per_Page", $this->adminLangId), "CONF_ADMIN_PAGESIZE");
-                $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Determines_how_many_items_are_shown_per_page_(user_listing,_categories,_etc)", $this->adminLangId).".</small>";
+                $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Users,_orders,_etc)", $this->adminLangId).".</small>";
 
-                
-                
                 $frm->addHtml('', 'FlashCard', '<h3>'.Label::getLabel('LBL_FlashCards', $this->adminLangId).'</h3>');
 
                 $frm->addCheckBox(
@@ -575,11 +573,8 @@ class ConfigurationsController extends AdminBaseController
 
                 $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Teacher_Dashboard', $this->adminLangId).'</h3>');
 
-                $fld3 = $frm->addTextBox(Label::getLabel("LBL_No._Of_Lessons_plans", $this->adminLangId), "CONF_TEACHER_NO_OF_LESSON");
-                $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Enter_the_value_with_comma_Separated_used_in_teacher_dashboard_for_My_couses_page_No._Of_Lessons_plans)", $this->adminLangId).".</small>";
-
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Default_Items_Per_Page", $this->adminLangId), "CONF_FRONTEND_PAGESIZE");
-                $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Determines_how_many_items_are_shown_per_page_(lesson_listing,_flashcards,_etc)", $this->adminLangId).".</small>";
+                $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Lessons,_orders,_etc)", $this->adminLangId).".</small>";
 
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_END_LESSON_DURATION", $this->adminLangId), "CONF_ALLOW_TEACHER_END_LESSON");
                 $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Duration_After_Teacher_Can_End_Lesson_(In_Minutes)", $this->adminLangId).".</small>";
@@ -629,8 +624,8 @@ class ConfigurationsController extends AdminBaseController
                 //$fld = $frm->addIntegerField(Label::getLabel("LBL_Maximum_Site_Commission",$this->adminLangId).' ['.$this->siteDefaultCurrencyCode.']','CONF_MAX_COMMISSION','');
                 //$fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_maximum_commission/Fees_that_will_be_charged_on_a_particular_product.",$this->adminLangId)."</small>";
 
-                $fld = $frm->addCheckBox(Label::getLabel("LBL_Commission_charged_including_tax", $this->adminLangId), 'CONF_COMMISSION_INCLUDING_TAX', 1, array(), false, 0);
-                $fld->htmlAfterField = '<br><small>'.Label::getLabel("LBL_Commission_charged_including_tax_charges", $this->adminLangId).'</small>';
+                /* $fld = $frm->addCheckBox(Label::getLabel("LBL_Commission_charged_including_tax", $this->adminLangId), 'CONF_COMMISSION_INCLUDING_TAX', 1, array(), false, 0);
+                $fld->htmlAfterField = '<br><small>'.Label::getLabel("LBL_Commission_charged_including_tax_charges", $this->adminLangId).'</small>'; */
 
                 $frm->addHtml('', 'Withdrawal', '<h3>'.Label::getLabel("LBL_Withdrawal", $this->adminLangId).'</h3>');
                 $fld = $frm->addIntegerField(Label::getLabel("LBL_Minimum_Withdrawal_Amount", $this->adminLangId).' ['.$this->siteDefaultCurrencyCode.']', 'CONF_MIN_WITHDRAW_LIMIT', '');
@@ -948,7 +943,7 @@ class ConfigurationsController extends AdminBaseController
                 $favicon_fld = $frm->addButton('Website Favicon', 'favicon', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'favicon', 'data-file_type' => AttachedFile::FILETYPE_FAVICON));
                 $social_logo_fld = $frm->addButton('Social Media Logo', 'social_feed_image', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'social_feed_image', 'data-file_type' => AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE));
                 $payment_logo_fld = $frm->addButton('Payment Page Logo', 'payment_page_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'payment_page_logo', 'data-file_type' => AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO));
-                $watermark_fld = $frm->addButton('Watermark', 'watermark', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'watermark', 'data-file_type' => AttachedFile::FILETYPE_WATERMARK_IMAGE));
+                // $watermark_fld = $frm->addButton('Watermark', 'watermark', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'watermark', 'data-file_type' => AttachedFile::FILETYPE_WATERMARK_IMAGE));
                 $appletouch_fld = $frm->addButton('Apple Touch Icon', 'apple_touch_icon', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'apple_touch_icon', 'data-file_type' => AttachedFile::FILETYPE_APPLE_TOUCH_ICON));
                 $mobilelogo_fld = $frm->addButton('Mobile Logo', 'mobile_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'mobile_logo', 'data-file_type' => AttachedFile::FILETYPE_MOBILE_LOGO));
 

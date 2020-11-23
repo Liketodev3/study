@@ -337,13 +337,13 @@ class MetaTagsController extends AdminBaseController
 
         if ($metaType == MetaTag::META_GROUP_ADVANCED) {
             $fld = $frm->addRequiredField(Label::getLabel('LBL_Controller', $this->adminLangId), 'meta_controller');
-            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/shops/report-spam/1/10 ". Label::getLabel("LBL_then_controller_will_be_", $this->adminLangId) ." shops</small>";
+            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/learner-scheduled-lessons/view/100 ". Label::getLabel("LBL_then_controller_will_be_", $this->adminLangId) ." LearnerScheduledLessons</small>";
             $fld = $frm->addRequiredField(Label::getLabel('LBL_Action', $this->adminLangId), 'meta_action');
-            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/shops/report-spam/1/10 ". Label::getLabel("LBL_then_action_will_be_", $this->adminLangId) ." reportSpam</small>";
+            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/learner-scheduled-lessons/view/100 ". Label::getLabel("LBL_then_action_will_be_", $this->adminLangId) ." view</small>";
             $fld = $frm->addTextBox(Label::getLabel('LBL_Record_Id', $this->adminLangId), 'meta_record_id');
-            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/shops/report-spam/1/10 ". Label::getLabel("LBL_then_record_id_will_be_", $this->adminLangId) ." 1</small>";
+            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/learner-scheduled-lessons/view/100 ". Label::getLabel("LBL_then_record_id_will_be_", $this->adminLangId) ." 100</small>";
             $fld = $frm->addTextBox(Label::getLabel('LBL_Sub_Record_Id', $this->adminLangId), 'meta_subrecord_id');
-            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/shops/report-spam/1/10 ". Label::getLabel("LBL_then_sub_record_id_will_be_", $this->adminLangId) ." 10</small>";
+            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/learner-scheduled-lessons/view/100 ". Label::getLabel("LBL_then_sub_record_id_will_be_", $this->adminLangId) ." 0</small>";
         } else {
             $frm->addHiddenField(Label::getLabel('LBL_Entity_Id', $this->adminLangId), 'meta_record_id', $recordId);
         }
