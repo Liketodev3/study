@@ -5,7 +5,7 @@ Release Number: TV-2.7.4.20201124
 
 Release Date: 2020/11/24
 
-Bugs:
+Updates:
 
     * Bug-#045645: refine redirections on lessons action
     * Task-73053:
