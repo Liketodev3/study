@@ -10031,3 +10031,5 @@ REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUE
 
 INSERT INTO `tbl_attached_files` (`afile_type`, `afile_record_id`, `afile_record_subid`, `afile_lang_id`, `afile_screen`, `afile_physical_path`, `afile_name`, `afile_display_order`, `afile_downloaded_times`) VALUES
 (43, 0, 0, 1, 0, '2020/11/1606219089-2000x600jpg', '2000x600.jpg', 1, 0);
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.4.20201124' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

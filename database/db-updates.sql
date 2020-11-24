@@ -171,3 +171,5 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.3.20201124' WHERE `conf_nam
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
 ('MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}', 1, '<p>Your trial lesson order has been successfully processed!</p>'),
 ('MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}', 2, '<p>Your trial lesson order has been successfully processed!</p>');
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.4.20201124' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

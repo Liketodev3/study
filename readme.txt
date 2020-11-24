@@ -1,5 +1,22 @@
 This file shares the details of YoCoach version and features.
 
+
+Release Number: TV-2.7.4.20201124
+
+Release Date: 2020/11/24
+
+Bugs:
+
+    * Bug-#045645: refine redirections on lessons action
+    * Task-73053:
+        - Remove order id from tutor lessons list
+        - Make blog page image left align in media settings
+    * Task-76258:
+        - Fix restore header bar style and timing issue
+        - Add Zoom, Lessonspace and Mailchimp API details
+        - Add default blog page image.
+
+--------------------
 Release Number: TV-2.7.3.20201124
 
 Release Date: 2020/11/24
@@ -9,6 +26,7 @@ Bugs:
     * Bug-#045645: refine redirections on lessons action
     * Task-73053-die json instead of plain error on addtocart action
 
+-----------------
 Release Number: TV-2.7.2.20201123
 
 Release Date: 2020/11/23
