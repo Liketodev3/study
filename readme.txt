@@ -1,5 +1,13 @@
 This file shares the details of YoCoach version and features.
 
+Release Number: TV-2.7.3.20201124
+
+Release Date: 2020/11/24
+
+Bugs:
+
+    * Bug-#045645: refine redirections on lessons action
+    * Task-73053-die json instead of plain error on addtocart action
 
 Release Number: TV-2.7.2.20201123
 
