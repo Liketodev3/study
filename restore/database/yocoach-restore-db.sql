@@ -10016,3 +10016,18 @@ ALTER TABLE `tbl_user_settings`
 UPDATE `tbl_url_rewrites` SET urlrewrite_custom = 'teachers/profile/urlparameter' WHERE `urlrewrite_original` LIKE 'teachers/view';
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.3.20201124' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
+('MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}', 1, '<p>Your trial lesson order has been successfully processed!</p>'),
+('MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}', 2, '<p>Your trial lesson order has been successfully processed!</p>');
+
+REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
+('CONF_ZOOM_API_KEY', 'KrK84VX6Q1WkFSTHe5tZ1Q', '0'),
+('CONF_ZOOM_API_SECRET', 'cgrP5fwMf9czo0loqHomZDGAMAZuu71S7kvs', '0'),
+('CONF_ZOOM_JWT_TOKEN', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6IktySzg0Vlg2UTFXa0ZTVEhlNXRaMVEiLCJleHAiOjE5MjMyNDQyMDAsImlhdCI6MTYwNTU5MTk3N30.hmvE1ciNYC6MlHuk-im3hp5ksJu-FVbUOHbEWkYIIJU', '0'),
+('CONF_LESSONSPACE_API_KEY', 'b8fec473-adc0-4a13-944f-b8a20a962037', '0'),
+('CONF_MAILCHIMP_KEY', '9e9817f1cbd98b025bd4010d7d44ea7e-us12', '0'),
+('CONF_MAILCHIMP_LIST_ID', '062b62f477', '0');
+
+INSERT INTO `tbl_attached_files` (`afile_type`, `afile_record_id`, `afile_record_subid`, `afile_lang_id`, `afile_screen`, `afile_physical_path`, `afile_name`, `afile_display_order`, `afile_downloaded_times`) VALUES
+(43, 0, 0, 1, 0, '2020/11/1606219089-2000x600jpg', '2000x600.jpg', 1, 0);
