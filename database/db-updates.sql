@@ -87,11 +87,11 @@ UPDATE `tbl_content_pages_block_lang` SET `cpblocklang_text` = '<section class=\
 
 -- clean email archives after an interval
 
-SET GLOBAL event_scheduler = ON;
+/* SET GLOBAL event_scheduler = ON;
 CREATE EVENT event_clean_email_archives ON SCHEDULE EVERY 1 MONTH ENABLE
   DO 
   delete from tbl_email_archives
-  WHERE `emailarchive_sent_on` < CURRENT_TIMESTAMP - INTERVAL 1 MONTH;
+  WHERE `emailarchive_sent_on` < CURRENT_TIMESTAMP - INTERVAL 1 MONTH; */
 
 INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ENABLE_FLASHCARD', 1, 0);
 
