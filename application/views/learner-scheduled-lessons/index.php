@@ -1,5 +1,4 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<script>var statusUpcoming = <?php echo FatUtility::int(ScheduledLesson::STATUS_UPCOMING); ?></script>
 <section class="section section--grey section--page">
     <div class="container container--fixed">
 
