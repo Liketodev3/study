@@ -59,7 +59,6 @@ foreach( $lessons as $lesson ){
 				<h6><?php echo $lesson['learnerFname']; ?></h6>
 				<p><?php echo $lesson['learnerCountryName']; ?> <br>
                 <?php endif; ?>
-                <p><?php echo Label::getLabel('LBL_Order_Id').' : '.$lesson['sldetail_order_id']; ?></p>
 			</div>
 
 			<div class="col-xl-4 col-lg-4 col-md-12">
