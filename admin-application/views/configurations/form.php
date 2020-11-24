@@ -58,7 +58,7 @@ switch ($frmType){
 		$mobileLogo= $frm->getField('mobile_logo');
         $blogImg= $frm->getField('blog_img');
 
-		$blogImg->developerTags['col'] = 12;
+		// $blogImg->developerTags['col'] = 12;
 
         if($canEdit){
             $adminLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '142*45');
