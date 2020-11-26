@@ -15,7 +15,7 @@
 	echo $str = '<script type="text/javascript">
 		var SITE_ROOT_URL = "' . CommonHelper::generateFullUrl('','',array(),CONF_WEBROOT_FRONT_URL) . '" ;
 		var langLbl = ' . json_encode(
-			$jsVariables 
+			CommonHelper::htmlEntitiesDecode($jsVariables)
 		) . ';
 		var CONF_AUTO_CLOSE_SYSTEM_MESSAGES = ' . FatApp::getConfig("CONF_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 0) . ';
 		var layoutDirection ="'.$layoutDirection.'";

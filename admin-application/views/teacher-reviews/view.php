@@ -44,7 +44,7 @@
 			<dl class="list">
 				<dt>Review Comments</dt>
 				<?php $findKeywordStr=''; ?>
-				<dd><?php echo $data['tlreview_description']?preg_replace('/'.$findKeywordStr.'/i', '<span class="highlight">$0</span>', nl2br($data['tlreview_description'])):"N/A";?></dd>
+				<dd><?php  echo nl2br(CommonHelper::decodeHtmlEntities($data['tlreview_description'])); ?></dd>
 			</dl>				
 		</div>		
 	</div>

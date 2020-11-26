@@ -89,7 +89,7 @@ class GroupClassesController extends AdminBaseController
         $this->set('classes', $classes);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
         $this->set('classStatusArr', TeacherGroupClasses::getStatusArr());
-        $this->_template->render(false, false);
+        $this->_template->render(false, false, null, false, false);
     }
     
     public function form($classId = 0)
