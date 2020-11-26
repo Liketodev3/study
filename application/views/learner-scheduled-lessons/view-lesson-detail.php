@@ -98,7 +98,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                 <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startTime > $curDate || $curDate > $endTime || !$isScheduled ? 'style="display:none;"' : '') ?>>
                     <?php $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT); ?>
                     <?php if($activeMettingTool==ApplicationConstants::MEETING_ZOOM): ?>
-                    <a href="javascript:void(0);" class="btn btn--secondary btn--xlarge -hide-mobile" onclick="joinLesson('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
+                    <a href="javascript:void(0);" class="btn btn--primary btn--xlarge -hide-mobile" onclick="joinLesson('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
                     <a href="javascript:void(0);" class="btn btn--secondary btn--xlarge" onclick="joinLessonFromApp('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
                     
                     <?php else: ?>
