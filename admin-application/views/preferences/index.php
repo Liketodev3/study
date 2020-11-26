@@ -18,51 +18,48 @@
 	<div class="col-sm-12"> -->
 		<h1><?php //echo Label::getLabel('LBL_Manage_Testimonials',$adminLangId); ?></h1>
 	</div>
-	<div class="col-sm-12"> 
+	<div class="col-sm-12">
 						<section class="section searchform_filter">
 							<div class="sectionhead">
 								<h4> <?php echo Label::getLabel('LBL_Search...',$adminLangId); ?></h4>
 							</div>
 							<div class="sectionbody space togglewrap" style="display:none;">
-								<?php 
+								<?php
 								$frmSearch->setFormTagAttribute ( 'onsubmit', 'searchPreferences(this); return(false);');
 								$frmSearch->setFormTagAttribute ( 'class', 'web_form' );
-								$frmSearch->developerTags['colClassPrefix'] = 'col-md-';					
+								$frmSearch->developerTags['colClassPrefix'] = 'col-md-';
 								$frmSearch->developerTags['fld_default_col'] = 6;
 								$btn_clear = $frmSearch->getField('btn_clear');
-								$btn_clear->addFieldTagAttribute('onclick', 'clearSearch()');					
+								$btn_clear->addFieldTagAttribute('onclick', 'clearSearch()');
 								echo  $frmSearch->getFormHtml();
-								?>    
+								?>
 							</div>
-						</section> 
-	
+						</section>
+
 		<section class="section">
 		<div class="sectionhead">
-			<h4><?php	
-				$title=Preference::getPreferenceTypeArr();
-				echo Label::getLabel('LBL_Preferences_'.str_replace(' ','_',$title[$type]).'__Listing',$adminLangId); ?></h4>
+			<h4><?php echo Preference::getPreferenceTypeArr($adminLangId)[$type]; ?></h4>
 			<?php if($canEdit){
 
-			$ul = new HtmlElement( "ul",array("class"=>"actions actions--centered") );
+				$ul = new HtmlElement( "ul",array("class"=>"actions actions--centered") );
 			            $li = $ul->appendElement("li",array('class'=>'droplink'));
 			            $li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
 			            $innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
 			            $innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
-			 			$innerLiAddCat=$innerUl->appendElement('li');            
+			 			$innerLiAddCat=$innerUl->appendElement('li');
 			            $innerLiAddCat->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Add_Preferences',$adminLangId),"onclick"=>"addPreferenceForm(0,".$type.")"),Label::getLabel('LBL_Add_Preferences',$adminLangId), true);
 						echo $ul->getHtml();
 
-			/*<a href="javascript:void(0)" class="themebtn btn-default btn-sm" onClick="testimonialForm(0)";><?php echo Label::getLabel('LBL_Add_Testimonial',$adminLangId); ?></a>*/			
+			/*<a href="javascript:void(0)" class="themebtn btn-default btn-sm" onClick="testimonialForm(0)";><?php echo Label::getLabel('LBL_Add_Testimonial',$adminLangId); ?></a>*/
 			 } ?>
 		</div>
 		<div class="sectionbody">
 			<div class="tablewrap" >
 				<div id="listing"> <?php echo Label::getLabel('LBL_Processing...',$adminLangId); ?></div>
-			</div> 
+			</div>
 		</div>
 		</section>
-	</div>		
+	</div>
 </div>
 </div>
 </div>
-
