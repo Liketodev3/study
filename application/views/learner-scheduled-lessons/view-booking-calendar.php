@@ -382,7 +382,7 @@ function getSlotBookingConfirmationBox(calEvent, jsEvent){
     newEvent.title = '';
     newEvent.startTime = moment(calEvent.start).format('HH:mm:ss');
     newEvent.endTime = moment(calEvent.end).format('HH:mm:ss');
-    newEvent.start = moment(calEvent.end).format('YYYY-MM-DD')+" "+ moment(calEvent.start).format('HH:mm:ss');
+    newEvent.start = moment(calEvent.start).format('YYYY-MM-DD')+" "+ moment(calEvent.start).format('HH:mm:ss');
     newEvent.end = moment(calEvent.end).format('YYYY-MM-DD')+" "+moment(calEvent.end).format('HH:mm:ss');
     newEvent.date = moment(calEvent.start).format('YYYY-MM-DD');
     newEvent.day = moment(calEvent.start).format('d');
@@ -398,7 +398,7 @@ function getSlotBookingConfirmationBox(calEvent, jsEvent){
     var selectedStartDateTime = moment(calEvent.start).format('YYYY-MM-DD HH:mm:ss');
     var selectedEndDateTime = moment(calEvent.end).format('YYYY-MM-DD HH:mm:ss');
     
-    var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><div class="booking-view"><h3 class="-display-inline"><?php echo $userRow['user_first_name']; ?></h3><span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userRow['user_country_id'], 'DEFAULT') ); ?>" alt=""></span><div class="inline-list"><span class="inline-list__value highlight"><strong>Date</strong> &nbsp; &nbsp; '+date+' at '+start+'-'+end+'</span></div></div><div class="-align-center"><a href="javascript:void(0);" onClick="setUpLessonSchedule(&quot;<?php echo $teacher_id; ?>&quot;, &quot;<?php echo $lDetailId; ?>&quot;, &quot;'+ newEvent.startTime +'&quot;, &quot;'+ newEvent.endTime +'&quot;, &quot;'+ newEvent.date +'&quot; );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Confirm_It!'); ?></a></div><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:;" class="-link-close"></a></div>';
+    var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><div class="booking-view"><h3 class="-display-inline"><?php echo $userRow['user_first_name']; ?></h3><span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userRow['user_country_id'], 'DEFAULT') ); ?>" alt=""></span><div class="inline-list"><span class="inline-list__value highlight"><strong>Date</strong> &nbsp; &nbsp; '+date+' at '+start+'-'+end+'</span></div></div><div class="-align-center"><a href="javascript:void(0);" onClick="setUpLessonSchedule(&quot;<?php echo $teacher_id; ?>&quot;, &quot;<?php echo $lDetailId; ?>&quot;, &quot;'+ newEvent.start +'&quot;, &quot;'+ newEvent.end +'&quot;, &quot;'+ newEvent.date +'&quot; );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Confirm_It!'); ?></a></div><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:;" class="-link-close"></a></div>';
     if(calEvent.className != "sch_data"){
         $("body").append(tooltip);
         $('.tooltipevent').css('top', jsEvent.pageY - 110);

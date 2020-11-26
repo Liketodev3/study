@@ -924,8 +924,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
-        $startTime = MyDate::changeDateTimezone($post['date'].' '. $post['startTime'], $user_timezone, $systemTimeZone);
-        $endTime = MyDate::changeDateTimezone($post['date'].' '. $post['endTime'], $user_timezone, $systemTimeZone);
+        $startTime = MyDate::changeDateTimezone($post['startTime'], $user_timezone, $systemTimeZone);
+        $endTime = MyDate::changeDateTimezone($post['endTime'], $user_timezone, $systemTimeZone);
 
         $teacherBookingBefore = FatUtility::int($lessonDetail['teacherBookingBefore']);
 
@@ -1707,8 +1707,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
 
 
-        $startDateTime = MyDate::changeDateTimezone($post['date'].' '. $post['startTime'], $user_timezone, $systemTimeZone);
-        $endDateTime = MyDate::changeDateTimezone($post['date'].' '.$post['endTime'], $user_timezone, $systemTimeZone);
+        $startDateTime = MyDate::changeDateTimezone($post['startTime'], $user_timezone, $systemTimeZone);
+        $endDateTime = MyDate::changeDateTimezone($post['endTime'], $user_timezone, $systemTimeZone);
         $db = FatApp::getDb();
 
         $userIds  = array($teacherId, UserAuthentication::getLoggedUserId() );
