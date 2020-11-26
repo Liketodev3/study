@@ -8,7 +8,7 @@ $userIdFld = $profileFrm->getField('user_id');
 $userIdFld->addFieldTagAttribute('id','user_id');
 $user_url_name = $profileFrm->getField('user_url_name');
 $user_url_name->developerTags['col'] = 12;
-$user_url_name->htmlAfterField = '<p class="user_url_string">'. CommonHelper::generateFullUrl('teachers','') .'/<span class="user_url_name_span">'. $user_url_name->value .'</span></p>';
+$user_url_name->htmlAfterField = '<p class="user_url_string">'. CommonHelper::generateFullUrl('teachers','profile') .'/<span class="user_url_name_span">'. $user_url_name->value .'</span></p>';
 }
 
 $profileFrm->developerTags['colClassPrefix'] = 'col-md-';
@@ -32,7 +32,7 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 <script>
 var userData = <?php echo $jsonUserRow ?>;
 var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
-var  userSeoBaseUrl = '<?php echo CommonHelper::generateFullUrl('teachers','').'/'; ?>';
+var  userSeoBaseUrl = '<?php echo CommonHelper::generateFullUrl('teachers', 'profile').'/'; ?>';
 var userImage = '<?php echo CommonHelper::generateFullUrl('Image','user',array( $userRow['user_id'])); ?>';
 
 </script>
