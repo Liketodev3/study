@@ -101,11 +101,11 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                 <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startTime > $curDate || $curDate > $endTime || !$isScheduled ? 'style="display:none;"' : '') ?>>
                     <?php $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT); ?>
                     <?php if($activeMettingTool==ApplicationConstants::MEETING_ZOOM): ?>
-                    <a href="javascript:void(0);" class="btn btn--primary btn--xlarge -hide-mobile" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
-                    <a href="javascript:void(0);" class="btn btn--secondary btn--xlarge" onclick="joinLessonFromApp(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
+                    <a href="javascript:void(0);" class="btn btn--primary btn--large -hide-mobile" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
+                    <a href="javascript:void(0);" class="btn btn--secondary btn--large" onclick="joinLessonFromApp(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
                     <?php else: ?>
                     
-                    <a href="javascript:void(0);" class="btn btn--secondary btn--xlarge" id="joinL" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>
+                    <a href="javascript:void(0);" class="btn btn--secondary btn--large" id="joinL" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>
                     
                     <?php endif; ?>
                 </div>
@@ -312,7 +312,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
 
                                 <span class="-gap"></span>
 
-                                <div class="timer-block d-sm-flex align-items-center justify-content-between">
+                                <div class="timer-block d-sm-flex align-items-center">
                                     <div id="end_lesson_time_div" style="display:none;">
                                         <div class="timer timer--small">
                                             <span id="end_lesson_timer" class="style colorDefinition size_lg"></span>
