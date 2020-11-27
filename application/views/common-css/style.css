@@ -7965,7 +7965,11 @@ color: #fff;}
     -moz-margin-start: 1rem;
     margin-left: 1rem;
   }
-  
+  /*--------27-11-2020--------*/
+  .terms_wrap .errorlist.erlist_agree {
+    bottom: -10px;
+    }
+   /*-------end--------*/ 
   @media (max-width: 1199px) {
     .sticky-demo-header .demo-header {
       display: none;
