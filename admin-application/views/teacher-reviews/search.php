@@ -53,7 +53,7 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			
 			case 'tlreview_status':
-				$td->appendElement('plaintext', array(), $reviewStatus[$row[$key]]);
+				$td->appendElement('plaintext', array(), $reviewStatus[$row[$key]], true);
 			break;
 			
 			case 'average_rating':

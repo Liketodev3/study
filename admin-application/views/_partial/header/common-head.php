@@ -17,7 +17,7 @@
 		var SITE_ROOT_FRONT_URL = "' . CONF_WEBROOT_FRONTEND . '" ;
 
 		var langLbl = ' . json_encode(
-			$jsVariables
+			CommonHelper::htmlEntitiesDecode($jsVariables)
 		) . ';
 		var CONF_AUTO_CLOSE_SYSTEM_MESSAGES = ' . FatApp::getConfig("CONF_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 0) . ';
 		var layoutDirection ="'.$layoutDirection.'";

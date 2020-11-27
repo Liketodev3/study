@@ -38,9 +38,7 @@
 
 		<section class="section">
 		<div class="sectionhead">
-			<h4><?php
-				$title=Preference::getPreferenceTypeArr();
-				echo Label::getLabel('LBL_Preferences_'.str_replace(' ','_',$title[$type]).'__Listing',$adminLangId); ?></h4>
+			<h4><?php echo Preference::getPreferenceTypeArr($adminLangId)[$type]; ?></h4>
 			<?php if($canEdit){
 
 				$ul = new HtmlElement( "ul",array("class"=>"actions actions--centered") );
