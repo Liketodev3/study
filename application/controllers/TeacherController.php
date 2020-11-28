@@ -245,11 +245,12 @@ class TeacherController extends TeacherBaseController
         }
 
         //unset($post['teach_lang_id']);
-        /* $userTechLangObj = UserToLanguage::getUserTeachlanguages(UserAuthentication::getLoggedUserId());
+        $userTechLangObj = UserToLanguage::getUserTeachlanguages(UserAuthentication::getLoggedUserId());
         $userTechLangObj->addCondition('utl_slanguage_id','IN',$post['teach_lang_id']);
-        $userTechLangObj->addMultipleFields(['utl_id','utl_slanguage_id']);
+        $userTechLangObj->addMultipleFields(['utl_id','utl_slanguage_id', 'utl_single_lesson_amount', 'utl_bulk_lesson_amount']);
         $resultSet =  $userTechLangObj->getResultSet($userTechLangObj);
-        $userTechLangData =  FatApp::getDb()->fetchAllAssoc($resultSet); */
+        $userTechLangData =  FatApp::getDb()->fetchAll($resultSet, 'utl_slanguage_id');
+
         $db->startTransaction();
 
         if(
@@ -263,10 +264,12 @@ class TeacherController extends TeacherBaseController
         }
 
         foreach ($post['teach_lang_id'] as $tlang) {
-            /* if(in_array($tlang,$userTechLangData)) {
-                continue;
-            } */
             $insertArr = array('utl_slanguage_id' => $tlang, 'utl_us_user_id' => UserAuthentication::getLoggedUserId());
+            if(isset($userTechLangData[$tlang])){
+                $insertArr['utl_single_lesson_amount'] = $userTechLangData[$tlang]['utl_single_lesson_amount'];
+                $insertArr['utl_bulk_lesson_amount'] = $userTechLangData[$tlang]['utl_bulk_lesson_amount'];
+            }
+            
             if (!$db->insertFromArray('tbl_user_teach_languages', $insertArr, false, array(), $insertArr)) {
                 $db->rollbackTransaction();
                 Message::addErrorMessage(Label::getLabel($db->getError()));
