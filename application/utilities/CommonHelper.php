@@ -975,6 +975,7 @@ class CommonHelper extends FatUtility
 
     public static function getFirstChar($string, $capitalize = false)
     {
+        $string = iconv('UTF-8','ASCII//TRANSLIT', $string);
         if (!empty($string)) {
             if ($capitalize == true) {
                 return strtoupper($string[0]);

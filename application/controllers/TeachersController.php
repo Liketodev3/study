@@ -338,6 +338,9 @@ class TeachersController extends MyAppController {
 		$json['msg'] =  Label::getLabel('LBL_Request_Processing..');
 		$json['html'] = $this->_template->render(false, false, '_partial/teacher-reviews-list.php', true, false);
 		$json['loadMoreBtnHtml'] = $this->_template->render(false, false, '_partial/load-more-teacher-reviews-btn.php', true, false);
+		array_map(function($val){
+            $val = iconv('UTF-8', 'UTF-8//IGNORE', $val);
+        }, $json);
 		FatUtility::dieJsonSuccess($json);
 	}
 
