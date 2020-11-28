@@ -982,6 +982,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $grpclsObj = new TeacherGroupClasses($grpclsId);
             $grpclsObj->cancelClass();
         }
+        $action = ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED];
 
         if($lessonDetail['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $rescheduleReason) {
 
@@ -1000,6 +1001,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 FatUtility::dieJsonError($lessonResLogObj->getError());
             }
 
+            $action = ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_RESCHEDULED];
+
         }
         $db->commitTransaction();
 
@@ -1011,7 +1014,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{lesson_start_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', date('Y-m-d H:i:s', $SelectedDateTimeStamp), true, $lessonDetail['teacherTimeZone']),
             '{lesson_end_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', date('Y-m-d H:i:s', $endDateTimeStamp), true, $lessonDetail['teacherTimeZone']),
             '{learner_comment}' => '',
-            '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
+            '{action}' => $action,
         );
 
         if (!EmailHandler::sendMailTpl($lessonDetail['teacherEmailId'], 'learner_schedule_email', $this->siteLangId, $vars)) {
