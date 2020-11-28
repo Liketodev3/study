@@ -8772,3 +8772,13 @@ INSERT INTO tbl_spoken_languages (slanguage_id, slanguage_code, slanguage_identi
 INSERT INTO tbl_spoken_languages (slanguage_id, slanguage_code, slanguage_identifier, slanguage_flag, slanguage_display_order, slanguage_active) VALUES(180, 'za','Zhuang; Chuang', '', 180, 1);	INSERT INTO tbl_spoken_languages_lang (slanguagelang_slanguage_id, slanguagelang_lang_id, slanguage_name) VALUES (180, 1,'Zhuang; Chuang');	INSERT INTO tbl_spoken_languages_lang (slanguagelang_slanguage_id, slanguagelang_lang_id, slanguage_name) VALUES (180, 2,'تشوانغ؛ شوانغ');
 INSERT INTO tbl_spoken_languages (slanguage_id, slanguage_code, slanguage_identifier, slanguage_flag, slanguage_display_order, slanguage_active) VALUES(181, 'zh','Chinese', '', 181, 1);	INSERT INTO tbl_spoken_languages_lang (slanguagelang_slanguage_id, slanguagelang_lang_id, slanguage_name) VALUES (181, 1,'Chinese');	INSERT INTO tbl_spoken_languages_lang (slanguagelang_slanguage_id, slanguagelang_lang_id, slanguage_name) VALUES (181, 2,'الصينية');
 INSERT INTO tbl_spoken_languages (slanguage_id, slanguage_code, slanguage_identifier, slanguage_flag, slanguage_display_order, slanguage_active) VALUES(182, 'zu','Zulu', '', 182, 1);	INSERT INTO tbl_spoken_languages_lang (slanguagelang_slanguage_id, slanguagelang_lang_id, slanguage_name) VALUES (182, 1,'Zulu');	INSERT INTO tbl_spoken_languages_lang (slanguagelang_slanguage_id, slanguagelang_lang_id, slanguage_name) VALUES (182, 2,'الزولوية');
+
+
+
+INSERT INTO `tbl_attached_files` (`afile_type`, `afile_record_id`, `afile_record_subid`, `afile_lang_id`, `afile_screen`, `afile_physical_path`, `afile_name`, `afile_display_order`, `afile_downloaded_times`) VALUES
+(7, 7, 0, 0, 1, '2020/11/1606486194-1920X7502jpg', '1920X750_2.jpg', 1, 0),
+(7, 6, 0, 0, 1, '2020/11/1606486158-1920X7507jpg', '1920X750_7.jpg', 1, 0),
+(7, 4, 0, 0, 1, '2020/11/1606486138-1920X7504jpg', '1920X750_4.jpg', 2, 0),
+(7, 5, 0, 0, 1, '2020/11/1606486120-1920X7506jpg', '1920X750_6.jpg', 1, 0),
+(7, 3, 0, 0, 1, '2020/11/1606486101-1920X7503jpg', '1920X750_3.jpg', 1, 0);
+

@@ -6,26 +6,52 @@ class DummyController extends MyAppController
         parent::__construct($action);
     }
 
-	public function getAttachments($fileType)
+	public function getAttachments($fileTypes)
     {
         $srch = new SearchBase(AttachedFile::DB_TBL);
-        $srch->addCondition('afile_type', '=', $fileType);
+		$srch->addCondition('afile_type', 'IN', $fileTypes);
+		// die($srch->getQuery());
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetchAll($rs, 'afile_id');
     }
 	
     public function list()
     {
-		$slideAttchments = $this->getAttachments(AttachedFile::FILETYPE_HOME_PAGE_BANNER);
+		$slideAttchments = $this->getAttachments([AttachedFile::FILETYPE_HOME_PAGE_BANNER]);
 		var_dump($slideAttchments);
 		exit;
 	}
     public function test()
     {
-		$slideAttchments = $this->getAttachments(AttachedFile::FILETYPE_HOME_PAGE_BANNER);
+		$slideAttchments = $this->getAttachments([AttachedFile::FILETYPE_HOME_PAGE_BANNER]);
 
 		foreach($slideAttchments as $slideAttchment){
 			if(!Slide::getAttributesById($slideAttchment['afile_record_id'])){
+				$attachedFile = new AttachedFile($slideAttchment['afile_id']);
+				if($attachedFile->deleteRecord()){
+					var_dump(unlink(CONF_UPLOADS_PATH. $slideAttchment['afile_physical_path']));
+				}
+			}
+			
+		}
+		// var_dump($slideAttchments);
+		exit;
+
+	}
+	
+	
+    public function usersAttachments()
+    {
+		$slideAttchments = $this->getAttachments([AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_PROFILE_IMAGE, AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, AttachedFile::FILETYPE_USER_PROFILE_IMAGE, AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, AttachedFile::FILETYPE_USER_QUALIFICATION_FILE]);
+		var_dump($slideAttchments);
+		exit;
+	}
+    public function removeUNUserMedia()
+    {
+		$slideAttchments = $this->getAttachments([AttachedFile::FILETYPE_USER_PROFILE_IMAGE, AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, AttachedFile::FILETYPE_USER_QUALIFICATION_FILE]);
+
+		foreach($slideAttchments as $slideAttchment){
+			if(!User::getAttributesById($slideAttchment['afile_record_id'])){
 				$attachedFile = new AttachedFile($slideAttchment['afile_id']);
 				if($attachedFile->deleteRecord()){
 					var_dump(unlink(CONF_UPLOADS_PATH. $slideAttchment['afile_physical_path']));
