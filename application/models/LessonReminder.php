@@ -14,10 +14,10 @@ class LessonReminder extends MyAppModel
     public function sendLessonReminder($type)
     {
         $type = FatUtility::int($type);
+        $langId = CommonHelper::getLangId();
         if (0 > $type) {
             return Label::getLabel('MSG_Invalid_Request', $langId);
         }
-        $langId = CommonHelper::getLangId();
         $srch = $this->getLessonsData();
         if ($type == self::DAILY) {
             $srch->addCondition('slns.slesson_date', '=', date('Y-m-d', strtotime('+1 days', strtotime(date('Y-m-d')))));
@@ -79,10 +79,10 @@ class LessonReminder extends MyAppModel
         $template = 'coming_up_lesson_reminder';
         if ($userType == self::TEACHER) {
             $controller = 'teacherScheduledLessons';
-            $user = 'Learner';
+            $user = Label::getLabel('Lbl_Learner', CommonHelper::getLangId());
         } else {
             $controller = 'learnerScheduledLessons';
-            $user = 'Teacher';
+            $user = Label::getLabel('Lbl_Teacher', CommonHelper::getLangId());
         }
         $lessonIds = array();
         $emailNotificationObj = new EmailHandler();
@@ -103,8 +103,8 @@ class LessonReminder extends MyAppModel
 				<tbody>
 					<tr>
 						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> '. $user .' </th>
-						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> Start </th>
-						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> End  </th>
+						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> ' . Label::getLabel('Lbl_Start', CommonHelper::getLangId()) . ' </th>
+						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> ' . Label::getLabel('Lbl_End', CommonHelper::getLangId()) . '  </th>
 						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> </th>
 					</tr>';
             foreach ($lessons as $lesson) {
