@@ -926,7 +926,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('CONF_SEND_EMAIL', '0', 0),
 ('CONF_SEND_SMTP_EMAIL', '0', 0),
 ('CONF_SITE_FAX', '', 0),
-('CONF_SITE_OWNER_1', 'Manish Bhalla', 0),
+('CONF_SITE_OWNER_1', 'FATbit', 0),
 ('CONF_SITE_OWNER_2', 'FATbit', 0),
 ('CONF_SITE_OWNER_EMAIL', 'yocoach@dummyid.com', 0),
 ('CONF_SITE_PHONE', '+1 469 844 3346', 0),

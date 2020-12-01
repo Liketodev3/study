@@ -1,0 +1,1 @@
+a:4:{s:5:"value";a:2:{s:19:"totalsForAllResults";s:3:"371";s:4:"rows";a:3:{s:6:"Direct";a:2:{s:5:"visit";s:3:"255";s:4:"%age";d:68.73;}s:8:"Referral";a:2:{s:5:"visit";s:2:"79";s:4:"%age";d:21.29;}s:13:"Search Engine";a:2:{s:5:"visit";s:2:"37";s:4:"%age";d:9.97;}}}s:10:"write_time";s:10:"1606829396";s:10:"expired_in";i:86400;s:12:"expired_time";i:1606915796;}
