@@ -37,11 +37,7 @@
 
             $out = '<div><div class="caraousel__item">';
             if($haveUrl){
-                if($slide['promotion_id']>0){
-                    $slideUrl =  CommonHelper::generateUrl('slides','track',array($slide['slide_id']));
-                }else{
-                    $slideUrl = CommonHelper::processUrlString($slide['slide_url']);
-                }
+                $slideUrl = CommonHelper::processUrlString($slide['slide_url']);
             }
 
             if( $haveUrl ){
