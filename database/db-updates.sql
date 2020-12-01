@@ -177,3 +177,5 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.4.20201124' WHERE `conf_nam
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
 ('NOTE_SETTINGS_NOT_ALLOWED_TO_BE_MODIFIED_ON_DEMO_VERSION', 1, 'Please note that, these details are not allowed to be modified on demo version.'),
 ('NOTE_SETTINGS_NOT_ALLOWED_TO_BE_MODIFIED_ON_DEMO_VERSION', 2, 'Please note that, these details are not allowed to be modified on demo version.');
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.5.20201201' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

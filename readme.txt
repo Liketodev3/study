@@ -1,5 +1,39 @@
 This file shares the details of YoCoach version and features.
 
+Release Number: TV-2.7.5.20201201
+
+Release Date: 2020/12/01
+
+Updates:
+
+    * Task-76258:
+        - Remove new-message email template
+        - Add user uploads and data for restore function, db-with-data and db-without-data
+        - Mask api keys and update db file
+        - Add home page slides
+
+    * Task-73053:
+        - Add overlay on home page sliders
+        - Remove unncessary promotions code from home page slides
+        - Refine view lesson buttons
+        - Rename label, fix signup popup ui issues
+        - Set teacher profile url
+
+
+    * Bug-#045753: Fix unicode issue in reviews on teacher profile and getFirstChar function
+    * Bug-#045764: Use labels for data being sent in reminder emails
+    * Bug-#045766: Fix email for reschedule lesson
+    * Bug-#037959: Fix price reset issue on configuring new teach lang
+    * Bug-#045742:
+        Set color of join lesson via browser
+        Send datetime instead of time only for start and end timeof scheduling session
+
+    * Bug-#045420:
+        - Fix incoorrect labels on prefernces index page in admin panel
+        - Fix unicode chars issue in admin panel
+
+
+--------------------
 
 Release Number: TV-2.7.4.20201124
 
