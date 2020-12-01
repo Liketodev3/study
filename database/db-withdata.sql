@@ -2226,6 +2226,13 @@ CREATE TABLE `tbl_faq` (
 
 -- --------------------------------------------------------
 
+INSERT INTO `tbl_faq` (`faq_id`, `faq_identifier`, `faq_category`, `faq_active`, `faq_added_on`) VALUES
+(1, 'I am a new teacher. How does YoCoach work?', 1, 1, '2018-12-26 19:03:39'),
+(2, 'I am a new teacher. How do I start a lesson?', 1, 1, '2018-12-27 12:29:08'),
+(4, 'I am a new teacher. How does YoCoach work?', 2, 0, '2018-12-27 12:35:38'),
+(5, 'I am a new teacher. How does YoCoach work?', 3, 0, '2018-12-27 12:40:37'),
+(6, 'I am a new teacher. How does YoCoach work?', 1, 0, '2018-12-27 13:50:55');
+
 --
 -- Table structure for table `tbl_faq_categories`
 --
@@ -2242,6 +2249,11 @@ CREATE TABLE `tbl_faq_categories` (
 
 -- --------------------------------------------------------
 
+INSERT INTO `tbl_faq_categories` (`faqcat_id`, `faqcat_identifier`, `faqcat_active`, `faqcat_type`, `faqcat_deleted`, `faqcat_display_order`, `faqcat_featured`) VALUES
+(1, 'General Queries', 1, 0, 0, 1, 0),
+(2, 'Application / Requirements', 1, 0, 0, 2, 0),
+(3, 'Payments', 1, 0, 0, 3, 0);
+
 --
 -- Table structure for table `tbl_faq_categories_lang`
 --
@@ -2253,6 +2265,14 @@ CREATE TABLE `tbl_faq_categories_lang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+
+INSERT INTO `tbl_faq_categories_lang` (`faqcatlang_faqcat_id`, `faqcatlang_lang_id`, `faqcat_name`) VALUES
+(1, 1, 'General Queries'),
+(1, 2, 'General Queries'),
+(2, 1, 'Application / Requirements'),
+(2, 2, 'Application / Requirements'),
+(3, 1, 'Payments'),
+(3, 2, 'Payments');
 
 --
 -- Table structure for table `tbl_faq_lang`
@@ -2266,6 +2286,13 @@ CREATE TABLE `tbl_faq_lang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+
+INSERT INTO `tbl_faq_lang` (`faqlang_faq_id`, `faqlang_lang_id`, `faq_title`, `faq_description`) VALUES
+(1, 1, 'I am a new teacher. How does YoCoach work?', 'Yo!Coach is an online language-learning platform that connects language learners with qualified language teachers for private sessions through live video chat.'),
+(2, 1, 'I am a new teacher. How do I start a lesson?', 'Yo!Coach is an online language-learning platform that connects language learners with qualified language teachers for private sessions through live video chat.'),
+(4, 1, 'I am a new teacher. How does YoCoach work?', 'I am a new teacher. How does YoCoach work?'),
+(5, 1, 'I am a new teacher. How does YoCoach work?', 'I am a new teacher. How does YoCoach work?'),
+(6, 1, 'I am a new teacher. How does YoCoach work?', 'I am a new teacher. How does YoCoach work?');
 
 --
 -- Table structure for table `tbl_flashcards`
@@ -3571,7 +3598,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (971, 'LBL_Lessons:', 1, 'Lessons:'),
 (972, 'LBL_Teaching_Expertise', 1, 'Teaching Expertise'),
 (973, 'LBL_Save', 1, 'Save'),
-(974, 'LBL_FREE_Trail', 1, 'Free Trail'),
+(974, 'LBL_FREE_Trail', 1, 'Free Trial'),
 (975, 'LBL_Book_your_trial_FREE_for_30_Mins_only', 1, 'Book Your Trial Free For 30 Mins Only'),
 (976, 'LBL_Book_Free_Trial', 1, 'Book Free Trial'),
 (977, 'LBL_Please_login_to_book', 1, 'Please Login To Book'),
@@ -4068,7 +4095,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (1474, 'LBL_Current_Balance', 1, 'Current Balance'),
 (1475, 'LBL_Enter_Giftcard_Code', 1, 'Enter Giftcard Code'),
 (1476, 'LBL_Txn_ID', 1, 'Txn Id'),
-(1477, 'LBL_User_Withdrwal_Requests', 1, 'User Withdrwal Requests'),
+(1477, 'LBL_User_Withdrwal_Requests', 1, 'User Withdrawal Requests'),
 (1478, 'LBL_Bible_Title', 1, 'video Title'),
 (1479, 'LBL_Bible', 2, 'فيديو'),
 (1480, 'LBL_Redeem_Giftcard', 1, 'Redeem Giftcard'),
