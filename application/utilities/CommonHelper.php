@@ -1802,5 +1802,18 @@ class CommonHelper extends FatUtility
 			$var = html_entity_decode($var, ENT_COMPAT, 'UTF-8');
 		}
 		return $var;
-	}
+    }
+     
+    public static function maskAndDisableFormFields(Form $frm)
+    {
+
+        $flds = $frm->getAllFields();
+        foreach ($flds as $fld) {
+            $fld->addFieldTagAttribute('disabled', 'disabled');
+            if($fld->fldType == 'text'){
+                $fld->value = '***********';
+            }
+        }
+        $frm->addHTML(Label::getLabel('LBL_Note'), 'note', '<span class="spn_must_field">' . Label::getLabel('NOTE_SETTINGS_NOT_ALLOWED_TO_BE_MODIFIED_ON_DEMO_VERSION') . '</span>')->setWrapperAttribute('class', 'text--center');
+    }
 }

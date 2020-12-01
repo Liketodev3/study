@@ -37,6 +37,9 @@ class ConfigurationsController extends AdminBaseController
         $frm = $this->getForm($frmType);
         $frm->fill($record);
 
+        if (($frmType == Configurations::FORM_THIRD_PARTY_API) && CommonHelper::demoUrl()) {
+            CommonHelper::maskAndDisableFormFields($frm);
+        }
         $this->set('frm', $frm);
         $this->set('canEdit', $this->objPrivilege->canEditGeneralSettings(AdminAuthentication::getLoggedAdminId(), true));
         $this->set('frmType', $frmType);
@@ -83,6 +86,11 @@ class ConfigurationsController extends AdminBaseController
 
         if (1 > $frmType) {
             Message::addErrorMessage($this->str_invalid_request);
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        if (($frmType == Configurations::FORM_THIRD_PARTY_API) && CommonHelper::demoUrl()) {
+            Message::addErrorMessage(Label::getLabel('LBL_INVALID_REQUEST'));
             FatUtility::dieJsonError(Message::getHtml());
         }
 
@@ -974,4 +982,5 @@ class ConfigurationsController extends AdminBaseController
             FatUtility::dieJsonError($e->getMessage());
         }
     }
+
 }
