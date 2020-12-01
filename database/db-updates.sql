@@ -186,3 +186,5 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ('Label_Help', 1, 'Help'),
 ('Label_Help', 2, 'مساعدة');
 
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.6.20201201' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

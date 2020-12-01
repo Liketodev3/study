@@ -1,5 +1,15 @@
 This file shares the details of YoCoach version and features.
 
+Release Number: TV-2.7.6.20201201
+
+Release Date: 2020/12/01
+
+Updates:
+
+    * Task-76258: Minor content tweaks
+
+--------------------
+
 Release Number: TV-2.7.5.20201201
 
 Release Date: 2020/12/01
