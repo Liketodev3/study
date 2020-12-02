@@ -52,7 +52,12 @@
 				} ?>
 				</small></h6></td>
 			<td>
-				<h6 class="-color-secondary"><?php echo CommonHelper::displayMoneyFormat($cart['itemPrice'] * $cart['lpackage_lessons']); ?></h6></td>
+                <h6 class="-color-secondary">
+                <?php
+                $itemPrice = ($cart['grpcls_id'] != 0) ? $cart['itemPrice'] : $cart['itemPrice'] * $cart['lpackage_lessons'];
+                echo CommonHelper::displayMoneyFormat($itemPrice); ?>
+                </h6>
+            </td>
 		</tr>
 		
 		<?php if( $cart['siteCommission'] > 0 ){ ?>
