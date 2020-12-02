@@ -13,7 +13,7 @@ class GuestUserController extends MyAppController
     }
     public function logInFormPopUp()
     {
-        $userLoginData = array('username' => 'danielparker@dummyid.com', 'password' => 'test@123');
+        $userLoginData = array('username' => 'jason@dummyid.com', 'password' => 'jason@123');
         if (UserAuthentication::isUserLogged()) {
             Message::addErrorMessage(Label::getLabel('MSG_Already_Logged_in,_Please_try_after_reloading_the_page'));
             FatUtility::dieWithError(Message::getHtml());
@@ -435,8 +435,8 @@ class GuestUserController extends MyAppController
         $userName = '';
         $pass = '';
         if (CommonHelper::demoUrl()) {
-            $userName = 'danielparker@dummyid.com';
-            $pass = 'test@123';
+            $userName = 'jason@dummyid.com';
+            $pass = 'jason@123';
         }
 
         $frm = new Form('frmLogin');
