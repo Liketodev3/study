@@ -1013,8 +1013,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{lesson_date}' => MyDate::convertTimeFromSystemToUserTimezone('Y-m-d',  date('Y-m-d H:i:s', $SelectedDateTimeStamp),false, $lessonDetail['teacherTimeZone']),
             '{lesson_start_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', date('Y-m-d H:i:s', $SelectedDateTimeStamp), true, $lessonDetail['teacherTimeZone']),
             '{lesson_end_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', date('Y-m-d H:i:s', $endDateTimeStamp), true, $lessonDetail['teacherTimeZone']),
-            '{learner_comment}' => '',
-            '{action}' => $action,
+            '{learner_comment}' => $rescheduleReason,
+            '{action}' => strtolower($action),
         );
 
         if (!EmailHandler::sendMailTpl($lessonDetail['teacherEmailId'], 'learner_schedule_email', $this->siteLangId, $vars)) {
@@ -1032,7 +1032,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             }
             $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($lessonDetail['sldetail_id']));
             
-            $title = sprintf(Label::getLabel('LBL_%1$s_LESSON_Scheduled_with_%2$s'), ($lessonDetail['op_lpackage_is_free_trial'] == applicationConstants::NO ? $lessonDetail['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial', $this->siteLangId)), $lessonDetail['teacherFullName']);
+            $title = sprintf(Label::getLabel('LBL_%1$s_LESSON_%2$s_with_%3$s'), ($lessonDetail['op_lpackage_is_free_trial'] == applicationConstants::NO ? $lessonDetail['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial', $this->siteLangId)), $action, $lessonDetail['teacherFullName']);
             
             $google_cal_data = array(
                 'title' => FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId),
