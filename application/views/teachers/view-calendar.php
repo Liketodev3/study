@@ -385,8 +385,18 @@ function getSlotBookingConfirmationBox(calEvent, jsEvent){
     <?php } ?>
     if( calEvent.className != "sch_data" ){
         $("body").append(tooltip);
-        $('.tooltipevent').css('top', jsEvent.pageY - 110);
-            $('.tooltipevent').css('left', jsEvent.pageX - 100);
+        let tooltipTop = 0, tooltipLeft = 0;
+        if(jsEvent.changedTouches){
+            tooltipTop = jsEvent.changedTouches[jsEvent.changedTouches.length-1].clientY - 110;
+            tooltipLeft = jsEvent.changedTouches[jsEvent.changedTouches.length-1].clientX - 100;
+            $('.tooltipevent').css('position', 'fixed');
+        } else {
+            tooltipTop = jsEvent.pageY - 110;
+            tooltipLeft = jsEvent.pageX - 100;
+        }
+        $('.tooltipevent').css('top', tooltipTop);
+        $('.tooltipevent').css('left', tooltipLeft);
+
         $(this).mouseover(function(e) {
             $(this).css('z-index', 10000);
             $('.tooltipevent').fadeIn('500');
