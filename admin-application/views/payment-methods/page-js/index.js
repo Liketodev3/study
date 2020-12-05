@@ -55,10 +55,11 @@ $(document).ready(function(){
 		})
 	};
 
-	editFeeForm  = function(trObj, currency_id, fee){
+	editFeeForm  = function(trObj, currency_id, fee, type){
 		document.frmGatewayFee.pmtfee_currency_id.setAttribute('disabled',true);
 		document.frmGatewayFee.pmtfee_fee.value = fee;
 		document.frmGatewayFee.pmtfee_currency_id.value = currency_id;
+		document.frmGatewayFee.pmtfee_type.value = type;
 		$('.paymentMethodFeeList').animate({
 			 scrollTop: $("#pmFeesectionhead-js").offset().top
 	 }, 800);

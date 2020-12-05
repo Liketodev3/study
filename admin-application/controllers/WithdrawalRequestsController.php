@@ -50,7 +50,8 @@ class WithdrawalRequestsController extends AdminBaseController
                 'user_is_teacher','credential_email as user_email','credential_username as user_username',
                 'user_balance',
                 'pmethod_code',
-                'IFNULL(pmtfee_fee,0) AS pmtfee'
+                'IFNULL(pmtfee_fee,0) AS pmtfee',
+                'IFNULL(pmtfee_type,0) AS pmttype',
     ));
 
         if ($post['keyword']) {

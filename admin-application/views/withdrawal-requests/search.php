@@ -53,6 +53,10 @@ foreach ($arr_listing as $sn=>$row){
 				$fee =  $row['withdrawal_transaction_fee'];
 				if($row['withdrawal_status'] == Transaction::WITHDRAWL_STATUS_PENDING){
 					$fee =  $row['pmtfee'];
+					if($row['pmttype'] == PaymentMethodTransactionFee::FEE_TYPE_PERCENTAGE){
+						$pmtfee = FatUtility::float($row['pmtfee']);
+						$fee = ($pmtfee / 100) * $row['withdrawal_amount'];
+					}
 				}
 				$td->appendElement('plaintext', array(), CommonHelper::displayMoneyFormat($fee,true,true));
 			break;

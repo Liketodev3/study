@@ -296,8 +296,21 @@ class WalletController extends LoggedUserController
             break;
         }
 
-        $payoutFee = PaymentMethodTransactionFee::getGatewayFee($payoutMethodId, FatApp::getConfig('CONF_CURRENCY'));
-        $withdrawalAmountAfterHTML .= "<small class='-color-secondary transaction-fee'>".Label::getLabel("LBL_Transaction_Fee", $langId).' '.CommonHelper::displayMoneyFormat($payoutFee, true, true)."</small>";
+        $paymentMethodTransactionFee = new PaymentMethodTransactionFee( $payoutMethodId , FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 0) );
+
+        $payoutGatewayFee = $paymentMethodTransactionFee->getGatewayFee();
+
+        switch ($paymentMethodTransactionFee->feeType) {
+            case PaymentMethodTransactionFee::FEE_TYPE_FLAT:
+                 $payoutFee = CommonHelper::displayMoneyFormat($payoutGatewayFee, true, true);
+                break;
+            default:
+                $payoutFee = $payoutGatewayFee.'%'; 
+                break;
+        }
+        if($payoutGatewayFee > 0) {
+            $withdrawalAmountAfterHTML .= "<small class='-color-secondary transaction-fee'>".Label::getLabel("LBL_Transaction_Fee", $langId).' '.$payoutFee."</small>";
+        }
 
         $withdrawalAmountFld->htmlAfterField = $withdrawalAmountAfterHTML;
 

@@ -6,6 +6,9 @@ $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 6;
 $resetBtn = $frm->getField('btn_clear');
 $resetBtn->addFieldTagAttribute('onClick','resetGatewayFeeForm()');
+
+$feeTypeField = $frm->getField('pmtfee_type');
+
 ?>
 
 <section class="section">
@@ -59,7 +62,11 @@ foreach ($arr_listing as $sn=>$row){
 				$td->appendElement('plaintext', array(), $txt);
 			break;
 			case 'pmtfee_fee':
-				$td->appendElement('plaintext', array(), $row['pmtfee_fee']);
+				$fee = FatUtility::float($row['pmtfee_fee'])."%";
+				if($row['pmtfee_type'] == PaymentMethodTransactionFee::FEE_TYPE_FLAT){
+					$fee = CommonHelper::displayMoneyFormat($row['pmtfee_fee'], true, true);
+				}
+				$td->appendElement('plaintext', array(), $fee);
 			break;
 
 			case 'action':
@@ -70,7 +77,7 @@ foreach ($arr_listing as $sn=>$row){
 					$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
 					$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
 					$innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"editFeeForm(this,".$row['pmtfee_currency_id'].",".$row['pmtfee_fee'].")" ),Label::getLabel('LBL_Edit',$adminLangId), true);
+					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"editFeeForm(this,".$row['pmtfee_currency_id'].",".$row['pmtfee_fee'].",".$row['pmtfee_type'].")" ),Label::getLabel('LBL_Edit',$adminLangId), true);
 				}
 			break;
 		}

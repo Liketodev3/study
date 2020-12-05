@@ -294,8 +294,8 @@ class PaymentMethodsController extends AdminBaseController
         }
         $paymentMethodFeeObj =  new PaymentMethodTransactionFee($pMethodId, $post['pmtfee_currency_id']);
 
-        if($paymentMethodFeeObj->setupFee($post['pmtfee_fee']) === false){
-            Message::addErrorMessage($paymentMethodFeeObj->getValidationErrors());
+        if($paymentMethodFeeObj->setupFee($post['pmtfee_fee'], $post['pmtfee_type']) === false){
+            Message::addErrorMessage($paymentMethodFeeObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
 
@@ -309,7 +309,12 @@ class PaymentMethodsController extends AdminBaseController
         $fld = $frm->addFloatField(Label::getLabel('LBL_Method_Fee', $this->adminLangId), 'pmtfee_fee');
         $fld->requirements()->setFloatPositive();
         $currancyList =  Currency::getCurrencyAssoc($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Currency', $this->adminLangId), 'pmtfee_currency_id', $currancyList, '', array(), '');
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Currency', $this->adminLangId), 'pmtfee_currency_id', $currancyList, '', array(), '');
+        $fld->requirements()->setRequired();
+        $feeTypeArray = PaymentMethodTransactionFee::feeTypeArray($this->adminLangId);
+
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Method_Fee_Type', $this->adminLangId), 'pmtfee_type', $feeTypeArray, PaymentMethodTransactionFee::FEE_TYPE_PERCENTAGE, array(), '');
+        $fld->requirements()->setRequired();
         $submitFild = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         $resetBtn =  $frm->addResetButton('', 'btn_clear', Label::getLabel('LBL_Reset', $this->adminLangId));
         $submitFild->attachField($resetBtn);
