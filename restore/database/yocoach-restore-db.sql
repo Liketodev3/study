@@ -11155,3 +11155,6 @@ COMMIT;
 
 ALTER TABLE `tbl_payment_method_transaction_fee` CHANGE `pmtfee_fee` `pmtfee_fee` DECIMAL(5,2) NOT NULL;
 ALTER TABLE `tbl_payment_method_transaction_fee` ADD `pmtfee_type` TINYINT(2) NOT NULL;
+
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.7.20201205' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

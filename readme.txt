@@ -1,5 +1,21 @@
 This file shares the details of YoCoach version and features.
 
+Release Number: TV-2.7.7.20201205
+
+Release Date: 2020/12/05
+
+Updates:
+
+    * Task-73053: Add payout fee type
+    * Task-73053: Allow changing calling tool on demo
+
+Bugs:
+        * Bug-045882-slot confirmation popup ui fix
+        * Bug-045948-fix reschedule email and calendar event content
+
+--------------------
+
+
 Release Number: TV-2.7.6.20201201
 
 Release Date: 2020/12/01
