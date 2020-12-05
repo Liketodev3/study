@@ -38,7 +38,7 @@ class ConfigurationsController extends AdminBaseController
         $frm->fill($record);
 
         if (($frmType == Configurations::FORM_THIRD_PARTY_API) && CommonHelper::demoUrl()) {
-            CommonHelper::maskAndDisableFormFields($frm);
+            CommonHelper::maskAndDisableFormFields($frm, ['CONF_ACTIVE_MEETING_TOOL']);
         }
         $this->set('frm', $frm);
         $this->set('canEdit', $this->objPrivilege->canEditGeneralSettings(AdminAuthentication::getLoggedAdminId(), true));
@@ -89,13 +89,12 @@ class ConfigurationsController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
 
-        if (($frmType == Configurations::FORM_THIRD_PARTY_API) && CommonHelper::demoUrl()) {
-            Message::addErrorMessage(Label::getLabel('LBL_INVALID_REQUEST'));
-            FatUtility::dieJsonError(Message::getHtml());
-        }
-
         $frm = $this->getForm($frmType);
         $post = $frm->getFormDataFromArray($post);
+
+        if (($frmType == Configurations::FORM_THIRD_PARTY_API) && CommonHelper::demoUrl()) {
+            $post = ['CONF_ACTIVE_MEETING_TOOL' => FatApp::getPostedData('CONF_ACTIVE_MEETING_TOOL')];
+        }
 
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));

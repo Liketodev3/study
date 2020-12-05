@@ -1804,13 +1804,16 @@ class CommonHelper extends FatUtility
 		return $var;
     }
      
-    public static function maskAndDisableFormFields(Form $frm)
+    public static function maskAndDisableFormFields(Form $frm, array $fieldsToSkip)
     {
 
         $flds = $frm->getAllFields();
         foreach ($flds as $fld) {
-            $fld->addFieldTagAttribute('disabled', 'disabled');
-            if($fld->fldType == 'text'){
+            if(!in_array($fld->getName(), $fieldsToSkip) && ($fld->fldType != 'submit')){
+                $fld->addFieldTagAttribute('disabled', 'disabled');
+            }
+            
+            if($fld->fldType == 'text' ){
                 $fld->value = '***********';
             }
         }
