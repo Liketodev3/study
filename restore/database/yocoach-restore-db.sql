@@ -7090,7 +7090,11 @@ CREATE TABLE `tbl_payment_methods_lang` (
 
 INSERT INTO `tbl_payment_methods_lang` (`pmethodlang_pmethod_id`, `pmethodlang_lang_id`, `pmethod_name`, `pmethod_description`) VALUES
 (1, 1, 'Credit Card - Authorize.Net (AIM)', 'Credit Card - Authorize.Net (AIM) -  payment method description will go here.'),
+(1, 2, 'Credit Card - Authorize.Net (AIM)', ''),
 (2, 1, 'PayPal Payments Standard', 'PayPal Payment Gateway Description will go here.'),
+(2, 2, 'معيار المدفوعات PayPal', ''),
+(3, 1, 'Stripe', ''),
+(3, 2, 'Stripe', ''),
 (4, 1, 'Paypal Payouts', ''),
 (4, 2, 'Paypal Payouts', ''),
 (5, 1, 'Bank Payouts', ''),
@@ -7113,15 +7117,19 @@ CREATE TABLE `tbl_payment_method_settings` (
 --
 
 INSERT INTO `tbl_payment_method_settings` (`paysetting_pmethod_id`, `paysetting_key`, `paysetting_value`) VALUES
-(1, 'login_id', '2am5nE2Fzf'),
+(1, 'login_id', '7mV286wEG'),
 (1, 'md5_hash', 'BIGSECRET'),
-(1, 'transaction_key', '539Kst89yW4EfpY5'),
+(1, 'transaction_key', '6zh4RY2E6Su25DZG'),
 (2, 'merchant_email', 'wzyseller@dummyid.com'),
 (2, 'order_status_completed', '1'),
 (2, 'order_status_initial', '0'),
 (2, 'order_status_others', '0'),
 (2, 'order_status_pending', '0'),
-(2, 'order_status_processed', '0');
+(2, 'order_status_processed', '0'),
+(3, 'privateKey', 'sk_test_VpGEcRkNwsbjU0cVyGLjhM1J'),
+(3, 'publishableKey', 'pk_test_j0z2RoT7838WI4M5lyYPxAkl'),
+(4, 'paypal_client_id', 'ARoWBxHYywvjE_x4gPSqf3k_GVDWy7iE6yHr4msFvWE-60xd1X4L_9J5Ol2FEbAZ2Esasq-_KI_z8VxD'),
+(4, 'paypal_client_secret', 'EJJ4-Y_xQDjvQZI2lIAKa25Tz584nxJ7jiS2AeoHTHC0r0dqw0q0JEU1M6cRLy-QDQFDldSRHFDVMFjk');
 
 -- --------------------------------------------------------
 
