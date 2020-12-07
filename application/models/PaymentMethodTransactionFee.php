@@ -37,7 +37,7 @@ class PaymentMethodTransactionFee extends MyAppModel
     {
         $langId = ($langId > 0)  ? $langId : CommonHelper::getLangId();
         return array(
-            self::FEE_TYPE_PERCENTAGE => Label::getLabel('LBL_percntage', $langId),
+            self::FEE_TYPE_PERCENTAGE => Label::getLabel('LBL_percentage', $langId),
             self::FEE_TYPE_FLAT => Label::getLabel('LBL_FLAT', $langId),
         );
     }
