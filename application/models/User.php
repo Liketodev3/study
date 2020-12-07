@@ -1017,8 +1017,8 @@ class User extends MyAppModel
             'user_last_name',
             'user_country_id',
             'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
-            'IFNULL(top_single_lesson_price, 0 ) as singleLessonAmount',
-            'IFNULL(top_bulk_lesson_price, 0 ) as bulkLessonAmount',
+            'IFNULL(top_single_lesson_price, min(utsl.utl_single_lesson_amount) ) as singleLessonAmount',
+            'IFNULL(top_bulk_lesson_price, min(utsl.utl_bulk_lesson_amount) ) as bulkLessonAmount',
             //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName'
         ));
         //echo $srch->getQuery(); die;

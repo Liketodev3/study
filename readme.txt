@@ -1,5 +1,10 @@
 This file shares the details of YoCoach version and features.
 
+Hotfixes
+        * Bug-045964: Show only relevant language for class
+
+        
+
 Release Number: TV-2.7.7.20201205
 
 Release Date: 2020/12/05

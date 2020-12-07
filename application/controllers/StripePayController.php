@@ -172,11 +172,13 @@ class StripePayController extends PaymentController
                         )
                     );
 
+                    $systemCurrencyCode = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1), 'currency_code');
+
                     $charge = \Stripe\Charge::create(
                         array(
                         "customer" => $customer->id,
                         'amount' => $payment_amount,
-                        'currency' => $orderInfo["order_currency_code"]
+                        'currency' => $systemCurrencyCode
                         )
                     );
 

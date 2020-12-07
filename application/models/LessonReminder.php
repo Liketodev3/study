@@ -109,7 +109,7 @@ class LessonReminder extends MyAppModel
 					</tr>';
             foreach ($lessons as $lesson) {
                 $lessonIds[] = $lesson['slesson_id'];
-                $teacherLink = CommonHelper::generateFullUrl($controller, 'view', array( $lesson['slesson_id'] ));
+                $lessonLink = CommonHelper::generateFullUrl($controller, 'view', array( $lesson['slesson_id'] ));
                 if ($userType == self::TEACHER) {
                     $lesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lesson['slesson_date'].'  '.$lesson['slesson_start_time'], true, $lesson['teacherTimezone']);
 
@@ -119,18 +119,20 @@ class LessonReminder extends MyAppModel
 						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson['learnerFullName'] .'</td>
 						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson_start_time .'</td>
 						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson_end_time .'</td>
-						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153"><a href="'. $teacherLink .'" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
+						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153"><a href="'. $lessonLink .'" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
 					</tr>';
                 } else {
                     $lesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lesson['slesson_date'].'  '.$lesson['slesson_start_time'], true, $lesson['LearnerTimezone']);
 
                     $lesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lesson['slesson_end_date'].'  '.$lesson['slesson_end_time'], true, $lesson['LearnerTimezone']);
 
+                    $lessonLink = CommonHelper::generateFullUrl($controller, 'view', array( $lesson['sldetail_id'] ));
+
                     $lessonsData .='<tr>
 						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson['teacherFullName'] .'</td>
 						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson_start_time .'</td>
 						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">'. $lesson_end_time .'</td>
-						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153"><a href="'. $teacherLink .'" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
+						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153"><a href="'. $lessonLink .'" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
 					</tr>';
                 }
             }
@@ -168,6 +170,7 @@ class LessonReminder extends MyAppModel
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addMultipleFields(array(
             'slns.slesson_id',
+            'sld.sldetail_id',
             'sld.sldetail_learner_id as learnerId',
             'slns.slesson_teacher_id as teacherId',
             'ut.user_first_name as teacherFname',

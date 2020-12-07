@@ -91,17 +91,9 @@
 										<span class="td__data">
 										<?php if( $favourite['isSetUpOfferPrice'] ){ ?>
 										<span class="inline-icon -display-inline -color-fill">
-										<span class="svg-icon" title="These prices are locked">
+										<span class="svg-icon" title="<?php echo Label::getLabel('LBL_These_Prices_are_locked'); ?>">
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 520 520">
 										<path d="M265,9A130.148,130.148,0,0,0,135,139v92h30V139a100,100,0,0,1,200,0v92h30V139A130.147,130.147,0,0,0,265,9ZM85,231V521H445V231H85ZM280,384.42V446H250V384.42A45,45,0,1,1,280,384.42ZM265,327a15,15,0,1,0,15,15A15.017,15.017,0,0,0,265,327Z" transform="translate(-5 -5)"></path>
-										</svg>
-										</span>
-										</span>
-										<?php } else { ?>
-										<span class="inline-icon -display-inline">
-										<span class="svg-icon" title="<?php echo Label::getLabel('LBL_These_Prices_are_locked') ?>">
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 520 520">
-										<path d="M85,521V231H365V139A99.972,99.972,0,0,0,182.193,83h-34.5A129.991,129.991,0,0,1,395,139v92h50V521H85ZM265,297a45,45,0,0,0-15,87.42V446h30V384.42A45,45,0,0,0,265,297Zm0,30a15,15,0,1,0,15,15A15.017,15.017,0,0,0,265,327Z" transform="translate(-5 -5)"></path>
 										</svg>
 										</span>
 										</span>
