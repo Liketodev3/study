@@ -1,8 +1,20 @@
 This file shares the details of YoCoach version and features.
 
-Hotfixes
-        * Bug-045964: Show only relevant language for class
+Release Number: TV-2.7.8.20201207
 
+Release Date: 2020/12/07
+
+Updates:
+
+    * Task-73053: Fix label for Percentage in Method fee settings
+    * Task-76258: Add payment gateway details in restore-db
+
+Bugs:
+    * Bug-045882-fix slot confirmation popup ui on booking calendar for bought lessons
+    * Bug-046183-fix faq categories and faq order
+    * Bug-045964: Show only relevant language for class
+
+--------------------------
         
 
 Release Number: TV-2.7.7.20201205
