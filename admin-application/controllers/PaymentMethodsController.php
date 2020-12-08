@@ -302,7 +302,7 @@ class PaymentMethodsController extends AdminBaseController
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Fee_Setup_Successfully'));
     }
 
-    private function getPaymentMethodFeeForm(int $pMethodId) : object
+    private function getPaymentMethodFeeForm(int $pMethodId) : SearchBase
     {
         $frm = new Form('frmGatewayFee');
         $frm->addHiddenField('', 'pmtfee_pmethod_id', $pMethodId);

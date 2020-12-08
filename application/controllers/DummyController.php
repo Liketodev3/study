@@ -8,6 +8,7 @@ class DummyController extends MyAppController
 
     public function test()
     {
+		phpinfo();
     }
 
     public function createProcedures() {

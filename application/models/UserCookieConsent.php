@@ -23,7 +23,7 @@ class UserCookieConsent extends MyAppModel
         return time() + 3600 * 24 * 30;
     }
 
-    public static function getSearchObject(bool $joinUser = true) :  object
+    public static function getSearchObject(bool $joinUser = true) :  SearchBase
     {
         $search = new SearchBase(static::DB_TBL, 'usercc');
 

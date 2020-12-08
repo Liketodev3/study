@@ -43,7 +43,7 @@ class TeacherOfferPrice extends MyAppModel
         return true;
     }
 
-    public function getOffer(int $learnerId, int $teacherId ) : object
+    public function getOffer(int $learnerId, int $teacherId ) : SearchBase
     {
 		// $learnerId = FatUtility::int( $learnerId );
 		// $teacherId = FatUtility::int( $teacherId );

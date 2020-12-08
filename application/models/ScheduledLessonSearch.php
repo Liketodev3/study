@@ -322,7 +322,7 @@ class ScheduledLessonSearch extends SearchBase
         return $db->fetchAll($rs);
     }
 
-    public function checkUserLessonBooking(array $userIds, string $startDateTime, string $endDateTime) : object
+    public function checkUserLessonBooking(array $userIds, string $startDateTime, string $endDateTime) : SearchBase
     {
         if(empty($userIds)){
             trigger_error(Label::getLabel('LBL_User_id_Requried'),E_USER_ERROR);
