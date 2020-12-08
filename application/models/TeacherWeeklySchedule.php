@@ -262,6 +262,28 @@ class TeacherWeeklySchedule extends MyAppModel
         $searchStartTime = date('H:i:s', strtotime($startTime));
         $searchEndTime = date('H:i:s', strtotime($endTime));
 
+        $tWsrchC = new TeacherWeeklyScheduleSearch();
+        $tWsrchC->addCondition('twsch_user_id', '=', $userId);
+        $tWsrchC->addCondition('mysql_func_CONCAT(twsch_end_date," ", twsch_end_time)', '>', date('Y-m-d H:i:s', strtotime($weekStart)), 'AND', true);
+        $tWRsC = $tWsrchC->getResultSet();
+        $tWcountC = $tWRsC->totalRecords();
+
+        if($tWcountC > 0){
+            $tWsrch = clone $tWsrchC;
+            $tWsrch->addCondition('mysql_func_CONCAT(twsch_date," ", twsch_start_time)', '<=', $startTime, 'AND', true);
+            $tWsrch->addCondition('mysql_func_CONCAT( twsch_end_date," ", twsch_end_time)', '>=', $endTime, 'AND', true);
+            $tWRs = $tWsrch->getResultSet();
+            $tWcount = 0;
+            $tWcount = $tWRs->totalRecords();
+            $tWRows = $db->fetch($tWRs);
+
+            if ($tWcount > 0) {
+                if ($tWRows['twsch_is_available'] == static::AVAILABLE) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
 
         $gaSrch = new TeacherGeneralAvailabilitySearch();
         $gaSrch->addCondition('tgavl_user_id', '=', $userId);
@@ -301,34 +323,10 @@ class TeacherWeeklySchedule extends MyAppModel
             }
         }
 
-
-        //echo $gaSrch->getQuery(); die;
-
-        $tWsrchC = new TeacherWeeklyScheduleSearch();
-        $tWsrchC->addCondition('twsch_user_id', '=', $userId);
-        $tWsrchC->addCondition('mysql_func_CONCAT(twsch_end_date," ", twsch_end_time)', '>', date('Y-m-d H:i:s'), 'AND', true);
-
-
-        $tWRsC = $tWsrchC->getResultSet();
-        $tWcountC = $tWRsC->totalRecords();
-
-        $tWsrch = clone $tWsrchC;
-        $tWsrch->addCondition('mysql_func_CONCAT(twsch_date," ", twsch_start_time)', '<=', $startTime, 'AND', true);
-        $tWsrch->addCondition('mysql_func_CONCAT( twsch_end_date," ", twsch_end_time)', '>=', $endTime, 'AND', true);
-        $tWRs = $tWsrch->getResultSet();
-        $tWcount = 0;
-        $tWcount = $tWRs->totalRecords();
-        $tWRows = $db->fetch($tWRs);
-
-        if ($tWcount > 0) {
-            if ($tWRows['twsch_is_available'] == static::AVAILABLE) {
-                return 1;
-            }
-            return 0;
-        }
         if ($generalAvail > 0) {
             return 1;
         }
+        
         return 0;
     }
 
