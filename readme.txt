@@ -1,5 +1,16 @@
 This file shares the details of YoCoach version and features.
 
+Release Number: TV-2.7.9.20201208
+
+Release Date: 2020/12/08
+
+Bugs:
+    * Bug-046223-fix fatal error on faq page and add default data for faqs in restore db file
+    * Bug-045946-check weekly and then general avialability for confirmation popup
+    * Bug-046094-Fix Booking slot not available booking sometimes
+
+-------------------
+
 Release Number: TV-2.7.8.20201207
 
 Release Date: 2020/12/07
