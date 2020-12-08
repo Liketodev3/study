@@ -10,7 +10,6 @@ class FaqController extends MyAppController
             'IFNULL(faq_title, faq_identifier) as faq_title',
         ));
         $srch->joinTable(FaqCategory::DB_TBL, 'LEFT OUTER JOIN', 'faqcat_id=faq_category');
-        $srch->joinTable(Faq::DB_TBL_LANG, 'LEFT OUTER JOIN', 'faqlang_faq_id=faq_id AND faqlang_lang_id = ' . $this->siteLangId);
         $srch->addOrder('faqcat_display_order');
         $srch->setPageSize(50);
         $rs = $srch->getResultSet();
