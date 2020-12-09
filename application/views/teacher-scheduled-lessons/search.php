@@ -145,9 +145,14 @@ foreach( $lessons as $lesson ){
 							</li>
 					<?php
 						}else{
+							if(strtotime($endTime) > strtotime($curDateTime)) {
+								$lessonInfoLblKey = 'LBL_Lesson_ongoing';
+							} else {
+								$lessonInfoLblKey = 'LBL_Lesson_time_has_passed';
+							}
 						?>
 						<li class="span-right">
-							<span class="-color-secondary"><?php echo Label::getLabel('LBL_Lesson_start_time_has_passed'); ?></span>
+							<span class="-color-secondary"><?php echo Label::getLabel($lessonInfoLblKey); ?></span>
 						</li>
 						<?php
 							}
