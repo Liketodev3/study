@@ -1,0 +1,11 @@
+
+.-float-left { float:theme('direction.left') !important; }
+.-float-right { float:theme('direction.right') !important; }
+
+.-box-shadow-xy { box-shadow: var(--shadow-4); }
+
+.-link-underline { text-decoration: underline; }
+
+.-transition { transition: 0.3s all ease-in-out; }
+
+.no-float{ float:unset; }

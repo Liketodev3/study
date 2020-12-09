@@ -1,0 +1,180 @@
+
+
+
+/**************** Slider Edited ********************/
+.box {
+    background: #fff;
+    border-radius: 2px;
+    /*border: 1px solid #e5e5e5;*/
+}
+
+.box .box__head {
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+}
+
+.box .box__head .-link-underline {
+    line-height: 1.4;
+
+    display: inline-block;
+}
+
+.box .box__head p,
+.box .box__head h4 {
+    margin: 0;
+}
+
+.box .box__head h1 {
+    font-size: 1.75rem;
+}
+
+
+
+.box--narrow {
+    padding: 30px;
+    min-width: 450px;
+}
+
+.box--narrow h2 {
+    margin-bottom: 25px;
+}
+
+.box--narrow .box__logo {
+    width: 140px;
+    margin: auto;
+}
+
+.box--narrow .form input[type="submit"],
+.box--narrow .form input[type="button"] {
+    width: 100%;
+    text-align: center;
+}
+
+
+
+.box-list {
+    margin: 0 0 30px;
+    position: relative;
+}
+
+.box-list .box__price h6 {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.box-list__head {
+    margin-bottom: 10px;
+}
+
+.box-list__head h3 {font-size: 1.4rem;
+    margin: 0 5px 0 0;
+}
+
+.box-list__head .ratings {
+    margin: 0 0 0 30px;
+}
+
+.box__description {
+    margin: 10px 0 20px;
+    min-height: 60px;
+}
+
+.box__description p {
+    line-height: 1.4;
+    font-size: 1.05rem;
+    color: #666; line-height: 1.8;
+}
+
+.box__slip {
+    display: none;
+    height: 100%;
+    width: 55%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: #fff;
+    padding: 20px;
+    /*display: none;*/
+}
+
+
+
+.box__slip-data .btn {
+    margin: 20px 0 0 90px;
+}
+
+.box-list.is-selected .box__content {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.box__tabs {
+    margin: 0 0 20px 0;
+}
+
+.box__tabs li {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    margin: 0 20px 0 0;
+}
+
+.box__tabs li a {
+    color: #999999;
+    position: relative;
+}
+
+.box__tabs li a:after {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    bottom: -5px;
+    content: "";
+    height: 2px;
+    background: #333;
+    display: none;
+}
+
+.box__tabs li.is-active a {
+    color: #000;
+}
+
+.box__tabs li.is-active a:after {
+    display: block;
+}
+
+
+.box__calender li .time {
+    min-width: 80px;
+    display: inline-block;
+    min-height: 15px;
+}
+
+.box__calender li .span {
+    display: inline-block;
+    padding: 5px;
+    width: 10%;
+    vertical-align: top;
+    font-size: 0.85rem;
+}
+
+.box__calender li .point {
+    background: #ddd;
+    min-height: 12px;
+    width: 100%;
+    display: block;
+}
+
+.box__calender li .point.is-available {
+    background: var(--color-primary);
+}
+
+
+@media(min-width:1199px){
+    .box__slip-data {
+        min-width: 300px;
+        white-space: nowrap;
+    }
+
+}

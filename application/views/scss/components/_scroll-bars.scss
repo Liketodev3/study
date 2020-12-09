@@ -1,0 +1,22 @@
+
+
+.scrollbar {
+    width: 100% !important;
+    max-height: 350px;
+    padding: 0;
+    position: relative;
+}
+
+.scrollbar-track {
+    width: 8px;
+    right: -10px !important;
+    position: relative;
+}
+
+.scrollbar-handle {
+    width: 5px;
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.1);
+    -webkit-transition: width 250ms;
+    transition: width 250ms;
+}

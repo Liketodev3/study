@@ -10,3 +10,9 @@
 /library/core
 /fatlib
 /robots.txt
+
+
+/node_modules
+/gulpfile.js
+/package.json
+/package-lock.json

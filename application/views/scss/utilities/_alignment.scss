@@ -1,0 +1,19 @@
+//
+//Aligns
+//
+$align: "align";
+
+.#{$align}{
+    &-left { text-align:#{$start-direction} !important;}
+    &-right { text-align:#{$start-direction} !important;}
+}
+
+.-align{
+    &-left { text-align:theme('direction.left') !important; }
+    &-right { text-align:theme('direction.right') !important; }
+    &-center { text-align: center !important; }
+    &-justify { text-align: justify !important; }
+    &-auto { margin: auto !important; }
+}
+
+.align--center {text-align: center !important; }

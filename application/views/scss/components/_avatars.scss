@@ -1,0 +1,107 @@
+
+.avtar {
+    border-radius: 100%;
+    display: block;
+    position: relative;
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    background: #eee
+}
+
+.avtar img {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: 1
+}
+
+.avtar.avtar--xsmall {
+    width: 35px;
+    height: 35px
+}
+
+.avtar.avtar--small {
+    width: 60px;
+    height: 60px
+}
+
+.avtar.avtar--normal {
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    border: 6px solid #fff
+}
+
+.avtar:after {
+    pointer-events: none;
+    content: attr(data-text);
+    font-size: 2rem;
+    color: #000;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    font-weight: 700;
+    text-transform: uppercase
+}
+
+.avtar.avtar--xsmall:after {
+    font-size: 1em
+}
+
+.avtar.avtar--small:after {
+    font-size: 1.4em
+}
+
+.avtar-cover {
+    position: relative;
+    display: inline-block
+}
+
+.avtar.avtar--centered {
+    margin: auto;
+    display: block
+}
+
+
+
+.avtars-list {
+    display: inline-block;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.avtars-list li {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 -12px;
+}
+
+.avtars-list li .avtar {
+    border: 4px solid #fff;
+    z-index: 1;
+}
+
+
+.avtars-list.avtars-list--sticky {
+    position: absolute;
+    left: 0;
+    top: 10px;
+    margin: 0;
+}
+
+.avtars-list.avtars-list--sticky .avtar.avtar--small {
+    width: 35px;
+    height: 35px;
+}
+
+.avtars-list.avtars-list--sticky li {
+    margin: 0 -10px;
+}
