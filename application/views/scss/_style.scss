@@ -16,30 +16,51 @@
 @import "utilities/backgroud";
 @import "utilities/border";
 @import "utilities/heading";
+@import "utilities/misc";
 @import "utilities/no-effects";
 @import "utilities/radius";
 @import "utilities/scroll";
 
 
 // COMPONENTS
+@import 'components/accordians';
 @import 'components/animate';
 @import 'components/avatars';
+@import 'components/blockquote';
+@import 'components/blocks';
+@import 'components/box';
 @import 'components/breadcrumbs';
 @import 'components/buttons';
 @import 'components/cms';
+@import 'components/cookie-bar';
+@import 'components/demo-header';
 @import 'components/forms';
 @import 'components/labels';
 @import 'components/lists';
 @import 'components/loader';
-@import 'components/misc';
+@import 'components/media';
 @import 'components/paginations';
+@import 'components/processing';
 @import 'components/progress';
+@import 'components/range-slider';
+@import 'components/ratings';
+@import 'components/scroll-bars';
+@import 'components/sections';
+@import 'components/slider';
+@import 'components/socials';
 @import 'components/tables';
+@import 'components/tabs';
+@import 'components/toggle';
+@import 'components/tooltip';
+
+
+// CONFIG
+@import "config-directions/direction-ltr";
+@import "config-directions/direction-rtl";
 
 
 // PLUGINS
 @import "plugins/bootstrap";
-@import "plugins/classes";
 @import "plugins/cropper";
 @import "plugins/facebox";
 @import "plugins/fullcalendar.min";
@@ -49,7 +70,6 @@
 @import "plugins/jquery-ui";
 @import "plugins/jquery.countdownTimer";
 @import "plugins/jquery.tagsinput.min";
-@import "plugins/payment";
 @import "plugins/slick";
 @import "plugins/star-rating";
 @import "plugins/zdeveloper-common";
@@ -58,6 +78,21 @@
 // LAYOUTS
 @import 'layout/header';
 @import 'layout/nav';
-@import 'layout/footer';
 @import 'layout/body';
-@import 'layout/style';
+@import 'layout/footer';
+
+
+// PAGES
+@import 'pages/home';
+@import 'pages/login';
+@import 'pages/listing';
+@import 'pages/details';
+@import 'pages/group-classes';
+@import 'pages/contact';
+@import 'pages/faq';
+@import 'pages/blog';
+@import 'pages/payment';
+@import 'pages/chat';
+@import 'pages/dashboard';
+@import 'pages/notifications';
+

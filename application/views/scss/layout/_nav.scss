@@ -406,3 +406,200 @@
 
     }
 }
+
+
+
+@media (max-width:1199px) {
+    .nav__dropdown-target {
+        min-width: 250px;
+    }
+
+    .menu-vertical li a {
+        padding: 16px 15px 16px 55px;
+    }
+
+    .nav.nav--primary > ul > li > a.btn {
+        color: #fff;
+    }
+
+    .nav.nav--primary-offset {
+        bottom: 0;
+        background: #fff;
+        padding: 0;
+        box-shadow: 0 0 10px rgba(51, 51, 51, 0.38);
+        left: 0;
+        margin: 0;
+        overflow: auto;
+        position: fixed;
+        text-align: left;
+        top: 0;
+        transform: translate3d(-100%, 0px, 0px);
+        -webkit-transform: translate3d(-100%, 0px, 0px);
+        -ms-transform: translate3d(-100%, 0px, 0px);
+        transition: all 300ms ease 0s;
+        -webkit-transition: all 300ms ease 0s;
+        -ms-transition: all 300ms ease 0s;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 11;
+        width: 280px;
+    }
+
+    html.show-nav-js .nav.nav--primary-offset {
+        opacity: 1;
+        transform: translate3d(0px, 0px, 0px);
+        -webkit-transform: translate3d(0px, 0px, 0px);
+        -ms-transform: translate3d(0px, 0px, 0px);
+        visibility: visible;
+    }
+
+    html.show-nav-js, html.show-dashboard-js {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+
+    html.show-nav-js .overlay--nav{
+        display: block;
+    }
+
+
+
+
+    .nav.nav--primary-offset > ul > li {
+        display: block;
+        border-bottom: 1px solid #eee;
+        padding: 0;
+    }
+
+    .nav.nav--primary-offset > ul > li > a {
+        padding: 0 15px;
+    }
+
+    .nav.nav--primary > ul > li.nav__dropdown > a.is-active:after {
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid #333;
+        top: 12px;
+    }
+
+    .subheader .nav.nav--primary > ul > li.nav__dropdown > a.is-active:after {
+        border-bottom: 0px solid #333;
+    }
+
+    .nav.nav--primary-offset > ul > li .nav__dropdown-target {
+        min-width: 100%;
+        position: relative;
+        box-shadow: none;
+        border-top: 1px solid #eee;
+        top: auto;
+        right: auto;
+    }
+
+
+    
+    .nav__dropdown-target {
+        opacity: 1;
+        visibility: visible;
+        display: none;
+        padding: 10px;
+        top: 45px;
+        right: 0;
+        left: auto;
+    }
+
+
+}
+
+@media(max-width:767px){
+    
+
+    .nav.nav--actions > ul > li {
+        margin: 0 0 0 4px;
+        padding: 0;
+    }
+
+    .nav.nav--actions > ul > li > a {
+        width: 40px;
+        height: 40px;
+        position: relative;
+        font-size: 0;
+        padding: 0;
+    }
+
+    .nav.nav--actions > ul > li > a img {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        width: 60%;
+    }
+
+    .nav.nav--primary > ul > li.nav__dropdown.nav__dropdown--notification {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .nav.nav--primary > ul > li.nav__dropdown > a {
+        padding-right: 0;
+    }
+
+    .nav.nav--actions > ul > li {
+        position: static;
+    }
+
+    .nav.nav--actions > ul > li .nav__dropdown-target .nav--vertical {
+        width: 100%;
+    }
+
+    .nav.nav--actions > ul > li .nav__dropdown-target .nav--vertical li {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .nav.nav--actions > ul > li .nav__dropdown-target .nav--vertical li a {
+        font-size: 1.2rem;
+        padding: 15px;
+    }
+
+    .nav.nav--actions > ul > li .nav__dropdown-target {
+        left: 0;
+        right: 0;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        z-index: 100;
+        padding: 50px 0 20px 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+    html.show-dropdown-js {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        overflow: hidden;
+    }
+
+    
+    .list-container {
+        padding-bottom: 10px;
+    }
+
+    
+    .nav.nav--actions > ul > li.nav__dropdown.nav__dropdown--account > a img {
+        width: 100%;
+    }
+
+
+    .menu-vertical li.-show-responsive {
+        display: block !important;
+    }
+
+
+}

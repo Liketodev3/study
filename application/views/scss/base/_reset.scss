@@ -1,10 +1,14 @@
 
 :root {
-    --color-primary: #06d260;
-    --color-secondary: #8337e6;
+    --color-primary: #3d91e8;
+    --color-secondary: #e84c3d;
+    --color-main: #e84c3d;
+    --color-black: #1a1a1a;
     --color-light: #fff;
     --color-dark: #333;
-    --color-grey: #999
+    --color-grey: #666666;
+    --border-color: #454545;
+    --color-grey-light: #f1f1f1;
 }
 
 *,
@@ -15,11 +19,6 @@
     outline: 0
 }
 
-.-clearfix:after {
-    display: block;
-    content: "";
-    clear: both
-}
 
 html {
     line-height: 1.15;
@@ -27,7 +26,8 @@ html {
     -ms-text-size-adjust: 100%;
     -ms-overflow-style: scrollbar;
     -webkit-tap-highlight-color: transparent;
-    font-size: 14px
+    font-size: 14px;
+    font-family: theme('font.family.base');
 }
 
 body {

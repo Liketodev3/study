@@ -242,3 +242,92 @@ div.tagsinput div {
     }
 
 }
+
+
+@media(max-width:1199px){
+    
+   
+    .tabs-inline li {
+        margin: 0 15px;
+    }
+
+    .offset-min-12 {
+        margin-left: 33.333333%;
+    }
+
+    .box.box--preview .offset-min-12 {
+        margin-left: 0;
+    }
+
+}
+
+
+@media(max-width:767px){
+    
+
+    .screen,
+    body.is-screen-on {
+        top: auto;
+        position: relative;
+        bottom: auto;
+        left: auto;
+        right: auto;
+    }
+
+    .screen .screen__left {
+        position: relative;
+        height: 740px;
+        right: auto;
+        left: auto;
+        top: auto;
+        bottom: auto;
+    }
+
+    .screen .screen__right {
+        position: relative;
+        width: 100%;
+        top: auto;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        border: none;
+        padding: 0 0;
+        margin: 20px 0 0;
+    }
+
+    .screen .screen__right .page-head {
+        border-top: none;
+    }
+
+    .form-search.form-search--single form {
+        width: 100%;
+        padding: 0;
+    }
+
+    .screen {
+        padding: 0 15px 15px;
+        background: none;
+    }
+
+
+    .screen .screen__left {
+        height: 400px;
+    }
+
+
+    .window__search {
+        border-top: 2px solid var(--color-secondary);
+    }
+
+    .screen__center-content {
+        width: 95%;
+    }
+
+
+    .section--content {
+        padding: 0;
+    }
+
+
+
+}

@@ -115,3 +115,11 @@
     opacity: 1;
     filter: alpha(opacity=100);
 }
+
+
+@media(max-width:1199px){
+    
+    .toggle--nav {
+        display: inline-block;
+    }
+}

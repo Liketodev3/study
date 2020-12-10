@@ -61,3 +61,22 @@
     content: "-";
     font-size: 2.5rem;
 }
+
+
+@media(max-width:767px){
+    
+    .accordian__title {
+        padding: 20px 50px 20px 20px;
+        line-height: 1.6;
+    }
+
+    .accordian__body {
+        padding: 0 20px 20px 20px;
+    }
+
+    .accordian__title:before {
+        right: 10px;
+        top: 16px;
+    }
+
+}

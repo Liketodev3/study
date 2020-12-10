@@ -280,7 +280,7 @@
     font-weight: 700;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1199px) {
 
     .tabs-vertical ul li .tab-info h3 {
         font-size: 1.3rem;
@@ -290,6 +290,9 @@
         font-size: 44px;
     }
 
+    .tabs-vertical li a {
+        padding-left: 60px;
+    }
 
 }
 
@@ -311,7 +314,7 @@
 
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .tabs-vertical ul {
         overflow: auto;
         white-space: nowrap;
@@ -327,6 +330,27 @@
 
     .tabs-vertical ul li .counter {
         margin-right: 0;
+    }
+
+    
+    .tabs-gray ul {
+        display: block;
+        overflow: auto;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        margin: 0 0 20px;
+    }
+
+    .tabs-gray ul li {
+        display: inline-block;
+        vertical-align: top;
+        white-space: normal;
+        margin: 0 -4px 0 0;
+    }
+
+    .tabs-gray ul li a img {
+        position: relative;
+        top: 16px;
     }
 
 }

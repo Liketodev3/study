@@ -71,10 +71,42 @@
     display: block;
 }
 
-/*+========================HEADER NAV============================*/
 
 @media(min-width:1199px){
     .header.is-fixed .nav.nav--primary > ul > li.nav__dropdown > a:hover {
         border-color: transparent;
     }
+}
+
+
+@media(max-width:1199px){
+    .header {
+        background: #fff;
+        color: #333;
+        padding: 10px 0;
+        box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.07);
+    }
+
+    .is-landing .header {
+        color: #333;
+    }
+
+    
+    .header__logo {
+        width: 100px;
+        /*  height: 50px; */
+        height: auto;
+        margin: 0;
+    }
+
+    
+    .nav.nav--primary > ul > li.nav__dropdown > a:after {
+        right: 5px;
+    }
+
+    .nav.nav--primary.nav--primary-offset > ul > li.nav__dropdown > a:after {
+        right: 15px;
+    }
+
+
 }
