@@ -169,7 +169,7 @@ $(function() {
             }
             joinLessonButtonAction();
             if(typeof(joinFromApp)!='undefined' && joinFromApp==YES){
-                window.location = data.join_url;
+                window.location = data.url;
                 return;
             }
             return createZoomBox(data);
