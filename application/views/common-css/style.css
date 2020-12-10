@@ -7995,3 +7995,15 @@ color: #fff;}
     background: linear-gradient(to right, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
     width: 70%;
 }
+
+/*-------------12/10/2020----------*/
+.google__Sync {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.google__Sync span {
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+/*----------end----------*/
