@@ -1,5 +1,21 @@
 This file shares the details of YoCoach version and features.
 
+
+Release Number: TV-2.7.10.20201210
+
+Release Date: 2020/12/10
+
+Updates:
+
+    * Task-73053 - Changed Sync with Google Calendar button as per guidelines
+
+Bugs:
+
+    # Bug-046274 - fix zoom join by app for learner
+    # Bug-046279 - show correct lesson status info
+
+--------------------
+
 Release Number: TV-2.7.9.20201208
 
 Release Date: 2020/12/08

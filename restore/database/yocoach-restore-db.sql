@@ -11009,3 +11009,4 @@ INSERT INTO `tbl_faq_lang` (`faqlang_faq_id`, `faqlang_lang_id`, `faq_title`, `f
 (6, 1, 'I am a new teacher. How does YoCoach work?', 'I am a new teacher. How does YoCoach work?');
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.9.20201208' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.10.20201210' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
