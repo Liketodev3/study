@@ -7995,3 +7995,20 @@ color: #fff;}
     background: linear-gradient(to right, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
     width: 70%;
 }
+
+/*-------------12/10/2020----------*/
+.google__Sync {
+    text-align: center;
+    padding: 16px 25px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    border: 1px solid #e9e8eb;
+    border-radius: 5px;
+}
+.google__Sync p {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+.google__Sync a{
+    display: inline-block;
+}
+/*----------end----------*/
