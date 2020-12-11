@@ -86,6 +86,14 @@ console.log(userData);
 				<div id="dispMessage"></div>
 			</div>
 		</div>
+		<span class="-gap"></span>
+
+		<div class="google__Sync">
+			<p style="font-weight: 600;color: gray;font-family: inherit;"><?php echo Label::getLabel('Lbl_To_Sync_with_google_calendar') ?></p>
+			<a href="<?php echo CommonHelper::generateUrl('Account', 'GoogleCalendarAuthorize') ?>"><img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png" /></a>
+		</div>
+		<span class="-gap"></span>
+
 	</div>
 	<div class="col-lg-8">
 	 <?php echo $profileFrm->getFormHtml();?></div>
