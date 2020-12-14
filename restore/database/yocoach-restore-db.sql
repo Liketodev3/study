@@ -11010,3 +11010,8 @@ INSERT INTO `tbl_faq_lang` (`faqlang_faq_id`, `faqlang_lang_id`, `faq_title`, `f
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.9.20201208' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.10.20201210' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
+('Note_This_calendar_is_to_only_check_availability', 1, 'Note: This calendar is to only check availability.'),
+('Note_This_calendar_is_to_only_check_availability', 2, 'ملاحظة: هذا التقويم هو للتحقق من التوفر فقط');
