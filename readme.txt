@@ -1,5 +1,18 @@
 This file shares the details of YoCoach version and features.
 
+Release Number: TV-2.7.11.20201215
+
+Release Date: 2020/12/15
+
+Updates:
+
+    * Task-73053 - Display info label on teacher availability calendar
+
+Bugs:
+
+    # Bug-046499 - Align how it works columns on home page
+
+--------------------
 
 Release Number: TV-2.7.10.20201210
 

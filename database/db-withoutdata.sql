@@ -9380,3 +9380,5 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.10.20201210' WHERE `conf_na
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
 ('Note_This_calendar_is_to_only_check_availability', 1, 'Note: This calendar is to only check availability.'),
 ('Note_This_calendar_is_to_only_check_availability', 2, 'ملاحظة: هذا التقويم هو للتحقق من التوفر فقط');
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.11.20201215' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
