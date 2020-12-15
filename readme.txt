@@ -1,5 +1,21 @@
 This file shares the details of YoCoach version and features.
 
+
+Release Number: TV-2.7.12.20201215
+
+Release Date: 2020/12/15
+
+Updates:
+
+    * Task-76258 - Update demo login credentials and links
+
+Bugs:
+
+    # Bug-046368 - Update button sync with google calendar
+
+--------------------
+
+
 Release Number: TV-2.7.11.20201215
 
 Release Date: 2020/12/15
