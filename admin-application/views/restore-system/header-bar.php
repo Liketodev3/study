@@ -449,7 +449,9 @@
         </a>
     </div>
     <div class="demo-cta">
-        <a target="_blank" href="https://www.yo-coach.com/" class=" btn btn-primary btn-sm ripplelink" rel="noopener"><?php echo Label::getLabel('LBL_Request_demo'); ?></a>
+        <a target="_blank" href="https://www.fatbit.com/online-learning-consultation-marketplace-platform.html" class="btn btn-primary btn-sm ripplelink" rel="noopener"><?php echo Label::getLabel('LBL_START_YOUR_MARKETPLACE'); ?></a>
+        &nbsp;
+        <a target="_blank" href="https://www.yo-coach.com#demo" class="btn btn-outline-primary btn-sm ripplelink" rel="noopener"><?php echo Label::getLabel('LBL_Request_demo'); ?></a>
         <a href="javascript:void(0)" class="close-layer" id="demoBoxClose"></a>
     </div>
 </div>
