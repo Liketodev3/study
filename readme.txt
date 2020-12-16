@@ -1,5 +1,11 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Hotfixes:
+    Bug-#045944-fix empty stripe token issue
+    Task-73053-set SSL ON for demo instance by default
+
+---------------------
+
 Release Number: RV-2.1
 
 Release Date: 2020/12/16
