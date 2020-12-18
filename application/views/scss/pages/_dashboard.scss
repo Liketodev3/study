@@ -1,4 +1,48 @@
 
+.menu-vertical li a {
+    display: block;
+    padding: 22px 15px 22px 55px;
+    font-size: 1.1rem;
+    font-weight: 400;
+    position: relative;
+}
+
+.menu-vertical li.is-active a {
+    background: rgba(131, 55, 230, 0.03);
+}
+
+.menu-vertical li a .menu-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    width: 26px;
+    height: 26px;
+    margin: -15px 0 0;
+}
+
+.menu-vertical li a .menu-icon svg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.menu-vertical li a .menu-icon .-color-fill {
+    fill:theme('colors.primary');
+}
+
+.menu-vertical {
+    background: #fff;
+    border-radius: 2px;
+    min-height: 300px;
+}
+
+
+
+
+
 .col-list-group {
     margin: 0 0 30px;
     width: 100%;
@@ -1447,12 +1491,7 @@ color: #fff;}
         padding-left: 115px;
     }
 
-    .nav.nav--primary-offset > ul > li > a {
-        font-size: 1.2rem;
-        height: 45px;
-        line-height: 45px;
-    }
-
+  
     .select-box.select-box--small .select-box__value:after {
         top: 16px;
     }

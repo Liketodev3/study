@@ -57,7 +57,6 @@ class JsCssController{
     }
 
     function cssCommon(){
-		
 		if (empty($_SESSION['preview_theme']) && !isset($_SESSION['preview_theme']) ) {
 			$this->checkModifiedHeader();
 		}
@@ -82,7 +81,8 @@ class JsCssController{
         		$files .= $fl;
         	}
         }
-
+		
+		if(!file_exists(CONF_THEME_PATH . 'common-css')) return;
 
         $arr = explode(',', $files);
 

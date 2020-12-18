@@ -3,7 +3,11 @@
     padding-left: 15px;
     margin-right: auto;
     margin-left: auto;
-    position: relative
+    position: relative;
+}
+
+@media(min-width:767px){
+    .container{ width: 96%;}
 }
 
 @media (min-width:1299px) {

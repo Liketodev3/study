@@ -72,8 +72,8 @@
     ),
     'font':(
       'family': (
-        'base': ('Lato', sans-serif),
-        'custom': ('Bebas Neue', cursive)
+        'base': ('Open Sans')
+
       ),
       'weight': (
         'regular': 400,
@@ -101,19 +101,13 @@
     ),
     
     'colors':  (
-      'first': #003a5d,
-      'first-inverse': #fff,
+      'primary': #e84c3d,
+      'primary-inverse': #fff,
 
-      'second': #004a87,
-      'second-inverse': #fff,
-
-      'third': #005fb9,
-      'third-inverse': #fff,
-
-      'forth': #00a2df,
-      'forth-inverse': #fff,
+      'secondary': #3d91e8,
+      'secondary-inverse': #fff,
       
-      'black': #666,
+      'black': #333,
       'white': #ffffff,
 
       'gray': palette(#000),
@@ -129,6 +123,8 @@
       '7': '0 15px 30px 12px rgba(0, 0, 0, 0.25)',
       'inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
       'outline': '0 0 0 3px rgba(66, 153, 225, 0.5)',
+      'vertical': '3.536px 3.536px 8px 0px rgba(0, 0, 0, 0.08)',
+      'all': ' 0 0 20px 4px rgba(0, 0, 0, 0.08)',
       'none': 'none', 
     ),
 

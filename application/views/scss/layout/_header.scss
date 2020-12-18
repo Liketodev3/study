@@ -1,19 +1,19 @@
 
 /*========================HEADER============================*/
 .header {
-    padding: 20px 0;
-    position: fixed;
+    padding: theme('padding.5') 0;
+    position: sticky;
     left: 0;
     right: 0;
     top: 0;
     z-index: 10;
-    color: var(--color-dark);
-    background: #fff;
+    color: theme('colors.black');
+    background: theme('colors.white');;
     -webkit-transition: 0.3s all ease-in-out;
     -moz-transition: 0.3s all ease-in-out;
     -o-transition: 0.3s all ease-in-out;
     transition: 0.3s all ease-in-out;
-    box-shadow: 3.536px 3.536px 8px 0px rgba(0, 0, 0, 0.08);
+    box-shadow:theme('boxShadow.vertical');
 }
 
 .header__logo {
@@ -31,24 +31,7 @@
     margin: auto;
 }
 
-@media (max-width: 767px) {
-    .header {
-        padding: 10px 0;
 
-    }
-}
-
-
-
-/*+========================HEADER ACTIONS============================*/
-.header__right {
-    text-align: left;
-}
-
-.header__actionList .btn {
-    text-transform: uppercase;
-    font-size: 1rem;
-}
 
 .header__actions {
     -webkit-box-ordinal-group: 3;
@@ -58,19 +41,8 @@
     margin: 0;
 }
 
-.header__actionList ul li {
-    display: inline-block;
-    vertical-align: middle;
-    color: inherit;
-    padding: 0 0 0 15px;
-    position: relative;
-}
 
-.header__actionList ul li .nav.nav--vertical li {
-    padding: 0;
-    display: block;
-}
-
+.btn .svg-icon.user-icon{display: none;}
 
 @media(min-width:1199px){
     .header.is-fixed .nav.nav--primary > ul > li.nav__dropdown > a:hover {
@@ -79,34 +51,3 @@
 }
 
 
-@media(max-width:1199px){
-    .header {
-        background: #fff;
-        color: #333;
-        padding: 10px 0;
-        box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.07);
-    }
-
-    .is-landing .header {
-        color: #333;
-    }
-
-    
-    .header__logo {
-        width: 100px;
-        /*  height: 50px; */
-        height: auto;
-        margin: 0;
-    }
-
-    
-    .nav.nav--primary > ul > li.nav__dropdown > a:after {
-        right: 5px;
-    }
-
-    .nav.nav--primary.nav--primary-offset > ul > li.nav__dropdown > a:after {
-        right: 15px;
-    }
-
-
-}
