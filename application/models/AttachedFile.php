@@ -558,7 +558,7 @@ class AttachedFile extends MyAppModel
         $record_subid = FatUtility::int($record_subid);
         $langId = FatUtility::int($langId);
 
-        if (!in_array($fileType, array(AttachedFile::FILETYPE_ADMIN_LOGO, AttachedFile::FILETYPE_FRONT_LOGO, AttachedFile::FILETYPE_FRONT_WHITE_LOGO, AttachedFile::FILETYPE_EMAIL_LOGO, AttachedFile::FILETYPE_FAVICON, AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE, AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, AttachedFile::FILETYPE_WATERMARK_IMAGE, AttachedFile::FILETYPE_APPLE_TOUCH_ICON, AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, AttachedFile::FILETYPE_MOBILE_LOGO, AttachedFile::FILETYPE_CATEGORY_COLLECTION_BG_IMAGE)) && (!$fileType || !$recordId)) {
+        if (!in_array($fileType, array(AttachedFile::FILETYPE_ADMIN_LOGO, AttachedFile::FILETYPE_FRONT_LOGO, AttachedFile::FILETYPE_FRONT_WHITE_LOGO, AttachedFile::FILETYPE_EMAIL_LOGO, AttachedFile::FILETYPE_FAVICON, AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE, AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, AttachedFile::FILETYPE_WATERMARK_IMAGE, AttachedFile::FILETYPE_APPLE_TOUCH_ICON, AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, AttachedFile::FILETYPE_MOBILE_LOGO, AttachedFile::FILETYPE_CATEGORY_COLLECTION_BG_IMAGE, AttachedFile::FILETYPE_LESSON_PAGE_IMAGE)) && (!$fileType || !$recordId)) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
             return false;
         }
