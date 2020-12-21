@@ -5,6 +5,7 @@ Hotfixes:
     Task-73053-set SSL ON for demo instance by default
     Bug-#047204-Google sign in button text editable
     Bug-#047271-Show correct reason for file not upload
+    Bug:#046838: change lesson page image
 
 ---------------------
 

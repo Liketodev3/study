@@ -252,6 +252,7 @@ class ConfigurationsController extends AdminBaseController
             AttachedFile::FILETYPE_APPLE_TOUCH_ICON,
             AttachedFile::FILETYPE_MOBILE_LOGO,
             AttachedFile::FILETYPE_BLOG_PAGE_IMAGE,
+            AttachedFile::FILETYPE_LESSON_PAGE_IMAGE,
             );
 
         if (!in_array($file_type, $allowedFileTypeArr)) {
@@ -457,6 +458,18 @@ class ConfigurationsController extends AdminBaseController
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, 0, 0, 0, $lang_id)) {
+            Message::addErrorMessage($fileHandlerObj->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+    public function removeLessonImage($lang_id = 0)
+    {
+        $lang_id = FatUtility::int($lang_id);
+        $fileHandlerObj = new AttachedFile();
+        if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_LESSON_PAGE_IMAGE, 0, 0, 0, $lang_id)) {
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
@@ -955,6 +968,7 @@ class ConfigurationsController extends AdminBaseController
                 $mobilelogo_fld = $frm->addButton('Mobile Logo', 'mobile_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'mobile_logo', 'data-file_type' => AttachedFile::FILETYPE_MOBILE_LOGO));
 
                 $blogimg_fld = $frm->addButton('Blog Image', 'blog_img', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'blog_img', 'data-file_type' => AttachedFile::FILETYPE_BLOG_PAGE_IMAGE));
+                $blogimg_fld = $frm->addButton('Lesson Image', 'lesson_img', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'lesson_img', 'data-file_type' => AttachedFile::FILETYPE_LESSON_PAGE_IMAGE));
 
             break;
 

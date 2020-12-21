@@ -57,6 +57,7 @@ switch ($frmType){
 		$appleTouchIcon= $frm->getField('apple_touch_icon');
 		$mobileLogo= $frm->getField('mobile_logo');
         $blogImg= $frm->getField('blog_img');
+        $lessonImg= $frm->getField('lesson_img');
 
 		// $blogImg->developerTags['col'] = 12;
 
@@ -76,6 +77,8 @@ switch ($frmType){
             $mobileLogo->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
 			
 			$blogImg->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '1600*480');
+            
+			$lessonImg->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '2000*900');
 
             $appleTouchIcon->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '16*16');
             
@@ -177,6 +180,10 @@ switch ($frmType){
 		
 		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, 0, 0, $lang_id ) ){
 			$blogImg->htmlAfterField .= '<div class="uploaded--image" style="width:100%"><img src="'.FatUtility::generateFullUrl('Image','blog',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a class="remove--img" href="javascript:void(0);" onclick="removeBlogImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+		}
+        
+		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_LESSON_PAGE_IMAGE, 0, 0, $lang_id ) ){
+			$lessonImg->htmlAfterField .= '<div class="uploaded--image" style="width:100%"><img src="'.FatUtility::generateFullUrl('Image','lesson', array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a class="remove--img" href="javascript:void(0);" onclick="removeLessonImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
 		}
 	break;
 

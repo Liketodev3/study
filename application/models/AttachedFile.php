@@ -48,6 +48,7 @@ class AttachedFile extends MyAppModel
     const FILETYPE_FLAG_TEACHING_LANGUAGES = 42;
     const FILETYPE_BLOG_POST_IMAGE_PATH = 'blog-post/';
     const FILETYPE_BLOG_PAGE_IMAGE = 43;
+    const FILETYPE_LESSON_PAGE_IMAGE = 44;
 
     public function __construct($fileId = 0)
     {

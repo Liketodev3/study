@@ -178,6 +178,12 @@ $(document).ready(function(){
 		});
 	};
 	
+	removeLessonImage = function(lang_id){
+		if(!confirm(langLbl.confirmDeleteImage)){return;}
+		fcom.updateWithAjax(fcom.makeUrl('Configurations', 'removeLessonImage', [lang_id]), '', function(t) {
+			getLangForm( document.frmConfiguration.form_type.value, lang_id );
+		});
+	};
 	
 })();	
 
