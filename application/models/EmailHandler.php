@@ -133,6 +133,8 @@ class EmailHandler extends FatModel
         $mail->Password = $password;
         $mail->SMTPSecure = $secure;
         $mail->SMTPDebug = false;
+        $mail->CharSet = 'UTF-8';
+        $mail->Encoding = 'base64';
         $mail->SetFrom(FatApp::getConfig('CONF_FROM_EMAIL'));
         $mail->addAddress($toAdress);
         $mail->Subject = '=?UTF-8?B?'.base64_encode($Subject).'?=';
@@ -148,6 +150,7 @@ class EmailHandler extends FatModel
         $db = FatApp::getDb();
         $headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+        $headers .= 'Content-Transfer-Encoding: base64' . "\r\n";
 
         $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_".$langId, FatUtility::VAR_STRING, '') ."<".FatApp::getConfig("CONF_FROM_EMAIL").">" . "\r\nReply-to: ".FatApp::getConfig("CONF_REPLY_TO_EMAIL");
 
