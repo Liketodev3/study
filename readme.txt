@@ -4,6 +4,8 @@ Hotfixes
         * Bug-045964: Show only relevant language for class
         * Bug-046368: Update button sync with google calendar
         * Bug-043080: show group class & trial lesson on google calendar
+        * Bug-045944: fix empty stripe token issue
+        * Bug-045420: fix unicode issue in emails and blog list
 
 
 Release Number: TV-2.6.20201120
