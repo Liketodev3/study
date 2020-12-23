@@ -1,8 +1,6 @@
 //
-//LOGO
+//NAV
 //
-
-
 $nav: "nav";
 
 .#{$nav}{
@@ -11,7 +9,7 @@ $nav: "nav";
         > ul {
             > li{position: relative; display: inline-block; vertical-align: top;
                 > a{display: block; padding: theme('padding.3') theme('padding.6'); position: relative;
-                    &:not(.btn):hover{color: theme('colors.primary');}
+                    &:not(.btn):hover{ color: theme('color.primary');}
                 }
                 
                 
@@ -27,7 +25,7 @@ $nav: "nav";
        
             .#{$nav}{
                 &__dropdown{
-                    & > a{padding-#{theme('direction.right','value')}:theme('padding.10');}
+                    & > a{padding-#{theme('direction.right','value')}: theme('padding.10');}
                 }
             }
        
@@ -100,24 +98,23 @@ $nav: "nav";
                 }
 
                 @media(min-width: 1199px){
-                    &:hover{background-color:theme('colors.primary');
-                        & .svg-icon{fill:theme('colors.white');}
+                    &:hover{background-color:theme('color.primary');
+                        & .svg-icon{fill:theme('color.white');}
                     }
                 }
 
                .count {
                     position: absolute;
-                    
                     #{theme('direction.right','value')}:-0.9rem;
                     top: -0.3rem;
                     padding:0.15rem;
                     border-radius: theme('radius.round');
-                    background:theme('colors.primary');
+                    background:theme('color.primary');
                     font-size: 11px;
-                    color:theme('colors.white');
+                    color:theme('color.white');
                     min-width: 1.5rem;
                     text-align: center;
-                    line-height: normal; min-width:1.9rem; border: 2px solid theme('colors.white');
+                    line-height: normal; min-width:1.9rem; border: 2px solid theme('color.white');
                 }
 
         }
@@ -127,7 +124,7 @@ $nav: "nav";
                 margin-#{theme('direction.left','value')}:theme('margin.6');
             }
        
-            & > a{padding-top: 0!important;padding-bottom: 0!important;padding-#{theme('direction.left','value')}: 0!important;}
+            & > a{padding-top: 0!important;padding-bottom: 0!important; padding-#{theme('direction.left','value')}: 0!important;}
             
             
         }
@@ -148,7 +145,7 @@ $nav: "nav";
         > ul{
             > li{
                 > a{padding:theme('padding.3'); display: block;
-                    &:hover{background-color: rgba(0,0,0,0.05); color:theme('colors.primary');}
+                    &:hover{background-color: rgba(0,0,0,0.05); color:theme('color.primary');}
                 }
             }
         }
@@ -162,90 +159,8 @@ $nav: "nav";
 
 
 
-@media (max-width: 1200px) {
 
-    .nav.nav--primary-offset {
-        bottom: 0;
-        background: #fff;
-        padding: 0;
-       
-        #{theme('direction.left','value')}:0;
-        margin: 0;
-        overflow: auto;
-        position: fixed;
-        top: 0;
-        transform: translate3d(-100%, 0px, 0px);
-        -webkit-transform: translate3d(-100%, 0px, 0px);
-        -ms-transform: translate3d(-100%, 0px, 0px);
-        transition: all 300ms ease 0s;
-        -webkit-transition: all 300ms ease 0s;
-        -ms-transition: all 300ms ease 0s;
-        opacity: 0;
-        visibility: hidden;
-        z-index: 11;
-        width: 280px;
-    }
-
-    .nav.nav--primary > ul > li.nav__dropdown.is-active .nav__dropdown-target,
-    .nav.nav--primary > ul > li.nav__dropdown:hover .nav__dropdown-target {
-        visibility: visible;
-        top: 100%;
-        opacity: 1;
-        filter: alpha(opacity=100);
-    }
-
-    .nav.nav--primary > ul > li.nav__dropdown.nav__dropdown--account .nav__dropdown-target {
-        #{theme('direction.left','value')}:auto;
-        #{theme('direction.right','value')}:0;}
-
-
-
-    html.show-nav-js .nav.nav--primary-offset {
-        opacity: 1;
-        transform: translate3d(0px, 0px, 0px);
-        -webkit-transform: translate3d(0px, 0px, 0px);
-        -ms-transform: translate3d(0px, 0px, 0px);
-        visibility: visible;
-    }
-
-    html.show-nav-js{
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-    }
-
-    html.show-nav-js .overlay--nav {
-        display: block;
-    }
-
-
-    .nav.nav--primary-offset > ul > li .nav__dropdown-target {
-        min-width: 100%;
-        position: relative;
-        box-shadow: none;
-        border-top: 1px solid #eee;
-        top: auto;
-        right: auto;
-    }
-
-    .nav__dropdown-target {
-        opacity: 1;
-        visibility: visible;
-        display: none;
-        padding: 10px;
-        top: 45px;
-        right: 0;
-        left: auto;
-    }
-
-
-
-}
-
-
-@media (min-width:1200px) {
+    @media (min-width: theme('breakpoints.lg','value')) {
 
     .nav__dropdown-target .menu-vertical {
         display: none;
@@ -273,7 +188,7 @@ $nav: "nav";
 
 
 
-@media (max-width:1199px) {
+@media (max-width: theme('breakpoints.lg','value')) {
     .nav__dropdown-target {
         min-width: 250px;
     }
@@ -362,7 +277,8 @@ $nav: "nav";
 
 }
 
-@media(max-width:767px){
+@media (max-width: theme('breakpoints.md','value')) {
+
   
     .nav.nav--actions > ul > li > a {
         width: 40px;

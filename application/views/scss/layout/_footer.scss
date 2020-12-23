@@ -1,8 +1,8 @@
 
-
+.footer-bottom{background-color: theme('color.black'); color: theme('color.white');}
 .footer h5 {
-    font-weight: 400;
-    font-size: 1.132rem;
+    font-weight:600;
+
     margin: 0 0 30px 0;
     text-transform: uppercase;
 }
@@ -16,16 +16,16 @@
 }
 
 .links--vertical li a {
-    color: #fff;
+
     display: block;
-    font-size: 0.96rem;
-    font-weight: 400;
+    font-size:1rem;
+
     display: flex;
     line-height: 1.5;
 }
 
 .links--vertical li a img {
-    margin-right: 10px;
+    margin-#{theme('direction.right','value')}: 10px;
 }
 
 /*Social Links[*/
@@ -35,7 +35,7 @@
 
 .social-links ul {
     display: flex;
-    margin-left: -5px;
+    margin-#{theme('direction.left','value')}: -5px;
 }
 
 .social-links li {
@@ -61,9 +61,7 @@
     margin: auto;
 }
 
-.social-links li a:hover {
-    border-color: var(--color-main)
-}
+
 
 /*Social Links]*/
 
@@ -79,7 +77,7 @@
 
 .settings-group a img {
     display: inline-block;
-    margin-right: 5px;
+    margin-#{theme('direction.right','value')}: 5px;
 }
 
 .settings .settings__target {
@@ -92,14 +90,13 @@
 
 .settings-group .btn.btn--bordered {
     background: transparent;
-    color: #fff;
     border-color: rgba(255, 255, 255, 0.2);
     font-size: 0.857rem;
     font-weight: 400;
     padding: 0 20px;
     line-height: 33px;
     height: 35px;
-    text-align: left;
+
 }
 
 .settings-group .settings:last-child .btn.btn--bordered {
@@ -110,7 +107,7 @@
 
 /*Footer Form[*/
 .footer-head {
-    background: var(--color-grey-light);
+    background: theme('color.gray.100');
 }
 
 .footer-subscribe {
@@ -148,7 +145,7 @@
 
 .footer-inline li a,
 .footer-inline li p {
-    color: #fff;
+
     font-size: 0.857rem;
     font-weight: 400;
 }
@@ -162,11 +159,6 @@
     border-color: rgba(255, 255, 255, 0.1)
 }
 
-.footer-inline li a:hover,
-.links--vertical li a:hover {
-    color: var(--color-main)
-}
-
 .footer .settings .settings__target {
     z-index: 99;
 }
@@ -175,7 +167,7 @@
 
 .links--vertical.footer_contact_details li {
     font-size: 0.857rem !important;
-    color: #fff !important;
+
     display: flex;
     line-height: 1.5;
 
@@ -186,29 +178,7 @@
 }
 
 
-/*Footer Inline]*/
 
-@media (min-width: 767px) {
-    .footer h5 {
-        pointer-events: none;
-    }
-
-    .footer-bottom .toggle__target {
-        display: block !important;
-    }
-}
-
-@media (min-width: 1200px) {
-
-    .btn.btn--bordered:focus,
-    .btn.btn--bordered:active {}
-
-    .btn.btn--secondary:hover {
-        background: var(--color-black);
-        border-color: var(--color-black);
-        color: var(--color-light);
-    }
-}
 
 @media (max-width: 1200px) {
     .footer-subscribe {
@@ -252,7 +222,7 @@
 .links--vertical.footer_contact_details li {
 
     font-size: 0.96rem !important;
-    color: #fff !important;
+
 }
 
     .-hide-mobile {
@@ -274,7 +244,7 @@
     }
 
     .header__actionList .user-click .user-icon svg {
-        fill: #fff;
+        fill: currentColor;
         width: 20px;
     }
 
@@ -311,8 +281,8 @@
         font-size: 1.1em;
         text-transform: uppercase;
         padding: 15px 10px 15px 15px !important;
-        color: #fff;
-        background: var(--color-black);
+
+        background:theme('color.black');
         height: auto;
         line-height: normal;
         font-weight: 400;
@@ -327,8 +297,8 @@
     }
 
     .settings-group .btn.btn--bordered-inverse {
-        background: var(--color-black);
-        color: #fff;
+        background:theme('color.black');
+
         text-align: left;
         font-weight: 600;
         text-transform: uppercase;
@@ -340,7 +310,7 @@
     .footer .toggle__trigger:before,
     .settings-group .btn.btn--bordered-inverse:before {
         position: absolute;
-        right: 15px;
+        #{theme('direction.right','value')}: 15px;
         top: 18px;
         width: 10px;
         height: 10px;
@@ -368,7 +338,7 @@
     .settings .settings__target {
         position: relative;
         background: none;
-        color: #fff;
+
     }
 
     .footer-bottom {
@@ -381,32 +351,19 @@
         padding-right: 0;
     }
 
-    .links--vertical li a, .links--vertical.footer_contact_details li {
-        color: var(--color-dark)!important;
-    }
+
 
     .links--vertical li:first-child {
         margin-top: 0;
     }
 
-    .social-links li a {
-        background: var(--color-main);
-    }
+
 
     .social-links {
         margin-bottom: 0;
     }
 
-    .footer-inline {
-        background: var(--color-grey-light);
-        padding-top: 0;
-        padding: 10px;
-    }
 
-    .footer-inline li a,
-    .footer-inline li p {
-        color: var(--color-dark)
-    }
 
     .footer-inline li {
         margin: 0 15px;

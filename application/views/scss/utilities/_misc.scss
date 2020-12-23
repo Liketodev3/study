@@ -522,7 +522,7 @@ img {
 .arrow-link {
     position: relative;
     font-weight: 600;
-    padding-right: 20px;
+    padding-#{theme('direction.right','value')}: 20px;
     display: inline-block;
 }
 
@@ -530,11 +530,11 @@ img {
 .arrow-link:after {
     content: "";
     position: absolute;
-    right: 5px;
+    #{theme('direction.right','value')}: 5px;
     top: 5px;
     width: 8px;
     height: 8px;
-    border-left: 2px solid currentColor;
+    border-#{theme('direction.left','value')}: 2px solid currentColor;
     border-bottom: 2px solid currentColor;
     -moz-transform: rotate(-135deg);
     -webkit-transform: rotate(-135deg);
@@ -549,7 +549,7 @@ img {
 
 
 .arrow-link:hover:after {
-    right: 0;
+    #{theme('direction.right','value')}: 0;
 }
 
 
@@ -581,18 +581,18 @@ img {
 }
 
 .readMore {
-    float: right;
+    float: #{theme('direction.right','value')};
 }
 
 
 
 .messageCheckbox {
-    text-align: right;
+    text-align: #{theme('direction.right','value')};
     margin-top: 15px;
 }
 
 .text-right {
-    text-align: right;
+    text-align: #{theme('direction.right','value')};
 }
 
 

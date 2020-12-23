@@ -8,7 +8,8 @@
     }
 
     .section-action-wrap {
-        padding: 0 0 30px;
+         padding-#{theme('direction.left','value')}: 30px;
+      
     }
 }
 
@@ -61,7 +62,7 @@
 
 .web-class-card .price-value {
     font-weight: 600;
-    color: var(--color-secondary);
+    color:theme('color.secondary');
     font-size: 1.3rem;
     margin-top: 10px;
     display: block;

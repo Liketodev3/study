@@ -1,4 +1,95 @@
 
+
+.list-container {
+    position: relative;
+}
+
+.list-container .list-container__body {
+    max-height: 500px;
+    overflow: auto;
+}
+
+.list-container .list-container__head {
+    position: relative;
+    padding: 10px;
+    color: #000;
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.list-container .list {
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    padding: 10px;
+    margin: 0;
+}
+
+.list-container .list:last-child {
+    border-bottom: none;
+}
+
+.list-container .list:after {
+    display: block;
+    clear: both;
+    content: "";
+}
+
+.list-container .list .list__action {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: block;
+}
+
+.list-container .list .list__action:hover {
+    background: rgba(131, 55, 230, 0.05);
+}
+
+.list-container .list p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.list-container .list h6 {
+    font-size: 1.1rem;
+    padding: 0;
+    margin: 0 0 5px;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.list-container .list__media {
+    width: 35px;
+    float: left;
+}
+
+.list-container .list__content {
+    width: calc(100% - 35px);
+    float: left;
+    padding: 0 0 0 15px;
+}
+
+.list-container .message-display {
+    padding: 10px 0;
+}
+
+.list-container .message-display .message-display__icon {
+    width: 80px;
+    height: 80px;
+}
+
+
+
+
 .window {
     background: #fff;
     position: relative;

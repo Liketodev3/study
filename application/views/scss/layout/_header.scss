@@ -1,53 +1,47 @@
 
-/*========================HEADER============================*/
-.header {
-    padding: theme('padding.5') 0;
+//
+//HEADER
+//
+$header: "header";
+
+.#{$header}{
+    padding: theme('padding.3') 0;
     position: sticky;
     left: 0;
     right: 0;
     top: 0;
     z-index: 10;
-    color: theme('colors.black');
-    background: theme('colors.white');;
+    color: theme('color.black');
+    background: theme('color.white');
     -webkit-transition: 0.3s all ease-in-out;
     -moz-transition: 0.3s all ease-in-out;
     -o-transition: 0.3s all ease-in-out;
     transition: 0.3s all ease-in-out;
     box-shadow:theme('boxShadow.vertical');
-}
 
-.header__logo {
-    margin: 0 20px 0 0;
-    width: 135px;
-    position: relative;
-}
-
-.header__logo img {
-    /* position: absolute;*/
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-}
+    &__left{display: flex; align-items: center;}
 
 
+    &__logo{
+        margin-#{theme('direction.right','value')}: theme('margin.5');
+        width: 150px;
+        height: 60px;
+        position: relative; display: flex!important; align-items: center;
+    }
 
-.header__actions {
-    -webkit-box-ordinal-group: 3;
-    -ms-flex-order: 2;
-    order: 2;
-    white-space: nowrap;
-    margin: 0;
+    &__actions{
+        -webkit-box-ordinal-group: 3;
+        -ms-flex-order: 2;
+        order: 2;
+        white-space: nowrap;
+        margin: 0;
+    }
+
 }
 
 
 .btn .svg-icon.user-icon{display: none;}
 
-@media(min-width:1199px){
-    .header.is-fixed .nav.nav--primary > ul > li.nav__dropdown > a:hover {
-        border-color: transparent;
-    }
-}
+
 
 

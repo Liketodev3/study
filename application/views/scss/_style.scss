@@ -1,15 +1,18 @@
+
 // FONTS
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700,900&display=swap');
 
 
-// THEMES
-@import "themes/functions";
-@import "themes/vars";
+// CONFIG
+
+@import "config/functions";
+@import "config/vars";
+@import "config/direction-ltr";
+@import "config/direction-rtl";
+@import 'config/root';
+@import 'config/reset';
 
 
-// BASE
-@import 'base/reset';
-@import 'base/root';
 
 
 // UTILITIES
@@ -56,25 +59,21 @@
 @import 'components/system_messages';
 
 
-// CONFIG
-@import "config-directions/direction-ltr";
-@import "config-directions/direction-rtl";
-
 
 // PLUGINS
-@import "plugins/bootstrap";
-@import "plugins/cropper";
-@import "plugins/facebox";
-@import "plugins/fullcalendar.min";
-@import "plugins/ion.rangeSlider";
-@import "plugins/jquery-confirm.min";
-@import "plugins/jquery-ui-timepicker-addon";
-@import "plugins/jquery-ui";
-@import "plugins/jquery.countdownTimer";
-@import "plugins/jquery.tagsinput.min";
-@import "plugins/slick";
-@import "plugins/star-rating";
-@import "plugins/zdeveloper-common";
+@import "vendors/bootstrap-grid";
+@import "vendors/cropper";
+@import "vendors/facebox";
+@import "vendors/fullcalendar.min";
+@import "vendors/ion.rangeSlider";
+@import "vendors/jquery-confirm.min";
+@import "vendors/jquery-ui-timepicker-addon";
+@import "vendors/jquery-ui";
+@import "vendors/jquery.countdownTimer";
+@import "vendors/jquery.tagsinput.min";
+@import "vendors/slick";
+@import "vendors/star-rating";
+@import "vendors/zdeveloper-common";
 
 
 // LAYOUTS

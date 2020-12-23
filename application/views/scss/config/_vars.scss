@@ -1,3 +1,6 @@
+
+
+
 @function palette($color){
     $palette: ();
     @for $i from 1 through 10{
@@ -79,7 +82,7 @@
     ),
     'font':(
       'family': (
-        'base': ('Open Sans'),
+        'base': ('Open Sans')
 
       ),
       'weight': (
@@ -107,7 +110,7 @@
 
     ),
     
-    'colors':  (
+    'color':  (
       'primary': #e84c3d,
       'primary-inverse': #fff,
 
