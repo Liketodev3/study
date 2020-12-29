@@ -1,5 +1,17 @@
-for left/right labels
 
+
+align-right
 #{theme('direction.right','value')}
+
+align-right
+#{theme('direction.left','value')}
+
+for media queries
+theme('breakpoints.xxl','value')) - 1399.98px
+theme('breakpoints.xl','value')) - 1199.98px
+theme('breakpoints.lg','value')) - 991.98px
+theme('breakpoints.md','value')) - 767.98px
+theme('breakpoints.sm','value')) - 575.98px
+
 
 

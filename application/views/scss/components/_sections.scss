@@ -34,7 +34,7 @@
         margin-bottom: 30px;
     }
 
-    .section.section_course_card {}
+
 }
 
 @media (max-width: 992px) {
@@ -103,15 +103,6 @@
     margin: 0;
 }
 
-.is-landing .section p {
-    font-size: 1.1rem;
-    color: #666;
-}
-
-.is-landing .section p a {
-    color: inherit;
-}
-
 
 .section--content {
     padding: 0;
@@ -142,7 +133,7 @@
 .section--content h2 {
     font-weight: normal;
     margin-bottom: 30px;
-    color: var(--color-primary);
+    color:theme('color.primary');
 }
 
 .section--content .icon img {
@@ -195,7 +186,7 @@
 
 .section--hiw:before {
     background: #f3f2f5;
-    right: 0;
+    #{theme('direction.right','value')}: 0;
     width: 50%;
     top: 150px;
     bottom: 90px;
@@ -210,7 +201,7 @@
 
 .section--hiw .col__content:before {
     background: #f3f2f5;
-    left: -12%;
+    #{theme('direction.left','value')}: -12%;
     width: 50%;
     top: 0;
     bottom: 0;
@@ -249,7 +240,7 @@
 }
 
 .section--slider .quote__col-right {
-    padding: 0 100px 0 0;
+     padding-#{theme('direction.right','value')}: 100px;
 }
 
 .section--slider .caraousel--single {
@@ -263,7 +254,7 @@
 .section--slider .container--fixed:before {
     background: #f3f2f5;
     position: absolute;
-    right: 20px;
+    #{theme('direction.right','value')}: 20px;
     bottom: -30px;
     top: -30px;
     content: "";
@@ -273,7 +264,7 @@
 .section--slider .container--fixed:after {
     background: #f3f2f5;
     position: absolute;
-    right: 50%;
+    #{theme('direction.right','value')}: 50%;
     bottom: -30px;
     top: -30px;
     content: "";
@@ -315,7 +306,7 @@
 
 .section--icons .icon-col {
     margin: 50px 0 0 0;
-    padding-right: 40px;
+    padding-#{theme('direction.right','value')}: 40px;
 }
 
 .section--icons .icon-col .icon + h4 {
@@ -329,8 +320,8 @@
     position: relative;
     border: 1px solid #eaeaea;
     box-shadow: 3.536px 3.536px 8px 0px rgba(0, 0, 0, 0.08);
-    margin: 0 40px 20px 0;
-    float: left;
+    margin: 0 0 20px 0; margin-#{theme('direction.right','value')}: 40px;
+    float: #{theme('direction.left','value')};
 }
 
 .section--icons h2 {
@@ -405,11 +396,11 @@
     }
 
     .is-landing .section--gray [class*="col-"]:last-child {
-        padding-right: 150px;
+        padding-#{theme('direction.right','value')}: 150px;
     }
 
     .is-landing .section--gray [class*="col-"].col__content {
-        padding-right: 15px;
+        padding-#{theme('direction.right','value')}: 15px;
         /*pading changes done here*/
         /*Took default column padding*/
         /*To overwrite property of padding-right for home page tabs section, mentioned in above*/
@@ -487,8 +478,8 @@
 
 
     .section--content .row:nth-child(2n) .media-group .media.media--small {
-        left: auto;
-        right: 20px;
+        #{theme('direction.left','value')}: auto;
+        #{theme('direction.right','value')}: 20px;
     }
 
     .section--content .row {

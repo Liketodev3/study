@@ -21,11 +21,11 @@ class TeachersController extends MyAppController {
 		$this->_template->addJs('js/enscroll-0.6.2.min.js');
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
-		$this->_template->addCss('css/fullcalendar.min.css');
-		$this->_template->addCss('css/custom-full-calendar.css');
+		//$this->_template->addCss('css/fullcalendar.min.css');
+		//$this->_template->addCss('css/custom-full-calendar.css');
 		$this->_template->addJs('js/ion.rangeSlider.js');
-		$this->_template->addCss('css/ion.rangeSlider.css');
-		$this->_template->addCss('css/ion.rangeSlider.skinHTML5.css');
+		//$this->_template->addCss('css/ion.rangeSlider.css');
+		//$this->_template->addCss('css/ion.rangeSlider.skinHTML5.css');
 		$this->_template->render();
 	}
 

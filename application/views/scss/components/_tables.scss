@@ -3,27 +3,24 @@
 .table {
     width: 100%;
     border-spacing: 0;
-    font-size: 1.1rem
+    font-size: 1.1rem;text-align: #{theme('direction.left','value')}; color:theme('colors.gray.800');
 }
 
 .table th {
-    text-align: left;
     padding: 15px 10px;
     border-bottom: 2px solid #eee;
     font-weight: 600
 }
 
 .table td {
-    text-align: left;
     padding: 15px 10px;
     border-bottom: 1px solid #eee;
-    color: #666;
     vertical-align: middle
 }
 
 .table td:first-child,
 .table th:first-child {
-    padding-left: 0
+    padding-#{theme('direction.left','value')}: 0;
 }
 
 .table td:first-child.-style-bold {
@@ -33,7 +30,7 @@
 
 .table td:last-child,
 .table th:last-child {
-    padding-right: 0
+    padding-#{theme('direction.right','value')}: 0
 }
 
 
@@ -48,12 +45,12 @@
     display: table-cell;
     vertical-align: top;
     padding: 25px 15px;
-    border-right: 1px solid #e5e5e5;
+    border-#{theme('direction.right','value')}: 1px solid #e5e5e5;
     line-height: 1.4;
 }
 
 .tabled .tabled__cell:last-child {
-    border-right: none;
+    border-#{theme('direction.right','value')}: none;
 }
 
 .tabled .tabled__cell h3 {
@@ -67,7 +64,7 @@
     width: 100%;
     border-spacing: 0 20px;
     font-size: 1.1rem;
-    color: #333;
+    color:theme('colors.gray.800');
     border-collapse: separate;
 }
 
@@ -97,7 +94,7 @@
 }
 
 .table-listing td:first-child {
-    padding-left: 20px;
+    padding-#{theme('direction.left','value')}: 20px;
 }
 
 .table-listing td .avtar {
@@ -134,7 +131,7 @@
 }
 
 
-@media(min-width:1199px){
+@media(min-width:theme('breakpoints.xl','value')){
     .table-cols td:first-child {
         width: 25%;
     }
@@ -149,16 +146,16 @@
 
 }
 
-@media(min-width:767px) {
+@media(min-width:theme('breakpoints.xl','value')) {
 
 
     .table--cols.table td:first-child {
-        padding-left: 15px;
+        padding-#{theme('direction.left','value')}: 15px;
         width: 25%;
     }
 }
 
-@media(max-width:1599px) {
+@media(max-width:theme('breakpoints.xl','value')) {
     .table {
         font-size: 1rem
     }
@@ -166,7 +163,7 @@
 
 
 
-@media(max-width:1023px) {
+@media(max-width:theme('breakpoints.xl','value')) {
 
     .table-scroll {
         overflow: auto;
@@ -175,7 +172,7 @@
 }
 
 
-@media(max-width:767px){
+@media(max-width:theme('breakpoints.xl','value')){
     
     .table {
         font-size: 1.1rem
@@ -199,7 +196,7 @@
 
 }
 
-@media(max-width:400px) {
+@media(max-width:theme('breakpoints.xl','value')) {
     .table tr td .td__caption {
         width: 100%;
         padding-bottom: 3px

@@ -13,7 +13,7 @@
     padding: 3px 10px;
     max-width: 200px;
     position: absolute;
-    right: 0;
+    #{theme('direction.right','value')}: 0;
     bottom: 0;
     font-size: 0.85rem;
     line-height: 1.4;
@@ -30,7 +30,7 @@
 
 .tooltip .tooltip__content:before {
     position: absolute;
-    right: 15px;
+    #{theme('direction.right','value')}: 15px;
     bottom: -7px;
     content: "";
     border-left: 8px solid transparent;
@@ -45,33 +45,33 @@
 }
 
 .tooltip.tooltip--centered .tooltip__content {
-    right: auto;
-    left: 50%;
+    #{theme('direction.right','value')}: auto;
+    #{theme('direction.left','value')}: 50%;
     transform: translate(-50%, 0);
     -webkit-transform: translate(-50%, 0);
     -ms-transform: translate(-50%, 0);
 }
 
 .tooltip.tooltip--centered .tooltip__content:before {
-    right: auto;
-    left: 50%;
+    #{theme('direction.right','value')}: auto;
+    #{theme('direction.left','value')}: 50%;
     margin: 0 0 0 -8px;
 }
 
 .tooltip.tooltip--left .tooltip__content {
-    right: auto;
-    left: 0;
+    #{theme('direction.right','value')}: auto;
+    #{theme('direction.left','value')}: 0;
 }
 
 .tooltip.tooltip--left .tooltip__content:before {
-    right: auto;
-    left: 10px;
+    #{theme('direction.right','value')}: auto;
+    #{theme('direction.left','value')}: 10px;
 }
 
 .tooltip.tooltip--bottom .tooltip__content {
-    right: auto;
-    left: 50%;
-    margin: 0 0 0 -100px;
+    #{theme('direction.right','value')}: auto;
+    #{theme('direction.left','value')}: 50%;
+    margin-#{theme('direction.left','value')}: -100px;
     bottom: auto;
     top: 0;
 }
@@ -84,9 +84,9 @@
 }
 
 .tooltip.tooltip--bottom .tooltip__content:before {
-    right: auto;
-    left: 50%;
-    margin: 0 0 0 -8px;
+    #{theme('direction.right','value')}: auto;
+    #{theme('direction.left','value')}: 50%;
+    margin-#{theme('direction.left','value')}: -8px;
 }
 
 .tooltip.tooltip--bottom:hover .tooltip__content {

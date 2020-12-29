@@ -1,11 +1,7 @@
 
-
-
-/**************** Slider Edited ********************/
 .box {
     background: #fff;
     border-radius: 2px;
-    /*border: 1px solid #e5e5e5;*/
 }
 
 .box .box__head {
@@ -67,11 +63,11 @@
 }
 
 .box-list__head h3 {font-size: 1.4rem;
-    margin: 0 5px 0 0;
+ margin-#{theme('direction.right','value')}: 5px;
 }
 
 .box-list__head .ratings {
-    margin: 0 0 0 30px;
+    margin-#{theme('direction.left','value')}: 30px;
 }
 
 .box__description {
@@ -90,7 +86,7 @@
     height: 100%;
     width: 55%;
     position: absolute;
-    right: 0;
+    #{theme('direction.right','value')}: 0;
     top: 0;
     bottom: 0;
     background: #fff;
@@ -101,7 +97,7 @@
 
 
 .box__slip-data .btn {
-    margin: 20px 0 0 90px;
+    margin: 20px 0 0 0; margin-#{theme('direction.left','value')}: 90px;
 }
 
 .box-list.is-selected .box__content {
@@ -110,14 +106,14 @@
 }
 
 .box__tabs {
-    margin: 0 0 20px 0;
+     margin-#{theme('direction.right','value')}: 20px;
 }
 
 .box__tabs li {
     display: inline-block;
     position: relative;
     vertical-align: top;
-    margin: 0 20px 0 0;
+   margin-#{theme('direction.right','value')}: 20px;
 }
 
 .box__tabs li a {
@@ -167,7 +163,7 @@
 }
 
 .box__calender li .point.is-available {
-    background: var(--color-primary);
+    background:theme('color.primary');
 }
 
 

@@ -37,7 +37,7 @@
 
 .tabs-vertical ul li .counter {
     position: relative;
-    margin-right: 20px;
+    margin-#{theme('direction.right','value')}: 20px;
     z-index: 1;
 }
 
@@ -280,7 +280,7 @@
     font-weight: 700;
 }
 
-@media (max-width: 1199px) {
+@media (max-width: theme('breakpoints.xl','value')) {
 
     .tabs-vertical ul li .tab-info h3 {
         font-size: 1.3rem;
@@ -296,7 +296,7 @@
 
 }
 
-@media (max-width: 992px) {
+@media (max-width: theme('breakpoints.lg','value')) {
     .tabs-vertical {
         margin-bottom: 25px;
     }
@@ -314,7 +314,7 @@
 
 }
 
-@media (max-width: 767px) {
+@media (max-width: theme('breakpoints.md','value')) {
     .tabs-vertical ul {
         overflow: auto;
         white-space: nowrap;

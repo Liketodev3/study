@@ -18,18 +18,18 @@
 
 .form--processing:before {
     position: absolute;
-    left: 50%;
+    #{theme('direction.left','value')}: 50%;
     top: 50%;
     width: 50px;
     height: 50px;
-    margin: -25px 0 0 -25px;
+    margin: -25px 0 0 0; margin-#{theme('direction.left','value')}: -25px;
     z-index: 3;
     border-top: 3px solid rgba(0, 0, 0, 0.2);
     content: "";
     border-radius: 100%;
     border-right: 3px solid rgba(0, 0, 0, 0.2);
     border-bottom: 3px solid rgba(0, 0, 0, 0.2);
-    border-left: 3px solid #000;
+    border-#{theme('direction.left','value')}: 3px solid #000;
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);

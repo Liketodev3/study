@@ -5,7 +5,7 @@
 }
 
 .ratings .ratings__count {
-    margin-left: 10px;
+    margin-#{theme('direction.left','value')}: 10px;
 }
 
 .ratings h6 {

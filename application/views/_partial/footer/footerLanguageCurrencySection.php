@@ -5,7 +5,7 @@
 	<?php if($currencies && count($currencies) > 1){ ?>
 	
 	<div class="settings toggle-group">
-		<a href="javascript:void(0)" class="btn  btn--bordered btn--bordered-inverse btn--block btn--dropdown toggle__trigger-js is-active"><?php echo CommonHelper::getCurrencyCode();?></a>
+		<a href="javascript:void(0)" class="btn  btn--bordered btn--bordered-inverse btn--block btn--dropdown toggle__trigger-js"><?php echo CommonHelper::getCurrencyCode();?></a>
 		<div div-for="currency" class="settings__target -skin toggle__target-js">
 			<nav class="nav nav--vertical">
 				<ul>
@@ -20,7 +20,7 @@
 	<?php 
 	if( $languages && count($languages) > 1 ){ ?>
 	<div class="settings toggle-group">
-		<a href="javascript:void(0)" class="btn  btn--bordered btn--bordered-inverse btn--block btn--dropdown toggle__trigger-js is-active"> <?php echo $languages[$siteLangId]['language_name']; ?>  </a>
+		<a href="javascript:void(0)" class="btn  btn--bordered btn--bordered-inverse btn--block btn--dropdown toggle__trigger-js"> <?php echo $languages[$siteLangId]['language_name']; ?>  </a>
 		<div div-for="language" class="settings__target toggle__target-js -skin">
 		   <nav class="nav nav--vertical">
 				<ul>

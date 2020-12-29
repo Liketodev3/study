@@ -45,80 +45,74 @@
 
 .pagination li.is-prev a:before {
     position: absolute;
-    left: 50%;
+    #{theme('direction.left','value')}: 50%;
     top: 50%;
     content: "";
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
-    border-right: 5px solid #000;
-    margin: -5px 0 0 -5px
+    border-#{theme('direction.right','value')}: 5px solid #000;
+    margin: -5px 0 0 0; margin-#{theme('direction.left','value')}: -5px;
 }
 
 .pagination li.is-first a:before {
     position: absolute;
-    left: 50%;
+    #{theme('direction.left','value')}: 50%;
     top: 50%;
     content: "";
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
-    border-right: 5px solid #000;
-    margin: -5px 0 0 -1px
+    border-#{theme('direction.left','value')}: 5px solid #000;
+    margin: -5px 0 0 0; margin-#{theme('direction.left','value')}: -1px;
 }
 
 .pagination li.is-first a:after {
     position: absolute;
-    left: 50%;
+    #{theme('direction.left','value')}: 50%;
     top: 50%;
     content: "";
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
-    border-right: 5px solid #000;
+    border-#{theme('direction.right','value')}: 5px solid #000;
     margin: -5px 0 0 -6px
 }
 
 .pagination li.is-next a:before {
     position: absolute;
-    left: 50%;
+    #{theme('direction.left','value')}: 50%;
     top: 50%;
     content: "";
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
-    border-left: 5px solid #000;
-    margin: -5px 0 0 -3px
+    border-#{theme('direction.left','value')}: 5px solid #000;
+    margin: -5px 0 0 0; margin-#{theme('direction.left','value')}: -3px;
 }
 
-body[dir=rtl] .pagination li.is-next a:before {
-    right: 50%;
-    left: auto;
-    border-right: 5px solid #000;
-    border-left: 0
-}
 
 .pagination li.is-last a:before {
     position: absolute;
-    left: 50%;
+    #{theme('direction.left','value')}: 50%;
     top: 50%;
     content: "";
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
-    border-left: 5px solid #000;
-    margin: -5px 0 0 -1px
+    border-#{theme('direction.left','value')}: 5px solid #000;
+    margin: -5px 0 0 0; margin-#{theme('direction.left','value')}: -1px;
 }
 
 .pagination li.is-last a:after {
     position: absolute;
-    left: 50%;
+    #{theme('direction.left','value')}: 50%;
     top: 50%;
     content: "";
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
-    border-left: 5px solid #000;
-    margin: -5px 0 0 -6px
+    border-#{theme('direction.right','value')}: 5px solid #000;
+    margin: -5px 0 0 0; margin-left: -6px;
 }
 
 
 
-@media(max-width:767px){
+@media(max-width:theme('breakpoints.md','value')){
    
     .pagination li a {
         width: 38px

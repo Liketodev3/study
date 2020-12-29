@@ -28,7 +28,7 @@ input[name=teach_language_name].ui-autocomplete-loading {
   font-size:15px;
   margin: 0;
   display: inline-block;
-    margin-right: 5px;
+    margin-#{theme('direction.right','value')}: 5px;
   font-weight:600;
   color:var(--color-secondary);
 }
@@ -42,7 +42,7 @@ input[name=teach_language_name].ui-autocomplete-loading {
 .actions li {
     display: inline-block;
     vertical-align: top;
-    margin: 0 2px 4px 0;
+    margin: 0 0 4px 0; margin-#{theme('direction.right','value')}: 2px;
 }
 .actions li a {
     display: block;
@@ -79,7 +79,7 @@ input[name=teach_language_name].ui-autocomplete-loading {
     width:180px;
 }
 .progress-bar {
-    float: left;
+    float: #{theme('direction.left','value')};
     width: 0%;
     height: 100%;
     font-size: 12px;
@@ -110,7 +110,7 @@ input[name=teach_language_name].ui-autocomplete-loading {
 	display:inline-block;
 	font-size: 13px;
 	font-weight: 800;
-	padding-left:10px;
+	padding-#{theme('direction.left','value')}:10px;
 	color:#333;
 }
 
@@ -128,15 +128,15 @@ small.transaction-fee{
 .btn.disabled {
   cursor: not-allowed;
 }
-.div_info li a{text-decoration: underline; color:var(--color-primary); cursor: pointer;}
-a.view-teacher-link{margin-right:35px;}
+.div_info li a{text-decoration: underline; color:theme('colors.primary'); cursor: pointer;}
+a.view-teacher-link{margin-#{theme('direction.right','value')}:35px;}
 .-link-close.-top{top:17px;}
 @media screen and (max-width:767px){
   a.view-teacher-link {
-    margin-right: 45px;
+    margin-#{theme('direction.right','value')}: 45px;
   }
-  .-link-close.-top{right:0px;}
-  .message-head{padding-left:30px;}
+  .-link-close.-top{#{theme('direction.right','value')}:0px;}
+  .message-head{padding-#{theme('direction.left','value')}:30px;}
 }
 
 .iss_accordion {
@@ -145,7 +145,7 @@ a.view-teacher-link{margin-right:35px;}
   cursor: pointer;
   padding: 18px;
   width: 100%;
-  text-align: left;
+  text-align: #{theme('direction.left','value')};
   border: none;
   outline: none;
   transition: 0.4s;
@@ -292,7 +292,7 @@ ul.list-accordion li .iss_accordion{ padding-left: 40px;}
   font-weight: 600;
   font-size: 1.2rem;
   font-weight: 600;
-  margin: 0 10px 0 0;
+  margin-#{theme('direction.right','value')}: 10px;
   -webkit-transition: 0.3s all ease-in-out;
   -moz-transition: 0.3s all ease-in-out;
   -o-transition: 0.3s all ease-in-out;

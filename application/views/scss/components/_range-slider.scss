@@ -18,7 +18,7 @@
 
 .range .ui-slider-horizontal .ui-slider-handle {
     border-radius: 100%;
-    margin-left: -0.6em;
+    margin-#{theme('direction.left','value')}: -0.6em;
     top: -0.6rem;
     background: #fff;
     color: #555555;
@@ -53,12 +53,12 @@
 }
 
 .slide__fields li input {
-    padding-left: 40px;
+    padding-#{theme('direction.left','value')}: 40px;
 }
 
 .slide__fields li .rsText {
     position: absolute;
-    left: 17px;
+    #{theme('direction.left','value')}: 17px;
     top: 0;
     bottom: 0;
     line-height: 50px;

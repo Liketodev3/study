@@ -25,53 +25,46 @@
 
 .form-filters .form__element {
     width: 50%;
-    float: left;
+    float: #{theme('direction.left','value')};
 }
 
 .form-filters .form__element:first-child input {
-    border-right: none;
+    border-#{theme('direction.right','value')}: none;
 }
 
 .form-filters .form__element:after {
     position: absolute;
-    right: 24px;
+    #{theme('direction.right','value')}: 24px;
     top: 28px;
     content: "";
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
+    border-#{theme('direction.left','value')}: 5px solid transparent;
+    border-#{theme('direction.right','value')}: 5px solid transparent;
     border-top: 6px solid #333;
     pointer-events: none;
 }
 
-body[dir="rtl"] .form-filters .form__element:after {
-    left: 24px;
-    right: auto;
-}
+
 
 .form-filters .form__element .svg-icon {
     width: 20px;
     height: 20px;
     position: absolute;
     overflow: hidden;
-    left: 24px;
+    #{theme('direction.left','value')}: 24px;
     top: 22px;
 }
 
-body[dir="rtl"] .form-filters .form__element .svg-icon {
-    right: 24px;
-    left: auto;
-}
 
 .form__element .form__input {
     border-radius: 0;
     box-shadow: none;
     height: 60px;
-    padding-right: 50px;
+    padding-#{theme('direction.right','value')}: 50px;
     line-height: 60px;
 }
 
 .form-filters .form__element .form__input {
-    padding-left: 50px;
+    padding-#{theme('direction.left','value')}: 50px;
 	    cursor: default;
 }
 
@@ -79,7 +72,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     width: 100%;
     height: 100%;
     position: absolute;
-    right: 0;
+    #{theme('direction.right','value')}: 0;
     top: 0;
     background: none;
     border: none;
@@ -88,13 +81,13 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 
 .form-search .form__action-wrap {
     position: absolute;
-    right: 0;
+    #{theme('direction.right','value')}: 0;
     top: 0;
     width: 40px;
     height: 50px;
 }
 .form-search--inline .keyword-search {
-    padding: 0 40px 0 20px;
+    padding-#{theme('direction.left','value')}:20px; padding-#{theme('direction.right','value')}: 40px;
 }
 .form-search .form__action-wrap .svg-icon {
     position: absolute;
@@ -151,7 +144,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     position: relative;
     background: #e9e8eb;
     border-radius: 3px;
-    padding: 0 45px 0 20px;
+    padding-#{theme('direction.left','value')}: 20px; padding-#{theme('direction.right','value')}: 45px;
 }
 
 .tag-list li a.tag__clickable:after {
@@ -161,7 +154,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     background: #fff;
     content: "+";
     position: absolute;
-    right: 12px;
+    #{theme('direction.right','value')}: 12px;
     top: 10px;
     line-height: 19px;
     text-align: center;
@@ -193,19 +186,19 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 .box-language .language span,
 .border-box .language span,
 .my_teacher_langauges .language span {
-    float: left;
+    float: #{theme('direction.left','value')};
     line-height: 24px;
     margin: 0px 3px;
     position: relative;
-    font-size: 0.9rem;
+  
 }
 
 .my_teacher_langauges .language span:first-child {
-    margin-left: 0;
+    margin-#{theme('direction.left','value')}: 0;
 }
 
 .my_teacher_langauges .language ul li span.plus {
-    margin-left: 5px;
+    margin-#{theme('direction.left','value')}: 5px;
 }
 
 .box-language .language span.main-language:after {
@@ -220,7 +213,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 .box-language .language ul,
 .border-box .language ul,
 .my_teacher_langauges .language ul {
-    margin-left: 0px;
+    margin-#{theme('direction.right','value')}: 0px;
 }
 
 .box-language .language .more_listing ul:after,
@@ -235,7 +228,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     content: " ";
     position: absolute;
     top: -7px;
-    right: 11px;
+    #{theme('direction.right','value')}: 11px;
 }
 
 
@@ -254,7 +247,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     font-weight: 600;
     color: #fff;
     font-size: 16px;
-    float: left;
+    float: #{theme('direction.left','value')};
     cursor: pointer;
     height: 24px;
     position: relative;
@@ -270,7 +263,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     font-weight: 600;
     color: #fff;
     font-size: 16px;
-    float: left;
+    float: #{theme('direction.left','value')};
     cursor: pointer;
     height: 32px;
     position: relative;
@@ -285,7 +278,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     display: none;
     width: 150px;
     position: absolute;
-    left: 0px;
+    #{theme('direction.left','value')}: 0px;
     padding-top: 35px;
 }
 
@@ -315,26 +308,6 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     padding: 5px 7px;
 }
 
-.border-box .language span {
-    background: var(--color-grey-light);
-    padding: 3px 6px;
-    font-size: 0.857rem;
-    color: var(--color-dark);
-    margin: 0 5px;
-}
-
-.border-box .box-body .tags .language li {
-    background: transparent;
-    padding: 0px;
-    color: var(--color-dark);
-    margin: 0px;
-}
-
-.border-box .language .more_listing {
-    padding-top: 45px;
-}
-
-
 .my_teacher_lang_heading {
     display: inline;
 }
@@ -343,9 +316,25 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     word-break: break-all;
 }
 
+.grid-group {
+    margin-#{theme('direction.left','value')}: -10px;
+ }
+ 
+ .grid-group .grid {
+     display: inline-block;
+     padding-bottom:20px; padding-#{theme('direction.left','value')}: 10px;
+     vertical-align: top;
+ }
+ 
+ .grid-group .grid span {
+     background: #f9f5ff;
+     padding:5px 15px;
+     display: block;
+     border-radius: 2px; line-height: 1.5; font-size: 0.9rem;
+ }
 
 
-@media(min-width:1199px){
+@media(min-width:theme('breakpoints.xl','value')){
     
     #left__fixed.stick {
         position: fixed;
@@ -353,7 +342,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     }
 }
 
-@media(max-width:1199px){
+@media(max-width:theme('breakpoints.xl','value')){
     
 
     .tag-list li a {
@@ -363,20 +352,20 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 
     .tag-list li a.tag__clickable:after {
         top: 5px;
-        right: 5px;
+        #{theme('direction.right','value')}: 5px;
     }
 
     .form-filters .form__element .svg-icon {
-        left: 15px;
+        #{theme('direction.left','value')}: 15px;
     }
 
     .form-filters .form__element:after {
-        right: 14px;
+        #{theme('direction.right','value')}: 14px;
     }
 
     .form-filters .form__element .form__input {
-        padding-left: 40px;
-        padding-right: 30px;
+        padding-#{theme('direction.left','value')}: 40px;
+        padding-#{theme('direction.right','value')}: 30px;
     }
 
     .section--listing,
@@ -393,11 +382,11 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
         background: #fff;
         padding: 0;
         box-shadow: 0 0 10px rgba(51, 51, 51, 0.38);
-        left: 0;
+        #{theme('direction.left','value')}: 0;
         margin: 0;
         overflow: auto;
         position: fixed;
-        text-align: left;
+        text-align: #{theme('direction.left','value')};
         top: 0;
         transform: translate3d(-100%, 0px, 0px);
         -webkit-transform: translate3d(-100%, 0px, 0px);
@@ -455,7 +444,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 
     .box__slip {
         width: 100%;
-        text-align: left;
+        text-align: #{theme('direction.left','value')};
         z-index: 1;
     }
 
@@ -473,11 +462,11 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
     }
 
     .form-filters .form__element:first-child input {
-        border-right: 1px solid #e5e5e5;
+        border-#{theme('direction.right','value')}: 1px solid #e5e5e5;
     }
 
     .form-filters .form__element:after {
-        right: 26px;
+        #{theme('direction.right','value')}: 26px;
     }
 
     

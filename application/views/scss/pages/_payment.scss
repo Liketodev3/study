@@ -18,7 +18,8 @@
 	position: relative;
 
 }
-.logo-payment {max-width:200px;
+.logo-payment {
+    max-width:200px;
 	text-align: center;
 	margin: 25px auto;
 }
@@ -36,7 +37,7 @@
 	padding:30px;
 }
 .payment-from .siteForm label {
-	text-align: left;
+	text-align: #{theme('direction.left','value')};
 	display: block;
 }
 .payment-from .siteForm input.type-bg {
@@ -44,28 +45,28 @@
 }
 .payment-from .field {
 	margin-bottom: 15px;
-	text-align: left;
+	text-align: #{theme('direction.left','value')};
 }
 .cvv {
-	float: left
+	float: #{theme('direction.left','value')}
 }
 .ccExpiryMonth, .ccExpiryYear {
-	float: left;
+	float: #{theme('direction.left','value')};
 }
 .expiry-wrapper, .ccCvvWrapper {
-	float: left;
+	float: #{theme('direction.left','value')};
 }
 .ccExpiryYear {
-	margin-left: 20px;
+	margin-#{theme('direction.left','value')}: 20px;
 }
 .ccCvvWrapper {
 	width: 205px;
-	margin-left: 50px;
+	margin-#{theme('direction.left','value')}: 50px;
 }
 .payment-from .siteForm input.ccCvvBox {
 	width: 119px;
 	margin-right: 10px;
-	float: left;
+	float: #{theme('direction.left','value')};
 }
 .total-pay {
 	margin-bottom: 10px;
@@ -100,7 +101,7 @@
 .label-select {
     display: block;
     width: 100%;
-    padding: 20px 20px 20px 60px;
+    padding: 20px; padding-#{theme('direction.left','value')}: 60px;
     background: #e9e8eb;
     position: relative;
     margin: 0 0;
@@ -115,7 +116,7 @@
 .label-select .checkbox,
 .label-select .radio {
     position: absolute;
-    left: 25px;
+    #{theme('direction.left','value')}: 25px;
     top: 20px;
 }
 
@@ -137,7 +138,7 @@
 }
 
 .listing-cell ul li {
-    padding: 0 20px 0 0;
+    padding-#{theme('direction.right','value')}:20px;
     flex-grow: 1;
 }
 
@@ -189,19 +190,19 @@
     width: 100%;
 }
 
-@media(max-width:767px){
+@media(max-width:theme('breakpoints.md','value')){
     
     .label-select {
         padding: 15px 15px 15px 15px;
     }
 
     .label-select label h6 {
-        padding: 0 0 0 30px;
+        padding-#{theme('direction.left','value')}:30px;
     }
 
     .label-select .checkbox,
     .label-select .radio {
-        left: 15px;
+        #{theme('direction.left','value')}: 15px;
         top: 12px;
     }
 

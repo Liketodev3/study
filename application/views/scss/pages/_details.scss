@@ -26,7 +26,7 @@
 
 .video .video__enlarge {
     position: absolute;
-    right: 10px;
+    #{theme('direction.right','value')}: 10px;
     bottom: 10px;
     width: 40px;
     height: 40px;
@@ -92,15 +92,14 @@
 }
 
 .box__profile-head .location {
-    position: relative;
-    padding: 0 0 0 20px;
+    position: relative;padding-#{theme('direction.left','value')}: 20px;
     color: #888;
     margin: 5px 0 0;
 }
 
 .box__profile-head .location .svg-icon {
     position: absolute;
-    left: 0;
+    #{theme('direction.left','value')}: 0;
     top: 0;
     width: 20px;
     height: 20px;
@@ -112,7 +111,7 @@
     padding: 10px 20px;
     background: #f3f2f5;
     margin: 10px 0;
-    text-align: left;
+    text-align: #{theme('direction.left','value')};
 }
 
 
@@ -148,7 +147,7 @@
 
 .tick-listing.tick-listing--onehalf li {
     width: 50%;
-    margin-right: -4px;
+    margin-#{theme('direction.right','value')}: -4px;
     display: inline-block;
     vertical-align: top;
 }
@@ -156,12 +155,12 @@
 .tick-listing li:before {
     width: 10px;
     height: 6px;
-    border-left: 2px solid #ddd;
+    border-#{theme('direction.left','value')}: 2px solid #ddd;
     border-bottom: 2px solid #ddd;
     content: "";
     transform: rotate(-45deg);
     position: absolute;
-    left: 0;
+    #{theme('direction.left','value')}: 0;
     top: 4px;
 }
 
@@ -170,7 +169,7 @@
 .content-repeated [class*="col-"]:last-child {
     border-bottom: 1px solid #ebebeb;
     padding-bottom: 15px;
-    padding-left: 0;
+    padding-#{theme('direction.left','value')}: 0;
     margin-bottom: 20px;
 }
 
@@ -192,8 +191,8 @@
 }
 
 .content-repeated .avtar {
-    float: left;
-    margin: 0 15px 0 0;
+    float: #{theme('direction.left','value')};
+    margin-#{theme('direction.right','value')}: 15px;
 }
 
 .content-repeated .avtar + h6 {
@@ -212,7 +211,7 @@
 .select-box .select-box__value {
     position: relative;
     display: block;
-    padding: 10px 40px 10px 15px;
+    padding: 10px 15px; padding-#{theme('direction.right','value')}: 40px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 2px;
     font-size: 1.15rem;
@@ -223,7 +222,7 @@
 
 .select-box .select-box__value:after {
     position: absolute;
-    right: 15px;
+    #{theme('direction.right','value')}: 15px;
     top: 50%;
     content: "";
     border-left: 5px solid transparent;
@@ -245,14 +244,14 @@
     max-height: 350px;
     overflow: auto;
     position: absolute;
-    right: 0;
+    #{theme('direction.right','value')}: 0;
     z-index: 2;
     min-width: 200px;
     width: 100%;
 }
 
 .select-box .select-box__target .listing li {
-    text-align: left;
+    text-align: #{theme('direction.left','value')};
     margin: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
@@ -272,11 +271,11 @@
 .select-box.select-box--small {
     display: inline-block;
     vertical-align: middle;
-    margin: 0 0 0 20px;
+    margin-#{theme('direction.left','value')}: 20px;
 }
 
 .select-box.select-box--small .select-box__value {
-    padding: 0 40px 0 0;
+     padding-#{theme('direction.right','value')}: 40px;
     border-color: transparent;
     height: 30px;
     line-height: 28px;
@@ -299,9 +298,9 @@
 
 .select-box--up.select-box .select-box__target {
     bottom: 100%;
-    right: auto;
+    #{theme('direction.right','value')}: auto;
     width: auto;
-    left: 0;
+    #{theme('direction.left','value')}: 0;
     min-width: 250px;
 }
 
@@ -318,7 +317,7 @@
     
     .form .select-box .select-box__value {
         min-height: 50px;
-        padding: 16px 40px 12px 20px;
+        padding: 16px 20px 12px 20px; padding-#{theme('direction.right','value')}: 40px;
         box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.07);
     }
     
@@ -340,7 +339,7 @@
     }
     
     .direction {
-        margin: 0 0 0 30px;
+         margin-#{theme('direction.left','value')}: 30px;
     }
     
     .direction .direction__action {
@@ -362,30 +361,30 @@
         width: 8px;
         height: 8px;
         content: "";
-        border-left: 1px solid #333;
+        border-#{theme('direction.left','value')}: 1px solid #333;
         border-bottom: 1px solid #333;
         position: absolute;
-        left: 50%;
+        #{theme('direction.left','value')}: 50%;
         top: 50%;
         transform: rotate(45deg);
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);
-        margin: -4px 0 0 -3px;
+        margin: -4px 0 0 0; margin-#{theme('direction.left','value')}: -3px;
     }
     
     .direction .direction__action.direction__action-next:before {
         width: 8px;
         height: 8px;
         content: "";
-        border-right: 1px solid #333;
+        border-#{theme('direction.right','value')}: 1px solid #333;
         border-top: 1px solid #333;
         position: absolute;
-        left: 50%;
+        #{theme('direction.left','value')}: 50%;
         top: 50%;
         transform: rotate(45deg);
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);
-        margin: -4px 0 0 -5px;
+        margin: -4px 0 0 0; margin-#{theme('direction.left','value')}: -5px;
     }
     
 
@@ -397,12 +396,12 @@
     padding: 15px 20px 15px 20px;
     border-bottom: 1px solid #ddd;
     border-top: 1px solid #ddd;
-    text-align: left;
+    text-align: #{theme('direction.left','value')};
 }
 
 .table-total th:last-child,
 .table-total td:last-child {
-    text-align: right;
+    text-align: #{theme('direction.right','value')};
 }
 
 .table-total td {
@@ -434,7 +433,7 @@
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     font-size: 1.8rem;
-    margin: -2px 0 0 10px;
+    margin: -2px 0 0 0; margin-#{theme('direction.right','value')}: 10px;
 }
 
 .apply-coupon__target {
@@ -453,11 +452,13 @@
     text-transform: uppercase;
     display: block;
     width: 100%;
-    border-radius: 0 3px 3px 0;
+    border-top-#{theme('direction.right','value')}-radius: 3px;
+    border-bottom-#{theme('direction.right','value')}-radius: 3px;
 }
 
 .apply-coupon__target input[type="text"] {
-    border-radius: 3px 0 0 3px;
+    border-top-#{theme('direction.left','value')}-radius: 3px;
+    border-bottom-#{theme('direction.left','value')}-radius: 3px;
 }
 
 .applied-coupon {
@@ -495,10 +496,10 @@
 }
 
 
-@media(max-width:767px){
+@media(max-width:theme('breakpoints.md','value')){
     
     .content-repeated [class*="col-"]:last-child {
-        padding-left: 15px;
+        padding-#{theme('direction.left','value')}: 15px;
     }
 
     .content-repeated .avtar + h6 + p {
@@ -522,14 +523,14 @@
     }
 
     .box__head-trigger {
-        padding-right: 40px;
+        padding-#{theme('direction.right','value')}: 40px;
         cursor: pointer;
         position: relative;
     }
 
     .box__head-trigger:after {
         position: absolute;
-        right: 20px;
+        #{theme('direction.right','value')}: 20px;
         top: 15px;
         content: "+";
         font-size: 1.6rem;

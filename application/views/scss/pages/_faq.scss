@@ -20,7 +20,7 @@
     display: inline-block;
     vertical-align: middle;
     position: absolute;
-    left: 20px;
+    #{theme('direction.left','value')}: 20px;
     top: 50%;
     transform: translate(0, -50%);
     -webkit-transform: translate(0, -50%);
@@ -60,7 +60,7 @@
 }
 
 .faq__action {
-    margin: 0 15px 0 0;
+    margin-#{theme('direction.right','value')}: 15px;
 }
 
 .faq__action img {
@@ -70,7 +70,7 @@
 
 
 
-@media(max-width:1199px){
+@media(max-width:theme('breakpoints.xl','value')){
     
 
     .box--faqs .box__footer .d-sm-block {
@@ -84,7 +84,7 @@
 
 }
 
-@media(max-width:767px){
+@media(max-width:theme('breakpoints.md','value')){
     
     .box--faqs .box__footer {
         text-align: center;

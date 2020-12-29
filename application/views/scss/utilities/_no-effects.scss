@@ -12,10 +12,10 @@
             border-top: none !important;
         }
         &-right {
-            border-#{theme('direction.right')}: none !important;
+            border-#{theme('direction.right','value')}: none !important;
         }
         &-left {
-            border-#{theme('direction.left')}: none !important;
+            border-#{theme('direction.left','value')}: none !important;
         }
     }
     &-margin {
@@ -24,10 +24,10 @@
             margin-top: 0 !important;
         }
         &-left {
-            margin-#{theme('direction.left')}: 0 !important;
+            margin-#{theme('direction.left','value')}: 0 !important;
         }
         &-right {
-            margin-#{theme('direction.right')}: 0 !important;
+            margin-#{theme('direction.right','value')}: 0 !important;
         }
         &-bottom {
             margin-bottom: 0 !important;
@@ -39,10 +39,10 @@
             padding-top: 0 !important;
         }
         &-left {
-            padding-#{theme('direction.left')}: 0 !important;
+            padding-#{theme('direction.left','value')}: 0 !important;
         }
         &-right {
-            padding-#{theme('direction.right')}: 0 !important;
+            padding-#{theme('direction.right','value')}: 0 !important;
         }
         &-bottom {
             padding-bottom: 0 !important;
@@ -65,15 +65,15 @@
         margin: 0 !important;
         &--bottom { margin-bottom: 0 !important; }
         &--top { margin-top: 0 !important; }
-        &--left { margin-#{theme('direction.left')}: 0 !important; }
-        &--right { margin-#{theme('direction.right')}: 0 !important; }
+        &--left { margin-#{theme('direction.left','value')}: 0 !important; }
+        &--right { margin-#{theme('direction.right','value')}: 0 !important; }
     }
     &padding {
         padding: 0 !important;
         &--bottom { padding-bottom: 0 !important; }
         &--top { padding-top: 0 !important; }
-        &--left { padding-#{theme('direction.left')}: 0 !important; }
-        &--right { padding-#{theme('direction.right')}: 0 !important; }
+        &--left { padding-#{theme('direction.left','value')}: 0 !important; }
+        &--right { padding-#{theme('direction.right','value')}: 0 !important; }
     }
 }
   

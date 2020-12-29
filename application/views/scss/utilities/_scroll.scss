@@ -10,19 +10,19 @@
 .scroll{
     &-track {
         width: 10px;
-       #{theme('direction.right')}: -10px !important;
+        #{theme('direction.right','value')}: -10px !important;
         position: relative;
     }
     &-handle {
         width: 4px;
         background: rgba(0, 0, 0, 0.1);
-        margin: 0 0 0 3px;
+        margin-#{theme('direction.left','value')}:3px;
         border-radius: var(--radius-1);
         transition: width 250ms;
     }
 }
 
-@media(max-width:1024px) {
+@media(max-width:theme('breakpoints.xl','value')) {
     .horiz-scroller {
         position: relative;
         overflow-y: hidden;
@@ -36,7 +36,7 @@
     }
 }
 
-@media(max-width:768px) {
+@media(max-width:theme('breakpoints.md','value')) {
     .mini-horiz-scroller {
         position: relative;
         display: inline-block;

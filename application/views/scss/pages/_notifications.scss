@@ -69,13 +69,13 @@
 
 .list-container .list__media {
     width: 35px;
-    float: left;
+    float: #{theme('direction.left','value')};
 }
 
 .list-container .list__content {
     width: calc(100% - 35px);
-    float: left;
-    padding: 0 0 0 15px;
+    float: #{theme('direction.left','value')};
+    padding-#{theme('direction.left','value')}: 15px;
 }
 
 .list-container .message-display {
@@ -100,7 +100,7 @@
 .window__left {
     width: 400px;
     border-right: 1px solid #ddd;
-    border-left: 1px solid #ddd;
+    border-#{theme('direction.left','value')}: 1px solid #ddd;
 }
 
 .window__left .scrollbar {
@@ -110,7 +110,7 @@
 }
 
 .window__left .scrollbar-track {
-    right: 5px !important;
+    #{theme('direction.right','value')}: 5px !important;
 }
 
 .window__right {
@@ -137,7 +137,7 @@
 
 .msg-list .msg-count {
     position: absolute;
-    right: 20px;
+    #{theme('direction.right','value')}: 20px;
     top: 15px;
     background: var(--color-primary);
     border-radius: 3px;
@@ -186,7 +186,7 @@
 
 .msg-list__right {
     width: calc(100% - 50px);
-    padding-left: 15px;
+    padding-#{theme('direction.left','value')}: 15px;
 }
 
 .message-details {
@@ -240,7 +240,7 @@
 }
 
 .message-row .grid_1 {
-    float: left;
+    float: #{theme('direction.left','value')};
     width: 50px;
     text-align: center;
     padding: 0 0;
@@ -271,7 +271,7 @@
 
 .message-row .grid_2 {
     width: calc(100% - 50px);
-    float: right;
+    float: #{theme('direction.right','value')};
     padding: 0 0 0 15px;
 }
 
@@ -296,7 +296,7 @@
     border-top: 10px solid transparent;
     border-right: 10px solid #f5f3dc;
     position: absolute;
-    left: -10px;
+    #{theme('direction.left','value')}: -10px;
     top: 14px;
     content: "";
 }
@@ -305,36 +305,36 @@
     text-transform: uppercase;
     font-size: 13px;
     color: #8a8a8a;
-    padding: 0 0 5px 5px;
+    padding: 0 0 5px 0; padding-#{theme('direction.left','value')}: 5px;
     display: block;
 }
 
 .message-row.my-message .grid_1 {
-    float: right;
+    float: #{theme('direction.right','value')};
 }
 
 .message-row.my-message .grid_2 {
-    float: left;
+    float: #{theme('direction.left','value')};
     padding: 0 15px 0 0;
 }
 
 .message-row.my-message .datetext {
-    float: right;
-    clear: right;
+    float: #{theme('direction.right','value')};
+    clear: #{theme('direction.right','value')};
 }
 
 .message-row.my-message .secionreviews {
-    float: right;
-    clear: right;
+    float: #{theme('direction.right','value')};
+    clear: #{theme('direction.right','value')};
     background: rgba(0, 0, 0, 0.04);
     border: none;
 }
 
 .message-row.my-message .secionreviews:before {
-    left: auto;
-    right: -20px;
-    border-left: 10px solid rgba(0, 0, 0, 0.04);
-    border-right: 10px solid transparent;
+    #{theme('direction.left','value')}: auto;
+    #{theme('direction.right','value')}: -20px;
+    border-#{theme('direction.left','value')}: 10px solid rgba(0, 0, 0, 0.04);
+    border-#{theme('direction.right','value')}: 10px solid transparent;
 }
 
 .message-row.my-message .secionreviews:after {
@@ -375,7 +375,7 @@
 
 .message-display--positioned.message-display {
     position: absolute;
-    left: 50%;
+    #{theme('direction.left','value')}: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
@@ -493,7 +493,7 @@
     }
 }
 
-@media(max-width:767px) {
+@media(max-width:theme('breakpoints.md','value')) {
     .message-head {
         padding: 15px;
     }

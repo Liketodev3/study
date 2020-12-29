@@ -11,16 +11,16 @@
     font-weight: normal;
 }
 
-@media(max-width:1023px) {
+@media(max-width:theme('breakpoints.lg','value')) {
 
    
 
     .box.box--narrow .-float-right {
-        float: right !important;
+        float: #{theme('direction.right','value')} !important;
     }
 
     .div-login-form .-float-right {
-        float: right !important;
+        float: #{theme('direction.left','value')} !important;
     }
 
 }

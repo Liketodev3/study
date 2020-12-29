@@ -1,9 +1,9 @@
 #facebox {
     position: absolute;
     top: 0;
-    left: 0;
+    #{theme('direction.left','value')}: 0;
     z-index: 999;
-    text-align: left;
+    text-align: #{theme('direction.left','value')};
 }
 
 #facebox .popup {
@@ -68,7 +68,7 @@
     height: 35px;
     position: absolute;
     top: -35px;
-    right: 0;
+    #{theme('direction.right','value')}: 0;
     transform: none;
 }
 
@@ -105,7 +105,7 @@
 #facebox_overlay {
     position: fixed;
     top: 0px;
-    left: 0px;
+    #{theme('direction.left','value')}: 0px;
     height: 100%;
     width: 100%;
 }

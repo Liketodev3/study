@@ -1,8 +1,8 @@
 
 .IssueBlockquote {
-    border-left: 3px solid;
+    border-#{theme('direction.left','value')}: 3px solid;
     border-color: var(--color-primary);
-    padding-left: 15px;
+    padding-#{theme('direction.left','value')}: 15px;
     margin-bottom: 30px;
 }
 

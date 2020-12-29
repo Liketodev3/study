@@ -40,7 +40,13 @@ $header: "header";
 }
 
 
-.btn .svg-icon.user-icon{display: none;}
+
+@media(min-width:theme('breakpoints.md','value')){
+    .btn .svg-icon.user-icon{display: none;}
+
+}
+
+
 
 
 

@@ -14,24 +14,24 @@
 
 .group.group--social .btn {
     /* margin: 0 0; */
-    float: left;
+    float: #{theme('direction.left','value')};
     width: 48%;
 }
 
 .group.group--social .btn.btn--social-gp {
-    float: right;
+    float: #{theme('direction.right','value')};
 }
 
 .group.group--social .btn .svg-icon {
     position: absolute;
-    left: 15px;
+    #{theme('direction.left','value')}: 15px;
     top: 8px;
 }
 .group--social a {
-    margin-right: 5px;
+    margin-#{theme('direction.right','value')}: 5px;
 }
 .group--social a:last-child {
-    margin-right: 0;
+    margin-#{theme('direction.right','value')}: 0;
 }
 .group--social{
     display: flex;
@@ -44,7 +44,7 @@
 .social--share li {
     display: inline-block;
     vertical-align: top;
-    margin: 10px 3px 0 0;
+    margin: 10px 0 0 0; margin-#{theme('direction.right','value')}: 3px;
 }
 
 .social--share li a,
@@ -96,11 +96,11 @@
     height: 46px;
     max-width: 191px;
     margin:auto;
-    padding-right:10px;
+    padding-#{theme('direction.right','value')}:10px;
 }
 .google-btn span{
   display: inline-flex;
-  padding-left: 5px;
+  padding-#{theme('direction.left','value')}: 5px;
 }
 .group.group--social a .google-btn img{
   width:auto;
@@ -111,11 +111,11 @@
     height: 46px;
     vertical-align: top;
     margin-top: 0;
-    margin-right: 15px;float:none;}
+    margin-#{theme('direction.right','value')}: 15px;float:none;}
 
 @media screen and (max-width:1199px){
     .group.group--social .btn--social-fb.btn{
-        margin-right: 5px;
+        margin-#{theme('direction.right','value')}: 5px;
     }
   .group.group--social .btn--social-fb.btn,
   .group.group--social a{

@@ -9,7 +9,7 @@
 
 .scrollbar-track {
     width: 8px;
-    right: -10px !important;
+    #{theme('direction.right','value')}: -10px !important;
     position: relative;
 }
 

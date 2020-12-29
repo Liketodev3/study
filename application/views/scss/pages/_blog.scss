@@ -11,13 +11,13 @@
 }
 
 .blog-row:nth-child(even) {
-    direction: rtl;
-    text-align: left;
+    direction: #{theme('direction.rtl-direction','value')};
+    text-align: #{theme('direction.left','value')};
 }
 
 .blog-row:nth-child(even) .blog__content {
-    padding-left: 0;
-    direction: ltr;
+    padding-#{theme('direction.left','value')}: 0;
+    direction: #{theme('direction.ltr-direction','value')};
 }
 
 .section--blogs {
@@ -47,7 +47,7 @@
 }
 
 .blog__content {
-    padding: 0 0 0 20px;
+  padding-left: #{theme('direction.left','value')};
 }
 
 .blog__content h2 {
@@ -57,7 +57,7 @@
 .blog__actions .blog__action {
     font-size: 1.15em;
     color: #666;
-    margin: 0 10px 0 0;
+     margin-#{theme('direction.right','value')}: 10px;
 }
 
 .blog__media {
@@ -91,7 +91,7 @@
 }
 
 .blog__author .avtar {
-    margin-right: 10px;
+    margin-#{theme('direction.right','value')}: 10px;
 }
 
 /* nav categories */
@@ -129,12 +129,12 @@
 }
 
 .nav-categories .nav-subcategories {
-    text-align: left;
+    text-align: #{theme('direction.left','value')};
 }
 
 .nav-categories .nav-subcategories li {
     width: 25%;
-    float: left;
+    float: #{theme('direction.left','value')};
     padding: 10px;
 }
 
@@ -170,7 +170,7 @@
     content: "";
     position: absolute;
     top: -7px;
-    left: 0;
+    #{theme('direction.left','value')}: 0;
 }
 
 .categories-toggle span:after {
@@ -180,7 +180,7 @@
     content: "";
     position: absolute;
     bottom: -7px;
-    left: 0;
+    #{theme('direction.left','value')}: 0;
 }
 
 .categories-toggle.is-active span {
@@ -229,7 +229,7 @@
 
 .nav--toggled > ul > li .link--toggle {
     position: absolute;
-    right: 0;
+    #{theme('direction.right','value')}: 0;
     top: 0;
     height: 46px;
     width: 40px;
@@ -238,7 +238,7 @@
 
 .nav--toggled > ul > li > a {
     position: relative;
-    padding: 14px 40px 14px 20px;
+    padding: 14px 20px; padding-#{theme('direction.right','value')}: 40px;
     color: #333;
     display: block;
 }
@@ -255,7 +255,7 @@
 }
 
 .nav--toggled > ul > li ul li .link--toggle {
-    right: -10px;
+    #{theme('direction.right','value')}: -10px;
 }
 
 .nav--toggled > ul > li ul li {
@@ -266,7 +266,7 @@
 
 .nav--toggled > ul > li ul li a {
     color: #999;
-    padding: 10px 40px 10px 20px;
+    padding: 10px 20px; padding-#{theme('direction.right','value')}: 40px;
     display: block;
 }
 
@@ -290,12 +290,12 @@
     height: 6px;
     margin: 0;
     position: absolute;
-    right: 20px;
+    #{theme('direction.right','value')}: 20px;
     top: 18px;
     content: "";
     border-top: 4px solid transparent;
     border-bottom: 4px solid transparent;
-    border-left: 5px solid #333;
+    border-#{theme('direction.left','value')}: 5px solid #333;
     -webkit-transition: 0.4s all ease-in-out;
     pointer-events: none;
     -moz-transition: 0.4s all ease-in-out;
@@ -317,15 +317,14 @@
     width: 100%;
     display: inline-block;
     border: 1px solid #efefef;
-    padding: 20px 20px 20px 100px;
+    padding: 20px; padding-#{theme('direction.left','value')}: 100px;
     position: relative;
-    margin: 0 0 0 0;
     background: #fff;
     margin: 15px 0 0;
 }
 
 .comments-list .date {
-    float: right;
+    float: #{theme('direction.right','value')};
     text-transform: uppercase;
     color: #999;
     font-size: 0.9em;
@@ -344,17 +343,17 @@
 
 .comments-list .avtar {
     position: absolute;
-    left: 20px;
+    #{theme('direction.left','value')}: 20px;
     top: 15px;
     color: #000;
 }
 
 .comments-list .avtar img {
     position: absolute;
-    left: 0;
+    #{theme('direction.left','value')}: 0;
     top: 0;
     bottom: 0;
-    right: 0;
+    #{theme('direction.right','value')}: 0;
     margin: auto;
 }
 
@@ -370,8 +369,7 @@
 }
 
 .comments-list.comments-list--replied {
-    background: rgba(0, 0, 0, 0.03);
-    margin: 0 0 0 50px;
+    background: rgba(0, 0, 0, 0.03); margin-#{theme('direction.left','value')}: 50px;
     width: auto;
     border-top: none;
 }
@@ -388,7 +386,7 @@
 
 .form--comments h4 {
     font-size: 1.4em;
-    margin: 0 0 30px 0;
+    margin-#{theme('direction.right','value')}: 30px;
     color: #333;
 }
 
@@ -425,14 +423,14 @@
 .box--cta-blog .btn img {
     position: relative;
     top: -2px;
-    margin-right: 5px;
+    margin-#{theme('direction.right','value')}: 5px;
 }
 
 .blog-toggle {
     height: 60px;
     width: 60px;
     background: var(--color-secondary);
-    float: left;
+    float: #{theme('direction.left','value')};
     display: none;
 }
 
@@ -452,7 +450,7 @@
     content: "";
     position: absolute;
     top: -8px;
-    left: 0;
+    #{theme('direction.left','value')}: 0;
 }
 
 .blog-toggle span:after {
@@ -462,7 +460,7 @@
     content: "";
     position: absolute;
     bottom: -8px;
-    left: 0;
+    #{theme('direction.left','value')}: 0;
 }
 
 .section--upper {
@@ -472,22 +470,7 @@
 
 /*  blog css ] */
 
-.grid-group {
-    margin: 0 0 0 -10px;
-}
 
-.grid-group .grid {
-    display: inline-block;
-    padding: 0 0 20px 10px;
-    vertical-align: top;
-}
-
-.grid-group .grid span {
-    background: #f9f5ff;
-    padding:5px 15px;
-    display: block;
-    border-radius: 2px; line-height: 1.5; font-size: 0.9rem;
-}
 
 .txt-inline strong {
     font-weight: 600;
@@ -527,7 +510,7 @@
 }
 
 
-@media(min-width:1199px){
+@media(min-width:theme('breakpoints.xl','value')){
     
     .inline-action:hover {
         box-shadow: 1px 6px 6px 1px rgba(0, 0, 0, 0.05);
@@ -560,7 +543,7 @@
 }
 
 
-@media(max-width:1199px){
+@media(max-width:theme('breakpoints.xl','value')){
     
     /* [ blog css for resposive  */
 
@@ -570,7 +553,7 @@
 
     .nav-categories > ul > li {
         display: block;
-        text-align: left;
+        text-align: #{theme('direction.left','value')};
     }
 
     .nav-categories > ul > li > a {
@@ -606,11 +589,11 @@
         background: #fff;
         padding: 0;
         box-shadow: 0 0 10px rgba(51, 51, 51, 0.38);
-        left: 0;
+        #{theme('direction.left','value')}: 0;
         margin: 0;
         overflow: auto;
         position: fixed;
-        text-align: left;
+        text-align: #{theme('direction.left','value')};
         top: 0;
         transform: translate3d(-100%, 0px, 0px);
         -webkit-transform: translate3d(-100%, 0px, 0px);
@@ -652,7 +635,7 @@
 
     .banner .form-search form {
         width: calc(100% - 60px);
-        float: right;
+        float: #{theme('direction.right','value')};
         padding-left: 20px;
     }
 
@@ -708,7 +691,7 @@
 }
 
 
-@media(max-width:1023px){
+@media(max-width:theme('breakpoints.lg','value')){
     
 
     .blog-row h2 {
@@ -716,7 +699,7 @@
     }
 
     .blog__content {
-        padding-left: 0;
+        padding-#{theme('direction.left','value')}: 0;
     }
 
     .form-search.form-search--blog .blog-toggle {
@@ -725,8 +708,8 @@
 
     .form-search form {
         width: calc(100% - 60px);
-        float: right;
-        padding-left: 20px;
+        float: #{theme('direction.right','value')};
+        padding-#{theme('direction.left','value')}: 20px;
     }
 
     .blog-filters {
@@ -734,11 +717,11 @@
         background: #fff;
         padding: 0;
         box-shadow: 0 0 10px rgba(51, 51, 51, 0.38);
-        left: 0;
+        #{theme('direction.left','value')}: 0;
         margin: 0;
         overflow: auto;
         position: fixed;
-        text-align: left;
+        text-align: #{theme('direction.left','value')};
         top: 0;
         transform: translate3d(-100%, 0px, 0px);
         -webkit-transform: translate3d(-100%, 0px, 0px);
@@ -784,7 +767,7 @@
 }
 
 
-@media(max-width:767px){
+@media(max-width:theme('breakpoints.md','value')){
     
 
     .banner .form-search {
@@ -812,7 +795,7 @@
     }
 
     .blog__content {
-        padding-left: 0;
+        padding-#{theme('direction.left','value')}: 0;
     }
 
     .blog-row h2 {
@@ -853,9 +836,9 @@
 
     .comments-list .avtar {
         position: relative;
-        left: auto;
+        #{theme('direction.left','value')}: auto;
         top: auto;
-        float: left;
+        float: #{theme('direction.left','value')};
         margin: 0 15px 0 0;
         width: 40px;
         height: 40px;
@@ -863,7 +846,7 @@
     }
 
     .comments-list {
-        padding: 0 0 15px 0;
+        padding-#{theme('direction.right','value')}: 15px;
         border: none;
         border-bottom: 1px solid #ddd;
         margin: 20px 0 0;

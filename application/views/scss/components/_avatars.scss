@@ -3,8 +3,8 @@
     border-radius: 100%;
     display: block;
     position: relative;
-    width: 150px;
-    height: 150px;
+    width: 12rem;
+    height: 11rem;
     position: relative;
     overflow: hidden;
     background: #eee
@@ -43,7 +43,7 @@
     font-size: 2rem;
     color: #000;
     position: absolute;
-    left: 50%;
+    #{theme('direction.left','value')}: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
@@ -92,7 +92,7 @@
 
 .avtars-list.avtars-list--sticky {
     position: absolute;
-    left: 0;
+    #{theme('direction.left','value')}: 0;
     top: 10px;
     margin: 0;
 }

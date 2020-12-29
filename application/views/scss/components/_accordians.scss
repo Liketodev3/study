@@ -5,7 +5,6 @@
 
 .accordian {
     border: 1px solid #ceced0;
-    text-align: left;
     border-bottom: none;
     -webkit-transition: 0.3s all ease-in-out;
     -moz-transition: 0.3s all ease-in-out;
@@ -29,7 +28,7 @@
     width: 30px;
     height: 30px;
     position: absolute;
-    right: 30px;
+    #{theme('direction.right','value')}: 30px;
     top: 20px;
     content: "+";
     color: #000;
@@ -66,7 +65,8 @@
 @media(max-width:767px){
     
     .accordian__title {
-        padding: 20px 50px 20px 20px;
+        padding: 20px;
+        padding-#{theme('direction.right','value')}: 50px;
         line-height: 1.6;
     }
 
@@ -75,7 +75,7 @@
     }
 
     .accordian__title:before {
-        right: 10px;
+        #{theme('direction.right','value')}: 10px;
         top: 16px;
     }
 
