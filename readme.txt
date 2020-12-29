@@ -1,5 +1,8 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Updates:
+    *Task-80349: Update Stripe to support SCA( Strong Customer Authentication)
+    
 Hotfixes:
     Bug-#045944-fix empty stripe token issue
     Task-73053-set SSL ON for demo instance by default
