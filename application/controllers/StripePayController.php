@@ -136,6 +136,27 @@ class StripePayController extends PaymentController
     {
         $get = FatApp::getQueryStringData();
         $sessionId = $get['session_id'];
+        $this->updatePaymentStatus($sessionId);
+    }
+    
+    public function webhook()
+    {
+        $payload = file_get_contents('php://input');
+        try {
+            $event = \Stripe\Event::constructFrom(
+                json_decode($payload, true)
+            );
+        } catch(\UnexpectedValueException $e) {
+            // Invalid payload
+            http_response_code(400);
+            exit();
+        }
+        $sessionId = $event->data->id;
+        $this->updatePaymentStatus($sessionId);
+    }
+    
+    private function updatePaymentStatus($sessionId)
+    {
         $this->paymentSettings = $this->getPaymentSettings();
         $stripe = array(
         'secret_key' => $this->paymentSettings['privateKey'],
@@ -150,6 +171,10 @@ class StripePayController extends PaymentController
             FatApp::redirectUser($session->cancel_url);
         }
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
+        $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
+        if ($orderInfo["order_is_paid"] == Order::ORDER_IS_PAID){
+            FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess'));
+        }
         $paymentGatewayCharge = $orderPaymentObj->getOrderPaymentGatewayAmount();
         $payableAmount = $this->formatPayableAmount($paymentGatewayCharge);
         
