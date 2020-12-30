@@ -213,3 +213,4 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.11.20201215' WHERE `conf_na
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.12.20201215' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.1' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
+ALTER TABLE `tbl_teachers_weekly_schedule` ADD `twsch_weekyear` VARCHAR(10) NOT NULL AFTER `twsch_end_time`; 

@@ -505,87 +505,19 @@ class TeacherController extends TeacherBaseController
     public function teacherGeneralAvailability()
     {
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
-        /* $userData = User::getAttributesById( UserAuthentication::getLoggedUserId(), array('user_timezone') );
-        $this->set('userData',$userData); */
         $this->set('cssClassArr', $cssClassNamesArr);
+        $userId = UserAuthentication::getLoggedUserId();
+        $this->set('userId', $userId);
         $this->_template->render(false, false);
     }
 
     public function teacherWeeklySchedule()
     {
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
-        /* $userData = User::getAttributesById( UserAuthentication::getLoggedUserId(), array('user_timezone'));
-        $this->set('userData',$userData); */
         $this->set('cssClassArr', $cssClassNamesArr);
+        $userId = UserAuthentication::getLoggedUserId();
+        $this->set('userId', $userId);
         $this->_template->render(false, false);
-    }
-
-    public function getTeacherGeneralAvailabilityJsonData()
-    {
-        $userId = UserAuthentication::getLoggedUserId();
-        $post = FatApp::getPostedData();
-        $jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, $post);
-        echo FatUtility::convertToJson($jsonArr);
-    }
-
-    public function getTeacherGeneralAvailabilityJsonDataForWeekly()
-    {
-        $userId = UserAuthentication::getLoggedUserId();
-        $post = FatApp::getPostedData();
-        $jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, $post);
-        echo FatUtility::convertToJson($jsonArr);
-    }
-
-    public function getTeacherWeeklyScheduleJsonData()
-    {
-        $userId = UserAuthentication::getLoggedUserId();
-        $post = FatApp::getPostedData();
-        if (false === $post) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
-        }
-
-        if(empty($post['start']) || empty($post['end'])){
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
-        }
-
-        /*$startDate = $post['start']." 00:00:00";
-		$endDate = $post['end']." 23:59:59";*/
-        $startDate = $post['start'];
-		$endDate = $post['end'];
-		$user_timezone = MyDate::getUserTimeZone();
-		$systemTimeZone = MyDate::getTimeZone();
-        $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
-        $endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
-        $_serchEndDate =    $post['end'];
-		$weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId,$startDate,$endDate);
-       
-
-        $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
-        $jsonArr = array();
-        if (!empty($weeklySchRows)) {
-            $user_timezone = MyDate::getUserTimeZone($userId);
-            foreach ($weeklySchRows as $row) {
-                $twsch_end_time = MyDate::format(date('Y-m-d H:i:s', strtotime($row['twsch_end_date'].' '. $row['twsch_end_time'])), true, true, $user_timezone);
-
-                $twsch_start_time = MyDate::format(date('Y-m-d H:i:s', strtotime($row['twsch_date']. ' ' . $row['twsch_start_time'])), true, true, $user_timezone);
-
-                $startDate = date('Y-m-d', strtotime($twsch_start_time));
-                $endDate = date('Y-m-d', strtotime($twsch_end_time));
-
-                //if ((strtotime($twsch_start_time) >=  strtotime($post['start'] .' 00:00:00 ')) && (strtotime($twsch_end_time) <= strtotime($_serchEndDate))) {
-                    $jsonArr[] = array(
-                        "title" => "",
-                        "date" => date('Y-m-d', strtotime($twsch_start_time)),
-                        "start" => $twsch_start_time,
-                        "end" => $twsch_end_time,
-                        '_id' => $row['twsch_id'],
-                        'classType' => $row['twsch_is_available'],
-                        'className' => $cssClassNamesArr[$row['twsch_is_available']]
-                    );
-               // }
-            }
-        }
-        echo FatUtility::convertToJson($jsonArr);
     }
 
     public function deleteTeacherGeneralAvailability($tgavl_id = 0)

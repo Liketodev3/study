@@ -2,6 +2,9 @@ This file shares the details of the Yo!Coach version and change log.
 
 Updates:
     *Task-80349: Update Stripe to support SCA( Strong Customer Authentication)
+
+Bug Fixes:    
+    Bug-#045564-Fixed saturday availability issue
     
 Hotfixes:
     Bug-#045944-fix empty stripe token issue

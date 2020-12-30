@@ -446,7 +446,7 @@ class TeachersController extends MyAppController {
         }
 		$originalDayNumber = $post['day'];
 		$tWsch = new TeacherWeeklySchedule();
-		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime, $post['weekStart']);
+		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime);
 		$returnArray = [
 			'status' => $checkAvialSlots,
 		];
@@ -457,8 +457,7 @@ class TeachersController extends MyAppController {
 		FatUtility::dieJsonSuccess($returnArray);
 	}
 
-	public function getTeacherGeneralAvailabilityJsonData($userId = 0) {
-		$userId = FatUtility::int($userId);
+	public function getTeacherGeneralAvailabilityJsonData(int $userId) {
 		$post = FatApp::getPostedData();
 		if ($userId < 1) {
 			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
@@ -505,8 +504,7 @@ class TeachersController extends MyAppController {
 		echo FatUtility::convertToJson($jsonArr);
 	}
 
-	public function getTeacherWeeklyScheduleJsonData($userId = 0) {
-		$userId = FatUtility::int($userId);
+	public function getTeacherWeeklyScheduleJsonData(int $userId) {
 		$post = FatApp::getPostedData();
 		if (false === $post) {
 			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
@@ -520,6 +518,7 @@ class TeachersController extends MyAppController {
 		$endDate = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
 		
 		$weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId, $startDate, $endDate);
+        
 		// $_serchEndDate = date('Y-m-d 00:00:00', strtotime($post['end']));
 		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
 		$jsonArr = array();
@@ -535,6 +534,7 @@ class TeachersController extends MyAppController {
 				    	"date" => $twsch_date,
 				    	"start" => $twsch_start_time,
 				    	"end" => $twsch_end_time,
+				    	"weekyear" => $row['twsch_weekyear'],
 				    	'_id' => $row['twsch_id'],
 				    	'classType' => $row['twsch_is_available'],
 				    	'className' => $cssClassNamesArr[$row['twsch_is_available']]
@@ -542,6 +542,17 @@ class TeachersController extends MyAppController {
 				// }
 			}
 		}
+        
+        $midPoint = (strtotime($startDate) + strtotime($endDate))/2;        
+        $twsch_weekyear = date('W-Y', $midPoint);
+        if(empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear){
+            $weekRange = CommonHelper::getWeekRangeByDate(date('Y-m-d', $midPoint));
+            $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, array('WeekStart' => $weekRange['start'], 'WeekEnd' => $weekRange['end']));
+            // CommonHelper::printArray($jsonArr2);die;
+            $jsonArr = array_merge($jsonArr, $jsonArr2);
+        }
+        
+        // CommonHelper::printArray($jsonArr);die;
 		echo FatUtility::convertToJson($jsonArr);
 	}
 

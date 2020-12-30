@@ -218,7 +218,7 @@ $weekDayName =  CommonHelper::dayNames();
    		events: function(start, end, timezone, callback) {
 
    			$.ajax({
-   			  url: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherWeeklyScheduleJsonData'); ?>",
+   			  url: "<?php echo CommonHelper::generateUrl('Teachers','getTeacherWeeklyScheduleJsonData', [$userId]); ?>",
    			  data:{start:moment(start).format('YYYY-MM-DD HH:mm:ss'),end:moment(end).format('YYYY-MM-DD HH:mm:ss')},
    			  method:'post',
    				success: function(doc) {
@@ -227,7 +227,7 @@ $weekDayName =  CommonHelper::dayNames();
 				data = { WeekStart:moment(start).format('YYYY-MM-DD HH:mm:ss'), WeekEnd:moment(end).format('YYYY-MM-DD HH:mm:ss') };
 
    				$.ajax({
-   				url: "<?php echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonDataForWeekly'); ?>",
+   				url: "<?php echo CommonHelper::generateUrl('Teachers','getTeacherGeneralAvailabilityJsonData', [$userId]); ?>",
 				data : data,
 				method : 'POST',
    				success: function(doc) {
