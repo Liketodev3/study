@@ -5,6 +5,7 @@ Updates:
     *Task-78843: Upgrade zoom to v1.8.3
 Bug Fixes:    
     * Bug-#045564-Fixed saturday availability issue
+    * Bug-#047296-Hide "this calendar is just for showing availabilty" on trial booking
     
 Hotfixes:
     Bug-#045944-fix empty stripe token issue
