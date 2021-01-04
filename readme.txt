@@ -2,6 +2,7 @@ This file shares the details of the Yo!Coach version and change log.
 
 Updates:
     *Task-80349: Update Stripe to support SCA( Strong Customer Authentication)
+    *Task-78843: Upgrade zoom to v1.8.3
 
 Bug Fixes:    
     Bug-#045564-Fixed saturday availability issue
