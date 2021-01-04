@@ -1755,7 +1755,7 @@ class CommonHelper extends FatUtility
         switch ($errorCode) {
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
-                $message = 'ERR_FILE_SIZE_EXCEEDS_ALLOWED_SIZE';
+                $message = 'ERR_FILE_SIZE_EXCEEDS_ALLOWED_SIZE_'.ini_get('upload_max_filesize').'B';
                 break;
             case UPLOAD_ERR_PARTIAL:
                 $message = 'ERR_The_uploaded_file_was_only_partially_uploaded';

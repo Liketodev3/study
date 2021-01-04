@@ -6,6 +6,7 @@ Updates:
 Bug Fixes:    
     * Bug-#045564-Fixed saturday availability issue
     * Bug-#047296-Hide "this calendar is just for showing availabilty" on trial booking
+    * Bug-#047271-Show correct reason for file not upload
     
 Hotfixes:
     Bug-#045944-fix empty stripe token issue
