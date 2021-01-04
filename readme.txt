@@ -4,7 +4,7 @@ Hotfixes:
     Bug-#045944-fix empty stripe token issue
     Task-73053-set SSL ON for demo instance by default
     Bug-#047204-Google sign in button text editable
-
+    Bug-#047271-Show correct reason for file not upload
 
 ---------------------
 
