@@ -3,13 +3,17 @@ This file shares the details of the Yo!Coach version and change log.
 Updates:
     *Task-80349: Update Stripe to support SCA( Strong Customer Authentication)
     *Task-78843: Upgrade zoom to v1.8.3
-
 Bug Fixes:    
-    Bug-#045564-Fixed saturday availability issue
+    * Bug-#045564-Fixed saturday availability issue
     
 Hotfixes:
     Bug-#045944-fix empty stripe token issue
     Task-73053-set SSL ON for demo instance by default
+    * Bug-045964: Show only relevant language for class
+    * Bug-046368: Update button sync with google calendar
+    * Bug-043080: show group class & trial lesson on google calendar
+    * Bug-045944: fix empty stripe token issue
+    * Bug-045420: fix unicode issue in emails and blog list
 
 ---------------------
 
