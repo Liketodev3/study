@@ -62,6 +62,7 @@ foreach( $lessons as $lesson ){
 			</div>
 
 			<div class="col-xl-4 col-lg-4 col-md-12">
+				
 				<div class="schedule-list">
 					<ul>
 						<?php
