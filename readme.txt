@@ -6,7 +6,7 @@ Hotfixes:
     Bug-#047204-Google sign in button text editable
     Bug-#047271-Show correct reason for file not upload
     Bug:#046838: change lesson page image
-
+    Bug-#047296-Hide "this calendar is just for showing availabilty" on trial booking
 ---------------------
 
 Release Number: RV-2.1

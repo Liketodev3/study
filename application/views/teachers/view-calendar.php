@@ -432,7 +432,9 @@ function getSlotBookingConfirmationBox(calEvent, jsEvent){
 
 <span> <?php echo MyDate::displayTimezoneString();?> </span>
 <!-- (<span id="currentTime"> </span>) -->
+<?php if( 'free_trial' != $action ): ?>
 <small class="label label--warning"><?php echo Label::getLabel('Note_This_calendar_is_to_only_check_availability') ?></small>
+<?php endif; ?>
 
 <div id='d_calendar'></div>
 </div>
