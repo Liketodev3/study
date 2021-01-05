@@ -7,7 +7,7 @@
 				<path d="M57.378,0.001H3.352C1.502,0.001,0,1.5,0,3.353v54.026c0,1.853,1.502,3.354,3.352,3.354h29.086V37.214h-7.914v-9.167h7.914   v-6.76c0-7.843,4.789-12.116,11.787-12.116c3.355,0,6.232,0.251,7.071,0.36v8.198l-4.854,0.002c-3.805,0-4.539,1.809-4.539,4.462   v5.851h9.078l-1.187,9.166h-7.892v23.52h15.475c1.852,0,3.355-1.503,3.355-3.351V3.351C60.731,1.5,59.23,0.001,57.378,0.001z"/>
 			</g>
 		</svg>
-		<span>Sign in with Facebook</span>
+		<span><?php echo Label::getLabel("LBL_Sign_in_with_Facebook") ?></span>
 	</a>
 
 	<a class="google-login" href="<?php echo CommonHelper::generateUrl('GuestUser', 'socialMediaLogin',array('google', $userType)); ?>">
@@ -18,7 +18,7 @@
 			<path style="fill:#F14336;" d="M419.404,58.936l-82.933,67.896c-23.335-14.586-50.919-23.012-80.471-23.012  c-66.729,0-123.429,42.957-143.965,102.724l-83.397-68.276h-0.014C71.23,56.123,157.06,0,256,0  C318.115,0,375.068,22.126,419.404,58.936z"/>
 			<g>
 		</svg>
-		<span>Sign in with Google</span>
+		<span><?php echo Label::getLabel("LBL_Sign_in_with_Google") ?></span>
 	</a>
 
 </div>
