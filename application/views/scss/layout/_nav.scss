@@ -9,7 +9,7 @@ $nav: "nav";
         > ul {
             > li{position: relative; display: inline-block; vertical-align: top;
                 > a{display: block; padding: theme('padding.3') theme('padding.6'); position: relative;
-                    &:not(.btn):hover{ color: theme('color.primary');}
+                    &:not(.btn):hover{ color: theme('color.secondary');}
                 }
                 
                 
@@ -145,7 +145,7 @@ $nav: "nav";
         > ul{
             > li{
                 > a{padding:theme('padding.3'); display: block;
-                    &:hover{background-color: rgba(0,0,0,0.05); color:theme('color.primary');}
+                    &:hover{background-color: rgba(0,0,0,0.05); color:theme('color.secondary');}
                 }
             }
         }

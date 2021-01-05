@@ -7,7 +7,7 @@
 .section--search {
     background: #fff;
     padding: 20px 0;
-    box-shadow: 3.536px 3.536px 8px 0px rgba(0, 0, 0, 0.08);
+    box-shadow:theme('boxShadow.1');
 }
 
 .section__tags {
@@ -34,13 +34,13 @@
 
 .form-filters .form__element:after {
     position: absolute;
-    #{theme('direction.right','value')}: 24px;
-    top: 28px;
+    #{theme('direction.right','value')}: 20px;
+    top: 50%;
     content: "";
     border-#{theme('direction.left','value')}: 5px solid transparent;
     border-#{theme('direction.right','value')}: 5px solid transparent;
     border-top: 6px solid #333;
-    pointer-events: none;
+    pointer-events: none; margin-top: -3px;
 }
 
 
@@ -50,18 +50,18 @@
     height: 20px;
     position: absolute;
     overflow: hidden;
-    #{theme('direction.left','value')}: 24px;
-    top: 22px;
+    #{theme('direction.left','value')}: 20px;
+    top: 50%; margin-top: -8px;
 }
 
 
-.form__element .form__input {
-    border-radius: 0;
-    box-shadow: none;
-    height: 60px;
-    padding-#{theme('direction.right','value')}: 50px;
-    line-height: 60px;
-}
+// .form__element .form__input {
+//     border-radius: 0;
+//     box-shadow: none;
+//     height: 60px;
+//     padding-#{theme('direction.right','value')}: 50px;
+//     line-height: 60px;
+// }
 
 .form-filters .form__element .form__input {
     padding-#{theme('direction.left','value')}: 50px;
@@ -113,12 +113,24 @@
     top: 100%;
     z-index: 2;
     max-height: 400px;
-    overflow: auto;
+    overflow: auto; box-shadow:theme('boxShadow.vertical');
 }
 
 .form__element.form-target-visible .form__target {
     display: block;
 }
+
+
+.txt-inline strong {
+    font-weight: 600; margin-#{theme('direction.left','value')}: 4px;
+}
+
+.txt-inline .txt-inline__tag {
+    margin-bottom: 6px;
+    display: inline-block;
+    vertical-align: top;
+}
+
 
 /* @media(min-width:767px){
 .form__element.form-target-visible:before{position: fixed;left: 0;right: 0; top: 0; bottom: 0;content: "";background: rgba(243,242,245,0.8);z-index: -1;}
@@ -130,14 +142,14 @@
 
 .tag-list li {
     display: inline-block;
-    padding: 10px 10px 10px 0;
+    padding: 10px 10px 10px 0; padding-#{theme('direction.left','value')}: 0;
     vertical-align: top;
 }
 
 .tag-list li a {
-    height: 40px;
-    line-height: 40px;
-    display: block;
+    height:30px;
+    line-height: 30px;
+    display: block; font-size: 11px; text-transform: uppercase;
 }
 
 .tag-list li a.tag__clickable {
@@ -155,12 +167,12 @@
     content: "+";
     position: absolute;
     #{theme('direction.right','value')}: 12px;
-    top: 10px;
+    top: 50%;
     line-height: 19px;
     text-align: center;
     transform: rotate(45deg);
     font-size: 1.2rem;
-    transform-origin: center center;
+    transform-origin: center center; margin-top: -10px;
 }
 
 .sort-by {
@@ -327,10 +339,8 @@
  }
  
  .grid-group .grid span {
-     background: #f9f5ff;
-     padding:5px 15px;
      display: block;
-     border-radius: 2px; line-height: 1.5; font-size: 0.9rem;
+
  }
 
 
@@ -448,28 +458,7 @@
         z-index: 1;
     }
 
-    .form-search .form__element .form__input {
-        border-top: none;
-    }
 
-    .form-filters .form__element:first-child input {
-        border-bottom: none;
-    }
-
-    .form-filters .form__element {
-        width: 100%;
-        float: none;
-    }
-
-    .form-filters .form__element:first-child input {
-        border-#{theme('direction.right','value')}: 1px solid #e5e5e5;
-    }
-
-    .form-filters .form__element:after {
-        #{theme('direction.right','value')}: 26px;
-    }
-
-    
     .box-list__head .btn--fav {
         font-size: 1rem;
     }
@@ -489,5 +478,57 @@
     .box-list__body .grid-group .grid span strong {
         word-break: break-all;
     }
+    .form-filters .form__element {
+        width: 50%;
+        float: left;
+    }
+    .tabled-box {
+        margin: 0 -10px;
+    }
+
+    .tabled-box ul {
+        width: 100%;
+        display: flex;
+       align-items: center;
+    }
+
+    .tabled-box ul li { flex: 1;
+         padding: 0 10px;
+    }
+    .sort-by{margin-bottom: 0;}
 
 }
+
+@media(max-width:theme('breakpoints.md','value')){
+    .form-search .form__element .form__input {
+        border-top: none;
+    }
+
+    
+
+    .form-filters .form__element:first-child input {
+        border-bottom: none;
+    }
+
+    .form-filters .form__element {
+        width: 100%;
+        float: none;
+    }
+
+    .form-filters .form__element:first-child input {
+        border-#{theme('direction.right','value')}: 1px solid #e5e5e5;
+    }
+
+    .form-filters .form__element:after {
+        #{theme('direction.right','value')}: 26px;
+    }
+
+    
+
+    .tabled-box ul li {
+        display: block !important;
+    }
+
+}
+
+

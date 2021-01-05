@@ -1,95 +1,4 @@
 
-.tabs-vertical ul {
-    counter-reset: number;
-}
-
-.tabs-vertical ul li,
-.container--cms .tabs-vertical ul li {
-    position: relative;
-    z-index: 1;
-    padding: 25px;
-    display: flex;
-}
-
-.tabs-vertical ul li:before,
-.tabs-vertical ul li:after {
-    display: none;
-    /*Clashes with the class of aplying container--cms listing arrow shown*/
-}
-
-.tabs-vertical ul li .tab-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-}
-
-.tabs-vertical ul li .tab-click {
-
-    border-radius: 4px;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    position: absolute;
-    z-index: 0;
-    cursor: pointer;
-}
-
-.tabs-vertical ul li .counter {
-    position: relative;
-    margin-#{theme('direction.right','value')}: 20px;
-    z-index: 1;
-}
-
-.tabs-vertical ul li .counter:before {
-    content: ""counter(number, decimal-leading-zero) " ";
-    counter-increment: number;
-    overflow: hidden;
-    font-size: 54px;
-    opacity: 0.1;
-    font-weight: 700;
-}
-
-.tabs-vertical ul li .tab-info {
-    z-index: 1;
-    position: relative;
-}
-
-.tabs-vertical ul li .tab-info h3 {
-    font-size: 1.4285rem;
-    font-weight: 600;
-    color: var(--color-dark);
-    margin-bottom: 6px;
-}
-
-.tabs-vertical ul li .tab-info .btn {
-    opacity: 0;
-    visibility: hidden;
-    display: none;
-    position: absolute;
-}
-
-.tabs-vertical ul li.is-active {
-    background: #f1f1f1
-}
-
-
-.section--gray .tabs-vertical ul li.is-active {
-    background: #fff;
-}
-
-.tabs-vertical ul li.is-active .tab-info .btn {
-    opacity: 1;
-    visibility: visible;
-    display: inline-block;
-    position: relative;
-}
-
-.tabs-vertical ul li.is-active .tab-info h3 {
-    color: var(--color-main);
-}
-
-
 
 .tabs-gray {
     overflow: auto;
@@ -290,9 +199,7 @@
         font-size: 44px;
     }
 
-    .tabs-vertical li a {
-        padding-left: 60px;
-    }
+
 
 }
 
@@ -315,23 +222,7 @@
 }
 
 @media (max-width: theme('breakpoints.md','value')) {
-    .tabs-vertical ul {
-        overflow: auto;
-        white-space: nowrap;
-        justify-content: start;
-    }
-
-
-    .tabs-vertical ul li .tab-wrap {
-        white-space: normal;
-        width: 205px;
-        justify-content: center;
-    }
-
-    .tabs-vertical ul li .counter {
-        margin-right: 0;
-    }
-
+   
     
     .tabs-gray ul {
         display: block;

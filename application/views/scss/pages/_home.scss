@@ -592,7 +592,7 @@ $caraousel: "caraousel";
 
 .course_card_container a.whole-link:hover {
     -webkit-box-shadow: 0 10px 16px rgba(0, 0, 0, 0.15);
-    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.1);border-bottom-right-radius: 50px; 
+    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.1);
     
 }
 
@@ -603,7 +603,7 @@ $caraousel: "caraousel";
 .course_flag_card {
     display: flex;
     padding: 20px;
-    flex-wrap: wrap;
+    flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.1); position: relative;
 }
 
 .course_flag_card .flag-icon {
@@ -639,7 +639,7 @@ $caraousel: "caraousel";
 
 @media (max-width: theme('breakpoints.md','value')) {
     .course_flag_card {
-        padding:15px;
+        padding:10px 15px;
     }
 
     .card-more-content {
@@ -647,13 +647,15 @@ $caraousel: "caraousel";
     }
 
 
-    .course_card_container .course-selector-image {
-      display: none;
-    }
-    .course_card_container{border: 1px solid #ddd; margin-bottom: 10px;}
-    .course_flag_card .course-info{width: calc(100% - 60px); display: flex; align-items: center; justify-content: space-between;}
+    // .course_card_container .course-selector-image {
+    //   display: none;
+    // }
+    .course_card_container{ margin-bottom: 10px;}
+    // .course_flag_card .course-info{width: calc(100% - 60px); display: flex; align-items: center; justify-content: space-between;}
     .card-more-content{margin-top: 15px;}
-
+    .section_course_card .row [class*="col-"]{-webkit-box-flex: 0;-ms-flex: 0 0 50%;    flex: 0 0 50%;    max-width: 50%;padding:0 10px;}
+    .course_flag_card .flag-icon{position: absolute; top: -30%; #{theme('direction.right','value')}:-10px;}
+    .course_flag_card .course-info h4{font-size: 1rem;}
 }
 
 
@@ -1192,8 +1194,134 @@ $caraousel: "caraousel";
 
 
 
+.tabs-vertical ul {
+    counter-reset: number;
+}
+
+.tabs-vertical ul li,
+.container--cms .tabs-vertical ul li {
+    position: relative;
+    z-index: 1;
+    padding: 25px;
+    display: flex;
+}
+
+.tabs-vertical ul li:before,
+.tabs-vertical ul li:after {
+    display: none;
+    /*Clashes with the class of aplying container--cms listing arrow shown*/
+}
+
+.tabs-vertical ul li .tab-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.tabs-vertical ul li .tab-click {
+
+    border-radius: 4px;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    z-index: 0;
+    cursor: pointer;
+}
+
+.tabs-vertical ul li .counter {
+    position: relative;
+   
+    z-index: 1;
+}
+
+.tabs-vertical ul li .counter:before {
+    content: ""counter(number, decimal-leading-zero) " ";
+    counter-increment: number;
+    overflow: hidden;
+    font-size: 54px;
+    opacity: 0.1;
+    font-weight: 700;
+}
+
+.tabs-vertical ul li .tab-info {
+    z-index: 1;
+    position: relative;
+}
+
+.tabs-vertical ul li .tab-info h3 {
+    font-size: 1.4285rem;
+    font-weight: 600;
+    color: var(--color-dark);
+    margin-bottom: 6px;
+}
+
+.tabs-vertical ul li .tab-info .btn {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+    position: absolute;
+}
+
+.tabs-vertical ul li.is-active {
+    background: #f1f1f1
+}
+
+
+.section--gray .tabs-vertical ul li.is-active {
+    background: #fff;
+}
+
+.tabs-vertical ul li.is-active .tab-info .btn {
+    opacity: 1;
+    visibility: visible;
+    display: inline-block;
+    position: relative;
+}
+
+.tabs-vertical ul li.is-active .tab-info h3 {
+    color:theme('color.primary');
+}
+
+
+
+
+
+@media (max-width: theme('breakpoints.xl','value')) {
+    .tabs-vertical ul li{padding: 15px;}
+    .tabs-vertical ul li .counter::before{font-size: 2rem;}
+}
+
 @media (max-width: theme('breakpoints.md','value')) {
     .border-box{ margin-bottom: 15px;}
+
+    #how-it-works .tabs-vertical{background-color: #fff;}
+    #how-it-works .tabs-vertical ul li .counter{display: none;}
+    #how-it-works .tabs-vertical ul li.is-active .tab-info .btn{display: none;}
+    .tabs-vertical ul li{text-align: #{theme('direction.left','value')};}
+
+
+
+    .tabs-vertical ul {
+        overflow: auto;
+        white-space: nowrap;
+        justify-content: start;
+    }
+    .tabs-vertical ul li{padding:15px 10px;}
+
+    .tabs-vertical ul li .tab-wrap {
+        white-space: normal;
+        width: 205px;
+        justify-content: center;
+    }
+
+    .tabs-vertical ul li .counter {
+        margin-right: 0;
+    }
+
+    .tabs-vertical ul li.is-active .tab-wrap:after{position: absolute; left: 0; right: 0; top: 0; content: ""; height: 5px; background-color: theme('color.primary');}
+    .tabs-vertical ul li .tab-info h3{font-size: 1.4rem;}
 }
 
 

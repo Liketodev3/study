@@ -1204,21 +1204,7 @@ color: #fff;}
         min-width: 500px;
     }
 
-    .tabled-box {
-        margin: 0 -10px;
-    }
-
-    .tabled-box ul {
-        width: 100%;
-        display: table;
-        table-layout: fixed;
-    }
-
-    .tabled-box ul li {
-        display: table-cell !important;
-        vertical-align: top;
-        padding: 0 10px;
-    }
+  
 
 
 
@@ -1693,10 +1679,6 @@ color: #fff;}
         margin-bottom: 25px;
     }
 
-
-    .tabled-box ul li {
-        display: block !important;
-    }
 
 
     ul.actions{

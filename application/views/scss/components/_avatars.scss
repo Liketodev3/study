@@ -1,11 +1,11 @@
 
 .avtar {
-    border-radius: 100%;
+    border-radius:theme('radius.1');
     display: block;
     position: relative;
     width: 12rem;
-    height: 11rem;
-    position: relative;
+    height: 12rem;
+
     overflow: hidden;
     background: #eee
 }

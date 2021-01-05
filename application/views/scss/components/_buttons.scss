@@ -1,8 +1,8 @@
 
 .btn {
     background: #333;
-    display: inline-block;
-    vertical-align: top;
+    display: inline-flex; align-items: center;
+ 
     padding: 0 30px;
     position: relative;
     cursor: pointer;
@@ -19,7 +19,7 @@
 
 .btn.btn--small {
     height: 30px;
-    line-height: 30px;
+    line-height:26px;
     font-size: .95rem;
     padding: 0 15px
 }
@@ -71,23 +71,21 @@
 
 .btn.btn--primary-bordered {
     background: #fff;
-    border: 1px solid var(--color-primary);
-    -webkit-box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, .07);
-    box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, .07);
-    color: var(--color-primary)
+    border: 1px solid theme('color-primary');
+   
+    color:theme('color-primary');
 }
 
 .btn.btn--secondary-bordered {
     background: #fff;
-    border: 1px solid var(--color-secondary);
-    -webkit-box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, .07);
-    box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, .07);
-    color: var(--color-secondary)
+    border: 1px solid theme('color-secondary');
+   
+    color:theme('color-secondary');
 }
 
 .btn.btn--bordered {
     background: #fff;
-    color: var(--color-dark);
+    color:theme('color-primary');
     border: 1px solid rgba(0, 0, 0, .1)
 }
 
@@ -102,19 +100,19 @@
     box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, .07)
 }
 
-.btn .svg-icon {
-    margin: 0 5px 0 0;
+.btn .svg-icon { margin-#{theme('direction.right','value')}: 5px;
+ 
     overflow: hidden;
     position: relative;
     display: inline-block;
     vertical-align: middle;
     width: 22px;
     height: 22px;
-    top: -2px
+
 }
 
 .btn .svg-icon svg {
-    fill: #333;
+    fill:currentColor;
     position: absolute;
     left: 0;
     right: 0;
@@ -216,19 +214,20 @@
 
 @media(min-width:theme('breakpoints.xl','value')) {
     .btn.btn--primary:hover {
-        background: var(--color-secondary);
-        border-color: var(--color-secondary);
+        background: theme('color.secondary');
+        border-color: theme('color.secondary');
+        color:theme('color.white');
 
     }
 
     .btn.btn--secondary:hover {
-        background: var(--color-primary);
-        border-color: var(--color-primary);
-        color: var(--color-light)
+        background: theme('color.primary');
+        border-color:theme('color.primary');
+        color:theme('color.white');
     }
 
     .form input[type=submit]:hover {
-        background-color: var(--color-primary)
+        background-color: theme('color.primary');
     }
 
     .btn.btn--bordered:hover {
@@ -250,15 +249,17 @@
     }
 
     .btn.btn--primary-bordered:hover {
-        background: var(--color-secondary);
-        border-color: var(--color-secondary);
-        color: #fff
+        background:theme('color.primary');
+        border-color:theme('color.primary');
+        color:theme('color.white');
     }
 
+    .btn.btn--primary-bordered:hover svg, .btn.btn--secondary-bordered:hover svg{fill:theme('color.white');}
+
     .btn.btn--secondary-bordered:hover {
-        background: var(--color-primary);
-        border-color: var(--color-primary);
-        color: #fff
+        background: theme('color.secondary');
+        border-color: theme('color.secondary');
+        color:theme('color.white');
     }
 
     .-hover-shadow:hover {

@@ -10,14 +10,14 @@ $header: "header";
     left: 0;
     right: 0;
     top: 0;
-    z-index: 10;
+    z-index: 11;
     color: theme('color.black');
     background: theme('color.white');
     -webkit-transition: 0.3s all ease-in-out;
     -moz-transition: 0.3s all ease-in-out;
     -o-transition: 0.3s all ease-in-out;
     transition: 0.3s all ease-in-out;
-    box-shadow:theme('boxShadow.vertical');
+    box-shadow:theme('boxShadow.1');
 
     &__left{display: flex; align-items: center;}
 

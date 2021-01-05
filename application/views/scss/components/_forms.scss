@@ -17,11 +17,9 @@ textarea {
     width: 100%;
     color: #999;
     font-family: inherit;
-    line-height: 40px;
+    line-height: 50px;
     background-color: #fff;
-    -webkit-box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, .07);
-    box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, .07);
-    font-size: 1.1rem
+
 }
 
 input[type=email]:focus,
@@ -326,8 +324,8 @@ select[disabled] {
     transform: scale(0) rotate(80deg);
     width: 11px;
     height: 6px;
-    border-bottom: 2px solid #8437e7;
-    border-left: 2px solid #8437e7;
+    border-bottom: 2px solid theme('color.secondary');
+    border-left: 2px solid theme('color.secondary');
     border-bottom-left-radius: 2px;
     left: 4px;
     top: 7px

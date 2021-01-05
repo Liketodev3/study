@@ -45,7 +45,7 @@
     filter: Alpha(Opacity=0);
 }
 .ui-front {
-    z-index: 100;
+    z-index: 10;
 }
 .ui-state-disabled {
     cursor: default !important;
@@ -89,7 +89,7 @@
     position: absolute;
     top: 0;
     #{theme('direction.left','value')}: 0;
-    cursor: default;
+    cursor: default; max-height: 366px; overflow-x:hidden; overflow-y: auto;
 }
 .ui-menu {
     list-style: none;
@@ -108,7 +108,7 @@
 }
 .ui-menu .ui-menu-item-wrapper {
     position: relative;
-    padding: 3px 1em 3px 0; padding-#{theme('direction.left','value')}: 0.4em;
+    padding:0.6rem 1rem;
 }
 .ui-menu .ui-menu-divider {
     margin: 5px 0;
@@ -117,10 +117,10 @@
     line-height: 0;
     border-width: 1px 0 0 0;
 }
-.ui-menu .ui-state-active,
-.ui-menu .ui-state-focus {
-    margin: -1px;
-}
+// .ui-menu .ui-state-active,
+// .ui-menu .ui-state-focus {
+//     margin: -1px;
+// }
 .ui-menu-icons {
     position: relative;
 }
@@ -845,9 +845,10 @@ body .ui-tooltip {
     border: 1px solid #c5c5c5;
 }
 .ui-widget-content {
-    border: 1px solid #ddd;
+    border: 1px solid transparent!important;
     background: #fff;
     color: #333;
+    box-shadow:theme('boxShadow.vertical');
 }
 .ui-widget-content a {
     color: #333;
@@ -881,9 +882,9 @@ html .ui-button.ui-state-disabled:hover {
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active,
 a.ui-button:active {
-    background: #54d1f1;
+    background: rgba(0,0,0,0.06);
     font-weight: 400;
-    color: #fff;
+    color:theme('color.secondary');
 }
 .ui-icon-background,
 .ui-state-active .ui-icon-background {

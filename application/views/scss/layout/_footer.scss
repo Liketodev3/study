@@ -1,5 +1,6 @@
 
 @media(min-width:theme('breakpoints.md','value')){
+   
     .footer-bottom{background-color: theme('color.black'); color: theme('color.white');}
 }
 
@@ -397,6 +398,7 @@
     }
 
     .section.footer-bottom.section--black{padding: 0;}
+    .footer-inline{margin-top: 0;}
 }
 
 
