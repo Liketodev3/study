@@ -94,6 +94,9 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 						  echo  str_replace("{default-currency-code}", CommonHelper::getDefaultCurrencyData()['currency_code'],$labelstr);
 						?>
 					</p>
+					<div class="">
+							<img src="<?php echo CONF_WEBROOT_URL; ?>images/PayGate-Card-Brand-Logos.jpg">
+               		 </div>
 				</div>
 
 				<div class="col-xl-8 col-lg-8 col-md-12">
