@@ -97,13 +97,13 @@ class TeachersController extends MyAppController {
         $post = FatApp::getPostedData();
 		$srch = new SpokenLanguageSearch($this->siteLangId);
         $srch->addChecks();
-        $srch->setPageSize($pageSize);
+        // $srch->setPageSize($pageSize);
 		$keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '');
         if (!empty($keyword)) {
             $cnd = $srch->addCondition('slanguage_identifier', 'like', '%' . $keyword . '%');
             $cnd->attachCondition('slanguage_name', 'like', '%' . $keyword . '%', 'OR');
-        }
-        $rs = $srch->getResultSet();
+		}
+		$rs = $srch->getResultSet();
         $languages = FatApp::getDb()->fetchAll($rs, 'slanguage_id');
         $json  = array();
         foreach ($languages as $key => $language) {
@@ -120,7 +120,7 @@ class TeachersController extends MyAppController {
         $post = FatApp::getPostedData();
 		$srch = new TeachingLanguageSearch($this->siteLangId);
         $srch->addChecks();
-        $srch->setPageSize($pageSize);
+        // $srch->setPageSize($pageSize);
 		$keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '');
         if (!empty($keyword)) {
             $cnd = $srch->addCondition('tlanguage_identifier', 'like', '%' . $keyword . '%');
