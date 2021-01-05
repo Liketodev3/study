@@ -47,6 +47,7 @@ class AdminPrivilege
     const SECTION_COMMISSION = 42;
     const SECTION_SALES_REPORT = 43;
     const SECTION_GROUP_CLASSES = 44;
+    const SECTION_TIMEZONES = 45;
 
     const PRIVILEGE_NONE = 0;
     const PRIVILEGE_READ = 1;
@@ -129,6 +130,7 @@ class AdminPrivilege
             static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs', CommonHelper::getLangId()),
             static::SECTION_FAQ_CATEGORY => Label::getLabel('MSG_Manage_faq_Categories', CommonHelper::getLangId()),
             static::SECTION_GROUP_CLASSES => Label::getLabel('MSG_Manage_GROUP_CLASSES', CommonHelper::getLangId()),
+            static::SECTION_TIMEZONES => Label::getLabel('MSG_Manage_Timezones', CommonHelper::getLangId()),
         );
         return $arr;
     }
@@ -706,5 +708,14 @@ class AdminPrivilege
     public function canViewGroupClasses($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_GROUP_CLASSES, static::PRIVILEGE_READ, $returnResult);
+    }
+    public function canEditTimezones($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_TIMEZONES, static::PRIVILEGE_WRITE, $returnResult);
+    }
+
+    public function canViewTimezones($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_TIMEZONES, static::PRIVILEGE_READ, $returnResult);
     }
 }

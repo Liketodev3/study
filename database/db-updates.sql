@@ -1,50 +1,170 @@
--- task 72959 / 1-AUG-2020 / RV-2.0
-
-ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_payment_method_id` INT NOT NULL AFTER `withdrawal_amount`;
-
--- UPDATE `tbl_user_withdrawal_requests` SET `withdrawal_payment_method_id` = '1' WHERE `tbl_user_withdrawal_requests`.`withdrawal_payment_method_id` = 0;
-
-ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_paypal_email_id` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `withdrawal_status`;
-
-ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_response` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `withdrawal_paypal_email_id`;
-
-ALTER TABLE `tbl_payment_methods` ADD `pmethod_type` INT NOT NULL COMMENT 'payment method type (defined in PaymentMethods model)' AFTER `pmethod_identifier`;
-
-UPDATE `tbl_payment_methods` SET `pmethod_type` = '1' WHERE `tbl_payment_methods`.`pmethod_type` = 0;
+-- ALTER TABLE `tbl_teachers_weekly_schedule` ADD `twsch_weekyear` VARCHAR(10) NOT NULL AFTER `twsch_end_time`; 
 
 --
--- Table structure for table `tbl_payment_method_transaction_fee`
+-- Table structure for table `tbl_timezone`
 --
 
-CREATE TABLE `tbl_payment_method_transaction_fee` (
-  `pmtfee_pmethod_id` int(11) NOT NULL,
-  `pmtfee_currency_id` int(11) NOT NULL,
-  `pmtfee_fee` decimal(12,8) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-ALTER TABLE `tbl_payment_method_transaction_fee` ADD UNIQUE( `pmtfee_pmethod_id`, `pmtfee_currency_id`);
-
-
-INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES (NULL, 'Paypal Payout', '2', 'PaypalPayout', '1', '3');
-
-ALTER TABLE `tbl_user_withdrawal_requests` ADD `withdrawal_transaction_fee` DECIMAL(10,4) NOT NULL AFTER `withdrawal_amount`;
-
-
-INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES (NULL, 'Bank Payout', '2', 'BankPayout', '1', '4');
-
-INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_MEETING_TOOL_COMET_CHAT', 1, 0), ('CONF_MEETING_TOOL_LESSONSPACE', 2, 0), ('CONF_ACTIVE_MEETING_TOOL', 2, 0);
+CREATE TABLE `tbl_timezone` (
+  `timezone_id` int(11) NOT NULL,
+  `timezone_offset` varchar(10) NOT NULL,
+  `timezone_identifier` varchar(100) NOT NULL,
+  `timezone_name` varchar(100) NOT NULL,
+  `timezone_active` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Table structure for table `tbl_lesson_meeting_details`
+-- Dumping data for table `tbl_timezone`
 --
 
-CREATE TABLE `tbl_lesson_meeting_details` (
-  `lmeetdetail_id` int(11) NOT NULL,
-  `lmeetdetail_slesson_id` int(11) NOT NULL,
-  `lmeetdetail_user_id` int(11) NOT NULL,
-  `lmeetdetail_key` varchar(255) NOT NULL,
-  `lmeetdetail_value` text NOT NULL
+INSERT INTO `tbl_timezone` (`timezone_id`, `timezone_offset`, `timezone_identifier`, `timezone_name`, `timezone_active`) VALUES
+(1, '+02:00', 'Africa/Cairo', 'Cairo', 1),
+(2, '+01:00', 'Africa/Casablanca', ' Casablanca', 1),
+(3, '+02:00', 'Africa/Harare', ' Harare', 1),
+(4, '+02:00', 'Africa/Johannesburg', ' Pretoria', 1),
+(5, '+01:00', 'Africa/Lagos', ' West Central Africa', 1),
+(6, '+00:00', 'Africa/Monrovia', ' Monrovia', 1),
+(7, '+03:00', 'Africa/Nairobi', ' Nairobi', 1),
+(8, '-03:00', 'America/Argentina/Buenos_Aires', ' Georgetown', 1),
+(9, '-05:00', 'America/Bogota', ' Bogota', 1),
+(10, '-04:00', 'America/Caracas', ' Caracas', 1),
+(11, '-07:00', 'America/Chihuahua', ' Chihuahua', 1),
+(12, '-03:00', 'America/Godthab', ' Greenland', 1),
+(13, '-04:00', 'America/La_Paz', ' La Paz', 1),
+(14, '-05:00', 'America/Lima', ' Lima', 1),
+(15, '-08:00', 'America/Los_Angeles', ' Pacific Time (US & Canada)', 1),
+(16, '-06:00', 'America/Managua', ' Central America', 1),
+(17, '-07:00', 'America/Mazatlan', ' Mazatlan', 1),
+(18, '-06:00', 'America/Mexico_City', ' Guadalajara', 1),
+(19, '-06:00', 'America/Monterrey', ' Monterrey', 1),
+(20, '-02:00', 'America/Noronha', ' Mid-Atlantic', 1),
+(21, '-03:00', 'America/Santiago', ' Santiago', 1),
+(22, '-02:00', 'America/Sao_Paulo', ' Brasilia', 1),
+(23, '-08:00', 'America/Tijuana', ' Tijuana', 1),
+(24, '+06:00', 'Asia/Almaty', ' Almaty', 1),
+(25, '+03:00', 'Asia/Baghdad', ' Baghdad', 1),
+(26, '+04:00', 'Asia/Baku', ' Baku', 1),
+(27, '+07:00', 'Asia/Bangkok', ' Bangkok', 1),
+(28, '+05:30', 'Asia/Calcutta', ' Sri Jayawardenepura', 1),
+(29, '+08:00', 'Asia/Chongqing', ' Chongqing', 1),
+(30, '+06:00', 'Asia/Dhaka', ' Astana', 1),
+(31, '+08:00', 'Asia/Hong_Kong', ' Hong Kong', 1),
+(32, '+08:00', 'Asia/Irkutsk', ' Irkutsk', 1),
+(33, '+07:00', 'Asia/Jakarta', ' Jakarta', 1),
+(34, '+02:00', 'Asia/Jerusalem', ' Jerusalem', 1),
+(35, '+04:30', 'Asia/Kabul', ' Kabul', 1),
+(36, '+12:00', 'Asia/Kamchatka', ' Kamchatka', 1),
+(37, '+05:00', 'Asia/Karachi', ' Islamabad', 1),
+(38, '+05:45', 'Asia/Katmandu', ' Kathmandu', 1),
+(39, '+05:30', 'Asia/Kolkata', ' Kolkata', 1),
+(40, '+07:00', 'Asia/Krasnoyarsk', ' Krasnoyarsk', 1),
+(41, '+08:00', 'Asia/Kuala_Lumpur', ' Kuala Lumpur', 1),
+(42, '+03:00', 'Asia/Kuwait', ' Kuwait', 1),
+(43, '+11:00', 'Asia/Magadan', ' New Caledonia', 1),
+(44, '+04:00', 'Asia/Muscat', ' Muscat', 1),
+(45, '+07:00', 'Asia/Novosibirsk', ' Novosibirsk', 1),
+(46, '+06:30', 'Asia/Rangoon', ' Rangoon', 1),
+(47, '+03:00', 'Asia/Riyadh', ' Riyadh', 1),
+(48, '+09:00', 'Asia/Seoul', ' Seoul', 1),
+(49, '+08:00', 'Asia/Singapore', ' Singapore', 1),
+(50, '+08:00', 'Asia/Taipei', ' Taipei', 1),
+(51, '+05:00', 'Asia/Tashkent', ' Tashkent', 1),
+(52, '+04:00', 'Asia/Tbilisi', ' Tbilisi', 1),
+(53, '+03:30', 'Asia/Tehran', ' Tehran', 1),
+(54, '+09:00', 'Asia/Tokyo', ' Sapporo', 1),
+(55, '+08:00', 'Asia/Ulan_Bator', ' Ulaan Bataar', 1),
+(56, '+06:00', 'Asia/Urumqi', ' Urumqi', 1),
+(57, '+10:00', 'Asia/Vladivostok', ' Vladivostok', 1),
+(58, '+09:00', 'Asia/Yakutsk', ' Yakutsk', 1),
+(59, '+05:00', 'Asia/Yekaterinburg', ' Ekaterinburg', 1),
+(60, '+04:00', 'Asia/Yerevan', ' Yerevan', 1),
+(61, '-01:00', 'Atlantic/Azores', ' Azores', 1),
+(62, '-01:00', 'Atlantic/Cape_Verde', ' Cape Verde Is.', 1),
+(63, '+10:30', 'Australia/Adelaide', ' Adelaide', 1),
+(64, '+10:00', 'Australia/Brisbane', ' Brisbane', 1),
+(65, '+11:00', 'Australia/Canberra', ' Canberra', 1),
+(66, '+09:30', 'Australia/Darwin', ' Darwin', 1),
+(67, '+11:00', 'Australia/Hobart', ' Hobart', 1),
+(68, '+11:00', 'Australia/Melbourne', ' Melbourne', 1),
+(69, '+08:00', 'Australia/Perth', ' Perth', 1),
+(70, '+11:00', 'Australia/Sydney', ' Sydney', 1),
+(71, '-04:00', 'Canada/Atlantic', ' Atlantic Time (Canada)', 1),
+(72, '-03:30', 'Canada/Newfoundland', ' Newfoundland', 1),
+(73, '-06:00', 'Canada/Saskatchewan', ' Saskatchewan', 1),
+(74, '+00:00', 'Etc/Greenwich', ' Greenwich Mean Time : Dublin', 1),
+(75, '+01:00', 'Europe/Amsterdam', ' Amsterdam', 1),
+(76, '+02:00', 'Europe/Athens', ' Athens', 1),
+(77, '+01:00', 'Europe/Belgrade', ' Belgrade', 1),
+(78, '+01:00', 'Europe/Berlin', ' Bern', 1),
+(79, '+01:00', 'Europe/Bratislava', ' Bratislava', 1),
+(80, '+01:00', 'Europe/Brussels', ' Brussels', 1),
+(81, '+02:00', 'Europe/Bucharest', ' Bucharest', 1),
+(82, '+01:00', 'Europe/Budapest', ' Budapest', 1),
+(83, '+01:00', 'Europe/Copenhagen', ' Copenhagen', 1),
+(84, '+02:00', 'Europe/Helsinki', ' Kyiv', 1),
+(85, '+03:00', 'Europe/Istanbul', ' Istanbul', 1),
+(86, '+00:00', 'Europe/Lisbon', ' Lisbon', 1),
+(87, '+01:00', 'Europe/Ljubljana', ' Ljubljana', 1),
+(88, '+00:00', 'Europe/London', ' London', 1),
+(89, '+01:00', 'Europe/Madrid', ' Madrid', 1),
+(90, '+03:00', 'Europe/Minsk', ' Minsk', 1),
+(91, '+03:00', 'Europe/Moscow', ' Moscow', 1),
+(92, '+01:00', 'Europe/Paris', ' Paris', 1),
+(93, '+01:00', 'Europe/Prague', ' Prague', 1),
+(94, '+02:00', 'Europe/Riga', ' Riga', 1),
+(95, '+01:00', 'Europe/Rome', ' Rome', 1),
+(96, '+01:00', 'Europe/Sarajevo', ' Sarajevo', 1),
+(97, '+01:00', 'Europe/Skopje', ' Skopje', 1),
+(98, '+02:00', 'Europe/Sofia', ' Sofia', 1),
+(99, '+01:00', 'Europe/Stockholm', ' Stockholm', 1),
+(100, '+02:00', 'Europe/Tallinn', ' Tallinn', 1),
+(101, '+01:00', 'Europe/Vienna', ' Vienna', 1),
+(102, '+02:00', 'Europe/Vilnius', ' Vilnius', 1),
+(103, '+04:00', 'Europe/Volgograd', ' Volgograd', 1),
+(104, '+01:00', 'Europe/Warsaw', ' Warsaw', 1),
+(105, '+01:00', 'Europe/Zagreb', ' Zagreb', 1),
+(106, '+13:00', 'Pacific/Auckland', ' Auckland', 1),
+(107, '+13:00', 'Pacific/Fiji', ' Marshall Is.', 1),
+(108, '+10:00', 'Pacific/Guam', ' Guam', 1),
+(109, '-10:00', 'Pacific/Honolulu', ' Hawaii', 1),
+(110, '+12:00', 'Pacific/Kwajalein', ' International Date Line West', 1),
+(111, '-11:00', 'Pacific/Midway', ' Midway Island', 1),
+(112, '+10:00', 'Pacific/Port_Moresby', ' Port Moresby', 1),
+(113, '-11:00', 'Pacific/Samoa', ' Samoa', 1),
+(114, '+13:00', 'Pacific/Tongatapu', ' Nuku\'alofa', 1),
+(115, '-09:00', 'US/Alaska', ' Alaska', 1),
+(116, '-07:00', 'US/Arizona', ' Arizona', 1),
+(117, '-06:00', 'US/Central', ' Central Time (US & Canada)', 1),
+(118, '-05:00', 'US/East-Indiana', ' Indiana (East)', 1),
+(119, '-05:00', 'US/Eastern', ' Eastern Time (US & Canada)', 1),
+(120, '-07:00', 'US/Mountain', ' Mountain Time (US & Canada)', 1),
+(121, '+00:00', 'UTC', ' UTC', 1);
+
+--
+-- Indexes for table `tbl_timezone`
+--
+ALTER TABLE `tbl_timezone`
+  ADD PRIMARY KEY (`timezone_id`),
+  ADD UNIQUE KEY `timezone_identifier` (`timezone_identifier`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tbl_timezone`
+--
+ALTER TABLE `tbl_timezone`
+  MODIFY `timezone_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
+
+
+--
+-- Table structure for table `tbl_timezone_lang`
+--
+
+CREATE TABLE `tbl_timezone_lang` (
+  `timezonelang_timezone_id` varchar(100) NOT NULL,
+  `timezonelang_lang_id` int(11) NOT NULL,
+  `timezonelang_text` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -52,166 +172,14 @@ CREATE TABLE `tbl_lesson_meeting_details` (
 --
 
 --
--- Indexes for table `tbl_lesson_meeting_details`
+-- Indexes for table `tbl_timezone_lang`
 --
-ALTER TABLE `tbl_lesson_meeting_details`
-  ADD PRIMARY KEY (`lmeetdetail_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `tbl_lesson_meeting_details`
---
-ALTER TABLE `tbl_lesson_meeting_details`
-  MODIFY `lmeetdetail_id` int(11) NOT NULL AUTO_INCREMENT;
-
-INSERT INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
-('MSG_Money_added_to_wallet', 1, '<p>Your order has been successfully processed!</p><p>Please direct any questions you have to the <a href=\"{contact-us-page-url}\">web portal owner</a>.</p><p>Thanks for choosing us online!');
-
-INSERT INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_TIMEZONE_STRING',1,'UTC');
-INSERT INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_TIMEZONE_STRING',2,'UTC');
-
-INSERT INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES
-('class_book_email_confirmation', 1, 'New Class Booked', 'New Class Booked at {website_name}', '<table style=\"font-family:Arial; color:#333; line-height:26px;\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" bgcolor=\"#f5f5f5\"> \r\n        \r\n        \r\n	<tbody>            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:30px 0;\"></td>    \r\n            \r\n		</tr>    \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:0 0 0;\">          \r\n                    \r\n				<!--\r\n				header start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table style=\"background: #fff;border-bottom: 1px solid #eee;\" width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:20px 40px;\"><a href=\"#\" style=\"display: block;\">{Company_Logo}</a></td>                  \r\n                                \r\n							<td style=\"text-align:right;padding: 40px;\">                      {social_media_icons}\r\n                      </td>              \r\n                            \r\n						</tr>          \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				header end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n       \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>                    \r\n				<!--\r\n				page body start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">             \r\n                  \r\n                        \r\n					<tbody>                        \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;\">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:20px 0 60px;\">                                                                          \r\n												<h5 style=\"margin: 0;padding: 0; text-transform: uppercase; font-size: 16px;font-weight: 500;color: #333;\"></h5>                                     \r\n												<h2 style=\"margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;\">Your class is Booked!</h2>                                     \r\n                                  </td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                  \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; \">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:60px 0 70px;\">                                      \r\n												<h3 style=\"margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;\">Dear {learner_name}  </h3>Your class ({class_name}) with ({teacher_name}) is booked, which is scheduled on {class_date} {class_start_time} - {class_end_time}<br />\r\n												<br />\r\n												</td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                 \r\n                \r\n              \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page body end here\r\n				-->\r\n				                          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>          \r\n                    \r\n				<!--\r\n				page footer start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                                \r\n							<td style=\"height:30px;\"></td>                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;\">                      \r\n                                    \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:30px 0; font-size:20px; color:#000;\">                                  Need more help?<br />\r\n												                                                     <a href=\"{contact_us_url}\" style=\"color:#e84c3d;\">We‘re here, ready to talk</a>                              </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;\">                      \r\n                                    \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:20px 0 30px; font-size:13px; color:#999;\">                                  Be sure to add <a href=\"#\" style=\"color: #e84c3d\">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br />\r\n												                                                    <br />\r\n												                                                    &copy; 2018, {website_name}. All Rights Reserved.\r\n                                      \r\n                                  </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                  \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0; height:50px;\"></td>              \r\n                            \r\n						</tr>              \r\n                  \r\n              \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page footer end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n        \r\n        \r\n	</tbody>    \r\n</table>', '{learner_name}\r\n{teacher_name}\r\n{class_name}\r\n{learner_comment}\r\n{class_date}\r\n{class_start_time}\r\n{class_end_time}\r\n{status}\r\n', 1),
-('learner_class_book_email', 1, 'Learner New Class Book Email', 'Learner New Class Book Email at {website_name}', '<table style=\"font-family:Arial; color:#333; line-height:26px;\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" bgcolor=\"#f5f5f5\"> \r\n        \r\n        \r\n	<tbody>            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:30px 0;\"></td>    \r\n            \r\n		</tr>    \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:0 0 0;\">          \r\n                    \r\n				<!--\r\n				header start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table style=\"background: #fff;border-bottom: 1px solid #eee;\" width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:20px 40px;\"><a href=\"#\" style=\"display: block;\">{Company_Logo}</a></td>                  \r\n                                \r\n							<td style=\"text-align:right;padding: 40px;\">                      {social_media_icons}\r\n                      </td>              \r\n                            \r\n						</tr>          \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				header end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n       \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>                    \r\n				<!--\r\n				page body start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">             \r\n                  \r\n                        \r\n					<tbody>                        \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;\">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:20px 0 60px;\">                                                                          \r\n												<h5 style=\"margin: 0;padding: 0; text-transform: uppercase; font-size: 16px;font-weight: 500;color: #333;\"></h5>                                     \r\n												<h2 style=\"margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;\">Learner {status} The Lesson!</h2>                                     \r\n                                  </td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                  \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; \">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:60px 0 70px;\">                                      \r\n												<h3 style=\"margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;\">Dear {teacher_name}  </h3>Learner ({learner_name}) has {status} the class ({class_name}) which is scheduled on {class_date} {class_start_time} - {class_end_time}<br />\r\n												<br />\r\n												</td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                 \r\n                \r\n              \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page body end here\r\n				-->\r\n				                          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>          \r\n                    \r\n				<!--\r\n				page footer start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                                \r\n							<td style=\"height:30px;\"></td>                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;\">                      \r\n                                    \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:30px 0; font-size:20px; color:#000;\">                                  Need more help?<br />\r\n												                                                     <a href=\"{contact_us_url}\" style=\"color:#e84c3d;\">We‘re here, ready to talk</a>                              </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;\">                      \r\n                                    \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:20px 0 30px; font-size:13px; color:#999;\">                                  Be sure to add <a href=\"#\" style=\"color: #e84c3d\">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br />\r\n												                                                    <br />\r\n												                                                    &copy; 2018, {website_name}. All Rights Reserved.\r\n                                      \r\n                                  </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                  \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0; height:50px;\"></td>              \r\n                            \r\n						</tr>              \r\n                  \r\n              \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page footer end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n        \r\n        \r\n	</tbody>    \r\n</table>', '{learner_name}\r\n{teacher_name}\r\n{class_name}\r\n{learner_comment}\r\n{class_date}\r\n{class_start_time}\r\n{class_end_time}\r\n{status}\r\n', 1);
+ALTER TABLE `tbl_timezone_lang`
+  ADD UNIQUE KEY `timezonelang_timezone_id` (`timezonelang_timezone_id`,`timezonelang_lang_id`);
 
 
-UPDATE `tbl_language_labels` SET `label_caption` = 'Currently, there are no classes found per filtered criteria.' WHERE`label_key` = 'LBL_No_classes_found'; 
-
-UPDATE `tbl_url_rewrites` SET `urlrewrite_custom` = 'teachers/profile/urlparameter' WHERE `tbl_url_rewrites`.`urlrewrite_custom` = 'teachers/urlparameter';
-
-UPDATE `tbl_content_pages_block_lang` SET `cpblocklang_text` = '<section class=\"section section--white section--centered\">\r\n    <div class=\"container container--narrow container--cms\">\r\n        <div class=\"section__body\" style=\"\">\r\n            <!--\r\n            ------ First Section -------\r\n            -->\r\n            \r\n            <div class=\"row justify-content-center -align-center\">\r\n                <div class=\"col-xl-10 col-lg-12 col-md-12\">\r\n                    <div class=\"row\">\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <div class=\"icon\"><img src=\"/public/images/icon_mission.svg\" alt=\"\" /></div>\r\n                            <h4>The Mission</h4>\r\n                            <p>Nulla ornare euismod blandit. Quisque metus turpis, sollicitudin eget pellentesque sit amet, sagittis non dui. Sed convallis et nisl eget molestie. Vestibulum quis leo purus. Nunc iaculis placerat enim non tempus. </p></div>\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <div class=\"icon\"><img src=\"/public/images/icon_vision.svg\" alt=\"\" /></div>\r\n                            <h4>The Vision</h4>\r\n                            <p>Nulla ornare euismod blandit. Quisque metus turpis, sollicitudin eget pellentesque sit amet, sagittis non dui. Sed convallis et nisl eget molestie. Vestibulum quis leo purus. Nunc iaculis placerat enim non tempus.</p></div></div><span class=\"-gap\"></span><span class=\"-gap\"></span><span class=\"-gap\"></span><span class=\"-gap\"></span>\r\n                    <div class=\"-align-center section__head\">\r\n                        <h2>The Yocoach</h2></div>\r\n                    <div class=\"row\">\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <p style=\"text-align:left;\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin ante vel nisl mollis, vel viverra ipsum molestie. Nullam vehicula eros magna, id pharetra diam fringilla sit amet. Sed id lectus quis diam facilisis mollis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut convallis nec ante id dictum. Nunc rutrum ultrices dolor sit amet dignissim. Donec commodo turpis quis justo interdum egestas. Phasellus vestibulum aliquet neque eget scelerisque. Integer lacus orci, faucibus a nunc sed, rutrum iaculis tortor. Etiam sit amet massa sapien. In tincidunt sem at lorem viverra rutrum. Ut erat metus, mattis vel venenatis at, sodales et libero. Suspendisse consequat congue pretium. Morbi a eros fermentum, maximus neque in, egestas lectus. Nunc aliquam ante erat, vitae efficitur dui aliquam sit amet.</p></div>\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <p style=\"text-align:left;\">Ut lacus nisi, pulvinar eu tortor non, consectetur sollicitudin ante. Etiam maximus, neque a fermentum porta, mauris est consequat quam, eu fermentum quam arcu et nulla. Nullam ipsum turpis, lobortis lobortis cursus a, malesuada id nulla. Proin vitae pellentesque enim. Morbi quis viverra ante. Etiam malesuada, nisi eu hendrerit varius, nunc mi condimentum mi, eget lacinia sapien eros at erat. Aliquam pretium mattis erat, ultricies malesuada mi luctus eget. Aliquam in dignissim mi. Curabitur quam ante, feugiat sit amet commodo eu, tincidunt ut nibh. Ut ultricies velit non nibh lacinia dignissim.</p></div></div></div></div>\r\n            <!--\r\n            ------------\r\n            -->\r\n            </div></div></section>\r\n<section class=\"section section--grey -align-center\">\r\n    <div class=\"container container--narrow\">\r\n        <div class=\"section__head\">\r\n            <h2>The Team</h2></div>\r\n        <div class=\"section__body\">\r\n            <div class=\"row justify-content-center\">\r\n                <div class=\"col-xl-9 col-lg-12\">\r\n                    <div class=\"row\">\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_2.jpg\" alt=\"\" /></div>\r\n                            <h4>Kirstin</h4>\r\n                            <p>Customer Executive</p></div>\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_5.jpg\" alt=\"\" /></div>\r\n                            <h4>Cooper</h4>\r\n                            <p>Product Design</p></div>\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_4.jpg\" alt=\"\" /></div>\r\n                            <h4>Andrew</h4>\r\n                            <p>Marketing</p></div>\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_3.jpg\" alt=\"\" /></div>\r\n                            <h4>Mikael</h4>\r\n                            <p>Product Developer</p></div></div></div></div></div></div></section>\r\n<section class=\"section section--white section--hiw\">\r\n    <div class=\"container container--narrow\">\r\n        <div class=\"section-title\">\r\n            <h2>How It Works</h2></div>\r\n        <div class=\"row justify-content-between\">\r\n            <div class=\"col-xl-4 col-lg-5 col-md-12 col-sm-12\">\r\n                <div class=\"tabs-vertical tabs-js\">\r\n                    <ul>\r\n                        <li class=\"is-active\" data-href=\"#tab1\">\r\n                            <div class=\"tab-wrap\"> <span class=\"counter\"></span> \r\n                                <div class=\"tab-info\">\r\n                                    <h3>Browse</h3> \r\n                                    <p>Browse through hundreds of teachers.</p> <a href=\"https://www.italki.com/home\" class=\"btn btn--primary\">Find a Teacher</a> </div></div></li>\r\n                        <li class=\"\" data-href=\"#tab2\">\r\n                            <div class=\"tab-wrap\"> <span class=\"counter\"></span> \r\n                                <div class=\"tab-info\">\r\n                                    <h3>Book</h3> \r\n                                    <p>Book lessons with the best teacher for you.</p> <a href=\"https://www.italki.com/home\" class=\"btn btn--primary\">Find a Teacher</a> </div></div></li>\r\n                        <li class=\"\" data-href=\"#tab3\">\r\n                            <div class=\"tab-wrap\"> <span class=\"counter\"></span> \r\n                                <div class=\"tab-info\">\r\n                                    <h3>Start</h3> \r\n                                    <p>Log in to YoCoach and start learning.</p> <a href=\"https://www.italki.com/home\" class=\"btn btn--primary\">Find a Teacher</a> </div></div></li>\r\n                    </ul></div></div>\r\n            <div class=\"col-xl-7 col-lg-7 col-md-12 col-sm-12 col__content\">\r\n                <div id=\"tab1\" class=\"tabs-content-js\" style=\"display: block;\">\r\n                    <div class=\"media\"><a href=\"\" target=\"_self\"><img src=\"/image/show-banner/4/0/3\" alt=\"\" /></a></div></div>\r\n                <div id=\"tab2\" class=\"tabs-content-js\" style=\"display: none;\">\r\n                    <div class=\"media\"><a href=\"\" target=\"_self\"><img src=\"/image/show-banner/5/0/3\" alt=\"\" /></a></div></div>\r\n                <div id=\"tab3\" class=\"tabs-content-js\" style=\"display: none;\">\r\n                    <div class=\"media\"><a href=\"\" target=\"_self\"><img src=\"/image/show-banner/6/0/3\" alt=\"\" /></a></div></div></div></div></div></section>\r\n<section class=\"section section--white\">             \r\n    <div class=\"container container--narrow -align-center\">                 \r\n        <h2 class=\"-style-bold\">Looking forward to meeting<br />\r\n              your new students?</h2>                 <span class=\"-gap\"></span>                 <a href=\"#\" class=\"btn btn--primary btn--large\">Start Teaching</a>             </div>         </section>' WHERE `cpblocklang_id` = 1;
-
-
--- clean email archives after an interval
-
-/* SET GLOBAL event_scheduler = ON;
-CREATE EVENT event_clean_email_archives ON SCHEDULE EVERY 1 MONTH ENABLE
-  DO 
-  delete from tbl_email_archives
-  WHERE `emailarchive_sent_on` < CURRENT_TIMESTAMP - INTERVAL 1 MONTH; */
-
-INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ENABLE_FLASHCARD', 1, 0);
-
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.3.1.20201028' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
-
-
-REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
-('CONF_ANALYTICS_ACCESS_TOKEN', '1//0glmaGc5eiieRCgYIARAAGBASNwF-L9IrsvdLLYVTMldzNsxW-KIxbA5oAE4nwGMySOYHYsz8yErmqcXs9hZ3INqw4r3FPYfHe64', 0),
-('CONF_ANALYTICS_CLIENT_ID', '726877070901-9m6sct2rbdj7edf9n9ugl0h4bk45f45v.apps.googleusercontent.com', 0),
-('CONF_ANALYTICS_ID', 'UA-82212031-1', 0),
-('CONF_ANALYTICS_SECRET_KEY', '3HlpqTqwL5RVb96ZM7bS_Kky', 0);
-
-REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
-('CONF_SITE_TRACKER_CODE', '<!-- Global site tag (gtag.js) - Google Analytics -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=UA-82212031-1\"></script>\r\n<script>\r\n window.dataLayer = window.dataLayer || [];\r\n function gtag(){dataLayer.push(arguments);}\r\n gtag(\'js\', new Date());\r\n gtag(\'config\', \'UA-82212031-1\');\r\n</script>>', 0);
-
-
-UPDATE `tbl_social_platforms` SET `splatform_url` = 'https://www.facebook.com/yocoachelearning/' WHERE `splatform_identifier` = 'Facebook';
-UPDATE `tbl_social_platforms` SET `splatform_url` = 'https://twitter.com/yo_coach_' WHERE `splatform_identifier` = 'Twitter';
-UPDATE `tbl_social_platforms` SET `splatform_url` = 'https://in.pinterest.com/YoCoach_/' WHERE `splatform_identifier` = 'Pinterest';
-UPDATE `tbl_social_platforms` SET `splatform_url` = 'https://www.instagram.com/YoCoach_Software/' WHERE `splatform_identifier` = 'Instagram';
-UPDATE `tbl_social_platforms` SET `splatform_url` = 'https://www.youtube.com/channel/UCNPly8tAtfBneXv1MfzjD4g' WHERE `splatform_identifier` = 'Youtube';
+INSERT INTO `tbl_attached_files` (`afile_type`, `afile_record_id`, `afile_record_subid`, `afile_lang_id`, `afile_screen`, `afile_physical_path`, `afile_name`, `afile_display_order`, `afile_downloaded_times`) VALUES
+(44, 0, 0, 1, 0, '2020/12/1608545402-2000x9001jpg', '2000x900_1.jpg', 5, 0);
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
-('LBL_COPYRIGHT_TEXT', 1, 'Copyright {YEAR} {PRODUCT} Developed by {OWNER}.');
-
-replace INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES ('tpl_teacher_request_received', '1', 'New Teacher Request - Admin', 'New Teacher Request on {website_name}', '<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#f5f5f5\" style=\"font-family:Arial; color:#333; line-height:26px;\">    \r\n    <tbody>        \r\n        <tr>            \r\n            <td style=\"background:#e84c3d;padding:30px 0;\"></td>        \r\n        </tr>        \r\n        <tr>            \r\n            <td style=\"background:#e84c3d;padding:0 0 0;\">                \r\n                <!--\r\n                header start here\r\n                -->\r\n \r\n                <table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #fff;border-bottom: 1px solid #eee;\">                    \r\n                    <tbody>                        \r\n                        <tr> \r\n <td style=\"padding:20px 40px;\"><a href=\"#\" style=\"display: block;\">{Company_Logo}</a></td> \r\n <td style=\"text-align:right;padding: 40px;\">{social_media_icons}\r\n </td>                        \r\n                        </tr>                    \r\n                    </tbody>                \r\n                </table>                \r\n                <!--\r\n                header end here\r\n                -->\r\n </td>        \r\n        </tr>        \r\n        <tr>            \r\n            <td>                \r\n                <!--\r\n                page body start here\r\n                -->\r\n \r\n                <table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                    \r\n                    <tbody>                        \r\n                        <tr> \r\n <td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;\"> \r\n <table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">     \r\n     <tbody> \r\n <tr>     \r\n     <td style=\"padding:20px 0 20px;\"><img src=\"icon-account.png\" alt=\"\" />         \r\n         <h5 style=\"margin: 0;padding: 0; text-transform: uppercase; font-size: 16px;font-weight: 500;color: #333;\">         </h5>         \r\n         <h2 style=\"margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;\"> Teacher Request</h2>     </td> \r\n </tr>     \r\n     </tbody> \r\n </table> </td>                        \r\n                        </tr>                        \r\n                        <tr> \r\n <td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; \"> \r\n <table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">     \r\n     <tbody> \r\n <tr>     \r\n     <td style=\"padding:20px 0 20px;\">         \r\n         <h3 style=\"margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;\"> Dear Admin</h3>\r\n         <p>{name} wants to become a teacher on <a href=\"{website_url}\">{website_name}</a>.</p>         \r\n         <table style=\"border:1px solid #ddd; border-collapse:collapse;\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">             \r\n <tbody> \r\n     <tr>     \r\n         <td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">                         Refernce Number</td>     \r\n         <td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">{refnum}</td> \r\n     </tr> \r\n     <tr>     \r\n         <td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">                         Name</td>     \r\n         <td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">{name}</td> \r\n     </tr> \r\n     <tr>     \r\n         <td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">                         Phone<span class=\"Apple-tab-span\" style=\"white-space:pre\"></span></td>     \r\n         <td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">{phone}</td> \r\n     </tr> \r\n     <tr>     \r\n         <td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">                         Subjects</td>     \r\n         <td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">{subjects}</td> \r\n     </tr> \r\n     <tr>     \r\n         <td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">                         Requested On</td>     \r\n         <td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">{request_date}</td> \r\n     </tr>             \r\n </tbody>         \r\n         </table>     </td> \r\n </tr>     \r\n     </tbody> \r\n </table> </td>                        \r\n                        </tr>                    \r\n                    </tbody>                \r\n                </table>                \r\n                <!--\r\n                page body end here\r\n                -->\r\n </td>        \r\n        </tr>        \r\n        <tr>            \r\n            <td>                \r\n                <!--\r\n                page footer start here\r\n                -->\r\n \r\n                <table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                    \r\n                    <tbody>                        \r\n                        <tr> \r\n <td style=\"height:30px;\"></td>                        \r\n                        </tr>                        \r\n                        <tr> \r\n <td style=\"background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;\"> \r\n <table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">     \r\n     <tbody> \r\n <tr>     \r\n     <td style=\"padding:30px 0; font-size:20px; color:#000;\">Need more\r\n         help?<br />\r\n      <a href=\"{contact_us_url}\" style=\"color:#e84c3d;\">We‘re here, ready to talk</a></td> \r\n </tr>     \r\n     </tbody> \r\n </table> </td>                        \r\n                        </tr>                        \r\n                        <tr> \r\n <td style=\"padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;\"> \r\n <table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">     \r\n     <tbody> \r\n <tr>     \r\n     <td style=\"padding:20px 0 30px; font-size:13px; color:#999;\">Be sure to add\r\n         <a href=\"#\" style=\"color: #e84c3d\">{notifcation_email}</a>to your\r\n         address book or safe sender list so our emails get to your inbox.<br />\r\n      <br />\r\n      &copy; 2018, {website_name}. All Rights Reserved.\r\n     </td> \r\n </tr>     \r\n     </tbody> \r\n </table> </td>                        \r\n                        </tr>                        \r\n                        <tr> \r\n <td style=\"padding:0; height:50px;\"></td>                        \r\n                        </tr>                    \r\n                    </tbody>                \r\n                </table>                \r\n                <!--\r\n                page footer end here\r\n                -->\r\n </td>        \r\n        </tr>    \r\n    </tbody>\r\n</table>', '\'{refnum}\' => Request Reference Number\r\n\'{name}\' => Applicant name,\r\n\'{phone}\' => Phone Number,\r\n\'{request_date}\' => Requested On - Datetime,\r\n\'{subjects}\' => Subjects that the application can teach', '1');
-
-replace INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES ('tpl_teacher_request_received', '2', 'New Teacher Request - Admin', 'New Teacher Request on {website_name}', '<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#f5f5f5\" style=\"font-family:Arial; color:#333; line-height:26px;\">    \r\n    <tbody>        \r\n        <tr>            \r\n            <td style=\"background:#e84c3d;padding:30px 0;\"></td>        \r\n        </tr>        \r\n        <tr>            \r\n            <td style=\"background:#e84c3d;padding:0 0 0;\">                \r\n                <!--\r\n                header start here\r\n                -->\r\n \r\n                <table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #fff;border-bottom: 1px solid #eee;\">                    \r\n                    <tbody>                        \r\n                        <tr> \r\n <td style=\"padding:20px 40px;\"><a href=\"#\" style=\"display: block;\">{Company_Logo}</a></td> \r\n <td style=\"text-align:right;padding: 40px;\">{social_media_icons}\r\n </td>                        \r\n                        </tr>                    \r\n                    </tbody>                \r\n                </table>                \r\n                <!--\r\n                header end here\r\n                -->\r\n </td>        \r\n        </tr>        \r\n        <tr>            \r\n            <td>                \r\n                <!--\r\n                page body start here\r\n                -->\r\n \r\n                <table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                    \r\n                    <tbody>                        \r\n                        <tr> \r\n <td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;\"> \r\n <table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">     \r\n     <tbody> \r\n <tr>     \r\n     <td style=\"padding:20px 0 20px;\"><img src=\"icon-account.png\" alt=\"\" />         \r\n         <h5 style=\"margin: 0;padding: 0; text-transform: uppercase; font-size: 16px;font-weight: 500;color: #333;\">         </h5>         \r\n         <h2 style=\"margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;\"> Teacher Request</h2>     </td> \r\n </tr>     \r\n     </tbody> \r\n </table> </td>                        \r\n                        </tr>                        \r\n                        <tr> \r\n <td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; \"> \r\n <table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">     \r\n     <tbody> \r\n <tr>     \r\n     <td style=\"padding:20px 0 20px;\">         \r\n         <h3 style=\"margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;\"> Dear Admin</h3>\r\n         <p>{name} wants to become a teacher on <a href=\"{website_url}\">{website_name}</a>.</p>         \r\n         <table style=\"border:1px solid #ddd; border-collapse:collapse;\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">             \r\n <tbody> \r\n     <tr>     \r\n         <td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">                         Refernce Number</td>     \r\n         <td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">{refnum}</td> \r\n     </tr> \r\n     <tr>     \r\n         <td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">                         Name</td>     \r\n         <td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">{name}</td> \r\n     </tr> \r\n     <tr>     \r\n         <td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">                         Phone<span class=\"Apple-tab-span\" style=\"white-space:pre\"></span></td>     \r\n         <td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">{phone}</td> \r\n     </tr> \r\n     <tr>     \r\n         <td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">                         Subjects</td>     \r\n         <td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">{subjects}</td> \r\n     </tr> \r\n     <tr>     \r\n         <td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">                         Requested On</td>     \r\n         <td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">{request_date}</td> \r\n     </tr>             \r\n </tbody>         \r\n         </table>     </td> \r\n </tr>     \r\n     </tbody> \r\n </table> </td>                        \r\n                        </tr>                    \r\n                    </tbody>                \r\n                </table>                \r\n                <!--\r\n                page body end here\r\n                -->\r\n </td>        \r\n        </tr>        \r\n        <tr>            \r\n            <td>                \r\n                <!--\r\n                page footer start here\r\n                -->\r\n \r\n                <table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                    \r\n                    <tbody>                        \r\n                        <tr> \r\n <td style=\"height:30px;\"></td>                        \r\n                        </tr>                        \r\n                        <tr> \r\n <td style=\"background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;\"> \r\n <table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">     \r\n     <tbody> \r\n <tr>     \r\n     <td style=\"padding:30px 0; font-size:20px; color:#000;\">Need more\r\n         help?<br />\r\n      <a href=\"{contact_us_url}\" style=\"color:#e84c3d;\">We‘re here, ready to talk</a></td> \r\n </tr>     \r\n     </tbody> \r\n </table> </td>                        \r\n                        </tr>                        \r\n                        <tr> \r\n <td style=\"padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;\"> \r\n <table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">     \r\n     <tbody> \r\n <tr>     \r\n     <td style=\"padding:20px 0 30px; font-size:13px; color:#999;\">Be sure to add\r\n         <a href=\"#\" style=\"color: #e84c3d\">{notifcation_email}</a>to your\r\n         address book or safe sender list so our emails get to your inbox.<br />\r\n      <br />\r\n      &copy; 2018, {website_name}. All Rights Reserved.\r\n     </td> \r\n </tr>     \r\n     </tbody> \r\n </table> </td>                        \r\n                        </tr>                        \r\n                        <tr> \r\n <td style=\"padding:0; height:50px;\"></td>                        \r\n                        </tr>                    \r\n                    </tbody>                \r\n                </table>                \r\n                <!--\r\n                page footer end here\r\n                -->\r\n </td>        \r\n        </tr>    \r\n    </tbody>\r\n</table>', '\'{refnum}\' => Request Reference Number\r\n\'{name}\' => Applicant name,\r\n\'{phone}\' => Phone Number,\r\n\'{request_date}\' => Requested On - Datetime,\r\n\'{subjects}\' => Subjects that the application can teach', '1');
-
-
-
--- task_77655_GDPR_compliance_and_secure_cookies
-
-CREATE TABLE `tbl_user_cookie_consent` (
-  `usercc_user_id` int(11) NOT NULL,
-  `usercc_settings` varchar(255) NOT NULL,
-  `usercc_added_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Indexes for table `tbl_user_cookie_preferences`
---
-ALTER TABLE `tbl_user_cookie_consent`
-  ADD PRIMARY KEY (`usercc_user_id`);
-
-
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
-('LBL_Cookie_settings_update_successfully', '1', 'Cookie settings updated succesfully.')
-, ('LBL_COOKIE_CONSENT_HEADING', '1', 'Cookie Consent')
-, ('LBL_STATISTICS_COOKIE_DESCRIPTION_TEXT', '1', 'These cookies allow us to count visits and traffic sources so we can measure and improve the performance of our site. They help us to know which pages are the most and least popular and see how visitors move around the site. All information these cookies collect is aggregated and therefore anonymous. If you do not allow these cookies we will not know when you have visited our site, and will not be able to monitor its performance.')
-, ('LBL_PREFERENCES_COOKIE_DESCRIPTION_TEXT', '1', 'These cookies enable the website to provide enhanced functionality and personalisation. If you do not allow these cookies then some or all of these services may not function properly.')
-, ('LBL_NECESSARY_COOKIE_DESCRIPTION_TEXT', '1', 'These cookies are necessary for the website to function and cannot be switched off in our systems. They are usually only set in response to actions made by you which amount to a request for services, such as setting your privacy preferences, logging in or filling in forms. You can set your browser to block or alert you about these cookies, but some parts of the site will not then work. These cookies do not store any personally identifiable information.')
-;
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.4.0.20201104' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.4.1.20201105' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
-
-ALTER TABLE `tbl_user_settings`
-  DROP `us_single_lesson_amount`,
-  DROP `us_bulk_lesson_amount`;
-
-  REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
-('CONF_SITE_TRACKER_CODE', '<!-- Global site tag (gtag.js) - Google Analytics -->\r\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=UA-82212031-1\"></script>\r\n<script>\r\n window.dataLayer = window.dataLayer || [];\r\n function gtag(){dataLayer.push(arguments);}\r\n gtag(\'js\', new Date());\r\n gtag(\'config\', \'UA-82212031-1\');\r\n</script>', 0);
-
-UPDATE `tbl_url_rewrites` SET urlrewrite_custom = 'teachers/profile/urlparameter' WHERE `urlrewrite_original` LIKE 'teachers/view';
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.5.0.20201118' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.6.20201120' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.0.20201120' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.1.20201121' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.2.20201123' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.3.20201124' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
-('MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}', 1, '<p>Your trial lesson order has been successfully processed!</p>'),
-('MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}', 2, '<p>Your trial lesson order has been successfully processed!</p>');
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.4.20201124' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
-('NOTE_SETTINGS_NOT_ALLOWED_TO_BE_MODIFIED_ON_DEMO_VERSION', 1, 'Please note that, these details are not allowed to be modified on demo version.'),
-('NOTE_SETTINGS_NOT_ALLOWED_TO_BE_MODIFIED_ON_DEMO_VERSION', 2, 'Please note that, these details are not allowed to be modified on demo version.');
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.5.20201201' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
-('LBL_User_Withdrwal_Requests', 1, 'User Withdrawal Requests.'),
-('LBL_FREE_Trail', 1, 'Free Trial'),
-('Label_Help', 1, 'Help'),
-('Label_Help', 2, 'مساعدة');
-
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.6.20201201' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-REPLACE INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES
-('learner_schedule_email', 1, 'Learner Scheduled/Rescheduled Lesson', 'Learner {action} lesson at {website_name}', '\r\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#f5f5f5\" style=\"font-family:Arial; color:#333; line-height:26px;\"> \r\n        \r\n        \r\n	<tbody>            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:30px 0;\"></td>    \r\n            \r\n		</tr>    \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:0 0 0;\">          \r\n                    \r\n				<!--\r\n				header start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #fff;border-bottom: 1px solid #eee;\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:20px 40px;\"><a href=\"#\" style=\"display: block;\">{Company_Logo}</a></td>                  \r\n                                \r\n							<td style=\"text-align:right;padding: 40px;\">                      {social_media_icons}\r\n                      </td>              \r\n                            \r\n						</tr>          \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				header end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n       \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>                    \r\n				<!--\r\n				page body start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">             \r\n                  \r\n                        \r\n					<tbody>                        \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;\">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:20px 0 60px;\">                                     <img src=\"icon-account.png\" alt=\"\" />                                     \r\n												<h5 style=\"margin: 0;padding: 0; text-transform: uppercase; font-size: 16px;font-weight: 500;color: #333;\"></h5>                                     \r\n												<h2 style=\"margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;\">Learner {action} the lesson!</h2>                                     \r\n                                  </td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                  \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; \">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:60px 0 70px;\">                                      \r\n												<h3 style=\"margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;\">Dear {teacher_name}  </h3>Learner ({learner_name}) has {action} the lesson ({lesson_name}) which is scheduled on {lesson_date} {lesson_start_time} - {lesson_end_time}<br />\r\n												\r\n												<div>&nbsp;</div>\r\n												<div>&nbsp;</div>\r\n												<div>Comments: {learner_comment}</div></td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                 \r\n                \r\n              \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page body end here\r\n				-->\r\n				                          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>          \r\n                    \r\n				<!--\r\n				page footer start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                                \r\n							<td style=\"height:30px;\"></td>                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:30px 0; font-size:20px; color:#000;\">                                  Need more help?<br />\r\n												                                                     <a href=\"{contact_us_url}\" style=\"color:#e84c3d;\">We‘re here, ready to talk</a>                              </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:20px 0 30px; font-size:13px; color:#999;\">                                  Be sure to add <a href=\"#\" style=\"color: #e84c3d\">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br />\r\n												                                                    <br />\r\n												                                                    &copy; 2018, {website_name}. All Rights Reserved.\r\n                                      \r\n                                  </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                  \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0; height:50px;\"></td>              \r\n                            \r\n						</tr>              \r\n                  \r\n              \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page footer end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n        \r\n        \r\n	</tbody>    \r\n</table>     ', '{learner_name}\r\n{teacher_name}\r\n{lesson_name}\r\n{learner_comment}\r\n{lesson_date}\r\n{lesson_start_time}\r\n{lesson_end_time}\r\n{action}\r\n', 1);
-
-
-
-ALTER TABLE `tbl_payment_method_transaction_fee` CHANGE `pmtfee_fee` `pmtfee_fee` DECIMAL(5,2) NOT NULL;
-ALTER TABLE `tbl_payment_method_transaction_fee` ADD `pmtfee_type` TINYINT(2) NOT NULL;
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.7.20201205' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.8.20201207' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.9.20201208' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.10.20201210' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
-('Note_This_calendar_is_to_only_check_availability', 1, 'Note: This calendar is to only check availability.'),
-('Note_This_calendar_is_to_only_check_availability', 2, 'ملاحظة: هذا التقويم هو للتحقق من التوفر فقط');
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.11.20201215' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.12.20201215' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.1' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-INSERT INTO `tbl_attached_files` (`afile_id`, `afile_type`, `afile_record_id`, `afile_record_subid`, `afile_lang_id`, `afile_screen`, `afile_physical_path`, `afile_name`, `afile_display_order`, `afile_downloaded_times`) VALUES
-(997, 44, 0, 0, 1, 0, '2020/12/1608545402-2000x9001jpg', '2000x900_1.jpg', 5, 0);
+('LBL_Timezone_:_UTC_%s', 1, 'Timezone : UTC %s');

@@ -126,6 +126,7 @@
 			$objPrivilege->canViewContentPages(AdminAuthentication::getLoggedAdminId(), true) ||
 			$objPrivilege->canViewContentBlocks(AdminAuthentication::getLoggedAdminId(), true) ||
 			$objPrivilege->canViewNavigationManagement(AdminAuthentication::getLoggedAdminId(), true) ||
+			$objPrivilege->canViewTimezones(AdminAuthentication::getLoggedAdminId(), true) ||
 			$objPrivilege->canViewCountries(AdminAuthentication::getLoggedAdminId(), true) ||
 			$objPrivilege->canViewStates(AdminAuthentication::getLoggedAdminId(), true) ||
 			$objPrivilege->canViewSocialPlatforms(AdminAuthentication::getLoggedAdminId(), true) ||
@@ -171,7 +172,11 @@
 					<li><a href="<?php echo CommonHelper::generateUrl('Navigations'); ?>"><?php echo Label::getLabel('LBL_Navigation_Management',$adminLangId);?></a></li>
 				<?php }?>
 
-				<?php if($objPrivilege->canViewCountries(AdminAuthentication::getLoggedAdminId(), true)){?>
+				<?php if($objPrivilege->canViewTimezones(AdminAuthentication::getLoggedAdminId(), true)){?>
+					<li><a href="<?php echo CommonHelper::generateUrl('Timezones'); ?>"><?php echo Label::getLabel('LBL_Timezones_Management',$adminLangId);?></a></li>
+				<?php }?>
+                
+                <?php if($objPrivilege->canViewCountries(AdminAuthentication::getLoggedAdminId(), true)){?>
 					<li><a href="<?php echo CommonHelper::generateUrl('Countries'); ?>"><?php echo Label::getLabel('LBL_Countries_Management',$adminLangId);?></a></li>
 				<?php }?>
 

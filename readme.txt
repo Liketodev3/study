@@ -7,6 +7,7 @@ Hotfixes:
     Bug-#047271-Show correct reason for file not upload
     Bug:#046838: change lesson page image
     Bug-#047296-Hide "this calendar is just for showing availabilty" on trial booking
+    Bug-#047294-Timezone translations manageable from admin
 ---------------------
 
 Release Number: RV-2.1
