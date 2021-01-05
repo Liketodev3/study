@@ -12,7 +12,8 @@ Bug Fixes:
     * Bug-#047271-Show correct reason for file not upload
     * Bug-#047294-Timezone translations manageable from admin
     * Bug-#047308-If teaching language not update, removed popup for update price
-    * Bug-#047386-display subjects of active teachers
+    * Bug-#047386-display all subjects of active teachers
+    * Bug-#047204-Google sign in button text editable
     
 Hotfixes:
     Bug-#045944-fix empty stripe token issue
