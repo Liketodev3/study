@@ -1580,7 +1580,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 }
 
 .flex-container .pop-over .inline-list,
-.booking-view .inline-list,
+.booking-view .inline-list
     {
     margin: 20px 0;
     width: 100%;
@@ -6516,7 +6516,7 @@ div.tagsinput div {
         display: table;
     }
 
-    . .custom-colum__left {
+    .custom-colum__left {
         width: 100%;
         float: none;
     }
@@ -7710,7 +7710,15 @@ color: #fff;}
 .group.group--social a .google-btn img{
   width:auto;
 }
-.group.group--social a{display:inline-block;}
+.group.group--social a{
+    width: 50%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    border-radius: 2px;
+    font-weight: bold;
+}
 .group.group--social .btn--social-fb.btn{width: 184px;
     display: inline-block;
     height: 46px;
@@ -8010,5 +8018,58 @@ color: #fff;}
 }
 .google__Sync a{
     display: inline-block;
+}
+
+.group--social a svg {
+    height: 18px;
+    width: 18px;
+    margin-right: 24px;
+}
+.group--social a span, .group--social a {
+    font-size: 14px;
+    color: #fff;
+}
+.group.group--social .google-login {
+    background: #4285F4;
+    padding: 0 2px;
+}
+.group--social .facebook-login {
+    background-color: #28589c;
+    color: #fff;
+}
+.group--social .facebook-login svg {
+    fill: #fff;
+    height: 25px;
+    width: 25px;
+    margin-right: 24px;
+}
+.group--social a.google-login svg {
+    height: 36px;
+    width: 36px;
+    margin-right: 15px;
+    padding: 9px 9px;
+    background: #fff;
+    border-radius: 2px;
+}
+@media(max-width:1199px){
+    .group.group--social a {
+        width: 100%;
+        display: flex;
+    }
+}
+
+@media(max-width:767px){
+    
+}
+@media(max-width:576px){
+    .group--social {
+        flex-direction: column;
+    }
+    .group.group--social a {
+        margin-bottom: 10px;
+    }
+    .group--social a {
+        margin-right: 0px;
+    }
 }
 /*----------end----------*/
