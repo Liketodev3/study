@@ -1,4 +1,6 @@
 var isRuningTeacherQualificationFormAjax = false;
+
+var teachLangs = [];
 $(document).ready(function(){
 	profileInfoForm();
 
@@ -239,6 +241,10 @@ $(document).ready(function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher', 'teacherLanguagesForm'), '', function(t) {
 			$(dv).html(t);
+			teachLangs = $('[name^=teach_lang_id]').map(function(){
+				return this.value
+			}).get();
+  
 			if(userIsTeacher) {
 				getTeacherProfileProgress();
 			}
@@ -274,11 +280,24 @@ $(document).ready(function(){
 	setupTeacherLanguages  = function(frm){
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		// fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function(t) {
-		// 		//$.mbsmessage.close();
-		// 		teacherLanguagesForm();
-		// });
-        $.confirm({
+		var newTeachLangs = $('[name^=teach_lang_id]').map(function(){
+			return this.value
+		}).get();
+
+		var difference = [];
+		jQuery.grep(newTeachLangs, function(el) {
+			if (jQuery.inArray(el, teachLangs) == -1) difference.push(el);
+		});
+
+		if(difference.length<=0){
+			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function(t) {
+				//$.mbsmessage.close();
+				teacherLanguagesForm();
+			});
+			return;
+		}
+		
+		$.confirm({
             title: langLbl.Confirm,
             content: langLbl.languageUpdateAlert,
             buttons: {

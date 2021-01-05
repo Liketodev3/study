@@ -11,6 +11,7 @@ Bug Fixes:
     * Bug-#047296-Hide "this calendar is just for showing availabilty" on trial booking
     * Bug-#047271-Show correct reason for file not upload
     * Bug-#047294-Timezone translations manageable from admin
+    * Bug-#047308-If teaching language not update, removed popup for update price
     
 Hotfixes:
     Bug-#045944-fix empty stripe token issue
