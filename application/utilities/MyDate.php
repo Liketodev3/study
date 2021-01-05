@@ -101,7 +101,7 @@ class MyDate extends FatDate
     public static function displayTimezoneString($echoTimeZone =  true)
     {
         $user_timezone = self::getUserTimeZone();
-        $string =  Label::getLabel("LBL_Timezone_:").Label::getLabel("LBL_TIMEZONE_STRING").' '.CommonHelper::getDateOrTimeByTimeZone($user_timezone, ' P');
+        $string =  sprintf(Label::getLabel("LBL_Timezone_:_UTC_%s"), CommonHelper::getDateOrTimeByTimeZone($user_timezone, ' P'));
         if($echoTimeZone) {
             echo $string;
             return;
@@ -152,167 +152,18 @@ class MyDate extends FatDate
     }
     public static function timeZoneListing() : array
     {
-        $timeZoneList = self::getIdentifiers();
+        
+        $timeZoneList = Timezone::getAllByLang(CommonHelper::getLangId());
         $finalArray = [];
-      
-        foreach ($timeZoneList as $key => $val) {
-            $offset = self::getOffset($key);
-            
-            $timeZoneName =  $val;
-
-            $finalArray[$key] = "(".Label::getLabel('LBL_TIMEZONE_STRING').$offset.") ".$timeZoneName;
+        foreach ($timeZoneList as $key=>$timezone) {
+            $finalArray[$key] = sprintf(Label::getLabel('LBL_(TIMEZONE_%s)_%s'), $timezone['timezone_offset'], $timezone['timezone_name']);
         }
        return $finalArray;
     }
 
-   public static function getIdentifiers()
+    public static function getIdentifiers()
     {
-        return  array(
-            "Africa/Cairo" => " Cairo",
-            "Africa/Casablanca" => " Casablanca",
-            "Africa/Harare" => " Harare",
-            "Africa/Johannesburg" => " Pretoria",
-            "Africa/Lagos" => " West Central Africa",
-            "Africa/Monrovia" => " Monrovia",
-            "Africa/Nairobi" => " Nairobi",
-            "America/Argentina/Buenos_Aires" => " Buenos Aires",
-            "America/Argentina/Buenos_Aires" => " Georgetown",
-            "America/Bogota" => " Quito",
-            "America/Bogota" => " Bogota",
-            "America/Caracas" => " Caracas",
-            "America/Chihuahua" => " La Paz",
-            "America/Chihuahua" => " Chihuahua",
-            "America/Godthab" => " Greenland",
-            "America/La_Paz" => " La Paz",
-            "America/Lima" => " Lima",
-            "America/Los_Angeles" => " Pacific Time (US & Canada)",
-            "America/Managua" => " Central America",
-            "America/Mazatlan" => " Mazatlan",
-            "America/Mexico_City" => " Mexico City",
-            "America/Mexico_City" => " Guadalajara",
-            "America/Monterrey" => " Monterrey",
-            "America/Noronha" => " Mid-Atlantic",
-            "America/Santiago" => " Santiago",
-            "America/Sao_Paulo" => " Brasilia",
-            "America/Tijuana" => " Tijuana",
-            "Asia/Almaty" => " Almaty",
-            "Asia/Baghdad" => " Baghdad",
-            "Asia/Baku" => " Baku",
-            "Asia/Bangkok" => " Hanoi",
-            "Asia/Bangkok" => " Bangkok",
-            "Asia/Calcutta" => " Chennai",
-            "Asia/Calcutta" => " Mumbai",
-            "Asia/Calcutta" => " New Delhi",
-            "Asia/Calcutta" => " Sri Jayawardenepura",
-            "Asia/Chongqing" => " Chongqing",
-            "Asia/Dhaka" => " Dhaka",
-            "Asia/Dhaka" => " Astana",
-            "Asia/Hong_Kong" => " Beijing",
-            "Asia/Hong_Kong" => " Hong Kong",
-            "Asia/Irkutsk" => " Irkutsk",
-            "Asia/Jakarta" => " Jakarta",
-            "Asia/Jerusalem" => " Jerusalem",
-            "Asia/Kabul" => " Kabul",
-            "Asia/Kamchatka" => " Kamchatka",
-            "Asia/Karachi" => " Karachi",
-            "Asia/Karachi" => " Islamabad",
-            "Asia/Katmandu" => " Kathmandu",
-            "Asia/Kolkata" => " Kolkata",
-            "Asia/Krasnoyarsk" => " Krasnoyarsk",
-            "Asia/Kuala_Lumpur" => " Kuala Lumpur",
-            "Asia/Kuwait" => " Kuwait",
-            "Asia/Magadan" => " Solomon Is.",
-            "Asia/Magadan" => " Magadan",
-            "Asia/Magadan" => " New Caledonia",
-            "Asia/Muscat" => " Abu Dhabi",
-            "Asia/Muscat" => " Muscat",
-            "Asia/Novosibirsk" => " Novosibirsk",
-            "Asia/Rangoon" => " Rangoon",
-            "Asia/Riyadh" => " Riyadh",
-            "Asia/Seoul" => " Seoul",
-            "Asia/Singapore" => " Singapore",
-            "Asia/Taipei" => " Taipei",
-            "Asia/Tashkent" => " Tashkent",
-            "Asia/Tbilisi" => " Tbilisi",
-            "Asia/Tehran" => " Tehran",
-            "Asia/Tokyo" => " Osaka",
-            "Asia/Tokyo" => " Tokyo",
-            "Asia/Tokyo" => " Sapporo",
-            "Asia/Ulan_Bator" => " Ulaan Bataar",
-            "Asia/Urumqi" => " Urumqi",
-            "Asia/Vladivostok" => " Vladivostok",
-            "Asia/Yakutsk" => " Yakutsk",
-            "Asia/Yekaterinburg" => " Ekaterinburg",
-            "Asia/Yerevan" => " Yerevan",
-            "Atlantic/Azores" => " Azores",
-            "Atlantic/Cape_Verde" => " Cape Verde Is.",
-            "Australia/Adelaide" => " Adelaide",
-            "Australia/Brisbane" => " Brisbane",
-            "Australia/Canberra" => " Canberra",
-            "Australia/Darwin" => " Darwin",
-            "Australia/Hobart" => " Hobart",
-            "Australia/Melbourne" => " Melbourne",
-            "Australia/Perth" => " Perth",
-            "Australia/Sydney" => " Sydney",
-            "Canada/Atlantic" => " Atlantic Time (Canada)",
-            "Canada/Newfoundland" => " Newfoundland",
-            "Canada/Saskatchewan" => " Saskatchewan",
-            "Etc/Greenwich" => " Greenwich Mean Time : Dublin",
-            "Europe/Amsterdam" => " Amsterdam",
-            "Europe/Athens" => " Athens",
-            "Europe/Belgrade" => " Belgrade",
-            "Europe/Berlin" => " Berlin",
-            "Europe/Berlin" => " Bern",
-            "Europe/Bratislava" => " Bratislava",
-            "Europe/Brussels" => " Brussels",
-            "Europe/Bucharest" => " Bucharest",
-            "Europe/Budapest" => " Budapest",
-            "Europe/Copenhagen" => " Copenhagen",
-            "Europe/Helsinki" => " Helsinki",
-            "Europe/Helsinki" => " Kyiv",
-            "Europe/Istanbul" => " Istanbul",
-            "Europe/Lisbon" => " Lisbon",
-            "Europe/Ljubljana" => " Ljubljana",
-            "Europe/London" => " Edinburgh",
-            "Europe/London" => " London",
-            "Europe/Madrid" => " Madrid",
-            "Europe/Minsk" => " Minsk",
-            "Europe/Moscow" => " St. Petersburg",
-            "Europe/Moscow" => " Moscow",
-            "Europe/Paris" => " Paris",
-            "Europe/Prague" => " Prague",
-            "Europe/Riga" => " Riga",
-            "Europe/Rome" => " Rome",
-            "Europe/Sarajevo" => " Sarajevo",
-            "Europe/Skopje" => " Skopje",
-            "Europe/Sofia" => " Sofia",
-            "Europe/Stockholm" => " Stockholm",
-            "Europe/Tallinn" => " Tallinn",
-            "Europe/Vienna" => " Vienna",
-            "Europe/Vilnius" => " Vilnius",
-            "Europe/Volgograd" => " Volgograd",
-            "Europe/Warsaw" => " Warsaw",
-            "Europe/Zagreb" => " Zagreb",
-            "Pacific/Auckland" => " Wellington",
-            "Pacific/Auckland" => " Auckland",
-            "Pacific/Fiji" => " Fiji",
-            "Pacific/Fiji" => " Marshall Is.",
-            "Pacific/Guam" => " Guam",
-            "Pacific/Honolulu" => " Hawaii",
-            "Pacific/Kwajalein" => " International Date Line West",
-            "Pacific/Midway" => " Midway Island",
-            "Pacific/Port_Moresby" => " Port Moresby",
-            "Pacific/Samoa" => " Samoa",
-            "Pacific/Tongatapu" => " Nuku'alofa",
-            "US/Alaska" => " Alaska",
-            "US/Arizona" => " Arizona",
-            "US/Central" => " Central Time (US & Canada)",
-            "US/East-Indiana" => " Indiana (East)",
-            "US/Eastern" => " Eastern Time (US & Canada)",
-            "US/Mountain" => " Mountain Time (US & Canada)",
-            "UTC" => " UTC"
-        );
-    
+        return Timezone::getAssocByLang(CommonHelper::getLangId());
     }
 
 }
