@@ -4,6 +4,8 @@ Updates:
     *Task-80349: Update Stripe to support SCA( Strong Customer Authentication)
     *Task-78843: Upgrade zoom to v1.8.3
     *Task-79596: Paygate Payment gateway integration
+    *Task-79596: 2checkout Payment gateway integration
+
 Bug Fixes:    
     * Bug-#045564-Fixed saturday availability issue
     * Bug-#047296-Hide "this calendar is just for showing availabilty" on trial booking

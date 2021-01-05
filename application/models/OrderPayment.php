@@ -36,6 +36,7 @@ class OrderPayment extends Order
             "invoice" => $orderInfo["order_id"],
             "customer_id" => $orderInfo["order_user_id"],
             "user_name" => $userInfo["user_first_name"],
+            "user_phone" => $userInfo["user_phone"],
             "user_email" => $userInfo["credential_email"],
             "order_currency_code" => $orderCurrencyCode,
             "order_type" => $orderInfo['order_type'],

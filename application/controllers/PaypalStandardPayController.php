@@ -1,7 +1,7 @@
 <?php
 class PaypalStandardPayController extends PaymentController
 {
-    private $keyName = "PaypalStandard";
+    protected $keyName = "PaypalStandard";
     private $testEnvironmentUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
     private $liveEnvironmentUrl = 'https://www.paypal.com/cgi-bin/webscr';
     private $currenciesAccepted = array(
