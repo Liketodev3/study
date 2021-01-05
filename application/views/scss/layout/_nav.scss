@@ -31,7 +31,7 @@ $nav: "nav";
        
     }
 
-    @media(max-width:1199px){
+    @media(max-width:theme('breakpoints.xl','value')){
         &--primary-offset{
             & > ul{
                 & > li{display: block; border-bottom:1px solid rgba(0,0,0,0.1);
@@ -97,7 +97,7 @@ $nav: "nav";
                     & svg{width: 100%; height: 100%;}
                 }
 
-                @media(min-width: 1199px){
+                @media(min-width: theme('breakpoints.xl','value')){
                     &:hover{background-color:theme('color.primary');
                         & .svg-icon{fill:theme('color.white');}
                     }
@@ -120,7 +120,7 @@ $nav: "nav";
         }
      
         &--account{
-            @media(min-width:1199px){
+            @media(min-width:theme('breakpoints.xl','value')){
                 margin-#{theme('direction.left','value')}:theme('margin.6');
             }
        

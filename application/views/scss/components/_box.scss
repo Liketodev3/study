@@ -167,7 +167,7 @@
 }
 
 
-@media(min-width:1199px){
+@media(min-width:theme('breakpoints.xl','value')){
     .box__slip-data {
         min-width: 300px;
         white-space: nowrap;

@@ -16,7 +16,7 @@ $banner: "banner";
         min-width: 545px;
         max-width: 545px;
         color: #fff;
-        margin-#{theme('direction.left','value')}: -600px;
+        margin-#{theme('direction.left','value')}: -550px;
         transform: translate(0, -50%);
         -webkit-transform: translate(0, -50%);
         -ms-transform: translate(0, -50%);
@@ -462,7 +462,7 @@ $caraousel: "caraousel";
     font-size: 1rem;
     font-family:inherit;
     font-weight: 400;
-    color: var(--color-grey);
+    color: theme('color.gray.1000');
 }
 
 .search-form .form input[type="submit"],

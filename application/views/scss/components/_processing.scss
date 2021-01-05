@@ -22,11 +22,11 @@
     top: 50%;
     width: 50px;
     height: 50px;
-    margin: -25px 0 0 0; margin-#{theme('direction.left','value')}: -25px;
+    margin-top: -25px; margin-#{theme('direction.left','value')}: -25px;
     z-index: 3;
     border-top: 3px solid rgba(0, 0, 0, 0.2);
     content: "";
-    border-radius: 100%;
+    border-radius: theme('radius.round');
     border-right: 3px solid rgba(0, 0, 0, 0.2);
     border-bottom: 3px solid rgba(0, 0, 0, 0.2);
     border-#{theme('direction.left','value')}: 3px solid #000;
