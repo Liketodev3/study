@@ -1580,7 +1580,7 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 }
 
 .flex-container .pop-over .inline-list,
-.booking-view .inline-list,
+.booking-view .inline-list
     {
     margin: 20px 0;
     width: 100%;
@@ -6516,7 +6516,7 @@ div.tagsinput div {
         display: table;
     }
 
-    . .custom-colum__left {
+    .custom-colum__left {
         width: 100%;
         float: none;
     }
