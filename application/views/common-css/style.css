@@ -8051,6 +8051,9 @@ color: #fff;}
     background: #fff;
     border-radius: 2px;
 }
+.div-login-form .form input[type="submit"] {
+    width: 100%;
+}
 @media(max-width:1199px){
     .group.group--social a {
         width: 100%;
