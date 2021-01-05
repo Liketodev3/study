@@ -17,7 +17,7 @@ if(isset($userType) && !empty($userType)) {
 <section class="section section--gray section--page">
 	<div class="container container--fixed">
 		<div class="row justify-content-center">
-			<div class="col-sm-9 col-lg-5 col-xl-5">
+			<div class="col-sm-10 col-lg-7 col-md-10 col-xl-6">
 				<div class="box -skin">
 					<div class="box__head -align-center">
 						<h4 class="-border-title"><?php echo Label::getLabel('LBL_Login'); ?></h4>
