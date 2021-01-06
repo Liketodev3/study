@@ -119,21 +119,23 @@ foreach ( $lessons as $lesson ) {
 
 							<?php
 							if($lesson['is_trial'] == applicationConstants::NO) {
-								echo empty($teachLanguages[$lesson['slesson_slanguage_id']]) ? '': $teachLanguages[$lesson['slesson_slanguage_id']] ; ?>
-								<br>
-							<?php }
-							if( $lesson['slesson_date'] != "0000-00-00" ){
-								// $str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
-								// $str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
-								// $arrReplacements = array(
-								// 	'{n}'	=>	$lesson['op_lesson_duration'],
-								// 	'{trial-or-paid}'	=>	($lesson['is_trial']) ? Label::getLabel('LBL_Trial') : '',
-								// );
-								// foreach( $arrReplacements as $key => $val ){
-								// 	$str = str_replace( $key, $val, $str );
-								// }
-								// echo $str;
-							} ?>
+								echo empty($teachLanguages[$lesson['slesson_slanguage_id']]) ? '': $teachLanguages[$lesson['slesson_slanguage_id']] ; 
+							} ?><br>
+							<?php $duration = $lesson['op_lesson_duration'];
+                                if(0 >= $duration){
+                                    $duration = (strtotime($lesson['slesson_end_time'])-strtotime($lesson['slesson_start_time']))/60;
+                                }
+                                if(0 < $duration){
+                                    $str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
+                                    $arrReplacements = array(
+                                        '{n}'	=>	$duration,
+                                        '{trial-or-paid}'	=>	($lesson['is_trial']) ? Label::getLabel('LBL_Trial') : '',
+                                    );
+                                    foreach( $arrReplacements as $key => $val ){
+                                        $str = str_replace( $key, $val, $str );
+                                    }
+                                    echo $str;
+                                } ?>
 							</span>
 						</li>
 					</ul>

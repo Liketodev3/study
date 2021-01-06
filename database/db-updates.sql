@@ -184,5 +184,11 @@ INSERT INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`
 REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('PayGate payweb-3', 'PayGate', 1, 5, 1);
 REPLACE INTO `tbl_payment_methods_lang` (`pmethodlang_pmethod_id`, `pmethodlang_lang_id`, `pmethod_name`, `pmethod_description`) VALUES ('6', '1', 'PayGate payweb-3', 'PayGate payweb-3 Payment Gateway Description will go here.');
 
-REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('Twocheckout', 'Twocheckout', '1', 6, 1);
+REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('Twocheckout', 'Twocheckout', 1, 6, 1);
 
+UPDATE `tbl_configurations` SET `conf_val` = '45,60,90,120' WHERE `tbl_configurations`.`conf_name` = 'conf_paid_lesson_duration'; 
+
+ALTER TABLE `tbl_user_teach_languages` ADD `utl_booking_slot` INT NOT NULL DEFAULT '60' AFTER `utl_bulk_lesson_amount`; 
+ALTER TABLE `tbl_user_teach_languages` DROP INDEX `language`, ADD UNIQUE `language` (`utl_us_user_id`, `utl_slanguage_id`, `utl_booking_slot`) USING BTREE; 
+
+ALTER TABLE `tbl_teacher_offer_price` ADD `top_lesson_duration` INT NOT NULL DEFAULT '60' AFTER `top_bulk_lesson_price`; 

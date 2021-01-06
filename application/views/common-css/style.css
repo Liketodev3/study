@@ -3014,6 +3014,27 @@ body[dir="rtl"] .form-filters .form__element .svg-icon {
 
 }
 
+input[type="checkbox"][disabled]::before {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 11px;
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
+    left: 7px;
+    top: 3px;
+    transform: scale(1) rotate(34deg);
+ }
+ input[type="checkbox"][disabled] {
+    background: #ddd;
+    opacity: 1;
+    left: 0;
+    top: 1px;
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+ }
+
 @media(max-width:500px) {
     #teacherPreferencesFrm.form .field_label.-display-block {
         min-height: 1%;

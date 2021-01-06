@@ -65,7 +65,8 @@ class LearnerTeachersController extends LearnerBaseController
             '('.$unSchLesSrch->getQuery().') as unScheduledLessonCount',
             'IFNULL(top_single_lesson_price,0) AS singleLessonAmount',
             'IFNULL(top_bulk_lesson_price,0) AS bulkLessonAmount',
-            'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice'
+            'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
+            'IFNULL(top_lesson_duration, utsl.utl_booking_slot ) as lessonDuration'
         ));
 
         $page = $post['page'];

@@ -276,6 +276,7 @@ class TeacherWeeklySchedule extends MyAppModel
         $srch = new ScheduledLessonSearch(false);
         $userIds  = array( $userId, UserAuthentication::getLoggedUserId() );
         $srch->checkUserLessonBooking($userIds, $startTime, $endTime);
+        // echo $srch->getQuery();die;
         $getResultSet = $srch->getResultSet();
         $scheduledLessonData =$db->fetch($getResultSet);
         if(!empty($scheduledLessonData)){

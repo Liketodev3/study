@@ -47,7 +47,7 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
                             <?php } ?>
                             <div class="tabled__cell">
                             <span class="-color-light"><?php echo Label::getLabel('LBL_Duration'); ?></span><br>
-                            <?php echo ($cartData['lpackage_is_free_trial'])?FatApp::getConfig( 'conf_trial_lesson_duration', FatUtility::VAR_INT, 30 ):FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60); ?> <?php echo Label::getLabel('LBL_Mins/Lesson'); ?>
+							<?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cartData['lessonDuration']); ?>
                             </div>
                         </div>
 					</div>
@@ -83,8 +83,11 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 					</div>
 				</div>
 				<?php } ?>
-				<div class="col-xl-8 col-lg-8 col-md-12" id="lsn-pckgs">
-				</div>
+				
+				<div class="col-xl-8 col-lg-8 col-md-12" id="booking-durations-js"></div>
+
+				<div class="col-xl-8 col-lg-8 col-md-12" id="lsn-pckgs"></div>
+
 				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right" >
 					<div class="box" style="margin-bottom: 30px;" id="financialSummaryListing">
 					</div>
@@ -123,6 +126,6 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 	}
 	if( $cartData['lpackage_is_free_trial'] == 0 AND $cartData['user_id'] > 0 AND $cartData['languageId'] > 0 ){
 ?>
-    getLangPackages('<?php echo $cartData['user_id']; ?>','<?php echo $cartData['languageId']; ?>');
+    getLangPackages('<?php echo $cartData['user_id']; ?>', <?php echo $cartData['languageId'].','.$cartData['lessonDuration']; ?>);
     <?php } ?>
 </script>

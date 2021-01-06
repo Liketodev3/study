@@ -203,7 +203,8 @@ class TeachersController extends MyAppController {
 			'minPrice',
 			'maxPrice',
             'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
-            'utl_slanguage_ids'
+			'utl_slanguage_ids',
+            'utl_booking_slots'
 		));
 
 		$rs = $srch->getResultSet();

@@ -5,6 +5,7 @@ Updates:
     *Task-78843: Upgrade zoom to v1.8.3
     *Task-79596: Paygate Payment gateway integration
     *Task-79596: 2checkout Payment gateway integration
+    *Task-80518: Multiple Booking Slots
 
 Bug Fixes:    
     * Bug-#045564-Fixed saturday availability issue
