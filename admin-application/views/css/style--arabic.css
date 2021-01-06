@@ -75,3 +75,8 @@ background: url(../images/icon--info.svg) no-repeat calc(100% - 15px) 15px #02b4
 .box--stats .box__body {padding: 15px;}
 .section .sectionhead .actions {right:auto; left:20px;}
 .section .sectionhead .actions.actions--centered .dropwrap{left:0px; right: auto;}
+.banner--main:after {
+    background: -moz-linear-gradient(left, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%);
+    background: -webkit-linear-gradient(left, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
+    background: linear-gradient(to left, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
+}
