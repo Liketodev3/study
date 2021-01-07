@@ -193,4 +193,8 @@ ALTER TABLE `tbl_user_teach_languages` DROP INDEX `language`, ADD UNIQUE `langua
 
 ALTER TABLE `tbl_teacher_offer_price` ADD `top_lesson_duration` INT NOT NULL DEFAULT '60' AFTER `top_bulk_lesson_price`; 
 
+ALTER TABLE `tbl_teachers_weekly_schedule` ADD `twsch_weekyear` VARCHAR(10) NOT NULL AFTER `twsch_end_time`; 
+
+UPDATE `tbl_teachers_weekly_schedule` SET `twsch_weekyear`=DATE_FORMAT(`twsch_date`,'%U-%Y') WHERE twsch_weekyear='';
+
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.13.20210107' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION'; 
