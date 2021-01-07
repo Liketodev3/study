@@ -371,7 +371,7 @@ img {
     margin-top: -6px; margin-#{theme('direction.left','value')}: -6px;
     position: absolute;
     content: "";
-    border-#{theme('direction.left','value')}: 3px solid #fff;
+    border-left: 3px solid #fff;
     border-bottom: 3px solid #fff;
     transform: rotate(135deg);
     -webkit-transform: rotate(135deg);
@@ -674,12 +674,6 @@ img {
     .-clear-right,
     .-clear-left {
         clear: none !important;
-        float: none !important;
-    }
-
-
-    .-float-left,
-    .-float-right {
         float: none !important;
     }
 

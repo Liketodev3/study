@@ -621,6 +621,7 @@
         position: relative;
         width: 100%;
         display: inline-block;
+        margin-top:  theme('padding.4');
     }
 
     .banner .form-search form {
@@ -696,11 +697,11 @@
         display: block;
     }
 
-    .form-search form {
-        width: calc(100% - 60px);
-        float: #{theme('direction.right','value')};
-        padding-#{theme('direction.left','value')}: 20px;
-    }
+    // .form-search form {
+    //     width: calc(100% - 60px);
+    //     float: #{theme('direction.right','value')};
+    //     padding-#{theme('direction.left','value')}: 20px;
+    // }
 
     .blog-filters {
         bottom: 0;

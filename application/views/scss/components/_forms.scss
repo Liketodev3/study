@@ -70,7 +70,9 @@ textarea {
     -moz-appearance: none;
     appearance: none
 }
-
+.div-login-form .form input[type="submit"] {
+    width: 100%;
+}
 .form input[type=submit] {
     background: var(--color-secondary);
     display: inline-block;

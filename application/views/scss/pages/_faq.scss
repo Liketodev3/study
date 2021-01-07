@@ -106,3 +106,9 @@
 
 
 }
+
+@media(max-width:theme('breakpoints.sm','value')){
+    .box--faqs .box__footer span {
+        margin-bottom: theme('padding.3');
+    }
+}

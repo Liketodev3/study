@@ -33,7 +33,7 @@
 
 					<div class="col-xl-9 col-lg-9 col-md-8 col-sm-8">
 						<div class="box-list__head row justify-content-between">
-							<div class="col-xl-9 col-lg-9 col-md-8">
+							<div class="col-xl-9 col-lg-9 col-md-12">
 								<h3 class="-display-inline"><a href="<?php echo $teacherUrl; ?>"><?php echo $teacher['user_first_name']." ". $teacher['user_last_name']; ?></a></h3>
 
 								<?php if( $teacher['user_country_id'] > 0 ){ ?>

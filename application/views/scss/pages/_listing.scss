@@ -343,6 +343,7 @@
 
  }
 
+ 
 
 @media(min-width:theme('breakpoints.xl','value')){
     
@@ -361,7 +362,6 @@
     }
 
     .tag-list li a.tag__clickable:after {
-        top: 5px;
         #{theme('direction.right','value')}: 5px;
     }
 
@@ -529,6 +529,22 @@
         display: block !important;
     }
 
+}
+
+@media(max-width:theme('breakpoints.sm','value')){
+    .teacher__info {
+        text-align: center;
+        margin-top: 10px;
+    }
+    .box__profile-head .location .svg-icon{
+        display: none;
+    }
+    .teacher__info .box__price {
+        padding: theme('padding.2') 0;
+        border: 1px solid #ddd;
+        border-left: 0;
+        border-right: 0;
+    }
 }
 
 

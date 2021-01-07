@@ -15,24 +15,28 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right">
 					<div class="box -align-center" style="margin-bottom: 30px;">
 						<div class="-padding-30">
-							<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($cartData['user_first_name']); ?>">
+							<div class="checkout__r">
+								<div class="check__media">
+									<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($cartData['user_first_name']); ?>">
 
-								<?php
-								if( true == User::isProfilePicUploaded( $cartData['user_id'] ) ){
-									$img = CommonHelper::generateUrl('Image','User', array( $cartData['user_id'] ));
-									echo '<img src="'.$img.'" />';
-								}
-								?>
+										<?php
+										if( true == User::isProfilePicUploaded( $cartData['user_id'] ) ){
+											$img = CommonHelper::generateUrl('Image','User', array( $cartData['user_id'] ));
+											echo '<img src="'.$img.'" />';
+										}
+										?>
+									</div>
+								</div>
+								<div class="check__info">
+									<h3 class="-display-inline"><?php echo $cartData['user_first_name']; ?></h3>
+
+									<?php if( $cartData['user_country_id'] > 0 ){ ?>
+									<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($cartData['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>
+									<?php } ?>
+
+									<p class="-no-margin-bottom"><?php echo ($cartData['user_state_name'] != ''  ) ? $cartData['user_state_name'].', ' : ''; echo $cartData['user_country_name']; ?></p>
+								</div>
 							</div>
-
-							<span class="-gap"></span>
-							<h3 class="-display-inline"><?php echo $cartData['user_first_name']; ?></h3>
-
-							<?php if( $cartData['user_country_id'] > 0 ){ ?>
-							<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($cartData['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>
-							<?php } ?>
-
-							<p class="-no-margin-bottom"><?php echo ($cartData['user_state_name'] != ''  ) ? $cartData['user_state_name'].', ' : ''; echo $cartData['user_country_name']; ?></p>
 						</div>
                         <div class="tabled">
                             <?php if($cartData['lpackage_is_free_trial'] == applicationConstants::NO){ ?>

@@ -16,7 +16,7 @@ $banner: "banner";
         min-width: 545px;
         max-width: 545px;
         color: #fff;
-        margin-#{theme('direction.left','value')}: -550px;
+        margin-#{theme('direction.left','value')}: -700px;
         transform: translate(0, -50%);
         -webkit-transform: translate(0, -50%);
         -ms-transform: translate(0, -50%);
@@ -48,7 +48,7 @@ $banner: "banner";
 
         @media(min-width: theme('breakpoints.lg','value')) {
             #{theme('direction.left','value')}: 50%;
-            margin-#{theme('direction.left','value')}:-600px;
+            margin-#{theme('direction.left','value')}:-700px;
         }
 
     }
@@ -64,10 +64,10 @@ $caraousel: "caraousel";
 .#{$caraousel}{
     &__item{position: relative;
 
-        &:before{position: absolute; left: 0;bottom: 0; top: 0;width:90%; content: "";
-            background: -moz-linear-gradient(left,  rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%); /* FF3.6-15 */
-            background: -webkit-linear-gradient(left,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
-            background: linear-gradient(to right,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        &:before{position: absolute; #{theme('direction.left','value')}: 0;bottom: 0; top: 0;width:90%; content: "";
+            background: -moz-linear-gradient(#{theme('direction.right','value')},  rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(#{theme('direction.right','value')},  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to #{theme('direction.right','value')},  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
         }
 
     }
