@@ -2,7 +2,6 @@
 .btn {
     background: #333;
     display: inline-flex; align-items: center;
- 
     padding: 0 30px;
     position: relative;
     cursor: pointer;
@@ -14,7 +13,8 @@
     font-weight: 500;
     font-size: 1.1rem;
     -webkit-transition: .3s all ease-in-out;
-    transition: .3s all ease-in-out
+    transition: .3s all ease-in-out;
+    white-space: nowrap;
 }
 
 .btn.btn--small {

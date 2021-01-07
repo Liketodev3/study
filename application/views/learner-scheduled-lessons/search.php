@@ -47,8 +47,8 @@ foreach ( $lessons as $lesson ) {
     $countReviews = TeacherLessonReview::getTeacherTotalReviews($lesson['teacherId'], $lesson['slesson_id'], UserAuthentication::getLoggedUserId());
 ?>
 	<div class="col-list">
-		<div class="d-lg-flex align-items-center">
-			<div class="col-xl-4 col-lg-4 col-md-12">
+		<div class="d-lg-flex d-sm-flex align-items-center">
+			<div class="col-xl-4 col-lg-4 col-md-4 col-sm-5">
                 <?php if($lesson['slesson_grpcls_id']>0): //dashboard ?>
                 <h6><?php echo Label::getLabel('LBL_Group_Class') ?></h6>
                 <p><?php echo $lesson['grpcls_title']; ?></p>
@@ -65,7 +65,7 @@ foreach ( $lessons as $lesson ) {
                 <?php endif; ?>
 			</div>
 
-			<div class="col-xl-4 col-lg-4 col-md-12 ">
+			<div class="col-xl-4 col-lg-4 col-md-5 col-sm-5">
 				<div class="schedule-list">
 					<ul>
 						<?php
@@ -145,7 +145,7 @@ foreach ( $lessons as $lesson ) {
             $endTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($lesson['slesson_end_date'] .' '. $lesson['slesson_end_time']), true , $user_timezone );
             ?>
 			<?php if($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
-			<div class="col-xl-4 col-lg-4 col-md-12 col-positioned">
+			<div class="col-xl-4 col-lg-4 col-md-3 col-sm-2 col-positioned">
 				<div class="schedule-list">
 					<ul>
 					<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {

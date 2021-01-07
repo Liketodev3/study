@@ -75,3 +75,6 @@ background: url(../images/icon--info.svg) no-repeat calc(100% - 15px) 15px #02b4
 .box--stats .box__body {padding: 15px;}
 .section .sectionhead .actions {right:auto; left:20px;}
 .section .sectionhead .actions.actions--centered .dropwrap{left:0px; right: auto;}
+.fld-date {
+    background-position: 12px 11px;
+}
