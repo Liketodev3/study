@@ -195,11 +195,17 @@ class TeacherWeeklySchedule extends MyAppModel
                     $twsch_date = MyDate::changeDateTimezone($val->date .' '. $val->start, $user_timezone, $systemTimeZone);
                     $twsch_end_date = MyDate::changeDateTimezone($endDate .' '. $val->end, $user_timezone, $systemTimeZone);
                     
+                    $weekRange = CommonHelper::getWeekRangeByDate(date('Y-m-d', strtotime($twsch_date)));
+                    $midPoint = (strtotime($weekRange['start']) + strtotime($weekRange['end']))/2;
+                    
+                    $twsch_weekyear = date('W-Y', $midPoint);
+                    // var_dump($twsch_start_time, $twsch_weekyear);die;
+                    
                     $insertArr = array(
                         'twsch_user_id'     => $userId, 
                         'twsch_start_time'  => $twsch_start_time,
                         'twsch_end_time'    => $twsch_end_time,
-                        // 'twsch_weekyear'    => $twsch_weekyear,
+                        'twsch_weekyear'    => $twsch_weekyear,
                         "twsch_is_available"=> $val->classtype,
                         'twsch_date'        => date('Y-m-d', strtotime($twsch_date)),
                         'twsch_end_date'    => date('Y-m-d', strtotime($twsch_end_date)));
