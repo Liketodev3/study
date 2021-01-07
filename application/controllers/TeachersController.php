@@ -538,6 +538,7 @@ class TeachersController extends MyAppController {
 				    	"weekyear" => $row['twsch_weekyear'],
 				    	'_id' => $row['twsch_id'],
 				    	'classType' => $row['twsch_is_available'],
+				    	'action' => 'fromWeeklySchedule',
 				    	'className' => $cssClassNamesArr[$row['twsch_is_available']]
 				    );
 				// }
@@ -549,7 +550,9 @@ class TeachersController extends MyAppController {
         if(empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear){
             $weekRange = CommonHelper::getWeekRangeByDate(date('Y-m-d', $midPoint));
             $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, array('WeekStart' => $weekRange['start'], 'WeekEnd' => $weekRange['end']));
-            // CommonHelper::printArray($jsonArr2);die;
+            foreach($jsonArr2 as &$j){
+                $j['action'] = 'fromGeneralAvailability';
+            }
             $jsonArr = array_merge($jsonArr, $jsonArr2);
         }
         
