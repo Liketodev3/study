@@ -1,5 +1,8 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Version: TV-2.7.13.20210107
+Release Date: 2021/01/07
+
 Updates:
     *Task-80349: Update Stripe to support SCA( Strong Customer Authentication)
     *Task-78843: Upgrade zoom to v1.8.3

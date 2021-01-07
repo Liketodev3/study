@@ -192,3 +192,5 @@ ALTER TABLE `tbl_user_teach_languages` ADD `utl_booking_slot` INT NOT NULL DEFAU
 ALTER TABLE `tbl_user_teach_languages` DROP INDEX `language`, ADD UNIQUE `language` (`utl_us_user_id`, `utl_slanguage_id`, `utl_booking_slot`) USING BTREE; 
 
 ALTER TABLE `tbl_teacher_offer_price` ADD `top_lesson_duration` INT NOT NULL DEFAULT '60' AFTER `top_bulk_lesson_price`; 
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.13.20210107' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION'; 
