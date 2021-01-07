@@ -1357,8 +1357,8 @@ img {
   border-radius: var(--radius-1);
   display: block;
   position: relative;
-  width: 12rem;
-  height: 12rem;
+  width: 8rem;
+  height: 8rem;
   overflow: hidden;
   background: #eee; }
 
