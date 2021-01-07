@@ -230,12 +230,10 @@ class TeacherWeeklySchedule extends MyAppModel
                 $twsch_date = MyDate::changeDateTimezone($val->date .' '. $val->start, $user_timezone, $systemTimeZone);
                 $twsch_end_date = MyDate::changeDateTimezone($endDate .' '. $val->end, $user_timezone, $systemTimeZone);
                 
-                $weekRange = CommonHelper::getWeekRangeByDate($twsch_start_time);
+                $weekRange = CommonHelper::getWeekRangeByDate($twsch_date);
                 $midPoint = (strtotime($weekRange['start']) + strtotime($weekRange['end']))/2;
                 
                 $twsch_weekyear = date('W-Y', $midPoint);
-                // echo $twsch_weekyear;die;
-
                 $updateArr = array(                
                     'twsch_start_time'  => $twsch_start_time,
                     'twsch_end_time'    => $twsch_end_time,
@@ -246,7 +244,7 @@ class TeacherWeeklySchedule extends MyAppModel
                 );
 
                 $updateWhereArr = array('smt'=>'twsch_id = ? and twsch_user_id = ?','vals'=>array($val->_id,$userId));
-
+                
                 if (!$db->updateFromArray(TeacherWeeklySchedule::DB_TBL, $updateArr, $updateWhereArr)) {
                      $db->rollbackTransaction();
                     $this->error = $db->getError();
