@@ -1,5 +1,9 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Enhancements:
+    *Task-80520: Upgrade Fullcalendar
+
+-------------------------------
 Updates:
     *Task-80349: Update Stripe to support SCA( Strong Customer Authentication)
     *Task-78843: Upgrade zoom to v1.8.3

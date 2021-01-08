@@ -8,7 +8,7 @@ class TeacherGeneralAvailability extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getGenaralAvailabilityJsonArr($userId, $post ='', $requestBtTeacher = false)
+    public static function getGenaralAvailabilityJsonArr($userId, $post = [])
     {
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
@@ -73,44 +73,19 @@ class TeacherGeneralAvailability extends MyAppModel
 
                 $tgavl_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $date, true, $user_timezone);
                 $tgavl_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDate, true, $user_timezone);
-
-
-                //$tgavl_day = MyDate::getDayNumber( $tgavl_start_time );
-                if (true == $requestBtTeacher) {
-                    $gendate = new DateTime();
-                    $gendate->setISODate(2018, 2, MyDate::getDayNumber($tgavl_start_time));
-                    $day = $gendate->format('d');
-                    $dayNum = $day;
-                    $startDate = "2018-01-".$dayNum." ". date('H:i:s', strtotime($tgavl_start_time));
-                    $endDate = "2018-01-".$dayNum." ". date('H:i:s', strtotime($tgavl_end_time));
-                    if (strtotime($endDate) <=  strtotime($startDate)) {
-                        $endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime($endDate)));
-                    }
-
-                    $jsonArr[] = array(
-                "title"=>"",
-                "endW"=> date('H:i:s', strtotime($tgavl_end_time)),
-                "startW"=> date('H:i:s', strtotime($tgavl_start_time)),
-                "end"=>$endDate,
-                "start"=>$startDate,
-                '_id'=>$row['tgavl_id'],
-                "classType"=>1,
-                "day"=> MyDate::getDayNumber($tgavl_start_time),
-                'className'=>"slot_available"
-            );
-                } else {
-                    $jsonArr[] = array(
-                "title"=>"",
-                "endW"=> date('H:i:s', strtotime($tgavl_end_time)),
-                "startW"=> date('H:i:s', strtotime($tgavl_start_time)),
-                "end"=>$tgavl_end_time,
-                "start"=>$tgavl_start_time,
-                '_id'=>$row['tgavl_id'],
-                "classType"=>1,
-                "day"=> MyDate::getDayNumber($tgavl_start_time),
-                'className'=>"slot_available"
-            );
-                }
+            
+                $jsonArr[] = array(
+                    "title" => "",
+                    "endW"  => date('H:i:s', strtotime($tgavl_end_time)),
+                    "startW"=> date('H:i:s', strtotime($tgavl_start_time)),
+                    "end"   => $tgavl_end_time,
+                    "start" => $tgavl_start_time,
+                    '_id'   => $row['tgavl_id'],
+                    "classType"=> 1,
+                    "display" => 'background',
+                    "day"   => MyDate::getDayNumber($tgavl_start_time),
+                    'className'=>"slot_available"
+                );
                 $i++;
             }
 

@@ -22,7 +22,7 @@ class TeachersController extends MyAppController {
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
-		$this->_template->addCss('css/custom-full-calendar.css');
+		// $this->_template->addCss('css/custom-full-calendar.css');
 		$this->_template->addJs('js/ion.rangeSlider.js');
 		$this->_template->addCss('css/ion.rangeSlider.css');
 		$this->_template->addCss('css/ion.rangeSlider.skinHTML5.css');
@@ -143,7 +143,7 @@ class TeachersController extends MyAppController {
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
-		$this->_template->addCss('css/custom-full-calendar.css');
+		// $this->_template->addCss('css/custom-full-calendar.css');
 
 		$srchTeacher = new UserSearch();
 		$srchTeacher->addMultipleFields(array('user_id'));
@@ -397,11 +397,11 @@ class TeachersController extends MyAppController {
 		if ($lPackageId <= 0) {
 			FatUtility::dieWithError(Label::getLabel('LBL_Packages_are_not_configured_by_admin'));
 		}
-		$mint = floor($bookingMinutesDuration / 60);
-		$mint =  ($mint > 9) ?  $mint : '0'.$mint;
-		$second = ($bookingMinutesDuration - floor($bookingMinutesDuration / 60) * 60);
-		$second =  ($second > 9) ?  $second : '0'.$second;
-		$bookingSnapDuration = $mint.':'.$second.':00';
+		$hour = floor($bookingMinutesDuration / 60);
+		$hour =  ($hour > 9) ?  $hour : '0'.$hour;
+		$min = ($bookingMinutesDuration - floor($bookingMinutesDuration / 60) * 60);
+		$min =  ($min > 9) ?  $min : '0'.$min;
+		$bookingSnapDuration = $hour.':'.$min;
 		$this->set('bookingMinutesDuration', $bookingMinutesDuration);
 		$this->set('bookingSnapDuration', $bookingSnapDuration);
 		MyDate::setUserTimeZone();
@@ -439,12 +439,9 @@ class TeachersController extends MyAppController {
 		$user_timezone = MyDate::getUserTimeZone();
 		$startDateTime = MyDate::changeDateTimezone($post['start'], $user_timezone, $systemTimeZone);
 		$endDateTime = MyDate::changeDateTimezone( $post['end'], $user_timezone, $systemTimeZone);
-		$date = MyDate::changeDateTimezone($post['date'] .' '. $post['startTime'], $user_timezone, $systemTimeZone);
-		$day = MyDate::getDayNumber($startDateTime);
 		if (strtotime($startDateTime) < strtotime(date('Y-m-d H:i:s'))) {
             FatUtility::dieJsonSuccess(0);
         }
-		$originalDayNumber = $post['day'];
 		$tWsch = new TeacherWeeklySchedule();
 		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime);
 		$returnArray = [
@@ -535,8 +532,9 @@ class TeachersController extends MyAppController {
 				    	"start" => $twsch_start_time,
 				    	"end" => $twsch_end_time,
 				    	"weekyear" => $row['twsch_weekyear'],
-				    	'_id' => $row['twsch_id'],
-				    	'classType' => $row['twsch_is_available'],
+						'_id' => $row['twsch_id'],
+						"display" => 'background',
+						'classType' => $row['twsch_is_available'],
 				    	'className' => $cssClassNamesArr[$row['twsch_is_available']]
 				    );
 				// }
