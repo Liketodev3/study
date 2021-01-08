@@ -8,6 +8,7 @@ if( !empty( $teacher['teachLanguages'] ) ) {
 } else {
 	$teacherLanguage = 1;
 }
+$bookingDuration = max(explode(',', $teacher['utl_booking_slots']));
 ?>
 
 <div class="box box--cta -padding-30">
@@ -23,7 +24,7 @@ if( !empty( $teacher['teachLanguages'] ) ) {
 
 	<div class="box-btn-group">
 		<?php if( count($teacher['lessonPackages']) ){ ?>
-		<a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','','<?php echo $teacherLanguage; ?>' )" class="btn btn--secondary btn--large btn--block"><?php echo Label::getLabel('LBL_Book_Now') ?></a>
+		<a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','','<?php echo $teacherLanguage.', '.$bookingDuration; ?>' )" class="btn btn--secondary btn--large btn--block"><?php echo Label::getLabel('LBL_Book_Now') ?></a>
 		<?php } ?>
 
 		<a href="javascript:void(0)" onClick="generateThread(<?php echo $teacher['user_id']; ?>)" class="btn btn--gray btn--large btn--block"><span class="svg-icon">

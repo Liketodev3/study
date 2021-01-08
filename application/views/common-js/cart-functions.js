@@ -1,5 +1,5 @@
 var cart = {
-	add: function( teacherId, lpackageId, startDateTime, endDateTime, languageId, grpclsId ){
+	add: function( teacherId, lpackageId, startDateTime, endDateTime, languageId, grpclsId, lessonDuration ){
 		$('.loading-wrapper').show();
 		if( isUserLogged() == 0 ){
 			logInFormPopUp();
@@ -7,16 +7,12 @@ var cart = {
 			return false;
 		}
 		
-		if( startDateTime == undefined ){
-			startDateTime = '';
-		}
-		if( endDateTime == undefined ){
-			endDateTime = '';
-		}
-		if( grpclsId == undefined ){
-			grpclsId = 0;
-		}
-		var data = 'grpcls_id=' + grpclsId + '&teacher_id=' + teacherId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId +'&languageId='+ languageId;
+		startDateTime = startDateTime || '';
+		endDateTime = endDateTime || '';
+		grpclsId = grpclsId || 0;
+		lessonDuration = lessonDuration || 60;
+
+		var data = 'grpcls_id=' + grpclsId + '&teacher_id=' + teacherId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId +'&languageId='+ languageId + '&lessonDuration=' + lessonDuration;
 		
 		fcom.ajax( fcom.makeUrl('Cart','add'), data ,function(res){
 

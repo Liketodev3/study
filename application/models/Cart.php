@@ -34,13 +34,9 @@ class Cart extends FatModel
         }
     }
 
-    public function add($teacher_id, $lpackageId, $languageId, $startDateTime = '', $endDateTime = '', $grpcls_id = 0)
+    public function add(int $teacher_id, int $lpackageId, int $languageId, $startDateTime = '', $endDateTime = '', int $grpcls_id = 0, int $lessonDuration = 60)
     {
         $this->SYSTEM_ARR['cart'] = array();
-        $grpcls_id = FatUtility::int($grpcls_id);
-        $teacher_id = FatUtility::int($teacher_id);
-        $lpackageId = FatUtility::int($lpackageId);
-        $languageId = FatUtility::int($languageId);
         if ($teacher_id < 1 || ($lpackageId < 1 && $grpcls_id<1)) {
             $this->error = Label::getLabel('LBL_Invalid_Request');
             return false;
@@ -138,6 +134,7 @@ class Cart extends FatModel
             'endDateTime' => $endDateTime,
             'lpackageId' => $lpackageId,
             'languageId' => $languageId,
+            'lessonDuration' => $lessonDuration,
         );
         $this->updateUserCart();
         return true;
@@ -147,6 +144,10 @@ class Cart extends FatModel
         $key = key($this->SYSTEM_ARR['cart']);
         $cartData = $this->SYSTEM_ARR['cart'][$key];
         $languageId = $cartData['languageId'];
+        $lessonDuration = $cartData['lessonDuration'];
+        $lPackageId = $cartData['lpackageId'];
+        $grpcls_id = $cartData['grpcls_id'];
+
         $keyDecoded = unserialize(base64_decode($key));
         list($teacher_id,$grpcls_id) = explode('_', $keyDecoded);
         $teacherSrch = new UserSearch();
@@ -156,9 +157,16 @@ class Cart extends FatModel
         $teacherSrch->addCondition('user_id', '=', $teacher_id);
         //$teacherSrch->addCondition( 'utl_slanguage_id', '=', 1 );
         $teacherSrch->setPageSize(1);
-        $teacherSrch->joinTable("tbl_user_teach_languages", 'INNER JOIN', 'utl_us_user_id = '. $teacher_id .' AND utl_slanguage_id = '. $languageId, 'utl');
+
+        $cnd = $cnd2 = '';
+        if($grpcls_id==0 && !LessonPackage::getAttributesById($lPackageId, 'lpackage_is_free_trial')){
+            $cnd = ' AND utl_booking_slot='.$lessonDuration;
+            $cnd2 = ' AND top_lesson_duration='.$lessonDuration;
+        }
+
+        $teacherSrch->joinTable("tbl_user_teach_languages", 'INNER JOIN', 'utl_us_user_id = '. $teacher_id .' AND utl_slanguage_id = '. $languageId . $cnd, 'utl');
         /* find, if have added any offer price is locked with this teacher[ */
-        $teacherSrch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top_teacher_id = user_id AND top_learner_id = '.$this->cart_user_id, 'top');
+        $teacherSrch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top_teacher_id = user_id AND top_learner_id = '.$this->cart_user_id.$cnd2, 'top');
         /* ] */
         $teacherSrch->addMultipleFields(array(
                 'user_id',
@@ -185,8 +193,7 @@ class Cart extends FatModel
         if (!$teacher) {
             $this->removeCartKey($key);
         }
-        $lPackageId = $cartData['lpackageId'];
-        $grpcls_id = $cartData['grpcls_id'];
+        
         if($lPackageId > 0){
             $srch = LessonPackage::getSearchObject($langId);
             $srch->addCondition('lpackage_id', '=', $lPackageId);
@@ -220,6 +227,7 @@ class Cart extends FatModel
         $this->cartData['grpcls_id'] = $grpcls_id;
         $this->cartData['lpackage_id'] = $lPackageId;
         $this->cartData['languageId'] = $languageId;
+        $this->cartData['lessonDuration'] = $lessonDuration;
         $this->cartData['lpackage_is_free_trial'] = $lPackageId>0 ? $lessonPackageRow['lpackage_is_free_trial'] : 0;
         $this->cartData['lpackage_lessons'] = $lPackageId>0 ? $lessonPackageRow['lpackage_lessons'] * 1 : 0;
         $this->cartData['startDateTime'] = $cartData['startDateTime'];

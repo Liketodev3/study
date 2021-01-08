@@ -24,7 +24,7 @@ class UserSetting extends MyAppModel
         return true;
     }
 
-    public static function getUserSettings($userId, $tlangId = null)
+    public static function getUserSettings($userId, $tlangId = null, $duration = 0)
     {
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
@@ -46,6 +46,11 @@ class UserSetting extends MyAppModel
         );
         $srch->joinTable("tbl_user_teach_languages", 'LEFT JOIN', 'utl_us_user_id = us_user_id', 'utl');
         $srch->addCondition('us_user_id', '=', $userId);
+        $srch->addOrder('utl_booking_slot', 'DESC');
+        // if greater than 0, then specific otherwise all
+        if($duration>0){
+            $srch->addCondition('utl_booking_slot', '=', $duration);
+        }
         if ($tlangId) {
             $srch->addCondition('utl_slanguage_id', '=', $tlangId);
         }

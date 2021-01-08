@@ -26,8 +26,9 @@ class TeacherStudentsController extends TeacherBaseController
         $srch->joinOrderProducts();
         $srch->joinLearner();
         $srch->joinTeacher();
-        $srch->joinTeacherSettings();
-        $srch->joinTeacherTeachLanguageView($this->siteLangId);
+        // $srch->joinTeacherSettings();
+        // $srch->joinTeacherTeachLanguageView($this->siteLangId);
+        $srch->joinUserTeachLanguages( $this->siteLangId );
         $srch->joinTeacherOfferPrice(UserAuthentication::getLoggedUserId());
         $srch->addCondition('slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addCondition('sldetail_learner_status', '!=', ScheduledLesson::STATUS_CANCELLED);
@@ -49,8 +50,8 @@ class TeacherStudentsController extends TeacherBaseController
             'COUNT(IF(slns.slesson_status="'.ScheduledLesson::STATUS_NEED_SCHEDULING.'",1,null)) as unScheduledLessonCount',
             'COUNT(IF(CONCAT(slesson_date, " ", slesson_start_time) < "'.date('Y-m-d H:i:s').'" AND slns.slesson_status!='.ScheduledLesson::STATUS_CANCELLED.' AND slns.slesson_date != "0000-00-00", 1, null)) as pastLessonCount',
             'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
-            'IFNULL(top_single_lesson_price,0) as singleLessonAmount',
-            'IFNULL(top_bulk_lesson_price, 0) as bulkLessonAmount',
+            'IFNULL(top_single_lesson_price, utl_single_lesson_amount) as singleLessonAmount',
+            'IFNULL(top_bulk_lesson_price, utl_bulk_lesson_amount) as bulkLessonAmount',
         ));
 
         if (!empty($post['keyword'])) {
@@ -116,6 +117,12 @@ class TeacherStudentsController extends TeacherBaseController
         $fld->requirements()->setFloatPositive();
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Bulk_Lesson_Price'), 'top_bulk_lesson_price');
         $fld->requirements()->setFloatPositive();
+
+        $bookingMinutesDuration = explode(',', FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_STRING, 60));
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Lesson_Duration'), 'top_lesson_duration', array_combine($bookingMinutesDuration, $bookingMinutesDuration));
+        $fld->requirements()->setRequired();
+        $fld->requirements()->setInt();
+        
         $fld = $frm->addHiddenField('', 'top_learner_id');
         $fld->requirements()->setInt();
         $fld->requirements()->setRequired();

@@ -56,15 +56,58 @@ class TeacherController extends TeacherBaseController
         $lessonNotificationArr = User::getLessonNotificationArr($this->siteLangId);
         //$frm->addSelectBox(Label::getLabel('LBL_How_much_notice_do_you_require_before_lessons?'), 'us_notice_number',$lessonNotificationArr,'',array())->requirements()->setRequired();
 
-        foreach ($data as $us_data) {
-            if (empty($us_data['utl_slanguage_id'])) {
-                continue;
+        $lesson_durations = explode(',', FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_STRING, 60));
+
+        $durationFlds = array();        
+        $frm->addHtml(Label::getLabel('LBL_Lesson_Durations'), 'lesson_duration_head', '');
+        foreach($lesson_durations as $lesson_duration){
+            $durationFlds[$lesson_duration] = $frm->addCheckBox(sprintf(Label::getLabel('LBL_%d_minutes'), $lesson_duration), 'duration['.$lesson_duration.']', $lesson_duration);
+        }
+
+        $uTeachLangs = array_unique(array_column($data, 'utl_slanguage_id'));
+
+        // $fldGrp = $frm->addFieldGroup();
+
+        foreach($lesson_durations as $lesson_duration){
+            foreach($uTeachLangs as $uTeachLang){
+                if (!isset($teachLangs[$uTeachLang])) continue;
+
+                $single_lesson_name = 'utl_single_lesson_amount['.$uTeachLang.']['.$lesson_duration.']';
+
+                $fld = $frm->addFloatField(sprintf(Label::getLabel('LBL_Single_Lesson_Rate(%d_min)'), $lesson_duration).' ['. $teachLangs[$uTeachLang]['tlanguage_name'] .']', $single_lesson_name, '0.00');
+                $fld->requirements()->setRange(1, 99999);
+
+
+                // onchange update requirements for single lesson price
+                $single_lesson_fld_req = new FormFieldRequirement($single_lesson_name, Label::getLabel('LBL_Single_Lesson_Rate'));
+                $single_lesson_fld_req->setRequired(true);
+                $single_lesson_fld_req->setRange(1, 99999);
+                $durationFlds[$lesson_duration]->requirements()->addOnChangerequirementUpdate($lesson_duration, 'eq', $single_lesson_name, $single_lesson_fld_req);
+
+                $single_lesson_fld_req2 = clone $single_lesson_fld_req;
+                $single_lesson_fld_req2->setRequired(true);
+                $single_lesson_fld_req2->setRange(0,0);
+                $durationFlds[$lesson_duration]->requirements()->addOnChangerequirementUpdate("", 'eq', $single_lesson_name, $single_lesson_fld_req2);
             }
-            if (isset($teachLangs[$us_data['utl_slanguage_id']])) {
-                $fld = $frm->addRequiredField(Label::getLabel('M_Single_Lesson_Rate').' ['. $teachLangs[$us_data['utl_slanguage_id']]['tlanguage_name'] .']', 'utl_single_lesson_amount['.$us_data['utl_slanguage_id'].']', '');
+        }
+
+        foreach($lesson_durations as $lesson_duration){
+            foreach($uTeachLangs as $uTeachLang){
+                if (!isset($teachLangs[$uTeachLang])) continue;
+                $bulk_lesson_name = 'utl_bulk_lesson_amount['.$uTeachLang.']['.$lesson_duration.']';
+                $fld = $frm->addFloatField(sprintf(Label::getLabel('LBL_Bulk_Lesson_Rate(%d_min)'), $lesson_duration).' ['. $teachLangs[$uTeachLang]['tlanguage_name'] .']', $bulk_lesson_name, '0.00');
                 $fld->requirements()->setRange(1, 99999);
-                $fld = $frm->addRequiredField(Label::getLabel('M_Bulk_Lesson_Rate').' ['. $teachLangs[$us_data['utl_slanguage_id']]['tlanguage_name'] .']', 'utl_bulk_lesson_amount['.$us_data['utl_slanguage_id'].']', '');
-                $fld->requirements()->setRange(1, 99999);
+
+                // onchange update requirements for bulk lesson price
+                $bulk_lesson_fld_req = new FormFieldRequirement($bulk_lesson_name, Label::getLabel('LBL_Bulk_Lesson_Rate'));
+                $bulk_lesson_fld_req->setRequired(true);
+                $bulk_lesson_fld_req->setRange(1, 99999);
+                $durationFlds[$lesson_duration]->requirements()->addOnChangerequirementUpdate($lesson_duration, 'eq', $bulk_lesson_name, $bulk_lesson_fld_req);
+
+                $bulk_lesson_fld_req2 = clone $bulk_lesson_fld_req;
+                $bulk_lesson_fld_req2->setRequired(true);
+                $bulk_lesson_fld_req2->setRange(0,0);
+                $durationFlds[$lesson_duration]->requirements()->addOnChangerequirementUpdate("", 'eq', $bulk_lesson_name, $bulk_lesson_fld_req2);
             }
         }
         //$frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'),'us_video_link','');
@@ -76,16 +119,36 @@ class TeacherController extends TeacherBaseController
     {
         $data = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
         $frm = $this->getSettingsForm($data);
+        $lesson_durations = explode(',', FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_STRING, 60));
         if ($data) {
-            $filledData = array();
+            $filledData = array('duration' => array());
             foreach ($data as $utlData) {
-                $filledData['utl_single_lesson_amount'][$utlData['utl_slanguage_id']] = $utlData['utl_single_lesson_amount'];
-                $filledData['utl_bulk_lesson_amount'][$utlData['utl_slanguage_id']] = $utlData['utl_bulk_lesson_amount'];
+                if($utlData['utl_single_lesson_amount']>0){
+                    $filledData['duration'][$utlData['utl_booking_slot']] = $utlData['utl_booking_slot'];
+                }
+
+                $filledData['utl_single_lesson_amount'][$utlData['utl_slanguage_id']][$utlData['utl_booking_slot']] = $utlData['utl_single_lesson_amount'];
+                $filledData['utl_bulk_lesson_amount'][$utlData['utl_slanguage_id']][$utlData['utl_booking_slot']] = $utlData['utl_bulk_lesson_amount'];
+                foreach($lesson_durations as $lesson_duration){
+                    if(!in_array($lesson_duration, array_column($data, 'utl_booking_slot'))){
+                        $filledData['utl_single_lesson_amount'][$utlData['utl_slanguage_id']][$lesson_duration] = '0.00';
+                        $filledData['utl_bulk_lesson_amount'][$utlData['utl_slanguage_id']][$lesson_duration] = '0.00';
+                    }
+                }
             }
             $filledData['us_is_trial_lesson_enabled'] = current($data)['us_is_trial_lesson_enabled'];
             $frm->fill($filledData);
         }
         $this->set('frm', $frm);
+
+        $srch = new TeachingLanguageSearch($this->siteLangId);
+		$srch->addMultiplefields(array('tlanguagelang_tlanguage_id','tlanguage_name'));
+		$srch->addChecks();
+		$rs = $srch->getResultSet();
+        $teachLangs = FatApp::getDb()->fetchAll($rs,'tlanguagelang_tlanguage_id');
+        $this->set('teachLangs', $teachLangs);
+
+        $this->set('tprices', $data);
         $this->_template->render(false, false);
     }
 
@@ -98,13 +161,31 @@ class TeacherController extends TeacherBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
 
-        if (isset($post['utl_single_lesson_amount'])) {
-            foreach ($post['utl_single_lesson_amount'] as $k=>$tlang) {
-                $record = new TableRecord('tbl_user_teach_languages');
-                $record->assignValues(array('utl_single_lesson_amount' => $tlang, 'utl_bulk_lesson_amount' => $post['utl_bulk_lesson_amount'][$k]));
-                if (!$record->update(array('smt'=>'utl_us_user_id=? and utl_slanguage_id=?', 'vals'=>array(UserAuthentication::getLoggedUserId(),$k)))) {
-                    $this->error = $record->getError();
-                    return false;
+        if(isset($post['utl_single_lesson_amount'])){
+            foreach ($post['utl_single_lesson_amount'] as $tlang=>$priceAr) {
+                foreach ($priceAr as $slot=>$single_lesson_price) {
+                    $bulk_lesson_price = $post['utl_bulk_lesson_amount'][$tlang][$slot];
+                    if(!in_array($slot, $post['duration'])) {
+                        $single_lesson_price = 0;
+                        $bulk_lesson_price = 0;
+                    }
+                    $data = array(
+                        'utl_us_user_id'            => UserAuthentication::getLoggedUserId(), 
+                        'utl_single_lesson_amount'  => $single_lesson_price, 
+                        'utl_bulk_lesson_amount'    => $bulk_lesson_price, 
+                        'utl_slanguage_id'          => $tlang, 
+                        'utl_booking_slot'          => $slot
+                    );
+                    $data_on_dup = array(
+                        'utl_single_lesson_amount'  => $single_lesson_price, 
+                        'utl_bulk_lesson_amount'    => $bulk_lesson_price
+                    );
+                    $record = new TableRecord(UserToLanguage::DB_TBL_TEACH);
+                    $record->assignValues($data);
+                    if (!$record->addNew(array(), $data_on_dup)) {
+                        $this->error = $record->getError();
+                        return false;
+                    }
                 }
             }
         }
@@ -154,6 +235,7 @@ class TeacherController extends TeacherBaseController
         $userToTeachLangSrch = new SearchBase('tbl_user_teach_languages');
         $userToTeachLangSrch->addMultiplefields(array('utl_slanguage_id'));
         $userToTeachLangSrch->addCondition('utl_us_user_id', '=', $userId);
+        $userToTeachLangSrch->addGroupBy('utl_slanguage_id');
         $userToTeachLangRs=$userToTeachLangSrch->getResultSet();
         $userToTeachLangRows = $db->fetchAll($userToTeachLangRs);
             // prx($userToTeachLangRows);
@@ -264,16 +346,18 @@ class TeacherController extends TeacherBaseController
         }
 
         foreach ($post['teach_lang_id'] as $tlang) {
-            $insertArr = array('utl_slanguage_id' => $tlang, 'utl_us_user_id' => UserAuthentication::getLoggedUserId());
-            if(isset($userTechLangData[$tlang])){
-                $insertArr['utl_single_lesson_amount'] = $userTechLangData[$tlang]['utl_single_lesson_amount'];
-                $insertArr['utl_bulk_lesson_amount'] = $userTechLangData[$tlang]['utl_bulk_lesson_amount'];
-            }
-            
-            if (!$db->insertFromArray('tbl_user_teach_languages', $insertArr, false, array(), $insertArr)) {
-                $db->rollbackTransaction();
-                Message::addErrorMessage(Label::getLabel($db->getError()));
-                FatUtility::dieWithError(Message::getHtml());
+            $lesson_durations = explode(',', FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_STRING, 60));
+            foreach($lesson_durations as $lesson_duration){
+                $insertArr = array(
+                    'utl_slanguage_id' => $tlang,
+                    'utl_us_user_id' => UserAuthentication::getLoggedUserId(), 
+                    'utl_booking_slot' => $lesson_duration
+                );
+                if(!$db->insertFromArray('tbl_user_teach_languages', $insertArr, false, array(), $insertArr )){
+                    $db->rollbackTransaction();
+                    Message::addErrorMessage( Label::getLabel($db->getError()) );
+                    FatUtility::dieWithError( Message::getHtml() );
+                }
             }
         }
         $i = 0;

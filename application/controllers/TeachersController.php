@@ -203,7 +203,8 @@ class TeachersController extends MyAppController {
 			'minPrice',
 			'maxPrice',
             'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
-            'utl_slanguage_ids'
+			'utl_slanguage_ids',
+            'utl_booking_slots'
 		));
 
 		$rs = $srch->getResultSet();
@@ -535,7 +536,8 @@ class TeachersController extends MyAppController {
 						'_id' => $row['twsch_id'],
 						"display" => 'background',
 						'classType' => $row['twsch_is_available'],
-				    	'className' => $cssClassNamesArr[$row['twsch_is_available']]
+				    	'className' => $cssClassNamesArr[$row['twsch_is_available']],
+				    	'action' => 'fromWeeklySchedule',
 				    );
 				// }
 			}
@@ -546,7 +548,9 @@ class TeachersController extends MyAppController {
         if(empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear){
             $weekRange = CommonHelper::getWeekRangeByDate(date('Y-m-d', $midPoint));
             $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, array('WeekStart' => $weekRange['start'], 'WeekEnd' => $weekRange['end']));
-            // CommonHelper::printArray($jsonArr2);die;
+            foreach($jsonArr2 as &$j){
+                $j['action'] = 'fromGeneralAvailability';
+            }
             $jsonArr = array_merge($jsonArr, $jsonArr2);
         }
         
