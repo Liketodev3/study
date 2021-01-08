@@ -6,6 +6,45 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 $getAllMonthName =  CommonHelper::getAllMonthName();
 $weekDayName =  CommonHelper::dayNames();
 ?>
+<style>
+.fc button.fc-time-button{display:none;}
+</style>
+<div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
+<div class="calendar-view">
+    <?php //if( 'free_trial' != $action ){ ?>
+    <div class="row">
+        <div class="col-sm-5">
+            <h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
+        </div>
+        <div class="col-sm-7 justify-content-sm-end justify-content-start">
+            <div class="cal-status">
+                <span class="ml-0 box-hint disabled-box">&nbsp;</span>
+                <p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
+            </div>
+            <div class="cal-status">
+                <span class="box-hint available-box">&nbsp;</span>
+                <p><?php echo Label::getLabel('Lbl_Available'); ?></p>
+            </div>
+            <div class="cal-status">
+                <span class="box-hint booked-box">&nbsp;</span>
+                <p><?php echo Label::getLabel('Lbl_Booked'); ?></p>
+            </div>
+        </div>
+    </div>
+    <?php //} ?>
+
+    <span> <?php echo MyDate::displayTimezoneString();?> </span>
+    <!-- (<span id="currentTime"> </span>) -->
+    <?php if( 'free_trial' != $action ): ?>
+    <small class="label label--warning"><?php echo Label::getLabel('Note_This_calendar_is_to_only_check_availability') ?></small>
+    <?php endif; ?>
+
+</div>
+
+<div id='calendar-container'>
+    <div id='d_calendar'></div>
+</div>
+
 <script >
 var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
 var calendarEl = document.getElementById('d_calendar');
@@ -24,6 +63,9 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             titleFormat: {  month: 'short', day: '2-digit', year: 'numeric' }
         }
     },
+    buttonText :{
+        today: '<?php echo Label::getLabel('LBL_Today'); ?>',
+    },
     navLinks: true, // can click day/week names to navigate views
     dayMaxEvents: true, // allow "more" link when too many events
     eventOverlap: false,
@@ -33,6 +75,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     snapDuration : "<?php echo $bookingSnapDuration; ?>",
     allDaySlot: false,
     selectable: (action === 'free_trial'),
+    now:'<?php echo date('Y-m-d H:i:s', strtotime($nowDate)); ?>',
     // timeZone: 'UTC',
     // unselectAuto: true,
     selectLongPressDelay: 50,
@@ -117,12 +160,12 @@ function validateSelectedSlot(arg){
         return false;
     }
     if ( selectedDateTime < validSelectDateTime ) {
-        if( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
+        /* if( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
             $.systemMessage('<?php echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--danger');
             setTimeout(function() {
                 $.systemMessage.close();
             }, 3000);
-        }
+        } */
         return false;
     }
 
@@ -171,40 +214,4 @@ $(".fc-today-button,button.fc-prev-button,button.fc-next-button").click(function
 $(document).bind('close.facebox', function() {
     $('.tooltipevent').remove();
 });
-
 </script>
-<div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
-<div class="calendar-view">
-    <?php //if( 'free_trial' != $action ){ ?>
-    <div class="row">
-        <div class="col-sm-5">
-            <h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
-        </div>
-        <div class="col-sm-7 justify-content-sm-end justify-content-start">
-            <div class="cal-status">
-                <span class="ml-0 box-hint disabled-box">&nbsp;</span>
-                <p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
-            </div>
-            <div class="cal-status">
-                <span class="box-hint available-box">&nbsp;</span>
-                <p><?php echo Label::getLabel('Lbl_Available'); ?></p>
-            </div>
-            <div class="cal-status">
-                <span class="box-hint booked-box">&nbsp;</span>
-                <p><?php echo Label::getLabel('Lbl_Booked'); ?></p>
-            </div>
-        </div>
-    </div>
-    <?php //} ?>
-
-    <span> <?php echo MyDate::displayTimezoneString();?> </span>
-    <!-- (<span id="currentTime"> </span>) -->
-    <?php if( 'free_trial' != $action ): ?>
-    <small class="label label--warning"><?php echo Label::getLabel('Note_This_calendar_is_to_only_check_availability') ?></small>
-    <?php endif; ?>
-
-</div>
-
-<div id='calendar-container'>
-    <div id='d_calendar'></div>
-</div>

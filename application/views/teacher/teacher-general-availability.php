@@ -1,11 +1,26 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+<?php
+defined('SYSTEM_INIT') or die('Invalid Usage.');
 $user_timezone = MyDate::getUserTimeZone();
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 $getAllMonthName =  CommonHelper::getAllMonthName();
-
 $weekDayName =  CommonHelper::dayNames();
 ?>
+<h6><?php echo Label::getLabel('LBL_General_Availability_Note'); ?></h6>
+<br />
+<button id='setUpGABtn' class="btn btn--secondary"><?php echo Label::getLabel('LBL_Save'); ?></button>
+<span class="-gap"></span>
+<div class="calendar-view -no-padding">
+    <div id="loaderCalendar" style="display: none;">
+        <div class="loader"></div>
+    </div>
+    <span> <?php echo MyDate::displayTimezoneString();?> </span>
+</div>
+
+<div id='calendar-container'>
+    <div id='ga_calendar'></div>
+</div>
+
 <script>
     var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
     var timeInterval;
@@ -17,20 +32,10 @@ $weekDayName =  CommonHelper::dayNames();
       $('body').find(".fc-left h6 span.timer").html(moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A'));
       seconds++;
     }
-   function isOverlapping(start,end){
-       var array = $("#ga_calendar").fullCalendar('clientEvents');
-       for(i in array){
-           if (end >= array[i].start && start <= array[i].end){
-              return true;
-           }
-       }
-       return false;
-   }
-   $(document).ready(function() {
-
+      
     $("#setUpGABtn").click(function () {
-
-        let data = $("#ga_calendar").fullCalendar("clientEvents").map(function (e) {
+        var allevents = calendar.getEvents();
+        let data = allevents.map(function (e) {
             return {
                 start: moment(e.start).format('HH:mm:ss'),
                 end: moment(e.end).format('HH:mm:ss'),
@@ -45,8 +50,7 @@ $weekDayName =  CommonHelper::dayNames();
 
         data.forEach(element => {
 
-            if (
-                (element.dayStart != element.dayEnd)
+            if ((element.dayStart != element.dayEnd)
                 &&
                 ((element.endTime != '00:00') || (element.startTime == '00:00'))
             ) {
@@ -87,67 +91,12 @@ $weekDayName =  CommonHelper::dayNames();
         var json = JSON.stringify(data);
 
         setupTeacherGeneralAvailability(json);
-        });
-    function mergeEvents() {
-        allevents = $("#ga_calendar").fullCalendar("clientEvents");
-        if(allevents.length == 1) {
-            return;
-        }
-        // debugger;
-        $.each(allevents, function( i, eItem )
-        {
+    });
+    
+    var calendarEl = document.getElementById('ga_calendar');
 
-            if(eItem ===null || typeof eItem == 'undefined')
-            {
-                return;
-            }
-            var start =  eItem.start;
-            var end =  eItem.end;
-            var eventId =  eItem._id;
-            $.each(allevents, function( index, eventitem )
-            {
-                eventmerge =  false;
-                if(eventId == eventitem._id){
-                    return;
-                }
-                // if start time of new event (2nd slot) is end time of existing event (1st slot)
-                if( moment(start).format('YYYY-MM-DD HH:mm') == moment(eventitem.end).format('YYYY-MM-DD HH:mm') )
-                {
-                    eventmerge = true;
-                    eventitem.end = end;
-
-                }
-                // if end time of new event (1st slot) is start time of existing event (2nd slot)
-                else if( moment(end).format('YYYY-MM-DD HH:mm') == moment(eventitem.start).format('YYYY-MM-DD HH:mm') )
-                {
-                    eventmerge = true;
-                    // existing event gets start data of new merging event
-                    eventitem.start = start;
-                }
-
-                if(eventmerge)
-                {
-                    eventData = eventitem;
-                    // find event object in calendar
-                    eventId = parseInt(eventId);
-                    eventitemId =  eventitem._id;
-                    if(eventId && Number.isInteger(eventId)) {
-                        eventitem._id = eventId;
-                    }else{
-                        eventitemId = eItem._id;
-                    }
-                     $('#ga_calendar').fullCalendar('updateEvent', eventitem);
-                    $('#ga_calendar').fullCalendar('removeEvents', eventitemId);
-
-                    // break each loop
-                    return;
-                }
-            });
-        });
-    }
-
-    $('#ga_calendar').fullCalendar({
-        header: {
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
             left: '',
             center: '',
             right: ''
@@ -155,52 +104,78 @@ $weekDayName =  CommonHelper::dayNames();
         buttonText :{
             today: '<?php echo Label::getLabel('LBL_Today'); ?>',
         },
-        monthNames: <?php echo  json_encode($getAllMonthName['monthNames']); ?>,
+        /* monthNames: <?php echo  json_encode($getAllMonthName['monthNames']); ?>,
         monthNamesShort: <?php echo  json_encode($getAllMonthName['monthNamesShort']); ?>,
         dayNames: <?php echo  json_encode($weekDayName['dayNames']); ?>,
-        dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>,
-        defaultView: 'agendaWeek',
+        dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>, */
+        initialView: 'timeGridWeek',
         selectable: true,
         editable: true,
-        selectOverlap: false,
-        eventOverlap: false,
-        slotEventOverlap : false,
         selectLongPressDelay:50,
         eventLongPressDelay:50,
         longPressDelay:50,
-        allDaySlot: false,
-        columnHeaderFormat :"ddd",
-        timezone: '<?php echo $user_timezone; ?>',
-        select: function (start, end, jsEvent, view ) {
+        // allDaySlot: false,
+        // columnHeaderFormat :"ddd",
+        // timeZone: '<?php echo $user_timezone; ?>',
+        select: function (arg ) {
+            var start = arg.start;
+            var end = arg.end;
             if(moment(start).format('d') != moment(end).format('d') ) {
-                $('#ga_calendar').fullCalendar('unselect');
+                calendar.unselect();
                 return false;
             }
             var newEvent = new Object();
             newEvent.title = '';
-            newEvent.start = moment(start).format('YYYY-MM-DD')+" "+moment(start).format('HH:mm');
-            newEvent.end = moment(end).format('YYYY-MM-DD')+" "+moment(end).format('HH:mm'),
+            newEvent.start = moment(start).format('YYYY-MM-DD')+"T"+moment(start).format('HH:mm:ss');
+            newEvent.end = moment(end).format('YYYY-MM-DD')+"T"+moment(end).format('HH:mm:ss'),
             newEvent.startTime = moment(start).format('HH:mm:ss');
             newEvent.endTime = moment(end).format('HH:mm:ss'),
-            newEvent.day = moment(start).format('d'),
+            newEvent.daysOfWeek = moment(start).format('d'),
             newEvent.className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>',
             newEvent.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>',
-            newEvent.allday = 'false';
-            $('#ga_calendar').fullCalendar('renderEvent',newEvent);
-            mergeEvents();
-        },
-        eventLimit: true,
-        defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
-        //events: "<?php //echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonData'); ?>",
-        events: function( start, end, timezone, callback ) {
-            var data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };
-            fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData', [userId]), data , function(doc) {
-                var doc = JSON.parse(doc);
-                callback(doc);
-            });
-        },
-        eventAfterAllRender : function(view) {
-            mergeEvents();
+            // newEvent.display = 'background',
+            // newEvent.backgroundColor = 'none',
+            newEvent.overlap = true,
+            // newEvent.allday = false;
+            // console.log('new Event:', newEvent);
+            calendar.addEvent(newEvent);
+            // $('#ga_calendar').fullCalendar('renderEvent',newEvent);
+            // mergeEvents();
+        },/* 
+        eventClick: function(arg) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                arg.event.remove()
+            }
+        }, */
+        now: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
+        eventSources: [
+            {
+                url: fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData',[userId]),
+                method: 'POST',
+                success: function(doc){
+                    // console.log(doc);
+                }
+            }
+        ],
+        eventSourceSuccess: function(events, xhr){
+            /* for(i in events){
+                var event = events[i];
+                console.log(event, xhr);
+                if(isNaN(event._id)){
+                    element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
+                }
+                else{
+                    element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+event._id+");'>X</span>" );
+                }
+                element.find(".closeon").click(function() {
+                    if(isNaN(event._id)){
+                        // $('#ga_calendar').fullCalendar('removeEvents',event._id);
+                        var event = calendar.getEventById(event.id);
+                        event.remove();
+                    }
+                });
+            } */
+            // mergeEvents();
         },
         loading :function( isLoading, view ) {
             if(isLoading == true){
@@ -209,7 +184,7 @@ $weekDayName =  CommonHelper::dayNames();
                 $("#loaderCalendar").hide();
             }
         },
-        eventRender: function(event, element) {
+        /* eventRender: function(event, element) {
             
             if(isNaN(event._id)){
                 element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
@@ -223,23 +198,12 @@ $weekDayName =  CommonHelper::dayNames();
                 }
             });
             // mergeEvents();
-        },
+        }, */
     });
+    calendar.render();
+
     $('body').find(".fc-left").html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'></span></h6>");
-   });
-</script>
-<h6><?php echo Label::getLabel('LBL_General_Availability_Note'); ?></h6>
-<br />
-<button id='setUpGABtn' class="btn btn--secondary"><?php echo Label::getLabel('LBL_Save'); ?></button>
-<span class="-gap"></span>
-<div class="calendar-view -no-padding">
-<div id="loaderCalendar" style="display: none;">
-    <div class="loader"></div>
-</div>
-<span> <?php echo MyDate::displayTimezoneString();?> </span>
-<div id='ga_calendar'></div>
-</div>
-<script>
+
 var current_day = '<?php echo strtolower(date('D')); ?>';
 $(document).ready(function(){
     $(".fc-view-container").find('.fc-'+current_day).addClass('fc-today');

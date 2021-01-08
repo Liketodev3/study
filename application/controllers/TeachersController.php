@@ -460,7 +460,13 @@ class TeachersController extends MyAppController {
 		if ($userId < 1) {
 			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
 		}
-		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, $post);
+		$userTimezone = MyDate::getUserTimeZone();
+		$systemTimeZone = MyDate::getTimeZone();
+		$startDate = MyDate::changeDateTimezone( $post['start'], $userTimezone, $systemTimeZone);
+		$endDate = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
+		$midPoint = (strtotime($startDate) + strtotime($endDate))/2;        
+		$weekRange = CommonHelper::getWeekRangeByDate(date('Y-m-d', $midPoint));
+		$jsonArr = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, array('WeekStart' => $weekRange['start'], 'WeekEnd' => $weekRange['end']));
 		echo FatUtility::convertToJson($jsonArr);
 	}
 
@@ -534,7 +540,6 @@ class TeachersController extends MyAppController {
 				    	"end" => $twsch_end_time,
 				    	"weekyear" => $row['twsch_weekyear'],
 						'_id' => $row['twsch_id'],
-						"display" => 'background',
 						'classType' => $row['twsch_is_available'],
 				    	'className' => $cssClassNamesArr[$row['twsch_is_available']],
 				    	'action' => 'fromWeeklySchedule',
@@ -547,15 +552,44 @@ class TeachersController extends MyAppController {
         $twsch_weekyear = date('W-Y', $midPoint);
         if(empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear){
             $weekRange = CommonHelper::getWeekRangeByDate(date('Y-m-d', $midPoint));
-            $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, array('WeekStart' => $weekRange['start'], 'WeekEnd' => $weekRange['end']));
+			$jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, array('WeekStart' => $weekRange['start'], 'WeekEnd' => $weekRange['end']));
+			// CommonHelper::printArray($jsonArr2);die;
             foreach($jsonArr2 as &$j){
                 $j['action'] = 'fromGeneralAvailability';
             }
             $jsonArr = array_merge($jsonArr, $jsonArr2);
-        }
-        
-        // CommonHelper::printArray($jsonArr);die;
-		echo FatUtility::convertToJson($jsonArr);
+		}
+		// CommonHelper::printArray($jsonArr);die;
+		$events = [];
+		array_push($events, array(
+			'title'		=> '',
+			'start'		=> date('Y-m-d 00:00:00'),
+			'end'		=> date('Y-m-d H:i:s'),
+			'className' => 'past_current_day',
+			'display' => 'background'
+		));
+		
+		$teacherBookingBefore = current(UserSetting::getUserSettings($userId))['us_booking_before'];
+		if ('' ==  $teacherBookingBefore) {
+			$teacherBookingBefore = 0;
+		}
+		
+		$validSelectDateTime = MyDate::changeDateTimezone( date('Y-m-d H:i:s', strtotime('+'.$teacherBookingBefore.' Hour')), $systemTimeZone, $userTimezone);
+		
+		foreach($jsonArr as $ar){
+			if(  $validSelectDateTime > $ar['end'] ) {
+				continue;
+			}
+			
+			if(  $validSelectDateTime > $ar['start'] ) {
+				$ar['start'] = $validSelectDateTime;
+			}
+			$ar["display"]  = 'background';
+			array_push($events, $ar);
+		}
+
+        // CommonHelper::printArray($events);die;
+		echo FatUtility::convertToJson($events);
 	}
 
 	public function qualificationList() {
