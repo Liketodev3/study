@@ -565,8 +565,7 @@ class TeachersController extends MyAppController {
 			'title'		=> '',
 			'start'		=> date('Y-m-d 00:00:00'),
 			'end'		=> date('Y-m-d H:i:s'),
-			'className' => 'past_current_day',
-			'display' => 'background'
+			'className' => 'past_current_day',			
 		));
 		
 		$teacherBookingBefore = current(UserSetting::getUserSettings($userId))['us_booking_before'];
@@ -584,7 +583,6 @@ class TeachersController extends MyAppController {
 			if(  $validSelectDateTime > $ar['start'] ) {
 				$ar['start'] = $validSelectDateTime;
 			}
-			$ar["display"]  = 'background';
 			array_push($events, $ar);
 		}
 

@@ -82,7 +82,6 @@ class TeacherGeneralAvailability extends MyAppModel
                     "start" => $tgavl_start_time,
                     '_id'   => $row['tgavl_id'],
                     "classType"=> 1,
-                    "overlap" => false,
                     // "display" => 'background',
                     "day"   => MyDate::getDayNumber($tgavl_start_time),
                     'className'=>"slot_available"
@@ -137,10 +136,10 @@ class TeacherGeneralAvailability extends MyAppModel
         //$deleteWeeklyFutrureWeeksRecords = $db->deleteRecords(TeacherWeeklySchedule::DB_TBL,array('smt'=>'twsch_user_id = ? and (twsch_start_time > ?)','vals'=>array($userId,$weekendDate)));
         //$deleteRecords = true;
         $deleteRecords = $db->deleteRecords(TeacherGeneralAvailability::DB_TBL, array('smt'=>'tgavl_user_id = ?','vals'=>array($userId)));
-         if(empty($postJson)) {
-             return true;
-         }
-        $postJsonArr = array();
+        if(empty($postJson)) {
+            return true;
+        }
+        $postJsonArr = [];//self::mergeDates($postJson);
 
         $sort = array();
 
@@ -155,15 +154,15 @@ class TeacherGeneralAvailability extends MyAppModel
         /* ] */
 
 
+        /*[ Clubbing the continuous timeslots */
         foreach ($postJson as $k=>$postObj) {
-            /*[ Clubbing the continuous timeslots */
             if ($k>0 and ($postJson[$k-1]->day == $postObj->day) and ($postJson[$k-1]->endTime == $postObj->startTime)) {
                 $postJsonArr[count($postJsonArr)-1]->endTime = $postObj->endTime;
                 continue;
             }
-            /* ] */
             $postJsonArr[] = $postObj;
         }
+        /* ] */
         if ($deleteRecords) {
             /* code added  on 12-07-2019 */
             $user_timezone = MyDate::getUserTimeZone();
@@ -227,5 +226,37 @@ class TeacherGeneralAvailability extends MyAppModel
             6	=>	'18:00-20:59',
             7	=>	'21:00-23:59',
         );
+    }
+
+    private static function mergeDates(array $datesArray = []): array
+    {
+
+       foreach ($datesArray as $key => &$date) {
+
+           foreach ($datesArray as $index => $value) {
+             
+               $mergeDates =  false;
+
+               if ($date['startDateTime'] == $value['endDateTime']) {
+                   $mergeDates =  true;
+                   $date['startDateTime'] = $value['startDateTime'];
+                   $date['startTime'] = $value['startTime'];
+                   $date['day'] = $value['day'];
+                   
+               }
+
+               if ($date['endDateTime'] == $value['startDateTime']) {
+                   $mergeDates =  true;
+                   $date['endDateTime'] = $value['endDateTime'];
+                   $date['endTime'] = $value['endTime'];
+               }
+
+               if ($mergeDates) {
+                   unset($datesArray[$index]);
+                   $datesArray =  self::mergeDates($datesArray);
+               }
+           }
+       }
+       return $datesArray;
     }
 }

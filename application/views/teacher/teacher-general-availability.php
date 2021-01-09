@@ -8,7 +8,7 @@ $weekDayName =  CommonHelper::dayNames();
 ?>
 <h6><?php echo Label::getLabel('LBL_General_Availability_Note'); ?></h6>
 <br />
-<button id='setUpGABtn' class="btn btn--secondary"><?php echo Label::getLabel('LBL_Save'); ?></button>
+<button class="btn btn--secondary" onclick="saveGeneralAvailability();"><?php echo Label::getLabel('LBL_Save'); ?></button>
 <span class="-gap"></span>
 <div class="calendar-view -no-padding">
     <div id="loaderCalendar" style="display: none;">
@@ -22,176 +22,123 @@ $weekDayName =  CommonHelper::dayNames();
 </div>
 
 <script>
-    var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
-    var timeInterval;
-    var userId = '<?php echo $userId ?>';
-    var seconds = 2;
-    clearInterval(timeInterval);
-    timeInterval = setInterval(currentTimer, 1000);
-    function currentTimer() {
-      $('body').find(".fc-left h6 span.timer").html(moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A'));
-      seconds++;
-    }
-      
-    $("#setUpGABtn").click(function () {
-        var allevents = calendar.getEvents();
-        let data = allevents.map(function (e) {
-            return {
-                start: moment(e.start).format('HH:mm:ss'),
-                end: moment(e.end).format('HH:mm:ss'),
-                startTime: moment(e.start).format('HH:mm'),
-                endTime: moment(e.end).format('HH:mm'),
-                day: moment(e.start).format('d'),
-                dayStart: moment(e.start).format('d'),
-                dayEnd: moment(e.end).format('d'),
-                classtype: e.classType,
-            };
-        });
+var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
+var userId = '<?php echo $userId ?>';
 
-        data.forEach(element => {
+var calendarEl = document.getElementById('ga_calendar');
 
-            if ((element.dayStart != element.dayEnd)
-                &&
-                ((element.endTime != '00:00') || (element.startTime == '00:00'))
-            ) {
-
-                if ((element.dayEnd - element.dayStart == 1)) {
-
-                    if ((element.endTime != '00:00') || (element.startTime != '00:00')) {
-
-                        let elementClone = $.parseJSON(JSON.stringify(element));
-                        elementClone.day = parseInt(element.dayEnd);
-                        elementClone.start = '00:00:00';
-                        elementClone.startTime = '00:00';
-                        data[data.length] = elementClone;
-                    }
-                } else {
-
-                    for (let index = 0; index < element.dayEnd - element.dayStart; index++) {
-
-                        if ((element.endTime == '00:00') && (parseInt(element.dayStart) + index + 1 == element.dayEnd)) {
-
-                            continue;
-                        }
-                        let elementClone = $.parseJSON(JSON.stringify(element));
-                        elementClone.day = parseInt(element.dayStart) + index + 1;
-                        elementClone.start = '00:00:00';
-                        elementClone.startTime = '00:00';
-                        if (index + 1 != element.dayEnd - element.dayStart) {
-                            elementClone.end = '24:00:00';
-                            elementClone.endTime = '24:00';
-                        }
-                        data[data.length] = elementClone;
-                    }
-                }
-                element.end = '24:00:00';
-                element.endTime = '24:00';
+var calendar = new FullCalendar.Calendar(calendarEl, {
+    headerToolbar: {
+        left: 'time',
+        center: '',
+        right: ''
+    },
+    buttonText :{
+        today: '<?php echo Label::getLabel('LBL_Today'); ?>',
+    },
+    /* monthNames: <?php echo  json_encode($getAllMonthName['monthNames']); ?>,
+    monthNamesShort: <?php echo  json_encode($getAllMonthName['monthNamesShort']); ?>,
+    dayNames: <?php echo  json_encode($weekDayName['dayNames']); ?>,
+    dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>, */
+    initialView: 'timeGridWeek',
+    selectable: true,
+    editable: true,
+    selectOverlap: false,
+    // overlap:false,
+    eventOverlap: false,
+    slotEventOverlap : false,
+    selectLongPressDelay:50,
+    eventLongPressDelay:50,
+    longPressDelay:50,
+    eventTimeFormat : {
+        hour: '2-digit',
+        minute: '2-digit',
+        meridiem: true
+    },
+    allDaySlot: false,
+    // columnHeaderFormat :"ddd",
+    // timeZone: '<?php echo $user_timezone; ?>',
+    select: function (arg ) {
+        var start = arg.start;
+        var end = arg.end;
+        if(moment(start).format('d') != moment(end).format('d') ) {
+            calendar.unselect();
+            return false;
+        }
+        var newEvent = new Object();
+        newEvent.title = '';
+        newEvent.start = moment(start).format('YYYY-MM-DD')+"T"+moment(start).format('HH:mm:ss');
+        newEvent.end = moment(end).format('YYYY-MM-DD')+"T"+moment(end).format('HH:mm:ss'),
+        newEvent.startTime = moment(start).format('HH:mm:ss');
+        newEvent.endTime = moment(end).format('HH:mm:ss'),
+        newEvent.daysOfWeek = moment(start).format('d'),
+        newEvent.className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>',
+        newEvent.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>',
+        newEvent.allday = false;
+        newEvent.overlap = false;
+        
+        var events = calendar.getEvents();
+        for(i in events){
+            if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
+                newEvent.end = moment(events[i].end).format('YYYY-MM-DD')+"T"+moment(events[i].end).format('HH:mm:ss');
+                newEvent.endTime = moment(events[i].end).format('HH:mm:ss');
+                events[i].remove();
+            }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
+                newEvent.start = moment(events[i].start).format('YYYY-MM-DD')+"T"+moment(events[i].start).format('HH:mm:ss');
+                newEvent.startTime = moment(events[i].start).format('HH:mm:ss');
+                events[i].remove();
             }
-        });
-        var json = JSON.stringify(data);
+        }         
+        calendar.addEvent(newEvent);
+    },
+    eventDrop: function(info){
+        var start = info.event.start;
+        var end = info.event.end;
+        var events = calendar.getEvents();
+        for(i in events){
+            if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
+                info.event.setEnd(events[i].end);
+                events[i].remove();
+            }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
+                info.event.setStart(events[i].start);
+                events[i].remove();
+            }
+        }
+    },
+    now: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
+    eventSources: [
+        {
+            url: fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData',[userId]),
+            method: 'POST',
+            success: function(docs){
+                // console.log(doc);
+                
+            }
+        }
+    ],
+    eventClick: function(arg) {
+        if (confirm(langLbl.confirmRemove)) {
+            arg.event.remove()
+        }
+    },
+    loading :function( isLoading, view ) {
+        if(isLoading == true){
+            $("#loaderCalendar").show();
+        }else{
+            $("#loaderCalendar").hide();
+        }
+    },
+});
+calendar.render();
 
-        setupTeacherGeneralAvailability(json);
-    });
-    
-    var calendarEl = document.getElementById('ga_calendar');
+$('body').find(".fc-time-button").parent().html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'>"+moment('<?php echo $nowDate; ?>').format('hh:mm A')+"</span></h6>");
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        headerToolbar: {
-            left: '',
-            center: '',
-            right: ''
-        },
-        buttonText :{
-            today: '<?php echo Label::getLabel('LBL_Today'); ?>',
-        },
-        /* monthNames: <?php echo  json_encode($getAllMonthName['monthNames']); ?>,
-        monthNamesShort: <?php echo  json_encode($getAllMonthName['monthNamesShort']); ?>,
-        dayNames: <?php echo  json_encode($weekDayName['dayNames']); ?>,
-        dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>, */
-        initialView: 'timeGridWeek',
-        selectable: true,
-        editable: true,
-        selectOverlap: false,
-        eventOverlap: false,
-        slotEventOverlap : false,
-        selectLongPressDelay:50,
-        eventLongPressDelay:50,
-        longPressDelay:50,
-        // allDaySlot: false,
-        // columnHeaderFormat :"ddd",
-        // timeZone: '<?php echo $user_timezone; ?>',
-        select: function (arg ) {
-            var start = arg.start;
-            var end = arg.end;
-            if(moment(start).format('d') != moment(end).format('d') ) {
-                calendar.unselect();
-                return false;
-            }
-            var newEvent = new Object();
-            newEvent.title = '';
-            newEvent.start = moment(start).format('YYYY-MM-DD')+"T"+moment(start).format('HH:mm:ss');
-            newEvent.end = moment(end).format('YYYY-MM-DD')+"T"+moment(end).format('HH:mm:ss'),
-            newEvent.startTime = moment(start).format('HH:mm:ss');
-            newEvent.endTime = moment(end).format('HH:mm:ss'),
-            newEvent.daysOfWeek = moment(start).format('d'),
-            newEvent.className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>',
-            newEvent.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>',
-            newEvent.allday = false;
-            // console.log('new Event:', newEvent);
-            
-            var addEventFlag = true;
-            var events = calendar.getEvents();
-            for(i in events){
-                if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
-                    addEventFlag = false;
-                    events[i].setStart(start);
-                }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
-                    addEventFlag = false;
-                    events[i].setEnd(end);
-                }
-            } 
-            if(addEventFlag === true){
-                calendar.addEvent(newEvent);
-            }
-        },
-        eventDrop: function(info){
-            var start = info.event.start;
-            var end = info.event.end;
-            var events = calendar.getEvents();
-            for(i in events){
-                if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
-                    info.event.remove();
-                    events[i].setStart(start);
-                }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
-                    info.event.remove();
-                    events[i].setEnd(end);
-                }
-            }
-        },
-        now: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
-        eventSources: [
-            {
-                url: fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData',[userId]),
-                method: 'POST',
-                success: function(doc){
-                    // console.log(doc);
-                }
-            }
-        ],
-        loading :function( isLoading, view ) {
-            if(isLoading == true){
-                $("#loaderCalendar").show();
-            }else{
-                $("#loaderCalendar").hide();
-            }
-        },
-    });
-    calendar.render();
-
-    $('body').find(".fc-left").html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'></span></h6>");
-
-var current_day = '<?php echo strtolower(date('D')); ?>';
-$(document).ready(function(){
-    $(".fc-view-container").find('.fc-'+current_day).addClass('fc-today');
-})
+var timeInterval;
+var seconds = 2;
+clearInterval(timeInterval);
+timeInterval = setInterval(currentTimer, 1000);
+function currentTimer() {
+    $('body').find(".fc-toolbar-ltr h6 span.timer").html(moment('<?php echo $nowDate; ?>').add(seconds,'seconds').format('hh:mm A'));
+    seconds++;
+}
 </script>

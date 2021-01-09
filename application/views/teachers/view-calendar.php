@@ -92,8 +92,10 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         {
             url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData',[<?php echo $teacher_id; ?>]),
             method: 'POST',
-            success: function(doc){
-                // console.log(doc);
+            success: function(docs){
+                for(i in docs){
+					docs[i].display = 'background';
+				}
             }
         }
     ],
@@ -138,7 +140,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
 calendar.render();
 
 
-$('body').find(".fc-time-button").parent().html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'></span></h6>");
+$('body').find(".fc-time-button").parent().html("<h6><span>"+myTimeZoneLabel+" :-</span> <span class='timer'>"+moment('<?php echo $nowDate; ?>').format('hh:mm A')+"</span></h6>");
 var timeInterval;
 var seconds = 2;
 clearInterval(timeInterval);
