@@ -111,6 +111,9 @@ $weekDayName =  CommonHelper::dayNames();
         initialView: 'timeGridWeek',
         selectable: true,
         editable: true,
+        selectOverlap: false,
+        eventOverlap: false,
+        slotEventOverlap : false,
         selectLongPressDelay:50,
         eventLongPressDelay:50,
         longPressDelay:50,
@@ -133,20 +136,38 @@ $weekDayName =  CommonHelper::dayNames();
             newEvent.daysOfWeek = moment(start).format('d'),
             newEvent.className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>',
             newEvent.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>',
-            // newEvent.display = 'background',
-            // newEvent.backgroundColor = 'none',
-            newEvent.overlap = true,
-            // newEvent.allday = false;
+            newEvent.allday = false;
             // console.log('new Event:', newEvent);
-            calendar.addEvent(newEvent);
-            // $('#ga_calendar').fullCalendar('renderEvent',newEvent);
-            // mergeEvents();
-        },/* 
-        eventClick: function(arg) {
-            if (confirm('Are you sure you want to delete this event?')) {
-                arg.event.remove()
+            
+            var addEventFlag = true;
+            var events = calendar.getEvents();
+            for(i in events){
+                if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
+                    addEventFlag = false;
+                    events[i].setStart(start);
+                }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
+                    addEventFlag = false;
+                    events[i].setEnd(end);
+                }
+            } 
+            if(addEventFlag === true){
+                calendar.addEvent(newEvent);
             }
-        }, */
+        },
+        eventDrop: function(info){
+            var start = info.event.start;
+            var end = info.event.end;
+            var events = calendar.getEvents();
+            for(i in events){
+                if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
+                    info.event.remove();
+                    events[i].setStart(start);
+                }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
+                    info.event.remove();
+                    events[i].setEnd(end);
+                }
+            }
+        },
         now: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
         eventSources: [
             {
@@ -157,26 +178,6 @@ $weekDayName =  CommonHelper::dayNames();
                 }
             }
         ],
-        eventSourceSuccess: function(events, xhr){
-            /* for(i in events){
-                var event = events[i];
-                console.log(event, xhr);
-                if(isNaN(event._id)){
-                    element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
-                }
-                else{
-                    element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+event._id+");'>X</span>" );
-                }
-                element.find(".closeon").click(function() {
-                    if(isNaN(event._id)){
-                        // $('#ga_calendar').fullCalendar('removeEvents',event._id);
-                        var event = calendar.getEventById(event.id);
-                        event.remove();
-                    }
-                });
-            } */
-            // mergeEvents();
-        },
         loading :function( isLoading, view ) {
             if(isLoading == true){
                 $("#loaderCalendar").show();
@@ -184,21 +185,6 @@ $weekDayName =  CommonHelper::dayNames();
                 $("#loaderCalendar").hide();
             }
         },
-        /* eventRender: function(event, element) {
-            
-            if(isNaN(event._id)){
-                element.find(".fc-content").prepend( "<span class='closeon' >X</span>" );
-            }
-            else{
-                element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+event._id+");'>X</span>" );
-            }
-            element.find(".closeon").click(function() {
-                if(isNaN(event._id)){
-                    $('#ga_calendar').fullCalendar('removeEvents',event._id);
-                }
-            });
-            // mergeEvents();
-        }, */
     });
     calendar.render();
 

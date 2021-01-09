@@ -82,6 +82,7 @@ class TeacherGeneralAvailability extends MyAppModel
                     "start" => $tgavl_start_time,
                     '_id'   => $row['tgavl_id'],
                     "classType"=> 1,
+                    "overlap" => false,
                     // "display" => 'background',
                     "day"   => MyDate::getDayNumber($tgavl_start_time),
                     'className'=>"slot_available"
