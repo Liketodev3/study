@@ -38,15 +38,14 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         center: 'title',
 		right: 'prev,next today'
 	},
-	buttonText :{
-		today:    '<?php echo Label::getLabel('LBL_Today'); ?>',
-	},
+	locale: '<?php echo $currentLangCode ?>',
 	/* monthNames: <?php echo  json_encode($getAllMonthName['monthNames']); ?>,
 	monthNamesShort: <?php echo  json_encode($getAllMonthName['monthNamesShort']); ?>,
 	dayNames: <?php echo  json_encode($weekDayName['dayNames']); ?>,
 	dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>, */
 	initialView: 'timeGridWeek',
 	selectable: true,
+	// selectMirror: true,
 	editable: true,
 	nowIndicator:true,
 	now:'<?php echo $nowDate; ?>',
@@ -57,7 +56,11 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
 	selectLongPressDelay:50,
 	eventLongPressDelay:50,
 	longPressDelay:50,
-	overlap: false,
+	eventTimeFormat : {
+        hour: '2-digit',
+        minute: '2-digit',
+        meridiem: true
+    },
 	defaultTimedEventDuration : "00:30:00",
 	// timeZone: '<?php echo $user_timezone; ?>',
 	allDaySlot: false,
@@ -68,34 +71,40 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
 			calendar.unselect();
 			return false;
 		}
+		// console.log(start, end, moment(start).format('d'), moment(end).format('d') );
 		if(moment(start).format('d')!=moment(end).format('d') ) {
 			calendar.unselect();
 			return false;
 		}
 		var newEvent = new Object();
 		newEvent.title = '';
-		newEvent.start = moment(start).format();
-		newEvent.end = moment(end).format(),
-		newEvent.className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>',
-		newEvent.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>',
+		newEvent.start = moment(start).format('YYYY-MM-DDTHH:mm:ss');
+        newEvent.end = moment(end).format('YYYY-MM-DDTHH:mm:ss'),
+        newEvent.startTime = moment(start).format('HH:mm:ss');
+        newEvent.endTime = moment(end).format('HH:mm:ss'),
+		newEvent.daysOfWeek = moment(start).format('d'),
+		newEvent.extendedProps = {};
+		newEvent.extendedProps._id = 0;
+		newEvent.extendedProps.className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>',
+		newEvent.extendedProps.classType = '<?php echo TeacherWeeklySchedule::AVAILABLE; ?>',
+		newEvent.extendedProps.action = 'fromGeneralAvailability',
 		newEvent.date = moment(start).format('YYYY-MM-DD');
 		newEvent.overlap = false;
 		newEvent.allday = false;
-		
-		var addEventFlag = true;
-        var events = calendar.getEvents();
+		console.log(newEvent);
+		var events = calendar.getEvents();
         for(i in events){
             if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
-                addEventFlag = false;
-                events[i].setStart(start);
+                newEvent.end = moment(events[i].end).format('YYYY-MM-DD')+"T"+moment(events[i].end).format('HH:mm:ss');
+                newEvent.endTime = moment(events[i].end).format('HH:mm:ss');
+                events[i].remove();
             }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
-                addEventFlag = false;
-                events[i].setEnd(end);
+                newEvent.start = moment(events[i].start).format('YYYY-MM-DD')+"T"+moment(events[i].start).format('HH:mm:ss');
+                newEvent.startTime = moment(events[i].start).format('HH:mm:ss');
+                events[i].remove();
             }
-        } 
-        if(addEventFlag === true){
-            calendar.addEvent(newEvent);
-        }
+        }         
+		calendar.addEvent(newEvent);
 	},
 	// defaultDate: '<?php echo date('Y-m-d', strtotime($nowDate)); ?>',
 	loading :function( isLoading, view ) {
@@ -111,7 +120,12 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             method: 'POST',
             success: function(docs){
 				// console.log(doc);
-				
+				for(i in docs){
+					docs[i].extendedProps = {};
+					docs[i].extendedProps._id = docs[i]._id || 0;
+					docs[i].extendedProps.action = docs[i].action;
+					docs[i].extendedProps.classType = docs[i].classType;
+				}				
             }
         }
     ],
@@ -121,11 +135,11 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         var events = calendar.getEvents();
         for(i in events){
             if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
-                info.event.remove();
-                events[i].setStart(start);
+                info.event.setEnd(events[i].end);
+                events[i].remove();
             }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
-                info.event.remove();
-                events[i].setEnd(end);
+                info.event.setStart(events[i].start);
+                events[i].remove();
             }
         }
 	},

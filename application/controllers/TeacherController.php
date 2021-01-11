@@ -601,6 +601,8 @@ class TeacherController extends TeacherBaseController
         $this->set('cssClassArr', $cssClassNamesArr);
         $userId = UserAuthentication::getLoggedUserId();
         $this->set('userId', $userId);
+        $currentLangCode = strtolower(Language::getLangCode($this->siteLangId));
+        $this->set('currentLangCode', $currentLangCode);
         $this->_template->render(false, false);
     }
 

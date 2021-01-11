@@ -765,16 +765,18 @@ $(document).ready(function(){
 	};
 	
 	setUpWeeklyAvailability = function(){
-		var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {		
+		var json = JSON.stringify(calendar.getEvents().map(function(e) {		
+			
 			return 	{
 				start: moment(e.start).format('HH:mm:ss'),
 				end: moment(e.end).format('HH:mm:ss'),
 				date:moment(e.start).format('YYYY-MM-DD'),
-				_id: e._id,
-				action: e.action,
-				classtype: e.classType,
+				_id: e.extendedProps._id,
+				action: e.extendedProps.action,
+				classtype: e.extendedProps.classType,
 			};
 		}));
+		
 		setupTeacherWeeklySchedule(json);
 	};
 	

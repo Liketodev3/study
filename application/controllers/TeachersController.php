@@ -561,12 +561,12 @@ class TeachersController extends MyAppController {
 		}
 		// CommonHelper::printArray($jsonArr);die;
 		$events = [];
-		array_push($events, array(
+		/* array_push($events, array(
 			'title'		=> '',
 			'start'		=> date('Y-m-d 00:00:00'),
 			'end'		=> date('Y-m-d H:i:s'),
 			'className' => 'past_current_day',			
-		));
+		)); */
 		
 		$teacherBookingBefore = current(UserSetting::getUserSettings($userId))['us_booking_before'];
 		if ('' ==  $teacherBookingBefore) {

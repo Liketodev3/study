@@ -155,6 +155,7 @@ class TeacherWeeklySchedule extends MyAppModel
             /* ] */
             $date =  date('Y-m-d',strtotime(MyDate::changeDateTimezone($postObj->date, $user_timezone, $systemTimeZone)));
             $dateArray[$date] = $date;
+            // CommonHelper::printArray($postObj);
             $postDataId[$postObj->_id] = $postObj->_id;
             $postJsonArr[] = $postObj;
 
@@ -172,10 +173,8 @@ class TeacherWeeklySchedule extends MyAppModel
             $needToDelete = array_diff_key($dateRecordId,$postDataId);
         }
 
-
         $db->startTransaction();
 
-        $deleteDateArray = [];
         foreach ($postJsonArr as $val) {
 
             if (preg_match('/_fc/', $val->_id) || $val->action == "fromGeneralAvailability") {

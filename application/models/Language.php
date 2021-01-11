@@ -64,6 +64,12 @@ class Language extends MyAppModel
         return $row;
     }
 
+    public static function getLangCode($langId)
+    {
+        $currentLangCodeData = self::getAllCodesAssoc(false, $langId);
+        return $currentLangCodeData[$langId];
+    }
+
     public static function getLayoutDirection($langId)
     {
         $langId = FatUtility::int($langId);
