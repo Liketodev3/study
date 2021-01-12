@@ -1,5 +1,8 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Bug Fixes:
+    *Bug-#047837: Fixed slider images
+--------------------------
 Release Version: TV-2.7.13.20210107
 Release Date: 2021/01/07
 
