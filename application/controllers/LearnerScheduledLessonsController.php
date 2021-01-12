@@ -384,6 +384,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
         $this->set('user_timezone', $user_timezone);
         $this->set('nowDate', $nowDate);
+        $currentLangCode = strtolower(Language::getLangCode($this->siteLangId));
+        $this->set('currentLangCode', $currentLangCode);
         $this->_template->render(false, false);
     }
 

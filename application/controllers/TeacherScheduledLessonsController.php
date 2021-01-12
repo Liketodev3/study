@@ -348,6 +348,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->set('user_timezone', $user_timezone);
         $this->set('nowDate', $nowDate);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
+        $currentLangCode = strtolower(Language::getLangCode($this->siteLangId));
+        $this->set('currentLangCode', $currentLangCode);
         $this->_template->render(false, false);
     }
 
