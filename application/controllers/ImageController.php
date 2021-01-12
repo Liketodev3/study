@@ -392,10 +392,18 @@ class ImageController extends FatController
                 $h = 100;
                 break;
             case 'DESKTOP':
-                $w = 1903;
-                $h = 749;
+                $w = 1920;
+                $h = 800;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 return;
+                break;
+            case 'TABLET':
+                $w = 1024;
+                $h = 500;
+                break;
+            case 'MOBILE':
+                $w = 640;
+                $h = 360;
                 break;
             default:
                 $w = 2000;
