@@ -1,0 +1,21 @@
+.checkout__r .check__media {
+    margin-bottom: 10px;
+}
+
+@media(max-width:theme('breakpoints.sm','value')){
+    .checkout__r .check__media {
+        float: #{theme('direction.left','value')};
+        margin-right:  theme('margin.6');
+    }
+    .checkout__r{
+        display: inline-block;
+        width: 100%;
+    }
+    .check__info{
+        text-align: #{theme('direction.left','value')};
+    }
+    .checkout__r .avtar{
+        width: 6rem;
+        height: 6rem;
+    }
+}

@@ -23,6 +23,10 @@ for padding/margin
 theme('padding.3')
 theme('margin.3')
 
+for padding/margin direction
+margin-#{theme('direction.left','value')}: theme('margin.2');
+padding-#{theme('direction.left','value')}: theme('padding.2');
+
 for font size
 theme('font.size.md')
 

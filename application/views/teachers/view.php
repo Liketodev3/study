@@ -36,7 +36,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR
 						<div class="row">
 
 							<!-- Image[ -->
-							<div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 -align-center">
+							<div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 -align-center">
 								<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
 									<?php
 									if (true == User::isProfilePicUploaded($teacher['user_id'])) {
@@ -51,7 +51,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR
 							</div>
 							<!-- ] -->
 
-							<div class="col-xl-5 col-lg-8 col-md-8 col-sm-8">
+							<div class="col-xl-5 col-lg-5 col-md-5 col-sm-5">
 								<div class="teacher__info">
 									<h3 class="-display-inline"><?php echo $teacher['user_full_name']; ?></h3>
 
@@ -129,7 +129,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR
 							</div>
 
 							<!-- [-->
-							<div class="col-xl-4 col-lg-8 col-md-8 col-sm-12">
+							<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
 								<div class="box-highlighted box-language">
 									<div class="row d-block justify-content-between">
 										<div class="col"><strong><?php echo Label::getLabel('LBL_Teaches:'); ?></strong></div>

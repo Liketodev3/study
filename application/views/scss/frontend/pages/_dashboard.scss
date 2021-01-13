@@ -1169,13 +1169,19 @@ color: #fff;}
     box-shadow: none;
 }
 .field_cover .select2-container .select2-selection--single .select2-selection__rendered {
-    padding-left: theme('padding.4');
-    padding-right: theme('padding.8');
+    padding-#{theme('direction.right','value')}: theme('padding.4');
+    padding-#{theme('direction.left','value')}: theme('padding.8');
 }
 .field_cover .select2-container--default .select2-selection--single .select2-selection__arrow b {
     background-position: calc(100% - 10px) center;
     line-height: 50px;
     position: static;
+}
+.box--earning h6, .box--earning h2 {
+    margin-bottom: theme('margin.3');
+}
+.page-panel__inner-r .flag {
+    margin-#{theme('direction.left','value')}: theme('margin.2');
 }
 
 
@@ -1715,7 +1721,7 @@ color: #fff;}
       .progress-wrapper .profile-progress{
           width:100%;
       }
-      .progress-wrapper .progress {width: 200px;}
+      .progress-wrapper .progress {width: 100%;}
       .profile-progress {
           padding-#{theme('direction.right','value')}: 0;
           padding-bottom: 10px;

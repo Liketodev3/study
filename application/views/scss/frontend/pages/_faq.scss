@@ -1,0 +1,114 @@
+
+.nav-vertical li {
+    margin: 0 0 20px 0;
+}
+
+.nav-vertical li a {
+    display: block;
+    padding: 0 20px 0 20px;
+    position: relative;
+    background: #fff;
+    border-radius: 3px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    position: relative;
+    height: 70px;
+    line-height: 70px;
+}
+
+.nav-vertical li a img {
+    display: inline-block;
+    vertical-align: middle;
+    position: absolute;
+    #{theme('direction.left','value')}: 20px;
+    top: 50%;
+    transform: translate(0, -50%);
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+}
+
+.box--faqs .box__top h4 {
+    display: inline-block;
+}
+
+.box--faqs .-padding-30 {
+    padding-bottom: 15px;
+}
+
+.box--faqs .box__body.-padding-30 {
+    padding-top: 0;
+}
+
+.vertical-links li {
+    border-bottom: 1px solid #ddd;
+}
+
+.vertical-links li:last-child {
+    border-bottom: none;
+}
+
+.vertical-links li a {
+    display: block;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    color: var(--color-secondary);
+    line-height: 1.4;
+}
+
+.vertical-links li a:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.faq__action {
+    margin-#{theme('direction.right','value')}: 15px;
+}
+
+.faq__action img {
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+
+@media(max-width:theme('breakpoints.xl','value')){
+    
+
+    .box--faqs .box__footer .d-sm-block {
+        display: inline-block !important;
+    }
+
+    .box--faqs .box__footer [class*="col-"]:last-child .btn {
+        margin-top: 10px;
+    }
+
+
+}
+
+@media(max-width:theme('breakpoints.md','value')){
+    
+    .box--faqs .box__footer {
+        text-align: center;
+        padding: 25px;
+    }
+
+    .box--faqs .box__footer [class*="col-"] {
+        background: rgba(0, 0, 0, 0.04);
+        padding: 15px;
+    }
+
+    .box--faqs .box__footer [class*="col-"]:last-child {
+        padding-top: 20px;
+    }
+
+    .box--faqs .box__footer [class*="col-"]:last-child .btn {
+        margin-top: 0;
+    }
+
+
+}
+
+@media(max-width:theme('breakpoints.sm','value')){
+    .box--faqs .box__footer span {
+        margin-bottom: theme('padding.3');
+    }
+}

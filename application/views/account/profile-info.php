@@ -30,7 +30,7 @@ var isCometChatMeetingToolActive = '<?php echo $activeMettingTool == Application
 
 						</div>
 						<?php if($userIsTeacher){ ?>
-						<div class="progress-wrapper d-flex align-items-center flex-column">
+						<div class="progress-wrapper d-flex align-items-start flex-column">
 							<div class="progress--top">
 								<span class="profile-progress"><span class="spn_must_field">*</span> <?php echo Label::getLabel('LBL_Profile_progress');?></span>
 								<span class="txt progress-count-js"></span>
