@@ -308,3 +308,5 @@ ul.list-accordion li .iss_accordion{ padding-left: 40px;}
 .card-brand-logos {
   width:300px;
 }
+
+.fc button.fc-time-button{display:none;}

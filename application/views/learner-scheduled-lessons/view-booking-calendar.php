@@ -3,7 +3,6 @@ defined('SYSTEM_INIT') or die('Invalid Usage.');
 $lesson_duration = $lessonRow['op_lesson_duration'];
 $layoutDirection = CommonHelper::getLayoutDirection(); 
 $teacherBookingBefore = (!empty($teacherBookingBefore)) ? $teacherBookingBefore : 0;
-$myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
 $isRescheduleRequest = (!empty($isRescheduleRequest));
 $getAllMonthName =  CommonHelper::getAllMonthName();
@@ -69,7 +68,8 @@ $weekDayName =  CommonHelper::dayNames();
 
 <script>
 var isRescheduleRequest = <?php  echo (!empty($isRescheduleRequest)) ? 1 : 0 ; ?>;
-var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
 var checkSlotAvailabiltAjaxRun =  false;
-loadWeeklyBookingCalendar(<?php echo $teacher_id; ?>, '<?php echo $currentLangCode ?>', '<?php echo date('Y-m-d H:i:s', strtotime($nowDate)); ?>', '<?php echo gmdate("H:i", $lesson_duration*60); ?>', <?php echo $teacherBookingBefore;?>);
+var fecal = new FatEventCalendar(<?php echo $teacher_id; ?>);
+fecal.setLocale('<?php echo $currentLangCode ?>');
+fecal.WeeklyBookingCalendar( '<?php echo date('Y-m-d H:i:s', strtotime($nowDate)); ?>', '<?php echo gmdate("H:i", $lesson_duration*60); ?>', <?php echo $teacherBookingBefore;?>);
 </script>

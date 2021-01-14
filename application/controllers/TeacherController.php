@@ -29,6 +29,7 @@ class TeacherController extends TeacherBaseController
         $this->_template->addCss('css/custom-full-calendar.css');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
+        $this->_template->addJs('js/fateventcalendar.js');
         $this->_template->addCss('css/fullcalendar.min.css');
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $this->_template->addCss('css/jquery.countdownTimer.css');
@@ -597,6 +598,8 @@ class TeacherController extends TeacherBaseController
         $this->set('cssClassArr', $cssClassNamesArr);
         $userId = UserAuthentication::getLoggedUserId();
         $this->set('userId', $userId);
+        $currentLangCode = strtolower(Language::getLangCode($this->siteLangId));
+		$this->set('currentLangCode', $currentLangCode);
         $this->_template->render(false, false);
     }
 

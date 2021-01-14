@@ -21,7 +21,13 @@ class TeachersController extends MyAppController {
 		$this->_template->addJs('js/enscroll-0.6.2.min.js');
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
+		$this->_template->addJs('js/fateventcalendar.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
+		if($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))){
+            if(file_exists(CONF_THEME_PATH."js/locales/$currentLangCode.js")){
+                $this->_template->addJs("js/locales/$currentLangCode.js");
+            }
+        }
 		// $this->_template->addCss('css/custom-full-calendar.css');
 		$this->_template->addJs('js/ion.rangeSlider.js');
 		$this->_template->addCss('css/ion.rangeSlider.css');
@@ -142,7 +148,13 @@ class TeachersController extends MyAppController {
 	public function view($user_name) {
 		$this->_template->addJs('js/moment.min.js');
 		$this->_template->addJs('js/fullcalendar.min.js');
+		$this->_template->addJs('js/fateventcalendar.js');
 		$this->_template->addCss('css/fullcalendar.min.css');
+		if($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))){
+            if(file_exists(CONF_THEME_PATH."js/locales/$currentLangCode.js")){
+                $this->_template->addJs("js/locales/$currentLangCode.js");
+            }
+        }
 		// $this->_template->addCss('css/custom-full-calendar.css');
 
 		$srchTeacher = new UserSearch();
@@ -416,6 +428,9 @@ class TeachersController extends MyAppController {
 		$this->set('user_timezone', $user_timezone);
 		$this->set('nowDate', $nowDate);
 		$cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
+		$currentLangCode = strtolower(Language::getLangCode($this->siteLangId));
+		$this->set('currentLangCode', $currentLangCode);
+		
 		$this->set('lPackageId', $lPackageId);
 		$this->set('userRow', $userRow);
 		$this->set('action', $postedAction);

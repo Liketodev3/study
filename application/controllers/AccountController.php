@@ -161,6 +161,7 @@ class AccountController extends LoggedUserController
         $this->_template->addCss('css/custom-full-calendar.css');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
+        $this->_template->addJs('js/fateventcalendar.js');
         $this->_template->addCss('css/fullcalendar.min.css');
         if($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))){
             if(file_exists(CONF_THEME_PATH."js/locales/$currentLangCode.js")){

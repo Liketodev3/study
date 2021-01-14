@@ -13,8 +13,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->_template->addJs('js/learnerLessonCommon.js');
         $this->_template->addCss('css/custom-full-calendar.css');
         $this->_template->addJs('js/moment.min.js');
-        // $this->_template->addJs('js/fullcalendar.min.js');
-        $this->_template->addJs('js/main.js');
+        $this->_template->addJs('js/fullcalendar.min.js');
+        // $this->_template->addJs('js/main.js');
+        $this->_template->addJs('js/fateventcalendar.js');
         if($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))){
             if(file_exists(CONF_THEME_PATH."js/locales/$currentLangCode.js")){
                 $this->_template->addJs("js/locales/$currentLangCode.js");
@@ -238,6 +239,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->_template->addCss('css/custom-full-calendar.css');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
+        $this->_template->addJs('js/fateventcalendar.js');
+        if($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))){
+            if(file_exists(CONF_THEME_PATH."js/locales/$currentLangCode.js")){
+                $this->_template->addJs("js/locales/$currentLangCode.js");
+            }
+        }
         $this->_template->addCss('css/fullcalendar.min.css');
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $this->_template->addCss('css/jquery.countdownTimer.css');
