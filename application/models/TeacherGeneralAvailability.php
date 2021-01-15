@@ -8,7 +8,7 @@ class TeacherGeneralAvailability extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getGenaralAvailabilityJsonArr($userId, $post ='', $requestBtTeacher = false)
+    public static function getGenaralAvailabilityJsonArr($userId, $post = [])
     {
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
@@ -73,44 +73,19 @@ class TeacherGeneralAvailability extends MyAppModel
 
                 $tgavl_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $date, true, $user_timezone);
                 $tgavl_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDate, true, $user_timezone);
-
-
-                //$tgavl_day = MyDate::getDayNumber( $tgavl_start_time );
-                if (true == $requestBtTeacher) {
-                    $gendate = new DateTime();
-                    $gendate->setISODate(2018, 2, MyDate::getDayNumber($tgavl_start_time));
-                    $day = $gendate->format('d');
-                    $dayNum = $day;
-                    $startDate = "2018-01-".$dayNum." ". date('H:i:s', strtotime($tgavl_start_time));
-                    $endDate = "2018-01-".$dayNum." ". date('H:i:s', strtotime($tgavl_end_time));
-                    if (strtotime($endDate) <=  strtotime($startDate)) {
-                        $endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime($endDate)));
-                    }
-
-                    $jsonArr[] = array(
-                "title"=>"",
-                "endW"=> date('H:i:s', strtotime($tgavl_end_time)),
-                "startW"=> date('H:i:s', strtotime($tgavl_start_time)),
-                "end"=>$endDate,
-                "start"=>$startDate,
-                '_id'=>$row['tgavl_id'],
-                "classType"=>1,
-                "day"=> MyDate::getDayNumber($tgavl_start_time),
-                'className'=>"slot_available"
-            );
-                } else {
-                    $jsonArr[] = array(
-                "title"=>"",
-                "endW"=> date('H:i:s', strtotime($tgavl_end_time)),
-                "startW"=> date('H:i:s', strtotime($tgavl_start_time)),
-                "end"=>$tgavl_end_time,
-                "start"=>$tgavl_start_time,
-                '_id'=>$row['tgavl_id'],
-                "classType"=>1,
-                "day"=> MyDate::getDayNumber($tgavl_start_time),
-                'className'=>"slot_available"
-            );
-                }
+            
+                $jsonArr[] = array(
+                    "title" => "",
+                    "endW"  => date('H:i:s', strtotime($tgavl_end_time)),
+                    "startW"=> date('H:i:s', strtotime($tgavl_start_time)),
+                    "end"   => $tgavl_end_time,
+                    "start" => $tgavl_start_time,
+                    '_id'   => $row['tgavl_id'],
+                    "classType"=> 1,
+                    // "display" => 'background',
+                    "day"   => MyDate::getDayNumber($tgavl_start_time),
+                    'className'=>"slot_available"
+                );
                 $i++;
             }
 
@@ -161,10 +136,10 @@ class TeacherGeneralAvailability extends MyAppModel
         //$deleteWeeklyFutrureWeeksRecords = $db->deleteRecords(TeacherWeeklySchedule::DB_TBL,array('smt'=>'twsch_user_id = ? and (twsch_start_time > ?)','vals'=>array($userId,$weekendDate)));
         //$deleteRecords = true;
         $deleteRecords = $db->deleteRecords(TeacherGeneralAvailability::DB_TBL, array('smt'=>'tgavl_user_id = ?','vals'=>array($userId)));
-         if(empty($postJson)) {
-             return true;
-         }
-        $postJsonArr = array();
+        if(empty($postJson)) {
+            return true;
+        }
+        $postJsonArr = [];//self::mergeDates($postJson);
 
         $sort = array();
 
@@ -179,15 +154,15 @@ class TeacherGeneralAvailability extends MyAppModel
         /* ] */
 
 
+        /*[ Clubbing the continuous timeslots */
         foreach ($postJson as $k=>$postObj) {
-            /*[ Clubbing the continuous timeslots */
             if ($k>0 and ($postJson[$k-1]->day == $postObj->day) and ($postJson[$k-1]->endTime == $postObj->startTime)) {
                 $postJsonArr[count($postJsonArr)-1]->endTime = $postObj->endTime;
                 continue;
             }
-            /* ] */
             $postJsonArr[] = $postObj;
         }
+        /* ] */
         if ($deleteRecords) {
             /* code added  on 12-07-2019 */
             $user_timezone = MyDate::getUserTimeZone();
@@ -251,5 +226,37 @@ class TeacherGeneralAvailability extends MyAppModel
             6	=>	'18:00-20:59',
             7	=>	'21:00-23:59',
         );
+    }
+
+    private static function mergeDates(array $datesArray = []): array
+    {
+
+       foreach ($datesArray as $key => &$date) {
+
+           foreach ($datesArray as $index => $value) {
+             
+               $mergeDates =  false;
+
+               if ($date['startDateTime'] == $value['endDateTime']) {
+                   $mergeDates =  true;
+                   $date['startDateTime'] = $value['startDateTime'];
+                   $date['startTime'] = $value['startTime'];
+                   $date['day'] = $value['day'];
+                   
+               }
+
+               if ($date['endDateTime'] == $value['startDateTime']) {
+                   $mergeDates =  true;
+                   $date['endDateTime'] = $value['endDateTime'];
+                   $date['endTime'] = $value['endTime'];
+               }
+
+               if ($mergeDates) {
+                   unset($datesArray[$index]);
+                   $datesArray =  self::mergeDates($datesArray);
+               }
+           }
+       }
+       return $datesArray;
     }
 }

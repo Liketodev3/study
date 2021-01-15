@@ -1,5 +1,6 @@
 var isLessonCancelAjaxRun = false;
 var isRescheduleRequest = (isRescheduleRequest) ? true : false;
+
 lessonFeedback = function (lDetailId) {
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'lessonFeedback', [lDetailId]), '', function (t) {
         $.facebox(t, 'facebox-medium');
