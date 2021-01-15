@@ -212,7 +212,7 @@
 
 
 
-@media(min-width:theme('breakpoints.xl','value')) {
+@media (min-width:theme('breakpoints.xl','value')) {
     .btn.btn--primary:hover {
         background: theme('color.secondary');
         border-color: theme('color.secondary');
@@ -270,7 +270,7 @@
 }
 
 
-@media(max-width:theme('breakpoints.md','value')){
+@media (max-width:theme('breakpoints.md','value')){
     .btn.btn--large {
         padding: 0 20px
     }

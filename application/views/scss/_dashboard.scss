@@ -1,25 +1,19 @@
 
+//Config
+@import 'config/functions';
+@import 'config/vars';
 
-// dashboard/layoutS
+// layoutS
 @import 'dashboard/layout/header';
 @import 'dashboard/layout/nav';
 @import 'dashboard/layout/body';
 @import 'dashboard/layout/footer';
 
 
-// dashboard/pages
-@import 'dashboard/pages/home';
-@import 'dashboard/pages/login';
-@import 'dashboard/pages/listing';
-@import 'dashboard/pages/checkout';
-@import 'dashboard/pages/details';
-@import 'dashboard/pages/group-classes';
-@import 'dashboard/pages/contact';
-@import 'dashboard/pages/faq';
-@import 'dashboard/pages/blog';
-@import 'dashboard/pages/payment';
+// pages
+
 @import 'dashboard/pages/chat';
 @import 'dashboard/pages/dashboard';
-// @import 'dashboard/pages/notifications';
+@import 'dashboard/pages/notifications';
 
 

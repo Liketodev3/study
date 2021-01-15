@@ -306,7 +306,7 @@
 
 
 
-@media(max-width:568px) {
+@media (max-width:568px) {
     .timer-block .select-box .buttons-toggle{display: flex;}
     .timer-block .select-box .buttons-toggle .btn:first-child{    width: 100%;}
     .timer-block .timer.timer--small{    display: block;     text-align: center;}
@@ -471,7 +471,7 @@
 }
 
 
-@media(max-width:1199px){
+@media (max-width:1199px){
        
     .box__slip {
         padding: 10px;
@@ -496,7 +496,7 @@
 }
 
 
-@media(max-width:theme('breakpoints.md','value')){
+@media (max-width:theme('breakpoints.md','value')){
     
     .content-repeated [class*="col-"]:last-child {
         padding-#{theme('direction.left','value')}: 15px;

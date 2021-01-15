@@ -22,7 +22,7 @@
     }
 }
 
-@media(max-width:theme('breakpoints.xl','value')) {
+@media (max-width:theme('breakpoints.xl','value')) {
     .horiz-scroller {
         position: relative;
         overflow-y: hidden;
@@ -36,7 +36,7 @@
     }
 }
 
-@media(max-width:theme('breakpoints.md','value')) {
+@media (max-width:theme('breakpoints.md','value')) {
     .mini-horiz-scroller {
         position: relative;
         display: inline-block;

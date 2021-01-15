@@ -41,7 +41,7 @@ $header: "header";
 
 
 
-@media(min-width:theme('breakpoints.md','value')){
+@media (min-width:theme('breakpoints.md','value')){
     .btn .svg-icon.user-icon{display: none;}
 
 }

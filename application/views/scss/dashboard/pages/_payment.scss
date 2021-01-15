@@ -78,7 +78,7 @@
 	font-size: 13px;
 	color: #333;
 }
- @media only screen and (max-width:768px) {
+ @media  only screen and (max-width:768px) {
 .payment-page {
 	height: auto;
 }
@@ -90,7 +90,7 @@
 .cc-payment{margin:0 auto; border:none;padding-top:30px;}
 .logo-payment{margin-top:0;}
 }
- @media only screen and (max-width:500px) {
+ @media  only screen and (max-width:500px) {
 
 .form .btn.btn--large{width:100%;display:block;text-align:center;}
  }
@@ -190,7 +190,7 @@
     width: 100%;
 }
 
-@media(max-width:theme('breakpoints.md','value')){
+@media (max-width:theme('breakpoints.md','value')){
     
     .label-select {
         padding: 15px 15px 15px 15px;

@@ -13,7 +13,7 @@
 }
 
 .accordian:last-child {
-    border-bottom: 1px solid #ceced0; 
+    border-bottom: 1px solid #ceced0; margin: 0;
 }
 
 .accordian__title {
@@ -62,7 +62,7 @@
 }
 
 
-@media(max-width:767px){
+@media (max-width:767px){
     
     .accordian__title {
         padding: 20px;

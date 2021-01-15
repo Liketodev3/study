@@ -113,7 +113,7 @@
     margin-top: 0;
     margin-#{theme('direction.right','value')}: 15px;float:none;}
 
-@media screen and (max-width:1199px){
+@media  screen and (max-width:1199px){
     .group.group--social .btn--social-fb.btn{
         margin-#{theme('direction.right','value')}: 5px;
     }
@@ -125,7 +125,7 @@
 }
 
 
-@media(max-width:767px){
+@media (max-width:767px){
     .social-links {
         margin: 0;
     }

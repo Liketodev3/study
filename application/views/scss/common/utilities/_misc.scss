@@ -293,7 +293,7 @@ img {
     line-height: 1
 }
 
-@media(min-width:767px) {
+@media (min-width:767px) {
     .message-display.message-display--404 .message-display__media {
         width: 280px;
         margin: 0;
@@ -476,13 +476,13 @@ img {
 
 
 
-@media(max-width:1200px) {
+@media (max-width:1200px) {
     .-show-responsive {
         display: inline-block !important
     }
 }
 
-@media(max-width:767px){
+@media (max-width:767px){
     
 
     .message-display {
@@ -657,20 +657,20 @@ img {
     display: none;
 }
 
-@media (max-width: 1200px) {
+@media  (max-width: 1200px) {
     html.show-nav-js .overlay--nav {
         display: block;
     }
 }
 
 
-@media(max-width:1199px){
+@media (max-width:1199px){
     .-hide-responsive {
         display: none !important;
     }
 }
 
-@media(max-width:1023px){
+@media (max-width:1023px){
     .-clear-right,
     .-clear-left {
         clear: none !important;

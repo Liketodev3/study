@@ -500,7 +500,7 @@
 }
 
 
-@media(min-width:theme('breakpoints.xl','value')){
+@media (min-width:theme('breakpoints.xl','value')){
     
     .inline-action:hover {
         box-shadow: 1px 6px 6px 1px rgba(0, 0, 0, 0.05);
@@ -521,7 +521,7 @@
 
 
 
-@media(max-width:1599px) {
+@media (max-width:1599px) {
     .blog-row {
         padding: 50px 0;
     }
@@ -533,7 +533,7 @@
 }
 
 
-@media(max-width:theme('breakpoints.xl','value')){
+@media (max-width:theme('breakpoints.xl','value')){
     
     /* [ blog css for resposive  */
 
@@ -682,7 +682,7 @@
 }
 
 
-@media(max-width:theme('breakpoints.lg','value')){
+@media (max-width:theme('breakpoints.lg','value')){
     
 
     .blog-row h2 {
@@ -758,7 +758,7 @@
 }
 
 
-@media(max-width:theme('breakpoints.md','value')){
+@media (max-width:theme('breakpoints.md','value')){
     
 
     .banner .form-search {

@@ -130,7 +130,7 @@ small.transaction-fee{
 .div_info li a{text-decoration: underline; color:theme('colors.primary'); cursor: pointer;}
 a.view-teacher-link{margin-#{theme('direction.right','value')}:35px;}
 .-link-close.-top{top:17px;}
-@media screen and (max-width:767px){
+@media  screen and (max-width:767px){
   a.view-teacher-link {
     margin-#{theme('direction.right','value')}: 45px;
   }

@@ -1,5 +1,5 @@
 
-@media(min-width:theme('breakpoints.md','value')){
+@media (min-width:theme('breakpoints.md','value')){
    
     .footer-bottom{background-color: theme('color.black'); color: theme('color.white');}
 }
@@ -178,13 +178,13 @@
 
 
 
-@media (max-width: theme('breakpoints.xl','value')){
+@media  (max-width: theme('breakpoints.xl','value')){
     .footer-subscribe {
         max-width: 600px;
     }
 }
 
-@media (max-width: theme('breakpoints.lg','value'))  {
+@media  (max-width: theme('breakpoints.lg','value'))  {
 
 
 
@@ -215,7 +215,7 @@
 }
 
 
-@media (min-width: theme('breakpoints.md','value')) {
+@media  (min-width: theme('breakpoints.md','value')) {
     .footer h5 {
         pointer-events: none;
     }
@@ -225,7 +225,7 @@
     }
 }
 
-@media (max-width: theme('breakpoints.md','value')) {
+@media  (max-width: theme('breakpoints.md','value')) {
 .footer{color: theme('color.black');}
 .footer-inline{padding: 20px 0;}
 

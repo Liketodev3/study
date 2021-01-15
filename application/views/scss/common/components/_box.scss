@@ -169,7 +169,7 @@
 }
 
 
-@media(min-width:theme('breakpoints.xl','value')){
+@media (min-width:theme('breakpoints.xl','value')){
     .box__slip-data {
         min-width: 300px;
         white-space: nowrap;
@@ -177,7 +177,7 @@
 
 }
 
-@media(max-width:theme('breakpoints.sm','value')){
+@media (max-width:theme('breakpoints.sm','value')){
     .box-list .box__description{
         display: none;
     }
@@ -237,7 +237,7 @@
     }
 }
 
-@media(max-width:theme('breakpoints.xl','value')){
+@media (max-width:theme('breakpoints.xl','value')){
     .box-list .grid-group .grid{
         padding-left: theme('padding.0');
         padding-bottom: theme('padding.1');

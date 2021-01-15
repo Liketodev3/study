@@ -70,7 +70,7 @@
 
 
 
-@media(max-width:theme('breakpoints.xl','value')){
+@media (max-width:theme('breakpoints.xl','value')){
     
 
     .box--faqs .box__footer .d-sm-block {
@@ -84,7 +84,7 @@
 
 }
 
-@media(max-width:theme('breakpoints.md','value')){
+@media (max-width:theme('breakpoints.md','value')){
     
     .box--faqs .box__footer {
         text-align: center;
@@ -107,7 +107,7 @@
 
 }
 
-@media(max-width:theme('breakpoints.sm','value')){
+@media (max-width:theme('breakpoints.sm','value')){
     .box--faqs .box__footer span {
         margin-bottom: theme('padding.3');
     }

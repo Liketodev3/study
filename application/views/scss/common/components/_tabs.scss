@@ -190,7 +190,7 @@
     font-weight: 700;
 }
 
-@media (max-width: theme('breakpoints.xl','value')) {
+@media  (max-width: theme('breakpoints.xl','value')) {
 
     .tabs-vertical ul li .tab-info h3 {
         font-size: 1.3rem;
@@ -204,7 +204,7 @@
 
 }
 
-@media (max-width: theme('breakpoints.lg','value')) {
+@media  (max-width: theme('breakpoints.lg','value')) {
     .tabs-vertical {
         margin-bottom: 25px;
     }
@@ -222,7 +222,7 @@
 
 }
 
-@media (max-width: theme('breakpoints.md','value')) {
+@media  (max-width: theme('breakpoints.md','value')) {
    
     
     .tabs-gray ul {

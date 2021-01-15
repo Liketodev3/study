@@ -3,19 +3,15 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700,900&display=swap');
 
 
-// common/config
+// config
+@import "config/functions";
+@import "config/vars";
 
-@import "common/config/functions";
-@import "common/config/vars";
-@import "common/config/direction-ltr";
-@import "common/config/direction-rtl";
-@import 'common/config/root';
-@import 'common/config/reset';
+// common
+@import 'common/base/root';
+@import 'common/base/reset';
 
-
-
-
-// common/utilities
+// utilities
 @import "common/utilities/alignment";
 @import "common/utilities/backgroud";
 @import "common/utilities/border";
@@ -26,7 +22,7 @@
 @import "common/utilities/scroll";
 
 
-// common/components
+// components
 @import 'common/components/accordians';
 @import 'common/components/animate';
 @import 'common/components/avatars';

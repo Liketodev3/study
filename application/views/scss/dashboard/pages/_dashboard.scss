@@ -572,7 +572,7 @@
     margin-bottom: 15px;
 }
 
-@media(max-width:767px) {
+@media (max-width:767px) {
 
     .inline-action.inline-action--add:before,
     .inline-action.inline-action--minus:before {
@@ -594,7 +594,7 @@
 
 }
 
-@media(max-width:500px) {
+@media (max-width:500px) {
     #teacherPreferencesFrm.form .field_label.-display-block {
         min-height: 1%;
         margin: 0;
@@ -879,7 +879,7 @@
 }
 
 .gift-block:before {
-    background: url(../images/patterns.svg) repeat;
+    // background: url(../images/patterns.svg) repeat;
     background-size: auto;
     background-size: 24px 24px;
     opacity: 0.1;
@@ -1185,7 +1185,7 @@ color: #fff;}
 }
 
 
-@media(min-width:theme('breakpoints.xl','value')) and (max-width:1599px) {
+@media (min-width:theme('breakpoints.xl','value')) and (max-width:1599px) {
     .box--earning .row {
         display: block;
     }
@@ -1212,7 +1212,7 @@ color: #fff;}
 
 
 
-@media(max-width:theme('breakpoints.xl','value')) {
+@media (max-width:theme('breakpoints.xl','value')) {
     .page-panel__left .menu-vertical {
         display: none;
     }
@@ -1308,7 +1308,7 @@ color: #fff;}
         -moz-transform:translateX(-50%) !important; -webkit-transform:translateX(-50%) !important;}
 }
 
-@media(max-width:theme('breakpoints.lg','value')){
+@media (max-width:theme('breakpoints.lg','value')){
     
 
     .page-panel__inner-l {
@@ -1378,7 +1378,7 @@ color: #fff;}
 }
 
 
-@media(max-width:theme('breakpoints.xl','value')){
+@media (max-width:theme('breakpoints.xl','value')){
     
 
     .address-container {
@@ -1713,7 +1713,7 @@ color: #fff;}
 
 
 
-@media screen and (max-width:#{theme('breakpoints.xl','value')}){
+@media  screen and (max-width:#{theme('breakpoints.xl','value')}){
     .alert a{display:block;margin-top:5px;}
       .progress-wrapper{
           flex-wrap:wrap;

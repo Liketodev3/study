@@ -132,7 +132,7 @@
 }
 
 
-/* @media(min-width:767px){
+/* @media (min-width:767px){
 .form__element.form-target-visible:before{position: fixed;left: 0;right: 0; top: 0; bottom: 0;content: "";background: rgba(243,242,245,0.8);z-index: -1;}
 }     */
 
@@ -345,7 +345,7 @@
 
  
 
-@media(min-width:theme('breakpoints.xl','value')){
+@media (min-width:theme('breakpoints.xl','value')){
     
     #left__fixed.stick {
         position: fixed;
@@ -353,7 +353,7 @@
     }
 }
 
-@media(max-width:theme('breakpoints.xl','value')){
+@media (max-width:theme('breakpoints.xl','value')){
     
 
     .tag-list li a {
@@ -499,12 +499,7 @@
 
 }
 
-@media(max-width:theme('breakpoints.md','value')){
-    .form-search .form__element .form__input {
-        border-top: none;
-    }
-
-    
+@media (max-width:theme('breakpoints.md','value')){
 
     .form-filters .form__element:first-child input {
         border-bottom: none;
@@ -531,7 +526,7 @@
 
 }
 
-@media(max-width:theme('breakpoints.sm','value')){
+@media (max-width:theme('breakpoints.sm','value')){
     .teacher__info {
         text-align: center;
         margin-top: 10px;

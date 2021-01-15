@@ -408,7 +408,7 @@
     z-index: 1;
 }
 
-@media(max-width:1023px) {
+@media (max-width:1023px) {
     .window {
         display: block;
     }
@@ -493,7 +493,7 @@
     }
 }
 
-@media(max-width:theme('breakpoints.md','value')) {
+@media (max-width: theme('breakpoints.md','value')) {
     .message-head {
         padding: 15px;
     }

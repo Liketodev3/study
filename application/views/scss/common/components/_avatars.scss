@@ -104,3 +104,10 @@
 .avtars-list.avtars-list--sticky li {
     margin: 0 -10px;
 }
+
+@media(min-width:1200px){
+    .box-list .avtar {
+        width: 12rem;
+        height: 12rem;
+    }
+}

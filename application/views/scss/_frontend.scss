@@ -1,12 +1,16 @@
 
-// frontend/layoutS
+//Config
+@import 'config/functions';
+@import 'config/vars';
+
+// layoutS
 @import 'frontend/layout/header';
 @import 'frontend/layout/nav';
 @import 'frontend/layout/body';
 @import 'frontend/layout/footer';
 
 
-// frontend/pages
+// pages
 @import 'frontend/pages/home';
 @import 'frontend/pages/login';
 @import 'frontend/pages/listing';
@@ -17,6 +21,7 @@
 @import 'frontend/pages/faq';
 @import 'frontend/pages/blog';
 @import 'frontend/pages/payment';
+
 @import 'frontend/pages/chat';
 @import 'frontend/pages/dashboard';
 @import 'frontend/pages/notifications';

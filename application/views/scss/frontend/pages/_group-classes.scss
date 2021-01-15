@@ -2,7 +2,7 @@
     margin: 20px 0;
 }
 
-@media (min-width:theme('breakpoints.md','value')) {
+@media  (min-width:theme('breakpoints.md','value')) {
     .section-action-wrap .form-search {
         margin: 0;
     }
@@ -83,7 +83,7 @@
     color: #464646;
 }
 
-@media (min-width:theme('breakpoints.sm','value')) {
+@media  (min-width:theme('breakpoints.sm','value')) {
     .web-class-card .price-value {
         margin-top: 0;
     }
@@ -128,7 +128,7 @@
     color: var(--color-secondary)
 }
 
-@media (min-width:theme('breakpoints.sm','value')) {
+@media  (min-width:theme('breakpoints.sm','value')) {
 
     .web-class-card .inline-card {
         display: flex;
@@ -163,7 +163,7 @@
     font-size: 1.5rem;
 }
 
-@media (min-width:theme('breakpoints.md','value')) {
+@media  (min-width:theme('breakpoints.md','value')) {
     .teacher-card {
         text-align: center;
     }
@@ -223,7 +223,7 @@
     margin: 5px 0;
 }
 
-@media (max-width:600px) {
+@media  (max-width:600px) {
     .web-class-detail .btn-wrap {
         text-align: #{theme('direction.left','value')} !important;
     }
@@ -233,7 +233,7 @@
     font-size: 1rem;
 }
 
-@media (min-width:theme('breakpoints.md','value')) {
+@media  (min-width:theme('breakpoints.md','value')) {
     .web-class-detail .teacher-card .avtar {
         width: 100px;
         height: 100px;
@@ -272,7 +272,7 @@
     margin-top: 10px;
 }
 
-@media (min-width:theme('breakpoints.xl','value')) {
+@media  (min-width:theme('breakpoints.xl','value')) {
 
     .timezone,
     .web-class-detail .top-card .card-listing li.timezone {
@@ -286,14 +286,14 @@
     }
 }
 
-@media (max-width:theme('breakpoints.sm','value')) {
+@media  (max-width:theme('breakpoints.sm','value')) {
     .web-class-detail .btn-wrap.twobtn-actions a:last-child {
         display: block;
         text-align: center;
     }
 }
 
-@media (max-width:theme('breakpoints.sm','value')){
+@media  (max-width:theme('breakpoints.sm','value')){
 .web-class-card .bottom-card{display:block;}
 .web-class-card .twobtn-actions{margin-top:10px;}
 .web-class-card .twobtn-actions .btn{width:100%;display:block;margin-top:5px;}

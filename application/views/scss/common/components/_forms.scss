@@ -418,7 +418,7 @@ textarea[disabled] {
 
 
 
-@media(max-width:1599px) {
+@media (max-width:1599px) {
 
     .form input[type=reset],
     .page-filters .form input[type=button],
@@ -427,14 +427,14 @@ textarea[disabled] {
     }
 }
 
-@media(max-width:1023px) {
+@media (max-width:1023px) {
     .form--horizontal .field-set {
         width: 100%
     }
 
 }
 
-@media(max-width:767px){
+@media (max-width:767px){
     
     .field-set {
         margin-bottom: 15px
@@ -457,7 +457,7 @@ textarea[disabled] {
 
 }
 
-@media(max-width:500px) {
+@media (max-width:500px) {
     .form--horizontal .field-set {
         display: block;
         table-layout: auto;

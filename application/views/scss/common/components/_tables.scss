@@ -131,7 +131,7 @@
 }
 
 
-@media(min-width:theme('breakpoints.xl','value')){
+@media (min-width:theme('breakpoints.xl','value')){
     .table-cols td:first-child {
         width: 25%;
     }
@@ -146,7 +146,7 @@
 
 }
 
-@media(min-width:theme('breakpoints.xl','value')) {
+@media (min-width:theme('breakpoints.xl','value')) {
 
 
     .table--cols.table td:first-child {
@@ -155,7 +155,7 @@
     }
 }
 
-@media(max-width:theme('breakpoints.xl','value')) {
+@media (max-width:theme('breakpoints.xl','value')) {
     .table {
         font-size: 1rem
     }
@@ -163,7 +163,7 @@
 
 
 
-@media(max-width:theme('breakpoints.xl','value')) {
+@media (max-width:theme('breakpoints.xl','value')) {
 
     .table-scroll {
         overflow: auto;
@@ -172,7 +172,7 @@
 }
 
 
-@media(max-width:theme('breakpoints.xl','value')){
+@media (max-width:theme('breakpoints.xl','value')){
     
     .table {
         font-size: 1.1rem
@@ -196,7 +196,7 @@
 
 }
 
-@media(max-width:theme('breakpoints.xl','value')) {
+@media (max-width:theme('breakpoints.xl','value')) {
     .table tr td .td__caption {
         width: 100%;
         padding-bottom: 3px
