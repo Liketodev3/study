@@ -11,7 +11,7 @@ class LessonRescheduleLog extends MyAppModel
         $this->scheduledLessonId =  FatUtility::int($scheduledLessonId);
     }
 	
-	 public static function getSearchObject(string $alias = 'lsl' ) : object
+	 public static function getSearchObject(string $alias = 'lsl' ) : SearchBase
     {
         $srch = new SearchBase(static::DB_TBL, $alias);
         return $srch;
@@ -26,7 +26,7 @@ class LessonRescheduleLog extends MyAppModel
         return parent::save();
     }
 	
-	public static function getLatestLessonRescheduleLog() : object
+	public static function getLatestLessonRescheduleLog() : SearchBase
     {
 		$searchObj = self::getSearchObject('lreschlog');
         

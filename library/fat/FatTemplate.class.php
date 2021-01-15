@@ -53,9 +53,11 @@ class FatTemplate {
 			$this->addJs(substr($fl, strlen(CONF_THEME_PATH)));
 		}
 
+		
 		/* Include CSS */
-		if ($includeCommon) {
-			$pth = CONF_THEME_PATH . 'common-css';
+		$pth = CONF_THEME_PATH . 'common-css';
+		if ($includeCommon && file_exists($pth)) {
+			
 			$last_updated = 0;
 
 			$arrCommonfiles = scandir($pth, SCANDIR_SORT_ASCENDING);

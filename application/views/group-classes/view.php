@@ -22,7 +22,7 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
                             <h4 class="topic-title"><?php echo $class['grpcls_title']; ?></h4>
                         </div>
                         <div class="row justify-content-between">
-                            <div class="col-md-9">
+                            <div class="col-md-9 col-sm-9">
                                 <ul class="card-listing" id="cls_<?php echo $class['grpcls_id'] ?>">
                                     <li>
                                         <div class="card-type">
@@ -80,8 +80,8 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_'.$langId, FatUtility::VAR_S
                                     </li>
                                 </ul>
                             </div>
-                            <div class="col-md-3">
-                                <a href="<?php echo CommonHelper::generateUrl('Teachers', 'profile', array( $class['user_url_name'])) ?>" class="teacher-card">
+                            <div class="col-md-3 col-sm-3">
+                                <a href="<?php echo CommonHelper::generateUrl('Teachers', 'view', array( $class['user_url_name'])) ?>" class="teacher-card">
                                     <span class="avtar" data-text="<?php echo CommonHelper::getFirstChar($class['user_first_name']); ?>">
                                         <?php if( true == User::isProfilePicUploaded( $class['user_id'] ) ){ ?>
                                         <img src="<?php echo CommonHelper::generateUrl('Image','User', array( $class['user_id'] )) ?>" alt="">

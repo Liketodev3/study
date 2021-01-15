@@ -62,7 +62,7 @@ class ScheduledLessonDetails extends MyAppModel
         return $srch;
     }
 
-    public static function getLessonDetailSearchObj() : object
+    public static function getLessonDetailSearchObj() : SearchBase
     {
         $srch = self::getSearchObj();
         $srch->joinScheduledLesson();

@@ -1,0 +1,132 @@
+
+
+.group--social a span, .group--social a {
+    font-size: 13px;
+}
+.group.group--social .-gap {
+    height: 15px;
+    font-weight: 500;
+}
+
+.group.group--social p {
+    margin: 10px 0;
+}
+
+.group.group--social .btn {
+    /* margin: 0 0; */
+    float: #{theme('direction.left','value')};
+    width: 48%;
+}
+
+.group.group--social .btn.btn--social-gp {
+    float: #{theme('direction.right','value')};
+}
+
+.group.group--social .btn .svg-icon {
+    position: absolute;
+    #{theme('direction.left','value')}: 15px;
+    top: 8px;
+}
+.group--social a {
+    margin-#{theme('direction.right','value')}: 5px;
+}
+.group--social a:last-child {
+    margin-#{theme('direction.right','value')}: 0;
+}
+.group--social{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.social--share li {
+    display: inline-block;
+    vertical-align: top;
+    margin: 10px 0 0 0; margin-#{theme('direction.right','value')}: 3px;
+}
+
+.social--share li a,
+.social--share li span {
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    display: block;
+    padding: 5px;
+    overflow: hidden;
+    position: relative;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.social--share li a img,
+.social--share li span img {
+    width: 16px;
+    display: block;
+    margin: 5px auto 0;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.social--share li a:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.social--share li .stButton {
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+
+
+
+.google-btn{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #4285f4;
+    color: #ffff;
+    font-size: 14px;
+    font-weight: 600;
+    height: 46px;
+    max-width: 191px;
+    margin:auto;
+    padding-#{theme('direction.right','value')}:10px;
+}
+.google-btn span{
+  display: inline-flex;
+  padding-#{theme('direction.left','value')}: 5px;
+}
+.group.group--social a .google-btn img{
+  width:auto;
+}
+.group.group--social a{display:inline-block;}
+.group.group--social .btn--social-fb.btn{width: 184px;
+    display: inline-block;
+    height: 46px;
+    vertical-align: top;
+    margin-top: 0;
+    margin-#{theme('direction.right','value')}: 15px;float:none;}
+
+@media  screen and (max-width:1199px){
+    .group.group--social .btn--social-fb.btn{
+        margin-#{theme('direction.right','value')}: 5px;
+    }
+  .group.group--social .btn--social-fb.btn,
+  .group.group--social a{
+    display:block;
+  }
+  .group.group--social .btn--social-fb.btn{margin-bottom:10px;}
+}
+
+
+@media (max-width:767px){
+    .social-links {
+        margin: 0;
+    }
+}

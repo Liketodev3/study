@@ -1,0 +1,19 @@
+
+//Config
+@import 'config/functions';
+@import 'config/vars';
+
+// layoutS
+@import 'dashboard/layout/header';
+@import 'dashboard/layout/nav';
+@import 'dashboard/layout/body';
+@import 'dashboard/layout/footer';
+
+
+// pages
+
+@import 'dashboard/pages/chat';
+@import 'dashboard/pages/dashboard';
+@import 'dashboard/pages/notifications';
+
+

@@ -1,0 +1,28 @@
+.border, .-border {
+  border: 1px solid var(--color-border);
+  
+  &-top {
+    border-top: 1px solid var(--color-border);
+  }
+  
+  &-right {
+    border-#{theme('direction.right','value')}: 1px solid var(--color-border);
+  }
+  
+  &-bottom {
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  &-left {
+    border-#{theme('direction.left','value')}: 1px solid var(--color-border);
+  }
+}
+
+.noborder{
+  &--right {
+    border-#{theme('direction.right','value')}: none !important;
+  }
+  &--left {
+    border-#{theme('direction.left','value')}: none !important;
+  }
+}
