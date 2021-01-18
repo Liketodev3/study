@@ -55,7 +55,7 @@ $(document).ready(function(){
 		fcom.updateWithAjax(fcom.makeUrl('Users', 'login', [userId]), '', function(t) {
 			if(t.status == 1) {
 				$.systemMessage.close();
-                window.open(fcom.makeUrl('account', '', [], SITE_ROOT_FRONT_URL),"_blank");
+                window.open(fcom.makeUrl('account', '', [], SITE_ROOT_DASHBOARD_URL),"_blank");
 			}
 		});
 	};

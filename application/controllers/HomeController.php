@@ -5,7 +5,7 @@ class HomeController extends MyAppController
     {
         if (UserAuthentication::isUserLogged()) {
             if (User::isTeacher()) {
-                FatApp::redirectUser(CommonHelper::generateUrl('Account'));
+                FatApp::redirectUser(CommonHelper::generateUrl('Account', '', [], CONF_WEBROOT_DASHBOARD));
             }
             FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
         }

@@ -429,7 +429,7 @@ class CommonHelper extends FatUtility
 
     public static function verifyCaptcha($fld_name='g-recaptcha-response')
     {
-        require_once(CONF_INSTALLATION_PATH . 'library/ReCaptcha/src/autoload.php');
+        require_once(CONF_INSTALLATION_PATH . 'library/third-party/ReCaptcha/src/autoload.php');
         if (!empty(FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '')) && !empty(FatApp::getConfig('CONF_RECAPTCHA_SECRETKEY', FatUtility::VAR_STRING, ''))) {
             $recaptcha = new \ReCaptcha\ReCaptcha(FatApp::getConfig('CONF_RECAPTCHA_SECRETKEY', FatUtility::VAR_STRING, ''));
             $post = FatApp::getPostedData();
@@ -519,13 +519,13 @@ class CommonHelper extends FatUtility
     public static function getnavigationUrl($type, $nav_url = '', $nav_cpage_id = 0, $nav_category_id = 0)
     {
         if ($type == NavigationLinks::NAVLINK_TYPE_CMS) {
-            $url = CommonHelper::generateUrl('cms', 'view', array($nav_cpage_id));
+            $url = CommonHelper::generateUrl('cms', 'view', array($nav_cpage_id), CONF_WEBROOT_FRONTEND);
         } elseif ($type==NavigationLinks::NAVLINK_TYPE_EXTERNAL_PAGE) {
-            $url = str_replace('{SITEROOT}', CONF_WEBROOT_URL, $nav_url) ;
-            $url = str_replace('{siteroot}', CONF_WEBROOT_URL, $url) ;
+            $url = str_replace('{SITEROOT}', CONF_WEBROOT_FRONTEND, $nav_url) ;
+            $url = str_replace('{siteroot}', CONF_WEBROOT_FRONTEND, $url) ;
             $url = CommonHelper::processURLString($url);
         } elseif ($type == NavigationLinks::NAVLINK_TYPE_CATEGORY_PAGE) {
-            $url= CommonHelper::generateUrl('category', 'view', array($nav_category_id));
+            $url= CommonHelper::generateUrl('category', 'view', array($nav_category_id), CONF_WEBROOT_FRONTEND);
         }
 
         return $url;

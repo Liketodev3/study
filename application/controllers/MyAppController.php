@@ -87,9 +87,9 @@ class MyAppController extends FatController
             $jsVariables['language'.$val['language_id']] = $val['language_layout_direction'];
         }
         if (CommonHelper::getLayoutDirection() == 'rtl') {
-            $this->_template->addCss('css/common-rtl.css,css/frontend-rtl.css');
+            $this->_template->addCss(array('css/common-rtl.css','css/frontend-rtl.css'));
         }else{
-            $this->_template->addCss('css/common-ltr.css,css/frontend-ltr.css');
+            $this->_template->addCss(array('css/common-ltr.css','css/frontend-ltr.css'));
         }
      
         $this->set('cookieConsent', $cookieConsent);

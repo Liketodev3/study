@@ -7,7 +7,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
 const svgSprite = require('gulp-svg-sprite');
 const concat = require('gulp-concat');
-
+const merge = require('merge-stream');
 //
 // SVG Sprite Config
 //
@@ -38,12 +38,26 @@ const config = {
 //
 //
 function css(){
-  return src('application/views/scss/*.scss')
-      .pipe(sourcemaps.init({loadMaps: true}))
-			.pipe(sass())
-      .pipe(autoprefixer())
-      .pipe(sourcemaps.write('.'))
-			.pipe(dest('application/views/css'));
+    var common = src('scss/common*.scss')
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(sourcemaps.write('.'))
+        .pipe(dest('application/views/css'))
+        .pipe(dest('dashboard-application/views/css'));
+    var frontend = src('scss/frontend*.scss')
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(sourcemaps.write('.'))
+        .pipe(dest('application/views/css'));
+    var dashboard = src('scss/dashboard*.scss')
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(sourcemaps.write('.'))
+        .pipe(dest('dashboard-application/views/css'));
+    return merge(common, frontend, dashboard);
 }
 
 /* function js(){

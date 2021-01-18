@@ -3,6 +3,7 @@ This file shares the details of the Yo!Coach version and change log.
 
 Enhancements:
     *Task-80520: Upgrade Fullcalendar
+    *Task-80811: Frontend Directory Changes
 
 Bug Fixes:
     *Bug-#047837: Fixed slider images

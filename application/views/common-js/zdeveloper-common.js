@@ -437,7 +437,7 @@ $(document).ready(function(){
 			return false;
 		}
 
-		fcom.updateWithAjax( fcom.makeUrl('Messages','initiate/'+id), '',function(ans){
+		fcom.updateWithAjax( fcom.makeUrl('Messages','initiate', [id], confWebDashUrl), '',function(ans){
 			$.mbsmessage.close();
 			if( ans.redirectUrl ){
                 if(ans.threadId){
@@ -455,8 +455,8 @@ $(document).ready(function(){
 		var data = fcom.frmData(frm);
 		var dv = "#frm_fat_id_frmSendMessage";
 		$(dv).html(fcom.getLoader());
-		fcom.updateWithAjax(fcom.makeUrl('Messages', 'sendMessage'), data, function(t) {
-		window.location.href = fcom.makeUrl('Messages');
+		fcom.updateWithAjax(fcom.makeUrl('Messages', 'sendMessage', [], confWebDashUrl), data, function(t) {
+		window.location.href = fcom.makeUrl('Messages', '', [], confWebDashUrl);
 		});
 	};
 

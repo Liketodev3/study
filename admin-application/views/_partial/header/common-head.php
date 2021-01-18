@@ -14,6 +14,7 @@
 
 	echo $str = '<script type="text/javascript">
 		var SITE_ROOT_URL = "' . CONF_WEBROOT_URL . '" ;
+		var SITE_ROOT_DASHBOARD_URL = "' . CONF_WEBROOT_DASHBOARD . '" ;
 		var SITE_ROOT_FRONT_URL = "' . CONF_WEBROOT_FRONTEND . '" ;
 
 		var langLbl = ' . json_encode(

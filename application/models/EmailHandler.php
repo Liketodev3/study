@@ -114,7 +114,7 @@ class EmailHandler extends FatModel
         ))) {
             return false;
         }
-        require_once(CONF_INSTALLATION_PATH . 'library/PHPMailer/PHPMailerAutoload.php');
+        require_once(CONF_INSTALLATION_PATH . 'library/third-party/PHPMailer/PHPMailerAutoload.php');
         if(!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))){
             return true;
         }

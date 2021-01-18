@@ -808,18 +808,18 @@ class User extends MyAppModel
             case User::USER_LEARNER_DASHBOARD:
                 //$redirectUrl = CommonHelper::generateFullUrl('learner');
                 if (true != User::isLearnerProfileCompleted()) {
-                    $redirectUrl = CommonHelper::generateFullUrl('learner');
+                    $redirectUrl = CommonHelper::generateFullUrl('learner', '', [], CONF_WEBROOT_DASHBOARD);
                 } else {
-                    $redirectUrl = CommonHelper::generateFullUrl('teachers');
+                    $redirectUrl = CommonHelper::generateFullUrl('teachers', '', [], CONF_WEBROOT_DASHBOARD);
                 }
             break;
             case User::USER_TEACHER_DASHBOARD:
-                $redirectUrl = CommonHelper::generateFullUrl('teacher');
+                $redirectUrl = CommonHelper::generateFullUrl('teacher', '', [], CONF_WEBROOT_DASHBOARD);
             break;
         }
 
         if ("" == $redirectUrl) {
-            $redirectUrl = CommonHelper::generateFullUrl('account');
+            $redirectUrl = CommonHelper::generateFullUrl('account', '', [], CONF_WEBROOT_DASHBOARD);
         }
         return $redirectUrl;
     }

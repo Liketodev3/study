@@ -6,8 +6,8 @@ class GroupClassesController extends MyAppController
         $frmSrch = $this->getSearchForm();
 		$this->set('frmSrch', $frmSrch);
         $this->_template->addJs('js/jquery.datetimepicker.js');
-        $this->_template->addCss('css/jquery.datetimepicker.css');
-        $this->_template->addCss('css/classes.css');
+        // $this->_template->addCss('css/jquery.datetimepicker.css');
+        // $this->_template->addCss('css/classes.css');
 		$this->_template->render();
 	}
 
@@ -78,7 +78,7 @@ class GroupClassesController extends MyAppController
 		$this->set('class', $classData);
         $min_booking_time = FatApp::getConfig('CONF_CLASS_BOOKING_GAP', FatUtility::VAR_INT, 60);
         $this->set('min_booking_time', $min_booking_time);
-        $this->_template->addCss('css/classes.css');
+        // $this->_template->addCss('css/classes.css');
         // $this->_template->addCss('css/switch.css');
 		$this->_template->render();
 	}

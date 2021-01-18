@@ -18,17 +18,17 @@
                                 <div class="payment-success"><?php echo FatUtility::decodeHtmlEntities(($textMessage)) ?? Label::getLabel('MSG_Your_Order_has_been_successfully_Placed'); ?></div>
 
                                 <?php if (isset($orderType) and $orderType == Order::TYPE_WALLET_RECHARGE) { ?>
-                                    <a href="<?php echo CommonHelper::generateUrl('wallet'); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_Wallet'); ?></a>
+                                    <a href="<?php echo CommonHelper::generateUrl('wallet', '', [], CONF_WEBROOT_DASHBOARD); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_Wallet'); ?></a>
                                 <?php } elseif (isset($orderType) and $orderType == Order::TYPE_GIFTCARD) { ?>
-                                    <a href="<?php echo CommonHelper::generateUrl('giftcard'); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_Giftcards_Purchased'); ?></a>
+                                    <a href="<?php echo CommonHelper::generateUrl('giftcard', '', [], CONF_WEBROOT_DASHBOARD); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_Giftcards_Purchased'); ?></a>
                                 <?php } elseif (!empty($lessonInfo) && $lessonInfo['slesson_grpcls_id'] > 0) { ?>
                                     <h5><?php echo Label::getLabel('MSG_You_can_view_classes_here'); ?></h5>
-                                    <a href="<?php echo CommonHelper::generateUrl('LearnerGroupClasses'); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Navigate_to_classes'); ?></a>
+                                    <a href="<?php echo CommonHelper::generateUrl('LearnerGroupClasses', '', [], CONF_WEBROOT_DASHBOARD); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Navigate_to_classes'); ?></a>
                                 <?php } elseif (!empty($lessonInfo) && ($lessonInfo['op_lpackage_is_free_trial'] == 1)) { ?>
-                                    <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons') . '#' . ScheduledLesson::STATUS_SCHEDULED; ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_my_Lessons'); ?></a>
+                                    <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons', '', [], CONF_WEBROOT_DASHBOARD) . '#' . ScheduledLesson::STATUS_SCHEDULED; ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_my_Lessons'); ?></a>
                                 <?php } else { ?>
                                     <h5><?php echo Label::getLabel('MSG_You_can_schedule_lessons_here'); ?></h5>
-                                    <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons') . '#' . ScheduledLesson::STATUS_NEED_SCHEDULING; ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_my_Lessons'); ?></a>
+                                    <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons', '', [], CONF_WEBROOT_DASHBOARD) . '#' . ScheduledLesson::STATUS_NEED_SCHEDULING; ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_my_Lessons'); ?></a>
                                 <?php } ?>
                             </div>
                         </div>

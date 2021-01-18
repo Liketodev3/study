@@ -136,7 +136,7 @@ class Common
         $template->set('action', $action);
     }
 
-    public static function footerLanguageCurrencySection($template)
+    public static function languageCurrencySection($template)
     {
         $template->set('siteLangId', CommonHelper::getLangId());
         $template->set('languages', Language::getAllNames(false));

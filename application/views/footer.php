@@ -5,9 +5,9 @@
         <div class="container container--fixed">
             <div class="row">
                 <div class="col-xl-3 col-lg-3 col-md-6">
-                    <?php $this->includeTemplate('_partial/footer/footerSocialMedia.php'); ?>
+                    <?php $this->includeTemplate('footer/socialMedia.php'); ?>
 
-                    <?php $this->includeTemplate('_partial/footer/footerLanguageCurrencySection.php');
+                    <?php $this->includeTemplate('footer/languageCurrencySection.php');
                     ?>
                 </div>
                 <div class="col-xl-2 col-lg-2 col-md-3">
@@ -15,7 +15,7 @@
                         <h5 class="toggle__trigger toggle__trigger-js"><?php echo FatApp::getConfig('CONF_WEBSITE_NAME_' . CommonHelper::getLangId(), null, ''); ?></h5>
                         <div class="toggle__target toggle__target-js">
                             <ul class="links--vertical">
-                                <?php $this->includeTemplate('_partial/footerNavigation.php'); ?>
+                                <?php $this->includeTemplate('footer/navigation.php'); ?>
                             </ul>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                                 <li><a href="#">Learn Spanish</a></li>
                                 <li><a href="#">Learn German</a></li>
                                 <li><a href="#">More Languages</a></li>-->
-                                <?php $this->includeTemplate('_partial/footerRightNavigation.php'); ?>
+                                <?php $this->includeTemplate('footer/rightNavigation.php'); ?>
                             </ul>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
         <div class="footer-inline -singleTopBorder">
             <div class="container container--fixed">
                 <ul class="inline-listing">
-                    <?php $this->includeTemplate('_partial/footerBottomNavigation.php'); ?>
+                    <?php $this->includeTemplate('footer/bottomNavigation.php'); ?>
                 </ul>
 
                 <ul class="fineprint-listing">
@@ -138,9 +138,6 @@ if (FatApp::getConfig('CONF_ENABLE_COOKIES', FatUtility::VAR_INT, 1) && !CommonH
 </div>
 
 <a href="javascript:void(0)" class="scroll-top-js gototop" title="Back to Top"></a>
-</body>
-
-</html>
 <?php
 
 if (FatApp::getConfig('CONF_ENABLE_LIVECHAT', FatUtility::VAR_STRING, '')) {
@@ -156,3 +153,6 @@ if($autoRestartOn == applicationConstants::YES && CommonHelper::demoUrl()) {
 } */
 
 ?>
+</body>
+
+</html>

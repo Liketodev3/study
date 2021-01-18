@@ -63,7 +63,7 @@ class TwocheckoutPayController extends PaymentController
             $json['html'] = $this->_template->render(false, false, 'twocheckout-pay/charge-ajax.php', true, false);
             FatUtility::dieJsonSuccess($json);
         }
-        $this->_template->addCss('css/payment.css');
+        // $this->_template->addCss('css/payment.css');
         $this->_template->render(true, false);
     }
 

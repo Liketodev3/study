@@ -800,7 +800,7 @@ class ConfigurationsController extends AdminBaseController
                 $fld->htmlAfterField = "<small>".Label::getLabel("LBL_This_is_the_Google_Analytics_ID._Ex._UA-xxxxxxx-xx.", $this->adminLangId)."</small>";
 
                 $accessToken = FatApp::getConfig("CONF_ANALYTICS_ACCESS_TOKEN", FatUtility::VAR_STRING, '');
-                require_once(CONF_INSTALLATION_PATH . 'library/analytics/AnalyticsAPI.php');
+                require_once(CONF_INSTALLATION_PATH . 'library/third-party/analytics/AnalyticsAPI.php');
                 $analyticArr = array(
                     'clientId' => FatApp::getConfig("CONF_ANALYTICS_CLIENT_ID", FatUtility::VAR_STRING, ''),
                     'clientSecretKey' => FatApp::getConfig("CONF_ANALYTICS_SECRET_KEY", FatUtility::VAR_STRING, ''),

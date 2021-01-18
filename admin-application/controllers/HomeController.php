@@ -8,7 +8,7 @@ class HomeController extends AdminBaseController
         $this->canView = $this->objPrivilege->canViewAdminDashboard($this->admin_id, true);
         $this->set("canView", $this->canView);
 
-        require_once(CONF_INSTALLATION_PATH . 'library/phpfastcache.php');
+        require_once(CONF_INSTALLATION_PATH . 'library/third-party/phpfastcache.php');
     }
     public function index()
     {
@@ -25,7 +25,7 @@ class HomeController extends AdminBaseController
 
         if ($dashboardInfo == null) {
 
-            include_once CONF_INSTALLATION_PATH . 'library/analytics/AnalyticsAPI.php';
+            include_once CONF_INSTALLATION_PATH . 'library/third-party/analytics/AnalyticsAPI.php';
             try {
 
                 $analytics = new AnalyticsAPI();
@@ -111,7 +111,7 @@ class HomeController extends AdminBaseController
         $type = $post['rtype'];
         $interval = isset($post['interval'])?$post['interval']:'';
 
-        include_once CONF_INSTALLATION_PATH . 'library/analytics/AnalyticsAPI.php';
+        include_once CONF_INSTALLATION_PATH . 'library/third-party/analytics/AnalyticsAPI.php';
 
         phpFastCache::setup("storage", "files");
         phpFastCache::setup("path", CONF_UPLOADS_PATH."caching");

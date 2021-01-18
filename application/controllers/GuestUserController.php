@@ -775,7 +775,7 @@ class GuestUserController extends MyAppController
 
 		$redirectUrl = User::getPreferedDashbordRedirectUrl();
 		if ($user_type == User::USER_TYPE_TEACHER) {
-			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
+			$redirectUrl = CommonHelper::generateUrl('TeacherRequest', '', [], CONF_WEBROOT_DASHBOARD);
 		}
         $message = Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId);
 		if (empty($userInfo['credential_email'])) {
@@ -913,9 +913,9 @@ class GuestUserController extends MyAppController
 
     public function loginGoogleplus($userType = User::USER_TYPE_LEANER)
     {
-        require_once CONF_INSTALLATION_PATH . 'library/googleplus/Google_Client.php'; // include the required calss files for google login
-        require_once CONF_INSTALLATION_PATH . 'library/googleplus/contrib/Google_PlusService.php';
-        require_once CONF_INSTALLATION_PATH . 'library/googleplus/contrib/Google_Oauth2Service.php';
+        require_once CONF_INSTALLATION_PATH . 'library/third-party/googleplus/Google_Client.php'; // include the required calss files for google login
+        require_once CONF_INSTALLATION_PATH . 'library/third-party/googleplus/contrib/Google_PlusService.php';
+        require_once CONF_INSTALLATION_PATH . 'library/third-party/googleplus/contrib/Google_Oauth2Service.php';
         $client = new Google_Client();
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
         $client->setScopes(array(
@@ -1048,8 +1048,7 @@ class GuestUserController extends MyAppController
 
     public function loginGoogle($userType = User::USER_TYPE_LEANER)
     {
-
-        require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
+        require_once CONF_INSTALLATION_PATH . 'library/third-party/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
         $client->setScopes(['email','profile', 'https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
@@ -1180,7 +1179,7 @@ class GuestUserController extends MyAppController
             unset($_SESSION['access_token']);
             $redirectUrl = CommonHelper::generateUrl('Teachers');
     		if ($userType == User::USER_TYPE_TEACHER) {
-    			$redirectUrl = CommonHelper::generateUrl('TeacherRequest');
+    			$redirectUrl = CommonHelper::generateUrl('TeacherRequest', '', [], CONF_WEBROOT_DASHBOARD);
     		}
             FatApp::redirectUser($redirectUrl);
         }
