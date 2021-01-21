@@ -76,7 +76,7 @@ class SlideSearch extends SearchBase
         }
 
         if (!$this->joinedPromotion) {
-            trigger_error(Labels::getLabel('ERR_please_join_promotions', $langId), E_USER_ERROR);
+            trigger_error(Label::getLabel('ERR_please_join_promotions', $langId), E_USER_ERROR);
         }
 
 
