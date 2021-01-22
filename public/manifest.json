@@ -1,0 +1,13 @@
+{
+    "name": "Yo!Coach",
+    "short_name": "Yo!Coach",
+    "description": "Yo!Coach",
+    "lang": "en-US",
+    "start_url": "/yo-coach/",
+    "display": "standalone",
+    "background_color": "#FFFFFF",
+    "theme_color": "#FFFFFF",
+    "icons": [
+        
+    ]
+}
