@@ -49,6 +49,9 @@ class AttachedFile extends MyAppModel
     const FILETYPE_BLOG_POST_IMAGE_PATH = 'blog-post/';
     const FILETYPE_BLOG_PAGE_IMAGE = 43;
 
+    const FILETYPE_PWA_APP_ICON = 44;
+    const FILETYPE_PWA_SPLASH_ICON = 45;
+
     public function __construct($fileId = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $fileId);
@@ -67,7 +70,7 @@ class AttachedFile extends MyAppModel
         return ($time > 0) ? '?t=' . $time : '';
     }
     
-    public static function checkSize($file, $compareSize)
+    public function checkSize($file, $compareSize)
     {
         $compareSize = FatUtility::convertToType($compareSize, FatUtility::VAR_FLOAT);
         if (filesize($file) > $compareSize) {
