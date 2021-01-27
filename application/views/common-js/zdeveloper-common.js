@@ -405,13 +405,13 @@ $(document).ready(function(){
 		if(isRuningTeacherFavoriteAjax) {
 			return false;
 		}
-
-		isRuningTeacherFavoriteAjax = true;
-
+		
 		if( isUserLogged() == 0 ){
 			logInFormPopUp();
 			return false;
 		}
+		isRuningTeacherFavoriteAjax = true;
+		
 		var data = 'teacher_id='+teacher_id;
 		$.mbsmessage.close();
 		fcom.updateWithAjax(fcom.makeUrl('Learner', 'toggleTeacherFavorite'), data, function(ans) {
