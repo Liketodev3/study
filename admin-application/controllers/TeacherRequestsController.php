@@ -25,15 +25,15 @@ class TeacherRequestsController extends AdminBaseController
         $srch->joinUserCredentials();
         $srch->addMultipleFields(
             array(
-            'utrequest_id',
-            'utrequest_user_id',
-            'utrequest_status',
-            'utrequest_date',
-            'utrequest_reference',
-            'credential_username',
-            'credential_email',
-            'user_first_name',
-            'user_last_name',
+                'utrequest_id',
+                'utrequest_user_id',
+                'utrequest_status',
+                'utrequest_date',
+                'utrequest_reference',
+                'credential_username',
+                'credential_email',
+                'user_first_name',
+                'user_last_name',
             )
         );
         $srch->addOrder('utrequest_id', 'desc');
@@ -41,21 +41,21 @@ class TeacherRequestsController extends AdminBaseController
         $srch->setPageSize($pagesize);
 
 
-        $laterstRecordsrch = new SearchBase('tbl_user_teacher_requests','str');
+        $laterstRecordsrch = new SearchBase('tbl_user_teacher_requests', 'str');
         $laterstRecordsrch->joinTable(User::DB_TBL, 'INNER JOIN', 'su.user_id = str.utrequest_user_id', 'su');
         $laterstRecordsrch->doNotCalculateRecords();
         $laterstRecordsrch->doNotLimitRecords();
         $laterstRecordsrch->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'su.user_id = scred.credential_user_id', 'scred');
         $laterstRecordsrch->addMultipleFields(array('max(str.utrequest_id) as maxId'));
 
-       if (!empty($post['keyword'])) {
-           $cnd = $laterstRecordsrch->addCondition('utrequest_reference', '=', '%' . $post['keyword'] . '%', 'AND');
-           $cnd->attachCondition('mysql_func_concat(`user_first_name`," ",`user_last_name`)', 'like', '%' . $post['keyword'] . '%', 'OR',true);
-           $cnd->attachCondition('user_last_name', 'like', '%' . $post['keyword'] . '%', 'OR');
-           $cnd->attachCondition('credential_email', 'like', '%' . $post['keyword'] . '%', 'OR');
-           $cnd->attachCondition('credential_username', 'like', '%' . $post['keyword'] . '%', 'OR');
-           $cnd->attachCondition('utrequest_reference', 'like', '%' . $post['keyword'] . '%', 'OR');
-       }
+        if (!empty($post['keyword'])) {
+            $cnd = $laterstRecordsrch->addCondition('utrequest_reference', '=', '%' . $post['keyword'] . '%', 'AND');
+            $cnd->attachCondition('mysql_func_concat(`user_first_name`," ",`user_last_name`)', 'like', '%' . $post['keyword'] . '%', 'OR', true);
+            $cnd->attachCondition('user_last_name', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $cnd->attachCondition('credential_email', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $cnd->attachCondition('credential_username', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $cnd->attachCondition('utrequest_reference', 'like', '%' . $post['keyword'] . '%', 'OR');
+        }
         $laterstRecordsrch->addGroupBy('str.utrequest_user_id');
 
 
@@ -75,8 +75,8 @@ class TeacherRequestsController extends AdminBaseController
             }
             $laterstRecordsrch->addCondition('str.utrequest_date', '<=', $post['date_to'] . ' 23:59:59');
         }
-        $srch->joinTable("(".$laterstRecordsrch->getQuery().")", 'INNER JOIN', 'latestR.maxId = tr.utrequest_id', 'latestR');
-        $rs	= $srch->getResultSet();
+        $srch->joinTable("(" . $laterstRecordsrch->getQuery() . ")", 'INNER JOIN', 'latestR.maxId = tr.utrequest_id', 'latestR');
+        $rs    = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
         $this->set('canEditTeacherApprovalRequests', $this->objPrivilege->canEditTeacherApprovalRequests(AdminAuthentication::getLoggedAdminId(), true));
         $this->set('reqStatusArr', TeacherRequest::getStatusArr($this->adminLangId));
@@ -129,7 +129,7 @@ class TeacherRequestsController extends AdminBaseController
                 'utrvalue_user_language_speak',
                 'utrvalue_user_language_speak_proficiency',
                 'count(utrequest_id) as totalRequest'
-                )
+            )
         );
         $srch->addGroupBy('utrequest_id');
         $rs = $srch->getResultSet();
@@ -153,11 +153,11 @@ class TeacherRequestsController extends AdminBaseController
         /* ] */
         $otherRequest = [];
         /* previous request  data[ */
-        if($row['totalRequest'] > 0) {
+        if ($row['totalRequest'] > 0) {
             $srch = new TeacherRequestSearch();
             $srch->addCondition('utrequest_user_id', '=', $row['utrequest_user_id']);
             $srch->addCondition('utrequest_id', '!=', $utrequest_id);
-            $srch->addOrder('utrequest_id','desc');
+            $srch->addOrder('utrequest_id', 'desc');
             $rs = $srch->getResultSet();
             $otherRequest = FatApp::getDb()->fetchAll($rs);
         }
@@ -204,7 +204,7 @@ class TeacherRequestsController extends AdminBaseController
         }
 
         $frm = $this->getTeacherRequestUpdateForm();
-        $frm->fill(array('utrequest_id' => $utrequest_id ));
+        $frm->fill(array('utrequest_id' => $utrequest_id));
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
@@ -258,7 +258,7 @@ class TeacherRequestsController extends AdminBaseController
         $requestRow['utrequest_comments'] = $comment;
         $statusArr = TeacherRequest::getStatusArr($this->adminLangId);
         unset($statusArr[TeacherRequest::STATUS_PENDING]);
-        if($requestRow['utrequest_status'] != TeacherRequest::STATUS_PENDING) {
+        if ($requestRow['utrequest_status'] != TeacherRequest::STATUS_PENDING) {
             Message::addErrorMessage(Label::getLabel('LBL_Request_Status_Already_Changed', $this->adminLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
@@ -286,7 +286,7 @@ class TeacherRequestsController extends AdminBaseController
                 'user_last_name' => $requestRow['utrvalue_user_last_name'],
                 'user_gender' => $requestRow['utrvalue_user_gender'],
                 'user_phone' => $requestRow['utrvalue_user_phone'],
-                'user_profile_info'	=> $requestRow['utrvalue_user_profile_info'],
+                'user_profile_info'    => $requestRow['utrvalue_user_profile_info'],
             );
             $user->assignValues($userUpdateDataArr);
             if (true != $user->save()) {
@@ -334,17 +334,17 @@ class TeacherRequestsController extends AdminBaseController
             if (!empty($teachLanguagesArr)) {
                 foreach ($teachLanguagesArr as $key => $slanguage_id) {
                     $dataArr = array(
-                            'utl_us_user_id' => $requestRow['utrequest_user_id'],
-                            'utl_slanguage_id' => $slanguage_id,
-                        );
+                        'utl_us_user_id' => $requestRow['utrequest_user_id'],
+                        'utl_slanguage_id' => $slanguage_id,
+                    );
 
                     if (!$db->insertFromArray(
-                            UserToLanguage::DB_TBL_TEACH,
-                            $dataArr,
-                            false,
-                            array(),
-                            $dataArr
-                        )) {
+                        UserToLanguage::DB_TBL_TEACH,
+                        $dataArr,
+                        false,
+                        array(),
+                        $dataArr
+                    )) {
                         Message::addErrorMessage($db->getError());
                         FatUtility::dieWithError(Message::getHtml());
                     }
@@ -386,7 +386,7 @@ class TeacherRequestsController extends AdminBaseController
             if (!$db->updateFromArray(
                 UserQualification::DB_TBL,
                 $dataArr,
-                array('smt' => 'uqualification_user_id = ?', 'vals' => array($requestRow['utrequest_user_id']) )
+                array('smt' => 'uqualification_user_id = ?', 'vals' => array($requestRow['utrequest_user_id']))
             )) {
                 Message::addErrorMessage($db->getError());
                 FatUtility::dieWithError(Message::getHtml());
@@ -398,7 +398,7 @@ class TeacherRequestsController extends AdminBaseController
         /* ] */
 
         /* email sending[ */
-        $email	= new EmailHandler();
+        $email    = new EmailHandler();
         $requestRow['utrequest_status'] = $post['utrequest_status'];
         if (!$email->SendTeacherRequestStatusChangeNotification($this->adminLangId, $requestRow)) {
             Message::addErrorMessage(Label::getLabel('LBL_Email_Could_Not_Be_Sent', $this->adminLangId));
@@ -482,18 +482,19 @@ class TeacherRequestsController extends AdminBaseController
         }
     }
 
-        public function downloadResume($userId, $subRecordId) {
-          $subRecordId = FatUtility::int($subRecordId);
-          if ($subRecordId < 1) {
-              Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
-              FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequests'));
-          }
-          $fileRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $userId, $subRecordId);
+    public function downloadResume($userId, $subRecordId)
+    {
+        $subRecordId = FatUtility::int($subRecordId);
+        if ($subRecordId < 1) {
+            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequests'));
+        }
+        $fileRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $userId, $subRecordId);
 
-          if (!$fileRow || $fileRow['afile_physical_path'] == "") {
-              Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
-              FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequests'));
-          }
-          AttachedFile::downloadFile($fileRow['afile_name'], $fileRow['afile_physical_path']);
+        if (!$fileRow || $fileRow['afile_physical_path'] == "") {
+            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequests'));
+        }
+        AttachedFile::downloadFile($fileRow['afile_name'], $fileRow['afile_physical_path']);
     }
 }

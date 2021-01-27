@@ -30,12 +30,13 @@ class TeacherReportsController extends TeacherBaseController
                 $earningData = $statObj->getEarning($post['duration']);
                 $this->set('earningData', $earningData);
                 $this->_template->render(false, false);
-            break;
+                break;
             case Statistics::REPORT_SOLD_LESSONS:
                 $soldLessons = $statObj->getSoldLessons($post['duration']);
                 $this->set('soldLessons', $soldLessons);
+                $this->set('siteLangId', $this->siteLangId);
                 $this->_template->render(false, false, 'teacher-reports/get-sold-lessons.php');
-            break;
+                break;
         }
     }
 }

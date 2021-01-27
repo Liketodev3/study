@@ -213,3 +213,10 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.11.20201215' WHERE `conf_na
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.12.20201215' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.1' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
+-- Bug-048752 multi lingual functionality issue
+
+ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_id` INT(11) NOT NULL AFTER `utrequest_user_id`;
+
+ALTER TABLE `tbl_user_teacher_requests` ADD `order_language_code` VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER `utrequest_language_id`;
+
+
