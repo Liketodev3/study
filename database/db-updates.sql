@@ -217,6 +217,6 @@ UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.1' WHERE `conf_name` = 'CONF_
 
 ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_id` INT(11) NOT NULL AFTER `utrequest_user_id`;
 
-ALTER TABLE `tbl_user_teacher_requests` ADD `order_language_code` VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER `utrequest_language_id`;
+ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_code` VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER `utrequest_language_id`;
 
 
