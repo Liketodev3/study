@@ -68,7 +68,7 @@ $("document").ready(function(){
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 
-		fcom.updateWithAjax(fcom.makeUrl('Cart','applyPromoCode'),data,function(res){
+		fcom.updateWithAjax(fcom.makeUrl('Cart', 'applyPromoCode', [], confFrontEndUrl),data,function(res){
 			$("#facebox .close").trigger('click');
 			$.systemMessage.close();
 			loadFinancialSummary();
@@ -83,7 +83,7 @@ $("document").ready(function(){
 	};
 
 	removePromoCode  = function(){
-		fcom.updateWithAjax(fcom.makeUrl('Cart','removePromoCode'),'',function(res){
+		fcom.updateWithAjax(fcom.makeUrl('Cart', 'removePromoCode', [], confFrontEndUrl),'',function(res){
 		loadFinancialSummary();
 		loadPaymentSummary();
 		});
@@ -118,7 +118,7 @@ $("document").ready(function(){
 
 		var data = 'teacher_id=' + teacherId + '&languageId=' + languageId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId + '&lessonDuration=' + lessonDuration + '&checkoutPage=1';
 		$('.cart-lang-id-js').html(teachLanguages[languageId]);
-		fcom.updateWithAjax( fcom.makeUrl('Cart','add'), data ,function(ans){
+		fcom.updateWithAjax( fcom.makeUrl('Cart', 'add', [], confFrontEndUrl), data ,function(ans){
 			if( ans.redirectUrl ){
 				//fcom.waitAndRedirect( ans.redirectUrl );
 				loadFinancialSummary();
