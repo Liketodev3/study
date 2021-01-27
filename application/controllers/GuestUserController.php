@@ -1380,7 +1380,7 @@ class GuestUserController extends MyAppController
     {
         $email = new EmailHandler();
         if (!$email->sendWelcomeEmail($this->siteLangId, $data)) {
-            Message::addMessage(Labels::getLabel("MSG_ERROR_IN_SENDING_WELCOME_EMAIL", $this->siteLangId));
+            Message::addMessage(Label::getLabel("MSG_ERROR_IN_SENDING_WELCOME_EMAIL", $this->siteLangId));
             return false;
         }
         return true;
