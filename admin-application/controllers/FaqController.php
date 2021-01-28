@@ -13,6 +13,8 @@ class FaqController extends AdminBaseController
         $canEdit = $this->objPrivilege->canEditFaq($this->admin_id, true);
         $this->set("canEdit", $canEdit);
 
+        $this->set('includeEditor', true);
+
         $faq_catid = FatUtility::int($faq_catid);
         $this->set("faq_catid", $faq_catid);
 
@@ -225,7 +227,7 @@ class FaqController extends AdminBaseController
         $frm->addHiddenField('', 'faq_id', $faqId);
         $frm->addHiddenField('', 'lang_id', $lang_id);
         $frm->addRequiredField(Label::getLabel('LBL_Faq_Title', $this->adminLangId), 'faq_title');
-        $frm->addTextarea(Label::getLabel('LBL_Faq_Text', $this->adminLangId), 'faq_description');
+        $frm->addHtmlEditor(Label::getLabel('LBL_Faq_Text', $this->adminLangId), 'faq_description');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
