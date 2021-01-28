@@ -277,13 +277,22 @@ class LabelController extends AdminBaseController
                     if(!$langId){
                         FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Language'), $this->adminLangId);
                     }
-
+                    
+                    // new records not allowed
+                    $srch = Label::getSearchObject();
+                    $srch->addCondition(Label::DB_TBL_PREFIX . 'key', '=', $labelKey);
+                    $srch->doNotCalculateRecords();
+                    $srch->doNotLimitRecords();
+                    if (!FatApp::getDb()->fetch($srch->getResultSet())) {
+                        FatUtility::dieJsonError(sprintf(Label::getLabel('LBL_Label_key_"%s"_does_not_exist', $this->adminLangId), $labelKey));
+                    }
+                    
                     $srch = Label::getSearchObject($langId);
                     $srch->addCondition(Label::DB_TBL_PREFIX . 'key', '=', $labelKey);
                     $srch->doNotCalculateRecords();
                     $srch->doNotLimitRecords();
                     if (!FatApp::getDb()->fetch($srch->getResultSet())) {
-                        // FatUtility::dieJsonError(sprintf(Label::getLabel('LBL_Label_key_"%s"_does_not_exist', $this->adminLangId), $labelKey));
+                        // we can have key for other languages, so add label for this language as well
                         $dataToSaveArr = array( 
 							'label_key'		=>	$labelKey,
 							'label_lang_id'	=>	$langId,
