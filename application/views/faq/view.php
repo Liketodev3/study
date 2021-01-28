@@ -23,7 +23,7 @@
 
 						<div class="box__body -padding-30">
 							<div class="faq_desc container--cms">
-								<?php echo $data['faq_description']; ?>
+								<?php echo CommonHelper::renderHtml($data['faq_description']); ?>
 							</div>
 						</div>
 						

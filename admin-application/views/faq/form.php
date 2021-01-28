@@ -2,9 +2,7 @@
 $frm->setFormTagAttribute('class', 'web_form form_horizontal');
 $frm->setFormTagAttribute('onsubmit', 'setupFaq(this); return(false);');
 $frm->developerTags['colClassPrefix'] = 'col-md-';
-$frm->developerTags['fld_default_col'] = 12; 	
-
-
+$frm->developerTags['fld_default_col'] = 12;
 ?>
 
 <section class="section">

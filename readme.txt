@@ -11,6 +11,7 @@ Bug Fixes:
     *Bug-#048309: Group class 15 min slot difference
     *Bug-#047762: Fixed Label Import error
     *Bug-#047908: Cancel Reschedule email template changes
+    *Suggestion-#047951: FAQ page with html content to add links and styling.
 -------------------------------
 Release Version: TV-2.7.13.20210107
 Release Date: 2021/01/07

@@ -1,6 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
-$langFrm->setFormTagAttribute('class', 'web_form form_horizontal layout--'.$formLayout);
-$langFrm->setFormTagAttribute('onsubmit', 'setupLangFaq(this); return(false);');
+$langFrm->setFormTagAttribute('class', 'web_form layout--'.$formLayout);
+$langFrm->setFormTagAttribute('onsubmit', 'setupLangFaq('.$langFrm->getFormTagAttribute('name').'); return(false);');
 $langFrm->developerTags['colClassPrefix'] = 'col-md-';
 $langFrm->developerTags['fld_default_col'] = 12; 	
 
