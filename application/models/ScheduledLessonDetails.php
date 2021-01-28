@@ -105,6 +105,7 @@ class ScheduledLessonDetails extends MyAppModel
         $srch->addMultipleFields(
             array(
                 'sldetail_id',
+                'slesson_id',
                 'slesson_date',
                 'slesson_start_time',
                 'slesson_end_time',

@@ -10,6 +10,7 @@ Bug Fixes:
     *Bug-#048614: Favourite popup not working properly
     *Bug-#048309: Group class 15 min slot difference
     *Bug-#047762: Fixed Label Import error
+    *Bug-#047908: Cancel Reschedule email template changes
 -------------------------------
 Release Version: TV-2.7.13.20210107
 Release Date: 2021/01/07
