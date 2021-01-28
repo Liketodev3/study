@@ -8,6 +8,7 @@ Enhancements:
 Bug Fixes:
     *Bug-#047837: Fixed slider images
     *Bug-#048614: Favourite popup not working properly
+    *Bug-#048309: Group class 15 min slot difference
 -------------------------------
 Release Version: TV-2.7.13.20210107
 Release Date: 2021/01/07
