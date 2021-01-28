@@ -587,7 +587,7 @@ class ConfigurationsController extends AdminBaseController
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_END_LESSON_DURATION", $this->adminLangId), "CONF_ALLOW_TEACHER_END_LESSON");
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Duration_After_Teacher_Can_End_Lesson_(In_Minutes)", $this->adminLangId) . ".</small>";
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_LEARNER_REFUND_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_REFUND_PERCENTAGE");
-                $fld3->requirements()->setRange(1, 500);
+                $fld3->requirements()->setRange(0, 100);
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Refund_to_learner_In_Less_than_24_Hours_(In_Percentage)", $this->adminLangId) . ".</small>";
 
                 $maxAttemptFld =  $frm->addIntegerField(Label::getLabel("LBL_MAX_TEACHER_REQUEST_ATTEMPT", $this->adminLangId), "CONF_MAX_TEACHER_REQUEST_ATTEMPT");
@@ -954,9 +954,7 @@ class ConfigurationsController extends AdminBaseController
                 // $watermark_fld = $frm->addButton('Watermark', 'watermark', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'watermark', 'data-file_type' => AttachedFile::FILETYPE_WATERMARK_IMAGE));
                 $appletouch_fld = $frm->addButton('Apple Touch Icon', 'apple_touch_icon', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'apple_touch_icon', 'data-file_type' => AttachedFile::FILETYPE_APPLE_TOUCH_ICON));
                 $mobilelogo_fld = $frm->addButton('Mobile Logo', 'mobile_logo', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'mobile_logo', 'data-file_type' => AttachedFile::FILETYPE_MOBILE_LOGO));
-
                 $blogimg_fld = $frm->addButton('Blog Image', 'blog_img', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'blog_img', 'data-file_type' => AttachedFile::FILETYPE_BLOG_PAGE_IMAGE));
-
                 break;
 
             case  Configurations::FORM_SERVER:
