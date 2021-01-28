@@ -234,13 +234,13 @@ class LabelController extends AdminBaseController
 	
 	public function uploadLabelsImportedFile()
 	{
+        set_time_limit(0);
 		$this->objPrivilege->canEditLanguageLabel();
 		if ( !is_uploaded_file($_FILES['import_file']['tmp_name']) ) {
 			Message::addErrorMessage(Label::getLabel('LBL_Please_Select_A_CSV_File', $this->adminLangId));
 			FatUtility::dieJsonError( Message::getHtml() );
 		}
-		$post = FatApp::getPostedData();
-		
+				
 		if( !in_array($_FILES['import_file']['type'], CommonHelper::isCsvValidMimes()) ){
 			Message::addErrorMessage( Label::getLabel( "LBL_Not_a_Valid_CSV_File", $this->adminLangId ) );
 			FatUtility::dieJsonError( Message::getHtml() );
@@ -259,27 +259,40 @@ class LabelController extends AdminBaseController
 		$firstLine = fgetcsv( $csvFilePointer );
 		array_shift($firstLine);
 		$firstLineLangArr = $firstLine;
-		$langIndexLangIds = array();
+        $langIndexLangIds = array();
+        
 		foreach( $firstLineLangArr as $key => $langCode ){
+            if(empty($languages[$langCode])){
+                FatUtility::dieJsonError(sprintf(Label::getLabel('LBL_Invalid_Language_Heading_%s', $this->adminLangId), $langCode));
+            }
 			$langIndexLangIds[$key] = $languages[$langCode]['language_id'];
 		}
 				
 		while( ($line = fgetcsv($csvFilePointer) ) !== FALSE ){
-			if( $line[0] != ''){
+            if( $line[0] != ''){
 				$labelKey = array_shift($line);
-				foreach( $line as $key => $caption ){
-					$sql = "SELECT label_key FROM ". Label::DB_TBL ." WHERE label_key = " . $db->quoteVariable($labelKey). " AND label_lang_id = " .  $langIndexLangIds[$key];
-					$rs = $db->query( $sql );
-					if( $row = $db->fetch( $rs ) ){
-						$db->updateFromArray( Label::DB_TBL, array( 'label_caption' => $caption ), array('smt' => 'label_key = ? AND label_lang_id = ?', 'vals' => array( $labelKey, $langIndexLangIds[$key] ) ) );
-					} else {
-						$dataToSaveArr = array( 
+				foreach( $line as $key => $caption ){					
+                    $langId = $langIndexLangIds[$key];
+                    
+                    if(!$langId){
+                        FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Language'), $this->adminLangId);
+                    }
+
+                    $srch = Label::getSearchObject($langId);
+                    $srch->addCondition(Label::DB_TBL_PREFIX . 'key', '=', $labelKey);
+                    $srch->doNotCalculateRecords();
+                    $srch->doNotLimitRecords();
+                    if (!FatApp::getDb()->fetch($srch->getResultSet())) {
+                        // FatUtility::dieJsonError(sprintf(Label::getLabel('LBL_Label_key_"%s"_does_not_exist', $this->adminLangId), $labelKey));
+                        $dataToSaveArr = array( 
 							'label_key'		=>	$labelKey,
-							'label_lang_id'	=>	$langIndexLangIds[$key],
+							'label_lang_id'	=>	$langId,
 							'label_caption'	=>	$caption,
 						);
 						$db->insertFromArray(Label::DB_TBL, $dataToSaveArr );
-					}
+                    }else{
+                        $db->updateFromArray( Label::DB_TBL, array( 'label_caption' => $caption ), array('smt' => 'label_key = ? AND label_lang_id = ?', 'vals' => array( $labelKey, $langId ) ) );
+                    }                    
 				}
 			}
 		}
