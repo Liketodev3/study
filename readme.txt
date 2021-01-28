@@ -9,6 +9,8 @@ Hotfixes:
     Bug-#047296-Hide "this calendar is just for showing availabilty" on trial booking
     Bug-#047294-Timezone translations manageable from admin
     Bug-#047308-If teaching language not update, removed popup for update price
+    Bug-#047908: Cancel Reschedule email template changes
+    
 ---------------------
 
 Release Number: RV-2.1

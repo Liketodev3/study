@@ -192,6 +192,7 @@ class ScheduledLesson extends MyAppModel
 
             /* send an email to learner[ */
             $vars = array(
+                '{lesson_id}'       => $lessonDetailRow['slesson_id'],
                 '{learner_name}'    => $lessonDetailRow['learnerFullName'],
                 '{teacher_name}'    => $lessonDetailRow['teacherFullName'],
                 '{lesson_name}'     => ($lessonDetailRow['op_lpackage_is_free_trial'] == applicationConstants::NO) ? $lessonDetailRow['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial'),
@@ -199,6 +200,7 @@ class ScheduledLesson extends MyAppModel
                 '{lesson_date}'     => FatDate::format($start_date),
                 '{lesson_start_time}' => $start_time,
                 '{lesson_end_time}' => $end_time,
+                '{lesson_url}'      => CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($lessonDetailRow['sldetail_id'])),
             );
 
             if (!EmailHandler::sendMailTpl($lessonDetailRow['learnerEmailId'], 'teacher_cancelled_email', CommonHelper::getLangId(), $vars)) {
@@ -255,11 +257,13 @@ class ScheduledLesson extends MyAppModel
 
             /* send email to learner[ */
             $vars = array(
+                '{lesson_id}'       => $lessonDetailRow['slesson_id'],
                 '{learner_name}'    => $lessonDetailRow['learnerFullName'],
                 '{teacher_name}'    => $lessonDetailRow['teacherFullName'],
                 '{lesson_name}'     => ($lessonDetailRow['op_lpackage_is_free_trial'] == applicationConstants::NO) ? $lessonDetailRow['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial'),
                 '{teacher_comment}' => $reason,
                 '{lesson_date}'     => FatDate::format($start_date),
+                '{lesson_url}'      => CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($lessonDetailRow['sldetail_id'])),
                 '{lesson_start_time}' => $start_time,
                 '{lesson_end_time}' => $end_time,
                 '{action}' => Label::getLabel('LBL_Rescheduled'),
