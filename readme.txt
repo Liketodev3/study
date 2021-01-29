@@ -8,6 +8,7 @@ Bugs:
     #050897 - Teacher and learner >> calender >> need to show end time also as now there are multiple slots.
     #051458 - CLear Search button needs alignment 
     #047762 - When user import label then error is showing.
+    #048965: Fixed issue in join with zoom not work for users having email in capital letters
 ===================================================================================================================
 Release Number: TV-2.11.0.20210317
 Release Date: 2021-03-17
@@ -97,12 +98,6 @@ Bugs:
     Bug-#050836-Learner side >> teacher description page >> Ui Break for first time on pageload.               [Build: TV-2.10.0.20210304]
     Bug-#047815-IN login/sign up screen>> Social media button text is touches with icon in Arabic language.               [Build: TV-2.7.13.20210107]
     Bug-#046817-In home page>> home page slide images>> when user change the language English to Arabic then  Overlay issue is showing.               [Build: 2.1]
-
-
-==============================================================================================================================
-
-Release Number: TV-2.10.0.20210304
-Release Date: 2021-03-04
 
 Updates:
     *Task-80349: Update Stripe to support SCA( Strong Customer Authentication) task_80349_stripe_intent
