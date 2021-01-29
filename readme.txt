@@ -13,6 +13,7 @@ Bug Fixes:
     *Bug-#047908: Cancel Reschedule email template changes
     *Suggestion-#047951: FAQ page with html content to add links and styling.
     *Bug-#047747: Disabled new label import
+    *Bug-#048965: Fixed issue in join with zoom not work for users having email in capital letters
 -------------------------------
 Release Version: TV-2.7.13.20210107
 Release Date: 2021/01/07
