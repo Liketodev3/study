@@ -604,4 +604,9 @@ class AttachedFile extends MyAppModel
             readfile($image_name);
         }
     }
+
+    public function getMimeType(string $filepath): string
+    {
+        return mime_content_type($filepath);
+    }
 }

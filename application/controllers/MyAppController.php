@@ -19,10 +19,41 @@ class MyAppController extends FatController
         $this->initCommonVariables();
     }
     
-    public function test(){
-        echo 1;
-        CommonHelper::printArray($_GET);
-        CommonHelper::printArray(apache_request_headers());
+    public function pwaManifest()
+    {
+        $pwaSettings = FatApp::getConfig('CONF_PWA_SETTINGS');
+        $pwaManifest = [];
+        if(!empty($pwaSettings)){
+            $pwaManifest = json_decode(FatApp::getConfig('CONF_PWA_SETTINGS'), true);
+        }
+        
+        $pwaManifest['icons'] = [
+            [
+                "src"=> CommonHelper::generateUrl('Image', 'pwaIcon', ['144']),
+                "sizes"=> "144x144",
+                "type"=> "image/png"
+            ],
+            [
+                "src"=> CommonHelper::generateUrl('Image', 'pwaSplashIcon', ['512']),
+                "sizes"=> "512x512",
+                "type"=> "image/png"
+            ]
+        ];
+        /* $pwaManifest = [
+            'name',
+            'short_name',
+            'description',
+            'icons' => [
+
+            ],
+            'background_color',
+            'theme_color',
+            'display',
+            'orientation',
+            'start_url',
+            'scope',
+        ]; stripslashes(FatApp::getConfig('CONF_PWA_SETTINGS'));*/
+        die(stripslashes(json_encode($pwaManifest)));
     }
 
     public function initCommonVariables()

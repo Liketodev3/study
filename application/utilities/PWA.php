@@ -5,18 +5,18 @@ class PWA
     public static function orientationArr(int $langId): array
     {
         return [
-            'Portrait' => Label::getLabel('PWALBL_Portrait', $langId),
-            'Landscape' => Label::getLabel('PWALBL_Landscape', $langId),
+            'portrait' => Label::getLabel('PWALBL_Portrait', $langId),
+            'landscape' => Label::getLabel('PWALBL_Landscape', $langId),
         ];
     }
     
     public static function displayArr(int $langId): array
     {
         return [
-            'Full Screen' => Label::getLabel('PWALBL_Full_Screen', $langId),
-            'Standalone' => Label::getLabel('PWALBL_Standalone', $langId),
-            'Minimal UI' => Label::getLabel('PWALBL_Minimal_UI', $langId),
-            'Browser' => Label::getLabel('PWALBL_Browser', $langId)
+            'fullscreen' => Label::getLabel('PWALBL_Full_Screen', $langId),
+            'standalone' => Label::getLabel('PWALBL_Standalone', $langId),
+            'minimal-ui' => Label::getLabel('PWALBL_Minimal_UI', $langId),
+            'browser' => Label::getLabel('PWALBL_Browser', $langId)
         ];
     }
 }

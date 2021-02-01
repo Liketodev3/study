@@ -17,7 +17,7 @@ class PwaController extends AdminBaseController
         }
 
         $this->set('frm', $frm);
-        $this->_template->render();
+        $this->_template->render(true, true, 'pwa/index.php');
     }
 
     public function setup()
@@ -34,6 +34,11 @@ class PwaController extends AdminBaseController
 
         if (!empty($_FILES['icon']['name'])) {
             $attchedFile = new AttachedFile();
+            if($attchedFile->getMimeType($_FILES['icon']['tmp_name']) != 'image/png'){
+                FatApp::getDb()->rollbackTransaction();
+                Message::addErrorMessage(sprintf(Label::getLabel('LBL_Please_upload_%s_image_for_app_icon'), $attchedFile->getMimeType($_FILES['icon']['tmp_name'])));
+                return $this->index();
+            }
             if (!$attchedFile->saveImage($_FILES['icon']['tmp_name'], AttachedFile::FILETYPE_PWA_APP_ICON, 0, 0, $_FILES['icon']['name'], 0, true)) {
                 FatApp::getDb()->rollbackTransaction();
                 Message::addErrorMessage($attchedFile->getError());
@@ -43,6 +48,11 @@ class PwaController extends AdminBaseController
 
         if (!empty($_FILES['splash_icon']['name'])) {
             $attchedFile = new AttachedFile();
+            if($attchedFile->getMimeType($_FILES['splash_icon']['tmp_name']) != 'image/png'){
+                FatApp::getDb()->rollbackTransaction();
+                Message::addErrorMessage(sprintf(Label::getLabel('LBL_Please_upload_%s_image_for_splash_icon'), $attchedFile->getMimeType($_FILES['icon']['tmp_name'])));
+                return $this->index();
+            }
             if (!$attchedFile->saveImage($_FILES['splash_icon']['tmp_name'], AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0, 0, $_FILES['splash_icon']['name'], 0, true)) {
                 FatApp::getDb()->rollbackTransaction();
                 Message::addErrorMessage($attchedFile->getError());
@@ -74,20 +84,40 @@ class PwaController extends AdminBaseController
 
         $frm = new Form('pwaFrm');
 
-        $frm->addRequiredField(Label::getLabel('PWALBL_App_Name'), 'pwa_settings[app_name]');
-        $frm->addRequiredField(Label::getLabel('PWALBL_App_Short_Name'), 'pwa_settings[app_short_name]')->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_APP_SHORT_NAME').'</small>';
-        $frm->addTextBox(Label::getLabel('PWALBL_Description'), 'pwa_settings[description]');
-        $frm->addFileUpload(Label::getLabel('PWALBL_App_Icon'), 'icon');
-        $frm->addFileUpload(Label::getLabel('PWALBL_Splash_Icon'), 'splash_icon');
-        $frm->addRequiredField(Label::getLabel('PWALBL_Background_Color'), 'pwa_settings[background_color]');
-        $frm->addRequiredField(Label::getLabel('PWALBL_Theme_Color'), 'pwa_settings[theme_color]');
-        $frm->addRequiredField(Label::getLabel('PWALBL_Start_Page'), 'pwa_settings[start_page]');
-        $contentPages = ContentPage::getPagesForSelectBox($langId);
-        $frm->addSelectBox(Label::getLabel('PWALBL_Offline_Page', $langId), 'pwa_settings[offline_page]', $contentPages)->requirements()->setRequired();
+        $fld = $frm->addRequiredField(Label::getLabel('PWALBL_App_Name'), 'pwa_settings[name]');
+        $fld->requirements()->setLength(1, 50);
 
-        $frm->addSelectBox(Label::getLabel('PWALBL_Orientation'), 'pwa_settings[orientation]', $orientationArr, '', [], '')->requirements()->setRequired();
-        $frm->addSelectBox(Label::getLabel('PWALBL_Display'), 'pwa_settings[display]', $displayArr, '', [], '')->requirements()->setRequired();
-        // $frm->addTextBox(Label::getLabel('PWALBL_Cache_Strategy'), 'pwa_settings[background_color]');
+        $fld = $frm->addRequiredField(Label::getLabel('PWALBL_App_Short_Name'), 'pwa_settings[short_name]');
+        $fld->requirements()->setLength(1, 15);
+        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_APP_SHORT_NAME').'</small>';
+
+        $fld = $frm->addTextBox(Label::getLabel('PWALBL_Description'), 'pwa_settings[description]');
+        $fld->requirements()->setLength(1, 200);
+        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Description').'</small>';
+        $fld = $frm->addFileUpload(Label::getLabel('PWALBL_App_Icon'), 'icon', ['accept' =>'image/png']);
+        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_App_Icon').'</small>';
+        $frm->addFileUpload(Label::getLabel('PWALBL_Splash_Icon'), 'splash_icon', ['accept' =>'image/png'])
+            ->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Spash_Icon').'</small>';
+        $frm->addRequiredField(Label::getLabel('PWALBL_Background_Color'), 'pwa_settings[background_color]')
+            ->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Background_color').'</small>';
+        $frm->addRequiredField(Label::getLabel('PWALBL_Theme_Color'), 'pwa_settings[theme_color]')
+            ->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Theme_Color').'</small>';
+        $frm->addRequiredField(Label::getLabel('PWALBL_Start_Page'), 'pwa_settings[start_url]')
+            ->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Start_Page').'</small>';
+        $contentPages = ContentPage::getPagesForSelectBox($langId);
+        
+        $fld = $frm->addSelectBox(Label::getLabel('PWALBL_Offline_Page', $langId), 'pwa_settings[offline_page]', $contentPages);
+        $fld->requirements()->setRequired();
+        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Offline_Page').'</small>';
+        $frm->addSelectBox(Label::getLabel('PWALBL_Orientation'), 'pwa_settings[orientation]', $orientationArr, '', [], '');
+        $fld->requirements()->setRequired();
+        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_orientation').'</small>';
+
+        $frm->addSelectBox(Label::getLabel('PWALBL_Display'), 'pwa_settings[display]', $displayArr, '', [], '');
+        $fld->requirements()->setRequired();
+        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Display').'</small>';
+
+        // $frm->addTextBox(Label::getLabel('PWALBL_Cache_Strategy'), 'cache_strategy');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save', $langId));
 
         return $frm;

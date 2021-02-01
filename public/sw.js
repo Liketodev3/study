@@ -1,9 +1,5 @@
 importScripts('config.js');
 
-const contentToCache = [
-  webRootUrl
-];
-
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(cacheName + cacheVersion).then((cache) => {

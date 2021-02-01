@@ -24,16 +24,16 @@
 
                         $frm->developerTags = [
                             'colClassPrefix' => 'col-md-',
-                            'fld_default_col' => 3
+                            'fld_default_col' => 12
                         ];
 
-                        $frm->getField('pwa_settings[description]')->developerTags['col'] = 6;
+                        // $frm->getField('pwa_settings[description]')->developerTags['col'] = 6;
                         $background_color_fld = $frm->getField('pwa_settings[background_color]');
                         $theme_color_fld = $frm->getField('pwa_settings[theme_color]');
                         $background_color_fld->overrideFldType('color');
                         $theme_color_fld->overrideFldType('color');
                         
-                        $background_color_fld->developerTags['col'] = $theme_color_fld->developerTags['col'] = 2;
+                        // $background_color_fld->developerTags['col'] = $theme_color_fld->developerTags['col'] = 2;
 
                         ?>
                         <div class="box -padding-20">

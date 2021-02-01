@@ -4,10 +4,10 @@ if (isset($includeEditor) && $includeEditor) { ?>
     <script src="<?php echo CONF_WEBROOT_URL; ?>innovas/scripts/common/webfont.js"></script>
 <?php } ?>
 <meta name="theme-color" content="#3d91e8">
-<link rel="manifest" href="<?php echo CONF_WEBROOT_URL; ?>manifest.json">
+<link rel="manifest" href="<?php echo CommonHelper::generateUrl('MyApp', 'PwaManifest'); ?>">
 <script>
     if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register(<?php echo CONF_WEBROOT_URL; ?> + "sw.js");
+        navigator.serviceWorker.register("<?php echo CONF_WEBROOT_URL; ?>sw.js");
     }
 </script>
 </head>
