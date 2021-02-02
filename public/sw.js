@@ -22,28 +22,20 @@ self.addEventListener('activate', function (event) {
   )
 });
 
+
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    fetch(e.request).then((response) => {
-      return caches.open(cacheName + cacheVersion).then((cache) => {
-        if ((e.request.method == 'GET') && (e.request.url.startsWith('http') || e.request.url.startsWith('https'))) {
-          cache.put(e.request, response.clone());
-        }
-        return response;
-      });
-    }).catch(async function () {
-
-      if (e.request.method == 'GET') {
-        return caches.match(e.request).then(function (res) {
-          if (res === undefined) {
-            if(e.request.mode === 'navigate'){
-              return caches.match(webRootUrl + 'offline.html');
-            }
-            return;
+    caches.match(e.request).then((r) => {
+      console.log('[Service Worker] Fetching resource: ' + e.request.url);
+      return r || fetch(e.request).then((response) => {
+        return caches.open(cacheName+cacheVersion).then((cache) => {
+          console.log('[Service Worker] Caching new resource: ' + e.request.url);
+          if ((e.request.method == 'GET') && (e.request.mode === 'navigate')) {
+            cache.put(e.request, response.clone());
           }
-          return res;
+          return response;
         });
-      }
+      });
     })
   );
 });
