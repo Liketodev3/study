@@ -26,12 +26,12 @@ self.addEventListener('activate', function (event) {
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     caches.match(e.request).then((r) => {
-      console.log('[Service Worker] Fetching resource: ' + e.request.url);
       return r || fetch(e.request).then((response) => {
         return caches.open(cacheName+cacheVersion).then((cache) => {
-          console.log('[Service Worker] Caching new resource: ' + e.request.url);
           if ((e.request.method == 'GET') && (e.request.mode === 'navigate')) {
-            cache.put(e.request, response.clone());
+            if(response.headers.get('Content-Type') && (!response.headers.get('Content-Type').startsWith('text/html'))){
+              cache.put(e.request, response.clone());
+            }
           }
           return response;
         });

@@ -7,10 +7,8 @@ const cacheVersion = 1;
 const cacheName = 'yocoach';
 
 const contentToCache = [
-    webRootUrl,
-    webRootUrl + '/teachers'
+    
 ];
-
 
 function updateSchema(db) {
 
