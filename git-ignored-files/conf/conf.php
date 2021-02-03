@@ -11,5 +11,3 @@ define('CONF_WEBROOT_URL_TRADITIONAL', CONF_WEBROOT_URL . 'public/index.php?url=
 define('CONF_HTML_EDITOR', 'innova');
 define('CONF_FAT_CACHE_DIR', CONF_INSTALLATION_PATH . 'public/cache/');
 define('CONF_FAT_CACHE_URL', CONF_WEBROOT_URL.'cache/');
-
-define('CONF_ZOOM_VERSION', '1.8.5');

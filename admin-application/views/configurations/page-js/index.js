@@ -12,6 +12,13 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('.info__icon').click(function(){
+		$(this).toggleClass('is--active');
+	});
+
+	$(document).click(function(el){
+		if (!$(el.target).parents().hasClass("info__icon")) $(".info__icon").removeClass("is--active");		
+	});
 });
 
 (function() {
