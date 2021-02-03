@@ -105,6 +105,7 @@ class ScheduledLessonDetails extends MyAppModel
         $srch->addMultipleFields(
             array(
                 'sldetail_id',
+                'slesson_id',
                 'slesson_date',
                 'slesson_start_time',
                 'slesson_end_time',
@@ -112,6 +113,7 @@ class ScheduledLessonDetails extends MyAppModel
                 'op.op_lpackage_is_free_trial',
                 'sldetail_learner_status',
                 'ul.user_id as learnerId',
+                'ut.user_id as teacherId',
                 'ul.user_first_name as learnerFname',
                 'ul.user_last_name as learnerLname',
                 'lcred.credential_email as learnerEmailId',

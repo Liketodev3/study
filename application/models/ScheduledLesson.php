@@ -190,6 +190,10 @@ class ScheduledLesson extends MyAppModel
                 $end_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $end_time, true, $user_timezone);
             }
 
+         
+            $userNotification = new UserNotifications($lessonDetailRow['learnerId']);
+            $userNotification->cancelLessonNotification($lessonDetailRow['sldetail_id'], $lessonDetailRow['teacherId'], $lessonDetailRow['teacherFullName'], USER::USER_TYPE_LEANER, $reason);
+
             /* send an email to learner[ */
             $vars = array(
                 '{learner_name}'    => $lessonDetailRow['learnerFullName'],

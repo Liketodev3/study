@@ -219,4 +219,5 @@ ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_id` INT(11) NOT 
 
 ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_code` VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER `utrequest_language_id`;
 
-
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
+('LBL_LESSON_{lesson-id}_CANCELED_BY_{user-full-name}_Comment:{comment}', 1, "Lesson {lesson-id} Canceled By {user-full-name} \n Comment: {comment}");

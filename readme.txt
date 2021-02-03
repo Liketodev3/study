@@ -3,12 +3,9 @@ This file shares the details of the Yo!Coach version and change log.
 Hotfixes:
     Bug-#045944-fix empty stripe token issue
     Task-73053-set SSL ON for demo instance by default
-<<<<<<< HEAD
     Bug-#048752-Fix issues with multi lingual functionality 
-=======
     Bug-#48675-validate item per page field in settings
-
->>>>>>> bug_048675_validate_item_per_page
+    Bug-#049259-System should notifictions when the student or teacher cancel the lesson
 ---------------------
 
 Release Number: RV-2.1

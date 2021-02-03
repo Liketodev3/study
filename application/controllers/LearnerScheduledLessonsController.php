@@ -627,6 +627,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 			$db->rollbackTransaction();
 			FatUtility::dieJsonError($sLessonDetailObj->getError());
 		}
+       
 
         $db->commitTransaction();
         /* send email to teacher[ */
@@ -645,6 +646,11 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $end_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $end_time, true, $user_timezone);
         }
 
+        
+        $learnerId = UserAuthentication::getLoggedUserId();
+        $userNotification = new UserNotifications($lessonRow['teacherId']);
+        $userNotification->cancelLessonNotification($lessonRow['slesson_id'], $learnerId, $lessonRow['learnerFullName'], USER::USER_TYPE_TEACHER, $post['cancel_lesson_msg']);
+        
         $vars = array(
             '{learner_name}'    => $lessonRow['learnerFullName'],
             '{teacher_name}'    => $lessonRow['teacherFullName'],
@@ -655,6 +661,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{lesson_end_time}' => $end_time,
             '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_CANCELLED],
         );
+
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], 'learner_cancelled_email', $this->siteLangId, $vars)) {
             Message::addErrorMessage(Label::getLabel("LBL_Mail_not_sent!!"));
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));

@@ -305,3 +305,8 @@ ul.list-accordion li .iss_accordion{ padding-left: 40px;}
 }
 /* end cookie consent */
 
+.list-container .list p{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
