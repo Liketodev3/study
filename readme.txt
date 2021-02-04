@@ -18,6 +18,7 @@ Bug Fixes:
     *Bug-#047733: Selected Payment gateway,stay same when apply coupon
     *Bug-#048753: Show correct error message for uploaded file
     *Bug-#047722: Show same slots in availability
+    *Bug-#049262: fixed issue for teacher availability at 11:30 PM
 -------------------------------
 Release Version: TV-2.7.13.20210107
 Release Date: 2021/01/07

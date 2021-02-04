@@ -367,7 +367,9 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
         editable: true,
         now:current_time,
         headerToolbar: {
-            left: 'time'
+            left: 'time',
+            center: '',
+            right: ''
         },
         eventSources: [
             {
@@ -387,14 +389,15 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
         select: function (arg ) {
             var start = arg.start;
             var end = arg.end;
-            if(moment(start).format('d') != moment(end).format('d') ) {
+            
+            if(moment(start).format('d') != moment(end).format('d') && moment(end).format('YYYY-MM-DD HH:mm')!=moment(start).add(1, 'days').format('YYYY-MM-DD 00:00') ) {
                 calendar.unselect();
                 return false;
             }
             var newEvent = new Object();
             newEvent.title = '';
-            newEvent.start = moment(start).format('YYYY-MM-DD')+"T"+moment(start).format('HH:mm:ss');
-            newEvent.end = moment(end).format('YYYY-MM-DD')+"T"+moment(end).format('HH:mm:ss'),
+            newEvent.start = start;//moment(start).format('YYYY-MM-DD')+"T"+moment(start).format('HH:mm:ss');
+            newEvent.end = end;//moment(end).format('YYYY-MM-DD')+"T"+moment(end).format('HH:mm:ss'),
             newEvent.startTime = moment(start).format('HH:mm:ss');
             newEvent.endTime = moment(end).format('HH:mm:ss'),
             newEvent.daysOfWeek = moment(start).format('d'),
@@ -402,7 +405,6 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
             newEvent.classType = 1,
             newEvent.allday = false;
             newEvent.overlap = false;
-            
             var events = calendar.getEvents();
             for(i in events){
                 if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
@@ -414,8 +416,15 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
                     newEvent.startTime = moment(events[i].start).format('HH:mm:ss');
                     events[i].remove();
                 }
-            }         
-            calendar.addEvent(newEvent);
+            }
+            // calendar.addEvent(newEvent);
+            calendar.addEvent({
+                title: '',
+                start: newEvent.start,
+                end: newEvent.end,
+                allDay: arg.allDay
+            });
+            // calendar.unselect();
         },
         eventDrop: function(info){
             var start = info.event.start;
@@ -479,7 +488,7 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function(current_time){
                 calendar.unselect();
                 return false;
             }
-            if(moment(start).format('d') != moment(end).format('d') ) {
+            if(moment(start).format('d') != moment(end).format('d') && moment(end).format('YYYY-MM-DD HH:mm')!=moment(start).add(1, 'days').format('YYYY-MM-DD 00:00') ) {
                 calendar.unselect();
                 return false;
             }
@@ -511,7 +520,14 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function(current_time){
                     events[i].remove();
                 }
             }         
-            calendar.addEvent(newEvent);
+            // calendar.addEvent(newEvent);
+            calendar.addEvent({
+                title: '',
+                start: newEvent.start,
+                end: newEvent.end,
+                allDay: arg.allDay,
+                extendedProps: newEvent.extendedProps
+            });
         },
         eventDrop: function(info){
             var start = info.event.start;
