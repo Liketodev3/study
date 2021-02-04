@@ -4,6 +4,7 @@ This file shares the details of the Yo!Coach version and change log.
 Enhancements:
     *Task-80520: Upgrade Fullcalendar
     *Task-80811: Frontend Directory Changes
+    *Task-81638: Upgrade zoom version to 1.9.0
 
 Bug Fixes:
     *Bug-#047837: Fixed slider images
@@ -14,6 +15,7 @@ Bug Fixes:
     *Suggestion-#047951: FAQ page with html content to add links and styling.
     *Bug-#047747: Disabled new label import
     *Bug-#048965: Fixed issue in join with zoom not work for users having email in capital letters
+    *Bug-#047733: Selected Payment gateway,stay same when apply coupon
 -------------------------------
 Release Version: TV-2.7.13.20210107
 Release Date: 2021/01/07

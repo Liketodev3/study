@@ -19,19 +19,21 @@ $("document").ready(function(){
 	};
 
 	loadPaymentSummary = function(){
+		if($('#payment_methods_tab').length>0){
+			loadTab( $('#payment_methods_tab li.is-active a') );
+			return;
+		}
 		$(paymentDiv).html( fcom.getLoader() );
 		fcom.ajax(fcom.makeUrl('Checkout', 'paymentSummary'), '', function(ans) {
 			try {
-					data = JSON.parse(ans);
-					if( data.redirectUrl != '' ){
-						window.location.href = data.redirectUrl;
-					}
-						return false;
+				data = JSON.parse(ans);
+				if( data.redirectUrl != '' ){
+					window.location.href = data.redirectUrl;
+				}
+				return false;
 			} catch (e) {
 					$(paymentDiv).html(ans);
 			}
-
-
 			//$("#payment_methods_tab  li:first a").trigger('click');
 		});
 	};
