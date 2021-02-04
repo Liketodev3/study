@@ -429,19 +429,25 @@ class TeacherController extends TeacherBaseController
 			$db->rollbackTransaction();
 			Message::addErrorMessage(Label::getLabel('MSG_Please_upload_certificate'));
 			FatUtility::dieJsonError(Message::getHtml());
-		} */
+        } */
+        
+        $attachedFile = new AttachedFile();
 
-        if (!empty($_FILES['certificate']['tmp_name'])) {
+        if (!empty($_FILES['certificate']['name']) && !empty($_FILES['certificate']['error'])) {            
+            $db->rollbackTransaction();
+            FatUtility::dieJsonError($attachedFile->getErrMsgByErrCode($_FILES['certificate']['error']));            
+        }
+
+        if (!empty($_FILES['certificate']['tmp_name'])) {            
             if (!is_uploaded_file($_FILES['certificate']['tmp_name'])) {
                 $db->rollbackTransaction();
                 FatUtility::dieJsonError(Label::getLabel('LBL_Please_select_a_file'));
             }
             $uqualification_id = $qualification->getMainTableRecordId();
-            $fileHandlerObj = new AttachedFile();
-            $res = $fileHandlerObj->saveDoc($_FILES['certificate']['tmp_name'], AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $post['uqualification_user_id'], $uqualification_id, $_FILES['certificate']['name'], -1, $unique_record = true,0,$_FILES['certificate']['type']);
+            $res = $attachedFile->saveDoc($_FILES['certificate']['tmp_name'], AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $post['uqualification_user_id'], $uqualification_id, $_FILES['certificate']['name'], -1, $unique_record = true,0,$_FILES['certificate']['type']);
             if (!$res) {
                 $db->rollbackTransaction();
-                FatUtility::dieJsonError($fileHandlerObj->getError());
+                FatUtility::dieJsonError($attachedFile->getError());
             }
         }
         $db->commitTransaction();

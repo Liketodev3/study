@@ -16,6 +16,7 @@ Bug Fixes:
     *Bug-#047747: Disabled new label import
     *Bug-#048965: Fixed issue in join with zoom not work for users having email in capital letters
     *Bug-#047733: Selected Payment gateway,stay same when apply coupon
+    *Bug-#048753: Show error message for uploaded file
 -------------------------------
 Release Version: TV-2.7.13.20210107
 Release Date: 2021/01/07

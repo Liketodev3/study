@@ -601,4 +601,18 @@ class AttachedFile extends MyAppModel
             readfile($image_name);
         }
     }
+
+    public function getErrMsgByErrCode($errorCode)
+    {
+        $phpFileUploadErrors = array(
+            1 => sprintf(Label::getLabel('LBL_The_uploaded_file_can_not_exceed_the_filesize_%sB'), ini_get('upload_max_filesize')),
+            2 => Label::getLabel('LBL_The_uploaded_file_can_not_exceed_the_filesize_%sB', ini_get('max_file_size')),
+            3 => Label::getLabel('LBL_The_uploaded_file_was_only_partially_uploaded'),
+            4 => Label::getLabel('LBL_No_file_was_uploaded'),
+            6 => Label::getLabel('LBL_Missing_a_temporary_folder'),
+            7 => Label::getLabel('LBL_Failed_to_write_file_to_disk.'),
+            8 => Label::getLabel('LBL_A_PHP_extension_stopped_the_file_upload.'),
+        );
+        return $phpFileUploadErrors[$errorCode];
+    }
 }
