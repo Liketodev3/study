@@ -118,6 +118,7 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function(current_time, durati
     var calConf = {
         now:current_time,
         selectable: true,
+        slotDuration: '00:15',
         eventSources: [
             {
                 url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [this.teacherId], confFrontEndUrl),
