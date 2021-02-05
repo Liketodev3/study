@@ -5,6 +5,7 @@ Enhancements:
     *Task-80520: Upgrade Fullcalendar
     *Task-80811: Frontend Directory Changes
     *Task-81638: Upgrade zoom version to 1.9.0
+    *Task-81706: Paystack Payment gateway integration
 
 Bug Fixes:
     *Bug-#047837: Fixed slider images
