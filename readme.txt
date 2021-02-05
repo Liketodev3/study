@@ -12,6 +12,8 @@ Hotfixes:
     Bug-#047908: Cancel Reschedule email template changes
     Suggestion-#047951: FAQ page with html content to add links and styling
     Bug-#048752-Fix issues with multi lingual functionality 
+    Bug-#48675-validate item per page field in settings
+
 ---------------------
 
 Release Number: RV-2.1
