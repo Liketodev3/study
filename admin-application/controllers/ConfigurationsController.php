@@ -16,7 +16,6 @@ class ConfigurationsController extends AdminBaseController
     public function index()
     {
         $tabs = Configurations::getTabsArr();
-
         $this->set('activeTab', Configurations::FORM_GENERAL);
         $this->set('tabs', $tabs);
         $this->_template->render();
@@ -25,15 +24,12 @@ class ConfigurationsController extends AdminBaseController
     public function form($frmType)
     {
         $frmType = FatUtility::int($frmType);
-
         $dispLangTab = false;
         if (in_array($frmType, Configurations::getLangTypeFormArr())) {
             $dispLangTab = true;
             $this->set('languages', Language::getAllNames());
         }
-
         $record = Configurations::getConfigurations();
-
         $frm = $this->getForm($frmType);
         $frm->fill($record);
 
@@ -53,15 +49,12 @@ class ConfigurationsController extends AdminBaseController
     {
         $frmType = FatUtility::int($frmType);
         $langId = FatUtility::int($langId);
-
         $frm = $this->getLangForm($frmType, $langId);
-
         $dispLangTab = false;
         if (in_array($frmType, Configurations::getLangTypeFormArr())) {
             $dispLangTab = true;
             $this->set('languages', Language::getAllNames());
         }
-
         $record = Configurations::getConfigurations();
         $frm->fill($record);
         if ($tabId) {
@@ -80,18 +73,14 @@ class ConfigurationsController extends AdminBaseController
     public function setup()
     {
         $this->objPrivilege->canEditGeneralSettings();
-
         $post = FatApp::getPostedData();
         $frmType = FatUtility::int($post['form_type']);
-
         if (1 > $frmType) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $frm = $this->getForm($frmType);
         $post = $frm->getFormDataFromArray($post);
-
         if (($frmType == Configurations::FORM_THIRD_PARTY_API) && CommonHelper::demoUrl()) {
             $post = ['CONF_ACTIVE_MEETING_TOOL' => FatApp::getPostedData('CONF_ACTIVE_MEETING_TOOL')];
         }
@@ -168,10 +157,8 @@ class ConfigurationsController extends AdminBaseController
 
     public function is_ssl_enabled()
     {
-
         // url connection
         $url = "https://" . $_SERVER["HTTP_HOST"];
-
         // Initiate connection
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6"); // set browser/user agent
@@ -189,7 +176,6 @@ class ConfigurationsController extends AdminBaseController
     public function setupLang()
     {
         $this->objPrivilege->canEditGeneralSettings();
-
         $post = FatApp::getPostedData();
         $frmType = FatUtility::int($post['form_type']);
         $langId = FatUtility::int($post['lang_id']);
@@ -198,20 +184,18 @@ class ConfigurationsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $frm = $this->getLangForm($frmType, $langId);
         $post = $frm->getFormDataFromArray($post);
-
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         unset($post['form_type']);
         unset($post['lang_id']);
         unset($post['btn_submit']);
 
         $record = new Configurations();
+
         if (!$record->update($post)) {
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
@@ -232,6 +216,7 @@ class ConfigurationsController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported', $this->adminLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
+
         $file_type = FatApp::getPostedData('file_type', FatUtility::VAR_INT, 0);
         $lang_id = FatApp::getPostedData('lang_id', FatUtility::VAR_INT, 0);
 
@@ -239,7 +224,6 @@ class ConfigurationsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $allowedFileTypeArr = array(
             AttachedFile::FILETYPE_ADMIN_LOGO,
             AttachedFile::FILETYPE_FRONT_LOGO,
@@ -279,7 +263,6 @@ class ConfigurationsController extends AdminBaseController
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $this->set('file', $_FILES['file']['name']);
         $this->set('frmType', Configurations::FORM_GENERAL);
         $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_Uploaded_Successfully', $this->adminLangId));
@@ -289,7 +272,6 @@ class ConfigurationsController extends AdminBaseController
     public function redirect()
     {
         require_once(CONF_INSTALLATION_PATH . 'library/analytics/AnalyticsAPI.php');
-
         $analyticArr = array(
             'clientId' => FatApp::getConfig("CONF_ANALYTICS_CLIENT_ID"),
             'clientSecretKey' => FatApp::getConfig("CONF_ANALYTICS_SECRET_KEY"),
@@ -572,7 +554,6 @@ class ConfigurationsController extends AdminBaseController
 
                 $frm->addHtml('', 'Admin', '<h3>' . Label::getLabel('LBL_Admin', $this->adminLangId) . '</h3>');
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Default_Items_Per_Page", $this->adminLangId), "CONF_ADMIN_PAGESIZE");
-                $fld3->requirements()->setRange(1, 500);
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Users,_orders,_etc)", $this->adminLangId) . ".</small>";
 
                 $frm->addHtml('', 'FlashCard', '<h3>' . Label::getLabel('LBL_FlashCards', $this->adminLangId) . '</h3>');
@@ -594,7 +575,6 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addHtml('', 'Admin', '<h3>' . Label::getLabel('LBL_Teacher_Dashboard', $this->adminLangId) . '</h3>');
 
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Default_Items_Per_Page", $this->adminLangId), "CONF_FRONTEND_PAGESIZE");
-                $fld3->requirements()->setRange(1, 500);
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Lessons,_orders,_etc)", $this->adminLangId) . ".</small>";
 
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_END_LESSON_DURATION", $this->adminLangId), "CONF_ALLOW_TEACHER_END_LESSON");
@@ -913,7 +893,6 @@ class ConfigurationsController extends AdminBaseController
                 $ul->htmlAfterField .= ' <input type="button" name="social_feed_image" class="logoFiles-Js btn-xs" id="social_feed_image" data-file_type='.AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE.' value="Upload file"><small>Dimensions 160*240</small></li>';
 
 
-
                 $ul->htmlAfterField .= '<li>'.Label::getLabel('LBL_Select_Payment_Page_Logo',$this->adminLangId).'';
 
 
@@ -977,7 +956,6 @@ class ConfigurationsController extends AdminBaseController
                 $fld->requirements()->setRequired(true);
                 break;
         }
-
         $frm->addHiddenField('', 'lang_id', $langId);
         $frm->addHiddenField('', 'form_type', $type);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel("LBL_Save_Changes", $this->adminLangId));
