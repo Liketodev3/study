@@ -31,19 +31,19 @@ class UserNotifications extends FatModel
         $this->userInfo = $user->getFlds();
     }
 
-    public function sendNotifcationMetaData($type, $recordId, $subRecordId=0)
+    public function sendNotifcationMetaData($type, $recordId, $subRecordId = 0)
     {
         $this->type = $type;
         $this->recordId = $recordId;
         $this->subRecordId = $subRecordId;
     }
 
-    public function sendTeacherApprovalNotification()
+    public function sendTeacherApprovalNotification($langId = 0)
     {
         $this->type = self::NOTICATION_FOR_TEACHER_APPROVAL;
         $this->recordId = 0;
-        $title = Label::getLabel("LABEL_TEACHER_REQUEST_APPROVED", CommonHelper::getLangId());
-        $description = Label::getLabel("LABEL_TEACHER_REQUEST_APPROVED_DESCRIPTION", CommonHelper::getLangId());
+        $title = Label::getLabel("LABEL_TEACHER_REQUEST_APPROVED", ($langId != applicationConstants::NO) ? $langId : CommonHelper::getLangId());
+        $description = Label::getLabel("LABEL_TEACHER_REQUEST_APPROVED_DESCRIPTION", ($langId != applicationConstants::NO) ? $langId : CommonHelper::getLangId());
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -108,7 +108,7 @@ class UserNotifications extends FatModel
     public static function deleteNotifications($recordId)
     {
         $db = FatApp::getDb();
-        if (!$db->query("UPDATE tbl_notifications SET notification_deleted = 1 WHERE notification_id in (".$recordId.")")) {
+        if (!$db->query("UPDATE tbl_notifications SET notification_deleted = 1 WHERE notification_id in (" . $recordId . ")")) {
             return false;
         }
         return true;
@@ -117,7 +117,7 @@ class UserNotifications extends FatModel
     public static function changeNotifyStatus($status, $recordId)
     {
         $db = FatApp::getDb();
-        if (!$db->query("UPDATE tbl_notifications SET notification_read = ".$status." WHERE notification_id in (".$recordId.")")) {
+        if (!$db->query("UPDATE tbl_notifications SET notification_read = " . $status . " WHERE notification_id in (" . $recordId . ")")) {
             return false;
         }
         return true;
@@ -753,14 +753,14 @@ class UserNotifications extends FatModel
                 $this->type = self::NOTICATION_FOR_ISSUE_REFUND;
                 $title = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER", CommonHelper::getLangId());
                 $description = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER_DESCRIPTION", CommonHelper::getLangId());
-            break;
+                break;
 
             case IssuesReported::ISSUE_RESOLVE_NOTIFICATION:
                 $this->type = self::NOTICATION_FOR_ISSUE_RESOLVE;
                 $title = Label::getLabel("LABEL_LESSON_ISSUE_RESOLVED_BY_TEACHER", CommonHelper::getLangId());
                 $description = Label::getLabel("LABEL_LESSON_RESOLVED_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());
 
-            break;
+                break;
         }
 
         if (!$this->addNotification($title, $description)) {
@@ -769,14 +769,14 @@ class UserNotifications extends FatModel
         return true;
     }
 
-	public function sendSchLessonUpdateNotificationByAdmin($lessonId, $userId ,$status, $updateFor)
+    public function sendSchLessonUpdateNotificationByAdmin($lessonId, $userId, $status, $updateFor)
     {
         $lessonStatusArray = ScheduledLesson::getStatusArr();
-		if ($updateFor == USER::USER_TYPE_LEANER) {
-			$this->type = self::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_LEARNER;
-		} else {
-			$this->type = self::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER;
-		}
+        if ($updateFor == USER::USER_TYPE_LEANER) {
+            $this->type = self::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_LEARNER;
+        } else {
+            $this->type = self::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER;
+        }
 
         $this->recordId = $lessonId;
         $this->subRecordId = $userId;
@@ -785,10 +785,9 @@ class UserNotifications extends FatModel
 
         $description = sprintf(Label::getLabel("LABEL_LESSON_STATUS_UPDATED_TO_%s", CommonHelper::getLangId()), $lessonStatusArray[$status]);
 
-		if (!$this->addNotification($title, $description)) {
+        if (!$this->addNotification($title, $description)) {
             return false;
         }
         return true;
     }
-
 }

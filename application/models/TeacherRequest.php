@@ -36,7 +36,7 @@ class TeacherRequest extends MyAppModel
         $srch = new TeacherRequestSearch();
         $srch->addCondition('utrequest_user_id', '=', $userId);
         // $srch->addMultiplefields(array( 'utrequest_id', 'utrequest_attempts'));
-        $srch->addMultiplefields(array( 'count(utrequest_id) as totalRequest'));
+        $srch->addMultiplefields(array('count(utrequest_id) as totalRequest'));
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
 
@@ -56,15 +56,15 @@ class TeacherRequest extends MyAppModel
         }
         $srch = new TeacherRequestSearch();
         $srch->addCondition('utrequest_user_id', '=', $userId);
-        $srch->addMultiplefields(array( 'utrequest_attempts', 'utrequest_id', 'utrequest_status'));
-        $srch->addOrder('utrequest_id','desc');
+        $srch->addMultiplefields(array('utrequest_attempts', 'utrequest_id', 'utrequest_status'));
+        $srch->addOrder('utrequest_id', 'desc');
         $rs = $srch->getResultSet();
         if ($row = FatApp::getDb()->fetch($rs)) {
             return $row;
         }
         return false;
     }
-    
+
     public function saveData($post, $userId)
     {
 
@@ -76,10 +76,12 @@ class TeacherRequest extends MyAppModel
 
         /* save teacher approval request[ */
         $data = array(
-            'utrequest_user_id'	=>	$userId,
-            'utrequest_reference'	=>	$userId.'-'.time(),
-            'utrequest_date'		=>	date('Y-m-d H:i:s'),
-            'utrequest_status'	=>	0,
+            'utrequest_user_id'    =>    $userId,
+            'utrequest_reference'    =>    $userId . '-' . time(),
+            'utrequest_date'        =>    date('Y-m-d H:i:s'),
+            'utrequest_status'    =>    0,
+            'utrequest_language_id'  =>    $post['utrequest_language_id'],
+            'utrequest_language_code'  =>    $post['utrequest_language_code']
         );
 
         $this->assignValues($data);

@@ -11,7 +11,7 @@ Hotfixes:
     Bug-#047308-If teaching language not update, removed popup for update price
     Bug-#047908: Cancel Reschedule email template changes
     Suggestion-#047951: FAQ page with html content to add links and styling
-    
+    Bug-#048752-Fix issues with multi lingual functionality 
 ---------------------
 
 Release Number: RV-2.1
