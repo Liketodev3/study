@@ -2,26 +2,23 @@
 <?php
 $arr_flds = array(
 	'listserial' => Label::getLabel('LBL_Sr._No', $adminLangId),
-	'url' => Label::getLabel('LBL_Original_URL', $adminLangId),
-	'meta_identifier' => Label::getLabel('LBL_Identifier', $adminLangId),
+	'post_identifier' => Label::getLabel('LBL_Blog', $adminLangId),
+	'bpcategory_identifier' => Label::getLabel('LBL_Blog_Categories', $adminLangId),
 	'meta_title' => Label::getLabel('LBL_Title', $adminLangId),
 	'action' => Label::getLabel('LBL_Action', $adminLangId),
 );
-if ($metaType != MetaTag::META_GROUP_OTHERS) {
-	unset($arr_flds['url']);
-}
-$tbl = new HtmlElement('table', array('width' => '100%', 'class' => 'table table-responsive'));
+$tbl = new HtmlElement('table', array('width' => '100%', 'class' => 'table table-responsive table--hovered'));
 $th = $tbl->appendElement('thead')->appendElement('tr');
 foreach ($arr_flds as $val) {
 	$e = $th->appendElement('th', array(), $val);
 }
 
-$sr_no = 0;
+$sr_no = $page == 1 ? 0 : $pageSize * ($page - 1);
 foreach ($arr_listing as $sn => $row) {
 	$sr_no++;
 	$tr = $tbl->appendElement('tr');
 	$metaId = FatUtility::int($row['meta_id']);
-	$recordId = FatUtility::int($row['meta_record_id']);
+	$recordId = FatUtility::int($row['bpcategory_id']);
 	$tr->setAttribute("id", $metaId);
 
 	foreach ($arr_flds as $key => $val) {
@@ -30,15 +27,14 @@ foreach ($arr_listing as $sn => $row) {
 			case 'listserial':
 				$td->appendElement('plaintext', array(), $sr_no);
 				break;
-			case 'url':
-				$td->appendElement('plaintext', array(), MetaTag::getOrignialUrlFromComponents($row));
+			case 'group_class':
+				$td->appendElement('plaintext', array(), $row['grpcls_title']);
 				break;
 			case 'action':
 				$ul = $td->appendElement("ul", array("class" => "actions actions--centered"));
 				if ($canEdit) {
-					//	$li = $ul->appendElement("li");
+					//$li = $ul->appendElement("li");
 					$li = $ul->appendElement("li", array('class' => 'droplink'));
-
 					$li->appendElement('a', array('href' => 'javascript:void(0)', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Edit', $adminLangId)), '<i class="ion-android-more-horizontal icon"></i>', true);
 					$innerDiv = $li->appendElement('div', array('class' => 'dropwrap'));
 					$innerUl = $innerDiv->appendElement('ul', array('class' => 'linksvertical'));
@@ -52,6 +48,20 @@ foreach ($arr_listing as $sn => $row) {
 						Label::getLabel('LBL_Edit', $adminLangId),
 						true
 					);
+					if ($metaType == MetaTag::META_GROUP_OTHERS) {
+						//$li = $ul->appendElement("li");
+						$innerLiDelete = $innerUl->appendElement('li');
+
+						$innerLiDelete->appendElement(
+							'a',
+							array(
+								'href' => 'javascript:void(0)', 'class' => 'button small green',
+								'title' => Label::getLabel('LBL_Delete', $adminLangId), "onclick" => "deleteRecord($metaId)"
+							),
+							Label::getLabel('LBL_Delete', $adminLangId),
+							true
+						);
+					}
 				}
 				break;
 			default:
@@ -60,6 +70,7 @@ foreach ($arr_listing as $sn => $row) {
 		}
 	}
 }
+
 if (count($arr_listing) == 0) {
 	$tbl->appendElement('tr')->appendElement('td', array('colspan' => count($arr_flds)), Label::getLabel('LBL_No_Records_Found', $adminLangId));
 }

@@ -14,7 +14,7 @@
 				</div>
 
 		<div class="tabs_nav_container vertical">
-			 <ul class="tabs_nav">
+			<ul class="tabs_nav">
 				<?php $itr = 0; foreach($tabsArr as $metaType => $metaDetail){
 					?>
 					<li><a class="<?php echo ($activeTab==$itr)?'active':''?>" href="javascript:void(0)" onClick="listMetaTags(<?php echo "'$metaType'";?>)"><?php echo $metaDetail['name'];?></a></li>

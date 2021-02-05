@@ -6,7 +6,6 @@ class MetaTagsController extends AdminBaseController
         parent::__construct($action);
         $this->objPrivilege->canViewMetaTags();
     }
-
     public function index()
     {
         $tabsArr = MetaTag::getTabsArr();
@@ -18,19 +17,18 @@ class MetaTagsController extends AdminBaseController
         $this->_template->render();
     }
 
-    public function listMetaTags($metaType)
+    public function listMetaTags()
     {
+        $metaType = FatApp::getPostedData('metaType', FatUtility::VAR_INT, -2);
         $tabsArr = MetaTag::getTabsArr();
-        $metaType = FatUtility::convertToType($metaType, FatUtility::VAR_STRING);
-        $metaType = ($metaType == '')?array_keys($tabsArr)[0] :$metaType ;
+        $metaType = ($metaType == -2) ? array_keys($tabsArr)[0] : $metaType;
         $searchForm = $this->getSearchForm($metaType);
         $canAddNew = false;
         $toShowForm = true;
         if (in_array($metaType, array(MetaTag::META_GROUP_DEFAULT))) {
             $toShowForm = false;
         }
-
-        if (in_array($metaType, array( MetaTag::META_GROUP_ADVANCED))) {
+        if (in_array($metaType, array(MetaTag::META_GROUP_OTHERS))) {
             $canAddNew = true;
         }
         $this->set('metaTypeDefault', MetaTag::META_GROUP_DEFAULT);
@@ -44,7 +42,7 @@ class MetaTagsController extends AdminBaseController
     public function search()
     {
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-        $metaType = FatApp::getPostedData('metaType', FatUtility::VAR_STRING);
+        $metaType = FatApp::getPostedData('metaType', FatUtility::VAR_INT);
         $this->set('metaType', $metaType);
         $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditMetaTags($adminId, true);
@@ -52,44 +50,50 @@ class MetaTagsController extends AdminBaseController
 
         switch ($metaType) {
             case MetaTag::META_GROUP_DEFAULT:
+                $this->renderTemplateForDefaultMetaTag(true);
+                break;
+            case MetaTag::META_GROUP_OTHERS:
                 $this->renderTemplateForDefaultMetaTag();
-            break;
-
-
-            case MetaTag::META_GROUP_ADVANCED:
-                $this->renderTemplateForAdvanced();
-            break;
+                break;
             case MetaTag::META_GROUP_CMS_PAGE:
                 $this->renderTemplateForCMSPage();
-            break;
-
+                break;
+            case MetaTag::META_GROUP_TEACHERS:
+                $this->renderTemplateForTeachers();
+                break;
+            case MetaTag::META_GROUP_GRP_CLASSES:
+                $this->renderTemplateForGrpClasses();
+                break;
+            case MetaTag::META_GROUP_BLOG_CATEGORIES;
+                $this->renderTemplateForBlogCategories();
+                break;
+            case MetaTag::META_GROUP_BLOG_POSTS;
+                $this->renderTemplateForBlogPosts();
+                break;
             default:
-            $this->renderTemplateForMetaType();
-            break;
+                $this->renderTemplateForMetaType();
+                break;
         }
     }
 
-    public function form($metaId = 0, $metaType = 'default', $recordId = 0)
+    public function form()
     {
-        if (0 < $metaId) {
-            $data = MetaTag::getAttributesById($metaId);
+        $metaId = FatApp::getPostedData('metaId', FatUtility::VAR_INT, 0);
+        $metaType = FatApp::getPostedData('metaType', FatUtility::VAR_INT, -2);
+        $recordId = FatApp::getPostedData('recordId', FatUtility::VAR_INT, 0);
 
-            if ($data === false) {
-                FatUtility::dieWithError($this->str_invalid_request);
-            }
-            if (empty($metaType)) {
-                $tabsArr = MetaTag::getTabsArr();
-                foreach ($tabsArr as $key => $value) {
-                    if ($value['controller'] == $data['meta_controller'] && $value['action'] == $data['meta_action']) {
-                        $metaType = $key;
-                        break;
-                    }
-                }
-            }
-        }
         $frm = $this->getForm($metaId, $metaType, $recordId);
 
         if (0 < $metaId) {
+            $data = MetaTag::getAttributesById($metaId);
+            if ($data === false) {
+                FatUtility::dieWithError($this->str_invalid_request);
+            }
+
+            if ($metaType == MetaTag::META_GROUP_OTHERS) {
+                $data['meta_url'] =  MetaTag::getOrignialUrlFromComponents($data);
+            }
+
             $frm->fill($data);
         }
 
@@ -104,7 +108,6 @@ class MetaTagsController extends AdminBaseController
     public function setup()
     {
         $this->objPrivilege->canEditMetaTags();
-
         $post = FatApp::getPostedData();
 
         if (false === $post) {
@@ -113,42 +116,28 @@ class MetaTagsController extends AdminBaseController
         }
 
         $metaId = FatUtility::int($post['meta_id']);
-
+        $record = new MetaTag($metaId);
         $tabsArr = MetaTag::getTabsArr();
-        $metaType = FatUtility::convertToType($post['meta_type'], FatUtility::VAR_STRING);
+        $metaType = FatUtility::convertToType($post['meta_type'], FatUtility::VAR_INT, -2);
+        $post['meta_record_id'] = 0;
 
-        if ($metaType == '' || !isset($tabsArr[$metaType])) {
+        if ($metaType == -2 || !isset($tabsArr[$metaType])) {
             Message::addErrorMessage($this->str_invalid_access);
             FatUtility::dieJsonError(Message::getHtml());
         }
         $frm = $this->getForm($metaId, $metaType, $post['meta_record_id']);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-
-        if ($metaType ==MetaTag::META_GROUP_ADVANCED) {
-            $post['meta_advanced'] = 1;
-        } elseif ($metaType ==MetaTag::META_GROUP_DEFAULT) {
-            $post['meta_default'] = 1;
-        } else {
-            $post['meta_controller'] = $tabsArr[$metaType]['controller'];
-            $post['meta_action'] = $tabsArr[$metaType]['action'];
-            if ($metaId == 0) {
-                $post['meta_subrecord_id'] = 0;
-            }
-        }
-
+        $this->getUrlComponents($metaType, $post);
         $record = new MetaTag($metaId);
-
         $record->assignValues($post);
-
         if (!$record->save()) {
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
-
-        $newTabLangId=0;
-        if ($metaId>0) {
+        $newTabLangId = 0;
+        if ($metaId > 0) {
             $languages = Language::getAllNames();
-            foreach ($languages as $langId =>$langName) {
+            foreach ($languages as $langId => $langName) {
                 if (!$row = MetaTag::getAttributesByLangId($langId, $metaId)) {
                     $newTabLangId = $langId;
                     break;
@@ -156,7 +145,7 @@ class MetaTagsController extends AdminBaseController
             }
         } else {
             $metaId = $record->getMainTableRecordId();
-            $newTabLangId=FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
+            $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
 
         $this->set('msg', $this->str_setup_successful);
@@ -166,7 +155,7 @@ class MetaTagsController extends AdminBaseController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-    public function langForm($metaId = 0, $lang_id = 0, $metaType='default')
+    public function langForm($metaId = 0, $lang_id = 0, $metaType = 'default')
     {
         $metaId = FatUtility::int($metaId);
         $lang_id = FatUtility::int($lang_id);
@@ -213,7 +202,7 @@ class MetaTagsController extends AdminBaseController
         }
         /* echo strip_tags($post['meta_other_meta_tags']); die; */
 
-        if (!$post['meta_other_meta_tags']=='' && $post['meta_other_meta_tags'] == strip_tags($post['meta_other_meta_tags'])) {
+        if (!$post['meta_other_meta_tags'] == '' && $post['meta_other_meta_tags'] == strip_tags($post['meta_other_meta_tags'])) {
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Other_Meta_Tag', $this->adminLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
@@ -224,12 +213,12 @@ class MetaTagsController extends AdminBaseController
         unset($post['lang_id']);
 
         $data = array(
-            'metalang_lang_id'=>$lang_id,
-            'metalang_meta_id'=>$metaId,
-            'meta_title'=>$post['meta_title'],
-            'meta_keywords'=>$post['meta_keywords'],
-            'meta_description'=>$post['meta_description'],
-            'meta_other_meta_tags'=>$post['meta_other_meta_tags'],
+            'metalang_lang_id' => $lang_id,
+            'metalang_meta_id' => $metaId,
+            'meta_title' => $post['meta_title'],
+            'meta_keywords' => $post['meta_keywords'],
+            'meta_description' => $post['meta_description'],
+            'meta_other_meta_tags' => $post['meta_other_meta_tags'],
         );
 
         $metaObj = new MetaTag($metaId);
@@ -241,7 +230,7 @@ class MetaTagsController extends AdminBaseController
 
         $newTabLangId = 0;
         $languages = Language::getAllNames();
-        foreach ($languages as $langId =>$langName) {
+        foreach ($languages as $langId => $langName) {
             if (!$row = MetaTag::getAttributesByLangId($langId, $metaId)) {
                 $newTabLangId = $langId;
                 break;
@@ -285,7 +274,7 @@ class MetaTagsController extends AdminBaseController
         $frm = new Form('frmSearch');
         $frm->addHiddenField(Label::getLabel('LBL_Type', $this->adminLangId), 'metaType', $metaType);
         $frm->addTextBox(Label::getLabel('LBL_Keyword', $this->adminLangId), 'keyword');
-        $fld_submit=$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
+        $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         $fld_submit->attachField($fld_cancel);
         return $frm;
@@ -297,7 +286,7 @@ class MetaTagsController extends AdminBaseController
         $frm->addHiddenField(Label::getLabel('LBL_Type', $this->adminLangId), 'metaType', $metaType);
         $frm->addTextBox(Label::getLabel('LBL_Keyword', $this->adminLangId), 'keyword');
         $frm->addSelectBox(Label::getLabel('LBL_Has_Tags_Associated', $this->adminLangId), 'hasTagsAssociated', applicationConstants::getYesNoArr($this->adminLangId), false, array(), Label::getLabel('LBL_Doesn\'t_Matter', $this->adminLangId));
-        $fld_submit=$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
+        $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         $fld_submit->attachField($fld_cancel);
         return $frm;
@@ -305,24 +294,30 @@ class MetaTagsController extends AdminBaseController
 
     private function getSearchForm($metaType)
     {
+
         switch ($metaType) {
 
             case MetaTag::META_GROUP_CMS_PAGE:
-
                 return $this->getListingSearchForm($metaType);
-            break;
-            case MetaTag::META_GROUP_ADVANCED:
+                break;
+            case MetaTag::META_GROUP_OTHERS:
                 return $this->getAdvancedSearchForm($metaType);
-            break;
+                break;
+            case MetaTag::META_GROUP_TEACHERS:
+                return $this->getAdvancedSearchForm($metaType);
+                break;
+            case MetaTag::META_GROUP_GRP_CLASSES:
+                return $this->getAdvancedSearchForm($metaType);
+                break;
             default:
                 return $this->getSearchFormForMetaType($metaType);
-            break;
+                break;
         }
 
         return false;
     }
 
-    private function getForm($metaTagId = 0, $metaType = 'default', $recordId = 0)
+    private function getForm($metaTagId = 0, $metaType = MetaTag::META_GROUP_DEFAULT, $recordId = 0)
     {
         $metaTagId = FatUtility::int($metaTagId);
         $frm = new Form('frmMetaTag');
@@ -330,20 +325,16 @@ class MetaTagsController extends AdminBaseController
         $tabsArr = MetaTag::getTabsArr();
         $frm->addHiddenField('', 'meta_type', $metaType);
 
-        if ($metaTagId!= 0 && ($metaType == '' || !isset($tabsArr[$metaType]))) {
+
+
+        if ($metaTagId != 0 && ($metaType == -2 || !isset($tabsArr[$metaType]))) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
 
-        if ($metaType == MetaTag::META_GROUP_ADVANCED) {
-            $fld = $frm->addRequiredField(Label::getLabel('LBL_Controller', $this->adminLangId), 'meta_controller');
-            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/learner-scheduled-lessons/view/100 ". Label::getLabel("LBL_then_controller_will_be_", $this->adminLangId) ." LearnerScheduledLessons</small>";
-            $fld = $frm->addRequiredField(Label::getLabel('LBL_Action', $this->adminLangId), 'meta_action');
-            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/learner-scheduled-lessons/view/100 ". Label::getLabel("LBL_then_action_will_be_", $this->adminLangId) ." view</small>";
-            $fld = $frm->addTextBox(Label::getLabel('LBL_Record_Id', $this->adminLangId), 'meta_record_id');
-            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/learner-scheduled-lessons/view/100 ". Label::getLabel("LBL_then_record_id_will_be_", $this->adminLangId) ." 100</small>";
-            $fld = $frm->addTextBox(Label::getLabel('LBL_Sub_Record_Id', $this->adminLangId), 'meta_subrecord_id');
-            $fld->htmlAfterField = "<small>".Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId)." http://domain-name.com/learner-scheduled-lessons/view/100 ". Label::getLabel("LBL_then_sub_record_id_will_be_", $this->adminLangId) ." 0</small>";
+        if ($metaType == MetaTag::META_GROUP_OTHERS) {
+            $fld = $frm->addRequiredField(Label::getLabel('LBL_Url', $this->adminLangId), 'meta_url');
+            $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_Ex:_If_URL_is", $this->adminLangId) . " http://domain-name.com/learner-scheduled-lessons/view/100 " . Label::getLabel("LBL_then_controller_will_be_", $this->adminLangId) . " LearnerScheduledLessons</small>";
         } else {
             $frm->addHiddenField(Label::getLabel('LBL_Entity_Id', $this->adminLangId), 'meta_record_id', $recordId);
         }
@@ -361,7 +352,7 @@ class MetaTagsController extends AdminBaseController
         $frm->addTextarea(Label::getLabel('LBL_Meta_Keywords', $this->adminLangId), 'meta_keywords')->requirements()->setRequired(true);
         $frm->addTextarea(Label::getLabel('LBL_Meta_Description', $this->adminLangId), 'meta_description')->requirements()->setRequired(true);
         $fld = $frm->addTextarea(Label::getLabel('LBL_Other_Meta_Tags', $this->adminLangId), 'meta_other_meta_tags');
-        $fld->htmlAfterField = '<small>'.Label::getLabel('LBL_For_Example:', $this->adminLangId).' '.htmlspecialchars(' <meta name="copyright" content="text">').'</small>';
+        $fld->htmlAfterField = '<small>' . Label::getLabel('LBL_For_Example:', $this->adminLangId) . ' ' . htmlspecialchars(' <meta name="copyright" content="text">') . '</small>';
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
@@ -369,7 +360,7 @@ class MetaTagsController extends AdminBaseController
     private function renderTemplateForBlogPost()
     {
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0)?1:$data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
 
@@ -383,16 +374,16 @@ class MetaTagsController extends AdminBaseController
         $srch = BlogPost::getSearchObject($this->adminLangId, true, true);
 
         $srch->joinTable(MetaTag::DB_TBL, 'LEFT OUTER JOIN', "mt.meta_record_id = bp.post_id and mt.meta_controller = '$controller' and mt.meta_action = '$action' ", 'mt');
-        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = ".$this->adminLangId, 'mt_l');
+        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = " . $this->adminLangId, 'mt_l');
         $srch->addCondition('post_deleted', '=', applicationConstants::NO);
         if (!empty($post['keyword'])) {
-            $condition=$srch->addCondition('mt.meta_identifier', 'like', '%'.$post['keyword'].'%');
-            $condition->attachCondition('mt_l.meta_title', 'like', '%'.$post['keyword'].'%', 'OR');
-            $condition->attachCondition('bp_l.post_title', 'like', '%'.$post['keyword'].'%', 'OR');
-            $condition->attachCondition('bp.post_identifier', 'like', '%'.$post['keyword'].'%', 'OR');
+            $condition = $srch->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('bp_l.post_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('bp.post_identifier', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
 
-        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated']!= '') {
+        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated'] != '') {
             if ($post['hasTagsAssociated'] == applicationConstants::YES) {
                 $srch->addCondition('mt.meta_id', 'is not', 'mysql_func_NULL', 'AND', true);
             } elseif ($post['hasTagsAssociated'] == applicationConstants::NO) {
@@ -400,9 +391,9 @@ class MetaTagsController extends AdminBaseController
             }
         }
 
-        $srch->addMultipleFields(array('meta_id','meta_identifier','meta_title','post_id','IF(post_title is NULL or post_title = "" ,post_identifier, post_title) as post_title'));
+        $srch->addMultipleFields(array('meta_id', 'meta_identifier', 'meta_title', 'post_id', 'IF(post_title is NULL or post_title = "" ,post_identifier, post_title) as post_title'));
 
-        $page = (empty($page) || $page <= 0)?1:$page;
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -424,7 +415,7 @@ class MetaTagsController extends AdminBaseController
     private function renderTemplateForBlogCategory()
     {
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0)?1:$data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
 
@@ -438,16 +429,16 @@ class MetaTagsController extends AdminBaseController
         $srch = BlogPostCategory::getSearchObject(false, $this->adminLangId, false);
 
         $srch->joinTable(MetaTag::DB_TBL, 'LEFT OUTER JOIN', "mt.meta_record_id = bpc.bpcategory_id and mt.meta_controller = '$controller' and mt.meta_action = '$action' ", 'mt');
-        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = ".$this->adminLangId, 'mt_l');
+        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = " . $this->adminLangId, 'mt_l');
 
         if (!empty($post['keyword'])) {
-            $condition=$srch->addCondition('mt.meta_identifier', 'like', '%'.$post['keyword'].'%');
-            $condition->attachCondition('mt_l.meta_title', 'like', '%'.$post['keyword'].'%', 'OR');
-            $condition->attachCondition('bpc_l.bpcategory_name', 'like', '%'.$post['keyword'].'%', 'OR');
-            $condition->attachCondition('bpc.bpcategory_identifier', 'like', '%'.$post['keyword'].'%', 'OR');
+            $condition = $srch->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('bpc_l.bpcategory_name', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('bpc.bpcategory_identifier', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
 
-        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated']!= '') {
+        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated'] != '') {
             if ($post['hasTagsAssociated'] == applicationConstants::YES) {
                 $srch->addCondition('mt.meta_id', 'is not', 'mysql_func_NULL', 'AND', true);
             } elseif ($post['hasTagsAssociated'] == applicationConstants::NO) {
@@ -455,10 +446,10 @@ class MetaTagsController extends AdminBaseController
             }
         }
 
-        $srch->addMultipleFields(array('meta_id','meta_identifier','meta_title','bpcategory_id','IF(bpcategory_name is NULL or bpcategory_name = "" ,bpcategory_identifier,bpcategory_name) as bpcategory_name'));
+        $srch->addMultipleFields(array('meta_id', 'meta_identifier', 'meta_title', 'bpcategory_id', 'IF(bpcategory_name is NULL or bpcategory_name = "" ,bpcategory_identifier,bpcategory_name) as bpcategory_name'));
         $srch->addCondition('bpcategory_deleted', '=', applicationConstants::NO);
 
-        $page = (empty($page) || $page <= 0)?1:$page;
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -479,7 +470,7 @@ class MetaTagsController extends AdminBaseController
     private function renderTemplateForProductDetail()
     {
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0)?1:$data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
 
@@ -491,18 +482,18 @@ class MetaTagsController extends AdminBaseController
         $action = FatUtility::convertToType($tabsArr[$metaType]['action'], FatUtility::VAR_STRING);
         $srch = SellerProduct::getSearchObject($this->adminLangId);
         $srch->joinTable(Product::DB_TBL, 'INNER JOIN', 'p.product_id = sp.selprod_product_id', 'p');
-        $srch->joinTable(Product::DB_LANG_TBL, 'LEFT OUTER JOIN', 'p.product_id = p_l.productlang_product_id AND p_l.productlang_lang_id = '.$this->adminLangId, 'p_l');
+        $srch->joinTable(Product::DB_LANG_TBL, 'LEFT OUTER JOIN', 'p.product_id = p_l.productlang_product_id AND p_l.productlang_lang_id = ' . $this->adminLangId, 'p_l');
         $srch->joinTable(MetaTag::DB_TBL, 'LEFT OUTER JOIN', "mt.meta_record_id = sp.selprod_id and mt.meta_controller = '$controller' and mt.meta_action = '$action' ", 'mt');
-        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = ".$this->adminLangId, 'mt_l');
+        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = " . $this->adminLangId, 'mt_l');
         $srch->addCondition('selprod_deleted', '=', applicationConstants::NO);
         if (!empty($post['keyword'])) {
-            $condition=$srch->addCondition('mt.meta_identifier', 'like', '%'.$post['keyword'].'%');
-            $condition->attachCondition('mt_l.meta_title', 'like', '%'.$post['keyword'].'%', 'OR');
-            $condition->attachCondition('p_l.product_name', 'like', '%'.$post['keyword'].'%', 'OR');
-            $condition->attachCondition('sp_l.selprod_title', 'like', '%'.$post['keyword'].'%', 'OR');
+            $condition = $srch->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('p_l.product_name', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('sp_l.selprod_title', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
 
-        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated']!= '') {
+        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated'] != '') {
             if ($post['hasTagsAssociated'] == applicationConstants::YES) {
                 $srch->addCondition('mt.meta_id', 'is not', 'mysql_func_NULL', 'AND', true);
             } elseif ($post['hasTagsAssociated'] == applicationConstants::NO) {
@@ -510,9 +501,9 @@ class MetaTagsController extends AdminBaseController
             }
         }
 
-        $srch->addMultipleFields(array('meta_id','meta_identifier','meta_title','selprod_id','IF(selprod_title is NULL or selprod_title = "" ,product_name, selprod_title) as selprod_title'));
+        $srch->addMultipleFields(array('meta_id', 'meta_identifier', 'meta_title', 'selprod_id', 'IF(selprod_title is NULL or selprod_title = "" ,product_name, selprod_title) as selprod_title'));
 
-        $page = (empty($page) || $page <= 0)?1:$page;
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -534,7 +525,7 @@ class MetaTagsController extends AdminBaseController
     private function renderTemplateForShopDetail()
     {
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0)?1:$data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
 
@@ -548,15 +539,15 @@ class MetaTagsController extends AdminBaseController
         $srch->joinTable('tbl_users', 'INNER JOIN', 'u.user_id = s.shop_user_id', 'u');
         $srch->joinTable('tbl_user_credentials', 'INNER JOIN', 'u.user_id = c.credential_user_id', 'c');
         $srch->joinTable(MetaTag::DB_TBL, 'LEFT OUTER JOIN', "mt.meta_record_id = s.shop_id and mt.meta_controller = '$controller' and mt.meta_action = '$action' ", 'mt');
-        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = ".$this->adminLangId, 'mt_l');
+        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = " . $this->adminLangId, 'mt_l');
 
         if (!empty($post['keyword'])) {
-            $condition=$srch->addCondition('mt.meta_identifier', 'like', '%'.$post['keyword'].'%');
-            $condition->attachCondition('mt_l.meta_title', 'like', '%'.$post['keyword'].'%', 'OR');
-            $condition->attachCondition('s_l.shop_name', 'like', '%'.$post['keyword'].'%', 'OR');
+            $condition = $srch->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('s_l.shop_name', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
 
-        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated']!= '') {
+        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated'] != '') {
             if ($post['hasTagsAssociated'] == applicationConstants::YES) {
                 $srch->addCondition('mt.meta_id', 'is not', 'mysql_func_NULL', 'AND', true);
             } elseif ($post['hasTagsAssociated'] == applicationConstants::NO) {
@@ -564,8 +555,8 @@ class MetaTagsController extends AdminBaseController
             }
         }
 
-        $srch->addMultipleFields(array('meta_id','meta_identifier','meta_title','shop_id','IFNULL(s_l.shop_name, s.shop_identifier) as shop_name'));
-        $page = (empty($page) || $page <= 0)?1:$page;
+        $srch->addMultipleFields(array('meta_id', 'meta_identifier', 'meta_title', 'shop_id', 'IFNULL(s_l.shop_name, s.shop_identifier) as shop_name'));
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -588,7 +579,7 @@ class MetaTagsController extends AdminBaseController
     private function renderTemplateForCMSPage()
     {
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0)?1:$data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
 
@@ -601,15 +592,15 @@ class MetaTagsController extends AdminBaseController
         $srch = ContentPage::getSearchObject($this->adminLangId);
 
         $srch->joinTable(MetaTag::DB_TBL, 'LEFT OUTER JOIN', "mt.meta_record_id = p.cpage_id and mt.meta_controller = '$controller' and mt.meta_action = '$action' ", 'mt');
-        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = ".$this->adminLangId, 'mt_l');
+        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = " . $this->adminLangId, 'mt_l');
 
         if (!empty($post['keyword'])) {
-            $condition=$srch->addCondition('mt.meta_identifier', 'like', '%'.$post['keyword'].'%');
-            $condition->attachCondition('mt_l.meta_title', 'like', '%'.$post['keyword'].'%', 'OR');
-            $condition->attachCondition('p_l.cpage_title', 'like', '%'.$post['keyword'].'%', 'OR');
+            $condition = $srch->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('p_l.cpage_title', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
 
-        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated']!= '') {
+        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated'] != '') {
             if ($post['hasTagsAssociated'] == applicationConstants::YES) {
                 $srch->addCondition('mt.meta_id', 'is not', 'mysql_func_NULL', 'AND', true);
             } elseif ($post['hasTagsAssociated'] == applicationConstants::NO) {
@@ -617,9 +608,9 @@ class MetaTagsController extends AdminBaseController
             }
         }
 
-        $srch->addMultipleFields(array('meta_id','meta_identifier','meta_title','cpage_id','IF(cpage_title is NULL or cpage_title = "" ,cpage_identifier, cpage_title) as cpage_title'));
+        $srch->addMultipleFields(array('meta_id', 'meta_identifier', 'meta_title', 'cpage_id', 'IF(cpage_title is NULL or cpage_title = "" ,cpage_identifier, cpage_title) as cpage_title'));
 
-        $page = (empty($page) || $page <= 0)?1:$page;
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -642,7 +633,7 @@ class MetaTagsController extends AdminBaseController
     private function renderTemplateForBrandDetail()
     {
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0)?1:$data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
 
@@ -655,15 +646,15 @@ class MetaTagsController extends AdminBaseController
         $srch = Brand::getSearchObject($this->adminLangId);
 
         $srch->joinTable(MetaTag::DB_TBL, 'LEFT OUTER JOIN', "mt.meta_record_id = b.brand_id and mt.meta_controller = '$controller' and mt.meta_action = '$action' ", 'mt');
-        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = ".$this->adminLangId, 'mt_l');
+        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = " . $this->adminLangId, 'mt_l');
 
         if (!empty($post['keyword'])) {
-            $condition=$srch->addCondition('mt.meta_identifier', 'like', '%'.$post['keyword'].'%');
-            $condition->attachCondition('mt_l.meta_title', 'like', '%'.$post['keyword'].'%', 'OR');
-            $condition->attachCondition('b_l.brand_name', 'like', '%'.$post['keyword'].'%', 'OR');
+            $condition = $srch->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('b_l.brand_name', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
 
-        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated']!= '') {
+        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated'] != '') {
             if ($post['hasTagsAssociated'] == applicationConstants::YES) {
                 $srch->addCondition('mt.meta_id', 'is not', 'mysql_func_NULL', 'AND', true);
             } elseif ($post['hasTagsAssociated'] == applicationConstants::NO) {
@@ -671,9 +662,9 @@ class MetaTagsController extends AdminBaseController
             }
         }
 
-        $srch->addMultipleFields(array('meta_id','meta_identifier','meta_title','brand_id','IF(brand_name is NULL or brand_name = "" ,brand_identifier, brand_name) as brand_name'));
+        $srch->addMultipleFields(array('meta_id', 'meta_identifier', 'meta_title', 'brand_id', 'IF(brand_name is NULL or brand_name = "" ,brand_identifier, brand_name) as brand_name'));
         $srch->addCondition('brand_status', '=', Brand::BRAND_REQUEST_APPROVED);
-        $page = (empty($page) || $page <= 0)?1:$page;
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -696,7 +687,7 @@ class MetaTagsController extends AdminBaseController
     private function renderTemplateForCategoryDetail()
     {
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0)?1:$data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
 
@@ -709,15 +700,15 @@ class MetaTagsController extends AdminBaseController
         $srch = ProductCategory::getSearchObject(false, $this->adminLangId, false);
 
         $srch->joinTable(MetaTag::DB_TBL, 'LEFT OUTER JOIN', "mt.meta_record_id = m.prodcat_id and mt.meta_controller = '$controller' and mt.meta_action = '$action' ", 'mt');
-        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = ".$this->adminLangId, 'mt_l');
+        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = " . $this->adminLangId, 'mt_l');
 
         if (!empty($post['keyword'])) {
-            $condition=$srch->addCondition('mt.meta_identifier', 'like', '%'.$post['keyword'].'%');
-            $condition->attachCondition('mt_l.meta_title', 'like', '%'.$post['keyword'].'%', 'OR');
-            $condition->attachCondition('pc_l.prodcat_name', 'like', '%'.$post['keyword'].'%', 'OR');
+            $condition = $srch->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('pc_l.prodcat_name', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
 
-        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated']!= '') {
+        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated'] != '') {
             if ($post['hasTagsAssociated'] == applicationConstants::YES) {
                 $srch->addCondition('mt.meta_id', 'is not', 'mysql_func_NULL', 'AND', true);
             } elseif ($post['hasTagsAssociated'] == applicationConstants::NO) {
@@ -725,9 +716,9 @@ class MetaTagsController extends AdminBaseController
             }
         }
 
-        $srch->addMultipleFields(array('meta_id','meta_identifier','meta_title','prodcat_id','IF(prodcat_name is NULL or prodcat_name = "" ,prodcat_identifier, prodcat_name) as prodcat_name'));
+        $srch->addMultipleFields(array('meta_id', 'meta_identifier', 'meta_title', 'prodcat_id', 'IF(prodcat_name is NULL or prodcat_name = "" ,prodcat_identifier, prodcat_name) as prodcat_name'));
         $srch->addCondition('prodcat_deleted', '=', applicationConstants::NO);
-        $page = (empty($page) || $page <= 0)?1:$page;
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -747,64 +738,144 @@ class MetaTagsController extends AdminBaseController
         $this->_template->render(false, false, 'meta-tags/category-detail.php');
     }
 
-    private function renderTemplateForAdvanced()
+    // private function renderTemplateForOthers()
+    // {
+    //     $data = FatApp::getPostedData();
+    //     $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
+    //     $searchForm = $this->getSearchForm($data['metaType']);
+    //     $post = $searchForm->getFormDataFromArray($data);
+
+    //     $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_STRING);
+    //     $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+
+    //     $srch = new MetaTagSearch($this->adminLangId);
+    //     $srch->addCondition('mt.meta_advanced', '=', 1);
+    //     $srch->addFld('mt.* , mt_l.meta_title');
+    //     if (!empty($post['keyword'])) {
+    //         $condition = $srch->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+    //         $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+    //     }
+
+    //     $page = (empty($page) || $page <= 0) ? 1 : $page;
+    //     $page = FatUtility::int($page);
+    //     $srch->setPageNumber($page);
+    //     $srch->setPageSize($pagesize);
+
+    //     $rs = $srch->getResultSet();
+    //     $records = array();
+
+    //     if ($rs) {
+    //         $records = FatApp::getDb()->fetchAll($rs);
+    //     }
+    //     $this->set("arr_listing", $records);
+    //     $this->set('pageCount', $srch->pages());
+    //     $this->set('recordCount', $srch->recordCount());
+    //     $this->set('page', $page);
+    //     $this->set('pageSize', $pagesize);
+    //     $this->set('postedData', $post);
+    //     $this->_template->render(false, false, 'meta-tags/default-template.php');
+    // }
+
+    private function renderTemplateForTeachers()
     {
+        $records = array();
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0)?1:$data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
-
-        $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_STRING);
+        $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_INT, -2);
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $langId = $this->adminLangId;
 
         $srch = new MetaTagSearch($this->adminLangId);
-        $srch->addCondition('mt.meta_advanced', '=', 1);
-        $srch->addFld('mt.* , mt_l.meta_title');
+        $srch = User::getSearchObject();
+        $srch->joinTable(MetaTag::DB_TBL, 'LEFT OUTER JOIN', "mt.meta_record_id = u.user_url_name and mt.meta_type=" . MetaTag::META_GROUP_TEACHERS, 'mt');
+        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = " . $langId, 'mt_l');
+        $srch->addCondition('u.user_is_teacher', '=', 1);
+        $srch->addMultipleFields(array('meta_id', 'meta_identifier', 'meta_title', 'CONCAT(user_first_name, " ", user_last_name) as teacherFullName', 'u.user_id'));
         if (!empty($post['keyword'])) {
-            $condition=$srch->addCondition('mt.meta_identifier', 'like', '%'.$post['keyword'].'%');
-            $condition->attachCondition('mt_l.meta_title', 'like', '%'.$post['keyword'].'%', 'OR');
+            $condition = $srch->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('u.user_first_name', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('u.user_last_name', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
 
-        $page = (empty($page) || $page <= 0)?1:$page;
+        $srch->addCondition('u.user_url_name', '!=', '');
+
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-
         $rs = $srch->getResultSet();
-        $records = array();
 
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
         }
-        $this->set("arr_listing", $records);
+
+        //CommonHelper::printArray($records, true);
+        $this->set('arr_listing', $records);
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
         $this->set('page', $page);
         $this->set('pageSize', $pagesize);
         $this->set('postedData', $post);
-        $this->_template->render(false, false, 'meta-tags/default-template.php');
+        $this->_template->render(false, false, 'meta-tags/advanced-meta-tags-teacher.php');
     }
 
-    private function renderTemplateForDefaultMetaTag()
+    private function renderTemplateForGrpClasses()
     {
+        $records = array();
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0)?1:$data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
-
-        $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_STRING);
-
+        $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_INT, -2);
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $langId = $this->adminLangId;
+        $getMetaTagsAdvanced = MetaTag::getMetaTagsAdvancedGrpClasses($langId);
 
+        if (!empty($post['keyword'])) {
+            $condition = $getMetaTagsAdvanced->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('gcls.grpcls_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+        }
+
+        $getMetaTagsAdvanced->addCondition('gcls.grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+        $getMetaTagsAdvanced->addCondition('gcls.grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
+
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
+        $page = FatUtility::int($page);
+        $getMetaTagsAdvanced->setPageNumber($page);
+        $getMetaTagsAdvanced->setPageSize($pagesize);
+        $rs = $getMetaTagsAdvanced->getResultSet();
+        if ($rs) {
+            $records = FatApp::getDb()->fetchAll($rs);
+        }
+        $this->set('arr_listing', $records);
+        $this->set('pageCount', $getMetaTagsAdvanced->pages());
+        $this->set('recordCount', $getMetaTagsAdvanced->recordCount());
+        $this->set('page', $page);
+        $this->set('pageSize', $pagesize);
+        $this->set('postedData', $post);
+        $this->_template->render(false, false, 'meta-tags/advanced-meta-tags-grp-classes.php');
+    }
+
+    private function renderTemplateForDefaultMetaTag($checkRecordId = false)
+    {
+        $data = FatApp::getPostedData();
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
+        $searchForm = $this->getSearchForm($data['metaType']);
+        $post = $searchForm->getFormDataFromArray($data);
+        $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_INT);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch = new MetaTagSearch($this->adminLangId);
-        $srch->addCondition('mt.meta_controller', '=', '');
-        $srch->addCondition('mt.meta_action', '=', '');
-        $srch->addCondition('mt.meta_record_id', '=', 0);
-        $srch->addCondition('mt.meta_subrecord_id', '=', 0);
-        $srch->addCondition('mt.meta_default', '=', 1);
+        if ($checkRecordId) {
+            $srch->addCondition('mt.meta_record_id', '=', 0);
+            $srch->addCondition('mt.meta_subrecord_id', '=', 0);
+        }
+        $srch->addCondition('mt.meta_type', '=', $metaType);
         $srch->addFld('mt.* , mt_l.meta_title');
 
-        $page = (empty($page) || $page <= 0)?1:$page;
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -825,7 +896,7 @@ class MetaTagsController extends AdminBaseController
     private function renderTemplateForMetaType()
     {
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0)?1:$data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
 
@@ -843,7 +914,7 @@ class MetaTagsController extends AdminBaseController
 
         $srch->addFld('mt.* , mt_l.meta_title');
 
-        $page = (empty($page) || $page <= 0)?1:$page;
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -859,5 +930,118 @@ class MetaTagsController extends AdminBaseController
         $this->set('pageSize', $pagesize);
         $this->set('postedData', $post);
         $this->_template->render(false, false, 'meta-tags/default-template.php');
+    }
+
+    private function renderTemplateForBlogCategories()
+    {
+
+        $records = array();
+        $data = FatApp::getPostedData();
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
+        $searchForm = $this->getSearchForm($data['metaType']);
+        $post = $searchForm->getFormDataFromArray($data);
+        $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_INT, -2);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $srch = BlogPostCategory::getSearchObject(false, $this->adminLangId, false);
+        $srch->joinTable(MetaTag::DB_TBL, 'LEFT OUTER JOIN', 'mt.meta_record_id=bpc.bpcategory_id and mt.meta_type=' . MetaTag::META_GROUP_BLOG_CATEGORIES, 'mt');
+        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', 'mt.meta_id=mt_l.metalang_meta_id and mt_l.metalang_lang_id=' . $this->adminLangId, 'mt_l');
+        if (!empty($post['keyword'])) {
+            $condition = $getMetaTagsAdvanced->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('bpc.bpcategory_identifier', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('bpc_l.bpcategory_name', 'like', '%' . $post['keyword'] . '%', 'OR');
+        }
+
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
+        $page = FatUtility::int($page);
+        $srch->setPageNumber($page);
+        $srch->setPageSize($pagesize);
+        $rs = $srch->getResultSet();
+        if ($rs) {
+            $records = FatApp::getDb()->fetchAll($rs);
+        }
+
+        $this->set('arr_listing', $records);
+        $this->set('pageCount', $srch->pages());
+        $this->set('recordCount', $srch->recordCount());
+        $this->set('page', $page);
+        $this->set('pageSize', $pagesize);
+        $this->set('postedData', $post);
+        $this->_template->render(false, false, 'meta-tags/meta-tags-blog-post-categories.php');
+    }
+
+    private function renderTemplateForBlogPosts()
+    {
+        $records = array();
+        $data = FatApp::getPostedData();
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
+        $searchForm = $this->getSearchForm($data['metaType']);
+        $post = $searchForm->getFormDataFromArray($data);
+        $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_INT, -2);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $srch = BlogPost::getSearchObject($this->adminLangId, true, true);
+        $srch->joinTable(MetaTag::DB_TBL, 'LEFT OUTER JOIN', 'mt.meta_record_id=bp.post_id and mt.meta_type=' . MetaTag::META_GROUP_BLOG_POSTS, 'mt');
+        $srch->joinTable(MetaTag::DB_LANG_TBL, 'LEFT OUTER JOIN', 'mt.meta_id=mt_l.metalang_meta_id and mt_l.metalang_lang_id=' . $this->adminLangId, 'mt_l');
+        if (!empty($post['keyword'])) {
+            $condition = $getMetaTagsAdvanced->addCondition('mt.meta_identifier', 'like', '%' . $post['keyword'] . '%');
+            $condition->attachCondition('mt_l.meta_title', 'like', '%' . $post['keyword'] . '%', 'OR');
+            $condition->attachCondition('bp.post_identifier', 'like', '%' . $post['keyword'] . '%', 'OR');
+        }
+        $page = (empty($page) || $page <= 0) ? 1 : $page;
+        $page = FatUtility::int($page);
+        $srch->setPageNumber($page);
+        $srch->setPageSize($pagesize);
+        $rs = $srch->getResultSet();
+        if ($rs) {
+            $records = FatApp::getDb()->fetchAll($rs);
+        }
+
+        $this->set('arr_listing', $records);
+        $this->set('pageCount', $srch->pages());
+        $this->set('recordCount', $srch->recordCount());
+        $this->set('page', $page);
+        $this->set('pageSize', $pagesize);
+        $this->set('postedData', $post);
+        $this->_template->render(false, false, 'meta-tags/meta-tags-blog-post.php');
+    }
+
+    private function getUrlComponents($metaType, &$post)
+    {
+        $metaId = FatUtility::int($post['meta_id']);
+
+        $tabsArr = MetaTag::getTabsArr();
+        switch ($metaType) {
+            case MetaTag::META_GROUP_TEACHERS:
+                $userDetail = User::getAttributesById($post['meta_record_id']);
+
+                if (!$userDetail) {
+                    return false;
+                }
+                $post['meta_controller'] = $tabsArr[$metaType]['controller'];
+                $post['meta_action'] = $tabsArr[$metaType]['action'];
+                $post['meta_record_id'] = $userDetail['user_url_name'];
+                if ($metaId == 0) {
+                    $post['meta_subrecord_id'] = 0;
+                }
+                break;
+            case MetaTag::META_GROUP_OTHERS:
+                $post['meta_controller'] = $post['meta_action'] = '';
+                $post['meta_record_id'] = $post['meta_subrecord_id'] = 0;
+                $componentsNameArray = ['meta_controller', 'meta_action', 'meta_record_id', 'meta_subrecord_id'];
+                $urlComponents = explode("/", $post['meta_url']);
+                $urlComponents = array_combine(array_slice($componentsNameArray, 0, count($urlComponents)), $urlComponents);
+                $post = array_merge($post, $urlComponents);
+                break;
+
+            default;
+                $post['meta_controller'] = $tabsArr[$metaType]['controller'];
+                $post['meta_action'] = $tabsArr[$metaType]['action'];
+                if ($metaId == 0) {
+                    $post['meta_subrecord_id'] = 0;
+                }
+                break;
+        }
+
+        return true;
     }
 }

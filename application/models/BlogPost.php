@@ -3,10 +3,10 @@ class BlogPost extends MyAppModel
 {
     const DB_TBL = 'tbl_blog_post';
     const DB_TBL_PREFIX = 'post_';
-    const DB_LANG_TBL ='tbl_blog_post_lang';
-    const DB_LANG_TBL_PREFIX ='postlang_';
-    const DB_POST_TO_CAT_TBL ='tbl_blog_post_to_category';
-    const DB_POST_TO_CAT_TBL_PREFIX ='ptc_';
+    const DB_LANG_TBL = 'tbl_blog_post_lang';
+    const DB_LANG_TBL_PREFIX = 'postlang_';
+    const DB_POST_TO_CAT_TBL = 'tbl_blog_post_to_category';
+    const DB_POST_TO_CAT_TBL_PREFIX = 'ptc_';
     private $db;
 
     public function __construct($id = 0)
@@ -24,18 +24,18 @@ class BlogPost extends MyAppModel
             $srch->joinTable(
                 static::DB_LANG_TBL,
                 'LEFT OUTER JOIN',
-                'bp_l.'. static::DB_LANG_TBL_PREFIX.'post_id = bp.'. static::tblFld('id').' and
-			bp_l.'. static::DB_LANG_TBL_PREFIX.'lang_id = '.$langId,
+                'bp_l.' . static::DB_LANG_TBL_PREFIX . 'post_id = bp.' . static::tblFld('id') . ' and
+			bp_l.' . static::DB_LANG_TBL_PREFIX . 'lang_id = ' . $langId,
                 'bp_l'
             );
         }
         if ($joinCategory) {
-            $srch->joinTable(static::DB_POST_TO_CAT_TBL, 'LEFT OUTER JOIN', 'bptc.'.static::DB_POST_TO_CAT_TBL_PREFIX .'post_id = bp.'. static::tblFld('id'), 'bptc');
+            $srch->joinTable(static::DB_POST_TO_CAT_TBL, 'LEFT OUTER JOIN', 'bptc.' . static::DB_POST_TO_CAT_TBL_PREFIX . 'post_id = bp.' . static::tblFld('id'), 'bptc');
 
-            $srch->joinTable(BlogPostCategory::DB_TBL, 'LEFT OUTER JOIN', 'bptc.'. static::DB_POST_TO_CAT_TBL_PREFIX .'bpcategory_id = bpc.'. BlogPostCategory::tblFld('id') .' and bpc.bpcategory_deleted =0', 'bpc');
+            $srch->joinTable(BlogPostCategory::DB_TBL, 'LEFT OUTER JOIN', 'bptc.' . static::DB_POST_TO_CAT_TBL_PREFIX . 'bpcategory_id = bpc.' . BlogPostCategory::tblFld('id') . ' and bpc.bpcategory_deleted =0', 'bpc');
 
             if ($langId > 0) {
-                $srch->joinTable(BlogPostCategory::DB_TBL_LANG, 'LEFT OUTER JOIN', 'bpc_l.'. BlogPostCategory::DB_LANG_TBL_PREFIX .'bpcategory_id = bpc.'. BlogPostCategory::tblFld('id') .' and bpc_l.'. BlogPostCategory::DB_LANG_TBL_PREFIX .'lang_id = '. $langId, 'bpc_l');
+                $srch->joinTable(BlogPostCategory::DB_TBL_LANG, 'LEFT OUTER JOIN', 'bpc_l.' . BlogPostCategory::DB_LANG_TBL_PREFIX . 'bpcategory_id = bpc.' . BlogPostCategory::tblFld('id') . ' and bpc_l.' . BlogPostCategory::DB_LANG_TBL_PREFIX . 'lang_id = ' . $langId, 'bpc_l');
             }
         }
         if ($categoryActive) {
@@ -75,8 +75,8 @@ class BlogPost extends MyAppModel
     public function getPostCategories($post_id)
     {
         $srch = new SearchBase(static::DB_POST_TO_CAT_TBL, 'ptc');
-        $srch->addCondition(static::DB_POST_TO_CAT_TBL_PREFIX .'post_id', '=', $post_id);
-        $srch->joinTable(BlogPostCategory::DB_TBL, 'INNER JOIN', BlogPostCategory::DB_TBL_PREFIX .'id = ptc.'. static::DB_POST_TO_CAT_TBL_PREFIX .'bpcategory_id', 'cat');
+        $srch->addCondition(static::DB_POST_TO_CAT_TBL_PREFIX . 'post_id', '=', $post_id);
+        $srch->joinTable(BlogPostCategory::DB_TBL, 'INNER JOIN', BlogPostCategory::DB_TBL_PREFIX . 'id = ptc.' . static::DB_POST_TO_CAT_TBL_PREFIX . 'bpcategory_id', 'cat');
         $srch->addMultipleFields(array('bpcategory_id'));
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs);
@@ -92,7 +92,7 @@ class BlogPost extends MyAppModel
             $this->error = Label::getLabel('MSG_Invalid_Request!', $this->commonLangId);
             return false;
         }
-        FatApp::getDb()->deleteRecords(static::DB_POST_TO_CAT_TBL, array('smt' => static::DB_POST_TO_CAT_TBL_PREFIX .'post_id = ?', 'vals' => array($post_id)));
+        FatApp::getDb()->deleteRecords(static::DB_POST_TO_CAT_TBL, array('smt' => static::DB_POST_TO_CAT_TBL_PREFIX . 'post_id = ?', 'vals' => array($post_id)));
         if (empty($categories)) {
             return true;
         }
@@ -120,7 +120,7 @@ class BlogPost extends MyAppModel
             $srch->addFld('post_id');
             $rs = $srch->getResultSet();
             $row = FatApp::getDb()->fetch($rs);
-            if (!empty($row) && $row['post_id']==$post_id) {
+            if (!empty($row) && $row['post_id'] == $post_id) {
                 return true;
             }
         }
