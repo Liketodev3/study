@@ -15,12 +15,11 @@ if( $controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
 <link rel="apple-touch-icon" sizes="114x114" href="<?php echo CONF_WEBROOT_URL; ?>images/apple-touch-icon-114x114.png">
 
 <?php if(!empty($canonicalUrl)) { ?>
-	<link rel="canonical" href="<?php echo $canonicalUrl;?>" />
+<link rel="canonical" href="<?php echo $canonicalUrl;?>" />
 <?php } ?>
 
 
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<link rel="canonical" href="<?php echo $canonicalUrl;?>" />
 
 <?php
 $jsVariables = CommonHelper::htmlEntitiesDecode($jsVariables);

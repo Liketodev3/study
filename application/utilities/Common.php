@@ -324,6 +324,25 @@ class Common
 
     public static function getUriFromPath($path)
     {
-        return self::doesStringStartWith($path, CONF_WEBROOT_URL) ? substr($path, strlen(CONF_WEBROOT_URL)) : ltrim($path, '/');
+        return self::doesStringStartWith($path, CONF_WEBROOT_URL) ? rtrim(substr($path, strlen(CONF_WEBROOT_URL)), '/') : ltrim($path, '/');
+    }
+
+    public static function getCanonicalUrl()
+    {
+
+        $url = $_SERVER['REQUEST_URI'];
+        $url_components = parse_url($url);
+        $path = $url_components['path'];
+        $uri = Common::getUriFromPath($path);
+
+        $row = UrlRewrite::getDataByOriginalUrl($uri);
+
+        $rootUrl = $_SERVER['REQUEST_SCHEME'] . '://';
+        if(!empty($_SERVER['HTTP_HOST'])){
+            $rootUrl .= $_SERVER['HTTP_HOST'];
+        } else{
+            $rootUrl .= $_SERVER['SERVER_NAME'];
+        }
+        return $rootUrl . CONF_WEBROOT_URL.(!empty($row) ? $row['urlrewrite_custom'] : $uri);
     }
 }
