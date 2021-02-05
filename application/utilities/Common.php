@@ -336,6 +336,13 @@ class Common
         $uri = Common::getUriFromPath($path);
 
         $row = UrlRewrite::getDataByOriginalUrl($uri);
-        return CONF_WEBROOT_URL.(!empty($row) ? $row['urlrewrite_custom'] : $uri);
+
+        $rootUrl = $_SERVER['REQUEST_SCHEME'] . '://';
+        if(!empty($_SERVER['HTTP_HOST'])){
+            $rootUrl .= $_SERVER['HTTP_HOST'];
+        } else{
+            $rootUrl .= $_SERVER['SERVER_NAME'];
+        }
+        return $rootUrl . CONF_WEBROOT_URL.(!empty($row) ? $row['urlrewrite_custom'] : $uri);
     }
 }
