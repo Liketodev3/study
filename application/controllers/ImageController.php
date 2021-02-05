@@ -391,18 +391,24 @@ class ImageController extends FatController
                 $w = 200;
                 $h = 100;
                 break;
+            case 'MOBILE':
+                $w = 500;
+                $h = 208;
+                break;
+            case 'TABLET':
+                $w = 1000;
+                $h = 416;
+                break;
             case 'DESKTOP':
-                $w = 1903;
-                $h = 749;
-                AttachedFile::displayImage($image_name, $w, $h, $default_image);
-                return;
+                $w = 1920;
+                $h = 800;
                 break;
             default:
-                $w = 2000;
-                $h = 360;
+                $w = 1920;
+                $h = 800;
                 break;
             }
-            AttachedFile::displayImage($image_name, $w, $h, $default_image,'', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
+            AttachedFile::displayImage($image_name, $w, $h, $default_image,'', ImageResize::IMG_RESIZE_EXTRA_CROP, false, true);
         } else {
             AttachedFile::displayOriginalImage($image_name, $default_image, '',  true);
         }
