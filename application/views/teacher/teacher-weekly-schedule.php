@@ -190,7 +190,7 @@ $weekDayName =  CommonHelper::dayNames();
    				$('#w_calendar').fullCalendar('unselect');
    				return false;
    			}
-   			if(moment(start).format('d')!=moment(end).format('d') ) {
+   			if(moment(start).format('d') != moment(end).format('d') && moment(end).format('YYYY-MM-DD HH:mm')!=moment(start).add(1, 'days').format('YYYY-MM-DD 00:00') ) {
    				$('#w_calendar').fullCalendar('unselect');
    				return false;
    			}

@@ -171,7 +171,7 @@ $weekDayName =  CommonHelper::dayNames();
         columnHeaderFormat :"ddd",
         timezone: '<?php echo $user_timezone; ?>',
         select: function (start, end, jsEvent, view ) {
-            if(moment(start).format('d') != moment(end).format('d') ) {
+            if(moment(start).format('d') != moment(end).format('d') && moment(end).format('YYYY-MM-DD HH:mm')!=moment(start).add(1, 'days').format('YYYY-MM-DD 00:00') ) {
                 $('#ga_calendar').fullCalendar('unselect');
                 return false;
             }

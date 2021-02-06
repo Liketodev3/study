@@ -18,6 +18,7 @@ Hotfixes:
     Bug-#048752-Fix issues with multi lingual functionality 
     Bug-#48675-validate item per page field in settings
     Bug-#049348-set homepage slide dimensions
+    Bug-#049262: Fixed selection of Teacher availability at 11:30
 
 ---------------------
 
