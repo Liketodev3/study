@@ -19,7 +19,7 @@ Hotfixes:
     Bug-#48675-validate item per page field in settings
     Bug-#049348-set homepage slide dimensions
     Bug-#049262: Fixed selection of Teacher availability at 11:30
-
+    Bug-#049259-System should notifictions when the student or teacher cancel the lesson
 ---------------------
 
 Release Number: RV-2.1

@@ -14,6 +14,8 @@ class UserNotifications extends FatModel
     const NOTICATION_FOR_ISSUE_RESOLVE = 6;
     const NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER = 7;
     const NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_LEARNER = 8;
+    const NOTICATION_FOR_CANCEL_LESSON_BY_TEACHER = 9;
+    const NOTICATION_FOR_CANCEL_LESSON_BY_LEARNER = 10;
 
     private $userId = 0;
     private $recordId = 0;
@@ -785,6 +787,26 @@ class UserNotifications extends FatModel
 
         $description = sprintf(Label::getLabel("LABEL_LESSON_STATUS_UPDATED_TO_%s", CommonHelper::getLangId()), $lessonStatusArray[$status]);
 
+        if (!$this->addNotification($title, $description)) {
+            return false;
+        }
+        return true;
+    }
+
+    public function cancelLessonNotification(int $lessonId, int $userId, string $userFullName, int $updateFor, string $comment = '')
+    {
+        if ($updateFor == USER::USER_TYPE_LEANER) {
+            $this->type = self::NOTICATION_FOR_CANCEL_LESSON_BY_TEACHER;
+        } else {
+            $this->type = self::NOTICATION_FOR_CANCEL_LESSON_BY_LEARNER;
+        }
+
+        $this->recordId = $lessonId;
+        $this->subRecordId = $userId;
+        $title = Label::getLabel("LABEL_LESSON_CANCELED", CommonHelper::getLangId());
+        $label = Label::getLabel("LBL_LESSON_{lesson-id}_CANCELED_BY_{user-full-name}_Comment:{comment}", CommonHelper::getLangId());
+        $description = str_replace(['{lesson-id}','{user-full-name}','{comment}'], [$lessonId, $userFullName, $comment],  $label);
+    
         if (!$this->addNotification($title, $description)) {
             return false;
         }

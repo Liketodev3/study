@@ -113,6 +113,7 @@ class ScheduledLessonDetails extends MyAppModel
                 'op.op_lpackage_is_free_trial',
                 'sldetail_learner_status',
                 'ul.user_id as learnerId',
+                'ut.user_id as teacherId',
                 'ul.user_first_name as learnerFname',
                 'ul.user_last_name as learnerLname',
                 'lcred.credential_email as learnerEmailId',
