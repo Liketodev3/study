@@ -1,5 +1,16 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number:
+
+Release Date:
+
+Hotfixes:
+    Bug-#049262: Fixed selection of Teacher availability at 11:30
+    Bug-#049259-System should notifictions when the student or teacher cancel the lesson
+    Task-78843-Upgrade zoom version - 1.8.5
+
+------------------------------------------------------------
+
 Release Number: TV-2.7.12.20210206
 
 Release Date: 2021/02/06
@@ -18,8 +29,7 @@ Hotfixes:
     Bug-#048752-Fix issues with multi lingual functionality 
     Bug-#48675-validate item per page field in settings
     Bug-#049348-set homepage slide dimensions
-    Bug-#049262: Fixed selection of Teacher availability at 11:30
-    Bug-#049259-System should notifictions when the student or teacher cancel the lesson
+
 ---------------------
 
 Release Number: RV-2.1
