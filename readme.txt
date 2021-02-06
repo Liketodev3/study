@@ -6,6 +6,7 @@ Enhancements:
     *Task-80811: Frontend Directory Changes
     *Task-81638: Upgrade zoom version to 1.9.0
     *Task-81706: Paystack Payment gateway integration
+    *Task-81790: Admin change timezone
 
 Bug Fixes:
     *Bug-#047837: Fixed slider images
