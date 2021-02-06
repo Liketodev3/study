@@ -3,7 +3,8 @@
 $arr_flds = array(
 	'listserial' => Label::getLabel('LBL_Sr._No', $adminLangId),
 	'group_class' => Label::getLabel('LBL_Group_Class', $adminLangId),
-	'meta_title' => Label::getLabel('LBL_Title', $adminLangId),
+	'teacher_name' => Label::getLabel('LBL_Teacher_Name', $adminLangId),
+	'meta_title' => Label::getLabel('LBL_Meta_Title', $adminLangId),
 	'action' => Label::getLabel('LBL_Action', $adminLangId),
 );
 $tbl = new HtmlElement('table', array('width' => '100%', 'class' => 'table table-responsive table--hovered'));
@@ -47,20 +48,19 @@ foreach ($arr_listing as $sn => $row) {
 						Label::getLabel('LBL_Edit', $adminLangId),
 						true
 					);
-					if ($metaType == MetaTag::META_GROUP_OTHERS) {
-						//$li = $ul->appendElement("li");
-						$innerLiDelete = $innerUl->appendElement('li');
 
-						$innerLiDelete->appendElement(
-							'a',
-							array(
-								'href' => 'javascript:void(0)', 'class' => 'button small green',
-								'title' => Label::getLabel('LBL_Delete', $adminLangId), "onclick" => "deleteRecord($metaId)"
-							),
-							Label::getLabel('LBL_Delete', $adminLangId),
-							true
-						);
-					}
+					//$li = $ul->appendElement("li");
+					$innerLiDelete = $innerUl->appendElement('li');
+
+					$innerLiDelete->appendElement(
+						'a',
+						array(
+							'href' => 'javascript:void(0)', 'class' => 'button small green',
+							'title' => Label::getLabel('LBL_Delete', $adminLangId), "onclick" => "deleteRecord($metaId)"
+						),
+						Label::getLabel('LBL_Delete', $adminLangId),
+						true
+					);
 				}
 				break;
 			default:

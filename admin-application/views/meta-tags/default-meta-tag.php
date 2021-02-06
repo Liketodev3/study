@@ -2,12 +2,12 @@
 <?php
 $arr_flds = array(
 	'listserial' => Label::getLabel('LBL_Sr._No', $adminLangId),
-	'url' => Label::getLabel('LBL_Original_URL', $adminLangId),
+	'url' => Label::getLabel('LBL_Slug', $adminLangId),
 	'meta_identifier' => Label::getLabel('LBL_Identifier', $adminLangId),
 	'meta_title' => Label::getLabel('LBL_Title', $adminLangId),
 	'action' => Label::getLabel('LBL_Action', $adminLangId),
 );
-if ($metaType != MetaTag::META_GROUP_OTHERS) {
+if ($metaType != MetaTag::META_GROUP_OTHER) {
 	unset($arr_flds['url']);
 }
 $tbl = new HtmlElement('table', array('width' => '100%', 'class' => 'table table-responsive'));
@@ -52,6 +52,17 @@ foreach ($arr_listing as $sn => $row) {
 						Label::getLabel('LBL_Edit', $adminLangId),
 						true
 					);
+					if ($metaType == MetaTag::META_GROUP_OTHER) {
+						$innerLiEdit->appendElement(
+							'a',
+							array(
+								'href' => 'javascript:void(0)', 'class' => 'button small green',
+								'title' => Label::getLabel('LBL_Edit', $adminLangId), "onclick" => "deleteRecord($metaId)"
+							),
+							Label::getLabel('LBL_Delete', $adminLangId),
+							true
+						);
+					}
 				}
 				break;
 			default:

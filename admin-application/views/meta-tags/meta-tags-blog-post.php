@@ -48,20 +48,19 @@ foreach ($arr_listing as $sn => $row) {
 						Label::getLabel('LBL_Edit', $adminLangId),
 						true
 					);
-					if ($metaType == MetaTag::META_GROUP_OTHERS) {
-						//$li = $ul->appendElement("li");
-						$innerLiDelete = $innerUl->appendElement('li');
 
-						$innerLiDelete->appendElement(
-							'a',
-							array(
-								'href' => 'javascript:void(0)', 'class' => 'button small green',
-								'title' => Label::getLabel('LBL_Delete', $adminLangId), "onclick" => "deleteRecord($metaId)"
-							),
-							Label::getLabel('LBL_Delete', $adminLangId),
-							true
-						);
-					}
+					//$li = $ul->appendElement("li");
+					$innerLiDelete = $innerUl->appendElement('li');
+
+					$innerLiDelete->appendElement(
+						'a',
+						array(
+							'href' => 'javascript:void(0)', 'class' => 'button small green',
+							'title' => Label::getLabel('LBL_Delete', $adminLangId), "onclick" => "deleteRecord($metaId)"
+						),
+						Label::getLabel('LBL_Delete', $adminLangId),
+						true
+					);
 				}
 				break;
 			default:
