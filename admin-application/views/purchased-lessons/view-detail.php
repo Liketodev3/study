@@ -1,4 +1,6 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+$adminTimezone = Admin::getAdminTimeZone();
+?>
 <section class="section">
 	<div class="sectionhead">
 		<h4><?php echo Label::getLabel('LBL_View_Lesson_Detail',$adminLangId); ?></h4>
@@ -55,7 +57,7 @@
 											<?php echo Label::getLabel('LBL_Session_Date',$adminLangId); ?>
 										</label> :
 										<strong>
-											<?php echo ($lessonRow['slesson_date'] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : FatDate::format($lessonRow['slesson_date']); ?>
+											<?php echo ($lessonRow['slesson_date'] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : MyDate::format($lessonRow['slesson_date']." ".$lessonRow['slesson_start_time'], false, true, $adminTimezone); ?>
 										</strong>
 									</div>
 								</div>
@@ -71,7 +73,7 @@
 										</label>
 										:
 										<strong>
-											<?php echo ($lessonRow['slesson_start_time'] == "00:00:00" && $lessonRow['slesson_date'] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : date('h:i A',strtotime($lessonRow['slesson_start_time'])); ?>
+											<?php echo ($lessonRow['slesson_start_time'] == "00:00:00" && $lessonRow['slesson_date'] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lessonRow['slesson_date']." ".$lessonRow['slesson_start_time'], true, $adminTimezone); ?>
 										</strong>
 									</div>
 								</div>
@@ -87,7 +89,7 @@
 										</label>
 										:
 										<strong>
-											<?php echo ($lessonRow['slesson_end_time'] == "00:00:00" && $lessonRow['slesson_date'] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : date('h:i A',strtotime($lessonRow['slesson_end_time'])) ; ?>
+											<?php echo ($lessonRow['slesson_end_time'] == "00:00:00" && $lessonRow['slesson_date'] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lessonRow['slesson_end_date']." ".$lessonRow['slesson_end_time'], true, $adminTimezone) ; ?>
 										</strong>
 									</div>
 								</div>

@@ -294,6 +294,7 @@ class PurchasedLessonsController extends AdminBaseController
             /*'ul.user_timezone as learnerTimeZone',*/
             'IFNULL(learnercountry_lang.country_name, learnercountry.country_code) as learnerCountryName',
             'slns.slesson_date',
+            'slns.slesson_end_date',
             'slns.slesson_start_time',
             'slns.slesson_end_time',
             'slns.slesson_status',

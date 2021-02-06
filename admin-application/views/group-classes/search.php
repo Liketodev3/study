@@ -35,7 +35,7 @@ foreach ($classes as $sn=>$row){
 				$td->appendElement('plaintext', array(), CommonHelper::displayMoneyFormat($row[$key], true, true) );
 			break;
 			case 'grpcls_added_on': case 'grpcls_start_datetime': case 'grpcls_end_datetime':
-				$td->appendElement('plaintext',array(), MyDate::format($row[$key],true));
+				$td->appendElement('plaintext',array(), MyDate::format($row[$key], true, true, Admin::getAdminTimeZone()));
 			break;
 			case 'grpcls_status':
 				$td->appendElement('plaintext',array(), $classStatusArr[$row[$key]],true);

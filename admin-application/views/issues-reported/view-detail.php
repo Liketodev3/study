@@ -14,7 +14,7 @@ $endedBy = isset(User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_b
 			<tbody>
 			<tr>
                 <td><strong><?php echo Label::getLabel('LBL_Reported_By',$adminLangId); ?>:</strong> <?php echo $lastIssue['reporter_username']; ?><br>
-                    <strong><?php echo Label::getLabel('LBL_Reported_Time',$adminLangId); ?>:</strong> <?php echo $lastIssue['issrep_added_on']; ?><br>
+                    <strong><?php echo Label::getLabel('LBL_Reported_Time',$adminLangId); ?>:</strong> <?php echo MyDate::format($lastIssue['issrep_added_on'], true, true, Admin::getAdminTimeZone()); ?><br>
                     <strong><?php echo Label::getLabel('LBL_Issue_Status',$adminLangId); ?>:</strong> <?php echo $statusArr[$lastIssue['issrep_status']]; ?>
 				</td>
 				<td>
@@ -23,7 +23,7 @@ $endedBy = isset(User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_b
                     <?php foreach ( $issueDetail as $details ) {
                             $_reasonIds = explode(',', $details['issrep_issues_to_report']);
                             echo $details['issrep_comment'] .'<br />';
-                            echo '<strong>Date: '. date('Y-m-d H:i A', strtotime( $details['issrep_added_on'] )) .'</strong> <br /> <span>';
+                            echo '<strong>Date: '. MyDate::format( $details['issrep_added_on'], true, true, Admin::getAdminTimeZone()) .'</strong> <br /> <span>';
                             echo '<strong>Options:</strong> ';
                             foreach( $_reasonIds as $_ids ) {
                                 echo $issues_options[$_ids]. '<br />';
@@ -40,7 +40,7 @@ $endedBy = isset(User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_b
 						foreach ( $issueDetail as $details ) {
                             echo $details['issrep_resolve_comments'] .'<br />';
 							$_reasonIds = explode(',', $details['issrep_issues_resolve']);
-							echo 'Date: <strong>'. date('Y-m-d H:i A', strtotime( $details['issrep_updated_on'] )) .'</strong> <br /> <span>';
+							echo 'Date: <strong>'. MyDate::format( $details['issrep_updated_on'], true, true, Admin::getAdminTimeZone()) .'</strong> <br /> <span>';
 							echo '<strong>Options:</strong> ';
                             foreach( $_reasonIds as $_ids ) {
 								echo $issues_options[$_ids]. '<br />';
@@ -57,7 +57,7 @@ $endedBy = isset(User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_b
 					<?php
 						foreach ( $issueDetail as $details ) {
 							echo IssuesReported::getResolveTypeArray()[$details['issrep_issues_resolve_type']] .'<br />';
-							echo '<strong>Date:'. date('Y-m-d H:i A', strtotime( $details['issrep_updated_on'] )) .'</strong><br> ';
+							echo '<strong>Date:'. MyDate::format($details['issrep_updated_on'], true, true, Admin::getAdminTimeZone()) .'</strong><br> ';
 						}
 					?>
 
@@ -90,14 +90,14 @@ $endedBy = isset(User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_b
             </tr>
             <tr>
                 <td ><strong><?php echo Label::getLabel('LBL_Teacher_Name',$adminLangId); ?>:</strong>  <?php echo $lastIssue['teacher_username']; ?></td>
-              <td><strong><?php echo Label::getLabel('LBL_Teacher_Join_Time',$adminLangId); ?>:</strong> <?php echo $lastIssue['slesson_teacher_join_time']; ?></td>
-              <td ><strong><?php echo Label::getLabel('LBL_Teacher_End_Time',$adminLangId); ?>:</strong>  <?php echo $lastIssue['slesson_teacher_end_time']; ?></td>
+              <td><strong><?php echo Label::getLabel('LBL_Teacher_Join_Time',$adminLangId); ?>:</strong> <?php echo MyDate::format($lastIssue['slesson_teacher_join_time'], true, true, Admin::getAdminTimeZone()); ?></td>
+              <td ><strong><?php echo Label::getLabel('LBL_Teacher_End_Time',$adminLangId); ?>:</strong>  <?php echo MyDate::format($lastIssue['slesson_teacher_end_time'], true, true, Admin::getAdminTimeZone()); ?></td>
               <td ></td>
             </tr>
             <tr>
               <td ><strong><?php echo Label::getLabel('LBL_Learner_Name',$adminLangId); ?>:</strong>  <?php echo $lastIssue['learner_username']; ?></td>
-              <td ><strong><?php echo Label::getLabel('LBL_Learner_Join_Time',$adminLangId); ?>:</strong>  <?php echo $lastIssue['sldetail_learner_join_time']; ?></td>
-              <td><strong><?php echo Label::getLabel('LBL_Learner_end_Time',$adminLangId); ?>:</strong> <?php echo $lastIssue['sldetail_learner_end_time']; ?></td>
+              <td ><strong><?php echo Label::getLabel('LBL_Learner_Join_Time',$adminLangId); ?>:</strong>  <?php echo MyDate::format($lastIssue['sldetail_learner_join_time'], true, true, Admin::getAdminTimeZone()); ?></td>
+              <td><strong><?php echo Label::getLabel('LBL_Learner_end_Time',$adminLangId); ?>:</strong> <?php echo MyDate::format($lastIssue['sldetail_learner_end_time'], true, true, Admin::getAdminTimeZone()); ?></td>
               <td ></td>
             </tr>
             <?php /*

@@ -57,7 +57,8 @@ foreach ($arr_listing as $sn=>$row){
 				$td->appendElement('plaintext', array(), $str,true);
 			break;
 			case 'user_regdate':
-				$td->appendElement('plaintext',array(),MyDate::format($row[$key],true));
+			case 'user_added_on':
+				$td->appendElement('plaintext',array(), MyDate::format($row[$key], true, true, Admin::getAdminTimeZone()) );
 			break;
 			case 'type':
 				$str = '';

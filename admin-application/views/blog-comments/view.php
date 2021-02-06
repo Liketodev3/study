@@ -18,7 +18,7 @@
 			</dl>
 			<dl class="list">
 				<dt><?php echo Label::getLabel('LBL_Posted_On',$adminLangId); ?></dt>
-				<dd><?php echo FatDate::format($data['bpcomment_added_on']);?></dd>
+				<dd><?php echo MyDate::format($data['bpcomment_added_on'], true, true, Admin::getAdminTimeZone());?></dd>
 			</dl>
 			<dl class="list">
 				<dt><?php echo Label::getLabel('LBL_Blog_Post_Title',$adminLangId); ?></dt>

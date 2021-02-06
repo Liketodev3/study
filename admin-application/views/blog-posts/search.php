@@ -28,10 +28,10 @@ foreach ($arr_listing as $sn=>$row){
 		$td = $tr->appendElement('td');
 		switch ($key){
 			case 'post_published_on':
-				$td->appendElement('plaintext', array(), FatDate::format($row['post_published_on'] , true));
+				$td->appendElement('plaintext', array(), MyDate::format($row['post_published_on'] , true, true, Admin::getAdminTimeZone()));
 			break;
 			case 'post_added_on':
-				$td->appendElement('plaintext', array(), FatDate::format($row['post_added_on'] , true));
+				$td->appendElement('plaintext', array(), MyDate::format($row['post_added_on'] , true, true, Admin::getAdminTimeZone()));
 			break;
 			case 'listserial':
 				$td->appendElement('plaintext', array(), $sr_no);

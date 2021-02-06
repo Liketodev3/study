@@ -28,7 +28,7 @@ foreach ($arr_listing as $sn=>$row){
 				$td->appendElement('plaintext', array(), $sr_no);
 			break;
 			case 'bpcomment_added_on':
-				$td->appendElement('plaintext', array(), FatDate::format($row['bpcomment_added_on'] , true));
+				$td->appendElement('plaintext', array(), MyDate::format($row['bpcomment_added_on'] , true, true, Admin::getAdminTimeZone()));
 			break;
 			case 'bpcomment_author_name':
 				$td->appendElement('plaintext', array(),CommonHelper::displayName($row[$key]), true );

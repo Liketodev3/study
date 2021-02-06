@@ -13,7 +13,9 @@
 	    'slesson_status'=>Label::getLabel('LBL_Status',$adminLangId),
 	    'slesson_change_status'=>Label::getLabel('LBL_Change_Status',$adminLangId),
 	    'action' => Label::getLabel('LBL_Action',$adminLangId),
-	  );
+	);
+
+	$adminTimezone = Admin::getAdminTimeZone();
 
 	$tbl = new HtmlElement('table', array('width'=>'100%', 'class'=>'table table-responsive'));
 
@@ -41,15 +43,15 @@
 					$td->appendElement('plaintext', array(), $sr_no);
 				break;
 				case 'slesson_date':
-				  $date = ($row[$key] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : date('l, F d, Y',strtotime($row[$key]));
+				  $date = ($row[$key] == "0000-00-00") ?  Label::getLabel('LBL_N/A') : MyDate::format($row['slesson_date']." ".$row['slesson_start_time'], false, true, $adminTimezone);
 				  $td->appendElement('plaintext', array(), $date,true);
 				break;
 				case 'slesson_ended_on':
-		          $endTime = ($row[$key] == "0000-00-00 00:00:00") ?  Label::getLabel('LBL_N/A') : date('h:i A',strtotime($row[$key]));
+		          $endTime = ($row[$key] == "0000-00-00 00:00:00") ?  Label::getLabel('LBL_N/A') : MyDate::convertTimeFromSystemToUserTimezone('h:i A', $row['slesson_end_date']." ".$row['slesson_end_time'], true, $adminTimezone);
 		          $td->appendElement('plaintext', array(), $endTime,true);
 		        break;
 				case 'slesson_start_time':
-		          $startTime = ($row[$key] == "00:00:00" && $row['slesson_date'] == "0000-00-00") ?  Label::getLabel("LBL_N/A") : date('h:i A',strtotime($row[$key]));
+		          $startTime = ($row[$key] == "00:00:00" && $row['slesson_date'] == "0000-00-00") ?  Label::getLabel("LBL_N/A") : MyDate::convertTimeFromSystemToUserTimezone('h:i A', $row['slesson_date']." ".$row['slesson_start_time'], true, $adminTimezone);
 		          $td->appendElement('plaintext', array(), $startTime,true);
 		        break;
 				case 'slesson_ended_by':

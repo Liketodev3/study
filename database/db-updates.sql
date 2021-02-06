@@ -209,3 +209,4 @@ INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_
 
 INSERT INTO `tbl_payment_method_settings` (`paysetting_pmethod_id`, `paysetting_key`, `paysetting_value`) VALUES (10, 'secret_key', ''), (10, 'public_key', '');
 
+INSERT INTO `tbl_configurations`(`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ADMIN_TIMEZONE', 'UTC', 0) 

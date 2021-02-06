@@ -9,7 +9,7 @@
         <tr>
           <td ><strong><?php echo Label::getLabel('LBL_Username',$adminLangId); ?>:</strong>  <?php echo $data['user_first_name'].' '.$data['user_last_name']; ?></td>
           <td><strong><?php echo Label::getLabel('LBL_User_Phone',$adminLangId); ?>:</strong> <?php echo $data['user_phone']; ?></td>
-          <td ><strong><?php echo Label::getLabel('LBL_User_Date',$adminLangId); ?>:</strong>  <?php echo $data['user_added_on']; ?></td>
+          <td ><strong><?php echo Label::getLabel('LBL_User_Date',$adminLangId); ?>:</strong>  <?php echo MyDate::format($data['user_added_on'], true, true, Admin::getAdminTimeZone()); ?></td>
         </tr>
         <tr>
           <td><strong><?php echo Label::getLabel('LBL_Email',$adminLangId); ?>:</strong> <?php echo $data['credential_email']; ?></td>

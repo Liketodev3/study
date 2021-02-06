@@ -9,4 +9,9 @@ class Admin extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $userId);
         $this->objMainTableRecord->setSensitiveFields(array());
     }
+
+    public static function getAdminTimeZone()
+    {
+        return FatApp::getConfig('CONF_ADMIN_TIMEZONE', FatUtility::VAR_STRING, date_default_timezone_get());
+    }
 }

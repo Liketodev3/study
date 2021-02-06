@@ -65,7 +65,7 @@ foreach ($arr_listing as $sn=>$row){
 				if( $row[$key] == '0000-00-00' ) {
 					$_str = '-';
 				} else {
-					$_str = date('l, F d, Y',strtotime($row[$key]));
+					$_str = MyDate::format($row[$key], false, true, Admin::getAdminTimeZone());
 				}
 			
 				$td->appendElement('plaintext', array(), $_str, true);

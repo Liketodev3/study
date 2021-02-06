@@ -44,8 +44,8 @@
 							case 'csh_commsetting_product_id':
 								$td->appendElement('plaintext', array(), CommonHelper::displayText($row['product_name']),true);
 							break;	
-							case 'csh_commsetting_added_on':
-								$td->appendElement('plaintext', array(), FatDate::format($row[$key]),true);
+							case 'csh_commsetting_added_on': case 'csh_added_on':
+								$td->appendElement('plaintext', array(), MyDate::format($row[$key], true, true, Admin::getAdminTimeZone()));
 							break;									
 							default:
 								$td->appendElement('plaintext', array(), CommonHelper::displayText($row[$key]));
