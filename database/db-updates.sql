@@ -202,3 +202,4 @@ ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_id` INT(11) NOT 
 ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_code` VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER `utrequest_language_id`;
 
 
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.12.20210206' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION'; 
