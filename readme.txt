@@ -17,6 +17,7 @@ Hotfixes:
     Suggestion-#047951: FAQ page with html content to add links and styling
     Bug-#048752-Fix issues with multi lingual functionality 
     Bug-#48675-validate item per page field in settings
+    Bug-#049348-set homepage slide dimensions
 
 ---------------------
 
