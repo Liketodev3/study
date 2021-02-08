@@ -554,6 +554,7 @@ class ConfigurationsController extends AdminBaseController
 
                 $frm->addHtml('', 'Admin', '<h3>' . Label::getLabel('LBL_Admin', $this->adminLangId) . '</h3>');
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Default_Items_Per_Page", $this->adminLangId), "CONF_ADMIN_PAGESIZE");
+                $fld3->requirements()->setRange(1, 500);
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Users,_orders,_etc)", $this->adminLangId) . ".</small>";
 
                 $frm->addHtml('', 'FlashCard', '<h3>' . Label::getLabel('LBL_FlashCards', $this->adminLangId) . '</h3>');
@@ -575,6 +576,7 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addHtml('', 'Admin', '<h3>' . Label::getLabel('LBL_Teacher_Dashboard', $this->adminLangId) . '</h3>');
 
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Default_Items_Per_Page", $this->adminLangId), "CONF_FRONTEND_PAGESIZE");
+                $fld3->requirements()->setRange(1, 500);
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Lessons,_orders,_etc)", $this->adminLangId) . ".</small>";
 
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_END_LESSON_DURATION", $this->adminLangId), "CONF_ALLOW_TEACHER_END_LESSON");
