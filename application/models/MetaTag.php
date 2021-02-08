@@ -20,7 +20,7 @@ class MetaTag extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getTabsArr(int $langId): array
+    public static function getTabsArr($langId): array
     {
 
         $metaGroups = array(
@@ -77,7 +77,7 @@ class MetaTag extends MyAppModel
         $metaTagSrch->joinTable(static::DB_TBL, 'LEFT OUTER JOIN', "mt.meta_record_id = gcls.grpcls_id and mt.meta_controller = 'GroupClasses' and mt.meta_action = 'view' ", 'mt');
         $metaTagSrch->joinTable(static::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = " . $langId, 'mt_l');
         $metaTagSrch->joinTable(User::DB_TBL, 'LEFT OUTER JOIN', "gcls.grpcls_teacher_id= u.user_id", 'u');
-        $metaTagSrch->addMultipleFields(array('meta_id', 'meta_identifier', 'meta_title', 'grpcls_title', 'grpcls_id', 'concat(u.user_first_name," ",u.user_last_name) as teacher_name'));
+        $metaTagSrch->addMultipleFields(array('meta_id', 'meta_record_id', 'meta_identifier', 'meta_title', 'grpcls_title', 'grpcls_id', 'concat(u.user_first_name," ",u.user_last_name) as teacher_name'));
         $metaTagSrch->addOrder('grpcls_start_datetime', 'DESC');
         return $metaTagSrch;
     }

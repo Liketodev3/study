@@ -1,18 +1,10 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php
-$arr_flds = array(
-	'listserial' => Label::getLabel('LBL_Sr._No', $adminLangId),
-	'url' => Label::getLabel('LBL_Slug', $adminLangId),
-	'meta_identifier' => Label::getLabel('LBL_Identifier', $adminLangId),
-	'meta_title' => Label::getLabel('LBL_Title', $adminLangId),
-	'action' => Label::getLabel('LBL_Action', $adminLangId),
-);
-if ($metaType != MetaTag::META_GROUP_OTHER) {
-	unset($arr_flds['url']);
-}
+
+
 $tbl = new HtmlElement('table', array('width' => '100%', 'class' => 'table table-responsive'));
 $th = $tbl->appendElement('thead')->appendElement('tr');
-foreach ($arr_flds as $val) {
+foreach ($columnsArr as $val) {
 	$e = $th->appendElement('th', array(), $val);
 }
 
@@ -21,10 +13,10 @@ foreach ($arr_listing as $sn => $row) {
 	$sr_no++;
 	$tr = $tbl->appendElement('tr');
 	$metaId = FatUtility::int($row['meta_id']);
-	$recordId = FatUtility::int($row['meta_record_id']);
+	$recordId = FatUtility::int($row[$meta_record_id]);
 	$tr->setAttribute("id", $metaId);
 
-	foreach ($arr_flds as $key => $val) {
+	foreach ($columnsArr as $key => $val) {
 		$td = $tr->appendElement('td');
 		switch ($key) {
 			case 'listserial':

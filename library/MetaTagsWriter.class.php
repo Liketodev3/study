@@ -1,7 +1,6 @@
 <?php
 class MetaTagsWriter
 {
-
 	static function getMetaTags($controller, $action, $arrParameters)
 	{
 		$langId = CommonHelper::getLangId();
@@ -18,43 +17,31 @@ class MetaTagsWriter
 		$controllerName = ucfirst(FatUtility::dashed2Camel($controllerName));
 
 		$srch = new MetaTagSearch($langId);
-		$cond = $srch->addCondition('meta_controller', '=', $controllerName);
-		$cond->attachCondition('meta_controller', '=', '', 'OR');
-
-		$cond1 = $srch->addCondition('meta_action', '=', $action);
-		$cond1->attachCondition('meta_action', '=', '', 'OR');
-
-		$srch->addOrder('meta_default', 'asc');
-
-		if (!empty($arrParameters)) {
-			switch ($controllerName) {
-					/* case 'products':
-					if( isset($arrParameters[0]) && FatUtility::int($arrParameters[0]) > 0 && $action == 'view' ){
-						$srch->addCondition( 'meta_record_id', '=', FatUtility::int( $arrParameters[0] ) );
-					}
-				break; */
-				default:
-					if (isset($arrParameters[0]) && FatUtility::int($arrParameters[0]) > 0) {
-						$cond = $srch->addCondition('meta_record_id', '=', FatUtility::int($arrParameters[0]));
-						$cond->attachCondition('meta_record_id', '=', 0, 'OR');
-					}
-					if (isset($arrParameters[1]) && FatUtility::int($arrParameters[1]) > 0) {
-						$cond = $srch->addCondition('meta_subrecord_id', '=', FatUtility::int($arrParameters[1]));
-						$cond->attachCondition('meta_subrecord_id', '=', 0, 'OR');
-					}
-					break;
-			}
-		}
-
 		$srch->doNotCalculateRecords();
 		$srch->setPageSize(1);
 		$srch->addMultipleFields(array(
 			'IFNULL(meta_title, meta_identifier) as meta_title',
 			'meta_keywords', 'meta_description', 'meta_other_meta_tags'
 		));
+		$defSearch = clone $srch;
+		$srch->addCondition('meta_controller', '=', $controllerName);
+		$srch->addCondition('meta_action', '=', $action);
+		$srch->addOrder('meta_default', 'asc');
+
+		if (!empty($arrParameters)) {
+			switch ($controllerName) {
+				default:
+					if (isset($arrParameters[0]) && FatUtility::int($arrParameters[0]) > 0) {
+						$cond = $srch->addCondition('meta_record_id', '=', FatUtility::int($arrParameters[0]));
+					}
+					if (isset($arrParameters[1]) && FatUtility::int($arrParameters[1]) > 0) {
+						$cond = $srch->addCondition('meta_subrecord_id', '=', FatUtility::int($arrParameters[1]));
+					}
+					break;
+			}
+		}
 
 		$rs = $srch->getResultSet();
-
 		if ($metas = FatApp::getDb()->fetch($rs)) {
 			$title = $metas['meta_title'] . ' | ' . $websiteName;
 			echo '<title>' . $title . '</title>' . "\n";
@@ -65,7 +52,19 @@ class MetaTagsWriter
 			if (isset($metas['meta_other_meta_tags']))
 				echo CommonHelper::renderHtml($metas['meta_other_meta_tags'], ENT_QUOTES, 'UTF-8');
 		} else {
-			return '<title>' . $websiteName . '</title>';
+			$defSearch->addCondition('meta_type', '=', MetaTag::META_GROUP_DEFAULT);
+			if ($metas = FatApp::getDb()->fetch($defSearch->getResultSet())) {
+				$title = $metas['meta_title'] . ' | ' . $websiteName;
+				echo '<title>' . $title . '</title>' . "\n";
+				if (isset($metas['meta_description']))
+					echo '<meta name="description" content="' . $metas['meta_description'] . '" />';
+				if (isset($metas['meta_keywords']))
+					echo '<meta name="keywords" content="' . $metas['meta_keywords'] . '" />';
+				if (isset($metas['meta_other_meta_tags']))
+					echo CommonHelper::renderHtml($metas['meta_other_meta_tags'], ENT_QUOTES, 'UTF-8');
+			} else {
+				return '<title>' . $websiteName . '</title>';
+			}
 		}
 		/* $srch = Meta::metaSearch();
 		
