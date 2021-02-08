@@ -1,9 +1,13 @@
 <?php
-class TeacherLessonsPlanController extends TeacherBaseController
+class TeacherLessonsPlanController extends LoggedUserController
 {
     public function __construct($action)
     {
         parent::__construct($action);
+        $learnerAllowedActions = ['getFileById'];
+        if(User::isLearner() && !in_array($action, $learnerAllowedActions)){
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
     }
 
     public function index()
@@ -148,7 +152,7 @@ class TeacherLessonsPlanController extends TeacherBaseController
         $lessonPlan=new AttachedFile($fileId);
         $lessonPlan->deleteRecord();
         if ($lessonPlan->getError()) {
-            FatUtility::dieJsonError($AttachedFile->getError());
+            FatUtility::dieJsonError($lessonPlan->getError());
         }
         FatUtility::dieJsonSuccess(Label::getLabel("Record Deleted Successfully!"));
     }
