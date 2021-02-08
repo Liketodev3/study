@@ -67,7 +67,7 @@
 		<p><?php echo Label::getLabel('LBL_Slider_Description_Text'); ?></p>
 		<div class="search-form">
 			<form method="POST" class="form" action="<?php echo CONF_WEBROOT_URL; ?>teachers" name="homeSearchForm" id="homeSearchForm" >
-                <input type="text" name="language" placeholder="<?php echo Label::getLabel('LBL_I_am_learning...'); ?>">
+                <input type="text" name="language" placeholder="<?php echo Label::getLabel('LBL_Type_subject...'); ?>">
                 <input type="submit" value="<?php echo Label::getLabel('LBL_Search_for_teachers'); ?>">
 			</form>
 		</div>

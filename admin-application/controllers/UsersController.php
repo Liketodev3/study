@@ -531,6 +531,169 @@ class UsersController extends AdminBaseController
         $this->_template->render(false, false, 'json-success.php');
     }
 
+    public function createTestUsers(int $user_count = 2500)
+    {
+        ini_set('memory_limit', '-1');
+        set_time_limit(0);
+        try{
+            $this->createTestTeachers($user_count);
+            $this->createTestStudents($user_count);
+        }catch(Exception $e){
+            die($e->getMessage());
+        }
+        die('<h2>Users created Successfully</h2>');
+    }
+
+    private function createTestStudents(int $user_count)
+    {
+        $db = FatApp::getDb();
+        $db->startTransaction();
+        $attachments1 = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_USER_PROFILE_IMAGE, 1);
+        $attachments2 = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, 1);
+        $attachments = $attachments1 + $attachments2;
+        for($i=0; $i<$user_count;$i++){
+            $user_data = array(
+                'user_first_name' => 'Test',
+                'user_last_name' => 'Learner'.($i+1),
+                'user_email' => 'testlearner'.($i+1).'@dummyid.com',
+                'user_password' =>  'learner@123',
+                'user_is_learner' => 1,
+                'user_timezone' => MyDate::getTimeZone(),
+                'user_country_id' => 91,
+                'user_preferred_dashboard' => User::USER_LEARNER_DASHBOARD,
+                'user_registered_initially_for' => User::USER_TYPE_LEANER,
+            );
+            $user = new User();
+            if(!$user->create($user_data)){
+                $db->rollbackTransaction();
+                throw new Exception($user->getError());
+            }
+            $userId = $user->getMainTableRecordId();
+            if(!User::isProfilePicUploaded($userId)){
+                foreach($attachments as $attachment){
+                    $attachment['afile_id'] = 0;
+                    $attachment['afile_record_id'] = $userId;
+                    $attachedFile = new AttachedFile();
+                    $attachedFile->assignValues($attachment);
+                    if(!$attachedFile->save()){
+                        $db->rollbackTransaction();
+                        throw new Exception($attachedFile->getError());
+                    }
+                }
+            }
+        }
+        $db->commitTransaction();
+    }
+
+    private function createTestTeachers(int $user_count)
+    {
+        $db = FatApp::getDb();
+        $db->startTransaction();
+        $attachments1 = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_USER_PROFILE_IMAGE, 1);
+        $attachments2 = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, 1);
+        $attachments = $attachments1 + $attachments2;
+        for($i=0; $i<$user_count;$i++){
+            $user_data = array(
+                'user_first_name' => 'Test',
+                'user_last_name' => 'Teacher'.($i+1),
+                'user_email' => 'testteacher'.($i+1).'@dummyid.com',
+                'user_url_name' => 'testteacher'.($i+1),
+                'user_password' =>  'teacher@123',
+                'user_is_learner' => 1,
+                'user_is_teacher' => 1,
+                'user_timezone' => MyDate::getTimeZone(),
+                'user_country_id' => 91, 
+                'user_preferred_dashboard' => User::USER_TEACHER_DASHBOARD,
+                'user_registered_initially_for' => User::USER_TYPE_TEACHER,
+            );
+            
+            $user = new User();
+            if(!$user->create($user_data)){
+                $db->rollbackTransaction();
+                throw new Exception($user->getError());
+            }
+            $userId = $user->getMainTableRecordId();
+            if(!User::isProfilePicUploaded($userId)){
+                foreach($attachments as $attachment){
+                    $attachment['afile_id'] = 0;
+                    $attachment['afile_record_id'] = $userId;
+                    $attachedFile = new AttachedFile();
+                    $attachedFile->assignValues($attachment);
+                    if(!$attachedFile->save()){
+                        $db->rollbackTransaction();
+                        throw new Exception($attachedFile->getError());
+                    }
+                }
+            }
+            try{
+                $this->makeTeacher($userId);
+            }catch(Exception $e){
+                $db->rollbackTransaction();
+                throw new Exception($e->getMessage());
+            }
+        }
+        $db->commitTransaction();
+    }
+
+    private function makeTeacher($userId)
+    {
+        // add teacher settings
+        $userSetting = new UserSetting($userId);
+        if(!$userSetting->saveData(array('us_booking_before' => 0))){
+            throw new Exception($userSetting->getError());
+        }
+
+        // add teacher spoken language
+        $spokenData = array(
+            'utsl_slanguage_id' => 1, 
+            'utsl_proficiency' => SpokenLanguage::PROFICIENCY_BEGINNER,
+            'utsl_user_id' => $userId
+        );
+        // var_dump($spokenData);die;
+        $userToLang = new UserToLanguage($userId);
+        $row = $userToLang->loadFromDb();
+        if(empty($row)){
+            $userToLang = new UserToLanguage();
+        }
+        $userToLang->assignValues($spokenData);
+        if(!$userToLang->save()){
+            throw new Exception('UserToSpokenLanuage:'.$userToLang->getError());
+        }
+
+        // add teacher teach language
+        $userToLang = new UserToLanguage($userId);
+        if(!$userToLang->saveTeachLang()){
+            throw new Exception('UserToLanuage:'.$userToLang->getError());
+        }
+
+        $uqdata = array(
+            'uqualification_user_id' => $userId,
+            'uqualification_active' => 1,
+        );
+
+        $uqsrch = new UserQualificationSearch();
+        $uqsrch->addCondition('uqualification_user_id', '=', $userId);
+        $row = FatApp::getDb()->fetch($uqsrch->getResultSet());
+        $uqId = $row ? $row['uqualification_id'] : 0;
+        $uQualification = new UserQualification($uqId);
+        $uQualification->assignValues($uqdata);
+        if (!$uQualification->save()) {
+            // throw new Exception($uQualification->getError());
+        }
+
+        $db = FatApp::getDb();
+        if (!$db->insertFromArray(Preference::DB_TBL_USER_PREF, array('utpref_preference_id' => 1, 'utpref_user_id' => $userId))) {
+            // throw new Exception($db->getError());            
+        }
+
+        $availabilityData = '[{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"1","dayStart":"1","dayEnd":"2","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"2","dayStart":"2","dayEnd":"3","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"3","dayStart":"3","dayEnd":"4","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"4","dayStart":"4","dayEnd":"5","classtype":"1"},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"5","dayStart":"5","dayEnd":"6","classtype":1}]';
+        $tGAvail = new TeacherGeneralAvailability();
+        if (!$tGAvail->addTeacherGeneralAvailability(array('data'=>$availabilityData), $userId)) {
+            throw new Exception($tGAvail->getError());
+        }
+        return true;
+    }
+
     private function getForm($user_id = 0)
     {
         $user_id = FatUtility::int($user_id);
