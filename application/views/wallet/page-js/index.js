@@ -42,11 +42,11 @@ $(document).ready(function () {
     }
 
     redeemGiftcardForm = function () {
-        $('.loading-wrapper').show();
+        $.loader.show();
         $.facebox(function () {
             fcom.ajax(fcom.makeUrl('Wallet', 'giftcard-redeem-form'), '', function (t) {
                 $.facebox(t, 'faceboxWidth');
-                $('.loading-wrapper').hide();
+                $.loader.hide();
             });
         });
     };
@@ -63,7 +63,7 @@ $(document).ready(function () {
     };
 
     withdrwalRequestForm = function (methodId) {
-        $('.loading-wrapper').show();
+        $.loader.show();
         var postData = '';
         if (typeof methodId != 'undefined') {
             postData = 'methodId=' + methodId;
@@ -71,7 +71,7 @@ $(document).ready(function () {
         $.facebox(function () {
             fcom.ajax(fcom.makeUrl('Wallet', 'requestWithdrawal'), postData, function (t) {
                 $.facebox(t, 'facebox-medium request-Withdrawal-js');
-                $('.loading-wrapper').hide();
+                $.loader.hide();
             });
         });
     };

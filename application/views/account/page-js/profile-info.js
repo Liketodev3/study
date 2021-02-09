@@ -537,9 +537,9 @@ $(document).ready(function(){
 	};
 
 	removeProfileImage = function(){
-		$('.loading-wrapper').show();
+		$.loader.show();
 		fcom.ajax(fcom.makeUrl('Account','removeProfileImage'),'',function(t){
-			$('.loading-wrapper').hide();
+			$.loader.hide();
 			profileInfoForm();
 
 			if(isCometChatMeetingToolActive) {
@@ -552,7 +552,7 @@ $(document).ready(function(){
 	};
 
 	sumbmitProfileImage = function(){
-		$('.loading-wrapper').show();
+		$.loader.show();
 		$("#frmProfile").ajaxSubmit({
 			delegation: true,
 			success: function(json){
@@ -563,11 +563,11 @@ $(document).ready(function(){
 					userSeoUrl = userSeoBaseUrl+userData.user_url_name;
 					updateCometChatUser(userData.user_id, name, userImage , userSeoUrl);
 				}
-				$('.loading-wrapper').hide();
+				$.loader.hide();
 				profileInfoForm();
 				$.mbsmessage(json.msg,true,'alert alert--success');
 				$(document).trigger('close.facebox');
-				$('.loading-wrapper').hide();
+				$.loader.hide();
 			}
 		});
 	};
