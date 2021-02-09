@@ -1,9 +1,9 @@
 var cart = {
 	add: function( teacherId, lpackageId, startDateTime, endDateTime, languageId, grpclsId ){
-		$('.loading-wrapper').show();
+		$.loader.show();
 		if( isUserLogged() == 0 ){
 			logInFormPopUp();
-			$('.loading-wrapper').hide();
+			$.loader.hide();
 			return false;
 		}
 		
@@ -35,7 +35,7 @@ var cart = {
 					return;
 				}
 			}
-			$('.loading-wrapper').hide();
+			$.loader.hide();
 			$.mbsmessage(resObj.msg,true, 'alert alert--danger');
 
 			
