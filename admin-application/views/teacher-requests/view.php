@@ -89,7 +89,7 @@
 					<div class="listview">
 						<dl class="list">
 							<dt><?php echo Label::getLabel('LBL_Profile_Picture',$adminLangId); ?></dt>
-							<dd><img src="<?php echo CommonHelper::generateUrl('TeacherRequests','viewProfilePic', array($row['utrequest_user_id']) ); ?>" /></dd>
+							<dd><img src="<?php echo CommonHelper::generateUrl('Image', 'User', array($row['utrequest_user_id']), CONF_WEBROOT_FRONT_URL ); ?>" /></dd>
 						</dl>
 						<dl class="list">
 							<dt><?php echo Label::getLabel('LBL_Photo_Id',$adminLangId); ?></dt>

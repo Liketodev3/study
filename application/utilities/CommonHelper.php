@@ -702,7 +702,8 @@ class CommonHelper extends FatUtility
         $src_img_w = $size_w;
         $src_img_h = $size_h;
 
-        $degrees = $data -> rotate + self::getCorrectImageOrientation($src);
+        // $degrees = $data -> rotate + self::getCorrectImageOrientation($src);
+        $degrees = $data -> rotate;
 
         switch ($size['mime']) {
            case "image/gif":

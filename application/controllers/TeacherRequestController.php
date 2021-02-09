@@ -88,6 +88,14 @@ class TeacherRequestController extends MyAppController
 		$websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $this->siteLangId, FatUtility::VAR_STRING, '');
 		$this->set('websiteName', $websiteName);
 		$this->set('frm', $frm);
+		
+		// image cropper
+		$this->set('profileImgFrm', $this->getProfileImageForm());
+		$this->set('userId', $this->userId);
+		$this->_template->addJs('js/jquery.form.js');
+        $this->_template->addJs('js/cropper.js');
+        $this->_template->addCss('css/cropper.css');
+
 		$this->_template->render(true, true, 'teacher-request/form.php');
 	}
 
@@ -107,7 +115,7 @@ class TeacherRequestController extends MyAppController
 		}
 		/* ] */
 		/* Validation[ */
-		$frm = $this->getForm(false);
+		$frm = $this->getForm();
 		$post = $frm->getFormDataFromArray(FatApp::getPostedData());
 
 		if (false === $post) {
@@ -132,7 +140,7 @@ class TeacherRequestController extends MyAppController
 			return;
 		}
 		/* file handling[ */
-		if (empty($_FILES['user_profile_pic']['tmp_name']) || !is_uploaded_file($_FILES['user_profile_pic']['tmp_name'])) {
+		if (!User::isProfilePicUploaded()) {
 			if (FatUtility::isAjaxCall()) {
 				FatUtility::dieWithError(Label::getLabel('MSG_Please_select_a_Profile_Pic'));
 			}
@@ -144,14 +152,14 @@ class TeacherRequestController extends MyAppController
 		$userId = $this->userId;
 		$fileHandlerObj = new AttachedFile();
 		/* Profile Pic[ */
-		if (!$fileHandlerObj->saveImage($_FILES['user_profile_pic']['tmp_name'], $fileHandlerObj::FILETYPE_TEACHER_APPROVAL_USER_PROFILE_IMAGE, $userId, 0, $_FILES['user_profile_pic']['name'], -1, true)) {
+		/* if (!$fileHandlerObj->saveImage($_FILES['user_profile_pic']['tmp_name'], $fileHandlerObj::FILETYPE_TEACHER_APPROVAL_USER_PROFILE_IMAGE, $userId, 0, $_FILES['user_profile_pic']['name'], -1, true)) {
 			if (FatUtility::isAjaxCall()) {
 				FatUtility::dieWithError($fileHandlerObj->getError());
 			}
 			Message::addErrorMessage($fileHandlerObj->getError());
 			$this->form();
 			return;
-		}
+		} */
 		/* ] */
 		/* Proof File[ */
 		if (!empty($_FILES['user_photo_id']['tmp_name'])) {
@@ -335,7 +343,7 @@ class TeacherRequestController extends MyAppController
 		AttachedFile::downloadFile($fileRow['afile_name'], $fileRow['afile_physical_path']);
 	}
 
-	private function getForm($profilePic = true)
+	private function getForm()
 	{
 		$langId = $this->siteLangId;
 		/* [ */
@@ -352,18 +360,39 @@ class TeacherRequestController extends MyAppController
 		$fld->requirements()->setRequired();
 		$fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone_Number'), 'utrvalue_user_phone');
 		$fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
-		if ($profilePic) {
+		/* if (!User::isProfilePicUploaded()) {
 			$fld = $frm->addFileUpload(Label::getLabel('LBL_Profile_Picture'), 'user_profile_pic');
 			$fld->requirements()->setRequired();
 			$fld->htmlAfterField = "<small>" . Label::getLabel('LBL_User_Profile_Image_Dimension') . "</small>";
-		}
+		} */
 		$fld = $frm->addFileUpload(Label::getLabel('LBL_Photo_Id'), 'user_photo_id');
 		$fld->htmlAfterField = "<small>" . Label::getLabel('LBL_Photo_Id_Type') . "</small>";
-		$frm->addHtml('', 'introduction_fields_heading', '');
-		$frm->addTextBox(Label::getLabel('LBL_Video_Youtube_Link'), 'utrvalue_user_video_link');
-		$frm->addHtml('', 'about_me_fields_heading', '');
-		$fld = $frm->addTextArea(Label::getLabel('LBL_Write_about_yourself_and_your_qualifications'), 'utrvalue_user_profile_info');
+		$headfld = $frm->addHtml('', 'about_me_fields_heading', '');
+		
+		$bioFld = $frm->addHtml('', 'bio', '');
+		$headfld->attachField($bioFld);
+
+		$fld = $frm->addTextArea('', 'utrvalue_user_profile_info');
 		$fld->requirements()->setLength(1, 500);
+		$headfld->attachField($fld);
+		
+		
+		$brFld = $frm->addHtml('', 'br', '<br><br>');
+		$headfld->attachField($brFld);
+
+		$fld = $frm->addHtml('', 'introduction_fields_heading', '');
+		$headfld->attachField($fld);
+
+		$bioFld = $frm->addHtml('', 'youtube_head', '');
+		$headfld->attachField($bioFld);
+
+		$fld = $frm->addTextBox('', 'utrvalue_user_video_link');
+		$headfld->attachField($fld);
+
+		$frm->addHtml('', 'profile_pic_preview', '');
+
+		$frm->addHtml('', 'brFld', '<br>');
+
 		$frm->addHtml('', 'language_fields_heading', '');
 		$fld = $frm->addSelectBox(Label::getLabel('LBL_What_Language_Do_You_Want_To_Teach?'), 'utrvalue_user_teach_slanguage_id[]', $teachingLanguagesArr, [], [], Label::getLabel('LBL_Select'));
 		$fld->requirements()->setRequired();
@@ -382,4 +411,16 @@ class TeacherRequestController extends MyAppController
 		$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
 		return $frm;
 	}
+	private function getProfileImageForm()
+    {
+        $frm = new Form('frmProfileImage', array('id' => 'frmProfileImage'));
+        $frm->addFileUpload(Label::getLabel('LBL_Profile_Picture'), 'user_profile_image', array('onchange' => 'popupImage(this)', 'accept' => 'image/*'));
+        $frm->addHiddenField('', 'update_profile_img', Label::getLabel('LBL_Update_Profile_Picture'), array('id' => 'update_profile_img'));
+        $frm->addHiddenField('', 'rotate_left', Label::getLabel('LBL_Rotate_Left'), array('id' => 'rotate_left'));
+        $frm->addHiddenField('', 'rotate_right', Label::getLabel('LBL_Rotate_Right'), array('id' => 'rotate_right'));
+        $frm->addHiddenField('', 'remove_profile_img', 0, array('id' => 'remove_profile_img'));
+        $frm->addHiddenField('', 'action', 'avatar', array('id' => 'avatar-action'));
+        $frm->addHiddenField('', 'img_data', '', array('id' => 'img_data'));
+        return $frm;
+    }
 }
