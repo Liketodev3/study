@@ -19,7 +19,7 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 
 								<?php
 								if( true == User::isProfilePicUploaded( $cartData['user_id'] ) ){
-									$img = CommonHelper::generateUrl('Image','User', array( $cartData['user_id'] ));
+									$img = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','User', array( $cartData['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg');
 									echo '<img src="'.$img.'" />';
 								}
 								?>
