@@ -94,9 +94,8 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                     <span class="-gap"></span>
                     <a href="<?php echo CommonHelper::generateUrl('account'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
                 <?php endif; ?>
-                <?php if (empty($lessonData['sldetail_learner_join_time'])) { ?>
 
-
+                <?php if ($lessonData['sldetail_learner_join_time'] == '0000-00-00 00:00:00') { ?>
                     <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startTime > $curDate || $curDate > $endTime || !$isScheduled ? 'style="display:none;"' : '') ?>>
                         <?php $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT); ?>
                         <?php if ($activeMettingTool == ApplicationConstants::MEETING_ZOOM) : ?>
