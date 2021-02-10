@@ -1,5 +1,10 @@
 This file shares the details of the Yo!Coach version and change log.
 
+
+Hotfixes:
+Bug-#049602-Issue with speaking and proficiency level
+
+------------------------------------------------------------
 Release Number: TV-2.8.1.20210209
 
 Release Date: 2021/02/09
@@ -7,7 +12,6 @@ Release Date: 2021/02/09
 Hotfixes:
     Bug-#049283-fix attach lesson plan issue
     Bug-#049565-fix cancel lesson submit button issue
-
 ------------------------------------------------------------
 
 Release Number: TV-2.8.0.20210208
