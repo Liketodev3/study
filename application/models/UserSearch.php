@@ -52,11 +52,12 @@ class UserSearch extends SearchBase
         }
         /* ] */
         /* qualification/experience[ */
-        $qSrch = new UserQualificationSearch();
+        /* $qSrch = new UserQualificationSearch();
         $qSrch->addMultipleFields(array('uqualification_user_id'));
         $qSrch->addCondition('uqualification_active', '=', 1);
         $qSrch->addGroupBy('uqualification_user_id');
-        $this->joinTable("(" . $qSrch->getQuery() . ")", 'INNER JOIN', 'user_id = uqualification_user_id', 'utqual');
+        $this->joinTable("(" . $qSrch->getQuery() . ")", 'INNER JOIN', 'user_id = uqualification_user_id', 'utqual'); */
+        $this->joinTable(UserQualification::DB_TBL, 'INNER JOIN', 'user_id = uqualification_user_id AND uqualification_active = '.ApplicationConstants::ACTIVE, 'utqual');
         /* ] */
 
         /* user preferences/skills[ */
@@ -64,6 +65,8 @@ class UserSearch extends SearchBase
         $skillSrch->addMultipleFields(array('utpref_user_id','GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids'));
         $skillSrch->addGroupBy('utpref_user_id');
         $this->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
+        // $this->joinTable(Preference::DB_TBL_USER_PREF, 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
+        // $this->addFld('GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids');
         /* ] */
     }
 
@@ -104,11 +107,11 @@ class UserSearch extends SearchBase
             trigger_error("Please join user settings table first to join user teacher language", E_USER_ERROR);
         }
 
-        $this->joinTable(SpokenLanguage::DB_TBL, 'LEFT JOIN', 'us.us_teach_slanguage_id = slanguage_id', 'teachl');
+        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'us.us_teach_slanguage_id = tlanguage_id', 'teachl');
 
         $langId = FatUtility::int($langId);
         if ($langId > 0) {
-            $this->joinTable(SpokenLanguage::DB_TBL.'_lang', 'LEFT JOIN', 'teachl.slanguage_id = teachl_lang.slanguagelang_slanguage_id AND teachl_lang.slanguagelang_lang_id = ' . $langId, 'teachl_lang');
+            $this->joinTable(TeachingLanguage::DB_TBL.'_lang', 'LEFT JOIN', 'teachl.tlanguage_id = teachl_lang.tlanguagelang_tlanguage_id AND teachl_lang.tlanguagelang_lang_id = ' . $langId, 'teachl_lang');
         }
 
         $this->isUserTeachLanguageJoined = true;
@@ -152,7 +155,7 @@ class UserSearch extends SearchBase
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        $slSrch = new searchBase(UserToLanguage::DB_TBL);
+        /* $slSrch = new searchBase(UserToLanguage::DB_TBL);
         $slSrch->joinTable(SpokenLanguage::DB_TBL, 'LEFT JOIN', 'slanguage_id = utsl_slanguage_id');
         $slSrch->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = '. $langId, 'sl_lang');
         $slSrch->doNotCalculateRecords();
@@ -161,7 +164,13 @@ class UserSearch extends SearchBase
         $slSrch->addGroupBy('utsl_user_id');
         $slSrch->addCondition('slanguage_active', '=', 1);
 
-        $this->joinTable("(" . $slSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utsl.utsl_user_id', 'utsl');
+        $this->joinTable("(" . $slSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utsl.utsl_user_id', 'utsl'); */
+
+        $this->addMultipleFields(array('utsl_user_id', 'GROUP_CONCAT( DISTINCT IFNULL(slanguage_name, slanguage_identifier) ORDER BY slanguage_name,slanguage_identifier ) as spoken_language_names', 'GROUP_CONCAT(DISTINCT utsl_slanguage_id) as spoken_language_ids',  'GROUP_CONCAT(DISTINCT utsl_proficiency) as spoken_languages_proficiency'));
+        $this->joinTable(UserToLanguage::DB_TBL, 'INNER JOIN', 'user_id = utsl.utsl_user_id', 'utsl');
+        $this->joinTable(SpokenLanguage::DB_TBL, 'LEFT JOIN', 'slanguage_id = utsl_slanguage_id AND slanguage_active ='. applicationConstants::ACTIVE);
+        $this->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = '. $langId, 'sl_lang');
+        
     }
 
     public function joinFavouriteTeachers($user_id)

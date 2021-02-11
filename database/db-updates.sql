@@ -203,3 +203,5 @@ ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_code` VARCHAR(4)
 
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.12.20210206' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION'; 
+
+ALTER TABLE `tbl_teachers_general_availability` ADD INDEX(`tgavl_user_id`); 

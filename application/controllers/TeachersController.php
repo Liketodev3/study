@@ -56,6 +56,7 @@ class TeachersController extends MyAppController {
 		if (UserAuthentication::isUserLogged()) {
 			$srch->addCondition('user_id','!=',UserAuthentication::getLoggedUserId());
 		}
+		echo $srch->getQuery();die;
 		$rs = $srch->getResultSet();
 		$db = FatApp::getDb();
 		$teachersList = $db->fetchAll($rs);
@@ -195,17 +196,17 @@ class TeachersController extends MyAppController {
 			/* 'user_timezone', */
 			'IFNULL(country_name, country_code) as user_country_name',
 			'IFNULL(state_name, state_identifier) as user_state_name',
-			'IFNULL(slanguage_name, slanguage_identifier) as teachlanguage_name',
-			'utsl.spoken_language_names',
-			'utsl.spoken_languages_proficiency',
+			'IFNULL(tlanguage_name, tlanguage_identifier) as teachlanguage_name',
+			// 'utsl.spoken_language_names',
+			// 'utsl.spoken_languages_proficiency',
 			'us_video_link',
 			'us_is_trial_lesson_enabled',
 			'minPrice',
 			'maxPrice',
             'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
-            'utl_slanguage_ids'
+            // 'utl_slanguage_ids'
 		));
-
+		// echo $srch->getQuery();die;
 		$rs = $srch->getResultSet();
 		$teacher = FatApp::getDb()->fetch($rs);
 		if (empty($teacher)) {
@@ -757,11 +758,12 @@ class TeachersController extends MyAppController {
 			'user_country_id',
 			'country_name as user_country_name',
 			'user_profile_info',
-			'utsl.spoken_language_names',
-			'utsl.spoken_languages_proficiency',
+			'uqualification_user_id',
+			// 'utsl.spoken_language_names',
+			// 'utsl.spoken_languages_proficiency',
 			'utls.teacherTeachLanguageName',
             'utl_ids',
-            'utl_slanguage_ids'
+            // 'utl_slanguage_ids'
 		));
 	}
 
