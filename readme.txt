@@ -1,5 +1,16 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.8.2.20210211
+
+Release Date: 2021/02/11
+
+Hotfixes:
+    Task-81879-update demo homepage content along with hotfixes
+    Task-73053-fix banners button URL and text
+    Task-73053-fix root URL in top rated teachers list homepage
+
+----------------------------------------------------------
+
 Release Number: TV-2.8.1.20210209
 
 Release Date: 2021/02/09
