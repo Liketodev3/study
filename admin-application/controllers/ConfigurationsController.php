@@ -136,13 +136,14 @@ class ConfigurationsController extends AdminBaseController
         if (array_key_exists('CONF_TIMEZONE', $post)) {
             unset($post['CONF_TIMEZONE']);
         }
-        if (array_key_exists('CONF_CURRENCY', $post)) {
-            $data = Currency::getAttributesById($post['CONF_CURRENCY']);
-            if (empty($data) || ($data['currency_value'] * 1) != 1) {
-                Message::addErrorMessage(Label::getLabel('MSG_Please_set_default_currency_value_to_1', $this->adminLangId));
-                FatUtility::dieJsonError(Message::getHtml());
-            }
-        }
+        
+        // if (array_key_exists('CONF_CURRENCY', $post)) {
+        //     $data = Currency::getAttributesById($post['CONF_CURRENCY']);
+        //     if (empty($data) || ($data['currency_value'] * 1) != 1) {
+        //         Message::addErrorMessage(Label::getLabel('MSG_Please_set_default_currency_value_to_1', $this->adminLangId));
+        //         FatUtility::dieJsonError(Message::getHtml());
+        //     }
+        // }
 
         if (!$record->update($post)) {
             Message::addErrorMessage($record->getError());

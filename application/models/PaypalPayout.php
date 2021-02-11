@@ -162,7 +162,7 @@ class PaypalPayout {
 
 		$access_token = $accessTokenResponse['access_token'];
 
-		$currencyData = Currency::getDefaultCurrencyData();
+		$currencyData = Currency::getSystemCurrencyData();
 
 		if (!in_array($currencyData["currency_code"], $this->currenciesAccepted)) {
 			$this->isError= true;
