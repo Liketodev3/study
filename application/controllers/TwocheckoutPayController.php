@@ -18,6 +18,11 @@ class TwocheckoutPayController extends PaymentController
             $msg = CommonHelper::replaceStringData($msg, ['{CURRENCY}' => $this->systemCurrencyCode]);
             $this->setErrorAndRedirect($msg);
         }
+
+        if(empty($this->settings['sellerId']) || empty($this->settings['publishableKey'])){
+            $msg = Label::getLabel('MSG_seller_Id_And_publishable_Key_is_required_for_payment', $this->siteLangId);
+            $this->setErrorAndRedirect($msg);
+        }
     }
 
     protected function allowedCurrenciesArr()

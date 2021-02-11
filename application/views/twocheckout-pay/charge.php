@@ -195,13 +195,17 @@
 
                             // Called when token creation fails.
                             var errorCallback = function(data) {
+                                
                                 // Retry the token request if ajax call fails
                                 if (data.errorCode === 200) {
                                     // This error code indicates that the ajax call failed. We recommend that you retry the token request.
                                     tokenRequest();
                                 } else {
                                     frmApiCheckout.data('requestRunning', false);
-                                    $('#ajax_message').html('<div class="alert alert--danger">' + data.errorMsg + '</div>');
+                                    if(data.errorMsg){
+                                        $('#ajax_message').html('<div class="alert alert--danger">' + data.errorMsg + '</div>');
+                                    }
+                                   
                                 }
                             };
 
