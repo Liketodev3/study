@@ -4,6 +4,7 @@ $bannerLangFrm->setFormTagAttribute('onsubmit', 'langSetup(this); return(false);
 $bannerLangFrm->developerTags['colClassPrefix'] = 'col-md-';
 $bannerLangFrm->developerTags['fld_default_col'] = 12;
 
+$bannerLangFrm->getField('banner_btn_url')->htmlAfterField='<small>' . sprintf(Label::getLabel('HTMLAFTERFIELD_BANNER_BUTTON_URL_%s', $adminLangId), '{SITEROOT}') . '</small>';
 
 ?>
 

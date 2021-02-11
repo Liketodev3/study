@@ -1819,4 +1819,14 @@ class CommonHelper extends FatUtility
         }
         $frm->addHTML(Label::getLabel('LBL_Note'), 'note', '<span class="spn_must_field">' . Label::getLabel('NOTE_SETTINGS_NOT_ALLOWED_TO_BE_MODIFIED_ON_DEMO_VERSION') . '</span>')->setWrapperAttribute('class', 'text--center');
     }
+
+    public static function getBannerUrl(string $url): string
+    {
+        $formattedUrl = $url;
+        if (strpos($url, '{SITEROOT}') !== false) {
+            $formattedUrl = str_replace('{SITEROOT}', CONF_WEBROOT_URL, $url);
+        }
+
+        return $formattedUrl;
+    }
 }
