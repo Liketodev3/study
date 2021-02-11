@@ -1,8 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<div class="tabs_panel">
+<div class="tabs_panel meta-tag-tbl">
 	<div class="row">
 		<div class="col-sm-12">
-			<h4><?php echo Label::getLabel('LBL_Manage_Meta_Tags', $adminLangId); ?> </h4>
 			<?php if (!empty($frmSearch)) { ?>
 				<?php if ($showFilters) { ?>
 					<section class="section searchform_filter">
@@ -16,11 +15,12 @@
 							$frmSearch->setFormTagAttribute('id', 'frmSearch');
 							$frmSearch->developerTags['colClassPrefix'] = 'col-md-';
 							$frmSearch->developerTags['fld_default_col'] = 6;
-
 							($frmSearch->getField('keyword')) ? $frmSearch->getField('keyword')->addFieldtagAttribute('class', 'search-input') : NUll;
 							($frmSearch->getField('hasTagsAssociated')) ? $frmSearch->getField('hasTagsAssociated')->addFieldtagAttribute('class', 'search-input') : NUll;
-
-							($frmSearch->getField('btn_clear')) ? $frmSearch->getField('btn_clear')->addFieldtagAttribute('onclick', 'clearSearch();') :  NULL;
+							$submitBtn = $frmSearch->getField('btn_submit');
+							$clearbtn = $frmSearch->getField('btn_clear');
+							$submitBtn->attachField($clearbtn);
+							$clearbtn->addFieldtagAttribute('onclick', 'clearSearch();');
 
 							echo  $frmSearch->getFormHtml();
 							?>

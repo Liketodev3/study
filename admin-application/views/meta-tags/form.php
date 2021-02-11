@@ -3,9 +3,10 @@ $frm->setFormTagAttribute('class', 'web_form form_horizontal');
 $frm->setFormTagAttribute('onsubmit', 'setupMetaTag(this); return(false);');
 $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 12;
-$urlField = $frm->getField('banner_url');
-$urlField->addFieldTagAttribute('placeholder', 'http://');
-
+if ($metaType == MetaTag::META_GROUP_OTHER) {
+	$slugField = $frm->getField('meta_slug');
+	$slugField->htmlAfterField  = "<small>" . sprintf(Label::getLabel("LBL_Ex_slug_%s_%s_%s", $adminLangId), CommonHelper::getRootUrl() . '/contact', 'contact', CommonHelper::getRootUrl() . '/contact') . "</small>";
+}
 ?>
 <section class="section">
 	<div class="sectionhead">
@@ -15,8 +16,6 @@ $urlField->addFieldTagAttribute('placeholder', 'http://');
 	<div class="sectionbody space">
 		<div class="row">
 			<div class="col-sm-12">
-				<h1><?php //echo Label::getLabel('LBL_Meta_Tag_Setup',$adminLangId); 
-					?></h1>
 				<div class="tabs_nav_container responsive flat">
 					<ul class="tabs_nav">
 						<li><a class="active" href="javascript:void(0)" onclick="editMetaTagForm(<?php echo "$metaId,'$metaType',$recordId" ?>);"><?php echo Label::getLabel('LBL_General', $adminLangId); ?></a></li>
