@@ -106,7 +106,7 @@
         {
             $frm = new Form('frmRechargeWallet');
             $str = Label::getLabel('LBL_Enter_Amount_To_Be_Added_[{site-currency-symbol}]');
-            $str = str_replace("{site-currency-symbol}", CommonHelper::getDefaultCurrencySymbol(), $str);
+            $str = str_replace("{site-currency-symbol}", CommonHelper::getSystemCurrencySymbol(), $str);
             $fld = $frm->addFloatField($str, 'amount');
             $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Add_Money_to_account', $this->siteLangId));
             return $frm;
@@ -272,7 +272,7 @@
             $frm = new Form('frmWithdrawal');
             $fld = $frm->addRadioButtons(Label::getLabel('LBL_Payout_Type'), 'withdrawal_payment_method_id', $methodArray, $payoutMethodId);
 
-            $withdrawalAmountFld  = $frm->addRequiredField(Label::getLabel('LBL_Amount_to_be_Withdrawn', $langId) . ' [' . commonHelper::getDefaultCurrencySymbol() . ']', 'withdrawal_amount');
+            $withdrawalAmountFld  = $frm->addRequiredField(Label::getLabel('LBL_Amount_to_be_Withdrawn', $langId) . ' [' . CommonHelper::getSystemCurrencySymbol() . ']', 'withdrawal_amount');
             $withdrawalAmountFld->requirement->setFloat(true);
             $walletBalance = User::getUserBalance(UserAuthentication::getLoggedUserId());
             $withdrawalAmountAfterHTML =  "<small>" . Label::getLabel("LBL_Current_Wallet_Balance", $langId) . ' ' . CommonHelper::displayMoneyFormat($walletBalance, true, true) . "</small>";
@@ -290,7 +290,7 @@
                     break;
             }
 
-            $paymentMethodTransactionFee = new PaymentMethodTransactionFee($payoutMethodId, FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 0));
+            $paymentMethodTransactionFee = new PaymentMethodTransactionFee($payoutMethodId, CommonHelper::getSystemCurrencyId());
 
             $payoutGatewayFee = $paymentMethodTransactionFee->getGatewayFee();
 

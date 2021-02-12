@@ -150,7 +150,7 @@ class WithdrawalRequestsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $currencyId = FatApp::getConfig('CONF_CURRENCY');
+        
         $gatewayFee = $records['pmtfee'];
         $gatewayFee = FatUtility::float($gatewayFee);
         $amount = $records['withdrawal_amount'] - $gatewayFee;

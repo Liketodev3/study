@@ -12,6 +12,8 @@ class CommonHelper extends FatUtility
     private static $_currency_value;
     private static $_default_currency_symbol_left;
     private static $_default_currency_symbol_right;
+    private static $_system_currency_id;
+    private static $_system_currency_data;
 
     public static function initCommonVariables($isAdmin = false)
     {
@@ -19,7 +21,7 @@ class CommonHelper extends FatUtility
         self::$_user_agent = isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
         self::$_lang_id = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
         self::$_currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
-
+        
         if (false === $isAdmin) {
             if (isset($_COOKIE['defaultSiteLang'])) {
                 $languages = Language::getAllNames();
@@ -57,6 +59,12 @@ class CommonHelper extends FatUtility
         self::$_currency_code = $currencyData['currency_code'];
         self::$_currency_value = $currencyData['currency_value'];
         self::$_layout_direction = Language::getLayoutDirection(self::$_lang_id);
+        self::$_system_currency_data =  Currency::getSystemCurrencyData();
+        if(!empty(self::$_system_currency_data)){
+            self::$_system_currency_id =  self::$_system_currency_data['currency_id'];
+        }
+        // self::$_system_currency_id =  ;
+
     }
 
     public static function getLangId()
@@ -67,6 +75,21 @@ class CommonHelper extends FatUtility
     public static function getLayoutDirection()
     {
         return self::$_layout_direction;
+    }
+
+    public static function getSystemCurrencyId()
+    {
+        return self::$_system_currency_id;
+    }
+
+    public static function getSystemCurrencyData() : array
+    {
+        return self::$_system_currency_data;
+    }
+
+    public static function getSystemCurrencySymbol() : string
+    {
+        return (self::$_system_currency_data['currency_symbol_left'] !='' ) ? self::$_system_currency_data['currency_symbol_left']: self::$_system_currency_data['currency_symbol_right'];
     }
 
     public static function getCurrencyId()
@@ -269,11 +292,7 @@ class CommonHelper extends FatUtility
     public static function getCurrencySymbol($showDefaultSiteCurrenySymbol = false)
     {
         if ($showDefaultSiteCurrenySymbol) {
-            $currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
-            $currencyData = Currency::getAttributesById(
-                $currency_id,
-                array('currency_symbol_left','currency_symbol_right')
-            );
+            $currencyData =  $currencyData = CommonHelper::getSystemCurrencyData();
             $currencySymbolLeft = $currencyData['currency_symbol_left'];
             $currencySymbolRight = $currencyData['currency_symbol_right'];
         } else {
@@ -322,11 +341,13 @@ class CommonHelper extends FatUtility
         $currencySymbolRight = self::getCurrencySymbolRight();
 
         if ($showInConfiguredDefaultCurrency) {
-            $currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
-            $currencyData = Currency::getAttributesById(
-                $currency_id,
-                array('currency_code','currency_symbol_left','currency_symbol_right','currency_value')
-            );
+            // $currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
+
+            // $currencyData = Currency::getAttributesById(
+            //     $currency_id,
+            //     array('currency_code','currency_symbol_left','currency_symbol_right','currency_value')
+            // );
+            $currencyData = CommonHelper::getSystemCurrencyData();
             $currencyValue = $currencyData['currency_value'];
             $currencySymbolLeft = $currencyData['currency_symbol_left'];
             $currencySymbolRight = $currencyData['currency_symbol_right'];

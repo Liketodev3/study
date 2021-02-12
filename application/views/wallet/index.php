@@ -44,7 +44,7 @@ $frmRechargeWallet->developerTags['fld_default_col'] = 12;
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="wrap wrap--gray">
                                             <h4><?php $str = Label::getLabel('LBL_Enter_Amount_To_Be_Added_[{site-currency-symbol}]');
-											$str = str_replace( "{site-currency-symbol}", CommonHelper::getDefaultCurrencySymbol(), $str );
+											$str = str_replace( "{site-currency-symbol}", CommonHelper::getSystemCurrencySymbol(), $str );
 											//echo $str;
 											?></h4>
                                             <span class="-gap"></span>

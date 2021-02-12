@@ -21,7 +21,7 @@ $fldSubmit->setFieldTagAttribute( 'class', 'btn btn--secondary btn--large' );
 	<h6><?php
 		echo Label::getLabel('LBL_Net_Payable_:');
 		echo CommonHelper::displayMoneyFormat( $netAmmount ); ?>
-		<?php if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) { ?>
+		<?php if (CommonHelper::getCurrencyId() != CommonHelper::getSystemCurrencyId()) { ?>
 		<br><br><p class="-color-secondary"><?php echo CommonHelper::currencyDisclaimer($siteLangId, $netAmmount); ?></p>
 		<?php } ?>
 	</h6>
