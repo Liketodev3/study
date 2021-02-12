@@ -5,7 +5,7 @@ class TeacherLessonsPlanController extends LoggedUserController
     {
         parent::__construct($action);
         $learnerAllowedActions = ['getFileById'];
-        if(User::isLearner() && !in_array($action, $learnerAllowedActions)){
+        if(!User::isTeacher() && !in_array($action, $learnerAllowedActions)){
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
     }

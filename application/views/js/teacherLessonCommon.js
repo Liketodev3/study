@@ -39,10 +39,13 @@ cancelLessonSetup = function(frm){
     if(isLessonCancelAjaxRun) {
         return false;
     }
-    isLessonCancelAjaxRun = true;
+    
     if (!$(frm).validate()) return;
+    $.loader.show();
     var data = fcom.frmData(frm);
+    isLessonCancelAjaxRun = true;
     fcom.updateWithAjax(fcom.makeUrl('TeacherScheduledLessons', 'cancelLessonSetup'), data , function(t) {
+        $.loader.hide();
         $.facebox.close();
         location.reload();
     });

@@ -1,13 +1,27 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number:
+Release Number: TV-2.8.1.20210209
 
-Release Date:
+Release Date: 2021/02/09
+
+Hotfixes:
+    Bug-#049283-fix attach lesson plan issue
+    Bug-#049565-fix cancel lesson submit button issue
+
+------------------------------------------------------------
+
+Release Number: TV-2.8.0.20210208
+
+Release Date: 2021/02/08
 
 Hotfixes:
     Bug-#049262: Fixed selection of Teacher availability at 11:30
     Bug-#049259-System should notifictions when the student or teacher cancel the lesson
     Task-78843-Upgrade zoom version - 1.8.5
+    Bug-#047294-fix keyword search
+    Bug-#048675-validate page size
+    Bug-#049283-fix lesson plan attachment download
+    Bug-#048531-fix label Class error on home page in case of analytics not found on google account
 
 ------------------------------------------------------------
 
