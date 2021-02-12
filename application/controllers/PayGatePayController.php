@@ -9,6 +9,7 @@ class PayGatePayController extends PaymentController
 
     private $error;
     private $isError;
+    
     private $orderInfo;
     public $settings;
 

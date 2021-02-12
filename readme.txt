@@ -5,6 +5,7 @@ Release Date:
 
 New Features:
 . Task-79596 - Add 2Checkout payment gateway
+
 . Task-79596 - Add Paygate payment gateway
 
 Enhancements:
