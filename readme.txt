@@ -1,5 +1,18 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: 
+Release Date:
+
+New Features:
+. Task-79596 - Add  2Checkout payment gateway Payment gateway
+
+Enhancements:
+  
+Bug Fixes:
+
+----------------------------------------------------------
+
+
 Release Number: TV-2.8.2.20210211
 
 Release Date: 2021/02/11
