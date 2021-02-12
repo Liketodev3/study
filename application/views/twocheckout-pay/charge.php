@@ -1,4 +1,9 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage'); ?>
+<script>
+    if(performance.navigation.type == 2){
+        location.reload(true);
+    }
+</script>
 <div class="payment-page">
     <div class="cc-payment">
         <div class="logo-payment"><img src="<?php echo CommonHelper::generateFullUrl('Image', 'paymentPageLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo FatApp::getConfig('CONF_WEBSITE_NAME_' . $siteLangId) ?>" title="<?php echo FatApp::getConfig('CONF_WEBSITE_NAME_' . $siteLangId) ?>" /></div>
@@ -21,6 +26,7 @@
                     <?php else : ?>
                         <div class="alert alert--danger"><?php echo $error; ?></div>
                     <?php endif; ?>
+                    
                 </div>
                 <script type="text/javascript">
                     $(function() {
@@ -33,6 +39,8 @@
             <?php } else { /* API Checkout */ ?>
 
                 <div class="payment-from">
+                    <div class="loader" style="display: none;"></div>
+                    <div class="col-md-12 alert--info alert" id="lbl-txn-inproress" style="display: none;"><?php echo Label::getLabel('LBL_Please_hold_while_your_transaction_is_being_processed') ?></div>
                     <?php if (!isset($error)) :
                         // $frm->setFormTagAttribute('onsubmit', 'sendPayment(this);return false;');
                         $frm->setFormTagAttribute('id', 'twocheckout');
@@ -194,7 +202,7 @@
                         <?php else : ?>
                             <div class="alert alert--danger"><?php echo $error; ?></div>
                         <?php endif; ?>
-                        <div id="ajax_message"></div>
+                        <div id="ajax_message" class="col-md-12"></div>
                         </div>
                         <?php if (!FatUtility::isAjaxCall()) { ?>
                             <script type="text/javascript" src="https://www.2checkout.com/checkout/api/2co.min.js"></script>
@@ -250,16 +258,19 @@
                                     // This error code indicates that the ajax call failed. We recommend that you retry the token request.
                                     tokenRequest();
                                 } else {
-                                    frmApiCheckout.data('requestRunning', false);
+                                    $("#twocheckout").data('requestRunning', false);
                                     $('#ajax_message').html('<div class="alert alert--danger">' + data.errorMsg + '</div>');
+                                    $("#twocheckout").show();
+                                    $('div.payment-from .loader').hide();
+                                    $('#lbl-txn-inproress').hide();
                                 }
                             };
 
                             var tokenRequest = function() {
                                 // Setup token request arguments
                                 var args = {
-                                    sellerId: "<?php echo $sellerId; ?>",
-                                    publishableKey: "<?php echo $publishableKey; ?>",
+                                    sellerId: "<?php echo $sellerId??''; ?>",
+                                    publishableKey: "<?php echo $publishableKey??''; ?>",
                                     ccNo: $("#ccNo").val(),
                                     cvv: $("#cvv").val(),
                                     expMonth: $("#expMonth").val(),
@@ -275,10 +286,16 @@
 
                             $(document).on("submit", "#twocheckout", function(event) {
                                 event.preventDefault();
+                                if(!$('#twocheckout').validate()){
+                                    return;
+                                }
                                 var token = $("input[name='token']").val();
                                 if ('' != token && 'undefined' != typeof token) {
                                     return;
                                 }
+                                $(this).hide();
+                                $('div.payment-from .loader').show();
+                                $('#lbl-txn-inproress').show();
                                 $(this).data('requestRunning', false);
                                 TCO.loadPubKey("<?php echo $transaction_mode; ?>", tokenRequest);
                                 /* tokenRequest(); */

@@ -26,7 +26,7 @@ class OrderPayment extends Order
     {
         $orderInfo = $this->orderAttributes;
         $userObj = new User($orderInfo["order_user_id"]);
-        $userInfo = $userObj->getUserInfo(array('user_first_name', 'credential_email', 'user_phone'), true, true, true);
+        $userInfo = $userObj->getUserInfo(array('user_first_name', 'user_last_name', 'credential_email', 'user_phone',  'user_country_id'), true, true, true);
         $orderCurrencyCode = CommonHelper::getSystemCurrencyData()['currency_code'];
         
         $arrOrder = array(

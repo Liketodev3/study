@@ -1,5 +1,4 @@
 <?php
-
 class TwocheckoutPayController extends PaymentController
 {
     protected $keyName = "Twocheckout";
@@ -8,7 +7,7 @@ class TwocheckoutPayController extends PaymentController
     public function __construct($action)
     {
         parent::__construct($action);
-        
+
         if (!is_array($this->allowedCurrenciesArr())) {
             $this->setErrorAndRedirect(Label::getLabel('MSG_INVALID_CURRENCY_FORMAT', $this->siteLangId));
         }
@@ -16,6 +15,10 @@ class TwocheckoutPayController extends PaymentController
         if (!in_array($this->systemCurrencyCode, $this->allowedCurrenciesArr())) {
             $msg = Label::getLabel('MSG_INVALID_ORDER_CURRENCY_({CURRENCY})_PASSED_TO_GATEWAY', $this->siteLangId);
             $msg = CommonHelper::replaceStringData($msg, ['{CURRENCY}' => $this->systemCurrencyCode]);
+            $this->setErrorAndRedirect($msg);
+        }
+        if (!$this->validateSettings()) {
+            $msg = Label::getLabel('MSG_PLESAE_UPDATE_2CHECKOUT_PAYMENT_SETTINGS', $this->siteLangId);
             $this->setErrorAndRedirect($msg);
         }
     }
@@ -72,7 +75,7 @@ class TwocheckoutPayController extends PaymentController
     public function send($orderId)
     {
         $frm = $this->getPaymentForm($orderId);
-        if(!$post = $frm->getFormDataFromArray(FatApp::getPostedData())){
+        if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
             FatUtility::dieWithError(current($frm->getValidationErrors()));
         }
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
@@ -83,26 +86,26 @@ class TwocheckoutPayController extends PaymentController
             $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
 
             $order_actual_paid = number_format(round($orderPaymentAmount, 2), 2, ".", "");
-            $params = array (
+            $params = array(
                 'sellerId' => $this->settings['sellerId'],
                 'privateKey' => $this->settings['privateKey'],
                 'merchantOrderId' => $orderId,
                 'token' => $post['token'],
                 'currency' => $orderInfo["order_currency_code"],
                 'total' => $order_actual_paid,
-                'billingAddr' => 
-                array (
-                  'name' => FatUtility::decodeHtmlEntities($post['cc_owner'], ENT_QUOTES, 'UTF-8'),
-                  "addrLine1" => $post['addrLine1'],
-                  "city" => $post['city'],
-                  "state" => $post['state'],
-                  "zipCode" => $post['zipCode'],
-                  'country' => Country::getAttributesById($post['country'], 'country_code'),
-                  'email' => $orderInfo['user_email'],
-                  'phoneNumber' => $orderInfo['user_phone'],
+                'billingAddr' =>
+                array(
+                    'name' => FatUtility::decodeHtmlEntities($post['cc_owner'], ENT_QUOTES, 'UTF-8'),
+                    "addrLine1" => $post['addrLine1'],
+                    "city" => $post['city'],
+                    "state" => $post['state'],
+                    "zipCode" => $post['zipCode'],
+                    'country' => Country::getAttributesById($post['country'], 'country_code'),
+                    'email' => $orderInfo['user_email'],
+                    'phoneNumber' => $orderInfo['user_phone'],
                 )
             );
-            
+
 
             if (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == false) {
                 $params['demo'] = true;
@@ -197,12 +200,12 @@ class TwocheckoutPayController extends PaymentController
         $frm->addRequiredField(Label::getLabel('LBL_City'), 'city');
         $frm->addRequiredField(Label::getLabel('LBL_State'), 'state');
         $frm->addRequiredField(Label::getLabel('LBL_Zip'), 'zipCode');
-        
+
         $country = new Country();
         $countriesArr = $country->getCountriesArr($this->siteLangId);
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'country', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
         $fld->requirement->setRequired(true);
-/* 
+        /* 
         $frm->addEmailField(Label::getLabel('LBL_email'), 'user_email');
         $frm->addTextBox(Label::getLabel('LBL_phone'), 'user_phone');
          */
@@ -218,5 +221,16 @@ class TwocheckoutPayController extends PaymentController
             "https://www.2checkout.com/checkout/api/2co.min.js",
         ];
         FatUtility::dieJsonSuccess($json);
+    }
+
+    public function validateSettings(): bool
+    {
+        if (
+            empty($this->settings['sellerId']) || empty($this->settings['publishableKey']) ||
+            empty($this->settings['privateKey']) || empty($this->settings['hashSecretWord'])
+        ) {
+            return false;
+        }
+        return true;
     }
 }
