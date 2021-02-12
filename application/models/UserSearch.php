@@ -1,4 +1,7 @@
 <?php
+
+use Stripe\ApplicationFee;
+
 class UserSearch extends SearchBase
 {
     private $isCredentialsJoined;
@@ -61,11 +64,11 @@ class UserSearch extends SearchBase
         /* ] */
 
         /* user preferences/skills[ */
-        $skillSrch = new UserToPreferenceSearch();
+        /* $skillSrch = new UserToPreferenceSearch();
         $skillSrch->addMultipleFields(array('utpref_user_id','GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids'));
         $skillSrch->addGroupBy('utpref_user_id');
-        $this->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
-        // $this->joinTable(Preference::DB_TBL_USER_PREF, 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
+        $this->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref'); */
+        $this->joinTable(Preference::DB_TBL_USER_PREF, 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
         // $this->addFld('GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids');
         /* ] */
     }
@@ -294,15 +297,19 @@ class UserSearch extends SearchBase
             $langId = CommonHelper::getLangId();
         }
 
-        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'u.user_id = utsl1.utl_us_user_id', 'utsl1');
+        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'INNER  JOIN', 'u.user_id = utsl1.utl_us_user_id AND utl_single_lesson_amount>0 AND utl_bulk_lesson_amount>0', 'utsl1');
+        $this->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utsl1.utl_slanguage_id AND tlanguage_active = '.applicationConstants::ACTIVE);
+        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl1.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'tl_lang');
+        $this->addMultipleFields(array(
+            'utsl1.utl_us_user_id', 
+            'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName',
+            'GROUP_CONCAT(DISTINCT utl_id) as utl_ids',
+            'max(utl_single_lesson_amount) as maxPrice',
+            'min(utl_bulk_lesson_amount) as minPrice',
+            'GROUP_CONCAT(DISTINCT utl_slanguage_id) as utl_slanguage_ids'
+        ));
 
-        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl1.utl_slanguage_id');
-
-        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl1.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'sl_lang');
-
-        $this->addMultipleFields(array('utsl1.utl_us_user_id', 'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
-
-        $this->addCondition('tlanguage_active', '=', '1');
+        // $this->addCondition('tlanguage_active', '=', '1');
 
         if (!empty($keyword)) {
             $cnd = $this->addCondition('tlanguage_name', 'LIKE', '%' . $keyword . '%');

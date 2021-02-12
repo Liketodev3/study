@@ -290,6 +290,7 @@ function htmlEncode(value){
 			}
 			$(dv).html( ans.html );
             $('#start_record').parent('p').removeClass('d-none');
+			window.scroll(0, 0);
 		});
 	};
 
