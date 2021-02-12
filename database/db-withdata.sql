@@ -842,7 +842,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('apple_touch_icon', '', 0),
 ('CONF_ABOUT_US_PAGE', '1', 0),
 ('conf_activate_separate_signup_form', '1', 0),
-('CONF_ACTIVE_MEETING_TOOL', 'comet_chat', 0),
+('CONF_ACTIVE_MEETING_TOOL', 'lesson_space', 0),
 ('CONF_ADDITIONAL_ALERT_EMAILS', '', 0),
 ('CONF_ADDRESS_1', 'A-712, FATbit Technologies, Bestech Business Towers, Mohali, Punjab, India', 0),
 ('CONF_ADDRESS_2', 'A-712, FATbit Technologies, Bestech Business Towers, Mohali, Punjab, India', 0),
@@ -950,7 +950,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('CONF_WEBSITE_NAME_1', 'Yo!Coach', 0),
 ('CONF_WEBSITE_NAME_2', 'Yo!Coach', 0),
 ('CONF_WELCOME_EMAIL_REGISTRATION', '1', 0),
-('CONF_YOCOACH_VERSION', 'TV-2.7.6.20201201', 0),
+('CONF_YOCOACH_VERSION', 'RV-2.1', 0),
 ('conf_yokart_version', 'V8.1', 0),
 ('CONF_ZOOM_API_KEY', '', 0),
 ('CONF_ZOOM_API_SECRET', '', 0),
@@ -2448,7 +2448,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (2, 'LBL_EMAIL_ADDRESS', 1, 'Email Address'),
 (3, 'LBL_Password', 1, 'Password'),
 (4, 'LBL_Remember_Me', 1, 'Remember Me'),
-(5, 'LBL_LOGIN', 1, 'Sign In'),
+(5, 'LBL_LOGIN', 1, 'Log In'),
 (6, 'LBL_Do_you_want_to_remove', 1, 'Do You Want To Remove'),
 (7, 'LBL_Do_you_want_to_remove_this_option', 1, 'Do You Want To Remove This Option'),
 (8, 'LBL_Do_you_want_to_remove_this_shop', 1, 'Do You Want To Remove This Shop'),
@@ -2502,7 +2502,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (56, 'LBL_Do_you_want_to_change_request_status', 1, 'Do You Want To Change Request Status'),
 (57, 'LBL_Do_you_want_to_truncate_User_Data', 1, 'Do You Want To Truncate User Data'),
 (58, 'LBL_Default_Admin_View', 1, 'Default Admin View'),
-(59, 'LBL_Sign_In', 1, 'Sign In'),
+(59, 'LBL_Sign_In', 1, 'Log In'),
 (60, 'LBL_Username', 1, 'Username'),
 (61, 'LBL_Forgot_Password?', 1, 'Forgot Password?'),
 (62, 'LBL_Enter_Your_Email_Address', 1, 'Enter Your Email Address'),
@@ -2743,7 +2743,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (300, 'LBL_Request_Processing...', 1, 'Request Processing...'),
 (301, 'LBL_is_mandatory', 1, 'Is Mandatory'),
 (302, 'LBL_Please_enter_valid_email_ID_for', 1, 'Please Enter Valid Email Id For'),
-(303, 'LBL_Sign_Up', 1, 'Sign Up'),
+(303, 'LBL_Sign_Up', 1, 'Register'),
 (304, 'MSG_Back_To_Home', 1, 'Back To Home'),
 (305, 'LBL_Email_ID', 1, 'Email Id'),
 (306, 'MSG_Valid_password', 1, 'Valid Password'),
@@ -3275,8 +3275,8 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (842, 'MSG_That_captcha_was_incorrect', 1, 'The entered captcha is incorrect. '),
 (843, 'MSG_Please_Enter_Valid_password', 1, 'Please Enter Valid Password'),
 (844, 'LBL_Tutor_Preferences', 1, 'Tutor Preferences'),
-(845, 'LBL_Accents', 1, 'Accents'),
-(846, 'LBL_Teaches_Level', 1, 'Teaches Level'),
+(845, 'LBL_Accents', 1, 'Teacher’s accent'),
+(846, 'LBL_Teaches_Level', 1, 'Teaches level'),
 (847, 'LBL_Learners_Ages', 1, 'Learners Ages'),
 (848, 'LBL_Lessons_Include', 1, 'Lessons Include'),
 (849, 'LBL_Subjects', 1, 'Subjects'),
@@ -3286,8 +3286,8 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (853, 'LBL_Start/End', 1, 'Start/end'),
 (854, 'LBL_Uploaded_Certificate', 1, 'Uploaded Certificate'),
 (855, 'LBL_Actions', 1, 'Actions'),
-(856, 'LBL_Learner_Ages', 1, 'Learner Ages'),
-(857, 'LBL_Test_Preparations', 1, 'Test Preparations'),
+(856, 'LBL_Learner_Ages', 1, 'Learner’s age group'),
+(857, 'LBL_Test_Preparations', 1, 'Test preparations'),
 (858, 'LBL_Language_that_I\'m_teaching', 1, 'Language That I\'m Teaching'),
 (859, 'LBL_Preferences_updated_successfully!', 1, 'Preferences Updated Successfully!'),
 (860, 'LBL_Facebook', 1, 'Facebook'),
@@ -3939,7 +3939,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (1511, 'LBL_Are_you_sure_to_unlock_this_price!', 1, 'Are You Sure To Unlock This Price!'),
 (1512, 'LBL_Are_you_sure_to_unlock_this_price!', 2, 'هل أنت متأكد من إطلاق هذه الأسعار!'),
 (1513, 'MSG_Please_select_a_Profile_Pic', 1, 'Please Select A Profile Pic'),
-(1514, 'LBL_Search_By_Teacher_Name', 1, 'Search By Teacher Name'),
+(1514, 'LBL_Search_By_Teacher_Name', 1, 'Search by teacher’s name'),
 (1515, 'LBL_Unused', 1, 'Unused'),
 (1516, 'LBL_Used', 1, 'Used'),
 (1517, 'LBL_Giftcards_Purchased', 1, 'Giftcards Purchased'),
@@ -4515,9 +4515,9 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (2130, 'MSG_You_can_schedule_lessons_here', 2, 'يمكنك جدولة الدروس هنا'),
 (2131, 'MSG_Go_to_my_Lessons', 2, 'العودة إلى بلدي الدروس'),
 (2132, 'BLOCK_SECOND_AFTER_HOMESLIDER', 1, 'Second After Homeslider'),
-(2133, 'Lbl_What_Language_You_want_to_learn?', 1, 'What Subject Do You Want To Learn?'),
-(2134, 'Lbl_We_have_teacher_in_different_languages!', 1, 'We Have Teacher In Different Languages!'),
-(2135, 'Lbl_Browse_them_now!', 1, 'Browse Them Now!'),
+(2133, 'Lbl_What_Language_You_want_to_learn?', 1, 'Popular Languages To Learn'),
+(2134, 'Lbl_We_have_teacher_in_different_languages!', 1, 'Learn With A Multitude of Language Experts.'),
+(2135, 'Lbl_Browse_them_now!', 1, 'Find Your Tutor'),
 (2136, 'Lbl_Top_Rated_Teachers', 1, 'Top Rated Teachers'),
 (2137, 'LBL_Subscribe', 1, 'Subscribe'),
 (2138, 'LBL_Newsletter_is_not_configured_yet,_Please_contact_admin', 1, 'Newsletter Is Not Configured Yet, Please Contact Admin'),
@@ -4532,9 +4532,9 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (2147, 'LBL_Jul', 1, 'Jul'),
 (2148, 'LBL_ADD_LANGUAGE', 1, 'Add Language'),
 (2149, 'LBL_ADD_TEACH_LANGUAGE', 1, 'Add Teach Language'),
-(2150, 'LBL_Slider_Title_Text', 1, 'Learn With Us!'),
-(2151, 'LBL_Slider_Description_Text', 1, 'Most people fail to learn a language before they even begin. Not anymore!\nBecause our tutors apply the most appropriate method for a learner’s specific objectives and learning style.'),
-(2152, 'LBL_I_am_learning...', 1, 'I am learning...'),
+(2150, 'LBL_Slider_Title_Text', 1, 'Master any language with online tutors'),
+(2151, 'LBL_Slider_Description_Text', 1, 'Learn any language through live video sessions with native language teachers at any time from anywhere.'),
+(2152, 'LBL_I_am_learning...', 1, 'Language I want to learn'),
 (2153, 'LBL_Get_Started?', 1, 'Get Started'),
 (2154, 'LBL_How_it_Works?', 1, 'How it works?'),
 (2155, 'LBL_NOTE:_To_use_SSL,_check_with_your_host', 1, 'Note: To Use Ssl, Check With Your Host'),
@@ -4542,7 +4542,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (2157, 'LBL_Buyer_Phone', 1, 'Buyer Phone'),
 (2158, 'LBL_Recipient_Name', 1, 'Recipient Name'),
 (2159, 'LBL_Recipient_Email', 1, 'Recipient Email'),
-(2160, 'LBL_Why_Us?', 1, 'Why Us?'),
+(2160, 'LBL_Why_Us?', 1, 'We Make Language Learning Easy & Simpler'),
 (2161, 'LBL_Upcoming_Scheduled_Lessons', 1, 'Upcoming Scheduled Lessons'),
 (2162, 'LBL_Start_now_and_turn_Text', 1, 'Book Your Lesson'),
 (2163, 'LBL_Get_started_now!', 1, 'Get Started Now!'),
@@ -4556,7 +4556,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (2171, 'LBL_Comet_Chat_Auth', 1, 'Comet Chat Auth'),
 (2172, 'LBL_On_Submit_Price_Needs_To_Set_Again', 1, 'On Submit Price Needs To Set Again'),
 (2173, 'LBL_Learner_Join_Time_Marked!', 1, 'Learner Join Time Marked!'),
-(2175, 'Lbl_What_Language_You_want_to_learn?', 2, 'ما موضوع هل تريد أن تعرف؟'),
+(2175, 'Lbl_What_Language_You_want_to_learn?', 2, 'اللغات الشعبية للتعلم'),
 (2176, 'LBL_Aug', 1, 'Aug'),
 (2177, 'MSG_USER_NOT_LOGGED', 1, 'User Not Logged'),
 (2178, 'MSG_Invalid_Order', 1, 'Invalid Order'),
@@ -4615,13 +4615,13 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (2231, 'MSG_No_Record_Found', 1, 'No Record Found'),
 (2232, 'MSG_Success', 1, 'Success'),
 (2234, 'LBL_Slider_Title_Text', 2, 'تعلم معنا!'),
-(2236, 'LBL_Slider_Description_Text', 2, 'معظم الناس لا تعلم لغة حتى قبل أن تبدأ. ليس بعد الآن!\nلأن المدرسين لدينا تنطبق على معظم الطريقة المناسبة لتحقيق أهداف محددة المتعلم وأسلوب التعلم.'),
+(2236, 'LBL_Slider_Description_Text', 2, 'معظم الناس لا تعلم لغة حتى قبل أن تبدأ. ليس بعد الآن!\r\nلأن المدرسين لدينا تنطبق على معظم الطريقة المناسبة لتحقيق أهداف محددة المتعلم وأسلوب التعلم.'),
 (2237, 'LBL_I_am_learning...', 2, 'انا اتعلم...'),
 (2238, 'LBL_Get_Started?', 2, 'البدء'),
 (2239, 'LBL_How_it_Works?', 2, 'كيف تعمل؟'),
-(2240, 'LBL_Why_Us?', 2, 'لماذا نحن؟'),
-(2241, 'Lbl_We_have_teacher_in_different_languages!', 2, 'لدينا المعلم في لغات مختلفة!'),
-(2242, 'Lbl_Browse_them_now!', 2, 'تصفحها الآن!'),
+(2240, 'LBL_Why_Us?', 2, 'نجعل تعلم اللغة أسهل وأبسط'),
+(2241, 'Lbl_We_have_teacher_in_different_languages!', 2, 'تعلم مع العديد من خبراء اللغة'),
+(2242, 'Lbl_Browse_them_now!', 2, 'ابحث عن مدرسك'),
 (2243, 'LBL_Upcoming_Scheduled_Lessons', 2, 'دروس من المقرر القادمة'),
 (2244, 'LBL_Start_now_and_turn_Text', 2, 'احجز درسك'),
 (2245, 'LBL_Get_started_now!', 2, 'نبدأ الآن!'),
@@ -6001,11 +6001,11 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (3624, 'Lbl_Calendar', 1, 'Calendar'),
 (3625, 'Lbl_Calendar', 2, 'التقويم'),
 (3626, 'LBL_Cache_has_been_cleared', 2, 'مخبأ تم مسح'),
-(3627, 'LBL_By_Price_Low_to_High', 1, 'By Price Low To High'),
+(3627, 'LBL_By_Price_Low_to_High', 1, 'Price low to high'),
 (3628, 'LBL_By_Price_Low_to_High', 2, 'حسب السعر الأدنى إلى الأعلى'),
-(3629, 'LBL_By_Price_High_to_Low', 1, 'By Price High To Low'),
+(3629, 'LBL_By_Price_High_to_Low', 1, 'Price high to low'),
 (3630, 'LBL_By_Price_High_to_Low', 2, 'حسب السعر الاعلى الى الادنى'),
-(3631, 'LBL_By_Popularity', 1, 'By Popularity'),
+(3631, 'LBL_By_Popularity', 1, 'Popularity'),
 (3632, 'LBL_By_Popularity', 2, 'حسب الأكثر إقبالا'),
 (3633, 'LBL_Buy_Now', 2, 'اشتري الآن'),
 (3634, 'LBL_Buyer_Phone', 2, 'مشتري الهاتف'),
@@ -6197,7 +6197,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (3820, 'LBL_NECESSARY_COOKIE_DESCRIPTION_TEXT', 1, 'These cookies are necessary for the website to function and cannot be switched off in our systems. They are usually only set in response to actions made by you which amount to a request for services, such as setting your privacy preferences, logging in or filling in forms. You can set your browser to block or alert you about these cookies, but some parts of the site will not then work. These cookies do not store any personally identifiable information.'),
 (3821, 'MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}', 1, '<p>Your trial lesson order has been successfully processed!</p>'),
 (3822, 'MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}', 2, '<p>Your trial lesson order has been successfully processed!</p>'),
-(3823, 'LBL_Search_for_teachers', 1, 'Search For Teachers'),
+(3823, 'LBL_Search_for_teachers', 1, 'Search Teachers'),
 (3824, 'LBL_COPYRIGHT', 1, 'Copyright'),
 (3825, 'LBL_Choose_Cookies', 1, 'Choose Cookies'),
 (3826, 'LBL_Sitemap', 1, 'Sitemap'),
@@ -6287,9 +6287,44 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (3911, 'LBL_Total_Lesson', 1, 'Total Lesson'),
 (3912, 'LBL_Lesson_Price', 1, 'Lesson Price'),
 (3913, 'LBL_Order_Discount_Total', 1, 'Order Discount Total'),
-(3914, 'LBL_Lesson_includes', 1, 'Lesson Includes'),
+(3914, 'LBL_Lesson_includes', 1, 'Lesson includes'),
 (3915, 'LBL_Change_Lesson_Plan', 1, 'Change Lesson Plan'),
-(3916, 'LBL_Remove_Lesson_Plan', 1, 'Remove Lesson Plan');
+(3916, 'LBL_Remove_Lesson_Plan', 1, 'Remove Lesson Plan'),
+(3917, 'Note_This_calendar_is_to_only_check_availability', 1, 'Note: This calendar is to only check availability.'),
+(3918, 'Note_This_calendar_is_to_only_check_availability', 2, 'ملاحظة: هذا التقويم هو للتحقق من التوفر فقط'),
+(3919, 'Label_Help', 1, 'Help'),
+(3935, 'LBL_Search_for_teachers', 2, 'ابحث عن المعلمين'),
+(3938, 'Label_Help', 2, 'Help'),
+(3939, 'LBL_COPYRIGHT', 2, 'Copyright'),
+(3940, 'LBL_Lesson_includes', 2, 'Lesson includes'),
+(3941, 'LBL_Starts_from', 2, 'Starts From'),
+(3950, 'HTMLAFTERFIELD_BANNER_BUTTON_URL_%s', 1, 'Prefix with {SITEROOT} in case of URL on same site e.g. {SITEROOT}teachers. Otherwise full URL to webpage e.g. https://www.example.com'),
+(3952, 'HTMLAFTERFIELD_BANNER_BUTTON_URL_%s', 2, 'بادئة بـ {SITEROOT} في حالة وجود عنوان URL على نفس الموقع على سبيل المثال معلمو {SITEROOT}. وإلا عنوان URL الكامل لصفحة الويب ، على سبيل المثال https://www.example.com'),
+(3955, 'LBL_Timezone_:_UTC_%s', 1, 'Timezone : UTC %s'),
+(3956, 'LBL_LESSON_{lesson-id}_CANCELED_BY_{user-full-name}_Comment:{comment}', 1, 'Lesson {lesson-id} Canceled By {user-full-name} \n Comment: {comment}'),
+(3957, 'LBL_Timezones_Management', 1, 'Timezones Management'),
+(3958, 'LBL_Order_Refund_Amount', 1, 'Order Refund Amount'),
+(3959, 'LBL_Sign_in_with_Google', 1, 'Sign In With Google'),
+(3960, 'LBL_Teacher_Speaks', 1, 'Teacher Speaks'),
+(3961, 'LBL_Select_A_Language', 1, 'Select a language'),
+(3962, 'LBL_*_Note_:_charged_in_currency_disclaimer_{default-currency-symbol}', 1, '* Note : Charged In Currency Disclaimer {default-currency-symbol}'),
+(3963, 'LBL_Lesson_time_has_passed', 1, 'Lesson Time Has Passed'),
+(3964, 'LBL_Withdrawal_Payout_Sent', 1, 'Withdrawal Payout Sent'),
+(3965, 'LBL_Withdrawal_Payout_Failed', 1, 'Withdrawal Payout Failed'),
+(3966, 'LBL_Withdrawal_Request_Amount', 1, 'Withdrawal Request Amount'),
+(3967, 'LBL_Paypal_Email', 1, 'Paypal Email'),
+(3968, 'LBL_Method_Fee_Type', 1, 'Method Fee Type'),
+(3969, 'LBL_Method_Fee_Setups', 1, 'Method Fee Setups'),
+(3970, 'LBL_Method_Fee_Listing', 1, 'Method Fee Listing'),
+(3971, 'LBL_Fee', 1, 'Fee'),
+(3972, 'LBL_Fee_Setup_Successfully', 1, 'Fee Setup Successfully'),
+(3973, 'MSG_Transaction_Fee_Charged_:', 1, 'Transaction Fee Charged :'),
+(3974, 'MSG_You_have_a_payout!!', 1, 'You Have A Payout!!'),
+(3975, 'MSG_You_have_a_Received_a_payout', 1, 'You Have A Received A Payout'),
+(3977, 'LBL_Select_A_Language', 2, 'اختر لغة'),
+(3978, 'LBL_Select_date_time', 1, 'Select day & time'),
+(3980, 'LBL_Select_date_time', 2, 'حدد التاريخ والوقت'),
+(3995, 'LBL_Sort_by', 1, 'Sort By');
 
 -- --------------------------------------------------------
 
@@ -6978,6 +7013,7 @@ CREATE TABLE `tbl_preferences` (
   `preference_display_order` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 --
 -- Dumping data for table `tbl_preferences`
 --
@@ -7201,11 +7237,11 @@ INSERT INTO `tbl_preferences_lang` (`preferencelang_preference_id`, `preferencel
 (45, 2, '(C1) متقدم'),
 (46, 1, '(C2) Upper Advanced '),
 (46, 2, '(C2) المستوى المتقدم'),
-(47, 1, 'Children (4-11)'),
+(47, 1, '4 yrs -11 yrs'),
 (47, 2, 'الأطفال (4-11)'),
-(48, 1, 'Teenagers 12-18'),
+(48, 1, '12 yrs - 18 yrs'),
 (48, 2, 'المراهقون 12-18'),
-(49, 1, 'Adults 18+'),
+(49, 1, '18+ yrs'),
 (49, 2, 'البالغين 18+'),
 (50, 1, 'Curriculum'),
 (50, 2, 'منهاج دراسي'),
@@ -10739,7 +10775,7 @@ ALTER TABLE `tbl_languages`
 -- AUTO_INCREMENT for table `tbl_language_labels`
 --
 ALTER TABLE `tbl_language_labels`
-  MODIFY `label_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3917;
+  MODIFY `label_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4018;
 
 --
 -- AUTO_INCREMENT for table `tbl_lesson_meeting_details`
@@ -10983,21 +11019,5 @@ COMMIT;
 ALTER TABLE `tbl_payment_method_transaction_fee` CHANGE `pmtfee_fee` `pmtfee_fee` DECIMAL(5,2) NOT NULL;
 ALTER TABLE `tbl_payment_method_transaction_fee` ADD `pmtfee_type` TINYINT(2) NOT NULL;
 
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.7.20201205' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
 REPLACE INTO `tbl_email_templates` (`etpl_code`, `etpl_lang_id`, `etpl_name`, `etpl_subject`, `etpl_body`, `etpl_replacements`, `etpl_status`) VALUES
 ('learner_schedule_email', 1, 'Learner Scheduled/Rescheduled Lesson', 'Learner {action} lesson at {website_name}', '\r\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#f5f5f5\" style=\"font-family:Arial; color:#333; line-height:26px;\"> \r\n        \r\n        \r\n	<tbody>            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:30px 0;\"></td>    \r\n            \r\n		</tr>    \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:0 0 0;\">          \r\n                    \r\n				<!--\r\n				header start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #fff;border-bottom: 1px solid #eee;\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:20px 40px;\"><a href=\"#\" style=\"display: block;\">{Company_Logo}</a></td>                  \r\n                                \r\n							<td style=\"text-align:right;padding: 40px;\">                      {social_media_icons}\r\n                      </td>              \r\n                            \r\n						</tr>          \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				header end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n       \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>                    \r\n				<!--\r\n				page body start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">             \r\n                  \r\n                        \r\n					<tbody>                        \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;\">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:20px 0 60px;\">                                     <img src=\"icon-account.png\" alt=\"\" />                                     \r\n												<h5 style=\"margin: 0;padding: 0; text-transform: uppercase; font-size: 16px;font-weight: 500;color: #333;\"></h5>                                     \r\n												<h2 style=\"margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;\">Learner {action} the lesson!</h2>                                     \r\n                                  </td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                  \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; \">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:60px 0 70px;\">                                      \r\n												<h3 style=\"margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;\">Dear {teacher_name}  </h3>Learner ({learner_name}) has {action} the lesson ({lesson_name}) which is scheduled on {lesson_date} {lesson_start_time} - {lesson_end_time}<br />\r\n												\r\n												<div>&nbsp;</div>\r\n												<div>&nbsp;</div>\r\n												<div>Comments: {learner_comment}</div></td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                 \r\n                \r\n              \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page body end here\r\n				-->\r\n				                          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>          \r\n                    \r\n				<!--\r\n				page footer start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                                \r\n							<td style=\"height:30px;\"></td>                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:30px 0; font-size:20px; color:#000;\">                                  Need more help?<br />\r\n												                                                     <a href=\"{contact_us_url}\" style=\"color:#e84c3d;\">We‘re here, ready to talk</a>                              </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:20px 0 30px; font-size:13px; color:#999;\">                                  Be sure to add <a href=\"#\" style=\"color: #e84c3d\">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br />\r\n												                                                    <br />\r\n												                                                    &copy; 2018, {website_name}. All Rights Reserved.\r\n                                      \r\n                                  </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                  \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0; height:50px;\"></td>              \r\n                            \r\n						</tr>              \r\n                  \r\n              \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page footer end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n        \r\n        \r\n	</tbody>    \r\n</table>     ', '{learner_name}\r\n{teacher_name}\r\n{lesson_name}\r\n{learner_comment}\r\n{lesson_date}\r\n{lesson_start_time}\r\n{lesson_end_time}\r\n{action}\r\n', 1);
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.8.20201207' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.9.20201208' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.10.20201210' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-
-
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
-('Note_This_calendar_is_to_only_check_availability', 1, 'Note: This calendar is to only check availability.'),
-('Note_This_calendar_is_to_only_check_availability', 2, 'ملاحظة: هذا التقويم هو للتحقق من التوفر فقط');
-
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.11.20201215' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.12.20201215' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.1' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

@@ -47,7 +47,7 @@ if (empty($minPrice) && empty($maxPrice)) {
 					<?php if( isset($spokenLangsArr) && $spokenLangsArr ){ ?>
 					<div class="block">
 						<div class="block__head block__head-trigger block__head-trigger-js is-active">
-							<h6><?php echo Label::getLabel('LBL_Teacher_Speakes'); ?></h6>
+							<h6><?php echo Label::getLabel('LBL_Teacher_Speaks'); ?></h6>
 						</div>
 						<div class="block__body block__body-target block__body-target-js" style="display: block;">
 							<div class="scrollbar scrollbar-js">
@@ -69,7 +69,29 @@ if (empty($minPrice) && empty($maxPrice)) {
 					</div>
 					<?php } ?>
 
-
+					<?php if( isset($fromArr) && !empty($fromArr) ){ ?>
+                    <div class="block">
+                        <div class="block__head block__head-trigger block__head-trigger-js">
+                            <h6><?php echo Label::getLabel('LBL_From'); ?></h6>
+                        </div>
+                        <div class="block__body block__body-target block__body-target-js" style="display: none;">
+                            <div class="scrollbar scrollbar-js">
+                                <div class="listing listing--vertical">
+                                    <ul>
+										<?php foreach($fromArr as $from){ ?>
+                                        <li>
+                                            <label class="checkbox" id="fromcountry_<?php echo $from['user_country_id'] ?>">
+                                                <input type="checkbox" name="filterFromCountry[]" value="<?php echo $from['user_country_id'] ?>" <?php if( in_array($from['user_country_id'], $fromCountry_filter )){ echo 'checked'; }  ?> >
+                                                <i class="input-helper"></i> <?php echo $from['country_name']; ?>
+                                            </label>
+                                        </li>
+										<?php } ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					<?php } ?>
 					<?php if( isset($priceArr) && $priceArr ){ ?>
 					<div class="block">
 						<div class="block__head block__head-trigger block__head-trigger-js is-active"><h6><?php echo Label::getLabel( 'LBL_Price' ); ?></h6></div>
@@ -120,29 +142,7 @@ if (empty($minPrice) && empty($maxPrice)) {
                         </div>
                     </div>
 					<?php } ?>
-					<?php if( isset($fromArr) && !empty($fromArr) ){ ?>
-                    <div class="block">
-                        <div class="block__head block__head-trigger block__head-trigger-js">
-                            <h6><?php echo Label::getLabel('LBL_From'); ?></h6>
-                        </div>
-                        <div class="block__body block__body-target block__body-target-js" style="display: none;">
-                            <div class="scrollbar scrollbar-js">
-                                <div class="listing listing--vertical">
-                                    <ul>
-										<?php foreach($fromArr as $from){ ?>
-                                        <li>
-                                            <label class="checkbox" id="fromcountry_<?php echo $from['user_country_id'] ?>">
-                                                <input type="checkbox" name="filterFromCountry[]" value="<?php echo $from['user_country_id'] ?>" <?php if( in_array($from['user_country_id'], $fromCountry_filter )){ echo 'checked'; }  ?> >
-                                                <i class="input-helper"></i> <?php echo $from['country_name']; ?>
-                                            </label>
-                                        </li>
-										<?php } ?>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-					<?php } ?>
+					
 
 					<?php
 					if( isset($genderArr) && !empty($genderArr) ){ ?>
