@@ -178,7 +178,6 @@ class Cart extends FatModel
                 'IFNULL(top_single_lesson_price,0) as topSingleLessonPrice',
                 'IFNULL(top_bulk_lesson_price,0) as topBulkLessonPrice',
                 'utl.*'
-
             ));
         if ($langId > 0) {
             $teacherSrch->addMultipleFields(array(

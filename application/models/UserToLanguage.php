@@ -108,4 +108,19 @@ class UserToLanguage extends MyAppModel
         $rs = $srch->getResultSet();
 		return FatApp::getDb()->fetchAll($rs);
     }
+
+    public function getTeachingSlots()
+    {
+        $srch = new SearchBase(static::DB_TBL_TEACH, 'utl');
+        $srch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utl.utl_slanguage_id');
+        $srch->addFld(array('utl_id', 'utl_booking_slot'));
+        $srch->addCondition('utl_single_lesson_amount', '>', 0);
+        $srch->addCondition('utl_bulk_lesson_amount', '>', 0);
+        $srch->addCondition('utl_slanguage_id', '>', 0);
+        $srch->addCondition('tlanguage_active', '=', 1);
+        $srch->addCondition('utl_us_user_id', '=', $this->getMainTableRecordId());
+        $srch->addGroupBy('utl_booking_slot');
+        $rs = $srch->getResultSet();
+		return FatApp::getDb()->fetchAllAssoc($rs);
+    }
 }

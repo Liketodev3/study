@@ -43,7 +43,7 @@ class TeacherOfferPrice extends MyAppModel
         return true;
     }
 
-    public function getOffer(int $learnerId, int $teacherId ) : object
+    public function getOffer(int $learnerId, int $teacherId, int $lessonDuration ) : object
     {
 		// $learnerId = FatUtility::int( $learnerId );
 		// $teacherId = FatUtility::int( $teacherId );
@@ -55,6 +55,7 @@ class TeacherOfferPrice extends MyAppModel
 		$srch = new SearchBase(self::DB_TBL, 'us');
 		$srch->addCondition( 'top_learner_id','=',$learnerId );
 		$srch->addCondition( 'top_teacher_id','=',$teacherId );
+		$srch->addCondition( 'top_lesson_duration','=',$lessonDuration );
 		return $srch;
 	}
 }

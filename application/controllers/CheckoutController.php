@@ -502,7 +502,7 @@ class CheckoutController extends LoggedUserController{
             die('');
         }
 		$teacherOfferClassObj = new TeacherOfferPrice();
-		$srchdata =  $teacherOfferClassObj->getOffer(UserAuthentication::getLoggedUserId(),$post['teacher_id'], $cartData['lessonDuration']);
+		$srchdata =  $teacherOfferClassObj->getOffer(UserAuthentication::getLoggedUserId(), $post['teacher_id'], $cartData['lessonDuration']);
 		$srchdata->doNotCalculateRecords();
 		$srchdata->setPageSize(1);
 		$rs = $srchdata->getResultSet();
