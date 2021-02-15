@@ -49,7 +49,12 @@ class TeachersController extends MyAppController {
 		$srch->joinUserLang($this->siteLangId);
 		$srch->joinTeacherLessonData(0,false, false);
 		$srch->joinRatingReview();
-		$srch->addMultipleFields(array('ulg.*', 'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info', 'utls.*'));
+		$srch->addMultipleFields(array(
+			// 'ulg.*', 
+			'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info', 
+			'utls.minPrice'
+			// 'utls.*'
+		));
 		$srch->setPageSize($pageSize);
 		$srch->setPageNumber($page);
 		$srch->removGroupBy('sl.slesson_teacher_id');
@@ -608,14 +613,12 @@ class TeachersController extends MyAppController {
 		$spokenLanguage = FatApp::getPostedData('spokenLanguage', FatUtility::VAR_STRING, NULL);
 		if (!empty($spokenLanguage)) {
 			if (is_numeric($spokenLanguage)) {
-				// $srch->addDirectCondition('FIND_IN_SET('. $spokenLanguage .', spoken_language_ids)');
 				$srch->addDirectCondition('utsl_slanguage_id = '. $spokenLanguage);
 			} else {
 				$spokenLanguageArr = explode(",", $spokenLanguage);
 				if (!empty($spokenLanguageArr)) {
 					$spokenLanguageArr = FatUtility::int($spokenLanguageArr);
 					foreach ($spokenLanguageArr as $spokenLanguage) {
-						// $srch->addDirectCondition('FIND_IN_SET('. $spokenLanguage .', spoken_language_ids)');
 						$srch->addDirectCondition('utsl_slanguage_id = '. $spokenLanguage);
 					}
 				}
@@ -626,14 +629,12 @@ class TeachersController extends MyAppController {
 		$preferenceFilter = FatApp::getPostedData('preferenceFilter', FatUtility::VAR_STRING, NULL);
 		if (!empty($preferenceFilter)) {
 			if (is_numeric($preferenceFilter)) {
-				// $srch->addDirectCondition('FIND_IN_SET('. $preferenceFilter .', utpref_preference_ids)');
 				$srch->addDirectCondition('utpref_preference_id = '. $preferenceFilter);
 			} else {
 				$preferenceFilterArr = explode("," , $preferenceFilter);
 				if (!empty($preferenceFilterArr)) {
 					$preferenceFilterArr = FatUtility::int($preferenceFilterArr);
 					foreach ($preferenceFilterArr as $preferenceFilter) {
-						// $srch->addDirectCondition('FIND_IN_SET('. $preferenceFilter .', utpref_preference_ids)');
 						$srch->addDirectCondition('utpref_preference_id = '. $preferenceFilter);
 					}
 				}
@@ -767,7 +768,6 @@ class TeachersController extends MyAppController {
 			// 'utsl.spoken_languages_proficiency',
 			'utls.teacherTeachLanguageName',
             'utl_ids',
-			'GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids',
             // 'utl_slanguage_ids'
 		));
 	}

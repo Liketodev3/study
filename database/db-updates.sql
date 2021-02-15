@@ -205,3 +205,11 @@ ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_code` VARCHAR(4)
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.7.12.20210206' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION'; 
 
 ALTER TABLE `tbl_teachers_general_availability` ADD INDEX(`tgavl_user_id`); 
+
+ALTER TABLE `tbl_scheduled_lesson_details` ADD INDEX(`sldetail_slesson_id`); 
+
+ALTER TABLE `tbl_user_teach_languages` DROP INDEX `utl_single_lesson_amount`;
+
+ALTER TABLE `tbl_user_teach_languages` ADD INDEX( `utl_slanguage_id`, `utl_single_lesson_amount`, `utl_bulk_lesson_amount`); 
+
+ALTER TABLE `tbl_teaching_languages` ADD INDEX( `tlanguage_identifier`, `tlanguage_display_order`, `tlanguage_active`); 
