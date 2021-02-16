@@ -563,6 +563,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
+        
         if (empty($lessonRow)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
@@ -579,6 +580,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         /* ] */
         /* update lesson status[ */
         $sLessonDetailObj = new ScheduledLessonDetails($lessonRow['sldetail_id']);
+        
         $sLessonDetailObj->assignValues(array('sldetail_learner_status' =>	ScheduledLesson::STATUS_CANCELLED));
         if (!$sLessonDetailObj->save()) {
             $db->rollbackTransaction();
@@ -600,7 +602,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         /* ] */
 
         /* Also update lesson status for 1 to 1[ */
-		$sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
+        $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
+        
 		if($lessonRow['slesson_grpcls_id']<=0){
 			$sLessonObj->assignValues(array('slesson_status' =>	ScheduledLesson::STATUS_CANCELLED));
 			if (!$sLessonObj->save()) {
@@ -629,7 +632,15 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 		}
        
 
+        // start: saving log in new table i.e. tbl_lesson_status_log
+
+        $this->addLessonStatusLog($lessonRow, $post['cancel_lesson_msg'], User::USER_TYPE_LEANER, ScheduledLesson::STATUS_CANCELLED);
+
+        // End: saving log in new table i.e. tbl_lesson_status_log
+
+        
         $db->commitTransaction();
+
         /* send email to teacher[ */
 
         $start_date = $lessonRow['slesson_date'];
@@ -813,6 +824,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError($lessonResLogObj->getError());
         }
 
+         // start: saving log in new table i.e. tbl_lesson_status_log
+
+         $this->addLessonStatusLog($lessonRow, $post['reschedule_lesson_msg'], User::USER_TYPE_LEANER, ScheduledLesson::STATUS_NEED_SCHEDULING);
+
+         // End: saving log in new table i.e. tbl_lesson_status_log
+
         $db->commitTransaction();
         $tpl = 'learner_reschedule_email';
         $vars = array(
@@ -919,6 +936,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                             );
         $getResultSet =  $getLessonDetailObj->getResultSet();
         $lessonDetail  = $db->fetch($getResultSet);
+        
         if(empty($lessonDetail)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
@@ -1007,6 +1025,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $db->rollbackTransaction();
                 FatUtility::dieJsonError($lessonResLogObj->getError());
             }
+
+            // start: saving log in new table i.e. tbl_lesson_status_log
+
+            $this->addLessonStatusLog($lessonDetail, $rescheduleReason, User::USER_TYPE_LEANER, ScheduledLesson::STATUS_SCHEDULED);
+
+            // End: saving log in new table i.e. tbl_lesson_status_log
 
             $action = ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_RESCHEDULED];
 

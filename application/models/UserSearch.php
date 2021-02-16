@@ -200,6 +200,34 @@ class UserSearch extends SearchBase
         $this->addFld('GROUP_CONCAT(DISTINCT sldetail_learner_id) as studentIds');
     }
 
+    public function joinUserLessonData($userId = 0, $getRescheduledLesson = true, $getCanCelledScheduledLesson = true)
+    {
+        $scheduledLessonDetailsSrch = new ScheduledLessonDetailsSearch();
+        $scheduledLessonDetailsSrch->addGroupBy('sld.sldetail_slesson_id');        
+        if ($userId) {
+            $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'u.user_id = sl.slesson_teacher_id AND sl.slesson_teacher_id = '.$userId, 'sl');
+            $this->joinTable('('.$scheduledLessonDetailsSrch->getQuery().')', 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
+        } else {
+            $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'u.user_id = sl.slesson_teacher_id', 'sl');
+            $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
+            $this->joinTable(LessonRescheduleLog::DB_TBL, 'LEFT JOIN', 'lrl.lesreschlog_slesson_id = sl.slesson_id', 'lrl');
+            //$this->addFld('count(DISTINCT sldetail_learner_id) as studentIdsCnt');
+        }
+        $this->addGroupBy('u.user_id');
+        $this->addFld('count(DISTINCT sl.slesson_id) as teacherTotLessons');
+        
+        //$this->addFld( 'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) AS teacherSchLessons' );
+        if($getCanCelledScheduledLesson) {
+            $this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as teacherCancelledLessons');
+        }
+
+        if($getRescheduledLesson) {
+            $this->addFld('(select COUNT(lesreschlog_id) from '. LessonRescheduleLog::DB_TBL . ' WHERE lesreschlog_slesson_id = sl.slesson_id ) as teacherRescheduledLessons');
+        }
+
+        //$this->addFld('GROUP_CONCAT(DISTINCT sldetail_learner_id) as studentIds');
+    }
+
     public function joinLearnerLessonData($userId)
     {
         if ($userId) {

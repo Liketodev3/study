@@ -305,6 +305,10 @@
 			<?php if ( $objPrivilege->canViewTeacherPerformanceReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
 				<li><a href="<?php echo CommonHelper::generateUrl('TeacherPerformanceReport'); ?>"><?php echo Label::getLabel('LBL_Teacher_Performance',$adminLangId);?></a></li>
 			<?php } ?>
+
+			<?php if ( $objPrivilege->canViewRescheduleReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
+				<li><a href="<?php echo CommonHelper::generateUrl('RescheduleReport'); ?>"><?php echo Label::getLabel('LBL_Reschedule_Report',$adminLangId);?></a></li>
+			<?php } ?>
 			</ul>
 		</li>
 		<?php } ?>

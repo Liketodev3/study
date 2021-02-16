@@ -487,6 +487,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             $sLessonObj->save();
         }
 
+        // start: saving log in new table i.e. tbl_lesson_status_log
+
+        $this->addLessonStatusLog($lessonRow, $post['cancel_lesson_msg'], User::USER_TYPE_TEACHER, ScheduledLesson::STATUS_CANCELLED);
+
+        // End: saving log in new table i.e. tbl_lesson_status_log
+
+
         $db->commitTransaction();
         /* ] */
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Cancelled_Successfully!'));
@@ -593,6 +600,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             $db->rollbackTransaction();
             FatUtility::dieJsonError($lessonResLogObj->getError());
         }
+
+        // start: saving log in new table i.e. tbl_lesson_status_log
+
+        $this->addLessonStatusLog($lessonRow, $post['reschedule_lesson_msg'], User::USER_TYPE_TEACHER, ScheduledLesson::STATUS_NEED_SCHEDULING);
+
+        // End: saving log in new table i.e. tbl_lesson_status_log
+
 
         /* ] */
         if (!$sLessonObj->rescheduleLessonByTeacher($post['reschedule_lesson_msg'])) {
