@@ -249,6 +249,26 @@ class ImageController extends FatController
         }
     }
 
+    public function allowedPaymentGatewayImage(int $langId = 0, string $sizeType = '')
+    {
+        $langId = FatUtility::int($langId);
+        $recordId = 0;
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, $recordId, 0, $langId);
+        $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
+        $default_image = '';
+        switch (strtoupper($sizeType)) {
+            case 'THUMB':
+                $w = 300;
+                $h = 34;
+            break;
+            default:
+                $w = 500;
+                $h = 67;
+            break;
+        }
+        AttachedFile::displayImage($image_name, $w, $h, $default_image);
+    }
+
     public function favicon($lang_id = 0, $sizeType = '')
     {
         /* $recordId = 0;

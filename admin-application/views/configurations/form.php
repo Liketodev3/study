@@ -58,6 +58,7 @@ switch ($frmType){
 		$mobileLogo= $frm->getField('mobile_logo');
         $blogImg= $frm->getField('blog_img');
         $lessonImg= $frm->getField('lesson_img');
+        $allowedPaymentGatewayImg = $frm->getField('allowed_payment_gateways_img');
 
 		// $blogImg->developerTags['col'] = 12;
 
@@ -83,6 +84,8 @@ switch ($frmType){
             $appleTouchIcon->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '16*16');
             
             $paymentPageLogo->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
+
+            $allowedPaymentGatewayImg->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '500*67');
             
             // $watermarkFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
         }else{
@@ -184,6 +187,9 @@ switch ($frmType){
         
 		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_LESSON_PAGE_IMAGE, 0, 0, $lang_id ) ){
 			$lessonImg->htmlAfterField .= '<div class="uploaded--image" style="width:100%"><img src="'.FatUtility::generateFullUrl('Image','lesson', array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a class="remove--img" href="javascript:void(0);" onclick="removeLessonImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+		}
+		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, 0, 0, $lang_id ) ){
+			$allowedPaymentGatewayImg->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','allowedPaymentGatewayImage', array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a class="remove--img" href="javascript:void(0);" onclick="removeAllowedPaymentGatewayImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
 		}
 	break;
 

@@ -94,6 +94,11 @@ var teachLanguages =  <?php echo FatUtility::convertToJson($teachLanguages); ?>
 						  echo  str_replace("{default-currency-code}", CommonHelper::getSystemCurrencyData()['currency_code'],$labelstr);
 						?>
 					</p>
+					<?php if( AttachedFile::getAttachment(AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, 0, 0,CommonHelper::getLangId() ) ){ ?>
+						<div class="">
+							<img src="<?php echo FatUtility::generateFullUrl('Image','allowedPaymentGatewayImage', array(CommonHelper::getLangId())); ?>">	
+						</div>
+					<?php } ?>
 				</div>
 
 				<div class="col-xl-8 col-lg-8 col-md-12">

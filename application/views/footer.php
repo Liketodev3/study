@@ -89,6 +89,11 @@
                 </ul>
 
                 <ul class="fineprint-listing">
+                    <?php if( AttachedFile::getAttachment(AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, 0, 0,CommonHelper::getLangId() ) ){ ?>
+                    <li class="card-brand-logos">
+						<img src="<?php echo FatUtility::generateFullUrl('Image','allowedPaymentGatewayImage', array(CommonHelper::getLangId(),'THUMB')); ?>">
+					</li>
+                    <?php } ?>
                     <li>
                         <p>
                             <?php if (CommonHelper::demoUrl()) {
