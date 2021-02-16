@@ -1,23 +1,23 @@
-<?php if($topRatedTeachers){ ?>
-       <section class="section -singleTopBorder section-teacher">
-            <div class="container container--fixed">
-                <div class="section-title">
-                    <h2><?php echo Label::getLabel('Lbl_Top_Rated_Teachers'); ?></h2>
-                </div>
-                <div class="row justify-content-center align-items-center">
-                <?php foreach($topRatedTeachers as $topRatedTeacher){
-                    $teacherImnage =  FatCache::getCachedUrl(CommonHelper::generateUrl('Image','user', array( $topRatedTeacher['user_id'],'NORMAL',1)),  CONF_IMG_CACHE_TIME, '.jpg');
+<?php if ($topRatedTeachers) { ?>
+    <section class="section -singleTopBorder section-teacher">
+        <div class="container container--fixed">
+            <div class="section-title">
+                <h2><?php echo Label::getLabel('Lbl_Top_Rated_Teachers'); ?></h2>
+            </div>
+            <div class="row justify-content-center align-items-center">
+                <?php foreach ($topRatedTeachers as $topRatedTeacher) {
+                    $teacherImnage =  FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'user', array($topRatedTeacher['user_id'], 'NORMAL', 1)),  CONF_IMG_CACHE_TIME, '.jpg');
                 ?>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                         <div class="border-box">
                             <span class="box-pic">
-                                <a href="<?php echo CommonHelper::generateUrl('Teachers', 'profile').'/'. $topRatedTeacher['user_url_name'];?>"><img src="<?php echo $teacherImnage; ?>" alt=""></a>
+                                <a href="<?php echo CommonHelper::generateUrl('Teachers', 'profile') . '/' . $topRatedTeacher['user_url_name']; ?>"><img src="<?php echo $teacherImnage; ?>" alt=""></a>
                             </span>
 
                             <div class="box-body">
-                                <h4 class="title"> <a href="<?php echo CommonHelper::generateUrl('Teachers', 'profile').'/'. $topRatedTeacher['user_url_name'];?>"><?php echo $topRatedTeacher['user_first_name'].' '.$topRatedTeacher['user_last_name']; ?></a></h4>
+                                <h4 class="title"> <a href="<?php echo CommonHelper::generateUrl('Teachers', 'profile') . '/' . $topRatedTeacher['user_url_name']; ?>"><?php echo $topRatedTeacher['user_first_name'] . ' ' . $topRatedTeacher['user_last_name']; ?></a></h4>
                                 <span class="location"><?php echo $topRatedTeacher['country_name']; ?></span>
-                                <div class="rating <?php echo ($topRatedTeacher['teacher_rating']>0)?'':'no-rating'?>">
+                                <div class="rating <?php echo ($topRatedTeacher['teacher_rating'] > 0) ? '' : 'no-rating' ?>">
                                     <i class="svg">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="14.854px" height="14.166px" viewBox="0 0 14.854 14.166" enable-background="new 0 0 14.854 14.166" xml:space="preserve">
                                             <path d="M14.854,5.49c0-0.268-0.286-0.375-0.5-0.41L9.873,4.428L7.864,0.367C7.784,0.197,7.632,0,7.427,0
@@ -32,7 +32,7 @@
 
                                 <ul class="tags">
 
-                                <?php echo CommonHelper::getTeachLangs($topRatedTeacher['utl_slanguage_ids'],true); ?>
+                                    <?php echo CommonHelper::getTeachLangs($topRatedTeacher['utl_slanguage_ids'], true); ?>
                                 </ul>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                 <?php } ?>
             </div>
             <div class="align-center card-more-content">
-                <a href="/teachers" class="arrow-link"><?php echo Label::getLabel('LBL_Browse_All_Teachers'); ?></a>
+                <a href="<?php echo CONF_WEBROOT_URL; ?>teachers" class="arrow-link"><?php echo Label::getLabel('LBL_Browse_All_Teachers'); ?></a>
             </div>
-        </section>
-<?php }?>
+    </section>
+<?php }

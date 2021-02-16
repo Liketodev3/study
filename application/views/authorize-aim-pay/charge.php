@@ -134,10 +134,10 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
             <div class="field-wraper">
               <div class="field_cover"> <?php echo $frm->getFieldHtml('btn_submit'); ?> <a href="<?php echo $cancelBtnUrl; ?>" class="btn btn--large"><?php echo Label::getLabel('LBL_Cancel',$siteLangId);?></a> </div>
             </div>
-			<span class="-gap -hide-mobile"></span>
-			<?php if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) { ?>
-				<p class="-color-secondary"><?php echo CommonHelper::currencyDisclaimer($siteLangId, $paymentAmount); ?></p>
-			<?php } ?>
+          <span class="-gap -hide-mobile"></span>
+          <?php if (CommonHelper::getCurrencyId() != CommonHelper::getSystemCurrencyId()) { ?>
+            <p class="-color-secondary"><?php echo CommonHelper::currencyDisclaimer($siteLangId, $paymentAmount); ?></p>
+          <?php } ?>
           </div>
         </div>
       </div>

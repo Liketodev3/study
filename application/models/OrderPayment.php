@@ -27,10 +27,8 @@ class OrderPayment extends Order
         $orderInfo = $this->orderAttributes;
         $userObj = new User($orderInfo["order_user_id"]);
         $userInfo = $userObj->getUserInfo(array('user_first_name', 'credential_email', 'user_phone'), true, true, true);
-
-        $currencyArr = Currency::getCurrencyAssoc($this->orderLangId);
-        $orderCurrencyCode = !empty($currencyArr[FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)]) ? $currencyArr[FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)] : '';
-
+        $orderCurrencyCode = CommonHelper::getSystemCurrencyData()['currency_code'];
+        
         $arrOrder = array(
             "order_id" => $orderInfo["order_id"],
             "invoice" => $orderInfo["order_id"],

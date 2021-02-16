@@ -135,7 +135,8 @@ class WithdrawalRequestsController extends AdminBaseController
                 'tuwr.*',
                 'pmethod_id',
                 'pmethod_code',
-                'IFNULL(pmtfee_fee,0) AS pmtfee'
+                'IFNULL(pmtfee_fee,0) AS pmtfee',
+                'IFNULL(pmtfee_type,0) AS pmtType',
             ));
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
@@ -150,9 +151,14 @@ class WithdrawalRequestsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $currencyId = FatApp::getConfig('CONF_CURRENCY');
+        
         $gatewayFee = $records['pmtfee'];
         $gatewayFee = FatUtility::float($gatewayFee);
+        
+        if($gatewayFee > 0 && $records['pmtType'] == PaymentMethodTransactionFee::FEE_TYPE_PERCENTAGE) {
+			$gatewayFee = ($gatewayFee / 100) * $records['withdrawal_amount'];
+        }
+
         $amount = $records['withdrawal_amount'] - $gatewayFee;
         if(0 >= $amount){
             Message::addErrorMessage(Label::getLabel('MSG_Withdrawal_amount_is_zero_after_adding_gateway_fee'));

@@ -38,7 +38,8 @@ class WithdrawalRequestsSearch extends SearchBase
         if(!$this->joinPaymentMethod) {
                 trigger_error(Label::getLabel('ERR_You_must_join_Payout_ Method_first', $this->commonLangId), E_USER_ERROR);
         }
-        $currancyId = FatApp::getConfig('CONF_CURRENCY');
+        
+        $currancyId = CommonHelper::getSystemCurrencyId();
         $this->joinTable(PaymentMethodTransactionFee::DB_TBL, 'LEFT JOIN', 'pmfee.pmtfee_pmethod_id = pm.pmethod_id and pmtfee_currency_id ='.$currancyId, 'pmfee');
     }
 
