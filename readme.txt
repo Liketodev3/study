@@ -9,6 +9,7 @@ New Features:
 . Task-81706: Paystack Payment gateway integration
 
 Enhancements:
+  . Task-82203: Image for allowed payment gateways/cards on the platform
   
 Bug Fixes:
 
