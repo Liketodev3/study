@@ -9,6 +9,7 @@ New Features:
 Enhancements:
   
 Bug Fixes:
+    *Bug-047721: Trial lesson booking not working
 
 ----------------------------------------------------------
 
