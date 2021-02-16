@@ -123,8 +123,9 @@ class MetaTagSearch extends SearchBase
                 $this->addCondition('mt.meta_type', '=', $metaType);
                 break;
         }
+
         if (isset($criteria['hasTagsAssociated'])) {
-            if ($val['val'] == applicationConstants::YES) {
+            if ($criteria['hasTagsAssociated']['val'] == applicationConstants::YES) {
                 $this->addCondition('mt.meta_id', 'is not', 'mysql_func_NULL', 'AND', true);
             } else {
                 $this->addCondition('mt.meta_id', 'is', 'mysql_func_NULL', 'AND', true);
