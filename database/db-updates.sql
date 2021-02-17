@@ -219,4 +219,8 @@ ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_id` INT(11) NOT 
 
 ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_code` VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER `utrequest_language_id`;
 
+-- Task-81501 Meta tags management
+
+ALTER TABLE `tbl_meta_tags` ADD `meta_type` TINYINT(1) NOT NULL AFTER `meta_action`;
+
 
