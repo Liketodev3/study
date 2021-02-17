@@ -51,6 +51,9 @@ class AttachedFile extends MyAppModel
     const FILETYPE_LESSON_PAGE_IMAGE = 44;
     const FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE = 45;
 
+    const FILETYPE_PWA_APP_ICON = 44;
+    const FILETYPE_PWA_SPLASH_ICON = 45;
+
     public function __construct($fileId = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $fileId);
@@ -69,7 +72,7 @@ class AttachedFile extends MyAppModel
         return ($time > 0) ? '?t=' . $time : '';
     }
     
-    public static function checkSize($file, $compareSize)
+    public function checkSize($file, $compareSize)
     {
         $compareSize = FatUtility::convertToType($compareSize, FatUtility::VAR_FLOAT);
         if (filesize($file) > $compareSize) {
@@ -602,5 +605,10 @@ class AttachedFile extends MyAppModel
             header('Content-Length: ' . filesize($image_name));
             readfile($image_name);
         }
+    }
+
+    public function getMimeType(string $filepath): string
+    {
+        return mime_content_type($filepath);
     }
 }
