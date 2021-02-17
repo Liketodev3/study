@@ -82,7 +82,7 @@ foreach ($lessons as $sn=>$row){
 				$td->appendElement('plaintext', array(), $row[$key] ,true);
 			break;
 			case 'lesstslog_comment':
-				$td->appendElement('plaintext', array(), $row[$key] ,true);
+				$td->appendElement('p', array('title' => nl2br($row[$key])), CommonHelper::truncateCharacters($row[$key],20,'','',true) ,true);
 			break;
 			default:
 				$td->appendElement('plaintext', array(), $row[$key]);

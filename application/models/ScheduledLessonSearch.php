@@ -70,35 +70,6 @@ class ScheduledLessonSearch extends SearchBase
         return $srch;
     }
 
-    public function joinUserLessonData1($userId = 0, $getRescheduledLesson = true, $getCanCelledScheduledLesson = true)
-    {
-        $scheduledLessonDetailsSrch = new ScheduledLessonDetailsSearch();
-        $scheduledLessonDetailsSrch->addGroupBy('sld.sldetail_slesson_id');        
-        if ($userId) {
-            $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'u.user_id = sl.slesson_teacher_id AND sl.slesson_teacher_id = '.$userId, 'sl');
-            $this->joinTable('('.$scheduledLessonDetailsSrch->getQuery().')', 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
-        } else {
-            //$this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
-            $this->joinTable(LessonRescheduleLog::DB_TBL, 'LEFT JOIN', 'lrl.lesreschlog_slesson_id = slns.slesson_id', 'lrl');
-            $this->joinTable(User::DB_TBL, 'LEFT JOIN', 'lrl.lesreschlog_reschedule_by = u.user_id', 'u');
-            $this->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'u.user_id = cred.credential_user_id', 'cred');
-            //$this->addFld('count(DISTINCT sldetail_learner_id) as studentIdsCnt');
-        }
-        $this->addGroupBy('lesreschlog_reschedule_by');
-        //$this->addFld('count(DISTINCT sl.slesson_id) as teacherTotLessons');
-        
-        //$this->addFld( 'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) AS teacherSchLessons' );
-        if($getCanCelledScheduledLesson) {
-            //$this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = lrl.user_id ) as teacherCancelledLessons');
-        }
-
-        if($getRescheduledLesson) {
-            $this->addFld('COUNT(lesreschlog_id) as teacherRescheduledLessons');
-        }
-
-        //$this->addFld('GROUP_CONCAT(DISTINCT sldetail_learner_id) as studentIds');
-    }
-
     public function joinUserLessonData($getRescheduledLesson = true, $getCanCelledScheduledLesson = true)
     {
         $scheduledLessonDetailsSrch = new ScheduledLessonDetailsSearch();
@@ -110,14 +81,13 @@ class ScheduledLessonSearch extends SearchBase
         
         $this->addGroupBy('lesstslog_updated_by_user_id');
         
-        if($getCanCelledScheduledLesson) {
-            $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherCancelledLessons');
-        }
+        // if($getCanCelledScheduledLesson) {
+        //     $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherCancelledLessons');
+        // }
         
-        if($getRescheduledLesson) {
-            $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherRescheduledLessons');
-            //$this->addFld('COUNT(lesstslog_id) as teacherRescheduledLessons');
-        }
+        // if($getRescheduledLesson) {
+        //     $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherRescheduledLessons');
+        // }
 
         //$this->addFld('GROUP_CONCAT(DISTINCT sldetail_learner_id) as studentIds');
     }

@@ -182,7 +182,12 @@ $(document).ready(function(){
 		fcom.displayProcessing();
 		$("input[name='report_type']").val( reportType );
 		$("input[name='report_user_id']").val( userId );
-		fcom.ajax(fcom.makeUrl('RescheduleReport', 'viewReport', [userId, reportType]), '', function(t) {
+		var frm = document.frmRescheduledReportSearchPaging;
+		var data = '';
+		if (frm) {
+			data = fcom.frmData(frm);
+		}
+		fcom.ajax(fcom.makeUrl('RescheduleReport', 'viewReport'), data, function(t) {
 			fcom.updateFaceboxContent(t);
 		});
 		

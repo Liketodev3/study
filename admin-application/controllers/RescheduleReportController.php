@@ -59,10 +59,21 @@ class RescheduleReportController extends AdminBaseController
         if ($cancelled_no > 0) {
             $srch->addHaving('teacherCancelledLessons', '=', $cancelled_no, 'AND');
         }
+
+        if (!empty($reschedule_from) && !empty($reschedule_to)) {
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" AND `lesstslog_added_on` >= "'.$reschedule_from .' 00:00:00" AND `lesstslog_added_on` <= "'.$reschedule_to .' 23:59:59") as teacherCancelledLessons');
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" AND `lesstslog_added_on` >= "'.$reschedule_from .' 00:00:00" AND `lesstslog_added_on` <= "'.$reschedule_to .' 23:59:59") as teacherRescheduledLessons');
+        }
+
+        if (empty($reschedule_from) && empty($reschedule_to)) {
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherCancelledLessons');
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherRescheduledLessons');
+        }
         
         $srch->setPageSize($pagesize);
         $srch->setPageNumber($page);
         $srch->addOrder('teacherRescheduledLessons', 'DESC');
+        
         $rs = $srch->getResultSet();
         $db = FatApp::getDb();
         $teachersList = $db->fetchAll($rs);
@@ -131,7 +142,6 @@ class RescheduleReportController extends AdminBaseController
         $page       = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $post = $searchForm->getFormDataFromArray(FatApp::getPostedData());
         $parameters = FatApp::getParameters();
-        //echo "<pre>";print_r($post);die;
         
         $db = FatApp::getDb();
         $srch = LessonStatusLog::getSearchObject();
@@ -204,10 +214,21 @@ class RescheduleReportController extends AdminBaseController
             $srch->addCondition('lesstslog_current_status', '!=', ScheduledLesson::STATUS_CANCELLED);
         }
 
+        if (!empty($reschedule_from) && !empty($reschedule_to)) {
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = u.user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" AND `lesstslog_added_on` >= "'.$reschedule_from .' 00:00:00" AND `lesstslog_added_on` <= "'.$reschedule_to .' 23:59:59") as teacherCancelledLessons');
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = u.user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" AND `lesstslog_added_on` >= "'.$reschedule_from .' 00:00:00" AND `lesstslog_added_on` <= "'.$reschedule_to .' 23:59:59") as teacherRescheduledLessons');
+        }
+
+        if (empty($reschedule_from) && empty($reschedule_to)) {
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = u.user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherCancelledLessons');
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = u.user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherRescheduledLessons');
+        }
+
         //$srch->doNotCalculateRecords();
         //$srch->doNotLimitRecords();
         $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
+        ;
         $rs = $srch->getResultSet();
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
