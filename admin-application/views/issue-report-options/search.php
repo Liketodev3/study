@@ -3,6 +3,7 @@
 $arr_flds = array(
 		'dragdrop'=>'',
 		'listserial'=>Label::getLabel('LBL_Sr_no.',$adminLangId),
+		'tissueopt_user_type'=>Label::getLabel('LBL_User_Type',$adminLangId),
 		'optLabel'=>Label::getLabel('LBL_Option_Identifier',$adminLangId),	
 		'tissueopt_active'=>Label::getLabel('LBL_Status',$adminLangId),
 		'action' => Label::getLabel('LBL_Action',$adminLangId),
@@ -29,9 +30,12 @@ foreach ($arr_listing as $sn=>$row){
 					$td->setAttribute ("class",'dragHandle');
 				}
 			break;
-			
 			case 'listserial':
 				$td->appendElement('plaintext', array(), $sr_no);
+			break;
+			
+			case 'tissueopt_user_type':
+				$td->appendElement('plaintext', array(), $userTypesOptionsArr[$row['tissueopt_user_type']]);
 			break;
 			case 'tissueopt_active':
 					$active = "";
