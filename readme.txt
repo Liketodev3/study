@@ -4,12 +4,13 @@ Release Number:
 Release Date:
 
 New Features:
-. Task-79596 - Add 2Checkout payment gateway
-. Task-79596 - Add Paygate payment gateway
-. Task-81706: Paystack Payment gateway integration
+    . Task-79596 - Add 2Checkout payment gateway
+    . Task-79596 - Add Paygate payment gateway
+    . Task-81706: Paystack Payment gateway integration
 
 Enhancements:
-  . Task-82203: Image for allowed payment gateways/cards on the platform
+    . Task-82203: Image for allowed payment gateways/cards on the platform
+    . Task-81501: Refine and refactor Meta Tags Management
   
 Bug Fixes:
 

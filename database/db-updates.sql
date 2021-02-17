@@ -211,6 +211,10 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.2.20210209' WHERE `tbl_conf
 REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('Twocheckout', 'Twocheckout', '1', 6, 1);
 
 REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('PayGate payweb-3', 'PayGate', '1', 7, 1);
+-- Task-81501 Meta tags management
+
+ALTER TABLE `tbl_meta_tags` ADD `meta_type` TINYINT(1) NOT NULL AFTER `meta_action`;
+
 
 REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES ('Paystack', 1, 'Paystack', 1, 10);
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES

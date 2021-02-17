@@ -18,7 +18,7 @@ class CommonHelper extends FatUtility
     public static function initCommonVariables($isAdmin = false)
     {
         self::$_ip = self::getClientIp();
-        self::$_user_agent = isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
+        self::$_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         self::$_lang_id = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
         self::$_currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
         
@@ -51,7 +51,7 @@ class CommonHelper extends FatUtility
 
         $currencyData = Currency::getAttributesById(
             self::$_currency_id,
-            array('currency_code','currency_symbol_left','currency_symbol_right','currency_value')
+            array('currency_code', 'currency_symbol_left', 'currency_symbol_right', 'currency_value')
         );
 
         self::$_currency_symbol_left = $currencyData['currency_symbol_left'];
@@ -66,6 +66,7 @@ class CommonHelper extends FatUtility
         // self::$_system_currency_id =  ;
 
     }
+
 
     public static function getLangId()
     {
@@ -181,9 +182,9 @@ class CommonHelper extends FatUtility
         $rs = $srch->getResultSet();
         if ($row = FatApp::getDb()->fetch($rs)) {
             if ($encodeUrl) {
-                $url = $use_root_url.urlencode($row['urlrewrite_custom']);
+                $url = $use_root_url . urlencode($row['urlrewrite_custom']);
             } else {
-                $url = $use_root_url.$row['urlrewrite_custom'];
+                $url = $use_root_url . $row['urlrewrite_custom'];
             }
         }
         return $url;
@@ -198,12 +199,17 @@ class CommonHelper extends FatUtility
         }
         return $protocol . $_SERVER['SERVER_NAME'] . $url;
     }
+    public static function getRootUrl()
+    {
+        $protocol = (FatApp::getConfig('CONF_USE_SSL') == 1) ? 'https://' : 'http://';
+        return $protocol . $_SERVER['SERVER_NAME'];
+    }
 
     public static function generateNoAuthUrl($model = '', $action = '', $queryData = array(), $use_root_url = '')
     {
         $url = CommonHelper::generateUrl($model, $action, $queryData, $use_root_url, false);
         $url = str_replace('index.php?', 'index_noauth.php?', $url);
-        $protocol = (FatApp::getConfig('CONF_USE_SSL')==1)?'https://':'http://';
+        $protocol = (FatApp::getConfig('CONF_USE_SSL') == 1) ? 'https://' : 'http://';
         return $protocol . $_SERVER['SERVER_NAME'] . $url;
     }
 
@@ -230,28 +236,28 @@ class CommonHelper extends FatUtility
         }
     }
 
-    public static function combinationOfElementsOfArr($arr = array(), $useKey='')
+    public static function combinationOfElementsOfArr($arr = array(), $useKey = '')
     {
         $tempArr = array();
         $loopCount = count($arr);
 
-        for ($i=0; $i<$loopCount; $i++) {
+        for ($i = 0; $i < $loopCount; $i++) {
             $count = 0;
-            foreach ($arr as $key=>$val) {
+            foreach ($arr as $key => $val) {
                 if ($count != $i) {
                     continue;
                 }
                 asort($val[$useKey]);
 
                 if (!empty($tempArr)) {
-                    foreach ($tempArr as $tempKey=>$tempVal) {
-                        foreach ($val[$useKey] as $k=>$v) {
-                            $tempArr[$tempKey.'|'.$k] = $tempVal.'|'.$v;
+                    foreach ($tempArr as $tempKey => $tempVal) {
+                        foreach ($val[$useKey] as $k => $v) {
+                            $tempArr[$tempKey . '|' . $k] = $tempVal . '|' . $v;
                             unset($tempArr[$tempKey]);
                         }
                     }
                 } else {
-                    foreach ($val[$useKey] as $k=>$v) {
+                    foreach ($val[$useKey] as $k => $v) {
                         $tempArr[$k] = $v;
                     }
                 }
@@ -261,10 +267,10 @@ class CommonHelper extends FatUtility
         return $tempArr;
     }
 
-    public static function renderHtml($content='', $stripJs = false)
+    public static function renderHtml($content = '', $stripJs = false)
     {
         $str = html_entity_decode($content);
-        $str = ($stripJs == true)?static::strip_javascript($str):$str;
+        $str = ($stripJs == true) ? static::strip_javascript($str) : $str;
 
         return $str;
     }
@@ -276,10 +282,10 @@ class CommonHelper extends FatUtility
         }
 
         if ($position == 'L') {
-            return '% '.$val;
+            return '% ' . $val;
         }
 
-        return $val.' %';
+        return $val . ' %';
     }
 
     public static function getDefaultCurrencyValue($val, $format = true, $displaySymbol = true)
@@ -292,24 +298,24 @@ class CommonHelper extends FatUtility
     public static function getCurrencySymbol($showDefaultSiteCurrenySymbol = false)
     {
         if ($showDefaultSiteCurrenySymbol) {
-            $currencyData =  $currencyData = CommonHelper::getSystemCurrencyData();
+            $currencyData = CommonHelper::getSystemCurrencyData();
             $currencySymbolLeft = $currencyData['currency_symbol_left'];
             $currencySymbolRight = $currencyData['currency_symbol_right'];
         } else {
             $currencySymbolLeft = self::getCurrencySymbolLeft();
             $currencySymbolRight = self::getCurrencySymbolRight();
         }
-        return   $currencySymbolLeft.$currencySymbolRight;
+        return   $currencySymbolLeft . $currencySymbolRight;
     }
 
     public static function numberStringFormat($number)
     {
         $prefixes = 'KMGTPEZY';
         if ($number >= 1000) {
-            for ($i=-1; $number>=1000; ++$i) {
-                $number =  $number/1000;
+            for ($i = -1; $number >= 1000; ++$i) {
+                $number =  $number / 1000;
             }
-            return floor($number).$prefixes[$i];
+            return floor($number) . $prefixes[$i];
         }
         return $number;
     }
@@ -334,7 +340,7 @@ class CommonHelper extends FatUtility
         return $val;
     }
 
-    public static function displayMoneyFormat($val, $numberFormat = true, $showInConfiguredDefaultCurrency = false, $displaySymbol = true, $stringFormat = false,$cunvertValue = true)
+    public static function displayMoneyFormat($val, $numberFormat = true, $showInConfiguredDefaultCurrency = false, $displaySymbol = true, $stringFormat = false, $cunvertValue = true)
     {
         $currencyValue = self::getCurrencyValue();
         $currencySymbolLeft = self::getCurrencySymbolLeft();
@@ -352,7 +358,7 @@ class CommonHelper extends FatUtility
             $currencySymbolLeft = $currencyData['currency_symbol_left'];
             $currencySymbolRight = $currencyData['currency_symbol_right'];
         }
-        if($cunvertValue) {
+        if ($cunvertValue) {
             $val = $val * $currencyValue;
         }
 
@@ -373,10 +379,10 @@ class CommonHelper extends FatUtility
         }
 
         if ($displaySymbol) {
-            $sign.= ' ';
-            $val =  $sign.$currencySymbolLeft.$val.$currencySymbolRight;
+            $sign .= ' ';
+            $val =  $sign . $currencySymbolLeft . $val . $currencySymbolRight;
         } else {
-            $val =  $sign.$val;
+            $val =  $sign . $val;
         }
 
         return $val;
@@ -395,14 +401,14 @@ class CommonHelper extends FatUtility
             header('Content-type: image/svg+xml');
             header('Cache-Control: public, must-revalidate');
             header("Pragma: public");
-            header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($path)).' GMT', true, 304);
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT', true, 304);
             header("Expires: " . date('D, d M Y H:i:s', strtotime("+30 days")));
             exit;
         }
         header('Content-type: image/svg+xml');
         header("Pragma: public");
         header('Cache-Control: public, must-revalidate');
-        header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($path)).' GMT', true, 200);
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT', true, 200);
         header("Expires: " . date('D, d M Y H:i:s', strtotime("+30 days")));
         readfile($path);
     }
@@ -444,11 +450,11 @@ class CommonHelper extends FatUtility
         if (!$total) {
             return 0;
         }
-        $percent = $percentage/$total;
+        $percent = $percentage / $total;
         return $percent_friendly = number_format($percent * 100, 2) . '%';
     }
 
-    public static function verifyCaptcha($fld_name='g-recaptcha-response')
+    public static function verifyCaptcha($fld_name = 'g-recaptcha-response')
     {
         require_once(CONF_INSTALLATION_PATH . 'library/ReCaptcha/src/autoload.php');
         if (!empty(FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '')) && !empty(FatApp::getConfig('CONF_RECAPTCHA_SECRETKEY', FatUtility::VAR_STRING, ''))) {
@@ -456,7 +462,7 @@ class CommonHelper extends FatUtility
             $post = FatApp::getPostedData();
             if (isset($post[$fld_name])) {
                 $resp = $recaptcha->verify($post[$fld_name], $_SERVER['REMOTE_ADDR']);
-                return $resp->isSuccess()==true?true:false;
+                return $resp->isSuccess() == true ? true : false;
             } else {
                 return false;
             }
@@ -472,7 +478,7 @@ class CommonHelper extends FatUtility
         return true; */
     }
 
-    public static function strip_javascript($content='')
+    public static function strip_javascript($content = '')
     {
         $javascript = '/<script[^>]*?>.*?<\/script>/si';
         $noscript = '';
@@ -541,12 +547,12 @@ class CommonHelper extends FatUtility
     {
         if ($type == NavigationLinks::NAVLINK_TYPE_CMS) {
             $url = CommonHelper::generateUrl('cms', 'view', array($nav_cpage_id));
-        } elseif ($type==NavigationLinks::NAVLINK_TYPE_EXTERNAL_PAGE) {
-            $url = str_replace('{SITEROOT}', CONF_WEBROOT_URL, $nav_url) ;
-            $url = str_replace('{siteroot}', CONF_WEBROOT_URL, $url) ;
+        } elseif ($type == NavigationLinks::NAVLINK_TYPE_EXTERNAL_PAGE) {
+            $url = str_replace('{SITEROOT}', CONF_WEBROOT_URL, $nav_url);
+            $url = str_replace('{siteroot}', CONF_WEBROOT_URL, $url);
             $url = CommonHelper::processURLString($url);
         } elseif ($type == NavigationLinks::NAVLINK_TYPE_CATEGORY_PAGE) {
-            $url= CommonHelper::generateUrl('category', 'view', array($nav_category_id));
+            $url = CommonHelper::generateUrl('category', 'view', array($nav_category_id));
         }
 
         return $url;
@@ -560,7 +566,7 @@ class CommonHelper extends FatUtility
         }
         $pageURL .= "://";
         if ($_SERVER["SERVER_PORT"] != "80") {
-            $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"];
+            $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"];
         } else {
             $pageURL .= $_SERVER["SERVER_NAME"];
         }
@@ -611,7 +617,7 @@ class CommonHelper extends FatUtility
         $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         $pass = '';
         for ($i = 0; $i < $n; $i++) {
-            $pass .= substr($chars, rand(0, strlen($chars)-1), 1);
+            $pass .= substr($chars, rand(0, strlen($chars) - 1), 1);
         }
         return $pass;
     }
@@ -664,14 +670,13 @@ class CommonHelper extends FatUtility
         return true;
     }
 
-    public static function getLangFields($condition_id = 0, $condition_field="", $condition_lang_field="", $lang_flds=array(), $lang_table="")
+    public static function getLangFields($condition_id = 0, $condition_field = "", $condition_lang_field = "", $lang_flds = array(), $lang_table = "")
     {
         $condition_id = FatUtility::int($condition_id);
-        if ($condition_id ==0 || $condition_field == "" || $condition_lang_field =="" || $lang_table=="" || empty($lang_flds)) {
+        if ($condition_id == 0 || $condition_field == "" || $condition_lang_field == "" || $lang_table == "" || empty($lang_flds)) {
             return array();
         }
-        $langs = Language::getAllNames();
-        ;
+        $langs = Language::getAllNames();;
         $array = array();
         $srch = new SearchBase($lang_table);
         $srch->addCondition($condition_field, '=', $condition_id);
@@ -683,7 +688,7 @@ class CommonHelper extends FatUtility
                 if ($rec[$condition_lang_field] == $langId) {
                     foreach ($lang_flds as $fld) {
                         $array[$fld][$langId] = $rec[$fld];
-                        $array[$fld.$langId] = $rec[$fld];
+                        $array[$fld . $langId] = $rec[$fld];
                     }
                     continue;
                 }
@@ -696,9 +701,9 @@ class CommonHelper extends FatUtility
     {
         $arr_url_params = array();
         if (!empty($arr)) {
-            foreach ($arr as $key=>$val) {
+            foreach ($arr as $key => $val) {
                 $v = 0;
-                if ($key%2 == 0) {
+                if ($key % 2 == 0) {
                     $k = $val;
                 } else {
                     $v = $val;
@@ -723,20 +728,20 @@ class CommonHelper extends FatUtility
         $src_img_w = $size_w;
         $src_img_h = $size_h;
 
-        $degrees = $data -> rotate + self::getCorrectImageOrientation($src);
+        $degrees = $data->rotate + self::getCorrectImageOrientation($src);
 
         switch ($size['mime']) {
-           case "image/gif":
-              $src_img = imagecreatefromgif($src);
-              break;
+            case "image/gif":
+                $src_img = imagecreatefromgif($src);
+                break;
 
             case "image/jpeg":
-              $src_img = imagecreatefromjpeg($src);
-              break;
+                $src_img = imagecreatefromjpeg($src);
+                break;
 
             case "image/png":
-              $src_img = imagecreatefrompng($src);
-              break;
+                $src_img = imagecreatefrompng($src);
+                break;
         }
 
         //  $src_img = imagecreatefromjpeg($src);
@@ -759,13 +764,13 @@ class CommonHelper extends FatUtility
             $src_img_h -= 1;
         }
 
-        $tmp_img_w = $data -> width;
-        $tmp_img_h = $data -> height;
+        $tmp_img_w = $data->width;
+        $tmp_img_h = $data->height;
         $dst_img_w = 320;
         $dst_img_h = 320;
 
-        $src_x = $data -> x;
-        $src_y = $data -> y;
+        $src_x = $data->x;
+        $src_y = $data->y;
 
         if ($src_x <= -$tmp_img_w || $src_x > $src_img_w) {
             $src_x = $src_w = $dst_x = $dst_w = 0;
@@ -815,15 +820,16 @@ class CommonHelper extends FatUtility
         imagedestroy($src_img);
         imagedestroy($dst_img);
     }
-    
-    public static function getCorrectImageOrientation($filename) {
+
+    public static function getCorrectImageOrientation($filename)
+    {
         $deg = 0;
 
         if (function_exists('exif_read_data') && ((mime_content_type($filename) == 'image/jpeg') || (mime_content_type($filename) == 'image/tiff'))) {
             $exif = exif_read_data($filename);
-            if($exif && isset($exif['Orientation'])) {
+            if ($exif && isset($exif['Orientation'])) {
                 $orientation = $exif['Orientation'];
-                if($orientation != 1){
+                if ($orientation != 1) {
                     switch ($orientation) {
                         case 3:
                             $deg = 180;
@@ -845,12 +851,12 @@ class CommonHelper extends FatUtility
     {
         $instance = FatApplication::getInstance();
         if ($template == '') {
-            $themeDirName = FatUtility::camel2dashed(substr($instance->getController(), 0, -(strlen('controller'))));
+            $themeDirName = FatUtility::camel2dashed(substr($instance->getController(), 0, - (strlen('controller'))));
             $actionName = FatUtility::camel2dashed($instance->getAction()) . '.php';
             $template = $themeDirName . '/' . $actionName;
         }
 
-        if (file_exists(CONF_THEME_PATH.$template)) {
+        if (file_exists(CONF_THEME_PATH . $template)) {
             return true;
         }
         return false;
@@ -858,12 +864,12 @@ class CommonHelper extends FatUtility
 
     public static function subStringByWords($str, $maxlength)
     {
-        if (strlen($str)<$maxlength) {
+        if (strlen($str) < $maxlength) {
             return $str;
         }
         $str = substr($str, 0, $maxlength);
         $rpos = strrpos($str, ' ');
-        if ($rpos>0) {
+        if ($rpos > 0) {
             $str = substr($str, 0, $rpos);
         }
         return $str;
@@ -875,20 +881,20 @@ class CommonHelper extends FatUtility
         switch ($unit) {
             case applicationConstants::WEIGHT_GRAM:
                 $weight = $val;
-            break;
+                break;
 
             case applicationConstants::WEIGHT_POUND:
                 $weight = $val * 453.592;
-            break;
+                break;
 
-            /* case 'OU':
+                /* case 'OU':
             case 'OUNCE':
                 $weight = $val * 28.3495;
             break; */
 
             case applicationConstants::WEIGHT_KILOGRAM:
                 $weight = $val * 0.001;
-            break;
+                break;
             default:
                 trigger_error("Invalid Argument", E_USER_ERROR);
         }
@@ -901,13 +907,13 @@ class CommonHelper extends FatUtility
         switch ($unit) {
             case applicationConstants::LENGTH_CENTIMETER:
                 $length = $val;
-            break;
+                break;
             case applicationConstants::LENGTH_METER:
-                $length = $val*100;
-            break;
+                $length = $val * 100;
+                break;
             case applicationConstants::LENGTH_INCH:
-                $length = $val*2.54;
-            break;
+                $length = $val * 2.54;
+                break;
             default:
                 trigger_error("Invalid Argument", E_USER_ERROR);
         }
@@ -935,7 +941,7 @@ class CommonHelper extends FatUtility
 
     public static function processURLString($urlString)
     {
-        $strtestpos = strpos(" ".$urlString, ".");
+        $strtestpos = strpos(" " . $urlString, ".");
         if (!$strtestpos) {
             return $urlString;
         }
@@ -951,7 +957,7 @@ class CommonHelper extends FatUtility
             if ($my_bool) {
                 $pre_str = 'https://';
             }
-            $urlString = $pre_str.$urlString;
+            $urlString = $pre_str . $urlString;
         }
         return $urlString;
     }
@@ -968,10 +974,10 @@ class CommonHelper extends FatUtility
         return $str;
     }
 
-    public static function truncateCharacters($string, $limit, $break=" ", $pad="...", $nl2br = false)
+    public static function truncateCharacters($string, $limit, $break = " ", $pad = "...", $nl2br = false)
     {
         if (strlen($string) <= $limit) {
-            return ($nl2br)? nl2br($string) : $string ;
+            return ($nl2br) ? nl2br($string) : $string;
         }
 
         $tempString = str_replace('\n', '^', $string);
@@ -984,7 +990,7 @@ class CommonHelper extends FatUtility
         if (false !== ($breakpoint = strrpos($string, $break))) {
             $string = substr($string, 0, $breakpoint);
         }
-        return (($nl2br)? nl2br($string) : $string) . $pad;
+        return (($nl2br) ? nl2br($string) : $string) . $pad;
     }
 
     public static function displayName($string)
@@ -996,7 +1002,7 @@ class CommonHelper extends FatUtility
 
     public static function getFirstChar($string, $capitalize = false)
     {
-        $string = iconv('UTF-8','ASCII//TRANSLIT', $string);
+        $string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
         if (!empty($string)) {
             if ($capitalize == true) {
                 return strtoupper($string[0]);
@@ -1023,8 +1029,8 @@ class CommonHelper extends FatUtility
         $keyword = strtolower($string);
         $keyword = ucfirst(FatUtility::dashed2Camel($keyword));
 
-        if (file_exists(CONF_INSTALLATION_PATH . 'application/controllers/' .$keyword.'Controller' . '.php')) {
-            return $string.'-'.rand(1, 100);
+        if (file_exists(CONF_INSTALLATION_PATH . 'application/controllers/' . $keyword . 'Controller' . '.php')) {
+            return $string . '-' . rand(1, 100);
         }
 
         return trim($string, '-');
@@ -1035,8 +1041,8 @@ class CommonHelper extends FatUtility
         if (is_file($str)) {
             return @unlink($str);
         } elseif (is_dir($str)) {
-            $scan = glob(rtrim($str, '/').'/*');
-            foreach ($scan as $index=>$path) {
+            $scan = glob(rtrim($str, '/') . '/*');
+            foreach ($scan as $index => $path) {
                 static::recursiveDelete($path);
             }
             return @rmdir($str);
@@ -1045,12 +1051,12 @@ class CommonHelper extends FatUtility
 
     public static function displayText($value = '')
     {
-        return empty(trim($value)) ? '-' : $value ;
+        return empty(trim($value)) ? '-' : $value;
     }
 
     public static function getPlaceholderForAmtField($langId)
     {
-        return Label::getLabel('Lbl_Amount_in', $langId).' '.static::concatCurrencySymbolWithAmtLbl();
+        return Label::getLabel('Lbl_Amount_in', $langId) . ' ' . static::concatCurrencySymbolWithAmtLbl();
     }
 
     public static function concatCurrencySymbolWithAmtLbl()
@@ -1058,15 +1064,15 @@ class CommonHelper extends FatUtility
         $currencyId = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
         $currencyData = Currency::getAttributesById(
             $currencyId,
-            array('currency_code','currency_symbol_left','currency_symbol_right','currency_value')
+            array('currency_code', 'currency_symbol_left', 'currency_symbol_right', 'currency_value')
         );
 
         $currencySymbolLeft = $currencyData['currency_symbol_left'];
         $currencySymbolRight = $currencyData['currency_symbol_right'];
 
-        $symbol = $currencySymbolRight ? $currencySymbolRight : $currencySymbolLeft ;
+        $symbol = $currencySymbolRight ? $currencySymbolRight : $currencySymbolLeft;
 
-        return empty($symbol) ? '' : " ($symbol)" ;
+        return empty($symbol) ? '' : " ($symbol)";
     }
 
     public static function isValidEmail($email)
@@ -1079,18 +1085,18 @@ class CommonHelper extends FatUtility
         $mainDelim = end($delimiters);
         array_pop($delimiters);
         foreach ($delimiters as $delimiter) {
-            $string= str_replace($delimiter, $mainDelim, $string);
+            $string = str_replace($delimiter, $mainDelim, $string);
         }
-        $result= explode($mainDelim, $string);
+        $result = explode($mainDelim, $string);
         return self::array_trim($result);
     }
 
     public static function array_trim($ar)
     {
-        foreach ($ar as $key=>$val) {
-            $val=trim($val);
+        foreach ($ar as $key => $val) {
+            $val = trim($val);
             if (!empty($val)) {
-                $reArray[]=$val;
+                $reArray[] = $val;
             }
         }
         return $reArray;
@@ -1108,7 +1114,7 @@ class CommonHelper extends FatUtility
 
     public static function createSlug($string)
     {
-        $slug=preg_replace('/[^A-Za-z0-9-]+/', '-', $string);
+        $slug = preg_replace('/[^A-Za-z0-9-]+/', '-', $string);
         return $slug;
     }
 
@@ -1132,16 +1138,16 @@ class CommonHelper extends FatUtility
 
     public static function createDropDownFromArray($name = '', $arr = array(), $selected = 0, $extra = ' ', $selectCaption = '')
     {
-        $dropDown ='<select name="'.$name.'" '.$extra.'>';
+        $dropDown = '<select name="' . $name . '" ' . $extra . '>';
         if ($selectCaption) {
-            $dropDown .='<option  value="0">'.$selectCaption.'</option>';
+            $dropDown .= '<option  value="0">' . $selectCaption . '</option>';
         }
 
-        foreach ($arr as $key=>$val) {
-            $selectedStr = ($key==$selected)?"selected=selected":"" ;
-            $dropDown .='<option '.$selectedStr.' value="'.$key.'">'.$val.'</option>';
+        foreach ($arr as $key => $val) {
+            $selectedStr = ($key == $selected) ? "selected=selected" : "";
+            $dropDown .= '<option ' . $selectedStr . ' value="' . $key . '">' . $val . '</option>';
         }
-        $dropDown .='</select>';
+        $dropDown .= '</select>';
         return  $dropDown;
     }
 
@@ -1149,57 +1155,56 @@ class CommonHelper extends FatUtility
     {
         $cardNumber = preg_replace('/\D/', '', ($cardNumber));
         $len = strlen($cardNumber);
-        $result=array();
+        $result = array();
         if ($len > 16) {
-            $result['card_type']='Invalid';
+            $result['card_type'] = 'Invalid';
             return $result;
         }
         switch ($cardNumber) {
-                case 0:
-                    $result['card_type']='';
+            case 0:
+                $result['card_type'] = '';
                 break;
-                case(preg_match('/^4/', $cardNumber) >= 1):
-                    $result['card_type']='VISA';
+            case (preg_match('/^4/', $cardNumber) >= 1):
+                $result['card_type'] = 'VISA';
                 break;
-                case(preg_match('/^5[1-5]/', $cardNumber) >= 1):
-                    $result['card_type']='MASTER';
+            case (preg_match('/^5[1-5]/', $cardNumber) >= 1):
+                $result['card_type'] = 'MASTER';
                 break;
-                case(preg_match('/^3[47]/', $cardNumber) >= 1):
-                    $result['card_type']='AMEX';
+            case (preg_match('/^3[47]/', $cardNumber) >= 1):
+                $result['card_type'] = 'AMEX';
                 break;
-                case(preg_match('/^3(?:0[0-5]|[68])/', $cardNumber) >= 1):
-                    $result['card_type']='DINERS_CLUB';
+            case (preg_match('/^3(?:0[0-5]|[68])/', $cardNumber) >= 1):
+                $result['card_type'] = 'DINERS_CLUB';
                 break;
-                case(preg_match('/^6(?:011|5)/', $cardNumber) >= 1):
-                    $result['card_type']='DISCOVER';
+            case (preg_match('/^6(?:011|5)/', $cardNumber) >= 1):
+                $result['card_type'] = 'DISCOVER';
                 break;
-                case(preg_match('/^(?:2131|1800|35\d{3})/', $cardNumber) >= 1):
-                    $result['card_type']='JCB';
+            case (preg_match('/^(?:2131|1800|35\d{3})/', $cardNumber) >= 1):
+                $result['card_type'] = 'JCB';
                 break;
-                default:
-                    $result['card_type']='';
+            default:
+                $result['card_type'] = '';
                 break;
-            }
+        }
         return $result;
     }
 
     public static function setCookie($cookieName, $cookieValue, $cookieExpiryTime = 60 * 60 * 24 * 7, $cookiePath = CONF_WEBROOT_FRONT_URL, $cokieSubDomainName = '', $isCookieSecure = false, $isCookieHttpOnly = true, $samesite = '')
     {
-        $cokieSubDomainName =  ($cokieSubDomainName == '') ? 	$_SERVER['HTTP_HOST'] : $cokieSubDomainName;
+        $cokieSubDomainName =  ($cokieSubDomainName == '') ?     $_SERVER['HTTP_HOST'] : $cokieSubDomainName;
         $cookieOptions = [];
         $secure = FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false);
-       
+
         $isCookieSecure = ($isCookieSecure && $secure) ? true : false;
 
-        if(empty($samesite) && $isCookieSecure) {
-            $samesite =  'none';	
+        if (empty($samesite) && $isCookieSecure) {
+            $samesite =  'none';
         }
         if (PHP_VERSION_ID < 70300) {
-            
-            $cookiePath = ($samesite != '') ? $cookiePath.'; samesite='.$samesite :  $cookiePath;
+
+            $cookiePath = ($samesite != '') ? $cookiePath . '; samesite=' . $samesite :  $cookiePath;
             return setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly);
-       
-        }else{
+        } else {
             $cookieOptions = [
                 'expires' => $cookieExpiryTime,
                 'path' => $cookiePath,
@@ -1208,18 +1213,18 @@ class CommonHelper extends FatUtility
                 'httponly' => $isCookieHttpOnly,
                 'samesite' => $samesite,
             ];
-            if($samesite != '') {
-                $cookieOptions['samesite'] =  $samesite;	
+            if ($samesite != '') {
+                $cookieOptions['samesite'] =  $samesite;
             }
-            return  setcookie ( $cookieName ,  $cookieValue ,  $cookieOptions);
+            return  setcookie($cookieName,  $cookieValue,  $cookieOptions);
         }
-       
+
         /* manipulating $cookieValue to make it array containg real data and storing creation datetime [ */
         /* */
         /* ] */
-       
+
         // return setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly,$options);
-        
+
     }
 
     public static function writeFile($name, $data, &$response)
@@ -1268,12 +1273,12 @@ class CommonHelper extends FatUtility
         }
         if (strpos($input, '</style>') !== false) {
             $input = preg_replace_callback('#<style(.*?)>(.*?)</style>#is', function ($matches) {
-                return '<style' . $matches[1] .'>'. CommonHelper::minify_css($matches[2]) . '</style>';
+                return '<style' . $matches[1] . '>' . CommonHelper::minify_css($matches[2]) . '</style>';
             }, $input);
         }
         if (strpos($input, '</script>') !== false) {
             $input = preg_replace_callback('#<script(.*?)>(.*?)</script>#is', function ($matches) {
-                return '<script' . $matches[1] .'>'. CommonHelper::minify_js($matches[2]) . '</script>';
+                return '<script' . $matches[1] . '>' . CommonHelper::minify_js($matches[2]) . '</script>';
             }, $input);
         }
         return preg_replace(
@@ -1364,7 +1369,7 @@ class CommonHelper extends FatUtility
             return $input;
         }
         return preg_replace(
-                array(
+            array(
                 // Remove comment(s)
                 '#\s*("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')\s*|\s*\/\*(?!\!|@cc_on)(?>[\s\S]*?\*\/)\s*|\s*(?<![\:\=])\/\/.*(?=[\n\r]|$)|^\s*|\s*$#',
                 // Remove white-space(s) outside the string and regex
@@ -1376,32 +1381,32 @@ class CommonHelper extends FatUtility
                 // --ibid. From `foo['bar']` to `foo.bar`
                 '#([a-z0-9_\)\]])\[([\'"])([a-z_][a-z0-9_]*)\2\]#i'
             ),
-                array(
+            array(
                 '$1',
                 '$1$2',
                 '}',
                 '$1$3',
                 '$1.$3'
             ),
-                $input
-            );
+            $input
+        );
     }
 
-    public static function getUserCookiesEnabled() : bool
+    public static function getUserCookiesEnabled(): bool
     {
         return (!empty($_COOKIE[UserCookieConsent::COOKIE_NAME]));
     }
 
     public static function getDefaultCurrencySymbol()
     {
-        $row = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY'), array('currency_symbol_left','currency_symbol_right'));
+        $row = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY'), array('currency_symbol_left', 'currency_symbol_right'));
         if (!empty($row)) {
-            return ($row['currency_symbol_left']!='')?$row['currency_symbol_left']:$row['currency_symbol_right'];
+            return ($row['currency_symbol_left'] != '') ? $row['currency_symbol_left'] : $row['currency_symbol_right'];
         }
         trigger_error(Label::getLabel('ERR_Default_currency_not_specified.', CommonHelper::getLangId()), E_USER_ERROR);
     }
 
-	  public static function getDefaultCurrencyData()
+    public static function getDefaultCurrencyData()
     {
         $row = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY'));
         if (!empty($row)) {
@@ -1417,15 +1422,15 @@ class CommonHelper extends FatUtility
             $str = json_encode($str);
         }
         //Something to write to txt log
-        $log  = "User: ".$_SERVER['REMOTE_ADDR'].' - '.date("F j, Y, g:i a").PHP_EOL.
-                "data: ".$str.PHP_EOL.
-                "-------------------------".PHP_EOL;
-        $file = CONF_UPLOADS_PATH.'./log_'.date("Y-m-d").'.txt';
+        $log  = "User: " . $_SERVER['REMOTE_ADDR'] . ' - ' . date("F j, Y, g:i a") . PHP_EOL .
+            "data: " . $str . PHP_EOL .
+            "-------------------------" . PHP_EOL;
+        $file = CONF_UPLOADS_PATH . './log_' . date("Y-m-d") . '.txt';
         //Save string to log, use FILE_APPEND to append.
         file_put_contents($file, $log, FILE_APPEND);
     }
 
-    public static function fullCopy($source, $target, $empty_first=true)
+    public static function fullCopy($source, $target, $empty_first = true)
     {
         if ($empty_first) {
             self::recursiveDelete($target);
@@ -1498,8 +1503,7 @@ class CommonHelper extends FatUtility
 				)               # End host alternatives.
 				([\w-]{10,12})  # Allow 10-12 for 11 char youtube id.
 				($|&).*         # if additional parameters are also in query string after video id.
-				$%x'
-            ;
+				$%x';
             $result = preg_match($pattern, $url, $matches);
 
             if (false !== $result && isset($matches[1])) {
@@ -1513,22 +1517,22 @@ class CommonHelper extends FatUtility
         return $data;
     }
 
-   
+
 
     public static function encryptId($string_to_encrypt)
     {
         $key = md5(ENCRYPTION_SALT);
-        $append="-";
-        $encrypt=urlencode(base64_encode($string_to_encrypt.$append.$key));
+        $append = "-";
+        $encrypt = urlencode(base64_encode($string_to_encrypt . $append . $key));
         return $encrypt;
     }
 
     public static function decryptId($string_to_decrypt)
     {
-        $d=base64_decode(urldecode($string_to_decrypt));
-        $append="-";
-        $value=explode($append, $d);
-        $decrypt=$value[0];
+        $d = base64_decode(urldecode($string_to_decrypt));
+        $append = "-";
+        $value = explode($append, $d);
+        $decrypt = $value[0];
         return $decrypt;
     }
 
@@ -1536,7 +1540,7 @@ class CommonHelper extends FatUtility
     {
         $timeSlotArr = array_intersect_key(TeacherGeneralAvailability::timeSlotArr(), array_flip($arr));
         $formattedArr = array();
-        foreach ($timeSlotArr as $k=>$timeSlot) {
+        foreach ($timeSlotArr as $k => $timeSlot) {
             $breakTimeStrng = explode('-', $timeSlot);
             $formattedArr[$k]['startTime'] = $breakTimeStrng[0];
             $formattedArr[$k]['endTime'] = $breakTimeStrng[1];
@@ -1555,75 +1559,74 @@ class CommonHelper extends FatUtility
         return $recordCount;
     }
 
-    public static function getAllMonthName() : array
+    public static function getAllMonthName(): array
     {
         return array(
-                'monthNames' => [
-                        Label::getLabel('LBL_January'),
-                        Label::getLabel('LBL_February'),
-                        Label::getLabel('LBL_March'),
-                        Label::getLabel('LBL_April'),
-                        Label::getLabel('LBL_May'),
-                        Label::getLabel('LBL_June'),
-                        Label::getLabel('LBL_July'),
-                        Label::getLabel('LBL_August'),
-                        Label::getLabel('LBL_September'),
-                        Label::getLabel('LBL_October'),
-                        Label::getLabel('LBL_November'),
-                        Label::getLabel('LBL_December'),
-                    ],
-                'monthNamesShort' => [
-                        Label::getLabel('LBL_Jan'),
-                        Label::getLabel('LBL_Feb'),
-                        Label::getLabel('LBL_Mar'),
-                        Label::getLabel('LBL_Apr'),
-                        Label::getLabel('LBL_May'),
-                        Label::getLabel('LBL_Jun'),
-                        Label::getLabel('LBL_Jul'),
-                        Label::getLabel('LBL_Aug'),
-                        Label::getLabel('LBL_Sep'),
-                        Label::getLabel('LBL_Oct'),
-                        Label::getLabel('LBL_Nov'),
-                        Label::getLabel('LBL_Dec'),
-                    ],
+            'monthNames' => [
+                Label::getLabel('LBL_January'),
+                Label::getLabel('LBL_February'),
+                Label::getLabel('LBL_March'),
+                Label::getLabel('LBL_April'),
+                Label::getLabel('LBL_May'),
+                Label::getLabel('LBL_June'),
+                Label::getLabel('LBL_July'),
+                Label::getLabel('LBL_August'),
+                Label::getLabel('LBL_September'),
+                Label::getLabel('LBL_October'),
+                Label::getLabel('LBL_November'),
+                Label::getLabel('LBL_December'),
+            ],
+            'monthNamesShort' => [
+                Label::getLabel('LBL_Jan'),
+                Label::getLabel('LBL_Feb'),
+                Label::getLabel('LBL_Mar'),
+                Label::getLabel('LBL_Apr'),
+                Label::getLabel('LBL_May'),
+                Label::getLabel('LBL_Jun'),
+                Label::getLabel('LBL_Jul'),
+                Label::getLabel('LBL_Aug'),
+                Label::getLabel('LBL_Sep'),
+                Label::getLabel('LBL_Oct'),
+                Label::getLabel('LBL_Nov'),
+                Label::getLabel('LBL_Dec'),
+            ],
 
         );
-
     }
 
-    public static function dayNames() : array
+    public static function dayNames(): array
     {
         return [
-                    'dayNames' => [
-                            Label::getLabel('LBL_Sunday'),
-                            Label::getLabel('LBL_Monday'),
-                            Label::getLabel('LBL_Tuesday'),
-                            Label::getLabel('LBL_Wednesday'),
-                            Label::getLabel('LBL_Thursday'),
-                            Label::getLabel('LBL_Friday'),
-                            Label::getLabel('LBL_Saturday')
-                        ],
-                    'dayNamesShort' => [
-                            Label::getLabel('LBL_Sun'),
-                            Label::getLabel('LBL_Mon'),
-                            Label::getLabel('LBL_Tue'),
-                            Label::getLabel('LBL_Wed'),
-                            Label::getLabel('LBL_Thu'),
-                            Label::getLabel('LBL_Fri'),
-                            Label::getLabel('LBL_Sat')
-                        ],
-                ];
+            'dayNames' => [
+                Label::getLabel('LBL_Sunday'),
+                Label::getLabel('LBL_Monday'),
+                Label::getLabel('LBL_Tuesday'),
+                Label::getLabel('LBL_Wednesday'),
+                Label::getLabel('LBL_Thursday'),
+                Label::getLabel('LBL_Friday'),
+                Label::getLabel('LBL_Saturday')
+            ],
+            'dayNamesShort' => [
+                Label::getLabel('LBL_Sun'),
+                Label::getLabel('LBL_Mon'),
+                Label::getLabel('LBL_Tue'),
+                Label::getLabel('LBL_Wed'),
+                Label::getLabel('LBL_Thu'),
+                Label::getLabel('LBL_Fri'),
+                Label::getLabel('LBL_Sat')
+            ],
+        ];
     }
 
-    public static function demoUrl() : bool
+    public static function demoUrl(): bool
     {
-        if (strpos($_SERVER ['SERVER_NAME'], 'teach.yo-coach.com') !== false) {
+        if (strpos($_SERVER['SERVER_NAME'], 'teach.yo-coach.com') !== false) {
             return true;
         }
         return false;
     }
 
-    public static function getUnreadNotifications($limit=false)
+    public static function getUnreadNotifications($limit = false)
     {
         $srchNotification = UserNotifications::getUserNotifications(UserAuthentication::getLoggedUserId());
         $srchNotification->joinTable(Order::DB_TBL, 'LEFT OUTER JOIN', 'order_id = notification_record_id');
@@ -1653,7 +1656,7 @@ class CommonHelper extends FatUtility
         return $list;
     }
 
-    public static function getTeachLangs($ids=null, $homePagCal = false, $singleView = false)
+    public static function getTeachLangs($ids = null, $homePagCal = false, $singleView = false)
     {
         if (empty($ids)) {
             return '';
@@ -1681,31 +1684,31 @@ class CommonHelper extends FatUtility
             if (count($teachLangs) > 2) {
                 $first_array = array_slice($teachLangs, 0, 2);
                 $second_array = array_slice($teachLangs, 2, count($teachLangs)); ?>
-			<div class="language">
-				<?php  foreach ($first_array as $teachLang) {  ?>
-						<span class="main-language"><?php echo $teachLang; ?></span>
-				<?php } ?>
-				<ul>
-					<li><span class="plus">+</span>
-							<div class="more_listing">
-								<ul>
-								<?php  foreach ($second_array as $teachLang) {  ?>
-									<li><a><?php echo $teachLang; ?></a></li>
-								<?php } ?>
-								</ul>
-							</div>
-					  </li>
-				</ul>
-			</div>
-		<?php
-        return;
+                <div class="language">
+                    <?php foreach ($first_array as $teachLang) {  ?>
+                        <span class="main-language"><?php echo $teachLang; ?></span>
+                    <?php } ?>
+                    <ul>
+                        <li><span class="plus">+</span>
+                            <div class="more_listing">
+                                <ul>
+                                    <?php foreach ($second_array as $teachLang) {  ?>
+                                        <li><a><?php echo $teachLang; ?></a></li>
+                                    <?php } ?>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <?php
+                return;
             } else {
-                echo'<div class="language">';
+                echo '<div class="language">';
                 foreach ($teachLangs as $teachLang) {  ?>
-				<span class="main-language"><?php echo $teachLang; ?></span>
-		<?php
-            }
-                echo'</div>';
+                    <span class="main-language"><?php echo $teachLang; ?></span>
+<?php
+                }
+                echo '</div>';
                 //return $teachLangsStr = implode($teachLangs,', ');
                 return;
             }
@@ -1715,31 +1718,31 @@ class CommonHelper extends FatUtility
 
     public static function setCookieConsent(string $value = '')
     {
-        if(empty($value)) {
+        if (empty($value)) {
             $value = json_encode(UserCookieConsent::fieldsArrayWithDefultValue());
         }
-        self::setCookie(UserCookieConsent::COOKIE_NAME, $value, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_URL,'', true);
+        self::setCookie(UserCookieConsent::COOKIE_NAME, $value, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_URL, '', true);
     }
 
-    public static function getCookieConsent() : array
+    public static function getCookieConsent(): array
     {
         $settings  = [];
-        if(!empty($_COOKIE[UserCookieConsent::COOKIE_NAME])) {
+        if (!empty($_COOKIE[UserCookieConsent::COOKIE_NAME])) {
             $settings =  json_decode($_COOKIE[UserCookieConsent::COOKIE_NAME], true);
         }
 
-        if(UserAuthentication::isUserLogged()){
-           $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
-           $cookieSettings = $userCookieConsent->getCookieSettings();
-           if(!empty($cookieSettings)) {
+        if (UserAuthentication::isUserLogged()) {
+            $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+            $cookieSettings = $userCookieConsent->getCookieSettings();
+            if (!empty($cookieSettings)) {
                 $settings =  json_decode($cookieSettings, true);
-               self::setCookieConsent($cookieSettings); 
-           }
-         }
-         if(empty($settings)) {
+                self::setCookieConsent($cookieSettings);
+            }
+        }
+        if (empty($settings)) {
             $settings = UserCookieConsent::fieldsArrayWithDefultValue();
-         }
-         return $settings;
+        }
+        return $settings;
     }
 
     public static function setSeesionCookieParams()
@@ -1814,27 +1817,26 @@ class CommonHelper extends FatUtility
         return $str;
     }
 
-    public static function htmlEntitiesDecode( $var ) 
+    public static function htmlEntitiesDecode($var)
     {
-		if (is_array($var)){
-			foreach ($var as $key=>$val) $var[$key] = self::htmlEntitiesDecode($val);
-		}
-		elseif (is_string($var) || is_numeric($var)) {
-			$var = html_entity_decode($var, ENT_COMPAT, 'UTF-8');
-		}
-		return $var;
+        if (is_array($var)) {
+            foreach ($var as $key => $val) $var[$key] = self::htmlEntitiesDecode($val);
+        } elseif (is_string($var) || is_numeric($var)) {
+            $var = html_entity_decode($var, ENT_COMPAT, 'UTF-8');
+        }
+        return $var;
     }
-     
+
     public static function maskAndDisableFormFields(Form $frm, array $fieldsToSkip)
     {
 
         $flds = $frm->getAllFields();
         foreach ($flds as $fld) {
-            if(!in_array($fld->getName(), $fieldsToSkip) && ($fld->fldType != 'submit')){
+            if (!in_array($fld->getName(), $fieldsToSkip) && ($fld->fldType != 'submit')) {
                 $fld->addFieldTagAttribute('disabled', 'disabled');
             }
-            
-            if($fld->fldType == 'text' ){
+
+            if ($fld->fldType == 'text') {
                 $fld->value = '***********';
             }
         }
