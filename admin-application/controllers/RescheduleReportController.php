@@ -189,9 +189,19 @@ class RescheduleReportController extends AdminBaseController
             $srch->addCondition('lesstslog_added_on', '<=', $reschedule_to . ' 23:59:59');
         }
 
+        // $rescheduled_no = FatApp::getPostedData('rescheduled_no', FatUtility::VAR_INT, 0);
+        // if ($rescheduled_no > 0) {
+        //     $srch->addHaving('mysql_func_count(lesstslog_id)', '>=', $rescheduled_no, 'AND', true);
+        // }
+
         $rescheduled_no = FatApp::getPostedData('rescheduled_no', FatUtility::VAR_INT, 0);
         if ($rescheduled_no > 0) {
-            $srch->addHaving('mysql_func_count(lesstslog_id)', '>=', $rescheduled_no, 'AND', true);
+            $srch->addHaving('teacherRescheduledLessons', '=', $rescheduled_no, 'AND');
+        }
+
+        $cancelled_no = FatApp::getPostedData('cancelled_no', FatUtility::VAR_INT, 0);
+        if ($cancelled_no > 0) {
+            $srch->addHaving('teacherCancelledLessons', '=', $cancelled_no, 'AND');
         }
 
         if (isset($parameters[1]) && $parameters[1] == LessonStatusLog::CANCELLED_REPORT) {
@@ -232,7 +242,7 @@ class RescheduleReportController extends AdminBaseController
         $rs = $srch->getResultSet();
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-        //echo "<pre>";print_r($srch->getQuery());die;goToNextPage
+        
         $rs = $srch->getResultSet();
         $lessons = $db->fetchAll($rs);
         //echo $page;
@@ -275,10 +285,8 @@ class RescheduleReportController extends AdminBaseController
                 CONCAT(u.user_first_name, " ", u.user_last_name) as RescheduledBy, 
                 CONCAT(su.user_first_name, " ", su.user_last_name) as StudentName,
                 lesstslog_current_status,
-                date(lesstslog_prev_start_date,,lesstslog_prev_start_time) as StartTime,
-                lesstslog_prev_start_time,
-                lesstslog_prev_end_date,
-                lesstslog_prev_end_time, 
+                CONCAT(lesstslog_prev_start_date," ",lesstslog_prev_start_time) as StartTime,
+                CONCAT(lesstslog_prev_end_date," ",lesstslog_prev_end_time) as EndTime,
                 lesstslog_comment,
                 lesstslog_added_on,
                 lesstslog_id
@@ -300,9 +308,29 @@ class RescheduleReportController extends AdminBaseController
             $srch->addCondition('lesstslog_added_on', '<=', $reschedule_to . ' 23:59:59');
         }
 
+        // $rescheduled_no = FatApp::getPostedData('rescheduled_no', FatUtility::VAR_INT, 0);
+        // if ($rescheduled_no > 0) {
+        //     $srch->addHaving('mysql_func_count(lesstslog_id)', '>=', $rescheduled_no, 'AND', true);
+        // }
+
         $rescheduled_no = FatApp::getPostedData('rescheduled_no', FatUtility::VAR_INT, 0);
         if ($rescheduled_no > 0) {
-            $srch->addHaving('mysql_func_count(lesstslog_id)', '>=', $rescheduled_no, 'AND', true);
+            $srch->addHaving('teacherRescheduledLessons', '=', $rescheduled_no, 'AND');
+        }
+
+        $cancelled_no = FatApp::getPostedData('cancelled_no', FatUtility::VAR_INT, 0);
+        if ($cancelled_no > 0) {
+            $srch->addHaving('teacherCancelledLessons', '=', $cancelled_no, 'AND');
+        }
+
+        if (!empty($reschedule_from) && !empty($reschedule_to)) {
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = u.user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" AND `lesstslog_added_on` >= "'.$reschedule_from .' 00:00:00" AND `lesstslog_added_on` <= "'.$reschedule_to .' 23:59:59") as teacherCancelledLessons');
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = u.user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" AND `lesstslog_added_on` >= "'.$reschedule_from .' 00:00:00" AND `lesstslog_added_on` <= "'.$reschedule_to .' 23:59:59") as teacherRescheduledLessons');
+        }
+
+        if (empty($reschedule_from) && empty($reschedule_to)) {
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = u.user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherCancelledLessons');
+            $srch->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = u.user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherRescheduledLessons');
         }
 
         $reportName = '';
@@ -344,12 +372,10 @@ class RescheduleReportController extends AdminBaseController
                     Label::getLabel('Student Name', $this->adminLangId),
                     Label::getLabel('Order ID', $this->adminLangId),
                     Label::getLabel('Lesson ID', $this->adminLangId),
-                    Label::getLabel('Previous Scheduled Start Date', $this->adminLangId),
-                    Label::getLabel('Previous Scheduled Start Time', $this->adminLangId),
-                    Label::getLabel('Previous Scheduled End Date', $this->adminLangId),
-                    Label::getLabel('Previous Scheduled End Time', $this->adminLangId),
+                    Label::getLabel('Start Time', $this->adminLangId),
+                    Label::getLabel('End Time', $this->adminLangId),
                     Label::getLabel('Lesson Status', $this->adminLangId),
-                    Label::getLabel('Action Type', $this->adminLangId)
+                    Label::getLabel('Action Performed', $this->adminLangId)
                 );
         
                 $arr = array_merge($arr, $extraLabelArr);
@@ -364,10 +390,8 @@ class RescheduleReportController extends AdminBaseController
                     $row['StudentName'],
                     $row['sldetail_order_id'],
                     $row['slesson_id'],
-                    $row['lesstslog_prev_start_date'],
-                    $row['lesstslog_prev_start_time'],
-                    $row['lesstslog_prev_end_date'],
-                    $row['lesstslog_prev_end_time'],
+                    $row['StartTime'],
+                    $row['EndTime'],
                     $statusArr[$row['slesson_status']],
                     $row['lesstslog_current_status'],
                     $row['lesstslog_added_on'],

@@ -93,6 +93,9 @@ foreach ($lessons as $sn=>$row){
 <section class="section">
 	<div class="sectionhead">
 		<h4><?php echo Label::getLabel('LBL_Report',$adminLangId); ?></h4>
+		<div class="-float-right">
+			<a onClick="exportReport(<?php echo $report_user_id;?>, <?php echo $report_type;?>)" class='btn btn-primary btn-sm'>Export CSV</a>
+		</div>
 	</div>
 	<div class="sectionbody space">
 		<div class="tabs_nav_container responsive flat">
