@@ -330,7 +330,6 @@ class MetaTagsController extends AdminBaseController
                 $columnsArr = [
                     'listserial' => Label::getLabel('LBL_Sr._No', $this->adminLangId),
                     'cpage_title' => Label::getLabel('LBL_CMS_Page', $this->adminLangId),
-                    'meta_identifier' => Label::getLabel('LBL_Identifier', $this->adminLangId),
                     'meta_title' => Label::getLabel('LBL_Meta_Title', $this->adminLangId),
                     'has_tag_associated' => Label::getLabel('LBL_Has_Tags_Associated', $this->adminLangId),
                     'action' => Label::getLabel('LBL_Action', $this->adminLangId),
