@@ -171,7 +171,7 @@ class Common
             'price_asc'	=>	Label::getLabel('LBL_By_Price_Low_to_High'),
             'price_desc'=>	Label::getLabel('LBL_By_Price_High_to_Low'),
         );
-        $frmFilters->addSelectBox('', 'filterSortBy', $filterSortBy, 'popularity_desc', array(), '');
+        $frmFilters->addSelectBox('', 'filterSortBy', $filterSortBy, '', array(), Label::getLabel('LBL_Sort_by'));
 
         $teacherSrchObj = new UserSearch();
         $teacherSrchObj->setTeacherDefinedCriteria(true);

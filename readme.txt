@@ -16,6 +16,17 @@ Bug Fixes:
 ----------------------------------------------------------
 
 
+Release Number: TV-2.8.3.20210212
+
+Release Date: 2021/02/12
+
+Hotfixes:
+    Task-81879-update labels, filters on tutor search and make lessonspace default
+    Bug-#049803-fix transaction fee issue
+    Bug-#049646-fix currency conversion issue
+
+----------------------------------------------------------
+
 Release Number: TV-2.8.2.20210211
 
 Release Date: 2021/02/11
