@@ -209,3 +209,24 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.2.20210209' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION'; 
 
 REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('Twocheckout', 'Twocheckout', '1', 6, 1);
+
+CREATE TABLE `tbl_lesson_status_log` (
+  `lesstslog_id` int(11) NOT NULL,
+  `lesstslog_slesson_id` int(11) NOT NULL,
+  `lesstslog_prev_status` tinyint(1) NOT NULL COMMENT 'defined in model',
+  `lesstslog_current_status` int(11) NOT NULL,
+  `lesstslog_prev_start_date` date NOT NULL,
+  `lesstslog_prev_start_time` time NOT NULL,
+  `lesstslog_prev_end_date` date NOT NULL,
+  `lesstslog_prev_end_time` time NOT NULL,
+  `lesstslog_updated_by_user_id` int(11) NOT NULL,
+  `lesstslog_updated_by_user_type` int(11) NOT NULL,
+  `lesstslog_comment` text CHARACTER SET utf8 NOT NULL,
+  `lesstslog_added_on` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `tbl_lesson_status_log`
+  ADD PRIMARY KEY (`lesstslog_id`);
+
+ALTER TABLE `tbl_lesson_status_log`
+  MODIFY `lesstslog_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;

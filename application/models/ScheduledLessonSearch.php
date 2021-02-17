@@ -70,7 +70,7 @@ class ScheduledLessonSearch extends SearchBase
         return $srch;
     }
 
-    public function joinUserLessonData($getRescheduledLesson = true, $getCanCelledScheduledLesson = true)
+    public function joinUserLessonData()
     {
         $scheduledLessonDetailsSrch = new ScheduledLessonDetailsSearch();
         $scheduledLessonDetailsSrch->addGroupBy('sld.sldetail_slesson_id');        

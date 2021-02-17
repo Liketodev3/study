@@ -238,7 +238,7 @@ class RescheduleReportController extends AdminBaseController
         //$srch->doNotLimitRecords();
         $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
-        ;
+        //echo $srch->getQuery();die;
         $rs = $srch->getResultSet();
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);

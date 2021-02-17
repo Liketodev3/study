@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	
 	searchTopLangReport(document.frmRescheduledReportSearch);
 
 	$(document).on('click',function(){
@@ -188,7 +189,7 @@ $(document).ready(function(){
 			data = fcom.frmData(frm);
 		}
 		fcom.ajax(fcom.makeUrl('RescheduleReport', 'viewReport'), data, function(t) {
-			fcom.updateFaceboxContent(t);
+			fcom.updateFaceboxContent(t, 'xlargebox');
 		});
 		
     };

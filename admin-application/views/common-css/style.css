@@ -11112,3 +11112,13 @@ body.page--front .page__cell #footer {
   .tabs_panel_wrap .table th {
     white-space: nowrap;
 }
+.export-btn {
+    cursor: pointer;
+    box-shadow: unset;
+    padding: 8px 15px;
+    font-size: 13px;
+    border-radius: 3px;
+}
+.export-btn:hover {
+    box-shadow: 0 4px 4px rgba(84, 209, 241, 0.5);
+}

@@ -10,10 +10,10 @@ $arr_flds = array(
 	//'lesstslog_prev_start_time' => Label::getLabel('LBL_Prev_Start_Time',$adminLangId),
 	'EndTime' => Label::getLabel('LBL_End_Time',$adminLangId),
 	//'lesstslog_prev_end_time' => Label::getLabel('LBL_Prev_End_Time',$adminLangId),
-	'slesson_status' => Label::getLabel('LBL_Status',$adminLangId),
+	'slesson_status' => Label::getLabel('LBL_Current_Status',$adminLangId),
 	'lesstslog_current_status' => Label::getLabel('LBL_Action_Performed',$adminLangId),
 	'lesstslog_added_on' => Label::getLabel('LBL_Added_On',$adminLangId),
-	'RescheduledBy' => Label::getLabel('LBL_Rescheduled_By',$adminLangId),
+	'RescheduledBy' => Label::getLabel('LBL_Performed_By',$adminLangId),
 	'lesstslog_comment' => Label::getLabel('LBL_Reason',$adminLangId)
 );
 $tbl = new HtmlElement('table', array('width'=>'100%', 'class'=>'table table--hovered'));
@@ -94,7 +94,7 @@ foreach ($lessons as $sn=>$row){
 	<div class="sectionhead">
 		<h4><?php echo Label::getLabel('LBL_Report',$adminLangId); ?></h4>
 		<div class="-float-right">
-			<a onClick="exportReport(<?php echo $report_user_id;?>, <?php echo $report_type;?>)" class='btn btn-primary btn-sm'>Export CSV</a>
+			<a onClick="exportReport(<?php echo $report_user_id;?>, <?php echo $report_type;?>)" class='btn btn-primary export-btn btn-sm'>Export CSV</a>
 		</div>
 	</div>
 	<div class="sectionbody space">
