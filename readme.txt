@@ -12,7 +12,7 @@ Enhancements:
 Bug Fixes:
     Bug-#044725: Fixed incorrect end timer
     Bug-#049602-Issue with speaking and proficiency level
-
+    Bug-#047721: Trial lesson booking not working
 
 
 ----------------------------------------------------------
