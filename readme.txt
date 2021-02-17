@@ -9,7 +9,7 @@ New Features:
 Enhancements:
   
 Bug Fixes:
-
+    *Bug-044725: Fixed incorrect end timer
 ----------------------------------------------------------
 
 
