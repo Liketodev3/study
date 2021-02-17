@@ -2,7 +2,7 @@
 require_once CONF_INSTALLATION_PATH . 'library/payment-plugins/stripe/init.php';
 class StripePayController extends PaymentController
 {
-    private $keyName = "Stripe";
+    protected $keyName = "Stripe";
 
     private $error = false;
 
@@ -22,17 +22,19 @@ class StripePayController extends PaymentController
         }
 
         $this->paymentSettings = $this->getPaymentSettings();
+        
+        if (!isset($this->paymentSettings['privateKey']) && !isset($this->paymentSettings['publishableKey'])) {
+            Message::addErrorMessage(Label::getLabel('STRIPE_INVALID_PAYMENT_GATEWAY_SETUP_ERROR', $this->siteLangId));
+            CommonHelper::redirectUserReferer();
+        }
+
         $stripe = array(
         'secret_key' => $this->paymentSettings['privateKey'],
         'publishable_key' => $this->paymentSettings['publishableKey']
         );
         $this->set('stripe', $stripe);
 
-        if (!isset($this->paymentSettings['privateKey']) && !isset($this->paymentSettings['publishableKey'])) {
-            Message::addErrorMessage(Label::getLabel('STRIPE_INVALID_PAYMENT_GATEWAY_SETUP_ERROR', $this->siteLangId));
-            CommonHelper::redirectUserReferer();
-        }
-
+        
         if (strlen(trim($this->paymentSettings['privateKey'])) > 0 && strlen(trim($this->paymentSettings['publishableKey'])) > 0) {
             if (strpos($this->paymentSettings['privateKey'], 'test') !== false || strpos($this->paymentSettings['publishableKey'], 'test') !== false) {
             }

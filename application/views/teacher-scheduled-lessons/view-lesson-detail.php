@@ -620,7 +620,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'startLessonAuthentication', [CometJsonFriendData.lessonId]), '', function(t) {
                             if (t != 0) {
                                 $(".join_lesson_now").show();
-                                endLessonCountDownTimer(curDate, endTime);
+                                endLessonCountDownTimer(startTime, endTime);
                                 checkEveryMinuteStatus();
                             }
                         });

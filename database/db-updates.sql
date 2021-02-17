@@ -207,3 +207,6 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ('LBL_LESSON_{lesson-id}_CANCELED_BY_{user-full-name}_Comment:{comment}', 1, "Lesson {lesson-id} Canceled By {user-full-name} \n Comment: {comment}");
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.3.20210212' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.2.20210209' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION'; 
+
+REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('Twocheckout', 'Twocheckout', '1', 6, 1);

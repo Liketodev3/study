@@ -631,7 +631,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'startLessonAuthentication', ['<?php echo $lessonData['sldetail_id'] ?>']), '', function(t) {
                             if (t != 0) {
                                 $(".join_lesson_now").show();
-                                endLessonCountDownTimer(curDate, endTime);
+                                endLessonCountDownTimer(startTime, endTime);
                                 checkEveryMinuteStatus();
                             }
                         });
