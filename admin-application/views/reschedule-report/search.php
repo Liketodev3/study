@@ -73,23 +73,41 @@ foreach ($arr_listing as $sn=>$row){
 				$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
 				$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
 				
-				$innerLiBoth=$innerUl->appendElement('li');
-				$innerLiBoth->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 
-					'title'=>Label::getLabel('LBL_Download_Both_Report',$adminLangId),
-					"onclick"=>"exportReport(".$row['user_id'].", ".LessonStatusLog::BOTH_REPORT.")"),
-					Label::getLabel('LBL_Both',$adminLangId), true);
+				// $innerLiBoth=$innerUl->appendElement('li');
+				// $innerLiBoth->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 
+				// 	'title'=>Label::getLabel('LBL_Download_Both_Report',$adminLangId),
+				// 	"onclick"=>"exportReport(".$row['user_id'].", ".LessonStatusLog::BOTH_REPORT.")"),
+				// 	Label::getLabel('LBL_Both',$adminLangId), true);
 
-				$innerLiReschedule=$innerUl->appendElement('li');
-				$innerLiReschedule->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 
-					'title'=>Label::getLabel('LBL_Download_Reschedule_Report',$adminLangId),
-					"onclick"=>"exportReport(".$row['user_id'].", ".LessonStatusLog::NOT_CANCELLED_REPORT.")"),
-					Label::getLabel('LBL_Reschedule',$adminLangId), true);
+				// $innerLiReschedule=$innerUl->appendElement('li');
+				// $innerLiReschedule->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 
+				// 	'title'=>Label::getLabel('LBL_Download_Reschedule_Report',$adminLangId),
+				// 	"onclick"=>"exportReport(".$row['user_id'].", ".LessonStatusLog::NOT_CANCELLED_REPORT.")"),
+				// 	Label::getLabel('LBL_Reschedule',$adminLangId), true);
 				
+				// $innerLiCancelled=$innerUl->appendElement('li');
+				// $innerLiCancelled->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 
+				// 	'title'=>Label::getLabel('LBL_Download_Cancelled_Report',$adminLangId),
+				// 	"onclick"=>"exportReport(".$row['user_id'].", ".LessonStatusLog::CANCELLED_REPORT.")"),
+				// 	Label::getLabel('LBL_Cancelled',$adminLangId), true);
+
 				$innerLiCancelled=$innerUl->appendElement('li');
 				$innerLiCancelled->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 
-					'title'=>Label::getLabel('LBL_Download_Cancelled_Report',$adminLangId),
-					"onclick"=>"exportReport(".$row['user_id'].", ".LessonStatusLog::CANCELLED_REPORT.")"),
-					Label::getLabel('LBL_Cancelled',$adminLangId), true);
+					'title'=>Label::getLabel('LBL_View_Report',$adminLangId),
+					"onclick"=>"viewReport(".$row['user_id'].", ".LessonStatusLog::BOTH_REPORT.")"),
+					Label::getLabel('LBL_View_Report',$adminLangId), true);
+
+				$innerLiCancelled=$innerUl->appendElement('li');
+				$innerLiCancelled->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 
+					'title'=>Label::getLabel('LBL_View_Rescheduled_Report',$adminLangId),
+					"onclick"=>"viewReport(".$row['user_id'].", ".LessonStatusLog::NOT_CANCELLED_REPORT.")"),
+					Label::getLabel('LBL_View_Rescheduled_Report',$adminLangId), true);
+
+				$innerLiCancelled=$innerUl->appendElement('li');
+				$innerLiCancelled->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 
+					'title'=>Label::getLabel('LBL_View_Cancelled_Report',$adminLangId),
+					"onclick"=>"viewReport(".$row['user_id'].", ".LessonStatusLog::CANCELLED_REPORT.")"),
+					Label::getLabel('LBL_View_Cancelled_Report',$adminLangId), true);
 			break;
 			
 			case 'studentIds':

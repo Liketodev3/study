@@ -3690,8 +3690,8 @@ body.toggled-right .rightoverlay {
 }
 
 .actions.actions--centered .dropwrap {
-    min-width: 130px;
-    left: 50%;
+    min-width: 185px;
+    right: calc(100% - 48px);
     margin: 0 0 0 -65px;
     transform-origin: center top;
     -webkit-transform-origin: center top;
@@ -11104,4 +11104,11 @@ body.page--front .page__cell #footer {
       display: none;
     }
   }
-  
+ 
+  /*------------------16/2-2021-------------------*/
+  .table-responsive{
+      overflow-y: auto;
+  }
+  .tabs_panel_wrap .table th {
+    white-space: nowrap;
+}

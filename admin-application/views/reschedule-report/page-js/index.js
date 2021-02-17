@@ -66,6 +66,7 @@ $(document).ready(function(){
 	var currentPage = 1;
 	var runningAjaxReq = false;
 	var dv = '#listing';
+	var dvPop = '#listingReport';
 
 	goToSearchPage = function(page) {	
 		if(typeof page == undefined || page == null){
@@ -75,6 +76,28 @@ $(document).ready(function(){
 		$(frm.page).val(page);
 		searchTopLangReport(frm);
 	};
+	
+	goToNextPage = function(page) {	
+		if(typeof page == undefined || page == null){
+			page =1;
+		}
+		var frm = document.frmRescheduledReportSearchPaging;
+		$(frm.page).val(page);
+		nextReportPage(frm);
+	};
+
+	nextReportPage = function(form){
+		var data = '';
+		if (form) {
+			data = fcom.frmData(form);
+		}
+		$(dvPop).html(fcom.getLoader());
+		console.log('dvPop', dvPop)
+		fcom.ajax(fcom.makeUrl('RescheduleReport','viewReport'),data,function(res){
+			$('.fbminwidth').html(res);
+		});
+	};
+
 	redirectBack=function(redirecrt){$(document).on('click',function(){
 		$('.autoSuggest').empty();
 	});
@@ -121,7 +144,7 @@ $(document).ready(function(){
 					response($.map(json, function(item) {
 						return { label: item['name'] +'(' + item['username'] + ')', value: item['id'], name: item['username']	};
 					}));
-				},
+				},goToNextPage
 			});
 		},
 		'select': function(item) {
@@ -154,6 +177,16 @@ $(document).ready(function(){
 			$(dv).html(res);
 		});
 	};
+
+	viewReport = function(userId, reportType){
+		fcom.displayProcessing();
+		$("input[name='report_type']").val( reportType );
+		$("input[name='report_user_id']").val( userId );
+		fcom.ajax(fcom.makeUrl('RescheduleReport', 'viewReport', [userId, reportType]), '', function(t) {
+			fcom.updateFaceboxContent(t);
+		});
+		
+    };
 	
 	exportReport = function(userId, reportType){
 		document.frmRescheduledReportSearch.action = fcom.makeUrl('RescheduleReport','export', [userId, reportType]);
