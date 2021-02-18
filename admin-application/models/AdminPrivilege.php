@@ -48,6 +48,9 @@ class AdminPrivilege
     const SECTION_SALES_REPORT = 43;
     const SECTION_GROUP_CLASSES = 44;
     const SECTION_TIMEZONES = 45;
+    
+    const SECTION_ISSUE_REPORT_OPTIONS = 46;
+
 
     const PRIVILEGE_NONE = 0;
     const PRIVILEGE_READ = 1;
@@ -131,6 +134,9 @@ class AdminPrivilege
             static::SECTION_FAQ_CATEGORY => Label::getLabel('MSG_Manage_faq_Categories', CommonHelper::getLangId()),
             static::SECTION_GROUP_CLASSES => Label::getLabel('MSG_Manage_GROUP_CLASSES', CommonHelper::getLangId()),
             static::SECTION_TIMEZONES => Label::getLabel('MSG_Manage_Timezones', CommonHelper::getLangId()),
+            static::SECTION_ISSUE_REPORT_OPTIONS => Label::getLabel('MSG_Manage_ISSUE_REPORT_OPTIONS', CommonHelper::getLangId()),
+
+            
         );
         return $arr;
     }
@@ -718,4 +724,16 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_TIMEZONES, static::PRIVILEGE_READ, $returnResult);
     }
+
+    public function canEditIssueReportOptions($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_ISSUE_REPORT_OPTIONS, static::PRIVILEGE_WRITE, $returnResult);
+    }
+
+    public function canViewIssueReportOptions($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_ISSUE_REPORT_OPTIONS, static::PRIVILEGE_READ, $returnResult);
+    }
+
+    
 }

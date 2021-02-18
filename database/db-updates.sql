@@ -229,3 +229,8 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ('HTMLAFTER_PWA_orientation', '1', 'Set the orientation of your app on devices. When set to Follow Device Orientation your app will rotate as the device is rotated.'),
 ('HTMLAFTER_PWA_Display', '1', 'Display mode decides what browser UI is shown when your app is launched. Standalone is default.');
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.3.20210212' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
+
+
+
+
+ALTER TABLE `tbl_issue_report_options` ADD `tissueopt_user_type` TINYINT NOT NULL;

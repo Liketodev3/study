@@ -21,4 +21,12 @@ class IssueReportOptionsSearch extends SearchBase
             $this->doNotCalculateRecords();
         }
     }
+
+    public function findByCriteria(array $criteria = []): array
+    {
+        if(isset($criteria['tissueopt_user_type'])){
+            $this->addCondition('tissueopt_user_type', 'in', FatUtility::int($criteria['tissueopt_user_type']));
+        }
+        return FatApp::getDb()->fetchAll($this->getResultSet());
+    }
 }
