@@ -88,18 +88,11 @@ class UserToLanguage extends MyAppModel
         return $row;
     }
 
-    public function saveTeachLang()
-    {
-        $langData = array(
-            'utl_slanguage_id'          => 1, 
-            'utl_us_user_id'            => $this->mainTableRecordId,
-            'utl_single_lesson_amount'  => 25,
-            'utl_bulk_lesson_amount'    => 20,
-        );
-        $id = $this->getAttributesByUserAndLangId($this->mainTableRecordId, 1, self::DB_TBL_TEACH_PREFIX . 'id');
+    public function saveTeachLang($langData)
+    {        
+        $id = $this->getAttributesByUserAndLangId($this->mainTableRecordId, $langData['utl_slanguage_id'], self::DB_TBL_TEACH_PREFIX . 'id');
         parent::__construct(self::DB_TBL_TEACH, self::DB_TBL_TEACH_PREFIX . 'id', $id);
         $this->assignValues($langData);
-        // CommonHelper::printArray($this);die;
         return $this->save();
     }
 }

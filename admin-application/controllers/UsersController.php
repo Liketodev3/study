@@ -563,8 +563,17 @@ class UsersController extends AdminBaseController
                 'user_preferred_dashboard' => User::USER_LEARNER_DASHBOARD,
                 'user_registered_initially_for' => User::USER_TYPE_LEANER,
             );
-            $user = new User();
-            if(!$user->create($user_data)){
+
+            $userSrch = new UserSearch(true, false);
+            $userId = $userSrch->getUserIdByEmail($user_data['user_email']);
+
+            $user = new User($userId);
+            $user->assignValues($user_data);
+            if(!$user->save()){
+                $db->rollbackTransaction();
+                throw new Exception($user->getError());
+            }
+            if (!$user->setLoginCredentials($user_data['user_email'], $user_data['user_email'], $user_data['user_password'], 1, 1)) {
                 $db->rollbackTransaction();
                 throw new Exception($user->getError());
             }
@@ -607,8 +616,16 @@ class UsersController extends AdminBaseController
                 'user_registered_initially_for' => User::USER_TYPE_TEACHER,
             );
             
-            $user = new User();
-            if(!$user->create($user_data)){
+            $userSrch = new UserSearch(true, false);
+            $userId = $userSrch->getUserIdByEmail($user_data['user_email']);
+
+            $user = new User($userId);
+            $user->assignValues($user_data);
+            if(!$user->save()){
+                $db->rollbackTransaction();
+                throw new Exception($user->getError());
+            }
+            if (!$user->setLoginCredentials($user_data['user_email'], $user_data['user_email'], $user_data['user_password'], 1, 1)) {
                 $db->rollbackTransaction();
                 throw new Exception($user->getError());
             }
@@ -637,6 +654,8 @@ class UsersController extends AdminBaseController
 
     private function makeTeacher($userId)
     {
+        $db = FatApp::getDb();
+
         // add teacher settings
         $userSetting = new UserSetting($userId);
         if(!$userSetting->saveData(array('us_booking_before' => 0))){
@@ -644,30 +663,67 @@ class UsersController extends AdminBaseController
         }
 
         // add teacher spoken language
+        $db->query("REPLACE INTO `tbl_spoken_languages` 
+        (`slanguage_id`, `slanguage_code`, `slanguage_identifier`, `slanguage_flag`, `slanguage_display_order`, `slanguage_active`) 
+        VALUES 
+        (1, 'EN', 'English', 'gb.png', 1, 1)
+        (2, 'FR', 'French', 'fr.png', 2, 1)
+        ");
+
         $spokenData = array(
-            'utsl_slanguage_id' => 1, 
-            'utsl_proficiency' => SpokenLanguage::PROFICIENCY_BEGINNER,
-            'utsl_user_id' => $userId
+            array(
+                'utsl_slanguage_id' => 1, 
+                'utsl_proficiency' => SpokenLanguage::PROFICIENCY_BEGINNER,
+                'utsl_user_id' => $userId
+            ),
+            array(
+                'utsl_slanguage_id' => 2, 
+                'utsl_proficiency' => SpokenLanguage::PROFICIENCY_BEGINNER,
+                'utsl_user_id' => $userId
+            )
         );
         // var_dump($spokenData);die;
-        $userToLang = new UserToLanguage($userId);
-        $row = $userToLang->loadFromDb();
-        if(empty($row)){
-            $userToLang = new UserToLanguage();
-        }
-        $userToLang->assignValues($spokenData);
-        if(!$userToLang->save()){
-            throw new Exception('UserToSpokenLanuage:'.$userToLang->getError());
+        
+        $userToLang = new UserToLanguage();
+        foreach($spokenData as $row){            
+            $userToLang->assignValues($row);
+            $userToLang->save();
         }
 
         // add teacher teach language
+        $db->query("REPLACE INTO `tbl_teaching_languages` (`tlanguage_id`, `tlanguage_code`, `tlanguage_identifier`, `tlanguage_flag`, `tlanguage_display_order`, `tlanguage_active`) VALUES
+        (1, 'EN', 'English', 'gb.png', 1, 1),
+        (2, 'FR', 'French', 'fr.png', 2, 1)");
+        $langData = array(
+            array(
+                'utl_slanguage_id'          => 1, 
+                'utl_us_user_id'            => $userId,
+                'utl_single_lesson_amount'  => 25,
+                'utl_bulk_lesson_amount'    => 20,
+            ),
+            array(
+                'utl_slanguage_id'          => 2, 
+                'utl_us_user_id'            => $userId,
+                'utl_single_lesson_amount'  => 25,
+                'utl_bulk_lesson_amount'    => 20,
+            )
+        );
         $userToLang = new UserToLanguage($userId);
-        if(!$userToLang->saveTeachLang()){
-            throw new Exception('UserToLanuage:'.$userToLang->getError());
+        foreach($langData as $row){
+            if(!$userToLang->saveTeachLang($row)){
+                // throw new Exception('UserToLanuage:'.$userToLang->getError());
+            }
         }
 
         $uqdata = array(
             'uqualification_user_id' => $userId,
+            'uqualification_experience_type' => 1,
+            'uqualification_title' => 'test',
+            'uqualification_institute_name' => 'test',
+            'uqualification_institute_address' => 'test',
+            'uqualification_description' => 'test',
+            'uqualification_start_year' => date('Y'),
+            'uqualification_end_year' => date('Y'),
             'uqualification_active' => 1,
         );
 
@@ -675,13 +731,14 @@ class UsersController extends AdminBaseController
         $uqsrch->addCondition('uqualification_user_id', '=', $userId);
         $row = FatApp::getDb()->fetch($uqsrch->getResultSet());
         $uqId = $row ? $row['uqualification_id'] : 0;
-        $uQualification = new UserQualification($uqId);
-        $uQualification->assignValues($uqdata);
-        if (!$uQualification->save()) {
-            // throw new Exception($uQualification->getError());
+        for($i=0; $i<2; $i++){
+            $uQualification = new UserQualification($uqId);
+            $uQualification->assignValues($uqdata);
+            if (!$uQualification->save()) {
+                // throw new Exception($uQualification->getError());
+            }
         }
-
-        $db = FatApp::getDb();
+        
         if (!$db->insertFromArray(Preference::DB_TBL_USER_PREF, array('utpref_preference_id' => 1, 'utpref_user_id' => $userId))) {
             // throw new Exception($db->getError());            
         }
@@ -689,6 +746,29 @@ class UsersController extends AdminBaseController
         $availabilityData = '[{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"1","dayStart":"1","dayEnd":"2","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"2","dayStart":"2","dayEnd":"3","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"3","dayStart":"3","dayEnd":"4","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"4","dayStart":"4","dayEnd":"5","classtype":"1"},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"5","dayStart":"5","dayEnd":"6","classtype":1}]';
         $tGAvail = new TeacherGeneralAvailability();
         if (!$tGAvail->addTeacherGeneralAvailability(array('data'=>$availabilityData), $userId)) {
+            throw new Exception($tGAvail->getError());
+        }
+
+        $weekData = array();
+        $dateWeekRange = CommonHelper::getWeekRangeByDate(date('Y-m-d'));        
+        
+        $start = $dateWeekRange['start'];
+        $end = $dateWeekRange['end'];
+        while($start<=$end){
+            $weekData[] = array(
+                'start'     => "15:00:00",
+                "end"       => "00:00:00",
+                "date"      => $start,
+                "action"    => "fromGeneralAvailability",
+                "classtype" => 1,
+                "_id"       => "_fc6"
+            );
+            $start = date('Y-m-d', strtotime($start . '+1 day'));            
+        }
+
+        $availabilityData = json_encode($weekData);        
+        $tGAvail = new TeacherWeeklySchedule();
+        if (!$tGAvail->addTeacherWeeklySchedule(array('data'=>$availabilityData), $userId)) {
             throw new Exception($tGAvail->getError());
         }
         return true;

@@ -67,6 +67,24 @@ class UserSearch extends SearchBase
         /* ] */
     }
 
+    public function getUserDataByEmail(string $email)
+    {
+        $this->joinCredentials(false, false);
+        $this->addCondition('credential_email', '=', $email);
+        $this->setPageSize(1);        
+        return FatApp::getDb()->fetch($this->getResultSet());
+    }
+
+    public function getUserIdByEmail(string $email) : int
+    {
+        $this->addFld('user_id');
+        $user_row = $this->getUserDataByEmail($email);        
+        if(!empty($user_row)){            
+            return $user_row['user_id'];
+        }
+        return 0;
+    }
+
     public function joinCredentials($isActive = true, $isEmailVerified = true)
     {
         if (true === $this->isCredentialsJoined) {
