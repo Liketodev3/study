@@ -274,8 +274,12 @@ $(document).ready(function(){
 			
           /* if in tab mode */
             $(".tabs_nav li a").click(function() {
-              $(this).parents('.tabs_nav_container:first').find(".tabs_panel").hide();
+                
               var activeTab = $(this).attr("rel"); 
+              if($("#"+activeTab).css('display') != 'none'){
+                  return;
+              }
+              $(this).parents('.tabs_nav_container:first').find(".tabs_panel").hide();
               $("#"+activeTab).fadeIn();		
 
               $(this).parents('.tabs_nav_container:first').find(".tabs_nav li a").removeClass("active");

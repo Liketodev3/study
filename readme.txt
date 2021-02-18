@@ -1,5 +1,6 @@
 This file shares the details of the Yo!Coach version and change log.
 
+
 Release Number: 
 Release Date:
 
@@ -12,7 +13,22 @@ Enhancements:
   . Task-82203: Image for allowed payment gateways/cards on the platform
   
 Bug Fixes:
-  .  #049983 - 1. Click on https://hotfix2-1.yocoach.4livedemo.com/checkout 2. When the user clicks on "Confirm payment" after selecting his payment method, the amount is straightaway deducted from the wallet.
+    Bug-#044725: Fixed incorrect end timer
+    Bug-#049602-Issue with speaking and proficiency level
+    Bug-#047721: Trial lesson booking not working
+    Bug-#049983: Click on https://hotfix2-1.yocoach.4livedemo.com/checkout 2. When the user clicks on "Confirm payment" after selecting his payment method, the amount is straightaway deducted from the wallet.
+
+----------------------------------------------------------
+
+Release Number: TV-2.8.3.20210212
+
+Release Date: 2021/02/12
+
+Hotfixes:
+    Task-81879-update labels, filters on tutor search and make lessonspace default
+    Bug-#049803-fix transaction fee issue
+    Bug-#049646-fix currency conversion issue
+
 ----------------------------------------------------------
 
 
@@ -34,7 +50,6 @@ Release Date: 2021/02/09
 Hotfixes:
     Bug-#049283-fix attach lesson plan issue
     Bug-#049565-fix cancel lesson submit button issue
-
 ------------------------------------------------------------
 
 Release Number: TV-2.8.0.20210208

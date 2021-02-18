@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 11, 2021 at 10:47 AM
+-- Generation Time: Feb 12, 2021 at 08:55 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -849,7 +849,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('blog_img', '', 0),
 ('CONF_ABOUT_US_PAGE', '1', 0),
 ('conf_activate_separate_signup_form', '1', 0),
-('CONF_ACTIVE_MEETING_TOOL', 'comet_chat', 0),
+('CONF_ACTIVE_MEETING_TOOL', 'lesson_space', 0),
 ('CONF_ADDITIONAL_ALERT_EMAILS', '', 0),
 ('CONF_ADDRESS_1', 'A-712, FATbit Technologies, Bestech Business Towers, Mohali, Punjab, India', 0),
 ('CONF_ADDRESS_2', 'A-712, FATbit Technologies, Bestech Business Towers, Mohali, Punjab, India', 0),
@@ -957,7 +957,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('CONF_WEBSITE_NAME_1', 'Yo!Coach', 0),
 ('CONF_WEBSITE_NAME_2', 'Yo!Coach', 0),
 ('CONF_WELCOME_EMAIL_REGISTRATION', '1', 0),
-('CONF_YOCOACH_VERSION', 'TV-2.8.2.20210209', 0),
+('CONF_YOCOACH_VERSION', 'TV-2.8.3.20210212', 0),
 ('conf_yokart_version', 'V8.1', 0),
 ('CONF_ZOOM_API_KEY', 'KrK84VX6Q1WkFSTHe5tZ1Q', 0),
 ('CONF_ZOOM_API_SECRET', 'cgrP5fwMf9czo0loqHomZDGAMAZuu71S7kvs', 0),
@@ -3301,8 +3301,8 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (842, 'MSG_That_captcha_was_incorrect', 1, 'The entered captcha is incorrect. '),
 (843, 'MSG_Please_Enter_Valid_password', 1, 'Please Enter Valid Password'),
 (844, 'LBL_Tutor_Preferences', 1, 'Tutor Preferences'),
-(845, 'LBL_Accents', 1, 'Accents'),
-(846, 'LBL_Teaches_Level', 1, 'Teaches Level'),
+(845, 'LBL_Accents', 1, 'Teacher’s accent'),
+(846, 'LBL_Teaches_Level', 1, 'Teaches level'),
 (847, 'LBL_Learners_Ages', 1, 'Learners Ages'),
 (848, 'LBL_Lessons_Include', 1, 'Lessons Include'),
 (849, 'LBL_Subjects', 1, 'Subjects'),
@@ -3312,8 +3312,8 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (853, 'LBL_Start/End', 1, 'Start/end'),
 (854, 'LBL_Uploaded_Certificate', 1, 'Uploaded Certificate'),
 (855, 'LBL_Actions', 1, 'Actions'),
-(856, 'LBL_Learner_Ages', 1, 'Learner Ages'),
-(857, 'LBL_Test_Preparations', 1, 'Test Preparations'),
+(856, 'LBL_Learner_Ages', 1, 'Learner’s age group'),
+(857, 'LBL_Test_Preparations', 1, 'Test preparations'),
 (858, 'LBL_Language_that_I\'m_teaching', 1, 'Language That I\'m Teaching'),
 (859, 'LBL_Preferences_updated_successfully!', 1, 'Preferences Updated Successfully!'),
 (860, 'LBL_Facebook', 1, 'Facebook'),
@@ -3965,7 +3965,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (1511, 'LBL_Are_you_sure_to_unlock_this_price!', 1, 'Are You Sure To Unlock This Price!'),
 (1512, 'LBL_Are_you_sure_to_unlock_this_price!', 2, 'هل أنت متأكد من إطلاق هذه الأسعار!'),
 (1513, 'MSG_Please_select_a_Profile_Pic', 1, 'Please Select A Profile Pic'),
-(1514, 'LBL_Search_By_Teacher_Name', 1, 'Search By Teacher Name'),
+(1514, 'LBL_Search_By_Teacher_Name', 1, 'Search by teacher’s name'),
 (1515, 'LBL_Unused', 1, 'Unused'),
 (1516, 'LBL_Used', 1, 'Used'),
 (1517, 'LBL_Giftcards_Purchased', 1, 'Giftcards Purchased'),
@@ -6027,11 +6027,11 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (3624, 'Lbl_Calendar', 1, 'Calendar'),
 (3625, 'Lbl_Calendar', 2, 'التقويم'),
 (3626, 'LBL_Cache_has_been_cleared', 2, 'مخبأ تم مسح'),
-(3627, 'LBL_By_Price_Low_to_High', 1, 'By Price Low To High'),
+(3627, 'LBL_By_Price_Low_to_High', 1, 'Price low to high'),
 (3628, 'LBL_By_Price_Low_to_High', 2, 'حسب السعر الأدنى إلى الأعلى'),
-(3629, 'LBL_By_Price_High_to_Low', 1, 'By Price High To Low'),
+(3629, 'LBL_By_Price_High_to_Low', 1, 'Price high to low'),
 (3630, 'LBL_By_Price_High_to_Low', 2, 'حسب السعر الاعلى الى الادنى'),
-(3631, 'LBL_By_Popularity', 1, 'By Popularity'),
+(3631, 'LBL_By_Popularity', 1, 'Popularity'),
 (3632, 'LBL_By_Popularity', 2, 'حسب الأكثر إقبالا'),
 (3633, 'LBL_Buy_Now', 2, 'اشتري الآن'),
 (3634, 'LBL_Buyer_Phone', 2, 'مشتري الهاتف'),
@@ -6313,7 +6313,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (3911, 'LBL_Total_Lesson', 1, 'Total Lesson'),
 (3912, 'LBL_Lesson_Price', 1, 'Lesson Price'),
 (3913, 'LBL_Order_Discount_Total', 1, 'Order Discount Total'),
-(3914, 'LBL_Lesson_includes', 1, 'Lesson Includes'),
+(3914, 'LBL_Lesson_includes', 1, 'Lesson includes'),
 (3915, 'LBL_Change_Lesson_Plan', 1, 'Change Lesson Plan'),
 (3916, 'LBL_Remove_Lesson_Plan', 1, 'Remove Lesson Plan'),
 (3917, 'Note_This_calendar_is_to_only_check_availability', 1, 'Note: This calendar is to only check availability.'),
@@ -6322,14 +6322,35 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (3935, 'LBL_Search_for_teachers', 2, 'ابحث عن المعلمين'),
 (3938, 'Label_Help', 2, 'Help'),
 (3939, 'LBL_COPYRIGHT', 2, 'Copyright'),
-(3940, 'LBL_Lesson_includes', 2, 'Lesson Includes'),
+(3940, 'LBL_Lesson_includes', 2, 'Lesson includes'),
 (3941, 'LBL_Starts_from', 2, 'Starts From'),
 (3950, 'HTMLAFTERFIELD_BANNER_BUTTON_URL_%s', 1, 'Prefix with {SITEROOT} in case of URL on same site e.g. {SITEROOT}teachers. Otherwise full URL to webpage e.g. https://www.example.com'),
 (3952, 'HTMLAFTERFIELD_BANNER_BUTTON_URL_%s', 2, 'بادئة بـ {SITEROOT} في حالة وجود عنوان URL على نفس الموقع على سبيل المثال معلمو {SITEROOT}. وإلا عنوان URL الكامل لصفحة الويب ، على سبيل المثال https://www.example.com'),
 (3955, 'LBL_Timezone_:_UTC_%s', 1, 'Timezone : UTC %s'),
 (3956, 'LBL_LESSON_{lesson-id}_CANCELED_BY_{user-full-name}_Comment:{comment}', 1, 'Lesson {lesson-id} Canceled By {user-full-name} \n Comment: {comment}'),
 (3957, 'LBL_Timezones_Management', 1, 'Timezones Management'),
-(3958, 'LBL_Order_Refund_Amount', 1, 'Order Refund Amount');
+(3958, 'LBL_Order_Refund_Amount', 1, 'Order Refund Amount'),
+(3959, 'LBL_Sign_in_with_Google', 1, 'Sign In With Google'),
+(3960, 'LBL_Teacher_Speaks', 1, 'Teacher Speaks'),
+(3961, 'LBL_Select_A_Language', 1, 'Select a language'),
+(3962, 'LBL_*_Note_:_charged_in_currency_disclaimer_{default-currency-symbol}', 1, '* Note : Charged In Currency Disclaimer {default-currency-symbol}'),
+(3963, 'LBL_Lesson_time_has_passed', 1, 'Lesson Time Has Passed'),
+(3964, 'LBL_Withdrawal_Payout_Sent', 1, 'Withdrawal Payout Sent'),
+(3965, 'LBL_Withdrawal_Payout_Failed', 1, 'Withdrawal Payout Failed'),
+(3966, 'LBL_Withdrawal_Request_Amount', 1, 'Withdrawal Request Amount'),
+(3967, 'LBL_Paypal_Email', 1, 'Paypal Email'),
+(3968, 'LBL_Method_Fee_Type', 1, 'Method Fee Type'),
+(3969, 'LBL_Method_Fee_Setups', 1, 'Method Fee Setups'),
+(3970, 'LBL_Method_Fee_Listing', 1, 'Method Fee Listing'),
+(3971, 'LBL_Fee', 1, 'Fee'),
+(3972, 'LBL_Fee_Setup_Successfully', 1, 'Fee Setup Successfully'),
+(3973, 'MSG_Transaction_Fee_Charged_:', 1, 'Transaction Fee Charged :'),
+(3974, 'MSG_You_have_a_payout!!', 1, 'You Have A Payout!!'),
+(3975, 'MSG_You_have_a_Received_a_payout', 1, 'You Have A Received A Payout'),
+(3977, 'LBL_Select_A_Language', 2, 'اختر لغة'),
+(3978, 'LBL_Select_date_time', 1, 'Select day & time'),
+(3980, 'LBL_Select_date_time', 2, 'حدد التاريخ والوقت'),
+(3995, 'LBL_Sort_by', 1, 'Sort By');
 
 -- --------------------------------------------------------
 
@@ -6707,7 +6728,8 @@ INSERT INTO `tbl_orders` (`order_id`, `order_type`, `order_user_id`, `order_is_p
 ('O1606472385', 1, 2, 1, '12.00', 1, '0.00', '', '0.00', '', '0.00', 1, 'EN', 1, 'USD', '1.00000000', 0, '2020-11-27 10:19:45', '2020-11-27 10:19:45'),
 ('O1606472489', 1, 2, 1, '10.00', 1, '0.00', '', '0.00', '', '0.00', 1, 'EN', 1, 'USD', '1.00000000', 0, '2020-11-27 10:21:29', '2020-11-27 10:21:30'),
 ('O1606472548', 1, 2, 1, '15.00', 1, '0.00', '', '0.00', '', '0.00', 1, 'EN', 1, 'USD', '1.00000000', 0, '2020-11-27 10:22:28', '2020-11-27 10:22:29'),
-('O1606480415', 1, 11, 1, '60.00', 0, '0.00', '', '0.00', '', '0.00', 1, 'EN', 1, 'USD', '1.00000000', 2, '2020-11-27 12:33:35', '2020-11-27 12:35:04');
+('O1606480415', 1, 11, 1, '60.00', 0, '0.00', '', '0.00', '', '0.00', 1, 'EN', 1, 'USD', '1.00000000', 2, '2020-11-27 12:33:35', '2020-11-27 12:35:04'),
+('O1613114104', 1, 2, 1, '8.00', 1, '0.00', '', '0.00', '', '0.00', 1, 'EN', 4, 'EUR', '1.20000000', 0, '2021-02-12 07:15:04', '2021-02-12 07:15:04');
 
 -- --------------------------------------------------------
 
@@ -6744,7 +6766,8 @@ INSERT INTO `tbl_order_payments` (`opayment_id`, `opayment_order_id`, `opayment_
 (11, 'O1606472385', 'User Wallet', 'W-1606472385', '12.00', 'Received Payment', 'Payment From User Wallet', '2020-11-27 10:19:45'),
 (12, 'O1606472489', 'User Wallet', 'W-1606472490', '10.00', 'Received Payment', 'Payment From User Wallet', '2020-11-27 10:21:30'),
 (13, 'O1606472548', 'User Wallet', 'W-1606472549', '15.00', 'Received Payment', 'Payment From User Wallet', '2020-11-27 10:22:29'),
-(14, 'O1606480415', 'PaypalStandard', '0M584813Y44802709', '60.00', 'Received Payment', 'cmd=_notify-validate&mc_gross=60.00&invoice=O1606480415&protection_eligibility=Eligible&item_number1=O1606480415&payer_id=USMTWCB5XMHR8&payment_date=04%3A34%3A41+Nov+27%2C+2020+PST&payment_status=Completed&charset=windows-1252&first_name=WZY&mc_fee=2.04&notify_version=3.9&custom=O1606480415&payer_status=verified&business=wzyseller%40dummyid.com&num_cart_items=1&verify_sign=AxXQLjWknNsHxMa.4LvFzI8-b0vQAcK6QyUYhkgbDNyPJCskc8Zobrzh&payer_email=wzybuyer%40dummyid.com&txn_id=0M584813Y44802709&payment_type=instant&payer_business_name=Fatbit&last_name=Buyer&item_name1=Order+Payment+Gateway+Description+Yo%21Coach+O1606480415&receiver_email=wzyseller%40dummyid.com&payment_fee=2.04&shipping_discount=0.00&quantity1=1&insurance_amount=0.00&receiver_id=V5WMBUFN24AR6&txn_type=cart&discount=0.00&mc_gross_1=60.00&mc_currency=USD&residence_country=US&test_ipn=1&shipping_method=Default&transaction_subject=&payment_gross=60.00&ipn_track_id=93970bba1e4b2#VERIFIED', '2020-11-27 12:35:04');
+(14, 'O1606480415', 'PaypalStandard', '0M584813Y44802709', '60.00', 'Received Payment', 'cmd=_notify-validate&mc_gross=60.00&invoice=O1606480415&protection_eligibility=Eligible&item_number1=O1606480415&payer_id=USMTWCB5XMHR8&payment_date=04%3A34%3A41+Nov+27%2C+2020+PST&payment_status=Completed&charset=windows-1252&first_name=WZY&mc_fee=2.04&notify_version=3.9&custom=O1606480415&payer_status=verified&business=wzyseller%40dummyid.com&num_cart_items=1&verify_sign=AxXQLjWknNsHxMa.4LvFzI8-b0vQAcK6QyUYhkgbDNyPJCskc8Zobrzh&payer_email=wzybuyer%40dummyid.com&txn_id=0M584813Y44802709&payment_type=instant&payer_business_name=Fatbit&last_name=Buyer&item_name1=Order+Payment+Gateway+Description+Yo%21Coach+O1606480415&receiver_email=wzyseller%40dummyid.com&payment_fee=2.04&shipping_discount=0.00&quantity1=1&insurance_amount=0.00&receiver_id=V5WMBUFN24AR6&txn_type=cart&discount=0.00&mc_gross_1=60.00&mc_currency=USD&residence_country=US&test_ipn=1&shipping_method=Default&transaction_subject=&payment_gross=60.00&ipn_track_id=93970bba1e4b2#VERIFIED', '2020-11-27 12:35:04'),
+(15, 'O1613114104', 'User Wallet', 'W-1613114104', '8.00', 'Received Payment', 'Payment From User Wallet', '2021-02-12 07:15:04');
 
 -- --------------------------------------------------------
 
@@ -6790,7 +6813,8 @@ INSERT INTO `tbl_order_products` (`op_id`, `op_order_id`, `op_invoice_number`, `
 (11, 'O1606472385', 'O1606472385-S0001', 3, 15, 3, 0, '0.00', 0, '60', 1, '12.00', '10.80', '10.00', 0, '0.00', 2),
 (12, 'O1606472489', 'O1606472489-S0001', 5, 15, 3, 0, '0.00', 0, '60', 1, '10.00', '9.00', '10.00', 0, '0.00', 2),
 (13, 'O1606472548', 'O1606472548-S0001', 6, 15, 3, 0, '0.00', 0, '60', 1, '15.00', '13.50', '10.00', 0, '0.00', 2),
-(14, 'O1606480415', 'O1606480415-S0001', 0, 15, 11, 5, '5.00', 0, '60', 5, '12.00', '10.80', '10.00', 1, '12.00', 2);
+(14, 'O1606480415', 'O1606480415-S0001', 0, 15, 11, 5, '5.00', 0, '60', 5, '12.00', '10.80', '10.00', 1, '12.00', 2),
+(15, 'O1613114104', 'O1613114104-S0001', 0, 15, 1, 2, '1.00', 0, '60', 1, '8.00', '7.20', '10.00', 0, '0.00', 2);
 
 -- --------------------------------------------------------
 
@@ -6820,7 +6844,9 @@ INSERT INTO `tbl_order_products_lang` (`oplang_op_id`, `oplang_lang_id`, `oplang
 (5, 1, 'O1606458152', '2 Lessons'),
 (5, 2, 'O1606458152', '2 Lessons'),
 (14, 1, 'O1606480415', '5 Lesson'),
-(14, 2, 'O1606480415', '5 Lesson');
+(14, 2, 'O1606480415', '5 Lesson'),
+(15, 1, 'O1613114104', '1 Lesson'),
+(15, 2, 'O1613114104', '1 Lesson');
 
 -- --------------------------------------------------------
 
@@ -6913,7 +6939,9 @@ INSERT INTO `tbl_order_status_history` (`oshistory_id`, `oshistory_order_id`, `o
 (24, 'O1606472548', 0, 0, 1, '2020-11-27 10:22:29', 1, '', 'Received Payment'),
 (25, '', 13, 2, 0, '2020-11-27 10:22:29', 1, '', ''),
 (26, 'O1606480415', 0, 0, 1, '2020-11-27 12:35:04', 1, '', 'Received Payment'),
-(27, '', 14, 2, 0, '2020-11-27 12:35:04', 1, '', '');
+(27, '', 14, 2, 0, '2020-11-27 12:35:04', 1, '', ''),
+(28, 'O1613114104', 0, 0, 1, '2021-02-12 07:15:04', 1, '', 'Received Payment'),
+(29, '', 15, 2, 0, '2021-02-12 07:15:04', 1, '', '');
 
 -- --------------------------------------------------------
 
@@ -7013,6 +7041,13 @@ CREATE TABLE `tbl_payment_method_transaction_fee` (
   `pmtfee_fee` decimal(5,2) NOT NULL,
   `pmtfee_type` tinyint(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `tbl_payment_method_transaction_fee`
+--
+
+INSERT INTO `tbl_payment_method_transaction_fee` (`pmtfee_pmethod_id`, `pmtfee_currency_id`, `pmtfee_fee`, `pmtfee_type`) VALUES
+(4, 1, '0.25', 1);
 
 -- --------------------------------------------------------
 
@@ -7250,11 +7285,11 @@ INSERT INTO `tbl_preferences_lang` (`preferencelang_preference_id`, `preferencel
 (45, 2, '(C1) متقدم'),
 (46, 1, '(C2) Upper Advanced '),
 (46, 2, '(C2) المستوى المتقدم'),
-(47, 1, 'Children (4-11)'),
+(47, 1, '4 yrs -11 yrs'),
 (47, 2, 'الأطفال (4-11)'),
-(48, 1, 'Teenagers 12-18'),
+(48, 1, '12 yrs - 18 yrs'),
 (48, 2, 'المراهقون 12-18'),
-(49, 1, 'Adults 18+'),
+(49, 1, '18+ yrs'),
 (49, 2, 'البالغين 18+'),
 (50, 1, 'Curriculum'),
 (50, 2, 'منهاج دراسي'),
@@ -7442,7 +7477,8 @@ INSERT INTO `tbl_scheduled_lessons` (`slesson_id`, `slesson_grpcls_id`, `slesson
 (31, 0, 15, 11, '2020-12-12', '2020-12-12', '18:30:00', '19:30:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 0, '', 0, '', '2020-11-27 12:35:04', 0, 0),
 (32, 0, 15, 11, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2020-11-27 12:35:04', 0, 0),
 (33, 0, 15, 11, '2020-11-27', '2020-11-28', '23:30:00', '00:30:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 0, '', 0, '', '2020-11-27 12:35:04', 0, 1),
-(34, 0, 15, 11, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2020-11-27 12:35:04', 0, 0);
+(34, 0, 15, 11, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2020-11-27 12:35:04', 0, 0),
+(35, 0, 15, 1, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2021-02-12 07:15:05', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -7518,7 +7554,8 @@ INSERT INTO `tbl_scheduled_lesson_details` (`sldetail_id`, `sldetail_slesson_id`
 (31, 31, 11, 'O1606480415', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, '', '2020-11-27 12:35:04'),
 (32, 32, 11, 'O1606480415', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2020-11-27 12:35:04'),
 (33, 33, 11, 'O1606480415', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, '', '2020-11-27 12:35:04'),
-(34, 34, 11, 'O1606480415', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2020-11-27 12:35:04');
+(34, 34, 11, 'O1606480415', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2020-11-27 12:35:04'),
+(35, 35, 2, 'O1613114104', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2021-02-12 07:15:05');
 
 -- --------------------------------------------------------
 
@@ -9079,7 +9116,7 @@ CREATE TABLE `tbl_user_cart` (
 
 INSERT INTO `tbl_user_cart` (`usercart_user_id`, `usercart_type`, `usercart_details`, `usercart_added_date`) VALUES
 ('11', 1, 'a:0:{}', '2020-11-27 12:33:35'),
-('2', 1, 'a:1:{s:16:\"czo0OiIxNV83Ijs=\";a:6:{s:10:\"teacher_id\";i:15;s:9:\"grpcls_id\";i:7;s:13:\"startDateTime\";s:0:\"\";s:11:\"endDateTime\";s:0:\"\";s:10:\"lpackageId\";i:0;s:10:\"languageId\";i:3;}}', '2020-11-27 10:26:29'),
+('2', 1, 'a:0:{}', '2021-02-12 07:15:05'),
 ('4', 1, 'a:0:{}', '2020-11-27 06:22:32');
 
 -- --------------------------------------------------------
@@ -9917,7 +9954,9 @@ INSERT INTO `tbl_user_transactions` (`utxn_id`, `utxn_user_id`, `utxn_date`, `ut
 (11, 15, '2020-11-27 10:35:04', '200.00', '0.00', 'Thankyou!', 1, '', 0, 0, 0, 0),
 (12, 11, '2020-11-27 12:37:04', '12.00', '0.00', 'Lessonid: 30 Refund Payment', 1, '', 0, 0, 3, 0),
 (13, 2, '2020-11-27 12:51:39', '7.50', '0.00', 'Lessonid: 11 Payment Received ( 50&percnt; Refunded )', 1, '', 0, 0, 5, 11),
-(14, 2, '2020-11-27 12:53:38', '6.00', '0.00', 'Amount credited.', 1, '', 0, 0, 5, 11);
+(14, 2, '2020-11-27 12:53:38', '6.00', '0.00', 'Amount credited.', 1, '', 0, 0, 5, 11),
+(15, 2, '2021-02-12 07:15:04', '0.00', '8.00', 'Order Placed  #O1613114104', 1, 'O1613114104', 0, 0, 1, 0),
+(16, 15, '2021-02-12 07:20:47', '0.00', '100.00', 'Funds Withdrawn. Request Id #000001 <br /><small class=\"transaction-fee\">Transaction Fee Charged :  $0.25<small>', 0, '', 0, 1, 4, 0);
 
 -- --------------------------------------------------------
 
@@ -9942,6 +9981,13 @@ CREATE TABLE `tbl_user_withdrawal_requests` (
   `withdrawal_paypal_email_id` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `withdrawal_response` text CHARACTER SET utf8mb4 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `tbl_user_withdrawal_requests`
+--
+
+INSERT INTO `tbl_user_withdrawal_requests` (`withdrawal_id`, `withdrawal_user_id`, `withdrawal_amount`, `withdrawal_transaction_fee`, `withdrawal_payment_method_id`, `withdrawal_bank`, `withdrawal_account_holder_name`, `withdrawal_account_number`, `withdrawal_ifc_swift_code`, `withdrawal_bank_address`, `withdrawal_comments`, `withdrawal_request_date`, `withdrawal_status`, `withdrawal_paypal_email_id`, `withdrawal_response`) VALUES
+(1, 15, '100.00', '0.2500', 4, '', '', '', '', '', '', '2021-02-12 07:20:47', 4, 'grace@dummyid.com', '{\"batch_header\":{\"payout_batch_id\":\"8CZCPJ8B4RSGN\",\"batch_status\":\"PENDING\",\"sender_batch_header\":{\"sender_batch_id\":\"Payout_1613114629_1\",\"email_subject\":\"You Have A Payout!!\",\"email_message\":\"You Have A Received A Payout\"}},\"links\":[{\"href\":\"https:\\/\\/api.sandbox.paypal.com\\/v1\\/payments\\/payouts\\/8CZCPJ8B4RSGN\",\"rel\":\"self\",\"method\":\"GET\",\"encType\":\"application\\/json\"}]}');
 
 --
 -- Indexes for dumped tables
@@ -10842,7 +10888,7 @@ ALTER TABLE `tbl_content_pages`
 -- AUTO_INCREMENT for table `tbl_content_pages_block_lang`
 --
 ALTER TABLE `tbl_content_pages_block_lang`
-  MODIFY `cpblocklang_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `cpblocklang_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `tbl_countries`
@@ -10896,7 +10942,7 @@ ALTER TABLE `tbl_currencies`
 -- AUTO_INCREMENT for table `tbl_email_archives`
 --
 ALTER TABLE `tbl_email_archives`
-  MODIFY `emailarchive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+  MODIFY `emailarchive_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbl_faq`
@@ -10956,7 +11002,7 @@ ALTER TABLE `tbl_languages`
 -- AUTO_INCREMENT for table `tbl_language_labels`
 --
 ALTER TABLE `tbl_language_labels`
-  MODIFY `label_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3959;
+  MODIFY `label_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4018;
 
 --
 -- AUTO_INCREMENT for table `tbl_lesson_meeting_details`
@@ -11004,13 +11050,13 @@ ALTER TABLE `tbl_notifications`
 -- AUTO_INCREMENT for table `tbl_order_payments`
 --
 ALTER TABLE `tbl_order_payments`
-  MODIFY `opayment_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `opayment_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tbl_order_products`
 --
 ALTER TABLE `tbl_order_products`
-  MODIFY `op_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `op_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tbl_order_statuses`
@@ -11022,7 +11068,7 @@ ALTER TABLE `tbl_order_statuses`
 -- AUTO_INCREMENT for table `tbl_order_status_history`
 --
 ALTER TABLE `tbl_order_status_history`
-  MODIFY `oshistory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `oshistory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `tbl_payment_methods`
@@ -11040,13 +11086,13 @@ ALTER TABLE `tbl_preferences`
 -- AUTO_INCREMENT for table `tbl_scheduled_lessons`
 --
 ALTER TABLE `tbl_scheduled_lessons`
-  MODIFY `slesson_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `slesson_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `tbl_scheduled_lesson_details`
 --
 ALTER TABLE `tbl_scheduled_lesson_details`
-  MODIFY `sldetail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `sldetail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `tbl_slides`
@@ -11190,13 +11236,13 @@ ALTER TABLE `tbl_user_timetables`
 -- AUTO_INCREMENT for table `tbl_user_transactions`
 --
 ALTER TABLE `tbl_user_transactions`
-  MODIFY `utxn_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `utxn_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_withdrawal_requests`
 --
 ALTER TABLE `tbl_user_withdrawal_requests`
-  MODIFY `withdrawal_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `withdrawal_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
