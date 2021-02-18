@@ -77,6 +77,7 @@ class MyAppController extends FatController
 			'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
 			'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),  
 			'language' => Label::getLabel('Lbl_Language'),  
+			'confirmPaymentAlertMsg' => Label::getLabel('MSG_CONFIRM_PAYMENT_ALERT_MSG'),  
             //'siteCurrencyId' => $this->siteCurrencyId,
             //'controllerName' => $controllerName,
         );
