@@ -36,9 +36,38 @@ class MetaTagsController extends AdminBaseController
     }
     public function search()
     {
-        $metaType = FatApp::getPostedData('metaType', FatUtility::VAR_INT, MetaTag::META_GROUP_DEFAULT);
+        $data = FatApp::getPostedData();
+        $meta_record_id = 'meta_record_id';
+        $page = (empty($data['page']) ||  $data['page'] <= 0) ? 1 :  $data['page'];
+        $searchForm = $this->getSearchForm($data['metaType']);
+        $post = $searchForm->getFormDataFromArray($data);
+        $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_INT, MetaTag::META_GROUP_DEFAULT);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $metaSrch =  new MetaTagSearch($this->adminLangId);
+        $criteria['metaType'] = ['val' => $metaType];
+        if (!empty($post['keyword'])) {
+            $criteria['keyword'] = ['val' => $post['keyword']];
+        }
+        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated'] != '') {
+            $criteria['hasTagsAssociated'] = ['val' => $post['hasTagsAssociated']];
+        }
+        $metaSrch->searchByCriteria($criteria, $this->adminLangId);
+        $metaSrch->addMultipleFields($this->getDbColumns($metaType));
+        $metaSrch->setPageNumber($page);
+        $metaSrch->setPageSize($pagesize);
+        $records = FatApp::getDb()->fetchAll($metaSrch->getResultSet());
+
+        $this->set("meta_record_id", $this->getMetaRecordcolumn($metaType));
+        $this->set("columnsArr", $this->getColumns($metaType));
+        $this->set("arr_listing", $records);
+        $this->set('pageCount', $metaSrch->pages());
+        $this->set('recordCount', $metaSrch->recordCount());
+        $this->set('page', $page);
         $this->set('metaType', $metaType);
-        $this->searchMeta($metaType);
+        $this->set('pageSize', $pagesize);
+        $this->set('metaType', $metaType);
+        $this->set('postedData', $post);
+        $this->_template->render(false, false, 'meta-tags/default-meta-tag.php');
     }
     public function form()
     {
@@ -217,6 +246,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('recordCount', $metaSrch->recordCount());
         $this->set('page', $page);
         $this->set('pageSize', $pagesize);
+        $this->set('metaType', $metaType);
         $this->set('postedData', $post);
         $this->_template->render(false, false, 'meta-tags/default-meta-tag.php');
     }
