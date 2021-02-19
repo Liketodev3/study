@@ -49,8 +49,8 @@ class AttachedFile extends MyAppModel
     const FILETYPE_BLOG_POST_IMAGE_PATH = 'blog-post/';
     const FILETYPE_BLOG_PAGE_IMAGE = 43;
 
-    const FILETYPE_PWA_APP_ICON = 44;
-    const FILETYPE_PWA_SPLASH_ICON = 45;
+    const FILETYPE_PWA_APP_ICON = 46;
+    const FILETYPE_PWA_SPLASH_ICON = 47;
 
     public function __construct($fileId = 0)
     {

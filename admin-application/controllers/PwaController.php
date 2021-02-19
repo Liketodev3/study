@@ -104,16 +104,16 @@ class PwaController extends AdminBaseController
             ->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Theme_Color').'</small>';
         $frm->addRequiredField(Label::getLabel('PWALBL_Start_Page'), 'pwa_settings[start_url]')
             ->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Start_Page').'</small>';
-        $contentPages = ContentPage::getPagesForSelectBox($langId);
+        /* $contentPages = ContentPage::getPagesForSelectBox($langId);
         
         $fld = $frm->addSelectBox(Label::getLabel('PWALBL_Offline_Page', $langId), 'pwa_settings[offline_page]', $contentPages);
         $fld->requirements()->setRequired();
-        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Offline_Page').'</small>';
-        $frm->addSelectBox(Label::getLabel('PWALBL_Orientation'), 'pwa_settings[orientation]', $orientationArr, '', [], '');
+        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Offline_Page').'</small>'; */
+        $fld = $frm->addSelectBox(Label::getLabel('PWALBL_Orientation'), 'pwa_settings[orientation]', $orientationArr, '', [], '');
         $fld->requirements()->setRequired();
         $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_orientation').'</small>';
 
-        $frm->addSelectBox(Label::getLabel('PWALBL_Display'), 'pwa_settings[display]', $displayArr, '', [], '');
+        $fld = $frm->addSelectBox(Label::getLabel('PWALBL_Display'), 'pwa_settings[display]', $displayArr, '', [], '');
         $fld->requirements()->setRequired();
         $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Display').'</small>';
 

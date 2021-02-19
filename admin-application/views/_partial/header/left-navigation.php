@@ -244,6 +244,10 @@
 					<li><a href="<?php echo CommonHelper::generateUrl('configurations'); ?>"><?php echo Label::getLabel('LBL_General_Settings',$adminLangId);?></a></li>
 				<?php } ?>
 
+				<?php if($objPrivilege->canViewGeneralSettings(AdminAuthentication::getLoggedAdminId(), true)){?>
+					<li><a href="<?php echo CommonHelper::generateUrl('Pwa'); ?>"><?php echo Label::getLabel('LBL_PWA_Settings',$adminLangId);?></a></li>
+				<?php } ?>
+
 				<?php if($objPrivilege->canViewPaymentMethods(AdminAuthentication::getLoggedAdminId(), true)){?>
 					<li><a href="<?php echo CommonHelper::generateUrl('PaymentMethods'); ?>"><?php echo Label::getLabel('LBL_Payment_Methods',$adminLangId);?></a></li>
 				<?php } ?>
