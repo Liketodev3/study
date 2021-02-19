@@ -961,7 +961,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('CONF_WEBSITE_NAME_1', 'Yo!Coach', 0),
 ('CONF_WEBSITE_NAME_2', 'Yo!Coach', 0),
 ('CONF_WELCOME_EMAIL_REGISTRATION', '1', 0),
-('CONF_YOCOACH_VERSION', 'TV-2.8.3.20210212', 0),
+('CONF_YOCOACH_VERSION', 'RV-2.1.1', 0),
 ('conf_yokart_version', 'V8.1', 0),
 ('CONF_ZOOM_API_KEY', 'KrK84VX6Q1WkFSTHe5tZ1Q', 0),
 ('CONF_ZOOM_API_SECRET', 'cgrP5fwMf9czo0loqHomZDGAMAZuu71S7kvs', 0),
