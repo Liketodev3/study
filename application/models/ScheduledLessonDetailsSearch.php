@@ -79,4 +79,9 @@ class ScheduledLessonDetailsSearch extends SearchBase
 
         return 100;// do not charge
     }
+
+    public function getDetailsById( int $sDetailsID ): array
+    {
+        $this->joinScheduledLesson(); 
+    }
 }

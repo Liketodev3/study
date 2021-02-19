@@ -8,14 +8,20 @@ class LessonStatusLog extends MyAppModel
     const CANCELLED_REPORT = 2;
     const BOTH_REPORT = 3;
 
-    private  $scheduledLessonId;
-    public function __construct(int $id = 0, int $scheduledLessonId = 0)
+    private $lessonDetailId;
+    private $lessonData;
+
+    public function __construct(int $lessonDetailId = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
-        $this->scheduledLessonId =  FatUtility::int($scheduledLessonId);
+        if ( $lessonDetailId > 0 ) {
+            $this->lessonDetailId = $lessonDetailId;
+            $scheduledLessonDetailsSearch = new ScheduledLessonDetailsSearch();
+            $this->lessonData = $scheduledLessonDetailsSearch->getDetailsById($this->lessonDetailId);
+        }
     }
 	
-	 public static function getSearchObject(string $alias = 'lsl' ) : object
+	public static function getSearchObject(string $alias = 'lsl' ) : object
     {
         $srch = new SearchBase(static::DB_TBL, $alias);
         return $srch;
@@ -29,23 +35,29 @@ class LessonStatusLog extends MyAppModel
         }
         return parent::save();
     }
-	
-	public static function getLatestLessonStatusLog() : object
+    //ScheduledLesson::STATUS_CANCELLED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $post['cancel_lesson_msg'
+    
+    public function addLog(int $status, int $userType, int $userId, string $comment) :bool
     {
-		$searchObj = self::getSearchObject('lstslog');
-        
-		$latestLogSearchObj =  self::getSearchObject('latestStatusLessonLog');
-		$latestLogSearchObj->doNotCalculateRecords();
-        $latestLogSearchObj->doNotLimitRecords();
-		$latestLogSearchObj->addMultipleFields(array('max(latestStatusLessonLog.lesstslog_id) as lessonLatestLogId'));
-		$latestLogSearchObj->addGroupBy('latestStatusLessonLog.lesstslog_slesson_id');
-       
-	   $searchObj->joinTable("(".$latestLogSearchObj->getQuery().")", 'INNER JOIN', 'latestLesStatusLog.lessonLatestLogId = lstslog.lesstslog_id', 'latestLesStatusLog');
-	   
-	   return $searchObj;
-		
+        $scheduledLessonDetails = new ScheduledLessonDetails( $this->lessonDetailId );
+        echo "<pre>";print_r($this->lessonData);die;
+        // $lessonStatusLogArr = array(
+        //     'lesstslog_slesson_id' => $lesson['slesson_id'],
+        //     'lesstslog_sldetail_id' => $lesson['sldetail_id'],
+        //     'lesstslog_prev_status' => $lesson['slesson_status'],
+        //     'lesstslog_current_status' => $currentStatus,
+        //     'lesstslog_prev_start_date' => $lesson['slesson_date'],
+        //     'lesstslog_prev_end_time' => $lesson['slesson_end_time'],
+        //     'lesstslog_prev_start_time' => $lesson['slesson_start_time'],
+        //     'lesstslog_prev_end_date' => $lesson['slesson_end_date'],
+        //     'lesstslog_updated_by_user_id' => UserAuthentication::getLoggedUserId(),
+        //     'lesstslog_updated_by_user_type' => $userType,
+        //     'lesstslog_comment' => $comment
+        // );
+
+        $lessonStatusLog = new LessonStatusLog();
+        $lessonStatusLog->assignValues($lessonStatusLogArr);
+
     }
-	
-	
 	
 }

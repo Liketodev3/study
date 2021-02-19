@@ -534,6 +534,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         $lDetailId = $post['sldetail_id'];
         $sLessonDetailObj = new ScheduledLessonDetails($lDetailId);
+
+        $lesStsLog = new LessonStatusLog($lDetailId);
+        
         /* [ */
         $srch = new stdClass();
         $this->searchLessons($srch);
@@ -634,7 +637,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         // start: saving log in new table i.e. tbl_lesson_status_log
 
-        $this->addLessonStatusLog($lessonRow, $post['cancel_lesson_msg'], User::USER_TYPE_LEANER, ScheduledLesson::STATUS_CANCELLED);
+        $lesStsLog->addLog(ScheduledLesson::STATUS_CANCELLED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $post['cancel_lesson_msg']);
+        //$this->addLessonStatusLog($lessonRow, $post['cancel_lesson_msg'], User::USER_TYPE_LEANER, ScheduledLesson::STATUS_CANCELLED);
 
         // End: saving log in new table i.e. tbl_lesson_status_log
 

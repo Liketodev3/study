@@ -233,9 +233,10 @@ class MyAppController extends FatController
     public function addLessonStatusLog( $lesson, $comment, $userType, $currentStatus ) {
 
         // start: saving log in new table i.e. tbl_lesson_status_log
-
+        
         $lessonStatusLogArr = array(
             'lesstslog_slesson_id' => $lesson['slesson_id'],
+            'lesstslog_sldetail_id' => $lesson['sldetail_id'],
             'lesstslog_prev_status' => $lesson['slesson_status'],
             'lesstslog_current_status' => $currentStatus,
             'lesstslog_prev_start_date' => $lesson['slesson_date'],
@@ -246,6 +247,12 @@ class MyAppController extends FatController
             'lesstslog_updated_by_user_type' => $userType,
             'lesstslog_comment' => $comment
         );
+
+        $lesStsLog = new LessonStatusLog();
+
+        $lesStsLog->setLesson($lessonRow['sldetail_id']);
+
+        $lesStsLog->addLog(ScheduledLesson::STATUS_CANCELLED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $post['cancel_lesson_msg']);
 
         $lessonStatusLogObj = new LessonStatusLog();
         $lessonStatusLogObj->assignValues($lessonStatusLogArr);

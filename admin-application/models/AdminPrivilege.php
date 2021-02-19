@@ -702,12 +702,7 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_TEACHER_PERFORMANCE_REPORT, static::PRIVILEGE_READ, $returnResult);
     }
 
-    public function canEditRescheduleReport($adminId = 0, $returnResult = false)
-    {
-        return $this->checkPermission($adminId, static::SECTION_RESCHEDULE_REPORT, static::PRIVILEGE_READ, $returnResult);
-    }
-
-    public function canViewRescheduleReport($adminId = 0, $returnResult = false)
+    public function canViewLessonStatsReport($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_RESCHEDULE_REPORT, static::PRIVILEGE_READ, $returnResult);
     }

@@ -94,7 +94,7 @@ $(document).ready(function(){
 		}
 		$(dvPop).html(fcom.getLoader());
 		console.log('dvPop', dvPop)
-		fcom.ajax(fcom.makeUrl('RescheduleReport','viewReport'),data,function(res){
+		fcom.ajax(fcom.makeUrl('LessonStats','viewReport'),data,function(res){
 			$('.fbminwidth').html(res);
 		});
 	};
@@ -174,7 +174,7 @@ $(document).ready(function(){
 		}
 		$(dv).html(fcom.getLoader());
 		
-		fcom.ajax(fcom.makeUrl('RescheduleReport','search'),data,function(res){
+		fcom.ajax(fcom.makeUrl('LessonStats','search'),data,function(res){
 			$(dv).html(res);
 		});
 	};
@@ -188,14 +188,14 @@ $(document).ready(function(){
 		if (frm) {
 			data = fcom.frmData(frm);
 		}
-		fcom.ajax(fcom.makeUrl('RescheduleReport', 'viewReport'), data, function(t) {
+		fcom.ajax(fcom.makeUrl('LessonStats', 'viewReport'), data, function(t) {
 			fcom.updateFaceboxContent(t, 'xlargebox');
 		});
 		
     };
 	
 	exportReport = function(userId, reportType){
-		document.frmRescheduledReportSearch.action = fcom.makeUrl('RescheduleReport','export', [userId, reportType]);
+		document.frmRescheduledReportSearch.action = fcom.makeUrl('LessonStats','export', [userId, reportType]);
 		document.frmRescheduledReportSearch.submit();		
 	}
 	

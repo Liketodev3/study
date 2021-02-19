@@ -54,7 +54,7 @@ foreach ($arr_listing as $sn=>$row){
 			break;
 			// case 'action':
 			// 	$queryArray = array( $row['user_id'] );
-			// 	$td->appendElement("a",array('href'=>CommonHelper::generateUrl('RescheduleReport','export', $queryArray), 
+			// 	$td->appendElement("a",array('href'=>CommonHelper::generateUrl('LessonStats','export', $queryArray), 
 			// 		'class'=>'button small green',
 			// 		'title'=>Label::getLabel('LBL_Export_History',$adminLangId)), 
 			// 		Label::getLabel('LBL_Export_History', $adminLangId), true);
