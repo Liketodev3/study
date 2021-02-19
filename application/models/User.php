@@ -1042,28 +1042,4 @@ class User extends MyAppModel
     {
         return (bool)self::getAttributesById($userId, 'user_is_teacher');
     }
-
-    public function create($user_data){
-        $userSrch = new UserSearch(true, false);
-        $userSrch->addFld('user_id');
-        $userSrch->joinCredentials(false, false);
-        $userSrch->addCondition('credential_email', '=', $user_data['user_email']);
-        $row = FatApp::getDb()->fetch($userSrch->getResultSet());
-        
-        if(!empty($row)){
-            $this->mainTableRecordId = $row['user_id'];
-            // die($user_data['user_email'].' already exits.');
-        }
-        
-        $this->assignValues($user_data);
-        if (!$this->save()) {
-            return false;
-        }
-
-        if (!$this->setLoginCredentials($user_data['user_email'], $user_data['user_email'], $user_data['user_password'], 1, 1)) {
-            $db->rollbackTransaction();
-            return false;
-        }
-        return true;
-    }
 }
