@@ -1,5 +1,14 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.8.4.20210219
+
+Release Date: 2021/02/19
+
+Hotfixes:
+    Task-81879-update demo content
+
+--------------------------
+
 Release Number: TV-2.8.3.20210212
 
 Release Date: 2021/02/12

@@ -207,3 +207,4 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ('LBL_LESSON_{lesson-id}_CANCELED_BY_{user-full-name}_Comment:{comment}', 1, "Lesson {lesson-id} Canceled By {user-full-name} \n Comment: {comment}");
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.3.20210212' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.4.20210219' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
