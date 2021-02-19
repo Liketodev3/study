@@ -13,6 +13,7 @@ Bug Fixes:
     Bug-#044725: Fixed incorrect end timer
     Bug-#049602-Issue with speaking and proficiency level
     Bug-#047721: Trial lesson booking not working
+    Bug-#049899 - Email Notification is missing> When teacher is placing wallet withdrawal request admin do not receive any notification through email.
 
 
 ----------------------------------------------------------

@@ -382,7 +382,7 @@
             $fatTemplate = new FatTemplate(' ', ' ');
             $fatTemplate->set('data', $withdrawRequestData);
             $fatTemplate->set('pmethodCode', $pmethodCode);
-            $withdrawRequestData['other_details'] = $fatTemplate->render(false, false, '_partial/new-withdrawal-request.php', true);
+            $withdrawRequestData['other_details'] = $fatTemplate->render(false, false, '_partial/new-withdrawal-request-mail.php', true);
 
             $emailNotificationObj = new EmailHandler($this->siteLangId );
             $emailNotificationObj->sendWithdrawRequestNotification( $withdrawRequestData , "A" );

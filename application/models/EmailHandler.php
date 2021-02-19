@@ -691,7 +691,8 @@ class EmailHandler extends FatModel
         '{payout_type}' => $withdrawalRequestData['payout_type'],
         '{request_date}' => date('Y-m-d'),
         '{withdrawal_amount}' => CommonHelper::displayMoneyFormat($withdrawalRequestData['withdrawal_amount'], true, true),
-        '{other_details}' => $withdrawalRequestData['other_details']
+        '{other_details}' => $withdrawalRequestData['other_details'],
+        '{withdrawal_comment}' => $withdrawalRequestData['withdrawal_comments']
         );
         switch ($adminOrUser) {
             case 'A':
