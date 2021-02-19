@@ -15,7 +15,7 @@
 						<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
 							<?php
 							if( true == User::isProfilePicUploaded( $teacher['user_id'] ) ){
-								$img = CommonHelper::generateUrl('Image','User', array( $teacher['user_id'] ));
+								$img = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','User', array( $teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg');
 								echo '<a href="'.$teacherUrl.'"><img src="'.$img.'" /></a>';
 							}
 							?>

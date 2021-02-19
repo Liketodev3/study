@@ -5,7 +5,7 @@
 								<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($userDetails['user_first_name']); ?>">
                                     <?php
 									if( true == User::isProfilePicUploaded( $userDetails['user_id'] ) ){
-										$img = CommonHelper::generateUrl('Image','user', array( $userDetails['user_id'] )).'?'.time();
+										$img = CommonHelper::generateUrl('Image','user', array( $userDetails['user_id'], 'MEDIUM' )).'?'.time();
 										echo '<img src="'.$img.'" alt="" />';
 									}
 									?>

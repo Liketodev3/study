@@ -60,7 +60,7 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 				<div class="avtar avtar--large avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($userRow['user_first_name']); ?>">
 					<?php
 					if (true == User::isProfilePicUploaded()) {
-						echo '<img src="' . CommonHelper::generateUrl('Image', 'user', array($userRow['user_id'])) . '?' . time() . '" />';
+						echo '<img src="' . CommonHelper::generateUrl('Image', 'user', array($userRow['user_id'], 'MEDIUM')).'?t='.time() . '" />';
 					}
 					?>
 				</div>
