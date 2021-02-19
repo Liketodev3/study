@@ -64,7 +64,7 @@
 								<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($userDetails['user_first_name']); ?>">
                                     <?php
 									if( true == User::isProfilePicUploaded( ) ){
-										$img = CommonHelper::generateUrl('Image','user', array( $userDetails['user_id'] )).'?'.time();
+										$img = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','user', array( $userDetails['user_id'], 'MEDIUM' )), CONF_DEF_CACHE_TIME, '.jpg');
 										echo '<img src="'.$img.'" />';
 									}
 									?>
@@ -131,7 +131,7 @@
                                     <li>
                                         <a href="javascript:void(0)">
                                             <figure class="avtar avtar--small" data-text="A">
-                                                <img src="<?php echo CommonHelper::generateUrl('image','user',array($studentId)) ?>" alt="">
+                                                <img src="<?php echo FatCache::getCachedUrl(CommonHelper::generateUrl('image', 'user', array($studentId, 'ExtraSmall')), CONF_DEF_CACHE_TIME, '.jpg') ?>" alt="">
                                             </figure>
                                         </a>
                                     </li>

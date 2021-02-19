@@ -5,9 +5,10 @@ Release Number:
 Release Date:
 
 New Features:
-    . Task-79596 - Add 2Checkout payment gateway
-    . Task-79596 - Add Paygate payment gateway
-    . Task-81706: Paystack Payment gateway integration
+    . Task-79596 - Integrate 2Checkout payment gateway
+    . Task-79596 - Integrate Paygate payment gateway
+    . Task-81706 - Integrate Paystack Payment gateway
+    . Task-79595 - PWA
 
 Enhancements:
     . Task-82203: Image for allowed payment gateways/cards on the platform
@@ -17,7 +18,10 @@ Bug Fixes:
     Bug-#044725: Fixed incorrect end timer
     Bug-#049602-Issue with speaking and proficiency level
     Bug-#047721: Trial lesson booking not working
-    Bug-#049983: Click on https://hotfix2-1.yocoach.4livedemo.com/checkout 2. When the user clicks on "Confirm payment" after selecting his payment method, the amount is straightaway deducted from the wallet.
+    Bug-#049783: Fix Statistics graphical representation
+    Bug-#044726: To not show join lesson button on page reload if already joined
+    Bug-#044692: Fix Lesson status issue in orders in admin panel
+    Bug-#045497: Make report issue options user type specific and fix admin privileges
 
 ----------------------------------------------------------
 
