@@ -10,6 +10,7 @@ function loadTab( tabObj ){
 }
 
 confirmOrder = function( frm ){
+  if(!confirm(langLbl.confirmPaymentAlertMsg)){ return false; }
   var data = fcom.frmData(frm);
   //$("#checkout-left-side").addClass('form--processing');
   fcom.updateWithAjax(fcom.makeUrl('Checkout', 'confirmOrder'), data, function(ans) {

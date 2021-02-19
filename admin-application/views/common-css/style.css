@@ -11102,6 +11102,10 @@ body.page--front .page__cell #footer {
   .meta-tag-tbl .searchform_filter {
     margin-top: 0px;
   }
+  .lesson-status-dropdown select option:disabled{
+    color: #ccc;
+    font-weight: bold;
+  }
   @media (max-width: 1199px) {
     .sticky-demo-header .demo-header {
       display: none;

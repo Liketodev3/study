@@ -331,7 +331,7 @@ function getSlickSliderSettings( slidesToShow, slidesToScroll,layoutDirection ){
 			$("#"+str_val_id).val(str);
 	};
 	
-	callChart= function(dv,$labels,$series,$position){
+	callChart = function(dv,$labels,$series,$position){
 		
 		
 		new Chartist.Bar('#'+dv, {
