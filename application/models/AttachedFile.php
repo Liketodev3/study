@@ -51,8 +51,8 @@ class AttachedFile extends MyAppModel
     const FILETYPE_LESSON_PAGE_IMAGE = 44;
     const FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE = 45;
 
-    const FILETYPE_PWA_APP_ICON = 44;
-    const FILETYPE_PWA_SPLASH_ICON = 45;
+    const FILETYPE_PWA_APP_ICON = 46;
+    const FILETYPE_PWA_SPLASH_ICON = 47;
 
     public function __construct($fileId = 0)
     {

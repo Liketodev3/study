@@ -39,20 +39,7 @@ class MyAppController extends FatController
                 "type"=> "image/png"
             ]
         ];
-        /* $pwaManifest = [
-            'name',
-            'short_name',
-            'description',
-            'icons' => [
-
-            ],
-            'background_color',
-            'theme_color',
-            'display',
-            'orientation',
-            'start_url',
-            'scope',
-        ]; stripslashes(FatApp::getConfig('CONF_PWA_SETTINGS'));*/
+        unset($pwaManifest['offline_page']);
         die(stripslashes(json_encode($pwaManifest)));
     }
 
@@ -69,6 +56,14 @@ class MyAppController extends FatController
         /* ] */
         $cookieConsent =  CommonHelper::getCookieConsent();
         $this->cookieConsent =  $cookieConsent;
+
+        
+        /* $pwaSettings = FatApp::getConfig('CONF_PWA_SETTINGS', FatUtility::VAR_STRING, '');
+        $pwaManifest = !empty($pwaSettings) ? json_decode(FatApp::getConfig('CONF_PWA_SETTINGS'), true) : [];
+        $offlinePage = !empty($pwaManifest['offline_page']) ? CommonHelper::generateUrl('Cms', 'view', [$pwaManifest['offline_page']]) : '';
+         */
+
+
         $jsVariables = array(
             'confirmUnLockPrice' => Label::getLabel('LBL_Are_you_sure_to_unlock_this_price!'),
             'confirmRemove' => Label::getLabel('LBL_Do_you_want_to_remove'),
@@ -107,7 +102,8 @@ class MyAppController extends FatController
 			'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
 			'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
 			'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),  
-			'language' => Label::getLabel('Lbl_Language'),  
+			'language' => Label::getLabel('Lbl_Language'),
+            /* 'offlinePageUrl' => $offlinePage */
             //'siteCurrencyId' => $this->siteCurrencyId,
             //'controllerName' => $controllerName,
         );
@@ -119,7 +115,7 @@ class MyAppController extends FatController
         if (CommonHelper::getLayoutDirection() == 'rtl') {
             $this->_template->addCss('css/style--arabic.css');
         }
-     
+
         $this->set('cookieConsent', $cookieConsent);
         $this->set('currencySymbolLeft', CommonHelper::getCurrencySymbolLeft());
         $this->set('currencySymbolRight', CommonHelper::getCurrencySymbolRight());

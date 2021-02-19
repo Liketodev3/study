@@ -3,13 +3,14 @@ if (isset($includeEditor) && $includeEditor) { ?>
     <script src="<?php echo CONF_WEBROOT_URL; ?>innovas/scripts/innovaeditor.js"></script>
     <script src="<?php echo CONF_WEBROOT_URL; ?>innovas/scripts/common/webfont.js"></script>
 <?php } ?>
-<meta name="theme-color" content="#3d91e8">
-<link rel="manifest" href="<?php echo CommonHelper::generateUrl('MyApp', 'PwaManifest'); ?>">
-<script>
-    if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("<?php echo CONF_WEBROOT_URL; ?>sw.js");
-    }
-</script>
+<?php if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
+    <link rel="manifest" href="<?php echo CommonHelper::generateUrl('MyApp', 'PwaManifest'); ?>">
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("<?php echo CONF_WEBROOT_URL; ?>sw.js");
+        }
+    </script>
+<?php } ?>
 </head>
 <?php
 $layoutDirection = CommonHelper::getLayoutDirection();
