@@ -235,5 +235,3 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.3.20210212' WHERE `tbl_conf
 
 
 ALTER TABLE `tbl_issue_report_options` ADD `tissueopt_user_type` TINYINT NOT NULL;
-
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('MSG_CONFIRM_PAYMENT_ALERT_MSG', 1, 'Are you sure you want the payment to be made?');
