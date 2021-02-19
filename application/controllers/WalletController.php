@@ -372,13 +372,25 @@
                 Message::addErrorMessage(Label::getLabel($userObj->getError(), $this->siteLangId));
                 FatUtility::dieJsonError(Message::getHtml());
             }
+            $withdrawRequestData = $post;
+            $withdrawRequestData['txn_id'] = $withdrawRequestId;
+            $withdrawRequestData['user_first_name'] = UserAuthentication::getLoggedUserAttribute('user_first_name', true);
+            $withdrawRequestData['user_last_name'] =  UserAuthentication::getLoggedUserAttribute('user_last_name', true);
+            $withdrawRequestData['user_email'] =  UserAuthentication::getLoggedUserAttribute('user_email', true);
+            $withdrawRequestData['payout_type'] =  ($pmethodCode == PaymentMethods::BANK_PAYOUT_KEY) ? Label::getLabel('Lbl_Bank_Payout') : Label::getLabel('Lbl_Paypal_Payout');
+            
+            $fatTemplate = new FatTemplate(' ', ' ');
+            $fatTemplate->set('data', $withdrawRequestData);
+            $fatTemplate->set('pmethodCode', $pmethodCode);
+            $withdrawRequestData['other_details'] = $fatTemplate->render(false, false, '_partial/new-withdrawal-request.php', true);
 
-            /*$emailNotificationObj = new EmailHandler();
-        if (!$emailNotificationObj->SendWithdrawRequestNotification( $withdrawRequestId, $this->siteLangId , "A" )){
-            Message::addErrorMessage(Label::getLabel($emailNotificationObj->getError(),$this->siteLangId));
-            FatUtility::dieJsonError( Message::getHtml() );
-        }*/
-
+            $emailNotificationObj = new EmailHandler($this->siteLangId );
+            $emailNotificationObj->sendWithdrawRequestNotification( $withdrawRequestData , "A" );
+            $emailNotificationObj->sendWithdrawRequestNotification( $withdrawRequestData , "U" );
+            // if (!$emailNotificationObj->sendWithdrawRequestNotification( $withdrawRequestData , "A" )){
+            //     Message::addErrorMessage(Label::getLabel($emailNotificationObj->getError(),$this->siteLangId));
+            //     FatUtility::dieJsonError( Message::getHtml() );
+            // }
             $this->set('msg', Label::getLabel('MSG_Withdraw_request_placed_successfully', $this->siteLangId));
             $this->_template->render(false, false, 'json-success.php');
         }
