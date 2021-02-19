@@ -12,7 +12,7 @@ Enhancements:
   . Task-82203: Image for allowed payment gateways/cards on the platform
   
 Bug Fixes:
-  .  #049983 - 1. Click on https://hotfix2-1.yocoach.4livedemo.com/checkout 2. When the user clicks on "Confirm payment" after selecting his payment method, the amount is straightaway deducted from the wallet.
+
 ----------------------------------------------------------
 
 
