@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 12, 2021 at 08:55 AM
+-- Generation Time: Feb 19, 2021 at 01:39 PM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -16,6 +16,10 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `yocoach_restore`
+--
 
 -- --------------------------------------------------------
 
@@ -953,7 +957,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('CONF_TWITTER_API_KEY', '', 0),
 ('CONF_TWITTER_API_SECRET', '', 0),
 ('CONF_TWITTER_USERNAME', '', 0),
-('CONF_USE_SSL', '0', 0),
+('CONF_USE_SSL', '1', 0),
 ('CONF_WEBSITE_NAME_1', 'Yo!Coach', 0),
 ('CONF_WEBSITE_NAME_2', 'Yo!Coach', 0),
 ('CONF_WELCOME_EMAIL_REGISTRATION', '1', 0),
@@ -6462,7 +6466,8 @@ CREATE TABLE `tbl_meta_tags` (
 
 INSERT INTO `tbl_meta_tags` (`meta_id`, `meta_controller`, `meta_action`, `meta_record_id`, `meta_subrecord_id`, `meta_identifier`, `meta_default`, `meta_advanced`) VALUES
 (1, 'Cms', 'view', 1, 0, 'About Us', 0, 0),
-(2, 'Home', 'index', 0, 0, 'Home', 0, 1);
+(2, 'Home', 'index', 0, 0, 'Home', 0, 1),
+(3, '', '', 0, 0, 'Default', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -6487,7 +6492,9 @@ INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_
 (1, 1, 'About Us', 'About Us', 'About Us', '<meta name=\"copyright\" content=\"text\">'),
 (1, 2, 'About Us', 'About Us', 'About Us', '<meta name=\"copyright\" content=\"text\">'),
 (2, 1, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', ''),
-(2, 2, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '');
+(2, 2, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', ''),
+(3, 1, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', ''),
+(3, 2, 'Yo!Coach Live Demo - Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '');
 
 -- --------------------------------------------------------
 
@@ -7047,7 +7054,8 @@ CREATE TABLE `tbl_payment_method_transaction_fee` (
 --
 
 INSERT INTO `tbl_payment_method_transaction_fee` (`pmtfee_pmethod_id`, `pmtfee_currency_id`, `pmtfee_fee`, `pmtfee_type`) VALUES
-(4, 1, '0.25', 1);
+(4, 1, '0.25', 1),
+(5, 1, '1.00', 1);
 
 -- --------------------------------------------------------
 
@@ -11026,7 +11034,7 @@ ALTER TABLE `tbl_lesson_reschedule_log`
 -- AUTO_INCREMENT for table `tbl_meta_tags`
 --
 ALTER TABLE `tbl_meta_tags`
-  MODIFY `meta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `meta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_navigations`
