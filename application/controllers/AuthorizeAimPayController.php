@@ -1,21 +1,17 @@
 <?php
 class AuthorizeAimPayController extends PaymentController
 {
-    private $keyName = "AuthorizeAim";
+    protected $keyName = "AuthorizeAim";
     /*	private $testEnvironmentUrl = 'https://test.authorize.net/gateway/transact.dll';
         private $liveEnvironmentUrl = 'https://secure.authorize.net/gateway/transact.dll';*/
     private $testEnvironmentUrl = "https://apitest.authorize.net/xml/v1/request.api";
     private $liveEnvironmentUrl = "https://api.authorize.net/xml/v1/request.api";
-    public function charge($orderId = '')
+    public function charge($orderId)
     {
         if (empty($orderId)) {
             FatUtility::exitWIthErrorCode(404);
         }
-        $pmObj = new PaymentSettings($this->keyName);
-        if (!$paymentSettings = $pmObj->getPaymentSettings()) {
-            Message::addErrorMessage($pmObj->getError());
-            CommonHelper::redirectUserReferer();
-        }
+        
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
         // $orderInfo = $orderPaymentObj->getOrderById($orderId);

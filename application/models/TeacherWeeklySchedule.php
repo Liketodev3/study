@@ -384,6 +384,10 @@ class TeacherWeeklySchedule extends MyAppModel
             return false;
         }
 
+        if(!$weekStart){
+            $weekStart = $selectedDateWeekRangeArr['start'];
+        }
+
         /* Now, start checking in general Availablity[ */
         $gaSrch = new TeacherGeneralAvailabilitySearch();
         $gaSrch->addCondition('tgavl_user_id', '=', $teacherId);

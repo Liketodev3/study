@@ -157,7 +157,7 @@ class UserSearch extends SearchBase
         $slSrch->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = '. $langId, 'sl_lang');
         $slSrch->doNotCalculateRecords();
         $slSrch->doNotLimitRecords();
-        $slSrch->addMultipleFields(array('utsl_user_id', 'GROUP_CONCAT( IFNULL(slanguage_name, slanguage_identifier) ORDER BY slanguage_name,slanguage_identifier ) as spoken_language_names', 'GROUP_CONCAT(utsl_slanguage_id) as spoken_language_ids',  'GROUP_CONCAT(utsl_proficiency) as spoken_languages_proficiency'));
+        $slSrch->addMultipleFields(array('utsl_user_id', 'GROUP_CONCAT( IFNULL(slanguage_name, slanguage_identifier) ORDER BY slanguage_name,slanguage_identifier ) as spoken_language_names', 'GROUP_CONCAT(utsl_slanguage_id ORDER BY slanguage_name,slanguage_identifier) as spoken_language_ids',  'GROUP_CONCAT(utsl_proficiency ORDER BY slanguage_name,slanguage_identifier) as spoken_languages_proficiency'));
         $slSrch->addGroupBy('utsl_user_id');
         $slSrch->addCondition('slanguage_active', '=', 1);
 

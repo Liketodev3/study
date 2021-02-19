@@ -26,14 +26,15 @@ class OrderPayment extends Order
     {
         $orderInfo = $this->orderAttributes;
         $userObj = new User($orderInfo["order_user_id"]);
-        $userInfo = $userObj->getUserInfo(array('user_first_name', 'credential_email', 'user_phone'), true, true, true);
+        $userInfo = $userObj->getUserInfo(array('user_first_name', 'user_last_name', 'credential_email', 'user_phone',  'user_country_id'), true, true, true);
         $orderCurrencyCode = CommonHelper::getSystemCurrencyData()['currency_code'];
         
         $arrOrder = array(
             "order_id" => $orderInfo["order_id"],
             "invoice" => $orderInfo["order_id"],
             "customer_id" => $orderInfo["order_user_id"],
-            "user_name" => $userInfo["user_first_name"],
+            "user_name" => $userInfo["user_first_name"] . ' '. $userInfo["user_last_name"],
+            "user_phone" => $userInfo["user_phone"],
             "user_email" => $userInfo["credential_email"],
             "order_currency_code" => $orderCurrencyCode,
             "order_type" => $orderInfo['order_type'],
@@ -44,6 +45,7 @@ class OrderPayment extends Order
             "site_system_admin_email" => FatApp::getConfig("CONF_SITE_OWNER_EMAIL", FatUtility::VAR_STRING, ''),
             "order_wallet_amount_charge" => $orderInfo['order_wallet_amount_charge'],
             "paypal_bn" => "FATbit_SP",
+            "user_country_id" => $userInfo["user_country_id"],
         );
         return $arrOrder;
     }
