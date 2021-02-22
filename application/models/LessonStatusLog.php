@@ -13,7 +13,7 @@ class LessonStatusLog extends MyAppModel
 
     public function __construct(int $lessonDetailId = 0)
     {
-        parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
+        parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $lessonDetailId);
         if ( $lessonDetailId > 0 ) {
             $this->lessonDetailId = $lessonDetailId;
             $scheduledLessonDetailsSearch = new ScheduledLessonDetailsSearch();
@@ -35,29 +35,26 @@ class LessonStatusLog extends MyAppModel
         }
         return parent::save();
     }
-    //ScheduledLesson::STATUS_CANCELLED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $post['cancel_lesson_msg'
     
     public function addLog(int $status, int $userType, int $userId, string $comment) :bool
     {
-        $scheduledLessonDetails = new ScheduledLessonDetails( $this->lessonDetailId );
-        echo "<pre>";print_r($this->lessonData);die;
-        // $lessonStatusLogArr = array(
-        //     'lesstslog_slesson_id' => $lesson['slesson_id'],
-        //     'lesstslog_sldetail_id' => $lesson['sldetail_id'],
-        //     'lesstslog_prev_status' => $lesson['slesson_status'],
-        //     'lesstslog_current_status' => $currentStatus,
-        //     'lesstslog_prev_start_date' => $lesson['slesson_date'],
-        //     'lesstslog_prev_end_time' => $lesson['slesson_end_time'],
-        //     'lesstslog_prev_start_time' => $lesson['slesson_start_time'],
-        //     'lesstslog_prev_end_date' => $lesson['slesson_end_date'],
-        //     'lesstslog_updated_by_user_id' => UserAuthentication::getLoggedUserId(),
-        //     'lesstslog_updated_by_user_type' => $userType,
-        //     'lesstslog_comment' => $comment
-        // );
-
+        $lessonStatusLogArr = array(
+            'lesstslog_slesson_id' => $this->lessonData['slesson_id'],
+            'lesstslog_sldetail_id' => $this->lessonData['sldetail_id'],
+            'lesstslog_prev_status' => $this->lessonData['slesson_status'],
+            'lesstslog_current_status' => $status,
+            'lesstslog_prev_start_date' => $this->lessonData['slesson_date'],
+            'lesstslog_prev_end_time' => $this->lessonData['slesson_end_time'],
+            'lesstslog_prev_start_time' => $this->lessonData['slesson_start_time'],
+            'lesstslog_prev_end_date' => $this->lessonData['slesson_end_date'],
+            'lesstslog_updated_by_user_id' => $userId,
+            'lesstslog_updated_by_user_type' => $userType,
+            'lesstslog_comment' => $comment
+        );
+        
         $lessonStatusLog = new LessonStatusLog();
         $lessonStatusLog->assignValues($lessonStatusLogArr);
-
+        return (bool)$lessonStatusLog->save();
     }
 	
 }

@@ -439,6 +439,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError($frm->getValidationErrors());
         }
         $lessonId = $post['slesson_id'];
+
+        
         /* [ */
         $srch = new stdClass();
         $this->searchLessons($srch);
@@ -449,6 +451,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
+
+        $lessonStsLog = new LessonStatusLog($lessonRow['sldetail_id']);
+
         $statusArray =  [ScheduledLesson::STATUS_COMPLETED , ScheduledLesson::STATUS_ISSUE_REPORTED];
         if (!$lessonRow || in_array($lessonRow['slesson_status'], $statusArray)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
@@ -489,8 +494,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
         // start: saving log in new table i.e. tbl_lesson_status_log
 
-        $this->addLessonStatusLog($lessonRow, $post['cancel_lesson_msg'], User::USER_TYPE_TEACHER, ScheduledLesson::STATUS_CANCELLED);
-
+        //$this->addLessonStatusLog($lessonRow, $post['cancel_lesson_msg'], User::USER_TYPE_TEACHER, ScheduledLesson::STATUS_CANCELLED);
+        $lessonStsLog->addLog(ScheduledLesson::STATUS_CANCELLED, User::USER_TYPE_TEACHER, UserAuthentication::getLoggedUserId(), $post['cancel_lesson_msg']);
         // End: saving log in new table i.e. tbl_lesson_status_log
 
 
@@ -552,6 +557,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         );
         $rs = $srch->getResultSet();
         $lessonRow = $db->fetch($rs);
+
+        $lessonStsLog = new LessonStatusLog($lessonRow['sldetail_id']);
+
         if (!$lessonRow) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
@@ -603,8 +611,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
         // start: saving log in new table i.e. tbl_lesson_status_log
 
-        $this->addLessonStatusLog($lessonRow, $post['reschedule_lesson_msg'], User::USER_TYPE_TEACHER, ScheduledLesson::STATUS_NEED_SCHEDULING);
-
+        //$this->addLessonStatusLog($lessonRow, $post['reschedule_lesson_msg'], User::USER_TYPE_TEACHER, ScheduledLesson::STATUS_NEED_SCHEDULING);
+        $lessonStsLog->addLog(ScheduledLesson::STATUS_NEED_SCHEDULING, User::USER_TYPE_TEACHER, UserAuthentication::getLoggedUserId(), $post['reschedule_lesson_msg']);
         // End: saving log in new table i.e. tbl_lesson_status_log
 
 

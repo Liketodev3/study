@@ -229,39 +229,4 @@ class MyAppController extends FatController
         $this->set('msg', Label::getLabel('MSG_Successfully_subscribed', $siteLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
-
-    public function addLessonStatusLog( $lesson, $comment, $userType, $currentStatus ) {
-
-        // start: saving log in new table i.e. tbl_lesson_status_log
-        
-        $lessonStatusLogArr = array(
-            'lesstslog_slesson_id' => $lesson['slesson_id'],
-            'lesstslog_sldetail_id' => $lesson['sldetail_id'],
-            'lesstslog_prev_status' => $lesson['slesson_status'],
-            'lesstslog_current_status' => $currentStatus,
-            'lesstslog_prev_start_date' => $lesson['slesson_date'],
-            'lesstslog_prev_end_time' => $lesson['slesson_end_time'],
-            'lesstslog_prev_start_time' => $lesson['slesson_start_time'],
-            'lesstslog_prev_end_date' => $lesson['slesson_end_date'],
-            'lesstslog_updated_by_user_id' => UserAuthentication::getLoggedUserId(),
-            'lesstslog_updated_by_user_type' => $userType,
-            'lesstslog_comment' => $comment
-        );
-
-        $lesStsLog = new LessonStatusLog();
-
-        $lesStsLog->setLesson($lessonRow['sldetail_id']);
-
-        $lesStsLog->addLog(ScheduledLesson::STATUS_CANCELLED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $post['cancel_lesson_msg']);
-
-        $lessonStatusLogObj = new LessonStatusLog();
-        $lessonStatusLogObj->assignValues($lessonStatusLogArr);
-
-        if (!$lessonStatusLogObj->save()) {
-            $db->rollbackTransaction();
-            FatUtility::dieJsonError($lessonStatusLogObj->getError());
-        }
-
-        // End: saving log in new table i.e. tbl_lesson_status_log
-    }
 }

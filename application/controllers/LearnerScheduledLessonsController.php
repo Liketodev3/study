@@ -535,7 +535,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $lDetailId = $post['sldetail_id'];
         $sLessonDetailObj = new ScheduledLessonDetails($lDetailId);
 
-        $lesStsLog = new LessonStatusLog($lDetailId);
+        $lessonStsLog = new LessonStatusLog($lDetailId);
         
         /* [ */
         $srch = new stdClass();
@@ -637,7 +637,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         // start: saving log in new table i.e. tbl_lesson_status_log
 
-        $lesStsLog->addLog(ScheduledLesson::STATUS_CANCELLED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $post['cancel_lesson_msg']);
+        $lessonStsLog->addLog(ScheduledLesson::STATUS_CANCELLED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $post['cancel_lesson_msg']);
         //$this->addLessonStatusLog($lessonRow, $post['cancel_lesson_msg'], User::USER_TYPE_LEANER, ScheduledLesson::STATUS_CANCELLED);
 
         // End: saving log in new table i.e. tbl_lesson_status_log
@@ -766,6 +766,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError($frm->getValidationErrors());
         }
         $lDetailId = $post['sldetail_id'];
+
+        $lessonStsLog = new LessonStatusLog($lDetailId);
+
         $srch = new stdClass();
         $this->searchLessons($srch);
         $srch->joinTeacherCredentials();
@@ -829,8 +832,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
 
          // start: saving log in new table i.e. tbl_lesson_status_log
-
-         $this->addLessonStatusLog($lessonRow, $post['reschedule_lesson_msg'], User::USER_TYPE_LEANER, ScheduledLesson::STATUS_NEED_SCHEDULING);
+         $lessonStsLog->addLog(ScheduledLesson::STATUS_NEED_SCHEDULING, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $post['reschedule_lesson_msg']);
+         //$this->addLessonStatusLog($lessonRow, $post['reschedule_lesson_msg'], User::USER_TYPE_LEANER, ScheduledLesson::STATUS_NEED_SCHEDULING);
 
          // End: saving log in new table i.e. tbl_lesson_status_log
 
@@ -909,6 +912,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if (1 > $lDetailId) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
+
+        $lessonStsLog = new LessonStatusLog($lDetailId);
 
         $isRescheduleRequest = FatApp::getPostedData('isRescheduleRequest', FatUtility::VAR_INT, 0);
         $rescheduleReason = FatApp::getPostedData('rescheduleReason', FatUtility::VAR_STRING, '');
@@ -1032,7 +1037,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
             // start: saving log in new table i.e. tbl_lesson_status_log
 
-            $this->addLessonStatusLog($lessonDetail, $rescheduleReason, User::USER_TYPE_LEANER, ScheduledLesson::STATUS_SCHEDULED);
+            //$this->addLessonStatusLog($lessonDetail, $rescheduleReason, User::USER_TYPE_LEANER, ScheduledLesson::STATUS_SCHEDULED);
+            $lessonStsLog->addLog(ScheduledLesson::STATUS_SCHEDULED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $rescheduleReason);
 
             // End: saving log in new table i.e. tbl_lesson_status_log
 
