@@ -6,6 +6,8 @@ class LessonStatusLog extends MyAppModel
 
     const NOT_CANCELLED_REPORT = 1;
     const CANCELLED_REPORT = 2;
+    const UPCOMING_REPORT = 3;
+    const COMPLETED_REPORT = 4;
     const BOTH_REPORT = 3;
 
     private $lessonDetailId;

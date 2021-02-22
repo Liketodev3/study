@@ -192,8 +192,28 @@ $(document).ready(function(){
 			fcom.updateFaceboxContent(t, 'xlargebox');
 		});
 		
+	};
+	
+	viewUpcomingAndCompletedReport = function(userId, reportType){
+		fcom.displayProcessing();
+		$("input[name='report_type']").val( reportType );
+		$("input[name='report_user_id']").val( userId );
+		var frm = document.frmRescheduledReportSearchPaging;
+		var data = '';
+		if (frm) {
+			data = fcom.frmData(frm);
+		}
+		fcom.ajax(fcom.makeUrl('LessonStats', 'viewUpcomingAndCompletedReport'), data, function(t) {
+			fcom.updateFaceboxContent(t, 'xlargebox');
+		});
+		
     };
 	
+	exportUpcomingAndCompletedReport = function(userId, reportType){
+		document.frmRescheduledReportSearch.action = fcom.makeUrl('LessonStats','upcomingAndCompletedReportExport', [userId, reportType]);
+		document.frmRescheduledReportSearch.submit();		
+	}
+
 	exportReport = function(userId, reportType){
 		document.frmRescheduledReportSearch.action = fcom.makeUrl('LessonStats','export', [userId, reportType]);
 		document.frmRescheduledReportSearch.submit();		

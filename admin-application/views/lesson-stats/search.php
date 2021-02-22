@@ -4,8 +4,10 @@ $arr_flds = array(
 	'listserial'=>Label::getLabel('LBL_Sr_no.',$adminLangId),
 	'user_name'=>Label::getLabel('LBL_Name',$adminLangId),
 	'user_type'=>Label::getLabel('LBL_User_Type',$adminLangId),
-	'teacherRescheduledLessons'=>Label::getLabel('LBL_Rescheduled_Lessons',$adminLangId),
-	'teacherCancelledLessons'=>Label::getLabel('LBL_Cancelled_Lessons',$adminLangId),
+	'upcomingLessons'=>Label::getLabel('LBL_Upcoming_Lessons',$adminLangId),
+	'completedLessons'=>Label::getLabel('LBL_Completed_Lessons',$adminLangId),
+	'rescheduledLessons'=>Label::getLabel('LBL_Rescheduled_Lessons',$adminLangId),
+	'cancelledLessons'=>Label::getLabel('LBL_Cancelled_Lessons',$adminLangId),
 	'action' => Label::getLabel('LBL_Action', $adminLangId)
 	//'teacherSchLessons'=>Label::getLabel('LBL_Completed_Lessons',$adminLangId),
 	
@@ -46,10 +48,16 @@ foreach ($arr_listing as $sn=>$row){
 					$td->appendElement('plaintext', array(), 'Learner' ,true);
 				}
 			break;
-			case 'teacherRescheduledLessons':
+			case 'upcomingLessons':
 				$td->appendElement('plaintext', array(), $row[$key] ,true);
 			break;
-			case 'teacherCancelledLessons':
+			case 'completedLessons':
+				$td->appendElement('plaintext', array(), $row[$key] ,true);
+			break;
+			case 'rescheduledLessons':
+				$td->appendElement('plaintext', array(), $row[$key] ,true);
+			break;
+			case 'cancelledLessons':
 				$td->appendElement('plaintext', array(), $row[$key] ,true);
 			break;
 			// case 'action':
@@ -91,11 +99,11 @@ foreach ($arr_listing as $sn=>$row){
 				// 	"onclick"=>"exportReport(".$row['user_id'].", ".LessonStatusLog::CANCELLED_REPORT.")"),
 				// 	Label::getLabel('LBL_Cancelled',$adminLangId), true);
 
-				$innerLiCancelled=$innerUl->appendElement('li');
-				$innerLiCancelled->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 
-					'title'=>Label::getLabel('LBL_View_Report',$adminLangId),
-					"onclick"=>"viewReport(".$row['user_id'].", ".LessonStatusLog::BOTH_REPORT.")"),
-					Label::getLabel('LBL_View_Report',$adminLangId), true);
+				// $innerLiCancelled=$innerUl->appendElement('li');
+				// $innerLiCancelled->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 
+				// 	'title'=>Label::getLabel('LBL_View_Report',$adminLangId),
+				// 	"onclick"=>"viewReport(".$row['user_id'].", ".LessonStatusLog::BOTH_REPORT.")"),
+				// 	Label::getLabel('LBL_View_Report',$adminLangId), true);
 
 				$innerLiCancelled=$innerUl->appendElement('li');
 				$innerLiCancelled->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 
@@ -108,6 +116,18 @@ foreach ($arr_listing as $sn=>$row){
 					'title'=>Label::getLabel('LBL_View_Cancelled_Report',$adminLangId),
 					"onclick"=>"viewReport(".$row['user_id'].", ".LessonStatusLog::CANCELLED_REPORT.")"),
 					Label::getLabel('LBL_View_Cancelled_Report',$adminLangId), true);
+
+				$innerLiUpcoming=$innerUl->appendElement('li');
+				$innerLiUpcoming->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 
+					'title'=>Label::getLabel('LBL_View_Upcoming_Report',$adminLangId),
+					"onclick"=>"viewUpcomingAndCompletedReport(".$row['user_id'].", ".LessonStatusLog::UPCOMING_REPORT.")"),
+					Label::getLabel('LBL_View_Upcoming_Report',$adminLangId), true);
+				
+				$innerLiCompleted=$innerUl->appendElement('li');
+				$innerLiCompleted->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 
+					'title'=>Label::getLabel('LBL_View_Completed_Report',$adminLangId),
+					"onclick"=>"viewUpcomingAndCompletedReport(".$row['user_id'].", ".LessonStatusLog::COMPLETED_REPORT.")"),
+					Label::getLabel('LBL_View_Completed_Report',$adminLangId), true);
 			break;
 			
 			case 'studentIds':

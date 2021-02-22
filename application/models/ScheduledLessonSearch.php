@@ -82,11 +82,11 @@ class ScheduledLessonSearch extends SearchBase
         $this->addGroupBy('lesstslog_updated_by_user_id');
         
         // if($getCanCelledScheduledLesson) {
-        //     $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherCancelledLessons');
+        //     $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" ) as cancelledLessons');
         // }
         
         // if($getRescheduledLesson) {
-        //     $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" ) as teacherRescheduledLessons');
+        //     $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" ) as rescheduledLessons');
         // }
 
         //$this->addFld('GROUP_CONCAT(DISTINCT sldetail_learner_id) as studentIds');

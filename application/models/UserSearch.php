@@ -194,7 +194,7 @@ class UserSearch extends SearchBase
         }
 
         if($getCanCelledScheduledLesson) {
-            $this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as teacherCancelledLessons');
+            $this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as cancelledLessons');
         }
         
         $this->addFld('GROUP_CONCAT(DISTINCT sldetail_learner_id) as studentIds');
@@ -218,11 +218,11 @@ class UserSearch extends SearchBase
         
         //$this->addFld( 'SUM(CASE WHEN sl.slesson_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) AS teacherSchLessons' );
         if($getCanCelledScheduledLesson) {
-            $this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as teacherCancelledLessons');
+            $this->addFld('(select COUNT(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED .'",1,null)) from '. ScheduledLesson::DB_TBL . ' WHERE slesson_teacher_id = u.user_id ) as cancelledLessons');
         }
 
         if($getRescheduledLesson) {
-            $this->addFld('(select COUNT(lesreschlog_id) from '. LessonRescheduleLog::DB_TBL . ' WHERE lesreschlog_slesson_id = sl.slesson_id ) as teacherRescheduledLessons');
+            $this->addFld('(select COUNT(lesreschlog_id) from '. LessonRescheduleLog::DB_TBL . ' WHERE lesreschlog_slesson_id = sl.slesson_id ) as rescheduledLessons');
         }
 
         //$this->addFld('GROUP_CONCAT(DISTINCT sldetail_learner_id) as studentIds');
