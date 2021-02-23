@@ -1,8 +1,8 @@
 This file shares the details of the Yo!Coach version and change log.
 
 
-Release Number: 
-Release Date:
+Release Number: TV-2.9.0.20210223
+Release Date: 2021-02-23
 
 New Features:
     . Task-79596 - Integrate 2Checkout payment gateway
@@ -15,6 +15,7 @@ Enhancements:
     . Task-81501: Refine and refactor Meta Tags Management
     . Task-80174: User images optimization
     . Task-82382: Auto Language selection
+    . Task-82103: Teachers search query optimization
    
 Bug Fixes:
     Bug-#044725: Fixed incorrect end timer

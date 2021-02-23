@@ -245,3 +245,4 @@ ALTER TABLE `tbl_user_teach_languages` DROP INDEX `utl_single_lesson_amount`;
 ALTER TABLE `tbl_user_teach_languages` ADD INDEX( `utl_slanguage_id`, `utl_single_lesson_amount`, `utl_bulk_lesson_amount`); 
 
 ALTER TABLE `tbl_teaching_languages` ADD INDEX( `tlanguage_identifier`, `tlanguage_display_order`, `tlanguage_active`); 
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.9.0.20210223' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
