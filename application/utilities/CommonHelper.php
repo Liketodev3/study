@@ -94,18 +94,19 @@ class CommonHelper extends FatUtility
             self::$_lang_id = FatUtility::int($userSiteLangData['language_id']);
            }
         }
-        $cookieConsent = CommonHelper::getCookieConsent();
-        $isActivePreferencesCookie =  (!empty($cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
-
-        if(!$isActivePreferencesCookie){
-            return true;
-        }
-        
+      
         self::setDefaultSiteLangCookie(self::$_lang_id);
     }
 
     public static function setDefaultSiteLangCookie(int $langId)
     {
+        $cookieConsent = CommonHelper::getCookieConsent();
+        $isActivePreferencesCookie =  (!empty($cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
+        
+        if(!$isActivePreferencesCookie){
+            return true;
+        }
+
         self::setCookie('defaultSiteLang', $langId, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_URL, '', true);
     }
 

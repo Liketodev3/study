@@ -341,6 +341,11 @@ class AccountController extends LoggedUserController
             } //  code added on 23-08-2019
             $record->assignValues(array('us_video_link' => $post['us_video_link'], 'us_booking_before' => $post['us_booking_before'])); //  code added on 23-08-2019
         }
+      
+        $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
+        if($post['us_site_lang'] != $user_settings['us_site_lang']){
+            CommonHelper::setDefaultSiteLangCookie($post['us_site_lang']);
+        }
         // prx($record->getFlds());
         if (!$record->addNew( array(), $record->getFlds())) {
             $db->rollbackTransaction();
