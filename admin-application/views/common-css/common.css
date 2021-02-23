@@ -48,3 +48,12 @@ padding-bottom: 2px;
     height: 100%;
     overflow: hidden;
 }
+
+.statustab.disabled-switch{
+    cursor: no-drop;
+    opacity: 0.5;
+}
+.statustab.disabled-switch .switch-handles
+{
+    cursor: no-drop;
+}
