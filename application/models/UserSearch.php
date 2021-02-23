@@ -158,7 +158,7 @@ class UserSearch extends SearchBase
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        /* $slSrch = new searchBase(UserToLanguage::DB_TBL);
+        $slSrch = new searchBase(UserToLanguage::DB_TBL);
         $slSrch->joinTable(SpokenLanguage::DB_TBL, 'LEFT JOIN', 'slanguage_id = utsl_slanguage_id');
         $slSrch->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = '. $langId, 'sl_lang');
         $slSrch->doNotCalculateRecords();
@@ -167,12 +167,13 @@ class UserSearch extends SearchBase
         $slSrch->addGroupBy('utsl_user_id');
         $slSrch->addCondition('slanguage_active', '=', 1);
 
-        $this->joinTable("(" . $slSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utsl.utsl_user_id', 'utsl'); */
+        $this->joinTable("(" . $slSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utsl.utsl_user_id', 'utsl');
+        $this->addMultipleFields(array('utsl_user_id', 'spoken_language_names', 'spoken_language_ids',  'spoken_languages_proficiency'));
 
-        $this->addMultipleFields(array('utsl_user_id', 'GROUP_CONCAT( DISTINCT IFNULL(slanguage_name, slanguage_identifier) ORDER BY slanguage_name,slanguage_identifier ) as spoken_language_names', 'GROUP_CONCAT(DISTINCT utsl_slanguage_id) as spoken_language_ids',  'GROUP_CONCAT(DISTINCT utsl_proficiency) as spoken_languages_proficiency'));
+        /* $this->addMultipleFields(array('utsl_user_id', 'GROUP_CONCAT( IFNULL(slanguage_name, slanguage_identifier) ORDER BY slanguage_name,slanguage_identifier ) as spoken_language_names', 'GROUP_CONCAT(utsl_slanguage_id) as spoken_language_ids',  'GROUP_CONCAT(utsl_proficiency) as spoken_languages_proficiency'));
         $this->joinTable(UserToLanguage::DB_TBL, 'INNER JOIN', 'user_id = utsl.utsl_user_id', 'utsl');
         $this->joinTable(SpokenLanguage::DB_TBL, 'LEFT JOIN', 'slanguage_id = utsl_slanguage_id AND slanguage_active ='. applicationConstants::ACTIVE);
-        $this->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = '. $langId, 'sl_lang');
+        $this->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = '. $langId, 'sl_lang'); */
         
     }
 
