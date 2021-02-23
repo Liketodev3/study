@@ -17,7 +17,7 @@ $spokenLanguagesProficiencyArr = explode(",", $spoken_languages_proficiency);
 
 	foreach( $spokenLanguagesArr as $index => $spokenLangName ){
 		?>
-		<span class="txt-inline__tag"><?php echo $spokenLangName; ?><strong>(<?php echo $proficiencyArr[$spokenLanguagesProficiencyArr[$index]]; ?>)</strong></span><?php echo ($index < $totalSpokenLanguages) ? ',' : ''; ?>
+		<span class="txt-inline__tag"><?php echo $spokenLangName; ?><strong> (<?php echo $proficiencyArr[$spokenLanguagesProficiencyArr[$index]]; ?>) </strong></span><?php echo ($index < $totalSpokenLanguages) ? ',' : ''; ?>
 		<?php
 	}
 	?>

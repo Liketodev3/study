@@ -156,43 +156,44 @@ class TeacherController extends TeacherBaseController
     public function setUpSettings()
     {
         $post = FatApp::getPostedData();
-        if (false === $post) {
+        $data = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
+        $frm = $this->getSettingsForm($data);
+        $data = $frm->getFormDataFromArray($post);
+        if (false === $data) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
 
-        if(isset($post['utl_single_lesson_amount'])){
-            foreach ($post['utl_single_lesson_amount'] as $tlang=>$priceAr) {
-                foreach ($priceAr as $slot=>$single_lesson_price) {
-                    $bulk_lesson_price = $post['utl_bulk_lesson_amount'][$tlang][$slot];
-                    if(!in_array($slot, $post['duration'])) {
-                        $single_lesson_price = 0;
-                        $bulk_lesson_price = 0;
-                    }
-                    $data = array(
-                        'utl_us_user_id'            => UserAuthentication::getLoggedUserId(), 
-                        'utl_single_lesson_amount'  => $single_lesson_price, 
-                        'utl_bulk_lesson_amount'    => $bulk_lesson_price, 
-                        'utl_slanguage_id'          => $tlang, 
-                        'utl_booking_slot'          => $slot
-                    );
-                    $data_on_dup = array(
-                        'utl_single_lesson_amount'  => $single_lesson_price, 
-                        'utl_bulk_lesson_amount'    => $bulk_lesson_price
-                    );
-                    $record = new TableRecord(UserToLanguage::DB_TBL_TEACH);
-                    $record->assignValues($data);
-                    if (!$record->addNew(array(), $data_on_dup)) {
-                        $this->error = $record->getError();
-                        return false;
-                    }
+        $userId = UserAuthentication::getLoggedUserId();
+        
+        foreach ($post['utl_single_lesson_amount'] as $tlang=>$priceAr) {
+            foreach ($priceAr as $slot=>$single_lesson_price) {
+                $bulk_lesson_price = $post['utl_bulk_lesson_amount'][$tlang][$slot];
+                if(!in_array($slot, $post['duration'])) {
+                    $single_lesson_price = 0;
+                    $bulk_lesson_price = 0;
+                }
+                $data = array(
+                    'utl_us_user_id'            => $userId, 
+                    'utl_single_lesson_amount'  => $single_lesson_price, 
+                    'utl_bulk_lesson_amount'    => $bulk_lesson_price, 
+                    'utl_slanguage_id'          => $tlang, 
+                    'utl_booking_slot'          => $slot
+                );
+                $userToLanguage = new UserToLanguage($userId);
+                if (!$userToLanguage->saveTeachLang($data)) {
+                    Message::addErrorMessage($userToLanguage->getError());
+                    FatUtility::dieJsonError(Message::getHtml());
                 }
             }
         }
-        $userObj = new UserSetting(UserAuthentication::getLoggedUserId());
-        $isFreeTrial['us_is_trial_lesson_enabled'] = isset($post['us_is_trial_lesson_enabled'])?$post['us_is_trial_lesson_enabled']:0;
-        if (!$userObj->saveData($isFreeTrial)) {
-            Message::addErrorMessage(Label::getLabel($userObj->getError()));
+        
+        $isFreeTrial = isset($post['us_is_trial_lesson_enabled']) ? $post['us_is_trial_lesson_enabled'] : 0;
+
+        $userSetting = new UserSetting(UserAuthentication::getLoggedUserId());
+        $userSetting->setFldValue('us_is_trial_lesson_enabled', $isFreeTrial);
+        if (!$userSetting->save()) {
+            Message::addErrorMessage($userSetting->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
         $this->set('msg', Label::getLabel('MSG_Setup_successful'));

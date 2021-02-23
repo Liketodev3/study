@@ -16,19 +16,12 @@ class TeacherOfferPrice extends MyAppModel
             return false;
         }
 
-        $record = new TableRecord(static::DB_TBL);
-        $record->assignValues($data);
-        if (!$record->addNew(array(), array('top_single_lesson_price' => $data['top_single_lesson_price'], 'top_bulk_lesson_price' => $data['top_bulk_lesson_price']))) {
-            $this->error = $record->getError();
-            return false;
-        }
-        return true;
+        $this->assignValues($data);
+        return $this->addNew(array(), array('top_single_lesson_price' => $data['top_single_lesson_price'], 'top_bulk_lesson_price' => $data['top_bulk_lesson_price']));
     }
 
-    public function removeOffer($learnerId, $teacherId)
+    public function removeOffer(int $learnerId, int $teacherId)
     {
-        $learnerId = FatUtility::int($learnerId);
-        $teacherId = FatUtility::int($teacherId);
         if (0 > $learnerId || 0 > $teacherId) {
             $this->error = Label::getLabel('LBL_Invalid_Request');
             return false;
@@ -58,4 +51,13 @@ class TeacherOfferPrice extends MyAppModel
 		$srch->addCondition( 'top_lesson_duration','=',$lessonDuration );
 		return $srch;
 	}
+
+    public function getTeacherOfferPrices(int $learnerId, int $teacherId)
+    {
+        $srch = new SearchBase(self::DB_TBL, 'us');
+		$srch->addCondition( 'top_learner_id', '=', $learnerId );
+		$srch->addCondition( 'top_teacher_id', '=', $teacherId );
+        $srch->doNotCalculateRecords();
+        return FatApp::getDb()->fetchAll($srch->getResultSet());
+    }
 }

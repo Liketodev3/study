@@ -54,8 +54,8 @@
 									?><br>
 									<?php endforeach; ?>
 								</span>
+								<a href="javascript:void(0);" onclick="offerPriceForm(<?php echo $student['learnerId'];?>);">
 								<?php if( $student['isSetUpOfferPrice'] ){ ?>
-									<a href="javascript:void(0);" onClick="return unlockOfferPrice(<?php echo $student['learnerId'];?>);">
 										<span class="inline-icon -display-inline -color-fill">
 											<span class="svg-icon" title="<?php echo Label::getLabel('LBL_These_prices_are_locked');?>" >
 											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 520 520">
@@ -63,18 +63,16 @@
 											</svg>
 											</span>
 										</span>
-										</a>
-								<?php } else { ?>
-									<a href="javascript:void(0);" onclick="offerPriceForm(<?php echo $student['learnerId'];?>);">
-										<span class="inline-icon -display-inline">
-											<span class="svg-icon" title="<?php echo Label::getLabel('LBL_These_prices_are_Unlocked'); ?>">
-											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 520 520">
-												<path d="M85,521V231H365V139A99.972,99.972,0,0,0,182.193,83h-34.5A129.991,129.991,0,0,1,395,139v92h50V521H85ZM265,297a45,45,0,0,0-15,87.42V446h30V384.42A45,45,0,0,0,265,297Zm0,30a15,15,0,1,0,15,15A15.017,15.017,0,0,0,265,327Z" transform="translate(-5 -5)"></path>
-												</svg>
-											</span>
+								<?php } else { ?>									
+									<span class="inline-icon -display-inline">
+										<span class="svg-icon" title="<?php echo Label::getLabel('LBL_These_prices_are_Unlocked'); ?>">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 520 520">
+											<path d="M85,521V231H365V139A99.972,99.972,0,0,0,182.193,83h-34.5A129.991,129.991,0,0,1,395,139v92h50V521H85ZM265,297a45,45,0,0,0-15,87.42V446h30V384.42A45,45,0,0,0,265,297Zm0,30a15,15,0,1,0,15,15A15.017,15.017,0,0,0,265,327Z" transform="translate(-5 -5)"></path>
+											</svg>
 										</span>
-										</a>
+									</span>
 								<?php } ?>
+								</a>
 							</span>
                         </td>
 						

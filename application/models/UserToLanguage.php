@@ -123,4 +123,41 @@ class UserToLanguage extends MyAppModel
         $rs = $srch->getResultSet();
 		return FatApp::getDb()->fetchAllAssoc($rs);
     }
+
+    public function getAttributesByLangAndSlot($langId, $slot, $attr = null)
+    {
+        $srch = new SearchBase(static::DB_TBL_TEACH);
+        $srch->addCondition(static::DB_TBL_TEACH_PREFIX . 'us_user_id', '=', $this->mainTableRecordId);
+        $srch->addCondition(static::DB_TBL_TEACH_PREFIX . 'slanguage_id', '=', $langId);
+        $srch->addCondition(static::DB_TBL_TEACH_PREFIX . 'booking_slot', '=', $slot);
+
+        if (null != $attr) {
+            if (is_array($attr)) {
+                $srch->addMultipleFields($attr);
+            } elseif (is_string($attr)) {
+                $srch->addFld($attr);
+            }
+        }
+
+        $rs = $srch->getResultSet();
+        $row = FatApp::getDb()->fetch($rs);
+
+        if (!is_array($row)) {
+            return false;
+        }
+
+        if (is_string($attr)) {
+            return $row[$attr];
+        }
+
+        return $row;
+    }
+
+    public function saveTeachLang($langData)
+    {        
+        $id = $this->getAttributesByLangAndSlot($langData['utl_slanguage_id'], $langData['utl_booking_slot'], self::DB_TBL_TEACH_PREFIX . 'id');
+        parent::__construct(self::DB_TBL_TEACH, self::DB_TBL_TEACH_PREFIX . 'id', $id);
+        $this->assignValues($langData);
+        return $this->save();
+    }
 }
