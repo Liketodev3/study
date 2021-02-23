@@ -61,7 +61,7 @@ class TeachersController extends MyAppController {
 		if (UserAuthentication::isUserLogged()) {
 			$srch->addCondition('user_id','!=',UserAuthentication::getLoggedUserId());
 		}
-		echo $srch->getQuery();die;
+		// echo $srch->getQuery();die;
 		$rs = $srch->getResultSet();
 		$db = FatApp::getDb();
 		$teachersList = $db->fetchAll($rs);
