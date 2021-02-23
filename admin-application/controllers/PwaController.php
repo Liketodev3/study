@@ -7,6 +7,7 @@ class PwaController extends AdminBaseController
         $record = Configurations::getConfigurations();
         if (!empty($record['CONF_PWA_SETTINGS'])) {
             $data['pwa_settings'] = json_decode($record['CONF_PWA_SETTINGS'], true);
+            $data['CONF_ENABLE_PWA'] = $record['CONF_ENABLE_PWA'];
             $frm->fill($data);
         }
         if (empty(AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_APP_ICON, 0))) {
@@ -61,7 +62,7 @@ class PwaController extends AdminBaseController
         }
 
         $configurations = new Configurations();
-        if (!$configurations->update(['CONF_PWA_SETTINGS' => json_encode($pwaSettings)])) {
+        if (!$configurations->update(['CONF_PWA_SETTINGS' => json_encode($pwaSettings), 'CONF_ENABLE_PWA' => $post['CONF_ENABLE_PWA']])) {
             FatApp::getDb()->rollbackTransaction();
             Message::addErrorMessage(FatApp::getDb()->getError());
             return $this->index();
@@ -83,7 +84,8 @@ class PwaController extends AdminBaseController
         $displayArr = PWA::displayArr($langId);
 
         $frm = new Form('pwaFrm');
-
+        
+        $frm->addCheckBox(Label::getLabel('PWALBL_Enable_PWA'), 'CONF_ENABLE_PWA', 1, [], false, 0);
         $fld = $frm->addRequiredField(Label::getLabel('PWALBL_App_Name'), 'pwa_settings[name]');
         $fld->requirements()->setLength(1, 50);
 
