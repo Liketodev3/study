@@ -18,12 +18,13 @@ Enhancements:
    
 Bug Fixes:
     Bug-#044725: Fixed incorrect end timer
-    Bug-#049602-Issue with speaking and proficiency level
+    Bug-#049602: Issue with speaking and proficiency level
     Bug-#047721: Trial lesson booking not working
     Bug-#049783: Fix Statistics graphical representation
     Bug-#044726: To not show join lesson button on page reload if already joined
     Bug-#044692: Fix Lesson status issue in orders in admin panel
     Bug-#045497: Make report issue options user type specific and fix admin privileges
+    Bug-#049646: Refine currency handling
 
 ----------------------------------------------------------
 
