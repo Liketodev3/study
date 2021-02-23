@@ -53,16 +53,23 @@ class TeachersController extends MyAppController
 		$srch->joinUserLang($this->siteLangId);
 		$srch->joinTeacherLessonData(0, false, false);
 		$srch->joinRatingReview();
-		$srch->addMultipleFields(array('ulg.*', 'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info', 'utls.*'));
+		$srch->addMultipleFields(array(
+			// 'ulg.*', 
+			'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info', 
+			'utls.minPrice'
+			// 'utls.*'
+		));
 		$srch->setPageSize($pageSize);
 		$srch->setPageNumber($page);
 		$srch->removGroupBy('sl.slesson_teacher_id');
 		if (UserAuthentication::isUserLogged()) {
 			$srch->addCondition('user_id', '!=', UserAuthentication::getLoggedUserId());
 		}
+		// echo $srch->getQuery();die;
 		$rs = $srch->getResultSet();
 		$db = FatApp::getDb();
 		$teachersList = $db->fetchAll($rs);
+        // CommonHelper::printArray($teachersList);die;
 		$totalRecords = $srch->recordCount();
 		$pagingArr = array(
 			'pageCount' => $srch->pages(),
@@ -204,9 +211,9 @@ class TeachersController extends MyAppController
 			/* 'user_timezone', */
 			'IFNULL(country_name, country_code) as user_country_name',
 			'IFNULL(state_name, state_identifier) as user_state_name',
-			'IFNULL(slanguage_name, slanguage_identifier) as teachlanguage_name',
-			'utsl.spoken_language_names',
-			'utsl.spoken_languages_proficiency',
+			'IFNULL(tlanguage_name, tlanguage_identifier) as teachlanguage_name',
+			// 'utsl.spoken_language_names',
+			// 'utsl.spoken_languages_proficiency',
 			'us_video_link',
 			'us_is_trial_lesson_enabled',
 			'minPrice',
@@ -214,7 +221,7 @@ class TeachersController extends MyAppController
 			'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
 			'utl_slanguage_ids'
 		));
-
+		// echo $srch->getQuery();die;
 		$rs = $srch->getResultSet();
 		$teacher = FatApp::getDb()->fetch($rs);
 		if (empty($teacher)) {
@@ -625,13 +632,13 @@ class TeachersController extends MyAppController
 		$spokenLanguage = FatApp::getPostedData('spokenLanguage', FatUtility::VAR_STRING, NULL);
 		if (!empty($spokenLanguage)) {
 			if (is_numeric($spokenLanguage)) {
-				$srch->addDirectCondition('FIND_IN_SET(' . $spokenLanguage . ', spoken_language_ids)');
+				$srch->addDirectCondition('utsl_slanguage_id = '. $spokenLanguage);
 			} else {
 				$spokenLanguageArr = explode(",", $spokenLanguage);
 				if (!empty($spokenLanguageArr)) {
 					$spokenLanguageArr = FatUtility::int($spokenLanguageArr);
 					foreach ($spokenLanguageArr as $spokenLanguage) {
-						$srch->addDirectCondition('FIND_IN_SET(' . $spokenLanguage . ', spoken_language_ids)');
+						$srch->addDirectCondition('utsl_slanguage_id = '. $spokenLanguage);
 					}
 				}
 			}
@@ -641,13 +648,13 @@ class TeachersController extends MyAppController
 		$preferenceFilter = FatApp::getPostedData('preferenceFilter', FatUtility::VAR_STRING, NULL);
 		if (!empty($preferenceFilter)) {
 			if (is_numeric($preferenceFilter)) {
-				$srch->addDirectCondition('FIND_IN_SET(' . $preferenceFilter . ', utpref_preference_ids)');
+				$srch->addDirectCondition('utpref_preference_id = '. $preferenceFilter);
 			} else {
 				$preferenceFilterArr = explode(",", $preferenceFilter);
 				if (!empty($preferenceFilterArr)) {
 					$preferenceFilterArr = FatUtility::int($preferenceFilterArr);
 					foreach ($preferenceFilterArr as $preferenceFilter) {
-						$srch->addDirectCondition('FIND_IN_SET(' . $preferenceFilter . ', utpref_preference_ids)');
+						$srch->addDirectCondition('utpref_preference_id = '. $preferenceFilter);
 					}
 				}
 			}
@@ -775,11 +782,12 @@ class TeachersController extends MyAppController
 			'user_country_id',
 			'country_name as user_country_name',
 			'user_profile_info',
-			'utsl.spoken_language_names',
-			'utsl.spoken_languages_proficiency',
+			'uqualification_user_id',
+			// 'utsl.spoken_language_names',
+			// 'utsl.spoken_languages_proficiency',
 			'utls.teacherTeachLanguageName',
-			'utl_ids',
-			'utl_slanguage_ids'
+            'utl_ids',
+            // 'utl_slanguage_ids'
 		));
 	}
 

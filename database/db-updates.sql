@@ -235,3 +235,13 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.3.20210212' WHERE `tbl_conf
 ALTER TABLE `tbl_issue_report_options` ADD `tissueopt_user_type` TINYINT NOT NULL;
 
 ALTER TABLE `tbl_user_settings` ADD `us_site_lang` INT NOT NULL COMMENT 'the language which user preferred to view site content' AFTER `us_is_trial_lesson_enabled`;
+
+ALTER TABLE `tbl_teachers_general_availability` ADD INDEX(`tgavl_user_id`); 
+
+ALTER TABLE `tbl_scheduled_lesson_details` ADD INDEX(`sldetail_slesson_id`); 
+
+ALTER TABLE `tbl_user_teach_languages` DROP INDEX `utl_single_lesson_amount`;
+
+ALTER TABLE `tbl_user_teach_languages` ADD INDEX( `utl_slanguage_id`, `utl_single_lesson_amount`, `utl_bulk_lesson_amount`); 
+
+ALTER TABLE `tbl_teaching_languages` ADD INDEX( `tlanguage_identifier`, `tlanguage_display_order`, `tlanguage_active`); 

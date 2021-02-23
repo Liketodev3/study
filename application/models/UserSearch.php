@@ -1,4 +1,7 @@
 <?php
+
+use Stripe\ApplicationFee;
+
 class UserSearch extends SearchBase
 {
     private $isCredentialsJoined;
@@ -37,8 +40,8 @@ class UserSearch extends SearchBase
         $this->addCondition('user_is_teacher', '=', 1);
         $this->addCondition('user_country_id', '>', 0);
 
-        $this->addCondition('credential_active', '=', 1);
-        $this->addCondition('credential_verified', '=', 1);
+        /* $this->addCondition('credential_active', '=', 1);
+        $this->addCondition('credential_verified', '=', 1); */
 
         /* additional conditions[ */
         if($addUserSettingJoin) {
@@ -52,18 +55,21 @@ class UserSearch extends SearchBase
         }
         /* ] */
         /* qualification/experience[ */
-        $qSrch = new UserQualificationSearch();
+        /* $qSrch = new UserQualificationSearch();
         $qSrch->addMultipleFields(array('uqualification_user_id'));
         $qSrch->addCondition('uqualification_active', '=', 1);
         $qSrch->addGroupBy('uqualification_user_id');
-        $this->joinTable("(" . $qSrch->getQuery() . ")", 'INNER JOIN', 'user_id = uqualification_user_id', 'utqual');
+        $this->joinTable("(" . $qSrch->getQuery() . ")", 'INNER JOIN', 'user_id = uqualification_user_id', 'utqual'); */
+        $this->joinTable(UserQualification::DB_TBL, 'INNER JOIN', 'user_id = uqualification_user_id AND uqualification_active = '.ApplicationConstants::ACTIVE, 'utqual');
         /* ] */
 
         /* user preferences/skills[ */
-        $skillSrch = new UserToPreferenceSearch();
+        /* $skillSrch = new UserToPreferenceSearch();
         $skillSrch->addMultipleFields(array('utpref_user_id','GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids'));
         $skillSrch->addGroupBy('utpref_user_id');
-        $this->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
+        $this->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref'); */
+        $this->joinTable(Preference::DB_TBL_USER_PREF, 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
+        // $this->addFld('GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids');
         /* ] */
     }
 
@@ -122,11 +128,11 @@ class UserSearch extends SearchBase
             trigger_error("Please join user settings table first to join user teacher language", E_USER_ERROR);
         }
 
-        $this->joinTable(SpokenLanguage::DB_TBL, 'LEFT JOIN', 'us.us_teach_slanguage_id = slanguage_id', 'teachl');
+        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'us.us_teach_slanguage_id = tlanguage_id', 'teachl');
 
         $langId = FatUtility::int($langId);
         if ($langId > 0) {
-            $this->joinTable(SpokenLanguage::DB_TBL.'_lang', 'LEFT JOIN', 'teachl.slanguage_id = teachl_lang.slanguagelang_slanguage_id AND teachl_lang.slanguagelang_lang_id = ' . $langId, 'teachl_lang');
+            $this->joinTable(TeachingLanguage::DB_TBL.'_lang', 'LEFT JOIN', 'teachl.tlanguage_id = teachl_lang.tlanguagelang_tlanguage_id AND teachl_lang.tlanguagelang_lang_id = ' . $langId, 'teachl_lang');
         }
 
         $this->isUserTeachLanguageJoined = true;
@@ -180,6 +186,13 @@ class UserSearch extends SearchBase
         $slSrch->addCondition('slanguage_active', '=', 1);
 
         $this->joinTable("(" . $slSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utsl.utsl_user_id', 'utsl');
+        $this->addMultipleFields(array('utsl_user_id', 'spoken_language_names', 'spoken_language_ids',  'spoken_languages_proficiency'));
+
+        /* $this->addMultipleFields(array('utsl_user_id', 'GROUP_CONCAT( IFNULL(slanguage_name, slanguage_identifier) ORDER BY slanguage_name,slanguage_identifier ) as spoken_language_names', 'GROUP_CONCAT(utsl_slanguage_id) as spoken_language_ids',  'GROUP_CONCAT(utsl_proficiency) as spoken_languages_proficiency'));
+        $this->joinTable(UserToLanguage::DB_TBL, 'INNER JOIN', 'user_id = utsl.utsl_user_id', 'utsl');
+        $this->joinTable(SpokenLanguage::DB_TBL, 'LEFT JOIN', 'slanguage_id = utsl_slanguage_id AND slanguage_active ='. applicationConstants::ACTIVE);
+        $this->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = '. $langId, 'sl_lang'); */
+        
     }
 
     public function joinFavouriteTeachers($user_id)
@@ -303,15 +316,19 @@ class UserSearch extends SearchBase
             $langId = CommonHelper::getLangId();
         }
 
-        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'u.user_id = utsl1.utl_us_user_id', 'utsl1');
+        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'INNER  JOIN', 'u.user_id = utsl1.utl_us_user_id AND utl_single_lesson_amount>0 AND utl_bulk_lesson_amount>0', 'utsl1');
+        $this->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utsl1.utl_slanguage_id AND tlanguage_active = '.applicationConstants::ACTIVE);
+        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl1.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'tl_lang');
+        $this->addMultipleFields(array(
+            'utsl1.utl_us_user_id', 
+            'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName',
+            'GROUP_CONCAT(DISTINCT utl_id) as utl_ids',
+            'max(utl_single_lesson_amount) as maxPrice',
+            'min(utl_bulk_lesson_amount) as minPrice',
+            'GROUP_CONCAT(DISTINCT utl_slanguage_id) as utl_slanguage_ids'
+        ));
 
-        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl1.utl_slanguage_id');
-
-        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl1.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'sl_lang');
-
-        $this->addMultipleFields(array('utsl1.utl_us_user_id', 'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
-
-        $this->addCondition('tlanguage_active', '=', '1');
+        // $this->addCondition('tlanguage_active', '=', '1');
 
         if (!empty($keyword)) {
             $cnd = $this->addCondition('tlanguage_name', 'LIKE', '%' . $keyword . '%');
