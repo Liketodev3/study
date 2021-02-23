@@ -14,7 +14,8 @@ Enhancements:
     . Task-82203: Image for allowed payment gateways/cards on the platform
     . Task-81501: Refine and refactor Meta Tags Management
     . Task-80174: User images optimization
-  
+    . Task-82382: Auto Language selection
+   
 Bug Fixes:
     Bug-#044725: Fixed incorrect end timer
     Bug-#049602-Issue with speaking and proficiency level

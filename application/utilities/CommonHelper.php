@@ -23,12 +23,13 @@ class CommonHelper extends FatUtility
         self::$_currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
         
         if (false === $isAdmin) {
-            if (isset($_COOKIE['defaultSiteLang'])) {
-                $languages = Language::getAllNames();
-                if (array_key_exists($_COOKIE['defaultSiteLang'], $languages)) {
-                    self::$_lang_id = FatUtility::int(trim($_COOKIE['defaultSiteLang']));
-                }
-            }
+            // if (isset($_COOKIE['defaultSiteLang'])) {
+            //     $languages = Language::getAllNames();
+            //     if (array_key_exists($_COOKIE['defaultSiteLang'], $languages)) {
+            //         self::$_lang_id = FatUtility::int(trim($_COOKIE['defaultSiteLang']));
+            //     }
+            // }
+            self::setSiteDefaultLang();
 
             if (isset($_COOKIE['defaultSiteCurrency'])) {
                 $currencies = Currency::getCurrencyAssoc(self::$_lang_id);
@@ -67,6 +68,47 @@ class CommonHelper extends FatUtility
 
     }
 
+    public static function setSiteDefaultLang()
+    {
+        self::$_lang_id = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
+
+        $languages = array_map('strtoupper',Language::getAllCodesAssoc());
+        
+        if (isset($_COOKIE['defaultSiteLang'])) {
+            if (array_key_exists($_COOKIE['defaultSiteLang'], $languages)) {
+                self::$_lang_id = FatUtility::int(trim($_COOKIE['defaultSiteLang']));
+                return true;
+            }
+        }
+
+        $headerLang = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+        $langId = array_search($headerLang, $languages);
+        if( $langId !== false){
+            self::$_lang_id = FatUtility::int($langId);
+        }
+
+        if (UserAuthentication::isUserLogged()) {
+           $userSetting = new UserSetting(UserAuthentication::getLoggedUserId(true));
+           $userSiteLangData = $userSetting->getUserSiteLang();
+           if(!empty($userSiteLangData['language_id'])){
+            self::$_lang_id = FatUtility::int($userSiteLangData['language_id']);
+           }
+        }
+      
+        self::setDefaultSiteLangCookie(self::$_lang_id);
+    }
+
+    public static function setDefaultSiteLangCookie(int $langId)
+    {
+        $cookieConsent = CommonHelper::getCookieConsent();
+        $isActivePreferencesCookie =  (!empty($cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
+        
+        if(!$isActivePreferencesCookie){
+            return true;
+        }
+
+        self::setCookie('defaultSiteLang', $langId, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_URL, '', true);
+    }
 
     public static function getLangId()
     {

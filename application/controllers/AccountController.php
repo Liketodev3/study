@@ -185,13 +185,15 @@ class AccountController extends LoggedUserController
         ));
         $userRow['user_phone'] = ($userRow['user_phone'] == 0) ? '' : $userRow['user_phone'];
         $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
+        $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
         if ($userRow['user_is_teacher']) {
-            $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
+            
             $userRow['us_video_link'] = $user_settings['us_video_link'];
             $userRow['us_booking_before'] = $user_settings['us_booking_before']; //== code added on 23-08-2019
             $userRow['us_google_access_token'] = $user_settings['us_google_access_token'];
             $userRow['us_google_access_token_expiry'] = $user_settings['us_google_access_token_expiry'];
         }
+        $userRow['us_site_lang'] = $user_settings['us_site_lang'];
         $profileFrm->fill($userRow);
         $this->set('isProfilePicUploaded', User::isProfilePicUploaded());
         $this->set('userRow', $userRow);
@@ -328,21 +330,29 @@ class AccountController extends LoggedUserController
         }
         $db = FatApp::getDb();
         $db->startTransaction();
+        $record = new TableRecord(UserSetting::DB_TBL);
+
+        $record->setFlds(['us_site_lang' => $post['us_site_lang'],'us_user_id'=> UserAuthentication::getLoggedUserId()]);
         if ($isTeacher) {
             $bookingDurationOptions = array(0, 12, 24);
             if (!in_array($post['us_booking_before'], $bookingDurationOptions)) {
                 Message::addErrorMessage('Invalid Selection of Booking Field');
                 FatUtility::dieWithError(Message::getHtml());
             } //  code added on 23-08-2019
-
-            $record = new TableRecord(UserSetting::DB_TBL);
             $record->assignValues(array('us_video_link' => $post['us_video_link'], 'us_booking_before' => $post['us_booking_before'])); //  code added on 23-08-2019
-            if (!$record->update(array('smt' => 'us_user_id=?', 'vals' => array(UserAuthentication::getLoggedUserId())))) {
-                $db->rollbackTransaction();
-                $this->error = $record->getError();
-                return false;
-            }
         }
+      
+        $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
+        if($post['us_site_lang'] != $user_settings['us_site_lang']){
+            CommonHelper::setDefaultSiteLangCookie($post['us_site_lang']);
+        }
+        // prx($record->getFlds());
+        if (!$record->addNew( array(), $record->getFlds())) {
+            $db->rollbackTransaction();
+            $this->error = $record->getError();
+            return false;
+        }
+
         $user = new User(UserAuthentication::getLoggedUserId());
         $user->assignValues($post);
         if (!$user->save()) {
@@ -392,8 +402,11 @@ class AccountController extends LoggedUserController
             $fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'), 'us_booking_before', $bookingOptionArr, 'us_booking_before', array(), Label::getLabel('LBL_Select'));
             $fld3->requirement->setRequired(true);
         }
+        
         /* $fld = $frm->addTextArea(Label::getLabel('LBL_Biography'), 'user_profile_info');
         $fld->requirements()->setLength(1, 500); */
+         $frm->addSelectBox(Label::getLabel('LBL_Site_Language'), 'us_site_lang', Language::getAllNames(), '', array(), Label::getLabel('LBL_Select'));
+
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         return $frm;
     }

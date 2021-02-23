@@ -232,6 +232,6 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.3.20210212' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
 
 
-
-
 ALTER TABLE `tbl_issue_report_options` ADD `tissueopt_user_type` TINYINT NOT NULL;
+
+ALTER TABLE `tbl_user_settings` ADD `us_site_lang` INT NOT NULL COMMENT 'the language which user preferred to view site content' AFTER `us_is_trial_lesson_enabled`;

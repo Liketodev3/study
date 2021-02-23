@@ -54,7 +54,7 @@ class HomeController extends MyAppController
         if (0 < $langId) {
             $languages = Language::getAllNames();
             if (array_key_exists($langId, $languages)) {
-                CommonHelper::setCookie('defaultSiteLang', $langId, time()+3600*24*10, CONF_WEBROOT_URL, '', true);
+                CommonHelper::setDefaultSiteLangCookie($langId);
             }
         }
     }
