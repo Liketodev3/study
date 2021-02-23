@@ -6,7 +6,10 @@ $frm->developerTags['fld_default_col'] = 12;
 
 if($defaultCurrency){
 	$fld = $frm->getField('currency_value');
+	$fld->setFieldTagAttribute('disabled',true);
 	$fld->htmlAfterField = '<small>'.Label::getLabel('LBL_This_is_your_default_currency',$adminLangId).'</small>';
+	$frm->getField('currency_code')->setFieldTagAttribute('disabled',true);
+	$frm->getField('currency_active')->setFieldTagAttribute('disabled',true);
 }
 ?>
 <section class="section">

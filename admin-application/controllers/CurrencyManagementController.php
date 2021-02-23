@@ -22,7 +22,7 @@ class CurrencyManagementController extends AdminBaseController
         $srch->doNotLimitRecords();
         $srch->addFld('*');
         $srch->addOrder('currency_display_order', 'ASC');
-
+    
         $rs = $srch->getResultSet();
         $records = array();
         if ($rs) {
@@ -84,8 +84,8 @@ class CurrencyManagementController extends AdminBaseController
                 FatUtility::dieWithError($this->str_invalid_request);
             }
 
-            if ($data['currency_is_default'] == 1) {
-                unset($post['currency_value']);
+            if ($data['currency_is_default'] == applicationConstants::YES) {
+                unset($post['currency_value'], $post['currency_code'], $post['currency_active']);
             }
         }
         $record = new Currency($currencyId);
@@ -211,14 +211,14 @@ class CurrencyManagementController extends AdminBaseController
         $status = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
         if (0 >= $currencyId) {
             Message::addErrorMessage($this->str_invalid_request_id);
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Message::getHtml());
         }
 
-        $data = Currency::getAttributesById($currencyId, array('currency_id', 'currency_active'));
+        $data = Currency::getAttributesById($currencyId, array('currency_id', 'currency_is_default', 'currency_active'));
 
-        if ($data == false) {
+        if ($data == false || $data['currency_is_default'] == applicationConstants::YES) {
             Message::addErrorMessage($this->str_invalid_request);
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Message::getHtml());
         }
 
         //$status = ( $data['currency_active'] == applicationConstants::ACTIVE ) ? applicationConstants::INACTIVE : applicationConstants::ACTIVE;
@@ -226,14 +226,14 @@ class CurrencyManagementController extends AdminBaseController
         $obj = new Currency($currencyId);
         if (!$obj->changeStatus($status)) {
             Message::addErrorMessage($obj->getError());
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Message::getHtml());
         }
 
         $this->set('msg', $this->str_update_record);
         $this->_template->render(false, false, 'json-success.php');
     }
 
-    private function getForm($currencyId = 0)
+    private function getForm($currencyId = 0 )
     {
         $currencyId =  FatUtility::int($currencyId);
 
