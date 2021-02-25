@@ -15,7 +15,6 @@
                 </div>
 
                 <section class="section">
-
                     <div class="sectionbody space">
                         <?php
                         $frm->setFormTagAttribute('class', 'web_form');
@@ -27,14 +26,18 @@
                             'fld_default_col' => 12
                         ];
 
-                        // $frm->getField('pwa_settings[description]')->developerTags['col'] = 6;
                         $background_color_fld = $frm->getField('pwa_settings[background_color]');
                         $theme_color_fld = $frm->getField('pwa_settings[theme_color]');
                         $background_color_fld->overrideFldType('color');
                         $theme_color_fld->overrideFldType('color');
-                        
-                        // $background_color_fld->developerTags['col'] = $theme_color_fld->developerTags['col'] = 2;
 
+                        $icon_fld = $frm->getField('icon')->developerTags['col'] = 6;
+                        $icon_img_fld = $frm->getField('icon_img');
+                        $icon_img_fld->developerTags['col'] = 6;
+
+                        $icon_fld = $frm->getField('splash_icon')->developerTags['col'] = 6;
+                        $splash_icon_img_fld = $frm->getField('splash_icon_img');
+                        $splash_icon_img_fld->developerTags['col'] = 6;
                         ?>
                         <div class="box -padding-20">
                             <?php echo $frm->getFormHtml(); ?>
