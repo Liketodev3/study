@@ -11254,6 +11254,10 @@ ALTER TABLE `tbl_user_transactions`
 --
 ALTER TABLE `tbl_user_withdrawal_requests`
   MODIFY `withdrawal_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.4.20210219' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.1.1' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION';
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
