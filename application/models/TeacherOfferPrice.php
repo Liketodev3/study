@@ -20,18 +20,19 @@ class TeacherOfferPrice extends MyAppModel
         return $this->addNew(array(), array('top_single_lesson_price' => $data['top_single_lesson_price'], 'top_bulk_lesson_price' => $data['top_bulk_lesson_price']));
     }
 
-    public function removeOffer(int $learnerId, int $teacherId)
+    public function removeOffer(int $learnerId, int $teacherId) : bool
     {
         if (0 > $learnerId || 0 > $teacherId) {
             $this->error = Label::getLabel('LBL_Invalid_Request');
             return false;
         }
-
-        if (!FatApp::getDb()->deleteRecords(static::DB_TBL, array(
+        $db = FatApp::getDb();
+        if (!$db->deleteRecords(static::DB_TBL, array(
             "smt"=>"top_learner_id = ? and top_teacher_id = ?",
             "vals"=>array($learnerId, $teacherId )
         ))) {
-            FatUtility::dieWithError(FatApp::getDb()->getError());
+            $this->error = $db->getError();
+            return false;
         }
         return true;
     }

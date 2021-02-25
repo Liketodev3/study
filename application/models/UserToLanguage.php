@@ -154,10 +154,10 @@ class UserToLanguage extends MyAppModel
     }
 
     public function saveTeachLang($langData)
-    {        
-        $id = $this->getAttributesByLangAndSlot($langData['utl_slanguage_id'], $langData['utl_booking_slot'], self::DB_TBL_TEACH_PREFIX . 'id');
-        parent::__construct(self::DB_TBL_TEACH, self::DB_TBL_TEACH_PREFIX . 'id', $id);
+    {
+        $langData['utl_us_user_id'] = $this->mainTableRecordId;
+        parent::__construct(self::DB_TBL_TEACH, self::DB_TBL_TEACH_PREFIX . 'user_id', $this->mainTableRecordId);
         $this->assignValues($langData);
-        return $this->save();
+        return $this->objMainTableRecord->addNew(array(), array('utl_single_lesson_amount' => $langData['utl_single_lesson_amount'], 'utl_bulk_lesson_amount' => $langData['utl_bulk_lesson_amount']));
     }
 }

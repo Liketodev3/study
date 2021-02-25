@@ -10,7 +10,6 @@ class TeacherStudentsController extends TeacherBaseController
     {
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
-        $this->set('statusArr', ScheduledLesson::getStatusArr());
         $this->_template->render();
     }
 
@@ -141,9 +140,9 @@ class TeacherStudentsController extends TeacherBaseController
             $data['top_single_lesson_price'] = $post['top_single_lesson_price'][$k];
             $data['top_bulk_lesson_price'] = $post['top_bulk_lesson_price'][$k];
             $data['top_lesson_duration'] = $k;
-            $teacherOffer = new TeacherOfferPrice();
-            if (!$teacherOffer->saveData($data)) {
-                FatUtility::dieWithError($teacherOffer->getError());
+            $teacherOfferPrice = new TeacherOfferPrice();
+            if (!$teacherOfferPrice->saveData($data)) {
+                FatUtility::dieWithError($teacherOfferPrice->getError());
             }
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Price_Locked_Successfully!'));
@@ -177,9 +176,9 @@ class TeacherStudentsController extends TeacherBaseController
         if ($learnerId < 1) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $teacherOffer = new TeacherOfferPrice();
-        if (!$teacherOffer->removeOffer($learnerId, UserAuthentication::getLoggedUserId())) {
-            FatUtility::dieWithError($teacherOffer->getError());
+        $teacherOfferPrice = new TeacherOfferPrice();
+        if (!$teacherOfferPrice->removeOffer($learnerId, UserAuthentication::getLoggedUserId())) {
+            FatUtility::dieWithError($teacherOfferPrice->getError());
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Price_Unlocked_Successfully!'));
     }
