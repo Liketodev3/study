@@ -192,12 +192,15 @@ class PurchasedLessonsController extends AdminBaseController
         $srch->addGroupBy('order_id');
         $srch->joinOrderProduct();
         $srch->joinUser();
+        $srch->joinUserCredentials();
         $srch->joinTeacherLessonLanguage($this->adminLangId);
+        $srch->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'op_teacher_id = tCredentials.credential_user_id', 'tCredentials');
         $srch->joinGroupClass();
         $srch->addMultipleFields(
             array(
             'order_id',
             'grpcls_id',
+            'op_qty',
 			'grpcls.grpcls_title',
             'order_user_id',
             'op_teacher_id',
@@ -206,6 +209,8 @@ class PurchasedLessonsController extends AdminBaseController
             'order_net_amount',
             'CONCAT(u.user_first_name, " " , u.user_last_name) AS learner_username',
             'CONCAT(t.user_first_name, " " , t.user_last_name) AS teacher_username',
+            'tCredentials.credential_email as teacherEmail',
+            'cred.credential_email as userEmail',
             'COALESCE(NULLIF(sl.tlanguage_name, ""), tlang.tlanguage_identifier) AS language',
             'order_currency_code'
             )
@@ -240,6 +245,7 @@ class PurchasedLessonsController extends AdminBaseController
 
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
+      
         $rs      = $srch->getResultSet();
 
         $records = FatApp::getDb()->fetchAll($rs);
