@@ -1707,4 +1707,6 @@ h1, h2, h3, h4, h5, h6{
     /* html.show-dashboard-js .overlay{     z-index: 0;     top: 60px;} */
     /* } */
     
-
+.payment-success a {
+    font-weight: bold;
+}

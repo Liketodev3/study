@@ -4,6 +4,17 @@ Release Number: RV-2.1.1
 
 Release Date: 2021/02/19
 
+Bugs:
+    Bug-#044719 - When user purchase any lesson then success message is showing> but link button is not highlighted properly
+    
+
+
+=============================================================================================
+
+Release Number: RV-2.1.1
+
+Release Date: 2021/02/19
+
 Hotfixes:
     
     Bug-#049803- Fix transaction fee issue
