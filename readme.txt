@@ -1,5 +1,13 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: 
+
+Release Date:
+
+Bugs:
+    Bug-#045486 - In teacher detail screen >> rating view >> text is looking too bold.
+
+=========================================================
 Release Number: RV-2.1.1
 
 Release Date: 2021/02/19

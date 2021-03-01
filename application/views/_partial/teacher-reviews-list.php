@@ -21,7 +21,7 @@ foreach ($reviewsList as $review) {
             <div class="col-xl-8 col-lg-8 col-sm-8">
 
                 <p><strong><?php echo $review['lessonLanguage'];?> </strong></p>
-                <h5><?php echo $review['tlreview_title']; ?></h5>
+                <span><?php echo $review['tlreview_title']; ?></span>
             <p>
                 <span class='lessText'><?php echo CommonHelper::truncateCharacters($review['tlreview_description'],200,'','',true);?></span><?php if(strlen($review['tlreview_description']) > 200) { ?><span class='lessText' >...</span>
                 <span class='moreText moreTextHide' >
