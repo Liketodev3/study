@@ -1,8 +1,8 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number: RV-2.1.1
+Release Number:
 
-Release Date: 2021/02/19
+Release Date: 
 
 Bugs:
     Bug-#044719 - When user purchase any lesson then success message is showing> but link button is not highlighted properly
