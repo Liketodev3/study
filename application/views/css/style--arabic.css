@@ -640,3 +640,6 @@ body[dir="rtl"] .accordian__body {
         max-width: fit-content;
     }
 }
+.group--social a.google-login svg{margin-left: 15px;margin-right: unset;}
+.group--social .facebook-login svg{margin-right: unset;margin-left: 24px;}
+.group--social a {margin-right: unset;margin-left: 5px;}
