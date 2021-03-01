@@ -100,9 +100,14 @@ class OrderSearch extends SearchBase
         $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_order_id = o.order_id', 'sld');
     }
 
-    public function joinScheduledLesson()
+    public function joinScheduledLesson(bool $addIsPaidCheck = true)
     {
-        $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', 'sl.slesson_id = sld.sldetail_slesson_id AND sl.slesson_is_teacher_paid = '.applicationConstants::YES, 'sl');
+        $onCondition = 'sl.slesson_id = sld.sldetail_slesson_id';
+        if($addIsPaidCheck) {
+            $onCondition .= ' AND sl.slesson_is_teacher_paid = '.applicationConstants::YES;
+        }
+
+        $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', $onCondition, 'sl');
     }
     
 	public function joinGroupClass()
