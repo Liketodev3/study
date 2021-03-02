@@ -30,47 +30,33 @@ class PurchasedLessonsController extends AdminBaseController
 
         $orderSearch = new OrderSearch();
         $orderSearch->addMultipleFields(array(
-                                    'order_id',
-                                    'order_user_id',
-                                    'order_date_added',
-                                    'order_is_paid',
-                                    'order_net_amount',
-                                    'order_wallet_amount_charge',
-                                    'order_discount_total',
-                                    'order_date_added',
-                                    'op_invoice_number',
-                                    'slesson_date',
-                                    'slesson_start_time',
-                                    'slesson_end_date',
-                                    'slesson_end_time',
-                                    'op_grpcls_id',
-                                    'op_qty',
-                                    'op_unit_price',
-                                    'op_commission_charged',
-                                    'op_commission_percentage',
-                                    'op_refund_qty',
-                                    'op_total_refund_amount',
-                                    'op_lpackage_is_free_trial',
-                                    'op_lesson_duration',
-                                    'CONCAT(u.user_first_name, " ", u.user_last_name) as userFullName',
-                                    'CONCAT(t.user_first_name, " ", t.user_last_name) as teacherFullName',
-                                    'tcred.credential_email as teacherEmail',
-                                    'cred.credential_email as userEmail',
-                                    'grpcls_title',
-                                    'grpcls_status',
-                                    'IFNULL(tlanguage_name, tlanguage_identifier) as teachLang'
+                                    'order_id','order_user_id','order_date_added','order_is_paid','order_net_amount',
+                                    'order_wallet_amount_charge','order_discount_total','order_date_added','op_invoice_number',
+                                    'slesson_date','slesson_start_time','slesson_end_date', 'slesson_end_time','op_teacher_id',
+                                    'op_grpcls_id','op_qty', 'op_unit_price','op_commission_charged', 'op_commission_percentage',
+                                    'op_refund_qty','op_total_refund_amount','op_lpackage_is_free_trial','op_lesson_duration',
+                                    'CONCAT(u.user_first_name, " ", u.user_last_name) as userFullName','CONCAT(t.user_first_name, " ", t.user_last_name) as teacherFullName',
+                                    't.user_timezone as teacherTimezone','u.user_timezone as userTimezone','tcred.credential_email as teacherEmail',
+                                    'cred.credential_email as userEmail', 'grpcls_title', 'grpcls_status',
+                                    'IFNULL(tlanguage_name, tlanguage_identifier) as teachLang',
+                                    'IFNULL(uCountryLang.country_name, " ") as uCountryName',
+                                    'IFNULL(tCountryLang.country_name, " ") as tCountryName',
                                 ));
         $orderSearch->joinOrderProduct($this->adminLangId);
         $orderSearch->joinUser();
+        $orderSearch->joinTable(Country::DB_TBL, 'LEFT JOIN', 'uCountry.country_id = u.user_country_id', 'uCountry');
+        $orderSearch->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'uCountry.country_id = uCountryLang.countrylang_country_id', 'uCountryLang');
         $orderSearch->joinUserCredentials();
         $orderSearch->joinTeacherLessonLanguage($this->adminLangId);
         $orderSearch->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 't.user_id = tcred.credential_user_id', 'tcred');
+        $orderSearch->joinTable(Country::DB_TBL, 'LEFT JOIN', 'tCountry.country_id = t.user_country_id', 'tCountry');
+        $orderSearch->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'tCountry.country_id = tCountryLang.countrylang_country_id', 'tCountryLang');
         $orderSearch->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = op_grpcls_id', 'grpcls');
         $orderSearch->addCondition('order_id', '=', $orderId);
         $orderSearch->addCondition('order_type', '=', Order::TYPE_LESSON_BOOKING);
-        $resultSet = $orderSearch->getResultSet();
-        $orderDeatils = FatApp::getDb()->fetchAll($resultSet);
       
+        $resultSet = $orderSearch->getResultSet();
+        $orderDeatils = FatApp::getDb()->fetch($resultSet);
         if (empty($orderDeatils)) {
             Message::addErrorMessage(Label::getLabel('LBL_INVALID_REQUEST.'));
             FatApp::redirectUser(CommonHelper::generateUrl('PurchasedLessons'));
@@ -79,19 +65,20 @@ class PurchasedLessonsController extends AdminBaseController
         $order =  new Order($orderId);
         $orderPayments = $order->getOrderPayments(array("order_id"=>$orderId));
         
-        $form = $this->getPaymentForm($this->adminLangId, $orderId);
+        $form = $this->getPaymentForm($orderId);
            
         $this->set('yesNoArr', applicationConstants::getYesNoArr($this->adminLangId));
-        $this->set('order',$orderDeatils[0]);
-        $this->set('orderProducts',$orderDeatils);
+        $this->set('order',$orderDeatils);
         $this->set('orderPayments',$orderPayments);
         $this->set('adminLangId',$this->adminLangId);
         $this->set('form',$form);
         
         $this->_template->render();
     }
-    
-    private function getPaymentForm($langId, $orderId = '')
+
+ 
+
+    private function getPaymentForm(string $orderId)
     {
         $form = new Form('frmPayment');
         $form->addHiddenField('', 'opayment_order_id', $orderId);
@@ -467,7 +454,8 @@ class PurchasedLessonsController extends AdminBaseController
                     FatUtility::dieJsonError($trnObj->getError());
                 }
             }
-        } /* elseif ($status == ScheduledLesson::STATUS_CANCELLED) {
+        }
+        /* elseif ($status == ScheduledLesson::STATUS_CANCELLED) {
             $lessonDetailsObj = new ScheduledLessonDetails($sldetailId);
             if(!$lessonDetailsObj->refundToLearner()){
                 $db->rollbackTransaction();
@@ -652,6 +640,58 @@ class PurchasedLessonsController extends AdminBaseController
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Updated_Successfully.'));
         }
         $this->set('msg', Label::getLabel('LBL_Updated_Successfully.'));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+
+
+    public function updatePayment()
+    {
+        if (!$this->canEdit) {
+            FatUtility::dieJsonError($this->unAuthorizeAccess);
+        }
+       
+        $orderId = FatApp::getPostedData('opayment_order_id', FatUtility::VAR_STRING, '');
+        if ($orderId == '' || $orderId == null) {
+            Message::addErrorMessage($this->str_invalid_request);
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $form = $this->getPaymentForm($orderId);
+        $post = $form->getFormDataFromArray(FatApp::getPostedData());
+        
+        if (false === $post) {
+            Message::addErrorMessage(current($form->getValidationErrors()));
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $orderSearch = new OrderSearch();
+        $orderSearch->addMultipleFields(array('order_id' ));
+        $orderSearch->joinOrderProduct();
+        $orderSearch->joinUser();
+        $orderSearch->joinTable(User::DB_TBL, 'INNER JOIN', 'op.op_teacher_id = t.user_id', 't');
+        $orderSearch->addCondition('order_id', '=', $orderId);
+        $orderSearch->addCondition('order_type', '=', Order::TYPE_LESSON_BOOKING);
+        $orderSearch->addCondition('order_is_paid', '=', Order::ORDER_IS_PENDING);
+        $resultSet = $orderSearch->getResultSet();
+        $orderDeatils = FatApp::getDb()->fetch($resultSet);
+        if (empty($orderDeatils)) {
+            Message::addErrorMessage(Label::getLabel('LBL_INVALID_REQUEST.'));
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $orderPaymentObj = new OrderPayment($orderId, $this->adminLangId);
+        if (!$orderPaymentObj->addOrderPayment($post["opayment_method"], $post['opayment_gateway_txn_id'], $post["opayment_amount"], $post["opayment_comments"])) {
+            Message::addErrorMessage($orderPaymentObj->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $giftcardObj = new Giftcard();
+        if (!$giftcardObj->addGiftcardDetails($orderId)) {
+            Message::addErrorMessage($giftcardObj->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $this->set('msg', Label::getLabel('LBL_Payment_Details_Added_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
 }

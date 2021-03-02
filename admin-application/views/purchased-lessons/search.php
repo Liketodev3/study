@@ -81,21 +81,20 @@ foreach ($arr_listing as $sn=>$row){
 				$td->appendElement('plaintext', array(), $str, true);
 			break;
 			case 'action':
-            if($row['order_is_paid'] == Order::ORDER_IS_PAID){
-				$td->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array("all",$row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'View Schedules',true);
-            }else{
-				$td->appendElement('plaintext', array(), 'N/A');
-            }
-				/*$ul = $td->appendElement("ul",array("class"=>"actions actions--centered"));
-				if($canEdit){
-					$li = $ul->appendElement("li",array('class'=>'droplink'));
-    			    $li->appendElement('a', array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
-					$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
-					$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
-
+				$ul = $td->appendElement("ul",array("class"=>"actions actions--centered"));
+				$li = $ul->appendElement("li",array('class'=>'droplink'));
+				$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
+				$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
+				$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
+				$innerLi=$innerUl->appendElement('li');
+				$innerLi->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','view',array($row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_View_Details',$adminLangId)),Label::getLabel('LBL_View_Details',$adminLangId),true);
+				if($row['order_is_paid'] == Order::ORDER_IS_PAID){
 					$innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['order_id'])),'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),Label::getLabel('LBL_View',$adminLangId), true);
-				}*/
+					$innerLi->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array("all",$row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_View_Schedules',$adminLangId)),Label::getLabel('LBL_View_Schedules',$adminLangId),true);
+            	}
+
+				
+				
 			break;
 			default:
 				$td->appendElement('plaintext', array(), $row[$key], true);
