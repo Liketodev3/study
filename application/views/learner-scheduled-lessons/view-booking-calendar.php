@@ -54,7 +54,7 @@ $(document).ready(function() {
         dayNames: <?php echo  json_encode($weekDayName['dayNames']); ?>,
         dayNamesShort: <?php echo  json_encode($weekDayName['dayNamesShort']); ?>,
 
-        <?php if (strtolower($layoutDirection ) == 'rtl') { ?>
+        <?php if (strtolower($layoutDirection) == 'rtl') { ?>
         rtl : true,
         isRTL : true,
         <?php } ?>
@@ -98,25 +98,20 @@ $(document).ready(function() {
                     $("body").css( {"cursor": "default"} );
                     $("body").css( {"pointer-events": "initial"} );
 
-                    if( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
-                        $.systemMessage('<?php echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--success');
-                        setTimeout(function() {
-                            $.systemMessage.close();
-                        }, 3000);
-                    }
+                    // if( selectedDateTime > moment('<?php //echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
+                    //     $.systemMessage('<?php //echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--success');
+                    //     setTimeout(function() {
+                    //         $.systemMessage.close();
+                    //     }, 3000);
+                    // }
 
                     $('#d_calendar').fullCalendar('unselect');
                     checkSlotAvailabiltAjaxRun =  false;
+                    $("#loaderCalendar").hide();
                     return false;
                 }
             }
             //================================//
-
-            // if(getEventsByTime( start, end ).length > 1)
-            // {
-            // 	//alert(1);
-            // 	//$('#d_calendar').fullCalendar('refetchEvents');
-            // }
             if(moment('<?php echo $nowDate; ?>').diff(moment(start)) >= 0) {
                 //alert(2);
                 $("#loaderCalendar").hide();
@@ -398,7 +393,7 @@ function getSlotBookingConfirmationBox(calEvent, jsEvent){
     var selectedStartDateTime = moment(calEvent.start).format('YYYY-MM-DD HH:mm:ss');
     var selectedEndDateTime = moment(calEvent.end).format('YYYY-MM-DD HH:mm:ss');
     
-    var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><div class="booking-view"><h3 class="-display-inline"><?php echo $userRow['user_first_name']; ?></h3><span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userRow['user_country_id'], 'DEFAULT') ); ?>" alt=""></span><div class="inline-list"><span class="inline-list__value highlight"><strong>Date</strong> &nbsp; &nbsp; '+date+' at '+start+'-'+end+'</span></div></div><div class="-align-center"><a href="javascript:void(0);" onClick="setUpLessonSchedule(&quot;<?php echo $teacher_id; ?>&quot;, &quot;<?php echo $lDetailId; ?>&quot;, &quot;'+ newEvent.start +'&quot;, &quot;'+ newEvent.end +'&quot;, &quot;'+ newEvent.date +'&quot; );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Confirm_It!'); ?></a></div><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:;" class="-link-close"></a></div>';
+    var tooltip = '<div class="tooltipevent" style="position:absolute;z-index:10001;"><div class="booking-view"><h3 class="-display-inline"><?php echo $userRow['user_first_name']; ?></h3><span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($userRow['user_country_id'], 'DEFAULT')); ?>" alt=""></span><div class="inline-list"><span class="inline-list__value highlight"><strong>Date</strong> &nbsp; &nbsp; '+date+' at '+start+'-'+end+'</span></div></div><div class="-align-center"><a href="javascript:void(0);" onClick="setUpLessonSchedule(&quot;<?php echo $teacher_id; ?>&quot;, &quot;<?php echo $lDetailId; ?>&quot;, &quot;'+ newEvent.start +'&quot;, &quot;'+ newEvent.end +'&quot;, &quot;'+ newEvent.date +'&quot; );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Confirm_It!'); ?></a></div><a onclick="$(&apos;.tooltipevent&apos;).remove();" href="javascript:;" class="-link-close"></a></div>';
     if(calEvent.className != "sch_data"){
         $("body").append(tooltip);
         let tooltipTop = 0, tooltipLeft = 0;
@@ -424,14 +419,14 @@ function getSlotBookingConfirmationBox(calEvent, jsEvent){
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
 <div class="calendar-view">
 
-	<?php if($isRescheduleRequest) { ?>
+	<?php if ($isRescheduleRequest) { ?>
 	<div class="box">
 	<h4><?php echo Label::getLabel('Lbl_Reschedule_Reason'); ?><span class="spn_must_field">*</span></h4>
 		<?php
-		$commentField =  $rescheduleRequestfrm->getField('reschedule_lesson_msg');
-		$commentField->addFieldTagAttribute('placeholder',Label::getLabel('Lbl_Reschedule_Reason_*'));
-		$commentField->addFieldTagAttribute('id','reschedule-reason-js');
-		echo $commentField->getHTML(); ?>
+        $commentField =  $rescheduleRequestfrm->getField('reschedule_lesson_msg');
+        $commentField->addFieldTagAttribute('placeholder', Label::getLabel('Lbl_Reschedule_Reason_*'));
+        $commentField->addFieldTagAttribute('id', 'reschedule-reason-js');
+        echo $commentField->getHTML(); ?>
 	</div>
 	<br>
 	<br>
