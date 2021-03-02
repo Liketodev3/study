@@ -223,17 +223,15 @@ class TeachersController extends MyAppController {
 		}
 		$teacher['isFreeTrialEnabled'] = $isFreeTrialEnabled;
 		/* ] */
-		/* Languages [ */
-        $userSrchObj = new UserSearch();
-        $tLangsrch = $userSrchObj->getMyTeachLangQry();
-        $tLangsrch->addCondition('utl_us_user_id', '=', $teacher_id);
-		$rs = $tLangsrch->getResultSet();
-		$tLangs = FatApp::getDb()->fetch($rs);
-        $teachLanguages = TeachingLanguage::getAllLangs($this->siteLangId, true);
-        if (!empty($tLangs['utl_slanguage_ids'])) {
-            $tLangidsArr = explode(',', $tLangs['utl_slanguage_ids']);
-            $tlangArr = array_intersect_key($teachLanguages, array_flip($tLangidsArr));
-        }
+		/* Languages and prices [ */
+		$userToLanguage = new UserToLanguage($teacher_id);
+		$userTeachLangs = $userToLanguage->getTeachingSettings($this->siteLangId);
+		$tlangArr = array();
+		foreach($userTeachLangs as $userTeachLang){
+			$tlangArr[$userTeachLang['tlanguage_id']] = $userTeachLang['tlanguage_name'];
+		}
+		// CommonHelper::printArray($userTeachLangs);die;
+		$this->set('userTeachLangs', $userTeachLangs);
 		/* ] */
         /* [ */
 		$srch = LessonPackage::getSearchObject($this->siteLangId);

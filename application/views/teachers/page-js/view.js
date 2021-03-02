@@ -41,7 +41,12 @@ $("document").ready(function(){
             e.stopPropagation();
         });
 
-
+		$('.tab-a').click(function() {
+			$(".tab").removeClass('tab-active');
+			$(".tab[data-id='" + $(this).attr('data-id') + "']").addClass("tab-active");
+			$(".tab-a").parent('li').removeClass('is-active');
+			$(this).parent().addClass('is-active');
+		});
 
 	/* FUNCTION FOR LEFT COLLAPSEABLE LINKS */
 	if( $(window).width() < 767 ){

@@ -8097,3 +8097,137 @@ color: #fff;}
     }
 }
 /*----------end----------*/
+
+/*-----------------26/2/2021-----------------*/
+
+.Lprice__wrapper{
+    color: var(--color-dark);
+    margin-bottom: 30px;
+}
+.Lprice__wrapper .Lprice-head {
+    margin-bottom: 16px;
+}
+.Lprice__wrapper .Lprice-body li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    position: relative;
+}
+.Lprice__wrapper .Lprice-body li .Lprice-price {
+    font-weight: 700;
+    color: inherit;
+    background: #fff;
+    padding: 0 0 0 12px;
+    z-index: 1;
+}
+.Lprice__wrapper .Lprice-body li .Lprice-lang {
+    background: #fff;
+    padding: 0 12px 0 0;
+    position: relative;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 20px;
+    display: block;
+    white-space: nowrap;
+    max-width: 130px;
+}
+.Lprice-body li:before {
+    content: "";
+    position: absolute;
+    width: calc(100% - 73px);
+    height: 1px;
+    bottom: 2px;
+    right: 14px;
+    background: #dedede;
+}
+.Lprice-btn {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.Lprice-btn a.btn {
+    width: calc(100% - 53%);
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 0 12px;
+}
+.btn.btn-outline-primary{
+    background: none; 
+    border: 1px solid var(--color-primary); 
+    color: var(--color-primary);
+}
+
+#style-4::-webkit-scrollbar-track
+{
+	background-color: #f2f2f2;
+}
+#style-4::-webkit-scrollbar
+{
+	width: 5px;
+	background-color: #d9d9d9;
+}
+#style-4::-webkit-scrollbar-thumb
+{
+	background-color: #d9d9d9;
+}
+
+.custom-scrollbar {
+    max-height: 200px;
+    overflow-y: scroll;
+    padding-right: 12px;
+}
+.Lprice-cover {
+    margin-bottom: 30px;
+}
+.Lprice__wrapper:last-child, .Lprice__wrapper .Lprice-body li:last-child {
+    margin-bottom: 0;
+}
+
+.fat-tab .tab {
+    display: none;
+}
+.fat-tab .tab-active {
+    display: block;
+}
+.fat-tab .tab-group ul {
+    display: flex;
+}
+.tab-group li.is-active {
+    background: var(--color-secondary);
+    z-index: 1;
+}
+.tab-group li.is-active a{
+    color: #fff;
+}
+.tab-group li{
+    padding: 8px 17px;
+    margin: 0 -3px;
+    border-radius: 5px;
+    width: 73px;
+    background-color: var(--color-grey-light);
+    text-align: center;
+}
+.tab-group li a {
+    font-size: 13px;
+    color: var(--color-grey);
+    font-weight: 600;
+    
+}
+.fat-tab .box-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-grey-light);
+}
+.fat-tab .box-head h4{
+    margin-bottom: 0;
+}
+.Lprice-btn .btn-outline-primary:hover{
+    border-color: var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+}
+.Lprice-btn .svg-icon svg {
+    fill: var(--color-primary);
+}

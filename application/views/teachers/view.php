@@ -5,8 +5,6 @@ $avgRating = FatUtility::convertToType($reviews['prod_rating'], FatUtility::VAR_
 $pixelToFillRight = $avgRating / 5 * 160;
 $pixelToFillRight = FatUtility::convertToType($pixelToFillRight, FatUtility::VAR_FLOAT);
 
-?>
-<?php
 $teacherLanguage = 1;
 if (!empty($teacher['teachLanguages'])) {
 	foreach ($teacher['teachLanguages'] as $key => $val) {
@@ -16,6 +14,12 @@ if (!empty($teacher['teachLanguages'])) {
 }
 $langId = CommonHelper::getLangId();
 $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR_STRING, '');
+
+$teacherLangPrices = array();
+foreach($userTeachLangs as $userTeachLang){
+	$teacherLangPrices['single'][$userTeachLang['utl_booking_slot']][$userTeachLang['tlanguage_name']] = $userTeachLang['utl_single_lesson_amount'];
+	$teacherLangPrices['bulk'][$userTeachLang['utl_booking_slot']][$userTeachLang['tlanguage_name']] = $userTeachLang['utl_bulk_lesson_amount'];
+}
 ?>
 <title><?php echo Label::getLabel('LBL_Learn') . " " . implode(', ', $teacher['teachLanguages']) . " " . Label::getLabel('LBL_from') . " " . $teacher['user_full_name'] . " " . Label::getLabel('LBL_on') . " " . $websiteName; ?></title>
 
@@ -237,9 +241,76 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR
 					 <button type="button" <?php echo $onclick; ?> class="btn <?php echo $btnClass.' '.$disabledText; ?> btn--large btn--block"  <?php echo $disabledText; ?> ><?php echo Label::getLabel( $btnText ); ?></button>
 				 </div>
 				<?php } ?>
-				 <?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher), false); ?>
-
-
+                
+                <div class="box box--cta fat-tab">
+					<div class="box-head -padding-20">
+						<h4 class="-text-bold"><?php echo Label::getLabel("LBL_Lesson_Prices"); ?></h4>
+						<div class="tab-group tabs-scroll-js">
+							<ul>
+								<li class="is-active">
+									<a href="javascript:;" class="tab-a" data-id="tab_single_price">
+										<?php echo Label::getLabel("LBL_Single") ?>
+									</a>
+								</li>
+								<li>
+									<a href="javascript:;" class="tab-a" data-id="tab_bulk_price">
+										<?php echo Label::getLabel("LBL_Bulk") ?>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+                    <div class="box-body -padding-20">
+						<div class="tab-body">
+							<div class="tab tab-active" data-id="tab_single_price">
+								<div class="Lprice-cover custom-scrollbar" id="style-4">
+                                    <?php foreach($teacherLangPrices['single'] as $slot => $prices): ?>
+									<div class="Lprice__wrapper">
+										<div class="Lprice-head">
+											<b><?php echo sprintf(Label::getLabel('LBL_%d_min'), $slot) ?></b>
+										</div>
+										<div class="Lprice-body">
+											<ul>
+                                                <?php foreach($prices as $lang=>$price): ?>
+												<li>
+													<div class="Lprice-lang"><?php echo $lang ?></div>
+													<div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($price) ?></div>
+												</li>
+                                                <?php endforeach; ?>
+											</ul>
+										</div> 
+									</div>
+                                    <?php endforeach; ?>
+								</div>
+							</div>
+							<div class="tab" data-id="tab_bulk_price">
+								<div class="Lprice-cover custom-scrollbar" id="style-4">
+                                    <?php foreach($teacherLangPrices['bulk'] as $slot => $prices): ?>
+									<div class="Lprice__wrapper">
+										<div class="Lprice-head">
+											<b><?php echo sprintf(Label::getLabel('LBL_%d_min'), $slot) ?></b>
+										</div>
+										<div class="Lprice-body">
+											<ul>
+                                                <?php foreach($prices as $lang=>$price): ?>
+												<li>
+													<div class="Lprice-lang"><?php echo $lang ?></div>
+													<div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($price) ?></div>
+												</li>
+                                                <?php endforeach; ?>
+											</ul>
+										</div> 
+									</div>
+                                    <?php endforeach; ?>
+								</div>
+							</div>
+							
+						</div>
+                        <?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher), false); ?>
+						
+					</div>
+                </div>
+                
 				<hr class="-no-margin">
 				<div class="box box--cta -padding-30 -no-margin-top">
 					<h4 class="-text-bold"><strong><?php echo Label::getLabel('LBL_View_Availability'); ?></strong></h4>
