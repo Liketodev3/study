@@ -49,7 +49,7 @@ class CheckoutController extends LoggedUserController{
 		$this->set('confirmForm', $confirmForm );
 
 		$bookingDurations = array_unique(array_column($tLangSettings, 'utl_booking_slot'));
-        rsort($bookingDurations);
+        sort($bookingDurations);
         $this->set('bookingDurations', $bookingDurations);
 
 		$this->set('lessonPackages',$lessonPackages);
@@ -542,7 +542,7 @@ class CheckoutController extends LoggedUserController{
 		$row = FatApp::getDb()->fetch($rs);
 
         $bookingDurations = array_unique(explode(',', $row['utl_booking_slots']));
-        rsort($bookingDurations);
+        sort($bookingDurations);
 
         $this->set('cartData', $cartData);
         $this->set('bookingDurations', $bookingDurations);

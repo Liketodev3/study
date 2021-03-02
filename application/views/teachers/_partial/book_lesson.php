@@ -12,11 +12,12 @@ $lessonPackages = $teacher['lessonPackages'];
 if( count($lessonPackages) ){
     $lessonPackage = array_shift( $lessonPackages );
 }
+
 ?>
 
 <div class="Lprice-btn">	
     <?php if( count($teacher['lessonPackages']) ){ ?>
-    <a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','','<?php echo $teacherLanguage.', '.$bookingDuration; ?>' )" class="btn btn--primary"><?php echo Label::getLabel('LBL_Book_Now') ?></a>
+    <a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','', <?php echo $teacherLanguage.', 0, '.$bookingDuration; ?> )" class="btn btn--primary"><?php echo Label::getLabel('LBL_Book_Now') ?></a>
     <?php } ?>
 
     <a href="javascript:void(0)" onClick="generateThread(<?php echo $teacher['user_id']; ?>)" class="btn btn--primary btn-outline-primary">
