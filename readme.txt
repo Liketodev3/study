@@ -1,5 +1,11 @@
 This file shares the details of the Yo!Coach version and change log.
+Release Number:
+Release Date:
 
+Bugs:
+    bug-#050141 - When teacher set his profile feature BOOKING BEFOIRE is 12 hours before. then learner side its showing wrong alert.
+
+===========================================================================
 Release Number: RV-2.1.1
 
 Release Date: 2021/02/19
