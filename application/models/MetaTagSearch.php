@@ -59,13 +59,16 @@ class MetaTagSearch extends SearchBase
         switch ($metaType) {
             case MetaTag::META_GROUP_CMS_PAGE:
                 $this->joinCmsPage($criteria['metaType']['val'], $langId);
-                $condition->attachCondition('cp.cpage_identifier', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
+                if (isset($condition) && $condition) {
+                    $condition->attachCondition('cp.cpage_identifier', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
+                }
                 break;
             case MetaTag::META_GROUP_TEACHER:
                 $this->joinTeachers($metaType);
                 if (isset($condition) && $condition) {
                     $condition->attachCondition('u.user_first_name', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
                     $condition->attachCondition('u.user_last_name', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
+                    $this->addDirectCondition('concat(u.user_first_name," ",u.user_last_name) like "%' . $criteria['keyword']['val'] . '%"', 'OR');
                 }
                 break;
             case MetaTag::META_GROUP_GRP_CLASS:

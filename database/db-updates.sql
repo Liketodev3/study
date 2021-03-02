@@ -223,4 +223,7 @@ ALTER TABLE `tbl_user_teacher_requests` ADD `utrequest_language_code` VARCHAR(4)
 
 ALTER TABLE `tbl_meta_tags` ADD `meta_type` TINYINT(1) NOT NULL AFTER `meta_action`;
 
+ALTER TABLE `tbl_meta_tags` CHANGE `meta_record_id` `meta_record_id` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+
+
 
