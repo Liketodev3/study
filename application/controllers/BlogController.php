@@ -86,7 +86,7 @@ class BlogController extends MyAppController
         $this->set("postList", $records);
         $this->set('recordCount', $srch->recordCount());
         $this->set('postedData', $post);
-        $json['html'] = $this->_template->render(false, false, 'blog/search.php', true, false);
+        $json['html'] = $this->_template->render(false, false, 'blog/search.php', true);
         $json['loadMoreBtnHtml'] = $this->_template->render(false, false, 'blog/load-more-btn.php', true, false);
         FatUtility::dieJsonSuccess($json);
     }

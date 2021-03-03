@@ -9,6 +9,7 @@ $weekDayName =  CommonHelper::dayNames();
 <script>
     var myTimeZoneLabel = '<?php echo $myTimeZoneLabel; ?>';
     var timeInterval;
+    var userId = '<?php echo $userId ?>';
     var seconds = 2;
     clearInterval(timeInterval);
     timeInterval = setInterval(currentTimer, 1000);
@@ -193,7 +194,7 @@ $weekDayName =  CommonHelper::dayNames();
         //events: "<?php //echo CommonHelper::generateUrl('Teacher','getTeacherGeneralAvailabilityJsonData'); ?>",
         events: function( start, end, timezone, callback ) {
             var data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };
-            fcom.ajax(fcom.makeUrl('Teacher', 'getTeacherGeneralAvailabilityJsonData'), data , function(doc) {
+            fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData', [userId]), data , function(doc) {
                 var doc = JSON.parse(doc);
                 callback(doc);
             });

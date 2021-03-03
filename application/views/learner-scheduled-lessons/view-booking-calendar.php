@@ -1,4 +1,7 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php
+defined('SYSTEM_INIT') or die('Invalid Usage.');
+$lesson_duration = $lessonRow['op_lesson_duration'];
+?>
 <?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 <?php $teacherBookingBefore = (!empty($teacherBookingBefore)) ? $teacherBookingBefore : 0;
 $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
@@ -66,8 +69,9 @@ $(document).ready(function() {
         eventLongPressDelay:50,
         longPressDelay:50,
         slotEventOverlap : false,
-        defaultTimedEventDuration : "01:00:00",
-        snapDuration : "<?php echo ($action=="free_trial") ? '0:30:00' : '01:00:00' ?>",
+        defaultTimedEventDuration : "<?php echo gmdate("H:i:s", $lesson_duration*60); ?>",
+        snapDuration : "<?php echo gmdate("H:i:s", $lesson_duration*60); ?>",
+        slotDuration : '<?php echo gmdate("H:i:s", 15*60); ?>',
         allDaySlot: false,
         timezone: "<?php echo $user_timezone; ?>",
         loading :function( isLoading, view ) {
@@ -89,7 +93,12 @@ $(document).ready(function() {
             // $("body").css( {"cursor": "wait"} );
             //
             //==================================//
-            var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
+
+            // temporarily added 1 second to fix 45min slot booking issue with calendar
+            start = moment(start).add(1, 'seconds').set('second', 0);
+            end = moment(end).add(1, 'seconds').set('second', 0);
+
+            var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:00');
             //var duration = '<?php //echo $teacherBookingBefore;?>';
             var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
 
@@ -138,7 +147,7 @@ $(document).ready(function() {
 
             var duration = moment.duration(moment(end).diff(moment(start)));
             var minutesDiff = duration.asMinutes();
-            var minutes = "<?php echo ($action=="free_trial") ? 30 : 60 ?>";
+            var minutes = "<?php echo $lesson_duration ?>";
             if(minutesDiff > minutes)
             {
                 //alert(4);

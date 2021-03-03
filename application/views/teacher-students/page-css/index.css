@@ -57,3 +57,13 @@
 .tage:hover::after {
    border-left-color: #B26DE6; 
 }
+
+.table-box-bordered{width: 100%; margin-top:30px;padding: 20px;}
+.table-box-bordered h5{margin-bottom: 10px;}
+.table-pricing{width: 100%;border-collapse: separate;}
+.table-pricing td{padding: 5px 0;}
+
+.field-price-small{ border: 1px solid #ddd;height: 40px;padding: 10px;width: 100%;text-align: center;}
+.box-signle-price{background: #f9f8f0;}
+.box-signle-price h5{color: #7a6d09;}
+.box-bulk-price{ background: #faf3f2;}

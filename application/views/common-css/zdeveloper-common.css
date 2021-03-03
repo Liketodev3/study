@@ -310,3 +310,6 @@ ul.list-accordion li .iss_accordion{ padding-left: 40px;}
   overflow: hidden;
   white-space: nowrap;
 }
+.card-brand-logos {
+  width:300px;
+}

@@ -5,8 +5,6 @@ $avgRating = FatUtility::convertToType($reviews['prod_rating'], FatUtility::VAR_
 $pixelToFillRight = $avgRating / 5 * 160;
 $pixelToFillRight = FatUtility::convertToType($pixelToFillRight, FatUtility::VAR_FLOAT);
 
-?>
-<?php
 $teacherLanguage = 1;
 if (!empty($teacher['teachLanguages'])) {
 	foreach ($teacher['teachLanguages'] as $key => $val) {
@@ -16,6 +14,18 @@ if (!empty($teacher['teachLanguages'])) {
 }
 $langId = CommonHelper::getLangId();
 $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR_STRING, '');
+
+$teacherLangPrices = array();
+foreach($userTeachLangs as $userTeachLang){
+	$teacherLangPrices['single'][$userTeachLang['utl_booking_slot']][$userTeachLang['tlanguage_id']] = array(
+        'lang_name' => $userTeachLang['tlanguage_name'],
+        'price' => $userTeachLang['utl_single_lesson_amount']
+    );
+	$teacherLangPrices['bulk'][$userTeachLang['utl_booking_slot']][$userTeachLang['tlanguage_id']] = array(
+        'lang_name' => $userTeachLang['tlanguage_name'],
+        'price' => $userTeachLang['utl_single_lesson_amount']
+    );
+}
 ?>
 <title><?php echo Label::getLabel('LBL_Learn') . " " . implode(', ', $teacher['teachLanguages']) . " " . Label::getLabel('LBL_from') . " " . $teacher['user_full_name'] . " " . Label::getLabel('LBL_on') . " " . $websiteName; ?></title>
 
@@ -31,6 +41,17 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR
 
 		<div class="row">
 			<div class="col-xl-8 col-lg-8">
+                <?php
+                    if ($teacher['us_video_link'] != '') {
+					$youTubeVideoArr = explode("?v=", $teacher['us_video_link']);
+					if (count($youTubeVideoArr) > 1) {
+				?>
+						<div class="video">
+							<iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $youTubeVideoArr[1]; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+						</div>
+				<?php }
+				}
+                ?>
 				<div class="box -padding-30">
 					<div class="box__profile-head">
 						<div class="row">
@@ -210,15 +231,6 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR
 
 			<div class="col-xl-4 col-lg-4">
 				<?php
-				if ($teacher['us_video_link'] != '') {
-					$youTubeVideoArr = explode("?v=", $teacher['us_video_link']);
-					if (count($youTubeVideoArr) > 1) {
-				?>
-						<div class="video -margin-b-30">
-							<iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $youTubeVideoArr[1]; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-						</div>
-				<?php }
-				}
 				if($teacher['isFreeTrialEnabled']) { 
 					$onclick = "";
 					$btnClass = "btn-secondary";
@@ -237,13 +249,98 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR
 					 <button type="button" <?php echo $onclick; ?> class="btn <?php echo $btnClass.' '.$disabledText; ?> btn--large btn--block"  <?php echo $disabledText; ?> ><?php echo Label::getLabel( $btnText ); ?></button>
 				 </div>
 				<?php } ?>
-				 <?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher), false); ?>
-
-
-				<hr class="-no-margin">
-				<div class="box box--cta -padding-30 -no-margin-top">
-					<h4 class="-text-bold"><strong><?php echo Label::getLabel('LBL_View_Availability'); ?></strong></h4>
-					<a href="javascript:void(0);" onclick="viewCalendar('<?php echo $teacher['user_id']; ?>','paid')" class="btn btn--secondary btn--large btn--block"><?php echo Label::getLabel('LBL_Availability'); ?></a>
+                
+                <div class="box box--cta box--sticky">
+                    <div class="fat-tab">
+                        <div class="box-head -padding-20">
+                            <h4 class="-text-bold"><?php echo Label::getLabel("LBL_Lesson_Prices"); ?></h4>
+                            <div class="tab-group tabs-scroll-js">
+                                <ul>
+                                    <li class="is-active">
+                                        <a href="javascript:;" class="tab-a" data-id="tab_single_price">
+                                            <?php echo Label::getLabel("LBL_Single") ?>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" class="tab-a" data-id="tab_bulk_price">
+                                            <?php echo Label::getLabel("LBL_Bulk") ?>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="box-body">
+                            <div class="tab-body">
+                                <div class="tab tab-active" data-id="tab_single_price">
+                                    <div class="scrollbar custom-scrollbar scrollbar-js">
+                                        <div class="Lprice-cover" id="style-4">
+                                            <?php $lessonPackages = $teacher['lessonPackages'];
+                                            if( count($lessonPackages) ){
+                                                $lessonPackage = $lessonPackages[0];
+                                            }
+                                            foreach($teacherLangPrices['single'] as $slot => $prices): ?>
+                                            <div class="Lprice__wrapper">
+                                                <div class="Lprice-head">
+                                                    <b><?php echo sprintf(Label::getLabel('LBL_%d_min'), $slot) ?></b>
+                                                </div>
+                                                <div class="Lprice-body">
+                                                    <ul>
+                                                        <?php foreach($prices as $lang_id=>$price_info): ?>
+                                                        <li>
+                                                            <a href="javascript:;" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','', <?php echo $lang_id.', 0, '.$slot; ?> )">
+                                                                <div class="Lprice-lang"><?php echo $price_info['lang_name'] ?></div>
+                                                                <div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($price_info['price']) ?></div>
+                                                            </a>
+                                                        </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                </div> 
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab" data-id="tab_bulk_price">
+                                    <div class="scrollbar custom-scrollbar scrollbar-js">
+                                        <div class="Lprice-cover" id="style-4">
+                                            <?php $lessonPackages = array_reverse($teacher['lessonPackages']);
+                                            if( count($lessonPackages) ){
+                                                $lessonPackage = $lessonPackages[0];
+                                            }
+                                            foreach($teacherLangPrices['bulk'] as $slot => $prices): ?>
+                                            <div class="Lprice__wrapper">
+                                                <div class="Lprice-head">
+                                                    <b><?php echo sprintf(Label::getLabel('LBL_%d_min'), $slot) ?></b>
+                                                </div>
+                                                <div class="Lprice-body">
+                                                        <ul>
+                                                            <?php foreach($prices as $lang_id=>$price_info): ?>
+                                                            <li>
+                                                                <a href="javascript:;" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','', <?php echo $lang_id.', 0, '.$slot; ?> )">
+                                                                    <div class="Lprice-lang"><?php echo $price_info['lang_name'] ?></div>
+                                                                    <div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($price_info['price']) ?></div>
+                                                                </a>
+                                                            </li>
+                                                            <?php endforeach; ?>
+                                                        </ul>
+                                                    </div> 
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher), false); ?>
+                            
+                        </div>
+                    </div>
+                    
+                    <hr class="-no-margin">
+                    <div class="box box--cta -padding-30 -no-margin-top -align-center">
+                        <a href="javascript:void(0);" onclick="viewCalendar('<?php echo $teacher['user_id']; ?>','paid')" class="-link -color-secondary"><?php echo Label::getLabel('LBL_View_Calendar_Availability'); ?></a>
+                    </div>
 				</div>
 
 			</div>

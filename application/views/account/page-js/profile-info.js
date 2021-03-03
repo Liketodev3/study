@@ -9,6 +9,7 @@ $(document).ready(function(){
 		$(this).parent('li').addClass('is-active');
 	});
 
+	$(document).on('change', '[name^=duration]', selectDuration);
 });
 
 (function() {
@@ -337,11 +338,27 @@ $(document).ready(function(){
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher','settingsInfoForm'),'',function(t){
 			$(dv).html(t);
-				if(userIsTeacher) {
-				  getTeacherProfileProgress();
-				}
+			selectDuration();
+			if(userIsTeacher) {
+				getTeacherProfileProgress();
+			}
 		});
 	};
+
+	selectDuration = function(){
+        $('[name^=duration]').each((i,fld) => {
+            if($(fld).is(':checked')){
+                $('input[name^="utl_single_lesson_amount["][name*="]['+fld.value+']').closest('.fld_wrapper-js').show();
+                $('input[name^="utl_bulk_lesson_amount["][name*="]['+fld.value+']').closest('.fld_wrapper-js').show();
+            }else{
+                $('input[name^="utl_single_lesson_amount["][name*="]['+fld.value+']').closest('.fld_wrapper-js').hide();
+                $('input[name^="utl_bulk_lesson_amount["][name*="]['+fld.value+']').closest('.fld_wrapper-js').hide();
+
+                $('input[name^="utl_single_lesson_amount["][name*="]['+fld.value+']').val('0.00');
+                $('input[name^="utl_bulk_lesson_amount["][name*="]['+fld.value+']').val('0.00');
+            }
+        });
+    };
 
 	setUpTeacherSettings = function(frm){
 		if (!$(frm).validate()) return;

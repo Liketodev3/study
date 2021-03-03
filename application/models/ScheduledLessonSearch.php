@@ -330,20 +330,14 @@ class ScheduledLessonSearch extends SearchBase
 
         $userFieldCnd = $this->addCondition('slns.slesson_teacher_id', ' IN ', $userIds);
         $userFieldCnd->attachCondition('sld.sldetail_learner_id', ' IN ', $userIds,' OR ');
-        $directStr = " ( ";
+        /* $directStr = " ( ";
         $directStr .=  " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) <= '".$startDateTime."' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) >= '".$startDateTime."' ) ";
         $directStr .=  " OR ";
         $directStr .= " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) <= '".$endDateTime."' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) >= '".$endDateTime."' ) ";
-        $directStr .= " ) ";
+        $directStr .= " ) "; */
+        $directStr =  " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) < '".$endDateTime."' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) > '".$startDateTime."' ) ";
         $this->addDirectCondition($directStr);
-        // $startDateTimeCnd = $this->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', ' <= ', $startDateTime, ' and ( ', true);
-        // $startDateTimeCnd->attachCondition('mysql_func_CONCAT(slns.slesson_end_date, " ", slns.slesson_end_time )', ' >= ', $startDateTime, " and ", true);
-        //
-        // $endDateTimeCnd = $this->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', ' <= ', $endDateTime, " or ", true);
-        // $endDateTimeCnd->attachCondition('mysql_func_CONCAT(slns.slesson_end_date, " ", slns.slesson_end_time )', ' >= ', $endDateTime, "  and ", true);
-
         $this->addCondition('slns.slesson_status', ' IN ', [ScheduledLesson::STATUS_SCHEDULED,ScheduledLesson::STATUS_COMPLETED]);
-
         $this->addMultipleFields(array('slns.slesson_date', 'slns.slesson_start_time', 'slns.slesson_end_time','slns.slesson_id','sld.sldetail_order_id','sld.sldetail_learner_id'));
         return $this;
    }

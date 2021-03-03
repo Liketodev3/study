@@ -31,32 +31,29 @@ class CheckoutController extends LoggedUserController{
 		$cartData = $this->cartObj->getCart( $this->siteLangId );
         
         /* Languages [ */
-        $userSrchObj = new UserSearch();
-        $tLangsrch = $userSrchObj->getMyTeachLangQry();
-        $tLangsrch->addCondition('utl_us_user_id','=',$cartData['user_id']);
-		$rs = $tLangsrch->getResultSet();
-		$tLangs = FatApp::getDb()->fetch($rs);
-        $teachLanguages = TeachingLanguage::getAllLangs($this->siteLangId,true);
-		$tlangArr =array();
-        if(!empty($tLangs['utl_slanguage_ids'])){
-            $tLangidsArr = explode(',',$tLangs['utl_slanguage_ids']);
-            $tlangArr = array_intersect_key($teachLanguages, array_flip($tLangidsArr));
+        $userToLanguage = new UserToLanguage($cartData['user_id']);
+        $tLangSettings = $userToLanguage->getTeachingSettings($this->siteLangId);
+        $tlangArr = array();
+        foreach($tLangSettings as $tLangSetting){
+            $tlangArr[$tLangSetting['tlanguage_id']] = $tLangSetting['tlanguage_name'];
         }
-
-        /* ] */
+		$this->set('teachLanguages', $tlangArr);
+		/* ] */
+		
 		$confirmForm = $this->getConfirmFormWithNoAmount( $this->siteLangId );
 		if( $cartData['orderNetAmount'] <= 0 ) {
 			//$confirmForm->addFormTagAttribute('action', CommonHelper::generateUrl('ConfirmPay','Charge', array($order_id)) );
 			/* $confirmForm->setFormTagAttribute('onsubmit', 'confirmOrderWithoutPayment(this); return(false);'); */
 			$confirmForm->addSubmitButton( '', 'btn_submit', Label::getLabel('LBL_Confirm_Order') );
 		}
+		$this->set('confirmForm', $confirmForm );
 
-		$this->set('teachLanguages', $tlangArr);
+		$bookingDurations = array_unique(array_column($tLangSettings, 'utl_booking_slot'));
+        sort($bookingDurations);
+        $this->set('bookingDurations', $bookingDurations);
 
 		$this->set('lessonPackages',$lessonPackages);
-		$this->set('tLangs',$tLangs['utl_slanguage_ids']);
 		$this->set('cartData', $cartData );
-		$this->set('confirmForm', $confirmForm );
         $this->_template->render();
 	}
 
@@ -332,7 +329,7 @@ class CheckoutController extends LoggedUserController{
 		$orderData['order_language_code'] =  $languageRow['language_code'];
 
 		/* [ */
-		$op_lesson_duration = FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60);
+		$op_lesson_duration = $cartData['lessonDuration'];//FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60);
 
 		$cartData['op_commission_charged'] = 0;
 		$cartData['op_commission_percentage'] = 0;
@@ -505,11 +502,11 @@ class CheckoutController extends LoggedUserController{
             die('');
         }
 		$teacherOfferClassObj = new TeacherOfferPrice();
-		$srchdata =  $teacherOfferClassObj->getOffer(UserAuthentication::getLoggedUserId(),$post['teacher_id']);
+		$srchdata =  $teacherOfferClassObj->getOffer(UserAuthentication::getLoggedUserId(), $post['teacher_id'], $cartData['lessonDuration']);
 		$srchdata->doNotCalculateRecords();
 		$srchdata->setPageSize(1);
 		$rs = $srchdata->getResultSet();
-		$teachcerOffer = FatApp::getDb()->fetch($rs);
+		$teacherOffer = FatApp::getDb()->fetch($rs);
 
 		$srch = LessonPackage::getSearchObject( $this->siteLangId );
 		$srch->addCondition( 'lpackage_is_free_trial', '=', 0 );
@@ -520,13 +517,35 @@ class CheckoutController extends LoggedUserController{
         ));
 		$rs = $srch->getResultSet();
 		$lessonPackages = FatApp::getDb()->fetchAll($rs);
-        $data = UserSetting::getUserSettings( $post['teacher_id'],$post['languageId'] );
-        $this->set('cartData',$cartData);
-		$this->set('teachcerOffer',$teachcerOffer);
+        $data = UserSetting::getUserSettings( $post['teacher_id'],$post['languageId'], $post['lessonDuration'] );
+		$this->set('cartData',$cartData);
+		$this->set('teacherOffer',$teacherOffer);
         $this->set('languageId',$post['languageId']);
         $this->set('lessonPackages',$lessonPackages);
         $this->set('selectedLang',current($data));
 
+        $this->_template->render(false,false);
+	}
+
+	public function getBookingDurations()
+    {
+		$cartData = $this->cartObj->getCart( $this->siteLangId );
+		if($cartData['grpcls_id']>0){
+            die('');
+        }
+        $teacher_id = $cartData['user_id'];
+
+        $userSrch = new UserSearch();
+        $userTeachLangSrch = $userSrch->getMyTeachLangQry();
+        $userTeachLangSrch->addCondition('utl_us_user_id', '=', $teacher_id);
+		$rs = $userTeachLangSrch->getResultSet();
+		$row = FatApp::getDb()->fetch($rs);
+
+        $bookingDurations = array_unique(explode(',', $row['utl_booking_slots']));
+        sort($bookingDurations);
+
+        $this->set('cartData', $cartData);
+        $this->set('bookingDurations', $bookingDurations);
         $this->_template->render(false,false);
     }
 }

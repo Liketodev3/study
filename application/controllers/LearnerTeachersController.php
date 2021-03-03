@@ -38,6 +38,18 @@ class LearnerTeachersController extends LearnerBaseController
         $unSchLesSrch->addCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_NEED_SCHEDULING);
         
         // echo $pastLesSrch->getQuery();die;
+
+        $teacherOfferPriceSrch = new SearchBase(TeacherOfferPrice::DB_TBL);
+        $teacherOfferPriceSrch->addMultipleFields(array(
+            'top_learner_id',
+            'top_teacher_id',
+            'GROUP_CONCAT(top_single_lesson_price ORDER BY top_lesson_duration) as singleLessonAmount',
+            'GROUP_CONCAT(top_bulk_lesson_price ORDER BY top_lesson_duration) as bulkLessonAmount',
+            'GROUP_CONCAT(top_lesson_duration ORDER BY top_lesson_duration) as lessonDuration'
+        ));
+        $teacherOfferPriceSrch->addGroupBy('top_learner_id');
+        $teacherOfferPriceSrch->doNotLimitRecords();
+        $teacherOfferPriceSrch->doNotCalculateRecords();
         
         $srch = new ScheduledLessonSearch(false);
         $srch->addCondition('sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
@@ -51,7 +63,9 @@ class LearnerTeachersController extends LearnerBaseController
         $srch->joinTeacherSettings();
         $srch->joinRatingReview();
         $srch->joinUserTeachLanguages($this->siteLangId);
-        $srch->joinLearnerOfferPrice(UserAuthentication::getLoggedUserId());
+        // $srch->joinLearnerOfferPrice(UserAuthentication::getLoggedUserId());
+        $srch->joinTable('('. $teacherOfferPriceSrch->getQuery().')', 'LEFT JOIN', 'sldetail_learner_id = top_learner_id AND top_teacher_id = slesson_teacher_id', 'top');
+
         $srch->addMultipleFields(array(
             'slns.slesson_teacher_id as teacherId',
             'slns.slesson_slanguage_id as languageID',
@@ -63,9 +77,10 @@ class LearnerTeachersController extends LearnerBaseController
             '('.$schLesSrch->getQuery().') as scheduledLessonCount',
             '('.$pastLesSrch->getQuery().') as pastLessonCount',
             '('.$unSchLesSrch->getQuery().') as unScheduledLessonCount',
-            'IFNULL(top_single_lesson_price,0) AS singleLessonAmount',
-            'IFNULL(top_bulk_lesson_price,0) AS bulkLessonAmount',
-            'CASE WHEN top_single_lesson_price IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice'
+            'singleLessonAmount',
+            'bulkLessonAmount',
+            'CASE WHEN singleLessonAmount IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
+            'lessonDuration'
         ));
 
         $page = $post['page'];

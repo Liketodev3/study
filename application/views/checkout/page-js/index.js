@@ -106,38 +106,41 @@ $("document").ready(function(){
 	};
 
 
-	addToCart =  function( teacherId, lpackageId, languageId ,startDateTime, endDateTime, grpclsId ){
-		if( startDateTime == undefined ){
-			startDateTime = '';
-		}
-		if( endDateTime == undefined ){
-			endDateTime = '';
-		}
-        if( grpclsId == undefined ){
-			grpclsId = 0;
-		}
+	addToCart =  function( teacherId, lpackageId, languageId ,startDateTime, endDateTime, grpclsId, lessonDuration ){
+		startDateTime ||= '';
+		endDateTime ||= '';
+		grpclsId ||= 0;
+		lessonDuration ||= 60;
+
         if(parseInt(grpclsId)>0){
             return false;
         }
 
-		var data = 'teacher_id=' + teacherId + '&languageId=' + languageId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId + '&checkoutPage=1';
+		var data = 'teacher_id=' + teacherId + '&languageId=' + languageId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId + '&lessonDuration=' + lessonDuration + '&checkoutPage=1';
 		$('.cart-lang-id-js').html(teachLanguages[languageId]);
 		fcom.updateWithAjax( fcom.makeUrl('Cart','add'), data ,function(ans){
 			if( ans.redirectUrl ){
 				//fcom.waitAndRedirect( ans.redirectUrl );
 				loadFinancialSummary();
 				loadPaymentSummary();
+				getLangPackages(teacherId, languageId, lessonDuration);
 			}
 		});
 	};
 
-	getLangPackages =  function( teacherId, languageId ){
+	getLangPackages =  function( teacherId, languageId, lessonDuration ){
 
-		var data = 'teacher_id=' + teacherId + '&languageId=' + languageId ;
+		var data = 'teacher_id=' + teacherId + '&languageId=' + languageId + '&lessonDuration='+lessonDuration ;
 		fcom.ajax( fcom.makeUrl('Checkout','getLanguagePackages'), data ,function(ans){
 			$('#lsn-pckgs').html(ans);
+			getBookingDurations();
 		});
+	};
 
+	getBookingDurations =  function(){
+		fcom.ajax( fcom.makeUrl('Checkout', 'getBookingDurations'), '' ,function(ans){
+			$('#booking-durations-js').html(ans);
+		});
 	};
 
 })();

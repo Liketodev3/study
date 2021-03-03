@@ -1,5 +1,9 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Updates:
+    *Task-80349: Update Stripe to support SCA( Strong Customer Authentication) task_80349_stripe_intent
+    *Task-80518: Multiple Booking Slots
+
 
 Release Number: TV-2.9.0.20210223
 Release Date: 2021-02-23

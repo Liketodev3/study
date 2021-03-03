@@ -25,23 +25,28 @@ function getSortedReviews(elm){
 
 $("document").ready(function(){
 
-        $('.toggle-dropdown__link-js').each(function(){
-            $(this).click(function() {
-             $(this).parent('.toggle-dropdown').toggleClass("is-active");
-            });
-        })
-
-        $('html').click(function(){
-            if($('.toggle-dropdown').hasClass('is-active')){
-            $('.toggle-dropdown').removeClass('is-active');
-            }
+    $('.toggle-dropdown__link-js').each(function(){
+        $(this).click(function() {
+         $(this).parent('.toggle-dropdown').toggleClass("is-active");
         });
+    })
 
-        $('.toggle-dropdown').click(function(e){
-            e.stopPropagation();
-        });
+    $('html').click(function(){
+        if($('.toggle-dropdown').hasClass('is-active')){
+        $('.toggle-dropdown').removeClass('is-active');
+        }
+    });
 
+    $('.toggle-dropdown').click(function(e){
+        e.stopPropagation();
+    });
 
+    $('.tab-a').click(function() {
+        $(".tab").removeClass('tab-active');
+        $(".tab[data-id='" + $(this).attr('data-id') + "']").addClass("tab-active");
+        $(".tab-a").parent('li').removeClass('is-active');
+        $(this).parent().addClass('is-active');
+    });
 
 	/* FUNCTION FOR LEFT COLLAPSEABLE LINKS */
 	if( $(window).width() < 767 ){
@@ -59,6 +64,12 @@ $("document").ready(function(){
 	}
 
     reviews(document.frmReviewSearch);
+    if( $(window).width() > 1199 ){
+        $('.scrollbar-js').enscroll({
+            verticalTrackClass: 'scrollbar-track',
+            verticalHandleClass: 'scrollbar-handle'
+        });
+    }
 
 });
 

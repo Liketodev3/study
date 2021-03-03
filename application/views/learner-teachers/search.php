@@ -82,9 +82,22 @@
 
 			<td>
 				<span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Lock_(Single/Bulk_Price)');?></span>				
-				
+				<?php $durations = explode(',', $teacher['lessonDuration']);
+				$singleLessonAmount = explode(',', $teacher['singleLessonAmount']);
+				$bulkLessonAmount = explode(',', $teacher['bulkLessonAmount']);
+				?>
 				<span class="td__data">
-				<span class="-display-inline"><?php echo CommonHelper::displayMoneyFormat($teacher['singleLessonAmount']); ?> / <?php echo CommonHelper::displayMoneyFormat($teacher['bulkLessonAmount']); ?></span>
+				<span class="-display-inline">
+				<?php foreach($durations as $i=>$duration): 
+					if(!empty($singleLessonAmount[$i])){
+						echo sprintf(Label::getLabel('LBL_%d_mins'), $duration).': '.CommonHelper::displayMoneyFormat($singleLessonAmount[$i]); ?> / <?php echo CommonHelper::displayMoneyFormat($bulkLessonAmount[$i]);
+					}
+					else{
+						echo CommonHelper::displayMoneyFormat(0).' / '.CommonHelper::displayMoneyFormat(0);
+					}
+				?><br>
+				<?php endforeach; ?>
+				</span>
 				<?php if( $teacher['isSetUpOfferPrice'] ){ ?>
 					<span class="inline-icon -display-inline -color-fill">
 						<span class="svg-icon" title="<?php echo Label::getLabel('LBL_These_prices_are_locked');?>">
@@ -122,7 +135,7 @@
 			<td>
 				<span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Actions');?></span>
 				<span class="td__data">
-						<a href="javascript:void(0)" class="btn btn--small btn--secondary" onClick="cart.add( '<?php echo $teacher['teacherId']; ?>', '<?php echo $lessonPackages[0]['lpackage_id'] ?>','','', <?php echo $teacher['languageID'];?> )"> <?php echo Label::getLabel('LBL_Buy_Now');?>
+						<a href="javascript:void(0)" class="btn btn--small btn--secondary" onClick="cart.add( '<?php echo $teacher['teacherId']; ?>', '<?php echo $lessonPackages[0]['lpackage_id'] ?>','','', <?php echo $teacher['languageID'].','.$teacher['lessonDuration']; ?> )"> <?php echo Label::getLabel('LBL_Buy_Now');?>
                         </a>
 					<?php /*<a href="javascript:void(0)" onClick="generateThread(<?php echo $teacher['teacherId']; ?>)" class="btn btn--small btn--secondary"><?php echo Label::getLabel('LBL_Message');?></a>*/ ?>
 					

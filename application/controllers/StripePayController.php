@@ -14,6 +14,13 @@ class StripePayController extends PaymentController
             'USD', 'AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 'BBD', 'BDT', 'BGN', 'BIF', 'BMD', 'BND', 'BOB', 'BRL', 'BSD', 'BWP', 'BZD', 'CAD', 'CDF', 'CHF', 'CLP', 'CNY', 'COP', 'CRC', 'CVE', 'CZK', 'DJF', 'DKK', 'DOP', 'DZD', 'EGP', 'ETB', 'EUR', 'FJD', 'FKP', 'GBP', 'GEL', 'GIP', 'GMD', 'GNF', 'GTQ', 'GYD', 'HKD', 'HNL', 'HRK', 'HTG', 'HUF', 'IDR', 'ILS', 'INR', 'ISK', 'JMD', 'JPY', 'KES', 'KGS', 'KHR', 'KMF', 'KRW', 'KYD', 'KZT', 'LAK', 'LBP', 'LKR', 'LRD', 'LSL', 'MAD', 'MDL', 'MGA', 'MKD', 'MMK', 'MNT', 'MOP', 'MRO', 'MUR', 'MVR', 'MWK', 'MXN', 'MYR', 'MZN', 'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'PAB', 'PEN', 'PGK', 'PHP', 'PKR', 'PLN', 'PYG', 'QAR', 'RON', 'RSD', 'RUB', 'RWF', 'SAR', 'SBD', 'SCR', 'SEK', 'SGD', 'SHP', 'SLL', 'SOS', 'SRD', 'STD', 'SZL', 'THB', 'TJS', 'TOP', 'TRY', 'TTD', 'TWD', 'TZS', 'UAH', 'UGX', 'UYU', 'UZS', 'VND', 'VUV', 'WST', 'XAF', 'XCD', 'XOF', 'XPF', 'YER', 'ZAR', 'ZMW'
         ];
     }
+    
+    private function zeroDecimalCurrencies()
+    {
+        return [
+            'BIF', 'CLP', 'DJF', 'GNF', 'JPY', 'KMF', 'KRW', 'MGA', 'PYG', 'RWF', 'UGX', 'VND', 'VUV', 'XAF', 'XOF', 'XPF'
+        ];
+    }
 
     public function charge($orderId)
     {
@@ -36,27 +43,63 @@ class StripePayController extends PaymentController
 
         
         if (strlen(trim($this->paymentSettings['privateKey'])) > 0 && strlen(trim($this->paymentSettings['publishableKey'])) > 0) {
-            if (strpos($this->paymentSettings['privateKey'], 'test') !== false || strpos($this->paymentSettings['publishableKey'], 'test') !== false) {
-            }
             \Stripe\Stripe::setApiKey($stripe['secret_key']);
         } else {
             $this->error = Label::getLabel('STRIPE_INVALID_PAYMENT_GATEWAY_SETUP_ERROR', $this->siteLangId);
         }
+        $systemCurrencyCode = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1), 'currency_code');
 
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
 		$payableAmount = $this->formatPayableAmount($paymentAmount);
-        $orderInfo = $orderPaymentObj->getOrderById($orderId);
+        
+        $orderSrch = new OrderSearch();
+		$orderSrch->joinUser();
+		$orderSrch->joinUserCredentials();
+		$orderSrch->addCondition('order_id', '=', $orderId);
+		$orderSrch->addMultipleFields(array(
+			'order_id',
+			'order_language_id',
+			'order_currency_code',
+			'u.user_first_name as user_first_name',
+			'cred.credential_email as customer_email',
+			'order_is_paid',
+			'order_language_code'
+		));
+
+		$orderRs = $orderSrch->getResultSet();
+		$orderInfo = FatApp::getDb()->fetch($orderRs);
 
         if (!$orderInfo['order_id']) {
             FatUtility::exitWithErrorCode(404);
         } elseif ($orderInfo && $orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
-            $checkPayment = $this->doPayment($payableAmount, $orderId);
-            $frm = $this->getPaymentForm($orderId);
-            $this->set('frm', $frm);
-            if ($checkPayment) {
-                $this->set('success', true);
+            try{
+                $session = \Stripe\Checkout\Session::create([
+                    'customer_email' => $orderInfo['customer_email'],
+                    'payment_method_types' => ['card'],
+                    'metadata' => [
+                        'order_id' => $orderId
+                    ],
+                    'line_items' => [[
+                        'price_data' => [
+                            'currency' => $systemCurrencyCode,
+                            'product_data' => [
+                              'name' => Label::getLabel('LBL_Buy_Lessons'),
+                            ],
+                            'unit_amount' => $payableAmount
+                        ],
+                        'quantity' => 1,
+                    ]],
+                    'mode' => 'payment',
+                    'success_url' => CommonHelper::generateFullUrl('StripePay', 'callback')."?session_id={CHECKOUT_SESSION_ID}",
+                    'cancel_url' => CommonHelper::getPaymentCancelPageUrl(),
+                ]);
+                
+                $this->set('stripeSessionId', $session->id);
+            }catch(exception $e){
+                $this->set('error', $e->getMessage());
             }
+            
         } else {
             $message = Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId);
             $this->error = $message;
@@ -67,24 +110,8 @@ class StripePayController extends PaymentController
             $this->set('error', $this->error);
         }
 
-        $cancelBtnUrl = CommonHelper::getPaymentCancelPageUrl();
-        if ($orderInfo['order_type'] == Order::TYPE_WALLET_RECHARGE) {
-            $cancelBtnUrl = CommonHelper::getPaymentFailurePageUrl();
-        }
-        $this->set('cancelBtnUrl', $cancelBtnUrl);
-		$this->set('orderInfo', $orderInfo);
-        $this->set('paymentAmount', $paymentAmount);
         $this->set('exculdeMainHeaderDiv', true);
-		$this->_template->addCss('css/payment.css');
         $this->_template->render(true, false);
-    }
-
-    public function checkCardType()
-    {
-        $post = FatApp::getPostedData();
-        $res = ValidateElement::ccNumber($post['cc']);
-        echo json_encode($res);
-        exit;
     }
 
     private function formatPayableAmount($amount = null)
@@ -92,7 +119,12 @@ class StripePayController extends PaymentController
         if ($amount == null) {
             return false;
         }
+        $systemCurrencyCode = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1), 'currency_code');
+        
         $amount = number_format($amount, 2, '.', '');
+        if(in_array($systemCurrencyCode, $this->zeroDecimalCurrencies())){
+            return round($amount);
+        }
         return $amount * 100;
     }
 
@@ -101,134 +133,71 @@ class StripePayController extends PaymentController
         $pmObj = new PaymentSettings($this->keyName);
         return $pmObj->getPaymentSettings();
     }
-
-    private function getPaymentForm($orderId)
+    
+    public function callback()
     {
-        $frm = new Form('frmPaymentForm', array('id' => 'frmPaymentForm', 'action' => CommonHelper::generateUrl('StripePay', 'charge', array($orderId)), 'class' => "form form--normal"));
-        $frm->addRequiredField(Label::getLabel('LBL_ENTER_CREDIT_CARD_NUMBER', $this->siteLangId), 'cc_number');
-        $frm->addRequiredField(Label::getLabel('LBL_CARD_HOLDER_NAME', $this->siteLangId), 'cc_owner');
-        $data['months'] = applicationConstants::getMonthsArr($this->siteLangId);
-        $today = getdate();
-        $data['year_expire'] = array();
-        for ($i = $today['year']; $i < $today['year'] + 11; $i++) {
-            $data['year_expire'][strftime('%Y', mktime(0, 0, 0, 1, 1, $i))] = strftime('%Y', mktime(0, 0, 0, 1, 1, $i));
-        }
-        $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_MONTH', $this->siteLangId), 'cc_expire_date_month', $data['months'], '', array(), '');
-        $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_YEAR', $this->siteLangId), 'cc_expire_date_year', $data['year_expire'], '', array(), '');
-        $frm->addPasswordField(Label::getLabel('LBL_CVV_SECURITY_CODE', $this->siteLangId), 'cc_cvv')->requirements()->setRequired();
-        /* $frm->addCheckBox(Label::getLabel('LBL_SAVE_THIS_CARD_FOR_FASTER_CHECKOUT',$this->siteLangId), 'cc_save_card','1'); */
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Pay_Now', $this->siteLangId));
-
-        return $frm;
+        $get = FatApp::getQueryStringData();
+        $sessionId = $get['session_id'];
+        $this->updatePaymentStatus($sessionId);
     }
-
-    private function doPayment($payment_amount, $orderId)
+    
+    public function webhook()
+    {
+        $payload = file_get_contents('php://input');
+        try {
+            $event = \Stripe\Event::constructFrom(
+                json_decode($payload, true)
+            );
+        } catch(\UnexpectedValueException $e) {
+            // Invalid payload
+            http_response_code(400);
+            exit();
+        }
+        $sessionId = $event->data->id;
+        $this->updatePaymentStatus($sessionId);
+    }
+    
+    private function updatePaymentStatus($sessionId)
     {
         $this->paymentSettings = $this->getPaymentSettings();
-
-		$orderSrch = new OrderSearch();
-		$orderSrch->joinUser();
-		$orderSrch->joinUserCredentials();
-		$orderSrch->addCondition('order_id', '=', $orderId);
-		$orderSrch->addMultipleFields(array(
-			'order_id',
-			'order_language_id',
-			'order_currency_code',
-			'u.user_first_name as user_first_name',
-			'cred.credential_email as customer_email',
-			'order_language_code',
-			'"FATbit_SP" as paypal_bn'
-		));
-
-		$orderRs = $orderSrch->getResultSet();
-		$orderInfo = FatApp::getDb()->fetch($orderRs);
-		// echo '<pre>'.$payment_amount;print_r($orderInfo);die;
-        if ($payment_amount == null || !$this->paymentSettings || $orderInfo['order_id'] == null) {
-            return false;
+        $stripe = array(
+        'secret_key' => $this->paymentSettings['privateKey'],
+        'publishable_key' => $this->paymentSettings['publishableKey']
+        );
+        \Stripe\Stripe::setApiKey($stripe['secret_key']);
+        $session = \Stripe\Checkout\Session::retrieve($sessionId);        
+        
+        $orderId = $session->metadata->order_id;
+        if(empty($orderId)){
+            Message::addErrorMessage(Label::getLabel('STRIPE_INVALID_OrderId', $this->siteLangId));
+            FatApp::redirectUser($session->cancel_url);
         }
-
-        $checkPayment = false;
-        if (strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
-            try {
-                $stripeToken = FatApp::getPostedData('stripeToken', FatUtility::VAR_STRING, '');
-
-                if (empty($stripeToken)) {
-                    $message = Label::getLabel('MSG_The_Stripe_Token_was_not_generated_correctly', $this->siteLangId);
-                    if (true === MOBILE_APP_API_CALL) {
-                        FatUtility::dieJsonError($message);
-                    }
-                    throw new Exception($message);
-                } else {
-                    $stripe = array(
-                    'secret_key' => $this->paymentSettings['privateKey'],
-                    'publishable_key' => $this->paymentSettings['publishableKey']
-                    );
-                    if (!empty(trim($this->paymentSettings['privateKey'])) && !empty(trim($this->paymentSettings['publishableKey']))) {
-                        \Stripe\Stripe::setApiKey($stripe['secret_key']);
-                    }
-
-                    $customer = \Stripe\Customer::create(
-                        array(
-                          "email" => $orderInfo['customer_email'],
-                          "source" => $stripeToken,
-                        )
-                    );
-
-                   $systemCurrencyCode = CommonHelper::getSystemCurrencyData()['currency_code'];
-
-                    $charge = \Stripe\Charge::create(
-                        array(
-                        "customer" => $customer->id,
-                        'amount' => $payment_amount,
-                        'currency' => $systemCurrencyCode
-                        )
-                    );
-
-                    $charge = $charge->__toArray();
-
-                    if (isset($charge['status'])) {
-                        if (strtolower($charge['status']) == 'succeeded') {
-                            $message = '';
-                            $message .= 'Id: ' . (string)$charge['id'] . "&";
-                            $message .= 'Object: ' . (string)$charge['object'] . "&";
-                            $message .= 'Amount: ' . (string)$charge['amount'] . "&";
-                            $message .= 'Amount Refunded: ' . (string)$charge['amount_refunded'] . "&";
-                            $message .= 'Application Fee: ' . (string)$charge['application_fee'] . "&";
-                            $message .= 'Balance Transaction: ' . (string)$charge['balance_transaction'] . "&";
-                            $message .= 'Captured: ' . (string)$charge['captured'] . "&";
-                            $message .= 'Created: ' . (string)$charge['created'] . "&";
-                            $message .= 'Currency: ' . (string)$charge['currency'] . "&";
-                            $message .= 'Customer: ' . (string)$charge['customer'] . "&";
-                            $message .= 'Description: ' . (string)$charge['description'] . "&";
-                            $message .= 'Destination: ' . (string)$charge['destination'] . "&";
-                            $message .= 'Dispute: ' . (string)$charge['dispute'] . "&";
-                            $message .= 'Failure Code: ' . (string)$charge['failure_code'] . "&";
-                            $message .= 'Failure Message: ' . (string)$charge['failure_message'] . "&";
-                            $message .= 'Invoice: ' . (string)$charge['invoice'] . "&";
-                            $message .= 'Livemode: ' . (string)$charge['livemode'] . "&";
-                            $message .= 'Paid: ' . (string)$charge['paid'] . "&";
-                            $message .= 'Receipt Email: ' . (string)$charge['receipt_email'] . "&";
-                            $message .= 'Receipt Number: ' . (string)$charge['receipt_number'] . "&";
-                            $message .= 'Refunded: ' . (string)$charge['refunded'] . "&";
-                            $message .= 'Shipping: ' . (string)$charge['shipping'] . "&";
-                            $message .= 'Statement Descriptor: ' . (string)$charge['statement_descriptor'] . "&";
-                            $message .= 'Status: ' . (string)$charge['status'] . "&";
-                            /* Recording Payment in DB */
-                            $orderPaymentObj = new OrderPayment($orderInfo['order_id']);
-                            $orderPaymentObj->addOrderPayment($this->paymentSettings["pmethod_name"], $charge['id'], ($payment_amount / 100), Label::getLabel("MSG_Received_Payment", $this->siteLangId), $message);
-                            /* End Recording Payment in DB */
-                            $checkPayment = true;
-							FatApp::redirectUser(CommonHelper::generateUrl('custom', 'paymentSuccess', array($orderInfo['order_id'])));
-                        } else {
-                            $orderPaymentObj->addOrderPaymentComments($message);
-                            FatApp::redirectUser(CommonHelper::generateUrl('custom', 'paymentFailed'));
-                        }
-                    }
-                }
-            } catch (Exception $e) {
-                $this->error = $e->getMessage();
-            }
+        $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
+        $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
+        if ($orderInfo["order_is_paid"] == Order::ORDER_IS_PAID){
+            FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess'));
         }
-        return $checkPayment;
+        $paymentGatewayCharge = $orderPaymentObj->getOrderPaymentGatewayAmount();
+        $payableAmount = $this->formatPayableAmount($paymentGatewayCharge);
+        
+        $payment_comments = '';
+        $totalPaidMatch = $session->amount_total == $payableAmount;
+        
+        if(strtolower($session->payment_status)!='paid'){
+            $payment_comments .= "STRIPE_PAYMENT :: Status is: " . strtolower($session->payment_status) . "\n\n";
+        }
+        
+        if (!$totalPaidMatch) {
+            $payment_comments .= "STRIPE_PAYMENT :: TOTAL PAID MISMATCH! " . strtolower($session->amount_total) . "\n\n";
+        }
+        
+        if (strtolower($session->payment_status)=='paid' && $totalPaidMatch) {
+            $orderPaymentObj->addOrderPayment($this->paymentSettings["pmethod_code"], $sessionId, $paymentGatewayCharge, 'Received Payment', serialize($session));
+        } else {
+            $orderPaymentObj->addOrderPaymentComments($payment_comments);
+            FatApp::redirectUser($session->cancel_url);
+        }
+        
+        FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess'));
     }
 }

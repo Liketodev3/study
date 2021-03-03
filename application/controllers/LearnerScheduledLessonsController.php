@@ -694,14 +694,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $getLessonDetailObj->addCondition(ScheduledLessonDetails::tblFld('id'),'=', $lDetailId);
         $getLessonDetailObj->addCondition(ScheduledLessonDetails::tblFld('learner_id'),'=', UserAuthentication::getLoggedUserId());
         $getLessonDetailObj->addCondition('order_is_paid','=', Order::ORDER_IS_PAID);
-        $getLessonDetailObj->addMultipleFields(
-                                    array(
-                                    'uts.us_booking_before as teacherBookingBefore',
-                                    'ut.user_country_id as teacherCountryId',
-                                    'ut.user_first_name as teacherFirstName',
-                                    'op_lpackage_is_free_trial',
-                                    )
-                            );
+        $getLessonDetailObj->addMultipleFields(array(
+            'uts.us_booking_before as teacherBookingBefore',
+            'ut.user_country_id as teacherCountryId',
+            'ut.user_first_name as teacherFirstName',
+            'op_lpackage_is_free_trial',
+            'op_lesson_duration'
+        ));
 
         $getLessonDetailObj->addCondition(ScheduledLessonDetails::tblFld('learner_status'), '=', ScheduledLesson::STATUS_SCHEDULED);
 
@@ -738,6 +737,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->set('action', $action);
         $this->set('teacher_id', $getLessonDetail['teacherId']);
         $this->set('lessonId', $getLessonDetail['slesson_id']);
+        $this->set('lessonRow', $getLessonDetail);
         $this->set('lDetailId', $lDetailId);
         $this->set('cssClassArr', $cssClassNamesArr);
         $this->_template->render(false, false,'learner-scheduled-lessons/view-booking-calendar.php');
@@ -839,22 +839,24 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if (1 > $lDetailId) {
             FatUtility::exitWithErrorCode(404);
         }
-        $lessonDetailRow = ScheduledLessonDetails::getAttributesById($lDetailId, array('sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id'));
-        if (!$lessonDetailRow || $lessonDetailRow['sldetail_id']!=$lDetailId) {
-            FatUtility::exitWithErrorCode(404);
-        }
-        $lessonId = $lessonDetailRow['sldetail_slesson_id'];
-        $lessonRow = ScheduledLesson::getAttributesById($lessonId, array('slesson_id', 'slesson_teacher_id'));
-        if (!$lessonRow || $lessonRow['slesson_id']!=$lessonId) {
-            FatUtility::exitWithErrorCode(404);
-        }
+        
+        $srch = new stdClass();
+        $this->searchLessons($srch);
+        $srch->joinTeacherCredentials();
+        $srch->joinTeacherSettings();
+        $srch->doNotCalculateRecords();
+        $srch->addCondition('sldetail_id', '=', $lDetailId);
+        $srch->addFld(array('us_booking_before as teacherBookingBefore', 'ut.user_country_id as teacherCountryId'));
+        $rs = $srch->getResultSet();
+        $lessonRow = FatApp::getDb()->fetch($rs);
+        
+		if( !$lessonRow || $lessonRow['learnerId'] != UserAuthentication::getLoggedUserId() ){
+			Message::addErrorMessage( Label::getLabel('LBL_Access_Denied') );
+			FatUtility::dieWithError( Message::getHtml() );
+		}
 
-        if ($lessonDetailRow['sldetail_learner_id'] != UserAuthentication::getLoggedUserId()) {
-            Message::addErrorMessage(Label::getLabel('LBL_Access_Denied'));
-            FatApp::redirectUser(CommonHelper::generateUrl('LearnerScheduledLessons'));
-        }
+		$teacher_id = $lessonRow['teacherId'];
 
-        $teacher_id = $lessonRow['slesson_teacher_id'];
         $userRow = User::getAttributesById($teacher_id, array('user_first_name','CONCAT(user_first_name," ",user_last_name) AS user_full_name', 'user_country_id'));
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
         MyDate::setUserTimeZone();
@@ -868,9 +870,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->set('user_timezone', $user_timezone);
         $this->set('nowDate', $nowDate);
         $this->set('userRow', $userRow);
+        $this->set('lessonRow', $lessonRow);
         $this->set('action', FatApp::getPostedData('action'));
         $this->set('teacher_id', $teacher_id);
-        $this->set('lessonId', $lessonId);
+        $this->set('lessonId', $lessonRow['slesson_id']);
         $this->set('lDetailId', $lDetailId);
         $this->set('cssClassArr', $cssClassNamesArr);
         $this->_template->render(false, false);
