@@ -13,6 +13,8 @@ Bugs:
     Bug-#050150 - Spacing between the social media buttons is not correct.
     Bug-#044719 - When user purchase any lesson then success message is showing> but link button is not highlighted properly
     Bug-#045486 - In teacher detail screen >> rating view >> text is looking too bold.
+    Bug-#049899 - Email Notification is missing> When teacher is placing wallet withdrawal request admin do not receive any notification through email.
+
 
 Release Number: TV-2.9.0.20210223
 Release Date: 2021-02-23

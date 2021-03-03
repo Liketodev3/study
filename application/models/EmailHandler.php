@@ -59,7 +59,6 @@ class EmailHandler extends FatModel
             $body = str_replace($key, $val, $body);
         }
 
-
         if (FatApp::getConfig('CONF_SEND_SMTP_EMAIL')) {
             if (!$sendEmail = static::sendSmtpEmail($to, $subject, $body, '', $tpl, $langId, '', $smtp_arr)) {
                 return static::sendMail($to, $subject, $body, '', $tpl, $langId);
@@ -681,6 +680,34 @@ class EmailHandler extends FatModel
 
         $to = FatApp::getConfig('CONF_SITE_OWNER_EMAIL');
         if (self::sendMailTpl($to, $tpl, $this->commonLangId, $vars)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function sendWithdrawRequestNotification(array $withdrawalRequestData , string $adminOrUser = "A") : bool
+    {
+        $vars = array(
+        '{txn_id}' => Transaction::formatTransactionNumber($withdrawalRequestData['txn_id']),
+        '{user_first_name}' => $withdrawalRequestData['user_first_name'],
+        '{user_last_name}' => $withdrawalRequestData['user_last_name'],
+        '{payout_type}' => $withdrawalRequestData['payout_type'],
+        '{request_date}' => date('Y-m-d'),
+        '{withdrawal_amount}' => CommonHelper::displayMoneyFormat($withdrawalRequestData['withdrawal_amount'], true, true),
+        '{other_details}' => $withdrawalRequestData['other_details'],
+        '{withdrawal_comment}' => $withdrawalRequestData['withdrawal_comments']
+        );
+        switch ($adminOrUser) {
+            case 'A':
+                $to = FatApp::getConfig('CONF_SITE_OWNER_EMAIL');
+                $tpl = 'new_withdrawal_request_mail_to_admin';
+                break;
+            default:
+                $to = $withdrawalRequestData['user_email'];
+                $tpl = 'new_withdrawal_request_mail_to_user';
+            break;
+        }
+        if (self::sendMailTpl( $to, $tpl, $this->commonLangId, $vars)) {
             return true;
         }
         return false;
