@@ -170,7 +170,7 @@ class UserToLanguage extends MyAppModel
             'tlanguage_id',
             'tlanguage_name',
             'IFNULL(top_single_lesson_price, utl_single_lesson_amount) utl_single_lesson_amount',
-            'IFNULL(top_bulk_lesson_price, utl_bulk_lesson_amount) utl_single_lesson_amount',
+            'IFNULL(top_bulk_lesson_price, utl_bulk_lesson_amount) utl_bulk_lesson_amount',
             'utl_booking_slot',
         ));
         $srch->addCondition('utl_single_lesson_amount', '>', 0);

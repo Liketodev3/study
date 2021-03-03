@@ -23,7 +23,7 @@ foreach($userTeachLangs as $userTeachLang){
     );
 	$teacherLangPrices['bulk'][$userTeachLang['utl_booking_slot']][$userTeachLang['tlanguage_id']] = array(
         'lang_name' => $userTeachLang['tlanguage_name'],
-        'price' => $userTeachLang['utl_single_lesson_amount']
+        'price' => $userTeachLang['utl_bulk_lesson_amount']
     );
 }
 ?>
