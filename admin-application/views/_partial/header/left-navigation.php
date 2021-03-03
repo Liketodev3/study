@@ -297,7 +297,8 @@
 		<!-- Report [ -->
 		<?php if (
 			$objPrivilege->canViewTopLangReport(AdminAuthentication::getLoggedAdminId(), true) ||
-			$objPrivilege->canViewTeacherPerformanceReport(AdminAuthentication::getLoggedAdminId(), true)
+			$objPrivilege->canViewTeacherPerformanceReport(AdminAuthentication::getLoggedAdminId(), true) ||
+			$objPrivilege->canViewCommissionReport(AdminAuthentication::getLoggedAdminId(), true) 
 			) { ?>
 		<li class="haschild">
 			<a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Reports',$adminLangId);?></a>
@@ -308,6 +309,10 @@
 
 			<?php if ( $objPrivilege->canViewTeacherPerformanceReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
 				<li><a href="<?php echo CommonHelper::generateUrl('TeacherPerformanceReport'); ?>"><?php echo Label::getLabel('LBL_Teacher_Performance',$adminLangId);?></a></li>
+			<?php } ?>
+			<?php
+			if ( $objPrivilege->canViewCommissionReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
+				<li><a href="<?php echo CommonHelper::generateUrl('CommissionReport'); ?>"><?php echo Label::getLabel('LBL_Commission_Report',$adminLangId);?></a></li>
 			<?php } ?>
 			</ul>
 		</li>
