@@ -11,6 +11,7 @@ Bugs:
     Bug-#050554 - In admin and front end>> some where did not mention about the preferred image required for upload.
     bug-#050141 - When teacher set his profile feature BOOKING BEFOIRE is 12 hours before. then learner side its showing wrong alert.
     Bug-#050150 - Spacing between the social media buttons is not correct.
+    Bug-#044719 - When user purchase any lesson then success message is showing> but link button is not highlighted properly
 
 Release Number: TV-2.9.0.20210223
 Release Date: 2021-02-23
