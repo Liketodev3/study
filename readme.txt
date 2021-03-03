@@ -1,5 +1,13 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number:
+
+Release Date:
+
+Bugs
+    Bug-#050554 - In admin and front end>> some where did not mention about the preferred image required for upload.
+    
+=============================================================
 Release Number: RV-2.1.1
 
 Release Date: 2021/02/19
