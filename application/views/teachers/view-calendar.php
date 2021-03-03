@@ -93,10 +93,10 @@ $(document).ready(function() {
 
             if ( selectedDateTime < validSelectDateTime ) {
                 if( selectedDateTime > moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
-                    $.systemMessage('<?php echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--danger');
-                    setTimeout(function() {
-                        $.systemMessage.close();
-                    }, 3000);
+                    // $.systemMessage('<?php //echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--danger');
+                    // setTimeout(function() {
+                    //     $.systemMessage.close();
+                    // }, 3000);
                 }
                 $("#loaderCalendar").hide();
                 $("body").css( {"cursor": "default"} );
