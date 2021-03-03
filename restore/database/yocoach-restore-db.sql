@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 12, 2021 at 08:55 AM
+-- Generation Time: Feb 26, 2021 at 01:24 PM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -16,6 +16,10 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `yocoach_restore`
+--
 
 -- --------------------------------------------------------
 
@@ -356,14 +360,9 @@ INSERT INTO `tbl_attached_files` (`afile_id`, `afile_type`, `afile_record_id`, `
 (800, 8, 4, 0, 0, 0, '2019/09/1568288294-pinterestpng', 'pinterest.png', 1, 0),
 (801, 8, 5, 0, 0, 0, '2019/09/1568288303-youtubepng', 'youtube.png', 1, 0),
 (802, 8, 3, 0, 0, 0, '2019/09/1568288458-instagrampng', 'instagram.png', 1, 0),
-(827, 14, 0, 0, 1, 0, '2019/09/1568608719-finalpng', 'final.png', 1, 0),
 (828, 9, 7, 0, 0, 0, '2019/09/1568700156-whyus75X7102png', 'why-us-75X71_02.png', 1, 0),
 (829, 9, 8, 0, 0, 0, '2019/09/1568700184-whyus75X7101png', 'why-us-75X71_01.png', 2, 0),
 (830, 9, 9, 0, 0, 0, '2019/09/1568700204-whyus75X7103png', 'why-us-75X71_03.png', 2, 0),
-(834, 10, 0, 0, 1, 0, '2019/09/1568810917-logoiconpng', 'logo-icon.png', 1, 0),
-(835, 37, 0, 0, 1, 0, '2019/09/1568810928-logoiconwhitepng', 'logo-icon-white.png', 4, 0),
-(836, 6, 0, 0, 1, 0, '2019/09/1568810936-logoiconpng', 'logo-icon.png', 1, 0),
-(837, 11, 0, 0, 1, 0, '2019/09/1568810947-logoiconpng', 'logo-icon.png', 1, 0),
 (864, 10, 0, 0, 2, 0, '2019/09/1568873497-logoiconpng', 'logo-icon.png', 1, 0),
 (865, 6, 0, 0, 2, 0, '2019/09/1568873503-logoiconpng', 'logo-icon.png', 1, 0),
 (866, 37, 0, 0, 2, 0, '2019/09/1568873511-logoiconwhitepng', 'logo-icon-white.png', 1, 0),
@@ -371,7 +370,6 @@ INSERT INTO `tbl_attached_files` (`afile_id`, `afile_type`, `afile_record_id`, `
 (868, 14, 0, 0, 2, 0, '2019/09/1568873526-logoiconpng', 'logo-icon.png', 1, 0),
 (869, 12, 0, 0, 2, 0, '2019/09/1568873603-favicon96x96png', 'favicon-96x96.png', 1, 0),
 (870, 18, 0, 0, 2, 0, '2019/09/1568873616-appleicon72x72png', 'apple-icon-72x72.png', 1, 0),
-(872, 12, 0, 0, 1, 0, '2019/09/1568873647-favicon96x96png', 'favicon-96x96.png', 1, 0),
 (918, 9, 4, 0, 0, 0, '2019/09/1569246986-tab1imagejpg', 'tab1-image.jpg', 5, 0),
 (919, 9, 5, 0, 0, 0, '2019/09/1569247000-tab2imagejpg', 'tab2-image.jpg', 5, 0),
 (920, 9, 6, 0, 0, 0, '2019/09/1569247016-tab3imagejpg', 'tab3-image.jpg', 7, 0),
@@ -463,7 +461,14 @@ INSERT INTO `tbl_attached_files` (`afile_id`, `afile_type`, `afile_record_id`, `
 (1034, 42, 12, 0, 0, 0, '2020/12/1606801154-germanpng', 'german.png', 1, 0),
 (1035, 43, 0, 0, 2, 0, '2020/12/1606827938-2000x600jpg', '2000x600.jpg', 1, 0),
 (1036, 43, 0, 0, 1, 0, '2020/12/1606829566-2000x600jpg', '2000x600.jpg', 1, 0),
-(1037, 44, 0, 0, 1, 0, '2020/12/1608545402-2000x9001jpg', '2000x900_1.jpg', 5, 0);
+(1038, 44, 0, 0, 1, 0, '2021/02/1614152431-2000x9001jpg', '2000x900_1.jpg', 6, 0),
+(1040, 37, 0, 0, 1, 0, '2021/02/1614152842-Desktoplogowhitepng', 'Desktop-logo-white.png', 5, 0),
+(1051, 10, 0, 0, 1, 0, '2021/02/1614251713-LogoFinal20101png', 'Logo_Final_2-01-01.png', 6, 0),
+(1053, 6, 0, 0, 1, 0, '2021/02/1614251773-LogoFinal20101png', 'Logo_Final_2-01-01.png', 7, 0),
+(1054, 12, 0, 0, 1, 0, '2021/02/1614251964-FAVFinal2ico', 'FAV_Final_2.ico', 3, 0),
+(1058, 14, 0, 0, 1, 0, '2021/02/1614342192-LogoFinal20101png', 'Logo_Final_2-01-01.png', 6, 0),
+(1060, 19, 0, 0, 1, 0, '2021/02/1614342229-LogoFinal20101png', 'Logo_Final_2-01-01.png', 2, 0),
+(1061, 11, 0, 0, 1, 0, '2021/02/1614342241-LogoFinal20101png', 'Logo_Final_2-01-01.png', 3, 0);
 
 -- --------------------------------------------------------
 
@@ -928,7 +933,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('CONF_RECAPTCHA_SITEKEY', '6LdrVagZAAAAAAdCNpskQknOZL6CXWF78yqHe_OV', 0),
 ('CONF_REPLY_TO_EMAIL', 'yocoach@dummyid.com', 0),
 ('CONF_RESTORED_SUCCESSFULLY', '1', 0),
-('conf_restore_schedule_time', '2019-11-07 13:48:39', 0),
+('conf_restore_schedule_time', '2021-02-24 13:44:03', 0),
 ('CONF_REVIEW_ALERT_EMAIL', '1', 0),
 ('CONF_SEND_EMAIL', '0', 0),
 ('CONF_SEND_SMTP_EMAIL', '0', 0),
@@ -953,11 +958,11 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('CONF_TWITTER_API_KEY', '', 0),
 ('CONF_TWITTER_API_SECRET', '', 0),
 ('CONF_TWITTER_USERNAME', '', 0),
-('CONF_USE_SSL', '0', 0),
+('CONF_USE_SSL', '1', 0),
 ('CONF_WEBSITE_NAME_1', 'Yo!Coach', 0),
 ('CONF_WEBSITE_NAME_2', 'Yo!Coach', 0),
 ('CONF_WELCOME_EMAIL_REGISTRATION', '1', 0),
-('CONF_YOCOACH_VERSION', 'TV-2.8.3.20210212', 0),
+('CONF_YOCOACH_VERSION', 'RV-2.1.1', 0),
 ('conf_yokart_version', 'V8.1', 0),
 ('CONF_ZOOM_API_KEY', 'KrK84VX6Q1WkFSTHe5tZ1Q', 0),
 ('CONF_ZOOM_API_SECRET', 'cgrP5fwMf9czo0loqHomZDGAMAZuu71S7kvs', 0),
@@ -1017,7 +1022,7 @@ CREATE TABLE `tbl_content_pages_block_lang` (
 --
 
 INSERT INTO `tbl_content_pages_block_lang` (`cpblocklang_id`, `cpblocklang_lang_id`, `cpblocklang_cpage_id`, `cpblocklang_block_id`, `cpblocklang_text`) VALUES
-(1, 1, 1, 1, '<section class=\"section section--white section--centered\">\r\n    <div class=\"container container--narrow container--cms\">\r\n        <div class=\"section__body\" style=\"\">\r\n            <!--\r\n            ------ First Section -------\r\n            -->\r\n            \r\n            <div class=\"row justify-content-center -align-center\">\r\n                <div class=\"col-xl-10 col-lg-12 col-md-12\">\r\n                    <div class=\"row\">\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <div class=\"icon\"><img src=\"/public/images/icon_mission.svg\" alt=\"\" /></div>\r\n                            <h4>The Mission</h4>\r\n                            <p>Nulla ornare euismod blandit. Quisque metus turpis, sollicitudin eget pellentesque sit amet, sagittis non dui. Sed convallis et nisl eget molestie. Vestibulum quis leo purus. Nunc iaculis placerat enim non tempus. </p></div>\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <div class=\"icon\"><img src=\"/public/images/icon_vision.svg\" alt=\"\" /></div>\r\n                            <h4>The Vision</h4>\r\n                            <p>Nulla ornare euismod blandit. Quisque metus turpis, sollicitudin eget pellentesque sit amet, sagittis non dui. Sed convallis et nisl eget molestie. Vestibulum quis leo purus. Nunc iaculis placerat enim non tempus.</p></div></div><span class=\"-gap\"></span><span class=\"-gap\"></span><span class=\"-gap\"></span><span class=\"-gap\"></span>\r\n                    <div class=\"-align-center section__head\">\r\n                        <h2>The Yocoach</h2></div>\r\n                    <div class=\"row\">\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <p style=\"text-align:left;\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin ante vel nisl mollis, vel viverra ipsum molestie. Nullam vehicula eros magna, id pharetra diam fringilla sit amet. Sed id lectus quis diam facilisis mollis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut convallis nec ante id dictum. Nunc rutrum ultrices dolor sit amet dignissim. Donec commodo turpis quis justo interdum egestas. Phasellus vestibulum aliquet neque eget scelerisque. Integer lacus orci, faucibus a nunc sed, rutrum iaculis tortor. Etiam sit amet massa sapien. In tincidunt sem at lorem viverra rutrum. Ut erat metus, mattis vel venenatis at, sodales et libero. Suspendisse consequat congue pretium. Morbi a eros fermentum, maximus neque in, egestas lectus. Nunc aliquam ante erat, vitae efficitur dui aliquam sit amet.</p></div>\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <p style=\"text-align:left;\">Ut lacus nisi, pulvinar eu tortor non, consectetur sollicitudin ante. Etiam maximus, neque a fermentum porta, mauris est consequat quam, eu fermentum quam arcu et nulla. Nullam ipsum turpis, lobortis lobortis cursus a, malesuada id nulla. Proin vitae pellentesque enim. Morbi quis viverra ante. Etiam malesuada, nisi eu hendrerit varius, nunc mi condimentum mi, eget lacinia sapien eros at erat. Aliquam pretium mattis erat, ultricies malesuada mi luctus eget. Aliquam in dignissim mi. Curabitur quam ante, feugiat sit amet commodo eu, tincidunt ut nibh. Ut ultricies velit non nibh lacinia dignissim.</p></div></div></div></div>\r\n            <!--\r\n            ------------\r\n            -->\r\n            </div></div></section>\r\n<section class=\"section section--grey -align-center\">\r\n    <div class=\"container container--narrow\">\r\n        <div class=\"section__head\">\r\n            <h2>The Team</h2></div>\r\n        <div class=\"section__body\">\r\n            <div class=\"row justify-content-center\">\r\n                <div class=\"col-xl-9 col-lg-12\">\r\n                    <div class=\"row\">\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_2.jpg\" alt=\"\" /></div>\r\n                            <h4>Kirstin</h4>\r\n                            <p>Customer Executive</p></div>\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_5.jpg\" alt=\"\" /></div>\r\n                            <h4>Cooper</h4>\r\n                            <p>Product Design</p></div>\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_4.jpg\" alt=\"\" /></div>\r\n                            <h4>Andrew</h4>\r\n                            <p>Marketing</p></div>\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_3.jpg\" alt=\"\" /></div>\r\n                            <h4>Mikael</h4>\r\n                            <p>Product Developer</p></div></div></div></div></div></div></section>\r\n<section class=\"section section--white section--hiw\">\r\n    <div class=\"container container--narrow\">\r\n        <div class=\"section-title\">\r\n            <h2>How It Works</h2></div>\r\n        <div class=\"row justify-content-between\">\r\n            <div class=\"col-xl-4 col-lg-5 col-md-12 col-sm-12\">\r\n                <div class=\"tabs-vertical tabs-js\">\r\n                    <ul>\r\n                        <li class=\"is-active\" data-href=\"#tab1\">\r\n                            <div class=\"tab-wrap\"> <span class=\"counter\"></span> \r\n                                <div class=\"tab-info\">\r\n                                    <h3>Browse</h3> \r\n                                    <p>Browse through hundreds of teachers.</p> <a href=\"https://www.italki.com/home\" class=\"btn btn--primary\">Find a Teacher</a> </div></div></li>\r\n                        <li class=\"\" data-href=\"#tab2\">\r\n                            <div class=\"tab-wrap\"> <span class=\"counter\"></span> \r\n                                <div class=\"tab-info\">\r\n                                    <h3>Book</h3> \r\n                                    <p>Book lessons with the best teacher for you.</p> <a href=\"https://www.italki.com/home\" class=\"btn btn--primary\">Find a Teacher</a> </div></div></li>\r\n                        <li class=\"\" data-href=\"#tab3\">\r\n                            <div class=\"tab-wrap\"> <span class=\"counter\"></span> \r\n                                <div class=\"tab-info\">\r\n                                    <h3>Start</h3> \r\n                                    <p>Log in to YoCoach and start learning.</p> <a href=\"https://www.italki.com/home\" class=\"btn btn--primary\">Find a Teacher</a> </div></div></li>\r\n                    </ul></div></div>\r\n            <div class=\"col-xl-7 col-lg-7 col-md-12 col-sm-12 col__content\">\r\n                <div id=\"tab1\" class=\"tabs-content-js\" style=\"display: block;\">\r\n                    <div class=\"media\"><a href=\"\" target=\"_self\"><img src=\"/image/show-banner/4/0/3\" alt=\"\" /></a></div></div>\r\n                <div id=\"tab2\" class=\"tabs-content-js\" style=\"display: none;\">\r\n                    <div class=\"media\"><a href=\"\" target=\"_self\"><img src=\"/image/show-banner/5/0/3\" alt=\"\" /></a></div></div>\r\n                <div id=\"tab3\" class=\"tabs-content-js\" style=\"display: none;\">\r\n                    <div class=\"media\"><a href=\"\" target=\"_self\"><img src=\"/image/show-banner/6/0/3\" alt=\"\" /></a></div></div></div></div></div></section>\r\n<section class=\"section section--white\">             \r\n    <div class=\"container container--narrow -align-center\">                 \r\n        <h2 class=\"-style-bold\">Looking forward to meeting<br />\r\n              your new students?</h2>                 <span class=\"-gap\"></span>                 <a href=\"#\" class=\"btn btn--primary btn--large\">Start Teaching</a>             </div>         </section>'),
+(1, 1, 1, 1, '<section class=\"section section--white section--centered\">\r\n    <div class=\"container container--narrow container--cms\">\r\n        <div class=\"section__body\" style=\"\">\r\n            <!--\r\n            ------ First Section -------\r\n            -->\r\n            \r\n            <div class=\"row justify-content-center -align-center\">\r\n                <div class=\"col-xl-10 col-lg-12 col-md-12\">\r\n                    <div class=\"row\">\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <div class=\"icon\"><img src=\"/public/images/icon_mission.svg\" alt=\"\" /></div>\r\n                            <h4>The Mission</h4>\r\n                            <p>Nulla ornare euismod blandit. Quisque metus turpis, sollicitudin eget pellentesque sit amet, sagittis non dui. Sed convallis et nisl eget molestie. Vestibulum quis leo purus. Nunc iaculis placerat enim non tempus. </p></div>\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <div class=\"icon\"><img src=\"/public/images/icon_vision.svg\" alt=\"\" /></div>\r\n                            <h4>The Vision</h4>\r\n                            <p>Nulla ornare euismod blandit. Quisque metus turpis, sollicitudin eget pellentesque sit amet, sagittis non dui. Sed convallis et nisl eget molestie. Vestibulum quis leo purus. Nunc iaculis placerat enim non tempus.</p></div></div><span class=\"-gap\"></span><span class=\"-gap\"></span><span class=\"-gap\"></span><span class=\"-gap\"></span>\r\n                    <div class=\"-align-center section__head\">\r\n                        <h2>The Yocoach</h2></div>\r\n                    <div class=\"row\">\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <p style=\"text-align:left;\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin ante vel nisl mollis, vel viverra ipsum molestie. Nullam vehicula eros magna, id pharetra diam fringilla sit amet. Sed id lectus quis diam facilisis mollis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut convallis nec ante id dictum. Nunc rutrum ultrices dolor sit amet dignissim. Donec commodo turpis quis justo interdum egestas. Phasellus vestibulum aliquet neque eget scelerisque. Integer lacus orci, faucibus a nunc sed, rutrum iaculis tortor. Etiam sit amet massa sapien. In tincidunt sem at lorem viverra rutrum. Ut erat metus, mattis vel venenatis at, sodales et libero. Suspendisse consequat congue pretium. Morbi a eros fermentum, maximus neque in, egestas lectus. Nunc aliquam ante erat, vitae efficitur dui aliquam sit amet.</p></div>\r\n                        <div class=\"col-xl-6 col-lg-6 col-md-12 icon-col\">\r\n                            <p style=\"text-align:left;\">Ut lacus nisi, pulvinar eu tortor non, consectetur sollicitudin ante. Etiam maximus, neque a fermentum porta, mauris est consequat quam, eu fermentum quam arcu et nulla. Nullam ipsum turpis, lobortis lobortis cursus a, malesuada id nulla. Proin vitae pellentesque enim. Morbi quis viverra ante. Etiam malesuada, nisi eu hendrerit varius, nunc mi condimentum mi, eget lacinia sapien eros at erat. Aliquam pretium mattis erat, ultricies malesuada mi luctus eget. Aliquam in dignissim mi. Curabitur quam ante, feugiat sit amet commodo eu, tincidunt ut nibh. Ut ultricies velit non nibh lacinia dignissim.</p></div></div></div></div>\r\n            <!--\r\n            ------------\r\n            -->\r\n            </div></div></section>\r\n<section class=\"section section--grey -align-center\">\r\n    <div class=\"container container--narrow\">\r\n        <div class=\"section__head\">\r\n            <h2>The Team</h2></div>\r\n        <div class=\"section__body\">\r\n            <div class=\"row justify-content-center\">\r\n                <div class=\"col-xl-9 col-lg-12\">\r\n                    <div class=\"row\">\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_2.jpg\" alt=\"\" /></div>\r\n                            <h4>Kirstin</h4>\r\n                            <p>Customer Executive</p></div>\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_5.jpg\" alt=\"\" /></div>\r\n                            <h4>Cooper</h4>\r\n                            <p>Product Design</p></div>\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_4.jpg\" alt=\"\" /></div>\r\n                            <h4>Andrew</h4>\r\n                            <p>Marketing</p></div>\r\n                        <div class=\"col-xl-3 col-lg-3 col-md-3 team\">\r\n                            <div class=\"team__media\"><img src=\"/public/images/300x300_3.jpg\" alt=\"\" /></div>\r\n                            <h4>Mikael</h4>\r\n                            <p>Product Developer</p></div></div></div></div></div></div></section>\r\n<section class=\"section section--white section--hiw\">\r\n    <div class=\"container container--narrow\">\r\n        <div class=\"section-title\">\r\n            <h2>How It Works</h2></div>\r\n        <div class=\"row justify-content-between\">\r\n            <div class=\"col-xl-4 col-lg-5 col-md-12 col-sm-12\">\r\n                <div class=\"tabs-vertical tabs-js\">\r\n                    <ul>\r\n                        <li class=\"is-active\" data-href=\"#tab1\">\r\n                            <div class=\"tab-wrap\"> <span class=\"counter\"></span> \r\n                                <div class=\"tab-info\">\r\n                                    <h3>Browse</h3> \r\n                                    <p>Browse through hundreds of teachers.</p> <a href=\"https://www.teach.yo-coach.com/teachers\" class=\"btn btn--primary\">Find a Teacher</a> </div></div></li>\r\n                        <li class=\"\" data-href=\"#tab2\">\r\n                            <div class=\"tab-wrap\"> <span class=\"counter\"></span> \r\n                                <div class=\"tab-info\">\r\n                                    <h3>Book</h3> \r\n                                    <p>Book lessons with the best teacher for you.</p> <a href=\"https://www.teach.yo-coach.com/teachers\" class=\"btn btn--primary\">Find a Teacher</a> </div></div></li>\r\n                        <li class=\"\" data-href=\"#tab3\">\r\n                            <div class=\"tab-wrap\"> <span class=\"counter\"></span> \r\n                                <div class=\"tab-info\">\r\n                                    <h3>Start</h3> \r\n                                    <p>Log in to YoCoach and start learning.</p> <a href=\"https://www.teach.yo-coach.com/teachers\" class=\"btn btn--primary\">Find a Teacher</a> </div></div></li>\r\n                    </ul></div></div>\r\n            <div class=\"col-xl-7 col-lg-7 col-md-12 col-sm-12 col__content\">\r\n                <div id=\"tab1\" class=\"tabs-content-js\" style=\"display: block;\">\r\n                    <div class=\"media\"><a href=\"\" target=\"_self\"><img src=\"/image/show-banner/4/0/3\" alt=\"\" /></a></div></div>\r\n                <div id=\"tab2\" class=\"tabs-content-js\" style=\"display: none;\">\r\n                    <div class=\"media\"><a href=\"\" target=\"_self\"><img src=\"/image/show-banner/5/0/3\" alt=\"\" /></a></div></div>\r\n                <div id=\"tab3\" class=\"tabs-content-js\" style=\"display: none;\">\r\n                    <div class=\"media\"><a href=\"\" target=\"_self\"><img src=\"/image/show-banner/6/0/3\" alt=\"\" /></a></div></div></div></div></div></section>\r\n<section class=\"section section--white\">             \r\n    <div class=\"container container--narrow -align-center\">                 \r\n        <h2 class=\"-style-bold\">Looking forward to meeting<br />\r\n              your new students?</h2>                 <span class=\"-gap\"></span>                 <a href=\"#\" class=\"btn btn--primary btn--large\">Start Teaching</a>             </div>         </section>'),
 (2, 1, 1, 2, ''),
 (3, 1, 1, 3, ''),
 (4, 1, 1, 4, ''),
@@ -1073,7 +1078,7 @@ INSERT INTO `tbl_content_pages_lang` (`cpagelang_cpage_id`, `cpagelang_lang_id`,
 (3, 2, 'سياسة خاصة', '', '', ''),
 (4, 1, 'test page eng', '', 'test page english image', ''),
 (4, 2, 'test page arabic', '', 'test page arabic image', ''),
-(5, 1, 'Contact US', '<section class=\"banner banner--main\">             \r\n	<div class=\"banner__media\"><img src=\"/public/images/2000x600.jpg\" alt=\"\" /></div>             \r\n	<div class=\"banner__content banner__content--centered\">                 \r\n		<h1>Drop us a line</h1>                 \r\n		<p>Got a question? We\'d love to hear from  you. <br />\r\n			Send us a message and we\'ll respond as soon as possible.</p>             </div>         </section>         \r\n         \r\n<section class=\"section section--white section--offset -align-center\">             \r\n	<div class=\"container container--fixed\">                 \r\n		<div class=\"row justify-content-center\">                     \r\n			<div class=\"col-xl-3 col-lg-4 col-md-4\">                         \r\n				<div class=\"icon\"><img src=\"/public/images/contact_icon_1.svg\" alt=\"\" /></div>                         \r\n				<p>Team yoCoach</p>                     </div>                     \r\n			<div class=\"col-xl-3 col-lg-4 col-md-4\">                         \r\n				<div class=\"icon\"><img src=\"/public/images/contact_icon_2.svg\" alt=\"\" /></div>                         \r\n				<p><a href=\"#\">info@yoCoach.com</a><br />\r\n					</p>                     </div>                     \r\n			<div class=\"col-xl-3 col-lg-4 col-md-4\">                         \r\n				<div class=\"icon\"><img src=\"/public/images/contact_icon_3.svg\" alt=\"\" /></div>                         \r\n				<p>coming soon.&nbsp; Please send email</p>                     </div>                 </div>             </div>         </section>', '', ''),
+(5, 1, 'Contact US', '\r\n<section class=\"banner banner--main\">             \r\n	<div class=\"banner__media\"><img src=\"/public/images/2000x600.jpg\" alt=\"\" /></div>             \r\n	<div class=\"banner__content banner__content--centered\">                 \r\n		<h1>Drop us a line</h1>                 \r\n		<p>Got a question? We\'d love to hear from  you. <br />\r\n			Send us a message and we\'ll respond as soon as possible.</p>             </div>         </section>         \r\n         \r\n<section class=\"section section--white section--offset -align-center\">             \r\n	<div class=\"container container--fixed\">                 \r\n		<div class=\"row justify-content-center\">                     \r\n			<div class=\"col-xl-3 col-lg-4 col-md-4\">                         \r\n				<div class=\"icon\"><img src=\"/public/images/contact_icon_1.svg\" alt=\"\" /></div>                         \r\n				<p>Team Yo!Coach</p>                     </div>                     \r\n			<div class=\"col-xl-3 col-lg-4 col-md-4\">                         \r\n				<div class=\"icon\"><img src=\"/public/images/contact_icon_2.svg\" alt=\"\" /></div>                         \r\n				<p><a href=\"#\">info@yocoach.com</a><br />\r\n					</p>                     </div>                     \r\n			<div class=\"col-xl-3 col-lg-4 col-md-4\">                         \r\n				<div class=\"icon\"><img src=\"/public/images/contact_icon_3.svg\" alt=\"\" /></div>                         \r\n				<p>Coming soon.&nbsp; Please send email.</p>                     </div>                 </div>             </div>         </section>', '', ''),
 (5, 2, 'Contact US', '<section class=\"banner banner--main\">             \r\n	<div class=\"banner__media\"><img src=\"/public/images/2000x600.jpg\" alt=\"\" /></div>             \r\n	<div class=\"banner__content banner__content--centered\">                 \r\n		<h1>Drop us a line</h1>                 \r\n		<p>Got a question? We\'d love to hear from  you. <br />\r\n			Send us a message and we\'ll respond as soon as possible.</p>             </div>         </section>         \r\n         \r\n<section class=\"section section--white section--offset -align-center\">             \r\n	<div class=\"container container--fixed\">                 \r\n		<div class=\"row justify-content-center\">                     \r\n			<div class=\"col-xl-3 col-lg-4 col-md-4\">                         \r\n				<div class=\"icon\"><img src=\"/public/images/contact_icon_1.svg\" alt=\"\" /></div>                         \r\n				<p>The Office Group <br />\r\n					91 Wimpole Street Marylebone,<br />\r\n					 London W1G 0EF, United Kingdom</p>                     </div>                     \r\n			<div class=\"col-xl-3 col-lg-4 col-md-4\">                         \r\n				<div class=\"icon\"><img src=\"/public/images/contact_icon_2.svg\" alt=\"\" /></div>                         \r\n				<p><a href=\"#\">info@yoCoach.com</a><br />\r\n					                         <a href=\"#\">sales@weyakweyak.com</a></p>                     </div>                     \r\n			<div class=\"col-xl-3 col-lg-4 col-md-4\">                         \r\n				<div class=\"icon\"><img src=\"/public/images/contact_icon_3.svg\" alt=\"\" /></div>                         \r\n				<p>(+44) 020 7846 0316 <br />\r\n					(+44) 020 7846 0316 <br />\r\n					(+44) 020 7846 0316</p>                     </div>                 </div>             </div>         </section>', '', ''),
 (6, 1, 'Help', '<div>\r\n	<ol style=\"box-sizing: border-box; margin: 0px 0px 0.692em; padding: 0px 0px 0px 2em; border: 0px; font-variant-numeric: inherit; font-variant-east-asian: inherit; font-stretch: inherit; line-height: inherit; font-family: Ubuntu, sans-serif; font-size: 16px; vertical-align: baseline; list-style-position: outside; list-style-image: initial; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255);\">\r\n		<li style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\"><a href=\"https://www.drupal.org/docs/develop/documenting-your-project/help-text-standards#description\" rel=\"nofollow\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(6, 120, 190); text-decoration-line: none;\"><strong style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Short description</strong></a>&nbsp;of what the module&nbsp;<em style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">does</em>. It is displayed on the&nbsp;<em style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Extend</em>&nbsp;or&nbsp;<em style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Modules</em>&nbsp;page (in Drupal 8 or 7). It is the only texts users will see if the module is not enabled yet.</li>\r\n		<li style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\"><a href=\"https://www.drupal.org/docs/develop/documenting-your-project/help-text-standards#links\" rel=\"nofollow\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(6, 120, 190); text-decoration-line: none;\"><strong style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Description on links</strong></a>&nbsp;are displayed with the links on the Configuration and Structure pages and invite users to do something.</li>\r\n		<li style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\"><a href=\"https://www.drupal.org/docs/develop/documenting-your-project/help-text-standards#admin\" rel=\"nofollow\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(6, 120, 190); text-decoration-line: none;\"><strong style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Explanations on the administration pages</strong>.</a>&nbsp;Ideally this should not be needed, but if they do they are short and do not duplicate the help page.</li>\r\n		<li style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\"><a href=\"https://www.drupal.org/docs/develop/documenting-your-project/help-text-standards#help\" rel=\"nofollow\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(6, 120, 190); text-decoration-line: none;\"><strong style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Help page</strong></a>&nbsp;displayed by the&nbsp;<a href=\"https://www.drupal.org/documentation/modules/help/\" rel=\"nofollow\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(6, 120, 190); text-decoration-line: none;\">Help module</a>&nbsp;with three sections: What does the module do, what can users do with it, and a link to the online documentation here on drupal.org. This&nbsp;<code class=\" language-php\" style=\"box-sizing: border-box; margin: 0px; padding: 0.25em 0.5em; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: Monaco, Consolas, \"Andale Mono\", \"Ubuntu Mono\", monospace; font-size: 0.75em; vertical-align: baseline; white-space: pre-wrap; background: rgb(247, 247, 247); border-radius: 0.25em;\"><span class=\"token function\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(6, 71, 113);\">hook_help</span><span class=\"token punctuation\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(85, 85, 85);\">(</span><span class=\"token punctuation\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(85, 85, 85);\">)</span></code>&nbsp;text is in the&nbsp;<code class=\" language-php\" style=\"box-sizing: border-box; margin: 0px; padding: 0.25em 0.5em; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: Monaco, Consolas, \"Andale Mono\", \"Ubuntu Mono\", monospace; font-size: 0.75em; vertical-align: baseline; white-space: pre-wrap; background: rgb(247, 247, 247); border-radius: 0.25em;\">my_module<span class=\"token punctuation\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(85, 85, 85);\">.</span>module</code>&nbsp;file.</li>\r\n	</ol>\r\n	<h2 style=\"box-sizing: border-box; margin: 0.9em 0px 0.45em; padding: 0px; border: 0px; font-variant-numeric: inherit; font-variant-east-asian: inherit; font-weight: 300; font-stretch: inherit; line-height: 1.35em; font-family: Ubuntu, sans-serif; font-size: 2em; vertical-align: baseline; -webkit-font-smoothing: antialiased; color: rgb(6, 71, 113); background-color: rgb(255, 255, 255);\"><a id=\"description\" name=\"description\" rel=\"nofollow\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(6, 120, 190);\">1. Short Description</a></h2>\r\n	<p style=\"box-sizing: border-box; margin: 0px 0px 1.385em; padding: 0px; border: 0px; font-variant-numeric: inherit; font-variant-east-asian: inherit; font-stretch: inherit; line-height: inherit; font-family: Ubuntu, sans-serif; font-size: 16px; vertical-align: baseline; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255);\">The short description is set in the&nbsp;<code class=\" language-php\" style=\"box-sizing: border-box; margin: 0px; padding: 0.25em 0.5em; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: Monaco, Consolas, \"Andale Mono\", \"Ubuntu Mono\", monospace; font-size: 0.75em; vertical-align: baseline; white-space: pre-wrap; background: rgb(247, 247, 247); border-radius: 0.25em;\">description</code>&nbsp;element of:</p>\r\n	<ul style=\"box-sizing: border-box; margin: 0px 0px 0.692em; padding: 0px 0px 0px 2em; border: 0px; font-variant-numeric: inherit; font-variant-east-asian: inherit; font-stretch: inherit; line-height: inherit; font-family: Ubuntu, sans-serif; font-size: 16px; vertical-align: baseline; list-style-position: initial; list-style-image: initial; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255);\">\r\n		<li style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Drupal 8:&nbsp;<code class=\" language-php\" style=\"box-sizing: border-box; margin: 0px; padding: 0.25em 0.5em; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: Monaco, Consolas, \"Andale Mono\", \"Ubuntu Mono\", monospace; font-size: 0.75em; vertical-align: baseline; white-space: pre-wrap; background: rgb(247, 247, 247); border-radius: 0.25em;\">my_module<span class=\"token punctuation\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(85, 85, 85);\">.</span>info<span class=\"token punctuation\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(85, 85, 85);\">.</span>yml</code>&nbsp;file</li>\r\n		<li style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Drupal 7:&nbsp;<code class=\" language-php\" style=\"box-sizing: border-box; margin: 0px; padding: 0.25em 0.5em; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: Monaco, Consolas, \"Andale Mono\", \"Ubuntu Mono\", monospace; font-size: 0.75em; vertical-align: baseline; white-space: pre-wrap; background: rgb(247, 247, 247); border-radius: 0.25em;\">my_module<span class=\"token punctuation\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(85, 85, 85);\">.</span>info</code>&nbsp;file</li>\r\n	</ul>\r\n	<p style=\"box-sizing: border-box; margin: 0px 0px 1.385em; padding: 0px; border: 0px; font-variant-numeric: inherit; font-variant-east-asian: inherit; font-stretch: inherit; line-height: inherit; font-family: Ubuntu, sans-serif; font-size: 16px; vertical-align: baseline; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255);\">This description is displayed in the list of available modules on the&nbsp;<em style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Extend</em>&nbsp;(D8) or&nbsp;<em style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Modules</em>&nbsp;(D7) page to tell site builders what the module does, before they enable it.<br style=\"box-sizing: border-box;\" />\r\n		The description starts with a verb and should be short and concise.</p>\r\n	<p style=\"box-sizing: border-box; margin: 0px 0px 1.385em; padding: 0px; border: 0px; font-variant-numeric: inherit; font-variant-east-asian: inherit; font-stretch: inherit; line-height: inherit; font-family: Ubuntu, sans-serif; font-size: 16px; vertical-align: baseline; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255);\"><em style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Examples</em></p>\r\n	<ul style=\"box-sizing: border-box; margin: 0px 0px 0.692em; padding: 0px 0px 0px 2em; border: 0px; font-variant-numeric: inherit; font-variant-east-asian: inherit; font-stretch: inherit; line-height: inherit; font-family: Ubuntu, sans-serif; font-size: 16px; vertical-align: baseline; list-style-position: initial; list-style-image: initial; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255);\">\r\n		<li style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\"><strong style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Help</strong>&nbsp;Manages the display of online help.</li>\r\n		<li style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\"><strong style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Content Translation</strong>&nbsp;Allows users to translate content entities.</li>\r\n		<li style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\"><strong style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline;\">Datetime</strong>&nbsp;Defines datetime form elements and a datetime field type.<br style=\"box-sizing: border-box;\" />\r\n			<code class=\" language-php\" style=\"box-sizing: border-box; margin: 0px; padding: 0.25em 0.5em; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: Monaco, Consolas, \"Andale Mono\", \"Ubuntu Mono\", monospace; font-size: 0.75em; vertical-align: baseline; white-space: pre-wrap; background: rgb(247, 247, 247); border-radius: 0.25em;\">description<span class=\"token punctuation\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(85, 85, 85);\">:</span> Defines datetime form elements <span class=\"token keyword keyword-and\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(83, 115, 141);\">and</span> a datetime field type<span class=\"token punctuation\" style=\"box-sizing: border-box; margin: 0px; padding: 0px; border: 0px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; font-family: inherit; vertical-align: baseline; color: rgb(85, 85, 85);\">.</span></code></li>\r\n	</ul></div>', 'Help', 'hgujgkuy'),
 (6, 2, 'مساعدة', 'مساعدة', '', ''),
@@ -1924,6 +1929,13 @@ CREATE TABLE `tbl_email_archives` (
   `emailarchive_headers` mediumtext NOT NULL,
   `emailarchive_sent_on` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `tbl_email_archives`
+--
+
+INSERT INTO `tbl_email_archives` (`emailarchive_id`, `emailarchive_to_email`, `emailarchive_tpl_name`, `emailarchive_subject`, `emailarchive_body`, `emailarchive_headers`, `emailarchive_sent_on`) VALUES
+(1, 'betty@dummyid.com', 'account_credited_debited', 'Your account has been Credited on Yo!Coach', '<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#f5f5f5\" style=\"font-family:Arial; color:#333; line-height:26px;\"> \r\n        \r\n        \r\n	<tbody>            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:30px 0;\"></td>    \r\n            \r\n		</tr>    \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:0 0 0;\">          \r\n                    \r\n				<!--\r\n				header start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #fff;border-bottom: 1px solid #eee;\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:20px 40px;\"><a href=\"#\" style=\"display: block;\"><img style=\"max-width: 160px;\" src=\"http://localhost/yo-coach/image/email-logo/1\" /></a></td>                  \r\n                                \r\n							<td style=\"text-align:right;padding: 40px;\">                      <a style=\"display:inline-block;vertical-align:top; width:35px;height:35px; margin:0 0 0 5px; background:#1a1a1a;border-radius:100%;padding:4px;\" href=\"https://www.facebook.com/yocoachelearning/\" target=\"_blank\" title=\"Facebook\" ><img alt=\"Facebook\" width=\"24\" style=\"margin:4px auto 0; display:block;\" src = \"http://localhost/yo-coach/image/social-platform/1\"/></a><a style=\"display:inline-block;vertical-align:top; width:35px;height:35px; margin:0 0 0 5px; background:#1a1a1a;border-radius:100%;padding:4px;\" href=\"https://twitter.com/yo_coach_\" target=\"_blank\" title=\"TW\" ><img alt=\"TW\" width=\"24\" style=\"margin:4px auto 0; display:block;\" src = \"http://localhost/yo-coach/image/social-platform/2\"/></a><a style=\"display:inline-block;vertical-align:top; width:35px;height:35px; margin:0 0 0 5px; background:#1a1a1a;border-radius:100%;padding:4px;\" href=\"https://www.instagram.com/YoCoach_Software/\" target=\"_blank\" title=\"IG\" ><img alt=\"IG\" width=\"24\" style=\"margin:4px auto 0; display:block;\" src = \"http://localhost/yo-coach/image/social-platform/3\"/></a><a style=\"display:inline-block;vertical-align:top; width:35px;height:35px; margin:0 0 0 5px; background:#1a1a1a;border-radius:100%;padding:4px;\" href=\"https://www.pinterest.com/yoCoach/pins/\" target=\"_blank\" title=\"P\" ><img alt=\"P\" width=\"24\" style=\"margin:4px auto 0; display:block;\" src = \"http://localhost/yo-coach/image/social-platform/4\"/></a><a style=\"display:inline-block;vertical-align:top; width:35px;height:35px; margin:0 0 0 5px; background:#1a1a1a;border-radius:100%;padding:4px;\" href=\"https://www.youtube.com/channel/UCNPly8tAtfBneXv1MfzjD4g\" target=\"_blank\" title=\"YT\" ><img alt=\"YT\" width=\"24\" style=\"margin:4px auto 0; display:block;\" src = \"http://localhost/yo-coach/image/social-platform/5\"/></a>\r\n                      </td>              \r\n                            \r\n						</tr>          \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				header end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n       \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>                    \r\n				<!--\r\n				page body start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">             \r\n                  \r\n                        \r\n					<tbody>                        \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;\">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:20px 0 60px;\">                                     <img src=\"icon-account.png\" alt=\"\" />                                     \r\n												<h5 style=\"margin: 0;padding: 0; text-transform: uppercase; font-size: 16px;font-weight: 500;color: #333;\"></h5>                                     \r\n												<h2 style=\"margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;\">Account Transaction</h2>                                  </td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                  \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; \">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:60px 0 70px;\">                                      \r\n												<h3 style=\"margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;\">Dear Betty Harris</h3>Your account has been Credited at <a href=\"http://localhost/yo-coach\">Yo!Coach</a>. Please find the details below:<br />\r\n												\r\n												<table style=\"border:1px solid #ddd; border-collapse:collapse;\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\r\n													<tbody>\r\n														<tr>\r\n															<td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">ID</td>\r\n															<td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">TN-0000017</td>\r\n														</tr>                                                        \r\n														<tr>\r\n															<td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">Amount<span class=\"Apple-tab-span\" style=\"white-space:pre\"></span></td>\r\n															<td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\"> $1,000.00</td>\r\n														</tr>                                                        \r\n														<tr>\r\n															<td style=\"padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;\" width=\"153\">Comment</td>\r\n															<td style=\"padding:10px;font-size:13px; color:#333;border:1px solid #ddd;\" width=\"620\">1000</td>\r\n														</tr> \r\n													</tbody>\r\n												</table>                                  </td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                 \r\n                \r\n              \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page body end here\r\n				-->\r\n				                          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>          \r\n                    \r\n				<!--\r\n				page footer start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                                \r\n							<td style=\"height:30px;\"></td>                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:30px 0; font-size:20px; color:#000;\">                                  Need more help?<br />\r\n												                                                     <a href=\"http://localhost/yo-coach/contact\" style=\"color:#e84c3d;\">We‘re here, ready to talk</a>                              </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:20px 0 30px; font-size:13px; color:#999;\">                                  Be sure to add <a href=\"#\" style=\"color: #e84c3d\">yocoach@dummyid.com</a> to your address book or safe sender list so our emails get to your inbox.<br />\r\n												                                                    <br />\r\n												                                                    &copy; 2018, Yo!Coach. All Rights Reserved.\r\n                                      \r\n                                  </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                  \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0; height:50px;\"></td>              \r\n                            \r\n						</tr>              \r\n                  \r\n              \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page footer end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n        \r\n        \r\n	</tbody>    \r\n</table>', '\'MIME-Version: 1.0\\r\\nContent-type: text/html; charset=utf-8\\r\\nFrom: YoCoach<yocoach@dummyid.com>\\r\\nReply-to: yocoach@dummyid.com\'', '2021-02-26 10:41:15');
 
 -- --------------------------------------------------------
 
@@ -6350,7 +6362,20 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (3977, 'LBL_Select_A_Language', 2, 'اختر لغة'),
 (3978, 'LBL_Select_date_time', 1, 'Select day & time'),
 (3980, 'LBL_Select_date_time', 2, 'حدد التاريخ والوقت'),
-(3995, 'LBL_Sort_by', 1, 'Sort By');
+(3995, 'LBL_Sort_by', 1, 'Sort By'),
+(3996, 'LBL_Note_End_time_for_this_lesson_is_passed._Schedule_more_lessons.', 1, 'Note End Time For This Lesson Is Passed. Schedule More Lessons.'),
+(3997, 'LBL_Booking_Close_For_This_Class', 1, 'Booking Close For This Class'),
+(3998, 'LBL_2_Articles', 1, '2 Articles'),
+(3999, 'LBL_Commission_REPORT', 1, 'Commission Report'),
+(4000, 'METALBL_Default', 1, 'Default'),
+(4001, 'METALBL_Others', 1, 'Others'),
+(4002, 'METALBL_Teachers', 1, 'Teachers'),
+(4003, 'METALBL_Group_Classes', 1, 'Group Classes'),
+(4004, 'METALBL_CMS_Page', 1, 'Cms Page'),
+(4005, 'METALBL_Blog_Categories', 1, 'Blog Categories'),
+(4006, 'METALBL_Blog_Posts', 1, 'Blog Posts'),
+(4007, 'LBL_(TIMEZONE_%s)_%s', 1, '(timezone %s) %s'),
+(4008, 'Lbl_To_Sync_with_google_calendar', 1, 'To Sync With Google Calendar');
 
 -- --------------------------------------------------------
 
@@ -6462,7 +6487,8 @@ CREATE TABLE `tbl_meta_tags` (
 
 INSERT INTO `tbl_meta_tags` (`meta_id`, `meta_controller`, `meta_action`, `meta_record_id`, `meta_subrecord_id`, `meta_identifier`, `meta_default`, `meta_advanced`) VALUES
 (1, 'Cms', 'view', 1, 0, 'About Us', 0, 0),
-(2, 'Home', 'index', 0, 0, 'Home', 0, 1);
+(2, 'Home', 'index', 0, 0, 'Home', 0, 1),
+(3, '', '', 0, 0, 'Default', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -6487,7 +6513,9 @@ INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_
 (1, 1, 'About Us', 'About Us', 'About Us', '<meta name=\"copyright\" content=\"text\">'),
 (1, 2, 'About Us', 'About Us', 'About Us', '<meta name=\"copyright\" content=\"text\">'),
 (2, 1, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', ''),
-(2, 2, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '');
+(2, 2, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', ''),
+(3, 1, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', ''),
+(3, 2, 'Yo!Coach Live Demo - Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '');
 
 -- --------------------------------------------------------
 
@@ -6680,7 +6708,8 @@ INSERT INTO `tbl_notifications` (`notification_id`, `notification_user_id`, `not
 (33, 15, '30', 11, 2, 'Lesson Scheduled By Learner', 'Lesson Scheduled By Learner Description', 0, '2020-11-27 12:36:19', 0),
 (34, 15, '31', 11, 2, 'Lesson Scheduled By Learner', 'Lesson Scheduled By Learner Description', 0, '2020-11-27 12:36:42', 0),
 (35, 2, '11', 15, 6, 'Lesson Issue Resolved By Teacher', 'Lesson Resolved By Teacher Description', 0, '2020-11-27 12:51:39', 0),
-(36, 22, '0', 0, 1, 'Teacher Request Approved', 'Teacher Request Approved Description', 0, '2020-11-28 04:52:27', 0);
+(36, 22, '0', 0, 1, 'Teacher Request Approved', 'Teacher Request Approved Description', 0, '2020-11-28 04:52:27', 0),
+(37, 22, '0', 0, 4, 'Wallet Credit', 'Wallet Credit Description', 0, '2021-02-26 10:41:15', 0);
 
 -- --------------------------------------------------------
 
@@ -6729,7 +6758,8 @@ INSERT INTO `tbl_orders` (`order_id`, `order_type`, `order_user_id`, `order_is_p
 ('O1606472489', 1, 2, 1, '10.00', 1, '0.00', '', '0.00', '', '0.00', 1, 'EN', 1, 'USD', '1.00000000', 0, '2020-11-27 10:21:29', '2020-11-27 10:21:30'),
 ('O1606472548', 1, 2, 1, '15.00', 1, '0.00', '', '0.00', '', '0.00', 1, 'EN', 1, 'USD', '1.00000000', 0, '2020-11-27 10:22:28', '2020-11-27 10:22:29'),
 ('O1606480415', 1, 11, 1, '60.00', 0, '0.00', '', '0.00', '', '0.00', 1, 'EN', 1, 'USD', '1.00000000', 2, '2020-11-27 12:33:35', '2020-11-27 12:35:04'),
-('O1613114104', 1, 2, 1, '8.00', 1, '0.00', '', '0.00', '', '0.00', 1, 'EN', 4, 'EUR', '1.20000000', 0, '2021-02-12 07:15:04', '2021-02-12 07:15:04');
+('O1613114104', 1, 2, 1, '8.00', 1, '0.00', '', '0.00', '', '0.00', 1, 'EN', 4, 'EUR', '1.20000000', 0, '2021-02-12 07:15:04', '2021-02-12 07:15:04'),
+('O1614336084', 1, 22, 1, '54.00', 1, '0.00', '', '0.00', '', '0.00', 1, 'EN', 1, 'USD', '1.00000000', 0, '2021-02-26 10:41:24', '2021-02-26 10:41:24');
 
 -- --------------------------------------------------------
 
@@ -6767,7 +6797,8 @@ INSERT INTO `tbl_order_payments` (`opayment_id`, `opayment_order_id`, `opayment_
 (12, 'O1606472489', 'User Wallet', 'W-1606472490', '10.00', 'Received Payment', 'Payment From User Wallet', '2020-11-27 10:21:30'),
 (13, 'O1606472548', 'User Wallet', 'W-1606472549', '15.00', 'Received Payment', 'Payment From User Wallet', '2020-11-27 10:22:29'),
 (14, 'O1606480415', 'PaypalStandard', '0M584813Y44802709', '60.00', 'Received Payment', 'cmd=_notify-validate&mc_gross=60.00&invoice=O1606480415&protection_eligibility=Eligible&item_number1=O1606480415&payer_id=USMTWCB5XMHR8&payment_date=04%3A34%3A41+Nov+27%2C+2020+PST&payment_status=Completed&charset=windows-1252&first_name=WZY&mc_fee=2.04&notify_version=3.9&custom=O1606480415&payer_status=verified&business=wzyseller%40dummyid.com&num_cart_items=1&verify_sign=AxXQLjWknNsHxMa.4LvFzI8-b0vQAcK6QyUYhkgbDNyPJCskc8Zobrzh&payer_email=wzybuyer%40dummyid.com&txn_id=0M584813Y44802709&payment_type=instant&payer_business_name=Fatbit&last_name=Buyer&item_name1=Order+Payment+Gateway+Description+Yo%21Coach+O1606480415&receiver_email=wzyseller%40dummyid.com&payment_fee=2.04&shipping_discount=0.00&quantity1=1&insurance_amount=0.00&receiver_id=V5WMBUFN24AR6&txn_type=cart&discount=0.00&mc_gross_1=60.00&mc_currency=USD&residence_country=US&test_ipn=1&shipping_method=Default&transaction_subject=&payment_gross=60.00&ipn_track_id=93970bba1e4b2#VERIFIED', '2020-11-27 12:35:04'),
-(15, 'O1613114104', 'User Wallet', 'W-1613114104', '8.00', 'Received Payment', 'Payment From User Wallet', '2021-02-12 07:15:04');
+(15, 'O1613114104', 'User Wallet', 'W-1613114104', '8.00', 'Received Payment', 'Payment From User Wallet', '2021-02-12 07:15:04'),
+(16, 'O1614336084', 'User Wallet', 'W-1614336084', '54.00', 'Received Payment', 'Payment From User Wallet', '2021-02-26 10:41:24');
 
 -- --------------------------------------------------------
 
@@ -6814,7 +6845,8 @@ INSERT INTO `tbl_order_products` (`op_id`, `op_order_id`, `op_invoice_number`, `
 (12, 'O1606472489', 'O1606472489-S0001', 5, 15, 3, 0, '0.00', 0, '60', 1, '10.00', '9.00', '10.00', 0, '0.00', 2),
 (13, 'O1606472548', 'O1606472548-S0001', 6, 15, 3, 0, '0.00', 0, '60', 1, '15.00', '13.50', '10.00', 0, '0.00', 2),
 (14, 'O1606480415', 'O1606480415-S0001', 0, 15, 11, 5, '5.00', 0, '60', 5, '12.00', '10.80', '10.00', 1, '12.00', 2),
-(15, 'O1613114104', 'O1613114104-S0001', 0, 15, 1, 2, '1.00', 0, '60', 1, '8.00', '7.20', '10.00', 0, '0.00', 2);
+(15, 'O1613114104', 'O1613114104-S0001', 0, 15, 1, 2, '1.00', 0, '60', 1, '8.00', '7.20', '10.00', 0, '0.00', 2),
+(16, 'O1614336084', 'O1614336084-S0001', 0, 19, 1, 4, '3.00', 0, '60', 3, '18.00', '15.84', '12.00', 0, '0.00', 2);
 
 -- --------------------------------------------------------
 
@@ -6846,7 +6878,9 @@ INSERT INTO `tbl_order_products_lang` (`oplang_op_id`, `oplang_lang_id`, `oplang
 (14, 1, 'O1606480415', '5 Lesson'),
 (14, 2, 'O1606480415', '5 Lesson'),
 (15, 1, 'O1613114104', '1 Lesson'),
-(15, 2, 'O1613114104', '1 Lesson');
+(15, 2, 'O1613114104', '1 Lesson'),
+(16, 1, 'O1614336084', '3 Lessons'),
+(16, 2, 'O1614336084', '3 Lessons');
 
 -- --------------------------------------------------------
 
@@ -6941,7 +6975,9 @@ INSERT INTO `tbl_order_status_history` (`oshistory_id`, `oshistory_order_id`, `o
 (26, 'O1606480415', 0, 0, 1, '2020-11-27 12:35:04', 1, '', 'Received Payment'),
 (27, '', 14, 2, 0, '2020-11-27 12:35:04', 1, '', ''),
 (28, 'O1613114104', 0, 0, 1, '2021-02-12 07:15:04', 1, '', 'Received Payment'),
-(29, '', 15, 2, 0, '2021-02-12 07:15:04', 1, '', '');
+(29, '', 15, 2, 0, '2021-02-12 07:15:04', 1, '', ''),
+(30, 'O1614336084', 0, 0, 1, '2021-02-26 10:41:24', 1, '', 'Received Payment'),
+(31, '', 16, 2, 0, '2021-02-26 10:41:24', 1, '', '');
 
 -- --------------------------------------------------------
 
@@ -7047,7 +7083,8 @@ CREATE TABLE `tbl_payment_method_transaction_fee` (
 --
 
 INSERT INTO `tbl_payment_method_transaction_fee` (`pmtfee_pmethod_id`, `pmtfee_currency_id`, `pmtfee_fee`, `pmtfee_type`) VALUES
-(4, 1, '0.25', 1);
+(4, 1, '0.25', 1),
+(5, 1, '1.00', 1);
 
 -- --------------------------------------------------------
 
@@ -7478,7 +7515,10 @@ INSERT INTO `tbl_scheduled_lessons` (`slesson_id`, `slesson_grpcls_id`, `slesson
 (32, 0, 15, 11, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2020-11-27 12:35:04', 0, 0),
 (33, 0, 15, 11, '2020-11-27', '2020-11-28', '23:30:00', '00:30:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 0, '', 0, '', '2020-11-27 12:35:04', 0, 1),
 (34, 0, 15, 11, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2020-11-27 12:35:04', 0, 0),
-(35, 0, 15, 1, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2021-02-12 07:15:05', 0, 0);
+(35, 0, 15, 1, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2021-02-12 07:15:05', 0, 0),
+(36, 0, 19, 1, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2021-02-26 10:41:24', 0, 0),
+(37, 0, 19, 1, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2021-02-26 10:41:25', 0, 0),
+(38, 0, 19, 1, '0000-00-00', '0000-00-00', '00:00:00', '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 2, 0, '', 0, '', '2021-02-26 10:41:25', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -7555,7 +7595,10 @@ INSERT INTO `tbl_scheduled_lesson_details` (`sldetail_id`, `sldetail_slesson_id`
 (32, 32, 11, 'O1606480415', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2020-11-27 12:35:04'),
 (33, 33, 11, 'O1606480415', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, '', '2020-11-27 12:35:04'),
 (34, 34, 11, 'O1606480415', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2020-11-27 12:35:04'),
-(35, 35, 2, 'O1613114104', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2021-02-12 07:15:05');
+(35, 35, 2, 'O1613114104', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2021-02-12 07:15:05'),
+(36, 36, 22, 'O1614336084', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2021-02-26 10:41:24'),
+(37, 37, 22, 'O1614336084', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2021-02-26 10:41:25'),
+(38, 38, 22, 'O1614336084', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 2, '', '2021-02-26 10:41:25');
 
 -- --------------------------------------------------------
 
@@ -8517,7 +8560,10 @@ INSERT INTO `tbl_teachers_weekly_schedule` (`twsch_id`, `twsch_user_id`, `twsch_
 (22, 17, '2020-11-27', '2020-11-27', '08:00:00', '16:30:00', 1),
 (23, 18, '2020-11-27', '2020-11-27', '06:30:00', '13:30:00', 1),
 (24, 19, '2020-11-27', '2020-11-27', '08:00:00', '13:30:00', 1),
-(25, 22, '2020-11-28', '2020-11-28', '09:00:00', '21:00:00', 1);
+(25, 22, '2020-11-28', '2020-11-28', '09:00:00', '21:00:00', 1),
+(26, 22, '2021-02-26', '2021-02-26', '09:00:00', '21:00:00', 1),
+(27, 22, '2021-02-27', '2021-02-27', '09:00:00', '21:00:00', 1),
+(28, 19, '2021-02-26', '2021-02-26', '08:00:00', '17:30:00', 1);
 
 -- --------------------------------------------------------
 
@@ -9117,6 +9163,7 @@ CREATE TABLE `tbl_user_cart` (
 INSERT INTO `tbl_user_cart` (`usercart_user_id`, `usercart_type`, `usercart_details`, `usercart_added_date`) VALUES
 ('11', 1, 'a:0:{}', '2020-11-27 12:33:35'),
 ('2', 1, 'a:0:{}', '2021-02-12 07:15:05'),
+('22', 1, 'a:0:{}', '2021-02-26 10:41:25'),
 ('4', 1, 'a:0:{}', '2020-11-27 06:22:32');
 
 -- --------------------------------------------------------
@@ -9137,7 +9184,7 @@ CREATE TABLE `tbl_user_cookie_consent` (
 
 INSERT INTO `tbl_user_cookie_consent` (`usercc_user_id`, `usercc_settings`, `usercc_added_on`) VALUES
 (1, '{\"necessary\":1,\"preferences\":1,\"statistics\":1}', '2020-11-26 06:35:43'),
-(2, '{\"necessary\":1,\"preferences\":1,\"statistics\":1}', '2020-11-26 08:07:13'),
+(2, '{\"necessary\":1,\"preferences\":1,\"statistics\":1}', '2021-02-24 07:39:45'),
 (3, '{\"necessary\":1,\"preferences\":1,\"statistics\":1}', '2020-11-26 08:11:14'),
 (4, '{\"necessary\":1,\"preferences\":1,\"statistics\":1}', '2020-11-26 08:14:16'),
 (5, '{\"necessary\":1,\"preferences\":1,\"statistics\":1}', '2020-11-26 09:53:15'),
@@ -9369,7 +9416,7 @@ INSERT INTO `tbl_user_settings` (`us_user_id`, `us_is_trial_lesson_enabled`, `us
 (16, 1, 0, '', 0, 0, '', '0000-00-00 00:00:00'),
 (17, 1, 0, 'https://www.youtube.com/watch?v=nGM8mY22eec', 0, 0, '', '0000-00-00 00:00:00'),
 (18, 1, 0, 'https://www.youtube.com/watch?v=nGM8mY22eec', 0, 0, '', '0000-00-00 00:00:00'),
-(19, 1, 0, 'https://www.youtube.com/watch?v=90EBvAfxC1Y', 0, 0, '', '0000-00-00 00:00:00'),
+(19, 1, 0, 'https://www.youtube.com/watch?v=90EBvAfxC1Y', 0, 12, '', '0000-00-00 00:00:00'),
 (22, 1, 0, 'https://www.youtube.com/watch?v=nGM8mY22eec', 0, 0, '', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
@@ -9956,7 +10003,9 @@ INSERT INTO `tbl_user_transactions` (`utxn_id`, `utxn_user_id`, `utxn_date`, `ut
 (13, 2, '2020-11-27 12:51:39', '7.50', '0.00', 'Lessonid: 11 Payment Received ( 50&percnt; Refunded )', 1, '', 0, 0, 5, 11),
 (14, 2, '2020-11-27 12:53:38', '6.00', '0.00', 'Amount credited.', 1, '', 0, 0, 5, 11),
 (15, 2, '2021-02-12 07:15:04', '0.00', '8.00', 'Order Placed  #O1613114104', 1, 'O1613114104', 0, 0, 1, 0),
-(16, 15, '2021-02-12 07:20:47', '0.00', '100.00', 'Funds Withdrawn. Request Id #000001 <br /><small class=\"transaction-fee\">Transaction Fee Charged :  $0.25<small>', 0, '', 0, 1, 4, 0);
+(16, 15, '2021-02-12 07:20:47', '0.00', '100.00', 'Funds Withdrawn. Request Id #000001 <br /><small class=\"transaction-fee\">Transaction Fee Charged :  $0.25<small>', 0, '', 0, 1, 4, 0),
+(17, 22, '2021-02-26 10:41:15', '1000.00', '0.00', '1000', 1, '', 0, 0, 0, 0),
+(18, 22, '2021-02-26 10:41:24', '0.00', '54.00', 'Order Placed  #O1614336084', 1, 'O1614336084', 0, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -10822,7 +10871,7 @@ ALTER TABLE `tbl_admin`
 -- AUTO_INCREMENT for table `tbl_attached_files`
 --
 ALTER TABLE `tbl_attached_files`
-  MODIFY `afile_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1038;
+  MODIFY `afile_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1062;
 
 --
 -- AUTO_INCREMENT for table `tbl_banners`
@@ -10942,7 +10991,7 @@ ALTER TABLE `tbl_currencies`
 -- AUTO_INCREMENT for table `tbl_email_archives`
 --
 ALTER TABLE `tbl_email_archives`
-  MODIFY `emailarchive_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `emailarchive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_faq`
@@ -11002,7 +11051,7 @@ ALTER TABLE `tbl_languages`
 -- AUTO_INCREMENT for table `tbl_language_labels`
 --
 ALTER TABLE `tbl_language_labels`
-  MODIFY `label_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4018;
+  MODIFY `label_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4009;
 
 --
 -- AUTO_INCREMENT for table `tbl_lesson_meeting_details`
@@ -11026,7 +11075,7 @@ ALTER TABLE `tbl_lesson_reschedule_log`
 -- AUTO_INCREMENT for table `tbl_meta_tags`
 --
 ALTER TABLE `tbl_meta_tags`
-  MODIFY `meta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `meta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_navigations`
@@ -11044,19 +11093,19 @@ ALTER TABLE `tbl_navigation_links`
 -- AUTO_INCREMENT for table `tbl_notifications`
 --
 ALTER TABLE `tbl_notifications`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `tbl_order_payments`
 --
 ALTER TABLE `tbl_order_payments`
-  MODIFY `opayment_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `opayment_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tbl_order_products`
 --
 ALTER TABLE `tbl_order_products`
-  MODIFY `op_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `op_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tbl_order_statuses`
@@ -11068,7 +11117,7 @@ ALTER TABLE `tbl_order_statuses`
 -- AUTO_INCREMENT for table `tbl_order_status_history`
 --
 ALTER TABLE `tbl_order_status_history`
-  MODIFY `oshistory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `oshistory_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `tbl_payment_methods`
@@ -11086,13 +11135,13 @@ ALTER TABLE `tbl_preferences`
 -- AUTO_INCREMENT for table `tbl_scheduled_lessons`
 --
 ALTER TABLE `tbl_scheduled_lessons`
-  MODIFY `slesson_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `slesson_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `tbl_scheduled_lesson_details`
 --
 ALTER TABLE `tbl_scheduled_lesson_details`
-  MODIFY `sldetail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `sldetail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `tbl_slides`
@@ -11134,7 +11183,7 @@ ALTER TABLE `tbl_teachers_lessons_plan`
 -- AUTO_INCREMENT for table `tbl_teachers_weekly_schedule`
 --
 ALTER TABLE `tbl_teachers_weekly_schedule`
-  MODIFY `twsch_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `twsch_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `tbl_teacher_courses`
@@ -11236,7 +11285,7 @@ ALTER TABLE `tbl_user_timetables`
 -- AUTO_INCREMENT for table `tbl_user_transactions`
 --
 ALTER TABLE `tbl_user_transactions`
-  MODIFY `utxn_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `utxn_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_withdrawal_requests`
