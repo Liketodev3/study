@@ -66,6 +66,7 @@ $(document).ready(function() {
         forceEventDuration : true,
         defaultTimedEventDuration : "<?php echo $bookingSnapDuration; ?>",
         snapDuration : "<?php echo $bookingSnapDuration; ?>",
+        slotDuration : '<?php echo gmdate("H:i:s", 15*60); ?>',
         allDaySlot: false,
         timezone: "<?php echo $user_timezone; ?>",
         loading :function( isLoading, view ) {
