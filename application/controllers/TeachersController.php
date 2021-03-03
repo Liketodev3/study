@@ -611,19 +611,10 @@ class TeachersController extends MyAppController {
 			$srch->addFld('0 as uft_id');
 		}
 		/* [ */
+		
 		$spokenLanguage = FatApp::getPostedData('spokenLanguage', FatUtility::VAR_STRING, NULL);
 		if (!empty($spokenLanguage)) {
-			if (is_numeric($spokenLanguage)) {
-				$srch->addDirectCondition('utsl_slanguage_id = '. $spokenLanguage);
-			} else {
-				$spokenLanguageArr = explode(",", $spokenLanguage);
-				if (!empty($spokenLanguageArr)) {
-					$spokenLanguageArr = FatUtility::int($spokenLanguageArr);
-					foreach ($spokenLanguageArr as $spokenLanguage) {
-						$srch->addDirectCondition('utsl_slanguage_id = '. $spokenLanguage);
-					}
-				}
-			}
+			$srch->addDirectCondition('spoken_language_ids IN ('. $spokenLanguage.')');
 		}
 		/* ] */
 		/* [ */
