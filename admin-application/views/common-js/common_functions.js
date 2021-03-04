@@ -274,10 +274,9 @@ $(document).ready(function(){
 			
           /* if in tab mode */
             $(".tabs_nav li a").click(function() {
-                
               var activeTab = $(this).attr("rel"); 
-              if($("#"+activeTab).css('display') != 'none'){
-                  return;
+              if($("#"+activeTab).is(':visible')){
+                return;
               }
               $(this).parents('.tabs_nav_container:first').find(".tabs_panel").hide();
               $("#"+activeTab).fadeIn();		
