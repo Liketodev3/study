@@ -1,20 +1,26 @@
 This file shares the details of the Yo!Coach version and change log.
-Release Number:
-Release Date:
+
+Release Number: TV-2.10.0.20210304
+Release Date: 2021-03-04
 
 Updates:
     *Task-80349: Update Stripe to support SCA( Strong Customer Authentication) task_80349_stripe_intent
     *Task-80518: Multiple Booking Slots
     *Task-81798: Commission report
+    *Task-79595-Admin can switch PWA ON or OFF
+    *Task-82683- Changes on Dashboard> Total Revenue from lessons
 
 Bugs:
     Bug-#050554 - In admin and front end>> some where did not mention about the preferred image required for upload.
-    bug-#050141 - When teacher set his profile feature BOOKING BEFOIRE is 12 hours before. then learner side its showing wrong alert.
+    Bug-#050141 - When teacher set his profile feature BOOKING BEFOIRE is 12 hours before. then learner side its showing wrong alert.
     Bug-#050150 - Spacing between the social media buttons is not correct.
     Bug-#044719 - When user purchase any lesson then success message is showing> but link button is not highlighted properly
     Bug-#045486 - In teacher detail screen >> rating view >> text is looking too bold.
     Bug-#049899 - Email Notification is missing> When teacher is placing wallet withdrawal request admin do not receive any notification through email.
+    Bug-#050557 - Fix meta tag search
+    Bug-#050577 - Change in search teacher query condition
 
+---------------------------------------------------------
 
 Release Number: TV-2.9.0.20210223
 Release Date: 2021-02-23
