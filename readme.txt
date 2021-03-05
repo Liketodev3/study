@@ -5,6 +5,7 @@ Release Date:
 
 Bugs
     Bug-#050724 - Admin >> need to remove.
+    Bug-#050538  - #050538 - In Group class >>Why user can not set his group class price more than highest lesson package rate in website.
 
 ==============================================================================================================================
 Release Number: RV-2.1.1
