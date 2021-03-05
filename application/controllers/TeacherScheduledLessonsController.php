@@ -449,6 +449,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->setPageSize(1);
         $srch->addCondition('slns.slesson_id', ' = ', $lessonId);
 
+        $srch->addFld('sldetail_id');
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
 

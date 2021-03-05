@@ -4,7 +4,7 @@ class LessonStatusLog extends MyAppModel
     const DB_TBL = 'tbl_lesson_status_log';
     const DB_TBL_PREFIX = 'lesstslog_';
 
-    const NOT_CANCELLED_REPORT = 1;
+    const RESCHEDULED_REPORT = 1;
     const CANCELLED_REPORT = 2;
     const UPCOMING_REPORT = 3;
     const COMPLETED_REPORT = 4;

@@ -1,9 +1,12 @@
 <?php
 class LessonStatsSearch extends SearchBase
 {
-    public function __construct($doNotCalculateRecords = true, $joinDetails = true)
+    public function __construct($doNotCalculateRecords = true, $doNotLimitRecords = true, $joinDetails = false)
     {
         parent::__construct(LessonStatusLog::DB_TBL, 'lsl');
+        $doNotCalculateRecords && $this->doNotCalculateRecords();
+        $doNotLimitRecords && $this->doNotLimitRecords();
+        $joinDetails && $this->joinDetails();
     }
 
     public function joinDetails()
