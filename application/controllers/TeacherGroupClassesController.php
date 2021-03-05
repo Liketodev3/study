@@ -314,6 +314,8 @@ class TeacherGroupClassesController extends TeacherBaseController
         $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->siteLangId), '', [], Label::getLabel('LBL_Select'))->requirements()->setRequired(true);
         $fld = $frm->addFloatField(Label::getLabel('LBl_Entry_fee'), 'grpcls_entry_fee', '', array('id' => 'grpcls_entry_fee'));
         $fld->requirements()->setPositive(true);
+        $fld->requirements()->setRange(0,9999999);
+
         $start_time_fld = $frm->addRequiredField(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', array('id' => 'grpcls_start_datetime', 'autocomplete' => 'off', 'readonly' => 'readonly'));
         $end_time_fld = $frm->addRequiredField(Label::getLabel('LBl_End_Time'), 'grpcls_end_datetime', '', array('id' => 'grpcls_end_datetime', 'autocomplete' => 'off', 'readonly' => 'readonly'));
         $end_time_fld->requirements()->setCompareWith('grpcls_start_datetime', 'gt', Label::getLabel('LBl_Start_Time'));
