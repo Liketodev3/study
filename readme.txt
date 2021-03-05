@@ -6,6 +6,7 @@ Release Date:
 Bugs
     Bug-#050724 - Admin >> need to remove.
     Bug-#050538  - #050538 - In Group class >>Why user can not set his group class price more than highest lesson package rate in website.
+    Bug-#050556 - If user did not join a lesson even session start time is crossed. but time left view is showing, which is wrong.
 
 ==============================================================================================================================
 Release Number: RV-2.1.1
