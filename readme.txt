@@ -1,5 +1,12 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number:
+Release Date:
+
+Bugs
+    Bug-#050724 - Admin >> need to remove.
+
+==============================================================================================================================
 Release Number: RV-2.1.1
 
 Release Date: 2021/02/19
