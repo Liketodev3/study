@@ -674,7 +674,8 @@ class ConfigurationsController extends AdminBaseController
                 $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_This_is_the_minimum_interval_in_days_between_two_withdrawal_requests.", $this->adminLangId) . "</small>";
 
                 $frm->addHtml('', 'Checkout', '<h3>' . Label::getLabel("LBL_Checkout", $this->adminLangId) . '</h3>');
-                $srch = new OrderStatusSearch($this->adminLangId);
+               
+                /*$srch = new OrderStatusSearch($this->adminLangId);
                 $srch->addMultipleFields(array('orderstatus_id', 'IFNULL(orderstatus_name, orderstatus_identifier) as  orderstatus_name'));
                 $rs = $srch->getResultSet();
                 $orderStatusArr = FatApp::getDb()->fetchAllAssoc($rs, 'orderstatus_id');
@@ -697,6 +698,7 @@ class ConfigurationsController extends AdminBaseController
                     ''
                 );
                 $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_Set_the_default_child_order_status_when_an_order_is_marked_Paid.", $this->adminLangId) . "</small>";
+               */
                 $fld1 = $frm->addCheckBox(Label::getLabel('LBL_Activate_Live_Payment_Transaction_Mode', $this->adminLangId), 'CONF_TRANSACTION_MODE', 1, array(), false, 0);
                 $fld1->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_Transaction_Mode_To_Live_Environment", $this->adminLangId) . "</small>";
 

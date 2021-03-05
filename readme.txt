@@ -1,5 +1,14 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number:
+Release Date:
+
+Bugs
+    Bug-#050724 - Admin >> need to remove.
+    Bug-#050538  - #050538 - In Group class >>Why user can not set his group class price more than highest lesson package rate in website.
+    Bug-#050556 - If user did not join a lesson even session start time is crossed. but time left view is showing, which is wrong.
+
+==============================================================================================================================
 Release Number: TV-2.10.0.20210304
 Release Date: 2021-03-04
 

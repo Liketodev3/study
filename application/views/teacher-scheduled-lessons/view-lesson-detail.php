@@ -313,12 +313,13 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                                 <div class="timer-block d-sm-flex align-items-center">
                                     <div id="end_lesson_time_div" style="display:none;">
                                         <div class="timer timer--small">
+                                                <p><?php echo Label::getLabel('LBL_CLASS_ENDS_IN'); ?></p>
                                             <span id="end_lesson_timer" class="style colorDefinition size_lg"></span>
                                         </div>
                                     </div>
 
                                     <div class="actions">
-                                        <a href="javascript:void(0);" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> class="btn btn--primary btn--large btn--sticky end_lesson_now" id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?></a>
+                                        <a href="javascript:void(0);" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> class="btn btn--secondary btn--large btn--sticky end_lesson_now" id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?></a>
                                     </div>
                                     <span class="-gap"></span>
                                 </div>
