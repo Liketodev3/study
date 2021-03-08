@@ -1,4 +1,4 @@
-git <?php
+<?php
 class Common
 {
     public static function homePageSlides($template)
