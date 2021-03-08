@@ -10,6 +10,7 @@ Bugs
     Bug-#050350: Need to add validation alert , bulk price should always be less than single lesson rate, other wise teacher will not display if bulk price of any lesson is greater than existing maximum single lesson rate of website teacher list.
     Bug-#050730 - Front end >> teacher sign up >> resume >> upload invalid resume format >> loader keep on revolving >> after giving error message.
     Bug-#050754 - Front end >> teacher >> teacher setting >> when don't change any language >> clik on save button then also price become clear >> and teacher not able to know. 
+    Bug-#050820 - Teacher >> settings >> Skills >> same language is coming multiple time.
     
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
