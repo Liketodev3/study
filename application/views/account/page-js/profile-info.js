@@ -338,18 +338,13 @@ $(document).ready(function () {
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher', 'settingsInfoForm'), '', function (t) {
 			$(dv).html(t);
-<<<<<<< HEAD
 			selectDuration();
 			if(userIsTeacher) {
-=======
-			if (userIsTeacher) {
->>>>>>> hotfix_2.1
 				getTeacherProfileProgress();
 			}
 		});
 	};
 
-<<<<<<< HEAD
 	selectDuration = function(){
         $('[name^=duration]').each((i,fld) => {
             if($(fld).is(':checked')){
@@ -366,9 +361,6 @@ $(document).ready(function () {
     };
 
 	setUpTeacherSettings = function(frm){
-=======
-	setUpTeacherSettings = function (frm) {
->>>>>>> hotfix_2.1
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpSettings'), data, function (t) {
