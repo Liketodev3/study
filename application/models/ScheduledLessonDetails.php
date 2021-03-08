@@ -75,6 +75,7 @@ class ScheduledLessonDetails extends MyAppModel
             array(
                 'sldetail_id',
                 'slesson_date',
+                'slesson_end_date',
                 'slesson_start_time',
                 'slesson_end_time',
                 'slesson_status',

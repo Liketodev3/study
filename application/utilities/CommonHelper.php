@@ -1894,4 +1894,34 @@ class CommonHelper extends FatUtility
 
         return $formattedUrl;
     }
+
+    public static function exportCsv($rs, $refindedLabels, $rowKeys, $labels, $placeholders, $output_file_name)
+    {
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $output_file_name . '";');
+        
+        $outstream = fopen('php://output', 'w');
+        
+        fputcsv($outstream, $refindedLabels, ',');
+        
+        $count = 1;
+        while ($row = FatApp::getDb()->fetch($rs)) {
+            $rec = array( $count );    
+            foreach($rowKeys as $rowKey) {
+                if (in_array($rowKey, $placeholders)) {
+                    array_push($rec, $labels[$row[$rowKey]]);
+                } else {
+                    array_push($rec, $row[$rowKey]);
+                }
+            }
+            
+            fputcsv($outstream, $rec, ',');
+
+            $count++;
+        }
+
+        fclose($outstream);
+        
+    }
 }
+

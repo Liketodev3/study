@@ -314,6 +314,9 @@
 			if ( $objPrivilege->canViewCommissionReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
 				<li><a href="<?php echo CommonHelper::generateUrl('CommissionReport'); ?>"><?php echo Label::getLabel('LBL_Commission_Report',$adminLangId);?></a></li>
 			<?php } ?>
+			<?php if ( $objPrivilege->canViewLessonStatsReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
+				<li><a href="<?php echo CommonHelper::generateUrl('LessonStats'); ?>"><?php echo Label::getLabel('LBL_Lesson_Stats',$adminLangId);?></a></li>
+			<?php } ?>
 			</ul>
 		</li>
 		<?php } ?>

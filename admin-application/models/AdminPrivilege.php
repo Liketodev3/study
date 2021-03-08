@@ -57,6 +57,9 @@ class AdminPrivilege
     const PRIVILEGE_READ = 1;
     const PRIVILEGE_WRITE = 2;
 
+
+    const SECTION_RESCHEDULE_REPORT = 52;
+
     private static $instance = null;
     private $loadedPermissions = array();
 
@@ -702,6 +705,12 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_TEACHER_PERFORMANCE_REPORT, static::PRIVILEGE_READ, $returnResult);
     }
+
+    public function canViewLessonStatsReport($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_RESCHEDULE_REPORT, static::PRIVILEGE_READ, $returnResult);
+    }
+
     public function canEditGroupClasses($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_GROUP_CLASSES, static::PRIVILEGE_WRITE, $returnResult);
