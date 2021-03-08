@@ -7,7 +7,9 @@ Bugs
     Bug-#050724 - Admin >> need to remove.
     Bug-#050538  - #050538 - In Group class >>Why user can not set his group class price more than highest lesson package rate in website.
     Bug-#050556 - If user did not join a lesson even session start time is crossed. but time left view is showing, which is wrong.
-
+    Bug-#050350: Need to add validation alert , bulk price should always be less than single lesson rate, other wise teacher will not display if bulk price of any lesson is greater than existing maximum single lesson rate of website teacher list.
+    Bug-#050730 - Front end >> teacher sign up >> resume >> upload invalid resume format >> loader keep on revolving >> after giving error message.
+    
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
 Release Date: 2021-03-04

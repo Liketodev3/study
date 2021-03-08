@@ -20,7 +20,6 @@ $("document").ready(function(){
 			return false;
 		}
 		teacherQualificationAjax = true;
-        $(frm.btn_submit).attr('disabled','disabled');
 		var dv = $("#frm_fat_id_frmQualification");
 
 		var formData = new FormData(frm);
@@ -33,22 +32,24 @@ $("document").ready(function(){
 			//dataType: 'json',
 			processData: false,
 			beforeSend: function(){
-				$(dv).html(fcom.getLoader());
+				$.mbsmessage(langLbl.requestProcessing, false,'alert alert--process');
 			},
 			success: function (data, textStatus, jqXHR) {
+			
 				teacherQualificationAjax = false;
+				$.mbsmessage.close();
 				var data = JSON.parse(data);
 				if(data.status==0){
 					$.mbsmessage(data.msg, true, 'alert alert--danger');
-                    $(frm.btn_submit).attr('disabled','');
 				} else {
 					$.mbsmessage(data.msg, true, 'alert alert--success');
-                    $(frm.btn_submit).attr('disabled','');
 					reloadQualificationList();
 					$(document).trigger('close.facebox');
 			   }
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
+				teacherQualificationAjax = false;
+				$.mbsmessage.close();
 				$.mbsmessage(jqXHR.msg, true,'alert alert--danger');
 				$(frm.btn_submit).attr('disabled','');
 			}

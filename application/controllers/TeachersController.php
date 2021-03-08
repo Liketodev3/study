@@ -67,6 +67,7 @@ class TeachersController extends MyAppController
 		}
 		// echo $srch->getQuery();die;
 		$rs = $srch->getResultSet();
+	
 		$db = FatApp::getDb();
 		$teachersList = $db->fetchAll($rs);
         // CommonHelper::printArray($teachersList);die;
@@ -727,16 +728,14 @@ class TeachersController extends MyAppController
 		/* ] */
 		/* price Range[ */
 		$minPriceRange = FatApp::getPostedData('minPriceRange', FatUtility::VAR_FLOAT, 0);
-		if (!empty($minPriceRange)) {
-			$minPriceRangeInDefaultCurrency = CommonHelper::getDefaultCurrencyValue($minPriceRange, false, false);
-			$srch->addCondition('minPrice', '>=', $minPriceRangeInDefaultCurrency);
-		}
 		$maxPriceRange = FatApp::getPostedData('maxPriceRange', FatUtility::VAR_FLOAT, 0);
-		if (!empty($maxPriceRange)) {
+		if (!empty($minPriceRange) && !empty($maxPriceRange)) {
+			$minPriceRangeInDefaultCurrency = CommonHelper::getDefaultCurrencyValue($minPriceRange, false, false);
 			$maxPriceRangeInDefaultCurrency =  CommonHelper::getDefaultCurrencyValue($maxPriceRange, false, false);
-			//$srch->addCondition('maxPrice', '<=', $maxPriceRangeInDefaultCurrency);
-			$srch->addCondition('minPrice', '<=', $maxPriceRangeInDefaultCurrency);
+			$condition = $srch->addCondition('minPrice', '<=', $maxPriceRangeInDefaultCurrency);
+			$condition->attachCondition('maxPrice', '>=', $minPriceRangeInDefaultCurrency,'AND');
 		}
+	
 		/* ] */
 		/* [ */
 		$filterSortBy = FatApp::getPostedData('sortBy', FatUtility::VAR_STRING, 'popularity_desc');
