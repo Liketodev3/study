@@ -60,18 +60,6 @@ foreach ($arr_listing as $sn => $row) {
             case 'cancelledLessons':
                 $td->appendElement('plaintext', array(), $row[$key], true);
                 break;
-                // case 'action':
-                // 	$queryArray = array( $row['user_id'] );
-                // 	$td->appendElement("a",array('href'=>CommonHelper::generateUrl('LessonStats','export', $queryArray), 
-                // 		'class'=>'button small green',
-                // 		'title'=>Label::getLabel('LBL_Export_History',$adminLangId)), 
-                // 		Label::getLabel('LBL_Export_History', $adminLangId), true);
-                // break;
-                // case 'action':
-                // 	$td->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green',
-                // 	'title'=>Label::getLabel('LBL_Export', $adminLangId),"onclick"=>"exportReport(".$row['user_id'].")"),
-                // 	Label::getLabel('LBL_Export', $adminLangId), true);
-                // break;
             case 'action':
                 $ul = $td->appendElement("ul", array("class" => "actions actions--centered"));
                 $li = $ul->appendElement("li", array('class' => 'droplink'));

@@ -93,7 +93,6 @@ class LessonStatsController extends AdminBaseController
 
         $srch->addGroupBy('user_id');
         $srch->addOrder('user_full_name');
-        // die($srch->getQuery());
         $rs = $srch->getResultSet();
         $db = FatApp::getDb();
         $teachersList = $db->fetchAll($rs);
@@ -111,7 +110,7 @@ class LessonStatsController extends AdminBaseController
     private function getSearchForm($langId)
     {
         $frm = new Form('frmRescheduledReportSearch');
-        $frm->addTextBox(Label::getLabel('LBL_User', $langId), 'user', '', [ 'id' => 'user', 'autocomplete' => 'off']);
+        $frm->addTextBox(Label::getLabel('LBL_User', $langId), 'user', '', ['id' => 'user', 'autocomplete' => 'off']);
 
         $frm->addDateField(Label::getLabel('LBL_Date_From', $langId), 'reschedule_from', '', ['readonly' => 'readonly']);
         $frm->addDateField(Label::getLabel('LBL_Date_To', $langId), 'reschedule_to', '', ['readonly' => 'readonly']);
@@ -302,6 +301,7 @@ class LessonStatsController extends AdminBaseController
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $searchForm = $this->getSearchForm($this->adminLangId);
 
+        $reportName = '';
         $post = $searchForm->getFormDataFromArray(FatApp::getPostedData());
 
         if (false === $post) {
@@ -312,64 +312,62 @@ class LessonStatsController extends AdminBaseController
         $lessonStatsSearch = new LessonStatsSearch();
         $lessonStatsSearch->joinDetails();
 
-        if ($post) {
-            if ($post['report_user_id'] > 0) {
-                $lessonStatsSearch->addCondition('lesstslog_updated_by_user_id', '=', $post['report_user_id']);
-            }
-
-            if (!empty($post['reschedule_from'])) {
-                $lessonStatsSearch->addCondition('lesstslog_added_on', '>=', $post['reschedule_from'] . ' 00:00:00');
-            }
-
-            if (!empty($post['reschedule_to'])) {
-                $lessonStatsSearch->addCondition('lesstslog_added_on', '<=', $post['reschedule_to'] . ' 23:59:59');
-            }
-
-            if (isset($post['report_type']) && $post['report_type'] == LessonStatusLog::CANCELLED_REPORT) {
-                $lessonStatsSearch->addCondition('lesstslog_current_status', '=', ScheduledLesson::STATUS_CANCELLED);
-            }
-
-            if (isset($post['report_type']) && $post['report_type'] == LessonStatusLog::RESCHEDULED_REPORT) {
-                $lessonStatsSearch->addCondition('lesstslog_current_status', 'IN', [
-                    ScheduledLesson::STATUS_NEED_SCHEDULING,
-                    ScheduledLesson::STATUS_SCHEDULED
-                ]);
-            }
+        if ($post['report_user_id'] > 0) {
+            $lessonStatsSearch->addCondition('lesstslog_updated_by_user_id', '=', $post['report_user_id']);
         }
 
-        $lessonStatsSearch->addMultipleFields(array(
-            'lesstslog_updated_by_user_id,
-                slesson_status,
-                slesson_id,
-                slesson_date,
-                sldetail_order_id,
-                CONCAT(tu.user_first_name, " ", tu.user_last_name) as ExpertName,
-                (CASE
+        if (!empty($post['reschedule_from'])) {
+            $lessonStatsSearch->addCondition('lesstslog_added_on', '>=', $post['reschedule_from'] . ' 00:00:00');
+        }
+
+        if (!empty($post['reschedule_to'])) {
+            $lessonStatsSearch->addCondition('lesstslog_added_on', '<=', $post['reschedule_to'] . ' 23:59:59');
+        }
+
+        if (isset($post['report_type']) && $post['report_type'] == LessonStatusLog::CANCELLED_REPORT) {
+            $reportName = Label::getLabel('LBL_CANCELLED_REPORT');
+            $lessonStatsSearch->addCondition('lesstslog_current_status', '=', ScheduledLesson::STATUS_CANCELLED);
+        }
+
+        if (isset($post['report_type']) && $post['report_type'] == LessonStatusLog::RESCHEDULED_REPORT) {
+            $reportName = Label::getLabel('LBL_RESCHEDULED_REPORT');
+            $lessonStatsSearch->addCondition('lesstslog_current_status', 'IN', [
+                ScheduledLesson::STATUS_NEED_SCHEDULING,
+                ScheduledLesson::STATUS_SCHEDULED
+            ]);
+        }
+
+        $lessonStatsSearch->addMultipleFields([
+            'lesstslog_updated_by_user_id',
+            'slesson_status',
+            'slesson_id',
+            'slesson_date',
+            'sldetail_order_id',
+            'CONCAT(tu.user_first_name, " ", tu.user_last_name) as ExpertName',
+            '(CASE
                     WHEN lesstslog_updated_by_user_id = sl.slesson_teacher_id THEN CONCAT(tu.user_first_name, " ", tu.user_last_name)
                     ELSE CONCAT(su.user_first_name, " ", su.user_last_name)
-                END ) as RescheduledBy,
-                CONCAT(su.user_first_name, " ", su.user_last_name) as StudentName,
-                lesstslog_current_status,
-                CONCAT(lesstslog_prev_start_date," ",lesstslog_prev_start_time) as StartTime,
-                CONCAT(lesstslog_prev_end_date," ",lesstslog_prev_end_time) as EndTime,
-                lesstslog_comment,
-                lesstslog_added_on,
-                lesstslog_id      
-                '
-        ));
+                END ) as RescheduledBy',
+            'CONCAT(su.user_first_name, " ", su.user_last_name) as StudentName',
+            'lesstslog_current_status',
+            'CONCAT(lesstslog_prev_start_date," ",lesstslog_prev_start_time) as StartTime',
+            'CONCAT(lesstslog_prev_end_date," ",lesstslog_prev_end_time) as EndTime',
+            'lesstslog_comment',
+            'lesstslog_added_on',
+            'lesstslog_id',
+            'tu.user_id tuser_id',
+            'su.user_id suser_id',
+        ]);
 
-        // CONCAT(u.user_first_name, " ", u.user_last_name) as RescheduledBy, 
-
-
-        //$srch->doNotCalculateRecords();
-        //$srch->doNotLimitRecords();
-        $page = $post['page'];
+        $page = max(1, $post['page']);
 
         $lessonStatsSearch->setPageNumber($page);
         $lessonStatsSearch->setPageSize($pagesize);
 
         $rs = $lessonStatsSearch->getResultSet();
         $lessons = $db->fetchAll($rs);
+
+        $reportNoteText = Label::getLabel('NOTE_LESSONSTATS_REPORT');
 
         $this->set('lessons', $lessons);
         $this->set('pageCount', $lessonStatsSearch->pages());
@@ -379,10 +377,12 @@ class LessonStatsController extends AdminBaseController
         $this->set('report_type', $post['report_type']);
         $this->set('report_user_id', $post['report_user_id']);
         $this->set('postedData', $post);
+        $this->set('reportName', $reportName);
+        $this->set('reportNoteText', $reportNoteText);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
         $this->_template->render(false, false);
     }
-
+    
     public function export()
     {
         $searchForm = $this->getSearchForm($this->adminLangId);

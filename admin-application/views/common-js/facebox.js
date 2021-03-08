@@ -123,7 +123,10 @@
       if (klass) $('#facebox .content').addClass(klass)
       $('#facebox .content').empty().append(data)
       $('#facebox .popup').children().fadeIn('normal')
-      $('#facebox').css('left', $(window).width() / 2 - ($('#facebox .popup').outerWidth() / 2))
+      let wid = $(window).width() / 2 - ($('#facebox .popup').outerWidth() / 2);
+      $('#facebox').css('left', wid);
+      $('#facebox').css('right', wid);
+      
       $(document).trigger('reveal.facebox').trigger('afterReveal.facebox')
     },
 

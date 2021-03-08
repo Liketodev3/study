@@ -4,16 +4,11 @@ $arr_flds = array(
 	'listserial' => Label::getLabel('LBL_Sr_no.', $adminLangId),
 	'ExpertName' => Label::getLabel('LBL_Expert_Name', $adminLangId),
 	'StudentName' => Label::getLabel('LBL_Student_Name', $adminLangId),
-	'sldetail_order_id' => Label::getLabel('LBL_Order_ID', $adminLangId),
-	// 'slesson_id' => Label::getLabel('LBL_Lesson_ID', $adminLangId),
-	'StartTime' => Label::getLabel('LBL_Start_Time', $adminLangId),
-	//'lesstslog_prev_start_time' => Label::getLabel('LBL_Prev_Start_Time',$adminLangId),
-	// 'EndTime' => Label::getLabel('LBL_End_Time', $adminLangId),
-	//'lesstslog_prev_end_time' => Label::getLabel('LBL_Prev_End_Time',$adminLangId),
-	'slesson_status' => Label::getLabel('LBL_Current_Status', $adminLangId),
+	'sldetail_order_id' => Label::getLabel('LBL_Order_Details', $adminLangId),
+	'StartTime' => Label::getLabel('LBL_Prev_Timings', $adminLangId),
 	'lesstslog_current_status' => Label::getLabel('LBL_Action_Performed', $adminLangId),
+	// 'slesson_status' => Label::getLabel('LBL_Current_Status', $adminLangId),
 	'lesstslog_added_on' => Label::getLabel('LBL_Added_On', $adminLangId),
-	'RescheduledBy' => Label::getLabel('LBL_Performed_By', $adminLangId),
 	'lesstslog_comment' => Label::getLabel('LBL_Reason', $adminLangId)
 );
 $tbl = new HtmlElement('table', array('width' => '100%', 'class' => 'table table--hovered'));
@@ -30,47 +25,40 @@ foreach ($lessons as $sn => $row) {
 		$td = $tr->appendElement('td');
 		switch ($key) {
 			case 'listserial':
+				$td->setAttribute('width', '2%');
 				$td->appendElement('plaintext', array(), $sr_no);
 				break;
 			case 'ExpertName':
-				$td->appendElement('plaintext', array(), $row[$key], true);
+				$td->setAttribute('width', '15%');
+				$td->appendElement('span', array('class' => ($row['tuser_id'] == $row['lesstslog_updated_by_user_id']) ? 'label--info' : ''), $row[$key], true);
 				break;
 			case 'StudentName':
-				$td->appendElement('plaintext', array(), $row[$key], true);
+				$td->appendElement('span', array('class' => ($row['suser_id'] == $row['lesstslog_updated_by_user_id']) ? 'label--info' : ''), $row[$key], true);
 				break;
 			case 'sldetail_order_id':
-				$td->appendElement('plaintext', array(), Label::getLabel('LBL_Order_ID') . ': ' . $row[$key] . '<br> ' . Label::getLabel('LBL_Lesson_ID') . ': ' . $row['slesson_id'], true);
+				$td->setAttribute('width', '15%');
+				$td->appendElement('plaintext', array(), Label::getLabel('LBL_O-ID') . ': ' . $row[$key] . '<br> ' . Label::getLabel('LBL_Lesson_ID') . ': ' . $row['slesson_id'], true);
 				break;
-				// $innerLiBoth = $innerUl->appendElement('li');
-				// $innerLiBoth->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 
-				// 	'title'=>Label::getLabel('LBL_Download_Both_Report',$adminLangId),
-				// 	"onclick"=>"exportReport(".$row['user_id'].", ".LessonStatusLog::BOTH_REPORT.")"),
-				// 	Label::getLStartTimeabel('LBL_Both',$adminLangId), true);
 
-				// $innerLiReschedule=$innerUl->appendElement('li');
-				// $innerLiReschedule->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 
-				// 	'title'=>Label::getLabel('LBL_Download_Reschedule_Report',$adminLangId),
-				// 	"onclick"=>"exportReport(".$row['user_id'].", ".LessonStatusLog::NOT_CANCELLED_REPORT.")"),
-				// 	Label::getLabel('LBL_Reschedule',$adminLangId), true);
-
-				// $innerLiCancelled=$innerUl->appendElement('li');
-				// $innerLiCancelled->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 
-				// 	'title'=>Label::getLabel('LBL_Download_Cancelled_Report',$adminLangId),
-				// 	"onclick"=>"exportReport(".$row['user_id'].", ".LessonStatusLog::CANCELLED_REPORT.")"),
-				// 	Label::getLabel('LBL_Cancelled',$adminLangId), true);
 			case 'StartTime':
-				$td->appendElement('plaintext', array(), 
-				Label::getLabel('LBL_Start') . ': ' . MyDate::format($row[$key], true) . '<br> ' . Label::getLabel('LBL_End') . ': ' .  MyDate::format($row['EndTime'], true), true);
+
+				$td->setAttribute('width', '20%');
+
+				if ($row[$key] == '0000-00-00 00:00:00') {
+					$timings = Label::getLabel('LBL_Unscheduled');
+				} else {
+					$st = ($row[$key] !== '0000-00-00 00:00:00') ? MyDate::format($row[$key], true) : '-';
+					$et = ($row['EndTime'] !== '0000-00-00 00:00:00') ? MyDate::format($row['EndTime'], true) : '-';
+					$timings = Label::getLabel('LBL_ST') . ': ' . $st . '<br> ' . Label::getLabel('LBL_ET') . ': ' .  $et;
+				}
+
+				$td->appendElement(
+					'plaintext',
+					array(),
+					$timings,
+					true
+				);
 				break;
-				// case 'lesstslog_prev_start_time':
-				// 	$td->appendElement('plaintext', array(), $row[$key] ,true);
-				// break;
-			// case 'EndTime':
-				// $td->appendElement('plaintext', array(), MyDate::format($row[$key], true), true);
-				// break;
-				// case 'lesstslog_prev_end_time':
-				// 	$td->appendElement('plaintext', array(), $row[$key] ,true);
-				// break;
 			case 'slesson_status':
 				$td->appendElement('plaintext', array(), $statusArr[$row[$key]], true);
 				break;
@@ -84,7 +72,7 @@ foreach ($lessons as $sn => $row) {
 				$td->appendElement('plaintext', array(), $row[$key], true);
 				break;
 			case 'lesstslog_comment':
-				$td->appendElement('p', array('title' => nl2br($row[$key])), CommonHelper::truncateCharacters($row[$key], 20, '', '', true), true);
+				$td->appendElement('span', array('title' => nl2br($row[$key])), CommonHelper::truncateCharacters($row[$key], 20, '', '', true), true);
 				break;
 			default:
 				$td->appendElement('plaintext', array(), $row[$key]);
@@ -94,8 +82,9 @@ foreach ($lessons as $sn => $row) {
 } ?>
 <section class="section">
 	<div class="sectionhead">
-		<h4><?php echo Label::getLabel('LBL_Report', $adminLangId); ?></h4>
+		<h4><?php echo $reportName; ?></h4>
 		<div class="-float-right">
+			<span class="label--info"><?php echo $reportNoteText; ?></span>
 			<a onClick="exportReport(<?php echo $report_user_id; ?>, <?php echo $report_type; ?>)" class='btn btn-primary export-btn btn-sm'>Export CSV</a>
 		</div>
 	</div>

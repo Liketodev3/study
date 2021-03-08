@@ -233,3 +233,11 @@ ALTER TABLE `tbl_lesson_status_log`
 
 
 ALTER TABLE `tbl_lesson_status_log` ADD `lesstslog_sldetail_id` INT(11) NOT NULL;
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
+('LBL_Sr_no.', 1, 'S/N')
+,('LBL_Need_to_be_scheduled', 1, 'Unscheduled')
+,('LBL_ST', 1, 'ST')
+,('LBL_ET', 1, 'ET')
+,('LBL_O-ID', 1, 'O-ID')
+;
