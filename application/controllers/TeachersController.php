@@ -225,7 +225,7 @@ class TeachersController extends MyAppController {
 		/* ] */
 		/* Languages and prices [ */
 		$userToLanguage = new UserToLanguage($teacher_id);
-		$userTeachLangs = $userToLanguage->getTeachingSettings($this->siteLangId);
+		$userTeachLangs = $userToLanguage->getTeacherPricesForLearner($this->siteLangId, UserAuthentication::getLoggedUserId(true));
 		$tlangArr = array();
 		foreach($userTeachLangs as $userTeachLang){
 			$tlangArr[$userTeachLang['tlanguage_id']] = $userTeachLang['tlanguage_name'];
