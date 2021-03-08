@@ -13,6 +13,7 @@ Bug Fixes:
     Bug-#044725: Fixed incorrect end timer
     Bug-#049602-Issue with speaking and proficiency level
     Bug-#047721: Trial lesson booking not working
+    Bug-#050350: Need to add validation alert , bulk price should always be less than single lesson rate, other wise teacher will not display if bulk price of any lesson is greater than existing maximum single lesson rate of website teacher list.
 
 
 ----------------------------------------------------------
