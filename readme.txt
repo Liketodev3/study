@@ -7,6 +7,7 @@ Bugs
     Bug-#050724 - Admin >> need to remove.
     Bug-#050538  - #050538 - In Group class >>Why user can not set his group class price more than highest lesson package rate in website.
     Bug-#050556 - If user did not join a lesson even session start time is crossed. but time left view is showing, which is wrong.
+    Bug-#050350 - Need to add validation alert , bulk price should always be less than single lesson rate, other wise teacher will not display if bulk price of any lesson is greater than existing maximum single lesson rate of website teacher list.
 
 ==============================================================================================================================
 Release Number: RV-2.1.1
