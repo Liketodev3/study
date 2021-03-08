@@ -176,9 +176,7 @@ class Common
         $teacherSrchObj = new UserSearch();
         $teacherSrchObj->setTeacherDefinedCriteria(true);
         $teacherSrchObj->doNotLimitRecords();
-        // echo "<pre>";
-        // echo $teacherSrchObj->getQuery();
-        // die;
+        
         /* preferences/skills[ */
         $prefSrch = clone $teacherSrchObj;
         $prefSrch->joinTable(Preference::DB_TBL_USER_PREF, 'INNER JOIN', 'u.user_id = utp.utpref_user_id', 'utp');
@@ -214,19 +212,17 @@ class Common
         $priceSrch = clone $teacherSrchObj;
 
         //$priceSrch->addMultipleFields( array('MIN(us_bulk_lesson_amount) as minPrice', 'MAX(us_bulk_lesson_amount) as maxPrice') );
+       
         $priceRs = $priceSrch->getResultSet();
         $priceArr = FatApp::getDb()->fetchAll($priceRs);
-        // echo "<pre>";
-        // echo $teacherSrchObj->getQuery();
-        // die;
-       
+    
         if ($priceArr) {
             $newArr = array();
             $newArr['minPrice'] = min(array_column($priceArr, 'minPrice'));
             $newArr['maxPrice'] = max(array_column($priceArr, 'maxPrice'));
             $priceArr = $newArr;
         }
-      
+        
         //echo CommonHelper::getCurrencyId(); die;
         if (CommonHelper::getCurrencyId() != CommonHelper::getSystemCurrencyId()) {
             $priceArr['minPrice'] = CommonHelper::displayMoneyFormat(($priceArr['minPrice'])??0, false, false, false);
