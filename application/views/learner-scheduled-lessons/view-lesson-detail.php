@@ -377,13 +377,14 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                                 <div class="timer-block d-sm-flex align-items-center">
                                     <div id="end_lesson_time_div" style="display:none;">
                                         <div class="timer timer--small">
+                                            <p><?php echo Label::getLabel('LBL_CLASS_ENDS_IN'); ?></p>
                                             <span id="end_lesson_timer" class="style colorDefinition size_lg"></span>
                                         </div>
                                     </div>
 
                                     <?php if ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) : ?>
                                         <div class="actions">
-                                            <a href="javascript:void(0);" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> class="btn btn--primary btn--large btn--sticky end_lesson_now" id="endL" onclick="endLesson(<?php echo $lessonData['sldetail_id']; ?>);">
+                                            <a href="javascript:void(0);" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> class="btn btn--secondary btn--large btn--sticky end_lesson_now" id="endL" onclick="endLesson(<?php echo $lessonData['sldetail_id']; ?>);">
                                                 <?php echo Label::getLabel('LBL_End_Lesson'); ?>
                                             </a>
                                         </div>

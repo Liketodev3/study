@@ -3928,10 +3928,11 @@ body.is-screen-on .header .container {
 }
 
 .timer.timer--small .size_lg {
-    font-size: 30px;
+    font-size: 20px;
     padding: 4px 10px;
-    height: 50px;
+    height: 40px;
     display: block;
+    width: 200px;
 }
 
 
@@ -7999,9 +8000,6 @@ color: #fff;}
   .terms_wrap .errorlist.erlist_agree {
     bottom: -10px;
     }
-    .timer-block .actions {
-        margin-left: 10px;
-    }
    /*-------end--------*/ 
   @media (max-width: 1199px) {
     .sticky-demo-header .demo-header {
@@ -8094,6 +8092,55 @@ color: #fff;}
     }
     .group--social a {
         margin-right: 0px;
+    }
+}
+
+.timer-block .timer {
+    width: 100%;
+    text-align: center;
+    padding: 14px 30px;
+    border: 2px solid black;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.timer p {
+    font-size: 20px;
+    font-weight: 900;
+    color: black;
+    text-transform: capitalize;
+    margin-bottom: 0;
+}
+.timer p:first-child span {
+    color: var(--color-secondary);
+}
+#end_lesson_time_div {
+    width: 100%;
+}
+.timer-block {
+    flex-direction: column;
+}
+
+@media(min-width:768px) and (max-width:1199px){
+    .timer-block .timer {
+        margin-bottom: 0;
+    }
+    #end_lesson_time_div {
+        width: 65%;
+    }
+    .timer-block {
+        flex-direction: revert;
+        justify-content: space-between;
+    }
+}
+@media(max-width:767px){
+    .timer p{
+        margin-bottom: 10px;
+    }
+    .timer.timer--small .size_lg{
+        width: 100%;
     }
 }
 /*----------end----------*/
