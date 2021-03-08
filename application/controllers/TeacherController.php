@@ -491,12 +491,13 @@ class TeacherController extends TeacherBaseController
 
         $userSettingRs = $userSettingSrch->getResultSet();
         $teacherTeachLangArr = $db->fetch($userSettingRs);*/
-        $userSrchObj = new UserSearch();
-        $tLangsrch = $userSrchObj->getMyTeachLangQry();
-        $tLangsrch->addCondition('utl_us_user_id', '=', UserAuthentication::getLoggedUserId());
-        $rs = $tLangsrch->getResultSet();
-        $tLangs = FatApp::getDb()->fetch($rs);
-        $teacherTeachLang = CommonHelper::getTeachLangs($tLangs['utl_slanguage_ids']);
+        $userToLanguage = UserToLanguage::getUserTeachlanguages(UserAuthentication::getLoggedUserId(), true);
+        $userToLanguage->doNotCalculateRecords();
+        $userToLanguage->doNotLimitRecords();
+        $userToLanguage->addMultipleFields(['GROUP_CONCAT(DISTINCT IFNULL(tlanguage_name, tlanguage_identifier)) as teachLang']);
+        $resultSet = $userToLanguage->getResultSet();
+        $teachLangs = FatApp::getDb()->fetch($resultSet);
+        $teacherTeachLang = (!empty($teachLangs['teachLang'])) ? $teachLangs['teachLang'] :  '';
         $arrOptions = array();
         foreach ($teacherPrefArr as $val) {
             $arrOptions['pref_'.$val['preference_type']][] = $val['utpref_preference_id'];
