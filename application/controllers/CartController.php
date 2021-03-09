@@ -84,7 +84,9 @@ class CartController extends MyAppController
 
         /* add to cart[ */
         $cart = new Cart();
+    
         if (!$cart->add($teacher_id, $lpackageId, $languageId, $startDateTime, $endDateTime, $grpclsId)) {
+            
             FatUtility::dieJsonError($cart->getError());
         }
         /* ] */

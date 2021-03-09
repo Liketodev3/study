@@ -52,7 +52,12 @@ class TeacherController extends TeacherBaseController
         $rs=$srch->getResultSet();
         $teachLangs = $db->fetchAll($rs, 'tlanguage_id');
         $frm = new Form('frmSettings');
-        $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', 1);
+        $freeTrialPackage = LessonPackage::getFreeTrialPackage();
+          
+        if(!empty($freeTrialPackage) && $freeTrialPackage['lpackage_active'] == applicationConstants::YES){
+            $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', applicationConstants::YES);
+        }
+      
         $lessonNotificationArr = User::getLessonNotificationArr($this->siteLangId);
         //$frm->addSelectBox(Label::getLabel('LBL_How_much_notice_do_you_require_before_lessons?'), 'us_notice_number',$lessonNotificationArr,'',array())->requirements()->setRequired();
 
@@ -92,7 +97,9 @@ class TeacherController extends TeacherBaseController
 
     public function setUpSettings()
     {
-        $post = FatApp::getPostedData();
+        $data = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
+        $form = $this->getSettingsForm($data);
+        $post = $form->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
@@ -109,11 +116,15 @@ class TeacherController extends TeacherBaseController
             }
         }
         $userObj = new UserSetting(UserAuthentication::getLoggedUserId());
-        $isFreeTrial['us_is_trial_lesson_enabled'] = isset($post['us_is_trial_lesson_enabled'])?$post['us_is_trial_lesson_enabled']:0;
-        if (!$userObj->saveData($isFreeTrial)) {
-            Message::addErrorMessage(Label::getLabel($userObj->getError()));
-            FatUtility::dieJsonError(Message::getHtml());
+        if(isset($post['us_is_trial_lesson_enabled'])){
+            $isFreeTrial['us_is_trial_lesson_enabled'] = $post['us_is_trial_lesson_enabled'];
+            if (!$userObj->saveData($isFreeTrial)) {
+                Message::addErrorMessage(Label::getLabel($userObj->getError()));
+                FatUtility::dieJsonError(Message::getHtml());
+            }
         }
+       
+      
         $this->set('msg', Label::getLabel('MSG_Setup_successful'));
         $this->_template->render(false, false, 'json-success.php');
     }

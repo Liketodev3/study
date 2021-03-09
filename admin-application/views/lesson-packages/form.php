@@ -4,6 +4,10 @@ $frm->setFormTagAttribute('onsubmit', 'setupLessonPackage(this); return(false);'
 $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 12; 	
 
+if($isFreeTrial == applicationConstants::YES){
+
+	$frm->getField('lpackage_lessons')->addFieldTagAttribute('disabled', true);
+}
 
 ?>
 
