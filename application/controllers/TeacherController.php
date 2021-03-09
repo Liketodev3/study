@@ -330,25 +330,6 @@ class TeacherController extends TeacherBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
 
-        //unset($post['teach_lang_id']);
-        $userTechLangObj = UserToLanguage::getUserTeachlanguages(UserAuthentication::getLoggedUserId());
-        $userTechLangObj->addCondition('utl_slanguage_id','IN',$post['teach_lang_id']);
-        $userTechLangObj->addMultipleFields(['utl_id','utl_slanguage_id', 'utl_single_lesson_amount', 'utl_bulk_lesson_amount']);
-        $resultSet =  $userTechLangObj->getResultSet($userTechLangObj);
-        $userTechLangData =  FatApp::getDb()->fetchAll($resultSet, 'utl_slanguage_id');
-
-        $db->startTransaction();
-
-        if(
-            !$db->deleteRecords('tbl_user_teach_languages', array('smt' => 'utl_us_user_id = ?', 'vals'=> array(UserAuthentication::getLoggedUserId())))
-            ||
-            !$db->deleteRecords('tbl_user_to_spoken_languages', array('smt' => 'utsl_user_id = ?', 'vals'=> array(UserAuthentication::getLoggedUserId())))
-            ){
-            $db->rollbackTransaction();
-            Message::addErrorMessage(Label::getLabel($db->getError()));
-            FatUtility::dieWithError(Message::getHtml());
-        }
-
         foreach ($post['teach_lang_id'] as $tlang) {
             $lesson_durations = explode(',', FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_STRING, 60));
             foreach($lesson_durations as $lesson_duration){
@@ -357,7 +338,7 @@ class TeacherController extends TeacherBaseController
                     'utl_us_user_id' => UserAuthentication::getLoggedUserId(), 
                     'utl_booking_slot' => $lesson_duration
                 );
-                if(!$db->insertFromArray('tbl_user_teach_languages', $insertArr, false, array(), $insertArr )){
+                if(!$db->insertFromArray(UserToLanguage::DB_TBL_TEACH, $insertArr, false, array(), $insertArr )){
                     $db->rollbackTransaction();
                     Message::addErrorMessage( Label::getLabel($db->getError()) );
                     FatUtility::dieWithError( Message::getHtml() );
@@ -510,12 +491,13 @@ class TeacherController extends TeacherBaseController
 
         $userSettingRs = $userSettingSrch->getResultSet();
         $teacherTeachLangArr = $db->fetch($userSettingRs);*/
-        $userSrchObj = new UserSearch();
-        $tLangsrch = $userSrchObj->getMyTeachLangQry();
-        $tLangsrch->addCondition('utl_us_user_id', '=', UserAuthentication::getLoggedUserId());
-        $rs = $tLangsrch->getResultSet();
-        $tLangs = FatApp::getDb()->fetch($rs);
-        $teacherTeachLang = CommonHelper::getTeachLangs($tLangs['utl_slanguage_ids']);
+        $userToLanguage = UserToLanguage::getUserTeachlanguages(UserAuthentication::getLoggedUserId(), true);
+        $userToLanguage->doNotCalculateRecords();
+        $userToLanguage->doNotLimitRecords();
+        $userToLanguage->addMultipleFields(['GROUP_CONCAT(DISTINCT IFNULL(tlanguage_name, tlanguage_identifier)) as teachLang']);
+        $resultSet = $userToLanguage->getResultSet();
+        $teachLangs = FatApp::getDb()->fetch($resultSet);
+        $teacherTeachLang = (!empty($teachLangs['teachLang'])) ? $teachLangs['teachLang'] :  '';
         $arrOptions = array();
         foreach ($teacherPrefArr as $val) {
             $arrOptions['pref_'.$val['preference_type']][] = $val['utpref_preference_id'];

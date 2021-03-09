@@ -292,7 +292,7 @@ class UserSearch extends SearchBase
         $this->joinTable(User::DB_TBL_LANG, 'LEFT OUTER JOIN', 'ulg.'.User::DB_TBL_LANG_PREFIX.'user_id = u.user_id and ulg.'.User::DB_TBL_LANG_PREFIX.'lang_id = '.$langId, 'ulg');
     }
 
-    public function getMyTeachLangQry($addJoinTeachLangTable = false, $langId = 0, $keyword = '')
+    public function getMyTeachLangQry($addJoinTeachLangTable = false, $langId = 0, int $teachLangId = 0)
     {
         $tlangSrch = new SearchBase(UserToLanguage::DB_TBL_TEACH, 'utl');
         if($addJoinTeachLangTable) {
@@ -305,13 +305,15 @@ class UserSearch extends SearchBase
             $tlangSrch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utl.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'sl_lang');
             $tlangSrch->addCondition('tlanguage_active', '=', '1');
             $tlangSrch->addMultipleFields(array('GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY tlanguage_name,tlanguage_identifier ) as teacherTeachLanguageName'));
-            if (!empty($keyword)) {
-                $cnd = $tlangSrch->addCondition('tlanguage_name', 'LIKE', '%' . $keyword . '%');
-                $cnd->attachCondition('tlanguage_identifier', 'LIKE', '%' . $keyword . '%');
+            
+            if (!empty($teachLangId)) {
+                $tlangSrch->addMultipleFields(array('SUM(CASE when utl.utl_slanguage_id = '.$teachLangId.' then 1 else 0 end) as teachLangId '));
+                $tlangSrch->addHaving('teachLangId', '>', '0');
             }
+            
             $tlangSrch->addOrder('tlanguage_display_order');
         }
-        $tlangSrch->addMultipleFields(array('utl_us_user_id','GROUP_CONCAT(utl_id) as utl_ids','max(utl_single_lesson_amount) as maxPrice','min(utl_bulk_lesson_amount) as minPrice','GROUP_CONCAT(utl_slanguage_id) as utl_slanguage_ids', 'GROUP_CONCAT(utl_booking_slot) as utl_booking_slots'));
+        $tlangSrch->addMultipleFields(array('utl_us_user_id','GROUP_CONCAT(utl_id) as utl_ids','GREATEST(max(utl_single_lesson_amount), max(utl_bulk_lesson_amount)) AS maxPrice','LEAST(min(utl_bulk_lesson_amount), min(utl_single_lesson_amount)) AS minPrice','GROUP_CONCAT(utl_slanguage_id) as utl_slanguage_ids', 'GROUP_CONCAT(utl_booking_slot) as utl_booking_slots'));
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
         $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);
