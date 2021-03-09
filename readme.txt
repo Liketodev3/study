@@ -63,6 +63,7 @@ Hotfixes:
     Bug-#048675-validate page size
     Bug-#049283-fix lesson plan attachment download
     Bug-#048531-fix label Class error on home page in case of analytics not found on google account
+    Bug-#050799 - Admin > cms >> lesson package management >> if disable free trial >> it then also show at front end at teacher profile.
 
 ------------------------------------------------------------
 
