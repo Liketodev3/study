@@ -10,6 +10,7 @@ $preferenceFilter_filter = array();
 $fromCountry_filter = array();
 $gender_filter = array();
 $filters  = array();
+$keywordlanguage = '';
 if ( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters'] )) {
 	$filters = $_SESSION['search_filters'];
 
@@ -33,8 +34,8 @@ if ( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters']
 	if ( isset($filters['gender']) && !empty( $filters['gender'] ) ) {
 		$gender_filter = explode(',', $filters['gender']);
 	}
-	if ( isset($filters['teach_lang_keyword']) && !empty( $filters['teach_lang_keyword'] ) ) {
-		$keywordlanguage = $filters['teach_lang_keyword'];
+	if ( isset($filters['teach_language_name']) && !empty( $filters['teach_language_name'] ) ) {
+		$keywordlanguage = $filters['teach_language_name'];
 	}
 	if ( isset($filters['keyword']) && !empty( $filters['keyword'] ) ) {
 		$keyword = $filters['keyword'];

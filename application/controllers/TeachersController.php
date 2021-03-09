@@ -2,8 +2,12 @@
 class TeachersController extends MyAppController {
 
 	public function index($teachLangId = 0) {
-		$keyword = FatApp::getPostedData('language');
-		$frmSrch = $this->getTeacherSearchForm($teachLangId, $keyword);
+		
+		if(empty($teachLangId)){
+			$teachLangId = FatApp::getPostedData('teachLangId', FatUtility::VAR_INT, 0);
+		}
+		
+		$frmSrch = $this->getTeacherSearchForm($teachLangId);
 		$this->set('frmTeacherSrch', $frmSrch);
 		$daysArr = array(
 			0 => Label::getLabel('LBL_Sunday'),
@@ -15,7 +19,6 @@ class TeachersController extends MyAppController {
 			6 => Label::getLabel('LBL_Saturday')
 		);
 		$timeSlotArr = TeacherGeneralAvailability::timeSlotArr();
-		$this->set('keywordlanguage', $keyword);
 		$this->set('daysArr', $daysArr);
 		$this->set('timeSlotArr', $timeSlotArr);
 		$this->_template->addJs('js/enscroll-0.6.2.min.js');
@@ -56,6 +59,7 @@ class TeachersController extends MyAppController {
 		if (UserAuthentication::isUserLogged()) {
 			$srch->addCondition('user_id','!=',UserAuthentication::getLoggedUserId());
 		}
+		// prx($srch->getQuery());
 		$rs = $srch->getResultSet();
 	
 		$db = FatApp::getDb();
@@ -585,25 +589,27 @@ class TeachersController extends MyAppController {
 	}
 
 	private function searchTeachers(&$srch) {
-		$teachLanguageName = FatApp::getPostedData('teach_lang_keyword');
+		$teachLangId = FatApp::getPostedData('teachLangId', FatUtility::VAR_INT, 0);
 		$postedData = FatApp::getPostedData();
 		$_SESSION['search_filters'] = $postedData;
 
 		$srch = new UserSearch(false);
 		$srch->setTeacherDefinedCriteria(false,false);
-		$tlangSrch = $srch->getMyTeachLangQry(true, $this->siteLangId, $teachLanguageName);
+		
+		$tlangSrch = $srch->getMyTeachLangQry(true, $this->siteLangId, $teachLangId);
+
 		$srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_us_user_id', 'utls');
 		$srch->joinUserSpokenLanguages($this->siteLangId);
-		// $srch->joinUserTeachingLanguages($this->siteLangId, $teachLanguageName);
 		$srch->joinUserCountry($this->siteLangId);
-		// $srch->joinUserSettings();
 		$srch->joinUserAvailibility();
+		
 		if (UserAuthentication::isUserLogged()) {
 			$srch->joinFavouriteTeachers(UserAuthentication::getLoggedUserId());
 			$srch->addFld('uft_id');
 		} else {
 			$srch->addFld('0 as uft_id');
 		}
+
 		/* [ */
 		$spokenLanguage = FatApp::getPostedData('spokenLanguage', FatUtility::VAR_STRING, NULL);
 		if (!empty($spokenLanguage)) {
@@ -764,10 +770,12 @@ class TeachersController extends MyAppController {
 		));
 	}
 
-	private function getTeacherSearchForm($teachLangId = 0, $techLangKeyword = '') {
-		$slangId = 0;
-		$slangName = '';
+	private function getTeacherSearchForm($teachLangId = 0) {
+		$teachLangName = '';
 		$keyword = '';
+		if(empty($teachLangId)){
+			$teachLangId = (!empty($_SESSION['search_filters']['teachLangId'])) ? $_SESSION['search_filters']['teachLangId'] : $teachLangId;
+		}
 		if ($teachLangId) {
 			$srch = new TeachingLanguageSearch($this->siteLangId);
 			$srch->addCondition('tlanguage_id', '=', $teachLangId);
@@ -775,27 +783,26 @@ class TeachersController extends MyAppController {
 				'tlanguage_id',
 				'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'
 			));
-
+			$srch->doNotCalculateRecords();
+			$srch->setPageSize(1);
 			$rs = $srch->getResultSet();
 			$languages = FatApp::getDb()->fetch($rs);
-			if ($languages) {
-				$slangId = $languages['tlanguage_id'];
-				$slangName = $languages['tlanguage_name'];
+			if (!empty($languages['tlanguage_id'])) {
+				$teachLangId = $languages['tlanguage_id'];
+				$teachLangName = $languages['tlanguage_name'];
 			}
 		}
+		if(!empty($teachLangName)){
+			$_SESSION['search_filters']['teach_language_name'] = $teachLangName;
+		}
 		if (isset($_SESSION['search_filters']) && !empty($_SESSION['search_filters'])) {
-			if (isset($_SESSION['search_filters']['teach_lang_keyword']) && !empty($_SESSION['search_filters']['teach_lang_keyword'])) {
-				$slangName = $_SESSION['search_filters']['teach_lang_keyword'];
-				$techLangKeyword = $_SESSION['search_filters']['teach_lang_keyword'];
-			}
 			if (isset($_SESSION['search_filters']['keyword']) && !empty($_SESSION['search_filters']['keyword'])) {
 				$keyword = $_SESSION['search_filters']['keyword'];
 			}
 		}
 		$frm = new Form('frmTeacherSrch');
-		$frm->addTextBox('', 'teach_language_name', $slangName, array('placeholder' => Label::getLabel('LBL_Select_a_language')));
-		$frm->addHiddenField('', 'teach_language_id', $slangId);
-		$frm->addHiddenField('', 'teach_lang_keyword', $techLangKeyword );
+		$frm->addTextBox('', 'teach_language_name', $teachLangName, array('placeholder' => Label::getLabel('LBL_Select_a_language')));
+		$frm->addHiddenField('', 'teachLangId', $teachLangId);
 		$frm->addTextBox('', 'teach_availability', '', array('placeholder' => Label::getLabel('LBL_Select_date_time')));
 		$keyword =  $frm->addTextBox('', 'keyword', $keyword, array('placeholder' => Label::getLabel('LBL_Search_By_Teacher_Name')));
 		$keyword->requirements()->setLength(0,15);
