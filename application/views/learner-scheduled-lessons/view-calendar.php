@@ -42,7 +42,7 @@
    	});
 
    	$('#listing_calendar').fullCalendar({
-
+            slotLabelFormat: 'HH:mm',
    			selectable: true,
 			<?php if (strtolower($layoutDirection ) == 'rtl') { ?>
 			rtl : true,

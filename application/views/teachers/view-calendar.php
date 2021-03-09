@@ -36,6 +36,7 @@ $(document).ready(function() {
         $('.tooltipevent').remove();
     });
     var calendarObj  = $('#d_calendar').fullCalendar({
+        slotLabelFormat: 'HH:mm',
         header: {
             left: 'time',
             center: '',

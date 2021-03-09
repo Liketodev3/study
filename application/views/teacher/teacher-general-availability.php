@@ -147,6 +147,7 @@ $weekDayName =  CommonHelper::dayNames();
     }
 
     $('#ga_calendar').fullCalendar({
+        slotLabelFormat: 'HH:mm',
         header: {
             left: '',
             center: '',
