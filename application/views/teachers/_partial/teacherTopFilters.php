@@ -24,9 +24,8 @@ $frmTeacherSrch->getField( 'btnTeacherSrchSubmit' )->setFieldTagAttribute('class
 							</svg>
 						</span>
 						<?php
-						echo $frmTeacherSrch->getFieldHtml('teach_lang_keyword');
 						echo $frmTeacherSrch->getFieldHtml('teach_language_name');
-						echo $frmTeacherSrch->getFieldHtml('teach_language_id');
+						echo $frmTeacherSrch->getFieldHtml('teachLangId');
 						?>
 
                     </div>

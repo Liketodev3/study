@@ -13,6 +13,7 @@ Bugs
     Bug-#050820 - Teacher >> settings >> Skills >> same language is coming multiple time.
     Bug-#050759 - Admin >> Dashboard >> total revenue from lesson >> view details >> need to correct ui
     Bug-#050761 - Admin >> Dashboard >> total revenue from lesson >>view schedule >> need to correct ui 
+    Bug-#047550 - Listing Teacher : Teaches Language information
     
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
