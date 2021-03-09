@@ -2685,6 +2685,7 @@ padding: 18px 38px;
     color: #999;
     text-transform: capitalize;
     display: block;
+    width: 100%;
 }
 
 .section.searchform_filter .sectionhead h4:before {
@@ -11128,4 +11129,28 @@ body.page--front .page__cell #footer {
 }
 .export-btn:hover {
     box-shadow: 0 4px 4px rgba(84, 209, 241, 0.5);
+}
+
+.label--note {
+    padding: 2px 12px;
+    background: rgba(204, 88, 92,0.08);
+    border-radius: 2px;
+}
+.label--note strong {
+    font-size: 12px;
+    font-weight: normal;
+}
+.section .sectionhead:before{
+    top: 50%;
+    transform: translateY(-50%);
+}
+.section .sectionhead{
+    display: flex;
+    align-items: center;
+}
+.sectionhead h4 {
+    margin-right: auto;
+}
+.export-btn {
+    margin-left: 20px;
 }
