@@ -102,7 +102,7 @@ class TeacherController extends TeacherBaseController
         $post = FatApp::getPostedData();
         $data = $form->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
-            Message::addErrorMessage(current($frm->getValidationErrors()));
+            Message::addErrorMessage(current($form->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
 
