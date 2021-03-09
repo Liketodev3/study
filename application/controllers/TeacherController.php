@@ -52,7 +52,11 @@ class TeacherController extends TeacherBaseController
         $rs=$srch->getResultSet();
         $teachLangs = $db->fetchAll($rs, 'tlanguage_id');
         $frm = new Form('frmSettings');
-        $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', 1, [], false, 0);
+        $freeTrialPackage = LessonPackage::getFreeTrialPackage();
+        if(!empty($freeTrialPackage) && $freeTrialPackage['lpackage_active'] == applicationConstants::YES){
+            $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', applicationConstants::YES);
+        }
+      
         $lessonNotificationArr = User::getLessonNotificationArr($this->siteLangId);
         //$frm->addSelectBox(Label::getLabel('LBL_How_much_notice_do_you_require_before_lessons?'), 'us_notice_number',$lessonNotificationArr,'',array())->requirements()->setRequired();
 
@@ -192,13 +196,16 @@ class TeacherController extends TeacherBaseController
                 }
             }
         }
-        
-        $userSetting = new UserSetting($userId);
-        $userSetting->setFldValue('us_is_trial_lesson_enabled', $data['us_is_trial_lesson_enabled']);
-        if (!$userSetting->save()) {
-            Message::addErrorMessage($userSetting->getError());
-            FatUtility::dieJsonError(Message::getHtml());
+        $userObj = new UserSetting(UserAuthentication::getLoggedUserId());
+        if(isset($post['us_is_trial_lesson_enabled'])){
+            $isFreeTrial['us_is_trial_lesson_enabled'] = $post['us_is_trial_lesson_enabled'];
+            if (!$userObj->saveData($isFreeTrial)) {
+                Message::addErrorMessage(Label::getLabel($userObj->getError()));
+                FatUtility::dieJsonError(Message::getHtml());
+            }
         }
+       
+      
         $this->set('msg', Label::getLabel('MSG_Setup_successful'));
         $this->_template->render(false, false, 'json-success.php');
     }

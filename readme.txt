@@ -14,6 +14,7 @@ Bugs
     Bug-#050759 - Admin >> Dashboard >> total revenue from lesson >> view details >> need to correct ui
     Bug-#050761 - Admin >> Dashboard >> total revenue from lesson >>view schedule >> need to correct ui 
     Bug-#047550 - Listing Teacher : Teaches Language information
+    Bug-#050799 - Admin > cms >> lesson package management >> if disable free trial >> it then also show at front end at teacher profile.
     
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304

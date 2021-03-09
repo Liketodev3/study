@@ -54,23 +54,22 @@ class Cart extends FatModel
             return false;
         }
 
-        $freePackages = LessonPackage::getFreeTrialPackage();
-        if ($freePackages and $freePackages['lpackage_id'] == $lpackageId) {
-            if (1 != $userRow['us_is_trial_lesson_enabled']) {
-                $this->error = Label::getLabel('MSG_Trial_Lessons_are_disabled_by_teacher');
-                return false;
-            }
-        }
-        /* ] */
-        /* validate that free trial package cannot be added again per teacher[ */
-        if($lpackageId>0){
-            $lPackageRow = LessonPackage::getAttributesById($lpackageId, array('lpackage_id', 'lpackage_is_free_trial'));
-            if ($lpackageId !== $lPackageRow['lpackage_id']) {
+        if ($lpackageId > 0) {
+
+            $lPackageRow = LessonPackage::getAttributesById($lpackageId, array('lpackage_id', 'lpackage_is_free_trial','lpackage_active'));
+           
+            if (empty($lpackageId)) {
                 $this->error = Label::getLabel('LBL_Invalid_Request');
                 return false;
             }
 
-            if (1 === $lPackageRow['lpackage_is_free_trial']) {
+            if ($lPackageRow['lpackage_is_free_trial'] == applicationConstants::YES) {
+           
+                if ($lPackageRow['lpackage_active'] != applicationConstants::YES || applicationConstants::YES != $userRow['us_is_trial_lesson_enabled']) {
+                    $this->error = Label::getLabel('MSG_Trial_Lessons_are_disabled');
+                    return false;
+                }
+
                 /* validate if teacher has enabled free trial or not[ */
                 /* ] */
                 if (LessonPackage::isAlreadyPurchasedFreeTrial($this->cart_user_id, $teacher_id)) {
@@ -83,8 +82,8 @@ class Cart extends FatModel
                 }
             }
         }
-        /* ] */
 
+        /* ] */
         /* validate group class id */
         if($grpcls_id>0){
 			$classDetails = TeacherGroupClasses::getAttributesById($grpcls_id, array('grpcls_id', 'grpcls_teacher_id', 'grpcls_start_datetime', 'grpcls_end_datetime', 'grpcls_max_learner', 'grpcls_status'));
