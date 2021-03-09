@@ -27,9 +27,12 @@ if(!empty($defaultSlot)){
                 <div class="field-wraper">
                     <div class="field_cover">
                         <span class="checkbox">
-                        <?php $frm->getField('us_is_trial_lesson_enabled')->htmlAfterField = '<i class="input-helper"></i>'; ?>
-                        <?php $trialFld = $frm->getFieldHtml('us_is_trial_lesson_enabled');
-                        echo str_replace(array('<label>', '</label>'), array(), $trialFld);
+                        <?php
+                            if (!empty($frm->getField('us_is_trial_lesson_enabled'))) {
+                                $frm->getField('us_is_trial_lesson_enabled')->htmlAfterField = '<i class="input-helper"></i>';
+                                $trialFld = $frm->getFieldHtml('us_is_trial_lesson_enabled');
+                                echo str_replace(array('<label>', '</label>'), array(), $trialFld);
+                            }
                         ?>
                         </span>
                     </div>
