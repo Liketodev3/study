@@ -11,11 +11,8 @@ class ImageController extends FatController
         $lang_id = FatUtility::int($lang_id);
         $recordId = 0;
         $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_FRONT_LOGO, $recordId, 0, $lang_id, false);
-        $image_name = $file_row['afile_physical_path'] ?? '';
+        $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
         $default_image = '';
-        if (!empty(CLOUDFRONT_URL)) {
-            return CLOUDFRONT_URL . $image_name;
-        }
 
         switch (strtoupper($sizeType)) {
             case 'THUMB':
@@ -254,28 +251,6 @@ class ImageController extends FatController
 
     public function favicon($lang_id = 0, $sizeType = '')
     {
-        /* $recordId = 0;
-        $file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_FAVICON, $recordId );
-        $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
-        $default_image = '';
-
-        $uploadedFilePath = $file_row['afile_physical_path'];
-        echo $uploadedFilePath; die();
-        return $uploadedFilePath; */
-
-        /* switch( strtoupper($sizeType) ){
-            case 'THUMB':
-                $w = 100;
-                $h = 100;
-                AttachedFile::displayImage( $image_name, $w, $h, $default_image );
-            break;
-            default:
-                $h = 0;
-                $w = 0;
-                AttachedFile::displayImage( $image_name, $w, $h, $default_image );
-            break;
-        } */
-
         if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_FAVICON, 0, 0, $lang_id, false)) {
             $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
             AttachedFile::displayOriginalImage($image_name);
@@ -302,45 +277,32 @@ class ImageController extends FatController
         if (false == $fileRow || $fileRow['afile_physical_path'] == "") {
             AttachedFile::displayImage('', '', '', $default_image);
         }
-
+        $imageName = $fileRow['afile_physical_path'];
+        $addSpaces = ImageResize::IMG_RESIZE_EXTRA_ADDSPACE;
         switch (strtoupper($sizeType)) {
             case 'NORMAL':
-                $w = 100;
-                $h = 100;
-                AttachedFile::displayImage($fileRow['afile_physical_path'], $w, $h, '', '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
+                AttachedFile::displayImage($imageName, 100, 100, '', '', $addSpaces, false, true);
                 break;
             case 'SMALL':
-                $w = 60;
-                $h = 60;
-                AttachedFile::displayImage($fileRow['afile_physical_path'], $w, $h, '', '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
-                break;
-            case 'EXTRASMALL':
-                $w = 60;
-                $h = 60;
+                AttachedFile::displayImage($imageName, 60, 60, '', '', $addSpaces, false, true);
                 break;
             default:
-                AttachedFile::displayOriginalImage($fileRow['afile_physical_path'], '', '', true);
+                AttachedFile::displayOriginalImage($imageName, '', '', true);
                 break;
         }
-
-        //AttachedFile::displayImage( $fileRow['afile_physical_path'], $w, $h);
     }
 
     public function countryFlag($countryId, $sizeType = 'default')
     {
         $countryId = FatUtility::int($countryId);
         $fileRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_COUNTRY_FLAG, $countryId);
-        $imageName = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
+        $imageName = $fileRow['afile_physical_path'] ?? '';
         switch (strtoupper($sizeType)) {
             case 'THUMB':
-                $w = 100;
-                $h = 100;
-                AttachedFile::displayImage($imageName, $w, $h);
+                AttachedFile::displayImage($imageName, 100, 100);
                 break;
             case 'DEFAULT':
-                $w = 30;
-                $h = 20;
-                AttachedFile::displayImage($imageName, $w, $h);
+                AttachedFile::displayImage($imageName, 30, 20);
                 break;
             default:
                 AttachedFile::displayOriginalImage($imageName);

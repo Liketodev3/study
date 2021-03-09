@@ -166,7 +166,7 @@ class AttachedFile extends MyAppModel
         $date_wise_path = date('Y') . '/' . date('m') . '/';
         /* ] */
         $path = $path . $date_wise_path;
-        $saveName = time() . '-' . preg_replace('/[^a-zA-Z0-9]/', '', $name);
+        $saveName = time() . '-' . preg_replace('/[^a-zA-Z0-9.]/', '', $name);
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
@@ -266,7 +266,7 @@ class AttachedFile extends MyAppModel
 
     /* always call this function using image controller and pass relavant arguments. */
 
-    public static function displayImage($image_name, $w, $h, $no_image = '', $uploadedFilePath = '', $resizeType = ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, $apply_watermark = false, $cache = false)
+    public static function displayImage($image_name, $w, $h, $no_image = '', $uploadPath = '', $resizeType = ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, $apply_watermark = false, $cache = false)
     {
         ob_end_clean();
         if ($no_image == '') {
@@ -274,37 +274,35 @@ class AttachedFile extends MyAppModel
         } else {
             $no_image = CONF_UPLOADS_PATH . 'defaults/' . $no_image;
         }
-        $originalImageName = $image_name;
-        if (trim($uploadedFilePath) != '') {
-            $uploadedFilePath = CONF_UPLOADS_PATH . $uploadedFilePath;
+        if (trim($uploadPath) != '') {
+            $uploadPath = CONF_UPLOADS_PATH . $uploadPath;
         } else {
-            $uploadedFilePath = CONF_UPLOADS_PATH;
+            $uploadPath = CONF_UPLOADS_PATH;
         }
-        $fileMimeType = '';
-        if (!empty($image_name) && file_exists($uploadedFilePath . $image_name)) {
-            $fileMimeType = mime_content_type($uploadedFilePath . $image_name);
-            $image_name = $uploadedFilePath . $image_name;
+        $imagePath = $uploadPath . $image_name;
+        $fileMimeType = static::getContentType($imagePath);
+        if (!empty($image_name) && file_exists($imagePath)) {
             $headers = FatApp::getApacheRequestHeaders();
-            if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($image_name))) {
-                // header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($image_name)).' GMT', true, 304);
-                // exit;
+            if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($imagePath))) {
+                header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($imagePath)) . ' GMT', true, 304);
+                exit;
             }
             try {
-                $img = new ImageResize($image_name);
+                $img = new ImageResize($imagePath);
                 header('Cache-Control: public');
                 header("Pragma: public");
-                header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($image_name)) . ' GMT', true, 200);
+                header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($imagePath)) . ' GMT', true, 200);
                 header("Expires: " . date('r', strtotime("+30 Day")));
             } catch (Exception $e) {
                 try {
-                    $file_extension = substr($image_name, strlen($image_name) - 3, strlen($image_name));
+                    $file_extension = substr($imagePath, strlen($imagePath) - 3, strlen($imagePath));
                     if ($file_extension == "svg") {
                         header("Content-type: image/svg+xml");
                         header('Cache-Control: public');
                         header("Pragma: public");
-                        header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($image_name)) . ' GMT', true, 200);
+                        header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($imagePath)) . ' GMT', true, 200);
                         header("Expires: " . date('r', strtotime("+30 Day")));
-                        echo file_get_contents($image_name);
+                        echo file_get_contents($imagePath);
                         exit;
                     }
                     $img = new ImageResize($no_image);
@@ -315,56 +313,24 @@ class AttachedFile extends MyAppModel
         } else {
             $img = new ImageResize($no_image);
         }
-        /* $w = max(1, FatUtility::int($w));
-          $h = max(1, FatUtility::int($h)); */
         $w = FatUtility::int($w);
         $h = FatUtility::int($h);
         $img->setResizeMethod($resizeType);
-        //$img->setResizeMethod(ImageResize::IMG_RESIZE_RESET_DIMENSIONS);
         if ($w && $h) {
             $img->setMaxDimensions($w, $h);
         }
-        if ($apply_watermark && !empty($image_name)) {
-            $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_WATERMARK_IMAGE, 0, 0, CommonHelper::getLangId());
-            $wtrmrk_file = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
-            if (!empty($wtrmrk_file)) {
-                $wtrmrk_file = $uploadedFilePath . $wtrmrk_file;
-                //$wtrmrkFileMimeType = mime_content_type($uploadedFilePath . $image_name);
-                $ext_watermark = substr($wtrmrk_file, -3);
-                $imageInfo = getimagesize($wtrmrk_file);
-                $OriginalImageInfo = getimagesize($image_name);
-                /* var_dump($OriginalImageInfo); die; */
-                $img_w = $w;
-                $img_h = $h;
-                $wtrmrk_w = $imageInfo[0];
-                $wtrmrk_h = $imageInfo[1];
-                /* echo $img_h-$wtrmrk_h-20; die; 422,651 */
-                $img->setWaterMark($wtrmrk_file, $img_w - $wtrmrk_w - 20, $img_h - $wtrmrk_h - 20);
-                $fileMimeType = 'image/png';
-            }
-        }
         if ($cache) {
             $cacheKey = $_SERVER['REQUEST_URI'];
-            // ob_get_clean();
             ob_start();
-            if ($fileMimeType != '') {
-                header("content-type: " . $fileMimeType);
-            } else {
-                header("content-type: image/jpeg");
-            }
+            header("content-type: " . $fileMimeType);
             $img->displayImage(80, false);
             $imgData = ob_get_clean();
             FatCache::set($cacheKey, $imgData, '.jpg');
             echo $imgData;
         } else {
-            if ($fileMimeType != '') {
-                header("content-type: " . $fileMimeType);
-            } else {
-                header("content-type: image/jpeg");
-            }
+            header("content-type: " . $fileMimeType);
             $img->displayImage(80, false);
         }
-        /* $img->displayImage(); */
     }
 
     public static function downloadFile($fileName, $uploadedFilePath = '')
@@ -404,36 +370,33 @@ class AttachedFile extends MyAppModel
         } else {
             $uploadedFilePath = CONF_UPLOADS_PATH;
         }
-        $fileMimeType = mime_content_type($uploadedFilePath . $image_name);
-        if ($fileMimeType != '') {
-            header("content-type: " . $fileMimeType);
-        } else {
-            header("content-type: image/jpeg");
-        }
+        $imagePath = $uploadedFilePath . $image_name;
+        $contentType = static::getContentType($imagePath);
+        header("content-type: " . $contentType);
         $cacheKey = $_SERVER['REQUEST_URI'];
-        if (!empty($image_name) && file_exists($uploadedFilePath . $image_name)) {
-            $image_name = $uploadedFilePath . $image_name;
-            $headers = FatApp::getApacheRequestHeaders();
-            if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($image_name))) {
-                header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($image_name)) . ' GMT', true, 304);
-                exit;
-            }
-            try {
-                header('Cache-Control: public');
-                header("Pragma: public");
-                header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($image_name)) . ' GMT', true, 200);
-                header("Expires: " . date('r', strtotime("+30 Day")));
-                echo file_get_contents($image_name);
-                if ($cache) {
-                    FatCache::set($cacheKey, file_get_contents($image_name), '.jpg');
-                }
-            } catch (Exception $e) {
-                echo file_get_contents($no_image);
-                FatCache::set($cacheKey, file_get_contents($no_image), '.jpg');
-            }
-        } else {
+        if (empty($image_name) || !file_exists($imagePath)) {
             echo file_get_contents($no_image);
-            FatCache::set($cacheKey, file_get_contents($no_image), '.jpg');
+            return;
+        }
+        $headers = FatApp::getApacheRequestHeaders();
+        if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($imagePath))) {
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($imagePath)) . ' GMT', true, 304);
+            exit;
+        }
+        try {
+            header('Cache-Control: public');
+            header("Pragma: public");
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($imagePath)) . ' GMT', true, 200);
+            header("Expires: " . date('r', strtotime("+30 Day")));
+            $fileContents =  file_get_contents($imagePath);
+            echo $fileContents;
+            if ($cache) {
+                FatCache::set($cacheKey, $fileContents, '.jpg');
+            }
+        } catch (Exception $e) {
+            $fileContents =  file_get_contents($no_image);
+            FatCache::set($cacheKey, $fileContents, '.jpg');
+            echo $fileContents;
         }
     }
 
@@ -625,5 +588,34 @@ class AttachedFile extends MyAppModel
             'version' => 'latest'
         ]);
         $client->registerStreamWrapper();
+    }
+
+    public static function getContentType($filename)
+    {
+        try {
+            $extension = strtolower(pathinfo($filename)['extension'] ?? '');
+            if (empty($extension)) {
+                return mime_content_type($filename);
+            }
+            switch ($extension) {
+                case 'jpg':
+                case 'jpeg':
+                    return 'image/jpeg';
+                case 'png':
+                    return 'image/png';
+                case 'bmp':
+                    return 'image/bmp';
+                case 'gif':
+                    return 'image/gif';
+                case 'svg':
+                    return 'image/svg+xml';
+                case 'ico':
+                    return 'image/vnd.microsoft.icon';
+                default:
+                    break;
+            }
+        } catch (Exception $e) {
+            return 'image/jpeg';
+        }
     }
 }

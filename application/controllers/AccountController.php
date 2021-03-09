@@ -14,13 +14,13 @@ class AccountController extends LoggedUserController
         switch (User::getDashboardActiveTab()) {
             case User::USER_LEARNER_DASHBOARD:
                 FatApp::redirectUser(CommonHelper::generateUrl('learner'));
-            break;
+                break;
             case User::USER_TEACHER_DASHBOARD:
                 FatApp::redirectUser(CommonHelper::generateUrl('teacher'));
-            break;
+                break;
             default:
                 FatApp::redirectUser(CommonHelper::generateUrl('learner'));
-            break;
+                break;
         }
     }
 
@@ -77,7 +77,7 @@ class AccountController extends LoggedUserController
             FatUtility::dieWithError(Message::getHtml());
         }
         if (!$userObj->setLoginPassword($post['new_password'])) {
-            Message::addErrorMessage(Label::getLabel('MSG_Password_could_not_be_set'). $userObj->getError());
+            Message::addErrorMessage(Label::getLabel('MSG_Password_could_not_be_set') . $userObj->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
         $this->set('msg', Label::getLabel('MSG_Password_changed_successfully'));
@@ -108,7 +108,7 @@ class AccountController extends LoggedUserController
 
         $_token = $userObj->prepareUserVerificationCode();
         if (!$this->sendEmailChangeVerificationLink($_token, $userData)) {
-            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset'). $emailChangeReqObj->getError());
+            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
 
@@ -126,7 +126,7 @@ class AccountController extends LoggedUserController
 
         $emailChangeReqObj->assignValues($postData);
         if (!$emailChangeReqObj->save()) {
-            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset'). $emailChangeReqObj->getError());
+            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
         $this->set('msg', Label::getLabel('MSG_Please_verify_your_email'));
@@ -162,9 +162,8 @@ class AccountController extends LoggedUserController
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addCss('css/fullcalendar.min.css');
-		$this->set('userIsTeacher', User::isTeacher());
+        $this->set('userIsTeacher', User::isTeacher());
         $this->_template->render();
-
     }
 
     public function profileInfoForm()
@@ -237,7 +236,7 @@ class AccountController extends LoggedUserController
         return $frm;
     }
 
-  
+
     public function setUpProfileLangInfo()
     {
         $post = FatApp::getPostedData();
@@ -288,12 +287,11 @@ class AccountController extends LoggedUserController
                 FatUtility::dieJsonError(Message::getHtml());
             }
             $fileHandlerObj = new AttachedFile();
-            if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)
-            ) {
+            if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)) {
                 Message::addErrorMessage($fileHandlerObj->getError());
                 FatUtility::dieJsonError(Message::getHtml());
             }
-            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId)).'?'.time());
+            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId)) . '?' . time());
         }
 
         if ($post['action'] == "avatar") {
@@ -303,14 +301,13 @@ class AccountController extends LoggedUserController
                 FatUtility::dieJsonError(Message::getHtml());
             }
             $fileHandlerObj = new AttachedFile();
-            if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)
-            ) {
+            if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)) {
                 Message::addErrorMessage($fileHandlerObj->getError());
                 FatUtility::dieJsonError(Message::getHtml());
             }
             $data = json_decode(stripslashes($post['img_data']));
-            CommonHelper::crop($data, CONF_UPLOADS_PATH .$res);
-            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'croped', true)).'?'.time());
+            CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
+            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'croped', true)) . '?' . time());
         }
         $this->set('msg', Label::getLabel('MSG_File_uploaded_successfully'));
         $this->_template->render(false, false, 'json-success.php');
@@ -366,7 +363,7 @@ class AccountController extends LoggedUserController
             $fldUname = $frm->addTextBox(Label::getLabel('LBL_Username'), 'user_url_name');
             $fldUname->setUnique('tbl_users', 'user_url_name', 'user_id', 'user_id', 'user_id');
             $fldUname->requirements()->setRequired();
-            $fldUname->requirements()->setLength(3,35);
+            $fldUname->requirements()->setLength(3, 35);
             $fldUname->requirements()->setRegularExpressionToValidate('^[A-Za-z0-9_\-!@#\$\&]{3,35}$');
             // $fldUname->requirements()->setUsername();
         }
@@ -385,7 +382,7 @@ class AccountController extends LoggedUserController
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'user_country_id', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
         $fld->requirement->setRequired(true);
         $timezonesArr = MyDate::timeZoneListing();
-        $fld2 = $frm->addSelectBox(Label::getLabel('LBL_TimeZone'), 'user_timezone',$timezonesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
+        $fld2 = $frm->addSelectBox(Label::getLabel('LBL_TimeZone'), 'user_timezone', $timezonesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
         $fld2->requirement->setRequired(true);
         if ($teacher) { //== check if user is teacher
             $bookingOptionArr = array(0 => Label::getLabel('LBL_Immediate'), 12 => Label::getLabel('LBL_12_Hours'), 24 => Label::getLabel('LBL_24_Hours'));
@@ -448,8 +445,8 @@ class AccountController extends LoggedUserController
     {
         require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
-        $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_'.$this->siteLangId)); // Set your applicatio name
-        $client->setScopes([ 'email','profile', 'https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
+        $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_' . $this->siteLangId)); // Set your applicatio name
+        $client->setScopes(['email', 'profile', 'https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
         $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
         $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
         $currentPageUri = CommonHelper::generateFullUrl('Account', 'GoogleCalendarAuthorize', array(), '', false);
@@ -457,7 +454,7 @@ class AccountController extends LoggedUserController
         $client->setAccessType("offline");
         $client->setApprovalPrompt("force");
         $client->setDeveloperKey(FatApp::getConfig("CONF_GOOGLEPLUS_DEVELOPER_KEY")); // Developer key
-        $oauth2 =new Google_Service_Oauth2($client); // Call the OAuth2 class for get email address
+        $oauth2 = new Google_Service_Oauth2($client); // Call the OAuth2 class for get email address
         if (isset($_GET['code'])) {
             $client->authenticate($_GET['code']); // Authenticate
             $_SESSION['access_token'] = $client->getAccessToken(); // get the access token here
