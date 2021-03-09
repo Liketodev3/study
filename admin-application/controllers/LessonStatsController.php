@@ -377,6 +377,7 @@ class LessonStatsController extends AdminBaseController
         $this->set('report_type', $post['report_type']);
         $this->set('report_user_id', $post['report_user_id']);
         $this->set('postedData', $post);
+        $this->set('userFullName', User::getAttributesById($post['report_user_id'], 'concat(user_first_name, " " ,user_last_name)'));
         $this->set('reportName', $reportName);
         $this->set('reportNoteText', $reportNoteText);
         $this->set('statusArr', ScheduledLesson::getStatusArr());

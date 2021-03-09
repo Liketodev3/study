@@ -30,16 +30,15 @@ foreach ($lessons as $sn => $row) {
 				break;
 			case 'ExpertName':
 				$td->setAttribute('width', '15%');
-				$td->appendElement('span', array('class' => ($row['tuser_id'] == $row['lesstslog_updated_by_user_id']) ? 'label--info' : ''), $row[$key], true);
+				$td->appendElement('span', [], $row[$key], true);
 				break;
 			case 'StudentName':
-				$td->appendElement('span', array('class' => ($row['suser_id'] == $row['lesstslog_updated_by_user_id']) ? 'label--info' : ''), $row[$key], true);
+				$td->appendElement('span', [], $row[$key], true);
 				break;
 			case 'sldetail_order_id':
 				$td->setAttribute('width', '15%');
 				$td->appendElement('plaintext', array(), Label::getLabel('LBL_O-ID') . ': ' . $row[$key] . '<br> ' . Label::getLabel('LBL_Lesson_ID') . ': ' . $row['slesson_id'], true);
 				break;
-
 			case 'StartTime':
 
 				$td->setAttribute('width', '20%');
@@ -82,11 +81,13 @@ foreach ($lessons as $sn => $row) {
 } ?>
 <section class="section">
 	<div class="sectionhead">
-		<h4><?php echo $reportName; ?></h4>
-		<div class="-float-right">
-			<span class="label--info"><?php echo $reportNoteText; ?></span>
-			<a onClick="exportReport(<?php echo $report_user_id; ?>, <?php echo $report_type; ?>)" class='btn btn-primary export-btn btn-sm'>Export CSV</a>
-		</div>
+		<h4><?php echo $reportName, ' - <span class="label--info">', $userFullName, '</span>'; ?></h4>
+		<!-- <div class="label--note text-right">
+			<strong class="-color-secondary span-right">
+				<?php /* echo $reportNoteText; */ ?>
+			</strong>
+		</div> -->
+		<a onClick="exportReport(<?php echo $report_user_id; ?>, <?php echo $report_type; ?>)" class='btn btn-primary export-btn btn-sm'>Export CSV</a>
 	</div>
 	<div class="sectionbody space">
 		<div class="tabs_nav_container responsive flat">

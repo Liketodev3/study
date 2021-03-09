@@ -31,7 +31,7 @@
 
 						<h4><?php echo Label::getLabel('LBL_Commission_Report', $adminLangId); ?> </h4>
 
-						<div class="col-md-12 text-right">
+						<div class="label--note text-right">
 							<strong class="-color-secondary span-right">
 								<?php echo Label::getLabel('LBL_REFUNDS_/_CANCELLATIONS_COMMISSION_REPORT_NOTE') ?>
 								<span class="spn_must_field">*</span>
