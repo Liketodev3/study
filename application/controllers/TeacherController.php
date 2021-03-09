@@ -55,7 +55,7 @@ class TeacherController extends TeacherBaseController
         $freeTrialPackage = LessonPackage::getFreeTrialPackage();
           
         if(!empty($freeTrialPackage) && $freeTrialPackage['lpackage_active'] == applicationConstants::YES){
-            $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', applicationConstants::YES);
+            $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', applicationConstants::YES, [], true, applicationConstants::NO);
         }
       
         $lessonNotificationArr = User::getLessonNotificationArr($this->siteLangId);
