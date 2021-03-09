@@ -97,9 +97,10 @@ class TeacherController extends TeacherBaseController
 
     public function setUpSettings()
     {
-        $data = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
-        $form = $this->getSettingsForm($data);
-        $post = $form->getFormDataFromArray(FatApp::getPostedData());
+        $userSettingData = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
+        $form = $this->getSettingsForm($userSettingData);
+        $post = FatApp::getPostedData();
+        $data = $form->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
@@ -116,8 +117,8 @@ class TeacherController extends TeacherBaseController
             }
         }
         $userObj = new UserSetting(UserAuthentication::getLoggedUserId());
-        if(isset($post['us_is_trial_lesson_enabled'])){
-            $isFreeTrial['us_is_trial_lesson_enabled'] = $post['us_is_trial_lesson_enabled'];
+        if(isset($data['us_is_trial_lesson_enabled'])){
+            $isFreeTrial['us_is_trial_lesson_enabled'] = $data['us_is_trial_lesson_enabled'];
             if (!$userObj->saveData($isFreeTrial)) {
                 Message::addErrorMessage(Label::getLabel($userObj->getError()));
                 FatUtility::dieJsonError(Message::getHtml());
