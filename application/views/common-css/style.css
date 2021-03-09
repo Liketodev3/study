@@ -8072,4 +8072,7 @@ color: #fff;}
         margin-right: 0px;
     }
 }
+.header__logo img {
+    max-height: 40px;
+}
 /*----------end----------*/
