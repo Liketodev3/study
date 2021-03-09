@@ -11129,3 +11129,7 @@ body.page--front .page__cell #footer {
 .export-btn:hover {
     box-shadow: 0 4px 4px rgba(84, 209, 241, 0.5);
 }
+  
+  .lesson-status-dropdown{
+      padding-right: 35px;
+  }

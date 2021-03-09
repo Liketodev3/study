@@ -11,6 +11,8 @@ Bugs
     Bug-#050730 - Front end >> teacher sign up >> resume >> upload invalid resume format >> loader keep on revolving >> after giving error message.
     Bug-#050754 - Front end >> teacher >> teacher setting >> when don't change any language >> clik on save button then also price become clear >> and teacher not able to know. 
     Bug-#050820 - Teacher >> settings >> Skills >> same language is coming multiple time.
+    Bug-#050759 - Admin >> Dashboard >> total revenue from lesson >> view details >> need to correct ui
+    Bug-#050761 - Admin >> Dashboard >> total revenue from lesson >>view schedule >> need to correct ui 
     
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
