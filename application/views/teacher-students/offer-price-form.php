@@ -46,16 +46,28 @@ $frm->setFormTagAttribute('onsubmit', 'setUpOfferPrice(this); return(false);');
 			</div>
 		</div>
 		<div class="row">
-			<div class="fld_wrapper-js col-md-4">
+			<div class="fld_wrapper-js col-md-2">
 				<div class="field-set">
 					<div class="caption-wraper"><label class="field_label">&nbsp;</label></div>
 					<div class="field-wraper">
 						<div class="field_cover">
 							<?php echo $frm->getFieldHtml('top_learner_id') ?>
 							<?php echo $frm->getFieldHtml('btn_submit') ?>
+						</div>
 					</div>
 				</div>
 			</div>
+			<?php if(!empty($tofferPrices)): ?>
+			<div class="fld_wrapper-js col-md-4">
+			<div class="field-set">
+				<div class="caption-wraper"><label class="field_label">&nbsp;</label></div>
+				<div class="field-wraper">
+					<div class="field_cover">
+						<a href="javascript:;" class="btn btn--primary btn--large" onClick="return unlockOfferPrice(<?php echo $user_info['user_id'];?>);"><?php echo Label::getLabel('LBL_Unlock_prices') ?></a>
+					</div>
+				</div>
+			</div>
+			<?php endif; ?>
 		</div>
 	</form>
 	<?php echo $frm->getExternalJs(); ?>

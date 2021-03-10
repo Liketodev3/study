@@ -10,7 +10,6 @@ class TeacherStudentsController extends TeacherBaseController
     {
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
-        $this->set('statusArr', ScheduledLesson::getStatusArr());
         $this->_template->render();
     }
 
@@ -105,15 +104,23 @@ class TeacherStudentsController extends TeacherBaseController
 
     public function offerPriceForm()
     {
-        $learnerId = FatApp::getPostedData('top_learner_id', FatUtility::VAR_INT, 0);
-        $frm = $this->getOfferPriceForm();
-        $frm->fill(array('top_learner_id' => $learnerId));
-        $this->set('frm', $frm);
         $teacherId = UserAuthentication::getLoggedUserId();
+        $learnerId = FatApp::getPostedData('top_learner_id', FatUtility::VAR_INT, 0);
+        $teacherOfferPrice = new TeacherOfferPrice();
+        $tofferPrices = $teacherOfferPrice->getTeacherOfferPrices($learnerId, $teacherId);
+        $offerPrices = array('top_learner_id' => $learnerId);
+        foreach($tofferPrices as $tofferPrice){
+            $offerPrices['top_single_lesson_price'][$tofferPrice['top_lesson_duration']] = $tofferPrice['top_single_lesson_price'];
+            $offerPrices['top_bulk_lesson_price'][$tofferPrice['top_lesson_duration']] = $tofferPrice['top_bulk_lesson_price'];
+        }        
+        $frm = $this->getOfferPriceForm();
+        $frm->fill($offerPrices);
+        $this->set('frm', $frm);
         $userToLang = new UserToLanguage($teacherId);
         $userSlots = $userToLang->getTeachingSlots();
         $this->set('userSlots', $userSlots);
-        $this->set('user_info', User::getAttributesById($learnerId, array('user_first_name', 'user_last_name')));
+        $this->set('tofferPrices', $tofferPrices);
+        $this->set('user_info', User::getAttributesById($learnerId, array('user_id', 'user_first_name', 'user_last_name')));
         $this->_template->render(false, false);
     }
 
@@ -133,9 +140,9 @@ class TeacherStudentsController extends TeacherBaseController
             $data['top_single_lesson_price'] = $post['top_single_lesson_price'][$k];
             $data['top_bulk_lesson_price'] = $post['top_bulk_lesson_price'][$k];
             $data['top_lesson_duration'] = $k;
-            $teacherOffer = new TeacherOfferPrice();
-            if (!$teacherOffer->saveData($data)) {
-                FatUtility::dieWithError($teacherOffer->getError());
+            $teacherOfferPrice = new TeacherOfferPrice();
+            if (!$teacherOfferPrice->saveData($data)) {
+                FatUtility::dieWithError($teacherOfferPrice->getError());
             }
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Price_Locked_Successfully!'));
@@ -143,19 +150,13 @@ class TeacherStudentsController extends TeacherBaseController
 
     private function getOfferPriceForm()
     {
-        $frm = new Form('frmOfferPrice');
-        
-        /* $bookingMinutesDuration = explode(',', FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_STRING, 60));
-        
-        $fld = $frm->addSelectBox(Label::getLabel('LBL_Lesson_Duration'), 'top_lesson_duration', array_combine($bookingMinutesDuration, $bookingMinutesDuration));
-        $fld->requirements()->setRequired();
-        $fld->requirements()->setInt(); */
-
         $teacherId = UserAuthentication::getLoggedUserId();
         $userToLang = new UserToLanguage($teacherId);
         $userSlots = $userToLang->getTeachingSlots();
+
+        $frm = new Form('frmOfferPrice');        
         
-        foreach($userSlots as $slot){            
+        foreach($userSlots as $slot){
             $fld = $frm->addRequiredField(sprintf(Label::getLabel('LBL_%d_min_slot_Price'), $slot), 'top_single_lesson_price['.$slot.']');
             $fld->requirements()->setFloatPositive();
             $fld = $frm->addRequiredField(sprintf(Label::getLabel('LBL_%d_min_slot_Price'), $slot), 'top_bulk_lesson_price['.$slot.']');
@@ -175,9 +176,9 @@ class TeacherStudentsController extends TeacherBaseController
         if ($learnerId < 1) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $teacherOffer = new TeacherOfferPrice();
-        if (!$teacherOffer->removeOffer($learnerId, UserAuthentication::getLoggedUserId())) {
-            FatUtility::dieWithError($teacherOffer->getError());
+        $teacherOfferPrice = new TeacherOfferPrice();
+        if (!$teacherOfferPrice->removeOffer($learnerId, UserAuthentication::getLoggedUserId())) {
+            FatUtility::dieWithError($teacherOfferPrice->getError());
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Price_Unlocked_Successfully!'));
     }

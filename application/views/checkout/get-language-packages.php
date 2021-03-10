@@ -20,7 +20,7 @@ defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 						<input onClick="addToCart('<?php echo $cartData['user_id'] ?>', '<?php echo $lpackage['lpackage_id']; ?>', '<?php echo $languageId; ?>', '', '', 0, '<?php echo $cartData['lessonDuration'] ?>');" type="radio" <?php echo ($cartData['lpackage_id'] == $lpackage['lpackage_id']) ? 'checked="checked"' : ''; ?> name="lpackage_qty" value="<?php echo $lpackage['lpackage_id']; ?>"><i class="input-helper"></i>
 					</span>
 					<span class="selection__item">
-						<?php echo $lpackage['lpackage_title']." (".$lpackage['lpackage_lessons']." Lessons)"; ?> <small class="-float-right"> <?php echo CommonHelper::displayMoneyFormat( ($lpackage['lpackage_lessons']>1)?$bulkLessonAmount:$singleLessonAmount ); ?>/ <?php echo Label::getLabel('LBL_Per_Hour'); ?></small>
+						<?php echo $lpackage['lpackage_title']." : ".CommonHelper::int($lpackage['lpackage_lessons'])." ".Label::getLabel('LBL_Lesson(s)'); ?> <small class="-float-right"> <?php echo CommonHelper::displayMoneyFormat( ($lpackage['lpackage_lessons']>1)?$bulkLessonAmount:$singleLessonAmount ); ?>/ <?php echo Label::getLabel('LBL_Per_Lesson'); ?></small>
 					</span>
 				</label>
 			</li>
