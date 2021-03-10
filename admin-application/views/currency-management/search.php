@@ -19,6 +19,7 @@ foreach ($arr_flds as $val) {
 }
 
 $sr_no = 0;
+
 foreach ($arr_listing as $sn=>$row){
 	$sr_no++;
 	$tr = $tbl->appendElement('tr', array());
@@ -45,18 +46,29 @@ foreach ($arr_listing as $sn=>$row){
 			case 'currency_active':
 				$active = "active";
 				$statucAct='';
-					if($row['currency_active']==applicationConstants::YES &&  $canEdit === true ) {
+				$strTxt = Label::getLabel('LBL_Active', $adminLangId);
+
+					if($row['currency_active'] == applicationConstants::YES ) {
 						$active = 'active';
 						$statucAct='inactiveStatus(this)';
 					}
-					if($row['currency_active']==applicationConstants::NO &&  $canEdit === true ) {
+					if($row['currency_active'] == applicationConstants::NO) {
+						$strTxt = Label::getLabel('LBL_Inactive', $adminLangId);
 						$active = 'inactive';
 						$statucAct='activeStatus(this)';
 					}
-				$str = '<label id="'.$row['currency_id'].'" class="statustab '.$active.'" onclick="'.$statucAct.'">
-				<span data-off="'. Label::getLabel('LBL_Active', $adminLangId) .'" data-on="'. Label::getLabel('LBL_Inactive', $adminLangId) .'" class="switch-labels status_'.$row['currency_id'].'"></span>
-				<span class="switch-handles"></span>
-				</label>';
+					$disabledClass =  "";
+					if($canEdit == false || $row['currency_is_default'] == applicationConstants::YES){
+						$disabledClass =  "disabled-switch";
+						$statucAct = "";
+					}
+					
+				
+					$str = '<label id="'.$row['currency_id'].'" class="statustab '.$active.' ' .$disabledClass.'" onclick="'.$statucAct.'">
+					<span data-off="'. Label::getLabel('LBL_Active', $adminLangId) .'" data-on="'. Label::getLabel('LBL_Inactive', $adminLangId) .'" class="switch-labels status_'.$row['currency_id'].'"></span>
+					<span class="switch-handles"></span>
+					</label>';
+				
 				$td->appendElement('plaintext', array(), $str,true);
 			break;			
 			case 'currency_code':

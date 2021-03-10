@@ -1,12 +1,12 @@
-<?php if ($topRatedTeachers) { ?>
-    <section class="section -singleTopBorder section-teacher">
-        <div class="container container--fixed">
-            <div class="section-title">
-                <h2><?php echo Label::getLabel('Lbl_Top_Rated_Teachers'); ?></h2>
-            </div>
-            <div class="row justify-content-center align-items-center">
-                <?php foreach ($topRatedTeachers as $topRatedTeacher) {
-                    $teacherImnage =  FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'user', array($topRatedTeacher['user_id'], 'NORMAL', 1)),  CONF_IMG_CACHE_TIME, '.jpg');
+<?php if($topRatedTeachers){ ?>
+       <section class="section -singleTopBorder section-teacher">
+            <div class="container container--fixed">
+                <div class="section-title">
+                    <h2><?php echo Label::getLabel('Lbl_Top_Rated_Teachers'); ?></h2>
+                </div>
+                <div class="row justify-content-center align-items-center">
+                <?php foreach($topRatedTeachers as $topRatedTeacher){
+                    $teacherImnage =  FatCache::getCachedUrl(CommonHelper::generateUrl('Image','user', array( $topRatedTeacher['user_id'])),  CONF_IMG_CACHE_TIME, '.jpg');
                 ?>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                         <div class="border-box">

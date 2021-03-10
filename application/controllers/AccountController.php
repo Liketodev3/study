@@ -291,7 +291,7 @@ class AccountController extends LoggedUserController
                 Message::addErrorMessage($fileHandlerObj->getError());
                 FatUtility::dieJsonError(Message::getHtml());
             }
-            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId)) . '?' . time());
+            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'ORIGINAL', 0)) . '?' . time());
         }
 
         if ($post['action'] == "avatar") {

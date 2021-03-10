@@ -7,7 +7,7 @@ if( UserAuthentication::isUserLogged() ){ ?>
         <div class="avtar avtar--xsmall -display-inline" data-text="<?php echo CommonHelper::getFirstChar(UserAuthentication::getLoggedUserAttribute('user_first_name')); ?>">
 			<?php
 			if( true == User::isProfilePicUploaded() ){
-				echo '<img src="'.CommonHelper::generateUrl('Image','user', array( UserAuthentication::getLoggedUserId() )).'?'.time().'" alt="" />';
+				echo '<img src="'.CommonHelper::generateUrl('Image','user', array( UserAuthentication::getLoggedUserId(), 'EXTRASMALL' )).'?t='.time().'" alt="" />';
 			}
 			?>
         </div>

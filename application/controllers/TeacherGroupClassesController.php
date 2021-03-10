@@ -170,15 +170,6 @@ class TeacherGroupClassesController extends TeacherBaseController
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
 
-        $price = UserToLanguage::getAttributesByUserAndLangId($teacher_id, $post['grpcls_slanguage_id'], 'utl_single_lesson_amount');
-        if (empty($price) || $price < 1) {
-            FatUtility::dieJsonError(Label::getLabel("LBL_Price_needs_to_be_set_for_the_selected_language"));
-        }
-
-        if ($price < $post['grpcls_entry_fee']) {
-            FatUtility::dieJsonError(Label::getLabel("LBL_Price_needs_to_be_less_than_single_lesson"));
-        }
-
         $post['grpcls_teacher_id'] = $teacher_id;
 
         $post['grpcls_start_datetime'] = MyDate::changeDateTimezone($post['grpcls_start_datetime'], $user_timezone, $systemTimeZone);
@@ -323,6 +314,8 @@ class TeacherGroupClassesController extends TeacherBaseController
         $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->siteLangId), '', [], Label::getLabel('LBL_Select'))->requirements()->setRequired(true);
         $fld = $frm->addFloatField(Label::getLabel('LBl_Entry_fee'), 'grpcls_entry_fee', '', array('id' => 'grpcls_entry_fee'));
         $fld->requirements()->setPositive(true);
+        $fld->requirements()->setRange(0,9999999);
+
         $start_time_fld = $frm->addRequiredField(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', array('id' => 'grpcls_start_datetime', 'autocomplete' => 'off', 'readonly' => 'readonly'));
         $end_time_fld = $frm->addRequiredField(Label::getLabel('LBl_End_Time'), 'grpcls_end_datetime', '', array('id' => 'grpcls_end_datetime', 'autocomplete' => 'off', 'readonly' => 'readonly'));
         $end_time_fld->requirements()->setCompareWith('grpcls_start_datetime', 'gt', Label::getLabel('LBl_Start_Time'));
