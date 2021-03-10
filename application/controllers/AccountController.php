@@ -291,6 +291,12 @@ class AccountController extends LoggedUserController
                 Message::addErrorMessage($fileHandlerObj->getError());
                 FatUtility::dieJsonError(Message::getHtml());
             }
+            if (CONF_USE_FAT_CACHE) {
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'ORIGINAL')));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM')));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'SMALL')));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId)));
+            }
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'ORIGINAL', 0)) . '?' . time());
         }
 
