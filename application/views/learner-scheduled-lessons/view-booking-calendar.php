@@ -107,13 +107,6 @@ $(document).ready(function() {
                     $("body").css( {"cursor": "default"} );
                     $("body").css( {"pointer-events": "initial"} );
 
-                    // if( selectedDateTime > moment('<?php //echo $nowDate; ?>').format('YYYY-MM-DD HH:mm:ss') ) {
-                    //     $.systemMessage('<?php //echo Label::getLabel('LBL_Teacher_Disable_the_Booking_before') .' '. $teacherBookingBefore .' Hours.' ; ?>','alert alert--success');
-                    //     setTimeout(function() {
-                    //         $.systemMessage.close();
-                    //     }, 3000);
-                    // }
-
                     $('#d_calendar').fullCalendar('unselect');
                     checkSlotAvailabiltAjaxRun =  false;
                     $("#loaderCalendar").hide();
@@ -202,68 +195,7 @@ $(document).ready(function() {
         events: function(start, end, timezone, callback) {
             var data = {start:moment(start).format('YYYY-MM-DD HH:mm:ss'),end:moment(end).format('YYYY-MM-DD HH:mm:ss')};
             fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData',[<?php echo $teacher_id; ?>]), data, function(doc) {
-                if(doc == "[]")
-                {
-                    data = { WeekStart:moment(start).format('YYYY-MM-DD'), WeekEnd:moment(end).format('YYYY-MM-DD') };
-                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData',[<?php echo $teacher_id; ?>]), data, function(doc) {
-                        var doc = JSON.parse(doc);
-                        var events = [];
-                        events.push({
-                            title: '',
-                            start: moment('<?php echo $nowDate; ?>').format('YYYY-MM-DD 00:00:00'),
-                            end: moment('<?php echo $nowDate; ?>'),
-                            className: 'past_current_day testPast',
-                            editable: false,
-                            rendering:'background'
-                        });
-                        
-                        var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore; ?>' ,'hours');
-                        $(doc).each(function(i,e) {
-                            if(  validSelectDateTime > moment(e.end) ) {
-                                return;
-                            }
-                            
-                            if( validSelectDateTime.format('YYYY-MM-DD HH:mm:ss') > moment(e.start).format('YYYY-MM-DD HH:mm:ss') ) {
-                                e.start =  validSelectDateTime.format('YYYY-MM-DD HH:mm:ss');
-                            }
-                            var classType = $(this).attr('classType');
-                            if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
-                                var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
-                            }else if(classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>"){
-                                var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
-                            }
-                            events.push({
-                                title: $(this).attr('title'),
-                                start: $(this).attr('start'),
-                                end: $(this).attr('end'),
-                                color: $(this).attr('color'),
-                                day: $(this).attr('day'),
-                                _id: $(this).attr('_id'),
-                                action: 'fromGeneralAvailability',
-                                classType: $(this).attr('classType'),
-                                className: className,
-                                editable: false,
-                                rendering:'background',
-                                selectable: true,
-                                dow:[$(this).attr('day')]
-                            });
-                        });
-                        fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
-                            var doc2 = JSON.parse(doc2);
-                            $(doc2).each(function(i,e) {
-                                events.push({
-                                    title: $(this).attr('title'),
-                                    start: $(this).attr('start'),
-                                    end: $(this).attr('end'),
-                                    className: $(this).attr('className'),
-                                    color: "var(--color-secondary)",
-
-                              });
-                            });
-                            callback(events);
-                        });
-                    });
-                } else {
+               
                     var doc = JSON.parse(doc);
                     var events = [];
                     events.push({
@@ -303,7 +235,7 @@ $(document).ready(function() {
                             color: $(this).attr('color'),
                             day: $(this).attr('day'),
                             _id: $(this).attr('_id'),
-                            action: 'fromWeeklySchedule',
+                            action: $(this).attr('action'),
                             classType: $(this).attr('classType'),
                             className: className,
                             rendering:'background',
@@ -311,6 +243,7 @@ $(document).ready(function() {
                             selectable: editable,
                         });
                     });
+
                     fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
                         var doc2 = JSON.parse(doc2);
                         $(doc2).each(function(i,e) {
@@ -325,7 +258,6 @@ $(document).ready(function() {
                         });
                         callback(events);
                     });
-                }
             });
         },
         eventRender: function(event, element) {
