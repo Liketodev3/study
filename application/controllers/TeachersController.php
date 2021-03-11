@@ -547,7 +547,7 @@ class TeachersController extends MyAppController
 				$twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['twsch_end_date'] . ' ' . $row['twsch_end_time'], true, $userTimezone);
 				$twsch_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['twsch_date'] . ' ' . $row['twsch_start_time'], true, $userTimezone);
 				$twsch_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $row['twsch_date'] . ' ' . $row['twsch_start_time'], true, $userTimezone);
-				// if ((strtotime($twsch_start_time) >=  strtotime($post['start'])) && (strtotime($twsch_end_time) <= strtotime($_serchEndDate))) {
+			
 					$jsonArr[] = array(
 				    	"title" => "",
 				    	"date" => $twsch_date,
@@ -556,20 +556,22 @@ class TeachersController extends MyAppController
 				    	"weekyear" => $row['twsch_weekyear'],
 				    	'_id' => $row['twsch_id'],
 				    	'classType' => $row['twsch_is_available'],
-				    	'className' => $cssClassNamesArr[$row['twsch_is_available']]
+				    	'className' => $cssClassNamesArr[$row['twsch_is_available']],
+						'action' => 'fromWeeklySchedule',
 				    );
-				// }
 			}
 		}
         
         $midPoint = (strtotime($startDate) + strtotime($endDate))/2;        
         $twsch_weekyear = date('W-Y', $midPoint);
         if(empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear){
-            $weekRange = CommonHelper::getWeekRangeByDate(date('Y-m-d', $midPoint));
-            $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, array('WeekStart' => $weekRange['start'], 'WeekEnd' => $weekRange['end']));
-            // CommonHelper::printArray($jsonArr2);die;
+			
+			$dateTime =  new dateTime(date('Y-m-d H:i:s',$midPoint));
+            $weekRange = MyDate::getWeekStartAndEndDate($dateTime);
+            $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, array('WeekStart' => $weekRange['weekStart'], 'WeekEnd' => $weekRange['weekEnd']));
             $jsonArr = array_merge($jsonArr, $jsonArr2);
         }
+		// prx($jsonArr);
         
         // CommonHelper::printArray($jsonArr);die;
 		echo FatUtility::convertToJson($jsonArr);

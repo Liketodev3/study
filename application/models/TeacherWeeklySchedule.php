@@ -40,12 +40,10 @@ class TeacherWeeklySchedule extends MyAppModel
             )
         );
         
-        $start = date('Y-m-d H:i:s', strtotime($start. ' -1 day'));
-        $end = date('Y-m-d H:i:s', strtotime($end. ' +1 day'));
         $srch->addCondition('twsch_user_id', ' = ', $userId);
-        $srch->addCondition('mysql_func_CONCAT(twsch_date," ",twsch_start_time)', '>=', $start, 'AND', true);
-        $srch->addCondition('mysql_func_CONCAT(twsch_end_date," ",twsch_end_time)', '<=', $end, 'AND', true);
-        $srch->addCondition('twsch_date', '>=', date('Y-m-d'));
+        $srch->addCondition('mysql_func_CONCAT(twsch_date," ",twsch_start_time)', '<', $end, 'AND', true);
+        $srch->addCondition('mysql_func_CONCAT(twsch_end_date," ",twsch_end_time)', '>', $start, 'AND', true);
+     
         if($isAvailabel) {
             $srch->addCondition('twsch_is_available', '=', self::AVAILABLE);
         }
@@ -175,9 +173,8 @@ class TeacherWeeklySchedule extends MyAppModel
 
         $db->startTransaction();
 
-        $deleteDateArray = [];
         foreach ($postJsonArr as $val) {
-
+           
             if (preg_match('/_fc/', $val->_id) || $val->action == "fromGeneralAvailability") {
 
                 //if( strtotime($val->date) >= strtotime(date('Y-m-d')) && $val->start != '00:00:00'  )
@@ -189,17 +186,20 @@ class TeacherWeeklySchedule extends MyAppModel
                         //$date = $val->date;
                         $endDate = $val->date;
                     }
-
+               
                     $twsch_start_time = MyDate::changeDateTimezone($val->start, $user_timezone, $systemTimeZone);
                     $twsch_end_time = MyDate::changeDateTimezone($val->end, $user_timezone, $systemTimeZone);
                     $twsch_date = MyDate::changeDateTimezone($val->date .' '. $val->start, $user_timezone, $systemTimeZone);
                     $twsch_end_date = MyDate::changeDateTimezone($endDate .' '. $val->end, $user_timezone, $systemTimeZone);
-                    
+                    $weekDates = MyDate::getWeekStartAndEndDate(new DateTime($twsch_date));  
+                    $midPoint = (strtotime($weekDates['weekStart']) + strtotime($weekDates['weekEnd']))/2;
+                    $twsch_weekyear = date('W-Y', $midPoint);
+
                     $insertArr = array(
                         'twsch_user_id'     => $userId, 
                         'twsch_start_time'  => $twsch_start_time,
                         'twsch_end_time'    => $twsch_end_time,
-                        // 'twsch_weekyear'    => $twsch_weekyear,
+                         'twsch_weekyear'    => $twsch_weekyear,
                         "twsch_is_available"=> $val->classtype,
                         'twsch_date'        => date('Y-m-d', strtotime($twsch_date)),
                         'twsch_end_date'    => date('Y-m-d', strtotime($twsch_end_date)));
@@ -211,6 +211,7 @@ class TeacherWeeklySchedule extends MyAppModel
                     }
                 }
             } else {
+              
                 /* code added  on 12-07-2019 */
                 //changeDateTimezone(string  $date, string  $fromTimezone, string  $toTimezone) //== change timezone
                 if (strtotime($val->date .' '. $val->end) <= strtotime($val->date .' '. $val->start)) {
@@ -218,16 +219,17 @@ class TeacherWeeklySchedule extends MyAppModel
                 } else {
                     $endDate = $val->date;
                 }
-
+                
                 $twsch_start_time = MyDate::changeDateTimezone($val->start, $user_timezone, $systemTimeZone);
                 $twsch_end_time = MyDate::changeDateTimezone($val->end, $user_timezone, $systemTimeZone);
                 $twsch_date = MyDate::changeDateTimezone($val->date .' '. $val->start, $user_timezone, $systemTimeZone);
                 $twsch_end_date = MyDate::changeDateTimezone($endDate .' '. $val->end, $user_timezone, $systemTimeZone);
-                
-                $weekRange = CommonHelper::getWeekRangeByDate($twsch_start_time);
-                $midPoint = (strtotime($weekRange['start']) + strtotime($weekRange['end']))/2;
-                
+        
+                $weekDates = MyDate::getWeekStartAndEndDate(new DateTime($twsch_date));  
+         
+                $midPoint = (strtotime($weekDates['weekStart']) + strtotime($weekDates['weekEnd']))/2;
                 $twsch_weekyear = date('W-Y', $midPoint);
+       
                 // echo $twsch_weekyear;die;
 
                 $updateArr = array(                
@@ -248,6 +250,7 @@ class TeacherWeeklySchedule extends MyAppModel
                 }
             }
         }
+
         if(!empty($needToDelete)) {
              if(!$db->query('DELETE FROM '.TeacherWeeklySchedule::DB_TBL.' WHERE twsch_user_id = '.$userId.' and twsch_id IN ('.implode(",",array_keys($needToDelete)).')')){
                  $db->rollbackTransaction();
@@ -284,11 +287,9 @@ class TeacherWeeklySchedule extends MyAppModel
             return 0;
         }
 
-        $searchStartTime = date('H:i:s', strtotime($startTime));
-        $searchEndTime = date('H:i:s', strtotime($endTime));
-        
-        $weekRange = CommonHelper::getWeekRangeByDate($startTime);
-        $weekStart = $weekRange['start'];
+        $dateTime = new DateTime($startTime);
+        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);
+        $weekStart = $weekStartAndEndDate['weekStart'];
 
         $tWsrchC = new TeacherWeeklyScheduleSearch();
         $tWsrchC->addCondition('twsch_user_id', '=', $userId);
@@ -376,7 +377,8 @@ class TeacherWeeklySchedule extends MyAppModel
             trigger_error(Label::getLabel('LBL_Invalid_Date_selected'), E_USER_ERROR);
         }
 
-        $selectedDateWeekRangeArr = CommonHelper::getWeekRangeByDate($startDateTime);
+        $dateTime = new DateTime($startDateTime);
+        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);
 
         /* [ */
         $weeklySchSrchObj = new TeacherWeeklyScheduleSearch();
@@ -397,8 +399,8 @@ class TeacherWeeklySchedule extends MyAppModel
 
         /* [ */
         $weeklySchDataAddedSrch = clone $weeklySchSrchObj;
-        $weeklySchDataAddedSrch->addCondition('mysql_func_DATE(twsch_date)', '>=', $selectedDateWeekRangeArr['start'], 'AND', true);
-        $weeklySchDataAddedSrch->addCondition('mysql_func_DATE(twsch_end_date)', '<=', $selectedDateWeekRangeArr['end'], 'AND', true);
+        $weeklySchDataAddedSrch->addCondition('mysql_func_DATE(twsch_date)', '>=', $weekStartAndEndDate['weekStart'], 'AND', true);
+        $weeklySchDataAddedSrch->addCondition('mysql_func_DATE(twsch_end_date)', '<=', $weekStartAndEndDate['weekEnd'], 'AND', true);
         $weeklySchDataAddedRs = $weeklySchDataAddedSrch->getResultSet();
         $isWeeklySchDataAdded = $weeklySchDataAddedRs->totalRecords();
         /* ] */
@@ -414,7 +416,7 @@ class TeacherWeeklySchedule extends MyAppModel
         }
 
         if(!$weekStart){
-            $weekStart = $selectedDateWeekRangeArr['start'];
+            $weekStart = $weekStartAndEndDate['weekStart'];
         }
 
         /* Now, start checking in general Availablity[ */
