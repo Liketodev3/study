@@ -286,18 +286,21 @@ class TeacherWeeklySchedule extends MyAppModel
             $this->error = Label::getLabel('LBL_Either_You_or_teacher_not_available_for_this_slot');
             return 0;
         }
-
+        
         $dateTime = new DateTime($startTime);
+    
         $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);
+      
         $weekStart = $weekStartAndEndDate['weekStart'];
-
-        $tWsrchC = new TeacherWeeklyScheduleSearch();
+       
+       
+        $tWsrchC = new TeacherWeeklyScheduleSearch(false, false);
         $tWsrchC->addCondition('twsch_user_id', '=', $userId);
-        $tWsrchC->addCondition('mysql_func_CONCAT(twsch_end_date," ", twsch_end_time)', '>', date('Y-m-d H:i:s', strtotime($weekStart)), 'AND', true);
-        // echo $tWsrchC->getQuery();die;
+        $tWsrchC->addMultipleFields(['twsch_is_available']);
+        $tWsrchC->addCondition('mysql_func_DATE_FORMAT(twsch_end_date,"%U-%Y")', '=', 'mysql_func_DATE_FORMAT("'.$startTime.'","%U-%Y")', 'AND', true);
+        $tWsrchC->setPageSize(1);
         $tWRsC = $tWsrchC->getResultSet();
         $tWcountC = $tWRsC->totalRecords();
-
         if($tWcountC > 0){
             $tWsrch = clone $tWsrchC;
             $tWsrch->addCondition('mysql_func_CONCAT(twsch_date," ", twsch_start_time)', '<=', $startTime, 'AND', true);
