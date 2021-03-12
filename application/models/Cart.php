@@ -123,7 +123,22 @@ class Cart extends FatModel
                 $this->error = Label::getLabel('LBL_Class_Full');
 				return false;
             }
-		}
+
+            $isSlotBooked = ScheduledLessonSearch::isSlotBooked($this->cart_user_id, $classDetails['grpcls_start_datetime'], $classDetails['grpcls_end_datetime']);
+            if($isSlotBooked){
+                $this->error = Label::getLabel('LBL_YOU_ALREADY_BOOKED_A_CLASS_BETWEEN_THIS_TIME_RANGE');
+				return false;
+            }
+
+           $groupClassTiming = TeacherGroupClassesSearch::checkGroupClassTiming([$this->cart_user_id], $classDetails['grpcls_start_datetime'], $classDetails['grpcls_end_datetime']);
+           $groupClassTiming->setPageSize(1);
+           $groupClassTiming->getResultSet();
+            if($groupClassTiming->recordCount() > 0)
+            {
+                $this->error = Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE');
+				return false;
+            }
+        }
         $key = $teacher_id.'_'.$grpcls_id;
         $key = base64_encode(serialize($key));
         $this->SYSTEM_ARR['cart'][$key] = array(

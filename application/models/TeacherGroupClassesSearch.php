@@ -277,4 +277,16 @@ class TeacherGroupClassesSearch extends SearchBase
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetch($rs);
     }
+
+    public static function checkGroupClassTiming(array $userIds, $startDateTime, $endDateTime) : object
+    {
+        $searchBase = new self(false);
+        $searchBase->addMultipleFields(array('grpcls_id'));
+        $searchBase->addCondition('grpcls_teacher_id','IN', $userIds);
+        $searchBase->addCondition('grpcls_start_datetime','<', $endDateTime);
+        $searchBase->addCondition('grpcls_end_datetime','>', $startDateTime);
+        return $searchBase;
+    }
+
+
 }
