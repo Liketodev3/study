@@ -19,9 +19,9 @@ class HomeController extends AdminBaseController
 
         // simple Caching with:
         phpFastCache::setup("storage", "files");
-        phpFastCache::setup("path", CONF_UPLOADS_PATH."caching");
+        phpFastCache::setup("path", CONF_INSTALLATION_PATH . "public/caching");
         $cache = phpFastCache();
-        $dashboardInfo = $cache->get("dashboardInfo".$this->adminLangId);
+        $dashboardInfo = $cache->get("dashboardInfo" . $this->adminLangId);
 
         if ($dashboardInfo == null) {
 
@@ -50,7 +50,6 @@ class HomeController extends AdminBaseController
 
                     $dashboardInfo['visitsCount'] = (isset($visitCount)) ? $visitCount : '';
                 }
-
             } catch (exception $e) {
                 /* Message::addErrorMessage(Labels::getLabel('LBL_Analytic_Id_does_not_exist_with_Configured_Account',$this->adminLangId)); */
                 //Message::addErrorMessage($e->getMessage());
@@ -92,10 +91,10 @@ class HomeController extends AdminBaseController
             $dashboardInfo['salesChartData'] =   array_reverse($salesChartData);
             $dashboardInfo['signupsChartData'] =   array_reverse($signupsChartData);
             $dashboardInfo['earningsChartData'] =   array_reverse($earningsChartData);
-            $cache->set("dashboardInfo".$this->adminLangId, $dashboardInfo, 24*60*60);
+            $cache->set("dashboardInfo" . $this->adminLangId, $dashboardInfo, 24 * 60 * 60);
         }
 
-        $this->_template->addJs(array('js/chartist.min.js','js/jquery.counterup.js','js/slick.min.js','js/enscroll-0.6.2.min.js'));
+        $this->_template->addJs(array('js/chartist.min.js', 'js/jquery.counterup.js', 'js/slick.min.js', 'js/enscroll-0.6.2.min.js'));
         $this->_template->addCss(array('css/chartist.css'));
 
         if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false) {
@@ -109,21 +108,20 @@ class HomeController extends AdminBaseController
     {
         $post = FatApp::getPostedData();
         $type = $post['rtype'];
-        $interval = isset($post['interval'])?$post['interval']:'';
+        $interval = isset($post['interval']) ? $post['interval'] : '';
 
         include_once CONF_INSTALLATION_PATH . 'library/analytics/AnalyticsAPI.php';
 
         phpFastCache::setup("storage", "files");
-        phpFastCache::setup("path", CONF_UPLOADS_PATH."caching");
+        phpFastCache::setup("path", CONF_INSTALLATION_PATH . "public/caching");
         $cache = phpFastCache();
 
-        $result = $cache->get("dashboardInfo_".$type.'_'.$interval.'_'.$this->adminLangId);
+        $result = $cache->get("dashboardInfo_" . $type . '_' . $interval . '_' . $this->adminLangId);
         if ($result == null) {
             if (strtoupper($type) == 'TOP_LESSON_LANGUAGES') {
 
                 $statsObj = new AdminStatistic();
                 $result = $statsObj->getTopLessonLanguages($interval, $this->adminLangId, 10);
-
             } else {
                 try {
                     $analytics = new AnalyticsAPI();
@@ -133,26 +131,26 @@ class HomeController extends AdminBaseController
                     }
                     $accountId = $analytics->setAccountId(FatApp::getConfig("CONF_ANALYTICS_ID"));
                     switch (strtoupper($type)) {
-                    case 'TOP_COUNTRIES':
-                        $result = $analytics->getTopCountries($interval, 9);
+                        case 'TOP_COUNTRIES':
+                            $result = $analytics->getTopCountries($interval, 9);
 
-                        break;
-                    case 'TOP_REFERRERS':
-                        $result = $analytics->getTopReferrers($interval, 9);
-                        break;
-                    /*case 'TOP_SEARCH_KEYWORD':
+                            break;
+                        case 'TOP_REFERRERS':
+                            $result = $analytics->getTopReferrers($interval, 9);
+                            break;
+                            /*case 'TOP_SEARCH_KEYWORD':
                         //$result=$analytics->getSearchTerm($interval,9);
                         $statsObj = new Statistics();
                         $result = $statsObj->getTopSearchKeywords($interval, 10);
                         break;*/
-                    case 'TRAFFIC_SOURCE':
-                        $result = $analytics->getTrafficSource($interval);
+                        case 'TRAFFIC_SOURCE':
+                            $result = $analytics->getTrafficSource($interval);
 
-                        break;
-                    case 'VISITORS_STATS':
-                        $result = $analytics->getVisitsByDate();
-                        break;
-                    /*case 'TOP_PRODUCTS':
+                            break;
+                        case 'VISITORS_STATS':
+                            $result = $analytics->getVisitsByDate();
+                            break;
+                            /*case 'TOP_PRODUCTS':
                         $statsObj = new Statistics();
                         $result = $statsObj->getTopProducts($interval, $this->adminLangId, 10);
                         break;*/
@@ -161,7 +159,7 @@ class HomeController extends AdminBaseController
                     echo $e->getMessage();
                 }
             }
-            $cache->set("dashboardInfo_" . $type . '_' . $interval . '_' . $this->adminLangId, $result, 24*60*60);
+            $cache->set("dashboardInfo_" . $type . '_' . $interval . '_' . $this->adminLangId, $result, 24 * 60 * 60);
         }
         $this->set('stats_type', strtoupper($type));
         $this->set('stats_info', $result);
@@ -170,7 +168,7 @@ class HomeController extends AdminBaseController
 
     public function clearCache()
     {
-        CommonHelper::recursiveDelete(CONF_UPLOADS_PATH . "caching");
+        phpFastCache::setup("path", CONF_INSTALLATION_PATH . "public/caching");
         FatCache::clearAll();
         Message::addMessage(Label::getLabel('LBL_Cache_has_been_cleared', $this->adminLangId));
         //FatApp::redirectUser(CommonHelper::generateUrl("home"));
