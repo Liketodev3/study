@@ -243,8 +243,8 @@ $(document).ready(function() {
                             selectable: editable,
                         });
                     });
-
-                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), '', function(doc2) {
+                    let postData = { weekStart:moment(start).format('YYYY-MM-DD'), weekEnd:moment(end).format('YYYY-MM-DD') };
+                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[<?php echo $teacher_id; ?>]), postData, function(doc2) {
                         var doc2 = JSON.parse(doc2);
                         $(doc2).each(function(i,e) {
                             events.push({

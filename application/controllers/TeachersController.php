@@ -490,6 +490,18 @@ class TeachersController extends MyAppController
 		if ($userId < 1) {
 			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
 		}
+		$weekStartDate =  Fatapp::getPostedData('weekStart', FatUtility::VAR_DATE, '');
+		$weekEndDate =  Fatapp::getPostedData('weekEnd', FatUtility::VAR_DATE, '');
+		
+		if(empty($weekStartDate) || empty($weekEndDate)){
+			$weekStartAndEndDate = MyDate::getWeekStartAndEndDate(new DateTime());
+			$weekStartDate = $weekStartAndEndDate['weekStart'];
+			$weekEndDate = $weekStartAndEndDate['weekEnd'];
+		}
+		if(strtotime($weekStartDate) <= time()){
+			$weekStartDate = date('Y-m-d');
+		}
+		$db = FatApp::getDb();
 		$srch = new ScheduledLessonSearch();
 		$srch->addGroupBy('slesson_id');
 		$srch->joinTeacher();
@@ -497,20 +509,33 @@ class TeachersController extends MyAppController
 		$srch->joinTeacherTeachLanguageView($this->siteLangId);
 		$srch->addMultipleFields(array(
 			'slns.slesson_date',
+			'slns.slesson_date',
 			'slns.slesson_start_time',
 			'slns.slesson_end_time',
-			'slns.slesson_end_date'
+			'slns.slesson_end_date',
+			'slns.slesson_grpcls_id',
 			//'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName'
 		));
-		$srch->addCondition('slns.slesson_teacher_id', '=', $userId);
+		$userIds = [];
+		$userIds[] =  $userId;
+		
+		if (UserAuthentication::isUserLogged()) {
+			$userIds[] = UserAuthentication::getLoggedUserId();
+		}
+
+		$condition = $srch->addCondition('slns.slesson_teacher_id', 'IN', $userIds);
+		$condition->attachCondition('sldetail_learner_id', 'IN', $userIds);
 		$srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+		$srch->addCondition('CONCAT(slns.`slesson_date`, " ", slns.`slesson_start_time` )', '< ', $weekEndDate);
+		$srch->addCondition('CONCAT(slns.`slesson_end_date`, " ", slns.`slesson_end_time` )', ' > ', $weekStartDate);
+
 		$rs = $srch->getResultSet();
-		$data = FatApp::getDb()->fetchAll($rs);
+		$data = $db->fetchAll($rs);
 		$jsonArr = array();
+		$groupClassIds = [];
 		$user_timezone = MyDate::getUserTimeZone();
 		foreach ($data as $data) {
 			$slesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['slesson_date'] . ' ' . $data['slesson_start_time'], true, $user_timezone);
-
 			$slesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['slesson_end_date'] . ' ' . $data['slesson_end_time'], true, $user_timezone);
 			$jsonArr[] = array(
 				"title" => $data['teacherTeachLanguageName'],
@@ -519,7 +544,40 @@ class TeachersController extends MyAppController
 				"className" => "sch_data",
 				"classType" => "0",
 			);
+
+			if($data['slesson_grpcls_id'] > 0) {
+				$groupClassIds[] = $data['slesson_grpcls_id'];
+			}
+
 		}
+
+        if (UserAuthentication::isUserLogged()) {
+			$teacherGroupClassesSearch = new TeacherGroupClassesSearch();
+			$teacherGroupClassesSearch->addMultipleFields(['grpcls_start_datetime', 'grpcls_end_datetime','grpcls_title']);
+			$teacherGroupClassesSearch->addCondition('grpcls_teacher_id', '=', UserAuthentication::isUserLogged());
+			$teacherGroupClassesSearch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+			if(!empty($groupClassIds)){
+				$teacherGroupClassesSearch->addCondition('grpcls_id', 'NOT IN', $groupClassIds);
+			}
+			$teacherGroupClassesSearch->addCondition('grpcls_start_datetime', '<', $weekEndDate);
+			$teacherGroupClassesSearch->addCondition('grpcls_end_datetime', '>', $weekStartDate);
+			$resultSet =  $teacherGroupClassesSearch->getResultSet();
+			$groupClasses =  $db->fetchAll($resultSet);
+
+			foreach ($groupClasses as $data) {
+				$startTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['grpcls_start_datetime'], true, $user_timezone);
+				$endTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['grpcls_end_datetime'], true, $user_timezone);
+				$jsonArr[] = array(
+					"title" => $data['grpcls_title'],
+					"start" => $startTime,
+					"end" => $endTime,
+					"className" => "sch_data",
+					"classType" => "0",
+				);
+			}
+		
+		}
+
 		echo FatUtility::convertToJson($jsonArr);
 	}
 

@@ -159,12 +159,13 @@ class TeacherGroupClassesController extends TeacherBaseController
             $isSlotBooked = ScheduledLessonSearch::isSlotBooked($teacher_id, $class_details['grpcls_start_datetime'], $class_details['grpcls_end_datetime']);
 
             if ($isSlotBooked) {
+               
                 $post['grpcls_start_datetime'] = MyDate::changeDateTimezone($class_details['grpcls_start_datetime'], $systemTimeZone, $user_timezone);
                 $post['grpcls_end_datetime'] = MyDate::changeDateTimezone($class_details['grpcls_end_datetime'], $systemTimeZone, $user_timezone);
                 $post['grpcls_entry_fee'] = $class_details['grpcls_entry_fee'];
             }
         }
-
+     
         $post = $frm->getFormDataFromArray($post);
         if ($post === false) {
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
@@ -196,7 +197,8 @@ class TeacherGroupClassesController extends TeacherBaseController
         }
 
         $current_time = MyDate::changeDateTimezone(null, $user_timezone, $systemTimeZone);
-
+        pr($current_time);
+        prx($post['grpcls_start_datetime']);
         if ($post['grpcls_start_datetime'] < $current_time) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Can_not_add_time_for_old_date'));
         }
