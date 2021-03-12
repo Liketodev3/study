@@ -15,6 +15,7 @@ Bugs
     Bug-#050761 - Admin >> Dashboard >> total revenue from lesson >>view schedule >> need to correct ui 
     Bug-#047550 - Listing Teacher : Teaches Language information
     Bug-#050799 - Admin > cms >> lesson package management >> if disable free trial >> it then also show at front end at teacher profile.
+    Bug-#050841 - Teacher >> weekly schedule coming as twice in single row.
     
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
