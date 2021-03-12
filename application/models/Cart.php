@@ -85,7 +85,7 @@ class Cart extends FatModel
 
         /* ] */
         /* validate group class id */
-        if($grpcls_id>0){
+        if( $grpcls_id > 0 ){
 			$classDetails = TeacherGroupClasses::getAttributesById($grpcls_id, array('grpcls_id', 'grpcls_teacher_id', 'grpcls_start_datetime', 'grpcls_end_datetime', 'grpcls_max_learner', 'grpcls_status'));
 			if ($grpcls_id !== $classDetails['grpcls_id']) {
 				$this->error = Label::getLabel('LBL_Invalid_Request');

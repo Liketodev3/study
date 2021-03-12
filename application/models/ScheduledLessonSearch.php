@@ -281,25 +281,17 @@ class ScheduledLessonSearch extends SearchBase
         $this->addMultipleFields(array('utsl.utl_us_user_id', 'GROUP_CONCAT(DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY IFNULL(tlanguage_name, tlanguage_identifier) ASC) AS teacherTeachLanguageName'));
     }
 
-    public static function isSlotBooked($teacherId, $startDateTime, $endDateTime)
+    public static function isSlotBooked(int $teacherId, $startDateTime, $endDateTime)
     {
-        $teacherId = FatUtility::int($teacherId);
+
+
         $srch = new self(false);
-        $srch->addMultipleFields(
-            array(
-                'slns.slesson_id'
-            )
-        );
-        $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
-        $srch->addCondition('slns.slesson_teacher_id', '=', $teacherId);
-        $srch->addCondition('slns.slesson_date', '=', date('Y-m-d', strtotime($startDateTime)));
-        $cnd = $srch->addCondition('slns.slesson_start_time', '=', date('H:i:s', strtotime($startDateTime)), 'AND');
-        $cnd->attachCondition('slns.slesson_start_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
-        $cnd1 = $cnd->attachCondition('slns.slesson_end_time', '>', date('H:i:s', strtotime($startDateTime)), 'OR');
-        $cnd1->attachCondition('slns.slesson_end_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
-        // echo $srch->getQuery();die;
-        $rs = $srch->getResultSet();
-        return $srch->recordCount()>0;
+        $userIds  = array($teacherId);
+        $srch->checkUserLessonBooking($userIds, $startDateTime, $endDateTime);
+        $srch->setPageSize(1);
+        $getResultSet = $srch->getResultSet();
+        $scheduledLessonData =FatApp::getDb()->fetch($getResultSet);
+        return (!empty($scheduledLessonData));
     }
 
     public static function getLessonInfoByGrpClsid($grpclsId, $attr = null)

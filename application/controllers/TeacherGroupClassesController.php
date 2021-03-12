@@ -187,12 +187,9 @@ class TeacherGroupClassesController extends TeacherBaseController
         }
         $tGrpClsSrchObj->addCondition('grpcls_teacher_id', '=', $teacher_id);
         $tGrpClsSrchObj->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-        $cnd = $tGrpClsSrchObj->addCondition('grpcls_start_datetime', '<=', $post['grpcls_start_datetime']);
-        $cnd->attachCondition('grpcls_end_datetime', '>', $post['grpcls_start_datetime'], 'AND');
-
-        $cnd2 = $cnd->attachCondition('grpcls_start_datetime', '<=', $post['grpcls_end_datetime']);
-        $cnd2->attachCondition('grpcls_end_datetime', '>=', $post['grpcls_end_datetime'], 'AND');
-
+        $cnd = $tGrpClsSrchObj->addCondition('grpcls_end_datetime', '>', $post['grpcls_start_datetime']);
+        $cnd->attachCondition('grpcls_start_datetime', '<', $post['grpcls_end_datetime'], 'AND');
+        $tGrpClsSrchObj->setPageSize(1);
         $rs = $tGrpClsSrchObj->getResultSet();
         if (FatApp::getDb()->fetch($rs)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_A_class_already_exist_in_selected_time'));
@@ -203,10 +200,10 @@ class TeacherGroupClassesController extends TeacherBaseController
         if ($post['grpcls_start_datetime'] < $current_time) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Can_not_add_time_for_old_date'));
         }
-
-        $weekStartDay = date('W', strtotime($post['grpcls_start_datetime']));
-        $weekStart = date("Y-m-d", strtotime(date('Y') . "-W$weekStartDay+1"));
-
+        $dataTime = new DateTime($post['grpcls_start_datetime']);
+        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dataTime);
+        $weekStart = $weekStartAndEndDate['weekStart'];
+        
         $isSlotBooked = ScheduledLessonSearch::isSlotBooked($teacher_id, $post['grpcls_start_datetime'], $post['grpcls_end_datetime']);
 
         if ($isSlotBooked) {
