@@ -196,6 +196,10 @@ $(function () {
     };
 
     endLesson = function (lDetailId) {
+        if(isConfirmpopOpen){
+            return;
+        }
+        isConfirmpopOpen = true;
         $.confirm({
             title: langLbl.Confirm,
             content: langLbl.endLessonAlert,
@@ -205,13 +209,7 @@ $(function () {
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
                     action: function () {
-                        fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'endLessonSetup'), 'lDetailId=' + lDetailId, function (t) {
-                            // clearInterval(checkEveryMinuteStatusVar);
-                            $('.screen-chat-js').hide();
-                            endLessonButtonAction();
-                            $.facebox.close();
-                            viewLessonDetail();
-                        });
+                        endLessonSetup(lDetailId);
                     }
                 },
                 Quit: {
@@ -219,6 +217,7 @@ $(function () {
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
                     action: function () {
+                        isConfirmpopOpen = false;
                     }
                 }
             }

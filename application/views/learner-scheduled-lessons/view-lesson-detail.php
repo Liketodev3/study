@@ -492,7 +492,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
     var chat_avatar = "<?php echo $studentImage; ?>";
     var chat_friends = "<?php echo $lessonData['teacherId']; ?>";
     var worker = new Worker(siteConstants.webroot + 'js/worker-time-interval.js?');
-
+    
     if (!isZoomMettingToolActive && !is_time_up && lesson_joined && !lesson_completed && learnerLessonStatus != '<?php echo ScheduledLesson::STATUS_CANCELLED ?>') {
         joinLesson(chat_id, teacherId);
     }
@@ -535,7 +535,8 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                     return;
                 }
 
-                if (t.slesson_status == '<?php echo ScheduledLesson::STATUS_COMPLETED ?>' && t.sldetail_learner_status == '<?php echo ScheduledLesson::STATUS_SCHEDULED ?>') {
+                if (t.slesson_status == '<?php echo ScheduledLesson::STATUS_COMPLETED ?>' && learnerLessonStatus == '<?php echo ScheduledLesson::STATUS_SCHEDULED ?>') {
+                    
                     if (!isGroupClass) {
                         $.alert({
                             title: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
@@ -554,24 +555,29 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                         }, 1500);
                         return;
                     } else {
+                       if(isConfirmpopOpen){
+                           return;
+                       }
+                       isConfirmpopOpen = true;
                         $.confirm({
                             title: langLbl.Confirm,
                             content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',
-                            autoClose: langLbl.Quit + '|10000',
+                            autoClose: 'Quit|10000',
                             buttons: {
                                 Proceed: {
                                     text: langLbl.Proceed,
                                     btnClass: 'btn btn--primary',
                                     keys: ['enter', 'shift'],
                                     action: function() {
-                                        endLesson(sldetail_id);
+                                        endLessonSetup(sldetail_id);
                                     }
                                 },
                                 Quit: {
                                     text: langLbl.Quit,
                                     btnClass: 'btn btn--secondary',
-                                    keys: ['enter', 'shift'],
-                                    action: function() {}
+                                    action: function() {
+                                        isConfirmpopOpen = false;
+                                    }
                                 }
                             }
                         });
