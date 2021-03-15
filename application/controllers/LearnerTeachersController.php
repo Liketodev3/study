@@ -101,15 +101,8 @@ class LearnerTeachersController extends LearnerBaseController
         $rs = $srch->getResultSet();
         $teachers = FatApp::getDb()->fetchAll($rs);
         $this->set('teachers', $teachers);
-        $srch = LessonPackage::getSearchObject($this->siteLangId);
-        $srch->addCondition('lpackage_is_free_trial', '=', 0);
-        $srch->addMultipleFields(array(
-            'lpackage_id',
-            'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',
-            'lpackage_lessons'
-        ));
-        $rs = $srch->getResultSet();
-        $lessonPackages = FatApp::getDb()->fetchAll($rs);
+     
+        $lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
         /* [ */
         $totalRecords = $srch->recordCount();
         $pagingArr = array(

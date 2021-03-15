@@ -64,7 +64,7 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 										<li class="<?php echo ($cartData['languageId'] == $key) ? 'is-active' : ''; ?>">
 											<label class="selection">
 												<span class="radio">
-													<input onClick="addToCart('<?php echo $cartData['user_id'] ?>',2,'<?php echo $key; ?>', '', '', '<?php echo isset($cartData['grpcls_id']) ? $cartData['grpcls_id'] : 0 ?>');" type="radio" name="language" value="<?php echo $key; ?>" <?php echo ($cartData['languageId'] == $key) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
+													<input onClick="addToCart('<?php echo $cartData['user_id'] ?>', '<?php echo $cartData['lpackage_id']; ?>','<?php echo $key; ?>', '', '', '<?php echo isset($cartData['grpcls_id']) ? $cartData['grpcls_id'] : 0 ?>');" type="radio" name="language" value="<?php echo $key; ?>" <?php echo ($cartData['languageId'] == $key) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
 												</span>
 												<span class="selection__item">
 													<?php echo $teachLanguage; ?> <small class="-float-right"> </small>

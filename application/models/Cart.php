@@ -58,14 +58,18 @@ class Cart extends FatModel
 
             $lPackageRow = LessonPackage::getAttributesById($lpackageId, array('lpackage_id', 'lpackage_is_free_trial','lpackage_active'));
            
-            if (empty($lpackageId)) {
+            if (empty($lpackageId) || (empty($lPackageRow))){
                 $this->error = Label::getLabel('LBL_Invalid_Request');
+                return false;
+            }
+            if ($lPackageRow['lpackage_active'] != applicationConstants::YES){
+                $this->error = Label::getLabel('MSG_LESSONS_PACKAGE_ARE_DISABLED');
                 return false;
             }
 
             if ($lPackageRow['lpackage_is_free_trial'] == applicationConstants::YES) {
            
-                if ($lPackageRow['lpackage_active'] != applicationConstants::YES || applicationConstants::YES != $userRow['us_is_trial_lesson_enabled']) {
+                if (applicationConstants::YES != $userRow['us_is_trial_lesson_enabled']) {
                     $this->error = Label::getLabel('MSG_Trial_Lessons_are_disabled');
                     return false;
                 }
@@ -81,6 +85,7 @@ class Cart extends FatModel
                     return false;
                 }
             }
+            
         }
 
         /* ] */
@@ -287,6 +292,13 @@ class Cart extends FatModel
     public function updateCartWalletOption($val)
     {
         $this->SYSTEM_ARR['shopping_cart']['Pay_from_wallet'] = $val;
+        $this->updateUserCart();
+        return true;
+    }
+
+    public function updateLessonPackageId(int $lessonPackageId)
+    {
+        $this->SYSTEM_ARR['shopping_cart']['lpackage_id'] = $lessonPackageId;
         $this->updateUserCart();
         return true;
     }
