@@ -19,7 +19,7 @@ Bugs
     Bug-#050923 - Why a learner can join a lesson and group class with almost same time with different teachers. 
     Bug-#051112 - Currency/Languages scroller is not available if User added 100 currencies/languages they are not displaying in the right manner on the website 
     Bug-#051078 - The transaction limit should be set to 1 cr at the time when user adds money to the wallet. 
-    
+    Bug-#050853 - User >> if teacher has mutiple langugae >> at user side select another language >> below radion button donot remain selected and able to do payment of Zero order. 
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
 Release Date: 2021-03-04
