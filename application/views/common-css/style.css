@@ -8142,6 +8142,8 @@ color: #fff;}
     .timer.timer--small .size_lg{
         width: 100%;
     }
+.header__logo img {
+    max-height: 40px;
 }
 /*----------end----------*/
 
