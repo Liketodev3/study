@@ -8142,8 +8142,6 @@ color: #fff;}
     .timer.timer--small .size_lg{
         width: 100%;
     }
-.header__logo img {
-    max-height: 40px;
 }
 /*----------end----------*/
 
@@ -8296,6 +8294,10 @@ color: #fff;}
 
 .footer-dropdown{
     max-height: 200px;
+}
+
+.header__logo img {
+    max-height: 40px;
 }
 
 
