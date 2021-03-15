@@ -17,6 +17,7 @@ Bugs
     Bug-#050799 - Admin > cms >> lesson package management >> if disable free trial >> it then also show at front end at teacher profile.
     Bug-#050841 - Teacher >> weekly schedule coming as twice in single row.
     Bug-#050923 - Why a learner can join a lesson and group class with almost same time with different teachers. 
+    Bug #051112 - Currency/Languages scroller is not available if User added 100 currencies/languages they are not displaying in the right manner on the website 
     
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
