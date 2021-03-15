@@ -89,40 +89,31 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 					<div class="box" style="margin-bottom: 30px;" id="financialSummaryListing">
 					</div>
 					<p class="-color-secondary">
-						<<<<<<< HEAD <?php
-										$labelstr =  Label::getLabel('LBL_*_All_Purchases_are_in_{default-currency-code}._Foreign_transaction_fees_might_apply,_according_to_your_bank\'s_policies');
-										echo  str_replace("{default-currency-code}", CommonHelper::getSystemCurrencyData()['currency_code'], $labelstr);
-										?> </p> <?php if (AttachedFile::getAttachment(AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, 0, 0, CommonHelper::getLangId())) { ?> <div class="">
-							<img src="<?php echo FatUtility::generateFullUrl('Image', 'allowedPaymentGatewayImage', array(CommonHelper::getLangId())); ?>">
-				</div>
-			<?php } ?>
-			=======
-			<?php
-			$labelstr =  Label::getLabel('LBL_*_All_Purchases_are_in_{default-currency-code}._Foreign_transaction_fees_might_apply,_according_to_your_bank\'s_policies');
-			echo  str_replace("{default-currency-code}", CommonHelper::getDefaultCurrencyData()['currency_code'], $labelstr);
-			?>
-			</p>
-			<div class="">
-				<img src="<?php echo CONF_WEBROOT_URL; ?>images/PayGate-Card-Brand-Logos.jpg">
-			</div>
-			>>>>>>> task_80518_multiple_slot_bookings
-			</div>
-
-			<div class="col-xl-8 col-lg-8 col-md-12">
-				<div class="box" style="margin-bottom: 30px;" id="checkout-left-side">
-					<div id="paymentDiv">
 						<?php
-						$cartData['orderNetAmount']  = FatUtility::float($cartData['orderNetAmount']);
-						if (0 >= $cartData['orderNetAmount']) {
-							$this->includeTemplate('checkout/_partial/processWithNoPayment.php', $this->variables);
-						}
-						?>
+						$labelstr =  Label::getLabel('LBL_*_All_Purchases_are_in_{default-currency-code}._Foreign_transaction_fees_might_apply,_according_to_your_bank\'s_policies');
+						echo  str_replace("{default-currency-code}", CommonHelper::getSystemCurrencyData()['currency_code'], $labelstr);
+						?> </p> <?php if (AttachedFile::getAttachment(AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, 0, 0, CommonHelper::getLangId())) { ?> <div class="">
+							<img src="<?php echo FatUtility::generateFullUrl('Image', 'allowedPaymentGatewayImage', array(CommonHelper::getLangId())); ?>">
+						</div>
+					<?php } ?>
+
+				</div>
+
+				<div class="col-xl-8 col-lg-8 col-md-12">
+					<div class="box" style="margin-bottom: 30px;" id="checkout-left-side">
+						<div id="paymentDiv">
+							<?php
+							$cartData['orderNetAmount']  = FatUtility::float($cartData['orderNetAmount']);
+							if (0 >= $cartData['orderNetAmount']) {
+								$this->includeTemplate('checkout/_partial/processWithNoPayment.php', $this->variables);
+							}
+							?>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-	</div>
+		</div>
 </section>
 
 <script>

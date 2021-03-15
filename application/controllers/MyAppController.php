@@ -18,30 +18,29 @@ class MyAppController extends FatController
         CommonHelper::initCommonVariables();
         $this->initCommonVariables();
     }
-    
+
     public function pwaManifest()
     {
         $pwaSettings = FatApp::getConfig('CONF_PWA_SETTINGS');
         $pwaManifest = [];
-        if(!empty($pwaSettings)){
+        if (!empty($pwaSettings)) {
             $pwaManifest = json_decode(FatApp::getConfig('CONF_PWA_SETTINGS'), true);
         }
-        
+
         $pwaManifest['icons'] = [
             [
-                "src"=> CommonHelper::generateUrl('Image', 'pwaIcon', ['144']),
-                "sizes"=> "144x144",
-                "type"=> "image/png"
+                "src" => CommonHelper::generateUrl('Image', 'pwaIcon', ['144']),
+                "sizes" => "144x144",
+                "type" => "image/png"
             ],
             [
-                "src"=> CommonHelper::generateUrl('Image', 'pwaSplashIcon', ['512']),
-                "sizes"=> "512x512",
-                "type"=> "image/png"
+                "src" => CommonHelper::generateUrl('Image', 'pwaSplashIcon', ['512']),
+                "sizes" => "512x512",
+                "type" => "image/png"
             ]
         ];
         unset($pwaManifest['offline_page']);
         die(stripslashes(json_encode($pwaManifest)));
-
     }
 
     public function test()
@@ -65,7 +64,7 @@ class MyAppController extends FatController
         $cookieConsent =  CommonHelper::getCookieConsent();
         $this->cookieConsent =  $cookieConsent;
 
-        
+
         /* $pwaSettings = FatApp::getConfig('CONF_PWA_SETTINGS', FatUtility::VAR_STRING, '');
         $pwaManifest = !empty($pwaSettings) ? json_decode(FatApp::getConfig('CONF_PWA_SETTINGS'), true) : [];
         $offlinePage = !empty($pwaManifest['offline_page']) ? CommonHelper::generateUrl('Cms', 'view', [$pwaManifest['offline_page']]) : '';
@@ -107,21 +106,14 @@ class MyAppController extends FatController
             'Proceed' => Label::getLabel('LBL_Proceed'),
             'Confirm' => Label::getLabel('LBL_Confirm'),
             'pleaseSelect' => Label::getLabel('VLBL_Please_select'),
-<<<<<<< HEAD
-			'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
-			'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
-			'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),  
-			'language' => Label::getLabel('Lbl_Language'),
-            /* 'offlinePageUrl' => $offlinePage */
-            //'siteCurrencyId' => $this->siteCurrencyId,
-            //'controllerName' => $controllerName,
-=======
             'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
             'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
             'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),
             'language' => Label::getLabel('Lbl_Language'),
             'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson')
->>>>>>> task_80518_multiple_slot_bookings
+            /* 'offlinePageUrl' => $offlinePage */
+            //'siteCurrencyId' => $this->siteCurrencyId,
+            //'controllerName' => $controllerName,
         );
 
         $languages = Language::getAllNames(false);
@@ -140,11 +132,7 @@ class MyAppController extends FatController
         $this->set('jsVariables', $jsVariables);
         $this->set('controllerName', $controllerName);
         $this->set('action', $this->action);
-<<<<<<< HEAD
         $this->set('canonicalUrl', Common::getCanonicalUrl());
-      
-=======
->>>>>>> task_80518_multiple_slot_bookings
     }
 
     protected function getChangeEmailForm($passwordField = true)
