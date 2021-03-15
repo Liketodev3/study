@@ -131,6 +131,7 @@ class Cart extends FatModel
             }
 
            $groupClassTiming = TeacherGroupClassesSearch::checkGroupClassTiming([$this->cart_user_id], $classDetails['grpcls_start_datetime'], $classDetails['grpcls_end_datetime']);
+           $groupClassTiming->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
            $groupClassTiming->setPageSize(1);
            $groupClassTiming->getResultSet();
             if($groupClassTiming->recordCount() > 0)

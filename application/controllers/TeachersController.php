@@ -462,6 +462,20 @@ class TeachersController extends MyAppController
 		if (strtotime($startDateTime) < strtotime(date('Y-m-d H:i:s'))) {
 			FatUtility::dieJsonSuccess(0);
 		}
+		if (UserAuthentication::isUserLogged()) {
+			$loggedUserId = UserAuthentication::getLoggedUserId();
+			$checkGroupClassTiming = TeacherGroupClassesSearch::checkGroupClassTiming([$loggedUserId], $startDateTime, $endDateTime);
+			$checkGroupClassTiming->setPageSize(1);
+			$checkGroupClassTiming->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+			$getResultSet = $checkGroupClassTiming->getResultSet();
+			$scheduledLessonData = FatApp::getDb()->fetch($getResultSet);
+			if(!empty($scheduledLessonData)){
+				Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE');
+				FatUtility::dieJsonError(Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE'));
+			}
+		}
+
+		
 		$originalDayNumber = $post['day'];
 		$tWsch = new TeacherWeeklySchedule();
 		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime);
@@ -551,32 +565,32 @@ class TeachersController extends MyAppController
 
 		}
 
-        if (UserAuthentication::isUserLogged()) {
-			$teacherGroupClassesSearch = new TeacherGroupClassesSearch();
-			$teacherGroupClassesSearch->addMultipleFields(['grpcls_start_datetime', 'grpcls_end_datetime','grpcls_title']);
-			$teacherGroupClassesSearch->addCondition('grpcls_teacher_id', '=', UserAuthentication::isUserLogged());
-			$teacherGroupClassesSearch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-			if(!empty($groupClassIds)){
-				$teacherGroupClassesSearch->addCondition('grpcls_id', 'NOT IN', $groupClassIds);
-			}
-			$teacherGroupClassesSearch->addCondition('grpcls_start_datetime', '<', $weekEndDate);
-			$teacherGroupClassesSearch->addCondition('grpcls_end_datetime', '>', $weekStartDate);
-			$resultSet =  $teacherGroupClassesSearch->getResultSet();
-			$groupClasses =  $db->fetchAll($resultSet);
+        // if (UserAuthentication::isUserLogged()) {
+		// 	$teacherGroupClassesSearch = new TeacherGroupClassesSearch();
+		// 	$teacherGroupClassesSearch->addMultipleFields(['grpcls_start_datetime', 'grpcls_end_datetime','grpcls_title']);
+		// 	$teacherGroupClassesSearch->addCondition('grpcls_teacher_id', '=', UserAuthentication::getLoggedUserId());
+		// 	$teacherGroupClassesSearch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+		// 	if(!empty($groupClassIds)){
+		// 		$teacherGroupClassesSearch->addCondition('grpcls_id', 'NOT IN', $groupClassIds);
+		// 	}
+		// 	$teacherGroupClassesSearch->addCondition('grpcls_start_datetime', '<', $weekEndDate);
+		// 	$teacherGroupClassesSearch->addCondition('grpcls_end_datetime', '>', $weekStartDate);
+		// 	$resultSet =  $teacherGroupClassesSearch->getResultSet();
+		// 	$groupClasses =  $db->fetchAll($resultSet);
 
-			foreach ($groupClasses as $data) {
-				$startTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['grpcls_start_datetime'], true, $user_timezone);
-				$endTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['grpcls_end_datetime'], true, $user_timezone);
-				$jsonArr[] = array(
-					"title" => $data['grpcls_title'],
-					"start" => $startTime,
-					"end" => $endTime,
-					"className" => "sch_data",
-					"classType" => "0",
-				);
-			}
+		// 	foreach ($groupClasses as $data) {
+		// 		$startTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['grpcls_start_datetime'], true, $user_timezone);
+		// 		$endTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['grpcls_end_datetime'], true, $user_timezone);
+		// 		$jsonArr[] = array(
+		// 			"title" => $data['grpcls_title'],
+		// 			"start" => $startTime,
+		// 			"end" => $endTime,
+		// 			"className" => "sch_data",
+		// 			"classType" => "0",
+		// 		);
+		// 	}
 		
-		}
+		// }
 
 		echo FatUtility::convertToJson($jsonArr);
 	}

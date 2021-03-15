@@ -197,8 +197,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         }
 
         $current_time = MyDate::changeDateTimezone(null, $user_timezone, $systemTimeZone);
-        pr($current_time);
-        prx($post['grpcls_start_datetime']);
+     
         if ($post['grpcls_start_datetime'] < $current_time) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Can_not_add_time_for_old_date'));
         }
