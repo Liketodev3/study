@@ -498,7 +498,7 @@ class TeachersController extends MyAppController
 		echo FatUtility::convertToJson($jsonArr);
 	}
 
-	public function getTeacherScheduledLessonData($userId = 0)
+	public function getTeacherScheduledLessonData($userId = 0) 
 	{
 		$userId = FatUtility::int($userId);
 		if ($userId < 1) {
@@ -564,33 +564,6 @@ class TeachersController extends MyAppController
 			}
 
 		}
-
-        // if (UserAuthentication::isUserLogged()) {
-		// 	$teacherGroupClassesSearch = new TeacherGroupClassesSearch();
-		// 	$teacherGroupClassesSearch->addMultipleFields(['grpcls_start_datetime', 'grpcls_end_datetime','grpcls_title']);
-		// 	$teacherGroupClassesSearch->addCondition('grpcls_teacher_id', '=', UserAuthentication::getLoggedUserId());
-		// 	$teacherGroupClassesSearch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-		// 	if(!empty($groupClassIds)){
-		// 		$teacherGroupClassesSearch->addCondition('grpcls_id', 'NOT IN', $groupClassIds);
-		// 	}
-		// 	$teacherGroupClassesSearch->addCondition('grpcls_start_datetime', '<', $weekEndDate);
-		// 	$teacherGroupClassesSearch->addCondition('grpcls_end_datetime', '>', $weekStartDate);
-		// 	$resultSet =  $teacherGroupClassesSearch->getResultSet();
-		// 	$groupClasses =  $db->fetchAll($resultSet);
-
-		// 	foreach ($groupClasses as $data) {
-		// 		$startTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['grpcls_start_datetime'], true, $user_timezone);
-		// 		$endTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['grpcls_end_datetime'], true, $user_timezone);
-		// 		$jsonArr[] = array(
-		// 			"title" => $data['grpcls_title'],
-		// 			"start" => $startTime,
-		// 			"end" => $endTime,
-		// 			"className" => "sch_data",
-		// 			"classType" => "0",
-		// 		);
-		// 	}
-		
-		// }
 
 		echo FatUtility::convertToJson($jsonArr);
 	}
