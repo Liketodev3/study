@@ -21,6 +21,7 @@ Bugs
     Bug-#051078 - The transaction limit should be set to 1 cr at the time when user adds money to the wallet. 
     Bug-#050853 - User >> if teacher has mutiple langugae >> at user side select another language >> below radion button donot remain selected and able to do payment of Zero order. 
     Bug-#051034 - Find a Teacher and Teacher page > Add some space
+    Bug-#051007 - Confirm end lesson >> popup come mutiple times.
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
 Release Date: 2021-03-04
