@@ -33,6 +33,7 @@ Bugs
     Bug-#050550 :- When user upload a picture from mobile(iphone) via zoom process then its upload success fully in mobile > but its not displaying at profile view and desktop end also.
     Bug-#051188 - When any learner click on teacher whose username is not fill by teacher. then facing a 404 error.
     Bug-#050205 - UI bug- add red colour in teacher setting tab
+    Bug-#051184 - In teacher Profile screen>> when user set his profile, now delete the weekly availability, now press save>> then facing a json error. 
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
 Release Date: 2021-03-04
