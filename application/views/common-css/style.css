@@ -8241,7 +8241,9 @@ color: #fff;}
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 20px;
-    padding-top: 0;
+    background-color: #fff;
+    position: relative;
+    z-index: 1;
 }
 .Lprice-btn a.btn {
     width: calc(100% - 53%);
