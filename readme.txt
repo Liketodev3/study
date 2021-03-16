@@ -35,6 +35,7 @@ Bugs
     Bug-#050205 - UI bug- add red colour in teacher setting tab
     Bug-#051184 - In teacher Profile screen>> when user set his profile, now delete the weekly availability, now press save>> then facing a json error.
     Bug-#050836 - Learner side >> teacher description page >> Ui Break for first time on pageload.  
+    Bug-#051255 - The same teaching language showing multiple times on the teacher's profile page. 
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
 Release Date: 2021-03-04
