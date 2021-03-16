@@ -39,6 +39,8 @@ class UserSearch extends SearchBase
 
         $this->addCondition('user_is_teacher', '=', 1);
         $this->addCondition('user_country_id', '>', 0);
+        $this->addCondition('user_url_name', '!=', "");
+        // $this->addDirectCondition('user_url_name IS NOT NULL');
 
         /* $this->addCondition('credential_active', '=', 1);
         $this->addCondition('credential_verified', '=', 1); */
