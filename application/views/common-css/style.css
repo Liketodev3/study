@@ -60,7 +60,9 @@
     margin-bottom: 0;
 }
 
+/********* General *****/
 
+.-color-secondary {color:var(--color-secondary) !important}
 
 /*cookies*/
 .cc-window {
@@ -189,6 +191,8 @@
     margin-bottom: 30px;
     color: var(--color-primary);
 }
+
+
 
 .section--content .icon img {
     position: absolute;
