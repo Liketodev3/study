@@ -1712,7 +1712,7 @@ class CommonHelper extends FatUtility
             //   $teachLangs[] = '<li>'.$allLangs[$teachLangId].'</li>';
             //}else{
             if (isset($allLangs[$teachLangId])) {
-                $teachLangs[] = $allLangs[$teachLangId];
+                $teachLangs[$teachLangId] = $allLangs[$teachLangId];
             }
             //}
         }
