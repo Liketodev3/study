@@ -22,6 +22,15 @@ Bugs
     Bug-#050853 - User >> if teacher has mutiple langugae >> at user side select another language >> below radion button donot remain selected and able to do payment of Zero order. 
     Bug-#051034 - Find a Teacher and Teacher page > Add some space
     Bug-#051007 - Confirm end lesson >> popup come mutiple times.
+    Bug-#050890 :- Once User registered, then No loader is showing during waiting or delay time.
+    Bug-#050882 :- Fatal error >> when teacher book a teacher the fatal error appear
+    Bug-#050860 :- When class time come and teacher and learner open lesson to connect >> on join lesson button need to add loader .
+    Bug-#050540 : - When leaner schedule a group class and admin delete or cancel a group class then variation or changes are not reflect properly on front end.Sta
+    Bug-#050774 :-  2CHECKOUT PAGE >> need to add card checkout validations
+    Bug-#050764 : - Student >> buy lesson >> switching slot duration >> lesson package become non selectable >> and student able to do payment of 0 charges>> mean he able to buy the same in free (Branch name :-  task_80518_multiple_slot_bookings)
+    Bug-#050667 : - Due to top header view/bar view i can not see some features and data.
+    Bug-#050548 : - When user upload a profile pic via iphone camera by scroll Zoom process then it is upload image but it take time.
+    Bug-#050550 :- When user upload a picture from mobile(iphone) via zoom process then its upload success fully in mobile > but its not displaying at profile view and desktop end also.
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
 Release Date: 2021-03-04
