@@ -31,6 +31,7 @@ Bugs
     Bug-#050667 : - Due to top header view/bar view i can not see some features and data.
     Bug-#050548 : - When user upload a profile pic via iphone camera by scroll Zoom process then it is upload image but it take time.
     Bug-#050550 :- When user upload a picture from mobile(iphone) via zoom process then its upload success fully in mobile > but its not displaying at profile view and desktop end also.
+    Bug-#051188 - When any learner click on teacher whose username is not fill by teacher. then facing a 404 error.
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
 Release Date: 2021-03-04
