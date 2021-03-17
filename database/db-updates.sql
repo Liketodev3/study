@@ -225,5 +225,9 @@ ALTER TABLE `tbl_meta_tags` ADD `meta_type` TINYINT(1) NOT NULL AFTER `meta_acti
 
 ALTER TABLE `tbl_meta_tags` CHANGE `meta_record_id` `meta_record_id` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
 
+INSERT INTO `tbl_meta_tags` (`meta_id`, `meta_controller`, `meta_action`, `meta_type`, `meta_record_id`, `meta_subrecord_id`, `meta_identifier`, `meta_default`, `meta_advanced`) VALUES (1, '', '', '-1', '0', '0', 'Yo!Coach Live Demo', '0', '0');
+
+INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_title`, `meta_keywords`, `meta_description`, `meta_other_meta_tags`) VALUES ('1', '1', 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace | Yo!Coach', '', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki, Preply, and Cambly. ', '');
+
 
 
