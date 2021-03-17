@@ -215,16 +215,14 @@ class Common
        
         $priceRs = $priceSrch->getResultSet();
         $priceArr = FatApp::getDb()->fetchAll($priceRs);
-        // echo "<pre>";
-        // echo $teacherSrchObj->getQuery();
-        // die;
+    
         if ($priceArr) {
             $newArr = array();
             $newArr['minPrice'] = min(array_column($priceArr, 'minPrice'));
             $newArr['maxPrice'] = max(array_column($priceArr, 'maxPrice'));
             $priceArr = $newArr;
         }
-      
+        
         //echo CommonHelper::getCurrencyId(); die;
         if (CommonHelper::getCurrencyId() != CommonHelper::getSystemCurrencyId()) {
             $priceArr['minPrice'] = CommonHelper::displayMoneyFormat(($priceArr['minPrice'])??0, false, false, false);
