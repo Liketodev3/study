@@ -95,10 +95,10 @@ class LessonPackage extends MyAppModel
         return false;
     }
 
-    public static function getPackagesWithoutTrial($langId)
+    public static function getPackagesWithoutTrial(int $langId, bool $active = true)
     {
-        $srch = self::getSearchObject($langId);
-		$srch->addCondition('lpackage_is_free_trial', '=', 0);
+        $srch = self::getSearchObject($langId, $active);
+		$srch->addCondition('lpackage_is_free_trial', '=', applicationConstants::NO);
 		$srch->addMultipleFields(array(
 			'lpackage_id',
 			'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',

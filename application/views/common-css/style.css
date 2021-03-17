@@ -60,7 +60,9 @@
     margin-bottom: 0;
 }
 
+/********* General *****/
 
+.-color-secondary {color:var(--color-secondary) !important}
 
 /*cookies*/
 .cc-window {
@@ -189,6 +191,8 @@
     margin-bottom: 30px;
     color: var(--color-primary);
 }
+
+
 
 .section--content .icon img {
     position: absolute;
@@ -8237,7 +8241,9 @@ color: #fff;}
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 20px;
-    padding-top: 0;
+    background-color: #fff;
+    position: relative;
+    z-index: 1;
 }
 .Lprice-btn a.btn {
     width: calc(100% - 53%);
@@ -8290,6 +8296,14 @@ color: #fff;}
 .box--sticky{
     position: sticky;
     top: 88px;
+}
+
+.footer-dropdown{
+    max-height: 200px;
+}
+
+.header__logo img {
+    max-height: 40px;
 }
 
 

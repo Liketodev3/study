@@ -15,21 +15,26 @@ class CheckoutController extends LoggedUserController{
 			}
 			FatApp::redirectUser( CommonHelper::generateUrl() );
 		}
-
-		/* [ */
-		$srch = LessonPackage::getSearchObject( $this->siteLangId );
-		$srch->addCondition( 'lpackage_is_free_trial', '=', 0 );
-		$srch->addMultipleFields(array(
-			'lpackage_id',
-			'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',
-			'lpackage_lessons'
-        ));
-		$rs = $srch->getResultSet();
-		$lessonPackages = FatApp::getDb()->fetchAll($rs);
-		/* ] */
-
 		$cartData = $this->cartObj->getCart( $this->siteLangId );
-        
+		
+		if(0 >= $cartData['grpcls_id']){
+			$lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
+			if(empty($lessonPackages)){
+				Message::addErrorMessage(Label::getLabel('MSG_PLEASE_CONCAT_WITH_ADMIN_NO_LESSON_PACKAGE_ACTIVE'));
+				FatApp::redirectUser( CommonHelper::generateUrl('Teachers') );
+			}
+			$this->set('lessonPackages',$lessonPackages);
+
+			$lessonPackageIds = array_column($lessonPackages, 'lpackage_id', 'lpackage_id');
+			if(!array_key_exists($cartData['lpackage_id'], $lessonPackageIds)){
+			   $cartData['lpackage_id'] =  $lessonPackages[0]['lpackage_id'];
+			   	$cart = new Cart();
+				$cart->updateLessonPackageId($cartData['lpackage_id']);
+			}
+		}
+		/* [ */
+		
+		/* ] */
         /* Languages [ */
         $userToLanguage = new UserToLanguage($cartData['user_id']);
         $tLangSettings = $userToLanguage->getTeachingSettings($this->siteLangId);
@@ -52,7 +57,7 @@ class CheckoutController extends LoggedUserController{
         sort($bookingDurations);
         $this->set('bookingDurations', $bookingDurations);
 
-		$this->set('lessonPackages',$lessonPackages);
+		
 		$this->set('cartData', $cartData );
         $this->_template->render();
 	}
@@ -508,16 +513,19 @@ class CheckoutController extends LoggedUserController{
 		$rs = $srchdata->getResultSet();
 		$teacherOffer = FatApp::getDb()->fetch($rs);
 
-		$srch = LessonPackage::getSearchObject( $this->siteLangId );
-		$srch->addCondition( 'lpackage_is_free_trial', '=', 0 );
-		$srch->addMultipleFields(array(
-			'lpackage_id',
-			'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',
-			'lpackage_lessons'
-        ));
-		$rs = $srch->getResultSet();
-		$lessonPackages = FatApp::getDb()->fetchAll($rs);
-        $data = UserSetting::getUserSettings( $post['teacher_id'],$post['languageId'], $post['lessonDuration'] );
+		$lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
+		if(empty($lessonPackages)){
+			$errMsg = Message::addErrorMessage(Label::getLabel('MSG_PLEASE_CONCAT_WITH_ADMIN_NO_LESSON_PACKAGE_ACTIVE'));
+			FatUtility::dieWithError( $errMsg );
+		}
+
+		$lessonPackageIds = array_column($lessonPackages, 'lpackage_id', 'lpackage_id');
+		 if(!array_key_exists($cartData['lpackage_id'], $lessonPackageIds)){
+			$cartData['lpackage_id'] =  $lessonPackages[0]['lpackage_id'];
+			$cart = new Cart();
+			$cart->updateLessonPackageId($cartData['lpackage_id']);
+		 }
+        $data = UserSetting::getUserSettings( $post['teacher_id'], $post['languageId'], $post['lessonDuration'] );
 		$this->set('cartData',$cartData);
 		$this->set('teacherOffer',$teacherOffer);
         $this->set('languageId',$post['languageId']);
@@ -530,6 +538,7 @@ class CheckoutController extends LoggedUserController{
 	public function getBookingDurations()
     {
 		$cartData = $this->cartObj->getCart( $this->siteLangId );
+
 		if($cartData['grpcls_id']>0){
             die('');
         }
@@ -543,7 +552,18 @@ class CheckoutController extends LoggedUserController{
 
         $bookingDurations = array_unique(explode(',', $row['utl_booking_slots']));
         sort($bookingDurations);
-
+		$lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
+		if(empty($lessonPackages)){
+			Message::addErrorMessage(Label::getLabel('MSG_PLEASE_CONCAT_WITH_ADMIN_NO_LESSON_PACKAGE_ACTIVE'));
+			FatUtility::dieWithError( Message::getHtml() );
+		}
+		$lessonPackageIds = array_column($lessonPackages, 'lpackage_id', 'lpackage_id');
+		 if(!array_key_exists($cartData['lpackage_id'], $lessonPackageIds)){
+			$cartData['lpackage_id'] =  $lessonPackages[0]['lpackage_id'];
+			$cart = new Cart();
+			$cart->updateLessonPackageId($cartData['lpackage_id']);
+		 }
+	
         $this->set('cartData', $cartData);
         $this->set('bookingDurations', $bookingDurations);
         $this->_template->render(false,false);

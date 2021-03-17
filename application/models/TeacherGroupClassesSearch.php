@@ -259,22 +259,23 @@ class TeacherGroupClassesSearch extends SearchBase
         $this->joinTable(UserSetting::DB_TBL, 'LEFT JOIN', 'u.user_id = us_user_id', 'us');
     }
     
-    public static function getTeacherClassByTime($teacherId, $startDateTime, $endDateTime)
+    public static function getTeacherClassByTime(int $teacherId, $startDateTime, $endDateTime)
     {
-        $teacherId = FatUtility::int($teacherId);
-        $srch = new self(false);
-        $srch->addMultipleFields(
-            array(
-                'grpcls_id'
-            )
-        );
-        $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-        $srch->addCondition('grpcls_teacher_id', '=', $teacherId);
-        $cnd = $srch->addCondition('grpcls_start_datetime', '>=', date('Y-m-d H:i:s', strtotime($startDateTime)), 'AND');
-        $cnd->attachCondition('grpcls_start_datetime', '<=', date('Y-m-d H:i:s', strtotime($endDateTime)), 'AND');
-        $cnd1 = $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s', strtotime($startDateTime)), 'OR');
-        $cnd1->attachCondition('grpcls_end_datetime', '<=', date('Y-m-d H:i:s', strtotime($endDateTime)), 'AND');
-        $rs = $srch->getResultSet();
+        $groupClassTiming =  self::checkGroupClassTiming([$teacherId], $startDateTime, $endDateTime);
+        $groupClassTiming->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+        $rs = $groupClassTiming->getResultSet();
         return FatApp::getDb()->fetch($rs);
     }
+
+    public static function checkGroupClassTiming(array $userIds, $startDateTime, $endDateTime) : object
+    {
+        $searchBase = new self(false);
+        $searchBase->addMultipleFields(array('grpcls_id'));
+        $searchBase->addCondition('grpcls_teacher_id','IN', $userIds);
+        $searchBase->addCondition('grpcls_start_datetime','<', $endDateTime);
+        $searchBase->addCondition('grpcls_end_datetime','>', $startDateTime);
+        return $searchBase;
+    }
+
+
 }

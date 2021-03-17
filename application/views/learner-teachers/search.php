@@ -11,7 +11,9 @@
 			<th><?php echo Label::getLabel('LBL_Scheduled'); ?></th>
 			<th><?php echo Label::getLabel('LBL_Past'); ?></th>
 			<th><?php echo Label::getLabel('LBL_Unscheduled'); ?></th>
+			<?php if(!empty($lessonPackages)){ ?>
 			<th><?php echo Label::getLabel('LBL_Actions'); ?></th>
+			<?php } ?>
 		</tr>
 		<?php foreach( $teachers as $teacher ){
 			
@@ -132,6 +134,7 @@
 				<span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Unscheduled');?></span>
 				<span class="td__data"><?php echo $teacher['unScheduledLessonCount']; ?></span>
 			</td>
+			<?php if(!empty($lessonPackages)){ ?>
 			<td>
 				<span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Actions');?></span>
 				<span class="td__data">
@@ -142,6 +145,7 @@
 					<?php /*<a href="javascript:void(0);" onclick="removeTeacherConfirmation('<?php echo $teacher['teacherId']; ?>');" class="btn btn--small"><?php echo Label::getLabel('LBL_Remove');?></a>*/ ?>
 				</span>
 			</td>
+			<?php } ?>
 		</tr>
 		<?php } ?>
 		</tbody>

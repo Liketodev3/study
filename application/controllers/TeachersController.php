@@ -462,6 +462,20 @@ class TeachersController extends MyAppController
 		if (strtotime($startDateTime) < strtotime(date('Y-m-d H:i:s'))) {
 			FatUtility::dieJsonSuccess(0);
 		}
+		if (UserAuthentication::isUserLogged()) {
+			$loggedUserId = UserAuthentication::getLoggedUserId();
+			$checkGroupClassTiming = TeacherGroupClassesSearch::checkGroupClassTiming([$loggedUserId], $startDateTime, $endDateTime);
+			$checkGroupClassTiming->setPageSize(1);
+			$checkGroupClassTiming->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+			$getResultSet = $checkGroupClassTiming->getResultSet();
+			$scheduledLessonData = FatApp::getDb()->fetch($getResultSet);
+			if(!empty($scheduledLessonData)){
+				Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE');
+				FatUtility::dieJsonError(Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE'));
+			}
+		}
+
+		
 		$originalDayNumber = $post['day'];
 		$tWsch = new TeacherWeeklySchedule();
 		$checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime);
@@ -484,12 +498,24 @@ class TeachersController extends MyAppController
 		echo FatUtility::convertToJson($jsonArr);
 	}
 
-	public function getTeacherScheduledLessonData($userId = 0)
+	public function getTeacherScheduledLessonData($userId = 0) 
 	{
 		$userId = FatUtility::int($userId);
 		if ($userId < 1) {
 			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
 		}
+		$weekStartDate =  Fatapp::getPostedData('weekStart', FatUtility::VAR_DATE, '');
+		$weekEndDate =  Fatapp::getPostedData('weekEnd', FatUtility::VAR_DATE, '');
+		
+		if(empty($weekStartDate) || empty($weekEndDate)){
+			$weekStartAndEndDate = MyDate::getWeekStartAndEndDate(new DateTime());
+			$weekStartDate = $weekStartAndEndDate['weekStart'];
+			$weekEndDate = $weekStartAndEndDate['weekEnd'];
+		}
+		if(strtotime($weekStartDate) <= time()){
+			$weekStartDate = date('Y-m-d');
+		}
+		$db = FatApp::getDb();
 		$srch = new ScheduledLessonSearch();
 		$srch->addGroupBy('slesson_id');
 		$srch->joinTeacher();
@@ -497,20 +523,33 @@ class TeachersController extends MyAppController
 		$srch->joinTeacherTeachLanguageView($this->siteLangId);
 		$srch->addMultipleFields(array(
 			'slns.slesson_date',
+			'slns.slesson_date',
 			'slns.slesson_start_time',
 			'slns.slesson_end_time',
-			'slns.slesson_end_date'
+			'slns.slesson_end_date',
+			'slns.slesson_grpcls_id',
 			//'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName'
 		));
-		$srch->addCondition('slns.slesson_teacher_id', '=', $userId);
+		$userIds = [];
+		$userIds[] =  $userId;
+		
+		if (UserAuthentication::isUserLogged()) {
+			$userIds[] = UserAuthentication::getLoggedUserId();
+		}
+
+		$condition = $srch->addCondition('slns.slesson_teacher_id', 'IN', $userIds);
+		$condition->attachCondition('sldetail_learner_id', 'IN', $userIds);
 		$srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+		$srch->addCondition('CONCAT(slns.`slesson_date`, " ", slns.`slesson_start_time` )', '< ', $weekEndDate);
+		$srch->addCondition('CONCAT(slns.`slesson_end_date`, " ", slns.`slesson_end_time` )', ' > ', $weekStartDate);
+
 		$rs = $srch->getResultSet();
-		$data = FatApp::getDb()->fetchAll($rs);
+		$data = $db->fetchAll($rs);
 		$jsonArr = array();
+		$groupClassIds = [];
 		$user_timezone = MyDate::getUserTimeZone();
 		foreach ($data as $data) {
 			$slesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['slesson_date'] . ' ' . $data['slesson_start_time'], true, $user_timezone);
-
 			$slesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['slesson_end_date'] . ' ' . $data['slesson_end_time'], true, $user_timezone);
 			$jsonArr[] = array(
 				"title" => $data['teacherTeachLanguageName'],
@@ -519,7 +558,13 @@ class TeachersController extends MyAppController
 				"className" => "sch_data",
 				"classType" => "0",
 			);
+
+			if($data['slesson_grpcls_id'] > 0) {
+				$groupClassIds[] = $data['slesson_grpcls_id'];
+			}
+
 		}
+
 		echo FatUtility::convertToJson($jsonArr);
 	}
 
@@ -547,7 +592,7 @@ class TeachersController extends MyAppController
 				$twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['twsch_end_date'] . ' ' . $row['twsch_end_time'], true, $userTimezone);
 				$twsch_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['twsch_date'] . ' ' . $row['twsch_start_time'], true, $userTimezone);
 				$twsch_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $row['twsch_date'] . ' ' . $row['twsch_start_time'], true, $userTimezone);
-				// if ((strtotime($twsch_start_time) >=  strtotime($post['start'])) && (strtotime($twsch_end_time) <= strtotime($_serchEndDate))) {
+			
 					$jsonArr[] = array(
 				    	"title" => "",
 				    	"date" => $twsch_date,
@@ -556,20 +601,22 @@ class TeachersController extends MyAppController
 				    	"weekyear" => $row['twsch_weekyear'],
 				    	'_id' => $row['twsch_id'],
 				    	'classType' => $row['twsch_is_available'],
-				    	'className' => $cssClassNamesArr[$row['twsch_is_available']]
+				    	'className' => $cssClassNamesArr[$row['twsch_is_available']],
+						'action' => 'fromWeeklySchedule',
 				    );
-				// }
 			}
 		}
         
         $midPoint = (strtotime($startDate) + strtotime($endDate))/2;        
         $twsch_weekyear = date('W-Y', $midPoint);
         if(empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear){
-            $weekRange = CommonHelper::getWeekRangeByDate(date('Y-m-d', $midPoint));
-            $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, array('WeekStart' => $weekRange['start'], 'WeekEnd' => $weekRange['end']));
-            // CommonHelper::printArray($jsonArr2);die;
+			
+			$dateTime =  new dateTime(date('Y-m-d H:i:s',$midPoint));
+            $weekRange = MyDate::getWeekStartAndEndDate($dateTime);
+            $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, array('WeekStart' => $weekRange['weekStart'], 'WeekEnd' => $weekRange['weekEnd']));
             $jsonArr = array_merge($jsonArr, $jsonArr2);
         }
+		// prx($jsonArr);
         
         // CommonHelper::printArray($jsonArr);die;
 		echo FatUtility::convertToJson($jsonArr);

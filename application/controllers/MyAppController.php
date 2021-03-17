@@ -5,8 +5,8 @@ class MyAppController extends FatController
     {
         parent::__construct($action);
         $this->action = $action;
-        if (FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && (get_class($this) != "MaintenanceController") && (get_class($this)!='Home' && $action!='setLanguage')) {
-            if(UserAuthentication::isUserLogged()) {
+        if (FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && (get_class($this) != "MaintenanceController") && (get_class($this) != 'Home' && $action != 'setLanguage')) {
+            if (UserAuthentication::isUserLogged()) {
                 UserAuthentication::logout();
             }
             if (FatUtility::isAjaxCall()) {
@@ -18,29 +18,36 @@ class MyAppController extends FatController
         CommonHelper::initCommonVariables();
         $this->initCommonVariables();
     }
-    
+
     public function pwaManifest()
     {
         $pwaSettings = FatApp::getConfig('CONF_PWA_SETTINGS');
         $pwaManifest = [];
-        if(!empty($pwaSettings)){
+        if (!empty($pwaSettings)) {
             $pwaManifest = json_decode(FatApp::getConfig('CONF_PWA_SETTINGS'), true);
         }
-        
+
         $pwaManifest['icons'] = [
             [
-                "src"=> CommonHelper::generateUrl('Image', 'pwaIcon', ['144']),
-                "sizes"=> "144x144",
-                "type"=> "image/png"
+                "src" => CommonHelper::generateUrl('Image', 'pwaIcon', ['144']),
+                "sizes" => "144x144",
+                "type" => "image/png"
             ],
             [
-                "src"=> CommonHelper::generateUrl('Image', 'pwaSplashIcon', ['512']),
-                "sizes"=> "512x512",
-                "type"=> "image/png"
+                "src" => CommonHelper::generateUrl('Image', 'pwaSplashIcon', ['512']),
+                "sizes" => "512x512",
+                "type" => "image/png"
             ]
         ];
         unset($pwaManifest['offline_page']);
         die(stripslashes(json_encode($pwaManifest)));
+    }
+
+    public function test()
+    {
+        echo 1;
+        CommonHelper::printArray($_GET);
+        CommonHelper::printArray(apache_request_headers());
     }
 
     public function initCommonVariables()
@@ -57,7 +64,7 @@ class MyAppController extends FatController
         $cookieConsent =  CommonHelper::getCookieConsent();
         $this->cookieConsent =  $cookieConsent;
 
-        
+
         /* $pwaSettings = FatApp::getConfig('CONF_PWA_SETTINGS', FatUtility::VAR_STRING, '');
         $pwaManifest = !empty($pwaSettings) ? json_decode(FatApp::getConfig('CONF_PWA_SETTINGS'), true) : [];
         $offlinePage = !empty($pwaManifest['offline_page']) ? CommonHelper::generateUrl('Cms', 'view', [$pwaManifest['offline_page']]) : '';
@@ -99,10 +106,11 @@ class MyAppController extends FatController
             'Proceed' => Label::getLabel('LBL_Proceed'),
             'Confirm' => Label::getLabel('LBL_Confirm'),
             'pleaseSelect' => Label::getLabel('VLBL_Please_select'),
-			'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
-			'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
-			'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),  
-			'language' => Label::getLabel('Lbl_Language'),
+            'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
+            'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
+            'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),
+            'language' => Label::getLabel('Lbl_Language'),
+            'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson')
             /* 'offlinePageUrl' => $offlinePage */
             //'siteCurrencyId' => $this->siteCurrencyId,
             //'controllerName' => $controllerName,
@@ -110,7 +118,7 @@ class MyAppController extends FatController
 
         $languages = Language::getAllNames(false);
         foreach ($languages as $val) {
-            $jsVariables['language'.$val['language_id']] = $val['language_layout_direction'];
+            $jsVariables['language' . $val['language_id']] = $val['language_layout_direction'];
         }
         if (CommonHelper::getLayoutDirection() == 'rtl') {
             $this->_template->addCss('css/style--arabic.css');
@@ -125,7 +133,6 @@ class MyAppController extends FatController
         $this->set('controllerName', $controllerName);
         $this->set('action', $this->action);
         $this->set('canonicalUrl', Common::getCanonicalUrl());
-      
     }
 
     protected function getChangeEmailForm($passwordField = true)
@@ -137,13 +144,13 @@ class MyAppController extends FatController
         $userRow = FatApp::getDb()->fetch($rs);
         $user_email = $userRow['credential_email'];
         $frm->addHiddenField('', 'user_id', UserAuthentication::getLoggedUserId());
-        $curEmail= $frm->addEmailField(Label::getLabel('LBL_CURRENT_EMAIL'), 'user_email', $user_email);
+        $curEmail = $frm->addEmailField(Label::getLabel('LBL_CURRENT_EMAIL'), 'user_email', $user_email);
         $curEmail->requirements()->setRequired();
         $curEmail->addFieldTagAttribute('readonly', 'true');
         $newEmail = $frm->addEmailField(Label::getLabel('LBL_NEW_EMAIL'), 'new_email');
         $newEmail->setUnique('tbl_user_credentials', 'credential_email', 'credential_user_id', 'user_id', 'user_id');
         $newEmail->requirements()->setRequired();
-        if($passwordField){
+        if ($passwordField) {
             $curPwd = $frm->addPasswordField(Label::getLabel('LBL_CURRENT_PASSWORD'), 'current_password');
             $curPwd->requirements()->setRequired();
         }
@@ -151,13 +158,13 @@ class MyAppController extends FatController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         return $frm;
     }
-   
+
     protected function getTeacherQualificationForm($isCertiRequried = false)
     {
         $frm = new Form('frmQualification');
         $fld = $frm->addHiddenField('', 'uqualification_id', 0);
         $fld->requirements()->setInt();
-        $fld = $frm->addSelectBox(Label::getLabel('LBL_Experience_Type'), 'uqualification_experience_type', UserQualification::getExperienceTypeArr(),'',[],Label::getLabel('LBL_Select'));
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Experience_Type'), 'uqualification_experience_type', UserQualification::getExperienceTypeArr(), '', [], Label::getLabel('LBL_Select'));
         $fld->requirements()->setRequired();
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Title'), 'uqualification_title', '', array('placeholder' =>  Label::getLabel('LBL_Eg:_B.A._English')));
         $fld->requirements()->setLength(1, 100);
@@ -167,9 +174,9 @@ class MyAppController extends FatController
         $fld->requirements()->setLength(1, 100);
         $fld = $frm->addTextArea(Label::getLabel('LBL_Description'), 'uqualification_description', '', array('placeholder' => Label::getLabel('LBL_Eg._Focus_in_Humanist_Literature')));
         $fld->requirements()->setLength(1, 500);
-        
+
         $yearArr = range(date('Y'), 1970);
-        
+
         $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Start_Year'), 'uqualification_start_year', array_combine($yearArr, $yearArr), '', array(), '');
         $fld1->requirements()->setRequired();
         $fld2 = $frm->addSelectBox(Label::getLabel('LBL_End_Year'), 'uqualification_end_year', array_combine($yearArr, $yearArr), '', array(), '');
@@ -177,7 +184,7 @@ class MyAppController extends FatController
         $fld2->requirements()->setCompareWith('uqualification_start_year', 'ge');
         $fld = $frm->addFileUpload(Label::getLabel('LBL_Upload_Certificate'), 'certificate');
         // $fld->requirements()->setRequired($isCertiRequried);
-        $fld->htmlAfterField = "<small>".Label::getLabel('LBL_NOTE:_Allowed_Certificate_Extentions!')."</small>";
+        $fld->htmlAfterField = "<small>" . Label::getLabel('LBL_NOTE:_Allowed_Certificate_Extentions!') . "</small>";
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
         return $frm;
     }
@@ -228,7 +235,7 @@ class MyAppController extends FatController
         $post = FatApp::getPostedData();
         $frm = Common::getNewsLetterForm(CommonHelper::getLangId());
         $post = $frm->getFormDataFromArray($post);
-        if($post === false) {
+        if ($post === false) {
             Message::addErrorMessage($frm->getValidationErrors());
             FatUtility::dieWithError(Message::getHtml());
         }
@@ -250,7 +257,7 @@ class MyAppController extends FatController
             }
         } catch (Mailchimp_Error $e) {
             //Message::addErrorMessage($e->getMessage());
-            Message::addErrorMessage( Label::getLabel('MSG_Error_while_subscribing_to_newsletter', $siteLangId) );
+            Message::addErrorMessage(Label::getLabel('MSG_Error_while_subscribing_to_newsletter', $siteLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
         $this->set('msg', Label::getLabel('MSG_Successfully_subscribed', $siteLangId));

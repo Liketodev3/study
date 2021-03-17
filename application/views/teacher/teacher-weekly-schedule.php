@@ -1,6 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $user_timezone = MyDate::getUserTimeZone();
-$nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
+$nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
 $myTimeZoneLabel =  Label::getLabel('Lbl_My_Current_Time');
 $getAllMonthName =  CommonHelper::getAllMonthName();
 $weekDayName =  CommonHelper::dayNames();
@@ -34,9 +34,8 @@ $weekDayName =  CommonHelper::dayNames();
    	});
 
     deleteTeacherWeeklySchedule  = function(eventData){
-        console.log('Hello');
         $.mbsmessage.close();
-        confirmMessage = '<?php echo Label::getLabel( 'LBL_Do_you_want_to_disable_the_slot' ); ?>';
+        confirmMessage = '<?php echo Label::getLabel('LBL_Do_you_want_to_disable_the_slot'); ?>';
         var edata = $("#w_calendar").fullCalendar("clientEvents",eventData._id);
         if(!edata.length) {
             return;
@@ -49,7 +48,7 @@ $weekDayName =  CommonHelper::dayNames();
            edata.classType = <?php echo TeacherWeeklySchedule::AVAILABLE ?>;
            edata.className = ['<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>'];
            edata.editable = true;
-           confirmMessage = '<?php echo Label::getLabel( 'LBL_Do_you_want_to_enable_the_slot_again' ); ?>';
+           confirmMessage = '<?php echo Label::getLabel('LBL_Do_you_want_to_enable_the_slot_again'); ?>';
         }
 
          if(confirm(confirmMessage)){
@@ -57,22 +56,6 @@ $weekDayName =  CommonHelper::dayNames();
              $("#w_calendar").fullCalendar('updateEvent',edata);
              mergeEvents();
              return;
-            // var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
-            // return 	{
-            //     start: moment(e.start).format('HH:mm:ss'),
-            //     end: moment(e.end).format('HH:mm:ss'),
-            //     day: moment(e.start).format('d'),
-            //     date: moment(e.start).format('YYYY-MM-DD'),
-            //     _id: e._id,
-            //     action: e.action,
-            //     classtype: e.classType,
-            // };
-            // }));
-            // fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data='+json, function(t) {
-            //     $("#w_calendar").fullCalendar("refetchEvents");
-            //     // fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherWeeklySchedule'), 'data='+JSON.stringify(eventData) , function(t) {
-            //     // });
-            // });
          }
     };
 
@@ -220,83 +203,41 @@ $weekDayName =  CommonHelper::dayNames();
    		events: function(start, end, timezone, callback) {
 
    			$.ajax({
-   			  url: "<?php echo CommonHelper::generateUrl('Teachers','getTeacherWeeklyScheduleJsonData', [$userId]); ?>",
+   			  url: "<?php echo CommonHelper::generateUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [$userId]); ?>",
    			  data:{start:moment(start).format('YYYY-MM-DD HH:mm:ss'),end:moment(end).format('YYYY-MM-DD HH:mm:ss')},
    			  method:'post',
    				success: function(doc) {
-   				if(doc == "[]")
-   				{
-				data = { WeekStart:moment(start).format('YYYY-MM-DD HH:mm:ss'), WeekEnd:moment(end).format('YYYY-MM-DD HH:mm:ss') };
-
-   				$.ajax({
-   				url: "<?php echo CommonHelper::generateUrl('Teachers','getTeacherGeneralAvailabilityJsonData', [$userId]); ?>",
-				data : data,
-				method : 'POST',
-   				success: function(doc) {
-   					var doc = JSON.parse(doc);
-   					var events = [];
-
-   					$(doc).each(function(i,e) {
-   					var classType = $(this).attr('classType');
-   					if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
-   						var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
-   					}else if(classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>"){
-   						var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
-   					}
-   					events.push({
-   						title: $(this).attr('title'),
-   						start: $(this).attr('start'),
-   						end: $(this).attr('end'),
-   						color: $(this).attr('color'),
-   						_id: $(this).attr('_id'),
-   						action: 'fromGeneralAvailability',
-   						classType: $(this).attr('classType'),
-   						className: className,
-   						editable: false,
-   						//dow:[$(this).attr('day')]
-   					  });
-   					});
-   					callback(events);
-   					}
-   				});
-   				}
-   				else{
    				var doc = JSON.parse(doc);
    				var events = [];
-   			
    				$(doc).each(function(i,e) {
+					 
    					var classType = $(this).attr('classType');
-   					if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
+   					
+					if(classType == "<?php echo TeacherWeeklySchedule::AVAILABLE; ?>"){
    						var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::AVAILABLE]; ?>';
-   						 if(moment('<?php echo $nowDate; ?>') > moment(e.start)) {
-   							var editable = false;
-   						}
-   						else{
-   							var editable = true;
-   						}
    					}else if(classType == "<?php echo TeacherWeeklySchedule::UNAVAILABLE; ?>"){
    						var className = '<?php echo $cssClassArr[TeacherWeeklySchedule::UNAVAILABLE]; ?>';
-   						 var editable = false;
    					}
-   				  events.push({
-   					title: $(this).attr('title'),
-   					start: $(this).attr('start'),
-   					end: $(this).attr('end'),
-   					color: $(this).attr('color'),
-   					_id: $(this).attr('_id'),
-   					action: 'fromWeeklySchedule',
-   					classType: $(this).attr('classType'),
-   					className: className,
-   					editable: editable,
-   				  });
+
+					events.push({
+						title: $(this).attr('title'),
+						start: $(this).attr('start'),
+						end: $(this).attr('end'),
+						color: $(this).attr('color'),
+						_id: $(this).attr('_id'),
+						action: e.action,
+						classType: $(this).attr('classType'),
+						className: className,
+						editable: true,
+					});
+
    				});
    				callback(events);
-   				}
    			  }
    			});
    		  },
           eventAfterAllRender : function(view) {
-                    mergeEvents();
+                mergeEvents();
           },
    		eventRender: function(event, element) {
    			if(isNaN(event._id)){
@@ -336,7 +277,7 @@ $weekDayName =  CommonHelper::dayNames();
    });
 
 </script>
-<button id="setUpWeeklyAvailability" class="btn btn--secondary"><?php echo Label::getLabel( 'LBL_Save' );?></button>
+<button id="setUpWeeklyAvailability" class="btn btn--secondary"><?php echo Label::getLabel('LBL_Save');?></button>
 <span class="-gap"></span>
 
 <span class="-gap"></span>

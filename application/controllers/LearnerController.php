@@ -26,7 +26,7 @@ class LearnerController extends LearnerBaseController
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $this->_template->addCss('css/jquery.countdownTimer.css');
         $frmSrch = $this->getSearchForm();
-        $frmSrch->fill(['status'=>ScheduledLesson::STATUS_UPCOMING, 'show_group_classes'=>ApplicationConstants::YES]);
+        $frmSrch->fill(['status' => ScheduledLesson::STATUS_UPCOMING, 'show_group_classes' => ApplicationConstants::YES]);
         $this->set('frmSrch', $frmSrch);
         $userObj = new User(UserAuthentication::getLoggedUserId());
         $userDetails = $userObj->getDashboardData(CommonHelper::getLangId());
@@ -64,7 +64,7 @@ class LearnerController extends LearnerBaseController
         $frm->addDateField(Label::getLabel('LBL_Date_From', $langId), 'date_from', '', array('readonly' => 'readonly'));
         $frm->addDateField(Label::getLabel('LBL_Date_To', $langId), 'date_to', '', array('readonly' => 'readonly'));
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Submit', $langId), array('class' => 'btn btn--primary'));
-        $fld_cancel = $frm->addResetButton("", "btn_clear", Label::getLabel('LBL_Clear', $langId), array('onclick' => 'clearSearch();', 'class' =>'btn--clear'));
+        $fld_cancel = $frm->addResetButton("", "btn_clear", Label::getLabel('LBL_Clear', $langId), array('onclick' => 'clearSearch();', 'class' => 'btn--clear'));
         $frm->addHiddenField('', 'page', 1);
         $fld_submit->attachField($fld_cancel);
         return $frm;
@@ -122,19 +122,19 @@ class LearnerController extends LearnerBaseController
             'IFNULL(uft_id, 0) as uft_id',
             'IFNULL(country_name, country_code) as user_country_name',
             'IFNULL(state_name, state_identifier) as user_state_name',
-            'IFNULL(slanguage_name, slanguage_identifier) as teachlanguage_name',
             'utsl.spoken_language_names',
             'utsl.spoken_languages_proficiency',
             'us_video_link',
             'us_is_trial_lesson_enabled',
             'utl_slanguage_ids'
         ));
+
         $rs = $srch->getResultSet();
         $teacher = FatApp::getDb()->fetch($rs);
         if (empty($teacher)) {
             FatUtility::exitWithErrorCode(404);
         }
-        $proficiencyArr = SpokenLanguage::getProficiencyArr( CommonHelper::getLangId() );
+        $proficiencyArr = SpokenLanguage::getProficiencyArr(CommonHelper::getLangId());
         $teacher['proficiencyArr'] = $proficiencyArr;
         $this->set('teacher', $teacher);
         $this->_template->render();
@@ -181,15 +181,15 @@ class LearnerController extends LearnerBaseController
                 FatUtility::dieWithError(Message::getHtml());
             }
             $action = 'A'; //Added to favorite
-            $this->set('msg', Label::getLabel('LBL_Teacher_has_been_marked_as_favourite_successfully', $this->siteLangId) );
+            $this->set('msg', Label::getLabel('LBL_Teacher_has_been_marked_as_favourite_successfully', $this->siteLangId));
             //Message::addMessage(Label::getLabel('LBL_Teacher_has_been_marked_as_favourite_successfully', $this->siteLangId));
         } else {
-            if (!$db->deleteRecords(User::DB_TBL_TEACHER_FAVORITE, array('smt'=>'uft_user_id = ? AND uft_teacher_id = ?', 'vals'=> array($loggedUserId, $teacherId)))) {
+            if (!$db->deleteRecords(User::DB_TBL_TEACHER_FAVORITE, array('smt' => 'uft_user_id = ? AND uft_teacher_id = ?', 'vals' => array($loggedUserId, $teacherId)))) {
                 Message::addErrorMessage(Label::getLabel('LBL_Some_problem_occurred,_Please_contact_webmaster', $this->siteLangId));
                 FatUtility::dieWithError(Message::getHtml());
             }
             $action = 'R'; //Removed from favorite
-            $this->set('msg', Label::getLabel('LBL_Teacher_has_been_removed_from_favourite_list', $this->siteLangId) );
+            $this->set('msg', Label::getLabel('LBL_Teacher_has_been_removed_from_favourite_list', $this->siteLangId));
             //Message::addMessage(Label::getLabel('LBL_Teacher_has_been_removed_from_favourite_list', $this->siteLangId));
         }
         $this->set('action', $action);
@@ -208,7 +208,7 @@ class LearnerController extends LearnerBaseController
         $frm = new Form('frmFavSrch');
         $frm->addTextBox(Label::getLabel('LBL_Keyword', $langId), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Keyword', $langId)));
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Submit', $langId), array('class' => 'btn btn--primary'));
-        $fld_cancel = $frm->addResetButton('', "btn_clear", Label::getLabel('LBL_Clear', $langId), array('onclick' => 'clearSearch();', 'class' =>'btn--clear'));
+        $fld_cancel = $frm->addResetButton('', "btn_clear", Label::getLabel('LBL_Clear', $langId), array('onclick' => 'clearSearch();', 'class' => 'btn--clear'));
         $fld_submit->attachField($fld_cancel);
         $frm->addHiddenField('', 'page', 1);
         return $frm;

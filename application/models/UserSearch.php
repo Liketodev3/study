@@ -39,6 +39,8 @@ class UserSearch extends SearchBase
 
         $this->addCondition('user_is_teacher', '=', 1);
         $this->addCondition('user_country_id', '>', 0);
+        $this->addCondition('user_url_name', '!=', "");
+        // $this->addDirectCondition('user_url_name IS NOT NULL');
 
         /* $this->addCondition('credential_active', '=', 1);
         $this->addCondition('credential_verified', '=', 1); */
@@ -313,7 +315,7 @@ class UserSearch extends SearchBase
             
             $tlangSrch->addOrder('tlanguage_display_order');
         }
-        $tlangSrch->addMultipleFields(array('utl_us_user_id','GROUP_CONCAT(utl_id) as utl_ids','GREATEST(max(utl_single_lesson_amount), max(utl_bulk_lesson_amount)) AS maxPrice','LEAST(min(utl_bulk_lesson_amount), min(utl_single_lesson_amount)) AS minPrice','GROUP_CONCAT(utl_slanguage_id) as utl_slanguage_ids', 'GROUP_CONCAT(utl_booking_slot) as utl_booking_slots'));
+        $tlangSrch->addMultipleFields(array('utl_us_user_id','GROUP_CONCAT(utl_id) as utl_ids','GREATEST(max(utl_single_lesson_amount), max(utl_bulk_lesson_amount)) AS maxPrice','LEAST(min(utl_bulk_lesson_amount), min(utl_single_lesson_amount)) AS minPrice','GROUP_CONCAT(DISTINCT utl_slanguage_id) as utl_slanguage_ids', 'GROUP_CONCAT(utl_booking_slot) as utl_booking_slots'));
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
         $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);

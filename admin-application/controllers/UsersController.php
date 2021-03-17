@@ -750,10 +750,11 @@ class UsersController extends AdminBaseController
         }
 
         $weekData = array();
-        $dateWeekRange = CommonHelper::getWeekRangeByDate(date('Y-m-d'));        
+        $dateTime = new DateTime(date('Y-m-d'));
+        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);       
         
-        $start = $dateWeekRange['start'];
-        $end = $dateWeekRange['end'];
+        $start = $weekStartAndEndDate['weekStart'];
+        $end = $weekStartAndEndDate['weekEnd'];
         while($start<=$end){
             $weekData[] = array(
                 'start'     => "15:00:00",

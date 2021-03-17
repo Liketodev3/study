@@ -180,11 +180,9 @@ class TwocheckoutPayController extends PaymentController
     private function getAPICheckoutForm($orderId)
     {
         $frm = new Form('frmTwoCheckout', array('id' => 'frmTwoCheckout', 'action' => CommonHelper::generateUrl('TwocheckoutPay', 'send', array($orderId)), 'class' => "form form--normal"));
-
-        $frm->addRequiredField(Label::getLabel('LBL_ENTER_CREDIT_CARD_NUMBER', $this->siteLangId), 'ccNo');
+        $frm->addRequiredField(Label::getLabel('LBL_ENTER_CREDIT_CARD_NUMBER', $this->siteLangId), 'ccNo')->requirements()->setRegularExpressionToValidate(applicationConstants::CREDIT_CARD_NO_REGEX);
         $frm->addRequiredField(Label::getLabel('LBL_CARD_HOLDER_NAME', $this->siteLangId), 'cc_owner');
         $frm->addHiddenField('', 'token', '');
-
         $data['months'] = applicationConstants::getMonthsArr($this->siteLangId);
         $today = getdate();
         $data['year_expire'] = array();
@@ -195,23 +193,16 @@ class TwocheckoutPayController extends PaymentController
         $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_YEAR', $this->siteLangId), 'expYear', $data['year_expire'], '', array(), '');
         $fld = $frm->addPasswordField(Label::getLabel('LBL_CVV_SECURITY_CODE', $this->siteLangId), 'cvv');
         $fld->requirements()->setRequired(true);
-
+        $fld->requirements()->setRegularExpressionToValidate(applicationConstants::CVV_NO_REGEX);
         $frm->addRequiredField(Label::getLabel('LBL_Address'), 'addrLine1');
         $frm->addRequiredField(Label::getLabel('LBL_City'), 'city');
         $frm->addRequiredField(Label::getLabel('LBL_State'), 'state');
         $frm->addRequiredField(Label::getLabel('LBL_Zip'), 'zipCode');
-
         $country = new Country();
         $countriesArr = $country->getCountriesArr($this->siteLangId);
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'country', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
         $fld->requirement->setRequired(true);
-        /* 
-        $frm->addEmailField(Label::getLabel('LBL_email'), 'user_email');
-        $frm->addTextBox(Label::getLabel('LBL_phone'), 'user_phone');
-         */
-        /* $frm->addCheckBox(Label::getLabel('LBL_SAVE_THIS_CARD_FOR_FASTER_CHECKOUT',$this->siteLangId), 'cc_save_card','1'); */
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Pay_Now', $this->siteLangId));
-
         return $frm;
     }
 

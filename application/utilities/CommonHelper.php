@@ -1504,11 +1504,11 @@ class CommonHelper extends FatUtility
         if ($date == "") {
             trigger_error("Invalid date", E_USER_ERROR);
         }
-
-        $dt = strtotime($date);
+        $dateTime = new DateTime($date);
+        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);
         return array(
-            "start" => date('N', $dt) == 1 ? date('Y-m-d', $dt) : date('Y-m-d', strtotime('last sunday', $dt)),
-            "end" => date('N', $dt) == 7 ? date('Y-m-d', $dt) : date('Y-m-d', strtotime('next saturday', $dt))
+            'start' =>$weekStartAndEndDate['weekStart'],
+            'end' =>  $weekStartAndEndDate['weekEnd'],
         );
     }
 
@@ -1712,7 +1712,7 @@ class CommonHelper extends FatUtility
             //   $teachLangs[] = '<li>'.$allLangs[$teachLangId].'</li>';
             //}else{
             if (isset($allLangs[$teachLangId])) {
-                $teachLangs[] = $allLangs[$teachLangId];
+                $teachLangs[$teachLangId] = $allLangs[$teachLangId];
             }
             //}
         }

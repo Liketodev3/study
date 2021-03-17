@@ -4,7 +4,11 @@ class TeacherBaseController extends LoggedUserController
     public function __construct($action)
     {
         parent::__construct($action);
-        if (true !== User::canAccessTeacherDashboard()) {
+        if (!User::canAccessTeacherDashboard()) {
+            if(FatUtility::isAjaxCall()){
+                Message::addErrorMessage(Label::getLabel('MSG_ERROR_INVALID_ACCESS', $this->siteLangId));
+                FatUtility::dieWithError(Message::getHtml());
+            }
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', 'form'));
         }
         User::setDashboardActiveTab(User::USER_TEACHER_DASHBOARD);

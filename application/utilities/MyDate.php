@@ -166,4 +166,14 @@ class MyDate extends FatDate
         return Timezone::getAssocByLang(CommonHelper::getLangId());
     }
 
+    public static function getWeekStartAndEndDate(DateTime $dateTime): array
+    {
+        // $dateTime = ($dateTime->format('w') == 0) ? $dateTime : $dateTime->modify('last Sunday');
+        $dateTime = $dateTime->modify('last saturday')->modify('+1 day');
+        return array(
+            'weekStart' => $dateTime->format('Y-m-d'),
+            'weekEnd' =>  $dateTime->modify('next saturday')->format('Y-m-d'),
+        );
+    }
+
 }

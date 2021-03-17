@@ -275,7 +275,8 @@ foreach($userTeachLangs as $userTeachLang){
                                 <div class="tab tab-active" data-id="tab_single_price">
                                     <div class="scrollbar custom-scrollbar scrollbar-js">
                                         <div class="Lprice-cover" id="style-4">
-                                            <?php $lessonPackages = $teacher['lessonPackages'];
+                                            <?php 
+											$lessonPackages = $teacher['lessonPackages'];
                                             if( count($lessonPackages) ){
                                                 $lessonPackage = $lessonPackages[0];
                                             }
@@ -286,9 +287,15 @@ foreach($userTeachLangs as $userTeachLang){
                                                 </div>
                                                 <div class="Lprice-body">
                                                     <ul>
-                                                        <?php foreach($prices as $lang_id=>$price_info): ?>
+                                                        <?php 
+															foreach($prices as $lang_id=>$price_info): 
+																$onclick = '';
+																if (!empty($lessonPackages)) {
+																	$onclick = "cart.add('". $teacher['user_id']."','".$lessonPackage['lpackage_id']."','','','". $lang_id."', 0, '".$slot."')";
+																}
+														?>
                                                         <li>
-                                                            <a href="javascript:;" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','', <?php echo $lang_id.', 0, '.$slot; ?> )">
+                                                            <a href="javascript:;" onClick="<?php echo $onclick; ?>">
                                                                 <div class="Lprice-lang"><?php echo $price_info['lang_name'] ?></div>
                                                                 <div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($price_info['price']) ?></div>
                                                             </a>
@@ -304,10 +311,7 @@ foreach($userTeachLangs as $userTeachLang){
                                 <div class="tab" data-id="tab_bulk_price">
                                     <div class="scrollbar custom-scrollbar scrollbar-js">
                                         <div class="Lprice-cover" id="style-4">
-                                            <?php $lessonPackages = array_reverse($teacher['lessonPackages']);
-                                            if( count($lessonPackages) ){
-                                                $lessonPackage = $lessonPackages[0];
-                                            }
+                                            <?php 
                                             foreach($teacherLangPrices['bulk'] as $slot => $prices): ?>
                                             <div class="Lprice__wrapper">
                                                 <div class="Lprice-head">
@@ -315,9 +319,15 @@ foreach($userTeachLangs as $userTeachLang){
                                                 </div>
                                                 <div class="Lprice-body">
                                                         <ul>
-                                                            <?php foreach($prices as $lang_id=>$price_info): ?>
+                                                            <?php 
+																foreach($prices as $lang_id=>$price_info): 
+																	$onclick = '';
+                                                                    if (!empty($lessonPackages)) {
+                                                                        $onclick = "cart.add('". $teacher['user_id']."','".$lessonPackage['lpackage_id']."','','','". $lang_id."', 0, '".$slot."')";
+                                                                    }
+															?>
                                                             <li>
-                                                                <a href="javascript:;" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','', <?php echo $lang_id.', 0, '.$slot; ?> )">
+                                                                <a href="javascript:;" onClick="<?php echo $onclick; ?>">
                                                                     <div class="Lprice-lang"><?php echo $price_info['lang_name'] ?></div>
                                                                     <div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($price_info['price']) ?></div>
                                                                 </a>

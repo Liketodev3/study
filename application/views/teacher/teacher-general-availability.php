@@ -90,10 +90,14 @@ $weekDayName =  CommonHelper::dayNames();
         });
     function mergeEvents() {
         allevents = $("#ga_calendar").fullCalendar("clientEvents");
+        
+        calendarStartDateTime =  $('#ga_calendar').fullCalendar("getView").start;
+        calendarEndDateTime =  $('#ga_calendar').fullCalendar("getView").end;
+
         if(allevents.length == 1) {
             return;
         }
-        // debugger;
+
         $.each(allevents, function( i, eItem )
         {
 
@@ -101,6 +105,28 @@ $weekDayName =  CommonHelper::dayNames();
             {
                 return;
             }
+
+            let updateEvent =  false;
+            
+            if (moment(calendarStartDateTime) >  eItem.end || moment(calendarEndDateTime) <  eItem.start) {
+                $('#ga_calendar').fullCalendar('removeEvents', eItem._id);
+                return;
+            }
+
+           if(moment(calendarStartDateTime) >  eItem.start) {
+                updateEvent = true;
+                eItem.start = moment(calendarStartDateTime);
+           }
+          
+           if(moment(calendarEndDateTime) <  eItem.end) {
+                updateEvent = true;
+                eItem.end =  moment(calendarEndDateTime);
+           }
+           if(updateEvent){
+                $('#ga_calendar').fullCalendar('updateEvent', eItem);
+                console.table(eItem);
+           }
+
             var start =  eItem.start;
             var end =  eItem.end;
             var eventId =  eItem._id;
@@ -174,10 +200,6 @@ $weekDayName =  CommonHelper::dayNames();
         columnHeaderFormat :"ddd",
         timezone: '<?php echo $user_timezone; ?>',
         select: function (start, end, jsEvent, view ) {
-            if(moment(start).format('d') != moment(end).format('d') && moment(end).format('YYYY-MM-DD HH:mm')!=moment(start).add(1, 'days').format('YYYY-MM-DD 00:00') ) {
-                $('#ga_calendar').fullCalendar('unselect');
-                return false;
-            }
             var newEvent = new Object();
             newEvent.title = '';
             newEvent.start = moment(start).format('YYYY-MM-DD')+" "+moment(start).format('HH:mm');

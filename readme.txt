@@ -15,7 +15,27 @@ Bugs
     Bug-#050761 - Admin >> Dashboard >> total revenue from lesson >>view schedule >> need to correct ui 
     Bug-#047550 - Listing Teacher : Teaches Language information
     Bug-#050799 - Admin > cms >> lesson package management >> if disable free trial >> it then also show at front end at teacher profile.
-    
+    Bug-#050841 - Teacher >> weekly schedule coming as twice in single row.
+    Bug-#050923 - Why a learner can join a lesson and group class with almost same time with different teachers. 
+    Bug-#051112 - Currency/Languages scroller is not available if User added 100 currencies/languages they are not displaying in the right manner on the website 
+    Bug-#051078 - The transaction limit should be set to 1 cr at the time when user adds money to the wallet. 
+    Bug-#050853 - User >> if teacher has mutiple langugae >> at user side select another language >> below radion button donot remain selected and able to do payment of Zero order. 
+    Bug-#051034 - Find a Teacher and Teacher page > Add some space
+    Bug-#051007 - Confirm end lesson >> popup come mutiple times.
+    Bug-#050890 :- Once User registered, then No loader is showing during waiting or delay time.
+    Bug-#050882 :- Fatal error >> when teacher book a teacher the fatal error appear
+    Bug-#050860 :- When class time come and teacher and learner open lesson to connect >> on join lesson button need to add loader .
+    Bug-#050540 : - When leaner schedule a group class and admin delete or cancel a group class then variation or changes are not reflect properly on front end.Sta
+    Bug-#050774 :-  2CHECKOUT PAGE >> need to add card checkout validations
+    Bug-#050764 : - Student >> buy lesson >> switching slot duration >> lesson package become non selectable >> and student able to do payment of 0 charges>> mean he able to buy the same in free (Branch name :-  task_80518_multiple_slot_bookings)
+    Bug-#050667 : - Due to top header view/bar view i can not see some features and data.
+    Bug-#050548 : - When user upload a profile pic via iphone camera by scroll Zoom process then it is upload image but it take time.
+    Bug-#050550 :- When user upload a picture from mobile(iphone) via zoom process then its upload success fully in mobile > but its not displaying at profile view and desktop end also.
+    Bug-#051188 - When any learner click on teacher whose username is not fill by teacher. then facing a 404 error.
+    Bug-#050205 - UI bug- add red colour in teacher setting tab
+    Bug-#051184 - In teacher Profile screen>> when user set his profile, now delete the weekly availability, now press save>> then facing a json error.
+    Bug-#050836 - Learner side >> teacher description page >> Ui Break for first time on pageload.  
+    Bug-#051255 - The same teaching language showing multiple times on the teacher's profile page. 
 ==============================================================================================================================
 Release Number: TV-2.10.0.20210304
 Release Date: 2021-03-04

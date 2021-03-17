@@ -13,6 +13,6 @@ $spokenLanguagesProficiencyArr = explode(",", $spoken_languages_proficiency);
 		<?php echo Label::getLabel('LBL_Speaks'); ?>
 	</span> &nbsp;&nbsp;
 	<?php foreach( $spokenLanguagesArr as $index => $spokenLangName ){ ?>
-		<span class="txt-inline__tag"><?php echo $spokenLangName; ?><strong>(<?php echo $proficiencyArr[$spokenLanguagesProficiencyArr[$index]]; ?>)</strong></span><?php echo ($index < $totalSpokenLanguages) ? ',' : ''; ?>
+		<span class="txt-inline__tag"><?php echo $spokenLangName; ?><strong> (<?php echo $proficiencyArr[$spokenLanguagesProficiencyArr[$index]]; ?>)</strong></span><?php echo ($index < $totalSpokenLanguages) ? ',' : ''; ?>
     <?php } ?>
 </div>

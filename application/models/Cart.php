@@ -58,14 +58,18 @@ class Cart extends FatModel
 
             $lPackageRow = LessonPackage::getAttributesById($lpackageId, array('lpackage_id', 'lpackage_is_free_trial','lpackage_active'));
            
-            if (empty($lpackageId)) {
+            if (empty($lpackageId) || (empty($lPackageRow))){
                 $this->error = Label::getLabel('LBL_Invalid_Request');
+                return false;
+            }
+            if ($lPackageRow['lpackage_active'] != applicationConstants::YES){
+                $this->error = Label::getLabel('MSG_LESSONS_PACKAGE_ARE_DISABLED');
                 return false;
             }
 
             if ($lPackageRow['lpackage_is_free_trial'] == applicationConstants::YES) {
            
-                if ($lPackageRow['lpackage_active'] != applicationConstants::YES || applicationConstants::YES != $userRow['us_is_trial_lesson_enabled']) {
+                if (applicationConstants::YES != $userRow['us_is_trial_lesson_enabled']) {
                     $this->error = Label::getLabel('MSG_Trial_Lessons_are_disabled');
                     return false;
                 }
@@ -81,11 +85,12 @@ class Cart extends FatModel
                     return false;
                 }
             }
+            
         }
 
         /* ] */
         /* validate group class id */
-        if($grpcls_id>0){
+        if( $grpcls_id > 0 ){
 			$classDetails = TeacherGroupClasses::getAttributesById($grpcls_id, array('grpcls_id', 'grpcls_teacher_id', 'grpcls_start_datetime', 'grpcls_end_datetime', 'grpcls_max_learner', 'grpcls_status'));
 			if ($grpcls_id !== $classDetails['grpcls_id']) {
 				$this->error = Label::getLabel('LBL_Invalid_Request');
@@ -123,7 +128,23 @@ class Cart extends FatModel
                 $this->error = Label::getLabel('LBL_Class_Full');
 				return false;
             }
-		}
+
+            $isSlotBooked = ScheduledLessonSearch::isSlotBooked($this->cart_user_id, $classDetails['grpcls_start_datetime'], $classDetails['grpcls_end_datetime']);
+            if($isSlotBooked){
+                $this->error = Label::getLabel('LBL_YOU_ALREADY_BOOKED_A_CLASS_BETWEEN_THIS_TIME_RANGE');
+				return false;
+            }
+
+           $groupClassTiming = TeacherGroupClassesSearch::checkGroupClassTiming([$this->cart_user_id], $classDetails['grpcls_start_datetime'], $classDetails['grpcls_end_datetime']);
+           $groupClassTiming->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+           $groupClassTiming->setPageSize(1);
+           $groupClassTiming->getResultSet();
+            if($groupClassTiming->recordCount() > 0)
+            {
+                $this->error = Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE');
+				return false;
+            }
+        }
         $key = $teacher_id.'_'.$grpcls_id;
         $key = base64_encode(serialize($key));
         $this->SYSTEM_ARR['cart'][$key] = array(
@@ -271,6 +292,13 @@ class Cart extends FatModel
     public function updateCartWalletOption($val)
     {
         $this->SYSTEM_ARR['shopping_cart']['Pay_from_wallet'] = $val;
+        $this->updateUserCart();
+        return true;
+    }
+
+    public function updateLessonPackageId(int $lessonPackageId)
+    {
+        $this->SYSTEM_ARR['shopping_cart']['lpackage_id'] = $lessonPackageId;
         $this->updateUserCart();
         return true;
     }
