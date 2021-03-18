@@ -216,6 +216,14 @@ class AttachedFile extends MyAppModel
             $this->error = Label::getLabel('MSG_UNRECOGNISED_IMAGE_FILE', $this->commonLangId);
             return false;
         }
+        $deg = CommonHelper::getCorrectImageOrientation($fl);
+        $ext = pathinfo($name, PATHINFO_EXTENSION);
+        $ext = $ext!='jpg' ? $ext : 'jpeg';
+        if($deg>0){            
+            $src = call_user_func('imagecreatefrom'.$ext, $fl);
+            $rotate = imagerotate($src, $deg, 0);
+            call_user_func('image'.$ext, $rotate, $fl);            
+        }
         return $this->saveAttachment($fl, $fileType, $recordId, $recordSubid, $name, $displayOrder, $uniqueRecord, $lang_id, $screen);
     }
 

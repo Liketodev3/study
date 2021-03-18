@@ -622,7 +622,7 @@ $(document).ready(function () {
 		$image = obj;
 		$image.cropper({
 			aspectRatio: 1,
-			autoCropArea: 0.4545,
+			// autoCropArea: 0.4545,
 			// strict: true,
 			guides: false,
 			highlight: false,
@@ -638,7 +638,7 @@ $(document).ready(function () {
 					'"height":' + e.detail.height,
 					'"width":' + e.detail.width,
 					'"rotate":' + e.detail.rotate + '}'
-				].join();
+					].join();
 				$("#img_data").val(json);
 			},
 			built: function () {
