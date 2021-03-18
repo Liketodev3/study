@@ -19,7 +19,7 @@ $otherMetatagsFld->htmlAfterField = '<small>' . Label::getLabel('LBL_For_Example
 						<?php
 						if ($metaId > 0) {
 							foreach ($languages as $lang_Id => $langName) { ?>
-								<li><a class="<?php echo ($lang_id == $langId) ? 'active' : '' ?>" href="javascript:void(0);" onclick="editMetaTagLangForm(<?php echo "$metaId,$lang_Id,'$metaType'"; ?>);"><?php echo Label::getLabel('LBL_' . $langName, $adminLangId); ?></a></li>
+								<li><a class="<?php echo ($lang_Id == $langId) ? 'active' : '' ?>" href="javascript:void(0);" onclick="editMetaTagLangForm(<?php echo "$metaId,$lang_Id,'$metaType'"; ?>);"><?php echo Label::getLabel('LBL_' . $langName, $adminLangId); ?></a></li>
 						<?php }
 						}
 						?>
