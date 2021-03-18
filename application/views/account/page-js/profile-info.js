@@ -633,11 +633,11 @@ $(document).ready(function () {
 			responsive: true,
 			crop: function (e) {
 				var json = [
-					'{"x":' + e.x,
-					'"y":' + e.y,
-					'"height":' + e.height,
-					'"width":' + e.width,
-					'"rotate":' + e.rotate + '}'
+					'{"x":' + e.detail.x,
+					'"y":' + e.detail.y,
+					'"height":' + e.detail.height,
+					'"width":' + e.detail.width,
+					'"rotate":' + e.detail.rotate + '}'
 				].join();
 				$("#img_data").val(json);
 			},

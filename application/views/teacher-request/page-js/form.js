@@ -138,4 +138,34 @@ $("document").ready(function(){
 		// },{contentType: false,processData: false});
 	}
 
+	var $image;
+	cropImage = function (obj) {
+		$image = obj;
+		$image.cropper({
+			aspectRatio: 1,
+			autoCropArea: 0.4545,
+			// strict: true,
+			guides: false,
+			highlight: false,
+			dragCrop: false,
+			cropBoxMovable: false,
+			cropBoxResizable: false,
+			rotatable: true,
+			responsive: true,
+			crop: function (e) {
+				var json = [
+					'{"x":' + e.detail.x,
+					'"y":' + e.detail.y,
+					'"height":' + e.detail.height,
+					'"width":' + e.detail.width,
+					'"rotate":' + e.detail.rotate + '}'
+				].join();
+				$("#img_data").val(json);
+			},
+			built: function () {
+				$(this).cropper("zoom", 0.5);
+			},
+		})
+	};
+
 })(jQuery);
