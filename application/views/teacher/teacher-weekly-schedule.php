@@ -138,6 +138,8 @@ $weekDayName =  CommonHelper::dayNames();
         $('#loaderCalendar').hide();
     }
    	$('#w_calendar').fullCalendar({
+        slotDuration: '00:15:00',
+        slotLabelFormat: 'HH:mm',
    		header: {
    			left: 'time',
    			center: '',

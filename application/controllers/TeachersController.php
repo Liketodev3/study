@@ -692,17 +692,14 @@ class TeachersController extends MyAppController
 		/* ] */
 		/* [ */
 		$preferenceFilter = FatApp::getPostedData('preferenceFilter', FatUtility::VAR_STRING, NULL);
+		
 		if (!empty($preferenceFilter)) {
 			if (is_numeric($preferenceFilter)) {
-				$srch->addDirectCondition('utpref_preference_id = '. $preferenceFilter);
+				$srch->addCondition('utpref_preference_id', '=', $preferenceFilter);
 			} else {
 				$preferenceFilterArr = explode(",", $preferenceFilter);
-				if (!empty($preferenceFilterArr)) {
-					$preferenceFilterArr = FatUtility::int($preferenceFilterArr);
-					foreach ($preferenceFilterArr as $preferenceFilter) {
-						$srch->addDirectCondition('utpref_preference_id = '. $preferenceFilter);
-					}
-				}
+				$srch->addCondition('utpref_preference_id', 'IN', $preferenceFilterArr);
+				$srch->addHaving('mysql_func_COUNT(DISTINCT utpref_preference_id)', '=', count($preferenceFilterArr), 'AND', true);
 			}
 		}
 		/* ] */

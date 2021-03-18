@@ -41,6 +41,7 @@ $(document).ready(function() {
         $('.tooltipevent').remove();
     });
     $('#d_calendar').fullCalendar({
+        slotLabelFormat: 'HH:mm',
         header: {
             left: 'title',
             center: '',

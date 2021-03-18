@@ -1,13 +1,16 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number:
-Release Date:
+Release Number: TV-2.11.0.20210317
+Release Date: 2021-03-17
 
-Bugs
+Updates:
+    Task-#81802-Lesson reschedule and cancellation report
+
+Bugs:
     Bug-#050724 - Admin >> need to remove.
-    Bug-#050538  - #050538 - In Group class >>Why user can not set his group class price more than highest lesson package rate in website.
+    Bug-#050538 - #050538 - In Group class >>Why user can not set his group class price more than highest lesson package rate in website.
     Bug-#050556 - If user did not join a lesson even session start time is crossed. but time left view is showing, which is wrong.
-    Bug-#050350: Need to add validation alert , bulk price should always be less than single lesson rate, other wise teacher will not display if bulk price of any lesson is greater than existing maximum single lesson rate of website teacher list.
+    Bug-#050350 - Need to add validation alert , bulk price should always be less than single lesson rate, other wise teacher will not display if bulk price of any lesson is greater than existing maximum single lesson rate of website teacher list.
     Bug-#050730 - Front end >> teacher sign up >> resume >> upload invalid resume format >> loader keep on revolving >> after giving error message.
     Bug-#050754 - Front end >> teacher >> teacher setting >> when don't change any language >> clik on save button then also price become clear >> and teacher not able to know. 
     Bug-#050820 - Teacher >> settings >> Skills >> same language is coming multiple time.
@@ -22,21 +25,73 @@ Bugs
     Bug-#050853 - User >> if teacher has mutiple langugae >> at user side select another language >> below radion button donot remain selected and able to do payment of Zero order. 
     Bug-#051034 - Find a Teacher and Teacher page > Add some space
     Bug-#051007 - Confirm end lesson >> popup come mutiple times.
-    Bug-#050890 :- Once User registered, then No loader is showing during waiting or delay time.
-    Bug-#050882 :- Fatal error >> when teacher book a teacher the fatal error appear
-    Bug-#050860 :- When class time come and teacher and learner open lesson to connect >> on join lesson button need to add loader .
-    Bug-#050540 : - When leaner schedule a group class and admin delete or cancel a group class then variation or changes are not reflect properly on front end.Sta
-    Bug-#050774 :-  2CHECKOUT PAGE >> need to add card checkout validations
-    Bug-#050764 : - Student >> buy lesson >> switching slot duration >> lesson package become non selectable >> and student able to do payment of 0 charges>> mean he able to buy the same in free (Branch name :-  task_80518_multiple_slot_bookings)
-    Bug-#050667 : - Due to top header view/bar view i can not see some features and data.
-    Bug-#050548 : - When user upload a profile pic via iphone camera by scroll Zoom process then it is upload image but it take time.
-    Bug-#050550 :- When user upload a picture from mobile(iphone) via zoom process then its upload success fully in mobile > but its not displaying at profile view and desktop end also.
+    Bug-#050890 - Once User registered, then No loader is showing during waiting or delay time.
+    Bug-#050882 - Fatal error >> when teacher book a teacher the fatal error appear
+    Bug-#050860 - When class time come and teacher and learner open lesson to connect >> on join lesson button need to add loader .
+    Bug-#050540 - When leaner schedule a group class and admin delete or cancel a group class then variation or changes are not reflect properly on front end.Sta
+    Bug-#050774 -  2CHECKOUT PAGE >> need to add card checkout validations
+    Bug-#050764 - Student >> buy lesson >> switching slot duration >> lesson package become non selectable >> and student able to do payment of 0 charges>> mean he able to buy the same in free (Branch name :-  task_80518_multiple_slot_bookings)
+    Bug-#050667 - Due to top header view/bar view i can not see some features and data.
+    Bug-#050548 - When user upload a profile pic via iphone camera by scroll Zoom process then it is upload image but it take time.
+    Bug-#050550 - When user upload a picture from mobile(iphone) via zoom process then its upload success fully in mobile > but its not displaying at profile view and desktop end also.
     Bug-#051188 - When any learner click on teacher whose username is not fill by teacher. then facing a 404 error.
     Bug-#050205 - UI bug- add red colour in teacher setting tab
     Bug-#051184 - In teacher Profile screen>> when user set his profile, now delete the weekly availability, now press save>> then facing a json error.
     Bug-#050836 - Learner side >> teacher description page >> Ui Break for first time on pageload.  
-    Bug-#051255 - The same teaching language showing multiple times on the teacher's profile page. 
+    Bug-#051255 - The same teaching language showing multiple times on the teacher's profile page.
+    Bug-#050987 - User side >> group class >> today should be on top.
+    Bug-#050953 - Apple touch Icons are not working (404), after updated from admin panel.
+    Bug-#050948 - Student>> teacher menu >> click on any teacher
+    Bug-#050930 - When teacher add two-three languages,with different time slots then Price is not match for language
+    Bug-#050918 - Checkout page >> Language and duration not changing on selecting the Radio buttons
+    Bug-#050904 - As per discussion once lesson complete then commission report vary. but if user report an issue and resolve the issue by teacher by 50% ,100% , Un-schedule ,then commission report remain same
+    Bug-#050902 - Ui need to fix
+    Bug-#050890 - Once User registered, then No loader is showing during waiting or delay time
+    Bug-#050878 - When user try to add Availability only 45 minutes for the day then user can't.
+    Bug-#044323 - When learner/teacher update a profile picture then plugin showing for cropping the image. but plugin is not working working as standard feature
+    Bug-#044694 - "Find a teacher> subjects in chronological order in the subjects dropdown If admin side you will reorder the subjects it is not showing in the same order at frontend"
+    Bug-#044725 - When user schedule a 30 minutes lesson at 1 pm and and right now time is 12:59 pm. then time left is showing 1 minutes.
+    Bug-#045490 - In Admin side>>Sitemap>> there is suggestion regarding the xml and html.
+    Bug-#045624- There is issue in availability screen. 1.User can two slow together without difference of 30 minutes at end of day. 2.When user update the availability of next of "booking slots area" then issue is showing in Availability screen.
+    Bug-#045624- There is issue in availability screen. 1.User can two slow together without difference of 30 minutes at end of day. 2.When user update the availability of next of "booking slots area" then issue is showing in Availability screen.
+    Bug-#046184-Emails> Scheduled lesson reminder - table formatting creates an additonal row in the emails
+    Bug-#050930-When teacher add two-three languages,with different time slots then Price is not match for language.               [Build: TV-2.1.1.20210304]
+    Bug-#050902-Ui need to fix               [Build: TV-2.10.0.20210304]
+    Bug-#050878-When user try to add Availability only 45 minutes for the day then user can't.               [Build: TV-2.10.0.20210304]
+    Bug-#050851-In search module >> When any learner try to search a teacher with select his/her  Country, Accent, teacher level and then select his /her then search is not wotking.               [Build: TV-2.10.0.20210304]
+    Bug-#050731-Admin >> need to highlight the selected section >> now first one remain highlighted.               [Build: TV-2.10.0.20210304 ]
+    Bug-#050563-PWA is not working for iphone- chrome browsers.               [Build: TV-2.9.0.20210223]
+    Bug-#050216-Here I am test the speed of teachers listing page. and result is mention below:-  Result URL:-https://developers.google.com/speed/pagespeed/insights/?url=https%3A%2F%2Fbeta.teach.yo-coach.com%2Fteachers&tab=desktop   Please check attached screen shot  wit               [Build: V2.1]
+    Bug-#049564-When user do default item per page is 0 then few error is showing and apply to teach button is not working in about us screen.               [Build: TV-2.7.12.20210206]
+    Bug-#048531-Misspelled class name (Labels instead of Label)               [Build: RV-2.1]
+    Bug-#048026-After make  slot in availability and  weekly availability then its not working properly.               [Build: TV-2.7.13.20210107]
+    Bug-#047747-Import > The addition of new labels shouldn't be allowed
+    Bug-#047721-When any learner scheduling a lesson for particular week(next) which Availability was not save by related teacher then learner can not book a lesson.               [Build: TV-2.7.13.20210107]
+    Bug-#050829-Payment through Autrourize.net on wrong data show invalid data               [Build: TV-2.10.0.20210304 ]
+    Bug-#050813-Teacher application form >> able to add png also in resume but below text its not given               [Build: TV-2.10.0.20210304 ]
+    Bug-#050774-2CHECKOUT PAGE >> need to add card checkout validations               [Build: TV-2.10.0.20210304 ]
+    Bug-#050773-2 checkout >> on entering invalid data >> loader keep on revolving                [Build: TV-2.10.0.20210304 ]
+    Bug-#050764-Student >> buy lesson >> switching slot duration >> lesson package become non selectable >> and student able to do payment of 0 charges>> mean he able to buy the same in free               [Build: TV-2.10.0.20210304 ]
+    Bug-#050667-Due to top header view/bar view i can not see some features and data.               [Build: TV-2.2.2.20210105 ]
+    Bug-#050562-There are some major issue in  meta tags management.mata tag feature is not working properly.               [Build: TV-2.9.0.20210223]
+    Bug-#050557-In meta tag management>> when user search any  keyword then undefined error is displaying.               [Build: TV-2.9.0.20210223]
+    Bug-#050552-When user did not upload a profile pic or picture taking time to upload, on this time>Preview/default image is showing incorrect.               [Build: TV-2.9.0.20210223]
+    Bug-#050550-When user upload a picture from mobile(iphone)  via zoom process then its upload success fully in mobile > but its not displaying at profile view and desktop end also.               [Build:  TV-2.9.0.20210223]
+    Bug-#050548-When user upload a profile pic via iphone camera by scroll Zoom process then it is upload image but it take time.               [Build:  TV-2.9.0.20210223]
+    Bug-#050540-When leaner schedule a group class and  admin delete or cancel a group class then variation or changes are not reflect properly on front end.Sta               [Build: TV-2.9.0.20210223]
+    Bug-#050298-Make group class multilingual
+    Bug-#050205-UI bug- add red colour in teacher setting tab
+    Bug-#049973-Email content not decoded in outlook ,  yopmail etc               [Build: TV-2.8.3.20210212]
+    Bug-#044692-When teacher and learner scheduled a lesson and complete it>> but in admin section status is showing completed>> but in Status dropdown text field its showing NEED TO BE SCHEDULE, and UI is incorrect.               [Build: TV-2.3.1.20201028]
+    Bug-#043910-In teacher end Dashboard>>schedule lesson  and total lesson list are not match with actual.               [Build: TV-2.1.1.20200925]
+    Bug-#043797-In sign up, login,forgot password and other forms>> language compatibility is not support.               [Build: TV-2.1.1.20200925]
+    Bug-#050836-Learner side >> teacher description page >> Ui Break for first time on pageload.               [Build: TV-2.10.0.20210304]
+    Bug-#047815-IN login/sign up screen>> Social media button text is touches with icon in Arabic language.               [Build: TV-2.7.13.20210107]
+    Bug-#046817-In home page>> home page slide images>> when user change the language English to Arabic then  Overlay issue is showing.               [Build: 2.1]
+
+
 ==============================================================================================================================
+
 Release Number: TV-2.10.0.20210304
 Release Date: 2021-03-04
 

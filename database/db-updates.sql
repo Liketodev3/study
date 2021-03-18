@@ -307,3 +307,4 @@ INSERT INTO `tbl_meta_tags` (`meta_id`, `meta_controller`, `meta_action`, `meta_
 
 INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_title`, `meta_keywords`, `meta_description`, `meta_other_meta_tags`) VALUES ('1', '1', 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace | Yo!Coach', '', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki, Preply, and Cambly. ', '');
 
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.0.20210317' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION'; 
