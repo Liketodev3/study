@@ -17,7 +17,7 @@ class MetaTagSearch extends SearchBase
     }
     public function joinTeachers(int $metaType = MetaTag::META_GROUP_DEFAULT)
     {
-        $this->joinTable(User::DB_TBL, 'RIGHT OUTER JOIN', 'mt.meta_record_id = u.user_url_name and u.user_is_teacher=1 AND u.user_deleted = 0 AND mt.meta_type=' . $metaType, 'u');
+        $this->joinTable(User::DB_TBL, 'RIGHT OUTER JOIN', 'mt.meta_record_id = u.user_url_name AND u.user_is_teacher=1 and u.user_deleted = 0 and mt.meta_type=' . $metaType, 'u');
         $this->joinTable(User::DB_TBL_CRED, 'LEFT OUTER JOIN', 'u.user_id = uc.credential_user_id and uc.credential_active = ' . applicationConstants::YES . ' and uc.credential_verified=' . applicationConstants::YES, 'uc');
     }
 
@@ -59,16 +59,20 @@ class MetaTagSearch extends SearchBase
         switch ($metaType) {
             case MetaTag::META_GROUP_CMS_PAGE:
                 $this->joinCmsPage($criteria['metaType']['val'], $langId);
+                $this->addCondition('cpage_deleted', '=', 0);
                 if (isset($condition) && $condition) {
                     $condition->attachCondition('cp.cpage_identifier', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
                 }
                 break;
             case MetaTag::META_GROUP_TEACHER:
                 $this->joinTeachers($metaType);
+                $this->addCondition('u.user_is_teacher', '=', 1, 'AND');
+                $this->addCondition('u.user_deleted', '=', 0, 'AND');
+                $this->addCondition('u.user_url_name', 'is not', 'mysql_func_null', 'and', true);
                 if (isset($condition) && $condition) {
                     $condition->attachCondition('u.user_first_name', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
                     $condition->attachCondition('u.user_last_name', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
-                    $this->addDirectCondition('concat(u.user_first_name," ",u.user_last_name) like "%' . $criteria['keyword']['val'] . '%"', 'OR');
+                    $this->addDirectCondition('concat(u.user_first_name," ",u.user_last_name) like "%' . $criteria['keyword']['val'] . '%"', 'AND');
                 }
                 break;
             case MetaTag::META_GROUP_GRP_CLASS:
@@ -79,6 +83,7 @@ class MetaTagSearch extends SearchBase
                 break;
             case MetaTag::META_GROUP_BLOG_POST:
                 $this->joinBlogPosts($metaType, $langId);
+                $this->addCondition('post_deleted', '=', 0);
                 if (isset($condition) && $condition) {
                     $condition->attachCondition('bp.post_identifier', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
                     $condition->attachCondition('bp.post_identifier', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
@@ -86,6 +91,7 @@ class MetaTagSearch extends SearchBase
                 break;
             case MetaTag::META_GROUP_BLOG_CATEGORY:
                 $this->joinBlogCategories($metaType, $langId);
+                $this->addCondition('bpcategory_deleted', '=', 0);
                 if (isset($condition) && $condition) {
                     $condition->attachCondition('bpc.bpcategory_identifier', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
                     $condition->attachCondition('bpcl.bpcategory_name', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');

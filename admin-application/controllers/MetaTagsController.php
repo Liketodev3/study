@@ -55,6 +55,7 @@ class MetaTagsController extends AdminBaseController
         $metaSrch->addMultipleFields($this->getDbColumns($metaType));
         $metaSrch->setPageNumber($page);
         $metaSrch->setPageSize($pagesize);
+
         $records = FatApp::getDb()->fetchAll($metaSrch->getResultSet());
 
         $this->set("meta_record_id", $this->getMetaRecordcolumn($metaType));
@@ -149,6 +150,7 @@ class MetaTagsController extends AdminBaseController
         if ($langData) {
             $langFrm->fill($langData);
         }
+
         $this->set('languages', Language::getAllNames());
         $this->set('metaId', $metaId);
         $this->set('metaType', $metaType);
