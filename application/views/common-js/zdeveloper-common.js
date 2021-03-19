@@ -334,16 +334,19 @@ $(document).ready(function () {
 		};
 
 	setUpSignUp = function (frm) {
-		$.loader.show()
 		if (!$(frm).validate()) { return; }
-		fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'setUpSignUp'), fcom.frmData(frm), function (res) {
-			if (res.redirectUrl) {
+		$.loader.show()
+		fcom.ajax(fcom.makeUrl('GuestUser', 'setUpSignUp'), fcom.frmData(frm), function (res) {
+
+			if (res.status == 1) {
 				window.location.href = res.redirectUrl;
 				return;
+			} else {
+				$.loader.hide();
+				$.mbsmessage(res.msg, true, 'alert alert--danger');
 			}
-			$.facebox(res.msg, '');
-			$.loader.hide();
-		});
+
+		}, { fOutMode: 'json' });
 	};
 
 	logInFormPopUp = function () {
@@ -357,8 +360,8 @@ $(document).ready(function () {
 	};
 
 	setUpLogin = function (frm) {
-		$.loader.show();
 		if (!$(frm).validate()) { return; }
+		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'setUpLogin'), fcom.frmData(frm), function (res) {
 			if (res.redirectUrl) {
 				window.location.href = res.redirectUrl;
