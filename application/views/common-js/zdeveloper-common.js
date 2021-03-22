@@ -362,13 +362,17 @@ $(document).ready(function () {
 	setUpLogin = function (frm) {
 		if (!$(frm).validate()) { return; }
 		$.loader.show();
-		fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'setUpLogin'), fcom.frmData(frm), function (res) {
-			if (res.redirectUrl) {
+		fcom.ajax(fcom.makeUrl('GuestUser', 'setUpLogin'), fcom.frmData(frm), function (res) {
+			if (res.status == 1 && res.redirectUrl) {
 				window.location.href = res.redirectUrl;
 				return;
+			} else {
+				$.loader.hide();
+				$.mbsmessage(res.msg, true, 'alert alert--danger');
 			}
-		});
-		$.loader.hide();
+
+		}, { fOutMode: 'json' });
+
 	};
 
 	resendEmailVerificationLink = function (username) {
