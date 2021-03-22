@@ -31,11 +31,11 @@ class MetaTagsWriter
 		if (!empty($arrParameters)) {
 			switch ($controllerName) {
 				default:
-					if (isset($arrParameters[0]) && FatUtility::int($arrParameters[0]) > 0) {
-						$cond = $srch->addCondition('meta_record_id', '=', FatUtility::int($arrParameters[0]));
+					if (isset($arrParameters[0]) && $arrParameters[0] != '') {
+						$cond = $srch->addCondition('meta_record_id', '=', $arrParameters[0]);
 					}
-					if (isset($arrParameters[1]) && FatUtility::int($arrParameters[1]) > 0) {
-						$cond = $srch->addCondition('meta_subrecord_id', '=', FatUtility::int($arrParameters[1]));
+					if (isset($arrParameters[1]) && $arrParameters[1] != '') {
+						$cond = $srch->addCondition('meta_subrecord_id', '=', $arrParameters[1]);
 					}
 					break;
 			}
