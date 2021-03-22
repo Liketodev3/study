@@ -158,7 +158,7 @@ if(array_key_exists($epageData['epage_id'],$contentBlockArrWithBg)) {
 			if ( $epage_id > 0 ) {
 				foreach( $languages as $langId => $langName ){ ?>
 					<li><a class="<?php echo ($epage_lang_id == $langId)?'active':''?>" href="javascript:void(0);" 
-					onclick="addBlockLangForm(<?php echo $epage_id ?>, <?php echo $langId;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+					onclick="addBlockLangForm(<?php echo $epage_id ?>, <?php echo $langId;?>);"><?php echo $langName;?></a></li>
 				<?php }
 				}
 			?>

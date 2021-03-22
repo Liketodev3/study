@@ -50,7 +50,7 @@ $fld1->htmlAfterField = $htmlAfterField;
 			<?php 
 			if ($banner_id > 0) {
 				foreach($languages as $langId=>$langName){?>
-					<li><a href="javascript:void(0);" onclick="bannerLangForm(<?php echo $blocation_id;?>,<?php echo $banner_id ?>, <?php echo $langId;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+					<li><a href="javascript:void(0);" onclick="bannerLangForm(<?php echo $blocation_id;?>,<?php echo $banner_id ?>, <?php echo $langId;?>);"><?php echo $langName;?></a></li>
 				<?php }
 				}
 			?>

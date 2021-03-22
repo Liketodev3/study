@@ -19,7 +19,7 @@ $slideFrm->developerTags['fld_default_col'] = 12;
 						foreach( $languages as $langId=>$langName ){ ?>
 						<li class="<?php echo $inactive; ?>"><a href="javascript:void(0);" 
 							<?php if( $slide_id > 0 ){ ?> onclick="slideLangForm(<?php echo $slide_id ?>, <?php echo $langId;?>);" <?php }?>>
-							<?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+							<?php echo $langName;?></a></li>
 							<?php } ?>
 							<li class="<?php echo $inactive;?>"><a href="javascript:void(0)" <?php if( $slide_id > 0 ){ ?> onclick="slideMediaForm(<?php echo $slide_id ?>);" <?php }?>><?php echo Label::getLabel('LBL_Media',$adminLangId); ?></a></li>
 						</ul>

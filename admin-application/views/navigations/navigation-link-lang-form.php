@@ -20,7 +20,7 @@ $langFrm->developerTags['fld_default_col'] = 12;
 			<?php 
 			if ($nlink_id > 0) {
 				foreach($languages as $langId => $langName){?>
-					<li><a class="<?php echo ($nav_lang_id == $langId)?'active':''?>" href="javascript:void(0);" onclick="navigationLinkLangForm(<?php echo $nav_id ?>, <?php echo $nlink_id; ?>, <?php echo $langId;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+					<li><a class="<?php echo ($nav_lang_id == $langId)?'active':''?>" href="javascript:void(0);" onclick="navigationLinkLangForm(<?php echo $nav_id ?>, <?php echo $nlink_id; ?>, <?php echo $langId;?>);"><?php echo $langName;?></a></li>
 				<?php }
 				}
 			?>

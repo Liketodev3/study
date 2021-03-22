@@ -24,7 +24,7 @@ $frm->developerTags['fld_default_col'] = 12;
 			<?php
 			$inactive = ($banner_id == 0)?'fat-inactive':'';
 			foreach($languages as $langId=>$langName){?>
-				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if( $banner_id > 0 ){ ?> onclick="bannerLangForm(<?php echo $blocation_id ?>,<?php echo $banner_id ?>, <?php echo $langId;?>);" <?php } ?>><?php echo Label::getLabel('LBL_'.$langName,$adminLangId); ?></a></li>
+				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if( $banner_id > 0 ){ ?> onclick="bannerLangForm(<?php echo $blocation_id ?>,<?php echo $banner_id ?>, <?php echo $langId;?>);" <?php } ?>><?php echo $langName; ?></a></li>
 			<?php } ?>
 			<li class="<?php echo $inactive;?>"><a href="javascript:void(0)" <?php if($banner_id>0){?> onclick="mediaForm(<?php echo $blocation_id ?>,<?php echo $banner_id ?>);" <?php }?>><?php echo Label::getLabel('LBL_Media',$adminLangId); ?></a></li>
 		</ul>

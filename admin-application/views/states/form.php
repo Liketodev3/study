@@ -21,7 +21,7 @@ $frm->developerTags['fld_default_col'] = 12;
 						<?php 
 						$inactive=($state_id==0)?'fat-inactive':'';	
 						foreach($languages as $langId=>$langName){?>
-						<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($state_id>0){?> onclick="editStateLangForm(<?php echo $state_id ?>, <?php echo $langId;?>);" <?php }?>><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+						<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($state_id>0){?> onclick="editStateLangForm(<?php echo $state_id ?>, <?php echo $langId;?>);" <?php }?>><?php echo $langName;?></a></li>
 						<?php } ?>
 					</ul>
 					<div class="tabs_panel_wrap">

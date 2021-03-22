@@ -30,7 +30,7 @@ $fld1->htmlAfterField = $htmlAfterField;
 						<?php
 						if ($slide_id > 0) {
 							foreach($languages as $langId=>$langName){?>
-							<li><a href="javascript:void(0);" onclick="slideLangForm(<?php echo $slide_id ?>, <?php echo $langId;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+							<li><a href="javascript:void(0);" onclick="slideLangForm(<?php echo $slide_id ?>, <?php echo $langId;?>);"><?php echo $langName;?></a></li>
 							<?php }
 						}
 						?>

@@ -26,7 +26,7 @@ $frm->developerTags['fld_default_col'] = 12;
 						<li><a class="active" href="javascript:void(0);" onclick="blogPostForm(<?php echo $post_id ?>);"><?php echo Label::getLabel('LBL_General',$adminLangId); ?></a></li>
 						<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($post_id>0){?> onclick="linksForm(<?php echo $post_id ?>);" <?php }?>><?php echo Label::getLabel('LBL_Link_Category',$adminLangId); ?></a></li>
 						<?php foreach($languages as $langId=>$langName){ ?>
-						<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($post_id>0){?> onclick="langForm(<?php echo $post_id ?>, <?php echo $langId;?>);" <?php }?>><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+						<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($post_id>0){?> onclick="langForm(<?php echo $post_id ?>, <?php echo $langId;?>);" <?php }?>><?php echo $langName;?></a></li>
 						<?php } ?>
 						<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($post_id>0){?> onclick="postImages(<?php echo $post_id ?>);" <?php }?>><?php echo Label::getLabel('LBL_Post_Images',$adminLangId); ?></a></li>
 					</ul>

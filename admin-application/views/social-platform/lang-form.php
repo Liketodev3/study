@@ -24,7 +24,7 @@ $langFrm->developerTags['fld_default_col'] = 12;
 			if ( $splatform_id > 0 ) {
 				foreach( $languages as $langId => $langName ){ ?>
 					<li><a class="<?php echo ($splatform_lang_id == $langId)?'active':''?>" href="javascript:void(0);" 
-					onclick="addLangForm(<?php echo $splatform_id ?>, <?php echo $langId;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+					onclick="addLangForm(<?php echo $splatform_id ?>, <?php echo $langId;?>);"><?php echo $langName;?></a></li>
 			<?php } } ?>
 			<li class=""><a href="javascript:void(0);" <?php if( $splatform_id > 0 ){?> onclick="mediaForm(<?php echo $splatform_id ?>);" <?php }?>><?php echo Label::getLabel('LBL_Media',$adminLangId); ?></a></li>
 		</ul>

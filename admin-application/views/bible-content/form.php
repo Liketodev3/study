@@ -14,7 +14,7 @@ $frm->setFormTagAttribute('onsubmit','return false;');
 			<?php
 			$inactive = ($contentId == 0)?'fat-inactive':'';
 			foreach($languages as $langId=>$langName){?>
-				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if( $contentId > 0 ){ ?> onclick="addLangForm(<?php echo $contentId ?>, <?php echo $langId;?>);" <?php } ?>><?php echo Label::getLabel('LBL_'.$langName,$adminLangId); ?></a></li>
+				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if( $contentId > 0 ){ ?> onclick="addLangForm(<?php echo $contentId ?>, <?php echo $langId;?>);" <?php } ?>><?php echo $langName; ?></a></li>
 			<?php } ?>
 		</ul>
 

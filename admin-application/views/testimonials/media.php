@@ -36,7 +36,7 @@ $fld2->htmlAfterField = $htmlAfterField;
 			<?php 
 			$inactive = ( $testimonialId == 0 ) ? 'fat-inactive' : '';	
 			foreach($languages as $langId=>$langName){?>
-				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($testimonialId>0){?> onclick="editTestimonialLangForm(<?php echo $testimonialId ?>, <?php echo $langId;?>);" <?php }?>><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($testimonialId>0){?> onclick="editTestimonialLangForm(<?php echo $testimonialId ?>, <?php echo $langId;?>);" <?php }?>><?php echo $langName;?></a></li>
 			<?php } ?>
 			<li><a class="active" href="javascript:void(0)" onclick="testimonialMediaForm(<?php echo $testimonialId ?>);"><?php echo Label::getLabel('LBL_Media',$adminLangId); ?></a></li>
 		</ul>
