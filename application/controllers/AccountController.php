@@ -314,6 +314,7 @@ class AccountController extends LoggedUserController
             CommonHelper::crop($data, CONF_UPLOADS_PATH .$res);
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'MEDIUM', true)).'?'.time());
         }
+        
         $this->set('msg', Label::getLabel('MSG_File_uploaded_successfully'));
         $this->_template->render(false, false, 'json-success.php');
     }
