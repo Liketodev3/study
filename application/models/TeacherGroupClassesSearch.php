@@ -263,13 +263,8 @@ class TeacherGroupClassesSearch extends SearchBase
     {
         $this->joinTable(UserSetting::DB_TBL, 'LEFT JOIN', 'u.user_id = us_user_id', 'us');
     }
-<<<<<<< HEAD
-    
-    public static function getTeacherClassByTime(int $teacherId, $startDateTime, $endDateTime)
-=======
 
     public static function getTeacherClassByTime($teacherId, $startDateTime, $endDateTime)
->>>>>>> bug_050298_make_group_class_multilingual
     {
         $groupClassTiming =  self::checkGroupClassTiming([$teacherId], $startDateTime, $endDateTime);
         $groupClassTiming->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
@@ -277,15 +272,13 @@ class TeacherGroupClassesSearch extends SearchBase
         return FatApp::getDb()->fetch($rs);
     }
 
-    public static function checkGroupClassTiming(array $userIds, $startDateTime, $endDateTime) : object
+    public static function checkGroupClassTiming(array $userIds, $startDateTime, $endDateTime): object
     {
         $searchBase = new self(false);
         $searchBase->addMultipleFields(array('grpcls_id'));
-        $searchBase->addCondition('grpcls_teacher_id','IN', $userIds);
-        $searchBase->addCondition('grpcls_start_datetime','<', $endDateTime);
-        $searchBase->addCondition('grpcls_end_datetime','>', $startDateTime);
+        $searchBase->addCondition('grpcls_teacher_id', 'IN', $userIds);
+        $searchBase->addCondition('grpcls_start_datetime', '<', $endDateTime);
+        $searchBase->addCondition('grpcls_end_datetime', '>', $startDateTime);
         return $searchBase;
     }
-
-
 }
