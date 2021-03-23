@@ -71,6 +71,30 @@ class ScheduledLessonSearch extends SearchBase
         return $srch;
     }
 
+    public function joinUserLessonData()
+    {
+        $scheduledLessonDetailsSrch = new ScheduledLessonDetailsSearch();
+        $scheduledLessonDetailsSrch->addGroupBy('sld.sldetail_slesson_id');
+
+        $this->joinTable(LessonStatusLog::DB_TBL, 'LEFT JOIN', 'lsl.lesstslog_slesson_id = slns.slesson_id', 'lsl');
+        $this->joinTable(User::DB_TBL, 'LEFT JOIN', 'lsl.lesstslog_updated_by_user_id = u.user_id', 'u');
+        $this->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'u.user_id = cred.credential_user_id', 'cred');
+
+        $this->addGroupBy('lesstslog_updated_by_user_id');
+
+        // if($getCanCelledScheduledLesson) {
+        //     $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" ) as cancelledLessons');
+        // }
+
+        // if($getRescheduledLesson) {
+        //     $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" ) as rescheduledLessons');
+        // }
+
+        //$this->addFld('GROUP_CONCAT(DISTINCT sldetail_learner_id) as studentIds');
+    }
+
+
+
     public function joinGroupClass($langId)
     {
         $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
