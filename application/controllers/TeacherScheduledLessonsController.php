@@ -353,6 +353,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
     public function calendarJsonData()
     {
+
+        $curDateTime = date('Y-m-d H:i:s');
         $cssClassNamesArr = ScheduledLesson::getStatusArr();
         $srch = new ScheduledLessonSearch();
         $srch->joinGroupClass();
@@ -369,11 +371,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
                 'slns.slesson_status',
                 'ul.user_first_name',
                 'ul.user_id',
-                'grpcls.grpcls_title'
+                'grpcls.grpcls_title',
+                'concat(slns.slesson_date," ",slns.slesson_start_time) AS slesson_date_time'
             )
         );
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addCondition('slns.slesson_status', '!=', ScheduledLesson::STATUS_CANCELLED);
+        $srch->addHaving('slesson_date_time', '>', $curDateTime);
         $srch->joinLearner();
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);

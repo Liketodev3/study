@@ -6,13 +6,13 @@ class Navigation
         $db = FatApp::getDb();
         $siteLangId = CommonHelper::getLangId();
 
-        $headerTopNavigationCache =  FatCache::get('headerTopNavigation_'.$siteLangId, CONF_HOME_PAGE_CACHE_TIME, '.txt');
+        $headerTopNavigationCache =  FatCache::get('headerTopNavigation_' . $siteLangId, CONF_HOME_PAGE_CACHE_TIME, '.txt');
 
         if ($headerTopNavigationCache) {
             $headerTopNavigation  = unserialize($headerTopNavigationCache);
         } else {
             $headerTopNavigation = self::getNavigation(Navigations::NAVTYPE_TOP_HEADER);
-            FatCache::set('headerTopNavigationCache_'.$siteLangId, serialize($headerTopNavigation), '.txt');
+            FatCache::set('headerTopNavigationCache_' . $siteLangId, serialize($headerTopNavigation), '.txt');
         }
         $template->set('top_header_navigation', $headerTopNavigation);
     }
@@ -42,8 +42,10 @@ class Navigation
         $srch->addCondition('nav_type', '=', $type);
         $srch->addCondition('nlink_deleted', '=', applicationConstants::NO);
         $srch->addCondition('nav_active', '=', applicationConstants::ACTIVE);
-        $srch->addMultipleFields(array('nav_id', 'IFNULL( nav_name, nav_identifier ) as nav_name',
-        'IFNULL( nlink_caption, nlink_identifier ) as nlink_caption', 'nlink_type', 'nlink_cpage_id' , 'IFNULL( cpage_deleted, ' . applicationConstants::NO . ' ) as filtered_cpage_deleted', 'nlink_target', 'nlink_url', 'nlink_login_protected' ));
+        $srch->addMultipleFields(array(
+            'nav_id', 'IFNULL( nav_name, nav_identifier ) as nav_name',
+            'IFNULL( nlink_caption, nlink_identifier ) as nlink_caption', 'nlink_type', 'nlink_cpage_id', 'IFNULL( cpage_deleted, ' . applicationConstants::NO . ' ) as filtered_cpage_deleted', 'nlink_target', 'nlink_url', 'nlink_login_protected'
+        ));
 
         $isUserLogged = UserAuthentication::isUserLogged();
         if ($isUserLogged) {
@@ -184,7 +186,7 @@ class Navigation
             array(
                 'slanguage_id',
                 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name'
-                )
+            )
         );
         $srch->addCondition('slanguage_active', '=', applicationConstants::ACTIVE);
         $rs    = $srch->getResultSet();
@@ -210,7 +212,7 @@ class Navigation
             array(
                 'tlanguage_id',
                 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'
-                )
+            )
         );
         $srch->addCondition('tlanguage_active', '=', applicationConstants::ACTIVE);
         $rs    = $srch->getResultSet();
