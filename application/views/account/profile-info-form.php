@@ -11,6 +11,10 @@ if ($profileFrm->getField('user_url_name')) {
 	$user_url_name->htmlAfterField = '<p class="user_url_string">' . CommonHelper::generateFullUrl('teachers', 'profile') . '/<span class="user_url_name_span">' . $user_url_name->value . '</span></p>';
 }
 
+if ($profileFrm->getField('us_booking_before')) {
+	$profileFrm->getField('us_booking_before')->htmlAfterField = "<br><small>".Label::getLabel("htmlAfterField_booking_before_text").".</small>";
+}
+
 $profileFrm->developerTags['colClassPrefix'] = 'col-md-';
 $profileFrm->developerTags['fld_default_col'] = 6;
 
