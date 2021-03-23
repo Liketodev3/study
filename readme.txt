@@ -1,5 +1,10 @@
 This file shares the details of the Yo!Coach version and change log.
+Release Number:
+Release Date:
 
+Bugs:
+    #051013 - A suggestion to differentiate the single lesson class and group class in terms of booking.
+===================================================================================================================
 Release Number: TV-2.11.0.20210317
 Release Date: 2021-03-17
 
