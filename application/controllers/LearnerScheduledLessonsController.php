@@ -384,6 +384,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
     public function calendarJsonData()
     {
+        $curDateTime = date('Y-m-d H:i:s');
         $cssClassNamesArr = ScheduledLesson::getStatusArr();
         $srch = new ScheduledLessonSearch();
         $srch->joinGroupClass($this->siteLangId);
@@ -400,10 +401,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 'ut.user_id',
                 'ut.user_url_name',
                 'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
+                'concat(slns.slesson_date," ",slns.slesson_start_time) AS slesson_date_time',
             )
         );
         $srch->addCondition('sld.sldetail_learner_id', ' = ', UserAuthentication::getLoggedUserId());
         $srch->addCondition('slns.slesson_status', '!= ', ScheduledLesson::STATUS_CANCELLED);
+        $srch->addHaving('slesson_date_time', '>', $curDateTime);
         $srch->joinTeacher();
         $srch->addGroupBy('slesson_id');
         $rs = $srch->getResultSet();
