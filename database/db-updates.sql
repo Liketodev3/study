@@ -235,3 +235,14 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.3.20210212' WHERE `tbl_conf
 
 
 ALTER TABLE `tbl_issue_report_options` ADD `tissueopt_user_type` TINYINT NOT NULL;
+
+CREATE TABLE `tbl_group_classes_lang` (
+  `grpclslang_grpcls_id` int(11) NOT NULL,
+  `grpclslang_lang_id` int(11) NOT NULL,
+  `grpclslang_grpcls_title` varchar(300) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `grpclslang_grpcls_description` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+ALTER TABLE `tbl_group_classes_lang`
+  ADD PRIMARY KEY (`grpclslang_grpcls_id`,`grpclslang_lang_id`);
