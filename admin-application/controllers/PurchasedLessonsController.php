@@ -64,7 +64,7 @@ class PurchasedLessonsController extends AdminBaseController
 
         $order =  new Order($orderId);
         $orderPayments = $order->getOrderPayments(array("order_id"=>$orderId));
-        
+       // print_r($orderPayments['opayment_gateway_response']);die;
         $form = $this->getPaymentForm($orderId);
            
         $this->set('yesNoArr', applicationConstants::getYesNoArr($this->adminLangId));
