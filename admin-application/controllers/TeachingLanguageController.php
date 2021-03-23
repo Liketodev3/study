@@ -6,7 +6,6 @@ class TeachingLanguageController extends AdminBaseController
         parent::__construct($action);
         $this->objPrivilege->canViewTeachingLanguage();
     }
-
     public function index()
     {
         $adminId = AdminAuthentication::getLoggedAdminId();
@@ -16,7 +15,6 @@ class TeachingLanguageController extends AdminBaseController
         $this->set("canEdit", $canEdit);
         $this->_template->render();
     }
-
     public function search()
     {
         $data = FatApp::getPostedData();
@@ -49,7 +47,6 @@ class TeachingLanguageController extends AdminBaseController
         $this->set('recordCount', $srch->recordCount());
         $this->_template->render(false, false);
     }
-
     public function form($tLangId)
     {
         $tLangId = FatUtility::int($tLangId);
@@ -72,7 +69,6 @@ class TeachingLanguageController extends AdminBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-
     public function setup()
     {
         $this->objPrivilege->canEditTeachingLanguage();
@@ -84,9 +80,7 @@ class TeachingLanguageController extends AdminBaseController
         }
         $tLangId = $post['tlanguage_id'];
         unset($post['tlanguage_id']);
-        /*  if ($tLangId == 0) {
-             $post['lpackage_added_on'] = date('Y-m-d H:i:s');
-         } */
+
         $record = new TeachingLanguage($tLangId);
         $record->assignValues($post);
         if (!$record->save()) {
@@ -150,7 +144,7 @@ class TeachingLanguageController extends AdminBaseController
             'tlanguagelang_lang_id' => $lang_id,
             'tlanguagelang_tlanguage_id' => $tLangId,
             'tlanguage_name' => $post['tlanguage_name'],
-           // 'lpackage_text' => $post['lpackage_text']
+            // 'lpackage_text' => $post['lpackage_text']
         );
         $obj = new TeachingLanguage($tLangId);
         if (!$obj->updateLangData($lang_id, $data)) {
@@ -220,7 +214,6 @@ class TeachingLanguageController extends AdminBaseController
         $frm->addHiddenField('', 'tlanguage_id', $sLangId);
         $frm->addRequiredField(Label::getLabel('LBL_Language_Code_Identifier', $this->adminLangId), 'tlanguage_code');
         $frm->addRequiredField(Label::getLabel('LBL_Language_Identifier', $this->adminLangId), 'tlanguage_identifier');
-        //$frm->addRequiredField(Label::getLabel('LBL_Language_Flag', $this->adminLangId), 'slanguage_flag');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'tlanguage_active', $activeInactiveArr, '', array(), '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
@@ -328,7 +321,6 @@ class TeachingLanguageController extends AdminBaseController
         $this->set('tlanguage_id', $tlanguage_id);
         $this->_template->render(false, false);
     }
-
     public function upload($tlanguage_id)
     {
         $this->objPrivilege->canEditTeachingLanguage();
@@ -361,7 +353,6 @@ class TeachingLanguageController extends AdminBaseController
         $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_uploaded_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
-
     public function flagUpload($tlanguage_id)
     {
         $this->objPrivilege->canEditTeachingLanguage();
@@ -413,7 +404,6 @@ class TeachingLanguageController extends AdminBaseController
         $this->set('msg', Label::getLabel('MSG_Deleted_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
-
     public function removeFlagImage($tlanguage_id)
     {
         $tlanguage_id = FatUtility::int($tlanguage_id);
@@ -432,7 +422,6 @@ class TeachingLanguageController extends AdminBaseController
         $this->set('msg', Label::getLabel('MSG_Deleted_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
-
     public function Thumb($bannerId, $imgType, $langId = 0, $screen = 0)
     {
         $this->showBanner($bannerId, $imgType, $langId, 100, 100, $screen);
@@ -445,7 +434,6 @@ class TeachingLanguageController extends AdminBaseController
         $image_name = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
         AttachedFile::displayImage($image_name, $w, $h, '', '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
     }
-
     public function updateOrder()
     {
         $post = FatApp::getPostedData();
@@ -459,7 +447,6 @@ class TeachingLanguageController extends AdminBaseController
             $this->_template->render(false, false, 'json-success.php');
         }
     }
-
     private function getSearchForm()
     {
         $frm = new Form('frmTeachingLanguageSearch');

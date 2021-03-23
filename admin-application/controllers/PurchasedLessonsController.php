@@ -30,18 +30,18 @@ class PurchasedLessonsController extends AdminBaseController
 
         $orderSearch = new OrderSearch();
         $orderSearch->addMultipleFields(array(
-                                    'order_id','order_user_id','order_date_added','order_is_paid','order_net_amount',
-                                    'order_wallet_amount_charge','order_discount_total','order_date_added','op_invoice_number',
-                                    'slesson_date','slesson_start_time','slesson_end_date', 'slesson_end_time','op_teacher_id',
-                                    'op_grpcls_id','op_qty', 'op_unit_price','op_commission_charged', 'op_commission_percentage',
-                                    'op_refund_qty','op_total_refund_amount','op_lpackage_is_free_trial','op_lesson_duration',
-                                    'CONCAT(u.user_first_name, " ", u.user_last_name) as userFullName','CONCAT(t.user_first_name, " ", t.user_last_name) as teacherFullName',
-                                    't.user_timezone as teacherTimezone','u.user_timezone as userTimezone','tcred.credential_email as teacherEmail',
-                                    'cred.credential_email as userEmail', 'grpcls_title', 'grpcls_status',
-                                    'IFNULL(tlanguage_name, tlanguage_identifier) as teachLang',
-                                    'IFNULL(uCountryLang.country_name, " ") as uCountryName',
-                                    'IFNULL(tCountryLang.country_name, " ") as tCountryName',
-                                ));
+            'order_id', 'order_user_id', 'order_date_added', 'order_is_paid', 'order_net_amount',
+            'order_wallet_amount_charge', 'order_discount_total', 'order_date_added', 'op_invoice_number',
+            'slesson_date', 'slesson_start_time', 'slesson_end_date', 'slesson_end_time', 'op_teacher_id',
+            'op_grpcls_id', 'op_qty', 'op_unit_price', 'op_commission_charged', 'op_commission_percentage',
+            'op_refund_qty', 'op_total_refund_amount', 'op_lpackage_is_free_trial', 'op_lesson_duration',
+            'CONCAT(u.user_first_name, " ", u.user_last_name) as userFullName', 'CONCAT(t.user_first_name, " ", t.user_last_name) as teacherFullName',
+            't.user_timezone as teacherTimezone', 'u.user_timezone as userTimezone', 'tcred.credential_email as teacherEmail',
+            'cred.credential_email as userEmail', 'grpcls_title', 'grpcls_status',
+            'IFNULL(tlanguage_name, tlanguage_identifier) as teachLang',
+            'IFNULL(uCountryLang.country_name, " ") as uCountryName',
+            'IFNULL(tCountryLang.country_name, " ") as tCountryName',
+        ));
         $orderSearch->joinOrderProduct($this->adminLangId);
         $orderSearch->joinUser();
         $orderSearch->joinTable(Country::DB_TBL, 'LEFT JOIN', 'uCountry.country_id = u.user_country_id', 'uCountry');
@@ -54,7 +54,7 @@ class PurchasedLessonsController extends AdminBaseController
         $orderSearch->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = op_grpcls_id', 'grpcls');
         $orderSearch->addCondition('order_id', '=', $orderId);
         $orderSearch->addCondition('order_type', '=', Order::TYPE_LESSON_BOOKING);
-      
+
         $resultSet = $orderSearch->getResultSet();
         $orderDeatils = FatApp::getDb()->fetch($resultSet);
         if (empty($orderDeatils)) {
@@ -63,20 +63,20 @@ class PurchasedLessonsController extends AdminBaseController
         }
 
         $order =  new Order($orderId);
-        $orderPayments = $order->getOrderPayments(array("order_id"=>$orderId));
-        
+        $orderPayments = $order->getOrderPayments(array("order_id" => $orderId));
+
         $form = $this->getPaymentForm($orderId);
-           
+
         $this->set('yesNoArr', applicationConstants::getYesNoArr($this->adminLangId));
-        $this->set('order',$orderDeatils);
-        $this->set('orderPayments',$orderPayments);
-        $this->set('adminLangId',$this->adminLangId);
-        $this->set('form',$form);
-        
+        $this->set('order', $orderDeatils);
+        $this->set('orderPayments', $orderPayments);
+        $this->set('adminLangId', $this->adminLangId);
+        $this->set('form', $form);
+
         $this->_template->render();
     }
 
- 
+
 
     private function getPaymentForm(string $orderId)
     {
@@ -126,9 +126,9 @@ class PurchasedLessonsController extends AdminBaseController
         $frm = new Form('purchasedLessonsSearchForm');
         $isFreeTrialOption  = array('-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)) + applicationConstants::getYesNoArr($this->adminLangId);
         $lessonStatusOption = array('-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)) + ScheduledLesson::getStatusArr();
-        $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', array('id' => 'teacher','autocomplete' => 'off'));
+        $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', array('id' => 'teacher', 'autocomplete' => 'off'));
 
-        $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', array('id' => 'learner','autocomplete' => 'off'));
+        $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', array('id' => 'learner', 'autocomplete' => 'off'));
 
         $frm->addSelectBox(Label::getLabel('LBL_Free_Trial', $this->adminLangId), 'op_lpackage_is_free_trial', $isFreeTrialOption, -1, array(), '');
 
@@ -167,29 +167,29 @@ class PurchasedLessonsController extends AdminBaseController
         $scheduledLessonSearchObj->joinOrderProducts();
         $scheduledLessonSearchObj->joinTeacherTeachLanguage();
         $scheduledLessonSearchObj->addMultipleFields(array(
-                'sldetail_id',
-                'slesson_id',
-                'slesson_grpcls_id',
-                'op_lpackage_is_free_trial',
-                'slesson_status',
-                'slesson_ended_by',
-                'slesson_date',
-                'slesson_end_date',
-                'slesson_ended_on',
-                'slesson_start_time',
-                'slesson_end_time',
-                'slesson_teacher_join_time',
-                'sldetail_learner_join_time',
-                'slesson_teacher_end_time',
-                'sldetail_learner_end_time',
-                'slesson_added_on',
-                'order_is_paid',
-                'IFNULL(iss.issrep_status,0) AS issrep_status',
-                'IFNULL(iss.issrep_id,0) AS issrep_id',
-                'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_name',
-                'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_name',
-               'IFNULL(tl_l.tlanguage_name, t_t_lang.tlanguage_identifier) as teacherTeachLanguageName',
-            ));
+            'sldetail_id',
+            'slesson_id',
+            'slesson_grpcls_id',
+            'op_lpackage_is_free_trial',
+            'slesson_status',
+            'slesson_ended_by',
+            'slesson_date',
+            'slesson_end_date',
+            'slesson_ended_on',
+            'slesson_start_time',
+            'slesson_end_time',
+            'slesson_teacher_join_time',
+            'sldetail_learner_join_time',
+            'slesson_teacher_end_time',
+            'sldetail_learner_end_time',
+            'slesson_added_on',
+            'order_is_paid',
+            'IFNULL(iss.issrep_status,0) AS issrep_status',
+            'IFNULL(iss.issrep_id,0) AS issrep_id',
+            'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_name',
+            'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_name',
+            'IFNULL(tl_l.tlanguage_name, t_t_lang.tlanguage_identifier) as teacherTeachLanguageName',
+        ));
         if (!empty($data['slesson_teacher_id'])) {
             $teacherId = FatUtility::int($data['slesson_teacher_id']);
             $scheduledLessonSearchObj->addCondition('slesson_teacher_id', '=', $teacherId);
@@ -213,19 +213,19 @@ class PurchasedLessonsController extends AdminBaseController
             $status = FatUtility::int($data['slesson_status']);
             switch ($status) {
                 case ScheduledLesson::STATUS_ISSUE_REPORTED:
-                $scheduledLessonSearchObj->addCondition('issrep_id', '>', 0);
-                break;
+                    $scheduledLessonSearchObj->addCondition('issrep_id', '>', 0);
+                    break;
                 case ScheduledLesson::STATUS_UPCOMING:
                     $scheduledLessonSearchObj->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
                     // $scheduledLessonSearchObj->addCondition('slns.slesson_date', '>=', date('Y-m-d'));
                     $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
-                break;
+                    break;
                 case ScheduledLesson::STATUS_SCHEDULED:
                     $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', $status);
-                break;
+                    break;
                 default:
                     $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', $status);
-                break;
+                    break;
             }
         }
         $scheduledLessonSearchObj->addOrder('slesson_date', 'desc');
@@ -266,21 +266,21 @@ class PurchasedLessonsController extends AdminBaseController
         $srch->joinGroupClass();
         $srch->addMultipleFields(
             array(
-            'order_id',
-            'grpcls_id',
-            'op_qty',
-            'grpcls.grpcls_title',
-            'order_user_id',
-            'op_teacher_id',
-            'op_lpackage_is_free_trial',
-            'order_is_paid',
-            'order_net_amount',
-            'CONCAT(u.user_first_name, " " , u.user_last_name) AS learner_username',
-            'CONCAT(t.user_first_name, " " , t.user_last_name) AS teacher_username',
-            'tCredentials.credential_email as teacherEmail',
-            'cred.credential_email as userEmail',
-            'COALESCE(NULLIF(sl.tlanguage_name, ""), tlang.tlanguage_identifier) AS language',
-            'order_currency_code'
+                'order_id',
+                'grpcls_id',
+                'op_qty',
+                'grpcls.grpcls_title',
+                'order_user_id',
+                'op_teacher_id',
+                'op_lpackage_is_free_trial',
+                'order_is_paid',
+                'order_net_amount',
+                'CONCAT(u.user_first_name, " " , u.user_last_name) AS learner_username',
+                'CONCAT(t.user_first_name, " " , t.user_last_name) AS teacher_username',
+                'tCredentials.credential_email as teacherEmail',
+                'cred.credential_email as userEmail',
+                'COALESCE(NULLIF(sl.tlanguage_name, ""), tlang.tlanguage_identifier) AS language',
+                'order_currency_code'
             )
         );
         if (isset($post['op_teacher_id']) and $post['op_teacher_id'] > 0) {
@@ -300,7 +300,7 @@ class PurchasedLessonsController extends AdminBaseController
             $srch->addCondition('op_lpackage_is_free_trial', '=', $is_trial);
         }
         if (!empty($post['class_type'])) {
-            if ($post['class_type']==applicationConstants::CLASS_TYPE_GROUP) {
+            if ($post['class_type'] == applicationConstants::CLASS_TYPE_GROUP) {
                 $srch->addCondition('grpcls_id', '>', 0);
             } else {
                 $srch->addDirectCondition('grpcls_id IS NULL');
@@ -313,7 +313,7 @@ class PurchasedLessonsController extends AdminBaseController
 
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-      
+
         $rs      = $srch->getResultSet();
 
         $records = FatApp::getDb()->fetchAll($rs);
@@ -347,7 +347,7 @@ class PurchasedLessonsController extends AdminBaseController
 
         /* [ */
         $srch = new ScheduledLessonSearch(false);
-        $srch->joinGroupClass();
+        $srch->joinGroupClass($this->adminLangId);
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->joinTeacher();
@@ -359,7 +359,7 @@ class PurchasedLessonsController extends AdminBaseController
 
         $srch->addMultipleFields(array(
             'slns.slesson_id',
-            'grpcls.grpcls_title',
+            'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             'grpcls.grpcls_description',
             'sld.sldetail_learner_id as learnerId',
             'ul.user_first_name as learnerFname',
@@ -418,8 +418,8 @@ class PurchasedLessonsController extends AdminBaseController
         $slesson_id = $lessonRow['slesson_id'];
 
         // echo "<pre>"; print_r($lessonRow); echo "</pre>"; exit;
-        
-        if ($lessonRow['slesson_status']==ScheduledLesson::STATUS_CANCELLED) {
+
+        if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_CANCELLED) {
             $this->error = Label::getLabel("LBL_You_can_not_change_status_of_cancelled_lesson", CommonHelper::getLangId());
             if (FatUtility::isAjaxCall()) {
                 FatUtility::dieJsonError($this->error);
@@ -523,8 +523,8 @@ class PurchasedLessonsController extends AdminBaseController
             'slesson_id',
             'slesson_grpcls_id',
             'count(sld.sldetail_order_id) as totalLessons',
-            'SUM(CASE WHEN sld.sldetail_learner_status = '.ScheduledLesson::STATUS_SCHEDULED.' THEN 1 ELSE 0 END) scheduledLessonsCount',
-            'SUM(CASE WHEN sld.sldetail_learner_status = '.ScheduledLesson::STATUS_NEED_SCHEDULING.' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
+            'SUM(CASE WHEN sld.sldetail_learner_status = ' . ScheduledLesson::STATUS_SCHEDULED . ' THEN 1 ELSE 0 END) scheduledLessonsCount',
+            'SUM(CASE WHEN sld.sldetail_learner_status = ' . ScheduledLesson::STATUS_NEED_SCHEDULING . ' THEN 1 ELSE 0 END) needToscheduledLessonsCount',
         ]);
         //$orderSearch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sld.sldetail_order_id = o.order_id', 'sl');
         $orderSearch->addCondition('o.order_id', '=', FatApp::getPostedData('order_id', FatUtility::VAR_STRING, ''));
@@ -541,15 +541,15 @@ class PurchasedLessonsController extends AdminBaseController
             }
             return false;
         }
-        
-        if ($orderInfo['order_is_paid']==Order::ORDER_IS_CANCELLED) {
+
+        if ($orderInfo['order_is_paid'] == Order::ORDER_IS_CANCELLED) {
             $this->error = Label::getLabel("LBL_You_can_not_change_status_of_cancelled_order", CommonHelper::getLangId());
             if (FatUtility::isAjaxCall()) {
                 FatUtility::dieJsonError($this->error);
             }
             return false;
         }
-        
+
         $orderInfo['order_net_amount'] =  FatUtility::float($orderInfo['order_net_amount']);
 
         if ($orderInfo['slesson_grpcls_id'] == 0 && $data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['needToscheduledLessonsCount'] != $orderInfo['totalLessons']) {
@@ -561,7 +561,7 @@ class PurchasedLessonsController extends AdminBaseController
             return false;
         }
 
-        if ($orderInfo['slesson_grpcls_id']==0 && $data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['scheduledLessonsCount'] > 0) {
+        if ($orderInfo['slesson_grpcls_id'] == 0 && $data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['scheduledLessonsCount'] > 0) {
             $this->error = Label::getLabel("LBL_You_are_not_cancelled_the_order_because_some_lesson_are_scheduled", CommonHelper::getLangId());
             if (FatUtility::isAjaxCall()) {
                 // Message::addErrorMessage($this->error);
@@ -592,7 +592,7 @@ class PurchasedLessonsController extends AdminBaseController
         /* [ */
         if ($data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['order_net_amount'] > 0) {
             $assignValues = array('slesson_status' => ScheduledLesson::STATUS_CANCELLED);
-            
+
             $scheduledLessonSrch = new ScheduledLessonSearch();
             $scheduledLessonSrch->addMultipleFields(array(
                 'sldetail_id',
@@ -605,9 +605,10 @@ class PurchasedLessonsController extends AdminBaseController
             $scheduledLessonSrch->addCondition('sldetail_learner_status', '!=', ScheduledLesson::STATUS_CANCELLED);
             $scheduledLessonSrch->addCondition('slesson_status', '!=', ScheduledLesson::STATUS_CANCELLED);
             $orderLessons = FatApp::getDb()->fetchAll($scheduledLessonSrch->getResultSet());
-            
+
             foreach ($orderLessons as $orderLesson) {
-                if ($orderLesson['slesson_grpcls_id']==0 && !$db->updateFromArray(ScheduledLesson::DB_TBL, $assignValues, array('smt' => 'slesson_id = ?', 'vals' => array($orderLesson['slesson_id'])))) {
+
+                if ($orderLesson['slesson_grpcls_id'] == 0 && !$db->updateFromArray(ScheduledLesson::DB_TBL, $assignValues, array('smt' => 'slesson_id = ?', 'vals' => array($orderLesson['slesson_id'])))) {
                     $db->rollbackTransaction();
                     $this->error = $db->getError();
                     if (FatUtility::isAjaxCall()) {
@@ -649,7 +650,7 @@ class PurchasedLessonsController extends AdminBaseController
         if (!$this->canEdit) {
             FatUtility::dieJsonError($this->unAuthorizeAccess);
         }
-       
+
         $orderId = FatApp::getPostedData('opayment_order_id', FatUtility::VAR_STRING, '');
         if ($orderId == '' || $orderId == null) {
             Message::addErrorMessage($this->str_invalid_request);
@@ -658,14 +659,14 @@ class PurchasedLessonsController extends AdminBaseController
 
         $form = $this->getPaymentForm($orderId);
         $post = $form->getFormDataFromArray(FatApp::getPostedData());
-        
+
         if (false === $post) {
             Message::addErrorMessage(current($form->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
 
         $orderSearch = new OrderSearch();
-        $orderSearch->addMultipleFields(array('order_id' ));
+        $orderSearch->addMultipleFields(array('order_id'));
         $orderSearch->joinOrderProduct();
         $orderSearch->joinUser();
         $orderSearch->joinTable(User::DB_TBL, 'INNER JOIN', 'op.op_teacher_id = t.user_id', 't');

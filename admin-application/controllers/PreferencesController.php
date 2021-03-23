@@ -42,7 +42,7 @@ class PreferencesController extends AdminBaseController
         if ($post['type'] > 0) {
             $srch->addCondition('preference_type', '=', $post['type']);
         }
-        $srch->addOrder('preference_display_order','asc');
+        $srch->addOrder('preference_display_order', 'asc');
         $srch->doNotLimitRecords();
         // $page = (empty($page) || $page <= 0) ? 1 : $page;
         // $page = FatUtility::int($page);
@@ -81,20 +81,19 @@ class PreferencesController extends AdminBaseController
     public function form($preferenceId, $type = 0)
     {
         $preferenceId = FatUtility::int($preferenceId);
-        $frm           = $this->getForm($preferenceId);
+        $frm = $this->getForm($preferenceId);
         if (0 < $preferenceId) {
             $data = Preference::getAttributesById($preferenceId, array(
                 'preference_id',
                 'preference_identifier',
-
             ));
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
             $frm->fill($data);
         }
-        $fldType=$frm->getField('type');
-        $fldType->value=$type;
+        $fldType = $frm->getField('type');
+        $fldType->value = $type;
         $this->set('languages', Language::getAllNames());
         $this->set('preference_id', $preferenceId);
         $this->set('frm', $frm);
@@ -111,10 +110,9 @@ class PreferencesController extends AdminBaseController
         }
         $preferenceId = $post['preference_id'];
         if (!empty($post['type'])) {
-            $post['preference_type']=$post['type'];
+            $post['preference_type'] = $post['type'];
         }
         unset($post['preference_id']);
-
         $record = new Preference($preferenceId);
         $record->assignValues($post);
         if (!$record->save()) {
@@ -134,7 +132,6 @@ class PreferencesController extends AdminBaseController
             $preferenceId = $record->getMainTableRecordId();
             $newTabLangId  = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
-
         $this->set('msg', $this->str_setup_successful);
         $this->set('preferenceId', $preferenceId);
         $this->set('langId', $newTabLangId);
@@ -179,7 +176,7 @@ class PreferencesController extends AdminBaseController
             'preferencelang_lang_id' => $lang_id,
             'preferencelang_preference_id' => $preferenceId,
             'preference_title' => $post['preferencelang_title'],
-            );
+        );
         $obj  = new Preference($preferenceId);
         if (!$obj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($obj->getError());

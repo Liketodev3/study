@@ -2,7 +2,6 @@
 $profileFrm->setFormTagAttribute('id', 'profileInfoFrm');
 $profileFrm->setFormTagAttribute('class', 'form');
 $profileFrm->setFormTagAttribute('onsubmit', 'setUpProfileInfo(this); return(false);');
-
 if ($profileFrm->getField('user_url_name')) {
 	$userIdFld = $profileFrm->getField('user_id');
 	$userIdFld->addFieldTagAttribute('id', 'user_id');
@@ -10,11 +9,14 @@ if ($profileFrm->getField('user_url_name')) {
 	$user_url_name->developerTags['col'] = 12;
 	$user_url_name->htmlAfterField = '<p class="user_url_string">' . CommonHelper::generateFullUrl('teachers', 'profile') . '/<span class="user_url_name_span">' . $user_url_name->value . '</span></p>';
 }
+<<<<<<< HEAD
 
 if ($profileFrm->getField('us_booking_before')) {
 	$profileFrm->getField('us_booking_before')->htmlAfterField = "<br><small>".Label::getLabel("htmlAfterField_booking_before_text").".</small>";
 }
 
+=======
+>>>>>>> bug_050298_make_group_class_multilingual
 $profileFrm->developerTags['colClassPrefix'] = 'col-md-';
 $profileFrm->developerTags['fld_default_col'] = 6;
 
@@ -28,10 +30,9 @@ $user_profile_info->developerTags['col'] = 12;
 $user_gender = $profileFrm->getField('user_gender');
 $user_gender->setOptionListTagAttribute('class', 'list-inline list-inline--onehalf');
 
-
-
 $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account', 'setUpProfileImage'));
 $jsonUserRow = FatUtility::convertToJson($userRow);
+
 ?>
 <script>
 	var userData = <?php echo $jsonUserRow ?>;
@@ -44,7 +45,7 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 		<div>
 			<h4 class="page-heading"><?php echo Label::getLabel('LBL_General'); ?></h4>
 		</div>
-		
+
 	</div>
 </div>
 <div id="langForm">
@@ -64,7 +65,7 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 				<div class="avtar avtar--large avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($userRow['user_first_name']); ?>">
 					<?php
 					if (true == User::isProfilePicUploaded()) {
-						echo '<img src="' . CommonHelper::generateUrl('Image', 'user', array($userRow['user_id'], 'MEDIUM')).'?t='.time() . '" />';
+						echo '<img src="' . CommonHelper::generateUrl('Image', 'user', array($userRow['user_id'], 'MEDIUM')) . '?t=' . time() . '" />';
 					}
 					?>
 				</div>

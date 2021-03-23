@@ -72,6 +72,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
+
         $rs = $srch->getResultSet();
         $lessons = FatApp::getDb()->fetchAll($rs);
         $lessonArr = array();
@@ -113,7 +114,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     private function searchLessons(&$srch, $post = array(), $getCancelledOrder = false, $addLessonDateOrder = true)
     {
         $srch = new ScheduledLessonSearch(false);
-        $srch->joinGroupClass();
+        $srch->joinGroupClass($this->siteLangId);
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->joinTeacher();
@@ -133,7 +134,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addMultipleFields(array(
             'slns.slesson_id',
-            'grpcls_title',
+            'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             'slesson_grpcls_id',
             'order_is_paid',
             'sld.sldetail_learner_id as learnerId',
@@ -219,14 +220,14 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
         $srch = new stdClass();
         $this->searchLessons($srch);
-        $srch->joinGroupClass();
+        $srch->joinGroupClass($this->siteLangId);
         $srch->doNotCalculateRecords();
         $srch->joinLessonRescheduleLog();
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
         $srch->joinTeacherCountry($this->siteLangId);
         // $srch->joinIssueReported();
         $srch->addFld(array(
-            'grpcls_title',
+            'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             'slns.slesson_teacher_id as teacherId',
             'ut.user_first_name as teacherFname',
             'ut.user_url_name as teacherUrlName',
@@ -355,7 +356,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     {
         $cssClassNamesArr = ScheduledLesson::getStatusArr();
         $srch = new ScheduledLessonSearch();
-        $srch->joinGroupClass();
+        $srch->joinGroupClass($this->siteLangId);
         $srch->addMultipleFields(
             array(
                 'slns.slesson_grpcls_id',
@@ -369,7 +370,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
                 'slns.slesson_status',
                 'ul.user_first_name',
                 'ul.user_id',
-                'grpcls.grpcls_title'
+                'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             )
         );
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
