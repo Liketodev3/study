@@ -9,14 +9,10 @@ if ($profileFrm->getField('user_url_name')) {
 	$user_url_name->developerTags['col'] = 12;
 	$user_url_name->htmlAfterField = '<p class="user_url_string">' . CommonHelper::generateFullUrl('teachers', 'profile') . '/<span class="user_url_name_span">' . $user_url_name->value . '</span></p>';
 }
-<<<<<<< HEAD
-
 if ($profileFrm->getField('us_booking_before')) {
-	$profileFrm->getField('us_booking_before')->htmlAfterField = "<br><small>".Label::getLabel("htmlAfterField_booking_before_text").".</small>";
+	$profileFrm->getField('us_booking_before')->htmlAfterField = "<br><small>" . Label::getLabel("htmlAfterField_booking_before_text") . ".</small>";
 }
 
-=======
->>>>>>> bug_050298_make_group_class_multilingual
 $profileFrm->developerTags['colClassPrefix'] = 'col-md-';
 $profileFrm->developerTags['fld_default_col'] = 6;
 
