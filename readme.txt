@@ -8,7 +8,7 @@ Bugs:
     #050897 - Teacher and learner >> calender >> need to show end time also as now there are multiple slots.
     #051458 - CLear Search button needs alignment 
     #047762 - When user import label then error is showing.
-    #048965: Fixed issue in join with zoom not work for users having email in capital letters
+    #048965 - Fixed issue in join with zoom not work for users having email in capital letters
 ===================================================================================================================
 Release Number: TV-2.11.0.20210317
 Release Date: 2021-03-17
