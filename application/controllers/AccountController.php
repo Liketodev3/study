@@ -187,7 +187,7 @@ class AccountController extends LoggedUserController
         $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
         $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
         if ($userRow['user_is_teacher']) {
-            
+
             $userRow['us_video_link'] = $user_settings['us_video_link'];
             $userRow['us_booking_before'] = $user_settings['us_booking_before']; //== code added on 23-08-2019
             $userRow['us_google_access_token'] = $user_settings['us_google_access_token'];
@@ -309,15 +309,10 @@ class AccountController extends LoggedUserController
                 FatUtility::dieJsonError(Message::getHtml());
             }
             $data = json_decode(stripslashes($post['img_data']));
-<<<<<<< HEAD
             CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
-            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'croped', true)) . '?' . time());
-=======
-            CommonHelper::crop($data, CONF_UPLOADS_PATH .$res);
-            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'MEDIUM', true)).'?'.time());
->>>>>>> dac3058606312d39c57ba4f70077e417b3b02b39
+            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'MEDIUM', true)) . '?' . time());
         }
-        
+
         $this->set('msg', Label::getLabel('MSG_File_uploaded_successfully'));
         $this->_template->render(false, false, 'json-success.php');
     }
@@ -336,7 +331,7 @@ class AccountController extends LoggedUserController
         $db->startTransaction();
         $record = new TableRecord(UserSetting::DB_TBL);
 
-        $record->setFlds(['us_site_lang' => $post['us_site_lang'],'us_user_id'=> UserAuthentication::getLoggedUserId()]);
+        $record->setFlds(['us_site_lang' => $post['us_site_lang'], 'us_user_id' => UserAuthentication::getLoggedUserId()]);
         if ($isTeacher) {
             $bookingDurationOptions = array(0, 12, 24);
             if (!in_array($post['us_booking_before'], $bookingDurationOptions)) {
@@ -345,13 +340,13 @@ class AccountController extends LoggedUserController
             } //  code added on 23-08-2019
             $record->assignValues(array('us_video_link' => $post['us_video_link'], 'us_booking_before' => $post['us_booking_before'])); //  code added on 23-08-2019
         }
-      
+
         $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
-        if($post['us_site_lang'] != $user_settings['us_site_lang']){
+        if ($post['us_site_lang'] != $user_settings['us_site_lang']) {
             CommonHelper::setDefaultSiteLangCookie($post['us_site_lang']);
         }
         // prx($record->getFlds());
-        if (!$record->addNew( array(), $record->getFlds())) {
+        if (!$record->addNew(array(), $record->getFlds())) {
             $db->rollbackTransaction();
             $this->error = $record->getError();
             return false;
@@ -406,10 +401,10 @@ class AccountController extends LoggedUserController
             $fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'), 'us_booking_before', $bookingOptionArr, 'us_booking_before', array(), Label::getLabel('LBL_Select'));
             $fld3->requirement->setRequired(true);
         }
-        
+
         /* $fld = $frm->addTextArea(Label::getLabel('LBL_Biography'), 'user_profile_info');
         $fld->requirements()->setLength(1, 500); */
-         $frm->addSelectBox(Label::getLabel('LBL_Site_Language'), 'us_site_lang', Language::getAllNames(), '', array(), Label::getLabel('LBL_Select'));
+        $frm->addSelectBox(Label::getLabel('LBL_Site_Language'), 'us_site_lang', Language::getAllNames(), '', array(), Label::getLabel('LBL_Select'));
 
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         return $frm;
