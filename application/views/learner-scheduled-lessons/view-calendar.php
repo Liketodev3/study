@@ -78,16 +78,11 @@
    			eventRender: function(event, element) {
    				if(isNaN(event._id)){
 					var imgUrl = fcom.makeUrl('Image','user',[event.lid])+'<?php echo time(); ?>';
-					element.find(".fc-content").prepend( '	<div class="avtar avtar--xsmall" data-text="'+event.liFname+'">'+event.imgTag+'</div>' );
-   				}
-   				else{
-   				//	element.find(".fc-content").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+event._id+");'>X</span>" );
-   				}
-                element.find(".closeon").click(function() {
-                    if(isNaN(event._id)){
-                        $('#listing_calendar').fullCalendar('removeEvents',event._id);
-                    }
-                });
+                    let startAndEndTime =  event.start.format('hh:mma')+' - '+event.end.format('hh:mma');
+                    element.find(".fc-content").prepend( '<div class="avtar avtar--xsmall" data-text="'+event.liFname+'">'+event.imgTag+'</div>' );
+                    element.find('.fc-time').html(startAndEndTime).addClass('calendar-time');;
+                }
+                   
                 const title = $(element).find('.fc-title');
                 title.attr('title', title.text());
            },
