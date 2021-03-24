@@ -6,6 +6,7 @@ Bugs:
     #051013 - A suggestion to differentiate the single lesson class and group class in terms of booking.
     #051451 - Admin >> goup class setting donot accept alphabets.
     #050897 - Teacher and learner >> calender >> need to show end time also as now there are multiple slots.
+    #051458 - CLear Search button needs alignment 
 ===================================================================================================================
 Release Number: TV-2.11.0.20210317
 Release Date: 2021-03-17
