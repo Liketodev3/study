@@ -122,8 +122,9 @@ class Label extends MyAppModel
             static::DB_TBL_PREFIX . 'caption' => $data['label_caption'],
             static::DB_TBL_PREFIX . 'lang_id' => $data['label_lang_id']
         );
-
-        if (!FatApp::getDB()->insertFromArray(static::DB_TBL, $assignValues, false, array(), $assignValues)) {
+        $db = FatApp::getDB();
+        if (!$db->insertFromArray(static::DB_TBL, $assignValues, false, array(), $assignValues)) {
+            $this->error = $db->getError();
             return false;
         }
 

@@ -85,6 +85,7 @@ $(document).ready(function(){
 				contentType: false,
 				success: function(t){					
 					try {
+						$('#fileupload_div').html();
 						var ans = $.parseJSON(t);
 						if( ans.status == 1 ){
 							fcom.displaySuccessMessage(ans.msg);
@@ -92,7 +93,6 @@ $(document).ready(function(){
 							$(document).trigger('close.facebox');
 						} else {
 							fcom.displayErrorMessage(ans.msg);
-							$('#fileupload_div').html('');
 						}						
 					}
 					catch(exc){
