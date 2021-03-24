@@ -602,7 +602,11 @@ class ConfigurationsController extends AdminBaseController
 
                 $frm->addHtml('', 'Grpcls', '<h3>' . Label::getLabel('LBL_Group_Class', $this->adminLangId) . '</h3>');
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Cancellation_Refund_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_CLASS_REFUND_PERCENTAGE");
+                $fld3->requirements()->setIntPositive();
+                $fld3->requirements()->setRange(0,100);
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Booking_Time_Span(Minutes)", $this->adminLangId), "CONF_CLASS_BOOKING_GAP");
+                $fld3->requirements()->setIntPositive();
+                $fld3->requirements()->setRange(0,1000);
                 $frm->addIntegerField(Label::getLabel("LBL_Class_Max_learners", $this->adminLangId), "CONF_GROUP_CLASS_MAX_LEARNERS");
                 
                 $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Teacher_Dashboard', $this->adminLangId).'</h3>');
