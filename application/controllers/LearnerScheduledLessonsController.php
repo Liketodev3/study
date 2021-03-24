@@ -889,7 +889,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
 
-        $teacher_id = $lessonRow['slesson_teacher_id'];
+        $teacher_id = $lessonRow['teacherId'];
         $userRow = User::getAttributesById($teacher_id, array('user_first_name', 'CONCAT(user_first_name," ",user_last_name) AS user_full_name', 'user_country_id'));
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
         MyDate::setUserTimeZone();

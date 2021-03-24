@@ -263,7 +263,7 @@ class PurchasedLessonsController extends AdminBaseController
         $srch->joinUserCredentials();
         $srch->joinTeacherLessonLanguage($this->adminLangId);
         $srch->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'op_teacher_id = tCredentials.credential_user_id', 'tCredentials');
-        $srch->joinGroupClass();
+        $srch->joinGroupClass($this->adminLangId);
         $srch->addMultipleFields(
             array(
                 'order_id',
