@@ -265,7 +265,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         $srch = new stdClass();
         $this->searchLessons($srch);
-        $srch->joinGroupClass($this->adminLangId);
+        $srch->joinGroupClass($this->siteLangId);
         $srch->joinLessonRescheduleLog();
         $srch->doNotCalculateRecords();
         $srch->addCondition('sld.sldetail_id', '=', $lDetailId);
