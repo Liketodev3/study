@@ -238,11 +238,11 @@ class LabelController extends AdminBaseController
 		if ( !is_uploaded_file($_FILES['import_file']['tmp_name']) ) {
 			FatUtility::dieJsonError( Label::getLabel('LBL_Please_Select_A_CSV_File', $this->adminLangId) );
 		}
-		$post = FatApp::getPostedData();
-		
+
 		if( !in_array($_FILES['import_file']['type'], CommonHelper::isCsvValidMimes()) ){
 			FatUtility::dieJsonError( Label::getLabel( "LBL_Not_a_Valid_CSV_File", $this->adminLangId ) );
 		}
+        
         set_time_limit(0);
 
 		$db = FatApp::getDb();
