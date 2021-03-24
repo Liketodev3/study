@@ -25,7 +25,8 @@ $frmSearch->getField('btn_submit')->attachField($frmSearch->getField('btn_clear'
                         $frmSearch->setFormTagAttribute('onsubmit', 'loadReport(this); return false;');
                         $frmSearch->setFormTagAttribute('class', 'web_form');
                         $frmSearch->developerTags['colClassPrefix'] = 'col-md-';
-                        $frmSearch->developerTags['fld_default_col'] = 3;
+                        $frmSearch->developerTags['fld_default_col'] = 6;
+                        
                         $btn_clear = $frmSearch->getField('btn_clear');
                         $btn_clear->addFieldTagAttribute('onclick', 'clearSearch()');
                         echo  $frmSearch->getFormHtml();
