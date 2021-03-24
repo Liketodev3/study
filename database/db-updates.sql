@@ -322,3 +322,5 @@ CREATE TABLE `tbl_group_classes_lang` (
 --
 ALTER TABLE `tbl_group_classes_lang`
   ADD PRIMARY KEY (`grpclslang_grpcls_id`,`grpclslang_lang_id`);
+
+DELETE FROM `tbl_language_labels` WHERE `label_key` = 'LBL_Calender';
