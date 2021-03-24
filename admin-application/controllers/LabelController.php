@@ -242,7 +242,7 @@ class LabelController extends AdminBaseController
 		if( !in_array($_FILES['import_file']['type'], CommonHelper::isCsvValidMimes()) ){
 			FatUtility::dieJsonError( Label::getLabel( "LBL_Not_a_Valid_CSV_File", $this->adminLangId ) );
 		}
-        
+
         set_time_limit(0);
 
 		$db = FatApp::getDb();
@@ -256,6 +256,11 @@ class LabelController extends AdminBaseController
 		$csvFilePointer = fopen($_FILES['import_file']['tmp_name'], 'r');
 		
 		$firstLine = fgetcsv( $csvFilePointer );
+
+        if(empty($firstLine)){
+            FatUtility::dieJsonError(Label::getLabel('LBL_NOT_A_VALID_CSV_FILE', $this->adminLangId));
+        }
+        
 		array_shift($firstLine);
 		$firstLineLangArr = $firstLine;
 		$langIndexLangIds = array();
