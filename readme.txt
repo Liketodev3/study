@@ -7,6 +7,7 @@ Bugs:
     #051451 - Admin >> goup class setting donot accept alphabets.
     #050897 - Teacher and learner >> calender >> need to show end time also as now there are multiple slots.
     #051458 - CLear Search button needs alignment 
+    #047762 - When user import label then error is showing.
 ===================================================================================================================
 Release Number: TV-2.11.0.20210317
 Release Date: 2021-03-17
