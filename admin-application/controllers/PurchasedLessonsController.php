@@ -591,8 +591,6 @@ class PurchasedLessonsController extends AdminBaseController
         }
         /* [ */
         if ($data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['order_net_amount'] > 0) {
-            $assignValues = array('slesson_status' => ScheduledLesson::STATUS_CANCELLED);
-
             $scheduledLessonSrch = new ScheduledLessonSearch();
             $scheduledLessonSrch->addMultipleFields(array(
                 'sldetail_id',
@@ -605,10 +603,13 @@ class PurchasedLessonsController extends AdminBaseController
             $scheduledLessonSrch->addCondition('sldetail_learner_status', '!=', ScheduledLesson::STATUS_CANCELLED);
             $scheduledLessonSrch->addCondition('slesson_status', '!=', ScheduledLesson::STATUS_CANCELLED);
             $orderLessons = FatApp::getDb()->fetchAll($scheduledLessonSrch->getResultSet());
-
+            
+        
             foreach ($orderLessons as $orderLesson) {
-
-                if ($orderLesson['slesson_grpcls_id'] == 0 && !$db->updateFromArray(ScheduledLesson::DB_TBL, $assignValues, array('smt' => 'slesson_id = ?', 'vals' => array($orderLesson['slesson_id'])))) {
+                
+                if ($orderLesson['slesson_grpcls_id'] == 0 &&
+                    !$db->updateFromArray(ScheduledLesson::DB_TBL, ['slesson_status' => ScheduledLesson::STATUS_CANCELLED],
+                        ['smt' => 'slesson_id = ?', 'vals' => [$orderLesson['slesson_id']]])) {
                     $db->rollbackTransaction();
                     $this->error = $db->getError();
                     if (FatUtility::isAjaxCall()) {
@@ -623,8 +624,9 @@ class PurchasedLessonsController extends AdminBaseController
                     FatUtility::dieJsonError($db->getError());
                 }
 
-                $assignValues = array('sldetail_learner_status' => ScheduledLesson::STATUS_CANCELLED);
-                if (!$db->updateFromArray(ScheduledLessonDetails::DB_TBL, $assignValues, array('smt' => 'sldetail_order_id = ?', 'vals' => array($data['order_id'])))) {
+                
+                if (!$db->updateFromArray(ScheduledLessonDetails::DB_TBL, ['sldetail_learner_status' => ScheduledLesson::STATUS_CANCELLED],
+                    ['smt' => 'sldetail_order_id = ?', 'vals' => [$data['order_id']]])) {
                     $db->rollbackTransaction();
                     $this->error = $db->getError();
                     if (FatUtility::isAjaxCall()) {

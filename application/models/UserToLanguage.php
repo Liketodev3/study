@@ -145,7 +145,8 @@ class UserToLanguage extends MyAppModel
                 $srch->addFld($attr);
             }
         }
-
+        $srch->doNotCalculateRecords();
+        $srch->setPagesize(1);
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
 

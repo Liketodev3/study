@@ -26,6 +26,8 @@ class UserSetting extends MyAppModel
     public function getUserSiteLang() : array
     {
        $userSetting =  new UserSettingSearch();
+       $userSetting->doNotCalculateRecords();
+        $userSetting->setPagesize(1);
        $userSetting->getUserSiteLang($this->mainTableRecordId);
        $resultSet = $userSetting->getResultSet();
        $data =  FatApp::getDb()->fetch($resultSet);

@@ -203,9 +203,12 @@ class CommonHelper extends FatUtility
         return md5(PASSWORD_SALT . $pwd . PASSWORD_SALT);
     } */
 
-    public static function generateUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false)
+    public static function generateUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false): string
     {
         $url = FatUtility::generateUrl($controller, $action, $queryData, $use_root_url, $url_rewriting);
+        if (in_array(strtolower($controller), array('jscss', 'image'))) {
+            return $url;
+        }
 
         /* if(FatUtility::isAjaxCall()){
             return $url;
@@ -220,6 +223,8 @@ class CommonHelper extends FatUtility
         $urlString = trim($urlString,'/'); */
         $urlString = trim($url, '/');
         $srch = UrlRewrite::getSearchObject();
+        $srch->doNotCalculateRecords();
+        $srch->setPagesize(1);
         $srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'original', 'LIKE', $urlString);
         $rs = $srch->getResultSet();
         if ($row = FatApp::getDb()->fetch($rs)) {
