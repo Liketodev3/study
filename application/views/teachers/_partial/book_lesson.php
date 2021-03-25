@@ -7,7 +7,7 @@ if( !empty( $teacher['teachLanguages'] ) ) {
 		break;
 	}	
 }
-$bookingDuration = max(explode(',', $teacher['utl_booking_slots']));
+
 $lessonPackages = $teacher['lessonPackages'];
 if( count($lessonPackages) ){
     $lessonPackage = array_shift( $lessonPackages );
@@ -16,7 +16,7 @@ if( count($lessonPackages) ){
 ?>
 
 <div class="Lprice-btn">	
-    <?php if( count($teacher['lessonPackages']) ){ ?>
+    <?php if( count($teacher['lessonPackages']) && !empty($bookingDuration)){ ?>
     <a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','', <?php echo $teacherLanguage.', 0, '.$bookingDuration; ?> )" class="btn btn--primary"><?php echo Label::getLabel('LBL_Book_Now') ?></a>
     <?php } ?>
 

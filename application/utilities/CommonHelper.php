@@ -1924,5 +1924,12 @@ class CommonHelper extends FatUtility
         fclose($outstream);
         
     }
+
+    public static function getPaidLessonDurations() : array
+    {
+        $defaultPaidLessonDuration =  FatApp::getConfig('CONF_DEFAULT_PAID_LESSON_DURATION', FatUtility::VAR_INT, 60);
+        $confPaidLessonDuration =  FatApp::getConfig('CONF_PAID_LESSON_DURATION', FatUtility::VAR_STRING, $defaultPaidLessonDuration);
+        return explode(',', $confPaidLessonDuration);
+    }
 }
 

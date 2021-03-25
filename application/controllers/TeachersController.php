@@ -670,6 +670,8 @@ class TeachersController extends MyAppController
 		$srch->setTeacherDefinedCriteria(false,false);
 		
 		$tlangSrch = $srch->getMyTeachLangQry(true, $this->siteLangId, $teachLangId);
+       
+		$tlangSrch->addCondition('utl.utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
 
 		$srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_us_user_id', 'utls');
 		$srch->joinUserSpokenLanguages($this->siteLangId);

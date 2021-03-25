@@ -5,18 +5,20 @@ $avgRating = FatUtility::convertToType($reviews['prod_rating'], FatUtility::VAR_
 $pixelToFillRight = $avgRating / 5 * 160;
 $pixelToFillRight = FatUtility::convertToType($pixelToFillRight, FatUtility::VAR_FLOAT);
 
-$teacherLanguage = 1;
+$teacherLanguage = 0;
 if (!empty($teacher['teachLanguages'])) {
-	foreach ($teacher['teachLanguages'] as $key => $val) {
-		$teacherLanguage = $key;
-		break;
-	}
+    $teacherLanguage = array_key_first($teacher['teachLanguages']);
 }
 $langId = CommonHelper::getLangId();
 $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR_STRING, '');
 
-$teacherLangPrices = array();
+$teacherLangPrices = [
+						'single' => [],
+						'bulk' => []
+					];
+$bookingDuration = '';
 foreach($userTeachLangs as $userTeachLang){
+
 	$teacherLangPrices['single'][$userTeachLang['utl_booking_slot']][$userTeachLang['tlanguage_id']] = array(
         'lang_name' => $userTeachLang['tlanguage_name'],
         'price' => $userTeachLang['utl_single_lesson_amount']
@@ -25,6 +27,7 @@ foreach($userTeachLangs as $userTeachLang){
         'lang_name' => $userTeachLang['tlanguage_name'],
         'price' => $userTeachLang['utl_bulk_lesson_amount']
     );
+    $bookingDuration = $userTeachLang['utl_booking_slot'];
 }
 ?>
 <title><?php echo Label::getLabel('LBL_Learn') . " " . implode(', ', $teacher['teachLanguages']) . " " . Label::getLabel('LBL_from') . " " . $teacher['user_full_name'] . " " . Label::getLabel('LBL_on') . " " . $websiteName; ?></title>
@@ -236,7 +239,7 @@ foreach($userTeachLangs as $userTeachLang){
 					$btnClass = "btn-secondary";
 					$disabledText = "disabled";
 					$btnText =  "LBL_You_already_have_availed_the_Trial";
-					if(!$teacher['isAlreadyPurchasedFreeTrial']){
+					if(!$teacher['isAlreadyPurchasedFreeTrial'] && !empty($teacherLanguage)){
 						$disabledText = "";
 						$onclick = "onclick=\"viewCalendar(".$teacher['user_id'].",'free_trial',".$teacherLanguage.")\"";
 						$btnClass = 'btn-primary';
@@ -252,6 +255,7 @@ foreach($userTeachLangs as $userTeachLang){
                 
                 <div class="box box--cta box--sticky">
                     <div class="fat-tab">
+					<?php if(!empty($bookingDuration)) { ?>
                         <div class="box-head -padding-20">
                             <h4 class="-text-bold"><?php echo Label::getLabel("LBL_Lesson_Prices"); ?></h4>
                             <div class="tab-group tabs-scroll-js">
@@ -269,7 +273,6 @@ foreach($userTeachLangs as $userTeachLang){
                                 </ul>
                             </div>
                         </div>
-                        
                         <div class="box-body">
                             <div class="tab-body">
                                 <div class="tab tab-active" data-id="tab_single_price">
@@ -280,6 +283,7 @@ foreach($userTeachLangs as $userTeachLang){
                                             if( count($lessonPackages) ){
                                                 $lessonPackage = $lessonPackages[0];
                                             }
+                                            // prx($teacherLangPrices);
                                             foreach($teacherLangPrices['single'] as $slot => $prices): ?>
                                             <div class="Lprice__wrapper">
                                                 <div class="Lprice-head">
@@ -340,9 +344,9 @@ foreach($userTeachLangs as $userTeachLang){
                                         </div>
                                     </div>
                                 </div>
-                                
                             </div>
-                            <?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher), false); ?>
+							<?php } ?>
+                            <?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher, 'bookingDuration' => $bookingDuration), false); ?>
                             
                         </div>
                     </div>
