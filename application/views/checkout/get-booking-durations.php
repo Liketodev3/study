@@ -10,7 +10,7 @@ if ($cartData['lpackage_is_free_trial'] == 0) { ?>
                     <li class="<?php echo ($cartData['lessonDuration'] == $lessonDuration) ? 'is-active' : ''; ?>">
                         <label class="selection">
                             <span class="radio">
-                                <input onClick="addToCart('<?php echo $cartData['user_id'] ?>', '<?php echo $lpackage['lpackage_id']; ?>', <?php echo $cartData['languageId'] . ", '', '', 0, " . $lessonDuration; ?>);" type="radio" name="lessonDuration" value="<?php echo $lessonDuration; ?>" <?php echo ($cartData['lessonDuration'] == $lessonDuration) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
+                                <input onClick="addToCart('<?php echo $cartData['user_id'] ?>', '<?php echo $cartData['lpackage_id']; ?>', <?php echo $cartData['languageId'] . ", '', '', 0, " . $lessonDuration; ?>);" type="radio" name="lessonDuration" value="<?php echo $lessonDuration; ?>" <?php echo ($cartData['lessonDuration'] == $lessonDuration) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
                             </span>
                             <span class="selection__item">
                                 <?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $lessonDuration); ?> <small class="-float-right"> </small>
