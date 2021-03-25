@@ -38,6 +38,7 @@ class TeachersController extends MyAppController
     public function teachersList()
     {
         $post = FatApp::getPostedData();
+        $userId = UserAuthentication::getLoggedUserId();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 12);
         $sortOrder = FatApp::getPostedData('sortOrder', FatUtility::VAR_INT, 1);
@@ -49,24 +50,21 @@ class TeachersController extends MyAppController
         $srch->applyOrderBy($sortOrder);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-        echo '<pre>' . $srch->getQuery(); die;
-//        $count = $srch->getRecordCount();
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $records = $srch->formatTeacherSearchData($rawData, $userId);
-        $this->set('records', $records);
+        $recordCount = $srch->getRecordCount();
+        $startRecord = ($recordCount > 0) ? (($page - 1) * $pageSize + 1) : 0;
+        $endRecord = ($recordCount < $page * $pageSize) ? $recordCount : $page * $pageSize;
+        $recordCountTxt = ($recordCount > SEARCH_MAX_COUNT) ? $recordCount . '+' : $recordCount;
+        $showing = 'Showing ' . $startRecord . ' - ' . $endRecord . ' Of ' . $recordCountTxt;
+        $this->set('showing', $showing);
+        $this->set('teachers', $records);
         $this->set('postedData', $post);
-        $this->set('startRecord', 1);
-        $this->set('endRecord', 100);
-        $this->set('totalRecords', 1500);
-        $pagingArr = array(
-            'pageCount' => 100,
-            'page' => 1,
-            'pageSize' => 12,
-            'recordCount' => 1500,
-        );
-        $this->set('pagingArr', $pagingArr);
-        $this->set('html', $this->_template->render(false, false, 'teachers/teachers-list.php', true));
-        $this->_template->render(false, false, 'json-success.php', false, false);
+        $this->set('page', $page);
+        $this->set('pageSize', $pageSize);
+        $this->set('recordCount', $recordCount);
+        $this->set('pageCount', ceil($recordCount / $pageSize));
+        $this->_template->render(false, false);
     }
 
     public function teachersList_()

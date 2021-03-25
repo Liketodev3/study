@@ -54,6 +54,8 @@ class TeacherSearch extends SearchBase
             'testat.testat_lessions' => 'teacherTotLessons',
             'testat.testat_ratings' => 'teacher_rating',
             'testat.testat_reviewes' => 'totReviews',
+            'testat.testat_minprice' => 'minPrice',
+            'testat.testat_maxprice' => 'maxPrice',
         ];
     }
 
@@ -93,6 +95,62 @@ class TeacherSearch extends SearchBase
             $cond->attachCondition($fullNameField, 'LIKE', '%' . $keyword . '%', 'OR', true);
         }
 
+        /* Teach Language */
+        $teachLangId = FatUtility::int($post['teachLangId'] ?? 0);
+        if ($teachLangId > 0) {
+            $srch = new SearchBase('tbl_user_teach_languages');
+            $srch->addFld('DISTINCT utl_us_user_id as utl_us_user_id');
+            $srch->addCondition('utl_slanguage_id', '=', $teachLangId);
+            $srch->doNotCalculateRecords();
+            $srch->doNotLimitRecords();
+            $subTable = '(' . $srch->getQuery() . ')';
+            $this->joinTable($subTable, 'INNER JOIN', 'utl.utl_us_user_id = teacher.user_id', 'utl');
+        }
+
+        /* Speak Language */
+        $speakLangs = explode(",", $post['spokenLanguage'] ?? '');
+        $speakLangIds = array_filter(FatUtility::int($speakLangs));
+        if (count($speakLangIds) > 0) {
+            $srch = new SearchBase('tbl_user_to_spoken_languages');
+            $srch->addFld('DISTINCT utsl_user_id as utsl_user_id');
+            $srch->addCondition('utsl_slanguage_id', 'IN', $speakLangIds);
+            $srch->doNotCalculateRecords();
+            $srch->doNotLimitRecords();
+            $subTable = '(' . $srch->getQuery() . ')';
+            $this->joinTable($subTable, 'INNER JOIN', 'utsl.utsl_user_id = teacher.user_id', 'utsl');
+        }
+
+        /* Week Day and Time Slot */
+        $weekDays = (array) ($post['filterWeekDays'] ?? []);
+        $timeSlots = (array) ($post['filterTimeSlots'] ?? []);
+        if (count($weekDays) > 0 || count($timeSlots) > 0) {
+            $srch = new SearchBase('tbl_teachers_general_availability');
+            $srch->addFld('DISTINCT tgavl_user_id as tgavl_user_id');
+            if (count($weekDays) > 0) {
+                $srch->addCondition('tgavl_day', 'IN', $weekDays);
+            }
+            $systemTimezone = MyDate::getTimeZone();
+            $userTimezone = MyDate::getUserTimeZone();
+            $timeSlots = CommonHelper::formatTimeSlotArr($timeSlots);
+            foreach ($timeSlots as $key => $formatedVal) {
+                $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
+                $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
+                $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $userTimezone, $systemTimezone)));
+                $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $userTimezone, $systemTimezone)));
+                if ($key == 0) {
+                    $cnd = $srch->addCondition('tgavl_start_time', '<=', $startTime, 'AND');
+                    $cnd->attachCondition('tgavl_end_time', '>=', $startTime, 'AND');
+                } else {
+                    $cnd2 = $cnd->attachCondition('tgavl_start_time', '<=', $endTime, 'OR');
+                    $cnd2->attachCondition('tgavl_end_time', '>=', $endTime, 'AND');
+                }
+            }
+            $srch->doNotCalculateRecords();
+            $srch->doNotLimitRecords();
+            $subTable = '(' . $srch->getQuery() . ')';
+            $this->joinTable($subTable, 'INNER JOIN', 'tgavl.tgavl_user_id = teacher.user_id', 'tgavl');
+        }
+
         /* From Country */
         $fromCountries = explode(",", $post['fromCountry'] ?? '');
         $fromCountries = array_filter(FatUtility::int($fromCountries));
@@ -111,7 +169,7 @@ class TeacherSearch extends SearchBase
         /* Preferences Filter (Teacher’s accent, Teaches level, Subjects, Test preparations, Lesson includes, Learner’s age group) */
         $preferences = explode(",", $post['preferenceFilter'] ?? '');
         $preferences = array_filter(FatUtility::int($preferences));
-        if (count($preferences)) {
+        if (count($preferences) > 0) {
             $srch = new SearchBase('tbl_user_to_preference');
             $srch->addFld('DISTINCT utpref_user_id as utpref_user_id');
             $srch->addCondition('utpref_preference_id', 'IN', $preferences);
@@ -122,63 +180,9 @@ class TeacherSearch extends SearchBase
         }
 
         /* Tutor Gender */
-        $genders = FatUtility::int(explode(",", $post['gender'] ?? ''));
+        $genders = array_filter(FatUtility::int(explode(",", $post['gender'] ?? '')));
         if (count($genders) == 1) {
             $this->addCondition('teacher.user_gender', '=', current($genders));
-        }
-
-
-        $spokenLanguage = FatApp::getPostedData('spokenLanguage', FatUtility::VAR_STRING, NULL);
-        if (!empty($spokenLanguage)) {
-            $srch->addDirectCondition('spoken_language_ids IN (' . $spokenLanguage . ')');
-        }
-
-        /* Language Teach [ */
-        $langTeach = FatApp::getPostedData('teach_language_id', FatUtility::VAR_STRING, NULL);
-        if ($langTeach > 0) {
-            if (is_numeric($langTeach)) {
-                //$srch->addCondition( 'us.us_teach_slanguage_id', '=', $langTeach );
-                $srch->addDirectCondition('FIND_IN_SET(' . $langTeach . ', utl_slanguage_ids)');
-            }
-        }
-        /* ] */
-        /* Week Day [ */
-        $weekDays = FatApp::getPostedData('filterWeekDays', FatUtility::VAR_STRING, array());
-        if ($weekDays) {
-            $srch->addCondition('ta.tgavl_day', 'IN', $weekDays);
-        }
-        /* ] */
-        /* Time Slot [ */
-        $timeSlots = FatApp::getPostedData('filterTimeSlots', FatUtility::VAR_STRING, array());
-
-        $systemTimeZone = MyDate::getTimeZone();
-        $user_timezone = MyDate::getUserTimeZone();
-
-        if ($timeSlots) {
-            $formatedArr = CommonHelper::formatTimeSlotArr($timeSlots);
-            if ($formatedArr) {
-                foreach ($formatedArr as $key => $formatedVal) {
-                    $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
-                    $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
-                    $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $user_timezone, $systemTimeZone)));
-                    $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $user_timezone, $systemTimeZone)));
-                    if ($key == 0) {
-                        $cnd = $srch->addCondition('tgavl_start_time', '<=', $startTime, 'AND');
-                        $cnd->attachCondition('tgavl_end_time', '>=', $startTime, 'AND');
-                    } else {
-                        $newSrch = $cnd->attachCondition('tgavl_start_time', '<=', $endTime, 'OR');
-                        $newSrch->attachCondition('tgavl_end_time', '>=', $endTime, 'AND');
-                    }
-                }
-            }
-        }
-
-
-        /* ] */
-        if (isset($postedData['keyword']) && !empty($postedData['keyword'])) {
-            $cond = $srch->addCondition('user_first_name', 'LIKE', '%' . $postedData['keyword'] . '%');
-            $cond->attachCondition('user_last_name', 'LIKE', '%' . $postedData['keyword'] . '%');
-            $cond->attachCondition('mysql_func_CONCAT(user_first_name, " ", user_last_name)', 'LIKE', '%' . $postedData['keyword'] . '%', 'OR', true);
         }
     }
 
@@ -217,7 +221,7 @@ class TeacherSearch extends SearchBase
      * @param int $userId
      * @return array
      */
-    public static function formatSearchData(array $records, int $userId): array
+    public static function formatTeacherSearchData(array $records, int $userId): array
     {
         $langId = CommonHelper::getLangId();
         $teacherIds = array_column($records, 'user_id');
@@ -225,11 +229,14 @@ class TeacherSearch extends SearchBase
         $countries = static::getCountryNames($langId, $countryIds);
         $favorites = static::getFavoriteTeachers($userId, $teacherIds);
         $langData = static::getTeachersLangData($langId, $teacherIds);
-
+        $teachLangs = static::getTeachLangs($langId, $teacherIds);
+        $speakLangs = static::getSpeakLangs($langId, $teacherIds);
         foreach ($records as $key => $record) {
             $record['uft_id'] = $favorites[$record['user_id']] ?? 0;
             $record['user_country_name'] = $countries[$record['user_country_id']] ?? '';
             $record['userlang_user_profile_Info'] = $langData[$record['user_id']] ?? '';
+            $record['teacherTeachLanguageName'] = $teachLangs[$record['user_id']] ?? '';
+            $record['spoken_language_names'] = $speakLangs[$record['user_id']] ?? '';
             $records[$key] = $record;
         }
         return $records;
@@ -299,6 +306,50 @@ class TeacherSearch extends SearchBase
     }
 
     /**
+     * Get Teachers Teach Lang
+     * 
+     * @param int $langId
+     * @param array $teacherIds
+     * @return array
+     */
+    public static function getTeachLangs(int $langId, array $teacherIds): array
+    {
+        if ($langId == 0 || count($teacherIds) == 0) {
+            return [];
+        }
+        $srch = new SearchBase('tbl_user_teach_languages', 'utl');
+        $srch->joinTable('tbl_teaching_languages_lang', 'INNER JOIN', 'tlanguage.tlanguagelang_tlanguage_id = utl.utl_slanguage_id', 'tlanguage');
+        $srch->addMultipleFields(['utl.utl_us_user_id', 'tlanguage.tlanguage_name']);
+        $srch->addCondition('tlanguage.tlanguagelang_lang_id', '=', $langId);
+        $srch->addCondition('utl.utl_us_user_id', 'IN', $teacherIds);
+        $srch->doNotCalculateRecords();
+        $result = $srch->getResultSet();
+        return FatApp::getDb()->fetchAllAssoc($result);
+    }
+
+    /**
+     * Get Teachers Speak Lang
+     * 
+     * @param int $langId
+     * @param array $teacherIds
+     * @return array
+     */
+    public static function getSpeakLangs(int $langId, array $teacherIds): array
+    {
+        if ($langId == 0 || count($teacherIds) == 0) {
+            return [];
+        }
+        $srch = new SearchBase('tbl_user_to_spoken_languages', 'utsl');
+        $srch->joinTable('tbl_spoken_languages_lang', 'INNER JOIN', 'slanguage.slanguagelang_slanguage_id = utsl.utsl_slanguage_id', 'slanguage');
+        $srch->addMultipleFields(['utsl.utsl_user_id', 'slanguage.slanguage_name']);
+        $srch->addCondition('slanguage.slanguagelang_lang_id', '=', $langId);
+        $srch->addCondition('utsl.utsl_user_id', 'IN', $teacherIds);
+        $srch->doNotCalculateRecords();
+        $result = $srch->getResultSet();
+        return FatApp::getDb()->fetchAllAssoc($result);
+    }
+
+    /**
      * Get Record Count
      * to be updated as per requirements
      * 
@@ -312,10 +363,9 @@ class TeacherSearch extends SearchBase
         $pageSize = $this->pageSize;
         $this->limitRecords = false;
         $this->order = [];
-        $maxCount = 1000;
-        $qry = $this->getQuery() . ' LIMIT ' . $maxCount . ', 1';
+        $qry = $this->getQuery() . ' LIMIT ' . SEARCH_MAX_COUNT . ', 1';
         if ($db->totalRecords($db->query($qry)) > 0) {
-            $recordCount = $maxCount;
+            $recordCount = SEARCH_MAX_COUNT;
         } else {
             if (empty($this->groupby) && empty($this->havings)) {
                 $this->addFld('COUNT(user_id) AS total');
