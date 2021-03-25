@@ -10,6 +10,7 @@ Bugs:
     #047762 - When user import label then error is showing.
     #048965 - Fixed issue in join with zoom not work for users having email in capital letters
     #051602 - LBL_Calender - incorrect spelling for calendar
+    #051600 - Previously teacher has the access of slot and admin remove access for same then also its visible to user.
 ===================================================================================================================
 Release Number: TV-2.11.0.20210317
 Release Date: 2021-03-17

@@ -248,7 +248,8 @@ class CheckoutController extends LoggedUserController{
 					Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
 					$errMsg = Message::getHtml();
 				}
-				FatUtility::dieWithError($error);
+				
+				FatUtility::dieWithError($errMsg);
 			}
 			$user_id = UserAuthentication::getLoggedUserId();
 
@@ -280,17 +281,26 @@ class CheckoutController extends LoggedUserController{
 			$this->_template->render(false, false, 'json-success.php');
 		}
 
-		$cartData = $this->cartObj->getCart( $this->siteLangId );
 		$criteria = array(
 			'isUserLogged' => true,
 			'hasItems' =>  true,
 		);
+		$cartData = $this->cartObj->getCart( $this->siteLangId );
+		
 		if( !$this->isEligibleForNextStep( $criteria ) ){
 		if( Message::getErrorCount() ){
 			$errMsg = Message::getHtml();
 		} else {
 			Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
 			$errMsg = Message::getHtml();
+		}
+		
+		
+
+		if( FatUtility::isAjaxCall() == true) {
+			$json['msg'] = $errMsg;
+			$json['redirectUrl'] = CommonHelper::generateUrl('Checkout');
+			FatUtility::dieJsonError($json);
 		}
 			FatUtility::dieWithError( $errMsg );
 		}
@@ -543,20 +553,25 @@ class CheckoutController extends LoggedUserController{
             die('');
         }
         $teacher_id = $cartData['user_id'];
-
+		$confPaidLessonDuration =  CommonHelper::getPaidLessonDurations();
         $userSrch = new UserSearch();
         $userTeachLangSrch = $userSrch->getMyTeachLangQry();
         $userTeachLangSrch->addCondition('utl_us_user_id', '=', $teacher_id);
+        $userTeachLangSrch->addCondition('utl_booking_slot', 'IN', $confPaidLessonDuration);
 		$rs = $userTeachLangSrch->getResultSet();
 		$row = FatApp::getDb()->fetch($rs);
-
+		if(empty($row)){
+			Message::addErrorMessage(Label::getLabel('MSG_TEACHER_HAS_NOT_ANY_SLOT_DURATION'));
+			FatUtility::dieWithError( Message::getHtml() );
+		}
         $bookingDurations = array_unique(explode(',', $row['utl_booking_slots']));
-        sort($bookingDurations);
+		
 		$lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
 		if(empty($lessonPackages)){
 			Message::addErrorMessage(Label::getLabel('MSG_PLEASE_CONCAT_WITH_ADMIN_NO_LESSON_PACKAGE_ACTIVE'));
 			FatUtility::dieWithError( Message::getHtml() );
 		}
+        
 		$lessonPackageIds = array_column($lessonPackages, 'lpackage_id', 'lpackage_id');
 		 if(!array_key_exists($cartData['lpackage_id'], $lessonPackageIds)){
 			$cartData['lpackage_id'] =  $lessonPackages[0]['lpackage_id'];

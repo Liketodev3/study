@@ -48,12 +48,29 @@ $("document").ready(function () {
 
 	confirmOrder = function (frm) {
 		var data = fcom.frmData(frm);
-		//$("#checkout-left-side").addClass('form--processing');
-		fcom.updateWithAjax(fcom.makeUrl('Checkout', 'confirmOrder'), data, function (ans) {
-			if (ans.redirectUrl != '') {
-				$(location).attr("href", ans.redirectUrl);
+		$.loader.show();
+		fcom.ajax(fcom.makeUrl('Checkout', 'confirmOrder'), data, function (ans) {
+			try {
+					$(document).trigger('close.mbsmessage');	
+					if (ans.redirectUrl == '') {
+						$.loader.hide();
+					}
+					if (ans.status != 1) {
+						$.mbsmessage(ans.msg,true, 'alert alert--danger');
+					}else{
+						$.mbsmessage( ans.msg,true, 'alert alert--success');
+					}
+					if (ans.redirectUrl != '') {
+						setTimeout(function(){  window.location.href = ans.redirectUrl }, 3000);
+					}
+
+			} catch (error) {
+				$.loader.hide();
+				$(location).attr("href", fcom.makeUrl('Teachers'));
 			}
-		});
+
+			
+		},{fOutMode:'json'});
 		return false;
 	}
 
