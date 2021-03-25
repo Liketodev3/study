@@ -668,6 +668,18 @@ function getNotifications (){
 		
 })();
 
+//  custom loader js start
+$.loader = {
+    selector: '.loading-wrapper',
+    show: function() {
+        $(this.selector).show();
+    },
+    hide: function() {
+        $(this.selector).hide();
+    }
+};
+//  custom loader js end
+
 function selectAll(obj) {
     var parentForm = obj.closest('form').attr('id');
     $("#" + parentForm + " .selectItem--js").each(function () {

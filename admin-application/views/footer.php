@@ -10,37 +10,45 @@
 
 	</div>
 	<?php $haveMsg = false;
-	if( Message::getMessageCount() || Message::getErrorCount() ){
-		$haveMsg = true;
-	}
+    if (Message::getMessageCount() || Message::getErrorCount()) {
+        $haveMsg = true;
+    }
 
-	?>
-<div  class="alert alert--positioned " <?php if($haveMsg) echo 'style="display:block"';?>>
+    ?>
+<div  class="alert alert--positioned " <?php if ($haveMsg) {
+        echo 'style="display:block"';
+    }?>>
 	<div class="close"></div>
 	<div class="sysmsgcontent content ">
 		<?php
 
-		if( $haveMsg ){
-
-			echo html_entity_decode( Message::getHtml() );
-		} ?>
+        if ($haveMsg) {
+            echo html_entity_decode(Message::getHtml());
+        } ?>
 	</div>
 </div>
-		<?php if( $haveMsg ){ ?>
-		<script >
-			$("document").ready(function(){
-				if( CONF_AUTO_CLOSE_SYSTEM_MESSAGES == 1 ){
-					var time = CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES * 1000;
-					setTimeout(function(){
-						$.systemMessage.close();
-					}, time);
-				}
-			});
-		</script>
-		<?php } ?>
+<div class="loading-wrapper" style="display: none;">
+    <div class="loading">
+        <div class="inner rotate-one"></div>
+        <div class="inner rotate-two"></div>
+        <div class="inner rotate-three"></div>
+    </div>
+</div>
+<?php if ($haveMsg) { ?>
+<script >
+	$("document").ready(function(){
+		if( CONF_AUTO_CLOSE_SYSTEM_MESSAGES == 1 ){
+			var time = CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES * 1000;
+			setTimeout(function(){
+				$.systemMessage.close();
+			}, time);
+		}
+	});
+</script>
+<?php } ?>
 	<!--wrapper end here-->
 
-	<?php if( AdminAuthentication::isAdminLogged() ){ ?>
+	<?php if (AdminAuthentication::isAdminLogged()) { ?>
 	<!--div class="color_pallete">
 		<a href="#" class="pallete_control"><i class="ion-android-settings icon"></i></a>
 		<div class="controlwrap">
@@ -63,5 +71,5 @@
 <?php
 /* $autoRestartOn =  FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1);
 if($autoRestartOn == applicationConstants::YES && CommonHelper::demoUrl()) {
-	$this->includeTemplate( 'restore-system/page-content.php');
+    $this->includeTemplate( 'restore-system/page-content.php');
 } */

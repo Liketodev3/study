@@ -32,7 +32,7 @@ class Zoom
         do{
             $response = $this->getUsers($page_number);
             $emailIds = array_column($response['users'], 'email');
-            $idx = array_search($email,$emailIds);
+            $idx = array_search(strtolower($email), array_map('strtolower', $emailIds));
             if($idx!==false){
                 return $response['users'][$idx]['id'];
             }

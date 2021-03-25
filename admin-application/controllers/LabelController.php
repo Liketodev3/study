@@ -236,17 +236,16 @@ class LabelController extends AdminBaseController
 	{
 		$this->objPrivilege->canEditLanguageLabel();
 		if ( !is_uploaded_file($_FILES['import_file']['tmp_name']) ) {
-			Message::addErrorMessage(Label::getLabel('LBL_Please_Select_A_CSV_File', $this->adminLangId));
-			FatUtility::dieJsonError( Message::getHtml() );
+			FatUtility::dieJsonError( Label::getLabel('LBL_Please_Select_A_CSV_File', $this->adminLangId) );
 		}
-		$post = FatApp::getPostedData();
-		
+
 		if( !in_array($_FILES['import_file']['type'], CommonHelper::isCsvValidMimes()) ){
-			Message::addErrorMessage( Label::getLabel( "LBL_Not_a_Valid_CSV_File", $this->adminLangId ) );
-			FatUtility::dieJsonError( Message::getHtml() );
+			FatUtility::dieJsonError( Label::getLabel( "LBL_Not_a_Valid_CSV_File", $this->adminLangId ) );
 		}
+
+        set_time_limit(0);
+
 		$db = FatApp::getDb();
-		
 		$langSrch = Language::getSearchObject();
 		$langSrch->doNotCalculateRecords();
 		$langSrch->addMultipleFields( array( 'language_id', 'language_code', 'language_name' ) );
@@ -257,29 +256,47 @@ class LabelController extends AdminBaseController
 		$csvFilePointer = fopen($_FILES['import_file']['tmp_name'], 'r');
 		
 		$firstLine = fgetcsv( $csvFilePointer );
+
+        if(empty($firstLine)){
+            FatUtility::dieJsonError(Label::getLabel('LBL_NOT_A_VALID_CSV_FILE', $this->adminLangId));
+        }
+        
 		array_shift($firstLine);
 		$firstLineLangArr = $firstLine;
 		$langIndexLangIds = array();
+
 		foreach( $firstLineLangArr as $key => $langCode ){
+
+            if(!array_key_exists($langCode,$languages)){
+                continue;
+            }
+
 			$langIndexLangIds[$key] = $languages[$langCode]['language_id'];
 		}
-				
+        
+        if(empty($langIndexLangIds)){
+            FatUtility::dieJsonError(Label::getLabel('LBL_PLESAE_ADD_VAILD_LANGUAGE_CODE', $this->adminLangId));
+        }
+
 		while( ($line = fgetcsv($csvFilePointer) ) !== FALSE ){
 			if( $line[0] != ''){
 				$labelKey = array_shift($line);
 				foreach( $line as $key => $caption ){
-					$sql = "SELECT label_key FROM ". Label::DB_TBL ." WHERE label_key = " . $db->quoteVariable($labelKey). " AND label_lang_id = " .  $langIndexLangIds[$key];
-					$rs = $db->query( $sql );
-					if( $row = $db->fetch( $rs ) ){
-						$db->updateFromArray( Label::DB_TBL, array( 'label_caption' => $caption ), array('smt' => 'label_key = ? AND label_lang_id = ?', 'vals' => array( $labelKey, $langIndexLangIds[$key] ) ) );
-					} else {
-						$dataToSaveArr = array( 
-							'label_key'		=>	$labelKey,
-							'label_lang_id'	=>	$langIndexLangIds[$key],
-							'label_caption'	=>	$caption,
-						);
-						$db->insertFromArray(Label::DB_TBL, $dataToSaveArr );
-					}
+
+                    if(!array_key_exists($key,$langIndexLangIds)){
+                        continue;
+                    }
+                    $dataToSaveArr = array( 
+                        'label_key'		=>	$labelKey,
+                        'label_lang_id'	=>	$langIndexLangIds[$key],
+                        'label_caption'	=>	$caption,
+                    );
+
+                    $label = new Label(0);
+
+                    if(!$label->addUpdateData($dataToSaveArr)){
+                        FatUtility::dieJsonError($label->getError());
+                    }
 				}
 			}
 		}

@@ -37,7 +37,7 @@
 							<div>
 								<div class="tab-swticher tab-swticher-small">
 									<a href="<?php echo CommonHelper::generateUrl('Teacher'); ?>" class="btn btn--large is-active"><?php echo Label::getLabel('LBL_List'); ?></a>
-									<a onclick="viewCalendar();" href="javascript:void(0);" class="btn btn--large"><?php echo Label::getLabel('LBL_Calender'); ?></a>
+									<a onclick="viewCalendar();" href="javascript:void(0);" class="btn btn--large"><?php echo Label::getLabel('LBL_Calendar'); ?></a>
 								</div>
 							</div>
 							</div>
