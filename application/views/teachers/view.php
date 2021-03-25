@@ -7,7 +7,7 @@ $pixelToFillRight = FatUtility::convertToType($pixelToFillRight, FatUtility::VAR
 
 $teacherLanguage = 0;
 if (!empty($teacher['teachLanguages'])) {
-    $teacherLanguage = array_key_first($teacher['teachLanguages']);
+	 $teacherLanguage = key($teacher['teachLanguages']);
 }
 $langId = CommonHelper::getLangId();
 $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR_STRING, '');
