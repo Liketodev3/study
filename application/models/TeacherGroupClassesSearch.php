@@ -162,6 +162,7 @@ class TeacherGroupClassesSearch extends SearchBase
     {
         $db = FatApp::getDb();
         $this->joinScheduledLesson();
+        $this->joinGroupClassLang($langId);
         $this->joinScheduledLessonDetails();
         $this->joinTeacher();
         $this->joinTeacherCredentials();
