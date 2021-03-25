@@ -5,7 +5,7 @@ class CustomRouter
 	{
 		if (defined('SYSTEM_FRONT') && SYSTEM_FRONT === true && !FatUtility::isAjaxCall()) {
 
-			if (in_array($controller, array('js-css', 'image', 'fonts', 'images', 'js', 'img', 'innovas', 'assetmanager'))) {
+			if (UrlHelper::isStaticContentProvider($controller, $action)) {
 				return true;
 			}
 
@@ -29,7 +29,7 @@ class CustomRouter
 			if (!empty($new_url)) {
 				$cond->attachCondition(UrlRewrite::DB_TBL_PREFIX . 'custom', 'LIKE', $new_url, 'OR');
 			}
-			
+
 			$rs = $srch->getResultSet();
 			if (!$row = FatApp::getDb()->fetch($rs)) {
 				return;
