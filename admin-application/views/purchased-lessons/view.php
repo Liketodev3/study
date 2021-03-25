@@ -189,9 +189,9 @@
 										<td><?php echo $row['opayment_method'];?></td>
 										<td><?php echo CommonHelper::displayMoneyFormat($row['opayment_amount'], true, true);?></td>
 										<td><div class="break-me"><?php echo nl2br($row['opayment_comments']);?></div></td>
-										<td><div class="break-me text-overflow"><?php echo nl2br($row['opayment_gateway_response']);?>
+										<td><div class="break-me collapse-text"><?php echo nl2br($row['opayment_gateway_response']);?>
                                                
-                                            </div> <a class="btn-overflow" href="javascript:void(0)" >Show more</a></td>
+                                            </div> <a class="collapse-btn" href="javascript:void(0)" >Show more</a></td>
                                         
 									</tr>
 									<?php } ?>

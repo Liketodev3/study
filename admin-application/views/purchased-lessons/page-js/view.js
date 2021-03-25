@@ -74,8 +74,8 @@ var dv = '#lesson-deatils-js';
 	////////////////////////////////////////
 	collapseContent = function(){
 
-		var text = $('.text-overflow'),
-		btn = $('.btn-overflow'),
+		var text = $('.collapse-text'),
+		btn = $('.collapse-btn'),
 		h = text[0].scrollHeight; 
    
 		if(h > 120) {

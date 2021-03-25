@@ -58,7 +58,7 @@ padding-bottom: 2px;
     cursor: no-drop;
 }
 
-.text-overflow 
+.collapse-text 
 {
     width:250px;
     height:120px;
@@ -68,7 +68,7 @@ padding-bottom: 2px;
     word-wrap: break-word;
 }
 
-.btn-overflow 
+.collapse-btn 
 {
     display: none;
     text-decoration: none; 
