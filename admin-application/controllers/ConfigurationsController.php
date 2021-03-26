@@ -616,7 +616,9 @@ class ConfigurationsController extends AdminBaseController
                 $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Lessons,_orders,_etc)", $this->adminLangId).".</small>";
                 
                 $bookingSlots = applicationConstants::getBookingSlots();
-                $frm->addCheckBoxes(Label::getLabel("LBL_Lesson_durations", $this->adminLangId), "CONF_PAID_LESSON_DURATION", array_combine($bookingSlots, $bookingSlots), array(), array('class' => 'list-inline'));
+                $fld = $frm->addCheckBoxes(Label::getLabel("LBL_Lesson_durations", $this->adminLangId), "CONF_PAID_LESSON_DURATION", array_combine($bookingSlots, $bookingSlots), array(), array('class' => 'list-inline'));
+                $fld->htmlAfterField = "<br><small>".Label::getLabel("htmlAfterField_LESSON_DURATIONS_TEXT", $this->adminLangId).".</small>";
+
                 $frm->addRadioButtons(Label::getLabel("LBL_Default_Lesson_duration",  $this->adminLangId), "CONF_DEFAULT_PAID_LESSON_DURATION", array_combine($bookingSlots, $bookingSlots), '', array('class' => 'list-inline'));
                 
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_END_LESSON_DURATION", $this->adminLangId), "CONF_ALLOW_TEACHER_END_LESSON");

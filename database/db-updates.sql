@@ -325,6 +325,7 @@ ALTER TABLE `tbl_group_classes_lang`
 
 DELETE FROM `tbl_language_labels` WHERE `label_key` = 'LBL_Calender';
 
-INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Invalid_Username', '1', 'Username accepts only letters,numbers,(-),(_)')
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_Invalid_Username', '1', 'Username accepts only letters,numbers,(-),(_)'),
+ ('htmlAfterField_LESSON_DURATIONS_TEXT', '1', 'Please notify your tutors in advance before you change the lesson duration, since this can impact the tutor profile listing on the frontend.');
 
 
