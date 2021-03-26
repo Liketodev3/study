@@ -731,7 +731,14 @@ class TeachersController extends MyAppController
 		/* Week Day [ */
 		$weekDays = FatApp::getPostedData('filterWeekDays', FatUtility::VAR_STRING, array());
 		if ($weekDays) {
-			$srch->addCondition('ta.tgavl_day', 'IN', $weekDays);
+			$weekDates = MyDate::changeWeekDaysToDate($weekDays);
+			$condition = '( ';
+            foreach ($weekDates as $weekDayKey =>  $date) {
+				$condition .= ($weekDayKey == 0) ? '' : 'OR';
+				$condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "'.$date['endDate'].'" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "'.$date['startDate'].'" )';
+			}
+			$condition .= ' ) ';
+			$srch->addDirectCondition($condition);
 		}
 		/* ] */
 		/* Time Slot [ */
@@ -743,19 +750,21 @@ class TeachersController extends MyAppController
 		if ($timeSlots) {
 			$formatedArr = CommonHelper::formatTimeSlotArr($timeSlots);
 			if ($formatedArr) {
+				$condition = '( ';
 				foreach ($formatedArr as $key => $formatedVal) {
+					$condition .= ($key == 0) ? '' : 'OR';
+
 					$startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
 					$endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
 					$startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $user_timezone, $systemTimeZone)));
 					$endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $user_timezone, $systemTimeZone)));
-					if ($key == 0) {
-						$cnd = $srch->addCondition('tgavl_start_time', '<=', $startTime, 'AND');
-						$cnd->attachCondition('tgavl_end_time', '>=', $startTime, 'AND');
-					} else {
-						$newSrch = $cnd->attachCondition('tgavl_start_time', '<=', $endTime, 'OR');
-						$newSrch->attachCondition('tgavl_end_time', '>=', $endTime, 'AND');
-					}
+
+					$condition .= ' ( `tgavl_start_time` < "'.$endTime.'" and `tgavl_end_time` > "'.$startTime.'" )';
+				
 				}
+				
+				$condition .= ' ) ';
+				$srch->addDirectCondition($condition);
 			}
 		}
 		/* ] */
@@ -875,4 +884,5 @@ class TeachersController extends MyAppController
 		$frm->addSubmitButton('', 'btnTeacherSrchSubmit', '');
 		return $frm;
 	}
+	
 }

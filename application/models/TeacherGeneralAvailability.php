@@ -165,12 +165,19 @@ class TeacherGeneralAvailability extends MyAppModel
             
             foreach ($postJsonArr as $val) {
                 $gendate = new DateTime();
+              
                 $gendate->setISODate(2018, 2, $val->day);
-                $day = $gendate->format('d');
-                $dayNum = $day;
+                $dayNum = $gendate->format('d');
                 $startDate = "2018-01-".$dayNum." ". date('H:i:s', strtotime($val->startTime));
                 
                 $custom_tgavl_start = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+
+
+                $gendate = new DateTime();
+                $gendate->setISODate(2018, 2, $val->dayEnd);
+                $dayNum = $gendate->format('d');
+                $endDate = "2018-01-".$dayNum." ". date('H:i:s', strtotime($val->endTime));
+                $custom_tgavl_end = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
                 
                 $startDate = date('Y-m-d H:i:s', strtotime($val->startTime));
                 $endDate = date('Y-m-d H:i:s', strtotime($val->endTime));
@@ -184,14 +191,15 @@ class TeacherGeneralAvailability extends MyAppModel
                 $tgavl_start_time = date('H:i:00', strtotime($tgavl_start));
                 $tgavl_end_time = date('H:i:00', strtotime($tgavl_end));
 
-                $day = MyDate::getDayNumber($tgavl_start);
-
+                $day = MyDate::getDayNumber($custom_tgavl_start);
+                
                 $insertArr = array(
                     'tgavl_day'         => $day,
                     'tgavl_user_id'     => $userId,
                     'tgavl_start_time'  => $tgavl_start_time,
                     'tgavl_end_time'    => $tgavl_end_time,
                     'tgavl_date'        => $custom_tgavl_start,
+                    'tgavl_end_date'    => $custom_tgavl_end,
                 );
 
                 if (!$db->insertFromArray(TeacherGeneralAvailability::DB_TBL, $insertArr)) {
