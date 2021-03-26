@@ -11,6 +11,7 @@ Bugs:
     #048965 - Fixed issue in join with zoom not work for users having email in capital letters
     #051602 - LBL_Calender - incorrect spelling for calendar
     #051600 - Previously teacher has the access of slot and admin remove access for same then also its visible to user.
+    #051630 - Teacher previosly set his account and then removed all languages then at price tab >> slots labels are coming.
 ===================================================================================================================
 Release Number: TV-2.11.0.20210317
 Release Date: 2021-03-17
