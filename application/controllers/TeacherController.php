@@ -176,26 +176,28 @@ class TeacherController extends TeacherBaseController
         $userToLanguage = new UserToLanguage($userId);
 
         // CommonHelper::printArray($post);die;
-        
-        foreach ($post['utl_single_lesson_amount'] as $tlang=>$priceAr) {
-            foreach ($priceAr as $slot=>$single_lesson_price) {
-                $bulk_lesson_price = $post['utl_bulk_lesson_amount'][$tlang][$slot];
-                if(!in_array($slot, $post['duration'])) {
-                    $single_lesson_price = 0;
-                    $bulk_lesson_price = 0;
-                }
-                $utl_data = array(
-                    'utl_single_lesson_amount'  => $single_lesson_price, 
-                    'utl_bulk_lesson_amount'    => $bulk_lesson_price, 
-                    'utl_slanguage_id'          => $tlang, 
+        if (!empty($post['utl_single_lesson_amount'])) {
+            foreach ($post['utl_single_lesson_amount'] as $tlang=>$priceAr) {
+                foreach ($priceAr as $slot=>$single_lesson_price) {
+                    $bulk_lesson_price = $post['utl_bulk_lesson_amount'][$tlang][$slot];
+                    if (!in_array($slot, $post['duration'])) {
+                        $single_lesson_price = 0;
+                        $bulk_lesson_price = 0;
+                    }
+                    $utl_data = array(
+                    'utl_single_lesson_amount'  => $single_lesson_price,
+                    'utl_bulk_lesson_amount'    => $bulk_lesson_price,
+                    'utl_slanguage_id'          => $tlang,
                     'utl_booking_slot'          => $slot
                 );
-                if (!$userToLanguage->saveTeachLang($utl_data)) {
-                    Message::addErrorMessage($userToLanguage->getError());
-                    FatUtility::dieJsonError(Message::getHtml());
+                    if (!$userToLanguage->saveTeachLang($utl_data)) {
+                        Message::addErrorMessage($userToLanguage->getError());
+                        FatUtility::dieJsonError(Message::getHtml());
+                    }
                 }
             }
         }
+
         $userObj = new UserSetting(UserAuthentication::getLoggedUserId());
         if(isset($data['us_is_trial_lesson_enabled'])){
             $isFreeTrial['us_is_trial_lesson_enabled'] = $data['us_is_trial_lesson_enabled'];
