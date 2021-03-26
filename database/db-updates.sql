@@ -310,7 +310,6 @@ INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.0.20210317' WHERE `tbl_configurations`.`conf_name` = 'CONF_YOCOACH_VERSION'; 
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('htmlAfterField_booking_before_text', 1, 'Only applicable for single lesson class.');
-ALTER TABLE `tbl_issue_report_options` ADD `tissueopt_user_type` TINYINT NOT NULL;
 
 CREATE TABLE `tbl_group_classes_lang` (
   `grpclslang_grpcls_id` int(11) NOT NULL,
@@ -329,3 +328,6 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
  ('htmlAfterField_LESSON_DURATIONS_TEXT', '1', 'Please notify your tutors in advance before you change the lesson duration, since this can impact the tutor profile listing on the frontend.');
 
 
+
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.1.20210326' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

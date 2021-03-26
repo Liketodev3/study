@@ -1,19 +1,49 @@
 This file shares the details of the Yo!Coach version and change log.
-Release Number:
-Release Date:
+
+Release Number: TV-2.11.1.20210326
+Release Date: 2021-03-26
 
 Bugs:
-    #051013 - A suggestion to differentiate the single lesson class and group class in terms of booking.
-    #051451 - Admin >> goup class setting donot accept alphabets.
-    #050897 - Teacher and learner >> calender >> need to show end time also as now there are multiple slots.
-    #051458 - CLear Search button needs alignment 
-    #047762 - When user import label then error is showing.
-    #048965 - Fixed issue in join with zoom not work for users having email in capital letters
-    #051602 - LBL_Calender - incorrect spelling for calendar
-    #051600 - Previously teacher has the access of slot and admin remove access for same then also its visible to user.
-    #051630 - Teacher previosly set his account and then removed all languages then at price tab >> slots labels are coming.
-    #051629 - Need to add tool tip at setting >> option
-    #051628 - Previously teacher added price for slot >> admin remove that slot >> admin again provide removed slot >> price that was previously set should not come for teacher >> now the price which was previously set is coming.
+    
+    . #051647
+    . #051645
+    . #051630
+    . #051629
+    . #051624
+    . #051602
+    . #051600
+    . #051568
+    . #051458
+    . #051451
+    . #051408
+    . #051396
+    . #051366
+    . #051365
+    . #051276
+    . #051255
+    . #051184
+    . #051013
+    . #050897
+    . #050853
+    . #050298
+    . #049973
+    . #049647
+    . #049602
+    . #048965
+    . #048614
+    . #048531
+    . #047837
+    . #047762
+    . #047386
+    . #045564
+    . #045497
+    . #044726
+    . #044492
+    . #044264
+    . #051630
+    . #051629
+
+
 ===================================================================================================================
 Release Number: TV-2.11.0.20210317
 Release Date: 2021-03-17
