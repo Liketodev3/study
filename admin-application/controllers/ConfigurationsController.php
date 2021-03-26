@@ -157,14 +157,22 @@ class ConfigurationsController extends AdminBaseController
                 FatUtility::dieJsonError(Message::getHtml());
             }
         }
-
+        $unselectedSlot = [];
         if (array_key_exists('CONF_PAID_LESSON_DURATION', $post)) {
+            $bookingSlots = applicationConstants::getBookingSlots();
+            $unselectedSlot = array_diff($bookingSlots, $post['CONF_PAID_LESSON_DURATION']);
             $post['CONF_PAID_LESSON_DURATION'] = implode(',', $post['CONF_PAID_LESSON_DURATION']);
         }
-
+       
+        
         if (!$record->update($post)) {
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
+        }
+        
+        if(!empty($unselectedSlot)){
+            $userToLanguage = new UserToLanguage();
+            $userToLanguage->removeTeachSlots($unselectedSlot);
         }
 
         $this->set('msg', Label::getLabel('MSG_Setup_Successful', $this->adminLangId));
