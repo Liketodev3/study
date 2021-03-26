@@ -13,6 +13,7 @@ Bugs:
     #051600 - Previously teacher has the access of slot and admin remove access for same then also its visible to user.
     #051630 - Teacher previosly set his account and then removed all languages then at price tab >> slots labels are coming.
     #051629 - Need to add tool tip at setting >> option
+    #051628 - Previously teacher added price for slot >> admin remove that slot >> admin again provide removed slot >> price that was previously set should not come for teacher >> now the price which was previously set is coming.
 ===================================================================================================================
 Release Number: TV-2.11.0.20210317
 Release Date: 2021-03-17
