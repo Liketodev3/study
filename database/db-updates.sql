@@ -327,6 +327,9 @@ DELETE FROM `tbl_language_labels` WHERE `label_key` = 'LBL_Calender';
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_Invalid_Username', '1', 'Username accepts only letters,numbers,(-),(_)'),
  ('htmlAfterField_LESSON_DURATIONS_TEXT', '1', 'Please notify your tutors in advance before you change the lesson duration, since this can impact the tutor profile listing on the frontend.');
 
+ALTER TABLE `tbl_teachers_general_availability` ADD `tgavl_end_date` DATE NOT NULL AFTER `tgavl_date`;
+
+UPDATE `tbl_teachers_general_availability` SET `tgavl_end_date` =( CASE WHEN `tgavl_start_time` >= `tgavl_end_time` THEN DATE_ADD(`tgavl_date`, INTERVAL 1 DAY) ELSE `tgavl_date` END) WHERE `tgavl_end_date` = '0000-00-00';
 
 
 
