@@ -330,3 +330,5 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 
 ALTER TABLE `tbl_teachers_general_availability` ADD `tgavl_end_date` DATE NOT NULL AFTER `tgavl_date`;
 
+UPDATE `tbl_teachers_general_availability` SET `tgavl_end_date` =( CASE WHEN `tgavl_start_time` >= `tgavl_end_time` THEN DATE_ADD(`tgavl_date`, INTERVAL 1 DAY) ELSE `tgavl_date` END) WHERE `tgavl_end_date` = '0000-00-00'
+
