@@ -189,9 +189,10 @@ class MyDate extends FatDate
 			$date = "2018-01-".$day;
 
 			$dateStart = $date." 00:00:00";
-			$dateStart = MyDate::changeDateTimezone($dateStart, $user_timezone, $systemTimeZone);
-			
-			$dateEnd = $date." 23:59:59";
+            $dateStart = MyDate::changeDateTimezone($dateStart, $user_timezone, $systemTimeZone);
+            
+			$date =  date('Y-m-d',strtotime($date." +1 day"));
+			$dateEnd = $date." 00:00:00";
 			$dateEnd = MyDate::changeDateTimezone($dateEnd, $user_timezone, $systemTimeZone);
 			
 			$newWeekDayArray[$key]['startDate'] = $dateStart;

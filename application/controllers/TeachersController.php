@@ -759,7 +759,7 @@ class TeachersController extends MyAppController
 					$startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $user_timezone, $systemTimeZone)));
 					$endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $user_timezone, $systemTimeZone)));
 
-					$condition .= ' ( `tgavl_start_time` < "'.$endTime.'" and `tgavl_end_time` > "'.$startTime.'" )';
+					$condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","'.$endTime.'") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","'.$startTime.'") ) ';
 				
 				}
 				
