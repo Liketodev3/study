@@ -12,6 +12,7 @@ if (!empty($defaultSlot)) {
         $defaultSlotFld->setFieldTagAttribute('disabled', 'disabled');
     }
 }
+
 $uTeachLangs = array_unique(array_column($tprices, 'utl_slanguage_id'));
 ?>
 <div class="section-head">
@@ -21,8 +22,6 @@ $uTeachLangs = array_unique(array_column($tprices, 'utl_slanguage_id'));
         </div>
     </div>
 </div>
-<?php //echo $frm->getFormHtml(); 
-?>
 <?php echo $frm->getFormTag(); ?>
 <div class="row">
     <div class="col-md-12">
@@ -44,7 +43,7 @@ $uTeachLangs = array_unique(array_column($tprices, 'utl_slanguage_id'));
         </div>
     </div>
 </div>
-<?php if (!empty($uTeachLangs)) { ?>
+<?php if (!empty($uTeachLangs) && !empty($uTeachLangs[0])) { ?>
     <div class="row">
         <div class="col-md-12">
             <h6><?php echo Label::getLabel('LBL_Lesson_Durations') ?></h6>
