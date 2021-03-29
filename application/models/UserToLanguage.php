@@ -192,7 +192,6 @@ class UserToLanguage extends MyAppModel
     {
         $slots = implode(",",$slots);
         $db =  FatApp::getDb();
-        $db->logQueries(true, CONF_INSTALLATION_PATH . 'public/dbLog.log');
         $db->query('DELETE  FROM '.self::DB_TBL_TEACH.' WHERE utl_booking_slot IN ('.$slots.')');
         if ($db->getError()) {
             return false;
