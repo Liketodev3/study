@@ -1,8 +1,14 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number: TV-2.11.1.20210326
-Release Date: 2021-03-26
+Release Number:
+Release Date:
 
+Bugs:
+    
+    . #051703 - Front end >> apply to teach >> not able to register with Teacher.
+
+
+=====================================================================
 Bugs:
     
     . #051647
