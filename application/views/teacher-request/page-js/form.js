@@ -150,6 +150,10 @@ $("document").ready(function(){
 		}else{
 			wid = 280;
 		}
+	
+		if (0 >= frmProfileImage.user_profile_image.files.length ) {
+			return false;
+		}
 
 		var defaultform = "#frmProfileImage";
 		$("#avatar-action").val("demo_avatar");
