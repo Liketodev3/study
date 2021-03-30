@@ -1,15 +1,7 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of TeacherSearch
- *
- * @author sher
  */
 class TeacherSearch extends SearchBase
 {
@@ -25,6 +17,7 @@ class TeacherSearch extends SearchBase
     {
         $this->langId = $langId;
         parent::__construct('tbl_users', 'teacher');
+        $this->joinTable('tbl_user_credentials', 'INNER JOIN', 'cred.credential_user_id = teacher.user_id', 'cred');
         $this->joinTable('tbl_teacher_stats', 'INNER JOIN', 'testat.testat_user_id = teacher.user_id', 'testat');
         $this->doNotCalculateRecords();
     }
@@ -42,7 +35,7 @@ class TeacherSearch extends SearchBase
         }
     }
 
-    public function getSearchListingFields(): array
+    public static function getSearchListingFields(): array
     {
         return [
             'teacher.user_id' => 'user_id',
@@ -70,9 +63,10 @@ class TeacherSearch extends SearchBase
         $this->addCondition('teacher.user_is_teacher', '=', 1);
         $this->addCondition('teacher.user_country_id', '>', 0);
         $this->addCondition('teacher.user_url_name', '!=', "");
+        $this->addCondition('cred.credential_active', '=', 1);
+        $this->addCondition('cred.credential_verified', '=', 1);
         $this->addCondition('testat.testat_preference', '=', 1);
         $this->addCondition('testat.testat_qualification', '=', 1);
-        $this->addCondition('testat.testat_valid_cred', '=', 1);
         $this->addCondition('testat.testat_teachlang', '=', 1);
         $this->addCondition('testat.testat_speaklang', '=', 1);
         $this->addCondition('testat.testat_gavailability', '=', 1);

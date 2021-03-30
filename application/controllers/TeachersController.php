@@ -50,6 +50,7 @@ class TeachersController extends MyAppController
         $srch->applyOrderBy($sortOrder);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
+        echo $srch->getQuery();die;
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $records = $srch->formatTeacherSearchData($rawData, $userId);
         $recordCount = $srch->getRecordCount();
@@ -65,78 +66,6 @@ class TeachersController extends MyAppController
         $this->set('recordCount', $recordCount);
         $this->set('pageCount', ceil($recordCount / $pageSize));
         $this->_template->render(false, false);
-    }
-
-    public function teachersList_()
-    {
-        $frmSrch = $this->getTeacherSearchForm();
-        $post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
-        if (false === $post) {
-            Message::addErrorMessage($frmSrch->getValidationErrors());
-            FatUtility::dieWithError(Message::getHtml());
-        }
-        $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
-        if ($page < 2) {
-            $page = 1;
-        }
-        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
-        /* $json['status'] = true;
-          $json['msg'] = ''; */
-
-        $srch = new stdClass();
-        $this->searchTeachers($srch);
-        $srch->joinUserLang($this->siteLangId);
-        $srch->joinTeacherLessonData(0, false, false);
-        $srch->joinRatingReview();
-        $srch->addMultipleFields(array(
-            // 'ulg.*', 
-            'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
-            'utls.minPrice'
-            // 'utls.*'
-        ));
-        $srch->setPageSize($pageSize);
-        $srch->setPageNumber($page);
-        $srch->removGroupBy('sl.slesson_teacher_id');
-        if (UserAuthentication::isUserLogged()) {
-            $srch->addCondition('user_id', '!=', UserAuthentication::getLoggedUserId());
-        }
-        // echo $srch->getQuery();die;
-        $rs = $srch->getResultSet();
-
-        $db = FatApp::getDb();
-        $teachersList = $db->fetchAll($rs);
-        // CommonHelper::printArray($teachersList);die;
-        $totalRecords = $srch->recordCount();
-        $pagingArr = array(
-            'pageCount' => $srch->pages(),
-            'page' => $page,
-            'pageSize' => $pageSize,
-            'recordCount' => $totalRecords,
-        );
-
-        $this->set('teachers', $teachersList);
-        $post['page'] = $page;
-        $this->set('postedData', $post);
-        $this->set('pagingArr', $pagingArr);
-        $html = $this->_template->render(false, false, 'teachers/teachers-list.php', true);
-        $this->set('html', $html);
-        $startRecord = ($page - 1) * $pageSize + 1;
-        if ($totalRecords < 1) {
-            $startRecord = 0;
-        }
-        $endRecord = $page * $pageSize;
-        if ($totalRecords < $endRecord) {
-            $endRecord = $totalRecords;
-        }
-        $this->set('startRecord', $startRecord);
-        $this->set('endRecord', $endRecord);
-        $this->set('totalRecords', $totalRecords);
-        $this->set('msg', Label::getLabel('LBL_Request_Processing..'));
-        /* $json['startRecord'] = $startRecord ;
-          $json['endRecord'] = $endRecord;
-          $json['totalRecords'] = $totalRecords; */
-        //FatUtility::dieJsonSuccess($json);
-        $this->_template->render(false, false, 'json-success.php', false, false);
     }
 
     public function spokenLanguagesAutoCompleteJson()
