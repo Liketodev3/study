@@ -181,6 +181,10 @@ class Cart extends FatModel
     public function cartData($langId)
     {
         $key = key($this->SYSTEM_ARR['cart']);
+        if(empty($key)){
+            $this->error = Label::getLabel('LBL_SOMETHING_WENT_WORNG');
+			return false;
+        }
         $cartData = $this->SYSTEM_ARR['cart'][$key];
         $languageId = $cartData['languageId'];
         $lessonDuration = $cartData['lessonDuration'];
@@ -260,6 +264,7 @@ class Cart extends FatModel
 			$itemPrice = $classDetails['grpcls_entry_fee'];
 			$totalPrice = $itemPrice;
 		}else{
+            $this->removeCartKey($key);
             $this->error = Label::getLabel('LBL_Invalid_Request');
 			return false;
         }
@@ -286,7 +291,7 @@ class Cart extends FatModel
             /* cart Summary[ */
             $this->cartData = $this->cartData($langId);
             if(empty($this->cartData)) {
-                return false;
+                return [];
             }
             $userWalletBalance = User::getUserBalance($this->cart_user_id);
             $cartTotal = $this->cartData['total'];
