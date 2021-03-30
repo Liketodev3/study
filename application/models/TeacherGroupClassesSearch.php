@@ -188,9 +188,10 @@ class TeacherGroupClassesSearch extends SearchBase
         return $db->fetch($rs);
     }
 
-    public static function getClassDetailsByTeacher($grpcls_id, $teacher_id)
+    public static function getClassDetailsByTeacher($grpcls_id, $teacher_id, $langId)
     {
         $srch = new TeacherGroupClassesSearch();
+        $srch->joinGroupClassLang($langId);
         $srch->addMultipleFields(
             array(
                 'grpcls_id',
