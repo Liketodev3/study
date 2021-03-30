@@ -144,7 +144,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         $systemTimeZone = MyDate::getTimeZone();
 
         if ($grpcls_id > 0) {
-            $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpcls_id, $teacher_id);
+            $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpcls_id, $teacher_id, $this->siteLangId);
             if (empty($class_details)) {
                 FatUtility::dieJsonError(Label::getLabel("LBL_Unauthorized"));
             }
@@ -304,7 +304,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         }
 
         $teacher_id = UserAuthentication::getLoggedUserId();
-        $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpclsId, $teacher_id);
+        $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpclsId, $teacher_id, $this->siteLangId);
         if (empty($class_details)) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Unauthorized"));
         }
@@ -323,7 +323,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         }
 
         $teacher_id = UserAuthentication::getLoggedUserId();
-        $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpclsId, $teacher_id);
+        $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpclsId, $teacher_id, $this->siteLangId);
         if (empty($class_details)) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Unauthorized"));
         }

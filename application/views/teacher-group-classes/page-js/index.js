@@ -14,7 +14,7 @@ $(function () {
 			jQuery('#grpcls_start_datetime,#grpcls_end_datetime').each(function () {
 				$(this).datetimepicker({
 					format: 'Y-m-d H:i',
-					lang: 'pb'
+
 				});
 			});
 
