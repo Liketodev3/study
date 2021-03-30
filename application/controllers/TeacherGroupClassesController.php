@@ -163,16 +163,6 @@ class TeacherGroupClassesController extends TeacherBaseController
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
 
-        $price = UserToLanguage::getAttributesByUserAndLangId($teacher_id, $post['grpcls_slanguage_id'], 'utl_single_lesson_amount');
-
-        if (empty($price) || $price < 1) {
-            FatUtility::dieJsonError(Label::getLabel("LBL_Price_needs_to_be_set_for_the_selected_language"));
-        }
-
-        if ($price < $post['grpcls_entry_fee']) {
-            FatUtility::dieJsonError(Label::getLabel("LBL_Price_needs_to_be_less_than_single_lesson"));
-        }
-
         $post['grpcls_teacher_id'] = $teacher_id;
         $post['grpcls_start_datetime'] = MyDate::changeDateTimezone($post['grpcls_start_datetime'], $user_timezone, $systemTimeZone);
         $post['grpcls_end_datetime'] = MyDate::changeDateTimezone($post['grpcls_end_datetime'], $user_timezone, $systemTimeZone);
