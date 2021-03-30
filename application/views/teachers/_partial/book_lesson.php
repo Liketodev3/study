@@ -1,22 +1,22 @@
-<?php 
+<?php
 defined('SYSTEM_INIT') or die('Invalid Usage.');
 $teacherLanguage = 1;
-if( !empty( $teacher['teachLanguages'] ) ) {
-	foreach( $teacher['teachLanguages'] as $key=>$val ) {
-		$teacherLanguage = $key;
-		break;
-	}	
+if (!empty($teacher['teachLanguages'])) {
+    foreach ($teacher['teachLanguages'] as $key=>$val) {
+        $teacherLanguage = $key;
+        break;
+    }
 }
 
 $lessonPackages = $teacher['lessonPackages'];
-if( count($lessonPackages) ){
-    $lessonPackage = array_shift( $lessonPackages );
+if (count($lessonPackages)) {
+    $lessonPackage = array_shift($lessonPackages);
 }
 
-?>
+if ($loggedUserId != $teacher['user_id']) { ?>
 
 <div class="Lprice-btn">	
-    <?php if( count($teacher['lessonPackages']) && !empty($bookingDuration)){ ?>
+    <?php if (count($teacher['lessonPackages']) && !empty($bookingDuration)) { ?>
     <a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','', <?php echo $teacherLanguage.', 0, '.$bookingDuration; ?> )" class="btn btn--primary"><?php echo Label::getLabel('LBL_Book_Now') ?></a>
     <?php } ?>
 
@@ -29,3 +29,4 @@ if( count($lessonPackages) ){
         <?php echo Label::getLabel('LBL_Message'); ?>
     </a>	
 </div>
+<?php } ?>

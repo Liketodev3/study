@@ -285,7 +285,7 @@ class TeachersController extends MyAppController
 		$teacher['preferences'] = $teacherPreferences;
 		$teacher['proficiencyArr'] = SpokenLanguage::getProficiencyArr(CommonHelper::getLangId());
 		$this->set('teacher', $teacher);
-        
+        $this->set('loggedUserId', UserAuthentication::getLoggedUserId(true));
         $this->_template->addJs('js/enscroll-0.6.2.min.js');
         
 		$this->_template->render();

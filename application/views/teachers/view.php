@@ -245,6 +245,10 @@ foreach($userTeachLangs as $userTeachLang){
 						$btnClass = 'btn-primary';
 						$btnText =  "LBL_Book_Free_Trial";
 					}
+					if($loggedUserId == $teacher['user_id']){
+                        $onclick = "";
+						$disabledText = "disabled";
+					}
 				?>
 				<div class="box box--cta -padding-30">
 					<h4 class="-text-bold"><?php echo Label::getLabel('LBL_FREE_Trail'); ?></h4>
@@ -294,7 +298,7 @@ foreach($userTeachLangs as $userTeachLang){
                                                         <?php 
 															foreach($prices as $lang_id=>$price_info): 
 																$onclick = '';
-																if (!empty($lessonPackages)) {
+																if (!empty($lessonPackages) && $loggedUserId != $teacher['user_id']) {
 																	$onclick = "cart.add('". $teacher['user_id']."','".$lessonPackage['lpackage_id']."','','','". $lang_id."', 0, '".$slot."')";
 																}
 														?>
@@ -326,7 +330,7 @@ foreach($userTeachLangs as $userTeachLang){
                                                             <?php 
 																foreach($prices as $lang_id=>$price_info): 
 																	$onclick = '';
-                                                                    if (!empty($lessonPackages)) {
+                                                                    if (!empty($lessonPackages) && $loggedUserId != $teacher['user_id']) {
                                                                         $onclick = "cart.add('". $teacher['user_id']."','".$lessonPackage['lpackage_id']."','','','". $lang_id."', 0, '".$slot."')";
                                                                     }
 															?>
@@ -346,7 +350,7 @@ foreach($userTeachLangs as $userTeachLang){
                                 </div>
                             </div>
 							<?php } ?>
-                            <?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher, 'bookingDuration' => $bookingDuration), false); ?>
+                            <?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher, 'bookingDuration' => $bookingDuration, 'loggedUserId' => $loggedUserId), false); ?>
                             
                         </div>
                     </div>
