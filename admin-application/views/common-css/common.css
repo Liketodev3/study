@@ -57,3 +57,19 @@ padding-bottom: 2px;
 {
     cursor: no-drop;
 }
+
+.collapse-text 
+{
+    width:250px;
+    height:120px;
+    display:block; 
+    overflow:hidden;
+    word-break: break-word;
+    word-wrap: break-word;
+}
+
+.collapse-btn 
+{
+    display: none;
+    text-decoration: none; 
+}

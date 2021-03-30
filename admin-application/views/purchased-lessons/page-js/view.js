@@ -1,5 +1,8 @@
+
 $(document).ready(function(){
+	
 	serachScheduledLesson(1);
+	collapseContent();
 });
 var dv = '#lesson-deatils-js';
 (function() {
@@ -68,5 +71,37 @@ var dv = '#lesson-deatils-js';
 			}
 		});
 	};
+	////////////////////////////////////////
+	collapseContent = function(){
+
+		var text = $('.collapse-text'),
+		btn = $('.collapse-btn'),
+		h = text[0].scrollHeight; 
+   
+		if(h > 120) {
+			btn.addClass('less');
+			btn.css('display', 'block');
+		}
+
+		btn.click(function(e) 
+		{
+			e.stopPropagation();
+			if (btn.hasClass('less')) {
+				btn.removeClass('less');
+				btn.addClass('more');
+				btn.text('Show less');
+		  
+				text.animate({'height': h});
+			} else {
+				btn.addClass('less');
+				btn.removeClass('more');
+				btn.text('Show more');
+				text.animate({'height': '120px'});
+			}  
+
+		});
+	}
 
 })();
+
+

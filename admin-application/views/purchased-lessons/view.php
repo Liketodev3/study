@@ -101,7 +101,7 @@
                                 <h4><?php echo Label::getLabel('Lbl_Class_Details'); ?></h4>
                             </div>
                             <div class="row space">
-                                <div class="addresas-group">
+                                <div class="addresas-group ">
                                     <h5><?php echo Label::getLabel('Lbl_Class_Details'); ?></h5>
                                     <p>
 										<strong><?php echo Label::getLabel('LBL_Class_Type'); ?> : </strong><?php echo ($order['op_grpcls_id'] > 0) ? Label::getLabel('LBL_GROUP_CLASS') : Label::getLabel('LBL_ONE_TO_ONE'); ?><br>
@@ -123,6 +123,7 @@
 
 										<strong><?php echo Label::getLabel('LBL_Teach_Language'); ?> : </strong><?php echo $order['teachLang']; ?><br> 
 									</p>
+                                    
                                 </div>
                             </div>
                         </section>
@@ -188,7 +189,10 @@
 										<td><?php echo $row['opayment_method'];?></td>
 										<td><?php echo CommonHelper::displayMoneyFormat($row['opayment_amount'], true, true);?></td>
 										<td><div class="break-me"><?php echo nl2br($row['opayment_comments']);?></div></td>
-										<td><div class="break-me"><?php echo nl2br($row['opayment_gateway_response']);?></div></td>
+										<td><div class="break-me collapse-text"><?php echo nl2br($row['opayment_gateway_response']);?>
+                                               
+                                            </div> <a class="collapse-btn" href="javascript:void(0)" >Show more</a></td>
+                                        
 									</tr>
 									<?php } ?>
 								</tbody>
