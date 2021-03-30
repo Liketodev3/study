@@ -324,7 +324,6 @@ ALTER TABLE `tbl_group_classes_lang`
 
 DELETE FROM `tbl_language_labels` WHERE `label_key` = 'LBL_Calender';
 
-<<<<<<< HEAD
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_Invalid_Username', '1', 'Username accepts only letters,numbers,(-),(_)'),
  ('htmlAfterField_LESSON_DURATIONS_TEXT', '1', 'Please notify your tutors in advance before you change the lesson duration, since this can impact the tutor profile listing on the frontend.');
 
@@ -332,9 +331,7 @@ ALTER TABLE `tbl_teachers_general_availability` ADD `tgavl_end_date` DATE NOT NU
 
 UPDATE `tbl_teachers_general_availability` SET `tgavl_end_date` =( CASE WHEN `tgavl_start_time` >= `tgavl_end_time` THEN DATE_ADD(`tgavl_date`, INTERVAL 1 DAY) ELSE `tgavl_date` END) WHERE `tgavl_end_date` = '0000-00-00';
 
-=======
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Invalid_Username', '1', 'Username accepts only letters,numbers,(-),(_) and length between 3 to 35')
->>>>>>> bug_051624_username_field_accept_spcl_char
 
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.1.20210326' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

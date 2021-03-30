@@ -328,6 +328,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if ($lessonId) {
             $srch->addCondition('sflashcard_slesson_id', '=', $lessonId);
         }
+        $srch->addCondition('sflashcard_learner_id', '=', UserAuthentication::getLoggedUserId());
         // $srch->addCondition('sflashcard_learner_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addOrder('flashcard_id', 'DESC');
         $srch->addMultipleFields(array(
