@@ -233,10 +233,11 @@ class TeacherSearch extends SearchBase
         $speakLangs = static::getSpeakLangs($langId, $teacherIds);
         foreach ($records as $key => $record) {
             $record['uft_id'] = $favorites[$record['user_id']] ?? 0;
+            $record['user_profile_info'] = $langData[$record['user_id']] ?? '';
             $record['user_country_name'] = $countries[$record['user_country_id']] ?? '';
-            $record['userlang_user_profile_Info'] = $langData[$record['user_id']] ?? '';
             $record['teacherTeachLanguageName'] = $teachLangs[$record['user_id']] ?? '';
-            $record['spoken_language_names'] = $speakLangs[$record['user_id']] ?? '';
+            $record['spoken_language_names'] = $speakLangs[$record['user_id']]['slanguage_name'] ?? '';
+            $record['spoken_languages_proficiency'] = $speakLangs[$record['user_id']]['utsl_proficiency'] ?? '';
             $records[$key] = $record;
         }
         return $records;
@@ -319,9 +320,10 @@ class TeacherSearch extends SearchBase
         }
         $srch = new SearchBase('tbl_user_teach_languages', 'utl');
         $srch->joinTable('tbl_teaching_languages_lang', 'INNER JOIN', 'tlanguage.tlanguagelang_tlanguage_id = utl.utl_slanguage_id', 'tlanguage');
-        $srch->addMultipleFields(['utl.utl_us_user_id', 'tlanguage.tlanguage_name']);
+        $srch->addMultipleFields(['utl.utl_us_user_id', 'GROUP_CONCAT(tlanguage.tlanguage_name) as tlanguage_name']);
         $srch->addCondition('tlanguage.tlanguagelang_lang_id', '=', $langId);
         $srch->addCondition('utl.utl_us_user_id', 'IN', $teacherIds);
+        $srch->addGroupBy('utl.utl_us_user_id');
         $srch->doNotCalculateRecords();
         $result = $srch->getResultSet();
         return FatApp::getDb()->fetchAllAssoc($result);
@@ -341,12 +343,13 @@ class TeacherSearch extends SearchBase
         }
         $srch = new SearchBase('tbl_user_to_spoken_languages', 'utsl');
         $srch->joinTable('tbl_spoken_languages_lang', 'INNER JOIN', 'slanguage.slanguagelang_slanguage_id = utsl.utsl_slanguage_id', 'slanguage');
-        $srch->addMultipleFields(['utsl.utsl_user_id', 'slanguage.slanguage_name']);
+        $srch->addMultipleFields(['utsl.utsl_user_id', 'GROUP_CONCAT(utsl.utsl_proficiency) as utsl_proficiency', 'GROUP_CONCAT(slanguage.slanguage_name) as slanguage_name']);
         $srch->addCondition('slanguage.slanguagelang_lang_id', '=', $langId);
         $srch->addCondition('utsl.utsl_user_id', 'IN', $teacherIds);
+        $srch->addGroupBy('utsl.utsl_user_id');
         $srch->doNotCalculateRecords();
         $result = $srch->getResultSet();
-        return FatApp::getDb()->fetchAllAssoc($result);
+        return FatApp::getDb()->fetchAll($result, 'utsl_user_id');
     }
 
     /**
@@ -393,5 +396,4 @@ class TeacherSearch extends SearchBase
     {
         $this->conditions = [];
     }
-
 }

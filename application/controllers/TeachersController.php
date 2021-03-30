@@ -38,10 +38,10 @@ class TeachersController extends MyAppController
     public function teachersList()
     {
         $post = FatApp::getPostedData();
-        $userId = UserAuthentication::getLoggedUserId();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 12);
         $sortOrder = FatApp::getPostedData('sortOrder', FatUtility::VAR_INT, 1);
+        $userId = UserAuthentication::isUserLogged() ? UserAuthentication::getLoggedUserId() : 0;
         $langId = CommonHelper::getLangId();
         $srch = new TeacherSearch($langId);
         $srch->addSearchListingFields();
@@ -56,7 +56,7 @@ class TeachersController extends MyAppController
         $startRecord = ($recordCount > 0) ? (($page - 1) * $pageSize + 1) : 0;
         $endRecord = ($recordCount < $page * $pageSize) ? $recordCount : $page * $pageSize;
         $recordCountTxt = ($recordCount > SEARCH_MAX_COUNT) ? $recordCount . '+' : $recordCount;
-        $showing = 'Showing ' . $startRecord . ' - ' . $endRecord . ' Of ' . $recordCountTxt;
+        $showing = 'Showing ' . $startRecord . ' - ' . $endRecord . ' Of ' . $recordCountTxt . ' ' . Label::getLabel('lbl_teachers');
         $this->set('showing', $showing);
         $this->set('teachers', $records);
         $this->set('postedData', $post);
@@ -92,7 +92,7 @@ class TeachersController extends MyAppController
             // 'ulg.*', 
             'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
             'utls.minPrice'
-                // 'utls.*'
+            // 'utls.*'
         ));
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
@@ -564,7 +564,7 @@ class TeachersController extends MyAppController
             'slns.slesson_end_time',
             'slns.slesson_end_date',
             'slns.slesson_grpcls_id',
-                //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName'
+            //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName'
         ));
         $userIds = [];
         $userIds[] = $userId;
@@ -864,7 +864,7 @@ class TeachersController extends MyAppController
             // 'utsl.spoken_languages_proficiency',
             'utls.teacherTeachLanguageName',
             'utl_ids',
-                // 'utl_slanguage_ids'
+            // 'utl_slanguage_ids'
         ));
     }
 
@@ -910,5 +910,4 @@ class TeachersController extends MyAppController
         $frm->addSubmitButton('', 'btnTeacherSrchSubmit', '');
         return $frm;
     }
-
 }
