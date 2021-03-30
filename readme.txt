@@ -1,5 +1,11 @@
 This file shares the details of the Yo!Coach version and change log.
+Release Number:
+Release Date:
 
+Bugs:
+    . #051733 - Teacher have access of slot >> user is on checkout page >> admin remove access of slot >> Checkout page crash 
+    
+======================================================================================
 Release Number: TV-2.11.1.20210326
 Release Date: 2021-03-26
 
