@@ -370,7 +370,9 @@ class GuestUserController extends MyAppController
         unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_access_token']);
         unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_user_id']);
         } */
+
         unset($_SESSION[UserAuthentication::SESSION_ELEMENT_NAME]);
+        unset($_SESSION['referer_page_url']);
         UserAuthentication::clearLoggedUserLoginCookie();
         FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
     }
