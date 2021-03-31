@@ -1,5 +1,4 @@
 This file shares the details of the Yo!Coach version and change log.
-
 Release Number: TV-2.11.2.20210331
 Release Date: 2021-03-31
 
