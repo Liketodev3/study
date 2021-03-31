@@ -422,6 +422,7 @@ $(document).ready(function () {
 		isRuningTeacherFavoriteAjax = true;
 
 		if (isUserLogged() == 0) {
+			isRuningTeacherFavoriteAjax = false;
 			logInFormPopUp();
 			return false;
 		}
@@ -439,7 +440,9 @@ $(document).ready(function () {
 					searchfavorites(document.frmFavSrch);
 				}
 			}
-		});
+		}, { errorFn: function () {
+			isRuningTeacherFavoriteAjax = false;
+		}});
 		$(el).blur();
 	}
 
