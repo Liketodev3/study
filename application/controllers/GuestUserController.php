@@ -708,7 +708,7 @@ class GuestUserController extends MyAppController
         }
 
         $userObj = new User(UserAuthentication::getLoggedUserId());
-        $srch = $userObj->getUserSearchObj(array('user_id', 'credential_email', 'user_first_name', 'user_last_name'));
+        $srch = $userObj->getUserSearchObj(array('user_id', 'credential_email', 'credential_password', 'user_first_name', 'user_last_name'));
         $rs = $srch->getResultSet();
 
         if (!$rs) {
@@ -723,41 +723,65 @@ class GuestUserController extends MyAppController
         }
         $db =  FatApp::getDb();
         $db->startTransaction();
-        $_token = $userObj->prepareUserVerificationCode();
+        $msg = Label::getLabel('LBL_EMAIL_UPDATE_SUCCESSFULL');
+        $redirectUrl = "";
         $emailChangeReqObj = new UserEmailChangeRequest();
         $emailChangeReqObj->deleteOldLinkforUser(UserAuthentication::getLoggedUserId());
-        $postData = array(
-            'uecreq_user_id' => UserAuthentication::getLoggedUserId(),
-            'uecreq_email' => $post['new_email'],
-            'uecreq_token' => $_token,
-            'uecreq_status' => 0,
-            'uecreq_created' => date('Y-m-d H:i:s'),
-            'uecreq_updated' => date('Y-m-d H:i:s'),
-            'uecreq_expire' => date('Y-m-d H:i:s', strtotime('+ 24 hours', strtotime(date('Y-m-d H:i:s'))))
-        );
+        $emailVerification = FatApp::getConfig('CONF_EMAIL_VERIFICATION_REGISTRATION', FatUtility::VAR_INT, 1);
+        if (applicationConstants::YES == $emailVerification) { 
+            $_token = $userObj->prepareUserVerificationCode();
+                $postData = array(
+                    'uecreq_user_id' => UserAuthentication::getLoggedUserId(),
+                    'uecreq_email' => $post['new_email'],
+                    'uecreq_token' => $_token,
+                    'uecreq_status' => 0,
+                    'uecreq_created' => date('Y-m-d H:i:s'),
+                    'uecreq_updated' => date('Y-m-d H:i:s'),
+                    'uecreq_expire' => date('Y-m-d H:i:s', strtotime('+ 24 hours', strtotime(date('Y-m-d H:i:s'))))
+                );
 
-        $emailChangeReqObj->assignValues($postData);
-        if (!$emailChangeReqObj->save()) {
-            $db->rollbackTransaction();
-            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
-            FatUtility::dieWithError(Message::getHtml());
-        }
+            $emailChangeReqObj->assignValues($postData);
+            if (!$emailChangeReqObj->save()) {
+                $db->rollbackTransaction();
+                Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
+                FatUtility::dieWithError(Message::getHtml());
+            }
 
-        $userData = array(
-            'user_email' => $post['new_email'],
-            'user_first_name' => $data['user_first_name'],
-            'user_last_name' => $data['user_last_name']
-        );
+            $userData = array(
+                'user_email' => $post['new_email'],
+                'user_first_name' => $data['user_first_name'],
+                'user_last_name' => $data['user_last_name']
+            );
 
-        if (!$this->sendEmailChangeVerificationLink($_token, $userData)) {
-            $db->rollbackTransaction();
-            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
-            FatUtility::dieWithError(Message::getHtml());
+            if (!$this->sendEmailChangeVerificationLink($_token, $userData)) {
+                $db->rollbackTransaction();
+                Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
+                FatUtility::dieWithError(Message::getHtml());
+            }
+            $msg =  Label::getLabel('MSG_UPDATE_EMAIL_REQUEST_SENT_SUCCESSFULLY._YOU_NEED_TO_VERIFY_YOUR_NEW_EMAIL_ADDRESS_BEFORE_ACCESSING_OTHER_MODULES');
+        }else{
+            if (!$userObj->changeEmail($post['new_email'])) {
+                Message::addErrorMessage(Label::getLabel('MSG_Email_could_not_be_set'));
+                FatUtility::dieWithError(Message::getHtml());
+            }
         }
         $db->commitTransaction();
+        $confAutoLoginRegisteration = FatApp::getConfig('CONF_AUTO_LOGIN_REGISTRATION', FatUtility::VAR_INT, 1);
+        if (applicationConstants::NO == $emailVerification) {
+            $authentication = new UserAuthentication();
+            if (!$authentication->login($post['new_email'], $data['credential_password'], $_SERVER['REMOTE_ADDR'], false)) {
+                Message::addErrorMessage(Label::getLabel($authentication->getError()));
+                FatUtility::dieWithError(Message::getHtml());
+            }
+            $redirectUrl = User::getPreferedDashbordRedirectUrl();
+        }
+        $returnJson =  ['msg' => $msg];
+        
+        if(!empty($redirectUrl)){
+            $returnJson['redirectUrl'] = $redirectUrl;
+        }
 
-        $this->set('msg', Label::getLabel('MSG_UPDATE_EMAIL_REQUEST_SENT_SUCCESSFULLY._YOU_NEED_TO_VERIFY_YOUR_NEW_EMAIL_ADDRESS_BEFORE_ACCESSING_OTHER_MODULES'));
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess($returnJson);
     }
 
     private function sendEmailChangeVerificationLink($_token, $data)
