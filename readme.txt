@@ -6,6 +6,7 @@ Bugs:
     . #051733 - Teacher have access of slot >> user is on checkout page >> admin remove access of slot >> Checkout page crash 
     . #051647 - Teacher click on message icon >> from his own profile >> first show Request in process and then show invalid request message>> Should not show request in process message as he cannot message himself.
     . #051365 - Admin >> orders >> orders >> view detail >> Gateway response is coming as coding >> if large is size ui break.
+    . #051732 - When user login with mobile number and password then facing a issue of email verification.
 ======================================================================================
 Release Number: TV-2.11.1.20210326
 Release Date: 2021-03-26
