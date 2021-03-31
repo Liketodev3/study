@@ -336,4 +336,4 @@ UPDATE `tbl_teachers_general_availability` SET `tgavl_end_date` =( CASE WHEN `tg
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_Invalid_Username', '1', 'Username accepts only letters,numbers,(-),(_) and length between 3 to 35');
 
 
-
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.2.20210331' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
