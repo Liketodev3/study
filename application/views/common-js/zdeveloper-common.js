@@ -415,12 +415,11 @@ $(document).ready(function () {
 	};
 
 	toggleTeacherFavorite = function (teacher_id, el) {
+		
 		if (isRuningTeacherFavoriteAjax) {
 			return false;
 		}
-
 		isRuningTeacherFavoriteAjax = true;
-
 		if (isUserLogged() == 0) {
 			isRuningTeacherFavoriteAjax = false;
 			logInFormPopUp();
@@ -431,10 +430,11 @@ $(document).ready(function () {
 		fcom.updateWithAjax(fcom.makeUrl('Learner', 'toggleTeacherFavorite'), data, function (ans) {
 			isRuningTeacherFavoriteAjax = false;
 			if (ans.status) {
+				
 				if (ans.action == 'A') {
 					$(el).addClass("is-active");
 				} else if (ans.action == 'R') {
-					$(el).removeClass("is-active");
+					$(el).removeClass("is-active");	
 				}
 				if (typeof searchfavorites != 'undefined') {
 					searchfavorites(document.frmFavSrch);

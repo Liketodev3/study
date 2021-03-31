@@ -8321,3 +8321,12 @@ color: #fff;}
         max-height: 300px; overflow:auto;
     }
 }
+
+.btn.btn--fav:focus {
+    background: var(--color-secondary);
+    color: #fff;
+}
+
+.btn.btn--fav:focus span svg{
+    fill: #fff;
+}
