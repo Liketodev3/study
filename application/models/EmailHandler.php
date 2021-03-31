@@ -687,17 +687,17 @@ class EmailHandler extends FatModel
         return false;
     }
 
-    public function sendWithdrawRequestNotification(array $withdrawalRequestData , string $adminOrUser = "A") : bool
+    public function sendWithdrawRequestNotification(array $withdrawalRequestData, string $adminOrUser = "A"): bool
     {
         $vars = array(
-        '{txn_id}' => Transaction::formatTransactionNumber($withdrawalRequestData['txn_id']),
-        '{user_first_name}' => $withdrawalRequestData['user_first_name'],
-        '{user_last_name}' => $withdrawalRequestData['user_last_name'],
-        '{payout_type}' => $withdrawalRequestData['payout_type'],
-        '{request_date}' => date('Y-m-d'),
-        '{withdrawal_amount}' => CommonHelper::displayMoneyFormat($withdrawalRequestData['withdrawal_amount'], true, true),
-        '{other_details}' => $withdrawalRequestData['other_details'],
-        '{withdrawal_comment}' => $withdrawalRequestData['withdrawal_comments']
+            '{txn_id}' => Transaction::formatTransactionNumber($withdrawalRequestData['txn_id']),
+            '{user_first_name}' => $withdrawalRequestData['user_first_name'],
+            '{user_last_name}' => $withdrawalRequestData['user_last_name'],
+            '{payout_type}' => $withdrawalRequestData['payout_type'],
+            '{request_date}' => date('Y-m-d'),
+            '{withdrawal_amount}' => CommonHelper::displayMoneyFormat($withdrawalRequestData['withdrawal_amount'], true, true),
+            '{other_details}' => $withdrawalRequestData['other_details'],
+            '{withdrawal_comment}' => $withdrawalRequestData['withdrawal_comments']
         );
         switch ($adminOrUser) {
             case 'A':
@@ -707,9 +707,9 @@ class EmailHandler extends FatModel
             default:
                 $to = $withdrawalRequestData['user_email'];
                 $tpl = 'new_withdrawal_request_mail_to_user';
-            break;
+                break;
         }
-        if (self::sendMailTpl( $to, $tpl, $this->commonLangId, $vars)) {
+        if (self::sendMailTpl($to, $tpl, $this->commonLangId, $vars)) {
             return true;
         }
         return false;
