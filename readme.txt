@@ -8,6 +8,7 @@ Bugs:
    #051769 - The refund percentage for group class does not match the general flow.
    #051839 - The Search class only responds for "English Language" and not for other langauges. 
    #051771 - Group class text over ongoing class not coming as correct.
+   #051877 - When user purchase a lesson then in need to be schedule stage>> when user cancel the lesson then got 50% refund, which is wrong, it should be 100% refund.
 
 ============================================================================================
 
