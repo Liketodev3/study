@@ -679,6 +679,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_CANCELLED],
         );
 
+
+
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], 'learner_cancelled_email', $this->siteLangId, $vars)) {
             Message::addErrorMessage(Label::getLabel("LBL_Mail_not_sent!!"));
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
@@ -1217,6 +1219,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         $srch = new stdClass();
         $this->searchLessons($srch);
+        $srch->joinLessonLanguage($this->siteLangId);
         $srch->joinTeacherCredentials();
         $srch->doNotCalculateRecords();
         $srch->addCondition('sldetail_id', '=', $lDetailId);
@@ -1226,14 +1229,11 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 'ut.user_id as teacher_id',
                 'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
                 'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
-                //'IFNULL(t_sl_l.slanguage_name, t_sl.slanguage_identifier) as teacherTeachLanguageName',
-                '"-" as teacherTeachLanguageName',
+                'IFNULL(tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
                 'tcred.credential_email as teacherEmailId'
             )
         );
-
         $srch->addOrder('sldetail_id', 'DESC');
-
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
         if (empty($lessonRow)) {
