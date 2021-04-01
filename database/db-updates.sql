@@ -335,5 +335,9 @@ UPDATE `tbl_teachers_general_availability` SET `tgavl_end_date` =( CASE WHEN `tg
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_Invalid_Username', '1', 'Username accepts only letters,numbers,(-),(_) and length between 3 to 35');
 
+-- bug-051797-Delete email templates for message exchange
 
+DELETE FROM `tbl_email_templates` WHERE `tbl_email_templates`.`etpl_code` = 'learner_message_to_teacher_email';
+
+DELETE FROM `tbl_email_templates` WHERE `tbl_email_templates`.`etpl_code` = 'teacher_message_to_learner_email';
 
