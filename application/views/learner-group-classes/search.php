@@ -131,9 +131,16 @@ foreach ( $lessons as $lesson ) {
 									<span class="countdowntimer" id="countdowntimer-<?php echo $lesson['slesson_id']?>" data-startTime="<?php echo $curDateTime; ?>"  data-endTime="<?php echo $timerEndTimer; ?>"></span>
 								</span>
 							</li>
-                        <?php }else{ ?>
+                        <?php }else{
+
+							if(strtotime($timerEndTimer) > strtotime($curDateTime)) {
+								$lessonInfoLblKey = 'LBL_Lesson_ongoing';
+							} else {
+								$lessonInfoLblKey = 'LBL_Lesson_time_has_passed';
+							}
+						?>
 						<li class="span-right">
-							<span class="-color-secondary"><?php echo Label::getLabel('LBL_Class_start_time_has_passed'); ?></span>
+							<span class="-color-secondary"><?php echo Label::getLabel($lessonInfoLblKey); ?></span>
 						</li>
 						<?php }
 						} ?>
