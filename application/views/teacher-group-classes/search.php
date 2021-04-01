@@ -59,9 +59,11 @@ $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate))); ?>
                                     <a class="btn btn--primary btn--small" href="javascript:void(0);" onclick="form('<?php echo $class['grpcls_id'];  ?>');"><?php echo Label::getLabel("LBL_Edit") ?></a>
                                 <?php else : ?>
                                     <a class="btn btn--gray btn--disabled btn--small" href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Can_not_edit_old_classes') ?>"><?php echo Label::getLabel("LBL_Edit") ?></a>
+                                <?php endif; 
+                                    if (empty($class['issrep_id']) && $class['grpcls_status'] != TeacherGroupClasses::STATUS_COMPLETED){ ?>
+                                     <a class="btn btn--secondary btn--small" href="javascript:void(0);" onclick="cancelClass('<?php echo $class['grpcls_id'];  ?>');"><?php echo Label::getLabel("LBL_Cancel") ?></a>
+                                <?php } ?>
                                 <?php endif; ?>
-                                <a class="btn btn--secondary btn--small" href="javascript:void(0);" onclick="cancelClass('<?php echo $class['grpcls_id'];  ?>');"><?php echo Label::getLabel("LBL_Cancel") ?></a>
-                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php } ?>
