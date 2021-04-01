@@ -223,7 +223,7 @@ class ScheduledLessonDetails extends MyAppModel
         $rs = $srch->getResultSet();
         $data = $db->fetch($rs);
         if (!$data) return true;
-
+        
         $utxn_comments = sprintf(Label::getLabel('LBL_LessonId:_%s_Refund_Payment', CommonHelper::getLangId()), $data['slesson_id']);
         $transactionType =  Transaction::TYPE_LOADED_MONEY_TO_WALLET;
         //coupon order case
@@ -291,14 +291,14 @@ class ScheduledLessonDetails extends MyAppModel
             $perUnitAmount = round(($data['order_net_amount'] / $data['op_qty']), 2);
         }
 
-        if ($learner && !$isDiscountApply && $diff < 24) {
+        if ($learner && !$isDiscountApply && ($data['slesson_date'] != "0000-00-00" && $diff < 24)) {
             if ($data['slesson_grpcls_id'] > 0) {
                 $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_CLASS_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
             } else {
                 $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
             }
         }
-
+        
         if ($learner && $data['order_discount_total'] > 0) {
             //  refund only need to scheduled lesson  ammount
             $perUnitAmount =  round(($data['order_net_amount'] / $data['op_qty']), 2);

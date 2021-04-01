@@ -524,7 +524,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
       
         $diff = round(($to_time - $from_time) / 3600, 2);
         $deductionNote  = false;
-        if ($diff < 24 && $lessonRow['order_net_amount'] > 0) {
+        if (($lessonRow['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $diff < 24) && $lessonRow['order_net_amount'] > 0) {
             $deductionNote = ($lessonRow['op_lpackage_is_free_trial'] == applicationConstants::YES) ? false : true;
         }
         $frm = $this->getCancelLessonFrm($deductionNote, $showCouponRefundNote, $lessonRow['sldetail_order_id']);
