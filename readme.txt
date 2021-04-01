@@ -1,5 +1,15 @@
 This file shares the details of the Yo!Coach version and change log.
 
+
+Release Number:
+Release Date:
+
+Bugs:
+   #051769 - The refund percentage for group class does not match the general flow.
+
+============================================================================================
+
+
 Release Number: TV-2.11.3.20210331
 Release Date: 2021-03-31
 

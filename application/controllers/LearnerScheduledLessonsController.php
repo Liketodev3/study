@@ -475,7 +475,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $scheduledLessonObj->joinLearner();
         $scheduledLessonObj->joinOrder();
         $scheduledLessonObj->joinOrderProducts();
-        $scheduledLessonObj->addMultipleFields(['slesson_grpcls_id', 'sldetail_learner_id', 'slesson_date', 'sldetail_order_id', 'slesson_start_time', 'op_lpackage_is_free_trial', 'order_net_amount']);
+        $scheduledLessonObj->addMultipleFields(['slesson_grpcls_id', 'sldetail_learner_id', 'slesson_date', 'sldetail_order_id', 'slesson_start_time', 'op_lpackage_is_free_trial', 'sldetail_learner_status', 'order_net_amount']);
         $scheduledLessonObj->addCondition('sldetail_id', '=', $lDetailId);
         $scheduledLessonObj->addCondition('sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
         $scheduledLessonObj->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
@@ -508,13 +508,20 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $orderInfo['order_discount_total']  = FatUtility::float($orderInfo['order_discount_total']);
         $totalCanceledAndNeedToScheduledCount = $orderInfo['needToscheduledLessonsCount'] + $orderInfo['canceledLessonsCount'];;
 
+        $to_time = strtotime($lessonRow['slesson_date'] . ' ' . $lessonRow['slesson_start_time']);
+        $from_time = strtotime(date('Y-m-d H:i:s'));
+
+        if($lessonRow['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $from_time >= $to_time){
+            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
+            FatUtility::dieWithError(Message::getHtml());
+        }
+
         if (!empty($orderInfo['order_discount_total']) && $orderInfo['slesson_grpcls_id'] == 0 && $orderInfo['totalLessons'] != $totalCanceledAndNeedToScheduledCount) {
             Message::addErrorMessage(Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon'));
             FatUtility::dieWithError(Message::getHtml());
         }
         $showCouponRefundNote = ($orderInfo['order_discount_total'] > 0) ? true : false;
-        $to_time = strtotime($lessonRow['slesson_date'] . ' ' . $lessonRow['slesson_start_time']);
-        $from_time = strtotime(date('Y-m-d H:i:s'));
+      
         $diff = round(($to_time - $from_time) / 3600, 2);
         $deductionNote  = false;
         if ($diff < 24 && $lessonRow['order_net_amount'] > 0) {
@@ -561,7 +568,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 // '"-" as teacherTeachLanguageName',
                 'tcred.credential_email as teacherEmailId',
                 'sldetail_learner_status',
-                'sldetail_order_id'
+                'sldetail_order_id',
+                'slesson_date',
+                'slesson_start_time'
             )
         );
 
@@ -582,6 +591,14 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         if ($lessonRow['sldetail_learner_status'] == ScheduledLesson::STATUS_CANCELLED) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Lesson_Already_Cancelled'));
+        }
+        
+        $sessionStartTime = strtotime($lessonRow['slesson_date'] . ' ' . $lessonRow['slesson_start_time']);
+        $currentTime = strtotime(date('Y-m-d H:i:s'));
+
+        if($lessonRow['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $currentTime >= $sessionStartTime){
+            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
+            FatUtility::dieWithError(Message::getHtml());
         }
 
         /* ] */

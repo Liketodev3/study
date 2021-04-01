@@ -50,14 +50,15 @@ foreach ($classes as $sn => $row) {
 				$innerDiv = $li->appendElement('div', array('class' => 'dropwrap'));
 				$innerUl = $innerDiv->appendElement('ul', array('class' => 'linksvertical'));
 
-				$innerLi = $innerUl->appendElement('li');
-				if ($row['grpcls_status'] != TeacherGroupClasses::STATUS_COMPLETED &&  $row['grpcls_start_datetime'] >  date('Y-m-d H:i:s')) {
-					$innerLi->appendElement('a', array('href' => 'javascript:;', 'onclick' => 'form(' . $row['grpcls_id'] . ');', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Edit', $adminLangId)), Label::getLabel('LBL_Edit', $adminLangId), true);
-					$innerLi->appendElement('a', array('href' => 'javascript:;', 'onclick' => 'cancelClass(' . $row['grpcls_id'] . ');', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Cancel', $adminLangId)), Label::getLabel('LBL_Cancel', $adminLangId), true);
-					$innerLi->appendElement('a', array('href' => 'javascript:;', 'onclick' => 'removeClass(' . $row['grpcls_id'] . ');', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Delete', $adminLangId)), Label::getLabel('LBL_Delete', $adminLangId), true);
+				$innerLi=$innerUl->appendElement('li');
+				$innerLi->appendElement('a', array('href'=> 'javascript:;', 'onclick' => 'form('.$row['grpcls_id'].');', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),Label::getLabel('LBL_Edit',$adminLangId), true);
+				
+				if(empty($row['issrep_id']) && $row['grpcls_status'] != TeacherGroupClasses::STATUS_COMPLETED) {
+					$innerLi->appendElement('a', array('href'=> 'javascript:;', 'onclick' => 'cancelClass('.$row['grpcls_id'].');', 'class'=>'button small green','title'=>Label::getLabel('LBL_Cancel',$adminLangId)),Label::getLabel('LBL_Cancel',$adminLangId), true);
+					$innerLi->appendElement('a', array('href'=> 'javascript:;', 'onclick' => 'removeClass('.$row['grpcls_id'].');', 'class'=>'button small green','title'=>Label::getLabel('LBL_Delete',$adminLangId)),Label::getLabel('LBL_Delete',$adminLangId), true);
 				}
-				$innerLi->appendElement('a', array('href' => 'javascript:;', 'onclick' => 'viewJoinedLearners(' . $row['grpcls_id'] . ');', 'class' => 'button small green', 'title' => Label::getLabel('LBL_View_Joined_Learners', $adminLangId)), Label::getLabel('LBL_Joined_Learners', $adminLangId), true);
-				break;
+				$innerLi->appendElement('a', array('href'=> 'javascript:;', 'onclick' => 'viewJoinedLearners('.$row['grpcls_id'].');', 'class'=>'button small green','title'=>Label::getLabel('LBL_View_Joined_Learners',$adminLangId)),Label::getLabel('LBL_Joined_Learners',$adminLangId), true);
+			break;
 			default:
 				$td->appendElement('plaintext', array(), $row[$key]);
 				break;
