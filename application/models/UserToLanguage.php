@@ -102,7 +102,7 @@ class UserToLanguage extends MyAppModel
         $srch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utl.utl_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
         $srch->addMultipleFields(array(
             'tlanguage_id',
-            'tlanguage_name',
+            'IFNULL(tlanguage_name,tlanguage_identifier)as tlanguage_name',
             'utl_single_lesson_amount',
             'utl_bulk_lesson_amount',
             'utl_booking_slot',
@@ -169,7 +169,7 @@ class UserToLanguage extends MyAppModel
         $srch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'utl_booking_slot = top_lesson_duration AND top_teacher_id = utl_us_user_id AND top_learner_id = ' . $learnerId, 'top');
         $srch->addMultipleFields(array(
             'tlanguage_id',
-            'tlanguage_name',
+            'IFNULL(tlanguage_name,tlanguage_identifier) as tlanguage_name',
             'IFNULL(top_single_lesson_price, utl_single_lesson_amount) utl_single_lesson_amount',
             'IFNULL(top_bulk_lesson_price, utl_bulk_lesson_amount) utl_bulk_lesson_amount',
             'utl_booking_slot',
@@ -179,20 +179,20 @@ class UserToLanguage extends MyAppModel
         $srch->addCondition('utl_bulk_lesson_amount', '>', 0);
         $srch->addCondition('utl_slanguage_id', '>', 0);
         $srch->addCondition('tlanguage_active', '=', '1');
-        if(!empty($slotDuration)){
+        if (!empty($slotDuration)) {
             $slotDuration  =  FatUtility::convertToType($slotDuration, FatUtility::VAR_INT);
             $srch->addCondition('utl_booking_slot', '=', $slotDuration);
         }
-       
+
         $srch->addCondition('utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
         return FatApp::getDb()->fetchAll($srch->getResultSet());
     }
 
-    public function removeTeachSlots(array $slots) : bool
+    public function removeTeachSlots(array $slots): bool
     {
-        $slots = implode(",",$slots);
+        $slots = implode(",", $slots);
         $db =  FatApp::getDb();
-        $db->query('DELETE  FROM '.self::DB_TBL_TEACH.' WHERE utl_booking_slot IN ('.$slots.')');
+        $db->query('DELETE  FROM ' . self::DB_TBL_TEACH . ' WHERE utl_booking_slot IN (' . $slots . ')');
         if ($db->getError()) {
             return false;
         }
