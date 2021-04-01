@@ -7,6 +7,7 @@ Release Date:
 Bugs:
    #051769 - The refund percentage for group class does not match the general flow.
    #051839 - The Search class only responds for "English Language" and not for other langauges. 
+   #051771 - Group class text over ongoing class not coming as correct.
 
 ============================================================================================
 
