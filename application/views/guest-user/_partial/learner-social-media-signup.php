@@ -48,10 +48,15 @@
 	function getUserData()
 	{
 		FB.api('/me?fields=id,name,email, first_name, last_name', function(response) {
-			response['type'] = <?php echo $userType; ?>;
-			fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'loginFacebook'), response, function(t) {
-				location.href = t.url;
-			});
+			if(!response.id ||  typeof response == "undefined" || response.error){
+                return;
+			}else{
+				response['type'] = <?php echo $userType; ?>;
+				fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'loginFacebook'), response, function(t) {
+					location.href = t.url;
+				});
+			}
+			
 		}, {scope: 'public_profile,email'});
 	}
 

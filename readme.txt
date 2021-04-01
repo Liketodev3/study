@@ -1,12 +1,40 @@
 This file shares the details of the Yo!Coach version and change log.
-Release Number:
-Release Date:
+
+Release Number: TV-2.11.3.20210331
+Release Date: 2021-03-31
 
 Bugs:
-    . #051733 - Teacher have access of slot >> user is on checkout page >> admin remove access of slot >> Checkout page crash 
-    . #051647 - Teacher click on message icon >> from his own profile >> first show Request in process and then show invalid request message>> Should not show request in process message as he cannot message himself.
-    . #051365 - Admin >> orders >> orders >> view detail >> Gateway response is coming as coding >> if large is size ui break.
+    #051703
+
+============================================================================================
+Release Number: TV-2.11.2.20210331
+Release Date: 2021-03-31
+
+Bugs:
+    #051733
+    #051732
+    #051731
+    #051729
+    #051706
+    #051703
+    #051685
+    #051671
+    #051666
+    #051654
+    #051647
+    #051630
+    #051624
+    #051461
+    #051408
+    #051365
+    #049973
+    #049647
+    #048614
+    #045564
+    #051663
+
 ======================================================================================
+
 Release Number: TV-2.11.1.20210326
 Release Date: 2021-03-26
 

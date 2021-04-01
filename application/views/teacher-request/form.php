@@ -1,4 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+
 $frm->setFormTagAttribute( 'class', 'form' );
 $frm->setFormTagAttribute( 'onsubmit', 'setUpTeacherApproval(this); return false;' );
 $frm->developerTags['colClassPrefix'] = 'col-sm-';
@@ -73,7 +74,7 @@ $frm->setFormTagAttribute( 'action', CommonHelper::generateUrl( 'TeacherRequest'
 $profile_pic_preview_html = '<h5>'.Label::getLabel('LBL_Profile_Photo').'</h5>';
 $profile_pic_preview_html .= '<div class="-align-center"><div class="preview preview--profile">';
 $profile_pic_preview_html .= '<div class="avtar avtar--large avtar--centered" data-text="'. CommonHelper::getFirstChar($frm->getField( 'utrvalue_user_first_name' )->value). '">';
-$isProfilePicUploaded = User::isProfilePicUploaded();
+$isProfilePicUploaded = User::isProfilePicUploaded($userId);
 
 $profile_pic_preview_html .= '<img id="user-profile-pic--js" src="' . ($isProfilePicUploaded ? CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM')).'?t='.time() : '') . '" />';
 
@@ -112,7 +113,7 @@ $frm->getField('youtube_head')->value = '<p>'.Label::getLabel('LBL_Video_Youtube
 </section>
 
 <div class="d-none">
-	<?php $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account', 'setUpProfileImage'));
+	<?php $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('TeacherRequest', 'setUpProfileImage'));
 	echo $profileImgFrm->getFormHtml(); ?>	
 </div>
 

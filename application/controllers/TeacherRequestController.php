@@ -140,7 +140,7 @@ class TeacherRequestController extends MyAppController
 			return;
 		}
 		/* file handling[ */
-		if (!User::isProfilePicUploaded()) {
+		if (!User::isProfilePicUploaded($this->userId)) {
 			if (FatUtility::isAjaxCall()) {
 				FatUtility::dieWithError(Label::getLabel('MSG_Please_select_a_Profile_Pic'));
 			}
@@ -422,5 +422,48 @@ class TeacherRequestController extends MyAppController
         $frm->addHiddenField('', 'action', 'avatar', array('id' => 'avatar-action'));
         $frm->addHiddenField('', 'img_data', '', array('id' => 'img_data'));
         return $frm;
+    }
+
+	public function setUpProfileImage()
+    {
+        $userId = $this->userId;
+        $post = FatApp::getPostedData();
+        if (empty($post)) {
+            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported'));
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        if ($post['action'] == "demo_avatar") {
+            if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
+                $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
+                Message::addErrorMessage(Label::getLabel($msgLblKey));
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+            $fileHandlerObj = new AttachedFile();
+            if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)) {
+                Message::addErrorMessage($fileHandlerObj->getError());
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'ORIGINAL', 0)) . '?' . time());
+        }
+
+        if ($post['action'] == "avatar") {
+            if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
+                $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
+                Message::addErrorMessage(Label::getLabel($msgLblKey));
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+            $fileHandlerObj = new AttachedFile();
+            if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)) {
+                Message::addErrorMessage($fileHandlerObj->getError());
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+            $data = json_decode(stripslashes($post['img_data']));
+            CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
+            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'MEDIUM', true)) . '?' . time());
+        }
+
+        $this->set('msg', Label::getLabel('MSG_File_uploaded_successfully'));
+        $this->_template->render(false, false, 'json-success.php');
     }
 }
