@@ -205,7 +205,7 @@ class GroupClassesController extends AdminBaseController
         }
 
         $class_details = TeacherGroupClasses::getAttributesById($grpclsId);
-        if (empty($class_details)) {
+        if (empty($class_details) || $class_details['grpcls_start_datetime'] < date('Y-m-d H:i:s')) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
 
@@ -253,7 +253,7 @@ class GroupClassesController extends AdminBaseController
         }
 
         $class_details = TeacherGroupClasses::getAttributesById($grpclsId);
-        if (empty($class_details)) {
+        if (empty($class_details) || $class_details['grpcls_start_datetime'] < date('Y-m-d H:i:s')) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
 
