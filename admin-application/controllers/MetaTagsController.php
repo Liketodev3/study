@@ -37,7 +37,6 @@ class MetaTagsController extends AdminBaseController
     public function search()
     {
         $data = FatApp::getPostedData();
-        $meta_record_id = 'meta_record_id';
         $page = (empty($data['page']) ||  $data['page'] <= 0) ? 1 :  $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
@@ -55,9 +54,7 @@ class MetaTagsController extends AdminBaseController
         $metaSrch->addMultipleFields($this->getDbColumns($metaType));
         $metaSrch->setPageNumber($page);
         $metaSrch->setPageSize($pagesize);
-
         $records = FatApp::getDb()->fetchAll($metaSrch->getResultSet());
-
         $this->set("meta_record_id", $this->getMetaRecordcolumn($metaType));
         $this->set("columnsArr", $this->getColumns($metaType));
         $this->set("arr_listing", $records);
@@ -68,7 +65,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('pageSize', $pagesize);
         $this->set('metaType', $metaType);
         $this->set('postedData', $post);
-        $this->_template->render(false, false, 'meta-tags/default-meta-tag.php');
+        $this->_template->render(false, false);
     }
     public function form()
     {
@@ -218,40 +215,7 @@ class MetaTagsController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
-    public function searchMeta()
-    {
-        $data = FatApp::getPostedData();
-        $meta_record_id = 'meta_record_id';
-        $page = (empty($data['page']) ||  $data['page'] <= 0) ? 1 :  $data['page'];
-        $searchForm = $this->getSearchForm($data['metaType']);
-        $post = $searchForm->getFormDataFromArray($data);
-        $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_INT, MetaTag::META_GROUP_DEFAULT);
-        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-        $metaSrch =  new MetaTagSearch($this->adminLangId);
-        $criteria['metaType'] = ['val' => $metaType];
-        if (!empty($post['keyword'])) {
-            $criteria['keyword'] = ['val' => $post['keyword']];
-        }
-        if (isset($post['hasTagsAssociated']) && $post['hasTagsAssociated'] != '') {
-            $criteria['hasTagsAssociated'] = ['val' => $post['hasTagsAssociated']];
-        }
-        $metaSrch->searchByCriteria($criteria, $this->adminLangId);
-        $metaSrch->addMultipleFields($this->getDbColumns($metaType));
-        $metaSrch->setPageNumber($page);
-        $metaSrch->setPageSize($pagesize);
-        $records = FatApp::getDb()->fetchAll($metaSrch->getResultSet());
 
-        $this->set("meta_record_id", $this->getMetaRecordcolumn($metaType));
-        $this->set("columnsArr", $this->getColumns($metaType));
-        $this->set("arr_listing", $records);
-        $this->set('pageCount', $metaSrch->pages());
-        $this->set('recordCount', $metaSrch->recordCount());
-        $this->set('page', $page);
-        $this->set('pageSize', $pagesize);
-        $this->set('metaType', $metaType);
-        $this->set('postedData', $post);
-        $this->_template->render(false, false, 'meta-tags/default-meta-tag.php');
-    }
     private function getSearchForm(int $metaType): Form
     {
 
@@ -398,7 +362,7 @@ class MetaTagsController extends AdminBaseController
             case MetaTag::META_GROUP_BLOG_POST;
                 $columnsArr = [
                     'listserial' => Label::getLabel('LBL_Sr._No', $this->adminLangId),
-                    'post_identifier' => Label::getLabel('LBL_Blog_Categories', $this->adminLangId),
+                    'post_identifier' => Label::getLabel('LBL_Post_Title', $this->adminLangId),
                     'meta_title' => Label::getLabel('LBL_Meta_Title', $this->adminLangId),
                     'has_tag_associated' => Label::getLabel('LBL_Has_Tags_Associated', $this->adminLangId),
                     'action' => Label::getLabel('LBL_Action', $this->adminLangId),
@@ -415,7 +379,7 @@ class MetaTagsController extends AdminBaseController
                 $dbcolumnsArr = array_merge($dbcolumnsArr, ['meta_controller', 'meta_action', 'meta_record_id', 'meta_subrecord_id']);
                 break;
             case MetaTag::META_GROUP_CMS_PAGE:
-                $dbcolumnsArr = array_merge($dbcolumnsArr, ['cpage_id', 'IF(cpage_title is NULL or cpage_title = "" ,cpage_identifier, cpage_title) as cpage_title']);
+                $dbcolumnsArr = array_merge($dbcolumnsArr, ['cpage_id', 'IFNULL(cpage_title,cpage_identifier) as cpage_title']);
                 break;
             case MetaTag::META_GROUP_TEACHER:
                 $dbcolumnsArr = array_merge($dbcolumnsArr, ['CONCAT(user_first_name, " ", user_last_name) as teacher_name', 'u.user_id']);
@@ -424,10 +388,10 @@ class MetaTagsController extends AdminBaseController
                 $dbcolumnsArr = array_merge($dbcolumnsArr, ['grpcls_title', 'grpcls_id', 'concat(u.user_first_name," ",u.user_last_name) as teacher_name']);
                 break;
             case MetaTag::META_GROUP_BLOG_CATEGORY;
-                $dbcolumnsArr = array_merge($dbcolumnsArr, ['bpcategory_identifier', 'bpcategory_id']);
+                $dbcolumnsArr = array_merge($dbcolumnsArr, ['IFNULL(bpcategory_name,bpcategory_identifier) as bpcategory_identifier', 'bpcategory_id']);
                 break;
             case MetaTag::META_GROUP_BLOG_POST;
-                $dbcolumnsArr = array_merge($dbcolumnsArr, ['post_identifier', 'post_id']);
+                $dbcolumnsArr = array_merge($dbcolumnsArr, ['IFNULL(post_title,post_identifier) as post_identifier ', 'post_id']);
                 break;
         }
         return $dbcolumnsArr;
