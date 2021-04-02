@@ -162,8 +162,10 @@ class TeacherGeneralAvailability extends MyAppModel
             //$weekNumber = date('W', strtotime($nowDate));
             //$Year = date('Y', strtotime($nowDate));
             //$gendate = new DateTime( $nowDate );
-            $weekNumber =  2;
+            
             foreach ($postJsonArr as $val) {
+                $weekNumber =  2;
+                
                 $gendate = new DateTime();
                
                 $gendate->setISODate(2018, $weekNumber, $val->day);
