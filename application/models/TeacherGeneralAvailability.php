@@ -175,7 +175,7 @@ class TeacherGeneralAvailability extends MyAppModel
                 $custom_tgavl_start = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
 
                
-                if($val->day == 6 && $val->dayEnd == 0){
+                if($val->day <= 6 &&( $val->dayEnd == 0 && $val->endTime == "00:00")){
                     $weekNumber = 3;
                 }
 
