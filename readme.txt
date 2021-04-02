@@ -1,15 +1,33 @@
 This file shares the details of the Yo!Coach version and change log.
 
-
 Release Number:
 Release Date:
 
 Bugs:
-   #051769 - The refund percentage for group class does not match the general flow.
-   #051839 - The Search class only responds for "English Language" and not for other langauges. 
-   #051771 - Group class text over ongoing class not coming as correct.
-   #051877 - When user purchase a lesson then in need to be schedule stage>> when user cancel the lesson then got 50% refund, which is wrong, it should be 100% refund.
-   #051847 - The payment methods distorts on changing the languages under "Group Class"
+    #051769 - The refund percentage for group class does not match the general flow.
+    #051839 - The Search class only responds for "English Language" and not for other langauges. 
+    #051771 - Group class text over ongoing class not coming as correct.
+    #051877 - When user purchase a lesson then in need to be schedule stage>> when user cancel the lesson then got 50% refund, which is wrong, it should be 100% refund.
+    #051847 - The payment methods distorts on changing the languages under "Group Class"
+    #051884 - In mata tag management >>Search is not working properly. 
+    #051883 - In meta tag management >> when user create a metatag for teacher, blog, cms and for english language only. then it will create of rest languages also.
+    #051845 - The change in language affects the language offered field on the checkout page.
+    #051828 - Language specific data not coming
+    #051798 - One 2 one class, Student report the issue, emails not coming coorect. 
+    #051797 - Need to remove or hide email templets as its functionality not working. 
+    #051796 - The refund percentage for the student for group class should be limited to a particular time slot, let suppose before 24 hours.
+    #051776 - In admin>> meta tag management>> Blog post>> "Blog title column" is missing.
+    #051774 - The Admin is able to edit the already completed group class.
+    #051773 - Edge - Checkout page - Payment methods not coming 
+    #051732 - When user login with mobile number and password then facing a issue of email verification.
+    #051731 - When user login with facebook and click on side area and cancel the facebook pop up then JSON error is showing. 
+    #051729 - When user login with facebook's email id and password then error message is showing. 
+    #051663 - From user >> Teacher listing page >> clicking on favorite button for some time >> Favorite button >> text disappear 
+    #051461 - Admin >> dashboard >> total revenew from lesson>> need to set the ui
+    #051408 - User >> teacher menu >> clicking on one teacher show 404
+    #049973 - Email content not decoded in outlook , yopmail etc
+    #049647 - Issue faced on signup> User is coming from Instagram> Below are the specifications of the device Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 173.0.0.23.119 (iPhone9,4; iOS 14_3
+    #048614 - On the home page- go t search a teacher.
 ============================================================================================
 
 
