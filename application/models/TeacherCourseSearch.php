@@ -1,6 +1,8 @@
 <?php
+
 class TeacherCourseSearch extends SearchBase
 {
+
     public function __construct($doNotCalculateRecords = true)
     {
         parent::__construct(TeacherCourse::DB_TBL, 'tcourse');
@@ -8,4 +10,5 @@ class TeacherCourseSearch extends SearchBase
             $this->doNotCalculateRecords();
         }
     }
+
 }

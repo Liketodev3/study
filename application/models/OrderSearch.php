@@ -1,27 +1,26 @@
 <?php
+
 class OrderSearch extends SearchBase
 {
+
     private $isUserJoined;
+
     public function __construct($doNotCalculateRecords = true, $doNotLimitRecords = true)
     {
         parent::__construct(Order::DB_TBL, 'o');
         if (true === $doNotCalculateRecords) {
             $this->doNotCalculateRecords();
         }
-
         if (true === $doNotLimitRecords) {
             $this->doNotLimitRecords();
         }
-
         $this->isUserJoined = false;
     }
 
     public function joinOrderProduct($langId = 0)
     {
         $langId = FatUtility::int($langId);
-
         $this->joinTable(OrderProduct::DB_TBL, 'INNER JOIN', 'o.order_id = op.op_order_id', 'op');
-
         if ($langId > 1) {
             $this->joinTable(OrderProduct::DB_TBL . '_lang', 'LEFT JOIN', 'op_id = oplang_op_id AND oplang_lang_id = ' . $langId);
         }
@@ -67,7 +66,6 @@ class OrderSearch extends SearchBase
     public function joinOrderPaymentMethod($langId = 0)
     {
         $this->joinTable(PaymentMethods::DB_TBL, 'INNER JOIN', 'o.order_pmethod_id = pm.pmethod_id', 'pm');
-
         if ($langId) {
             $this->joinTable(PaymentMethods::DB_LANG_TBL, 'LEFT OUTER JOIN', 'pm.pmethod_id = pm_l.pmethodlang_pmethod_id AND pm_l.pmethodlang_lang_id = ' . $langId, 'pm_l');
         }
@@ -106,7 +104,6 @@ class OrderSearch extends SearchBase
         if ($addIsPaidCheck) {
             $onCondition .= ' AND sl.slesson_is_teacher_paid = ' . applicationConstants::YES;
         }
-
         $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', $onCondition, 'sl');
     }
 
@@ -115,4 +112,5 @@ class OrderSearch extends SearchBase
         $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
         $this->joinTable(TeacherGroupClasses::DB_TBL_LANG, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = grpcls_l.grpclslang_grpcls_id and grpcls_l.grpclslang_lang_id=' . $langId, 'grpcls_l');
     }
+
 }

@@ -1,6 +1,8 @@
 <?php
+
 class BannerLocation extends MyAppModel
 {
+
     const DB_TBL = 'tbl_banner_locations';
     const DB_TBL_PREFIX = 'blocation_';
     const DB_LANG_TBL = 'tbl_banner_locations_lang';
@@ -24,4 +26,5 @@ class BannerLocation extends MyAppModel
         }
         return $srch;
     }
+
 }

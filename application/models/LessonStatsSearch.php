@@ -1,6 +1,8 @@
 <?php
+
 class LessonStatsSearch extends SearchBase
 {
+
     public function __construct($doNotCalculateRecords = true, $doNotLimitRecords = true, $joinDetails = false)
     {
         parent::__construct(LessonStatusLog::DB_TBL, 'lsl');
@@ -17,4 +19,5 @@ class LessonStatsSearch extends SearchBase
         $this->joinTable(User::DB_TBL, 'LEFT JOIN', 'sl.slesson_teacher_id = tu.user_id', 'tu');
         $this->joinTable(User::DB_TBL, 'LEFT JOIN', 'sld. sldetail_learner_id = su.user_id', 'su');
     }
+
 }

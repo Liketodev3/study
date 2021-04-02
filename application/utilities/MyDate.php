@@ -1,6 +1,8 @@
 <?php
+
 class MyDate extends FatDate
 {
+
     public static function format($date, $showTime = false, $useTimeZone = true, $timeZone = '')
     {
         if ('' == $timeZone) {
@@ -12,13 +14,8 @@ class MyDate extends FatDate
     public static function getDateAndTimeDisclaimer()
     {
         $str = Label::getLabel('LBL_All_Date_&_Times_are_showing_in_{time-zone-abbr},_Current_Date_&_Time:_{current-date-time}');
-
-        $arr = array(
-            "{time-zone-abbr}"	=>	date('T'),
-            "{current-date-time}"	=>	date('d-M-Y H:i:s A T'),
-        );
-
-        foreach ($arr  as $key => $val) {
+        $arr = array("{time-zone-abbr}" => date('T'), "{current-date-time}" => date('d-M-Y H:i:s A T'),);
+        foreach ($arr as $key => $val) {
             $str = str_replace($key, $val, $str);
         }
         echo $str;
@@ -29,8 +26,7 @@ class MyDate extends FatDate
         return FatApp::getConfig('CONF_TIMEZONE', FatUtility::VAR_STRING, date_default_timezone_get());
     }
 
-    /** custom function for change according to timezone **/
-
+    /** custom function for change according to timezone * */
     public static function changeDateTimezone($date, $fromTimezone, $toTimezone)
     {
         return parent::changeDateTimezone($date, $fromTimezone, $toTimezone);
@@ -38,13 +34,12 @@ class MyDate extends FatDate
 
     public static function convertTimeFromSystemToUserTimezone($format, $dateTime, $showtime, $timeZone)
     {
-        if(substr($dateTime, 0, 10) === '0000-00-00'){
+        if (substr($dateTime, 0, 10) === '0000-00-00') {
             return $dateTime;
         }
         if ($timeZone == '') {
             $timeZone = self::getTimeZone();
         }
-
         $changedDate = self::format(date('Y-m-d H:i:s', strtotime($dateTime)), $showtime, true, $timeZone);
         return date($format, strtotime($changedDate));
     }
@@ -58,33 +53,31 @@ class MyDate extends FatDate
     {
         $user_timezone = '';
         if ($userId > 0) {
-            $userRow = User::getAttributesById($userId, array( 'user_timezone'));
+            $userRow = User::getAttributesById($userId, array('user_timezone'));
             $user_timezone = $userRow['user_timezone'];
         } else {
             if (UserAuthentication::isUserLogged()) {
-                $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array( 'user_timezone'));
+                $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array('user_timezone'));
                 $user_timezone = $userRow['user_timezone'];
             } else {
                 $user_timezone = $_COOKIE['user_timezone'] ?? self::getTimeZone();
             }
         }
-
         if (empty($user_timezone)) {
             $user_timezone = $_COOKIE['user_timezone'] ?? self::getTimeZone();
         }
-
         return $user_timezone;
     }
 
     public static function setUserTimeZone()
     {
         if (UserAuthentication::isUserLogged()) {
-            $userDataRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array( 'user_timezone'));
+            $userDataRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array('user_timezone'));
             $user_timezone = $userDataRow['user_timezone'];
-	    $cookieConsent = CommonHelper::getCookieConsent();
-            $isActivePreferencesCookie =  (!empty($cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
+            $cookieConsent = CommonHelper::getCookieConsent();
+            $isActivePreferencesCookie = (!empty($cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
             if (!empty($user_timezone) && $isActivePreferencesCookie) {
-                CommonHelper::setCookie("user_timezone", $user_timezone, time() + 365*24*60*60, CONF_WEBROOT_URL, '', true);
+                CommonHelper::setCookie("user_timezone", $user_timezone, time() + 365 * 24 * 60 * 60, CONF_WEBROOT_URL, '', true);
             }
         }
     }
@@ -98,11 +91,11 @@ class MyDate extends FatDate
         return $number;
     }
 
-    public static function displayTimezoneString($echoTimeZone =  true)
+    public static function displayTimezoneString($echoTimeZone = true)
     {
         $user_timezone = self::getUserTimeZone();
-        $string =  sprintf(Label::getLabel("LBL_Timezone_:_UTC_%s"), CommonHelper::getDateOrTimeByTimeZone($user_timezone, ' P'));
-        if($echoTimeZone) {
+        $string = sprintf(Label::getLabel("LBL_Timezone_:_UTC_%s"), CommonHelper::getDateOrTimeByTimeZone($user_timezone, ' P'));
+        if ($echoTimeZone) {
             echo $string;
             return;
         }
@@ -125,40 +118,36 @@ class MyDate extends FatDate
 
     public static function week_between_two_dates($date1, $date2)
     {
-        $first =  new DateTime($date1);
+        $first = new DateTime($date1);
         $second = new DateTime($date2);
         if ($date1 > $date2) {
             return self::week_between_two_dates($date2, $date1);
         }
-        return floor($first->diff($second)->days/7);
-        //return round($first->diff($second)->days/7);
+        return floor($first->diff($second)->days / 7);
     }
-    
-    
+
     public static function timeDiff($date1, $date2)
     {
-        $first =  new DateTime($date1);
+        $first = new DateTime($date1);
         $second = new DateTime($date2);
         return $first->diff($second);
     }
 
-    public static function getOffset(string $timeZone = 'UTC') : string
+    public static function getOffset(string $timeZone = 'UTC'): string
     {
         $dateTimeZone = new DateTimeZone($timeZone);
-        
         $dateTime = new DateTime("now", $dateTimeZone);
-        
-       return $dateTime->format('P');
+        return $dateTime->format('P');
     }
-    public static function timeZoneListing() : array
+
+    public static function timeZoneListing(): array
     {
-        
         $timeZoneList = Timezone::getAllByLang(CommonHelper::getLangId());
         $finalArray = [];
-        foreach ($timeZoneList as $key=>$timezone) {
+        foreach ($timeZoneList as $key => $timezone) {
             $finalArray[$key] = sprintf(Label::getLabel('LBL_(TIMEZONE_%s)_%s'), $timezone['timezone_offset'], $timezone['timezone_name']);
         }
-       return $finalArray;
+        return $finalArray;
     }
 
     public static function getIdentifiers()
@@ -168,39 +157,32 @@ class MyDate extends FatDate
 
     public static function getWeekStartAndEndDate(DateTime $dateTime): array
     {
-        // $dateTime = ($dateTime->format('w') == 0) ? $dateTime : $dateTime->modify('last Sunday');
         $dateTime = $dateTime->modify('last saturday')->modify('+1 day');
         return array(
             'weekStart' => $dateTime->format('Y-m-d'),
-            'weekEnd' =>  $dateTime->modify('next saturday')->format('Y-m-d'),
+            'weekEnd' => $dateTime->modify('next saturday')->format('Y-m-d'),
         );
     }
 
-    public static function changeWeekDaysToDate(array $weekDays) : array
-	{
-		$user_timezone = MyDate::getUserTimeZone();
-		$systemTimeZone = MyDate::getTimeZone();
-		$newWeekDayArray = [];
-		foreach($weekDays as $key => $day){
-			
-			$dateTime = new DateTime();
-			$dateTime->setISODate(2018, 2, $day);
-			$day = $dateTime->format('d');
-			$date = "2018-01-".$day;
-
-			$dateStart = $date." 00:00:00";
+    public static function changeWeekDaysToDate(array $weekDays): array
+    {
+        $user_timezone = MyDate::getUserTimeZone();
+        $systemTimeZone = MyDate::getTimeZone();
+        $newWeekDayArray = [];
+        foreach ($weekDays as $key => $day) {
+            $dateTime = new DateTime();
+            $dateTime->setISODate(2018, 2, $day);
+            $day = $dateTime->format('d');
+            $date = "2018-01-" . $day;
+            $dateStart = $date . " 00:00:00";
             $dateStart = MyDate::changeDateTimezone($dateStart, $user_timezone, $systemTimeZone);
-            
-			$date =  date('Y-m-d',strtotime($date." +1 day"));
-			$dateEnd = $date." 00:00:00";
-			$dateEnd = MyDate::changeDateTimezone($dateEnd, $user_timezone, $systemTimeZone);
-			
-			$newWeekDayArray[$key]['startDate'] = $dateStart;
-			$newWeekDayArray[$key]['endDate'] =$dateEnd;
-		}
-			// prx($newWeekDayArray);
-		return $newWeekDayArray;
-
-	}
+            $date = date('Y-m-d', strtotime($date . " +1 day"));
+            $dateEnd = $date . " 00:00:00";
+            $dateEnd = MyDate::changeDateTimezone($dateEnd, $user_timezone, $systemTimeZone);
+            $newWeekDayArray[$key]['startDate'] = $dateStart;
+            $newWeekDayArray[$key]['endDate'] = $dateEnd;
+        }
+        return $newWeekDayArray;
+    }
 
 }

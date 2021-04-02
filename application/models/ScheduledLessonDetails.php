@@ -1,6 +1,8 @@
 <?php
+
 class ScheduledLessonDetails extends MyAppModel
 {
+
     const DB_TBL = 'tbl_scheduled_lesson_details';
     const DB_TBL_PREFIX = 'sldetail_';
 
@@ -25,7 +27,6 @@ class ScheduledLessonDetails extends MyAppModel
         if ($this->getMainTableRecordId() == 0) {
             $this->setFldValue('sldetail_added_on', date('Y-m-d H:i:s'));
         }
-
         return parent::save();
     }
 
@@ -43,7 +44,8 @@ class ScheduledLessonDetails extends MyAppModel
         $srch->addFld(static::tblFld('id'));
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
-        if (empty($row)) return 0;
+        if (empty($row))
+            return 0;
         return $row[static::tblFld('id')];
     }
 
@@ -62,7 +64,7 @@ class ScheduledLessonDetails extends MyAppModel
         return $srch;
     }
 
-    public static function getLessonDetailSearchObj() : SearchBase
+    public static function getLessonDetailSearchObj(): SearchBase
     {
         $srch = self::getSearchObj();
         $srch->joinScheduledLesson();
@@ -72,21 +74,21 @@ class ScheduledLessonDetails extends MyAppModel
         $srch->joinTeacherCredentials();
         $srch->joinLessonLanguage();
         $srch->addMultipleFields(
-            array(
-                'sldetail_id',
-                'slesson_date',
-                'slesson_end_date',
-                'slesson_start_time',
-                'slesson_end_time',
-                'slesson_status',
-                'slesson_id',
-                'sldetail_learner_status',
-                'ul.user_id as learnerId',
-                'ut.user_id as teacherId',
-                'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
-                'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
-                'IFNULL(t_sl_l.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
-            )
+                array(
+                    'sldetail_id',
+                    'slesson_date',
+                    'slesson_end_date',
+                    'slesson_start_time',
+                    'slesson_end_time',
+                    'slesson_status',
+                    'slesson_id',
+                    'sldetail_learner_status',
+                    'ul.user_id as learnerId',
+                    'ut.user_id as teacherId',
+                    'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+                    'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+                    'IFNULL(t_sl_l.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
+                )
         );
         return $srch;
     }
@@ -102,35 +104,30 @@ class ScheduledLessonDetails extends MyAppModel
         $srch->joinOrderProduct();
         $srch->joinLearnerCredentials();
         $srch->joinLessonLanguage();
-
         $srch->addMultipleFields(
-            array(
-                'sldetail_id',
-                'slesson_id',
-                'slesson_date',
-                'slesson_start_time',
-                'slesson_end_time',
-                'slesson_status',
-                'op.op_lpackage_is_free_trial',
-                'sldetail_learner_status',
-                'ul.user_id as learnerId',
-                'ut.user_id as teacherId',
-                'ul.user_first_name as learnerFname',
-                'ul.user_last_name as learnerLname',
-                'lcred.credential_email as learnerEmailId',
-                'ul.user_timezone as learnerTz',
-                'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
-                'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
-                'IFNULL(t_sl_l.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
-            )
+                array(
+                    'sldetail_id',
+                    'slesson_id',
+                    'slesson_date',
+                    'slesson_start_time',
+                    'slesson_end_time',
+                    'slesson_status',
+                    'op.op_lpackage_is_free_trial',
+                    'sldetail_learner_status',
+                    'ul.user_id as learnerId',
+                    'ut.user_id as teacherId',
+                    'ul.user_first_name as learnerFname',
+                    'ul.user_last_name as learnerLname',
+                    'lcred.credential_email as learnerEmailId',
+                    'ul.user_timezone as learnerTz',
+                    'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+                    'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+                    'IFNULL(t_sl_l.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
+                )
         );
         $cnd = $srch->addCondition(static::tblFld('learner_status'), '=', ScheduledLesson::STATUS_SCHEDULED);
         $cnd->attachCondition(static::tblFld('learner_status'), '=', ScheduledLesson::STATUS_NEED_SCHEDULING);
-        // echo $srch->getQuery();die;
-
-        $rs = $srch->getResultSet();
-        $rows = $db->fetchAll($rs);
-        return $rows;
+        return $db->fetchAll($srch->getResultSet());
     }
 
     public static function getAttributesByLessionId($recordId, $attr = null)
@@ -145,7 +142,6 @@ class ScheduledLessonDetails extends MyAppModel
         if (is_string($attr)) {
             return $row[$attr];
         }
-
         return $row;
     }
 
@@ -168,12 +164,10 @@ class ScheduledLessonDetails extends MyAppModel
     public function getCancelledGroupClassByDetailId()
     {
         $sldetail_id = $this->getMainTableRecordId();
-
         if ($sldetail_id < 1) {
             $this->error = Label::getLabel('LBL_Invalid_Request');
             return false;
         }
-
         $srch = new ScheduledLessonSearch(false);
         $srch->joinGroupClass($this->siteLangId);
         $srch->joinScheduledLessionDetails();
@@ -182,28 +176,20 @@ class ScheduledLessonDetails extends MyAppModel
         $srch->doNotCalculateRecords();
         $srch->addCondition('sld.sldetail_id', '=', $sldetail_id);
         $srch->addCondition('grpcls.grpcls_status', '=', TeacherGroupClasses::STATUS_CANCELLED);
-
-        $srch->addFld(array(
-            'sldetail_order_id',
-            'order_net_amount',
-        ));
+        $srch->addFld(array('sldetail_order_id', 'order_net_amount',));
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
         if (!$row) {
             $this->error = Label::getLabel('LBL_Invalid_Request');
             return false;
         }
-
         $order_id = $row['sldetail_order_id'];
-
-        $orderObj =  new Order();
+        $orderObj = new Order();
         $order = $orderObj->getOrderById($order_id);
-
         if ($order == false) {
             $this->error = Label::getLabel('LBL_Error:_Please_perform_this_action_on_valid_record.');
             return false;
         }
-
         if ($order["order_is_paid"] == Order::ORDER_IS_CANCELLED) {
             $this->error = Label::getLabel('LBL_Already_Refunded');
             return false;
@@ -222,16 +208,16 @@ class ScheduledLessonDetails extends MyAppModel
         $srch->addCondition('op.op_lpackage_is_free_trial', ' = ', 0);
         $rs = $srch->getResultSet();
         $data = $db->fetch($rs);
-        if (!$data) return true;
-
+        if (!$data)
+            return true;
         $utxn_comments = sprintf(Label::getLabel('LBL_LessonId:_%s_Refund_Payment', CommonHelper::getLangId()), $data['slesson_id']);
-        $transactionType =  Transaction::TYPE_LOADED_MONEY_TO_WALLET;
+        $transactionType = Transaction::TYPE_LOADED_MONEY_TO_WALLET;
         //coupon order case
-        $isDiscountApply =  false;
-        $data['order_discount_total']  = FatUtility::float($data['order_discount_total']);
-        $data['order_net_amount']  = FatUtility::float($data['order_net_amount']);
+        $isDiscountApply = false;
+        $data['order_discount_total'] = FatUtility::float($data['order_discount_total']);
+        $data['order_net_amount'] = FatUtility::float($data['order_net_amount']);
         if ($learner && $data['order_discount_total'] > 0) {
-            $orderObj =  new Order;
+            $orderObj = new Order;
             $orderSearch = $orderObj->getLessonsByOrderId($data['sldetail_order_id']);
             $orderSearch->addMultipleFields([
                 'count(sld.sldetail_id) as totalLessons',
@@ -243,9 +229,9 @@ class ScheduledLessonDetails extends MyAppModel
             ]);
             $orderSearch->addGroupBy('sld.sldetail_order_id');
             $resultSet = $orderSearch->getResultSet();
-            $orderInfo =  $db->fetch($resultSet);
+            $orderInfo = $db->fetch($resultSet);
             if (empty($orderInfo)) {
-                $this->error =  Label::getLabel('LBL_Invalid_Request');
+                $this->error = Label::getLabel('LBL_Invalid_Request');
                 return false;
             }
             // plus 1 beacuse 1 lesson alredy marked cancelled in learner scheduled lesson controller
@@ -255,7 +241,7 @@ class ScheduledLessonDetails extends MyAppModel
             }
             //if user buy order with discount and user scheduled his 1 or more Lessons he has not able to cancel the lesson
             if ($orderInfo['totalLessons'] != $totalCanceledAndNeedToScheduledCount) {
-                $this->error =  Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon');
+                $this->error = Label::getLabel('LBL_You_are_not_cancelled_the_lesson_becuase_you_purchase_the_lesson_with_coupon');
                 return false;
             }
             $orderAssignValues = array('order_is_paid' => Order::ORDER_IS_CANCELLED);
@@ -263,34 +249,26 @@ class ScheduledLessonDetails extends MyAppModel
                 $this->error = $db->getError();
                 return false;
             }
-
             $coustomQuery = "UPDATE " . ScheduledLessonDetails::DB_TBL . " as sld INNER JOIN " . ScheduledLesson::DB_TBL . " as sl ON ( sl.slesson_id = sld.sldetail_slesson_id ) ";
             $coustomQuery .= " SET  sld.sldetail_learner_status = " . ScheduledLesson::STATUS_CANCELLED . " , sl.slesson_status = " . ScheduledLesson::STATUS_CANCELLED;
             $coustomQuery .= " where sldetail_order_id = '" . $orderInfo['order_id'] . "'";
-
             if (!$db->query($coustomQuery)) {
-                $this->error =  $db->getError();
+                $this->error = $db->getError();
                 return false;
             }
-
             $formattedOrderId = "#" . $orderInfo["order_id"];
             $utxn_comments = Label::getLabel('LBL_Order_Refund:_{order-id}');
             $utxn_comments = str_replace("{order-id}", $formattedOrderId, $utxn_comments);
             $transactionType = Transaction::TYPE_ORDER_CANCELLED_REFUND;
-            $isDiscountApply =  true;
+            $isDiscountApply = true;
         }
-
-
         $to_time = strtotime($data['slesson_date'] . ' ' . $data['slesson_start_time']);
         $from_time = strtotime(date('Y-m-d H:i:s'));
         $diff = round(($to_time - $from_time) / 3600, 2);
-
         $perUnitAmount = $data['op_unit_price'];
-
         if (!$learner && $data['order_discount_total'] > 0) {
             $perUnitAmount = round(($data['order_net_amount'] / $data['op_qty']), 2);
         }
-
         if ($learner && !$isDiscountApply && $diff < 24) {
             if ($data['slesson_grpcls_id'] > 0) {
                 $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_CLASS_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
@@ -298,20 +276,16 @@ class ScheduledLessonDetails extends MyAppModel
                 $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
             }
         }
-
         if ($learner && $data['order_discount_total'] > 0) {
             //  refund only need to scheduled lesson  ammount
-            $perUnitAmount =  round(($data['order_net_amount'] / $data['op_qty']), 2);
+            $perUnitAmount = round(($data['order_net_amount'] / $data['op_qty']), 2);
             if ($addCancelledLessonCount) {
                 $orderInfo['needToscheduledLessonsCount'] += 1;
             }
             $perUnitAmount = round(($perUnitAmount * $orderInfo['needToscheduledLessonsCount']), 2);
         }
-
         $opObj = new OrderProduct($data['op_id']);
         $opObj->refund(1, $perUnitAmount);
-
-        //if($perUnitAmount > 0) {
         $tObj = new Transaction($data['sldetail_learner_id']);
         $data = array(
             'utxn_user_id' => $data['sldetail_learner_id'],
@@ -321,17 +295,17 @@ class ScheduledLessonDetails extends MyAppModel
             'utxn_type' => $transactionType,
             'utxn_credit' => $perUnitAmount
         );
-
         if (!$tObj->addTransaction($data)) {
             trigger_error($tObj->getError(), E_USER_ERROR);
             return false;
         }
-        //}
         return true;
     }
+
     public function markLearnerJoinTime()
     {
         $this->assignValues(array('sldetail_learner_join_time' => date('Y-m-d H:i:s')));
         return $this->save();
     }
+
 }

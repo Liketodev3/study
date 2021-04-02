@@ -1,6 +1,8 @@
 <?php
+
 class Banner extends MyAppModel
 {
+
     const DB_TBL = 'tbl_banners';
     const DB_TBL_PREFIX = 'banner_';
     const DB_LANG_TBL = 'tbl_banners_lang';
@@ -27,12 +29,7 @@ class Banner extends MyAppModel
     {
         $srch = new SearchBase(static::DB_TBL, 'b');
         if ($langId > 0) {
-            $srch->joinTable(
-                static::DB_LANG_TBL,
-                'LEFT OUTER JOIN',
-                'bannerlang_banner_id = banner_id
-			AND bannerlang_lang_id = ' . $langId
-            );
+            $srch->joinTable(static::DB_LANG_TBL, 'LEFT OUTER JOIN', 'bannerlang_banner_id = banner_id AND bannerlang_lang_id = ' . $langId);
         }
         if ($isActive) {
             $srch->addCondition('banner_active', '=', applicationConstants::ACTIVE);
@@ -44,8 +41,7 @@ class Banner extends MyAppModel
     {
         $srch = new SearchBase(static::DB_TBL_LOCATIONS);
         if ($langId > 0) {
-            $srch->joinTable(static::DB_LANG_TBL_LOCATIONS, 'LEFT OUTER JOIN', 'blocationlang_blocation_id = blocation_id
-			AND blocationlang_lang_id = ' . $langId);
+            $srch->joinTable(static::DB_LANG_TBL_LOCATIONS, 'LEFT OUTER JOIN', 'blocationlang_blocation_id = blocation_id AND blocationlang_lang_id = ' . $langId);
         }
         if ($isActive) {
             $srch->addCondition('blocation_active', '=', applicationConstants::ACTIVE);
@@ -70,4 +66,5 @@ class Banner extends MyAppModel
         }
         return true;
     }
+
 }

@@ -1,6 +1,8 @@
 <?php
+
 class EmailTemplates extends MyAppModel
 {
+
     const DB_TBL = 'tbl_email_templates';
     const DB_TBL_PREFIX = 'etpl_';
 
@@ -17,14 +19,12 @@ class EmailTemplates extends MyAppModel
         return self::$_instance;
     }
 
-    public static function getEtpl($etpl_code ='', $langId = 0, $fields = null)
+    public static function getEtpl($etpl_code = '', $langId = 0, $fields = null)
     {
         if (empty($etpl_code)) {
             return;
         }
-
         $db = FatApp::getDb();
-
         $srch = static::getSearchObject($langId);
         $srch->addCondition(static::DB_TBL_PREFIX . 'code', 'LIKE', $etpl_code);
         if ($langId > 0) {
@@ -42,20 +42,20 @@ class EmailTemplates extends MyAppModel
 
     public static function getSearchObject($langId = 0)
     {
-        $langId =  FatUtility::int($langId);
+        $langId = FatUtility::int($langId);
         if ($langId < 1) {
             $langId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG');
         }
         $srch = new SearchBase(static::DB_TBL);
         $srch->addOrder(static::DB_TBL_PREFIX . 'name', 'ASC');
         $srch->addMultipleFields(array(
-                static::DB_TBL_PREFIX . 'code',
-                static::DB_TBL_PREFIX . 'lang_id',
-                static::DB_TBL_PREFIX . 'name',
-                static::DB_TBL_PREFIX . 'subject',
-                static::DB_TBL_PREFIX . 'body',
-                static::DB_TBL_PREFIX . 'replacements',
-                static::DB_TBL_PREFIX . 'status',
+            static::DB_TBL_PREFIX . 'code',
+            static::DB_TBL_PREFIX . 'lang_id',
+            static::DB_TBL_PREFIX . 'name',
+            static::DB_TBL_PREFIX . 'subject',
+            static::DB_TBL_PREFIX . 'body',
+            static::DB_TBL_PREFIX . 'replacements',
+            static::DB_TBL_PREFIX . 'status',
         ));
         if ($langId > 0) {
             $srch->addCondition(static::DB_TBL_PREFIX . 'lang_id', '=', $langId);
@@ -66,13 +66,12 @@ class EmailTemplates extends MyAppModel
     public function addUpdateData($data = array())
     {
         $assignValues = array(
-                        static::DB_TBL_PREFIX . 'code' => $data['etpl_code'],
-                        static::DB_TBL_PREFIX . 'lang_id' => $data['etpl_lang_id'],
-                        static::DB_TBL_PREFIX . 'name' => $data['etpl_name'],
-                        static::DB_TBL_PREFIX . 'subject' => $data['etpl_subject'],
-                        static::DB_TBL_PREFIX . 'body' => $data['etpl_body'],
-                        );
-
+            static::DB_TBL_PREFIX . 'code' => $data['etpl_code'],
+            static::DB_TBL_PREFIX . 'lang_id' => $data['etpl_lang_id'],
+            static::DB_TBL_PREFIX . 'name' => $data['etpl_name'],
+            static::DB_TBL_PREFIX . 'subject' => $data['etpl_subject'],
+            static::DB_TBL_PREFIX . 'body' => $data['etpl_body'],
+        );
         if (!FatApp::getDb()->insertFromArray(static::DB_TBL, $assignValues, false, array(), $assignValues)) {
             $this->error = FatApp::getDb()->getError();
             return false;
@@ -86,20 +85,19 @@ class EmailTemplates extends MyAppModel
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED', $this->commonLangId);
             return false;
         }
-
         $db = FatApp::getDb();
-        if (! $db->updateFromArray(static::DB_TBL, array(
-                static::DB_TBL_PREFIX . 'status' => $v
-        ), array(
-                'smt' => static::DB_TBL_PREFIX . 'code = ?',
-                'vals' => array(
+        if (!$db->updateFromArray(static::DB_TBL, array(
+                    static::DB_TBL_PREFIX . 'status' => $v
+                        ), array(
+                    'smt' => static::DB_TBL_PREFIX . 'code = ?',
+                    'vals' => array(
                         $etplCode
-                )
-        ))) {
+                    )
+                ))) {
             $this->error = $db->getError();
             return false;
         }
-
         return true;
     }
+
 }

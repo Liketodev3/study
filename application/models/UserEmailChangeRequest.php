@@ -1,6 +1,8 @@
 <?php
+
 class UserEmailChangeRequest extends MyAppModel
 {
+
     const DB_TBL = 'tbl_user_email_change_request';
     const DB_TBL_PREFIX = 'uecreq_';
 
@@ -18,9 +20,9 @@ class UserEmailChangeRequest extends MyAppModel
     {
         $db = FatApp::getDb();
         if (!$result = $db->deleteRecords(
-            static::DB_TBL,
-            array('smt'=>static::DB_TBL_PREFIX . 'user_id = ?','vals'=>array($linkid))
-        )) {
+                static::DB_TBL,
+                array('smt' => static::DB_TBL_PREFIX . 'user_id = ?', 'vals' => array($linkid))
+                )) {
             return false;
         }
         return true;
@@ -33,48 +35,41 @@ class UserEmailChangeRequest extends MyAppModel
         $srch->addCondition(static::DB_TBL_PREFIX . 'token', '=', $_token);
         $srch->addCondition(static::DB_TBL_PREFIX . 'expire', '>=', date('Y-m-d h:i:s'));
         $srch->addCondition(static::DB_TBL_PREFIX . 'status', '=', 0);
-        $resultSet = $srch->getResultSet();
-        $resultSet = $db->fetch($resultSet);
-        return $resultSet;
+        return $db->fetch($srch->getResultSet());
     }
 
-    public function checkPendingRequestForUser($userid =  0)
+    public function checkPendingRequestForUser($userid = 0)
     {
         if ($userid < 1) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED', $this->commonLangId);
             return false;
         }
-
         $db = FatApp::getDb();
         $srch = new SearchBase(static::DB_TBL);
         $srch->addCondition(static::DB_TBL_PREFIX . 'user_id', '=', $userid);
         $srch->addCondition(static::DB_TBL_PREFIX . 'expire', '>=', date('Y-m-d h:i:s'));
         $srch->addCondition(static::DB_TBL_PREFIX . 'status', '=', 0);
-        $resultSet = $srch->getResultSet();
-        $resultSet = $db->fetch($resultSet);
-        return $resultSet;
+        return $db->fetch($srch->getResultSet());
     }
 
     public function updateUserRequestStatus()
     {
-        if (! ($this->getMainTableRecordId() > 0)) {
+        if (!($this->getMainTableRecordId() > 0)) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED', $this->commonLangId);
             return false;
         }
-
         $record = new TableRecord(static::DB_TBL);
         $arrFlds = array(
-                static::DB_TBL_PREFIX .'status' => 1,
-                static::DB_TBL_PREFIX .'updated' => date('Y-m-d H:i:s')
-
+            static::DB_TBL_PREFIX . 'status' => 1,
+            static::DB_TBL_PREFIX . 'updated' => date('Y-m-d H:i:s')
         );
-        $record->setFldValue(static::DB_TBL_PREFIX .'id', $this->getMainTableRecordId());
+        $record->setFldValue(static::DB_TBL_PREFIX . 'id', $this->getMainTableRecordId());
         $record->assignValues($arrFlds);
-        if (! $record->addNew(array(), $arrFlds)) {
+        if (!$record->addNew(array(), $arrFlds)) {
             $this->error = $record->getError();
             return false;
         }
-
         return true;
     }
+
 }

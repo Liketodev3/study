@@ -1,6 +1,8 @@
 <?php
+
 class BibleContent extends MyAppModel
 {
+
     const DB_TBL = "tbl_bible_content";
     const DB_TBL_PREFIX = "biblecontent_";
     const DB_TBL_LANG = "tbl_bible_content_lang";
@@ -22,7 +24,7 @@ class BibleContent extends MyAppModel
         $srch = self::getSearchObject();
         $srch->addCondition(self::DB_TBL_PREFIX . "active", '=', 1);
         if ($langId) {
-            $srch->joinTable(self::DB_TBL_LANG, 'LEFT OUTER JOIN', 'biblecontent_id = biblecontentlang_biblecontent_id AND biblecontentlang_lang_id='.$langId);
+            $srch->joinTable(self::DB_TBL_LANG, 'LEFT OUTER JOIN', 'biblecontent_id = biblecontentlang_biblecontent_id AND biblecontentlang_lang_id=' . $langId);
         }
         return $srch;
     }
@@ -37,4 +39,5 @@ class BibleContent extends MyAppModel
         }
         return FatApp::getDb()->fetch($rs);
     }
+
 }

@@ -1,12 +1,12 @@
 <?php
+
 class Thread extends MyAppModel
 {
+
     const DB_TBL = 'tbl_threads';
     const DB_TBL_PREFIX = 'thread_';
-
     const DB_TBL_THREAD_MESSAGES = 'tbl_thread_messages';
     const DB_TBL_THREAD_USERS = 'tbl_thread_users';
-
     const MESSAGE_IS_READ = 0;
     const MESSAGE_IS_UNREAD = 1;
 
@@ -35,10 +35,9 @@ class Thread extends MyAppModel
 
     public function markUserMessageRead($threadId, $userId)
     {
-        if (FatApp::getDb()->updateFromArray('tbl_thread_messages', array('message_is_unread' => self::MESSAGE_IS_READ), array('smt'=>'`message_thread_id`=? AND `message_to`=? ', 'vals'=>array($threadId, $userId)))) {
+        if (FatApp::getDb()->updateFromArray('tbl_thread_messages', array('message_is_unread' => self::MESSAGE_IS_READ), array('smt' => '`message_thread_id`=? AND `message_to`=? ', 'vals' => array($threadId, $userId)))) {
             return true;
         }
-
         $this->error = FatApp::getDb()->getError();
         return false;
     }
@@ -72,15 +71,13 @@ class Thread extends MyAppModel
         $db->startTransaction();
         $threadObj = new Thread();
         $threadDataToSave = array(
-            'thread_start_date'	=>	date('Y-m-d H:i:s')
+            'thread_start_date' => date('Y-m-d H:i:s')
         );
-
         $threadObj->assignValues($threadDataToSave);
         if (!$threadObj->save()) {
             $this->error = $threadObj->getError();
             return false;
         }
-
         foreach ($data as $id) {
             $threadUserArr = array();
             $threadUserArr['threaduser_id'] = $id;
@@ -114,9 +111,8 @@ class Thread extends MyAppModel
         $srch->joinLatestThreadMessage();
         $srch->joinMessagePostedFromUser();
         $srch->joinMessagePostedToUser();
-        //$srch->joinThreadStartedByUser();
-        $srch->addMultipleFields(array('tth.*', 'ttm.message_id', 'ttm.message_text', 'ttm.message_date', '(CASE WHEN tfr.user_id = ' . $userId . ' THEN 0 ELSE ttm.message_is_unread END) AS message_is_unread', 'ttm.message_to' ));
-        //User::addUserImageFldInQuery($srch, '(CASE WHEN tfto.user_id = ' . $userId . ' THEN IFNULL (tfr.user_id,0)  ELSE tfto.user_id END)', 'sender_image', true);
+        $srch->addMultipleFields(array('tth.*', 'ttm.message_id', 'ttm.message_text', 'ttm.message_date',
+            '(CASE WHEN tfr.user_id = ' . $userId . ' THEN 0 ELSE ttm.message_is_unread END) AS message_is_unread', 'ttm.message_to'));
         $srch->addCondition('ttm.message_deleted', '=', 0);
         $cnd = $srch->addCondition('ttm.message_from', '=', $userId);
         $cnd->attachCondition('ttm.message_to', '=', $userId, 'OR');
@@ -136,4 +132,5 @@ class Thread extends MyAppModel
         $res = FatApp::getDb()->fetchAll($rs, 'threaduser_id');
         return array_keys($res);
     }
+
 }

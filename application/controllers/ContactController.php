@@ -1,6 +1,8 @@
 <?php
+
 class ContactController extends MyAppController
 {
+
     public function index()
     {
         $cPageId = FatUtility::int(5);
@@ -59,4 +61,5 @@ class ContactController extends MyAppController
         }
         FatApp::redirectUser(CommonHelper::generateUrl('contact'));
     }
+
 }

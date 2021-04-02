@@ -1,8 +1,11 @@
 <?php
+
 class UrlRewrite extends MyAppModel
 {
+
     const DB_TBL = 'tbl_url_rewrites';
     const DB_TBL_PREFIX = 'urlrewrite_';
+
     private $db;
 
     public function __construct($id = 0)
@@ -22,7 +25,7 @@ class UrlRewrite extends MyAppModel
         $urlSrch = static::getSearchObject();
         $urlSrch->doNotCalculateRecords();
         $urlSrch->setPageSize(1);
-        $urlSrch->addMultipleFields(array('urlrewrite_id','urlrewrite_original','urlrewrite_custom'));
+        $urlSrch->addMultipleFields(array('urlrewrite_id', 'urlrewrite_original', 'urlrewrite_custom'));
         $urlSrch->addCondition('urlrewrite_custom', '=', $customUrl);
         if ($excludeThisOriginalUrl) {
             $urlSrch->addCondition('urlrewrite_original', '!=', $excludeThisOriginalUrl);
@@ -32,15 +35,15 @@ class UrlRewrite extends MyAppModel
         if ($urlRow == false) {
             return array();
         }
-
         return $urlRow;
     }
+
     public static function getDataByOriginalUrl($originalUrl, $excludeThisCustomUrl = false)
     {
         $urlSrch = static::getSearchObject();
         $urlSrch->doNotCalculateRecords();
         $urlSrch->setPageSize(1);
-        $urlSrch->addMultipleFields(array('urlrewrite_id','urlrewrite_original','urlrewrite_custom'));
+        $urlSrch->addMultipleFields(array('urlrewrite_id', 'urlrewrite_original', 'urlrewrite_custom'));
         $urlSrch->addCondition('urlrewrite_original', '=', $originalUrl);
         if ($excludeThisCustomUrl) {
             $urlSrch->addCondition('urlrewrite_custom', '!=', $excludeThisCustomUrl);
@@ -50,25 +53,22 @@ class UrlRewrite extends MyAppModel
         if ($urlRow == false) {
             return array();
         }
-
         return $urlRow;
     }
 
     public static function getValidSeoUrl($urlKeyword, $excludeThisOriginalUrl = false)
     {
         $customUrl = CommonHelper::seoUrl($urlKeyword);
-
         $res = static::getDataByCustomUrl($customUrl, $excludeThisOriginalUrl);
         if (empty($res)) {
             return $customUrl;
         }
-
         $i = 1;
         $slug = $customUrl;
         while (static::getDataByCustomUrl($slug, $excludeThisOriginalUrl)) {
             $slug = $customUrl . "-" . $i++;
         }
-
         return $slug;
     }
+
 }

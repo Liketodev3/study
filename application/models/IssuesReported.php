@@ -1,21 +1,17 @@
 <?php
+
 class IssuesReported extends MyAppModel
 {
+
     const DB_TBL = 'tbl_issues_reported';
     const DB_TBL_PREFIX = 'issrep_';
-
     const STATUS_OPEN = 0;
     const STATUS_PROGRESS = 1;
     const STATUS_RESOLVED = 2;
-
     const RESOLVE_TYPE_LESSON_UNSCHEDULED = 1;
     const RESOLVE_TYPE_LESSON_COMPLETED = 2;
     const RESOLVE_TYPE_LESSON_COMPLETED_HALF_REFUND = 3;
     const RESOLVE_TYPE_LESSON_COMPLETED_FULL_REFUND = 4;
-
-   
-
-  
     const ISSUE_REPORTED_NOTIFICATION = 1;
     const ISSUE_RESOLVE_NOTIFICATION = 2;
 
@@ -24,19 +20,16 @@ class IssuesReported extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getResolveTypeArray(int $langId = 0) : array
+    public static function getResolveTypeArray(int $langId = 0): array
     {
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-
         return array(
-            
-            self::RESOLVE_TYPE_LESSON_UNSCHEDULED           => Label::getLabel('LBL_Reset_Lesson_to:_Unscheduled'),
-            self::RESOLVE_TYPE_LESSON_COMPLETED             =>  Label::getLabel('LBL_Mark_Lesson_as:_Completed'),
-            self::RESOLVE_TYPE_LESSON_COMPLETED_HALF_REFUND =>  Label::getLabel('LBL_Mark_Lesson_as:_Completed_and_issue_student_a_50%_refund'),
-            self::RESOLVE_TYPE_LESSON_COMPLETED_FULL_REFUND =>  Label::getLabel('LBL_Mark_Lesson_as:_Completed_and_issue_student_a_100%_refund')          
-        
+            self::RESOLVE_TYPE_LESSON_UNSCHEDULED => Label::getLabel('LBL_Reset_Lesson_to:_Unscheduled'),
+            self::RESOLVE_TYPE_LESSON_COMPLETED => Label::getLabel('LBL_Mark_Lesson_as:_Completed'),
+            self::RESOLVE_TYPE_LESSON_COMPLETED_HALF_REFUND => Label::getLabel('LBL_Mark_Lesson_as:_Completed_and_issue_student_a_50%_refund'),
+            self::RESOLVE_TYPE_LESSON_COMPLETED_FULL_REFUND => Label::getLabel('LBL_Mark_Lesson_as:_Completed_and_issue_student_a_100%_refund')
         );
     }
 
@@ -47,7 +40,6 @@ class IssuesReported extends MyAppModel
         $srch->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
         $srch->joinTable(Order::DB_TBL, 'INNER JOIN', 'o.order_id = sld.sldetail_order_id', 'o');
         $srch->joinTable('tbl_order_products', 'INNER JOIN', 'op.op_order_id = o.order_id', 'op');
-        // $srch->joinTable(User::DB_TBL, 'INNER JOIN', '(CASE WHEN i.issrep_reported_by = '. USER::USER_TYPE_LEANER .' THEN sld.sldetail_learner_id  ELSE sl.slesson_teacher_id END) = u.user_id', 'u');
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'i.issrep_reported_by = u.user_id', 'u');
         return $srch;
     }
@@ -67,13 +59,13 @@ class IssuesReported extends MyAppModel
         }
         if (!$filter) {
             return array(
-                static::STATUS_OPEN	=>	Label::getLabel('LBL_Open', $langId),
-                static::STATUS_PROGRESS	=>	Label::getLabel('LBL_In_Progress', $langId),
-                static::STATUS_RESOLVED	=>	Label::getLabel('LBL_Resolved', $langId),
+                static::STATUS_OPEN => Label::getLabel('LBL_Open', $langId),
+                static::STATUS_PROGRESS => Label::getLabel('LBL_In_Progress', $langId),
+                static::STATUS_RESOLVED => Label::getLabel('LBL_Resolved', $langId),
             );
         } else {
             return array(
-                static::STATUS_RESOLVED	=>	Label::getLabel('LBL_Resolved', $langId),
+                static::STATUS_RESOLVED => Label::getLabel('LBL_Resolved', $langId),
             );
         }
     }
@@ -86,12 +78,12 @@ class IssuesReported extends MyAppModel
 
     public static function getCallHistory($uid)
     {
-        $data_string = array('UID'=>$uid);
-        $curl_handle=curl_init();
+        $data_string = array('UID' => $uid);
+        $curl_handle = curl_init();
         curl_setopt($curl_handle, CURLOPT_URL, 'https://api.cometondemand.net/api/v2/getCallHistory');
         curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($curl_handle, CURLOPT_HTTPHEADER, array(
-            "api-key: ".FatApp::getConfig('CONF_COMET_CHAT_API_KEY')
+            "api-key: " . FatApp::getConfig('CONF_COMET_CHAT_API_KEY')
         ));
         curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
@@ -130,7 +122,7 @@ class IssuesReported extends MyAppModel
     {
         $srch = new SearchBase(static::DB_TBL);
         $srch->addCondition('issrep_id', ' = ', $issrep_id);
-        $srch->addCondition('issrep_status', ' IN ', array( self::STATUS_PROGRESS, self::STATUS_RESOLVED ));
+        $srch->addCondition('issrep_status', ' IN ', array(self::STATUS_PROGRESS, self::STATUS_RESOLVED));
         $rs = $srch->getResultSet();
         $issueRow = FatApp::getDb()->fetch($rs);
         if ($issueRow) {
@@ -138,37 +130,40 @@ class IssuesReported extends MyAppModel
         }
         return false;
     }
-    
-    public function getIssuesByLessonId($lessonId):array
+
+    public function getIssuesByLessonId($lessonId): array
     {
         $srch = new SearchBase(self::DB_TBL, 'i');
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'i.issrep_reported_by = u.user_id', 'u');
         $srch->addCondition('issrep_slesson_id', '=', $lessonId);
         $srch->addMultipleFields(
-            array(
-                'issrep_id',
-                'issrep_slesson_id',
-                'issrep_comment',
-                'issrep_reported_by',
-                'issrep_status',
-                'issrep_issues_resolve',
-                'issrep_issues_resolve_type',
-                'issrep_resolve_comments',
-                'issrep_issues_to_report',
-                'issrep_is_for_admin',
-                'issrep_added_on',
-                'issrep_updated_on',
-                'user_id',
-                'user_first_name',
-                'user_last_name',
-                'CONCAT(user_first_name," ", user_last_name) as user_full_name',
-            )
+                array(
+                    'issrep_id',
+                    'issrep_slesson_id',
+                    'issrep_comment',
+                    'issrep_reported_by',
+                    'issrep_status',
+                    'issrep_issues_resolve',
+                    'issrep_issues_resolve_type',
+                    'issrep_resolve_comments',
+                    'issrep_issues_to_report',
+                    'issrep_is_for_admin',
+                    'issrep_added_on',
+                    'issrep_updated_on',
+                    'user_id',
+                    'user_first_name',
+                    'user_last_name',
+                    'CONCAT(user_first_name," ", user_last_name) as user_full_name',
+                )
         );
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $rs = $srch->getResultSet();
         $issueRows = FatApp::getDb()->fetchAll($rs);
-        if (empty($issueRows)) return array();
+        if (empty($issueRows)) {
+            return array();
+        }
         return $issueRows;
     }
+
 }

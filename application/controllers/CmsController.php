@@ -1,6 +1,8 @@
 <?php
+
 class CmsController extends MyAppController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -49,7 +51,6 @@ class CmsController extends MyAppController
     {
         $nodes = array();
         $parameters = FatApp::getParameters();
-
         if (!empty($parameters) && $action == 'view') {
             $cPageId = reset($parameters);
             $cPageId = FatUtility::int($cPageId);
@@ -68,4 +69,5 @@ class CmsController extends MyAppController
     {
         FatUtility::exitWithErrorCode(404);
     }
+
 }

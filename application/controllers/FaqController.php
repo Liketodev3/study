@@ -1,6 +1,8 @@
 <?php
+
 class FaqController extends MyAppController
 {
+
     public function index()
     {
         $srch = Faq::getSearchObject($this->siteLangId);
@@ -27,7 +29,6 @@ class FaqController extends MyAppController
         }
         $srchbase = new SearchBase(Faq::DB_TBL);
         $srchbase->joinTable(Faq::DB_TBL_LANG, 'LEFT OUTER JOIN', 'faqlang_faq_id=faq_id AND faqlang_lang_id = ' . $this->siteLangId);
-
         $srch = clone $srchbase;
         $srch->addMultipleFields(array('faq_id', 'faq_category', 'faq_title', 'faq_description',));
         $srch->addCondition('faq_id', '=', $faqId);
@@ -62,4 +63,5 @@ class FaqController extends MyAppController
         $this->set('categoryId', $categoryId);
         $this->_template->render();
     }
+
 }

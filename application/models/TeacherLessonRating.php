@@ -1,9 +1,10 @@
 <?php
+
 class TeacherLessonRating extends MyAppModel
 {
+
     const DB_TBL = 'tbl_teacher_lesson_rating';
     const DB_TBL_PREFIX = '	tlrating_';
-
     const TYPE_LESSON = 1;
     const TYPE_TEACHER_ACCENT = 2;
     const TYPE_TEACHER_PRSESNCE = 3;
@@ -16,14 +17,13 @@ class TeacherLessonRating extends MyAppModel
 
     public static function getSearchObj()
     {
-        // return $srch = new SearchBase(static::DB_TBL, 'spr');
         return $srch = new SearchBase(static::DB_TBL, 'sprating');
     }
 
     public static function getRatingAspectsArr()
     {
         return array(
-            static::TYPE_LESSON=> Label::getLabel('LBL_Lesson'),
+            static::TYPE_LESSON => Label::getLabel('LBL_Lesson'),
             static::TYPE_TEACHER_ACCENT => Label::getLabel('LBL_Accent'),
             static::TYPE_TEACHER_PRSESNCE => Label::getLabel('LBL_Presence'),
             static::TYPE_TEACHER_OVERALL => Label::getLabel('LBL_Overall'),
@@ -36,7 +36,7 @@ class TeacherLessonRating extends MyAppModel
         $srch = new TeacherLessonReviewSearch();
         $srch->joinTeacher();
         $srch->addMultipleFields(array('avg(tlrating_rating) as avg_rating'));
-        $srch->addCondition('tlrating_rating_type', 'in', array(static::TYPE_TEACHER_ACCENT , static::TYPE_TEACHER_PRSESNCE , static::TYPE_TEACHER_OVERALL));
+        $srch->addCondition('tlrating_rating_type', 'in', array(static::TYPE_TEACHER_ACCENT, static::TYPE_TEACHER_PRSESNCE, static::TYPE_TEACHER_OVERALL));
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addCondition('tlreview_seller_user_id', '=', $userId);
@@ -49,4 +49,5 @@ class TeacherLessonRating extends MyAppModel
         }
         return $record['avg_rating'];
     }
+
 }

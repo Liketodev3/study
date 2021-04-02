@@ -1,6 +1,8 @@
 <?php
+
 class OrderStatus extends MyAppModel
 {
+
     const DB_TBL = 'tbl_order_statuses';
     const DB_TBL_PREFIX = 'orderstatus_';
 
@@ -8,4 +10,5 @@ class OrderStatus extends MyAppModel
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
+
 }

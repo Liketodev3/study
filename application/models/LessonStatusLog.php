@@ -1,9 +1,10 @@
 <?php
+
 class LessonStatusLog extends MyAppModel
 {
+
     const DB_TBL = 'tbl_lesson_status_log';
     const DB_TBL_PREFIX = 'lesstslog_';
-
     const RESCHEDULED_REPORT = 1;
     const CANCELLED_REPORT = 2;
     const UPCOMING_REPORT = 3;
@@ -16,19 +17,18 @@ class LessonStatusLog extends MyAppModel
     public function __construct(int $lessonDetailId = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $lessonDetailId);
-        if ( $lessonDetailId > 0 ) {
+        if ($lessonDetailId > 0) {
             $this->lessonDetailId = $lessonDetailId;
             $scheduledLessonDetailsSearch = new ScheduledLessonDetailsSearch();
             $this->lessonData = $scheduledLessonDetailsSearch->getDetailsById($this->lessonDetailId);
         }
     }
-	
-	public static function getSearchObject(string $alias = 'lsl' ) : object
+
+    public static function getSearchObject(string $alias = 'lsl'): object
     {
         $srch = new SearchBase(static::DB_TBL, $alias);
         return $srch;
     }
-
 
     public function save()
     {
@@ -37,8 +37,8 @@ class LessonStatusLog extends MyAppModel
         }
         return parent::save();
     }
-    
-    public function addLog(int $status, int $userType, int $userId, string $comment) :bool
+
+    public function addLog(int $status, int $userType, int $userId, string $comment): bool
     {
         $lessonStatusLogArr = array(
             'lesstslog_slesson_id' => $this->lessonData['slesson_id'],
@@ -53,10 +53,9 @@ class LessonStatusLog extends MyAppModel
             'lesstslog_updated_by_user_type' => $userType,
             'lesstslog_comment' => $comment
         );
-        
         $lessonStatusLog = new LessonStatusLog();
         $lessonStatusLog->assignValues($lessonStatusLogArr);
-        return (bool)$lessonStatusLog->save();
+        return (bool) $lessonStatusLog->save();
     }
-	
+
 }

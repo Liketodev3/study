@@ -1,17 +1,18 @@
 <?php
+
 class Preference extends MyAppModel
 {
+
     const DB_TBL = 'tbl_preferences';
     const DB_TBL_PREFIX = 'preference_';
     const DB_TBL_LANG = 'tbl_preferences_lang';
     const DB_TBL_USER_PREF = 'tbl_user_to_preference';
-
-    const TYPE_ACCENTS=1;
-    const TYPE_TEACHES_LEVEL=2;
-    const TYPE_LEARNER_AGES=3;
-    const TYPE_LESSONS=4;
-    const TYPE_SUBJECTS=5;
-    const TYPE_TEST_PREPARATIONS=6;
+    const TYPE_ACCENTS = 1;
+    const TYPE_TEACHES_LEVEL = 2;
+    const TYPE_LEARNER_AGES = 3;
+    const TYPE_LESSONS = 4;
+    const TYPE_SUBJECTS = 5;
+    const TYPE_TEST_PREPARATIONS = 6;
 
     public function __construct($id = 0)
     {
@@ -25,22 +26,21 @@ class Preference extends MyAppModel
             $langId = CommonHelper::getLangId();
         }
         return array(
-            static::TYPE_ACCENTS	=>	Label::getLabel('LBL_Accents', $langId),
-            static::TYPE_TEACHES_LEVEL	=>	Label::getLabel('LBL_Teaches_Level', $langId),
-            static::TYPE_SUBJECTS	=>	Label::getLabel('LBL_Subjects', $langId),
-            static::TYPE_TEST_PREPARATIONS	=>	Label::getLabel('LBL_Test_Preparations', $langId),
-            static::TYPE_LESSONS	=>	Label::getLabel('LBL_Lesson_includes', $langId),
-            static::TYPE_LEARNER_AGES	=>	Label::getLabel('LBL_Learner_Ages', $langId),
-
+            static::TYPE_ACCENTS => Label::getLabel('LBL_Accents', $langId),
+            static::TYPE_TEACHES_LEVEL => Label::getLabel('LBL_Teaches_Level', $langId),
+            static::TYPE_SUBJECTS => Label::getLabel('LBL_Subjects', $langId),
+            static::TYPE_TEST_PREPARATIONS => Label::getLabel('LBL_Test_Preparations', $langId),
+            static::TYPE_LESSONS => Label::getLabel('LBL_Lesson_includes', $langId),
+            static::TYPE_LEARNER_AGES => Label::getLabel('LBL_Learner_Ages', $langId),
         );
     }
 
     public function deletePreference($preference_id)
     {
-        $db=FatApp::getDb();
-        $langDelete=$db->deleteRecords(static::DB_TBL_LANG, array('smt'=>'preferencelang_preference_id = ?','vals'=>array($preference_id)));
-        if (!$db->deleteRecords(static::DB_TBL, array('smt'=>'preference_id = ?','vals'=>array($preference_id))) && !$langDelete) {
-            $this->error=$db->getError();
+        $db = FatApp::getDb();
+        $langDelete = $db->deleteRecords(static::DB_TBL_LANG, array('smt' => 'preferencelang_preference_id = ?', 'vals' => array($preference_id)));
+        if (!$db->deleteRecords(static::DB_TBL, array('smt' => 'preference_id = ?', 'vals' => array($preference_id))) && !$langDelete) {
+            $this->error = $db->getError();
             return false;
         }
         return true;
@@ -63,4 +63,5 @@ class Preference extends MyAppModel
         ksort($tempRows);
         return $tempRows;
     }
+
 }

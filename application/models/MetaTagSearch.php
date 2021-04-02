@@ -1,20 +1,22 @@
 <?php
+
 class MetaTagSearch extends SearchBase
 {
+
     public function __construct(int $langId = 0, int $metaType = MetaTag::META_GROUP_DEFAULT)
     {
         parent::__construct(MetaTag::DB_TBL, 'mt');
-
         if ($langId > 0) {
             $this->joinTable(
-                MetaTag::DB_LANG_TBL,
-                'LEFT OUTER JOIN',
-                'mt_l.' . MetaTag::DB_LANG_TBL_PREFIX . 'meta_id = mt.meta_id
+                    MetaTag::DB_LANG_TBL,
+                    'LEFT OUTER JOIN',
+                    'mt_l.' . MetaTag::DB_LANG_TBL_PREFIX . 'meta_id = mt.meta_id
                 AND mt_l.' . MetaTag::DB_LANG_TBL_PREFIX . 'lang_id = ' . $langId,
-                'mt_l'
+                    'mt_l'
             );
         }
     }
+
     public function joinTeachers(int $metaType = MetaTag::META_GROUP_DEFAULT)
     {
         $this->joinTable(User::DB_TBL, 'RIGHT OUTER JOIN', 'mt.meta_record_id = u.user_url_name AND u.user_is_teacher=1 and u.user_deleted = 0 and mt.meta_type=' . $metaType, 'u');
@@ -34,6 +36,7 @@ class MetaTagSearch extends SearchBase
         $this->joinTable(ContentPage::DB_TBL, 'RIGHT OUTER JOIN', 'mt.meta_record_id = cp.cpage_id AND mt.meta_type=' . $metaType, 'cp');
         $this->joinTable(ContentPage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'cp_l.cpagelang_cpage_id = cp.cpage_id and cp_l.cpagelang_lang_id=' . $langId, 'cp_l');
     }
+
     public function joinBlogCategories(int $metaType = MetaTag::META_GROUP_DEFAULT, int $langId)
     {
         $this->joinTable(BlogPostCategory::DB_TBL, 'RIGHT OUTER JOIN', 'mt.meta_record_id = bpc.bpcategory_id AND mt.meta_type=' . $metaType, 'bpc');
@@ -48,10 +51,7 @@ class MetaTagSearch extends SearchBase
 
     public function searchByCriteria($criteria, int $langId)
     {
-
         $metaType = $criteria['metaType']['val'];
-
-
         if (isset($criteria['keyword']['val']) && $criteria['keyword']['val']) {
             $condition = $this->addCondition('mt.meta_identifier', 'like', '%' . $criteria['keyword']['val'] . '%');
             $condition->attachCondition('mt_l.meta_title', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
@@ -105,7 +105,6 @@ class MetaTagSearch extends SearchBase
                 $this->addCondition('mt.meta_type', '=', $metaType);
                 break;
         }
-
         if (isset($criteria['hasTagsAssociated'])) {
             if ($criteria['hasTagsAssociated']['val'] == applicationConstants::YES) {
                 $this->addCondition('mt.meta_id', 'is not', 'mysql_func_NULL', 'AND', true);
@@ -114,4 +113,5 @@ class MetaTagSearch extends SearchBase
             }
         }
     }
+
 }

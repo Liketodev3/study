@@ -1,26 +1,18 @@
 <?php
+
 class OrderProductSearch extends SearchBase
 {
+
     public function __construct($langId = 0, $doNotCalculateRecords = true, $doNotLimitRecords = true)
     {
         parent::__construct(OrderProduct::DB_TBL, 'op');
-
         $langId = FatUtility::int($langId);
-
         if ($langId > 0) {
-            $this->joinTable(
-                OrderProduct::DB_TBL.'_lang',
-                'LEFT OUTER JOIN',
-                'op.op_id = opl.oplang_op_id
-					AND opl.oplang_lang_id = '.$langId,
-                'opl'
-            );
+            $this->joinTable(OrderProduct::DB_TBL . '_lang', 'LEFT OUTER JOIN', 'op.op_id = opl.oplang_op_id AND opl.oplang_lang_id = ' . $langId, 'opl');
         }
-
         if (true === $doNotCalculateRecords) {
             $this->doNotCalculateRecords();
         }
-
         if (true === $doNotLimitRecords) {
             $this->doNotLimitRecords();
         }
@@ -39,11 +31,10 @@ class OrderProductSearch extends SearchBase
     public function joinScheduleLesson($addTeacherPaidCondition = true)
     {
         $onCondition = 'sld.sldetail_slesson_id = sl.slesson_id';
-        if($addTeacherPaidCondition){
-            $onCondition .= ' AND sl.slesson_is_teacher_paid = '.applicationConstants::YES;
+        if ($addTeacherPaidCondition) {
+            $onCondition .= ' AND sl.slesson_is_teacher_paid = ' . applicationConstants::YES;
         }
-
-        $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN',$onCondition, 'sl');
+        $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', $onCondition, 'sl');
     }
 
     public function addOrderIdCondition($orderId)
@@ -72,7 +63,7 @@ class OrderProductSearch extends SearchBase
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addGroupBy('temp_op.op_order_id');
-        $srch->addMultipleFields(array('temp_op.op_order_id',"count(temp_op.op_order_id) as totCombinedOrders"));
+        $srch->addMultipleFields(array('temp_op.op_order_id', "count(temp_op.op_order_id) as totCombinedOrders"));
         $qryCombinedOrders = $srch->getQuery();
         $this->joinTable('(' . $qryCombinedOrders . ')', 'LEFT OUTER JOIN', 'op.op_order_id = co.op_order_id', 'co');
     }
@@ -82,10 +73,11 @@ class OrderProductSearch extends SearchBase
         $srch = new SearchBase(OrderProduct::DB_TBL_CHARGES, 'opc');
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $srch->addMultipleFields(array('opcharge_op_id','sum(opcharge_amount) as op_other_charges'));
+        $srch->addMultipleFields(array('opcharge_op_id', 'sum(opcharge_amount) as op_other_charges'));
         $srch->addGroupBy('opc.opcharge_op_id');
         $srch->addCondition('opc.opcharge_order_type', '=', ORDERS::ORDER_PRODUCT);
         $qryOtherCharges = $srch->getQuery();
         $this->joinTable('(' . $qryOtherCharges . ')', 'LEFT OUTER JOIN', 'op.op_id = opcc.opcharge_op_id', 'opcc');
     }
+
 }

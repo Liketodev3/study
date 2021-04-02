@@ -1,6 +1,8 @@
 <?php
+
 class TeacherGroupClasses extends MyAppModel
 {
+
     const DB_TBL = 'tbl_group_classes';
     const DB_TBL_PREFIX = 'grpcls_';
     const DB_TBL_LANG = 'tbl_group_classes_lang';
@@ -21,20 +23,23 @@ class TeacherGroupClasses extends MyAppModel
     {
         return array(
             static::FILTER_UPCOMING => Label::getLabel('LBL_Upcoming'),
-            static::FILTER_ONGOING  => Label::getLabel('LBL_OnGoing')
+            static::FILTER_ONGOING => Label::getLabel('LBL_OnGoing')
         );
     }
+
     public function deleteClass()
     {
         $this->setFldValue('grpcls_deleted', ApplicationConstants::YES);
         $this->setFldValue('grpcls_status', self::STATUS_CANCELLED);
         return parent::save();
     }
+
     public function cancelClass()
     {
         $this->setFldValue('grpcls_status', self::STATUS_CANCELLED);
         return parent::save();
     }
+
     public static function getStatusArr($langId = 0)
     {
         $langId = FatUtility::int($langId);
@@ -42,10 +47,11 @@ class TeacherGroupClasses extends MyAppModel
             $langId = CommonHelper::getLangId();
         }
         return array(
-            static::STATUS_PENDING        =>    Label::getLabel('LBL_Pending', $langId),
-            static::STATUS_ACTIVE        =>    Label::getLabel('LBL_Active', $langId),
-            static::STATUS_COMPLETED    =>    Label::getLabel('LBL_Completed', $langId),
-            static::STATUS_CANCELLED    =>    Label::getLabel('LBL_Cancelled', $langId)
+            static::STATUS_PENDING => Label::getLabel('LBL_Pending', $langId),
+            static::STATUS_ACTIVE => Label::getLabel('LBL_Active', $langId),
+            static::STATUS_COMPLETED => Label::getLabel('LBL_Completed', $langId),
+            static::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled', $langId)
         );
     }
+
 }

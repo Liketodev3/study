@@ -1,6 +1,8 @@
 <?php
+
 class ErrorController extends MyAppController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -10,4 +12,5 @@ class ErrorController extends MyAppController
     {
         $this->_template->render();
     }
+
 }

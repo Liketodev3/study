@@ -1,14 +1,14 @@
 <?php
+
 class FlashCard extends MyAppModel
 {
+
     const DB_TBL = 'tbl_flashcards';
     const DB_TBL_PREFIX = 'flashcard_';
     const DB_TBL_SHARED = 'tbl_shared_flashcards';
-
     const ACCURACY_LEVEL_CORRECT = 1;
     const ACCURACY_LEVEL_ALMOST = 2;
     const ACCURACY_LEVEL_WRONG = 3;
-
 
     public function __construct($id = 0)
     {
@@ -22,9 +22,9 @@ class FlashCard extends MyAppModel
             $langId = CommonHelper::getLangId();
         }
         return array(
-            static::ACCURACY_LEVEL_CORRECT	=>	Label::getLabel('LBL_Correct', $langId),
-            static::ACCURACY_LEVEL_ALMOST	=>	Label::getLabel('LBL_Upper_Almost', $langId),
-            static::ACCURACY_LEVEL_WRONG	=>	Label::getLabel('LBL_Wrong', $langId),
+            static::ACCURACY_LEVEL_CORRECT => Label::getLabel('LBL_Correct', $langId),
+            static::ACCURACY_LEVEL_ALMOST => Label::getLabel('LBL_Upper_Almost', $langId),
+            static::ACCURACY_LEVEL_WRONG => Label::getLabel('LBL_Wrong', $langId),
         );
     }
 
@@ -35,4 +35,5 @@ class FlashCard extends MyAppModel
         }
         return parent::save();
     }
+
 }

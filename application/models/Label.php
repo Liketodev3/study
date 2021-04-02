@@ -1,6 +1,8 @@
 <?php
+
 class Label extends MyAppModel
 {
+
     const DB_TBL = 'tbl_language_labels';
     const DB_TBL_PREFIX = 'label_';
 
@@ -19,17 +21,15 @@ class Label extends MyAppModel
 
     public static function getSearchObject($langId = 0)
     {
-        $langId =  FatUtility::int($langId);
-
+        $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 'lbl');
         $srch->addOrder('lbl.' . static::DB_TBL_PREFIX . 'id', 'DESC');
         $srch->addMultipleFields(array(
-                'lbl.' . static::DB_TBL_PREFIX . 'id',
-                'lbl.' . static::DB_TBL_PREFIX . 'lang_id',
-                'lbl.' . static::DB_TBL_PREFIX . 'key',
-                'lbl.' . static::DB_TBL_PREFIX . 'caption',
+            'lbl.' . static::DB_TBL_PREFIX . 'id',
+            'lbl.' . static::DB_TBL_PREFIX . 'lang_id',
+            'lbl.' . static::DB_TBL_PREFIX . 'key',
+            'lbl.' . static::DB_TBL_PREFIX . 'caption',
         ));
-
         if ($langId > 0) {
             $srch->addCondition('lbl.' . static::DB_TBL_PREFIX . 'lang_id', '=', $langId);
         }
@@ -41,17 +41,13 @@ class Label extends MyAppModel
         if (empty($lblKey)) {
             return;
         }
-
         if (preg_match('/\s/', $lblKey)) {
             return $lblKey;
         }
-
         $langId = FatUtility::int($langId);
         if ($langId == 0) {
             $langId = CommonHelper::getLangId();
         }
-
-
         $cacheAvailable = static::isAPCUcacheAvailable();
         if ($cacheAvailable) {
             $cacheKey = static::getAPCUcacheKey($lblKey, $langId);
@@ -60,9 +56,8 @@ class Label extends MyAppModel
             }
         } else {
             global $lang_array;
-
             if (isset($lang_array[$lblKey][$langId])) {
-                if ($lang_array[$lblKey][$langId]!='') {
+                if ($lang_array[$lblKey][$langId] != '') {
                     return $lang_array[$lblKey][$langId];
                 } else {
                     $arr = explode(' ', ucwords(str_replace('_', ' ', strtolower($lblKey))));
@@ -71,20 +66,15 @@ class Label extends MyAppModel
                 }
             }
         }
-
         $key_original = $lblKey;
         $key = strtoupper($lblKey);
-
         $db = FatApp::getDb();
-
         $srch = static::getSearchObject($langId);
-
         $srch->addCondition(static::DB_TBL_PREFIX . 'key', '=', $key);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-
         if ($lbl = $db->fetch($srch->getResultSet())) {
-            if (isset($lbl[static::DB_TBL_PREFIX . 'caption']) && $lbl[static::DB_TBL_PREFIX . 'caption']!='') {
+            if (isset($lbl[static::DB_TBL_PREFIX . 'caption']) && $lbl[static::DB_TBL_PREFIX . 'caption'] != '') {
                 $str = $lbl[static::DB_TBL_PREFIX . 'caption'];
             } else {
                 $arr = explode(' ', ucwords(str_replace('_', ' ', strtolower($lblKey))));
@@ -94,24 +84,20 @@ class Label extends MyAppModel
         } else {
             $arr = explode(' ', ucwords(str_replace('_', ' ', strtolower($key_original))));
             array_shift($arr);
-
             $str = implode(' ', $arr);
             $assignValues = array(
-                            static::DB_TBL_PREFIX . 'key' => $lblKey,
-                            static::DB_TBL_PREFIX . 'caption' => $str,
-                            static::DB_TBL_PREFIX . 'lang_id' => $langId
-                            );
-
+                static::DB_TBL_PREFIX . 'key' => $lblKey,
+                static::DB_TBL_PREFIX . 'caption' => $str,
+                static::DB_TBL_PREFIX . 'lang_id' => $langId
+            );
             FatApp::getDB()->insertFromArray(static::DB_TBL, $assignValues, false, array(), $assignValues);
         }
-
         if ($cacheAvailable) {
             apcu_store($cacheKey, $str);
         } else {
             global $lang_array;
             $lang_array[$lblKey][$langId] = $str;
         }
-
         return $str;
     }
 
@@ -127,23 +113,22 @@ class Label extends MyAppModel
             $this->error = $db->getError();
             return false;
         }
-
         $cacheAvailable = static::isAPCUcacheAvailable();
         if ($cacheAvailable) {
             $cacheKey = static::getAPCUcacheKey($data['label_key'], $data['label_lang_id']);
             apcu_store($cacheKey, $data['label_caption']);
         }
-
         return true;
     }
 
     public static function isAPCUcacheAvailable()
     {
-        return $cacheAvailable = extension_loaded('apcu') && ini_get('apcu.enabled') ;
+        return $cacheAvailable = extension_loaded('apcu') && ini_get('apcu.enabled');
     }
 
     public static function getAPCUcacheKey($key, $langId)
     {
         return $cacheKey = $_SERVER['SERVER_NAME'] . '_' . $key . '_' . $langId;
     }
+
 }

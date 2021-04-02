@@ -1,6 +1,8 @@
 <?php
+
 class MyAppController extends FatController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -26,7 +28,6 @@ class MyAppController extends FatController
         if (!empty($pwaSettings)) {
             $pwaManifest = json_decode(FatApp::getConfig('CONF_PWA_SETTINGS'), true);
         }
-
         $pwaManifest['icons'] = [
             [
                 "src" => CommonHelper::generateUrl('Image', 'pwaIcon', ['144']),
@@ -61,16 +62,8 @@ class MyAppController extends FatController
         $urlController = implode('-', $arr);
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
         /* ] */
-        $cookieConsent =  CommonHelper::getCookieConsent();
-        $this->cookieConsent =  $cookieConsent;
-
-
-        /* $pwaSettings = FatApp::getConfig('CONF_PWA_SETTINGS', FatUtility::VAR_STRING, '');
-        $pwaManifest = !empty($pwaSettings) ? json_decode(FatApp::getConfig('CONF_PWA_SETTINGS'), true) : [];
-        $offlinePage = !empty($pwaManifest['offline_page']) ? CommonHelper::generateUrl('Cms', 'view', [$pwaManifest['offline_page']]) : '';
-         */
-
-
+        $cookieConsent = CommonHelper::getCookieConsent();
+        $this->cookieConsent = $cookieConsent;
         $jsVariables = array(
             'confirmUnLockPrice' => Label::getLabel('LBL_Are_you_sure_to_unlock_this_price!'),
             'confirmRemove' => Label::getLabel('LBL_Do_you_want_to_remove'),
@@ -112,11 +105,7 @@ class MyAppController extends FatController
             'language' => Label::getLabel('Lbl_Language'),
             'myTimeZoneLabel' => Label::getLabel('Lbl_My_Current_Time'),
             'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson')
-            /* 'offlinePageUrl' => $offlinePage */
-            //'siteCurrencyId' => $this->siteCurrencyId,
-            //'controllerName' => $controllerName,
         );
-
         $languages = Language::getAllNames(false);
         foreach ($languages as $val) {
             $jsVariables['language' . $val['language_id']] = $val['language_layout_direction'];
@@ -126,7 +115,6 @@ class MyAppController extends FatController
         } else {
             $this->_template->addCss(array('css/common-ltr.css', 'css/frontend-ltr.css'));
         }
-
         $this->set('cookieConsent', $cookieConsent);
         $this->set('currencySymbolLeft', CommonHelper::getCurrencySymbolLeft());
         $this->set('currencySymbolRight', CommonHelper::getCurrencySymbolRight());
@@ -157,7 +145,6 @@ class MyAppController extends FatController
             $curPwd = $frm->addPasswordField(Label::getLabel('LBL_CURRENT_PASSWORD'), 'current_password');
             $curPwd->requirements()->setRequired();
         }
-
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         return $frm;
     }
@@ -169,7 +156,7 @@ class MyAppController extends FatController
         $fld->requirements()->setInt();
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Experience_Type'), 'uqualification_experience_type', UserQualification::getExperienceTypeArr(), '', [], Label::getLabel('LBL_Select'));
         $fld->requirements()->setRequired();
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Title'), 'uqualification_title', '', array('placeholder' =>  Label::getLabel('LBL_Eg:_B.A._English')));
+        $fld = $frm->addRequiredField(Label::getLabel('LBL_Title'), 'uqualification_title', '', array('placeholder' => Label::getLabel('LBL_Eg:_B.A._English')));
         $fld->requirements()->setLength(1, 100);
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Institution'), 'uqualification_institute_name', '', array('placeholder' => Label::getLabel('LBL_Eg:_Oxford_University')));
         $fld->requirements()->setLength(1, 100);
@@ -177,9 +164,7 @@ class MyAppController extends FatController
         $fld->requirements()->setLength(1, 100);
         $fld = $frm->addTextArea(Label::getLabel('LBL_Description'), 'uqualification_description', '', array('placeholder' => Label::getLabel('LBL_Eg._Focus_in_Humanist_Literature')));
         $fld->requirements()->setLength(1, 500);
-
         $yearArr = range(date('Y'), 1970);
-
         $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Start_Year'), 'uqualification_start_year', array_combine($yearArr, $yearArr), '', array(), '');
         $fld1->requirements()->setRequired();
         $fld2 = $frm->addSelectBox(Label::getLabel('LBL_End_Year'), 'uqualification_end_year', array_combine($yearArr, $yearArr), '', array(), '');
@@ -201,7 +186,6 @@ class MyAppController extends FatController
         $this->set('stateId', $stateId);
         $this->_template->render(false, false, '_partial/states-list.php');
     }
-
 
     public function fatActionCatchAll($action)
     {
@@ -246,4 +230,5 @@ class MyAppController extends FatController
         $this->set('msg', Label::getLabel('MSG_Successfully_subscribed', $siteLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
 }

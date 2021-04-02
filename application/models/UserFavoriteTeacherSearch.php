@@ -1,8 +1,11 @@
 <?php
+
 class UserFavoriteTeacherSearch extends SearchBase
 {
+
     private $langId;
     private $isTeacherSettingsJoined;
+
     public function __construct($langId = 0, $alias = 'uft')
     {
         parent::__construct(User::DB_TBL_TEACHER_FAVORITE, 'uft');
@@ -35,8 +38,7 @@ class UserFavoriteTeacherSearch extends SearchBase
         if ($learnerId < 1) {
             trigger_error("Invalid Request", E_USER_ERROR);
         }
-
-        $this->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'ut.user_id = top_teacher_id AND top_learner_id = '.$learnerId, 'top');
+        $this->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'ut.user_id = top_teacher_id AND top_learner_id = ' . $learnerId, 'top');
     }
 
     public function joinTeacherTeachLanguage($langId = 0)
@@ -44,12 +46,10 @@ class UserFavoriteTeacherSearch extends SearchBase
         if (false === $this->isTeacherSettingsJoined) {
             trigger_error("First use 'joinTeacherSettings' before joining 'joinTeacherTeachLanguage'", E_USER_ERROR);
         }
-
         $langId = FatUtility::int($langId);
         $this->joinTable(SpokenLanguage::DB_TBL, 'INNER JOIN', 't_sl.slanguage_id = ts.us_teach_slanguage_id', 't_sl');
-
         if ($langId > 0) {
-            $this->joinTable(SpokenLanguage::DB_TBL_LANG, 'LEFT JOIN', 't_sl.slanguage_id = t_sl_l.slanguagelang_slanguage_id AND slanguagelang_lang_id = '.$langId, 't_sl_l');
+            $this->joinTable(SpokenLanguage::DB_TBL_LANG, 'LEFT JOIN', 't_sl.slanguage_id = t_sl_l.slanguagelang_slanguage_id AND slanguagelang_lang_id = ' . $langId, 't_sl_l');
         }
     }
 
@@ -60,11 +60,9 @@ class UserFavoriteTeacherSearch extends SearchBase
             $langId = CommonHelper::getLangId();
         }
         $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'ut.user_id = utsl.utl_us_user_id', 'utsl');
-
         $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl.utl_slanguage_id');
-
-        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'sl_lang');
-        
+        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl.utl_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
         $this->addMultipleFields(array('utsl.utl_us_user_id', 'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
     }
+
 }

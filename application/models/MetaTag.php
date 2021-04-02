@@ -1,12 +1,12 @@
 <?php
+
 class MetaTag extends MyAppModel
 {
+
     const DB_TBL = 'tbl_meta_tags';
     const DB_TBL_PREFIX = 'meta_';
-
     const DB_LANG_TBL = 'tbl_meta_tags_lang';
     const DB_LANG_TBL_PREFIX = 'metalang_';
-
     const META_GROUP_DEFAULT = -1;
     const META_GROUP_OTHER = 0;
     const META_GROUP_TEACHER = 1;
@@ -22,9 +22,7 @@ class MetaTag extends MyAppModel
 
     public static function getTabsArr($langId): array
     {
-
         $metaGroups = array(
-
             static::META_GROUP_DEFAULT => array(
                 'name' => Label::getLabel('METALBL_Default', $langId),
                 'controller' => 'Default',
@@ -67,7 +65,6 @@ class MetaTag extends MyAppModel
     public static function getSearchObject()
     {
         $srch = new SearchBase(static::DB_TBL, 'mt');
-
         return $srch;
     }
 
@@ -111,4 +108,5 @@ class MetaTag extends MyAppModel
         }
         return rtrim($url, '/');
     }
+
 }

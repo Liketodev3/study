@@ -1,6 +1,8 @@
 <?php
+
 class BlogController extends MyAppController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -22,7 +24,6 @@ class BlogController extends MyAppController
             $nodes[] = array('title' => $className, 'href' => CommonHelper::generateUrl($urlController));
         }
         $parameters = FatApp::getParameters();
-
         if (!empty($parameters)) {
             if ($action == 'category') {
                 $id = reset($parameters);
@@ -169,7 +170,7 @@ class BlogController extends MyAppController
         $enteredAbusiveWordsArr = array();
         if (!Abusive::validateContent($post['bpcomment_content'], $enteredAbusiveWordsArr)) {
             if (!empty($enteredAbusiveWordsArr)) {
-                $errStr =  Label::getLabel("LBL_Word_{abusiveword}_is/are_not_allowed_to_post", $this->siteLangId);
+                $errStr = Label::getLabel("LBL_Word_{abusiveword}_is/are_not_allowed_to_post", $this->siteLangId);
                 $errStr = str_replace("{abusiveword}", '"' . implode(", ", $enteredAbusiveWordsArr) . '"', $errStr);
                 Message::addErrorMessage($errStr);
                 FatUtility::dieWithError(Message::getHtml());
@@ -244,7 +245,6 @@ class BlogController extends MyAppController
             $this->contributionForm();
             return false;
         }
-
         if (FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '') != '' && FatApp::getConfig('CONF_RECAPTCHA_SECRETKEY', FatUtility::VAR_STRING, '') != '') {
             if (!CommonHelper::verifyCaptcha()) {
                 Message::addErrorMessage(Label::getLabel('MSG_That_captcha_was_incorrect', $this->siteLangId));
@@ -271,7 +271,6 @@ class BlogController extends MyAppController
                 $this->contributionForm();
                 return false;
             }
-
             $fileMimeType = mime_content_type($_FILES['file']['tmp_name']);
             if (!in_array($fileMimeType, applicationConstants::allowedMimeTypes())) {
                 Message::addErrorMessage(Label::getLabel('MSG_INVALID_FILE_MIME_TYPE', $this->siteLangId));
@@ -337,4 +336,5 @@ class BlogController extends MyAppController
         $frm->addHiddenField('', 'post_id', $postId);
         return $frm;
     }
+
 }

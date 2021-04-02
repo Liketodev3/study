@@ -1,8 +1,11 @@
 <?php
+
 class TeacherLessonReviewSearch extends SearchBase
 {
+
     private $langId;
     private $commonLangId;
+
     public function __construct($langId = 0)
     {
         $langId = FatUtility::int($langId);
@@ -17,7 +20,6 @@ class TeacherLessonReviewSearch extends SearchBase
         if ($this->langId) {
             $langId = $this->langId;
         }
-
         $this->joinTable(User::DB_TBL, 'LEFT OUTER JOIN', 'ut.user_id = tlr.tlreview_teacher_user_id', 'ut');
         $this->joinTable(User::DB_TBL_CRED, 'LEFT OUTER JOIN', 'usc.credential_user_id = ut.user_id', 'usc');
     }
@@ -42,10 +44,12 @@ class TeacherLessonReviewSearch extends SearchBase
     {
         $this->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id=sl.slesson_id', 'sld');
     }
+
     public function joinLessonLanguage($langId = 0)
     {
         $langId = FatUtility::int($langId);
         $this->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'sl.slesson_slanguage_id = tlang.tlanguage_id', 'tlang');
         $this->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'tlangLang.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND tlanguagelang_lang_id = ' . $langId, 'tlangLang');
     }
+
 }

@@ -1,9 +1,10 @@
 <?php
+
 class LessonPackage extends MyAppModel
 {
+
     const DB_TBL = 'tbl_lesson_packages';
     const DB_TBL_PREFIX = 'lpackage_';
-
     const DB_TBL_LANG = 'tbl_lesson_packages_lang';
 
     public function __construct($id = 0)
@@ -15,19 +16,12 @@ class LessonPackage extends MyAppModel
         ));
     }
 
-    public static function getSearchObject($langId = 0, $active =  true)
+    public static function getSearchObject($langId = 0, $active = true)
     {
         $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 't');
-
         if ($langId > 0) {
-            $srch->joinTable(
-                static::DB_TBL_LANG,
-                'LEFT OUTER JOIN',
-                't_l.lpackagelang_lpackage_id = t.lpackage_id
-			AND lpackagelang_lang_id = ' . $langId,
-                't_l'
-            );
+            $srch->joinTable(static::DB_TBL_LANG, 'LEFT OUTER JOIN', 't_l.lpackagelang_lpackage_id = t.lpackage_id			AND lpackagelang_lang_id = ' . $langId, 't_l');
         }
         if ($active == true) {
             $srch->addCondition('t.lpackage_active', '=', applicationConstants::ACTIVE);
@@ -45,7 +39,7 @@ class LessonPackage extends MyAppModel
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $srch->addCondition('lpackage_is_free_trial', '=', applicationConstants::YES);
-        $srch->addMultipleFields(array('lpackage_id', 'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title', 'lpackage_lessons', 'lpackage_active' ));
+        $srch->addMultipleFields(array('lpackage_id', 'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title', 'lpackage_lessons', 'lpackage_active'));
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
         if ($row) {
@@ -58,11 +52,9 @@ class LessonPackage extends MyAppModel
     {
         $learnerId = FatUtility::int($learnerId);
         $teacherId = FatUtility::int($teacherId);
-
         if ($learnerId < 1 || $teacherId < 1) {
             trigger_error("Invalid Request", E_USER_ERROR);
         }
-
         $srch = new OrderProductSearch(0, true, false);
         $srch->joinOrders();
         $srch->joinScheduleLessonDetails();
@@ -80,7 +72,7 @@ class LessonPackage extends MyAppModel
         return true;
     }
 
-    public function canRecordMarkDelete($lPackageId) : bool
+    public function canRecordMarkDelete($lPackageId): bool
     {
         $srch = static::getSearchObject();
         $srch->addCondition('lpackage_id', '=', $lPackageId);
@@ -88,7 +80,6 @@ class LessonPackage extends MyAppModel
         $srch->addFld('lpackage_is_free_trial');
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
-
         if (!empty($row) && $row['lpackage_id'] == $lPackageId && $row['lpackage_is_free_trial'] == applicationConstants::NO) {
             return true;
         }
@@ -98,13 +89,14 @@ class LessonPackage extends MyAppModel
     public static function getPackagesWithoutTrial(int $langId, bool $active = true)
     {
         $srch = self::getSearchObject($langId, $active);
-		$srch->addCondition('lpackage_is_free_trial', '=', applicationConstants::NO);
-		$srch->addMultipleFields(array(
-			'lpackage_id',
-			'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',
-			'lpackage_lessons'
+        $srch->addCondition('lpackage_is_free_trial', '=', applicationConstants::NO);
+        $srch->addMultipleFields(array(
+            'lpackage_id',
+            'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',
+            'lpackage_lessons'
         ));
-		$rs = $srch->getResultSet();
-		return FatApp::getDb()->fetchAll($rs);
+        $rs = $srch->getResultSet();
+        return FatApp::getDb()->fetchAll($rs);
     }
+
 }

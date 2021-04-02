@@ -1,9 +1,12 @@
 <?php
+
 class AuthorizeAimPayController extends PaymentController
 {
+
     protected $keyName = "AuthorizeAim";
     private $testEnvironmentUrl = "https://apitest.authorize.net/xml/v1/request.api";
     private $liveEnvironmentUrl = "https://api.authorize.net/xml/v1/request.api";
+
     public function charge($orderId)
     {
         if (empty($orderId)) {
@@ -21,7 +24,6 @@ class AuthorizeAimPayController extends PaymentController
         } else {
             $this->set('error', Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId));
         }
-
         $cancelBtnUrl = CommonHelper::getPaymentCancelPageUrl();
         if ($orderInfo['order_type'] == Order::TYPE_WALLET_RECHARGE) {
             $cancelBtnUrl = CommonHelper::getPaymentFailurePageUrl();
@@ -41,15 +43,13 @@ class AuthorizeAimPayController extends PaymentController
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         /* Retrieve Payment to charge corresponding to your order */
         $orderPaymentAamount = $orderPaymentObj->getOrderPaymentGatewayAmount();
-        $oPObj =  $orderPaymentObj->getOrderPayment($this->keyName);
-        $resultset =  $oPObj->getResultSet();
+        $oPObj = $orderPaymentObj->getOrderPayment($this->keyName);
+        $resultset = $oPObj->getResultSet();
         $orderPayment = FatApp::getDb()->fetch($resultset);
         if ($orderPaymentAamount > 0 && empty($orderPayment)) {
-
-            $orderInfo =  $orderPaymentObj->getOrderPrimaryinfo();
+            $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
             $orderActualPaid = number_format(round($orderPaymentAamount, 2), 2, ".", "");
             $actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true) ? $this->liveEnvironmentUrl : $this->testEnvironmentUrl;
-
             $orderPaymentGatewayDescription = sprintf(Label::getLabel("MSG_Order_Payment_Gateway_Description", $this->siteLangId), FatApp::getConfig("CONF_WEBSITE_NAME_" . $orderInfo["order_language_id"]), $orderInfo['order_id']);
             $data = array(
                 "createTransactionRequest" => array(
@@ -81,7 +81,6 @@ class AuthorizeAimPayController extends PaymentController
                                 "unitPrice" => $orderActualPaid,
                             )
                         ),
-
                         "customerIP" => $_SERVER['REMOTE_ADDR'],
                         "transactionSettings" => array(
                             "setting" => array(
@@ -92,9 +91,7 @@ class AuthorizeAimPayController extends PaymentController
                     )
                 )
             );
-
             $response = $this->executeCurl($data, $actionUrl);
-
             $json = array();
             if ($response['status'] == 0) {
                 $json['error'] = Label::getLabel('LBL_Payment_cannot_be_processed_right_now._Please_try_after_some_time.');
@@ -193,4 +190,5 @@ class AuthorizeAimPayController extends PaymentController
             return ['status' => 1, 'response' => json_decode($response, true)];
         }
     }
+
 }

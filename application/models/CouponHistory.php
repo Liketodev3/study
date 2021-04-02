@@ -1,9 +1,10 @@
 <?php
+
 class CouponHistory extends MyAppModel
 {
+
     const DB_TBL = 'tbl_coupons_history';
     const DB_TBL_PREFIX = 'couponhistory_';
-    private $db;
 
     public function __construct($id = 0)
     {
@@ -16,4 +17,5 @@ class CouponHistory extends MyAppModel
         $srch = new SearchBase(static::DB_TBL, 'ch');
         return $srch;
     }
+
 }

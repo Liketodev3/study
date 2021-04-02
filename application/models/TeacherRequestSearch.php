@@ -1,11 +1,13 @@
 <?php
+
 class TeacherRequestSearch extends SearchBase
 {
+
     private $isUserJoined = false;
+
     public function __construct($joinUsers = true)
     {
         parent::__construct(TeacherRequest::DB_TBL, 'tr');
-
         if (true === $joinUsers) {
             $this->joinUsers();
         }
@@ -32,4 +34,5 @@ class TeacherRequestSearch extends SearchBase
     {
         $this->joinTable(TeacherRequestValue::DB_TBL, 'INNER JOIN', 'tr.utrequest_id = utrvalue.utrvalue_utrequest_id', 'utrvalue');
     }
+
 }

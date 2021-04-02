@@ -1,9 +1,10 @@
 <?php
+
 class UserQualification extends MyAppModel
 {
+
     const DB_TBL = 'tbl_user_qualifications';
     const DB_TBL_PREFIX = 'uqualification_';
-
     const EXPERIENCE_EDUCATION = 1;
     const EXPERIENCE_CERTIFICATION = 2;
     const EXPERIENCE_WORK = 3;
@@ -19,11 +20,11 @@ class UserQualification extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-
         return array(
             static::EXPERIENCE_EDUCATION => Label::getLabel('LBL_Education', $langId),
             static::EXPERIENCE_CERTIFICATION => Label::getLabel('LBL_Certification', $langId),
             static::EXPERIENCE_WORK => Label::getLabel('LBL_Work_Experience', $langId),
         );
     }
+
 }

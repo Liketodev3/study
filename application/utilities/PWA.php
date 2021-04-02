@@ -2,6 +2,7 @@
 
 class PWA
 {
+
     public static function orientationArr(int $langId): array
     {
         return [
@@ -9,7 +10,7 @@ class PWA
             'landscape' => Label::getLabel('PWALBL_Landscape', $langId),
         ];
     }
-    
+
     public static function displayArr(int $langId): array
     {
         return [
@@ -19,4 +20,5 @@ class PWA
             'browser' => Label::getLabel('PWALBL_Browser', $langId)
         ];
     }
+
 }

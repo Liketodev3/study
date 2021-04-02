@@ -1,6 +1,8 @@
 <?php
+
 class PaypalStandardPayController extends PaymentController
 {
+
     protected $keyName = "PaypalStandard";
     private $testEnvironmentUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
     private $liveEnvironmentUrl = 'https://www.paypal.com/cgi-bin/webscr';
@@ -84,13 +86,11 @@ class PaypalStandardPayController extends PaymentController
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
             CommonHelper::redirectUserReferer();
         }
-
         $pmObj = new PaymentSettings($this->keyName);
         if (!$paymentSettings = $pmObj->getPaymentSettings()) {
             Message::addErrorMessage($pmObj->getError());
             CommonHelper::redirectUserReferer();
         }
-
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
         $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
@@ -115,7 +115,7 @@ class PaypalStandardPayController extends PaymentController
     private function toArray($obj)
     {
         if (is_object($obj)) {
-            $obj = (array)$obj;
+            $obj = (array) $obj;
         }
         if (is_array($obj)) {
             $new = array();
@@ -166,7 +166,7 @@ class PaypalStandardPayController extends PaymentController
                     break;
             }
             $receiverMatch = (strtolower($post['receiver_email']) == strtolower($paymentSettings['merchant_email']));
-            $totalPaidMatch = ((float)$post['mc_gross'] == $paymentGatewayCharge);
+            $totalPaidMatch = ((float) $post['mc_gross'] == $paymentGatewayCharge);
             if (!$receiverMatch) {
                 $request .= "\n\n PP_STANDARD :: RECEIVER EMAIL MISMATCH! " . strtolower($post['receiver_email']) . "\n\n";
             }
@@ -181,4 +181,5 @@ class PaypalStandardPayController extends PaymentController
         }
         curl_close($curl);
     }
+
 }

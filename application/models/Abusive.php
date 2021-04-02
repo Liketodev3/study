@@ -1,6 +1,8 @@
 <?php
+
 class Abusive extends MyAppModel
 {
+
     const DB_TBL = 'tbl_abusive_words';
     const DB_TBL_PREFIX = 'abusive_';
 
@@ -11,10 +13,10 @@ class Abusive extends MyAppModel
 
     public static function getSearchObject($langId = 0)
     {
-        $langId =  FatUtility::int($langId);
+        $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 'aw');
         if ($langId > 0) {
-            $srch->addCondition('lbl.'. static::DB_TBL_PREFIX .'lang_id', '=', $langId);
+            $srch->addCondition('lbl.' . static::DB_TBL_PREFIX . 'lang_id', '=', $langId);
         }
         return $srch;
     }
@@ -32,8 +34,8 @@ class Abusive extends MyAppModel
     public static function validateContent($textToBeCheck, &$enteredAbusiveWordsArr = array())
     {
         $srch = Abusive::getSearchObject();
-        $srch->joinTable(Language::DB_TBL, 'INNER JOIN', 'abusive_lang_id = language_id AND language_active = '. applicationConstants::ACTIVE);
-        $srch->addOrder('aw.'. Abusive::DB_TBL_PREFIX .'lang_id', 'ASC');
+        $srch->joinTable(Language::DB_TBL, 'INNER JOIN', 'abusive_lang_id = language_id AND language_active = ' . applicationConstants::ACTIVE);
+        $srch->addOrder('aw.' . Abusive::DB_TBL_PREFIX . 'lang_id', 'ASC');
         $srch->addMultipleFields(array('abusive_id', 'abusive_keyword'));
         $srch->doNotLimitRecords();
         $srch->doNotCalculateRecords();
@@ -43,8 +45,6 @@ class Abusive extends MyAppModel
         if ($abusiveWordsArr) {
             $abusiveWordsArr = array_map("strtolower", $abusiveWordsArr);
             $textToBeCheckArr = explode(" ", $textToBeCheck);
-            //$textToBeCheckArr2 = explode( ",", $textToBeCheck );
-            //$textToBeCheckArr = array_merge( $textToBeCheckArr1, $textToBeCheckArr2 );
             foreach ($textToBeCheckArr as $postedWord) {
                 if (in_array(strtolower($postedWord), $abusiveWordsArr)) {
                     array_push($enteredAbusiveWordsArr, $postedWord);
@@ -56,4 +56,5 @@ class Abusive extends MyAppModel
         }
         return true;
     }
+
 }

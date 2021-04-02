@@ -1,9 +1,12 @@
 <?php
+
 /* This should be present in the last of restore db file
-INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES  ('CONF_RESTORED_SUCCESSFULLY', '1', 0) ;
-*/
+  INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES  ('CONF_RESTORED_SUCCESSFULLY', '1', 0) ;
+ */
+
 class RestoreSystemController extends MyAppController
 {
+
     const CONF_FILE = 'public/settings.php';
     const BACKUP_FILE = CONF_INSTALLATION_PATH . "restore/database/yocoach-restore-db.sql";
     const DATABASE_FIRST = 'yocoach87h1y172_demo_yocch';
@@ -29,7 +32,6 @@ class RestoreSystemController extends MyAppController
             Message::addMessage('System unable to process the request and re-scheduled the restore process!');
             FatUtility::dieJsonSuccess(Message::getHtml());
         }
-
         $this->createRestoreProcessFile();
         $anotherDbName = $this->getAnotherDbName();
         $this->writeSettings(CONF_DB_SERVER, CONF_DB_USER, CONF_DB_PASS, $anotherDbName);
@@ -124,7 +126,7 @@ class RestoreSystemController extends MyAppController
     {
         $admin = 'admin/';
         $settings_file = CONF_INSTALLATION_PATH . static::CONF_FILE;
-        $output  = '<?php' . "\n";
+        $output = '<?php' . "\n";
         $output .= '// DB' . "\n";
         $output .= 'define(\'CONF_WEBROOT_FRONTEND\', \'' . addslashes(CONF_WEBROOT_URL) . '\');' . "\n";
         $output .= 'define(\'CONF_WEBROOT_BACKEND\', \'' . addslashes(CONF_WEBROOT_URL) . $admin . '\');' . "\n";
@@ -155,7 +157,6 @@ class RestoreSystemController extends MyAppController
         if ($empty_first) {
             $this->recursiveDelete($target);
         }
-
         if (is_dir($source)) {
             @mkdir($target);
             $d = dir($source);
@@ -170,10 +171,10 @@ class RestoreSystemController extends MyAppController
                 }
                 copy($Entry, $target . '/' . $entry);
             }
-
             $d->close();
         } else {
             copy($source, $target);
         }
     }
+
 }

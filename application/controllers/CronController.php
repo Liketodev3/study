@@ -1,6 +1,8 @@
 <?php
+
 class CronController extends MyAppController
 {
+
     public function __construct($action)
     {
         $this->_autoCreateModel = false;
@@ -59,4 +61,5 @@ class CronController extends MyAppController
             echo "No record found";
         }
     }
+
 }

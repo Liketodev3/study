@@ -1,6 +1,8 @@
 <?php
+
 class LessonPlanSearch extends SearchBase
 {
+
     public function __construct($doNotCalculateRecords = true)
     {
         parent::__construct(LessonPlan::DB_TBL, 'tlpn');
@@ -13,4 +15,5 @@ class LessonPlanSearch extends SearchBase
     {
         $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'tlpn.tlpn_slesson_id = slns.slesson_id', 'slns');
     }
+
 }

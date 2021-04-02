@@ -1,10 +1,11 @@
 <?php
+
 class TeachingLanguage extends MyAppModel
 {
+
     const DB_TBL = 'tbl_teaching_languages';
     const DB_TBL_LANG = 'tbl_teaching_languages_lang';
     const DB_TBL_PREFIX = 'tlanguage_';
-
     const PROFICIENCY_TOTAL_BEGINNER = 1;
     const PROFICIENCY_BEGINNER = 2;
     const PROFICIENCY_UPPER_BEGINNER = 3;
@@ -19,18 +20,17 @@ class TeachingLanguage extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getSearchObject($langId = 0, $active =  true)
+    public static function getSearchObject($langId = 0, $active = true)
     {
         $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 't');
-
         if ($langId > 0) {
             $srch->joinTable(
-                static::DB_TBL_LANG,
-                'LEFT OUTER JOIN',
-                't_l.tlanguagelang_tlanguage_id = t.tlanguage_id
+                    static::DB_TBL_LANG,
+                    'LEFT OUTER JOIN',
+                    't_l.tlanguagelang_tlanguage_id = t.tlanguage_id
 			AND tlanguagelang_lang_id = ' . $langId,
-                't_l'
+                    't_l'
             );
         }
         if ($active == true) {
@@ -45,7 +45,6 @@ class TeachingLanguage extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-
         return array(
             static::PROFICIENCY_TOTAL_BEGINNER => Label::getLabel('LBL_Total_Beginner', $langId),
             static::PROFICIENCY_BEGINNER => Label::getLabel('LBL_Beginner', $langId),
@@ -64,7 +63,6 @@ class TeachingLanguage extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-
         $TeachingLangSrch = new TeachingLanguageSearch($langId);
         if ($active) {
             $TeachingLangSrch->addChecks();
@@ -72,7 +70,7 @@ class TeachingLanguage extends MyAppModel
         $TeachingLangSrch->doNotCalculateRecords();
         $TeachingLangSrch->addMultiplefields(array('tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'));
         $TeachingLangSrch->addOrder('tlanguage_display_order');
-        
+
         $rs = $TeachingLangSrch->getResultSet();
         $teachingLanguagesArr = FatApp::getDb()->fetchAllAssoc($rs);
         return $teachingLanguagesArr;
@@ -84,24 +82,18 @@ class TeachingLanguage extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-
         $teachingLangSrch = new TeachingLanguageSearch($langId);
-
         $teachingLangSrch->addChecks();
         $teachingLangSrch->joinActiveTeachers();
-
-        $teachingLangSrch->addMultiplefields(array('tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name','count(DISTINCT utl_us_user_id) as teacherCount'));
+        $teachingLangSrch->addMultiplefields(array('tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name', 'count(DISTINCT utl_us_user_id) as teacherCount'));
         $teachingLangSrch->addGroupBy('utl_slanguage_id');
         $teachingLangSrch->addCondition('user_is_teacher', '=', 1);
         $teachingLangSrch->addCondition('user_country_id', '>', 0);
-
         $teachingLangSrch->addCondition('credential_active', '=', 1);
         $teachingLangSrch->addCondition('credential_verified', '=', 1);
-
         $teachingLangSrch->addCondition('utl_single_lesson_amount', '>', 0);
         $teachingLangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
         $teachingLangSrch->addCondition('utl_slanguage_id', '>', 0);
-
         /* qualification/experience[ */
         $qSrch = new UserQualificationSearch();
         $qSrch->addMultipleFields(array('uqualification_user_id'));
@@ -109,10 +101,9 @@ class TeachingLanguage extends MyAppModel
         $qSrch->addGroupBy('uqualification_user_id');
         $teachingLangSrch->joinTable("(" . $qSrch->getQuery() . ")", 'INNER JOIN', 'user_id = uqualification_user_id', 'utqual');
         /* ] */
-
         /* user preferences/skills[ */
         $skillSrch = new UserToPreferenceSearch();
-        $skillSrch->addMultipleFields(array('utpref_user_id','GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids'));
+        $skillSrch->addMultipleFields(array('utpref_user_id', 'GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids'));
         $skillSrch->addGroupBy('utpref_user_id');
         $teachingLangSrch->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
         /* ] */
@@ -138,4 +129,5 @@ class TeachingLanguage extends MyAppModel
         $teachingLanguagesArr = FatApp::getDb()->fetch($rs);
         return $teachingLanguagesArr['teacherTeachLanguageName'];
     }
+
 }

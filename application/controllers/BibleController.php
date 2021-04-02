@@ -1,10 +1,13 @@
 <?php
+
 class BibleController extends MyAppController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
     }
+
     public function index()
     {
         $this->_template->render();
@@ -42,14 +45,15 @@ class BibleController extends MyAppController
         $this->set('pagingArr', $pagingArr);
         $json['msg'] = Label::getLabel('LBL_Processing...', $this->siteLangId);
         $json['html'] = $this->_template->render(false, false, 'bible/search.php', true, false);
-        $startRecord = ($page - 1) * $pageSize + 1 ;
+        $startRecord = ($page - 1) * $pageSize + 1;
         $endRecord = $page * $pageSize;
         if ($totalRecords < $endRecord) {
             $endRecord = $totalRecords;
         }
-        $json['startRecord'] = $startRecord ;
+        $json['startRecord'] = $startRecord;
         $json['endRecord'] = $endRecord;
         $json['totalRecords'] = $totalRecords;
         FatUtility::dieJsonSuccess($json);
     }
+
 }

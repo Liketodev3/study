@@ -1,9 +1,10 @@
 <?php
+
 class TeacherLessonReview extends MyAppModel
 {
+
     const DB_TBL = 'tbl_teacher_lesson_reviews';
     const DB_TBL_PREFIX = 'tlreview_';
-
     const STATUS_PENDING = 0;
     const STATUS_APPROVED = 1;
     const STATUS_CANCELLED = 2;
@@ -27,7 +28,6 @@ class TeacherLessonReview extends MyAppModel
         return $arr;
     }
 
-
     public static function getTeacherTotalReviews($teachcerId, $lessonId = 0, $postedBy = null)
     {
         $teachcerId = FatUtility::int($teachcerId);
@@ -43,16 +43,15 @@ class TeacherLessonReview extends MyAppModel
         if ($lessonId > 0) {
             $srch->addCondition('tlreview_lesson_id', '=', $lessonId);
         }
-		if ($postedBy != null) {
+        if ($postedBy != null) {
             $srch->addCondition('tlreview_postedby_user_id', '=', $postedBy);
         }
         $srch->addGroupby('tlreview_teacher_user_id');
-        //$srch->addCondition('tlr.tlreview_status', '=', static::STATUS_APPROVED);
-        $rs = $srch->getResultSet();
-        $record = FatApp::getDb()->fetch($rs);
+        $record = FatApp::getDb()->fetch($srch->getResultSet());
         if ($record == false) {
             return 0;
         }
         return $record['numOfReviews'];
     }
+
 }

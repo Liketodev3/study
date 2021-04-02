@@ -1,11 +1,12 @@
 <?php
+
 require_once CONF_INSTALLATION_PATH . 'library/payment-plugins/stripe/init.php';
+
 class StripePayController extends PaymentController
 {
+
     protected $keyName = "Stripe";
-
     private $error = false;
-
     private $paymentSettings = false;
 
     protected function allowedCurrenciesArr()
@@ -67,26 +68,25 @@ class StripePayController extends PaymentController
         } elseif ($orderInfo && $orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
             try {
                 $session = \Stripe\Checkout\Session::create([
-                    'customer_email' => $orderInfo['customer_email'],
-                    'payment_method_types' => ['card'],
-                    'metadata' => [
-                        'order_id' => $orderId
-                    ],
-                    'line_items' => [[
-                        'price_data' => [
-                            'currency' => $systemCurrencyCode,
-                            'product_data' => [
-                                'name' => Label::getLabel('LBL_Buy_Lessons'),
+                            'customer_email' => $orderInfo['customer_email'],
+                            'payment_method_types' => ['card'],
+                            'metadata' => [
+                                'order_id' => $orderId
                             ],
-                            'unit_amount' => $payableAmount
-                        ],
-                        'quantity' => 1,
-                    ]],
-                    'mode' => 'payment',
-                    'success_url' => CommonHelper::generateFullUrl('StripePay', 'callback') . "?session_id={CHECKOUT_SESSION_ID}",
-                    'cancel_url' => CommonHelper::getPaymentCancelPageUrl(),
+                            'line_items' => [[
+                            'price_data' => [
+                                'currency' => $systemCurrencyCode,
+                                'product_data' => [
+                                    'name' => Label::getLabel('LBL_Buy_Lessons'),
+                                ],
+                                'unit_amount' => $payableAmount
+                            ],
+                            'quantity' => 1,
+                                ]],
+                            'mode' => 'payment',
+                            'success_url' => CommonHelper::generateFullUrl('StripePay', 'callback') . "?session_id={CHECKOUT_SESSION_ID}",
+                            'cancel_url' => CommonHelper::getPaymentCancelPageUrl(),
                 ]);
-
                 $this->set('stripeSessionId', $session->id);
             } catch (exception $e) {
                 $this->set('error', $e->getMessage());
@@ -135,7 +135,7 @@ class StripePayController extends PaymentController
         $payload = file_get_contents('php://input');
         try {
             $event = \Stripe\Event::constructFrom(
-                json_decode($payload, true)
+                            json_decode($payload, true)
             );
         } catch (\UnexpectedValueException $e) {
             // Invalid payload
@@ -155,7 +155,6 @@ class StripePayController extends PaymentController
         );
         \Stripe\Stripe::setApiKey($stripe['secret_key']);
         $session = \Stripe\Checkout\Session::retrieve($sessionId);
-
         $orderId = $session->metadata->order_id;
         if (empty($orderId)) {
             Message::addErrorMessage(Label::getLabel('STRIPE_INVALID_OrderId', $this->siteLangId));
@@ -168,7 +167,6 @@ class StripePayController extends PaymentController
         }
         $paymentGatewayCharge = $orderPaymentObj->getOrderPaymentGatewayAmount();
         $payableAmount = $this->formatPayableAmount($paymentGatewayCharge);
-
         $payment_comments = '';
         $totalPaidMatch = $session->amount_total == $payableAmount;
         if (strtolower($session->payment_status) != 'paid') {
@@ -185,4 +183,5 @@ class StripePayController extends PaymentController
         }
         FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess'));
     }
+
 }

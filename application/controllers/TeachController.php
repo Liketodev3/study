@@ -1,6 +1,8 @@
 <?php
+
 class TeachController extends MyAppController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -15,4 +17,5 @@ class TeachController extends MyAppController
     {
         $this->_template->render();
     }
+
 }

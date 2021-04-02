@@ -1,6 +1,8 @@
 <?php
+
 class PaymentController extends MyAppController
 {
+
     protected $systemCurrencyCode;
     protected $systemCurrencyId;
     public $settings = [];
@@ -33,4 +35,5 @@ class PaymentController extends MyAppController
             CommonHelper::redirectUserReferer();
         }
     }
+
 }

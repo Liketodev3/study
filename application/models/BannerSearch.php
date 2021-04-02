@@ -1,7 +1,10 @@
 <?php
+
 class BannerSearch extends SearchBase
 {
+
     private $langId;
+
     public function __construct($langId = 0, $isActive = true)
     {
         $this->langId = FatUtility::int($langId);
@@ -28,7 +31,8 @@ class BannerSearch extends SearchBase
 
     public function joinAttachedFile()
     {
-        $this->joinTable(AttachedFile::DB_TBL, 'INNER JOIN', 'af.afile_record_id = b.banner_id and afile_type ='.AttachedFile::FILETYPE_BANNER, 'af');
-        $this-> addGroupBy('banner_id');
+        $this->joinTable(AttachedFile::DB_TBL, 'INNER JOIN', 'af.afile_record_id = b.banner_id and afile_type =' . AttachedFile::FILETYPE_BANNER, 'af');
+        $this->addGroupBy('banner_id');
     }
+
 }

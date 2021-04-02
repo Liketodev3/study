@@ -1,14 +1,14 @@
 <?php
+
 class FlashCardSearch extends SearchBase
 {
+
     private $isSharedFlashCardJoined;
 
     public function __construct($doNotCalculateRecords = true)
     {
         $this->isSharedFlashCardJoined = false;
-
         parent::__construct(FlashCard::DB_TBL, 'tlpn');
-
         if (true === $doNotCalculateRecords) {
             $this->doNotCalculateRecords();
         }
@@ -35,11 +35,11 @@ class FlashCardSearch extends SearchBase
         if (false === $this->isSharedFlashCardJoined) {
             trigger_error("Please Join Shared FlashCard First to Join with Lesson", E_USER_ERROR);
         }
-
         if (true === $this->isSharedFlashCardJoined) {
             return;
         }
-        
+
         $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'sl.slesson_id = sflashcard_slesson_id', 'sl');
     }
+
 }

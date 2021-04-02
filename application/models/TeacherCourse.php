@@ -1,9 +1,10 @@
 <?php
+
 class TeacherCourse extends MyAppModel
 {
+
     const DB_TBL = 'tbl_teacher_courses';
     const DB_TBL_PREFIX = 'tcourse_';
-
     const LEVEL_BEGINNER = 1;
     const LEVEL_UPPER_BEGINNER = 2;
     const LEVEL_INTERMEDIATE = 3;
@@ -18,11 +19,12 @@ class TeacherCourse extends MyAppModel
     public static function getDifficultyArr()
     {
         return array(
-            static::LEVEL_BEGINNER	=>	Label::getLabel('LBL_Beginner'),
-            static::LEVEL_UPPER_BEGINNER	=>	Label::getLabel('LBL_Upper_Beginner'),
-            static::LEVEL_INTERMEDIATE	=>	Label::getLabel('LBL_Intermediate'),
-            static::LEVEL_UPPER_INTERMEDIATE	=>	Label::getLabel('LBL_Upper_Intermediate'),
-            static::LEVEL_ADVANCED	=>	Label::getLabel('LBL_Advanced'),
+            static::LEVEL_BEGINNER => Label::getLabel('LBL_Beginner'),
+            static::LEVEL_UPPER_BEGINNER => Label::getLabel('LBL_Upper_Beginner'),
+            static::LEVEL_INTERMEDIATE => Label::getLabel('LBL_Intermediate'),
+            static::LEVEL_UPPER_INTERMEDIATE => Label::getLabel('LBL_Upper_Intermediate'),
+            static::LEVEL_ADVANCED => Label::getLabel('LBL_Advanced'),
         );
     }
+
 }

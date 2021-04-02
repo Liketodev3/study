@@ -1,6 +1,8 @@
 <?php
+
 class GuestUserController extends MyAppController
 {
+
     public function loginForm()
     {
         if (UserAuthentication::isUserLogged()) {
@@ -11,6 +13,7 @@ class GuestUserController extends MyAppController
         $this->set('userType', User::USER_TYPE_LEANER);
         $this->_template->render();
     }
+
     public function logInFormPopUp()
     {
         if (UserAuthentication::isUserLogged()) {
@@ -24,6 +27,7 @@ class GuestUserController extends MyAppController
         $this->set('userType', User::USER_TYPE_LEANER);
         $this->_template->render(false, false);
     }
+
     public function setUpLogin()
     {
         $authentication = new UserAuthentication();
@@ -59,7 +63,6 @@ class GuestUserController extends MyAppController
         $this->set('termsAndConditionsLinkHref', $termsAndConditionsLinkHref);
         /* ] */
         /* [ */
-
         $cPPageSrch = ContentPage::getSearchObject($this->siteLangId);
         $cPPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE', FatUtility::VAR_INT, 0));
         $cpppage = FatApp::getDb()->fetch($cPPageSrch->getResultSet());
@@ -80,7 +83,6 @@ class GuestUserController extends MyAppController
         $json['msg'] = Label::getLabel('LBL_Request_Processing..');
         $post = FatApp::getPostedData();
         $userType = User::USER_TYPE_LEANER;
-
         if (UserAuthentication::isUserLogged()) {
             if ($post['signUpType'] == "teacher") {
                 $user_preferred_dashboard = User::USER_TEACHER_DASHBOARD;
@@ -112,7 +114,7 @@ class GuestUserController extends MyAppController
         }
         $this->set('termsAndConditionsLinkHref', $termsAndConditionsLinkHref);
         /* ] */
-        /*[*/
+        /* [ */
         $cPPageSrch = ContentPage::getSearchObject($this->siteLangId);
         $cPPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE', FatUtility::VAR_INT, 0));
         $cpppage = FatApp::getDb()->fetch($cPPageSrch->getResultSet());
@@ -123,7 +125,7 @@ class GuestUserController extends MyAppController
         }
         $this->set('userType', $userType);
         $this->set('privacyPolicyLinkHref', $privacyPolicyLinkHref);
-        /*]*/
+        /* ] */
         $json['html'] = $this->_template->render(false, false, 'guest-user/sign-up-form-pop-up.php', true, false);
         FatUtility::dieJsonSuccess($json);
     }
@@ -160,7 +162,8 @@ class GuestUserController extends MyAppController
             $user_preferred_dashboard = User::USER_TEACHER_DASHBOARD;
             $user_registered_initially_for = User::USER_TYPE_TEACHER;
         }
-        $post['user_timezone'] = $_COOKIE['user_timezone'] ?? MyDate::getTimeZone();;
+        $post['user_timezone'] = $_COOKIE['user_timezone'] ?? MyDate::getTimeZone();
+        ;
         $post['user_preferred_dashboard'] = $user_preferred_dashboard;
         $post['user_registered_initially_for'] = $user_registered_initially_for;
         $user->assignValues($post);
@@ -175,7 +178,6 @@ class GuestUserController extends MyAppController
         }
         $active = FatApp::getConfig('CONF_ADMIN_APPROVAL_REGISTRATION', FatUtility::VAR_INT, 1) ? 0 : 1;
         $verify = FatApp::getConfig('CONF_EMAIL_VERIFICATION_REGISTRATION', FatUtility::VAR_INT, 1) ? 0 : 1;
-
         if (true !== $user->setLoginCredentials($post['user_email'], $post['user_email'], $post['user_password'], $active, $verify)) {
             Message::addErrorMessage(Label::getLabel("MSG_LOGIN_CREDENTIALS_COULD_NOT_BE_SET") . $user->getError());
             $db->rollbackTransaction();
@@ -186,7 +188,6 @@ class GuestUserController extends MyAppController
             return;
         }
         /* ] */
-
         $db->commitTransaction();
         $redirectUrl = CommonHelper::redirectUserReferer(true);
         if ($user->getMainTableRecordId() and $user_registered_initially_for == User::USER_TYPE_TEACHER) {
@@ -230,7 +231,6 @@ class GuestUserController extends MyAppController
                 return;
             }
         }
-
         $confAutoLoginRegisteration = FatApp::getConfig('CONF_AUTO_LOGIN_REGISTRATION', FatUtility::VAR_INT, 1);
         if (1 === $confAutoLoginRegisteration && (0 === FatApp::getConfig('CONF_ADMIN_APPROVAL_REGISTRATION', FatUtility::VAR_INT, 1))) {
             $authentication = new UserAuthentication();
@@ -280,7 +280,7 @@ class GuestUserController extends MyAppController
         }
         $userObj = new User($userId);
         $userData = User::getAttributesById($userId, array(
-            'user_id',
+                    'user_id',
         ));
         if (!$userData || $userData['user_id'] != $userId) {
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_CODE'));
@@ -289,20 +289,18 @@ class GuestUserController extends MyAppController
         $db = FatApp::getDb();
         $db->startTransaction();
         /* if (!$userObj->verifyUserEmailVerificationCode($code)){
-        $db->rollbackTransaction();
-        Message::addErrorMessage(Label::getLabel("ERR_MSG_INVALID_VERIFICATION_REQUEST"));
-        FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
-        } */
+          $db->rollbackTransaction();
+          Message::addErrorMessage(Label::getLabel("ERR_MSG_INVALID_VERIFICATION_REQUEST"));
+          FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
+          } */
         $srch = new SearchBase('tbl_user_credentials');
         $srch->addCondition('credential_user_id', '=', $userId);
         $rs = $srch->getResultSet();
         $userCredentialRow = $db->fetch($rs);
-
         if (applicationConstants::ACTIVE === $userCredentialRow['credential_verified']) {
             Message::addErrorMessage(Label::getLabel('MSG_Your_Account_Is_Already_Verified'));
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
         }
-
         if (applicationConstants::ACTIVE !== $userCredentialRow['credential_active']) {
             $active = FatApp::getConfig('CONF_ADMIN_APPROVAL_REGISTRATION', FatUtility::VAR_INT, 1) ? 0 : 1;
             if (0 === $userObj->activateAccount($active)) {
@@ -311,13 +309,11 @@ class GuestUserController extends MyAppController
                 FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
             }
         }
-
         if (true !== $userObj->verifyAccount()) {
             $db->rollbackTransaction();
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_CODE'));
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
         }
-
         $db->commitTransaction();
         $userdata = $userObj->getUserInfo(array(
             'credential_email',
@@ -325,7 +321,7 @@ class GuestUserController extends MyAppController
             'user_first_name',
             'user_last_name',
             'credential_active'
-        ), false);
+                ), false);
         if (1 === FatApp::getConfig('CONF_WELCOME_EMAIL_REGISTRATION', FatUtility::VAR_INT, 1)) {
             $data['user_email'] = $userdata['credential_email'];
             $data['user_first_name'] = $userdata['user_first_name'];
@@ -337,15 +333,15 @@ class GuestUserController extends MyAppController
             }
         }
         /* if (1 === FatApp::getConfig('CONF_AUTO_LOGIN_REGISTRATION', FatUtility::VAR_INT, 1)) {
-            $authentication = new UserAuthentication();
-            if (true !== $authentication->login($userdata['credential_email'], $userdata['credential_password'], $_SERVER['REMOTE_ADDR'], false)) {
-                $msg = Label::getLabel("MSG_EMAIL_VERIFIED_SUCCESFULLY");
-                $msg .= " <br/>" .Label::getLabel( 'MSG_Tried_Autologin_in_system,_faced_below_error' ) . '<br/>'. Label::getLabel($authentication->getError());
-                Message::addErrorMessage( $msg );
-                FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
-            }
-            FatApp::redirectUser(CommonHelper::generateUrl('Account'));
-        } */
+          $authentication = new UserAuthentication();
+          if (true !== $authentication->login($userdata['credential_email'], $userdata['credential_password'], $_SERVER['REMOTE_ADDR'], false)) {
+          $msg = Label::getLabel("MSG_EMAIL_VERIFIED_SUCCESFULLY");
+          $msg .= " <br/>" .Label::getLabel( 'MSG_Tried_Autologin_in_system,_faced_below_error' ) . '<br/>'. Label::getLabel($authentication->getError());
+          Message::addErrorMessage( $msg );
+          FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
+          }
+          FatApp::redirectUser(CommonHelper::generateUrl('Account'));
+          } */
         Message::addMessage(Label::getLabel("MSG_EMAIL_VERIFIED_SUCCESFULLY"));
         FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
     }
@@ -354,23 +350,20 @@ class GuestUserController extends MyAppController
     {
         // Delete googleplus session if exist
         /* if(isset($_SESSION['access_token'])){
-        unset($_SESSION['access_token']);
-        } */
+          unset($_SESSION['access_token']);
+          } */
         //Delete facebook session if exist
         /* require_once (CONF_INSTALLATION_PATH . 'library/facebook/facebook.php');
-        $facebook = new Facebook(array(
-        'appId' => FatApp::getConfig("CONF_FACEBOOK_APP_ID"),
-        'secret' => FatApp::getConfig("CONF_FACEBOOK_APP_SECRET"),
-        ));
-
-        $user = $facebook->getUser();
-
-        if ($user) {
-        unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_code']);
-        unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_access_token']);
-        unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_user_id']);
-        } */
-
+          $facebook = new Facebook(array(
+          'appId' => FatApp::getConfig("CONF_FACEBOOK_APP_ID"),
+          'secret' => FatApp::getConfig("CONF_FACEBOOK_APP_SECRET"),
+          ));
+          $user = $facebook->getUser();
+          if ($user) {
+          unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_code']);
+          unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_access_token']);
+          unset($_SESSION['fb_'.FatApp::getConfig("CONF_FACEBOOK_APP_ID").'_user_id']);
+          } */
         unset($_SESSION[UserAuthentication::SESSION_ELEMENT_NAME]);
         unset($_SESSION['referer_page_url']);
         UserAuthentication::clearLoggedUserLoginCookie();
@@ -444,7 +437,6 @@ class GuestUserController extends MyAppController
                 $pass = 'jason@123';
             }
         }
-
         $frm = new Form('frmLogin');
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Email'), 'username', $userName, array(
             'placeholder' => Label::getLabel('LBL_EMAIL_ADDRESS')
@@ -463,7 +455,7 @@ class GuestUserController extends MyAppController
     {
         $verificationCode = $userObj->prepareUserVerificationCode();
         $link = CommonHelper::generateFullUrl('GuestUser', 'userCheckEmailVerification', array(
-            'verify' => $verificationCode
+                    'verify' => $verificationCode
         ));
         $data = array(
             'user_first_name' => $data['user_first_name'],
@@ -471,7 +463,7 @@ class GuestUserController extends MyAppController
             'user_email' => $data['user_email'],
             'link' => $link,
         );
-        $email    = new EmailHandler();
+        $email = new EmailHandler();
         if (true !== $email->sendEmailVerificationLink($this->siteLangId, $data)) {
             return false;
         }
@@ -511,8 +503,6 @@ class GuestUserController extends MyAppController
         CommonHelper::redirectUserReferer();
     }
 
-
-
     public function loginFacebook()
     {
         FatUtility::dieJsonError(Label::getLabel("MSG_THERE_WAS_SOME_PROBLEM_IN_AUTHENTICATING_YOUR_ACCOUNT_WITH_FACEBOOK,_PLEASE_TRY_WITH_DIFFERENT_LOGIN_OPTIONS", $this->siteLangId));
@@ -531,11 +521,9 @@ class GuestUserController extends MyAppController
         } else {
             $user_type = User::USER_TYPE_LEANER;
         }
-
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_code']);
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_access_token']);
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_user_id']);
-
         $facebookName = $userFirstName . ' ' . $userLastName;
         // User info ok? Let's print it (Here we will be adding the login and registering routines)
         $db = FatApp::getDb();
@@ -544,7 +532,6 @@ class GuestUserController extends MyAppController
         if (!empty($facebookEmail)) {
             $srch->addCondition('credential_email', '=', $facebookEmail);
         } else {
-
             $srch->addCondition('user_facebook_id', '=', $userFacebookId);
         }
         $rs = $srch->getResultSet();
@@ -560,7 +547,6 @@ class GuestUserController extends MyAppController
                 $this->set('msg', Label::getLabel("ERR_USER_INACTIVE_OR_DELETED"));
                 $this->_template->render(false, false, 'json-error.php');
             }
-
             $userObj->setMainTableRecordId($row['user_id']);
             $arr = array(
                 'user_facebook_id' => $userFacebookId
@@ -600,7 +586,6 @@ class GuestUserController extends MyAppController
             }
             $userData['user_username'] = $username;
             $userData['user_email'] = $facebookEmail;
-
             if (FatApp::getConfig('CONF_WELCOME_EMAIL_REGISTRATION', FatUtility::VAR_INT, 1) && $facebookEmail) {
                 $data['user_email'] = $facebookEmail;
                 $data['user_first_name'] = $user_first_name;
@@ -634,11 +619,9 @@ class GuestUserController extends MyAppController
             $this->set('msg', Label::getLabel($authentication->getError()));
             $this->_template->render(false, false, 'json-error.php');
         }
-
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_code']);
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_access_token']);
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_user_id']);
-
         $redirectUrl = User::getPreferedDashbordRedirectUrl();
         if ($user_type == User::USER_TYPE_TEACHER) {
             $redirectUrl = CommonHelper::generateUrl('TeacherRequest', '', [], CONF_WEBROOT_DASHBOARD);
@@ -648,7 +631,6 @@ class GuestUserController extends MyAppController
             $message = Label::getLabel('MSG_PLEASE_CONFIGURE_YOUR_EMAIL', $this->siteLangId);
             $redirectUrl = CommonHelper::generateUrl('GuestUser', 'configureEmail');
         }
-
         $this->set('url', $redirectUrl);
         $this->set('msg', $message);
         $this->_template->render(false, false, 'json-success.php');
@@ -657,7 +639,6 @@ class GuestUserController extends MyAppController
     public function configureEmail()
     {
         UserAuthentication::checkLogin();
-
         $userObj = new User(UserAuthentication::getLoggedUserId());
         $srch = $userObj->getUserSearchObj(array('user_id', 'credential_email', 'user_first_name', 'user_last_name'));
         $rs = $srch->getResultSet();
@@ -665,7 +646,6 @@ class GuestUserController extends MyAppController
         if ($data === false || !empty($data['credential_email'])) {
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
         }
-
         $frm = $this->getConfigureEmailForm();
         $this->set('frm', $frm);
         $this->set('siteLangId', $this->siteLangId);
@@ -675,19 +655,16 @@ class GuestUserController extends MyAppController
     private function getConfigureEmailForm()
     {
         $frm = new Form('changeEmailFrm');
-
         $frm->addHiddenField('', 'user_id', UserAuthentication::getLoggedUserId());
-
         $newEmail = $frm->addEmailField(
-            Label::getLabel('LBL_NEW_EMAIL'),
-            'new_email'
+                Label::getLabel('LBL_NEW_EMAIL'),
+                'new_email'
         );
         $newEmail->setUnique('tbl_user_credentials', 'credential_email', 'credential_user_id', 'user_id', 'user_id');
         $newEmail->requirements()->setRequired();
-
         $conNewEmail = $frm->addEmailField(
-            Label::getLabel('LBL_CONFIRM_NEW_EMAIL'),
-            'conf_new_email'
+                Label::getLabel('LBL_CONFIRM_NEW_EMAIL'),
+                'conf_new_email'
         );
         $conNewEmailReq = $conNewEmail->requirements();
         $conNewEmailReq->setRequired();
@@ -696,32 +673,27 @@ class GuestUserController extends MyAppController
         return $frm;
     }
 
-
     public function updateEmail()
     {
         $emailFrm = $this->getConfigureEmailForm(false);
         $post = $emailFrm->getFormDataFromArray(FatApp::getPostedData());
-
         if (false === $post) {
             $message = current($emailFrm->getValidationErrors());
             FatUtility::dieJsonError($message);
         }
-
         $userObj = new User(UserAuthentication::getLoggedUserId());
         $srch = $userObj->getUserSearchObj(array('user_id', 'credential_email', 'credential_password', 'user_first_name', 'user_last_name'));
         $rs = $srch->getResultSet();
-
         if (!$rs) {
             $message = Label::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
             FatUtility::dieJsonError($message);
         }
-
         $data = FatApp::getDb()->fetch($rs);
         if ($data === false || !empty($data['credential_email'])) {
             $message = Label::getLabel('MSG_INVALID_REQUEST', $this->siteLangId);
             FatUtility::dieJsonError($message);
         }
-        $db =  FatApp::getDb();
+        $db = FatApp::getDb();
         $db->startTransaction();
         $msg = Label::getLabel('LBL_EMAIL_UPDATE_SUCCESSFULL');
         $redirectUrl = "";
@@ -739,26 +711,23 @@ class GuestUserController extends MyAppController
                 'uecreq_updated' => date('Y-m-d H:i:s'),
                 'uecreq_expire' => date('Y-m-d H:i:s', strtotime('+ 24 hours', strtotime(date('Y-m-d H:i:s'))))
             );
-
             $emailChangeReqObj->assignValues($postData);
             if (!$emailChangeReqObj->save()) {
                 $db->rollbackTransaction();
                 Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
                 FatUtility::dieWithError(Message::getHtml());
             }
-
             $userData = array(
                 'user_email' => $post['new_email'],
                 'user_first_name' => $data['user_first_name'],
                 'user_last_name' => $data['user_last_name']
             );
-
             if (!$this->sendEmailChangeVerificationLink($_token, $userData)) {
                 $db->rollbackTransaction();
                 Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
                 FatUtility::dieWithError(Message::getHtml());
             }
-            $msg =  Label::getLabel('MSG_UPDATE_EMAIL_REQUEST_SENT_SUCCESSFULLY._YOU_NEED_TO_VERIFY_YOUR_NEW_EMAIL_ADDRESS_BEFORE_ACCESSING_OTHER_MODULES');
+            $msg = Label::getLabel('MSG_UPDATE_EMAIL_REQUEST_SENT_SUCCESSFULLY._YOU_NEED_TO_VERIFY_YOUR_NEW_EMAIL_ADDRESS_BEFORE_ACCESSING_OTHER_MODULES');
         } else {
             if (!$userObj->changeEmail($post['new_email'])) {
                 Message::addErrorMessage(Label::getLabel('MSG_Email_could_not_be_set'));
@@ -775,12 +744,10 @@ class GuestUserController extends MyAppController
             }
             $redirectUrl = User::getPreferedDashbordRedirectUrl();
         }
-        $returnJson =  ['msg' => $msg];
-
+        $returnJson = ['msg' => $msg];
         if (!empty($redirectUrl)) {
             $returnJson['redirectUrl'] = $redirectUrl;
         }
-
         FatUtility::dieJsonSuccess($returnJson);
     }
 
@@ -834,21 +801,18 @@ class GuestUserController extends MyAppController
         }
         $user = $oauth2->userinfo->get();
         //echo "<pre>"; print_r($oauth2->userinfo);die();
-
         $_SESSION['access_token'] = $client->getAccessToken();
         $userGoogleplusEmail = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
         $userGoogleplusId = $user['id'];
         $userGoogleplusName = $user['email'];
         if (isset($userGoogleplusEmail) && (!empty($userGoogleplusEmail))) {
-
             if ($userType == User::USER_TYPE_TEACHER) {
                 $preferredDashboard = User::USER_TEACHER_DASHBOARD;
-                $userType =   User::USER_TYPE_TEACHER;
+                $userType = User::USER_TYPE_TEACHER;
             } else {
                 $preferredDashboard = User::USER_LEARNER_DASHBOARD;
                 $userType = User::USER_TYPE_LEANER;
             }
-
             $db = FatApp::getDb();
             $userObj = new User();
             $srch = $userObj->getUserSearchObj(array('user_id', 'user_googleplus_id', 'credential_email', 'credential_active', 'user_deleted'));
@@ -918,7 +882,6 @@ class GuestUserController extends MyAppController
                 Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET"));
                 CommonHelper::redirectUserReferer();
             }
-
             $authentication = new UserAuthentication();
             if (!$authentication->login($userInfo['credential_username'], $userInfo['credential_password'], $_SERVER['REMOTE_ADDR'], false)) {
                 Message::addErrorMessage(Label::getLabel($authentication->getError()));
@@ -969,10 +932,9 @@ class GuestUserController extends MyAppController
         $userGoogleId = $user['id'];
         $userGoogleName = $user['name'];
         if (isset($userGoogleEmail) && (!empty($userGoogleEmail))) {
-
             if ($userType == User::USER_TYPE_TEACHER) {
                 $preferredDashboard = User::USER_TEACHER_DASHBOARD;
-                $userType =   User::USER_TYPE_TEACHER;
+                $userType = User::USER_TYPE_TEACHER;
             } else {
                 $preferredDashboard = User::USER_LEARNER_DASHBOARD;
                 $userType = User::USER_TYPE_LEANER;
@@ -1018,13 +980,11 @@ class GuestUserController extends MyAppController
                     'user_registered_initially_for' => $userType,
                 );
                 $userObj->assignValues($userData);
-
                 if (!$userObj->save()) {
                     Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $userObj->getError());
                     $db->rollbackTransaction();
                     FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
                 }
-
                 $username = str_replace(" ", "", $userGoogleName) . $userGoogleId;
                 if (!$userObj->setLoginCredentials($username, $userGoogleEmail, uniqid(), 1, 1)) {
                     Message::addErrorMessage(Label::getLabel("MSG_LOGIN_CREDENTIALS_COULD_NOT_BE_SET") . $userObj->getError());
@@ -1047,10 +1007,8 @@ class GuestUserController extends MyAppController
                 }
                 $db->commitTransaction();
             }
-
             $usrStngObj = new UserSetting($userObj->getMainTableRecordId());
             $usrStngObj->saveData(array('us_google_access_token' => $client->getRefreshToken()));
-
             $userInfo = $userObj->getUserInfo(array(
                 'user_googleplus_id',
                 'credential_username',
@@ -1100,7 +1058,6 @@ class GuestUserController extends MyAppController
         }
         $userAuthObj = new UserAuthentication();
         $row = $userAuthObj->getUserByEmailOrUserName($post['user_email_username'], '', false);
-
         if (!$row || false === $row) {
             Message::addErrorMessage(Label::getLabel($userAuthObj->getError()));
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'forgotPasswordForm'));
@@ -1110,7 +1067,6 @@ class GuestUserController extends MyAppController
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'forgotPasswordForm'));
             return false;
         }
-
         if ($userAuthObj->checkUserPwdResetRequest($row['user_id'])) {
             Message::addErrorMessage(Label::getLabel($userAuthObj->getError()));
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'forgotPasswordForm'));
@@ -1127,8 +1083,8 @@ class GuestUserController extends MyAppController
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'forgotPasswordForm'));
         }
         $row['link'] = CommonHelper::generateFullUrl('GuestUser', 'resetPassword', array(
-            $row['user_id'],
-            $token
+                    $row['user_id'],
+                    $token
         ));
         $email = new EmailHandler();
         if (!$email->sendForgotPasswordLinkEmail($this->siteLangId, $row)) {
@@ -1228,7 +1184,7 @@ class GuestUserController extends MyAppController
             'user_first_name',
             'user_last_name',
             'credential_email'
-        ), '', false);
+                ), '', false);
         $email->sendResetPasswordConfirmationEmail($this->siteLangId, $row);
         $this->set('msg', Label::getLabel('MSG_PASSWORD_CHANGED_SUCCESSFULLY'));
         $this->_template->render(false, false, 'json-success.php');
@@ -1259,7 +1215,6 @@ class GuestUserController extends MyAppController
     {
         $json = array();
         $json['isUserLogged'] = FatUtility::int(UserAuthentication::isUserLogged());
-
         die(json_encode($json));
     }
 
@@ -1272,6 +1227,7 @@ class GuestUserController extends MyAppController
         }
         return true;
     }
+
     public function verifyEmail($_token)
     {
         $emailChangeReqObj = new UserEmailChangeRequest();
@@ -1280,18 +1236,15 @@ class GuestUserController extends MyAppController
             Message::addErrorMessage(Label::getLabel("MSG_INVAILD_VERIFICATION_LINK", $this->siteLangId));
             $this->logout();
         }
-
         $userObj = new User($userRequest['uecreq_user_id']);
         $srch = $userObj->getUserSearchObj(array('user_id', 'credential_password'));
         $rs = $srch->getResultSet();
         $userRow = FatApp::getDb()->fetch($rs, 'user_id');
-
         if (false == $userRow) {
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_REQUEST'));
             $this->logout();
             //FatApp::redirectUser( FatUtility::generateUrl('GuestUser', '') );
         }
-
         if (!$userObj->changeEmail($userRequest['uecreq_email'])) {
             Message::addErrorMessage(Label::getLabel('MSG_Email_could_not_be_set') . $userObj->getError());
             $this->logout();
@@ -1306,4 +1259,5 @@ class GuestUserController extends MyAppController
         Message::addMessage(Label::getLabel('MSG_Email_Updated._Please_Login_again_in_your_profile_with_new_email'));
         $this->logout();
     }
+
 }

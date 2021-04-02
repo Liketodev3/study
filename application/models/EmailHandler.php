@@ -1,9 +1,12 @@
 <?php
 
 require_once(CONF_INSTALLATION_PATH . 'library/third-party/PHPMailer/PHPMailerAutoload.php');
+
 class EmailHandler extends FatModel
 {
+
     private $commonLangId;
+
     public function __construct($langId = 0)
     {
         $this->commonLangId = $langId ?: CommonHelper::getLangId();
@@ -12,7 +15,6 @@ class EmailHandler extends FatModel
     public static function getMailTpl($tpl, $langId = 1)
     {
         $langId = FatUtility::int($langId);
-
         $srch = new SearchBase('tbl_email_templates');
         $srch->addCondition('etpl_code', '=', $tpl);
         if (1 > $langId) {
@@ -23,7 +25,6 @@ class EmailHandler extends FatModel
         }
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
-        //echo $srch->getQuery();
         $rs = $srch->getResultSet();
         if (!$row = FatApp::getDb()->fetch($rs)) {
             return false;
@@ -42,25 +43,19 @@ class EmailHandler extends FatModel
                 }
             }
         }
-
         if ($row['etpl_status'] != applicationConstants::ACTIVE) {
             return false;
         }
-
         if (!isset($row['etpl_body']) || $row['etpl_body'] == '') {
             return false;
         }
-
         $subject = $row['etpl_subject'];
         $body = $row['etpl_body'];
-
         $vars += SELF::commonVars($langId);
-
         foreach ($vars as $key => $val) {
             $subject = str_replace($key, $val, $subject);
             $body = str_replace($key, $val, $body);
         }
-
         if (FatApp::getConfig('CONF_SEND_SMTP_EMAIL')) {
             if (!$sendEmail = static::sendSmtpEmail($to, $subject, $body, '', $tpl, $langId, '', $smtp_arr)) {
                 return static::sendMail($to, $subject, $body, '', $tpl, $langId);
@@ -76,12 +71,9 @@ class EmailHandler extends FatModel
     {
         $langId = FatUtility::int($langId);
         $txn = new Transaction(0, $txnId);
-
         $txnDetail = $txn->getAttributesWithUserInfo(0, array('utxn_user_id', 'utxn_credit', 'utxn_debit', 'utxn_comments', 'user_first_name', 'user_last_name', 'credential_email'));
         $statusArr = Transaction::getStatusArr($langId);
-
         $txnAmount = $txnDetail["utxn_credit"] > 0 ? $txnDetail["utxn_credit"] : $txnDetail["utxn_debit"];
-
         $arrReplacements = array(
             '{user_first_name}' => $txnDetail["user_first_name"],
             '{user_last_name}' => $txnDetail["user_last_name"],
@@ -97,26 +89,23 @@ class EmailHandler extends FatModel
 
     public static function sendSmtpEmail($toAdress, $Subject, $body, $extra_headers = '', $tpl_name = '', $langId, $attachment = "", $smtp_arr = array())
     {
-        $headers  = 'MIME-Version: 1.0' . "\r\n";
+        $headers = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
-
         $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_" . $langId, FatUtility::VAR_STRING, '') . "<" . FatApp::getConfig("CONF_FROM_EMAIL") . ">" . "\r\nReply-to: " . FatApp::getConfig("CONF_REPLY_TO_EMAIL");
-
         if ($extra_headers != '') {
             $headers .= $extra_headers;
         }
         if (!FatApp::getDb()->insertFromArray('tbl_email_archives', array(
-            'emailarchive_to_email' => $toAdress,
-            'emailarchive_tpl_name' => $tpl_name,
-            'emailarchive_subject' => $Subject,
-            'emailarchive_body' => $body,
-            'emailarchive_headers' => FatApp::getDb()->quoteVariable($headers),
-            'emailarchive_sent_on' => date('Y-m-d H:i:s')
-        ))) {
+                    'emailarchive_to_email' => $toAdress,
+                    'emailarchive_tpl_name' => $tpl_name,
+                    'emailarchive_subject' => $Subject,
+                    'emailarchive_body' => $body,
+                    'emailarchive_headers' => FatApp::getDb()->quoteVariable($headers),
+                    'emailarchive_sent_on' => date('Y-m-d H:i:s')
+                ))) {
             return false;
         }
-
-        if(!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))){
+        if (!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))) {
             return true;
         }
         $host = isset($smtp_arr["host"]) ? $smtp_arr["host"] : FatApp::getConfig("CONF_SMTP_HOST");
@@ -149,27 +138,23 @@ class EmailHandler extends FatModel
     private static function sendMail($to, $subject, $body, $extra_headers = '', $tpl_name = '', $langId)
     {
         $db = FatApp::getDb();
-        $headers  = 'MIME-Version: 1.0' . "\r\n";
+        $headers = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
         $headers .= 'Content-Transfer-Encoding: base64' . "\r\n";
-
         $headers .= 'From: ' . FatApp::getConfig("CONF_FROM_NAME_" . $langId, FatUtility::VAR_STRING, '') . "<" . FatApp::getConfig("CONF_FROM_EMAIL") . ">" . "\r\nReply-to: " . FatApp::getConfig("CONF_REPLY_TO_EMAIL");
-
         if ($extra_headers != '') {
             $headers .= $extra_headers;
         }
-
         if (!$db->insertFromArray('tbl_email_archives', array(
-            'emailarchive_to_email' => $to,
-            'emailarchive_tpl_name' => $tpl_name,
-            'emailarchive_subject' => $subject,
-            'emailarchive_body' => $body,
-            'emailarchive_headers' => $db->quoteVariable($headers),
-            'emailarchive_sent_on' => date('Y-m-d H:i:s')
-        ))) {
+                    'emailarchive_to_email' => $to,
+                    'emailarchive_tpl_name' => $tpl_name,
+                    'emailarchive_subject' => $subject,
+                    'emailarchive_body' => $body,
+                    'emailarchive_headers' => $db->quoteVariable($headers),
+                    'emailarchive_sent_on' => date('Y-m-d H:i:s')
+                ))) {
             return false;
         }
-
         if (!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))) {
             return true;
         }
@@ -184,14 +169,12 @@ class EmailHandler extends FatModel
     public function sendEmailVerificationLink($langId, $data)
     {
         $tpl = 'user_email_verification';
-
         $vars = array(
             '{user_first_name}' => $data['user_first_name'],
             '{user_last_name}' => $data['user_last_name'],
             '{user_full_name}' => $data['user_first_name'] . ' ' . $data['user_last_name'],
             '{verification_url}' => $data['link'],
         );
-
         if (self::sendMailTpl($data['user_email'], $tpl, $langId, $vars)) {
             return true;
         }
@@ -201,14 +184,12 @@ class EmailHandler extends FatModel
     public function sendNewRegistrationNotification($langId, $data)
     {
         $tpl = 'new_registration_admin';
-
         $vars = array(
-            '{user_first_name}'    =>    $data['user_first_name'],
-            '{user_last_name}'    =>    $data['user_last_name'],
-            '{user_full_name}'     => $data['user_first_name'] . ' ' . $data['user_last_name'],
+            '{user_first_name}' => $data['user_first_name'],
+            '{user_last_name}' => $data['user_last_name'],
+            '{user_full_name}' => $data['user_first_name'] . ' ' . $data['user_last_name'],
             '{user_email}' => $data['user_email'],
         );
-
         if (self::sendMailTpl(FatApp::getConfig('CONF_SITE_OWNER_EMAIL', FatUtility::VAR_STRING, 'yocoach_admin@dummyid.com'), $tpl, $langId, $vars)) {
             return true;
         }
@@ -218,14 +199,12 @@ class EmailHandler extends FatModel
     public function sendWelcomeEmail($langId, $d)
     {
         $tpl = 'welcome_registration';
-
         $vars = array(
             '{user_first_name}' => $d['user_first_name'],
             '{user_last_name}' => $d['user_last_name'],
             '{user_full_name}' => $d['user_first_name'] . ' ' . $d['user_last_name'],
             '{contact_us_email}' => FatApp::getConfig('CONF_CONTACT_EMAIL', FatUtility::VAR_STRING, 'yocoach_contact_us@dummyid.com'),
         );
-
         if (self::sendMailTpl($d['user_email'], $tpl, $langId, $vars)) {
             return true;
         }
@@ -239,9 +218,8 @@ class EmailHandler extends FatModel
             '{user_first_name}' => $data['user_first_name'],
             '{user_last_name}' => $data['user_last_name'],
             '{user_full_name}' => $data['user_first_name'] . ' ' . $data['user_last_name'],
-            '{reset_url}'          => $data['link'],
+            '{reset_url}' => $data['link'],
         );
-
         if (self::sendMailTpl($data['credential_email'], $tpl, $langId, $vars)) {
             return true;
         }
@@ -257,12 +235,12 @@ class EmailHandler extends FatModel
             '{user_full_name}' => $data['user_first_name'] . ' ' . $data['user_last_name'],
             '{login_link}' => CommonHelper::generateFullUrl('GuestUser', 'loginForm'),
         );
-
         if (self::sendMailTpl($data['credential_email'], $tpl, $langId, $vars)) {
             return true;
         }
         return false;
     }
+
     public static function sendlearnerScheduleEmail($to, $data, $langId)
     {
         $tpl = 'learner_schedule_email';
@@ -271,7 +249,7 @@ class EmailHandler extends FatModel
             '{teacher_name}' => $data['teacherFullName'],
             '{lesson_name}' => $data['teacherTeachLanguageName'],
             '{lesson_date}' => $data['startDate'], //y-m-d
-            '{lesson_start_time}' =>  $data['startTime'], // H:i:s
+            '{lesson_start_time}' => $data['startTime'], // H:i:s
             '{lesson_end_time}' => $data['endTime'], // H:i:s
             '{learner_comment}' => '',
             '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
@@ -285,23 +263,19 @@ class EmailHandler extends FatModel
     public function SendTeacherRequestStatusChangeNotification($langId, $data)
     {
         $tpl = 'teacher_request_status_change_learner';
-
         $teacherRequestComments = '';
         if ($data['utrequest_comments'] != '') {
             $teacherRequestComments = nl2br($data['utrequest_comments']);
         }
-
         $statusArr = TeacherRequest::getStatusArr($langId);
-
         $vars = array(
-            '{user_first_name}'    =>    $data['user_first_name'],
-            '{user_last_name}'    =>    $data['user_last_name'],
+            '{user_first_name}' => $data['user_first_name'],
+            '{user_last_name}' => $data['user_last_name'],
             '{user_full_name}' => $data['user_first_name'] . ' ' . $data['user_last_name'],
             '{reference_number}' => $data['utrequest_reference'],
             '{new_request_status}' => $statusArr[$data['utrequest_status']],
             '{request_comments}' => $teacherRequestComments,
         );
-
         if (self::sendMailTpl($data['credential_email'], $tpl, $langId, $vars)) {
             return true;
         }
@@ -311,10 +285,7 @@ class EmailHandler extends FatModel
     public function sendContactRequestEmailToAdmin($langId, &$d)
     {
         $tpl = 'tpl_contact_request_received';
-        $vars = array(
-            '{requests_link}' => $d['link'],
-        );
-
+        $vars = array('{requests_link}' => $d['link'],);
         $to = FatApp::getConfig('CONF_CONTACT_TO_EMAIL', FatUtility::VAR_STRING, '');
         if (strlen(trim($to)) < 1) {
             $to = FatApp::getConfig('CONF_SITE_OWNER_EMAIL');
@@ -348,7 +319,6 @@ class EmailHandler extends FatModel
         $srch->addCondition('splatform_user_id', '=', 0);
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
-
         $social_media_icons = '';
         $imgSrc = '';
         foreach ($rows as $row) {
@@ -356,19 +326,17 @@ class EmailHandler extends FatModel
             $title = ($row['splatform_title'] != '') ? $row['splatform_title'] : $row['splatform_identifier'];
             $target_blank = ($row['splatform_url'] != '') ? 'target="_blank"' : '';
             $url = $row['splatform_url'] != '' ? $row['splatform_url'] : 'javascript:void(0)';
-
             $imgSrc = '';
             if ($img) {
                 $imgSrc = CommonHelper::generateFullUrl('Image', 'SocialPlatform', array($row['splatform_id']), CONF_WEBROOT_FRONT_URL);
             }
             $social_media_icons .= '<a style="display:inline-block;vertical-align:top; width:35px;height:35px; margin:0 0 0 5px; background:#1a1a1a;border-radius:100%;padding:4px;" href="' . $url . '" ' . $target_blank . ' title="' . $title . '" ><img alt="' . $title . '" width="24" style="margin:4px auto 0; display:block;" src = "' . $imgSrc . '"/></a>';
         }
-
         return array(
-            '{website_name}'    =>    FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR_STRING, ''),
-            '{website_url}'        =>    CommonHelper::generateFullUrl('', '', array(), CONF_WEBROOT_FRONT_URL),
-            '{Company_Logo}'    =>    '<img style="max-width: 160px;" src="' . CommonHelper::generateFullUrl('Image', 'emailLogo', array($langId), CONF_WEBROOT_FRONT_URL) . '" />',
-            '{current_date}'    =>    date('M d, Y'),
+            '{website_name}' => FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR_STRING, ''),
+            '{website_url}' => CommonHelper::generateFullUrl('', '', array(), CONF_WEBROOT_FRONT_URL),
+            '{Company_Logo}' => '<img style="max-width: 160px;" src="' . CommonHelper::generateFullUrl('Image', 'emailLogo', array($langId), CONF_WEBROOT_FRONT_URL) . '" />',
+            '{current_date}' => date('M d, Y'),
             '{social_media_icons}' => $social_media_icons,
             '{contact_us_url}' => CommonHelper::generateFullUrl('contact', '', array(), CONF_WEBROOT_FRONT_URL),
             '{notifcation_email}' => FatApp::getConfig('CONF_FROM_EMAIL')
@@ -386,16 +354,12 @@ class EmailHandler extends FatModel
                 return false;
             }
         }
-
         if (!isset($row['etpl_body']) || $row['etpl_body'] == '') {
             return false;
         }
-
         $subject = $row['etpl_subject'];
         $body = $row['etpl_body'];
-
         $vars += SELF::commonVars($langId);
-
         foreach ($vars as $key => $val) {
             $subject = str_replace($key, $val, $subject);
             $body = str_replace($key, $val, $body);
@@ -419,24 +383,18 @@ class EmailHandler extends FatModel
                 return false;
             }
         }
-
         if (!isset($row['etpl_body']) || $row['etpl_body'] == '') {
             return false;
         }
-
         $subject = $row['etpl_subject'];
         $body = $row['etpl_body'];
-
         $vars += SELF::commonVars($langId);
-
         foreach ($vars as $key => $val) {
             $subject = str_replace($key, $val, $subject);
             $body = str_replace($key, $val, $body);
         }
-
         try {
             $email = EmailHandler::sendSmtpEmail(FatApp::getConfig("CONF_SITE_OWNER_EMAIL"), $subject, $body, '', $tpl, $langId, '', $smtpArr);
-
             return true;
         } catch (Exception $e) {
             return false;
@@ -446,7 +404,6 @@ class EmailHandler extends FatModel
     public function failedLoginAttempt($langId, $data)
     {
         $tpl = 'failed_login_attempt';
-
         $vars = array(
             '{user_first_name}' => $data['user_first_name'],
             '{user_last_name}' => $data['user_last_name'],
@@ -461,8 +418,6 @@ class EmailHandler extends FatModel
     private function sendnotificationToRecipient($giftcardlist)
     {
         $langId = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
-
-
         foreach ($giftcardlist as $GiftCardData) {
             $currencyData = Currency::getAttributesById($GiftCardData['order_currency_id']);
             if (!empty($GiftCardData)) {
@@ -474,7 +429,6 @@ class EmailHandler extends FatModel
                     '{giftcard_expire_date}' => $GiftCardData['giftcard_expiry_date'],
                     '{contact_us_email}' => FatApp::getConfig('CONF_CONTACT_EMAIL')
                 );
-
                 if (CommonHelper::isValidEmail($GiftCardData['gcrecipient_email'])) {
                     self::sendMailTpl($GiftCardData['gcrecipient_email'], "giftcard_recipient", $langId, $arrReplacementsRecipient);
                 }
@@ -486,9 +440,7 @@ class EmailHandler extends FatModel
     {
         $langId = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
         //$this->sendnotificationToBuyer($giftcardlist);
-
         $this->sendnotificationToRecipient($giftcardlist);
-
         $this->sendnotificationToAdmin($giftcardlist);
     }
 
@@ -530,7 +482,6 @@ class EmailHandler extends FatModel
                 '{giftcard_amount}' => $currencyData['currency_symbol_left'] . ' ' . $row['giftcard_amount'],
                 '{contact_us_email}' => FatApp::getConfig('CONF_CONTACT_EMAIL')
             );
-
             if (CommonHelper::isValidEmail(FatApp::getConfig('CONF_SITE_OWNER_EMAIL', FatUtility::VAR_STRING))) {
                 self::sendMailTpl(FatApp::getConfig('CONF_SITE_OWNER_EMAIL', FatUtility::VAR_STRING), "giftcard_redeem_admin", $langId, $arrReplacements);
             }
@@ -554,7 +505,6 @@ class EmailHandler extends FatModel
             $html .= "<td style='padding:10px;font-size:13px;border:1px solid #ddd; color:#333;' width='153'>" . $currencyData['currency_symbol_left'] . " " . $giftcard['amount'] . "</td>";
             $html .= "<td style='padding:10px;font-size:13px;border:1px solid #ddd; color:#333;' width='153'>" . $giftcard['expireon'] . "</td></tr>";
         }
-
         $html .= "</table>";
         return $html;
     }
@@ -568,7 +518,6 @@ class EmailHandler extends FatModel
             '{new_status}' => $statusArr[$d['bcontributions_status']],
             '{posted_on_datetime}' => $d['bcontributions_added_on'],
         );
-
         if (self::sendMailTpl($d['bcontributions_author_email'], $tpl, $langId, $vars)) {
             return true;
         }
@@ -586,7 +535,6 @@ class EmailHandler extends FatModel
             '{comment}' => $d['bpcomment_content'],
             '{posted_on_datetime}' => $d['bpcomment_added_on'],
         );
-
         if (self::sendMailTpl($d['bpcomment_author_email'], $tpl, $langId, $vars)) {
             return true;
         }
@@ -596,14 +544,12 @@ class EmailHandler extends FatModel
     public function sendEmailChangeVerificationLink($langId, $data)
     {
         $tpl = 'user_email_change_verification';
-
         $vars = array(
             '{user_first_name}' => $data['user_first_name'],
             '{user_last_name}' => $data['user_last_name'],
             '{user_full_name}' => $data['user_first_name'] . ' ' . $data['user_last_name'],
             '{verification_url}' => $data['link'],
         );
-
         if (self::sendMailTpl($data['user_email'], $tpl, $langId, $vars)) {
             return true;
         }
@@ -618,7 +564,6 @@ class EmailHandler extends FatModel
             '{user_full_name}' => $data['user_full_name'],
             '{lessons_details}' => $data['lessons_details'],
         );
-
         if (self::sendMailTpl($data['user_email'], $templete, $langId, $LearnerVars)) {
             return true;
         }
@@ -632,47 +577,42 @@ class EmailHandler extends FatModel
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
-
         $srch->addMultipleFields(
-            array(
-                'utrequest_id',
-                'utrequest_user_id',
-                'utrequest_reference',
-                'utrequest_date',
-                'utrequest_attempts',
-                'utrequest_comments',
-                'utrequest_status',
-                'utrvalue_user_first_name',
-                'utrvalue_user_last_name',
-                'utrvalue_user_gender',
-                'utrvalue_user_phone',
-                'utrvalue_user_video_link',
-                'utrvalue_user_profile_info',
-                'utrvalue_user_teach_slanguage_id',
-                'utrvalue_user_language_speak',
-                'utrvalue_user_language_speak_proficiency',
-                'count(utrequest_id) as totalRequest'
-            )
+                array(
+                    'utrequest_id',
+                    'utrequest_user_id',
+                    'utrequest_reference',
+                    'utrequest_date',
+                    'utrequest_attempts',
+                    'utrequest_comments',
+                    'utrequest_status',
+                    'utrvalue_user_first_name',
+                    'utrvalue_user_last_name',
+                    'utrvalue_user_gender',
+                    'utrvalue_user_phone',
+                    'utrvalue_user_video_link',
+                    'utrvalue_user_profile_info',
+                    'utrvalue_user_teach_slanguage_id',
+                    'utrvalue_user_language_speak',
+                    'utrvalue_user_language_speak_proficiency',
+                    'count(utrequest_id) as totalRequest'
+                )
         );
         $srch->addGroupBy('utrequest_id');
         $rs = $srch->getResultSet();
         $reqData = FatApp::getDb()->fetch($rs);
-
         if (!$reqData) {
             $this->error = Label::getLabel('MSG_Invalid_Request', $this->commonLangId);
             return false;
         }
         $subjectIds = json_decode($reqData['utrvalue_user_teach_slanguage_id']);
-
         $teachingLanguagesArr = TeachingLanguage::getAllLangs($this->commonLangId);
-
         $subjectNames = array_map(
-            function ($n) use ($teachingLanguagesArr) {
-                return $teachingLanguagesArr[$n];
-            },
-            $subjectIds
+                function ($n) use ($teachingLanguagesArr) {
+            return $teachingLanguagesArr[$n];
+        },
+                $subjectIds
         );
-
         $tpl = 'tpl_teacher_request_received';
         $vars = array(
             '{refnum}' => $reqData['utrequest_reference'],
@@ -681,7 +621,6 @@ class EmailHandler extends FatModel
             '{request_date}' => $reqData['utrequest_date'],
             '{subjects}' => implode(',', $subjectNames),
         );
-
         $to = FatApp::getConfig('CONF_SITE_OWNER_EMAIL');
         if (self::sendMailTpl($to, $tpl, $this->commonLangId, $vars)) {
             return true;
@@ -716,4 +655,5 @@ class EmailHandler extends FatModel
         }
         return false;
     }
+
 }

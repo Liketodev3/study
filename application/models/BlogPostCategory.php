@@ -1,12 +1,13 @@
 <?php
+
 class BlogPostCategory extends MyAppModel
 {
+
     const DB_TBL = 'tbl_blog_post_categories';
     const DB_TBL_PREFIX = 'bpcategory_';
     const DB_TBL_LANG = 'tbl_blog_post_categories_lang';
     const DB_LANG_TBL_PREFIX = 'bpcategorylang_';
     const REWRITE_URL_PREFIX = 'blog/category/';
-    private $db;
 
     public function __construct($id = 0)
     {
@@ -353,4 +354,5 @@ class BlogPostCategory extends MyAppModel
         }
         return false;
     }
+
 }

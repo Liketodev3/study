@@ -1,6 +1,8 @@
 <?php
+
 class PayGatePayController extends PaymentController
 {
+
     protected $keyName = "PayGate";
     private $initiateUrl = 'https://secure.paygate.co.za/payweb3/initiate.trans';
     private $processUrl = 'https://secure.paygate.co.za/payweb3/process.trans';
@@ -27,12 +29,11 @@ class PayGatePayController extends PaymentController
 
     public function charge(string $orderId = '')
     {
-
         if ($orderId == '') {
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
             CommonHelper::redirectUserReferer();
         }
-        $this->settings =  $this->getSettings();
+        $this->settings = $this->getSettings();
         if ($this->isError()) {
             Message::addErrorMessage($this->getError());
             CommonHelper::redirectUserReferer();
@@ -41,7 +42,6 @@ class PayGatePayController extends PaymentController
         $paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
         $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
         if (empty($orderInfo) || $orderInfo["order_is_paid"] != Order::ORDER_IS_PENDING) {
-
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId));
             CommonHelper::redirectUserReferer();
         }
@@ -63,25 +63,25 @@ class PayGatePayController extends PaymentController
 
     private function initiate(): array
     {
-        $settings =  $this->settings;
+        $settings = $this->settings;
         $orderInfo = $this->orderInfo;
         $orderId = $orderInfo['order_id'];
         $dateTime = new DateTime();
         $requestData = array(
             'PAYGATE_ID' => $settings['paygateId'],
             'REFERENCE' => $orderId,
-            'AMOUNT'    => $this->formatPayableAmount($orderInfo['paymentAmount']),
-            'CURRENCY'  => $orderInfo["order_currency_code"], // system currency code
+            'AMOUNT' => $this->formatPayableAmount($orderInfo['paymentAmount']),
+            'CURRENCY' => $orderInfo["order_currency_code"], // system currency code
             'RETURN_URL' => CommonHelper::generateFullUrl('PayGatePay', 'returnResult', array($orderId)),
             'TRANSACTION_DATE' => $dateTime->format('Y-m-d H:i:s'),
             'LOCALE' => strtolower($orderInfo['order_language_code']),
             'COUNTRY' => 'ZAF',
-            'EMAIL'  => $orderInfo['user_email'],
-            'NOTIFY_URL' =>  CommonHelper::generateFullUrl('PayGatePay', 'callback')
+            'EMAIL' => $orderInfo['user_email'],
+            'NOTIFY_URL' => CommonHelper::generateFullUrl('PayGatePay', 'callback')
         );
-        $checksum  = $this->generateChecksum($requestData, $settings['encryptionKey']);
+        $checksum = $this->generateChecksum($requestData, $settings['encryptionKey']);
         $requestData['CHECKSUM'] = $checksum;
-        $initiateRequestData =  $this->doCurlPost($requestData, $this->initiateUrl);
+        $initiateRequestData = $this->doCurlPost($requestData, $this->initiateUrl);
         if ($this->isError()) {
             return array();
         }
@@ -95,7 +95,7 @@ class PayGatePayController extends PaymentController
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
             FatApp::redirectUser(CommonHelper::getPaymentCancelPageUrl());
         }
-        $this->settings =  $this->getSettings();
+        $this->settings = $this->getSettings();
         if ($this->isError()) {
             Message::addErrorMessage($this->getError());
             FatApp::redirectUser(CommonHelper::getPaymentCancelPageUrl());
@@ -121,7 +121,7 @@ class PayGatePayController extends PaymentController
             FatApp::redirectUser(CommonHelper::getPaymentCancelPageUrl());
         }
         if ($transactionStatus != self::STATUS_APPROVED) {
-            $statusArr =  $this->getTransactionStatus();
+            $statusArr = $this->getTransactionStatus();
             Message::addErrorMessage(Label::getLabel('MSG_Your_Paymet_Status_' . $statusArr[$transactionStatus]));
             FatApp::redirectUser(CommonHelper::getPaymentCancelPageUrl());
         }
@@ -135,7 +135,7 @@ class PayGatePayController extends PaymentController
         if (empty($postData)) {
             die(Label::getLabel('MSG_INVALID_REQUEST'));
         }
-        $settings =  $this->getSettings();
+        $settings = $this->getSettings();
         if ($this->isError()) {
             die($this->getError());
         }
@@ -143,23 +143,23 @@ class PayGatePayController extends PaymentController
         $payRequestId = FatApp::getPostedData('PAY_REQUEST_ID', FatUtility::VAR_STRING, '');
         $orderPayment = new OrderPayment($orderId, $this->siteLangId);
         $orderInfo = $orderPayment->getOrderPrimaryinfo();
-        if (empty($orderInfo) ||  $orderInfo["order_is_paid"] != Order::ORDER_IS_PENDING) {
+        if (empty($orderInfo) || $orderInfo["order_is_paid"] != Order::ORDER_IS_PENDING) {
             die(Label::getLabel('MSG_INVALID_REQUEST', $this->siteLangId));
         }
         $paymentAmount = $orderPayment->getOrderPaymentGatewayAmount();
         $queryData = array(
-            'PAYGATE_ID'     => $settings['paygateId'],
+            'PAYGATE_ID' => $settings['paygateId'],
             'PAY_REQUEST_ID' => $payRequestId,
-            'REFERENCE'      => $orderId
+            'REFERENCE' => $orderId
         );
-        $checksum =  $this->generateChecksum($queryData, $settings['encryptionKey']);
+        $checksum = $this->generateChecksum($queryData, $settings['encryptionKey']);
         $queryData['CHECKSUM'] = $checksum;
         $queryResponseData = $this->doCurlPost($queryData, $this->queryUrl);
         if ($this->isError()) {
             die($this->getError());
         }
         if (isset($queryResponseData['TRANSACTION_STATUS'])) {
-            $status =  $queryResponseData['TRANSACTION_STATUS'];
+            $status = $queryResponseData['TRANSACTION_STATUS'];
             switch ($queryResponseData['TRANSACTION_STATUS']) {
                 case self::STATUS_APPROVED:
                     $status = Order::ORDER_IS_PAID;
@@ -187,14 +187,14 @@ class PayGatePayController extends PaymentController
         return $this->error;
     }
 
-    private  function isError()
+    private function isError()
     {
         return $this->isError;
     }
 
     private function getTransactionStatus(): array
     {
-        return  array(
+        return array(
             self::STATUS_APPROVED => Label::getLabel('LBL_Approved'), // in used
             self::STATUS_DECLINED => Label::getLabel('LBL_Declined'), // in used
             self::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled'),
@@ -217,7 +217,7 @@ class PayGatePayController extends PaymentController
         $curlResult = curl_exec($ch);
         if (curl_errno($ch)) {
             $this->isError = true;
-            $this->error =  'Error:' . curl_error($ch);
+            $this->error = 'Error:' . curl_error($ch);
             return array();
         }
         curl_close($ch);
@@ -253,17 +253,16 @@ class PayGatePayController extends PaymentController
         $checksum = $this->generateChecksum($data, $encryptionKey);
         if ($returnedChecksum != $checksum) {
             $this->isError = true;
-            $this->error =  Label::getLabel('MSG_CHECKSUM_NOT_VALID', $this->siteLangId);
+            $this->error = Label::getLabel('MSG_CHECKSUM_NOT_VALID', $this->siteLangId);
             return false;
         }
         return true;
     }
 
-
     private function getSettings(): array
     {
         $paymentSetting = new PaymentSettings($this->keyName);
-        $getSettings =  $paymentSetting->getPaymentSettings();
+        $getSettings = $paymentSetting->getPaymentSettings();
         if (empty($getSettings['paygateId']) || empty($getSettings['encryptionKey'])) {
             $this->isError = true;
             $this->error = Label::getLabel('MSG_Encryption_Key_And_Paygate_Id_is_required_for_payment');
@@ -279,4 +278,5 @@ class PayGatePayController extends PaymentController
         $form->addHiddenField('', 'CHECKSUM', $checksum);
         return $form;
     }
+
 }

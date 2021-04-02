@@ -1,6 +1,8 @@
 <?php
+
 class EmailsController extends MyAppController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -33,4 +35,5 @@ class EmailsController extends MyAppController
         echo $data['emailarchive_body'];
         die;
     }
+
 }

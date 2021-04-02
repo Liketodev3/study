@@ -1,13 +1,14 @@
 <?php
+
 class TwocheckoutPayController extends PaymentController
 {
+
     protected $keyName = "Twocheckout";
     private $paymentType = "API"; //holds two values HOSTED or API
 
     public function __construct($action)
     {
         parent::__construct($action);
-
         if (!is_array($this->allowedCurrenciesArr())) {
             $this->setErrorAndRedirect(Label::getLabel('MSG_INVALID_CURRENCY_FORMAT', $this->siteLangId));
         }
@@ -32,7 +33,6 @@ class TwocheckoutPayController extends PaymentController
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
         $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
-
         if (!$orderInfo['order_id']) {
             FatUtility::exitWIthErrorCode(404);
         } elseif ($orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
@@ -48,7 +48,6 @@ class TwocheckoutPayController extends PaymentController
         } else {
             $this->set('error', Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId));
         }
-
         $cancelBtnUrl = CommonHelper::getPaymentCancelPageUrl();
         if ($orderInfo['order_type'] == Order::TYPE_WALLET_RECHARGE) {
             $cancelBtnUrl = CommonHelper::getPaymentFailurePageUrl();
@@ -205,11 +204,12 @@ class TwocheckoutPayController extends PaymentController
     public function validateSettings(): bool
     {
         if (
-            empty($this->settings['sellerId']) || empty($this->settings['publishableKey']) ||
-            empty($this->settings['privateKey']) || empty($this->settings['hashSecretWord'])
+                empty($this->settings['sellerId']) || empty($this->settings['publishableKey']) ||
+                empty($this->settings['privateKey']) || empty($this->settings['hashSecretWord'])
         ) {
             return false;
         }
         return true;
     }
+
 }

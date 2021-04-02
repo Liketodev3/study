@@ -1,10 +1,11 @@
 <?php
+
 class SpokenLanguage extends MyAppModel
 {
+
     const DB_TBL = 'tbl_spoken_languages';
     const DB_TBL_LANG = 'tbl_spoken_languages_lang';
     const DB_TBL_PREFIX = 'slanguage_';
-
     const PROFICIENCY_TOTAL_BEGINNER = 1;
     const PROFICIENCY_BEGINNER = 2;
     const PROFICIENCY_UPPER_BEGINNER = 3;
@@ -19,18 +20,18 @@ class SpokenLanguage extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getSearchObject($langId = 0, $active =  true)
+    public static function getSearchObject($langId = 0, $active = true)
     {
         $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 't');
 
         if ($langId > 0) {
             $srch->joinTable(
-                static::DB_TBL_LANG,
-                'LEFT OUTER JOIN',
-                't_l.slanguagelang_slanguage_id = t.slanguage_id
+                    static::DB_TBL_LANG,
+                    'LEFT OUTER JOIN',
+                    't_l.slanguagelang_slanguage_id = t.slanguage_id
 			AND slanguagelang_lang_id = ' . $langId,
-                't_l'
+                    't_l'
             );
         }
         if ($active == true) {
@@ -89,7 +90,7 @@ class SpokenLanguage extends MyAppModel
         $spokenLangSrch->addChecks();
         $spokenLangSrch->joinActiveTeachers();
 
-        $spokenLangSrch->addMultiplefields(array('slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name','count(DISTINCT utl_us_user_id) as teacherCount'));
+        $spokenLangSrch->addMultiplefields(array('slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name', 'count(DISTINCT utl_us_user_id) as teacherCount'));
         $spokenLangSrch->addGroupBy('utl_slanguage_id');
         $spokenLangSrch->addCondition('user_is_teacher', '=', 1);
         $spokenLangSrch->addCondition('user_country_id', '>', 0);
@@ -111,7 +112,7 @@ class SpokenLanguage extends MyAppModel
 
         /* user preferences/skills[ */
         $skillSrch = new UserToPreferenceSearch();
-        $skillSrch->addMultipleFields(array('utpref_user_id','GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids'));
+        $skillSrch->addMultipleFields(array('utpref_user_id', 'GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids'));
         $skillSrch->addGroupBy('utpref_user_id');
         $spokenLangSrch->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
         /* ] */
@@ -123,15 +124,4 @@ class SpokenLanguage extends MyAppModel
         return $spokenLanguagesArr;
     }
 
-    /* public static function getLangById($sLangId  ){
-        $sLangId = FatUtility::int($sLangId);
-        $langId = CommonHelper::getLangId();
-        $spokenLangSrch = new SpokenLanguageSearch( $langId );
-        $spokenLangSrch->doNotCalculateRecords();
-        $spokenLangSrch->addMultiplefields( array('slanguage_code') );
-        $spokenLangSrch->addCondition('slanguage_id','=',$sLangId);
-        $rs = $spokenLangSrch->getResultSet();
-        $spokenLanguagesArr = FatApp::getDb()->fetch( $rs );
-        return strtolower($spokenLanguagesArr['slanguage_code']);
-    } */
 }

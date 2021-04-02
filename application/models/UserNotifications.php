@@ -2,6 +2,7 @@
 
 class UserNotifications extends FatModel
 {
+
     const DB_TBL = "tbl_notifications";
     const DB_TBL_PREFIX = "notification_";
     const NOTIFICATION_NOT_READ = 0;
@@ -81,7 +82,6 @@ class UserNotifications extends FatModel
             $title = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_TEACHER", CommonHelper::getLangId());
             $description = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -100,7 +100,6 @@ class UserNotifications extends FatModel
             $title = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_LEARNER", CommonHelper::getLangId());
             $description = Label::getLabel("LABEL_LESSON_SCHEDULED_BY_LEARNER_DESCRIPTION", CommonHelper::getLangId());
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -129,52 +128,32 @@ class UserNotifications extends FatModel
     {
         $this->type = self::NOTICATION_FOR_ORDER_RECIEVED;
         $this->recordId = $orderId;
-        $userCompanyName  = User::getAttributesById($orderUserId, 'user_company_name');
+        $userCompanyName = User::getAttributesById($orderUserId, 'user_company_name');
         $title = sprintf(Label::getLabel("LABEL_ORDER_NO_%s_HAS_BEEN_CANCELLED_BY_%s", CommonHelper::getLangId()), $orderId, $userCompanyName);
         $description = sprintf("Reason: %s", $comment);
-
         $this->sendFCMNotificationToUsers($title, $description);
-
         $orderStatus = Orders::getOrderStatus($orderId, CommonHelper::getLangId());
-
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             //return false;
         }
-
         $emailHandler = new EmailHandler();
-        /*
-        if ($this->isEmailNotificationAllowed() && !$emailHandler->orderStatusUpdateEmailToSeller($orderId,$comment)) {
-            //return false;
-        }
-        */
         if (!$this->addNotification($title, $description)) {
             return false;
         }
         return true;
     }
 
-
-
     public function sendOrderProductInStockNotification($sellerProductId, $productName, $sellerName)
     {
         $this->recordId = $sellerProductId;
-
         $title = sprintf(Label::getLabel("LABEL_INSTOCK_NOTIFICATION_TITLE_%s", CommonHelper::getLangId()), $productName);
         $description = sprintf(Label::getLabel("LABEL_INSTOCK__NOTIFICATION_DESCRIPTION_FOR_Product_Name_%s_BY_SELLER_%s", CommonHelper::getLangId()), $sellerName, $productName);
-
-
         $this->sendFCMNotificationToUsers($title, $description);
-
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             // return false;
         }
-
-
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -185,26 +164,17 @@ class UserNotifications extends FatModel
     {
         $this->type = self::NOTICATION_FOR_ORDER_RECIEVED;
         $this->recordId = $orderId;
-
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_ORDER_NO_%s_HAS_BEEN_RECIEVED", CommonHelper::getLangId()), $orderId);
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_YOUR_ORDER_RECIVED_DESCRIPTION:%s", CommonHelper::getLangId()), $orderId);
-
         $this->sendFCMNotificationToUsers($title, $description);
-
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             // return false;
         }
-
         $emailHandler = new EmailHandler();
-
         if ($this->isEmailNotificationAllowed() && !$emailHandler->newOrderEmailToSeller($orderId)) {
             //return false;
         }
-
-
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -215,26 +185,17 @@ class UserNotifications extends FatModel
     {
         $this->type = self::NOTICATION_FOR_ORDER_STATUS_UPDATE;
         $this->recordId = $orderId;
-
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_ORDER_NO_%s_HAS_BEEN_PLACED", CommonHelper::getLangId()), $orderId);
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_YOUR_ORDER_PLACED_DESCRIPTION:%s", CommonHelper::getLangId()), $orderId);
-
         $this->sendFCMNotificationToUsers($title, $description);
-
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             // return false;
         }
-
         $emailHandler = new EmailHandler();
-
         if ($this->isEmailNotificationAllowed() && !$emailHandler->newOrderEmailToSeller($orderId)) {
             //return false;
         }
-
-
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -246,24 +207,18 @@ class UserNotifications extends FatModel
         return true;
         $this->type = self::NOTICATION_FOR_REVIEW_STATUS_UPDATED_TO_SELLER;
         $this->recordId = $orderId;
-
         $reviewId = $data['reveiwId'];
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_NEW_REVIEW_%s", CommonHelper::getLangId()), $orderId);
         $description = Label::getLabel("LABEL_NOTIFICATION_DESC_NEW_REVIEW", CommonHelper::getLangId());
-
         $this->sendFCMNotificationToUsers($title, $description);
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             //return false;
         }
-
         $emailHandler = new EmailHandler();
-
         if ($this->isEmailNotificationAllowed() && !$emailHandler->sendSellerReviewNotification($reviewId, CommonHelper::getLangId())) {
             //return false;
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -279,20 +234,15 @@ class UserNotifications extends FatModel
         $reviewId = $data['reveiwId'];
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_YOUR_ORDER_REVIEW_STATUS_CHANGE_%s", CommonHelper::getLangId()), $orderId);
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_ORDER_REVIEW_STATUS_CHANGED_TO_%s", CommonHelper::getLangId()), $statusName);
-
         $this->sendFCMNotificationToUsers($title, $description);
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             //return false;
         }
-
         $emailHandler = new EmailHandler();
-
         if ($this->isEmailNotificationAllowed() && !$emailHandler->sendBuyerReviewStatusUpdatedNotification($reviewId, CommonHelper::getLangId())) {
             //return false;
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -306,23 +256,17 @@ class UserNotifications extends FatModel
         $statusName = $data['statusName'];
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_YOUR_ORDER_STATUS_CHANGE_%s", CommonHelper::getLangId()), $orderId);
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_ORDER_STATUS_CHANGED_TO_%s", CommonHelper::getLangId()), $statusName);
-
         $this->sendFCMNotificationToUsers($title, $description);
-
         $orderStatus = Orders::getOrderStatus($orderId, CommonHelper::getLangId());
         $smsTxt = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_YOUR_ORDER_DATA_CHANGED_SMS_%s_%s", CommonHelper::getLangId()), $orderId, $orderStatus);
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $smsTxt)) {
             //return false;
         }
-
         $emailHandler = new EmailHandler();
-
         if ($this->isEmailNotificationAllowed() && !$emailHandler->orderStatusUpdateEmailToSeller($orderId)) {
             //return false;
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -333,26 +277,18 @@ class UserNotifications extends FatModel
     {
         $this->type = self::NOTICATION_FOR_ORDER_NOT_UPDATED;
         $this->recordId = 0;
-
         $ordersCount = count($orderList);
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_YOUR_ORDER_STATUS_NOT_CHANGED_%d", CommonHelper::getLangId()), $ordersCount);
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_DESC_ORDER_STATUS_NOT_CHANGED_%d", CommonHelper::getLangId()), $ordersCount);
-
-
         $this->sendFCMNotificationToUsers($title, $description);
-
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             // return false;
         }
-
         $emailHandler = new EmailHandler();
-
         if ($this->isEmailNotificationAllowed() && !$emailHandler->orderNotUpdatedEmailToSeller($this->userId, $ordersCount)) {
             //return false;
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -363,18 +299,14 @@ class UserNotifications extends FatModel
     {
         $this->type = self::NOTICATION_FOR_ORDER_NOT_COMPLETED;
         $this->recordId = 0;
-
         $ordersCount = count($orderList);
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_YOUR_ORDER_NOT_COMPLETED_%d", CommonHelper::getLangId()), $ordersCount);
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_DESC_ORDER_NOT_COMPLETED_%d", CommonHelper::getLangId()), $ordersCount);
-
         $this->sendFCMNotificationToUsers($title, $description);
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             // return false;
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -387,22 +319,15 @@ class UserNotifications extends FatModel
         $this->recordId = $orderId;
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_YOUR_ORDER_DATA_CHANGED_%s", CommonHelper::getLangId()), $orderId);
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_DESC_ORDER_DATA_CHANGED_%s", CommonHelper::getLangId()), $orderId);
-
-
         $this->sendFCMNotificationToUsers($title, $description);
-
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             // return false;
         }
-
         $emailHandler = new EmailHandler();
-
         if ($this->isEmailNotificationAllowed() && !$emailHandler->orderUpdateEmailToBuyer($orderId)) {
             //return false;
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -419,16 +344,11 @@ class UserNotifications extends FatModel
         $expiryDate = FatDate::format($latestLicenseInfo['license_expiry_date']);
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_TITLE_YOUR_LICENSE_WILL_EXPIRE_ON_%s", CommonHelper::getLangId()), $expiryDate);
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_DESC_YOUR_LICENSE_WILL_EXPIRE_ON_%s", CommonHelper::getLangId()), $expiryDate);
-
-
         $this->sendFCMNotificationToUsers($title, $description);
-
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             // return false;
         }
-
         $emailHandler = new EmailHandler();
         if ($this->isEmailNotificationAllowed() && !$emailHandler->sendLicenseAboutToExpireEmail($this->userId)) {
             //return false;
@@ -436,7 +356,6 @@ class UserNotifications extends FatModel
         if (!$this->addNotification($title, $description)) {
             return false;
         }
-
         return true;
     }
 
@@ -444,24 +363,16 @@ class UserNotifications extends FatModel
     {
         $this->type = self::NOTICATION_FOR_ORDER_DELIVERY_DATE_UPDATE;
         $this->recordId = $orderId;
-
         $deliveryDate = $data['deliveryDate'];
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_YOUR_ORDER_DELIVERY_DATE_SET_%s", CommonHelper::getLangId()), $orderId);
         $smsText = sprintf(Label::getLabel("LABEL_NOTIFICATION_YOUR_ORDER_DELIVERY_DATE_SET_%s_%s", CommonHelper::getLangId()), $orderId, $deliveryDate);
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_DESC_ORDER_DELIVERY_DATE_%s", CommonHelper::getLangId()), $orderId);
-
         $this->sendFCMNotificationToUsers($title, $description);
-
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $smsText)) {
             // return false;
         }
         $emailHandler = new EmailHandler();
-
-        /* if ($this->isEmailNotificationAllowed() && !$emailHandler->orderUpdateEmailToBuyer($orderId)) {
-          //return false;
-          } */
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -472,50 +383,38 @@ class UserNotifications extends FatModel
     {
         $this->recordId = $loyaltyVoucherId;
         $langId = CommonHelper::getLangId();
-
         $srch = LoyaltyVoucher::getSearchObject(true);
         $srch->setPageSize(1);
         $srch->addCondition('loyaltyvoucher_id', '=', $loyaltyVoucherId);
         $srch->addMultipleFields(array('loyaltyvoucher_id', 'loyaltyvoucher_valid_till', 'loyaltyvoucher_code', 'loyaltyvoucher_status', 'loyaltyvoucher_comments', 'user_name', 'credential_email'));
         $rs = $srch->getResultSet();
         $loyaltyVoucherData = FatApp::getDb()->fetch($rs);
-
         if (!$loyaltyVoucherData) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $langId);
             return false;
         }
-
         if ($loyaltyVoucherData['loyaltyvoucher_status'] == LoyaltyVoucher::STATUS_REJECTED) {
             $this->type = self::NOTICATION_FOR_LOYALTY_VOUCHER_STATUS_REJECTED;
         } elseif ($loyaltyVoucherData['loyaltyvoucher_status'] == LoyaltyVoucher::STATUS_APPROVED || $loyaltyVoucherData['loyaltyvoucher_status'] == LoyaltyVoucher::STATUS_REDEEMED) {
             $this->type = self::NOTICATION_FOR_LOYALTY_VOUCHER_STATUS_APPROVED_REDEEMED;
         }
-
         $statusArr = LoyaltyVoucher::getVoucherStatusArr($langId);
         if (!isset($statusArr[$loyaltyVoucherData['loyaltyvoucher_status']])) {
             $this->error = Label::getLabel('MSG_INVALID_LOYALTY_VOUCHER_STATUS', $langId);
             return false;
         }
         $status = $statusArr[$loyaltyVoucherData['loyaltyvoucher_status']];
-
-
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_LOYALTY_VOUCHER_CODE_%s_HAS_BEEN_%s", CommonHelper::getLangId()), $loyaltyVoucherData['loyaltyvoucher_code'], $status);
-
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_YOUR_LOYALTY_VOUCHER_STATUS_UPDATE_DESCRIPTION", CommonHelper::getLangId()), $loyaltyVoucherData['loyaltyvoucher_code'], $status);
-
         $this->sendFCMNotificationToUsers($title, $description);
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             // return false;
         }
-
         $emailHandler = new EmailHandler();
-
         if ($this->isEmailNotificationAllowed() && !$emailHandler->sendLoyaltyVoucherStatusUpdatedNotification($langId, $loyaltyVoucherId)) {
             //return false;
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -526,39 +425,29 @@ class UserNotifications extends FatModel
     {
         $this->recordId = $rewtrxId;
         $langId = CommonHelper::getLangId();
-
         $srch = new RewardPointSearch($langId, true);
         $srch->addMultipleFields(array('rewtrx.*', 'u.user_name', 'uc.credential_email'));
         $rewtrxData = $srch->findBy(array('id' => $rewtrxId), null, 1);
-
         if (!$rewtrxData) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $langId);
             return false;
         }
-
         if ($rewtrxData['rewtrx_type'] == LoyaltyPoint::TYPE_VOUCHER_REJECTED) {
             $this->type = self::NOTICATION_FOR_LOYALTY_POINTS_REFUNDED;
         } else {
             $this->type = self::NOTICATION_FOR_LOYALTY_POINTS_AWARDED;
         }
-
         $title = sprintf(Label::getLabel("LABEL_NOTIFICATION_LOYALTY_POINTS_%s_HAVE_BEEN_AWARDED", CommonHelper::getLangId()), $rewtrxData['rewtrx_amount']);
-
         $description = sprintf(Label::getLabel("LABEL_NOTIFICATION_YOUR_LOYALTY_POINTS_HAVE_BEEN_AWARDED_DESCRIPTION_%s", CommonHelper::getLangId()), $rewtrxData['rewtrx_desc']);
-
         $this->sendFCMNotificationToUsers($title, $description, true);
-
         $phoneNo = $this->getUserPhoneNo();
         if ($this->isSmsNotificationAllowed() && !$this->sendSmsNotification($phoneNo, $title)) {
             // return false;
         }
-
         $emailHandler = new EmailHandler();
-
         if ($this->isEmailNotificationAllowed() && !$emailHandler->sendRewardPointsNotification($langId, $rewtrxId, $rewtrxData)) {
             // return false;
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -569,28 +458,20 @@ class UserNotifications extends FatModel
     {
         $this->recordId = $surveyId;
         $langId = CommonHelper::getLangId();
-
         if ($surveyId < 1) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $langId);
             return false;
         }
-
         $survey = new Survey($surveyId);
-
         $questionnaireData = $survey->getQuestionnaireData($langId, array());
-
         if (empty($questionnaireData)) {
             $this->error = 'Some data in questionnaire is missing in database.';
             return false;
         }
-
         $this->type = self::NOTICATION_FOR_SURVEY;
-
         $title = $questionnaireData['questionnaire_name'];
-
         $description = Label::getLabel("LABEL_NOTIFICATION_YOU_HAVE_SURVEY_TO_FILL_DESCRIPTION", CommonHelper::getLangId());
         $this->sendFCMNotificationToUsers($title, $description, true);
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -610,7 +491,6 @@ class UserNotifications extends FatModel
     {
         $srch = self::getUserNotifications($userId);
         $srch->addCondition(self::DB_TBL_PREFIX . "id", '=', $notiId);
-
         return FatApp::getDb()->fetch($srch->getResultSet());
     }
 
@@ -631,7 +511,6 @@ class UserNotifications extends FatModel
         $srch->addDirectCondition('uauth_expiry > NOW()');
         $srch->addMultipleFields(array('uauth_token', 'uauth_fcm_id'));
         $rs = $srch->getResultSet();
-
         return FatApp::getDb()->fetchAllAssoc($rs);
     }
 
@@ -645,8 +524,6 @@ class UserNotifications extends FatModel
             'notification_record_type' => $this->type,
             'notification_sub_record_id' => $this->subRecordId,
         );
-
-
         $tableRecord = new TableRecord(self::DB_TBL);
         $tableRecord->assignValues($saveData);
         if ($tableRecord->addNew()) {
@@ -660,14 +537,12 @@ class UserNotifications extends FatModel
         $saveData = array(
             'notification_read' => UserNotifications::NOTIFICATION_READ,
         );
-
         $tableRecord = new TableRecord(self::DB_TBL);
         $tableRecord->assignValues($saveData);
         $where = array('smt' => 'notification_user_id = ? and notification_id = ?', 'vals' => array($this->userId, intval($notificationId)));
         if ($tableRecord->update($where)) {
             return true;
         }
-
         return false;
     }
 
@@ -687,7 +562,6 @@ class UserNotifications extends FatModel
         if (strlen($userPhoneNo) < 10) {
             $userPhoneNo = "0" . $userPhoneNo;
         }
-
         return FatApp::getConfig("CONF_SMS_PHONE_CODE") . $userPhoneNo;
     }
 
@@ -703,7 +577,6 @@ class UserNotifications extends FatModel
         $srch->addCondition(self::DB_TBL_PREFIX . 'read', '=', self::NOTIFICATION_NOT_READ);
         $srch->addCondition(self::DB_TBL_PREFIX . 'record_type', '=', self::NOTICATION_FOR_ORDER_RECIEVED);
         $srch->getResultSet();
-
         return $srch->recordCount();
     }
 
@@ -718,14 +591,12 @@ class UserNotifications extends FatModel
     public function sendFCMNotificationToUsers($title, $description, $forcePush = false)
     {
         $fcmList = $this->getUserFcmIdList();
-
         foreach ($fcmList as $fcmId) {
             if (empty($fcmId)) {
                 continue;
             }
             $fcmNotification = new FcmNotification($fcmId);
             $fcmNotification->setNotificationData($title, $description, $this->type, $this->recordId, $this->isPushNotificationAllowed());
-
             if (($forcePush === true || $this->isPushNotificationAllowed()) && !$fcmNotification->sendNotification()) {
                 //return false;
             }
@@ -743,7 +614,6 @@ class UserNotifications extends FatModel
         return true;
     }
 
-
     public function sendIssueRefundNotification($lessonId, $_step)
     {
         $this->recordId = $lessonId;
@@ -756,15 +626,12 @@ class UserNotifications extends FatModel
                 $title = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER", CommonHelper::getLangId());
                 $description = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER_DESCRIPTION", CommonHelper::getLangId());
                 break;
-
             case IssuesReported::ISSUE_RESOLVE_NOTIFICATION:
                 $this->type = self::NOTICATION_FOR_ISSUE_RESOLVE;
                 $title = Label::getLabel("LABEL_LESSON_ISSUE_RESOLVED_BY_TEACHER", CommonHelper::getLangId());
                 $description = Label::getLabel("LABEL_LESSON_RESOLVED_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());
-
                 break;
         }
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -779,14 +646,10 @@ class UserNotifications extends FatModel
         } else {
             $this->type = self::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER;
         }
-
         $this->recordId = $lessonId;
         $this->subRecordId = $userId;
-
         $title = Label::getLabel("LABEL_LESSON_STATUS_UPDATED", CommonHelper::getLangId());
-
         $description = sprintf(Label::getLabel("LABEL_LESSON_STATUS_UPDATED_TO_%s", CommonHelper::getLangId()), $lessonStatusArray[$status]);
-
         if (!$this->addNotification($title, $description)) {
             return false;
         }
@@ -800,16 +663,15 @@ class UserNotifications extends FatModel
         } else {
             $this->type = self::NOTICATION_FOR_CANCEL_LESSON_BY_LEARNER;
         }
-
         $this->recordId = $lessonId;
         $this->subRecordId = $userId;
         $title = Label::getLabel("LABEL_LESSON_CANCELED", CommonHelper::getLangId());
         $label = Label::getLabel("LBL_LESSON_{lesson-id}_CANCELED_BY_{user-full-name}_Comment:{comment}", CommonHelper::getLangId());
-        $description = str_replace(['{lesson-id}','{user-full-name}','{comment}'], [$lessonId, $userFullName, $comment],  $label);
-    
+        $description = str_replace(['{lesson-id}', '{user-full-name}', '{comment}'], [$lessonId, $userFullName, $comment], $label);
         if (!$this->addNotification($title, $description)) {
             return false;
         }
         return true;
     }
+
 }

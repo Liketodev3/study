@@ -1,9 +1,12 @@
 <?php
+
 class PaystackPayController extends PaymentController
 {
+
     protected $keyName = "Paystack";
     private $error = false;
     private $paymentSettings = false;
+
     private const INITIALIZE_URL = "https://api.paystack.co/transaction/initialize/";
     private const VERIFY_URL = "https://api.paystack.co/transaction/verify/";
 
@@ -46,7 +49,6 @@ class PaystackPayController extends PaymentController
         if ($this->error) {
             $this->set('error', $this->error);
         }
-
         $cancelBtnUrl = CommonHelper::getPaymentCancelPageUrl();
         if ($orderInfo['order_type'] == Order::TYPE_WALLET_RECHARGE) {
             $cancelBtnUrl = CommonHelper::getPaymentFailurePageUrl();
@@ -55,7 +57,6 @@ class PaystackPayController extends PaymentController
         $this->set('orderInfo', $orderInfo);
         $this->set('paymentAmount', $paymentAmount);
         $this->set('exculdeMainHeaderDiv', true);
-        // $this->_template->addCss('css/payment.css');
         $this->_template->render(true, false);
     }
 
@@ -104,7 +105,7 @@ class PaystackPayController extends PaymentController
             return false;
         }
         try {
-            $systemCurrencyCode  = CommonHelper::getSystemCurrencyData()['currency_code'];
+            $systemCurrencyCode = CommonHelper::getSystemCurrencyData()['currency_code'];
             $callbackUrl = CommonHelper::generateFullUrl($this->keyName . 'Pay', "callback", [$orderId]);
             $requestBody = [
                 'email' => $orderInfo['customer_email'],
@@ -128,7 +129,6 @@ class PaystackPayController extends PaymentController
             if (!$response = curl_exec($ch)) {
                 throw new Exception(curl_error($ch));
             }
-
             $payment_response = json_decode($response, true);
             if (false === $payment_response['status']) {
                 throw new Exception($payment_response['message']);
@@ -149,7 +149,6 @@ class PaystackPayController extends PaymentController
     public function callback(string $orderId)
     {
         $this->paymentSettings = $this->getPaymentSettings();
-
         $orderPaymentObj = new OrderPayment($orderId);
         $referenceId = $_REQUEST['reference'];
         try {
@@ -159,7 +158,6 @@ class PaystackPayController extends PaymentController
             Message::addErrorMessage($e->getMessage());
             FatApp::redirectUser(CommonHelper::generateUrl('custom', 'paymentFailed'));
         }
-
         FatApp::redirectUser(CommonHelper::generateUrl('custom', 'paymentSuccess', array($orderId)));
     }
 
@@ -168,7 +166,6 @@ class PaystackPayController extends PaymentController
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, self::VERIFY_URL . rawurlencode($referenceId));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
         $headers = [
             "accept: application/json",
             "authorization: Bearer " . $this->paymentSettings['secret_key'],
@@ -193,7 +190,6 @@ class PaystackPayController extends PaymentController
         $signature = (isset($_SERVER['HTTP_X_PAYSTACK_SIGNATURE']) ? $_SERVER['HTTP_X_PAYSTACK_SIGNATURE'] : '');
         /* It is a good idea to log all events received. Add code *
          * here to log the signature and body to db or file       */
-
         if (!$signature) {
             // only a post with paystack signature header gets our attention
             exit();
@@ -225,7 +221,6 @@ class PaystackPayController extends PaymentController
         if (1 != $paymentResponse['status']) {
             throw new Exception($paymentResponse['message']);
         }
-
         $orderId = $paymentResponse['data']['metadata']['order_id'];
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
@@ -249,4 +244,5 @@ class PaystackPayController extends PaymentController
         }
         return $orderId;
     }
+
 }

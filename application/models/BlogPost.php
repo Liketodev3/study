@@ -1,13 +1,14 @@
 <?php
+
 class BlogPost extends MyAppModel
 {
+
     const DB_TBL = 'tbl_blog_post';
     const DB_TBL_PREFIX = 'post_';
     const DB_LANG_TBL = 'tbl_blog_post_lang';
     const DB_LANG_TBL_PREFIX = 'postlang_';
     const DB_POST_TO_CAT_TBL = 'tbl_blog_post_to_category';
     const DB_POST_TO_CAT_TBL_PREFIX = 'ptc_';
-    private $db;
 
     public function __construct($id = 0)
     {
@@ -21,19 +22,11 @@ class BlogPost extends MyAppModel
         $srch = new SearchBase(static::DB_TBL, 'bp');
         $srch->addOrder('bp.post_published', 'DESC');
         if ($langId > 0) {
-            $srch->joinTable(
-                static::DB_LANG_TBL,
-                'LEFT OUTER JOIN',
-                'bp_l.' . static::DB_LANG_TBL_PREFIX . 'post_id = bp.' . static::tblFld('id') . ' and
-			bp_l.' . static::DB_LANG_TBL_PREFIX . 'lang_id = ' . $langId,
-                'bp_l'
-            );
+            $srch->joinTable(static::DB_LANG_TBL, 'LEFT OUTER JOIN', 'bp_l.' . static::DB_LANG_TBL_PREFIX . 'post_id = bp.' . static::tblFld('id') . ' and bp_l.' . static::DB_LANG_TBL_PREFIX . 'lang_id = ' . $langId, 'bp_l');
         }
         if ($joinCategory) {
             $srch->joinTable(static::DB_POST_TO_CAT_TBL, 'LEFT OUTER JOIN', 'bptc.' . static::DB_POST_TO_CAT_TBL_PREFIX . 'post_id = bp.' . static::tblFld('id'), 'bptc');
-
             $srch->joinTable(BlogPostCategory::DB_TBL, 'LEFT OUTER JOIN', 'bptc.' . static::DB_POST_TO_CAT_TBL_PREFIX . 'bpcategory_id = bpc.' . BlogPostCategory::tblFld('id') . ' and bpc.bpcategory_deleted =0', 'bpc');
-
             if ($langId > 0) {
                 $srch->joinTable(BlogPostCategory::DB_TBL_LANG, 'LEFT OUTER JOIN', 'bpc_l.' . BlogPostCategory::DB_LANG_TBL_PREFIX . 'bpcategory_id = bpc.' . BlogPostCategory::tblFld('id') . ' and bpc_l.' . BlogPostCategory::DB_LANG_TBL_PREFIX . 'lang_id = ' . $langId, 'bpc_l');
             }
@@ -142,4 +135,5 @@ class BlogPost extends MyAppModel
         }
         return true;
     }
+
 }

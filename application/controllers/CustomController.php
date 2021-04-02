@@ -4,14 +4,13 @@ use function GuzzleHttp\json_encode;
 
 class CustomController extends MyAppController
 {
+
     public function paymentFailed()
     {
         $textMessage = Label::getLabel('MSG_learner_failure_order_{contact-us-page-url}');
         $contactUsPageUrl = CommonHelper::generateUrl('contact');
         $textMessage = str_replace('{contact-us-page-url}', $contactUsPageUrl, $textMessage);
-
         $this->set('textMessage', $textMessage);
-
         $this->_template->render();
     }
 
@@ -22,7 +21,6 @@ class CustomController extends MyAppController
             '{dashboard-url}' => CommonHelper::generateUrl('learner'),
             '{contact-us-page-url}' => CommonHelper::generateUrl('contact'),
         );
-
         foreach ($arrReplace as $key => $val) {
             $textMessage = str_replace($key, $val, $textMessage);
         }
@@ -44,17 +42,15 @@ class CustomController extends MyAppController
             $this->set('lessonInfo', $lessonInfo);
         }
         $this->set('textMessage', $textMessage);
-
         $this->_template->render();
     }
+
     public function updateUserCookies()
     {
-
         if (UserAuthentication::isUserLogged()) {
-            $UserCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+            $UserCookieConsent = new UserCookieConsent(UserAuthentication::getLoggedUserId());
             $UserCookieConsent->saveOrUpdateSetting([], false);
         }
-
         CommonHelper::setCookieConsent();
         return true;
     }
@@ -64,25 +60,23 @@ class CustomController extends MyAppController
         FatApp::redirectUser(CommonHelper::generateFullUrl('Custom', 'paymentFailed'));
     }
 
-
     public function cookieForm()
     {
         $cookieForm = $this->getCookieForm();
         if (UserAuthentication::isUserLogged()) {
-            $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+            $userCookieConsent = new UserCookieConsent(UserAuthentication::getLoggedUserId());
             $cookieSetting = $userCookieConsent->getCookieSettings();
-            $cookieSetting =  \json_decode($cookieSetting, true);
+            $cookieSetting = \json_decode($cookieSetting, true);
             $cookieForm->fill($cookieSetting);
         }
-
         $this->set('cookieForm', $cookieForm);
         $this->_template->render(false, false);
     }
 
     protected function getCookieForm()
     {
-        $form =  new Form('cookieForm');
-        $checkboxValue =  applicationConstants::YES;
+        $form = new Form('cookieForm');
+        $checkboxValue = applicationConstants::YES;
         $form->addCheckBox(Label::getLabel('LBL_Necessary'), UserCookieConsent::COOKIE_NECESSARY_FIELD, $checkboxValue, array(), true, 1);
         $form->addCheckBox(Label::getLabel('LBL_Preferences'), UserCookieConsent::COOKIE_PREFERENCES_FIELD, $checkboxValue, array(), true, 0);
         $form->addCheckBox(Label::getLabel('LBL_Statistics'), UserCookieConsent::COOKIE_STATISTICS_FIELD, $checkboxValue, array(), true, 0);
@@ -93,7 +87,6 @@ class CustomController extends MyAppController
     public function saveCookieSetting()
     {
         $cookieForm = $this->getCookieForm();
-
         $data = $cookieForm->getFormDataFromArray(FatApp::getPostedData());
         if ($data == false) {
             Message::addErrorMessage(current($cookieForm->getValidationErrors()));
@@ -102,15 +95,13 @@ class CustomController extends MyAppController
         unset($data['btn_submit']);
         unset($data['necessary']);
         if (UserAuthentication::isUserLogged()) {
-            $userCookieConsent  = new UserCookieConsent(UserAuthentication::getLoggedUserId());
+            $userCookieConsent = new UserCookieConsent(UserAuthentication::getLoggedUserId());
             $userCookieConsent->saveOrUpdateSetting($data, false);
         }
-
         $data = \json_encode($data);
         CommonHelper::setCookieConsent($data);
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Cookie_settings_update_successfully'));
     }
-
 
     public function trialBookedSuccess($orderId = null)
     {
@@ -119,14 +110,12 @@ class CustomController extends MyAppController
             '{dashboard-url}' => CommonHelper::generateUrl('learner'),
             '{contact-us-page-url}' => CommonHelper::generateUrl('contact'),
         );
-
         foreach ($arrReplace as $key => $val) {
             $textMessage = str_replace($key, $val, $textMessage);
         }
         if ($orderId) {
             $orderObj = new Order();
             $order = $orderObj->getOrderById($orderId);
-
             if (isset($order['order_type'])) {
                 $this->set('orderType', $order['order_type']);
             }
@@ -146,4 +135,5 @@ class CustomController extends MyAppController
     {
         $this->_template->render();
     }
+
 }

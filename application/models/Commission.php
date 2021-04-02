@@ -1,9 +1,12 @@
 <?php
+
 class Commission extends MyAppModel
 {
+
     const DB_TBL = 'tbl_commission_settings';
     const DB_TBL_PREFIX = 'commsetting_';
     const DB_TBL_HISTORY = 'tbl_commission_setting_history';
+
     private $db;
 
     public function __construct($id = 0)
@@ -18,7 +21,7 @@ class Commission extends MyAppModel
     public static function getSearchObject()
     {
         $srch = new SearchBase(static::DB_TBL, 'tcs');
-        $srch->addOrder('tcs.'. static::DB_TBL_PREFIX .'is_mandatory', 'DESC');
+        $srch->addOrder('tcs.' . static::DB_TBL_PREFIX . 'is_mandatory', 'DESC');
         return $srch;
     }
 
@@ -75,10 +78,10 @@ class Commission extends MyAppModel
         $srch->joinTable('tbl_user_credentials', 'LEFT OUTER JOIN', 'tuc.credential_user_id = tu.user_id', 'tuc');
         $srch->addCondition('tcs.commsetting_deleted', '=', FatUtility::int($trashed));
         $srch->addMultipleFields(
-            array(
-                'tcs.*',
-                'CONCAT(tu.user_first_name," ",tu.user_last_name) as vendor'
-            )
+                array(
+                    'tcs.*',
+                    'CONCAT(tu.user_first_name," ",tu.user_last_name) as vendor'
+                )
         );
         return $srch;
     }
@@ -91,10 +94,10 @@ class Commission extends MyAppModel
         $srch->joinTable('tbl_user_credentials', 'LEFT OUTER JOIN', 'tuc.credential_user_id = tu.user_id', 'tuc');
         $srch->addCondition('tcsh.csh_commsetting_deleted', '=', FatUtility::int($trashed));
         $srch->addMultipleFields(
-            array(
-                'tcsh.*',
-                'CONCAT(tu.user_first_name," ",tu.user_last_name) as vendor'
-            )
+                array(
+                    'tcsh.*',
+                    'CONCAT(tu.user_first_name," ",tu.user_last_name) as vendor'
+                )
         );
         return $srch;
     }
@@ -111,12 +114,12 @@ class Commission extends MyAppModel
         return $row['commsetting_id'];
     }
 
-    public static function getTeacherCommission($userId, $grpclsId=0)
+    public static function getTeacherCommission($userId, $grpclsId = 0)
     {
         $srch = self::getSearchObject();
         $srch->addCondition('commsetting_user_id', '=', $userId);
         $srch->addCondition('commsetting_deleted', '=', applicationConstants::NO);
-        if($grpclsId>0){
+        if ($grpclsId > 0) {
             $srch->addCondition('commsetting_is_grpcls', '=', applicationConstants::YES);
         }
         $srch->addMultipleFields(array('commsetting_id', 'commsetting_fees'));
@@ -125,7 +128,7 @@ class Commission extends MyAppModel
             $srch = self::getSearchObject();
             $srch->addCondition('commsetting_user_id', '=', 0);
             $srch->addCondition('commsetting_deleted', '=', applicationConstants::NO);
-            if($grpclsId>0){
+            if ($grpclsId > 0) {
                 $srch->addCondition('commsetting_is_grpcls', '=', applicationConstants::YES);
             }
             $srch->addMultipleFields(array('commsetting_id', 'commsetting_fees'));
@@ -137,4 +140,5 @@ class Commission extends MyAppModel
         }
         return $row;
     }
+
 }

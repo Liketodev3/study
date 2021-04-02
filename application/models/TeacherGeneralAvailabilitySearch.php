@@ -1,6 +1,8 @@
 <?php
+
 class TeacherGeneralAvailabilitySearch extends SearchBase
 {
+
     public function __construct($doNotCalculateRecords = true)
     {
         $this->db = FatApp::getDb();
@@ -9,4 +11,5 @@ class TeacherGeneralAvailabilitySearch extends SearchBase
             $this->doNotCalculateRecords();
         }
     }
+
 }

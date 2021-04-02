@@ -1,10 +1,11 @@
 <?php
+
 class LessonPlan extends MyAppModel
 {
+
     const DB_TBL = 'tbl_teachers_lessons_plan';
     const DB_TBL_LANG = 'tbl_teachers_lessons_plan_lang';
     const DB_TBL_PREFIX = 'tlpn_';
-
     const LEVEL_BEGINNER = 1;
     const LEVEL_UPPER_BEGINNER = 2;
     const LEVEL_INTERMEDIATE = 3;
@@ -19,11 +20,11 @@ class LessonPlan extends MyAppModel
     public static function getDifficultyArr()
     {
         return array(
-            static::LEVEL_BEGINNER	=>	Label::getLabel('LBL_Beginner'),
-            static::LEVEL_UPPER_BEGINNER	=>	Label::getLabel('LBL_Upper_Beginner'),
-            static::LEVEL_INTERMEDIATE	=>	Label::getLabel('LBL_Intermediate'),
-            static::LEVEL_UPPER_INTERMEDIATE	=>	Label::getLabel('LBL_Upper_Intermediate'),
-            static::LEVEL_ADVANCED	=>	Label::getLabel('LBL_Advanced'),
+            static::LEVEL_BEGINNER => Label::getLabel('LBL_Beginner'),
+            static::LEVEL_UPPER_BEGINNER => Label::getLabel('LBL_Upper_Beginner'),
+            static::LEVEL_INTERMEDIATE => Label::getLabel('LBL_Intermediate'),
+            static::LEVEL_UPPER_INTERMEDIATE => Label::getLabel('LBL_Upper_Intermediate'),
+            static::LEVEL_ADVANCED => Label::getLabel('LBL_Advanced'),
         );
     }
 
@@ -35,4 +36,5 @@ class LessonPlan extends MyAppModel
         $rs = $srchPlan->getResultSet();
         return $countPlan = $srchPlan->recordCount();
     }
+
 }

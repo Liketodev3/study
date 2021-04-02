@@ -1,6 +1,8 @@
 <?php
+
 class ContentPage extends MyAppModel
 {
+
     const DB_TBL = 'tbl_content_pages';
     const DB_TBL_PREFIX = 'cpage_';
     const DB_TBL_LANG = 'tbl_content_pages_lang';
@@ -10,11 +12,11 @@ class ContentPage extends MyAppModel
     const CONTENT_PAGE_LAYOUT1_TYPE = 1;
     const CONTENT_PAGE_LAYOUT2_TYPE = 2;
     const CONTENT_PAGE_LAYOUT1_BLOCK_COUNT = 2;
-    const CONTENT_PAGE_LAYOUT1_BLOCK_1 = 1 ;
-    const CONTENT_PAGE_LAYOUT1_BLOCK_2 = 2 ;
-    const CONTENT_PAGE_LAYOUT1_BLOCK_3 = 3 ;
-    const CONTENT_PAGE_LAYOUT1_BLOCK_4 = 4 ;
-    const CONTENT_PAGE_LAYOUT1_BLOCK_5 = 5 ;
+    const CONTENT_PAGE_LAYOUT1_BLOCK_1 = 1;
+    const CONTENT_PAGE_LAYOUT1_BLOCK_2 = 2;
+    const CONTENT_PAGE_LAYOUT1_BLOCK_3 = 3;
+    const CONTENT_PAGE_LAYOUT1_BLOCK_4 = 4;
+    const CONTENT_PAGE_LAYOUT1_BLOCK_5 = 5;
 
     public function __construct($epageId = 0)
     {
@@ -25,7 +27,7 @@ class ContentPage extends MyAppModel
     {
         $cPageData = static::getAttributesById($cPageId);
         if ($cPageData == false) {
-            return false ;
+            return false;
         }
         if ($langId > 0) {
             $cPageLangData = static::getAttributesByLangId($langId, $cPageId);
@@ -42,9 +44,9 @@ class ContentPage extends MyAppModel
         $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 'p');
         if ($langId > 0) {
-            $srch->joinTable(static::DB_TBL_LANG, 'LEFT OUTER JOIN', 'p_l.'. static::DB_TBL_LANG_PREFIX .'cpage_id = p.'.static::tblFld('id').' and p_l.'. static::DB_TBL_LANG_PREFIX .'lang_id = '. $langId, 'p_l');
+            $srch->joinTable(static::DB_TBL_LANG, 'LEFT OUTER JOIN', 'p_l.' . static::DB_TBL_LANG_PREFIX . 'cpage_id = p.' . static::tblFld('id') . ' and p_l.' . static::DB_TBL_LANG_PREFIX . 'lang_id = ' . $langId, 'p_l');
         }
-        $srch->addCondition('p.'. static::DB_TBL_PREFIX .'deleted', '=', 0);
+        $srch->addCondition('p.' . static::DB_TBL_PREFIX . 'deleted', '=', 0);
         return $srch;
     }
 
@@ -81,12 +83,12 @@ class ContentPage extends MyAppModel
 
     public function canRecordMarkDelete($id)
     {
-        $srch =static::getSearchObject();
-        $srch->addCondition('p.'. static::DB_TBL_PREFIX .'id', '=', $id);
-        $srch->addFld('p.' .static::DB_TBL_PREFIX .'id');
+        $srch = static::getSearchObject();
+        $srch->addCondition('p.' . static::DB_TBL_PREFIX . 'id', '=', $id);
+        $srch->addFld('p.' . static::DB_TBL_PREFIX . 'id');
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
-        if (!empty($row) && $row[static::DB_TBL_PREFIX .'id']==$id) {
+        if (!empty($row) && $row[static::DB_TBL_PREFIX . 'id'] == $id) {
             return true;
         }
         return false;
@@ -95,11 +97,11 @@ class ContentPage extends MyAppModel
     public static function isNotDeleted($id)
     {
         $srch = static::getSearchObject();
-        $srch->addCondition('p.' .static::DB_TBL_PREFIX .'id', '=', $id);
-        $srch->addFld('p.' .static::DB_TBL_PREFIX .'id');
+        $srch->addCondition('p.' . static::DB_TBL_PREFIX . 'id', '=', $id);
+        $srch->addFld('p.' . static::DB_TBL_PREFIX . 'id');
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
-        if (!empty($row) && $row[static::DB_TBL_PREFIX .'id'] == $id) {
+        if (!empty($row) && $row[static::DB_TBL_PREFIX . 'id'] == $id) {
             return true;
         }
         return false;
@@ -109,10 +111,10 @@ class ContentPage extends MyAppModel
     {
         FatApp::getDb()->startTransaction();
         $assignValues = array(
-            'cpblocklang_lang_id' =>$langId,
-            'cpblocklang_cpage_id' =>$cpageId,
-            'cpblocklang_block_id' =>$data['cpblocklang_block_id'],
-            'cpblocklang_text' =>$data['cpblocklang_text'],
+            'cpblocklang_lang_id' => $langId,
+            'cpblocklang_cpage_id' => $cpageId,
+            'cpblocklang_block_id' => $data['cpblocklang_block_id'],
+            'cpblocklang_text' => $data['cpblocklang_text'],
         );
         if (!FatApp::getDb()->insertFromArray(static::DB_TBL_CONTENT_PAGES_BLOCK_LANG, $assignValues, '', array(), $assignValues)) {
             $this->error = $this->db->getError();
@@ -122,4 +124,5 @@ class ContentPage extends MyAppModel
         FatApp::getDb()->commitTransaction();
         return true;
     }
+
 }
