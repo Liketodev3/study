@@ -9,7 +9,7 @@ Bugs:
    #051839 - The Search class only responds for "English Language" and not for other langauges. 
    #051771 - Group class text over ongoing class not coming as correct.
    #051877 - When user purchase a lesson then in need to be schedule stage>> when user cancel the lesson then got 50% refund, which is wrong, it should be 100% refund.
-
+   #051847 - The payment methods distorts on changing the languages under "Group Class"
 ============================================================================================
 
 
