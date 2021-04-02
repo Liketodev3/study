@@ -8330,3 +8330,11 @@ color: #fff;}
 .btn.btn--fav:focus span svg{
     fill: #fff;
 }
+.checkout-cart-dir {
+    float: right;
+    clear: right;
+}
+body[dir="rtl"] .checkout-cart-dir {
+    float: left !important;
+    clear: left !important;
+}
