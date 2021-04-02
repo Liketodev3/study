@@ -48,7 +48,7 @@ class PwaController extends AdminBaseController
             $attchedFile = new AttachedFile();
             if ($attchedFile->getMimeType($_FILES['icon']['tmp_name']) != 'image/png') {
                 FatApp::getDb()->rollbackTransaction();
-                Message::addErrorMessage(sprintf(Label::getLabel('LBL_Please_upload_%s_image_for_app_icon'), $attchedFile->getMimeType($_FILES['icon']['tmp_name'])));
+                Message::addErrorMessage(sprintf(Label::getLabel('LBL_Please_upload_%s_image_for_splash_icon'), 'PNG'));
                 return $this->index();
             }
             if (!$attchedFile->saveImage($_FILES['icon']['tmp_name'], AttachedFile::FILETYPE_PWA_APP_ICON, 0, 0, $_FILES['icon']['name'], 0, true)) {
@@ -62,7 +62,7 @@ class PwaController extends AdminBaseController
             $attchedFile = new AttachedFile();
             if ($attchedFile->getMimeType($_FILES['splash_icon']['tmp_name']) != 'image/png') {
                 FatApp::getDb()->rollbackTransaction();
-                Message::addErrorMessage(sprintf(Label::getLabel('LBL_Please_upload_%s_image_for_splash_icon'), $attchedFile->getMimeType($_FILES['icon']['tmp_name'])));
+                Message::addErrorMessage(sprintf(Label::getLabel('LBL_Please_upload_%s_image_for_splash_icon'), 'PNG'));
                 return $this->index();
             }
             if (!$attchedFile->saveImage($_FILES['splash_icon']['tmp_name'], AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0, 0, $_FILES['splash_icon']['name'], 0, true)) {
