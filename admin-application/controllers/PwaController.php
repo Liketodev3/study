@@ -10,14 +10,25 @@ class PwaController extends AdminBaseController
             $data['CONF_ENABLE_PWA'] = $record['CONF_ENABLE_PWA'];
             $frm->fill($data);
         }
-        if (empty(AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_APP_ICON, 0))) {
+
+        $iconData = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_APP_ICON, 0);
+        $splashIconData = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0);
+        if (empty($iconData)) {
             $frm->getField('icon')->requirement->setRequired();
+        } else {
+            $icon_img_fld = $frm->getField('icon_img');
+            $icon_img_fld->value = '<img src="' . CommonHelper::generateUrl('Image', 'pwaIcon', [], CONF_WEBROOT_FRONTEND) . '" alt="App Icon">';
         }
-        if (empty(AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0))) {
+        if (empty($splashIconData)) {
             $frm->getField('splash_icon')->requirement->setRequired();
+        } else {
+            $splash_icon_img_fld = $frm->getField('splash_icon_img');
+            $splash_icon_img_fld->value = '<img src="' . CommonHelper::generateUrl('Image', 'pwaSplashIcon', [], CONF_WEBROOT_FRONTEND) . '" alt="PWA Splash Icon">';
         }
 
         $this->set('frm', $frm);
+        $this->set('iconData', $iconData);
+        $this->set('splashIconData', $splashIconData);
         $this->_template->render(true, true, 'pwa/index.php');
     }
 
@@ -35,7 +46,7 @@ class PwaController extends AdminBaseController
 
         if (!empty($_FILES['icon']['name'])) {
             $attchedFile = new AttachedFile();
-            if($attchedFile->getMimeType($_FILES['icon']['tmp_name']) != 'image/png'){
+            if ($attchedFile->getMimeType($_FILES['icon']['tmp_name']) != 'image/png') {
                 FatApp::getDb()->rollbackTransaction();
                 Message::addErrorMessage(sprintf(Label::getLabel('LBL_Please_upload_%s_image_for_app_icon'), $attchedFile->getMimeType($_FILES['icon']['tmp_name'])));
                 return $this->index();
@@ -49,7 +60,7 @@ class PwaController extends AdminBaseController
 
         if (!empty($_FILES['splash_icon']['name'])) {
             $attchedFile = new AttachedFile();
-            if($attchedFile->getMimeType($_FILES['splash_icon']['tmp_name']) != 'image/png'){
+            if ($attchedFile->getMimeType($_FILES['splash_icon']['tmp_name']) != 'image/png') {
                 FatApp::getDb()->rollbackTransaction();
                 Message::addErrorMessage(sprintf(Label::getLabel('LBL_Please_upload_%s_image_for_splash_icon'), $attchedFile->getMimeType($_FILES['icon']['tmp_name'])));
                 return $this->index();
@@ -84,28 +95,30 @@ class PwaController extends AdminBaseController
         $displayArr = PWA::displayArr($langId);
 
         $frm = new Form('pwaFrm');
-        
+
         $frm->addCheckBox(Label::getLabel('PWALBL_Enable_PWA'), 'CONF_ENABLE_PWA', 1, [], false, 0);
         $fld = $frm->addRequiredField(Label::getLabel('PWALBL_App_Name'), 'pwa_settings[name]');
         $fld->requirements()->setLength(1, 50);
 
         $fld = $frm->addRequiredField(Label::getLabel('PWALBL_App_Short_Name'), 'pwa_settings[short_name]');
         $fld->requirements()->setLength(1, 15);
-        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_APP_SHORT_NAME').'</small>';
+        $fld->htmlAfterField = '<small>' . Label::getLabel('HTMLAFTER_PWA_APP_SHORT_NAME') . '</small>';
 
         $fld = $frm->addTextBox(Label::getLabel('PWALBL_Description'), 'pwa_settings[description]');
         $fld->requirements()->setLength(1, 200);
-        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Description').'</small>';
-        $fld = $frm->addFileUpload(Label::getLabel('PWALBL_App_Icon'), 'icon', ['accept' =>'image/png']);
-        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_App_Icon').'</small>';
-        $frm->addFileUpload(Label::getLabel('PWALBL_Splash_Icon'), 'splash_icon', ['accept' =>'image/png'])
-            ->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Spash_Icon').'</small>';
+        $fld->htmlAfterField = '<small>' . Label::getLabel('HTMLAFTER_PWA_Description') . '</small>';
+        $fld = $frm->addFileUpload(Label::getLabel('PWALBL_App_Icon'), 'icon', ['accept' => 'image/png']);
+        $fld->htmlAfterField = '<small>' . Label::getLabel('HTMLAFTER_PWA_App_Icon') . '</small>';
+        $frm->addHTML('', 'icon_img', '');
+        $frm->addFileUpload(Label::getLabel('PWALBL_Splash_Icon'), 'splash_icon', ['accept' => 'image/png'])
+            ->htmlAfterField = '<small>' . Label::getLabel('HTMLAFTER_PWA_Spash_Icon') . '</small>';
+        $frm->addHTML('', 'splash_icon_img', '');
         $frm->addRequiredField(Label::getLabel('PWALBL_Background_Color'), 'pwa_settings[background_color]')
-            ->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Background_color').'</small>';
+            ->htmlAfterField = '<small>' . Label::getLabel('HTMLAFTER_PWA_Background_color') . '</small>';
         $frm->addRequiredField(Label::getLabel('PWALBL_Theme_Color'), 'pwa_settings[theme_color]')
-            ->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Theme_Color').'</small>';
+            ->htmlAfterField = '<small>' . Label::getLabel('HTMLAFTER_PWA_Theme_Color') . '</small>';
         $frm->addRequiredField(Label::getLabel('PWALBL_Start_Page'), 'pwa_settings[start_url]')
-            ->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Start_Page').'</small>';
+            ->htmlAfterField = '<small>' . Label::getLabel('HTMLAFTER_PWA_Start_Page') . '</small>';
         /* $contentPages = ContentPage::getPagesForSelectBox($langId);
         
         $fld = $frm->addSelectBox(Label::getLabel('PWALBL_Offline_Page', $langId), 'pwa_settings[offline_page]', $contentPages);
@@ -113,11 +126,11 @@ class PwaController extends AdminBaseController
         $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Offline_Page').'</small>'; */
         $fld = $frm->addSelectBox(Label::getLabel('PWALBL_Orientation'), 'pwa_settings[orientation]', $orientationArr, '', [], '');
         $fld->requirements()->setRequired();
-        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_orientation').'</small>';
+        $fld->htmlAfterField = '<small>' . Label::getLabel('HTMLAFTER_PWA_orientation') . '</small>';
 
         $fld = $frm->addSelectBox(Label::getLabel('PWALBL_Display'), 'pwa_settings[display]', $displayArr, '', [], '');
         $fld->requirements()->setRequired();
-        $fld->htmlAfterField = '<small>'.Label::getLabel('HTMLAFTER_PWA_Display').'</small>';
+        $fld->htmlAfterField = '<small>' . Label::getLabel('HTMLAFTER_PWA_Display') . '</small>';
 
         // $frm->addTextBox(Label::getLabel('PWALBL_Cache_Strategy'), 'cache_strategy');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save', $langId));
