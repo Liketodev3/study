@@ -70,7 +70,7 @@ class BlogController extends MyAppController
         if ($categoryId = FatApp::getPostedData('categoryId', FatUtility::VAR_INT, 0)) {
             $srch->addCondition('ptc_bpcategory_id', '=', $categoryId);
         } elseif ($keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '')) {
-            $keywordCond= $srch->addCondition('post_title', 'like', "%$keyword%");
+            $keywordCond = $srch->addCondition('post_title', 'like', "%$keyword%");
             $keywordCond->attachCondition('post_short_description', 'like', "%$keyword%");
             $keywordCond->attachCondition('post_description', 'like', "%$keyword%");
         }
@@ -123,14 +123,14 @@ class BlogController extends MyAppController
                 $loggedUserId = UserAuthentication::getLoggedUserId(true);
                 $userObj = new User($loggedUserId);
                 $userInfo = $userObj->getUserInfo();
-                $frm->getField('bpcomment_author_name')->value = $userInfo['user_first_name'].' '.$userInfo['user_last_name'];
+                $frm->getField('bpcomment_author_name')->value = $userInfo['user_first_name'] . ' ' . $userInfo['user_last_name'];
                 $frm->getField('bpcomment_author_email')->value = $userInfo['credential_email'];
             }
             $this->set('postCommentFrm', $frm);
         }
         $title = $blogPostData['post_title'];
         $post_description = trim(CommonHelper::subStringByWords(strip_tags(CommonHelper::renderHtml($blogPostData["post_description"], true)), 500));
-        $post_description .= ' - '.Label::getLabel('LBL_See_more_at', $this->siteLangId).": ".CommonHelper::getCurrUrl();
+        $post_description .= ' - ' . Label::getLabel('LBL_See_more_at', $this->siteLangId) . ": " . CommonHelper::getCurrUrl();
         $postImageUrl = CommonHelper::generateFullUrl('Image', 'blogPostFront', array($blogPostData['post_id'], $this->siteLangId, ''));
         $socialShareContent = array(
             'type' => 'Blog Post',
@@ -141,7 +141,6 @@ class BlogController extends MyAppController
         $this->set('socialShareContent', $socialShareContent);
         $srchCommentsFrm = $this->getCommentSearchForm($blogPostId);
         $this->set('srchCommentsFrm', $srchCommentsFrm);
-        //$this->_template->addJs(array('js/masonry.pkgd.js'));
         $this->_template->addJs(array('js/slick.js'));
         $this->_template->addCss(array('css/slick.css'));
         $this->_template->render();
@@ -156,8 +155,8 @@ class BlogController extends MyAppController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $blogPostId = FatApp::getPostedData('bpcomment_post_id', FatUtility::VAR_INT, 0);
-        if ($blogPostId <=0) {
-            Message::addErrorMessage(Label('Lbl_Invalid_Request'));
+        if ($blogPostId <= 0) {
+            Message::addErrorMessage(Label::getLabel('Lbl_Invalid_Request'));
             FatUtility::dieWithError(Message::getHtml());
         }
         $frm = $this->getPostCommentForm($blogPostId);
@@ -171,7 +170,7 @@ class BlogController extends MyAppController
         if (!Abusive::validateContent($post['bpcomment_content'], $enteredAbusiveWordsArr)) {
             if (!empty($enteredAbusiveWordsArr)) {
                 $errStr =  Label::getLabel("LBL_Word_{abusiveword}_is/are_not_allowed_to_post", $this->siteLangId);
-                $errStr = str_replace("{abusiveword}", '"'.implode(", ", $enteredAbusiveWordsArr).'"', $errStr);
+                $errStr = str_replace("{abusiveword}", '"' . implode(", ", $enteredAbusiveWordsArr) . '"', $errStr);
                 Message::addErrorMessage($errStr);
                 FatUtility::dieWithError(Message::getHtml());
             }
@@ -187,21 +186,6 @@ class BlogController extends MyAppController
             Message::addErrorMessage($blogComment->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
-        $blogCommentId = $blogComment->getMainTableRecordId();
-
-        /* $notificationData = array(
-                'notification_record_type' => Notification::TYPE_BLOG,
-                'notification_record_id' => $blogCommentId,
-                'notification_user_id' => UserAuthentication::getLoggedUserId(true),
-                'notification_label_key' => Notification::BLOG_COMMENT_NOTIFICATION,
-                'notification_added_on' => date('Y-m-d H:i:s'),
-        );
-
-        if(!Notification::saveNotifications($notificationData)){
-            Message::addErrorMessage(Label::getLabel("MSG_NOTIFICATION_COULD_NOT_BE_SENT",$this->siteLangId));
-            FatUtility::dieJsonError( Message::getHtml() );
-        }	 */
-
         FatUtility::dieJsonSuccess(Label::getLabel('Msg_Blog_Comment_Saved_and_awaiting_admin_approval.', $this->siteLangId));
     }
 
@@ -261,7 +245,7 @@ class BlogController extends MyAppController
             return false;
         }
 
-        if (FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '')!= '' && FatApp::getConfig('CONF_RECAPTCHA_SECRETKEY', FatUtility::VAR_STRING, '')!= '') {
+        if (FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '') != '' && FatApp::getConfig('CONF_RECAPTCHA_SECRETKEY', FatUtility::VAR_STRING, '') != '') {
             if (!CommonHelper::verifyCaptcha()) {
                 Message::addErrorMessage(Label::getLabel('MSG_That_captcha_was_incorrect', $this->siteLangId));
                 $this->contributionForm();
@@ -309,18 +293,6 @@ class BlogController extends MyAppController
             return false;
         }
         $contributionId = $contribution->getMainTableRecordId();
-        /* $notificationData = array(
-                'notification_record_type' => Notification::TYPE_PROMOTION,
-                'notification_record_id' => $contributionId,
-                'notification_user_id' => UserAuthentication::getLoggedUserId(true),
-                'notification_label_key' => Notification::BLOG_CONTRIBUTION_NOTIFICATION,
-                'notification_added_on' => date('Y-m-d H:i:s'),
-        );
-
-        if(!Notification::saveNotifications($notificationData)){
-            Message::addErrorMessage(Label::getLabel("MSG_NOTIFICATION_COULD_NOT_BE_SENT",$this->siteLangId));
-            FatUtility::dieJsonError( Message::getHtml() );
-        } */
         $fileHandlerObj = new AttachedFile();
         if (!$res = $fileHandlerObj->saveAttachment($_FILES['file']['tmp_name'], AttachedFile::FILETYPE_BLOG_CONTRIBUTION, $contributionId, 0, $_FILES['file']['name'], -1, $unique_record = true)) {
             Message::addErrorMessage($fileHandlerObj->getError());
@@ -340,8 +312,8 @@ class BlogController extends MyAppController
         $fld_phn = $frm->addRequiredField(Label::getLabel('LBL_Phone', $this->siteLangId), 'bcontributions_author_phone');
         $fld_phn->requirements()->setRegularExpressionToValidate('^[\s()+-]*([0-9][\s()+-]*){5,20}$');
         $frm->addFileUpload(Label::getLabel('LBL_Upload_File', $this->siteLangId), 'file')->requirements()->setRequired(true);
-        if (FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '')!= '' && FatApp::getConfig('CONF_RECAPTCHA_SECRETKEY', FatUtility::VAR_STRING, '')!= '') {
-            $frm->addHtml('', 'htmlNote', '<div class="g-recaptcha" data-sitekey="'.FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '').'"></div>');
+        if (FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '') != '' && FatApp::getConfig('CONF_RECAPTCHA_SECRETKEY', FatUtility::VAR_STRING, '') != '') {
+            $frm->addHtml('', 'htmlNote', '<div class="g-recaptcha" data-sitekey="' . FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '') . '"></div>');
         }
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('BTN_SUBMIT', $this->siteLangId));
         return $frm;

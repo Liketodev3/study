@@ -122,9 +122,9 @@ class MyAppController extends FatController
             $jsVariables['language' . $val['language_id']] = $val['language_layout_direction'];
         }
         if (CommonHelper::getLayoutDirection() == 'rtl') {
-            $this->_template->addCss(array('css/common-rtl.css','css/frontend-rtl.css'));
-        }else{
-            $this->_template->addCss(array('css/common-ltr.css','css/frontend-ltr.css'));
+            $this->_template->addCss(array('css/common-rtl.css', 'css/frontend-rtl.css'));
+        } else {
+            $this->_template->addCss(array('css/common-ltr.css', 'css/frontend-ltr.css'));
         }
 
         $this->set('cookieConsent', $cookieConsent);
@@ -186,7 +186,6 @@ class MyAppController extends FatController
         $fld2->requirements()->setRequired();
         $fld2->requirements()->setCompareWith('uqualification_start_year', 'ge');
         $fld = $frm->addFileUpload(Label::getLabel('LBL_Upload_Certificate'), 'certificate');
-        // $fld->requirements()->setRequired($isCertiRequried);
         $fld->htmlAfterField = "<small>" . Label::getLabel('LBL_NOTE:_Allowed_Certificate_Extentions!') . "</small>";
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
         return $frm;
@@ -203,28 +202,10 @@ class MyAppController extends FatController
         $this->_template->render(false, false, '_partial/states-list.php');
     }
 
-    /* public function getBreadcrumbNodes($action) {
-        $nodes = array();
-        $className = get_class($this);
-        $arr = explode('-', FatUtility::camel2dashed($className));
-        array_pop($arr);
-        $urlController = implode('-', $arr);
-        $className = ucwords(implode(' ', $arr));
-
-        if ($action == 'index') {
-            $nodes[] = array('title'=>Label::getLabel('LBL_'.ucwords($className),$this->siteLangId));
-        }
-        else {
-            $nodes[] = array('title'=>ucwords($className), 'href'=>CommonHelper::generateUrl($urlController));
-            $nodes[] = array('title'=>Label::getLabel('LBL_'.ucwords($action),$this->siteLangId));
-        }
-        return $nodes;
-    } */
 
     public function fatActionCatchAll($action)
     {
         $this->_template->render(false, false, 'error-pages/404.php');
-        //CommonHelper::error404();
     }
 
     public function includeDateTimeFiles()
@@ -259,7 +240,6 @@ class MyAppController extends FatController
                 FatUtility::dieWithError(Message::getHtml());
             }
         } catch (Mailchimp_Error $e) {
-            //Message::addErrorMessage($e->getMessage());
             Message::addErrorMessage(Label::getLabel('MSG_Error_while_subscribing_to_newsletter', $siteLangId));
             FatUtility::dieWithError(Message::getHtml());
         }

@@ -51,14 +51,14 @@ class CartController extends MyAppController
             $systemTimeZone = MyDate::getTimeZone();
             $startDateTime = MyDate::changeDateTimezone($startDateTime, $user_timezone, $systemTimeZone);
             $endDateTime = MyDate::changeDateTimezone($endDateTime, $user_timezone, $systemTimeZone);
-           
+
             $scheduledLessonSearchObj = new ScheduledLessonSearch(false);
-            $userIds  = array( $teacher_id, UserAuthentication::getLoggedUserId() );
+            $userIds  = array($teacher_id, UserAuthentication::getLoggedUserId());
             $scheduledLessonSearchObj->checkUserLessonBooking($userIds, $startDateTime, $endDateTime);
             $getResultSet = $scheduledLessonSearchObj->getResultSet();
-            $scheduledLessonData =$db->fetch($getResultSet);
+            $scheduledLessonData = $db->fetch($getResultSet);
 
-            if(!empty($scheduledLessonData)){
+            if (!empty($scheduledLessonData)) {
                 FatUtility::dieJsonError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
             }
 
@@ -73,7 +73,7 @@ class CartController extends MyAppController
         }
 
         if ($startDateTime != '' && $endDateTime != '') {
-            $validDate = date('Y-m-d H:i:s', strtotime('+'.$teacherBookingBefore. 'hours', strtotime(date('Y-m-d H:i:s'))));
+            $validDate = date('Y-m-d H:i:s', strtotime('+' . $teacherBookingBefore . 'hours', strtotime(date('Y-m-d H:i:s'))));
             $selectedDate = $startDateTime;
             $validDateTimeStamp = strtotime($validDate);
             $SelectedDateTimeStamp = strtotime($selectedDate); //== always should be greater then current date
@@ -86,13 +86,13 @@ class CartController extends MyAppController
 
         /* add to cart[ */
         $cart = new Cart();
-       
+
         if (!$cart->add($teacher_id, $lpackageId, $languageId, $startDateTime, $endDateTime, $grpclsId, $lessonDuration)) {
             FatUtility::dieJsonError($cart->getError());
         }
         /* ] */
 
-        $cartData = $cart->getCart( $this->siteLangId );
+        $cartData = $cart->getCart($this->siteLangId);
         $freePackage = LessonPackage::getFreeTrialPackage();
         if (!empty($freePackage) && ($freePackage['lpackage_id'] == $lpackageId)) {
             $this->set('isFreeLesson', ($cartData['orderNetAmount'] == 0));
@@ -132,10 +132,10 @@ class CartController extends MyAppController
             FatUtility::dieWithError(Message::getHtml());
         }
         $holdCouponData = array(
-            'couponhold_coupon_id'=>$couponInfo['coupon_id'],
-            'couponhold_user_id'=>UserAuthentication::getLoggedUserId(),
+            'couponhold_coupon_id' => $couponInfo['coupon_id'],
+            'couponhold_user_id' => UserAuthentication::getLoggedUserId(),
             /* 'couponhold_usercart_id'=>$cartObj->cart_id, */
-            'couponhold_added_on'=>date('Y-m-d H:i:s'),
+            'couponhold_added_on' => date('Y-m-d H:i:s'),
         );
 
         if (!FatApp::getDb()->insertFromArray(DiscountCoupons::DB_TBL_COUPON_HOLD, $holdCouponData, true, array(), $holdCouponData)) {

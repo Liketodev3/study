@@ -544,7 +544,7 @@ class GuestUserController extends MyAppController
         if (!empty($facebookEmail)) {
             $srch->addCondition('credential_email', '=', $facebookEmail);
         } else {
-           
+
             $srch->addCondition('user_facebook_id', '=', $userFacebookId);
         }
         $rs = $srch->getResultSet();
@@ -639,10 +639,10 @@ class GuestUserController extends MyAppController
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_access_token']);
         unset($_SESSION['fb_' . FatApp::getConfig("CONF_FACEBOOK_APP_ID") . '_user_id']);
 
-		$redirectUrl = User::getPreferedDashbordRedirectUrl();
-		if ($user_type == User::USER_TYPE_TEACHER) {
-			$redirectUrl = CommonHelper::generateUrl('TeacherRequest', '', [], CONF_WEBROOT_DASHBOARD);
-		}
+        $redirectUrl = User::getPreferedDashbordRedirectUrl();
+        if ($user_type == User::USER_TYPE_TEACHER) {
+            $redirectUrl = CommonHelper::generateUrl('TeacherRequest', '', [], CONF_WEBROOT_DASHBOARD);
+        }
         $message = Label::getLabel('MSG_LoggedIn_SUCCESSFULLY', $this->siteLangId);
         if (empty($userInfo['credential_email'])) {
             $message = Label::getLabel('MSG_PLEASE_CONFIGURE_YOUR_EMAIL', $this->siteLangId);
@@ -728,17 +728,17 @@ class GuestUserController extends MyAppController
         $emailChangeReqObj = new UserEmailChangeRequest();
         $emailChangeReqObj->deleteOldLinkforUser(UserAuthentication::getLoggedUserId());
         $emailVerification = FatApp::getConfig('CONF_EMAIL_VERIFICATION_REGISTRATION', FatUtility::VAR_INT, 1);
-        if (applicationConstants::YES == $emailVerification) { 
+        if (applicationConstants::YES == $emailVerification) {
             $_token = $userObj->prepareUserVerificationCode();
-                $postData = array(
-                    'uecreq_user_id' => UserAuthentication::getLoggedUserId(),
-                    'uecreq_email' => $post['new_email'],
-                    'uecreq_token' => $_token,
-                    'uecreq_status' => 0,
-                    'uecreq_created' => date('Y-m-d H:i:s'),
-                    'uecreq_updated' => date('Y-m-d H:i:s'),
-                    'uecreq_expire' => date('Y-m-d H:i:s', strtotime('+ 24 hours', strtotime(date('Y-m-d H:i:s'))))
-                );
+            $postData = array(
+                'uecreq_user_id' => UserAuthentication::getLoggedUserId(),
+                'uecreq_email' => $post['new_email'],
+                'uecreq_token' => $_token,
+                'uecreq_status' => 0,
+                'uecreq_created' => date('Y-m-d H:i:s'),
+                'uecreq_updated' => date('Y-m-d H:i:s'),
+                'uecreq_expire' => date('Y-m-d H:i:s', strtotime('+ 24 hours', strtotime(date('Y-m-d H:i:s'))))
+            );
 
             $emailChangeReqObj->assignValues($postData);
             if (!$emailChangeReqObj->save()) {
@@ -759,7 +759,7 @@ class GuestUserController extends MyAppController
                 FatUtility::dieWithError(Message::getHtml());
             }
             $msg =  Label::getLabel('MSG_UPDATE_EMAIL_REQUEST_SENT_SUCCESSFULLY._YOU_NEED_TO_VERIFY_YOUR_NEW_EMAIL_ADDRESS_BEFORE_ACCESSING_OTHER_MODULES');
-        }else{
+        } else {
             if (!$userObj->changeEmail($post['new_email'])) {
                 Message::addErrorMessage(Label::getLabel('MSG_Email_could_not_be_set'));
                 FatUtility::dieWithError(Message::getHtml());
@@ -776,8 +776,8 @@ class GuestUserController extends MyAppController
             $redirectUrl = User::getPreferedDashbordRedirectUrl();
         }
         $returnJson =  ['msg' => $msg];
-        
-        if(!empty($redirectUrl)){
+
+        if (!empty($redirectUrl)) {
             $returnJson['redirectUrl'] = $redirectUrl;
         }
 
@@ -1067,9 +1067,9 @@ class GuestUserController extends MyAppController
             }
             unset($_SESSION['access_token']);
             $redirectUrl = CommonHelper::generateUrl('Teachers');
-    		if ($userType == User::USER_TYPE_TEACHER) {
-    			$redirectUrl = CommonHelper::generateUrl('TeacherRequest', '', [], CONF_WEBROOT_DASHBOARD);
-    		}
+            if ($userType == User::USER_TYPE_TEACHER) {
+                $redirectUrl = CommonHelper::generateUrl('TeacherRequest', '', [], CONF_WEBROOT_DASHBOARD);
+            }
             FatApp::redirectUser($redirectUrl);
         }
         Message::addErrorMessage(Label::getLabel("MSG_UNABLE_To_FETCH_YOUR_EMAIL_ID"));

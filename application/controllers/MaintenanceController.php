@@ -6,7 +6,7 @@ class MaintenanceController extends MyAppController
         if (FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) == 0) {
             FatApp::redirectUser(CommonHelper::generateUrl('home'));
         }
-        $this->set('maintenanceText', FatApp::getConfig("CONF_MAINTENANCE_TEXT_".$this->siteLangId, FatUtility::VAR_STRING, ''));
+        $this->set('maintenanceText', FatApp::getConfig("CONF_MAINTENANCE_TEXT_" . $this->siteLangId, FatUtility::VAR_STRING, ''));
         $this->_template->render();
     }
 }

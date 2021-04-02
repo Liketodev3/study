@@ -15,18 +15,18 @@ class HomeController extends MyAppController
         $srchSlide->doNotCalculateRecords();
         $srchSlide->joinAttachedFile();
         $srchSlide->addMultipleFields(
-            array('slide_id', 'slide_record_id', 'slide_type', 'IFNULL(slide_title, slide_identifier) as slide_title',
-            'slide_target', 'slide_url')
+            array(
+                'slide_id', 'slide_record_id', 'slide_type', 'IFNULL(slide_title, slide_identifier) as slide_title',
+                'slide_target', 'slide_url'
+            )
         );
         $srchSlide->addOrder('slide_display_order');
 
         $totalSlidesPageSize = FatApp::getConfig('CONF_TOTAL_SLIDES_HOME_PAGE', FatUtility::VAR_INT, 4);
-        $ppcSlidesPageSize = FatApp::getConfig('CONF_PPC_SLIDES_HOME_PAGE', FatUtility::VAR_INT, 4);
         $ppcSlides = array();
         $adminSlides = array();
-        $slidesSrch = new SearchBase('('.$srchSlide->getQuery().') as t');
+        $slidesSrch = new SearchBase('(' . $srchSlide->getQuery() . ') as t');
         $slidesSrch->addMultipleFields(array('slide_id', 'slide_type', 'slide_record_id', 'slide_url', 'slide_target', 'slide_title'));
-        // $slidesSrch->addOrder('', 'rand()');
         if ($totalSlidesPageSize > count($ppcSlides)) {
             $totalSlidesPageSize = $totalSlidesPageSize - count($ppcSlides);
             $adminSlideSrch = clone $slidesSrch;
@@ -46,10 +46,10 @@ class HomeController extends MyAppController
     {
         $isActivePreferencesCookie =  (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
 
-        if(!$isActivePreferencesCookie){
+        if (!$isActivePreferencesCookie) {
             return false;
         }
-        
+
         $langId = FatUtility::int($langId);
         if (0 < $langId) {
             $languages = Language::getAllNames();
@@ -62,22 +62,20 @@ class HomeController extends MyAppController
     public function setSiteDefaultCurrency($currencyId = 0)
     {
         $currencyId = FatUtility::int($currencyId);
-        $currencyObj = new Currency();
         if (0 < $currencyId) {
             $currencies = Currency::getCurrencyAssoc($this->siteLangId);
             if (array_key_exists($currencyId, $currencies)) {
-                if(isset($_SESSION['search_filters']['minPriceRange'])) {
+                if (isset($_SESSION['search_filters']['minPriceRange'])) {
                     unset($_SESSION['search_filters']['minPriceRange']);
                 }
-                if(isset($_SESSION['search_filters']['maxPriceRange'])) {
+                if (isset($_SESSION['search_filters']['maxPriceRange'])) {
                     unset($_SESSION['search_filters']['maxPriceRange']);
                 }
                 $isActivePreferencesCookie =  (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
-        
-                if($isActivePreferencesCookie){
-                    CommonHelper::setCookie('defaultSiteCurrency', $currencyId, time()+3600*24*10, CONF_WEBROOT_URL, '', true);
+
+                if ($isActivePreferencesCookie) {
+                    CommonHelper::setCookie('defaultSiteCurrency', $currencyId, time() + 3600 * 24 * 10, CONF_WEBROOT_URL, '', true);
                 }
-              
             }
         }
     }

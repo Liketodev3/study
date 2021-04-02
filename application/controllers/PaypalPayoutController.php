@@ -2,13 +2,14 @@
 
 class PaypalPayoutController extends PaymentController
 {
-    public function callback() {
+	public function callback()
+	{
 
 		$webhookData = file_get_contents('php://input');
 		$webhookData = json_decode($webhookData, true);
 		$event_type = $webhookData['event_type'];
 
-		switch($event_type) {
+		switch ($event_type) {
 			case "PAYMENT.PAYOUTS-ITEM.SUCCEEDED":
 				$withdrawStatus = Transaction::WITHDRAWL_STATUS_COMPLETED;
 				$trxnStatus = Transaction::STATUS_COMPLETED;
@@ -16,7 +17,7 @@ class PaypalPayoutController extends PaymentController
 					Message::addErrorMessage('Error');
 					FatUtility::dieJsonError(Message::getHtml());
 				}
-			break;
+				break;
 
 			case "PAYMENT.PAYOUTS-ITEM.CANCELED":
 				$withdrawStatus = Transaction::WITHDRAWL_STATUS_DECLINED;
@@ -25,7 +26,7 @@ class PaypalPayoutController extends PaymentController
 					Message::addErrorMessage('Error');
 					FatUtility::dieJsonError(Message::getHtml());
 				}
-			break;
+				break;
 
 			case "PAYMENT.PAYOUTS-ITEM.DENIED":
 				$withdrawStatus = Transaction::WITHDRAWL_STATUS_DECLINED;
@@ -34,7 +35,7 @@ class PaypalPayoutController extends PaymentController
 					Message::addErrorMessage('Error');
 					FatUtility::dieJsonError(Message::getHtml());
 				}
-			break;
+				break;
 
 			case "PAYMENT.PAYOUTS-ITEM.FAILED":
 				$withdrawStatus = Transaction::WITHDRAWL_STATUS_PAYOUT_FAILED;
@@ -43,13 +44,12 @@ class PaypalPayoutController extends PaymentController
 					Message::addErrorMessage('Error');
 					FatUtility::dieJsonError(Message::getHtml());
 				}
-			break;
-
+				break;
 		}
-
 	}
 
-	public function updatePayoutWithdrawRequest($requestData, $status, $trxnStatus) {
+	public function updatePayoutWithdrawRequest($requestData, $status, $trxnStatus)
+	{
 		if (empty($requestData)) {
 			return false;
 		}
@@ -60,19 +60,21 @@ class PaypalPayoutController extends PaymentController
 		$arryId = explode('_', $sender_batch_id);
 		$withdrawalId = end($arryId);
 		$withdrawalId = FatUtility::int($withdrawalId);
-        
+
 		$assignFields = array(
-			'withdrawal_status'=> $status,
-			'withdrawal_response'=> json_encode($requestData)
+			'withdrawal_status' => $status,
+			'withdrawal_response' => json_encode($requestData)
 		);
 
-		if (!FatApp::getDb()->updateFromArray(User::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields, array('smt'=>'withdrawal_id=?', 'vals'=>array($withdrawalId)))) {
+		if (!FatApp::getDb()->updateFromArray(User::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields, array('smt' => 'withdrawal_id=?', 'vals' => array($withdrawalId)))) {
 			return false;
 		}
-		FatApp::getDb()->updateFromArray(Transaction::DB_TBL, array("utxn_status"=>$trxnStatus),
-            array('smt'=>'utxn_withdrawal_id=?','vals'=>array($withdrawalId)));
+		FatApp::getDb()->updateFromArray(
+			Transaction::DB_TBL,
+			array("utxn_status" => $trxnStatus),
+			array('smt' => 'utxn_withdrawal_id=?', 'vals' => array($withdrawalId))
+		);
 
 		return true;
 	}
-
 }

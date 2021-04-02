@@ -2,8 +2,6 @@
 class AuthorizeAimPayController extends PaymentController
 {
     protected $keyName = "AuthorizeAim";
-    /*	private $testEnvironmentUrl = 'https://test.authorize.net/gateway/transact.dll';
-        private $liveEnvironmentUrl = 'https://secure.authorize.net/gateway/transact.dll';*/
     private $testEnvironmentUrl = "https://apitest.authorize.net/xml/v1/request.api";
     private $liveEnvironmentUrl = "https://api.authorize.net/xml/v1/request.api";
     public function charge($orderId)
@@ -11,10 +9,8 @@ class AuthorizeAimPayController extends PaymentController
         if (empty($orderId)) {
             FatUtility::exitWIthErrorCode(404);
         }
-        
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
-        // $orderInfo = $orderPaymentObj->getOrderById($orderId);
         $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
         if (!$orderInfo['order_id']) {
             FatUtility::exitWIthErrorCode(404);
@@ -34,29 +30,27 @@ class AuthorizeAimPayController extends PaymentController
         $this->set('orderInfo', $orderInfo);
         $this->set('paymentAmount', $paymentAmount);
         $this->set('exculdeMainHeaderDiv', true);
-        // $this->_template->addCss('css/payment.css');
         $this->_template->render(true, false);
     }
 
     public function send($orderId)
     {
-        $pmObj=new PaymentSettings($this->keyName);
-        $paymentSettings=$pmObj->getPaymentSettings();
+        $pmObj = new PaymentSettings($this->keyName);
+        $paymentSettings = $pmObj->getPaymentSettings();
         $post = FatApp::getPostedData();
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         /* Retrieve Payment to charge corresponding to your order */
-        $orderPaymentAamount=$orderPaymentObj->getOrderPaymentGatewayAmount();
-
+        $orderPaymentAamount = $orderPaymentObj->getOrderPaymentGatewayAmount();
         $oPObj =  $orderPaymentObj->getOrderPayment($this->keyName);
         $resultset =  $oPObj->getResultSet();
         $orderPayment = FatApp::getDb()->fetch($resultset);
         if ($orderPaymentAamount > 0 && empty($orderPayment)) {
-    
+
             $orderInfo =  $orderPaymentObj->getOrderPrimaryinfo();
             $orderActualPaid = number_format(round($orderPaymentAamount, 2), 2, ".", "");
-            $actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true)?$this->liveEnvironmentUrl:$this->testEnvironmentUrl;
-        
-            $orderPaymentGatewayDescription = sprintf(Label::getLabel("MSG_Order_Payment_Gateway_Description", $this->siteLangId), FatApp::getConfig("CONF_WEBSITE_NAME_". $orderInfo["order_language_id"]), $orderInfo['order_id']);
+            $actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true) ? $this->liveEnvironmentUrl : $this->testEnvironmentUrl;
+
+            $orderPaymentGatewayDescription = sprintf(Label::getLabel("MSG_Order_Payment_Gateway_Description", $this->siteLangId), FatApp::getConfig("CONF_WEBSITE_NAME_" . $orderInfo["order_language_id"]), $orderInfo['order_id']);
             $data = array(
                 "createTransactionRequest" => array(
                     "merchantAuthentication" => array(
@@ -82,17 +76,17 @@ class AuthorizeAimPayController extends PaymentController
                             "lineItem" => array(
                                 "itemId" => $orderId,
                                 "name" => "Cart Payment",
-                                "description" => sprintf(Label::getLabel("Order_Payment_Gateway_Description"), FatApp::getConfig("CONF_WEBSITE_NAME_".$this->siteLangId), $orderId),
+                                "description" => sprintf(Label::getLabel("Order_Payment_Gateway_Description"), FatApp::getConfig("CONF_WEBSITE_NAME_" . $this->siteLangId), $orderId),
                                 "quantity" => "1",
                                 "unitPrice" => $orderActualPaid,
                             )
                         ),
-                    
+
                         "customerIP" => $_SERVER['REMOTE_ADDR'],
-                        "transactionSettings"=> array(
-                            "setting"=> array(
-                                "settingName"=> "testRequest",
-                                "settingValue"=> (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true) ? 'false' : 'true'
+                        "transactionSettings" => array(
+                            "setting" => array(
+                                "settingName" => "testRequest",
+                                "settingValue" => (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true) ? 'false' : 'true'
                             )
                         )
                     )
@@ -100,12 +94,12 @@ class AuthorizeAimPayController extends PaymentController
             );
 
             $response = $this->executeCurl($data, $actionUrl);
-            
+
             $json = array();
             if ($response['status'] == 0) {
                 $json['error'] = Label::getLabel('LBL_Payment_cannot_be_processed_right_now._Please_try_after_some_time.');
-            } elseif ((!empty($response['response']['transactionResponse']['errors'])) || ( (!empty($response['response']['transactionResponse']['responseCode'])) && $response['response']['transactionResponse']['responseCode'] != 1)) {
-                $errorMsg = isset($response['response']['transactionResponse']['errors'][0]['errorText'])?$response['response']['transactionResponse']['errors'][0]['errorText']:current($response['response']['messages']['message'])['text'];
+            } elseif ((!empty($response['response']['transactionResponse']['errors'])) || ((!empty($response['response']['transactionResponse']['responseCode'])) && $response['response']['transactionResponse']['responseCode'] != 1)) {
+                $errorMsg = isset($response['response']['transactionResponse']['errors'][0]['errorText']) ? $response['response']['transactionResponse']['errors'][0]['errorText'] : current($response['response']['messages']['message'])['text'];
                 $json['error'] = $errorMsg;
             } elseif ($response['status'] == 1) {
                 $json = array();
@@ -132,19 +126,15 @@ class AuthorizeAimPayController extends PaymentController
                     if (isset($response['response']['transactionResponse']['accountType'])) {
                         $message .= 'Account Type: ' . $response['response']['transactionResponse']['accountType'] . "\n";
                     }
-                    //if (!$paymentSettings['md5_hash'] || (strtoupper($responseInfo[38]) == strtoupper(md5($paymentSettings['md5_hash'].$paymentSettings['login_id'].$responseInfo[7] . $orderActualPaid)))) {
                     /* Recording Payment in DB */
                     if (!$orderPaymentObj->addOrderPayment($this->keyName, $response['response']['transactionResponse']['transId'], $orderPaymentAamount, $message, serialize($response))) {
                         $orderPaymentObj->addOrderPaymentComments(serialize($response));
                         $json['error'] = "Invalid Action";
                     }
                     /* End Recording Payment in DB */
-                    //} else {
-                    /*  Do what ever you want to do */
-                    //}
                     $json['redirect'] = FatUtility::generateUrl("custom", "paymentSuccess", array($orderId));
                 } else {
-                    $errorMsg = isset($response['response']['transactionResponse']['errors'][0]['errorText'])?$response['response']['transactionResponse']['errors'][0]['errorText']:current($response['response']['messages']['message'])['text'];
+                    $errorMsg = isset($response['response']['transactionResponse']['errors'][0]['errorText']) ? $response['response']['transactionResponse']['errors'][0]['errorText'] : current($response['response']['messages']['message'])['text'];
                     $json['error'] = $errorMsg;
                 }
             } else {
@@ -159,7 +149,7 @@ class AuthorizeAimPayController extends PaymentController
     public function checkCardType()
     {
         $post = FatApp::getPostedData();
-        $res=CommonHelper::validate_cc_number($post['cc']);
+        $res = CommonHelper::validate_cc_number($post['cc']);
         echo json_encode($res);
         exit;
     }
@@ -180,7 +170,6 @@ class AuthorizeAimPayController extends PaymentController
         $fld = $frm->addPasswordField(Label::getLabel('LBL_CVV_SECURITY_CODE', $this->siteLangId), 'cc_cvv');
         $fld->requirements()->setRequired(true);
         $fld->requirements()->setLength(3, 5);
-        /* $frm->addCheckBox(Label::getLabel('LBL_SAVE_THIS_CARD_FOR_FASTER_CHECKOUT',$this->siteLangId), 'cc_save_card','1'); */
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Pay_Now', $this->siteLangId));
         return $frm;
     }
@@ -192,14 +181,7 @@ class AuthorizeAimPayController extends PaymentController
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt(
-            $ch,
-            CURLOPT_HTTPHEADER,
-            array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($data_string)
-            )
-        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Content-Length: ' . strlen($data_string)));
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         $response = curl_exec($ch);

@@ -9,12 +9,8 @@ class PaymentController extends MyAppController
     {
         parent::__construct($action);
         $currency = CommonHelper::getSystemCurrencyData();
-
-       
-
         $this->systemCurrencyId = CommonHelper::getSystemCurrencyId();
         $this->systemCurrencyCode = strtoupper($currency['currency_code']);
-
         $this->set('systemCurrencyCode', $this->systemCurrencyCode);
         $this->loadPaymenMethod();
     }
@@ -25,16 +21,15 @@ class PaymentController extends MyAppController
         if (!$this->settings = $pmObj->getPaymentSettings()) {
             $this->setErrorAndRedirect($pmObj->getError());
         }
-        
     }
 
     protected function setErrorAndRedirect(string $msg, $redirect = true)
     {
-        if(FatUtility::isAjaxCall()){
+        if (FatUtility::isAjaxCall()) {
             FatUtility::dieJsonError($msg);
         }
         Message::addErrorMessage($msg);
-        if($redirect){
+        if ($redirect) {
             CommonHelper::redirectUserReferer();
         }
     }

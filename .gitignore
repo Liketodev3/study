@@ -13,3 +13,5 @@
 /node_modules
 /public/config.js
 /.vscode/*
+/nbproject/
+/vendor/

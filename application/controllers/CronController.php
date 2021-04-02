@@ -9,7 +9,6 @@ class CronController extends MyAppController
 
     public function index($id = 0)
     {
-        $db = FatApp::getDb();
         $allCrons = Cron::getAllRecords(true, $id);
         foreach ($allCrons as $row) {
             $cron = new Cron($row['cron_id']);
@@ -30,18 +29,16 @@ class CronController extends MyAppController
             } else {
                 $cron->markFinished($logId, 'Marked finished with error');
             }
-            //echo 'Ended';
         }
         Cron::clearOldLog();
     }
 
-    public function manually($cron_command = '', $type='')
+    public function manually($cron_command = '', $type = '')
     {
         $allCrons = Cron::getAllRecords(true);
         $found = false;
         foreach ($allCrons as $row) {
-            if (strtolower($row['cron_command']) == strtolower('lessonreminder/'.$cron_command.'/'.$type)) {
-                $cron = new Cron($row['cron_id']);
+            if (strtolower($row['cron_command']) == strtolower('lessonreminder/' . $cron_command . '/' . $type)) {
                 $found = true;
                 $arr = explode('/', $row['cron_command']);
                 $class = $arr[0];

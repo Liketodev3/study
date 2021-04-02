@@ -3,11 +3,8 @@ class GroupClassesController extends MyAppController
 {
 	public function index()
 	{
-		$frmSrch = $this->getSearchForm();
-		$this->set('frmSrch', $frmSrch);
-        $this->_template->addJs('js/jquery.datetimepicker.js');
-        // $this->_template->addCss('css/jquery.datetimepicker.css');
-        // $this->_template->addCss('css/classes.css');
+		$this->set('frmSrch', $this->getSearchForm());
+		$this->_template->addJs('js/jquery.datetimepicker.js');
 		$this->_template->render();
 	}
 
@@ -45,7 +42,6 @@ class GroupClassesController extends MyAppController
 
 		$srch->setPageSize($pageSize);
 		$srch->setPageNumber($page);
-
 		$rs = $srch->getResultSet();
 		$classesList = FatApp::getDb()->fetchAll($rs);
 		$pagingArr = array(
@@ -74,12 +70,9 @@ class GroupClassesController extends MyAppController
 		if (empty($classData)) {
 			FatUtility::exitWithErrorCode(404);
 		}
-
 		$this->set('class', $classData);
-        $min_booking_time = FatApp::getConfig('CONF_CLASS_BOOKING_GAP', FatUtility::VAR_INT, 60);
-        $this->set('min_booking_time', $min_booking_time);
-        // $this->_template->addCss('css/classes.css');
-        // $this->_template->addCss('css/switch.css');
+		$min_booking_time = FatApp::getConfig('CONF_CLASS_BOOKING_GAP', FatUtility::VAR_INT, 60);
+		$this->set('min_booking_time', $min_booking_time);
 		$this->_template->render();
 	}
 
@@ -92,15 +85,6 @@ class GroupClassesController extends MyAppController
 		$fld = $frm->addHiddenField('', 'page', 1);
 		$fld->requirements()->setIntPositive();
 		$frm->addSubmitButton('', 'btnSrchSubmit', '');
-		return $frm;
-	}
-
-	private function getInterstForm()
-	{
-		$frm = new Form('frmInterest');
-		$frm->addHiddenField('', 'grpcls_id')->requirements()->setRequired(true);
-		$frm->addRequiredField(Label::getLabel("LBL_Time"), 'time', '', array('id' => 'time', 'placeholder' => Label::getLabel('LBL_Interested_At')));
-		$frm->addSubmitButton('', 'btnSubmit', Label::getLabel("LBL_Submit"));
 		return $frm;
 	}
 }

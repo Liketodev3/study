@@ -9,7 +9,6 @@ class EmailsController extends MyAppController
 
     public function index($page = 1)
     {
-        $data = FatApp::getPostedData();
         $srch = new SearchBase('tbl_email_archives');
         $srch->addOrder('emailarchive_id', 'desc');
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);

@@ -11,7 +11,6 @@ class TwocheckoutPayController extends PaymentController
         if (!is_array($this->allowedCurrenciesArr())) {
             $this->setErrorAndRedirect(Label::getLabel('MSG_INVALID_CURRENCY_FORMAT', $this->siteLangId));
         }
-
         if (!in_array($this->systemCurrencyCode, $this->allowedCurrenciesArr())) {
             $msg = Label::getLabel('MSG_INVALID_ORDER_CURRENCY_({CURRENCY})_PASSED_TO_GATEWAY', $this->siteLangId);
             $msg = CommonHelper::replaceStringData($msg, ['{CURRENCY}' => $this->systemCurrencyCode]);
@@ -25,9 +24,7 @@ class TwocheckoutPayController extends PaymentController
 
     protected function allowedCurrenciesArr()
     {
-        return [
-            'USD', 'EUR', 'GBP', 'JPY', 'CAD', 'RON', 'CZK', 'HUF', 'TRY', 'ZAR', 'EGP', 'MXN', 'PEN'
-        ];
+        return ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'RON', 'CZK', 'HUF', 'TRY', 'ZAR', 'EGP', 'MXN', 'PEN'];
     }
 
     public function charge($orderId)
@@ -42,9 +39,7 @@ class TwocheckoutPayController extends PaymentController
             $frm = $this->getPaymentForm($orderId);
             $frm->getField('country')->value = $orderInfo['user_country_id'];
             $frm->getField('cc_owner')->value = $orderInfo['user_name'];
-
             $this->set('frm', $frm);
-
             if ($this->paymentType == 'API') {
                 $this->set('sellerId', $this->settings['sellerId']);
                 $this->set('publishableKey', $this->settings['publishableKey']);
@@ -58,9 +53,7 @@ class TwocheckoutPayController extends PaymentController
         if ($orderInfo['order_type'] == Order::TYPE_WALLET_RECHARGE) {
             $cancelBtnUrl = CommonHelper::getPaymentFailurePageUrl();
         }
-
         $this->set('cancelBtnUrl', $cancelBtnUrl);
-
         $this->set('paymentAmount', $paymentAmount);
         $this->set('paymentType', $this->paymentType);
         $this->set('orderInfo', $orderInfo);
@@ -69,7 +62,6 @@ class TwocheckoutPayController extends PaymentController
             $json['html'] = $this->_template->render(false, false, 'twocheckout-pay/charge-ajax.php', true, false);
             FatUtility::dieJsonSuccess($json);
         }
-        // $this->_template->addCss('css/payment.css');
         $this->_template->render(true, false);
     }
 
@@ -88,7 +80,6 @@ class TwocheckoutPayController extends PaymentController
         if ($orderPaymentAmount > 0) {
             /* Retrieve Primary Info corresponding to your order */
             $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
-
             $order_actual_paid = number_format(round($orderPaymentAmount, 2), 2, ".", "");
             $params = array(
                 'sellerId' => $this->settings['sellerId'],
@@ -109,13 +100,10 @@ class TwocheckoutPayController extends PaymentController
                     'phoneNumber' => $orderInfo['user_phone'],
                 )
             );
-
-
             if (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == false) {
                 $params['demo'] = true;
             }
             $url = 'https://www.2checkout.com/checkout/api/1/' . $this->settings['sellerId'] . '/rs/authService';
-
             $curl = curl_init($url);
             $params = json_encode($params);
             $header = array("content-type:application/json", "content-length:" . strlen($params));
@@ -128,7 +116,6 @@ class TwocheckoutPayController extends PaymentController
             $result = curl_exec($curl);
             $json = array();
             $json['redirect'] = CommonHelper::generateUrl('custom', 'paymentFailed');
-
             if (curl_error($curl)) {
                 $json['error'] = 'CURL ERROR: ' . curl_errno($curl) . '::' . curl_error($curl);
             } elseif ($result) {
@@ -137,7 +124,6 @@ class TwocheckoutPayController extends PaymentController
                 foreach ($object as $member => $data) {
                     $result_array[$member] = $data;
                 }
-
                 $exception = $result_array['exception']; //must be null in case of successful orders
                 $response = $result_array['response'];
                 $message = '';
@@ -212,9 +198,7 @@ class TwocheckoutPayController extends PaymentController
 
     public function getExternalLibraries()
     {
-        $json['libraries'] = [
-            "https://www.2checkout.com/checkout/api/2co.min.js",
-        ];
+        $json['libraries'] = ["https://www.2checkout.com/checkout/api/2co.min.js",];
         FatUtility::dieJsonSuccess($json);
     }
 

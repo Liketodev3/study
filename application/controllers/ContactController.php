@@ -3,18 +3,9 @@ class ContactController extends MyAppController
 {
     public function index()
     {
-        /* $srch = Extrapage::getSearchObject($this->siteLangId);
-        $srch->addCondition('ep.epage_type','=',Extrapage::CONTACT_US_CONTENT_BLOCK);
-        $srch->doNotCalculateRecords();
-        $srch->doNotLimitRecords();
-        $rs = $srch->getResultSet();
-        $pageData = FatApp::getDb()->fetch($rs); */
-        /* $obj = new Extrapage();
-        $pageData = $obj->getContentByPageType( Extrapage::CONTACT_US_CONTENT_BLOCK, $this->siteLangId );
-         */
         $cPageId = FatUtility::int(5);
         $srch = ContentPage::getSearchObject($this->siteLangId);
-        $srch->addMultipleFields(array('cpage_id', 'IFNULL(cpage_title, cpage_identifier) as cpage_title','cpage_layout', 'cpage_image_title', 'cpage_image_content', 'cpage_content'));
+        $srch->addMultipleFields(array('cpage_id', 'IFNULL(cpage_title, cpage_identifier) as cpage_title', 'cpage_layout', 'cpage_image_title', 'cpage_image_content', 'cpage_content'));
         $srch->addCondition('cpage_id', '=', $cPageId);
         $pageData = FatApp::getDb()->fetch($srch->getResultset());
         $contactFrm = $this->contactUsForm();
@@ -36,7 +27,7 @@ class ContactController extends MyAppController
         $fld_phn = $frm->addRequiredField(Label::getLabel('LBL_Your_Phone', $this->siteLangId), 'phone');
         $fld_phn->requirements()->setRegularExpressionToValidate('^[\s()+-]*([0-9][\s()+-]*){5,20}$');
         $frm->addTextArea(Label::getLabel('LBL_Your_Message', $this->siteLangId), 'message')->requirements()->setRequired();
-        $frm->addHtml('', 'htmlNote', '<div class="g-recaptcha" data-sitekey="'.FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '').'"></div>');
+        $frm->addHtml('', 'htmlNote', '<div class="g-recaptcha" data-sitekey="' . FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '') . '"></div>');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('BTN_SUBMIT', $this->siteLangId));
         return $frm;
     }
