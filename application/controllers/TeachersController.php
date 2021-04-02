@@ -730,42 +730,49 @@ class TeachersController extends MyAppController
 		/* ] */
 		/* Week Day [ */
 		$weekDays = FatApp::getPostedData('filterWeekDays', FatUtility::VAR_STRING, array());
-		if ($weekDays) {
-			$weekDates = MyDate::changeWeekDaysToDate($weekDays);
-			$condition = '( ';
+		$timeSlots = FatApp::getPostedData('filterTimeSlots', FatUtility::VAR_STRING, array());
+        
+		$timeSlotArr = [];
+
+		if(!empty($timeSlots)) {
+			$timeSlotArr = CommonHelper::formatTimeSlotArr($timeSlots);
+		}
+
+		if (is_array($weekDays) && !empty($weekDays)) {
+
+			$weekDates = MyDate::changeWeekDaysToDate($weekDays, $timeSlotArr);
+			$condition = ' ( ';
             foreach ($weekDates as $weekDayKey =>  $date) {
-				$condition .= ($weekDayKey == 0) ? '' : 'OR';
-				$condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "'.$date['endDate'].'" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "'.$date['startDate'].'" )';
+				$condition .= ($weekDayKey == 0) ? '' : ' OR ';
+				$condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "'.$date['endDate'].'" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "'.$date['startDate'].'" ) ';
 			}
 			$condition .= ' ) ';
 			$srch->addDirectCondition($condition);
+		
 		}
 		/* ] */
 		/* Time Slot [ */
-		$timeSlots = FatApp::getPostedData('filterTimeSlots', FatUtility::VAR_STRING, array());
 
-		$systemTimeZone = MyDate::getTimeZone();
-		$user_timezone = MyDate::getUserTimeZone();
+        if (empty($weekDays) && !empty($timeSlotArr)) {
 
-		if ($timeSlots) {
-			$formatedArr = CommonHelper::formatTimeSlotArr($timeSlots);
-			if ($formatedArr) {
-				$condition = '( ';
-				foreach ($formatedArr as $key => $formatedVal) {
-					$condition .= ($key == 0) ? '' : 'OR';
+            $systemTimeZone = MyDate::getTimeZone();
+            $user_timezone = MyDate::getUserTimeZone();
 
-					$startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
-					$endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
-					$startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $user_timezone, $systemTimeZone)));
-					$endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $user_timezone, $systemTimeZone)));
+            $condition = '( ';
+            
+			foreach ($timeSlotArr as $key => $formatedVal) {
+                $condition .= ($key == 0) ? '' : 'OR';
 
-					$condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","'.$endTime.'") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","'.$startTime.'") ) ';
-				
-				}
-				
-				$condition .= ' ) ';
-				$srch->addDirectCondition($condition);
-			}
+                $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
+                $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
+                $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $user_timezone, $systemTimeZone)));
+                $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $user_timezone, $systemTimeZone)));
+
+                $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","'.$endTime.'") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","'.$startTime.'") ) ';
+            }
+                
+            $condition .= ' ) ';
+            $srch->addDirectCondition($condition);
 		}
 		/* ] */
 		/* [ */
