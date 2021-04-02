@@ -157,6 +157,8 @@ class AccountController extends LoggedUserController
     {
         $this->_template->addJs('js/jquery.form.js');
         $this->_template->addJs('js/cropper.js');
+        $this->_template->addJs('js/intlTelInput.js');
+        $this->_template->addCss('css/intlTelInput.css');
         $this->_template->addCss('css/cropper.css');
         $this->_template->addCss('css/custom-full-calendar.css');
         $this->_template->addJs('js/moment.min.js');
@@ -386,6 +388,9 @@ class AccountController extends LoggedUserController
         $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'user_gender', User::getGenderArr());
         $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
+        
+        $frm->addHiddenField('', 'user_phone_code');
+
         if ($teacher) {
             $frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'), 'us_video_link', '');
         }

@@ -23,6 +23,10 @@ $personal_information->developerTags['col'] = 12;
 $user_profile_info = $profileFrm->getField('user_profile_info');
 $user_profile_info->developerTags['col'] = 12;
 
+ $profileFrm->getField('user_phone')->addFieldTagAttribute('id', 'user_phone');
+$phoneCode  = $profileFrm->getField('user_phone_code');
+$phoneCode->addFieldTagAttribute('id', 'user_phone_code');
+
 $user_gender = $profileFrm->getField('user_gender');
 $user_gender->setOptionListTagAttribute('class', 'list-inline list-inline--onehalf');
 
@@ -107,9 +111,24 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 
 
 <script>
-	/* $(document).ready(function(){
-		getCountryStates($( "#user_country_id" ).val(),<?php echo $stateId; ?>,'#user_state_id');
-	}); */
+
+	var countryData = window.intlTelInputGlobals.getCountryData();
+        for (var i = 0; i < countryData.length; i++) {
+            var country = countryData[i];
+            country.name = country.name.replace(/ *\([^)]*\) */g, "");
+        }
+		var input = document.querySelector("#user_phone");
+
+		input.addEventListener("countrychange",function() {
+            var dial_code = $.trim($('.iti__selected-dial-code').text());
+            $('#user_phone_code').val(dial_code);
+        });
+		
+        window.intlTelInput(input, {
+            nationalMode: false,
+            separateDialCode: true,
+            utilsScript: "../.../js/utils.js",
+        });
 
 	$(document).ready(function() {
 		$("[name='user_timezone']").select2();
@@ -128,5 +147,5 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 			var user_name = $(this).val();
 			$('.user_url_name_span').html(user_name);
 		});
-	})
+	});
 </script>
