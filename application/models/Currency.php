@@ -28,13 +28,30 @@ class Currency extends MyAppModel
         return $srch;
     }
 	
-	public static function getDefaultCurrencyData() : array
+	public static function getDefaultCurrencyData(int $langId = 0) : array
     {
         $row = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY'));
         if (empty($row)) {
 			trigger_error(Label::getLabel('ERR_Default_currency_not_specified.', CommonHelper::getLangId()), E_USER_ERROR);
         }
-		return $row;  
+		return $row;   
+    }
+
+    public static function getSystemCurrencyData(int $langId = 0) : array
+    {
+        $searchObject = self::getSearchObject($langId);
+        $searchObject->addCondition('currency_is_default', '=', applicationConstants::YES);
+        $searchObject->addCondition('currency_value', '=', 1);
+        $searchObject->addMultipleFields(['" " as currency_name', 'currency_id', 'currency_code','currency_value','currency_symbol_right','currency_symbol_left']);
+        if($langId > 0) {
+            $searchObject->addMultipleFields(['currency_name']);
+        }
+        $resultSet = $searchObject->getResultSet();
+        $systemCurrency = FatApp::getDb()->fetch($resultSet);
+        if (empty($systemCurrency)) {
+			trigger_error(Label::getLabel('ERR_System_currency_not_specified.', CommonHelper::getLangId()), E_USER_ERROR);
+        }
+		return $systemCurrency;  
     }
 	
 	

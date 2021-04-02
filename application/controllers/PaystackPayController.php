@@ -8,6 +8,7 @@ class PaystackPayController extends PaymentController
     private $paymentSettings = false;
 
     private const INITIALIZE_URL = "https://api.paystack.co/transaction/initialize/";
+    
     private const VERIFY_URL = "https://api.paystack.co/transaction/verify/";
 
     protected function allowedCurrenciesArr()
@@ -111,13 +112,12 @@ class PaystackPayController extends PaymentController
 
 		$orderRs = $orderSrch->getResultSet();
 		$orderInfo = FatApp::getDb()->fetch($orderRs);
-		// echo '<pre>'.$payment_amount;print_r($orderInfo);die;
         if ($payment_amount == null || !$this->paymentSettings || $orderInfo['order_id'] == null) {
             return false;
         }
-        
+
         try {
-            $systemCurrencyCode = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1), 'currency_code');
+            $systemCurrencyCode  = CommonHelper::getSystemCurrencyData()['currency_code'];
 
             $callbackUrl = CommonHelper::generateFullUrl($this->keyName. 'Pay', "callback", [$orderId]); 
 

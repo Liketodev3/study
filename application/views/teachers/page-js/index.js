@@ -132,9 +132,8 @@ $("document").ready(function(){
 				success: function(json) {
 					response($.map(json, function(item) {
 						return {
-							label: item['name'],
-							value: item['id'],
-							name: item['name']
+							value: item['name'], 
+                            id: item['id'],	
 						};
 					}));
 				},
@@ -143,7 +142,7 @@ $("document").ready(function(){
 		'select': function( event, ui) {
 			event.preventDefault();
 			$('input[name=\'teach_language_name\']').val( ui.item.label );
-			$('input[name=\'teach_lang_keyword\']').val( ui.item.label );
+			$('input[name=\'teachLangId\']').val( ui.item.id );
 			$('#frm_fat_id_frmTeacherSrch').submit();
 			$('.language_keyword').parent("li").remove();
 			$('#searched-filters').append("<li><a href='javascript:void(0);' class= 'language_keyword tag__clickable' onclick='removeFilterCustom(\"language_keyword\",this)' >"+langLbl.language+" : " + ui.item.label +"</a></li>");
@@ -290,6 +289,7 @@ function htmlEncode(value){
 			}
 			$(dv).html( ans.html );
             $('#start_record').parent('p').removeClass('d-none');
+			window.scroll(0, 0);
 		});
 	};
 
@@ -334,7 +334,7 @@ function htmlEncode(value){
 
 	removeFilterCustom = function( id, obj ){
 		$('.'+id).parent("li").remove();
-		$('input[name=\'teach_lang_keyword\']').val('');
+		$('input[name=\'teachLangId\']').val('');
 		$('input[name=\'teach_language_name\']').val('');
 		searchTeachers(document.frmTeacherSrch);
 	}

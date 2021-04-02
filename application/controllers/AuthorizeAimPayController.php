@@ -1,7 +1,6 @@
 <?php
 class AuthorizeAimPayController extends PaymentController
 {
-    /* public const KEY_NAME = "AuthorizeAim"; */
     protected $keyName = "AuthorizeAim";
     /*	private $testEnvironmentUrl = 'https://test.authorize.net/gateway/transact.dll';
         private $liveEnvironmentUrl = 'https://secure.authorize.net/gateway/transact.dll';*/

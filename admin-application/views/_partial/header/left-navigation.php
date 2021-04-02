@@ -249,6 +249,10 @@
 					<li><a href="<?php echo CommonHelper::generateUrl('configurations'); ?>"><?php echo Label::getLabel('LBL_General_Settings',$adminLangId);?></a></li>
 				<?php } ?>
 
+				<?php if($objPrivilege->canViewGeneralSettings(AdminAuthentication::getLoggedAdminId(), true)){?>
+					<li><a href="<?php echo CommonHelper::generateUrl('Pwa'); ?>"><?php echo Label::getLabel('LBL_PWA_Settings',$adminLangId);?></a></li>
+				<?php } ?>
+
 				<?php if($objPrivilege->canViewPaymentMethods(AdminAuthentication::getLoggedAdminId(), true)){?>
 					<li><a href="<?php echo CommonHelper::generateUrl('PaymentMethods'); ?>"><?php echo Label::getLabel('LBL_Payment_Methods',$adminLangId);?></a></li>
 				<?php } ?>
@@ -293,7 +297,8 @@
 		<!-- Report [ -->
 		<?php if (
 			$objPrivilege->canViewTopLangReport(AdminAuthentication::getLoggedAdminId(), true) ||
-			$objPrivilege->canViewTeacherPerformanceReport(AdminAuthentication::getLoggedAdminId(), true)
+			$objPrivilege->canViewTeacherPerformanceReport(AdminAuthentication::getLoggedAdminId(), true) ||
+			$objPrivilege->canViewCommissionReport(AdminAuthentication::getLoggedAdminId(), true) 
 			) { ?>
 		<li class="haschild">
 			<a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Reports',$adminLangId);?></a>
@@ -304,6 +309,13 @@
 
 			<?php if ( $objPrivilege->canViewTeacherPerformanceReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
 				<li><a href="<?php echo CommonHelper::generateUrl('TeacherPerformanceReport'); ?>"><?php echo Label::getLabel('LBL_Teacher_Performance',$adminLangId);?></a></li>
+			<?php } ?>
+			<?php
+			if ( $objPrivilege->canViewCommissionReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
+				<li><a href="<?php echo CommonHelper::generateUrl('CommissionReport'); ?>"><?php echo Label::getLabel('LBL_Commission_Report',$adminLangId);?></a></li>
+			<?php } ?>
+			<?php if ( $objPrivilege->canViewLessonStatsReport(AdminAuthentication::getLoggedAdminId(), true) ) { ?>
+				<li><a href="<?php echo CommonHelper::generateUrl('LessonStats'); ?>"><?php echo Label::getLabel('LBL_Lesson_Stats',$adminLangId);?></a></li>
 			<?php } ?>
 			</ul>
 		</li>

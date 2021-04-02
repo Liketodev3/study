@@ -1,5 +1,4 @@
 <?php
-
 class TwocheckoutPayController extends PaymentController
 {
     protected $keyName = "Twocheckout";
@@ -8,7 +7,7 @@ class TwocheckoutPayController extends PaymentController
     public function __construct($action)
     {
         parent::__construct($action);
-        
+
         if (!is_array($this->allowedCurrenciesArr())) {
             $this->setErrorAndRedirect(Label::getLabel('MSG_INVALID_CURRENCY_FORMAT', $this->siteLangId));
         }
@@ -16,6 +15,10 @@ class TwocheckoutPayController extends PaymentController
         if (!in_array($this->systemCurrencyCode, $this->allowedCurrenciesArr())) {
             $msg = Label::getLabel('MSG_INVALID_ORDER_CURRENCY_({CURRENCY})_PASSED_TO_GATEWAY', $this->siteLangId);
             $msg = CommonHelper::replaceStringData($msg, ['{CURRENCY}' => $this->systemCurrencyCode]);
+            $this->setErrorAndRedirect($msg);
+        }
+        if (!$this->validateSettings()) {
+            $msg = Label::getLabel('MSG_PLESAE_UPDATE_2CHECKOUT_PAYMENT_SETTINGS', $this->siteLangId);
             $this->setErrorAndRedirect($msg);
         }
     }
@@ -37,9 +40,12 @@ class TwocheckoutPayController extends PaymentController
             FatUtility::exitWIthErrorCode(404);
         } elseif ($orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
             $frm = $this->getPaymentForm($orderId);
+            $frm->getField('country')->value = $orderInfo['user_country_id'];
+            $frm->getField('cc_owner')->value = $orderInfo['user_name'];
+
             $this->set('frm', $frm);
 
-            if ($this->paymentType != 'HOSTED') {
+            if ($this->paymentType == 'API') {
                 $this->set('sellerId', $this->settings['sellerId']);
                 $this->set('publishableKey', $this->settings['publishableKey']);
                 $this->set('transaction_mode', 'production');
@@ -68,74 +74,42 @@ class TwocheckoutPayController extends PaymentController
     }
 
     /**
-     * Description: This method will be called when the payment type is HOSTED CHECKOUT i.e. $paymentType has HOSTED value.
-     */
-    public function callback()
-    {
-        $post = FatApp::getPostedData();
-        $orderId = $post['li_0_product_id']; //in our case it is order id (hosted checkout case)
-        //$orderPaymentAmount = $request['total'];
-        $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
-        $orderPaymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
-        $hashSecretWord = $this->settings['hashSecretWord']; //2Checkout Secret Word
-        $hashSid = $this->settings['sellerId']; //2Checkout account number
-        $hashOrder = $post['order_number']; //2Checkout Order Number
-        $hashTotal = $orderPaymentAmount; //Sale total to validate against
-        $StringToHash = strtoupper(md5($hashSecretWord . $hashSid . $hashOrder . $hashTotal));
-
-        if ($StringToHash == $post['key']) {
-            if ($post['credit_card_processed'] == 'Y') {
-                $message = '';
-                $message .= '2Checkout Order Number: ' . $post['order_number'] . "\n";
-                $message .= '2Checkout Invoice Id: ' . $post['invoice_id'] . "\n";
-                $message .= 'Merchant Order Id: ' . $post['merchant_order_id'] . "\n";
-                $message .= 'Pay Method: ' . $post['pay_method'] . "\n";
-                $message .= 'Description: ' . $post['li_0_name'] . "\n";
-                $message .= 'Hash Match: ' . 'Keys matched' . "\n";
-                /* Recording Payment in DB */
-                $orderPaymentObj->addOrderPayment($this->settings["plugin_code"], $post['invoice_id'], $orderPaymentAmount, Label::getLabel("LBL_Received_Payment", $this->siteLangId), $message);
-                /* End Recording Payment in DB */
-                FatApp::redirectUser(CommonHelper::generateUrl('custom', 'paymentSuccess', array($orderId)));
-            }
-        }
-        Message::addErrorMessage(Label::getLabel('MSG_ERROR_INVALID_ACCESS', $this->siteLangId));
-        FatApp::redirectUser(CommonHelper::getPaymentFailurePageUrl());
-    }
-
-    /**
      * Description: This function will be called in case of Payment type is API CHECKOUT i.e. $paymentType = API.
      */
     public function send($orderId)
     {
-        $post = FatApp::getPostedData();
+        $frm = $this->getPaymentForm($orderId);
+        if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
+            FatUtility::dieWithError(current($frm->getValidationErrors()));
+        }
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         /* Retrieve Payment to charge corresponding to your order */
         $orderPaymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
         if ($orderPaymentAmount > 0) {
             /* Retrieve Primary Info corresponding to your order */
             $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
+
             $order_actual_paid = number_format(round($orderPaymentAmount, 2), 2, ".", "");
-            $params = array (
+            $params = array(
                 'sellerId' => $this->settings['sellerId'],
                 'privateKey' => $this->settings['privateKey'],
                 'merchantOrderId' => $orderId,
                 'token' => $post['token'],
                 'currency' => $orderInfo["order_currency_code"],
                 'total' => $order_actual_paid,
-                'billingAddr' => 
-                array (
-                  'name' => FatUtility::decodeHtmlEntities($post['cc_owner'], ENT_QUOTES, 'UTF-8'),
-                  "addrLine1" => '530, Phase 2', // @todo
-                  "city" => 'Mohali', // @todo
-                  "state" => 'Punjab', //@todo
-                  "zipCode" => '160055',// @todo
-                  'country' => 'USA', // @todo
-                  'email' => $orderInfo['user_email'],
-                  'phoneNumber' => '5555555555',
-                ),
-                'demo' => true,
-              );
-            
+                'billingAddr' =>
+                array(
+                    'name' => FatUtility::decodeHtmlEntities($post['cc_owner'], ENT_QUOTES, 'UTF-8'),
+                    "addrLine1" => $post['addrLine1'],
+                    "city" => $post['city'],
+                    "state" => $post['state'],
+                    "zipCode" => $post['zipCode'],
+                    'country' => Country::getAttributesById($post['country'], 'country_code'),
+                    'email' => $orderInfo['user_email'],
+                    'phoneNumber' => $orderInfo['user_phone'],
+                )
+            );
+
 
             if (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == false) {
                 $params['demo'] = true;
@@ -210,11 +184,9 @@ class TwocheckoutPayController extends PaymentController
     private function getAPICheckoutForm($orderId)
     {
         $frm = new Form('frmTwoCheckout', array('id' => 'frmTwoCheckout', 'action' => CommonHelper::generateUrl('TwocheckoutPay', 'send', array($orderId)), 'class' => "form form--normal"));
-
-        $frm->addRequiredField(Label::getLabel('LBL_ENTER_CREDIT_CARD_NUMBER', $this->siteLangId), 'ccNo');
+        $frm->addRequiredField(Label::getLabel('LBL_ENTER_CREDIT_CARD_NUMBER', $this->siteLangId), 'ccNo')->requirements()->setRegularExpressionToValidate(applicationConstants::CREDIT_CARD_NO_REGEX);
         $frm->addRequiredField(Label::getLabel('LBL_CARD_HOLDER_NAME', $this->siteLangId), 'cc_owner');
         $frm->addHiddenField('', 'token', '');
-
         $data['months'] = applicationConstants::getMonthsArr($this->siteLangId);
         $today = getdate();
         $data['year_expire'] = array();
@@ -225,9 +197,16 @@ class TwocheckoutPayController extends PaymentController
         $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_YEAR', $this->siteLangId), 'expYear', $data['year_expire'], '', array(), '');
         $fld = $frm->addPasswordField(Label::getLabel('LBL_CVV_SECURITY_CODE', $this->siteLangId), 'cvv');
         $fld->requirements()->setRequired(true);
-        /* $frm->addCheckBox(Label::getLabel('LBL_SAVE_THIS_CARD_FOR_FASTER_CHECKOUT',$this->siteLangId), 'cc_save_card','1'); */
+        $fld->requirements()->setRegularExpressionToValidate(applicationConstants::CVV_NO_REGEX);
+        $frm->addRequiredField(Label::getLabel('LBL_Address'), 'addrLine1');
+        $frm->addRequiredField(Label::getLabel('LBL_City'), 'city');
+        $frm->addRequiredField(Label::getLabel('LBL_State'), 'state');
+        $frm->addRequiredField(Label::getLabel('LBL_Zip'), 'zipCode');
+        $country = new Country();
+        $countriesArr = $country->getCountriesArr($this->siteLangId);
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'country', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
+        $fld->requirement->setRequired(true);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Pay_Now', $this->siteLangId));
-
         return $frm;
     }
 
@@ -237,5 +216,16 @@ class TwocheckoutPayController extends PaymentController
             "https://www.2checkout.com/checkout/api/2co.min.js",
         ];
         FatUtility::dieJsonSuccess($json);
+    }
+
+    public function validateSettings(): bool
+    {
+        if (
+            empty($this->settings['sellerId']) || empty($this->settings['publishableKey']) ||
+            empty($this->settings['privateKey']) || empty($this->settings['hashSecretWord'])
+        ) {
+            return false;
+        }
+        return true;
     }
 }

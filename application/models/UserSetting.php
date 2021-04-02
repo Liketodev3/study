@@ -23,6 +23,21 @@ class UserSetting extends MyAppModel
         }
         return true;
     }
+    public function getUserSiteLang() : array
+    {
+       $userSetting =  new UserSettingSearch();
+       $userSetting->doNotCalculateRecords();
+        $userSetting->setPagesize(1);
+       $userSetting->getUserSiteLang($this->mainTableRecordId);
+       $resultSet = $userSetting->getResultSet();
+       $data =  FatApp::getDb()->fetch($resultSet);
+      
+       if(empty($data)) {
+           return array();
+       }
+
+       return $data;
+    }
 
     public static function getUserSettings($userId, $tlangId = null, $duration = 0)
     {
@@ -41,6 +56,7 @@ class UserSetting extends MyAppModel
                 'us_teach_slanguage_id',
                 'us_google_access_token',
                 'us_google_access_token_expiry',
+                'us_site_lang',
                 'utl.*'
                 )
         );

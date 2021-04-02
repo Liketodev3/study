@@ -1,9 +1,13 @@
 <?php
-class TeacherLessonsPlanController extends TeacherBaseController
+class TeacherLessonsPlanController extends LoggedUserController
 {
     public function __construct($action)
     {
         parent::__construct($action);
+        $learnerAllowedActions = ['getFileById'];
+        if (!User::isTeacher() && !in_array($action, $learnerAllowedActions)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
     }
 
     public function index()
@@ -23,12 +27,12 @@ class TeacherLessonsPlanController extends TeacherBaseController
         $frm->addTextarea(Label::getLabel('LBl_Description'), 'tlpn_description');
         $frm->addSelectBox(Label::getLabel('LBl_Difficulty_Level'), 'tlpn_level', LessonPlan::getDifficultyArr())->requirement->setRequired(true);
         $fld = $frm->addFileUpload(Label::getLabel('LBl_Plan_Files'), 'tlpn_file[]', array('multiple' => 'multiple', 'id' => 'tlpn_file'));
-        $fld->htmlAfterField = "<small>".Label::getLabel('LBL_NOTE:_Allowed_Lesson_File_types!')."</small>";
+        $fld->htmlAfterField = "<small>" . Label::getLabel('LBL_NOTE:_Allowed_Lesson_File_types!') . "</small>";
         $frm->addHtml('', 'tlpn_file_display', '', array('id' => 'tlpn_file_display'));
         $fld = $frm->addRequiredField(Label::getLabel('LBl_Tags'), 'tlpn_tags', '', array('id' => 'tlpn_tags'));
-        $fld->htmlAfterField = "<small>".Label::getLabel('LBL_NOTE:_Press_enter_inside_text_box_to_create_tag!')."</small>";
+        $fld->htmlAfterField = "<small>" . Label::getLabel('LBL_NOTE:_Press_enter_inside_text_box_to_create_tag!') . "</small>";
         $fld = $frm->addTextarea(Label::getLabel('LBl_Links'), 'tlpn_links');
-        $fld->htmlAfterField = "<small>".Label::getLabel('LBl_Links')."</small>";
+        $fld->htmlAfterField = "<small>" . Label::getLabel('LBl_Links') . "</small>";
         $frm->addFileUpload(Label::getLabel('LBl_Plan_Banner_Image'), 'tlpn_image');
         $frm->addHiddenField('', 'tlpn_id');
         $frm->addSubmitButton('', 'submit', 'Save');
@@ -39,7 +43,7 @@ class TeacherLessonsPlanController extends TeacherBaseController
     {
         $frm = $this->getFrm();
         if ($lessonPlanId > 0) {
-            $data=LessonPlan::getAttributesById($lessonPlanId);
+            $data = LessonPlan::getAttributesById($lessonPlanId);
             $frm->fill($data);
         }
         $this->set('userId', UserAuthentication::getLoggedUserId());
@@ -51,12 +55,11 @@ class TeacherLessonsPlanController extends TeacherBaseController
     public function uploadMultipleFiles()
     {
         $lessonPlan = new LessonPlan();
-        $lessonPlanId = $lessonPlan->getMainTableRecordId()+1;
-        for ($i=0; $i<count($_FILES['tlpn_file']['name']); $i++) {
+        $lessonPlanId = $lessonPlan->getMainTableRecordId() + 1;
+        for ($i = 0; $i < count($_FILES['tlpn_file']['name']); $i++) {
             if (!empty($_FILES['tlpn_file']['name'][$i])) {
                 $fileHandlerObj = new AttachedFile();
-                if (!$res = $fileHandlerObj->saveDoc($_FILES['tlpn_file']['tmp_name'][$i], AttachedFile::FILETYPE_LESSON_PLAN_FILE, $lessonPlanId, 0, $_FILES['tlpn_file']['name'][$i], 0)
-                ) {
+                if (!$res = $fileHandlerObj->saveDoc($_FILES['tlpn_file']['tmp_name'][$i], AttachedFile::FILETYPE_LESSON_PLAN_FILE, $lessonPlanId, 0, $_FILES['tlpn_file']['name'][$i], 0)) {
                     Message::addErrorMessage($fileHandlerObj->getError());
                     FatUtility::dieJsonError(Message::getHtml());
                 }
@@ -80,8 +83,8 @@ class TeacherLessonsPlanController extends TeacherBaseController
         if (true !== $lessonPlan->save()) {
             FatUtility::dieJsonError($lessonPlan->getError());
         }
-        $lessonPlanId=$lessonPlan->getMainTableRecordId();
-        for ($i=0;$i<count($_FILES['tlpn_file']['name']);$i++) {
+        $lessonPlanId = $lessonPlan->getMainTableRecordId();
+        for ($i = 0; $i < count($_FILES['tlpn_file']['name']); $i++) {
             if (!empty($_FILES['tlpn_file']['name'][$i])) {
                 $fileHandlerObj = new AttachedFile();
                 if (!$res = $fileHandlerObj->saveDoc($_FILES['tlpn_file']['tmp_name'][$i], AttachedFile::FILETYPE_LESSON_PLAN_FILE, $lessonPlanId, 0, $_FILES['tlpn_file']['name'][$i], 0)) {
@@ -104,7 +107,7 @@ class TeacherLessonsPlanController extends TeacherBaseController
     public function remove($lessonPlanId)
     {
         $lessonPlanId = FatUtility::int($lessonPlanId);
-        $lessonPlan=new LessonPlan($lessonPlanId);
+        $lessonPlan = new LessonPlan($lessonPlanId);
         $lessonPlan->deleteRecord();
         if ($lessonPlan->getError()) {
             FatUtility::dieJsonError($lessonPlan->getError());
@@ -135,7 +138,7 @@ class TeacherLessonsPlanController extends TeacherBaseController
             FatUtility::dieWithError($db->getError());
         }
 
-        $lessonPlan=new LessonPlan($post['lessonPlanId']);
+        $lessonPlan = new LessonPlan($post['lessonPlanId']);
         if (!$lessonPlan->deleteRecord()) {
             FatUtility::dieWithError($db->getError());
         }
@@ -145,10 +148,10 @@ class TeacherLessonsPlanController extends TeacherBaseController
     public function removeFile($fileId)
     {
         $fileId = FatUtility::int($fileId);
-        $lessonPlan=new AttachedFile($fileId);
+        $lessonPlan = new AttachedFile($fileId);
         $lessonPlan->deleteRecord();
         if ($lessonPlan->getError()) {
-            FatUtility::dieJsonError($AttachedFile->getError());
+            FatUtility::dieJsonError($lessonPlan->getError());
         }
         FatUtility::dieJsonSuccess(Label::getLabel("Record Deleted Successfully!"));
     }
@@ -170,7 +173,7 @@ class TeacherLessonsPlanController extends TeacherBaseController
         ));
         $srch->addCondition('tlpn_user_id', '=', UserAuthentication::getLoggedUserId());
         if (!empty($post['keyword'])) {
-            $srch->addCondition('tlpn_title', 'like', '%'.$post['keyword'].'%');
+            $srch->addCondition('tlpn_title', 'like', '%' . $post['keyword'] . '%');
         }
         if (!empty($post['status'])) {
             $srch->addCondition('tlpn_level', '=', $post['status']);
@@ -185,7 +188,7 @@ class TeacherLessonsPlanController extends TeacherBaseController
         $this->_template->render(false, false);
     }
 
-    public function lessonPlanFile($lessonPlanId = 0, $subRecordId=0, $sizeType = '')
+    public function lessonPlanFile($lessonPlanId = 0, $subRecordId = 0, $sizeType = '')
     {
         $recordId = FatUtility::int($lessonPlanId);
         $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_LESSON_PLAN_FILE, $recordId, $subRecordId);
@@ -195,14 +198,14 @@ class TeacherLessonsPlanController extends TeacherBaseController
                 $w = 100;
                 $h = 100;
                 AttachedFile::displayImage($image_name, $w, $h);
-            break;
+                break;
             default:
                 AttachedFile::displayOriginalImage($image_name);
-            break;
+                break;
         }
     }
 
-    public function lessonPlanImage($lessonPlanId = 0, $subRecordId=0, $sizeType = '')
+    public function lessonPlanImage($lessonPlanId = 0, $subRecordId = 0, $sizeType = '')
     {
         $recordId = FatUtility::int($lessonPlanId);
         $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_LESSON_PLAN_IMAGE, $recordId, $subRecordId);
@@ -212,12 +215,12 @@ class TeacherLessonsPlanController extends TeacherBaseController
                 $w = 100;
                 $h = 100;
                 AttachedFile::displayImage($image_name, $w, $h);
-            break;
+                break;
             default:
                 $w = 60;
                 $h = 60;
                 AttachedFile::displayImage($image_name, $w, $h);
-            break;
+                break;
         }
     }
 

@@ -91,7 +91,7 @@ class MyDate extends FatDate
 
     public static function getDayNumber($date)
     {
-        $number = date('N', strtotime(date($date)));
+        $number = date('N', strtotime($date));
         if (7 == $number) { //== Sunday is 0 in full-calendar
             $number = 0;
         }
@@ -165,5 +165,42 @@ class MyDate extends FatDate
     {
         return Timezone::getAssocByLang(CommonHelper::getLangId());
     }
+
+    public static function getWeekStartAndEndDate(DateTime $dateTime): array
+    {
+        // $dateTime = ($dateTime->format('w') == 0) ? $dateTime : $dateTime->modify('last Sunday');
+        $dateTime = $dateTime->modify('last saturday')->modify('+1 day');
+        return array(
+            'weekStart' => $dateTime->format('Y-m-d'),
+            'weekEnd' =>  $dateTime->modify('next saturday')->format('Y-m-d'),
+        );
+    }
+
+    public static function changeWeekDaysToDate(array $weekDays) : array
+	{
+		$user_timezone = MyDate::getUserTimeZone();
+		$systemTimeZone = MyDate::getTimeZone();
+		$newWeekDayArray = [];
+		foreach($weekDays as $key => $day){
+			
+			$dateTime = new DateTime();
+			$dateTime->setISODate(2018, 2, $day);
+			$day = $dateTime->format('d');
+			$date = "2018-01-".$day;
+
+			$dateStart = $date." 00:00:00";
+            $dateStart = MyDate::changeDateTimezone($dateStart, $user_timezone, $systemTimeZone);
+            
+			$date =  date('Y-m-d',strtotime($date." +1 day"));
+			$dateEnd = $date." 00:00:00";
+			$dateEnd = MyDate::changeDateTimezone($dateEnd, $user_timezone, $systemTimeZone);
+			
+			$newWeekDayArray[$key]['startDate'] = $dateStart;
+			$newWeekDayArray[$key]['endDate'] =$dateEnd;
+		}
+			// prx($newWeekDayArray);
+		return $newWeekDayArray;
+
+	}
 
 }

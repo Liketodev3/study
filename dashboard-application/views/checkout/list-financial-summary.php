@@ -37,16 +37,19 @@
 
 
 <div class="table-total">
-	<table>
-		<tr>
-			<th><?php echo Label::getLabel('LBL_Product'); ?></th>
-			<th><?php echo Label::getLabel('LBL_Price'); ?></th>
-		</tr>
+	<table>		
 		<tr>
 			<td>
-				<h6><strong><?php echo $cart['itemName']; ?></strong><br><small>
+				<h6><strong><?php echo $cart['itemName']; ?></strong><br><small>				
 				
-				<?php 
+                <?php
+                if(!empty($cart['lpackage_lessons'])){
+                    echo Label::getLabel('LBL_Lesson_Count').': '. sprintf(Label::getLabel('LBL_%s_Lesson(s)'), $cart['lpackage_lessons']).'<br>';
+                }
+                if(!empty($cart['lessonDuration'])){
+                    echo Label::getLabel('LBL_Duration').': '. sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cart['lessonDuration']).'<br>';
+                }
+                
 				if( $cart['startDateTime'] != '' && $cart['endDateTime'] ){
 					echo date("M d, Y h:i A", strtotime($cart['startDateTime'])).'-'.date("h:i A", strtotime($cart['endDateTime'])); 
 				} ?>

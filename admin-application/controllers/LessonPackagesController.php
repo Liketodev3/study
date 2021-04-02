@@ -42,23 +42,31 @@ class LessonPackagesController extends AdminBaseController
     public function form($lPackageId)
     {
         $lPackageId = FatUtility::int($lPackageId);
-        $frm           = $this->getForm($lPackageId);
+
+        $isFreeTrial =  applicationConstants::NO;
+        $lessonPackageData =[];
         if (0 < $lPackageId) {
-            $data = LessonPackage::getAttributesById($lPackageId, array(
+            $lessonPackageData = LessonPackage::getAttributesById($lPackageId, array(
                 'lpackage_id',
                 'lpackage_identifier',
                 'lpackage_lessons',
                 'lpackage_active',
                 'lpackage_is_free_trial'
             ));
-            if ($data === false) {
+            if ($lessonPackageData === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
-            $data['lpackage_lessons'] = $data['lpackage_lessons'] * 1;
-            $frm->fill($data);
+            $isFreeTrial = $lessonPackageData['lpackage_is_free_trial'];
+            $lessonPackageData['lpackage_lessons'] = $lessonPackageData['lpackage_lessons'] * 1;
+           
         }
+      
+        $frm = $this->getForm($lPackageId, $isFreeTrial);
+        $frm->fill($lessonPackageData);
+
         $this->set('languages', Language::getAllNames());
         $this->set('lPackageId', $lPackageId);
+        $this->set('isFreeTrial', $isFreeTrial);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
@@ -66,36 +74,42 @@ class LessonPackagesController extends AdminBaseController
     public function setup()
     {
         $this->objPrivilege->canEditLessonPackages();
-        $frm  = $this->getForm();
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+        $lPackageId = FatApp::getPostedData('lpackage_id', FatUtility::VAR_INT, 0);
+       
+        $isFreeTrial = applicationConstants::NO;
+        if ($lPackageId > 0) {
+            
+            $srch = LessonPackage::getSearchObject(0, false);
+            $srch->setPageSize(1);
+            $srch->doNotCalculateRecords();
+            $srch->addMultipleFields(array('lpackage_is_free_trial', 'lpackage_id'));
+            $srch->addCondition('lpackage_id', '=', $lPackageId);
+            $rs = $srch->getResultSet();
+            $lessonPackageData = FatApp::getDb()->fetch($rs);
+            if (empty($lessonPackageData)) {
+                Message::addErrorMessage(Label::getLabel('LBL_INVALID_REQUEST'));
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+            
+            $isFreeTrial = $lessonPackageData['lpackage_is_free_trial'];
+        }
+       
+        $form  = $this->getForm($lPackageId, $isFreeTrial);
+        $post = $form->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
-            Message::addErrorMessage(current($frm->getValidationErrors()));
+            Message::addErrorMessage(current($form->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
+        unset($post['lpackage_id'], $post['lpackage_is_free_trial']);
+        if( $isFreeTrial == applicationConstants::YES) {
+            unset($post['lpackage_lessons']);
+        }
 
-        $lPackageId = $post['lpackage_id'];
-        unset($post['lpackage_id']);
         if ($lPackageId == 0) {
             $post['lpackage_added_on'] = date('Y-m-d H:i:s');
         }
-
-        /* add check that Free Trial can only be one time in system[ */
-        $srch = LessonPackage::getSearchObject(0, false);
-        $srch->addCondition('lpackage_is_free_trial', '=', 1);
-        $srch->setPageSize(1);
-        $srch->doNotCalculateRecords();
-        $srch->addMultipleFields(array('lpackage_is_free_trial'));
-        if ($lPackageId > 0) {
-            $srch->addCondition('lpackage_id', '!=', $lPackageId);
-        }
-        $rs = $srch->getResultSet();
-        $row = FatApp::getDb()->fetch($rs);
-        if ($row && $post['lpackage_is_free_trial'] == 1) {
-            Message::addErrorMessage("Free Trial Package can only be one time.");
-            FatUtility::dieWithError(Message::getHtml());
-        }
-        /* ] */
-
+      
+        
         $record = new LessonPackage($lPackageId);
         $record->assignValues($post);
         if (!$record->save()) {
@@ -233,17 +247,24 @@ class LessonPackagesController extends AdminBaseController
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
 
-    private function getForm($lPackageId = 0)
+    private function getForm($lPackageId = 0, int $isFreeTrial = applicationConstants::NO)
     {
         $lPackageId = FatUtility::int($lPackageId);
         $frm           = new Form('frmLessonPackage');
         $frm->addHiddenField('', 'lpackage_id', $lPackageId);
         $frm->addRequiredField(Label::getLabel('LBL_Lesson_Package_Identifier', $this->adminLangId), 'lpackage_identifier');
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Package_Lessons', $this->adminLangId), 'lpackage_lessons');
+        $fld = $frm->addFloatField(Label::getLabel('LBL_Package_Lessons', $this->adminLangId), 'lpackage_lessons');
+        $fld->requirements()->setRequired(true);
+
+        if($isFreeTrial == applicationConstants::NO){
+            $fld->requirements()->setFloatPositive();
+            $fld->requirements()->setRange(1,9999);
+        }
+       
         $fld->htmlAfterField = '<small>' . Label::getLabel('LBL_Note:_Enter_Number_of_lessons_in_a_package') . '</small>';
 
-        $yesNoArr = applicationConstants::getYesNoArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Free_Trial'), 'lpackage_is_free_trial', $yesNoArr, applicationConstants::NO, array(), '');
+        // $yesNoArr = applicationConstants::getYesNoArr($this->adminLangId);
+        // $frm->addSelectBox(Label::getLabel('LBL_Free_Trial'), 'lpackage_is_free_trial', $yesNoArr, applicationConstants::NO, array(), '');
 
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'lpackage_active', $activeInactiveArr, '', array(), '');

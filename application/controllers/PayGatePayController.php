@@ -2,15 +2,16 @@
 class PayGatePayController extends PaymentController
 {
    
-    private $keyName = "PayGate";
+    protected $keyName = "PayGate";
     private $initiateUrl = 'https://secure.paygate.co.za/payweb3/initiate.trans';
     private $processUrl = 'https://secure.paygate.co.za/payweb3/process.trans';
     private $queryUrl = 'https://secure.paygate.co.za/payweb3/query.trans';
 
     private $error;
     private $isError;
+    
     private $orderInfo;
-    private $settings;
+    public $settings;
 
     //  out of these six status only there are used 
     const STATUS_APPROVED = 1;  // in use
@@ -88,11 +89,11 @@ class PayGatePayController extends PaymentController
                             'PAYGATE_ID' => $settings['paygateId'],
                             'REFERENCE' => $orderId,
                             'AMOUNT'    => $this->formatPayableAmount($orderInfo['paymentAmount']),
-                            'CURRENCY'  => $orderInfo["order_currency_code"],
+                            'CURRENCY'  => $orderInfo["order_currency_code"], // system currency code
                             'RETURN_URL' => CommonHelper::generateFullUrl('PayGatePay', 'returnResult', array($orderId)),
                             'TRANSACTION_DATE' => $dateTime->format('Y-m-d H:i:s'),
                             'LOCALE' => strtolower($orderInfo['order_language_code']),
-                            'COUNTRY' => 'USA', // need
+                            'COUNTRY' => 'ZAF', 
                             'EMAIL'  => $orderInfo['user_email'],
                             'NOTIFY_URL' =>  CommonHelper::generateFullUrl('PayGatePay', 'callback')
                         );

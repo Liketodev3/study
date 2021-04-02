@@ -8,15 +8,12 @@ class PaymentController extends MyAppController
     public function __construct($action)
     {
         parent::__construct($action);
-        $currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
+        $currency = CommonHelper::getSystemCurrencyData();
 
-        $currency = new Currency($currency_id);
-        if(!$currency->loadFromDb()){
-            $this->setErrorAndRedirect(Label::getLabel('MSG_DEFAULT_CURRENCY_NOT_SET', $this->siteLangId));
-        }
+       
 
-        $this->systemCurrencyId = $currency_id;
-        $this->systemCurrencyCode = strtoupper($currency->getFldValue('currency_code'));
+        $this->systemCurrencyId = CommonHelper::getSystemCurrencyId();
+        $this->systemCurrencyCode = strtoupper($currency['currency_code']);
 
         $this->set('systemCurrencyCode', $this->systemCurrencyCode);
         $this->loadPaymenMethod();

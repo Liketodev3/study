@@ -21,7 +21,7 @@ $langFrm->developerTags['fld_default_col'] = 12;
 			<?php 
 			if ($cCategoryId > 0) {
 				foreach($languages as $langId=>$langName){?>
-					<li><a class="<?php echo ($lang_id == $langId)?'active':''?>" href="javascript:void(0);" onclick="editCourseCategoryLangForm(<?php echo $cCategoryId ?>, <?php echo $langId;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+					<li><a class="<?php echo ($lang_id == $langId)?'active':''?>" href="javascript:void(0);" onclick="editCourseCategoryLangForm(<?php echo $cCategoryId ?>, <?php echo $langId;?>);"><?php echo $langName;?></a></li>
 				<?php }
 				}
 			?>

@@ -22,7 +22,7 @@ $faqCatLangFrm->developerTags['fld_default_col'] = 12;
 			<?php 
 			if ($faqcat_id > 0) {
 				foreach($languages as $langId => $langName){?>
-					<li><a class="<?php echo ($faqcat_lang_id == $langId)?'active':''?>" href="javascript:void(0);" onclick="faqCatLangForm(<?php echo $faqcat_id ?>, <?php echo $langId;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+					<li><a class="<?php echo ($faqcat_lang_id == $langId)?'active':''?>" href="javascript:void(0);" onclick="faqCatLangForm(<?php echo $faqcat_id ?>, <?php echo $langId;?>);"><?php echo $langName;?></a></li>
 				<?php }
 			} ?>			
 		</ul>

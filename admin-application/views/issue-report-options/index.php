@@ -23,7 +23,7 @@
 				$frmSearch->setFormTagAttribute ( 'onsubmit', 'searchIssueReportOptions(this); return(false);');
 				$frmSearch->setFormTagAttribute ( 'class', 'web_form' );
 				$frmSearch->developerTags['colClassPrefix'] = 'col-md-';					
-				$frmSearch->developerTags['fld_default_col'] = 6;
+				$frmSearch->developerTags['fld_default_col'] = 4;
 				$btn_clear = $frmSearch->getField('btn_clear');
 				$btn_clear->addFieldTagAttribute('onclick', 'clearSearch()');					
 				echo  $frmSearch->getFormHtml();

@@ -23,7 +23,7 @@
                         <div>
                             <div class="tab-swticher tab-swticher-small calender-lessons-js">
                                 <a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons'); ?>" class="btn btn--large is-active list-js"><?php echo Label::getLabel('LBL_List'); ?></a>
-                                <a onclick="viewCalendar();" href="javascript:void(0);" class="btn btn--large calender-js"><?php echo Label::getLabel('LBL_Calender'); ?></a>
+                                <a onclick="viewCalendar();" href="javascript:void(0);" class="btn btn--large calender-js"><?php echo Label::getLabel('LBL_Calendar'); ?></a>
                             </div>
 
                         </div>

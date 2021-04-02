@@ -4,6 +4,10 @@ $frm->setFormTagAttribute('onsubmit', 'setupLessonPackage(this); return(false);'
 $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 12; 	
 
+if($isFreeTrial == applicationConstants::YES){
+
+	$frm->getField('lpackage_lessons')->addFieldTagAttribute('disabled', true);
+}
 
 ?>
 
@@ -23,7 +27,7 @@ $frm->developerTags['fld_default_col'] = 12;
 			<?php 
 			$inactive=($lPackageId==0)?'fat-inactive':'';	
 			foreach($languages as $langId=>$langName){?>
-				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($lPackageId>0){?> onclick="editLessonPackageLangForm(<?php echo $lPackageId ?>, <?php echo $langId;?>);" <?php }?>><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($lPackageId>0){?> onclick="editLessonPackageLangForm(<?php echo $lPackageId ?>, <?php echo $langId;?>);" <?php }?>><?php echo $langName;?></a></li>
 			<?php } ?>
 			<!--li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($lPackageId>0){?> onclick="LessonPackageMediaForm(<?php echo $lPackageId ?>);" <?php }?>><?php echo Label::getLabel('LBL_Media',$adminLangId);?></a></li-->
 		</ul>

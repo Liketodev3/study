@@ -11,10 +11,10 @@ $teacherImage = '';
 $studentImageTag = '';
 $studentImage = '';
 
-$baseSeoUrl = CommonHelper::generateUrl('Teachers', 'profile').'/';
-if( true == User::isProfilePicUploaded( $lessonData['learnerId'] ) ){
-    $studentImage = CommonHelper::generateFullUrl('Image','user', array( $lessonData['learnerId']), CONF_WEBROOT_FRONT_URL).'?'.time();
-    $studentImageTag =  '<img src="'.$studentImage.'" />';
+$baseSeoUrl = CommonHelper::generateUrl('Teachers', 'profile') . '/';
+if (true == User::isProfilePicUploaded($lessonData['learnerId'])) {
+    $studentImage = CommonHelper::generateFullUrl('Image', 'user', array($lessonData['learnerId']), CONF_WEBROOT_FRONT_URL) . '?' . time();
+    $studentImageTag =  '<img src="' . $studentImage . '" />';
 }
 
 if (true == User::isProfilePicUploaded($lessonData['teacherId'])) {
@@ -44,7 +44,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
 ?>
 <section class="section section--grey section--page">
     <div class="screen">
-        <div class="screen__left" style="background-image:url(<?php echo CONF_WEBROOT_FRONTEND ?>images/2000x900_1.jpg">
+        <div class="screen__left" style="background-image:url(<?php echo CommonHelper::generateUrl('Image', 'lesson', array($siteLangId), CONF_WEBROOT_FRONTEND) ?>">
             <div class="screen__center-content">
                 <?php if ($lessonData['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
                     <div class="alert alert--info" role="alert">
@@ -97,16 +97,16 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                     <a href="<?php echo CommonHelper::generateUrl('teacher'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
 
                 <?php endif; ?>
-                
+
                 <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startTime > $curDate || $curDate > $endTime || !$isScheduled ? 'style="display:none;"' : '') ?>>
                     <?php $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT); ?>
-                    <?php if($activeMettingTool==ApplicationConstants::MEETING_ZOOM): ?>
-                    <a href="javascript:void(0);" class="btn btn--primary btn--large -hide-mobile" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
-                    <a href="javascript:void(0);" class="btn btn--secondary btn--large" onclick="joinLessonFromApp(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
-                    <?php else: ?>
-                    
-                    <a href="javascript:void(0);" class="btn btn--secondary btn--large" id="joinL" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>
-                    
+                    <?php if ($activeMettingTool == ApplicationConstants::MEETING_ZOOM) : ?>
+                        <a href="javascript:void(0);" class="btn btn--primary btn--large -hide-mobile" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
+                        <a href="javascript:void(0);" class="btn btn--secondary btn--large" onclick="joinLessonFromApp(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
+                    <?php else : ?>
+
+                        <a href="javascript:void(0);" class="btn btn--secondary btn--large" id="joinL" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>
+
                     <?php endif; ?>
                 </div>
 
@@ -132,8 +132,8 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
             <div class="tab-horizontal tabs-js">
                 <ul>
                     <li class="is-active"><a href="#tab1"><?php echo Label::getLabel('LBL_Info'); ?></a></li>
-                    <?php if($flashCardEnabled){ ?>
-                    <li><a href="#tab2" id="li_tab2"><?php echo Label::getLabel('LBL_Flashcards'); ?></a></li>
+                    <?php if ($flashCardEnabled) { ?>
+                        <li><a href="#tab2" id="li_tab2"><?php echo Label::getLabel('LBL_Flashcards'); ?></a></li>
                     <?php } ?>
                 </ul>
             </div>
@@ -239,7 +239,8 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                                                         <svg width="35px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="m256 512c-141.164062 0-256-114.835938-256-256s114.835938-256 256-256 256 114.835938 256 256-114.835938 256-256 256zm0-480c-123.519531 0-224 100.480469-224 224s100.480469 224 224 224 224-100.480469 224-224-100.480469-224-224-224zm0 0" />
                                                             <path d="m176.8125 351.1875c-4.097656 0-8.195312-1.554688-11.308594-4.691406-6.25-6.25-6.25-16.382813 0-22.632813l158.398438-158.402343c6.253906-6.25 16.386718-6.25 22.636718 0s6.25 16.382812 0 22.636718l-158.402343 158.398438c-3.15625 3.136718-7.25 4.691406-11.324219 4.691406zm0 0" />
-                                                            <path d="m335.1875 351.1875c-4.09375 0-8.191406-1.554688-11.304688-4.691406l-158.398437-158.378906c-6.253906-6.25-6.253906-16.382813 0-22.632813 6.25-6.253906 16.382813-6.253906 22.632813 0l158.398437 158.398437c6.253906 6.25 6.253906 16.382813 0 22.632813-3.132813 3.117187-7.230469 4.671875-11.328125 4.671875zm0 0" /></svg>
+                                                            <path d="m335.1875 351.1875c-4.09375 0-8.191406-1.554688-11.304688-4.691406l-158.398437-158.378906c-6.253906-6.25-6.253906-16.382813 0-22.632813 6.25-6.253906 16.382813-6.253906 22.632813 0l158.398437 158.398437c6.253906 6.25 6.253906 16.382813 0 22.632813-3.132813 3.117187-7.230469 4.671875-11.328125 4.671875zm0 0" />
+                                                        </svg>
                                                     </a>
                                                 </li>
                                             <?php } else { ?>
@@ -283,7 +284,8 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                                             <li class="cancel-lesson--js">
                                                 <a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lessonData['slesson_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_Cancel_Lesson'); ?>">
                                                     <svg width="14px" viewBox="0 0 329.26933 329" width="329pt" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0" /></svg>
+                                                        <path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0" />
+                                                    </svg>
                                                 </a>
                                             </li>
                                         <?php } ?>
@@ -303,7 +305,8 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                                                         <path d="m81.773438 392.457031h124.496093c4.171875 0 7.554688-3.382812 7.554688-7.554687 0-4.175782-3.382813-7.558594-7.554688-7.558594h-124.496093c-4.175782 0-7.558594 3.382812-7.558594 7.558594 0 4.171875 3.382812 7.554687 7.558594 7.554687zm0 0" />
                                                         <path d="m142.21875 415.085938h-60.445312c-4.171876 0-7.558594 3.386718-7.558594 7.558593 0 4.167969 3.386718 7.554688 7.558594 7.554688h60.445312c4.167969 0 7.554688-3.386719 7.554688-7.554688 0-4.171875-3.386719-7.558593-7.554688-7.558593zm0 0" />
                                                         <path d="m218.832031 415.085938h-46.390625c-4.171875 0-7.558594 3.386718-7.558594 7.558593 0 4.167969 3.386719 7.554688 7.558594 7.554688h46.390625c4.179688 0 7.554688-3.386719 7.554688-7.554688 0-4.171875-3.375-7.558593-7.554688-7.558593zm0 0" />
-                                                        <path d="m464.441406 260.8125c-35.535156-31.882812-83.042968-43.054688-126.957031-33.214844v-203.296875c0-13.398437-10.898437-24.300781-24.308594-24.300781h-288.867187c-13.410156 0-24.308594 10.902344-24.308594 24.300781v462.164063c0 13.398437 10.898438 24.296875 24.308594 24.296875h288.867187c5.933594 0 11.375-2.125 15.59375-5.660157 30.3125 8.808594 62.25 7.109376 90.527344-3.539062 3.910156-1.46875 5.882813-5.832031 4.414063-9.730469-1.472657-3.90625-5.832032-5.882812-9.730469-4.410156-44.582031 16.75-96.628907 7.976563-133.253907-26.546875-83.785156-78.9375-28.644531-221.621094 88.160157-221.621094 65.855469 0 120.609375 49.472656 127.347656 115.085938 4.953125 48.210937-17.320313 93.960937-56.898437 120.136718-3.484376 2.296876-4.441407 6.980469-2.136719 10.464844 2.296875 3.484375 6.992187 4.433594 10.46875 2.136719 78.746093-52.058594 86.222656-163.960937 16.773437-226.265625zm-215.226562 185.746094h-186.746094c-3.160156 0-5.730469-2.578125-5.730469-5.742188v-74.085937c0-3.164063 2.570313-5.742188 5.730469-5.742188h163.082031c-1.269531 29.382813 6.363281 59.460938 23.664063 85.570313zm31.53125-192.234375c-15.316406 11.921875-28.125 26.917969-37.484375 43.84375h-180.792969c-3.160156 0-5.730469-2.582031-5.730469-5.742188v-74.085937c0-3.164063 2.570313-5.742188 5.730469-5.742188h212.546875c3.164063 0 5.730469 2.578125 5.730469 5.742188zm41.628906-22.476563c-9.25 3.144532-18.125 7.234375-26.515625 12.191406v-25.699218c0-11.496094-9.347656-20.855469-20.84375-20.855469h-212.546875c-11.492188 0-20.84375 9.359375-20.84375 20.855469v74.085937c0 11.492188 9.351562 20.851563 20.84375 20.851563h173.558594c-4.269532 10.445312-7.300782 21.386718-8.996094 32.601562h-164.5625c-11.492188 0-20.84375 9.359375-20.84375 20.851563v74.085937c0 11.496094 9.351562 20.855469 20.84375 20.855469h198.28125c12.085938 13.878906 27.125 25.601563 43.914062 33.980469h-280.355468c-5.078125 0-9.199219-4.121094-9.199219-9.1875v-462.164063c0-5.070312 4.121094-9.1875 9.199219-9.1875h288.867187c5.078125 0 9.199219 4.117188 9.199219 9.1875zm0 0" /></svg>
+                                                        <path d="m464.441406 260.8125c-35.535156-31.882812-83.042968-43.054688-126.957031-33.214844v-203.296875c0-13.398437-10.898437-24.300781-24.308594-24.300781h-288.867187c-13.410156 0-24.308594 10.902344-24.308594 24.300781v462.164063c0 13.398437 10.898438 24.296875 24.308594 24.296875h288.867187c5.933594 0 11.375-2.125 15.59375-5.660157 30.3125 8.808594 62.25 7.109376 90.527344-3.539062 3.910156-1.46875 5.882813-5.832031 4.414063-9.730469-1.472657-3.90625-5.832032-5.882812-9.730469-4.410156-44.582031 16.75-96.628907 7.976563-133.253907-26.546875-83.785156-78.9375-28.644531-221.621094 88.160157-221.621094 65.855469 0 120.609375 49.472656 127.347656 115.085938 4.953125 48.210937-17.320313 93.960937-56.898437 120.136718-3.484376 2.296876-4.441407 6.980469-2.136719 10.464844 2.296875 3.484375 6.992187 4.433594 10.46875 2.136719 78.746093-52.058594 86.222656-163.960937 16.773437-226.265625zm-215.226562 185.746094h-186.746094c-3.160156 0-5.730469-2.578125-5.730469-5.742188v-74.085937c0-3.164063 2.570313-5.742188 5.730469-5.742188h163.082031c-1.269531 29.382813 6.363281 59.460938 23.664063 85.570313zm31.53125-192.234375c-15.316406 11.921875-28.125 26.917969-37.484375 43.84375h-180.792969c-3.160156 0-5.730469-2.582031-5.730469-5.742188v-74.085937c0-3.164063 2.570313-5.742188 5.730469-5.742188h212.546875c3.164063 0 5.730469 2.578125 5.730469 5.742188zm41.628906-22.476563c-9.25 3.144532-18.125 7.234375-26.515625 12.191406v-25.699218c0-11.496094-9.347656-20.855469-20.84375-20.855469h-212.546875c-11.492188 0-20.84375 9.359375-20.84375 20.855469v74.085937c0 11.492188 9.351562 20.851563 20.84375 20.851563h173.558594c-4.269532 10.445312-7.300782 21.386718-8.996094 32.601562h-164.5625c-11.492188 0-20.84375 9.359375-20.84375 20.851563v74.085937c0 11.496094 9.351562 20.855469 20.84375 20.855469h198.28125c12.085938 13.878906 27.125 25.601563 43.914062 33.980469h-280.355468c-5.078125 0-9.199219-4.121094-9.199219-9.1875v-462.164063c0-5.070312 4.121094-9.1875 9.199219-9.1875h288.867187c5.078125 0 9.199219 4.117188 9.199219 9.1875zm0 0" />
+                                                    </svg>
                                                 </a>
                                             </li>
                                         <?php } ?>
@@ -315,12 +318,13 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                                 <div class="timer-block d-sm-flex align-items-center">
                                     <div id="end_lesson_time_div" style="display:none;">
                                         <div class="timer timer--small">
+                                            <p><?php echo Label::getLabel('LBL_CLASS_ENDS_IN'); ?></p>
                                             <span id="end_lesson_timer" class="style colorDefinition size_lg"></span>
                                         </div>
                                     </div>
 
                                     <div class="actions">
-                                        <a href="javascript:void(0);" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> class="btn btn--primary btn--large btn--sticky end_lesson_now" id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?></a>
+                                        <a href="javascript:void(0);" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> class="btn btn--secondary btn--large btn--sticky end_lesson_now" id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?></a>
                                     </div>
                                     <span class="-gap"></span>
                                 </div>
@@ -329,7 +333,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                             <hr>
                             <div class="col-xl-12">
                                 <h6><?php echo ($lessonData['slesson_grpcls_id'] == 0) ? Label::getLabel('LBL_Learner_Details') :
-                                Label::getLabel('LBL_Learners'); ?></h6>
+                                        Label::getLabel('LBL_Learners'); ?></h6>
                                 <div class="d-flex align-items-center">
                                     <?php if ($lessonData['slesson_grpcls_id'] == 0) { ?>
                                         <div>
@@ -353,9 +357,9 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                                                 for ($i = 0; $i < $numLearners; $i++) {
                                                 ?>
                                                     <li>
-                                                        <span><?php echo $learnerNames[$i]; ?> <?php if($learnerCountries[$i]){ 
-                                                        echo '(' . $learnerCountries[$i] . ')';
-                                                        } ?></span>
+                                                        <span><?php echo $learnerNames[$i]; ?> <?php if ($learnerCountries[$i]) {
+                                                                                                    echo '(' . $learnerCountries[$i] . ')';
+                                                                                                } ?></span>
                                                     </li>
                                                 <?php
                                                 }
@@ -372,51 +376,51 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                         </div>
                     </div>
                 </div>
-                <?php if($flashCardEnabled){ ?>
-                <div id="tab2" class="tabs-content-js">
-                    <div class="box">
-                        <div class="box-head">
-                            <div class="page-head">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h5><?php echo Label::getLabel('LBL_Flashcards'); ?></h5>
-                                    </div>
-                                    <div>
-                                        <a class="btn btn--secondary btn--small" href="javascript:void(0)" onclick="flashCardForm(<?php echo $lessonData['slesson_id'] ?>, 0)"><?php echo Label::getLabel('LBL_Add_New'); ?></a>
+                <?php if ($flashCardEnabled) { ?>
+                    <div id="tab2" class="tabs-content-js">
+                        <div class="box">
+                            <div class="box-head">
+                                <div class="page-head">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5><?php echo Label::getLabel('LBL_Flashcards'); ?></h5>
+                                        </div>
+                                        <div>
+                                            <a class="btn btn--secondary btn--small" href="javascript:void(0)" onclick="flashCardForm(<?php echo $lessonData['slesson_id'] ?>, 0)"><?php echo Label::getLabel('LBL_Add_New'); ?></a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="form-search form-search--single">
-                                <?php
-                                $frmSrchFlashCard->addFormTagAttribute('onsubmit', 'searchFlashCards(this); return false;');
-                                $fldBtnSubmit = $frmSrchFlashCard->getField('btn_submit');
-                                $fldBtnSubmit->addFieldTagAttribute('class', 'form__action');
+                                <div class="form-search form-search--single">
+                                    <?php
+                                    $frmSrchFlashCard->addFormTagAttribute('onsubmit', 'searchFlashCards(this); return false;');
+                                    $fldBtnSubmit = $frmSrchFlashCard->getField('btn_submit');
+                                    $fldBtnSubmit->addFieldTagAttribute('class', 'form__action');
 
-                                echo $frmSrchFlashCard->getFormTag();
-                                echo $frmSrchFlashCard->getFieldHtml('lesson_id');
-                                echo $frmSrchFlashCard->getFieldHtml('page');
-                                ?>
-                                <div class="form__element">
-                                    <?php echo $frmSrchFlashCard->getFieldHtml('keyword'); ?>
+                                    echo $frmSrchFlashCard->getFormTag();
+                                    echo $frmSrchFlashCard->getFieldHtml('lesson_id');
+                                    echo $frmSrchFlashCard->getFieldHtml('page');
+                                    ?>
+                                    <div class="form__element">
+                                        <?php echo $frmSrchFlashCard->getFieldHtml('keyword'); ?>
 
-                                    <span class="form__action-wrap">
-                                        <?php echo $frmSrchFlashCard->getFieldHtml('btn_submit'); ?>
-                                        <span class="svg-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14.844" height="14.843" viewBox="0 0 14.844 14.843">
-                                                <path d="M251.286,196.714a4.008,4.008,0,1,1,2.826-1.174A3.849,3.849,0,0,1,251.286,196.714Zm8.241,2.625-3.063-3.062a6.116,6.116,0,0,0,1.107-3.563,6.184,6.184,0,0,0-.5-2.442,6.152,6.152,0,0,0-3.348-3.348,6.271,6.271,0,0,0-4.884,0,6.152,6.152,0,0,0-3.348,3.348,6.259,6.259,0,0,0,0,4.884,6.152,6.152,0,0,0,3.348,3.348,6.274,6.274,0,0,0,6-.611l3.063,3.053a1.058,1.058,0,0,0,.8.34,1.143,1.143,0,0,0,.813-1.947h0Z" transform="translate(-245 -186.438)"></path>
-                                            </svg>
+                                        <span class="form__action-wrap">
+                                            <?php echo $frmSrchFlashCard->getFieldHtml('btn_submit'); ?>
+                                            <span class="svg-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14.844" height="14.843" viewBox="0 0 14.844 14.843">
+                                                    <path d="M251.286,196.714a4.008,4.008,0,1,1,2.826-1.174A3.849,3.849,0,0,1,251.286,196.714Zm8.241,2.625-3.063-3.062a6.116,6.116,0,0,0,1.107-3.563,6.184,6.184,0,0,0-.5-2.442,6.152,6.152,0,0,0-3.348-3.348,6.271,6.271,0,0,0-4.884,0,6.152,6.152,0,0,0-3.348,3.348,6.259,6.259,0,0,0,0,4.884,6.152,6.152,0,0,0,3.348,3.348,6.274,6.274,0,0,0,6-.611l3.063,3.053a1.058,1.058,0,0,0,.8.34,1.143,1.143,0,0,0,.813-1.947h0Z" transform="translate(-245 -186.438)"></path>
+                                                </svg>
+                                            </span>
                                         </span>
-                                    </span>
+                                    </div>
+                                    </form>
                                 </div>
-                                </form>
+
+                                <div class="box-body" id="flashCardListing"></div>
+
                             </div>
-
-                            <div class="box-body" id="flashCardListing"></div>
-
                         </div>
                     </div>
-                </div>
                 <?php } ?>
             </div>
         </div>
@@ -424,7 +428,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
 </section>
 
 <script>
-    var flashCardEnabled = '<?php echo $flashCardEnabled?:0 ?>';
+    var flashCardEnabled = '<?php echo $flashCardEnabled ?: 0 ?>';
     var curDate = "<?php echo $curDate; ?>";
     var startTime = "<?php echo $startTime; ?>";
     var endTime = "<?php echo $endTime; ?>";
@@ -490,7 +494,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
     if (!isZoomMettingToolActive && !is_time_up && lesson_joined && !lesson_status_completed && lessonStatus != '<?php echo ScheduledLesson::STATUS_CANCELLED ?>') {
         joinLesson(CometJsonData, CometJsonFriendData);
     }
-    var worker = new Worker(confFrontEndUrl + 'js/worker-time-interval.js?');
+    var worker = new Worker(siteConstants.webroot + 'js/worker-time-interval.js?');
 
     function joinLessonButtonAction() {
 
@@ -544,7 +548,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
     }
 
     function checkNewFlashCards() {
-        if((typeof flashCardEnabled !== typeof undefined) && !flashCardEnabled){
+        if ((typeof flashCardEnabled !== typeof undefined) && !flashCardEnabled) {
             return;
         }
         checkNewFlashCardsVar = setInterval(function() {
@@ -622,7 +626,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'startLessonAuthentication', [CometJsonFriendData.lessonId]), '', function(t) {
                             if (t != 0) {
                                 $(".join_lesson_now").show();
-                                endLessonCountDownTimer(curDate, endTime);
+                                endLessonCountDownTimer(startTime, endTime);
                                 checkEveryMinuteStatus();
                             }
                         });

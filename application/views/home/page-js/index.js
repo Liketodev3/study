@@ -23,9 +23,8 @@ $("document").ready(function(){
 				success: function(json) {
 					response($.map(json, function(item) {
 						return {
-							label: item['name'], 
-							value: item['id'], 
-							name: item['name']	
+							value: item['name'], 
+                            id: item['id'],	
 						};
 					}));
 				},
@@ -34,6 +33,7 @@ $("document").ready(function(){
 		'select': function( event, ui) { 
 			event.preventDefault();
 			$('input[name=\'language\']').val( ui.item.label );
+			$('input[name=\'teachLangId\']').val( ui.item.id );
 			$('#homeSearchForm').submit();
 			//window.location.href = window.location.href + "teachers/index/" + ui.item.value;
 		}

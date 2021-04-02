@@ -51,7 +51,7 @@ $fld1->htmlAfterField = $htmlAfterField;
    			$inactive=($tLangId==0)?'fat-inactive':'';	
 			if ($tLangId > 0) {
 			foreach($languages as $langId=>$langName){?>
-				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($tLangId>0){?> onclick="editTeachingLanguageLangForm(<?php echo $tLangId ?>, <?php echo $langId;?>);" <?php }?>><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" <?php if($tLangId>0){?> onclick="editTeachingLanguageLangForm(<?php echo $tLangId ?>, <?php echo $langId;?>);" <?php }?>><?php echo $langName;?></a></li>
 			<?php } 
 				}
 			?>

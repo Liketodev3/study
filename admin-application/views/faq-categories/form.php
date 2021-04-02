@@ -24,7 +24,7 @@ $faqCatFrm->developerTags['fld_default_col'] = 12;
 			foreach($languages as $langId=>$langName){?>
 				<li class="<?php echo $inactive;?>"><a href="javascript:void(0);" 
 				<?php if($faqcat_id>0){?> onclick="faqCatLangForm(<?php echo $faqcat_id ?>, <?php echo $langId;?>);" <?php }?>>
-				<?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+				<?php echo $langName;?></a></li>
 			<?php } ?>			
 		</ul>
 		<div class="tabs_panel_wrap">

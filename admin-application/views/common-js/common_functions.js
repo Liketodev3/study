@@ -274,8 +274,11 @@ $(document).ready(function(){
 			
           /* if in tab mode */
             $(".tabs_nav li a").click(function() {
-              $(this).parents('.tabs_nav_container:first').find(".tabs_panel").hide();
               var activeTab = $(this).attr("rel"); 
+              if($("#"+activeTab).is(':visible')){
+                return;
+              }
+              $(this).parents('.tabs_nav_container:first').find(".tabs_panel").hide();
               $("#"+activeTab).fadeIn();		
 
               $(this).parents('.tabs_nav_container:first').find(".tabs_nav li a").removeClass("active");
@@ -664,6 +667,18 @@ function getNotifications (){
 	
 		
 })();
+
+//  custom loader js start
+$.loader = {
+    selector: '.loading-wrapper',
+    show: function() {
+        $(this.selector).show();
+    },
+    hide: function() {
+        $(this.selector).hide();
+    }
+};
+//  custom loader js end
 
 function selectAll(obj) {
     var parentForm = obj.closest('form').attr('id');

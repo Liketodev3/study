@@ -2685,6 +2685,7 @@ padding: 18px 38px;
     color: #999;
     text-transform: capitalize;
     display: block;
+    width: 100%;
 }
 
 .section.searchform_filter .sectionhead h4:before {
@@ -3690,8 +3691,8 @@ body.toggled-right .rightoverlay {
 }
 
 .actions.actions--centered .dropwrap {
-    min-width: 130px;
-    left: 50%;
+    min-width: 185px;
+    right: calc(100% - 48px);
     margin: 0 0 0 -65px;
     transform-origin: center top;
     -webkit-transform-origin: center top;
@@ -11099,9 +11100,108 @@ body.page--front .page__cell #footer {
   .sticky-demo-header body {
     padding: 0px 0px 0!important;
   }
+  .meta-tag-tbl .searchform_filter {
+    margin-top: 0px;
+  }
+  .lesson-status-dropdown select option:disabled{
+    color: #ccc;
+    font-weight: bold;
+  }
   @media (max-width: 1199px) {
     .sticky-demo-header .demo-header {
       display: none;
     }
   }
+ 
+  /*------------------16/2-2021-------------------*/
+  .table-responsive{
+      overflow-y: auto;
+  }
+  .tabs_panel_wrap .table th {
+    white-space: nowrap;
+}
+.export-btn {
+    cursor: pointer;
+    box-shadow: unset;
+    padding: 8px 15px;
+    font-size: 13px;
+    border-radius: 3px;
+}
+.export-btn:hover {
+    box-shadow: 0 4px 4px rgba(84, 209, 241, 0.5);
+}
+
+.label--note {
+    padding: 2px 12px;
+    background: rgba(204, 88, 92,0.08);
+    border-radius: 2px;
+}
+.label--note strong {
+    font-size: 12px;
+    font-weight: normal;
+}
+.section .sectionhead:before{
+    top: 50%;
+    transform: translateY(-50%);
+}
+.section .sectionhead{
+    display: flex;
+    align-items: center;
+}
+.sectionhead h4 {
+    margin-right: auto;
+}
+.export-btn {
+    margin-left: 20px;
+}
   
+.lesson-status-dropdown{
+    padding-right: 35px;
+}
+
+/*  custom loader css start */
+.loading-wrapper {
+    background: rgba(0, 0, 0, 0.65);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    bottom: 0;
+    left: 0;
+    right: 0; }
+.loading-wrapper .loading {
+    width: 100px;
+    height: 80px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -40px;
+    margin-left: -50px; 
+}
+.loading-wrapper .loading .inner {
+    -webkit-animation: rotate 0.8s linear infinite;
+    animation: rotate 0.8s linear infinite;
+    margin-top: 20px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+}
+.loading-wrapper .loading .rotate-one {
+    left: 50%;
+    margin-left: -25px;
+    border-top: 2px solid #fff; 
+}
+.loading-wrapper .loading .rotate-two {
+    top: -10px;
+    left: 30px;
+    border-left: 2px solid #fff;
+}
+.loading-wrapper .loading .rotate-three 
+{
+    top: -10px;
+    right: 30px;
+    border-right: 2px solid #fff; 
+}
+/*  custom loader css end */

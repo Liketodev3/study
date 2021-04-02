@@ -4,6 +4,7 @@ $bannerLangFrm->setFormTagAttribute('onsubmit', 'langSetup(this); return(false);
 $bannerLangFrm->developerTags['colClassPrefix'] = 'col-md-';
 $bannerLangFrm->developerTags['fld_default_col'] = 12;
 
+$bannerLangFrm->getField('banner_btn_url')->htmlAfterField='<small>' . sprintf(Label::getLabel('HTMLAFTERFIELD_BANNER_BUTTON_URL_%s', $adminLangId), '{SITEROOT}') . '</small>';
 
 ?>
 
@@ -22,7 +23,7 @@ $bannerLangFrm->developerTags['fld_default_col'] = 12;
 			<?php 
 			if ($banner_id > 0) {
 				foreach($languages as $langId=>$langName){?>
-					<li><a class="<?php echo ($banner_lang_id==$langId)?'active':''?>" href="javascript:void(0);" onclick="bannerLangForm(<?php echo $blocation_id;?>,<?php echo $banner_id ?>, <?php echo $langId;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+					<li><a class="<?php echo ($banner_lang_id==$langId)?'active':''?>" href="javascript:void(0);" onclick="bannerLangForm(<?php echo $blocation_id;?>,<?php echo $banner_id ?>, <?php echo $langId;?>);"><?php echo $langName;?></a></li>
 				<?php }
 				}
 			?>

@@ -3,10 +3,14 @@
 <div class="settings-group">
 	
 	<?php if($currencies && count($currencies) > 1){ ?>
-	
+	<style>
+		footer-dropdown{
+			max-height: 200px;
+		}
+	</style>
 	<div class="settings toggle-group">
 		<a href="javascript:void(0)" class="btn  btn--bordered btn--bordered-inverse btn--block btn--dropdown toggle__trigger-js"><?php echo CommonHelper::getCurrencyCode();?></a>
-		<div div-for="currency" class="settings__target -skin toggle__target-js">
+		<div div-for="currency" class="settings__target -skin toggle__target-js scrollbar scrollbar-js footer-dropdown">
 			<nav class="nav nav--vertical">
 				<ul>
 					<?php foreach( $currencies as $currencyId => $currency ){ ?>

@@ -10,6 +10,9 @@ class LessonPackage extends MyAppModel
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
         $this->db = FatApp::getDb();
+        $this->objMainTableRecord->setSensitiveFields(array(
+            'lpackage_is_free_trial'
+        ));
     }
 
     public static function getSearchObject($langId = 0, $active =  true)
@@ -40,9 +43,9 @@ class LessonPackage extends MyAppModel
         }
         $srch = static::getSearchObject($langId);
         $srch->doNotCalculateRecords();
-        $srch->doNotLimitRecords();
-        $srch->addCondition('lpackage_is_free_trial', '=', 1);
-        $srch->addMultipleFields(array('lpackage_id', 'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title', 'lpackage_lessons' ));
+        $srch->setPageSize(1);
+        $srch->addCondition('lpackage_is_free_trial', '=', applicationConstants::YES);
+        $srch->addMultipleFields(array('lpackage_id', 'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title', 'lpackage_lessons', 'lpackage_active' ));
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
         if ($row) {
@@ -77,23 +80,25 @@ class LessonPackage extends MyAppModel
         return true;
     }
 
-    public function canRecordMarkDelete($lPackageId)
+    public function canRecordMarkDelete($lPackageId) : bool
     {
         $srch = static::getSearchObject();
         $srch->addCondition('lpackage_id', '=', $lPackageId);
         $srch->addFld('lpackage_id');
+        $srch->addFld('lpackage_is_free_trial');
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
-        if (!empty($row) && $row['lpackage_id']==$lPackageId) {
+
+        if (!empty($row) && $row['lpackage_id'] == $lPackageId && $row['lpackage_is_free_trial'] == applicationConstants::NO) {
             return true;
         }
         return false;
     }
 
-    public static function getPackagesWithoutTrial($langId)
+    public static function getPackagesWithoutTrial(int $langId, bool $active = true)
     {
-        $srch = self::getSearchObject($langId);
-		$srch->addCondition('lpackage_is_free_trial', '=', 0);
+        $srch = self::getSearchObject($langId, $active);
+		$srch->addCondition('lpackage_is_free_trial', '=', applicationConstants::NO);
 		$srch->addMultipleFields(array(
 			'lpackage_id',
 			'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',

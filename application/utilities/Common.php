@@ -171,14 +171,12 @@ class Common
             'price_asc'	=>	Label::getLabel('LBL_By_Price_Low_to_High'),
             'price_desc'=>	Label::getLabel('LBL_By_Price_High_to_Low'),
         );
-        $frmFilters->addSelectBox('', 'filterSortBy', $filterSortBy, 'popularity_desc', array(), '');
+        $frmFilters->addSelectBox('', 'filterSortBy', $filterSortBy, '', array(), Label::getLabel('LBL_Sort_by'));
 
         $teacherSrchObj = new UserSearch();
         $teacherSrchObj->setTeacherDefinedCriteria(true);
         $teacherSrchObj->doNotLimitRecords();
-        // echo "<pre>";
-        // echo $teacherSrchObj->getQuery();
-        // die;
+        
         /* preferences/skills[ */
         $prefSrch = clone $teacherSrchObj;
         $prefSrch->joinTable(Preference::DB_TBL_USER_PREF, 'INNER JOIN', 'u.user_id = utp.utpref_user_id', 'utp');
@@ -214,19 +212,19 @@ class Common
         $priceSrch = clone $teacherSrchObj;
 
         //$priceSrch->addMultipleFields( array('MIN(us_bulk_lesson_amount) as minPrice', 'MAX(us_bulk_lesson_amount) as maxPrice') );
+       
         $priceRs = $priceSrch->getResultSet();
         $priceArr = FatApp::getDb()->fetchAll($priceRs);
-        // echo "<pre>";
-        // echo $teacherSrchObj->getQuery();
-        // die;
+    
         if ($priceArr) {
             $newArr = array();
             $newArr['minPrice'] = min(array_column($priceArr, 'minPrice'));
             $newArr['maxPrice'] = max(array_column($priceArr, 'maxPrice'));
             $priceArr = $newArr;
         }
+        
         //echo CommonHelper::getCurrencyId(); die;
-        if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) {
+        if (CommonHelper::getCurrencyId() != CommonHelper::getSystemCurrencyId()) {
             $priceArr['minPrice'] = CommonHelper::displayMoneyFormat(($priceArr['minPrice'])??0, false, false, false);
             $priceArr['maxPrice'] = CommonHelper::displayMoneyFormat(($priceArr['maxPrice'])??0, false, false, false);
         }
@@ -324,6 +322,25 @@ class Common
 
     public static function getUriFromPath($path)
     {
-        return self::doesStringStartWith($path, CONF_WEBROOT_URL) ? substr($path, strlen(CONF_WEBROOT_URL)) : ltrim($path, '/');
+        return self::doesStringStartWith($path, CONF_WEBROOT_URL) ? rtrim(substr($path, strlen(CONF_WEBROOT_URL)), '/') : ltrim($path, '/');
+    }
+
+    public static function getCanonicalUrl()
+    {
+
+        $url = $_SERVER['REQUEST_URI'];
+        $url_components = parse_url($url);
+        $path = $url_components['path'];
+        $uri = Common::getUriFromPath($path);
+
+        $row = UrlRewrite::getDataByOriginalUrl($uri);
+
+        $rootUrl = $_SERVER['REQUEST_SCHEME'] . '://';
+        if(!empty($_SERVER['HTTP_HOST'])){
+            $rootUrl .= $_SERVER['HTTP_HOST'];
+        } else{
+            $rootUrl .= $_SERVER['SERVER_NAME'];
+        }
+        return $rootUrl . CONF_WEBROOT_URL.(!empty($row) ? $row['urlrewrite_custom'] : $uri);
     }
 }

@@ -2,8 +2,9 @@
 <?php
 $arr_flds = array(
 	'listserial'=> Label::getLabel('LBL_S.No.',$adminLangId),
-    'class_type'=>Label::getLabel('LBL_Class_Type',$adminLangId),
 	'order_id'=>Label::getLabel('LBL_Order_Id',$adminLangId),
+	'op_qty'=>Label::getLabel('LBL_NO._OF_LESSONS',$adminLangId),
+	'class_type'=>Label::getLabel('LBL_Class_Type',$adminLangId),
 	'learner_username'=>Label::getLabel('LBL_Learner',$adminLangId),
 	'teacher_username'	=> Label::getLabel('LBL_Teacher',$adminLangId),
 	'language'=>Label::getLabel('LBL_Language',$adminLangId),
@@ -62,26 +63,38 @@ foreach ($arr_listing as $sn=>$row){
 				$str = $row[$key] ? 'Yes' : 'No';
 				$td->appendElement('plaintext', array(), $str, true);
 			break;
+			case 'learner_username':
+				$td->appendElement('strong', array(),Label::getlabel('LBL_N_:') , true);
+				$td->appendElement('plaintext', array(), ' '.$row['learner_username'].'<br>', true);
+				$td->appendElement('strong', array(),Label::getlabel('LBL_E_:'), true);
+				$td->appendElement('plaintext', array(), ' '.$row['userEmail'], true);
+				
+			break;
+			case 'teacher_username':
+					$td->appendElement('strong', array(),Label::getlabel('LBL_N_:') , true);
+					$td->appendElement('plaintext', array(), ' '.$row['teacher_username'].'<br>', true);
+					$td->appendElement('strong', array(),Label::getlabel('LBL_E_:'), true);
+					$td->appendElement('plaintext', array(), ' '.$row['teacherEmail'], true);
+			break;
 			case 'language':
 				$str = ($row['op_lpackage_is_free_trial']) ? Label::getLabel('LBL_N/A',$adminLangId) : $row[$key] ;
 				$td->appendElement('plaintext', array(), $str, true);
 			break;
 			case 'action':
-            if($row['order_is_paid'] == Order::ORDER_IS_PAID){
-				$td->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array("all",$row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'View Schedules',true);
-            }else{
-				$td->appendElement('plaintext', array(), 'N/A');
-            }
-				/*$ul = $td->appendElement("ul",array("class"=>"actions actions--centered"));
-				if($canEdit){
-					$li = $ul->appendElement("li",array('class'=>'droplink'));
-    			    $li->appendElement('a', array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
-					$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
-					$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
-
+				$ul = $td->appendElement("ul",array("class"=>"actions actions--centered"));
+				$li = $ul->appendElement("li",array('class'=>'droplink'));
+				$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
+				$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
+				$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
+				$innerLi=$innerUl->appendElement('li');
+				$innerLi->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','view',array($row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_View_Details',$adminLangId)),Label::getLabel('LBL_View_Details',$adminLangId),true);
+				if($row['order_is_paid'] == Order::ORDER_IS_PAID){
 					$innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array($row['order_id'])),'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),Label::getLabel('LBL_View',$adminLangId), true);
-				}*/
+					$innerLi->appendElement("a",array('href'=>CommonHelper::generateUrl('PurchasedLessons','viewSchedules',array("all",$row['order_id'])), 'class'=>'button small green','title'=>Label::getLabel('LBL_View_Schedules',$adminLangId)),Label::getLabel('LBL_View_Schedules',$adminLangId),true);
+            	}
+
+				
+				
 			break;
 			default:
 				$td->appendElement('plaintext', array(), $row[$key], true);

@@ -36,7 +36,7 @@ class TimezonesController extends AdminBaseController
         $srch       = Timezone::getSearchObject(false, $this->adminLangId);
         $srch->addFld('tz.* , tz_l.timezonelang_text, IFNULL(timezonelang_text, timezone_identifier) as timezone_name');
         if (!empty($post['keyword'])) {
-            $condition = $srch->addCondition('tz.timezone_id', 'like', '%' . $post['keyword'] . '%');
+            $condition = $srch->addCondition('tz.timezone_identifier', 'like', '%' . $post['keyword'] . '%');
             $condition->attachCondition('tz_l.timezonelang_text', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
         $page = (empty($page) || $page <= 0) ? 1 : $page;

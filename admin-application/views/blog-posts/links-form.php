@@ -25,7 +25,7 @@ $fld_div->fieldWrapper = array('<div class="box--scroller">','</div>');
 			<?php 
 			if ($post_id > 0) {
 				foreach($languages as $langId=>$langName){?>
-					<li><a href="javascript:void(0);" onclick="langForm(<?php echo $post_id ?>, <?php echo $langId;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+					<li><a href="javascript:void(0);" onclick="langForm(<?php echo $post_id ?>, <?php echo $langId;?>);"><?php echo $langName;?></a></li>
 				<?php }
 			}
 			?>

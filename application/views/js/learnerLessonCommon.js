@@ -125,10 +125,13 @@ cancelLessonSetup = function (frm) {
     if (isLessonCancelAjaxRun) {
         return false;
     }
-    isLessonCancelAjaxRun = true;
+    
     if (!$(frm).validate()) return;
+    $.loader.show();
     var data = fcom.frmData(frm);
+    isLessonCancelAjaxRun = true;
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'cancelLessonSetup'), data, function (ans) {
+        $.loader.hide();
         isLessonCancelAjaxRun = false;
         if (ans.status != 1) {
             $(document).trigger('close.mbsmessage');

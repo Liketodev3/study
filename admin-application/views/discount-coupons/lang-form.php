@@ -22,7 +22,7 @@ $langFrm->developerTags['fld_default_col'] = 12;
 				$inactive = ($coupon_id == 0)?'fat-inactive':'';	
 			if ($coupon_id > 0) {
 				foreach($languages as $langId => $langName){?>
-					<li><a class="<?php echo ($coupon_lang_id == $langId)?'active':''?>" href="javascript:void(0);" onclick="addCouponLangForm(<?php echo $coupon_id ?>, <?php echo $langId;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+					<li><a class="<?php echo ($coupon_lang_id == $langId)?'active':''?>" href="javascript:void(0);" onclick="addCouponLangForm(<?php echo $coupon_id ?>, <?php echo $langId;?>);"><?php echo $langName;?></a></li>
 				<?php } ?>
 			<?php } ?>
 		</ul>

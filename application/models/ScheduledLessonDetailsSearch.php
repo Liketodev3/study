@@ -79,4 +79,13 @@ class ScheduledLessonDetailsSearch extends SearchBase
 
         return 100;// do not charge
     }
+
+    public function getDetailsById( int $sDetailsID ): array
+    {
+        $this->joinScheduledLesson(); 
+        $this->addCondition('sldetail_id', '=', $sDetailsID);
+        $rs = $this->getResultSet();
+        $data = FatApp::getDb()->fetch($rs);
+        return $data;
+    }
 }

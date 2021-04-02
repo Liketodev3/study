@@ -205,6 +205,28 @@ class ImageController extends FatController
             break;
         }
     }
+    
+    public function lesson($lang_id = 0, $sizeType = '')
+    {
+        $lang_id = FatUtility::int($lang_id);
+        $recordId = 0;
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_LESSON_PAGE_IMAGE, $recordId, 0, $lang_id);
+        $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
+        $default_image = '';
+
+        switch (strtoupper($sizeType)) {
+            case 'THUMB':
+                $w = 200;
+                $h = 60;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+            break;
+            default:
+                $h = 900;
+                $w = 2000;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+            break;
+        }
+    }
 
     public function paymentPageLogo($lang_id = 0, $sizeType = '')
     {
@@ -225,6 +247,26 @@ class ImageController extends FatController
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
             break;
         }
+    }
+
+    public function allowedPaymentGatewayImage(int $langId = 0, string $sizeType = '')
+    {
+        $langId = FatUtility::int($langId);
+        $recordId = 0;
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, $recordId, 0, $langId);
+        $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
+        $default_image = '';
+        switch (strtoupper($sizeType)) {
+            case 'THUMB':
+                $w = 300;
+                $h = 34;
+            break;
+            default:
+                $w = 500;
+                $h = 67;
+            break;
+        }
+        AttachedFile::displayImage($image_name, $w, $h, $default_image);
     }
 
     public function favicon($lang_id = 0, $sizeType = '')
@@ -257,7 +299,7 @@ class ImageController extends FatController
         }
     }
 
-    public function user($userId, $sizeType = 'default', $requestedForCroppedImage = 0)
+    public function user($userId, $sizeType = 'default', $requestedForCroppedImage = 1)
     {
         $userId = FatUtility::int($userId);
         $requestedForCroppedImage = FatUtility::int($requestedForCroppedImage);
@@ -277,25 +319,34 @@ class ImageController extends FatController
         if (false == $fileRow || $fileRow['afile_physical_path'] == "") {
             AttachedFile::displayImage('', '', '', $default_image);
         }
-
+        
         switch (strtoupper($sizeType)) {
-            case 'NORMAL':
-                $w = 100;
-                $h = 100;
-                AttachedFile::displayImage($fileRow['afile_physical_path'], $w, $h, '' ,'', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
+            case 'ORIGINAL':
+                $w = '';
+                $h = '';
+            break;
+            case 'MEDIUM':
+                $w = 150;
+                $h = 150;
             break;
             case 'SMALL':
                 $w = 60;
                 $h = 60;
-                AttachedFile::displayImage($fileRow['afile_physical_path'], $w, $h, '' ,'', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
             break;
             case 'EXTRASMALL':
-                $w = 60;
-                $h = 60;
+                $w = 42;
+                $h = 42;                
             break;
             default:
-                AttachedFile::displayOriginalImage($fileRow['afile_physical_path'],'','', true);
+                $w = 100;
+                $h = 100;
             break;
+        }
+
+        if($w && $h){
+            AttachedFile::displayImage($fileRow['afile_physical_path'], $w, $h, '' ,'', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
+        }else{
+            AttachedFile::displayOriginalImage($fileRow['afile_physical_path'],'','', true);
         }
 
         //AttachedFile::displayImage( $fileRow['afile_physical_path'], $w, $h);
@@ -391,11 +442,17 @@ class ImageController extends FatController
                 $w = 200;
                 $h = 100;
                 break;
+            case 'MOBILE':
+                $w = 500;
+                $h = 208;
+                break;
+            case 'TABLET':
+                $w = 1000;
+                $h = 416;
+                break;
             case 'DESKTOP':
                 $w = 1920;
                 $h = 800;
-                AttachedFile::displayImage($image_name, $w, $h, $default_image);
-                return;
                 break;
             case 'TABLET':
                 $w = 1024;
@@ -406,11 +463,11 @@ class ImageController extends FatController
                 $h = 360;
                 break;
             default:
-                $w = 2000;
-                $h = 360;
+                $w = 1920;
+                $h = 800;
                 break;
             }
-            AttachedFile::displayImage($image_name, $w, $h, $default_image,'', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
+            AttachedFile::displayImage($image_name, $w, $h, $default_image,'', ImageResize::IMG_RESIZE_EXTRA_CROP, false, true);
         } else {
             AttachedFile::displayOriginalImage($image_name, $default_image, '',  true);
         }
@@ -558,5 +615,43 @@ class ImageController extends FatController
     public function editorImages($dirPath, $fileNamewithPath)
     {
         AttachedFile::displayOriginalImage('editor/'. $fileNamewithPath);
+    }
+    
+    public function pwaIcon(int $size)
+    {
+        $image_name = '';
+        
+        if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_APP_ICON, 0, 0, 0, true)) {
+            $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
+        }
+
+        switch (strtoupper($size)) {
+            case '144':
+                $w = $h =  144;
+            break;
+            case '512':
+                $w = $h =  512;
+            break;
+        }
+        AttachedFile::displayImage($image_name, $w, $h);
+    }
+    
+    public function pwaSplashIcon(int $size)
+    {
+        $image_name = '';
+        
+        if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0, 0, 0, true)) {
+            $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
+        }
+
+        switch (strtoupper($size)) {
+            case '144':
+                $w = $h =  144;
+            break;
+            case '512':
+                $w = $h =  512;
+            break;
+        }
+        AttachedFile::displayImage($image_name, $w, $h);
     }
 }

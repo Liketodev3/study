@@ -232,8 +232,7 @@ class GiftcardsController extends AdminBaseController
 
     private function getGiftcardSearchForm($langId)
     {
-        $currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
-        $currencyData = Currency::getAttributesById($currency_id, array('currency_code','currency_symbol_left','currency_symbol_right'));
+        $currencyData = CommonHelper::getSystemCurrencyData();
         $currencySymbol = ($currencyData['currency_symbol_left'] != '') ? $currencyData['currency_symbol_left'] : $currencyData['currency_symbol_right'];
         $frm = new Form('frmOrderSearch');
         $keyword = $frm->addTextBox(Label::getLabel('LBL_Keyword', $this->adminLangId), 'keyword', '', array('id'=>'keyword','autocomplete'=>'off'));

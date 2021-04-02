@@ -1,37 +1,36 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
-$langFrm->setFormTagAttribute('class', 'web_form form_horizontal layout--'.$formLayout);
-$langFrm->setFormTagAttribute('onsubmit', 'setupLangMetaTag(this,"'.$metaType.'"); return(false);');
+$langFrm->setFormTagAttribute('class', 'web_form form_horizontal layout--' . $formLayout);
+$langFrm->setFormTagAttribute('onsubmit', 'setupLangMetaTag(this,"' . $metaType . '"); return(false);');
 $langFrm->developerTags['colClassPrefix'] = 'col-md-';
 $langFrm->developerTags['fld_default_col'] = 12;
-
+$otherMetatagsFld = $langFrm->getField('meta_other_meta_tags');
+$otherMetatagsFld->htmlAfterField = '<small>' . Label::getLabel('LBL_For_Example:', $langId) . ' ' . htmlspecialchars(' <meta name="copyright" content="text">') . '</small>';
 ?>
 <section class="section">
 	<div class="sectionhead">
-
-		<h4><?php echo Label::getLabel('LBL_Meta_Tag_Setup',$adminLangId); ?></h4>
+		<h4><?php echo Label::getLabel('LBL_Meta_Tag_Setup', $langId); ?></h4>
 	</div>
 	<div class="sectionbody space">
 		<div class="row">
-<div class="col-sm-12">
-	<h1><?php //echo Label::getLabel('LBL_Meta_Setup',$adminLangId); ?></h1>
-	<div class="tabs_nav_container responsive flat">
-		<ul class="tabs_nav">
-			<li><a href="javascript:void(0);" onclick="editMetaTagForm(<?php echo "$metaId,'$metaType',$recordId" ?>);"><?php echo Label::getLabel('LBL_General',$adminLangId); ?></a></li>
-			<?php 
-			if ($metaId > 0) {
-				foreach($languages as $langId=>$langName){?>
-					<li><a class="<?php echo ($lang_id == $langId)?'active':''?>" href="javascript:void(0);" onclick="editMetaTagLangForm(<?php echo "$metaId,$langId,'$metaType'";?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
-				<?php }
-				}
-			?>
-		</ul>
-		<div class="tabs_panel_wrap">
-			<div class="tabs_panel">
-				<?php echo $langFrm->getFormHtml(); ?>
+			<div class="col-sm-12">
+				<div class="tabs_nav_container responsive flat">
+					<ul class="tabs_nav">
+						<li><a href="javascript:void(0);" onclick="editMetaTagForm(<?php echo "$metaId,'$metaType',$recordId" ?>);"><?php echo Label::getLabel('LBL_General', $adminLangId); ?></a></li>
+						<?php
+						if ($metaId > 0) {
+							foreach ($languages as $lang_Id => $langName) { ?>
+								<li><a class="<?php echo ($lang_Id == $langId) ? 'active' : '' ?>" href="javascript:void(0);" onclick="editMetaTagLangForm(<?php echo "$metaId,$lang_Id,'$metaType'"; ?>);"><?php echo $langName; ?></a></li>
+						<?php }
+						}
+						?>
+					</ul>
+					<div class="tabs_panel_wrap">
+						<div class="tabs_panel">
+							<?php echo $langFrm->getFormHtml(); ?>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>	
-</div>
-</div>
-</div>
+	</div>
 </section>

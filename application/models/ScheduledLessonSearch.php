@@ -17,7 +17,7 @@ class ScheduledLessonSearch extends SearchBase
             $this->doNotCalculateRecords();
         }
 
-        if($joinDetails === true){
+        if ($joinDetails === true) {
             $this->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sld.sldetail_slesson_id = slns.slesson_id', 'sld');
             $this->isScheduledLessonDetailJoined = true;
         }
@@ -26,7 +26,7 @@ class ScheduledLessonSearch extends SearchBase
     public static function getSearchLessonsObj($langId)
     {
         $srch = new self(false);
-		$srch->joinGroupClass();
+        $srch->joinGroupClass($langId);
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->joinTeacher();
@@ -40,7 +40,8 @@ class ScheduledLessonSearch extends SearchBase
         $srch->addMultipleFields(array(
             'slns.slesson_id',
             'slns.slesson_grpcls_id',
-            'grpcls.grpcls_title',
+            'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
+            'IFNULL(grpclslang_grpcls_description,grpcls_description) as grpcls_description',
             'grpcls_slanguage_id',
             'grpcls.grpcls_status',
             'sld.sldetail_id',
@@ -60,7 +61,7 @@ class ScheduledLessonSearch extends SearchBase
             'slns.slesson_status',
             'sld.sldetail_learner_status',
             'slns.slesson_is_teacher_paid',
-             '"-" as teacherTeachLanguageName',
+            '"-" as teacherTeachLanguageName',
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration',
             'order_is_paid'
@@ -70,9 +71,34 @@ class ScheduledLessonSearch extends SearchBase
         return $srch;
     }
 
-    public function joinGroupClass()
+    public function joinUserLessonData()
+    {
+        $scheduledLessonDetailsSrch = new ScheduledLessonDetailsSearch();
+        $scheduledLessonDetailsSrch->addGroupBy('sld.sldetail_slesson_id');
+
+        $this->joinTable(LessonStatusLog::DB_TBL, 'LEFT JOIN', 'lsl.lesstslog_slesson_id = slns.slesson_id', 'lsl');
+        $this->joinTable(User::DB_TBL, 'LEFT JOIN', 'lsl.lesstslog_updated_by_user_id = u.user_id', 'u');
+        $this->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'u.user_id = cred.credential_user_id', 'cred');
+
+        $this->addGroupBy('lesstslog_updated_by_user_id');
+
+        // if($getCanCelledScheduledLesson) {
+        //     $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status = "'.ScheduledLesson::STATUS_CANCELLED .'" ) as cancelledLessons');
+        // }
+
+        // if($getRescheduledLesson) {
+        //     $this->addFld('(select COUNT(*) from '. LessonStatusLog::DB_TBL . ' WHERE lesstslog_updated_by_user_id = user_id AND lesstslog_current_status != "'.ScheduledLesson::STATUS_CANCELLED .'" ) as rescheduledLessons');
+        // }
+
+        //$this->addFld('GROUP_CONCAT(DISTINCT sldetail_learner_id) as studentIds');
+    }
+
+
+
+    public function joinGroupClass($langId)
     {
         $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
+        $this->joinTable(TeacherGroupClasses::DB_TBL_LANG, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = grpcls_l.grpclslang_grpcls_id and grpclslang_lang_id=' . $langId, 'grpcls_l');
     }
 
     public function joinTeacher()
@@ -94,12 +120,11 @@ class ScheduledLessonSearch extends SearchBase
         $this->isTeacherSettingsJoined = true;
     }
 
-    public function joinIssueReported($user_id=0)
+    public function joinIssueReported($user_id = 0)
     {
         // $this->joinTable(' ( SELECT MAX(issrep_id) max_id, issrep_slesson_id FROM '. IssuesReported::DB_TBL .' GROUP BY issrep_slesson_id )', 'LEFT JOIN', 'i_max.issrep_slesson_id = slns.slesson_id', 'i_max');
         // $this->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_id = i_max.max_id', 'iss');
-        $this->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = slns.slesson_id'.($user_id> 0 ? ' AND issrep_reported_by='.$user_id : ''), 'iss');
-
+        $this->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = slns.slesson_id' . ($user_id > 0 ? ' AND issrep_reported_by=' . $user_id : ''), 'iss');
     }
 
     public function joinTeacherCountry($langId = 0)
@@ -109,7 +134,7 @@ class ScheduledLessonSearch extends SearchBase
         $this->joinTable(Country::DB_TBL, 'LEFT JOIN', 'ut.user_country_id = teachercountry.country_id', 'teachercountry');
 
         if ($langId > 0) {
-            $this->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'teachercountry.country_id = teachercountry_lang.countrylang_country_id AND teachercountry_lang.countrylang_lang_id = '.$langId, 'teachercountry_lang');
+            $this->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'teachercountry.country_id = teachercountry_lang.countrylang_country_id AND teachercountry_lang.countrylang_lang_id = ' . $langId, 'teachercountry_lang');
         }
     }
 
@@ -119,7 +144,7 @@ class ScheduledLessonSearch extends SearchBase
         $this->joinTable(Country::DB_TBL, 'LEFT JOIN', 'ul.user_country_id = learnercountry.country_id', 'learnercountry');
 
         if ($langId > 0) {
-            $this->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'learnercountry.country_id = learnercountry_lang.countrylang_country_id AND learnercountry_lang.countrylang_lang_id = '.$langId, 'learnercountry_lang');
+            $this->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'learnercountry.country_id = learnercountry_lang.countrylang_country_id AND learnercountry_lang.countrylang_lang_id = ' . $langId, 'learnercountry_lang');
         }
     }
 
@@ -133,7 +158,7 @@ class ScheduledLessonSearch extends SearchBase
 
         $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = slns.slesson_slanguage_id');
 
-        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = slns.slesson_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'sl_lang');
+        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = slns.slesson_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
 
         $this->addMultipleFields(array('GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
     }
@@ -147,7 +172,7 @@ class ScheduledLessonSearch extends SearchBase
         $this->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 't_t_lang.tlanguage_id = slns.slesson_slanguage_id', 't_t_lang');
 
         if ($langId > 0) {
-            $this->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tl_l.tlanguagelang_tlanguage_id = t_t_lang.tlanguage_id AND tl_l.tlanguagelang_lang_id = '.$langId, 'tl_l');
+            $this->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tl_l.tlanguagelang_tlanguage_id = t_t_lang.tlanguage_id AND tl_l.tlanguagelang_lang_id = ' . $langId, 'tl_l');
         }
     }
 
@@ -190,10 +215,10 @@ class ScheduledLessonSearch extends SearchBase
     public function joinLessonRescheduleLog()
     {
         $getLessonRescheduleLogObj = LessonRescheduleLog::getLatestLessonRescheduleLog();
-		$getLessonRescheduleLogObj->addMultipleFields(array('lreschlog.*'));
-		$getLessonRescheduleLogObj->doNotCalculateRecords();
+        $getLessonRescheduleLogObj->addMultipleFields(array('lreschlog.*'));
+        $getLessonRescheduleLogObj->doNotCalculateRecords();
         $getLessonRescheduleLogObj->doNotLimitRecords();
-		$this->joinTable("(".$getLessonRescheduleLogObj->getQuery().")", 'LEFT JOIN', 'lrsl.lesreschlog_slesson_id = slns.slesson_id', 'lrsl');
+        $this->joinTable("(" . $getLessonRescheduleLogObj->getQuery() . ")", 'LEFT JOIN', 'lrsl.lesreschlog_slesson_id = slns.slesson_id', 'lrsl');
     }
 
     public function joinTeacherOfferPrice($teacherId)
@@ -203,7 +228,7 @@ class ScheduledLessonSearch extends SearchBase
             trigger_error("Invalid Request", E_USER_ERROR);
         }
 
-        $this->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'sldetail_learner_id = top_learner_id AND top_teacher_id = '.$teacherId, 'top');
+        $this->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'sldetail_learner_id = top_learner_id AND top_teacher_id = ' . $teacherId, 'top');
     }
 
     public function joinLearnerOfferPrice($learnerId)
@@ -213,7 +238,7 @@ class ScheduledLessonSearch extends SearchBase
             trigger_error("Invalid Request", E_USER_ERROR);
         }
 
-        $this->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'slesson_teacher_id = top_teacher_id AND top_learner_id = '.$learnerId, 'top');
+        $this->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'slesson_teacher_id = top_teacher_id AND top_learner_id = ' . $learnerId, 'top');
     }
 
     public static function countPlansRelation($lessonId)
@@ -223,9 +248,9 @@ class ScheduledLessonSearch extends SearchBase
         $srchRelLsnToPln = new SearchBase('tbl_scheduled_lessons_to_teachers_lessons_plan');
         $srchRelLsnToPln->addMultipleFields(
             array(
-        'ltp_tlpn_id',
-        'ltp_slessonid',
-        )
+                'ltp_tlpn_id',
+                'ltp_slessonid',
+            )
         );
         //$srchRelLsnToPln->addCondition('ltp_tlpn_id','=',$planId);
         $srchRelLsnToPln->addCondition('ltp_slessonid', '=', $lessonId);
@@ -233,15 +258,15 @@ class ScheduledLessonSearch extends SearchBase
         $count = $srchRelLsnToPln->recordCount();
         return $count;
     }
-    
+
     public function joinRatingReview()
     {
-        $this->joinTable(TeacherLessonReview::DB_TBL, 'LEFT OUTER JOIN', 'ut.user_id = tlr.tlreview_teacher_user_id AND tlr.tlreview_status = '. TeacherLessonReview::STATUS_APPROVED, 'tlr');
+        $this->joinTable(TeacherLessonReview::DB_TBL, 'LEFT OUTER JOIN', 'ut.user_id = tlr.tlreview_teacher_user_id AND tlr.tlreview_status = ' . TeacherLessonReview::STATUS_APPROVED, 'tlr');
         $this->joinTable(TeacherLessonRating::DB_TBL, 'LEFT OUTER JOIN', 'tlrating.tlrating_tlreview_id = tlr.tlreview_id', 'tlrating');
-        $this->addMultipleFields(array("ROUND(AVG(tlrating_rating),2) as teacher_rating","count(DISTINCT tlreview_id) as totReviews"));
+        $this->addMultipleFields(array("ROUND(AVG(tlrating_rating),2) as teacher_rating", "count(DISTINCT tlreview_id) as totReviews"));
     }
     /***************/
-    
+
     public function joinUserTeachLanguages($langId = 0)
     {
         $langId = FatUtility::int($langId);
@@ -252,14 +277,15 @@ class ScheduledLessonSearch extends SearchBase
 
         $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl.utl_slanguage_id');
 
-        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl.utl_slanguage_id AND tlanguagelang_lang_id = '. $langId, 'sl_lang');
+        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl.utl_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
 
         $this->addMultipleFields(array('utsl.utl_us_user_id', 'GROUP_CONCAT(DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY IFNULL(tlanguage_name, tlanguage_identifier) ASC) AS teacherTeachLanguageName'));
     }
 
-    public static function isSlotBooked($teacherId, $startDateTime, $endDateTime)
+    public static function isSlotBooked(int $teacherId, $startDateTime, $endDateTime)
     {
-        $teacherId = FatUtility::int($teacherId);
+
+
         $srch = new self(false);
         $srch->addMultipleFields(
             array(
@@ -275,7 +301,7 @@ class ScheduledLessonSearch extends SearchBase
         $cnd1->attachCondition('slns.slesson_end_time', '<=', date('H:i:s', strtotime($endDateTime)), 'AND');
         // echo $srch->getQuery();die;
         $rs = $srch->getResultSet();
-        return $srch->recordCount()>0;
+        return $srch->recordCount() > 0;
     }
 
     public static function getLessonInfoByGrpClsid($grpclsId, $attr = null)
@@ -324,21 +350,21 @@ class ScheduledLessonSearch extends SearchBase
 
     public function checkUserLessonBooking(array $userIds, string $startDateTime, string $endDateTime) : SearchBase
     {
-        if(empty($userIds)){
-            trigger_error(Label::getLabel('LBL_User_id_Requried'),E_USER_ERROR);
+        if (empty($userIds)) {
+            trigger_error(Label::getLabel('LBL_User_id_Requried'), E_USER_ERROR);
         }
 
         $userFieldCnd = $this->addCondition('slns.slesson_teacher_id', ' IN ', $userIds);
-        $userFieldCnd->attachCondition('sld.sldetail_learner_id', ' IN ', $userIds,' OR ');
+        $userFieldCnd->attachCondition('sld.sldetail_learner_id', ' IN ', $userIds, ' OR ');
         /* $directStr = " ( ";
         $directStr .=  " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) <= '".$startDateTime."' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) >= '".$startDateTime."' ) ";
         $directStr .=  " OR ";
         $directStr .= " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) <= '".$endDateTime."' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) >= '".$endDateTime."' ) ";
         $directStr .= " ) "; */
-        $directStr =  " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) < '".$endDateTime."' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) > '".$startDateTime."' ) ";
+        $directStr =  " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) < '" . $endDateTime . "' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) > '" . $startDateTime . "' ) ";
         $this->addDirectCondition($directStr);
-        $this->addCondition('slns.slesson_status', ' IN ', [ScheduledLesson::STATUS_SCHEDULED,ScheduledLesson::STATUS_COMPLETED]);
-        $this->addMultipleFields(array('slns.slesson_date', 'slns.slesson_start_time', 'slns.slesson_end_time','slns.slesson_id','sld.sldetail_order_id','sld.sldetail_learner_id'));
+        $this->addCondition('slns.slesson_status', ' IN ', [ScheduledLesson::STATUS_SCHEDULED, ScheduledLesson::STATUS_COMPLETED]);
+        $this->addMultipleFields(array('slns.slesson_date', 'slns.slesson_start_time', 'slns.slesson_end_time', 'slns.slesson_id', 'sld.sldetail_order_id', 'sld.sldetail_learner_id'));
         return $this;
-   }
+    }
 }

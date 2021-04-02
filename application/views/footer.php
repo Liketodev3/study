@@ -89,10 +89,11 @@
                 </ul>
 
                 <ul class="fineprint-listing">
-					<li class="card-brand-logos">
-						<img src="<?php echo CONF_WEBROOT_URL; ?>images/PayGate-Card-Brand-Logos.jpg">
-
+                    <?php if( AttachedFile::getAttachment(AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, 0, 0,CommonHelper::getLangId() ) ){ ?>
+                    <li class="card-brand-logos">
+						<img src="<?php echo FatUtility::generateFullUrl('Image','allowedPaymentGatewayImage', array(CommonHelper::getLangId(),'THUMB')); ?>">
 					</li>
+                    <?php } ?>
                     <li>
                         <p>
                             <?php if (CommonHelper::demoUrl()) {

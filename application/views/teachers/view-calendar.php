@@ -2,7 +2,6 @@
 defined('SYSTEM_INIT') or die('Invalid Usage.');
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
 ?>
-
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
 <div class="calendar-view">
     <div class="row">

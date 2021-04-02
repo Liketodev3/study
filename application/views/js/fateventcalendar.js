@@ -10,6 +10,13 @@ var FatEventCalendar = function(teacherId){
             center: 'title',
             right: 'prev,next today'
         },
+        slotDuration: '00:15',
+        slotLabelFormat: {
+            hour12: true,
+            hour: '2-digit',
+            minute: '2-digit',
+            meridiem: 'short'
+        },
         views: {
             timeGridWeek: { // name of view
                 titleFormat: {  month: 'short', day: '2-digit', year: 'numeric' }
@@ -118,7 +125,6 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function(current_time, durati
     var calConf = {
         now:current_time,
         selectable: true,
-        slotDuration: '00:15',
         eventSources: [
             {
                 url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData',[this.teacherId]),
@@ -282,7 +288,6 @@ FatEventCalendar.prototype.AvailaibilityCalendar = function(current_time, durati
     var calConf = {
         now:current_time,
         selectable: selectable,
-        slotDuration: '00:15',
         eventSources: [
             {
                 url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData',[this.teacherId]),

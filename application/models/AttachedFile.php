@@ -48,6 +48,11 @@ class AttachedFile extends MyAppModel
     const FILETYPE_FLAG_TEACHING_LANGUAGES = 42;
     const FILETYPE_BLOG_POST_IMAGE_PATH = 'blog-post/';
     const FILETYPE_BLOG_PAGE_IMAGE = 43;
+    const FILETYPE_LESSON_PAGE_IMAGE = 44;
+    const FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE = 45;
+
+    const FILETYPE_PWA_APP_ICON = 46;
+    const FILETYPE_PWA_SPLASH_ICON = 47;
 
     public function __construct($fileId = 0)
     {
@@ -67,7 +72,7 @@ class AttachedFile extends MyAppModel
         return ($time > 0) ? '?t=' . $time : '';
     }
     
-    public static function checkSize($file, $compareSize)
+    public function checkSize($file, $compareSize)
     {
         $compareSize = FatUtility::convertToType($compareSize, FatUtility::VAR_FLOAT);
         if (filesize($file) > $compareSize) {
@@ -210,6 +215,14 @@ class AttachedFile extends MyAppModel
         if (getimagesize($fl) === false && $mimeType !='image/svg+xml') {
             $this->error = Label::getLabel('MSG_UNRECOGNISED_IMAGE_FILE', $this->commonLangId);
             return false;
+        }
+        $deg = CommonHelper::getCorrectImageOrientation($fl);
+        $ext = pathinfo($name, PATHINFO_EXTENSION);
+        $ext = $ext!='jpg' ? $ext : 'jpeg';
+        if($deg>0){            
+            $src = call_user_func('imagecreatefrom'.$ext, $fl);
+            $rotate = imagerotate($src, $deg, 0);
+            call_user_func('image'.$ext, $rotate, $fl);            
         }
         return $this->saveAttachment($fl, $fileType, $recordId, $recordSubid, $name, $displayOrder, $uniqueRecord, $lang_id, $screen);
     }
@@ -557,7 +570,7 @@ class AttachedFile extends MyAppModel
         $record_subid = FatUtility::int($record_subid);
         $langId = FatUtility::int($langId);
 
-        if (!in_array($fileType, array(AttachedFile::FILETYPE_ADMIN_LOGO, AttachedFile::FILETYPE_FRONT_LOGO, AttachedFile::FILETYPE_FRONT_WHITE_LOGO, AttachedFile::FILETYPE_EMAIL_LOGO, AttachedFile::FILETYPE_FAVICON, AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE, AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, AttachedFile::FILETYPE_WATERMARK_IMAGE, AttachedFile::FILETYPE_APPLE_TOUCH_ICON, AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, AttachedFile::FILETYPE_MOBILE_LOGO, AttachedFile::FILETYPE_CATEGORY_COLLECTION_BG_IMAGE)) && (!$fileType || !$recordId)) {
+        if (!in_array($fileType, array(AttachedFile::FILETYPE_ADMIN_LOGO, AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, AttachedFile::FILETYPE_FRONT_LOGO, AttachedFile::FILETYPE_FRONT_WHITE_LOGO, AttachedFile::FILETYPE_EMAIL_LOGO, AttachedFile::FILETYPE_FAVICON, AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE, AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, AttachedFile::FILETYPE_WATERMARK_IMAGE, AttachedFile::FILETYPE_APPLE_TOUCH_ICON, AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, AttachedFile::FILETYPE_MOBILE_LOGO, AttachedFile::FILETYPE_CATEGORY_COLLECTION_BG_IMAGE, AttachedFile::FILETYPE_LESSON_PAGE_IMAGE)) && (!$fileType || !$recordId)) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
             return false;
         }
@@ -614,5 +627,10 @@ class AttachedFile extends MyAppModel
             8 => Label::getLabel('LBL_A_PHP_extension_stopped_the_file_upload.'),
         );
         return $phpFileUploadErrors[$errorCode];
+    }
+    
+    public function getMimeType(string $filepath): string
+    {
+        return mime_content_type($filepath);
     }
 }

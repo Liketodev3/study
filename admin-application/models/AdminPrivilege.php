@@ -31,9 +31,7 @@ class AdminPrivilege
     const SECTION_LESSON_PACKAGES = 28;
     const SECTION_COURSE_CATEGORY = 29;
     const SECTION_SPOKEN_LANGUAGES = 30;
-    const SECTION_TEACHING_LANGUAGES = 44;
     const SECTION_FAQ = 31;
-    const SECTION_FAQ_CATEGORY = 45;
     const SECTION_BLOG_POST_CATEGORIES = 32;
     const SECTION_BLOG_POSTS = 33;
     const SECTION_BLOG_CONTRIBUTIONS = 34;
@@ -48,14 +46,19 @@ class AdminPrivilege
     const SECTION_SALES_REPORT = 43;
     const SECTION_GROUP_CLASSES = 44;
     const SECTION_TIMEZONES = 45;
+    const SECTION_ISSUE_REPORT_OPTIONS = 46;
+    const SECTION_TEACHER_PERFORMANCE_REPORT = 47;
+    const SECTION_TOP_LANGUAGES_REPORT = 48;
+    const SECTION_FAQ_CATEGORY = 49;
+    const SECTION_TEACHING_LANGUAGES = 50;
+    const SECTION_COMMISSION_REPORT  = 51;
 
     const PRIVILEGE_NONE = 0;
     const PRIVILEGE_READ = 1;
     const PRIVILEGE_WRITE = 2;
 
 
-    const SECTION_TOP_LANGUAGES_REPORT = 46;
-    const SECTION_TEACHER_PERFORMANCE_REPORT = 47;
+    const SECTION_RESCHEDULE_REPORT = 52;
 
     private static $instance = null;
     private $loadedPermissions = array();
@@ -131,6 +134,8 @@ class AdminPrivilege
             static::SECTION_FAQ_CATEGORY => Label::getLabel('MSG_Manage_faq_Categories', CommonHelper::getLangId()),
             static::SECTION_GROUP_CLASSES => Label::getLabel('MSG_Manage_GROUP_CLASSES', CommonHelper::getLangId()),
             static::SECTION_TIMEZONES => Label::getLabel('MSG_Manage_Timezones', CommonHelper::getLangId()),
+            static::SECTION_ISSUE_REPORT_OPTIONS => Label::getLabel('MSG_Manage_ISSUE_REPORT_OPTIONS', CommonHelper::getLangId()),
+            static::SECTION_COMMISSION_REPORT => Label::getLabel('MSG_Commission_Report', CommonHelper::getLangId()),
         );
         return $arr;
     }
@@ -700,6 +705,12 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_TEACHER_PERFORMANCE_REPORT, static::PRIVILEGE_READ, $returnResult);
     }
+
+    public function canViewLessonStatsReport($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_RESCHEDULE_REPORT, static::PRIVILEGE_READ, $returnResult);
+    }
+
     public function canEditGroupClasses($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_GROUP_CLASSES, static::PRIVILEGE_WRITE, $returnResult);
@@ -718,4 +729,20 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_TIMEZONES, static::PRIVILEGE_READ, $returnResult);
     }
+
+    public function canEditIssueReportOptions($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_ISSUE_REPORT_OPTIONS, static::PRIVILEGE_WRITE, $returnResult);
+    }
+
+    public function canViewIssueReportOptions($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_ISSUE_REPORT_OPTIONS, static::PRIVILEGE_READ, $returnResult);
+    }
+
+    public function canViewCommissionReport($adminId = 0, $returnResult = false) 
+    {
+        return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult); 
+    }
+
 }

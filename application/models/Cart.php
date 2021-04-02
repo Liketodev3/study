@@ -34,7 +34,7 @@ class Cart extends FatModel
         }
     }
 
-    public function add(int $teacher_id, int $lpackageId, int $languageId, $startDateTime = '', $endDateTime = '', int $grpcls_id = 0, int $lessonDuration = 60)
+    public function add(int $teacher_id, int $lpackageId, int $languageId, $startDateTime = '', $endDateTime = '', int $grpcls_id = 0, int $lessonDuration = 0)
     {
         $this->SYSTEM_ARR['cart'] = array();
         if ($teacher_id < 1 || ($lpackageId < 1 && $grpcls_id<1)) {
@@ -54,23 +54,26 @@ class Cart extends FatModel
             return false;
         }
 
-        $freePackages = LessonPackage::getFreeTrialPackage();
-        if ($freePackages and $freePackages['lpackage_id'] == $lpackageId) {
-            if (1 != $userRow['us_is_trial_lesson_enabled']) {
-                $this->error = Label::getLabel('MSG_Trial_Lessons_are_disabled_by_teacher');
-                return false;
-            }
-        }
-        /* ] */
-        /* validate that free trial package cannot be added again per teacher[ */
-        if($lpackageId>0){
-            $lPackageRow = LessonPackage::getAttributesById($lpackageId, array('lpackage_id', 'lpackage_is_free_trial'));
-            if ($lpackageId !== $lPackageRow['lpackage_id']) {
+        if ($lpackageId > 0) {
+
+            $lPackageRow = LessonPackage::getAttributesById($lpackageId, array('lpackage_id', 'lpackage_is_free_trial','lpackage_active'));
+           
+            if (empty($lpackageId) || (empty($lPackageRow))){
                 $this->error = Label::getLabel('LBL_Invalid_Request');
                 return false;
             }
+            if ($lPackageRow['lpackage_active'] != applicationConstants::YES){
+                $this->error = Label::getLabel('MSG_LESSONS_PACKAGE_ARE_DISABLED');
+                return false;
+            }
 
-            if (1 === $lPackageRow['lpackage_is_free_trial']) {
+            if ($lPackageRow['lpackage_is_free_trial'] == applicationConstants::YES) {
+           
+                if (applicationConstants::YES != $userRow['us_is_trial_lesson_enabled']) {
+                    $this->error = Label::getLabel('MSG_Trial_Lessons_are_disabled');
+                    return false;
+                }
+
                 /* validate if teacher has enabled free trial or not[ */
                 /* ] */
                 if (LessonPackage::isAlreadyPurchasedFreeTrial($this->cart_user_id, $teacher_id)) {
@@ -81,12 +84,32 @@ class Cart extends FatModel
                     $this->error = Label::getLabel('LBL_Lesson_Schedule_time_is_required');
                     return false;
                 }
-            }
-        }
-        /* ] */
+            }else{
 
+                $userToLanguage = new UserToLanguage($teacher_id);
+		        $userTeachLangs = $userToLanguage->getTeacherPricesForLearner(CommonHelper::getLangId(), $this->cart_user_id, $lessonDuration);
+            
+                if(empty($userTeachLangs)){
+                    $this->error = sprintf(Label::getLabel('LBL_ADMIN/TEACHER_DISABLED_THE_REQUESTED_TIME_DURATION'), $lessonDuration);
+                    return false;
+                }
+
+                if(empty($lessonDuration)){
+                    $lessonDuration =  $userTeachLangs[0]['utl_booking_slot'];
+                }
+                if(empty($languageId)){
+                    $languageId =  $userTeachLangs[0]['tlanguage_id'];
+                }
+                
+            }
+
+           
+            
+        }
+
+        /* ] */
         /* validate group class id */
-        if($grpcls_id>0){
+        if( $grpcls_id > 0 ){
 			$classDetails = TeacherGroupClasses::getAttributesById($grpcls_id, array('grpcls_id', 'grpcls_teacher_id', 'grpcls_start_datetime', 'grpcls_end_datetime', 'grpcls_max_learner', 'grpcls_status'));
 			if ($grpcls_id !== $classDetails['grpcls_id']) {
 				$this->error = Label::getLabel('LBL_Invalid_Request');
@@ -124,7 +147,23 @@ class Cart extends FatModel
                 $this->error = Label::getLabel('LBL_Class_Full');
 				return false;
             }
-		}
+
+            $isSlotBooked = ScheduledLessonSearch::isSlotBooked($this->cart_user_id, $classDetails['grpcls_start_datetime'], $classDetails['grpcls_end_datetime']);
+            if($isSlotBooked){
+                $this->error = Label::getLabel('LBL_YOU_ALREADY_BOOKED_A_CLASS_BETWEEN_THIS_TIME_RANGE');
+				return false;
+            }
+
+           $groupClassTiming = TeacherGroupClassesSearch::checkGroupClassTiming([$this->cart_user_id], $classDetails['grpcls_start_datetime'], $classDetails['grpcls_end_datetime']);
+           $groupClassTiming->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+           $groupClassTiming->setPageSize(1);
+           $groupClassTiming->getResultSet();
+            if($groupClassTiming->recordCount() > 0)
+            {
+                $this->error = Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE');
+				return false;
+            }
+        }
         $key = $teacher_id.'_'.$grpcls_id;
         $key = base64_encode(serialize($key));
         $this->SYSTEM_ARR['cart'][$key] = array(
@@ -142,6 +181,10 @@ class Cart extends FatModel
     public function cartData($langId)
     {
         $key = key($this->SYSTEM_ARR['cart']);
+        if(empty($key)){
+            $this->error = Label::getLabel('LBL_SOMETHING_WENT_WORNG');
+			return false;
+        }
         $cartData = $this->SYSTEM_ARR['cart'][$key];
         $languageId = $cartData['languageId'];
         $lessonDuration = $cartData['lessonDuration'];
@@ -157,13 +200,15 @@ class Cart extends FatModel
         $teacherSrch->addCondition('user_id', '=', $teacher_id);
         //$teacherSrch->addCondition( 'utl_slanguage_id', '=', 1 );
         $teacherSrch->setPageSize(1);
-
         $cnd = $cnd2 = '';
-        if($grpcls_id==0 && !LessonPackage::getAttributesById($lPackageId, 'lpackage_is_free_trial')){
-            $cnd = ' AND utl_booking_slot='.$lessonDuration;
+        $slotDurationActive =  true;
+        if($grpcls_id == 0 && !LessonPackage::getAttributesById($lPackageId, 'lpackage_is_free_trial')){
+            $cnd = ' AND utl_booking_slot='.$lessonDuration.' AND utl_bulk_lesson_amount > 0 AND utl_single_lesson_amount > 0';
             $cnd2 = ' AND top_lesson_duration='.$lessonDuration;
+            $slotDurationActive = (in_array($lessonDuration, CommonHelper::getPaidLessonDurations()));
+            
         }
-
+       
         $teacherSrch->joinTable("tbl_user_teach_languages", 'INNER JOIN', 'utl_us_user_id = '. $teacher_id .' AND utl_slanguage_id = '. $languageId . $cnd, 'utl');
         /* find, if have added any offer price is locked with this teacher[ */
         $teacherSrch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top_teacher_id = user_id AND top_learner_id = '.$this->cart_user_id.$cnd2, 'top');
@@ -178,7 +223,6 @@ class Cart extends FatModel
                 'IFNULL(top_single_lesson_price,0) as topSingleLessonPrice',
                 'IFNULL(top_bulk_lesson_price,0) as topBulkLessonPrice',
                 'utl.*'
-
             ));
         if ($langId > 0) {
             $teacherSrch->addMultipleFields(array(
@@ -186,12 +230,11 @@ class Cart extends FatModel
                     'IFNULL(state_name, state_identifier) as user_state_name'
                 ));
         }
-        //echo $teacherSrch->getQuery(); die;
         $rs = $teacherSrch->getResultSet();
         $teacher = FatApp::getDb()->fetch($rs);
-        // print_r($teacher); die;
-        if (!$teacher) {
+        if (empty($teacher) || !$slotDurationActive) {
             $this->removeCartKey($key);
+            return false;
         }
         
         if($lPackageId > 0){
@@ -201,6 +244,7 @@ class Cart extends FatModel
             if ($langId > 0) {
                 $srch->addMultipleFields(array('IFNULL(lpackage_title, lpackage_identifier) as lpackage_title'));
             }
+            $srch->doNotCalculateRecords();
             $rs = $srch->getResultSet();
             $lessonPackageRow = FatApp::getDb()->fetch($rs);
             if ($lessonPackageRow['lpackage_is_free_trial'] == 1) {
@@ -214,11 +258,13 @@ class Cart extends FatModel
                 $itemPrice = (($lessonPackageRow['lpackage_lessons'] > 1) ? $teacher['utl_bulk_lesson_amount'] : $teacher['utl_single_lesson_amount']);
             }
             $totalPrice = $itemPrice * $lessonPackageRow['lpackage_lessons'];
+
         }elseif($grpcls_id>0){
 			$classDetails = TeacherGroupClasses::getAttributesById($grpcls_id, array('grpcls_id', 'grpcls_title', 'grpcls_entry_fee'));
 			$itemPrice = $classDetails['grpcls_entry_fee'];
 			$totalPrice = $itemPrice;
 		}else{
+            $this->removeCartKey($key);
             $this->error = Label::getLabel('LBL_Invalid_Request');
 			return false;
         }
@@ -244,6 +290,9 @@ class Cart extends FatModel
         if (!$this->cartData) {
             /* cart Summary[ */
             $this->cartData = $this->cartData($langId);
+            if(empty($this->cartData)) {
+                return [];
+            }
             $userWalletBalance = User::getUserBalance($this->cart_user_id);
             $cartTotal = $this->cartData['total'];
             $cartTaxTotal = 0;
@@ -273,6 +322,13 @@ class Cart extends FatModel
     public function updateCartWalletOption($val)
     {
         $this->SYSTEM_ARR['shopping_cart']['Pay_from_wallet'] = $val;
+        $this->updateUserCart();
+        return true;
+    }
+
+    public function updateLessonPackageId(int $lessonPackageId)
+    {
+        $this->SYSTEM_ARR['shopping_cart']['lpackage_id'] = $lessonPackageId;
         $this->updateUserCart();
         return true;
     }

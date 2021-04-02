@@ -21,7 +21,7 @@ class CartController extends MyAppController
         $endDateTime = FatApp::getPostedData('endDateTime', FatUtility::VAR_STRING, '');
         $weekStart = FatApp::getPostedData('weekStart', FatUtility::VAR_STRING, '');
         $weekEnd = FatApp::getPostedData('weekEnd', FatUtility::VAR_STRING, '');
-        $lessonDuration = FatApp::getPostedData('lessonDuration', FatUtility::VAR_STRING, 60);
+        $lessonDuration = FatApp::getPostedData('lessonDuration', FatUtility::VAR_INT, 0);
         /* ] */
 
         $grpclsId = FatApp::getPostedData('grpcls_id', FatUtility::VAR_INT, 0);
@@ -51,6 +51,7 @@ class CartController extends MyAppController
             $systemTimeZone = MyDate::getTimeZone();
             $startDateTime = MyDate::changeDateTimezone($startDateTime, $user_timezone, $systemTimeZone);
             $endDateTime = MyDate::changeDateTimezone($endDateTime, $user_timezone, $systemTimeZone);
+           
             $scheduledLessonSearchObj = new ScheduledLessonSearch(false);
             $userIds  = array( $teacher_id, UserAuthentication::getLoggedUserId() );
             $scheduledLessonSearchObj->checkUserLessonBooking($userIds, $startDateTime, $endDateTime);
@@ -85,6 +86,7 @@ class CartController extends MyAppController
 
         /* add to cart[ */
         $cart = new Cart();
+       
         if (!$cart->add($teacher_id, $lpackageId, $languageId, $startDateTime, $endDateTime, $grpclsId, $lessonDuration)) {
             FatUtility::dieJsonError($cart->getError());
         }

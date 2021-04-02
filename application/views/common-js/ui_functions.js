@@ -245,3 +245,15 @@ $('.quote-thumbs').slick({
         ]
 
 });
+
+//  custom loader js start
+$.loader = {
+    selector: '.loading-wrapper',
+    show: function() {
+        $(this.selector).show();
+    },
+    hide: function() {
+        $(this.selector).hide();
+    }
+};
+//  custom loader js end

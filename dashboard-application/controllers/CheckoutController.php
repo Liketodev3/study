@@ -1,123 +1,132 @@
 <?php
-class CheckoutController extends LoggedUserController{
+class CheckoutController extends LoggedUserController
+{
 	private $cartObj;
 
-	public function __construct($action) {
+	public function __construct($action)
+	{
 		parent::__construct($action);
-		$this->cartObj = new Cart( UserAuthentication::getLoggedUserId() );
+		$this->cartObj = new Cart(UserAuthentication::getLoggedUserId());
 	}
 
-	public function index(){
-		$criteria = array( 'isUserLogged' => true, 'hasItems' =>  true );
-		if( !$this->isEligibleForNextStep( $criteria ) ){
-			if( !Message::getErrorCount() ){
+	public function index()
+	{
+		$cartData = $this->cartObj->getCart($this->siteLangId);
+		$criteria = array('isUserLogged' => true, 'hasItems' =>  true);
+		if (!$this->isEligibleForNextStep($criteria)) {
+			if (!Message::getErrorCount()) {
 				Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
 			}
-			FatApp::redirectUser( CommonHelper::generateUrl() );
+			FatApp::redirectUser(CommonHelper::generateUrl());
 		}
 
-		/* [ */
-		$srch = LessonPackage::getSearchObject( $this->siteLangId );
-		$srch->addCondition( 'lpackage_is_free_trial', '=', 0 );
-		$srch->addMultipleFields(array(
-			'lpackage_id',
-			'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',
-			'lpackage_lessons'
-        ));
-		$rs = $srch->getResultSet();
-		$lessonPackages = FatApp::getDb()->fetchAll($rs);
-		/* ] */
+		if (0 >= $cartData['grpcls_id']) {
+			$lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
+			if (empty($lessonPackages)) {
+				Message::addErrorMessage(Label::getLabel('MSG_PLEASE_CONCAT_WITH_ADMIN_NO_LESSON_PACKAGE_ACTIVE'));
+				FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
+			}
+			$this->set('lessonPackages', $lessonPackages);
 
-		$cartData = $this->cartObj->getCart( $this->siteLangId );
-        
-        /* Languages [ */
-        $userToLanguage = new UserToLanguage($cartData['user_id']);
-        $tLangSettings = $userToLanguage->getTeachingSettings($this->siteLangId);
-        $tlangArr = array();
-        foreach($tLangSettings as $tLangSetting){
-            $tlangArr[$tLangSetting['tlanguage_id']] = $tLangSetting['tlanguage_name'];
-        }
+			$lessonPackageIds = array_column($lessonPackages, 'lpackage_id', 'lpackage_id');
+			if (!array_key_exists($cartData['lpackage_id'], $lessonPackageIds)) {
+				$cartData['lpackage_id'] =  $lessonPackages[0]['lpackage_id'];
+				$cart = new Cart();
+				$cart->updateLessonPackageId($cartData['lpackage_id']);
+			}
+		}
+
+		/* Languages [ */
+		$userToLanguage = new UserToLanguage($cartData['user_id']);
+		$tLangSettings = $userToLanguage->getTeachingSettings($this->siteLangId);
+		$tlangArr = array();
+		foreach ($tLangSettings as $tLangSetting) {
+			$tlangArr[$tLangSetting['tlanguage_id']] = $tLangSetting['tlanguage_name'];
+		}
 		$this->set('teachLanguages', $tlangArr);
 		/* ] */
-		
-		$confirmForm = $this->getConfirmFormWithNoAmount( $this->siteLangId );
-		if( $cartData['orderNetAmount'] <= 0 ) {
+
+		$confirmForm = $this->getConfirmFormWithNoAmount($this->siteLangId);
+		if ($cartData['orderNetAmount'] <= 0) {
 			//$confirmForm->addFormTagAttribute('action', CommonHelper::generateUrl('ConfirmPay','Charge', array($order_id)) );
 			/* $confirmForm->setFormTagAttribute('onsubmit', 'confirmOrderWithoutPayment(this); return(false);'); */
-			$confirmForm->addSubmitButton( '', 'btn_submit', Label::getLabel('LBL_Confirm_Order') );
+			$confirmForm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Confirm_Order'));
 		}
-		$this->set('confirmForm', $confirmForm );
+		$this->set('confirmForm', $confirmForm);
 
 		$bookingDurations = array_unique(array_column($tLangSettings, 'utl_booking_slot'));
-        rsort($bookingDurations);
-        $this->set('bookingDurations', $bookingDurations);
+		sort($bookingDurations);
+		$this->set('bookingDurations', $bookingDurations);
 
-		$this->set('lessonPackages',$lessonPackages);
-		$this->set('cartData', $cartData );
-        $this->_template->render();
+		$this->set('cartData', $cartData);
+		$this->_template->render();
 	}
 
-	public function listFinancialSummary(){
+	public function listFinancialSummary()
+	{
 		$json = array();
-		$cart = $this->cartObj->getCart( $this->siteLangId );
-		$userWalletBalance = User::getUserBalance( UserAuthentication::getLoggedUserId() );
-		$this->set('userWalletBalance', $userWalletBalance );
-		$this->set('cart', $cart );
-		$json['html'] = $this->_template->render( false, false, 'checkout/list-financial-summary.php', true, false);
-		$json['couponApplied'] = isset($cart['cartDiscounts']['coupon_discount_total'])?$cart['cartDiscounts']['coupon_discount_total']:0;
+		$cart = $this->cartObj->getCart($this->siteLangId);
+		$userWalletBalance = User::getUserBalance(UserAuthentication::getLoggedUserId());
+		$this->set('userWalletBalance', $userWalletBalance);
+		$this->set('cart', $cart);
+		$json['html'] = $this->_template->render(false, false, 'checkout/list-financial-summary.php', true, false);
+		$json['couponApplied'] = isset($cart['cartDiscounts']['coupon_discount_total']) ? $cart['cartDiscounts']['coupon_discount_total'] : 0;
 		FatUtility::dieJsonSuccess($json);
 	}
 
-	public function getCouponForm(){
+	public function getCouponForm()
+	{
 		$loggedUserId = UserAuthentication::getLoggedUserId();
-		$orderId = isset($_SESSION['order_id'])?$_SESSION['order_id']:'';
-		$cartSummary = $this->cartObj->getCart( $this->siteLangId );
-		$couponsList = DiscountCoupons::getValidCoupons( $loggedUserId, $this->siteLangId,'',$orderId );
-		$this->set( 'couponsList', $couponsList );
-		$this->set('cartSummary', $cartSummary );
+		$orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
+		$cartSummary = $this->cartObj->getCart($this->siteLangId);
+		$couponsList = DiscountCoupons::getValidCoupons($loggedUserId, $this->siteLangId, '', $orderId);
+		$this->set('couponsList', $couponsList);
+		$this->set('cartSummary', $cartSummary);
 		$PromoCouponsFrm = $this->getPromoCouponsForm($this->siteLangId);
-		$this->set('PromoCouponsFrm', $PromoCouponsFrm );
+		$this->set('PromoCouponsFrm', $PromoCouponsFrm);
 		$this->_template->render(false, false);
 	}
 
-	private function getPromoCouponsForm($langId){
+	private function getPromoCouponsForm($langId)
+	{
 		$langId = FatUtility::int($langId);
 		$frm = new Form('frmPromoCoupons');
-		$fld = $frm->addTextBox(Label::getLabel('LBL_Coupon_code',$langId),'coupon_code','',array('placeholder'=>Label::getLabel('LBL_Enter_Your_code',$langId)));
+		$fld = $frm->addTextBox(Label::getLabel('LBL_Coupon_code', $langId), 'coupon_code', '', array('placeholder' => Label::getLabel('LBL_Enter_Your_code', $langId)));
 		$fld->requirements()->setRequired();
-		$frm->addSubmitButton('', 'btn_submit',Label::getLabel('LBL_Apply',$langId));
+		$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Apply', $langId));
 		return $frm;
 	}
 
-	public function paymentSummary(){
-		$criteria = array( 'isUserLogged' => true, 'hasItems' =>  true );
-		if( !$this->isEligibleForNextStep( $criteria ) ){
-			if( Message::getErrorCount() ){
+	public function paymentSummary()
+	{
+		$criteria = array('isUserLogged' => true, 'hasItems' =>  true);
+		if (!$this->isEligibleForNextStep($criteria)) {
+			if (Message::getErrorCount()) {
 				$errMsg = Message::getHtml();
 			} else {
 				Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
 				$errMsg = Message::getHtml();
 			}
-			if( FatUtility::isAjaxCall() == true) {
+			if (FatUtility::isAjaxCall() == true) {
 				$json['errorMsg'] = $errMsg;
 				$json['redirectUrl'] = CommonHelper::generateUrl('Checkout');
 				FatUtility::dieJsonError($json);
 			}
-			FatUtility::dieWithError( $errMsg );
+			FatUtility::dieWithError($errMsg);
 		}
 
 		$userId = UserAuthentication::getLoggedUserId();
-		$userWalletBalance = User::getUserBalance( $userId );
+		$userWalletBalance = User::getUserBalance($userId);
 		$cartData = $this->cartObj->getCart($this->siteLangId);
-		$WalletPaymentForm = $this->getWalletPaymentForm( );
+		$WalletPaymentForm = $this->getWalletPaymentForm();
 
-		if( (FatUtility::convertToType( $userWalletBalance,FatUtility::VAR_FLOAT) >= FatUtility::convertToType($cartData['orderNetAmount'], FatUtility::VAR_FLOAT) ) && $cartData['cartWalletSelected'] ){
+		if ((FatUtility::convertToType($userWalletBalance, FatUtility::VAR_FLOAT) >= FatUtility::convertToType($cartData['orderNetAmount'], FatUtility::VAR_FLOAT)) && $cartData['cartWalletSelected']) {
 			$WalletPaymentForm->setFormTagAttribute('onsubmit', 'confirmOrder(this); return(false);');
-			$WalletPaymentForm->addSubmitButton( '', 'btn_submit', Label::getLabel('LBL_Pay_Now') );
+			$WalletPaymentForm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Pay_Now'));
 		}
 
 		/* Payment Methods[ */
-		$pmSrch = PaymentMethods::getSearchObject( $this->siteLangId );
+		$pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
 		$pmSrch->doNotCalculateRecords();
 		$pmSrch->doNotLimitRecords();
 		$pmSrch->addMultipleFields(
@@ -126,124 +135,128 @@ class CheckoutController extends LoggedUserController{
 				'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name',
 				'pmethod_code',
 				'pmethod_description'
-				));
+			)
+		);
 		$pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
 		$pmRs = $pmSrch->getResultSet();
 		$paymentMethods = FatApp::getDb()->fetchAll($pmRs);
 		/* ] */
-		$confirmForm = $this->getConfirmFormWithNoAmount( $this->siteLangId );
-		if( $cartData['orderPaymentGatewayCharges'] <= 0 ) {
+		$confirmForm = $this->getConfirmFormWithNoAmount($this->siteLangId);
+		if ($cartData['orderPaymentGatewayCharges'] <= 0) {
 			//$confirmForm->addFormTagAttribute('action', CommonHelper::generateUrl('ConfirmPay','Charge', array($order_id)) );
 			/* $confirmForm->setFormTagAttribute('onsubmit', 'confirmOrderWithoutPayment(this); return(false);'); */
-			$confirmForm->addSubmitButton( '', 'btn_submit', Label::getLabel('LBL_Confirm_Order') );
+			$confirmForm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Confirm_Order'));
 		}
 
 
-		$this->set( 'confirmForm', $confirmForm );
-		$this->set( 'paymentMethods', $paymentMethods );
-		$this->set( 'userWalletBalance', $userWalletBalance );
+		$this->set('confirmForm', $confirmForm);
+		$this->set('paymentMethods', $paymentMethods);
+		$this->set('userWalletBalance', $userWalletBalance);
 		$this->set('cartData', $cartData);
-		$this->set('WalletPaymentForm', $WalletPaymentForm );
-		$this->_template->render( false, false );
+		$this->set('WalletPaymentForm', $WalletPaymentForm);
+		$this->_template->render(false, false);
 	}
 
-	public function walletSelection(){
+	public function walletSelection()
+	{
 		$payFromWallet = FatApp::getPostedData('payFromWallet', FatUtility::VAR_INT, 0);
-		$this->cartObj->updateCartWalletOption( $payFromWallet );
+		$this->cartObj->updateCartWalletOption($payFromWallet);
 		$this->_template->render(false, false, 'json-success.php');
 	}
 
-	public function paymentTab($pmethod_id, $order_id = ''){
-		$pmethodId = FatUtility::int( $pmethod_id );
-		if( !$pmethodId ){
-			FatUtility::dieWithError( Label::getLabel("MSG_Invalid_Request!", $this->siteLangId) );
+	public function paymentTab($pmethod_id, $order_id = '')
+	{
+		$pmethodId = FatUtility::int($pmethod_id);
+		if (!$pmethodId) {
+			FatUtility::dieWithError(Label::getLabel("MSG_Invalid_Request!", $this->siteLangId));
 		}
 
-		if( !UserAuthentication::isUserLogged() ){
-			FatUtility::dieWithError( Label::getLabel('MSG_Your_Session_seems_to_be_expired.', $this->siteLangId) );
+		if (!UserAuthentication::isUserLogged()) {
+			FatUtility::dieWithError(Label::getLabel('MSG_Your_Session_seems_to_be_expired.', $this->siteLangId));
 		}
 		$orderInfo = [];
-		$netAmmount =0;
-		if(!empty($order_id)) {
+		$netAmmount = 0;
+		if (!empty($order_id)) {
 			$srch = Order::getSearchObject();
-	        $srch->doNotCalculateRecords();
-	        $srch->doNotLimitRecords();
-	        $srch->addCondition('order_id', '=', $order_id);
-	        $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PENDING);
-	        $rs = $srch->getResultSet();
-	        $orderInfo = FatApp::getDb()->fetch($rs);
-	        if (!$orderInfo) {
-	            FatUtility::dieWithError(Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId));
-	        }
+			$srch->doNotCalculateRecords();
+			$srch->doNotLimitRecords();
+			$srch->addCondition('order_id', '=', $order_id);
+			$srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PENDING);
+			$rs = $srch->getResultSet();
+			$orderInfo = FatApp::getDb()->fetch($rs);
+			if (!$orderInfo) {
+				FatUtility::dieWithError(Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId));
+			}
 			$netAmmount =  $orderInfo['order_net_amount'];
 		}
 
 		/* [ */
-		$pmSrch = PaymentMethods::getSearchObject( $this->siteLangId );
+		$pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
 		$pmSrch->doNotCalculateRecords();
 		$pmSrch->doNotLimitRecords();
 		$pmSrch->addMultipleFields(array('pmethod_id', 'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name', 'pmethod_code', 'pmethod_description'));
-		$pmSrch->addCondition('pmethod_id','=', $pmethodId);
+		$pmSrch->addCondition('pmethod_id', '=', $pmethodId);
 		$pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
 		$pmRs = $pmSrch->getResultSet();
 		$paymentMethod = FatApp::getDb()->fetch($pmRs);
-		if( !$paymentMethod ){
-			FatUtility::dieWithError( Label::getLabel("MSG_Selected_Payment_method_not_found!", $this->siteLangId) );
+		if (!$paymentMethod) {
+			FatUtility::dieWithError(Label::getLabel("MSG_Selected_Payment_method_not_found!", $this->siteLangId));
 		}
 		$this->set('paymentMethod', $paymentMethod);
 		/* ] */
 
 		/* [ */
-		$frm = $this->getPaymentTabForm( $this->siteLangId );
-		if(!empty($order_id)) {
-			$frm->fill(array('order_id' => $order_id,'order_type' => $orderInfo['order_type']));
+		$frm = $this->getPaymentTabForm($this->siteLangId);
+		if (!empty($order_id)) {
+			$frm->fill(array('order_id' => $order_id, 'order_type' => $orderInfo['order_type']));
 		}
 		/* $controller = $paymentMethod['pmethod_code'].'Pay';
 		$frm->setFormTagAttribute( 'action', CommonHelper::generateUrl( $controller, 'charge', array( $orderInfo['order_id']) ) ); */
-		$frm->fill(array( 'pmethod_id' => $pmethodId ) );
-		$this->set( 'frm', $frm );
+		$frm->fill(array('pmethod_id' => $pmethodId));
+		$this->set('frm', $frm);
 		/* ] */
 		$cartData = [];
-		if(empty($order_id)) {
+		if (empty($order_id)) {
 			$cartData = $this->cartObj->getCart($this->siteLangId);
 			$netAmmount = $cartData['orderPaymentGatewayCharges'];
 			$this->set('cartData', $cartData);
 		}
 		$this->set('netAmmount', $netAmmount);
-		$this->_template->render( false, false, '', false, false );
+		$this->_template->render(false, false, '', false, false);
 	}
 
-	public function confirmOrder(){
+	public function confirmOrder()
+	{
 		$order_type = FatApp::getPostedData('order_type', FatUtility::VAR_INT, 0);
-        $pmethodId = FatApp::getPostedData('pmethod_id', FatUtility::VAR_INT, 0);
-        $order_id = FatApp::getPostedData("order_id", FatUtility::VAR_STRING, "");
+		$pmethodId = FatApp::getPostedData('pmethod_id', FatUtility::VAR_INT, 0);
+		$order_id = FatApp::getPostedData("order_id", FatUtility::VAR_STRING, "");
 		/* [ */
-		if( $pmethodId > 0 ){
-			$pmSrch = PaymentMethods::getSearchObject( $this->siteLangId );
+		if ($pmethodId > 0) {
+			$pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
 			$pmSrch->doNotCalculateRecords();
 			$pmSrch->doNotLimitRecords();
 			$pmSrch->addMultipleFields(array('pmethod_id', 'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name', 'pmethod_code', 'pmethod_description'));
-			$pmSrch->addCondition('pmethod_id','=',$pmethodId);
+			$pmSrch->addCondition('pmethod_id', '=', $pmethodId);
 			$pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
 			$pmRs = $pmSrch->getResultSet();
 			$paymentMethod = FatApp::getDb()->fetch($pmRs);
-			if( !$paymentMethod ){
-				Message::addErrorMessage( Label::getLabel("MSG_Selected_Payment_method_not_found!") );
-				FatUtility::dieWithError( Message::getHtml() );
+			if (!$paymentMethod) {
+				Message::addErrorMessage(Label::getLabel("MSG_Selected_Payment_method_not_found!"));
+				FatUtility::dieWithError(Message::getHtml());
 			}
 		}
 		/* ] */
 		/* Loading Money to wallet[ */
 		if ($order_type == Order::TYPE_WALLET_RECHARGE || $order_type == Order::TYPE_GIFTCARD) {
-			$criteria = array( 'isUserLogged' => true );
+			$criteria = array('isUserLogged' => true);
 			if (!$this->isEligibleForNextStep($criteria)) {
 				if (Message::getErrorCount()) {
 					$errMsg = Message::getHtml();
-				}else {
+				} else {
 					Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
 					$errMsg = Message::getHtml();
 				}
-				FatUtility::dieWithError($error);
+				FatUtility::dieWithError($errMsg);
 			}
 			$user_id = UserAuthentication::getLoggedUserId();
 
@@ -268,35 +281,40 @@ class CheckoutController extends LoggedUserController{
 			}
 
 			$orderObj->updateOrderInfo($order_id, array('order_pmethod_id' => $pmethodId));
-			$controller = $paymentMethod['pmethod_code'].'Pay';
-			$redirectUrl = CommonHelper::generateUrl($controller, 'charge', array($order_id), CONF_WEBROOT_FRONTEND);
+			$controller = $paymentMethod['pmethod_code'] . 'Pay';
+			$redirectUrl = CommonHelper::generateUrl($controller, 'charge', array($order_id));
 			$this->set('msg', Label::getLabel('LBL_Processing...'));
 			$this->set('redirectUrl', $redirectUrl);
 			$this->_template->render(false, false, 'json-success.php');
 		}
 
-		$cartData = $this->cartObj->getCart( $this->siteLangId );
+		$cartData = $this->cartObj->getCart($this->siteLangId);
 		$criteria = array(
 			'isUserLogged' => true,
 			'hasItems' =>  true,
 		);
-		if( !$this->isEligibleForNextStep( $criteria ) ){
-		if( Message::getErrorCount() ){
-			$errMsg = Message::getHtml();
-		} else {
-			Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
-			$errMsg = Message::getHtml();
-		}
-			FatUtility::dieWithError( $errMsg );
+		if (!$this->isEligibleForNextStep($criteria)) {
+			if (Message::getErrorCount()) {
+				$errMsg = Message::getHtml();
+			} else {
+				Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
+				$errMsg = Message::getHtml();
+			}
+			if (FatUtility::isAjaxCall() == true) {
+				$json['msg'] = $errMsg;
+				$json['redirectUrl'] = CommonHelper::generateUrl('Checkout');
+				FatUtility::dieJsonError($json);
+			}
+			FatUtility::dieWithError($errMsg);
 		}
 		/* if( $cartData['cartWalletSelected'] && $cartData['orderPaymentGatewayCharges'] == 0 ){
 			Message::addErrorMessage( Label::getLabel('MSG_Try_to_pay_using_wallet_balance_as_amount_for_payment_gateway_is_not_enough.') );
 			FatUtility::dieWithError( Message::getHtml() );
 		} */
 
-		if( $cartData['orderPaymentGatewayCharges'] == 0 && $pmethodId ){
-			Message::addErrorMessage( Label::getLabel('MSG_Amount_for_payment_gateway_must_be_greater_than_zero.' ) );
-			FatUtility::dieWithError( Message::getHtml() );
+		if ($cartData['orderPaymentGatewayCharges'] == 0 && $pmethodId) {
+			Message::addErrorMessage(Label::getLabel('MSG_Amount_for_payment_gateway_must_be_greater_than_zero.'));
+			FatUtility::dieWithError(Message::getHtml());
 		}
 
 		/* addOrder[ */
@@ -329,41 +347,40 @@ class CheckoutController extends LoggedUserController{
 		$orderData['order_language_code'] =  $languageRow['language_code'];
 
 		/* [ */
-		$op_lesson_duration = $cartData['lessonDuration'];//FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60);
+		$op_lesson_duration = $cartData['lessonDuration']; //FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60);
 
 		$cartData['op_commission_charged'] = 0;
 		$cartData['op_commission_percentage'] = 0;
 
-		if( $cartData['lpackage_is_free_trial'] ){
-			$op_lesson_duration = FatApp::getConfig( 'conf_trial_lesson_duration', FatUtility::VAR_INT, 30 );
-		}else {
+		if ($cartData['lpackage_is_free_trial']) {
+			$op_lesson_duration = FatApp::getConfig('conf_trial_lesson_duration', FatUtility::VAR_INT, 30);
+		} else {
 			$commissionDetails = Commission::getTeacherCommission($cartData['user_id'], $cartData['grpcls_id']);
 			if ($commissionDetails) {
 				$cartData['op_commission_percentage'] = $commissionDetails['commsetting_fees'];
-                $teacherCommission = ( (100 - $commissionDetails['commsetting_fees']) * $cartData['itemPrice'] ) / 100;
+				$teacherCommission = ((100 - $commissionDetails['commsetting_fees']) * $cartData['itemPrice']) / 100;
+			} else {
+				$teacherCommission = $cartData['itemPrice'];
 			}
-            else {
-                $teacherCommission = $cartData['itemPrice'];
-            }
 			// $teacherCommission = $teacherCommission * CommonHelper::getCurrencyValue();
 			$teacherCommission = $teacherCommission;
 
-            /*$maxCommission = FatApp::getConfig('CONF_MAX_COMMISSION', FatUtility::VAR_INT, 0);
+			/*$maxCommission = FatApp::getConfig('CONF_MAX_COMMISSION', FatUtility::VAR_INT, 0);
             if($maxCommission > 0 AND $maxCommission <= $teacherCommission){
                 $teacherCommission = $maxCommission;
             }*/
-            $cartData['op_commission_charged'] = $teacherCommission;
+			$cartData['op_commission_charged'] = $teacherCommission;
 		}
 
 		$products[$cartData['lpackage_id']] = array(
-            'op_grpcls_id' => $cartData['grpcls_id'],
+			'op_grpcls_id' => $cartData['grpcls_id'],
 			'op_lpackage_id' => $cartData['lpackage_id'],
 			'op_lpackage_lessons' => $cartData['lpackage_lessons'],
 			'op_lpackage_is_free_trial' => $cartData['lpackage_is_free_trial'],
 			'op_lesson_duration' => $op_lesson_duration,
 			'op_teacher_id' => $cartData['user_id'],
 			//'op_qty' => 1,
-			'op_qty'	=>	$cartData['grpcls_id']==0 ? $cartData['lpackage_lessons'] : 1,
+			'op_qty'	=>	$cartData['grpcls_id'] == 0 ? $cartData['lpackage_lessons'] : 1,
 			'op_commission_charged' => $cartData['op_commission_charged'],
 			'op_commission_percentage' => $cartData['op_commission_percentage'],
 			'op_unit_price' => $cartData['itemPrice'],
@@ -373,9 +390,9 @@ class CheckoutController extends LoggedUserController{
 
 		$productsLangData = array();
 		$allLanguages = Language::getAllNames();
-		foreach ( $allLanguages as $lang_id => $language_name ) {
-			$langSpecificLPackageRow = LessonPackage::getAttributesByLangId( $lang_id, $cartData['lpackage_id'] );
-			if( !$langSpecificLPackageRow ){
+		foreach ($allLanguages as $lang_id => $language_name) {
+			$langSpecificLPackageRow = LessonPackage::getAttributesByLangId($lang_id, $cartData['lpackage_id']);
+			if (!$langSpecificLPackageRow) {
 				continue;
 			}
 
@@ -389,19 +406,19 @@ class CheckoutController extends LoggedUserController{
 		$orderData['products'] = $products;
 		/* ] */
 
-		$order = new Order( );
-		if( !$order->addUpdate( $orderData ) ){
-			Message::addErrorMessage( $order->getError() );
-			FatUtility::dieWithError( Message::getHtml() );
+		$order = new Order();
+		if (!$order->addUpdate($orderData)) {
+			Message::addErrorMessage($order->getError());
+			FatUtility::dieWithError(Message::getHtml());
 		}
 		/* ] */
 
 		$redirectUrl = '';
 		/* if( $cartData['lpackage_is_free_trial'] == 1 && $cartData['orderNetAmount'] <= 0 ){ */
-		if( 0 >= $orderNetAmount ){
+		if (0 >= $orderNetAmount) {
 			$redirectUrl = CommonHelper::generateUrl('FreePay', 'Charge', array($order->getOrderId()));
-			$this->set( 'msg', Label::getLabel('LBL_Processing...', $this->siteLangId) );
-			$this->set( 'redirectUrl', $redirectUrl );
+			$this->set('msg', Label::getLabel('LBL_Processing...', $this->siteLangId));
+			$this->set('redirectUrl', $redirectUrl);
 			$this->_template->render(false, false, 'json-success.php');
 		}
 
@@ -409,15 +426,15 @@ class CheckoutController extends LoggedUserController{
 		$userWalletBalance = User::getUserBalance($userId);
 		// $userWalletBalance = $userWalletBalance * CommonHelper::getCurrencyValue();
 
-		if ( $orderNetAmount > 0 && $cartData['cartWalletSelected'] && ($userWalletBalance >= $orderNetAmount) && !$pmethodId ) {
-			$redirectUrl = CommonHelper::generateUrl('WalletPay','Charge', array($order->getOrderId()), CONF_WEBROOT_FRONTEND);
+		if ($orderNetAmount > 0 && $cartData['cartWalletSelected'] && ($userWalletBalance >= $orderNetAmount) && !$pmethodId) {
+			$redirectUrl = CommonHelper::generateUrl('WalletPay', 'Charge', array($order->getOrderId()), CONF_WEBROOT_FRONTEND);
 			$this->set('msg', Label::getLabel('LBL_Processing...', $this->siteLangId));
 			$this->set('redirectUrl', $redirectUrl);
 			$this->_template->render(false, false, 'json-success.php');
 		}
 
 		if ($pmethodId > 0) {
-			$controller = $paymentMethod['pmethod_code'].'Pay';
+			$controller = $paymentMethod['pmethod_code'] . 'Pay';
 			$redirectUrl = CommonHelper::generateUrl($controller, 'charge', array($order->getOrderId()), CONF_WEBROOT_FRONTEND);
 			$this->set('msg', Label::getLabel('LBL_Processing...', $this->siteLangId));
 			$this->set('redirectUrl', $redirectUrl);
@@ -428,124 +445,158 @@ class CheckoutController extends LoggedUserController{
 			$this->_template->render(false, false, 'json-success.php');
 		}
 
-		Message::addErrorMessage( Label::getLabel('LBL_Invalid_Request') );
-		FatUtility::dieWithError( Message::getHtml() );
+		Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
+		FatUtility::dieWithError(Message::getHtml());
 		//$this->cartObj->clear();
 		//$this->cartObj->updateUserCart();
 		//$order->updateOrderInfo($order_id, array('order_pmethod_id' => $pmethod_id) );
 	}
 
-	private function getPaymentTabForm( $langId = 0 ){
+	private function getPaymentTabForm($langId = 0)
+	{
 		$frm = new Form('frmPaymentTabForm');
 		$frm->setFormTagAttribute('id', 'frmPaymentTabForm');
-		$frm->addSubmitButton( '', 'btn_submit', Label::getLabel('LBL_Confirm_Payment', $langId) );
-		$frm->addHiddenField( '', 'order_type' );
-		$frm->addHiddenField( '', 'order_id' );
-		$frm->addHiddenField('','pmethod_id');
+		$frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Confirm_Payment', $langId));
+		$frm->addHiddenField('', 'order_type');
+		$frm->addHiddenField('', 'order_id');
+		$frm->addHiddenField('', 'pmethod_id');
 		return $frm;
 	}
 
-	private function getWalletPaymentForm( ){
+	private function getWalletPaymentForm()
+	{
 		$frm = new Form('frmWalletPayment');
 		return $frm;
 	}
 
-	private function isEligibleForNextStep( &$criteria = array()){
-		if( empty( $criteria ) ) return true;
+	private function isEligibleForNextStep(&$criteria = array())
+	{
+		if (empty($criteria)) return true;
 
 
-		foreach( $criteria as $key => $val ) {
-            switch( $key ) {
+		foreach ($criteria as $key => $val) {
+			switch ($key) {
 				case 'isUserLogged':
-					if( !UserAuthentication::isUserLogged() ){
+					if (!UserAuthentication::isUserLogged()) {
 						$key = false;
 						Message::addErrorMessage(Label::getLabel('MSG_Your_Session_seems_to_be_expired.'));
 						return false;
 					}
-				break;
+					break;
 				case 'hasItems':
-					if( !$this->cartObj->hasItems() ){
+					if (!$this->cartObj->hasItems()) {
 						$key = false;
 						Message::addErrorMessage(Label::getLabel('MSG_Teacher_booking_selection_is_not_yet_been_selected,_Please_try_selecting_the_appropriate_teacher_and_start_booking_lesson.'));
 						return false;
 					}
-				break;
+					break;
 			}
 		}
 		return true;
 	}
 
-	private function getConfirmFormWithNoAmount( ){
+	private function getConfirmFormWithNoAmount()
+	{
 		$frm = new Form('frmConfirmForm');
-		$frm->addFormTagAttribute( 'onSubmit', 'return confirmOrder(this);' );
+		$frm->addFormTagAttribute('onSubmit', 'return confirmOrder(this);');
 		return $frm;
 	}
 
-    public function getLanguagePackages(){
-		$criteria = array( 'isUserLogged' => true, 'hasItems' =>  true );
-		if( !$this->isEligibleForNextStep( $criteria ) ){
-			if( Message::getErrorCount() ){
+	public function getLanguagePackages()
+	{
+		$criteria = array('isUserLogged' => true, 'hasItems' =>  true);
+		if (!$this->isEligibleForNextStep($criteria)) {
+			if (Message::getErrorCount()) {
 				$errMsg = Message::getHtml();
 			} else {
 				Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
 				$errMsg = Message::getHtml();
 			}
-			FatUtility::dieWithError( $errMsg );
+			FatUtility::dieWithError($errMsg);
 		}
 		$post = FatApp::getPostedData();
-		if( false == $post ){
-			FatUtility::dieWithError( Label::getLabel('LBL_Invalid_Request') );
+		if (false == $post) {
+			FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
 		}
-		$cartData = $this->cartObj->getCart( $this->siteLangId );
-        // if buying group class, then show no packages
-        if($cartData['grpcls_id']>0){
-            die('');
-        }
+		$cartData = $this->cartObj->getCart($this->siteLangId);
+		// if buying group class, then show no packages
+		if ($cartData['grpcls_id'] > 0) {
+			die('');
+		}
 		$teacherOfferClassObj = new TeacherOfferPrice();
-		$srchdata =  $teacherOfferClassObj->getOffer(UserAuthentication::getLoggedUserId(),$post['teacher_id'], $cartData['lessonDuration']);
+		$srchdata =  $teacherOfferClassObj->getOffer(UserAuthentication::getLoggedUserId(), $post['teacher_id'], $cartData['lessonDuration']);
 		$srchdata->doNotCalculateRecords();
 		$srchdata->setPageSize(1);
 		$rs = $srchdata->getResultSet();
 		$teacherOffer = FatApp::getDb()->fetch($rs);
 
-		$srch = LessonPackage::getSearchObject( $this->siteLangId );
-		$srch->addCondition( 'lpackage_is_free_trial', '=', 0 );
-		$srch->addMultipleFields(array(
-			'lpackage_id',
-			'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',
-			'lpackage_lessons'
-        ));
-		$rs = $srch->getResultSet();
-		$lessonPackages = FatApp::getDb()->fetchAll($rs);
-        $data = UserSetting::getUserSettings( $post['teacher_id'],$post['languageId'], $post['lessonDuration'] );
-		$this->set('cartData',$cartData);
-		$this->set('teacherOffer',$teacherOffer);
-        $this->set('languageId',$post['languageId']);
-        $this->set('lessonPackages',$lessonPackages);
-        $this->set('selectedLang',current($data));
+		$lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
+		if (empty($lessonPackages)) {
+			$errMsg = Message::addErrorMessage(Label::getLabel('MSG_PLEASE_CONCAT_WITH_ADMIN_NO_LESSON_PACKAGE_ACTIVE'));
+			FatUtility::dieWithError($errMsg);
+		}
 
-        $this->_template->render(false,false);
+		$lessonPackageIds = array_column($lessonPackages, 'lpackage_id', 'lpackage_id');
+		if (!array_key_exists($cartData['lpackage_id'], $lessonPackageIds)) {
+			$cartData['lpackage_id'] =  $lessonPackages[0]['lpackage_id'];
+			$cart = new Cart();
+			$cart->updateLessonPackageId($cartData['lpackage_id']);
+		}
+		$data = UserSetting::getUserSettings($post['teacher_id'], $post['languageId'], $post['lessonDuration']);
+		$this->set('cartData', $cartData);
+		$this->set('teacherOffer', $teacherOffer);
+		$this->set('languageId', $post['languageId']);
+		$this->set('lessonPackages', $lessonPackages);
+		$this->set('selectedLang', current($data));
+
+		$this->_template->render(false, false);
 	}
 
 	public function getBookingDurations()
-    {
-		$cartData = $this->cartObj->getCart( $this->siteLangId );
-		if($cartData['grpcls_id']>0){
-            die('');
-        }
-        $teacher_id = $cartData['user_id'];
-
-        $userSrch = new UserSearch();
-        $userTeachLangSrch = $userSrch->getMyTeachLangQry();
-        $userTeachLangSrch->addCondition('utl_us_user_id', '=', $teacher_id);
+	{
+		$cartData = $this->cartObj->getCart($this->siteLangId);
+		$criteria = array('isUserLogged' => true, 'hasItems' =>  true);
+		if (!$this->isEligibleForNextStep($criteria)) {
+			if (Message::getErrorCount()) {
+				$errMsg = Message::getHtml();
+			} else {
+				Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
+				$errMsg = Message::getHtml();
+			}
+			FatUtility::dieWithError($errMsg);
+		}
+		if ($cartData['grpcls_id'] > 0) {
+			die('');
+		}
+		$teacher_id = $cartData['user_id'];
+		$confPaidLessonDuration =  CommonHelper::getPaidLessonDurations();
+		$userSrch = new UserSearch();
+		$userTeachLangSrch = $userSrch->getMyTeachLangQry();
+		$userTeachLangSrch->addCondition('utl_us_user_id', '=', $teacher_id);
+		$userTeachLangSrch->addCondition('utl_booking_slot', 'IN', $confPaidLessonDuration);
 		$rs = $userTeachLangSrch->getResultSet();
 		$row = FatApp::getDb()->fetch($rs);
+		if (empty($row)) {
+			Message::addErrorMessage(Label::getLabel('MSG_TEACHER_HAS_NOT_ANY_SLOT_DURATION'));
+			FatUtility::dieWithError(Message::getHtml());
+		}
+		$bookingDurations = array_unique(explode(',', $row['utl_booking_slots']));
 
-        $bookingDurations = array_unique(explode(',', $row['utl_booking_slots']));
-        rsort($bookingDurations);
+		$lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
+		if (empty($lessonPackages)) {
+			Message::addErrorMessage(Label::getLabel('MSG_PLEASE_CONCAT_WITH_ADMIN_NO_LESSON_PACKAGE_ACTIVE'));
+			FatUtility::dieWithError(Message::getHtml());
+		}
 
-        $this->set('cartData', $cartData);
-        $this->set('bookingDurations', $bookingDurations);
-        $this->_template->render(false,false);
-    }
+		$lessonPackageIds = array_column($lessonPackages, 'lpackage_id', 'lpackage_id');
+		if (!array_key_exists($cartData['lpackage_id'], $lessonPackageIds)) {
+			$cartData['lpackage_id'] =  $lessonPackages[0]['lpackage_id'];
+			$cart = new Cart();
+			$cart->updateLessonPackageId($cartData['lpackage_id']);
+		}
+
+		$this->set('cartData', $cartData);
+		$this->set('bookingDurations', $bookingDurations);
+		$this->_template->render(false, false);
+	}
 }

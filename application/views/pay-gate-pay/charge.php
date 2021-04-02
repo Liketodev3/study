@@ -28,7 +28,7 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
 								<p class="">
 									<?php echo Label::getLabel('LBL_Order_Invoice',$siteLangId);?>: <strong><?php echo $orderInfo["order_id"] ; ?></strong>
 								</p>
-								<?php if (CommonHelper::getCurrencyId() != FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1)) { ?>
+								<?php if (CommonHelper::getCurrencyId() != CommonHelper::getSystemCurrencyId()) { ?>
 									<p class="-color-secondary"><?php echo CommonHelper::currencyDisclaimer($siteLangId, $paymentAmount); ?></p>
 								<?php } ?>
 							</div>

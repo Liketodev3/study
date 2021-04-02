@@ -18,27 +18,17 @@ class IssueReportOptions extends MyAppModel
         return $srch;
     }
 
-    public static function getOptionsArray($langId)
+    public static function getOptionsArray(int $langId, $userType = NULL): array
     {
         $srch = new IssueReportOptionsSearch($langId);
         $srch->addMultipleFields(array(
             'tissueopt_id',
-            'IFNULL(tissueoptlang_title, tissueopt_identifier) as optLabel',
+            'IFNULL(tissueoptlang_title, tissueopt_identifier)',
         ));
-
-        $rs = $srch->getResultSet();
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetchAll($rs);
+        if(!is_null($userType)){
+            $srch->findByCriteria(['tissueopt_user_type' => [$userType, 0]]);
         }
-        if (empty($records)) {
-            return $records;
-        }
-        $optionArray = array();
-        foreach ($records as $record) {
-            $optionArray[$record['tissueopt_id']] = $record['optLabel'];
-        }
-        return $optionArray;
+        return FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
     }
 
     public function deleteOption($optId)

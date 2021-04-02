@@ -59,10 +59,10 @@ class User extends MyAppModel
     public function getUserSearchObj($attr = null, $joinUserCredentials = false, $skipDeleted = true)
     {
         $srch = static::getSearchObject($joinUserCredentials, $skipDeleted);
-        $srch->joinTable(static::DB_TBL_CRED, 'LEFT OUTER JOIN', 'uc.'.static::DB_TBL_CRED_PREFIX.'user_id = u.user_id', 'uc');
+        $srch->joinTable(static::DB_TBL_CRED, 'LEFT OUTER JOIN', 'uc.' . static::DB_TBL_CRED_PREFIX . 'user_id = u.user_id', 'uc');
 
-        if ($this->getMainTableRecordId()>0) {
-            $srch->addCondition('u.'.static::DB_TBL_PREFIX.'id', '=', $this->getMainTableRecordId());
+        if ($this->getMainTableRecordId() > 0) {
+            $srch->addCondition('u.' . static::DB_TBL_PREFIX . 'id', '=', $this->getMainTableRecordId());
         }
 
         if (null != $attr) {
@@ -73,18 +73,18 @@ class User extends MyAppModel
             }
         } else {
             $srch->addMultipleFields(array(
-                'u.'.static::DB_TBL_PREFIX.'id',
-                'u.'.static::DB_TBL_PREFIX.'first_name',
-                'u.'.static::DB_TBL_PREFIX.'last_name',
+                'u.' . static::DB_TBL_PREFIX . 'id',
+                'u.' . static::DB_TBL_PREFIX . 'first_name',
+                'u.' . static::DB_TBL_PREFIX . 'last_name',
                 /* 'u.'.static::DB_TBL_PREFIX.'timezone', */
-                'u.'.static::DB_TBL_PREFIX.'phone',
-                'u.'.static::DB_TBL_PREFIX.'profile_info',
-                'u.'.static::DB_TBL_PREFIX.'added_on',
-                'u.'.static::DB_TBL_PREFIX.'country_id',
-                'uc.'.static::DB_TBL_CRED_PREFIX.'username',
-                'uc.'.static::DB_TBL_CRED_PREFIX.'email',
-                'uc.'.static::DB_TBL_CRED_PREFIX.'active',
-                'uc.'.static::DB_TBL_CRED_PREFIX.'verified'
+                'u.' . static::DB_TBL_PREFIX . 'phone',
+                'u.' . static::DB_TBL_PREFIX . 'profile_info',
+                'u.' . static::DB_TBL_PREFIX . 'added_on',
+                'u.' . static::DB_TBL_PREFIX . 'country_id',
+                'uc.' . static::DB_TBL_CRED_PREFIX . 'username',
+                'uc.' . static::DB_TBL_CRED_PREFIX . 'email',
+                'uc.' . static::DB_TBL_CRED_PREFIX . 'active',
+                'uc.' . static::DB_TBL_CRED_PREFIX . 'verified'
             ));
         }
         return $srch;
@@ -99,11 +99,11 @@ class User extends MyAppModel
         }
         $srch = $this->getUserSearchObj($attr);
         if ($isActive) {
-            $srch->addCondition('uc.'.static::DB_TBL_CRED_PREFIX.'active', '=', 1);
+            $srch->addCondition('uc.' . static::DB_TBL_CRED_PREFIX . 'active', '=', 1);
         }
 
         if ($isVerified) {
-            $srch->addCondition('uc.'.static::DB_TBL_CRED_PREFIX.'verified', '=', 1);
+            $srch->addCondition('uc.' . static::DB_TBL_CRED_PREFIX . 'verified', '=', 1);
         }
 
         if ($joinUserCredentials) {
@@ -126,7 +126,7 @@ class User extends MyAppModel
         }
 
         if ($joinUserCredentials) {
-            $srch->joinTable(static::DB_TBL_CRED, 'LEFT OUTER JOIN', 'uc.'.static::DB_TBL_CRED_PREFIX.'user_id = u.user_id', 'uc');
+            $srch->joinTable(static::DB_TBL_CRED, 'LEFT OUTER JOIN', 'uc.' . static::DB_TBL_CRED_PREFIX . 'user_id = u.user_id', 'uc');
         }
         return $srch;
     }
@@ -139,27 +139,27 @@ class User extends MyAppModel
         }
 
         return array(
-            static::USER_NOTICATION_NUMBER_12	=>	Label::getLabel('LBL_12_Hours', $langId),
-            static::USER_NOTICATION_NUMBER_24	=>	Label::getLabel('LBL_24_Hours', $langId),
-            static::USER_NOTICATION_NUMBER_48	=>	Label::getLabel('LBL_48_Hours', $langId),
+            static::USER_NOTICATION_NUMBER_12    =>    Label::getLabel('LBL_12_Hours', $langId),
+            static::USER_NOTICATION_NUMBER_24    =>    Label::getLabel('LBL_24_Hours', $langId),
+            static::USER_NOTICATION_NUMBER_48    =>    Label::getLabel('LBL_48_Hours', $langId),
 
         );
     }
 
-    public static function getWithdrawlMethodArray() : array
+    public static function getWithdrawlMethodArray(): array
     {
 
         return array(
-            static::WITHDRAWAL_METHOD_TYPE_BANK	=>	Label::getLabel('LBL_Bank_Payout'),
-            static::WITHDRAWAL_METHOD_TYPE_PAYPAL	=>	Label::getLabel('LBL_Paypal_Payout'),
+            static::WITHDRAWAL_METHOD_TYPE_BANK    =>    Label::getLabel('LBL_Bank_Payout'),
+            static::WITHDRAWAL_METHOD_TYPE_PAYPAL    =>    Label::getLabel('LBL_Paypal_Payout'),
 
         );
     }
 
-    public static function getWithdrawlMethodKey() : array
+    public static function getWithdrawlMethodKey(): array
     {
         return array(
-            static::WITHDRAWAL_METHOD_TYPE_PAYPAL	=>	'PaypalPayout',
+            static::WITHDRAWAL_METHOD_TYPE_PAYPAL    =>    'PaypalPayout',
         );
     }
 
@@ -171,8 +171,8 @@ class User extends MyAppModel
             $langId = CommonHelper::getLangId();
         }
         return array(
-            static::USER_TYPE_LEANER	=>	Label::getLabel('LBL_Learner', $langId),
-            static::USER_TYPE_TEACHER	=>	Label::getLabel('LBL_Teacher', $langId),
+            static::USER_TYPE_LEANER    =>    Label::getLabel('LBL_Learner', $langId),
+            static::USER_TYPE_TEACHER    =>    Label::getLabel('LBL_Teacher', $langId),
 
         );
     }
@@ -227,12 +227,12 @@ class User extends MyAppModel
 
     public static function isTeacher($returnNullIfNotLogged = false)
     {
-        return (1 == UserAuthentication::getLoggedUserAttribute('user_is_teacher',$returnNullIfNotLogged));
+        return (1 == UserAuthentication::getLoggedUserAttribute('user_is_teacher', $returnNullIfNotLogged));
     }
 
     public static function isLearner($returnNullIfNotLogged = false)
     {
-        return (1 == UserAuthentication::getLoggedUserAttribute('user_is_learner',$returnNullIfNotLogged));
+        return (1 == UserAuthentication::getLoggedUserAttribute('user_is_learner', $returnNullIfNotLogged));
     }
 
     public static function canAccessTeacherDashboard()
@@ -253,7 +253,7 @@ class User extends MyAppModel
         $srch->setPageSize(1);
         $srch->addMultiplefields(array(
             'user_timezone'
-            ));
+        ));
 
         $rs = $srch->getResultSet();
         $teacherRow = FatApp::getDb()->fetch($rs);
@@ -265,7 +265,7 @@ class User extends MyAppModel
         return true;
     }
 
-    public static function getTeacherProfileProgress(int $userId = 0) : array
+    public static function getTeacherProfileProgress(int $userId = 0): array
     {
         //$userId = FatUtility::int($userId);
         if (0 >= $userId) {
@@ -278,7 +278,7 @@ class User extends MyAppModel
         $srch->addCondition('user_id', '=', $userId);
         $srch->setPageSize(1);
         $srch->addMultiplefields(array(
-            'if(user_country_id > 0 && user_timezone != "",1,0) as userProfile',
+            'if(user_country_id > 0 && user_timezone != "" && user_url_name != "",1,0) as userProfile',
             // 'if(user_timezone != "",1,0) as userTimeZone',
             'if(count(DISTINCT uqualification_id) > 0,1,0) as uqualificationCount',
             'if(count(DISTINCT tgavl_id),1,0) as generalAvailabilityCount',
@@ -288,7 +288,7 @@ class User extends MyAppModel
         ));
 
         /* qualification/experience[ */
-    //    $qSrch = new UserQualificationSearch();
+        //    $qSrch = new UserQualificationSearch();
         // $qSrch->addMultipleFields(array('uqualification_user_id', 'uqualification_id'));
         // $qSrch->addCondition('uqualification_active', '=', 1);
         // $qSrch->addGroupBy('uqualification_user_id');
@@ -296,33 +296,34 @@ class User extends MyAppModel
         /* ] */
 
 
-        $srch->joinTable(UserQualification::DB_TBL, 'LEFT JOIN', 'user_id = uqualification_user_id and uqualification_active = '.applicationConstants::YES, 'utqual');
+        $srch->joinTable(UserQualification::DB_TBL, 'LEFT JOIN', 'user_id = uqualification_user_id and uqualification_active = ' . applicationConstants::YES, 'utqual');
 
         $spokenSrch = new searchBase(UserToLanguage::DB_TBL);
         $spokenSrch->doNotCalculateRecords();
         $spokenSrch->doNotLimitRecords();
-        $spokenSrch->addMultipleFields(array('utsl_slanguage_id','utsl_user_id'));
-        $spokenSrch->joinTable(SpokenLanguage::DB_TBL, 'INNER JOIN' , 'utsl_slanguage_id = slanguage_id');
+        $spokenSrch->addMultipleFields(array('utsl_slanguage_id', 'utsl_user_id'));
+        $spokenSrch->joinTable(SpokenLanguage::DB_TBL, 'INNER JOIN', 'utsl_slanguage_id = slanguage_id');
         $spokenSrch->addCondition('slanguage_active', '=', applicationConstants::YES);
 
         $srch->joinTable("(" . $spokenSrch->getQuery() . ")", 'LEFT JOIN', 'utsl_user_id = user_id', 'uSpokenL');
 
         /* user preferences/skills[ */
         $skillSrch = new UserToPreferenceSearch();
-        $skillSrch->joinTable(Preference::DB_TBL, 'INNER JOIN' , 'preference_id = utpref_preference_id');
-        $skillSrch->addMultipleFields(array('utpref_user_id','utpref_preference_id'));
+        $skillSrch->joinTable(Preference::DB_TBL, 'INNER JOIN', 'preference_id = utpref_preference_id');
+        $skillSrch->addMultipleFields(array('utpref_user_id', 'utpref_preference_id'));
         $srch->joinTable("(" . $skillSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utpref.utpref_user_id', 'utpref');
         /* ] */
 
         /* teachLanguage[ */
         $tlangSrch = new SearchBase(UserToLanguage::DB_TBL_TEACH, 'utl');
-        $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utl_slanguage_id','tl');
-        $tlangSrch->addMultipleFields(array('utl_us_user_id','utl_id'));
+        $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utl_slanguage_id', 'tl');
+        $tlangSrch->addMultipleFields(array('utl_us_user_id', 'utl_id'));
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
         $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);
         $tlangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
         $tlangSrch->addCondition('utl_slanguage_id', '>', 0);
+        $tlangSrch->addCondition('utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
         $tlangSrch->addCondition('tlanguage_active', '=', applicationConstants::YES);
 
         $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utl_us_user_id', 'utls');
@@ -337,7 +338,7 @@ class User extends MyAppModel
 
         $teacherRowCount = count($teacherRow);
         $teacherFieldSum = array_sum($teacherRow);
-        $profileProgressCount = round( ( ($teacherFieldSum * 100 ) / $teacherRowCount ),2);
+        $profileProgressCount = round((($teacherFieldSum * 100) / $teacherRowCount), 2);
 
         $teacherRow += [
             'totalFields' => $teacherRowCount,
@@ -405,7 +406,7 @@ class User extends MyAppModel
     public function save()
     {
         $broken = false;
-        if (! ($this->getMainTableRecordId() > 0)) {
+        if (!($this->getMainTableRecordId() > 0)) {
             $this->setFldValue('user_added_on', date('Y-m-d H:i:s'));
         }
         return parent::save();
@@ -413,28 +414,28 @@ class User extends MyAppModel
 
     public function setLoginCredentials($username, $email, $password, $active = null, $verified = null)
     {
-        if (! ($this->getMainTableRecordId() > 0)) {
+        if (!($this->getMainTableRecordId() > 0)) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED', $this->commonLangId);
             return false;
         }
 
         $record = new TableRecord(static::DB_TBL_CRED);
         $arrFlds = array(
-                static::DB_TBL_CRED_PREFIX.'username' => $username,
-                static::DB_TBL_CRED_PREFIX.'email' => $email,
-                static::DB_TBL_CRED_PREFIX.'password' => UserAuthentication::encryptPassword($password)
+            static::DB_TBL_CRED_PREFIX . 'username' => $username,
+            static::DB_TBL_CRED_PREFIX . 'email' => $email,
+            static::DB_TBL_CRED_PREFIX . 'password' => UserAuthentication::encryptPassword($password)
         );
 
         if (null != $active) {
-            $arrFlds[static::DB_TBL_CRED_PREFIX.'active'] = $active;
+            $arrFlds[static::DB_TBL_CRED_PREFIX . 'active'] = $active;
         }
         if (null != $verified) {
-            $arrFlds[static::DB_TBL_CRED_PREFIX.'verified'] = $verified;
+            $arrFlds[static::DB_TBL_CRED_PREFIX . 'verified'] = $verified;
         }
 
-        $record->setFldValue(static::DB_TBL_CRED_PREFIX.'user_id', $this->getMainTableRecordId());
+        $record->setFldValue(static::DB_TBL_CRED_PREFIX . 'user_id', $this->getMainTableRecordId());
         $record->assignValues($arrFlds);
-        if (! $record->addNew(array(), $arrFlds)) {
+        if (!$record->addNew(array(), $arrFlds)) {
             $this->error = $record->getError();
             return false;
         }
@@ -448,14 +449,14 @@ class User extends MyAppModel
             return false;
         }
 
-        if (! ($this->getMainTableRecordId() > 0)) {
+        if (!($this->getMainTableRecordId() > 0)) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED', $this->commonLangId);
             return false;
         }
         $record = new TableRecord(static::DB_TBL);
-        $record->setFldValue(static::DB_TBL_PREFIX.'id', $this->getMainTableRecordId());
+        $record->setFldValue(static::DB_TBL_PREFIX . 'id', $this->getMainTableRecordId());
         $record->assignValues($data);
-        if (! $record->addNew(array(), $data)) {
+        if (!$record->addNew(array(), $data)) {
             $this->error = $record->getError();
             return false;
         }
@@ -464,17 +465,17 @@ class User extends MyAppModel
 
     public function setLoginPassword($password)
     {
-        if (! ($this->getMainTableRecordId() > 0)) {
+        if (!($this->getMainTableRecordId() > 0)) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED', $this->commonLangId);
             return false;
         }
         $record = new TableRecord(static::DB_TBL_CRED);
         $arrFlds = array(
-                static::DB_TBL_CRED_PREFIX.'password' => UserAuthentication::encryptPassword($password)
+            static::DB_TBL_CRED_PREFIX . 'password' => UserAuthentication::encryptPassword($password)
         );
-        $record->setFldValue(static::DB_TBL_CRED_PREFIX.'user_id', $this->getMainTableRecordId());
+        $record->setFldValue(static::DB_TBL_CRED_PREFIX . 'user_id', $this->getMainTableRecordId());
         $record->assignValues($arrFlds);
-        if (! $record->addNew(array(), $arrFlds)) {
+        if (!$record->addNew(array(), $arrFlds)) {
             $this->error = $record->getError();
             return false;
         }
@@ -488,19 +489,19 @@ class User extends MyAppModel
             return false;
         }
 
-        if (! ($this->getMainTableRecordId() > 0)) {
+        if (!($this->getMainTableRecordId() > 0)) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED', $this->commonLangId);
             return false;
         }
 
         $record = new TableRecord(static::DB_TBL_CRED);
         $arrFlds = array(
-                static::DB_TBL_CRED_PREFIX.'email' => $email,
-                static::DB_TBL_CRED_PREFIX.'username' => $email,
+            static::DB_TBL_CRED_PREFIX . 'email' => $email,
+            static::DB_TBL_CRED_PREFIX . 'username' => $email,
         );
-        $record->setFldValue(static::DB_TBL_CRED_PREFIX.'user_id', $this->getMainTableRecordId());
+        $record->setFldValue(static::DB_TBL_CRED_PREFIX . 'user_id', $this->getMainTableRecordId());
         $record->assignValues($arrFlds);
-        if (! $record->addNew(array(), $arrFlds)) {
+        if (!$record->addNew(array(), $arrFlds)) {
             $this->error = $record->getError();
             return false;
         }
@@ -516,13 +517,13 @@ class User extends MyAppModel
         }
 
         $db = FatApp::getDb();
-        if (! $db->updateFromArray(static::DB_TBL_CRED, array(
-                static::DB_TBL_CRED_PREFIX . 'verified' => $v
+        if (!$db->updateFromArray(static::DB_TBL_CRED, array(
+            static::DB_TBL_CRED_PREFIX . 'verified' => $v
         ), array(
-                'smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?',
-                'vals' => array(
-                    $this->getMainTableRecordId()
-                )
+            'smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?',
+            'vals' => array(
+                $this->getMainTableRecordId()
+            )
         ))) {
             $this->error = $db->getError();
             return false;
@@ -539,13 +540,13 @@ class User extends MyAppModel
         }
 
         $db = FatApp::getDb();
-        if (! $db->updateFromArray(static::DB_TBL_CRED, array(
-                static::DB_TBL_CRED_PREFIX . 'active' => $v
+        if (!$db->updateFromArray(static::DB_TBL_CRED, array(
+            static::DB_TBL_CRED_PREFIX . 'active' => $v
         ), array(
-                'smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?',
-                'vals' => array(
-                        $this->getMainTableRecordId()
-                )
+            'smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?',
+            'vals' => array(
+                $this->getMainTableRecordId()
+            )
         ))) {
             $this->error = $db->getError();
             return false;
@@ -556,11 +557,11 @@ class User extends MyAppModel
 
     public function getProfileData()
     {
-        if (!$this->getMainTableRecordId()>0) {
+        if (!$this->getMainTableRecordId() > 0) {
             return false;
         }
         $srch = static::getSearchObject(true);
-        $srch->addCondition('u.'.static::DB_TBL_PREFIX.'id', '=', $this->getMainTableRecordId());
+        $srch->addCondition('u.' . static::DB_TBL_PREFIX . 'id', '=', $this->getMainTableRecordId());
         $rs = $srch->getResultSet();
         $record = FatApp::getDb()->fetch($rs);
         unset($record['credential_password']);
@@ -606,7 +607,7 @@ class User extends MyAppModel
         $emvSrch->addCondition(static::DB_TBL_UEMV_PREFIX . 'user_id', '=', $userId);
         $emvSrch->addCondition(static::DB_TBL_UEMV_PREFIX . 'token', '=', $code, 'AND');
 
-        $emvSrch->addFld(array(static::DB_TBL_UEMV_PREFIX . 'user_id',static::DB_TBL_UEMV_PREFIX . 'email'));
+        $emvSrch->addFld(array(static::DB_TBL_UEMV_PREFIX . 'user_id', static::DB_TBL_UEMV_PREFIX . 'email'));
 
         $rs = $emvSrch->getResultSet();
         if ($row = FatApp::getDb()->fetch($rs)) {
@@ -630,13 +631,13 @@ class User extends MyAppModel
         }
 
         $db = FatApp::getDb();
-        if (! $db->updateFromArray(static::DB_TBL_CRED, array(
-                static::DB_TBL_CRED_PREFIX . 'password' => $pwd
+        if (!$db->updateFromArray(static::DB_TBL_CRED, array(
+            static::DB_TBL_CRED_PREFIX . 'password' => $pwd
         ), array(
-                'smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?',
-                'vals' => array(
-                        $this->getMainTableRecordId()
-                )
+            'smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?',
+            'vals' => array(
+                $this->getMainTableRecordId()
+            )
         ))) {
             $this->error = $db->getError();
             return false;
@@ -668,7 +669,7 @@ class User extends MyAppModel
         $data = array(
             'user_first_name' => $data['user_first_name'],
             'user_last_name' => $data['user_last_name'],
-            'user_full_name' => $data['user_first_name'].' '.$data['user_last_name'],
+            'user_full_name' => $data['user_first_name'] . ' ' . $data['user_last_name'],
             'user_email' => $data['user_email'],
             'link' => $link,
         );
@@ -695,8 +696,8 @@ class User extends MyAppModel
         }
 
         $srch = new SearchBase(static::DB_TBL_USR_BANK_INFO, 'tub');
-        $srch->addMultipleFields(array('ub_bank_name','ub_account_holder_name','ub_account_number','ub_ifsc_swift_code','ub_bank_address','ub_paypal_email_address'));
-        $srch->addCondition(static::DB_TBL_USR_BANK_INFO_PREFIX.'user_id', '=', $this->getMainTableRecordId());
+        $srch->addMultipleFields(array('ub_bank_name', 'ub_account_holder_name', 'ub_account_number', 'ub_ifsc_swift_code', 'ub_bank_address', 'ub_paypal_email_address'));
+        $srch->addCondition(static::DB_TBL_USR_BANK_INFO_PREFIX . 'user_id', '=', $this->getMainTableRecordId());
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $rs = $srch->getResultSet();
@@ -712,7 +713,7 @@ class User extends MyAppModel
 
         $srch = new SearchBase(static::DB_TBL_USR_BANK_INFO, 'tub');
         $srch->addMultipleFields(array('ub_paypal_email_address'));
-        $srch->addCondition(static::DB_TBL_USR_BANK_INFO_PREFIX.'user_id', '=', $this->getMainTableRecordId());
+        $srch->addCondition(static::DB_TBL_USR_BANK_INFO_PREFIX . 'user_id', '=', $this->getMainTableRecordId());
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $rs = $srch->getResultSet();
@@ -726,12 +727,12 @@ class User extends MyAppModel
             return false;
         }
         $assignValues = array(
-            'ub_user_id'=>$this->getMainTableRecordId(),
-            'ub_bank_name'=>$data['ub_bank_name'],
-            'ub_account_holder_name'=>$data['ub_account_holder_name'],
-            'ub_account_number'=>$data['ub_account_number'],
-            'ub_ifsc_swift_code'=>$data['ub_ifsc_swift_code'],
-            'ub_bank_address'=>$data['ub_bank_address'],
+            'ub_user_id' => $this->getMainTableRecordId(),
+            'ub_bank_name' => $data['ub_bank_name'],
+            'ub_account_holder_name' => $data['ub_account_holder_name'],
+            'ub_account_number' => $data['ub_account_number'],
+            'ub_ifsc_swift_code' => $data['ub_ifsc_swift_code'],
+            'ub_bank_address' => $data['ub_bank_address'],
 
         );
         if (!FatApp::getDb()->insertFromArray(static::DB_TBL_USR_BANK_INFO, $assignValues, false, array(), $assignValues)) {
@@ -749,8 +750,8 @@ class User extends MyAppModel
             return false;
         }
         $assignValues = array(
-            'ub_user_id'=>$this->getMainTableRecordId(),
-            'ub_paypal_email_address'=>$data['ub_paypal_email_address']
+            'ub_user_id' => $this->getMainTableRecordId(),
+            'ub_paypal_email_address' => $data['ub_paypal_email_address']
         );
         if (!FatApp::getDb()->insertFromArray(static::DB_TBL_USR_BANK_INFO, $assignValues, false, array(), $assignValues)) {
             $this->error = $this->db->getError();
@@ -788,7 +789,7 @@ class User extends MyAppModel
             }
         }
 
-        return $userBalance ;
+        return $userBalance;
     }
 
     public static function getPreferedDashbordRedirectUrl($preferredDashboard = "", $detectReferrerUrl = true)
@@ -812,7 +813,7 @@ class User extends MyAppModel
                 } else {
                     $redirectUrl = CommonHelper::generateFullUrl('teachers', '', [], CONF_WEBROOT_DASHBOARD);
                 }
-            break;
+                break;
             case User::USER_TEACHER_DASHBOARD:
                 $redirectUrl = CommonHelper::generateFullUrl('teacher', '', [], CONF_WEBROOT_DASHBOARD);
             break;
@@ -840,7 +841,7 @@ class User extends MyAppModel
     public function getDashboardData($langId = 0, $isTeacherDashboard = false)
     {
         $langId = FatUtility::int($langId);
-
+        $curDateTime = date('Y-m-d H:i:s');
         $srch = new UserSearch();
         $srch->joinCredentials();
 
@@ -856,7 +857,7 @@ class User extends MyAppModel
         } else {
             $srch->joinLearnerLessonData($this->getMainTableRecordId());
         }
-        $srch->joinTable(Order::DB_TBL, 'LEFT JOIN', 'o.order_id = sld.sldetail_order_id and o.order_type = '.Order::TYPE_LESSON_BOOKING.' and order_is_paid IN ('.Order::ORDER_IS_PAID.','.Order::ORDER_IS_CANCELLED.')', 'o');
+        $srch->joinTable(Order::DB_TBL, 'LEFT JOIN', 'o.order_id = sld.sldetail_order_id and o.order_type = ' . Order::TYPE_LESSON_BOOKING . ' and order_is_paid IN (' . Order::ORDER_IS_PAID . ',' . Order::ORDER_IS_CANCELLED . ')', 'o');
         $srch->addMultipleFields(array(
             'user_id',
             'user_url_name',
@@ -864,17 +865,14 @@ class User extends MyAppModel
             'user_last_name',
             'concat(user_first_name, " ", user_last_name) as user_full_name',
             'COUNT(sl.slesson_id) AS teacherTotLessons',
-            // 'SUM(IF(slesson_status="'.ScheduledLesson::STATUS_COMPLETED.'",1,0)) as completedLessons',
-            'SUM(IF(slesson_status="'.ScheduledLesson::STATUS_SCHEDULED.'",1,0)) as teacherSchLessons',
-            'SUM(IF(slesson_status="'.ScheduledLesson::STATUS_CANCELLED.'",1,0)) as cancelledLessons',
+            'SUM(IF(sldetail_learner_status="' . ScheduledLesson::STATUS_SCHEDULED . '" AND concat(sl.slesson_date," ",sl.slesson_start_time) >="' . $curDateTime . '",1,0)) as learnerSchLessonsExcPast',
+            'SUM(IF(slesson_status="' . ScheduledLesson::STATUS_SCHEDULED . '" AND concat(sl.slesson_date," ",sl.slesson_start_time) >="' . $curDateTime . '",1,0)) as teacherSchLessons',
+            'SUM(IF(slesson_status="' . ScheduledLesson::STATUS_CANCELLED . '",1,0)) as cancelledLessons',
             'user_timezone',
             'user_country_id'
-            ));
+        ));
 
         $srch->addCondition('user_id', '=', $this->getMainTableRecordId());
-        // $srch->addCondition('order_type', 'IN', [Order::ORDER_IS_PAID,Order::ORDER_IS_CANCELLED]);
-        // echo $srch->getQuery();
-        // die;
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetch($rs);
     }
@@ -925,41 +923,41 @@ class User extends MyAppModel
             'withdrawal_user_id'=>$userId,
         ); */
         $assignFields = array(
-            'withdrawal_user_id'=>$userId,
-            'withdrawal_amount'=>$data['withdrawal_amount'],
-            'withdrawal_payment_method_id'=>$data['withdrawal_payment_method_id'],
-            'withdrawal_comments'=>$data['withdrawal_comments'],
-            'withdrawal_status'=>0,
-            'withdrawal_request_date'=>date('Y-m-d H:i:s')
+            'withdrawal_user_id' => $userId,
+            'withdrawal_amount' => $data['withdrawal_amount'],
+            'withdrawal_payment_method_id' => $data['withdrawal_payment_method_id'],
+            'withdrawal_comments' => $data['withdrawal_comments'],
+            'withdrawal_status' => 0,
+            'withdrawal_request_date' => date('Y-m-d H:i:s')
         );
 
         switch ($data['pmethod_code']) {
-    		case PaymentMethods::BANK_PAYOUT_KEY:
+            case PaymentMethods::BANK_PAYOUT_KEY:
                 $assignFields += array(
-                    'withdrawal_bank'=>$data['ub_bank_name'],
-                    'withdrawal_account_holder_name'=>$data['ub_account_holder_name'],
-                    'withdrawal_account_number'=>$data['ub_account_number'],
-                    'withdrawal_ifc_swift_code'=>$data['ub_ifsc_swift_code'],
-                    'withdrawal_bank_address'=>$data['ub_bank_address'],
+                    'withdrawal_bank' => $data['ub_bank_name'],
+                    'withdrawal_account_holder_name' => $data['ub_account_holder_name'],
+                    'withdrawal_account_number' => $data['ub_account_number'],
+                    'withdrawal_ifc_swift_code' => $data['ub_ifsc_swift_code'],
+                    'withdrawal_bank_address' => $data['ub_bank_address'],
                 );
-    			break;
-    		case PaypalPayout::KEY_NAME:
+                break;
+            case PaypalPayout::KEY_NAME:
                 $assignFields += array(
-                    'withdrawal_paypal_email_id'=>$data['ub_paypal_email_address'],
+                    'withdrawal_paypal_email_id' => $data['ub_paypal_email_address'],
                 );
-    			break;
-    	}
+                break;
+        }
         $broken = false;
 
         if (FatApp::getDb()->startTransaction() && FatApp::getDb()->insertFromArray(static::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields)) {
             $withdrawRequestId = FatApp::getDb()->getInsertId();
-            $formattedRequestValue = '#'.str_pad($withdrawRequestId, 6, '0', STR_PAD_LEFT);
+            $formattedRequestValue = '#' . str_pad($withdrawRequestId, 6, '0', STR_PAD_LEFT);
             $txnArray["utxn_user_id"] = $userId;
             $txnArray["utxn_debit"] = $data["withdrawal_amount"];
             $txnArray["utxn_status"] = Transaction::STATUS_PENDING;
-            $txnArray["utxn_comments"] = Label::getLabel('LBL_Funds_Withdrawn', $langId).'. '.Label::getLabel('LBL_Request_ID', $langId).' '.$formattedRequestValue;
+            $txnArray["utxn_comments"] = Label::getLabel('LBL_Funds_Withdrawn', $langId) . '. ' . Label::getLabel('LBL_Request_ID', $langId) . ' ' . $formattedRequestValue;
             $txnArray["utxn_withdrawal_id"] = $withdrawRequestId;
-            $txnArray['utxn_type']	=	Transaction::TYPE_MONEY_WITHDRAWN;
+            $txnArray['utxn_type']    =    Transaction::TYPE_MONEY_WITHDRAWN;
             $transObj = new Transaction($userId);
             if ($txnId = $transObj->addTransaction($txnArray)) {
                 /*
@@ -985,8 +983,8 @@ class User extends MyAppModel
         $user_id = FatUtility::int($this->getMainTableRecordId());
         $teacher_id = FatUtility::int($teacher_id);
 
-        $data_to_save = array( 'uft_user_id' => $user_id, 'uft_teacher_id' => $teacher_id );
-        $data_to_save_on_duplicate = array( 'uft_teacher_id' => $teacher_id );
+        $data_to_save = array('uft_user_id' => $user_id, 'uft_teacher_id' => $teacher_id);
+        $data_to_save_on_duplicate = array('uft_teacher_id' => $teacher_id);
         if (!FatApp::getDb()->insertFromArray(static::DB_TBL_TEACHER_FAVORITE, $data_to_save, false, array(), $data_to_save_on_duplicate)) {
             $this->error = FatApp::getDb()->getError();
             return false;
@@ -994,7 +992,7 @@ class User extends MyAppModel
         return true;
     }
 
-    public function getFavourites($filter, $langId=0)
+    public function getFavourites($filter, $langId = 0)
     {
         $srch = new UserFavoriteTeacherSearch();
         $page = (empty($filter['page']) || $filter['page'] <= 0) ? 1 : FatUtility::int($filter['page']);
@@ -1002,7 +1000,7 @@ class User extends MyAppModel
         $srch->addCondition('uft_user_id', '=', $this->getMainTableRecordId());
         $keyword = $filter['keyword'];
         if (!empty($keyword)) {
-            $srch->addCondition('mysql_func_concat(`user_first_name`," ",`user_last_name`)', 'like', '%' . $keyword . '%', 'AND',true);
+            $srch->addCondition('mysql_func_concat(`user_first_name`," ",`user_last_name`)', 'like', '%' . $keyword . '%', 'AND', true);
         }
         $srch->addGroupBy('uft_teacher_id');
         $srch->joinTeachers();
@@ -1027,18 +1025,18 @@ class User extends MyAppModel
         $rs = $srch->getResultSet();
 
         $pagingArr = array(
-            'pageCount'	=>	$srch->pages(),
-            'page'	=>	$page,
-            'pageSize'	=>	$pageSize,
-            'recordCount'	=>	$srch->recordCount()
+            'pageCount'    =>    $srch->pages(),
+            'page'    =>    $page,
+            'pageSize'    =>    $pageSize,
+            'recordCount'    =>    $srch->recordCount()
         );
 
         $dataArr['Favourites'] = FatApp::getDb()->fetchAll($rs);
         $dataArr['pagingArr'] = $pagingArr;
         return $dataArr;
     }
-    
-    public static function canWithdraw($userId):bool
+
+    public static function canWithdraw($userId): bool
     {
         return (bool)self::getAttributesById($userId, 'user_is_teacher');
     }

@@ -377,7 +377,7 @@ class TeacherIssueReportedController extends TeacherBaseController
     {
         $frm = new Form('issueResolveFrm');
         // $frm->setJsErrorDisplay(0);
-        $arr_options = IssueReportOptions::getOptionsArray($this->siteLangId);
+        $arr_options = IssueReportOptions::getOptionsArray($this->siteLangId, User::USER_TYPE_TEACHER);
         $users = $frm->addCheckBoxes(Label::getLabel('LBL_Select_Users_To_Resolve_issue'), 'issues_users', $users, array_keys($users));
         $users->requirements()->setRequired(true);
         $fldIssue = $frm->addCheckBoxes(Label::getLabel('LBL_Issue_To_Resolve'), 'issues_to_report', $arr_options, array());

@@ -35,7 +35,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
 ?>
 <section class="section section--grey section--page">
     <div class="screen">
-        <div class="screen__left" style="background-image:url(<?php echo CONF_WEBROOT_FRONTEND ?>images/2000x900_1.jpg">
+        <div class="screen__left" style="background-image:url(<?php echo CommonHelper::generateUrl('Image', 'lesson', array($siteLangId)) ?>">
             <div class="screen__center-content">
                 <?php if ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
                     <div class="alert alert--info" role="alert">
@@ -94,21 +94,22 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                     <span class="-gap"></span>
                     <a href="<?php echo CommonHelper::generateUrl('account'); ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
                 <?php endif; ?>
-                
-                <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startTime > $curDate || $curDate > $endTime || !$isScheduled ? 'style="display:none;"' : '') ?>>
-                    <?php $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT); ?>
-                    <?php if($activeMettingTool==ApplicationConstants::MEETING_ZOOM): ?>
-                    <a href="javascript:void(0);" class="btn btn--primary btn--large -hide-mobile" onclick="joinLesson('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
-                    <a href="javascript:void(0);" class="btn btn--secondary btn--large" onclick="joinLessonFromApp('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
-                    
-                    <?php else: ?>
-                    
-                    <a href="javascript:void(0);" class="btn btn--secondary btn--large" id="joinL" onclick="joinLesson('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');">
-                        <?php echo Label::getLabel('LBL_Join_Lesson'); ?>
-                    </a>
-                    <?php endif; ?>
-                </div>
+                <?php $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT); ?>
+                <?php if ($lessonData['sldetail_learner_join_time'] == '0000-00-00 00:00:00' || $activeMettingTool == ApplicationConstants::MEETING_ZOOM) { ?>
+                    <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startTime > $curDate || $curDate > $endTime || !$isScheduled ? 'style="display:none;"' : '') ?>>
 
+                        <?php if ($activeMettingTool == ApplicationConstants::MEETING_ZOOM) : ?>
+                            <a href="javascript:void(0);" class="btn btn--primary btn--large -hide-mobile" onclick="joinLesson('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
+                            <a href="javascript:void(0);" class="btn btn--secondary btn--large" onclick="joinLessonFromApp('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
+
+                        <?php else : ?>
+
+                            <a href="javascript:void(0);" class="btn btn--secondary btn--large" id="joinL" onclick="joinLesson('<?php echo $chatId; ?>','<?php echo $lessonData['teacherId']; ?>');">
+                                <?php echo Label::getLabel('LBL_Join_Lesson'); ?>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php } ?>
                 <?php if ($lessonData['sldetail_learner_status'] != ScheduledLesson::STATUS_SCHEDULED) { ?>
                     <a href="<?php echo CommonHelper::generateUrl('learner'); ?>" class="btn btn--secondary btn--large">
                         <?php echo Label::getLabel('LBL_Go_to_Dashboard'); ?>
@@ -140,12 +141,12 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                             <?php echo Label::getLabel('LBL_Info'); ?>
                         </a>
                     </li>
-                    <?php if($flashCardEnabled){ ?>
-                    <li>
-                        <a href="#tab2">
-                            <?php echo Label::getLabel('LBL_Flashcards'); ?>
-                        </a>
-                    </li>
+                    <?php if ($flashCardEnabled) { ?>
+                        <li>
+                            <a href="#tab2">
+                                <?php echo Label::getLabel('LBL_Flashcards'); ?>
+                            </a>
+                        </li>
                     <?php } ?>
                 </ul>
             </div>
@@ -376,13 +377,14 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                                 <div class="timer-block d-sm-flex align-items-center">
                                     <div id="end_lesson_time_div" style="display:none;">
                                         <div class="timer timer--small">
+                                            <p><?php echo Label::getLabel('LBL_CLASS_ENDS_IN'); ?></p>
                                             <span id="end_lesson_timer" class="style colorDefinition size_lg"></span>
                                         </div>
                                     </div>
 
                                     <?php if ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) : ?>
                                         <div class="actions">
-                                            <a href="javascript:void(0);" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> class="btn btn--primary btn--large btn--sticky end_lesson_now" id="endL" onclick="endLesson(<?php echo $lessonData['sldetail_id']; ?>);">
+                                            <a href="javascript:void(0);" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> class="btn btn--secondary btn--large btn--sticky end_lesson_now" id="endL" onclick="endLesson(<?php echo $lessonData['sldetail_id']; ?>);">
                                                 <?php echo Label::getLabel('LBL_End_Lesson'); ?>
                                             </a>
                                         </div>
@@ -401,7 +403,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                                             <?php echo CommonHelper::getFirstChar($lessonData['teacherFname']); ?>">
                                             <?php
                                             if (true == User::isProfilePicUploaded($lessonData['teacherId'])) {
-                                                $img = CommonHelper::generateUrl('Image', 'user', array($lessonData['teacherId'], 'normal', 1), CONF_WEBROOT_FRONT_URL) . '?' . time();
+                                                $img = CommonHelper::generateUrl('Image', 'user', array($lessonData['teacherId'], 'normal', 1)) . '?' . time();
                                                 echo '
                                             <img src="' . $img . '" />';
                                             }
@@ -418,51 +420,51 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                         </div>
                     </div>
                 </div>
-                <?php if($flashCardEnabled){ ?>
-                <div id="tab2" class="tabs-content-js">
-                    <div class="box">
-                        <div class="box-head">
-                            <div class="page-head">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h5>
-                                            <?php echo Label::getLabel('LBL_Flashcards'); ?>
-                                        </h5>
-                                    </div>
-                                    <div>
-                                        <a class="btn btn--secondary btn--small" href="javascript:void(0)" onclick="flashCardForm(<?php echo $lessonData['slesson_id'] ?>, 0, <?php echo $lessonData['learnerId'] ?>, <?php echo $lessonData['teacherId'] ?>)">
-                                            <?php echo Label::getLabel('LBL_Add_New'); ?>
-                                        </a>
+                <?php if ($flashCardEnabled) { ?>
+                    <div id="tab2" class="tabs-content-js">
+                        <div class="box">
+                            <div class="box-head">
+                                <div class="page-head">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5>
+                                                <?php echo Label::getLabel('LBL_Flashcards'); ?>
+                                            </h5>
+                                        </div>
+                                        <div>
+                                            <a class="btn btn--secondary btn--small" href="javascript:void(0)" onclick="flashCardForm(<?php echo $lessonData['slesson_id'] ?>, 0, <?php echo $lessonData['learnerId'] ?>, <?php echo $lessonData['teacherId'] ?>)">
+                                                <?php echo Label::getLabel('LBL_Add_New'); ?>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-search form-search--single">
-                                <?php
-                                $frmSrchFlashCard->addFormTagAttribute('onsubmit', 'searchFlashCards(this); return false;');
-                                $fldBtnSubmit = $frmSrchFlashCard->getField('btn_submit');
-                                $fldBtnSubmit->addFieldTagAttribute('class', 'form__action');
+                                <div class="form-search form-search--single">
+                                    <?php
+                                    $frmSrchFlashCard->addFormTagAttribute('onsubmit', 'searchFlashCards(this); return false;');
+                                    $fldBtnSubmit = $frmSrchFlashCard->getField('btn_submit');
+                                    $fldBtnSubmit->addFieldTagAttribute('class', 'form__action');
 
-                                echo $frmSrchFlashCard->getFormTag();
-                                echo $frmSrchFlashCard->getFieldHtml('lesson_id');
-                                echo $frmSrchFlashCard->getFieldHtml('page');
-                                ?>
-                                <div class="form__element">
-                                    <?php echo $frmSrchFlashCard->getFieldHtml('keyword'); ?>
-                                    <span class="form__action-wrap">
-                                        <?php echo $frmSrchFlashCard->getFieldHtml('btn_submit'); ?>
-                                        <span class="svg-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14.844" height="14.843" viewBox="0 0 14.844 14.843">
-                                                <path d="M251.286,196.714a4.008,4.008,0,1,1,2.826-1.174A3.849,3.849,0,0,1,251.286,196.714Zm8.241,2.625-3.063-3.062a6.116,6.116,0,0,0,1.107-3.563,6.184,6.184,0,0,0-.5-2.442,6.152,6.152,0,0,0-3.348-3.348,6.271,6.271,0,0,0-4.884,0,6.152,6.152,0,0,0-3.348,3.348,6.259,6.259,0,0,0,0,4.884,6.152,6.152,0,0,0,3.348,3.348,6.274,6.274,0,0,0,6-.611l3.063,3.053a1.058,1.058,0,0,0,.8.34,1.143,1.143,0,0,0,.813-1.947h0Z" transform="translate(-245 -186.438)"></path>
-                                            </svg>
+                                    echo $frmSrchFlashCard->getFormTag();
+                                    echo $frmSrchFlashCard->getFieldHtml('lesson_id');
+                                    echo $frmSrchFlashCard->getFieldHtml('page');
+                                    ?>
+                                    <div class="form__element">
+                                        <?php echo $frmSrchFlashCard->getFieldHtml('keyword'); ?>
+                                        <span class="form__action-wrap">
+                                            <?php echo $frmSrchFlashCard->getFieldHtml('btn_submit'); ?>
+                                            <span class="svg-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14.844" height="14.843" viewBox="0 0 14.844 14.843">
+                                                    <path d="M251.286,196.714a4.008,4.008,0,1,1,2.826-1.174A3.849,3.849,0,0,1,251.286,196.714Zm8.241,2.625-3.063-3.062a6.116,6.116,0,0,0,1.107-3.563,6.184,6.184,0,0,0-.5-2.442,6.152,6.152,0,0,0-3.348-3.348,6.271,6.271,0,0,0-4.884,0,6.152,6.152,0,0,0-3.348,3.348,6.259,6.259,0,0,0,0,4.884,6.152,6.152,0,0,0,3.348,3.348,6.274,6.274,0,0,0,6-.611l3.063,3.053a1.058,1.058,0,0,0,.8.34,1.143,1.143,0,0,0,.813-1.947h0Z" transform="translate(-245 -186.438)"></path>
+                                                </svg>
+                                            </span>
                                         </span>
-                                    </span>
+                                    </div>
+                                    </form>
                                 </div>
-                                </form>
                             </div>
+                            <div class="box-body" id="flashCardListing"></div>
                         </div>
-                        <div class="box-body" id="flashCardListing"></div>
                     </div>
-                </div>
                 <?php } ?>
             </div>
         </div>
@@ -470,7 +472,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
 </section>
 
 <script>
-    var flashCardEnabled = '<?php echo $flashCardEnabled?:0 ?>';
+    var flashCardEnabled = '<?php echo $flashCardEnabled ?: 0 ?>';
     var is_time_up = '<?php echo $endTime > 0 && $endTime < $curDate ?>';
     var learnerLessonStatus = '<?php echo $lessonData['sldetail_learner_status']; ?>';
     var lesson_joined = '<?php echo $isJoined ?>';
@@ -489,8 +491,8 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
     var chat_name = '<?php echo $lessonData['learnerFname']; ?>';
     var chat_avatar = "<?php echo $studentImage; ?>";
     var chat_friends = "<?php echo $lessonData['teacherId']; ?>";
-    var worker = new Worker(confFrontEndUrl + 'js/worker-time-interval.js?');
-
+    var worker = new Worker(siteConstants.webroot + 'js/worker-time-interval.js?');
+    
     if (!isZoomMettingToolActive && !is_time_up && lesson_joined && !lesson_completed && learnerLessonStatus != '<?php echo ScheduledLesson::STATUS_CANCELLED ?>') {
         joinLesson(chat_id, teacherId);
     }
@@ -533,7 +535,8 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                     return;
                 }
 
-                if (t.slesson_status == '<?php echo ScheduledLesson::STATUS_COMPLETED ?>' && t.sldetail_learner_status == '<?php echo ScheduledLesson::STATUS_SCHEDULED ?>') {
+                if (t.slesson_status == '<?php echo ScheduledLesson::STATUS_COMPLETED ?>' && learnerLessonStatus == '<?php echo ScheduledLesson::STATUS_SCHEDULED ?>') {
+                    
                     if (!isGroupClass) {
                         $.alert({
                             title: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
@@ -552,24 +555,29 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                         }, 1500);
                         return;
                     } else {
+                       if(isConfirmpopOpen){
+                           return;
+                       }
+                       isConfirmpopOpen = true;
                         $.confirm({
                             title: langLbl.Confirm,
                             content: '<?php echo Label::getLabel('LBL_Teacher_Ends_The_Lesson_Do_Yoy_Want_To_End_It_From_Your_End_Also'); ?>',
-                            autoClose: langLbl.Quit + '|10000',
+                            autoClose: 'Quit|10000',
                             buttons: {
                                 Proceed: {
                                     text: langLbl.Proceed,
                                     btnClass: 'btn btn--primary',
                                     keys: ['enter', 'shift'],
                                     action: function() {
-                                        endLesson(sldetail_id);
+                                        endLessonSetup(sldetail_id);
                                     }
                                 },
                                 Quit: {
                                     text: langLbl.Quit,
                                     btnClass: 'btn btn--secondary',
-                                    keys: ['enter', 'shift'],
-                                    action: function() {}
+                                    action: function() {
+                                        isConfirmpopOpen = false;
+                                    }
                                 }
                             }
                         });
@@ -580,7 +588,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
     }
 
     function checkNewFlashCards() {
-        if((typeof flashCardEnabled !== typeof undefined) && !flashCardEnabled){
+        if ((typeof flashCardEnabled !== typeof undefined) && !flashCardEnabled) {
             return;
         }
         checkNewFlashCardsVar = setInterval(function() {
@@ -630,7 +638,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'startLessonAuthentication', ['<?php echo $lessonData['sldetail_id'] ?>']), '', function(t) {
                             if (t != 0) {
                                 $(".join_lesson_now").show();
-                                endLessonCountDownTimer(curDate, endTime);
+                                endLessonCountDownTimer(startTime, endTime);
                                 checkEveryMinuteStatus();
                             }
                         });

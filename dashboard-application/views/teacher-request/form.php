@@ -48,10 +48,12 @@ $fldPhone = $frm->getField( 'utrvalue_user_phone' );
 $fldPhone->developerTags['col'] = 6;
 
 $fldProfilePic = $frm->getField( 'user_profile_pic' );
-$fldProfilePic->developerTags['col'] = 6;
+$fldProfilePic->developerTags['col'] = 4;
 
 $fldPhotId = $frm->getField( 'user_photo_id' );
-$fldPhotId->developerTags['col'] = 6;
+$fldPhotId->developerTags['col'] = 12;
+
+$frm->getField( 'about_me_fields_heading' )->developerTags['col'] = 8;
 
 $introduction_fields_heading = $frm->getField( 'introduction_fields_heading' );
 $introduction_fields_heading->value = '<h5>' . Label::getLabel('LBL_Introduction') . '</h5>';
@@ -67,6 +69,27 @@ $frm->getField('terms')->htmlAfterField = $terms_caption;
 
 //$frm->setFormTagAttribute( 'onsubmit', 'setUpTeacherApproval(this); return false;' );
 $frm->setFormTagAttribute( 'action', CommonHelper::generateUrl( 'TeacherRequest', 'setUpTeacherApproval' ) );
+
+$profile_pic_preview_html = '<h5>'.Label::getLabel('LBL_Profile_Photo').'</h5>';
+$profile_pic_preview_html .= '<div class="-align-center"><div class="preview preview--profile">';
+$profile_pic_preview_html .= '<div class="avtar avtar--large avtar--centered" data-text="'. CommonHelper::getFirstChar($frm->getField( 'utrvalue_user_first_name' )->value). '">';
+$isProfilePicUploaded = User::isProfilePicUploaded();
+
+$profile_pic_preview_html .= '<img id="user-profile-pic--js" src="' . ($isProfilePicUploaded ? CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM'), CONF_WEBROOT_FRONTEND).'?t='.time() : '') . '" />';
+
+$profile_pic_preview_html .= '</div>';
+$profile_pic_preview_html .= '<span class="-gap"></span>';
+$profile_pic_preview_html .= '<div class="btngroup--fix">';
+$profile_pic_preview_html .= '<span class="btn btn--primary btn--sm btn--fileupload" id="uploadFileInput--js">'.($isProfilePicUploaded ? Label::getLabel('LBL_Change') : Label::getLabel('LBL_Upload')).'</span>';
+$profile_pic_preview_html .= '</div><br></div></div>';
+
+$profilePicPreviewFld = $frm->getField('profile_pic_preview');
+$profilePicPreviewFld->developerTags['col'] = 4;
+$profilePicPreviewFld->value = $profile_pic_preview_html;
+
+$frm->getField('bio')->value = '<p>'.Label::getLabel('LBL_Write_about_yourself_and_your_qualifications').'</p>';
+$frm->getField('youtube_head')->value = '<p>'.Label::getLabel('LBL_Video_Youtube_Link').'</p>';
+
 ?>
 
 <section class="section section--gray section--page">
@@ -87,6 +110,11 @@ $frm->setFormTagAttribute( 'action', CommonHelper::generateUrl( 'TeacherRequest'
 		</div>
 	</div>
 </section>
+
+<div class="d-none">
+	<?php $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account', 'setUpProfileImage'));
+	echo $profileImgFrm->getFormHtml(); ?>	
+</div>
 
 <script >
 $("document").ready(function(){

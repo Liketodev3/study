@@ -3,9 +3,9 @@ class BlogPostCategory extends MyAppModel
 {
     const DB_TBL = 'tbl_blog_post_categories';
     const DB_TBL_PREFIX = 'bpcategory_';
-    const DB_TBL_LANG ='tbl_blog_post_categories_lang';
-    const DB_LANG_TBL_PREFIX ='bpcategorylang_';
-    const REWRITE_URL_PREFIX ='blog/category/';
+    const DB_TBL_LANG = 'tbl_blog_post_categories_lang';
+    const DB_LANG_TBL_PREFIX = 'bpcategorylang_';
+    const REWRITE_URL_PREFIX = 'blog/category/';
     private $db;
 
     public function __construct($id = 0)
@@ -24,12 +24,12 @@ class BlogPostCategory extends MyAppModel
             $childSrchbase->addCondition('bpcategory_deleted', '=', 0);
             $childSrchbase->doNotCalculateRecords();
             $childSrchbase->doNotLimitRecords();
-            $srch->joinTable('('.$childSrchbase->getQuery().')', 'LEFT OUTER JOIN', 's.bpcategory_parent = bpc.bpcategory_id', 's');
+            $srch->joinTable('(' . $childSrchbase->getQuery() . ')', 'LEFT OUTER JOIN', 's.bpcategory_parent = bpc.bpcategory_id', 's');
             $srch->addGroupBy('bpc.bpcategory_id');
             $srch->addFld('COUNT(s.bpcategory_id) AS child_count');
         }
         if ($langId > 0) {
-            $srch->joinTable(static::DB_TBL_LANG, 'LEFT OUTER JOIN', 'bpc_l.'.static::DB_LANG_TBL_PREFIX.'bpcategory_id = bpc.'.static::tblFld('id').' and bpc_l.'.static::DB_LANG_TBL_PREFIX .'lang_id = '. $langId, 'bpc_l');
+            $srch->joinTable(static::DB_TBL_LANG, 'LEFT OUTER JOIN', 'bpc_l.' . static::DB_LANG_TBL_PREFIX . 'bpcategory_id = bpc.' . static::tblFld('id') . ' and bpc_l.' . static::DB_LANG_TBL_PREFIX . 'lang_id = ' . $langId, 'bpc_l');
         }
         if ($bpcategory_active) {
             $srch->addCondition('bpc.bpcategory_active', '=', applicationConstants::ACTIVE);
@@ -42,7 +42,7 @@ class BlogPostCategory extends MyAppModel
     {
         $srch = new SearchBase(static::DB_TBL);
         $srch->addFld("MAX(" . static::DB_TBL_PREFIX . "display_order) as max_order");
-        if ($parent>0) {
+        if ($parent > 0) {
             $srch->addCondition(static::DB_TBL_PREFIX . 'parent', '=', $parent);
         }
         $srch->doNotCalculateRecords();
@@ -50,7 +50,7 @@ class BlogPostCategory extends MyAppModel
         $rs = $srch->getResultSet();
         $record = FatApp::getDb()->fetch($rs);
         if (!empty($record)) {
-            return $record['max_order']+1;
+            return $record['max_order'] + 1;
         }
         return 1;
     }
@@ -68,7 +68,7 @@ class BlogPostCategory extends MyAppModel
         $srch->addOrder('bpc.bpcategory_identifier', 'asc');
         $rs = $srch->getResultSet();
         if ($rs) {
-            while ($categories=FatApp::getDb()->fetch($rs)) {
+            while ($categories = FatApp::getDb()->fetch($rs)) {
                 $category_tree_array[] = $categories;
                 $category_tree_array = self::getCategoryStructure($categories['bpcategory_parent'], $category_tree_array);
             }
@@ -117,15 +117,15 @@ class BlogPostCategory extends MyAppModel
         $srch->addCondition('bpc.bpCategory_id', '=', FatUtility::int($bpCategory_id));
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetch($rs);
-        $name='';
-        $seprator='';
-        if ($level>0) {
-            $seprator =' &nbsp;&nbsp;&raquo;&raquo;&nbsp;&nbsp;';
+        $name = '';
+        $seprator = '';
+        if ($level > 0) {
+            $seprator = ' &nbsp;&nbsp;&raquo;&raquo;&nbsp;&nbsp;';
         }
         if ($records) {
-            $name = $records['bpcategory_identifier'].$seprator.$name_suffix;
-            if ($records['bpcategory_parent']>0) {
-                $name = self::getParentTreeStructure($records['bpcategory_parent'], $level+1, $name);
+            $name = $records['bpcategory_identifier'] . $seprator . $name_suffix;
+            if ($records['bpcategory_parent'] > 0) {
+                $name = self::getParentTreeStructure($records['bpcategory_parent'], $level + 1, $name);
             }
         }
         return $name;
@@ -138,7 +138,7 @@ class BlogPostCategory extends MyAppModel
         $srch->addCondition('bpc.bpcategory_deleted', '=', applicationConstants::NO);
         $srch->addCondition('bpc.bpcategory_active', '=', applicationConstants::ACTIVE);
         if (!empty($keywords)) {
-            $srch->addCondition('bpc.bpcategory_identifier', 'like', '%'.$keywords.'%');
+            $srch->addCondition('bpc.bpcategory_identifier', 'like', '%' . $keywords . '%');
         }
         $srch->addOrder('bpc.bpcategory_parent', 'asc');
         $srch->addOrder('bpc.bpcategory_display_order', 'asc');
@@ -153,7 +153,7 @@ class BlogPostCategory extends MyAppModel
             if ($row['bpcategory_parent'] > 0) {
                 $return[$row['bpcategory_id']] = self::getParentTreeStructure($row['bpcategory_id']);
             } else {
-                $return[$row['bpcategory_id']] =$row['bpcategory_identifier'];
+                $return[$row['bpcategory_id']] = $row['bpcategory_identifier'];
             }
         }
         return $return;
@@ -166,10 +166,10 @@ class BlogPostCategory extends MyAppModel
         foreach ($arr as $id => $cat) {
             $tree = str_split($cat['bpcategory_code'], 6);
             array_pop($tree);
-            $parent = & $out;
+            $parent = &$out;
             foreach ($tree as $parentId) {
                 $parentId = intval($parentId);
-                $parent = & $parent['children'][$parentId];
+                $parent = &$parent['children'][$parentId];
             }
             $parent['children'][$id]['name'] = $cat['bpcategory_name'];
         }
@@ -190,11 +190,11 @@ class BlogPostCategory extends MyAppModel
         $out = array();
         foreach ($catCodes as $key => $catCode) {
             $hierarchyArr = str_split($catCode, 6);
-            $this_active = 1 ;
+            $this_active = 1;
             foreach ($hierarchyArr as $node) {
                 $node = FatUtility::int($node);
                 if (!static::isCategoryActive($node)) {
-                    $this_active = 0 ;
+                    $this_active = 0;
                     break;
                 }
             }
@@ -214,11 +214,11 @@ class BlogPostCategory extends MyAppModel
             $name = $value['bpcategory_name'];
             $code = str_replace('_', '', $value['bpcategory_code']);
             $hierarchyArr = str_split($code, 6);
-            $this_deleted = 0 ;
+            $this_deleted = 0;
             foreach ($hierarchyArr as $node) {
                 $node = FatUtility::int($node);
                 if (!in_array($node, $tempArr)) {
-                    $this_deleted = 1 ;
+                    $this_deleted = 1;
                     break;
                 }
             }
@@ -237,7 +237,7 @@ class BlogPostCategory extends MyAppModel
     {
         $srch = static::getSearchObject();
         $srch->joinTable(static::DB_TBL_LANG, 'LEFT OUTER JOIN', 'bpcategorylang_bpcategory_id = bpcategory_id AND bpcategorylang_lang_id = ' . $langId);
-        $srch->addCondition(static::DB_TBL_PREFIX .'deleted', '=', 0);
+        $srch->addCondition(static::DB_TBL_PREFIX . 'deleted', '=', 0);
         $srch->addMultipleFields(array('bpcategory_id', 'IFNULL(bpcategory_name, bpcategory_identifier) AS bpcategory_name', 'GETBLOGCATCODE(bpcategory_id) AS bpcategory_code'));
         $srch->addOrder('GETBLOGCATORDERCODE(bpcategory_id)');
         if ($ignoreCategoryId > 0) {
@@ -251,7 +251,7 @@ class BlogPostCategory extends MyAppModel
     {
         $srch = static::getSearchObject();
         $srch->joinTable(static::DB_TBL_LANG, 'LEFT OUTER JOIN', 'bpcategorylang_bpcategory_id = bpcategory_id AND bpcategorylang_lang_id = ' . $langId);
-        $srch->addCondition(static::DB_TBL_PREFIX .'featured', '=', 1);
+        $srch->addCondition(static::DB_TBL_PREFIX . 'featured', '=', 1);
         $srch->addMultipleFields(array('bpcategory_id', 'IFNULL(bpcategory_name, bpcategory_identifier) AS bpcategory_name', 'GETBLOGCATCODE(bpcategory_id) AS bpcategory_code'));
         $srch->addOrder('GETBLOGCATORDERCODE(bpcategory_id)');
         return FatApp::getDb()->fetchAll($srch->getResultSet(), 'bpcategory_id');
@@ -265,22 +265,22 @@ class BlogPostCategory extends MyAppModel
         $srch->addCondition('bpc.bpcategory_active', '=', applicationConstants::ACTIVE);
         $srch->addCondition('bpc.bpcategory_parent', '=', FatUtility::int($parent_id));
         if (!empty($keywords)) {
-            $srch->addCondition('bpc.bpcategory_identifier', 'like', '%'.$keywords.'%');
+            $srch->addCondition('bpc.bpcategory_identifier', 'like', '%' . $keywords . '%');
         }
         $srch->addOrder('bpc.bpcategory_display_order', 'asc');
         $srch->addOrder('bpc.bpcategory_identifier', 'asc');
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAllAssoc($rs);
         $return = array();
-        $seprator='';
-        if ($level>0) {
-            $seprator='&raquo;&raquo;&nbsp;&nbsp;';
-            $seprator=CommonHelper::renderHtml($seprator);
+        $seprator = '';
+        if ($level > 0) {
+            $seprator = '&raquo;&raquo;&nbsp;&nbsp;';
+            $seprator = CommonHelper::renderHtml($seprator);
         }
         foreach ($records as $bpcategory_id => $bpcategory_identifier) {
-            $name = $name_prefix .$seprator. $bpcategory_identifier;
+            $name = $name_prefix . $seprator . $bpcategory_identifier;
             $return[$bpcategory_id] = $name;
-            $return += self::getBlogPostCatTreeStructure($bpcategory_id, $keywords, $level+1, $name);
+            $return += self::getBlogPostCatTreeStructure($bpcategory_id, $keywords, $level + 1, $name);
         }
         return $return;
     }

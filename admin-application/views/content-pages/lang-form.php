@@ -39,7 +39,7 @@ if($cpage_layout == ContentPage::CONTENT_PAGE_LAYOUT1_TYPE)
 						if ($cpage_id > 0) {
 							foreach($languages as $langId => $langName){?>
 								<li><a class="<?php echo ($cpage_lang_id == $langId)?'active':''?>" href="javascript:void(0);" 
-								onclick="addLangForm(<?php echo $cpage_id ?>, <?php echo $langId;?>, <?php echo $cpage_layout;?>);"><?php echo Label::getLabel('LBL_'.$langName,$adminLangId);?></a></li>
+								onclick="addLangForm(<?php echo $cpage_id ?>, <?php echo $langId;?>, <?php echo $cpage_layout;?>);"><?php echo $langName;?></a></li>
 							<?php }
 							}
 						?>

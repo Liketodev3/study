@@ -51,9 +51,7 @@ class NotificationsController extends LoggedUserController
     {
         $notificationId = intval($notificationId);
         $notificationData = UserNotifications::getUserNotificationsByNotificationId(UserAuthentication::getLoggedUserId(), $notificationId);
-        if (empty($notificationData)) {
-            $this->invalidRequest();
-        }
+       
         $notificationRedirectUrl = CommonHelper::generateUrl('notifications', 'my-notifications');
         $notificationType = $notificationData['notification_record_type'];
         $notificationRecordId = $notificationData['notification_record_id'];
@@ -64,9 +62,11 @@ class NotificationsController extends LoggedUserController
                 $notificationRedirectUrl = CommonHelper::generateUrl('teacher');
             break;
             case UserNotifications::NOTICATION_FOR_SCHEDULED_LESSON_BY_LEARNER:
+                case UserNotifications::NOTICATION_FOR_CANCEL_LESSON_BY_LEARNER:
                 $notificationRedirectUrl = CommonHelper::generateUrl('TeacherScheduledLessons', 'view', array($notificationRecordId));
             break;
             case UserNotifications::NOTICATION_FOR_SCHEDULED_LESSON_BY_TEACHER:
+            case UserNotifications::NOTICATION_FOR_CANCEL_LESSON_BY_TEACHER:
                 $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', array($notificationRecordId));
             break;
             case UserNotifications::NOTICATION_FOR_WALLET_CREDIT_ON_LESSON_COMPLETE:
