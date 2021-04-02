@@ -1,4 +1,17 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+if (empty($iconData)) {
+    $frm->getField('icon')->requirement->setRequired();
+} else {
+    $icon_img_fld = $frm->getField('icon_img');
+    $icon_img_fld->value = '<img src="' . CommonHelper::generateUrl('Image', 'pwaIcon', [], CONF_WEBROOT_FRONTEND) . '" alt="App Icon">';
+}
+if (empty($splashIconData)) {
+    $frm->getField('splash_icon')->requirement->setRequired();
+} else {
+    $splash_icon_img_fld = $frm->getField('splash_icon_img');
+    $splash_icon_img_fld->value = '<img src="' . CommonHelper::generateUrl('Image', 'pwaSplashIcon', [], CONF_WEBROOT_FRONTEND) . '" alt="PWA Splash Icon">';
+}
+?>
 <div class='page'>
     <div class='fixed_container'>
         <div class="row">
@@ -18,26 +31,17 @@
                     <div class="sectionbody space">
                         <?php
                         $frm->setFormTagAttribute('class', 'web_form');
-                        $frm->setFormTagAttribute('enctype', 'multipart/form-data');
-                        $frm->setFormTagAttribute('action', CommonHelper::generateUrl('Pwa', 'setup'));
-
                         $frm->developerTags = [
                             'colClassPrefix' => 'col-md-',
                             'fld_default_col' => 12
                         ];
 
-                        $background_color_fld = $frm->getField('pwa_settings[background_color]');
-                        $theme_color_fld = $frm->getField('pwa_settings[theme_color]');
-                        $background_color_fld->overrideFldType('color');
-                        $theme_color_fld->overrideFldType('color');
-
-                        $icon_fld = $frm->getField('icon')->developerTags['col'] = 6;
-                        $icon_img_fld = $frm->getField('icon_img');
-                        $icon_img_fld->developerTags['col'] = 6;
-
-                        $icon_fld = $frm->getField('splash_icon')->developerTags['col'] = 6;
-                        $splash_icon_img_fld = $frm->getField('splash_icon_img');
-                        $splash_icon_img_fld->developerTags['col'] = 6;
+                        $frm->getField('pwa_settings[background_color]')->overrideFldType('color');
+                        $frm->getField('pwa_settings[theme_color]')->overrideFldType('color');
+                        $frm->getField('icon')->developerTags['col'] = 6;
+                        $frm->getField('icon_img')->developerTags['col'] = 6;
+                        $frm->getField('splash_icon')->developerTags['col'] = 6;
+                        $frm->getField('splash_icon_img')->developerTags['col'] = 6;
                         ?>
                         <div class="box -padding-20">
                             <?php echo $frm->getFormHtml(); ?>

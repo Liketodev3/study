@@ -4,27 +4,17 @@ class PwaController extends AdminBaseController
     public function index()
     {
         $frm = $this->getForm($this->adminLangId);
-        $record = Configurations::getConfigurations();
+        $record = Configurations::getConfigurations(['CONF_ENABLE_PWA', 'CONF_PWA_SETTINGS']);
         if (!empty($record['CONF_PWA_SETTINGS'])) {
-            $data['pwa_settings'] = json_decode($record['CONF_PWA_SETTINGS'], true);
-            $data['CONF_ENABLE_PWA'] = $record['CONF_ENABLE_PWA'];
+            $data = [
+                'pwa_settings' => json_decode($record['CONF_PWA_SETTINGS'], true),
+                'CONF_ENABLE_PWA' => $record['CONF_ENABLE_PWA']
+            ];
             $frm->fill($data);
         }
 
         $iconData = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_APP_ICON, 0);
         $splashIconData = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0);
-        if (empty($iconData)) {
-            $frm->getField('icon')->requirement->setRequired();
-        } else {
-            $icon_img_fld = $frm->getField('icon_img');
-            $icon_img_fld->value = '<img src="' . CommonHelper::generateUrl('Image', 'pwaIcon', [], CONF_WEBROOT_FRONTEND) . '" alt="App Icon">';
-        }
-        if (empty($splashIconData)) {
-            $frm->getField('splash_icon')->requirement->setRequired();
-        } else {
-            $splash_icon_img_fld = $frm->getField('splash_icon_img');
-            $splash_icon_img_fld->value = '<img src="' . CommonHelper::generateUrl('Image', 'pwaSplashIcon', [], CONF_WEBROOT_FRONTEND) . '" alt="PWA Splash Icon">';
-        }
 
         $this->set('frm', $frm);
         $this->set('iconData', $iconData);
@@ -40,8 +30,6 @@ class PwaController extends AdminBaseController
             return $this->index();
         }
 
-        $pwaSettings = $post['pwa_settings'];
-
         FatApp::getDb()->startTransaction();
 
         if (!empty($_FILES['icon']['name'])) {
@@ -51,7 +39,8 @@ class PwaController extends AdminBaseController
                 Message::addErrorMessage(sprintf(Label::getLabel('LBL_Please_upload_%s_image_for_splash_icon'), 'PNG'));
                 return $this->index();
             }
-            if (!$attchedFile->saveImage($_FILES['icon']['tmp_name'], AttachedFile::FILETYPE_PWA_APP_ICON, 0, 0, $_FILES['icon']['name'], 0, true)) {
+            if (!$attchedFile->saveImage($_FILES['icon']['tmp_name'], AttachedFile::FILETYPE_PWA_APP_ICON, 0, 0,
+                $_FILES['icon']['name'], 0, true)) {
                 FatApp::getDb()->rollbackTransaction();
                 Message::addErrorMessage($attchedFile->getError());
                 return $this->index();
@@ -65,15 +54,17 @@ class PwaController extends AdminBaseController
                 Message::addErrorMessage(sprintf(Label::getLabel('LBL_Please_upload_%s_image_for_splash_icon'), 'PNG'));
                 return $this->index();
             }
-            if (!$attchedFile->saveImage($_FILES['splash_icon']['tmp_name'], AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0, 0, $_FILES['splash_icon']['name'], 0, true)) {
+            if (!$attchedFile->saveImage($_FILES['splash_icon']['tmp_name'], AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0, 0,
+                $_FILES['splash_icon']['name'], 0, true)) {
                 FatApp::getDb()->rollbackTransaction();
                 Message::addErrorMessage($attchedFile->getError());
                 return $this->index();
             }
         }
 
+        $pwaSettings = json_encode($post['pwa_settings']);
         $configurations = new Configurations();
-        if (!$configurations->update(['CONF_PWA_SETTINGS' => json_encode($pwaSettings), 'CONF_ENABLE_PWA' => $post['CONF_ENABLE_PWA']])) {
+        if (!$configurations->update(['CONF_PWA_SETTINGS' => $pwaSettings, 'CONF_ENABLE_PWA' => $post['CONF_ENABLE_PWA']])) {
             FatApp::getDb()->rollbackTransaction();
             Message::addErrorMessage(FatApp::getDb()->getError());
             return $this->index();
@@ -84,17 +75,12 @@ class PwaController extends AdminBaseController
         FatApp::redirectUser(CommonHelper::generateUrl('Pwa'));
     }
 
-    public function langForm(int $langId)
-    {
-    }
-
     private function getForm(int $langId): Form
     {
-
         $orientationArr = PWA::orientationArr($langId);
         $displayArr = PWA::displayArr($langId);
 
-        $frm = new Form('pwaFrm');
+        $frm = new Form('pwaFrm', ['action' => CommonHelper::generateUrl('Pwa', 'setup'), 'enctype' => 'multipart/form-data']);
 
         $frm->addCheckBox(Label::getLabel('PWALBL_Enable_PWA'), 'CONF_ENABLE_PWA', 1, [], false, 0);
         $fld = $frm->addRequiredField(Label::getLabel('PWALBL_App_Name'), 'pwa_settings[name]');
@@ -135,12 +121,6 @@ class PwaController extends AdminBaseController
         // $frm->addTextBox(Label::getLabel('PWALBL_Cache_Strategy'), 'cache_strategy');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save', $langId));
 
-        return $frm;
-    }
-
-    private function getLangForm(int $langId): Form
-    {
-        $frm = new Form('pwaLangFrm');
         return $frm;
     }
 }
