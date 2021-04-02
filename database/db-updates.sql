@@ -343,3 +343,4 @@ DELETE FROM `tbl_email_templates` WHERE `tbl_email_templates`.`etpl_code` = 'tea
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.2.20210331' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.3.20210331' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.4.20210402' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

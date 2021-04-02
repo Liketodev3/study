@@ -1,7 +1,7 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number:
-Release Date:
+Release Number: TV-2.11.4.20210402
+Release Date: 2021-04-02
 
 Bugs:
     #051769 - The refund percentage for group class does not match the general flow.
@@ -28,6 +28,9 @@ Bugs:
     #049973 - Email content not decoded in outlook , yopmail etc
     #049647 - Issue faced on signup> User is coming from Instagram> Below are the specifications of the device Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 173.0.0.23.119 (iPhone9,4; iOS 14_3
     #048614 - On the home page- go t search a teacher.
+    #051840 - Fix pwa icons validation messages
+    #051844 - PWA - Show existing icons with the file upload fields
+
 ============================================================================================
 
 
