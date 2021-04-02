@@ -49,9 +49,11 @@ foreach ($classes as $sn=>$row){
 				$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
 
 				$innerLi=$innerUl->appendElement('li');
-				$innerLi->appendElement('a', array('href'=> 'javascript:;', 'onclick' => 'form('.$row['grpcls_id'].');', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),Label::getLabel('LBL_Edit',$adminLangId), true);
-				
-				if(empty($row['issrep_id']) && $row['grpcls_status'] != TeacherGroupClasses::STATUS_COMPLETED) {
+               
+				if(empty($row['issrep_id']) && $row['grpcls_status'] != TeacherGroupClasses::STATUS_COMPLETED && $row['grpcls_status'] != TeacherGroupClasses::STATUS_CANCELLED) {
+					if(strtotime($row['grpcls_start_datetime']) > time() ){
+						$innerLi->appendElement('a', array('href'=> 'javascript:;', 'onclick' => 'form('.$row['grpcls_id'].');', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit', $adminLangId)), Label::getLabel('LBL_Edit', $adminLangId), true);
+					}
 					$innerLi->appendElement('a', array('href'=> 'javascript:;', 'onclick' => 'cancelClass('.$row['grpcls_id'].');', 'class'=>'button small green','title'=>Label::getLabel('LBL_Cancel',$adminLangId)),Label::getLabel('LBL_Cancel',$adminLangId), true);
 					$innerLi->appendElement('a', array('href'=> 'javascript:;', 'onclick' => 'removeClass('.$row['grpcls_id'].');', 'class'=>'button small green','title'=>Label::getLabel('LBL_Delete',$adminLangId)),Label::getLabel('LBL_Delete',$adminLangId), true);
 				}
