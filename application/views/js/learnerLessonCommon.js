@@ -144,11 +144,11 @@ cancelLessonSetup = function (frm) {
         }
         $.mbsmessage(ans.msg, true, 'alert alert--success');
         $.facebox.close();
-        let redirectUrl =  fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCanceled;
-        if(ans.isGroupClass == 1){
-            redirectUrl =fcom.makeUrl('LearnerGroupClasses');
+        if (ans.redirectUrl) {
+            setTimeout(function () { window.location.href = ans.redirectUrl }, 2000);
+        }else{
+            window.location.reload();
         }
-        window.location.href = redirectUrl;
         
     }, { fOutMode: 'json' });
 

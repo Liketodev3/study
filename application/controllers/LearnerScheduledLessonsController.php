@@ -570,6 +570,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 'sldetail_learner_status',
                 'sldetail_order_id',
                 'slesson_date',
+                'order_discount_total',
                 'slesson_start_time'
             )
         );
@@ -579,7 +580,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         $rs = $srch->getResultSet();
         $lessonRow = FatApp::getDb()->fetch($rs);
-
+     
         if (empty($lessonRow)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
@@ -704,8 +705,19 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         /* ] */
         $isGroupClass = ($lessonRow['slesson_grpcls_id'] > 0) ? applicationConstants::YES : applicationConstants::NO;
+        
+        $returnData = ['msg' => Label::getLabel('LBL_Lesson_Cancelled_Successfully!'), 'isGroupClass' => $isGroupClass];
+        
+        if($lessonRow['order_discount_total'] > 0){
+            $returnData['redirectUrl'] = CommonHelper::generateUrl('LearnerScheduledLessons');
+        }
+       
+        if($isGroupClass) {
+            $returnData['redirectUrl'] = CommonHelper::generateUrl('LearnerGroupClasses');
+        }
+
         Message::addMessage(Label::getLabel("LBL_Lesson_Cancelled_Successfully!"));
-        FatUtility::dieJsonSuccess(['msg' => Label::getLabel('LBL_Lesson_Cancelled_Successfully!'), 'isGroupClass' => $isGroupClass]);
+        FatUtility::dieJsonSuccess($returnData);
     }
 
     public function getRescheduleFrm()
