@@ -32,7 +32,6 @@ $user_gender->setOptionListTagAttribute('class', 'list-inline list-inline--oneha
 
 $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account', 'setUpProfileImage'));
 $jsonUserRow = FatUtility::convertToJson($userRow);
-
 ?>
 <script>
 	var userData = <?php echo $jsonUserRow ?>;
@@ -111,28 +110,47 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 
 
 <script>
-
 	var countryData = window.intlTelInputGlobals.getCountryData();
         for (var i = 0; i < countryData.length; i++) {
             var country = countryData[i];
             country.name = country.name.replace(/ *\([^)]*\) */g, "");
         }
-		var input = document.querySelector("#user_phone");
 
+		var input = document.querySelector("#user_phone");
+		$("#user_phone").inputmask();
 		input.addEventListener("countrychange",function() {
-            var dial_code = $.trim($('.iti__selected-dial-code').text());
+			var dial_code = $.trim($('.iti__selected-dial-code').text());
+            console.log(telInput.getSelectedCountryData());
+			setPhoneNumberMask();
             $('#user_phone_code').val(dial_code);
         });
-		
-        window.intlTelInput(input, {
-            nationalMode: false,
+      
+		var telInput =  window.intlTelInput(input, {
             separateDialCode: true,
-            utilsScript: "../.../js/utils.js",
+			initialCountry: "us",
+            utilsScript: "../../js/utils.js",
         });
 
+		setPhoneNumberMask =  function(){
+			let placeholder = $("#user_phone").attr("placeholder");
+            console.log(placeholder);
+			if(placeholder){
+				placeholder = placeholder.replace(/[0-9.]/g, '9');
+            	console.log(placeholder);
+				$("#user_phone").inputmask({"mask": placeholder});
+			}
+		};
+
 	$(document).ready(function() {
-		$("[name='user_timezone']").select2();
-		$('input[name="user_url_name"]').on('keypress', function(e) {
+	
+			var dial_code = $.trim($('.iti__selected-dial-code').text());
+        	$('#user_phone_code').val(dial_code);
+			setTimeout(() => {
+				setPhoneNumberMask();
+			}, 100);
+          
+			$("[name='user_timezone']").select2();
+			$('input[name="user_url_name"]').on('keypress', function(e) {
 			if (e.which == 32) {
 				return false;
 			}

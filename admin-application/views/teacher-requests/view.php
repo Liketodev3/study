@@ -112,7 +112,7 @@
 						</dl>
 						<dl class="list">
 							<dt><?php echo Label::getLabel('LBL_Phone_Number',$adminLangId); ?></dt>
-							<dd><?php echo $row['utrvalue_user_phone'];?></dd>
+							<dd><?php echo  $row['utrvalue_user_phone_code'].$row['utrvalue_user_phone'];?></dd>
 						</dl>
 						<dl class="list">
 							<dt><?php echo Label::getLabel('LBL_You_Tube_Video_Link',$adminLangId); ?></dt>
