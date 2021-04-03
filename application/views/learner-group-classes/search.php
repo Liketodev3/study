@@ -119,9 +119,10 @@ foreach ( $lessons as $lesson ) {
 			<div class="col-xl-4 col-lg-4 col-md-12 col-positioned">
 				<div class="schedule-list">
 					<ul>
-                        <?php
+					<?php
 						$lessonsStartTime = $lesson['slesson_date']." ". $lesson['slesson_start_time'];
 						$timerEndTimer = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', $lessonsStartTime, true , $user_timezone );
+						$endTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', $lesson['slesson_end_date'] .' '. $lesson['slesson_end_time'], true , $user_timezone );
 						if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) {
 							if(strtotime($timerEndTimer) > strtotime($curDateTime)) {
 						?>
@@ -133,7 +134,7 @@ foreach ( $lessons as $lesson ) {
 							</li>
                         <?php }else{
 
-							if(strtotime($timerEndTimer) > strtotime($curDateTime)) {
+							if(strtotime($endTime) > strtotime($curDateTime)) {
 								$lessonInfoLblKey = 'LBL_Lesson_ongoing';
 							} else {
 								$lessonInfoLblKey = 'LBL_Lesson_time_has_passed';
