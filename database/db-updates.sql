@@ -341,6 +341,12 @@ DELETE FROM `tbl_email_templates` WHERE `tbl_email_templates`.`etpl_code` = 'lea
 
 DELETE FROM `tbl_email_templates` WHERE `tbl_email_templates`.`etpl_code` = 'teacher_message_to_learner_email';
 
+DELETE FROM `tbl_email_templates` WHERE `tbl_email_templates`.`etpl_code` = 'blog_comment_status_changed';
+
+DELETE FROM `tbl_email_templates` WHERE `tbl_email_templates`.`etpl_code` = 'giftcard_buyer';
+
+DELETE FROM `tbl_email_templates` WHERE `tbl_email_templates`.`etpl_code` = 'new_teacher_approval_admin';
+
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.2.20210331' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.3.20210331' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.4.20210402' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

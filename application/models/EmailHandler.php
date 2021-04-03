@@ -359,7 +359,7 @@ class EmailHandler extends FatModel
             if ($img) {
                 $imgSrc = CommonHelper::generateFullUrl('Image', 'SocialPlatform', array($row['splatform_id']), CONF_WEBROOT_FRONT_URL);
             }
-            $social_media_icons .= '<a style="display:inline-block;vertical-align:top; width:35px;height:35px; margin:0 0 0 5px; background:#1a1a1a;border-radius:100%;padding:4px;" href="' . $url . '" ' . $target_blank . ' title="' . $title . '" ><img alt="' . $title . '" width="24" style="margin:4px auto 0; display:block;" src = "' . $imgSrc . '"/></a>';
+            $social_media_icons .= '<a style="display:inline-block;vertical-align:top; width:40px;height:40px; margin:0 0 0 5px; border-radius:100%;" href="' . $url . '" ' . $target_blank . ' title="' . $title . '" ><img alt="' . $title . '" width="30;" style="margin:4px auto 0; display:block;" src = "' . $imgSrc . '"/></a>';
         }
 
         return array(
