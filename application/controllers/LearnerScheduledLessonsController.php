@@ -703,8 +703,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
         }
         /* ] */
+        $isGroupClass = ($lessonRow['slesson_grpcls_id'] > 0) ? applicationConstants::YES : applicationConstants::NO;
         Message::addMessage(Label::getLabel("LBL_Lesson_Cancelled_Successfully!"));
-        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Cancelled_Successfully!'));
+        FatUtility::dieJsonSuccess(['msg' => Label::getLabel('LBL_Lesson_Cancelled_Successfully!'), 'isGroupClass' => $isGroupClass]);
     }
 
     public function getRescheduleFrm()

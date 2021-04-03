@@ -95,6 +95,9 @@ class TeacherRequestController extends MyAppController
 		$this->_template->addJs('js/jquery.form.js');
         $this->_template->addJs('js/cropper.js');
         $this->_template->addCss('css/cropper.css');
+	    $this->_template->addJs('js/jquery.inputmask.bundle.js');
+        $this->_template->addJs('js/intlTelInput.js');
+        $this->_template->addCss('css/intlTelInput.css');
 
 		$this->_template->render(true, true, 'teacher-request/form.php');
 	}
@@ -360,6 +363,7 @@ class TeacherRequestController extends MyAppController
 		$fld->requirements()->setRequired();
 		$fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone_Number'), 'utrvalue_user_phone');
 		$fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
+		$frm->addHiddenField('', 'utrvalue_user_phone_code');
 		/* if (!User::isProfilePicUploaded()) {
 			$fld = $frm->addFileUpload(Label::getLabel('LBL_Profile_Picture'), 'user_profile_pic');
 			$fld->requirements()->setRequired();

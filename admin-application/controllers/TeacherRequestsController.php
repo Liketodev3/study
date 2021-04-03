@@ -123,6 +123,7 @@ class TeacherRequestsController extends AdminBaseController
                 'utrvalue_user_last_name',
                 'utrvalue_user_gender',
                 'utrvalue_user_phone',
+                'utrvalue_user_phone_code',
                 'utrvalue_user_video_link',
                 'utrvalue_user_profile_info',
                 'utrvalue_user_teach_slanguage_id',
@@ -241,6 +242,7 @@ class TeacherRequestsController extends AdminBaseController
             'utrvalue_user_last_name',
             'utrvalue_user_gender',
             'utrvalue_user_phone',
+            'utrvalue_user_phone_code',
             'utrvalue_user_profile_info',
             'utrvalue_user_video_link',
             'utrvalue_user_teach_slanguage_id',
@@ -286,6 +288,7 @@ class TeacherRequestsController extends AdminBaseController
                 'user_last_name' => $requestRow['utrvalue_user_last_name'],
                 'user_gender' => $requestRow['utrvalue_user_gender'],
                 'user_phone' => $requestRow['utrvalue_user_phone'],
+                'user_phone_code' => $requestRow['utrvalue_user_phone_code'],
                 'user_profile_info'    => $requestRow['utrvalue_user_profile_info'],
             );
             $user->assignValues($userUpdateDataArr);

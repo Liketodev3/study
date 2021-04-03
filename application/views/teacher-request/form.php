@@ -47,6 +47,9 @@ $fldGender->setOptionListTagAttribute( 'class', 'list-inline list-inline--onehal
 
 $fldPhone = $frm->getField( 'utrvalue_user_phone' );
 $fldPhone->developerTags['col'] = 6;
+$fldPhone->addFieldTagAttribute('id','utrvalue_user_phone');
+
+ $frm->getField( 'utrvalue_user_phone_code')->addFieldTagAttribute('id','utrvalue_user_phone_code');
 
 $fldProfilePic = $frm->getField( 'user_profile_pic' );
 $fldProfilePic->developerTags['col'] = 4;
@@ -118,7 +121,43 @@ $frm->getField('youtube_head')->value = '<p>'.Label::getLabel('LBL_Video_Youtube
 </div>
 
 <script >
+var countryData = window.intlTelInputGlobals.getCountryData();
+	for (var i = 0; i < countryData.length; i++) {
+		var country = countryData[i];
+		country.name = country.name.replace(/ *\([^)]*\) */g, "");
+	}
+
+	var input = document.querySelector("#utrvalue_user_phone");
+	$("#utrvalue_user_phone").inputmask();
+	input.addEventListener("countrychange",function() {
+		var dial_code = $.trim($('.iti__selected-dial-code').text());
+		console.log(telInput.getSelectedCountryData());
+		setPhoneNumberMask();
+		$('#utrvalue_user_phone_code').val(dial_code);
+	});
+	
+	var telInput =  window.intlTelInput(input, {
+		separateDialCode: true,
+		initialCountry: "us",
+		utilsScript: "../../js/utils.js",
+	});
+
+	setPhoneNumberMask =  function(){
+		let placeholder = $("#utrvalue_user_phone").attr("placeholder");
+		console.log(placeholder);
+		if(placeholder){
+			placeholder = placeholder.replace(/[0-9.]/g, '9');
+			console.log(placeholder);
+			$("#utrvalue_user_phone").inputmask({"mask": placeholder});
+		}
+	};
+
 $("document").ready(function(){
+
+	setTimeout(() => {
+		setPhoneNumberMask();
+	}, 1000);
+
 	$("select[name='utrvalue_user_language_speak_proficiency[]']").closest(".row").addClass("spoken_language_row");
 	$("select[name='utrvalue_user_language_speak_proficiency[]']").closest(".row").addClass("row--addons");
 
@@ -178,4 +217,7 @@ $("document").ready(function(){
 		$(e).closest(".teach_language_row").remove();
 	};
 });
+
+
+	
 </script>

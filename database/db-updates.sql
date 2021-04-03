@@ -344,3 +344,6 @@ DELETE FROM `tbl_email_templates` WHERE `tbl_email_templates`.`etpl_code` = 'tea
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.2.20210331' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.3.20210331' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.4.20210402' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+ALTER TABLE `tbl_users` ADD `user_phone_code` VARCHAR(6) NOT NULL AFTER `user_last_name`;
+ALTER TABLE `tbl_user_teacher_request_values` ADD `utrvalue_user_phone_code` VARCHAR(6) NOT NULL AFTER `utrvalue_user_gender`;
