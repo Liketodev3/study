@@ -1,6 +1,8 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');?>
 <section class="section">
-	<h1><?php echo Label::getLabel('LBL_User_Transactions',$adminLangId); ?></h1>
+	<div class="sectionhead">
+		<h4><?php echo Label::getLabel('LBL_User_Transactions',$adminLangId); ?></h4>
+	</div>
 	<div class="tabs_nav_container responsive flat">
 		<ul class="tabs_nav">
 			<li><a class="active" href="javascript:void(0)" onclick="transactions(<?php echo $userId ?>);"><?php echo Label::getLabel('LBL_Transactions',$adminLangId); ?></a></li>

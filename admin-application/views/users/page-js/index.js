@@ -113,7 +113,7 @@ $(document).ready(function(){
 
 	addTransaction = function(userId){
 		fcom.ajax(fcom.makeUrl('Users', 'transaction', [userId]), '', function(t) {
-			$('#facebox').height($(window).height() - 46).css('overflow-y','auto');
+			/* $('#facebox').height($(window).height() - 46).css('overflow-y','auto'); */
 			fcom.updateFaceboxContent(t);
 		});
 	};

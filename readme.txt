@@ -1,5 +1,20 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: 
+Release Date: 
+
+Updates:
+    Task-83928-Country code and phone number validation
+
+Bugs:
+    #051957 - The default items per page on the Admin's end needs to be restricted to prevent the fatal error.
+    #051930 - When user cancel the lesson(Bulk/single) which is purchased by apply coupon , then error message is showing.
+    #051771 - Group class text over ongoing class not coming as correct.
+    #051770 - Phone no character length should be 7 to 16. 
+    #051199 - Email which goes to user on mobile need to do responsive.
+    
+============================================================================================
+
 Release Number: TV-2.11.4.20210402
 Release Date: 2021-04-02
 
@@ -26,7 +41,6 @@ Bugs:
     #051461 - Admin >> dashboard >> total revenew from lesson>> need to set the ui
     #051408 - User >> teacher menu >> clicking on one teacher show 404
     #049973 - Email content not decoded in outlook , yopmail etc
-    #049647 - Issue faced on signup> User is coming from Instagram> Below are the specifications of the device Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 173.0.0.23.119 (iPhone9,4; iOS 14_3
     #048614 - On the home page- go t search a teacher.
     #051840 - Fix pwa icons validation messages
     #051844 - PWA - Show existing icons with the file upload fields
