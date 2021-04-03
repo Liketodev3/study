@@ -1,5 +1,20 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: 
+Release Date: 
+
+Updates:
+    Task-83928-Country code and phone number validation
+
+Bugs:
+    #051957 - The default items per page on the Admin's end needs to be restricted to prevent the fatal error.
+    #051930 - When user cancel the lesson(Bulk/single) which is purchased by apply coupon , then error message is showing.
+    #051771 - Group class text over ongoing class not coming as correct.
+    #051770 - Phone no character length should be 7 to 16. 
+    #051199 - Email which goes to user on mobile need to do responsive.
+    
+============================================================================================
+
 Release Number: TV-2.11.4.20210402
 Release Date: 2021-04-02
 
