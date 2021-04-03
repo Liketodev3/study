@@ -369,7 +369,8 @@ class EmailHandler extends FatModel
             '{current_date}'    =>    date('M d, Y'),
             '{social_media_icons}' => $social_media_icons,
             '{contact_us_url}' => CommonHelper::generateFullUrl('contact', '', array(), CONF_WEBROOT_FRONT_URL),
-            '{notifcation_email}' => FatApp::getConfig('CONF_FROM_EMAIL')
+            '{notifcation_email}' => FatApp::getConfig('CONF_FROM_EMAIL'),
+            '{current_year}' => date('Y')
         );
     }
 
