@@ -116,18 +116,18 @@ class TeachersController extends MyAppController {
         die(json_encode($json));
 	}
 
-	public function teachLanguagesAutoCompleteJson() {
-		$pageSize = 20;
-        $post = FatApp::getPostedData();
+	public function teachLanguagesAutoCompleteJson()
+	{
 		$srch = new TeachingLanguageSearch($this->siteLangId);
-        $srch->addChecks();
-        $srch->setPageSize($pageSize);
+		$srch->addChecks();
+		$srch->addOrder('tlanguage_display_order');
+        $srch->doNotLimitRecords();
+
 		$keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '');
-        if (!empty($keyword)) {
-            $cnd = $srch->addCondition('tlanguage_identifier', 'like', '%' . $keyword . '%');
-            $cnd->attachCondition('tlanguage_name', 'like', '%' . $keyword . '%', 'OR');
-        }
-        $srch->addOrder('tlanguage_display_order');
+		if(!empty($keyword)){
+          $conditaion =  $srch->addCondition('tlanguage_name', 'like', '%'.$keyword.'%');
+          $conditaion->attachCondition('tlanguage_identifier', 'like', '%'.$keyword.'%');
+		}
 		$rs = $srch->getResultSet();
         $languages = FatApp::getDb()->fetchAll($rs, 'tlanguage_id');
         $json = array();
