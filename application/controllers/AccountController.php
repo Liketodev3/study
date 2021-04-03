@@ -156,7 +156,10 @@ class AccountController extends LoggedUserController
     public function profileInfo()
     {
         $this->_template->addJs('js/jquery.form.js');
+        $this->_template->addJs('js/jquery.inputmask.bundle.js');
         $this->_template->addJs('js/cropper.js');
+        $this->_template->addJs('js/intlTelInput.js');
+        $this->_template->addCss('css/intlTelInput.css');
         $this->_template->addCss('css/cropper.css');
         $this->_template->addCss('css/custom-full-calendar.css');
         $this->_template->addJs('js/moment.min.js');
@@ -177,6 +180,7 @@ class AccountController extends LoggedUserController
             'user_last_name',
             'user_gender',
             'user_phone',
+            'user_phone_code',
             'user_country_id',
             'user_is_teacher',
             'user_timezone',
@@ -193,6 +197,7 @@ class AccountController extends LoggedUserController
             $userRow['us_google_access_token'] = $user_settings['us_google_access_token'];
             $userRow['us_google_access_token_expiry'] = $user_settings['us_google_access_token_expiry'];
         }
+        $userRow['user_phone'] = $userRow['user_phone_code'].$userRow['user_phone'];
         $userRow['us_site_lang'] = $user_settings['us_site_lang'];
         $profileFrm->fill($userRow);
         $this->set('isProfilePicUploaded', User::isProfilePicUploaded());
@@ -386,6 +391,9 @@ class AccountController extends LoggedUserController
         $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'user_gender', User::getGenderArr());
         $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
+        
+        $frm->addHiddenField('', 'user_phone_code');
+
         if ($teacher) {
             $frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'), 'us_video_link', '');
         }
