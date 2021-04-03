@@ -26,7 +26,6 @@ Bugs:
     #051461 - Admin >> dashboard >> total revenew from lesson>> need to set the ui
     #051408 - User >> teacher menu >> clicking on one teacher show 404
     #049973 - Email content not decoded in outlook , yopmail etc
-    #049647 - Issue faced on signup> User is coming from Instagram> Below are the specifications of the device Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 173.0.0.23.119 (iPhone9,4; iOS 14_3
     #048614 - On the home page- go t search a teacher.
     #051840 - Fix pwa icons validation messages
     #051844 - PWA - Show existing icons with the file upload fields
