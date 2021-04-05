@@ -78,7 +78,7 @@
    			eventRender: function(event, element) {
    				if(isNaN(event._id)){
 					var imgUrl = fcom.makeUrl('Image','user',[event.lid])+'<?php echo time(); ?>';
-                    let startAndEndTime =  event.start.format('hh:mma')+' - '+event.end.format('hh:mma');
+                    let startAndEndTime = event.start.format('hh:mma')+' <br> '+event.end.format('hh:mma');
                     element.find(".fc-content").prepend( '<div class="avtar avtar--xsmall" data-text="'+event.liFname+'">'+event.imgTag+'</div>' );
                     element.find('.fc-time').html(startAndEndTime).addClass('calendar-time');;
                 }

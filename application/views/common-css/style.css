@@ -8342,3 +8342,6 @@ body[dir="rtl"] .checkout-cart-dir {
     position: absolute!important;
     bottom: -19px;
 }
+.calendar-view{
+    z-index: 11;
+}
