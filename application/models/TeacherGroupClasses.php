@@ -21,10 +21,10 @@ class TeacherGroupClasses extends MyAppModel
 
     public static function getCustomFilterAr()
     {
-        return array(
+        return [
             static::FILTER_UPCOMING => Label::getLabel('LBL_Upcoming'),
             static::FILTER_ONGOING => Label::getLabel('LBL_OnGoing')
-        );
+        ];
     }
 
     public function deleteClass()

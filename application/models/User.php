@@ -54,7 +54,7 @@ class User extends MyAppModel
                 $srch->addField($attr);
             }
         } else {
-            $srch->addMultipleFields(array(
+            $srch->addMultipleFields([
                 'u.user_id',
                 'u.user_first_name',
                 'u.user_last_name',
@@ -66,7 +66,7 @@ class User extends MyAppModel
                 'uc.credential_email',
                 'uc.credential_active',
                 'uc.credential_verified'
-            ));
+            ]);
         }
         return $srch;
     }
@@ -229,14 +229,14 @@ class User extends MyAppModel
         $srch = new UserSearch();
         $srch->addCondition('user_id', '=', $userId);
         $srch->setPageSize(1);
-        $srch->addMultiplefields(array(
+        $srch->addMultiplefields([
             'if(user_country_id > 0 && user_timezone != "" && user_url_name != "",1,0) as userProfile',
             'if(count(DISTINCT uqualification_id) > 0,1,0) as uqualificationCount',
             'if(count(DISTINCT tgavl_id),1,0) as generalAvailabilityCount',
             'if(count(DISTINCT utsl_slanguage_id),1,0) as slanguageCount',
             'if(count(DISTINCT utpref_preference_id),1,0) as preferenceCount',
             'if(count(DISTINCT utl_id),1,0) as teachLangCount',
-        ));
+        ]);
         $srch->joinTable(UserQualification::DB_TBL, 'LEFT JOIN', 'user_id = uqualification_user_id and uqualification_active = ' . applicationConstants::YES, 'utqual');
         $spokenSrch = new searchBase(UserToLanguage::DB_TBL);
         $spokenSrch->doNotCalculateRecords();
@@ -379,9 +379,7 @@ class User extends MyAppModel
             return false;
         }
         $record = new TableRecord(static::DB_TBL_CRED);
-        $arrFlds = array(
-            static::DB_TBL_CRED_PREFIX . 'password' => UserAuthentication::encryptPassword($password)
-        );
+        $arrFlds = [static::DB_TBL_CRED_PREFIX . 'password' => UserAuthentication::encryptPassword($password)];
         $record->setFldValue(static::DB_TBL_CRED_PREFIX . 'user_id', $this->getMainTableRecordId());
         $record->assignValues($arrFlds);
         if (!$record->addNew([], $arrFlds)) {
@@ -477,7 +475,7 @@ class User extends MyAppModel
         ];
         $tblRec = new TableRecord(static::DB_TBL_USER_EMAIL_VER);
         $tblRec->assignValues($data);
-        if ($tblRec->addNew(array(), $data)) {
+        if ($tblRec->addNew([], $data)) {
             return $verificationCode;
         } else {
             return false;

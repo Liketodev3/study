@@ -16,7 +16,7 @@ class SpokenLanguageSearch extends SearchBase
     {
         $this->addCondition('slanguage_active', '=', applicationConstants::ACTIVE);
         $this->doNotCalculateRecords();
-        $this->addMultipleFields(array('slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name'));
+        $this->addMultipleFields(['slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name']);
     }
 
     public function joinActiveTeachers()

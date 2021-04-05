@@ -22,10 +22,10 @@ class AdminGuestController extends FatController
         array_pop($arr);
         $urlController = implode('-', $arr);
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
-        $jsVariables = array(
-            'processing' => Label::getLabel('LBL_Processing...', $this->adminLangId)
-            , 'isMandatory' => Label::getLabel('VLBL_is_mandatory', $this->adminLangId),
-        );
+        $jsVariables = [
+            'processing' => Label::getLabel('LBL_Processing...', $this->adminLangId),
+            'isMandatory' => Label::getLabel('VLBL_is_mandatory', $this->adminLangId),
+        ];
         $this->set('controllerName', $controllerName);
         $this->set('jsVariables', $jsVariables);
         $this->set('adminLangId', $this->adminLangId);
@@ -248,14 +248,14 @@ class AdminGuestController extends FatController
         }
         $token = $this->generateLoginToken();
         $expiry = strtotime('+7 day');
-        $values = array(
+        $values = [
             'admauth_admin_id' => $admin_id,
             'admauth_token' => $token,
             'admauth_expiry' => date('Y-m-d H:i:s', $expiry),
             'admauth_browser' => $_SERVER['HTTP_USER_AGENT'],
             'admauth_last_access' => date('Y-m-d H:i:s'),
             'admauth_last_ip' => $_SERVER['REMOTE_ADDR']
-        );
+        ];
         $adminAuthObj = AdminAuthentication::getInstance();
         if ($adminAuthObj->saveRememberLoginToken($values)) {
             $cookie_name = AdminAuthentication::ADMIN_REMEMBER_ME_COOKIE_NAME;

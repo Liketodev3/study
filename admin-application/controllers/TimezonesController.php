@@ -68,13 +68,13 @@ class TimezonesController extends AdminBaseController
         $this->objPrivilege->canEditTimezones();
         $frm = $this->getForm($timezoneId);
         if (!empty($timezoneId)) {
-            $data = Timezone::getAttributesById($timezoneId, array(
+            $data = Timezone::getAttributesById($timezoneId, [
                         'timezone_id',
                         'timezone_offset',
                         'timezone_identifier',
                         'timezone_name',
                         'timezone_active'
-            ));
+            ]);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
@@ -156,11 +156,11 @@ class TimezonesController extends AdminBaseController
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         unset($post['timezone_id']);
         unset($post['lang_id']);
-        $data = array(
+        $data = [
             'timezonelang_lang_id' => $lang_id,
             'timezonelang_timezone_id' => $timezoneId,
             'timezonelang_text' => $post['timezonelang_text']
-        );
+        ];
 
         $timezoneObj = new Timezone($timezoneId);
         if (!$timezoneObj->updateLangData($lang_id, $data)) {
@@ -186,7 +186,7 @@ class TimezonesController extends AdminBaseController
         $timezoneId = FatUtility::int($timezoneId);
         $frm = new Form('frmTimezone');
         $frm->addHiddenField('', 'timezone_id', $timezoneId);
-        $frm->addRequiredField(Label::getLabel('LBL_Timezone_Identifier', $this->adminLangId), 'timezone_identifier', '', array('readonly' => 'readonly'));
+        $frm->addRequiredField(Label::getLabel('LBL_Timezone_Identifier', $this->adminLangId), 'timezone_identifier', '', ['readonly' => 'readonly']);
         $frm->addRequiredField(Label::getLabel('LBL_Timezone_name', $this->adminLangId), 'timezone_name');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'timezone_active', $activeInactiveArr, '', [], '');

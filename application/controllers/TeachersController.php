@@ -765,7 +765,7 @@ class TeachersController extends MyAppController
         if ($teachLangId) {
             $srch = new TeachingLanguageSearch($this->siteLangId);
             $srch->addCondition('tlanguage_id', '=', $teachLangId);
-            $srch->addMultipleFields(array('tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'));
+            $srch->addMultipleFields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name']);
             $srch->doNotCalculateRecords();
             $srch->setPageSize(1);
             $rs = $srch->getResultSet();

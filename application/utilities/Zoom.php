@@ -43,10 +43,7 @@ class Zoom
     public function getUsers($page_number = 1)
     {
         $url = self::BASE_URL . "/users/";
-        $params = array(
-            "page_number" => $page_number,
-            "page_size" => 300
-        );
+        $params = ["page_number" => $page_number, "page_size" => 300];
         $curl = new Curl();
         $curl_method = 'GET';
         $curl->http_header('Content-Type', 'application/json');

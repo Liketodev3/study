@@ -90,10 +90,7 @@ class Giftcard extends MyAppModel
             $opSrch = new OrderProductSearch();
             $opSrch->doNotLimitRecords();
             $opSrch->addCondition('op.op_order_id', '=', $orderId);
-            $opSrch->addMultipleFields(array(
-                'op_id',
-                'op_unit_price'
-            ));
+            $opSrch->addMultipleFields(['op_id', 'op_unit_price']);
             $opRs = $opSrch->getResultSet();
             $orderProducts = FatApp::getDb()->fetchAll($opRs);
             foreach ($orderProducts as $giftcard) {
@@ -123,7 +120,7 @@ class Giftcard extends MyAppModel
         $srch->joinTable(Order::DB_TBL, 'INNER JOIN', 'op.op_order_id = o.order_id', 'o');
         $srch->addCondition('giftcard_expiry_date', '>', date("Y-m-d"));
         $srch->addCondition('giftcard_status', '=', static::GIFTCARD_UNUSED_STATUS);
-        $srch->addMultipleFields(array('o.order_currency_id', 'giftcard_amount as utxn_credit', 'giftcard.giftcard_op_id as utxn_op_id', 'op.op_order_id as utxn_order_id'));
+        $srch->addMultipleFields(['o.order_currency_id', 'giftcard_amount as utxn_credit', 'giftcard.giftcard_op_id as utxn_op_id', 'op.op_order_id as utxn_order_id']);
         $sr = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($sr);
         if (empty($row)) {
@@ -138,7 +135,7 @@ class Giftcard extends MyAppModel
         $srch = new SearchBase('tbl_user_cart');
         $srch->addCondition('usercart_user_id', '=', $this->cart_user_id);
         $srch->addCondition('usercart_type', '=', Cart::TYPE_GIFTCARD);
-        $srch->addMultipleFields(array('usercart_details'));
+        $srch->addMultipleFields(['usercart_details']);
         $rs = $srch->getResultSet();
         $row = $db->fetch($rs);
         return json_decode($row['usercart_details']);
@@ -148,20 +145,17 @@ class Giftcard extends MyAppModel
     {
         if ($userId > 0) {
             $record = new TableRecord(static::DB_TBL);
-            $record->assignValues(
-                    array(
-                        "giftcard_code" => $code,
-                        "giftcard_status" => static::GIFTCARD_USED_STATUS,
-                        "giftcard_used_date" => date("Y-m-d")
-                    )
-            );
-            $cardArray = array(
+            $record->assignValues(["giftcard_code" => $code,
+                "giftcard_status" => static::GIFTCARD_USED_STATUS,
+                "giftcard_used_date" => date("Y-m-d")
+            ]);
+            $cardArray = [
                 'giftcard_status' => static::GIFTCARD_USED_STATUS,
                 'giftcard_used_date' => date("Y-m-d"),
                 'giftcard_recipient_user_id' => $userId,
                 'giftcard_utxn_id' => $txnId
-            );
-            if (!$record->addNew(array(), $cardArray)) {
+            ];
+            if (!$record->addNew([], $cardArray)) {
                 Message::addErrorMessage($record->getError());
             }
             return true;
@@ -173,9 +167,8 @@ class Giftcard extends MyAppModel
         $srch = new SearchBase(Cart ::DB_TBL);
         $srch->addCondition('usercart_user_id', '=', $this->cart_user_id);
         $srch->addCondition('usercart_type', '=', Cart::TYPE_GIFTCARD);
-        $srch->addMultipleFields(array('usercart_details'));
-        $rs = $srch->getResultSet();
-        $row = FatApp::getDb()->fetch($rs);
+        $srch->addMultipleFields(['usercart_details']);
+        $row = FatApp::getDb()->fetch($srch->getResultSet());
         $cartRecord = json_decode($row['usercart_details']);
         return $cartRecord->giftcard_price;
     }
@@ -183,12 +176,7 @@ class Giftcard extends MyAppModel
     private function emptyGiftCardCart()
     {
         $db = FatApp::getDb();
-        $db->deleteRecords(Cart ::DB_TBL, array(
-            'smt' => '`usercart_user_id`=?',
-            'vals' => array(
-                $this->cart_user_id
-            )
-        ));
+        $db->deleteRecords(Cart ::DB_TBL, ['smt' => '`usercart_user_id`=?', 'vals' => [$this->cart_user_id]]);
     }
 
     private function generateOrderId()
@@ -206,7 +194,7 @@ class Giftcard extends MyAppModel
     {
         $srch = new SearchBase(Order::DB_TBL);
         $srch->addCondition('order_id', '=', $orderId);
-        $srch->addMultipleFields(array('order_id'));
+        $srch->addMultipleFields(['order_id']);
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetchAll($rs);
         if (empty($row)) {
@@ -229,7 +217,7 @@ class Giftcard extends MyAppModel
     {
         $srch = new SearchBase(Giftcard::DB_TBL);
         $srch->addCondition('giftcard_code', '=', $giftcardCode);
-        $srch->addMultipleFields(array('giftcard_code'));
+        $srch->addMultipleFields(['giftcard_code']);
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
         if (empty($row)) {
@@ -261,13 +249,13 @@ class Giftcard extends MyAppModel
         if (false === $resultGr) {
             return false;
         }
-        $buyerdata = array(
+        $buyerdata = [
             'gcbuyer_op_id' => $opId,
             'gcbuyer_order_id' => $orderId,
             'gcbuyer_name' => $cartRecord->gcbuyer_name,
             'gcbuyer_email' => $cartRecord->gcbuyer_email,
             'gcbuyer_phone' => $cartRecord->gcbuyer_phone
-        );
+        ];
         $buyerResult = FatApp::getDb()->insertFromArray(static::DB_TBL_GIFTCARD_BUYER, $buyerdata);
         if (false === $buyerResult) {
             return false;
@@ -280,9 +268,8 @@ class Giftcard extends MyAppModel
         $srch = new SearchBase(static::DB_TBL_GIFTCARD_BUYER, 'gb');
         $srch->joinTable(Order::DB_TBL, 'INNER JOIN', 'gb.gcbuyer_order_id = o.order_id', 'o');
         $srch->addCondition('o.order_id', '=', $orderId);
-        $srch->addMultipleFields(array('gcbuyer_name', 'gcbuyer_email'));
-        $rs = $srch->getResultSet();
-        return FatApp::getDb()->fetch($rs);
+        $srch->addMultipleFields(['gcbuyer_name', 'gcbuyer_email']);
+        return FatApp::getDb()->fetch($srch->getResultSet());
     }
 
     private function getGiftcardLists($orderId)
@@ -293,9 +280,8 @@ class Giftcard extends MyAppModel
         $srch->joinTable(Giftcard::DB_TBL_GIFTCARD_RECIPIENT, 'INNER JOIN', 'op.op_id = gr.gcrecipient_op_id', 'gr');
         $srch->joinTable(Giftcard::DB_TBL_GIFTCARD_BUYER, 'INNER JOIN', 'op.op_id = gb.gcbuyer_op_id', 'gb');
         $srch->addCondition('o.order_id', '=', $orderId);
-        $srch->addMultipleFields(array('gr.gcrecipient_email', 'gb.gcbuyer_op_id', 'gr.gcrecipient_name', 'gb.gcbuyer_name', 'gb.gcbuyer_email', 'o.order_currency_id', 'gc.giftcard_code', 'gc.giftcard_amount', 'gc.giftcard_expiry_date'));
-        $rs = $srch->getResultSet();
-        return FatApp::getDb()->fetchAll($rs);
+        $srch->addMultipleFields(['gr.gcrecipient_email', 'gb.gcbuyer_op_id', 'gr.gcrecipient_name', 'gb.gcbuyer_name', 'gb.gcbuyer_email', 'o.order_currency_id', 'gc.giftcard_code', 'gc.giftcard_amount', 'gc.giftcard_expiry_date']);
+        return FatApp::getDb()->fetchAll($srch->getResultSet());
     }
 
 }

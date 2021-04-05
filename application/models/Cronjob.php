@@ -111,7 +111,7 @@ class Cronjob extends FatModel
                                     </tr>';
             foreach ($lessons as $lesson) {
                 $teacherLessonIds[] = $lesson['slesson_id'];
-                $teacherLink = CommonHelper::generateFullUrl($controller, 'view', array($lesson['slesson_id']));
+                $teacherLink = CommonHelper::generateFullUrl($controller, 'view', [$lesson['slesson_id']]);
                 if ($userType == 'teacher') {
                     $lesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lesson['slesson_date'] . '  ' . $lesson['slesson_start_time'], true, $lesson['teacherTimezone']);
                     $lesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lesson['slesson_end_date'] . '  ' . $lesson['slesson_end_time'], true, $lesson['teacherTimezone']);

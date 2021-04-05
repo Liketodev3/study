@@ -50,7 +50,7 @@ class UrlRewrite extends MyAppModel
         $rs = $urlSrch->getResultSet();
         $urlRow = FatApp::getDb()->fetch($rs);
         if ($urlRow == false) {
-            return array();
+            return [];
         }
         return $urlRow;
     }

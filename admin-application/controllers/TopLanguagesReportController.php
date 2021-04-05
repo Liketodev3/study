@@ -55,16 +55,14 @@ class TopLanguagesReportController extends AdminBaseController
         if ($countryid > 0) {
             $srch->addCondition('ul.user_country_id', '=', $countryid);
         }
-        $srch->addMultipleFields(
-                array(
-                    'slns.slesson_id',
-                    'slns.slesson_date',
-                    'slns.slesson_status',
-                    'IFNULL(sl.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
-                    'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_username',
-                    'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_username',
-                )
-        );
+        $srch->addMultipleFields([
+            'slns.slesson_id',
+            'slns.slesson_date',
+            'slns.slesson_status',
+            'IFNULL(sl.tlanguage_name, tlang.tlanguage_identifier) as teacherTeachLanguageName',
+            'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_username',
+            'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_username',
+        ]);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         $rs = $srch->getResultSet();
@@ -119,16 +117,13 @@ class TopLanguagesReportController extends AdminBaseController
             $srch->addCondition('slesson_added_on', '>=', $orderDate . ' 00:00:00');
             $srch->addCondition('slesson_added_on', '<=', $orderDate . ' 23:59:59');
         }
-        //echo $joinQuery;
-        $srch->addMultipleFields(
-                array(
-                    'IFNULL(tlanguage_name , tlanguage_Identifier) as languageName',
-                    'count(slesson_id) as lessonsSold',
-                    'slesson_slanguage_id',
-                    '(select COUNT(IF(slesson_status="' . ScheduledLesson::STATUS_COMPLETED . '",1,null)) from ' . ScheduledLesson::DB_TBL . $joinQuery . ' ) as completedLessons',
-                    '(select COUNT(IF(slesson_status="' . ScheduledLesson::STATUS_CANCELLED . '",1,null)) from ' . ScheduledLesson::DB_TBL . $joinQueryCancelled . ' ) as cancelledLessons'
-                )
-        );
+        $srch->addMultipleFields([
+            'IFNULL(tlanguage_name , tlanguage_Identifier) as languageName',
+            'count(slesson_id) as lessonsSold',
+            'slesson_slanguage_id',
+            '(select COUNT(IF(slesson_status="' . ScheduledLesson::STATUS_COMPLETED . '",1,null)) from ' . ScheduledLesson::DB_TBL . $joinQuery . ' ) as completedLessons',
+            '(select COUNT(IF(slesson_status="' . ScheduledLesson::STATUS_CANCELLED . '",1,null)) from ' . ScheduledLesson::DB_TBL . $joinQueryCancelled . ' ) as cancelledLessons'
+        ]);
         $srch->addOrder('lessonsSold', 'desc');
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -158,8 +153,8 @@ class TopLanguagesReportController extends AdminBaseController
         $frm->addHiddenField('', 'page');
         $frm->addHiddenField('', 'orderDate', $orderDate);
         if (empty($orderDate)) {
-            $frm->addDateField(Label::getLabel('LBL_Date_From', $this->adminLangId), 'date_from', '', array('readonly' => 'readonly', 'class' => 'small dateTimeFld field--calender'));
-            $frm->addDateField(Label::getLabel('LBL_Date_To', $this->adminLangId), 'date_to', '', array('readonly' => 'readonly', 'class' => 'small dateTimeFld field--calender'));
+            $frm->addDateField(Label::getLabel('LBL_Date_From', $this->adminLangId), 'date_from', '', ['readonly' => 'readonly', 'class' => 'small dateTimeFld field--calender']);
+            $frm->addDateField(Label::getLabel('LBL_Date_To', $this->adminLangId), 'date_to', '', ['readonly' => 'readonly', 'class' => 'small dateTimeFld field--calender']);
             $srch = Country::getSearchObject(false, $this->adminLangId);
             $srch->addFld('c.* , c_l.country_name');
             $srch->addCondition('c.country_active', '=', 1);
@@ -176,7 +171,7 @@ class TopLanguagesReportController extends AdminBaseController
             }
             $frm->addSelectBox(Label::getLabel('LBL_Country', $this->adminLangId), 'country_id', $countriesListOptions);
             $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
-            $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId), array('onclick' => 'clearSearch();'));
+            $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId), ['onclick' => 'clearSearch();']);
             $fld_submit->attachField($fld_cancel);
         }
         return $frm;

@@ -60,7 +60,7 @@ class AdminPrivilege
     const SECTION_RESCHEDULE_REPORT = 52;
 
     private static $instance = null;
-    private $loadedPermissions = array();
+    private $loadedPermissions = [];
 
     public static function getInstance()
     {

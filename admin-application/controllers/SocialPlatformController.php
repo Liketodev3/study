@@ -1,15 +1,19 @@
 <?php
+
 class SocialPlatformController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
         $this->objPrivilege->canViewSocialPlatforms();
     }
+
     public function index()
     {
         $this->_template->render();
     }
+
     public function search()
     {
         $srch = SocialPlatform::getSearchObject($this->adminLangId, false);
@@ -23,6 +27,7 @@ class SocialPlatformController extends AdminBaseController
         $this->set("arr_listing", $records);
         $this->_template->render(false, false);
     }
+
     public function form($splatform_id = 0)
     {
         $splatform_id = FatUtility::int($splatform_id);
@@ -39,10 +44,11 @@ class SocialPlatformController extends AdminBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
+
     public function setup()
     {
         $this->objPrivilege->canEditSocialPlatforms();
-        $frm  = $this->getForm();
+        $frm = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -74,6 +80,7 @@ class SocialPlatformController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function langForm($splatform_id = 0, $lang_id = 0)
     {
         $splatform_id = FatUtility::int($splatform_id);
@@ -81,7 +88,7 @@ class SocialPlatformController extends AdminBaseController
         if ($splatform_id == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $langFrm  = $this->getLangForm($splatform_id, $lang_id);
+        $langFrm = $this->getLangForm($splatform_id, $lang_id);
         $langData = SocialPlatform::getAttributesByLangId($lang_id, $splatform_id);
         if ($langData) {
             $langFrm->fill($langData);
@@ -93,6 +100,7 @@ class SocialPlatformController extends AdminBaseController
         $this->set('formLayout', Language::getLayoutDirection($lang_id));
         $this->_template->render(false, false);
     }
+
     public function langSetup()
     {
         $this->objPrivilege->canEditSocialPlatforms();
@@ -107,11 +115,11 @@ class SocialPlatformController extends AdminBaseController
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         unset($post['splatform_id']);
         unset($post['lang_id']);
-        $data_to_update = array(
+        $data_to_update = [
             'splatformlang_splatform_id' => $splatform_id,
             'splatformlang_lang_id' => $lang_id,
             'splatform_title' => $post['splatform_title']
-        );
+        ];
         $socialObj = new SocialPlatform($splatform_id);
         if (!$socialObj->updateLangData($lang_id, $data_to_update)) {
             Message::addErrorMessage($socialObj->getError());
@@ -133,6 +141,7 @@ class SocialPlatformController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function mediaForm($splatform_id)
     {
         $splatform_id = FatUtility::int($splatform_id);
@@ -151,6 +160,7 @@ class SocialPlatformController extends AdminBaseController
         $this->set('languages', Language::getAllNames());
         $this->_template->render(false, false);
     }
+
     public function setUpImage($splatform_id)
     {
         $splatform_id = FatUtility::int($splatform_id);
@@ -174,6 +184,7 @@ class SocialPlatformController extends AdminBaseController
         $this->set('msg', $_FILES['file']['name'] . ' ' . Label::getLabel('LBL_Uploaded_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function removeImage($splatform_id)
     {
         $splatform_id = FatUtility::int($splatform_id);
@@ -189,6 +200,7 @@ class SocialPlatformController extends AdminBaseController
         $this->set('msg', Label::getLabel('LBL_Deleted_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function deleteRecord()
     {
         $this->objPrivilege->canEditSocialPlatforms();
@@ -204,6 +216,7 @@ class SocialPlatformController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
+
     public function changeStatus()
     {
         $this->objPrivilege->canEditSocialPlatforms();
@@ -213,7 +226,7 @@ class SocialPlatformController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $data = SocialPlatform::getAttributesById($splatformId, array(            'splatform_id',            'splatform_active'        ));
+        $data = SocialPlatform::getAttributesById($splatformId, ['splatform_id', 'splatform_active']);
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
@@ -225,6 +238,7 @@ class SocialPlatformController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
+
     private function isMediaUploaded($splatformId)
     {
         if ($attachment = AttachedFile::getAttachment(AttachedFile::FILETYPE_SOCIAL_PLATFORM_IMAGE, $splatformId, 0)) {
@@ -232,6 +246,7 @@ class SocialPlatformController extends AdminBaseController
         }
         return false;
     }
+
     private function getForm()
     {
         $frm = new Form('frmSocialPlatform');
@@ -244,6 +259,7 @@ class SocialPlatformController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function getLangForm($splatform_id = 0, $lang_id = 0)
     {
         $frm = new Form('frmSocialPlatformLang');
@@ -253,21 +269,21 @@ class SocialPlatformController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Update', $this->adminLangId));
         return $frm;
     }
+
     private function getMediaForm($splatform_id = 0)
     {
         $frm = new Form('frmSocialPlatformMedia');
         $frm->addHiddenField('', 'splatform_id', $splatform_id);
-        $frm->addButton(Label::getLabel('LBL_Icon_Image', $this->adminLangId), 'image', Label::getLabel('LBL_Upload_File', $this->adminLangId), array(
-            'class' => 'File-Js',
-            'id' => 'image',
-            'data-splatform_id' => $splatform_id
-        ));
+        $frm->addButton(Label::getLabel('LBL_Icon_Image', $this->adminLangId), 'image', Label::getLabel('LBL_Upload_File', $this->adminLangId), [
+            'class' => 'File-Js', 'id' => 'image', 'data-splatform_id' => $splatform_id
+        ]);
         return $frm;
     }
+
     public function SocialPlatformImage($splatform_id, $sizeType = '')
     {
         $default_image = 'brand_deafult_image.jpg';
-        $splatform_id  = FatUtility::int($splatform_id);
+        $splatform_id = FatUtility::int($splatform_id);
         $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_SOCIAL_PLATFORM_IMAGE, $splatform_id);
         $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         switch (strtoupper($sizeType)) {
@@ -283,4 +299,5 @@ class SocialPlatformController extends AdminBaseController
                 break;
         }
     }
+
 }

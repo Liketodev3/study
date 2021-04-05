@@ -143,7 +143,7 @@ class BlogPostsController extends AdminBaseController
         $blogOriginalUrl = 'blog/post-detail/' . $post_id;
         $blogCustomUrl = CommonHelper::seoUrl($post['urlrewrite_custom']);
         if ($post['urlrewrite_custom'] == '') {
-            FatApp::getDb()->deleteRecords(UrlRewrite::DB_TBL, array('smt' => 'urlrewrite_original = ?', 'vals' => array($blogOriginalUrl)));
+            FatApp::getDb()->deleteRecords(UrlRewrite::DB_TBL, ['smt' => 'urlrewrite_original = ?', 'vals' => [$blogOriginalUrl]]);
         } else {
             $urlSrch = UrlRewrite::getSearchObject();
             $urlSrch->doNotCalculateRecords();

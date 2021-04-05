@@ -22,12 +22,12 @@ class TeacherLessonRating extends MyAppModel
 
     public static function getRatingAspectsArr()
     {
-        return array(
+        return [
             static::TYPE_LESSON => Label::getLabel('LBL_Lesson'),
             static::TYPE_TEACHER_ACCENT => Label::getLabel('LBL_Accent'),
             static::TYPE_TEACHER_PRSESNCE => Label::getLabel('LBL_Presence'),
             static::TYPE_TEACHER_OVERALL => Label::getLabel('LBL_Overall'),
-        );
+        ];
     }
 
     public static function getSellerRating($userId)

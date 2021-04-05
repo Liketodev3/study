@@ -18,13 +18,13 @@ class TeacherGeneralAvailability extends MyAppModel
             trigger_error(Label::getLabel('LBL_Invalid_Request'));
         }
         $srch = new TeacherGeneralAvailabilitySearch();
-        $srch->addMultipleFields(array('tgavl_day', 'tgavl_start_time', 'tgavl_end_time', 'tgavl_user_id', 'tgavl_id', 'tgavl_date'));
+        $srch->addMultipleFields(['tgavl_day', 'tgavl_start_time', 'tgavl_end_time', 'tgavl_user_id', 'tgavl_id', 'tgavl_date']);
         $srch->addCondition('tgavl_user_id', '=', $userId);
         $srch->addOrder('tgavl_date', 'ASC');
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
-        $jsonArr = array();
+        $jsonArr = [];
         $user_timezone = MyDate::getUserTimeZone();
         if (!empty($post)) {
             $nowDate = $post['WeekEnd'];
@@ -50,7 +50,7 @@ class TeacherGeneralAvailability extends MyAppModel
                 $endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($endDate)));
                 $tgavl_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $date, true, $user_timezone);
                 $tgavl_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDate, true, $user_timezone);
-                $jsonArr[] = array(
+                $jsonArr[] = [
                     "title" => "",
                     "endW" => date('H:i:s', strtotime($tgavl_end_time)),
                     "startW" => date('H:i:s', strtotime($tgavl_start_time)),
@@ -61,7 +61,7 @@ class TeacherGeneralAvailability extends MyAppModel
                     'action' => 'fromGeneralAvailability',
                     "day" => MyDate::getDayNumber($tgavl_start_time),
                     'className' => "slot_available"
-                );
+                ];
             }
         }
         return $jsonArr;
@@ -76,7 +76,7 @@ class TeacherGeneralAvailability extends MyAppModel
             return false;
         }
         $db = FatApp::getDb();
-        $deleteRecords = $db->deleteRecords(TeacherGeneralAvailability::DB_TBL, array('smt' => 'tgavl_user_id = ? and tgavl_id = ?', 'vals' => array($userId, $tgavl_id)));
+        $deleteRecords = $db->deleteRecords(TeacherGeneralAvailability::DB_TBL, ['smt' => 'tgavl_user_id = ? and tgavl_id = ?', 'vals' => [$userId, $tgavl_id]]);
         if (!$deleteRecords) {
             $this->error = $db->getError();
             return false;
@@ -98,12 +98,12 @@ class TeacherGeneralAvailability extends MyAppModel
         $postJson = json_decode($post['data']);
         $db = FatApp::getDb();
         $weekendDate = date('Y-m-d', strtotime('next Saturday +1 day'));
-        $deleteRecords = $db->deleteRecords(TeacherGeneralAvailability::DB_TBL, array('smt' => 'tgavl_user_id = ?', 'vals' => array($userId)));
+        $deleteRecords = $db->deleteRecords(TeacherGeneralAvailability::DB_TBL, ['smt' => 'tgavl_user_id = ?', 'vals' => [$userId]]);
         if (empty($postJson)) {
             return true;
         }
-        $postJsonArr = array();
-        $sort = array();
+        $postJsonArr = [];
+        $sort = [];
         /* [ Sorting the Array By Date and StartTime */
         foreach ($postJson as $k => $v) {
             $sort['day'][$k] = $v->day;

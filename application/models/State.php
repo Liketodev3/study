@@ -36,7 +36,7 @@ class State extends MyAppModel
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addOrder('state_name', 'ASC');
-        $srch->addMultipleFields(array('state_id', 'IFNULL(state_name, state_identifier) as state_name'));
+        $srch->addMultipleFields(['state_id', 'IFNULL(state_name, state_identifier) as state_name']);
         $row = FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
         if (!is_array($row)) {
             return false;

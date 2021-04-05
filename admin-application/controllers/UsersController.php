@@ -85,7 +85,7 @@ class UsersController extends AdminBaseController
         }
         $latestTeacherRequest = new SearchBase(TeacherRequest::DB_TBL, 'ltr');
         ;
-        $latestTeacherRequest->addFld(array('max(ltr.utrequest_id) latestRequestId'));
+        $latestTeacherRequest->addFld(['max(ltr.utrequest_id) latestRequestId']);
         $latestTeacherRequest->addGroupBy('ltr.utrequest_user_id');
         $latestTeacherRequest->doNotCalculateRecords();
         $latestTeacherRequest->doNotLimitRecords();
@@ -263,7 +263,7 @@ class UsersController extends AdminBaseController
             FatUtility::dieWithError($this->str_invalid_request_id);
         }
         $frm = $this->addUserTransactionForm($this->adminLangId);
-        $frm->fill(array('user_id' => $userId));
+        $frm->fill(['user_id' => $userId]);
         $this->set('userId', $userId);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
@@ -284,12 +284,12 @@ class UsersController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $tObj = new Transaction($userId);
-        $data = array(
+        $data = [
             'utxn_user_id' => $userId,
             'utxn_date' => date('Y-m-d H:i:s'),
             'utxn_comments' => $post['description'],
             'utxn_status' => Transaction::STATUS_COMPLETED
-        );
+        ];
         if ($post['type'] == Transaction::CREDIT_TYPE) {
             $data['utxn_credit'] = $post['amount'];
         }
@@ -676,7 +676,7 @@ class UsersController extends AdminBaseController
         }
         $availabilityData = '[{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"1","dayStart":"1","dayEnd":"2","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"2","dayStart":"2","dayEnd":"3","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"3","dayStart":"3","dayEnd":"4","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"4","dayStart":"4","dayEnd":"5","classtype":"1"},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"5","dayStart":"5","dayEnd":"6","classtype":1}]';
         $tGAvail = new TeacherGeneralAvailability();
-        if (!$tGAvail->addTeacherGeneralAvailability(array('data' => $availabilityData), $userId)) {
+        if (!$tGAvail->addTeacherGeneralAvailability(['data' => $availabilityData], $userId)) {
             throw new Exception($tGAvail->getError());
         }
         $weekData = [];
@@ -706,9 +706,7 @@ class UsersController extends AdminBaseController
     private function getForm($user_id = 0)
     {
         $user_id = FatUtility::int($user_id);
-        $frm = new Form('frmUser', array(
-            'id' => 'frmUser'
-        ));
+        $frm = new Form('frmUser', ['id' => 'frmUser']);
         $frm->addHiddenField('', 'user_id', $user_id);
         $frm->addTextBox(Label::getLabel('LBL_Username', $this->adminLangId), 'credential_username', '');
         $fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name', $this->adminLangId), 'user_first_name');

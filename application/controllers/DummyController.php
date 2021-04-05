@@ -61,7 +61,7 @@ class DummyController extends MyAppController
     {
         $db = FatApp::getDb();
         $con = $db->getConnectionObject();
-        $queries = array(
+        $queries = [
             "DROP FUNCTION IF EXISTS `GETBLOGCATCODE`",
             "CREATE FUNCTION `GETBLOGCATCODE`(`id` INT) RETURNS varchar(255) CHARSET utf8
             BEGIN
@@ -90,7 +90,7 @@ class DummyController extends MyAppController
 				END WHILE;
 				RETURN code;
 			END"
-        );
+        ];
         foreach ($queries as $qry) {
             if (!$con->query($qry)) {
                 die($con->error);
@@ -102,7 +102,7 @@ class DummyController extends MyAppController
     public function testCurl()
     {
         $curl = curl_init();
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => "https://api.thelessonspace.com/v2/spaces/launch/",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
@@ -111,14 +111,14 @@ class DummyController extends MyAppController
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => "{ \t\n\t\"user\" : {\"name\" : \"Priyanka-new\",\"leader\":false},\n\t\"timeouts\": {\n\t    \"not_before\": \"2020-08-27T13:46:17+05:30\",\n\t    \"not_after\": \"2020-08-27T13:50:17+05:30\"\n\t}\n}",
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 "accept: application/json",
                 "authorization: Organisation 2f5884ec-3d29-4dc5-bcfb-e42da065bb38",
                 "cache-control: no-cache",
                 "content-type: application/json",
                 "postman-token: e8e4aa90-3c98-434b-8d62-412d9775a403"
-            ),
-        ));
+            ],
+        ]);
         $response = curl_exec($curl);
         $err = curl_error($curl);
         echo "<br>";

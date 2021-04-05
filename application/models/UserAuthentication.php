@@ -149,13 +149,13 @@ class UserAuthentication extends FatModel
 
     private function setSession($data)
     {
-        $_SESSION[UserAuthentication::SESSION_ELEMENT_NAME] = array(
+        $_SESSION[UserAuthentication::SESSION_ELEMENT_NAME] = [
             'user_id' => $data['user_id'],
             'user_first_name' => $data['user_first_name'],
             'user_last_name' => $data['user_last_name'],
             'user_ip' => $data['user_ip'],
             'user_email' => $data['user_email'],
-        );
+        ];
         return true;
     }
 

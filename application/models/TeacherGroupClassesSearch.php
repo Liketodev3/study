@@ -218,14 +218,14 @@ class TeacherGroupClassesSearch extends SearchBase
         /* ] */
         /* qualification/experience[ */
         $qSrch = new UserQualificationSearch();
-        $qSrch->addMultipleFields(array('uqualification_user_id'));
+        $qSrch->addMultipleFields(['uqualification_user_id']);
         $qSrch->addCondition('uqualification_active', '=', 1);
         $qSrch->addGroupBy('uqualification_user_id');
         $this->joinTable("(" . $qSrch->getQuery() . ")", 'INNER JOIN', 'user_id = uqualification_user_id', 'utqual');
         /* ] */
         /* user preferences/skills[ */
         $skillSrch = new UserToPreferenceSearch();
-        $skillSrch->addMultipleFields(array('utpref_user_id', 'GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids'));
+        $skillSrch->addMultipleFields(['utpref_user_id', 'GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids']);
         $skillSrch->addGroupBy('utpref_user_id');
         $this->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
         /* ] */

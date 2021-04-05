@@ -224,7 +224,7 @@ class Order extends MyAppModel
         if (!$orderInfo['order_is_paid'] && ($orderPaymentStatus > 0)) {
             $srch = new OrderProductSearch();
             $srch->addOrderIdCondition($orderId);
-            $srch->addMultipleFields(array('op_id'));
+            $srch->addMultipleFields(['op_id']);
             $rs = $srch->getResultSet();
             $subOrders = FatApp::getDb()->fetchAll($rs);
             foreach ($subOrders as $subOrder) {
