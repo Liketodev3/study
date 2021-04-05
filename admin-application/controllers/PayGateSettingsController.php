@@ -2,8 +2,9 @@
 
 class PayGateSettingsController extends PaymentSettingsController
 {
+
     private $keyName = "PayGate";
-    
+
     public function index()
     {
         $paymentSettings = $this->getPaymentSettings($this->keyName);
@@ -13,13 +14,13 @@ class PayGateSettingsController extends PaymentSettingsController
         $this->set('paymentMethod', $this->keyName);
         $this->_template->render(false, false);
     }
-    
+
     public function setup()
     {
         $frm = $this->getSettingsForm();
         $this->setUpPaymentSettings($frm, $this->keyName);
     }
-    
+
     private function getSettingsForm()
     {
         $frm = new Form('frmPaymentMethods');
@@ -28,4 +29,5 @@ class PayGateSettingsController extends PaymentSettingsController
         $frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
 }

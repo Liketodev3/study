@@ -1,6 +1,8 @@
 <?php
+
 class CommissionReportController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -24,40 +26,32 @@ class CommissionReportController extends AdminBaseController
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $page = ($page < 0) ? 1 : $page;
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-
-		// $orderIsPaidCondition =  $srch->addCondition('o
-        $orderSearch =  new OrderSearch();
+        $orderSearch = new OrderSearch();
         $orderSearch->joinOrderProduct();
         $orderSearch->joinScheduledLessonDetail();
         $orderSearch->joinScheduledLesson();
         $orderSearch->joinScheduledLesson();
-        $orderSearch->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = sl.slesson_id and issrep_status IN('.IssuesReported::STATUS_OPEN.','.IssuesReported::STATUS_PROGRESS.')', 'iss');
-        $orderSearch->addCondition('slesson_status', '=' , ScheduledLesson::STATUS_COMPLETED);
+        $orderSearch->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = sl.slesson_id and issrep_status IN(' . IssuesReported::STATUS_OPEN . ',' . IssuesReported::STATUS_PROGRESS . ')', 'iss');
+        $orderSearch->addCondition('slesson_status', '=', ScheduledLesson::STATUS_COMPLETED);
         $orderSearch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
         $orderSearch->addCondition('order_net_amount', '>', 0);
         $orderSearch->addCondition('order_type', '=', Order::TYPE_LESSON_BOOKING);
         $orderSearch->addCondition('op_lpackage_is_free_trial', '=', applicationConstants::NO);
         $orderSearch->addMultipleFields([
-            'count(sl.slesson_id) as totalLesson',
-            'order_net_amount',
-            'op_teacher_id',
+            'count(sl.slesson_id) as totalLesson', 'order_net_amount', 'op_teacher_id',
             '(((order_net_amount / op_qty ) - op_commission_charged) * count(sl.slesson_id)) as totalAdminCommission ',
         ]);
-       
         $dateTo = FatApp::getPostedData('dateto', FatUtility::VAR_DATE, '');
         if (!empty($dateTo)) {
             $orderSearch->addDirectCondition("DATE(order_date_added) <= '" . $post['dateto'] . "'");
         }
-
         $dateFrom = FatApp::getPostedData('datefrom', FatUtility::VAR_DATE, '');
         if ($dateFrom) {
             $orderSearch->addDirectCondition("DATE(order_date_added) >= '" . $post['datefrom'] . "'");
         }
-
         $orderSearch->addDirectCondition('ISNULL(issrep_status)');
         $orderSearch->addHaving('totalAdminCommission', '>', 0);
         $orderSearch->addGroupBy('order_id');
-
         $user = new User();
         $attrArray = ['credential_email', 'CONCAT(`user_first_name`," ",`user_last_name`) as fullName'];
         $userSearch = $user->getUserSearchObj($attrArray, true);
@@ -66,27 +60,19 @@ class CommissionReportController extends AdminBaseController
             'SUM(ord.totalAdminCommission) totalCommision',
             'SUM(ord.order_net_amount) as saleOrderValue'
         ]);
-        $userSearch->joinTable('('.$orderSearch->getQuery().')', 'INNER JOIN', 'u.user_id = ord.op_teacher_id', 'ord');
+        $userSearch->joinTable('(' . $orderSearch->getQuery() . ')', 'INNER JOIN', 'u.user_id = ord.op_teacher_id', 'ord');
         $userSearch->addCondition('user_is_teacher', '=', applicationConstants::YES);
-        
         if ($post['search']) {
             $cond = $userSearch->addCondition('user_first_name', 'like', '%' . $post['search'] . '%');
-            $cond->attachCondition('user_last_name', 'like', '%' . $post['search'] . '%','OR');
+            $cond->attachCondition('user_last_name', 'like', '%' . $post['search'] . '%', 'OR');
             $cond->attachCondition('credential_email', 'like', '%' . $post['search'] . '%');
         }
-
-      
-
         $userSearch->addGroupBy('u.user_id');
         $userSearch->addOrder('totalCommision', 'DESC');
         $userSearch->setPageNumber($page);
         $userSearch->setPageSize($pagesize);
-        // prx($userSearch->getQuery());
-    
         $resultSet = $userSearch->getResultSet();
-  
         $resultData = FatApp::getdb()->fetchAll($resultSet);
-
         $this->set('data', $resultData);
         $this->set('adminLangId', $this->adminLangId);
         $this->set('postedData', $post);
@@ -109,4 +95,5 @@ class CommissionReportController extends AdminBaseController
         $fldSubmit->attachField($fldCancel);
         return $frm;
     }
+
 }

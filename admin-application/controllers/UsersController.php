@@ -1,6 +1,8 @@
 <?php
+
 class UsersController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -23,9 +25,8 @@ class UsersController extends AdminBaseController
 
     public function search()
     {
-
-        $canEdit   = $this->objPrivilege->canEditUsers(AdminAuthentication::getLoggedAdminId(), true);
-        $pagesize  = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $canEdit = $this->objPrivilege->canEditUsers(AdminAuthentication::getLoggedAdminId(), true);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $frmSearch = $this->getUserSearchForm();
         $data = FatApp::getPostedData();
         $post = $frmSearch->getFormDataFromArray($data);
@@ -45,16 +46,11 @@ class UsersController extends AdminBaseController
             if (!empty($keyword)) {
                 $keywordsArr = array_unique(array_filter(explode(' ', $keyword)));
                 foreach ($keywordsArr as $kw) {
-                    $cnd = $srch->addCondition('u.user_first_name', 'like', '%'.$kw.'%');
-                    $cnd->attachCondition('u.user_last_name', 'like', '%'.$kw.'%');
-                    $cnd->attachCondition('uc.credential_username', 'like', '%'.$kw.'%');
-                    $cnd->attachCondition('uc.credential_email', 'like', '%'.$kw.'%');
+                    $cnd = $srch->addCondition('u.user_first_name', 'like', '%' . $kw . '%');
+                    $cnd->attachCondition('u.user_last_name', 'like', '%' . $kw . '%');
+                    $cnd->attachCondition('uc.credential_username', 'like', '%' . $kw . '%');
+                    $cnd->attachCondition('uc.credential_email', 'like', '%' . $kw . '%');
                 }
-
-                /* $cnd = $srch->addCondition('uc.credential_username', 'like', '%' . $keyword . '%');
-                $cnd->attachCondition('uc.credential_email', 'like', '%' . $keyword . '%', 'OR');
-                $cnd->attachCondition('u.user_first_name', 'like', '%' . $keyword . '%');
-                $cnd->attachCondition('u.user_last_name', 'like', '%' . $keyword . '%'); */
             }
         }
         $user_active = FatApp::getPostedData('user_active', FatUtility::VAR_INT, -1);
@@ -79,9 +75,7 @@ class UsersController extends AdminBaseController
                 $srch->addCondition('u.user_is_learner', '=', applicationConstants::YES);
                 break;
         }
-
         $user_regdate_from = FatApp::getPostedData('user_regdate_from', FatUtility::VAR_DATE, '');
-
         if (!empty($user_regdate_from)) {
             $srch->addCondition('user_added_on', '>=', $user_regdate_from . ' 00:00:00');
         }
@@ -89,30 +83,27 @@ class UsersController extends AdminBaseController
         if (!empty($user_regdate_to)) {
             $srch->addCondition('user_added_on', '<=', $user_regdate_to . ' 23:59:59');
         }
-        $latestTeacherRequest =   new SearchBase(TeacherRequest::DB_TBL, 'ltr');;
+        $latestTeacherRequest = new SearchBase(TeacherRequest::DB_TBL, 'ltr');
+        ;
         $latestTeacherRequest->addFld(array('max(ltr.utrequest_id) latestRequestId'));
         $latestTeacherRequest->addGroupBy('ltr.utrequest_user_id');
         $latestTeacherRequest->doNotCalculateRecords();
         $latestTeacherRequest->doNotLimitRecords();
-
         $teacherRequest = new TeacherRequestSearch(false);
         $teacherRequest->doNotCalculateRecords();
         $teacherRequest->doNotLimitRecords();
-
-        $teacherRequest->joinTable("(".$latestTeacherRequest->getQuery().")",'INNER JOIN','lastrequest.latestRequestId = tr.utrequest_id','lastrequest');
-        $srch->joinTable("(".$teacherRequest->getQuery().")", 'LEFT JOIN', 'utr.utrequest_user_id = user_id', 'utr');
-
-        $srch->addFld(array(
-                  'user_is_learner',
-                  'user_is_teacher',
-                  'user_first_name',
-                  'user_last_name',
-                  'user_registered_initially_for',
-                  'utr.utrequest_status',
-                  'utr.utrequest_id',
-                   'utr.utrequest_user_id'
-              ));
-
+        $teacherRequest->joinTable("(" . $latestTeacherRequest->getQuery() . ")", 'INNER JOIN', 'lastrequest.latestRequestId = tr.utrequest_id', 'lastrequest');
+        $srch->joinTable("(" . $teacherRequest->getQuery() . ")", 'LEFT JOIN', 'utr.utrequest_user_id = user_id', 'utr');
+        $srch->addFld([
+            'user_is_learner',
+            'user_is_teacher',
+            'user_first_name',
+            'user_last_name',
+            'user_registered_initially_for',
+            'utr.utrequest_status',
+            'utr.utrequest_id',
+            'utr.utrequest_user_id'
+        ]);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         $rs = $srch->getResultSet();
@@ -132,15 +123,11 @@ class UsersController extends AdminBaseController
     {
         $this->objPrivilege->canEditUsers();
         $userObj = new User($userId);
-        $user = $userObj->getUserInfo(array(
-            'credential_username',
-            'credential_password'
-        ), false, false);
-        $isAjaxRequest =  FatUtility::isAjaxCall();
+        $user = $userObj->getUserInfo(['credential_username', 'credential_password'], false, false);
+        $isAjaxRequest = FatUtility::isAjaxCall();
         if (!$user) {
-
             Message::addErrorMessage($this->str_invalid_request);
-            if($isAjaxRequest) {
+            if ($isAjaxRequest) {
                 FatUtility::dieJsonError(Message::getHtml());
             }
             FatApp::redirectUser(CommonHelper::generateUrl('Users'));
@@ -148,16 +135,15 @@ class UsersController extends AdminBaseController
         $userAuthObj = new UserAuthentication();
         if (!$userAuthObj->login($user['credential_username'], $user['credential_password'], $_SERVER['REMOTE_ADDR'], false, true) === true) {
             Message::addErrorMessage($userAuthObj->getError());
-            if($isAjaxRequest) {
+            if ($isAjaxRequest) {
                 FatUtility::dieJsonError(Message::getHtml());
             }
             FatApp::redirectUser(CommonHelper::generateUrl('Users'));
         }
-        if($isAjaxRequest) {
+        if ($isAjaxRequest) {
             FatUtility::dieJsonSuccess(Label::getLabel("MSG_LOGIN_SUCCESSFULL"));
         }
-        
-        FatApp::redirectUser(CommonHelper::generateUrl('account', '', array(), CONF_WEBROOT_FRONTEND));
+        FatApp::redirectUser(CommonHelper::generateUrl('account', '', [], CONF_WEBROOT_FRONTEND));
     }
 
     public function setup()
@@ -165,9 +151,7 @@ class UsersController extends AdminBaseController
         $this->objPrivilege->canEditUsers();
         $frm = $this->getForm();
         $post = FatApp::getPostedData();
-        //$user_state_id         = FatUtility::int($post['user_state_id']);
         $post = $frm->getFormDataFromArray($post);
-        //$post['user_state_id'] = $user_state_id;
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
@@ -195,20 +179,11 @@ class UsersController extends AdminBaseController
         if (0 < $user_id) {
             $userObj = new User($user_id);
             $srch = $userObj->getUserSearchObj();
-            $srch->addMultipleFields(array(
-                'u.*'
-            ));
-            $rs = $srch->getResultSet();
-            if (!$rs) {
-                FatUtility::dieWithError($this->str_invalid_request);
-            }
-            $data = FatApp::getDb()->fetch($rs, 'user_id');
+            $srch->addMultipleFields(['u.*']);
+            $data = FatApp::getDb()->fetch($srch->getResultSet(), 'user_id');
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
-            /* if(isset($data['credential_username'])){
-            $data['credential_username'] = htmlentities($data['credential_username']);
-            } */
             $stateId = $data['user_state_id'];
             $frmUser->fill($data);
         }
@@ -225,11 +200,7 @@ class UsersController extends AdminBaseController
         if (0 < $user_id) {
             $userObj = new User($user_id);
             $srch = $userObj->getUserSearchObj();
-            $srch->addMultipleFields(array(
-                'u.*',
-                'country_name',
-                'state_name'
-            ));
+            $srch->addMultipleFields(['u.*', 'country_name', 'state_name']);
             $srch->joinTable('tbl_countries_lang', 'LEFT JOIN', 'u.user_country_id=countrylang_country_id');
             $srch->joinTable('tbl_states_lang', 'LEFT JOIN', 'u.user_state_id=statelang_state_id');
             $rs = $srch->getResultSet();
@@ -263,27 +234,17 @@ class UsersController extends AdminBaseController
         $balSrch = Transaction::getSearchObject();
         $balSrch->doNotCalculateRecords();
         $balSrch->doNotLimitRecords();
-        $balSrch->addMultipleFields(array(
-            'utxn.*',
-            "utxn_credit - utxn_debit as bal"
-        ));
+        $balSrch->addMultipleFields(['utxn.*', "utxn_credit - utxn_debit as bal"]);
         $balSrch->addCondition('utxn_user_id', '=', $userId);
         $balSrch->addCondition('utxn_status', '=', 1);
         $qryUserPointsBalance = $balSrch->getQuery();
         $srch->joinTable('(' . $qryUserPointsBalance . ')', 'JOIN', 'tqupb.utxn_id <= utxn.utxn_id', 'tqupb');
-        $srch->addMultipleFields(array(
-            'utxn.*',
-            "SUM(tqupb.bal) balance"
-        ));
+        $srch->addMultipleFields(['utxn.*', "SUM(tqupb.bal) balance"]);
         $srch->addOrder('utxn_id', 'DESC');
         $srch->addGroupBy('utxn.utxn_id');
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-        $rs = $srch->getResultSet();
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetchAll($rs);
-        }
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $this->set("arr_listing", $records);
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
@@ -302,9 +263,7 @@ class UsersController extends AdminBaseController
             FatUtility::dieWithError($this->str_invalid_request_id);
         }
         $frm = $this->addUserTransactionForm($this->adminLangId);
-        $frm->fill(array(
-            'user_id' => $userId
-        ));
+        $frm->fill(array('user_id' => $userId));
         $this->set('userId', $userId);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
@@ -383,9 +342,7 @@ class UsersController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $userObj = new User($user_id);
-        $srch = $userObj->getUserSearchObj(array(
-            'user_id'
-        ));
+        $srch = $userObj->getUserSearchObj(['user_id']);
         $rs = $srch->getResultSet();
         if (!$rs) {
             Message::addErrorMessage($this->str_invalid_request);
@@ -442,13 +399,13 @@ class UsersController extends AdminBaseController
             $skipDeletedUser = false;
         }
         $userObj = new User();
-        $srch = $userObj->getUserSearchObj(array(
+        $srch = $userObj->getUserSearchObj([
             'u.user_first_name',
             'u.user_last_name',
             'u.user_id',
             'credential_username',
             'credential_email'
-        ), false, $skipDeletedUser);
+                ], false, $skipDeletedUser);
         if (!$skipDeletedUser) {
             $srch->addCondition('user_deleted', '=', applicationConstants::YES);
         }
@@ -480,15 +437,14 @@ class UsersController extends AdminBaseController
         $rs = $srch->getResultSet();
         $db = FatApp::getDb();
         $users = $db->fetchAll($rs, 'user_id');
-        $json = array();
+        $json = [];
         foreach ($users as $key => $user) {
-            $user_full_name = strip_tags(html_entity_decode($user['user_first_name'], ENT_QUOTES, 'UTF-8')).' '.strip_tags(html_entity_decode($user['user_last_name'], ENT_QUOTES, 'UTF-8'));
-            $json[] = array(
-                'id' => $key,
-                'name' => $user_full_name,
+            $user_full_name = strip_tags(html_entity_decode($user['user_first_name'], ENT_QUOTES, 'UTF-8')) . ' ' . strip_tags(html_entity_decode($user['user_last_name'], ENT_QUOTES, 'UTF-8'));
+            $json[] = [
+                'id' => $key, 'name' => $user_full_name,
                 'username' => strip_tags(html_entity_decode($user['credential_username'], ENT_QUOTES, 'UTF-8')),
                 'credential_email' => strip_tags(html_entity_decode($user['credential_email'], ENT_QUOTES, 'UTF-8'))
-            );
+            ];
         }
         die(json_encode($json));
     }
@@ -517,10 +473,11 @@ class UsersController extends AdminBaseController
         $this->set('msg', $this->str_update_record);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function activate()
     {
         $this->objPrivilege->canEditUsers();
-        $userId  = FatApp::getPostedData('userId', FatUtility::VAR_INT);
+        $userId = FatApp::getPostedData('userId', FatUtility::VAR_INT);
         $v = FatApp::getPostedData('v', FatUtility::VAR_INT);
         $userObj = new User($userId);
         if (!$userObj->activateAccount($v)) {
@@ -535,10 +492,10 @@ class UsersController extends AdminBaseController
     {
         ini_set('memory_limit', '-1');
         set_time_limit(0);
-        try{
+        try {
             $this->createTestTeachers($user_count);
             $this->createTestStudents($user_count);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             die($e->getMessage());
         }
         die('<h2>Users created Successfully</h2>');
@@ -551,25 +508,23 @@ class UsersController extends AdminBaseController
         $attachments1 = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_USER_PROFILE_IMAGE, 1);
         $attachments2 = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, 1);
         $attachments = $attachments1 + $attachments2;
-        for($i=0; $i<$user_count;$i++){
-            $user_data = array(
+        for ($i = 0; $i < $user_count; $i++) {
+            $user_data = [
                 'user_first_name' => 'Test',
-                'user_last_name' => 'Learner'.($i+1),
-                'user_email' => 'testlearner'.($i+1).'@dummyid.com',
-                'user_password' =>  'learner@123',
+                'user_last_name' => 'Learner' . ($i + 1),
+                'user_email' => 'testlearner' . ($i + 1) . '@dummyid.com',
+                'user_password' => 'learner@123',
                 'user_is_learner' => 1,
                 'user_timezone' => MyDate::getTimeZone(),
                 'user_country_id' => 91,
                 'user_preferred_dashboard' => User::USER_LEARNER_DASHBOARD,
                 'user_registered_initially_for' => User::USER_TYPE_LEANER,
-            );
-
+            ];
             $userSrch = new UserSearch(true, false);
             $userId = $userSrch->getUserIdByEmail($user_data['user_email']);
-
             $user = new User($userId);
             $user->assignValues($user_data);
-            if(!$user->save()){
+            if (!$user->save()) {
                 $db->rollbackTransaction();
                 throw new Exception($user->getError());
             }
@@ -578,13 +533,13 @@ class UsersController extends AdminBaseController
                 throw new Exception($user->getError());
             }
             $userId = $user->getMainTableRecordId();
-            if(!User::isProfilePicUploaded($userId)){
-                foreach($attachments as $attachment){
+            if (!User::isProfilePicUploaded($userId)) {
+                foreach ($attachments as $attachment) {
                     $attachment['afile_id'] = 0;
                     $attachment['afile_record_id'] = $userId;
                     $attachedFile = new AttachedFile();
                     $attachedFile->assignValues($attachment);
-                    if(!$attachedFile->save()){
+                    if (!$attachedFile->save()) {
                         $db->rollbackTransaction();
                         throw new Exception($attachedFile->getError());
                     }
@@ -601,27 +556,25 @@ class UsersController extends AdminBaseController
         $attachments1 = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_USER_PROFILE_IMAGE, 1);
         $attachments2 = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, 1);
         $attachments = $attachments1 + $attachments2;
-        for($i=0; $i<$user_count;$i++){
-            $user_data = array(
+        for ($i = 0; $i < $user_count; $i++) {
+            $user_data = [
                 'user_first_name' => 'Test',
-                'user_last_name' => 'Teacher'.($i+1),
-                'user_email' => 'testteacher'.($i+1).'@dummyid.com',
-                'user_url_name' => 'testteacher'.($i+1),
-                'user_password' =>  'teacher@123',
+                'user_last_name' => 'Teacher' . ($i + 1),
+                'user_email' => 'testteacher' . ($i + 1) . '@dummyid.com',
+                'user_url_name' => 'testteacher' . ($i + 1),
+                'user_password' => 'teacher@123',
                 'user_is_learner' => 1,
                 'user_is_teacher' => 1,
                 'user_timezone' => MyDate::getTimeZone(),
-                'user_country_id' => 91, 
+                'user_country_id' => 91,
                 'user_preferred_dashboard' => User::USER_TEACHER_DASHBOARD,
                 'user_registered_initially_for' => User::USER_TYPE_TEACHER,
-            );
-            
+            ];
             $userSrch = new UserSearch(true, false);
             $userId = $userSrch->getUserIdByEmail($user_data['user_email']);
-
             $user = new User($userId);
             $user->assignValues($user_data);
-            if(!$user->save()){
+            if (!$user->save()) {
                 $db->rollbackTransaction();
                 throw new Exception($user->getError());
             }
@@ -630,21 +583,21 @@ class UsersController extends AdminBaseController
                 throw new Exception($user->getError());
             }
             $userId = $user->getMainTableRecordId();
-            if(!User::isProfilePicUploaded($userId)){
-                foreach($attachments as $attachment){
+            if (!User::isProfilePicUploaded($userId)) {
+                foreach ($attachments as $attachment) {
                     $attachment['afile_id'] = 0;
                     $attachment['afile_record_id'] = $userId;
                     $attachedFile = new AttachedFile();
                     $attachedFile->assignValues($attachment);
-                    if(!$attachedFile->save()){
+                    if (!$attachedFile->save()) {
                         $db->rollbackTransaction();
                         throw new Exception($attachedFile->getError());
                     }
                 }
             }
-            try{
+            try {
                 $this->makeTeacher($userId);
-            }catch(Exception $e){
+            } catch (Exception $e) {
                 $db->rollbackTransaction();
                 throw new Exception($e->getMessage());
             }
@@ -655,67 +608,48 @@ class UsersController extends AdminBaseController
     private function makeTeacher($userId)
     {
         $db = FatApp::getDb();
-
         // add teacher settings
         $userSetting = new UserSetting($userId);
-        if(!$userSetting->saveData(array('us_booking_before' => 0))){
+        if (!$userSetting->saveData(['us_booking_before' => 0])) {
             throw new Exception($userSetting->getError());
         }
-
         // add teacher spoken language
         $db->query("REPLACE INTO `tbl_spoken_languages` 
         (`slanguage_id`, `slanguage_code`, `slanguage_identifier`, `slanguage_flag`, `slanguage_display_order`, `slanguage_active`) 
-        VALUES 
-        (1, 'EN', 'English', 'gb.png', 1, 1)
-        (2, 'FR', 'French', 'fr.png', 2, 1)
-        ");
-
-        $spokenData = array(
-            array(
-                'utsl_slanguage_id' => 1, 
-                'utsl_proficiency' => SpokenLanguage::PROFICIENCY_BEGINNER,
-                'utsl_user_id' => $userId
-            ),
-            array(
-                'utsl_slanguage_id' => 2, 
-                'utsl_proficiency' => SpokenLanguage::PROFICIENCY_BEGINNER,
-                'utsl_user_id' => $userId
-            )
-        );
-        // var_dump($spokenData);die;
-        
+        VALUES  (1, 'EN', 'English', 'gb.png', 1, 1) (2, 'FR', 'French', 'fr.png', 2, 1) ");
+        $spokenData = [
+            ['utsl_slanguage_id' => 1, 'utsl_proficiency' => SpokenLanguage::PROFICIENCY_BEGINNER, 'utsl_user_id' => $userId],
+            ['utsl_slanguage_id' => 2, 'utsl_proficiency' => SpokenLanguage::PROFICIENCY_BEGINNER, 'utsl_user_id' => $userId]
+        ];
         $userToLang = new UserToLanguage();
-        foreach($spokenData as $row){            
+        foreach ($spokenData as $row) {
             $userToLang->assignValues($row);
             $userToLang->save();
         }
-
         // add teacher teach language
         $db->query("REPLACE INTO `tbl_teaching_languages` (`tlanguage_id`, `tlanguage_code`, `tlanguage_identifier`, `tlanguage_flag`, `tlanguage_display_order`, `tlanguage_active`) VALUES
-        (1, 'EN', 'English', 'gb.png', 1, 1),
-        (2, 'FR', 'French', 'fr.png', 2, 1)");
-        $langData = array(
-            array(
-                'utl_slanguage_id'          => 1, 
-                'utl_us_user_id'            => $userId,
-                'utl_single_lesson_amount'  => 25,
-                'utl_bulk_lesson_amount'    => 20,
-            ),
-            array(
-                'utl_slanguage_id'          => 2, 
-                'utl_us_user_id'            => $userId,
-                'utl_single_lesson_amount'  => 25,
-                'utl_bulk_lesson_amount'    => 20,
-            )
-        );
+        (1, 'EN', 'English', 'gb.png', 1, 1),        (2, 'FR', 'French', 'fr.png', 2, 1)");
+        $langData = [
+            [
+                'utl_slanguage_id' => 1,
+                'utl_us_user_id' => $userId,
+                'utl_single_lesson_amount' => 25,
+                'utl_bulk_lesson_amount' => 20,
+            ],
+            [
+                'utl_slanguage_id' => 2,
+                'utl_us_user_id' => $userId,
+                'utl_single_lesson_amount' => 25,
+                'utl_bulk_lesson_amount' => 20,
+            ]
+        ];
         $userToLang = new UserToLanguage($userId);
-        foreach($langData as $row){
-            if(!$userToLang->saveTeachLang($row)){
+        foreach ($langData as $row) {
+            if (!$userToLang->saveTeachLang($row)) {
                 // throw new Exception('UserToLanuage:'.$userToLang->getError());
             }
         }
-
-        $uqdata = array(
+        $uqdata = [
             'uqualification_user_id' => $userId,
             'uqualification_experience_type' => 1,
             'uqualification_title' => 'test',
@@ -725,51 +659,45 @@ class UsersController extends AdminBaseController
             'uqualification_start_year' => date('Y'),
             'uqualification_end_year' => date('Y'),
             'uqualification_active' => 1,
-        );
-
+        ];
         $uqsrch = new UserQualificationSearch();
         $uqsrch->addCondition('uqualification_user_id', '=', $userId);
         $row = FatApp::getDb()->fetch($uqsrch->getResultSet());
         $uqId = $row ? $row['uqualification_id'] : 0;
-        for($i=0; $i<2; $i++){
+        for ($i = 0; $i < 2; $i++) {
             $uQualification = new UserQualification($uqId);
             $uQualification->assignValues($uqdata);
             if (!$uQualification->save()) {
                 // throw new Exception($uQualification->getError());
             }
         }
-        
-        if (!$db->insertFromArray(Preference::DB_TBL_USER_PREF, array('utpref_preference_id' => 1, 'utpref_user_id' => $userId))) {
+        if (!$db->insertFromArray(Preference::DB_TBL_USER_PREF, ['utpref_preference_id' => 1, 'utpref_user_id' => $userId])) {
             // throw new Exception($db->getError());            
         }
-
         $availabilityData = '[{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"1","dayStart":"1","dayEnd":"2","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"2","dayStart":"2","dayEnd":"3","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"3","dayStart":"3","dayEnd":"4","classtype":1},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"4","dayStart":"4","dayEnd":"5","classtype":"1"},{"start":"15:00:00","end":"00:00:00","startTime":"15:00","endTime":"00:00","day":"5","dayStart":"5","dayEnd":"6","classtype":1}]';
         $tGAvail = new TeacherGeneralAvailability();
-        if (!$tGAvail->addTeacherGeneralAvailability(array('data'=>$availabilityData), $userId)) {
+        if (!$tGAvail->addTeacherGeneralAvailability(array('data' => $availabilityData), $userId)) {
             throw new Exception($tGAvail->getError());
         }
-
-        $weekData = array();
+        $weekData = [];
         $dateTime = new DateTime(date('Y-m-d'));
-        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);       
-        
+        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);
         $start = $weekStartAndEndDate['weekStart'];
         $end = $weekStartAndEndDate['weekEnd'];
-        while($start<=$end){
-            $weekData[] = array(
-                'start'     => "15:00:00",
-                "end"       => "00:00:00",
-                "date"      => $start,
-                "action"    => "fromGeneralAvailability",
+        while ($start <= $end) {
+            $weekData[] = [
+                'start' => "15:00:00",
+                "end" => "00:00:00",
+                "date" => $start,
+                "action" => "fromGeneralAvailability",
                 "classtype" => 1,
-                "_id"       => "_fc6"
-            );
-            $start = date('Y-m-d', strtotime($start . '+1 day'));            
+                "_id" => "_fc6"
+            ];
+            $start = date('Y-m-d', strtotime($start . '+1 day'));
         }
-
-        $availabilityData = json_encode($weekData);        
+        $availabilityData = json_encode($weekData);
         $tGAvail = new TeacherWeeklySchedule();
-        if (!$tGAvail->addTeacherWeeklySchedule(array('data'=>$availabilityData), $userId)) {
+        if (!$tGAvail->addTeacherWeeklySchedule(['data' => $availabilityData], $userId)) {
             throw new Exception($tGAvail->getError());
         }
         return true;
@@ -784,12 +712,7 @@ class UsersController extends AdminBaseController
         $frm->addHiddenField('', 'user_id', $user_id);
         $frm->addTextBox(Label::getLabel('LBL_Username', $this->adminLangId), 'credential_username', '');
         $fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name', $this->adminLangId), 'user_first_name');
-        // $fld->requirements()->setCharOnly();
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Last_Name', $this->adminLangId), 'user_last_name');
-        // $fld->requirements()->setCharOnly();
-        /*$frm->addDateField(Label::getLabel('LBL_Date_Of_Birth', $this->adminLangId), 'user_dob', '', array(
-             'readonly' => 'readonly'
-         ));*/
         $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
         $frm->addTextBox(Label::getLabel('LBL_Email', $this->adminLangId), 'credential_email', '');
@@ -797,30 +720,23 @@ class UsersController extends AdminBaseController
         $countriesArr = $countryObj->getCountriesArr($this->adminLangId);
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Country', $this->adminLangId), 'user_country_id', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 223));
         $fld->requirement->setRequired(true);
-        //$frm->addSelectBox(Label::getLabel('LBL_State', $this->adminLangId), 'user_state_id', array());
-        //$frm->addTextBox(Label::getLabel('LBL_City', $this->adminLangId), 'user_city');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function getChangePasswordForm($user_id = 0)
     {
         $user_id = FatUtility::int($user_id);
         $frm = new Form('changePwdFrm');
         $frm->addHiddenField('', 'user_id', $user_id);
-        $newPwd = $frm->addPasswordField(Label::getLabel('LBL_New_Password', $this->adminLangId), 'new_password', '', array(
-            'id' => 'new_password'
-        ));
+        $newPwd = $frm->addPasswordField(Label::getLabel('LBL_New_Password', $this->adminLangId), 'new_password', '', ['id' => 'new_password']);
         $newPwd->requirements()->setRequired();
-        $conNewPwd = $frm->addPasswordField(Label::getLabel('LBL_Confirm_New_Password', $this->adminLangId), 'conf_new_password', '', array(
-            'id' => 'conf_new_password'
-        ));
+        $conNewPwd = $frm->addPasswordField(Label::getLabel('LBL_Confirm_New_Password', $this->adminLangId), 'conf_new_password', '', ['id' => 'conf_new_password']);
         $conNewPwdReq = $conNewPwd->requirements();
         $conNewPwdReq->setRequired();
         $conNewPwdReq->setCompareWith('new_password', 'eq');
         $conNewPwdReq->setCustomErrorMessage(Label::getLabel('LBL_Confirm_Password_Not_Matched!', $this->adminLangId));
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId), array(
-            'id' => 'btn_submit'
-        ));
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId), ['id' => 'btn_submit']);
         return $frm;
     }
 
@@ -835,4 +751,5 @@ class UsersController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
 }

@@ -1,6 +1,8 @@
 <?php
+
 class PaystackSettingsController extends PaymentSettingsController
 {
+
     private $keyName = "Paystack";
 
     public function index()
@@ -27,4 +29,5 @@ class PaystackSettingsController extends PaymentSettingsController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
 }

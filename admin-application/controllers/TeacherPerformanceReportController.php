@@ -1,13 +1,14 @@
 <?php
+
 class TeacherPerformanceReportController extends AdminBaseController
 {
+
     private $canView;
     private $canEdit;
 
     public function __construct($action)
     {
         parent::__construct($action);
-        $this->admin_id = AdminAuthentication::getLoggedAdminId();
         $this->canView = $this->objPrivilege->canViewTeacherPerformanceReport($this->admin_id, true);
         $this->canEdit = $this->objPrivilege->canEditTeacherPerformanceReport($this->admin_id, true);
         $this->set("canView", $this->canView);
@@ -27,7 +28,7 @@ class TeacherPerformanceReportController extends AdminBaseController
     {
         $this->objPrivilege->canViewTeacherPerformanceReport();
         $db = FatApp::getDb();
-        $orderDate = FatApp::getPostedData('orderDate') ;
+        $orderDate = FatApp::getPostedData('orderDate');
         $srchFrm = $this->getSearchForm($orderDate);
         $post = $srchFrm->getFormDataFromArray(FatApp::getPostedData());
         $page = (empty($post['page']) || $post['page'] <= 0) ? 1 : intval($post['page']);
@@ -36,7 +37,7 @@ class TeacherPerformanceReportController extends AdminBaseController
         $srch->addCondition('user_is_teacher', '=', 1);
         $srch->joinTeacherLessonData();
         $srch->joinRatingReview();
-        $srch->addMultipleFields(array('CONCAT(user_first_name, " ", user_last_name) as user_name'));
+        $srch->addMultipleFields(['CONCAT(user_first_name, " ", user_last_name) as user_name']);
         if (isset($post['country_id']) && $post['country_id'] > 0) {
             $srch->addCondition('user_country_id', '=', $post['country_id']);
         }
@@ -47,9 +48,6 @@ class TeacherPerformanceReportController extends AdminBaseController
         $db = FatApp::getDb();
         $teachersList = $db->fetchAll($rs);
         $totalRecords = $srch->recordCount();
-        //echo $srch->getQuery();
-        //die();
-
         $this->set("arr_listing", $teachersList);
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
@@ -66,22 +64,17 @@ class TeacherPerformanceReportController extends AdminBaseController
         $srch = Country::getSearchObject(false, $this->adminLangId);
         $srch->addFld('c.* , c_l.country_name');
         $srch->addCondition('c.country_active', '=', 1);
-        $rs = $srch->getResultSet();
-        $countriesList = array();
-        $countriesListOptions = array();
-        if ($rs) {
-            $countriesList = FatApp::getDb()->fetchAll($rs);
-            if (!empty($countriesList)) {
-                foreach ($countriesList as $_country) {
-                    $countriesListOptions[$_country['country_id']] = $_country['country_name'];
-                }
-            }
+        $countriesList = [];
+        $countriesListOptions = [];
+        $countriesList = FatApp::getDb()->fetchAll($srch->getResultSet());
+        foreach ($countriesList as $_country) {
+            $countriesListOptions[$_country['country_id']] = $_country['country_name'];
         }
-
         $frm->addSelectBox(Label::getLabel('LBL_Country', $this->adminLangId), 'country_id', $countriesListOptions);
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
-        $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId), array('onclick'=>'clearSearch();'));
+        $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId), ['onclick' => 'clearSearch();']);
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
+
 }

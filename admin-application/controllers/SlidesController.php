@@ -1,11 +1,14 @@
 <?php
+
 class SlidesController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
         $this->objPrivilege->canViewSlides();
     }
+
     public function index()
     {
         $adminId = AdminAuthentication::getLoggedAdminId();
@@ -15,6 +18,7 @@ class SlidesController extends AdminBaseController
         $this->set('frmSearch', $frmSearch);
         $this->_template->render();
     }
+
     public function search()
     {
         $adminId = AdminAuthentication::getLoggedAdminId();
@@ -28,19 +32,15 @@ class SlidesController extends AdminBaseController
         $srch->addOrder('slide_display_order', 'ASC');
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $rs = $srch->getResultSet();
-        $arrListing = array();
-        if ($rs) {
-            $arrListing = FatApp::getDb()->fetchAll($rs);
-        }
+        $arrListing = FatApp::getDb()->fetchAll($srch->getResultSet());
         $this->set("arrListing", $arrListing);
-        /* $this->set('languages', Language::getAllNames()); */
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
         $this->set('postedData', $post);
         $this->set("canEdit", $canEdit);
         $this->_template->render(false, false);
     }
+
     public function form($slide_id = 0)
     {
         $slide_id = FatUtility::int($slide_id);
@@ -57,10 +57,11 @@ class SlidesController extends AdminBaseController
         $this->set('slideFrm', $slideFrm);
         $this->_template->render(false, false);
     }
+
     public function setup()
     {
         $this->objPrivilege->canEditSlides();
-        $frm  = $this->getForm();
+        $frm = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -95,6 +96,7 @@ class SlidesController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function langForm($slide_id = 0, $lang_id = 0)
     {
         $slide_id = FatUtility::int($slide_id);
@@ -115,6 +117,7 @@ class SlidesController extends AdminBaseController
         $this->set('formLayout', Language::getLayoutDirection($lang_id));
         $this->_template->render(false, false);
     }
+
     public function langSetup()
     {
         $this->objPrivilege->canEditSlides();
@@ -129,11 +132,11 @@ class SlidesController extends AdminBaseController
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         unset($post['slide_id']);
         unset($post['lang_id']);
-        $data = array(
+        $data = [
             'slidelang_slide_id' => $slide_id,
             'slidelang_lang_id' => $lang_id,
             'slide_title' => $post['slide_title']
-        );
+        ];
         $slideObj = new Slide($slide_id);
         if (!$slideObj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($slideObj->getError());
@@ -155,18 +158,17 @@ class SlidesController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function mediaForm($slide_id)
     {
         $slide_id = FatUtility::int($slide_id);
-        $slideDetail = Slide::getAttributesById($slide_id);
         $slideMediaFrm = $this->getMediaForm($slide_id);
-        $screenTypeArr = applicationConstants::getDisplaysArr($this->adminLangId);
-        /* CommonHelper::printArray(key($screenTypeArr)); die; */
         $this->set('slide_id', $slide_id);
         $this->set('slideMediaFrm', $slideMediaFrm);
         $this->set('languages', Language::getAllNames());
         $this->_template->render(false, false);
     }
+
     public function images($slide_id, $slide_screen = 0, $lang_id = 0)
     {
         $slide_id = FatUtility::int($slide_id);
@@ -175,7 +177,6 @@ class SlidesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        /* echo $slide_id.' '.$lang_id.' '.$slide_screen; die; */
         if (!false == $slideDetail) {
             $slideBanner = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_HOME_PAGE_BANNER, $slide_id, 0, $lang_id, false, $slide_screen);
             $this->set('images', $slideBanner);
@@ -189,6 +190,7 @@ class SlidesController extends AdminBaseController
         $this->set('languages', Language::getAllNames());
         $this->_template->render(false, false);
     }
+
     public function deleteRecord()
     {
         $this->objPrivilege->canEditSlides();
@@ -206,6 +208,7 @@ class SlidesController extends AdminBaseController
         $fileHandlerObj->deleteFile(AttachedFile::FILETYPE_HOME_PAGE_BANNER, $slide_id);
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
+
     public function setUpImage($slide_id)
     {
         $this->objPrivilege->canEditSlides();
@@ -231,35 +234,7 @@ class SlidesController extends AdminBaseController
         $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_uploaded_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
-    /* public function setUpImage( $slide_id, $lang_id ){
-    $slide_id = FatUtility::int( $slide_id );
-    $lang_id = FatUtility::int( $lang_id );
-    if( !$slide_id || !$lang_id ){
-    Message::addErrorMessage($this->str_invalid_request);
-    FatUtility::dieJsonError( Message::getHtml() );
-    }
 
-    $post = FatApp::getPostedData();
-
-    if ( !is_uploaded_file($_FILES['file']['tmp_name']) ) {
-    Message::addErrorMessage(Label::getLabel('LBL_Please_Select_A_File',$this->adminLangId));
-    FatUtility::dieJsonError(Message::getHtml());
-    }
-
-    $fileHandlerObj = new AttachedFile();
-    $fileHandlerObj->deleteFile( AttachedFile::FILETYPE_HOME_PAGE_BANNER, $slide_id, 0, 0, $lang_id );
-    if(!$res = $fileHandlerObj->saveImage($_FILES['file']['tmp_name'], AttachedFile::FILETYPE_HOME_PAGE_BANNER, $slide_id, 0,
-    $_FILES['file']['name'], -1, false, $lang_id)
-    ){
-    Message::addErrorMessage($fileHandlerObj->getError());
-    FatUtility::dieJsonError( Message::getHtml() );
-    }
-
-    $this->set( 'file', $_FILES['file']['name'] );
-    $this->set( 'slide_id', $slide_id );
-    $this->set('msg', $_FILES['file']['name'].' '.Label::getLabel('LBL_Uploaded_Successfully',$this->adminLangId));
-    $this->_template->render(false, false, 'json-success.php');
-    } */
     public function removeImage($slide_id, $lang_id, $screen)
     {
         $slide_id = FatUtility::int($slide_id);
@@ -276,6 +251,7 @@ class SlidesController extends AdminBaseController
         $this->set('msg', Label::getLabel('MSG_Deleted_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function updateOrder()
     {
         $this->objPrivilege->canEditSlides();
@@ -289,6 +265,7 @@ class SlidesController extends AdminBaseController
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Order_Updated_Successfully', $this->adminLangId));
         }
     }
+
     public function changeStatus()
     {
         $this->objPrivilege->canEditSlides();
@@ -298,15 +275,11 @@ class SlidesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $data = Slide::getAttributesById($slideId, array(
-            'slide_id',
-            'slide_active'
-        ));
+        $data = Slide::getAttributesById($slideId, ['slide_id', 'slide_active']);
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-        //$status = ($data['slide_active'] == applicationConstants::ACTIVE) ? applicationConstants::INACTIVE : applicationConstants::ACTIVE;
         $obj = new Slide($slideId);
         if (!$obj->changeStatus($status)) {
             Message::addErrorMessage($obj->getError());
@@ -314,6 +287,7 @@ class SlidesController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
+
     private function isMediaUploaded($slideId)
     {
         if ($attachment = AttachedFile::getAttachment(AttachedFile::FILETYPE_HOME_PAGE_BANNER, $slideId, 0)) {
@@ -321,6 +295,7 @@ class SlidesController extends AdminBaseController
         }
         return false;
     }
+
     private function getForm()
     {
         $frm = new Form('frmSlide');
@@ -330,54 +305,50 @@ class SlidesController extends AdminBaseController
         $fld = $frm->addTextBox(Label::getLabel('LBL_Slide_URL', $this->adminLangId), 'slide_url');
         $fld->setFieldTagAttribute('placeholder', 'http://');
         $linkTargetsArr = applicationConstants::getLinkTargetsArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Open_In', $this->adminLangId), 'slide_target', $linkTargetsArr, '', array(), '');
-        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'slide_active', applicationConstants::getActiveInactiveArr($this->adminLangId), applicationConstants::ACTIVE, array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Open_In', $this->adminLangId), 'slide_target', $linkTargetsArr, '', [], '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'slide_active', applicationConstants::getActiveInactiveArr($this->adminLangId), applicationConstants::ACTIVE, [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function getLangForm($lang_id = 0)
     {
         $frm = new Form('frmSlideLang');
         $frm->addHiddenField('', 'slide_id');
         $frm->addHiddenField('', 'lang_id', $lang_id);
         $frm->addRequiredField(Label::getLabel('LBL_Slide_Title', $this->adminLangId), 'slide_title');
-        // $fld =  $frm->addButton(Label::getLabel('LBL_Slide_slide_Image',$this->adminLangId),'slide_image',Label::getLabel('LBL_Upload_File',$this->adminLangId),array('class'=>'slideFile-Js','id'=>'slide_image','data-slide_id'=>''));
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Update', $this->adminLangId));
         return $frm;
     }
+
     private function getMediaForm($slide_id = 0)
     {
         $frm = new Form('frmSlideMedia');
         $frm->addHiddenField('', 'slide_id', $slide_id);
         $bannerTypeArr = $this->bannerTypeArr();
-        $frm->addSelectBox(Label::getLabel('LBL_Language', $this->adminLangId), 'lang_id', $bannerTypeArr, '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Language', $this->adminLangId), 'lang_id', $bannerTypeArr, '', [], '');
         $screenArr = applicationConstants::getDisplaysArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel("LBL_Display_For", $this->adminLangId), 'slide_screen', $screenArr, '', array(), '');
-        $fld = $frm->addButton(Label::getLabel("LBL_Slide_Banner_Image", $this->adminLangId), 'slide_image', Label::getLabel("LBL_Upload_File", $this->adminLangId), array(
-            'class' => 'slideFile-Js',
-            'id' => 'slide_image',
-            'data-slide_id' => $slide_id
-        ));
+        $frm->addSelectBox(Label::getLabel("LBL_Display_For", $this->adminLangId), 'slide_screen', $screenArr, '', [], '');
+        $frm->addButton(Label::getLabel("LBL_Slide_Banner_Image", $this->adminLangId), 'slide_image', Label::getLabel("LBL_Upload_File", $this->adminLangId), ['class' => 'slideFile-Js', 'id' => 'slide_image', 'data-slide_id' => $slide_id]);
         return $frm;
     }
+
     private function getSearchForm()
     {
-        $frm = new Form('frmSlideSearch', array(
-            'id' => 'frmSlideSearch'
-        ));
-        return $frm;
+        return new Form('frmSlideSearch', ['id' => 'frmSlideSearch']);
     }
+
     private function bannerTypeArr()
     {
         return applicationConstants::bannerTypeArr();
     }
+
     private function getDisplayScreenName()
     {
         $screenTypesArr = applicationConstants::getDisplaysArr($this->adminLangId);
-        return array(
-            0 => ''
-        ) + $screenTypesArr;
+        return array(0 => '') + $screenTypesArr;
     }
+
     public function slide($slide_id, $screen = 0, $lang_id, $sizeType = '', $displayUniversalImage = true)
     {
         $default_image = 'brand_deafult_image.jpg';
@@ -406,4 +377,5 @@ class SlidesController extends AdminBaseController
             AttachedFile::displayOriginalImage($image_name, $default_image);
         }
     }
+
 }

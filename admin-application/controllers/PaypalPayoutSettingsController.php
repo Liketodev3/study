@@ -2,7 +2,7 @@
 
 class PaypalPayoutSettingsController extends PaymentSettingsController
 {
-   
+
     public function index()
     {
         $paymentSettings = $this->getPaymentSettings(PaypalPayout::KEY_NAME);
@@ -27,4 +27,5 @@ class PaypalPayoutSettingsController extends PaymentSettingsController
         $frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
 }

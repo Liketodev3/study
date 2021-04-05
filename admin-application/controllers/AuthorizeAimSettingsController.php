@@ -1,6 +1,8 @@
 <?php
+
 class AuthorizeAimSettingsController extends PaymentSettingsController
 {
+
     private $keyName = "AuthorizeAim";
 
     public function index()
@@ -28,4 +30,5 @@ class AuthorizeAimSettingsController extends PaymentSettingsController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
 }

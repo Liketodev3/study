@@ -1,6 +1,8 @@
 <?php
+
 class AdminBaseController extends FatController
 {
+
     protected $objPrivilege;
     protected $unAuthorizeAccess;
     protected $admin_id;
@@ -14,37 +16,33 @@ class AdminBaseController extends FatController
     protected $str_invalid_Action;
     protected $str_setup_successful;
     protected $adminLangId;
+
     public function __construct($action)
     {
         parent::__construct($action);
-        /* [ */
         $controllerName = get_class($this);
-        $arr            = explode('-', FatUtility::camel2dashed($controllerName));
+        $arr = explode('-', FatUtility::camel2dashed($controllerName));
         array_pop($arr);
-        $urlController  = implode('-', $arr);
+        $urlController = implode('-', $arr);
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
         if ($controllerName != 'AdminGuest') {
             $_SESSION['admin_referer_page_url'] = CommonHelper::getCurrUrl();
         }
-        /* ] */
-        /* [ */
         if (!AdminAuthentication::isAdminLogged()) {
             CommonHelper::initCommonVariables(true);
             if (FatUtility::isAjaxCall()) {
-                // FatUtility::dieWithError("Your session seems to be expired, Please try after reloading the page.");
                 Message::addErrorMessage(Label::getLabel('LBL_Your_session_seems_to_be_expired', CommonHelper::getLangId()));
                 FatUtility::dieWithError(Message::getHtml());
             }
             FatApp::redirectUser(CommonHelper::generateUrl('AdminGuest', 'loginForm'));
         }
-        /* ] */
         $this->objPrivilege = AdminPrivilege::getInstance();
-        $this->admin_id     = AdminAuthentication::getLoggedAdminId();
+        $this->admin_id = AdminAuthentication::getLoggedAdminId();
         if (!FatUtility::isAjaxCall()) {
-            $session_element_name            = AdminAuthentication::SESSION_ELEMENT_NAME;
-            $cookie_name                     = $session_element_name . 'layout';
+            $session_element_name = AdminAuthentication::SESSION_ELEMENT_NAME;
+            $cookie_name = $session_element_name . 'layout';
             //@todo-ask::: Confirm about the usage of $_COOKIE.
-            $selected_admin_dashboard_layout = isset($_COOKIE[$cookie_name]) ? (int) $_COOKIE[$cookie_name] : 0;
+            $selected_admin_dashboard_layout = FatUtility::int($_COOKIE[$cookie_name] ?? 0);
             $this->set('selected_admin_dashboard_layout', $selected_admin_dashboard_layout);
             $admin_dashboard_layouts = Admin::$admin_dashboard_layouts;
             $this->set('admin_dashboard_layouts', $admin_dashboard_layouts);
@@ -52,25 +50,24 @@ class AdminBaseController extends FatController
         $this->set("bodyClass", '');
         $this->setCommonValues();
     }
+
     private function setCommonValues()
     {
         CommonHelper::initCommonVariables(true);
-        $this->adminLangId            = CommonHelper::getLangId();
-        $this->layoutDirection        = CommonHelper::getLayoutDirection();
-        $this->unAuthorizeAccess      = Label::getLabel('LBL_Unauthorized_Access', $this->adminLangId);
-        $this->str_add_record         = Label::getLabel('LBL_Record_Added_Successfully', $this->adminLangId);
-        $this->str_update_record      = Label::getLabel('LBL_Record_Updated_Successfully', $this->adminLangId);
-        $this->str_no_record          = Label::getLabel('LBL_No_Record_Found', $this->adminLangId);
+        $this->adminLangId = CommonHelper::getLangId();
+        $this->layoutDirection = CommonHelper::getLayoutDirection();
+        $this->unAuthorizeAccess = Label::getLabel('LBL_Unauthorized_Access', $this->adminLangId);
+        $this->str_add_record = Label::getLabel('LBL_Record_Added_Successfully', $this->adminLangId);
+        $this->str_update_record = Label::getLabel('LBL_Record_Updated_Successfully', $this->adminLangId);
+        $this->str_no_record = Label::getLabel('LBL_No_Record_Found', $this->adminLangId);
         $this->str_invalid_request_id = Label::getLabel('LBL_Invalid_Request_Id', $this->adminLangId);
-        $this->str_invalid_request    = Label::getLabel('LBL_Invalid_Request', $this->adminLangId);
-        $this->str_delete_record      = Label::getLabel('LBL_Record_Deleted_Successfully', $this->adminLangId);
-        $this->str_invalid_Action     = Label::getLabel('LBL_Invalid_Action', $this->adminLangId);
-        $this->str_setup_successful   = Label::getLabel('LBL_Setup_Successful', $this->adminLangId);
+        $this->str_invalid_request = Label::getLabel('LBL_Invalid_Request', $this->adminLangId);
+        $this->str_delete_record = Label::getLabel('LBL_Record_Deleted_Successfully', $this->adminLangId);
+        $this->str_invalid_Action = Label::getLabel('LBL_Invalid_Action', $this->adminLangId);
+        $this->str_setup_successful = Label::getLabel('LBL_Setup_Successful', $this->adminLangId);
         $this->str_export_successfull = Label::getLabel('LBL_Export_Successful', $this->adminLangId);
-        $this->str_add_update_record  = $this->str_update_record;
-        $jsVariables                  = array();
-        $jsVariables                  = array(
-            'confirmRemove' => Label::getLabel('LBL_Do_you_want_to_remove', $this->adminLangId),
+        $this->str_add_update_record = $this->str_update_record;
+        $jsVariables = ['confirmRemove' => Label::getLabel('LBL_Do_you_want_to_remove', $this->adminLangId),
             'confirmRemoveOption' => Label::getLabel('LBL_Do_you_want_to_remove_this_option', $this->adminLangId),
             'confirmRemoveShop' => Label::getLabel('LBL_Do_you_want_to_remove_this_shop', $this->adminLangId),
             'confirmRemoveProduct' => Label::getLabel('LBL_Do_you_want_to_remove_this_product', $this->adminLangId),
@@ -124,8 +121,8 @@ class AdminBaseController extends FatController
             'options' => Label::getLabel('VLBL_options', $this->adminLangId),
             'confirmRestoreBackup' => Label::getLabel('LBL_Do_you_want_to_restore_database_to_this_record', $this->adminLangId),
             'confirmCancel' => Label::getLabel('LBL_Do_you_want_to_cancel'),
-        );
-        $languages                    = Language::getAllNames(false);
+        ];
+        $languages = Language::getAllNames(false);
         foreach ($languages as $val) {
             $jsVariables['language' . $val['language_id']] = $val['language_layout_direction'];
         }
@@ -139,6 +136,7 @@ class AdminBaseController extends FatController
             $this->_template->addCss('css/style--arabic.css');
         }
     }
+
     public function getNavigationBreadcrumbArr($action)
     {
         switch ($action) {
@@ -150,70 +148,50 @@ class AdminBaseController extends FatController
         }
         return $link;
     }
+
     public function getBreadcrumbNodes($action)
     {
-        $nodes     = array();
+        $nodes = [];
         $className = get_class($this);
-        $arr       = explode('-', FatUtility::camel2dashed($className));
+        $arr = explode('-', FatUtility::camel2dashed($className));
         array_pop($arr);
         $urlController = implode('-', $arr);
-        $className     = ucwords(implode(' ', $arr));
+        $className = ucwords(implode(' ', $arr));
         if ($action == 'index') {
-            $nodes[] = array(
-                'title' => $className
-            );
+            $nodes[] = ['title' => $className];
         } else {
-            $arr     = explode('-', FatUtility::camel2dashed($action));
-            $action  = ucwords(implode(' ', $arr));
-            $nodes[] = array(
-                'title' => $className,
-                'href' => CommonHelper::generateUrl($urlController)
-            );
-            $nodes[] = array(
-                'title' => $action
-            );
+            $arr = explode('-', FatUtility::camel2dashed($action));
+            $action = ucwords(implode(' ', $arr));
+            $nodes[] = ['title' => $className, 'href' => CommonHelper::generateUrl($urlController)];
+            $nodes[] = ['title' => $action];
         }
         return $nodes;
     }
+
     public function getStates($countryId, $stateId = 0)
     {
         $countryId = FatUtility::int($countryId);
-        $stateId   = FatUtility::int($stateId);
-        $stateObj  = new State();
+        $stateId = FatUtility::int($stateId);
+        $stateObj = new State();
         $statesArr = $stateObj->getStatesByCountryId($countryId, $this->adminLangId);
         $this->set('statesArr', $statesArr);
         $this->set('stateId', $stateId);
         $this->_template->render(false, false, '_partial/states-list.php');
     }
+
     protected function getUserSearchForm()
     {
-        $frm          = new Form('frmUserSearch');
-        $keyword      = $frm->addTextBox(Label::getLabel('LBL_Name_Or_Email', $this->adminLangId), 'keyword', '', array(
-            'id' => 'keyword',
-            'autocomplete' => 'off'
-        ));
-        //$keyword->setFieldTagAttribute('onKeyUp','usersAutocomplete(this)');
-        $arr_options  = array(
-            '-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)
-        ) + applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $arr_options1 = array(
-            '-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)
-        ) + applicationConstants::getYesNoArr($this->adminLangId);
-        $arr_options2 = array(
-            '-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)
-        ) + User::getUserTypesArr($this->adminLangId);
-        $arr_options2 = $arr_options2 + array(
-            User::USER_TYPE_LEARNER_TEACHER => Label::getLabel('LBL_Learner', $this->adminLangId) . '+' . Label::getLabel('LBL_Teacher', $this->adminLangId)
-        );
-        $frm->addSelectBox(Label::getLabel('LBL_Active_Users', $this->adminLangId), 'user_active', $arr_options, -1, array(), '');
-        $frm->addSelectBox(Label::getLabel('LBL_Email_Verified', $this->adminLangId), 'user_verified', $arr_options1, -1, array(), '');
-        $frm->addSelectBox(Label::getLabel('LBL_User_Type', $this->adminLangId), 'type', $arr_options2, -1, array(), '');
-        $frm->addDateField(Label::getLabel('LBL_Reg._Date_From', $this->adminLangId), 'user_regdate_from', '', array(
-            'readonly' => 'readonly'
-        ));
-        $frm->addDateField(Label::getLabel('LBL_Reg._Date_To', $this->adminLangId), 'user_regdate_to', '', array(
-            'readonly' => 'readonly'
-        ));
+        $frm = new Form('frmUserSearch');
+        $frm->addTextBox(Label::getLabel('LBL_Name_Or_Email', $this->adminLangId), 'keyword', '', ['id' => 'keyword', 'autocomplete' => 'off']);
+        $arr_options = ['-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)] + applicationConstants::getActiveInactiveArr($this->adminLangId);
+        $arr_options1 = ['-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)] + applicationConstants::getYesNoArr($this->adminLangId);
+        $arr_options2 = ['-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)] + User::getUserTypesArr($this->adminLangId);
+        $arr_options2 = $arr_options2 + [User::USER_TYPE_LEARNER_TEACHER => Label::getLabel('LBL_Learner', $this->adminLangId) . '+' . Label::getLabel('LBL_Teacher', $this->adminLangId)];
+        $frm->addSelectBox(Label::getLabel('LBL_Active_Users', $this->adminLangId), 'user_active', $arr_options, -1, [], '');
+        $frm->addSelectBox(Label::getLabel('LBL_Email_Verified', $this->adminLangId), 'user_verified', $arr_options1, -1, [], '');
+        $frm->addSelectBox(Label::getLabel('LBL_User_Type', $this->adminLangId), 'type', $arr_options2, -1, [], '');
+        $frm->addDateField(Label::getLabel('LBL_Reg._Date_From', $this->adminLangId), 'user_regdate_from', '', ['readonly' => 'readonly']);
+        $frm->addDateField(Label::getLabel('LBL_Reg._Date_To', $this->adminLangId), 'user_regdate_to', '', ['readonly' => 'readonly']);
         $frm->addHiddenField('', 'page', 1);
         $frm->addHiddenField('', 'user_id', '');
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
@@ -227,18 +205,17 @@ class AdminBaseController extends FatController
         $this->set('msg', $msg);
         $this->_template->render(false, false, 'json-error.php', false, false);
     }
+
     protected function renderJsonSuccess($msg = '')
     {
         $this->set('msg', $msg);
         $this->_template->render(false, false, 'json-success.php', false, false);
     }
+
     public function includeDateTimeFiles()
     {
-        $this->_template->addCss(array(
-            'css/1jquery-ui-timepicker-addon.css'
-        ), false);
-        $this->_template->addJs(array(
-            'js/1jquery-ui-timepicker-addon.js'
-        ), false);
+        $this->_template->addCss(['css/1jquery-ui-timepicker-addon.css'], false);
+        $this->_template->addJs(['js/1jquery-ui-timepicker-addon.js'], false);
     }
+
 }

@@ -1,26 +1,16 @@
 <?php
+
 class CourseCategoriesController extends AdminBaseController
 {
+
     public function __construct($action)
     {
-        $ajaxCallArray = array(
-            'deleteRecord',
-            'form',
-            'langForm',
-            'search',
-            'setup',
-            'langSetup'
-        );
-        if (!FatUtility::isAjaxCall() && in_array($action, $ajaxCallArray)) {
-            die($this->str_invalid_Action);
-        }
         parent::__construct($action);
         $this->objPrivilege->canViewCourseCategory();
     }
 
     public function index()
     {
-        $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditCourseCategory($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->_template->render();
@@ -29,19 +19,14 @@ class CourseCategoriesController extends AdminBaseController
     public function search()
     {
         $srch = CourseCategory::getSearchObject($this->adminLangId, false);
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             't.ccategory_id',
             't.ccategory_active',
             't.ccategory_identifier',
             't_l.ccategory_title',
-        ));
+        ]);
         $srch->addOrder('ccategory_active', 'desc');
-        $rs      = $srch->getResultSet();
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetchAll($rs);
-        }
-        $adminId = AdminAuthentication::getLoggedAdminId();
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $canEdit = $this->objPrivilege->canEditCourseCategory($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->set("arr_listing", $records);
@@ -52,14 +37,9 @@ class CourseCategoriesController extends AdminBaseController
     public function form($cCategoryId)
     {
         $cCategoryId = FatUtility::int($cCategoryId);
-        $frm           = $this->getForm($cCategoryId);
+        $frm = $this->getForm($cCategoryId);
         if (0 < $cCategoryId) {
-            $data = CourseCategory::getAttributesById($cCategoryId, array(
-                'ccategory_id',
-                'ccategory_identifier',
-                'ccategory_active',
-
-            ));
+            $data = CourseCategory::getAttributesById($cCategoryId, ['ccategory_id', 'ccategory_identifier', 'ccategory_active',]);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
@@ -74,7 +54,7 @@ class CourseCategoriesController extends AdminBaseController
     public function setup()
     {
         $this->objPrivilege->canEditCourseCategory();
-        $frm  = $this->getForm();
+        $frm = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -102,7 +82,7 @@ class CourseCategoriesController extends AdminBaseController
             }
         } else {
             $cCategoryId = $record->getMainTableRecordId();
-            $newTabLangId  = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
+            $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         $this->set('msg', $this->str_setup_successful);
         $this->set('cCategoryId', $cCategoryId);
@@ -113,11 +93,11 @@ class CourseCategoriesController extends AdminBaseController
     public function langForm($cCategoryId = 0, $lang_id = 0)
     {
         $cCategoryId = FatUtility::int($cCategoryId);
-        $lang_id       = FatUtility::int($lang_id);
+        $lang_id = FatUtility::int($lang_id);
         if ($cCategoryId == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $langFrm  = $this->getLangForm($cCategoryId, $lang_id);
+        $langFrm = $this->getLangForm($cCategoryId, $lang_id);
         $langData = CourseCategory::getAttributesByLangId($lang_id, $cCategoryId);
         if ($langData) {
             $langFrm->fill($langData);
@@ -133,14 +113,14 @@ class CourseCategoriesController extends AdminBaseController
     public function langSetup()
     {
         $this->objPrivilege->canEditCourseCategory();
-        $post          = FatApp::getPostedData();
+        $post = FatApp::getPostedData();
         $cCategoryId = $post['ccategory_id'];
-        $lang_id       = $post['lang_id'];
+        $lang_id = $post['lang_id'];
         if ($cCategoryId == 0 || $lang_id == 0) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $frm  = $this->getLangForm($cCategoryId, $lang_id);
+        $frm = $this->getLangForm($cCategoryId, $lang_id);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -148,18 +128,18 @@ class CourseCategoriesController extends AdminBaseController
         }
         unset($post['ccategory_id']);
         unset($post['lang_id']);
-        $data = array(
+        $data = [
             'ccategorylang_lang_id' => $lang_id,
             'ccategorylang_ccategory_id' => $cCategoryId,
             'ccategory_title' => $post['ccategory_title'],
-        );
-        $obj  = new CourseCategory($cCategoryId);
+        ];
+        $obj = new CourseCategory($cCategoryId);
         if (!$obj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($obj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
         $newTabLangId = 0;
-        $languages    = Language::getAllNames();
+        $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
             if (!$row = CourseCategory::getAttributesByLangId($langId, $cCategoryId)) {
                 $newTabLangId = $langId;
@@ -181,15 +161,12 @@ class CourseCategoriesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $data = CourseCategory::getAttributesById($cCategoryId, array(
-            'ccategory_id',
-            'ccategory_active'
-        ));
+        $data = CourseCategory::getAttributesById($cCategoryId, ['ccategory_id', 'ccategory_active']);
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $obj    = new CourseCategory($cCategoryId);
+        $obj = new CourseCategory($cCategoryId);
         if (!$obj->changeStatus($status)) {
             Message::addErrorMessage($obj->getError());
             FatUtility::dieWithError(Message::getHtml());
@@ -210,9 +187,7 @@ class CourseCategoriesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $CourseCategoryObj->assignValues(array(
-            CourseCategory::tblFld('deleted') => 1
-        ));
+        $CourseCategoryObj->assignValues([CourseCategory::tblFld('deleted') => 1]);
         if (!$CourseCategoryObj->save()) {
             Message::addErrorMessage($CourseCategoryObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
@@ -223,11 +198,11 @@ class CourseCategoriesController extends AdminBaseController
     private function getForm($cCategoryId = 0)
     {
         $cCategoryId = FatUtility::int($cCategoryId);
-        $frm           = new Form('frmCourseCategory');
+        $frm = new Form('frmCourseCategory');
         $frm->addHiddenField('', 'ccategory_id', $cCategoryId);
         $frm->addRequiredField(Label::getLabel('LBL_Course_Category_Identifier', $this->adminLangId), 'ccategory_identifier');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'ccategory_active', $activeInactiveArr, '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'ccategory_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
@@ -241,4 +216,5 @@ class CourseCategoriesController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
 }

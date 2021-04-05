@@ -1,11 +1,14 @@
 <?php
+
 class CountriesController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
         $this->objPrivilege->canViewCountries();
     }
+
     public function index()
     {
         $search = $this->getSearchForm();
@@ -14,6 +17,7 @@ class CountriesController extends AdminBaseController
         $this->_template->addJs('js/import-export.js');
         $this->_template->render();
     }
+
     private function getSearchForm()
     {
         $frm = new Form('frmSearch');
@@ -23,14 +27,15 @@ class CountriesController extends AdminBaseController
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
+
     public function search()
     {
-        $pagesize   = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $searchForm = $this->getSearchForm();
-        $data       = FatApp::getPostedData();
-        $page       = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
-        $post       = $searchForm->getFormDataFromArray($data);
-        $srch       = Country::getSearchObject(false, $this->adminLangId);
+        $data = FatApp::getPostedData();
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
+        $post = $searchForm->getFormDataFromArray($data);
+        $srch = Country::getSearchObject(false, $this->adminLangId);
         $srch->addFld('c.* , c_l.country_name');
         if (!empty($post['keyword'])) {
             $condition = $srch->addCondition('c.country_code', 'like', '%' . $post['keyword'] . '%');
@@ -40,11 +45,7 @@ class CountriesController extends AdminBaseController
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-        $rs      = $srch->getResultSet();
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetchAll($rs);
-        }
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditCountries($adminId, true);
         $this->set("canEdit", $canEdit);
@@ -57,19 +58,20 @@ class CountriesController extends AdminBaseController
         $this->set('postedData', $post);
         $this->_template->render(false, false);
     }
+
     public function form($countryId)
     {
         $this->objPrivilege->canEditCountries();
         $countryId = FatUtility::int($countryId);
-        $frm       = $this->getForm($countryId);
+        $frm = $this->getForm($countryId);
         if (0 < $countryId) {
-            $data = Country::getAttributesById($countryId, array(
-                'country_id',
-                'country_code',
-                'country_active',
-                'country_currency_id',
-                'country_language_id'
-            ));
+            $data = Country::getAttributesById($countryId, [
+                        'country_id',
+                        'country_code',
+                        'country_active',
+                        'country_currency_id',
+                        'country_language_id'
+            ]);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
@@ -80,10 +82,11 @@ class CountriesController extends AdminBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
+
     public function setup()
     {
         $this->objPrivilege->canEditCountries();
-        $frm  = $this->getForm();
+        $frm = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -107,7 +110,7 @@ class CountriesController extends AdminBaseController
                 }
             }
         } else {
-            $countryId    = $record->getMainTableRecordId();
+            $countryId = $record->getMainTableRecordId();
             $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         $this->set('msg', Label::getLabel('LBL_Updated_Successfully', $this->adminLangId));
@@ -115,14 +118,15 @@ class CountriesController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function langForm($countryId = 0, $lang_id = 0)
     {
         $countryId = FatUtility::int($countryId);
-        $lang_id   = FatUtility::int($lang_id);
+        $lang_id = FatUtility::int($lang_id);
         if ($countryId == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $langFrm  = $this->getLangForm($countryId, $lang_id);
+        $langFrm = $this->getLangForm($countryId, $lang_id);
         $langData = Country::getAttributesByLangId($lang_id, $countryId);
         if ($langData) {
             $langFrm->fill($langData);
@@ -134,32 +138,33 @@ class CountriesController extends AdminBaseController
         $this->set('formLayout', Language::getLayoutDirection($lang_id));
         $this->_template->render(false, false);
     }
+
     public function langSetup()
     {
         $this->objPrivilege->canEditCountries();
-        $post      = FatApp::getPostedData();
+        $post = FatApp::getPostedData();
         $countryId = $post['country_id'];
-        $lang_id   = $post['lang_id'];
+        $lang_id = $post['lang_id'];
         if ($countryId == 0 || $lang_id == 0) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $frm  = $this->getLangForm($countryId, $lang_id);
+        $frm = $this->getLangForm($countryId, $lang_id);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         unset($post['country_id']);
         unset($post['lang_id']);
-        $data       = array(
+        $data = [
             'countrylang_lang_id' => $lang_id,
             'countrylang_country_id' => $countryId,
             'country_name' => $post['country_name']
-        );
+        ];
         $countryObj = new Country($countryId);
         if (!$countryObj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($countryObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
         $newTabLangId = 0;
-        $languages    = Language::getAllNames();
+        $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
             if (!$row = Country::getAttributesByLangId($langId, $countryId)) {
                 $newTabLangId = $langId;
@@ -171,23 +176,23 @@ class CountriesController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     private function getForm($countryId = 0)
     {
         $countryId = FatUtility::int($countryId);
-        $frm       = new Form('frmCountry');
+        $frm = new Form('frmCountry');
         $frm->addHiddenField('', 'country_id', $countryId);
         $frm->addRequiredField(Label::getLabel('LBL_Country_code', $this->adminLangId), 'country_code');
         $currencyArr = Currency::getCurrencyNameWithCode($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Currency', $this->adminLangId), 'country_currency_id', $currencyArr);
         $languageArr = Language::getAllNames();
-        $frm->addSelectBox(Label::getLabel('LBL_Language', $this->adminLangId), 'country_language_id', array(
-            0 => 'Site Default'
-        ) + $languageArr, '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Language', $this->adminLangId), 'country_language_id', [0 => 'Site Default'] + $languageArr, '', [], '');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'country_active', $activeInactiveArr, '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'country_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function getLangForm($countryId = 0, $lang_id = 0)
     {
         $frm = new Form('frmCountryLang');
@@ -197,6 +202,7 @@ class CountriesController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     public function changeStatus()
     {
         $this->objPrivilege->canEditCountries();
@@ -206,14 +212,11 @@ class CountriesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $data = Country::getAttributesById($countryId, array(
-            'country_active'
-        ));
+        $data = Country::getAttributesById($countryId, ['country_active']);
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-        //$status     = ($data['country_active'] == applicationConstants::ACTIVE) ? applicationConstants::INACTIVE : applicationConstants::ACTIVE;
         $countryObj = new Country($countryId);
         if (!$countryObj->changeStatus($status)) {
             Message::addErrorMessage($countryObj->getError());
@@ -255,33 +258,19 @@ class CountriesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError($this->str_invalid_request_id);
         }
-
         if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
             Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
             FatUtility::dieWithError(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
         }
-
         $fileHandlerObj = new AttachedFile();
         $fileHandlerObj->deleteFile($fileHandlerObj::FILETYPE_COUNTRY_FLAG, $country_id, 0, 0, 0);
-
-        if (!$res = $fileHandlerObj->saveAttachment(
-            $_FILES['file']['tmp_name'],
-            $fileHandlerObj::FILETYPE_COUNTRY_FLAG,
-            $country_id,
-            0,
-            $_FILES['file']['name'],
-            -1,
-            $unique_record = true,
-            0
-        )
-        ) {
+        if (!$res = $fileHandlerObj->saveAttachment($_FILES['file']['tmp_name'], $fileHandlerObj::FILETYPE_COUNTRY_FLAG, $country_id, 0, $_FILES['file']['name'], -1, $unique_record = true, 0)) {
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieWithError($fileHandlerObj->getError());
         }
-
         $this->set('countryId', $country_id);
         $this->set('file', $_FILES['file']['name']);
-        $this->set('msg', $_FILES['file']['name']. Label::getLabel('MSG_File_Uploaded_Successfully', $this->adminLangId));
+        $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_Uploaded_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
 
@@ -292,31 +281,25 @@ class CountriesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_COUNTRY_FLAG, $country_id, 0, 0, 0)) {
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
-    
+
     private function getMediaForm($country_id)
     {
         $frm = new Form('frmCountryMedia');
         $frm->addHTML('', 'country_flag_heading', '');
         $frm->addHiddenField('', 'country_id', $country_id);
-        $frm->addButton(
-            Label::getLabel('Lbl_Flag', $this->adminLangId),
-            'flag',
-            Label::getLabel('LBL_Upload_Flag', $this->adminLangId),
-            array('class'=>'uploadFile-Js','id'=>'flag','data-file_type'=>AttachedFile::FILETYPE_COUNTRY_FLAG,'data-country_id' => $country_id )
-        );
-
+        $frm->addButton(Label::getLabel('Lbl_Flag', $this->adminLangId), 'flag', Label::getLabel('LBL_Upload_Flag', $this->adminLangId), [
+            'class' => 'uploadFile-Js', 'id' => 'flag', 'data-file_type' => AttachedFile::FILETYPE_COUNTRY_FLAG, 'data-country_id' => $country_id
+        ]);
         $frm->addHtml('', 'country_flag_display_div', '');
-
         return $frm;
     }
+
 }

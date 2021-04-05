@@ -6,7 +6,6 @@ class IssuesReportedController extends AdminBaseController
         parent::__construct($action);
         $this->objPrivilege->canViewIssuesReported();
     }
-
     public function index()
     {
         $frmSearch = $this->getIssuesReportedForm();
@@ -15,30 +14,15 @@ class IssuesReportedController extends AdminBaseController
         $this->set('frmSearch', $frmSearch);
         $this->_template->render();
     }
-
     private function getIssuesReportedForm()
     {
         $frm = new Form('frmIssuesReportedSearch');
-        $status_options  = array(
-            '-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)
-        ) + IssuesReported::getStatusArr($this->adminLangId);
-        $user_options  = array(
-            '0' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)
-        ) + User::getUserTypesArr($this->adminLangId);
-
-        $keyword = $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', array(
-            'id' => 'keyword',
-            'autocomplete' => 'off'
-        ));
-
-        $keyword = $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', array(
-            'id' => 'keyword',
-            'autocomplete' => 'off'
-        ));
+        $status_options = ['-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)] + IssuesReported::getStatusArr($this->adminLangId);
+        $user_options = ['0' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)] + User::getUserTypesArr($this->adminLangId);
+        $keyword = $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', ['id' => 'keyword', 'autocomplete' => 'off']);
+        $keyword = $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', ['id' => 'keyword', 'autocomplete' => 'off']);
         $frm->addTextBox(Label::getLabel('LBL_Order_Id', $this->adminLangId), 'sldetail_order_id');
-        $frm->addSelectBox(Label::getLabel('LBL_Issue_Status', $this->adminLangId), 'issrep_status', $status_options, -1, array(), '');
-        // $frm->addSelectBox(Label::getLabel('LBL_Reported_By', $this->adminLangId), 'issrep_reported_by', $user_options, 0, array(), '');
-
+        $frm->addSelectBox(Label::getLabel('LBL_Issue_Status', $this->adminLangId), 'issrep_status', $status_options, -1, [], '');
         $frm->addHiddenField('', 'page', 1);
         $frm->addHiddenField('', 'slesson_teacher_id', 0);
         $frm->addHiddenField('', 'sldetail_learner_id', 0);
@@ -47,7 +31,6 @@ class IssuesReportedController extends AdminBaseController
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
-
     public function search()
     {
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
@@ -56,25 +39,14 @@ class IssuesReportedController extends AdminBaseController
         $post = $frmSearch->getFormDataFromArray($data);
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $srch = IssuesReported::getSearchObject();
-        $srch->addMultipleFields(
-            array(
-            "i.*",
-            'sld.sldetail_order_id',
-            'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',
-            )
-        );
+        $srch->addMultipleFields(["i.*", 'sld.sldetail_order_id', 'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',]);
         $srch->addCondition('issrep_is_for_admin', '=', 1);
-
         if (isset($post['issrep_status']) and $post['issrep_status'] > -1) {
             $status = FatUtility::int($post['issrep_status']);
             $srch->addCondition('issrep_status', '=', $status);
         }
-        /* if (isset($post['issrep_reported_by']) and $post['issrep_reported_by'] > 0) {
-            $status = FatUtility::int($post['issrep_reported_by']);
-            $srch->addCondition('issrep_reported_by', '=', $status);
-        } */
         if (isset($post['sldetail_order_id']) and $post['sldetail_order_id'] != null) {
-            $srch->addCondition('sldetail_order_id', 'LIKE', '%'.$post['sldetail_order_id'].'%');
+            $srch->addCondition('sldetail_order_id', 'LIKE', '%' . $post['sldetail_order_id'] . '%');
         }
         if (isset($post['slesson_teacher_id']) and $post['slesson_teacher_id'] > 0) {
             $user_is_teacher = FatUtility::int($post['slesson_teacher_id']);
@@ -89,9 +61,7 @@ class IssuesReportedController extends AdminBaseController
         $srch->addOrder('issrep_status', 'ASC');
         $srch->addOrder('issrep_added_on', 'DESC');
         $srch->addGroupBy('issrep_id');
-        $rs      = $srch->getResultSet();
-        $records = FatApp::getDb()->fetchAll($rs);
-        $adminId = AdminAuthentication::getLoggedAdminId();
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $this->set("arr_listing", $records);
         $this->set('pageCount', $srch->pages());
         $this->set('page', $page);
@@ -100,7 +70,6 @@ class IssuesReportedController extends AdminBaseController
         $this->set('recordCount', $srch->recordCount());
         $this->_template->render(false, false, null, false, false);
     }
-
     public function viewDetail($issueLessonId)
     {
         $issueLessonId = FatUtility::int($issueLessonId);
@@ -118,10 +87,7 @@ class IssuesReportedController extends AdminBaseController
         }
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sld.sldetail_learner_id = ul.user_id', 'ul');
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = ut.user_id', 'ut');
-
-        $srch->addMultipleFields(
-            array(
-            "i.*",
+        $srch->addMultipleFields(["i.*",
             "us.*",
             'sld.sldetail_order_id',
             'sl.slesson_teacher_id',
@@ -141,14 +107,9 @@ class IssuesReportedController extends AdminBaseController
             'op_qty',
             'op_lpackage_is_free_trial',
             'op_unit_price',
-            )
-        );
+        ]);
         $srch->addGroupBy('issrep_id');
-        // echo $srch->getQuery();
-        // die;
-        $rs = $srch->getResultSet();
-        $issueDetail = FatApp::getDb()->fetchAll($rs);
-        //$commet_teacher_id = $issueDetail['issrep_slesson_id'].'_'.$issueDetail['slesson_teacher_id'];
+        $issueDetail = FatApp::getDb()->fetchAll($srch->getResultSet());
         $callHistory = IssuesReported::getCallHistory($issueDetail[0]['slesson_teacher_id']);
         $issueStatusArr = IssuesReported::getStatusArr($this->adminLangId);
         $this->set("callHistory", $callHistory);
@@ -157,31 +118,22 @@ class IssuesReportedController extends AdminBaseController
         $this->set('issues_options', IssueReportOptions::getOptionsArray($this->adminLangId));
         $this->_template->render(false, false);
     }
-
     public function transaction($slessonId, $issueId)
     {
         $slessonId = FatUtility::int($slessonId);
         if (1 > $slessonId) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $canEdit = 		$this->objPrivilege->canEditIssuesReported($this->admin_id, true);
-        $post     = FatApp::getPostedData();
-        $srch     = Transaction::getSearchObject();
+        $canEdit = $this->objPrivilege->canEditIssuesReported($this->admin_id, true);
+        $post = FatApp::getPostedData();
+        $srch = Transaction::getSearchObject();
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'utxn.utxn_user_id = u.user_id', 'u');
         $srch->addCondition('utxn.utxn_type', '=', Transaction::TYPE_ISSUE_REFUND);
         $srch->addCondition('utxn.utxn_slesson_id', '=', $slessonId);
-        $srch->addMultipleFields(array(
-            'utxn.*',
-            'CONCAT(u.user_first_name, " " , u.user_last_name) AS username'
-        ));
+        $srch->addMultipleFields(['utxn.*', 'CONCAT(u.user_first_name, " " , u.user_last_name) AS username']);
         $srch->addOrder('utxn_id', 'DESC');
         $srch->addGroupBy('utxn.utxn_id');
-        $rs      = $srch->getResultSet();
-        $records = array();
-        if (!$rs) {
-            trigger_error($srch->getError(), E_USER_ERROR);
-        }
-        $records = FatApp::getDb()->fetchAll($rs);
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $this->set("arr_listing", $records);
         $this->set('postedData', $post);
         $this->set('slessonId', $slessonId);
@@ -190,7 +142,6 @@ class IssuesReportedController extends AdminBaseController
         $this->set("canEdit", $canEdit);
         $this->_template->render(false, false);
     }
-
     public function addLessonTransaction($lessonId, $issueId)
     {
         $this->objPrivilege->canEditIssuesReported($this->admin_id, true);
@@ -202,20 +153,9 @@ class IssuesReportedController extends AdminBaseController
         $frm = $this->addLessonTransactionForm($this->adminLangId);
         $issRepObj = new IssuesReported($issueId);
         $srch = $issRepObj->getIssueDetails();
-        $srch->addMultipleFields(
-            array(
-            "i.*",
-            'u.user_id',
-            'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',
-            )
-        );
-        $rs      = $srch->getResultSet();
-        $issueDetail = FatApp::getDb()->fetch($rs);
-        $frm->fill(array(
-            'user_id' => $issueDetail['user_id'],
-            'slesson_id' => $lessonId,
-            'issue_id' => $issueId
-        ));
+        $srch->addMultipleFields(["i.*", 'u.user_id', 'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username']);
+        $issueDetail = FatApp::getDb()->fetch($srch->getResultSet());
+        $frm->fill(['user_id' => $issueDetail['user_id'], 'slesson_id' => $lessonId, 'issue_id' => $issueId]);
         $reporterName = $issueDetail['reporter_username'];
         $this->set('reporterName', $reporterName);
         $this->set('lessonId', $lessonId);
@@ -223,11 +163,10 @@ class IssuesReportedController extends AdminBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-
     public function setupLessonTransaction()
     {
         $this->objPrivilege->canEditIssuesReported($this->admin_id, true);
-        $frm  = $this->addLessonTransactionForm($this->adminLangId);
+        $frm = $this->addLessonTransactionForm($this->adminLangId);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -239,14 +178,14 @@ class IssuesReportedController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $tObj = new Transaction($userId);
-        $data = array(
+        $data = [
             'utxn_user_id' => $userId,
             'utxn_date' => date('Y-m-d H:i:s'),
             'utxn_comments' => $post['description'],
             'utxn_status' => Transaction::STATUS_COMPLETED,
             'utxn_type' => Transaction::TYPE_ISSUE_REFUND,
             'utxn_slesson_id' => $post['slesson_id']
-        );
+        ];
         if ($post['type'] == Transaction::CREDIT_TYPE) {
             $data['utxn_credit'] = $post['amount'];
         }
@@ -266,7 +205,6 @@ class IssuesReportedController extends AdminBaseController
         $this->set('msg', $this->str_setup_successful);
         $this->_template->render(false, false, 'json-success.php');
     }
-
     private function addLessonTransactionForm($langId)
     {
         $frm = new Form('frmUserTransaction');
@@ -280,7 +218,6 @@ class IssuesReportedController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
-
     public function updateStatus()
     {
         if (!$this->objPrivilege->canEditIssuesReported($this->admin_id, true)) {
@@ -290,8 +227,8 @@ class IssuesReportedController extends AdminBaseController
         if (IssuesReported::getIssueStatus($data['issue_id']) == IssuesReported::STATUS_RESOLVED) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Status_Already_Resolved", CommonHelper::getLangId()));
         }
-        $assignValues = array('issrep_status' => $data['issue_status'],'issrep_updated_on' => date('Y-m-d H:i:s'));
-        if (!FatApp::getDb()->updateFromArray(IssuesReported::DB_TBL, $assignValues, array('smt' => 'issrep_id = ?', 'vals' => array($data['issue_id'])))) {
+        $assignValues = ['issrep_status' => $data['issue_status'], 'issrep_updated_on' => date('Y-m-d H:i:s')];
+        if (!FatApp::getDb()->updateFromArray(IssuesReported::DB_TBL, $assignValues, ['smt' => 'issrep_id = ?', 'vals' => [$data['issue_id']]])) {
             FatUtility::dieJsonError(Label::getLabel("LBL_SYSTEM_ERROR", CommonHelper::getLangId()));
         }
         $this->set('msg', 'Updated Successfully.');

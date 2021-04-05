@@ -1,6 +1,8 @@
 <?php
+
 class MetaTagsController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -8,6 +10,7 @@ class MetaTagsController extends AdminBaseController
         $canEdit = $this->objPrivilege->canEditMetaTags($this->admin_id, true);
         $this->set("canEdit", $canEdit);
     }
+
     public function index()
     {
         $tabsArr = MetaTag::getTabsArr($this->adminLangId);
@@ -15,16 +18,17 @@ class MetaTagsController extends AdminBaseController
         $this->set('activeTab', MetaTag::META_GROUP_DEFAULT);
         $this->_template->render();
     }
+
     public function listMetaTags()
     {
         $metaType = FatApp::getPostedData('metaType', FatUtility::VAR_INT, MetaTag::META_GROUP_DEFAULT);
         $searchForm = $this->getSearchForm($metaType);
         $canAdd = false;
         $showFilters = true;
-        if (in_array($metaType, array(MetaTag::META_GROUP_DEFAULT))) {
+        if (in_array($metaType, [MetaTag::META_GROUP_DEFAULT])) {
             $showFilters = false;
         }
-        if (in_array($metaType, array(MetaTag::META_GROUP_OTHER))) {
+        if (in_array($metaType, [MetaTag::META_GROUP_OTHER])) {
             $canAdd = true;
         }
         $this->set('metaTypeDefault', MetaTag::META_GROUP_DEFAULT);
@@ -34,16 +38,16 @@ class MetaTagsController extends AdminBaseController
         $this->set('frmSearch', $searchForm);
         $this->_template->render(false, false);
     }
+
     public function search()
     {
         $data = FatApp::getPostedData();
-        $meta_record_id = 'meta_record_id';
-        $page = (empty($data['page']) ||  $data['page'] <= 0) ? 1 :  $data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
         $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_INT, MetaTag::META_GROUP_DEFAULT);
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-        $metaSrch =  new MetaTagSearch($this->adminLangId);
+        $metaSrch = new MetaTagSearch($this->adminLangId);
         $criteria['metaType'] = ['val' => $metaType];
         if (!empty($post['keyword'])) {
             $criteria['keyword'] = ['val' => $post['keyword']];
@@ -55,9 +59,7 @@ class MetaTagsController extends AdminBaseController
         $metaSrch->addMultipleFields($this->getDbColumns($metaType));
         $metaSrch->setPageNumber($page);
         $metaSrch->setPageSize($pagesize);
-
         $records = FatApp::getDb()->fetchAll($metaSrch->getResultSet());
-
         $this->set("meta_record_id", $this->getMetaRecordcolumn($metaType));
         $this->set("columnsArr", $this->getColumns($metaType));
         $this->set("arr_listing", $records);
@@ -70,6 +72,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('postedData', $post);
         $this->_template->render(false, false, 'meta-tags/default-meta-tag.php');
     }
+
     public function form()
     {
         $metaId = FatApp::getPostedData('metaId', FatUtility::VAR_INT, 0);
@@ -82,9 +85,8 @@ class MetaTagsController extends AdminBaseController
                 FatUtility::dieWithError($this->str_invalid_request);
             }
             if ($metaType == MetaTag::META_GROUP_OTHER) {
-                $data['meta_slug'] =  MetaTag::getOrignialUrlFromComponents($data);
+                $data['meta_slug'] = MetaTag::getOrignialUrlFromComponents($data);
             }
-
             $frm->fill($data);
         }
         $this->set('frm', $frm);
@@ -95,6 +97,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('languages', Language::getAllNames());
         $this->_template->render(false, false);
     }
+
     public function setup()
     {
         $meta_record_id = FatApp::getPostedData('meta_record_id');
@@ -137,6 +140,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function langForm($metaId = 0, $langId = 0, int $metaType = MetaTag::META_GROUP_DEFAULT)
     {
         $metaId = FatUtility::int($metaId);
@@ -150,7 +154,6 @@ class MetaTagsController extends AdminBaseController
         if ($langData) {
             $langFrm->fill($langData);
         }
-
         $this->set('languages', Language::getAllNames());
         $this->set('metaId', $metaId);
         $this->set('metaType', $metaType);
@@ -160,6 +163,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('formLayout', Language::getLayoutDirection($langId));
         $this->_template->render(false, false);
     }
+
     public function langSetup()
     {
         $data = FatApp::getPostedData();
@@ -175,7 +179,7 @@ class MetaTagsController extends AdminBaseController
         }
         $frm = $this->getLangForm($metaId, $langId);
         $data = $frm->getFormDataFromArray(FatApp::getPostedData());
-        if (false ===  $data) {
+        if (false === $data) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
@@ -185,7 +189,6 @@ class MetaTagsController extends AdminBaseController
         $data['metalang_lang_id'] = $langId;
         $data['metalang_meta_id'] = $metaId;
         $metaTag = new MetaTag($metaId);
-
         if (!$metaTag->updateLangData($langId, $data)) {
             Message::addErrorMessage($metaTag->getError());
             FatUtility::dieJsonError(Message::getHtml());
@@ -203,10 +206,10 @@ class MetaTagsController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function deleteRecord()
     {
         $metaId = FatApp::getPostedData('metaId', FatUtility::VAR_INT, 0);
-
         $metaTag = new MetaTag($metaId);
         if (!$metaTag->loadFromDb()) {
             Message::addErrorMessage($this->str_invalid_request_id);
@@ -218,16 +221,17 @@ class MetaTagsController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
+
     public function searchMeta()
     {
         $data = FatApp::getPostedData();
         $meta_record_id = 'meta_record_id';
-        $page = (empty($data['page']) ||  $data['page'] <= 0) ? 1 :  $data['page'];
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $searchForm = $this->getSearchForm($data['metaType']);
         $post = $searchForm->getFormDataFromArray($data);
         $metaType = FatUtility::convertToType($post['metaType'], FatUtility::VAR_INT, MetaTag::META_GROUP_DEFAULT);
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-        $metaSrch =  new MetaTagSearch($this->adminLangId);
+        $metaSrch = new MetaTagSearch($this->adminLangId);
         $criteria['metaType'] = ['val' => $metaType];
         if (!empty($post['keyword'])) {
             $criteria['keyword'] = ['val' => $post['keyword']];
@@ -240,7 +244,6 @@ class MetaTagsController extends AdminBaseController
         $metaSrch->setPageNumber($page);
         $metaSrch->setPageSize($pagesize);
         $records = FatApp::getDb()->fetchAll($metaSrch->getResultSet());
-
         $this->set("meta_record_id", $this->getMetaRecordcolumn($metaType));
         $this->set("columnsArr", $this->getColumns($metaType));
         $this->set("arr_listing", $records);
@@ -252,9 +255,9 @@ class MetaTagsController extends AdminBaseController
         $this->set('postedData', $post);
         $this->_template->render(false, false, 'meta-tags/default-meta-tag.php');
     }
+
     private function getSearchForm(int $metaType): Form
     {
-
         $frm = new Form('frmSearch');
         $frm->addHiddenField(Label::getLabel('LBL_Type', $this->adminLangId), 'metaType', $metaType);
         switch ($metaType) {
@@ -266,13 +269,14 @@ class MetaTagsController extends AdminBaseController
                 break;
             default:
                 $frm->addTextBox(Label::getLabel('LBL_Keyword', $this->adminLangId), 'keyword');
-                $frm->addSelectBox(Label::getLabel('LBL_Has_Tags_Associated', $this->adminLangId), 'hasTagsAssociated', applicationConstants::getYesNoArr($this->adminLangId), false, array(), Label::getLabel('LBL_Doesn\'t_Matter', $this->adminLangId));
+                $frm->addSelectBox(Label::getLabel('LBL_Has_Tags_Associated', $this->adminLangId), 'hasTagsAssociated', applicationConstants::getYesNoArr($this->adminLangId), false, [], Label::getLabel('LBL_Doesn\'t_Matter', $this->adminLangId));
                 break;
         }
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
-        return  $frm;
+        return $frm;
     }
+
     private function getForm(int $metaId = 0, $metaType = MetaTag::META_GROUP_DEFAULT, $recordId = 0)
     {
         $frm = new Form('frmMetaTag');
@@ -287,6 +291,7 @@ class MetaTagsController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function getLangForm(int $metaId = 0, int $lang_id = 0)
     {
         $frm = new Form('frmMetaTagLang');
@@ -299,6 +304,7 @@ class MetaTagsController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function setUrlComponents($metaType, &$post)
     {
         $metaId = FatUtility::int($post['meta_id']);
@@ -334,9 +340,9 @@ class MetaTagsController extends AdminBaseController
                 }
                 break;
         }
-
         return true;
     }
+
     private function getColumns(int $metaType)
     {
         $columnsArr = [];
@@ -407,6 +413,7 @@ class MetaTagsController extends AdminBaseController
         }
         return $columnsArr;
     }
+
     private function getDbColumns(int $metaType)
     {
         $dbcolumnsArr = ['meta_id', 'meta_record_id', 'meta_identifier', 'meta_title'];
@@ -432,6 +439,7 @@ class MetaTagsController extends AdminBaseController
         }
         return $dbcolumnsArr;
     }
+
     private function getMetaRecordcolumn(int $metaType)
     {
         $metaRecordColumns = [
@@ -443,7 +451,7 @@ class MetaTagsController extends AdminBaseController
             MetaTag::META_GROUP_BLOG_POST => 'post_id',
             MetaTag::META_GROUP_GRP_CLASS => 'grpcls_id'
         ];
-
         return $metaRecordColumns[$metaType];
     }
+
 }

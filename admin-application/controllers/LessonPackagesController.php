@@ -1,6 +1,8 @@
 <?php
+
 class LessonPackagesController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -9,7 +11,6 @@ class LessonPackagesController extends AdminBaseController
 
     public function index()
     {
-        $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditLessonPackages($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->_template->render();
@@ -18,52 +19,46 @@ class LessonPackagesController extends AdminBaseController
     public function search()
     {
         $srch = LessonPackage::getSearchObject($this->adminLangId, false);
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'lpackage_id',
             'lpackage_active',
             'lpackage_identifier',
             'lpackage_title',
             'lpackage_lessons',
             'lpackage_is_free_trial'
-        ));
+        ]);
         $srch->addOrder('lpackage_active', 'desc');
         $srch->addOrder('lpackage_is_free_trial', 'desc');
         $srch->addOrder('lpackage_added_on', 'desc');
-        $rs      = $srch->getResultSet();
-        $records = FatApp::getDb()->fetchAll($rs);
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $canEdit = $this->objPrivilege->canEditLessonPackages(AdminAuthentication::getLoggedAdminId(), true);
         $this->set("canEdit", $canEdit);
         $this->set("arr_listing", $records);
         $this->set('recordCount', $srch->recordCount());
-        //$this->set( 'adminLangId', $this->adminLangId );
         $this->_template->render(false, false);
     }
 
     public function form($lPackageId)
     {
         $lPackageId = FatUtility::int($lPackageId);
-
-        $isFreeTrial =  applicationConstants::NO;
-        $lessonPackageData =[];
+        $isFreeTrial = applicationConstants::NO;
+        $lessonPackageData = [];
         if (0 < $lPackageId) {
-            $lessonPackageData = LessonPackage::getAttributesById($lPackageId, array(
-                'lpackage_id',
-                'lpackage_identifier',
-                'lpackage_lessons',
-                'lpackage_active',
-                'lpackage_is_free_trial'
-            ));
+            $lessonPackageData = LessonPackage::getAttributesById($lPackageId, [
+                        'lpackage_id',
+                        'lpackage_identifier',
+                        'lpackage_lessons',
+                        'lpackage_active',
+                        'lpackage_is_free_trial'
+            ]);
             if ($lessonPackageData === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
             $isFreeTrial = $lessonPackageData['lpackage_is_free_trial'];
             $lessonPackageData['lpackage_lessons'] = $lessonPackageData['lpackage_lessons'] * 1;
-           
         }
-      
         $frm = $this->getForm($lPackageId, $isFreeTrial);
         $frm->fill($lessonPackageData);
-
         $this->set('languages', Language::getAllNames());
         $this->set('lPackageId', $lPackageId);
         $this->set('isFreeTrial', $isFreeTrial);
@@ -75,14 +70,12 @@ class LessonPackagesController extends AdminBaseController
     {
         $this->objPrivilege->canEditLessonPackages();
         $lPackageId = FatApp::getPostedData('lpackage_id', FatUtility::VAR_INT, 0);
-       
         $isFreeTrial = applicationConstants::NO;
         if ($lPackageId > 0) {
-            
             $srch = LessonPackage::getSearchObject(0, false);
             $srch->setPageSize(1);
             $srch->doNotCalculateRecords();
-            $srch->addMultipleFields(array('lpackage_is_free_trial', 'lpackage_id'));
+            $srch->addMultipleFields(['lpackage_is_free_trial', 'lpackage_id']);
             $srch->addCondition('lpackage_id', '=', $lPackageId);
             $rs = $srch->getResultSet();
             $lessonPackageData = FatApp::getDb()->fetch($rs);
@@ -90,26 +83,21 @@ class LessonPackagesController extends AdminBaseController
                 Message::addErrorMessage(Label::getLabel('LBL_INVALID_REQUEST'));
                 FatUtility::dieJsonError(Message::getHtml());
             }
-            
             $isFreeTrial = $lessonPackageData['lpackage_is_free_trial'];
         }
-       
-        $form  = $this->getForm($lPackageId, $isFreeTrial);
+        $form = $this->getForm($lPackageId, $isFreeTrial);
         $post = $form->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($form->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
         unset($post['lpackage_id'], $post['lpackage_is_free_trial']);
-        if( $isFreeTrial == applicationConstants::YES) {
+        if ($isFreeTrial == applicationConstants::YES) {
             unset($post['lpackage_lessons']);
         }
-
         if ($lPackageId == 0) {
             $post['lpackage_added_on'] = date('Y-m-d H:i:s');
         }
-      
-        
         $record = new LessonPackage($lPackageId);
         $record->assignValues($post);
         if (!$record->save()) {
@@ -127,7 +115,7 @@ class LessonPackagesController extends AdminBaseController
             }
         } else {
             $lPackageId = $record->getMainTableRecordId();
-            $newTabLangId  = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
+            $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         $this->set('msg', $this->str_setup_successful);
         $this->set('lPackageId', $lPackageId);
@@ -138,11 +126,11 @@ class LessonPackagesController extends AdminBaseController
     public function langForm($lPackageId = 0, $lang_id = 0)
     {
         $lPackageId = FatUtility::int($lPackageId);
-        $lang_id       = FatUtility::int($lang_id);
+        $lang_id = FatUtility::int($lang_id);
         if ($lPackageId == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $langFrm  = $this->getLangForm($lPackageId, $lang_id);
+        $langFrm = $this->getLangForm($lPackageId, $lang_id);
         $langData = LessonPackage::getAttributesByLangId($lang_id, $lPackageId);
         if ($langData) {
             $langFrm->fill($langData);
@@ -158,14 +146,14 @@ class LessonPackagesController extends AdminBaseController
     public function langSetup()
     {
         $this->objPrivilege->canEditLessonPackages();
-        $post          = FatApp::getPostedData();
+        $post = FatApp::getPostedData();
         $lPackageId = $post['lpackage_id'];
-        $lang_id       = $post['lang_id'];
+        $lang_id = $post['lang_id'];
         if ($lPackageId == 0 || $lang_id == 0) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $frm  = $this->getLangForm($lPackageId, $lang_id);
+        $frm = $this->getLangForm($lPackageId, $lang_id);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage($frm->getValidationErrors());
@@ -173,19 +161,18 @@ class LessonPackagesController extends AdminBaseController
         }
         unset($post['lpackage_id']);
         unset($post['lang_id']);
-        $data = array(
+        $data = [
             'lpackagelang_lang_id' => $lang_id,
             'lpackagelang_lpackage_id' => $lPackageId,
             'lpackage_title' => $post['lpackage_title'],
-           // 'lpackage_text' => $post['lpackage_text']
-        );
-        $obj  = new LessonPackage($lPackageId);
+        ];
+        $obj = new LessonPackage($lPackageId);
         if (!$obj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($obj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
         $newTabLangId = 0;
-        $languages    = Language::getAllNames();
+        $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
             if (!$row = LessonPackage::getAttributesByLangId($langId, $lPackageId)) {
                 $newTabLangId = $langId;
@@ -207,16 +194,12 @@ class LessonPackagesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $data = LessonPackage::getAttributesById($lPackageId, array(
-            'lpackage_id',
-            'lpackage_active'
-        ));
+        $data = LessonPackage::getAttributesById($lPackageId, ['lpackage_id', 'lpackage_active']);
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-        //$status = ($data['lpackage_active'] == applicationConstants::ACTIVE) ? applicationConstants::INACTIVE : applicationConstants::ACTIVE;
-        $obj    = new LessonPackage($lPackageId);
+        $obj = new LessonPackage($lPackageId);
         if (!$obj->changeStatus($status)) {
             Message::addErrorMessage($obj->getError());
             FatUtility::dieWithError(Message::getHtml());
@@ -237,9 +220,7 @@ class LessonPackagesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $LessonPackageObj->assignValues(array(
-            LessonPackage::tblFld('deleted') => 1
-        ));
+        $LessonPackageObj->assignValues([LessonPackage::tblFld('deleted') => 1]);
         if (!$LessonPackageObj->save()) {
             Message::addErrorMessage($LessonPackageObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
@@ -250,25 +231,18 @@ class LessonPackagesController extends AdminBaseController
     private function getForm($lPackageId = 0, int $isFreeTrial = applicationConstants::NO)
     {
         $lPackageId = FatUtility::int($lPackageId);
-        $frm           = new Form('frmLessonPackage');
+        $frm = new Form('frmLessonPackage');
         $frm->addHiddenField('', 'lpackage_id', $lPackageId);
         $frm->addRequiredField(Label::getLabel('LBL_Lesson_Package_Identifier', $this->adminLangId), 'lpackage_identifier');
         $fld = $frm->addFloatField(Label::getLabel('LBL_Package_Lessons', $this->adminLangId), 'lpackage_lessons');
         $fld->requirements()->setRequired(true);
-
-        if($isFreeTrial == applicationConstants::NO){
+        if ($isFreeTrial == applicationConstants::NO) {
             $fld->requirements()->setFloatPositive();
-            $fld->requirements()->setRange(1,9999);
+            $fld->requirements()->setRange(1, 9999);
         }
-       
         $fld->htmlAfterField = '<small>' . Label::getLabel('LBL_Note:_Enter_Number_of_lessons_in_a_package') . '</small>';
-
-        // $yesNoArr = applicationConstants::getYesNoArr($this->adminLangId);
-        // $frm->addSelectBox(Label::getLabel('LBL_Free_Trial'), 'lpackage_is_free_trial', $yesNoArr, applicationConstants::NO, array(), '');
-
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'lpackage_active', $activeInactiveArr, '', array(), '');
-
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'lpackage_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
@@ -279,8 +253,8 @@ class LessonPackagesController extends AdminBaseController
         $frm->addHiddenField('', 'lpackage_id', $lPackageId);
         $frm->addHiddenField('', 'lang_id', $lang_id);
         $frm->addRequiredField(Label::getLabel('LBL_Lesson_Package_Title', $this->adminLangId), 'lpackage_title');
-        // $frm->addTextarea(Label::getLabel('LBL_lpackage_Text', $this->adminLangId), 'lpackage_text');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
 }

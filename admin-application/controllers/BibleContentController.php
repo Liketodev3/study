@@ -2,14 +2,12 @@
 
 class BibleContentController extends AdminBaseController
 {
-    private $canView;
+
     private $canEdit;
 
     public function __construct($action)
     {
         parent::__construct($action);
-
-        $this->admin_id = AdminAuthentication::getLoggedAdminId();
         $this->objPrivilege->canViewBibleContent($this->admin_id);
         $this->objPrivilege->canViewBibleContent($this->admin_id, true);
         $this->canEdit = $this->objPrivilege->canEditBibleContent($this->admin_id, true);
@@ -27,10 +25,9 @@ class BibleContentController extends AdminBaseController
         $frm = new Form('frmPagesSearch');
         $f1 = $frm->addTextBox('Content Heading', 'keyword', '');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $frm->addSelectBox('Status', 'biblecontent_active', $activeInactiveArr, '', array());
+        $frm->addSelectBox('Status', 'biblecontent_active', $activeInactiveArr, '', []);
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', 'Search');
-        $fld_cancel = $frm->addButton("", "btn_clear", "Clear Search", array('onClick'=>'clearSearch()'));
-
+        $fld_cancel = $frm->addButton("", "btn_clear", "Clear Search", ['onClick' => 'clearSearch()']);
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
@@ -38,9 +35,7 @@ class BibleContentController extends AdminBaseController
     public function setup()
     {
         $this->objPrivilege->canEditBibleContent();
-
         $frm = $this->getForm();
-
         $postedData = FatApp::getPostedData();
         $postedData['image'] = 1;
         $post = $frm->getFormDataFromArray($postedData);
@@ -48,7 +43,6 @@ class BibleContentController extends AdminBaseController
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $bibleContentId = $post['biblecontent_id'];
         $bibleContent = new BibleContent($bibleContentId);
         $bibleContent->assignValues($post);
@@ -56,49 +50,35 @@ class BibleContentController extends AdminBaseController
             Message::addErrorMessage($bibleContent->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $bibleContentId = $bibleContent->getMainTableRecordId();
-        //Message::addMessage('Setup Successful.');
         FatUtility::dieJsonSuccess('Setup Successful.');
     }
 
     public function search()
     {
         $this->objPrivilege->canViewBibleContent();
-
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $searchForm = $this->getSearchForm();
         $data = FatApp::getPostedData();
         $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $post = $searchForm->getFormDataFromArray($data);
-
         $srch = BibleContent::getSearchObject($this->adminLangId);
-
         if (!empty($post['keyword'])) {
             $srch->addCondition('biblecontent_title', 'like', '%' . $post['keyword'] . '%');
         }
-
-        if (!empty($post['biblecontent_type']) && intval($post['biblecontent_type']>0)) {
+        if (!empty($post['biblecontent_type']) && intval($post['biblecontent_type'] > 0)) {
             $srch->addCondition('biblecontent_type', '=', $post['biblecontent_type']);
         }
-
         if ($post['biblecontent_active'] != '') {
             $srch->addCondition('biblecontent_active', '=', intval($post['biblecontent_active']));
         }
-
         $page = (empty($page) || $page <= 0) ? 1 : $page;
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         $srch->addOrder(BibleContent::DB_TBL_PREFIX . 'active', 'DESC');
         $srch->addOrder(BibleContent::DB_TBL_PREFIX . 'display_order', 'ASC');
-        $rs = $srch->getResultSet();
-
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetchAll($rs);
-        }
-
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $this->set("arr_listing", $records);
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
@@ -111,7 +91,6 @@ class BibleContentController extends AdminBaseController
     public function form($contentId = 0)
     {
         $this->objPrivilege->canViewBibleContent();
-
         $contentId = FatUtility::int($contentId);
         $frm = $this->getForm($contentId);
         if ($contentId > 0) {
@@ -124,7 +103,6 @@ class BibleContentController extends AdminBaseController
             if ($videoData['video_thumb']) {
                 $frm->getField('biblecontent_url')->attachField($frm->addHtml('', 'video_display', '<img id="displayVideo" alt="" width="100" height="100" src=' . $videoData['video_thumb'] . '>'));
             }
-
             $frm->fill($data);
         }
         $this->set('languages', Language::getAllNames());
@@ -136,16 +114,14 @@ class BibleContentController extends AdminBaseController
     private function getForm()
     {
         $langId = CommonHelper::getLangId();
-
         $frm = new Form('frmBlock');
         $frm->addHiddenField('', 'biblecontent_id', '');
         $frm->addRequiredField('Content Heading', 'biblecontent_title');
-
-        $videoFld = $frm->addRequiredField('Video Url', 'biblecontent_url', '', array());
+        $videoFld = $frm->addRequiredField('Video Url', 'biblecontent_url', '', []);
         $videoReq = new FormFieldRequirement('biblecontent_url', 'Video Url');
         $videoReq->setRequired(true);
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($langId);
-        $frm->addSelectBox('Status', 'biblecontent_active', $activeInactiveArr, '', array(), '');
+        $frm->addSelectBox('Status', 'biblecontent_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', 'Save Changes');
         return $frm;
     }
@@ -161,7 +137,7 @@ class BibleContentController extends AdminBaseController
             FatUtility::dieWithError($this->str_invalid_request);
         }
         $bibleLangFrm = $this->getLangForm($biblecontent_id, $lang_id);
-        $langData      = BibleContent::getAttributesByLangId($lang_id, $biblecontent_id);
+        $langData = BibleContent::getAttributesByLangId($lang_id, $biblecontent_id);
         if ($langData) {
             $bibleLangFrm->fill($langData);
         }
@@ -185,27 +161,27 @@ class BibleContentController extends AdminBaseController
     public function langSetup()
     {
         $this->objPrivilege->canEditBibleContent();
-        $post         = FatApp::getPostedData();
+        $post = FatApp::getPostedData();
         $biblecontent_id = $post['biblecontent_id'];
-        $lang_id      = $post['lang_id'];
+        $lang_id = $post['lang_id'];
         if ($biblecontent_id == 0 || $lang_id == 0) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $frm       = $this->getLangForm($biblecontent_id, $lang_id);
-        $post      = $frm->getFormDataFromArray(FatApp::getPostedData());
-        $data      = array(
+        $frm = $this->getLangForm($biblecontent_id, $lang_id);
+        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+        $data = [
             'biblecontentlang_biblecontent_id' => $biblecontent_id,
             'biblecontentlang_lang_id' => $lang_id,
             'biblecontentlang_biblecontent_title' => $post['biblecontentlang_biblecontent_title']
-        );
+        ];
         $bibleObj = new BibleContent($biblecontent_id);
         if (!$bibleObj->updateLangData($lang_id, $data)) {
-            Message::addErrorMessage($taxObj->getError());
+            Message::addErrorMessage($bibleObj->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
         $newTabLangId = 0;
-        $languages    = Language::getAllNames();
+        $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
             if (!$row = BibleContent::getAttributesByLangId($langId, $biblecontent_id)) {
                 $newTabLangId = $langId;
@@ -226,44 +202,39 @@ class BibleContentController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-
         $biblecontent_active = FatApp::getPostedData('biblecontent_active', FatUtility::VAR_INT, -1);
         if (0 !== $biblecontent_active && 1 !== $biblecontent_active) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-
-        $data = BibleContent::getAttributesById($biblecontent_id, array('biblecontent_id', 'biblecontent_active'));
+        $data = BibleContent::getAttributesById($biblecontent_id, ['biblecontent_id', 'biblecontent_active']);
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-
         $BibleContent = new BibleContent($biblecontent_id);
         if (!$BibleContent->changeStatus($biblecontent_active)) {
             Message::addErrorMessage($BibleContent->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
-
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
 
     public function deleteRecord()
     {
         $this->objPrivilege->canEditBibleContent();
-
         $biblecontent_id = FatApp::getPostedData('id', FatUtility::VAR_INT, 0);
         if ($biblecontent_id < 1) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
         $db = FatApp::getDb();
-        $deleteRecords = $db->deleteRecords(BibleContent::DB_TBL, array('smt'=>'biblecontent_id = ?','vals'=>array($biblecontent_id)));
+        $db->deleteRecords(BibleContent::DB_TBL, ['smt' => 'biblecontent_id = ?', 'vals' => [$biblecontent_id]]);
         if ($db->getError()) {
             Message::addErrorMessage($db->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $deleteRecords = $db->deleteRecords(BibleContent::DB_TBL_LANG, array('smt'=>'biblecontentlang_biblecontent_id = ?','vals'=>array($biblecontent_id)));
+        $db->deleteRecords(BibleContent::DB_TBL_LANG, ['smt' => 'biblecontentlang_biblecontent_id = ?', 'vals' => [$biblecontent_id]]);
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
 
@@ -280,4 +251,5 @@ class BibleContentController extends AdminBaseController
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Order_Updated_Successfully', $this->adminLangId));
         }
     }
+
 }

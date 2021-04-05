@@ -16,11 +16,7 @@ class SocialPlatformController extends AdminBaseController
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addCondition('splatform_user_id', '=', 0);
-        $rs = $srch->getResultSet();
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetchAll($rs);
-        }
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditSocialPlatforms($adminId, true);
         $this->set("canEdit", $canEdit);
@@ -217,15 +213,11 @@ class SocialPlatformController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $data = SocialPlatform::getAttributesById($splatformId, array(
-            'splatform_id',
-            'splatform_active'
-        ));
+        $data = SocialPlatform::getAttributesById($splatformId, array(            'splatform_id',            'splatform_active'        ));
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-        //$status = ( $data['splatform_active'] == applicationConstants::ACTIVE ) ? applicationConstants::INACTIVE : applicationConstants::ACTIVE;
         $socialPlatObj = new SocialPlatform($splatformId);
         if (!$socialPlatObj->changeStatus($status)) {
             Message::addErrorMessage($socialPlatObj->getError());
@@ -248,7 +240,7 @@ class SocialPlatformController extends AdminBaseController
         $fld->setUnique('tbl_navigations', 'splatform_identifier', 'splatform_id', 'splatform_id', 'splatform_id');
         $frm->addRequiredField(Label::getLabel('LBL_URL', $this->adminLangId), 'splatform_url');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'splatform_active', $activeInactiveArr, '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'splatform_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
@@ -265,7 +257,7 @@ class SocialPlatformController extends AdminBaseController
     {
         $frm = new Form('frmSocialPlatformMedia');
         $frm->addHiddenField('', 'splatform_id', $splatform_id);
-        $fld = $frm->addButton(Label::getLabel('LBL_Icon_Image', $this->adminLangId), 'image', Label::getLabel('LBL_Upload_File', $this->adminLangId), array(
+        $frm->addButton(Label::getLabel('LBL_Icon_Image', $this->adminLangId), 'image', Label::getLabel('LBL_Upload_File', $this->adminLangId), array(
             'class' => 'File-Js',
             'id' => 'image',
             'data-splatform_id' => $splatform_id

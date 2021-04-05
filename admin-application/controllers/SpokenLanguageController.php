@@ -1,6 +1,8 @@
-    <?php
+<?php
+
 class SpokenLanguageController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -9,10 +11,8 @@ class SpokenLanguageController extends AdminBaseController
 
     public function index()
     {
-        $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditSpokenLanguage($this->admin_id, true);
-        $frmSearch = $this->getSearchForm();
-        $this->set('frmSearch', $frmSearch);
+        $this->set('frmSearch', $this->getSearchForm());
         $this->set("canEdit", $canEdit);
         $this->_template->render();
     }
@@ -23,26 +23,23 @@ class SpokenLanguageController extends AdminBaseController
         $searchForm = $this->getSearchForm();
         $post = $searchForm->getFormDataFromArray($data);
         $srch = SpokenLanguage::getSearchObject($this->adminLangId, false);
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'slanguage_id',
             'slanguage_code',
             'slanguage_identifier',
             'slanguage_active',
             'slanguage_name',
-        ));
-
+        ]);
         if (!empty($post['keyword'])) {
             $srch->addCondition('slanguage_identifier', 'like', '%' . $post['keyword'] . '%');
         }
-
         $srch->addOrder('slanguage_display_order', 'asc');
         $srch->addOrder('slanguage_active', 'desc');
         $rs = $srch->getResultSet();
-        $records = array();
+        $records = [];
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
         }
-        $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditSpokenLanguage($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->set("arr_listing", $records);
@@ -55,13 +52,13 @@ class SpokenLanguageController extends AdminBaseController
         $sLangId = FatUtility::int($sLangId);
         $frm = $this->getForm($sLangId);
         if (0 < $sLangId) {
-            $data = SpokenLanguage::getAttributesById($sLangId, array(
-                'slanguage_id',
-                'slanguage_identifier',
-                'slanguage_code',
-                'slanguage_flag',
-                'slanguage_active',
-            ));
+            $data = SpokenLanguage::getAttributesById($sLangId, [
+                        'slanguage_id',
+                        'slanguage_identifier',
+                        'slanguage_code',
+                        'slanguage_flag',
+                        'slanguage_active',
+            ]);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
@@ -84,9 +81,6 @@ class SpokenLanguageController extends AdminBaseController
         }
         $sLangId = $post['slanguage_id'];
         unset($post['slanguage_id']);
-        /*  if ($sLangId == 0) {
-             $post['lpackage_added_on'] = date('Y-m-d H:i:s');
-         } */
         $record = new SpokenLanguage($sLangId);
         $record->assignValues($post);
         if (!$record->save()) {
@@ -104,7 +98,7 @@ class SpokenLanguageController extends AdminBaseController
             }
         } else {
             $sLangId = $record->getMainTableRecordId();
-            $newTabLangId  = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
+            $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         $this->set('msg', $this->str_setup_successful);
         $this->set('sLangId', $sLangId);
@@ -119,7 +113,7 @@ class SpokenLanguageController extends AdminBaseController
         if ($sLangId == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $langFrm  = $this->getLangForm($sLangId, $lang_id);
+        $langFrm = $this->getLangForm($sLangId, $lang_id);
         $langData = SpokenLanguage::getAttributesByLangId($lang_id, $sLangId);
         if ($langData) {
             $langFrm->fill($langData);
@@ -146,12 +140,11 @@ class SpokenLanguageController extends AdminBaseController
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         unset($post['slanguage_id']);
         unset($post['lang_id']);
-        $data = array(
+        $data = [
             'slanguagelang_lang_id' => $lang_id,
             'slanguagelang_slanguage_id' => $sLangId,
-            'slanguage_name' => $post['slanguage_name'],
-           // 'lpackage_text' => $post['lpackage_text']
-        );
+            'slanguage_name' => $post['slanguage_name']
+        ];
         $obj = new SpokenLanguage($sLangId);
         if (!$obj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($obj->getError());
@@ -180,15 +173,11 @@ class SpokenLanguageController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $data = SpokenLanguage::getAttributesById($sLangId, array(
-            'slanguage_id',
-            'slanguage_active'
-        ));
+        $data = SpokenLanguage::getAttributesById($sLangId, ['slanguage_id', 'slanguage_active']);
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-        //$status = ($data['lpackage_active'] == applicationConstants::ACTIVE) ? applicationConstants::INACTIVE : applicationConstants::ACTIVE;
         $obj = new SpokenLanguage($sLangId);
         if (!$obj->changeStatus($status)) {
             Message::addErrorMessage($obj->getError());
@@ -220,9 +209,8 @@ class SpokenLanguageController extends AdminBaseController
         $frm->addHiddenField('', 'slanguage_id', $sLangId);
         $frm->addRequiredField(Label::getLabel('LBL_Language_Code_Identifier', $this->adminLangId), 'slanguage_code');
         $frm->addRequiredField(Label::getLabel('LBL_Language_Identifier', $this->adminLangId), 'slanguage_identifier');
-        //$frm->addRequiredField(Label::getLabel('LBL_Language_Flag', $this->adminLangId), 'slanguage_flag');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'slanguage_active', $activeInactiveArr, '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'slanguage_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
@@ -233,7 +221,6 @@ class SpokenLanguageController extends AdminBaseController
         $frm->addHiddenField('', 'slanguage_id', $sLangId);
         $frm->addHiddenField('', 'lang_id', $lang_id);
         $frm->addRequiredField(Label::getLabel('LBL_Language_Name', $this->adminLangId), 'slanguage_name');
-        // $frm->addTextarea(Label::getLabel('LBL_lpackage_Text', $this->adminLangId), 'lpackage_text');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
@@ -264,16 +251,16 @@ class SpokenLanguageController extends AdminBaseController
     {
         $frm = new Form('frmSpokenLanguageMedia');
         $frm->addHiddenField('', 'slanguage_id', $slanguage_id);
-        $fld = $frm->addButton(Label::getLabel('LBL_Language_Image', $this->adminLangId), 'slanguage_image', Label::getLabel('LBL_Upload_File', $this->adminLangId), array(
+        $fld = $frm->addButton(Label::getLabel('LBL_Language_Image', $this->adminLangId), 'slanguage_image', Label::getLabel('LBL_Upload_File', $this->adminLangId), [
             'class' => 'slanguageFile-Js',
             'id' => 'slanguage_image',
             'data-slanguage_id' => $slanguage_id
-        ));
-        $fld = $frm->addButton(Label::getLabel('LBL_Language_Flag_Image', $this->adminLangId), 'slanguage_flag_image', Label::getLabel('LBL_Upload_File', $this->adminLangId), array(
+        ]);
+        $fld = $frm->addButton(Label::getLabel('LBL_Language_Flag_Image', $this->adminLangId), 'slanguage_flag_image', Label::getLabel('LBL_Upload_File', $this->adminLangId), [
             'class' => 'slanguageFlagFile-Js',
             'id' => 'slanguage_flag_image',
             'data-slanguage_id' => $slanguage_id
-        ));
+        ]);
         return $frm;
     }
 
@@ -288,15 +275,12 @@ class SpokenLanguageController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_request_Or_Inactive_Record', $this->adminLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-
         $imgType = AttachedFile::FILETYPE_SPOKEN_LANGUAGES;
-
         if (!false == $sLanguageDetail) {
             $languageImgArr = AttachedFile::getMultipleAttachments($imgType, $slanguage_id, 0, $lang_id, false, $screen);
             $this->set('images', $languageImgArr);
         }
-        $admin_id = AdminAuthentication::getLoggedAdminId();
-        $canEdit  = $this->objPrivilege->canEditSpokenLanguage($this->admin_id, true);
+        $canEdit = $this->objPrivilege->canEditSpokenLanguage($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->set('languages', Language::getAllNames());
         $this->set('slanguage_id', $slanguage_id);
@@ -314,14 +298,11 @@ class SpokenLanguageController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_request_Or_Inactive_Record', $this->adminLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-
         $imgType = AttachedFile::FILETYPE_FLAG_SPOKEN_LANGUAGES;
-
         if (!false == $sLanguageDetail) {
             $languageImgArr = AttachedFile::getMultipleAttachments($imgType, $slanguage_id, 0, $lang_id, false, $screen);
             $this->set('images', $languageImgArr);
         }
-        $admin_id = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditSpokenLanguage($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->set('languages', Language::getAllNames());
@@ -338,7 +319,6 @@ class SpokenLanguageController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $post = FatApp::getPostedData();
-
         if (empty($post)) {
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported', $this->adminLangId));
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported', $this->adminLangId));
@@ -348,7 +328,6 @@ class SpokenLanguageController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
             FatUtility::dieJsonError(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
         }
-
         $imgType = AttachedFile::FILETYPE_SPOKEN_LANGUAGES;
         $fileHandlerObj = new AttachedFile();
         $fileHandlerObj->deleteFile($imgType, $slanguage_id);
@@ -371,7 +350,6 @@ class SpokenLanguageController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $post = FatApp::getPostedData();
-
         if (empty($post)) {
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported', $this->adminLangId));
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported', $this->adminLangId));
@@ -381,7 +359,6 @@ class SpokenLanguageController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
             FatUtility::dieJsonError(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
         }
-
         $imgType = AttachedFile::FILETYPE_FLAG_SPOKEN_LANGUAGES;
         $fileHandlerObj = new AttachedFile();
         $fileHandlerObj->deleteFile($imgType, $slanguage_id);
@@ -394,6 +371,7 @@ class SpokenLanguageController extends AdminBaseController
         $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_uploaded_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function removeImage($slanguage_id)
     {
         $slanguage_id = FatUtility::int($slanguage_id);
@@ -432,6 +410,7 @@ class SpokenLanguageController extends AdminBaseController
     {
         $this->showBanner($bannerId, $imgType, $langId, 100, 100, $screen);
     }
+
     public function showBanner($bannerId, $imgType, $langId, $w = '200', $h = '200', $screen = 0)
     {
         $bannerId = FatUtility::int($bannerId);
@@ -444,14 +423,12 @@ class SpokenLanguageController extends AdminBaseController
     public function updateOrder()
     {
         $post = FatApp::getPostedData();
-
         if (!empty($post)) {
             $spokeLangObj = new SpokenLanguage();
             if (!$spokeLangObj->updateOrder($post['spokenLangages'])) {
                 Message::addErrorMessage($spokeLangObj->getError());
                 FatUtility::dieJsonError(Message::getHtml());
             }
-
             $this->set('msg', Label::getLabel('LBL_Order_Updated_Successfully', $this->adminLangId));
             $this->_template->render(false, false, 'json-success.php');
         }
@@ -460,10 +437,11 @@ class SpokenLanguageController extends AdminBaseController
     private function getSearchForm()
     {
         $frm = new Form('frmSpokenLanguageSearch');
-        $f1 = $frm->addTextBox(Label::getLabel('LBL_Language_Identifier', $this->adminLangId), 'keyword', '');
+        $frm->addTextBox(Label::getLabel('LBL_Language_Identifier', $this->adminLangId), 'keyword', '');
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
+
 }

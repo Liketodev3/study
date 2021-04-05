@@ -1,16 +1,20 @@
 <?php
+
 class SentEmailsController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
     }
+
     public function index()
     {
         $frm = $this->sentEmailSearchForm();
         $this->set('srchFrm', $frm);
         $this->_template->render();
     }
+
     public function search()
     {
         if (!FatUtility::isAjaxCall()) {
@@ -34,17 +38,19 @@ class SentEmailsController extends AdminBaseController
         $this->set('postedData', $post);
         $this->_template->render(false, false);
     }
+
     public function view($id)
     {
         $row_data = SentEmail::getAttributesById($id);
         $this->set('data', $row_data);
         $this->_template->render(false, false);
     }
+
     private function sentEmailSearchForm()
     {
         $frm = new Form('sentEmailSrchForm');
         $frm->addHiddenField('', 'page');
-        //$frm->addSubmitButton('', 'btn_search', 'Search');
         return $frm;
     }
+
 }

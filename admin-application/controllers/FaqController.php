@@ -1,6 +1,8 @@
 <?php
+
 class FaqController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -9,35 +11,20 @@ class FaqController extends AdminBaseController
 
     public function index($faq_catid = 0)
     {
-        $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditFaq($this->admin_id, true);
         $this->set("canEdit", $canEdit);
-
         $this->set('includeEditor', true);
-
         $faq_catid = FatUtility::int($faq_catid);
         $this->set("faq_catid", $faq_catid);
-
         $this->_template->render();
     }
 
     public function search()
     {
         $srch = Faq::getSearchObject($this->adminLangId, false);
-        $srch->addMultipleFields(array(
-            'faq_identifier',
-            'faq_id',
-            'faq_category',
-            'faq_active',
-            'faq_title',
-        ));
+        $srch->addMultipleFields(['faq_identifier', 'faq_id', 'faq_category', 'faq_active', 'faq_title']);
         $srch->addOrder('faq_active', 'desc');
-        $rs      = $srch->getResultSet();
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetchAll($rs);
-        }
-        $adminId = AdminAuthentication::getLoggedAdminId();
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $canEdit = $this->objPrivilege->canEditFaq($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->set("arr_listing", $records);
@@ -48,15 +35,9 @@ class FaqController extends AdminBaseController
     public function form($faqId)
     {
         $faqId = FatUtility::int($faqId);
-        $frm           = $this->getForm($faqId);
+        $frm = $this->getForm($faqId);
         if (0 < $faqId) {
-            $data = Faq::getAttributesById($faqId, array(
-                'faq_id',
-                'faq_identifier',
-                'faq_category',
-                'faq_active',
-
-            ));
+            $data = Faq::getAttributesById($faqId, ['faq_id', 'faq_identifier', 'faq_category', 'faq_active']);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
@@ -71,7 +52,7 @@ class FaqController extends AdminBaseController
     public function setup()
     {
         $this->objPrivilege->canEditFaq();
-        $frm  = $this->getForm();
+        $frm = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -99,7 +80,7 @@ class FaqController extends AdminBaseController
             }
         } else {
             $faqId = $record->getMainTableRecordId();
-            $newTabLangId  = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
+            $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         $this->set('msg', $this->str_setup_successful);
         $this->set('faqId', $faqId);
@@ -110,11 +91,11 @@ class FaqController extends AdminBaseController
     public function langForm($faqId = 0, $lang_id = 0)
     {
         $faqId = FatUtility::int($faqId);
-        $lang_id       = FatUtility::int($lang_id);
+        $lang_id = FatUtility::int($lang_id);
         if ($faqId == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $langFrm  = $this->getLangForm($faqId, $lang_id);
+        $langFrm = $this->getLangForm($faqId, $lang_id);
         $langData = Faq::getAttributesByLangId($lang_id, $faqId);
         if ($langData) {
             $langFrm->fill($langData);
@@ -130,30 +111,30 @@ class FaqController extends AdminBaseController
     public function langSetup()
     {
         $this->objPrivilege->canEditFaq();
-        $post          = FatApp::getPostedData();
+        $post = FatApp::getPostedData();
         $faqId = $post['faq_id'];
-        $lang_id       = $post['lang_id'];
+        $lang_id = $post['lang_id'];
         if ($faqId == 0 || $lang_id == 0) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $frm  = $this->getLangForm($faqId, $lang_id);
+        $frm = $this->getLangForm($faqId, $lang_id);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         unset($post['faq_id']);
         unset($post['lang_id']);
-        $data = array(
+        $data = [
             'faqlang_lang_id' => $lang_id,
             'faqlang_faq_id' => $faqId,
             'faq_title' => $post['faq_title'],
             'faq_description' => $post['faq_description']
-        );
-        $obj  = new Faq($faqId);
+        ];
+        $obj = new Faq($faqId);
         if (!$obj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($obj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
         $newTabLangId = 0;
-        $languages    = Language::getAllNames();
+        $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
             if (!$row = Faq::getAttributesByLangId($langId, $faqId)) {
                 $newTabLangId = $langId;
@@ -175,15 +156,12 @@ class FaqController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $data = Faq::getAttributesById($faqId, array(
-            'faq_id',
-            'faq_active'
-        ));
+        $data = Faq::getAttributesById($faqId, ['faq_id', 'faq_active']);
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $obj    = new Faq($faqId);
+        $obj = new Faq($faqId);
         if (!$obj->changeStatus($status)) {
             Message::addErrorMessage($obj->getError());
             FatUtility::dieWithError(Message::getHtml());
@@ -210,13 +188,13 @@ class FaqController extends AdminBaseController
     private function getForm($faqId = 0)
     {
         $faqId = FatUtility::int($faqId);
-        $frm           = new Form('frmFaq');
+        $frm = new Form('frmFaq');
         $frm->addHiddenField('', 'faq_id', $faqId);
         $frm->addRequiredField(Label::getLabel('LBL_Faq_Identifier', $this->adminLangId), 'faq_identifier');
         $fld = $frm->addSelectBox(Label::getLabel('LBL_faq_category', $this->adminLangId), 'faq_category', Faq::getFaqCategoryArr());
         $fld->requirement->setRequired(true);
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'faq_active', $activeInactiveArr, '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'faq_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
@@ -231,4 +209,5 @@ class FaqController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
 }

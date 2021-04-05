@@ -1,6 +1,8 @@
 <?php
+
 class TimezonesController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -28,12 +30,12 @@ class TimezonesController extends AdminBaseController
 
     public function search()
     {
-        $pagesize   = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $searchForm = $this->getSearchForm();
-        $data       = FatApp::getPostedData();
-        $page       = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
-        $post       = $searchForm->getFormDataFromArray($data);
-        $srch       = Timezone::getSearchObject(false, $this->adminLangId);
+        $data = FatApp::getPostedData();
+        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
+        $post = $searchForm->getFormDataFromArray($data);
+        $srch = Timezone::getSearchObject(false, $this->adminLangId);
         $srch->addFld('tz.* , tz_l.timezonelang_text, IFNULL(timezonelang_text, timezone_identifier) as timezone_name');
         if (!empty($post['keyword'])) {
             $condition = $srch->addCondition('tz.timezone_identifier', 'like', '%' . $post['keyword'] . '%');
@@ -43,8 +45,8 @@ class TimezonesController extends AdminBaseController
         $page = FatUtility::int($page);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-        $rs      = $srch->getResultSet();
-        $records = array();
+        $rs = $srch->getResultSet();
+        $records = [];
         if ($rs) {
             $records = FatApp::getDb()->fetchAll($rs);
         }
@@ -67,11 +69,11 @@ class TimezonesController extends AdminBaseController
         $frm = $this->getForm($timezoneId);
         if (!empty($timezoneId)) {
             $data = Timezone::getAttributesById($timezoneId, array(
-                'timezone_id',
-                'timezone_offset',
-                'timezone_identifier',
-                'timezone_name',
-                'timezone_active'
+                        'timezone_id',
+                        'timezone_offset',
+                        'timezone_identifier',
+                        'timezone_name',
+                        'timezone_active'
             ));
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
@@ -87,7 +89,7 @@ class TimezonesController extends AdminBaseController
     public function setup()
     {
         $this->objPrivilege->canEditTimezones();
-        $frm  = $this->getForm();
+        $frm = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -111,7 +113,7 @@ class TimezonesController extends AdminBaseController
                 }
             }
         } else {
-            $timezoneId    = $record->getMainTableRecordId();
+            $timezoneId = $record->getMainTableRecordId();
             $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         $this->set('msg', Label::getLabel('LBL_Updated_Successfully', $this->adminLangId));
@@ -123,11 +125,11 @@ class TimezonesController extends AdminBaseController
     public function langForm($timezoneId = 0, $lang_id = 0)
     {
         $timezoneId = FatUtility::int($timezoneId);
-        $lang_id   = FatUtility::int($lang_id);
+        $lang_id = FatUtility::int($lang_id);
         if ($timezoneId == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        $langFrm  = $this->getLangForm($timezoneId, $lang_id);
+        $langFrm = $this->getLangForm($timezoneId, $lang_id);
         $langData = Timezone::getAttributesByLangId($lang_id, $timezoneId);
         if ($langData) {
             $langFrm->fill($langData);
@@ -150,7 +152,7 @@ class TimezonesController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $frm  = $this->getLangForm($timezoneId, $lang_id);
+        $frm = $this->getLangForm($timezoneId, $lang_id);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         unset($post['timezone_id']);
         unset($post['lang_id']);
@@ -159,7 +161,7 @@ class TimezonesController extends AdminBaseController
             'timezonelang_timezone_id' => $timezoneId,
             'timezonelang_text' => $post['timezonelang_text']
         );
-        
+
         $timezoneObj = new Timezone($timezoneId);
         if (!$timezoneObj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($timezoneObj->getError());
@@ -182,12 +184,12 @@ class TimezonesController extends AdminBaseController
     private function getForm($timezoneId = 0)
     {
         $timezoneId = FatUtility::int($timezoneId);
-        $frm       = new Form('frmTimezone');
+        $frm = new Form('frmTimezone');
         $frm->addHiddenField('', 'timezone_id', $timezoneId);
         $frm->addRequiredField(Label::getLabel('LBL_Timezone_Identifier', $this->adminLangId), 'timezone_identifier', '', array('readonly' => 'readonly'));
         $frm->addRequiredField(Label::getLabel('LBL_Timezone_name', $this->adminLangId), 'timezone_name');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'timezone_active', $activeInactiveArr, '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'timezone_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
@@ -207,7 +209,7 @@ class TimezonesController extends AdminBaseController
         $this->objPrivilege->canEditTimezones();
         $timezoneId = FatApp::getPostedData('timezoneId');
         $status = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
-        
+
         $timezoneObj = new Timezone($timezoneId);
         if (!$timezoneObj->changeStatus($status)) {
             Message::addErrorMessage($timezoneObj->getError());
@@ -215,4 +217,5 @@ class TimezonesController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
+
 }

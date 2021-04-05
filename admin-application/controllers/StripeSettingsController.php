@@ -2,6 +2,7 @@
 
 class StripeSettingsController extends PaymentSettingsController
 {
+
     private $keyName = "Stripe";
 
     public function index()
@@ -28,4 +29,5 @@ class StripeSettingsController extends PaymentSettingsController
         $frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
 }

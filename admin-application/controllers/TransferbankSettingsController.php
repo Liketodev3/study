@@ -1,6 +1,8 @@
 <?php
+
 class TransferbankSettingsController extends PaymentSettingsController
 {
+
     private $keyName = "Transferbank";
 
     public function index()
@@ -26,4 +28,5 @@ class TransferbankSettingsController extends PaymentSettingsController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
 }

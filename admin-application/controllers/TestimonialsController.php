@@ -1,61 +1,45 @@
 <?php
+
 class TestimonialsController extends AdminBaseController
 {
+
     public function __construct($action)
     {
-        $ajaxCallArray = array(
-            'deleteRecord',
-            'form',
-            'langForm',
-            'search',
-            'setup',
-            'langSetup'
-        );
-        if (!FatUtility::isAjaxCall() && in_array($action, $ajaxCallArray)) {
-            die($this->str_invalid_Action);
-        }
         parent::__construct($action);
         $this->objPrivilege->canViewTestimonial();
     }
+
     public function index()
     {
-        $adminId = AdminAuthentication::getLoggedAdminId();
         $canEdit = $this->objPrivilege->canEditTestimonial($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->_template->render();
     }
+
     public function search()
     {
         $srch = Testimonial::getSearchObject($this->adminLangId, false);
-        $srch->addMultipleFields(array(
-            't.*',
-            't_l.testimonial_title',
-            't_l.testimonial_text'
-        ));
+        $srch->addMultipleFields(['t.*', 't_l.testimonial_title', 't_l.testimonial_text']);
         $srch->addOrder('testimonial_active', 'desc');
-        $rs = $srch->getResultSet();
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetchAll($rs);
-        }
-        $adminId = AdminAuthentication::getLoggedAdminId();
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $canEdit = $this->objPrivilege->canEditTestimonial($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->set("arr_listing", $records);
         $this->set('recordCount', $srch->recordCount());
         $this->_template->render(false, false);
     }
+
     public function form($testimonialId)
     {
         $testimonialId = FatUtility::int($testimonialId);
         $frm = $this->getForm($testimonialId);
         if (0 < $testimonialId) {
-            $data = Testimonial::getAttributesById($testimonialId, array(
-                'testimonial_id',
-                'testimonial_identifier',
-                'testimonial_active',
-                'testimonial_user_name'
-            ));
+            $data = Testimonial::getAttributesById($testimonialId, [
+                        'testimonial_id',
+                        'testimonial_identifier',
+                        'testimonial_active',
+                        'testimonial_user_name'
+            ]);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
@@ -66,6 +50,7 @@ class TestimonialsController extends AdminBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
+
     public function setup()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -107,6 +92,7 @@ class TestimonialsController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function langForm($testimonialId = 0, $lang_id = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -126,6 +112,7 @@ class TestimonialsController extends AdminBaseController
         $this->set('formLayout', Language::getLayoutDirection($lang_id));
         $this->_template->render(false, false);
     }
+
     public function langSetup()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -144,12 +131,12 @@ class TestimonialsController extends AdminBaseController
         }
         unset($post['testimonial_id']);
         unset($post['lang_id']);
-        $data = array(
+        $data = [
             'testimoniallang_lang_id' => $lang_id,
             'testimoniallang_testimonial_id' => $testimonialId,
             'testimonial_title' => $post['testimonial_title'],
             'testimonial_text' => $post['testimonial_text']
-        );
+        ];
         $obj = new Testimonial($testimonialId);
         if (!$obj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($obj->getError());
@@ -171,6 +158,7 @@ class TestimonialsController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function changeStatus()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -180,15 +168,11 @@ class TestimonialsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $data = Testimonial::getAttributesById($testimonialId, array(
-            'testimonial_id',
-            'testimonial_active'
-        ));
+        $data = Testimonial::getAttributesById($testimonialId, ['testimonial_id', 'testimonial_active']);
         if ($data == false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
-        //$status = ($data['testimonial_active'] == applicationConstants::ACTIVE) ? applicationConstants::INACTIVE : applicationConstants::ACTIVE;
         $obj = new Testimonial($testimonialId);
         if (!$obj->changeStatus($status)) {
             Message::addErrorMessage($obj->getError());
@@ -196,6 +180,7 @@ class TestimonialsController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
+
     public function deleteRecord()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -209,40 +194,40 @@ class TestimonialsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $testimonialObj->assignValues(array(
-            Testimonial::tblFld('deleted') => 1
-        ));
+        $testimonialObj->assignValues([Testimonial::tblFld('deleted') => 1]);
         if (!$testimonialObj->save()) {
             Message::addErrorMessage($testimonialObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
+
     public function media($testimonialId = 0)
     {
         $this->objPrivilege->canEditTestimonial();
         $testimonialId = FatUtility::int($testimonialId);
         $testimonialMediaFrm = $this->getMediaForm($testimonialId);
         $testimonialImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_TESTIMONIAL_IMAGE, $testimonialId, 0, -1);
-        //$bannerTypeArr = applicationConstants::bannerTypeArr();
         $this->set('languages', Language::getAllNames());
         $this->set('testimonialId', $testimonialId);
         $this->set('testimonialMediaFrm', $testimonialMediaFrm);
         $this->set('testimonialImages', $testimonialImages);
         $this->_template->render(false, false);
     }
+
     public function getMediaForm($testimonialId)
     {
         $frm = new Form('frmTestimonialMedia');
-        $frm->addButton(Label::getLabel('Lbl_Image', $this->adminLangId), 'testimonial_image', Label::getLabel('LBL_Upload_Image', $this->adminLangId), array(
+        $frm->addButton(Label::getLabel('Lbl_Image', $this->adminLangId), 'testimonial_image', Label::getLabel('LBL_Upload_Image', $this->adminLangId), [
             'class' => 'uploadFile-Js',
             'id' => 'testimonial_image',
             'data-file_type' => AttachedFile::FILETYPE_TESTIMONIAL_IMAGE,
             'data-testimonial_id' => $testimonialId
-        ));
+        ]);
         $frm->addHtml('', 'testimonial_image_display_div', '');
         return $frm;
     }
+
     public function uploadTestimonialMedia()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -272,6 +257,7 @@ class TestimonialsController extends AdminBaseController
         $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_Uploaded_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function removeTestimonialImage($testimonialId = 0, $lang_id = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -288,6 +274,7 @@ class TestimonialsController extends AdminBaseController
         $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     private function getForm($testimonialId = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -296,10 +283,11 @@ class TestimonialsController extends AdminBaseController
         $frm->addRequiredField(Label::getLabel('LBL_Testimonial_Identifier', $this->adminLangId), 'testimonial_identifier');
         $frm->addRequiredField(Label::getLabel('LBL_Testimonial_User_Name', $this->adminLangId), 'testimonial_user_name');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'testimonial_active', $activeInactiveArr, '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'testimonial_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function getLangForm($testimonialId = 0, $lang_id = 0)
     {
         $frm = new Form('frmTestimonialLang');
@@ -310,6 +298,7 @@ class TestimonialsController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function isMediaUploaded($testimonialId)
     {
         if ($attachment = AttachedFile::getAttachment(AttachedFile::FILETYPE_TESTIMONIAL_IMAGE, $testimonialId, 0)) {
@@ -317,6 +306,7 @@ class TestimonialsController extends AdminBaseController
         }
         return false;
     }
+
     public function image($recordId, $langId = 0, $sizeType = '', $afile_id = 0, $displayUniversalImage = true)
     {
         $default_image = 'user_deafult_image.jpg';
@@ -350,4 +340,5 @@ class TestimonialsController extends AdminBaseController
                 break;
         }
     }
+
 }
