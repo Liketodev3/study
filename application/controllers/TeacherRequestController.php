@@ -363,7 +363,7 @@ class TeacherRequestController extends MyAppController
 		$fld->requirements()->setRequired();
 		$fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone_Number'), 'utrvalue_user_phone');
 		$fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
-		$fldPhn->requirements()->setCustomErrorMessage(Label::getLabel('LBL_PHONE_N0_VALIDATION_MSG'));
+		$fldPhn->requirements()->setCustomErrorMessage(Label::getLabel('LBL_PHONE_NO_VALIDATION_MSG'));
 		$frm->addHiddenField('', 'utrvalue_user_phone_code');
 		/* if (!User::isProfilePicUploaded()) {
 			$fld = $frm->addFileUpload(Label::getLabel('LBL_Profile_Picture'), 'user_profile_pic');
