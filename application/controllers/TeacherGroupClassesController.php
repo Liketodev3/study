@@ -321,11 +321,11 @@ class TeacherGroupClassesController extends TeacherBaseController
         if ($grpclsId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
-        
+
         $teacher_id = UserAuthentication::getLoggedUserId();
 
         $db = FatApp::getDb();
-        $srch = TeacherGroupClassesSearch::getSearchObj($this->adminLangId);
+        $srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
         $srch->joinIssueReported();
         $srch->addMultipleFields(['issrep_id']);
         $srch->doNotCalculateRecords();
@@ -334,10 +334,12 @@ class TeacherGroupClassesController extends TeacherBaseController
         $srch->addCondition('grpcls_teacher_id', '=', $teacher_id);
         $class_details =  $db->fetch($srch->getResultSet());
 
+        $teacher_id = UserAuthentication::getLoggedUserId();
+        $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpclsId, $teacher_id, $this->siteLangId);
         if (empty($class_details)) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
-        if($class_details['issrep_id'] > 0 || $class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED){
+        if ($class_details['issrep_id'] > 0 || $class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
 
