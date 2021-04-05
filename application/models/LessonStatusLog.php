@@ -40,7 +40,7 @@ class LessonStatusLog extends MyAppModel
 
     public function addLog(int $status, int $userType, int $userId, string $comment): bool
     {
-        $lessonStatusLogArr = array(
+        $lessonStatusLogArr = [
             'lesstslog_slesson_id' => $this->lessonData['slesson_id'],
             'lesstslog_sldetail_id' => $this->lessonData['sldetail_id'],
             'lesstslog_prev_status' => $this->lessonData['slesson_status'],
@@ -52,7 +52,7 @@ class LessonStatusLog extends MyAppModel
             'lesstslog_updated_by_user_id' => $userId,
             'lesstslog_updated_by_user_type' => $userType,
             'lesstslog_comment' => $comment
-        );
+        ];
         $lessonStatusLog = new LessonStatusLog();
         $lessonStatusLog->assignValues($lessonStatusLogArr);
         return (bool) $lessonStatusLog->save();

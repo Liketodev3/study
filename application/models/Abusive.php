@@ -26,22 +26,22 @@ class Abusive extends MyAppModel
         $srch = static::getSearchObject($langId);
         $srch->doNotLimitRecords();
         $srch->doNotCalculateRecords();
-        $srch->addMultipleFields(array('abusive_id', 'abusive_keyword'));
+        $srch->addMultipleFields(['abusive_id', 'abusive_keyword']);
         $records = FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
         return array_values($records);
     }
 
-    public static function validateContent($textToBeCheck, &$enteredAbusiveWordsArr = array())
+    public static function validateContent($textToBeCheck, &$enteredAbusiveWordsArr = [])
     {
         $srch = Abusive::getSearchObject();
         $srch->joinTable(Language::DB_TBL, 'INNER JOIN', 'abusive_lang_id = language_id AND language_active = ' . applicationConstants::ACTIVE);
         $srch->addOrder('aw.' . Abusive::DB_TBL_PREFIX . 'lang_id', 'ASC');
-        $srch->addMultipleFields(array('abusive_id', 'abusive_keyword'));
+        $srch->addMultipleFields(['abusive_id', 'abusive_keyword']);
         $srch->doNotLimitRecords();
         $srch->doNotCalculateRecords();
         $rs = $srch->getResultSet();
         $abusiveWordsArr = FatApp::getDb()->fetchAllAssoc($rs);
-        $enteredAbusiveWordsArr = array();
+        $enteredAbusiveWordsArr = [];
         if ($abusiveWordsArr) {
             $abusiveWordsArr = array_map("strtolower", $abusiveWordsArr);
             $textToBeCheckArr = explode(" ", $textToBeCheck);

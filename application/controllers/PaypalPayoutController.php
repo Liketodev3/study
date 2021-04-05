@@ -56,18 +56,11 @@ class PaypalPayoutController extends PaymentController
         $arryId = explode('_', $sender_batch_id);
         $withdrawalId = end($arryId);
         $withdrawalId = FatUtility::int($withdrawalId);
-        $assignFields = array(
-            'withdrawal_status' => $status,
-            'withdrawal_response' => json_encode($requestData)
-        );
-        if (!FatApp::getDb()->updateFromArray(User::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields, array('smt' => 'withdrawal_id=?', 'vals' => array($withdrawalId)))) {
+        $assignFields = ['withdrawal_status' => $status, 'withdrawal_response' => json_encode($requestData)];
+        if (!FatApp::getDb()->updateFromArray(User::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields, ['smt' => 'withdrawal_id=?', 'vals' => [$withdrawalId]])) {
             return false;
         }
-        FatApp::getDb()->updateFromArray(
-                Transaction::DB_TBL,
-                array("utxn_status" => $trxnStatus),
-                array('smt' => 'utxn_withdrawal_id=?', 'vals' => array($withdrawalId))
-        );
+        FatApp::getDb()->updateFromArray(Transaction::DB_TBL, ["utxn_status" => $trxnStatus], ['smt' => 'utxn_withdrawal_id=?', 'vals' => [$withdrawalId]]);
         return true;
     }
 

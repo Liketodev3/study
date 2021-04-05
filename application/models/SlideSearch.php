@@ -27,15 +27,15 @@ class SlideSearch extends SearchBase
             $langId = $this->langId;
         }
         if ($activeOnly) {
-            $this->addFld(array('IF(pr.promotion_id > 0, promotion_active,1) AS promotionActive'));
+            $this->addFld(['IF(pr.promotion_id > 0, promotion_active,1) AS promotionActive']);
             $this->addHaving('promotionActive', '=', applicationConstants::ACTIVE);
         }
         if ($approvedOnly) {
-            $this->addFld(array('IF(pr.promotion_id > 0, promotion_approved,1) AS promotionApproved'));
+            $this->addFld(['IF(pr.promotion_id > 0, promotion_approved,1) AS promotionApproved']);
             $this->addHaving('promotionApproved', '=', applicationConstants::YES);
         }
         if ($deleted) {
-            $this->addFld(array('IF(pr.promotion_id > 0, promotion_deleted,0) AS promotionDeleted'));
+            $this->addFld(['IF(pr.promotion_id > 0, promotion_deleted,0) AS promotionDeleted']);
             $this->addHaving('promotionDeleted', '=', applicationConstants::NO);
         }
         $this->joinTable(Promotion::DB_TBL, 'LEFT OUTER JOIN', 'pr.promotion_id = sl.slide_record_id and sl.slide_type = ' . Slides::TYPE_PPC, 'pr');
@@ -49,7 +49,7 @@ class SlideSearch extends SearchBase
         $this->joinTable(User::DB_TBL, 'LEFT JOIN', 'pr.promotion_user_id = u.user_id', 'u');
         $this->joinTable(User::DB_TBL_CRED, 'LEFT JOIN', 'cu.credential_user_id = u.user_id', 'cu');
         if ($isActive) {
-            $this->addFld(array('IF(pr.promotion_id > 0, credential_active,1) AS credential_active'));
+            $this->addFld(['IF(pr.promotion_id > 0, credential_active,1) AS credential_active']);
             $this->addHaving('credential_active', '=', applicationConstants::ACTIVE);
         }
     }
@@ -63,12 +63,12 @@ class SlideSearch extends SearchBase
         if (!$this->joinedPromotion) {
             trigger_error(Label::getLabel('ERR_please_join_promotions', $langId), E_USER_ERROR);
         }
-        $this->addFld(array('if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_start_date,"0000-00-00") as start_date'));
-        $this->addFld(array('if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_end_date,"0000-00-00") as end_date'));
-        $this->addFld(array('if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_start_time,"00:00:00") as start_time'));
-        $this->addFld(array('if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_end_time,"00:00:00") as end_time'));
-        $this->addFld(array('if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_duration,' . Promotion::DURATION_NOT_AVAILABALE . ') as promotion_duration'));
-        $this->addFld(array('if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_budget,-1) as promotion_budget'));
+        $this->addFld(['if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_start_date,"0000-00-00") as start_date']);
+        $this->addFld(['if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_end_date,"0000-00-00") as end_date']);
+        $this->addFld(['if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_start_time,"00:00:00") as start_time']);
+        $this->addFld(['if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_end_time,"00:00:00") as end_time']);
+        $this->addFld(['if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_duration,' . Promotion::DURATION_NOT_AVAILABALE . ') as promotion_duration']);
+        $this->addFld(['if(sl.slide_type = ' . Slides::TYPE_PPC . ',pr.promotion_budget,-1) as promotion_budget']);
         $cnd = $this->addHaving('start_date', '=', '0000-00-00 00:00:00');
         $cnd->attachCondition('start_date', '<=', date('Y-m-d 00:00:00'), 'OR');
         $cnd = $this->addHaving('end_date', '=', '0000-00-00');
@@ -100,7 +100,7 @@ class SlideSearch extends SearchBase
         $this->joinedUserWallet = true;
         $txnObj = new Transactions();
         $srch = $txnObj->getSearchObject();
-        $srch->addMultipleFields(array('IFNULL(SUM(utxn.utxn_credit)-SUM(utxn.utxn_debit),0) AS userBalance', 'utxn_user_id'));
+        $srch->addMultipleFields(['IFNULL(SUM(utxn.utxn_credit)-SUM(utxn.utxn_debit),0) AS userBalance', 'utxn_user_id']);
         $srch->doNotCalculateRecords();
         $srch->doNotlimitRecords();
         $srch->addCondition('utxn_status', '=', applicationConstants::ACTIVE);
@@ -117,7 +117,7 @@ class SlideSearch extends SearchBase
         if (!$this->joinedUserWallet) {
             trigger_error(Labels::getLabel('ERR_please_join_user_wallet', $langId), E_USER_ERROR);
         }
-        $this->addFld(array('IF(pr.promotion_id > 0, userBalance,' . FatApp::getConfig('CONF_PPC_MIN_WALLET_BALANCE', FatUtility::VAR_INT, 0) . ') AS userBalance'));
+        $this->addFld(['IF(pr.promotion_id > 0, userBalance,' . FatApp::getConfig('CONF_PPC_MIN_WALLET_BALANCE', FatUtility::VAR_INT, 0) . ') AS userBalance']);
         $this->addHaving('userBalance', '>=', FatApp::getConfig('CONF_PPC_MIN_WALLET_BALANCE'));
     }
 
@@ -128,15 +128,12 @@ class SlideSearch extends SearchBase
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addGroupBy('tpc.' . Promotion::DB_TBL_CLICKS_PREFIX . 'promotion_id');
-        $srch->addMultipleFields(
-                array(
-                    'tpc.pclick_promotion_id',
-                    "SUM(IF(date(`picharge_datetime`)>CURRENT_DATE - INTERVAL 1 DAY,`picharge_cost`,0)) daily_cost,
-			SUM(IF(date(`picharge_datetime`)>CURRENT_DATE - INTERVAL 1 WEEK,`picharge_cost`,0)) weekly_cost,
-			SUM(IF(date(`picharge_datetime`)>CURRENT_DATE - INTERVAL 1 MONTH,`picharge_cost`,0)) monthly_cost",
-                    "SUM(picharge_cost) as total_cost"
-                )
-        );
+        $srch->addMultipleFields(['tpc.pclick_promotion_id',
+            "SUM(IF(date(`picharge_datetime`)>CURRENT_DATE - INTERVAL 1 DAY,`picharge_cost`,0)) daily_cost,
+             SUM(IF(date(`picharge_datetime`)>CURRENT_DATE - INTERVAL 1 WEEK,`picharge_cost`,0)) weekly_cost,
+             SUM(IF(date(`picharge_datetime`)>CURRENT_DATE - INTERVAL 1 MONTH,`picharge_cost`,0)) monthly_cost",
+            "SUM(picharge_cost) as total_cost"
+        ]);
         $this->joinTable('(' . $srch->getQuery() . ')', 'LEFT OUTER JOIN', 'pr.promotion_id =pclick_promotion_id', 'pcb');
     }
 

@@ -27,13 +27,7 @@ class NavigationLinks extends MyAppModel
         $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 'link');
         if ($langId > 0) {
-            $srch->joinTable(
-                    static::DB_TBL_LANG,
-                    'LEFT OUTER JOIN',
-                    'link_l.' . static::DB_TBL_LANG_PREFIX . 'nlink_id = link.' . static::tblFld('id') . ' and
-			link_l.' . static::DB_TBL_LANG_PREFIX . 'lang_id = ' . $langId,
-                    'link_l'
-            );
+            $srch->joinTable(static::DB_TBL_LANG, 'LEFT OUTER JOIN', 'link_l.nlinkslang_nlink_id = link.' . static::tblFld('id') . ' AND link_l.nlinkslang_lang_id = ' . $langId, 'link_l');
         }
         if ($isDeleted == false) {
             $srch->addCondition('link.' . static::DB_TBL_PREFIX . 'deleted', '=', applicationConstants::NO);
@@ -47,10 +41,10 @@ class NavigationLinks extends MyAppModel
         if ($langId < 1) {
             $langId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG');
         }
-        return array(
+        return [
             static::NAVLINK_TYPE_CMS => Label::getLabel('LBL_CMS_Page', $langId),
             static::NAVLINK_TYPE_EXTERNAL_PAGE => Label::getLabel('LBL_External_Page', $langId)
-        );
+        ];
     }
 
     public static function getLinkTargetArr($langId)
@@ -59,10 +53,10 @@ class NavigationLinks extends MyAppModel
         if ($langId < 1) {
             $langId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG');
         }
-        return array(
+        return [
             static::NAVLINK_TARGET_CURRENT_WINDOW => Label::getLabel('LBL_Current_Window', $langId),
             static::NAVLINK_TARGET_BLANK_WINDOW => Label::getLabel('LBL_Blank_Window', $langId),
-        );
+        ];
     }
 
     public static function getLinkLoginTypeArr($langId)
@@ -71,11 +65,11 @@ class NavigationLinks extends MyAppModel
         if ($langId < 1) {
             $langId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG');
         }
-        return array(
+        return [
             static::NAVLINK_LOGIN_BOTH => Label::getLabel('LBL_Both', $langId),
             static::NAVLINK_LOGIN_YES => Label::getLabel('LBL_Yes', $langId),
             static::NAVLINK_LOGIN_NO => Label::getLabel('LBL_No', $langId),
-        );
+        ];
     }
 
 }

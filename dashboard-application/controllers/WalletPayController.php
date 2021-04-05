@@ -1,6 +1,8 @@
 <?php
+
 class WalletPayController extends LoggedUserController
 {
+
     public function charge($orderId = '')
     {
         $isAjaxCall = FatUtility::isAjaxCall();
@@ -17,12 +19,7 @@ class WalletPayController extends LoggedUserController
         $srch->addCondition('order_id', '=', $orderId);
         $srch->addCondition('order_user_id', '=', $userId);
         $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PENDING);
-        $srch->addMultipleFields(array(
-            'order_id',
-            'order_user_id',
-            'order_net_amount',
-            'order_wallet_amount_charge'
-        ));
+        $srch->addMultipleFields(['order_id', 'order_user_id', 'order_net_amount', 'order_wallet_amount_charge']);
         $rs = $srch->getResultSet();
         $orderInfo = FatApp::getDb()->fetch($rs);
         if (!$orderInfo) {
@@ -42,11 +39,11 @@ class WalletPayController extends LoggedUserController
         $cartObj->clear();
         $cartObj->updateUserCart();
         if ($isAjaxCall) {
-            $this->set('redirectUrl', CommonHelper::generateUrl('Custom', 'paymentSuccess', array($orderId)));
+            $this->set('redirectUrl', CommonHelper::generateUrl('Custom', 'paymentSuccess', [$orderId]));
             $this->set('msg', Label::getLabel("MSG_Payment_from_wallet_made_successfully", $this->siteLangId));
             $this->_template->render(false, false, 'json-success.php');
         }
-        FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess', array($orderId)));
+        FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess', [$orderId]));
     }
 
     public function recharge($orderId)
@@ -68,9 +65,6 @@ class WalletPayController extends LoggedUserController
         $orderInfo = FatApp::getDb()->fetch($rs);
         if (!$orderInfo) {
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
-            if ($isAjaxCall) {
-                FatUtility::dieWithError(Message::getHtml());
-            }
             CommonHelper::redirectUserReferer();
         }
         $this->set('orderInfo', $orderInfo);
@@ -80,12 +74,12 @@ class WalletPayController extends LoggedUserController
         $pmSrch->doNotCalculateRecords();
         $pmSrch->doNotLimitRecords();
         $pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
-        $pmSrch->addMultipleFields(array('pmethod_id', 'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name', 'pmethod_code', 'pmethod_description'));
-        $pmRs = $pmSrch->getResultSet();
-        $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
+        $pmSrch->addMultipleFields(['pmethod_id', 'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name', 'pmethod_code', 'pmethod_description']);
+        $paymentMethods = FatApp::getDb()->fetchAll($pmSrch->getResultSet());
         $this->set('userDetails', $userDetails);
         $this->set('orderId', $orderId);
         $this->set('paymentMethods', $paymentMethods);
         $this->_template->render(true, true);
     }
+
 }

@@ -12,19 +12,20 @@ class CmsController extends MyAppController
     {
         $cPageId = FatUtility::int($cPageId);
         $srch = ContentPage::getSearchObject($this->siteLangId);
-        $srch->addMultipleFields(array('cpage_id', 'IFNULL(cpage_title, cpage_identifier) as cpage_title', 'cpage_layout', 'cpage_image_title', 'cpage_image_content', 'cpage_content'));
+        $srch->addMultipleFields(['cpage_id', 'IFNULL(cpage_title, cpage_identifier) as cpage_title',
+            'cpage_layout', 'cpage_image_title', 'cpage_image_content', 'cpage_content']);
         $srch->addCondition('cpage_id', '=', $cPageId);
         $cPage = FatApp::getDb()->fetch($srch->getResultset());
         if ($cPage == false) {
             FatUtility::exitWithErrorCode(404);
         }
-        $blockData = array();
+        $blockData = [];
         $teacherRequestStatus = null;
         if ($cPage['cpage_layout'] == ContentPage::CONTENT_PAGE_LAYOUT1_TYPE) {
             $srch = new searchBase(ContentPage::DB_TBL_CONTENT_PAGES_BLOCK_LANG);
             $srch->doNotCalculateRecords();
             $srch->doNotLimitRecords();
-            $srch->addMultipleFields(array("cpblocklang_text", 'cpblocklang_block_id'));
+            $srch->addMultipleFields(["cpblocklang_text", 'cpblocklang_block_id']);
             $srch->addCondition('cpblocklang_cpage_id', '=', $cPageId);
             $srch->addCondition('cpblocklang_lang_id', '=', $this->siteLangId);
             $srchRs = $srch->getResultSet();
@@ -49,7 +50,7 @@ class CmsController extends MyAppController
 
     public function getBreadcrumbNodes($action)
     {
-        $nodes = array();
+        $nodes = [];
         $parameters = FatApp::getParameters();
         if (!empty($parameters) && $action == 'view') {
             $cPageId = reset($parameters);
@@ -59,7 +60,7 @@ class CmsController extends MyAppController
         }
         switch ($action) {
             default:
-                $nodes[] = array('title' => $title);
+                $nodes[] = ['title' => $title];
                 break;
         }
         return $nodes;

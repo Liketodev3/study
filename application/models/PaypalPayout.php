@@ -12,7 +12,7 @@ class PaypalPayout
     private $error;
     private $isError;
     private $commonLangId;
-    private $currenciesAccepted = array(
+    private $currenciesAccepted = [
         'Australian Dollar' => 'AUD',
         'Brazilian Real' => 'BRL',
         'Canadian Dollar' => 'CAD',
@@ -36,7 +36,7 @@ class PaypalPayout
         'Taiwan New Dollar' => 'TWD',
         'Thai Baht' => 'THB',
         'U.S. Dollar' => 'USD',
-    );
+    ];
 
     public function __construct()
     {
@@ -67,7 +67,7 @@ class PaypalPayout
         if (empty($clientid) || empty($clientsecret)) {
             $this->isError = true;
             $this->error = Label::getLabel('MSG_Paypal_Client_id_And_Secret_is_required_for_payout');
-            return array();
+            return [];
         }
         $actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true) ? self::ACCESS_TOKEN_URL_LIVE : self::ACCESS_TOKEN_URL_TEST;
         $ch = curl_init();
@@ -78,7 +78,7 @@ class PaypalPayout
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_USERPWD, $clientid . ':' . $clientsecret);
-        $headers = array();
+        $headers = [];
         $headers[] = 'Accept: application/json';
         $headers[] = 'Accept-Language: en_US';
         $headers[] = 'Content-Type: application/x-www-form-urlencoded';
@@ -87,14 +87,14 @@ class PaypalPayout
         if (curl_errno($ch)) {
             $this->isError = true;
             $this->error = 'Error:' . curl_error($ch);
-            return array();
+            return [];
         }
         curl_close($ch);
         $accessTokenResponse = json_decode($result, true);
         if (!array_key_exists('access_token', $accessTokenResponse)) {
             $this->isError = true;
             $this->error = $accessTokenResponse['error'] . ' : ' . $accessTokenResponse['error_description'];
-            return array();
+            return [];
         }
         return $accessTokenResponse;
     }
@@ -111,7 +111,7 @@ class PaypalPayout
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        $headers = array();
+        $headers = [];
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Authorization: Bearer ' . $token;
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -119,7 +119,7 @@ class PaypalPayout
         if (curl_errno($ch)) {
             $this->isError = true;
             $this->error = 'Error:' . curl_error($ch);
-            return array();
+            return [];
         }
         curl_close($ch);
         return json_decode($result, true);
@@ -132,7 +132,7 @@ class PaypalPayout
         if (empty($paymentSettings['paypal_client_id']) || empty($paymentSettings['paypal_client_secret'])) {
             $this->isError = true;
             $this->error = Label::getLabel('MSG_Paypal_Client_id_And_Secret_is_required_for_payout');
-            return array();
+            return [];
         }
         return $paymentSettings;
     }
@@ -158,24 +158,24 @@ class PaypalPayout
         $sender_batch_id = "Payout_" . time() . '_' . $recordData['withdrawal_id'];
         $note = Label::getLabel('MSG_Transaction_Fee_Charged_:') . ' ' . CommonHelper::displayMoneyFormat($gatewayFee, true, true);
         $amount = round($recordData['amount'], 2);
-        $requestData = array(
-            "sender_batch_header" => array(
+        $requestData = [
+            "sender_batch_header" => [
                 "sender_batch_id" => $sender_batch_id,
                 "email_subject" => Label::getLabel('MSG_You_have_a_payout!!'),
                 "email_message" => Label::getLabel('MSG_You_have_a_Received_a_payout')
-            ),
-            "items" => array(
-                array(
+            ],
+            "items" => [
+                [
                     "recipient_type" => "EMAIL",
-                    "amount" => array(
+                    "amount" => [
                         "value" => (string) $recordData['amount'],
                         "currency" => $currencyData['currency_code']
-                    ),
+                    ],
                     "note" => $note,
                     "sender_item_id" => time() . '_' . $recordData['withdrawal_id'],
                     "receiver" => $recordData['withdrawal_paypal_email_id'],
-                ))
-        );
+                ]]
+        ];
         $response = $this->sendRequest($access_token, $requestData);
         if ($this->isError()) {
             $this->isError = true;
@@ -193,12 +193,12 @@ class PaypalPayout
             return false;
         }
         $db = FatApp::getDb();
-        $assignFields = array(
+        $assignFields = [
             'withdrawal_status' => Transaction::WITHDRAWL_STATUS_PAYOUT_SENT,
             'withdrawal_transaction_fee' => $gatewayFee,
             'withdrawal_response' => json_encode($response)
-        );
-        if (!$db->updateFromArray(User::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields, array('smt' => 'withdrawal_id=?', 'vals' => array($recordData['withdrawal_id'])))) {
+        ];
+        if (!$db->updateFromArray(User::DB_TBL_USR_WITHDRAWAL_REQ, $assignFields, ['smt' => 'withdrawal_id=?', 'vals' => [$recordData['withdrawal_id']]])) {
             $this->isError = true;
             $this->error = $db->getError();
             return false;

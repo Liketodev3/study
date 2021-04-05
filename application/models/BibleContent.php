@@ -35,7 +35,7 @@ class BibleContent extends MyAppModel
         $srch->addCondition(self::DB_TBL_PREFIX . "id", '=', $id);
         $rs = $srch->getResultSet();
         if ($srch->recordCount() < 1) {
-            return array();
+            return [];
         }
         return FatApp::getDb()->fetch($rs);
     }

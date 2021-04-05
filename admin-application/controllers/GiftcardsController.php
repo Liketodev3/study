@@ -146,16 +146,6 @@ class GiftcardsController extends AdminBaseController
         $this->_template->render();
     }
 
-    public function listChildOrderStatusLog($opId)
-    {
-        $this->objPrivilege->canViewGiftcards();
-        $opId = FatUtility::int($opId);
-        $orderObj = new Orders();
-        $comments = $orderObj->getOrderComments($this->adminLangId, array("op_id"=>$opId));
-        $this->set('comments', $comments);
-
-        $this->_template->render(false, false);
-    }
 
     public function updatePayment()
     {

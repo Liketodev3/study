@@ -14,7 +14,7 @@ class MyDate extends FatDate
     public static function getDateAndTimeDisclaimer()
     {
         $str = Label::getLabel('LBL_All_Date_&_Times_are_showing_in_{time-zone-abbr},_Current_Date_&_Time:_{current-date-time}');
-        $arr = array("{time-zone-abbr}" => date('T'), "{current-date-time}" => date('d-M-Y H:i:s A T'),);
+        $arr = ["{time-zone-abbr}" => date('T'), "{current-date-time}" => date('d-M-Y H:i:s A T')];
         foreach ($arr as $key => $val) {
             $str = str_replace($key, $val, $str);
         }
@@ -53,11 +53,11 @@ class MyDate extends FatDate
     {
         $user_timezone = '';
         if ($userId > 0) {
-            $userRow = User::getAttributesById($userId, array('user_timezone'));
+            $userRow = User::getAttributesById($userId, ['user_timezone']);
             $user_timezone = $userRow['user_timezone'];
         } else {
             if (UserAuthentication::isUserLogged()) {
-                $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array('user_timezone'));
+                $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), ['user_timezone']);
                 $user_timezone = $userRow['user_timezone'];
             } else {
                 $user_timezone = $_COOKIE['user_timezone'] ?? self::getTimeZone();
@@ -72,7 +72,7 @@ class MyDate extends FatDate
     public static function setUserTimeZone()
     {
         if (UserAuthentication::isUserLogged()) {
-            $userDataRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), array('user_timezone'));
+            $userDataRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), ['user_timezone']);
             $user_timezone = $userDataRow['user_timezone'];
             $cookieConsent = CommonHelper::getCookieConsent();
             $isActivePreferencesCookie = (!empty($cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
@@ -105,7 +105,7 @@ class MyDate extends FatDate
     public static function getDatesFromRange($start, $end, $format = 'Y-m-d')
     {
         // Declare an empty array
-        $array = array();
+        $array = [];
         $interval = new DateInterval('P1D');
         $realEnd = new DateTime($end);
         $realEnd->add($interval);
@@ -158,10 +158,10 @@ class MyDate extends FatDate
     public static function getWeekStartAndEndDate(DateTime $dateTime): array
     {
         $dateTime = $dateTime->modify('last saturday')->modify('+1 day');
-        return array(
+        return [
             'weekStart' => $dateTime->format('Y-m-d'),
             'weekEnd' => $dateTime->modify('next saturday')->format('Y-m-d'),
-        );
+        ];
     }
 
     public static function changeWeekDaysToDate(array $weekDays): array

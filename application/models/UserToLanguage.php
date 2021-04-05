@@ -33,21 +33,11 @@ class UserToLanguage extends MyAppModel
             $langId = CommonHelper::getLangId();
         }
         $TeachingLangSrch = new SearchBase(self::DB_TBL_TEACH, 'tt');
-        $TeachingLangSrch->joinTable(
-                TeachingLanguage::DB_TBL,
-                'LEFT OUTER JOIN',
-                'tl.tlanguage_id = tt.utl_slanguage_id',
-                'tl'
-        );
-        $TeachingLangSrch->joinTable(
-                TeachingLanguage::DB_TBL . '_lang',
-                'LEFT OUTER JOIN',
-                'tl_l.tlanguagelang_tlanguage_id = tl.tlanguage_id AND tl_l.tlanguagelang_lang_id = ' . $langId,
-                'tl_l'
-        );
+        $TeachingLangSrch->joinTable(TeachingLanguage::DB_TBL, 'LEFT OUTER JOIN', 'tl.tlanguage_id = tt.utl_slanguage_id', 'tl');
+        $TeachingLangSrch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT OUTER JOIN', 'tl_l.tlanguagelang_tlanguage_id = tl.tlanguage_id AND tl_l.tlanguagelang_lang_id = ' . $langId, 'tl_l');
         $TeachingLangSrch->addCondition('utl_us_user_id', '=', $teacherId);
         $TeachingLangSrch->doNotCalculateRecords();
-        $TeachingLangSrch->addMultiplefields(array('tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'));
+        $TeachingLangSrch->addMultiplefields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name']);
         $rs = $TeachingLangSrch->getResultSet();
         $teachingLanguagesArr = FatApp::getDb()->fetchAllAssoc($rs);
         return $teachingLanguagesArr;
@@ -83,7 +73,10 @@ class UserToLanguage extends MyAppModel
         $langData['utl_us_user_id'] = $this->mainTableRecordId;
         parent::__construct(self::DB_TBL_TEACH, self::DB_TBL_TEACH_PREFIX . 'user_id', $this->mainTableRecordId);
         $this->assignValues($langData);
-        return $this->objMainTableRecord->addNew(array(), array('utl_single_lesson_amount' => $langData['utl_single_lesson_amount'], 'utl_bulk_lesson_amount' => $langData['utl_bulk_lesson_amount']));
+        return $this->objMainTableRecord->addNew([], [
+                    'utl_single_lesson_amount' => $langData['utl_single_lesson_amount'],
+                    'utl_bulk_lesson_amount' => $langData['utl_bulk_lesson_amount']
+        ]);
     }
 
     public function getTeachingSettings($langId)
@@ -91,13 +84,13 @@ class UserToLanguage extends MyAppModel
         $srch = new SearchBase(static::DB_TBL_TEACH, 'utl');
         $srch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utl.utl_slanguage_id');
         $srch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utl.utl_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'tlanguage_id',
             'tlanguage_name',
             'utl_single_lesson_amount',
             'utl_bulk_lesson_amount',
             'utl_booking_slot',
-        ));
+        ]);
         $srch->addCondition('utl_single_lesson_amount', '>', 0);
         $srch->addCondition('utl_bulk_lesson_amount', '>', 0);
         $srch->addCondition('utl_slanguage_id', '>', 0);
@@ -111,7 +104,7 @@ class UserToLanguage extends MyAppModel
     {
         $srch = new SearchBase(static::DB_TBL_TEACH, 'utl');
         $srch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utl.utl_slanguage_id');
-        $srch->addFld(array('utl_id', 'utl_booking_slot'));
+        $srch->addFld(['utl_id', 'utl_booking_slot']);
         $srch->addCondition('utl_single_lesson_amount', '>', 0);
         $srch->addCondition('utl_bulk_lesson_amount', '>', 0);
         $srch->addCondition('utl_slanguage_id', '>', 0);
@@ -154,13 +147,11 @@ class UserToLanguage extends MyAppModel
         $srch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utl.utl_slanguage_id');
         $srch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utl.utl_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
         $srch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'utl_booking_slot = top_lesson_duration AND top_teacher_id = utl_us_user_id AND top_learner_id = ' . $learnerId, 'top');
-        $srch->addMultipleFields(array(
-            'tlanguage_id',
-            'tlanguage_name',
+        $srch->addMultipleFields(['tlanguage_id', 'tlanguage_name',
             'IFNULL(top_single_lesson_price, utl_single_lesson_amount) utl_single_lesson_amount',
             'IFNULL(top_bulk_lesson_price, utl_bulk_lesson_amount) utl_bulk_lesson_amount',
             'utl_booking_slot',
-        ));
+        ]);
         $srch->addCondition('utl_us_user_id', '=', $this->getMainTableRecordId());
         $srch->addCondition('utl_single_lesson_amount', '>', 0);
         $srch->addCondition('utl_bulk_lesson_amount', '>', 0);

@@ -41,7 +41,7 @@ class DiscountCoupons extends MyAppModel
         $status = true;
         $currDate = date('Y-m-d');
         $srch = static::getSearchObject($langId);
-        $srch->addMultipleFields(array('dc.*', 'IFNULL(dc_l.coupon_title,dc.coupon_identifier) as coupon_title'));
+        $srch->addMultipleFields(['dc.*', 'IFNULL(dc_l.coupon_title,dc.coupon_identifier) as coupon_title']);
         $srch->addCondition('coupon_code', '=', $code);
         $cnd = $srch->addCondition('coupon_start_date', '=', '0000-00-00', 'AND');
         $cnd->attachCondition('coupon_start_date', '<=', $currDate, 'OR');
@@ -59,18 +59,18 @@ class DiscountCoupons extends MyAppModel
         }
         $chistorySrch = CouponHistory::getSearchObject();
         $chistorySrch->addCondition('couponhistory_coupon_id', '=', $couponData['coupon_id']);
-        $chistorySrch->addMultipleFields(array('count(couponhistory_id) as total'));
+        $chistorySrch->addMultipleFields(['count(couponhistory_id) as total']);
         $chistorySrch->doNotLimitRecords();
         $chistorySrch->doNotCalculateRecords();
         $chistoryRs = $chistorySrch->getResultSet();
         $couponHistoryData = FatApp::getDb()->fetch($chistoryRs);
         $interval = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' - 15 minute'));
-        FatApp::getDb()->deleteRecords(DiscountCoupons::DB_TBL_COUPON_HOLD, array('smt' => 'couponhold_added_on < ?', 'vals' => array($interval)));
+        FatApp::getDb()->deleteRecords(DiscountCoupons::DB_TBL_COUPON_HOLD, ['smt' => 'couponhold_added_on < ?', 'vals' => [$interval]]);
         $cHoldSrch = new SearchBase(static::DB_TBL_COUPON_HOLD);
         $cHoldSrch->addCondition('couponhold_coupon_id', '=', $couponData['coupon_id']);
         $cHoldSrch->addCondition('couponhold_added_on', '>=', $interval);
         $cHoldSrch->addCondition('couponhold_user_id', '!=', UserAuthentication::getLoggedUserId());
-        $cHoldSrch->addMultipleFields(array('count(couponhold_id) as total'));
+        $cHoldSrch->addMultipleFields(['count(couponhold_id) as total']);
         $cHoldSrch->doNotLimitRecords();
         $cHoldSrch->doNotCalculateRecords();
         $cHoldRs = $cHoldSrch->getResultSet();
@@ -85,7 +85,7 @@ class DiscountCoupons extends MyAppModel
             $cUserhistorySrch = CouponHistory::getSearchObject();
             $cUserhistorySrch->addCondition('couponhistory_coupon_id', '=', $couponData['coupon_id']);
             $cUserhistorySrch->addCondition('couponhistory_user_id', '=', $userId);
-            $cUserhistorySrch->addMultipleFields(array('count(couponhistory_id) as total'));
+            $cUserhistorySrch->addMultipleFields(['count(couponhistory_id) as total']);
             $cUserhistorySrch->doNotLimitRecords();
             $cUserhistorySrch->doNotCalculateRecords();
             $cUserhistoryRs = $cUserhistorySrch->getResultSet();
@@ -99,7 +99,7 @@ class DiscountCoupons extends MyAppModel
             }
         }
         // Products
-        $productData = array('group' => '', 'product' => '');
+        $productData = ['group' => '', 'product' => ''];
         $products = $cartObj->getProducts($langId);
         $prodObj = new Product();
         if ($userSpecificCoupon) {
@@ -116,7 +116,7 @@ class DiscountCoupons extends MyAppModel
             if (!empty($couponProductData) || !empty($couponCategoryData)) {
                 foreach ($products as $product) {
                     if ($product['is_batch']) {
-                        $productData['group'][] = array();
+                        $productData['group'][] = [];
                     } else {
                         if (array_key_exists($product['product_id'], $couponProductData)) {
                             $productData['product'][] = $product['product_id'];
@@ -139,7 +139,7 @@ class DiscountCoupons extends MyAppModel
             $status = false;
         }
         if ($status) {
-            return array_merge($couponData, array("products" => $productData['product'], 'groups' => $productData['group']));
+            return array_merge($couponData, ["products" => $productData['product'], 'groups' => $productData['group']]);
         }
     }
 
@@ -163,7 +163,7 @@ class DiscountCoupons extends MyAppModel
         $cHistorySrch->doNotLimitRecords();
         $cHistorySrch->doNotCalculateRecords();
         $cHistorySrch->addGroupBy('couponhistory_coupon_id');
-        $cHistorySrch->addMultipleFields(array('count(couponhistory_id) as coupon_used_count', 'couponhistory_coupon_id'));
+        $cHistorySrch->addMultipleFields(['count(couponhistory_id) as coupon_used_count', 'couponhistory_coupon_id']);
         /* ] */
         /* coupon User History[ */
         $userCouponHistorySrch = CouponHistory::getSearchObject();
@@ -175,7 +175,7 @@ class DiscountCoupons extends MyAppModel
         if ($orderId != '') {
             $pendingOrderHoldSrch = new SearchBase(DiscountCoupons::DB_TBL_COUPON_HOLD_PENDING_ORDER);
             $pendingOrderHoldSrch->addCondition('ochold_order_id', '!=', $orderId);
-            $pendingOrderHoldSrch->addMultipleFields(array('count(ochold_order_id) as pending_order_hold_count', 'ochold_coupon_id'));
+            $pendingOrderHoldSrch->addMultipleFields(['count(ochold_order_id) as pending_order_hold_count', 'ochold_coupon_id']);
             $pendingOrderHoldSrch->doNotLimitRecords();
             $pendingOrderHoldSrch->addGroupBy('ochold_coupon_id');
             $pendingOrderHoldSrch->doNotCalculateRecords();
@@ -185,7 +185,7 @@ class DiscountCoupons extends MyAppModel
         $cHoldSrch = new SearchBase(DiscountCoupons::DB_TBL_COUPON_HOLD);
         $cHoldSrch->addCondition('couponhold_added_on', '>=', $interval);
         $cHoldSrch->addCondition('couponhold_user_id', '!=', $userId);
-        $cHoldSrch->addMultipleFields(array('couponhold_coupon_id'));
+        $cHoldSrch->addMultipleFields(['couponhold_coupon_id']);
         $cHoldSrch->doNotLimitRecords();
         $cHoldSrch->doNotCalculateRecords();
         /* ] */
@@ -206,9 +206,13 @@ class DiscountCoupons extends MyAppModel
         if ($coupon_code != '') {
             $srch->addCondition('coupon_code', '=', $coupon_code);
         }
-        $selectArr = array('dc.*', 'dc_l.coupon_description', 'IFNULL(dc_l.coupon_title, dc.coupon_identifier) as coupon_title', 'IFNULL(coupon_history.coupon_used_count, 0) as coupon_used_count', 'IFNULL(COUNT(coupon_hold.couponhold_coupon_id), 0) as coupon_hold_count', 'count(user_coupon_history.couponhistory_id) as user_coupon_used_count');
+        $selectArr = ['dc.*', 'dc_l.coupon_description',
+            'IFNULL(dc_l.coupon_title, dc.coupon_identifier) as coupon_title',
+            'IFNULL(coupon_history.coupon_used_count, 0) as coupon_used_count',
+            'IFNULL(COUNT(coupon_hold.couponhold_coupon_id), 0) as coupon_hold_count',
+            'count(user_coupon_history.couponhistory_id) as user_coupon_used_count'];
         if ($orderId != '') {
-            $selectArr = array_merge($selectArr, array('IFNULL(ctop.pending_order_hold_count,0) as pending_order_hold_count'));
+            $selectArr = array_merge($selectArr, ['IFNULL(ctop.pending_order_hold_count,0) as pending_order_hold_count']);
         }
         $srch->addMultipleFields($selectArr);
         $srch->addGroupBy('dc.coupon_id');

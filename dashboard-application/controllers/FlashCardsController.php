@@ -1,10 +1,12 @@
 <?php
+
 class FlashCardsController extends LoggedUserController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
-        if(!FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true)){
+        if (!FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true)) {
             FatUtility::exitWithErrorCode(404);
         }
     }
@@ -26,7 +28,6 @@ class FlashCardsController extends LoggedUserController
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
-
         $srch = new FlashCardSearch(false);
         $srch->joinWordLanguage();
         $srch->joinWordDefinitionLanguage();
@@ -37,38 +38,33 @@ class FlashCardsController extends LoggedUserController
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'flashcard_id',
             'flashcard_title',
             'wordLang.slanguage_code as wordLanguageCode',
             'flashcard_pronunciation',
             'flashcard_defination',
             'wordDefLang.slanguage_code as wordDefLanguageCode',
-        ));
-
+        ]);
         if (!empty($post['keyword'])) {
             $srch->addCondition('flashcard_title', 'like', '%' . $post['keyword'] . '%');
         }
-
         if (!empty($post['slanguage_id'])) {
             $srch->addCondition('flashcard_slanguage_id', '=', $post['slanguage_id']);
         }
         $rs = $srch->getResultSet();
         $flashCards = FatApp::getDb()->fetchAll($rs);
-
         /* [ */
         $totalRecords = $srch->recordCount();
-        $pagingArr = array(
+        $pagingArr = [
             'pageCount' => $srch->pages(),
             'page' => $page,
             'pageSize' => $pageSize,
             'recordCount' => $totalRecords,
-        );
+        ];
         $this->set('postedData', $post);
         $this->set('pagingArr', $pagingArr);
-
-        $startRecord = ($page - 1) * $pageSize + 1 ;
+        $startRecord = ($page - 1) * $pageSize + 1;
         $endRecord = $page * $pageSize;
         if ($totalRecords < $endRecord) {
             $endRecord = $totalRecords;
@@ -77,7 +73,6 @@ class FlashCardsController extends LoggedUserController
         $this->set('endRecord', $endRecord);
         $this->set('totalRecords', $totalRecords);
         /* ] */
-
         $this->set('flashCards', $flashCards);
         $this->_template->render(false, false);
     }
@@ -85,8 +80,8 @@ class FlashCardsController extends LoggedUserController
     private function getSearchForm()
     {
         $frm = new Form('frmSrch');
-        $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_By_Keyword')));
-        $frm->addSelectBox(Label::getLabel('LBL_Language'), 'slanguage_id', SpokenLanguage::getAllLangs(CommonHelper::getLangId(), true), '', array(), Label::getLabel('LBL_All'))->requirements()->setInt();
+        $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Keyword')]);
+        $frm->addSelectBox(Label::getLabel('LBL_Language'), 'slanguage_id', SpokenLanguage::getAllLangs(CommonHelper::getLangId(), true), '', [], Label::getLabel('LBL_All'))->requirements()->setInt();
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
         $btnSubmit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search'));
@@ -117,12 +112,11 @@ class FlashCardsController extends LoggedUserController
         }
         $flashCardId = FatApp::getPostedData('flashcard_id', FatUtility::VAR_INT, 0);
         if ($flashCardId > 0) {
-            $row = FlashCard::getAttributesById($flashCardId, array('flashcard_user_id'));
+            $row = FlashCard::getAttributesById($flashCardId, ['flashcard_user_id']);
             if ($row['flashcard_user_id'] != UserAuthentication::getLoggedUserId()) {
                 FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
             }
         }
-
         $post['flashcard_user_id'] = UserAuthentication::getLoggedUserId();
         $post['flashcard_created_by_user_id'] = UserAuthentication::getLoggedUserId();
         $flashCardObj = new FlashCard($flashCardId);
@@ -136,7 +130,7 @@ class FlashCardsController extends LoggedUserController
 
     private function getForm()
     {
-        $frm= new Form('flashcardFrm');
+        $frm = new Form('flashcardFrm');
         $frm->addRequiredField(Label::getLabel('LBL_Title'), 'flashcard_title');
         $langArr = SpokenLanguage::getAllLangs(CommonHelper::getLangId(), true);
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Title_Language'), 'flashcard_slanguage_id', $langArr);
@@ -155,7 +149,7 @@ class FlashCardsController extends LoggedUserController
     public function remove($flashCardId)
     {
         $flashCardId = FatUtility::int($flashCardId);
-        $row = FlashCard::getAttributesById($flashCardId, array('flashcard_user_id'));
+        $row = FlashCard::getAttributesById($flashCardId, ['flashcard_user_id']);
         if ($row['flashcard_user_id'] != UserAuthentication::getLoggedUserId()) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
@@ -174,14 +168,14 @@ class FlashCardsController extends LoggedUserController
         $todayReviewedCountSrch = clone $srch;
         $todayReviewedCountSrch->doNotLimitRecords();
         $todayReviewedCountSrch->addCondition('mysql_func_DATE(flashcard_accuracy_added_on)', '=', date('Y-m-d'), 'AND', true);
-        $todayReviewedCountSrch->addMultipleFields(array('COUNT(flashcard_id) as todayReviewedCounts'));
+        $todayReviewedCountSrch->addMultipleFields(['COUNT(flashcard_id) as todayReviewedCounts']);
         $rs = $todayReviewedCountSrch->getResultSet();
         $todayReviewedCountsRow = FatApp::getDb()->fetch($rs);
         /* ] */
         /* [ */
         $allFCardSrch = clone $srch;
         $allFCardSrch->doNotLimitRecords();
-        $allFCardSrch->addMultipleFields(array('COUNT(flashcard_id) as allFCardCounts'));
+        $allFCardSrch->addMultipleFields(['COUNT(flashcard_id) as allFCardCounts']);
         $rs = $allFCardSrch->getResultSet();
         $allFCardCountsRow = FatApp::getDb()->fetch($rs);
         /* ] */
@@ -194,7 +188,6 @@ class FlashCardsController extends LoggedUserController
         $rs = $lastReviewedOnSrch->getResultSet();
         $lastReviewedOnRow = FatApp::getDb()->fetch($rs);
         /* ] */
-
         $this->set('todayReviewedCounts', $todayReviewedCountsRow['todayReviewedCounts']);
         $this->set('allFCardCounts', $allFCardCountsRow['allFCardCounts']);
         $this->set('lastReviewedOnDate', $lastReviewedOnRow['flashcard_accuracy_added_on']);
@@ -209,20 +202,15 @@ class FlashCardsController extends LoggedUserController
         $todayReviewedCountSrch = clone $srch;
         $todayReviewedCountSrch->doNotLimitRecords();
         $todayReviewedCountSrch->addCondition('mysql_func_DATE(flashcard_accuracy_added_on)', '=', date('Y-m-d'), 'AND', true);
-        $todayReviewedCountSrch->addMultipleFields(array('COUNT(flashcard_id) as todayReviewedCounts'));
+        $todayReviewedCountSrch->addMultipleFields(['COUNT(flashcard_id) as todayReviewedCounts']);
         $rs = $todayReviewedCountSrch->getResultSet();
         $todayReviewedCountsRow = FatApp::getDb()->fetch($rs);
         $todayReviewedCount = $todayReviewedCountsRow['todayReviewedCounts'];
         /* ] */
-        /* $srch = new FlashCardSearch(false);
-        $srch->addCondition( 'flashcard_user_id',' = ', UserAuthentication::getLoggedUserId() ); */
-        //$srch->addCondition( 'flashcard_accuracy',' = ', 0 );
-        //$srch->addOrder('flashcard_added_on', 'DESC');
-        //$srch->addOrder('flashcard_title', 'DESC');
         /* [ */
         $allFCardSrch = clone $srch;
         $allFCardSrch->doNotLimitRecords();
-        $allFCardSrch->addMultipleFields(array('COUNT(flashcard_id) as allFCardCounts'));
+        $allFCardSrch->addMultipleFields(['COUNT(flashcard_id) as allFCardCounts']);
         $rs = $allFCardSrch->getResultSet();
         $allFCardCountsRow = FatApp::getDb()->fetch($rs);
         $allFCardCount = $allFCardCountsRow['allFCardCounts'];
@@ -233,17 +221,16 @@ class FlashCardsController extends LoggedUserController
         $flashCardSrch = clone $srch;
         $flashCardSrch->joinWordLanguage();
         $flashCardSrch->joinWordDefinitionLanguage();
-        $flashCardSrch->addMultipleFields(array(
+        $flashCardSrch->addMultipleFields([
             'flashcard_id',
             'flashcard_title',
             'wordLang.slanguage_code as wordLanguageCode',
             'flashcard_pronunciation',
             'flashcard_defination',
             'wordDefLang.slanguage_code as wordDefLanguageCode',
-        ));
+        ]);
         $flashCardSrch->setPageSize(1);
         /* ] */
-
         if ($todayReviewedCount == $allFCardCount) {
             $page = FatApp::getPostedData('currentReviewedCount', FatUtility::VAR_INT, 1);
             $currentReviewedCount = 1;
@@ -255,7 +242,6 @@ class FlashCardsController extends LoggedUserController
             $flashCardSrch->addOrder('flashcard_accuracy_added_on', 'DESC');
             $flashCardSrch->addOrder('flashcard_title', 'DESC');
             $flashCardSrch->addCondition('mysql_func_DATE(flashcard_accuracy_added_on)', '=', date('Y-m-d'), 'AND', true);
-        //echo $flashCardSrch->getQuery();
         } else {
             $flashCardSrch->addOrder('flashcard_added_on', 'DESC');
             $flashCardSrch->addOrder('flashcard_title', 'DESC');
@@ -265,7 +251,6 @@ class FlashCardsController extends LoggedUserController
         $rs = $flashCardSrch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
         /* ] */
-
         $this->set('currentReviewedCount', $currentReviewedCount);
         $this->set('allFCardCounts', $allFCardCount);
         $this->set('flashCardData', $row);
@@ -280,12 +265,12 @@ class FlashCardsController extends LoggedUserController
         if ($flashcard_id <= 0 || $flashcard_accuracy <= 0) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $row = FlashCard::getAttributesById($flashcard_id, array('flashcard_user_id'));
+        $row = FlashCard::getAttributesById($flashcard_id, ['flashcard_user_id']);
         if (UserAuthentication::getLoggedUserId() != $row['flashcard_user_id']) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         $flashCard = new FlashCard($flashcard_id);
-        $flashCard->assignValues(array('flashcard_accuracy' => $flashcard_accuracy, 'flashcard_accuracy_added_on' => date('Y-m-d H:i:s')));
+        $flashCard->assignValues(['flashcard_accuracy' => $flashcard_accuracy, 'flashcard_accuracy_added_on' => date('Y-m-d H:i:s')]);
         if (!$flashCard->save()) {
             FatUtility::dieJsonError($flashCard->getError());
         }
@@ -296,37 +281,35 @@ class FlashCardsController extends LoggedUserController
     public function reviewResult()
     {
         $srchBase = new FlashCardSearch(false);
-        $srchBase->addMultipleFields(array(
-                'flashcard_id',
-            ));
+        $srchBase->addMultipleFields(['flashcard_id',]);
         $srchBase->addCondition('flashcard_user_id', ' = ', UserAuthentication::getLoggedUserId());
-        //$srchBase->addCondition( 'flashcard_added_on',' >= ', date('Y-m-d H:i') );
-        /**Counting Correct Flashcards***/
+        /*         * Counting Correct Flashcards** */
         $srchCorrect = clone $srchBase;
         $srchCorrect->addCondition('flashcard_accuracy', ' = ', FlashCard::ACCURACY_LEVEL_CORRECT);
         $rsCorrect = $srchCorrect->getResultSet();
         $countCorrect = $srchCorrect->recordCount();
-        /**Counting Correct Flashcards***/
-        /**Counting InCorrect Flashcards***/
+        /*         * Counting Correct Flashcards** */
+        /*         * Counting InCorrect Flashcards** */
         $srchInCorrect = clone $srchBase;
         $srchInCorrect->addCondition('flashcard_accuracy', ' = ', FlashCard::ACCURACY_LEVEL_WRONG);
         $rsInCorrect = $srchInCorrect->getResultSet();
         $countIncorrect = $srchInCorrect->recordCount();
-        /**Counting InCorrect Flashcards***/
-        /**Counting AlmostCorrect Flashcards***/
+        /*         * Counting InCorrect Flashcards** */
+        /*         * Counting AlmostCorrect Flashcards** */
         $srchAlmostCorrect = clone $srchBase;
         $srchAlmostCorrect->addCondition('flashcard_accuracy', ' = ', FlashCard::ACCURACY_LEVEL_ALMOST);
         $rsAlmostCorrect = $srchAlmostCorrect->getResultSet();
         $countAlmostCorrect = $srchAlmostCorrect->recordCount();
-        /**Counting AlmostCorrect Flashcards***/
-        /**Fetching 1st flashcard id for restart***/
+        /*         * Counting AlmostCorrect Flashcards** */
+        /*         * Fetching 1st flashcard id for restart** */
         $rs = $srchBase->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
-        /**Fetching 1st flashcard id for restart***/
+        /*         * Fetching 1st flashcard id for restart** */
         $this->set('flashCardId', $row['flashcard_id']);
         $this->set('countAlmostCorrect', $countAlmostCorrect);
         $this->set('countIncorrect', $countIncorrect);
         $this->set('countCorrect', $countCorrect);
         $this->_template->render(false, false);
     }
+
 }

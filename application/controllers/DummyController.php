@@ -12,9 +12,7 @@ class DummyController extends MyAppController
     {
         $srch = new SearchBase(AttachedFile::DB_TBL);
         $srch->addCondition('afile_type', 'IN', $fileTypes);
-        // die($srch->getQuery());
-        $rs = $srch->getResultSet();
-        return FatApp::getDb()->fetchAll($rs, 'afile_id');
+        return FatApp::getDb()->fetchAll($srch->getResultSet(), 'afile_id');
     }
 
     public function list()
@@ -35,7 +33,6 @@ class DummyController extends MyAppController
                 }
             }
         }
-        // var_dump($slideAttchments);
         exit;
     }
 
@@ -57,7 +54,6 @@ class DummyController extends MyAppController
                 }
             }
         }
-        // var_dump($slideAttchments);
         exit;
     }
 
@@ -135,10 +131,6 @@ class DummyController extends MyAppController
         } else {
             $response = json_decode($response, true);
             print_r($response);
-            // if(is_array($response)) {
-            // 	$values = array_values($response);
-            // 	if(is_array($values[0]))
-            // }
             print_r(array_values($response));
             die;
         }

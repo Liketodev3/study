@@ -26,19 +26,19 @@ class Timezone extends MyAppModel
     public static function getAssocByLang($langId)
     {
         $srch = self::getSearchObject($langId);
-        $srch->addMultipleFields(array('timezone_id', 'IFNULL(timezonelang_text, timezone_name)'));
+        $srch->addMultipleFields(['timezone_id', 'IFNULL(timezonelang_text, timezone_name)']);
         return FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
     }
 
     public static function getAllByLang($langId)
     {
         $srch = self::getSearchObject($langId);
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'timezone_id',
             'timezone_offset',
             'timezone_identifier',
             'IFNULL(timezonelang_text, timezone_name) as timezone_name'
-        ));
+        ]);
         return FatApp::getDb()->fetchAll($srch->getResultSet(), 'timezone_identifier');
     }
 

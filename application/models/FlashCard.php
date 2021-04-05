@@ -21,11 +21,11 @@ class FlashCard extends MyAppModel
         if ($langId <= 0) {
             $langId = CommonHelper::getLangId();
         }
-        return array(
+        return [
             static::ACCURACY_LEVEL_CORRECT => Label::getLabel('LBL_Correct', $langId),
             static::ACCURACY_LEVEL_ALMOST => Label::getLabel('LBL_Upper_Almost', $langId),
             static::ACCURACY_LEVEL_WRONG => Label::getLabel('LBL_Wrong', $langId),
-        );
+        ];
     }
 
     public function save()

@@ -11,7 +11,7 @@ class UserSetting extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'user_id', $userId);
     }
 
-    public function saveData($data = array())
+    public function saveData($data = [])
     {
         if (($this->getMainTableRecordId() < 1)) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED', $this->commonLangId);
@@ -19,7 +19,7 @@ class UserSetting extends MyAppModel
         }
         $db = FatApp::getDb();
         $data['us_user_id'] = $this->getMainTableRecordId();
-        if (!$db->insertFromArray(static::DB_TBL, $data, false, array(), $data)) {
+        if (!$db->insertFromArray(static::DB_TBL, $data, false, [], $data)) {
             $this->error = $db->getError();
             return false;
         }
@@ -34,9 +34,8 @@ class UserSetting extends MyAppModel
         $userSetting->getUserSiteLang($this->mainTableRecordId);
         $resultSet = $userSetting->getResultSet();
         $data = FatApp::getDb()->fetch($resultSet);
-
         if (empty($data)) {
-            return array();
+            return [];
         }
         return $data;
     }
@@ -48,19 +47,16 @@ class UserSetting extends MyAppModel
             trigger_error("User Id is not passed", E_USER_ERROR);
         }
         $srch = new SearchBase(UserSetting::DB_TBL, 'us');
-        $srch->addMultipleFields(
-                array(
-                    'us_is_trial_lesson_enabled',
-                    'us_notice_number',
-                    'us_video_link',
-                    'us_booking_before', //== code added on 23-08-2019
-                    'us_teach_slanguage_id',
-                    'us_google_access_token',
-                    'us_google_access_token_expiry',
-                    'us_site_lang',
-                    'utl.*'
-                )
-        );
+        $srch->addMultipleFields(['us_is_trial_lesson_enabled',
+            'us_notice_number',
+            'us_video_link',
+            'us_booking_before', //== code added on 23-08-2019
+            'us_teach_slanguage_id',
+            'us_google_access_token',
+            'us_google_access_token_expiry',
+            'us_site_lang',
+            'utl.*'
+        ]);
         $srch->joinTable("tbl_user_teach_languages", 'LEFT JOIN', 'utl_us_user_id = us_user_id', 'utl');
         $srch->addCondition('us_user_id', '=', $userId);
         $srch->addOrder('utl_booking_slot', 'DESC');

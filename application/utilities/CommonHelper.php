@@ -42,7 +42,7 @@ class CommonHelper extends FatUtility
         }
         $currencyData = Currency::getAttributesById(
                         self::$_currency_id,
-                        array('currency_code', 'currency_symbol_left', 'currency_symbol_right', 'currency_value')
+                        ['currency_code', 'currency_symbol_left', 'currency_symbol_right', 'currency_value']
         );
         self::$_currency_symbol_left = $currencyData['currency_symbol_left'];
         self::$_currency_symbol_right = $currencyData['currency_symbol_right'];
@@ -180,10 +180,10 @@ class CommonHelper extends FatUtility
         return $userId;
     }
 
-    public static function generateUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false): string
+    public static function generateUrl($controller = '', $action = '', $queryData = [], $use_root_url = '', $url_rewriting = null, $encodeUrl = false): string
     {
         $url = FatUtility::generateUrl($controller, $action, $queryData, $use_root_url, $url_rewriting);
-        if (in_array(strtolower($controller), array('jscss', 'image'))) {
+        if (in_array(strtolower($controller), ['jscss', 'image'])) {
             return $url;
         }
         if (!$use_root_url) {
@@ -205,7 +205,7 @@ class CommonHelper extends FatUtility
         return $url;
     }
 
-    public static function generateFullUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false)
+    public static function generateFullUrl($controller = '', $action = '', $queryData = [], $use_root_url = '', $url_rewriting = null, $encodeUrl = false)
     {
         $url = static::generateUrl($controller, $action, $queryData, $use_root_url, $url_rewriting);
         $protocol = (FatApp::getConfig('CONF_USE_SSL') == 1) ? 'https://' : 'http://';
@@ -221,7 +221,7 @@ class CommonHelper extends FatUtility
         return $protocol . $_SERVER['SERVER_NAME'];
     }
 
-    public static function generateNoAuthUrl($model = '', $action = '', $queryData = array(), $use_root_url = '')
+    public static function generateNoAuthUrl($model = '', $action = '', $queryData = [], $use_root_url = '')
     {
         $url = CommonHelper::generateUrl($model, $action, $queryData, $use_root_url, false);
         $url = str_replace('index.php?', 'index_noauth.php?', $url);
@@ -250,9 +250,9 @@ class CommonHelper extends FatUtility
         }
     }
 
-    public static function combinationOfElementsOfArr($arr = array(), $useKey = '')
+    public static function combinationOfElementsOfArr($arr = [], $useKey = '')
     {
-        $tempArr = array();
+        $tempArr = [];
         $loopCount = count($arr);
         for ($i = 0; $i < $loopCount; $i++) {
             $count = 0;
@@ -331,13 +331,10 @@ class CommonHelper extends FatUtility
 
     public static function convertExistingToOtherCurrency($currCurrencyId, $val, $otherCurrencyId, $numberFormat = true)
     {
-        $currencyData = Currency::getAttributesById(
-                        $currCurrencyId,
-                        array('currency_value')
-        );
+        $currencyData = Currency::getAttributesById($currCurrencyId, ['currency_value']);
         $currencyValue = $currencyData['currency_value'];
         $val = $val / $currencyValue;
-        $currencyData = Currency::getAttributesById($otherCurrencyId, array('currency_value'));
+        $currencyData = Currency::getAttributesById($otherCurrencyId, ['currency_value']);
         $currencyValue = $currencyData['currency_value'];
         $val = $val * $currencyValue;
         if ($numberFormat) {
@@ -519,13 +516,13 @@ class CommonHelper extends FatUtility
     public static function getnavigationUrl($type, $nav_url = '', $nav_cpage_id = 0, $nav_category_id = 0)
     {
         if ($type == NavigationLinks::NAVLINK_TYPE_CMS) {
-            $url = CommonHelper::generateUrl('cms', 'view', array($nav_cpage_id), CONF_WEBROOT_FRONTEND);
+            $url = CommonHelper::generateUrl('cms', 'view', [$nav_cpage_id], CONF_WEBROOT_FRONTEND);
         } elseif ($type == NavigationLinks::NAVLINK_TYPE_EXTERNAL_PAGE) {
             $url = str_replace('{SITEROOT}', CONF_WEBROOT_FRONTEND, $nav_url);
             $url = str_replace('{siteroot}', CONF_WEBROOT_FRONTEND, $url);
             $url = CommonHelper::processURLString($url);
         } elseif ($type == NavigationLinks::NAVLINK_TYPE_CATEGORY_PAGE) {
-            $url = CommonHelper::generateUrl('category', 'view', array($nav_category_id), CONF_WEBROOT_FRONTEND);
+            $url = CommonHelper::generateUrl('category', 'view', [$nav_category_id], CONF_WEBROOT_FRONTEND);
         }
         return $url;
     }
@@ -593,7 +590,7 @@ class CommonHelper extends FatUtility
         return $pass;
     }
 
-    public static function getAdminUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '/admin/', $url_rewriting = null)
+    public static function getAdminUrl($controller = '', $action = '', $queryData = [], $use_root_url = '/admin/', $url_rewriting = null)
     {
         return FatUtility::generateFullUrl($controller, $action, $queryData, $use_root_url, $url_rewriting);
     }
@@ -637,15 +634,15 @@ class CommonHelper extends FatUtility
         return true;
     }
 
-    public static function getLangFields($condition_id = 0, $condition_field = "", $condition_lang_field = "", $lang_flds = array(), $lang_table = "")
+    public static function getLangFields($condition_id = 0, $condition_field = "", $condition_lang_field = "", $lang_flds = [], $lang_table = "")
     {
         $condition_id = FatUtility::int($condition_id);
         if ($condition_id == 0 || $condition_field == "" || $condition_lang_field == "" || $lang_table == "" || empty($lang_flds)) {
-            return array();
+            return [];
         }
         $langs = Language::getAllNames();
         ;
-        $array = array();
+        $array = [];
         $srch = new SearchBase($lang_table);
         $srch->addCondition($condition_field, '=', $condition_id);
         $rs = $srch->getResultSet();
@@ -666,7 +663,7 @@ class CommonHelper extends FatUtility
 
     public static function arrayToAssocArray($arr)
     {
-        $arr_url_params = array();
+        $arr_url_params = [];
         if (!empty($arr)) {
             foreach ($arr as $key => $val) {
                 $v = 0;
@@ -990,7 +987,7 @@ class CommonHelper extends FatUtility
     public static function concatCurrencySymbolWithAmtLbl()
     {
         $currencyId = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
-        $currencyData = Currency::getAttributesById($currencyId, array('currency_code', 'currency_symbol_left', 'currency_symbol_right', 'currency_value'));
+        $currencyData = Currency::getAttributesById($currencyId, ['currency_code', 'currency_symbol_left', 'currency_symbol_right', 'currency_value']);
         $currencySymbolLeft = $currencyData['currency_symbol_left'];
         $currencySymbolRight = $currencyData['currency_symbol_right'];
         $symbol = $currencySymbolRight ? $currencySymbolRight : $currencySymbolLeft;
@@ -1002,7 +999,7 @@ class CommonHelper extends FatUtility
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
-    public static function multipleExplode($delimiters = array(), $string = '')
+    public static function multipleExplode($delimiters = [], $string = '')
     {
         $mainDelim = end($delimiters);
         array_pop($delimiters);
@@ -1026,12 +1023,12 @@ class CommonHelper extends FatUtility
 
     public static function referralTrackingUrl($code)
     {
-        return self::generateFullUrl('Home', 'Referral', array($code));
+        return self::generateFullUrl('Home', 'Referral', [$code]);
     }
 
     public static function affiliateReferralTrackingUrl($code)
     {
-        return self::generateFullUrl('Home', 'AffiliateReferral', array($code));
+        return self::generateFullUrl('Home', 'AffiliateReferral', [$code]);
     }
 
     public static function createSlug($string)
@@ -1042,7 +1039,7 @@ class CommonHelper extends FatUtility
 
     public static function isCsvValidMimes()
     {
-        $csvValidMimes = array(
+        $csvValidMimes = [
             'text/x-comma-separated-values',
             'text/comma-separated-values',
             'application/octet-stream',
@@ -1054,11 +1051,11 @@ class CommonHelper extends FatUtility
             'application/excel',
             'application/vnd.msexcel',
             'text/plain'
-        );
+        ];
         return $csvValidMimes;
     }
 
-    public static function createDropDownFromArray($name = '', $arr = array(), $selected = 0, $extra = ' ', $selectCaption = '')
+    public static function createDropDownFromArray($name = '', $arr = [], $selected = 0, $extra = ' ', $selectCaption = '')
     {
         $dropDown = '<select name="' . $name . '" ' . $extra . '>';
         if ($selectCaption) {
@@ -1076,7 +1073,7 @@ class CommonHelper extends FatUtility
     {
         $cardNumber = preg_replace('/\D/', '', ($cardNumber));
         $len = strlen($cardNumber);
-        $result = array();
+        $result = [];
         if ($len > 16) {
             $result['card_type'] = 'Invalid';
             return $result;
@@ -1139,7 +1136,6 @@ class CommonHelper extends FatUtility
         /* manipulating $cookieValue to make it array containg real data and storing creation datetime [ */
         /* */
         /* ] */
-        // return setcookie($cookieName, $cookieValue, $cookieExpiryTime, $cookiePath, $cokieSubDomainName, $isCookieSecure, $isCookieHttpOnly,$options);
     }
 
     public static function writeFile($name, $data, &$response)
@@ -1195,11 +1191,7 @@ class CommonHelper extends FatUtility
             }, $input);
         }
         return preg_replace(
-                array(
-                    // t = text
-                    // o = tag open
-                    // c = tag close
-                    // Keep important white-space(s) after self-closing HTML tag(s)
+                [
                     '#<(img|input)(>| .*?>)#s',
                     // Remove a line break and two or more white-space(s) between tag(s)
                     '#(<!--.*?-->)|(>)(?:\n*|\s{2,})(<)|^\s*|\s*$#s',
@@ -1212,19 +1204,8 @@ class CommonHelper extends FatUtility
                     '#(?<=\>)(&nbsp;)(?=\<)#', // --ibid
                     // Remove HTML comment(s) except IE comment(s)
                     '#\s*<!--(?!\[if\s).*?-->\s*|(?<!\>)\n+(?=\<[^!])#s'
-                ),
-                array(
-                    '<$1$2</$1>',
-                    '$1$2$3',
-                    '$1$2$3',
-                    '$1$2$3$4$5',
-                    '$1$2$3$4$5$6$7',
-                    '$1$2$3',
-                    '<$1$2',
-                    '$1 ',
-                    '$1',
-                    ""
-                ),
+                ],
+                ['<$1$2</$1>', '$1$2$3', '$1$2$3', '$1$2$3$4$5', '$1$2$3$4$5$6$7', '$1$2$3', '<$1$2', '$1 ', '$1', ""],
                 $input
         );
     }
@@ -1235,8 +1216,7 @@ class CommonHelper extends FatUtility
             return $input;
         }
         return preg_replace(
-                array(
-                    // Remove comment(s)
+                [
                     '#("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')|\/\*(?!\!)(?>.*?\*\/)|^\s*|\s*$#s',
                     // Remove unused white-space(s)
                     '#("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\'|\/\*(?>.*?\*\/))|\s*+;\s*+(})\s*+|\s*+([*$~^|]?+=|[{};,>~+]|\s*+-(?![0-9\.])|!important\b)\s*+|([[(:])\s++|\s++([])])|\s++(:)\s*+(?!(?>[^{}"\']++|"(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')*+{)|^\s++|\s++\z|(\s)\s+#si',
@@ -1257,8 +1237,8 @@ class CommonHelper extends FatUtility
                     '#(?<=[\{;])(border|outline):none(?=[;\}\!])#',
                     // Remove empty selector(s)
                     '#(\/\*(?>.*?\*\/))|(^|[\{\}])(?:[^\s\{\}]+)\{\}#s'
-                ),
-                array('$1', '$1$2$3$4$5$6$7', '$1', ':0', '$1:0 0', '.$1', '$1$3', '$1$2$4$5', '$1$2$3', '$1:0', '$1$2'),
+                ],
+                ['$1', '$1$2$3$4$5$6$7', '$1', ':0', '$1:0 0', '.$1', '$1$3', '$1$2$4$5', '$1$2$3', '$1:0', '$1$2'],
                 $input
         );
     }
@@ -1270,8 +1250,7 @@ class CommonHelper extends FatUtility
             return $input;
         }
         return preg_replace(
-                array(
-                    // Remove comment(s)
+                [
                     '#\s*("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')\s*|\s*\/\*(?!\!|@cc_on)(?>[\s\S]*?\*\/)\s*|\s*(?<![\:\=])\/\/.*(?=[\n\r]|$)|^\s*|\s*$#',
                     // Remove white-space(s) outside the string and regex
                     '#("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\'|\/\*(?>.*?\*\/)|\/(?!\/)[^\n\r]*?\/(?=[\s.,;]|[gimuy]|$))|\s*([!%&*\(\)\-=+\[\]\{\}|;:,.<>?\/])\s*#s',
@@ -1281,8 +1260,8 @@ class CommonHelper extends FatUtility
                     '#([\{,])([\'])(\d+|[a-z_][a-z0-9_]*)\2(?=\:)#i',
                     // --ibid. From `foo['bar']` to `foo.bar`
                     '#([a-z0-9_\)\]])\[([\'"])([a-z_][a-z0-9_]*)\2\]#i'
-                ),
-                array('$1', '$1$2', '}', '$1$3', '$1.$3'),
+                ],
+                ['$1', '$1$2', '}', '$1$3', '$1.$3'],
                 $input
         );
     }
@@ -1294,7 +1273,7 @@ class CommonHelper extends FatUtility
 
     public static function getDefaultCurrencySymbol()
     {
-        $row = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY'), array('currency_symbol_left', 'currency_symbol_right'));
+        $row = Currency::getAttributesById(FatApp::getConfig('CONF_CURRENCY'), ['currency_symbol_left', 'currency_symbol_right']);
         if (!empty($row)) {
             return ($row['currency_symbol_left'] != '') ? $row['currency_symbol_left'] : $row['currency_symbol_right'];
         }
@@ -1356,10 +1335,10 @@ class CommonHelper extends FatUtility
         }
         $dateTime = new DateTime($date);
         $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);
-        return array(
+        return [
             'start' => $weekStartAndEndDate['weekStart'],
             'end' => $weekStartAndEndDate['weekEnd'],
-        );
+        ];
     }
 
     public static function getDateOrTimeByTimeZone($timeZone = "", $returnInFormat = "D-M-Y h:i:s A (P)")
@@ -1374,26 +1353,26 @@ class CommonHelper extends FatUtility
 
     public static function getVideoDetail($url)
     {
-        $data = array();
+        $data = [];
         $data['video_id'] = "";
         $data['video_thumb'] = "";
         $data['video_type'] = "";
         if (strpos($url, 'youtube') !== false) {
             $pattern = '%^# Match any youtube URL
-				(?:https?://)?  # Optional scheme. Either http or https
-				(?:www\.)?      # Optional www subdomain
-				(?:             # Group host alternatives
-				  youtu\.be/    # Either youtu.be,
-				| youtube\.com  # or youtube.com
-				  (?:           # Group path alternatives
-					/embed/     # Either /embed/
-				  | /v/         # or /v/
-				  | .*v=        # or /watch\?v=
-				  )             # End path alternatives.
-				)               # End host alternatives.
-				([\w-]{10,12})  # Allow 10-12 for 11 char youtube id.
-				($|&).*         # if additional parameters are also in query string after video id.
-				$%x';
+                        (?:https?://)?  # Optional scheme. Either http or https
+                        (?:www\.)?      # Optional www subdomain
+                        (?:             # Group host alternatives
+                          youtu\.be/    # Either youtu.be,
+                        | youtube\.com  # or youtube.com
+                          (?:           # Group path alternatives
+                                /embed/     # Either /embed/
+                          | /v/         # or /v/
+                          | .*v=        # or /watch\?v=
+                          )             # End path alternatives.
+                        )               # End host alternatives.
+                        ([\w-]{10,12})  # Allow 10-12 for 11 char youtube id.
+                        ($|&).*         # if additional parameters are also in query string after video id.
+                        $%x';
             $result = preg_match($pattern, $url, $matches);
             if (false !== $result && isset($matches[1])) {
                 $data['video_type'] = 1;
@@ -1424,7 +1403,7 @@ class CommonHelper extends FatUtility
     public static function formatTimeSlotArr($arr)
     {
         $timeSlotArr = array_intersect_key(TeacherGeneralAvailability::timeSlotArr(), array_flip($arr));
-        $formattedArr = array();
+        $formattedArr = [];
         foreach ($timeSlotArr as $k => $timeSlot) {
             $breakTimeStrng = explode('-', $timeSlot);
             $formattedArr[$k]['startTime'] = $breakTimeStrng[0];
@@ -1446,7 +1425,7 @@ class CommonHelper extends FatUtility
 
     public static function getAllMonthName(): array
     {
-        return array(
+        return [
             'monthNames' => [
                 Label::getLabel('LBL_January'),
                 Label::getLabel('LBL_February'),
@@ -1475,7 +1454,7 @@ class CommonHelper extends FatUtility
                 Label::getLabel('LBL_Nov'),
                 Label::getLabel('LBL_Dec'),
             ],
-        );
+        ];
     }
 
     public static function dayNames(): array
@@ -1515,7 +1494,7 @@ class CommonHelper extends FatUtility
         $srchNotification = UserNotifications::getUserNotifications(UserAuthentication::getLoggedUserId());
         $srchNotification->joinTable(Order::DB_TBL, 'LEFT OUTER JOIN', 'order_id = notification_record_id');
         $srchNotification->addCondition('notification_read', '=', 0);
-        $srchNotification->addMultipleFields(array(
+        $srchNotification->addMultipleFields([
             'notification_record_id as noti_record_id',
             'notification_record_type as noti_type',
             'notification_title as noti_title',
@@ -1524,7 +1503,7 @@ class CommonHelper extends FatUtility
             'notification_read as noti_is_read',
             'notification_id as noti_id',
             'notification_sub_record_id as noti_sub_record_id',
-        ));
+        ]);
         $srchNotification->setPageNumber(1);
         if ($limit) {
             $srchNotification->setPageSize(5);
@@ -1668,7 +1647,7 @@ class CommonHelper extends FatUtility
         return $message;
     }
 
-    public static function replaceStringData($str, $replacements = array(), $replaceTags = false)
+    public static function replaceStringData($str, $replacements = [], $replaceTags = false)
     {
         foreach ($replacements as $key => $val) {
             if ($replaceTags) {
@@ -1723,7 +1702,7 @@ class CommonHelper extends FatUtility
         fputcsv($outstream, $refindedLabels, ',');
         $count = 1;
         while ($row = FatApp::getDb()->fetch($rs)) {
-            $rec = array($count);
+            $rec = [$count];
             foreach ($rowKeys as $rowKey) {
                 if (in_array($rowKey, $placeholders)) {
                     array_push($rec, $labels[$row[$rowKey]]);

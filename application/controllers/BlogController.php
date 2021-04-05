@@ -12,16 +12,16 @@ class BlogController extends MyAppController
 
     public function getBreadcrumbNodes($action)
     {
-        $nodes = array();
+        $nodes = [];
         $className = get_class($this);
         $arr = explode('-', FatUtility::camel2dashed($className));
         array_pop($arr);
         $urlController = implode('-', $arr);
         $className = ucwords(implode(' ', $arr));
         if ($action == 'index') {
-            $nodes[] = array('title' => $className);
+            $nodes[] = ['title' => $className];
         } else {
-            $nodes[] = array('title' => $className, 'href' => CommonHelper::generateUrl($urlController));
+            $nodes[] = ['title' => $className, 'href' => CommonHelper::generateUrl($urlController)];
         }
         $parameters = FatApp::getParameters();
         if (!empty($parameters)) {
@@ -30,16 +30,16 @@ class BlogController extends MyAppController
                 $id = FatUtility::int($id);
                 $data = BlogPostCategory::getAttributesByLangId($this->siteLangId, $id);
                 $title = $data['bpcategory_name'];
-                $nodes[] = array('title' => $title);
+                $nodes[] = ['title' => $title];
             } elseif ($action == 'postDetail') {
                 $id = reset($parameters);
                 $id = FatUtility::int($id);
                 $data = BlogPost::getAttributesByLangId($this->siteLangId, $id);
                 $title = CommonHelper::truncateCharacters($data['post_title'], 40);
-                $nodes[] = array('title' => $title);
+                $nodes[] = ['title' => $title];
             }
         } elseif ($action == 'contributionForm' || $action == 'setupContribution') {
-            $nodes[] = array('title' => Label::getLabel('Lbl_Contribution', $this->siteLangId));
+            $nodes[] = ['title' => Label::getLabel('Lbl_Contribution', $this->siteLangId)];
         }
         return $nodes;
     }
@@ -66,7 +66,10 @@ class BlogController extends MyAppController
         $page = (empty($post['page']) || $post['page'] <= 0) ? 1 : FatUtility::int($post['page']);
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch = BlogPost::getSearchObject($this->siteLangId, true, false, true);
-        $srch->addMultipleFields(array('bp.*', 'IFNULL(bp_l.post_title,post_identifier) as post_title', 'bp_l.post_author_name', 'bp_l.post_short_description', 'group_concat(bpcategory_id) categoryIds', 'group_concat(IFNULL(bpcategory_name, bpcategory_identifier) SEPARATOR "~") categoryNames', 'group_concat(GETBLOGCATCODE(bpcategory_id)) AS categoryCodes'));
+        $srch->addMultipleFields(['bp.*', 'IFNULL(bp_l.post_title,post_identifier) as post_title',
+            'bp_l.post_author_name', 'bp_l.post_short_description', 'group_concat(bpcategory_id) categoryIds',
+            'group_concat(IFNULL(bpcategory_name, bpcategory_identifier) SEPARATOR "~") categoryNames',
+            'group_concat(GETBLOGCATCODE(bpcategory_id)) AS categoryCodes']);
         $srch->addCondition('postlang_post_id', 'is not', 'mysql_func_null', 'and', true);
         if ($categoryId = FatApp::getPostedData('categoryId', FatUtility::VAR_INT, 0)) {
             $srch->addCondition('ptc_bpcategory_id', '=', $categoryId);
@@ -103,7 +106,9 @@ class BlogController extends MyAppController
         $this->set('post_images', $post_images);
         $srch = BlogPost::getSearchObject($this->siteLangId, true, true);
         $srch->addCondition('post_id', '=', $blogPostId);
-        $srch->addMultipleFields(array('bp.*', 'IFNULL(bp_l.post_title,post_identifier) as post_title', 'bp_l.post_author_name', 'bp_l.post_description', 'group_concat(bpcategory_id) categoryIds', 'group_concat(IFNULL(bpcategory_name, bpcategory_identifier) SEPARATOR "~") categoryNames'));
+        $srch->addMultipleFields(['bp.*', 'IFNULL(bp_l.post_title,post_identifier) as post_title',
+            'bp_l.post_author_name', 'bp_l.post_description', 'group_concat(bpcategory_id) categoryIds',
+            'group_concat(IFNULL(bpcategory_name, bpcategory_identifier) SEPARATOR "~") categoryNames']);
         $srchComment = clone $srch;
         $srch->addGroupby('post_id');
         if (!$blogPostData = FatApp::getDb()->fetch($srch->getResultSet())) {
@@ -113,7 +118,7 @@ class BlogController extends MyAppController
         $this->set('blogPostData', $blogPostData);
         $srchComment->addGroupby('bpcomment_id');
         $srchComment->joinTable(BlogComment::DB_TBL, 'inner join', 'bpcomment.bpcomment_post_id = post_id and bpcomment.bpcomment_deleted=0', 'bpcomment');
-        $srchComment->addMultipleFields(array('bpcomment.*'));
+        $srchComment->addMultipleFields(['bpcomment.*']);
         $srchComment->addCondition('bpcomment_approved', '=', BlogComment::COMMENT_STATUS_APPROVED);
         $commentsResultSet = $srchComment->getResultSet();
         $this->set('commentsCount', $srchComment->recordCount());
@@ -132,18 +137,18 @@ class BlogController extends MyAppController
         $title = $blogPostData['post_title'];
         $post_description = trim(CommonHelper::subStringByWords(strip_tags(CommonHelper::renderHtml($blogPostData["post_description"], true)), 500));
         $post_description .= ' - ' . Label::getLabel('LBL_See_more_at', $this->siteLangId) . ": " . CommonHelper::getCurrUrl();
-        $postImageUrl = CommonHelper::generateFullUrl('Image', 'blogPostFront', array($blogPostData['post_id'], $this->siteLangId, ''));
-        $socialShareContent = array(
+        $postImageUrl = CommonHelper::generateFullUrl('Image', 'blogPostFront', [$blogPostData['post_id'], $this->siteLangId, '']);
+        $socialShareContent = [
             'type' => 'Blog Post',
             'title' => $title,
             'description' => $post_description,
             'image' => $postImageUrl,
-        );
+        ];
         $this->set('socialShareContent', $socialShareContent);
         $srchCommentsFrm = $this->getCommentSearchForm($blogPostId);
         $this->set('srchCommentsFrm', $srchCommentsFrm);
-        $this->_template->addJs(array('js/slick.js'));
-        $this->_template->addCss(array('css/slick.css'));
+        $this->_template->addJs(['js/slick.js']);
+        $this->_template->addCss(['css/slick.css']);
         $this->_template->render();
     }
 
@@ -167,7 +172,7 @@ class BlogController extends MyAppController
             FatUtility::dieWithError(Message::getHtml());
         }
         /* checking Abusive Words[ */
-        $enteredAbusiveWordsArr = array();
+        $enteredAbusiveWordsArr = [];
         if (!Abusive::validateContent($post['bpcomment_content'], $enteredAbusiveWordsArr)) {
             if (!empty($enteredAbusiveWordsArr)) {
                 $errStr = Label::getLabel("LBL_Word_{abusiveword}_is/are_not_allowed_to_post", $this->siteLangId);
@@ -198,7 +203,7 @@ class BlogController extends MyAppController
         $blogPostId = FatApp::getPostedData('post_id', FatUtility::VAR_INT, 0);
         $srch = BlogPost::getSearchObject($this->siteLangId, true, true);
         $srch->joinTable(BlogComment::DB_TBL, 'inner join', 'bpcomment.bpcomment_post_id = post_id and bpcomment.bpcomment_deleted=0', 'bpcomment');
-        $srch->addMultipleFields(array('bpcomment.*'));
+        $srch->addMultipleFields(['bpcomment.*']);
         $srch->addCondition('bpcomment_approved', '=', BlogComment::COMMENT_STATUS_APPROVED);
         $srch->addCondition('post_id', '=', $blogPostId);
         $srch->setPageSize($pageSize);

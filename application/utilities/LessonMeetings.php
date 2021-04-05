@@ -5,7 +5,7 @@ class LessonMeetings
 
     public function getMeetingData(array $lessonData): array
     {
-        $meetingData = array();
+        $meetingData = [];
         $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT);
         $loggedUserId = UserAuthentication::getLoggedUserId();
         switch ($activeMettingTool) {
@@ -22,7 +22,7 @@ class LessonMeetings
                 return $this->getCometChatMeetingData($lessonData);
                 break;
         }
-        return array();
+        return [];
     }
 
     private function getHostZoomMeetingData(array $lessonData): array
@@ -31,11 +31,11 @@ class LessonMeetings
         if (!empty($meetingDetails)) {
             return $meetingDetails;
         }
-        $teacherData = array(
+        $teacherData = [
             'first_name' => $lessonData['teacherFirstName'],
             'last_name' => $lessonData['teacherLastName'],
             'email' => $lessonData['teacherEmail']
-        );
+        ];
         $lessonMeetingDetail = new LessonMeetingDetail($lessonData['slesson_id'], $lessonData['teacherId']);
         $zoom = new Zoom();
         $zoomTeacherId = $zoom->createUser($teacherData);
@@ -44,13 +44,13 @@ class LessonMeetings
         $title = $lessonData['slesson_grpcls_id'] > 0 ? $lessonData['grpcls_title'] : '';
         $title = ($title ? $title : (!$lessonData['is_trial'] ? $teachingLangs[$lessonData['slesson_slanguage_id']] : ''));
         $title = $title ? $title : Label::getLabel('LBL_Trial_Lesson');
-        $meetingData = array(
+        $meetingData = [
             'zoomTeacherId' => $zoomTeacherId,
             'title' => ($title ? $title : Label::getLabel('LBL_N/A')),
             'start_time' => $startTime,
             'duration' => $lessonData['op_lesson_duration'],
             'description' => '',
-        );
+        ];
         $meetingInfo = $zoom->createMeeting($meetingData);
         if (!$lessonMeetingDetail->addDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA, json_encode($meetingInfo))) {
             throw new Exception($lessonMeetingDetail->getError());
@@ -62,20 +62,22 @@ class LessonMeetings
     {
         $lessonMeetingDetail = new LessonMeetingDetail($lessonData['slesson_id'], $lessonData['teacherId']);
         $meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA);
-        if (empty($meetingRow))
-            return array();
+        if (empty($meetingRow)) {
+            return [];
+        }
         $row = json_decode($meetingRow, true);
-        if (empty($row))
-            return array();
+        if (empty($row)) {
+            return [];
+        }
         $zoom = new Zoom();
-        $meetingData = array(
+        $meetingData = [
             'id' => $row['id'],
             'url' => $row['start_url'],
             'username' => $lessonData['teacherFullName'],
             'email' => $lessonData['teacherEmail'],
             'role' => Zoom::ROLE_HOST,
             'signature' => $zoom->generateSignature($row['id'], Zoom::ROLE_HOST)
-        );
+        ];
         return $meetingData;
     }
 
@@ -85,11 +87,11 @@ class LessonMeetings
         if (!empty($meetingDetails)) {
             return $meetingDetails;
         }
-        $teacherData = array(
+        $teacherData = [
             'first_name' => $lessonData['teacherFirstName'],
             'last_name' => $lessonData['teacherLastName'],
             'email' => $lessonData['teacherEmail']
-        );
+        ];
         $lessonMeetingDetail = new LessonMeetingDetail($lessonData['slesson_id'], $lessonData['teacherId']);
         $zoom = new Zoom();
         $zoomTeacherId = $zoom->createUser($teacherData);
@@ -98,13 +100,13 @@ class LessonMeetings
         $title = $lessonData['slesson_grpcls_id'] > 0 ? $lessonData['grpcls_title'] : '';
         $title = ($title ? $title : (!$lessonData['is_trial'] ? $teachingLangs[$lessonData['slesson_slanguage_id']] : ''));
         $title = $title ? $title : Label::getLabel('LBL_Trial_Lesson');
-        $meetingData = array(
+        $meetingData = [
             'zoomTeacherId' => $zoomTeacherId,
             'title' => ($title ? $title : Label::getLabel('LBL_N/A')),
             'start_time' => $startTime,
             'duration' => $lessonData['op_lesson_duration'],
             'description' => '',
-        );
+        ];
         $meetingInfo = $zoom->createMeeting($meetingData);
         if (!$lessonMeetingDetail->addDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA, json_encode($meetingInfo))) {
             throw new Exception($lessonMeetingDetail->getError());
@@ -117,21 +119,21 @@ class LessonMeetings
         $lessonMeetingDetail = new LessonMeetingDetail($lessonData['slesson_id'], $lessonData['teacherId']);
         $meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA);
         if (empty($meetingRow)) {
-            return array();
+            return [];
         }
         $row = json_decode($meetingRow, true);
         if (empty($row)) {
-            return array();
+            return [];
         }
         $zoom = new Zoom();
-        $meetingData = array(
+        $meetingData = [
             'id' => $row['id'],
             'url' => $row['join_url'],
             'username' => $lessonData['learnerFullName'],
             'email' => $lessonData['learnerEmail'],
             'role' => Zoom::ROLE_ATTENDEE,
             'signature' => $zoom->generateSignature($row['id'], Zoom::ROLE_ATTENDEE)
-        );
+        ];
         return $meetingData;
     }
 
@@ -157,7 +159,7 @@ class LessonMeetings
 
     private function formatLessonDataForLessonSpace(array $lessonData): array
     {
-        $lessonspaceData = array();
+        $lessonspaceData = [];
         $userTimezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
         $getTimeZoneOffset = MyDate::getOffset($userTimezone);
@@ -173,7 +175,7 @@ class LessonMeetings
             'leader' => ($loggedUserId == $lessonData['teacherId'])
         ];
         if (true == User::isProfilePicUploaded($loggedUserId)) {
-            $image = CommonHelper::generateFullUrl('Image', 'user', array($loggedUserId)) . '?' . time();
+            $image = CommonHelper::generateFullUrl('Image', 'user', [$loggedUserId]) . '?' . time();
             $userDetails['profile_picture'] = $image;
         }
         return [
@@ -195,14 +197,10 @@ class LessonMeetings
         $cometChat = new CometChat();
         if ($lessonData['slesson_grpcls_id'] > 0) {
             $chat_group_id = $lessonData['slesson_grpcls_id'] > 0 ? $lessonData['grpcls_title'] : "LESSON-" . $lessonData['slesson_id'];
-            $params = array(
-                'GUID' => $chat_group_id,
-                'name' => $chat_group_id,
-                'type' => CometChat::GROUP_TYPE_PRIVATE
-            );
+            $params = ['GUID' => $chat_group_id, 'name' => $chat_group_id, 'type' => CometChat::GROUP_TYPE_PRIVATE];
             $groupDetails = $cometChat->createGroup($params);
         }
-        return array();
+        return [];
     }
 
 }

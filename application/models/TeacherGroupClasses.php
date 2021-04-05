@@ -46,12 +46,12 @@ class TeacherGroupClasses extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        return array(
+        return [
             static::STATUS_PENDING => Label::getLabel('LBL_Pending', $langId),
             static::STATUS_ACTIVE => Label::getLabel('LBL_Active', $langId),
             static::STATUS_COMPLETED => Label::getLabel('LBL_Completed', $langId),
             static::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled', $langId)
-        );
+        ];
     }
 
 }

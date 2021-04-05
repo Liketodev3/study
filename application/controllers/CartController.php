@@ -37,7 +37,7 @@ class CartController extends MyAppController
         $srch->setTeacherDefinedCriteria();
         $srch->addCondition('user_id', '=', $teacher_id);
         $srch->setPageSize(1);
-        $srch->addMultipleFields(array('user_id'));
+        $srch->addMultipleFields(['user_id']);
         $rs = $srch->getResultSet();
         $teacher = $db->fetch($rs);
         if (!$teacher) {
@@ -51,7 +51,7 @@ class CartController extends MyAppController
             $startDateTime = MyDate::changeDateTimezone($startDateTime, $user_timezone, $systemTimeZone);
             $endDateTime = MyDate::changeDateTimezone($endDateTime, $user_timezone, $systemTimeZone);
             $scheduledLessonSearchObj = new ScheduledLessonSearch(false);
-            $userIds = array($teacher_id, UserAuthentication::getLoggedUserId());
+            $userIds = [$teacher_id, UserAuthentication::getLoggedUserId()];
             $scheduledLessonSearchObj->checkUserLessonBooking($userIds, $startDateTime, $endDateTime);
             $getResultSet = $scheduledLessonSearchObj->getResultSet();
             $scheduledLessonData = $db->fetch($getResultSet);
@@ -118,12 +118,12 @@ class CartController extends MyAppController
             Message::addErrorMessage(Label::getLabel('LBL_Action_Trying_Perform_Not_Valid', $this->siteLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-        $holdCouponData = array(
+        $holdCouponData = [
             'couponhold_coupon_id' => $couponInfo['coupon_id'],
             'couponhold_user_id' => UserAuthentication::getLoggedUserId(),
             'couponhold_added_on' => date('Y-m-d H:i:s'),
-        );
-        if (!FatApp::getDb()->insertFromArray(DiscountCoupons::DB_TBL_COUPON_HOLD, $holdCouponData, true, array(), $holdCouponData)) {
+        ];
+        if (!FatApp::getDb()->insertFromArray(DiscountCoupons::DB_TBL_COUPON_HOLD, $holdCouponData, true, [], $holdCouponData)) {
             Message::addErrorMessage(Label::getLabel('LBL_Action_Trying_Perform_Not_Valid', $this->siteLangId));
             FatUtility::dieWithError(Message::getHtml());
         }

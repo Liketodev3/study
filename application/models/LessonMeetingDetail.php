@@ -47,12 +47,12 @@ class LessonMeetingDetail extends MyAppModel
 
     public function addDetails(string $key, string $value = ''): bool
     {
-        $assigenValue = array(
+        $assigenValue = [
             'lmeetdetail_key' => $key,
             'lmeetdetail_value' => $value,
             'lmeetdetail_user_id' => $this->userId,
             'lmeetdetail_slesson_id' => $this->lessonId
-        );
+        ];
         $this->assignValues($assigenValue);
         if (!$this->save()) {
             $this->error = $this->getError();

@@ -38,7 +38,7 @@ class PaymentSettings
             return false;
         }
         $pmethod_id = $paymentMethod["pmethod_id"];
-        if (!$this->db->deleteRecords(static::DB_PAYMENT_METHOD_SETTINGS_TBL, array('smt' => static::DB_PAYMENT_METHOD_SETTINGS_TBL_PREFIX . 'pmethod_id = ?', 'vals' => array($pmethod_id)))) {
+        if (!$this->db->deleteRecords(static::DB_PAYMENT_METHOD_SETTINGS_TBL, ['smt' => static::DB_PAYMENT_METHOD_SETTINGS_TBL_PREFIX . 'pmethod_id = ?', 'vals' => [$pmethod_id]])) {
             $this->error = $this->db->getError();
             return false;
         }
@@ -46,13 +46,13 @@ class PaymentSettings
             if ($key == "btn_submit") {
                 continue;
             }
-            $data = array('paysetting_pmethod_id' => $pmethod_id, 'paysetting_key' => $key);
+            $data = ['paysetting_pmethod_id' => $pmethod_id, 'paysetting_key' => $key];
             if (!is_array($val)) {
                 $data['paysetting_value'] = $val;
             } else {
                 $data['paysetting_value'] = serialize($val);
             }
-            if (!$this->db->insertFromArray(static::DB_PAYMENT_METHOD_SETTINGS_TBL, $data, false, array('IGNORE'))) {
+            if (!$this->db->insertFromArray(static::DB_PAYMENT_METHOD_SETTINGS_TBL, $data, false, ['IGNORE'])) {
                 $this->error = $this->db->getError();
                 return false;
             }
@@ -72,7 +72,7 @@ class PaymentSettings
             return false;
         }
         $paymentMethodSettings = $this->getPaymentMethodFieldsById($paymentMethod["pmethod_id"]);
-        $paymentSettings = array();
+        $paymentSettings = [];
         $paymentSettings['pmethod_id'] = $paymentMethod["pmethod_id"];
         foreach ($paymentMethodSettings as $pkey => $pval) {
             $paymentSettings[$pval["paysetting_key"]] = $pval["paysetting_value"];
@@ -96,7 +96,7 @@ class PaymentSettings
     private function getPaymentMethodFieldsById($pmethod_id)
     {
         $srch = new SearchBase(static::DB_PAYMENT_METHOD_SETTINGS_TBL, 'tpms');
-        $srch->addCondition('tpms.' . static::DB_PAYMENT_METHOD_SETTINGS_TBL_PREFIX . 'pmethod_id', '=', (int) $pmethod_id);
+        $srch->addCondition('tpms.paysetting_pmethod_id', '=', (int) $pmethod_id);
         $rs = $srch->getResultSet();
         $paymentMethodSettings = $this->db->fetchAll($rs);
         return $paymentMethodSettings;

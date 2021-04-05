@@ -51,55 +51,55 @@ class AuthorizeAimPayController extends PaymentController
             $orderActualPaid = number_format(round($orderPaymentAamount, 2), 2, ".", "");
             $actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true) ? $this->liveEnvironmentUrl : $this->testEnvironmentUrl;
             $orderPaymentGatewayDescription = sprintf(Label::getLabel("MSG_Order_Payment_Gateway_Description", $this->siteLangId), FatApp::getConfig("CONF_WEBSITE_NAME_" . $orderInfo["order_language_id"]), $orderInfo['order_id']);
-            $data = array(
-                "createTransactionRequest" => array(
-                    "merchantAuthentication" => array(
+            $data = [
+                "createTransactionRequest" => [
+                    "merchantAuthentication" => [
                         "name" => $paymentSettings['login_id'],
                         "transactionKey" => $paymentSettings['transaction_key']
-                    ),
+                    ],
                     "refId" => $orderId,
-                    "transactionRequest" => array(
+                    "transactionRequest" => [
                         "transactionType" => 'authCaptureTransaction',
                         "amount" => $orderActualPaid,
-                        "payment" => array(
-                            "creditCard" => array(
+                        "payment" => [
+                            "creditCard" => [
                                 "cardNumber" => str_replace(' ', '', $post['cc_number']),
                                 "expirationDate" => $post['cc_expire_date_year'] . "-" . $post['cc_expire_date_month'],
                                 "cardCode" => $post['cc_cvv'],
-                            )
-                        ),
-                        "order" => array(
+                            ]
+                        ],
+                        "order" => [
                             "invoiceNumber" => $orderId,
                             "description" => FatUtility::decodeHtmlEntities($orderPaymentGatewayDescription, ENT_QUOTES, 'UTF-8')
-                        ),
-                        "lineItems" => array(
-                            "lineItem" => array(
+                        ],
+                        "lineItems" => [
+                            "lineItem" => [
                                 "itemId" => $orderId,
                                 "name" => "Cart Payment",
                                 "description" => sprintf(Label::getLabel("Order_Payment_Gateway_Description"), FatApp::getConfig("CONF_WEBSITE_NAME_" . $this->siteLangId), $orderId),
                                 "quantity" => "1",
                                 "unitPrice" => $orderActualPaid,
-                            )
-                        ),
+                            ]
+                        ],
                         "customerIP" => $_SERVER['REMOTE_ADDR'],
-                        "transactionSettings" => array(
-                            "setting" => array(
+                        "transactionSettings" => [
+                            "setting" => [
                                 "settingName" => "testRequest",
                                 "settingValue" => (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true) ? 'false' : 'true'
-                            )
-                        )
-                    )
-                )
-            );
+                            ]
+                        ]
+                    ]
+                ]
+            ];
             $response = $this->executeCurl($data, $actionUrl);
-            $json = array();
+            $json = [];
             if ($response['status'] == 0) {
                 $json['error'] = Label::getLabel('LBL_Payment_cannot_be_processed_right_now._Please_try_after_some_time.');
             } elseif ((!empty($response['response']['transactionResponse']['errors'])) || ((!empty($response['response']['transactionResponse']['responseCode'])) && $response['response']['transactionResponse']['responseCode'] != 1)) {
                 $errorMsg = isset($response['response']['transactionResponse']['errors'][0]['errorText']) ? $response['response']['transactionResponse']['errors'][0]['errorText'] : current($response['response']['messages']['message'])['text'];
                 $json['error'] = $errorMsg;
             } elseif ($response['status'] == 1) {
-                $json = array();
+                $json = [];
                 if ($response['response']['messages']['resultCode'] == 'Ok') {
                     $message = '';
                     if (isset($response['response']['transactionResponse']['authCode'])) {
@@ -129,7 +129,7 @@ class AuthorizeAimPayController extends PaymentController
                         $json['error'] = "Invalid Action";
                     }
                     /* End Recording Payment in DB */
-                    $json['redirect'] = FatUtility::generateUrl("custom", "paymentSuccess", array($orderId));
+                    $json['redirect'] = FatUtility::generateUrl("custom", "paymentSuccess", [$orderId]);
                 } else {
                     $errorMsg = isset($response['response']['transactionResponse']['errors'][0]['errorText']) ? $response['response']['transactionResponse']['errors'][0]['errorText'] : current($response['response']['messages']['message'])['text'];
                     $json['error'] = $errorMsg;
@@ -153,17 +153,17 @@ class AuthorizeAimPayController extends PaymentController
 
     private function getPaymentForm($orderId = '')
     {
-        $frm = new Form('frmPaymentForm', array('id' => 'frmPaymentForm', 'action' => CommonHelper::generateUrl('AuthorizeAimPay', 'send', array($orderId)), 'class' => "form form--normal"));
+        $frm = new Form('frmPaymentForm', ['id' => 'frmPaymentForm', 'action' => CommonHelper::generateUrl('AuthorizeAimPay', 'send', [$orderId]), 'class' => "form form--normal"]);
         $frm->addRequiredField(Label::getLabel('LBL_ENTER_CREDIT_CARD_NUMBER', $this->siteLangId), 'cc_number');
         $frm->addRequiredField(Label::getLabel('LBL_CARD_HOLDER_NAME', $this->siteLangId), 'cc_owner');
         $data['months'] = applicationConstants::getMonthsArr($this->siteLangId);
         $today = getdate();
-        $data['year_expire'] = array();
+        $data['year_expire'] = [];
         for ($i = $today['year']; $i < $today['year'] + 11; $i++) {
             $data['year_expire'][strftime('%Y', mktime(0, 0, 0, 1, 1, $i))] = strftime('%Y', mktime(0, 0, 0, 1, 1, $i));
         }
-        $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_MONTH', $this->siteLangId), 'cc_expire_date_month', $data['months'], '', array(), '');
-        $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_YEAR', $this->siteLangId), 'cc_expire_date_year', $data['year_expire'], '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_MONTH', $this->siteLangId), 'cc_expire_date_month', $data['months'], '', [], '');
+        $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_YEAR', $this->siteLangId), 'cc_expire_date_year', $data['year_expire'], '', [], '');
         $fld = $frm->addPasswordField(Label::getLabel('LBL_CVV_SECURITY_CODE', $this->siteLangId), 'cc_cvv');
         $fld->requirements()->setRequired(true);
         $fld->requirements()->setLength(3, 5);
@@ -178,7 +178,7 @@ class AuthorizeAimPayController extends PaymentController
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Content-Length: ' . strlen($data_string)));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Content-Length: ' . strlen($data_string)]);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         $response = curl_exec($ch);

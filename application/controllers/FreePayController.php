@@ -30,7 +30,7 @@ class FreePayController extends MyAppController
         $srch->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'tu.user_id = cred.credential_user_id', 'cred');
         $srch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'op.op_slanguage_id = tlang.tlanguage_id', 'tlang');
         $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'ttlang.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND tlanguagelang_lang_id = ' . $this->siteLangId, 'ttlang');
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'order_id',
             'order_user_id',
             'order_net_amount',
@@ -41,7 +41,7 @@ class FreePayController extends MyAppController
             'CONCAT(tu.user_first_name, " ", tu.user_last_name) as teacherFullName',
             'IFNULL(tlanguage_name, tlanguage_identifier) AS teacherTeachLanguageName',
             'tu.user_timezone'
-        ));
+        ]);
         $rs = $srch->getResultSet();
         $orderInfo = FatApp::getDb()->fetch($rs);
         if (!$orderInfo) {
@@ -60,9 +60,8 @@ class FreePayController extends MyAppController
         }
         $orderObj = new Order();
         $orderPaymentFinancials = $orderObj->getOrderPaymentFinancials($orderId);
-        //$orderPaymentGatewayCharge = $orderInfo["order_net_amount"] - $orderInfo["order_wallet_amount_charge"];
         if ($orderPaymentFinancials['order_payment_gateway_charge'] > 0) {
-            FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentFailure', array($orderId)));
+            FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentFailure', [$orderId]));
         }
         $cartObj = new Cart();
         $cartData = $cartObj->getCart($this->siteLangId);
@@ -77,7 +76,7 @@ class FreePayController extends MyAppController
         }
         /* add schedulaed lessons[ */
         if ($cartData['lpackage_is_free_trial']) { //== only for free trial
-            $sLessonArr = array(
+            $sLessonArr = [
                 'slesson_teacher_id' => $orderInfo['op_teacher_id'],
                 'slesson_slanguage_id' => $orderInfo['op_slanguage_id'],
                 'slesson_date' => date('Y-m-d', strtotime($cartData['startDateTime'])),
@@ -85,7 +84,7 @@ class FreePayController extends MyAppController
                 'slesson_start_time' => date('H:i:s', strtotime($cartData['startDateTime'])),
                 'slesson_end_time' => date('H:i:s', strtotime($cartData['endDateTime'])),
                 'slesson_status' => ScheduledLesson::STATUS_SCHEDULED
-            );
+            ];
             $getlearnerFullName = User::getAttributesById(UserAuthentication::getLoggedUserId(), ['CONCAT(user_first_name," ",user_last_name) as learnerFullName']);
             $db = FatApp::getDb();
             $db->startTransaction();
@@ -100,12 +99,12 @@ class FreePayController extends MyAppController
                 CommonHelper::redirectUserReferer();
             }
             $lessonId = $sLessonObj->getMainTableRecordId();
-            $sLessonDetailAr = array(
+            $sLessonDetailAr = [
                 'sldetail_slesson_id' => $lessonId,
                 'sldetail_order_id' => $orderId,
                 'sldetail_learner_id' => $orderInfo['order_user_id'],
                 'sldetail_learner_status' => ScheduledLesson::STATUS_SCHEDULED
-            );
+            ];
             $slDetailsObj = new ScheduledLessonDetails();
             $slDetailsObj->assignValues($sLessonDetailAr);
             if (!$slDetailsObj->save()) {
@@ -120,9 +119,9 @@ class FreePayController extends MyAppController
             // share on student google calendar
             $token = current(UserSetting::getUserSettings($orderInfo['order_user_id']))['us_google_access_token'];
             if ($token) {
-                $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($sldetailId));
+                $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', [$sldetailId]);
                 $title = sprintf(Label::getLabel('LBL_%1$s_LESSON_Scheduled_with_%2$s'), Label::getLabel('LBL_Trial', $this->siteLangId), $orderInfo['teacherFullName']);
-                $google_cal_data = array(
+                $google_cal_data = [
                     'title' => FatApp::getConfig('CONF_WEBSITE_NAME_' . $this->siteLangId),
                     'summary' => $title,
                     'description' => sprintf(Label::getLabel("LBL_Click_here_to_join_the_lesson:_%s"), $view_url),
@@ -130,7 +129,7 @@ class FreePayController extends MyAppController
                     'start_time' => date('c', strtotime($cartData['startDateTime'])),
                     'end_time' => date('c', strtotime($cartData['endDateTime'])),
                     'timezone' => MyDate::getTimeZone(),
-                );
+                ];
                 $calId = SocialMedia::addEventOnGoogleCalendar($token, $google_cal_data);
                 if ($calId) {
                     $slDetailsObj->setFldValue('sldetail_learner_google_calendar_id', $calId);
@@ -145,9 +144,9 @@ class FreePayController extends MyAppController
                 if ($oldCalId) {
                     SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
                 }
-                $view_url = CommonHelper::generateFullUrl('TeacherScheduledLessons', 'view', array($lessonId));
+                $view_url = CommonHelper::generateFullUrl('TeacherScheduledLessons', 'view', [$lessonId]);
                 $title = sprintf(Label::getLabel('LBL_%1$s_LESSON_Scheduled_by_%2$s'), Label::getLabel('LBL_Trial', $this->siteLangId), $getlearnerFullName['learnerFullName']);
-                $google_cal_data = array(
+                $google_cal_data = [
                     'title' => FatApp::getConfig('CONF_WEBSITE_NAME_' . $this->siteLangId),
                     'summary' => $title,
                     'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_lesson:_%s"), $view_url),
@@ -155,7 +154,7 @@ class FreePayController extends MyAppController
                     'start_time' => date('c', strtotime($cartData['startDateTime'])),
                     'end_time' => date('c', strtotime($cartData['endDateTime'])),
                     'timezone' => MyDate::getTimeZone(),
-                );
+                ];
                 $calId = SocialMedia::addEventOnGoogleCalendar($token, $google_cal_data);
                 if ($calId) {
                     $sLessonObj->setFldValue('slesson_teacher_google_calendar_id', $calId);

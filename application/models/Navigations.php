@@ -23,13 +23,7 @@ class Navigations extends MyAppModel
         $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 'nav');
         if ($langId > 0) {
-            $srch->joinTable(
-                    static::DB_TBL_LANG,
-                    'LEFT OUTER JOIN',
-                    'nav_l.' . static::DB_TBL_LANG_PREFIX . 'nav_id = nav.' . static::tblFld('id') . ' and
-			nav_l.' . static::DB_TBL_LANG_PREFIX . 'lang_id = ' . $langId,
-                    'nav_l'
-            );
+            $srch->joinTable(static::DB_TBL_LANG, 'LEFT OUTER JOIN', 'nav_l.navlang_nav_id = nav.' . static::tblFld('id') . ' AND nav_l.navlang_lang_id = ' . $langId, 'nav_l');
         }
         if ($isActive == true) {
             $srch->addCondition('nav.' . static::DB_TBL_PREFIX . 'active', '=', 1);
@@ -50,28 +44,19 @@ class Navigations extends MyAppModel
                 $srch->addFld($attr);
             }
         }
-        $srch->addMultipleFields(array('IFNULL(nav_l.nav_name,nav.nav_identifier) as nav_name'));
+        $srch->addMultipleFields(['IFNULL(nav_l.nav_name,nav.nav_identifier) as nav_name']);
         return $srch;
     }
 
-    public function updateContent($data = array())
+    public function updateContent($data = [])
     {
         if (!($this->mainTableRecordId > 0)) {
             $this->error = Label::getLabel('MSG_Invalid_Request', $this->commonLangId);
             return false;
         }
         $nav_id = FatUtility::int($data['nav_id']);
-        unset($data['nav_id']);
-        $assignValues = array(
-            'nav_identifier' => $data['nav_identifier'],
-            'nav_active' => $data['nav_active'],
-        );
-
-        if (!FatApp::getDb()->updateFromArray(
-                        static::DB_TBL,
-                        $assignValues,
-                        array('smt' => static::DB_TBL_PREFIX . 'id = ? ', 'vals' => array((int) $nav_id))
-                )) {
+        $assignValues = ['nav_identifier' => $data['nav_identifier'], 'nav_active' => $data['nav_active']];
+        if (!FatApp::getDb()->updateFromArray(static::DB_TBL, $assignValues, ['smt' => 'nav_id = ? ', 'vals' => [$nav_id]])) {
             $this->error = $this->db->getError();
             return false;
         }

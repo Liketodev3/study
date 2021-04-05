@@ -32,7 +32,7 @@ class Common
         $srch->joinTeacherTeachLanguageView(CommonHelper::getLangId());
         $srch->addOrder('slesson_date', 'ASC');
         $srch->addOrder('slesson_status', 'ASC');
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'slns.slesson_id',
             'slns.slesson_slanguage_id',
             'sld.sldetail_learner_id as learnerId',
@@ -49,7 +49,7 @@ class Common
             'slns.slesson_is_teacher_paid',
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration'
-        ));
+        ]);
         $srch->addCondition('slesson_status', ' = ', ScheduledLesson::STATUS_SCHEDULED);
         $srch->addCondition('mysql_func_CONCAT(slns.slesson_date," ",slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
         $srch->setPageSize(10);
@@ -96,11 +96,10 @@ class Common
     public static function homePageSlidesAboveFooter($template)
     {
         $srch = Testimonial::getSearchObject(CommonHelper::getLangId(), true);
-        $srch->addMultipleFields(array('t.*', 't_l.testimonial_title', 't_l.testimonial_text'));
+        $srch->addMultipleFields(['t.*', 't_l.testimonial_title', 't_l.testimonial_text']);
         $srch->addCondition('testimoniallang_testimonial_id', 'is not', 'mysql_func_null', 'and', true);
         $srch->addOrder('testimonial_added_on', 'desc');
-        $rs = $srch->getResultSet();
-        $records = FatApp::getDb()->fetchAll($rs);
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $template->set("testimonials", $records);
     }
 
@@ -140,8 +139,7 @@ class Common
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addCondition('splatform_user_id', '=', 0);
-        $rs = $srch->getResultSet();
-        $rows = FatApp::getDb()->fetchAll($rs);
+        $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
         $template->set('rows', $rows);
         $template->set('siteLangId', $siteLangId);
     }
@@ -154,12 +152,12 @@ class Common
     public static function teacherLeftFilters($template)
     {
         $frmFilters = new Form('teacherFilters');
-        $filterSortBy = array(
+        $filterSortBy = [
             'popularity_desc' => Label::getLabel('LBL_By_Popularity'),
             'price_asc' => Label::getLabel('LBL_By_Price_Low_to_High'),
             'price_desc' => Label::getLabel('LBL_By_Price_High_to_Low'),
-        );
-        $frmFilters->addSelectBox('', 'filterSortBy', $filterSortBy, '', array(), Label::getLabel('LBL_Sort_by'));
+        ];
+        $frmFilters->addSelectBox('', 'filterSortBy', $filterSortBy, '', [], Label::getLabel('LBL_Sort_by'));
         $teacherSrchObj = new UserSearch();
         $teacherSrchObj->setTeacherDefinedCriteria(true);
         $teacherSrchObj->doNotLimitRecords();
@@ -171,10 +169,10 @@ class Common
         $prefSrch->joinTable(Preference::DB_TBL_LANG, 'LEFT OUTER JOIN', 'pl.preferencelang_preference_id = p.preference_id AND pl.preferencelang_lang_id = ' . CommonHelper::getLangId(), 'pl');
         $prefSrch->addGroupBy('preference_id');
         $prefSrch->addOrder('preference_display_order');
-        $prefSrch->addMultipleFields(array('preference_id', 'preference_type', 'IFNULL(preference_title, preference_identifier) as preference_titles'));
+        $prefSrch->addMultipleFields(['preference_id', 'preference_type', 'IFNULL(preference_title, preference_identifier) as preference_titles']);
         $prefRs = $prefSrch->getResultSet();
         $teacherPreferences = FatApp::getDb()->fetchAll($prefRs);
-        $allPreferences = array();
+        $allPreferences = [];
         foreach ($teacherPreferences as $teacherPreference) {
             $allPreferences[$teacherPreference['preference_type']][] = $teacherPreference;
         }
@@ -186,7 +184,7 @@ class Common
         $spokenLangSrch->joinTable(SpokenLanguage::DB_TBL, 'INNER JOIN', 'utsl_slanguage_id = slanguage_id AND slanguage_active = 1');
         $spokenLangSrch->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = ' . CommonHelper::getLangId(), 'sl_lang');
         $spokenLangSrch->addGroupBy('utsl_slanguage_id');
-        $spokenLangSrch->addMultipleFields(array('slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name'));
+        $spokenLangSrch->addMultipleFields(['slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name']);
         $spokenLangSrch->addOrder('slanguage_display_order');
         $spokenLangRs = $spokenLangSrch->getResultSet();
         $spokenLangsArr = FatApp::getDb()->fetchAllAssoc($spokenLangRs);
@@ -198,7 +196,7 @@ class Common
         $priceArr = FatApp::getDb()->fetchAll($priceRs);
 
         if ($priceArr) {
-            $newArr = array();
+            $newArr = [];
             $newArr['minPrice'] = min(array_column($priceArr, 'minPrice'));
             $newArr['maxPrice'] = max(array_column($priceArr, 'maxPrice'));
             $priceArr = $newArr;
@@ -219,7 +217,7 @@ class Common
         /* from countries[ */
         $fromSrch = clone $teacherSrchObj;
         $fromSrch->joinUserCountry(CommonHelper::getLangId());
-        $fromSrch->addMultipleFields(array('user_country_id', 'IFNULL(country_name, country_code) as country_name'));
+        $fromSrch->addMultipleFields(['user_country_id', 'IFNULL(country_name, country_code) as country_name']);
         $fromSrch->addGroupBy('user_country_id');
         $fromRs = $fromSrch->getResultSet();
         $fromArr = FatApp::getDb()->fetchAll($fromRs);
@@ -260,7 +258,7 @@ class Common
     {
         $frm = new Form('frmBlogSearch');
         $frm->setFormTagAttribute('autocomplete', 'off');
-        $frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('Lbl_Search', CommonHelper::getLangId())));
+        $frm->addTextBox('', 'keyword', '', ['placeholder' => Label::getLabel('Lbl_Search', CommonHelper::getLangId())]);
         $frm->addHiddenField('', 'page', 1);
         $frm->addSubmitButton('', 'btn_submit', '');
         return $frm;

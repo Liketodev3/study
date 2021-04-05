@@ -22,7 +22,7 @@ class Banner extends MyAppModel
         if ($langId < 1) {
             $langId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG');
         }
-        return array();
+        return [];
     }
 
     public static function getSearchObject($langId = 0, $isActive = true)
@@ -50,16 +50,16 @@ class Banner extends MyAppModel
         return $srch;
     }
 
-    public function updateLocationData($data = array())
+    public function updateLocationData($data = [])
     {
         $db = FatApp::getDb();
         $blocationId = $data['blocation_id'];
         unset($data['blocation_id']);
-        $assignValues = array(
+        $assignValues = [
             'blocation_active' => $data['blocation_active'],
             'blocation_identifier' => $data['blocation_identifier'],
-        );
-        $where = array('smt' => 'blocation_id = ?', 'vals' => array($blocationId));
+        ];
+        $where = ['smt' => 'blocation_id = ?', 'vals' => [$blocationId]];
         if (!$db->updateFromArray(static::DB_TBL_LOCATIONS, $assignValues, $where)) {
             $this->error = $db->getError();
             return false;

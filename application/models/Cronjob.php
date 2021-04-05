@@ -49,8 +49,8 @@ class Cronjob extends FatModel
 
     private function prepareDataForReminder($lessons, $cronType)
     {
-        $teacherLessonArr = array();
-        $lernerLessonArr = array();
+        $teacherLessonArr = [];
+        $lernerLessonArr = [];
         foreach ($lessons as $lesson) {
             $key = $lesson['teacherId'];
             $key1 = $lesson['learnerId'];
@@ -87,12 +87,12 @@ class Cronjob extends FatModel
             $controller = 'learnerScheduledLessons';
             $user = 'Teacher';
         }
-        $teacherLessonIds = array();
+        $teacherLessonIds = [];
         $emailNotificationObj = new EmailHandler();
         $langId = CommonHelper::getLangId();
         foreach ($LessonArr as $lessons) {
             $lessonsData = '';
-            $data = array();
+            $data = [];
             if ($userType == 'teacher') {
                 $tommorowDate = MyDate::convertTimeFromSystemToUserTimezone('d F, Y', $lessons[0]['slesson_date'] . '  ' . $lessons[0]['slesson_start_time'], true, $lessons[0]['teacherTimezone']);
             } else {
@@ -134,21 +134,21 @@ class Cronjob extends FatModel
             }
             $lessonsData .= '</tbody></tabale>';
             if ($userType == 'teacher') {
-                $data = array(
+                $data = [
                     'user_email' => $lessons[0]['teacherEmail'],
                     'user_first_name' => $lessons[0]['teacherFname'],
                     'user_last_name' => $lessons[0]['teacherLname'],
                     'user_full_name' => $lessons[0]['teacherFullName'],
                     'lessons_details' => $lessonsData
-                );
+                ];
             } else {
-                $data = array(
+                $data = [
                     'user_email' => $lessons[0]['learnerEmail'],
                     'user_first_name' => $lessons[0]['LearnerFname'],
                     'user_last_name' => $lessons[0]['LearnerLname'],
                     'user_full_name' => $lessons[0]['learnerFullName'],
                     'lessons_details' => $lessonsData
-                );
+                ];
             }
             $emailNotificationObj->sendLessonReminderMail($template, $langId, $data);
         }
@@ -166,7 +166,7 @@ class Cronjob extends FatModel
         $srch->joinLearnerCredentials();
         $srch->addCondition('order_is_paid', ' = ', Order::ORDER_IS_PAID);
         $srch->addOrder('slesson_status', 'ASC');
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'slns.slesson_id',
             'slns.slesson_slanguage_id',
             'sld.sldetail_learner_id as learnerId',
@@ -190,7 +190,7 @@ class Cronjob extends FatModel
             '"-" as teacherTeachLanguageName',
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration'
-        ));
+        ]);
         $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
         return $srch;
     }

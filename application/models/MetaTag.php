@@ -22,43 +22,43 @@ class MetaTag extends MyAppModel
 
     public static function getTabsArr($langId): array
     {
-        $metaGroups = array(
-            static::META_GROUP_DEFAULT => array(
+        $metaGroups = [
+            static::META_GROUP_DEFAULT => [
                 'name' => Label::getLabel('METALBL_Default', $langId),
                 'controller' => 'Default',
                 'action' => 'Default',
-            ),
-            static::META_GROUP_OTHER => array(
+            ],
+            static::META_GROUP_OTHER => [
                 'name' => Label::getLabel('METALBL_Others', $langId),
                 'controller' => '',
                 'action' => '',
-            ),
-            static::META_GROUP_TEACHER => array(
+            ],
+            static::META_GROUP_TEACHER => [
                 'name' => Label::getLabel('METALBL_Teachers', $langId),
                 'controller' => 'Teachers',
                 'action' => 'view',
-            ),
-            static::META_GROUP_GRP_CLASS => array(
+            ],
+            static::META_GROUP_GRP_CLASS => [
                 'name' => Label::getLabel('METALBL_Group_Classes', $langId),
                 'controller' => 'GroupClasses',
                 'action' => 'view',
-            ),
-            static::META_GROUP_CMS_PAGE => array(
+            ],
+            static::META_GROUP_CMS_PAGE => [
                 'name' => Label::getLabel('METALBL_CMS_Page', $langId),
                 'controller' => 'Cms',
                 'action' => 'view',
-            ),
-            static::META_GROUP_BLOG_CATEGORY => array(
+            ],
+            static::META_GROUP_BLOG_CATEGORY => [
                 'name' => Label::getLabel('METALBL_Blog_Categories', $langId),
                 'controller' => 'Blog',
                 'action' => 'category',
-            ),
-            static::META_GROUP_BLOG_POST => array(
+            ],
+            static::META_GROUP_BLOG_POST => [
                 'name' => Label::getLabel('METALBL_Blog_Posts', $langId),
                 'controller' => 'Blog',
                 'action' => 'postDetail',
-            ),
-        );
+            ],
+        ];
         return $metaGroups;
     }
 
@@ -74,25 +74,20 @@ class MetaTag extends MyAppModel
         $metaTagSrch->joinTable(static::DB_TBL, 'LEFT OUTER JOIN', "mt.meta_record_id = gcls.grpcls_id and mt.meta_controller = 'GroupClasses' and mt.meta_action = 'view' ", 'mt');
         $metaTagSrch->joinTable(static::DB_LANG_TBL, 'LEFT OUTER JOIN', "mt_l.metalang_meta_id = mt.meta_id AND mt_l.metalang_lang_id = " . $langId, 'mt_l');
         $metaTagSrch->joinTable(User::DB_TBL, 'LEFT OUTER JOIN', "gcls.grpcls_teacher_id= u.user_id", 'u');
-        $metaTagSrch->addMultipleFields(array('meta_id', 'meta_record_id', 'meta_identifier', 'meta_title', 'grpcls_title', 'grpcls_id', 'concat(u.user_first_name," ",u.user_last_name) as teacher_name'));
+        $metaTagSrch->addMultipleFields(['meta_id', 'meta_record_id', 'meta_identifier', 'meta_title', 'grpcls_title', 'grpcls_id', 'concat(u.user_first_name," ",u.user_last_name) as teacher_name']);
         $metaTagSrch->addOrder('grpcls_start_datetime', 'DESC');
         return $metaTagSrch;
     }
 
     public static function getTeacherIDByUserName($teacherUserName)
     {
-        $teacherId = '';
-        $usrNameSrch = new SearchBase(static::DB_USERS_TBL, 'u');
-        $usrNameSrch->addCondition('u.user_url_name', '=', $teacherUserName);
-        $usrNameSrch->addFld('u.user_id');
-        $rs = $usrNameSrch->getResultSet();
-        if ($rs) {
-            $records = FatApp::getDb()->fetch($rs);
-            if (!empty($records)) {
-                $teacherId = $records['user_id'];
-            }
-        }
-        return $teacherId;
+        $srch = new SearchBase(static::DB_USERS_TBL, 'u');
+        $srch->addCondition('u.user_url_name', '=', $teacherUserName);
+        $srch->doNotCalculateRecords();
+        $srch->addFld('u.user_id');
+        $srch->setPageSize(1);
+        $row = FatApp::getDb()->fetch($srch->getResultSet());
+        return $row['user_id'] ?? '';
     }
 
     public static function getOrignialUrlFromComponents($row)

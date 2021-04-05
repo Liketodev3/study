@@ -37,7 +37,7 @@ class StripePayController extends PaymentController
             Message::addErrorMessage(Label::getLabel('STRIPE_INVALID_PAYMENT_GATEWAY_SETUP_ERROR', $this->siteLangId));
             CommonHelper::redirectUserReferer();
         }
-        $stripe = array('secret_key' => $this->paymentSettings['privateKey'], 'publishable_key' => $this->paymentSettings['publishableKey']);
+        $stripe = ['secret_key' => $this->paymentSettings['privateKey'], 'publishable_key' => $this->paymentSettings['publishableKey']];
         $this->set('stripe', $stripe);
         if (strlen(trim($this->paymentSettings['privateKey'])) > 0 && strlen(trim($this->paymentSettings['publishableKey'])) > 0) {
             \Stripe\Stripe::setApiKey($stripe['secret_key']);
@@ -52,7 +52,7 @@ class StripePayController extends PaymentController
         $orderSrch->joinUser();
         $orderSrch->joinUserCredentials();
         $orderSrch->addCondition('order_id', '=', $orderId);
-        $orderSrch->addMultipleFields(array(
+        $orderSrch->addMultipleFields([
             'order_id',
             'order_language_id',
             'order_currency_code',
@@ -60,7 +60,7 @@ class StripePayController extends PaymentController
             'cred.credential_email as customer_email',
             'order_is_paid',
             'order_language_code'
-        ));
+        ]);
         $orderRs = $orderSrch->getResultSet();
         $orderInfo = FatApp::getDb()->fetch($orderRs);
         if (!$orderInfo['order_id']) {
@@ -149,10 +149,10 @@ class StripePayController extends PaymentController
     private function updatePaymentStatus($sessionId)
     {
         $this->paymentSettings = $this->getPaymentSettings();
-        $stripe = array(
+        $stripe = [
             'secret_key' => $this->paymentSettings['privateKey'],
             'publishable_key' => $this->paymentSettings['publishableKey']
-        );
+        ];
         \Stripe\Stripe::setApiKey($stripe['secret_key']);
         $session = \Stripe\Checkout\Session::retrieve($sessionId);
         $orderId = $session->metadata->order_id;

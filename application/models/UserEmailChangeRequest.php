@@ -19,10 +19,7 @@ class UserEmailChangeRequest extends MyAppModel
     public function deleteOldLinkforUser($linkid)
     {
         $db = FatApp::getDb();
-        if (!$result = $db->deleteRecords(
-                static::DB_TBL,
-                array('smt' => static::DB_TBL_PREFIX . 'user_id = ?', 'vals' => array($linkid))
-                )) {
+        if (!$result = $db->deleteRecords(static::DB_TBL, ['smt' => static::DB_TBL_PREFIX . 'user_id = ?', 'vals' => [$linkid]])) {
             return false;
         }
         return true;
@@ -59,13 +56,13 @@ class UserEmailChangeRequest extends MyAppModel
             return false;
         }
         $record = new TableRecord(static::DB_TBL);
-        $arrFlds = array(
+        $arrFlds = [
             static::DB_TBL_PREFIX . 'status' => 1,
             static::DB_TBL_PREFIX . 'updated' => date('Y-m-d H:i:s')
-        );
+        ];
         $record->setFldValue(static::DB_TBL_PREFIX . 'id', $this->getMainTableRecordId());
         $record->assignValues($arrFlds);
-        if (!$record->addNew(array(), $arrFlds)) {
+        if (!$record->addNew([], $arrFlds)) {
             $this->error = $record->getError();
             return false;
         }

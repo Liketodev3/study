@@ -16,10 +16,10 @@ class TeacherWeeklySchedule extends MyAppModel
 
     public static function getWeeklySchCssClsNameArr()
     {
-        return array(
+        return [
             static::UNAVAILABLE => 'slot_unavailable',
             static::AVAILABLE => 'slot_available',
-        );
+        ];
     }
 
     public static function getWeeklyScheduleJsonArr($userId, $start, $end, $isAvailabel = false)
@@ -29,7 +29,7 @@ class TeacherWeeklySchedule extends MyAppModel
             trigger_error(Label::getLabel('LBL_Invalid_Request'), E_USER_ERROR);
         }
         $srch = new TeacherWeeklyScheduleSearch();
-        $srch->addMultipleFields(array('twsch_id', 'twsch_user_id', 'twsch_date', 'twsch_end_date', 'twsch_start_time', 'twsch_end_time', 'twsch_weekyear', 'twsch_is_available'));
+        $srch->addMultipleFields(['twsch_id', 'twsch_user_id', 'twsch_date', 'twsch_end_date', 'twsch_start_time', 'twsch_end_time', 'twsch_weekyear', 'twsch_is_available']);
         $srch->addCondition('twsch_user_id', ' = ', $userId);
         $srch->addCondition('mysql_func_CONCAT(twsch_date," ",twsch_start_time)', '<', $end, 'AND', true);
         $srch->addCondition('mysql_func_CONCAT(twsch_end_date," ",twsch_end_time)', '>', $start, 'AND', true);
@@ -65,7 +65,7 @@ class TeacherWeeklySchedule extends MyAppModel
         $endTime = date('H:i:s', strtotime($endDateTime));
         $db = FatApp::getDb();
         $srch = new TeacherWeeklyScheduleSearch();
-        $srch->addMultipleFields(array('twsch_user_id', 'twsch_is_available'));
+        $srch->addMultipleFields(['twsch_user_id', 'twsch_is_available']);
         $srch->addCondition('twsch_user_id', '=', $userId);
         $srch->addCondition('mysql_func_CONCAT(twsch_date, " ", twsch_start_time )', '=', $startDateTime, 'AND', true);
         $srch->addCondition('mysql_func_CONCAT(twsch_end_date, " ", twsch_end_time )', '=', $endDateTime, 'AND', true);
@@ -73,7 +73,7 @@ class TeacherWeeklySchedule extends MyAppModel
         $weeklySchCount = $rs->totalRecords();
         $weeklyDate = FatApp::getDb()->fetch($rs);
         $gaSrch = new TeacherGeneralAvailabilitySearch();
-        $gaSrch->addMultipleFields(array('tgavl_user_id'));
+        $gaSrch->addMultipleFields(['tgavl_user_id']);
         $gaSrch->addCondition('tgavl_user_id', '=', $userId);
         $gaSrch->addCondition('tgavl_day', '=', $_day);
         $gaSrch->addCondition('tgavl_start_time', '=', $startTime);
@@ -82,10 +82,11 @@ class TeacherWeeklySchedule extends MyAppModel
         $gaCount = $gaRs->totalRecords();
         if ($weeklySchCount > 0 && $gaCount > 0) {
             $weeklyDateAvailability = ($weeklyDate['twsch_is_available'] == TeacherWeeklySchedule::UNAVAILABLE) ? TeacherWeeklySchedule::AVAILABLE : TeacherWeeklySchedule::UNAVAILABLE;
-            $db->updateFromArray(TeacherWeeklySchedule::DB_TBL, array('twsch_is_available' => $weeklyDateAvailability), array('smt' => 'twsch_date = ? and twsch_end_date = ? and twsch_start_time = ? and twsch_end_time = ? and twsch_user_id = ?', 'vals' => array($date, $endDate, $startTime, $endTime, $userId)));
+            $db->updateFromArray(TeacherWeeklySchedule::DB_TBL, ['twsch_is_available' => $weeklyDateAvailability],
+                    ['smt' => 'twsch_date = ? and twsch_end_date = ? and twsch_start_time = ? and twsch_end_time = ? and twsch_user_id = ?', 'vals' => [$date, $endDate, $startTime, $endTime, $userId]]);
             return true;
         }
-        $deleteRecords = $db->deleteRecords(TeacherWeeklySchedule::DB_TBL, array('smt' => 'twsch_user_id = ? and twsch_id = ?', 'vals' => array($userId, $id)));
+        $deleteRecords = $db->deleteRecords(TeacherWeeklySchedule::DB_TBL, ['smt' => 'twsch_user_id = ? and twsch_id = ?', 'vals' => [$userId, $id]]);
         if ($db->getError()) {
             $this->error = $db->getError();
             return false;
@@ -108,7 +109,7 @@ class TeacherWeeklySchedule extends MyAppModel
         if (empty($postJson)) {
             return true;
         }
-        $postJsonArr = array();
+        $postJsonArr = [];
         $dateArray = [];
         $postDataId = [];
         $needToDelete = [];
@@ -130,7 +131,7 @@ class TeacherWeeklySchedule extends MyAppModel
         if (!empty($dateArray)) {
             $db = FatApp::getDb();
             $srch = new TeacherWeeklyScheduleSearch();
-            $srch->addMultipleFields(array('twsch_id', 'twsch_is_available'));
+            $srch->addMultipleFields(['twsch_id', 'twsch_is_available']);
             $srch->addCondition('twsch_user_id', '=', $userId);
             $srch->addCondition('twsch_date', 'IN', $dateArray);
             $srch->doNotLimitRecords();
@@ -155,14 +156,15 @@ class TeacherWeeklySchedule extends MyAppModel
                     $weekDates = MyDate::getWeekStartAndEndDate(new DateTime($twsch_date));
                     $midPoint = (strtotime($weekDates['weekStart']) + strtotime($weekDates['weekEnd'])) / 2;
                     $twsch_weekyear = date('W-Y', $midPoint);
-                    $insertArr = array(
+                    $insertArr = [
                         'twsch_user_id' => $userId,
                         'twsch_start_time' => $twsch_start_time,
                         'twsch_end_time' => $twsch_end_time,
                         'twsch_weekyear' => $twsch_weekyear,
                         "twsch_is_available" => $val->classtype,
                         'twsch_date' => date('Y-m-d', strtotime($twsch_date)),
-                        'twsch_end_date' => date('Y-m-d', strtotime($twsch_end_date)));
+                        'twsch_end_date' => date('Y-m-d', strtotime($twsch_end_date))
+                    ];
                     if (!$db->insertFromArray(TeacherWeeklySchedule::DB_TBL, $insertArr, false)) {
                         $db->rollbackTransaction();
                         $this->error = $db->getError();
@@ -184,15 +186,15 @@ class TeacherWeeklySchedule extends MyAppModel
                 $midPoint = (strtotime($weekDates['weekStart']) + strtotime($weekDates['weekEnd'])) / 2;
                 $twsch_weekyear = date('W-Y', $midPoint);
                 // echo $twsch_weekyear;die;
-                $updateArr = array(
+                $updateArr = [
                     'twsch_start_time' => $twsch_start_time,
                     'twsch_end_time' => $twsch_end_time,
                     'twsch_weekyear' => $twsch_weekyear,
                     "twsch_is_available" => $val->classtype,
                     'twsch_date' => $twsch_date,
                     'twsch_end_date' => date('Y-m-d', strtotime($twsch_end_date))
-                );
-                $updateWhereArr = array('smt' => 'twsch_id = ? and twsch_user_id = ?', 'vals' => array($val->_id, $userId));
+                ];
+                $updateWhereArr = ['smt' => 'twsch_id = ? and twsch_user_id = ?', 'vals' => [$val->_id, $userId]];
                 if (!$db->updateFromArray(TeacherWeeklySchedule::DB_TBL, $updateArr, $updateWhereArr)) {
                     $db->rollbackTransaction();
                     $this->error = $db->getError();
@@ -201,7 +203,8 @@ class TeacherWeeklySchedule extends MyAppModel
             }
         }
         if (!empty($needToDelete)) {
-            if (!$db->query('DELETE FROM ' . TeacherWeeklySchedule::DB_TBL . ' WHERE twsch_user_id = ' . $userId . ' and twsch_id IN (' . implode(",", array_keys($needToDelete)) . ')')) {
+            if (!$db->query('DELETE FROM ' . TeacherWeeklySchedule::DB_TBL . ' WHERE twsch_user_id = ' . $userId .
+                            ' and twsch_id IN (' . implode(",", array_keys($needToDelete)) . ')')) {
                 $db->rollbackTransaction();
                 $this->error = $db->getError();
                 return false;
@@ -224,7 +227,7 @@ class TeacherWeeklySchedule extends MyAppModel
         }
         $db = FatApp::getDb();
         $srch = new ScheduledLessonSearch(false);
-        $userIds = array($userId, UserAuthentication::getLoggedUserId());
+        $userIds = [$userId, UserAuthentication::getLoggedUserId()];
         $srch->checkUserLessonBooking($userIds, $startTime, $endTime);
         $srch->setPageSize(1);
         $getResultSet = $srch->getResultSet();
@@ -317,7 +320,7 @@ class TeacherWeeklySchedule extends MyAppModel
         $weeklySchSrch->addCondition('mysql_func_CONCAT( twsch_date," ",twsch_start_time)', '<=', $startDateTime, 'AND', true);
         $weeklySchSrch->addCondition('mysql_func_CONCAT(twsch_end_date," ",twsch_end_time)', '>=', $startDateTime, 'AND', true);
         $weeklySchSrch->setPageSize(1);
-        $weeklySchSrch->addMultipleFields(array('twsch_is_available'));
+        $weeklySchSrch->addMultipleFields(['twsch_is_available']);
         $weeklySchRs = $weeklySchSrch->getResultSet();
         $weeklySchSelectedSlotRow = FatApp::getDb()->fetch($weeklySchRs);
         /* ] */

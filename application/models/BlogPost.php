@@ -58,7 +58,8 @@ class BlogPost extends MyAppModel
                 if (FatUtility::int($id) < 1) {
                     continue;
                 }
-                FatApp::getDb()->updateFromArray('tbl_attached_files', array('afile_display_order' => $i), array('smt' => 'afile_type = ? AND afile_record_id = ? AND afile_id = ?', 'vals' => array(AttachedFile::FILETYPE_BLOG_POST_IMAGE, $post_id, $id)));
+                FatApp::getDb()->updateFromArray('tbl_attached_files', ['afile_display_order' => $i],
+                        ['smt' => 'afile_type = ? AND afile_record_id = ? AND afile_id = ?', 'vals' => [AttachedFile::FILETYPE_BLOG_POST_IMAGE, $post_id, $id]]);
             }
             return true;
         }
@@ -70,7 +71,7 @@ class BlogPost extends MyAppModel
         $srch = new SearchBase(static::DB_POST_TO_CAT_TBL, 'ptc');
         $srch->addCondition(static::DB_POST_TO_CAT_TBL_PREFIX . 'post_id', '=', $post_id);
         $srch->joinTable(BlogPostCategory::DB_TBL, 'INNER JOIN', BlogPostCategory::DB_TBL_PREFIX . 'id = ptc.' . static::DB_POST_TO_CAT_TBL_PREFIX . 'bpcategory_id', 'cat');
-        $srch->addMultipleFields(array('bpcategory_id'));
+        $srch->addMultipleFields(['bpcategory_id']);
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs);
         if (!$records) {
@@ -79,23 +80,23 @@ class BlogPost extends MyAppModel
         return $records;
     }
 
-    public function addUpdateCategories($post_id, $categories = array())
+    public function addUpdateCategories($post_id, $categories = [])
     {
         if (!$post_id) {
             $this->error = Label::getLabel('MSG_Invalid_Request!', $this->commonLangId);
             return false;
         }
-        FatApp::getDb()->deleteRecords(static::DB_POST_TO_CAT_TBL, array('smt' => static::DB_POST_TO_CAT_TBL_PREFIX . 'post_id = ?', 'vals' => array($post_id)));
+        FatApp::getDb()->deleteRecords(static::DB_POST_TO_CAT_TBL, ['smt' => static::DB_POST_TO_CAT_TBL_PREFIX . 'post_id = ?', 'vals' => [$post_id]]);
         if (empty($categories)) {
             return true;
         }
         $record = new TableRecord(static::DB_POST_TO_CAT_TBL);
         foreach ($categories as $category_id) {
-            $to_save_arr = array();
+            $to_save_arr = [];
             $to_save_arr['ptc_post_id'] = $post_id;
             $to_save_arr['ptc_bpcategory_id'] = $category_id;
             $record->assignValues($to_save_arr);
-            if (!$record->addNew(array(), $to_save_arr)) {
+            if (!$record->addNew([], $to_save_arr)) {
                 $this->error = $record->getError();
                 return false;
             }

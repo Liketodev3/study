@@ -1,6 +1,8 @@
 <?php
+
 class TeacherLessonsPlanController extends LoggedUserController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -13,9 +15,7 @@ class TeacherLessonsPlanController extends LoggedUserController
     public function index()
     {
         $this->_template->addJs('js/jquery.tagsinput.min.js');
-        // $this->_template->addCss('css/jquery.tagsinput.min.css');
         $this->_template->addJs('js/jquery-confirm.min.js');
-        // $this->_template->addCss('css/jquery-confirm.min.css');
         $this->set('statusArr', LessonPlan::getDifficultyArr());
         $this->_template->render();
     }
@@ -26,10 +26,10 @@ class TeacherLessonsPlanController extends LoggedUserController
         $frm->addRequiredField(Label::getLabel('LBl_Title'), 'tlpn_title');
         $frm->addTextarea(Label::getLabel('LBl_Description'), 'tlpn_description');
         $frm->addSelectBox(Label::getLabel('LBl_Difficulty_Level'), 'tlpn_level', LessonPlan::getDifficultyArr())->requirement->setRequired(true);
-        $fld = $frm->addFileUpload(Label::getLabel('LBl_Plan_Files'), 'tlpn_file[]', array('multiple' => 'multiple', 'id' => 'tlpn_file'));
+        $fld = $frm->addFileUpload(Label::getLabel('LBl_Plan_Files'), 'tlpn_file[]', ['multiple' => 'multiple', 'id' => 'tlpn_file']);
         $fld->htmlAfterField = "<small>" . Label::getLabel('LBL_NOTE:_Allowed_Lesson_File_types!') . "</small>";
-        $frm->addHtml('', 'tlpn_file_display', '', array('id' => 'tlpn_file_display'));
-        $fld = $frm->addRequiredField(Label::getLabel('LBl_Tags'), 'tlpn_tags', '', array('id' => 'tlpn_tags'));
+        $frm->addHtml('', 'tlpn_file_display', '', ['id' => 'tlpn_file_display']);
+        $fld = $frm->addRequiredField(Label::getLabel('LBl_Tags'), 'tlpn_tags', '', ['id' => 'tlpn_tags']);
         $fld->htmlAfterField = "<small>" . Label::getLabel('LBL_NOTE:_Press_enter_inside_text_box_to_create_tag!') . "</small>";
         $fld = $frm->addTextarea(Label::getLabel('LBl_Links'), 'tlpn_links');
         $fld->htmlAfterField = "<small>" . Label::getLabel('LBl_Links') . "</small>";
@@ -129,15 +129,12 @@ class TeacherLessonsPlanController extends LoggedUserController
         if (isset($post['submit']) && empty($post)) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
-
-        if (!$db->deleteRecords('tbl_scheduled_lessons_to_teachers_lessons_plan', array('smt' => 'ltp_tlpn_id = ?', 'vals' => array($post['lessonPlanId'])))) {
+        if (!$db->deleteRecords('tbl_scheduled_lessons_to_teachers_lessons_plan', ['smt' => 'ltp_tlpn_id = ?', 'vals' => [$post['lessonPlanId']]])) {
             FatUtility::dieWithError($db->getError());
         }
-
-        if (!$db->deleteRecords('tbl_teacher_courses_to_teachers_lessons_plan', array('smt' => 'ctp_tlpn_id = ?', 'vals' => array($post['lessonPlanId'])))) {
+        if (!$db->deleteRecords('tbl_teacher_courses_to_teachers_lessons_plan', ['smt' => 'ctp_tlpn_id = ?', 'vals' => [$post['lessonPlanId']]])) {
             FatUtility::dieWithError($db->getError());
         }
-
         $lessonPlan = new LessonPlan($post['lessonPlanId']);
         if (!$lessonPlan->deleteRecord()) {
             FatUtility::dieWithError($db->getError());
@@ -163,14 +160,14 @@ class TeacherLessonsPlanController extends LoggedUserController
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
         $srch = new LessonPlanSearch(false);
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'tlpn_id',
             'tlpn_title',
             'tlpn_level',
             'tlpn_user_id',
             'tlpn_tags',
             'tlpn_description',
-        ));
+        ]);
         $srch->addCondition('tlpn_user_id', '=', UserAuthentication::getLoggedUserId());
         if (!empty($post['keyword'])) {
             $srch->addCondition('tlpn_title', 'like', '%' . $post['keyword'] . '%');
@@ -228,18 +225,8 @@ class TeacherLessonsPlanController extends LoggedUserController
     {
         $afile_id = FatUtility::int($afile_id);
         $file_row = AttachedFile::getAttributesById($afile_id);
-        $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
+        $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         AttachedFile::downloadAttachment($image_name, $file_row['afile_name']);
-
-        /* switch( strtoupper($sizeType) ){
-            case 'THUMB':
-                $w = 100;
-                $h = 100;
-                AttachedFile::displayImage( $image_name, $w, $h);
-            break;
-            default:
-                AttachedFile::displayOriginalImage( $image_name);
-            break;
-        } */
     }
+
 }

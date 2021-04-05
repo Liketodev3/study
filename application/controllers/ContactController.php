@@ -7,7 +7,8 @@ class ContactController extends MyAppController
     {
         $cPageId = FatUtility::int(5);
         $srch = ContentPage::getSearchObject($this->siteLangId);
-        $srch->addMultipleFields(array('cpage_id', 'IFNULL(cpage_title, cpage_identifier) as cpage_title', 'cpage_layout', 'cpage_image_title', 'cpage_image_content', 'cpage_content'));
+        $srch->addMultipleFields(['cpage_id', 'IFNULL(cpage_title, cpage_identifier) as cpage_title',
+            'cpage_layout', 'cpage_image_title', 'cpage_image_content', 'cpage_content']);
         $srch->addCondition('cpage_id', '=', $cPageId);
         $pageData = FatApp::getDb()->fetch($srch->getResultset());
         $contactFrm = $this->contactUsForm();

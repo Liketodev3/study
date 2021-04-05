@@ -43,8 +43,8 @@ class LessonReminder extends MyAppModel
 
     private function prepareDataForReminder($lessons, $cronType)
     {
-        $teacherLessonArr = array();
-        $lernerLessonArr = array();
+        $teacherLessonArr = [];
+        $lernerLessonArr = [];
         foreach ($lessons as $lesson) {
             $key = $lesson['teacherId'];
             $key1 = $lesson['learnerId'];
@@ -81,12 +81,12 @@ class LessonReminder extends MyAppModel
             $controller = 'learnerScheduledLessons';
             $user = Label::getLabel('Lbl_Teacher', CommonHelper::getLangId());
         }
-        $lessonIds = array();
+        $lessonIds = [];
         $emailNotificationObj = new EmailHandler();
         $langId = CommonHelper::getLangId();
         foreach ($LessonArr as $lessons) {
             $lessonsData = '';
-            $data = array();
+            $data = [];
             if ($userType == self::TEACHER) {
                 $tommorowDate = MyDate::convertTimeFromSystemToUserTimezone('d F, Y', $lessons[0]['slesson_date'] . ' ' . $lessons[0]['slesson_start_time'], true, $lessons[0]['teacherTimezone']);
             } else {
@@ -94,54 +94,56 @@ class LessonReminder extends MyAppModel
             }
             $lessonsData = ' <table style="border:1px solid #ddd; border-collapse:collapse;" cellspacing="0" cellpadding="0" border="0" >
 				<thead>
-					<tr><th colspan="4" style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" >' . $tommorowDate . '</th></tr>
+                                    <tr><th colspan="4" style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" >' . $tommorowDate . '</th></tr>
 				</thead>
 				<tbody>
-					<tr>
-						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> ' . $user . ' </th>
-						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> ' . Label::getLabel('Lbl_Start', CommonHelper::getLangId()) . ' </th>
-						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> ' . Label::getLabel('Lbl_End', CommonHelper::getLangId()) . '  </th>
-						<th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> </th>
-					</tr>';
+                                    <tr>
+                                        <th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> ' . $user . ' </th>
+                                        <th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> ' . Label::getLabel('Lbl_Start', CommonHelper::getLangId()) . ' </th>
+                                        <th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> ' . Label::getLabel('Lbl_End', CommonHelper::getLangId()) . '  </th>
+                                        <th style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333; font-weight:bold;" width="153"> </th>
+                                    </tr>';
             foreach ($lessons as $lesson) {
                 $lessonIds[] = $lesson['slesson_id'];
-                $lessonLink = CommonHelper::generateFullUrl($controller, 'view', array($lesson['slesson_id']));
+                $lessonLink = CommonHelper::generateFullUrl($controller, 'view', [$lesson['slesson_id']]);
                 if ($userType == self::TEACHER) {
                     $lesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lesson['slesson_date'] . '  ' . $lesson['slesson_start_time'], true, $lesson['teacherTimezone']);
                     $lesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lesson['slesson_end_date'] . '  ' . $lesson['slesson_end_time'], true, $lesson['teacherTimezone']);
                     $lessonsData .= '<tr>
-						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson['learnerFullName'] . '</td>
-						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson_start_time . '</td>
-						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson_end_time . '</td>
-						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153"><a href="' . $lessonLink . '" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
-					</tr>';
+                                        <td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson['learnerFullName'] . '</td>
+                                        <td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson_start_time . '</td>
+                                        <td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson_end_time . '</td>
+                                        <td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153"><a href="' . $lessonLink . '" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
+                                    </tr>';
                 } else {
                     $lesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lesson['slesson_date'] . '  ' . $lesson['slesson_start_time'], true, $lesson['LearnerTimezone']);
                     $lesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lesson['slesson_end_date'] . '  ' . $lesson['slesson_end_time'], true, $lesson['LearnerTimezone']);
-                    $lessonLink = CommonHelper::generateFullUrl($controller, 'view', array($lesson['sldetail_id']));
+                    $lessonLink = CommonHelper::generateFullUrl($controller, 'view', [$lesson['sldetail_id']]);
                     $lessonsData .= '<tr>
-						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson['teacherFullName'] . '</td>
-						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson_start_time . '</td>
-						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson_end_time . '</td>
-						<td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153"><a href="' . $lessonLink . '" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
-					</tr>';
+                                        <td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson['teacherFullName'] . '</td>
+                                        <td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson_start_time . '</td>
+                                        <td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153">' . $lesson_end_time . '</td>
+                                        <td style="padding:10px;font-size:13px;border:1px solid #ddd; color:#333;" width="153"><a href="' . $lessonLink . '" style="background:#e84c3d; color:#fff; text-decoration:none;font-size:16px; font-weight:500;padding:10px 30px;display:inline-block;border-radius:3px;">View</a></td>
+                                 </tr>';
                 }
             }
             $lessonsData .= '</tbody></table><br />';
             if ($userType == self::TEACHER) {
-                $data = array('user_email' => $lessons[0]['teacherEmail'],
+                $data = [
+                    'user_email' => $lessons[0]['teacherEmail'],
                     'user_first_name' => $lessons[0]['teacherFname'],
                     'user_last_name' => $lessons[0]['teacherLname'],
                     'user_full_name' => $lessons[0]['teacherFullName'],
                     'lessons_details' => $lessonsData
-                );
+                ];
             } else {
-                $data = array('user_email' => $lessons[0]['learnerEmail'],
+                $data = [
+                    'user_email' => $lessons[0]['learnerEmail'],
                     'user_first_name' => $lessons[0]['LearnerFname'],
                     'user_last_name' => $lessons[0]['LearnerLname'],
                     'user_full_name' => $lessons[0]['learnerFullName'],
                     'lessons_details' => $lessonsData
-                );
+                ];
             }
             $emailNotificationObj->sendLessonReminderMail($template, $langId, $data);
         }
@@ -159,7 +161,7 @@ class LessonReminder extends MyAppModel
         $srch->joinLearnerCredentials();
         $srch->addCondition('order_is_paid', ' = ', Order::ORDER_IS_PAID);
         $srch->addOrder('slesson_status', 'ASC');
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'slns.slesson_id',
             'sld.sldetail_id',
             'sld.sldetail_learner_id as learnerId',
@@ -178,7 +180,7 @@ class LessonReminder extends MyAppModel
             'slns.slesson_end_date',
             'slns.slesson_start_time',
             'slns.slesson_end_time',
-        ));
+        ]);
         $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
         return $srch;
     }

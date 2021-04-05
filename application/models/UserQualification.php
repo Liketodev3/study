@@ -20,11 +20,11 @@ class UserQualification extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        return array(
+        return [
             static::EXPERIENCE_EDUCATION => Label::getLabel('LBL_Education', $langId),
             static::EXPERIENCE_CERTIFICATION => Label::getLabel('LBL_Certification', $langId),
             static::EXPERIENCE_WORK => Label::getLabel('LBL_Work_Experience', $langId),
-        );
+        ];
     }
 
 }

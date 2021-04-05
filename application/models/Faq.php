@@ -22,8 +22,8 @@ class Faq extends MyAppModel
         $srch->addCondition('faqcat_active', '=', 1);
         $srch->addOrder('faqcat_display_order', 'ASC');
         $rs = $srch->getResultSet();
-        $CatList = array();
-        $category_options = array();
+        $CatList = [];
+        $category_options = [];
         if ($rs) {
             $CatList = FatApp::getDb()->fetchAll($rs);
         }

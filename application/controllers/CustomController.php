@@ -17,10 +17,10 @@ class CustomController extends MyAppController
     public function paymentSuccess($orderId = null)
     {
         $textMessage = Label::getLabel('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}');
-        $arrReplace = array(
+        $arrReplace = [
             '{dashboard-url}' => CommonHelper::generateUrl('learner'),
             '{contact-us-page-url}' => CommonHelper::generateUrl('contact'),
-        );
+        ];
         foreach ($arrReplace as $key => $val) {
             $textMessage = str_replace($key, $val, $textMessage);
         }
@@ -77,9 +77,9 @@ class CustomController extends MyAppController
     {
         $form = new Form('cookieForm');
         $checkboxValue = applicationConstants::YES;
-        $form->addCheckBox(Label::getLabel('LBL_Necessary'), UserCookieConsent::COOKIE_NECESSARY_FIELD, $checkboxValue, array(), true, 1);
-        $form->addCheckBox(Label::getLabel('LBL_Preferences'), UserCookieConsent::COOKIE_PREFERENCES_FIELD, $checkboxValue, array(), true, 0);
-        $form->addCheckBox(Label::getLabel('LBL_Statistics'), UserCookieConsent::COOKIE_STATISTICS_FIELD, $checkboxValue, array(), true, 0);
+        $form->addCheckBox(Label::getLabel('LBL_Necessary'), UserCookieConsent::COOKIE_NECESSARY_FIELD, $checkboxValue, [], true, 1);
+        $form->addCheckBox(Label::getLabel('LBL_Preferences'), UserCookieConsent::COOKIE_PREFERENCES_FIELD, $checkboxValue, [], true, 0);
+        $form->addCheckBox(Label::getLabel('LBL_Statistics'), UserCookieConsent::COOKIE_STATISTICS_FIELD, $checkboxValue, [], true, 0);
         $form->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save'));
         return $form;
     }
@@ -106,10 +106,10 @@ class CustomController extends MyAppController
     public function trialBookedSuccess($orderId = null)
     {
         $textMessage = Label::getLabel('MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}');
-        $arrReplace = array(
+        $arrReplace = [
             '{dashboard-url}' => CommonHelper::generateUrl('learner'),
             '{contact-us-page-url}' => CommonHelper::generateUrl('contact'),
-        );
+        ];
         foreach ($arrReplace as $key => $val) {
             $textMessage = str_replace($key, $val, $textMessage);
         }

@@ -14,10 +14,7 @@ class Cron extends MyAppModel
 
     public static function clearOldLog()
     {
-        FatApp::getDb()->deleteRecords(
-                static::DB_TBL_LOG,
-                array('smt' => 'cronlog_started_at < ?', 'vals' => array(date('Y-m-d', strtotime("-3 Day"))))
-        );
+        FatApp::getDb()->deleteRecords(static::DB_TBL_LOG, ['smt' => 'cronlog_started_at < ?', 'vals' => [date('Y-m-d', strtotime("-3 Day"))]]);
     }
 
     public static function getAllRecords($activeOnly = true, $id = 0)
@@ -37,13 +34,7 @@ class Cron extends MyAppModel
         if (!$this->canStart()) {
             return false;
         }
-        FatApp::getDb()->insertFromArray(
-                static::DB_TBL_LOG,
-                array(
-                    'cronlog_cron_id' => $this->mainTableRecordId,
-                    'cronlog_started_at' => date('Y-m-d H:i:s'),
-                )
-        );
+        FatApp::getDb()->insertFromArray(static::DB_TBL_LOG, ['cronlog_cron_id' => $this->mainTableRecordId, 'cronlog_started_at' => date('Y-m-d H:i:s')]);
         return FatApp::getDb()->getInsertId();
     }
 
@@ -52,11 +43,11 @@ class Cron extends MyAppModel
         $db = FatApp::getDb();
         $db->updateFromArray(
                 static::DB_TBL_LOG,
-                array(
+                [
                     'cronlog_ended_at' => date('Y-m-d H:i:s'),
                     'cronlog_details' => "mysql_func_CONCAT(cronlog_details, '\n ', " . $db->quoteVariable($message) . ")"
-                ),
-                array('smt' => 'cronlog_id = ?', 'vals' => array($logId)),
+                ],
+                ['smt' => 'cronlog_id = ?', 'vals' => [$logId]],
                 true
         );
     }
@@ -64,10 +55,8 @@ class Cron extends MyAppModel
     private function canStart()
     {
         $db = FatApp::getDb();
-        $rs = $db->query(
-                'SELECT * FROM ' . static::DB_TBL_LOG . ' WHERE cronlog_cron_id = ' . $this->mainTableRecordId . '
-				ORDER BY cronlog_started_at DESC LIMIT 0, 1'
-        );
+        $rs = $db->query('SELECT * FROM ' . static::DB_TBL_LOG . ' WHERE cronlog_cron_id = ' .
+                $this->mainTableRecordId . ' ORDER BY cronlog_started_at DESC LIMIT 0, 1');
         if (!$row = $db->fetch($rs)) {
             return true;
         }

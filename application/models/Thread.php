@@ -35,7 +35,7 @@ class Thread extends MyAppModel
 
     public function markUserMessageRead($threadId, $userId)
     {
-        if (FatApp::getDb()->updateFromArray('tbl_thread_messages', array('message_is_unread' => self::MESSAGE_IS_READ), array('smt' => '`message_thread_id`=? AND `message_to`=? ', 'vals' => array($threadId, $userId)))) {
+        if (FatApp::getDb()->updateFromArray('tbl_thread_messages', ['message_is_unread' => self::MESSAGE_IS_READ], ['smt' => '`message_thread_id`=? AND `message_to`=? ', 'vals' => [$threadId, $userId]])) {
             return true;
         }
         $this->error = FatApp::getDb()->getError();
@@ -50,12 +50,8 @@ class Thread extends MyAppModel
         $srch->addCondition('threaduser_id', 'IN', $userArr);
         $srch->addGroupBy('threaduser_thread_id');
         $srch->addHaving('mysql_func_count(distinct threaduser_id)', '>', 1, 'AND', true);
-        $srch->addMultipleFields(array('threaduser_thread_id'));
-        $rs = $srch->getResultSet();
-        if (!$rs) {
-            return false;
-        }
-        $res = FatApp::getDb()->fetch($rs);
+        $srch->addMultipleFields(['threaduser_thread_id']);
+        $res = FatApp::getDb()->fetch($srch->getResultSet());
         if ($res['threaduser_thread_id']) {
             return self::isThreadExist($res['threaduser_thread_id']);
         }
@@ -70,16 +66,14 @@ class Thread extends MyAppModel
         $db = FatApp::getDb();
         $db->startTransaction();
         $threadObj = new Thread();
-        $threadDataToSave = array(
-            'thread_start_date' => date('Y-m-d H:i:s')
-        );
+        $threadDataToSave = ['thread_start_date' => date('Y-m-d H:i:s')];
         $threadObj->assignValues($threadDataToSave);
         if (!$threadObj->save()) {
             $this->error = $threadObj->getError();
             return false;
         }
         foreach ($data as $id) {
-            $threadUserArr = array();
+            $threadUserArr = [];
             $threadUserArr['threaduser_id'] = $id;
             $threadUserArr['threaduser_thread_id'] = $threadObj->mainTableRecordId;
             if (!$db->insertFromArray(Thread::DB_TBL_THREAD_USERS, $threadUserArr)) {
@@ -97,12 +91,8 @@ class Thread extends MyAppModel
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addCondition('thread_id', '=', $threadId);
-        $rs = $srch->getResultSet();
-        if (!$rs) {
-            return false;
-        }
-        $res = FatApp::getDb()->fetch($rs);
-        return $res['thread_id'];
+        $res = FatApp::getDb()->fetch($srch->getResultSet());
+        return $res['thread_id'] ?? 0;
     }
 
     public static function getThreads($userId)
@@ -111,8 +101,8 @@ class Thread extends MyAppModel
         $srch->joinLatestThreadMessage();
         $srch->joinMessagePostedFromUser();
         $srch->joinMessagePostedToUser();
-        $srch->addMultipleFields(array('tth.*', 'ttm.message_id', 'ttm.message_text', 'ttm.message_date',
-            '(CASE WHEN tfr.user_id = ' . $userId . ' THEN 0 ELSE ttm.message_is_unread END) AS message_is_unread', 'ttm.message_to'));
+        $srch->addMultipleFields(['tth.*', 'ttm.message_id', 'ttm.message_text', 'ttm.message_date',
+            '(CASE WHEN tfr.user_id = ' . $userId . ' THEN 0 ELSE ttm.message_is_unread END) AS message_is_unread', 'ttm.message_to']);
         $srch->addCondition('ttm.message_deleted', '=', 0);
         $cnd = $srch->addCondition('ttm.message_from', '=', $userId);
         $cnd->attachCondition('ttm.message_to', '=', $userId, 'OR');
@@ -124,12 +114,8 @@ class Thread extends MyAppModel
     {
         $srch = new SearchBase(static::DB_TBL_THREAD_USERS);
         $srch->addCondition('threaduser_thread_id', '=', $threadId);
-        $srch->addMultipleFields(array('threaduser_id'));
-        $rs = $srch->getResultSet();
-        if (!$rs) {
-            return false;
-        }
-        $res = FatApp::getDb()->fetchAll($rs, 'threaduser_id');
+        $srch->addMultipleFields(['threaduser_id']);
+        $res = FatApp::getDb()->fetchAll($srch->getResultSet(), 'threaduser_id');
         return array_keys($res);
     }
 

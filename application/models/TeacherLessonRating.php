@@ -35,19 +35,15 @@ class TeacherLessonRating extends MyAppModel
         $userId = FatUtility::int($userId);
         $srch = new TeacherLessonReviewSearch();
         $srch->joinTeacher();
-        $srch->addMultipleFields(array('avg(tlrating_rating) as avg_rating'));
-        $srch->addCondition('tlrating_rating_type', 'in', array(static::TYPE_TEACHER_ACCENT, static::TYPE_TEACHER_PRSESNCE, static::TYPE_TEACHER_OVERALL));
+        $srch->addMultipleFields(['avg(tlrating_rating) as avg_rating']);
+        $srch->addCondition('tlrating_rating_type', 'in', [static::TYPE_TEACHER_ACCENT, static::TYPE_TEACHER_PRSESNCE, static::TYPE_TEACHER_OVERALL]);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addCondition('tlreview_seller_user_id', '=', $userId);
         $srch->addCondition('tlr.spreview_status', '=', TeacherLessonReview::STATUS_APPROVED);
         $srch->addGroupby('tlreview_seller_user_id');
-        $rs = $srch->getResultSet();
-        $record = FatApp::getDb()->fetch($rs);
-        if ($record == false) {
-            return 0;
-        }
-        return $record['avg_rating'];
+        $record = FatApp::getDb()->fetch($srch->getResultSet());
+        return $record['avg_rating'] ?? 0;
     }
 
 }

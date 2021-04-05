@@ -8,7 +8,6 @@ class UserCookieConsent extends MyAppModel
     const COOKIE_NECESSARY_FIELD = 'necessary';
     const COOKIE_PREFERENCES_FIELD = 'preferences';
     const COOKIE_STATISTICS_FIELD = 'statistics';
-    // const COOKIE_MARKETING_FIELD = 'marketing';
     const COOKIE_NAME = 'CookieConsent';
 
     private $userId;
@@ -34,25 +33,25 @@ class UserCookieConsent extends MyAppModel
 
     public static function fieldsArrayWithDefultValue(): array
     {
-        return array(
+        return [
             self::COOKIE_NECESSARY_FIELD => applicationConstants::YES,
             self::COOKIE_PREFERENCES_FIELD => applicationConstants::YES,
             self::COOKIE_STATISTICS_FIELD => applicationConstants::YES,
-        );
+        ];
     }
 
-    public function saveOrUpdateSetting(array $settings = array(), $setSettingCookie = true)
+    public function saveOrUpdateSetting(array $settings = [], $setSettingCookie = true)
     {
         $settings = array_merge(self::fieldsArrayWithDefultValue(), $settings);
         $tableRecor = new TableRecord(self::DB_TBL);
         $settings = json_encode($settings);
-        $fields = array(
+        $fields = [
             'usercc_user_id' => $this->userId,
             'usercc_settings' => $settings,
             'usercc_added_on' => date('Y-m-d H:i:s'),
-        );
+        ];
         $tableRecor->setFlds($fields);
-        if ($tableRecor->addNew(array(), $fields) === false) {
+        if ($tableRecor->addNew([], $fields) === false) {
             $this->error = $tableRecor->getError();
             return false;
         }
@@ -69,10 +68,7 @@ class UserCookieConsent extends MyAppModel
         $search->addMultipleFields(['usercc_settings']);
         $resultSet = $search->getResultSet();
         $sttings = FatApp::getDb()->fetch($resultSet);
-        if (empty($sttings['usercc_settings'])) {
-            return '';
-        }
-        return $sttings['usercc_settings'];
+        return $sttings['usercc_settings'] ?? '';
     }
 
 }

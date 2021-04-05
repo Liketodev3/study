@@ -1,6 +1,8 @@
 <?php
+
 class NotificationsController extends LoggedUserController
 {
+
     public function index()
     {
         $this->_template->render();
@@ -13,9 +15,7 @@ class NotificationsController extends LoggedUserController
         $pagesize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srchNotification = UserNotifications::getUserNotifications(UserAuthentication::getLoggedUserId());
         $srchNotification->joinTable(Order::DB_TBL, 'LEFT OUTER JOIN', 'order_id = notification_record_id');
-        //$srchNotification->joinTable(Order::DB_TBL_ORDERS_STATUS, 'LEFT OUTER JOIN', 'orderstatus_id = order_status');
-        //$srchNotification->joinTable(Order::DB_TBL_ORDERS_STATUS_LANG, 'LEFT OUTER JOIN', 'orderstatuslang_orderstatus_id = orderstatus_id');
-        $srchNotification->addMultipleFields(array(
+        $srchNotification->addMultipleFields([
             'notification_record_id as noti_record_id',
             'notification_record_type as noti_type',
             'notification_title as noti_title',
@@ -24,9 +24,7 @@ class NotificationsController extends LoggedUserController
             'notification_read as noti_is_read',
             'notification_id as noti_id',
             'notification_sub_record_id as noti_sub_record_id',
-            //'order_status',
-            //'orderstatus_name'
-        ));
+        ]);
 
         $srchNotification->setPageNumber($page);
         $srchNotification->setPageSize($pagesize);
@@ -51,7 +49,7 @@ class NotificationsController extends LoggedUserController
     {
         $notificationId = intval($notificationId);
         $notificationData = UserNotifications::getUserNotificationsByNotificationId(UserAuthentication::getLoggedUserId(), $notificationId);
-       
+
         $notificationRedirectUrl = CommonHelper::generateUrl('notifications', 'my-notifications');
         $notificationType = $notificationData['notification_record_type'];
         $notificationRecordId = $notificationData['notification_record_id'];
@@ -60,31 +58,30 @@ class NotificationsController extends LoggedUserController
         switch ($notificationType) {
             case UserNotifications::NOTICATION_FOR_TEACHER_APPROVAL:
                 $notificationRedirectUrl = CommonHelper::generateUrl('teacher');
-            break;
+                break;
             case UserNotifications::NOTICATION_FOR_SCHEDULED_LESSON_BY_LEARNER:
-                case UserNotifications::NOTICATION_FOR_CANCEL_LESSON_BY_LEARNER:
-                $notificationRedirectUrl = CommonHelper::generateUrl('TeacherScheduledLessons', 'view', array($notificationRecordId));
-            break;
+            case UserNotifications::NOTICATION_FOR_CANCEL_LESSON_BY_LEARNER:
+                $notificationRedirectUrl = CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$notificationRecordId]);
+                break;
             case UserNotifications::NOTICATION_FOR_SCHEDULED_LESSON_BY_TEACHER:
             case UserNotifications::NOTICATION_FOR_CANCEL_LESSON_BY_TEACHER:
-                $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', array($notificationRecordId));
-            break;
+                $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', [$notificationRecordId]);
+                break;
             case UserNotifications::NOTICATION_FOR_WALLET_CREDIT_ON_LESSON_COMPLETE:
                 $notificationRedirectUrl = CommonHelper::generateUrl('Wallet');
-            break;
+                break;
             case UserNotifications::NOTICATION_FOR_ISSUE_REFUND:
-                $notificationRedirectUrl = CommonHelper::generateUrl('TeacherScheduledLessons', 'view', array($notificationRecordId));
-            break;
+                $notificationRedirectUrl = CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$notificationRecordId]);
+                break;
             case UserNotifications::NOTICATION_FOR_ISSUE_RESOLVE:
-                $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', array($notificationRecordId));
-            break;
-			case UserNotifications::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER:
-                $notificationRedirectUrl = CommonHelper::generateUrl('TeacherScheduledLessons', 'view', array($notificationRecordId));
-            break;
+                $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', [$notificationRecordId]);
+                break;
+            case UserNotifications::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER:
+                $notificationRedirectUrl = CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$notificationRecordId]);
+                break;
             case UserNotifications::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_LEARNER:
-                $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', array($notificationRecordId));
-            break;
-			
+                $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', [$notificationRecordId]);
+                break;
         }
         if ($notificationRead == UserNotifications::NOTIFICATION_NOT_READ) {
             $userNotification = new UserNotifications(UserAuthentication::getLoggedUserId());
@@ -127,9 +124,10 @@ class NotificationsController extends LoggedUserController
             Message::addErrorMessage(Label::getLabel("ERROR_UNBALE_TO_UPDATE_THE_STATUS", $this->siteLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-        if ($markread!=1) {
+        if ($markread != 1) {
             $this->set('msg', Label::getLabel('LBL_Status_Updated_Successfully!'));
         }
         $this->_template->render(false, false, 'json-success.php');
     }
+
 }

@@ -15,7 +15,7 @@ class BibleController extends MyAppController
 
     public function search()
     {
-        $json = array();
+        $json = [];
         $post = FatApp::getPostedData();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         if ($page < 2) {
@@ -33,12 +33,12 @@ class BibleController extends MyAppController
         $db = FatApp::getDb();
         $bibleList = $db->fetchAll($rs);
         $totalRecords = $srch->recordCount();
-        $pagingArr = array(
+        $pagingArr = [
             'pageCount' => $srch->pages(),
             'page' => $page,
             'pageSize' => $pageSize,
             'recordCount' => $totalRecords,
-        );
+        ];
         $this->set('bibles', $bibleList);
         $post['page'] = $page;
         $this->set('postedData', $post);

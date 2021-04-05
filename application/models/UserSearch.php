@@ -141,11 +141,11 @@ class UserSearch extends SearchBase
         $slSrch->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'slanguagelang_slanguage_id = utsl_slanguage_id AND slanguagelang_lang_id = ' . $langId, 'sl_lang');
         $slSrch->doNotCalculateRecords();
         $slSrch->doNotLimitRecords();
-        $slSrch->addMultipleFields(array('utsl_user_id', 'GROUP_CONCAT( IFNULL(slanguage_name, slanguage_identifier) ORDER BY slanguage_name,slanguage_identifier ) as spoken_language_names', 'GROUP_CONCAT(utsl_slanguage_id ORDER BY slanguage_name,slanguage_identifier) as spoken_language_ids', 'GROUP_CONCAT(utsl_proficiency ORDER BY slanguage_name,slanguage_identifier) as spoken_languages_proficiency'));
+        $slSrch->addMultipleFields(['utsl_user_id', 'GROUP_CONCAT( IFNULL(slanguage_name, slanguage_identifier) ORDER BY slanguage_name,slanguage_identifier ) as spoken_language_names', 'GROUP_CONCAT(utsl_slanguage_id ORDER BY slanguage_name,slanguage_identifier) as spoken_language_ids', 'GROUP_CONCAT(utsl_proficiency ORDER BY slanguage_name,slanguage_identifier) as spoken_languages_proficiency']);
         $slSrch->addGroupBy('utsl_user_id');
         $slSrch->addCondition('slanguage_active', '=', 1);
         $this->joinTable("(" . $slSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utsl.utsl_user_id', 'utsl');
-        $this->addMultipleFields(array('utsl_user_id', 'spoken_language_names', 'spoken_language_ids', 'spoken_languages_proficiency'));
+        $this->addMultipleFields(['utsl_user_id', 'spoken_language_names', 'spoken_language_ids', 'spoken_languages_proficiency']);
     }
 
     public function joinFavouriteTeachers($user_id)
@@ -224,7 +224,7 @@ class UserSearch extends SearchBase
     {
         $this->joinTable(TeacherLessonReview::DB_TBL, 'LEFT OUTER JOIN', 'u.user_id = tlr.tlreview_teacher_user_id AND tlr.tlreview_status = ' . TeacherLessonReview::STATUS_APPROVED, 'tlr');
         $this->joinTable(TeacherLessonRating::DB_TBL, 'LEFT OUTER JOIN', 'tlrating.tlrating_tlreview_id = tlr.tlreview_id', 'tlrating');
-        $this->addMultipleFields(array("ROUND(AVG(tlrating_rating),2) as teacher_rating", "count(DISTINCT tlreview_id) as totReviews"));
+        $this->addMultipleFields(["ROUND(AVG(tlrating_rating),2) as teacher_rating", "count(DISTINCT tlreview_id) as totReviews"]);
     }
 
     public function joinUserLang($langId = 0)
@@ -247,14 +247,14 @@ class UserSearch extends SearchBase
             $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utl.utl_slanguage_id');
             $tlangSrch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utl.utl_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
             $tlangSrch->addCondition('tlanguage_active', '=', '1');
-            $tlangSrch->addMultipleFields(array('GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY tlanguage_name,tlanguage_identifier ) as teacherTeachLanguageName'));
+            $tlangSrch->addMultipleFields(['GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY tlanguage_name,tlanguage_identifier ) as teacherTeachLanguageName']);
             if (!empty($teachLangId)) {
-                $tlangSrch->addMultipleFields(array('SUM(CASE when utl.utl_slanguage_id = ' . $teachLangId . ' then 1 else 0 end) as teachLangId '));
+                $tlangSrch->addMultipleFields(['SUM(CASE when utl.utl_slanguage_id = ' . $teachLangId . ' then 1 else 0 end) as teachLangId ']);
                 $tlangSrch->addHaving('teachLangId', '>', '0');
             }
             $tlangSrch->addOrder('tlanguage_display_order');
         }
-        $tlangSrch->addMultipleFields(array('utl_us_user_id', 'GROUP_CONCAT(utl_id) as utl_ids', 'GREATEST(max(utl_single_lesson_amount), max(utl_bulk_lesson_amount)) AS maxPrice', 'LEAST(min(utl_bulk_lesson_amount), min(utl_single_lesson_amount)) AS minPrice', 'GROUP_CONCAT(DISTINCT utl_slanguage_id) as utl_slanguage_ids', 'GROUP_CONCAT(utl_booking_slot) as utl_booking_slots'));
+        $tlangSrch->addMultipleFields(['utl_us_user_id', 'GROUP_CONCAT(utl_id) as utl_ids', 'GREATEST(max(utl_single_lesson_amount), max(utl_bulk_lesson_amount)) AS maxPrice', 'LEAST(min(utl_bulk_lesson_amount), min(utl_single_lesson_amount)) AS minPrice', 'GROUP_CONCAT(DISTINCT utl_slanguage_id) as utl_slanguage_ids', 'GROUP_CONCAT(utl_booking_slot) as utl_booking_slots']);
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
         $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);
@@ -266,7 +266,7 @@ class UserSearch extends SearchBase
 
     public function getTopRatedTeachers()
     {
-        $this->addMultipleFields(array('u.*', 'utls.*', 'cl.*'));
+        $this->addMultipleFields(['u.*', 'utls.*', 'cl.*']);
         $this->setTeacherDefinedCriteria();
         $this->addGroupBy('u.user_id');
         $this->joinRatingReview();
@@ -287,14 +287,14 @@ class UserSearch extends SearchBase
         $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'INNER  JOIN', 'u.user_id = utsl1.utl_us_user_id AND utl_single_lesson_amount>0 AND utl_bulk_lesson_amount>0', 'utsl1');
         $this->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utsl1.utl_slanguage_id AND tlanguage_active = ' . applicationConstants::ACTIVE);
         $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl1.utl_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'tl_lang');
-        $this->addMultipleFields(array(
+        $this->addMultipleFields([
             'utsl1.utl_us_user_id',
             'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName',
             'GROUP_CONCAT(DISTINCT utl_id) as utl_ids',
             'max(utl_single_lesson_amount) as maxPrice',
             'min(utl_bulk_lesson_amount) as minPrice',
             'GROUP_CONCAT(DISTINCT utl_slanguage_id) as utl_slanguage_ids'
-        ));
+        ]);
         if (!empty($keyword)) {
             $cnd = $this->addCondition('tlanguage_name', 'LIKE', '%' . $keyword . '%');
             $cnd->attachCondition('tlanguage_identifier', 'LIKE', '%' . $keyword . '%');

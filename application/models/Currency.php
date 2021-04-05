@@ -12,7 +12,7 @@ class Currency extends MyAppModel
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
         $this->db = FatApp::getDb();
-        $this->objMainTableRecord->setSensitiveFields(array('currency_is_default'));
+        $this->objMainTableRecord->setSensitiveFields(['currency_is_default']);
     }
 
     public static function getSearchObject($langId = 0, $isActive = true)
@@ -64,14 +64,14 @@ class Currency extends MyAppModel
                 $srch->addFld($attr);
             }
         }
-        $srch->addMultipleFields(array('IFNULL(curr_l.currency_name,curr.currency_code) as currency_name'));
+        $srch->addMultipleFields(['IFNULL(curr_l.currency_name,curr.currency_code) as currency_name']);
         return $srch;
     }
 
     public static function getCurrencyAssoc($langId)
     {
         $langId = FatUtility::int($langId);
-        $srch = self::getListingObj($langId, array('currency_id', 'currency_code'));
+        $srch = self::getListingObj($langId, ['currency_id', 'currency_code']);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $rs = $srch->getResultSet();
@@ -86,7 +86,7 @@ class Currency extends MyAppModel
     {
         $langId = FatUtility::int($langId);
         $srch = self::getSearchObject($langId);
-        $srch->addMultipleFields(array('currency_id', 'CONCAT(IFNULL(curr_l.currency_name,curr.currency_code)," (",currency_code ,")") as currency_name_code'));
+        $srch->addMultipleFields(['currency_id', 'CONCAT(IFNULL(curr_l.currency_name,curr.currency_code)," (",currency_code ,")") as currency_name_code']);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $row = FatApp::getDb()->fetchAllAssoc($srch->getResultSet(), 'currency_id');

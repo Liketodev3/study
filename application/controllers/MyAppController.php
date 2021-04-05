@@ -64,7 +64,7 @@ class MyAppController extends FatController
         /* ] */
         $cookieConsent = CommonHelper::getCookieConsent();
         $this->cookieConsent = $cookieConsent;
-        $jsVariables = array(
+        $jsVariables = [
             'confirmUnLockPrice' => Label::getLabel('LBL_Are_you_sure_to_unlock_this_price!'),
             'confirmRemove' => Label::getLabel('LBL_Do_you_want_to_remove'),
             'confirmCancel' => Label::getLabel('LBL_Do_you_want_to_cancel'),
@@ -105,15 +105,15 @@ class MyAppController extends FatController
             'language' => Label::getLabel('Lbl_Language'),
             'myTimeZoneLabel' => Label::getLabel('Lbl_My_Current_Time'),
             'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson')
-        );
+        ];
         $languages = Language::getAllNames(false);
         foreach ($languages as $val) {
             $jsVariables['language' . $val['language_id']] = $val['language_layout_direction'];
         }
         if (CommonHelper::getLayoutDirection() == 'rtl') {
-            $this->_template->addCss(array('css/common-rtl.css', 'css/frontend-rtl.css'));
+            $this->_template->addCss(['css/common-rtl.css', 'css/frontend-rtl.css']);
         } else {
-            $this->_template->addCss(array('css/common-ltr.css', 'css/frontend-ltr.css'));
+            $this->_template->addCss(['css/common-ltr.css', 'css/frontend-ltr.css']);
         }
         $this->set('cookieConsent', $cookieConsent);
         $this->set('currencySymbolLeft', CommonHelper::getCurrencySymbolLeft());
@@ -130,7 +130,7 @@ class MyAppController extends FatController
     {
         $frm = new Form('changeEmailFrm');
         $userObj = new User(UserAuthentication::getLoggedUserId());
-        $srch = $userObj->getUserSearchObj(array('credential_email'));
+        $srch = $userObj->getUserSearchObj(['credential_email']);
         $rs = $srch->getResultSet();
         $userRow = FatApp::getDb()->fetch($rs);
         $user_email = $userRow['credential_email'];
@@ -156,18 +156,18 @@ class MyAppController extends FatController
         $fld->requirements()->setInt();
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Experience_Type'), 'uqualification_experience_type', UserQualification::getExperienceTypeArr(), '', [], Label::getLabel('LBL_Select'));
         $fld->requirements()->setRequired();
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Title'), 'uqualification_title', '', array('placeholder' => Label::getLabel('LBL_Eg:_B.A._English')));
+        $fld = $frm->addRequiredField(Label::getLabel('LBL_Title'), 'uqualification_title', '', ['placeholder' => Label::getLabel('LBL_Eg:_B.A._English')]);
         $fld->requirements()->setLength(1, 100);
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Institution'), 'uqualification_institute_name', '', array('placeholder' => Label::getLabel('LBL_Eg:_Oxford_University')));
+        $fld = $frm->addRequiredField(Label::getLabel('LBL_Institution'), 'uqualification_institute_name', '', ['placeholder' => Label::getLabel('LBL_Eg:_Oxford_University')]);
         $fld->requirements()->setLength(1, 100);
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Location'), 'uqualification_institute_address', '', array('placeholder' => Label::getLabel('LBL_Eg:_London')));
+        $fld = $frm->addRequiredField(Label::getLabel('LBL_Location'), 'uqualification_institute_address', '', ['placeholder' => Label::getLabel('LBL_Eg:_London')]);
         $fld->requirements()->setLength(1, 100);
-        $fld = $frm->addTextArea(Label::getLabel('LBL_Description'), 'uqualification_description', '', array('placeholder' => Label::getLabel('LBL_Eg._Focus_in_Humanist_Literature')));
+        $fld = $frm->addTextArea(Label::getLabel('LBL_Description'), 'uqualification_description', '', ['placeholder' => Label::getLabel('LBL_Eg._Focus_in_Humanist_Literature')]);
         $fld->requirements()->setLength(1, 500);
         $yearArr = range(date('Y'), 1970);
-        $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Start_Year'), 'uqualification_start_year', array_combine($yearArr, $yearArr), '', array(), '');
+        $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Start_Year'), 'uqualification_start_year', array_combine($yearArr, $yearArr), '', [], '');
         $fld1->requirements()->setRequired();
-        $fld2 = $frm->addSelectBox(Label::getLabel('LBL_End_Year'), 'uqualification_end_year', array_combine($yearArr, $yearArr), '', array(), '');
+        $fld2 = $frm->addSelectBox(Label::getLabel('LBL_End_Year'), 'uqualification_end_year', array_combine($yearArr, $yearArr), '', [], '');
         $fld2->requirements()->setRequired();
         $fld2->requirements()->setCompareWith('uqualification_start_year', 'ge');
         $fld = $frm->addFileUpload(Label::getLabel('LBL_Upload_Certificate'), 'certificate');
@@ -194,8 +194,8 @@ class MyAppController extends FatController
 
     public function includeDateTimeFiles()
     {
-        $this->_template->addCss(array('css/jquery-ui-timepicker-addon.css'), false);
-        $this->_template->addJs(array('js/jquery-ui-timepicker-addon.js'), false);
+        $this->_template->addCss(['css/jquery-ui-timepicker-addon.css'], false);
+        $this->_template->addJs(['js/jquery-ui-timepicker-addon.js'], false);
     }
 
     public function setUpNewsLetter()
@@ -218,7 +218,7 @@ class MyAppController extends FatController
         $MailchimpObj = new Mailchimp($api_key);
         $Mailchimp_ListsObj = new Mailchimp_Lists($MailchimpObj);
         try {
-            $subscriber = $Mailchimp_ListsObj->subscribe($list_id, array('email' => htmlentities($post['email'])));
+            $subscriber = $Mailchimp_ListsObj->subscribe($list_id, ['email' => htmlentities($post['email'])]);
             if (empty($subscriber['leid'])) {
                 Message::addErrorMessage(Label::getLabel('MSG_Newsletter_subscription_valid_email', $siteLangId));
                 FatUtility::dieWithError(Message::getHtml());

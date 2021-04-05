@@ -10,8 +10,6 @@ class FaqCategory extends MyAppModel
     const FAQ_PAGE = 0;
     const SELLER_PAGE = 1;
 
-    private $db;
-
     public function __construct($id = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
@@ -26,11 +24,11 @@ class FaqCategory extends MyAppModel
         }
         if ($langId > 0) {
             $srch->joinTable(
-                    static::DB_LANG_TBL,
-                    'LEFT OUTER JOIN',
-                    'fc_l.' . static::DB_TBL_LANG_PREFIX . 'faqcat_id = fc.' . static::tblFld('id') . ' and
+                static::DB_LANG_TBL,
+                'LEFT OUTER JOIN',
+                'fc_l.' . static::DB_TBL_LANG_PREFIX . 'faqcat_id = fc.' . static::tblFld('id') . ' and
 			fc_l.' . static::DB_TBL_LANG_PREFIX . 'lang_id = ' . $langId,
-                    'fc_l'
+                'fc_l'
             );
         }
         $srch->addOrder('fc.' . static::DB_TBL_PREFIX . 'active', 'DESC');
@@ -53,8 +51,7 @@ class FaqCategory extends MyAppModel
         $srch->addCondition('fc.faqcat_active', '=', applicationConstants::ACTIVE);
         $srch->addOrder('fc.faqcat_display_order', 'asc');
         $srch->addOrder('fc.faqcat_identifier', 'asc');
-        $rs = $srch->getResultSet();
-        $categories = FatApp::getDb()->fetchAll($rs, 'faqcat_id');
+        $categories = FatApp::getDb()->fetchAll($srch->getResultSet(), 'faqcat_id');
         sort($categories);
         return $categories;
     }
@@ -67,7 +64,7 @@ class FaqCategory extends MyAppModel
         $srch->addCondition('faqcat_type', '=', static::FAQ_PAGE);
         $srch->addOrder('fc.faqcat_display_order', 'ASC');
         $srch->addOrder('fc.faqcat_identifier', 'ASC');
-        $srch->addMultipleFields(array('fc.faqcat_id', 'fc.faqcat_identifier'));
+        $srch->addMultipleFields(['fc.faqcat_id', 'fc.faqcat_identifier']);
         $rs = $srch->getResultSet();
         $categories = FatApp::getDb()->fetchAllAssoc($rs, 'faqcat_id');
         return $categories;
@@ -81,9 +78,8 @@ class FaqCategory extends MyAppModel
         $srch->addCondition('faqcat_type', '=', static::SELLER_PAGE);
         $srch->addOrder('fc.faqcat_display_order', 'ASC');
         $srch->addOrder('fc.faqcat_identifier', 'ASC');
-        $srch->addMultipleFields(array('fc.faqcat_id', 'fc.faqcat_identifier'));
-        $rs = $srch->getResultSet();
-        return FatApp::getDb()->fetchAllAssoc($rs, 'faqcat_id');
+        $srch->addMultipleFields(['fc.faqcat_id', 'fc.faqcat_identifier']);
+        return FatApp::getDb()->fetchAllAssoc($srch->getResultSet(), 'faqcat_id');
     }
 
     public function getMaxOrder()
@@ -99,5 +95,4 @@ class FaqCategory extends MyAppModel
         }
         return 1;
     }
-
 }

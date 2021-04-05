@@ -1,6 +1,8 @@
 <?php
+
 class HomeController extends MyAppController
 {
+
     public function index()
     {
         if (UserAuthentication::isUserLogged()) {
@@ -14,19 +16,14 @@ class HomeController extends MyAppController
         $srchSlide = new SlideSearch($this->siteLangId);
         $srchSlide->doNotCalculateRecords();
         $srchSlide->joinAttachedFile();
-        $srchSlide->addMultipleFields(
-            array(
-                'slide_id', 'slide_record_id', 'slide_type', 'IFNULL(slide_title, slide_identifier) as slide_title',
-                'slide_target', 'slide_url'
-            )
-        );
+        $srchSlide->addMultipleFields(['slide_id', 'slide_record_id', 'slide_type',
+            'IFNULL(slide_title, slide_identifier) as slide_title', 'slide_target', 'slide_url']);
         $srchSlide->addOrder('slide_display_order');
-
         $totalSlidesPageSize = FatApp::getConfig('CONF_TOTAL_SLIDES_HOME_PAGE', FatUtility::VAR_INT, 4);
-        $ppcSlides = array();
-        $adminSlides = array();
+        $ppcSlides = [];
+        $adminSlides = [];
         $slidesSrch = new SearchBase('(' . $srchSlide->getQuery() . ') as t');
-        $slidesSrch->addMultipleFields(array('slide_id', 'slide_type', 'slide_record_id', 'slide_url', 'slide_target', 'slide_title'));
+        $slidesSrch->addMultipleFields(['slide_id', 'slide_type', 'slide_record_id', 'slide_url', 'slide_target', 'slide_title']);
         if ($totalSlidesPageSize > count($ppcSlides)) {
             $totalSlidesPageSize = $totalSlidesPageSize - count($ppcSlides);
             $adminSlideSrch = clone $slidesSrch;
@@ -44,12 +41,10 @@ class HomeController extends MyAppController
 
     public function setSiteDefaultLang($langId = 0)
     {
-        $isActivePreferencesCookie =  (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
-
+        $isActivePreferencesCookie = (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
         if (!$isActivePreferencesCookie) {
             return false;
         }
-
         $langId = FatUtility::int($langId);
         if (0 < $langId) {
             $languages = Language::getAllNames();
@@ -71,7 +66,7 @@ class HomeController extends MyAppController
                 if (isset($_SESSION['search_filters']['maxPriceRange'])) {
                     unset($_SESSION['search_filters']['maxPriceRange']);
                 }
-                $isActivePreferencesCookie =  (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
+                $isActivePreferencesCookie = (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
 
                 if ($isActivePreferencesCookie) {
                     CommonHelper::setCookie('defaultSiteCurrency', $currencyId, time() + 3600 * 24 * 10, CONF_WEBROOT_URL, '', true);
@@ -79,4 +74,5 @@ class HomeController extends MyAppController
             }
         }
     }
+
 }

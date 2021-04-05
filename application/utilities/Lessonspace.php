@@ -14,7 +14,6 @@ class Lessonspace
         $this->apikey = FatApp::getConfig('CONF_LESSONSPACE_API_KEY', FatUtility::VAR_STRING, '');
         if (empty($this->apikey)) {
             throw new Exception(Label::getLabel('LBL_LESSONSPACE_API_KEY_NOT_DEFINED'));
-            return array();
         }
     }
 

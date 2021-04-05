@@ -24,7 +24,7 @@ class ScheduledLesson extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        return array(
+        return [
             static::STATUS_UPCOMING => Label::getLabel('LBL_Upcoming', $langId),
             static::STATUS_SCHEDULED => Label::getLabel('LBL_Scheduled', $langId),
             static::STATUS_RESCHEDULED => Label::getLabel('LBL_Rescheduled', $langId),
@@ -32,7 +32,7 @@ class ScheduledLesson extends MyAppModel
             static::STATUS_COMPLETED => Label::getLabel('LBL_Completed', $langId),
             static::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled', $langId),
             static::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported_Status', $langId),
-        );
+        ];
     }
 
     public function save()
@@ -49,8 +49,8 @@ class ScheduledLesson extends MyAppModel
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->joinLearner();
-        $srch->addMultipleFields(array('slesson_id', 'slesson_grpcls_id', 'slesson_teacher_id',
-            'op_commission_charged', 'CONCAT(user_first_name, " ", user_last_name) as user_full_name'));
+        $srch->addMultipleFields(['slesson_id', 'slesson_grpcls_id', 'slesson_teacher_id',
+            'op_commission_charged', 'CONCAT(user_first_name, " ", user_last_name) as user_full_name']);
         $srch->addCondition('slns.slesson_id', ' = ', $this->getMainTableRecordId());
         $srch->addCondition('slns.slesson_is_teacher_paid', ' = ', 0);
         $srch->addCondition('op.op_lpackage_is_free_trial', ' = ', 0);
@@ -68,7 +68,7 @@ class ScheduledLesson extends MyAppModel
             if ($data['slesson_grpcls_id']) {
                 $comment = sprintf(Label::getLabel('LBL_Group_Class_Payment_Received_for_user:_%s', CommonHelper::getLangId()), $data['user_full_name']);
             }
-            $data = array(
+            $data = [
                 'utxn_user_id' => $data['slesson_teacher_id'],
                 'utxn_date' => date('Y-m-d H:i:s'),
                 'utxn_comments' => $comment,
@@ -76,7 +76,7 @@ class ScheduledLesson extends MyAppModel
                 'utxn_type' => Transaction::TYPE_LOADED_MONEY_TO_WALLET,
                 'utxn_credit' => $data['op_commission_charged'],
                 'utxn_slesson_id' => $data['slesson_id'],
-            );
+            ];
             if (!$tObj->addTransaction($data)) {
                 trigger_error($tObj->getError(), E_USER_ERROR);
             }
@@ -87,8 +87,8 @@ class ScheduledLesson extends MyAppModel
     public function holdPayment($user_id, $lesson_id)
     {
         $db = FatApp::getDb();
-        $update_cond = array('smt' => 'utxn_user_id = ? and utxn_slesson_id = ? AND utxn_status=?', 'vals' => array($user_id, $lesson_id, Transaction::STATUS_COMPLETED));
-        if (!$db->updateFromArray(Transaction::DB_TBL, array('utxn_status' => Transaction::STATUS_PENDING), $update_cond, false, array(), '', 1)) {
+        $update_cond = ['smt' => 'utxn_user_id = ? and utxn_slesson_id = ? AND utxn_status=?', 'vals' => [$user_id, $lesson_id, Transaction::STATUS_COMPLETED]];
+        if (!$db->updateFromArray(Transaction::DB_TBL, ['utxn_status' => Transaction::STATUS_PENDING], $update_cond, false, [], '', 1)) {
             return false;
         }
         return true;
@@ -149,7 +149,7 @@ class ScheduledLesson extends MyAppModel
             $userNotification = new UserNotifications($lessonDetailRow['learnerId']);
             $userNotification->cancelLessonNotification($lessonDetailRow['sldetail_id'], $lessonDetailRow['teacherId'], $lessonDetailRow['teacherFullName'], USER::USER_TYPE_LEANER, $reason);
             /* send an email to learner[ */
-            $vars = array(
+            $vars = [
                 '{lesson_id}' => $lessonDetailRow['slesson_id'],
                 '{learner_name}' => $lessonDetailRow['learnerFullName'],
                 '{teacher_name}' => $lessonDetailRow['teacherFullName'],
@@ -158,8 +158,8 @@ class ScheduledLesson extends MyAppModel
                 '{lesson_date}' => FatDate::format($start_date),
                 '{lesson_start_time}' => $start_time,
                 '{lesson_end_time}' => $end_time,
-                '{lesson_url}' => CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($lessonDetailRow['sldetail_id'])),
-            );
+                '{lesson_url}' => CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', [$lessonDetailRow['sldetail_id']]),
+            ];
             if (!EmailHandler::sendMailTpl($lessonDetailRow['learnerEmailId'], 'teacher_cancelled_email', CommonHelper::getLangId(), $vars)) {
                 $this->error = Label::getLabel('LBL_Mail_not_sent!');
                 return false;
@@ -174,10 +174,7 @@ class ScheduledLesson extends MyAppModel
         /* update status for every learner [ */
         foreach ($lessonDetailRows as $lessonDetailRow) {
             $sLessonDetailObj = new ScheduledLessonDetails($lessonDetailRow['sldetail_id']);
-            $sLessonDetailObj->assignValues(array(
-                'sldetail_learner_status' => ScheduledLesson::STATUS_NEED_SCHEDULING,
-                'sldetail_learner_join_time' => '',
-            ));
+            $sLessonDetailObj->assignValues(['sldetail_learner_status' => ScheduledLesson::STATUS_NEED_SCHEDULING, 'sldetail_learner_join_time' => '']);
             if (!$sLessonDetailObj->save()) {
                 $this->error = $sLessonDetailObj->getError();
                 return false;
@@ -205,18 +202,18 @@ class ScheduledLesson extends MyAppModel
                 $end_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $end_time, true, $user_timezone);
             }
             /* send email to learner[ */
-            $vars = array(
+            $vars = [
                 '{lesson_id}' => $lessonDetailRow['slesson_id'],
                 '{learner_name}' => $lessonDetailRow['learnerFullName'],
                 '{teacher_name}' => $lessonDetailRow['teacherFullName'],
                 '{lesson_name}' => ($lessonDetailRow['op_lpackage_is_free_trial'] == applicationConstants::NO) ? $lessonDetailRow['teacherTeachLanguageName'] : Label::getLabel('LBL_Trial'),
                 '{teacher_comment}' => $reason,
                 '{lesson_date}' => FatDate::format($start_date),
-                '{lesson_url}' => CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($lessonDetailRow['sldetail_id'])),
+                '{lesson_url}' => CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', [$lessonDetailRow['sldetail_id']]),
                 '{lesson_start_time}' => $start_time,
                 '{lesson_end_time}' => $end_time,
                 '{action}' => Label::getLabel('LBL_Rescheduled'),
-            );
+            ];
             if (!EmailHandler::sendMailTpl($lessonDetailRow['learnerEmailId'], 'teacher_reschedule_email', CommonHelper::getLangId(), $vars)) {
                 $this->error = Label::getLabel('LBL_Mail_not_sent!');
                 return false;
@@ -228,7 +225,7 @@ class ScheduledLesson extends MyAppModel
 
     public function markTeacherJoinTime()
     {
-        $this->assignValues(array('slesson_teacher_join_time' => date('Y-m-d H:i:s')));
+        $this->assignValues(['slesson_teacher_join_time' => date('Y-m-d H:i:s')]);
         return $this->save();
     }
 

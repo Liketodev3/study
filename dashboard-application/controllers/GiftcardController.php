@@ -1,6 +1,8 @@
 <?php
+
 class GiftcardController extends LoggedUserController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -21,9 +23,9 @@ class GiftcardController extends LoggedUserController
     {
         $frm = new Form('frmGiftcardSrch');
         $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '');
-        $frm->addSelectBox(Label::getLabel('LBL_Status'), 'giftcard_status', array(-1 => Label::getLabel('LBL_Does_Not_Matter', $this->siteLangId)) + Giftcard::getStatusArr($this->siteLangId), -1, array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status'), 'giftcard_status', [-1 => Label::getLabel('LBL_Does_Not_Matter', $this->siteLangId)] + Giftcard::getStatusArr($this->siteLangId), -1, [], '');
         $fldSubmit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->siteLangId));
-        $fldCancel = $frm->addResetButton("", "btn_clear", Label::getLabel("LBL_Clear", $this->siteLangId), array('onclick'=>'clearSearch();'));
+        $fldCancel = $frm->addResetButton("", "btn_clear", Label::getLabel("LBL_Clear", $this->siteLangId), ['onclick' => 'clearSearch();']);
         $fldSubmit->attachField($fldCancel);
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
@@ -41,9 +43,6 @@ class GiftcardController extends LoggedUserController
 
     public function listing()
     {
-        /*$giftcardObj = new Giftcard();
-        $cartListing = $giftcardObj->giftCartCartDetails();
-        $this->set('cartListing', $cartListing); */
         $frmSrch = $this->getSearchForm();
         $post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
@@ -61,14 +60,15 @@ class GiftcardController extends LoggedUserController
         $srch->addOrder('order_date_added', 'DESC');
         $srch->addCondition('order_type', '=', Order::TYPE_GIFTCARD);
         $srch->addCondition('order_user_id', '=', $this->user_id);
-        $srch->addMultipleFields(array('order_id', 'order_is_paid', 'order_net_amount',  'order_wallet_amount_charge', 'gift.giftcard_code', 'gift.giftcard_amount', 'gcrecipient.gcrecipient_email as recipient_email', 'gcrecipient.gcrecipient_name as recipient_name', 'gift.giftcard_status', 'gift.giftcard_used_date', 'gift.giftcard_expiry_date', 'op_id', 'op_invoice_number', 'op_unit_price'));
-
+        $srch->addMultipleFields([
+            'order_id', 'order_is_paid', 'order_net_amount', 'order_wallet_amount_charge', 'gift.giftcard_code',
+            'gift.giftcard_amount', 'gcrecipient.gcrecipient_email as recipient_email', 'gcrecipient.gcrecipient_name as recipient_name',
+            'gift.giftcard_status', 'gift.giftcard_used_date', 'gift.giftcard_expiry_date', 'op_id', 'op_invoice_number', 'op_unit_price']);
         $keyword = FatApp::getPostedData('keyword', null, '');
         if (!empty($keyword)) {
-            $cond = $srch->addCondition('giftcard_code', 'like', '%'.$keyword.'%');
-            $cond->attachCondition('order_id', 'like', '%'.$keyword.'%', 'OR');
+            $cond = $srch->addCondition('giftcard_code', 'like', '%' . $keyword . '%');
+            $cond->attachCondition('order_id', 'like', '%' . $keyword . '%', 'OR');
         }
-
         $status = FatApp::getPostedData('giftcard_status', '', -1);
         if ($status > -1) {
             $srch->addCondition('giftcard_status', '=', $status);
@@ -77,22 +77,18 @@ class GiftcardController extends LoggedUserController
             $orderIsPaid = FatUtility::int($post['order_is_paid']);
             $srch->addCondition('order_is_paid', '=', $orderIsPaid);
         }
-
         $dateFrom = FatApp::getPostedData('date_from', null, '');
         if (!empty($dateFrom)) {
             $srch->addDateFromCondition($dateFrom);
         }
-
         $dateTo = FatApp::getPostedData('date_to', null, '');
         if (!empty($dateTo)) {
             $srch->addDateToCondition($dateTo);
         }
-
         $priceFrom = FatApp::getPostedData('price_from', null, '');
         if (!empty($priceFrom)) {
             $srch->addMinPriceCondition($priceFrom);
         }
-
         $priceTo = FatApp::getPostedData('price_to', null, '');
         if (!empty($priceTo)) {
             $srch->addMaxPriceCondition($priceTo);
@@ -103,12 +99,12 @@ class GiftcardController extends LoggedUserController
         $rs = $srch->getResultSet();
         $giftcardList = FatApp::getDb()->fetchAll($rs);
         $totalRecords = $srch->recordCount();
-        $pagingArr = array(
+        $pagingArr = [
             'pageCount' => $srch->pages(),
             'page' => $page,
             'pageSize' => $pageSize,
             'recordCount' => $totalRecords,
-        );
+        ];
         $this->set("giftCardStatus", $giftCardStatus);
         $this->set("giftcardList", $giftcardList);
         $this->set('postedData', $post);
@@ -120,49 +116,46 @@ class GiftcardController extends LoggedUserController
     {
         $frm = new Form('giftcardForm');
         $frm->setFormTagAttribute('class', 'form login-form-front');
-        $giftcardPrice = $frm->addFloatField(Label::getLabel('LBL_Giftcard_Amount'), 'giftcard_price', '', array('placeholder'=>Label::getLabel('LBL_Giftcard_Amount'), "onkeyup" => "cardUpdate(this)",'id'=>"giftcard_price"));
+        $giftcardPrice = $frm->addFloatField(Label::getLabel('LBL_Giftcard_Amount'), 'giftcard_price', '', ['placeholder' => Label::getLabel('LBL_Giftcard_Amount'), "onkeyup" => "cardUpdate(this)", 'id' => "giftcard_price"]);
         $giftcardPrice->requirements()->setRequired();
-        $giftcardPrice->requirements()->setLength(1,6);
-        // $giftcardPrice->requirements()->setFloatPositive();
+        $giftcardPrice->requirements()->setLength(1, 6);
         $giftcardPrice->requirements()->setRegularExpressionToValidate("^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$");
         $userObj = new User($this->user_id);
         $userInfo = $userObj->getUserInfo($this->user_id);
-        $loggedInUserName = UserAuthentication::isUserLogged() === true ? $userInfo['user_last_name'].' '.$userInfo['user_first_name'] : '';
+        $loggedInUserName = UserAuthentication::isUserLogged() === true ? $userInfo['user_last_name'] . ' ' . $userInfo['user_first_name'] : '';
         $loggedInUserEmail = UserAuthentication::isUserLogged() === true ? $userInfo['credential_email'] : '';
         $loggedInUserPhone = UserAuthentication::isUserLogged() === true ? $userInfo['user_phone'] : '';
-        $buyerName = $frm->addRequiredField(Label::getLabel('LBL_Buyer_Name'), 'gcbuyer_name', $loggedInUserName, array(
-            'title'=>'Buyer Name',
+        $buyerName = $frm->addRequiredField(Label::getLabel('LBL_Buyer_Name'), 'gcbuyer_name', $loggedInUserName, [
+            'title' => 'Buyer Name',
             'placeholder' => Label::getLabel('LBL_Buyer_Name'),
-			'readonly' => 'true'
-        ));
+            'readonly' => 'true'
+        ]);
         $buyerName->requirements()->setRequired();
-        $buyerEmail = $frm->addEmailField(Label::getLabel('LBL_Buyer_Email'), 'gcbuyer_email', $loggedInUserEmail, array(
-            'title'=>'Buyer Email',
+        $buyerEmail = $frm->addEmailField(Label::getLabel('LBL_Buyer_Email'), 'gcbuyer_email', $loggedInUserEmail, [
+            'title' => 'Buyer Email',
             'placeholder' => Label::getLabel('LBL_Buyer_Email'),
-			'readonly' => 'true'
-        ));
-        //$buyerEmail->requirements()->setRequired();
-        $buyerPhone = $frm->addRequiredField(Label::getLabel('LBL_Buyer_Phone'), 'gcbuyer_phone', $loggedInUserPhone, array(
-            'title'=>'Buyer Phone',
+            'readonly' => 'true'
+        ]);
+        $buyerPhone = $frm->addRequiredField(Label::getLabel('LBL_Buyer_Phone'), 'gcbuyer_phone', $loggedInUserPhone, [
+            'title' => 'Buyer Phone',
             'placeholder' => Label::getLabel('LBL_Buyer_Phone')
-
-        ));
+        ]);
         $buyerPhone->requirements()->setRequired();
         $buyerPhone->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
-        $frm->addRequiredField(Label::getLabel('LBL_Recipient_Name'), 'gcrecipient_name', '', array(
+        $frm->addRequiredField(Label::getLabel('LBL_Recipient_Name'), 'gcrecipient_name', '', [
             'placeholder' => Label::getLabel('LBL_Recipient_Name')
-        ));
-        $frm->addEmailField(Label::getLabel('LBL_Recipient_Email'), 'gcrecipient_email', '', array(
+        ]);
+        $frm->addEmailField(Label::getLabel('LBL_Recipient_Email'), 'gcrecipient_email', '', [
             'placeholder' => Label::getLabel('LBL_Recipient_Email')
-        ));
-        $frm->addSubmitButton('', 'save',Label::getLabel('LBL_Send_Gift_Card'), array(
+        ]);
+        $frm->addSubmitButton('', 'save', Label::getLabel('LBL_Send_Gift_Card'), [
             'class' => 'btn btn--primary',
             'onclick' => 'validateCustomFields()'
-        ));
-        $frm->addButton('', 'clear', 'Clear', array(
+        ]);
+        $frm->addButton('', 'clear', 'Clear', [
             'class' => 'btn btn--third',
             'onclick' => 'cleardata()'
-        ));
+        ]);
         return $frm;
     }
 
@@ -181,12 +174,9 @@ class GiftcardController extends LoggedUserController
     public function addGiftcardToCart($giftcardData)
     {
         $db = FatApp::getDb();
-        $db->deleteRecords(Cart ::DB_TBL, array(
+        $db->deleteRecords(Cart ::DB_TBL, [
             'smt' => '`usercart_user_id`=? and usercart_type=?',
-            'vals' => array(
-                $this->user_id,
-                Cart::TYPE_GIFTCARD
-            )));
+            'vals' => [$this->user_id, Cart::TYPE_GIFTCARD]]);
         $srch = new SearchBase(Cart::DB_TBL);
         $srch->addCondition('usercart_user_id', '=', $this->user_id);
         $srch->addCondition('usercart_type', '=', Cart::TYPE_GIFTCARD);
@@ -229,9 +219,6 @@ class GiftcardController extends LoggedUserController
         $orderInfo = FatApp::getDb()->fetch($rs);
         if (!$orderInfo) {
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
-            if ($isAjaxCall) {
-                FatUtility::dieWithError(Message::getHtml());
-            }
             CommonHelper::redirectUserReferer();
         }
         $this->set('orderInfo', $orderInfo);
@@ -241,20 +228,13 @@ class GiftcardController extends LoggedUserController
         $pmSrch->doNotCalculateRecords();
         $pmSrch->doNotLimitRecords();
         $pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
-        $pmSrch->addMultipleFields(array('pmethod_id', 'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name', 'pmethod_code', 'pmethod_description'));
+        $pmSrch->addMultipleFields(['pmethod_id', 'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name', 'pmethod_code', 'pmethod_description']);
         $pmRs = $pmSrch->getResultSet();
         $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
         $this->set('userDetails', $userDetails);
         $this->set('orderId', $orderId);
         $this->set('paymentMethods', $paymentMethods);
         $this->_template->render(true, true);
-
-        /*		$paymentUrl = CommonHelper::generateUrl('PaypalStandardPay', 'charge', array(
-                    $orderId,
-                    Order::TYPE_GIFTCARD
-                ));
-                FatApp::redirectUser($paymentUrl);
-        */
     }
 
     public function removeGiftcardFromCart($giftcardKey, $userId)
@@ -268,12 +248,7 @@ class GiftcardController extends LoggedUserController
         if (!empty($row)) {
             $usercartDetails = json_decode($row['usercart_details'], true);
             if (empty($usercartDetails)) {
-                $db->deleteRecords(Cart::DB_TBL, array(
-                    'smt' => '`usercart_user_id`=? and usercart_type=?',
-                    'vals' => array(
-                        $userId,
-                        Cart::TYPE_GIFTCARD
-                    )));
+                $db->deleteRecords(Cart::DB_TBL, ['smt' => '`usercart_user_id`=? and usercart_type=?', 'vals' => [$userId, Cart::TYPE_GIFTCARD]]);
                 return true;
                 exit;
             }
@@ -292,14 +267,8 @@ class GiftcardController extends LoggedUserController
     {
         if (isset($this->user_id)) {
             $record = new TableRecord(Cart::DB_TBL);
-            $record->assignValues(
-                array(
-                    "usercart_user_id" => $this->user_id,
-                    "usercart_type" => CART::TYPE_GIFTCARD,
-                    "usercart_details" => $dataSerialized
-                )
-            );
-            if (!$record->addNew(array(), array('usercart_details' => $dataSerialized))) {
+            $record->assignValues(["usercart_user_id" => $this->user_id, "usercart_type" => CART::TYPE_GIFTCARD, "usercart_details" => $dataSerialized]);
+            if (!$record->addNew([], ['usercart_details' => $dataSerialized])) {
                 Message::addErrorMessage($record->getError());
             }
         }
@@ -310,4 +279,5 @@ class GiftcardController extends LoggedUserController
         $giftcard = new Giftcard();
         $giftcard->addGiftcardDetails($orderId);
     }
+
 }

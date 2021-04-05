@@ -34,7 +34,7 @@ class LessonRescheduleLog extends MyAppModel
         $latestLogSearchObj = self::getSearchObject('latestReschLessonLog');
         $latestLogSearchObj->doNotCalculateRecords();
         $latestLogSearchObj->doNotLimitRecords();
-        $latestLogSearchObj->addMultipleFields(array('max(latestReschLessonLog.lesreschlog_id) as lessonLatestLogId'));
+        $latestLogSearchObj->addMultipleFields(['max(latestReschLessonLog.lesreschlog_id) as lessonLatestLogId']);
         $latestLogSearchObj->addGroupBy('latestReschLessonLog.lesreschlog_slesson_id');
         $searchObj->joinTable("(" . $latestLogSearchObj->getQuery() . ")", 'INNER JOIN', 'latestLesReschLog.lessonLatestLogId = lreschlog.lesreschlog_id', 'latestLesReschLog');
         return $searchObj;

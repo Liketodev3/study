@@ -63,7 +63,7 @@ class MyAppModel extends FatModel
         $prefix = substr(static::DB_TBL_PREFIX, 0, -1);
         $record->setFldValue($prefix . 'lang_' . static::DB_TBL_PREFIX . 'id', $this->mainTableRecordId);
         $record->setFldValue($prefix . 'lang_lang_id', $lang_id);
-        if (!$record->addNew(array(), $data)) {
+        if (!$record->addNew([], $data)) {
             $this->error = $record->getError();
             return false;
         }
@@ -77,7 +77,7 @@ class MyAppModel extends FatModel
 
     public function deleteRecord($deleteLangData = false)
     {
-        if (!FatApp::getDb()->deleteRecords($this->mainTableName, array('smt' => $this->mainTableIdField . ' = ?', 'vals' => array($this->mainTableRecordId)))) {
+        if (!FatApp::getDb()->deleteRecords($this->mainTableName, ['smt' => $this->mainTableIdField . ' = ?', 'vals' => [$this->mainTableRecordId]])) {
             $this->error = FatApp::getDb()->getError();
             return false;
         }
@@ -85,7 +85,7 @@ class MyAppModel extends FatModel
             return true;
         }
         $prefix = substr(static::DB_TBL_PREFIX, 0, -1);
-        if (!FatApp::getDb()->deleteRecords($this->mainTableName . '_lang', array('smt' => $prefix . 'lang_' . static::DB_TBL_PREFIX . 'id' . ' = ?', 'vals' => array($this->mainTableRecordId)))) {
+        if (!FatApp::getDb()->deleteRecords($this->mainTableName . '_lang', ['smt' => $prefix . 'lang_' . static::DB_TBL_PREFIX . 'id' . ' = ?', 'vals' => [$this->mainTableRecordId]])) {
             $this->error = FatApp::getDb()->getError();
             return false;
         }
@@ -94,10 +94,10 @@ class MyAppModel extends FatModel
 
     public function loadFromDb($prepare_dates_for_display = false)
     {
-        $result = $this->objMainTableRecord->loadFromDb(array(
+        $result = $this->objMainTableRecord->loadFromDb([
             'smt' => $this->mainTableIdField . " = ?",
-            'vals' => array($this->mainTableRecordId)
-                ), $prepare_dates_for_display);
+            'vals' => [$this->mainTableRecordId]
+                ], $prepare_dates_for_display);
         if (!$result) {
             $this->error = $this->objMainTableRecord->getError();
         }
@@ -233,7 +233,7 @@ class MyAppModel extends FatModel
     public function save()
     {
         if (0 < $this->mainTableRecordId) {
-            $result = $this->objMainTableRecord->update(array('smt' => $this->mainTableIdField . ' = ?', 'vals' => array($this->mainTableRecordId)));
+            $result = $this->objMainTableRecord->update(['smt' => $this->mainTableIdField . ' = ?', 'vals' => [$this->mainTableRecordId]]);
         } else {
             $result = $this->objMainTableRecord->addNew();
             if ($result) {
@@ -264,9 +264,7 @@ class MyAppModel extends FatModel
             return false;
         }
         $db = FatApp::getDb();
-        if (!$db->updateFromArray(static::DB_TBL,
-                        array(static::DB_TBL_PREFIX . 'active' => $v),
-                        array('smt' => static::DB_TBL_PREFIX . 'id = ?', 'vals' => array($this->mainTableRecordId)))) {
+        if (!$db->updateFromArray(static::DB_TBL, [static::DB_TBL_PREFIX . 'active' => $v], ['smt' => static::DB_TBL_PREFIX . 'id = ?', 'vals' => [$this->mainTableRecordId]])) {
             $this->error = $db->getError();
             return false;
         }
@@ -280,18 +278,14 @@ class MyAppModel extends FatModel
                 if (FatUtility::int($id) < 1) {
                     continue;
                 }
-                FatApp::getDb()->updateFromArray(
-                        static::DB_TBL,
-                        array(static::DB_TBL_PREFIX . 'display_order' => $i),
-                        array('smt' => static::DB_TBL_PREFIX . 'id = ?', 'vals' => array($id))
-                );
+                FatApp::getDb()->updateFromArray(static::DB_TBL, [static::DB_TBL_PREFIX . 'display_order' => $i], ['smt' => static::DB_TBL_PREFIX . 'id = ?', 'vals' => [$id]]);
             }
             return true;
         }
         return false;
     }
 
-    public function addNew($insert_options = array(), $flds_update_on_duplicate = array())
+    public function addNew($insert_options = [], $flds_update_on_duplicate = [])
     {
         if (!$this->objMainTableRecord->addNew($insert_options, $flds_update_on_duplicate)) {
             $this->error = $this->objMainTableRecord->getError();

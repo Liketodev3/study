@@ -48,7 +48,7 @@ class EmailTemplates extends MyAppModel
         }
         $srch = new SearchBase(static::DB_TBL);
         $srch->addOrder(static::DB_TBL_PREFIX . 'name', 'ASC');
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             static::DB_TBL_PREFIX . 'code',
             static::DB_TBL_PREFIX . 'lang_id',
             static::DB_TBL_PREFIX . 'name',
@@ -56,23 +56,23 @@ class EmailTemplates extends MyAppModel
             static::DB_TBL_PREFIX . 'body',
             static::DB_TBL_PREFIX . 'replacements',
             static::DB_TBL_PREFIX . 'status',
-        ));
+        ]);
         if ($langId > 0) {
             $srch->addCondition(static::DB_TBL_PREFIX . 'lang_id', '=', $langId);
         }
         return $srch;
     }
 
-    public function addUpdateData($data = array())
+    public function addUpdateData($data = [])
     {
-        $assignValues = array(
+        $assignValues = [
             static::DB_TBL_PREFIX . 'code' => $data['etpl_code'],
             static::DB_TBL_PREFIX . 'lang_id' => $data['etpl_lang_id'],
             static::DB_TBL_PREFIX . 'name' => $data['etpl_name'],
             static::DB_TBL_PREFIX . 'subject' => $data['etpl_subject'],
             static::DB_TBL_PREFIX . 'body' => $data['etpl_body'],
-        );
-        if (!FatApp::getDb()->insertFromArray(static::DB_TBL, $assignValues, false, array(), $assignValues)) {
+        ];
+        if (!FatApp::getDb()->insertFromArray(static::DB_TBL, $assignValues, false, [], $assignValues)) {
             $this->error = FatApp::getDb()->getError();
             return false;
         }
@@ -86,14 +86,10 @@ class EmailTemplates extends MyAppModel
             return false;
         }
         $db = FatApp::getDb();
-        if (!$db->updateFromArray(static::DB_TBL, array(
-                    static::DB_TBL_PREFIX . 'status' => $v
-                        ), array(
-                    'smt' => static::DB_TBL_PREFIX . 'code = ?',
-                    'vals' => array(
-                        $etplCode
-                    )
-                ))) {
+        if (!$db->updateFromArray(static::DB_TBL,
+                        [static::DB_TBL_PREFIX . 'status' => $v],
+                        ['smt' => static::DB_TBL_PREFIX . 'code = ?', 'vals' => [$etplCode]]
+                )) {
             $this->error = $db->getError();
             return false;
         }

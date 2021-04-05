@@ -5,7 +5,7 @@ class Sitemap
 
     public static function getUrls($langId)
     {
-        $sitemapUrls = array();
+        $sitemapUrls = [];
         // teachers profile
         $srch = new UserSearch();
         $srch->addFld('DISTINCT user_url_name, CONCAT(user_first_name, " ", user_last_name) as user_full_name');
@@ -17,9 +17,9 @@ class Sitemap
         $srch->joinUserAvailibility();
         $rs = $srch->getResultSet();
         $teachersList = FatApp::getDb()->fetchAll($rs);
-        $urls = array();
+        $urls = [];
         foreach ($teachersList as $key => $val) {
-            array_push($urls, array('url' => CommonHelper::generateFullUrl('Teachers', 'profile', array($val['user_url_name']), CONF_WEBROOT_FRONT_URL), 'value' => $val['user_full_name'], 'frequency' => 'weekly'));
+            array_push($urls, ['url' => CommonHelper::generateFullUrl('Teachers', 'profile', [$val['user_url_name']], CONF_WEBROOT_FRONT_URL), 'value' => $val['user_full_name'], 'frequency' => 'weekly']);
         }
         $sitemapUrls = array_merge($sitemapUrls, array(Label::getLabel('LBL_Teachers') => $urls));
         /* ] */
@@ -32,11 +32,11 @@ class Sitemap
         $grpClsSrch->doNotLimitRecords();
         $rs = $grpClsSrch->getResultSet();
         $grpClsList = FatApp::getDb()->fetchAll($rs);
-        $urls = array();
+        $urls = [];
         foreach ($grpClsList as $key => $val) {
-            array_push($urls, array('url' => CommonHelper::generateFullUrl('GroupClasses', 'view', array($val['grpcls_id']), CONF_WEBROOT_FRONT_URL), 'value' => $val['grpcls_title'], 'frequency' => 'weekly'));
+            array_push($urls, ['url' => CommonHelper::generateFullUrl('GroupClasses', 'view', [$val['grpcls_id']], CONF_WEBROOT_FRONT_URL), 'value' => $val['grpcls_title'], 'frequency' => 'weekly']);
         }
-        $sitemapUrls = array_merge($sitemapUrls, array(Label::getLabel('LBL_Group_Classes') => $urls));
+        $sitemapUrls = array_merge($sitemapUrls, [Label::getLabel('LBL_Group_Classes') => $urls]);
         /* ] */
         /* CMS Pages [ */
         $srch = new NavigationLinkSearch($langId);
@@ -45,24 +45,23 @@ class Sitemap
         $srch->joinNavigation();
         $srch->addCondition('nlink_deleted', '=', applicationConstants::NO);
         $srch->addCondition('nav_active', '=', applicationConstants::ACTIVE);
-        $srch->addMultipleFields(array('nav_id', 'nlink_type', 'nlink_cpage_id', 'nlink_url', 'nlink_identifier'));
+        $srch->addMultipleFields(['nav_id', 'nlink_type', 'nlink_cpage_id', 'nlink_url', 'nlink_identifier']);
         $srch->addOrder('nlink_display_order', 'ASC');
         $srch->addGroupBy('nlink_cpage_id');
         $srch->addGroupBy('nlink_url');
-        $rs = $srch->getResultSet();
-        $linksList = FatApp::getDb()->fetchAll($rs);
-        $urls = array();
+        $linksList = FatApp::getDb()->fetchAll($srch->getResultSet());
+        $urls = [];
         foreach ($linksList as $key => $link) {
             if ($link['nlink_type'] == NavigationLinks::NAVLINK_TYPE_CMS && $link['nlink_cpage_id']) {
-                array_push($urls, array('url' => CommonHelper::generateFullUrl('Cms', 'view', array($link['nlink_cpage_id']), CONF_WEBROOT_FRONT_URL), 'value' => $link['nlink_identifier'], 'frequency' => 'monthly'));
+                array_push($urls, ['url' => CommonHelper::generateFullUrl('Cms', 'view', [$link['nlink_cpage_id']], CONF_WEBROOT_FRONT_URL), 'value' => $link['nlink_identifier'], 'frequency' => 'monthly']);
             } elseif ($link['nlink_type'] == NavigationLinks::NAVLINK_TYPE_EXTERNAL_PAGE) {
                 $url = str_replace('{SITEROOT}', CONF_WEBROOT_FRONT_URL, $link['nlink_url']);
                 $url = str_replace('{siteroot}', CONF_WEBROOT_FRONT_URL, $url);
                 $url = CommonHelper::processURLString($url);
-                array_push($urls, array('url' => CommonHelper::getUrlScheme() . $url, 'value' => $link['nlink_identifier'], 'frequency' => 'monthly'));
+                array_push($urls, ['url' => CommonHelper::getUrlScheme() . $url, 'value' => $link['nlink_identifier'], 'frequency' => 'monthly']);
             }
         }
-        $sitemapUrls = array_merge($sitemapUrls, array(Label::getLabel('LBL_CMS_Pages') => $urls));
+        $sitemapUrls = array_merge($sitemapUrls, [Label::getLabel('LBL_CMS_Pages') => $urls]);
         return $sitemapUrls;
     }
 

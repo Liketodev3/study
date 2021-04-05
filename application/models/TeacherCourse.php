@@ -18,13 +18,13 @@ class TeacherCourse extends MyAppModel
 
     public static function getDifficultyArr()
     {
-        return array(
+        return [
             static::LEVEL_BEGINNER => Label::getLabel('LBL_Beginner'),
             static::LEVEL_UPPER_BEGINNER => Label::getLabel('LBL_Upper_Beginner'),
             static::LEVEL_INTERMEDIATE => Label::getLabel('LBL_Intermediate'),
             static::LEVEL_UPPER_INTERMEDIATE => Label::getLabel('LBL_Upper_Intermediate'),
             static::LEVEL_ADVANCED => Label::getLabel('LBL_Advanced'),
-        );
+        ];
     }
 
 }

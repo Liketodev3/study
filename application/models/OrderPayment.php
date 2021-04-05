@@ -27,10 +27,9 @@ class OrderPayment extends Order
     {
         $orderInfo = $this->orderAttributes;
         $userObj = new User($orderInfo["order_user_id"]);
-        $userInfo = $userObj->getUserInfo(array('user_first_name', 'user_last_name', 'credential_email', 'user_phone', 'user_country_id'), true, true, true);
+        $userInfo = $userObj->getUserInfo(['user_first_name', 'user_last_name', 'credential_email', 'user_phone', 'user_country_id'], true, true, true);
         $orderCurrencyCode = CommonHelper::getSystemCurrencyData()['currency_code'];
-
-        $arrOrder = array(
+        $arrOrder = [
             "order_id" => $orderInfo["order_id"],
             "invoice" => $orderInfo["order_id"],
             "customer_id" => $orderInfo["order_user_id"],
@@ -47,7 +46,7 @@ class OrderPayment extends Order
             "order_wallet_amount_charge" => $orderInfo['order_wallet_amount_charge'],
             "paypal_bn" => "FATbit_SP",
             "user_country_id" => $userInfo["user_country_id"],
-        );
+        ];
         return $arrOrder;
     }
 
@@ -58,10 +57,7 @@ class OrderPayment extends Order
             return false;
         }
         $langId = FatApp::getConfig('conf_default_site_lang');
-        if (!$this->addOrderPayment(
-                        'NoCharge',
-                        'W-' . time(),
-                        $amountToBeCharge,
+        if (!$this->addOrderPayment('NoCharge', 'W-' . time(), $amountToBeCharge,
                         Label::getLabel("LBL_No_Charges", $langId),
                         Label::getLabel('LBL_No_Charges', $langId),
                         true
@@ -83,14 +79,14 @@ class OrderPayment extends Order
         $formattedOrderValue = "#" . $orderInfo["order_id"];
         $transObj = new Transaction($orderInfo["order_user_id"]);
         $utxnComments = Transaction::formatTransactionCommentByOrderId($orderInfo["order_id"], $defaultSiteLangId);
-        $txnDataArr = array(
+        $txnDataArr = [
             'utxn_user_id' => $orderInfo["order_user_id"],
             'utxn_debit' => $amountToBeCharge,
             'utxn_status' => Transaction::STATUS_COMPLETED,
             'utxn_order_id' => $orderInfo["order_id"],
             'utxn_comments' => $utxnComments,
             'utxn_type' => Transaction::TYPE_LESSON_BOOKING
-        );
+        ];
         $transObj->assignValues($txnDataArr);
         if (!$transObj->save()) {
             $this->error = $transObj->getError();
@@ -100,8 +96,8 @@ class OrderPayment extends Order
         $orderWalletAmountCharge = $orderInfo['order_wallet_amount_charge'] - $amountToBeCharge;
         if (!FatApp::getDb()->updateFromArray(
                         Order::DB_TBL,
-                        array('order_wallet_amount_charge' => $orderWalletAmountCharge),
-                        array('smt' => 'order_id = ?', 'vals' => array($orderInfo["order_id"]))
+                        ['order_wallet_amount_charge' => $orderWalletAmountCharge],
+                        ['smt' => 'order_id = ?', 'vals' => [$orderInfo["order_id"]]]
                 )) {
             $this->error = FatApp::getDb()->getError();
             return false;
@@ -130,13 +126,13 @@ class OrderPayment extends Order
         /* [ */
         $orderProductSrch = new OrderProductSearch();
         $orderProductSrch->addCondition('op_order_id', '=', $this->paymentOrderId);
-        $orderProductSrch->addMultipleFields(array(
+        $orderProductSrch->addMultipleFields([
             'op_teacher_id',
             'op_grpcls_id',
             'op_slanguage_id',
             'op_lpackage_lessons',
             'op_lpackage_is_free_trial'
-        ));
+        ]);
         $rs = $orderProductSrch->getResultSet();
         $orderProductRow = FatApp::getDb()->fetch($rs);
         /* ] */
@@ -145,7 +141,7 @@ class OrderPayment extends Order
         }
         if (!FatApp::getDb()->insertFromArray(
                         static::DB_TBL_ORDER_PAYMENTS,
-                        array(
+                        [
                             'opayment_order_id' => $this->paymentOrderId,
                             'opayment_method' => $paymentMethodName,
                             'opayment_gateway_txn_id' => $txnId,
@@ -153,7 +149,7 @@ class OrderPayment extends Order
                             'opayment_comments' => $comments,
                             'opayment_gateway_response' => $response,
                             'opayment_date' => date('Y-m-d H:i:s')
-                        )
+                        ]
                 )) {
             $this->error = FatApp::getDb()->getError();
             return false;
@@ -183,7 +179,7 @@ class OrderPayment extends Order
                             $slesson_end_time = date('H:i:s', strtotime($grpClsDetails['grpcls_end_datetime']));
                             $slesson_status = ScheduledLesson::STATUS_SCHEDULED;
                         }
-                        $sLessonArr = array(
+                        $sLessonArr = [
                             'slesson_teacher_id' => $orderInfo['op_teacher_id'],
                             'slesson_grpcls_id' => $orderInfo['op_grpcls_id'],
                             'slesson_slanguage_id' => $orderInfo['op_slanguage_id'],
@@ -192,7 +188,7 @@ class OrderPayment extends Order
                             'slesson_start_time' => $slesson_start_time,
                             'slesson_end_time' => $slesson_end_time,
                             'slesson_status' => $slesson_status
-                        );
+                        ];
 
                         if ($slesson_id < 1) {
                             $sLessonObj = new ScheduledLesson();
@@ -203,12 +199,12 @@ class OrderPayment extends Order
                             }
                             $slesson_id = $sLessonObj->getMainTableRecordId();
                         }
-                        $sLessonDetailAr = array(
+                        $sLessonDetailAr = [
                             'sldetail_slesson_id' => $slesson_id,
                             'sldetail_order_id' => $this->paymentOrderId,
                             'sldetail_learner_id' => $orderInfo['order_user_id'],
                             'sldetail_learner_status' => $slesson_status
-                        );
+                        ];
                         $slDetailsObj = new ScheduledLessonDetails();
                         $slDetailsObj->assignValues($sLessonDetailAr);
                         if (!$slDetailsObj->save()) {
@@ -221,7 +217,7 @@ class OrderPayment extends Order
                         if ($orderInfo['op_grpcls_id'] > 0) {
                             $tgrpcls = new TeacherGroupClassesSearch(false);
                             $grpClsRow = $tgrpcls->getClassBasicDetails($orderInfo['op_grpcls_id'], $orderInfo['order_user_id']);
-                            $vars = array(
+                            $vars = [
                                 '{learner_name}' => $grpClsRow['learner_full_name'],
                                 '{teacher_name}' => $grpClsRow['teacher_full_name'],
                                 '{class_name}' => $grpClsRow['grpcls_title'],
@@ -230,7 +226,7 @@ class OrderPayment extends Order
                                 '{class_end_time}' => MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $grpClsRow['grpcls_end_datetime'], true, $grpClsRow['teacherTimeZone']),
                                 '{learner_comment}' => '',
                                 '{status}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
-                            );
+                            ];
                             if (!EmailHandler::sendMailTpl($grpClsRow['teacherEmailId'], 'learner_class_book_email', $defaultSiteLangId, $vars)) {
                                 FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
                             }
@@ -245,8 +241,8 @@ class OrderPayment extends Order
                             // share on student google calendar
                             $token = current(UserSetting::getUserSettings($orderInfo['order_user_id']))['us_google_access_token'];
                             if ($token) {
-                                $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', array($sldetailId));
-                                $google_cal_data = array(
+                                $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', [$sldetailId]);
+                                $google_cal_data = [
                                     'title' => FatApp::getConfig('CONF_WEBSITE_NAME_' . $defaultSiteLangId),
                                     'summary' => sprintf(Label::getLabel("LBL_Group_Class_Scheduled_for_%s"), $grpClsDetails['grpcls_title']),
                                     'description' => sprintf(Label::getLabel("LBL_Click_here_to_join_the_class:_%s"), $view_url),
@@ -254,8 +250,7 @@ class OrderPayment extends Order
                                     'start_time' => date('c', strtotime($slesson_date . ' ' . $slesson_start_time)),
                                     'end_time' => date('c', strtotime($slesson_end_date . ' ' . $slesson_end_time)),
                                     'timezone' => MyDate::getTimeZone(),
-                                );
-                                // CommonHelper::printArray($google_cal_data);die;
+                                ];
                                 $calId = SocialMedia::addEventOnGoogleCalendar($token, $google_cal_data);
                                 if ($calId) {
                                     $sLessonDetailObj = new ScheduledLessonDetails($sldetailId);
@@ -270,8 +265,8 @@ class OrderPayment extends Order
                                 $sLessonObj->loadFromDb();
                                 $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
                                 if (!$oldCalId) {
-                                    $view_url = CommonHelper::generateFullUrl('TeacherScheduledLessons', 'view', array($slesson_id));
-                                    $google_cal_data = array(
+                                    $view_url = CommonHelper::generateFullUrl('TeacherScheduledLessons', 'view', [$slesson_id]);
+                                    $google_cal_data = [
                                         'title' => FatApp::getConfig('CONF_WEBSITE_NAME_' . $defaultSiteLangId),
                                         'summary' => sprintf(Label::getLabel("LBL_Group_Class_Scheduled_for_%s"), $grpClsDetails['grpcls_title']),
                                         'description' => sprintf(Label::getLabel("LBL_Click_here_to_deliver_the_class:_%s"), $view_url),
@@ -279,7 +274,7 @@ class OrderPayment extends Order
                                         'start_time' => date('c', strtotime($slesson_date . ' ' . $slesson_start_time)),
                                         'end_time' => date('c', strtotime($slesson_end_date . ' ' . $slesson_end_time)),
                                         'timezone' => MyDate::getTimeZone(),
-                                    );
+                                    ];
                                     $calId = SocialMedia::addEventOnGoogleCalendar($token, $google_cal_data);
                                     if ($calId) {
                                         $sLessonObj->setFldValue('slesson_teacher_google_calendar_id', $calId);
@@ -299,11 +294,17 @@ class OrderPayment extends Order
                 $rs = $srch->getResultSet();
                 $row = FatApp::getDb()->fetch($rs);
                 if (!empty($row)) {
-                    if (!FatApp::getDb()->insertFromArray(CouponHistory::DB_TBL, array('couponhistory_coupon_id' => $row['coupon_id'], 'couponhistory_order_id' => $orderInfo['order_id'], 'couponhistory_user_id' => $orderInfo['order_user_id'], 'couponhistory_amount' => $orderInfo['order_discount_total'], 'couponhistory_added_on' => date('Y-m-d H:i:s')))) {
+                    if (!FatApp::getDb()->insertFromArray(CouponHistory::DB_TBL, [
+                                'couponhistory_coupon_id' => $row['coupon_id'],
+                                'couponhistory_order_id' => $orderInfo['order_id'],
+                                'couponhistory_user_id' => $orderInfo['order_user_id'],
+                                'couponhistory_amount' => $orderInfo['order_discount_total'],
+                                'couponhistory_added_on' => date('Y-m-d H:i:s')
+                            ])) {
                         $this->error = FatApp::getDb()->getError();
                         return false;
                     }
-                    FatApp::getDb()->deleteRecords(DiscountCoupons::DB_TBL_COUPON_HOLD, array('smt' => 'couponhold_coupon_id = ? and couponhold_user_id = ?', 'vals' => array($row['coupon_id'], $orderInfo['order_user_id'])));
+                    FatApp::getDb()->deleteRecords(DiscountCoupons::DB_TBL_COUPON_HOLD, ['smt' => 'couponhold_coupon_id = ? and couponhold_user_id = ?', 'vals' => [$row['coupon_id'], $orderInfo['order_user_id']]]);
                 }
             }
         }
@@ -314,14 +315,14 @@ class OrderPayment extends Order
         if ($orderInfo['order_type'] == Order::TYPE_WALLET_RECHARGE) {
             $formattedOrderValue = "#" . $orderInfo["order_id"];
             $transObj = new Transaction($orderInfo["order_user_id"]);
-            $txnDataArr = array(
+            $txnDataArr = [
                 'utxn_user_id' => $orderInfo["order_user_id"],
                 'utxn_credit' => $amount,
                 'utxn_status' => Transaction::STATUS_COMPLETED,
                 'utxn_order_id' => $orderInfo["order_id"],
                 'utxn_comments' => sprintf(Label::getLabel('LBL_Loaded_Money_to_Wallet', $defaultSiteLangId), $formattedOrderValue),
                 'utxn_type' => Transaction::TYPE_LOADED_MONEY_TO_WALLET
-            );
+            ];
             if (!$txnId = $transObj->addTransaction($txnDataArr)) {
                 $this->error = $transObj->getError();
                 return false;

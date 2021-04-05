@@ -9,7 +9,7 @@ class Language extends MyAppModel
     public function __construct($langId = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $langId);
-        $this->objMainTableRecord->setSensitiveFields(array());
+        $this->objMainTableRecord->setSensitiveFields([]);
     }
 
     public static function getSearchObject($isActive = true)
@@ -53,7 +53,7 @@ class Language extends MyAppModel
         }
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $srch->addMultipleFields(array(static::tblFld('id'), static::tblFld('code')));
+        $srch->addMultipleFields([static::tblFld('id'), static::tblFld('code')]);
         $row = FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
         if ($withDefaultValue) {
             return array(0 => 'Universal') + $row;
@@ -71,9 +71,9 @@ class Language extends MyAppModel
     {
         $langId = FatUtility::int($langId);
         if ($langId == 0) {
-            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
+            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.'), E_USER_ERROR);
         }
-        $langData = self::getAttributesById($langId, array('language_layout_direction'));
+        $langData = self::getAttributesById($langId, ['language_layout_direction']);
         if (false != $langData) {
             return $langData['language_layout_direction'];
         }

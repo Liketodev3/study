@@ -25,21 +25,21 @@ class Preference extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        return array(
+        return [
             static::TYPE_ACCENTS => Label::getLabel('LBL_Accents', $langId),
             static::TYPE_TEACHES_LEVEL => Label::getLabel('LBL_Teaches_Level', $langId),
             static::TYPE_SUBJECTS => Label::getLabel('LBL_Subjects', $langId),
             static::TYPE_TEST_PREPARATIONS => Label::getLabel('LBL_Test_Preparations', $langId),
             static::TYPE_LESSONS => Label::getLabel('LBL_Lesson_includes', $langId),
             static::TYPE_LEARNER_AGES => Label::getLabel('LBL_Learner_Ages', $langId),
-        );
+        ];
     }
 
     public function deletePreference($preference_id)
     {
         $db = FatApp::getDb();
-        $langDelete = $db->deleteRecords(static::DB_TBL_LANG, array('smt' => 'preferencelang_preference_id = ?', 'vals' => array($preference_id)));
-        if (!$db->deleteRecords(static::DB_TBL, array('smt' => 'preference_id = ?', 'vals' => array($preference_id))) && !$langDelete) {
+        $langDelete = $db->deleteRecords(static::DB_TBL_LANG, ['smt' => 'preferencelang_preference_id = ?', 'vals' => [$preference_id]]);
+        if (!$db->deleteRecords(static::DB_TBL, ['smt' => 'preference_id = ?', 'vals' => [$preference_id]]) && !$langDelete) {
             $this->error = $db->getError();
             return false;
         }
@@ -49,14 +49,14 @@ class Preference extends MyAppModel
     public static function getPreferencesArr($langId)
     {
         $srch = new PreferenceSearch($langId);
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'preference_id',
             'IFNULL(preference_title,preference_identifier) as preference_title',
-            'preference_type'));
+            'preference_type']);
         $srch->addOrder('preference_display_order', 'asc');
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
-        $tempRows = array();
+        $tempRows = [];
         foreach ($rows as $row) {
             $tempRows[$row['preference_type']][] = $row;
         }

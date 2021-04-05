@@ -20,11 +20,11 @@ class TeacherLessonReview extends MyAppModel
         if ($langId == 0) {
             trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
         }
-        $arr = array(
+        $arr = [
             static::STATUS_PENDING => Label::getLabel('LBL_Pending'),
             static::STATUS_APPROVED => Label::getLabel('LBL_Approved'),
             static::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled'),
-        );
+        ];
         return $arr;
     }
 
@@ -36,7 +36,7 @@ class TeacherLessonReview extends MyAppModel
         $srch = new TeacherLessonReviewSearch();
         $srch->joinLearner();
         $srch->joinTeacher();
-        $srch->addMultipleFields(array('count(*) as numOfReviews'));
+        $srch->addMultipleFields(['count(*) as numOfReviews']);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addCondition('tlreview_teacher_user_id', '=', $teachcerId);

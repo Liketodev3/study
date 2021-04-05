@@ -24,12 +24,12 @@ class Label extends MyAppModel
         $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 'lbl');
         $srch->addOrder('lbl.' . static::DB_TBL_PREFIX . 'id', 'DESC');
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'lbl.' . static::DB_TBL_PREFIX . 'id',
             'lbl.' . static::DB_TBL_PREFIX . 'lang_id',
             'lbl.' . static::DB_TBL_PREFIX . 'key',
             'lbl.' . static::DB_TBL_PREFIX . 'caption',
-        ));
+        ]);
         if ($langId > 0) {
             $srch->addCondition('lbl.' . static::DB_TBL_PREFIX . 'lang_id', '=', $langId);
         }
@@ -85,12 +85,12 @@ class Label extends MyAppModel
             $arr = explode(' ', ucwords(str_replace('_', ' ', strtolower($key_original))));
             array_shift($arr);
             $str = implode(' ', $arr);
-            $assignValues = array(
+            $assignValues = [
                 static::DB_TBL_PREFIX . 'key' => $lblKey,
                 static::DB_TBL_PREFIX . 'caption' => $str,
                 static::DB_TBL_PREFIX . 'lang_id' => $langId
-            );
-            FatApp::getDB()->insertFromArray(static::DB_TBL, $assignValues, false, array(), $assignValues);
+            ];
+            FatApp::getDB()->insertFromArray(static::DB_TBL, $assignValues, false, [], $assignValues);
         }
         if ($cacheAvailable) {
             apcu_store($cacheKey, $str);
@@ -101,15 +101,15 @@ class Label extends MyAppModel
         return $str;
     }
 
-    public function addUpdateData($data = array())
+    public function addUpdateData($data = [])
     {
-        $assignValues = array(
+        $assignValues = [
             static::DB_TBL_PREFIX . 'key' => $data['label_key'],
             static::DB_TBL_PREFIX . 'caption' => $data['label_caption'],
             static::DB_TBL_PREFIX . 'lang_id' => $data['label_lang_id']
-        );
+        ];
         $db = FatApp::getDB();
-        if (!$db->insertFromArray(static::DB_TBL, $assignValues, false, array(), $assignValues)) {
+        if (!$db->insertFromArray(static::DB_TBL, $assignValues, false, [], $assignValues)) {
             $this->error = $db->getError();
             return false;
         }

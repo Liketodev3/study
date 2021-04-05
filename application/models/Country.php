@@ -34,7 +34,7 @@ class Country extends MyAppModel
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addOrder('country_name', 'ASC');
-        $srch->addMultipleFields(array('country_id', 'if(country_name is null,country_code,country_name)as country_name'));
+        $srch->addMultipleFields(['country_id', 'if(country_name is null,country_code,country_name)as country_name']);
         $row = FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
         if (!is_array($row)) {
             return false;
@@ -70,7 +70,7 @@ class Country extends MyAppModel
     public static function getCountryById($countryId)
     {
         $srch = new SearchBase(static::DB_TBL, 'c');
-        $srch->addMultipleFields(array('country_id', 'country_name'));
+        $srch->addMultipleFields(['country_id', 'country_name']);
         $srch->joinTable(Country::DB_TBL_LANG, 'inner join', 'country_id = countrylang_country_id');
         $srch->addCondition('country_id', '=', $countryId);
         $rs = $srch->getResultSet();

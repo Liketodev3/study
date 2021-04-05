@@ -23,7 +23,7 @@ class IssueReportOptions extends MyAppModel
     public static function getOptionsArray(int $langId, $userType = NULL): array
     {
         $srch = new IssueReportOptionsSearch($langId);
-        $srch->addMultipleFields(array('tissueopt_id', 'IFNULL(tissueoptlang_title, tissueopt_identifier)',));
+        $srch->addMultipleFields(['tissueopt_id', 'IFNULL(tissueoptlang_title, tissueopt_identifier)',]);
         if (!is_null($userType)) {
             $srch->findByCriteria(['tissueopt_user_type' => [$userType, 0]]);
         }
@@ -33,8 +33,8 @@ class IssueReportOptions extends MyAppModel
     public function deleteOption($optId)
     {
         $db = FatApp::getDb();
-        $langDelete = $db->deleteRecords(static::DB_TBL_LANG, array('smt' => 'tissueoptlang_tissueopt_id = ?', 'vals' => array($optId)));
-        if (!$db->deleteRecords(static::DB_TBL, array('smt' => 'tissueopt_id = ?', 'vals' => array($optId))) && !$langDelete) {
+        $langDelete = $db->deleteRecords(static::DB_TBL_LANG, ['smt' => 'tissueoptlang_tissueopt_id = ?', 'vals' => [$optId]]);
+        if (!$db->deleteRecords(static::DB_TBL, ['smt' => 'tissueopt_id = ?', 'vals' => [$optId]]) && !$langDelete) {
             $this->error = $db->getError();
             return false;
         }

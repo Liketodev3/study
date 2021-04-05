@@ -25,15 +25,14 @@ class UrlRewrite extends MyAppModel
         $urlSrch = static::getSearchObject();
         $urlSrch->doNotCalculateRecords();
         $urlSrch->setPageSize(1);
-        $urlSrch->addMultipleFields(array('urlrewrite_id', 'urlrewrite_original', 'urlrewrite_custom'));
+        $urlSrch->addMultipleFields(['urlrewrite_id', 'urlrewrite_original', 'urlrewrite_custom']);
         $urlSrch->addCondition('urlrewrite_custom', '=', $customUrl);
         if ($excludeThisOriginalUrl) {
             $urlSrch->addCondition('urlrewrite_original', '!=', $excludeThisOriginalUrl);
         }
-        $rs = $urlSrch->getResultSet();
-        $urlRow = FatApp::getDb()->fetch($rs);
+        $urlRow = FatApp::getDb()->fetch($urlSrch->getResultSet());
         if ($urlRow == false) {
-            return array();
+            return [];
         }
         return $urlRow;
     }
@@ -43,7 +42,7 @@ class UrlRewrite extends MyAppModel
         $urlSrch = static::getSearchObject();
         $urlSrch->doNotCalculateRecords();
         $urlSrch->setPageSize(1);
-        $urlSrch->addMultipleFields(array('urlrewrite_id', 'urlrewrite_original', 'urlrewrite_custom'));
+        $urlSrch->addMultipleFields(['urlrewrite_id', 'urlrewrite_original', 'urlrewrite_custom']);
         $urlSrch->addCondition('urlrewrite_original', '=', $originalUrl);
         if ($excludeThisCustomUrl) {
             $urlSrch->addCondition('urlrewrite_custom', '!=', $excludeThisCustomUrl);

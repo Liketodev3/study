@@ -13,9 +13,7 @@ class Commission extends MyAppModel
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
         $this->db = FatApp::getDb();
-        $this->objMainTableRecord->setSensitiveFields(array(
-            'commsetting_is_mandatory'
-        ));
+        $this->objMainTableRecord->setSensitiveFields(['commsetting_is_mandatory']);
     }
 
     public static function getSearchObject()
@@ -35,16 +33,16 @@ class Commission extends MyAppModel
     public function addUpdateData($data)
     {
         unset($data['commsetting_id']);
-        $assignValues = array(
+        $assignValues = [
             'commsetting_user_id' => $data['commsetting_user_id'],
             'commsetting_fees' => $data['commsetting_fees'],
             'commsetting_is_grpcls' => $data['commsetting_is_grpcls'],
             'commsetting_deleted' => 0,
-        );
+        ];
         if ($this->mainTableRecordId > 0) {
             $assignValues['commsetting_id'] = $this->mainTableRecordId;
         }
-        if ($this->db->insertFromArray(static::DB_TBL, $assignValues, false, array(), $assignValues)) {
+        if ($this->db->insertFromArray(static::DB_TBL, $assignValues, false, [], $assignValues)) {
             $this->mainTableRecordId = $this->mainTableRecordId ? $this->mainTableRecordId : $this->db->getInsertId();
             return true;
         }
@@ -55,14 +53,14 @@ class Commission extends MyAppModel
     public function addCommissionHistory($commissionId)
     {
         $data = Commission::getAttributesById($commissionId);
-        $assignValues = array(
+        $assignValues = [
             'csh_commsetting_id' => $data['commsetting_id'],
             'csh_commsetting_user_id' => $data['commsetting_user_id'],
             'csh_commsetting_fees' => $data['commsetting_fees'],
             'csh_commsetting_is_mandatory' => $data['commsetting_is_mandatory'],
             'csh_commsetting_deleted' => $data['commsetting_deleted'],
             'csh_added_on' => date('Y-m-d H:i:s'),
-        );
+        ];
         if ($this->db->insertFromArray(static::DB_TBL_HISTORY, $assignValues)) {
             return true;
         }
@@ -77,12 +75,7 @@ class Commission extends MyAppModel
         $srch->joinTable('tbl_users', 'LEFT OUTER JOIN', 'tcs.commsetting_user_id = tu.user_id', 'tu');
         $srch->joinTable('tbl_user_credentials', 'LEFT OUTER JOIN', 'tuc.credential_user_id = tu.user_id', 'tuc');
         $srch->addCondition('tcs.commsetting_deleted', '=', FatUtility::int($trashed));
-        $srch->addMultipleFields(
-                array(
-                    'tcs.*',
-                    'CONCAT(tu.user_first_name," ",tu.user_last_name) as vendor'
-                )
-        );
+        $srch->addMultipleFields(['tcs.*', 'CONCAT(tu.user_first_name," ",tu.user_last_name) as vendor']);
         return $srch;
     }
 
@@ -93,12 +86,7 @@ class Commission extends MyAppModel
         $srch->joinTable('tbl_users', 'LEFT OUTER JOIN', 'tcsh.csh_commsetting_user_id = tu.user_id', 'tu');
         $srch->joinTable('tbl_user_credentials', 'LEFT OUTER JOIN', 'tuc.credential_user_id = tu.user_id', 'tuc');
         $srch->addCondition('tcsh.csh_commsetting_deleted', '=', FatUtility::int($trashed));
-        $srch->addMultipleFields(
-                array(
-                    'tcsh.*',
-                    'CONCAT(tu.user_first_name," ",tu.user_last_name) as vendor'
-                )
-        );
+        $srch->addMultipleFields(['tcsh.*', 'CONCAT(tu.user_first_name," ",tu.user_last_name) as vendor']);
         return $srch;
     }
 
@@ -122,7 +110,7 @@ class Commission extends MyAppModel
         if ($grpclsId > 0) {
             $srch->addCondition('commsetting_is_grpcls', '=', applicationConstants::YES);
         }
-        $srch->addMultipleFields(array('commsetting_id', 'commsetting_fees'));
+        $srch->addMultipleFields(['commsetting_id', 'commsetting_fees']);
         $rs = $srch->getResultSet();
         if (!$row = FatApp::getDb()->fetch($rs)) {
             $srch = self::getSearchObject();
@@ -131,7 +119,7 @@ class Commission extends MyAppModel
             if ($grpclsId > 0) {
                 $srch->addCondition('commsetting_is_grpcls', '=', applicationConstants::YES);
             }
-            $srch->addMultipleFields(array('commsetting_id', 'commsetting_fees'));
+            $srch->addMultipleFields(['commsetting_id', 'commsetting_fees']);
             $rs = $srch->getResultSet();
             if (!$row = FatApp::getDb()->fetch($rs)) {
                 return false;

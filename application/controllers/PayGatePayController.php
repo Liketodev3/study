@@ -67,23 +67,23 @@ class PayGatePayController extends PaymentController
         $orderInfo = $this->orderInfo;
         $orderId = $orderInfo['order_id'];
         $dateTime = new DateTime();
-        $requestData = array(
+        $requestData = [
             'PAYGATE_ID' => $settings['paygateId'],
             'REFERENCE' => $orderId,
             'AMOUNT' => $this->formatPayableAmount($orderInfo['paymentAmount']),
             'CURRENCY' => $orderInfo["order_currency_code"], // system currency code
-            'RETURN_URL' => CommonHelper::generateFullUrl('PayGatePay', 'returnResult', array($orderId)),
+            'RETURN_URL' => CommonHelper::generateFullUrl('PayGatePay', 'returnResult', [$orderId]),
             'TRANSACTION_DATE' => $dateTime->format('Y-m-d H:i:s'),
             'LOCALE' => strtolower($orderInfo['order_language_code']),
             'COUNTRY' => 'ZAF',
             'EMAIL' => $orderInfo['user_email'],
             'NOTIFY_URL' => CommonHelper::generateFullUrl('PayGatePay', 'callback')
-        );
+        ];
         $checksum = $this->generateChecksum($requestData, $settings['encryptionKey']);
         $requestData['CHECKSUM'] = $checksum;
         $initiateRequestData = $this->doCurlPost($requestData, $this->initiateUrl);
         if ($this->isError()) {
-            return array();
+            return [];
         }
         return $initiateRequestData;
     }
@@ -109,12 +109,12 @@ class PayGatePayController extends PaymentController
         $payRequestId = FatApp::getPostedData('PAY_REQUEST_ID', FatUtility::VAR_STRING, '');
         $transactionStatus = FatApp::getPostedData('TRANSACTION_STATUS', FatUtility::VAR_INT, -1);
         $checksum = FatApp::getPostedData('CHECKSUM', FatUtility::VAR_STRING, '');
-        $data = array(
+        $data = [
             'PAYGATE_ID' => $this->settings['paygateId'],
             'PAY_REQUEST_ID' => $payRequestId,
             'TRANSACTION_STATUS' => $transactionStatus,
             'REFERENCE' => $orderId
-        );
+        ];
         $this->validateChecksum($checksum, $data, $this->settings['encryptionKey']);
         if ($this->isError()) {
             Message::addErrorMessage($this->getError());
@@ -125,7 +125,7 @@ class PayGatePayController extends PaymentController
             Message::addErrorMessage(Label::getLabel('MSG_Your_Paymet_Status_' . $statusArr[$transactionStatus]));
             FatApp::redirectUser(CommonHelper::getPaymentCancelPageUrl());
         }
-        FatApp::redirectUser(CommonHelper::generateFullUrl('custom', 'paymentSuccess', array($orderId)));
+        FatApp::redirectUser(CommonHelper::generateFullUrl('custom', 'paymentSuccess', [$orderId]));
         exit;
     }
 
@@ -147,11 +147,11 @@ class PayGatePayController extends PaymentController
             die(Label::getLabel('MSG_INVALID_REQUEST', $this->siteLangId));
         }
         $paymentAmount = $orderPayment->getOrderPaymentGatewayAmount();
-        $queryData = array(
+        $queryData = [
             'PAYGATE_ID' => $settings['paygateId'],
             'PAY_REQUEST_ID' => $payRequestId,
             'REFERENCE' => $orderId
-        );
+        ];
         $checksum = $this->generateChecksum($queryData, $settings['encryptionKey']);
         $queryData['CHECKSUM'] = $checksum;
         $queryResponseData = $this->doCurlPost($queryData, $this->queryUrl);
@@ -194,14 +194,14 @@ class PayGatePayController extends PaymentController
 
     private function getTransactionStatus(): array
     {
-        return array(
+        return [
             self::STATUS_APPROVED => Label::getLabel('LBL_Approved'), // in used
             self::STATUS_DECLINED => Label::getLabel('LBL_Declined'), // in used
             self::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled'),
             self::STATUS_USER_CANCELLED => Label::getLabel('LBL_Cancelled'), // USER Cancelled // in used
             self::STATUS_RECEIVED_BY_PAYGATE => Label::getLabel('LBL_Received_By_PayGate'),
             self::STATUS_SETTLEMENT_VOIDED => Label::getLabel('LBL_Settlement_Voided')
-        );
+        ];
     }
 
     private function doCurlPost(array $postData, string $url): array
@@ -218,14 +218,14 @@ class PayGatePayController extends PaymentController
         if (curl_errno($ch)) {
             $this->isError = true;
             $this->error = 'Error:' . curl_error($ch);
-            return array();
+            return [];
         }
         curl_close($ch);
         parse_str($curlResult, $result);
         if (array_key_exists('ERROR', $result)) {
             $this->isError = true;
             $this->error = $result['ERROR'];
-            return array();
+            return [];
         }
         return $result;
     }
@@ -266,14 +266,14 @@ class PayGatePayController extends PaymentController
         if (empty($getSettings['paygateId']) || empty($getSettings['encryptionKey'])) {
             $this->isError = true;
             $this->error = Label::getLabel('MSG_Encryption_Key_And_Paygate_Id_is_required_for_payment');
-            return array();
+            return [];
         }
         return $getSettings;
     }
 
     private function getProcessForm(string $requestId, string $checksum): object
     {
-        $form = new Form('payGateProcessForm', array('id' => 'payGateProcessForm', 'action' => $this->processUrl));
+        $form = new Form('payGateProcessForm', ['id' => 'payGateProcessForm', 'action' => $this->processUrl]);
         $form->addHiddenField('', 'PAY_REQUEST_ID', $requestId);
         $form->addHiddenField('', 'CHECKSUM', $checksum);
         return $form;

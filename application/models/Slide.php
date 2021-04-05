@@ -20,18 +20,17 @@ class Slide extends MyAppModel
         if ($langId < 1) {
             $langId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG');
         }
-        return array(
+        return [
             static::TYPE_SLIDE => Label::getLabel('LBL_Slide', $langId),
             static::TYPE_PPC => Label::getLabel('LBL_Promotion', $langId),
-        );
+        ];
     }
 
     public static function getSearchObject($langId = 0, $isActive = true)
     {
         $srch = new SearchBase(static::DB_TBL, 'sl');
         if ($langId > 0) {
-            $srch->joinTable(static::DB_LANG_TBL, 'LEFT OUTER JOIN',
-                    'slidelang_slide_id = slide_id AND slidelang_lang_id = ' . $langId);
+            $srch->joinTable(static::DB_LANG_TBL, 'LEFT OUTER JOIN', 'slidelang_slide_id = slide_id AND slidelang_lang_id = ' . $langId);
         }
         if ($isActive) {
             $srch->addCondition('slide_active', '=', applicationConstants::ACTIVE);

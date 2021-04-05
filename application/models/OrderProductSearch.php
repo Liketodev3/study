@@ -63,21 +63,9 @@ class OrderProductSearch extends SearchBase
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $srch->addGroupBy('temp_op.op_order_id');
-        $srch->addMultipleFields(array('temp_op.op_order_id', "count(temp_op.op_order_id) as totCombinedOrders"));
+        $srch->addMultipleFields(['temp_op.op_order_id', "count(temp_op.op_order_id) as totCombinedOrders"]);
         $qryCombinedOrders = $srch->getQuery();
         $this->joinTable('(' . $qryCombinedOrders . ')', 'LEFT OUTER JOIN', 'op.op_order_id = co.op_order_id', 'co');
-    }
-
-    public function addOrderProductCharges()
-    {
-        $srch = new SearchBase(OrderProduct::DB_TBL_CHARGES, 'opc');
-        $srch->doNotCalculateRecords();
-        $srch->doNotLimitRecords();
-        $srch->addMultipleFields(array('opcharge_op_id', 'sum(opcharge_amount) as op_other_charges'));
-        $srch->addGroupBy('opc.opcharge_op_id');
-        $srch->addCondition('opc.opcharge_order_type', '=', ORDERS::ORDER_PRODUCT);
-        $qryOtherCharges = $srch->getQuery();
-        $this->joinTable('(' . $qryOtherCharges . ')', 'LEFT OUTER JOIN', 'op.op_id = opcc.opcharge_op_id', 'opcc');
     }
 
 }

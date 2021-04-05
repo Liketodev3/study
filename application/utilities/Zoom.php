@@ -16,15 +16,12 @@ class Zoom
         $this->apiSecret = FatApp::getConfig('CONF_ZOOM_API_SECRET', FatUtility::VAR_STRING, '');
         if (empty($this->token)) {
             throw new Exception(Label::getLabel('LBL_ZOOM_API_TOKEN_NOT_DEFINED'));
-            return array();
         }
         if (empty($this->apiKey)) {
             throw new Exception(Label::getLabel('LBL_ZOOM_API_KEY_NOT_DEFINED'));
-            return array();
         }
         if (empty($this->apiSecret)) {
             throw new Exception(Label::getLabel('LBL_ZOOM_API_SECRET_NOT_DEFINED'));
-            return array();
         }
     }
 
@@ -67,15 +64,15 @@ class Zoom
             return $id;
         }
         $url = self::BASE_URL . "/users";
-        $params = json_encode(array(
+        $params = json_encode([
             "action" => "custCreate",
-            "user_info" => array(
+            "user_info" => [
                 "first_name" => $teacherData['first_name'],
                 "last_name" => $teacherData['last_name'],
                 "email" => $teacherData['email'],
                 "type" => 1, // const 
-            )
-        ));
+            ]
+        ]);
         $curl = new Curl();
         $curl_method = 'POST';
         $curl->http_header('Content-Type', 'application/json');
@@ -95,14 +92,14 @@ class Zoom
     {
         // create User
         $url = self::BASE_URL . "/users/$meeting_data[zoomTeacherId]/meetings";
-        $params = json_encode(array(
+        $params = json_encode([
             "topic" => $meeting_data['title'],
             "type" => 2, //always a scheduled meeting for now
             "start_time" => date('c', strtotime($meeting_data['start_time'])),
             "duration" => $meeting_data['duration'],
             "timezone" => MyDate::getTimeZone(),
             "agenda" => $meeting_data['description']
-        ));
+        ]);
         $curl = new Curl();
         $curl_method = 'POST';
         $curl->http_header('Content-Type', 'application/json');
@@ -143,13 +140,9 @@ class Zoom
         $meetingData = $this->getMeetingDetails($meetingId);
         if (empty($meetingData)) {
             throw new Exception(Label::getLabel('MSG_Meeting_does_not_exists'));
-            return false;
         }
-        // CommonHelper::printArray($meetingData);die;
         $url = self::BASE_URL . "/meetings/$meetingId/status";
-        $params = json_encode(array(
-            "action" => "end"
-        ));
+        $params = json_encode(["action" => "end"]);
         $curl = new Curl();
         $curl_method = 'PUT';
         $curl->http_header('Content-Type', 'application/json');

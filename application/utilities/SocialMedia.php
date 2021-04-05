@@ -10,19 +10,19 @@ class SocialMedia
         $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
         $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
         $client->refreshToken($token);
-        $event_data = array(
+        $event_data = [
             'title' => $data['title'],
             'summary' => $data['summary'],
             'description' => $data['description'],
-            'start' => array('dateTime' => $data['start_time'], 'timeZone' => $data['timezone'],),
-            'end' => array('dateTime' => $data['end_time'], 'timeZone' => $data['timezone'],),
+            'start' => ['dateTime' => $data['start_time'], 'timeZone' => $data['timezone']],
+            'end' => ['dateTime' => $data['end_time'], 'timeZone' => $data['timezone']],
             'sendUpdates' => 'all',
-            'reminders' => array(
+            'reminders' => [
                 'useDefault' => FALSE,
-                'overrides' => array(array('method' => 'email', 'minutes' => 10),),
-            ),
-            'source' => array('title' => $data['title'], 'url' => $data['url'],)
-        );
+                'overrides' => [['method' => 'email', 'minutes' => 10]],
+            ],
+            'source' => ['title' => $data['title'], 'url' => $data['url']]
+        ];
         $service = new Google_Service_Calendar($client);
         $event = new Google_Service_Calendar_Event($event_data);
         $calendarId = 'primary';
@@ -37,7 +37,7 @@ class SocialMedia
         $client->setScopes(['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
         $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
         $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
-        $currentPageUri = CommonHelper::generateFullUrl('Account', 'GoogleCalendarAuthorize', array(), '', false);
+        $currentPageUri = CommonHelper::generateFullUrl('Account', 'GoogleCalendarAuthorize', [], '', false);
         $client->setRedirectUri($currentPageUri);
         $client->refreshToken($token);
         return $client->isAccessTokenExpired();

@@ -1,6 +1,8 @@
 <?php
+
 class MessagesController extends LoggedUserController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -26,15 +28,11 @@ class MessagesController extends LoggedUserController
         if (isset(FatApp::getPostedData()['is_unread']) and (FatApp::getPostedData()['is_unread'] != '' || FatApp::getPostedData()['is_unread'] == 1)) {
             $srch->addHaving('message_is_unread', '=', FatApp::getPostedData()['is_unread']);
         }
-
         if ($post['keyword'] != '') {
             $cnd = $srch->addCondition('tfr.user_first_name', 'like', "%" . $post['keyword']);
             $cnd->attachCondition('tfr.user_last_name', 'like', "%" . $post['keyword'] . "%", 'OR');
             $cnd->attachCondition('tfr_c.credential_username', 'like', "%" . $post['keyword'] . "%", 'OR');
         }
-
-        //$srch->setPageNumber($page);
-        // $srch->setPageSize($pagesize);
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs, 'thread_id');
         $recordCount = $srch->recordCount();
@@ -54,56 +52,47 @@ class MessagesController extends LoggedUserController
     {
         $frm = new Form('frmMessageSrch');
         $frm->addTextBox(Label::getLabel("LBL_From", $langId), 'keyword');
-        $frm->addSelectBox(Label::getLabel("LBL_Status", $langId), 'is_unread', array(0 => Label::getLabel("LBL_Read", $langId), 1 => Label::getLabel("LBL_Unread", $langId)),array(),array(), Label::getLabel('LBL_Select'));
+        $frm->addSelectBox(Label::getLabel("LBL_Status", $langId), 'is_unread', [0 => Label::getLabel("LBL_Read", $langId), 1 => Label::getLabel("LBL_Unread", $langId)], [], [], Label::getLabel('LBL_Select'));
         $frm->addHiddenField('', 'page');
         $fldSubmit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel("LBL_Submit", $langId));
-        $fldCancel = $frm->addResetButton("", "btn_clear", Label::getLabel("LBL_Clear", $langId), array('onclick' =>  'clearSearch();', 'class' => 'btn--clear'));
+        $fldCancel = $frm->addResetButton("", "btn_clear", Label::getLabel("LBL_Clear", $langId), ['onclick' => 'clearSearch();', 'class' => 'btn--clear']);
         $fldSubmit->attachField($fldCancel);
         return $frm;
     }
 
     public function initiate($userId)
     {
-        //$userId = FatUtility::int( CommonHelper::decryptId($userId) );
         if ($userId < 1 || $userId == UserAuthentication::getLoggedUserId()) {
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             $json['redirectUrl'] = CommonHelper::redirectUserReferer(true);
             FatUtility::dieJsonError($json);
         }
-        $userArr = array(
-            $userId,
-            UserAuthentication::getLoggedUserId()
-        );
+        $userArr = [$userId, UserAuthentication::getLoggedUserId()];
         $threadobj = new Thread();
         $threadId = $threadobj->getThreadId($userArr);
         $srch = new MessageSearch();
         $srch->joinThreadMessage();
         $srch->joinMessagePostedFromUser();
         $srch->joinMessagePostedToUser();
-        //$srch->joinThreadStartedByUser();
-        $srch->addMultipleFields(array('tth.*', 'ttm.message_id', 'ttm.message_text', 'ttm.message_date', 'ttm.message_is_unread'));
+        $srch->addMultipleFields(['tth.*', 'ttm.message_id', 'ttm.message_text', 'ttm.message_date', 'ttm.message_is_unread']);
         $srch->addCondition('ttm.message_deleted', '=', 0);
         $srch->addCondition('tth.thread_id', '=', $threadId);
         $cnd = $srch->addCondition('ttm.message_from', '=', $userId);
         $cnd->attachCondition('ttm.message_to', '=', $userId, 'OR');
         $srch->addOrder('message_id', 'DESC');
-        $rs = $srch->getResultSet();
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetchAll($rs, 'message_id');
-            if ($srch->recordCount() > 0) {
-                $json['redirectUrl'] = CommonHelper::generateUrl('Messages');
-                $json['threadId'] = $threadId;
-                FatUtility::dieJsonSuccess($json);
-            }
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet(), 'message_id');
+        if ($srch->recordCount() > 0) {
+            $json['redirectUrl'] = CommonHelper::generateUrl('Messages');
+            $json['threadId'] = $threadId;
+            FatUtility::dieJsonSuccess($json);
         }
         $frm = $this->sendMessageForm($this->siteLangId);
-        $frm->fill(array('message_thread_id' => $threadId));
+        $frm->fill(['message_thread_id' => $threadId]);
         $this->set('frm', $frm);
         $json['html'] = $this->_template->render(false, false, 'messages/generate-thread-pop-up.php', true, false);
         FatUtility::dieJsonSuccess($json);
         if ($threadId) {
-            FatApp::redirectUser(CommonHelper::generateUrl('Messages', 'thread', array($threadId)));
+            FatApp::redirectUser(CommonHelper::generateUrl('Messages', 'thread', [$threadId]));
         }
         Message::addErrorMessage($threadobj->getError());
         CommonHelper::redirectUserReferer();
@@ -118,31 +107,22 @@ class MessagesController extends LoggedUserController
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_ACCESS', $this->siteLangId));
             CommonHelper::redirectUserReferer();
         }
-        /* $threadData = Thread::getAttributesById($threadId);
-          if($threadData == false){
-          Message::addErrorMessage(Label::getLabel('MSG_INVALID_ACCESS',$this->siteLangId));
-          commonHelper::redirectUserReferer();
-          } */
-
-        //$threadTypeArr = Thread::getThreadTypeArr($this->siteLangId);
         $srch = new MessageSearch();
         $srch->joinThreadMessage();
         $srch->joinMessagePostedFromUser();
         $srch->joinMessagePostedToUser();
-        $srch->addMultipleFields(array('tth.*'));
+        $srch->addMultipleFields(['tth.*']);
         $srch->addCondition('tth.thread_id', '=', $threadId);
-        //$srch->addOrder('message_id','DESC');
         $rs = $srch->getResultSet();
         $threadDetails = FatApp::getDb()->fetch($rs);
         if ($threadDetails == false) {
             Message::addErrorMessage(Label::getLabel('MSG_INVALID_ACCESS', $this->siteLangId));
             commonHelper::redirectUserReferer();
         }
-
         $frmSrch = $this->getMsgSearchForm($this->siteLangId);
-        $frmSrch->fill(array('thread_id' => $threadId));
+        $frmSrch->fill(['thread_id' => $threadId]);
         $frm = $this->sendMessageForm($this->siteLangId);
-        $frm->fill(array('message_thread_id' => $threadId));
+        $frm->fill(['message_thread_id' => $threadId]);
         $threadObj = new Thread($threadId);
         if (!$threadObj->markUserMessageRead($threadId, $userId)) {
             Message::addErrorMessage($threadObj->getError());
@@ -183,16 +163,15 @@ class MessagesController extends LoggedUserController
         if (1 > $threadId || !in_array($userId, $threadUsers)) {
             FatUtility::dieWithError(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
         }
-        $otherUserId = ($threadUsers[0]==$userId) ? $threadUsers[1] : $threadUsers[0];
-        $otherUserDetail = User::getAttributesById($otherUserId, array('user_id', 'user_first_name', 'user_last_name', 'user_is_teacher','user_url_name'));
+        $otherUserId = ($threadUsers[0] == $userId) ? $threadUsers[1] : $threadUsers[0];
+        $otherUserDetail = User::getAttributesById($otherUserId, ['user_id', 'user_first_name', 'user_last_name', 'user_is_teacher', 'user_url_name']);
         $page = (empty($post['page']) || $post['page'] <= 0) ? 1 : FatUtility::int($post['page']);
         $pagesize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch = new MessageSearch();
         $srch->joinThreadMessage();
         $srch->joinMessagePostedFromUser();
         $srch->joinMessagePostedToUser();
-        //$srch->joinThreadStartedByUser();
-        $srch->addMultipleFields(array('tth.*', 'ttm.message_id', 'ttm.message_text', 'ttm.message_date', 'ttm.message_is_unread'));
+        $srch->addMultipleFields(['tth.*', 'ttm.message_id', 'ttm.message_text', 'ttm.message_date', 'ttm.message_is_unread']);
         $srch->addCondition('ttm.message_deleted', '=', 0);
         $srch->addCondition('tth.thread_id', '=', $threadId);
         $cnd = $srch->addCondition('ttm.message_from', '=', $userId);
@@ -200,11 +179,7 @@ class MessagesController extends LoggedUserController
         $srch->addOrder('message_id', 'DESC');
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
-        $rs = $srch->getResultSet();
-        $records = array();
-        if ($rs) {
-            $records = FatApp::getDb()->fetchAll($rs, 'message_id');
-        }
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet(), 'message_id');
         ksort($records);
         $pageCount = $srch->pages();
         $this->set('arrListing', $records);
@@ -216,7 +191,7 @@ class MessagesController extends LoggedUserController
         $this->set('userId', $userId);
         $this->set('otherUserDetail', $otherUserDetail);
         $frm = $this->sendMessageForm($this->siteLangId);
-        $frm->fill(array('message_thread_id' => $threadId));
+        $frm->fill(['message_thread_id' => $threadId]);
         $this->set('frm', $frm);
         $startRecord = ($page - 1) * $pagesize + 1;
         $endRecord = $pagesize;
@@ -251,55 +226,29 @@ class MessagesController extends LoggedUserController
             FatUtility::dieWithError(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
         }
         $srch = new MessageSearch();
-        // $srch->joinMessagePostedFromUser();
-        //$srch->joinMessagePostedToUser();
-        $srch->addMultipleFields(array('tth.*'));
+        $srch->addMultipleFields(['tth.*']);
         $srch->addCondition('tth.thread_id', '=', $threadId);
         $rs = $srch->getResultSet();
-        $threadDetails = array();
+        $threadDetails = [];
         if ($rs) {
             $threadDetails = FatApp::getDb()->fetch($rs);
         }
         if (empty($threadDetails)) {
-            //Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
             FatUtility::dieWithError(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
         }
         $messageSendTo = ($threadUsers[0] == $userId) ? $threadUsers[1] : $threadUsers[0];
-        $data = array(
+        $data = [
             'message_thread_id' => $threadId,
             'message_from' => $userId,
             'message_to' => $messageSendTo,
             'message_text' => $post['message_text'],
             'message_date' => date('Y-m-d H:i:s'),
             'message_is_unread' => 1
-        );
-
+        ];
         $tObj = new Thread();
         if (!$insertId = $tObj->addThreadMessages($data)) {
             FatUtility::dieWithError(Label::getLabel($tObj->getError(), $this->siteLangId));
         }
-        /****/
-        /* $toUserDate = User::getAttributesById($messageSendTo, array('user_first_name', 'user_last_name'));
-        $fromUserData = User::getAttributesById($userId, array('user_first_name', 'user_last_name'));
-        $db = FatApp::getDb();
-        $userSrch = User::getSearchObject(true);
-        $userSrch->addMultipleFields(array('credential_email'));
-        $userSrch->addCondition('credential_user_id', '=', $messageSendTo);
-        $userRs = $userSrch->getResultSet();
-        $_userData = $db->fetch($userRs);
-        $toUserEmail = $_userData['credential_email'];
-        $tpl = 'new_message_arrived';
-        $vars = array(
-            '{from_user_name}' => $fromUserData['user_first_name']." ".$fromUserData['user_last_name'],
-            '{to_user_name}' => $toUserDate['user_first_name']." ".$toUserDate['user_last_name'],
-            '{message}' => $post['message_text'],
-            '{action}' => Label::getLabel('MSG_New_Message_Arrived', $this->siteLangId),
-        );
-
-        if (!EmailHandler::sendMailTpl($toUserEmail, $tpl, $this->siteLangId, $vars)) {
-            Message::addErrorMessage(Label::getLabel('LBL_Mail_not_sent', $this->siteLangId));
-        } */
-        /****/
         $msg = Label::getLabel('MSG_Message_Submitted_Successfully!', $this->siteLangId);
         $this->set('threadId', $threadId);
         $this->set('messageId', $insertId);
@@ -308,16 +257,16 @@ class MessagesController extends LoggedUserController
         $json['messageId'] = $insertId;
         $json['msg'] = $msg;
         FatUtility::dieJsonSuccess($json);
-        //$this->_template->render(false, false, 'json-success.php');
     }
 
     public function getUnreadCount()
     {
         if (CommonHelper::getUnreadMsgCount()) {
-            $json['html'] = "<span class='count'>".CommonHelper::getUnreadMsgCount()."</span>";
+            $json['html'] = "<span class='count'>" . CommonHelper::getUnreadMsgCount() . "</span>";
         } else {
-            $json['html']='';
+            $json['html'] = '';
         }
         FatUtility::dieJsonSuccess($json);
     }
+
 }

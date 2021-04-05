@@ -16,7 +16,7 @@ class TeachingLanguageSearch extends SearchBase
     {
         $this->addCondition('tlanguage_active', '=', applicationConstants::ACTIVE);
         $this->doNotCalculateRecords();
-        $this->addMultipleFields(array('tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'));
+        $this->addMultipleFields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name']);
     }
 
     public function joinActiveTeachers()

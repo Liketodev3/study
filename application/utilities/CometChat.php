@@ -14,7 +14,6 @@ class CometChat
         $this->apiKey = FatApp::getConfig('CONF_COMET_CHAT_API_KEY', FatUtility::VAR_STRING, '');
         if (empty($this->apiKey)) {
             throw new Exception(Label::getLabel('LBL_COMETCHAT_API_KEY_NOT_DEFINED'));
-            return array();
         }
     }
 

@@ -33,8 +33,7 @@ class Testimonial extends MyAppModel
         $srch->addCondition('testimonial_deleted', '=', applicationConstants::NO);
         $srch->addCondition('testimonial_id', '=', $testimonialId);
         $srch->addFld('testimonial_id');
-        $rs = $srch->getResultSet();
-        $row = FatApp::getDb()->fetch($rs);
+        $row = FatApp::getDb()->fetch($srch->getResultSet());
         if (!empty($row) && $row['testimonial_id'] == $testimonialId) {
             return true;
         }

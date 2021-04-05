@@ -7,15 +7,8 @@ class SpokenLanguageSearch extends SearchBase
     {
         parent::__construct(SpokenLanguage::DB_TBL, 'sl');
         $langId = FatUtility::int($langId);
-
         if ($langId > 0) {
-            $this->joinTable(
-                    SpokenLanguage::DB_TBL . '_lang',
-                    'LEFT OUTER JOIN',
-                    'sl_l.slanguagelang_slanguage_id = sl.slanguage_id
-			AND sl_l.slanguagelang_lang_id = ' . $langId,
-                    'sl_l'
-            );
+            $this->joinTable(SpokenLanguage::DB_TBL . '_lang', 'LEFT OUTER JOIN', 'sl_l.slanguagelang_slanguage_id = sl.slanguage_id AND sl_l.slanguagelang_lang_id = ' . $langId, 'sl_l');
         }
     }
 

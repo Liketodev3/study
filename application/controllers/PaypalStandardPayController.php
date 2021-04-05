@@ -6,7 +6,7 @@ class PaypalStandardPayController extends PaymentController
     protected $keyName = "PaypalStandard";
     private $testEnvironmentUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
     private $liveEnvironmentUrl = 'https://www.paypal.com/cgi-bin/webscr';
-    private $currenciesAccepted = array(
+    private $currenciesAccepted = [
         'Australian Dollar' => 'AUD',
         'Brazilian Real' => 'BRL',
         'Canadian Dollar' => 'CAD',
@@ -30,7 +30,7 @@ class PaypalStandardPayController extends PaymentController
         'Taiwan New Dollar' => 'TWD',
         'Thai Baht' => 'THB',
         'U.S. Dollar' => 'USD',
-    );
+    ];
 
     private function getPaymentForm($orderId)
     {
@@ -40,15 +40,15 @@ class PaypalStandardPayController extends PaymentController
         $paymentGatewayCharge = $orderPaymentObj->getOrderPaymentGatewayAmount();
         $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
         $actionUrl = (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == true) ? $this->liveEnvironmentUrl : $this->testEnvironmentUrl;
-        $frm = new Form('frmPayPalStandard', array('id' => 'frmPayPalStandard', 'action' => $actionUrl));
+        $frm = new Form('frmPayPalStandard', ['id' => 'frmPayPalStandard', 'action' => $actionUrl]);
         $frm->addHiddenField('', 'cmd', "_cart");
         $frm->addHiddenField('', 'upload', "1");
         $frm->addHiddenField('', 'business', $paymentSettings["merchant_email"]);
         $orderPaymentGatewayDescription = Label::getLabel('MSG_Order_Payment_Gateway_Description_{website-name}_{order-id}', $this->siteLangId);
-        $arrReplace = array(
+        $arrReplace = [
             '{website-name}' => FatApp::getConfig("CONF_WEBSITE_NAME_" . $orderInfo["order_language_id"]),
             '{order-id}' => $orderInfo['order_id']
-        );
+        ];
         foreach ($arrReplace as $key => $val) {
             $orderPaymentGatewayDescription = str_replace($key, $val, $orderPaymentGatewayDescription);
         }
@@ -71,7 +71,7 @@ class PaypalStandardPayController extends PaymentController
         $frm->addHiddenField('', 'no_note', 1);
         $frm->addHiddenField('', 'no_shipping', 1);
         $frm->addHiddenField('', 'charset', "utf-8");
-        $frm->addHiddenField('', 'return', CommonHelper::generateFullUrl('custom', 'paymentSuccess', array($orderId)));
+        $frm->addHiddenField('', 'return', CommonHelper::generateFullUrl('custom', 'paymentSuccess', [$orderId]));
         $frm->addHiddenField('', 'notify_url', CommonHelper::generateNoAuthUrl('PaypalStandardPay', 'callback'));
         $frm->addHiddenField('', 'cancel_return', CommonHelper::getPaymentCancelPageUrl());
         $frm->addHiddenField('', 'paymentaction', 'sale');  // authorization or sale
@@ -118,7 +118,7 @@ class PaypalStandardPayController extends PaymentController
             $obj = (array) $obj;
         }
         if (is_array($obj)) {
-            $new = array();
+            $new = [];
             foreach ($obj as $key => $val) {
                 $new[$key] = $this->toArray($val);
             }

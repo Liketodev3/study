@@ -20,11 +20,11 @@ class TeacherRequest extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        return array(
+        return [
             static::STATUS_PENDING => Label::getLabel('LBL_Pending', $langId),
             static::STATUS_APPROVED => Label::getLabel('LBL_Approved', $langId),
             static::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled', $langId),
-        );
+        ];
     }
 
     public static function isMadeMaximumAttempts($userId)
@@ -35,7 +35,7 @@ class TeacherRequest extends MyAppModel
         }
         $srch = new TeacherRequestSearch();
         $srch->addCondition('utrequest_user_id', '=', $userId);
-        $srch->addMultiplefields(array('count(utrequest_id) as totalRequest'));
+        $srch->addMultiplefields(['count(utrequest_id) as totalRequest']);
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
         $maxAttempts = FatApp::getConfig('CONF_MAX_TEACHER_REQUEST_ATTEMPT', FatUtility::VAR_INT, 3);
@@ -53,7 +53,7 @@ class TeacherRequest extends MyAppModel
         }
         $srch = new TeacherRequestSearch();
         $srch->addCondition('utrequest_user_id', '=', $userId);
-        $srch->addMultiplefields(array('utrequest_attempts', 'utrequest_id', 'utrequest_status'));
+        $srch->addMultiplefields(['utrequest_attempts', 'utrequest_id', 'utrequest_status']);
         $srch->addOrder('utrequest_id', 'desc');
         $rs = $srch->getResultSet();
         if ($row = FatApp::getDb()->fetch($rs)) {
@@ -70,17 +70,17 @@ class TeacherRequest extends MyAppModel
             return false;
         }
         /* save teacher approval request[ */
-        $data = array(
+        $data = [
             'utrequest_user_id' => $userId,
             'utrequest_reference' => $userId . '-' . time(),
             'utrequest_date' => date('Y-m-d H:i:s'),
             'utrequest_status' => 0,
             'utrequest_language_id' => $post['utrequest_language_id'],
             'utrequest_language_code' => $post['utrequest_language_code']
-        );
+        ];
         $this->assignValues($data);
         $this->setFldValue('utrequest_attempts', 1, true);
-        if (true !== $this->addNew(array(), array('utrequest_attempts' => 'mysql_func_utrequest_attempts+1'))) {
+        if (true !== $this->addNew([], ['utrequest_attempts' => 'mysql_func_utrequest_attempts+1'])) {
             return false;
         }
         $utrequest_id = $this->getMainTableRecordId();

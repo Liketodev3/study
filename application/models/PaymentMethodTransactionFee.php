@@ -34,10 +34,10 @@ class PaymentMethodTransactionFee extends MyAppModel
     public static function feeTypeArray(int $langId = 0): array
     {
         $langId = ($langId > 0) ? $langId : CommonHelper::getLangId();
-        return array(
+        return [
             self::FEE_TYPE_PERCENTAGE => Label::getLabel('LBL_percentage', $langId),
             self::FEE_TYPE_FLAT => Label::getLabel('LBL_FLAT', $langId),
-        );
+        ];
     }
 
     public function getGatewayFee(): float
@@ -58,14 +58,14 @@ class PaymentMethodTransactionFee extends MyAppModel
     public function setupFee(float $fee, int $type = self::FEE_TYPE_PERCENTAGE): bool
     {
         $tableRecordObj = new TableRecord(self::DB_TBL);
-        $fields = array(
+        $fields = [
             'pmtfee_pmethod_id' => $this->pMethodId,
             'pmtfee_currency_id' => $this->currancyId,
             'pmtfee_fee' => $fee,
             'pmtfee_type' => $type,
-        );
+        ];
         $tableRecordObj->setFlds($fields);
-        if ($tableRecordObj->addNew(array(), $fields) === false) {
+        if ($tableRecordObj->addNew([], $fields) === false) {
             $this->error = $tableRecordObj->getError();
             return false;
         }

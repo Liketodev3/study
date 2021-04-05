@@ -25,7 +25,7 @@ class CronController extends MyAppController
             array_shift($arr);
             $action = $arr[0];
             array_shift($arr);
-            $success = call_user_func_array(array($obj, $action), $arr);
+            $success = call_user_func_array([$obj, $action], $arr);
             if ($success !== false) {
                 $cron->markFinished($logId, 'Response Got: ' . $success);
             } else {
@@ -48,7 +48,7 @@ class CronController extends MyAppController
                 array_shift($arr);
                 $action = $arr[0];
                 array_shift($arr);
-                $success = call_user_func_array(array($obj, $action), $arr);
+                $success = call_user_func_array([$obj, $action], $arr);
                 if ($success !== false) {
                     echo 'Response Got: ' . $success;
                 } else {

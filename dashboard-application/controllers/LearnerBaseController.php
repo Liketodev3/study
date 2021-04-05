@@ -1,6 +1,8 @@
 <?php
+
 class LearnerBaseController extends LoggedUserController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -16,8 +18,8 @@ class LearnerBaseController extends LoggedUserController
     protected function getSearchForm()
     {
         $frm = new Form('frmSrch');
-        $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_By_Keyword')));
-        $frm->addSelectBox(Label::getLabel('LBL_Status'), 'status', ScheduledLesson::getStatusArr()+array(ScheduledLesson::STATUS_ISSUE_REPORTED=>Label::getLabel('LBL_Issue_Reported')),'', array(), Label::getLabel('LBL_All'))->requirements()->setInt();
+        $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Keyword')]);
+        $frm->addSelectBox(Label::getLabel('LBL_Status'), 'status', ScheduledLesson::getStatusArr() + [ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported')], '', [], Label::getLabel('LBL_All'))->requirements()->setInt();
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
         $frm->addHiddenField('', 'show_group_classes', ApplicationConstants::NO);
@@ -26,4 +28,5 @@ class LearnerBaseController extends LoggedUserController
         $btnSubmit->attachField($btnReset);
         return $frm;
     }
+
 }

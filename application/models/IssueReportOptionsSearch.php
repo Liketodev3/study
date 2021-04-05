@@ -8,13 +8,8 @@ class IssueReportOptionsSearch extends SearchBase
         $langId = FatUtility::int($langId);
         parent::__construct(IssueReportOptions::DB_TBL, 'iropt');
         if ($langId > 0) {
-            $this->joinTable(
-                    IssueReportOptions::DB_TBL_LANG,
-                    'LEFT OUTER JOIN',
-                    'iroptLang.' . IssueReportOptions::DB_TBL_LANG_PREFIX . 'tissueopt_id = iropt.' . IssueReportOptions::DB_TBL_PREFIX . 'id
-			AND iroptLang.' . IssueReportOptions::DB_TBL_LANG_PREFIX . 'lang_id = ' . $langId,
-                    'iroptLang'
-            );
+            $on = 'iroptLang.tissueoptlang_tissueopt_id = iropt.tissueopt_id AND iroptLang.tissueoptlang_lang_id = ' . $langId;
+            $this->joinTable(IssueReportOptions::DB_TBL_LANG, 'LEFT OUTER JOIN', $on, 'iroptLang');
         }
         if (true === $doNotCalculateRecords) {
             $this->doNotCalculateRecords();

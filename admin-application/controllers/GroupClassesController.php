@@ -26,8 +26,6 @@ class GroupClassesController extends AdminBaseController
         }
 
         $srch = TeacherGroupClassesSearch::getSearchObj($this->adminLangId);
-        // $srch->joinTeacher();
-        // $srch->joinTeacherCredentials();
 
         $keyword = FatApp::getPostedData('teacher', null, '');
         $user_id = FatApp::getPostedData('teacher_id', FatUtility::VAR_INT, -1);

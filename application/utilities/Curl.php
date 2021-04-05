@@ -5,8 +5,8 @@ class Curl
 
     private $url;
     protected $ch;
-    private $options = array();
-    private $headers = array();
+    private $options = [];
+    private $headers = [];
     private $error_code;
     private $error_string;
     private $info;
@@ -23,10 +23,10 @@ class Curl
     public function __call($method, $arguments)
     {
         array_unshift($arguments, $method);
-        return call_user_func_array(array($this, 'request'), $arguments);
+        return call_user_func_array([$this, 'request'], $arguments);
     }
 
-    public function request($method, $url, $params = array(), $options = array())
+    public function request($method, $url, $params = [], $options = [])
     {
         if (strtoupper($method === 'GET')) {
             $this->create($url . ($params ? '?' . http_build_query($params, NULL, '&') : ''));
@@ -40,7 +40,7 @@ class Curl
         return $this->execute();
     }
 
-    public function post($params = array(), $options = array())
+    public function post($params = [], $options = [])
     {
         if (is_array($params)) {
             $params = http_build_query($params, NULL, '&');
@@ -51,7 +51,7 @@ class Curl
         $this->option(CURLOPT_POSTFIELDS, $params);
     }
 
-    public function put($params = array(), $options = array())
+    public function put($params = [], $options = [])
     {
         if (is_array($params)) {
             $params = http_build_query($params, NULL, '&');
@@ -59,7 +59,7 @@ class Curl
         $this->options($options);
         $this->http_method('put');
         $this->option(CURLOPT_POSTFIELDS, $params);
-        $this->option(CURLOPT_HTTPHEADER, array('X-HTTP-Method-Override: PUT'));
+        $this->option(CURLOPT_HTTPHEADER, ['X-HTTP-Method-Override: PUT']);
     }
 
     public function http_header($header, $content = NULL)
@@ -90,7 +90,7 @@ class Curl
         return $this;
     }
 
-    public function options($options = array())
+    public function options($options = [])
     {
         foreach ($options as $option_code => $option_value) {
             $this->option($option_code, $option_value);
@@ -191,16 +191,14 @@ class Curl
 
     public function debug_request()
     {
-        return array(
-            'url' => $this->url
-        );
+        return ['url' => $this->url];
     }
 
     public function set_defaults()
     {
         $this->ch = NULL;
-        $this->headers = array();
-        $this->options = array();
+        $this->headers = [];
+        $this->options = [];
         $this->error_code = NULL;
         $this->error_string = '';
         $this->response = '';

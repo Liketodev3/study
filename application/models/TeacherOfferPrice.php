@@ -18,7 +18,10 @@ class TeacherOfferPrice extends MyAppModel
             return false;
         }
         $this->assignValues($data);
-        return $this->addNew(array(), array('top_single_lesson_price' => $data['top_single_lesson_price'], 'top_bulk_lesson_price' => $data['top_bulk_lesson_price']));
+        return $this->addNew([], [
+                    'top_single_lesson_price' => $data['top_single_lesson_price'],
+                    'top_bulk_lesson_price' => $data['top_bulk_lesson_price']
+        ]);
     }
 
     public function removeOffer(int $learnerId, int $teacherId): bool
@@ -28,10 +31,10 @@ class TeacherOfferPrice extends MyAppModel
             return false;
         }
         $db = FatApp::getDb();
-        if (!$db->deleteRecords(static::DB_TBL, array(
+        if (!$db->deleteRecords(static::DB_TBL, [
                     "smt" => "top_learner_id = ? and top_teacher_id = ?",
-                    "vals" => array($learnerId, $teacherId)
-                ))) {
+                    "vals" => [$learnerId, $teacherId]
+                ])) {
             $this->error = $db->getError();
             return false;
         }

@@ -1,13 +1,14 @@
 <?php
+
 class TeacherReportsController extends TeacherBaseController
 {
+
     public function index()
     {
         $statObj = new Statistics(UserAuthentication::getLoggedUserId());
         $ordersData = $statObj->getLast12MonthsSales();
         $ordersChartData = '';
         foreach ($ordersData as $key => $val) {
-            //$ordersChartData .= "['" . $val["duration"] . "', " . $val["NewCustomersValue"] . ", " . $val["OldCustomersValue"] . "],";
             $ordersChartData .= "['" . $val["duration"] . "', " . $val["OldCustomersValue"] . "],";
         }
         $ordersChartData = rtrim($ordersChartData, ',');
@@ -39,4 +40,5 @@ class TeacherReportsController extends TeacherBaseController
                 break;
         }
     }
+
 }

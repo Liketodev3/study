@@ -29,29 +29,26 @@ class TeacherGroupClassesSearch extends SearchBase
         $srch2->addDirectCondition('slesson_grpcls_id=grpcls_id');
         $srch2->doNotLimitRecords(true);
         $srch2->doNotCalculateRecords(true);
-        $srch->addMultipleFields(
-                array(
-                    'user_id',
-                    'user_first_name',
-                    'user_last_name',
-                    'CONCAT(user_first_name," ", user_last_name) as user_full_name',
-                    'user_url_name',
-                    'user_timezone as teacher_timezone',
-                    'grpcls_id',
-                    'grpcls_slanguage_id',
-                    'grpcls_teacher_id',
-                    'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
-                    'IFNULL(grpclslang_grpcls_description,grpcls_description) as grpcls_description',
-                    'grpcls_entry_fee',
-                    'grpcls_start_datetime',
-                    'grpcls_end_datetime',
-                    'grpcls_max_learner',
-                    'grpcls_status',
-                    'grpcls_added_on',
-                    'IFNULL(tlanguage_name, tlanguage_identifier) as teacher_language',
-                    '(' . $srch2->getQuery() . ') as total_learners'
-                )
-        );
+        $srch->addMultipleFields(['user_id',
+            'user_first_name',
+            'user_last_name',
+            'CONCAT(user_first_name," ", user_last_name) as user_full_name',
+            'user_url_name',
+            'user_timezone as teacher_timezone',
+            'grpcls_id',
+            'grpcls_slanguage_id',
+            'grpcls_teacher_id',
+            'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
+            'IFNULL(grpclslang_grpcls_description,grpcls_description) as grpcls_description',
+            'grpcls_entry_fee',
+            'grpcls_start_datetime',
+            'grpcls_end_datetime',
+            'grpcls_max_learner',
+            'grpcls_status',
+            'grpcls_added_on',
+            'IFNULL(tlanguage_name, tlanguage_identifier) as teacher_language',
+            '(' . $srch2->getQuery() . ') as total_learners'
+        ]);
         if (UserAuthentication::isUserLogged()) {
             $user_id = UserAuthentication::getLoggedUserId();
             $srch->addFld('(SELECT IF(sldetail_id>0, 1, 0) FROM `tbl_scheduled_lesson_details` INNER JOIN `tbl_scheduled_lessons` ON slesson_id=sldetail_slesson_id  WHERE slesson_grpcls_id=grpcls_id AND sldetail_learner_status=' . ScheduledLesson::STATUS_SCHEDULED . ' AND sldetail_learner_id=' . $user_id . ' LIMIT 1) is_in_class');
@@ -167,19 +164,16 @@ class TeacherGroupClassesSearch extends SearchBase
         $this->joinTeacherCredentials();
         $this->joinLearner();
         $this->joinLearnerCredentials();
-        $this->addMultipleFields(
-                array(
-                    'CONCAT(ut.user_first_name," ", ut.user_last_name) as teacher_full_name',
-                    'ut.user_timezone as teacherTimeZone',
-                    'tcred.credential_email as teacherEmailId',
-                    'CONCAT(ul.user_first_name," ", ul.user_last_name) as learner_full_name',
-                    'ul.user_timezone as learnerTimeZone',
-                    'lcred.credential_email as learnerEmailId',
-                    'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
-                    'grpcls_start_datetime',
-                    'grpcls_end_datetime'
-                )
-        );
+        $this->addMultipleFields(['CONCAT(ut.user_first_name," ", ut.user_last_name) as teacher_full_name',
+            'ut.user_timezone as teacherTimeZone',
+            'tcred.credential_email as teacherEmailId',
+            'CONCAT(ul.user_first_name," ", ul.user_last_name) as learner_full_name',
+            'ul.user_timezone as learnerTimeZone',
+            'lcred.credential_email as learnerEmailId',
+            'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
+            'grpcls_start_datetime',
+            'grpcls_end_datetime'
+        ]);
         $this->addCondition('grpcls_id', '=', $grpclsId);
         $this->addCondition('sldetail_learner_id', '=', $userId);
         $this->addCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
@@ -191,22 +185,18 @@ class TeacherGroupClassesSearch extends SearchBase
     {
         $srch = new TeacherGroupClassesSearch();
         $srch->joinGroupClassLang($langId);
-        $srch->addMultipleFields(
-                array(
-                    'grpcls_id',
-                    'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
-                    'grpcls_max_learner',
-                    'grpcls_entry_fee',
-                    'grpcls_start_datetime',
-                    'grpcls_end_datetime',
-                    'grpcls_status'
-                )
-        );
+        $srch->addMultipleFields(['grpcls_id',
+            'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
+            'grpcls_max_learner',
+            'grpcls_entry_fee',
+            'grpcls_start_datetime',
+            'grpcls_end_datetime',
+            'grpcls_status'
+        ]);
         $srch->doNotCalculateRecords();
         $srch->addCondition('grpcls_teacher_id', '=', $teacher_id);
         $srch->addCondition('grpcls_id', '=', $grpcls_id);
-        $rs = $srch->getResultSet();
-        return FatApp::getDb()->fetch($rs);
+        return FatApp::getDb()->fetch($srch->getResultSet());
     }
 
     public function setTeacherDefinedCriteria($langCheck = true, $addUserSettingJoin = true)
@@ -268,7 +258,7 @@ class TeacherGroupClassesSearch extends SearchBase
     public static function checkGroupClassTiming(array $userIds, $startDateTime, $endDateTime): object
     {
         $searchBase = new self(false);
-        $searchBase->addMultipleFields(array('grpcls_id'));
+        $searchBase->addMultipleFields(['grpcls_id']);
         $searchBase->addCondition('grpcls_teacher_id', 'IN', $userIds);
         $searchBase->addCondition('grpcls_start_datetime', '<', $endDateTime);
         $searchBase->addCondition('grpcls_end_datetime', '>', $startDateTime);

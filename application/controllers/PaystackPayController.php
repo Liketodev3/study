@@ -90,7 +90,7 @@ class PaystackPayController extends PaymentController
         $orderSrch->joinUser();
         $orderSrch->joinUserCredentials();
         $orderSrch->addCondition('order_id', '=', $orderId);
-        $orderSrch->addMultipleFields(array(
+        $orderSrch->addMultipleFields([
             'order_id',
             'order_language_id',
             'order_currency_code',
@@ -98,7 +98,7 @@ class PaystackPayController extends PaymentController
             'cred.credential_email as customer_email',
             'order_language_code',
             '"FATbit_SP" as paypal_bn'
-        ));
+        ]);
         $orderRs = $orderSrch->getResultSet();
         $orderInfo = FatApp::getDb()->fetch($orderRs);
         if ($payment_amount == null || !$this->paymentSettings || $orderInfo['order_id'] == null) {
@@ -111,7 +111,7 @@ class PaystackPayController extends PaymentController
                 'email' => $orderInfo['customer_email'],
                 'amount' => $payment_amount,
                 'currency' => $systemCurrencyCode,
-                'metadata' => array('order_id' => $orderId),
+                'metadata' => ['order_id' => $orderId],
                 'callback_url' => $callbackUrl,
                 'webhook_url' => CommonHelper::generateFullUrl($this->keyName . 'Pay', 'webhook')
             ];
@@ -158,7 +158,7 @@ class PaystackPayController extends PaymentController
             Message::addErrorMessage($e->getMessage());
             FatApp::redirectUser(CommonHelper::generateUrl('custom', 'paymentFailed'));
         }
-        FatApp::redirectUser(CommonHelper::generateUrl('custom', 'paymentSuccess', array($orderId)));
+        FatApp::redirectUser(CommonHelper::generateUrl('custom', 'paymentSuccess', [$orderId]));
     }
 
     private function validatePaymentResponse($referenceId)

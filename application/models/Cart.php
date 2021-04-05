@@ -3,7 +3,7 @@
 class Cart extends FatModel
 {
 
-    private $cartData = array();
+    private $cartData = [];
     private $cart_user_id;
 
     const DB_TBL = 'tbl_user_cart';
@@ -30,16 +30,16 @@ class Cart extends FatModel
             }
         }
         if (!isset($this->SYSTEM_ARR['cart']) || !is_array($this->SYSTEM_ARR['cart'])) {
-            $this->SYSTEM_ARR['cart'] = array();
+            $this->SYSTEM_ARR['cart'] = [];
         }
         if (!isset($this->SYSTEM_ARR['shopping_cart']) || !is_array($this->SYSTEM_ARR['shopping_cart'])) {
-            $this->SYSTEM_ARR['shopping_cart'] = array();
+            $this->SYSTEM_ARR['shopping_cart'] = [];
         }
     }
 
     public function add(int $teacher_id, int $lpackageId, int $languageId, $startDateTime = '', $endDateTime = '', int $grpcls_id = 0, int $lessonDuration = 0)
     {
-        $this->SYSTEM_ARR['cart'] = array();
+        $this->SYSTEM_ARR['cart'] = [];
         if ($teacher_id < 1 || ($lpackageId < 1 && $grpcls_id < 1)) {
             $this->error = Label::getLabel('LBL_Invalid_Request');
             return false;
@@ -57,7 +57,7 @@ class Cart extends FatModel
             return false;
         }
         if ($lpackageId > 0) {
-            $lPackageRow = LessonPackage::getAttributesById($lpackageId, array('lpackage_id', 'lpackage_is_free_trial', 'lpackage_active'));
+            $lPackageRow = LessonPackage::getAttributesById($lpackageId, ['lpackage_id', 'lpackage_is_free_trial', 'lpackage_active']);
             if (empty($lpackageId) || (empty($lPackageRow))) {
                 $this->error = Label::getLabel('LBL_Invalid_Request');
                 return false;
@@ -97,7 +97,7 @@ class Cart extends FatModel
         /* ] */
         /* validate group class id */
         if ($grpcls_id > 0) {
-            $classDetails = TeacherGroupClasses::getAttributesById($grpcls_id, array('grpcls_id', 'grpcls_teacher_id', 'grpcls_start_datetime', 'grpcls_end_datetime', 'grpcls_max_learner', 'grpcls_status'));
+            $classDetails = TeacherGroupClasses::getAttributesById($grpcls_id, ['grpcls_id', 'grpcls_teacher_id', 'grpcls_start_datetime', 'grpcls_end_datetime', 'grpcls_max_learner', 'grpcls_status']);
             if ($grpcls_id !== $classDetails['grpcls_id']) {
                 $this->error = Label::getLabel('LBL_Invalid_Request');
                 return false;
@@ -144,7 +144,7 @@ class Cart extends FatModel
         }
         $key = $teacher_id . '_' . $grpcls_id;
         $key = base64_encode(serialize($key));
-        $this->SYSTEM_ARR['cart'][$key] = array(
+        $this->SYSTEM_ARR['cart'][$key] = [
             'teacher_id' => $teacher_id,
             'grpcls_id' => $grpcls_id,
             'startDateTime' => $startDateTime,
@@ -152,7 +152,7 @@ class Cart extends FatModel
             'lpackageId' => $lpackageId,
             'languageId' => $languageId,
             'lessonDuration' => $lessonDuration,
-        );
+        ];
         $this->updateUserCart();
         return true;
     }
@@ -188,7 +188,7 @@ class Cart extends FatModel
         /* find, if have added any offer price is locked with this teacher[ */
         $teacherSrch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top_teacher_id = user_id AND top_learner_id = ' . $this->cart_user_id . $cnd2, 'top');
         /* ] */
-        $teacherSrch->addMultipleFields(array(
+        $teacherSrch->addMultipleFields([
             'user_id',
             'user_first_name',
             'user_last_name',
@@ -198,12 +198,12 @@ class Cart extends FatModel
             'IFNULL(top_single_lesson_price,0) as topSingleLessonPrice',
             'IFNULL(top_bulk_lesson_price,0) as topBulkLessonPrice',
             'utl.*'
-        ));
+        ]);
         if ($langId > 0) {
-            $teacherSrch->addMultipleFields(array(
+            $teacherSrch->addMultipleFields([
                 'IFNULL(country_name, country_code) as user_country_name',
                 'IFNULL(state_name, state_identifier) as user_state_name'
-            ));
+            ]);
         }
         $rs = $teacherSrch->getResultSet();
         $teacher = FatApp::getDb()->fetch($rs);
@@ -214,9 +214,9 @@ class Cart extends FatModel
         if ($lPackageId > 0) {
             $srch = LessonPackage::getSearchObject($langId);
             $srch->addCondition('lpackage_id', '=', $lPackageId);
-            $srch->addMultipleFields(array('lpackage_id', 'lpackage_lessons', 'lpackage_is_free_trial', 'lpackage_identifier as lpackage_title'));
+            $srch->addMultipleFields(['lpackage_id', 'lpackage_lessons', 'lpackage_is_free_trial', 'lpackage_identifier as lpackage_title']);
             if ($langId > 0) {
-                $srch->addMultipleFields(array('IFNULL(lpackage_title, lpackage_identifier) as lpackage_title'));
+                $srch->addMultipleFields(['IFNULL(lpackage_title, lpackage_identifier) as lpackage_title']);
             }
             $srch->doNotCalculateRecords();
             $rs = $srch->getResultSet();
@@ -232,7 +232,7 @@ class Cart extends FatModel
             }
             $totalPrice = $itemPrice * $lessonPackageRow['lpackage_lessons'];
         } elseif ($grpcls_id > 0) {
-            $classDetails = TeacherGroupClasses::getAttributesById($grpcls_id, array('grpcls_id', 'grpcls_title', 'grpcls_entry_fee'));
+            $classDetails = TeacherGroupClasses::getAttributesById($grpcls_id, ['grpcls_id', 'grpcls_title', 'grpcls_entry_fee']);
             $itemPrice = $classDetails['grpcls_entry_fee'];
             $totalPrice = $itemPrice;
         } else {
@@ -268,13 +268,13 @@ class Cart extends FatModel
             $userWalletBalance = User::getUserBalance($this->cart_user_id);
             $cartTotal = $this->cartData['total'];
             $cartTaxTotal = 0;
-            $cartDiscounts = self::getCouponDiscounts($langId);
+            $cartDiscounts = $this->getCouponDiscounts($langId);
             $totalSiteCommission = 0;
             $totalDiscountAmount = (isset($cartDiscounts['coupon_discount_total'])) ? $cartDiscounts['coupon_discount_total'] : 0;
             $orderNetAmount = ($cartTotal + $cartTaxTotal) - $totalDiscountAmount;
             $walletAmountCharge = ($this->isCartUserWalletSelected()) ? min($orderNetAmount, $userWalletBalance) : 0;
             $orderPaymentGatewayCharges = $orderNetAmount - $walletAmountCharge;
-            $summaryArr = array(
+            $summaryArr = [
                 'cartTotal' => $cartTotal,
                 'cartTaxTotal' => $cartTaxTotal,
                 'cartDiscounts' => $cartDiscounts,
@@ -283,7 +283,7 @@ class Cart extends FatModel
                 'orderNetAmount' => $orderNetAmount,
                 'walletAmountCharge' => $walletAmountCharge,
                 'orderPaymentGatewayCharges' => $orderPaymentGatewayCharges,
-            );
+            ];
             $this->cartData = $this->cartData + $summaryArr;
             /* ] */
         }
@@ -326,15 +326,13 @@ class Cart extends FatModel
                 $cart_arr["shopping_cart"] = $this->SYSTEM_ARR['shopping_cart'];
             }
             $cart_arr = serialize($cart_arr);
-            $record->assignValues(
-                    array(
-                        "usercart_user_id" => $this->cart_user_id,
-                        "usercart_type" => CART::TYPE_TEACHER_BOOK,
-                        "usercart_details" => $cart_arr,
-                        "usercart_added_date" => date('Y-m-d H:i:s')
-                    )
-            );
-            if (!$record->addNew(array(), array('usercart_details' => $cart_arr, "usercart_added_date" => date('Y-m-d H:i:s')))) {
+            $record->assignValues([
+                "usercart_user_id" => $this->cart_user_id,
+                "usercart_type" => CART::TYPE_TEACHER_BOOK,
+                "usercart_details" => $cart_arr,
+                "usercart_added_date" => date('Y-m-d H:i:s')
+            ]);
+            if (!$record->addNew([], ['usercart_details' => $cart_arr, "usercart_added_date" => date('Y-m-d H:i:s')])) {
                 Message::addErrorMessage($record->getError());
                 throw new Exception('');
             }
@@ -353,9 +351,9 @@ class Cart extends FatModel
 
     public function clear()
     {
-        $this->cartData = array();
-        $this->SYSTEM_ARR['cart'] = array();
-        $this->SYSTEM_ARR['shopping_cart'] = array();
+        $this->cartData = [];
+        $this->SYSTEM_ARR['cart'] = [];
+        $this->SYSTEM_ARR['shopping_cart'] = [];
         unset($_SESSION['shopping_cart']["order_id"]);
     }
 
@@ -378,12 +376,12 @@ class Cart extends FatModel
     public function getCouponDiscounts($langId = 0)
     {
         $couponObj = new DiscountCoupons();
-        if (!self::getCartDiscountCoupon()) {
+        if (!$this->getCartDiscountCoupon()) {
             return false;
         }
-        $couponInfo = $couponObj->getValidCoupons($this->cart_user_id, $langId, self::getCartDiscountCoupon());
-        $cartSubTotal = self::getSubTotal($langId);
-        $couponData = array();
+        $couponInfo = $couponObj->getValidCoupons($this->cart_user_id, $langId, $this->getCartDiscountCoupon());
+        $cartSubTotal = $this->getSubTotal($langId);
+        $couponData = [];
         if ($couponInfo) {
             $discountTotal = 0;
             if ($couponInfo['coupon_discount_in_percent'] == applicationConstants::FLAT) {
@@ -393,12 +391,12 @@ class Cart extends FatModel
                 $discountTotal = $couponInfo['coupon_max_discount_value'];
             }
             /* ] */
-            $labelArr = array(
+            $labelArr = [
                 'coupon_label' => $couponInfo["coupon_title"],
                 'coupon_id' => $couponInfo["coupon_id"],
                 'coupon_discount_in_percent' => $couponInfo["coupon_discount_in_percent"],
                 'max_discount_value' => $couponInfo["coupon_max_discount_value"]
-            );
+            ];
             if ($couponInfo['coupon_discount_in_percent'] == applicationConstants::PERCENTAGE) {
                 $cartSubTotal = $cartSubTotal * $couponInfo['coupon_discount_value'] / 100;
             } elseif ($couponInfo['coupon_discount_in_percent'] == applicationConstants::FLAT) {
@@ -406,13 +404,13 @@ class Cart extends FatModel
                     $cartSubTotal = $couponInfo["coupon_discount_value"];
                 }
             }
-            $couponData = array(
+            $couponData = [
                 'coupon_discount_type' => $couponInfo["coupon_type"],
                 'coupon_code' => $couponInfo["coupon_code"],
                 'coupon_discount_value' => $couponInfo["coupon_discount_value"],
                 'coupon_discount_total' => $cartSubTotal,
                 'coupon_info' => json_encode($labelArr),
-            );
+            ];
         }
         if (empty($couponData)) {
             return false;
@@ -444,16 +442,16 @@ class Cart extends FatModel
             $srch = DiscountCoupons::getSearchObject(0, false, false);
             $srch->addCondition('coupon_code', '=', $couponCode);
             $srch->setPageSize(1);
-            $srch->addMultipleFields(array('coupon_id'));
+            $srch->addMultipleFields(['coupon_id']);
             $rs = $srch->getResultSet();
             $couponRow = FatApp::getDb()->fetch($rs);
             if ($couponRow && $loggedUserId) {
-                FatApp::getDb()->deleteRecords(DiscountCoupons::DB_TBL_COUPON_HOLD, array('smt' => 'couponhold_coupon_id = ? AND couponhold_user_id = ?', 'vals' => array($couponRow['coupon_id'], $loggedUserId)));
+                FatApp::getDb()->deleteRecords(DiscountCoupons::DB_TBL_COUPON_HOLD, ['smt' => 'couponhold_coupon_id = ? AND couponhold_user_id = ?', 'vals' => [$couponRow['coupon_id'], $loggedUserId]]);
             }
         }
         $orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
         if ($orderId != '') {
-            FatApp::getDb()->deleteRecords(DiscountCoupons::DB_TBL_COUPON_HOLD_PENDING_ORDER, array('smt' => 'ochold_order_id = ?', 'vals' => array($orderId)));
+            FatApp::getDb()->deleteRecords(DiscountCoupons::DB_TBL_COUPON_HOLD_PENDING_ORDER, ['smt' => 'ochold_order_id = ?', 'vals' => [$orderId]]);
         }
         /* ] */
         $this->updateUserCart();

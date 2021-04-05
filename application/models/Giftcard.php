@@ -27,16 +27,16 @@ class Giftcard extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        return array(
+        return [
             static::GIFTCARD_UNUSED_STATUS => Label::getLabel('LBL_Unused', $langId),
             static::GIFTCARD_USED_STATUS => Label::getLabel('LBL_Used', $langId)
-        );
+        ];
     }
 
     public function saveOrder()
     {
         $db = FatApp::getDb();
-        $orderData = array();
+        $orderData = [];
         $userId = $this->cart_user_id;
         $langId = CommonHelper::getLangId();
         $languageRow = Language::getAttributesById($langId);

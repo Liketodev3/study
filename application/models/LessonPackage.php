@@ -11,9 +11,7 @@ class LessonPackage extends MyAppModel
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
         $this->db = FatApp::getDb();
-        $this->objMainTableRecord->setSensitiveFields(array(
-            'lpackage_is_free_trial'
-        ));
+        $this->objMainTableRecord->setSensitiveFields(['lpackage_is_free_trial']);
     }
 
     public static function getSearchObject($langId = 0, $active = true)
@@ -39,9 +37,8 @@ class LessonPackage extends MyAppModel
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $srch->addCondition('lpackage_is_free_trial', '=', applicationConstants::YES);
-        $srch->addMultipleFields(array('lpackage_id', 'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title', 'lpackage_lessons', 'lpackage_active'));
-        $rs = $srch->getResultSet();
-        $row = FatApp::getDb()->fetch($rs);
+        $srch->addMultipleFields(['lpackage_id', 'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title', 'lpackage_lessons', 'lpackage_active']);
+        $row = FatApp::getDb()->fetch($srch->getResultSet());
         if ($row) {
             $row['lpackage_lessons'] = $row['lpackage_lessons'] * 1;
         }
@@ -64,7 +61,7 @@ class LessonPackage extends MyAppModel
         $srch->addCondition('op_teacher_id', '=', $teacherId);
         $srch->addCondition('op_lpackage_is_free_trial', '=', 1);
         $srch->addCondition('slesson_status', '!=', ScheduledLesson::STATUS_CANCELLED);
-        $srch->addMultipleFields(array('op_id'));
+        $srch->addMultipleFields(['op_id']);
         $rs = $srch->getResultSet();
         if (empty(FatApp::getDb()->fetch($rs))) {
             return false;
@@ -90,11 +87,7 @@ class LessonPackage extends MyAppModel
     {
         $srch = self::getSearchObject($langId, $active);
         $srch->addCondition('lpackage_is_free_trial', '=', applicationConstants::NO);
-        $srch->addMultipleFields(array(
-            'lpackage_id',
-            'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title',
-            'lpackage_lessons'
-        ));
+        $srch->addMultipleFields(['lpackage_id', 'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title', 'lpackage_lessons']);
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetchAll($rs);
     }

@@ -51,12 +51,12 @@ class Transaction extends MyAppModel
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        return array(
+        return [
             static::STATUS_PENDING => Label::getLabel('LBL_Pending', $langId),
             static::STATUS_COMPLETED => Label::getLabel('LBL_Completed', $langId),
             static::STATUS_REFUND => Label::getLabel('LBL_Refunded', $langId),
             static::STATUS_DECLINED => Label::getLabel('LBL_Declined', $langId)
-        );
+        ];
     }
 
     public static function getWithdrawlStatusArr($langId)
@@ -65,14 +65,14 @@ class Transaction extends MyAppModel
         if ($langId == 0) {
             trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
         }
-        $arr = array(
+        $arr = [
             static::WITHDRAWL_STATUS_PENDING => Label::getLabel('LBL_Withdrawal_Request_Pending', $langId),
             static::WITHDRAWL_STATUS_COMPLETED => Label::getLabel('LBL_Withdrawal_Request_Completed', $langId),
             static::WITHDRAWL_STATUS_APPROVED => Label::getLabel('LBL_Withdrawal_Request_Approved', $langId),
             static::WITHDRAWL_STATUS_DECLINED => Label::getLabel('LBL_Withdrawal_Request_Declined', $langId),
             static::WITHDRAWL_STATUS_PAYOUT_SENT => Label::getLabel('LBL_Withdrawal_Payout_Sent', $langId),
             static::WITHDRAWL_STATUS_PAYOUT_FAILED => Label::getLabel('LBL_Withdrawal_Payout_Failed', $langId)
-        );
+        ];
         return $arr;
     }
 
@@ -96,10 +96,10 @@ class Transaction extends MyAppModel
         if ($langId == 0) {
             trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
         }
-        $arr = array(
+        $arr = [
             static::CREDIT_TYPE => Label::getLabel('LBL_Credit', $langId),
             static::DEBIT_TYPE => Label::getLabel('LBL_Debit', $langId)
-        );
+        ];
         return $arr;
     }
 
@@ -126,7 +126,7 @@ class Transaction extends MyAppModel
         if ($this->mainTableRecordId > 0) {
             $srch->addCondition('utxn.utxn_id', '=', $mainTableRecordId);
         }
-        $srch->addMultipleFields(array('IFNULL(SUM(utxn.utxn_credit),0) AS total_earned', 'IFNULL(SUM(utxn.utxn_debit),0) AS total_used'));
+        $srch->addMultipleFields(['IFNULL(SUM(utxn.utxn_credit),0) AS total_earned', 'IFNULL(SUM(utxn.utxn_debit),0) AS total_used']);
         $srch->doNotCalculateRecords();
         $srch->doNotlimitRecords();
         $srch->addCondition('utxn_status', '=', applicationConstants::ACTIVE);
@@ -165,7 +165,7 @@ class Transaction extends MyAppModel
         if (!empty($row)) {
             return $row;
         }
-        return array();
+        return [];
     }
 
     public static function formatTransactionNumber($txnId)
@@ -220,29 +220,23 @@ class Transaction extends MyAppModel
         $srch->joinTable(User::DB_TBL_CRED, 'LEFT JOIN', 'lcred.credential_user_id = ul.user_id', 'lcred');
         $srch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tLang.tlanguage_id = slsn.slesson_slanguage_id', 'tLang');
         $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tLangLang.tlanguagelang_tlanguage_id = tLang.tlanguage_id AND tlanguagelang_lang_id = ' . CommonHelper::getLangId(), 'tLangLang');
-        $srch->addFld(
-                array(
-                    'utxn.*',
-                    'slsn.*',
-                    'sld.*',
-                    'o.order_net_amount as order_total',
-                    'op.op_qty as total_lessons',
-                    'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
-                    'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
-                    'lcred.credential_email as learner_email',
-                    'ul.user_timezone as lerner_timezone',
-                    'IFNULL(tLangLang.tlanguage_name, tLang.tlanguage_identifier) as teacherTeachLanguageName'
-                )
-        );
-        $rs = $srch->getResultSet();
-        $transactionDetails = FatApp::getDb()->fetch($rs);
-        return $transactionDetails;
+        $srch->addFld([
+            'utxn.*', 'slsn.*', 'sld.*',
+            'o.order_net_amount as order_total',
+            'op.op_qty as total_lessons',
+            'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+            'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+            'lcred.credential_email as learner_email',
+            'ul.user_timezone as lerner_timezone',
+            'IFNULL(tLangLang.tlanguage_name, tLang.tlanguage_identifier) as teacherTeachLanguageName'
+        ]);
+        return FatApp::getDb()->fetch($srch->getResultSet());
     }
 
     public function changeStatusByLessonId($lessonId, $status)
     {
         $db = FatApp::getDb();
-        if (!$db->updateFromArray(self::DB_TBL, array('utxn_status' => $status), array('smt' => 'utxn_slesson_id = ?', 'vals' => array($lessonId)))) {
+        if (!$db->updateFromArray(self::DB_TBL, ['utxn_status' => $status], ['smt' => 'utxn_slesson_id = ?', 'vals' => [$lessonId]])) {
             return false;
         }
         return true;

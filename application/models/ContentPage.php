@@ -60,9 +60,7 @@ class ContentPage extends MyAppModel
                 $srch->addFld($attr);
             }
         }
-        $srch->addMultipleFields(array(
-            'IFNULL(p_l.cpage_title,p.cpage_identifier) as cpage_title'
-        ));
+        $srch->addMultipleFields(['IFNULL(p_l.cpage_title,p.cpage_identifier) as cpage_title']);
         return $srch;
     }
 
@@ -73,7 +71,7 @@ class ContentPage extends MyAppModel
         $srch = static::getSearchObject($langId);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $srch->addMultipleFields(array('cpage_id', 'IFNULL(cpage_title, cpage_identifier) as cpage_title'));
+        $srch->addMultipleFields(['cpage_id', 'IFNULL(cpage_title, cpage_identifier) as cpage_title']);
         if ($ignoreCpageId > 0) {
             $srch->addCondition('cpage_id', '!=', $ignoreCpageId);
         }
@@ -110,13 +108,13 @@ class ContentPage extends MyAppModel
     public function addUpdateContentPageBlocks($langId, $cpageId, $data)
     {
         FatApp::getDb()->startTransaction();
-        $assignValues = array(
+        $assignValues = [
             'cpblocklang_lang_id' => $langId,
             'cpblocklang_cpage_id' => $cpageId,
             'cpblocklang_block_id' => $data['cpblocklang_block_id'],
             'cpblocklang_text' => $data['cpblocklang_text'],
-        );
-        if (!FatApp::getDb()->insertFromArray(static::DB_TBL_CONTENT_PAGES_BLOCK_LANG, $assignValues, '', array(), $assignValues)) {
+        ];
+        if (!FatApp::getDb()->insertFromArray(static::DB_TBL_CONTENT_PAGES_BLOCK_LANG, $assignValues, '', [], $assignValues)) {
             $this->error = $this->db->getError();
             FatApp::getDb()->rollbackTransaction();
             return false;

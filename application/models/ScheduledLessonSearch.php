@@ -36,7 +36,7 @@ class ScheduledLessonSearch extends SearchBase
         $srch->joinTeacherSettings();
         $srch->addOrder('slesson_date', 'ASC');
         $srch->addOrder('slesson_status', 'ASC');
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'slns.slesson_id',
             'slns.slesson_grpcls_id',
             'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
@@ -64,7 +64,7 @@ class ScheduledLessonSearch extends SearchBase
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration',
             'order_is_paid'
-        ));
+        ]);
         return $srch;
     }
 
@@ -134,7 +134,7 @@ class ScheduledLessonSearch extends SearchBase
         }
         $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = slns.slesson_slanguage_id');
         $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = slns.slesson_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
-        $this->addMultipleFields(array('GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName'));
+        $this->addMultipleFields(['GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName']);
     }
 
     public function joinTeacherTeachLanguage($langId = 0)
@@ -188,7 +188,7 @@ class ScheduledLessonSearch extends SearchBase
     public function joinLessonRescheduleLog()
     {
         $getLessonRescheduleLogObj = LessonRescheduleLog::getLatestLessonRescheduleLog();
-        $getLessonRescheduleLogObj->addMultipleFields(array('lreschlog.*'));
+        $getLessonRescheduleLogObj->addMultipleFields(['lreschlog.*']);
         $getLessonRescheduleLogObj->doNotCalculateRecords();
         $getLessonRescheduleLogObj->doNotLimitRecords();
         $this->joinTable("(" . $getLessonRescheduleLogObj->getQuery() . ")", 'LEFT JOIN', 'lrsl.lesreschlog_slesson_id = slns.slesson_id', 'lrsl');
@@ -216,7 +216,7 @@ class ScheduledLessonSearch extends SearchBase
     {
         $lessonId = FatUtility::int($lessonId);
         $srchRelLsnToPln = new SearchBase('tbl_scheduled_lessons_to_teachers_lessons_plan');
-        $srchRelLsnToPln->addMultipleFields(array('ltp_tlpn_id', 'ltp_slessonid',));
+        $srchRelLsnToPln->addMultipleFields(['ltp_tlpn_id', 'ltp_slessonid']);
         $srchRelLsnToPln->addCondition('ltp_slessonid', '=', $lessonId);
         $relRs = $srchRelLsnToPln->getResultSet();
         $count = $srchRelLsnToPln->recordCount();
@@ -227,7 +227,7 @@ class ScheduledLessonSearch extends SearchBase
     {
         $this->joinTable(TeacherLessonReview::DB_TBL, 'LEFT OUTER JOIN', 'ut.user_id = tlr.tlreview_teacher_user_id AND tlr.tlreview_status = ' . TeacherLessonReview::STATUS_APPROVED, 'tlr');
         $this->joinTable(TeacherLessonRating::DB_TBL, 'LEFT OUTER JOIN', 'tlrating.tlrating_tlreview_id = tlr.tlreview_id', 'tlrating');
-        $this->addMultipleFields(array("ROUND(AVG(tlrating_rating),2) as teacher_rating", "count(DISTINCT tlreview_id) as totReviews"));
+        $this->addMultipleFields(["ROUND(AVG(tlrating_rating),2) as teacher_rating", "count(DISTINCT tlreview_id) as totReviews"]);
     }
 
     public function joinUserTeachLanguages($langId = 0)
@@ -239,17 +239,13 @@ class ScheduledLessonSearch extends SearchBase
         $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'ut.user_id = utsl.utl_us_user_id', 'utsl');
         $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl.utl_slanguage_id');
         $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl.utl_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
-        $this->addMultipleFields(array('utsl.utl_us_user_id', 'GROUP_CONCAT(DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY IFNULL(tlanguage_name, tlanguage_identifier) ASC) AS teacherTeachLanguageName'));
+        $this->addMultipleFields(['utsl.utl_us_user_id', 'GROUP_CONCAT(DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY IFNULL(tlanguage_name, tlanguage_identifier) ASC) AS teacherTeachLanguageName']);
     }
 
     public static function isSlotBooked(int $teacherId, $startDateTime, $endDateTime)
     {
         $srch = new self(false);
-        $srch->addMultipleFields(
-                array(
-                    'slns.slesson_id'
-                )
-        );
+        $srch->addMultipleFields(['slns.slesson_id']);
         $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
         $srch->addCondition('slns.slesson_teacher_id', '=', $teacherId);
         $srch->addCondition('slns.slesson_date', '=', date('Y-m-d', strtotime($startDateTime)));
@@ -287,12 +283,7 @@ class ScheduledLessonSearch extends SearchBase
     public function getLessonsByClass($grpclsId)
     {
         $db = FatApp::getDb();
-        $this->addMultipleFields(
-                array(
-                    'slesson_id',
-                    'slesson_status'
-                )
-        );
+        $this->addMultipleFields(['slesson_id', 'slesson_status']);
         $this->addCondition('slesson_grpcls_id', '=', $grpclsId);
         $cnd = $this->addCondition('slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
         $cnd->attachCondition('slesson_status', '=', ScheduledLesson::STATUS_NEED_SCHEDULING);
@@ -310,7 +301,7 @@ class ScheduledLessonSearch extends SearchBase
         $directStr = " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) < '" . $endDateTime . "' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) > '" . $startDateTime . "' ) ";
         $this->addDirectCondition($directStr);
         $this->addCondition('slns.slesson_status', ' IN ', [ScheduledLesson::STATUS_SCHEDULED, ScheduledLesson::STATUS_COMPLETED]);
-        $this->addMultipleFields(array('slns.slesson_date', 'slns.slesson_start_time', 'slns.slesson_end_time', 'slns.slesson_id', 'sld.sldetail_order_id', 'sld.sldetail_learner_id'));
+        $this->addMultipleFields(['slns.slesson_date', 'slns.slesson_start_time', 'slns.slesson_end_time', 'slns.slesson_id', 'sld.sldetail_order_id', 'sld.sldetail_learner_id']);
         return $this;
     }
 

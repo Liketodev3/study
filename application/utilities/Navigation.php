@@ -42,12 +42,12 @@ class Navigation
         $srch->addCondition('nav_type', '=', $type);
         $srch->addCondition('nlink_deleted', '=', applicationConstants::NO);
         $srch->addCondition('nav_active', '=', applicationConstants::ACTIVE);
-        $srch->addMultipleFields(array(
+        $srch->addMultipleFields([
             'nav_id', 'IFNULL( nav_name, nav_identifier ) as nav_name',
             'IFNULL( nlink_caption, nlink_identifier ) as nlink_caption', 'nlink_type',
             'nlink_cpage_id', 'IFNULL( cpage_deleted, ' . applicationConstants::NO . ' ) as filtered_cpage_deleted',
             'nlink_target', 'nlink_url', 'nlink_login_protected'
-        ));
+        ]);
         $isUserLogged = UserAuthentication::isUserLogged();
         if ($isUserLogged) {
             $cnd = $srch->addCondition('nlink_login_protected', '=', NavigationLinks::NAVLINK_LOGIN_BOTH);
@@ -60,7 +60,7 @@ class Navigation
         $srch->addOrder('nlink_display_order', 'ASC');
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
-        $navigation = array();
+        $navigation = [];
         $previous_nav_id = 0;
         if ($rows) {
             foreach ($rows as $key => $row) {
@@ -177,13 +177,13 @@ class Navigation
         $srch = new SpokenLanguageSearch(CommonHelper::getLangId());
         $srch->doNotCalculateRecords();
         $srch->setPageSize($pageSize);
-        $srch->addMultipleFields(array('slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name'));
+        $srch->addMultipleFields(['slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name']);
         $srch->addCondition('slanguage_active', '=', applicationConstants::ACTIVE);
         $rs = $srch->getResultSet();
         $languages = FatApp::getDb()->fetchAll($rs, 'slanguage_id');
-        $json = array();
+        $json = [];
         foreach ($languages as $key => $language) {
-            $json[] = array('id' => $key, 'name' => $language['slanguage_name'],);
+            $json[] = ['id' => $key, 'name' => $language['slanguage_name'],];
         }
         return $json;
     }
@@ -194,13 +194,13 @@ class Navigation
         $srch = new TeachingLanguageSearch(CommonHelper::getLangId());
         $srch->doNotCalculateRecords();
         $srch->setPageSize($pageSize);
-        $srch->addMultipleFields(array('tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'));
+        $srch->addMultipleFields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name']);
         $srch->addCondition('tlanguage_active', '=', applicationConstants::ACTIVE);
         $rs = $srch->getResultSet();
         $languages = FatApp::getDb()->fetchAll($rs, 'tlanguage_id');
-        $json = array();
+        $json = [];
         foreach ($languages as $key => $language) {
-            $json[] = array('id' => $key, 'name' => $language['tlanguage_name'],);
+            $json[] = ['id' => $key, 'name' => $language['tlanguage_name']];
         }
         return $json;
     }

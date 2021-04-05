@@ -23,18 +23,7 @@ class Order extends MyAppModel
 
     public static function getSearchObject($langId = 0)
     {
-        $langId = FatUtility::int($langId);
-        $srch = new SearchBase(static::DB_TBL, 'o');
-        if ($langId > 0) {
-            $srch->joinTable(
-                    static::DB_TBL_LANG,
-                    'LEFT OUTER JOIN',
-                    'o_l.orderlang_order_id = o.order_id
-			     AND orderlang_lang_id = ' . $langId,
-                    'o_l'
-            );
-        }
-        return $srch;
+        return new SearchBase(static::DB_TBL, 'o');
     }
 
     public function updateOrderInfo($order_id, $data)
@@ -45,7 +34,7 @@ class Order extends MyAppModel
         }
         $record = new TableRecord(static::DB_TBL);
         $record->assignValues($data);
-        if (!$record->update(array('smt' => 'order_id=?', 'vals' => array($order_id)))) {
+        if (!$record->update(['smt' => 'order_id = ?', 'vals' => [$order_id]])) {
             $this->error = $record->getError();
             return false;
         }
@@ -59,16 +48,16 @@ class Order extends MyAppModel
             $langId = CommonHelper::getLangId();
         }
         if ($skipPending) {
-            return array(
+            return [
                 static::ORDER_IS_CANCELLED => Label::getLabel('LBL_Cancelled', $langId),
                 static::ORDER_IS_PAID => Label::getLabel('LBL_Paid', $langId),
-            );
+            ];
         }
-        return array(
+        return [
             static::ORDER_IS_CANCELLED => Label::getLabel('LBL_Cancelled', $langId),
             static::ORDER_IS_PENDING => Label::getLabel('LBL_Pending', $langId),
             static::ORDER_IS_PAID => Label::getLabel('LBL_Paid', $langId),
-        );
+        ];
     }
 
     public function addUpdate($data)
@@ -81,7 +70,7 @@ class Order extends MyAppModel
             $data['order_date_updated'] = date('Y-m-d H:i:s');
         }
         $this->order_id = $data['order_id'];
-        $products = array();
+        $products = [];
         if (isset($data['products'])) {
             $products = $data['products'];
             unset($data['products']);
@@ -97,14 +86,14 @@ class Order extends MyAppModel
         unset($flds_update_on_duplicate['order_id']);
         $db = FatApp::getDb();
         $db->startTransaction();
-        if (!$recordObj->addNew(array(), $flds_update_on_duplicate)) {
+        if (!$recordObj->addNew([], $flds_update_on_duplicate)) {
             $db->rollbackTransaction();
             $this->error = $recordObj->getError();
             return false;
         }
         $_SESSION['shopping_cart']["order_id"] = $this->getOrderId();
-        $db->deleteRecords(OrderProduct::DB_TBL, array('smt' => 'op_order_id = ?', 'vals' => array($this->getOrderId())));
-        $db->deleteRecords(OrderProduct::DB_TBL . '_lang', array('smt' => 'oplang_order_id = ?', 'vals' => array($this->getOrderId())));
+        $db->deleteRecords(OrderProduct::DB_TBL, ['smt' => 'op_order_id = ?', 'vals' => [$this->getOrderId()]]);
+        $db->deleteRecords(OrderProduct::DB_TBL . '_lang', ['smt' => 'oplang_order_id = ?', 'vals' => [$this->getOrderId()]]);
         if (!empty($products)) {
             $counter = 1;
             $opRecord = new OrderProduct();
@@ -114,7 +103,6 @@ class Order extends MyAppModel
                 $product['op_order_id'] = $this->getOrderId();
                 $product['op_invoice_number'] = $op_invoice_number;
                 $productsLangData = $product['productsLangData'];
-                /* unset($product['productsLangData']); */
                 $opRecord->assignValues($product);
                 if (!$opRecord->save()) {
                     $db->rollbackTransaction();
@@ -152,22 +140,20 @@ class Order extends MyAppModel
     {
         $srch = new OrderSearch();
         $srch->addCondition('order_id', '=', $orderId);
-        $srch->addMultipleFields(
-                array(
-                    'order_id',
-                    'order_user_id',
-                    'order_is_paid',
-                    'order_type',
-                    'order_net_amount',
-                    'order_is_wallet_selected',
-                    'order_wallet_amount_charge',
-                    'order_currency_code',
-                    'order_language_code',
-                    'order_language_id',
-                    'order_discount_coupon_code',
-                    'order_discount_total',
-                )
-        );
+        $srch->addMultipleFields([
+            'order_id',
+            'order_user_id',
+            'order_is_paid',
+            'order_type',
+            'order_net_amount',
+            'order_is_wallet_selected',
+            'order_wallet_amount_charge',
+            'order_currency_code',
+            'order_language_code',
+            'order_language_id',
+            'order_discount_coupon_code',
+            'order_discount_total',
+        ]);
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetch($rs);
     }
@@ -178,21 +164,19 @@ class Order extends MyAppModel
         $userBalance = User::getUserBalance($orderInfo["order_user_id"]);
         $orderCreditsCharge = $orderInfo["order_wallet_amount_charge"] ? min($orderInfo["order_wallet_amount_charge"], $userBalance) : 0;
         $orderPaymentGatewayCharge = $orderInfo["order_net_amount"] - $orderInfo["order_wallet_amount_charge"];
-        $orderPaymentSummary = array(
+        $orderPaymentSummary = [
             "net_payable" => $orderInfo["order_net_amount"],
             "order_user_balance" => $userBalance,
             "order_credits_charge" => $orderCreditsCharge,
             "order_payment_gateway_charge" => $orderPaymentGatewayCharge,
-        );
+        ];
         return $orderPaymentSummary;
     }
 
     public function getOrderPaymentPaid($orderId)
     {
         $srch = new SearchBase(static::DB_TBL_ORDER_PAYMENTS, 'opayment');
-        $srch->addMultipleFields(
-                array('sum(opayment_amount) as totalPaid')
-        );
+        $srch->addMultipleFields(['sum(opayment_amount) as totalPaid']);
         $srch->addCondition('opayment_order_id', '=', $orderId);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
@@ -207,22 +191,22 @@ class Order extends MyAppModel
     {
         $orderInfo = $this->getOrderById($orderId);
         if ($orderInfo) {
-            if (!FatApp::getDb()->updateFromArray(
-                            Order::DB_TBL,
-                            array('order_is_paid' => FatUtility::int($orderPaymentStatus), 'order_date_updated' => date('Y-m-d H:i:s')),
-                            array('smt' => 'order_id = ? ', 'vals' => array($orderId))
+            if (!FatApp::getDb()->updateFromArray(Order::DB_TBL,
+                            ['order_is_paid' => FatUtility::int($orderPaymentStatus), 'order_date_updated' => date('Y-m-d H:i:s')],
+                            ['smt' => 'order_id = ? ', 'vals' => [$orderId]]
                     )) {
                 $this->error = FatApp::getDb()->getError();
                 return false;
             }
         }
-        if (!FatApp::getDb()->insertFromArray(
-                        Order::DB_TBL_ORDER_STATUS_HISTORY,
-                        array('oshistory_order_id' => $orderId,
+        if (!FatApp::getDb()->insertFromArray(Order::DB_TBL_ORDER_STATUS_HISTORY,
+                        [
+                            'oshistory_order_id' => $orderId,
                             'oshistory_order_payment_status' => $orderPaymentStatus,
                             'oshistory_date_added' => date('Y-m-d H:i:s'),
                             'oshistory_customer_notified' => FatUtility::int($notify),
-                            'oshistory_comments' => $comment)
+                            'oshistory_comments' => $comment
+                        ]
                 )) {
             $this->error = FatApp::getDb()->getError();
             return false;
@@ -238,9 +222,6 @@ class Order extends MyAppModel
         $emailObj = new EmailHandler();
         // If order Payment status is 0 then becomes greater than 0 mail to Vendors and Update Child Order Status to Paid & Give Referral Reward Points
         if (!$orderInfo['order_is_paid'] && ($orderPaymentStatus > 0)) {
-            //$emailObj->OrderPaymentUpdateBuyerAdmin( $orderId );
-            //$emailObj->NewOrderVendor( $orderId );
-            //$emailObj->NewOrderBuyerAdmin( $orderId, $orderInfo['order_language_id'] );
             $srch = new OrderProductSearch();
             $srch->addOrderIdCondition($orderId);
             $srch->addMultipleFields(array('op_id'));
@@ -252,13 +233,6 @@ class Order extends MyAppModel
                 }
             }
         }
-        // If order Payment status is 0 then becomes less than 0 send mail to Vendors and Update Child Order Status to Cancelled
-        /* if (!$orderInfo['order_is_paid'] && ($orderPaymentStatus < 0 )) {
-          $subOrders = $this->getChildOrders(array("order"=>$orderId),$orderInfo['order_type']);
-          foreach ($subOrders as $subkey => $subval){
-          $this->addChildProductOrderHistory($subval["op_id"],$orderInfo['order_language_id'],FatApp::getConfig("CONF_DEFAULT_CANCEL_ORDER_STATUS"),'',true);
-          }
-          } */
     }
 
     public function addChildProductOrderHistory($op_id, $langId, $opStatusId, $comment = '', $notify = false)
@@ -269,22 +243,22 @@ class Order extends MyAppModel
         $db = FatApp::getDb();
         if (!$db->updateFromArray(
                         OrderProduct::DB_TBL,
-                        array('op_orderstatus_id' => $opStatusId),
-                        array('smt' => 'op_id = ? ', 'vals' => array($op_id))
+                        ['op_orderstatus_id' => $opStatusId],
+                        ['smt' => 'op_id = ? ', 'vals' => [$op_id]]
                 )) {
             $this->error = $db->getError();
             return false;
         }
         if (!$db->insertFromArray(
                         Order::DB_TBL_ORDER_STATUS_HISTORY,
-                        array(
+                        [
                             'oshistory_op_id' => $op_id,
                             'oshistory_orderstatus_id' => $opStatusId,
                             'oshistory_date_added' => date('Y-m-d H:i:s'),
                             'oshistory_customer_notified' => (int) $notify,
                             'oshistory_comments' => $comment,
                             'oshistory_tracking_number' => ''
-                        ),
+                        ],
                         true
                 )) {
             $this->error = $db->getError();
@@ -305,7 +279,7 @@ class Order extends MyAppModel
 
     private function checkUniqueOrderId($order_id)
     {
-        $row = Order::getAttributesById($order_id, array('order_id'));
+        $row = Order::getAttributesById($order_id, ['order_id']);
         if ($row == false) {
             return true;
         }
@@ -320,11 +294,11 @@ class Order extends MyAppModel
         if ($userType == User::USER_TYPE_LEANER) {
             $srch->addCondition('o.order_user_id', '=', $userId);
             $srch->joinTeacherLessonLanguage();
-            $srch->addMultipleFields(array('CONCAT(t.user_first_name," ",t.user_last_name) AS teacher_name', 'op_teacher_id'));
+            $srch->addMultipleFields(['CONCAT(t.user_first_name," ",t.user_last_name) AS teacher_name', 'op_teacher_id']);
         } else {
             $srch->addCondition('op.op_teacher_id', '=', $userId);
             $srch->joinUser();
-            $srch->addMultipleFields(array('CONCAT(u.user_first_name," ",u.user_last_name) AS learner_name'));
+            $srch->addMultipleFields(['CONCAT(u.user_first_name," ",u.user_last_name) AS learner_name']);
         }
         if ($filter['status'] > -2) {
             $srch->addCondition('o.order_is_paid', '=', $filter['status']);
@@ -359,40 +333,37 @@ class Order extends MyAppModel
             $dateTo = date('Y-m-d H:i:s', strtotime($dateTo));
             $srch->addCondition('o.order_date_added', '<=', $dateTo);
         }
-        $srch->addMultipleFields(
-                array(
-                    'order_id',
-                    'order_user_id',
-                    'order_is_paid',
-                    'order_type',
-                    'order_net_amount',
-                    'order_is_wallet_selected',
-                    'order_wallet_amount_charge',
-                    'order_currency_code',
-                    'order_language_id',
-                    'order_date_added',
-                    'op_lpackage_is_free_trial'
-                )
-        );
+        $srch->addMultipleFields(['order_id',
+            'order_user_id',
+            'order_is_paid',
+            'order_type',
+            'order_net_amount',
+            'order_is_wallet_selected',
+            'order_wallet_amount_charge',
+            'order_currency_code',
+            'order_language_id',
+            'order_date_added',
+            'op_lpackage_is_free_trial'
+        ]);
         $srch->addOrder('order_date_added', 'desc');
         $srch->setPageNumber($page);
         $srch->setPageSize($pageSize);
         $rs = $srch->getResultSet();
-        $pagingArr = array(
+        $pagingArr = [
             'pageCount' => $srch->pages(),
             'page' => $page,
             'pageSize' => $pageSize,
             'recordCount' => $srch->recordCount()
-        );
+        ];
         $dataArr['Orders'] = FatApp::getDb()->fetchAll($rs);
         $dataArr['pagingArr'] = $pagingArr;
         return $dataArr;
     }
 
-    public function getOrderPayments($criteria = array())
+    public function getOrderPayments($criteria = [])
     {
         if (count($criteria) == 0) {
-            return array();
+            return [];
         }
         $srch = new SearchBase(static::DB_TBL_ORDER_PAYMENTS, 'opayment');
         foreach ($criteria as $key => $val) {
@@ -413,7 +384,7 @@ class Order extends MyAppModel
         $srch->addOrder('opayment_id');
         $row = FatApp::getDb()->fetchAll($srch->getResultSet(), 'opayment_id');
         if ($row == false) {
-            return array();
+            return [];
         }
         return $row;
     }

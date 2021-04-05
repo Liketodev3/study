@@ -22,7 +22,7 @@ class UserNotifications extends FatModel
     private $recordId = 0;
     private $subRecordId = 0;
     private $type = 0;
-    private $userInfo = array();
+    private $userInfo = [];
 
     public function __construct($userId)
     {
@@ -160,7 +160,7 @@ class UserNotifications extends FatModel
         return true;
     }
 
-    public function sendOrderReceiveNotification($orderId, $data = array())
+    public function sendOrderReceiveNotification($orderId, $data = [])
     {
         $this->type = self::NOTICATION_FOR_ORDER_RECIEVED;
         $this->recordId = $orderId;
@@ -181,7 +181,7 @@ class UserNotifications extends FatModel
         return true;
     }
 
-    public function sendOrderPlacedNotification($orderId, $data = array())
+    public function sendOrderPlacedNotification($orderId, $data = [])
     {
         $this->type = self::NOTICATION_FOR_ORDER_STATUS_UPDATE;
         $this->recordId = $orderId;
@@ -202,7 +202,7 @@ class UserNotifications extends FatModel
         return true;
     }
 
-    public function sendOrderReviewNotificationToSeller($orderId, $data = array())
+    public function sendOrderReviewNotificationToSeller($orderId, $data = [])
     {
         return true;
         $this->type = self::NOTICATION_FOR_REVIEW_STATUS_UPDATED_TO_SELLER;
@@ -225,7 +225,7 @@ class UserNotifications extends FatModel
         return true;
     }
 
-    public function sendOrderReviewStatusUpdateNotification($orderId, $data = array())
+    public function sendOrderReviewStatusUpdateNotification($orderId, $data = [])
     {
         return true;
         $this->type = self::NOTICATION_FOR_REVIEW_STATUS_UPDATED_TO_BUYER;
@@ -249,7 +249,7 @@ class UserNotifications extends FatModel
         return true;
     }
 
-    public function sendOrderStatusUpdateNotification($orderId, $data = array())
+    public function sendOrderStatusUpdateNotification($orderId, $data = [])
     {
         $this->type = self::NOTICATION_FOR_ORDER_STATUS_UPDATE;
         $this->recordId = $orderId;
@@ -273,7 +273,7 @@ class UserNotifications extends FatModel
         return true;
     }
 
-    public function sendOrderNotUpdatedNotification($orderList = array())
+    public function sendOrderNotUpdatedNotification($orderList = [])
     {
         $this->type = self::NOTICATION_FOR_ORDER_NOT_UPDATED;
         $this->recordId = 0;
@@ -295,7 +295,7 @@ class UserNotifications extends FatModel
         return true;
     }
 
-    public function sendNotificationForUnfulfilledOrders($orderList = array())
+    public function sendNotificationForUnfulfilledOrders($orderList = [])
     {
         $this->type = self::NOTICATION_FOR_ORDER_NOT_COMPLETED;
         $this->recordId = 0;
@@ -313,7 +313,7 @@ class UserNotifications extends FatModel
         return true;
     }
 
-    public function sendOrderDataUpdateNotification($orderId, $data = array())
+    public function sendOrderDataUpdateNotification($orderId, $data = [])
     {
         $this->type = self::NOTICATION_FOR_ORDER_UPDATE;
         $this->recordId = $orderId;
@@ -359,7 +359,7 @@ class UserNotifications extends FatModel
         return true;
     }
 
-    public function sendOrderDeliveryDateUpdateNotification($orderId, $data = array())
+    public function sendOrderDeliveryDateUpdateNotification($orderId, $data = [])
     {
         $this->type = self::NOTICATION_FOR_ORDER_DELIVERY_DATE_UPDATE;
         $this->recordId = $orderId;
@@ -386,7 +386,7 @@ class UserNotifications extends FatModel
         $srch = LoyaltyVoucher::getSearchObject(true);
         $srch->setPageSize(1);
         $srch->addCondition('loyaltyvoucher_id', '=', $loyaltyVoucherId);
-        $srch->addMultipleFields(array('loyaltyvoucher_id', 'loyaltyvoucher_valid_till', 'loyaltyvoucher_code', 'loyaltyvoucher_status', 'loyaltyvoucher_comments', 'user_name', 'credential_email'));
+        $srch->addMultipleFields(['loyaltyvoucher_id', 'loyaltyvoucher_valid_till', 'loyaltyvoucher_code', 'loyaltyvoucher_status', 'loyaltyvoucher_comments', 'user_name', 'credential_email']);
         $rs = $srch->getResultSet();
         $loyaltyVoucherData = FatApp::getDb()->fetch($rs);
         if (!$loyaltyVoucherData) {
@@ -426,8 +426,8 @@ class UserNotifications extends FatModel
         $this->recordId = $rewtrxId;
         $langId = CommonHelper::getLangId();
         $srch = new RewardPointSearch($langId, true);
-        $srch->addMultipleFields(array('rewtrx.*', 'u.user_name', 'uc.credential_email'));
-        $rewtrxData = $srch->findBy(array('id' => $rewtrxId), null, 1);
+        $srch->addMultipleFields(['rewtrx.*', 'u.user_name', 'uc.credential_email']);
+        $rewtrxData = $srch->findBy(['id' => $rewtrxId], null, 1);
         if (!$rewtrxData) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $langId);
             return false;
@@ -463,7 +463,7 @@ class UserNotifications extends FatModel
             return false;
         }
         $survey = new Survey($surveyId);
-        $questionnaireData = $survey->getQuestionnaireData($langId, array());
+        $questionnaireData = $survey->getQuestionnaireData($langId, []);
         if (empty($questionnaireData)) {
             $this->error = 'Some data in questionnaire is missing in database.';
             return false;
@@ -509,21 +509,21 @@ class UserNotifications extends FatModel
         $srch->addCondition('uauth_user_id', '=', $this->userId);
         $srch->addCondition('uauth_type', '=', UserAuthentication::TYPE_INTERNAL_API);
         $srch->addDirectCondition('uauth_expiry > NOW()');
-        $srch->addMultipleFields(array('uauth_token', 'uauth_fcm_id'));
+        $srch->addMultipleFields(['uauth_token', 'uauth_fcm_id']);
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetchAllAssoc($rs);
     }
 
     public function addNotification($title, $description)
     {
-        $saveData = array(
+        $saveData = [
             'notification_user_id' => $this->userId,
             'notification_title' => $title,
             'notification_description' => $description,
             'notification_record_id' => $this->recordId,
             'notification_record_type' => $this->type,
             'notification_sub_record_id' => $this->subRecordId,
-        );
+        ];
         $tableRecord = new TableRecord(self::DB_TBL);
         $tableRecord->assignValues($saveData);
         if ($tableRecord->addNew()) {
@@ -534,12 +534,10 @@ class UserNotifications extends FatModel
 
     public function markRead($notificationId)
     {
-        $saveData = array(
-            'notification_read' => UserNotifications::NOTIFICATION_READ,
-        );
+        $saveData = ['notification_read' => UserNotifications::NOTIFICATION_READ,];
         $tableRecord = new TableRecord(self::DB_TBL);
         $tableRecord->assignValues($saveData);
-        $where = array('smt' => 'notification_user_id = ? and notification_id = ?', 'vals' => array($this->userId, intval($notificationId)));
+        $where = ['smt' => 'notification_user_id = ? and notification_id = ?', 'vals' => [$this->userId, intval($notificationId)]];
         if ($tableRecord->update($where)) {
             return true;
         }

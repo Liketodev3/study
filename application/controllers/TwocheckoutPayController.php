@@ -80,15 +80,14 @@ class TwocheckoutPayController extends PaymentController
             /* Retrieve Primary Info corresponding to your order */
             $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
             $order_actual_paid = number_format(round($orderPaymentAmount, 2), 2, ".", "");
-            $params = array(
+            $params = [
                 'sellerId' => $this->settings['sellerId'],
                 'privateKey' => $this->settings['privateKey'],
                 'merchantOrderId' => $orderId,
                 'token' => $post['token'],
                 'currency' => $orderInfo["order_currency_code"],
                 'total' => $order_actual_paid,
-                'billingAddr' =>
-                array(
+                'billingAddr' => [
                     'name' => FatUtility::decodeHtmlEntities($post['cc_owner'], ENT_QUOTES, 'UTF-8'),
                     "addrLine1" => $post['addrLine1'],
                     "city" => $post['city'],
@@ -97,15 +96,15 @@ class TwocheckoutPayController extends PaymentController
                     'country' => Country::getAttributesById($post['country'], 'country_code'),
                     'email' => $orderInfo['user_email'],
                     'phoneNumber' => $orderInfo['user_phone'],
-                )
-            );
+                ]
+            ];
             if (FatApp::getConfig('CONF_TRANSACTION_MODE', FatUtility::VAR_BOOLEAN, false) == false) {
                 $params['demo'] = true;
             }
             $url = 'https://www.2checkout.com/checkout/api/1/' . $this->settings['sellerId'] . '/rs/authService';
             $curl = curl_init($url);
             $params = json_encode($params);
-            $header = array("content-type:application/json", "content-length:" . strlen($params));
+            $header = ["content-type:application/json", "content-length:" . strlen($params)];
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -113,13 +112,13 @@ class TwocheckoutPayController extends PaymentController
             curl_setopt($curl, CURLOPT_USERAGENT, "2Checkout PHP/0.1.0%s");
             curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
             $result = curl_exec($curl);
-            $json = array();
+            $json = [];
             $json['redirect'] = CommonHelper::generateUrl('custom', 'paymentFailed');
             if (curl_error($curl)) {
                 $json['error'] = 'CURL ERROR: ' . curl_errno($curl) . '::' . curl_error($curl);
             } elseif ($result) {
                 $object = json_decode($result, true);
-                $result_array = array();
+                $result_array = [];
                 foreach ($object as $member => $data) {
                     $result_array[$member] = $data;
                 }
@@ -143,7 +142,7 @@ class TwocheckoutPayController extends PaymentController
                         $message .= 'Response Message: ' . $responseMsg . "\n";
                         if ($responseCode == 'APPROVED') {
                             $orderPaymentObj->addOrderPayment($this->settings["pmethod_code"], $transactionId, $orderPaymentAmount, Label::getLabel("LBL_Received_Payment", $this->siteLangId), $message);
-                            $json['redirect'] = CommonHelper::generateUrl('custom', 'paymentSuccess', array($orderId));
+                            $json['redirect'] = CommonHelper::generateUrl('custom', 'paymentSuccess', [$orderId]);
                         }
                     } else {
                         $json['error'] = $errors;
@@ -168,18 +167,18 @@ class TwocheckoutPayController extends PaymentController
 
     private function getAPICheckoutForm($orderId)
     {
-        $frm = new Form('frmTwoCheckout', array('id' => 'frmTwoCheckout', 'action' => CommonHelper::generateUrl('TwocheckoutPay', 'send', array($orderId)), 'class' => "form form--normal"));
+        $frm = new Form('frmTwoCheckout', ['id' => 'frmTwoCheckout', 'action' => CommonHelper::generateUrl('TwocheckoutPay', 'send', [$orderId]), 'class' => "form form--normal"]);
         $frm->addRequiredField(Label::getLabel('LBL_ENTER_CREDIT_CARD_NUMBER', $this->siteLangId), 'ccNo')->requirements()->setRegularExpressionToValidate(applicationConstants::CREDIT_CARD_NO_REGEX);
         $frm->addRequiredField(Label::getLabel('LBL_CARD_HOLDER_NAME', $this->siteLangId), 'cc_owner');
         $frm->addHiddenField('', 'token', '');
         $data['months'] = applicationConstants::getMonthsArr($this->siteLangId);
         $today = getdate();
-        $data['year_expire'] = array();
+        $data['year_expire'] = [];
         for ($i = $today['year']; $i < $today['year'] + 11; $i++) {
             $data['year_expire'][strftime('%Y', mktime(0, 0, 0, 1, 1, $i))] = strftime('%Y', mktime(0, 0, 0, 1, 1, $i));
         }
-        $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_MONTH', $this->siteLangId), 'expMonth', $data['months'], '', array(), '');
-        $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_YEAR', $this->siteLangId), 'expYear', $data['year_expire'], '', array(), '');
+        $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_MONTH', $this->siteLangId), 'expMonth', $data['months'], '', [], '');
+        $frm->addSelectBox(Label::getLabel('LBL_EXPIRY_YEAR', $this->siteLangId), 'expYear', $data['year_expire'], '', [], '');
         $fld = $frm->addPasswordField(Label::getLabel('LBL_CVV_SECURITY_CODE', $this->siteLangId), 'cvv');
         $fld->requirements()->setRequired(true);
         $fld->requirements()->setRegularExpressionToValidate(applicationConstants::CVV_NO_REGEX);
@@ -189,7 +188,7 @@ class TwocheckoutPayController extends PaymentController
         $frm->addRequiredField(Label::getLabel('LBL_Zip'), 'zipCode');
         $country = new Country();
         $countriesArr = $country->getCountriesArr($this->siteLangId);
-        $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'country', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'country', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), [], Label::getLabel('LBL_Select'));
         $fld->requirement->setRequired(true);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Pay_Now', $this->siteLangId));
         return $frm;

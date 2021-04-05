@@ -43,12 +43,12 @@ class GroupClassesController extends MyAppController
         $srch->setPageNumber($page);
         $rs = $srch->getResultSet();
         $classesList = FatApp::getDb()->fetchAll($rs);
-        $pagingArr = array(
+        $pagingArr = [
             'pageCount' => $srch->pages(),
             'page' => $page,
             'pageSize' => $pageSize,
             'recordCount' => $srch->recordCount(),
-        );
+        ];
         $this->set('classes', $classesList);
         $min_booking_time = FatApp::getConfig('CONF_CLASS_BOOKING_GAP', FatUtility::VAR_INT, 60);
         $this->set('min_booking_time', $min_booking_time);
@@ -78,9 +78,9 @@ class GroupClassesController extends MyAppController
     private function getSearchForm()
     {
         $frm = new Form('frmTeacherSrch');
-        $frm->addSelectBox('', 'custom_filter', TeacherGroupClasses::getCustomFilterAr(), '', array(), Label::getLabel('LBL_ALL'));
-        $frm->addSelectBox('', 'language', TeachingLanguage::getAllLangs($this->siteLangId), '', array(), Label::getLabel('LBL_Choose_Language'));
-        $frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_Class')));
+        $frm->addSelectBox('', 'custom_filter', TeacherGroupClasses::getCustomFilterAr(), '', [], Label::getLabel('LBL_ALL'));
+        $frm->addSelectBox('', 'language', TeachingLanguage::getAllLangs($this->siteLangId), '', [], Label::getLabel('LBL_Choose_Language'));
+        $frm->addTextBox('', 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_Class')]);
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
         $frm->addSubmitButton('', 'btnSrchSubmit', '');

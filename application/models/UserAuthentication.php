@@ -27,21 +27,15 @@ class UserAuthentication extends FatModel
     public function logFailedAttempt($ip, $username)
     {
         $db = FatApp::getDb();
-        $db->deleteRecords('tbl_failed_login_attempts', array(
-            'smt' => 'attempt_time < ?',
-            'vals' => array(date('Y-m-d H:i:s', strtotime("-7 Day")))));
-        $db->insertFromArray('tbl_failed_login_attempts', array(
-            'attempt_username' => $username,
-            'attempt_ip' => $ip,
-            'attempt_time' => date('Y-m-d H:i:s')
-        ));
+        $db->deleteRecords('tbl_failed_login_attempts', ['smt' => 'attempt_time < ?', 'vals' => [date('Y-m-d H:i:s', strtotime("-7 Day"))]]);
+        $db->insertFromArray('tbl_failed_login_attempts', ['attempt_username' => $username, 'attempt_ip' => $ip, 'attempt_time' => date('Y-m-d H:i:s')]);
         // For improvement, we can send an email about the failed attempt here.
     }
 
     public function clearFailedAttempt($ip, $username)
     {
         $db = FatApp::getDb();
-        return $db->deleteRecords('tbl_failed_login_attempts', array('smt' => 'attempt_username = ? and attempt_ip = ?', 'vals' => array($username, $ip)));
+        return $db->deleteRecords('tbl_failed_login_attempts', ['smt' => 'attempt_username = ? and attempt_ip = ?', 'vals' => [$username, $ip]]);
     }
 
     public function isBruteForceAttempt($ip, $username)
@@ -51,8 +45,7 @@ class UserAuthentication extends FatModel
         $srch->addCondition('attempt_ip', '=', $ip)->attachCondition('attempt_username', '=', $username);
         $srch->addCondition('attempt_time', '>=', date('Y-m-d H:i:s', strtotime("-5 minutes")));
         $srch->addFld('COUNT(*) AS total');
-        $rs = $srch->getResultSet();
-        $row = $db->fetch($rs);
+        $row = $db->fetch($srch->getResultSet());
         return ($row['total'] > 3);
     }
 
@@ -92,15 +85,8 @@ class UserAuthentication extends FatModel
             $srch->joinCredentials(true, true);
             $cnd = $srch->addCondition('credential_email', '=', $username);
             $cnd = $srch->addCondition('credential_username', '=', $username);
-            $srch->addMultipleFields(
-                    array(
-                        'user_first_name',
-                        'user_last_name',
-                        'credential_email'
-                    )
-            );
-            $rs = $srch->getResultSet();
-            if ($row = FatApp::getDb()->fetch($rs)) {
+            $srch->addMultipleFields(['user_first_name', 'user_last_name', 'credential_email']);
+            if ($row = FatApp::getDb()->fetch($srch->getResultSet())) {
                 $emailHandler = new EmailHandler();
                 $emailHandler->failedLoginAttempt(CommonHelper::getLangId(), $row);
             }
@@ -146,7 +132,6 @@ class UserAuthentication extends FatModel
         $rowUser['user_email'] = $row['credential_email'];
         $userCookieeConsent = new UserCookieConsent($row['credential_user_id']);
         $userCookieSettings = $userCookieeConsent->getCookieSettings();
-
         if (empty($userCookieSettings) && !empty($_COOKIE[UserCookieConsent::COOKIE_NAME])) {
             $cookieSettings = json_decode($_COOKIE[UserCookieConsent::COOKIE_NAME], true);
             $userCookieeConsent->saveOrUpdateSetting($cookieSettings);
@@ -159,7 +144,6 @@ class UserAuthentication extends FatModel
         /* clear failed login attempt for the user [ */
         $this->clearFailedAttempt($ip, $username);
         /* ] */
-
         return true;
     }
 
@@ -225,10 +209,10 @@ class UserAuthentication extends FatModel
         }
         $db = FatApp::getDb();
         if (strlen($_COOKIE[static::YOCOACHUSER_COOKIE_NAME])) {
-            $db->deleteRecords(static::DB_TBL_USER_AUTH, array(
+            $db->deleteRecords(static::DB_TBL_USER_AUTH, [
                 'smt' => static::DB_TBL_UAUTH_PREFIX . 'token = ?',
-                'vals' => array($_COOKIE[static::YOCOACHUSER_COOKIE_NAME])
-            ));
+                'vals' => [$_COOKIE[static::YOCOACHUSER_COOKIE_NAME]]
+            ]);
         }
         CommonHelper::setCookie($_COOKIE[static::YOCOACHUSER_COOKIE_NAME], '', time() - 3600, CONF_WEBROOT_URL, '', true);
         return true;
@@ -241,15 +225,10 @@ class UserAuthentication extends FatModel
         }
         if (isset($_SESSION [static::SESSION_ELEMENT_NAME]) && is_numeric($_SESSION [static::SESSION_ELEMENT_NAME] ['user_id']) && 0 < $_SESSION [static::SESSION_ELEMENT_NAME] ['user_id']) {
             $userObj = new User($_SESSION [static::SESSION_ELEMENT_NAME] ['user_id']);
-            $srch = $userObj->getUserSearchObj(array('credential_email'));
-            $rs = $srch->getResultSet();
-            $userRow = FatApp::getDb()->fetch($rs);
+            $srch = $userObj->getUserSearchObj(['credential_email']);
+            $userRow = FatApp::getDb()->fetch($srch->getResultSet());
             $credential_email = $userRow['credential_email'];
-            if ($_SESSION [static::SESSION_ELEMENT_NAME] ['user_email'] == $credential_email) {
-                return true;
-            } else {
-                return false;
-            }
+            return ($_SESSION [static::SESSION_ELEMENT_NAME]['user_email'] == $credential_email) ? true : false;
         }
         if ($token != '' && static::doAppLogin($token)) {
             return true;
@@ -301,18 +280,15 @@ class UserAuthentication extends FatModel
         } else {
             $srch->addFld(User::DB_TBL_CRED_PREFIX . 'verified');
         }
-        $srch->addMultipleFields(
-                array(
-                    User::tblFld('id'),
-                    User::tblFld('name'),
-                    User::DB_TBL_CRED_PREFIX . 'email',
-                    User::DB_TBL_CRED_PREFIX . 'password'
-                )
-        );
+        $srch->addMultipleFields([
+            User::tblFld('id'),
+            User::tblFld('name'),
+            User::DB_TBL_CRED_PREFIX . 'email',
+            User::DB_TBL_CRED_PREFIX . 'password'
+        ]);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $rs = $srch->getResultSet();
-        if (!$row = $db->fetch($rs, User::tblFld('id'))) {
+        if (!$row = $db->fetch($srch->getResultSet(), User::tblFld('id'))) {
             $this->error = Label::getLabel('ERR_INVALID_EMAIL_ADDRESS', $this->commonLangId);
             return false;
         }
@@ -339,21 +315,17 @@ class UserAuthentication extends FatModel
         if (true === $addDeletedCheck) {
             $srch->addCondition('user_deleted', '=', applicationConstants::NO);
         }
-        $srch->addMultipleFields(
-                array(
-                    'user_id',
-                    'user_first_name',
-                    'user_last_name',
-                    'user_deleted',
-                    'credential_email',
-                    'credential_password'
-                )
-        );
+        $srch->addMultipleFields([
+            'user_id',
+            'user_first_name',
+            'user_last_name',
+            'user_deleted',
+            'credential_email',
+            'credential_password'
+        ]);
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $rs = $srch->getResultSet();
-        if (!$row = $db->fetch($rs, 'user_id')) {
-            // $this->error = Label::getLabel('ERR_INVALID_USERNAME', $this->commonLangId);
+        if (!$row = $db->fetch($srch->getResultSet(), 'user_id')) {
             $this->error = Label::getLabel('ERR_INVALID_CREDENTIAL', $this->commonLangId);
             return false;
         }
@@ -380,14 +352,14 @@ class UserAuthentication extends FatModel
     public function deleteOldPasswordResetRequest()
     {
         $db = FatApp::getDb();
-        if (!$db->deleteRecords(static::DB_TBL_USER_PRR, array('smt' => static::DB_TBL_UPR_PREFIX . 'expiry < ?', 'vals' => array(date('Y-m-d H:i:s'))))) {
+        if (!$db->deleteRecords(static::DB_TBL_USER_PRR, ['smt' => static::DB_TBL_UPR_PREFIX . 'expiry < ?', 'vals' => [date('Y-m-d H:i:s')]])) {
             $this->error = $db->getError();
             return false;
         }
         return true;
     }
 
-    public function addPasswordResetRequest($data = array())
+    public function addPasswordResetRequest($data = [])
     {
         if (!isset($data['user_id']) || $data['user_id'] < 1 || strlen($data['token']) < 20) {
             return false;
@@ -395,16 +367,16 @@ class UserAuthentication extends FatModel
         $db = FatApp::getDb();
         if ($db->insertFromArray(
                         static::DB_TBL_USER_PRR,
-                        array(
+                        [
                             static::DB_TBL_UPR_PREFIX . 'user_id' => intval($data['user_id']),
                             static::DB_TBL_UPR_PREFIX . 'token' => $data['token'],
                             static::DB_TBL_UPR_PREFIX . 'expiry' => date('Y-m-d H:i:s', strtotime("+1 DAY"))
-                        )
+                        ]
                 )) {
-            $db->deleteRecords(static::DB_TBL_USER_AUTH, array(
+            $db->deleteRecords(static::DB_TBL_USER_AUTH, [
                 'smt' => static::DB_TBL_UAUTH_PREFIX . 'user_id = ?',
-                'vals' => array($data['user_id'])
-            ));
+                'vals' => [$data['user_id']]
+            ]);
             return true;
         }
         return false;
@@ -442,7 +414,6 @@ class UserAuthentication extends FatModel
         $userId = FatUtility::convertToType($userId, FatUtility::VAR_INT);
         if ($userId < 1) {
             $this->error = Label::getLabel('ERR_Invalid_Request', $this->commonLangId);
-            ;
             return false;
         }
         if (!empty($pwd)) {
@@ -451,7 +422,7 @@ class UserAuthentication extends FatModel
                 $this->error = $user->getError();
                 return false;
             }
-            FatApp::getDb()->deleteRecords(static::DB_TBL_USER_PRR, array('smt' => static::DB_TBL_UPR_PREFIX . 'user_id =?', 'vals' => array($userId)));
+            FatApp::getDb()->deleteRecords(static::DB_TBL_USER_PRR, ['smt' => static::DB_TBL_UPR_PREFIX . 'user_id =?', 'vals' => [$userId]]);
             return true;
         }
         $this->error = Label::getLabel('ERR_INVALID_PASSWORD', $this->commonLangId);
@@ -467,7 +438,7 @@ class UserAuthentication extends FatModel
             }
             $_SESSION['referer_page_url'] = CommonHelper::getCurrUrl();
             if ($redirect == true) {
-                FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm', array(), CONF_WEBROOT_FRONT_URL));
+                FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm', [], CONF_WEBROOT_FRONT_URL));
             } else {
                 return false;
             }
@@ -475,7 +446,7 @@ class UserAuthentication extends FatModel
         return true;
     }
 
-    public function updateSessionData($post = array())
+    public function updateSessionData($post = [])
     {
         if ($post) {
             $_SESSION[UserAuthentication::SESSION_ELEMENT_NAME]['user_first_name'] = $post['user_first_name'];
