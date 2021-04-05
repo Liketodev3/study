@@ -1,5 +1,24 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.11.6.20210405
+
+Release Date: 2021-04-05
+
+Updates:
+    .#73053-update labels
+Bugs
+    .#051969-change lesson package label
+    .#83928-use webroot url for include js file
+    .#83928-change label query
+    .#051968-fix group class serach form css issue
+    .#050298-cancel group class fixed
+    .#050897-fic start and end time text issue
+    .#051975-fix phone no validation issue
+    .#051963-set range of txn amount in admin panel
+    .#051964 - Search should be working according to Country wise
+
+-------------------------------------------------------------------------------------
+
 Release Number: TV-2.11.5.20210403
 Release Date: 2021-04-03
 
