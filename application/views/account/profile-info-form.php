@@ -135,9 +135,13 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 			let placeholder = $("#user_phone").attr("placeholder");
             console.log(placeholder);
 			if(placeholder){
+                placeholderlength = placeholder.length;
 				placeholder = placeholder.replace(/[0-9.]/g, '9');
-            	console.log(placeholder);
 				$("#user_phone").inputmask({"mask": placeholder});
+				// dataFatreq = JSON.parse($("#user_phone").attr('data-fatreq'));
+				// dataFatreq.lengthrange = [placeholderlength,placeholderlength];
+				// dataFatreq.range.maxval = placeholderlength;
+				// $("#user_phone").attr('data-fatreq', JSON.stringify(dataFatreq));
 			}
 		};
 

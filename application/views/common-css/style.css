@@ -8338,3 +8338,10 @@ body[dir="rtl"] .checkout-cart-dir {
     float: left !important;
     clear: left !important;
 }
+.erlist_user_phone, .erlist_utrvalue_user_phone {
+    position: absolute!important;
+    bottom: -19px;
+}
+.calendar-view{
+    z-index: 11;
+}

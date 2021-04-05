@@ -391,7 +391,7 @@ class AccountController extends LoggedUserController
         $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'user_gender', User::getGenderArr());
         $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
-        
+        $fldPhn->requirements()->setCustomErrorMessage(Label::getLabel('LBL_PHONE_N0_VALIDATION_MSG'));
         $frm->addHiddenField('', 'user_phone_code');
 
         if ($teacher) {
