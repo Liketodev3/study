@@ -353,5 +353,6 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.4.20210402' WHERE `conf_na
 
 ALTER TABLE `tbl_users` ADD `user_phone_code` VARCHAR(6) NOT NULL AFTER `user_last_name`;
 ALTER TABLE `tbl_user_teacher_request_values` ADD `utrvalue_user_phone_code` VARCHAR(6) NOT NULL AFTER `utrvalue_user_gender`;
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.5.20210403' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_PHONE_N0_VALIDATION_MSG', '1', 'Please add vaild phone no and length between 4 to 16');
