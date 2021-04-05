@@ -10,7 +10,7 @@ class Cronjob extends FatModel
         CommonHelper::initCommonVariables();
     }
 
-    public static function lessonOneDayReminder()
+    public function lessonOneDayReminder()
     {
         $langId = CommonHelper::getLangId();
         $srch = $this->getLessonsData();

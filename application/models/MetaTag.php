@@ -79,17 +79,6 @@ class MetaTag extends MyAppModel
         return $metaTagSrch;
     }
 
-    public static function getTeacherIDByUserName($teacherUserName)
-    {
-        $srch = new SearchBase(static::DB_USERS_TBL, 'u');
-        $srch->addCondition('u.user_url_name', '=', $teacherUserName);
-        $srch->doNotCalculateRecords();
-        $srch->addFld('u.user_id');
-        $srch->setPageSize(1);
-        $row = FatApp::getDb()->fetch($srch->getResultSet());
-        return $row['user_id'] ?? '';
-    }
-
     public static function getOrignialUrlFromComponents($row)
     {
         if (empty($row) || $row['meta_controller'] == '') {
