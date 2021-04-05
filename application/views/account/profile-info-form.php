@@ -120,7 +120,6 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 		$("#user_phone").inputmask();
 		input.addEventListener("countrychange",function() {
 			var dial_code = $.trim($('.iti__selected-dial-code').text());
-            console.log(telInput.getSelectedCountryData());
 			setPhoneNumberMask();
             $('#user_phone_code').val(dial_code);
         });
@@ -128,12 +127,11 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 		var telInput =  window.intlTelInput(input, {
             separateDialCode: true,
 			initialCountry: "us",
-            utilsScript: "../../js/utils.js",
+            utilsScript: siteConstants.webroot+"js/utils.js",
         });
 
 		setPhoneNumberMask =  function(){
 			let placeholder = $("#user_phone").attr("placeholder");
-            console.log(placeholder);
 			if(placeholder){
                 placeholderlength = placeholder.length;
 				placeholder = placeholder.replace(/[0-9.]/g, '9');
