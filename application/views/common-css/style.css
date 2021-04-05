@@ -8345,3 +8345,12 @@ body[dir="rtl"] .checkout-cart-dir {
 .calendar-view{
     z-index: 11;
 }
+
+@media(max-width:767px){
+    .form-search .group-class-search{
+        width: 100%;
+        float: none;
+        padding-left: 0;
+        margin-top: 20px;
+    }
+}

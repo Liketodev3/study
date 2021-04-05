@@ -1,6 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php $frmSrch->setFormTagAttribute ( 'onSubmit', 'search(this); return(false);' );
-$frmSrch->setFormTagAttribute ( 'class', '' );
+$frmSrch->setFormTagAttribute ( 'class', 'group-class-search' );
 $frmSrch->getField( 'btnSrchSubmit' )->setFieldTagAttribute('class', 'form__action');
 $frmSrch->getField( 'keyword' )->setFieldTagAttribute('class', 'keyword-search');
 ?>
