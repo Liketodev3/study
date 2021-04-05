@@ -562,7 +562,7 @@ class PurchasedLessonsController extends AdminBaseController
         }
 
         if ($orderInfo['slesson_grpcls_id'] == 0 && $data['order_is_paid'] == Order::ORDER_IS_CANCELLED && $orderInfo['scheduledLessonsCount'] > 0) {
-            $this->error = Label::getLabel("LBL_You_are_not_cancelled_the_order_because_some_lesson_are_scheduled", CommonHelper::getLangId());
+            $this->error = Label::getLabel("LBL_You_can_not_cancel_the_order_because_some_lesson_are_scheduled", CommonHelper::getLangId());
             if (FatUtility::isAjaxCall()) {
                 // Message::addErrorMessage($this->error);
                 FatUtility::dieJsonError($this->error);
