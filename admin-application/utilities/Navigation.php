@@ -1,6 +1,8 @@
 <?php
+
 class Navigation
 {
+
     public static function setLeftNavigationVals($template)
     {
         $db = FatApp::getDb();
@@ -9,4 +11,5 @@ class Navigation
         $template->set('objPrivilege', AdminPrivilege::getInstance());
         $template->set('adminName', AdminAuthentication::getLoggedAdminAttribute("admin_name"));
     }
+
 }

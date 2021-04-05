@@ -1,13 +1,17 @@
 <?php
+
 class AdminUsers extends MyAppModel
 {
+
     const DB_TBL = 'tbl_admin';
     const DB_TBL_PREFIX = 'admin_';
+
     public function __construct($adminId = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $adminId);
-        $this->objMainTableRecord->setSensitiveFields(array());
+        $this->objMainTableRecord->setSensitiveFields([]);
     }
+
     public static function getSearchObject($isActive = true)
     {
         $srch = new SearchBase(static::DB_TBL);
@@ -16,6 +20,7 @@ class AdminUsers extends MyAppModel
         }
         return $srch;
     }
+
     public static function getUserPermissions($admperm_admin_id = 0)
     {
         $srch = new SearchBase('tbl_admin_permissions');
@@ -27,21 +32,23 @@ class AdminUsers extends MyAppModel
         }
         return false;
     }
-    public function updatePermissions($assignValues = array(), $updateAll = false)
+
+    public function updatePermissions($assignValues = [], $updateAll = false)
     {
         if ($updateAll) {
             $permissionModules = AdminPrivilege::getPermissionModulesArr();
             foreach ($permissionModules as $key => $val) {
                 $assignValues['admperm_section_id'] = $key;
-                if (!FatApp::getDb()->insertFromArray('tbl_admin_permissions', $assignValues, false, array(), $assignValues)) {
+                if (!FatApp::getDb()->insertFromArray('tbl_admin_permissions', $assignValues, false, [], $assignValues)) {
                     return false;
                 }
             }
         } else {
-            if (!FatApp::getDb()->insertFromArray('tbl_admin_permissions', $assignValues, false, array(), $assignValues)) {
+            if (!FatApp::getDb()->insertFromArray('tbl_admin_permissions', $assignValues, false, [], $assignValues)) {
                 return false;
             }
         }
         return true;
     }
+
 }

@@ -1,10 +1,10 @@
 <?php
+
 class Configurations extends FatModel
 {
+
     const DB_TBL = 'tbl_configurations';
     const DB_TBL_PREFIX = 'conf_';
-    private $db;
-
     const FORM_GENERAL = 1;
     const FORM_LOCAL = 2;
     const FORM_SEO = 3;
@@ -16,7 +16,6 @@ class Configurations extends FatModel
     const FORM_SERVER = 9;
     const FORM_REVIEWS = 10;
 
-
     public function __construct()
     {
         parent::__construct();
@@ -24,17 +23,17 @@ class Configurations extends FatModel
 
     public static function getLangTypeFormArr()
     {
-        return  array(
+        return [
             Configurations::FORM_GENERAL,
             Configurations::FORM_EMAIL,
             Configurations::FORM_MEDIA,
-        );
+        ];
     }
 
     public static function getTabsArr()
     {
         $adminLangId = CommonHelper::getLangId();
-        $configurationArr =  array(
+        $configurationArr = [
             Configurations::FORM_GENERAL => Label::getLabel('MSG_General', $adminLangId),
             Configurations::FORM_LOCAL => Label::getLabel('MSG_Local', $adminLangId),
             Configurations::FORM_SEO => Label::getLabel('MSG_Seo', $adminLangId),
@@ -44,19 +43,18 @@ class Configurations extends FatModel
             Configurations::FORM_EMAIL => Label::getLabel('MSG_Email', $adminLangId),
             Configurations::FORM_MEDIA => Label::getLabel('MSG_Media', $adminLangId),
             Configurations::FORM_REVIEWS => Label::getLabel('MSG_Reviews', $adminLangId),
-            Configurations::FORM_SERVER => Label::getLabel('MSG_Server', $adminLangId));
+            Configurations::FORM_SERVER => Label::getLabel('MSG_Server', $adminLangId)];
         return $configurationArr;
     }
 
-
     public static function dateFormatPhpArr()
     {
-        return array( 'Y-m-d' => 'Y-m-d', 'd/m/Y' => 'd/m/Y', 'm-d-Y' => 'm-d-Y', 'M d, Y' => 'M d, Y');
+        return ['Y-m-d' => 'Y-m-d', 'd/m/Y' => 'd/m/Y', 'm-d-Y' => 'm-d-Y', 'M d, Y' => 'M d, Y'];
     }
 
     public static function dateFormatMysqlArr()
     {
-        return array('%Y-%m-%d','%d/%m/%Y','%m-%d-%Y','%b %d, %Y');
+        return ['%Y-%m-%d', '%d/%m/%Y', '%m-%d-%Y', '%b %d, %Y'];
     }
 
     public static function dateTimeZoneArr()
@@ -70,7 +68,7 @@ class Configurations extends FatModel
     {
         $srch = new SearchBase(static::DB_TBL, 'conf');
         $rs = $srch->getResultSet();
-        $record = array();
+        $record = [];
         while ($row = FatApp::getDb()->fetch($rs)) {
             $record [strtoupper($row['conf_name'])] = $row['conf_val'];
         }
@@ -80,15 +78,10 @@ class Configurations extends FatModel
     public function update($data)
     {
         foreach ($data as $key => $val) {
-            $assignValues = array('conf_name' => $key, 'conf_val' => $val);
-            FatApp::getDb()->insertFromArray(
-                static::DB_TBL,
-                $assignValues,
-                false,
-                array(),
-                $assignValues
-            );
+            $assignValues = ['conf_name' => $key, 'conf_val' => $val];
+            FatApp::getDb()->insertFromArray(static::DB_TBL, $assignValues, false, [], $assignValues);
         }
         return true;
     }
+
 }

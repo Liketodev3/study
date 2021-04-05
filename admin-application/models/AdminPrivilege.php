@@ -1,6 +1,8 @@
 <?php
+
 class AdminPrivilege
 {
+
     const SECTION_USERS = 1;
     const SECTION_TEACHER_APPROVAL_FORM = 2;
     const SECTION_TEACHER_APPROVAL_REQUESTS = 3;
@@ -51,13 +53,10 @@ class AdminPrivilege
     const SECTION_TOP_LANGUAGES_REPORT = 48;
     const SECTION_FAQ_CATEGORY = 49;
     const SECTION_TEACHING_LANGUAGES = 50;
-    const SECTION_COMMISSION_REPORT  = 51;
-
+    const SECTION_COMMISSION_REPORT = 51;
     const PRIVILEGE_NONE = 0;
     const PRIVILEGE_READ = 1;
     const PRIVILEGE_WRITE = 2;
-
-
     const SECTION_RESCHEDULE_REPORT = 52;
 
     private static $instance = null;
@@ -75,19 +74,20 @@ class AdminPrivilege
     {
         return (1 == $adminId);
     }
+
     public static function getPermissionArr()
     {
-        $arr = array(
+        $arr = [
             static::PRIVILEGE_NONE => Label::getLabel('MSG_None', CommonHelper::getLangId()),
             static::PRIVILEGE_READ => Label::getLabel('MSG_Read_Only', CommonHelper::getLangId()),
             static::PRIVILEGE_WRITE => Label::getLabel('MSG_Read_and_Write', CommonHelper::getLangId())
-        );
+        ];
         return $arr;
     }
 
     public static function getPermissionModulesArr()
     {
-        $arr = array(
+        $arr = [
             static::SECTION_ADMIN_DASHBOARD => Label::getLabel('MSG_Admin_Dashboard', CommonHelper::getLangId()),
             static::SECTION_TEACHER_APPROVAL_FORM => Label::getLabel('MSG_Teacher_Approval_Form', CommonHelper::getLangId()),
             static::SECTION_TEACHER_APPROVAL_REQUESTS => Label::getLabel('MSG_Teacher_Approval_Requests', CommonHelper::getLangId()),
@@ -122,7 +122,7 @@ class AdminPrivilege
             static::SECTION_BIBLE_CONTENT => Label::getLabel('MSG_Bible_Content', CommonHelper::getLangId()),
             static::SECTION_MANAGE_PURCHASED_LESSONS => Label::getLabel('MSG_Manage_Purchased_lessons', CommonHelper::getLangId()),
             static::SECTION_ISSUES_REPORTED => Label::getLabel('MSG_Manage_Issues_Reported', CommonHelper::getLangId()),
-            static::SECTION_GIFTCARDS	 		=> Label::getLabel('MSG_GIFTCARDS', CommonHelper::getLangId()),
+            static::SECTION_GIFTCARDS => Label::getLabel('MSG_GIFTCARDS', CommonHelper::getLangId()),
             static::SECTION_WITHDRAW_REQUESTS => Label::getLabel('MSG_Withdraw_Requests', CommonHelper::getLangId()),
             static::SECTION_TEACHER_REVIEWS => Label::getLabel('MSG_Teacher_Reviews', CommonHelper::getLangId()),
             static::SECTION_COMMISSION => Label::getLabel('MSG_Commission', CommonHelper::getLangId()),
@@ -136,7 +136,7 @@ class AdminPrivilege
             static::SECTION_TIMEZONES => Label::getLabel('MSG_Manage_Timezones', CommonHelper::getLangId()),
             static::SECTION_ISSUE_REPORT_OPTIONS => Label::getLabel('MSG_Manage_ISSUE_REPORT_OPTIONS', CommonHelper::getLangId()),
             static::SECTION_COMMISSION_REPORT => Label::getLabel('MSG_Commission_Report', CommonHelper::getLangId()),
-        );
+        ];
         return $arr;
     }
 
@@ -146,7 +146,7 @@ class AdminPrivilege
         $adminId = FatUtility::int($adminId);
         /* Are you looking for permissions of administrator [ */
         if (static::isAdminSuperAdmin($adminId)) {
-            $arrLevels = array();
+            $arrLevels = [];
             if ($sectionId > 0) {
                 $arrLevels[$sectionId] = static::PRIVILEGE_WRITE;
             } else {
@@ -162,19 +162,14 @@ class AdminPrivilege
         if (0 < $sectionId) {
             $srch->addCondition('admperm_section_id', '=', $sectionId);
         }
-        $srch->addMultipleFields(array(
-            'admperm_section_id',
-            'admperm_value'
-        ));
-        $rs = $srch->getResultSet();
-        $arr = $db->fetchAllAssoc($rs);
-        return $arr;
+        $srch->addMultipleFields(['admperm_section_id', 'admperm_value']);
+        return $db->fetchAllAssoc($srch->getResultSet());
     }
 
     private function cacheLoadedPermission($adminId, $secId, $level)
     {
         if (!isset($this->loadedPermissions[$adminId])) {
-            $this->loadedPermissions[$adminId] = array();
+            $this->loadedPermissions[$adminId] = [];
         }
         $this->loadedPermissions[$adminId][$secId] = $level;
     }
@@ -182,10 +177,7 @@ class AdminPrivilege
     private function checkPermission($adminId, $secId, $level, $returnResult = false)
     {
         $db = FatApp::getDb();
-        if (!in_array($level, array(
-            1,
-            2
-        ))) {
+        if (!in_array($level, [1, 2])) {
             trigger_error(Label::getLabel('MSG_Invalid_permission_level_checked', CommonHelper::getLangId()) . ' ' . $level, E_USER_ERROR);
         }
         $adminId = FatUtility::convertToType($adminId, FatUtility::VAR_INT);
@@ -201,9 +193,7 @@ class AdminPrivilege
         if ($this->isAdminSuperAdmin($adminId)) {
             return true;
         }
-        $row_admin = Admin::getAttributesById($adminId, array(
-            'admin_active'
-        ));
+        $row_admin = Admin::getAttributesById($adminId, ['admin_active']);
         if (empty($row_admin)) {
             FatUtility::dieWithError(Label::getLabel('MSG_Invalid_Request', CommonHelper::getLangId()));
         }
@@ -503,7 +493,6 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_FAQ_CATEGORY, static::PRIVILEGE_WRITE, $returnResult);
     }
 
-
     public function canViewCourseCategory($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_COURSE_CATEGORY, static::PRIVILEGE_READ, $returnResult);
@@ -523,7 +512,9 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_SPOKEN_LANGUAGES, static::PRIVILEGE_WRITE, $returnResult);
     }
+
     /* code added on 30-07-2019 TEACHING LANGUAGES SEPERATE OPTION */
+
     public function canViewTeachingLanguage($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_TEACHING_LANGUAGES, static::PRIVILEGE_READ, $returnResult);
@@ -535,6 +526,7 @@ class AdminPrivilege
     }
 
     /**/
+
     public function canViewPreferences($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_TEACHER_PREFFERENCES, static::PRIVILEGE_READ, $returnResult);
@@ -554,7 +546,6 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_ADMIN_PERMISSIONS, static::PRIVILEGE_WRITE, $returnResult);
     }
-
 
     public function canViewBlogPostCategories($adminId = 0, $returnResult = false)
     {
@@ -720,6 +711,7 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_GROUP_CLASSES, static::PRIVILEGE_READ, $returnResult);
     }
+
     public function canEditTimezones($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_TIMEZONES, static::PRIVILEGE_WRITE, $returnResult);
@@ -740,9 +732,9 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_ISSUE_REPORT_OPTIONS, static::PRIVILEGE_READ, $returnResult);
     }
 
-    public function canViewCommissionReport($adminId = 0, $returnResult = false) 
+    public function canViewCommissionReport($adminId = 0, $returnResult = false)
     {
-        return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult); 
+        return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult);
     }
 
 }
