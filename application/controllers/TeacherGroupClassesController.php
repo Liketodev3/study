@@ -331,9 +331,24 @@ class TeacherGroupClassesController extends TeacherBaseController
         }
 
         $teacher_id = UserAuthentication::getLoggedUserId();
+
+        $db = FatApp::getDb();
+        $srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
+        $srch->joinIssueReported();
+        $srch->addMultipleFields(['issrep_id']);
+        $srch->doNotCalculateRecords();
+        $srch->setPagesize(1);
+        $srch->addCondition('grpcls_id', '=', $grpclsId);
+        $srch->addCondition('grpcls_teacher_id', '=', $teacher_id);
+        $class_details =  $db->fetch($srch->getResultSet());
+
+        $teacher_id = UserAuthentication::getLoggedUserId();
         $class_details = TeacherGroupClassesSearch::getClassDetailsByTeacher($grpclsId, $teacher_id, $this->siteLangId);
         if (empty($class_details)) {
-            FatUtility::dieJsonError(Label::getLabel("LBL_Unauthorized"));
+            FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
+        }
+        if ($class_details['issrep_id'] > 0 || $class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED) {
+            FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
 
         $db = FatApp::getDb();
