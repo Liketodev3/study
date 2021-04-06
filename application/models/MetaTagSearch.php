@@ -93,7 +93,7 @@ class MetaTagSearch extends SearchBase
                 break;
             default:
                 if (!empty($post['keyword'])) {
-                    $condition = $metaSrch->addCondition('mt.meta_identifier', 'like', '%' . $criteria['keyword']['val'] . '%');
+                    $condition = $this->addCondition('mt.meta_identifier', 'like', '%' . $criteria['keyword']['val'] . '%');
                     $condition->attachCondition('mt_l.meta_title', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
                 }
                 $this->addCondition('mt.meta_type', '=', $metaType);

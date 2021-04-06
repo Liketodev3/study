@@ -361,35 +361,7 @@ class UsersController extends AdminBaseController
         $this->set('msg', $this->str_setup_successful);
         $this->_template->render(false, false, 'json-success.php');
     }
-
-    public function viewTeacherRequest($requestId)
-    {
-        $requestId = FatUtility::int($requestId);
-        if (1 > $requestId) {
-            Message::addErrorMessage($this->str_invalid_request_id);
-            FatUtility::dieWithError(Message::getHtml());
-        }
-        $userObj = new User();
-        $srch = $userObj->getTeacherRequestsObj($requestId);
-        $srch->addFld('tusr.*');
-        $srch->doNotCalculateRecords();
-        $srch->doNotLimitRecords();
-        $rs = $srch->getResultSet();
-        if (!$rs) {
-            Message::addErrorMessage($this->str_invalid_request);
-            FatUtility::dieWithError(Message::getHtml());
-        }
-        $teacherRequest = FatApp::getDb()->fetch($rs);
-        if ($teacherRequest == false) {
-            Message::addErrorMessage($this->str_invalid_request);
-            FatUtility::dieWithError(Message::getHtml());
-        }
-        $teacherRequest["field_values"] = $userObj->getTeacherRequestFieldsValueArr($requestId, $this->adminLangId);
-        $this->set('reqStatusArr', User::getTeacherReqStatusArr($this->adminLangId));
-        $this->set('teacherRequest', $teacherRequest);
-        $this->_template->render(false, false);
-    }
-
+    
     public function autoCompleteJson()
     {
         $pagesize = 20;

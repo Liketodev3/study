@@ -274,10 +274,10 @@ class BlogPostsController extends AdminBaseController
                 }
             }
         } else {
-            $postId = $record->getMainTableRecordId();
+            $postId = $prodObj->getMainTableRecordId();
             $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
-        $this->set('postId', $post_id);
+        $this->set('postId', $postId);
         $this->set('langId', $newTabLangId);
         $this->set('msg', Label::getLabel('MSG_Record_Updated_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
@@ -435,9 +435,6 @@ class BlogPostsController extends AdminBaseController
     private function getLangForm($postId = 0, $lang_id = 0)
     {
         $postId = FatUtility::int($postId);
-        $srch = BlogPost::getSearchObject(true);
-        $srch->addCondition('bp.post_id', '=', $postId);
-        $row = FatApp::getDb()->fetch($srch->getResultSet());
         $frm = new Form('frmBlogPostCatLang', ['id' => 'frmBlogPostCatLang']);
         $frm->addHiddenField('', 'post_id', $postId);
         $frm->addHiddenField('', 'lang_id', $lang_id);

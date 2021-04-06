@@ -327,11 +327,6 @@ class BlogPostCategoriesController extends AdminBaseController
     private function getLangForm($bpcategory_id = 0, $lang_id = 0)
     {
         $bpcategory_id = FatUtility::int($bpcategory_id);
-        $srch = BlogPostCategory::getSearchObject(true);
-        $srch->addCondition('bpc.bpcategory_id', '=', $bpcategory_id);
-        $srch->addCondition('bpc.bpcategory_parent', '=', 0);
-        $rs = $srch->getResultSet();
-        $row = FatApp::getDb()->fetch($rs);
         $frm = new Form('frmBlogPostCatLang', ['id' => 'frmBlogPostCatLang']);
         $frm->addHiddenField('', 'bpcategory_id', $bpcategory_id);
         $frm->addHiddenField('', 'lang_id', $lang_id);

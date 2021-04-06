@@ -156,29 +156,6 @@ class GiftcardsController extends AdminBaseController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-    public function Cancel($orderId)
-    {
-        $this->objPrivilege->canEditGiftcards();
-        $orderObj = new Orders();
-        $order = $orderObj->getOrderById($orderId);
-        if ($order == false) {
-            Message::addErrorMessage(Label::getLabel('LBL_Error:_Please_perform_this_action_on_valid_record.', $this->adminLangId));
-            FatUtility::dieJsonError(Message::getHtml());
-        }
-        if (!$order["order_is_paid"]) {
-            if (!$orderObj->addOrderPaymentHistory($orderId, Orders::ORDER_IS_CANCELLED, Label::getLabel('MSG_Order_Cancelled', $order['order_language_id']), 1)) {
-                Message::addErrorMessage($orderObj->getError());
-                FatUtility::dieJsonError(Message::getHtml());
-            }
-            if (!$orderObj->refundOrderPaidAmount($orderId, $order['order_language_id'])) {
-                Message::addErrorMessage($orderObj->getError());
-                FatUtility::dieJsonError(Message::getHtml());
-            }
-        }
-        $this->set('msg', Label::getLabel('LBL_Payment_Details_Cancelled_Successfully', $this->adminLangId));
-        $this->_template->render(false, false, 'json-success.php');
-    }
-
     private function getPaymentForm($langId, $orderId = '')
     {
         $frm = new Form('frmPayment');

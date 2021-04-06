@@ -239,15 +239,7 @@ class FaqCategoriesController extends AdminBaseController
             FatUtility::dieJsonSuccess(Label::getLabel('LBL_Order_Updated_Successfully'));
         }
     }
-
-    public function faqToCmsForm()
-    {
-        $this->objPrivilege->canEditFaqCategory();
-        $frm = $this->getFaqToCmsForm();
-        $this->set('frm', $frm);
-        $this->_template->render(false, false);
-    }
-
+    
     public function changeStatus()
     {
         $this->objPrivilege->canEditFaqCategory();

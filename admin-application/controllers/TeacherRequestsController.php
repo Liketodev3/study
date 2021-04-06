@@ -402,16 +402,7 @@ class TeacherRequestsController extends AdminBaseController
         $recordId = FatUtility::int($recordId);
         $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, $recordId, 0);
         $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
-        switch (strtoupper($sizeType)) {
-            case 'THUMB':
-                $w = 100;
-                $h = 100;
-                AttachedFile::displayImage($image_name, $w, $h);
-                break;
-            default:
-                AttachedFile::displayOriginalImage($image_name);
-                break;
-        }
+        AttachedFile::displayOriginalImage($image_name);
     }
 
     public function downloadResume($userId, $subRecordId)
