@@ -99,7 +99,8 @@ class TeacherRequestsController extends AdminBaseController
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
-        $srch->addMultipleFields(['utrequest_id',
+        $srch->addMultipleFields([
+            'utrequest_id',
             'utrequest_user_id',
             'utrequest_reference',
             'utrequest_date',
@@ -339,6 +340,11 @@ class TeacherRequestsController extends AdminBaseController
             /* ] */
             $userNotification = new UserNotifications($requestRow['utrequest_user_id']);
             $userNotification->sendTeacherApprovalNotification();
+            /* Update Teacher's Stat */
+            $stat = new TeacherStat($requestRow['utrequest_user_id']);
+            $stat->setTeachLangPrices();
+            $stat->setSpeakLang();
+            $stat->setQualification();
         }
         /* ] */
         /* email sending[ */
@@ -419,5 +425,4 @@ class TeacherRequestsController extends AdminBaseController
         }
         AttachedFile::downloadFile($fileRow['afile_name'], $fileRow['afile_physical_path']);
     }
-
 }

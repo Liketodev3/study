@@ -106,9 +106,11 @@ class TeacherReviewsController extends AdminBaseController
         $srch->joinLearner();
         $srch->joinScheduledLesson();
         $srch->joinScheduleLessonDetails();
-        $srch->addMultipleFields(['sld.sldetail_order_id as tlreview_order_id',
+        $srch->addMultipleFields([
+            'sld.sldetail_order_id as tlreview_order_id',
             'ul.user_first_name as reviewed_by', 'tlreview_id', 'tlreview_posted_on',
-            'tlreview_status', 'tlreview_title', 'tlreview_description']);
+            'tlreview_status', 'tlreview_title', 'tlreview_description'
+        ]);
         $srch->addOrder('tlreview_posted_on', 'DESC');
         $srch->addCondition('tlreview_id', '=', $tlreview_id);
         $records = FatApp::getDb()->fetch($srch->getResultSet());
@@ -144,8 +146,10 @@ class TeacherReviewsController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $data = TeacherLessonReview::getAttributesById($tlreview_id, ['tlreview_id', 'tlreview_status',
-                    'tlreview_teacher_user_id', 'tlreview_lang_id', 'tlreview_postedby_user_id']);
+        $data = TeacherLessonReview::getAttributesById($tlreview_id, [
+            'tlreview_id', 'tlreview_status', 'tlreview_teacher_user_id',
+            'tlreview_lang_id', 'tlreview_postedby_user_id'
+        ]);
         if (false == $data) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
@@ -157,7 +161,9 @@ class TeacherReviewsController extends AdminBaseController
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $statusArr = TeacherLessonReview::getReviewStatusArr($this->adminLangId);
+        /* Upudate Ratings and Reviews counts */
+        $teacherId = FatUtility::int($data['tlreview_teacher_user_id']);
+        (new TeacherStat($teacherId))->setRatingReviewCount();
         $this->set('msg', 'Updated Successfully.');
         $this->set('tlreviewId', $tlreview_id);
         $this->_template->render(false, false, 'json-success.php');
@@ -190,5 +196,4 @@ class TeacherReviewsController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', 'Update');
         return $frm;
     }
-
 }

@@ -57,11 +57,14 @@ class OrderPayment extends Order
             return false;
         }
         $langId = FatApp::getConfig('conf_default_site_lang');
-        if (!$this->addOrderPayment('NoCharge', 'W-' . time(), $amountToBeCharge,
-                        Label::getLabel("LBL_No_Charges", $langId),
-                        Label::getLabel('LBL_No_Charges', $langId),
-                        true
-                )) {
+        if (!$this->addOrderPayment(
+            'NoCharge',
+            'W-' . time(),
+            $amountToBeCharge,
+            Label::getLabel("LBL_No_Charges", $langId),
+            Label::getLabel('LBL_No_Charges', $langId),
+            true
+        )) {
             return false;
         }
         return true;
@@ -95,10 +98,10 @@ class OrderPayment extends Order
         $txnId = $transObj->getMainTableRecordId();
         $orderWalletAmountCharge = $orderInfo['order_wallet_amount_charge'] - $amountToBeCharge;
         if (!FatApp::getDb()->updateFromArray(
-                        Order::DB_TBL,
-                        ['order_wallet_amount_charge' => $orderWalletAmountCharge],
-                        ['smt' => 'order_id = ?', 'vals' => [$orderInfo["order_id"]]]
-                )) {
+            Order::DB_TBL,
+            ['order_wallet_amount_charge' => $orderWalletAmountCharge],
+            ['smt' => 'order_id = ?', 'vals' => [$orderInfo["order_id"]]]
+        )) {
             $this->error = FatApp::getDb()->getError();
             return false;
         }
@@ -140,17 +143,17 @@ class OrderPayment extends Order
             $orderInfo = $orderInfo + $orderProductRow;
         }
         if (!FatApp::getDb()->insertFromArray(
-                        static::DB_TBL_ORDER_PAYMENTS,
-                        [
-                            'opayment_order_id' => $this->paymentOrderId,
-                            'opayment_method' => $paymentMethodName,
-                            'opayment_gateway_txn_id' => $txnId,
-                            'opayment_amount' => $amount,
-                            'opayment_comments' => $comments,
-                            'opayment_gateway_response' => $response,
-                            'opayment_date' => date('Y-m-d H:i:s')
-                        ]
-                )) {
+            static::DB_TBL_ORDER_PAYMENTS,
+            [
+                'opayment_order_id' => $this->paymentOrderId,
+                'opayment_method' => $paymentMethodName,
+                'opayment_gateway_txn_id' => $txnId,
+                'opayment_amount' => $amount,
+                'opayment_comments' => $comments,
+                'opayment_gateway_response' => $response,
+                'opayment_date' => date('Y-m-d H:i:s')
+            ]
+        )) {
             $this->error = FatApp::getDb()->getError();
             return false;
         }
@@ -285,6 +288,9 @@ class OrderPayment extends Order
                         }
                     }
                 }
+                /* Upudate Studens and Lessions counts */
+                $userId = FatUtility::int($orderInfo['op_teacher_id']);
+                (new TeacherStat($userId))->setStudentLessionCount();
             }
 
             /* ] */
@@ -295,12 +301,12 @@ class OrderPayment extends Order
                 $row = FatApp::getDb()->fetch($rs);
                 if (!empty($row)) {
                     if (!FatApp::getDb()->insertFromArray(CouponHistory::DB_TBL, [
-                                'couponhistory_coupon_id' => $row['coupon_id'],
-                                'couponhistory_order_id' => $orderInfo['order_id'],
-                                'couponhistory_user_id' => $orderInfo['order_user_id'],
-                                'couponhistory_amount' => $orderInfo['order_discount_total'],
-                                'couponhistory_added_on' => date('Y-m-d H:i:s')
-                            ])) {
+                        'couponhistory_coupon_id' => $row['coupon_id'],
+                        'couponhistory_order_id' => $orderInfo['order_id'],
+                        'couponhistory_user_id' => $orderInfo['order_user_id'],
+                        'couponhistory_amount' => $orderInfo['order_discount_total'],
+                        'couponhistory_added_on' => date('Y-m-d H:i:s')
+                    ])) {
                         $this->error = FatApp::getDb()->getError();
                         return false;
                     }
@@ -367,5 +373,4 @@ class OrderPayment extends Order
         }
         return $srch;
     }
-
 }

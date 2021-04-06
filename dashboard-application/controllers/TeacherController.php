@@ -180,6 +180,8 @@ class TeacherController extends TeacherBaseController
             Message::addErrorMessage(Label::getLabel($userObj->getError()));
             FatUtility::dieJsonError(Message::getHtml());
         }
+        /* Update Teach Lang Minimum & Maximum Prices */
+        (new TeacherStat($userId))->setTeachLangPrices();
         $this->set('msg', Label::getLabel('MSG_Setup_successful'));
         $this->_template->render(false, false, 'json-success.php');
     }
@@ -271,23 +273,28 @@ class TeacherController extends TeacherBaseController
     public function deleteLanguageRow($id = 0)
     {
         $id = FatUtility::int($id);
+        $teacherId = UserAuthentication::getLoggedUserId();
         $db = FatApp::getDb();
-        if (!$db->deleteRecords(UserToLanguage::DB_TBL, ['smt' => 'utsl_user_id = ? and utsl_slanguage_id = ?', 'vals' => [UserAuthentication::getLoggedUserId(), $id]])) {
+        if (!$db->deleteRecords(UserToLanguage::DB_TBL, ['smt' => 'utsl_user_id = ? and utsl_slanguage_id = ?', 'vals' => [$teacherId, $id]])) {
             Message::addErrorMessage(Label::getLabel($db->getError()));
             FatUtility::dieJsonError(Message::getHtml());
         }
+        /* Update Teacher's teach language stat */
+        (new TeacherStat($teacherId))->setSpeakLang();
         $this->set('msg', Label::getLabel('MSG_Language_Removed_Successfuly!'));
         $this->_template->render(false, false, 'json-success.php');
     }
 
     public function deleteTeachLanguageRow($id = 0)
     {
-        $id = FatUtility::int($id);
+        $userId = UserAuthentication::getLoggedUserId();
         $db = FatApp::getDb();
-        if (!$db->deleteRecords('tbl_user_teach_languages', ['smt' => 'utl_us_user_id = ? and utl_slanguage_id = ?', 'vals' => [UserAuthentication::getLoggedUserId(), $id]])) {
+        if (!$db->deleteRecords('tbl_user_teach_languages', ['smt' => 'utl_us_user_id = ? and utl_slanguage_id = ?', 'vals' => [$userId, FatUtility::int($id)]])) {
             Message::addErrorMessage(Label::getLabel($db->getError()));
             FatUtility::dieJsonError(Message::getHtml());
         }
+        /* Update Teach Lang Minimum & Maximum Prices */
+        (new TeacherStat($userId))->setTeachLangPrices();
         $this->set('msg', Label::getLabel('MSG_Language_Removed_Successfuly!'));
         $this->_template->render(false, false, 'json-success.php');
     }
@@ -301,6 +308,7 @@ class TeacherController extends TeacherBaseController
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieWithError(Message::getHtml());
         }
+        $teacherId = UserAuthentication::getLoggedUserId();
         foreach ($post['teach_lang_id'] as $tlang) {
             $lesson_durations = explode(',', FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_STRING, 60));
             foreach ($lesson_durations as $lesson_duration) {
@@ -318,7 +326,7 @@ class TeacherController extends TeacherBaseController
         }
         $i = 0;
         foreach ($post['utsl_slanguage_id'] as $lang) {
-            $insertArr = ['utsl_slanguage_id' => $lang, 'utsl_proficiency' => $post['utsl_proficiency'][$i], 'utsl_user_id' => UserAuthentication::getLoggedUserId()];
+            $insertArr = ['utsl_slanguage_id' => $lang, 'utsl_proficiency' => $post['utsl_proficiency'][$i], 'utsl_user_id' => $teacherId];
             if (!$db->insertFromArray(UserToLanguage::DB_TBL, $insertArr, false, [], $insertArr)) {
                 $db->rollbackTransaction();
                 Message::addErrorMessage(Label::getLabel($db->getError()));
@@ -326,6 +334,8 @@ class TeacherController extends TeacherBaseController
             }
             $i++;
         }
+        /* Update Teacher's teach language stat */
+        (new TeacherStat($teacherId))->setSpeakLang();
         $db->commitTransaction();
         $this->set('msg', Label::getLabel('MSG_Setup_successful'));
         $this->_template->render(false, false, 'json-success.php');
@@ -369,15 +379,6 @@ class TeacherController extends TeacherBaseController
             $db->rollbackTransaction();
             FatUtility::dieJsonError($qualification->getError());
         }
-        /* $file_row = [];
-          if($uqualification_id > 0) {
-          $file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, UserAuthentication::getLoggedUserId() ,$uqualification_id);
-          }
-          if(empty($file_row) && empty($_FILES['certificate']['tmp_name'])) {
-          $db->rollbackTransaction();
-          Message::addErrorMessage(Label::getLabel('MSG_Please_upload_certificate'));
-          FatUtility::dieJsonError(Message::getHtml());
-          } */
         if (!empty($_FILES['certificate']['tmp_name'])) {
             if (!is_uploaded_file($_FILES['certificate']['tmp_name'])) {
                 $db->rollbackTransaction();
@@ -391,6 +392,8 @@ class TeacherController extends TeacherBaseController
                 FatUtility::dieJsonError($fileHandlerObj->getError());
             }
         }
+        /* Update Teacher's Qualification stat */
+        (new TeacherStat(UserAuthentication::getLoggedUserId()))->setQualification();
         $db->commitTransaction();
         $this->set('msg', Label::getLabel('MSG_Qualification_Setup_Successful'));
         $this->_template->render(false, false, 'json-success.php');
@@ -404,12 +407,12 @@ class TeacherController extends TeacherBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         /* [ */
+        $teacherId = UserAuthentication::getLoggedUserId();
         $srch = new UserQualificationSearch();
-        $srch->addCondition('uqualification_user_id', '=', UserAuthentication::getLoggedUserId());
+        $srch->addCondition('uqualification_user_id', '=', $teacherId);
         $srch->addCondition('uqualification_id', '=', $uqualification_id);
         $srch->addMultiplefields(['uqualification_id']);
-        $rs = $srch->getResultSet();
-        $row = FatApp::getDb()->fetch($rs);
+        $row = FatApp::getDb()->fetch($srch->getResultSet());
         if (false == $row) {
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatUtility::dieWithError(Message::getHtml());
@@ -420,6 +423,8 @@ class TeacherController extends TeacherBaseController
             Message::addErrorMessage($userQualification->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
+        /* Update Teacher's Qualification stat */
+        (new TeacherStat($teacherId))->setQualification();
         $this->set('msg', Label::getLabel('MSG_Qualification_Removed_Successfuly'));
         $this->_template->render(false, false, 'json-success.php');
     }
@@ -431,8 +436,7 @@ class TeacherController extends TeacherBaseController
         $srch->joinTable(AttachedFile::DB_TBL, 'Left Outer Join', 'uqualification_id=afile_record_subid');
         $srch->addCondition('uqualification_user_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addCondition('uqualification_active', '=', 1);
-        $rs = $srch->getResultSet();
-        $qualificationData = FatApp::getDb()->fetchAll($rs);
+        $qualificationData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $this->set('qualificationData', $qualificationData);
         $this->_template->render(false, false);
     }
@@ -472,22 +476,26 @@ class TeacherController extends TeacherBaseController
         if (false === $post) {
             FatUtility::dieWithError(current($frm->getValidationErrors()));
         }
-        $titleArr = Preference::getPreferenceTypeArr($this->siteLangId);
-        $deleteRecords = $db->deleteRecords(Preference::DB_TBL_USER_PREF, ['smt' => 'utpref_user_id = ?', 'vals' => [UserAuthentication::getLoggedUserId()]]);
+        $userId = UserAuthentication::getLoggedUserId();
+        $deleteRecords = $db->deleteRecords(Preference::DB_TBL_USER_PREF, ['smt' => 'utpref_user_id = ?', 'vals' => [$userId]]);
         if (!$deleteRecords) {
             FatUtility::dieWithError($db->getError());
         }
         unset($post['teach_lang']);
+        $preference = 0;
         foreach ($post as $key => $val) {
             if (empty($val)) {
                 continue;
             }
             foreach ($val as $innerVal) {
-                if (!$db->insertFromArray(Preference::DB_TBL_USER_PREF, ['utpref_preference_id' => $innerVal, 'utpref_user_id' => UserAuthentication::getLoggedUserId()])) {
+                if (!$db->insertFromArray(Preference::DB_TBL_USER_PREF, ['utpref_preference_id' => $innerVal, 'utpref_user_id' => $userId])) {
                     FatUtility::dieWithError($db->getError());
                 }
+                $preference = 1;
             }
         }
+        /* Update Teacher's Preferences */
+        (new TeacherStat($userId))->setPreference($preference);
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Preferences_updated_successfully!'));
     }
 
@@ -574,10 +582,14 @@ class TeacherController extends TeacherBaseController
         if (false === $post) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
+        $userId = UserAuthentication::getLoggedUserId();
         $tGAvail = new TeacherGeneralAvailability();
-        if (!$tGAvail->addTeacherGeneralAvailability($post, UserAuthentication::getLoggedUserId())) {
+        if (!$tGAvail->addTeacherGeneralAvailability($post, $userId)) {
             FatUtility::dieWithError($tGAvail->getError());
         }
+        /* Update Teacher's General Availability Stat */
+        $available  = json_decode($post['data'] ?? '') ? 1 : 0;
+        (new TeacherStat($userId))->setGavailability($available);
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Availability_updated_successfully!'));
     }
 
@@ -736,5 +748,4 @@ class TeacherController extends TeacherBaseController
         $this->set('postedData', $post);
         $this->_template->render(false, false);
     }
-
 }
