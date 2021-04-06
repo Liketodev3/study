@@ -357,7 +357,7 @@ class CheckoutController extends LoggedUserController
         /* ] */
         $redirectUrl = '';
         if (0 >= $orderNetAmount) {
-            $redirectUrl = CommonHelper::generateUrl('FreePay', 'Charge', [$order->getOrderId()]);
+            $redirectUrl = CommonHelper::generateUrl('FreePay', 'Charge', [$order->getOrderId()], CONF_WEBROOT_FRONT_URL);
             $this->set('msg', Label::getLabel('LBL_Processing...', $this->siteLangId));
             $this->set('redirectUrl', $redirectUrl);
             $this->_template->render(false, false, 'json-success.php');
@@ -524,5 +524,4 @@ class CheckoutController extends LoggedUserController
         $this->set('bookingDurations', $bookingDurations);
         $this->_template->render(false, false);
     }
-
 }
