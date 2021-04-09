@@ -1,5 +1,14 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.11.8.20210409
+Release Date: 2021-04-09
+
+Bugs
+    Fix db updates
+    .#050923: Change week start and end date timezone.
+
+--------------------------------------------------------------------------
+
 Release Number: TV-2.11.7.20210408
 Release Date: 2021-04-08
 
