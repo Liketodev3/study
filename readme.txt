@@ -1,5 +1,14 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.11.7.20210408
+Release Date: 2021-04-08
+
+Bugs
+    Fix db updates
+    .#052171: In multiple slot>> during changes lesson price and lesson time>> price is showing different for single and bulk lesson.
+
+--------------------------------------------------------------------------
+
 Release Number: RV-2.2
 
 Release Date: 2021-04-07
