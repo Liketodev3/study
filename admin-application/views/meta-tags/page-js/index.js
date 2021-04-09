@@ -2,6 +2,12 @@ $(document).ready(function () {
 	listMetaTags('-1');
 });
 
+$(document).delegate('.language-js', 'change', function () {
+	var langId = $(this).val();
+	var metaId = $("input[name='meta_id']").val();
+	images(metaId, langId);
+});
+
 (function () {
 	var runningAjaxReq = false;
 	var dv = '#listing';
@@ -29,6 +35,13 @@ $(document).ready(function () {
 		});
 	};
 
+	deleteImage = function (metaId, langId) {
+		if (!confirm(langLbl.confirmDeleteImage)) { return; }
+		fcom.updateWithAjax(fcom.makeUrl('MetaTags', 'removeImage', [metaId, langId]), '', function (t) {
+			images(metaId, langId);
+		});
+	};
+
 	searchMetaTag = function (form) {
 		var data = '';
 		if (form) {
@@ -49,15 +62,12 @@ $(document).ready(function () {
 
 	metaTagForm = function (id, metaType, recordId) {
 		fcom.displayProcessing();
-		//$.facebox(function() {
 		fcom.ajax(fcom.makeUrl('MetaTags', 'form'), { metaId: id, metaType: metaType, recordId: recordId }, function (t) {
-			//$.facebox(t,'faceboxWidth');
 			fcom.updateFaceboxContent(t);
 		});
-		//});
+
 	};
 	editMetaTagFormNew = function (id, metaType, recordId) {
-
 		$.facebox(function () { editMetaTagForm(id, metaType, recordId); });
 	};
 
@@ -85,10 +95,9 @@ $(document).ready(function () {
 
 	editMetaTagLangForm = function (metaId, langId, metaType) {
 		fcom.displayProcessing();
-		//	$.facebox(function() {
 		fcom.ajax(fcom.makeUrl('MetaTags', 'langForm', [metaId, langId, metaType]), '', function (t) {
-			//$.facebox(t,'faceboxWidth');
 			fcom.updateFaceboxContent(t);
+			images(metaId, langId);
 		});
 		//});
 	};
@@ -118,4 +127,57 @@ $(document).ready(function () {
 		document.frmSearch.reset();
 		searchMetaTag(document.frmSearch);
 	};
+
+	images = function (metaId, langId) {
+		fcom.ajax(fcom.makeUrl('MetaTags', 'images', [metaId, langId]), SITE_ROOT_URL, function (t) {
+			$('#image-listing').html(t);
+			fcom.resetFaceboxHeight();
+		});
+	};
 })();
+
+$(document).on('click', '.meta-tag', function () {
+	var node = this;
+	$('#form-upload').remove();
+	var metaId = document.frmMetaTagLang.meta_id.value;
+	var langId = document.frmMetaTagLang.lang_id.value;
+	var frm = '<form enctype="multipart/form-data" id="form-upload" style="position:absolute; top:-100px;" >';
+	frm = frm.concat('<input type="file" name="file" />');
+	frm = frm.concat('<input type="hidden" name="meta_id" value="' + metaId + '"/>');
+	frm = frm.concat('<input type="hidden" name="lang_id" value="' + langId + '"/>');
+
+	$('body').prepend(frm);
+	$('#form-upload input[name=\'file\']').trigger('click');
+	if (typeof timer != 'undefined') {
+		clearInterval(timer);
+	}
+
+	timer = setInterval(function () {
+		if ($('#form-upload input[name=\'file\']').val() != '') {
+			clearInterval(timer);
+			$val = $(node).val();
+			$.ajax({
+				url: fcom.makeUrl('MetaTags', 'setUpOgImage', [metaId]),
+				type: 'post',
+				dataType: 'json',
+				data: new FormData($('#form-upload')[0]),
+				cache: false,
+				contentType: false,
+				processData: false,
+				beforeSend: function () {
+					$(node).val('Loading');
+				},
+				complete: function () {
+					$(node).val($val);
+				},
+				success: function (ans) {
+					$('#form-upload').remove();
+					images(ans.metaId, langId);
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				}
+			});
+		}
+	}, 500);
+});

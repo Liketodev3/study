@@ -1,13 +1,15 @@
 <?php
 class MetaTagsController extends AdminBaseController
 {
+    private $canEdit;
     public function __construct($action)
     {
         parent::__construct($action);
         $this->objPrivilege->canViewMetaTags();
-        $canEdit = $this->objPrivilege->canEditMetaTags($this->admin_id, true);
-        $this->set("canEdit", $canEdit);
+        $this->canEdit = $this->objPrivilege->canEditMetaTags($this->admin_id, true);
+        $this->set("canEdit", $this->canEdit);
     }
+
     public function index()
     {
         $tabsArr = MetaTag::getTabsArr($this->adminLangId);
@@ -15,6 +17,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('activeTab', MetaTag::META_GROUP_DEFAULT);
         $this->_template->render();
     }
+
     public function listMetaTags()
     {
         $metaType = FatApp::getPostedData('metaType', FatUtility::VAR_INT, MetaTag::META_GROUP_DEFAULT);
@@ -34,6 +37,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('frmSearch', $searchForm);
         $this->_template->render(false, false);
     }
+
     public function search()
     {
         $data = FatApp::getPostedData();
@@ -67,6 +71,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('postedData', $post);
         $this->_template->render(false, false);
     }
+
     public function form()
     {
         $metaId = FatApp::getPostedData('metaId', FatUtility::VAR_INT, 0);
@@ -92,6 +97,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('languages', Language::getAllNames());
         $this->_template->render(false, false);
     }
+
     public function setup()
     {
         $meta_record_id = FatApp::getPostedData('meta_record_id');
@@ -134,6 +140,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function langForm($metaId = 0, $langId = 0, int $metaType = MetaTag::META_GROUP_DEFAULT)
     {
         $metaId = FatUtility::int($metaId);
@@ -157,6 +164,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('formLayout', Language::getLayoutDirection($langId));
         $this->_template->render(false, false);
     }
+
     public function langSetup()
     {
         $data = FatApp::getPostedData();
@@ -179,6 +187,7 @@ class MetaTagsController extends AdminBaseController
         unset($data['meta_id']);
         unset($data['lang_id']);
         unset($data['btn_submit']);
+        unset($data['open_graph_image']);
         $data['metalang_lang_id'] = $langId;
         $data['metalang_meta_id'] = $metaId;
         $metaTag = new MetaTag($metaId);
@@ -200,6 +209,7 @@ class MetaTagsController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function deleteRecord()
     {
         $metaId = FatApp::getPostedData('metaId', FatUtility::VAR_INT, 0);
@@ -214,6 +224,89 @@ class MetaTagsController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         FatUtility::dieJsonSuccess($this->str_delete_record);
+    }
+
+    public function setUpOgImage($metaId)
+    {
+        if (!$this->canEdit) {
+            Message::addErrorMessage($this->str_invalid_request);
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $post = FatApp::getPostedData();
+        $metaId = FatUtility::int($metaId);
+        if (1 > $metaId) {
+            Message::addErrorMessage($this->str_invalid_request);
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $langId = FatUtility::int($post['lang_id']);
+        if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
+            Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $fileHandlerObj = new AttachedFile();
+        if (!$res = $fileHandlerObj->saveAttachment($_FILES['file']['tmp_name'], AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metaId, 0, $_FILES['file']['name'], -1, true, $langId, 0, true)) {
+            Message::addErrorMessage($fileHandlerObj->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $this->set('metaId', $metaId);
+        $this->set('file', $_FILES['file']['name']);
+        $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_uploaded_successfully', $this->adminLangId));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+
+    public function images($metaId, $langId = 0)
+    {
+        if (!$this->canEdit) {
+            Message::addErrorMessage($this->str_invalid_request);
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $metaId = FatUtility::int($metaId);
+        $metaDetail = MetaTag::getAttributesById($metaId);
+        if (false == $metaDetail) {
+            Message::addErrorMessage($this->str_invalid_request_id);
+            FatUtility::dieWithError(Message::getHtml());
+        }
+        if (!false == $metaDetail) {
+            $ogImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metaId, 0, $langId, false);
+            $this->set('images', $ogImages);
+        }
+        $this->set('metaId', $metaId);
+        $this->set('languages', Language::getAllNames());
+        $this->_template->render(false, false);
+    }
+
+    public function viewImage($metaId, $langId)
+    {
+        $metaId = FatUtility::int($metaId);
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metaId, 0, $langId);
+        $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
+        $cacheKey = $_SERVER['REQUEST_URI'];
+        $str = FatCache::get($cacheKey, null, '.jpg');
+        if (false == $str && !CONF_USE_FAT_CACHE) {
+            $cacheKey = false;
+        }
+
+        $w = 200;
+        $h = 100;
+        AttachedFile::displayImage($image_name, $w, $h, $default_image);
+    }
+
+    public function removeImage($metaId, $langId)
+    {
+        $metaId = FatUtility::int($metaId);
+        $langId = FatUtility::int($langId);
+        if (1 > $metaId) {
+            Message::addErrorMessage($this->str_invalid_request_id);
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $fileHandlerObj = new AttachedFile();
+        if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metaId, 0, 0, $langId)) {
+            Message::addErrorMessage($fileHandlerObj->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $this->set('msg', Label::getLabel('MSG_Deleted_successfully', $this->adminLangId));
+        $this->_template->render(false, false, 'json-success.php');
     }
 
     private function getSearchForm(int $metaType): Form
@@ -237,6 +330,7 @@ class MetaTagsController extends AdminBaseController
         $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         return  $frm;
     }
+
     private function getForm(int $metaId = 0, $metaType = MetaTag::META_GROUP_DEFAULT, $recordId = 0)
     {
         $frm = new Form('frmMetaTag');
@@ -251,18 +345,28 @@ class MetaTagsController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
-    private function getLangForm(int $metaId = 0, int $lang_id = 0)
+
+    private function getLangForm(int $metaId = 0, int $langId = 0)
     {
         $frm = new Form('frmMetaTagLang');
         $frm->addHiddenField('', 'meta_id', $metaId);
-        $frm->addHiddenField('', 'lang_id', $lang_id);
+        $frm->addHiddenField('', 'lang_id', $langId);
         $frm->addTextBox(Label::getLabel('LBL_Meta_Title', $this->adminLangId), 'meta_title');
         $frm->addTextarea(Label::getLabel('LBL_Meta_Keywords', $this->adminLangId), 'meta_keywords');
         $frm->addTextarea(Label::getLabel('LBL_Meta_Description', $this->adminLangId), 'meta_description');
         $frm->addTextarea(Label::getLabel('LBL_Other_Meta_Tags', $this->adminLangId), 'meta_other_meta_tags');
+        $frm->addTextBox(Label::getLabel('LBL_Open_Graph_Title', $this->adminLangId), 'meta_og_title');
+        $frm->addTextBox(Label::getLabel('LBL_Open_Graph_Url', $this->adminLangId), 'meta_og_url');
+        $frm->addTextarea(Label::getLabel('LBL_Open_Graph_Description', $this->adminLangId), 'meta_og_description');
+        $fld = $frm->addButton(Label::getLabel("LBL_Open_Graph_Image", $this->adminLangId), 'open_graph_image', Label::getLabel("LBL_Upload_File", $this->adminLangId), array(
+            'class' => 'meta-tag',
+            'id' => 'open_graph_image',
+            'meta_id' => $metaId
+        ));
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function setUrlComponents($metaType, &$post)
     {
         $metaId = FatUtility::int($post['meta_id']);
@@ -301,6 +405,7 @@ class MetaTagsController extends AdminBaseController
 
         return true;
     }
+
     private function getColumns(int $metaType)
     {
         $columnsArr = [];
@@ -371,6 +476,7 @@ class MetaTagsController extends AdminBaseController
         }
         return $columnsArr;
     }
+
     private function getDbColumns(int $metaType)
     {
         $dbcolumnsArr = ['meta_id', 'meta_record_id', 'meta_identifier', 'meta_title'];
@@ -396,6 +502,7 @@ class MetaTagsController extends AdminBaseController
         }
         return $dbcolumnsArr;
     }
+
     private function getMetaRecordcolumn(int $metaType)
     {
         $metaRecordColumns = [

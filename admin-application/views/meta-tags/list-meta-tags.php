@@ -37,9 +37,6 @@
 				<div class="sectionhead">
 					<h4><?php echo Label::getLabel('LBL_Meta_Tags_Listing', $adminLangId); ?></h4>
 					<?php if (isset($canAdd) && $canAdd == true) {
-
-
-
 						$ul = new HtmlElement("ul", array("class" => "actions actions--centered"));
 						$li = $ul->appendElement("li", array('class' => 'droplink'));
 						$li->appendElement('a', array('href' => 'javascript:void(0)', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Edit', $adminLangId)), '<i class="ion-android-more-horizontal icon"></i>', true);

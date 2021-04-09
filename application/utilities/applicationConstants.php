@@ -223,6 +223,16 @@ class applicationConstants
         return array('zip', 'txt', 'png', 'jpeg', 'jpg', 'gif', 'bmp', 'ico', 'tiff', 'tif', 'svg', 'svgz', 'rar', 'msi', 'cab', 'mp3', 'qt', 'mov', 'pdf', 'psd', 'ai', 'eps', 'ps', 'doc', 'docx', 'ppt', 'pptx');
     }
 
+    public static function allowedImageFileExtensions()
+    {
+        return array('png', 'jpeg', 'jpg', 'gif', 'svg');
+    }
+
+    public static function allowedImageMimeTypes()
+    {
+        return array('image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml');
+    }
+
     public static function getBlogPostStatusArr($langId)
     {
         $langId = FatUtility::int($langId);
