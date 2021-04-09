@@ -54,13 +54,13 @@ class MetaTagsWriter
 			if (isset($metas['meta_other_meta_tags']))
 				echo CommonHelper::renderHtml($metas['meta_other_meta_tags'], ENT_QUOTES, 'UTF-8');
 			if (isset($metas['meta_og_title']))
-				echo '<meta property=”og:title” content=”' . $metas['meta_og_title'] . '” />';
+				echo '<meta property="og:title" content="' . $metas['meta_og_title'] . '" />';
 			if (isset($metas['meta_og_url']))
-				echo '<meta property=”og:url” content=”' . $metas['meta_og_url'] . '” />';
+				echo '<meta property="og:url" content="' . $metas['meta_og_url'] . '" />';
 			if (isset($metas['meta_og_description']))
-				echo '<meta property=”og:description” content=”' . $metas['meta_og_description'] . '” />';
+				echo '<meta property="og:description" content="' . $metas['meta_og_description'] . '" />';
 
-			echo '<meta property=”og:image” content=”' . CommonHelper::generateFullUrl('Image', 'openGraphImage', array($metas['meta_id'], $langId, 'NORMAL')) . '” />';
+			echo '<meta property=”og:image” content="' . CommonHelper::generateFullUrl('Image', 'openGraphImage', array($metas['meta_id'], $langId, 'NORMAL')) . '" />';
 		} else {
 			$defSearch->addCondition('meta_type', '=', MetaTag::META_GROUP_DEFAULT);
 			if ($metas = FatApp::getDb()->fetch($defSearch->getResultSet())) {
@@ -74,13 +74,13 @@ class MetaTagsWriter
 				if (isset($metas['meta_other_meta_tags']))
 					echo CommonHelper::renderHtml($metas['meta_other_meta_tags'], ENT_QUOTES, 'UTF-8');
 				if (isset($metas['meta_og_title']))
-					echo '<meta property=”og:title” content=”' . $metas['meta_og_title'] . '” />';
+					echo '<meta property="og:title" content="' . $metas['meta_og_title'] . '" />';
 				if (isset($metas['meta_og_url']))
-					echo '<meta property=”og:url” content=”' . $metas['meta_og_url'] . '” />';
+					echo '<meta property="og:url" content="' . $metas['meta_og_url'] . '" />';
 				if (isset($metas['meta_og_description']))
-					echo '<meta property=”og:description” content=”' . $metas['meta_og_description'] . '” />';
+					echo '<meta property="og:description" content="' . $metas['meta_og_description'] . '" />';
 
-				echo '<meta property=”og:image” content=”' . CommonHelper::generateFullUrl('Image', 'openGraphImage', array($metas['meta_id'], $langId, 'NORMAL')) . '” />';
+				echo '<meta property="og:image" content="' . CommonHelper::generateFullUrl('Image', 'openGraphImage', array($metas['meta_id'], $langId, 'NORMAL')) . '" />';
 			} else {
 				return '<title>' . $websiteName . '</title>';
 			}
