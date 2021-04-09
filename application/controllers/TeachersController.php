@@ -514,9 +514,12 @@ class TeachersController extends MyAppController
 			$weekStartDate = $weekStartAndEndDate['weekStart'];
 			$weekEndDate = $weekStartAndEndDate['weekEnd'];
 		}
-		if (strtotime($weekStartDate) <= time()) {
-			$weekStartDate = date('Y-m-d');
-		}
+		$user_timezone = MyDate::getUserTimeZone();
+		$systemTimeZone = MyDate::getTimeZone();
+
+        $weekStartDate = MyDate::changeDateTimezone($weekStartDate, $user_timezone, $systemTimeZone);
+		$weekEndDate =  MyDate::changeDateTimezone($weekEndDate, $user_timezone, $systemTimeZone);
+
 		$db = FatApp::getDb();
 		$srch = new ScheduledLessonSearch();
 		$srch->addGroupBy('slesson_id');
@@ -549,7 +552,7 @@ class TeachersController extends MyAppController
 		$data = $db->fetchAll($rs);
 		$jsonArr = array();
 		$groupClassIds = [];
-		$user_timezone = MyDate::getUserTimeZone();
+	
 		foreach ($data as $data) {
 			$slesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['slesson_date'] . ' ' . $data['slesson_start_time'], true, $user_timezone);
 			$slesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['slesson_end_date'] . ' ' . $data['slesson_end_time'], true, $user_timezone);
