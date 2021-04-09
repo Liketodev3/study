@@ -150,13 +150,29 @@ $(function () {
         $("#lessonBox").html(html);
     };
 
+    createWiziqBox = function (data) {
+        if (!data) {
+            $.systemMessage('Someting went wrong', 'alert alert--danger');
+            return false;
+        }
+        let html = '<div id="cometchat_embed_synergy_container" style="width:' + chat_width + ';height:' + chat_height + ';max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;">';
+        html += '<iframe  style="width:100%;height:100%;" src="' + data.presenter_url + '" allow="camera; microphone; fullscreen;display-capture" frameborder="0"></iframe>';
+        html += '</div>';
+        $("#lessonBox").html(html);
+        return true;
+    };
+
+
     joinLessonFromApp = function (learnerId, teacherId) {
         var joinFromApp = YES;
         joinLesson(learnerId, teacherId, joinFromApp);
     };
 
     createChatBox = function (data, joinFromApp) {
-        if (isCometChatMeetingToolActive) {
+        if (isWiziqMettingToolActive) {
+            joinLessonButtonAction();
+            return createWiziqChatBox();
+        } else if (isCometChatMeetingToolActive) {
             joinLessonButtonAction();
             return createCometChatBox();
         } else if (isLessonSpaceMeetingToolActive) {
@@ -196,7 +212,7 @@ $(function () {
     };
 
     endLesson = function (lDetailId) {
-        if(isConfirmpopOpen){
+        if (isConfirmpopOpen) {
             return;
         }
         isConfirmpopOpen = true;

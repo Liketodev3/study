@@ -803,9 +803,10 @@ class ConfigurationsController extends AdminBaseController
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Lessonspace_Api_Key", $this->adminLangId), 'CONF_LESSONSPACE_API_KEY');
 
                 $frm->addHtml('', 'WIZIQ_MEETING_API', '<h3>' . Label::getLabel("LBL_WIZIQ_MEETING_API", $this->adminLangId) . '</h3>');
-                $fld = $frm->addTextBox(Label::getLabel("WIZIQ_API_SECRET_KEY", $this->adminLangId), 'WIZIQ_API_SECRET_KEY');
-                $fld = $frm->addTextBox(Label::getLabel("WIZIQ_API_ACCESS_KEY", $this->adminLangId), 'WIZIQ_API_ACCESS_KEY');
-                $fld = $frm->addTextBox(Label::getLabel("WIZIQ_API_SERVICE_URL", $this->adminLangId), 'WIZIQ_API_SERVICE_URL');
+                $frm->addTextBox(Label::getLabel("WIZIQ_API_SECRET_KEY", $this->adminLangId), 'WIZIQ_API_SECRET_KEY');
+                $frm->addTextBox(Label::getLabel("WIZIQ_API_ACCESS_KEY", $this->adminLangId), 'WIZIQ_API_ACCESS_KEY');
+                $frm->addTextBox(Label::getLabel("WIZIQ_API_SERVICE_URL", $this->adminLangId), 'WIZIQ_API_SERVICE_URL');
+                $frm->addTextBox(Label::getLabel("WIZIQ_API_CLASSAPI_URL", $this->adminLangId), 'WIZIQ_API_CLASSAPI_URL');
 
                 $frm->addHtml('', 'Newsletter', '<h3>' . Label::getLabel("LBL_Newsletter_Subscription", $this->adminLangId) . '</h3>');
 

@@ -11,10 +11,15 @@ class LessonMeetingDetail extends MyAppModel
     const KEY_ZOOM_JOIN_URL = "ZOOM_JOIN_URL";
     const KEY_ZOOM_RAW_DATA = "ZOOM_RAW_DATA";
 
+    const KEY_WIZIQ_CLASS_ID = "WIZIQ_CLASS_ID";
+    const KEY_WIZIQ_START_URL = "WIZIQ_START_URL";
+    const KEY_WIZIQ_JOIN_URL = "WIZIQ_JOIN_URL";
+    const KEY_WIZIQ_RAW_DATA = "WIZIQ_RAW_DATA";
+
     private $lessonId;
     private $userId;
 
-    public function __construct(int $lessonId, int $userId, int $id = 0 )
+    public function __construct(int $lessonId, int $userId, int $id = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
         $this->lessonId =  $lessonId;
@@ -27,24 +32,24 @@ class LessonMeetingDetail extends MyAppModel
         return $searchBase;
     }
 
-    public function getUserLessonUrl() : string
+    public function getUserLessonUrl(): string
     {
         $lessonMeetingDetail =  self::getSearchObject();
-        $lessonMeetingDetail->addCondition('lmeetdetail_user_id', '=' , $this->userId);
-        $lessonMeetingDetail->addCondition('lmeetdetail_slesson_id', '=' , $this->lessonId);
-        $lessonMeetingDetail->addCondition('lmeetdetail_key', '=' , self::KEY_LS_URL);
+        $lessonMeetingDetail->addCondition('lmeetdetail_user_id', '=', $this->userId);
+        $lessonMeetingDetail->addCondition('lmeetdetail_slesson_id', '=', $this->lessonId);
+        $lessonMeetingDetail->addCondition('lmeetdetail_key', '=', self::KEY_LS_URL);
         $lessonMeetingDetail->addOrder('lmeetdetail_id', 'desc');
         $lessonMeetingDetail->setPageSize(1);
         $resultSet  =  $lessonMeetingDetail->getResultSet();
         $meetingData =  FatApp::getDb()->fetch($resultSet);
-        if(empty($meetingData['lmeetdetail_value'])) {
+        if (empty($meetingData['lmeetdetail_value'])) {
             $this->error = Label::getLabel('MSG_NO_RECORD_FOUND!');
             return '';
         }
         return $meetingData['lmeetdetail_value'];
     }
 
-    public function addDetails( string $key , string $value = '' ) : bool
+    public function addDetails(string $key, string $value = ''): bool
     {
         $assigenValue = array(
             'lmeetdetail_key' => $key,
@@ -60,19 +65,19 @@ class LessonMeetingDetail extends MyAppModel
         }
         return true;
     }
-    
-    public function getMeetingDetails($key) : string
+
+    public function getMeetingDetails($key): string
     {
         $lessonMeetingDetail =  self::getSearchObject();
         $lessonMeetingDetail->addCondition('lmeetdetail_slesson_id', '=', $this->lessonId);
         $lessonMeetingDetail->addCondition('lmeetdetail_user_id', '=', $this->userId);
         $lessonMeetingDetail->addCondition('lmeetdetail_key', '=', $key);
         $lessonMeetingDetail->addOrder('lmeetdetail_id', 'desc');
+        $lessonMeetingDetail->doNotCalculateRecords();
         $lessonMeetingDetail->setPageSize(1);
-        // echo $lessonMeetingDetail->getQuery();die;
         $resultSet  =  $lessonMeetingDetail->getResultSet();
         $meetingData =  FatApp::getDb()->fetch($resultSet);
-        if(empty($meetingData['lmeetdetail_value'])) {
+        if (empty($meetingData['lmeetdetail_value'])) {
             $this->error = Label::getLabel('MSG_NO_RECORD_FOUND!');
             return '';
         }
