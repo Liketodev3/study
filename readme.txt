@@ -39,7 +39,6 @@ Bugs:
     - #050890: Once User registered, then No loader is showing during waiting or delay time.
     - #050953: Apple touch Icons are not working (404), after updated from admin panel
     - #051112: Currency/Languages scroller is not available if User added 100  currencies/languages  they are not displaying in the right manner  on the website
-    - #045754: Dates of lessons still appear in English - both the day of the week and the month. That happens in the tutor/student profile as well as in the lesson itself. Screenshots attached. https://bizixx.fatbit.com/attachment/download/MjczNTc3LTE2MDYyMjEwODVfU2M%3
     - #049899: Email Notification is missing> When teacher is placing wallet withdrawal request admin does not receive any notification through email.
     - #049783: When user multiple click on statistics button then graphical representation has changed
     - #050923: Change week start and end date timezone
