@@ -37,7 +37,7 @@ $(document).delegate('.language-js', 'change', function () {
 
 	deleteImage = function (metaId, langId) {
 		if (!confirm(langLbl.confirmDeleteImage)) { return; }
-		fcom.updateWithAjax(fcom.makeUrl('MetaTags', 'removeImage', [metaId, langId]), '', function (t) {
+		fcom.updateWithAjax(fcom.makeUrl('MetaTags', 'removeImage'), { metaId: metaId, langId: langId }, function (t) {
 			images(metaId, langId);
 		});
 	};
@@ -99,7 +99,7 @@ $(document).delegate('.language-js', 'change', function () {
 			fcom.updateFaceboxContent(t);
 			images(metaId, langId);
 		});
-		//});
+
 	};
 
 	setupLangMetaTag = function (frm, metaType) {

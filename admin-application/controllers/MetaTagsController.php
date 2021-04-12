@@ -74,6 +74,7 @@ class MetaTagsController extends AdminBaseController
 
     public function form()
     {
+
         $metaId = FatApp::getPostedData('metaId', FatUtility::VAR_INT, 0);
         $metaType = FatApp::getPostedData('metaType', FatUtility::VAR_INT, MetaTag::META_GROUP_DEFAULT);
         $recordId = FatApp::getPostedData('recordId', FatUtility::VAR_INT, 0);
@@ -100,6 +101,11 @@ class MetaTagsController extends AdminBaseController
 
     public function setup()
     {
+        if (!$this->canEdit) {
+            Message::addErrorMessage($this->str_invalid_request);
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
         $meta_record_id = FatApp::getPostedData('meta_record_id');
         $metaId = FatApp::getPostedData('meta_id');
         $tabsArr = MetaTag::getTabsArr($this->adminLangId);
@@ -167,6 +173,10 @@ class MetaTagsController extends AdminBaseController
 
     public function langSetup()
     {
+        if (!$this->canEdit) {
+            Message::addErrorMessage($this->str_invalid_request);
+            FatUtility::dieJsonError(Message::getHtml());
+        }
         $data = FatApp::getPostedData();
         $metaId = $data['meta_id'];
         $langId = $data['lang_id'];
@@ -212,6 +222,10 @@ class MetaTagsController extends AdminBaseController
 
     public function deleteRecord()
     {
+        if (!$this->canEdit) {
+            Message::addErrorMessage($this->str_invalid_request);
+            FatUtility::dieJsonError(Message::getHtml());
+        }
         $metaId = FatApp::getPostedData('metaId', FatUtility::VAR_INT, 0);
 
         $metaTag = new MetaTag($metaId);
@@ -281,21 +295,16 @@ class MetaTagsController extends AdminBaseController
         $metaId = FatUtility::int($metaId);
         $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metaId, 0, $langId);
         $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
-        $cacheKey = $_SERVER['REQUEST_URI'];
-        $str = FatCache::get($cacheKey, null, '.jpg');
-        if (false == $str && !CONF_USE_FAT_CACHE) {
-            $cacheKey = false;
-        }
-
         $w = 200;
         $h = 100;
-        AttachedFile::displayImage($image_name, $w, $h, $default_image);
+        AttachedFile::displayImage($image_name, $w, $h);
     }
 
-    public function removeImage($metaId, $langId)
+    public function removeImage()
     {
-        $metaId = FatUtility::int($metaId);
-        $langId = FatUtility::int($langId);
+        $post = FatApp::getPostedData();
+        $metaId = FatUtility::int($post['metaId']);
+        $langId = FatUtility::int($post['langId']);
         if (1 > $metaId) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
