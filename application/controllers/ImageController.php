@@ -655,7 +655,6 @@ class ImageController extends FatController
 
     public function openGraphImage($metaId, $lang_id, $sizeType = 'NORMAL')
     {
-        $default_image = 'user_deafult_image.jpg';
         $metaId = FatUtility::int($metaId);
         $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metaId, 0, $lang_id, false, 0);
         $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
@@ -674,9 +673,9 @@ class ImageController extends FatController
                     $h = 630;
                     break;
             }
-            AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_CROP, false, true);
+            AttachedFile::displayImage($image_name, $w, $h, '', '', ImageResize::IMG_RESIZE_RESET_DIMENSIONS, false, true);
         } else {
-            AttachedFile::displayOriginalImage($image_name, $default_image, '',  true);
+            AttachedFile::displayOriginalImage($image_name, '', '',  true);
         }
     }
 }
