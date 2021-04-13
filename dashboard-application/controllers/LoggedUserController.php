@@ -9,9 +9,9 @@ class LoggedUserController extends MyAppController
         UserAuthentication::checkLogin();
         $userRow = $this->verifyLoggedUser();
         if (CommonHelper::getLayoutDirection() == 'rtl') {
-            $this->_template->addCss(['css/common-rtl.css', 'css/dashboard-rtl.css']);
+            // $this->_template->addCss(['css/common-rtl.css', 'css/dashboard-rtl.css']);
         } else {
-            $this->_template->addCss(['css/common-ltr.css', 'css/dashboard-ltr.css']);
+            // $this->_template->addCss(['css/common-ltr.css', 'css/dashboard-ltr.css']);
         }
     }
 

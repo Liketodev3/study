@@ -30,7 +30,9 @@
     '8': 2rem,
     '10': 2.5rem,
     '12': 3rem,
+    '14': 3.4rem,
     '16': 4rem,
+    '18': 4.5rem,
     '20': 5rem,
     '24': 6rem,
     '26': 7rem,
@@ -56,7 +58,8 @@
     'md': 767px,
     'lg': 991px,
     'xl': 1199px,
-    'xxl': 1399px
+    'xxl': 1299px,
+    'xxxl': 1399px
   ),
  
     
@@ -72,7 +75,7 @@
 
     'radius': (
       '0': 0,
-      '1': 4px,
+      '1': 5px,
       '2': 10px,
       '3': 16px,
       '4': 32px,
@@ -96,9 +99,10 @@
         'h3': calc(18px + 0.4vw),
         'h4': calc(18px + 0.2vw),
         'h5': calc(16px + 0.13vw),
-        'h6': calc(16px + 0.3vw),
+        'h6': calc(13px + 0.1vw),
         'p': 18px,
-        'small': 12px,
+        'medium': 15px,
+        'small': 13px,
         'xs': 0.7rem,
         'sm': 0.95rem,
         'md': 1rem,
@@ -111,31 +115,36 @@
     ),
     
     'color':  (
-      'primary': #e84c3d,
+      'primary': #005fb9,
       'primary-inverse': #fff,
 
-      'secondary': #3d91e8,
+      'secondary': #f05856,
       'secondary-inverse': #fff,
+
+      'third': #ff9600,
+      'third-inverse': #fff,
+
+      'red': #ff0251,
+      'red-inverse': #fff,
+
+      'green': #1DCE70,
+      'green-inverse': #fff,
+
+      'yellow': #ffab22,
+      'yellow-inverse': #fff,
       
-      'black': #333,
+      'black': #555,
       'white': #ffffff,
+
 
       'gray': palette(#000),
     ),
 
     'boxShadow': (
-      '1': '0 1px 0 1px rgba(0, 0, 0, 0.05)',
-      '2': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-      '3': '0 4px 8px 0px rgba(0, 0, 0, 0.08)',
-      '4': '0 2px 15px 0 rgba(0, 0, 0, 0.15)',
-      '5': '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-      '6': '0 20px 25px 0 rgba(0, 0, 0, 0.06), 0 10px 10px 0 rgba(0, 0, 0, 0.06)',
-      '7': '0 15px 30px 12px rgba(0, 0, 0, 0.25)',
-      'inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-      'outline': '0 0 0 3px rgba(66, 153, 225, 0.5)',
-      'vertical': '0 10px 20px 0px rgba(0, 0, 0, 0.08)',
-      'all': ' 0 0 20px 4px rgba(0, 0, 0, 0.08)',
-      'none': 'none', 
+      'l-r': '0px 0px 5px rgba(0, 0, 0, 0.1)',
+      'vertical': '5px 15px 20px 0px rgba(0, 0, 0, 0.1)',
+      'all': ' 0 0 4px rgba(0, 0, 0, 0.1)',
+      'none': 'none',
     ),
 
   );

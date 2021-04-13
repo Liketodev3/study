@@ -11,7 +11,7 @@
   "keywords": [
     "html"
   ],
-  "author": "FATbit",
+  "author": "YoCoach",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.12.10",

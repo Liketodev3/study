@@ -107,19 +107,26 @@ class MyAppController extends FatController
             'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson')
         ];
         $languages = Language::getAllNames(false);
+
         foreach ($languages as $val) {
             $jsVariables['language' . $val['language_id']] = $val['language_layout_direction'];
         }
+
         if (CommonHelper::getLayoutDirection() == 'rtl') {
             $this->_template->addCss(['css/common-rtl.css', 'css/dashboard-rtl.css']);
         } else {
             $this->_template->addCss(['css/common-ltr.css', 'css/dashboard-ltr.css']);
         }
+        
+        $currencyData = Currency::getCurrencyAssoc($this->siteLangId);
+
         $this->set('cookieConsent', $cookieConsent);
+        $this->set('websiteLangues', $languages);
         $this->set('currencySymbolLeft', CommonHelper::getCurrencySymbolLeft());
         $this->set('currencySymbolRight', CommonHelper::getCurrencySymbolRight());
         $this->set('siteLangId', $this->siteLangId);
         $this->set('siteCurrencyId', $this->siteCurrencyId);
+        $this->set('currencyData', $currencyData);
         $this->set('jsVariables', $jsVariables);
         $this->set('controllerName', $controllerName);
         $this->set('action', $this->action);

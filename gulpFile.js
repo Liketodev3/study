@@ -72,15 +72,16 @@ function css(){
 } */
 
 function svg(){
-  return src('./images/sprite/*.svg')
+  return src('images/sprite/*.svg')
       .pipe(svgSprite(config))
-      .pipe(dest('./images'));
+      .pipe(dest('images'));
 }
 
 // Watch files
 function watchFiles() {
 	// Watch SCSS changes
-  watch(['application/views/scss'], parallel(css));
+  watch(['scss'], parallel(css));
+
 }
 
 exports.default = parallel(css, svg);

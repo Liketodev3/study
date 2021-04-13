@@ -11,6 +11,18 @@
 .no-float{ float:unset; }
 
 
+.sr-only{
+    display: none;
+  }
+.uppercase{text-transform: uppercase;}
+
+  @media(min-width:theme('breakpoints.md','value')){
+    .min-height-500{min-height: 41rem;}
+    .max-width-80{max-width:80%;}
+    .max-width-70{max-width:70%;}
+  }
+
+
 
 .-gap {
     height: 30px;
@@ -30,7 +42,7 @@
     content: ""
 }
 
-.-link-underline {
+.-link-underline,.underline {
     text-decoration: underline
 }
 
@@ -47,17 +59,20 @@ img {
     color: red
 }
 
-.-text-small {
+.-text-small, .small {
     font-size: .85rem;
-    color: #999
+
 }
 
 .-text-italic {
     font-style: italic
 }
 
-.-text-bold {
+.-text-bold, .bold-700 {
     font-weight: 700
+}
+.bold-600 {
+    font-weight: 600
 }
 
 .-line {
@@ -68,7 +83,7 @@ img {
     height: 2px
 }
 
-.-display-inline {
+.-display-inline, .display-inline {
     display: inline-block !important;
     vertical-align: middle !important
 }
@@ -250,12 +265,12 @@ img {
 
 .message-display {
     text-align: center;
-    padding: 50px
+    padding: theme('padding.10'); background-color:theme('color.white') ; margin-top: theme('margin.6'); min-height: 40rem; display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
 
 .message-display h5 {
-    margin: 0 0 20px 0;
-    line-height: 1.6
+
+    line-height: 1.6;margin-bottom: theme('margin.3');
 }
 
 .message-display h2 {
@@ -271,8 +286,8 @@ img {
 }
 
 .message-display__icon {
-    width: 130px;
-    height: 130px;
+    width: 15rem;
+    height: 15rem;
     position: relative;
     display: block;
     overflow: hidden;
@@ -644,7 +659,9 @@ img {
     margin-top: -30px;
 }
 
-
+.border-dotted {
+    border-bottom: 1px dotted;
+}
 
 .overlay {
     position: fixed;
@@ -678,4 +695,10 @@ img {
     }
 
 
+}
+
+$close: "close";
+.#{$close}{width: 3rem; height: 3rem;position: relative; color:inherit;font-size: theme('font.size.xxxl'); line-height: 40px; display: flex; align-items: center; justify-content: center; background-color: transparent;border:none; cursor: pointer;
+    &:before{position: absolute; left: 0;right: 0; top: 0; bottom: 0; margin: auto;content: "+"; transform: rotate(45deg); text-align: center;}
+    &--small{width:24px; height: 24px;line-height: 20px;font-size: theme('font.size.xl');}
 }

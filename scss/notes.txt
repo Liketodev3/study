@@ -7,7 +7,8 @@ align-right
 #{theme('direction.left','value')}
 
 for media queries
-theme('breakpoints.xxl','value')) - 1399.98px
+theme('breakpoints.xxxl','value')) - 1399.98px
+theme('breakpoints.xxl','value')) - 1299.98px
 theme('breakpoints.xl','value')) - 1199.98px
 theme('breakpoints.lg','value')) - 991.98px
 theme('breakpoints.md','value')) - 767.98px
@@ -35,6 +36,9 @@ theme('boxShadow.1')
 
 for radius
 theme('radius.round')
+
+for border color
+ border-top: 1px solid theme('color.gray.200');
 
 
 

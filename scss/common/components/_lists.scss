@@ -6,15 +6,13 @@
 
 .list-inline label {
     background: #fff;
-    min-height: 50px;
-    border: 1px solid #eaeaea;
-    border-radius: 2px;
+    height: 2.8rem;
+    border-radius: var(--radius-1);
     display: inline-block;
     margin: 0 2px 0 0;
-    padding: 14px 15px 12px 15px;
+    padding: var(--padding-2) var(--padding-4);
     line-height: 1.4;
-    -webkit-box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, .07);
-    box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, .07);
+    border: 1px solid var(--color-gray-300);
     cursor: pointer
 }
 
@@ -36,7 +34,12 @@
 
 .list-inline label .checkbox .input-helper:after,
 .list-inline label .radio .input-helper:after {
-    top: 4px
+    top: 6px
+}
+
+.list-inline .is-active label{
+    color: var(--color-secondary);
+    font-weight: 600;
 }
 
 .list-inline label .checkbox .input-helper:before {
@@ -47,10 +50,21 @@
     margin: 0 0 0 -20px
 }
 
+@media(min-width:theme('breakpoints.sm','value')){
+    .list-inline.list-inline--onehalf ul,  .list-inline.list-inline--onethird ul{display: flex;align-items: center;}
+}
+
+.list-inline.list-inline--onethird li:first-child {
+     width: 20%;
+    }
+    .list-inline.list-inline--onethird li{
+        width: 80%;padding: 0 0 10px 20px;
+       }
+
 .list-inline.list-inline--onehalf li {
     padding: 0 0 10px 20px;
     width: 50%;
-    margin: 0 -4px 0 0
+
 }
 
 .list-inline.list-inline--onehalf li label {
@@ -180,6 +194,14 @@
     font-size: 1rem;
 }
 
+@media(max-width:theme('breakpoints.lg','value')){
+    .list-onethird li{width: 50%;}
+}
+@media(max-width:theme('breakpoints.sm','value')){
+    .list-onethird li{width: 100%;}
+    .list-onethird.list-onethird--bg{max-height: 350px; overflow:auto;}
+}
+
 
 @media (max-width:1199px){
     .vertical-links li a {
@@ -187,11 +209,5 @@
     }
 }
 
-@media (max-width:767px){
-    
-    .list-onethird li {
-        width: 50%
-    }
-}
 
 

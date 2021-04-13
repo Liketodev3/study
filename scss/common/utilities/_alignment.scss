@@ -6,6 +6,7 @@ $align: "align";
 .#{$align}{
     &-left {text-align: #{theme('direction.left','value')} !important;}
     &-right {text-align: #{theme('direction.right','value')} !important;}
+    &-center {text-align:center !important;}
 }
 
 .-align{
@@ -16,4 +17,4 @@ $align: "align";
     &-auto {margin: auto !important; }
 }
 
-.align--center {text-align: center !important; }
+.align--center{text-align: center !important; }

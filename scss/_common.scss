@@ -6,6 +6,8 @@
 // config
 @import "config/functions";
 @import "config/vars";
+@import "config/direction-ltr";
+@import "config/direction-rtl";
 
 // common
 @import 'common/base/root';
@@ -13,13 +15,16 @@
 
 // utilities
 @import "common/utilities/alignment";
-@import "common/utilities/backgroud";
+@import "common/utilities/backgrounds";
 @import "common/utilities/border";
 @import "common/utilities/heading";
 @import "common/utilities/misc";
 @import "common/utilities/no-effects";
 @import "common/utilities/radius";
 @import "common/utilities/scroll";
+@import "common/utilities/spacing";
+@import "common/utilities/spinner";
+@import "common/utilities/color";
 
 
 // components
@@ -29,6 +34,7 @@
 @import 'common/components/blockquote';
 @import 'common/components/blocks';
 @import 'common/components/box';
+@import 'common/components/badge';
 @import 'common/components/breadcrumbs';
 @import 'common/components/buttons';
 @import 'common/components/cms';
@@ -39,12 +45,11 @@
 @import 'common/components/lists';
 @import 'common/components/loader';
 @import 'common/components/media';
-@import 'common/components/paginations';
+@import 'common/components/pagination';
 @import 'common/components/processing';
 @import 'common/components/progress';
 @import 'common/components/range-slider';
 @import 'common/components/ratings';
-@import 'common/components/scroll-bars';
 @import 'common/components/sections';
 @import 'common/components/slider';
 @import 'common/components/socials';
@@ -53,6 +58,10 @@
 @import 'common/components/toggle';
 @import 'common/components/tooltip';
 @import 'common/components/system_messages';
+@import 'common/components/icons';
+@import 'common/components/switch';
+@import 'common/components/alerts';
+@import 'common/components/timer';
 
 
 

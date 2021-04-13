@@ -1,11 +1,4 @@
 
-:root {
-    --color-primary: #3d91e8;
-    --color-primary-inverse: #fff;
-    --color-secondary: #e84c3d;
-    --color-secondary-inverse: #fff;
-}
-
 *,
 ::after,
 ::before {
@@ -22,13 +15,16 @@ html {
     -ms-overflow-style: scrollbar;
     -webkit-tap-highlight-color: transparent;
     font-size: 14px;
-    font-family: theme('font.family.base');
+    font-family: theme('font.family.base'); color: theme('color.black');
 }
 
 body {
     margin: 0;
     background: #fff;
 }
+
+// html{min-height: 100%;height: 100%;}
+// body{height: 100%;}
 
 article,
 aside,
@@ -55,13 +51,6 @@ hr {
     overflow: visible
 }
 
-p {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: inherit;
-    line-height: 1.9;
-    font-size: 1.1rem
-}
 
 abbr[data-original-title],
 abbr[title] {
@@ -82,9 +71,10 @@ dl,
 ol,
 ul {
     margin-top: 0;
-    margin-bottom: 1rem
+    margin-bottom: 1rem; padding: 0; 
 }
-
+ol{list-style: decimal inside;color: theme('color.gray.1000');}
+ol li{padding: theme('padding.1') 0;}
 ol ol,
 ol ul,
 ul ol,
@@ -111,12 +101,10 @@ dfn {
 
 b,
 strong {
-    font-weight: 700
+    font-weight: 600
 }
 
-small {
-    font-size: 80%
-}
+
 
 sub,
 sup {
@@ -206,7 +194,7 @@ th {
 
 label {
     display: inline-block;
-    margin-bottom: .5rem
+    margin-bottom: 0;
 }
 
 button {
@@ -335,55 +323,6 @@ template {
 
 
 
-
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    margin: 0;
-    font-weight: 700;
-    line-height: 1.4;
-    color: inherit
-}
-
-.h1,
-h1 {
-    font-size: 2.2rem
-}
-
-.h2,
-h2 {
-    font-size: 2rem
-}
-
-.h3,
-h3 {
-    font-size: 1.75rem
-}
-
-.h4,
-h4 {
-    font-size: 1.3rem
-}
-
-.h5,
-h5 {
-    font-size: 1.4rem
-}
-
-.h6,
-h6 {
-    font-size: 1.2rem
-}
-
 .lead {
     font-size: 1.25rem;
     font-weight: 300
@@ -422,7 +361,7 @@ hr {
 
 .small,
 small {
-    font-size: 80%;
+    font-size: 85%;
     font-weight: 400
 }
 
@@ -553,16 +492,6 @@ ul {
 }
 
 
-p {
-    color: var(--color-dark);
-    font-size: 1rem;
-    font-weight: 400;
-}
-
-
-h1, h2, h3, h4, h5, h6{
-    font-family: inherit; font-weight: 700;
-}
 
 
 @media (max-width:767px) {

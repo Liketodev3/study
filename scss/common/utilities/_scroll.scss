@@ -1,4 +1,8 @@
 
+
+
+
+
 .scrollbar {
     overflow: auto;
     width: 100% !important;
@@ -7,10 +11,10 @@
     position: relative;
 }
 
-.scroll{
+.scrollbar{
     &-track {
         width: 10px;
-        #{theme('direction.right','value')}: -10px !important;
+        #{theme('direction.right','value')}: 0px !important;
         position: relative;
     }
     &-handle {

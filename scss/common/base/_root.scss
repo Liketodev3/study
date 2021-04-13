@@ -3,7 +3,6 @@
 //
 
 
-
 :root{
   @each $keys, $values in $theme{
     @each $key, $value in $values {
@@ -17,4 +16,14 @@
       }
     }
   }
+}
+
+html[data-theme="dashboard-secondary"], .dashboard-learner{
+  
+  --color-primary: #{theme('color.secondary','value')};
+  --color-primary-inverse: #{theme('color.secondary-inverse','value')};
+
+  --color-secondary: #{theme('color.primary','value')};
+  --color-secondary-inverse:  #{theme('color.primary','value')};
+
 }
