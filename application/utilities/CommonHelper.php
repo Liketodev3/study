@@ -70,6 +70,7 @@ class CommonHelper extends FatUtility
 
     public static function setSiteDefaultLang()
     {
+
         self::$_lang_id = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
 
         $languages = array_map('strtoupper', Language::getAllCodesAssoc());
@@ -94,6 +95,8 @@ class CommonHelper extends FatUtility
                 self::$_lang_id = FatUtility::int($userSiteLangData['language_id']);
             }
         }
+
+
 
         self::setDefaultSiteLangCookie(self::$_lang_id);
     }
