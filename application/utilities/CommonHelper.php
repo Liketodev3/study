@@ -21,7 +21,7 @@ class CommonHelper extends FatUtility
         self::$_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         self::$_lang_id = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
         self::$_currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
-        
+
         if (false === $isAdmin) {
             // if (isset($_COOKIE['defaultSiteLang'])) {
             //     $languages = Language::getAllNames();
@@ -61,7 +61,7 @@ class CommonHelper extends FatUtility
         self::$_currency_value = $currencyData['currency_value'];
         self::$_layout_direction = Language::getLayoutDirection(self::$_lang_id);
         self::$_system_currency_data =  Currency::getSystemCurrencyData();
-        if(!empty(self::$_system_currency_data)){
+        if (!empty(self::$_system_currency_data)) {
             self::$_system_currency_id =  self::$_system_currency_data['currency_id'];
         }
         // self::$_system_currency_id =  ;
@@ -72,8 +72,8 @@ class CommonHelper extends FatUtility
     {
         self::$_lang_id = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
 
-        $languages = array_map('strtoupper',Language::getAllCodesAssoc());
-        
+        $languages = array_map('strtoupper', Language::getAllCodesAssoc());
+
         if (isset($_COOKIE['defaultSiteLang'])) {
             if (array_key_exists($_COOKIE['defaultSiteLang'], $languages)) {
                 self::$_lang_id = FatUtility::int(trim($_COOKIE['defaultSiteLang']));
@@ -83,18 +83,18 @@ class CommonHelper extends FatUtility
 
         $headerLang = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
         $langId = array_search($headerLang, $languages);
-        if( $langId !== false){
+        if ($langId !== false) {
             self::$_lang_id = FatUtility::int($langId);
         }
 
         if (UserAuthentication::isUserLogged()) {
-           $userSetting = new UserSetting(UserAuthentication::getLoggedUserId(true));
-           $userSiteLangData = $userSetting->getUserSiteLang();
-           if(!empty($userSiteLangData['language_id'])){
-            self::$_lang_id = FatUtility::int($userSiteLangData['language_id']);
-           }
+            $userSetting = new UserSetting(UserAuthentication::getLoggedUserId(true));
+            $userSiteLangData = $userSetting->getUserSiteLang();
+            if (!empty($userSiteLangData['language_id'])) {
+                self::$_lang_id = FatUtility::int($userSiteLangData['language_id']);
+            }
         }
-      
+
         self::setDefaultSiteLangCookie(self::$_lang_id);
     }
 
@@ -102,8 +102,8 @@ class CommonHelper extends FatUtility
     {
         $cookieConsent = CommonHelper::getCookieConsent();
         $isActivePreferencesCookie =  (!empty($cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
-        
-        if(!$isActivePreferencesCookie){
+
+        if (!$isActivePreferencesCookie) {
             return true;
         }
 
@@ -125,14 +125,14 @@ class CommonHelper extends FatUtility
         return self::$_system_currency_id;
     }
 
-    public static function getSystemCurrencyData() : array
+    public static function getSystemCurrencyData(): array
     {
         return self::$_system_currency_data;
     }
 
-    public static function getSystemCurrencySymbol() : string
+    public static function getSystemCurrencySymbol(): string
     {
-        return (self::$_system_currency_data['currency_symbol_left'] !='' ) ? self::$_system_currency_data['currency_symbol_left']: self::$_system_currency_data['currency_symbol_right'];
+        return (self::$_system_currency_data['currency_symbol_left'] != '') ? self::$_system_currency_data['currency_symbol_left'] : self::$_system_currency_data['currency_symbol_right'];
     }
 
     public static function getCurrencyId()
@@ -1068,19 +1068,16 @@ class CommonHelper extends FatUtility
         //Make alphanumeric (removes all other characters)
         //$string = preg_replace("/[^a-z0-9,&_\s-\/]/", "", $string);
         //covert / to -
-        $string = preg_replace("/[\s,&\/]/", "-", $string);
+        $string = preg_replace("/[\s,&]/", "-", $string);
         //Clean up multiple dashes or whitespaces
         $string = preg_replace("/[\s-]+/", " ", $string);
         //Convert whitespaces and underscore to dash
-        $string = preg_replace("/[\s_]/", "-", $string);
-
+        // $string = preg_replace("/[\s_]/", "-", $string);
         $keyword = strtolower($string);
         $keyword = ucfirst(FatUtility::dashed2Camel($keyword));
-
         if (file_exists(CONF_INSTALLATION_PATH . 'application/controllers/' . $keyword . 'Controller' . '.php')) {
             return $string . '-' . rand(1, 100);
         }
-
         return trim($string, '-');
     }
 
@@ -1513,7 +1510,7 @@ class CommonHelper extends FatUtility
         $dateTime = new DateTime($date);
         $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);
         return array(
-            'start' =>$weekStartAndEndDate['weekStart'],
+            'start' => $weekStartAndEndDate['weekStart'],
             'end' =>  $weekStartAndEndDate['weekEnd'],
         );
     }
@@ -1827,7 +1824,7 @@ class CommonHelper extends FatUtility
         switch ($errorCode) {
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
-                $message = 'ERR_FILE_SIZE_EXCEEDS_ALLOWED_SIZE_'.ini_get('upload_max_filesize').'B';
+                $message = 'ERR_FILE_SIZE_EXCEEDS_ALLOWED_SIZE_' . ini_get('upload_max_filesize') . 'B';
                 break;
             case UPLOAD_ERR_PARTIAL:
                 $message = 'ERR_The_uploaded_file_was_only_partially_uploaded';
@@ -1905,36 +1902,34 @@ class CommonHelper extends FatUtility
     {
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $output_file_name . '";');
-        
+
         $outstream = fopen('php://output', 'w');
-        
+
         fputcsv($outstream, $refindedLabels, ',');
-        
+
         $count = 1;
         while ($row = FatApp::getDb()->fetch($rs)) {
-            $rec = array( $count );    
-            foreach($rowKeys as $rowKey) {
+            $rec = array($count);
+            foreach ($rowKeys as $rowKey) {
                 if (in_array($rowKey, $placeholders)) {
                     array_push($rec, $labels[$row[$rowKey]]);
                 } else {
                     array_push($rec, $row[$rowKey]);
                 }
             }
-            
+
             fputcsv($outstream, $rec, ',');
 
             $count++;
         }
 
         fclose($outstream);
-        
     }
 
-    public static function getPaidLessonDurations() : array
+    public static function getPaidLessonDurations(): array
     {
         $defaultPaidLessonDuration =  FatApp::getConfig('CONF_DEFAULT_PAID_LESSON_DURATION', FatUtility::VAR_INT, 60);
         $confPaidLessonDuration =  FatApp::getConfig('CONF_PAID_LESSON_DURATION', FatUtility::VAR_STRING, $defaultPaidLessonDuration);
         return explode(',', $confPaidLessonDuration);
     }
 }
-

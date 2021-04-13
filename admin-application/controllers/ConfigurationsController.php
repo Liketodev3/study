@@ -142,7 +142,7 @@ class ConfigurationsController extends AdminBaseController
         if (array_key_exists('CONF_TIMEZONE', $post)) {
             unset($post['CONF_TIMEZONE']);
         }
-        
+
         // if (array_key_exists('CONF_CURRENCY', $post)) {
         //     $data = Currency::getAttributesById($post['CONF_CURRENCY']);
         //     if (empty($data) || ($data['currency_value'] * 1) != 1) {
@@ -152,7 +152,7 @@ class ConfigurationsController extends AdminBaseController
         // }
 
         if (array_key_exists('CONF_PAID_LESSON_DURATION', $post)) {
-            if(!in_array($post['CONF_DEFAULT_PAID_LESSON_DURATION'], $post['CONF_PAID_LESSON_DURATION'])){
+            if (!in_array($post['CONF_DEFAULT_PAID_LESSON_DURATION'], $post['CONF_PAID_LESSON_DURATION'])) {
                 Message::addErrorMessage(Label::getLabel('MSG_Please_select_default_duration_from_selected_durations', $this->adminLangId));
                 FatUtility::dieJsonError(Message::getHtml());
             }
@@ -163,14 +163,14 @@ class ConfigurationsController extends AdminBaseController
             $unselectedSlot = array_diff($bookingSlots, $post['CONF_PAID_LESSON_DURATION']);
             $post['CONF_PAID_LESSON_DURATION'] = implode(',', $post['CONF_PAID_LESSON_DURATION']);
         }
-       
-        
+
+
         if (!$record->update($post)) {
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
-        
-        if(!empty($unselectedSlot)){
+
+        if (!empty($unselectedSlot)) {
             $userToLanguage = new UserToLanguage();
             $userToLanguage->removeTeachSlots($unselectedSlot);
         }
@@ -264,7 +264,7 @@ class ConfigurationsController extends AdminBaseController
             AttachedFile::FILETYPE_BLOG_PAGE_IMAGE,
             AttachedFile::FILETYPE_LESSON_PAGE_IMAGE,
             AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE,
-            );
+        );
 
         if (!in_array($file_type, $allowedFileTypeArr)) {
             Message::addErrorMessage($this->str_invalid_request);
@@ -583,8 +583,8 @@ class ConfigurationsController extends AdminBaseController
                 break;
 
             case Configurations::FORM_SEO:
-                /* $fld = $frm->addTextBox(Label::getLabel('LBL_Twitter_Username', $this->adminLangId), 'CONF_TWITTER_USERNAME');
-                $fld->htmlAfterField = '<small>'.Label::getLabel("LBL_This_is_required_for_Twitter_Card_code_SEO_Update", $this->adminLangId).'</small>'; */
+                $fld = $frm->addCheckBox(Label::getLabel('LBL_ENABLE_LANGUAGE_CODE_TO_SITE_URLS', $this->adminLangId), 'CONF_LANG_SPECIFIC_URL', 1, array(), false, 0);
+                $fld->htmlAfterField = '<small>' . Label::getLabel("LBL_LANGUAGE_CODE_TO_SITE_URLS_EXAMPLES", $this->adminLangId) . '</small>';
 
                 $fld2 = $frm->addTextarea(Label::getLabel('LBL_Site_Tracker_Code', $this->adminLangId), 'CONF_SITE_TRACKER_CODE');
                 $fld2->htmlAfterField = '<small>' . Label::getLabel("LBL_This_is_the_site_tracker_script,_used_to_track_and_analyze_data_about_how_people_are_getting_to_your_website._e.g.,_Google_Analytics.", $this->adminLangId) . ' http://www.google.com/analytics/</small>';
@@ -612,24 +612,24 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addHtml('', 'Grpcls', '<h3>' . Label::getLabel('LBL_Group_Class', $this->adminLangId) . '</h3>');
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Cancellation_Refund_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_CLASS_REFUND_PERCENTAGE");
                 $fld3->requirements()->setIntPositive();
-                $fld3->requirements()->setRange(0,100);
+                $fld3->requirements()->setRange(0, 100);
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Booking_Time_Span(Minutes)", $this->adminLangId), "CONF_CLASS_BOOKING_GAP");
                 $fld3->requirements()->setIntPositive();
-                $fld3->requirements()->setRange(0,1000);
+                $fld3->requirements()->setRange(0, 1000);
                 $frm->addIntegerField(Label::getLabel("LBL_Class_Max_learners", $this->adminLangId), "CONF_GROUP_CLASS_MAX_LEARNERS");
-                
-                $frm->addHtml('', 'Admin', '<h3>'.Label::getLabel('LBL_Teacher_Dashboard', $this->adminLangId).'</h3>');
-                
+
+                $frm->addHtml('', 'Admin', '<h3>' . Label::getLabel('LBL_Teacher_Dashboard', $this->adminLangId) . '</h3>');
+
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Default_Items_Per_Page", $this->adminLangId), "CONF_FRONTEND_PAGESIZE");
                 $fld3->requirements()->setRange(1, 500);
-                $fld3->htmlAfterField = "<br><small>".Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Lessons,_orders,_etc)", $this->adminLangId).".</small>";
-                
+                $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Lessons,_orders,_etc)", $this->adminLangId) . ".</small>";
+
                 $bookingSlots = applicationConstants::getBookingSlots();
                 $fld = $frm->addCheckBoxes(Label::getLabel("LBL_Lesson_durations", $this->adminLangId), "CONF_PAID_LESSON_DURATION", array_combine($bookingSlots, $bookingSlots), array(), array('class' => 'list-inline'));
-                $fld->htmlAfterField = "<br><small>".Label::getLabel("htmlAfterField_LESSON_DURATIONS_TEXT", $this->adminLangId).".</small>";
+                $fld->htmlAfterField = "<br><small>" . Label::getLabel("htmlAfterField_LESSON_DURATIONS_TEXT", $this->adminLangId) . ".</small>";
 
                 $frm->addRadioButtons(Label::getLabel("LBL_Default_Lesson_duration",  $this->adminLangId), "CONF_DEFAULT_PAID_LESSON_DURATION", array_combine($bookingSlots, $bookingSlots), '', array('class' => 'list-inline'));
-                
+
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_END_LESSON_DURATION", $this->adminLangId), "CONF_ALLOW_TEACHER_END_LESSON");
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Duration_After_Teacher_Can_End_Lesson_(In_Minutes)", $this->adminLangId) . ".</small>";
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_LEARNER_REFUND_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_REFUND_PERCENTAGE");
@@ -689,7 +689,7 @@ class ConfigurationsController extends AdminBaseController
                 $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_This_is_the_minimum_interval_in_days_between_two_withdrawal_requests.", $this->adminLangId) . "</small>";
 
                 $frm->addHtml('', 'Checkout', '<h3>' . Label::getLabel("LBL_Checkout", $this->adminLangId) . '</h3>');
-               
+
                 /*$srch = new OrderStatusSearch($this->adminLangId);
                 $srch->addMultipleFields(array('orderstatus_id', 'IFNULL(orderstatus_name, orderstatus_identifier) as  orderstatus_name'));
                 $rs = $srch->getResultSet();
@@ -1005,7 +1005,7 @@ class ConfigurationsController extends AdminBaseController
                 $blogimg_fld = $frm->addButton('Lesson Image', 'lesson_img', 'Upload file', array('class' => 'logoFiles-Js', 'id' => 'lesson_img', 'data-file_type' => AttachedFile::FILETYPE_LESSON_PAGE_IMAGE));
                 $frm->addButton(label::getLabel('LBL_ALLOWED_PAYMENT_GATEWAY_IMAGE'), 'allowed_payment_gateways_img', label::getLabel('LBL_UPLOAD_FILE'), array('class' => 'logoFiles-Js', 'id' => 'allowed_payment_gateways_img', 'data-file_type' => AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE));
 
-            break;
+                break;
 
             case  Configurations::FORM_SERVER:
                 $fld = $frm->addHtmlEditor(Label::getLabel('LBL_Maintenance_Text', $this->adminLangId), 'CONF_MAINTENANCE_TEXT_' . $langId);
