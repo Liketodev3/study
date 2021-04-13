@@ -8343,7 +8343,7 @@ body[dir="rtl"] .checkout-cart-dir {
     bottom: -19px;
 }
 .calendar-view{
-    z-index: 11;
+    z-index: 2;
 }
 
 @media(max-width:767px){

@@ -1,5 +1,50 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: RV-2.2
+
+Release Date: 2021-04-12
+
+New Features:
+
+    *79596: Integrate 2Checkout payment gateway
+    *79596: Integrate Paygate payment gateway
+    *81706: Integrate Paystack Payment gateway
+    *81802: Lesson reschedule and cancellation report
+    *80518: Multiple Booking Slots
+    *81798: Commission report
+    *79595: Basic PWA
+    *80349: Update Stripe to support SCA( Strong Customer Authentication)
+
+Updates:
+
+    *82683: Refine 'Total Revenue from lessons' on dashboard
+    *82203: Image for allowed payment gateways/cards on the platform
+    *81501: Refine and refactor Meta Tags Management
+    *80174: Images optimization
+    *82382: Auto Language selection
+    *82103: Teachers search query optimization
+    *78843: Upgrade zoom version - 1.9.1
+    *73053: Fix banners button URL and text and some bug fixes
+
+Bugs:
+
+    - #051199: Mobile resolution friendly email templates
+    - #045564: Saturday availability not showing correctly
+    - #048965: Emails with capital letters, can't start lesson
+    - #049602: Issue with speaking and proficiency level
+    - #050886: When user search Availability for all teachers for particular days then its not working accordingly.
+    - #051042: If teacher set general Availability and not  save current week's weekly Availability then system not allow to book a lesson on that time
+    - #044694: "Find a teacher> subjects in chronological order in the subjects dropdown If admin side you will reorder the subjects it is not showing in the same order at frontend"
+    - #049735: Change profile picture - on mobile version> Profile Picture changer - unable to zoom in and out on the mobile version. The picture loads, and you can zoom out. But once zoomed out all the way you can no longer move or adjust zoom in the image
+    - #050890: Once User registered, then No loader is showing during waiting or delay time.
+    - #050953: Apple touch Icons are not working (404), after updated from admin panel
+    - #051112: Currency/Languages scroller is not available if User added 100  currencies/languages  they are not displaying in the right manner  on the website
+    - #049899: Email Notification is missing> When teacher is placing wallet withdrawal request admin does not receive any notification through email.
+    - #049783: When user multiple click on statistics button then graphical representation has changed
+    - #050923: Change week start and end date timezone
+
+-------------------------------------------------------------------------
+
 Release Number: TV-2.11.8.20210409
 Release Date: 2021-04-09
 
@@ -17,57 +62,6 @@ Bugs
     .#052171: In multiple slot>> during changes lesson price and lesson time>> price is showing different for single and bulk lesson.
 
 --------------------------------------------------------------------------
-
-Release Number: RV-2.2
-
-Release Date: 2021-04-07
-
-New Features:
-
-    *79596: Integrate 2Checkout payment gateway
-    *79596: Integrate Paygate payment gateway
-    *81706: Integrate Paystack Payment gateway
-    *81802: Lesson reschedule and cancellation report
-    *80518: Multiple Booking Slots
-    *81798: Commission report
-    *79595: Basic PWA
-    *80349: Update Stripe to support SCA( Strong Customer Authentication) task_80349_stripe_intent
-    *82683: Refine 'Total Revenue from lessons' on dashboard
-    *82203: Image for allowed payment gateways/cards on the platform
-    *81501: Refine and refactor Meta Tags Management
-    *80174: Images optimization
-    *82382: Auto Language selection
-    *82103: Teachers search query optimization
-    *78843: Upgrade zoom version - 1.9.1
-    *73053: Fix banners button URL and text and some bug fixes
-
-Bugs:
-
-    - #051199: Email which goes to user on mobile need to do responsive.
-    - #045564: Saturday availability not showing correctly
-    - #047837: Home Page > Slides >The slider images has border on the side
-    - #048965: Emails with capital letters, can't start lesson
-    - #049602: Issue with speaking and proficiency level
-    - #050886: When user search  a Availability for all teachers for particular days then its not working accordingly.
-    - #051035: Daylight S time changes not supporting, When user set a Availability on general Availability  then it impact on all other weekly time and schedule time.  Please have  a look once into the video:- https://www.loom.com/share/44345d5365f64d58907c0ac043867353
-    - #051042: If teacher set general Availability and not  save current week's weekly Availability then system not allow to book a lesson on that time
-    - #044694: "Find a teacher> subjects in chronological order in the subjects dropdown If admin side you will reorder the subjects it is not showing in the same order at frontend"
-    - #046184: Emails> Scheduled lesson reminder - table formatting creates an additonal row in the emails
-    - #049735: Change profle picture - on mobile version> Profile Picture changer - unable to zoom in and out on the mobile version. The picture loads, and you can zoom out. But once zoomed out all the way you can no longer move or adjust zoom in the image
-    - #050890: Once User registered, then No loader is showing during waiting or delay time.
-    - #050953: Apple touch Icons are not working (404), after updated from admin panel
-    - #051112: Currency/Languages scroller is not available if User added 100  currencies/languages  they are not displaying in the right manner  on the website
-    - #051094: During Account Verification it shows Suspicious Link pop-up.
-    - #051111: Login failed attempt - if a user exceed the login attempt limit then system doesn't allow anyone to login not even admin
-    - #045754: Dates of lessons still appear in English - both the day of the week and the month. That happens in the tutor/student profile as well as in the lesson itself. Screenshots attached. https://bizixx.fatbit.com/attachment/download/MjczNTc3LTE2MDYyMjEwODVfU2M%3
-    - #049899: Email Notification is missing> When teacher is placing wallet withdrawal request admin do not receive any notification through email.
-    - #049783: When user multiple click on statistics button then graphical representation has changed
-    - #049290: We are  facing  404 error in any tutor live site when uer add "/"  at the end of url , the url list is mentioned in below  screen shot url :https://prnt.sc/y4c6yb
-    - #048753: Teacher application form> Showing  a error during upload pdf file.
-    - #046499: Home page, ipad portrait view> Alignment of  columns in image below not  in symmetrical order when user add maximum and minimum text. Seems to be ok in all other views except Ipad Portrait view. Please have a look one into the screen shot.  Screen shot UR
-    - #045400: When the user fills " Send Gift Card " Form, after click on "send gift card" button, gift card amount is automatically added to Manage Gift Cards section in the admin area, While user still on the checkout page. He has not proceeded.
-
--------------------------------------------------------------------------
 
 Release Number: TV-2.11.6.20210405
 

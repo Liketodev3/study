@@ -364,3 +364,4 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.6.20210405' WHERE `conf_na
 UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.7.20210408' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.8.20210409' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
