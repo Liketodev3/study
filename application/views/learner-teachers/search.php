@@ -138,7 +138,7 @@
 			<td>
 				<span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Actions');?></span>
 				<span class="td__data">
-						<a href="javascript:void(0)" class="btn btn--small btn--secondary" onClick="cart.add( '<?php echo $teacher['teacherId']; ?>', '<?php echo $lessonPackages[0]['lpackage_id'] ?>','','', '',<?php echo $teacher['lessonDuration']; ?> )"> <?php echo Label::getLabel('LBL_Buy_Now');?>
+						<a href="javascript:void(0)" class="btn btn--small btn--secondary" onClick="cart.add( '<?php echo $teacher['teacherId']; ?>', '<?php echo $lessonPackages[0]['lpackage_id'] ?>','','', null, null, null )"> <?php echo Label::getLabel('LBL_Buy_Now');?>
                         </a>
 					<?php /*<a href="javascript:void(0)" onClick="generateThread(<?php echo $teacher['teacherId']; ?>)" class="btn btn--small btn--secondary"><?php echo Label::getLabel('LBL_Message');?></a>*/ ?>
 					

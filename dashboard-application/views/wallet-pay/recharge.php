@@ -29,15 +29,6 @@
 						
 					</div>
 					<p class="-color-secondary">
-						<?php 
-						$labelstr =  Label::getLabel('LBL_*_All_Purchases_are_in_{default-currency-code}._Foreign_transaction_fees_might_apply,_according_to_your_bank\'s_policies');
-						echo  str_replace("{default-currency-code}", CommonHelper::getDefaultCurrencyData()['currency_code'],$labelstr);
-						?>
-					</p>
-					<div class="">
-						<img src="<?php echo CONF_WEBROOT_URL; ?>images/PayGate-Card-Brand-Logos.jpg">
-					</div>
-					<p class="-color-secondary">
 						<?php
 						$labelstr =  Label::getLabel('LBL_*_All_Purchases_are_in_{default-currency-code}._Foreign_transaction_fees_might_apply,_according_to_your_bank\'s_policies');
 						echo  str_replace("{default-currency-code}", CommonHelper::getSystemCurrencyData()['currency_code'], $labelstr);

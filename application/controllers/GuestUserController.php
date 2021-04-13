@@ -461,7 +461,6 @@ class GuestUserController extends MyAppController
 
     public function loginFacebook()
     {
-        FatUtility::dieJsonError(Label::getLabel("MSG_THERE_WAS_SOME_PROBLEM_IN_AUTHENTICATING_YOUR_ACCOUNT_WITH_FACEBOOK,_PLEASE_TRY_WITH_DIFFERENT_LOGIN_OPTIONS", $this->siteLangId));
         $post = FatApp::getPostedData();
         $facebookEmail = isset($post['email']) ? $post['email'] : NULL;
         if (empty($post['id'])) {

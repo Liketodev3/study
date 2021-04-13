@@ -577,35 +577,45 @@ class ImageController extends FatController
         AttachedFile::displayOriginalImage('editor/' . $fileNamewithPath);
     }
 
-    public function pwaIcon(int $size)
+    public function pwaIcon(int $size = 100)
     {
         $image_name = '';
+
         if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_APP_ICON, 0, 0, 0, true)) {
             $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         }
-        switch (strtoupper($size)) {
+
+        switch ($size) {
             case '144':
                 $w = $h = 144;
                 break;
             case '512':
                 $w = $h = 512;
+                break;
+            default:
+                $w = $h = 100;
                 break;
         }
         AttachedFile::displayImage($image_name, $w, $h);
     }
 
-    public function pwaSplashIcon(int $size)
+    public function pwaSplashIcon(int $size = 100)
     {
         $image_name = '';
+
         if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0, 0, 0, true)) {
             $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         }
-        switch (strtoupper($size)) {
+
+        switch ($size) {
             case '144':
-                $w = $h = 144;
+                $w = $h =  144;
                 break;
             case '512':
-                $w = $h = 512;
+                $w = $h =  512;
+                break;
+            default:
+                $w = $h = 100;
                 break;
         }
         AttachedFile::displayImage($image_name, $w, $h);

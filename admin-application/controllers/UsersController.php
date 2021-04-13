@@ -716,7 +716,8 @@ class UsersController extends AdminBaseController
         $frm->addHiddenField('', 'user_id');
         $typeArr = Transaction::getCreditDebitTypeArr($langId);
         $frm->addSelectBox(Label::getLabel('LBL_Type', $this->adminLangId), 'type', $typeArr)->requirements()->setRequired(true);
-        $frm->addRequiredField(Label::getLabel('LBL_Amount', $this->adminLangId), 'amount')->requirements()->setFloatPositive();
+        $fld = $frm->addFloatField(Label::getLabel('LBL_Amount', $this->adminLangId), 'amount');
+        $fld->requirements()->setRange(1, 99999);
         $frm->addTextArea(Label::getLabel('LBL_Description', $this->adminLangId), 'description')->requirements()->setRequired();
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;

@@ -26,6 +26,11 @@ class GroupClassesController extends AdminBaseController
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
         $srch = TeacherGroupClassesSearch::getSearchObj($this->adminLangId);
+        $srch->joinIssueReported();
+        $srch->addMultipleFields(['issrep_id']);
+        // $srch->joinTeacher();
+        // $srch->joinTeacherCredentials();
+
         $keyword = FatApp::getPostedData('teacher', null, '');
         $user_id = FatApp::getPostedData('teacher_id', FatUtility::VAR_INT, -1);
         if ($user_id > 0) {
@@ -57,6 +62,7 @@ class GroupClassesController extends AdminBaseController
         $srch->setPageNumber($page);
         $rs = $srch->getResultSet();
         $classes = FatApp::getDb()->fetchAll($rs);
+       
         $user_timezone = MyDate::getUserTimeZone();
         $totalRecords = $srch->recordCount();
         $this->set('postedData', $post);
@@ -175,11 +181,22 @@ class GroupClassesController extends AdminBaseController
         if ($grpclsId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $class_details = TeacherGroupClasses::getAttributesById($grpclsId);
+        $db = FatApp::getDb();
+        $srch = TeacherGroupClassesSearch::getSearchObj($this->adminLangId);
+        $srch->joinIssueReported();
+        $srch->addMultipleFields(['issrep_id']);
+        $srch->doNotCalculateRecords();
+        $srch->setPagesize(1);
+        $srch->addCondition('grpcls_id', '=', $grpclsId);
+        $class_details = $db->fetch($srch->getResultSet());
+
         if (empty($class_details)) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
-        $db = FatApp::getDb();
+        if($class_details['issrep_id'] > 0 || $class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED){
+            FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
+        }
+       
         $db->startTransaction();
         /* update all lesson status for this class[ */
         $sLessonSrchObj = new ScheduledLessonSearch();
@@ -215,11 +232,23 @@ class GroupClassesController extends AdminBaseController
         if ($grpclsId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $class_details = TeacherGroupClasses::getAttributesById($grpclsId);
+        $db = FatApp::getDb();
+        $srch = TeacherGroupClassesSearch::getSearchObj($this->adminLangId);
+        $srch->joinIssueReported();
+        $srch->addMultipleFields(['issrep_id']);
+        $srch->doNotCalculateRecords();
+        $srch->setPagesize(1);
+        $srch->addCondition('grpcls_id', '=', $grpclsId);
+        $class_details =  $db->fetch($srch->getResultSet());
+
         if (empty($class_details)) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
-        $db = FatApp::getDb();
+        if($class_details['issrep_id'] > 0 || $class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED){
+            FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
+        }
+
+       
         $db->startTransaction();
         $teacherGroupClassObj = new TeacherGroupClasses($grpclsId);
         $teacherGroupClassObj->cancelClass();

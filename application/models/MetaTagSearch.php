@@ -66,7 +66,7 @@ class MetaTagSearch extends SearchBase
                 if (isset($condition) && $condition) {
                     $condition->attachCondition('u.user_first_name', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
                     $condition->attachCondition('u.user_last_name', 'like', '%' . $criteria['keyword']['val'] . '%', 'OR');
-                    $this->addDirectCondition('concat(u.user_first_name," ",u.user_last_name) like "%' . $criteria['keyword']['val'] . '%"', 'AND');
+                    $condition->attachCondition('mysql_func_concat(u.user_first_name," ",u.user_last_name)', ' like', '%' . $criteria['keyword']['val'] . '%', 'OR', true);
                 }
                 break;
             case MetaTag::META_GROUP_GRP_CLASS:

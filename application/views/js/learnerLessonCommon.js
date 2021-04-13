@@ -145,8 +145,12 @@ cancelLessonSetup = function (frm) {
         }
         $.mbsmessage(ans.msg, true, 'alert alert--success');
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusUpcoming;
-        location.reload();
+        if (ans.redirectUrl) {
+            setTimeout(function () { window.location.href = ans.redirectUrl }, 2000);
+        }else{
+            window.location.reload();
+        }
+        
     }, { fOutMode: 'json' });
 
     // fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'cancelLessonSetup'), data , function(t) {

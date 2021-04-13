@@ -56,8 +56,10 @@ class TeacherGroupClassesSearch extends SearchBase
             $srch->addFld('0 as is_in_class');
         }
         if (isset($postedData['keyword']) && !empty($postedData['keyword'])) {
-            $srch->addCondition('grpcls_title', 'LIKE', '%' . $postedData['keyword'] . '%');
+           $condition = $srch->addCondition('grpcls_title', 'LIKE', '%' . $postedData['keyword'] . '%');
+           $condition->attachCondition('grpclslang_grpcls_title', 'LIKE', '%' . $postedData['keyword'] . '%');
         }
+
         if (isset($postedData['status']) && $postedData['status'] !== "") {
             $srch->addCondition('grpcls_status', '=', $postedData['status']);
         }

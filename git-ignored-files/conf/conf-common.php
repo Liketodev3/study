@@ -30,3 +30,4 @@ define('CONF_HOME_PAGE_CACHE_TIME', 28800); // in seconds (28800 = 8 hours)
 define('ALLOW_EMAILS', false);
 
 define('CONF_ZOOM_VERSION', '1.9.0');
+define('SEARCH_MAX_COUNT', 1000);

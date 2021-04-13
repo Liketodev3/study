@@ -330,7 +330,7 @@ class EmailHandler extends FatModel
             if ($img) {
                 $imgSrc = CommonHelper::generateFullUrl('Image', 'SocialPlatform', [$row['splatform_id']], CONF_WEBROOT_FRONT_URL);
             }
-            $social_media_icons .= '<a style="display:inline-block;vertical-align:top; width:35px;height:35px; margin:0 0 0 5px; background:#1a1a1a;border-radius:100%;padding:4px;" href="' . $url . '" ' . $target_blank . ' title="' . $title . '" ><img alt="' . $title . '" width="24" style="margin:4px auto 0; display:block;" src = "' . $imgSrc . '"/></a>';
+            $social_media_icons .= '<a style="display:inline-block;vertical-align:top; width:40px;height:40px; margin:0 0 0 5px; border-radius:100%;" href="' . $url . '" ' . $target_blank . ' title="' . $title . '" ><img alt="' . $title . '" width="30;" style="margin:4px auto 0; display:block;" src = "' . $imgSrc . '"/></a>';
         }
         return [
             '{website_name}' => FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR_STRING, ''),
@@ -339,7 +339,8 @@ class EmailHandler extends FatModel
             '{current_date}' => date('M d, Y'),
             '{social_media_icons}' => $social_media_icons,
             '{contact_us_url}' => CommonHelper::generateFullUrl('contact', '', [], CONF_WEBROOT_FRONT_URL),
-            '{notifcation_email}' => FatApp::getConfig('CONF_FROM_EMAIL')
+            '{notifcation_email}' => FatApp::getConfig('CONF_FROM_EMAIL'),
+            '{current_year}' => date('Y')
         ];
     }
 

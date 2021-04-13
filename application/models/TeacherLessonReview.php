@@ -18,7 +18,7 @@ class TeacherLessonReview extends MyAppModel
     {
         $langId = FatUtility::int($langId);
         if ($langId == 0) {
-            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
+            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $langId), E_USER_ERROR);
         }
         $arr = [
             static::STATUS_PENDING => Label::getLabel('LBL_Pending'),
