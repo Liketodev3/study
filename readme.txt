@@ -1,5 +1,14 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.11.9.20210414
+
+Release Date: 2021-04-14
+
+    .#052314- Remove delete lesson package option from admin panel
+    .#052296- Fix conflict of preferance form
+
+------------------------------------------------------------------------
+
 Release Number: RV-2.2
 
 Release Date: 2021-04-12
