@@ -127,13 +127,22 @@ class TeacherGeneralAvailability extends MyAppModel
             $systemTimeZone = MyDate::getTimeZone();
             $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
             foreach ($postJsonArr as $val) {
+                $weekNumber =  2;
+                
                 $gendate = new DateTime();
-                $gendate->setISODate(2018, 2, $val->day);
+               
+                $gendate->setISODate(2018, $weekNumber, $val->day);
                 $dayNum = $gendate->format('d');
                 $startDate = "2018-01-" . $dayNum . " " . date('H:i:s', strtotime($val->startTime));
                 $custom_tgavl_start = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+
+               
+                if($val->day <= 6 &&( $val->dayEnd == 0 && $val->endTime == "00:00")){
+                    $weekNumber = 3;
+                }
+
                 $gendate = new DateTime();
-                $gendate->setISODate(2018, 2, $val->dayEnd);
+                $gendate->setISODate(2018, $weekNumber, $val->dayEnd);
                 $dayNum = $gendate->format('d');
                 $endDate = "2018-01-" . $dayNum . " " . date('H:i:s', strtotime($val->endTime));
                 $custom_tgavl_end = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
@@ -168,13 +177,13 @@ class TeacherGeneralAvailability extends MyAppModel
     public static function timeSlotArr()
     {
         return [
-            0 => '00:00-02:59',
-            1 => '03:00-05:59',
-            2 => '06:00-08:59',
-            3 => '09:00-11:59',
-            4 => '12:00-14:59',
-            5 => '15:00-17:59',
-            6 => '18:00-20:59',
+            0 => '00:00-03:00',
+            1 => '03:00-06:00',
+            2 => '06:00-09:00',
+            3 => '09:00-12:00',
+            4 => '12:00-15:00',
+            5 => '15:00-18:00',
+            6 => '18:00-21:00',
             7 => '21:00-23:59',
         ];
     }

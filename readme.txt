@@ -1,19 +1,128 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number: 
+Release Number: RV-2.2
 
-Release Date: 
+Release Date: 2021-04-07
 
-Enhancements:
-    *Task-80520: Upgrade Fullcalendar
-    *Task-80811: Frontend Directory Changes
-    *Task-81790: Admin change timezone
+New Features:
 
-Bug Fixes:
-    *Bug-#048309: Group class 15 min slot difference
-    *Bug-#047908: Cancel Reschedule email template changes
-    *Bug-#047733: Selected Payment gateway,stay same when apply coupon
-    *Bug-#048753: Show correct error message for uploaded file
+    *79596: Integrate 2Checkout payment gateway
+    *79596: Integrate Paygate payment gateway
+    *81706: Integrate Paystack Payment gateway
+    *81802: Lesson reschedule and cancellation report
+    *80518: Multiple Booking Slots
+    *81798: Commission report
+    *79595: Basic PWA
+    *80349: Update Stripe to support SCA( Strong Customer Authentication) task_80349_stripe_intent
+    *82683: Refine 'Total Revenue from lessons' on dashboard
+    *82203: Image for allowed payment gateways/cards on the platform
+    *81501: Refine and refactor Meta Tags Management
+    *80174: Images optimization
+    *82382: Auto Language selection
+    *82103: Teachers search query optimization
+    *78843: Upgrade zoom version - 1.9.1
+    *73053: Fix banners button URL and text and some bug fixes
+
+Bugs:
+
+    - #051199: Email which goes to user on mobile need to do responsive.
+    - #045564: Saturday availability not showing correctly
+    - #047837: Home Page > Slides >The slider images has border on the side
+    - #048965: Emails with capital letters, can't start lesson
+    - #049602: Issue with speaking and proficiency level
+    - #050886: When user search  a Availability for all teachers for particular days then its not working accordingly.
+    - #051035: Daylight S time changes not supporting, When user set a Availability on general Availability  then it impact on all other weekly time and schedule time.  Please have  a look once into the video:- https://www.loom.com/share/44345d5365f64d58907c0ac043867353
+    - #051042: If teacher set general Availability and not  save current week's weekly Availability then system not allow to book a lesson on that time
+    - #044694: "Find a teacher> subjects in chronological order in the subjects dropdown If admin side you will reorder the subjects it is not showing in the same order at frontend"
+    - #046184: Emails> Scheduled lesson reminder - table formatting creates an additonal row in the emails
+    - #049735: Change profle picture - on mobile version> Profile Picture changer - unable to zoom in and out on the mobile version. The picture loads, and you can zoom out. But once zoomed out all the way you can no longer move or adjust zoom in the image
+    - #050890: Once User registered, then No loader is showing during waiting or delay time.
+    - #050953: Apple touch Icons are not working (404), after updated from admin panel
+    - #051112: Currency/Languages scroller is not available if User added 100  currencies/languages  they are not displaying in the right manner  on the website
+    - #051094: During Account Verification it shows Suspicious Link pop-up.
+    - #051111: Login failed attempt - if a user exceed the login attempt limit then system doesn't allow anyone to login not even admin
+    - #045754: Dates of lessons still appear in English - both the day of the week and the month. That happens in the tutor/student profile as well as in the lesson itself. Screenshots attached. https://bizixx.fatbit.com/attachment/download/MjczNTc3LTE2MDYyMjEwODVfU2M%3
+    - #049899: Email Notification is missing> When teacher is placing wallet withdrawal request admin do not receive any notification through email.
+    - #049783: When user multiple click on statistics button then graphical representation has changed
+    - #049290: We are  facing  404 error in any tutor live site when uer add "/"  at the end of url , the url list is mentioned in below  screen shot url :https://prnt.sc/y4c6yb
+    - #048753: Teacher application form> Showing  a error during upload pdf file.
+    - #046499: Home page, ipad portrait view> Alignment of  columns in image below not  in symmetrical order when user add maximum and minimum text. Seems to be ok in all other views except Ipad Portrait view. Please have a look one into the screen shot.  Screen shot UR
+    - #045400: When the user fills " Send Gift Card " Form, after click on "send gift card" button, gift card amount is automatically added to Manage Gift Cards section in the admin area, While user still on the checkout page. He has not proceeded.
+
+-------------------------------------------------------------------------
+
+Release Number: TV-2.11.6.20210405
+
+Release Date: 2021-04-05
+
+Updates:
+    .#73053-update labels
+Bugs
+    .#051969-change lesson package label
+    .#83928-use webroot url for include js file
+    .#83928-change label query
+    .#051968-fix group class serach form css issue
+    .#050298-cancel group class fixed
+    .#050897-fic start and end time text issue
+    .#051975-fix phone no validation issue
+    .#051963-set range of txn amount in admin panel
+    .#051964 - Search should be working according to Country wise
+
+-------------------------------------------------------------------------------------
+
+Release Number: TV-2.11.5.20210403
+Release Date: 2021-04-03
+
+Updates:
+    Task-83928-Country code and phone number validation
+
+Bugs:
+    #051957 - The default items per page on the Admin's end needs to be restricted to prevent the fatal error.
+    #051930 - When user cancel the lesson(Bulk/single) which is purchased by apply coupon , then error message is showing.
+    #051771 - Group class text over ongoing class not coming as correct.
+    #051770 - Phone no character length should be 7 to 16. 
+    #051199 - Design tweaks, responsive design and dynamic copyright year in email templates
+    #051935 - Show cross icon on transactions popup
+============================================================================================
+
+Release Number: TV-2.11.4.20210402
+Release Date: 2021-04-02
+
+Bugs:
+    #051769 - The refund percentage for group class does not match the general flow.
+    #051839 - The Search class only responds for "English Language" and not for other langauges. 
+    #051771 - Group class text over ongoing class not coming as correct.
+    #051877 - When user purchase a lesson then in need to be schedule stage>> when user cancel the lesson then got 50% refund, which is wrong, it should be 100% refund.
+    #051847 - The payment methods distorts on changing the languages under "Group Class"
+    #051884 - In mata tag management >>Search is not working properly. 
+    #051883 - In meta tag management >> when user create a metatag for teacher, blog, cms and for english language only. then it will create of rest languages also.
+    #051845 - The change in language affects the language offered field on the checkout page.
+    #051828 - Language specific data not coming
+    #051798 - One 2 one class, Student report the issue, emails not coming coorect. 
+    #051797 - Need to remove or hide email templets as its functionality not working. 
+    #051796 - The refund percentage for the student for group class should be limited to a particular time slot, let suppose before 24 hours.
+    #051776 - In admin>> meta tag management>> Blog post>> "Blog title column" is missing.
+    #051774 - The Admin is able to edit the already completed group class.
+    #051773 - Edge - Checkout page - Payment methods not coming 
+    #051732 - When user login with mobile number and password then facing a issue of email verification.
+    #051731 - When user login with facebook and click on side area and cancel the facebook pop up then JSON error is showing. 
+    #051729 - When user login with facebook's email id and password then error message is showing. 
+    #051663 - From user >> Teacher listing page >> clicking on favorite button for some time >> Favorite button >> text disappear 
+    #051461 - Admin >> dashboard >> total revenew from lesson>> need to set the ui
+    #051408 - User >> teacher menu >> clicking on one teacher show 404
+    #049973 - Email content not decoded in outlook , yopmail etc
+    #048614 - On the home page- go t search a teacher.
+    #051840 - Fix pwa icons validation messages
+    #051844 - PWA - Show existing icons with the file upload fields
+
+============================================================================================
+
+
+Release Number: TV-2.11.3.20210331
+Release Date: 2021-03-31
+
+Bugs:
+    #051703
 
 ----------------------------------
 

@@ -264,7 +264,8 @@ class ScheduledLessonDetails extends MyAppModel
         if (!$learner && $data['order_discount_total'] > 0) {
             $perUnitAmount = round(($data['order_net_amount'] / $data['op_qty']), 2);
         }
-        if ($learner && !$isDiscountApply && $diff < 24) {
+
+        if ($learner && !$isDiscountApply && ($data['slesson_date'] != "0000-00-00" && $diff < 24)) {
             if ($data['slesson_grpcls_id'] > 0) {
                 $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_CLASS_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
             } else {

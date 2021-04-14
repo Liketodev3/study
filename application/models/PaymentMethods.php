@@ -100,7 +100,6 @@ class PaymentMethods extends MyAppModel
             }
         }
         if (empty($paymentMethod)) {
-            $this->error = Label::getLabel('LBL_No_Payment_Method_Active');
             return [];
         }
         return $paymentMethod;

@@ -63,7 +63,7 @@ class Transaction extends MyAppModel
     {
         $langId = FatUtility::int($langId);
         if ($langId == 0) {
-            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
+            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $langId), E_USER_ERROR);
         }
         $arr = [
             static::WITHDRAWL_STATUS_PENDING => Label::getLabel('LBL_Withdrawal_Request_Pending', $langId),
@@ -94,7 +94,7 @@ class Transaction extends MyAppModel
     {
         $langId = FatUtility::int($langId);
         if ($langId == 0) {
-            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
+            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $langId), E_USER_ERROR);
         }
         $arr = [
             static::CREDIT_TYPE => Label::getLabel('LBL_Credit', $langId),
@@ -124,7 +124,7 @@ class Transaction extends MyAppModel
             $srch->addCondition('utxn.utxn_user_id', '=', $this->userId);
         }
         if ($this->mainTableRecordId > 0) {
-            $srch->addCondition('utxn.utxn_id', '=', $mainTableRecordId);
+            $srch->addCondition('utxn.utxn_id', '=', $this->mainTableRecordId);
         }
         $srch->addMultipleFields(['IFNULL(SUM(utxn.utxn_credit),0) AS total_earned', 'IFNULL(SUM(utxn.utxn_debit),0) AS total_used']);
         $srch->doNotCalculateRecords();

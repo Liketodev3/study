@@ -10,7 +10,7 @@ var cart = {
 		startDateTime = startDateTime || '';
 		endDateTime = endDateTime || '';
 		grpclsId = grpclsId || 0;
-		lessonDuration = lessonDuration || null;
+		lessonDuration = lessonDuration || 0;
 
 		var data = 'grpcls_id=' + grpclsId + '&teacher_id=' + teacherId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId + '&languageId=' + languageId + '&lessonDuration=' + lessonDuration;
 

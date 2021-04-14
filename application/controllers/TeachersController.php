@@ -87,7 +87,15 @@ class TeachersController extends MyAppController
     public function teachLanguagesAutoCompleteJson()
     {
         $srch = new TeachingLanguageSearch($this->siteLangId);
+        $keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '');
         $srch->addOrder('tlanguage_display_order');
+        $srch->doNotCalculateRecords();
+        $srch->doNotLimitRecords();
+        $srch->addMultipleFields(['tlanguage_id','IFNULL(tlanguage_name,tlanguage_identifier)as tlanguage_name']);
+        if(!empty($keyword)){
+        $conditaion =  $srch->addCondition('tlanguage_name', 'like', '%'.$keyword.'%');
+        $conditaion->attachCondition('tlanguage_identifier', 'like', '%'.$keyword.'%');
+        }
         $rs = $srch->getResultSet();
         $languages = FatApp::getDb()->fetchAll($rs, 'tlanguage_id');
         $json = [];
@@ -624,39 +632,51 @@ class TeachersController extends MyAppController
         }
         /* ] */
         /* Week Day [ */
-        $weekDays = FatApp::getPostedData('filterWeekDays', FatUtility::VAR_STRING, []);
-        if ($weekDays) {
-            $weekDates = MyDate::changeWeekDaysToDate($weekDays);
-            $condition = '( ';
-            foreach ($weekDates as $weekDayKey => $date) {
-                $condition .= ($weekDayKey == 0) ? '' : 'OR';
-                $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "' . $date['endDate'] . '" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "' . $date['startDate'] . '" )';
+		$weekDays = FatApp::getPostedData('filterWeekDays', FatUtility::VAR_STRING, array());
+		$timeSlots = FatApp::getPostedData('filterTimeSlots', FatUtility::VAR_STRING, array());
+        
+		$timeSlotArr = [];
+
+		if(!empty($timeSlots)) {
+			$timeSlotArr = CommonHelper::formatTimeSlotArr($timeSlots);
+		}
+
+		if (is_array($weekDays) && !empty($weekDays)) {
+
+			$weekDates = MyDate::changeWeekDaysToDate($weekDays, $timeSlotArr);
+			$condition = ' ( ';
+            foreach ($weekDates as $weekDayKey =>  $date) {
+				$condition .= ($weekDayKey == 0) ? '' : ' OR ';
+				$condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "'.$date['endDate'].'" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "'.$date['startDate'].'" ) ';
+			}
+			$condition .= ' ) ';
+			$srch->addDirectCondition($condition);
+		
+		}
+		/* ] */
+		/* Time Slot [ */
+
+        if (empty($weekDays) && !empty($timeSlotArr)) {
+
+            $systemTimeZone = MyDate::getTimeZone();
+            $user_timezone = MyDate::getUserTimeZone();
+
+            $condition = ' ( ';
+            
+			foreach ($timeSlotArr as $key => $formatedVal) {
+                $condition .= ($key == 0) ? '' : ' OR ';
+                $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
+                $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
+                $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $user_timezone, $systemTimeZone)));
+                $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $user_timezone, $systemTimeZone)));
+
+                $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","'.$endTime.'") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","'.$startTime.'") ) ';
             }
+                
             $condition .= ' ) ';
             $srch->addDirectCondition($condition);
-        }
-        /* ] */
-        /* Time Slot [ */
-        $timeSlots = FatApp::getPostedData('filterTimeSlots', FatUtility::VAR_STRING, []);
-        $systemTimeZone = MyDate::getTimeZone();
-        $user_timezone = MyDate::getUserTimeZone();
-        if ($timeSlots) {
-            $formatedArr = CommonHelper::formatTimeSlotArr($timeSlots);
-            if ($formatedArr) {
-                $condition = '( ';
-                foreach ($formatedArr as $key => $formatedVal) {
-                    $condition .= ($key == 0) ? '' : 'OR';
-                    $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
-                    $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
-                    $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $user_timezone, $systemTimeZone)));
-                    $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $user_timezone, $systemTimeZone)));
-                    $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","' . $endTime . '") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","' . $startTime . '") ) ';
-                }
-                $condition .= ' ) ';
-                $srch->addDirectCondition($condition);
-            }
-        }
-        /* ] */
+		}
+		/* ] */
         /* [ */
         $gender = FatApp::getPostedData('gender', FatUtility::VAR_STRING, NULL);
         if (!empty($gender)) {

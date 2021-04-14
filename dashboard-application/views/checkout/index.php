@@ -92,7 +92,7 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 
 				<div class="col-xl-8 col-lg-8 col-md-12" id="lsn-pckgs"></div>
 
-				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right">
+				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right checkout-cart-dir">
 					<div class="box" style="margin-bottom: 30px;" id="financialSummaryListing">
 					</div>
 					<p class="-color-secondary">
