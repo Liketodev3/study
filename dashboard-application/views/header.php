@@ -1,7 +1,7 @@
 <?php
 defined('SYSTEM_INIT') or die('Invalid Usage.');
 if ($controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerName != 'Teach') {
-	$_SESSION['referer_page_url'] = CommonHelper::getCurrUrl();
+    $_SESSION['referer_page_url'] = CommonHelper::getCurrUrl();
 }
 ?>
 <!doctype html>
@@ -30,6 +30,16 @@ $jsVariables = CommonHelper::htmlEntitiesDecode($jsVariables);
 $sslUsed = (FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false)) ? 1 : 0;
 $closeSystemMessages = FatApp::getConfig("CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 3);
 $closeSystemMessages = ($closeSystemMessages <= 0) ? 3 : $closeSystemMessages;
+$websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $siteLangId, FatUtility::VAR_STRING, '');
+
+$loggedUserFirstName =  UserAuthentication::getLoggedUserAttribute('user_first_name');
+$loggedUserLastName =  UserAuthentication::getLoggedUserAttribute('user_last_name');
+$loggedUserFullName = $loggedUserFirstName.' '.$loggedUserLastName;
+
+$currentActiveTab =  User::getDashboardActiveTab();
+$canViewTeacherTab =  User::canViewTeacherTab();
+$isUserTeacher =   User::isTeacher();
+
 ?>
 <script type="text/javascript">
 	
@@ -52,9 +62,9 @@ $closeSystemMessages = ($closeSystemMessages <= 0) ? 3 : $closeSystemMessages;
 		const statusCanceled = <?php echo FatUtility::int(ScheduledLesson::STATUS_CANCELLED); ?>;
 		const statusIssueReported = <?php echo FatUtility::int(ScheduledLesson::STATUS_ISSUE_REPORTED); ?>;
 	
-	</script>;
-<?php 
-	echo $this->getJsCssIncludeHtml(!CONF_DEVELOPMENT_MODE);
+	</script>
+<?php
+    echo $this->getJsCssIncludeHtml(!CONF_DEVELOPMENT_MODE);
 
 if (isset($includeEditor) && $includeEditor) { ?>
 	<script   src="<?php echo CONF_WEBROOT_URL; ?>innovas/scripts/innovaeditor.js"></script>
@@ -69,24 +79,14 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
 	}
 </script>
 <?php } ?>
-<script>
-	
-	
-</script>
-
-
 </head>
 
 <body class="dashboard-teacher">
-
     <div class="site">
-
         <!-- [ SIDE BAR ========= -->
         <aside class="sidebar">
-
             <!-- [ SIDE BAR SECONDARY ========= -->
             <div class="sidebar__secondary">
-
                 <nav class="menu menu--secondary">
                     <ul>
                         <li class="menu__item menu__item-toggle">
@@ -103,7 +103,6 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Menu'); ?></span>
                             </a>
                         </li>
-
 
                         <li class="menu__item menu__item-home">
                             <a href="#" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Home'); ?>">
@@ -125,7 +124,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Notificatons'); ?></span>
                             </a>
                         </li>
-						<?php if(!empty($websiteLangues) || !empty($currencyDat)) { ?>
+						<?php if (!empty($websiteLangues) || !empty($currencyDat)) { ?>
                         <li class="menu__item menu__item-languages">
                             <a href="#languages-nav" class="menu__item-trigger trigger-js" title="<?php echo Label::getLabel('LBL_Languages/Currencies'); ?>">
                                 <svg class="icon icon--lang"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#language'; ?>"></use></svg>
@@ -153,50 +152,48 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                 </div>
                             </div>
                         </li>
-						<?php } ?>
-
+						<?php }  if ($currentActiveTab == User::USER_LEARNER_DASHBOARD) { ?>
                         <li class="menu__item menu__item-favorites">
-                            <a href="#" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Favorites'); ?>">
+                            <a href="<?php echo CommonHelper::generateUrl('Learner', 'favourites'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Favorites'); ?>">
                                 <svg class="icon icon--favorites"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#favorite'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Favorites'); ?></span>
                             </a>
                         </li>
-
-
-
+                        <?php } ?>
                         <li class="menu__item menu__item-logout">
-                            <a href="<?php echo CommonHelper::generateUrl('GuestUser','logout',[],CONF_WEBROOT_FRONT_URL); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Logout'); ?>">
+                            <a href="<?php echo CommonHelper::generateUrl('GuestUser', 'logout', [], CONF_WEBROOT_FRONT_URL); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Logout'); ?>">
                                 <svg class="icon icon--logout"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#logout'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Logout'); ?></span>
                             </a>
                         </li>
-
                     </ul>
                 </nav>
-
             </div>
             <!-- ] -->
-
-
             <!-- [ SIDE BAR PRIMARY ========= -->
             <div id="sidebar__primary" class="sidebar__primary">
-
                 <div class="sidebar__head">
-
-                    <figure class="logo"><a href="#"><img src="images/yocoach-logo.svg" alt="Yo!Cocach"></a></figure>
-                    
-
+                    <figure class="logo"><a href="<?php echo CommonHelper::generateUrl(); ?>"><img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo $websiteName; ?>"></a></figure>              
                         <!-- [ PROFILE ========= -->
                         <div class="profile">
 
                             <a href="#profile-target" class="trigger-js profile__trigger">
                                 <div class="profile__meta d-flex align-items-center">
                                     <div class="profile__media margin-right-4">
-                                        <div class="avtar" data-title="J"><img src="images/320x320_1.jpg" alt=""></div>
+                                        <div class="avtar" data-title="<?php echo CommonHelper::getFirstChar($loggedUserFirstName); ?>">
+                                        <?php
+                                            if (true == User::isProfilePicUploaded()) {
+                                                echo '<img src="'.CommonHelper::generateUrl('Image', 'user', array( UserAuthentication::getLoggedUserId() ), CONF_WEBROOT_FRONT_URL).'?'.time().'" alt="'.$loggedUserFirstName.'" />';
+                                            }
+                                        ?>
+                                        </div>
                                     </div>
                                     <div class="profile__details">
-                                        <h6 class="profile__title">James Anderson</h6>
-                                        <small class="color-black">Logged in as a <span>Teacher</span></small>
+                                        <h6 class="profile__title"><?php echo $loggedUserFullName; ?></h6>
+                                        <?php
+                                            $loggedAs = ($currentActiveTab == User::USER_TEACHER_DASHBOARD) ? 'LBL_Logged_in_as_a_teacher' :'LBL_Logged_in_as_a_learner';
+                                        ?>
+                                        <small class="color-black"><?php echo label::getLabel($loggedAs); ?></small>
                                     </div>
                                 </div>
                              </a>
@@ -205,148 +202,44 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                 <div class="profile__target-details">
                                     <table>
                                         <tr>
-                                            <th>Location</th>
-                                            <td>France</td>
+                                            <th><?php echo label::getLabel('LBL_Location'); ?></th>
+                                            <td>France</td> 
                                         </tr>
                                         <tr>
-                                            <th>Time Zone</th>
+                                            <th><?php echo label::getLabel('LBL_Time_Zone'); ?></th>
                                             <td>12:20 PM (UTC +01:00)</td>
                                         </tr>
                                     </table>
                                     <span class="-gap-10"></span>
                                     <div class="btns-group">
-                                        <a href="#" class="btn btn--bordered color-third btn--block margin-top-2">View Public Profile</a>
-                                        <a href="#" class="btn bg-third btn--block margin-top-4">Switch to Student Profile</a>
+                                        <?php if ($isUserTeacher && $currentActiveTab == User::USER_TEACHER_DASHBOARD) { ?>
+                                         <a href="#" class="btn btn--bordered color-third btn--block margin-top-2"><?php echo label::getLabel('LBL_View_Public_Profile'); ?></a>
+                                        <?php }
+                                        if ($currentActiveTab == User::USER_LEARNER_DASHBOARD && $canViewTeacherTab) { ?>
+                                            <a href="<?php echo CommonHelper::generateUrl('Teacher'); ?>" class="btn bg-third btn--block margin-top-4"><?php echo label::getLabel('LBL_Switch_to_Teacher_Profile'); ?></a>
+                                        <?php } elseif ($currentActiveTab == User::USER_TEACHER_DASHBOARD) { ?>
+                                            <a href="<?php echo CommonHelper::generateUrl('Learner'); ?>" class="btn bg-third btn--block margin-top-4"><?php echo label::getLabel('LBL_Switch_to_Learner_Profile'); ?></a>
+                                       <?php } ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- ] -->
-
-
                 </div>
-
-
                 <div class="sidebar__body">
                     <div class="sidebar__scroll">
-
                         <div id="primary-nav" class="menu-offset">
-
-                            <div class="menu-group">
-                                <h6 class="heading-6">Profile</h6>
-                                <nav class="menu menu--primary">
-                                    <ul>
-                                        <li class="menu__item">
-                                            <a href="#">
-                                                <svg class="icon icon--dashboard margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#dashboard"></use></svg>
-                                                <span>Dashboard</span>
-                                            </a>
-                                        </li>
-                                        <li class="menu__item is-active">
-                                            <a href="teacher_settings.html">
-                                                <svg class="icon icon--settings margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#settings"></use></svg>
-                                                <span>Account Settings</span>
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <a href="#">
-                                                <svg class="icon icon--calendar margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#calendar"></use></svg>
-                                                <span>Calendar</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-
-                            <div class="menu-group">
-                                <h6 class="heading-6">Bookings</h6>
-                                <nav class="menu menu--primary">
-                                    <ul>
-                                        <li class="menu__item">
-                                            <a href="teacher_lessons.html">
-                                                <svg class="icon icon--lesson margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#lessons"></use></svg>
-                                                <span>Lessons</span>
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <a href="#">
-                                                <svg class="icon icon--lessons margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#lessons-plan"></use></svg>
-                                                <span>Lesson Plan</span>
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <a href="#">
-                                                <svg class="icon icon--group-classes margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#group-classes"></use></svg>
-                                                <span>Group Classes</span>
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <a href="#">
-                                                <svg class="icon icon--students margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#students"></use></svg>
-                                                <span>Students</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-
-                            <div class="menu-group">
-                                <h6 class="heading-6">History</h6>
-                                <nav class="menu menu--primary">
-                                    <ul>
-                                        <li class="menu__item">
-                                            <a href="#">
-                                                <svg class="icon icon--orders margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#orders"></use></svg>
-                                                <span>Orders</span>
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <a href="#">
-                                                <svg class="icon icon--wallet margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#wallet"></use></svg>
-                                                <span>Wallet <span>($250.00)</span></span>
-                                            </a>
-                                        </li>
-                                        
-                                    </ul>
-                                </nav>
-                            </div>
-
-                            <div class="menu-group">
-                                <h6 class="heading-6">Others</h6>
-                                <nav class="menu menu--primary">
-                                    <ul>
-                                        <li class="menu__item">
-                                            <a href="#">
-                                                <svg class="icon icon--flash-cards margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#flashcards"></use></svg>
-                                                <span>Flash Cards</span>
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <a href="#">
-                                                <svg class="icon icon--gifts-cards margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#giftcards"></use></svg>
-                                                <span>Gift Cards</span>
-                                            </a>
-                                        </li>
-                                        <li class="menu__item">
-                                            <a href="#">
-                                                <svg class="icon icon--issue margin-right-2"><use xlink:href="images/sprite.yo-coach.svg#issue"></use></svg>
-                                                <span>Report an Issue</span>
-                                            </a>
-                                        </li>
-                                        
-                                        
-                                    </ul>
-                                </nav>
-                            </div>
-                            
+                            <?php
+                                $sidebarMenuLayout = 'learner/_partial/learnerDashboardNavigation.php';
+                                if (User::canViewTeacherTab() && User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) {
+                                    $sidebarMenuLayout = 'teacher/_partial/teacherDashboardNavigation.php';
+                                }
+                                $this->includeTemplate($sidebarMenuLayout, ['controllerName' => $controllerName, 'action' => $action]);
+                            ?>   
                         </div>
-
                     </div>
                 </div>
-
             </div>
             <!-- ] -->
-
-
         </aside>
         <!-- ] -->

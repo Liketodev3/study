@@ -61,6 +61,7 @@ class MyAppController extends FatController
         array_pop($arr);
         $urlController = implode('-', $arr);
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
+       
         /* ] */
         $cookieConsent = CommonHelper::getCookieConsent();
         $this->cookieConsent = $cookieConsent;
