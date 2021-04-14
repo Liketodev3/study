@@ -1,14 +1,5 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number: TV-2.11.9.20210414
-
-Release Date: 2021-04-14
-
-    .#052314- Remove delete lesson package option from admin panel
-    .#052296- Fix conflict of preferance form
-
-------------------------------------------------------------------------
-
 Release Number: RV-2.2
 
 Release Date: 2021-04-12
@@ -51,6 +42,7 @@ Bugs:
     - #049899: Email Notification is missing> When teacher is placing wallet withdrawal request admin does not receive any notification through email.
     - #049783: When user multiple click on statistics button then graphical representation has changed
     - #050923: Change week start and end date timezone
+    - #052314- Remove delete lesson package option from admin panel
 
 ==============================================================================================================================
 Installation steps:
