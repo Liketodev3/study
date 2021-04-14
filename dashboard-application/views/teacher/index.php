@@ -7,6 +7,7 @@
 					<h1><?php echo Label::getLabel('LBL_Dashboard') ?></h1>
 				</div>
 				<div class="page__body">
+					<?php if(false == $teacherProfileProgress['isProfileCompleted']){ ?>
 					<!-- [ INFO BAR ========= -->
 					<div class="infobar infobar--primary">
 						<div class="row justify-content-between align-items-center">
@@ -16,22 +17,22 @@
 										<div class="infobar__media-icon infobar__media-icon--tick"></div>
 									</div>
 									<div class="infobar__content">
-										<h6 class="margin-bottom-1">Congratulations James</h6>
-										<p class="margin-0">You have successfully verified your account. So now please complete your profile as a professional to available in search results     
+										<h6 class="margin-bottom-1"><?php echo str_replace('{user-first-name}', $userDetails['user_first_name'], Label::getLabel('LBL_TEACHER_DASHBOARD_HEADING_{user-first-name}')); ?></h6>
+										<p class="margin-0"><?php echo Label::getLabel('LBL_TEACHER_DASHBOARD_INFO_TEXT'); ?></p>
 									</div>
 								</div>
 							</div>
 
 							<div class="col-sm-4 col-lg-3  col-xl-4">
 								<div class="-align-right">
-									<button class="btn bg-secondary">Complete Profile</button>
+									<a href="<?php echo CommonHelper::generateUrl('Account', 'ProfileInfo');?>" class="btn bg-secondary"><?php echo Label::getLabel('Lbl_Complete_Profile') ?></a>
 								</div>
 							</div>
 
 						</div>
 					</div>
 					<!-- ] -->
-
+					<?php } ?>
 					<div class="stats-row margin-bottom-6">
 						<div class="row align-items-center">
 							<div class="col-lg-4 col-md-6 col-sm-6">
@@ -77,7 +78,7 @@
 						<div class="page-panel__head border-bottom-0">
 							<div class="row">
 								<div class="col-md-6">
-									<h4>Sale Statistics</h4>
+									<h4><?php echo Label::getLabel('Lbl_Sale_Statistics'); ?></h4>
 								</div>
 							</div>
 						</div>
@@ -86,7 +87,7 @@
 								<div class="col-lg-6 col-md-6 col-sm-6">
 									<div class="sale-stat sale-stat--primary color-yellow">
 										<div class="sale-stat__count">
-											<span>Sales</span>
+											<span><?php echo Label::getLabel('Lbl_Sales'); ?></span>
 											<h5>$110.00</h5>
 										</div>
 
@@ -107,7 +108,7 @@
 								<div class="col-lg-6 col-md-6 col-sm-6">
 									<div class="sale-stat sale-stat--secondary color-secondary">
 										<div class="sale-stat__count">
-											<span>Lessons sold</span>
+											<span><?php echo Label::getLabel('LBL_Lessons_sold'); ?></span>
 											<h5>113</h5>
 										</div>
 
@@ -135,16 +136,16 @@
 
 				</div>
 
-				<div class="page__footer align-center">
+				<!-- <div class="page__footer align-center">
 					<p class="small">Copyright © 2021 Yo!Coach Developed by <a href="#" class="underline color-primary">FATbit Technologies</a> . </p>
-				</div>
+				</div> -->
 			</div>
 
 			<div class="dashboard__secondary">
 				<div class="status-bar">
 					<div class="status-bar__head">
-						<h5>Upcoming Lessons</h5>
-						<a href="#" class="color-secondary underline padding-top-3 padding-bottom-3">View All</a>
+						<h5><?php echo Label::getLabel('LBL_Upcoming_Lessons'); ?></h5>
+						<a href="#" class="color-secondary underline padding-top-3 padding-bottom-3"><?php echo Label::getLabel('LBL_ViewAll'); ?></a>
 					</div>
 					
 					<div class="status-bar__body">

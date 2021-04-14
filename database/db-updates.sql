@@ -370,4 +370,6 @@ UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
 ('LBL_Logged_in_as_a_teacher', 1, 'Logged in as a <span>teacher</span>'),
-('LBL_Logged_in_as_a_learner', 1, 'Logged in as a <span>learner</span>');
+('LBL_Logged_in_as_a_learner', 1, 'Logged in as a <span>learner</span>'),
+('LBL_TEACHER_DASHBOARD_HEADING_{user-first-name}', 1, 'Hello {user-first-name}'),
+('LBL_TEACHER_DASHBOARD_HEADING_{user-first-name}', 1, 'Please complete your profile as a professional to available in search results');

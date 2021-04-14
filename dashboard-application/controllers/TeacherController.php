@@ -36,7 +36,7 @@ class TeacherController extends TeacherBaseController
         $frmSrch->fill(['status' => ScheduledLesson::STATUS_UPCOMING, 'show_group_classes' => ApplicationConstants::YES]);
         $this->set('frmSrch', $frmSrch);
         $this->set('durationArr', $durationArr);
-        $this->set('durationArr', $durationArr);
+        $this->set('teacherProfileProgress',  $teacherProfileProgress);
         $this->set('userDetails', $userDetails);
         $this->_template->render();
     }
