@@ -3,9 +3,10 @@ defined('SYSTEM_INIT') or die('Invalid Usage.');
 if ($controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerName != 'Teach') {
     $_SESSION['referer_page_url'] = CommonHelper::getCurrUrl();
 }
+$layoutDirection = CommonHelper::getLayoutDirection();
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="<?php echo $layoutDirection; ?>">
 <head>
 <!-- Basic Page Needs ======================== -->
 <meta charset="utf-8">
@@ -40,6 +41,7 @@ $currentActiveTab =  User::getDashboardActiveTab();
 $canViewTeacherTab =  User::canViewTeacherTab();
 $isUserTeacher =   User::isTeacher();
 
+$bodyClass = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) ? 'dashboard-teacher' : 'dashboard-learner';
 ?>
 <script type="text/javascript">
 	
@@ -81,7 +83,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
 <?php } ?>
 </head>
 
-<body class="dashboard-teacher">
+<body class="<?php echo $bodyClass.' '.strtolower($controllerName); ?>">
     <div class="site">
         <!-- [ SIDE BAR ========= -->
         <aside class="sidebar">
