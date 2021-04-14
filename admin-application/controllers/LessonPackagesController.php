@@ -224,7 +224,7 @@ class LessonPackagesController extends AdminBaseController
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
 
-    public function deleteRecord()
+    /* public function deleteRecord()
     {
         $this->objPrivilege->canEditLessonPackages();
         $lpackage_id = FatApp::getPostedData('lPackageId', FatUtility::VAR_INT, 0);
@@ -245,7 +245,7 @@ class LessonPackagesController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         FatUtility::dieJsonSuccess($this->str_delete_record);
-    }
+    } */
 
     private function getForm($lPackageId = 0, int $isFreeTrial = applicationConstants::NO)
     {
