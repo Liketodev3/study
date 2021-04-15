@@ -6,39 +6,26 @@ class CustomRouter
 
 		define('LANG_CODES_ARR', Language::getAllCodesAssoc());
 
-		if (defined('SYSTEM_FRONT') && SYSTEM_FRONT === true && !FatUtility::isAjaxCall()) {
-
+		if (defined('SYSTEM_FRONT') && SYSTEM_FRONT === true) {
 			if (UrlHelper::isStaticContentProvider($controller, $action)) {
 				return true;
 			}
-
 			$url = $_SERVER['REQUEST_URI'];
 			$url_components = parse_url($url);
 			$path = $url_components['path'];
 			$uri = Common::getUriFromPath($path);
 			$last_param = '';
 			$uri_segment = explode('/', $uri);
-			if (count($uri_segment) > 1) {
-				$last_param = '/' . array_pop($uri_segment);
-				array_push($uri_segment, 'urlparameter');
-			}
-
-			$new_url = implode('/', $uri_segment);
-
 
 			if (FatApp::getConfig('CONF_LANG_SPECIFIC_URL', FatUtility::VAR_INT, 0) && in_array(strtoupper($controller), LANG_CODES_ARR)) {
 				$langId = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
 				$langCodes = array_flip(LANG_CODES_ARR);
-
 				if (in_array(strtoupper($controller), LANG_CODES_ARR)) {
 					$langId = $langCodes[strtoupper($controller)];
 				}
 				$langId = ($langId > 0) ? $langId : CommonHelper::getLangId();
-
 				define('SYSTEM_LANG_ID', $langId);
-				setcookie('defaultSiteLang', SYSTEM_LANG_ID, time() + 3600 * 24 * 10, CONF_WEBROOT_URL);
-
-
+				CommonHelper::setDefaultSiteLangCookie($langId);
 				$controller = ($action == 'index') ? 'Home' : $action;
 				if (!array_key_exists(0, $queryString)) {
 					$action = 'index';
@@ -46,9 +33,19 @@ class CustomRouter
 					$action = $queryString[0];
 					array_shift($queryString);
 				}
+				array_shift($uri_segment);
 			} else {
-				define('SYSTEM_LANG_ID', CommonHelper::getLangId());
+				define('SYSTEM_LANG_ID', FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1));
 			}
+			$uriSegmentCount = count($uri_segment);
+			if ($uriSegmentCount > 2) {
+				$urlwithoutparameter = array_slice($uri_segment, 0, 2);
+				$lastParamArray = array_slice($uri_segment, (-$uriSegmentCount + 2), ($uriSegmentCount - 2), true);
+				$last_param = '/' . implode('/', $lastParamArray);
+				$replaceArray = array_fill(count($urlwithoutparameter) - 1, count($lastParamArray), 'urlParameter');
+				$uri_segment = array_merge($urlwithoutparameter, $replaceArray);
+			}
+			$new_url = urldecode(implode('/', $uri_segment));
 			$url = urldecode($_SERVER['REQUEST_URI']);
 			if (strpos($url, "?") !== false && strpos($url, "/?") === false) {
 				$url = str_replace('?', '/?', $url);
@@ -69,10 +66,7 @@ class CustomRouter
 					}
 				}
 			}
-
-
 			/* ] */
-
 			/* [ Check url rewritten by the system or system url with query parameter*/
 			$row = false;
 			if (!empty($customUrl[0])) {
@@ -80,23 +74,35 @@ class CustomRouter
 				$srch->doNotCalculateRecords();
 				$srch->addMultipleFields(array('urlrewrite_custom', 'urlrewrite_original'));
 				$srch->setPageSize(1);
-				$srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'custom', '=', $customUrl[0]);
-				//$srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'lang_id', '=', SYSTEM_LANG_ID);
+				$cond = $srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'custom', '=', $customUrl[0]);
+				if (!empty($new_url)) {
+					$cond->attachCondition(UrlRewrite::DB_TBL_PREFIX . 'custom', 'LIKE', $new_url, 'OR');
+				}
+				$srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'lang_id', '=', SYSTEM_LANG_ID);
 				$rs = $srch->getResultSet();
 				$row = FatApp::getDb()->fetch($rs);
-
-				if (!$row && FatApp::getConfig('CONF_ENABLE_301', FatUtility::VAR_INT, 0) && !FatUtility::isAjaxCall()) {
+				if (!$row && !FatUtility::isAjaxCall()) {
 					$srch = UrlRewrite::getSearchObject();
 					$srch->doNotCalculateRecords();
-					$srch->addMultipleFields(array('urlrewrite_custom', 'urlrewrite_original'));
+					$srch->addMultipleFields(array('urlrewrite_custom', 'urlrewrite_original', 'urlrewrite_http_code'));
 					$srch->setPageSize(1);
-					$srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'original', '=', $customUrl[0]);
+					$cond = $srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'original', '=', $customUrl[0]);
+					if (!empty($urlwithoutparameter)) {
+						$cond->attachCondition(UrlRewrite::DB_TBL_PREFIX . 'original', 'LIKE', implode('/', $urlwithoutparameter), 'OR');
+					}
+					$srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'lang_id', '=', SYSTEM_LANG_ID);
 					$rs = $srch->getResultSet();
 					$res = FatApp::getDb()->fetch($rs);
 					if (!empty($res) && $res['urlrewrite_custom'] != '') {
 						$redirectQueryString = (isset($customUrl[1]) && $customUrl[1] != '') ?  '?' . $customUrl[1] : '';
-						header("HTTP/1.1 301 Moved Permanently");
-						header("Location: " . UrlHelper::generateFullUrl(CONF_WEBROOT_URL) . '/' . $res['urlrewrite_custom'] . $redirectQueryString);
+						if (strpos($res['urlrewrite_custom'], 'urlParameter') !== false) {
+							$rewriteCustomUrl = implode('/', array_slice(explode('/', $res['urlrewrite_custom']), 0, 2)) . $last_param;
+
+							header("Location: " . rtrim(CommonHelper::generateFullUrl(CONF_WEBROOT_URL), '/') . '/' . $rewriteCustomUrl . $redirectQueryString, true, $res['urlrewrite_http_code']);
+						} else {
+
+							header("Location: " . rtrim(CommonHelper::generateFullUrl(CONF_WEBROOT_URL), '/') . '/' . $res['urlrewrite_custom'] . $redirectQueryString, true, $res['urlrewrite_http_code']);
+						}
 						header("Connection: close");
 					}
 				}
@@ -105,21 +111,15 @@ class CustomRouter
 				return;
 			}
 			/*]*/
-
-
-			$url = (!empty($row['urlrewrite_original'])) ? $row['urlrewrite_original'] : '';
+			$url = ((!empty($row['urlrewrite_original'])) ? $row['urlrewrite_original'] : '') . $last_param;
 			if (!$row && isset($customUrl[1])) {
 				$url = $customUrl[0];
 			}
-
 			$arr = explode('/', $url);
-
 			$controller = (isset($arr[0])) ? $arr[0] : '';
 			array_shift($arr);
-
 			$action = (isset($arr[0])) ? $arr[0] : '';
 			array_shift($arr);
-
 			$queryString = $arr;
 			/* [ used in case of filters when passed through url*/
 			//array_shift($customUrl);
@@ -127,15 +127,12 @@ class CustomRouter
 				$customUrl = explode('&', $customUrl[1]);
 				$queryString = array_merge($queryString, $customUrl);
 			}
-
 			if ($controller != '' && $action == '') {
 				$action = 'index';
 			}
-
 			if ($controller == '') {
 				$controller = 'Content';
 			}
-
 			if ($action == '') {
 				$action = 'error404';
 			}

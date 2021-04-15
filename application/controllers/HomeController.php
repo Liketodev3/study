@@ -44,22 +44,6 @@ class HomeController extends MyAppController
         $this->_template->render();
     }
 
-    // public function setSiteDefaultLang($langId = 0)
-    // {
-    //     $isActivePreferencesCookie =  (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
-
-    //     if (!$isActivePreferencesCookie) {
-    //         return false;
-    //     }
-
-    //     $langId = FatUtility::int($langId);
-    //     if (0 < $langId) {
-    //         $languages = Language::getAllNames();
-    //         if (array_key_exists($langId, $languages)) {
-    //             CommonHelper::setDefaultSiteLangCookie($langId);
-    //         }
-    //     }
-    // }
     public function setSiteDefaultLang($langId = 0, $pathname = '')
     {
         if (!FatUtility::isAjaxCall()) {
@@ -135,7 +119,7 @@ class HomeController extends MyAppController
         if (0 < $langId) {
             $languages = Language::getAllNames();
             if (array_key_exists($langId, $languages)) {
-                setcookie('defaultSiteLang', $langId, time() + 3600 * 24 * 10, CONF_WEBROOT_URL);
+                CommonHelper::setDefaultSiteLangCookie($langId);
             }
         }
         $this->set('redirectUrl', $redirectUrl);

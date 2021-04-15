@@ -25,8 +25,7 @@ class AdminBaseController extends FatController
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
         if ($controllerName != 'AdminGuest') {
             $_SESSION['admin_referer_page_url'] = CommonHelper::getCurrUrl();
-        }
-        /* ] */
+        }        /* ] */
         /* [ */
         if (!AdminAuthentication::isAdminLogged()) {
             CommonHelper::initCommonVariables(true);
@@ -35,6 +34,7 @@ class AdminBaseController extends FatController
                 Message::addErrorMessage(Label::getLabel('LBL_Your_session_seems_to_be_expired', CommonHelper::getLangId()));
                 FatUtility::dieWithError(Message::getHtml());
             }
+
             FatApp::redirectUser(CommonHelper::generateUrl('AdminGuest', 'loginForm'));
         }
         /* ] */
