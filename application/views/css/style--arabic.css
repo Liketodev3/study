@@ -15,10 +15,6 @@ body[dir="rtl"] .btn .svg-icon {
     margin: 0 0 0 5px;
 }
 
-body[dir="rtl"] .-clear-right {
-    float: left !important;
-}
-
 body[dir="rtl"] #facebox .close {
     left: 0;
     right: auto;
@@ -653,4 +649,16 @@ body[dir="rtl"] .accordian__body {
 body[dir="rtl"] .form-search select {
     padding: 0 15px;
     padding-left: 34px;
+}
+
+body[dir="rtl"] .-clear-right {
+    float: left!important;
+    clear: left!important;
+}
+
+@media(max-width:1023px){
+    body[dir="rtl"] .-clear-right, body[dir="rtl"] .-clear-right {
+        float: none!important;
+        clear: none!important;
+    }
 }
