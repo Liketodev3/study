@@ -156,6 +156,7 @@ class AccountController extends LoggedUserController
         $this->_template->addJs('js/jquery.inputmask.bundle.js');
         $this->_template->addJs('js/cropper.js');
         $this->_template->addJs('js/intlTelInput.js');
+        $this->_template->addCss('css/intlTelInput.css');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addJs('js/fateventcalendar.js');
@@ -276,12 +277,17 @@ class AccountController extends LoggedUserController
     public function setUpProfileImage()
     {
         $userId = UserAuthentication::getLoggedUserId();
+        $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
+        $profileImgFrm = $this->getProfileImageForm($isTeacher);
+
         $post = FatApp::getPostedData();
-        if (empty($post)) {
-            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported'));
-            FatUtility::dieJsonError(Message::getHtml());
+        $post = $profileImgFrm->getFormDataFromArray($post);
+        if (false === $post) {
+            Message::addErrorMessage(current($profileImgFrm->getValidationErrors()));
+            FatUtility::dieWithError(Message::getHtml());
         }
-        if ($post['action'] == "demo_avatar") {
+
+        if ($post['action'] == "demo_avatar" && !empty($_FILES['user_profile_image']['tmp_name'])) {
             if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
                 $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
                 Message::addErrorMessage(Label::getLabel($msgLblKey));
@@ -294,7 +300,7 @@ class AccountController extends LoggedUserController
             }
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', [$userId, 'ORIGINAL', 0], CONF_WEBROOT_FRONTEND) . '?' . time());
         }
-        if ($post['action'] == "avatar") {
+        if ($post['action'] == "avatar" && !empty($_FILES['user_profile_image']['tmp_name'])) {
             if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
                 $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
                 Message::addErrorMessage(Label::getLabel($msgLblKey));
@@ -309,7 +315,12 @@ class AccountController extends LoggedUserController
             CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', [$userId, 'MEDIUM', true], CONF_WEBROOT_FRONTEND) . '?' . time());
         }
-        $this->set('msg', Label::getLabel('MSG_File_uploaded_successfully'));
+        $userSettings = new UserSetting($userId);
+        if(!$userSettings->saveData(['us_video_link' => $post['us_video_link']])){
+            FatUtility::dieJsonError($userSettings->getError());
+        }
+
+        $this->set('msg', Label::getLabel('MSG_Data_uploaded_successfully'));
         $this->_template->render(false, false, 'json-success.php');
     }
 
@@ -333,7 +344,7 @@ class AccountController extends LoggedUserController
                 Message::addErrorMessage('Invalid Selection of Booking Field');
                 FatUtility::dieWithError(Message::getHtml());
             } //  code added on 23-08-2019
-            $record->assignValues(['us_video_link' => $post['us_video_link'], 'us_booking_before' => $post['us_booking_before']]); //  code added on 23-08-2019
+            $record->assignValues(['us_booking_before' => $post['us_booking_before']]); //  code added on 23-08-2019
         }
         $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
         if ($post['us_site_lang'] != $user_settings['us_site_lang']) {
@@ -371,17 +382,17 @@ class AccountController extends LoggedUserController
             $fldUname->requirements()->setRegularExpressionToValidate('^[A-Za-z0-9-_]{3,35}$');
             $fldUname->requirements()->setCustomErrorMessage(Label::getLabel('LBL_Invalid_Username', $this->siteLangId));
         }
-        $fldFname = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'user_first_name');
-        $fldLname = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'user_last_name');
+        
+        $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'user_first_name');
+        $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'user_last_name');
+        
         $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'user_gender', User::getGenderArr());
         $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
         $fldPhn->requirements()->setCustomErrorMessage(Label::getLabel('LBL_PHONE_NO_VALIDATION_MSG'));
         $frm->addHiddenField('', 'user_phone_code');
 
-        if ($teacher) {
-            $frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'), 'us_video_link', '');
-        }
+       
         $countryObj = new Country();
         $countriesArr = $countryObj->getCountriesArr($this->siteLangId);
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'user_country_id', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), [], Label::getLabel('LBL_Select'));
@@ -393,13 +404,34 @@ class AccountController extends LoggedUserController
             $bookingOptionArr = array(0 => Label::getLabel('LBL_Immediate'), 12 => Label::getLabel('LBL_12_Hours'), 24 => Label::getLabel('LBL_24_Hours'));
             $fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'), 'us_booking_before', $bookingOptionArr, 'us_booking_before', [], Label::getLabel('LBL_Select'));
             $fld3->requirement->setRequired(true);
+
+            $freeTrialPackage = LessonPackage::getFreeTrialPackage();
+            if (!empty($freeTrialPackage) && $freeTrialPackage['lpackage_active'] == applicationConstants::YES) {
+                $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', applicationConstants::YES, [], true, applicationConstants::NO);
+            }
         }
         $frm->addSelectBox(Label::getLabel('LBL_Site_Language'), 'us_site_lang', Language::getAllNames(), '', [], Label::getLabel('LBL_Select'));
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
+        $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next'));
         return $frm;
     }
-
-    private function getProfileImageForm()
+    public function profileImageForm()
+    {
+        $userId = UserAuthentication::getLoggedUserId();
+        $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
+        $userSettings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
+        $profileImgFrm = $this->getProfileImageForm($isTeacher);
+        $profileImgFrm->fill(['us_video_link' => $userSettings['us_video_link']]);
+        $userFirstName =  UserAuthentication::getLoggedUserAttribute('user_first_name');
+        $isProfilePicUploaded =  User::isProfilePicUploaded($userId);
+        $this->set('profileImgFrm', $profileImgFrm);
+        $this->set('isProfilePicUploaded', $isProfilePicUploaded);
+        $this->set('userId', $userId);
+        $this->set('userFirstName', $userFirstName);
+      
+        $this->_template->render(false, false);
+    }
+    private function getProfileImageForm($teacher = false)
     {
         $frm = new Form('frmProfile', ['id' => 'frmProfile']);
         $frm->addFileUpload(Label::getLabel('LBL_Profile_Picture'), 'user_profile_image', ['onchange' => 'popupImage(this)', 'accept' => 'image/*']);
@@ -409,6 +441,11 @@ class AccountController extends LoggedUserController
         $frm->addHiddenField('', 'remove_profile_img', 0, ['id' => 'remove_profile_img']);
         $frm->addHiddenField('', 'action', 'avatar', ['id' => 'avatar-action']);
         $frm->addHiddenField('', 'img_data', '', ['id' => 'img_data']);
+        if ($teacher) {
+            $frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'), 'us_video_link', '');
+        }
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
+        $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next'));
         return $frm;
     }
 

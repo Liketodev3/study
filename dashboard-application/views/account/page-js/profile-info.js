@@ -3,18 +3,17 @@ var isRuningTeacherQualificationFormAjax = false;
 var teachLangs = [];
 $(document).ready(function () {
 	profileInfoForm();
-
-	$(".tabs-inline ul li a").on('click', function () {
-		$('.tabs-inline ul li').removeClass('is-active');
+	$('body').on('click', '.tab-ul-js li a', function () {
+		$('.tab-ul-js li').removeClass('is-active');
 		$(this).parent('li').addClass('is-active');
 	});
-
 	$(document).on('change', '[name^=duration]', selectDuration);
 });
 
 (function () {
 	var runningAjaxReq = false;
-	var dv = '#profileInfoFrmBlock';
+	var dv = '#formBlock-js';
+	var profileInfoFormDiv = '#profileInfoFrmBlock';
 
 	checkRunningAjax = function () {
 		if (runningAjaxReq == true) {
@@ -188,10 +187,10 @@ $(document).ready(function () {
 		});
 	};
 
-	setUpProfileInfo = function (frm) {
+	setUpProfileInfo = function (frm, gotoProfileImageForm) {
 		if (!$(frm).validate()) {
 			$("html, body").animate({ scrollTop: $(".error").eq(0).offset().top - 100 }, "slow");
-			return;
+			return false;
 		}
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileInfo'), data, function (t) {
@@ -211,9 +210,18 @@ $(document).ready(function () {
 			if (userIsTeacher) {
 				getTeacherProfileProgress();
 			}
-			getLangProfileInfoForm(1);
-			return;
+			gotoProfileImageForm
+			if(gotoProfileImageForm){
+
+			}else{
+				getLangProfileInfoForm(1);
+			}
+			return true;
 		});
+	};
+
+	gotoProfileImageForm = function (validator) {
+		setUpProfileInfo(validator, true);
 	};
 
 	teacherPreferencesForm = function () {
@@ -553,12 +561,18 @@ $(document).ready(function () {
 		}
 	};
 
+	profileImageForm = function () {
+		$(profileInfoFormDiv).html(fcom.getLoader());
+		fcom.ajax(fcom.makeUrl('Account', 'profileImageForm'), '', function (t) {
+			$(profileInfoFormDiv).html(t);
+		});
+	};
+
 	removeProfileImage = function () {
 		$.loader.show();
 		fcom.ajax(fcom.makeUrl('Account', 'removeProfileImage'), '', function (t) {
 			$.loader.hide();
-			profileInfoForm();
-
+			profileImageForm();
 			if (isCometChatMeetingToolActive) {
 				name = userData.user_first_name + " " + userData.user_last_name;
 				userSeoUrl = userSeoBaseUrl + userData.user_url_name;
@@ -574,16 +588,22 @@ $(document).ready(function () {
 			delegation: true,
 			success: function (json) {
 				json = $.parseJSON(json);
-
-				if (isCometChatMeetingToolActive) {
-					name = userData.user_first_name + " " + userData.user_last_name;
-					userSeoUrl = userSeoBaseUrl + userData.user_url_name;
-					updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
-				}
 				$.loader.hide();
-				profileInfoForm();
-				$.mbsmessage(json.msg, true, 'alert alert--success');
 				$(document).trigger('close.facebox');
+				if (json.status == 1) {
+					if (isCometChatMeetingToolActive) {
+						name = userData.user_first_name + " " + userData.user_last_name;
+						userSeoUrl = userSeoBaseUrl + userData.user_url_name;
+						updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
+					}	
+					profileImageForm();
+					$.mbsmessage(json.msg, true, 'alert alert--success');
+				} else {
+					console.log(json);
+					$.mbsmessage(json.msg, true, 'alert alert--danger');
+					return false;
+				}
+				
 			}
 		});
 	};
@@ -670,7 +690,6 @@ $(document).ready(function () {
 				if (json.status == 1) {
 					$("#avatar-action").val("avatar");
 					var fn = "sumbmitProfileImage();";
-
 					$.facebox('<div class="popup__body"><div class="img-container "><img alt="Picture" src="" class="img_responsive" id="new-img" /></div><div class="img-description"><div class="rotator-info">Use Mouse Scroll to Adjust Image</div><div class="-align-center rotator-actions"><a href="javascript:void(0)" class="btn btn--primary btn--sm" title="' + $("#rotate_left").val() + '" data-option="-90" data-method="rotate">' + $("#rotate_left").val() + '</a>&nbsp;<a onclick=' + fn + ' href="javascript:void(0)" class="btn btn--secondary btn--sm">' + $("#update_profile_img").val() + '</a>&nbsp;<a href="javascript:void(0)" class="btn btn--primary btn--sm rotate-right" title="' + $("#rotate_right").val() + '" data-option="90" data-method="rotate">' + $("#rotate_right").val() + '</a></div></div></div>', '');
 					$('#new-img').attr('src', json.file);
 					$('#new-img').width(wid);

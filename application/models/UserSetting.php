@@ -6,7 +6,7 @@ class UserSetting extends MyAppModel
     const DB_TBL = 'tbl_user_settings';
     const DB_TBL_PREFIX = 'us_';
 
-    public function __construct($userId = 0)
+    public function __construct(int $userId = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'user_id', $userId);
     }

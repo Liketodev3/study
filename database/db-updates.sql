@@ -372,4 +372,8 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ('LBL_Logged_in_as_a_teacher', 1, 'Logged in as a <span>teacher</span>'),
 ('LBL_Logged_in_as_a_learner', 1, 'Logged in as a <span>learner</span>'),
 ('LBL_TEACHER_DASHBOARD_HEADING_{user-first-name}', 1, 'Hello {user-first-name}'),
-('LBL_TEACHER_DASHBOARD_HEADING_{user-first-name}', 1, 'Please complete your profile as a professional to available in search results');
+('LBL_TEACHER_DASHBOARD_INFO_TEXT', 1, 'Please complete your profile as a professional to available in search results'),
+('Lbl_To_Sync_with_google_calendar', 1, 'Connect your Google Calendar and synchronize all your Yo!Coach lessons with your personal schedule'),
+('LBL_PROFILE_IMAGE_FIELD_INFO_TEXT', 1, 'Experts use profile picture to look professional'),
+('LBL_PROFILE_VIDEO_FIELD_INFO', 1, 'Experts use videos to present their skillsets'),
+('LBL_VIDEO_LINK_PLACEHOLDER', 1, 'eg: https://youtu.be/XkGgIjAHFDs');

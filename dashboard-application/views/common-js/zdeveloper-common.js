@@ -176,13 +176,15 @@ $(document).ready(function(){
 	setUpStickyHeader = function(){
 		if( $(window).width() > 767 ){
 			 $(window).scroll(function(){
-				body_height = $(".body").position();
-				scroll_position = $(window).scrollTop();
-				if( body_height.top < scroll_position ){
-					$(".header").addClass("is-fixed");
-				} else {
-					$(".header").removeClass("is-fixed");
+				if($(".body").length > 0){
+					scroll_position = $(window).scrollTop();
+					if( body_height.top < scroll_position ){
+						$(".header").addClass("is-fixed");
+					} else {
+						$(".header").removeClass("is-fixed");
+					}
 				}
+				
 			});
 
 

@@ -1,5 +1,13 @@
 
 </div>
+<!-- Custom Loader -->
+<div class="loading-wrapper" style="display: none;">
+    <div class="loading">
+        <div class="inner rotate-one"></div>
+        <div class="inner rotate-two"></div>
+        <div class="inner rotate-three"></div>
+    </div>
+</div>
         <script>
                 $(".expand-js").click(function(){
                 $(".expand-target-js").slideToggle();
