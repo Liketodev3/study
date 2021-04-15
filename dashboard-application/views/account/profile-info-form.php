@@ -1,13 +1,13 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $profileFrm->setFormTagAttribute('id', 'profileInfoFrm');
 $profileFrm->setFormTagAttribute('class', 'form form--horizontal');
-$profileFrm->setFormTagAttribute('onsubmit', 'setUpProfileInfo(this); return(false);');
+$profileFrm->setFormTagAttribute('onsubmit', 'setUpProfileInfo(this, false); return(false);');
 if ($profileFrm->getField('user_url_name')) {
     $userIdFld = $profileFrm->getField('user_id');
     $userIdFld->addFieldTagAttribute('id', 'user_id');
     $user_url_name = $profileFrm->getField('user_url_name');
     $user_url_name->developerTags['col'] = 12;
-    $user_url_name->htmlAfterField = '<small class=" user_url_string margin-bottom-0">' . CommonHelper::generateFullUrl('teachers', 'profile') . '/<span class="user_url_name_span">' . $user_url_name->value . '</span></small>';
+    $user_url_name->htmlAfterField = '<small class=" user_url_string margin-bottom-0">' . CommonHelper::generateFullUrl('teachers', 'profile',[], CONF_WEBROOT_FRONT_URL) . '/<span class="user_url_name_span">' . $user_url_name->value . '</span></small>';
 }
 if ($profileFrm->getField('us_booking_before')) {
     $profileFrm->getField('us_booking_before')->htmlAfterField = "<br><small>" . Label::getLabel("htmlAfterField_booking_before_text") . ".</small>";
@@ -33,7 +33,7 @@ $siteLangField = $profileFrm->getField('us_site_lang');
 
 $nextButton = $profileFrm->getField('btn_next');
 // prx($profileFrm);
-$nextButton->addFieldTagAttribute('onClick','gotoProfileImageForm(this.form); return(false);');
+$nextButton->addFieldTagAttribute('onClick','setUpProfileInfo(this.form, true); return(false);');
 
 $user_profile_info = $profileFrm->getField('user_profile_info');
 $user_profile_info->developerTags['col'] = 12;
@@ -66,9 +66,9 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 			<nav class="tabs tabs--line padding-left-6 padding-right-6">
 				<ul class="tab-ul-js">
 					<li class="is-active"><a href="javascript:void(0)" onclick="profileInfoForm();"><?php echo Label::getLabel('LBL_General'); ?></a></li>
-					<li><a href="javascript:void(0)" onclick="profileImageForm();"><?php echo Label::getLabel('LBL_Photos_&_Videos'); ?></a></li>
+					<li><a href="javascript:void(0)" onclick="profileImageForm();" class="profile-imag-li"><?php echo Label::getLabel('LBL_Photos_&_Videos'); ?></a></li>
 					<?php foreach ($languages as $langId => $language) { ?>
-						<li><a href="javascript:void(0)" onclick="getLangProfileInfoForm(<?php echo $langId; ?>);"><?php echo $language['language_name']; ?></a></li>
+						<li><a href="javascript:void(0)"  class="profile-lang-li" onclick="getLangProfileInfoForm(<?php echo $langId; ?>);"><?php echo $language['language_name']; ?></a></li>
 					<?php } ?>
 				</ul>
 			</nav>

@@ -210,18 +210,16 @@ $(document).ready(function () {
 			if (userIsTeacher) {
 				getTeacherProfileProgress();
 			}
-			gotoProfileImageForm
+			
 			if(gotoProfileImageForm){
-
-			}else{
-				getLangProfileInfoForm(1);
+				debugger;
+				$('.profile-imag-li').click();
 			}
+			// else{
+			// 	getLangProfileInfoForm(1);
+			// }
 			return true;
 		});
-	};
-
-	gotoProfileImageForm = function (validator) {
-		setUpProfileInfo(validator, true);
 	};
 
 	teacherPreferencesForm = function () {
@@ -582,7 +580,7 @@ $(document).ready(function () {
 		});
 	};
 
-	sumbmitProfileImage = function () {
+	sumbmitProfileImage = function (goToLangForm) {
 		$.loader.show();
 		$("#frmProfile").ajaxSubmit({
 			delegation: true,
@@ -595,9 +593,14 @@ $(document).ready(function () {
 						name = userData.user_first_name + " " + userData.user_last_name;
 						userSeoUrl = userSeoBaseUrl + userData.user_url_name;
 						updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
-					}	
-					profileImageForm();
+					}
+						
 					$.mbsmessage(json.msg, true, 'alert alert--success');
+					if(goToLangForm && $('.profile-lang-li').length > 0){
+						$('.profile-lang-li').first().click();
+					}else{
+						profileImageForm();
+					}
 				} else {
 					console.log(json);
 					$.mbsmessage(json.msg, true, 'alert alert--danger');

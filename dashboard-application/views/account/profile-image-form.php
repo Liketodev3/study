@@ -1,7 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
     
     $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account', 'setUpProfileImage'));
-	$profileImgFrm->setFormTagAttribute('onsubmit', 'sumbmitProfileImage(this); return(false);');
+	$profileImgFrm->setFormTagAttribute('onsubmit', 'sumbmitProfileImage(false); return(false);');
     $profileImgFrm->setFormTagAttribute('id', 'frmProfile');
     $profileImgFrm->setFormTagAttribute('class', 'form form--horizontal');
     $profileImageField = $profileImgFrm->getField('user_profile_image');
@@ -10,7 +10,7 @@
         $videoLinkField->addFieldTagAttribute('placeholder', Label::getLabel('LBL_VIDEO_LINK_PLACEHOLDER'));
     }
     $nextButton = $profileImgFrm->getField('btn_next');
-    $nextButton->addFieldTagAttribute('onlClick', 'gotoLangForm('.$profileImgFrm->validatorObjectName.'); return(false);');
+    $nextButton->addFieldTagAttribute('onClick', 'sumbmitProfileImage(true); return(false);');
 
 ?>
 <div class="padding-6">
