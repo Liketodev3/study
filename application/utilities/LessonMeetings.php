@@ -289,24 +289,24 @@ class LessonMeetings
     {
         $meetingDetails = $this->getAttendeeWiziqMeetingDetails($lessonData);
         if (!empty($meetingDetails)) {
-            // return $meetingDetails;
+            return $meetingDetails;
         }
         $meeting = $this->getHostWiziqMeetingDetails($lessonData);
         $classId = FatUtility::int($meeting['class_id'] ?? 0);
         if ($classId < 1) {
             return [];
         }
-        $meetingData = [
+        $studentData = [
             'student_id' => $lessonData['learnerId'],
             'student_name' => $lessonData['learnerFullName'],
             'student_email' => $lessonData['learnerEmail'],
         ];
         $wiziq = new Wiziq();
-        $data = $wiziq->addStudent($classId, $meetingData);
-        if ($data === false) {
+        $meetingData = $wiziq->addStudent($classId, $studentData);
+        if ($meetingData === false) {
             throw new Exception($wiziq->getError());
         }
-        $lessonMeetingDetail = new LessonMeetingDetail($lessonData['slesson_id'], $lessonData['teacherId']);
+        $lessonMeetingDetail = new LessonMeetingDetail($lessonData['slesson_id'], $lessonData['learnerId']);
         if (!$lessonMeetingDetail->addDetails(LessonMeetingDetail::KEY_WIZIQ_RAW_DATA, json_encode($meetingData))) {
             throw new Exception($lessonMeetingDetail->getError());
         }
@@ -324,12 +324,6 @@ class LessonMeetings
         if (empty($row)) {
             return [];
         }
-        var_dump($row);
-        die;
-        return [
-            'class_id' => $row['class_id'],
-            'name' => $lessonData['learnerFullName'],
-            'email' => $lessonData['learnerEmail']
-        ];
+        return $row;
     }
 }

@@ -23,11 +23,11 @@ class Wiziq extends FatModel
         $parameters['signature'] = $this->generateSignature(static::CREATE_MEET, $parameters);
         $parameters["title"] = $data['title'];
         $parameters["duration"] = $data['duration'];
-        $parameters["start_time"] = $data['start_time'];
+        $parameters["start_time"] = date('m/d/Y H:i:00');
         $parameters["presenter_id"] = $data['presenter_id'];
         $parameters["presenter_name"] = $data['presenter_name'];
         $parameters["presenter_email"] = $data['presenter_email'];
-        $parameters["language_culture_name"] = 'en-us';
+        $parameters['attendee_limit'] = '300'; /* Max allowed by WizIQ */
         try {
             $requestUrl = $this->serviceUrl . '?method=' . static::CREATE_MEET;
             $XMLReturn = $this->postRequest($requestUrl, http_build_query($parameters, '', '&'));
@@ -118,7 +118,9 @@ class Wiziq extends FatModel
             $attendeeUrl = $attendeeUrlTag->item($i)->nodeValue;
         }
         return [
-            'attendeeId' => $attendeeId, 'attendeeUrl' => $attendeeUrl,
+            'attendeeId' => $attendeeId,
+            'presenter_url' => $attendeeUrl,
+            'attendeeName' => $student['student_name'],
             'method' => ($objDOM->getElementsByTagName("method"))->item(0)->nodeValue ?? '',
             'class_id' => ($objDOM->getElementsByTagName("class_id"))->item(0)->nodeValue ?? '',
         ];
