@@ -250,13 +250,6 @@ class LessonMeetings
         if (!empty($meetDetail)) {
             return $meetDetail;
         }
-        $wiziq = new Wiziq();
-        $wiziqTeacherId = $wiziq->getTeacherId($lessonData['teacherId']);
-        $method = $wiziqTeacherId > 0 ? Wiziq::EDIT_TEACHER : Wiziq::ADD_TEACHER;
-        $wiziqTeacher = $wiziq->setupTeacher($lessonData['teacherId'], $method);
-        if (false === $wiziqTeacher) {
-            throw new Exception($wiziq->getError());
-        }
         $startTime = $lessonData['slesson_date'] . ' ' . $lessonData['slesson_start_time'];
         $teachingLangs = TeachingLanguage::getAllLangs();
         $title = $lessonData['slesson_grpcls_id'] > 0 ? $lessonData['grpcls_title'] : '';
@@ -265,10 +258,11 @@ class LessonMeetings
         $meetingData = [
             "title" => $title, "start_time" => $startTime,
             "duration" => $lessonData['op_lesson_duration'],
-            "presenter_name" => $wiziqTeacher['wizteach_name'],
-            "presenter_email" => $wiziqTeacher['wizteach_email'],
-            "presenter_id" => $wiziqTeacher['wizteach_teacher_id'],
+            "presenter_name" => $lessonData['teacherFullName'],
+            "presenter_email" => $lessonData['teacherEmail'],
+            "presenter_id" => $lessonData['teacherId'],
         ];
+        $wiziq = new Wiziq();
         $data = $wiziq->createMeeting($meetingData);
         if ($data === false) {
             throw new Exception($wiziq->getError());
@@ -295,63 +289,47 @@ class LessonMeetings
     {
         $meetingDetails = $this->getAttendeeWiziqMeetingDetails($lessonData);
         if (!empty($meetingDetails)) {
-            return $meetingDetails;
+            // return $meetingDetails;
         }
-
-        $teacherData = array(
-            'first_name' => $lessonData['teacherFirstName'],
-            'last_name' => $lessonData['teacherLastName'],
-            'email' => $lessonData['teacherEmail']
-        );
-
+        $meeting = $this->getHostWiziqMeetingDetails($lessonData);
+        $classId = FatUtility::int($meeting['class_id'] ?? 0);
+        if ($classId < 1) {
+            return [];
+        }
+        $meetingData = [
+            'student_id' => $lessonData['learnerId'],
+            'student_name' => $lessonData['learnerFullName'],
+            'student_email' => $lessonData['learnerEmail'],
+        ];
+        $wiziq = new Wiziq();
+        $data = $wiziq->addStudent($classId, $meetingData);
+        if ($data === false) {
+            throw new Exception($wiziq->getError());
+        }
         $lessonMeetingDetail = new LessonMeetingDetail($lessonData['slesson_id'], $lessonData['teacherId']);
-
-        $zoom = new Zoom();
-        $zoomTeacherId = $zoom->createUser($teacherData);
-
-        $startTime = $lessonData['slesson_date'] . ' ' . $lessonData['slesson_start_time'];
-        $teachingLangs = TeachingLanguage::getAllLangs($this->siteLangId);
-
-        $title = $lessonData['slesson_grpcls_id'] > 0 ? $lessonData['grpcls_title'] : '';
-        $title = ($title ? $title : (!$lessonData['is_trial'] ? $teachingLangs[$lessonData['slesson_slanguage_id']] : ''));
-        $title = $title ? $title : Label::getLabel('LBL_Trial_Lesson');
-
-        $meetingData = array(
-            'zoomTeacherId' => $zoomTeacherId,
-            'title' => ($title ? $title : Label::getLabel('LBL_N/A')),
-            'start_time' => $startTime,
-            'duration' => $lessonData['op_lesson_duration'],
-            'description' => '',
-        );
-        $meetingInfo = $zoom->createMeeting($meetingData);
-
-        if (!$lessonMeetingDetail->addDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA, json_encode($meetingInfo))) {
+        if (!$lessonMeetingDetail->addDetails(LessonMeetingDetail::KEY_WIZIQ_RAW_DATA, json_encode($meetingData))) {
             throw new Exception($lessonMeetingDetail->getError());
         }
-        return $this->getHostWiziqMeetingDetails($lessonData);
+        return $this->getAttendeeWiziqMeetingDetails($lessonData);
     }
 
-    private function getAttendeeQiziqMeetingDetails(array $lessonData): array
+    private function getAttendeeWiziqMeetingDetails(array $lessonData): array
     {
-        $lessonMeetingDetail = new LessonMeetingDetail($lessonData['slesson_id'], $lessonData['teacherId']);
-        $meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA);
-        if (empty($meetingRow))
-            return array();
-
+        $lessonMeetingDetail = new LessonMeetingDetail($lessonData['slesson_id'], $lessonData['learnerId']);
+        $meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_WIZIQ_RAW_DATA);
+        if (empty($meetingRow)) {
+            return [];
+        }
         $row = json_decode($meetingRow, true);
-        if (empty($row))
-            return array();
-
-        $zoom = new Zoom();
-        $meetingData = array(
-            'id' => $row['id'],
-            'url' => $row['join_url'],
-            'username' => $lessonData['learnerFullName'],
-            'email' => $lessonData['learnerEmail'],
-            'role' => Zoom::ROLE_ATTENDEE,
-            'signature' => $zoom->generateSignature($row['id'], Zoom::ROLE_ATTENDEE)
-        );
-        return $meetingData;
+        if (empty($row)) {
+            return [];
+        }
+        var_dump($row);
+        die;
+        return [
+            'class_id' => $row['class_id'],
+            'name' => $lessonData['learnerFullName'],
+            'email' => $lessonData['learnerEmail']
+        ];
     }
-
 }
