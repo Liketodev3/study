@@ -363,3 +363,11 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 DELETE FROM `tbl_language_labels` WHERE  `label_key` = "LBL_You_are_not_cancelled_the_order";
 DELETE FROM `tbl_language_labels` WHERE  `label_key` = "LBL_You_are_not_cancelled_the_order_because_some_lesson_are_scheduled";
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.6.20210405' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+RENAME TABLE `tbl_url_rewrites` TO `tbl_url_rewrite`;
+
+ALTER TABLE `tbl_url_rewrites` ADD `urlrewrite_http_resp_code` VARCHAR(10) NOT NULL AFTER `urlrewrite_lang_id`;
+
+                  
+
+
