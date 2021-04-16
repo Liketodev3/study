@@ -143,7 +143,7 @@ $(function () {
         var joinUrl = fcom.makeUrl('Zoom', 'Meeting') + '?' +
             testTool.serialize(meetingConfig);
 
-        // testTool.createZoomNode("websdk-iframe", joinUrl);
+
         let html = '<div style="width:' + chat_width + ';height:' + chat_height + ';max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;">';
         html += '<iframe  style="width:100%;height:100%;" src="' + joinUrl + '" allow="camera; microphone; fullscreen;display-capture" frameborder="0"></iframe>';
         html += '</div>';
@@ -151,6 +151,8 @@ $(function () {
     };
 
     createWiziqBox = function (data) {
+        var chat_height = '100%';
+        var chat_width = '100%';
         if (!data) {
             $.systemMessage('Someting went wrong', 'alert alert--danger');
             return false;
@@ -171,7 +173,7 @@ $(function () {
     createChatBox = function (data, joinFromApp) {
         if (isWiziqMettingToolActive) {
             joinLessonButtonAction();
-            return createWiziqChatBox();
+            return createWiziqBox(data);
         } else if (isCometChatMeetingToolActive) {
             joinLessonButtonAction();
             return createCometChatBox();

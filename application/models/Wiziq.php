@@ -8,6 +8,7 @@ class Wiziq extends FatModel
     private $serviceUrl;
 
     const CREATE_MEET = 'create';
+    const CANCEL_MEET = 'cancel';
     const ADD_ATTENDEES = 'add_attendees';
 
 
@@ -28,6 +29,7 @@ class Wiziq extends FatModel
         $parameters["presenter_name"] = $data['presenter_name'];
         $parameters["presenter_email"] = $data['presenter_email'];
         $parameters['attendee_limit'] = '300'; /* Max allowed by WizIQ */
+        $parameters['time_zone'] = 'GMT';
         try {
             $requestUrl = $this->serviceUrl . '?method=' . static::CREATE_MEET;
             $XMLReturn = $this->postRequest($requestUrl, http_build_query($parameters, '', '&'));
@@ -66,8 +68,36 @@ class Wiziq extends FatModel
     {
     }
 
-    public function cancelMeeting()
+    public function cancelMeeting(int $classId)
     {
+        $parameters['signature'] = $this->generateSignature(static::CREATE_MEET, $parameters);
+        $parameters["class_id"] = $classId;
+        try {
+            $requestUrl = $this->serviceUrl . '?method=' . static::CANCEL_MEET;
+            $XMLReturn = $this->postRequest($requestUrl, http_build_query($parameters, '', '&'));
+        } catch (Exception $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+        if (empty($XMLReturn)) {
+            $this->error = Label::getLabel('LBL_WIZIQ_NOT_RESPONDING');
+            return false;
+        }
+        try {
+            $objDOM = new DOMDocument();
+            $objDOM->loadXML($XMLReturn);
+        } catch (Exception $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+        $status = $objDOM->getElementsByTagName("rsp")->item(0);
+        $attribNode = $status->getAttribute("status");
+        if ($attribNode == "fail") {
+            $error = $objDOM->getElementsByTagName("error")->item(0);
+            $this->error = $error->getAttribute("msg");
+            return false;
+        }
+        return true;
     }
 
     public function addStudent(int $classId, array $student)
