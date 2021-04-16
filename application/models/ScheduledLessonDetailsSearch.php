@@ -65,15 +65,14 @@ class ScheduledLessonDetailsSearch extends SearchBase
             return 0; // if not exist refund nothing, mark charges 100%
         }
 
-        $to_time = strtotime($data['slesson_date'].' '.$data['slesson_start_time']);
-        $from_time = strtotime(date('Y-m-d H:i:s'));
-        $diff = round(($to_time - $from_time) / 3600, 2);
+        $diff = MyDate::hoursDiff($data['slesson_date'] . ' ' . $data['slesson_start_time']);
 
         if($data['slesson_grpcls_id']>0)
         {
             return FatApp::getConfig('CONF_LEARNER_CLASS_REFUND_PERCENTAGE', FatUtility::VAR_INT, 100); // refund charges for class
         }
-        if ($diff<24 ) {
+
+        if ($diff < FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) {
             return FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10);
         }
 

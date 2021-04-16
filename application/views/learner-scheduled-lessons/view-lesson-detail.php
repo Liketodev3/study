@@ -340,7 +340,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
                                                 </li>
                                             <?php } ?>
 
-                                            <?php if ($lessonData['slesson_grpcls_id'] <= 0 && $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDate < $startTime) { ?>
+                                            <?php if ($lessonData['slesson_grpcls_id'] <= 0 && $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && MyDate::hoursDiff($lessonData['slesson_date'] . ' ' . $lessonData['slesson_start_time']) >= FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) { ?>
                                                 <li class="reschedule-lesson--js">
                                                     <a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lessonData['sldetail_id']; ?>')" title="<?php echo Label::getLabel('LBL_Reschedule_Lesson'); ?>">
                                                         <svg version="1.1" width="30px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 460.801 460.801" style="enable-background:new 0 0 460.801 460.801;" xml:space="preserve">
