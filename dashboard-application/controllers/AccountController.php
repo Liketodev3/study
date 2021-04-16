@@ -239,6 +239,7 @@ class AccountController extends LoggedUserController
         $fld->requirements()->setLength(1, 500);
         $fld->requirements()->setRequired();
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $lang_id));
+        $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next', $lang_id));
         return $frm;
     }
 

@@ -68,7 +68,7 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 					<li class="is-active"><a href="javascript:void(0)" onclick="profileInfoForm();"><?php echo Label::getLabel('LBL_General'); ?></a></li>
 					<li><a href="javascript:void(0)" onclick="profileImageForm();" class="profile-imag-li"><?php echo Label::getLabel('LBL_Photos_&_Videos'); ?></a></li>
 					<?php foreach ($languages as $langId => $language) { ?>
-						<li><a href="javascript:void(0)"  class="profile-lang-li" onclick="getLangProfileInfoForm(<?php echo $langId; ?>);"><?php echo $language['language_name']; ?></a></li>
+						<li class="profile-lang-tab"><a href="javascript:void(0)"  class="profile-lang-li" onclick="getLangProfileInfoForm(<?php echo $langId; ?>);"><?php echo $language['language_name']; ?></a></li>
 					<?php } ?>
 				</ul>
 			</nav>

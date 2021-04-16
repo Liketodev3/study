@@ -198,10 +198,11 @@ class TeacherController extends TeacherBaseController
     {
         $teacherProfileProgress = User::getTeacherProfileProgress();
         $this->set('teacherProfileProgress', $teacherProfileProgress);
+        $msg =  '';
         if ($teacherProfileProgress['isProfileCompleted'] == false) {
-            $this->set('msg', Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'));
+            $msg = Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page');
         }
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess(['msg' => $msg, 'teacherProfileProgress' => $teacherProfileProgress]);
     }
 
     private function getTeacherLanguagesForm()
@@ -221,50 +222,35 @@ class TeacherController extends TeacherBaseController
         $userToTeachLangSrch->addCondition('utl_us_user_id', '=', $userId);
         $userToTeachLangSrch->addGroupBy('utl_slanguage_id');
         $userToTeachLangRs = $userToTeachLangSrch->getResultSet();
-        $userToTeachLangRows = $db->fetchAll($userToTeachLangRs);
+        $userToTeachLangRows = $db->fetchAll($userToTeachLangRs, 'utl_slanguage_id');
+        
         $userToLangSrch = new SearchBase('tbl_user_to_spoken_languages');
         $userToLangSrch->addMultiplefields(['utsl_slanguage_id', 'utsl_proficiency']);
         $userToLangSrch->addCondition('utsl_user_id', '=', $userId);
         $userToLangRs = $userToLangSrch->getResultSet();
-        $userToLangRows = $db->fetchAll($userToLangRs);
-        $frm->addHtml('', 'add_more_lang', '');
-        $userTeachingLang = [];
-        foreach ($userToTeachLangRows as $userToTeachLangRow) {
-            if (isset($teacherTeachLangArr[$userToTeachLangRow['utl_slanguage_id']])) {
-                $userTeachingLang[] = $userToTeachLangRow['utl_slanguage_id'];
-            }
-        }
-        if (empty($userTeachingLang)) {
-            $frm->addSelectBox(Label::getLabel('LBL_Language_To_Teach'), 'teach_lang_id[]', $teacherTeachLangArr, [], [], Label::getLabel('LBL_Select'))->requirements()->setRequired();
-        }
-        foreach ($userToTeachLangRows as $userToTeachLangRow) {
-            if (isset($teacherTeachLangArr[$userToTeachLangRow['utl_slanguage_id']])) {
-                $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Language_I_Teach'), 'teach_lang_id[]', $teacherTeachLangArr, [$userToTeachLangRow['utl_slanguage_id']], [], Label::getLabel('LBL_Select'))->requirements()->setRequired();
-                $fld1->developerTags['col'] = 10;
-                $fld = $frm->addHtml('', 'add_minus_teach_button', '<label class="field_label -display-block"></label><a class="inline-action teachLang inline-action--minus" onclick="deleteTeachLanguageRow(' . $userToTeachLangRow['utl_slanguage_id'] . ');" href="javascript:void(0);">' . Label::getLabel('LBL_REMOVE') . '</a>');
-                $fld->developerTags['col'] = 2;
-            }
-        }
-        $frm->addHtml('', 'add_more_div_a_tag', '');
-        $userSpokenLang = [];
-        foreach ($userToLangRows as $userToLangRow) {
-            if (isset($langArr[$userToLangRow['utsl_slanguage_id']])) {
-                $userSpokenLang[] = $userToLangRow['utsl_slanguage_id'];
-            }
-        }
-        if (empty($userSpokenLang)) {
-            $frm->addSelectBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id[]', $langArr, [], ['class' => 'utsl_slanguage_id'], Label::getLabel('LBL_Select'))->requirements()->setRequired();
-            $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency[]', $profArr, [], ['class' => 'utsl_proficiency'], Label::getLabel('LBL_Select'))->requirements()->setRequired();
-        }
-        foreach ($userToLangRows as $userToLangRow) {
-            if (isset($langArr[$userToLangRow['utsl_slanguage_id']])) {
-                $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id[]', $langArr, [$userToLangRow['utsl_slanguage_id']], ['class' => 'utsl_slanguage_id'], Label::getLabel('LBL_Select'))->requirements()->setRequired();
-                $fld1->developerTags['col'] = 5;
-                $fld1 = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency[]', $profArr, [$userToLangRow['utsl_proficiency']], ['class' => 'utsl_proficiency'], Label::getLabel('LBL_Select'))->requirements()->setRequired();
-                $fld1->developerTags['col'] = 5;
-                $fld = $frm->addHtml('', 'add_minus_button', '<label class="field_label -display-block"></label><a class="inline-action spokenLang inline-action--minus" onclick="deleteLanguageRow(' . $userToLangRow['utsl_slanguage_id'] . ');" href="javascript:void(0);">' . Label::getLabel('LBL_REMOVE') . '</a>');
-                //$fld->developerTags['col']=2;
-            }
+        $spokenLangRows = $db->fetchAllAssoc($userToLangRs);
+       
+        $frm->addCheckBoxes(Label::getLabel('LBL_Language_To_Teach'), 'teach_lang_id', $teacherTeachLangArr, array_keys($userToTeachLangRows))->requirements()->setRequired();
+        $frm->addCheckBoxes(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id', $langArr, array_keys($spokenLangRows), ['class' => 'utsl_slanguage_id'])->requirements()->setRequired();
+    
+        foreach ($langArr as $key => $lang) {
+            
+            $speakField = $frm->addSelectBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id[]', $langArr, array_keys($spokenLangRows), ['class' => 'utsl_proficiency'], Label::getLabel('LBL_Select'));
+            $proficiencyField = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency[]', $profArr, $spokenLangRows, ['class' => 'utsl_proficiency'], Label::getLabel('LBL_Select')); 
+            // if (array_key_exists($key, $spokenLangRows)) {
+            //         $speakField->value = [$key];
+            //         $proficiencyField->value = [$spokenLangRows[$key]];
+            // }
+            // if (array_key_exists($key, $langArr)) {
+            //     $speakField->requirements()->setRequired();
+            //     $proficiencyField->requirements()->setRequired();
+            // }else{
+                $requirements =  $proficiencyField->requirements()->setRequired();
+                $speakField->requirements()->addOnChangerequirementUpdate('','ne', $proficiencyField->getName(),  $proficiencyField->requirements());
+
+                $requirements = $proficiencyField->requirements()->setRequired(false);
+                $speakField->requirements()->addOnChangerequirementUpdate('','eq', $proficiencyField->getName(),  $proficiencyField->requirements());
+            // }
         }
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_SAVE_CHANGES'));
         $frm->addHtml('', 'add_more_div', '');

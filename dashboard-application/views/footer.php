@@ -39,7 +39,6 @@
                         scrollLeft: Math.max(0, q )
 
                     }, 800);
-                    console.log(out);
                     return false;
                 }
 

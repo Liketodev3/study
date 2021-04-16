@@ -57,12 +57,12 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 								<div class="progress progress--small progress--round">
 									<!-- <div class="progress__bar bg-green" role="progressbar" style="width:60%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div> -->
 									<div class="progress-bar">
-										<div class="progress__step is-active"></div>
-										<div class="progress__step"></div>
-										<div class="progress__step"></div>
-										<div class="progress__step"></div>
-										<div class="progress__step"></div>
-										<div class="progress__step"></div>
+										<div class="progress__step profile-Info-progress-js"></div>
+										<div class="progress__step teacher-lang-progress-js"></div>
+										<div class="progress__step teacher-lang-price-progress-js"></div>
+										<div class="progress__step teacher-qualification-progress-js"></div>
+										<div class="progress__step teacher-preferences-progress-js"></div>
+										<div class="progress__step general-availability-progress-js"></div>
 									</div>
 								</div>
 							</div>

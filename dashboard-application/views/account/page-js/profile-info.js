@@ -50,55 +50,70 @@ $(document).ready(function () {
 					}, 600);
 				}
 				$.each(data.teacherProfileProgress, function (key, value) {
+					
 					switch (key) {
 						case 'generalAvailabilityCount':
 							value = parseInt(value);
 							if (0 >= value) {
-								$('.general-availability-js').addClass('-color-secondary');
+								$('.general-availability-js').parent('li').removeClass('is-completed');
+								$('.general-availability-progress-js').removeClass('is-active');
 							} else {
-								$('.general-availability-js').removeClass('-color-secondary');
+								$('.general-availability-js').parent('li').addClass('is-completed');
+								$('.general-availability-progress-js').addClass('is-active');
 							}
 							break;
 						// case 'userCountryId':
 						case 'userProfile':
+							
 							// case 'userTimeZone':
 							value = parseInt(value);
 							if (0 >= value) {
-								$('.profile-Info-js').addClass('-color-secondary');
+								$('.profile-Info-js').parent('li').removeClass('is-completed');
+								$('.profile-Info-progress-js').removeClass('is-active');
 							} else {
-								$('.profile-Info-js').removeClass('-color-secondary');
+								$('.profile-Info-js').parent('li').addClass('is-completed');
+								$('.profile-Info-progress-js').addClass('is-active');
 							}
 							break;
 						case 'uqualificationCount':
 							value = parseInt(value);
 							if (0 >= value) {
-								$('.teacher-qualification-js').addClass('-color-secondary');
+								$('.teacher-qualification-js').parent('li').removeClass('is-completed');
+								$('.teacher-qualification-progress-js').removeClass('is-active');
 							} else {
-								$('.teacher-qualification-js').removeClass('-color-secondary');
+								$('.teacher-qualification-js').parent('li').addClass('is-completed');
+								$('.teacher-qualification-progress-js').addClass('is-active');
 							}
 							break;
 						case 'teachLangCount':
 							value = parseInt(value);
 							if (0 >= value) {
-								$('.teacher-tech-lang-price-js').addClass('-color-secondary');
+								$('.teacher-tech-lang-price-js').parent('li').removeClass('is-completed');
+								$('.teacher-lang-price-progress-js').removeClass('is-active');
 							} else {
-								$('.teacher-tech-lang-price-js').removeClass('-color-secondary');
+								$('.teacher-tech-lang-price-js').parent('li').addClass('is-completed');
+								$('.teacher-lang-price-progress-js').addClass('is-active');
 							}
 							break;
 						case 'slanguageCount':
 							value = parseInt(value);
 							if (0 >= value) {
-								$('.teacher-lang-form-js').addClass('-color-secondary');
+								$('.teacher-lang-form-js').parent('li').removeClass('is-completed');
+								$('.teacher-lang-progress-js').removeClass('is-active');
+								
 							} else {
-								$('.teacher-lang-form-js').removeClass('-color-secondary');
+								$('.teacher-lang-form-js').parent('li').addClass('is-completed');
+								$('.teacher-lang-progress-js').addClass('is-active');
 							}
 							break;
 						case 'preferenceCount':
 							value = parseInt(value);
 							if (0 >= value) {
-								$('.teacher-preferences-js').addClass('-color-secondary');
+								$('.teacher-preferences-js').parent('li').removeClass('is-completed');
+								$('.teacher-preferences-progress-js').removeClass('is-active');
 							} else {
-								$('.teacher-preferences-js').removeClass('-color-secondary');
+								$('.teacher-preferences-js').parent('li').addClass('is-completed');
+								$('.teacher-preferences-progress-js').addClass('is-active');
 							}
 							break;
 						case 'percentage':
@@ -487,7 +502,6 @@ $(document).ready(function () {
 	teacherPreferences = function () {
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher', 'teacherPreferences'), '', function (t) {
-			console.log(dv);
 			$(dv).html(t);
 
 		});
@@ -602,7 +616,6 @@ $(document).ready(function () {
 						profileImageForm();
 					}
 				} else {
-					console.log(json);
 					$.mbsmessage(json.msg, true, 'alert alert--danger');
 					return false;
 				}
@@ -708,20 +721,25 @@ $(document).ready(function () {
 	};
 
 	getLangProfileInfoForm = function (id) {
-		$('#langForm').html(fcom.getLoader());
+		$(profileInfoFormDiv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Account', 'userLangForm', [id]), '', function (t) {
-			$('#langForm').html(t);
+			$(profileInfoFormDiv).html(t);
 		});
 	};
 
-	setUpProfileLangInfo = function (frm) {
+	setUpProfileLangInfo = function (frm, gotToNextLangForm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileLangInfo'), data, function (t) {
-			if (t.langId > 0) {
-				getLangProfileInfoForm(t.langId);
-				return;
+			if(!gotToNextLangForm) {
+				if (t.langId > 0) {
+					getLangProfileInfoForm(t.langId);
+					return;
+				}
+			}else if($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0){
+				$('.profile-lang-tab.is-active').next('.profile-lang-tab').find('a').click();
 			}
+			
 		});
 	};
 

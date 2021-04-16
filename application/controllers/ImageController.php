@@ -567,6 +567,26 @@ class ImageController extends FatController
         }
     }
 
+    public function showSpokenLangFlagImage(int $speakLangId, string $sizeType = '', int $langId = 0)
+    {
+        $speakLangId = FatUtility::int($speakLangId);
+        $langId = FatUtility::int($langId);
+        $default_image = 'no_image_user.jpg';
+        $imgType = AttachedFile::FILETYPE_FLAG_SPOKEN_LANGUAGES;
+        $fileRow = AttachedFile::getAttachment($imgType, $speakLangId, 0, $langId, true, 0);
+        $image_name = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
+        switch (strtoupper($sizeType)) {
+            case 'SMALL':
+                $w = 40;
+                $h = 40;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
+                break;
+            default:
+                AttachedFile::displayOriginalImage($image_name, $default_image, '', true);
+                break;
+        }
+    }
+
     public function editorImage($fileNamewithPath)
     {
         AttachedFile::displayOriginalImage('editor/' . $fileNamewithPath);

@@ -20,12 +20,126 @@ $add_more_lang->value = '<label class="field_label -display-block"></label><a cl
 $add_more_div = $frm->getField('add_more_div');
 $add_more_div->value = '<div id="add_more_div"></div>';
 
+$teachLangField = $frm->getField('teach_lang_id');
+$teachLangFieldValue = $teachLangField->value;
+
+$speakLangField = $frm->getField('utsl_slanguage_id[]');
+$speakLangFieldValue = $speakLangField->value;
+
+$proficiencyField = $frm->getField('utsl_proficiency[]');
+$proficiencyFieldValue = $proficiencyField->value;
+$proficiencyOptions= $proficiencyField->options;
+
+// prx($proficiencyFieldValue);
+// pr($proficiencyFieldValue);
 /*$utsl_slanguage_id = $frm->getField('utsl_slanguage_id[]');
 $utsl_slanguage_id->developerTags['col'] = 5;
 $utsl_proficiency = $frm->getField('utsl_proficiency[]');
 $utsl_proficiency->developerTags['col'] = 5;*/
-
 ?>
+<div class="content-panel__head">
+	<div class="d-flex align-items-center justify-content-between">
+		<div><h5><?php echo Label::getLabel('LBL_Manage_Languages'); ?></h5></div>
+		<div></div>
+	</div>
+</div>
+
+<div class="content-panel__body">
+	<div class="form">
+		<div class="form__body">
+			<div class="colum-layout">
+			<div class="colum-layout__cell">
+				<div class="colum-layout__head">
+					<span class="bold-600"><?php echo $teachLangField->getCaption(); ?></span>
+					<?php if($teachLangField->requirement->isRequired()){ ?>
+						<span class="spn_must_field">*</span>
+					<?php } ?>
+				</div>
+				<div class="colum-layout__body">
+					<div class="colum-layout__scroll scrollbar scrollbar-js">
+						<?php foreach ($teachLangField->options as $key => $value) { ?>
+							<div class="selection">
+								<label class="selection__trigger">
+										<input name="<?php echo $teachLangField->getName(); ?>" class="selection__trigger-input"  type="checkbox" <?php echo (in_array($key, $teachLangFieldValue)) ? 'checked' : '';  ?>>
+										<span class="selection__trigger-action">
+											<span class="selection__trigger-label"><span class="flag-icon flag-icon--s">
+												<?php
+													$languageFlagImage = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','showLanguageFlagImage',array($key,'SMALL'), CONF_WEBROOT_FRONT_URL),CONF_IMG_CACHE_TIME, '.jpg');
+                                                    echo '<img src="'.$languageFlagImage.'" alt="'.$value.'">';
+												?>
+												
+											</span><?php echo $value; ?>
+										</span>
+										<span class="selection__trigger-icon"></span>
+										</span>
+								</label>
+							</div>
+						<?php } ?>
+					</div>
+				</div>
+			</div>
+			<div class="colum-layout__cell">
+					<div class="colum-layout__head">
+						<span class="bold-600"><?php echo $speakLangField->getCaption(); ?></span>
+						<?php if($speakLangField->requirement->isRequired()){ ?>
+							<span class="spn_must_field">*</span>
+						<?php } ?>
+					</div>
+					<div class="colum-layout__body">
+
+						<div class="colum-layout__scroll scrollbar scrollbar-js">
+						<?php foreach ($speakLangField->options as $key => $value) { ?>
+							<div class="selection selection--select">
+								<label class="selection__trigger ">
+									<input type="checkbox" name="<?php echo $speakLangField->getName(); ?>" <?php echo in_array($key, $speakLangFieldValue) ? 'checked' : ''; ?> >
+									<span class="selection__trigger-action">
+										<span class="selection__trigger-label">
+											<span class="flag-icon flag-icon--s">
+												<?php
+													$languageFlagImage = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','showSpokenLangFlagImage',array($key,'SMALL'), CONF_WEBROOT_FRONT_URL),CONF_IMG_CACHE_TIME, '.jpg');
+													echo '<img src="'.$languageFlagImage.'" alt="'.$value.'">';
+												?>
+											</span> <?php echo $value; ?> 
+											<?php if(in_array($key, $speakLangFieldValue)){ ?>
+											<span class="badge color-secondary badge--round badge--small margin-0"><?php echo $proficiencyOptions[$proficiencyFieldValue[$key]]; ?></span>
+											<?php } ?>
+										</span>
+										<span class="selection__trigger-icon"></span>
+									</span>
+								</label>
+								<div class="selection__target">
+									<?php  ?>
+									<select class="select__dropdown">
+										<option>Select Proficiency *</option>
+										<option>I don't speak this language</option>
+										<option>Beginner</option>
+										<option>Upper Beginner</option>
+										<option>Intermediate</option>
+									</select>
+								</div>
+							</div>
+						<?php } ?>
+						</div>
+
+					</div>
+			</div>
+			</div>
+		</div>
+		<div class="form__actions">
+			<div class="d-flex align-items-center justify-content-between">
+				<div>
+					<input type="button" value="Back">
+				</div>
+				<div>
+					<input type="submit" value="Save">
+					<input type="button" value="Next">
+				</div>
+			</div>
+		</div>
+		</div>
+	
+</div>
+
 <div class="section-head">
     <div class="d-flex justify-content-between align-items-center">
         <div>
@@ -40,6 +154,15 @@ $utsl_proficiency->developerTags['col'] = 5;*/
 </div>
 <script >
 $("document").ready(function(){
+
+	/* FUNCTION FOR SCROLLBAR */
+if($(window).width()>1199){
+$('.scrollbar-js').enscroll({
+    verticalTrackClass: 'scrollbar-track',
+    verticalHandleClass: 'scrollbar-handle'
+}); 
+}
+
 	$("select[name='utsl_slanguage_id[]']").closest(".row").addClass("row--addons spoken_language_row");
 	$(".spokenLang").closest(".row").addClass("row--addons spoken_language_row");
 	$(".addSpokenLang").closest(".row").addClass("spoken_language_row");
