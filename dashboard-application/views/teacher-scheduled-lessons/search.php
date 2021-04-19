@@ -46,10 +46,38 @@ foreach ($lessonArr as $key => $lessons) { ?>
 		<!-- [ LESSON CARD ========= -->
 		<div class="card-landscape">
 			<div class="card-landscape__colum card-landscape__colum--first">
+			<?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
 				<div class="card-landscape__head">
-					<time class="card-landscape__time">08:00 PM</time>
-					<date class="card-landscape__date">Tuesday, March 16, 2021</date>
-				</div>				
+					<?php 
+						$lessonsStartTime = $lesson['slesson_date']." ". $lesson['slesson_start_time'];
+						$startTime = MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $lessonsStartTime, true, $user_timezone);
+						$startUnixTime = strtotime($startTime);
+						$endDateTime = $lesson['slesson_end_date']." ". $lesson['slesson_end_time'];
+						$endDateTime =  MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $lessonsStartTime, true, $user_timezone);
+					?>
+					<time class="card-landscape__time"><?php echo date('h:i A',$startUnixTime); ?></time>
+					<date class="card-landscape__date"><?php echo date('l, F d, Y',$startUnixTime); ?></date>		
+				</div>	
+				<div class="timer">
+					<div class="timer__media"><span><svg class="icon icon--clock icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#clock'; ?>"></use></svg></span></div>
+					<div class="timer__content">
+						<?php if ($startUnixTime > strtotime($curDateTime)) { ?>
+						<div class="timer__controls countdowntimer timer-js"  id="countdowntimer-<?php echo $lesson['slesson_id']?>" data-startTime="<?php echo $curDateTime; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>">
+							<div class="timer__digit">00</div>
+							<div class="timer__digit">06</div>
+							<div class="timer__digit">33</div>
+							<div class="timer__digit">16</div>
+						</div>
+						<?php }else { 
+							$lessonInfoLblKey = 'LBL_Lesson_time_has_passed';
+                            if (strtotime($endDateTime) > strtotime($curDateTime)) {
+								$lessonInfoLblKey = 'LBL_Lesson_ongoing';
+							}
+							echo '<span class="color-red">'.Label::getLabel($lessonInfoLblKey).'</span>';
+						 } ?>
+					</div>
+				</div>		
+			<?php } ?>	
 			</div>
 			<div class="card-landscape__colum card-landscape__colum--second">
 				<div class="card-landscape__head">
