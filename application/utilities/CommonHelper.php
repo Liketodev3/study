@@ -208,7 +208,7 @@ class CommonHelper extends FatUtility
         return md5(PASSWORD_SALT . $pwd . PASSWORD_SALT);
     } */
 
-    public static function generateUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false, $useLangCode = true, $print = false): string
+    public static function generateUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false, $useLangCode = true): string
     {
         $langId = (defined("SYSTEM_LANG_ID")) ? SYSTEM_LANG_ID : self::$_lang_id;
 
