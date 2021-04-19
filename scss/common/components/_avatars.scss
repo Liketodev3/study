@@ -12,7 +12,8 @@ $avtar: "avtar";
   height: 3.428rem;
   font-size: theme('font.size.md');
   font-weight: 700;
- text-transform: uppercase;overflow: hidden;
+  text-transform: uppercase;overflow: hidden;
+  background: var(--color-gray-200);
 
   &:before{
      position: absolute;
