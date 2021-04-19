@@ -151,17 +151,7 @@ $(function () {
     };
 
     createWiziqBox = function (data) {
-        var chat_height = '100%';
-        var chat_width = '100%';
-        if (!data) {
-            $.systemMessage('Someting went wrong', 'alert alert--danger');
-            return false;
-        }
-        let html = '<div id="cometchat_embed_synergy_container" style="width:' + chat_width + ';height:' + chat_height + ';max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;">';
-        html += '<iframe  style="width:100%;height:100%;" src="' + data.presenter_url + '" allow="camera; microphone; fullscreen;display-capture" frameborder="0"></iframe>';
-        html += '</div>';
-        $("#lessonBox").html(html);
-        return true;
+        window.location.href = data.presenter_url;
     };
 
 

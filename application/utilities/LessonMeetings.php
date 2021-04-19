@@ -256,6 +256,7 @@ class LessonMeetings
         $title = ($title ? $title : (!$lessonData['is_trial'] ? $teachingLangs[$lessonData['slesson_slanguage_id']] : ''));
         $title = $title ? $title : Label::getLabel('LBL_Trial_Lesson');
         $meetingData = [
+            "slesson_id" => $lessonData['slesson_id'],
             "title" => $title, "start_time" => $startTime,
             "duration" => $lessonData['op_lesson_duration'],
             "presenter_name" => $lessonData['teacherFullName'],

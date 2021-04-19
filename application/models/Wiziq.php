@@ -21,15 +21,18 @@ class Wiziq extends FatModel
 
     public function createMeeting(array $data)
     {
+        $startTime =  date_format((new DateTime())->modify("+15 seconds"), 'm/d/Y H:i:00');
         $parameters['signature'] = $this->generateSignature(static::CREATE_MEET, $parameters);
         $parameters["title"] = $data['title'];
-        $parameters["duration"] = $data['duration'];
-        $parameters["start_time"] = date('m/d/Y H:i:00');
+        $parameters["duration"] = '10'; // $data['duration'];
+        $parameters["start_time"] = $startTime;
         $parameters["presenter_id"] = $data['presenter_id'];
         $parameters["presenter_name"] = $data['presenter_name'];
-        $parameters["presenter_email"] = $data['presenter_email'];
+        $parameters["presenter_email"] = 'sher.singh@fatbit.in'; //$data['presenter_email'];
         $parameters['attendee_limit'] = '300'; /* Max allowed by WizIQ */
         $parameters['time_zone'] = 'GMT';
+        $callbackToken = CommonHelper::encrypt($parameters['signature']);
+        $parameters['return_url'] = CommonHelper::generateFullUrl('GuestUser', 'wiziqCallback', [$data['slesson_id'], $data['presenter_id'], $callbackToken], CONF_WEBROOT_FRONT_URL);
         try {
             $requestUrl = $this->serviceUrl . '?method=' . static::CREATE_MEET;
             $XMLReturn = $this->postRequest($requestUrl, http_build_query($parameters, '', '&'));
@@ -56,6 +59,7 @@ class Wiziq extends FatModel
             return false;
         }
         return [
+            'signature' => $parameters['signature'],
             'method' => ($objDOM->getElementsByTagName("method"))->item(0)->nodeValue ?? '',
             'class_id' => ($objDOM->getElementsByTagName("class_id"))->item(0)->nodeValue ?? '',
             'recording_url' => ($objDOM->getElementsByTagName("recording_url"))->item(0)->nodeValue ?? '',

@@ -124,11 +124,7 @@ $(function () {
     };
 
     createWiziqChatBox = function (data) {
-        //window.location.href = data.presenter_url;
-        let html = '<div style="width:100%;height:100%;max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;">';
-        html += '<iframe style="width:100%;height:100%;" src="' + data.presenter_url + '" allow="camera; microphone; fullscreen;display-capture" frameborder="0"></iframe>';
-        html += '</div>';
-        $("#lessonBox").html(html);
+        window.location.href = data.presenter_url;
     };
 
     joinLessonFromApp = function (CometJsonData, CometJsonFriendData) {
