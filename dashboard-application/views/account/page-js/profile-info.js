@@ -13,6 +13,7 @@ $(document).ready(function () {
 (function () {
 	var runningAjaxReq = false;
 	var dv = '#formBlock-js';
+	var paymentInfoDiv = '#paymentInfoDiv';
 	var profileInfoFormDiv = '#profileInfoFrmBlock';
 
 	checkRunningAjax = function () {
@@ -142,11 +143,9 @@ $(document).ready(function () {
 
 	bankInfoForm = function () {
 		$(dv).html(fcom.getLoader());
-
 		fcom.ajax(fcom.makeUrl('Teacher', 'bankInfoForm'), '', function (t) {
 			$(dv).html(t);
-			$('#innerTabs > li').removeClass('is-active');
-			$('#innerTabs > li:nth-child(1)').addClass('is-active');
+		
 		});
 	};
 
@@ -160,7 +159,6 @@ $(document).ready(function () {
 
 	paypalEmailAddressForm = function () {
 		$(dv).html(fcom.getLoader());
-
 		fcom.ajax(fcom.makeUrl('Teacher', 'paypalEmailAddressForm'), '', function (t) {
 			$(dv).html(t);
 			$('#innerTabs > li').removeClass('is-active');
@@ -248,14 +246,18 @@ $(document).ready(function () {
 	};
 
 
-	setupTeacherPreferences = function (frm) {
+	setupTeacherPreferences = function (frm, goToPaymentForm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function (t) {
 			//$.mbsmessage.close();
-			if (userIsTeacher) {
+			if(goToPaymentForm) {
+				bankInfoForm();
+			}else if(userIsTeacher){
 				getTeacherProfileProgress();
 			}
+			
+			
 		});
 	};
 

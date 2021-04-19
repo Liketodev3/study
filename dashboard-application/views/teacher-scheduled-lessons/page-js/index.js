@@ -1,9 +1,7 @@
 $(function() {
 	var dv = '#listItemsLessons';
     
-    getLessonsByStatus = function(el, lStatus){
-        $('.lessons-list-tabs--js li').removeClass('is-active');
-        $(el).closest('li').addClass('is-active');
+    getLessonsByStatus = function(lStatus){
         $('[name=status]').val(lStatus);
         searchLessons(document.frmSrch);
     };
@@ -43,7 +41,6 @@ $(function() {
 	};
 
 	clearSearch = function(){
-        $('.lessons-list-tabs--js li').removeClass('is-active').first().addClass('is-active');
 		document.frmSrch.reset();
 		searchLessons( document.frmSrch );
 	};

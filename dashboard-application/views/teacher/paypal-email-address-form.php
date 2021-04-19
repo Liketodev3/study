@@ -7,20 +7,57 @@ $frm->setFormTagAttribute('onsubmit', 'setUpPaypalInfo(this); return(false);');
 
 $ub_paypal_email_address = $frm->getField('ub_paypal_email_address');
 $ub_paypal_email_address->developerTags['col'] = 8;
+$btnBack = $frm->getField('btn_back');
+$btnBack->addFieldTagAttribute('onclick','bankInfoForm();');
 ?>
-
-	<div class="section-head">
-	 <div class="d-flex justify-content-between align-items-center">
-		 <div><h4 class="page-heading"><?php echo Label::getLabel('LBL_Payment_Method'); ?></h4></div>
-		 <div>
-			<!--a href="#" class="btn btn--secondary btn--small"><?php //echo Label::getLabel('LBL_Add_New'); ?></a-->
-		 </div>
-	 </div>
+<div class="content-panel__head">
+	<div class="d-flex align-items-center justify-content-between">
+		<div><h5><?php echo Label::getLabel('LBL_Manage_Payments'); ?></h5></div>
+		<div></div>
 	</div>
-	<div class="tabs-small tabs-offset">
-		<ul id="innerTabs">
-			<li><a href="javascript:void(0);" onclick="bankInfoForm();"><?php echo Label::getLabel('LBL_Bank_Account'); ?></a></li>
-			<li class="is-active"><a href="javascript:void(0);" onclick="paypalEmailAddressForm();"><?php echo Label::getLabel('LBL_Paypal'); ?></a></li>
-		</ul>
+</div>
+<div class="content-panel__body">
+	<div class="form">
+	<?php echo $frm->getFormTag(); ?>
+		<div class="form__body padding-0">
+			<nav class="tabs tabs--line padding-left-6 padding-right-6">
+				<ul>
+					<li><a href="javascript:void(0);" onclick="bankInfoForm();"><?php echo Label::getLabel('LBL_Bank_Account'); ?></a></li>
+					<li class="is-active"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Paypal'); ?></a></li>
+				</ul>
+			</nav>
+			<div class="tabs-data">
+            	<div class="padding-6 padding-bottom-0">
+					<div class="row">
+						<div class="col-md-6">
+								<div class="field-set">
+									<div class="caption-wraper">
+										<label class="field_label"><?php echo $ub_paypal_email_address->getCaption(); ?>
+										<?php if($ub_paypal_email_address->requirement->isRequired()){ ?>
+												<span class="spn_must_field">*</span>
+										<?php } ?>
+									</label>
+									</div>
+									<div class="field-wraper">
+										<div class="field_cover"><?php echo $ub_paypal_email_address->getHtml(); ?></div>
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form__actions">
+			<div class="d-flex align-items-center justify-content-between">
+				<div>
+					<?php echo $frm->getFieldHTML('btn_back'); ?>
+				</div>
+				<div>
+					<?php echo $frm->getFieldHTML('btn_submit'); ?>
+				</div>
+			</div>
+		</div>
+	</form>
+	<?php echo  $frm->getExternalJS();  ?>
 	</div>
-		<?php echo $frm->getFormHtml();?>
+</div>

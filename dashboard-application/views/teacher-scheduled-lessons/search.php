@@ -7,54 +7,137 @@ $date = new DateTime("now", new DateTimeZone($user_timezone));
 $curDate = $date->format('Y-m-d');
 $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
 
-$curDateTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
+$curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
 
-$referer = preg_replace("(^https?://)", "", $referer );
-foreach( $lessonArr as $key=>$lessons ){ ?>
-<div class="col-list-group">
-<?php if($key!='0000-00-00'){ ?>
-<h6><?php
-if (strtotime($curDate) == strtotime($key)) {
-	echo Label::getLabel('LBL_Today');
-} elseif(strtotime($nextDate) == strtotime($key)) {
-	echo Label::getLabel('LBL_Tommorrow');
-} else {
-	echo date('l, F d, Y',strtotime($key));
-}
-?></h6>
-<?php } ?>
-<div class="col-list-container">
+$referer = preg_replace("(^https?://)", "", $referer);
+foreach ($lessonArr as $key => $lessons) { ?>
+<div class="lessons-group margin-top-10">
+	<?php if ($key!='0000-00-00') { ?>
+		<date class="date uppercase small bold-600">
+			<?php
+				if (strtotime($curDate) == strtotime($key)) {
+					echo Label::getLabel('LBL_Today');
+				} elseif (strtotime($nextDate) == strtotime($key)) {
+					echo Label::getLabel('LBL_Tommorrow');
+				} else {
+					echo date('l, F d, Y', strtotime($key));
+				}
+			?>
+		</date>
+	<?php } ?>
+	<?php
+		foreach ($lessons as $lesson) {
+			$lessonsStatus = $statusArr[$lesson['sldetail_learner_status']];
+			$lesson['lessonReschedulelogId'] =  FatUtility::int($lesson['lessonReschedulelogId']);
 
-<?php
-
-foreach( $lessons as $lesson ){
-
-	$lessonsStatus = $statusArr[$lesson['sldetail_learner_status']];
-	$lesson['lessonReschedulelogId'] =  FatUtility::int($lesson['lessonReschedulelogId']);
-
-	if($lesson['lessonReschedulelogId'] > 0 &&
-		( $lesson['sldetail_learner_status']== ScheduledLesson::STATUS_NEED_SCHEDULING ||
-			$lesson['sldetail_learner_status']== ScheduledLesson::STATUS_SCHEDULED ) ) {
-			$lessonsStatus = Label::getLabel('LBL_Rescheduled');
-		if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
-			$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
-		}
-	}
-
-?>
+			if ($lesson['lessonReschedulelogId'] > 0 &&
+				($lesson['sldetail_learner_status']== ScheduledLesson::STATUS_NEED_SCHEDULING ||
+					$lesson['sldetail_learner_status']== ScheduledLesson::STATUS_SCHEDULED)) {
+				$lessonsStatus = Label::getLabel('LBL_Rescheduled');
+				if ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
+					$lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
+				}
+			} 
+            $teachLang = Label::getLabel('LBL_Trial');
+            if ($lesson['is_trial'] == applicationConstants::NO) {
+				$teachLang = empty($teachLanguages[$lesson['slesson_slanguage_id']]) ? '': $teachLanguages[$lesson['slesson_slanguage_id']] ;
+			}
+	?>
+		<!-- [ LESSON CARD ========= -->
+		<div class="card-landscape">
+			<div class="card-landscape__colum card-landscape__colum--first">
+				<div class="card-landscape__head">
+					<time class="card-landscape__time">08:00 PM</time>
+					<date class="card-landscape__date">Tuesday, March 16, 2021</date>
+				</div>				
+			</div>
+			<div class="card-landscape__colum card-landscape__colum--second">
+				<div class="card-landscape__head">
+					<?php if ($lesson['slesson_grpcls_id'] > 0) { ?>
+						<span class="card-landscape__title"><?php echo $lesson['grpcls_title']; ?></span>
+					<?php }else{ ?>
+						<span class="card-landscape__title">
+							<?php 
+								$str = Label::getLabel('LBL_{teach-lang},{n}_minutes_of_Lesson');
+								echo  str_replace(['{teach-lang}','{n}'], [$teachLang, $lesson['op_lesson_duration']], $str);
+							 ?>
+						</span>
+					<?php } ?>
+					<span class="card-landscape__status badge color-secondary badge--curve badge--small margin-left-0"><?php echo $lessonsStatus; ?></span>
+				</div>
+				<?php 
+					$countRel = ScheduledLessonSearch::countPlansRelation($lesson['slesson_id']); 
+                    if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $countRel > 0) { ?>
+						<div class="card-landscape__docs">
+							<div class="d-flex align-items-center">
+								<a href="#" class="attachment-file">
+									<svg class="icon icon--issue icon--attachement icon--xsmall color-black"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#attach'; ?>"></use></svg>
+									Basic Words & Numeracy in French
+								</a>
+								<a href="javascript:void(0);" onclick="changeLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-black  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Change_Lesson_Plan'); ?></a>
+								<a href="javascript:void(0);" onclick="removeAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-black  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Remove'); ?></a>
+							</div>
+						</div>
+				<?php }else{ ?>
+					<div class="card-landscape__docs">
+						<a href="javascript:void(0);" onclick="listLessonPlans('<?php echo $lesson['slesson_id']; ?>');" class="btn btn--transparent btn--addition color-black btn--small"><?php echo Label::getLabel('LBL_Add_Lesson_Plan'); ?></a>
+					</div>
+				<?php } ?>
+				
+			</div>
+			<div class="card-landscape__colum card-landscape__colum--third">
+				<div class="card-landscape__actions">
+					
+						<div class="profile-meta">
+							<?php  if ( $lesson['slesson_grpcls_id'] > 0 ) { ?>	
+								<div class="profile-meta__media">
+									<span class="avtar" data-title="<?php echo CommonHelper::getFirstChar($lesson['learnerFname']); ?>">
+										<?php
+											if (true == User::isProfilePicUploaded($lesson['learnerId'])) {
+												$img = CommonHelper::generateUrl('Image', 'user', array( $lesson['learnerId'] ), CONF_WEBROOT_FRONT_URL).'?'.time();
+												echo '<img src="'.$img.'" alt="'.$lesson['learnerFname'].'" />';
+											}
+										?>	
+									</span>
+								</div>
+								<div class="profile-meta__details">
+									<p class="bold-600 color-black"><?php echo $lesson['learnerFname']; ?></p>
+									<p class="small"><?php echo $lesson['learnerCountryName']; ?></p>
+								</div>
+							<?php } ?>
+						</div>
+					
+					<div class="actions-group">
+						<a href="#" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+							<svg class="icon icon--enter icon--18"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#enter'; ?>"></use></svg>
+							<div class="tooltip tooltip--top bg-black">Enter Classroom</div>
+						</a>
+						<a href="#" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+							<svg class="icon icon--cancel icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#cancel'; ?>"></use></svg>
+							<div class="tooltip tooltip--top bg-black">Cancel</div>
+						</a>
+						<a href="#" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+							<svg class="icon icon--reschedule icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#reschedule'; ?>"></use></svg>
+							<div class="tooltip tooltip--top bg-black">Reschedule</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	<!-- ] ========= -->
 	<div class="col-list">
 		<div class="d-lg-flex align-items-center">
 			<div class="col-xl-4 col-lg-4 col-md-12">
-                <?php if($lesson['slesson_grpcls_id']>0): //dashboard ?>
+                <?php if ($lesson['slesson_grpcls_id']>0): //dashboard?>
                 <h6><?php echo Label::getLabel('LBL_Group_Class') ?></h6>
                 <p><?php echo $lesson['grpcls_title']; ?></p>
                 <?php else: ?>
 				<div class="avtar avtar--normal" data-text="<?php echo CommonHelper::getFirstChar($lesson['learnerFname']); ?>">
 					<?php
-					if( true == User::isProfilePicUploaded( $lesson['learnerId'] ) ){
-						$img = CommonHelper::generateUrl('Image','user', array( $lesson['learnerId'] ), CONF_WEBROOT_FRONT_URL).'?'.time();
-						echo '<img src="'.$img.'" />';
-					} ?>
+                    if (true == User::isProfilePicUploaded($lesson['learnerId'])) {
+                        $img = CommonHelper::generateUrl('Image', 'user', array( $lesson['learnerId'] ), CONF_WEBROOT_FRONT_URL).'?'.time();
+                        echo '<img src="'.$img.'" />';
+                    } ?>
 				</div>
 				<h6><?php echo $lesson['learnerFname']; ?></h6>
 				<p><?php echo $lesson['learnerCountryName']; ?> <br>
@@ -66,19 +149,19 @@ foreach( $lessons as $lesson ){
 				<div class="schedule-list">
 					<ul>
 						<?php
-						$date = DateTime::createFromFormat('Y-m-d', $lesson['slesson_date']);
-						if($date && ($date->format('Y-m-d') === $lesson['slesson_date'])){ ?>
+                        $date = DateTime::createFromFormat('Y-m-d', $lesson['slesson_date']);
+    					if ($date && ($date->format('Y-m-d') === $lesson['slesson_date'])) { ?>
 							<li>
 								<span class="span-left"><?php echo Label::getLabel('LBL_Schedule'); ?></span>
 								<span class="span-right">
 									<h4>
 									<?php
-										echo MyDate::convertTimeFromSystemToUserTimezone( 'h:i A', $lesson['slesson_start_time'], true , $user_timezone );
-									?>
+                                        echo MyDate::convertTimeFromSystemToUserTimezone('h:i A', $lesson['slesson_start_time'], true, $user_timezone);
+                                    ?>
 									</h4>
 									<?php
-										echo MyDate::convertTimeFromSystemToUserTimezone( 'l, F d, Y', $lesson['slesson_date'].' '. $lesson['slesson_start_time'], true , $user_timezone );
-									?>
+                                        echo MyDate::convertTimeFromSystemToUserTimezone('l, F d, Y', $lesson['slesson_date'].' '. $lesson['slesson_start_time'], true, $user_timezone);
+                                    ?>
 								</span>
 							</li>
 						<?php } ?>
@@ -87,7 +170,7 @@ foreach( $lessons as $lesson ){
 							<span class="span-right"><?php echo $lessonsStatus; ?></span>
 						</li>
 
-						<?php if($lesson['order_is_paid'] == Order::ORDER_IS_CANCELLED) {?>
+						<?php if ($lesson['order_is_paid'] == Order::ORDER_IS_CANCELLED) { ?>
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Order_Status'); ?></span>
 							<span class="span-right"><?php echo Label::getLabel('LBL_Canceled'); ?></span>
@@ -95,7 +178,7 @@ foreach( $lessons as $lesson ){
 
 						<?php } ?>
 
-                        <?php if( $lesson['issrep_id'] ){ ?>
+                        <?php if ($lesson['issrep_id']) { ?>
                             <li>
                                 <span class="span-left"><?php echo Label::getLabel('LBL_Issue_Status'); ?></span>
                                 <span class="span-right"><?php echo IssuesReported::getStatusArr()[$lesson['issrep_status']]; ?></span>
@@ -104,40 +187,41 @@ foreach( $lessons as $lesson ){
 						<li>
 							<span class="span-left"><?php echo Label::getLabel('LBL_Details'); ?></span>
 							<span class="span-right">
-								<?php if($lesson['is_trial'] == applicationConstants::NO) {
-									 echo empty($teachLanguages[$lesson['slesson_slanguage_id']])?'':$teachLanguages[$lesson['slesson_slanguage_id']] ; ?><br>
-								<?php }
-								if( $lesson['slesson_date'] != "0000-00-00" ){
-									$str = Label::getLabel( 'LBL_{n}_minutes_of_{trial-or-paid}_Lesson' );
+								<?php if ($lesson['is_trial'] == applicationConstants::NO) {
+                                        echo empty($teachLanguages[$lesson['slesson_slanguage_id']])?'':$teachLanguages[$lesson['slesson_slanguage_id']] ; ?><br>
+								<?php
+                                    }
+								if ($lesson['slesson_date'] != "0000-00-00") {
+									$str = Label::getLabel('LBL_{n}_minutes_of_{trial-or-paid}_Lesson');
 									$arrReplacements = array(
-										'{n}'	=>	$lesson['op_lesson_duration'],
-										'{trial-or-paid}'	=>	($lesson['is_trial']) ? Label::getLabel('LBL_Trial') : '',
-									);
-									foreach( $arrReplacements as $key => $val ){
-										$str = str_replace( $key, $val, $str );
+																	'{n}'	=>	$lesson['op_lesson_duration'],
+																	'{trial-or-paid}'	=>	($lesson['is_trial']) ? Label::getLabel('LBL_Trial') : '',
+																);
+									foreach ($arrReplacements as $key => $val) {
+										$str = str_replace($key, $val, $str);
 									}
 									echo $str;
 								}
-								/* $to_time = strtotime($lesson['slesson_start_time']);
-								$from_time = strtotime($lesson['slesson_end_time']);
-								echo $minutes = round(abs($to_time - $from_time) / 60,2);
-								echo Label::getLabel('LBL_Minute'); ?> <?php echo ($minutes == 30) ? 'Trial' : ''; ?> <?php echo Label::getLabel('LBL_Lesson'); */ ?>
+									/* $to_time = strtotime($lesson['slesson_start_time']);
+									$from_time = strtotime($lesson['slesson_end_time']);
+									echo $minutes = round(abs($to_time - $from_time) / 60,2);
+									echo Label::getLabel('LBL_Minute'); ?> <?php echo ($minutes == 30) ? 'Trial' : ''; ?> <?php echo Label::getLabel('LBL_Lesson'); */ ?>
 							</span>
 						</li>
 					</ul>
 				</div>
 			</div>
-            <?php $lessonsStartTime = $lesson['slesson_date']." ". $lesson['slesson_start_time'];
-            $startTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', $lessonsStartTime, true , $user_timezone );
-            $endTime = MyDate::convertTimeFromSystemToUserTimezone( 'Y/m/d H:i:s', date($lesson['slesson_end_date'] .' '. $lesson['slesson_end_time']), true , $user_timezone );
-            ?>
-            <?php if($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
+            <?php 
+				$lessonsStartTime = $lesson['slesson_date']." ". $lesson['slesson_start_time'];
+				$startTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', $lessonsStartTime, true, $user_timezone);
+				$endTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date($lesson['slesson_end_date'] .' '. $lesson['slesson_end_time']), true, $user_timezone); ?>
+            <?php if ($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
 			<div class="col-xl-4 col-lg-4 col-md-12 col-positioned">
 				<div class="schedule-list">
 					<ul>
-					<?php if($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
-							if(strtotime($startTime) > strtotime($curDateTime)) {
-						?>
+					<?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
+						if (strtotime($startTime) > strtotime($curDateTime)) {
+							?>
 							<li class="lesson-listing-timer timer">
 								<span class="span-right">
 									<span class="-color-secondary label"> <?php echo Label::getLabel('LBL_Lesson_Starts_in'); ?></span>
@@ -145,25 +229,24 @@ foreach( $lessons as $lesson ){
 								</span>
 							</li>
 					<?php
-						}else{
-							if(strtotime($endTime) > strtotime($curDateTime)) {
+						} else {
+							if (strtotime($endTime) > strtotime($curDateTime)) {
 								$lessonInfoLblKey = 'LBL_Lesson_ongoing';
 							} else {
 								$lessonInfoLblKey = 'LBL_Lesson_time_has_passed';
-							}
-						?>
+							} ?>
 						<li class="span-right">
 							<span class="-color-secondary"><?php echo Label::getLabel($lessonInfoLblKey); ?></span>
 						</li>
 						<?php
-							}
-						}
-					?>
+        }
+    }
+                    ?>
 				</ul>
 				</div>
 				<ul class="actions">
 					<li>
-						<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons','view',[$lesson['slesson_id']]); ?>" class="" title="<?php echo Label::getLabel('LBL_View'); ?>">
+						<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$lesson['slesson_id']]); ?>" class="" title="<?php echo Label::getLabel('LBL_View'); ?>">
 							<svg version="1.1" width="20px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 								 viewBox="0 0 511.999 511.999" style="enable-background:new 0 0 511.999 511.999;" xml:space="preserve">
 								<g>
@@ -185,9 +268,9 @@ foreach( $lessons as $lesson ){
 							</svg>
 						</a>
 					</li>
-					<?php if($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('teacher-scheduled-lessons'))){ ?>
+					<?php if ($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('teacher-scheduled-lessons'))) { ?>
 
-					<?php if(($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING || $lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) && $curDateTime<$startTime) { ?>
+					<?php if (($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING || $lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) && $curDateTime<$startTime) { ?>
 						<li>
 							<a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_Cancel_Lesson'); ?>">
 								<svg  width="14px" viewBox="0 0 329.26933 329" width="329pt" xmlns="http://www.w3.org/2000/svg"><path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0"/></svg>
@@ -195,7 +278,7 @@ foreach( $lessons as $lesson ){
 						</li>
 					<?php } ?>
 
-					<?php if( $lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lesson['issrep_id'] > 0) { ?>
+					<?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED || $lesson['issrep_id'] > 0) { ?>
 						<li>
 							<a href="javascript:void(0);" onclick="issueReportedDetails('<?php echo $lesson['slesson_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_Issue_Details'); ?>">
 								<svg version="1.1"  width="35px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -222,8 +305,8 @@ foreach( $lessons as $lesson ){
 							</a>
 						</li>
 					<?php }
-					 ?>
-					<?php if( $lesson['issrep_id']>0 && $lesson['issrep_status'] == 0) { ?>
+                     ?>
+					<?php if ($lesson['issrep_id']>0 && $lesson['issrep_status'] == 0) { ?>
 						<li>
 							<a href="javascript:void(0);"  onclick="resolveIssue('<?php echo $lesson['slesson_id'].','.$lesson['issrep_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_Check_And_Resolve_Issue'); ?>">
 								<svg width="30px" viewBox="0 -1 512.0004 512" xmlns="http://www.w3.org/2000/svg"><path d="m476.195312 356.402344c-9.472656-92.132813-124.835937-131.347656-187.847656-61.082032-62.253906 69.429688-12.839844 180.179688 80.21875 180.179688 64.164063.003906 114.167969-55.503906 107.628906-119.097656zm-107.636718 103.988281c-46.960938 0-87.363282-35.601563-92.28125-83.433594-8.792969-85.554687 92.207031-134.558593 154.53125-78.648437 62.640625 56.199218 23.917968 162.082031-62.25 162.082031zm0 0"/><path d="m436.449219 325.722656c-2.953125-2.949218-7.738281-2.949218-10.6875 0l-84.945313 84.945313-35.800781-35.796875c-2.949219-2.949219-7.734375-2.953125-10.683594 0-2.953125 2.949218-2.953125 7.734375 0 10.683594l36.640625 36.640624c5.4375 5.445313 14.242188 5.445313 19.683594.003907l85.792969-85.792969c2.949219-2.949219 2.949219-7.730469 0-10.683594zm0 0"/><path d="m275.015625 49.089844h-212.546875c-11.492188 0-20.84375 9.359375-20.84375 20.855468v74.085938c0 11.496094 9.351562 20.851562 20.84375 20.851562h212.546875c11.496094 0 20.84375-9.355468 20.84375-20.851562v-74.085938c0-11.496093-9.347656-20.855468-20.84375-20.855468zm5.730469 94.941406c0 3.164062-2.566406 5.742188-5.730469 5.742188h-212.546875c-3.160156 0-5.730469-2.578126-5.730469-5.742188v-74.085938c0-3.164062 2.570313-5.742187 5.730469-5.742187h212.546875c3.164063 0 5.730469 2.578125 5.730469 5.742187zm0 0"/><path d="m255.714844 80.5625h-173.941406c-4.175782 0-7.558594 3.382812-7.558594 7.554688 0 4.175781 3.382812 7.558593 7.558594 7.558593h173.941406c4.171875 0 7.554687-3.382812 7.554687-7.558593 0-4.171876-3.382812-7.554688-7.554687-7.554688zm0 0"/><path d="m208.789062 118.300781h-28.289062c-4.171875 0-7.554688 3.386719-7.554688 7.554688 0 4.183593 3.382813 7.558593 7.554688 7.558593h28.289062c4.167969 0 7.554688-3.375 7.554688-7.558593 0-4.167969-3.386719-7.554688-7.554688-7.554688zm0 0"/><path d="m150.277344 118.300781h-68.503906c-4.171876 0-7.558594 3.386719-7.558594 7.554688 0 4.183593 3.386718 7.558593 7.558594 7.558593h68.503906c4.171875 0 7.554687-3.375 7.554687-7.558593 0-4.167969-3.382812-7.554688-7.554687-7.554688zm0 0"/><path d="m255.714844 228.953125h-173.941406c-4.175782 0-7.558594 3.382813-7.558594 7.558594 0 4.171875 3.382812 7.554687 7.558594 7.554687h173.941406c4.171875 0 7.554687-3.382812 7.554687-7.554687 0-4.175781-3.382812-7.558594-7.554687-7.558594zm0 0"/><path d="m131.351562 266.695312h-49.578124c-4.175782 0-7.558594 3.382813-7.558594 7.554688 0 4.175781 3.382812 7.558594 7.558594 7.558594h49.578124c4.171876 0 7.554688-3.382813 7.554688-7.558594 0-4.171875-3.382812-7.554688-7.554688-7.554688zm0 0"/><path d="m81.773438 392.457031h124.496093c4.171875 0 7.554688-3.382812 7.554688-7.554687 0-4.175782-3.382813-7.558594-7.554688-7.558594h-124.496093c-4.175782 0-7.558594 3.382812-7.558594 7.558594 0 4.171875 3.382812 7.554687 7.558594 7.554687zm0 0"/><path d="m142.21875 415.085938h-60.445312c-4.171876 0-7.558594 3.386718-7.558594 7.558593 0 4.167969 3.386718 7.554688 7.558594 7.554688h60.445312c4.167969 0 7.554688-3.386719 7.554688-7.554688 0-4.171875-3.386719-7.558593-7.554688-7.558593zm0 0"/><path d="m218.832031 415.085938h-46.390625c-4.171875 0-7.558594 3.386718-7.558594 7.558593 0 4.167969 3.386719 7.554688 7.558594 7.554688h46.390625c4.179688 0 7.554688-3.386719 7.554688-7.554688 0-4.171875-3.375-7.558593-7.554688-7.558593zm0 0"/><path d="m464.441406 260.8125c-35.535156-31.882812-83.042968-43.054688-126.957031-33.214844v-203.296875c0-13.398437-10.898437-24.300781-24.308594-24.300781h-288.867187c-13.410156 0-24.308594 10.902344-24.308594 24.300781v462.164063c0 13.398437 10.898438 24.296875 24.308594 24.296875h288.867187c5.933594 0 11.375-2.125 15.59375-5.660157 30.3125 8.808594 62.25 7.109376 90.527344-3.539062 3.910156-1.46875 5.882813-5.832031 4.414063-9.730469-1.472657-3.90625-5.832032-5.882812-9.730469-4.410156-44.582031 16.75-96.628907 7.976563-133.253907-26.546875-83.785156-78.9375-28.644531-221.621094 88.160157-221.621094 65.855469 0 120.609375 49.472656 127.347656 115.085938 4.953125 48.210937-17.320313 93.960937-56.898437 120.136718-3.484376 2.296876-4.441407 6.980469-2.136719 10.464844 2.296875 3.484375 6.992187 4.433594 10.46875 2.136719 78.746093-52.058594 86.222656-163.960937 16.773437-226.265625zm-215.226562 185.746094h-186.746094c-3.160156 0-5.730469-2.578125-5.730469-5.742188v-74.085937c0-3.164063 2.570313-5.742188 5.730469-5.742188h163.082031c-1.269531 29.382813 6.363281 59.460938 23.664063 85.570313zm31.53125-192.234375c-15.316406 11.921875-28.125 26.917969-37.484375 43.84375h-180.792969c-3.160156 0-5.730469-2.582031-5.730469-5.742188v-74.085937c0-3.164063 2.570313-5.742188 5.730469-5.742188h212.546875c3.164063 0 5.730469 2.578125 5.730469 5.742188zm41.628906-22.476563c-9.25 3.144532-18.125 7.234375-26.515625 12.191406v-25.699218c0-11.496094-9.347656-20.855469-20.84375-20.855469h-212.546875c-11.492188 0-20.84375 9.359375-20.84375 20.855469v74.085937c0 11.492188 9.351562 20.851563 20.84375 20.851563h173.558594c-4.269532 10.445312-7.300782 21.386718-8.996094 32.601562h-164.5625c-11.492188 0-20.84375 9.359375-20.84375 20.851563v74.085937c0 11.496094 9.351562 20.855469 20.84375 20.855469h198.28125c12.085938 13.878906 27.125 25.601563 43.914062 33.980469h-280.355468c-5.078125 0-9.199219-4.121094-9.199219-9.1875v-462.164063c0-5.070312 4.121094-9.1875 9.199219-9.1875h288.867187c5.078125 0 9.199219 4.117188 9.199219 9.1875zm0 0"/></svg>
@@ -263,9 +346,9 @@ foreach( $lessons as $lesson ){
 						</a>
 					</li>
 					<?php $countRel = ScheduledLessonSearch::countPlansRelation($lesson['slesson_id']);
-                    if($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) {
-                    if($countRel > 0){
-					?>
+                    if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) {
+                        if ($countRel > 0) {
+                            ?>
 					<li>
 						<a href="javascript:void(0);" onclick="changeLessonPlan('<?php echo $lesson['slesson_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_Change_Lesson_Plan'); ?>">
 							<svg xmlns="http://www.w3.org/2000/svg"  width="35px" viewBox="0 0 512 512" width="512" ><g id="outline"><path d="M136,120H312a8,8,0,0,0,0-16H136a8,8,0,0,0,0,16Z"/><path d="M136,168H312a8,8,0,0,0,0-16H136a8,8,0,0,0,0,16Z"/><path d="M136,216H312a8,8,0,0,0,0-16H136a8,8,0,0,0,0,16Z"/><path d="M136,264H312a8,8,0,0,0,0-16H136a8,8,0,0,0,0,16Z"/><path d="M136,312h64a8,8,0,0,0,0-16H136a8,8,0,0,0,0,16Z"/><path d="M452.132,205.015a24.024,24.024,0,0,0-32.841,8.571L400,246.5V48a8,8,0,0,0-8-8H331.314s-24.038-24.48-25-23.656A7.976,7.976,0,0,0,304,16H72a8,8,0,0,0-8,8V49.013a32,32,0,0,0,0,61.974v18.026a32,32,0,0,0,0,61.974v18.026a32,32,0,0,0,0,61.974v10.026a32,32,0,0,0,0,61.974V392a8,8,0,0,0,8,8h8v24a8,8,0,0,0,8,8H291.292l-5.482,9.354a7.938,7.938,0,0,0-.981,2.721c-.008.046-.021.085-.028.132l-.02.131,0,.03-6.4,42.44a8,8,0,0,0,12.817,7.511L325.226,467.9c2.18-1.693,3.245-2.729,3.076-4.119L346.926,432H392a8,8,0,0,0,8-8V341.438l60.7-103.583A24.027,24.027,0,0,0,452.132,205.015ZM437.977,217.98a8,8,0,0,1,8.922,11.786l-4.045,6.9-13.8-8.09,4.046-6.9A7.944,7.944,0,0,1,437.977,217.98ZM317.462,450.632l-13.8-8.09L408.826,263.089l13.8,8.09ZM312,43.314,340.686,72H312Zm104.916,205.97,4.044-6.9,13.805,8.09-4.045,6.9ZM384,56V272a8.041,8.041,0,0,0,.152,1.546L368,301.108V80a7.978,7.978,0,0,0-2.336-5.649l-.007-.008L347.314,56ZM80,32H296V80a8,8,0,0,0,8,8h48V328.41L319.422,384H80V342.988a31.974,31.974,0,0,0,22.991-22.994,8,8,0,0,0-15.5-3.988A15.948,15.948,0,0,1,80,325.85V270.988a31.974,31.974,0,0,0,22.991-22.994,8,8,0,0,0-15.5-3.988A15.948,15.948,0,0,1,80,253.85V190.988a31.974,31.974,0,0,0,22.991-22.994,8,8,0,0,0-15.5-3.988A15.948,15.948,0,0,1,80,173.85V110.988a31.974,31.974,0,0,0,22.991-22.994,8,8,0,0,0-15.5-3.988A15.948,15.948,0,0,1,80,93.85ZM56,80a16,16,0,0,1,8-13.835v27.67A16,16,0,0,1,56,80Zm0,80a16,16,0,0,1,8-13.835v27.67A16,16,0,0,1,56,160Zm0,80a16,16,0,0,1,8-13.835v27.67A16,16,0,0,1,56,240Zm0,72a16,16,0,0,1,8-13.835v27.67A16,16,0,0,1,56,312ZM96,416V400H310.045l-9.377,16Zm202.861,42.276,7.219,4.231-8.9,6.908ZM384,416H356.3L384,368.739Z"/></g></svg>
@@ -277,7 +360,8 @@ foreach( $lessons as $lesson ){
 						</a>
 					</li>
 
-				<?php }else{ ?>
+				<?php
+                        } else { ?>
 					<li>
 						<a href="javascript:void(0);" onclick="listLessonPlans('<?php echo $lesson['slesson_id']; ?>')" class="" title="<?php echo Label::getLabel('LBL_Attach_Lesson_Plan'); ?>">
 							<svg version="1.1" width="21px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -293,31 +377,29 @@ foreach( $lessons as $lesson ){
 						</a>
 					</li>
 				<?php
-						}
-					}
+                        }
+                    }
                 }
-				?>
+                ?>
 				</ul>
 			</div>
 			<?php } ?>
 		</div>
 	</div>
-
 <?php } ?>
 </div>
-</div>
 <?php }
-if ( empty($lessons) ) {
-	$this->includeTemplate('_partial/no-record-found.php');
+if (empty($lessons)) {
+    $this->includeTemplate('_partial/no-record-found.php');
 } else {
-	echo FatUtility::createHiddenFormFromData ( $postedData, array (
-		'name' => 'frmSLnsSearchPaging'
-	) );
-	if ($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('teacher-scheduled-lessons'))) {
-		$this->includeTemplate('_partial/pagination.php', $pagingArr,false);
-	} else {
-		echo "<div class='load-more -align-center'><a href='".CommonHelper::generateFullUrl('teacher-scheduled-lessons')."' class='btn btn--bordered btn--xlarge'>".Label::getLabel('LBL_View_all')."</a></div>";
-	}
+    echo FatUtility::createHiddenFormFromData($postedData, array(
+        'name' => 'frmSLnsSearchPaging'
+    ));
+    if ($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('teacher-scheduled-lessons'))) {
+        $this->includeTemplate('_partial/pagination.php', $pagingArr, false);
+    } else {
+        echo "<div class='load-more -align-center'><a href='".CommonHelper::generateFullUrl('teacher-scheduled-lessons')."' class='btn btn--bordered btn--xlarge'>".Label::getLabel('LBL_View_all')."</a></div>";
+    }
 }
 ?>
 <script >

@@ -112,7 +112,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if ($getCancelledOrder) {
             $orderIsPaidCondition->attachCondition('order_is_paid', '=', Order::ORDER_IS_CANCELLED, 'OR');
         }
-        $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
+        // $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
         $srch->joinTeacherSettings();
         if ($addLessonDateOrder) {
             $srch->addOrder('slesson_date', 'ASC');

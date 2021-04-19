@@ -5,17 +5,107 @@ $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 7;
 $frm->setFormTagAttribute('autocomplete', 'off');
 $frm->setFormTagAttribute('onsubmit', 'setUpPassword(this); return(false);');
-?>
 
-<div class="section-head">
-		 <div class="d-flex justify-content-between align-items-center">
-			 <div><h4 class="page-heading"><?php echo Label::getLabel('LBL_Change_Password_or_Email'); ?></h4></div>
-		 </div>
+$currentPassword =  $frm->getField('current_password');
+$newPassword =  $frm->getField('new_password');
+$confNewPassword =  $frm->getField('conf_new_password');
+
+$submitBtn = $frm->getField('btn_submit');
+$submitBtn->setFieldTagAttribute('form', $frm->getFormTagAttribute('id'));
+?>
+<div class="content-panel__head">
+	<div class="d-flex align-items-center justify-content-between">
+		<div><h5><?php echo Label::getLabel('LBL_Change_Password_or_Email'); ?></h5></div>
+		<div></div>
+	</div>
 </div>
-<div class="tabs-small tabs-offset tabs-scroll-js">
-    <ul>
-        <li class="is-active"><a href="javascript:void(0)" onclick="changePasswordForm()" ><?php echo Label::getLabel('LBL_Password'); ?></a></li>
-		<li><a href="javascript:void(0)" onclick="changeEmailForm()" ><?php echo Label::getLabel('LBL_Email'); ?></a></li>
-     </ul>
+<div class="content-panel__body">
+	<div class="form">
+		<div class="form__body padding-0">
+			<nav class="tabs tabs--line padding-left-6 padding-right-6">
+				<ul>
+					<li class="is-active"><a href="javascript:void(0);" onclick="changePasswordForm();"> <?php echo Label::getLabel('LBL_Password'); ?></a></li>
+					<li><a href="javascript:void(0);" onclick="changeEmailForm()" ><?php echo Label::getLabel('LBL_Email'); ?></a></li>
+				</ul>
+			</nav>
+			<div class="tabs-data">
+				<div class="padding-6 padding-bottom-0">
+				<?php echo $frm->getFormTag(); ?>
+				
+					<div class="row">
+						<div class="col-md-6">
+							<div class="field-set">
+								<div class="caption-wraper">
+									<label class="field_label">
+										<?php echo $currentPassword->getCaption(); ?>
+										<?php if($currentPassword->requirement->isRequired()){ ?>
+										<span class="spn_must_field">*</span>
+										<?php } ?>
+									</label>
+								</div>
+								<div class="field-wraper">
+									<div class="field_cover">
+									<?php echo $currentPassword->getHtml(); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="field-set">
+								<div class="caption-wraper">
+									<label class="field_label">
+										<?php echo $newPassword->getCaption(); ?>
+										<?php if($newPassword->requirement->isRequired()){ ?>
+										<span class="spn_must_field">*</span>
+										<?php } ?>
+									</label>
+								</div>
+								<div class="field-wraper">
+									<div class="field_cover">
+									<?php echo $newPassword->getHtml(); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="field-set">
+								<div class="caption-wraper">
+									<label class="field_label">
+										<?php echo $confNewPassword->getCaption(); ?>
+										<?php if($confNewPassword->requirement->isRequired()){ ?>
+										<span class="spn_must_field">*</span>
+										<?php } ?>
+									</label>
+								</div>
+								<div class="field-wraper">
+									<div class="field_cover">
+									<?php echo $confNewPassword->getHtml(); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+				<?php echo $frm->getExternalJS(); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form__actions">
+			<div class="d-flex align-items-center justify-content-between">
+				<div>
+					<!-- <input type="button" value="Back"> -->
+				</div>
+				<div>
+					<?php echo $frm->getFieldHTML('btn_submit'); ?>
+					<!-- <input type="button" value="Next"> -->
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-<?php echo $frm->getFormHtml();
+
+

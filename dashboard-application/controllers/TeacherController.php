@@ -459,10 +459,11 @@ class TeacherController extends TeacherBaseController
     {
         $frm = $this->getTeacherPreferencesForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-        $db = FatApp::getDb();
         if (false === $post) {
             FatUtility::dieWithError(current($frm->getValidationErrors()));
         }
+        
+        $db = FatApp::getDb();
         $userId = UserAuthentication::getLoggedUserId();
         $deleteRecords = $db->deleteRecords(Preference::DB_TBL_USER_PREF, ['smt' => 'utpref_user_id = ?', 'vals' => [$userId]]);
         if (!$deleteRecords) {
@@ -481,8 +482,10 @@ class TeacherController extends TeacherBaseController
                 $preference = 1;
             }
         }
+        //
         /* Update Teacher's Preferences */
         (new TeacherStat($userId))->setPreference($preference);
+     
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Preferences_updated_successfully!'));
     }
 
@@ -499,6 +502,7 @@ class TeacherController extends TeacherBaseController
         /* ] */
         $preferencesArr = Preference::getPreferencesArr($this->siteLangId);
         $titleArr = Preference::getPreferenceTypeArr($this->siteLangId);
+      
         $frm->addTextArea(Label::getLabel("LBL_Language_that_I'm_teaching"), 'teach_lang', '', ['disabled' => 'disabled']);
         foreach ($preferencesArr as $key => $val) {
             if ($key == Preference::TYPE_ACCENTS && $teacherTeachLangArr['slanguage_code'] != "EN") {
@@ -512,7 +516,9 @@ class TeacherController extends TeacherBaseController
                 $frm->addCheckBoxes($titleArr[$key], 'pref_' . $key, $optionsArr, '', ['class' => 'list-onethird list-onethird--bg']);
             }
         }
+        $frm->addButton('', 'btn_back', Label::getLabel('LBL_Back'));
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save_Changes'));
+        $frm->addButton('', 'btn_next', Label::getLabel('LBL_next'));
         return $frm;
     }
 
@@ -643,7 +649,9 @@ class TeacherController extends TeacherBaseController
     {
         $frm = new Form('frmBankInfo');
         $frm->addEmailField(Label::getLabel('M_Paypal_Email_Address'), 'ub_paypal_email_address');
+        $frm->addButton('', 'btn_back', Label::getLabel('LBL_Back'));
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
+
         return $frm;
     }
 
@@ -666,7 +674,9 @@ class TeacherController extends TeacherBaseController
         $frm->addRequiredField(Label::getLabel('M_Bank_Account_Number'), 'ub_account_number', '');
         $frm->addRequiredField(Label::getLabel('M_IFSC_Code/Swift_Code'), 'ub_ifsc_swift_code', '');
         $frm->addTextArea(Label::getLabel('M_Bank_Address'), 'ub_bank_address', '');
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
+        $frm->addButton('', 'btn_back', Label::getLabel('LBL_Back'));
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE'));
+        // $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next'));
         return $frm;
     }
 

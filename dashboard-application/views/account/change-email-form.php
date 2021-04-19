@@ -5,35 +5,107 @@ $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 7;
 $frm->setFormTagAttribute('autocomplete', 'off');
 $frm->setFormTagAttribute('onsubmit', 'setUpEmail(this); return(false);');
+$currentEmail =  $frm->getField('user_email');
+$newEmail =  $frm->getField('new_email');
+$currentPassword =  $frm->getField('current_password');
+
+$submitBtn = $frm->getField('btn_submit');
+$submitBtn->setFieldTagAttribute('form', $frm->getFormTagAttribute('id'));
 ?>
 
-<div class="section-head">
-	<div class="d-flex justify-content-between align-items-center">
-		<div>
-			<h4 class="page-heading"><?php echo Label::getLabel('LBL_Change_Password_or_Email'); ?></h4>
-		</div>
+<div class="content-panel__head">
+	<div class="d-flex align-items-center justify-content-between">
+		<div><h5><?php echo Label::getLabel('LBL_Change_Password_or_Email'); ?></h5></div>
+		<div></div>
 	</div>
-	<?php if( !empty( $userPendingRequest ) ) {
-	?>
-	<div class="system_message alert--positioned-top-full alert  alert--warning" style="">
-        <a class="closeMsg" href="javascript:void(0)"></a>
-        <div class="content">
-            <div class="div_info">
+</div>
+<div class="content-panel__body">
+	<div class="form">
+		<div class="form__body padding-0">
+			<nav class="tabs tabs--line padding-left-6 padding-right-6">
 				<ul>
-					<li><?php echo Label::getLabel('LBL_Email_Verification_Pending_for_email_change'); ?></li>
+					<li><a href="javascript:void(0);" onclick="changePasswordForm();"> <?php echo Label::getLabel('LBL_Password'); ?></a></li>
+					<li class="is-active"><a href="javascript:void(0);" ><?php echo Label::getLabel('LBL_Email'); ?></a></li>
 				</ul>
+			</nav>
+			<div class="tabs-data">
+				<div class="padding-6 padding-bottom-0">
+				<?php echo $frm->getFormTag(); ?>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="field-set">
+								<div class="caption-wraper">
+									<label class="field_label">
+										<?php echo $currentEmail->getCaption(); ?>
+										<?php if($currentEmail->requirement->isRequired()){ ?>
+										<span class="spn_must_field">*</span>
+										<?php } ?>
+									</label>
+								</div>
+								<div class="field-wraper">
+									<div class="field_cover">
+									<?php echo $currentEmail->getHtml(); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="field-set">
+								<div class="caption-wraper">
+									<label class="field_label">
+										<?php echo $newEmail->getCaption(); ?>
+										<?php if($newEmail->requirement->isRequired()){ ?>
+										<span class="spn_must_field">*</span>
+										<?php } ?>
+									</label>
+								</div>
+								<div class="field-wraper">
+									<div class="field_cover">
+									<?php echo $newEmail->getHtml(); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="field-set">
+								<div class="caption-wraper">
+									<label class="field_label">
+										<?php echo $currentPassword->getCaption(); ?>
+										<?php if($currentPassword->requirement->isRequired()){ ?>
+										<span class="spn_must_field">*</span>
+										<?php } ?>
+									</label>
+								</div>
+								<div class="field-wraper">
+									<div class="field_cover">
+									<?php echo $currentPassword->getHtml(); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+				<?php echo $frm->getExternalJS(); ?>
+				</div>
 			</div>
 		</div>
-    </div>
-	<?php
-	}
-	?>
+		<div class="form__actions">
+			<div class="d-flex align-items-center justify-content-between">
+				<div>
+					<!-- <input type="button" value="Back"> -->
+				</div>
+				<div>
+					<?php echo $frm->getFieldHTML('btn_submit'); ?>
+					<!-- <input type="button" value="Next"> -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-</div>
-<div class="tabs-small tabs-offset tabs-scroll-js">
-    <ul>
-        <li><a href="javascript:void(0)" onclick="changePasswordForm()" ><?php echo Label::getLabel('LBL_Password'); ?></a></li>
-		<li class="is-active"><a href="javascript:void(0)" onclick="changeEmailForm()" ><?php echo Label::getLabel('LBL_Email'); ?></a></li>
-    </ul>
-</div>
-<?php echo $frm->getFormHtml();
+
+

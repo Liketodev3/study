@@ -464,6 +464,7 @@ class AccountController extends LoggedUserController
         $conNewPwdReq->setRequired();
         $conNewPwdReq->setCompareWith('new_password', 'eq');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
+        $frm->addSubmitButton('', 'btn_next', Label::getLabel('LBL_next'));
         return $frm;
     }
 
@@ -484,8 +485,9 @@ class AccountController extends LoggedUserController
     }
 
     public function GoogleCalendarAuthorize()
-    {
-        require_once CONF_INSTALLATION_PATH . 'library/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
+    {   
+     
+        require_once CONF_INSTALLATION_PATH . 'library/third-party/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_' . $this->siteLangId)); // Set your applicatio name
         $client->setScopes(['email', 'profile', 'https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
