@@ -24,11 +24,11 @@ class Wiziq extends FatModel
         $startTime =  date_format((new DateTime())->modify("+15 seconds"), 'm/d/Y H:i:00');
         $parameters['signature'] = $this->generateSignature(static::CREATE_MEET, $parameters);
         $parameters["title"] = $data['title'];
-        $parameters["duration"] = '10'; // $data['duration'];
+        $parameters["duration"] =  $data['duration'];
         $parameters["start_time"] = $startTime;
         $parameters["presenter_id"] = $data['presenter_id'];
         $parameters["presenter_name"] = $data['presenter_name'];
-        $parameters["presenter_email"] = 'sher.singh@fatbit.in'; //$data['presenter_email'];
+        $parameters["presenter_email"] = $data['presenter_email'];
         $parameters['attendee_limit'] = '300'; /* Max allowed by WizIQ */
         $parameters['time_zone'] = 'GMT';
         $callbackToken = CommonHelper::encrypt($parameters['signature']);
