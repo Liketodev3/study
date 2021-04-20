@@ -4,6 +4,7 @@ class Banner extends MyAppModel
     const DB_TBL = 'tbl_banners';
     const DB_TBL_PREFIX = 'banner_';
     const DB_LANG_TBL = 'tbl_banners_lang';
+    const DB_LANG_TBL_PREFIX = 'bannerlang_';
     const DB_TBL_LOCATIONS = 'tbl_banner_locations';
     const DB_LANG_TBL_LOCATIONS = 'tbl_banner_locations_lang';
     const DB_TBL_LOCATIONS_PREFIX = 'blocation_';
