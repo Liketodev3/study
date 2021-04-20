@@ -19,6 +19,13 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->set('frmSrch', $frmSrch);
         $lessonStatuses = ScheduledLesson::getStatusArr();
         $lessonStatuses += array(ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported'));
+        $srch = new stdClass();
+        $this->searchLessons($srch, ['status' => ScheduledLesson::STATUS_UPCOMING], false, false);
+        $srch->doNotCalculateRecords();
+        $srch->setPageSize(1);
+        $srch->addOrder('CONCAT(slns.slesson_date, " ", slns.slesson_start_time)', 'ASC');
+        $upcomingLesson = FatApp::getDb()->fetch($srch->getResultSet());
+        // prx($upcomingLesson);
         $this->set('lessonStatuses', $lessonStatuses);
         $this->_template->render();
     }
@@ -66,6 +73,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->setPageNumber($page);
         $rs = $srch->getResultSet();
         $lessons = FatApp::getDb()->fetchAll($rs);
+        // prx($srch->getQuery());
         $lessonArr = [];
         $user_timezone = MyDate::getUserTimeZone();
         foreach ($lessons as $lesson) {
@@ -115,7 +123,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if ($getCancelledOrder) {
             $orderIsPaidCondition->attachCondition('order_is_paid', '=', Order::ORDER_IS_CANCELLED, 'OR');
         }
-        // $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
+        $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
         $srch->joinTeacherSettings();
         if ($addLessonDateOrder) {
             $srch->addOrder('slesson_date', 'ASC');
