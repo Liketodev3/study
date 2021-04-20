@@ -1,13 +1,15 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number:
-Release Date:
+Release Number: TV-2.8.5.20210420
+Release Date: 2021-04-20
 
-Bugs
-    Bug-#050724 - Admin >> need to remove.
-    Bug-#050538  - #050538 - In Group class >>Why user can not set his group class price more than highest lesson package rate in website.
+Bugs:
+    Bug-#050724 - Admin >> Remove Order Status dropdowns from General Settings.
+    Bug-#050538 - In Group class >>Why user can not set his group class price more than highest lesson package rate in website.
     Bug-#050556 - If user did not join a lesson even session start time is crossed. but time left view is showing, which is wrong.
-    Bug-#050350 - Need to add validation alert , bulk price should always be less than single lesson rate, other wise teacher will not display if bulk price of any lesson is greater than existing maximum single lesson rate of website teacher list.
+    Bug-#050350 - List teacher even if bulk price is greater than maximum single lesson rate.
+    Bug-#051828 - Fix teach-lang multilingual issue and remove limit from records.
+    Bug-#052412 - Stop learner from reschduling lesson after a window passes.
 
 ==============================================================================================================================
 Release Number: RV-2.1.1
