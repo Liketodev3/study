@@ -35,6 +35,9 @@ $(function() {
 
 	viewCalendar = function(frm){
 		var data = fcom.frmData(frm);
+		$('.tab-switch__item').removeClass('is-active');
+		$('.calender-js').addClass('is-active');
+		
 		fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','viewCalendar'),data,function(t){
 			$(dv).html(t);
 		});

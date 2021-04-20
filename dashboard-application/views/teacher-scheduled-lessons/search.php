@@ -11,7 +11,7 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
 
 $referer = preg_replace("(^https?://)", "", $referer);
 ?>
-<div class="results" id="listItemsLessons">		
+<div class="results">		
 <?php
 foreach ($lessonArr as $key => $lessons) { ?>
 <div class="lessons-group margin-top-10">

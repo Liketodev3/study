@@ -15,6 +15,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
+        $this->_template->addJs('js/fateventcalendar.js');
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
         $lessonStatuses = ScheduledLesson::getStatusArr();

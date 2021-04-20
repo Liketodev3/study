@@ -142,10 +142,13 @@
 						<div class="tab-switch tab-switch--icons">
 							<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>" class="tab-switch__item is-active list-js">
 								<svg class="icon icon--view icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#lesson-view'; ?>"></use></svg>
-								<?php echo Label::getLabel('LBL_List'); ?></a>
+								<?php echo Label::getLabel('LBL_List'); ?>
+							</a>
+
 							<a href="javascript:void(0);" onclick="viewCalendar();" class="tab-switch__item calender-js">
 								<svg class="icon icon--calendar"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#calendar'; ?>"></use></svg>
-								<?php echo Label::getLabel('LBL_Calendar'); ?></a>
+								<?php echo Label::getLabel('LBL_Calendar'); ?>
+							</a>
 						</div>
 					</div>
 				</div>
@@ -154,6 +157,7 @@
 
 
 			<div class="page-content" id="listItemsLessons">
+												
 			</div>
 			<!-- ] -->
 		</div>
@@ -163,8 +167,12 @@
 	</div>
 </main>
 <!-- ] -->
-<script >
+<script>
+	
 jQuery(document).ready(function () {
+	$(".slide-toggle-js").click(function(){
+        $(".slide-target-js").slideToggle();
+    });
 		$("#countdowntimer-upcoming").countdowntimer({
             startDate : $("#countdowntimer-upcoming").attr('data-startTime'),
             dateAndTime : $("#countdowntimer-upcoming").attr('data-endTime'),
