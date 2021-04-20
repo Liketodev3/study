@@ -25,8 +25,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->setPageSize(1);
         $srch->addOrder('CONCAT(slns.slesson_date, " ", slns.slesson_start_time)', 'ASC');
         $upcomingLesson = FatApp::getDb()->fetch($srch->getResultSet());
-        // prx($upcomingLesson);
         $this->set('lessonStatuses', $lessonStatuses);
+        $this->set('upcomingLesson', $upcomingLesson);
         $this->_template->render();
     }
 

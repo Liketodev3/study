@@ -7,21 +7,38 @@
 			<h1><?php echo Label::getLabel('LBL_Manage_Lessons'); ?></h1>
 		</div>
 		<div class="page__body">
-			<!-- [ INFO BAR ========= -->
+			<?php if(!empty($upcomingLesson)){ 
+				$user_timezone = MyDate::getUserTimeZone();
+				$curDate = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
+            
+				$lessonStartTime = MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $upcomingLesson['slesson_date'].' '.$upcomingLesson['slesson_start_time'], true, $user_timezone);
+			
+				$startUnixTime = strtotime($lessonStartTime);
+			?>
+				<!-- [ INFO BAR ========= -->
 			<div class="infobar infobar--primary">
 				<div class="row justify-content-between align-items-center">
 					<div class="col-lg-8 col-sm-6">
 						<div class="d-flex align-items-lg-center">
 							<div class="infobar__media margin-right-5">
 								<div class="infobar__media-icon infobar__media-icon--vcamera ">
-									<svg class="icon icon--vcamera"><use xlink:href="images/sprite.yo-coach.svg#video-camera"></use></svg>
+									<svg class="icon icon--vcamera"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#video-camera';?>"></use></svg>
 								</div>
 							</div>
 							<div class="infobar__content">
 								<div class="upcoming-lesson display-inline">
-									Next Lesson: <date class=" bold-600"> Feb 10, 2021 </date> at <time class=". bold-600">07:00 PM</time> with 
+									<?php echo Label::getLabel('LBL_Next_Lesson:'); ?> <date class=" bold-600"> <?php echo date('M d, Y', $startUnixTime); ?></date> <?php echo Label::getLabel('LBL_At'); ?> <time class=". bold-600"><?php echo date('h:i A', $startUnixTime); ?></time>
+									  <?php echo Label::getLabel('LBL_with'); ?>
 									<div class="avtar-meta display-inline"  >
-										<span class="avtar avtar--xsmall display-inline" data-title="M"><img src="images/emp_6.jpg" alt=""></span> Stephen Fleming 
+										<span class="avtar avtar--xsmall display-inline" data-title="<?php echo CommonHelper::getFirstChar($upcomingLesson['learnerFname']); ?>">
+										<?php
+											if (true == User::isProfilePicUploaded($upcomingLesson['learnerId'])) {
+												$img = CommonHelper::generateUrl('Image', 'user', array( $upcomingLesson['learnerId'] ), CONF_WEBROOT_FRONT_URL).'?'.time();
+												echo '<img src="'.$img.'" alt="'.$upcomingLesson['learnerFullName'].'" />';
+											}
+										?>
+										</span>
+											<?php echo $upcomingLesson['learnerFullName']; ?>
 									</div>
 								</div>
 
@@ -33,17 +50,17 @@
 						<div class="upcoming-lesson-action d-flex align-items-center justify-content-between justify-content-sm-end">
 
 							<div class="timer margin-right-4">
-								<div class="timer__media"><span><svg class="icon icon--clock icon--small"><use xlink:href="images/sprite.yo-coach.svg#clock"></use></svg></span></div>
+								<div class="timer__media"><span><svg class="icon icon--clock icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#clock'; ?>"></use></svg></span></div>
 								<div class="timer__content">
-									<div class="timer__controls timer-js">
-										<div class="timer__digit">00</div>
+									<div class="timer__controls timer-js" id="countdowntimer-upcoming" data-startTime="<?php echo $curDate; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>">
+										<!-- <div class="timer__digit">00</div>
 										<div class="timer__digit">01</div>
 										<div class="timer__digit">24</div>
-										<div class="timer__digit">47</div>
+										<div class="timer__digit">47</div> -->
 									</div>
 								</div>
 							</div>
-							<a href="#" class="btn bg-secondary">Enter Classroom</a>
+							<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$upcomingLesson['slesson_id']]); ?>" class="btn bg-secondary"><?php echo Label::getLabel('LBL_Enter_Classroom') ?></a>
 
 						</div>
 
@@ -52,7 +69,7 @@
 				</div>
 			</div>
 			<!-- ] -->
-
+			<?php } ?>
 
 			<!-- [ PAGE PANEL ========= -->
 			<div class="page-filter">
@@ -66,6 +83,7 @@
 								$frmSrch->setFormTagAttribute ( 'class', 'form' );
 								$frmSrch->setFormTagAttribute ( 'id', 'frmSrch' );
 								$fldStatus = $frmSrch->getField( 'status');
+								$fldStatus->addFieldTagAttribute('id','lesson-status');
 								$fldStatus->addFieldTagAttribute('onChange','getLessonsByStatus(this.value)');
                                 $fldStatus->addFieldTagAttribute('class', 'd-none');
                                 $statusOptions =   $fldStatus->options;
@@ -76,7 +94,7 @@
 						<div class="filter-responsive slide-target-js">
 							<div class="form-inline">
 								<div class="form-inline__item">
-									<select name="<?php echo $fldStatus->getName(); ?>" onChange='getLessonsByStatus(this.value);' form="<?php echo $frmSrch->getFormTagAttribute('id'); ?>">
+									<select id="<?php echo $fldStatus->getFieldTagAttribute('id'); ?>" name="<?php echo $fldStatus->getName(); ?>" onChange='getLessonsByStatus(this.value);' form="<?php echo $frmSrch->getFormTagAttribute('id'); ?>">
 										<option value=''><?php echo Label::getLabel('L_ALL'); ?></option>
 										<?php 
 										   unset($statusOptions[ScheduledLesson::STATUS_RESCHEDULED]);
@@ -135,9 +153,7 @@
 			</div>
 
 
-			<div class="page-content">
-				<div class="results" id="listItemsLessons">
-				</div>
+			<div class="page-content" id="listItemsLessons">
 			</div>
 			<!-- ] -->
 		</div>
@@ -147,3 +163,12 @@
 	</div>
 </main>
 <!-- ] -->
+<script >
+jQuery(document).ready(function () {
+		$("#countdowntimer-upcoming").countdowntimer({
+            startDate : $("#countdowntimer-upcoming").attr('data-startTime'),
+            dateAndTime : $("#countdowntimer-upcoming").attr('data-endTime'),
+            size : "sm",
+        });
+});
+</script>
