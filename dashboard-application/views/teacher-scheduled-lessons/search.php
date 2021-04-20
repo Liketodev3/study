@@ -94,13 +94,14 @@ foreach ($lessonArr as $key => $lessons) { ?>
 					<span class="card-landscape__status badge color-secondary badge--curve badge--small margin-left-0"><?php echo $lessonsStatus; ?></span>
 				</div>
 				<?php 
-					$countRel = ScheduledLessonSearch::countPlansRelation($lesson['slesson_id']); 
-                    if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $countRel > 0) { ?>
+				
+                    if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['isLessonPlanAttach'] > 0) {
+				?>
 						<div class="card-landscape__docs">
 							<div class="d-flex align-items-center">
 								<a href="#" class="attachment-file">
 									<svg class="icon icon--issue icon--attachement icon--xsmall color-black"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#attach'; ?>"></use></svg>
-									Basic Words & Numeracy in French
+									<?php echo $lesson['tlpn_title'] ?>
 								</a>
 								<a href="javascript:void(0);" onclick="changeLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-black  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Change_Lesson_Plan'); ?></a>
 								<a href="javascript:void(0);" onclick="removeAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-black  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Remove'); ?></a>
@@ -117,7 +118,7 @@ foreach ($lessonArr as $key => $lessons) { ?>
 				<div class="card-landscape__actions">
 					
 						<div class="profile-meta">
-							<?php  if ( $lesson['slesson_grpcls_id'] > 0 ) { ?>	
+							<?php  if ( $lesson['slesson_grpcls_id'] <= 0 ) { ?>	
 								<div class="profile-meta__media">
 									<span class="avtar" data-title="<?php echo CommonHelper::getFirstChar($lesson['learnerFname']); ?>">
 										<?php

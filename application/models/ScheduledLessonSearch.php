@@ -230,6 +230,12 @@ class ScheduledLessonSearch extends SearchBase
         $this->addMultipleFields(["ROUND(AVG(tlrating_rating),2) as teacher_rating", "count(DISTINCT tlreview_id) as totReviews"]);
     }
 
+    public function joinLessonPLan()
+    {
+        $this->joinTable('tbl_scheduled_lessons_to_teachers_lessons_plan', 'LEFT JOIN', 'tlp.ltp_slessonid = slns.slesson_id', 'tlp');
+        $this->joinTable(LessonPlan::DB_TBL, 'LEFT JOIN', 'lp.tlpn_id = tlp.ltp_tlpn_id', 'lp');
+    }
+
     public function joinUserTeachLanguages($langId = 0)
     {
         $langId = FatUtility::int($langId);

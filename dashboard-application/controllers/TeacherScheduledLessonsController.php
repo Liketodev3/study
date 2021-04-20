@@ -39,9 +39,12 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
         $srch->joinLessonRescheduleLog();
         $srch->joinIssueReported();
+        $srch->joinLessonPLan();
         $srch->addFld([
             'IFNULL(iss.issrep_status,0) AS issrep_status',
             'IFNULL(iss.issrep_id,0) AS issrep_id',
+            'IFNULL(lp.tlpn_id,0) AS isLessonPlanAttach',
+            'lp.tlpn_title',
             'IFNULL(lrsl.lesreschlog_id,0) as lessonReschedulelogId',
             'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime',
             '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then 0 ELSE 1 END ) as upcomingLessonOrder',
@@ -770,7 +773,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Access_Denied'));
         }
         /* ] */
-        $data = ["ltp_slessonid" => $lessonId, "ltp_tlpn_id" => $planId,];
+        $data = ["ltp_slessonid" => $lessonId, "ltp_tlpn_id" => $planId];
         if (!FatApp::getDb()->insertFromArray('tbl_scheduled_lessons_to_teachers_lessons_plan', $data, false, [], $data)) {
             FatUtility::dieJsonError(FatApp::getDb()->getError());
         }
