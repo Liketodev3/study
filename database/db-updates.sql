@@ -377,3 +377,25 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ('LBL_PROFILE_IMAGE_FIELD_INFO_TEXT', 1, 'Experts use profile picture to look professional'),
 ('LBL_PROFILE_VIDEO_FIELD_INFO', 1, 'Experts use videos to present their skillsets'),
 ('LBL_VIDEO_LINK_PLACEHOLDER', 1, 'eg: https://youtu.be/XkGgIjAHFDs');
+
+
+CREATE TABLE `tbl_teacher_stats` (
+ `testat_user_id` int NOT NULL,
+ `testat_ratings` decimal(10,2) NOT NULL,
+ `testat_reviewes` int NOT NULL,
+ `testat_students` int NOT NULL,
+ `testat_lessions` int NOT NULL,
+ `testat_minprice` decimal(10,2) NOT NULL,
+ `testat_maxprice` decimal(10,2) NOT NULL,
+ `testat_preference` int NOT NULL,
+ `testat_qualification` int NOT NULL,
+ `testat_valid_cred` int NOT NULL,
+ `testat_teachlang` int NOT NULL,
+ `testat_speaklang` int NOT NULL,
+ `testat_gavailability` int NOT NULL,
+ `testat_subscription` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `tbl_teacher_stats`  ADD PRIMARY KEY (`testat_user_id`);
+ALTER TABLE `tbl_teacher_stats`  ADD CONSTRAINT `tbl_teacher_stats_ibfk_1` 
+FOREIGN KEY (`testat_user_id`) REFERENCES `tbl_users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

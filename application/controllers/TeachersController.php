@@ -50,6 +50,7 @@ class TeachersController extends MyAppController
         $srch->applyOrderBy($sortOrder);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
+        // prx($srch->getQuery());
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $records = $srch->formatTeacherSearchData($rawData, $userId);
         $recordCount = $srch->getRecordCount();
