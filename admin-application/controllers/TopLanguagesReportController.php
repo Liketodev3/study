@@ -104,7 +104,7 @@ class TopLanguagesReportController extends AdminBaseController
         if (isset($post['country_id']) && $post['country_id'] > 0) {
             $srch->addCondition('ul.user_country_id', '=', $post['country_id']);
             $this->set('country_id', $post['country_id']);
-            $joinQuery = ' INNER JOIN `tbl_users` AS countUl ON countUl.user_id = sld.sldetail_learner_id  where slesson_slanguage_id = slns.slesson_slanguage_id AND countUl.user_country_id = '. $post['country_id'];
+            $joinQuery = ' slns INNER JOIN `tbl_scheduled_lesson_details` AS sld ON sld.sldetail_slesson_id = slns.slesson_id INNER JOIN `tbl_users` AS countUl ON countUl.user_id = sld.sldetail_learner_id  where slesson_slanguage_id = slns.slesson_slanguage_id AND countUl.user_country_id = '. $post['country_id'];
         } else {
             $joinQuery =' WHERE slesson_slanguage_id = slns.slesson_slanguage_id';
         }
@@ -141,8 +141,8 @@ class TopLanguagesReportController extends AdminBaseController
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         $rs = $srch->getResultSet();
-        //echo $srch->getQuery();
-        //die();
+        // echo $srch->getQuery();
+        // die();
         $arr_listing = $db->fetchAll($rs);
         //$arr_listing = array();
         $this->set("arr_listing", $arr_listing);
