@@ -52,5 +52,5 @@
 	$this->includeTemplate('_partial/pagination.php', $pagingArr,false); ?>
 	 </div>
 	 <?php if(count($giftcardList) == 0) { 
-		$this->includeTemplate('_partial/no-record-found.php', $pagingArr,false);
+		$this->includeTemplate('_partial/no-record-found.php');
 	 } ?>
