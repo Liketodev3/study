@@ -25,7 +25,7 @@ $btnReset->addFieldTagAttribute('onclick', 'clearSearch()');
         <div class="page__head">
             <div class="row align-items-center justify-content-between">
                 <div class="col-sm-6">
-                    <h1>My Students</h1>
+                    <h1> <?php echo Label::getLabel('Lbl_My_Students'); ?></h1>
                 </div>
                 <div class="col-sm-auto">
                     <div class="buttons-group d-flex align-items-center">

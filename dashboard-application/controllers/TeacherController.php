@@ -10,6 +10,7 @@ class TeacherController extends TeacherBaseController
 
     public function index()
     {
+       
         $teacherProfileProgress = User::getTeacherProfileProgress();
         /* Validate Teacher has filled complete profile[ */
         $link = " <a href='" . CommonHelper::generateUrl('account', 'profileInfo') . "'>" . Label::getLabel('LBL_Click_Here') . "</a>";
