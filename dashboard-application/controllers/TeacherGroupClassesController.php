@@ -14,7 +14,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         $this->_template->addJs('js/jquery.datetimepicker.js');
         // $this->_template->addCss('css/jquery.datetimepicker.css');
         $frmSrch = $this->getSearchForm();
-        $this->set('frmSrch', $frmSrch);
+        $this->set('serachForm', $frmSrch);
         $this->_template->render();
     }
 
@@ -40,6 +40,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         $srch3->doNotLimitRecords();
         $srch3->addFld('slesson_teacher_join_time>0');
         $teacher_id = UserAuthentication::getLoggedUserId();
+       
         $srch = new TeacherGroupClassesSearch(false);
         $srch->joinGroupClassLang($this->siteLangId);
         $srch->joinScheduledLesson();
@@ -57,6 +58,15 @@ class TeacherGroupClassesController extends TeacherBaseController
             '(' . $srch3->getQuery() . ') is_joined'
         ]);
         $srch->addCondition('grpcls_teacher_id', '=', $teacher_id);
+        if(!empty($post['status'])){
+            $srch->addCondition('grpcls_status', '=', $post['status']);
+        }
+        if(!empty($post['keyword'])){
+            $keywordCondition = $srch->addCondition('grpcls_title', 'like', '%' .$post['keyword']. '%');
+            $keywordCondition->attachCondition('grpclslang_grpcls_title', 'like', '%' . $post['keyword'] . '%');
+              
+        }
+       
         $srch->addGroupBy('grpcls_id');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
@@ -365,10 +375,17 @@ class TeacherGroupClassesController extends TeacherBaseController
 
     protected function getSearchForm()
     {
-        $frm = new Form('frmSrch');
-        $fld = $frm->addHiddenField('', 'page', 1);
-        $fld->requirements()->setIntPositive();
-        return $frm;
+        $form = new Form('frmSrch');
+        $statusArray = TeacherGroupClasses::getStatusArr();
+        unset($statusArray[TeacherGroupClasses::STATUS_PENDING]);
+        $form->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Keyword')]);
+        $form->addSelectBox(Label::getLabel('LBL_Status'), 'status', $statusArray, '', [], Label::getLabel('LBL_All'))->requirements()->setInt();
+        $field = $form->addHiddenField('', 'page', 1);
+        $field->requirements()->setIntPositive();
+        $btnSubmit = $form->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search'));
+        $btnReset = $form->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset'));
+        $btnSubmit->attachField($btnReset);
+        return $form;
     }
 
 }

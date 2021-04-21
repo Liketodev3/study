@@ -1,59 +1,66 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<section class="section section--grey section--page">
+<?php 
+defined('SYSTEM_INIT') or die('Invalid Usage.');
+$frmSrch->setFormTagAttribute('onsubmit', 'searchStudents(this); return(false);');
+$frmSrch->setFormTagAttribute('class', 'form form--small');
+
+$frmSrch->developerTags['colClassPrefix'] = 'col-md-';
+$frmSrch->developerTags['fld_default_col'] = 4;
+
+$fldStatus = $frmSrch->getField('status');
+$frmSrch->removeField($fldStatus);
+//$fldStatus->developerTags['col'] = 3;
+
+// $fldSubmit = $frmSrch->getField('btn_submit');
+// $fldSubmit->developerTags['col'] = 4;
+
+$btnReset = $frmSrch->getField('btn_reset');
+//$btnReset->addFieldTagAttribute( 'style', 'margin-left:10px' );
+$btnReset->addFieldTagAttribute('onclick', 'clearSearch()');
+
+?>
+<!-- [ PAGE ========= -->
+<main class="page">
     <div class="container container--fixed">
-        <div class="page-panel -clearfix">
-            <!--panel left start here-->
-            <div class="page-panel__left">
-                <?php $this->includeTemplate('account/_partial/dashboardNavigation.php'); ?>
-            </div>
-            <!--panel left end here-->
 
-            <!--panel right start here-->
-            <div class="page-panel__right">
-
-                <!--page-head start here-->
-                <div class="page-head">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h1><?php echo Label::getLabel('LBL_My_Students'); ?></h1></div>
-                    </div>
+        <div class="page__head">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-sm-6">
+                    <h1>My Students</h1>
                 </div>
-                <!--page-head end here-->
-
-                <!--page filters start here-->
-				 <div class="page-filters">
-					<?php 
-					$frmSrch->setFormTagAttribute ( 'onsubmit', 'searchStudents(this); return(false);');
-					$frmSrch->setFormTagAttribute ( 'class', 'form form--small' );
-					
-					$frmSrch->developerTags['colClassPrefix'] = 'col-md-';
-					$frmSrch->developerTags['fld_default_col'] = 5;
-					
-					$fldStatus = $frmSrch->getField( 'status' );
-					$frmSrch->removeField($fldStatus);
-					//$fldStatus->developerTags['col'] = 3;
-					
-					$fldSubmit = $frmSrch->getField( 'btn_submit' );
-					$fldSubmit->developerTags['col'] = 4;
-					
-					$btnReset = $frmSrch->getField( 'btn_reset' );
-					//$btnReset->addFieldTagAttribute( 'style', 'margin-left:10px' );
-					$btnReset->addFieldTagAttribute('onclick','clearSearch()');
-					echo $frmSrch->getFormHtml(); ?>
-				 
-				 </div>
-				 <!--page filters end here-->
-
-                <!--Lessons list view start here-->
-                <div class="col-list-group">
-                    <!--h6>Today</h6-->
-                    <div class="col-list-container" id="listItems">
+                <div class="col-sm-auto">
+                    <div class="buttons-group d-flex align-items-center">
+                        <a href="javascript:void(0)" class="btn bg-secondary slide-toggle-js">
+                            <svg class="icon icon--clock icon--small margin-right-2">
+                                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#search'; ?>"></use>
+                            </svg>
+                            <?php echo Label::getLabel('Lbl_Search'); ?>
+                        </a>
 
                     </div>
+
                 </div>
-                <!--Lessons list view end here-->
             </div>
-            <!--panel right end here-->
+
+            <!-- [ FILTERS ========= -->
+            <div class="search-filter slide-target-js" style="display: none;">
+                <?php echo $frmSrch->getFormHtml();  ?>
+            </div>
+            <!-- ] ========= -->
+
         </div>
+
+        <div class="page__body">
+            <!-- [ PAGE PANEL ========= -->
+            <div class="page-content" id="listItems">
+            </div>
+            <!-- ] -->
+        </div>
+        <div class="page__footer align-center">
+            <p class="small">Copyright © 2021 Yo!Coach Developed by <a href="#" class="underline color-primary">FATbit Technologies</a> . </p>
+        </div>
+
     </div>
-</section>
+
+
+</main>
+<!-- ] -->
