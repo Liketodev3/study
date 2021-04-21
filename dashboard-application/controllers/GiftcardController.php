@@ -115,7 +115,7 @@ class GiftcardController extends LoggedUserController
     private function addForm()
     {
         $frm = new Form('giftcardForm');
-        $frm->setFormTagAttribute('class', 'form login-form-front');
+        $frm->setFormTagAttribute('class', 'form');
         $giftcardPrice = $frm->addFloatField(Label::getLabel('LBL_Giftcard_Amount'), 'giftcard_price', '', ['placeholder' => Label::getLabel('LBL_Giftcard_Amount'), "onkeyup" => "cardUpdate(this)", 'id' => "giftcard_price"]);
         $giftcardPrice->requirements()->setRequired();
         $giftcardPrice->requirements()->setLength(1, 6);
@@ -126,18 +126,18 @@ class GiftcardController extends LoggedUserController
         $loggedInUserEmail = UserAuthentication::isUserLogged() === true ? $userInfo['credential_email'] : '';
         $loggedInUserPhone = UserAuthentication::isUserLogged() === true ? $userInfo['user_phone'] : '';
         $buyerName = $frm->addRequiredField(Label::getLabel('LBL_Buyer_Name'), 'gcbuyer_name', $loggedInUserName, [
-            'title' => 'Buyer Name',
+            'title' => Label::getLabel('LBL_Buyer_Name'),
             'placeholder' => Label::getLabel('LBL_Buyer_Name'),
             'readonly' => 'true'
         ]);
         $buyerName->requirements()->setRequired();
         $buyerEmail = $frm->addEmailField(Label::getLabel('LBL_Buyer_Email'), 'gcbuyer_email', $loggedInUserEmail, [
-            'title' => 'Buyer Email',
+            'title' => Label::getLabel('LBL_Buyer_Email'),
             'placeholder' => Label::getLabel('LBL_Buyer_Email'),
             'readonly' => 'true'
         ]);
         $buyerPhone = $frm->addRequiredField(Label::getLabel('LBL_Buyer_Phone'), 'gcbuyer_phone', $loggedInUserPhone, [
-            'title' => 'Buyer Phone',
+            'title' => Label::getLabel('LBL_Buyer_Phone'),
             'placeholder' => Label::getLabel('LBL_Buyer_Phone')
         ]);
         $buyerPhone->requirements()->setRequired();
@@ -148,14 +148,15 @@ class GiftcardController extends LoggedUserController
         $frm->addEmailField(Label::getLabel('LBL_Recipient_Email'), 'gcrecipient_email', '', [
             'placeholder' => Label::getLabel('LBL_Recipient_Email')
         ]);
-        $frm->addSubmitButton('', 'save', Label::getLabel('LBL_Send_Gift_Card'), [
+        $save = $frm->addSubmitButton('', 'save', Label::getLabel('LBL_Send_Gift_Card'), [
             'class' => 'btn btn--primary',
             'onclick' => 'validateCustomFields()'
         ]);
-        $frm->addButton('', 'clear', 'Clear', [
+       $clear  = $frm->addButton('', 'clear', 'Clear', [
             'class' => 'btn btn--third',
             'onclick' => 'cleardata()'
         ]);
+        
         return $frm;
     }
 

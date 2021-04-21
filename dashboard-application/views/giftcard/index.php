@@ -1,140 +1,226 @@
 <?php
 defined('SYSTEM_INIT') or die('Invalid Usage.');
 
-$frmSrch->setFormTagAttribute('onSubmit','cartListing(this); return false;');
+$frmSrch->setFormTagAttribute('onSubmit', 'cartListing(this); return false;');
 $frmSrch->setFormTagAttribute('class', 'form form--small');
 
 $frmSrch->developerTags['colClassPrefix'] = 'col-md-';
 $frmSrch->developerTags['fld_default_col'] = 4;
 
 $fld = $frmSrch->getField('keyword');
-$fld->setWrapperAttribute('class','col-md-4');
+$fld->setWrapperAttribute('class', 'col-md-4');
 
 $fld = $frmSrch->getField('giftcard_status');
-$fld->setWrapperAttribute('class','col-md-4');
+$fld->setWrapperAttribute('class', 'col-md-4');
 
 $submitFld = $frmSrch->getField('btn_submit');
-$submitFld->setWrapperAttribute('class','col-md-4');
+$submitFld->setWrapperAttribute('class', 'col-md-4');
 
 $clearFld = $formData->getField('clear');
-$clearFld->setFieldTagAttribute('class','col-md-4');
-$clearFld->setFieldTagAttribute('id','clear');
+$clearFld->setFieldTagAttribute('class', 'col-md-4');
+$clearFld->setFieldTagAttribute('id', 'clear');
+
+// giftCard Purchased
+
+$gcbuyerNameField = $formData->getField('gcbuyer_name');
+$gcbuyerEmailField = $formData->getField('gcbuyer_email');
+$gcbuyerPhoneField = $formData->getField('gcbuyer_phone');
+$priceField = $formData->getField('giftcard_price');
+$gcrecipientNameField = $formData->getField('gcrecipient_name');
+$gcrecipientEmailField = $formData->getField('gcrecipient_email');
+
 
 ?>
-    <section class="section section--grey section--page">
-		<?php //$this->includeTemplate('_partial/dashboardTop.php'); ?>
-		<div class="container container--fixed">
-			<div class="page-panel -clearfix">
-			  <div class="page-panel__left">
-	   <!--div class="tab-swticher">
-			<a href="dashboard.html" class="btn btn--large is-active">Teacher</a>
-			<a href="learner_dashboard.html" class="btn btn--large">Student</a>
-		</div-->
-				<?php $this->includeTemplate('account/_partial/dashboardNavigation.php'); ?>
-		</div>
-				<div class="page-panel__right">
 
+<!-- [ PAGE ========= -->
+<main class="page">
+  <div class="container container--fixed">
 
-	  <div class="page-head">
-				   <div class="d-flex justify-content-between align-items-center">
-						 <div><h1><?php echo Label::getLabel('LBL_Giftcards_Purchased'); ?></h1></div>
-						 <div><a href="javascript:void(0);" onclick="$('#addGiftcardFrm').toggle()" class="btn btn--secondary btn--small"><?php echo Label::getLabel('LBL_Send_Gift_Card',$siteLangId); ?></a></div>
-					</div>
-				 </div>
+    <div class="page__head">
+      <div class="row align-items-center justify-content-between">
+        <div class="col-sm-6">
+          <h1><?php echo Label::getLabel('LBL_Gift_Card'); ?></h1>
+        </div>
+        <div class="col-sm-auto">
+          <div class="buttons-group d-flex align-items-center">
+            <a href="javascript:void(0)" class="btn bg-secondary slide-toggle-js">
+              <svg class="icon icon--clock icon--small margin-right-2">
+                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#search'; ?>"></use>
+              </svg>
+              <?php echo Label::getLabel('LBL_Search'); ?>
+            </a>
+            <a href="javascript:void(0);" onclick="$('#addGiftcardFrm').toggle()" class="btn color-secondary btn--bordered margin-left-4"><?php echo Label::getLabel('LBL_Giftcards_Purchased'); ?></a>
+          </div>
 
-
-	  <div class="page-filters">
-	  										<?php	echo $frmSrch->getFormHtml(); ?>
+        </div>
       </div>
 
-	   <div id="addGiftcardFrm" style="display:none;">
+      <!-- [ FILTERS ========= -->
+      <div class="search-filter slide-target-js" style="display: none;">
+         <?php echo $frmSrch->getFormHtml(); ?>
+      </div>
+      <!-- ] ========= -->
 
-		<div class="box -padding-20 gift-block">
+    </div>
 
-
-
-	   <div class="row">
-        <div class=" col-lg-4 col-md-4 col-sm-4 col-xs-12 column">
-					<div class="card-image" dd="">
-					  <div class="amount gift-amount-large"><span class="giftcardPrice">00</span></div>
-					  <div class="plan-text meal">
-						<?php echo Label::getLabel('LBL_Gift_card',$siteLangId); ?>
-					  </div>
-						<div class="brand-logo">
-						<img src="<?php echo FatUtility::generateFullUrl('Image','siteWhiteLogo',array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="">
-					  </div>
-					</div>
-        </div>
-        <div class=" col-lg-8 col-md-8 col-sm-8 col-xs-12 column">
-
-          <?php echo $formData->getFormTag(); ?>
-          <label><?php echo Label::getLabel('LBL_Your_Detail',$siteLangId); ?>
-          </label>
-          <div class="Buyerdetail">
-            <div class="buyer-div">
-              <div class="row">
-                <div class=" col-lg-4 col-md-12 col-sm-12 col-xs-12">
-					<div class="field-set"><?php echo $formData->getFieldHtml('gcbuyer_name'); ?> </div>
-                </div>
-				<div class=" col-lg-4 col-md-12 col-sm-12 col-xs-12">
-                 <div class="field-set"> <?php echo $formData->getFieldHtml('gcbuyer_email'); ?> </div>
-                </div>
-				<div class=" col-lg-4 col-md-12 col-sm-12 col-xs-12">
-                  <div class="field-set">  <?php echo $formData->getFieldHtml('gcbuyer_phone'); ?></div>
-                </div>
-              </div>
-
-
-            </div>
-          </div>
-          <div  class="row">
-
-            <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			  <label>
-                <?php echo Label::getLabel('LBL_Giftcard_Amount',$siteLangId); ?>
-              </label>
-              <div class="field-set"> <?php echo $formData->getFieldHtml('giftcard_price'); ?></div>
-            </div>
-          </div>
-          <label><?php echo Label::getLabel('LBL_Gift_card_Recipient_Detail',$siteLangId); ?>
-          </label>
-          <div class="recipientdetail">
-            <div class="recipient-div">
-              <div  class="row">
-                <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12 column">
-				<div class="field-set"><?php echo $formData->getFieldHtml('gcrecipient_name'); ?></div>
-                </div>
-                <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12 column">
-					<div class="field-set"><?php echo $formData->getFieldHtml('gcrecipient_email'); ?>	</div>
+    <div class="page__body">
+      <div class="page-panel margin-top-5 padding-6" style="display:none;" id="addGiftcardFrm">
+        <div class="row">
+          <div class="col-md-5 col-xl-4">
+            <div class="gift-card">
+              <div class="gift-card__body">
+                <div class="car-info">
+                  <div class="card-media">
+                    <img src="<?php echo FatUtility::generateFullUrl('Image', 'siteWhiteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo Label::getLabel('LBL_Gift_card'); ?>">
+                  </div>
+                  <h6><?php echo Label::getLabel('LBL_Gift_Card_for'); ?></h6>
+                  <button class="btn btn--light btn-round color-primary giftcardPrice" style="margin: 2px;">00</button>
                 </div>
               </div>
             </div>
-
           </div>
-          <div>
-            <fieldset>  <?php echo $formData->getFieldHtml('save'); ?>
-            <?php echo $formData->getFieldHtml('clear'); ?>
+          <div class="col-md-7 col-xl-8">
+            <div class="gift-card-info">
+              <?php echo $formData->getFormTag(); ?>
+                <div class="row">
+                  <div class="col-md-12 col-xl-4">
+                    <div class="field-set">
+                      <div class="caption-wraper">
+                        <label class="field_label">
+                          <?php echo $gcbuyerNameField->getCaption(); ?>
+                          <?php if($gcbuyerNameField->requirement->isRequired()){ ?>
+                             <span class="spn_must_field">*</span>
+                          <?php } ?>
+                      </label>
+                      </div>
+                      <div class="field-wraper">
+                        <div class="field_cover">
+                          <?php echo $gcbuyerNameField->getHTML(); ?>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-xl-4">
+                    <div class="field-set">
+                      <div class="caption-wraper">
+                        <label class="field_label">
+                            <?php echo $gcbuyerEmailField->getCaption(); ?>
+                            <?php if($gcbuyerEmailField->requirement->isRequired()){ ?>
+                              <span class="spn_must_field">*</span>
+                            <?php } ?>
+                        </label>
+                      </div>
+                      <div class="field-wraper">
+                        <div class="field_cover">
+                          <?php echo $gcbuyerEmailField->getHTML(); ?>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-xl-4">
+                    <div class="field-set">
+                      <div class="caption-wraper">
+                        <label class="field_label">
+                            <?php echo $gcbuyerPhoneField->getCaption(); ?>
+                            <?php if($gcbuyerPhoneField->requirement->isRequired()){ ?>
+                              <span class="spn_must_field">*</span>
+                            <?php } ?>
+                        </label>
+                      </div>
+                      <div class="field-wraper">
+                        <div class="field_cover">
+                         <?php echo $gcbuyerPhoneField->getHTML(); ?>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-        </fieldset>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="field-set">
+                      <div class="caption-wraper">
+                        <label class="field_label">
+                          <?php echo $priceField->getCaption(); ?>
+                            <?php if($priceField->requirement->isRequired()){ ?>
+                              <span class="spn_must_field">*</span>
+                            <?php } ?>
+                        </label>
+                      </div>
+                      <div class="field-wraper">
+                        <div class="field_cover">
+                          <?php echo $priceField->getHTML(); ?>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="field-set">
+                      <div class="caption-wraper">
+                        <label class="field_label">
+                          <?php echo $gcrecipientNameField->getCaption(); ?>
+                            <?php if($gcrecipientNameField->requirement->isRequired()){ ?>
+                              <span class="spn_must_field">*</span>
+                            <?php } ?>
+                        </label>
+                      </div>
+                      <div class="field-wraper">
+                        <div class="field_cover">
+                         <?php echo $gcrecipientNameField->getHTML(); ?>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="field-set">
+                      <div class="caption-wraper">
+                        <label class="field_label">
+                        <?php echo $gcrecipientEmailField->getCaption(); ?>
+                            <?php if($gcrecipientEmailField->requirement->isRequired()){ ?>
+                              <span class="spn_must_field">*</span>
+                            <?php } ?>
+                        </label>
+                      </div>
+                      <div class="field-wraper">
+                        <div class="field_cover">
+                          <?php echo $gcrecipientEmailField->getHTML(); ?>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row submit-row">
+                  <div class="col-sm-auto">
+                    <div class="field-set margin-bottom-0">
+                      <div class="field-wraper">
+                        <div class="field_cover">
+                          <?php 
+                              echo $formData->getFieldHtml('save');
+                              echo $formData->getFieldHtml('clear'); 
+                          ?>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <?php echo $formData->getExternalJs(); ?>
+            </div>
           </div>
-        </form>
-        <?php echo $formData->getExternalJs(); ?>
         </div>
-
-		</div>
       </div>
-	  <span class="-gap"></span>
-	  </div>
 
-
-				  <div class="box -padding-20">
-
-                             <div class="table-scroll">
-                  <div id="giftcardListing"><?php echo Label::getLabel('LBL_Loading..',$siteLangId); ?></div>
-					</div>
-					</div>
+      <!-- [ PAGE PANEL ========= -->
+      <div class="page-content" id="giftcardListing">
+      </div>
+      <!-- ] -->
     </div>
+    <div class="page__footer align-center">
+      <p class="small">Copyright © 2021 Yo!Coach Developed by <a href="#" class="underline color-primary">FATbit Technologies</a> . </p>
     </div>
-    </div>
-
-  </section>
+  </div>
+</main>
+<!-- ] -->
