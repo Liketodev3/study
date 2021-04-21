@@ -1,7 +1,7 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number: TV-2.8.5.20210420
-Release Date: 2021-04-20
+Release Number: TV-2.8.5.20210421
+Release Date: 2021-04-21
 
 Bugs:
     Bug-#050724 - Admin >> Remove Order Status dropdowns from General Settings.
@@ -10,6 +10,9 @@ Bugs:
     Bug-#050350 - List teacher even if bulk price is greater than maximum single lesson rate.
     Bug-#051828 - Fix teach-lang multilingual issue and remove limit from records.
     Bug-#052412 - Stop learner from reschduling lesson after a window passes.
+    Bug-#052672 - Fix media deletion on teach-langs section in admin
+    Bug-#052674 - Fix issue on req withdrawl submission
+    Bug-#052675 - Fix pagination and search issue in Top languages report
 
 ==============================================================================================================================
 Release Number: RV-2.1.1
