@@ -111,8 +111,8 @@
 											<div class="search-form__field">
 												<?php 
 													echo $frmSrch->getFieldHTML('keyword');
-												 	// echo $frmSrch->getFieldHTML('status'); 
 												 	echo $frmSrch->getFieldHTML('page'); 
+												 	echo $frmSrch->getFieldHTML('show_group_classes'); 
 												?>
 											</div>
 											<div class="search-form__action search-form__action--submit">
@@ -170,9 +170,6 @@
 <script>
 	
 jQuery(document).ready(function () {
-	$(".slide-toggle-js").click(function(){
-        $(".slide-target-js").slideToggle();
-    });
 		$("#countdowntimer-upcoming").countdowntimer({
             startDate : $("#countdowntimer-upcoming").attr('data-startTime'),
             dateAndTime : $("#countdowntimer-upcoming").attr('data-endTime'),

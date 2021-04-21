@@ -16,7 +16,7 @@ class TeacherLessonsPlanController extends LoggedUserController
     {
         $this->_template->addJs('js/jquery.tagsinput.min.js');
         $this->_template->addJs('js/jquery-confirm.min.js');
-        $this->set('statusArr', LessonPlan::getDifficultyArr());
+        $this->set('serachForm',  $this->getSearchForm());
         $this->_template->render();
     }
 
@@ -104,23 +104,6 @@ class TeacherLessonsPlanController extends LoggedUserController
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Plan_Saved_Successfully!'));
     }
 
-    public function remove($lessonPlanId)
-    {
-        $lessonPlanId = FatUtility::int($lessonPlanId);
-        $lessonPlan = new LessonPlan($lessonPlanId);
-        $lessonPlan->deleteRecord();
-        if ($lessonPlan->getError()) {
-            FatUtility::dieJsonError($lessonPlan->getError());
-        }
-        FatUtility::dieJsonSuccess(Label::getLabel("Record Deleted Successfully!"));
-    }
-
-    public function removeLesson($lessonPlanId = 0)
-    {
-        $lessonPlanId = FatUtility::int($lessonPlanId);
-        $this->set('lessonPlanId', $lessonPlanId);
-        $this->_template->render(false, false);
-    }
 
     public function removeLessonSetup()
     {
@@ -130,9 +113,6 @@ class TeacherLessonsPlanController extends LoggedUserController
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
         if (!$db->deleteRecords('tbl_scheduled_lessons_to_teachers_lessons_plan', ['smt' => 'ltp_tlpn_id = ?', 'vals' => [$post['lessonPlanId']]])) {
-            FatUtility::dieWithError($db->getError());
-        }
-        if (!$db->deleteRecords('tbl_teacher_courses_to_teachers_lessons_plan', ['smt' => 'ctp_tlpn_id = ?', 'vals' => [$post['lessonPlanId']]])) {
             FatUtility::dieWithError($db->getError());
         }
         $lessonPlan = new LessonPlan($post['lessonPlanId']);
@@ -155,9 +135,10 @@ class TeacherLessonsPlanController extends LoggedUserController
 
     public function getListing()
     {
-        $post = FatApp::getPostedData();
-        if (isset($post['submit']) && empty($post)) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
+        $searchForm= $this->getSearchForm();
+        $post = $searchForm->getFormDataFromArray(FatApp::getPostedData());
+        if (false === $post) {
+            FatUtility::dieWithError($searchForm->getValidationErrors());
         }
         $srch = new LessonPlanSearch(false);
         $srch->addMultipleFields([
@@ -175,13 +156,27 @@ class TeacherLessonsPlanController extends LoggedUserController
         if (!empty($post['status'])) {
             $srch->addCondition('tlpn_level', '=', $post['status']);
         }
+        $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
+        $page = (0 >= $page) ? 1 : $page;
+        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
+        $srch->setPageSize($pageSize);
+        $srch->setPageNumber($page);
         $rs = $srch->getResultSet();
-        $count = $srch->recordCount();
+        $totalRecords = $srch->recordCount();
         $rows = FatApp::getDb()->fetchAll($rs);
+        $pagingArr = [
+            'pageCount' => $srch->pages(),
+            'page' => $page,
+            'pageSize' => $pageSize,
+            'recordCount' => $totalRecords,
+        ];
         $this->set('userId', UserAuthentication::getLoggedUserId());
         $this->set('statusArr', LessonPlan::getDifficultyArr());
-        $this->set('countData', $count);
+        $this->set('countData', $totalRecords);
+        $this->set('pagingArr', $pagingArr);
+        $this->set('postedData', FatApp::getPostedData());
         $this->set('lessonsPlanData', $rows);
+        
         $this->_template->render(false, false);
     }
 
@@ -227,6 +222,18 @@ class TeacherLessonsPlanController extends LoggedUserController
         $file_row = AttachedFile::getAttributesById($afile_id);
         $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         AttachedFile::downloadAttachment($image_name, $file_row['afile_name']);
+    }
+
+    private function getSearchForm()
+    {
+        $form = new Form('lessonPlanSerach');
+        $form->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Keyword')]);
+        $form->addSelectBox(Label::getLabel('LBL_Status'), 'status', LessonPlan::getDifficultyArr(), '', [], Label::getLabel('LBL_All'))->requirements()->setInt();
+        $form->addHiddenField('', 'page', 1)->requirements()->setIntPositive();
+        $submitBtn =  $form->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search'));
+        $resetField = $form->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset'));
+        $submitBtn->attachField($resetField);
+        return $form;
     }
 
 }

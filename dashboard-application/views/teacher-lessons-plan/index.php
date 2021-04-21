@@ -1,89 +1,52 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<section class="section section--grey section--page">
-	 <div class="container container--fixed">
+<?php
+defined('SYSTEM_INIT') or die('Invalid Usage.');
+$serachForm->setFormTagAttribute('id', 'serachForm');
+$serachForm->setFormTagAttribute('class', 'form');
+$serachForm->developerTags['colClassPrefix'] = 'col-md-';
+$serachForm->developerTags['fld_default_col'] = 4;
+$serachForm->setFormTagAttribute('onsubmit', 'searchLessons(this); return(false);');
+$btnReset = $serachForm->getField('btn_reset');
+$btnReset->addFieldTagAttribute('onclick', 'clearSearch()');
+?>
 
-	   <div class="page-panel -clearfix">
-
-			<!--panel left start here-->
-			<div class="page-panel__left">
-				<?php $this->includeTemplate('account/_partial/dashboardNavigation.php'); ?>
-			</div>
-            <!--panel left end here-->
-
-
-			<!--panel right start here-->
-		   <div class="page-panel__right">
-
-				 <!--page-head start here-->
-				 <div class="page-head">
-				   <div class="d-flex justify-content-between align-items-center">
-						 <div><h1><?php echo Label::getLabel('LBL_My_Lesson_Plan'); ?></h1></div>
-						 <div><a class="btn btn--secondary btn--small" href="javascript:void(0);" onclick="add(0);" ><?php echo Label::getLabel('LBL_Add_New_Lesson'); ?></a></div>
-
-				 </div>
-				 </div>
-				 <!--page-head end here-->
-
-				 <!--page filters start here-->
-				 <div class="page-filters">
-					   <form onsubmit="searchLessons(this); return false;"  class="form form--small">
-							<div class="row">
-								<div class="col-md-4">
-									<div class="field-set">
-									   <div class="caption-wraper">
-										   <label class="field_label"><?php echo Label::getLabel('LBL_Search'); ?> </label>
-									   </div>
-									   <div class="field-wraper">
-										   <div class="field_cover"><input placeholder="<?php echo Label::getLabel('LBL_Search_by_keyword'); ?>..." value="<?php echo (!empty($keyword)) ? $keyword : ''; ?>"  name="keyword" type="text"></div>
-									   </div>
-								   </div>
-								</div>
-								<div class="col-md-4">
-									<div class="field-set">
-									   <div class="caption-wraper">
-										   <label class="field_label"><?php echo Label::getLabel('LBL_Status'); ?> </label>
-									   </div>
-									   <div class="field-wraper">
-										   <div class="field_cover">
-											   <select name="status">
-												   <option value=""><?php echo Label::getLabel('LBL_All'); ?></option>
-												   <?php foreach($statusArr as $key=>$val){ ?>
-												   <option <?php $status = (!empty($status)) ? $status : ''; echo ($key == $status) ? 'selected="selected"' : ''; ?> value="<?php echo $key; ?>"><?php echo $val; ?></option>
-												   <?php }?>
-											   </select>
-										   </div>
-									   </div>
-								   </div>
-								</div>
-								<div class="col-md-4">
-									<div class="field-set">
-									   <div class="caption-wraper">
-										   <label class="field_label"></label>
-									   </div>
-									   <div class="field-wraper">
-										   <div class="field_cover">
-											   <input type="submit" name="submit" value="<?php echo Label::getLabel('LBL_Search'); ?>">
-											   <input type="reset" id="resetFormLessonListing" >
-										   </div>
-									   </div>
-								   </div>
-								</div>
-
-							</div>
-						</form>
-				   </div>
-				 <!--page filters end here-->
-
-				<!--Lessons list view start here-->
-				<div class="col-list-group">
-					<!--h6>Today</h6-->
-					<div class="col-list-container" id="listItemsLessons">
-
+<!-- [ PAGE ========= -->
+<main class="page">
+	<div class="container container--fixed">
+		<div class="page__head">
+			<div class="row align-items-center justify-content-between">
+				<div class="col-sm-6">
+					<h1><?php echo Label::getLabel('LBL_Manage_Lessons_Plans'); ?></h1>
+				</div>
+				<div class="col-sm-auto">
+					<div class="buttons-group d-flex align-items-center">
+						<a href="javascript:void(0)" class="btn bg-secondary slide-toggle-js">
+							<svg class="icon icon--clock icon--small margin-right-2">
+								<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#search'; ?>"></use>
+							</svg>
+							<?php echo Label::getLabel('LBL_Search'); ?>
+						</a>
+						<a href="javascript:void(0);" onclick="add(0);" class="btn color-secondary btn--bordered margin-left-4"><?php echo Label::getLabel('LBL_Add_New_Lesson'); ?></a>
 					</div>
 				</div>
-				<!--Lessons list view end here-->
 			</div>
-		   <!--panel right end here-->
+			<!-- [ FILTERS ========= -->
+			<div class="search-filter slide-target-js" style="display: none;">
+				<?php echo $serachForm->getFormHtml(); ?>
+			</div>
+			<!-- ] ========= -->
 		</div>
-	 </div>
- </section>
+		<div class="page__body">
+			<!-- [ PAGE PANEL ========= -->
+			<div class="page-content" id="listItemsLessons">
+			</div>
+			<!-- ] -->
+		</div>
+		<div class="page__footer align-center">
+			<p class="small">Copyright © 2021 Yo!Coach Developed by <a href="#" class="underline color-primary">FATbit Technologies</a> . </p>
+		</div>
+
+
+	</div>
+
+</main>
+<!-- ] -->
