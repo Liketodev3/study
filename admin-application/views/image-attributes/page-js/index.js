@@ -4,9 +4,6 @@ $(document).ready(function () {
 (function () {
     var currentPage = 1;
     var dv = '#listing';
-
-
-
     listImageAttributes = function (imageAttributeType) {
         imageAttributeType = imageAttributeType || '';
 
@@ -15,7 +12,6 @@ $(document).ready(function () {
             searchImageAttributes(document.frmSearch);
         });
     };
-
     searchImageAttributes = function (form) {
         var data = '';
         if (form) {
@@ -28,9 +24,9 @@ $(document).ready(function () {
         });
     };
 
-    editImageAttributeForm = function (recordid, Type) {
+    editImageAttributeForm = function (afile_id, recordid, Type) {
         fcom.displayProcessing();
-        fcom.ajax(fcom.makeUrl('ImageAttributes', 'form'), { recordid: recordid, Type: Type }, function (t) {
+        fcom.ajax(fcom.makeUrl('ImageAttributes', 'form'), { afile_id: afile_id, recordid: recordid, Type: Type }, function (t) {
             fcom.updateFaceboxContent(t);
         });
     };
@@ -64,11 +60,11 @@ $(document).ready(function () {
     };
 
 
-    setup = function (frm) {
+    setupImageAttr = function (frm) {
         if (!$(frm).validate()) return;
         var data = fcom.frmData(frm);
         fcom.updateWithAjax(fcom.makeUrl('ImageAttributes', 'setup'), data, function (t) {
-            /* reloadList(); */
+            $.facebox.close();
         });
     };
 

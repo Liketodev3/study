@@ -3,6 +3,7 @@ $arr_flds = array(
     'listserial' => '#',
     'record_name' => Label::getLabel('LBL_Name', $adminLangId),
     'img' => Label::getLabel('LBL_Image', $adminLangId),
+    'Language' => Label::getLabel('LBL_Language', $adminLangId),
     'action' => Label::getLabel('LBL_Action', $adminLangId),
 );
 if (!$canEdit) {
@@ -33,8 +34,31 @@ foreach ($arr_listing as $sn => $row) {
                 $td->appendElement('plaintext', array(), $sr_no);
                 break;
             case 'img':
-                $img = '<img src="' . CommonHelper::generateUrl('Banners', 'Thumb', array($row['record_id'])) . '?' . time() . '" />';
+                switch ($imageAttributeType) {
+                    case AttachedFile::FILETYPE_HOME_PAGE_BANNER:
+
+                        $img = '<img src="' . CommonHelper::generateUrl('slides', 'slide', array($row['record_id'], 0, $row['afile_lang_id'], 'Thumb')) . '?' . time() . '" />';
+                        break;
+                    case AttachedFile::FILETYPE_BANNER:
+                        $img = '<img src="' . CommonHelper::generateUrl('Banners', 'Thumb', array($row['record_id'])) . '?' . time() . '" />';
+                        break;
+                    case AttachedFile::FILETYPE_CPAGE_BACKGROUND_IMAGE:
+                        $img = '<img src="' . CommonHelper::generateUrl('contentPages', 'cpageBackgroundImage', array($row['record_id'], 1, 'THUMB')) . '?' . time() . '" />';
+                        break;
+                    case AttachedFile::FILETYPE_TEACHING_LANGUAGES:
+                        $img = '<img src="' . CommonHelper::generateUrl('TeachingLanguage', 'thumb', array($row['record_id'], $imageAttributeType, 0, 0)) . '?' . time() . '" />';
+                        break;
+                    case AttachedFile::FILETYPE_FLAG_TEACHING_LANGUAGES:
+                        $img = '<img src="' . CommonHelper::generateUrl('TeachingLanguage', 'thumb', array($row['record_id'], $imageAttributeType, 0, 0)) . '?' . time() . '" />';
+                        break;
+                    case AttachedFile::FILETYPE_BLOG_POST_IMAGE:
+                        $img = '<img src="' . CommonHelper::generateUrl('image', 'blogPostAdmin', array($row['record_id'], 0, 'THUMB', 0, $row['afile_id']), '/') . '?' . time() . '" />';
+                        break;
+                }
                 $td->appendElement('plaintext', array(), $img, true);
+                break;
+            case 'Language':
+                $td->appendElement('plaintext', array(), $langArr[$row['afile_lang_id']], true);
                 break;
             case 'action':
                 $ul = $td->appendElement("ul", array("class" => "actions actions--centered"));
@@ -50,7 +74,7 @@ foreach ($arr_listing as $sn => $row) {
                         'a',
                         array(
                             'href' => 'javascript:void(0)', 'class' => 'button small green',
-                            'title' => Label::getLabel('LBL_Edit', $adminLangId), "onclick" => "editImageAttributeForm(" . $row['record_id'] . "," . $imageAttributeType . ")"
+                            'title' => Label::getLabel('LBL_Edit', $adminLangId), "onclick" => "editImageAttributeForm(" . $row['afile_id'] . "," . $row['record_id'] . "," . $imageAttributeType . ")"
                         ),
                         Label::getLabel('LBL_Edit', $adminLangId),
                         true

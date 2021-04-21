@@ -18,7 +18,7 @@
 						<?php $itr = 0;
 						foreach ($tabsArr as $imageAttributeKey => $imageAttributeVal) {
 						?>
-							<li><a class="<?php echo ($activeTab == $metaType) ? 'active' : '' ?>" href="javascript:void(0)" onClick="listMetaTags(<?php echo "'$metaType'"; ?>)"><?php echo $imageAttributeVal; ?></a></li>
+							<li><a class="<?php echo ($activeTab == $imageAttributeKey) ? 'active' : '' ?>" href="javascript:void(0)" onClick="listImageAttributes(<?php echo "'$imageAttributeKey'"; ?>)"><?php echo $imageAttributeVal; ?></a></li>
 						<?php $itr++;
 						} ?>
 					</ul>

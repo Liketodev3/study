@@ -11,7 +11,7 @@
 						<div class="sectionbody space togglewrap" style="display:none;">
 							<?php
 							$frmSearch->addFormTagAttribute('class', 'web_form');
-							$frmSearch->addFormTagAttribute('onsubmit', 'searchMetaTag(this);return false;');
+							$frmSearch->addFormTagAttribute('onsubmit', 'searchImageAttributes(this);return false;');
 							$frmSearch->setFormTagAttribute('id', 'frmSearch');
 							$frmSearch->developerTags['colClassPrefix'] = 'col-md-';
 							$frmSearch->developerTags['fld_default_col'] = 6;
@@ -19,7 +19,7 @@
 							($frmSearch->getField('hasTagsAssociated')) ? $frmSearch->getField('hasTagsAssociated')->addFieldtagAttribute('class', 'search-input') : NUll;
 							$submitBtn = $frmSearch->getField('btn_submit');
 							$clearbtn = $frmSearch->getField('btn_clear');
-							$submitBtn->attachField($clearbtn);
+
 							$clearbtn->addFieldtagAttribute('onclick', 'clearSearch();');
 
 							echo  $frmSearch->getFormHtml();

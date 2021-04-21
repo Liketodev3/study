@@ -365,3 +365,6 @@ UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.7.20210408' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.8.20210409' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+ALTER TABLE `tbl_attached_files` ADD `afile_attribute_title` VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `afile_physical_path`;
+ALTER TABLE `tbl_attached_files` ADD `afile_attribute_alt` VARCHAR(256) CHARACTER SET ucs2 COLLATE ucs2_general_ci NOT NULL AFTER `afile_attribute_title`;
