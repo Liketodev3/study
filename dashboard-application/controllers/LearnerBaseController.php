@@ -25,7 +25,7 @@ class LearnerBaseController extends LoggedUserController
         $frm->addHiddenField('', 'show_group_classes', ApplicationConstants::NO);
         $btnSubmit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search'));
         $btnReset = $frm->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset'));
-        $btnSubmit->attachField($btnReset);
+        // $btnSubmit->attachField($btnReset);
         return $frm;
     }
 

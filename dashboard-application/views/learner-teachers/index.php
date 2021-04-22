@@ -1,6 +1,6 @@
 <?php 
 defined('SYSTEM_INIT') or die('Invalid Usage.');
-$frmSrch->setFormTagAttribute('onsubmit', 'searchStudents(this); return(false);');
+$frmSrch->setFormTagAttribute('onsubmit', 'searchTeachers(this); return(false);');
 $frmSrch->setFormTagAttribute('class', 'form form--small');
 
 $frmSrch->developerTags['colClassPrefix'] = 'col-md-';

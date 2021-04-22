@@ -167,6 +167,7 @@
 	</div>
 </main>
 <!-- ] -->
+<?php if(!empty($upcomingLesson)){ ?>
 <script>
 	
 jQuery(document).ready(function () {
@@ -177,3 +178,4 @@ jQuery(document).ready(function () {
         });
 });
 </script>
+<?php } ?>

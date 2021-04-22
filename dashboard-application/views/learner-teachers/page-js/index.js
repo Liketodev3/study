@@ -8,22 +8,6 @@ $(function() {
 		});
 	};
 	
-	/* sendMessageToTeacher = function(id){	
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('LearnerTeachers','sendMessageToTeacher',[id]),'',function(t){
-			searchTeachers(document.frmSrch);
-			$.facebox( t,'facebox-medium');
-		}); 
-	};
-	
-	messageToTeacherSetup = function(frm){	
-		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('LearnerTeachers', 'messageToTeacherSetup'), data , function(t) {		
-			$.facebox.close();				
-			searchTeachers(document.frmSrch);
-		});	
-	}; */
-
 	clearSearch = function(){
 		document.frmSrch.reset();
 		searchTeachers( document.frmSrch );
