@@ -3360,6 +3360,23 @@ div.tagsinput div {
     .select2-container .select2-selection--single .select2-selection__arrow b {
       border-width: 6px 5px 0 5px !important; }
 
+.language {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+  .language .my_teacher_lang_heading {
+    margin-right: 4px; }
+  .language .btn--equal {
+    width: 2.5rem;
+    height: 2.5rem;
+    min-width: 2.5rem; }
+    .language .btn--equal .icon {
+      width: 15px;
+      height: 15px; }
+
 .list-container {
   position: relative; }
 

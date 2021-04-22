@@ -49,11 +49,11 @@
 												<?php foreach ($first_array as $teachLang) {  ?>
 													<span class="main-language"><?php echo $teachLang; ?></span>
 												<?php } ?>
-												<ul class>
+												<ul class="ml-1">
 													<li>
 														<a href="javascript:void(0);" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-															<svg class="icon icon--messaging">
-																<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#message'; ?>"></use>
+															<svg class="icon icon--add">
+																<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#icon-add'; ?>"></use>
 															</svg>
 														 <div class="tooltip tooltip--bottom bg-black">
 																<?php  echo '<ul class="custom-tooltip"><li>'.implode('</li><li>', $second_array).'</li></ul>'; ?>
@@ -147,8 +147,8 @@
 					<div class="flex-cell__content">
 						<div class="actions-group">
 							<a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['teacherId']; ?>', '<?php echo $lessonPackages[0]['lpackage_id'] ?>','','', null, null, null )" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-								<svg class="icon icon--messaging">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#message'; ?>"></use>
+								<svg class="icon icon--buy">
+									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#icon-buy'; ?>"></use>
 								</svg>
 								<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Message'); ?></div>
 							</a>
