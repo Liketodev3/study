@@ -26,6 +26,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->set('frmSrch', $frmSrch);
         $lessonStatuses = ScheduledLesson::getStatusArr();
         $lessonStatuses += [ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported')];
+        $srch = new stdClass();
+        $this->searchLessons($srch, ['status' => ScheduledLesson::STATUS_UPCOMING], false, false);
+        $srch->doNotCalculateRecords();
+        $srch->setPageSize(1);
+        $srch->addOrder('CONCAT(slns.slesson_date, " ", slns.slesson_start_time)', 'ASC');
+        $upcomingLesson = FatApp::getDb()->fetch($srch->getResultSet());
+        $this->set('upcomingLesson', $upcomingLesson);
         $this->set('lessonStatuses', $lessonStatuses);
         $this->_template->render();
     }
@@ -40,14 +47,21 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         $srch = new stdClass();
         $this->searchLessons($srch, $post, true, false);
-        if (empty($post['show_group_classes']) || $post['show_group_classes'] == ApplicationConstants::NO) {
+        if ($post['show_group_classes'] == ApplicationConstants::NO) {
             $srch->addCondition('slesson_grpcls_id', '=', 0);
         }
+        if($post['show_group_classes_only'] == ApplicationConstants::YES){
+            $srch->addCondition('slesson_grpcls_id', '>', 0);
+        }
+
         $srch->joinIssueReported(UserAuthentication::getLoggedUserId());
         $srch->joinLessonRescheduleLog();
+        $srch->joinLessonPLan();
         $srch->addFld([
             'IFNULL(iss.issrep_status,0) AS issrep_status',
             'IFNULL(iss.issrep_id,0) AS issrep_id',
+            'IFNULL(lp.tlpn_id,0) AS isLessonPlanAttach',
+            'lp.tlpn_title',
             'IFNULL(lrsl.lesreschlog_id,0) as lessonReschedulelogId',
             'IFNULL(iss.issrep_issues_resolve_type,0) AS issrep_issues_resolve_by',
             'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime',

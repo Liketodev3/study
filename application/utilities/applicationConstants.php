@@ -73,6 +73,17 @@ class applicationConstants
         ];
     }
 
+
+    public static function getClassTypeArray(int $langId)
+    {
+        $langId = FatUtility::int($langId);
+        return [
+            static::WEIGHT_GRAM => Label::getLabel('LBL_Gram', $langId),
+            static::WEIGHT_KILOGRAM => Label::getLabel('LBL_Kilogram', $langId),
+            static::WEIGHT_POUND => Label::getLabel('LBL_Pound', $langId),
+        ];
+    }
+
     public static function bannerTypeArr()
     {
         $bannerTypeArr = Language::getAllNames();

@@ -14,6 +14,7 @@ $referer = preg_replace("(^https?://)", "", $referer );
 <div class="results">		
 <?php
 foreach ($lessonArr as $key => $lessons) { ?>
+<div class="lessons-group margin-top-10">
 	<?php if ($key!='0000-00-00') { ?>
 		<date class="date uppercase small bold-600">
 			<?php
@@ -95,7 +96,7 @@ foreach ($lessonArr as $key => $lessons) { ?>
 					<?php } ?>
 					<span class="card-landscape__status badge color-secondary badge--curve badge--small margin-left-0"><?php echo $lessonsStatus; ?></span>
 				</div>
-				<?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && ScheduledLessonSearch::countPlansRelation($lesson['sldetail_id']) > 0) { ?>
+				<?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['isLessonPlanAttach'] > 0) { ?>
 						<div class="card-landscape__docs">
 							<div class="d-flex align-items-center">
 								<a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>')" class="attachment-file">
@@ -137,7 +138,7 @@ foreach ($lessonArr as $key => $lessons) { ?>
 								<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Enter_Classroom'); ?></div>
 							</a>
 
-							<?php if ($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('teacher-scheduled-lessons'))) { ?>
+							<?php if ($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('LearnerScheduledLessons'))) { ?>
 
 								<?php if (($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING || $lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) && $currentUnixTime < $startUnixTime) { ?>
 									<a href="javascript:void(0);" onclick="cancelLesson('<?php echo $lesson['sldetail_id']; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
@@ -145,13 +146,13 @@ foreach ($lessonArr as $key => $lessons) { ?>
 										<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Cancel'); ?></div>
 									</a>
 								<?php } ?>
-								<?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $currentUnixTime < $startUnixTime) { ?>
+								<?php if ($lesson['slesson_grpcls_id'] <= 0 && $lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $currentUnixTime < $startUnixTime) { ?>
 									<a  href="javascript:void(0);" onclick="requestReschedule('<?php echo $lesson['sldetail_id']; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
 										<svg class="icon icon--reschedule icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#reschedule'; ?>"></use></svg>
 										<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Reschedule'); ?></div>
 									</a>
 								<?php } ?>
-								<?php if ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
+								<?php if ($lesson['slesson_grpcls_id'] <= 0 && $lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
 									<a  href="javascript:void(0);" onclick="viewBookingCalendar('<?php echo $lesson['sldetail_id']; ?>','<?php echo $action; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
 										<svg class="icon icon--reschedule icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#reschedule'; ?>"></use></svg>
 										<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Schedule_Lesson'); ?></div>
@@ -173,12 +174,6 @@ foreach ($lessonArr as $key => $lessons) { ?>
 									<a  href="javascript:void(0);" onclick="lessonFeedback('<?php echo $lesson['sldetail_id']; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
 										<svg class="icon icon--reschedule icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#lesson-view'; ?>"></use></svg>
 										<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Rate_Lesson'); ?></div>
-									</a>
-								<?php } ?>
-								<?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED && $lesson['issrep_status'] == 1 && $lesson['issrep_issues_resolve_type'] < 1) { ?>
-									<a  href="javascript:void(0);"  onclick="issueResolveStepTwo('<?php echo $lesson['issrep_id']; ?>', '<?php echo $lesson['slesson_id']; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-										<svg class="icon icon--reschedule icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#resolve-issue'; ?>"></use></svg>
-										<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Issue_Details'); ?></div>
 									</a>
 								<?php } ?>
 

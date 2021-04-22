@@ -29,15 +29,15 @@
 									<?php echo Label::getLabel('LBL_Next_Lesson:'); ?> <date class=" bold-600"> <?php echo date('M d, Y', $startUnixTime); ?></date> <?php echo Label::getLabel('LBL_At'); ?> <time class=". bold-600"><?php echo date('h:i A', $startUnixTime); ?></time>
 									  <?php echo Label::getLabel('LBL_with'); ?>
 									<div class="avtar-meta display-inline"  >
-										<span class="avtar avtar--xsmall display-inline" data-title="<?php echo CommonHelper::getFirstChar($upcomingLesson['learnerFname']); ?>">
+										<span class="avtar avtar--xsmall display-inline" data-title="<?php echo CommonHelper::getFirstChar($upcomingLesson['teacherFname']); ?>">
 										<?php
-											if (true == User::isProfilePicUploaded($upcomingLesson['learnerId'])) {
-												$img = CommonHelper::generateUrl('Image', 'user', array( $upcomingLesson['learnerId'] ), CONF_WEBROOT_FRONT_URL).'?'.time();
-												echo '<img src="'.$img.'" alt="'.$upcomingLesson['learnerFullName'].'" />';
+											if (true == User::isProfilePicUploaded($upcomingLesson['teacherId'])) {
+												$img = CommonHelper::generateUrl('Image', 'user', array( $upcomingLesson['teacherId'], 'normal', 1 ), CONF_WEBROOT_FRONT_URL).'?'.time();
+												echo '<img src="'.$img.'" alt="'.$upcomingLesson['teacherFname'].'" />';
 											}
 										?>
 										</span>
-											<?php echo $upcomingLesson['learnerFullName']; ?>
+											<?php echo $upcomingLesson['teacherFname']; ?>
 									</div>
 								</div>
 
