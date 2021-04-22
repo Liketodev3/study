@@ -9,7 +9,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->_template->addJs('js/jquery-confirm.min.js');
     }
 
-    public function index()
+    public function index($classType = '')
     {
         $this->_template->addJs('js/learnerLessonCommon.js');
         $this->_template->addJs('js/moment.min.js');
@@ -20,9 +20,15 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $this->_template->addJs("js/locales/$currentLangCode.js");
             }
         }
+        $classTypes = applicationConstants::getClassTypes($this->siteLangId);
+        if(!array_key_exists($classType, $classTypes)){
+            $classType = '';
+        }
+
         $this->_template->addJs(['js/jquery.barrating.min.js']);
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $frmSrch = $this->getSearchForm();
+        $frmSrch->getField('class_type')->value =  $classType;
         $this->set('frmSrch', $frmSrch);
         $lessonStatuses = ScheduledLesson::getStatusArr();
         $lessonStatuses += [ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported')];
@@ -47,13 +53,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         $srch = new stdClass();
         $this->searchLessons($srch, $post, true, false);
-        if ($post['show_group_classes'] == ApplicationConstants::NO) {
-            $srch->addCondition('slesson_grpcls_id', '=', 0);
-        }
-        if($post['show_group_classes_only'] == ApplicationConstants::YES){
-            $srch->addCondition('slesson_grpcls_id', '>', 0);
-        }
-
         $srch->joinIssueReported(UserAuthentication::getLoggedUserId());
         $srch->joinLessonRescheduleLog();
         $srch->joinLessonPLan();
@@ -73,6 +72,16 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $srch->addCondition('lrsl.lesreschlog_id', '>', '0');
             $srch->addCondition('slns.slesson_status', 'IN', [ScheduledLesson::STATUS_SCHEDULED, ScheduledLesson::STATUS_NEED_SCHEDULING]);
         }
+
+        switch($post['class_type']){
+            case ApplicationConstants::CLASS_TYPE_GROUP :
+                $srch->addCondition('slesson_grpcls_id', '>', 0);
+            break;
+            case ApplicationConstants::CLASS_TYPE_1_TO_1 :
+                $srch->addCondition('slesson_grpcls_id', '=', 0);
+            break;
+        }
+
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addOrder('upcomingLessonOrder', 'DESC');
         $srch->addOrder('passedLessonsOrder', 'DESC');
@@ -183,6 +192,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $cnd = $srch->addCondition('ut.user_first_name', 'like', '%' . $keyword . '%');
                 $cnd->attachCondition('ut.user_last_name', 'like', '%' . $keyword . '%');
                 $cnd->attachCondition('sldetail_order_id', 'like', '%' . $keyword . '%');
+                $cnd->attachCondition('grpcls_title', 'like', '%' . $keyword . '%');
+                $cnd->attachCondition('grpclslang_grpcls_title', 'like', '%' . $keyword . '%');
             }
         }
         if (isset($post) && !empty($post['status'])) {

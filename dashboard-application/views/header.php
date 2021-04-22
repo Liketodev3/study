@@ -175,7 +175,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
             <!-- [ SIDE BAR PRIMARY ========= -->
             <div id="sidebar__primary" class="sidebar__primary">
                 <div class="sidebar__head">
-                    <figure class="logo"><a href="<?php echo CommonHelper::generateUrl(); ?>"><img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo $websiteName; ?>"></a></figure>              
+                    <figure class="logo"><a href="<?php echo CommonHelper::generateUrl('','',[],CONF_WEBROOT_FRONT_URL); ?>"><img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo $websiteName; ?>"></a></figure>              
                         <!-- [ PROFILE ========= -->
                         <div class="profile">
 

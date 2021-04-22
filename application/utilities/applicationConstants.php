@@ -379,7 +379,7 @@ class applicationConstants
         ];
     }
 
-    public static function getClassTypes($langId)
+    public static function getClassTypes(int $langId)
     {
         return [
             self::CLASS_TYPE_GROUP => Label::getLabel('LBL_Group_Class', $langId),

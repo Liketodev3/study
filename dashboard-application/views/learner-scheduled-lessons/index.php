@@ -89,6 +89,9 @@
 								$fldSubmit = $frmSrch->getField( 'btn_submit' );
 								$btnReset = $frmSrch->getField( 'btn_reset' );
 								$btnReset->addFieldTagAttribute('onclick','clearSearch()');
+								$classType =  $frmSrch->getField( 'class_type');
+								$classType->addFieldTagAttribute('form',  $frmSrch->getFormTagAttribute('id'));
+								$classType->addFieldTagAttribute('onChange', 'searchAllStatusLessons(this.form); return(false);');
 							?>
 						<div class="filter-responsive slide-target-js">
 							<div class="form-inline">
@@ -105,13 +108,16 @@
 									</select>
 								</div>
 								<div class="form-inline__item">
+									<?php echo $classType->getHTML('class_type'); ?>
+								</div>
+								<div class="form-inline__item">
 									<?php echo  $frmSrch->getFormTag(); ?>
 										<div class="search-form">
 											<div class="search-form__field">
 												<?php 
 													echo $frmSrch->getFieldHTML('keyword');
 												 	echo $frmSrch->getFieldHTML('page'); 
-												 	echo $frmSrch->getFieldHTML('show_group_classes'); 
+												 	// echo $frmSrch->getFieldHTML('show_group_classes'); 
 												?>
 											</div>
 											<div class="search-form__action search-form__action--submit">
@@ -139,7 +145,7 @@
 					</div>
 					<div class="col-auto">
 						<div class="tab-switch tab-switch--icons">
-							<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>" class="tab-switch__item is-active list-js">
+							<a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons'); ?>" class="tab-switch__item is-active list-js">
 								<svg class="icon icon--view icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#lesson-view'; ?>"></use></svg>
 								<?php echo Label::getLabel('LBL_List'); ?>
 							</a>

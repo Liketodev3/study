@@ -39,7 +39,12 @@ foreach ($lessonArr as $key => $lessons) { ?>
                 if ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
                     $lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
                 }
-            }
+			}
+			
+			if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_ISSUE_REPORTED){
+				$lessonsStatus = Label::getLabel('L_Issue_Reported');
+			}
+
             $teachLang = Label::getLabel('LBL_Trial');
             $action = 'free_trial';
 
@@ -59,7 +64,8 @@ foreach ($lessonArr as $key => $lessons) { ?>
                 
             $endDateTime = $lesson['slesson_end_date']." ". $lesson['slesson_end_time'];
             $endDateTime =  MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $endDateTime, true, $user_timezone);
-            $endUnixTime = strtotime($endDateTime);
+			$endUnixTime = strtotime($endDateTime);
+			
             if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
 				<div class="card-landscape__head">
 					<time class="card-landscape__time"><?php echo date('h:i A', $startUnixTime); ?></time>
@@ -72,11 +78,11 @@ foreach ($lessonArr as $key => $lessons) { ?>
 						<div class="timer__controls countdowntimer timer-js"  id="countdowntimer-<?php echo $lesson['slesson_id']?>" data-startTime="<?php echo $curDateTime; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>">
 						</div>
 						<?php } else {
-                $lessonInfoLblKey = 'LBL_Lesson_time_has_passed';
-                if ($endUnixTime > $currentUnixTime) {
-                    $lessonInfoLblKey = 'LBL_Lesson_ongoing';
-                }
-                echo '<span class="color-red">'.Label::getLabel($lessonInfoLblKey).'</span>';
+						$lessonInfoLblKey = 'LBL_Lesson_time_has_passed';
+						if ($endUnixTime > $currentUnixTime) {
+							$lessonInfoLblKey = 'LBL_Lesson_ongoing';
+						}
+						echo '<span class="color-red">'.Label::getLabel($lessonInfoLblKey).'</span>';
             } ?>
 					</div>
 				</div>		
@@ -112,7 +118,6 @@ foreach ($lessonArr as $key => $lessons) { ?>
 				<div class="card-landscape__actions">
 					
 						<div class="profile-meta">
-							<?php  if ($lesson['slesson_grpcls_id'] <= 0) { ?>	
 								<div class="profile-meta__media">
 									<span class="avtar" data-title="<?php echo CommonHelper::getFirstChar($lesson['teacherFname']); ?>">
 										<?php
@@ -127,7 +132,6 @@ foreach ($lessonArr as $key => $lessons) { ?>
 									<p class="bold-600 color-black"><?php echo $lesson['teacherFname']; ?></p>
 									<p class="small"><?php echo $lesson['teacherCountryName']; ?></p>
 								</div>
-							<?php } ?>
 						</div>
 					
 					<div class="actions-group">
