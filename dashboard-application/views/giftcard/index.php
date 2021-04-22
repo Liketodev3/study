@@ -28,8 +28,6 @@ $gcbuyerPhoneField = $formData->getField('gcbuyer_phone');
 $priceField = $formData->getField('giftcard_price');
 $gcrecipientNameField = $formData->getField('gcrecipient_name');
 $gcrecipientEmailField = $formData->getField('gcrecipient_email');
-
-
 ?>
 
 <!-- [ PAGE ========= -->

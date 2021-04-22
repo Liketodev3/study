@@ -93,12 +93,6 @@
 					<span><?php echo Label::getLabel('LBL_Gift_Cards'); ?></span>
 				</a>
 			</li>
-			<li class="menu__item <?php echo ($controllerName == "TeacherIssueReported") ? 'is-active' : ''; ?>">
-				<a href="<?php echo CommonHelper::generateUrl('TeacherIssueReported'); ?>">
-					<svg class="icon icon--issue margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#issue'; ?>"></use></svg>
-					<span><?php echo Label::getLabel('LBL_Issue_Reported'); ?></span>
-				</a>
-			</li>
 		</ul>
 	</nav>
 </div>
