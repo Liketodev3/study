@@ -20,7 +20,7 @@ class MetaTagsWriter
 		$srch->doNotCalculateRecords();
 		$srch->setPageSize(1);
 		$srch->addMultipleFields(array(
-			'IFNULL(meta_title, meta_identifier) as meta_title',
+			'meta_title',
 			'meta_keywords', 'meta_description', 'meta_other_meta_tags'
 		));
 		$defSearch = clone $srch;
@@ -42,14 +42,16 @@ class MetaTagsWriter
 		}
 
 		$rs = $srch->getResultSet();
-		if ($metas = FatApp::getDb()->fetch($rs)) {
+		$metas = FatApp::getDb()->fetch($rs);
+		if (!empty($metas) && ($metas['meta_title'] != '' || $metas['meta_title'] != null)) {
+
 			$title = $metas['meta_title'] . ' | ' . $websiteName;
 			echo '<title>' . $title . '</title>' . "\n";
-			if (isset($metas['meta_description']))
+			if (isset($metas['meta_description']) && ($metas['meta_description'] != '' || $metas['meta_description'] != null))
 				echo '<meta name="description" content="' . $metas['meta_description'] . '" />';
-			if (isset($metas['meta_keywords']))
+			if (isset($metas['meta_keywords']) && ($metas['meta_keywords'] != '' || $metas['meta_keywords'] != null))
 				echo '<meta name="keywords" content="' . $metas['meta_keywords'] . '" />';
-			if (isset($metas['meta_other_meta_tags']))
+			if (isset($metas['meta_other_meta_tags']) && ($metas['meta_other_meta_tags'] != '' || $metas['meta_other_meta_tags'] != null))
 				echo CommonHelper::renderHtml($metas['meta_other_meta_tags'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$defSearch->addCondition('meta_type', '=', MetaTag::META_GROUP_DEFAULT);
