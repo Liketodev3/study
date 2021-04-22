@@ -423,3 +423,24 @@ $margin-bottom-6: "margin-bottom-6";
     }
 
 }
+
+.language {
+    display: flex;
+    align-items: center;
+
+    .my_teacher_lang_heading {
+        margin-right: 4px;
+    }
+    
+    .btn--equal{
+        width: 2.5rem;
+        height: 2.5rem;
+        min-width: 2.5rem;
+
+        .icon{
+            width: 15px;
+            height: 15px;
+        }
+    }
+}
+
