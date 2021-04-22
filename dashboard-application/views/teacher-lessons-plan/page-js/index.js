@@ -1,6 +1,6 @@
 $(function() {
 	var dv = '#listItemsLessons';
-var isSetupAjaxrun = false;
+	var isSetupAjaxrun = false;
 	searchLessons = function(frm){
 		var data = fcom.frmData(frm);
 		fcom.ajax(fcom.makeUrl('TeacherLessonsPlan','getListing'),data,function(t){
@@ -10,46 +10,18 @@ var isSetupAjaxrun = false;
 
 
 	add = function(id){
-		$(dv).html(fcom.getLoader());
+		$.loader.show();
 		fcom.ajax(fcom.makeUrl('TeacherLessonsPlan','add',[id]),'',function(t){
-			searchLessons('');
+			$.loader.hide();
 			$.facebox( t,'facebox-medium');
 		});
-	};
-
-	remove = function(id){
-
-        $.confirm({
-            title: langLbl.Confirm,
-            content: langLbl.confirmRemove,
-            buttons: {
-                Proceed: {
-                    text: langLbl.Proceed,
-                    btnClass: 'btn btn--primary',
-                    keys: ['enter', 'shift'],
-                    action: function(){
-                    $(dv).html(fcom.getLoader());
-                    fcom.ajax(fcom.makeUrl('TeacherLessonsPlan','remove',[id]),'',function(t){
-                    searchLessons('');
-                    });
-                    }
-                },
-                Quit: {
-	                    text: langLbl.Quit,
-                    btnClass: 'btn btn--secondary',
-                    keys: ['enter', 'shift'],
-                    action: function(){
-                    }
-                }
-            }
-        });
 	};
 
 	removeLesson = function(id){
 
         $.confirm({
             title: langLbl.Confirm,
-            content: 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!',
+            content: langLbl.confirmDeleteLessonPlanText,
             buttons: {
                 Proceed: {
                     text: langLbl.Proceed,
@@ -58,7 +30,7 @@ var isSetupAjaxrun = false;
                     action: function(){
                         fcom.updateWithAjax(fcom.makeUrl('TeacherLessonsPlan', 'removeLessonSetup'), 'lessonPlanId='+id , function(t) {
                                 $.facebox.close();
-                                searchLessons('');
+                                searchLessons(document.lessonPlanSerach);
                         });
                     }
                 },
@@ -73,15 +45,7 @@ var isSetupAjaxrun = false;
         });
 	};
 
-	removeLessonSetup = function(lessonPlanId){
-		fcom.updateWithAjax(fcom.makeUrl('TeacherLessonsPlan', 'removeLessonSetup'), 'lessonPlanId='+lessonPlanId , function(t) {
-				$.facebox.close();
-				searchLessons('');
-		});
-	};
-
 	removeFile = function(celement,id){
-
         $.confirm({
             title: langLbl.Confirm,
             content: langLbl.confirmRemove,
@@ -110,9 +74,9 @@ var isSetupAjaxrun = false;
 	setup = function(frm){
 		if (!$(frm).validate()) return false;
 		$('body').find('.facebox-medium,.close').hide();
-		$('body').find("#facebox_overlay").html(fcom.getLoader());
 		if(isSetupAjaxrun) {return true;}
 		isSetupAjaxrun = true;
+		$.loader.show();
 		var formData = new FormData(frm);
 		$.ajax({
 			url: fcom.makeUrl('TeacherLessonsPlan', 'setup'),
@@ -123,9 +87,9 @@ var isSetupAjaxrun = false;
 			processData: false,
 			async:false,
 			success: function (data, textStatus, jqXHR) {
+				$.loader.hide();
 					isSetupAjaxrun = false;
 					var data=JSON.parse(data);
-
 				if(data.status==0)
 				{
 					$('body').find('.-padding-20').remove();
@@ -133,42 +97,35 @@ var isSetupAjaxrun = false;
 					$.mbsmessage(data.msg,true,'alert alert--danger');
 					return false;
 				}
-					$.facebox.close();
-					$.mbsmessage(data.msg,true,'alert alert--success');
-					searchLessons('');
-
-					setTimeout(function(){
-						$.mbsmessage.close();
-					},2000);
+				$.facebox.close();
+				$.mbsmessage(data.msg,true,'alert alert--success');
+				searchLessons('');
+				setTimeout(function(){
+					$.mbsmessage.close();
+				},2000);
 
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
 				isSetupAjaxrun = false;
 				$('body').find('.-padding-20').remove();
-				$('body').find('.facebox-medium,.close').show();
+				$.loader.hide();
 				$.mbsmessage(jqXHR.msg, true,'alert alert--danger');
 			}
 		},{});
 	};
 
-	requestReschedule = function(id){
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('TeacherLessonsPlan','requestReschedule',[id]),'',function(t){
-			searchLessons('');
-			$.facebox( t,'facebox-medium');
-		});
+	clearSearch = function () {
+        document.lessonPlanSerach.reset();
+        searchLessons(document.lessonPlanSerach);
+    };
+	goToSearchPage = function(page) {
+		if(typeof page == undefined || page == null){
+			page = 1;
+		}
+		var form = document.lessonPlanPaginationForm;
+		$(form.page).val(page);
+		searchLessons(form);
 	};
+	searchLessons(document.lessonPlanSerach);
 
-	requestRescheduleSetup = function(frm){
-		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('TeacherLessonsPlan', 'requestRescheduleSetup'), data , function(t) {
-				$.facebox.close();
-				searchLessons('');
-		});
-	};
-
-	$("input#resetFormLessonListing").click(function(){
-		searchLessons('');
-	});
-	searchLessons('');
 });

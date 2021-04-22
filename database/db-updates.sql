@@ -399,3 +399,6 @@ CREATE TABLE `tbl_teacher_stats` (
 ALTER TABLE `tbl_teacher_stats`  ADD PRIMARY KEY (`testat_user_id`);
 ALTER TABLE `tbl_teacher_stats`  ADD CONSTRAINT `tbl_teacher_stats_ibfk_1` 
 FOREIGN KEY (`testat_user_id`) REFERENCES `tbl_users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
+('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT', 1, 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!');

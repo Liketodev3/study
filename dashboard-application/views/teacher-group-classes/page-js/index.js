@@ -1,6 +1,7 @@
 $(function () {
     var dv = '#listItems';
     searchGroupClasses = function (frm) {
+        $('.search-filter').hide();
         var data = fcom.frmData(frm);
         $(dv).html(fcom.getLoader());
         fcom.ajax(fcom.makeUrl('TeacherGroupClasses', 'search'), data, function (t) {
@@ -54,7 +55,6 @@ $(function () {
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 if (data.status == 0) {
-                    //$.systemMessage(data.msg);
                     $.mbsmessage(data.msg, true, 'alert alert--danger');
                     return false;
                 } else {
@@ -64,7 +64,6 @@ $(function () {
                         editGroupClassLangForm(data.grpcls_id, data.lang_id);
                     }
                 }
-
                 setTimeout(function () {
                     $.systemMessage.close();
                 }, 2000);

@@ -14,13 +14,17 @@ function cartListing(frm) {
 
 function cardUpdate(obj) {
 		$(document.giftcardForm).validate();
-    var $this = $(obj).val();
-    if (!isNaN($this)) {
+    var amount = $(obj).val();
+    if (!isNaN(amount)) {
+       
 				if($("#giftcard_price").next('ul.errorlist').length > 0) {
+          if(amount == ''){
+            $(".giftcardPrice").html('');
+          }
 					return;
 				}
-				$(".giftcardPrice").html('');
-        $(".giftcardPrice").html($this);
+        $(".giftcardPrice").html('');
+        $(".giftcardPrice").html(amount);
     }else{
 			$(obj).val('');
 		}

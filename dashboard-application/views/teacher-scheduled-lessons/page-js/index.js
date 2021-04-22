@@ -35,6 +35,9 @@ $(function() {
 
 	viewCalendar = function(frm){
 		var data = fcom.frmData(frm);
+		$('.tab-switch__item').removeClass('is-active');
+		$('.calender-js').addClass('is-active');
+		
 		fcom.ajax(fcom.makeUrl('TeacherScheduledLessons','viewCalendar'),data,function(t){
 			$(dv).html(t);
 		});
@@ -54,5 +57,14 @@ $(function() {
 		searchLessons(frm);
 	};
 
-	clearSearch();
+	loadLessonsTab = function () {
+		
+        let urlHashVal = window.location.hash.replace('#', '');
+        let activeTab = urlHashVal ? urlHashVal : statusUpcoming;
+		console.log('#lesson-status option[value="'+activeTab+'"]');
+        $('#lesson-status option[value="'+activeTab+'"]').prop('selected', true);
+		searchLessons(document.frmSrch);
+    }
+	// clearSearch();
+	loadLessonsTab();
 });

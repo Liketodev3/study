@@ -15,6 +15,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
+        $this->_template->addJs('js/fateventcalendar.js');
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
         $lessonStatuses = ScheduledLesson::getStatusArr();
@@ -25,8 +26,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->setPageSize(1);
         $srch->addOrder('CONCAT(slns.slesson_date, " ", slns.slesson_start_time)', 'ASC');
         $upcomingLesson = FatApp::getDb()->fetch($srch->getResultSet());
-        // prx($upcomingLesson);
         $this->set('lessonStatuses', $lessonStatuses);
+        $this->set('upcomingLesson', $upcomingLesson);
         $this->_template->render();
     }
 

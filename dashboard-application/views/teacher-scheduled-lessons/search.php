@@ -10,6 +10,9 @@ $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
 $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
 
 $referer = preg_replace("(^https?://)", "", $referer);
+?>
+<div class="results">		
+<?php
 foreach ($lessonArr as $key => $lessons) { ?>
 <div class="lessons-group margin-top-10">
 	<?php if ($key!='0000-00-00') { ?>
@@ -189,7 +192,9 @@ foreach ($lessonArr as $key => $lessons) { ?>
 	<!-- ] ========= -->
 <?php } ?>
 </div>
-<?php }
+<?php } ?>
+</div>
+<?php 
 if (empty($lessons)) {
     $this->includeTemplate('_partial/no-record-found.php');
 } else {

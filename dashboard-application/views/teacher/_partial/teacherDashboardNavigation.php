@@ -58,7 +58,7 @@
 	<h6 class="heading-6"><?php echo Label::getLabel('Lbl_History'); ?></h6>
 	<nav class="menu menu--primary">
 		<ul>
-			<li class="menu__item <?php echo ($controllerName == "Teacher" && $actionName == "orders") ? 'is-active' : ''; ?>">
+			<li class="menu__item <?php echo ($controllerName == "Teacher" && $action == "orders") ? 'is-active' : ''; ?>">
 				<a href="<?php echo CommonHelper::generateUrl('Teacher', 'orders'); ?>">
 					<svg class="icon icon--orders margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#orders'; ?>"></use></svg>
 					<span><?php echo Label::getLabel('Lbl_Orders'); ?></span>
@@ -91,12 +91,6 @@
 				<a href="<?php echo CommonHelper::generateUrl('Giftcard'); ?>">
 					<svg class="icon icon--gifts-cards margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#giftcards'; ?>"></use></svg>
 					<span><?php echo Label::getLabel('LBL_Gift_Cards'); ?></span>
-				</a>
-			</li>
-			<li class="menu__item <?php echo ($controllerName == "TeacherIssueReported") ? 'is-active' : ''; ?>">
-				<a href="<?php echo CommonHelper::generateUrl('TeacherIssueReported'); ?>">
-					<svg class="icon icon--issue margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#issue'; ?>"></use></svg>
-					<span><?php echo Label::getLabel('LBL_Issue_Reported'); ?></span>
 				</a>
 			</li>
 		</ul>

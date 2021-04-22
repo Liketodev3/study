@@ -14,6 +14,14 @@
 					<span><?php echo Label::getLabel('LBL_Account_Settings'); ?></span>
 				</a>
 			</li>
+			<?php if(User::isTeacher()){ ?>
+			<li class="menu__item">
+				<a href="#">
+					<svg class="icon icon--calendar margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#calendar'; ?>"></use></svg>
+					<span><?php echo Label::getLabel('LBL_Availability_Calendar'); ?></span>
+				</a>
+			</li>
+			<?php } ?>
 		</ul>
 	</nav>
 </div>

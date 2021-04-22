@@ -1,42 +1,53 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<section class="section section--grey section--page">
-	 <div class="container container--fixed">
+<?php
+defined('SYSTEM_INIT') or die('Invalid Usage.');
+$serachForm->setFormTagAttribute('id', 'serachForm');
+$serachForm->setFormTagAttribute('class', 'form');
+$serachForm->developerTags['colClassPrefix'] = 'col-md-';
+$serachForm->developerTags['fld_default_col'] = 4;
+$serachForm->setFormTagAttribute('onsubmit', 'searchGroupClasses(this); return(false);');
+$btnReset = $serachForm->getField('btn_reset');
+$btnReset->addFieldTagAttribute('onclick', 'clearSearch()');
 
-	   <div class="page-panel -clearfix">
+?>
+<!-- [ PAGE ========= -->
+<main class="page">
+	<div class="container container--fixed">
 
-			<!--panel left start here-->
-			<div class="page-panel__left">
-				<?php $this->includeTemplate('account/_partial/dashboardNavigation.php'); ?>
-			</div>
-            <!--panel left end here-->
-
-
-			<!--panel right start here-->
-		   <div class="page-panel__right">
-
-				 <!--page-head start here-->
-				 <div class="page-head">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div><h1><?php echo Label::getLabel('LBL_My_Group_Classes'); ?></h1></div>
-                    </div>
-				 </div>
-				 <!--page-head end here-->
-
-				 <!--page filters start here-->
-				 <div class="page-filters">
-					<?php echo $frmSrch->getFormHtml(); ?>
-				 </div>
-				 <!--page filters end here-->
-
-				<!--Lessons list view start here-->
-				<div class="col-list-group">
-					<!--h6>Today</h6-->
-					<div class="col-list-container" id="listItemsLessons">
-					</div>
+		<div class="page__head">
+			<div class="row align-items-center justify-content-between">
+				<div class="col-sm-6">
+					<h1><?php echo Label::getLabel('LBL_Group_Classes'); ?></h1>
 				</div>
-				<!--Lessons list view end here-->
+				<div class="col-sm-auto">
+					<div class="buttons-group d-flex align-items-center">
+						<a href="javascript:void(0)" class="btn bg-secondary slide-toggle-js">
+							<svg class="icon icon--clock icon--small margin-right-2">
+								<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#search'; ?>"></use>
+							</svg>
+							<?php echo Label::getLabel('Lbl_Search'); ?>
+						</a>
+					</div>
+
+				</div>
 			</div>
-		   <!--panel right end here-->
+
+			<!-- [ FILTERS ========= -->
+			<div class="search-filter slide-target-js" style="display: none;">
+				<?php echo $serachForm->getFormHtml(); ?>
+			</div>
+			<!-- ] ========= -->
+
 		</div>
-	 </div>
- </section>
+
+		<div class="page__body">
+			<!-- [ PAGE PANEL ========= -->
+			<div class="page-content" id="listItems">
+			</div>
+			<!-- ] -->
+		</div>
+		<div class="page__footer align-center">
+			<p class="small">Copyright © 2021 Yo!Coach Developed by <a href="#" class="underline color-primary">FATbit Technologies</a> . </p>
+		</div>
+	</div>
+</main>
+<!-- ] -->

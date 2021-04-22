@@ -10,59 +10,55 @@ $arr_flds = array(
 	'utxn_status'	=>	Label::getLabel('LBL_Status', $siteLangId),
 );
 
-$tbl = new HtmlElement('table', array('class'=>'table'));
-$th = $tbl->appendElement('thead')->appendElement('tr',array('class' => '-hide-mobile'));
+$tbl = new HtmlElement('table', array('class'=>'table table--styled table--responsive table--aligned-middle'));
+$th = $tbl->appendElement('tr',array('class' => 'title-row'));
 foreach ($arr_flds as $val) {
-	$e = $th->appendElement('th', array(), $val);
+	 $th->appendElement('th', array(), $val);
 }
 
-$sr_no = 0;
 foreach ($arrListing as $sn => $row){
-	$sr_no++;
 	$tr = $tbl->appendElement('tr',array('class' =>'' ));
 	
-	foreach ($arr_flds as $key=>$val){
-        $width = '';
-        if($key=='utxn_comments'){
-            $width = '40%';
-        }
-		$td = $tr->appendElement('td',array('width'=>$width));
-		$td->appendElement('span', array('class'=>'td__caption -hide-desktop -show-mobile'), $val, true);
+	foreach ($arr_flds as $key => $val){
+
+		$div = $tr->appendElement('td')->appendElement('div', array('flex-cell'));
+		$div->appendElement('div', array('class'=>'flex-cell__label'), $val, true);
+		
 		switch ($key){
 			case 'utxn_id':
-				$td->appendElement('span', array('class'=>'td__data'), Transaction::formatTransactionNumber($row[$key]), true);
+				$div->appendElement('div', array('class'=>'flex-cell__content'), Transaction::formatTransactionNumber($row[$key]), true);
 			break;
 			case 'utxn_date':
 				$utxn_date = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', $row[$key], true , $user_timezone );
-				$td->appendElement('span', array('class'=>'td__data'), $utxn_date, true);
+				$div->appendElement('div', array('class'=>'flex-cell__content'), $utxn_date, true);
 				
 			break;
 			case 'utxn_status':
             if($row[$key] == Transaction::STATUS_COMPLETED){
-                $cls = 'success';
+                $cls = 'green';
             }else{
-                $cls = 'process';
+                $cls = 'yellow';
             }
-                $statusSpn = '<span class="label label--'.$cls.'">'.$statusArr[$row[$key]].'</span>';
-				$td->appendElement('span', array('class'=>'td__data'), $statusSpn, true);
+                $statusSpn = '<span class="badge color-'.$cls.' badge--curve">'.$statusArr[$row[$key]].'</span>';
+				$div->appendElement('div', array('class'=>'flex-cell__content'), $statusSpn, true);
 			break;
 			case 'utxn_credit':
 				$txt = CommonHelper::displayMoneyFormat( $row[$key] );
-				$td->appendElement('span', array('class'=>'td__data'), $txt, true);
+				$div->appendElement('div', array('class'=>'flex-cell__content'), $txt, true);
 			break;
 			case 'utxn_debit':
 				$txt = CommonHelper::displayMoneyFormat( $row[$key] );
-				$td->appendElement('span', array('class'=>'td__data'), $txt, true);
+				$div->appendElement('div', array('class'=>'flex-cell__content'), $txt, true);
 			break;
 			case 'balance':
 				$txt = CommonHelper::displayMoneyFormat( $row[$key] );
-				$td->appendElement('span', array('class'=>'td__data'), $txt, true);
+				$div->appendElement('div', array('class'=>'flex-cell__content'), $txt, true);
 			break;
 			case 'utxn_comments':
-				$td->appendElement('span', array('class'=>'td__data'), Transaction::formatTransactionComments($row[$key]), true);				
+				$div->appendElement('div', array('class'=>'flex-cell__content'), Transaction::formatTransactionComments($row[$key]), true);				
 			break;
 			default:
-				$td->appendElement('span', array('class'=>'td__data'), $row[$key], true);								
+				$div->appendElement('div', array('class'=>'flex-cell__content'), $row[$key], true);								
 			break;
 		}
 	}
