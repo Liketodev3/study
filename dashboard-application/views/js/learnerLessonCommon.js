@@ -159,13 +159,20 @@ issueReported = function (id) {
 };
 
 issueReportedSetup = function (frm) {
-    if (!$(frm).validate()) return;
+    if (!$(frm).validate()) {
+        return;
+    }
     $(frm).find('[type=submit]').attr('disabled', true);
-    var data = fcom.frmData(frm);
-    fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'issueReportedSetup'), data, function (t) {
+    var action = fcom.makeUrl('LearnerScheduledLessons', 'issueReportedSetup');
+    fcom.updateWithAjax(action, fcom.frmData(frm), function (response) {
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCompleted;
-        location.reload();
+        if(response.status == 1){
+            $.mbsmessage(response.msg, true, 'alert alert--success');
+            $("#lesson-status7").trigger("click");
+        } else {
+            $.mbsmessage(response.msg, true, 'alert alert--danger');
+            $(frm).find('[type=submit]').removeAttr('disabled');
+        }
     });
 };
 
