@@ -8,12 +8,13 @@ lessonFeedback = function (lDetailId) {
 };
 
 setupLessonFeedback = function (frm) {
-    if (!$(frm).validate()) return false;
+    if (!$(frm).validate())
+        return false;
     var data = fcom.frmData(frm);
 
     fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setupLessonFeedback'), data, function (t) {
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCompleted;
+        window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCompleted;
         location.reload();
     });
 };
@@ -25,17 +26,18 @@ requestReschedule = function (id) {
 };
 
 requestRescheduleSetup = function (frm) {
-    if (!$(frm).validate()) return;
+    if (!$(frm).validate())
+        return;
     var data = fcom.frmData(frm);
     fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'requestRescheduleSetup'), data, function (t) {
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
+        window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
         location.reload();
     });
 };
 
 viewBookingCalendar = function (id, action = '') {
-    var data = { 'action': action };
+    var data = {'action': action};
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'viewBookingCalendar', [id]), data, function (t) {
         $.facebox(t, 'facebox-medium booking-calendar-pop-js');
     });
@@ -82,7 +84,7 @@ setUpLessonSchedule = function (teacherId, lDetailId, startTime, endTime, date) 
                             $.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
                             fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function (doc) {
                                 $.facebox.close();
-                                window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
+                                window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
                                 location.reload();
                             });
                         }
@@ -101,7 +103,7 @@ setUpLessonSchedule = function (teacherId, lDetailId, startTime, endTime, date) 
             fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function (doc) {
                 $.mbsmessage.close();
                 $.facebox.close();
-                window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
+                window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
                 location.reload();
             });
         }
@@ -126,7 +128,8 @@ cancelLessonSetup = function (frm) {
         return false;
     }
     isLessonCancelAjaxRun = true;
-    if (!$(frm).validate()) return;
+    if (!$(frm).validate())
+        return;
     var data = fcom.frmData(frm);
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'cancelLessonSetup'), data, function (ans) {
         isLessonCancelAjaxRun = false;
@@ -135,16 +138,18 @@ cancelLessonSetup = function (frm) {
             $.mbsmessage(ans.msg, true, 'alert alert--danger');
             /* Custom Code[ */
             if (ans.redirectUrl) {
-                setTimeout(function () { window.location.href = ans.redirectUrl }, 3000);
+                setTimeout(function () {
+                    window.location.href = ans.redirectUrl
+                }, 3000);
             }
             /* ] */
             return;
         }
         $.mbsmessage(ans.msg, true, 'alert alert--success');
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusUpcoming;
+        window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusUpcoming;
         location.reload();
-    }, { fOutMode: 'json' });
+    }, {fOutMode: 'json'});
 
     // fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'cancelLessonSetup'), data , function(t) {
     // 		$.facebox.close();
@@ -166,9 +171,9 @@ issueReportedSetup = function (frm) {
     var action = fcom.makeUrl('LearnerScheduledLessons', 'issueReportedSetup');
     fcom.updateWithAjax(action, fcom.frmData(frm), function (response) {
         $.facebox.close();
-        if(response.status == 1){
+        if (response.status == 1) {
             $.mbsmessage(response.msg, true, 'alert alert--success');
-            $("#lesson-status7").trigger("click");
+            $("#lesson-status" + statusIssueReported).trigger("click");
         } else {
             $.mbsmessage(response.msg, true, 'alert alert--danger');
             $(frm).find('[type=submit]').removeAttr('disabled');
@@ -185,7 +190,7 @@ issueDetails = function (issuelDetailId) {
 reportIssueToAdmin = function (issueId, lDetailId, escalated_by) {
     fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'reportIssueToAdmin', [issueId, lDetailId, escalated_by]), '', function (t) {
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCompleted;
+        window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCompleted;
         location.reload();
     });
 };

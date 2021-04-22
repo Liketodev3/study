@@ -16,7 +16,7 @@ $fld->addFieldTagAttribute('onclick', 'clearIssueSearch()');
                         <div class="col--first col-lg-6">
                             <span class="page__icon">
                                 <i class="ion-android-star"></i></span>
-                            <h5><?php echo Label::getLabel('LBL_ALL_Reported_Issues', $adminLangId); ?> </h5>
+                            <h5><?php echo Label::getLabel('LBL_escalated_Issues', $adminLangId); ?> </h5>
                             <?php $this->includeTemplate('_partial/header/header-breadcrumb.php'); ?>
                         </div>
                     </div>

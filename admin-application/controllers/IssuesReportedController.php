@@ -1,11 +1,14 @@
 <?php
+
 class IssuesReportedController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
         $this->objPrivilege->canViewIssuesReported();
     }
+
     public function index()
     {
         $frmSearch = $this->getIssuesReportedForm();
@@ -14,23 +17,35 @@ class IssuesReportedController extends AdminBaseController
         $this->set('frmSearch', $frmSearch);
         $this->_template->render();
     }
+
+    public function escalated()
+    {
+        $frmSearch = $this->getIssuesReportedForm();
+        $data = FatApp::getPostedData();
+        $data['issrep_is_for_admin'] = 1;
+        $frmSearch->fill($data);
+        $this->set('frmSearch', $frmSearch);
+        $this->_template->addJs('issues-reported/page-js/index.js');
+        $this->_template->render();
+    }
+
     private function getIssuesReportedForm()
     {
         $frm = new Form('frmIssuesReportedSearch');
-        $status_options = ['-1' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)] + IssuesReported::getStatusArr($this->adminLangId);
-        $user_options = ['0' => Label::getLabel('LBL_Does_Not_Matter', $this->adminLangId)] + User::getUserTypesArr($this->adminLangId);
         $keyword = $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', ['id' => 'keyword', 'autocomplete' => 'off']);
         $keyword = $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', ['id' => 'keyword', 'autocomplete' => 'off']);
         $frm->addTextBox(Label::getLabel('LBL_Order_Id', $this->adminLangId), 'sldetail_order_id');
-        $frm->addSelectBox(Label::getLabel('LBL_Issue_Status', $this->adminLangId), 'issrep_status', $status_options, -1, [], '');
+        $frm->addSelectBox(Label::getLabel('LBL_Issue_Status', $this->adminLangId), 'issrep_status', ['-1' => Label::getLabel('LBL_SELECT')] + IssuesReported::getResolveTypeArray(), -1, [], '');
         $frm->addHiddenField('', 'page', 1);
         $frm->addHiddenField('', 'slesson_teacher_id', 0);
         $frm->addHiddenField('', 'sldetail_learner_id', 0);
+        $frm->addHiddenField('', 'issrep_is_for_admin', -1);
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
+
     public function search()
     {
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
@@ -40,7 +55,6 @@ class IssuesReportedController extends AdminBaseController
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $srch = IssuesReported::getSearchObject();
         $srch->addMultipleFields(["i.*", 'sld.sldetail_order_id', 'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',]);
-        $srch->addCondition('issrep_is_for_admin', '=', 1);
         if (isset($post['issrep_status']) and $post['issrep_status'] > -1) {
             $status = FatUtility::int($post['issrep_status']);
             $srch->addCondition('issrep_status', '=', $status);
@@ -56,6 +70,9 @@ class IssuesReportedController extends AdminBaseController
             $user_is_learner = FatUtility::int($post['sldetail_learner_id']);
             $srch->addCondition('sldetail_learner_id', '=', $user_is_learner);
         }
+        if ($post['issrep_is_for_admin'] > 0) {
+            $srch->addCondition('issrep_is_for_admin', '=', $post['issrep_is_for_admin']);
+        }
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         $srch->addOrder('issrep_status', 'ASC');
@@ -70,6 +87,7 @@ class IssuesReportedController extends AdminBaseController
         $this->set('recordCount', $srch->recordCount());
         $this->_template->render(false, false, null, false, false);
     }
+
     public function viewDetail($issueLessonId)
     {
         $issueLessonId = FatUtility::int($issueLessonId);
@@ -102,6 +120,7 @@ class IssuesReportedController extends AdminBaseController
             'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',
             'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_username',
             'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_username',
+            'i.issrep_admin_comments', 'i.issrep_updated_by_admin',
             'order_net_amount',
             'order_discount_total',
             'op_qty',
@@ -111,13 +130,81 @@ class IssuesReportedController extends AdminBaseController
         $srch->addGroupBy('issrep_id');
         $issueDetail = FatApp::getDb()->fetchAll($srch->getResultSet());
         $callHistory = IssuesReported::getCallHistory($issueDetail[0]['slesson_teacher_id']);
-        $issueStatusArr = IssuesReported::getStatusArr($this->adminLangId);
+        $issueStatusArr = IssuesReported::getResolveTypeArray($this->adminLangId);
         $this->set("callHistory", $callHistory);
         $this->set("statusArr", $issueStatusArr);
         $this->set("issueDetail", $issueDetail);
         $this->set('issues_options', IssueReportOptions::getOptionsArray($this->adminLangId));
         $this->_template->render(false, false);
     }
+
+    public function actionForm($issrepId)
+    {
+        $issrepId = FatUtility::int($issrepId);
+        $issRepObj = new IssuesReported();
+        $srch = $issRepObj->getSearchObject();
+        $srch->addCondition('issrep_id', '=', $issrepId);
+        $srch->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = us.us_user_id', 'us');
+        $srch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'sl.slesson_slanguage_id = tlang.tlanguage_id', 'tlang');
+        if ($this->adminLangId > 0) {
+            $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'sll.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND sll.tlanguagelang_lang_id = ' . $this->adminLangId, 'sll');
+        }
+        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sld.sldetail_learner_id = ul.user_id', 'ul');
+        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = ut.user_id', 'ut');
+        $srch->addMultipleFields(["i.*",
+            "us.*",
+            'sld.sldetail_order_id',
+            'sl.slesson_teacher_id',
+            'sld.sldetail_learner_id',
+            'sld.sldetail_learner_join_time',
+            'sl.slesson_teacher_join_time',
+            'sld.sldetail_learner_end_time',
+            'sl.slesson_teacher_end_time',
+            'sl.slesson_ended_by',
+            'sl.slesson_ended_on',
+            'IFNULL(sll.tlanguage_name, tlang.tlanguage_identifier) as tlanguage_name',
+            'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',
+            'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_username',
+            'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_username',
+            'i.issrep_admin_comments', 'i.issrep_updated_by_admin',
+            'order_net_amount',
+            'order_discount_total',
+            'op_qty',
+            'op_lpackage_is_free_trial',
+            'op_unit_price',
+        ]);
+        $srch->addGroupBy('issrep_id');
+        $issueDetail = FatApp::getDb()->fetchAll($srch->getResultSet());
+        if (empty($issueDetail)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
+
+        $frm = $this->getActionForm();
+        $issue = end($issueDetail);
+        $frm->fill($issue);
+        $this->set('frm', $frm);
+        $this->set('issueDetail', $issueDetail);
+        $this->set('statusArr', IssuesReported::getResolveTypeArray($this->adminLangId));
+        $this->set('issues_options', IssueReportOptions::getOptionsArray($this->adminLangId));
+        $this->_template->render(false, false);
+    }
+
+    public function setupAction()
+    {
+        FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        FatUtility::dieJsonSuccess(Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY'));
+    }
+
+    private function getActionForm()
+    {
+        $frm = new Form('actionForm');
+        $arrOptions = IssueReportOptions::getOptionsArray($this->adminLangId);
+        $frm->addTextArea(Label::getLabel('LBL_Admin_Comment'), 'issrep_admin_comments', '');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'issrep_status', IssuesReported::getResolveTypeArray())->requirements()->setRequired();
+        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
+        return $frm;
+    }
+
     public function transaction($slessonId, $issueId)
     {
         $slessonId = FatUtility::int($slessonId);
@@ -142,6 +229,7 @@ class IssuesReportedController extends AdminBaseController
         $this->set("canEdit", $canEdit);
         $this->_template->render(false, false);
     }
+
     public function addLessonTransaction($lessonId, $issueId)
     {
         $this->objPrivilege->canEditIssuesReported($this->admin_id, true);
@@ -163,6 +251,7 @@ class IssuesReportedController extends AdminBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
+
     public function setupLessonTransaction()
     {
         $this->objPrivilege->canEditIssuesReported($this->admin_id, true);
@@ -205,6 +294,7 @@ class IssuesReportedController extends AdminBaseController
         $this->set('msg', $this->str_setup_successful);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     private function addLessonTransactionForm($langId)
     {
         $frm = new Form('frmUserTransaction');
@@ -218,6 +308,7 @@ class IssuesReportedController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     public function updateStatus()
     {
         if (!$this->objPrivilege->canEditIssuesReported($this->admin_id, true)) {
@@ -234,4 +325,5 @@ class IssuesReportedController extends AdminBaseController
         $this->set('msg', 'Updated Successfully.');
         $this->_template->render(false, false, 'json-success.php');
     }
+
 }

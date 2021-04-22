@@ -402,3 +402,7 @@ FOREIGN KEY (`testat_user_id`) REFERENCES `tbl_users` (`user_id`) ON DELETE REST
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
 ('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT', 1, 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!');
+
+
+ALTER TABLE `tbl_issues_reported` ADD `issrep_admin_comments` TEXT NULL AFTER `issrep_resolve_comments`;
+ALTER TABLE `tbl_issues_reported` ADD `issrep_updated_by_admin` DATETIME NULL AFTER `issrep_admin_comments`;

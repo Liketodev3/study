@@ -20,11 +20,8 @@ class IssuesReported extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getResolveTypeArray(int $langId = 0): array
+    public static function getResolveTypeArray(): array
     {
-        if ($langId < 1) {
-            $langId = CommonHelper::getLangId();
-        }
         return [
             self::RESOLVE_TYPE_LESSON_UNSCHEDULED => Label::getLabel('LBL_Reset_Lesson_to:_Unscheduled'),
             self::RESOLVE_TYPE_LESSON_COMPLETED => Label::getLabel('LBL_Mark_Lesson_as:_Completed'),
