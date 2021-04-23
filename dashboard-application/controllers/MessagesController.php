@@ -13,6 +13,7 @@ class MessagesController extends LoggedUserController
         $frm = $this->getSearchForm($this->siteLangId);
         $this->set('frmSrch', $frm);
         $this->_template->addJs('js/enscroll-0.6.2.min.js');
+        $this->_template->addJs('js/enscroll-0.6.2.min.js');
         $this->_template->render();
     }
 
@@ -80,6 +81,7 @@ class MessagesController extends LoggedUserController
         $cnd = $srch->addCondition('ttm.message_from', '=', $userId);
         $cnd->attachCondition('ttm.message_to', '=', $userId, 'OR');
         $srch->addOrder('message_id', 'DESC');
+      
         $records = FatApp::getDb()->fetchAll($srch->getResultSet(), 'message_id');
         if ($srch->recordCount() > 0) {
             $json['redirectUrl'] = CommonHelper::generateUrl('Messages');

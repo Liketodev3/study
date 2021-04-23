@@ -113,14 +113,14 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                             </a>
                         </li>
 
-                        <li class="menu__item menu__item-messaging">
+                        <li class="menu__item menu__item-messaging  <?php echo ($controllerName == 'Messages') ? 'is-active' : ''; ?>">
                             <a href="<?php echo CommonHelper::generateUrl('Messages'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Messaging'); ?>" >  <!-- add  data-count="{count}" if any unread message -->
                                 <svg class="icon icon--messaging"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#message'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Messaging'); ?></span>
                             </a>
                         </li>
 
-                        <li class="menu__item menu__item-notifications">
+                        <li class="menu__item menu__item-notifications <?php echo ($controllerName == 'Notifications') ? 'is-active' : ''; ?> ">
                             <a href="<?php echo CommonHelper::generateUrl('Notifications'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Notificatons'); ?>" > <!-- add  data-count="{count}" if any unread Notificatons -->
                                 <svg class="icon icon--notificatons"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#notification'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Notificatons'); ?></span>
