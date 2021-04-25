@@ -23,22 +23,16 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 					<div class="col-lg-8 col-sm-8">
 						<div class="d-flex">
 							<div class="infobar__media margin-right-5">
-								<div class="infobar__media-icon infobar__media-icon--alert">!</div>
+								<div class="infobar__media-icon infobar__media-icon--alert is-profile-complete-js">!</div>
 							</div>
 							<div class="infobar__content">
-								<h6 class="margin-bottom-1">Complete Your profile</h6>
-								<p class="margin-0">To successfully register your profile as an expert and to you available in search results.
-									<a href="javascript:void(0)" class="color-secondary underline padding-top-3 padding-bottom-3 expand-js">Learn More</a>
+								<h6 class="margin-bottom-1"><?php echo Label::getLabel('Lbl_Complete_Your_profile'); ?></h6>
+								<p class="margin-0"> <?php echo Label::getLabel('LBL_PROFILE_INFO_HEADING'); ?>
+									<a href="javascript:void(0)" class="color-secondary underline padding-top-3 padding-bottom-3 expand-js"><?php echo Label::getLabel('LBL_Learn_More'); ?></a>
 								</p>
 
 								<div class="infobar__content-more margin-top-3 expand-target-js" style="display: none;">
-									<div class="infobar__list-content">
-										<ol>
-											<li>Profile needs to be 80% completed</li>
-											<li>You have to complete lorem ipsum dolar summit text</li>
-											<li>After verify all the details you have to mark availbility in calendar section.</li>
-										</ol>
-									</div>
+									<?php echo Extrapage::getBlockContent(Extrapage::BLOCK_PROFILE_INFO_BAR, $siteLangId); ?>
 								</div>
 
 							</div>

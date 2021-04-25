@@ -23,19 +23,6 @@ $add_more_div->value = '<div id="add_more_div"></div>';
 $teachLangField = $frm->getField('teach_lang_id');
 $teachLangFieldValue = $teachLangField->value;
 
-$speakLangField = $frm->getField('utsl_slanguage_id[]');
-$speakLangFieldValue = $speakLangField->value;
-
-$proficiencyField = $frm->getField('utsl_proficiency[]');
-$proficiencyFieldValue = $proficiencyField->value;
-$proficiencyOptions= $proficiencyField->options;
-
-// prx($proficiencyFieldValue);
-// pr($proficiencyFieldValue);
-/*$utsl_slanguage_id = $frm->getField('utsl_slanguage_id[]');
-$utsl_slanguage_id->developerTags['col'] = 5;
-$utsl_proficiency = $frm->getField('utsl_proficiency[]');
-$utsl_proficiency->developerTags['col'] = 5;*/
 ?>
 <div class="content-panel__head">
 	<div class="d-flex align-items-center justify-content-between">
@@ -80,18 +67,23 @@ $utsl_proficiency->developerTags['col'] = 5;*/
 			</div>
 			<div class="colum-layout__cell">
 					<div class="colum-layout__head">
-						<span class="bold-600"><?php echo $speakLangField->getCaption(); ?></span>
-						<?php if($speakLangField->requirement->isRequired()){ ?>
+						<span class="bold-600"><?php echo Label::getLabel('LBL_Language_I_Speak'); ?></span>
 							<span class="spn_must_field">*</span>
-						<?php } ?>
 					</div>
 					<div class="colum-layout__body">
 
 						<div class="colum-layout__scroll scrollbar scrollbar-js">
-						<?php foreach ($speakLangField->options as $key => $value) { ?>
+						<?php 
+							foreach ($speakLang as $key => $value) {
+								$speakLangField = $frm->getField('utsl_slanguage_id['.$key.']');
+								$speakLangFieldValue = $speakLangField->value;
+								$proficiencyField = $frm->getField('utsl_proficiency['.$key.']');
+								$proficiencyField->addFieldTagAttribute('onchange','changeProficiency(this);');
+								$proficiencyField->addFieldTagAttribute('data-lang-id', $key);
+						?>
 							<div class="selection selection--select">
 								<label class="selection__trigger ">
-									<input type="checkbox" name="<?php echo $speakLangField->getName(); ?>" <?php echo in_array($key, $speakLangFieldValue) ? 'checked' : ''; ?> >
+									<input type="checkbox" class="slanguage-<?php echo $key; ?>" onchange="changeSpeakLang(this.value, <?php echo $key; ?>);" name="<?php echo $speakLangField->getName(); ?>" <?php echo array_key_exists($speakLangFieldValue, $speakLang) ? 'checked' : ''; ?> >
 									<span class="selection__trigger-action">
 										<span class="selection__trigger-label">
 											<span class="flag-icon flag-icon--s">
@@ -100,22 +92,15 @@ $utsl_proficiency->developerTags['col'] = 5;*/
 													echo '<img src="'.$languageFlagImage.'" alt="'.$value.'">';
 												?>
 											</span> <?php echo $value; ?> 
-											<?php if(in_array($key, $speakLangFieldValue)){ ?>
-											<span class="badge color-secondary badge--round badge--small margin-0"><?php echo $proficiencyOptions[$proficiencyFieldValue[$key]]; ?></span>
+											<?php if(in_array($proficiencyField->value, $profArr)){ ?>
+												<span class="badge color-secondary badge--round badge--small margin-0"><?php echo $profArr[$proficiencyField->value]; ?></span>
 											<?php } ?>
 										</span>
 										<span class="selection__trigger-icon"></span>
 									</span>
 								</label>
 								<div class="selection__target">
-									<?php  ?>
-									<select class="select__dropdown">
-										<option>Select Proficiency *</option>
-										<option>I don't speak this language</option>
-										<option>Beginner</option>
-										<option>Upper Beginner</option>
-										<option>Intermediate</option>
-									</select>
+									<?php echo $proficiencyField->getHTML();  ?>
 								</div>
 							</div>
 						<?php } ?>

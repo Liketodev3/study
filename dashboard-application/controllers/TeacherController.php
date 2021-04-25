@@ -191,7 +191,12 @@ class TeacherController extends TeacherBaseController
     public function teacherLanguagesForm()
     {
         $frm = $this->getTeacherLanguagesForm();
+        $speakLang = SpokenLanguage::getAllLangs($this->siteLangId, true);
+        $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
         $this->set('frm', $frm);
+        $this->set('speakLang', $speakLang);
+        $this->set('profArr', $profArr);
+
         $this->_template->render(false, false);
     }
 
@@ -232,26 +237,20 @@ class TeacherController extends TeacherBaseController
         $spokenLangRows = $db->fetchAllAssoc($userToLangRs);
        
         $frm->addCheckBoxes(Label::getLabel('LBL_Language_To_Teach'), 'teach_lang_id', $teacherTeachLangArr, array_keys($userToTeachLangRows))->requirements()->setRequired();
-        $frm->addCheckBoxes(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id', $langArr, array_keys($spokenLangRows), ['class' => 'utsl_slanguage_id'])->requirements()->setRequired();
     
         foreach ($langArr as $key => $lang) {
-            
-            $speakField = $frm->addSelectBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id[]', $langArr, array_keys($spokenLangRows), ['class' => 'utsl_proficiency'], Label::getLabel('LBL_Select'));
-            $proficiencyField = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency[]', $profArr, $spokenLangRows, ['class' => 'utsl_proficiency'], Label::getLabel('LBL_Select')); 
-            // if (array_key_exists($key, $spokenLangRows)) {
-            //         $speakField->value = [$key];
-            //         $proficiencyField->value = [$spokenLangRows[$key]];
-            // }
-            // if (array_key_exists($key, $langArr)) {
-            //     $speakField->requirements()->setRequired();
-            //     $proficiencyField->requirements()->setRequired();
-            // }else{
-                $requirements =  $proficiencyField->requirements()->setRequired();
-                $speakField->requirements()->addOnChangerequirementUpdate('','ne', $proficiencyField->getName(),  $proficiencyField->requirements());
+            $speekLangField = $frm->addSelectBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id['.$key.']', $langArr, '', ['class' => 'utsl_slanguage_id'], Label::getLabel("LBL_Select")); 
+            $proficiencyField = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency['.$key.']', $profArr, '', ['class' => 'utsl_proficiency select__dropdown'], Label::getLabel("LBL_I_don't_speak_this_language")); 
+            if(array_key_exists($key, $spokenLangRows)){
+                $proficiencyField->value = $spokenLangRows[$key];
+                $speekLangField->value = $key;
+            }
+            // $speekLangField
+            $proficiencyField->requirements()->setRequired();
+            $speekLangField->requirements()->addOnChangerequirementUpdate('','ne', $proficiencyField->getName(),  $proficiencyField->requirements());
 
-                $requirements = $proficiencyField->requirements()->setRequired(false);
-                $speakField->requirements()->addOnChangerequirementUpdate('','eq', $proficiencyField->getName(),  $proficiencyField->requirements());
-            // }
+            $proficiencyField->requirements()->setRequired(false);
+            $speekLangField->requirements()->addOnChangerequirementUpdate('','eq', $proficiencyField->getName(),  $proficiencyField->requirements());
         }
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_SAVE_CHANGES'));
         $frm->addHtml('', 'add_more_div', '');

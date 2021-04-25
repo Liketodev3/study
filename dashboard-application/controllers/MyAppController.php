@@ -103,6 +103,8 @@ class MyAppController extends FatController
             'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
             'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
             'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),
+            'completeProfile' => Label::getLabel('Lbl_Your_profile_is_completed'),
+            'incompleteProfile' => Label::getLabel('Lbl_Complete_Your_profile'),
             'language' => Label::getLabel('Lbl_Language'),
             'myTimeZoneLabel' => Label::getLabel('Lbl_My_Current_Time'),
             'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson'),
