@@ -26,8 +26,19 @@ $(document).ready(function () {
     });
   
 });
-
+var messageThreadPage = 1;
+var messageThreadAjax = false;
 var div = '#threadListing';
+
+$.chatLoader = {
+    show: function() {
+        $('.load-more-js').html(fcom.getLoader())
+    },
+    hide: function() {
+        $('.load-more-js').html('')
+    }
+};
+
 function threadListing(frm, id) {
     var data = fcom.frmData(frm);
     data = data + "&isactive=" + id;
@@ -65,14 +76,32 @@ function closethread() {
     $("body .message-details-js").hide();
     $("html").removeClass("show-message-details"); 
 }
-function getThread(id) {
+
+function getThread(id, page) {
+    page  = (page) ? page : messageThreadPage;
+
+    if(page = 1){
+        messageThreadAjax = false;
+    }
+    
+    if(messageThreadAjax){
+        return false;
+    }
+    $.chatLoader.show();
+    messageThreadPage += 1; 
     dv = ".message-details-js";
-    data = "thread_id=" + id;
+    data = "thread_id=" + id + "&message="+page;
     fcom.ajax(fcom.makeUrl('Messages', 'messageSearch'), data, function (ans) {
+        $.chatLoader.hide();
         var data = JSON.parse(ans);
-        $(dv).html(data.html).show();
-        $("html").addClass("show-message-details"); 
-        $( ".chat-room__body" ).scrollTop($( ".chat-room__body" )[0].scrollHeight);
+        if(page == 1){
+            $(dv).html(data.html).show();
+            $("html").addClass("show-message-details"); 
+            $( ".chat-room__body" ).scrollTop($( ".chat-room__body" )[0].scrollHeight);
+        }else{
+            $(dv).prepend(data.html);
+        }
+        $(dv).prepend(data.loadMore);
     });
     $('html').addClass('show-message-details');
     threadListing(document.frmMessageSrch, id);

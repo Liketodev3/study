@@ -26,7 +26,6 @@
                     </div>
                     <div class="msg-list__right">
                         <h6><?php echo $senderName; ?></h6>
-                        <p class="small">Sourth Africa</p>
                     </div>
                 </div>
             </div>
@@ -37,6 +36,8 @@
     </div>
     <div class="chat-room__body">
         <div class="chat-list margin-top-auto">
+            <div class="load-more-js">
+            </div>
             <?php
             $date = '';
             foreach ($arrListing as $row) { 

@@ -33,15 +33,20 @@ $closeSystemMessages = FatApp::getConfig("CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES",
 $closeSystemMessages = ($closeSystemMessages <= 0) ? 3 : $closeSystemMessages;
 $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $siteLangId, FatUtility::VAR_STRING, '');
 
-$loggedUserFirstName =  UserAuthentication::getLoggedUserAttribute('user_first_name');
-$loggedUserLastName =  UserAuthentication::getLoggedUserAttribute('user_last_name');
+$loggedUserFirstName = $userDetails['user_first_name'];
+$loggedUserLastName = $userDetails['user_last_name'];
 $loggedUserFullName = $loggedUserFirstName.' '.$loggedUserLastName;
+$loggedUserId = UserAuthentication::getLoggedUserId();
+
 
 $currentActiveTab =  User::getDashboardActiveTab();
 $canViewTeacherTab =  User::canViewTeacherTab();
 $isUserTeacher =   User::isTeacher();
 
 $bodyClass = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) ? 'dashboard-teacher' : 'dashboard-learner';
+
+$msgCnt = CommonHelper::getUnreadMsgCount();
+$unreadNotifications = UserNotifications::getUserUnreadNotifications($loggedUserId);
 ?>
 <script type="text/javascript">
 	
@@ -114,14 +119,14 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                         </li>
 
                         <li class="menu__item menu__item-messaging  <?php echo ($controllerName == 'Messages') ? 'is-active' : ''; ?>">
-                            <a href="<?php echo CommonHelper::generateUrl('Messages'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Messaging'); ?>" >  <!-- add  data-count="{count}" if any unread message -->
+                            <a href="<?php echo CommonHelper::generateUrl('Messages'); ?>" class="menu__item-trigger" <?php echo ($msgCnt > 0) ? 'data-count="'.$msgCnt.'"' : ""; ?> title="<?php echo Label::getLabel('LBL_Messaging'); ?>" >  <!-- add  data-count="{count}" if any unread message -->
                                 <svg class="icon icon--messaging"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#message'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Messaging'); ?></span>
                             </a>
                         </li>
 
                         <li class="menu__item menu__item-notifications <?php echo ($controllerName == 'Notifications') ? 'is-active' : ''; ?> ">
-                            <a href="<?php echo CommonHelper::generateUrl('Notifications'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Notificatons'); ?>" > <!-- add  data-count="{count}" if any unread Notificatons -->
+                            <a href="<?php echo CommonHelper::generateUrl('Notifications'); ?>" class="menu__item-trigger" <?php echo ($unreadNotifications > 0) ? 'data-count="'.$unreadNotifications.'"' : ""; ?> title="<?php echo Label::getLabel('LBL_Notificatons'); ?>" > <!-- add  data-count="{count}" if any unread Notificatons -->
                                 <svg class="icon icon--notificatons"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#notification'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Notificatons'); ?></span>
                             </a>
@@ -203,13 +208,27 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                             <div id="profile-target" class="profile__target">
                                 <div class="profile__target-details">
                                     <table>
-                                        <tr>
+                                        <?php 
+                                            $countryDetails =  Country::getCountryById($userDetails['user_country_id']);
+                                            if (!empty($countryDetails['country_name'])) {
+                                                ?>
+                                        <tr> 
                                             <th><?php echo label::getLabel('LBL_Location'); ?></th>
-                                            <td>France</td> 
+                                            <td>
+                                             <?php echo $countryDetails['country_name']; ?>
+                                            </td> 
                                         </tr>
+                                        <?php } ?>
                                         <tr>
                                             <th><?php echo label::getLabel('LBL_Time_Zone'); ?></th>
-                                            <td>12:20 PM (UTC +01:00)</td>
+                                            <td>
+                                                <?php 
+                                                    $userTimeZone = MyDate::getUserTimeZone($loggedUserId);
+                                                    $timezoneStr = CommonHelper::getDateOrTimeByTimeZone($userTimeZone, 'h:i A');
+                                                    echo $timezoneStr." (" . Label::getLabel('LBL_TIMEZONE_STRING') . " " . CommonHelper::getDateOrTimeByTimeZone($userTimeZone, 'P') . ")";
+                                                   
+                                                ?>
+                                            </td>
                                         </tr>
                                     </table>
                                     <span class="-gap-10"></span>
