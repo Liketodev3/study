@@ -1,3 +1,4 @@
+
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php
 $arr_flds = array(
@@ -38,7 +39,7 @@ foreach ($arr_listing as $sn => $row) {
 					$innerLiEdit = $innerUl->appendElement('li');
 
 					//$li = $ul->appendElement("li");
-					$innerLiEdit->appendElement('a', array('href' => 'javascript:void(0)', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Edit', $adminLangId), "onclick" => "urlForm(" . $row['urlrewrite_id'] . ")"), Label::getLabel('LBL_Edit', $adminLangId), true);
+					$innerLiEdit->appendElement('a', array('href' => 'javascript:void(0)', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Edit', $adminLangId), "onclick" => "urlForm(" . $row['urlrewrite_id'] . ",'" . $row['urlrewrite_original'] . "')"), Label::getLabel('LBL_Edit', $adminLangId), true);
 					$innerLiDelete = $innerUl->appendElement('li');
 
 					//$li = $ul->appendElement("li");
@@ -55,7 +56,6 @@ if (count($arr_listing) == 0) {
 	$tbl->appendElement('tr')->appendElement('td', array('colspan' => count($arr_flds)), Label::getLabel('LBL_No_Records_Found', $adminLangId));
 }
 echo $tbl->getHtml();
-
 $postedData['page'] = $page;
 echo FatUtility::createHiddenFormFromData($postedData, array('name' => 'frmUrlSearchPaging'));
 $pagingArr = array('pageCount' => $pageCount, 'page' => $page, 'recordCount' => $recordCount, 'adminLangId' => $adminLangId);

@@ -210,7 +210,7 @@ class CommonHelper extends FatUtility
 
     public static function generateUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false, $useLangCode = true): string
     {
-        $langId = (defined("SYSTEM_LANG_ID")) ? SYSTEM_LANG_ID : self::$_lang_id;
+        $langId = self::$_lang_id;
 
 
         if ($useLangCode == true && FatApp::getConfig('CONF_LANG_SPECIFIC_URL', FatUtility::VAR_INT, 0) && count(LANG_CODES_ARR) > 1 && $langId  != FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1)) {
@@ -227,9 +227,6 @@ class CommonHelper extends FatUtility
         if (!$use_root_url) {
             $use_root_url = CONF_WEBROOT_URL;
         }
-
-        // $urlString = trim($url, '/');
-
 
         $srch = UrlRewrite::getSearchObject();
         $srch->doNotCalculateRecords();

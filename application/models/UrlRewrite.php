@@ -1,7 +1,7 @@
 <?php
 class UrlRewrite extends MyAppModel
 {
-    const DB_TBL = 'tbl_url_rewrite';
+    const DB_TBL = 'tbl_url_rewrites';
     const DB_TBL_PREFIX = 'urlrewrite_';
     private $db;
 

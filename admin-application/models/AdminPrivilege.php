@@ -122,7 +122,7 @@ class AdminPrivilege
             static::SECTION_BIBLE_CONTENT => Label::getLabel('MSG_Bible_Content', CommonHelper::getLangId()),
             static::SECTION_MANAGE_PURCHASED_LESSONS => Label::getLabel('MSG_Manage_Purchased_lessons', CommonHelper::getLangId()),
             static::SECTION_ISSUES_REPORTED => Label::getLabel('MSG_Manage_Issues_Reported', CommonHelper::getLangId()),
-            static::SECTION_GIFTCARDS	 		=> Label::getLabel('MSG_GIFTCARDS', CommonHelper::getLangId()),
+            static::SECTION_GIFTCARDS             => Label::getLabel('MSG_GIFTCARDS', CommonHelper::getLangId()),
             static::SECTION_WITHDRAW_REQUESTS => Label::getLabel('MSG_Withdraw_Requests', CommonHelper::getLangId()),
             static::SECTION_TEACHER_REVIEWS => Label::getLabel('MSG_Teacher_Reviews', CommonHelper::getLangId()),
             static::SECTION_COMMISSION => Label::getLabel('MSG_Commission', CommonHelper::getLangId()),
@@ -448,12 +448,12 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_META_TAGS, static::PRIVILEGE_WRITE, $returnResult);
     }
 
-    public function canViewUrlRewrite($adminId = 0, $returnResult = false)
+    public function canViewUrlRewrites($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_URL_REWRITE, static::PRIVILEGE_READ, $returnResult);
     }
 
-    public function canEditUrlRewrite($adminId = 0, $returnResult = false)
+    public function canEditUrlRewrites($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_URL_REWRITE, static::PRIVILEGE_WRITE, $returnResult);
     }
@@ -740,9 +740,8 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_ISSUE_REPORT_OPTIONS, static::PRIVILEGE_READ, $returnResult);
     }
 
-    public function canViewCommissionReport($adminId = 0, $returnResult = false) 
+    public function canViewCommissionReport($adminId = 0, $returnResult = false)
     {
-        return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult); 
+        return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult);
     }
-
 }
