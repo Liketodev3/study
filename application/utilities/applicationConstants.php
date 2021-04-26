@@ -437,6 +437,6 @@ class applicationConstants
 
     public static function getBookingSlots()
     {
-        return array(15, 30, 45, 60, 90, 120);
+        return [15 => 15, 30 => 30, 45 => 45, 60 => 60, 90 => 90, 120 => 120];
     }
 }
