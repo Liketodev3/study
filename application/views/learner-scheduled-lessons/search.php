@@ -251,7 +251,8 @@ foreach ( $lessons as $lesson ) {
                         </a>
                     </li>
 					<?php } ?>
-					<?php if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTime<$startTime) { ?>
+					<?php
+					if($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && MyDate::hoursDiff($lessonsStartTime) >= FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24) ) { ?>
                     <li>
                         <a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lesson['sldetail_id']; ?>')" title="<?php echo Label::getLabel('LBL_Reschedule_Lesson'); ?>">
                             <svg version="1.1" width="30px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"

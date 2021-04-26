@@ -214,4 +214,10 @@ class MyDate extends FatDate
 
         return $newWeekDayArray;
     }
+
+    public static function hoursDiff(string $toDate, string $fromDate = '', int $roundUpTo = 2): float
+    {
+        $fromDate = $fromDate ?: date('Y-m-d H:i:s');
+        return round((strtotime($toDate) - strtotime($fromDate)) / 3600, $roundUpTo);
+    }
 }
