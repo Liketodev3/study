@@ -254,7 +254,7 @@ $(document).ready(function () {
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function (t) {
 			//$.mbsmessage.close();
 			if(goToPaymentForm) {
-				bankInfoForm();
+				$('.teacher-bankinfo-js').trigger('click');
 			}else if(userIsTeacher){
 				getTeacherProfileProgress();
 			}
@@ -314,11 +314,13 @@ $(document).ready(function () {
 		jQuery.grep(newTeachLangs, function (el) {
 			if (jQuery.inArray(el, teachLangs) == -1) difference.push(el);
 		});
-
+		
 		if (difference.length <= 0) {
+			$.loader.show();
 			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
 				//$.mbsmessage.close();
-				teacherLanguagesForm();
+				// teacherLanguagesForm();
+				$.loader.hide();
 			});
 			return;
 		}
@@ -332,10 +334,9 @@ $(document).ready(function () {
 					btnClass: 'btn btn--primary',
 					keys: ['enter', 'shift'],
 					action: function () {
+						$.loader.show();
 						fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
-							//$.mbsmessage.close();
-							teacherLanguagesForm();
-							// $("#teacher-tech-lang-price-js").click();
+							$.loader.hide();
 						});
 					}
 				},
@@ -358,13 +359,24 @@ $(document).ready(function () {
 		});
 	};
 
-	changeProficiency = function (value, langId) {
-		console.log(obj);
-		// fcom.updateWithAjax(fcom.makeUrl('Account', 'setPrefferedDashboard', [id]), '', function (res) {
-		// 	if (userIsTeacher) {
-		// 		getTeacherProfileProgress();
-		// 	}
-		// });
+	changeProficiency = function (obj, langId) {
+		langId = parseInt(langId);
+		if(langId <= 0){
+			return;
+		}
+		let value = obj.value;
+		slanguageSection = '.slanguage-'+langId;
+		slanguageCheckbox = '.slanguage-checkbox-'+langId;
+		if(value == ''){
+			$(slanguageSection).find('.badge-js').remove();
+			$(slanguageSection).removeClass('is-selected');
+			$(slanguageCheckbox).prop('checked',false);
+		}else{
+			$(slanguageSection).addClass('is-selected');
+			$(slanguageCheckbox).prop('checked',true);
+			$(slanguageSection).find('.badge-js').remove();
+			$(slanguageSection).find('.selection__trigger-label').append('<span class="badge color-secondary badge-js  badge--round badge--small margin-0">'+obj.selectedOptions[0].innerHTML+'</span>');
+		}
 	};
 
 

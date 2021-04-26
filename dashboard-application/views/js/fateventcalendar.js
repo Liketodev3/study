@@ -48,6 +48,7 @@ var FatEventCalendar = function(teacherId){
     };
 
     updateTime = function(time) {
+        console.log(moment(time).add(seconds,'seconds').format('hh:mm A'));
         jQuery('body').find(".fc-toolbar-ltr h6 span.timer").html(moment(time).add(seconds,'seconds').format('hh:mm A'));
     };
 
@@ -56,7 +57,9 @@ var FatEventCalendar = function(teacherId){
     };
 
     this.startTimer = function(current_time){
+            console.log(current_time)
         clearInterval(timeInterval);
+        window.clearInterval();
 
         timeInterval = setInterval(function(){
             this.updateTime(current_time);
@@ -454,9 +457,8 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
     var calendar = new FullCalendar.Calendar(calendarEl, conf);
     
     calendar.render();
-
     jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
+    seconds = 2;
     this.startTimer(current_time);
     return calendar;
 };
@@ -557,9 +559,8 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function(current_time){
     var calendar = new FullCalendar.Calendar(calendarEl, conf);
     
     calendar.render();
-
     jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
+    seconds = 2;
     this.startTimer(current_time);
     return calendar;
 };

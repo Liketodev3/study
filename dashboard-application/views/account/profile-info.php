@@ -72,7 +72,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 					<nav class="menu menu--vertical menu--steps tabs-scrollable-js">
 						<ul>
 							<li class="menu__item is-active">
-								<a href="javascript:void(0);" class="profile-Info-js" onClick="profileInfoForm()">
+								<a href="javascript:void(0);" class="profile-Info-js" onClick="profileInfoForm();">
 									<?php echo Label::getLabel('LBL_Personal_Info'); ?>
 									<span class="menu__icon"></span>
 								</a>
@@ -102,7 +102,13 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 								</a>
 							</li>
 							<li class="menu__item">
-								<a  href="javascript:void(0);" onClick="bankInfoForm()">
+								<a href="javascript:void(0);" class="general-availability-js" onClick="teacherGeneralAvailability()">
+									<?php echo Label::getLabel('LBL_Availability_Calendar'); ?>
+									<span class="menu__icon"></span>
+								</a>
+							</li>
+							<li class="menu__item">
+								<a  href="javascript:void(0);" class="teacher-bankinfo-js" onClick="bankInfoForm()">
 									<?php echo Label::getLabel('LBL_Payments'); ?>
 									<span class="menu__icon"></span>
 								</a>
