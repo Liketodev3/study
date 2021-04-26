@@ -1,48 +1,5 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number: RV-2.2
-
-Release Date: 2021-04-12
-
-New Features:
-
-    *79596: Integrate 2Checkout payment gateway
-    *79596: Integrate Paygate payment gateway
-    *81706: Integrate Paystack Payment gateway
-    *81802: Lesson reschedule and cancellation report
-    *80518: Multiple Booking Slots
-    *81798: Commission report
-    *79595: Basic PWA
-    *80349: Update Stripe to support SCA( Strong Customer Authentication)
-
-Updates:
-
-    *82683: Refine 'Total Revenue from lessons' on dashboard
-    *82203: Image for allowed payment gateways/cards on the platform
-    *81501: Refine and refactor Meta Tags Management
-    *80174: Images optimization
-    *82382: Auto Language selection
-    *82103: Teachers search query optimization
-    *78843: Upgrade zoom version - 1.9.1
-    *73053: Fix banners button URL and text and some bug fixes
-
-Bugs:
-
-    - #051199: Mobile resolution friendly email templates
-    - #045564: Saturday availability not showing correctly
-    - #048965: Emails with capital letters, can't start lesson
-    - #049602: Issue with speaking and proficiency level
-    - #050886: When user search Availability for all teachers for particular days then its not working accordingly.
-    - #051042: If teacher set general Availability and not  save current week's weekly Availability then system not allow to book a lesson on that time
-    - #044694: "Find a teacher> subjects in chronological order in the subjects dropdown If admin side you will reorder the subjects it is not showing in the same order at frontend"
-    - #049735: Change profile picture - on mobile version> Profile Picture changer - unable to zoom in and out on the mobile version. The picture loads, and you can zoom out. But once zoomed out all the way you can no longer move or adjust zoom in the image
-    - #050890: Once User registered, then No loader is showing during waiting or delay time.
-    - #050953: Apple touch Icons are not working (404), after updated from admin panel
-    - #051112: Currency/Languages scroller is not available if User added 100  currencies/languages  they are not displaying in the right manner  on the website
-    - #049899: Email Notification is missing> When teacher is placing wallet withdrawal request admin does not receive any notification through email.
-    - #049783: When user multiple click on statistics button then graphical representation has changed
-    - #050923: Change week start and end date timezone
-    - #052314- Remove delete lesson package option from admin panel
 
 ==============================================================================================================================
 Installation steps:
