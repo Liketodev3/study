@@ -1,6 +1,6 @@
+var timeInterval;
 var FatEventCalendar = function(teacherId){
     this.teacherId = teacherId;
-    var timeInterval;
     var seconds = 2;
 
     this.calDefaultConf = {
@@ -48,7 +48,6 @@ var FatEventCalendar = function(teacherId){
     };
 
     updateTime = function(time) {
-        console.log(moment(time).add(seconds,'seconds').format('hh:mm A'));
         jQuery('body').find(".fc-toolbar-ltr h6 span.timer").html(moment(time).add(seconds,'seconds').format('hh:mm A'));
     };
 
@@ -57,10 +56,8 @@ var FatEventCalendar = function(teacherId){
     };
 
     this.startTimer = function(current_time){
-            console.log(current_time)
+        
         clearInterval(timeInterval);
-        window.clearInterval();
-
         timeInterval = setInterval(function(){
             this.updateTime(current_time);
             seconds++;

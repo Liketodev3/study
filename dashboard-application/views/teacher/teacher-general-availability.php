@@ -8,8 +8,8 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
 	<div class="row align-items-center justify-content-between">
 		<div class="col-6">
 			<div class="tab-switch">
-                <a href="#" class="tab-switch__item is-active"><?php echo Label::getLabel('LBL_General'); ?></a>
-				<a href="#" class="tab-switch__item" onclick="teacherWeeklySchedule()"><?php echo Label::getLabel('LBL_Weekly'); ?></a>
+                <a href="javascript:void(0);" class="tab-switch__item is-active"><?php echo Label::getLabel('LBL_General'); ?></a>
+				<a href="javascript:void(0);" class="tab-switch__item" onclick="teacherWeeklySchedule()"><?php echo Label::getLabel('LBL_Weekly'); ?></a>
 			</div>
 		</div>
 		<div class="col-lg-auto col-auto">

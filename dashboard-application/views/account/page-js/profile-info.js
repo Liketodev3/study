@@ -254,7 +254,7 @@ $(document).ready(function () {
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function (t) {
 			//$.mbsmessage.close();
 			if(goToPaymentForm) {
-				$('.teacher-bankinfo-js').trigger('click');
+				$('.general-availability-js').trigger('click');
 			}else if(userIsTeacher){
 				getTeacherProfileProgress();
 			}
