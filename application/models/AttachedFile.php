@@ -625,4 +625,18 @@ class AttachedFile extends MyAppModel
     {
         return mime_content_type($filepath);
     }
+
+
+    public static function getTabsArr(int $langId): array
+    {
+        $imageAttributesGroups = array(
+            AttachedFile::FILETYPE_BANNER => Label::getLabel('IMGA_Banner', $langId),
+            AttachedFile::FILETYPE_HOME_PAGE_BANNER => Label::getLabel('IMGA_Home_Page_Banner', $langId),
+            AttachedFile::FILETYPE_CPAGE_BACKGROUND_IMAGE => Label::getLabel('IMGA_CPAGE_BACKGROUND_IMAGE', $langId),
+            AttachedFile::FILETYPE_TEACHING_LANGUAGES => Label::getLabel('IMGA_TEACHING_LANGUAGES', $langId),
+            AttachedFile::FILETYPE_FLAG_TEACHING_LANGUAGES => Label::getLabel('IMGA_TEACHING_LANGUAGES_FLAG', $langId),
+            AttachedFile::FILETYPE_BLOG_POST_IMAGE => Label::getLabel('IMGA_BLOG_POST_IMAGE', $langId),
+        );
+        return $imageAttributesGroups;
+    }
 }

@@ -7,6 +7,7 @@
 					<section class="section searchform_filter">
 						<div class="sectionhead">
 							<h4> <?php echo Label::getLabel('LBL_Search...', $adminLangId); ?></h4>
+
 						</div>
 						<div class="sectionbody space togglewrap" style="display:none;">
 							<?php
@@ -19,7 +20,7 @@
 							($frmSearch->getField('hasTagsAssociated')) ? $frmSearch->getField('hasTagsAssociated')->addFieldtagAttribute('class', 'search-input') : NUll;
 							$submitBtn = $frmSearch->getField('btn_submit');
 							$clearbtn = $frmSearch->getField('btn_clear');
-
+							$submitBtn->attachField($clearbtn);
 							$clearbtn->addFieldtagAttribute('onclick', 'clearSearch();');
 
 							echo  $frmSearch->getFormHtml();
@@ -36,6 +37,11 @@
 			<section class="section">
 				<div class="sectionhead">
 					<h4><?php echo Label::getLabel('LBL_Image_Attributes_Listing', $adminLangId); ?></h4>
+					<div class="label--note text-right">
+						<strong class="-color-secondary span-right">
+							<?php echo Label::getLabel('LBL_Specific_Language_Alter_Tags_Note', $adminLangId) ?>
+						</strong>
+					</div>
 					<?php if (isset($canAdd) && $canAdd == true) {
 						$ul = new HtmlElement("ul", array("class" => "actions actions--centered"));
 						$li = $ul->appendElement("li", array('class' => 'droplink'));

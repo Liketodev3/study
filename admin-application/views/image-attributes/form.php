@@ -9,7 +9,7 @@ $frm->developerTags['fld_default_col'] = 12;
 <section class="section">
 	<div class="sectionhead">
 
-		<h4><?php echo Label::getLabel('LBL_Url_Rewrite_Setup', $adminLangId); ?></h4>
+		<h4><?php echo Label::getLabel('LBL_Image_Attributes_Setup', $adminLangId); ?></h4>
 	</div>
 	<div class="sectionbody space">
 		<div class="row">

@@ -2,19 +2,18 @@
 
 class ImageAttributesController extends AdminBaseController
 {
-
     public function __construct($action)
     {
         parent::__construct($action);
         $this->admin_id = AdminAuthentication::getLoggedAdminId();
-        $this->objPrivilege->canViewImageAttributes($this->admin_id, true);
+        $this->objPrivilege->canViewImageAttributes($this->admin_id);
     }
 
     public function index()
     {
         $canEdit = $this->objPrivilege->canEditImageAttributes($this->admin_id, true);
         $this->set('adminId', $this->admin_id);
-        $this->set("tabsArr", $this->getTabsArr());
+        $this->set("tabsArr", AttachedFile::getTabsArr($this->adminLangId));
         $this->set('activeTab', AttachedFile::FILETYPE_HOME_PAGE_BANNER);
         $this->set("canEdit", $canEdit);
         $this->_template->render();
@@ -49,7 +48,7 @@ class ImageAttributesController extends AdminBaseController
             case AttachedFile::FILETYPE_BANNER:
                 $srch->joinTable(Banner::DB_TBL, 'LEFT OUTER JOIN', 'banner_id = afile_record_id', 'banner');
                 $srch->joinTable(Banner::DB_LANG_TBL, 'LEFT OUTER JOIN', Banner::DB_LANG_TBL_PREFIX . 'banner_id = banner.banner_id and bannerlang_lang_id=' . $this->adminLangId, 'banner_l');
-                $cond = $srch->addCondition('afile_type', '=', AttachedFile::FILETYPE_BANNER);
+                $srch->addCondition('afile_type', '=', AttachedFile::FILETYPE_BANNER);
                 $srch->addMultipleFields(
                     array('afile_id,banner_id as record_id', 'afile_lang_id', 'banner_title as record_name', 'afile_type')
                 );
@@ -69,8 +68,8 @@ class ImageAttributesController extends AdminBaseController
                 break;
             case AttachedFile::FILETYPE_CPAGE_BACKGROUND_IMAGE:
                 $srch->joinTable(ContentPage::DB_TBL, 'LEFT OUTER JOIN', 'cpage_id = afile_record_id', 'cp');
-                $cond = $srch->addCondition('afile_type', '=', AttachedFile::FILETYPE_CPAGE_BACKGROUND_IMAGE);
-                $cond = $srch->addCondition('cpage_deleted', '=', applicationConstants::NO);
+                $srch->addCondition('afile_type', '=', AttachedFile::FILETYPE_CPAGE_BACKGROUND_IMAGE);
+                $srch->addCondition('cpage_deleted', '=', applicationConstants::NO);
                 $srch->addMultipleFields(
                     array('afile_id,cpage_id as record_id', 'afile_lang_id', 'cpage_identifier as record_name', 'afile_type')
                 );
@@ -80,7 +79,7 @@ class ImageAttributesController extends AdminBaseController
                 break;
             case AttachedFile::FILETYPE_TEACHING_LANGUAGES:
                 $srch->joinTable(TeachingLanguage::DB_TBL, 'LEFT OUTER JOIN', 'tlanguage_id = afile_record_id', 'tl');
-                $cond = $srch->addCondition('afile_type', '=', AttachedFile::FILETYPE_TEACHING_LANGUAGES);
+                $srch->addCondition('afile_type', '=', AttachedFile::FILETYPE_TEACHING_LANGUAGES);
                 $srch->addMultipleFields(
                     array('afile_id,tlanguage_id as record_id', 'afile_lang_id', 'tlanguage_identifier as record_name', 'afile_type')
                 );
@@ -90,7 +89,7 @@ class ImageAttributesController extends AdminBaseController
                 break;
             case AttachedFile::FILETYPE_FLAG_TEACHING_LANGUAGES:
                 $srch->joinTable(TeachingLanguage::DB_TBL, 'LEFT OUTER JOIN', 'tlanguage_id = afile_record_id', 'tl');
-                $cond = $srch->addCondition('afile_type', '=', AttachedFile::FILETYPE_FLAG_TEACHING_LANGUAGES);
+                $srch->addCondition('afile_type', '=', AttachedFile::FILETYPE_FLAG_TEACHING_LANGUAGES);
                 $srch->addMultipleFields(
                     array('afile_id,tlanguage_id as record_id', 'afile_lang_id', 'tlanguage_identifier as record_name', 'afile_type')
                 );
@@ -100,7 +99,7 @@ class ImageAttributesController extends AdminBaseController
                 break;
             case AttachedFile::FILETYPE_BLOG_POST_IMAGE:
                 $srch->joinTable(BlogPost::DB_TBL, 'LEFT OUTER JOIN', 'post_id = afile_record_id', 'bp');
-                $cond = $srch->addCondition('afile_type', '=', AttachedFile::FILETYPE_BLOG_POST_IMAGE);
+                $srch->addCondition('afile_type', '=', AttachedFile::FILETYPE_BLOG_POST_IMAGE);
                 $srch->addMultipleFields(
                     array('afile_id,post_id as record_id', 'afile_lang_id', 'post_identifier as record_name', 'afile_type')
                 );
@@ -198,9 +197,8 @@ class ImageAttributesController extends AdminBaseController
         $frm = new Form('frmSearch');
         $frm->addHiddenField(Label::getLabel('LBL_Type', $this->adminLangId), 'imageAttributeType', $imageAttributeType);
         $frm->addTextBox(Label::getLabel('LBL_Keyword', $this->adminLangId), 'keyword');
-        $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
-        $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId), array('onclick' => 'clearSearch();'));
-        $fld_submit->attachField($fld_cancel);
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
+        $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId), array('onclick' => 'clearSearch();'));
         return $frm;
     }
 
@@ -214,18 +212,5 @@ class ImageAttributesController extends AdminBaseController
         $frm->addRequiredField(Label::getLabel('LBL_Image_Alt', $this->adminLangId), 'afile_attribute_alt');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
-    }
-
-    private function getTabsArr(): array
-    {
-        $imageAttributesGroups = array(
-            AttachedFile::FILETYPE_BANNER => Label::getLabel('IMGA_Banner', $this->adminLangId),
-            AttachedFile::FILETYPE_HOME_PAGE_BANNER => Label::getLabel('IMGA_Home_Page_Banner', $this->adminLangId),
-            AttachedFile::FILETYPE_CPAGE_BACKGROUND_IMAGE => Label::getLabel('IMGA_CPAGE_BACKGROUND_IMAGE', $this->adminLangId),
-            AttachedFile::FILETYPE_TEACHING_LANGUAGES => Label::getLabel('IMGA_TEACHING_LANGUAGES', $this->adminLangId),
-            AttachedFile::FILETYPE_FLAG_TEACHING_LANGUAGES => Label::getLabel('IMGA_TEACHING_LANGUAGES_FLAG', $this->adminLangId),
-            AttachedFile::FILETYPE_BLOG_POST_IMAGE => Label::getLabel('IMGA_BLOG_POST_IMAGE', $this->adminLangId),
-        );
-        return $imageAttributesGroups;
     }
 }
