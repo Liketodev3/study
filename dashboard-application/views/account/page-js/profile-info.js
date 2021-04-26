@@ -752,7 +752,7 @@ $(document).ready(function () {
 		});
 	};
 
-	setUpProfileLangInfo = function (frm, gotToNextLangForm, goToLangForm) {
+	setUpProfileLangInfo = function (frm, gotToNextLangForm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileLangInfo'), data, function (t) {
@@ -761,8 +761,6 @@ $(document).ready(function () {
 					getLangProfileInfoForm(t.langId);
 					return;
 				}
-			}else if(goToLangForm){
-				$('.teacher-lang-form-js').trigger('click');
 			}
 			else if($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0){
 				$('.profile-lang-tab.is-active').next('.profile-lang-tab').find('a').click();

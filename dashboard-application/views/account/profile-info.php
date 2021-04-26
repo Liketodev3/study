@@ -17,6 +17,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 		</div>
 
 		<div class="page__body">
+		<?php if($userIsTeacher){ ?>
 			<!-- [ INFO BAR ========= -->
 			<div class="infobar">
 				<div class="row justify-content-between align-items-start">
@@ -66,6 +67,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 				</div>
 			</div>
 			<!-- ] -->
+			<?php } ?>
 			<!-- [ PAGE PANEL ========= -->
 			<div class="page-panel page-panel--flex min-height-500">
 				<div class="page-panel__small">
@@ -77,6 +79,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 									<span class="menu__icon"></span>
 								</a>
 							</li>
+							<?php if($userIsTeacher){ ?>
 							<li class="menu__item">
 								<a href="javascript:void(0);" class="teacher-lang-form-js" onClick="teacherLanguagesForm()">
 									<?php echo Label::getLabel('LBL_Languages'); ?>
@@ -113,6 +116,8 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 									<span class="menu__icon"></span>
 								</a>
 							</li>
+							<?php } ?>
+							
 							<li class="menu__item">
 								<a href="javascript:void(0);" onClick="changePasswordForm()">
 									<?php echo Label::getLabel('LBL_Password_/_Email');?>

@@ -316,9 +316,11 @@ class AccountController extends LoggedUserController
             CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', [$userId, 'MEDIUM', true], CONF_WEBROOT_FRONTEND) . '?' . time());
         }
-        $userSettings = new UserSetting($userId);
-        if(!$userSettings->saveData(['us_video_link' => $post['us_video_link']])){
-            FatUtility::dieJsonError($userSettings->getError());
+        if ($isTeacher) {
+            $userSettings = new UserSetting($userId);
+            if (!$userSettings->saveData(['us_video_link' => $post['us_video_link']])) {
+                FatUtility::dieJsonError($userSettings->getError());
+            }
         }
 
         $this->set('msg', Label::getLabel('MSG_Data_uploaded_successfully'));

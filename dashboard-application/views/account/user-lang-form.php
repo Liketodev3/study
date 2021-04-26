@@ -15,7 +15,7 @@ $langId = end($languagesKeys);
 $nextButton =  $langFrm->getField('btn_next');
 $nextButton->addFieldTagAttribute('onclick','setUpProfileLangInfo(this.form, true); return(false);');
 if($langId == $lang_id) {
-    $nextButton->setFieldTagAttribute('onclick','setUpProfileLangInfo(this.form, true, true); return(false);');
+    $nextButton->setFieldTagAttribute('onclick','setUpProfileLangInfo(this.form, true); $(".teacher-lang-form-js").trigger("click"); return(false);');
 }
 ?>
 <div class="padding-6">
@@ -50,9 +50,9 @@ if($langId == $lang_id) {
                             <div class="field_cover">
                                 <?php 
                                     echo $langFrm->getFieldHtml('btn_submit'); 
-                                   // if($langId !=  $lang_id) {
+                                    if($langId != $lang_id || User::isTeacher(true) == true) {
                                         echo $langFrm->getFieldHtml('btn_next'); 
-                                   // }
+                                   }
                                 ?>
                             </div>
                         </div>
