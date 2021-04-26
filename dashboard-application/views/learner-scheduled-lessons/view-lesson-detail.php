@@ -35,7 +35,7 @@ $isJoined = $lessonData['sldetail_learner_join_time'] > 0;
 ?>
 <section class="section section--grey section--page">
     <div class="screen">
-        <div class="screen__left" style="background-image:url(<?php echo CommonHelper::generateUrl('Image', 'lesson', array($siteLangId)) ?>">
+        <div class="screen__left" style="background-image:url(<?php echo CommonHelper::generateUrl('Image', 'lesson', array($siteLangId), CONF_WEBROOT_FRONTEND) ?>">
             <div class="screen__center-content">
                 <?php if ($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) { ?>
                     <div class="alert alert--info" role="alert">

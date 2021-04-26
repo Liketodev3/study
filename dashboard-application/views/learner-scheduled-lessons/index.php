@@ -59,7 +59,7 @@
 									</div>
 								</div>
 							</div>
-							<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$upcomingLesson['slesson_id']]); ?>" class="btn bg-secondary"><?php echo Label::getLabel('LBL_Enter_Classroom') ?></a>
+							<a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons', 'view', [$upcomingLesson['sldetail_id']]); ?>" class="btn bg-secondary"><?php echo Label::getLabel('LBL_Enter_Classroom') ?></a>
 
 						</div>
 
