@@ -1,5 +1,21 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.12.0.20210426
+
+Release Date: 2021-04-26
+
+Updates:
+
+    - Add 15 mins booking slot.
+    - Give provision to admin to change trial lesson duration.
+
+Fixes:
+
+    Bug-#051847 - Fix checkout page ui for mobile resolution
+    Bug-#052412 - Stop learner from reschduling lesson after a window passes
+    Bug-#052672 - Fix media deletion on teach-langs section in admin
+    Bug-#052674 - Fix issue on req withdrawl submission
+    Bug-#052675 - Fix pagination and search issue in Top languages report
 
 ==============================================================================================================================
 Installation steps:
