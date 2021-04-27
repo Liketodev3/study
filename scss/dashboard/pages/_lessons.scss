@@ -253,7 +253,7 @@ $page-filter: "page-filter";
 $search-filter: "search-filter";
 
 .#{$search-filter}{
-    position: absolute; top: 100%; left: 0; right: 0; background-color:theme('color.white'); border-radius: theme('radius.1'); padding: theme('padding.5') theme('padding.6') theme('padding.2');  box-shadow: theme('boxShadow.vertical');z-index: 3;
+    position: relative; background-color:theme('color.white'); border-radius: theme('radius.1'); padding: theme('padding.5') theme('padding.6') theme('padding.2');  margin: theme('padding.6') 0; z-index: 3;
    
    
 } 
