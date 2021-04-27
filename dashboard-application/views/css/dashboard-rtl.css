@@ -863,6 +863,43 @@ p {
     top: 0;
     bottom: 0; } }
 
+.montly-lesson-calendar .fc-header-toolbar {
+  padding: var(--padding-6) var(--padding-6) 0;
+  margin: 0 !important; }
+
+.montly-lesson-calendar .fc-view-harness {
+  margin: var(--padding-6); }
+  .montly-lesson-calendar .fc-view-harness .fc-scrollgrid {
+    border: 1px solid var(--color-gray-200); }
+
+.fc-scroller-harness .fc-col-header-cell {
+  border: 1px solid var(--color-gray-200); }
+  .fc-scroller-harness .fc-col-header-cell .fc-scrollgrid-sync-inner {
+    height: 40px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center; }
+    .fc-scroller-harness .fc-col-header-cell .fc-scrollgrid-sync-inner a {
+      text-transform: uppercase;
+      font-weight: 600; }
+
+.fc-scroller-harness .fc-scrollgrid-sync-table .fc-daygrid-day {
+  border: 1px solid var(--color-gray-200); }
+
+.fc-scrollgrid-section td {
+  border: none; }
+
+.fc-daygrid-day-frame .fc-daygrid-day-top {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+
 .menu-vertical li a {
   display: block;
   padding: 22px 15px 22px 15px;
