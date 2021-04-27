@@ -53,7 +53,8 @@ foreach ($lessonArr as $key => $lessons) { ?>
 				$lessonsStartTime = $lesson['slesson_date']." ". $lesson['slesson_start_time'];
 				$startTime = MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $lessonsStartTime, true, $user_timezone);
 				$startUnixTime = strtotime($startTime);
-				if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
+				 if ($lesson['slesson_date'] != '0000-00-00') { 
+				// if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
 				<div class="card-landscape__head">
 					<?php 
 						$endDateTime = $lesson['slesson_end_date']." ". $lesson['slesson_end_time'];
@@ -62,15 +63,12 @@ foreach ($lessonArr as $key => $lessons) { ?>
 					<time class="card-landscape__time"><?php echo date('h:i A',$startUnixTime); ?></time>
 					<date class="card-landscape__date"><?php echo date('l, F d, Y',$startUnixTime); ?></date>		
 				</div>	
+				<?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
 				<div class="timer">
 					<div class="timer__media"><span><svg class="icon icon--clock icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#clock'; ?>"></use></svg></span></div>
 					<div class="timer__content">
 						<?php if ($startUnixTime > strtotime($curDateTime)) { ?>
 						<div class="timer__controls countdowntimer timer-js"  id="countdowntimer-<?php echo $lesson['slesson_id']?>" data-startTime="<?php echo $curDateTime; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>">
-							<!-- <div class="timer__digit">00</div>
-							<div class="timer__digit">06</div>
-							<div class="timer__digit">33</div>
-							<div class="timer__digit">16</div> -->
 						</div>
 						<?php }else { 
 							$lessonInfoLblKey = 'LBL_Lesson_time_has_passed';
@@ -81,7 +79,7 @@ foreach ($lessonArr as $key => $lessons) { ?>
 						 } ?>
 					</div>
 				</div>		
-			<?php } ?>	
+			<?php } } ?>	
 			</div>
 			<div class="card-landscape__colum card-landscape__colum--second">
 				<div class="card-landscape__head">
@@ -97,8 +95,8 @@ foreach ($lessonArr as $key => $lessons) { ?>
 					<?php } ?>
 					<span class="card-landscape__status badge color-secondary badge--curve badge--small margin-left-0"><?php echo $lessonsStatus; ?></span>
 				</div>
-				<?php if ($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) {
-                        if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['isLessonPlanAttach'] > 0) { 
+				<?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) {
+                        if ($lesson['isLessonPlanAttach'] > 0) { 
 				?>
 						<div class="card-landscape__docs">
 							<div class="d-flex align-items-center">

@@ -4,14 +4,17 @@ $userTz = MyDate::getUserTimeZone();
 $format = 'Y/m/d H:i:s';
 
 $curDate = MyDate::timezoneConvertedTime($format, date('Y-m-d H:i:s'), true, $userTz);
-$curDateTimeunix = MyDate::timezoneConvertedTime($format, date('Y-m-d H:i:s'), true, $userTz);
+$curDateTimeunix = strtotime($curDate);
 
 $startTime = MyDate::timezoneConvertedTime($format, $lessonData['slesson_date'] . ' ' . $lessonData['slesson_start_time'], true, $userTz);
 
 $startDateTimeUnixtime = strtotime($startTime);
 
+
 $endTime = MyDate::timezoneConvertedTime($format, date($lessonData['slesson_end_date'] . ' ' . $lessonData['slesson_end_time']), true, $userTz);
 $endDateTimeUnixtime = strtotime($endTime);
+
+$endTime = date($format, $endDateTimeUnixtime );
 
 $chatId = UserAuthentication::getLoggedUserId();
 // prx()
@@ -44,7 +47,7 @@ if($lessonData['slesson_grpcls_id'] <= 0)
     $lessonTitle =  str_replace(['{teach-lang}','{n}'], [$teachLang, $lessonData['op_lesson_duration']], $lessonTitleLabel);
 }
 
-$canEnd = ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) && ($startTime < $curDate);
+$canEnd = ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) && ($startDateTimeUnixtime < $curDateTimeunix);
 
 $lessonsStatus = $statusArr[$lessonData['sldetail_learner_status']];
 $lessonData['lessonReschedulelogId'] =  FatUtility::int($lessonData['lessonReschedulelogId']);
@@ -62,6 +65,8 @@ if (
 
 $isScheduled = $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED;
 $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
+
+$activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT);
 ?>
 <div class="session__head">
     <div class="session-infobar">
@@ -74,7 +79,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                             if($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
                             <span class="color-primary"><?php echo $lessonsStatus; ?></span> 
                         <?php } 
-                        echo Label::getLabel('LBL_with');
+                        echo ' '.Label::getLabel('LBL_with');
                     ?>
                     </h4>
                     <?php 
@@ -133,16 +138,16 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                 </div>
                 <div class="session-infobar__bottom">
                     <div class="session-time">
-                        <?php if($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED){ ?>
+                        <?php if($lessonData['slesson_date'] != '0000-00-00'){ ?>
                             <p>
-                                <span><?php echo date('h:m A', $startDateTimeUnixtime).' - '.date('h:m A', $endDateTimeUnixtime);  ?>,</span> 
+                                <span><?php echo date('h:i A', $startDateTimeUnixtime).' - '.date('h:i A', $endDateTimeUnixtime);  ?>,</span> 
                                 <?php echo date('l, F d, Y', $startDateTimeUnixtime); ?>
                         </p>
                         <?php } ?>
                     </div>
-                    <?php if ($lessonData['order_is_paid'] != Order::ORDER_IS_CANCELLED) { ?>
+                    <?php if ($lessonData['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) { ?>
                         <div class="session-resource">
-                            <?php if ($lessonData['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lessonData['isLessonPlanAttach'] > 0) {  ?>
+                            <?php if ($lessonData['isLessonPlanAttach'] > 0) {  ?>
                                 <div class="d-flex align-items-center">
                                     <a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lessonData['slesson_id']; ?>');" class="attachment-file">
                                         <svg class="icon icon--issue icon--attachement icon--xsmall color-black"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#attach'; ?>"></use></svg>
@@ -152,7 +157,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                                     <a href="javascript:void(0);" onclick="removeAssignedLessonPlan('<?php echo $lessonData['slesson_id']; ?>');" class="underline color-primary  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Remove'); ?></a>
                                 </div>
                             <?php }else{ ?>
-                                <a a href="javascript:void(0);" onclick="listLessonPlans('<?php echo $lesson['slesson_id']; ?>');" class="btn btn--transparent btn--addition color-primary btn--small"><?php echo Label::getLabel('LBL_Add_Lesson_Plan'); ?></a>
+                                <a a href="javascript:void(0);" onclick="listLessonPlans('<?php echo $lessonData['slesson_id']; ?>');" class="btn btn--transparent btn--addition color-primary btn--small"><?php echo Label::getLabel('LBL_Add_Lesson_Plan'); ?></a>
                             <?php } ?>
                         </div>
                     <?php } ?>
@@ -161,25 +166,25 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
             <div class="col-xl-4 col-lg-4 col-sm-12">
                 <div class="session-infobar__action">
                     <span class="btn btn--live" id="end_lesson_timer" style="display:none;"></span>
+                    <button class="btn bg-red" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?></button>
                     <?php if ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTimeunix < $startDateTimeUnixtime) { ?>
-                        <button class="btn btn--third" onclick="requestReschedule('<?php echo $lesson['slesson_id']; ?>');"><?php echo Label::getLabel('LBL_Reschedule'); ?></button>
+                        <button class="btn btn--third" onclick="requestReschedule('<?php echo $lessonData['slesson_id']; ?>');"><?php echo Label::getLabel('LBL_Reschedule'); ?></button>
                    
                     <?php } ?>
-                    <?php if (($lessonData['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING || $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) && ($curDateTimeunix < $startDateTimeUnixtime)) { ?>
+                    <?php if (( $lessonData['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ) || ( $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTimeunix < $startDateTimeUnixtime)) { ?>
                         <button onclick="cancelLesson('<?php echo $lessonData['slesson_id']; ?>');" class="btn btn--bordered color-third"><?php echo Label::getLabel('LBL_Cancel'); ?></button>
                     <?php } ?>
                     <?php if ($is_issue_reported) { ?>
                         <button  onclick="resolveIssue('<?php echo $lessonData['slesson_id']; ?>');" class="btn btn--bordered color-third"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></button>
                     <?php } ?>
                 </div> 
-                <button class="btn bg-red" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?></button>
             </div>
         </div>  
     </div>
 </div>
 <div class="session__body">
     <div class="sesson-window" style="background-image: url(<?php echo CommonHelper::generateUrl('Image', 'lesson', array($siteLangId), CONF_WEBROOT_FRONTEND) ?>);">
-        <div class="sesson-window__content " id="lessonBox" class="cometChatBox"> <!-- session-window__frame -->
+        <div class="sesson-window__content lessonBox" id="lessonBox"> <!-- session-window__frame -->
             <div class="session-status">
                 <?php 
                     $showGoToDashboardBtn = true;
@@ -216,12 +221,21 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
                 ?>
                      <a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>" class="btn bg-primary"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
                 <?php } ?>
-                
+                <?php ?>
+                <?php if ($lessonData['slesson_teacher_join_time'] == '0000-00-00 00:00:00' || $activeMettingTool == ApplicationConstants::MEETING_ZOOM) { ?>
+                    <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startDateTimeUnixtime > $curDateTimeunix || $curDateTimeunix > $endDateTimeUnixtime || !$isScheduled ? 'style="display:none;"' : '') ?>>
+                        <?php if ($activeMettingTool == ApplicationConstants::MEETING_ZOOM){ ?>
+                            <a href="javascript:void(0);" class="btn btn--primary btn--large -hide-mobile" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
+                            <a href="javascript:void(0);" class="btn btn--secondary btn--large" onclick="joinLessonFromApp(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
+                        <?php }else{ ?>
+                            <a href="javascript:void(0);" class="btn btn--secondary btn--large" id="joinL" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
             </div>
             <div class="start-lesson-timer timer" style="display:none;">
                 <h5 class="timer-title"><?php echo Label::getLabel('LBL_Starts_In'); ?></h5>
-                <div class="countdown-timer" id="start_lesson_timer">
-                   
+                    <div class="countdown-timer" id="start_lesson_timer">
                 </div>
             </div>
         </div>
@@ -234,7 +248,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
     var endTime = "<?php echo $endTime; ?>";
 
     langLbl.chargelearner = "<?php echo ($lessonData['is_trial']) ? Label::getLabel('LBL_End_Lesson') : Label::getLabel('LBL_Charge_Learner'); ?>";
-    var is_time_up = '<?php echo ($endTime > 0) && ($endTime < $curDate) ?>';
+    var is_time_up = '<?php echo ($endTime > 0) && ($endDateTimeUnixtime < $curDateTimeunix) ?>';
 
     var lesson_joined = '<?php echo $isJoined ?>';
     var lesson_completed = '<?php echo $lessonData['slesson_teacher_end_time'] > 0 ?>';
@@ -301,6 +315,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
         $("#joinL").hide();
         $("#endL").show();
         $('.screen-chat-js').show();
+        $('.lessonBox').removeClass('sesson-window__content').addClass('session-window__frame').show();
         checkEveryMinuteStatus();
         searchFlashCards(document.frmFlashCardSrch);
         checkNewFlashCards();
@@ -309,6 +324,7 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
     function endLessonButtonAction() {
         $("#joinL").hide();
         $("#end_lesson_time_div, #endL, .screen-chat-js").hide();
+        $('.lessonBox').removeClass('session-window__frame').addClass('sesson-window__content').hide();
         searchFlashCards(document.frmFlashCardSrch);
         if (checkEveryMinuteStatusVar) {
             clearInterval(checkEveryMinuteStatusVar);
@@ -375,12 +391,12 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
     function endLessonCountDownTimer(curDate, endTime) {
         countDownTimer(curDate, endTime, function(w_res_data) {
             if (w_res_data) {
-                $('#end_lesson_time_div').show();
+                $('#end_lesson_timer').show();
                 if (lesson_joined) {
                     $('#endL').show();
                 }
             } else {
-                $('#end_lesson_time_div').hide();
+                $('#end_lesson_timer').hide();
             }
             $('#end_lesson_timer').html(w_res_data);
         });
@@ -416,7 +432,6 @@ $isJoined = $lessonData['slesson_teacher_join_time'] > 0;
     $(function() {
 
         <?php if ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
-            console.log(curDate, startTime);
             if (curDate < startTime) {
                 countDownTimer(curDate, startTime, function(w_res_data) {
                     $('#start_lesson_timer').html(w_res_data);
