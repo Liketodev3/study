@@ -6,7 +6,7 @@ class Language extends MyAppModel
     public function __construct($langId = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $langId);
-        $this->objMainTableRecord->setSensitiveFields(array( ));
+        $this->objMainTableRecord->setSensitiveFields(array());
     }
 
     public static function getSearchObject($isActive = true)
@@ -14,7 +14,7 @@ class Language extends MyAppModel
         $srch = new SearchBase(static::DB_TBL, 'l');
 
         if ($isActive == true) {
-            $srch->addCondition('l.' . static::DB_TBL_PREFIX.'active', '=', applicationConstants::ACTIVE);
+            $srch->addCondition('l.' . static::DB_TBL_PREFIX . 'active', '=', applicationConstants::ACTIVE);
         }
         return $srch;
     }
@@ -24,7 +24,7 @@ class Language extends MyAppModel
         $srch = new SearchBase(static::DB_TBL);
         $srch->addOrder(static::tblFld('id'));
         if ($active === true) {
-            $srch->addCondition(static::DB_TBL_PREFIX.'active', '=', applicationConstants::ACTIVE);
+            $srch->addCondition(static::DB_TBL_PREFIX . 'active', '=', applicationConstants::ACTIVE);
         }
 
         if ($recordId > 0) {
@@ -42,7 +42,7 @@ class Language extends MyAppModel
         }
     }
 
-    public static function getAllCodesAssoc($withDefaultValue = false, $recordId = 0, $active = true, $deleted = false)
+    public static function getAllCodesAssoc($withDefaultValue = false, $langId = 1, $recordId = 0, $active = true, $deleted = false)
     {
         $srch = new SearchBase(static::DB_TBL);
         $srch->addOrder(static::tblFld('id'));
@@ -59,7 +59,7 @@ class Language extends MyAppModel
         $srch->addMultipleFields(array(static::tblFld('id'), static::tblFld('code')));
         $row = FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
         if ($withDefaultValue) {
-            return array(0=>'Universal')+$row;
+            return array(0 => Label::getLabel('LBL_All', $langId)) + $row;
         }
         return $row;
     }

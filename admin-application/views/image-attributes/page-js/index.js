@@ -1,24 +1,17 @@
 $(document).ready(function () {
-    listImageAttributes('7');
+    searchImageAttributes(document.frmSearch);
 });
 (function () {
     var currentPage = 1;
     var dv = '#listing';
     listImageAttributes = function (imageAttributeType) {
-        imageAttributeType = imageAttributeType || '';
-
-        fcom.ajax(fcom.makeUrl('ImageAttributes', 'listImageAttributes'), { imageAttributeType: imageAttributeType }, function (res) {
-            $('#frmBlock').html(res);
-            searchImageAttributes(document.frmSearch);
-        });
+        $("input[name='imageAttributeType']").val(imageAttributeType);
+        searchImageAttributes(document.frmSearch);
     };
     searchImageAttributes = function (form) {
         var data = '';
-        if (form) {
-            data = fcom.frmData(form);
-        }
+        data = fcom.frmData(form);
         $(dv).html(fcom.getLoader());
-
         fcom.ajax(fcom.makeUrl('ImageAttributes', 'search'), data, function (res) {
             $(dv).html(res);
         });
@@ -31,34 +24,14 @@ $(document).ready(function () {
         });
     };
 
-
     goToSearchPage = function (page) {
         if (typeof page == undefined || page == null) {
             page = 1;
         }
         var frm = document.frmImgAttrPaging;
         $(frm.page).val(page);
-        searchUrls(frm);
+        searchImageAttributes(frm);
     };
-
-    reloadList = function () {
-        var frm = document.frmImgAttrPaging;
-        searchUrls(frm);
-    };
-
-    searchUrls = function (form) {
-        var data = '';
-        if (form) {
-            data = fcom.frmData(form);
-        }
-        $(dv).html(fcom.getLoader());
-        fcom.ajax(fcom.makeUrl('ImageAttributes', 'search'), data, function (res) {
-            $(dv).html(res);
-            $("#dvForm").hide();
-            $("#dvAlert").show();
-        });
-    };
-
 
     setupImageAttr = function (frm) {
         if (!$(frm).validate()) return;
@@ -75,24 +48,9 @@ $(document).ready(function () {
         });
     };
 
-    discardForm = function () {
-        $("#dvForm").hide();
-        $("#dvAlert").show();
-    };
-
     clearSearch = function () {
         document.frmSearch.reset();
-        searchUrls(document.frmSearch);
+        searchImageAttributes(document.frmSearch);
     };
 
 })();
-
-$(document).on('change', '.language-js', function () {
-    var langId = $(this).val();
-    var recordId = $('#frmImgAttribute input[name=record_id]').val();
-    var module = $('#frmImgAttribute input[name=module_type]').val();
-    fcom.ajax(fcom.makeUrl('ImageAttributes', 'attributeForm', [recordId, module, langId]), '', function (t) {
-        $("#dvForm").html(t);
-        $('#frmImgAttribute input[name=lang_id]').val(langId);
-    });
-});

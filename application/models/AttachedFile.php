@@ -627,7 +627,7 @@ class AttachedFile extends MyAppModel
     }
 
 
-    public static function getTabsArr(int $langId): array
+    public static function getFileTypesArrayForAttributes(int $langId): array
     {
         $imageAttributesGroups = array(
             AttachedFile::FILETYPE_BANNER => Label::getLabel('IMGA_Banner', $langId),
