@@ -15,8 +15,6 @@ defined('SYSTEM_INIT') or die('Invalid Usage.');
 					</div>
 				</div>
 
-				<h1><?php //echo Label::getLabel('LBL_Manage_Url_Rewriting',$adminLangId); 
-					?></h1>
 				<section class="section searchform_filter">
 					<div class="sectionhead">
 						<h4><?php echo Label::getLabel('LBL_Search...', $adminLangId); ?></h4>
@@ -31,7 +29,7 @@ defined('SYSTEM_INIT') or die('Invalid Usage.');
 						$submitBtn = $srchFrm->getField('btn_submit');
 						$cancelBtn = $srchFrm->getField('btn_clear');
 						$submitBtn->attachField($cancelBtn);
-
+						$cancelBtn->addFieldtagAttribute('onclick', 'clearSearch();');
 						echo  $srchFrm->getFormHtml();
 						?>
 					</div>

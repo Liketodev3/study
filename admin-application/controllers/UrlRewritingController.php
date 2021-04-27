@@ -9,7 +9,7 @@ class UrlRewritingController extends AdminBaseController
 
     public function index()
     {
-        $canEdit = $this->objPrivilege->canEditUrlRewrites();
+        $canEdit = $this->objPrivilege->canEditUrlRewrites(true);
         $srchFrm = $this->getSearchForm($this->adminLangId);
         $this->set("srchFrm", $srchFrm);
         $this->set("canEdit", $canEdit);
@@ -170,7 +170,7 @@ class UrlRewritingController extends AdminBaseController
         $defaultLangId = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
         $frm->addSelectBox(Label::getLabel('LBL_Language', $langId), 'lang_id', $langArr, $defaultLangId);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $langId));
-        $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $langId), ['onclick' => 'clearSearch();']);
+        $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $langId));
         return $frm;
     }
 

@@ -31,7 +31,6 @@ $(document).ready(function () {
 	};
 
 	urlForm = function (UrlRewriteId, originalUrl) {
-		var frm = document.frmUrlSearchPaging;
 		$.facebox(function () {
 			fcom.ajax(fcom.makeUrl('UrlRewriting', 'form'), { UrlRewriteId: UrlRewriteId, originalUrl: originalUrl }, function (t) {
 				$.facebox(t, 'faceboxWidth');
