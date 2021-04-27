@@ -73,38 +73,38 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 				<div class="page-panel__small">
 					<nav class="menu menu--vertical menu--steps tabs-scrollable-js">
 						<ul>
-							<li class="menu__item is-active">
+							<li class="menu__item profile--progress--menu is-active">
 								<a href="javascript:void(0);" class="profile-Info-js" onClick="profileInfoForm();">
 									<?php echo Label::getLabel('LBL_Personal_Info'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
 							<?php if($userIsTeacher){ ?>
-							<li class="menu__item">
+							<li class="menu__item profile--progress--menu">
 								<a href="javascript:void(0);" class="teacher-lang-form-js" onClick="teacherLanguagesForm()">
 									<?php echo Label::getLabel('LBL_Languages'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
-							<li class="menu__item">
+							<li class="menu__item profile--progress--menu">
 								<a href="javascript:void(0);" class="teacher-tech-lang-price-js" id="teacher-tech-lang-price-js" onClick="teacherSettingsForm()">
 									<?php echo Label::getLabel('LBL_Price'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
-							<li class="menu__item">
+							<li class="menu__item profile--progress--menu">
 								<a  href="javascript:void(0);" class="teacher-qualification-js" onClick="teacherQualification()">
 									<?php echo Label::getLabel('LBL_Experience'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
-							<li class="menu__item">
+							<li class="menu__item profile--progress--menu">
 								<a href="javascript:void(0);" class="teacher-preferences-js" onClick="teacherPreferencesForm()">
 									<?php echo Label::getLabel('LBL_Skills'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
-							<li class="menu__item">
+							<li class="menu__item profile--progress--menu">
 								<a href="javascript:void(0);" class="general-availability-js" onClick="teacherGeneralAvailability()">
 									<?php echo Label::getLabel('LBL_Availability_Calendar'); ?>
 									<span class="menu__icon"></span>

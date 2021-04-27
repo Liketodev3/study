@@ -29,7 +29,7 @@
 									<?php echo Label::getLabel('LBL_Next_Lesson:'); ?> <date class=" bold-600"> <?php echo date('M d, Y', $startUnixTime); ?></date> <?php echo Label::getLabel('LBL_At'); ?> <time class=". bold-600"><?php echo date('h:i A', $startUnixTime); ?></time>
 									  <?php echo Label::getLabel('LBL_with'); ?>
 									<div class="avtar-meta display-inline"  >
-										<span class="avtar avtar--xsmall display-inline" data-title="<?php echo CommonHelper::getFirstChar($upcomingLesson['teacherFname']); ?>">
+										<span class="avtar avtar--xsmall display-inline margin-right-2" data-title="<?php echo CommonHelper::getFirstChar($upcomingLesson['teacherFname']); ?>">
 										<?php
 											if (true == User::isProfilePicUploaded($upcomingLesson['teacherId'])) {
 												$img = CommonHelper::generateUrl('Image', 'user', array( $upcomingLesson['teacherId'], 'normal', 1 ), CONF_WEBROOT_FRONT_URL).'?'.time();
@@ -51,7 +51,7 @@
 							<div class="timer margin-right-4">
 								<div class="timer__media"><span><svg class="icon icon--clock icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#clock'; ?>"></use></svg></span></div>
 								<div class="timer__content">
-									<div class="timer__controls timer-js" id="countdowntimer-upcoming" data-startTime="<?php echo $curDate; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>">
+									<div class="timer__controls color-white timer-js" id="countdowntimer-upcoming" data-startTime="<?php echo $curDate; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>">
 										<!-- <div class="timer__digit">00</div>
 										<div class="timer__digit">01</div>
 										<div class="timer__digit">24</div>

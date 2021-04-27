@@ -48,7 +48,12 @@ var FatEventCalendar = function(teacherId){
     };
 
     updateTime = function(time) {
-        jQuery('body').find(".fc-toolbar-ltr h6 span.timer").html(moment(time).add(seconds,'seconds').format('hh:mm A'));
+        currentTimeStr = '';
+        if(timezoneOffset != ''){
+            currentTimeStr += timezoneOffset+" ";
+        }
+        currentTimeStr += "( "+moment(time).add(seconds,'seconds').format('hh:mm:ss A')+" )";
+        jQuery('body').find(".fc-toolbar-ltr h6 span.timer").html(currentTimeStr);
     };
 
     this.setLocale = function(locale){
@@ -58,6 +63,7 @@ var FatEventCalendar = function(teacherId){
     this.startTimer = function(current_time){
         
         clearInterval(timeInterval);
+        jQuery('body').find(".fc-time-button").parent().html("<h6><span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
         timeInterval = setInterval(function(){
             this.updateTime(current_time);
             seconds++;
@@ -95,6 +101,7 @@ var FatEventCalendar = function(teacherId){
             jQuery('.tooltipevent').fadeTo('10', 1.9);
         });
     };
+
 };
 
 FatEventCalendar.prototype.validateSelectedSlot = function (arg, current_time, duration, bookingBefore){
@@ -242,13 +249,10 @@ FatEventCalendar.prototype.LearnerMonthlyCalendar = function(current_time){
     var calendar = new FullCalendar.Calendar(calendarEl, conf);
     
     calendar.render();
-
-    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
     this.startTimer(current_time);
 };
 
-FatEventCalendar.prototype.TeacherMonthlyCalendar = function(current_time){
+FatEventCalendar.prototype.TeacherMonthlyCalendar = function(current_time, timeZone){
     var calConf = {
         initialView: '',
         now:current_time,
@@ -276,9 +280,8 @@ FatEventCalendar.prototype.TeacherMonthlyCalendar = function(current_time){
     var calendar = new FullCalendar.Calendar(calendarEl, conf);
     
     calendar.render();
+    currentTimeStr = moment(current_time).format('hh:mm A');
 
-    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
     this.startTimer(current_time);
 };
 
