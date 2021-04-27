@@ -214,9 +214,12 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->joinGroupClass($this->siteLangId);
         $srch->doNotCalculateRecords();
         $srch->joinLessonRescheduleLog();
+        $srch->joinLessonPLan();
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
         $srch->joinTeacherCountry($this->siteLangId);
         $srch->addFld([
+            'IFNULL(lp.tlpn_id,0) AS isLessonPlanAttach',
+            'lp.tlpn_title',
             'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             'slns.slesson_teacher_id as teacherId',
             'ut.user_first_name as teacherFname',
@@ -231,6 +234,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addGroupBy('slesson_id');
         $srch->addMultipleFields([
             'group_concat(CONCAT(ul.user_first_name, " ", ul.user_last_name) separator "^") AS learnerFullName',
+            'group_concat(ul.user_id separator "^") AS learnerIds',
             'group_concat(IFNULL(learnercountry_lang.country_name, ifnull(learnercountry.country_code, "")) separator "^") AS learnerCountryName',
         ]);
         $rs = $srch->getResultSet();

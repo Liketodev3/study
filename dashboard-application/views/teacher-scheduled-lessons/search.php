@@ -97,9 +97,9 @@ foreach ($lessonArr as $key => $lessons) { ?>
 					<?php } ?>
 					<span class="card-landscape__status badge color-secondary badge--curve badge--small margin-left-0"><?php echo $lessonsStatus; ?></span>
 				</div>
-				<?php  
-                    if ($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) {
-                        if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['isLessonPlanAttach'] > 0) { ?>
+				<?php if ($lesson['order_is_paid'] != Order::ORDER_IS_CANCELLED) {
+                        if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['isLessonPlanAttach'] > 0) { 
+				?>
 						<div class="card-landscape__docs">
 							<div class="d-flex align-items-center">
 								<a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>')" class="attachment-file">
