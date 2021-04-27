@@ -1,7 +1,6 @@
-var FatEventCalendar = function(teacherId, timezoneOffset){
+var timeInterval;
+var FatEventCalendar = function(teacherId){
     this.teacherId = teacherId;
-    var timezoneOffset = timezoneOffset;
-    var timeInterval;
     var seconds = 2;
 
     this.calDefaultConf = {
@@ -62,10 +61,9 @@ var FatEventCalendar = function(teacherId, timezoneOffset){
     };
 
     this.startTimer = function(current_time){
-        clearInterval(timeInterval);
         
+        clearInterval(timeInterval);
         jQuery('body').find(".fc-time-button").parent().html("<h6><span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-
         timeInterval = setInterval(function(){
             this.updateTime(current_time);
             seconds++;
@@ -459,6 +457,8 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
     var calendar = new FullCalendar.Calendar(calendarEl, conf);
     
     calendar.render();
+    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
+    seconds = 2;
     this.startTimer(current_time);
     return calendar;
 };
@@ -559,6 +559,8 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function(current_time){
     var calendar = new FullCalendar.Calendar(calendarEl, conf);
     
     calendar.render();
+    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
+    seconds = 2;
     this.startTimer(current_time);
     return calendar;
 };

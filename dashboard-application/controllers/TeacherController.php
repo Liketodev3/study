@@ -190,8 +190,13 @@ class TeacherController extends TeacherBaseController
 
     public function teacherLanguagesForm()
     {
-        $frm = $this->getTeacherLanguagesForm();
+        $speakLangs = SpokenLanguage::getAllLangs($this->siteLangId, true);
+        $frm = $this->getTeacherLanguagesForm($this->siteLangId, $speakLangs);
+        $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
+       
         $this->set('frm', $frm);
+        $this->set('speakLangs', $speakLangs);
+        $this->set('profArr', $profArr);
         $this->_template->render(false, false);
     }
 
@@ -206,16 +211,16 @@ class TeacherController extends TeacherBaseController
         FatUtility::dieJsonSuccess(['msg' => $msg, 'teacherProfileProgress' => $teacherProfileProgress]);
     }
 
-    private function getTeacherLanguagesForm()
+    private function getTeacherLanguagesForm(int $langId,  array $spokenLangs = [])
     {
         $frm = new Form('frmTeacherLanguages');
         $userId = UserAuthentication::getLoggedUserId();
         $db = FatApp::getDb();
         /*         * *** Get Teaching Languages ***** */
-        $teacherTeachLangArr = TeachingLanguage::getAllLangs($this->siteLangId, true);
+        $teacherTeachLangArr = TeachingLanguage::getAllLangs($langId, true);
         /*         * ******* */
         /*         * *** Get Spoken Languages ***** */
-        $langArr = SpokenLanguage::getAllLangs($this->siteLangId, true);
+        $langArr = $spokenLangs ?: SpokenLanguage::getAllLangs($langId, true);
         /* ] */
         $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
         $userToTeachLangSrch = new SearchBase('tbl_user_teach_languages');
@@ -230,31 +235,34 @@ class TeacherController extends TeacherBaseController
         $userToLangSrch->addCondition('utsl_user_id', '=', $userId);
         $userToLangRs = $userToLangSrch->getResultSet();
         $spokenLangRows = $db->fetchAllAssoc($userToLangRs);
-       
         $frm->addCheckBoxes(Label::getLabel('LBL_Language_To_Teach'), 'teach_lang_id', $teacherTeachLangArr, array_keys($userToTeachLangRows))->requirements()->setRequired();
-        $frm->addCheckBoxes(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id', $langArr, array_keys($spokenLangRows), ['class' => 'utsl_slanguage_id'])->requirements()->setRequired();
-    
-        foreach ($langArr as $key => $lang) {
-            
-            $speakField = $frm->addSelectBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id[]', $langArr, array_keys($spokenLangRows), ['class' => 'utsl_proficiency'], Label::getLabel('LBL_Select'));
-            $proficiencyField = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency[]', $profArr, $spokenLangRows, ['class' => 'utsl_proficiency'], Label::getLabel('LBL_Select')); 
-            // if (array_key_exists($key, $spokenLangRows)) {
-            //         $speakField->value = [$key];
-            //         $proficiencyField->value = [$spokenLangRows[$key]];
-            // }
-            // if (array_key_exists($key, $langArr)) {
-            //     $speakField->requirements()->setRequired();
-            //     $proficiencyField->requirements()->setRequired();
-            // }else{
-                $requirements =  $proficiencyField->requirements()->setRequired();
-                $speakField->requirements()->addOnChangerequirementUpdate('','ne', $proficiencyField->getName(),  $proficiencyField->requirements());
 
-                $requirements = $proficiencyField->requirements()->setRequired(false);
-                $speakField->requirements()->addOnChangerequirementUpdate('','eq', $proficiencyField->getName(),  $proficiencyField->requirements());
-            // }
+        foreach ($langArr as $key => $lang) {
+
+            $speekLangField = $frm->addCheckBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id['.$key.']', $key, ['class' => 'utsl_slanguage_id'], false, '0'); 
+            $proficiencyField = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency['.$key.']', $profArr, '', ['class' => 'utsl_proficiency select__dropdown'], Label::getLabel("LBL_I_don't_speak_this_language")); 
+            if(array_key_exists($key, $spokenLangRows)){
+                $proficiencyField->value = $spokenLangRows[$key];
+                $speekLangField->checked = true;    
+                $speekLangField->value = $key;           
+            }
+            
+            $proficiencyField->requirements()->setRequired();
+            $speekLangField->requirements()->addOnChangerequirementUpdate(0,'gt', $proficiencyField->getName(),  $proficiencyField->requirements());
+
+            $proficiencyField->requirements()->setRequired(false);
+            $speekLangField->requirements()->addOnChangerequirementUpdate(0,'le', $proficiencyField->getName(),  $proficiencyField->requirements());
+            
+            $speekLangField->requirements()->setRequired();
+            $proficiencyField->requirements()->addOnChangerequirementUpdate(0, 'gt', $proficiencyField->getName(), $speekLangField->requirements());
+
+            $speekLangField->requirements()->setRequired(false);
+            $proficiencyField->requirements()->addOnChangerequirementUpdate(0, 'le', $proficiencyField->getName(), $speekLangField->requirements());
+       
         }
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_SAVE_CHANGES'));
-        $frm->addHtml('', 'add_more_div', '');
+        $frm->addButton('', 'next_btn', Label::getLabel('LBL_Next'));
+        $frm->addButton('', 'back_btn', Label::getLabel('LBL_Back'));
         return $frm;
     }
 
@@ -289,7 +297,7 @@ class TeacherController extends TeacherBaseController
 
     public function setupTeacherLanguages()
     {
-        $frm = $this->getTeacherLanguagesForm();
+        $frm = $this->getTeacherLanguagesForm($this->siteLangId, []);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         $db = FatApp::getDb();
         if (false === $post) {
@@ -297,6 +305,20 @@ class TeacherController extends TeacherBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         $teacherId = UserAuthentication::getLoggedUserId();
+        
+        $query = 'DELETE  FROM ' . UserToLanguage::DB_TBL_TEACH . ' WHERE utl_us_user_id = '. $teacherId;
+        if(!empty($post['teach_lang_id'])){
+                $langIds = implode(",", $post['teach_lang_id']);
+                $query .= ' and utl_slanguage_id NOT IN (' . $langIds . ')';
+        }
+       $db->query($query);
+       if ($db->getError()) {
+            $db->rollbackTransaction();
+            FatUtility::dieWithError(Label::getLabel($db->getError()));
+           return false;
+       }
+
+       
         foreach ($post['teach_lang_id'] as $tlang) {
             $lesson_durations = explode(',', FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_STRING, 60));
             foreach ($lesson_durations as $lesson_duration) {
@@ -312,21 +334,43 @@ class TeacherController extends TeacherBaseController
                 }
             }
         }
-        $i = 0;
-        foreach ($post['utsl_slanguage_id'] as $lang) {
-            $insertArr = ['utsl_slanguage_id' => $lang, 'utsl_proficiency' => $post['utsl_proficiency'][$i], 'utsl_user_id' => $teacherId];
+
+        $query = 'DELETE  FROM ' . UserToLanguage::DB_TBL . ' WHERE utsl_user_id = '. $teacherId;
+        if(!empty($post['utsl_slanguage_id'])){
+                $langIds = implode(",", $post['utsl_slanguage_id']);
+                $query .= ' and utsl_slanguage_id NOT IN (' . $langIds . ')';
+        }
+
+       $db->query($query);
+       if ($db->getError()) {
+            $db->rollbackTransaction();
+            FatUtility::dieWithError(Label::getLabel($db->getError()));
+           return false;
+       }
+    
+        foreach ($post['utsl_slanguage_id'] as $key => $lang) {
+            $insertArr = ['utsl_slanguage_id' => $lang, 'utsl_proficiency' => $post['utsl_proficiency'][$key], 'utsl_user_id' => $teacherId];
             if (!$db->insertFromArray(UserToLanguage::DB_TBL, $insertArr, false, [], $insertArr)) {
                 $db->rollbackTransaction();
                 Message::addErrorMessage(Label::getLabel($db->getError()));
                 FatUtility::dieWithError(Message::getHtml());
             }
-            $i++;
         }
+
+        
         /* Update Teacher's teach language stat */
         (new TeacherStat($teacherId))->setSpeakLang();
         $db->commitTransaction();
         $this->set('msg', Label::getLabel('MSG_Setup_successful'));
         $this->_template->render(false, false, 'json-success.php');
+    }
+
+    private function deleteUserSpeakOrTeachLang($table, $field, $userId, $langs)
+    {
+        $query = 'DELETE  FROM ' . $table;
+        if($table ==  UserToLanguage::DB_TBL){
+            $query .= ' utsl_user_id = '.$userId;
+        }
     }
 
     public function teacherQualificationForm($uqualification_id = 0)

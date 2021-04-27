@@ -29,15 +29,15 @@
 									<?php echo Label::getLabel('LBL_Next_Lesson:'); ?> <date class=" bold-600"> <?php echo date('M d, Y', $startUnixTime); ?></date> <?php echo Label::getLabel('LBL_At'); ?> <time class=". bold-600"><?php echo date('h:i A', $startUnixTime); ?></time>
 									  <?php echo Label::getLabel('LBL_with'); ?>
 									<div class="avtar-meta display-inline"  >
-										<span class="avtar avtar--xsmall display-inline" data-title="<?php echo CommonHelper::getFirstChar($upcomingLesson['learnerFname']); ?>">
+										<span class="avtar avtar--xsmall display-inline margin-right-2" data-title="<?php echo CommonHelper::getFirstChar($upcomingLesson['teacherFname']); ?>">
 										<?php
-											if (true == User::isProfilePicUploaded($upcomingLesson['learnerId'])) {
-												$img = CommonHelper::generateUrl('Image', 'user', array( $upcomingLesson['learnerId'] ), CONF_WEBROOT_FRONT_URL).'?'.time();
-												echo '<img src="'.$img.'" alt="'.$upcomingLesson['learnerFullName'].'" />';
+											if (true == User::isProfilePicUploaded($upcomingLesson['teacherId'])) {
+												$img = CommonHelper::generateUrl('Image', 'user', array( $upcomingLesson['teacherId'], 'normal', 1 ), CONF_WEBROOT_FRONT_URL).'?'.time();
+												echo '<img src="'.$img.'" alt="'.$upcomingLesson['teacherFname'].'" />';
 											}
 										?>
 										</span>
-											<?php echo $upcomingLesson['learnerFullName']; ?>
+											<?php echo $upcomingLesson['teacherFname']; ?>
 									</div>
 								</div>
 
@@ -51,7 +51,7 @@
 							<div class="timer margin-right-4">
 								<div class="timer__media"><span><svg class="icon icon--clock icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#clock'; ?>"></use></svg></span></div>
 								<div class="timer__content">
-									<div class="timer__controls timer-js" id="countdowntimer-upcoming" data-startTime="<?php echo $curDate; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>">
+									<div class="timer__controls color-white timer-js" id="countdowntimer-upcoming" data-startTime="<?php echo $curDate; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>">
 										<!-- <div class="timer__digit">00</div>
 										<div class="timer__digit">01</div>
 										<div class="timer__digit">24</div>
@@ -59,7 +59,7 @@
 									</div>
 								</div>
 							</div>
-							<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$upcomingLesson['slesson_id']]); ?>" class="btn bg-secondary"><?php echo Label::getLabel('LBL_Enter_Classroom') ?></a>
+							<a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons', 'view', [$upcomingLesson['sldetail_id']]); ?>" class="btn bg-secondary"><?php echo Label::getLabel('LBL_Enter_Classroom') ?></a>
 
 						</div>
 
@@ -89,6 +89,9 @@
 								$fldSubmit = $frmSrch->getField( 'btn_submit' );
 								$btnReset = $frmSrch->getField( 'btn_reset' );
 								$btnReset->addFieldTagAttribute('onclick','clearSearch()');
+								$classType =  $frmSrch->getField( 'class_type');
+								$classType->addFieldTagAttribute('form',  $frmSrch->getFormTagAttribute('id'));
+								$classType->addFieldTagAttribute('onChange', 'searchAllStatusLessons(this.form); return(false);');
 							?>
 						<div class="filter-responsive slide-target-js">
 							<div class="form-inline">
@@ -105,13 +108,16 @@
 									</select>
 								</div>
 								<div class="form-inline__item">
+									<?php echo $classType->getHTML('class_type'); ?>
+								</div>
+								<div class="form-inline__item">
 									<?php echo  $frmSrch->getFormTag(); ?>
 										<div class="search-form">
 											<div class="search-form__field">
 												<?php 
 													echo $frmSrch->getFieldHTML('keyword');
 												 	echo $frmSrch->getFieldHTML('page'); 
-												 	echo $frmSrch->getFieldHTML('show_group_classes'); 
+												 	// echo $frmSrch->getFieldHTML('show_group_classes'); 
 												?>
 											</div>
 											<div class="search-form__action search-form__action--submit">
@@ -139,7 +145,7 @@
 					</div>
 					<div class="col-auto">
 						<div class="tab-switch tab-switch--icons">
-							<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>" class="tab-switch__item is-active list-js">
+							<a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons'); ?>" class="tab-switch__item is-active list-js">
 								<svg class="icon icon--view icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#lesson-view'; ?>"></use></svg>
 								<?php echo Label::getLabel('LBL_List'); ?>
 							</a>

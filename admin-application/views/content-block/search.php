@@ -34,15 +34,16 @@ foreach ($arr_listing as $sn=>$row){
 			case 'epage_active':
 				$active = "";
 				$statusAct='';
-					if($row['epage_active']==applicationConstants::YES &&  $canEdit === true ) {
+					if($row['epage_active']==applicationConstants::YES  ) {
 						$active = 'checked';
 						$statusAct='inactiveStatus(this)';
 					}
-					if($row['epage_active']==applicationConstants::NO &&  $canEdit === true ) {
+					if($row['epage_active']==applicationConstants::NO ) {
 						$active = 'unchecked';
 						$statusAct='activeStatus(this)';
 					}
-				$statusClass = ( $canEdit === false ) ? 'disabled' : '';
+				$statusClass = ($canEdit === false) ? 'disabled' : '';
+				$statusAct  =   ($canEdit === false) ? 'return false;' : $statusAct;
 				$str='<label class="statustab -txt-uppercase">    
                      <input '.$active.' type="checkbox" id="switch'.$row['epage_id'].'" value="'.$row['epage_id'].'" onclick="'.$statusAct.'" class="switch-labels status_'.$row['epage_id'].'"/>
                     <i class="switch-handles '.$statusClass.'"></i></label>';

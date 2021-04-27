@@ -1,15 +1,12 @@
 $(function () {
     var dv = '#listItemsLessons';
 
-    getLessonsByStatus = function (el, lStatus) {
-        $('.lessons-list-tabs--js li').removeClass('is-active');
-        $(el).closest('li').addClass('is-active');
+    getLessonsByStatus = function (lStatus) {
         $('[name=status]').val(lStatus);
         searchLessons(document.frmSrch);
     };
     searchAllStatusLessons = function (frm) {
-        $('.lessons-list-tabs--js li').removeClass('is-active').first().addClass('is-active');
-        frm.status.value = '';
+      
         searchLessons(frm);
     };
 
@@ -80,7 +77,6 @@ $(function () {
     };
 
     clearSearch = function () {
-        $('.lessons-list-tabs--js li').removeClass('is-active').first().addClass('is-active');
         document.frmSrch.reset();
         searchLessons(document.frmSrch);
     };
@@ -107,7 +103,7 @@ $(function () {
 });
 
 
-$(document).on('click', '.tab-swticher a', function () {
-    $('.calender-lessons-js a').removeClass('is-active');
+$(document).on('click', '.tab-switch a', function () {
+    $('.tab-switch a').removeClass('is-active');
     $(this).addClass('is-active');
 });

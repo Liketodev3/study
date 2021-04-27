@@ -378,7 +378,7 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 			setTimeout(() => {
 				setPhoneNumberMask();
 			}, 100);
-		$("[name='user_timezone']").select2();
+		$("[name='user_timezone'], [name='user_country_id']").select2();
 		$('input[name="user_url_name"]').on('keypress', function(e) {
 			if (e.which == 32) {
 				return false;

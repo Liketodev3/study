@@ -14,14 +14,6 @@
 					<span><?php echo Label::getLabel('LBL_Account_Settings'); ?></span>
 				</a>
 			</li>
-			<?php if(User::isTeacher()){ ?>
-			<li class="menu__item">
-				<a href="#">
-					<svg class="icon icon--calendar margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#calendar'; ?>"></use></svg>
-					<span><?php echo Label::getLabel('LBL_Availability_Calendar'); ?></span>
-				</a>
-			</li>
-			<?php } ?>
 		</ul>
 	</nav>
 </div>
@@ -36,7 +28,7 @@
 				</a>
 			</li>
 			<li class="menu__item <?php echo ( $controllerName == "LearnerGroupClasses" ) ? 'is-active' : ''; ?>">
-				<a href="<?php echo CommonHelper::generateUrl('LearnerGroupClasses'); ?>">
+				<a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons', 'index',[ApplicationConstants::CLASS_TYPE_GROUP]); ?>">
 					<svg class="icon icon--group-classes margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#group-classes'; ?>"></use></svg>
 					<span><?php echo Label::getLabel('Lbl_Group_Classes'); ?></span>
 				</a>
@@ -54,7 +46,7 @@
 	<h6 class="heading-6"><?php echo Label::getLabel('Lbl_History'); ?></h6>
 	<nav class="menu menu--primary">
 		<ul>
-			<li class="menu__item <?php echo ($controllerName == "Learner" && $actionName == "orders") ? 'is-active' : ''; ?>">
+			<li class="menu__item <?php echo ($controllerName == "Learner" && $action == "orders") ? 'is-active' : ''; ?>">
 				<a href="<?php echo CommonHelper::generateUrl('Learner', 'orders'); ?>">
 					<svg class="icon icon--orders margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#orders'; ?>"></use></svg>
 					<span><?php echo Label::getLabel('Lbl_Orders'); ?></span>

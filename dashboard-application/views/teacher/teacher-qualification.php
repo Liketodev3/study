@@ -87,7 +87,7 @@
 						<input type="button" onclick="teacherSettingsForm()"  value="<?php echo label::getLabel('LBL_back'); ?>">
 					</div>
 					<div>
-						<input type="button" value="<?php echo label::getLabel('LBL_next'); ?>" onclick="teacherPreferencesForm()">
+						<input type="button" value="<?php echo label::getLabel('LBL_next'); ?>" onclick="$('.teacher-preferences-js').trigger('click');">
 					</div>
 				</div>
 			</div>

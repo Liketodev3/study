@@ -4,20 +4,22 @@ $user_timezone = MyDate::getUserTimeZone();
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 ?>
 
-<h6><?php echo Label::getLabel('LBL_Weekly_Availability_Note'); ?></h6>
-<br />
-<button onclick="setUpWeeklyAvailability();" class="btn btn--secondary"><?php echo Label::getLabel( 'LBL_Save' );?></button>
-<span class="-gap"></span>
-
-<div class="calendar-view -no-padding">
-	<div id="loaderCalendar" style="display: none;">
-		<div class="loader"></div>
+<div class="page-panel__head">
+    
+	<div class="row align-items-center justify-content-between">
+		<div class="col-6">
+			<div class="tab-switch">
+                <a href="javascript:void(0);" onclick="teacherGeneralAvailability();" class="tab-switch__item"><?php echo Label::getLabel('LBL_General'); ?></a>
+				<a href="javascript:void(0);" class="tab-switch__item is-active"><?php echo Label::getLabel('LBL_Weekly'); ?></a>
+			</div>
+		</div>
+		<div class="col-lg-auto col-auto">
+			<input type="button" onclick="setUpWeeklyAvailability();"  value="<?php echo Label::getLabel('LBL_Save'); ?>" class="btn bg-primary">
+		</div>
 	</div>
-	<span> <?php echo MyDate::displayTimezoneString();?> </span>
 </div>
-
-<div id='calendar-container'>
-	<div id='w_calendar'></div>
+<div class="page-panel__body" id='calendar-container'>
+    <div id='w_calendar'></div>
 </div>
 
 <script>

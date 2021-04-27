@@ -144,6 +144,10 @@
 				<li><a href="<?php echo CommonHelper::generateUrl('ContentPages'); ?>"><?php echo Label::getLabel('LBL_Content_Pages',$adminLangId);?></a></li>
 				<?php } ?>
 
+				<?php if($objPrivilege->canViewContentBlocks(AdminAuthentication::getLoggedAdminId(), true)){?>
+				<li><a href="<?php echo CommonHelper::generateUrl('ContentBlock'); ?>"><?php echo Label::getLabel('LBL_Content_Blocks',$adminLangId);?></a></li>
+				<?php } ?>
+
 				<?php if($objPrivilege->canViewBibleContent(AdminAuthentication::getLoggedAdminId(), true)){?>
 				<li><a href="<?php echo CommonHelper::generateUrl('BibleContent'); ?>"><?php echo Label::getLabel('LBL_Bible_Content',$adminLangId);?></a></li>
 				<?php } ?>

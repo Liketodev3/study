@@ -3,20 +3,24 @@ defined('SYSTEM_INIT') or die('Invalid Usage.');
 $user_timezone = MyDate::getUserTimeZone();
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m-d H:i:s'), true , $user_timezone );
 ?>
-<h6><?php echo Label::getLabel('LBL_General_Availability_Note'); ?></h6>
-<br />
-<button class="btn btn--secondary" onclick="saveGeneralAvailability();"><?php echo Label::getLabel('LBL_Save'); ?></button>
-<span class="-gap"></span>
-<div class="calendar-view -no-padding">
-    <div id="loaderCalendar" style="display: none;">
-        <div class="loader"></div>
-    </div>
-    <span> <?php echo MyDate::displayTimezoneString();?> </span>
+<div class="page-panel__head">
+    
+	<div class="row align-items-center justify-content-between">
+		<div class="col-6">
+			<div class="tab-switch">
+                <a href="javascript:void(0);" class="tab-switch__item is-active"><?php echo Label::getLabel('LBL_General'); ?></a>
+				<a href="javascript:void(0);" class="tab-switch__item" onclick="teacherWeeklySchedule()"><?php echo Label::getLabel('LBL_Weekly'); ?></a>
+			</div>
+		</div>
+		<div class="col-lg-auto col-auto">
+			<input type="button"  onclick="saveGeneralAvailability();" value="<?php echo Label::getLabel('LBL_Save'); ?>" class="btn bg-primary">
+		</div>
+	</div>
 </div>
-
-<div id='calendar-container'>
+<div class="page-panel__body" id='calendar-container'>
     <div id='ga_calendar'></div>
 </div>
+
 
 <script>
 var fecal = new FatEventCalendar(<?php echo $userId; ?>);

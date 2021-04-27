@@ -1,16 +1,9 @@
 $(document).ready(function(){
 	searchNotification(document.frmNotificationSrch);
-	$(".check-all").on('click',function(){
-		if($(this).prop('checked') == true){
-			$('.check-record').prop('checked',true);
-		}else{
-			$('.check-record').prop('checked',false);
-		}
-	});	
+		
 });
 (function() {
 	var dv = '#ordersListing';
-	
 	searchNotification = function(frm){
 		/*[ this block should be written before overriding html of 'form's parent div/element, otherwise it will through exception in ie due to form being removed from div */
 		var data = fcom.frmData(frm);
@@ -67,6 +60,17 @@ $(document).ready(function(){
 			reloadList();	
 		});			
 	};
+
+	goToSearchPage = function(page) {
+		if(typeof page == undefined || page == null){
+			page = 1;
+		}		
+		var frm = document.frmLearnerTeachersSearchPaging;		
+		earchNotification(document.frmNotificationSrch);
+		$(frm.page).val(page);
+		searchTeachers(frm);
+	};
+	
 	
 	reloadList = function(){
 		searchNotification(document.frmNotificationSrch);

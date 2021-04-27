@@ -17,28 +17,23 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 		</div>
 
 		<div class="page__body">
+		<?php if($userIsTeacher){ ?>
 			<!-- [ INFO BAR ========= -->
 			<div class="infobar">
 				<div class="row justify-content-between align-items-start">
 					<div class="col-lg-8 col-sm-8">
 						<div class="d-flex">
 							<div class="infobar__media margin-right-5">
-								<div class="infobar__media-icon infobar__media-icon--alert">!</div>
+								<div class="infobar__media-icon infobar__media-icon--alert is-profile-complete-js">!</div>
 							</div>
 							<div class="infobar__content">
-								<h6 class="margin-bottom-1">Complete Your profile</h6>
-								<p class="margin-0">To successfully register your profile as an expert and to you available in search results.
-									<a href="javascript:void(0)" class="color-secondary underline padding-top-3 padding-bottom-3 expand-js">Learn More</a>
+								<h6 class="margin-bottom-1"><?php echo Label::getLabel('Lbl_Complete_Your_profile'); ?></h6>
+								<p class="margin-0"> <?php echo Label::getLabel('LBL_PROFILE_INFO_HEADING'); ?>
+									<a href="javascript:void(0)" class="color-secondary underline padding-top-3 padding-bottom-3 expand-js"><?php echo Label::getLabel('LBL_Learn_More'); ?></a>
 								</p>
 
 								<div class="infobar__content-more margin-top-3 expand-target-js" style="display: none;">
-									<div class="infobar__list-content">
-										<ol>
-											<li>Profile needs to be 80% completed</li>
-											<li>You have to complete lorem ipsum dolar summit text</li>
-											<li>After verify all the details you have to mark availbility in calendar section.</li>
-										</ol>
-									</div>
+									<?php echo Extrapage::getBlockContent(Extrapage::BLOCK_PROFILE_INFO_BAR, $siteLangId); ?>
 								</div>
 
 							</div>
@@ -72,47 +67,57 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 				</div>
 			</div>
 			<!-- ] -->
+			<?php } ?>
 			<!-- [ PAGE PANEL ========= -->
 			<div class="page-panel page-panel--flex min-height-500">
 				<div class="page-panel__small">
 					<nav class="menu menu--vertical menu--steps tabs-scrollable-js">
 						<ul>
-							<li class="menu__item is-active">
-								<a href="javascript:void(0);" class="profile-Info-js" onClick="profileInfoForm()">
+							<li class="menu__item profile--progress--menu is-active">
+								<a href="javascript:void(0);" class="profile-Info-js" onClick="profileInfoForm();">
 									<?php echo Label::getLabel('LBL_Personal_Info'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
-							<li class="menu__item">
+							<?php if($userIsTeacher){ ?>
+							<li class="menu__item profile--progress--menu">
 								<a href="javascript:void(0);" class="teacher-lang-form-js" onClick="teacherLanguagesForm()">
 									<?php echo Label::getLabel('LBL_Languages'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
-							<li class="menu__item">
+							<li class="menu__item profile--progress--menu">
 								<a href="javascript:void(0);" class="teacher-tech-lang-price-js" id="teacher-tech-lang-price-js" onClick="teacherSettingsForm()">
 									<?php echo Label::getLabel('LBL_Price'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
-							<li class="menu__item">
+							<li class="menu__item profile--progress--menu">
 								<a  href="javascript:void(0);" class="teacher-qualification-js" onClick="teacherQualification()">
 									<?php echo Label::getLabel('LBL_Experience'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
-							<li class="menu__item">
+							<li class="menu__item profile--progress--menu">
 								<a href="javascript:void(0);" class="teacher-preferences-js" onClick="teacherPreferencesForm()">
 									<?php echo Label::getLabel('LBL_Skills'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
+							<li class="menu__item profile--progress--menu">
+								<a href="javascript:void(0);" class="general-availability-js" onClick="teacherGeneralAvailability()">
+									<?php echo Label::getLabel('LBL_Availability_Calendar'); ?>
+									<span class="menu__icon"></span>
+								</a>
+							</li>
 							<li class="menu__item">
-								<a  href="javascript:void(0);" onClick="bankInfoForm()">
+								<a  href="javascript:void(0);" class="teacher-bankinfo-js" onClick="bankInfoForm()">
 									<?php echo Label::getLabel('LBL_Payments'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
+							<?php } ?>
+							
 							<li class="menu__item">
 								<a href="javascript:void(0);" onClick="changePasswordForm()">
 									<?php echo Label::getLabel('LBL_Password_/_Email');?>

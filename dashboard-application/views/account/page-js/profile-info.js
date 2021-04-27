@@ -53,14 +53,24 @@ $(document).ready(function () {
 				$.each(data.teacherProfileProgress, function (key, value) {
 					
 					switch (key) {
+
+						case 'isProfileCompleted':
+							if(value){
+								$('.is-profile-complete-js').removeClass('infobar__media-icon--alert').addClass('infobar__media-icon--tick');
+								$('.is-profile-complete-js').html('');
+							}else{
+								$('.is-profile-complete-js').removeClass('infobar__media-icon--tick').addClass('infobar__media-icon--alert');
+								$('.is-profile-complete-js').html('!');
+							}
+						break;
+						
 						case 'generalAvailabilityCount':
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.general-availability-js').parent('li').removeClass('is-completed');
-								$('.general-availability-progress-js').removeClass('is-active');
+								
 							} else {
 								$('.general-availability-js').parent('li').addClass('is-completed');
-								$('.general-availability-progress-js').addClass('is-active');
 							}
 							break;
 						// case 'userCountryId':
@@ -70,51 +80,40 @@ $(document).ready(function () {
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.profile-Info-js').parent('li').removeClass('is-completed');
-								$('.profile-Info-progress-js').removeClass('is-active');
 							} else {
 								$('.profile-Info-js').parent('li').addClass('is-completed');
-								$('.profile-Info-progress-js').addClass('is-active');
 							}
 							break;
 						case 'uqualificationCount':
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.teacher-qualification-js').parent('li').removeClass('is-completed');
-								$('.teacher-qualification-progress-js').removeClass('is-active');
 							} else {
 								$('.teacher-qualification-js').parent('li').addClass('is-completed');
-								$('.teacher-qualification-progress-js').addClass('is-active');
 							}
 							break;
 						case 'teachLangCount':
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.teacher-tech-lang-price-js').parent('li').removeClass('is-completed');
-								$('.teacher-lang-price-progress-js').removeClass('is-active');
 							} else {
 								$('.teacher-tech-lang-price-js').parent('li').addClass('is-completed');
-								$('.teacher-lang-price-progress-js').addClass('is-active');
 							}
 							break;
 						case 'slanguageCount':
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.teacher-lang-form-js').parent('li').removeClass('is-completed');
-								$('.teacher-lang-progress-js').removeClass('is-active');
-								
 							} else {
 								$('.teacher-lang-form-js').parent('li').addClass('is-completed');
-								$('.teacher-lang-progress-js').addClass('is-active');
 							}
 							break;
 						case 'preferenceCount':
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.teacher-preferences-js').parent('li').removeClass('is-completed');
-								$('.teacher-preferences-progress-js').removeClass('is-active');
 							} else {
 								$('.teacher-preferences-js').parent('li').addClass('is-completed');
-								$('.teacher-preferences-progress-js').addClass('is-active');
 							}
 							break;
 						case 'percentage':
@@ -122,11 +121,15 @@ $(document).ready(function () {
 							value = value + "%";
 							$('.teacher-profile-progress-bar-js').css({ "width": value });
 							break;
-						case 'totalFields':
 						case 'totalFilledFields':
+							$('.progress__step').removeClass('is-active');
+							for (let totalFilledFields = 0; totalFilledFields < value; totalFilledFields++) {
+								$('.progress__step').eq(totalFilledFields).addClass('is-active');
+							}
 							value = data.teacherProfileProgress.totalFilledFields + "/" + data.teacherProfileProgress.totalFields;
 							$('.progress-count-js').text(value);
 							break;
+						
 					}
 				});
 			}
@@ -225,7 +228,6 @@ $(document).ready(function () {
 			}
 			
 			if(gotoProfileImageForm){
-				debugger;
 				$('.profile-imag-li').click();
 			}
 			// else{
@@ -252,7 +254,7 @@ $(document).ready(function () {
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function (t) {
 			//$.mbsmessage.close();
 			if(goToPaymentForm) {
-				bankInfoForm();
+				$('.general-availability-js').trigger('click');
 			}else if(userIsTeacher){
 				getTeacherProfileProgress();
 			}
@@ -312,11 +314,13 @@ $(document).ready(function () {
 		jQuery.grep(newTeachLangs, function (el) {
 			if (jQuery.inArray(el, teachLangs) == -1) difference.push(el);
 		});
-
+		
 		if (difference.length <= 0) {
+			$.loader.show();
 			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
 				//$.mbsmessage.close();
-				teacherLanguagesForm();
+				// teacherLanguagesForm();
+				$.loader.hide();
 			});
 			return;
 		}
@@ -330,10 +334,9 @@ $(document).ready(function () {
 					btnClass: 'btn btn--primary',
 					keys: ['enter', 'shift'],
 					action: function () {
+						$.loader.show();
 						fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
-							//$.mbsmessage.close();
-							teacherLanguagesForm();
-							// $("#teacher-tech-lang-price-js").click();
+							$.loader.hide();
 						});
 					}
 				},
@@ -354,6 +357,26 @@ $(document).ready(function () {
 				getTeacherProfileProgress();
 			}
 		});
+	};
+
+	changeProficiency = function (obj, langId) {
+		langId = parseInt(langId);
+		if(langId <= 0){
+			return;
+		}
+		let value = obj.value;
+		slanguageSection = '.slanguage-'+langId;
+		slanguageCheckbox = '.slanguage-checkbox-'+langId;
+		if(value == ''){
+			$(slanguageSection).find('.badge-js').remove();
+			$(slanguageSection).removeClass('is-selected');
+			$(slanguageCheckbox).prop('checked',false);
+		}else{
+			$(slanguageSection).addClass('is-selected');
+			$(slanguageCheckbox).prop('checked',true);
+			$(slanguageSection).find('.badge-js').remove();
+			$(slanguageSection).find('.selection__trigger-label').append('<span class="badge color-secondary badge-js  badge--round badge--small margin-0">'+obj.selectedOptions[0].innerHTML+'</span>');
+		}
 	};
 
 
@@ -738,7 +761,8 @@ $(document).ready(function () {
 					getLangProfileInfoForm(t.langId);
 					return;
 				}
-			}else if($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0){
+			}
+			else if($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0){
 				$('.profile-lang-tab.is-active').next('.profile-lang-tab').find('a').click();
 			}
 			

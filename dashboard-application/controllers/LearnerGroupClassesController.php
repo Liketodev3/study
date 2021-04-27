@@ -11,7 +11,7 @@ class LearnerGroupClassesController extends LearnerBaseController
 
     public function index()
     {
-        $this->set('serachForm', $this->getSearchForm());
+        $this->set('frmSrch', $this->getSearchForm());
         $this->_template->addJs('js/learnerLessonCommon.js');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
@@ -121,17 +121,11 @@ class LearnerGroupClassesController extends LearnerBaseController
 
     protected function getSearchForm()
     {
-        $form = new Form('frmSrch');
-        $statusArray = TeacherGroupClasses::getStatusArr();
-        unset($statusArray[TeacherGroupClasses::STATUS_PENDING]);
-        $form->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Keyword')]);
-        // $form->addSelectBox(Label::getLabel('LBL_Status'), 'status', $statusArray, '', [], Label::getLabel('LBL_All'))->requirements()->setInt();
-        $field = $form->addHiddenField('', 'page', 1);
-        $field->requirements()->setIntPositive();
-        $btnSubmit = $form->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search'));
-        $btnReset = $form->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset'));
-        $btnSubmit->attachField($btnReset);
-        return $form;
+        $frm = parent::getSearchForm();
+        $frm = new Form('frmSrch');
+        $fld = $frm->addHiddenField('', 'page', 1);
+        $fld->requirements()->setIntPositive();
+        return $frm;
     }
 
 }

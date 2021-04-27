@@ -689,6 +689,20 @@ p {
         -ms-transform: rotate(-45deg) translate(0, -78%);
             transform: rotate(-45deg) translate(0, -78%); }
 
+.menu--steps li.profile--progress--menu:not(.is-completed) > a {
+  opacity: 1; }
+
+.menu--steps li.profile--progress--menu:not(.is-completed) .menu__icon {
+  background-color: var(--color-yellow);
+  display: block; }
+  .menu--steps li.profile--progress--menu:not(.is-completed) .menu__icon:before {
+    width: 9px;
+    height: 5px;
+    position: absolute;
+    left: 38%;
+    content: "!";
+    color: #fff; }
+
 @media (max-width: 1199px) {
   .menu--steps {
     border-bottom: 1px solid var(--color-primary);
@@ -891,6 +905,15 @@ p {
 
 .fc-scroller-harness .fc-scrollgrid-sync-table .fc-daygrid-day {
   border: 1px solid var(--color-gray-200); }
+  .fc-scroller-harness .fc-scrollgrid-sync-table .fc-daygrid-day .fc-daygrid-event {
+    background: var(--color-gray-100);
+    padding: var(--padding-4) var(--padding-3);
+    height: 50px;
+    border-left: 2px solid var(--color-primary);
+    border-radius: 0;
+    margin-left: var(--margin-2);
+    margin-right: var(--margin-2);
+    margin-bottom: var(--margin-1) !important; }
 
 .fc-scrollgrid-section td {
   border: none; }
@@ -899,6 +922,40 @@ p {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center; }
+
+.fc-button-group .fc-button {
+  background: transparent;
+  border-radius: 0;
+  margin: var(--margin-1);
+  -webkit-box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.07);
+          box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.07);
+  border: 1px solid var(--color-gray-200);
+  width: 2.70rem;
+  height: 2.70rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 3px; }
+
+.fc-button-group .fc-button:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none; }
+
+.fc-button-group .fc-button:last-child {
+  margin: var(--margin-1) !important; }
+
+.fc-button-group .fc-button .fc-icon {
+  color: var(--color-black); }
+
+.fc-button-group .fc-button:hover {
+  background-color: transparent;
+  border-color: var(--color-gray-200); }
 
 .menu-vertical li a {
   display: block;

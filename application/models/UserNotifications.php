@@ -494,7 +494,7 @@ class UserNotifications extends FatModel
         return FatApp::getDb()->fetch($srch->getResultSet());
     }
 
-    public static function getUserUnreadNotifications($userId)
+    public static function getUserUnreadNotifications(int $userId)
     {
         $srch = new SearchBase(self::DB_TBL);
         $srch->addCondition(self::DB_TBL_PREFIX . "user_id", '=', $userId);
