@@ -260,7 +260,6 @@ class LessonMeetings
             "title" => $title, "start_time" => $startTime,
             "duration" => $lessonData['op_lesson_duration'],
             "presenter_name" => $lessonData['teacherFullName'],
-            "presenter_email" => $lessonData['teacherEmail'],
             "presenter_id" => $lessonData['teacherId'],
         ];
         $wiziq = new Wiziq();

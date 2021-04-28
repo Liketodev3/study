@@ -28,7 +28,6 @@ class Wiziq extends FatModel
         $parameters["start_time"] = $startTime;
         $parameters["presenter_id"] = $data['presenter_id'];
         $parameters["presenter_name"] = $data['presenter_name'];
-        $parameters["presenter_email"] = $data['presenter_email'];
         $parameters['attendee_limit'] = '300'; /* Max allowed by WizIQ */
         $parameters['time_zone'] = 'GMT';
         $callbackToken = CommonHelper::encrypt($parameters['signature']);
@@ -63,7 +62,6 @@ class Wiziq extends FatModel
             'method' => ($objDOM->getElementsByTagName("method"))->item(0)->nodeValue ?? '',
             'class_id' => ($objDOM->getElementsByTagName("class_id"))->item(0)->nodeValue ?? '',
             'recording_url' => ($objDOM->getElementsByTagName("recording_url"))->item(0)->nodeValue ?? '',
-            'presenter_email' => ($objDOM->getElementsByTagName("presenter_email"))->item(0)->nodeValue ?? '',
             'presenter_url' => ($objDOM->getElementsByTagName("presenter_url"))->item(0)->nodeValue ?? ''
         ];
     }
