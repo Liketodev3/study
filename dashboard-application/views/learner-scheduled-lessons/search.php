@@ -106,7 +106,7 @@ foreach ($lessonArr as $key => $lessons) { ?>
 				<?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['isLessonPlanAttach'] > 0) { ?>
 						<div class="card-landscape__docs">
 							<div class="d-flex align-items-center">
-								<a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>')" class="attachment-file">
+								<a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['sldetail_id']; ?>')" class="attachment-file">
 									<svg class="icon icon--issue icon--attachement icon--xsmall color-black"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#attach'; ?>"></use></svg>
 									<?php echo $lesson['tlpn_title'] ?>
 								</a>

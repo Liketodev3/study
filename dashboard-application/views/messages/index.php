@@ -18,7 +18,7 @@ $fld->changeCaption('');
 $submitFld = $frmSrch->getField('btn_submit');
 $submitFld->setWrapperAttribute('class', 'col-md-12'); ?>
 <!-- [ PAGE ========= -->
-<main class="page">
+ <!-- <main class="page"> -->
     <div class="window">
         <div class="window__container">
             <div class="window__left">

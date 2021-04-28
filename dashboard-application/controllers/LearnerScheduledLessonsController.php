@@ -227,7 +227,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::exitWithErrorCode(404);
         }
         $lessonId = $lessonDetailRow['sldetail_slesson_id'];
-        $lessonRow = ScheduledLesson::getAttributesById($lessonId, ['slesson_id', 'slesson_grpcls_id']);
+        $lessonRow = ScheduledLesson::getAttributesById($lessonId, ['slesson_id','slesson_teacher_id', 'slesson_grpcls_id']);
         if (!$lessonRow || $lessonRow['slesson_id'] != $lessonId) {
             FatUtility::exitWithErrorCode(404);
         }
@@ -244,11 +244,22 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $this->_template->addJs("js/locales/$currentLangCode.js");
             }
         }
+        $lessonRow['learnerId'] = $lessonDetailRow['sldetail_learner_id'];
+        $lessonRow['teacherId'] = $lessonRow['slesson_teacher_id'];
+        $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
+        if ($flashCardEnabled) {
+            /* flashCardSearch Form[ */
+            $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
+            $frmSrchFlashCard->fill(['lesson_id' => $lessonRow['slesson_id']]);
+            $this->set('frmSrchFlashCard', $frmSrchFlashCard);
+            /* ] */
+        }
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $this->_template->addJs(['js/jquery.barrating.min.js']);
         $this->set('lessonRow', $lessonRow);
         $this->set('lessonId', $lessonRow['slesson_id']);
         $this->set('lDetailId', $lDetailId);
+        $this->set('showFlashCard', $flashCardEnabled);
         $this->_template->render();
     }
 
@@ -279,7 +290,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addCondition('sld.sldetail_id', '=', $lDetailId);
         $srch->joinIssueReported(UserAuthentication::getLoggedUserId());
         $srch->joinLearnerCountry($this->siteLangId);
+        $srch->joinLessonPLan();
         $srch->addFld([
+            'IFNULL(lp.tlpn_id,0) AS isLessonPlanAttach',
+            'lp.tlpn_title',
             'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             'ul.user_first_name as learnerFname',
             'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',

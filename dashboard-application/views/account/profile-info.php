@@ -1,15 +1,19 @@
 <?php
 defined('SYSTEM_INIT') or die('Invalid Usage.');
 $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT);
+$currentActiveTab =  User::getDashboardActiveTab();
+$isTeacherDashboardTabActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
 ?>
 <script>
 	var userIsTeacher = <?php echo $userIsTeacher ?: 0; ?>;
+	var currentActiveTab = <?php echo $currentActiveTab ?: 0; ?>;
+	var isTeacherDashboardTabActive = <?php echo $isTeacherDashboardTabActive ?: 0; ?>;
 
 	var isCometChatMeetingToolActive = '<?php echo $activeMettingTool == ApplicationConstants::MEETING_COMET_CHAT ?>';
 </script>
 
 <!-- [ PAGE ========= -->
-<main class="page">
+ <!-- <main class="page"> -->
 	<div class="container container--fixed">
 
 		<div class="page__head">
@@ -17,7 +21,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 		</div>
 
 		<div class="page__body">
-		<?php if($userIsTeacher){ ?>
+		<?php if($isTeacherDashboardTabActive && $userIsTeacher){ ?>
 			<!-- [ INFO BAR ========= -->
 			<div class="infobar">
 				<div class="row justify-content-between align-items-start">
@@ -63,7 +67,6 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 							</div>
 						</div>
 					</div>
-
 				</div>
 			</div>
 			<!-- ] -->
@@ -73,13 +76,13 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 				<div class="page-panel__small">
 					<nav class="menu menu--vertical menu--steps tabs-scrollable-js">
 						<ul>
-							<li class="menu__item profile--progress--menu is-active">
+							<li class="menu__item <?php echo ($isTeacherDashboardTabActive && $userIsTeacher) ? 'profile--progress--menu' :''; ?> is-active">
 								<a href="javascript:void(0);" class="profile-Info-js" onClick="profileInfoForm();">
 									<?php echo Label::getLabel('LBL_Personal_Info'); ?>
 									<span class="menu__icon"></span>
 								</a>
 							</li>
-							<?php if($userIsTeacher){ ?>
+							<?php if($isTeacherDashboardTabActive && $userIsTeacher){ ?>
 							<li class="menu__item profile--progress--menu">
 								<a href="javascript:void(0);" class="teacher-lang-form-js" onClick="teacherLanguagesForm()">
 									<?php echo Label::getLabel('LBL_Languages'); ?>
@@ -104,12 +107,12 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 									<span class="menu__icon"></span>
 								</a>
 							</li>
-							<li class="menu__item profile--progress--menu">
+							<!-- <li class="menu__item profile--progress--menu">
 								<a href="javascript:void(0);" class="general-availability-js" onClick="teacherGeneralAvailability()">
-									<?php echo Label::getLabel('LBL_Availability_Calendar'); ?>
+									<?php //echo Label::getLabel('LBL_Availability_Calendar'); ?>
 									<span class="menu__icon"></span>
 								</a>
-							</li>
+							</li> -->
 							<li class="menu__item">
 								<a  href="javascript:void(0);" class="teacher-bankinfo-js" onClick="bankInfoForm()">
 									<?php echo Label::getLabel('LBL_Payments'); ?>
@@ -131,7 +134,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 								</a>
 							</li>
 							<li class="menu__item">
-								<a href="teacher_settings_deactivate_account.html">
+								<a href="#">
 									
 									<?php echo Label::getLabel('LBL_Deactivate_Account');?>
 									<span class="menu__icon"></span>
@@ -150,11 +153,6 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 			</div>
 			<!-- ] -->
 		</div>
-		<div class="page__footer align-center">
-			<p class="small">Copyright © 2021 Yo!Coach Developed by <a href="#" class="underline color-primary">FATbit Technologies</a> . </p>
-		</div>
-	</div>
-</main>
 <!-- ] -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/> 

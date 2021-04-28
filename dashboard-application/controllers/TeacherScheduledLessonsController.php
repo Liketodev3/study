@@ -194,8 +194,20 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Access_Denied'));
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons'));
         }
+        $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
+        
+        $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
+        if ($flashCardEnabled) {
+            /* flashCardSearch Form[ */
+            $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
+            $frmSrchFlashCard->fill(['lesson_id' => $lessonId]);
+            $this->set('frmSrchFlashCard', $frmSrchFlashCard);
+            /* ] */
+        }
+
         $this->set('lessonRow', $lessonRow);
         $this->set('lessonId', $lessonRow['slesson_id']);
+        $this->set('showFlashCard', $flashCardEnabled);
         $this->_template->addJs('js/teacherLessonCommon.js');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');

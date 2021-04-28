@@ -137,14 +137,14 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                      <?php } ?>
                 </div>
                 <div class="session-infobar__bottom">
-                    <div class="session-time">
                         <?php if($lessonData['slesson_date'] != '0000-00-00'){ ?>
-                            <p>
-                                <span><?php echo date('h:i A', $startDateTimeUnixtime).' - '.date('h:i A', $endDateTimeUnixtime);  ?>,</span> 
-                                <?php echo date('l, F d, Y', $startDateTimeUnixtime); ?>
-                        </p>
+                            <div class="session-time">
+                                    <p>
+                                        <span><?php echo date('h:i A', $startDateTimeUnixtime).' - '.date('h:i A', $endDateTimeUnixtime);  ?>,</span> 
+                                        <?php echo date('l, F d, Y', $startDateTimeUnixtime); ?>
+                                </p>
+                            </div>
                         <?php } ?>
-                    </div>
                     <?php if ($lessonData['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) { ?>
                         <div class="session-resource">
                             <?php if ($lessonData['isLessonPlanAttach'] > 0) {  ?>
@@ -235,8 +235,8 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
             </div>
             <div class="start-lesson-timer timer" style="display:none;">
                 <h5 class="timer-title"><?php echo Label::getLabel('LBL_Starts_In'); ?></h5>
-                    <div class="countdown-timer" id="start_lesson_timer">
-                </div>
+                    <div class="countdown-timer size_lg" id="start_lesson_timer">
+                     </div>
             </div>
         </div>
     </div>

@@ -50,7 +50,7 @@ if($langId == $lang_id) {
                             <div class="field_cover">
                                 <?php 
                                     echo $langFrm->getFieldHtml('btn_submit'); 
-                                    if($langId != $lang_id || User::isTeacher(true) == true) {
+                                    if($langId != $lang_id || User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) {
                                         echo $langFrm->getFieldHtml('btn_next'); 
                                    }
                                 ?>

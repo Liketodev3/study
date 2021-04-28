@@ -6,7 +6,7 @@
 	$frmOrderSrch->setFormTagAttribute('onSubmit', 'searchOrders(this); return false;'); 
 ?>
 <!-- [ PAGE ========= -->
-<main class="page">
+ <!-- <main class="page"> -->
     <div class="container container--fixed">
 
         <div class="page__head">
@@ -42,12 +42,3 @@
             </div>
             <!-- ] -->
         </div>
-        <div class="page__footer align-center">
-            <p class="small">Copyright © 2021 Yo!Coach Developed by <a href="#" class="underline color-primary">FATbit Technologies</a> . </p>
-        </div>
-
-    </div>
-
-
-</main>
-<!-- ] -->

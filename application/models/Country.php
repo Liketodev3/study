@@ -76,6 +76,9 @@ class Country extends MyAppModel
         $srch->addCondition('country_id', '=', $countryId);
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
+        if(empty($row)){
+            return [];
+        }
         return $row;
     }
 

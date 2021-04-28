@@ -33,7 +33,7 @@ $(document).ready(function () {
 
 	getTeacherProfileProgress = function (showMessage) {
 		showMessage = (showMessage) ? showMessage : true;
-		if (!userIsTeacher) {
+		if (!userIsTeacher || !isTeacherDashboardTabActive) {
 			return;
 		}
 
@@ -248,13 +248,14 @@ $(document).ready(function () {
 	};
 
 
-	setupTeacherPreferences = function (frm, goToPaymentForm) {
+	setupTeacherPreferences = function (frm, goAvailablityForm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function (t) {
 			//$.mbsmessage.close();
-			if(goToPaymentForm) {
+			if(goAvailablityForm) {
 				$('.general-availability-js').trigger('click');
+				window.location = fcom.makeUrl('Teacher', 'availability');
 			}else if(userIsTeacher){
 				getTeacherProfileProgress();
 			}
@@ -321,6 +322,7 @@ $(document).ready(function () {
 				//$.mbsmessage.close();
 				// teacherLanguagesForm();
 				$.loader.hide();
+				getTeacherProfileProgress();
 			});
 			return;
 		}
@@ -337,6 +339,7 @@ $(document).ready(function () {
 						$.loader.show();
 						fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
 							$.loader.hide();
+							getTeacherProfileProgress();
 						});
 					}
 				},
@@ -425,18 +428,6 @@ $(document).ready(function () {
 		});
 	};
 
-	teacherGeneralAvailability = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherGeneralAvailability'), '', function (t) {
-			$(dv).html(t);
-			if (userIsTeacher) {
-				getTeacherProfileProgress();
-			}
-
-		});
-	};
-
-
 	deleteLanguageRow = function (id) {
 		$.confirm({
 			title: langLbl.Confirm,
@@ -489,40 +480,6 @@ $(document).ready(function () {
 		});
 	};
 
-	teacherWeeklySchedule = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherWeeklySchedule'), '', function (t) {
-			$(dv).html(t);
-
-		});
-	};
-
-	setupTeacherWeeklySchedule = function (frm) {
-		$(dv).html(fcom.getLoader());
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data=' + frm, function (t) {
-			teacherWeeklySchedule()
-			//$("#w_calendar").fullCalendar("refetchEvents");
-		});
-	};
-
-	setupTeacherGeneralAvailability = function (frm) {
-		$(dv).html(fcom.getLoader());
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherGeneralAvailability'), 'data=' + frm, function (t) {
-			teacherGeneralAvailability();
-			//$("#ga_calendar").fullCalendar("refetchEvents");
-		});
-	};
-
-	deleteTeacherGeneralAvailability = function (id) {
-		if (confirm(langLbl['confirmRemove'])) {
-			$('#ga_calendar').fullCalendar('removeEvents', id);
-			//  fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherGeneralAvailability',[id]), '' , function(t) {
-			// 		if(userIsTeacher) {
-			// 		  getTeacherProfileProgress(false);
-			// 		}
-			// });
-		}
-	};
 
 	teacherPreferences = function () {
 		$(dv).html(fcom.getLoader());
@@ -767,82 +724,6 @@ $(document).ready(function () {
 			}
 			
 		});
-	};
-
-	saveGeneralAvailability = function () {
-		var allevents = calendar.getEvents();
-		let data = allevents.map(function (e) {
-			return {
-				start: moment(e.start).format('HH:mm:ss'),
-				end: moment(e.end).format('HH:mm:ss'),
-				startTime: moment(e.start).format('HH:mm'),
-				endTime: moment(e.end).format('HH:mm'),
-				day: moment(e.start).format('d'),
-				dayStart: moment(e.start).format('d'),
-				dayEnd: moment(e.end).format('d'),
-				classtype: e.classType,
-			};
-		});
-
-		data.forEach(element => {
-
-			if ((element.dayStart != element.dayEnd)
-				&&
-				((element.endTime != '00:00') || (element.startTime == '00:00'))
-			) {
-
-				if ((element.dayEnd - element.dayStart == 1)) {
-
-					if ((element.endTime != '00:00') || (element.startTime != '00:00')) {
-
-						let elementClone = $.parseJSON(JSON.stringify(element));
-						elementClone.day = parseInt(element.dayEnd);
-						elementClone.start = '00:00:00';
-						elementClone.startTime = '00:00';
-						data[data.length] = elementClone;
-					}
-				} else {
-
-					for (let index = 0; index < element.dayEnd - element.dayStart; index++) {
-
-						if ((element.endTime == '00:00') && (parseInt(element.dayStart) + index + 1 == element.dayEnd)) {
-
-							continue;
-						}
-						let elementClone = $.parseJSON(JSON.stringify(element));
-						elementClone.day = parseInt(element.dayStart) + index + 1;
-						elementClone.start = '00:00:00';
-						elementClone.startTime = '00:00';
-						if (index + 1 != element.dayEnd - element.dayStart) {
-							elementClone.end = '24:00:00';
-							elementClone.endTime = '24:00';
-						}
-						data[data.length] = elementClone;
-					}
-				}
-				element.end = '24:00:00';
-				element.endTime = '24:00';
-			}
-		});
-		var json = JSON.stringify(data);
-
-		setupTeacherGeneralAvailability(json);
-	};
-
-	setUpWeeklyAvailability = function () {
-		var json = JSON.stringify(calendar.getEvents().map(function (e) {
-
-			return {
-				start: moment(e.start).format('HH:mm:ss'),
-				end: moment(e.end).format('HH:mm:ss'),
-				date: moment(e.start).format('YYYY-MM-DD'),
-				_id: e.extendedProps._id,
-				action: e.extendedProps.action,
-				classtype: e.extendedProps.classType,
-			};
-		}));
-
-		setupTeacherWeeklySchedule(json);
 	};
 
 })();

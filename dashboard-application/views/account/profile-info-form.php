@@ -43,7 +43,6 @@ $phoneCode  = $profileFrm->getField('user_phone_code');
 $phoneCode->addFieldTagAttribute('id', 'user_phone_code');
 $user_gender = $profileFrm->getField('user_gender');
 $user_gender->setOptionListTagAttribute('class', 'list-inline list-inline--onehalf');
-$profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Account', 'setUpProfileImage'));
 $jsonUserRow = FatUtility::convertToJson($userRow);
 
 ?>

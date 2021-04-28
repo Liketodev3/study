@@ -112,7 +112,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                         </li>
 
                         <li class="menu__item menu__item-home">
-                            <a href="#" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Home'); ?>">
+                            <a href="<?php echo CommonHelper::generateUrl('Account'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Home'); ?>">
                                 <svg class="icon icon--home"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#home'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Home'); ?></span>
                             </a>
@@ -160,7 +160,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                             </div>
                         </li>
 						<?php }  if ($currentActiveTab == User::USER_LEARNER_DASHBOARD) { ?>
-                        <li class="menu__item menu__item-favorites">
+                        <li class="menu__item menu__item-favorites <?php echo ($controllerName == 'Learner' && $action == 'favourites') ? 'is-active' : ''; ?>">
                             <a href="<?php echo CommonHelper::generateUrl('Learner', 'favourites'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Favorites'); ?>">
                                 <svg class="icon icon--favorites"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#favorite'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Favorites'); ?></span>
@@ -249,13 +249,23 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                 </div>
                 <div class="sidebar__body">
                     <div class="sidebar__scroll">
-                        <div id="primary-nav" class="menu-offset">
+                        <div id="primary-nav" class="menu-offset"><!-- Display flashcard list on left sidebar in lesson view page  -->
                             <?php
+                                $templateVariable = ['controllerName' => $controllerName, 'action' => $action];
                                 $sidebarMenuLayout = 'learner/_partial/learnerDashboardNavigation.php';
                                 if (User::canViewTeacherTab() && User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) {
                                     $sidebarMenuLayout = 'teacher/_partial/teacherDashboardNavigation.php';
                                 }
-                                $this->includeTemplate($sidebarMenuLayout, ['controllerName' => $controllerName, 'action' => $action]);
+                                if(isset($showFlashCard) && $showFlashCard) {
+                                  
+                                    $templateVariable['frmSrchFlashCard'] = $frmSrchFlashCard;
+                                    $templateVariable['lessonRow'] = $lessonRow;
+                                    $sidebarMenuLayout = 'learner/_partial/flashCardSidebarView.php';
+                                    if ($currentActiveTab == User::USER_TEACHER_DASHBOARD) {
+                                        $sidebarMenuLayout = 'teacher/_partial/flashCardSidebarView.php';
+                                    }
+                                }
+                                $this->includeTemplate($sidebarMenuLayout, $templateVariable);
                             ?>   
                         </div>
                     </div>
@@ -264,3 +274,5 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
             <!-- ] -->
         </aside>
         <!-- ] -->
+        <main class="page">
+            

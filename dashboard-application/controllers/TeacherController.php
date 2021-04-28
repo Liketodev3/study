@@ -299,13 +299,17 @@ class TeacherController extends TeacherBaseController
     {
         $frm = $this->getTeacherLanguagesForm($this->siteLangId, []);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-        $db = FatApp::getDb();
         if (false === $post) {
-            Message::addErrorMessage(current($frm->getValidationErrors()));
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
-        $teacherId = UserAuthentication::getLoggedUserId();
         
+        if(empty(FatApp::getPostedData('utsl_slanguage_id'))){
+            FatUtility::dieJsonError(Label::getLabel('Lbl_Speak_Language_is_Requried'));
+        }
+
+        $teacherId = UserAuthentication::getLoggedUserId();
+        $db = FatApp::getDb();
+        $db->startTransaction();
         $query = 'DELETE  FROM ' . UserToLanguage::DB_TBL_TEACH . ' WHERE utl_us_user_id = '. $teacherId;
         if(!empty($post['teach_lang_id'])){
                 $langIds = implode(",", $post['teach_lang_id']);
@@ -314,7 +318,7 @@ class TeacherController extends TeacherBaseController
        $db->query($query);
        if ($db->getError()) {
             $db->rollbackTransaction();
-            FatUtility::dieWithError(Label::getLabel($db->getError()));
+            FatUtility::dieJsonError($db->getError());
            return false;
        }
 
@@ -329,8 +333,7 @@ class TeacherController extends TeacherBaseController
                 ];
                 if (!$db->insertFromArray(UserToLanguage::DB_TBL_TEACH, $insertArr, false, [], $insertArr)) {
                     $db->rollbackTransaction();
-                    Message::addErrorMessage(Label::getLabel($db->getError()));
-                    FatUtility::dieWithError(Message::getHtml());
+                    FatUtility::dieJsonError($db->getError());
                 }
             }
         }
@@ -344,7 +347,7 @@ class TeacherController extends TeacherBaseController
        $db->query($query);
        if ($db->getError()) {
             $db->rollbackTransaction();
-            FatUtility::dieWithError(Label::getLabel($db->getError()));
+            FatUtility::dieJsonError($db->getError());
            return false;
        }
     
@@ -352,8 +355,7 @@ class TeacherController extends TeacherBaseController
             $insertArr = ['utsl_slanguage_id' => $lang, 'utsl_proficiency' => $post['utsl_proficiency'][$key], 'utsl_user_id' => $teacherId];
             if (!$db->insertFromArray(UserToLanguage::DB_TBL, $insertArr, false, [], $insertArr)) {
                 $db->rollbackTransaction();
-                Message::addErrorMessage(Label::getLabel($db->getError()));
-                FatUtility::dieWithError(Message::getHtml());
+                FatUtility::dieJsonError($db->getError());
             }
         }
 
@@ -565,6 +567,20 @@ class TeacherController extends TeacherBaseController
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save_Changes'));
         $frm->addButton('', 'btn_next', Label::getLabel('LBL_next'));
         return $frm;
+    }
+
+    public function availability()
+    {
+        $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
+        $this->set('cssClassArr', $cssClassNamesArr);
+        $userId = UserAuthentication::getLoggedUserId();
+        $this->set('userId', $userId);
+        $currentLangCode = strtolower(Language::getLangCode($this->siteLangId));
+        $this->set('currentLangCode', $currentLangCode);
+        $this->_template->addJs('js/moment.min.js');
+        $this->_template->addJs('js/fullcalendar.min.js');
+        $this->_template->addJs('js/fateventcalendar.js');
+        $this->_template->render();
     }
 
     public function teacherGeneralAvailability()

@@ -1,6 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <!-- [ PAGE ========= -->
-<main class="page">
+ <!-- <main class="page"> -->
 		<div class="dashboard">
 			<div class="dashboard__primary">
 				<div class="page__head">

@@ -49,20 +49,16 @@
 												<?php foreach ($first_array as $teachLang) {  ?>
 													<span class="main-language"><?php echo $teachLang; ?></span>
 												<?php } ?>
-												<ul class="ml-1">
-													<li>
-														<a href="javascript:void(0);" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-															<svg class="icon icon--add">
-																<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#icon-add'; ?>"></use>
-															</svg>
-														 <div class="tooltip tooltip--bottom bg-black">
-																<?php  echo '<ul class="custom-tooltip"><li>'.implode('</li><li>', $second_array).'</li></ul>'; ?>
-														 </div> 
-														</a>
-													<!-- <div class="tooltip tooltip--bottom bg-red">bottom Center</div> -->
-														
-													</li>
-												</ul>
+												<div class="more-lang">
+													<a class="menu__item-trigger trigger-js color-secondary" href="#more-lang<?php echo $teacher['teacherId']; ?>"><?php echo count($second_array).' '.Label::getLabel('LBL_More'); ?></a>
+													<ul class="menu__dropdown more--dropdown" id="more-lang<?php echo $teacher['teacherId']; ?>">
+														<?php foreach ($second_array as $key => $teachLang) { ?>
+															<li>
+																<h6><?php echo $teachLang; ?></h6>	
+															</li>
+														<?php } ?>
+													</ul>
+												</div>
 											</div>
 									<?php
 										} else {
