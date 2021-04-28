@@ -374,3 +374,9 @@ ALTER TABLE `tbl_attached_files` ADD `afile_attribute_alt` VARCHAR(256) CHARACTE
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Specific_Language_Alter_Tags_Note', '1', 'Image alter message can be language specific . Please upload image for specific language before update alter tags');
 
+
+ALTER TABLE `tbl_meta_tags_lang` ADD `meta_og_title` VARCHAR(90) NOT NULL AFTER `meta_other_meta_tags`;
+
+ALTER TABLE `tbl_meta_tags_lang` ADD `meta_og_url` VARCHAR(255) NOT NULL AFTER `meta_og_title`;
+
+ALTER TABLE `tbl_meta_tags_lang` ADD `meta_og_description` VARCHAR(300) NOT NULL AFTER `meta_og_url`;

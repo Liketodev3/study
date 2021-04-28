@@ -50,9 +50,9 @@ class AttachedFile extends MyAppModel
     const FILETYPE_BLOG_PAGE_IMAGE = 43;
     const FILETYPE_LESSON_PAGE_IMAGE = 44;
     const FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE = 45;
-
     const FILETYPE_PWA_APP_ICON = 46;
     const FILETYPE_PWA_SPLASH_ICON = 47;
+    const FILETYPE_OPENGRAPH_IMAGE = 48;
 
     public function __construct($fileId = 0)
     {
@@ -141,18 +141,27 @@ class AttachedFile extends MyAppModel
         return null;
     }
 
-    public function saveAttachment($fl, $fileType, $recordId, $recordSubid, $name, $displayOrder = 0, $uniqueRecord = false, $langId = 0, $screen = 0)
+    public function saveAttachment($fl, $fileType, $recordId, $recordSubid, $name, $displayOrder = 0, $uniqueRecord = false, $langId = 0, $screen = 0, $allowImageExt = false)
     {
+
+        if ($allowImageExt) {
+            $allowedFileExtensions =  applicationConstants::allowedImageFileExtensions();
+            $allowedMimeTypes = applicationConstants::allowedImageMimeTypes();
+        } else {
+            $allowedFileExtensions =  applicationConstants::allowedFileExtensions();
+            $allowedMimeTypes = applicationConstants::allowedMimeTypes();
+        }
+
         $defaultLangIdForErrors = ($langId == 0) ? $this->commonLangId : $langId;
         if (!empty($name) && !empty($fl)) {
             $fileExt = pathinfo($name, PATHINFO_EXTENSION);
             $fileExt = strtolower($fileExt);
-            if (!in_array($fileExt, applicationConstants::allowedFileExtensions())) {
+            if (!in_array($fileExt, $allowedFileExtensions)) {
                 $this->error = Label::getLabel('MSG_INVALID_FILE_EXTENSION', $defaultLangIdForErrors);
                 return false;
             }
             $fileMimeType = mime_content_type($fl);
-            if (!in_array($fileMimeType, applicationConstants::allowedMimeTypes())) {
+            if (!in_array($fileMimeType, $allowedMimeTypes)) {
                 $this->error = Label::getLabel('MSG_INVALID_FILE_MIME_TYPE', $defaultLangIdForErrors);
                 return false;
             }
