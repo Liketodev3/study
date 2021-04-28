@@ -380,3 +380,14 @@ ALTER TABLE `tbl_meta_tags_lang` ADD `meta_og_title` VARCHAR(90) NOT NULL AFTER 
 ALTER TABLE `tbl_meta_tags_lang` ADD `meta_og_url` VARCHAR(255) NOT NULL AFTER `meta_og_title`;
 
 ALTER TABLE `tbl_meta_tags_lang` ADD `meta_og_description` VARCHAR(300) NOT NULL AFTER `meta_og_url`;
+
+
+ALTER TABLE `tbl_url_rewrites` ADD `urlrewrite_lang_id` INT(11) NOT NULL DEFAULT '1' AFTER `urlrewrite_custom`;
+
+ALTER TABLE `tbl_url_rewrites` ADD `urlrewrite_http_resp_code` VARCHAR(10) NOT NULL AFTER `urlrewrite_lang_id`;
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Example_Custom_URL_Example', '1', 'Example: If Site URL Will Be http://domainname.com/cms/view/1 And You Want To Rewrite Then Original URL: Cms/view/1 custom URL: My-custom-page Browsing URL : http://domainname.com/my-custom-page');
+
+                  
+
+

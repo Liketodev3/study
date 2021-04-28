@@ -17,18 +17,14 @@ class CommonHelper extends FatUtility
 
     public static function initCommonVariables($isAdmin = false)
     {
+
         self::$_ip = self::getClientIp();
         self::$_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         self::$_lang_id = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
         self::$_currency_id = FatApp::getConfig('CONF_CURRENCY', FatUtility::VAR_INT, 1);
 
         if (false === $isAdmin) {
-            // if (isset($_COOKIE['defaultSiteLang'])) {
-            //     $languages = Language::getAllNames();
-            //     if (array_key_exists($_COOKIE['defaultSiteLang'], $languages)) {
-            //         self::$_lang_id = FatUtility::int(trim($_COOKIE['defaultSiteLang']));
-            //     }
-            // }
+
             self::setSiteDefaultLang();
 
             if (isset($_COOKIE['defaultSiteCurrency'])) {
@@ -70,19 +66,27 @@ class CommonHelper extends FatUtility
 
     public static function setSiteDefaultLang()
     {
+        $specificUrlConf = FatApp::getConfig('CONF_LANG_SPECIFIC_URL', FatUtility::VAR_INT, 0);
+
         self::$_lang_id = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
 
-        $languages = array_map('strtoupper', Language::getAllCodesAssoc());
-
         if (isset($_COOKIE['defaultSiteLang'])) {
-            if (array_key_exists($_COOKIE['defaultSiteLang'], $languages)) {
-                self::$_lang_id = FatUtility::int(trim($_COOKIE['defaultSiteLang']));
+            if (array_key_exists($_COOKIE['defaultSiteLang'], LANG_CODES_ARR)) {
+                self::$_lang_id = FatUtility::int($_COOKIE['defaultSiteLang']);
+                return true;
+            }
+        }
+
+        if (defined("SYSTEM_LANG_ID")) {
+
+            if ($specificUrlConf && SYSTEM_LANG_ID > 0) {
+                self::$_lang_id = SYSTEM_LANG_ID;
                 return true;
             }
         }
 
         $headerLang = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-        $langId = array_search($headerLang, $languages);
+        $langId = array_search($headerLang, LANG_CODES_ARR);
         if ($langId !== false) {
             self::$_lang_id = FatUtility::int($langId);
         }
@@ -203,31 +207,38 @@ class CommonHelper extends FatUtility
         return md5(PASSWORD_SALT . $pwd . PASSWORD_SALT);
     } */
 
-    public static function generateUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false): string
+    public static function generateUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false, $useLangCode = true): string
     {
+        $langId = self::$_lang_id;
+
+
+        if ($useLangCode == true && FatApp::getConfig('CONF_LANG_SPECIFIC_URL', FatUtility::VAR_INT, 0) && count(LANG_CODES_ARR) > 1 && $langId  != FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1)) {
+
+            $use_root_url = rtrim($use_root_url, '/') . '/' . strtolower(LANG_CODES_ARR[$langId]) . '/';
+        }
+
         $url = FatUtility::generateUrl($controller, $action, $queryData, $use_root_url, $url_rewriting);
+
         if (in_array(strtolower($controller), array('jscss', 'image'))) {
             return $url;
         }
 
-        /* if(FatUtility::isAjaxCall()){
-            return $url;
-        } */
-
         if (!$use_root_url) {
             $use_root_url = CONF_WEBROOT_URL;
         }
-        /* $urlString = FatUtility::camel2dashed($controller);
-        $urlString.= '/'.FatUtility::camel2dashed($action);
-        $urlString.= '/'.implode('/',$queryData);
-        $urlString = trim($urlString,'/'); */
-        $urlString = trim($url, '/');
+
         $srch = UrlRewrite::getSearchObject();
         $srch->doNotCalculateRecords();
         $srch->setPagesize(1);
-        $srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'original', 'LIKE', $urlString);
+        $srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'original', 'LIKE', strtolower($controller) . '/' . strtolower($action));
+        $srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'lang_id', '=', $langId);
         $rs = $srch->getResultSet();
+
+
         if ($row = FatApp::getDb()->fetch($rs)) {
+            if (strpos($row['urlrewrite_custom'], 'urlparameter') !== false) {
+                $row['urlrewrite_custom'] = implode('/', array_slice(explode('/', $row['urlrewrite_custom']), 0, 2)) . '/' . implode('/', $queryData);
+            }
             if ($encodeUrl) {
                 $url = $use_root_url . urlencode($row['urlrewrite_custom']);
             } else {
@@ -237,9 +248,9 @@ class CommonHelper extends FatUtility
         return $url;
     }
 
-    public static function generateFullUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false)
+    public static function generateFullUrl($controller = '', $action = '', $queryData = array(), $use_root_url = '', $url_rewriting = null, $encodeUrl = false, $useLangCode = true)
     {
-        $url = static::generateUrl($controller, $action, $queryData, $use_root_url, $url_rewriting);
+        $url = static::generateUrl($controller, $action, $queryData, $use_root_url, $url_rewriting, $encodeUrl, $useLangCode);
         $protocol = (FatApp::getConfig('CONF_USE_SSL') == 1) ? 'https://' : 'http://';
         if ($encodeUrl) {
             $url = urlencode($url);
@@ -1068,19 +1079,16 @@ class CommonHelper extends FatUtility
         //Make alphanumeric (removes all other characters)
         //$string = preg_replace("/[^a-z0-9,&_\s-\/]/", "", $string);
         //covert / to -
-        $string = preg_replace("/[\s,&\/]/", "-", $string);
+        $string = preg_replace("/[\s,&]/", "-", $string);
         //Clean up multiple dashes or whitespaces
-        $string = preg_replace("/[\s-]+/", " ", $string);
+        $string = preg_replace("/[\s]+/", " ", $string);
         //Convert whitespaces and underscore to dash
-        $string = preg_replace("/[\s_]/", "-", $string);
-
+        // $string = preg_replace("/[\s_]/", "-", $string);
         $keyword = strtolower($string);
         $keyword = ucfirst(FatUtility::dashed2Camel($keyword));
-
         if (file_exists(CONF_INSTALLATION_PATH . 'application/controllers/' . $keyword . 'Controller' . '.php')) {
             return $string . '-' . rand(1, 100);
         }
-
         return trim($string, '-');
     }
 

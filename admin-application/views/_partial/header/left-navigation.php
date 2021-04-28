@@ -275,7 +275,7 @@
 
 			<?php if (
 				$objPrivilege->canViewMetaTags(AdminAuthentication::getLoggedAdminId(), true) ||
-				$objPrivilege->canViewUrlRewrite(AdminAuthentication::getLoggedAdminId(), true)
+				$objPrivilege->canViewUrlRewrites(AdminAuthentication::getLoggedAdminId(), true)
 				//|| $objPrivilege->canViewEmailArchives(AdminAuthentication::getLoggedAdminId(), true)
 			) { ?>
 				<li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Misc', $adminLangId); ?></a>
@@ -284,7 +284,7 @@
 							<li><a href="<?php echo CommonHelper::generateUrl('MetaTags'); ?>"><?php echo Label::getLabel('LBL_Meta_Tags_Management', $adminLangId); ?></a></li>
 						<?php } ?>
 
-						<?php if ($objPrivilege->canViewUrlRewrite(AdminAuthentication::getLoggedAdminId(), true)) { ?>
+						<?php if ($objPrivilege->canViewUrlRewrites(AdminAuthentication::getLoggedAdminId(), true)) { ?>
 							<li><a href="<?php echo CommonHelper::generateUrl('UrlRewriting'); ?>"><?php echo Label::getLabel('LBL_Url_Rewriting', $adminLangId); ?></a></li>
 						<?php } ?>
 

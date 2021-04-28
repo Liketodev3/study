@@ -450,12 +450,12 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_META_TAGS, static::PRIVILEGE_WRITE, $returnResult);
     }
 
-    public function canViewUrlRewrite($adminId = 0, $returnResult = false)
+    public function canViewUrlRewrites($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_URL_REWRITE, static::PRIVILEGE_READ, $returnResult);
     }
 
-    public function canEditUrlRewrite($adminId = 0, $returnResult = false)
+    public function canEditUrlRewrites($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_URL_REWRITE, static::PRIVILEGE_WRITE, $returnResult);
     }
