@@ -107,6 +107,7 @@ class MyAppController extends FatController
             'incompleteProfile' => Label::getLabel('Lbl_Complete_Your_profile'),
             'language' => Label::getLabel('Lbl_Language'),
             'myTimeZoneLabel' => Label::getLabel('Lbl_My_Current_Time'),
+            'timezoneString' => Label::getLabel('LBL_TIMEZONE_STRING'),
             'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson'),
             'confirmDeleteLessonPlanText' => Label::getLabel('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT'),
         ];

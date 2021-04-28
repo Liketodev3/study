@@ -56,7 +56,8 @@ $unreadNotifications = UserNotifications::getUserUnreadNotifications($loggedUser
 		var currencySymbolRight = '<?php echo $currencySymbolRight; ?>';
 		var SslUsed = '<?php $sslUsed; ?>';
 		var cookieConsent = <?php echo json_encode($cookieConsent); ?>;
-	
+        var timeZoneOffset = '<?php echo MyDate::getOffset(MyDate::getUserTimeZone()); ?>';
+
 		const CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = '<?php echo $closeSystemMessages; ?>';
 		const CONF_AUTO_CLOSE_SYSTEM_MESSAGES = '<?php echo FatApp::getConfig("CONF_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 0); ?>';
 
