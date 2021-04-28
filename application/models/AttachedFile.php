@@ -627,16 +627,15 @@ class AttachedFile extends MyAppModel
     }
 
 
-    public static function getFileTypesArrayForAttributes(int $langId): array
+    public static function getFileTypesArrForImgAttrs(int $langId): array
     {
-        $imageAttributesGroups = array(
+        return [
             AttachedFile::FILETYPE_BANNER => Label::getLabel('IMGA_Banner', $langId),
             AttachedFile::FILETYPE_HOME_PAGE_BANNER => Label::getLabel('IMGA_Home_Page_Banner', $langId),
             AttachedFile::FILETYPE_CPAGE_BACKGROUND_IMAGE => Label::getLabel('IMGA_CPAGE_BACKGROUND_IMAGE', $langId),
             AttachedFile::FILETYPE_TEACHING_LANGUAGES => Label::getLabel('IMGA_TEACHING_LANGUAGES', $langId),
             AttachedFile::FILETYPE_FLAG_TEACHING_LANGUAGES => Label::getLabel('IMGA_TEACHING_LANGUAGES_FLAG', $langId),
             AttachedFile::FILETYPE_BLOG_POST_IMAGE => Label::getLabel('IMGA_BLOG_POST_IMAGE', $langId),
-        );
-        return $imageAttributesGroups;
+        ];
     }
 }

@@ -17,9 +17,9 @@ $(document).ready(function () {
         });
     };
 
-    editImageAttributeForm = function (afile_id, recordid, Type) {
+    editImageAttributeForm = function (afileId, recordId, type) {
         fcom.displayProcessing();
-        fcom.ajax(fcom.makeUrl('ImageAttributes', 'form'), { afile_id: afile_id, recordid: recordid, Type: Type }, function (t) {
+        fcom.ajax(fcom.makeUrl('ImageAttributes', 'form'), { afileId: afileId, recordId: recordId, type: type }, function (t) {
             fcom.updateFaceboxContent(t);
         });
     };
