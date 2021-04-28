@@ -23,7 +23,7 @@ var FatEventCalendar = function(teacherId){
             }
         },
         nowIndicator: true,
-        navLinks: true, // can click day/week names to navigate views
+        navLinks: false, // can click day/week names to navigate views
         // dayMaxEvents: true, // allow "more" link when too many events
         eventOverlap: false,
         slotEventOverlap : false,
@@ -443,7 +443,16 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
                     events[i].remove();
                 }
             }
-        }
+        },
+        eventDidMount: function(arg) {
+            element = arg.el;
+            if(isNaN(arg.event.extendedProps._id)){
+               $(element).find(".fc-event-main-frame").prepend( "<span class='closeon'>X</span>" );
+            }
+            else{
+                $(element).find(".fc-event-main-frame").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+arg.event.extendedProps_id+");'>X</span>" );
+            }
+         }
     }
     var defaultConf = this.calDefaultConf;
     var conf = {...defaultConf, ...calConf};
@@ -545,7 +554,16 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function(current_time){
                     events[i].remove();
                 }
             }
-        }
+        },
+        eventDidMount: function(arg) {
+            element = arg.el;
+            if(isNaN(arg.event.extendedProps._id)){
+               $(element).find(".fc-event-main-frame").prepend( "<span class='closeon'>X</span>" );
+            }
+            else{
+                $(element).find(".fc-event-main-frame").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+arg.event.extendedProps_id+");'>X</span>" );
+            }
+         }
     }
     var defaultConf = this.calDefaultConf;
     var conf = {...defaultConf, ...calConf};
