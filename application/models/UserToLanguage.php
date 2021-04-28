@@ -26,7 +26,7 @@ class UserToLanguage extends MyAppModel
         return $srch;
     }
     
-    public static function getTeachingAssoc($teacherId, $langId = 0)
+    public static function getTeachingAssoc($teacherId, $langId = 0, $activeOnly = true)
     {
         $langId = FatUtility::int($langId);
         if ($langId < 1) {
@@ -49,6 +49,7 @@ class UserToLanguage extends MyAppModel
             'tl_l'
         );
         $TeachingLangSrch->addCondition('utl_us_user_id', '=', $teacherId);
+        $activeOnly && $TeachingLangSrch->addCondition('tlanguage_active', '=', applicationConstants::YES);
         
         $TeachingLangSrch->doNotCalculateRecords();
         $TeachingLangSrch->addMultiplefields(array('tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'));
