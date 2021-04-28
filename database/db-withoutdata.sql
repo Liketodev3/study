@@ -9587,10 +9587,10 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.2.20210209' WHERE `tbl_conf
 
 REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('Twocheckout', 'Twocheckout', '1', 6, 1);
 
-REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('PayGate payweb-3', 'PayGate', '1', 7, 1);
+REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('PayGate payweb-3', 'PayGate', 0, 7, 1);
 -- Task-81501 Meta tags management
 
-REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES ('Paystack', 1, 'Paystack', 1, 10);
+REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES ('Paystack', 1, 'Paystack', 0, 10);
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
 ('HTMLAFTER_PWA_APP_SHORT_NAME', '1', 'Used when there is insufficient space to display the full name of the application. 15 characters or less.'),
 ('HTMLAFTER_PWA_Description', '1', 'A brief description of what your app is about.'),

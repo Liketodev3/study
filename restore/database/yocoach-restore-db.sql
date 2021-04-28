@@ -7142,8 +7142,8 @@ INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_
 (4, 'Paypal Payout', 2, 'PaypalPayout', 1, 3),
 (5, 'Bank Payout', 2, 'BankPayout', 1, 4),
 (6, 'Twocheckout', 1, 'Twocheckout', 1, 6),
-(7, 'PayGate payweb-3', 1, 'PayGate', 1, 7),
-(8, 'Paystack', 1, 'Paystack', 1, 10);
+(7, 'PayGate payweb-3', 1, 'PayGate', 0, 7),
+(8, 'Paystack', 1, 'Paystack', 0, 10);
 
 -- --------------------------------------------------------
 
