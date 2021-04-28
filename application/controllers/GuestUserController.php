@@ -543,7 +543,7 @@ class GuestUserController extends MyAppController
         if (!empty($facebookEmail)) {
             $srch->addCondition('credential_email', '=', $facebookEmail);
         } else {
-           
+
             $srch->addCondition('user_facebook_id', '=', $userFacebookId);
         }
         $rs = $srch->getResultSet();
@@ -727,17 +727,17 @@ class GuestUserController extends MyAppController
         $emailChangeReqObj = new UserEmailChangeRequest();
         $emailChangeReqObj->deleteOldLinkforUser(UserAuthentication::getLoggedUserId());
         $emailVerification = FatApp::getConfig('CONF_EMAIL_VERIFICATION_REGISTRATION', FatUtility::VAR_INT, 1);
-        if (applicationConstants::YES == $emailVerification) { 
+        if (applicationConstants::YES == $emailVerification) {
             $_token = $userObj->prepareUserVerificationCode();
-                $postData = array(
-                    'uecreq_user_id' => UserAuthentication::getLoggedUserId(),
-                    'uecreq_email' => $post['new_email'],
-                    'uecreq_token' => $_token,
-                    'uecreq_status' => 0,
-                    'uecreq_created' => date('Y-m-d H:i:s'),
-                    'uecreq_updated' => date('Y-m-d H:i:s'),
-                    'uecreq_expire' => date('Y-m-d H:i:s', strtotime('+ 24 hours', strtotime(date('Y-m-d H:i:s'))))
-                );
+            $postData = array(
+                'uecreq_user_id' => UserAuthentication::getLoggedUserId(),
+                'uecreq_email' => $post['new_email'],
+                'uecreq_token' => $_token,
+                'uecreq_status' => 0,
+                'uecreq_created' => date('Y-m-d H:i:s'),
+                'uecreq_updated' => date('Y-m-d H:i:s'),
+                'uecreq_expire' => date('Y-m-d H:i:s', strtotime('+ 24 hours', strtotime(date('Y-m-d H:i:s'))))
+            );
 
             $emailChangeReqObj->assignValues($postData);
             if (!$emailChangeReqObj->save()) {
@@ -758,7 +758,7 @@ class GuestUserController extends MyAppController
                 FatUtility::dieWithError(Message::getHtml());
             }
             $msg =  Label::getLabel('MSG_UPDATE_EMAIL_REQUEST_SENT_SUCCESSFULLY._YOU_NEED_TO_VERIFY_YOUR_NEW_EMAIL_ADDRESS_BEFORE_ACCESSING_OTHER_MODULES');
-        }else{
+        } else {
             if (!$userObj->changeEmail($post['new_email'])) {
                 Message::addErrorMessage(Label::getLabel('MSG_Email_could_not_be_set'));
                 FatUtility::dieWithError(Message::getHtml());
@@ -775,8 +775,8 @@ class GuestUserController extends MyAppController
             $redirectUrl = User::getPreferedDashbordRedirectUrl();
         }
         $returnJson =  ['msg' => $msg];
-        
-        if(!empty($redirectUrl)){
+
+        if (!empty($redirectUrl)) {
             $returnJson['redirectUrl'] = $redirectUrl;
         }
 
@@ -1305,5 +1305,28 @@ class GuestUserController extends MyAppController
         }
         Message::addMessage(Label::getLabel('MSG_Email_Updated._Please_Login_again_in_your_profile_with_new_email'));
         $this->logout();
+    }
+
+    public function wiziqCallback($lessonId, $teacherId, $token)
+    {
+        $lessonId = FatUtility::int($lessonId);
+        $teacherId = FatUtility::int($teacherId);
+        $signature = CommonHelper::decrypt($token);
+        if (empty($lessonId) || empty($teacherId) || empty($signature)) {
+            FatUtility::exitWithErrorCode(404);
+        }
+        $meetDetail = new LessonMeetingDetail($lessonId, $teacherId);
+        $meetingData = $meetDetail->getMeetingDetails(LessonMeetingDetail::KEY_WIZIQ_RAW_DATA);
+        $detail = json_decode($meetingData, true);
+        if (empty($detail) || ($detail['signature'] ?? '') != $signature) {
+            FatUtility::exitWithErrorCode(404);
+        }
+        (new ScheduledLesson($lessonId))->endLesson();
+        $userId = UserAuthentication::getLoggedUserId(true);
+        if ($userId == $teacherId) {
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$lessonId]));
+        } else {
+            FatApp::redirectUser(CommonHelper::generateUrl('Learner'));
+        }
     }
 }

@@ -1943,4 +1943,19 @@ class CommonHelper extends FatUtility
         $confPaidLessonDuration =  FatApp::getConfig('CONF_PAID_LESSON_DURATION', FatUtility::VAR_STRING, $defaultPaidLessonDuration);
         return explode(',', $confPaidLessonDuration);
     }
+
+    public static function encrypt($string)
+    {
+        $key = hash('sha256', ENCRYPTION_KEY);
+        $iv = substr(hash('sha256', ENCRYPTION_IV), 0, 16);
+        $output = openssl_encrypt($string, "AES-256-CBC", $key, 0, $iv);
+        return base64_encode($output);
+    }
+
+    public static function decrypt($string)
+    {
+        $key = hash('sha256', ENCRYPTION_KEY);
+        $iv = substr(hash('sha256', ENCRYPTION_IV), 0, 16);
+        return openssl_decrypt(base64_decode($string), "AES-256-CBC", $key, 0, $iv);
+    }
 }
