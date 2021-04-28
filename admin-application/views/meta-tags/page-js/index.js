@@ -28,6 +28,10 @@ $(document).ready(function () {
 			searchMetaTag(document.frmSearch);
 		});
 	};
+	editMetaTagFormNew = function (id, metaType, recordId) {
+
+		$.facebox(function () { editMetaTagForm(id, metaType, recordId); });
+	};
 
 	searchMetaTag = function (form) {
 		var data = '';
