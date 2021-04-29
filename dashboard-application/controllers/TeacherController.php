@@ -11,10 +11,11 @@ class TeacherController extends TeacherBaseController
     public function index()
     {
        
-        $teacherProfileProgress = User::getTeacherProfileProgress();
+        // $teacherProfileProgress = User::getTeacherProfileProgress();
         /* Validate Teacher has filled complete profile[ */
+        
         $viewProfile = true;
-        if (false == $teacherProfileProgress['isProfileCompleted']) {
+        if (false == $this->teacherProfileProgress['isProfileCompleted']) {
             $viewProfile = false;
         }
         /* ] */
@@ -27,19 +28,26 @@ class TeacherController extends TeacherBaseController
         $earningData = $statistics->getEarning(Statistics::TYPE_ALL);
 
         $frmSrch = $this->getSearchForm();
-        $frmSrch->fill(['status' => ScheduledLesson::STATUS_UPCOMING, 'show_group_classes' => ApplicationConstants::YES]);
-       $reportSearchForm =  $this->reportSearchForm($this->siteLangId);
-    //    $reportSearchForm->fill(['report_type' => [Statistics::REPORT_EARNING, Statistics::REPORT_SOLD_LESSONS]]);
+        
+        $frmSrch->fill([
+                'status' => ScheduledLesson::STATUS_UPCOMING, 
+                'show_group_classes' => ApplicationConstants::YES,
+                'listingView' => 'shortDetail'
+            ]);
+        $reportSearchForm =  $this->reportSearchForm($this->siteLangId);
 
         $this->set('frmSrch', $frmSrch);
         $this->set('durationArr', $durationArr);
         $this->set('earningData', $earningData);
-        $this->set('teacherProfileProgress',  $teacherProfileProgress);
+        $this->set('teacherProfileProgress', $this->teacherProfileProgress);
         $this->set('userDetails', $userDetails);
         $this->set('viewProfile', $viewProfile);
         $this->set('reportSearchForm', $reportSearchForm);
         $this->set('userTotalWalletBalance', User::getUserBalance($userId, false));
-
+        $this->set('userTimezone', Mydate::getUserTimeZone());
+        $currentLangCode = strtolower(Language::getLangCode($this->siteLangId));
+        $this->set('currentLangCode', $currentLangCode);
+        
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addJs('js/fateventcalendar.js');

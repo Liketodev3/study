@@ -1,3 +1,9 @@
+<?php 
+$isAcountSettingComplete =  false;
+if(($tpp['isProfileCompleted'] == applicationConstants::YES) || ($tpp['totalFilledFields'] == ($tpp['totalFields'] - 1) &&  $tpp['generalAvailabilityCount'] == applicationConstants::NO)){
+	$isAcountSettingComplete  = true;
+}
+?>
 <div class="menu-group">
 	<h6 class="heading-6"><?php echo label::getLabel('LBL_Profile'); ?></h6>
 	<nav class="menu menu--primary">
@@ -8,13 +14,13 @@
 					<span><?php echo Label::getLabel('LBL_Dashboard'); ?></span>
 				</a>
 			</li>
-			<li class="menu__item aside--progress--menu <?php echo ($controllerName == "Account") ? 'is-active' : ''; ?>">
+			<li class="menu__item profile-setting-js aside--progress--menu <?php echo ($isAcountSettingComplete) ? 'is-completed' : ''; echo ($controllerName == "Account") ? ' is-active' : ''; ?>">
 				<a href="<?php echo CommonHelper::generateUrl('Account', 'ProfileInfo');?>">
 					<svg class="icon icon--settings margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#settings'; ?>"></use></svg>
 					<span><?php echo Label::getLabel('LBL_Account_Settings'); ?></span>
 				</a>
 			</li>
-			<li class="menu__item  aside--progress--menu <?php echo ($controllerName == "Teacher" && $action == "availability") ? 'is-active' : ''; ?>">
+			<li class="menu__item availability-setting-js aside--progress--menu <?php echo ($tpp['generalAvailabilityCount'] == applicationConstants::YES) ? ' is-completed' : ''; echo ($controllerName == "Teacher" && $action == "availability") ? ' is-active' : ''; ?>">
 				<a href="<?php echo CommonHelper::generateUrl('Teacher', 'availability');?>">
 					<svg class="icon icon--settings margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#calendar'; ?>"></use></svg>
 					<span><?php echo Label::getLabel('LBL_Availability_Calendar'); ?></span>

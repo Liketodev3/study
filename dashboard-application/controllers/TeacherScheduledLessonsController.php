@@ -84,9 +84,11 @@ class TeacherScheduledLessonsController extends TeacherBaseController
                 $key = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $lesson['slesson_date'] . ' ' . $lesson['slesson_start_time'], true, $user_timezone);
             }
             $lessonArr[$key][] = $lesson;
+
         }
         /* [ */
         $totalRecords = $srch->recordCount();
+       
         $pagingArr = [
             'pageCount' => $srch->pages(),
             'page' => $page,

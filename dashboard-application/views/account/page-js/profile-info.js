@@ -50,7 +50,8 @@ $(document).ready(function () {
 						}, 950);
 					}, 600);
 				}
-				$.each(data.teacherProfileProgress, function (key, value) {
+				tpp = data.teacherProfileProgress;
+				$.each(tpp, function (key, value) {
 					
 					switch (key) {
 
@@ -58,9 +59,11 @@ $(document).ready(function () {
 							if(value){
 								$('.is-profile-complete-js').removeClass('infobar__media-icon--alert').addClass('infobar__media-icon--tick');
 								$('.is-profile-complete-js').html('');
+								$('.aside--progress--menu').addClass('is-completed');
 							}else{
 								$('.is-profile-complete-js').removeClass('infobar__media-icon--tick').addClass('infobar__media-icon--alert');
 								$('.is-profile-complete-js').html('!');
+								
 							}
 						break;
 						
@@ -68,9 +71,11 @@ $(document).ready(function () {
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.general-availability-js').parent('li').removeClass('is-completed');
-								
+								$('.availability-setting-js').removeClass('is-completed');
 							} else {
 								$('.general-availability-js').parent('li').addClass('is-completed');
+								$('.availability-setting-js').addClass('is-completed');
+								
 							}
 							break;
 						// case 'userCountryId':
@@ -126,8 +131,14 @@ $(document).ready(function () {
 							for (let totalFilledFields = 0; totalFilledFields < value; totalFilledFields++) {
 								$('.progress__step').eq(totalFilledFields).addClass('is-active');
 							}
-							value = data.teacherProfileProgress.totalFilledFields + "/" + data.teacherProfileProgress.totalFields;
+							value = tpp.totalFilledFields + "/" + tpp.totalFields;
 							$('.progress-count-js').text(value);
+							if((parseInt(tpp.isProfileCompleted) == 1) || (parseInt(tpp.totalFilledFields) == (parseInt(tpp.totalFields) - 1) &&  parseInt(tpp.generalAvailabilityCount) == 0)){
+								$('.profile-setting-js').addClass('is-completed');
+							}else{
+								$('.profile-setting-js').removeClass('is-completed');
+							}
+							
 							break;
 						
 					}

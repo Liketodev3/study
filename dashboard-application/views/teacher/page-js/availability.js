@@ -124,24 +124,41 @@ teacherWeeklySchedule = function () {
 
 getTeacherProfileProgress = function () {
 	fcom.ajax(fcom.makeUrl('Teacher', 'getTeacherProfileProgress'), '', function (data) {
-			$.each(data.teacherProfileProgress, function (key, value) {
+		tpp = data.teacherProfileProgress;
+			$.each(tpp, function (key, value) {
 				switch (key) {
 					case 'isProfileCompleted':
 						if(value){
 							$('.is-profile-complete-js').removeClass('infobar__media-icon--alert').addClass('infobar__media-icon--tick');
 							$('.is-profile-complete-js').html('');
+							$('.aside--progress--menu').addClass('is-completed');
 						}else{
 							$('.is-profile-complete-js').removeClass('infobar__media-icon--tick').addClass('infobar__media-icon--alert');
 							$('.is-profile-complete-js').html('!');
 						}
+					break;
+					case 'generalAvailabilityCount':
+					value = parseInt(value);
+					if (0 >= value) {
+						$('.availability-setting-js').removeClass('is-completed');
+					} else {
+						$('.availability-setting-js').addClass('is-completed');
+						
+					}
 					break;
 					case 'totalFilledFields':
 						$('.progress__step').removeClass('is-active');
 						for (let totalFilledFields = 0; totalFilledFields < value; totalFilledFields++) {
 							$('.progress__step').eq(totalFilledFields).addClass('is-active');
 						}
-						value = data.teacherProfileProgress.totalFilledFields + "/" + data.teacherProfileProgress.totalFields;
+						value = tpp.totalFilledFields + "/" + tpp.totalFields;
 						$('.progress-count-js').text(value);
+						
+						if((parseInt(tpp.isProfileCompleted) == 1) || (parseInt(tpp.totalFilledFields) == (parseInt(tpp.totalFields) - 1) &&  parseInt(tpp.generalAvailabilityCount) == 0)){
+							$('.profile-setting-js').addClass('is-completed');
+						}else{
+							$('.profile-setting-js').removeClass('is-completed');
+						}
 					break;
 				}
 			});

@@ -49,7 +49,7 @@
 												<?php foreach ($first_array as $teachLang) {  ?>
 													<span class="main-language"><?php echo $teachLang; ?></span>
 												<?php } ?>
-												<div class="more-lang">
+												<div class="more-dropdown">
 													<a class="menu__item-trigger trigger-js color-secondary" href="#more-lang<?php echo $teacher['teacherId']; ?>"><?php echo count($second_array).' '.Label::getLabel('LBL_More'); ?></a>
 													<ul class="menu__dropdown more--dropdown" id="more-lang<?php echo $teacher['teacherId']; ?>">
 														<?php foreach ($second_array as $key => $teachLang) { ?>

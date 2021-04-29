@@ -101,7 +101,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         </div>
                     </div>
                     <?php if($numLearners > 1){ ?>
-                        <div class="more-student">
+                        <div class="more-dropdown">
                         <a class="menu__item-trigger trigger-js color-secondary" href="#more-stud"><?php echo  (count($numLearners) - 1).' '.Label::getInstance('LBL_More'); ?></a>
                         <ul class="menu__dropdown more--dropdown" id="more-stud">
                         <?php 

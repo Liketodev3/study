@@ -10,6 +10,12 @@ $lessonDuration->addFieldTagAttribute('onChange','getStatisticalData(this.form);
 
 $reportType = $reportSearchForm->getField('report_type[]');
 $reportType->addFieldTagAttribute('class','d-none');
+
+$frmSrch->setFormTagAttribute ( 'onsubmit', 'searchLessons(this); return(false);');
+$frmSrch->setFormTagAttribute ( 'class', 'd-none');
+
+$nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $userTimezone);
+
 ?>
 <!-- [ PAGE ========= -->
  <!-- <main class="page"> -->
@@ -149,17 +155,15 @@ $reportType->addFieldTagAttribute('class','d-none');
 				<div class="status-bar">
 					<div class="status-bar__head">
 						<h5><?php echo Label::getLabel('LBL_Upcoming_Lessons'); ?></h5>
-						<a href="#" class="color-secondary underline padding-top-3 padding-bottom-3"><?php echo Label::getLabel('LBL_ViewAll'); ?></a>
+						<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons')."#".ScheduledLesson::STATUS_UPCOMING; ?>" class="color-secondary underline padding-top-3 padding-bottom-3"><?php echo Label::getLabel('LBL_View_All'); ?></a>
 					</div>
 					
 					<div class="status-bar__body">
 						<div class="calendar">
-							<img src="images/calendar.png" alt="">
+								<div id='d_calendar'></div>
 						</div>
-
-						<div class="listing-window">
-							
-							
+						<?php echo $frmSrch->getFormHtml(); ?>
+						<div class="listing-window" id="listItemsLessons">
 						</div>
 					</div>
 				</div>
@@ -167,3 +171,8 @@ $reportType->addFieldTagAttribute('class','d-none');
 		</div>
 	</main>
 	<!-- ] -->
+	<script>
+		var fecal = new FatEventCalendar(0,'<?php echo MyDate::displayTimezoneString();?>');
+		fecal.setLocale('<?php echo $currentLangCode ?>');
+		fecal.TeacherMonthlyCalendar( '<?php echo date('Y-m-d H:i:s', strtotime($nowDate)); ?>');
+	</script>

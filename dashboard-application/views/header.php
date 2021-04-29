@@ -235,7 +235,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                     </table>
                                     <span class="-gap-10"></span>
                                     <div class="btns-group">
-                                        <?php if ($isUserTeacher && $currentActiveTab == User::USER_TEACHER_DASHBOARD) { ?>
+                                        <?php if ($isUserTeacher && $currentActiveTab == User::USER_TEACHER_DASHBOARD && !empty($teacherProfileProgress['isProfileCompleted'])) { ?>
                                          <a href="#" class="btn btn--bordered color-third btn--block margin-top-2"><?php echo label::getLabel('LBL_View_Public_Profile'); ?></a>
                                         <?php }
                                         if ($currentActiveTab == User::USER_LEARNER_DASHBOARD && $canViewTeacherTab) { ?>
@@ -256,6 +256,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                 $templateVariable = ['controllerName' => $controllerName, 'action' => $action];
                                 $sidebarMenuLayout = 'learner/_partial/learnerDashboardNavigation.php';
                                 if (User::canViewTeacherTab() && User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) {
+                                    $templateVariable['tpp'] = $teacherProfileProgress;
                                     $sidebarMenuLayout = 'teacher/_partial/teacherDashboardNavigation.php';
                                 }
                                 if(isset($showFlashCard) && $showFlashCard) {
