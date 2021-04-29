@@ -42,10 +42,10 @@ foreach ($arr_listing as $sn => $row) {
                 $innerUl = $innerDiv->appendElement('ul', array('class' => 'linksvertical'));
                 $viewLi = $innerUl->appendElement('li');
                 $viewLi->appendElement('a', array('href' => 'javascript:void(0)', 'class' => 'button small green', 'title' => Label::getLabel('LBL_View', $adminLangId), "onclick" => "viewDetail(" . $row['issrep_slesson_id'] . ")"), Label::getLabel('LBL_View', $adminLangId), true);
-                $actionLi = $innerUl->appendElement("li");
-                $actionLi->appendElement('a', array('href' => 'javascript:void(0)', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Action', $adminLangId), "onclick" => "actionForm(" . $row['issrep_id'] . ")"), Label::getLabel('LBL_Action', $adminLangId), true);
-                $txnLi = $innerUl->appendElement("li");
-                $txnLi->appendElement('a', array('href' => 'javascript:void(0)', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Transactions', $adminLangId), "onclick" => "transactions(" . $row['issrep_slesson_id'] . "," . $row['issrep_id'] . ")"), Label::getLabel('LBL_Transactions', $adminLangId), true);
+                if (FatUtility::int($postedData['issrep_is_for_admin'] ?? 0) > 0) {
+                    $actionLi = $innerUl->appendElement("li");
+                    $actionLi->appendElement('a', array('href' => 'javascript:void(0)', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Action', $adminLangId), "onclick" => "actionForm(" . $row['issrep_id'] . ")"), Label::getLabel('LBL_Action', $adminLangId), true);
+                }
                 break;
             default:
                 $td->appendElement('plaintext', array(), $row[$key] ?? 'NA', true);

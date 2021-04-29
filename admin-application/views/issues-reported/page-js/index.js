@@ -128,37 +128,26 @@ $(document).ready(function () {
         if (!$(frm).validate()) {
             return;
         }
-        $.mbsmessage(langLbl.processing, true, 'alert alert--process');
-        fcom.updateWithAjax(fcom.makeUrl('IssuesReported', 'setupAction'), fcom.frmData(frm), function (t) {
+        fcom.updateWithAjax(fcom.makeUrl('IssuesReported', 'setupAction'), fcom.frmData(frm), function (res) {
             $.mbsmessage.close();
-            $.facebox(t, 'faceboxWidth');
+            $.facebox.close();
         });
     };
 
-    /*transactions = function(lessonId,issueId){
-     $.facebox(function() {
-     getTransactions(lessonId,issueId);
-     });
-     };
-     
-     getTransactions = function(lessonId,issueId){
-     fcom.ajax(fcom.makeUrl('IssuesReported', 'transaction', [lessonId,issueId]), '', function(t) {
-     $('#facebox').height($(window).height() - 46).css('overflow-y','auto');
-     fcom.updateFaceboxContent(t);
-     });		
-     };	*/
     transactions = function (lessonId, issueId) {
         fcom.ajax(fcom.makeUrl('IssuesReported', 'transaction', [lessonId, issueId]), '', function (t) {
             $('#facebox').height($(window).height() - 46).css('overflow-y', 'auto');
             fcom.updateFaceboxContent(t);
         });
     };
+
     addLessonTransaction = function (lessonId, issueId) {
         fcom.displayProcessing();
         fcom.ajax(fcom.makeUrl('IssuesReported', 'addLessonTransaction', [lessonId, issueId]), '', function (t) {
             fcom.updateFaceboxContent(t);
         });
     };
+
     setupLessonTransaction = function (frm) {
         if (!$(frm).validate())
             return;

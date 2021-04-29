@@ -32,8 +32,8 @@ class IssuesReportedController extends AdminBaseController
     private function getIssuesReportedForm()
     {
         $frm = new Form('frmIssuesReportedSearch');
-        $keyword = $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', ['id' => 'keyword', 'autocomplete' => 'off']);
-        $keyword = $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', ['id' => 'keyword', 'autocomplete' => 'off']);
+        $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher', '', ['id' => 'teacher_keyword', 'autocomplete' => 'off']);
+        $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner', '', ['id' => 'learner_keyword', 'autocomplete' => 'off']);
         $frm->addTextBox(Label::getLabel('LBL_Order_Id', $this->adminLangId), 'sldetail_order_id');
         $frm->addSelectBox(Label::getLabel('LBL_Issue_Status', $this->adminLangId), 'issrep_status', ['-1' => Label::getLabel('LBL_SELECT')] + IssuesReported::getResolveTypeArray(), -1, [], '');
         $frm->addHiddenField('', 'page', 1);
@@ -191,16 +191,30 @@ class IssuesReportedController extends AdminBaseController
 
     public function setupAction()
     {
-        FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        $frm = $this->getActionForm();
+        if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
+            FatUtility::dieJsonError(current($frm->getValidationErrors()));
+        }
+        $record = new IssuesReported($post['issrep_id']);
+        $record->setFldValue('issrep_status', $post['issrep_status']);
+        $record->setFldValue('issrep_closed', $post['issrep_closed']);
+        $record->setFldValue('issrep_admin_comments', $post['issrep_admin_comments']);
+        if (!$record->save()) {
+            FatUtility::dieJsonError($record->getError());
+        }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY'));
     }
 
     private function getActionForm()
     {
-        $frm = new Form('actionForm');
+        $frm = new Form('actionFrm');
+        $issrepId = $frm->addHiddenField('', 'issrep_id');
+        $issrepId->requirements()->setRequired();
+        $issrepId->requirements()->setIntPositive();
         $arrOptions = IssueReportOptions::getOptionsArray($this->adminLangId);
-        $frm->addTextArea(Label::getLabel('LBL_Admin_Comment'), 'issrep_admin_comments', '');
-        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'issrep_status', IssuesReported::getResolveTypeArray())->requirements()->setRequired();
+        $frm->addTextArea(Label::getLabel('LBL_ADMIN_COMMENT'), 'issrep_admin_comments', '');
+        $frm->addSelectBox(Label::getLabel('LBL_TAKE_ACTION', $this->adminLangId), 'issrep_status', IssuesReported::getResolveTypeArray())->requirements()->setRequired();
+        $frm->addCheckBox(Label::getLabel('LBL_MARK_IT_CLOSED'), 'issrep_closed', 1);
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
         return $frm;
     }

@@ -2,6 +2,7 @@
 <?php
 $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 12;
+$frm->setFormTagAttribute('id', 'actionForm');
 $frm->setFormTagAttribute('class', 'web_form');
 $frm->setFormTagAttribute('onsubmit', 'setupAction(this); return(false);');
 $lastIssue = end($issueDetail);

@@ -406,3 +406,4 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 
 ALTER TABLE `tbl_issues_reported` ADD `issrep_admin_comments` TEXT NULL AFTER `issrep_resolve_comments`;
 ALTER TABLE `tbl_issues_reported` ADD `issrep_updated_by_admin` DATETIME NULL AFTER `issrep_admin_comments`;
+ALTER TABLE `tbl_issues_reported` ADD `issrep_closed` TINYINT NOT NULL AFTER `issrep_updated_by_admin`;
