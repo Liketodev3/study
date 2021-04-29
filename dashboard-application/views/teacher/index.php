@@ -1,4 +1,16 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php 
+defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+$reportSearchForm->addFormTagAttribute('onsubmit', "getStatisticalData(this); return (false);");;
+
+$earingDuration = $reportSearchForm->getField('earing_duration');
+$earingDuration->addFieldTagAttribute('onChange','getStatisticalData(this.form); return (false);');
+
+$lessonDuration = $reportSearchForm->getField('lesson_duration');
+$lessonDuration->addFieldTagAttribute('onChange','getStatisticalData(this.form); return (false);');
+
+$reportType = $reportSearchForm->getField('report_type[]');
+$reportType->addFieldTagAttribute('class','d-none');
+?>
 <!-- [ PAGE ========= -->
  <!-- <main class="page"> -->
 		<div class="dashboard">
@@ -39,7 +51,7 @@
 								<div class="stat">
 									<div class="stat__amount">
 										<span><?php echo Label::getLabel('Lbl_Earnings'); ?></span>
-										<h5><?php echo CommonHelper::displayMoneyFormat($earningData); ?></h5>
+										<h5><?php echo $earningData['earning']; ?></h5>
 									</div>
 									<div class="stat__media bg-yellow">
 										<svg class="icon icon--money icon--40 color-white"><use xlink:href="images/sprite.yo-coach.svg#stats"></use></svg>
@@ -83,21 +95,21 @@
 							</div>
 						</div>
 						<div class="page-panel__body">
+							<?php 
+								echo $reportSearchForm->getFormTag(); 
+								echo $reportType->getHTML();
+							?>
 							<div class="row margin-bottom-6">
 								<div class="col-lg-6 col-md-6 col-sm-6">
 									<div class="sale-stat sale-stat--primary color-yellow">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('Lbl_Sales'); ?></span>
-											<h5>$110.00</h5>
+											<h5 class="earing-amount-js"></h5>
 										</div>
 
 										<div class="sale-stat__select">
 											<div class="form-inline__item">
-											<select id="earningMonth" onchange="getStatisticalData(1)">
-												<?php foreach($durationArr as $key => $duration){?>
-													<option value="<?php echo $key; ?>"><?php echo $duration; ?></option>
-												<?php }?>
-											</select>
+											<?php echo $earingDuration->getHTML(); ?>
 											</div>
 										</div>
 									</div>
@@ -106,21 +118,19 @@
 									<div class="sale-stat sale-stat--secondary color-secondary">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('LBL_Lessons_sold'); ?></span>
-											<h5>113</h5>
+											<h5 class="lessons-sold-count-js"></h5>
 										</div>
 
 										<div class="sale-stat__select">
 											<div class="form-inline__item">
-												<select id="lessonsMonth" onchange="getStatisticalData(2)">
-													<?php foreach($durationArr as $key=>$duration){?>
-														<option value="<?php echo $key; ?>"><?php echo $duration; ?></option>
-													<?php }?>
-												</select>
+												<?php echo $lessonDuration->getHTML(); ?>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
+							</form>
+							<?php echo $reportSearchForm->getExternalJS(); ?>
 							<div class="graph-media">
 								<img src="images/graph.png" alt="">
 							</div>
@@ -148,87 +158,8 @@
 						</div>
 
 						<div class="listing-window">
-							<div class="scrollbar scrollbar-js">
-								<div class="lesson-list-container">
-									<div class="date"><span>Friday, Feb 04, 2021</span></div>
-									<div class="lesson-list">
-										<div class="lesson-list__left">
-											<div class="avtar avtar--small avtar--centered" data-title="M">
-												<img src="images/320x320_1.jpg" alt="">
-											</div>
-										</div>
-										<div class="lesson-list__right">
-											<p>Mark Boucher</p>
-											<p class="lesson-time"><span>09:00 PM</span>German, 60 Mins Of Lession</p>
-										</div>
-										<a href="javascript:void(0)" class="lesson-list__action"></a>
-									</div>
-									<div class="lesson-list">
-										<div class="lesson-list__left">
-											<div class="avtar avtar--small avtar--centered" data-title="M">
-												<img src="images/320x320_2.jpg" alt="">
-											</div>
-										</div>
-										<div class="lesson-list__right">
-											<p>Stephen Fleming</p>
-											<p class="lesson-time"><span>09:00 PM</span>German, 60 Mins Of Lession</p>
-										</div>
-										<a href="javascript:void(0)" class="lesson-list__action"></a>
-									</div>
-									<div class="lesson-list">
-										<div class="lesson-list__left">
-											<div class="avtar avtar--small avtar--centered" data-title="M">
-												<img src="images/320x320_3.jpg" alt="">
-											</div>
-										</div>
-										<div class="lesson-list__right">
-											<p>James Maria</p>
-											<p class="lesson-time"><span>09:00 PM</span>German, 60 Mins Of Lession</p>
-										</div>
-										<a href="javascript:void(0)" class="lesson-list__action"></a>
-									</div>
-								</div>
-
-								<div class="lesson-list-container">
-									<div class="date"><span>Friday, Feb 04, 2021</span></div>
-									<div class="lesson-list">
-										<div class="lesson-list__left">
-											<div class="avtar avtar--small avtar--centered" data-title="M">
-												<img src="images/320x320_1.jpg" alt="">
-											</div>
-										</div>
-										<div class="lesson-list__right">
-											<p>Mark Boucher</p>
-											<p class="lesson-time"><span>09:00 PM</span>German, 60 Mins Of Lession</p>
-										</div>
-										<a href="javascript:void(0)" class="lesson-list__action"></a>
-									</div>
-									<div class="lesson-list">
-										<div class="lesson-list__left">
-											<div class="avtar avtar--small avtar--centered" data-title="M">
-												<img src="images/320x320_2.jpg" alt="">
-											</div>
-										</div>
-										<div class="lesson-list__right">
-											<p>Stephen Fleming</p>
-											<p class="lesson-time"><span>09:00 PM</span>German, 60 Mins Of Lession</p>
-										</div>
-										<a href="javascript:void(0)" class="lesson-list__action"></a>
-									</div>
-									<div class="lesson-list">
-										<div class="lesson-list__left">
-											<div class="avtar avtar--small avtar--centered" data-title="M">
-												<img src="images/320x320_3.jpg" alt="">
-											</div>
-										</div>
-										<div class="lesson-list__right">
-											<p>James Maria</p>
-											<p class="lesson-time"><span>09:00 PM</span>German, 60 Mins Of Lession</p>
-										</div>
-										<a href="javascript:void(0)" class="lesson-list__action"></a>
-									</div>
-								</div>
-							</div>
+							
+							
 						</div>
 					</div>
 				</div>
@@ -236,8 +167,3 @@
 		</div>
 	</main>
 	<!-- ] -->
-<script>
-	$(document).ready(function() {
-		getStatisticalData(<?php echo Statistics::REPORT_EARNING; ?>);
-	})
-</script>

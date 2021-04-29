@@ -39,6 +39,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
+        
         $srch = new stdClass();
         $this->searchLessons($srch, $post, true, false);
         // list on lessons not classes in lessons list
@@ -108,7 +109,12 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->set('referer', $referer);
         $this->set('lessonArr', $lessonArr);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
-        $this->_template->render(false, false);
+        $listingView = FatApp::getPostedData('listingView', FatUtility::VAR_STRING, '');
+        $tplpath = '';
+        if($listingView == 'shortDetail'){
+            $tplpath =   '_partial/short-detail-lesson-listing.php';
+        }
+        $this->_template->render(false, false, $tplpath);
     }
 
     private function searchLessons(&$srch, $post = [], $getCancelledOrder = false, $addLessonDateOrder = true)

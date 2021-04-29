@@ -28,7 +28,8 @@ class TeacherController extends TeacherBaseController
 
         $frmSrch = $this->getSearchForm();
         $frmSrch->fill(['status' => ScheduledLesson::STATUS_UPCOMING, 'show_group_classes' => ApplicationConstants::YES]);
-
+       $reportSearchForm =  $this->reportSearchForm($this->siteLangId);
+    //    $reportSearchForm->fill(['report_type' => [Statistics::REPORT_EARNING, Statistics::REPORT_SOLD_LESSONS]]);
 
         $this->set('frmSrch', $frmSrch);
         $this->set('durationArr', $durationArr);
@@ -36,6 +37,7 @@ class TeacherController extends TeacherBaseController
         $this->set('teacherProfileProgress',  $teacherProfileProgress);
         $this->set('userDetails', $userDetails);
         $this->set('viewProfile', $viewProfile);
+        $this->set('reportSearchForm', $reportSearchForm);
         $this->set('userTotalWalletBalance', User::getUserBalance($userId, false));
 
         $this->_template->addJs('js/moment.min.js');

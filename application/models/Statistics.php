@@ -1,5 +1,4 @@
 <?php
-
 class Statistics extends MyAppModel
 {
 
@@ -48,7 +47,7 @@ class Statistics extends MyAppModel
         $srch->addCondition('op_teacher_id', '=', $this->userId);
         $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
         $srch->addCondition('slesson_is_teacher_paid', '=', applicationConstants::YES);
-        $srch->addMultipleFields(['sum(op_commission_charged) as earning']);
+        $srch->addMultipleFields(['IFNULL(sum(op_commission_charged),0) as earning']);
         switch ($type) {
             case static::TYPE_TODAY:
 
@@ -57,9 +56,9 @@ class Statistics extends MyAppModel
                 $srch->addCondition('mysql_func_DATE(order_date_added)', '=', 'mysql_func_DATE("' . $nowDate . '")', 'AND', true);
                 $rs = $srch->getResultSet();
                 $data = $this->db->fetch($rs);
+              
                 $data['fromDate'] = $startDate;
                 $data['toDate'] = $nowDate;
-                return $data;
                 break;
             case static::TYPE_LAST_WEEK:
 
@@ -72,7 +71,6 @@ class Statistics extends MyAppModel
                 $data = $this->db->fetch($rs);
                 $data['fromDate'] = $startDate;
                 $data['toDate'] = $endDate;
-                return $data;
                 break;
             case static::TYPE_THIS_MONTH:
                 $startDate = MyDate::changeDateTimezone(date('Y-m', $nowDateTimestamp) . '-01 12:00:00', $user_timezone, $systemTimeZone);
@@ -81,7 +79,6 @@ class Statistics extends MyAppModel
                 $data = $this->db->fetch($srch->getResultSet());
                 $data['fromDate'] = $startDate;
                 $data['toDate'] = $nowDate;
-                return $data;
                 break;
             case static::TYPE_LAST_MONTH:
                 $startDate = date('Y-m-d', strtotime('first day of previous month', $nowDateTimestamp));
@@ -93,7 +90,6 @@ class Statistics extends MyAppModel
                 $data = $this->db->fetch($srch->getResultSet());
                 $data['fromDate'] = $startDate;
                 $data['toDate'] = $endDate;
-                return $data;
                 break;
             case static::TYPE_LAST_YEAR:
                 $startDate = date('Y-m-d', strtotime('last year January 1st', $nowDateTimestamp));
@@ -106,7 +102,6 @@ class Statistics extends MyAppModel
                 $data = $this->db->fetch($srch->getResultSet());
                 $data['fromDate'] = $startDate;
                 $data['toDate'] = $endDate;
-                return $data;
                 break;
             case static::TYPE_ALL:
             default:
@@ -119,6 +114,8 @@ class Statistics extends MyAppModel
                 $data['toDate'] = $endDate;
             break;
         }
+        $data['earning'] =  CommonHelper::displayMoneyFormat($data['earning']);
+        return $data;
     }
 
     public function getSoldlessons($type)

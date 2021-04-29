@@ -20,27 +20,28 @@ class TeacherReportsController extends TeacherBaseController
 
     public function getStatisticalData()
     {
-        $type = FatApp::getPostedData('type');
-        $duration = FatApp::getPostedData('duration' , FatUtility::VAR_INT, 0);
-        if (empty($type) || empty($duration)) {
+        $reportSearchForm =  $this->reportSearchForm($this->siteLangId);
+        $post = $reportSearchForm->getFormDataFromArray(FatApp::getPostedData());
+        if (!$post) {
             Message::addErrorMessage(Label::getLabel('MSG_ERROR_INVALID_ACCESS', $this->siteLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
         $statObj = new Statistics(UserAuthentication::getLoggedUserId());
+        $responseArray = [
+            'earningData' => [],
+            'soldLessons' => [],
+        ];
+        foreach ($post['report_type'] as $value) {
+            if($value == Statistics::REPORT_EARNING){
+                $responseArray['earningData'] = $statObj->getEarning($post['earing_duration']);
+            }
 
-        switch ($type) {
-            case Statistics::REPORT_EARNING:
-                $earningData = $statObj->getEarning($duration);
-                $this->set('earningData', $earningData);
-                $this->_template->render(false, false);
-                break;
-            case Statistics::REPORT_SOLD_LESSONS:
-                $soldLessons = $statObj->getSoldLessons($duration);
-                $this->set('soldLessons', $soldLessons);
-                $this->set('siteLangId', $this->siteLangId);
-                $this->_template->render(false, false, 'teacher-reports/get-sold-lessons.php');
-            break;
+            if($value == Statistics::REPORT_EARNING){
+                $responseArray['soldLessons'] = $statObj->getSoldLessons($post['lesson_duration']);
+            }
         }
+
+        FatUtility::dieJsonSuccess($responseArray);
     }
 
 }

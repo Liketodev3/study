@@ -16,22 +16,15 @@ function isUserLogged(){
 	});
 	return isUserLogged;
 }
-getStatisticalData = function(type){
+getStatisticalData = function(form){
 
-	if(type == 1){
-		duration = $('#earningMonth').val();
-	}
-	if(type == 2){
-		duration = $('#lessonsMonth').val();
-	}
-	fcom.ajax(fcom.makeUrl('TeacherReports','getStatisticalData'), 'duration='+duration+'&type='+type , function(res){
-		if(type == 1){
-			$('#earningContent').html(res);
-		}
-		if(type == 2){
-			$('#lessonsSold').html(res);
-		}
-	});
+	if (!$(form).validate()) return;
+	var data = fcom.frmData(form);
+	fcom.ajax(fcom.makeUrl('TeacherReports','getStatisticalData'), data , function(res){
+		console.log(res.earningData);
+		$('.earing-amount-js').html(res.earningData.earning);
+		$('.lessons-sold-count-js').html(res.soldLessons.lessonCount);
+	},{fOutMode:'json'});
 }
 getCookieConsentForm = function(){
 

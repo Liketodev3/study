@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	getStatisticalData(document.reportSearchForm);
 	searchLessons(document.frmSrch);
 })
 

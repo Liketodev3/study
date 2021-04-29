@@ -8,7 +8,7 @@ class TeacherBaseController extends LoggedUserController
         parent::__construct($action);
         if (!User::canAccessTeacherDashboard()) {
             if (FatUtility::isAjaxCall()) {
-                Message::addErrorMessage(Label::getLabel('MSG_ERROR_INVALID_ACCESS', $this->siteLangId));
+                Message::addErrorMessage(Label::getLabel('MSG_ERROR_INVALID_ACCESS'));
                 FatUtility::dieWithError(Message::getHtml());
             }
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', 'form'));
@@ -27,6 +27,22 @@ class TeacherBaseController extends LoggedUserController
         $btnSubmit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search'));
         $btnReset = $frm->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset'));
         // $btnSubmit->attachField($btnReset);
+        return $frm;
+    }
+
+    protected function reportSearchForm($langId)
+    {
+        $durationArray = Statistics::getDurationTypesArr($langId);
+        $reportType =  [Statistics::REPORT_EARNING => Statistics::REPORT_EARNING, Statistics::REPORT_SOLD_LESSONS => Statistics::REPORT_SOLD_LESSONS];
+        $frm = new Form('reportSearchForm');
+        $field = $frm->addSelectBox(Label::getLabel('LBL_Earing_Duration'), 'earing_duration', $durationArray, Statistics::TYPE_TODAY);
+        $field->requirements()->setInt();
+        $field->requirements()->setRequired(true);
+        $field = $frm->addSelectBox(Label::getLabel('LBL_Lesson_Sold_Duration'), 'lesson_duration', $durationArray, Statistics::TYPE_TODAY);
+        $field->requirements()->setInt();
+        $field->requirements()->setRequired(true);
+        $field = $frm->addSelectBox('', 'report_type[]', $reportType, $reportType, ['multiple' => 'multiple']);
+        $field->requirements()->setRequired(true);
         return $frm;
     }
 
