@@ -32,8 +32,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->set('frmSrch', $frmSrch);
         $lessonStatuses = ScheduledLesson::getStatusArr();
         $lessonStatuses += [ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported')];
-        $srch = new stdClass();
-        $this->searchLessons($srch, ['status' => ScheduledLesson::STATUS_UPCOMING], false, false);
+        $srch = $this->searchLessons(['status' => ScheduledLesson::STATUS_UPCOMING], false, false);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $srch->addOrder('CONCAT(slns.slesson_date, " ", slns.slesson_start_time)', 'ASC');

@@ -20,8 +20,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->set('frmSrch', $frmSrch);
         $lessonStatuses = ScheduledLesson::getStatusArr();
         $lessonStatuses += array(ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported'));
-        $srch = new stdClass();
-        $this->searchLessons($srch, ['status' => ScheduledLesson::STATUS_UPCOMING], false, false);
+        $srch = $this->searchLessons(['status' => ScheduledLesson::STATUS_UPCOMING], false, false);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $srch->addOrder('CONCAT(slns.slesson_date, " ", slns.slesson_start_time)', 'ASC');
@@ -39,8 +38,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
-        $srch = new stdClass();
-        $this->searchLessons($srch, $post, true, false);
+        $srch = $this->searchLessons($post, true, false);
         // list on lessons not classes in lessons list
         if (empty($post['show_group_classes']) || $post['show_group_classes'] == ApplicationConstants::NO) {
             $srch->addCondition('slesson_grpcls_id', '=', 0);
@@ -111,7 +109,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->_template->render(false, false);
     }
 
-    private function searchLessons(&$srch, $post = [], $getCancelledOrder = false, $addLessonDateOrder = true)
+    private function searchLessons($post = [], $getCancelledOrder = false, $addLessonDateOrder = true)
     {
         $srch = new ScheduledLessonSearch(false);
         $srch->joinGroupClass($this->siteLangId);
@@ -181,6 +179,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
                     break;
             }
         }
+        return $srch;
     }
 
     public function view($lessonId)
@@ -195,7 +194,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons'));
         }
         $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
-        
+
         $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
         if ($flashCardEnabled) {
             /* flashCardSearch Form[ */
@@ -221,8 +220,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if (1 > $lessonId) {
             FatUtility::exitWithErrorCode(404);
         }
-        $srch = new stdClass();
-        $this->searchLessons($srch);
+        $srch = $this->searchLessons();
         $srch->joinGroupClass($this->siteLangId);
         $srch->doNotCalculateRecords();
         $srch->joinLessonRescheduleLog();
@@ -437,8 +435,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
         $lessonId = $post['slesson_id'];
         /* [ */
-        $srch = new stdClass();
-        $this->searchLessons($srch);
+        $srch = $this->searchLessons();
         $srch->joinLearnerCredentials();
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -524,8 +521,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $lessonId = $post['slesson_id'];
         $db = FatApp::getDb();
         /* [ */
-        $srch = new stdClass();
-        $this->searchLessons($srch);
+        $srch = $this->searchLessons();
         $srch->joinLearnerCredentials();
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -620,8 +616,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         /* [ */
-        $srch = new stdClass();
-        $this->searchLessons($srch);
+        $srch = $this->searchLessons();
         $srch->joinLearnerCredentials();
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -710,8 +705,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
         /* ] */
         /* [ */
-        $srch = new stdClass();
-        $this->searchLessons($srch);
+        $srch = $this->searchLessons();
         $srch->joinLearnerCredentials();
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -1044,11 +1038,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
     private function getStartedLessonDetails($lessonId)
     {
-        $srch = new stdClass();
-        $this->searchLessons($srch);
+        $srch = $this->searchLessons();
         $srch->joinTeacherCredentials();
-        $srch->addMultipleFields(['slns.slesson_id',
-            'op_id',
+        $srch->addMultipleFields(['slns.slesson_id', 'op_id',
             'tcred.credential_email as teacherEmail',
             'ut.user_first_name as teacherFirstName',
             'ut.user_last_name as teacherLastName',
@@ -1111,8 +1103,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
         // validate user too with lesson id.
         /* [ */
-        $srch = new stdClass();
-        $this->searchLessons($srch);
+        $srch = $this->searchLessons();
         $srch->doNotCalculateRecords();
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
         $srch->addMultipleFields(['slesson_teacher_end_time', 'slesson_ended_by', 'sldetail_learner_status', 'sldetail_id']);
