@@ -45,6 +45,12 @@
 					<span><?php echo Label::getLabel('Lbl_Group_Classes'); ?></span>
 				</a>
 			</li>
+			<li class="menu__item <?php echo ($controllerName == "TeacherIssueReported") ? 'is-active' : ''; ?>">
+				<a href="<?php echo CommonHelper::generateUrl('TeacherIssueReported'); ?>">
+					<svg class="icon icon--group-classes margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#report-issue'; ?>"></use></svg>
+					<span><?php echo Label::getLabel('LBL_Issue_Reported'); ?></span>
+				</a>
+			</li>
 			<li class="menu__item <?php echo ($controllerName == "TeacherStudents") ? 'is-active' : ''; ?>">
 				<a href="<?php echo CommonHelper::generateUrl('TeacherStudents'); ?>">
 					<svg class="icon icon--students margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#students'; ?>"></use></svg>
