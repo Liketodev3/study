@@ -464,3 +464,35 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ('LBL_NO_RECORD_FLASH_CARD_TITLE', 2, "You havn't added any <span>Flash-card</span> yet"),
 ('LBL_NO_RECORD_FLASH_CARD_TEXT', 1, 'Click on the button "Add Flash-card" to add it. It will help you during the class'),
 ('LBL_NO_RECORD_FLASH_CARD_TEXT', 2, 'Click on the button "Add Flash-card" to add it. It will help you during the class');
+
+-- task_84683_report_an_issue
+
+CREATE TABLE `tbl_reported_issues` (
+  `repiss_id` int NOT NULL,
+  `repiss_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `repiss_slesson_id` int NOT NULL,
+  `repiss_reported_on` datetime NOT NULL,
+  `repiss_reported_by` int NOT NULL,
+  `repiss_reported_by_type` int NOT NULL,
+  `repiss_status` int NOT NULL,
+  `repiss_comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `repiss_updated_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE `tbl_reported_issues`  ADD PRIMARY KEY (`repiss_id`);
+ALTER TABLE `tbl_reported_issues`  MODIFY `repiss_id` int NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE `tbl_reported_issues_log` (
+  `reislo_id` int NOT NULL,
+  `reislo_repiss_id` int NOT NULL,
+  `reislo_action` int NOT NULL,
+  `reislo_comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reislo_added_on` datetime NOT NULL,
+  `reislo_added_by` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE `tbl_reported_issues_log`  ADD PRIMARY KEY (`reislo_id`),  ADD KEY `reislo_repiss_id` (`reislo_repiss_id`);
+ALTER TABLE `tbl_reported_issues_log`  MODIFY `reislo_id` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tbl_reported_issues_log`  ADD CONSTRAINT `tbl_reported_issues_log_ibfk_1` 
+FOREIGN KEY (`reislo_repiss_id`) REFERENCES `tbl_reported_issues` (`repiss_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION', '24', '1');
+INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION', '24', '1');

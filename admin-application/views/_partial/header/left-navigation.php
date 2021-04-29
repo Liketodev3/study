@@ -70,9 +70,6 @@
                         <?php if ($objPrivilege->canViewGiftcards(AdminAuthentication::getLoggedAdminId(), true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('giftcards'); ?>"><?php echo Label::getLabel('LBL_Gift_Orders', $adminLangId); ?></a></li>
                         <?php } ?>
-                        <?php if ($objPrivilege->canViewIssuesReported(AdminAuthentication::getLoggedAdminId(), true)) { ?>
-                            <li><a href="<?php echo CommonHelper::generateUrl('IssuesReported'); ?>"><?php echo Label::getLabel('LBL_Manage_Issues_Reported', $adminLangId); ?></a></li>
-                        <?php } ?>
                     </ul>
                 </li>
             <?php } ?>
@@ -82,6 +79,8 @@
                     <ul>
                         <li><a href="<?php echo CommonHelper::generateUrl('IssuesReported', 'escalated'); ?>"><?php echo Label::getLabel('LBL_Escalated_Issues', $adminLangId); ?></a></li>
                         <li><a href="<?php echo CommonHelper::generateUrl('IssuesReported'); ?>"><?php echo Label::getLabel('LBL_All_Reported_Issues', $adminLangId); ?></a></li>
+                        <li><a href="<?php echo CommonHelper::generateUrl('ReportedIssues', 'escalated'); ?>"><?php echo Label::getLabel('LBL_Escalated_Issues', $adminLangId); ?></a></li>
+                        <li><a href="<?php echo CommonHelper::generateUrl('ReportedIssues'); ?>"><?php echo Label::getLabel('LBL_All_Reported_Issues', $adminLangId); ?></a></li>
                     </ul>
                 </li>
             <?php } ?>

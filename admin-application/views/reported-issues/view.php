@@ -2,7 +2,6 @@
 <?php
 $lastIssue = end($issueDetail);
 $endedBy = isset(User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_by']]) ? User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_by']] : "NA";
-//echo "<pre>"; print_r( $issueDetail ); echo "</pre>"; exit;
 ?>
 <section class="section">
     <div class="sectionhead">
