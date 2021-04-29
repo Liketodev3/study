@@ -451,9 +451,9 @@ $session-status: "session-status";
     }
 }
 
-$more-student: "more-student";
+$more-dropdown: "more-dropdown";
 
-.#{&more-student} {
+.#{&more-dropdown} {
     
     margin-left: var(--margin-3);
 
@@ -493,7 +493,7 @@ $more-student: "more-student";
 
         @media (min-width:theme('breakpoints.xxl','value')) {
             &{
-                font-size: 1.4rem;
+                font-size: 1.2rem;
             }
         }
 

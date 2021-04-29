@@ -8,13 +8,13 @@
 					<span><?php echo Label::getLabel('LBL_Dashboard'); ?></span>
 				</a>
 			</li>
-			<li class="menu__item <?php echo ($controllerName == "Account") ? 'is-active' : ''; ?>">
+			<li class="menu__item aside--progress--menu <?php echo ($controllerName == "Account") ? 'is-active' : ''; ?>">
 				<a href="<?php echo CommonHelper::generateUrl('Account', 'ProfileInfo');?>">
 					<svg class="icon icon--settings margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#settings'; ?>"></use></svg>
 					<span><?php echo Label::getLabel('LBL_Account_Settings'); ?></span>
 				</a>
 			</li>
-			<li class="menu__item <?php echo ($controllerName == "Teacher" && $action == "availability") ? 'is-active' : ''; ?>">
+			<li class="menu__item  aside--progress--menu <?php echo ($controllerName == "Teacher" && $action == "availability") ? 'is-active' : ''; ?>">
 				<a href="<?php echo CommonHelper::generateUrl('Teacher', 'availability');?>">
 					<svg class="icon icon--settings margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#calendar'; ?>"></use></svg>
 					<span><?php echo Label::getLabel('LBL_Availability_Calendar'); ?></span>

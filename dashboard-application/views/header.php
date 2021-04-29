@@ -45,6 +45,7 @@ $isUserTeacher =   User::isTeacher();
 
 $bodyClass = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) ? 'dashboard-teacher' : 'dashboard-learner';
 
+$mainDashboardClass = (($controllerName == 'Teacher' || $controllerName == 'Learner') && $action == "index") ? "main-dashboard" : '';
 $msgCnt = CommonHelper::getUnreadMsgCount();
 $unreadNotifications = UserNotifications::getUserUnreadNotifications($loggedUserId);
 ?>
@@ -89,7 +90,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
 <?php } ?>
 </head>
 
-<body class="<?php echo $bodyClass.' '.strtolower($controllerName); ?>">
+<body class="<?php echo $bodyClass.' '.strtolower($controllerName).' '.strtolower($action).' '.$mainDashboardClass; ?>">
     <div class="site">
         <!-- [ SIDE BAR ========= -->
         <aside class="sidebar">

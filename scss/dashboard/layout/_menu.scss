@@ -157,7 +157,7 @@
         }
         .#{$menu}{
             
-            &__icon{width: 16px; height: 16px;position: absolute; #{theme('direction.right','value')}:1rem; top: 50%; border-radius: theme('radius.round'); transform: translate(0,-50%);display: none;
+            &__icon{min-width: 1.75em;height: 1.75em;position: absolute; #{theme('direction.right','value')}:1rem; top: 50%; border-radius: 1.75em; padding-left: var(--padding-1); font-size: 0.66em;line-height: 1.75em;padding-right: var(--padding-1); transform: translate(0,-50%);display: none;
             }
         }
         li.is-active{
@@ -170,18 +170,34 @@
             & > a{opacity: 1;}
             .#{$menu}{
                 &__icon{background-color:theme('color.green'); display: block;
-                    &:before{width:9px; height: 5px; position: absolute;top:50%; left:38%; border-left:2px solid theme('color.white');border-bottom:2px solid theme('color.white'); content:"";transform: rotate(-45deg) translate(0,-78%);}
+                    &:before{width:9px; height: 5px; position: absolute;top:50%; left:38%; border-left:2px solid theme('color.white');border-bottom:2px solid theme('color.white'); content:"";transform: rotate(-45deg) translate(0,-78%);pointer-events: none;}
                 }
             }
         }
         li.profile--progress--menu{
             &:not(.is-completed){
-                & > a{opacity: 1;}
+                & > a{
+                    opacity: 1;
+
+                    &::before{
+                        content: none;
+                    }
+
+                   
+
+                }
                 .#{$menu}{
                     &__icon{background-color:var(--color-yellow); display: block;
-                        &:before{width:9px; height: 5px; position: absolute;left:38%; content:"!";color: #fff;}
-                    }
+                        &:before{position: absolute;left: 0.43rem;font-weight: 600; content:"!";color: #fff;font-size: 15px;pointer-events: none;}
+
+                        @media(max-width:theme('breakpoints.xl','value')){
+                            &{
+                                right: 0;
+                            }
+                        }
+                    } 
                 }
+                
             }
         }
 

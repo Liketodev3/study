@@ -124,7 +124,17 @@
     opacity: 0.7;
 }
 
+.popup__body .img-description {
+    padding: var(--padding-4);
+}
+.img-description .rotator-info {
+    margin-bottom: 15px;
+    text-align: center;
+}
 
+.box .table-scroll {
+    margin-top: 15px;
+}
 
 @media (min-width:1199px) {
     #facebox .content.facebox-medium {

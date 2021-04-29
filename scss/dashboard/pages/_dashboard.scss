@@ -444,3 +444,47 @@ $margin-bottom-6: "margin-bottom-6";
     }
 }
 
+$aside--progress--menu: "aside--progress--menu";
+.#{&aside--progress--menu} {
+    position: relative;
+
+    &::before{
+        position: absolute;
+        #{theme('direction.right','value')}: 0.8rem;
+        top: 0.7rem;
+        content: "!";
+        color: #fff;
+        pointer-events: none;
+        z-index: 1;
+    }
+    &::after{
+        content: "";
+        position: absolute;
+        top: 1rem;
+        #{theme('direction.right','value')}: 0.65rem;
+        transform: translate(25%, -25%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.75em;
+        height: 1.75em;
+        border-radius: 1.75em;
+        padding-#{theme('direction.left','value')}: var(--padding-1);
+        padding-#{theme('direction.right','value')}: var(--padding-1);
+        content: attr(data-count);
+        font-size: 0.66em;
+        line-height: 1.75em;
+        background-color: var(--color-third);
+        pointer-events: none;
+    }
+}
+
+.main-dashboard .page__footer{
+    display: none;
+}
+.teacherscheduledlessons.view .page__footer{
+    display: none;
+}
+.learnerscheduledlessons.view .page__footer{
+    display: none;
+}

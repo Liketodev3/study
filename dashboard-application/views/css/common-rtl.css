@@ -6997,9 +6997,9 @@ textarea[disabled] {
 
 .timer {
   position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -7026,6 +7026,9 @@ textarea[disabled] {
   color: var(--color-third);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium); }
+
+.timezoneoffset {
+  margin-left: 5px; }
 
 .container {
   padding-right: 15px;
@@ -9055,6 +9058,16 @@ textarea[disabled] {
   z-index: 99;
   opacity: 0.7; }
 
+.popup__body .img-description {
+  padding: var(--padding-4); }
+
+.img-description .rotator-info {
+  margin-bottom: 15px;
+  text-align: center; }
+
+.box .table-scroll {
+  margin-top: 15px; }
+
 @media (min-width: 1199px) {
   #facebox .content.facebox-medium {
     min-width: 800px;
@@ -9997,9 +10010,6 @@ textarea[disabled] {
 
 .fc .fc-timegrid-slot:empty:before {
   content: '\00a0'; }
-
-.fc .fc-timegrid-slot-minor {
-  border-top-style: dotted; }
 
 .fc .fc-timegrid-slot-label-cushion {
   display: inline-block;
