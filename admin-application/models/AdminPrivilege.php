@@ -52,6 +52,7 @@ class AdminPrivilege
     const SECTION_FAQ_CATEGORY = 49;
     const SECTION_TEACHING_LANGUAGES = 50;
     const SECTION_COMMISSION_REPORT  = 51;
+    const SECTION_IMAGE_ATTRIBUTES = 52;
 
     const PRIVILEGE_NONE = 0;
     const PRIVILEGE_READ = 1;
@@ -122,7 +123,7 @@ class AdminPrivilege
             static::SECTION_BIBLE_CONTENT => Label::getLabel('MSG_Bible_Content', CommonHelper::getLangId()),
             static::SECTION_MANAGE_PURCHASED_LESSONS => Label::getLabel('MSG_Manage_Purchased_lessons', CommonHelper::getLangId()),
             static::SECTION_ISSUES_REPORTED => Label::getLabel('MSG_Manage_Issues_Reported', CommonHelper::getLangId()),
-            static::SECTION_GIFTCARDS	 		=> Label::getLabel('MSG_GIFTCARDS', CommonHelper::getLangId()),
+            static::SECTION_GIFTCARDS             => Label::getLabel('MSG_GIFTCARDS', CommonHelper::getLangId()),
             static::SECTION_WITHDRAW_REQUESTS => Label::getLabel('MSG_Withdraw_Requests', CommonHelper::getLangId()),
             static::SECTION_TEACHER_REVIEWS => Label::getLabel('MSG_Teacher_Reviews', CommonHelper::getLangId()),
             static::SECTION_COMMISSION => Label::getLabel('MSG_Commission', CommonHelper::getLangId()),
@@ -136,6 +137,7 @@ class AdminPrivilege
             static::SECTION_TIMEZONES => Label::getLabel('MSG_Manage_Timezones', CommonHelper::getLangId()),
             static::SECTION_ISSUE_REPORT_OPTIONS => Label::getLabel('MSG_Manage_ISSUE_REPORT_OPTIONS', CommonHelper::getLangId()),
             static::SECTION_COMMISSION_REPORT => Label::getLabel('MSG_Commission_Report', CommonHelper::getLangId()),
+            static::SECTION_IMAGE_ATTRIBUTES => Label::getLabel('MSG_Image_Attributes', CommonHelper::getLangId()),
         );
         return $arr;
     }
@@ -448,14 +450,24 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_META_TAGS, static::PRIVILEGE_WRITE, $returnResult);
     }
 
-    public function canViewUrlRewrite($adminId = 0, $returnResult = false)
+    public function canViewUrlRewrites($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_URL_REWRITE, static::PRIVILEGE_READ, $returnResult);
     }
 
-    public function canEditUrlRewrite($adminId = 0, $returnResult = false)
+    public function canEditUrlRewrites($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_URL_REWRITE, static::PRIVILEGE_WRITE, $returnResult);
+    }
+
+    public function canViewImageAttributes($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_IMAGE_ATTRIBUTES, static::PRIVILEGE_READ, $returnResult);
+    }
+
+    public function canEditImageAttributes($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_IMAGE_ATTRIBUTES, static::PRIVILEGE_WRITE, $returnResult);
     }
 
     public function canViewEmailArchives($adminId = 0, $returnResult = false)
@@ -740,9 +752,8 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_ISSUE_REPORT_OPTIONS, static::PRIVILEGE_READ, $returnResult);
     }
 
-    public function canViewCommissionReport($adminId = 0, $returnResult = false) 
+    public function canViewCommissionReport($adminId = 0, $returnResult = false)
     {
-        return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult); 
+        return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult);
     }
-
 }

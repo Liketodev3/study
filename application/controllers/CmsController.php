@@ -10,7 +10,7 @@ class CmsController extends MyAppController
     {
         $cPageId = FatUtility::int($cPageId);
         $srch = ContentPage::getSearchObject($this->siteLangId);
-        $srch->addMultipleFields(array('cpage_id', 'IFNULL(cpage_title, cpage_identifier) as cpage_title','cpage_layout','cpage_image_title','cpage_image_content','cpage_content' ));
+        $srch->addMultipleFields(array('cpage_id', 'IFNULL(cpage_title, cpage_identifier) as cpage_title', 'cpage_layout', 'cpage_image_title', 'cpage_image_content', 'cpage_content'));
         $srch->addCondition('cpage_id', '=', $cPageId);
         $cPage = FatApp::getDb()->fetch($srch->getResultset());
         if ($cPage == false) {
@@ -18,7 +18,7 @@ class CmsController extends MyAppController
         }
         $blockData = array();
         $teacherRequestStatus = null;
-        if ($cPage['cpage_layout']==ContentPage::CONTENT_PAGE_LAYOUT1_TYPE) {
+        if ($cPage['cpage_layout'] == ContentPage::CONTENT_PAGE_LAYOUT1_TYPE) {
             $srch = new searchBase(ContentPage::DB_TBL_CONTENT_PAGES_BLOCK_LANG);
             $srch->doNotCalculateRecords();
             $srch->doNotLimitRecords();
@@ -28,12 +28,11 @@ class CmsController extends MyAppController
             $srchRs = $srch->getResultSet();
             $blockData = FatApp::getDb()->fetchAll($srchRs, 'cpblocklang_block_id');
         }
-        if(UserAuthentication::isUserLogged()) {
+        if (UserAuthentication::isUserLogged()) {
             $requestData = TeacherRequest::getData(UserAuthentication::getLoggedUserId(true));
-            if(isset($requestData['utrequest_status'])){
+            if (isset($requestData['utrequest_status'])) {
                 $teacherRequestStatus = $requestData['utrequest_status'];
             }
-
         }
         $this->set('blockData', $blockData);
         $this->set('cPage', $cPage);
@@ -55,12 +54,12 @@ class CmsController extends MyAppController
             $cPageId = reset($parameters);
             $cPageId = FatUtility::int($cPageId);
             $cPage = ContentPage::getAllAttributesById($cPageId, $this->siteLangId);
-            $title = isset($cPage['cpage_title'])?$cPage['cpage_title']:$cPage['cpage_identifier'];
+            $title = isset($cPage['cpage_title']) ? $cPage['cpage_title'] : $cPage['cpage_identifier'];
         }
         switch ($action) {
             default:
-                $nodes[] = array('title'=>$title);
-            break;
+                $nodes[] = array('title' => $title);
+                break;
         }
         return $nodes;
     }

@@ -306,10 +306,18 @@ $(document).ready(function () {
 		},
 
 		setSiteDefaultLang = function (langId) {
-			fcom.ajax(fcom.makeUrl('Home', 'setSiteDefaultLang', [langId]), '', function (res) {
-				document.location.reload();
+			var url = window.location.pathname;
+			var srchString = window.location.search;
+			var data = 'pathname=' + url;
+			fcom.ajax(fcom.makeUrl('Home', 'setSiteDefaultLang', [langId]), data, function (res) {
+				var ans = $.parseJSON(res);
+				if (ans.status == 1) {
+					window.location.href = ans.redirectUrl + srchString;
+				}
 			});
 		},
+
+
 
 		setSiteDefaultCurrency = function (currencyId) {
 			fcom.ajax(fcom.makeUrl('Home', 'setSiteDefaultCurrency', [currencyId]), '', function (res) {
@@ -415,7 +423,7 @@ $(document).ready(function () {
 	};
 
 	toggleTeacherFavorite = function (teacher_id, el) {
-		
+
 		if (isRuningTeacherFavoriteAjax) {
 			return false;
 		}
@@ -430,19 +438,21 @@ $(document).ready(function () {
 		fcom.updateWithAjax(fcom.makeUrl('Learner', 'toggleTeacherFavorite'), data, function (ans) {
 			isRuningTeacherFavoriteAjax = false;
 			if (ans.status) {
-				
+
 				if (ans.action == 'A') {
 					$(el).addClass("is-active");
 				} else if (ans.action == 'R') {
-					$(el).removeClass("is-active");	
+					$(el).removeClass("is-active");
 				}
 				if (typeof searchfavorites != 'undefined') {
 					searchfavorites(document.frmFavSrch);
 				}
 			}
-		}, { errorFn: function () {
-			isRuningTeacherFavoriteAjax = false;
-		}});
+		}, {
+			errorFn: function () {
+				isRuningTeacherFavoriteAjax = false;
+			}
+		});
 		$(el).blur();
 	}
 

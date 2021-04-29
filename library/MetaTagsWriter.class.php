@@ -20,8 +20,8 @@ class MetaTagsWriter
 		$srch->doNotCalculateRecords();
 		$srch->setPageSize(1);
 		$srch->addMultipleFields(array(
-			'meta_title',
-			'meta_keywords', 'meta_description', 'meta_other_meta_tags'
+			'meta_id', 'IFNULL(meta_title, meta_identifier) as meta_title',
+			'meta_keywords', 'meta_description', 'meta_other_meta_tags', 'meta_og_title', 'meta_og_url', 'meta_og_description'
 		));
 		$defSearch = clone $srch;
 		$srch->addCondition('meta_controller', '=', $controllerName);
@@ -42,9 +42,9 @@ class MetaTagsWriter
 		}
 
 		$rs = $srch->getResultSet();
-		$metas = FatApp::getDb()->fetch($rs);
-		if (!empty($metas) && ($metas['meta_title'] != '' || $metas['meta_title'] != null)) {
-
+		if ($metas = FatApp::getDb()->fetch($rs)) {
+			/*--Get opengraph image-*/
+			$openGraphImage = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metas['meta_id'], 0, $langId, false, 0, 0, true);
 			$title = $metas['meta_title'] . ' | ' . $websiteName;
 			echo '<title>' . $title . '</title>' . "\n";
 			if (isset($metas['meta_description']) && ($metas['meta_description'] != '' || $metas['meta_description'] != null))
@@ -53,10 +53,19 @@ class MetaTagsWriter
 				echo '<meta name="keywords" content="' . $metas['meta_keywords'] . '" />';
 			if (isset($metas['meta_other_meta_tags']) && ($metas['meta_other_meta_tags'] != '' || $metas['meta_other_meta_tags'] != null))
 				echo CommonHelper::renderHtml($metas['meta_other_meta_tags'], ENT_QUOTES, 'UTF-8');
+			if (isset($metas['meta_og_title']))
+				echo '<meta property="og:title" content="' . $metas['meta_og_title'] . '" />';
+			if (isset($metas['meta_og_url']))
+				echo '<meta property="og:url" content="' . $metas['meta_og_url'] . '" />';
+			if (isset($metas['meta_og_description']))
+				echo '<meta property="og:description" content="' . $metas['meta_og_description'] . '" />';
+
+			echo '<meta property=”og:image” content="' . CommonHelper::generateFullUrl('Image', 'openGraphImage', array($metas['meta_id'], $langId, 'NORMAL')) . '" />';
 		} else {
 			$defSearch->addCondition('meta_type', '=', MetaTag::META_GROUP_DEFAULT);
 			if ($metas = FatApp::getDb()->fetch($defSearch->getResultSet())) {
 				$title = $metas['meta_title'] . ' | ' . $websiteName;
+				$openGraphImage = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metas['meta_id'], 0, $langId, false, 0, 0, true);
 				echo '<title>' . $title . '</title>' . "\n";
 				if (isset($metas['meta_description']))
 					echo '<meta name="description" content="' . $metas['meta_description'] . '" />';
@@ -64,6 +73,14 @@ class MetaTagsWriter
 					echo '<meta name="keywords" content="' . $metas['meta_keywords'] . '" />';
 				if (isset($metas['meta_other_meta_tags']))
 					echo CommonHelper::renderHtml($metas['meta_other_meta_tags'], ENT_QUOTES, 'UTF-8');
+				if (isset($metas['meta_og_title']))
+					echo '<meta property="og:title" content="' . $metas['meta_og_title'] . '" />';
+				if (isset($metas['meta_og_url']))
+					echo '<meta property="og:url" content="' . $metas['meta_og_url'] . '" />';
+				if (isset($metas['meta_og_description']))
+					echo '<meta property="og:description" content="' . $metas['meta_og_description'] . '" />';
+
+				echo '<meta property="og:image" content="' . CommonHelper::generateFullUrl('Image', 'openGraphImage', array($metas['meta_id'], $langId, 'NORMAL')) . '" />';
 			} else {
 				return '<title>' . $websiteName . '</title>';
 			}

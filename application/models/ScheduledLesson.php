@@ -24,13 +24,13 @@ class ScheduledLesson extends MyAppModel
             $langId = CommonHelper::getLangId();
         }
         return array(
-            static::STATUS_UPCOMING	=>	Label::getLabel('LBL_Upcoming', $langId),
-            static::STATUS_SCHEDULED	=>	Label::getLabel('LBL_Scheduled', $langId),
-            static::STATUS_RESCHEDULED	=>	Label::getLabel('LBL_Rescheduled', $langId),
-            static::STATUS_NEED_SCHEDULING	=>	Label::getLabel('LBL_Need_to_be_scheduled', $langId),
-            static::STATUS_COMPLETED	=>	Label::getLabel('LBL_Completed', $langId),
-            static::STATUS_CANCELLED	=>	Label::getLabel('LBL_Cancelled', $langId),
-            static::STATUS_ISSUE_REPORTED	=>	Label::getLabel('LBL_Issue_Reported_Status', $langId),
+            static::STATUS_UPCOMING    =>    Label::getLabel('LBL_Upcoming', $langId),
+            static::STATUS_SCHEDULED    =>    Label::getLabel('LBL_Scheduled', $langId),
+            static::STATUS_RESCHEDULED    =>    Label::getLabel('LBL_Rescheduled', $langId),
+            static::STATUS_NEED_SCHEDULING    =>    Label::getLabel('LBL_Need_to_be_scheduled', $langId),
+            static::STATUS_COMPLETED    =>    Label::getLabel('LBL_Completed', $langId),
+            static::STATUS_CANCELLED    =>    Label::getLabel('LBL_Cancelled', $langId),
+            static::STATUS_ISSUE_REPORTED    =>    Label::getLabel('LBL_Issue_Reported_Status', $langId),
         );
     }
 
@@ -91,10 +91,10 @@ class ScheduledLesson extends MyAppModel
 
         if (empty($rows)) return false;
 
-        foreach($rows as $data){
+        foreach ($rows as $data) {
             $tObj = new Transaction($data['slesson_teacher_id']);
             $comment = sprintf(Label::getLabel('LBL_LessonId:_%s_Payment_Received', CommonHelper::getLangId()), $this->getMainTableRecordId());
-            if($data['slesson_grpcls_id']){
+            if ($data['slesson_grpcls_id']) {
                 $comment = sprintf(Label::getLabel('LBL_Group_Class_Payment_Received_for_user:_%s', CommonHelper::getLangId()), $data['user_full_name']);
             }
             $data = array(
@@ -117,8 +117,8 @@ class ScheduledLesson extends MyAppModel
     public function holdPayment($user_id, $lesson_id)
     {
         $db = FatApp::getDb();
-        $update_cond = array('smt'=>'utxn_user_id = ? and utxn_slesson_id = ? AND utxn_status=?','vals'=>array( $user_id, $lesson_id, Transaction::STATUS_COMPLETED));
-        if (!$db->updateFromArray(Transaction::DB_TBL, array('utxn_status'=>Transaction::STATUS_PENDING), $update_cond, false, array(), '', 1)) {
+        $update_cond = array('smt' => 'utxn_user_id = ? and utxn_slesson_id = ? AND utxn_status=?', 'vals' => array($user_id, $lesson_id, Transaction::STATUS_COMPLETED));
+        if (!$db->updateFromArray(Transaction::DB_TBL, array('utxn_status' => Transaction::STATUS_PENDING), $update_cond, false, array(), '', 1)) {
             return false;
         }
         return true;
@@ -130,9 +130,9 @@ class ScheduledLesson extends MyAppModel
         $status = FatUtility::int($status);
         $db = FatApp::getDb();
 
-        $coustomQuery = "UPDATE ".ScheduledLesson::DB_TBL." as sl INNER JOIN ".ScheduledLessonDetails::DB_TBL." as sld ON ( sl.slesson_id = sld.sldetail_slesson_id ) ";
-        $coustomQuery .= " SET  sld.sldetail_learner_status = ".$status." , sl.slesson_status = ".$status;
-        $coustomQuery .= " where sl.slesson_id = '".$lesson_id."'";
+        $coustomQuery = "UPDATE " . ScheduledLesson::DB_TBL . " as sl INNER JOIN " . ScheduledLessonDetails::DB_TBL . " as sld ON ( sl.slesson_id = sld.sldetail_slesson_id ) ";
+        $coustomQuery .= " SET  sld.sldetail_learner_status = " . $status . " , sl.slesson_status = " . $status;
+        $coustomQuery .= " where sl.slesson_id = '" . $lesson_id . "'";
 
         if (!$db->query($coustomQuery)) {
             $this->error =  $db->getError();
@@ -144,32 +144,32 @@ class ScheduledLesson extends MyAppModel
         return true;
     }
 
-    public function cancelLessonByTeacher($reason='')
+    public function cancelLessonByTeacher($reason = '')
     {
         $lessonDetailRows = ScheduledLessonDetails::getScheduledRecordsByLessionId($this->getMainTableRecordId());
 
         /* update status for every learner and refund [ */
-		foreach($lessonDetailRows as $lessonDetailRow){
+        foreach ($lessonDetailRows as $lessonDetailRow) {
             // CommonHelper::printArray($lessonDetailRow);die;
-			$sLessonDetailObj = new ScheduledLessonDetails($lessonDetailRow['sldetail_id']);
+            $sLessonDetailObj = new ScheduledLessonDetails($lessonDetailRow['sldetail_id']);
 
             if (!$sLessonDetailObj->refundToLearner()) {
                 $this->error = $sLessonDetailObj->getError();
                 return false;
             }
 
-			if (!$sLessonDetailObj->changeStatus(ScheduledLesson::STATUS_CANCELLED)) {
-				$this->error = $sLessonDetailObj->getError();
+            if (!$sLessonDetailObj->changeStatus(ScheduledLesson::STATUS_CANCELLED)) {
+                $this->error = $sLessonDetailObj->getError();
                 return false;
-			}
+            }
 
             // remove from learner google calendar
             $token = current(UserSetting::getUserSettings($lessonDetailRow['learnerId']))['us_google_access_token'];
-            if($token){
+            if ($token) {
                 $sLessonDetailObj->loadFromDb();
                 $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
 
-                if($oldCalId){
+                if ($oldCalId) {
                     SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
                 }
                 $sLessonDetailObj->setFldValue('sldetail_learner_google_calendar_id', '');
@@ -182,15 +182,15 @@ class ScheduledLesson extends MyAppModel
 
             $user_timezone = $lessonDetailRow['learnerTz'];
 
-            if($start_time){
-                $start_time = $start_date.' '.$start_time;
-                $end_time = $start_date.' '.$end_time;
+            if ($start_time) {
+                $start_time = $start_date . ' ' . $start_time;
+                $end_time = $start_date . ' ' . $end_time;
                 $start_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $start_time, true, $user_timezone);
                 $start_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $start_time, true, $user_timezone);
                 $end_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $end_time, true, $user_timezone);
             }
 
-         
+
             $userNotification = new UserNotifications($lessonDetailRow['learnerId']);
             $userNotification->cancelLessonNotification($lessonDetailRow['sldetail_id'], $lessonDetailRow['teacherId'], $lessonDetailRow['teacherFullName'], USER::USER_TYPE_LEANER, $reason);
 
@@ -211,21 +211,20 @@ class ScheduledLesson extends MyAppModel
                 $this->error = Label::getLabel('LBL_Mail_not_sent!');
                 return false;
             }
-		}
+        }
         return true;
     }
 
-    public function rescheduleLessonByTeacher( $reason = '')
+    public function rescheduleLessonByTeacher($reason = '')
     {
         $lessonDetailRows = ScheduledLessonDetails::getScheduledRecordsByLessionId($this->getMainTableRecordId());
 
         /* update status for every learner [ */
-		foreach($lessonDetailRows as $lessonDetailRow)
-        {
+        foreach ($lessonDetailRows as $lessonDetailRow) {
             $sLessonDetailObj = new ScheduledLessonDetails($lessonDetailRow['sldetail_id']);
             $sLessonDetailObj->assignValues(array(
-                'sldetail_learner_status' =>	ScheduledLesson::STATUS_NEED_SCHEDULING,
-                'sldetail_learner_join_time' =>	'',
+                'sldetail_learner_status' =>    ScheduledLesson::STATUS_NEED_SCHEDULING,
+                'sldetail_learner_join_time' =>    '',
             ));
             if (!$sLessonDetailObj->save()) {
                 $this->error = $sLessonDetailObj->getError();
@@ -234,11 +233,11 @@ class ScheduledLesson extends MyAppModel
 
             // remove from learner google calendar
             $token = current(UserSetting::getUserSettings($lessonDetailRow['learnerId']))['us_google_access_token'];
-            if($token){
+            if ($token) {
                 $sLessonDetailObj->loadFromDb();
                 $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
 
-                if($oldCalId){
+                if ($oldCalId) {
                     SocialMedia::deleteEventOnGoogleCalendar($token, $oldCalId);
                 }
                 $sLessonDetailObj->setFldValue('sldetail_learner_google_calendar_id', '');
@@ -251,9 +250,9 @@ class ScheduledLesson extends MyAppModel
 
             $user_timezone = $lessonDetailRow['learnerTz'];
 
-            if($start_time){
-                $start_time = $start_date.' '.$start_time;
-                $end_time = $start_date.' '.$end_time;
+            if ($start_time) {
+                $start_time = $start_date . ' ' . $start_time;
+                $end_time = $start_date . ' ' . $end_time;
                 $start_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $start_time, true, $user_timezone);
                 $start_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $start_time, true, $user_timezone);
                 $end_time = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $end_time, true, $user_timezone);
@@ -281,10 +280,64 @@ class ScheduledLesson extends MyAppModel
         }
         return true;
     }
-    
+
     public function markTeacherJoinTime()
     {
         $this->assignValues(array('slesson_teacher_join_time' => date('Y-m-d H:i:s')));
         return $this->save();
+    }
+
+    public function endLesson()
+    {
+        $lessonId = $this->getMainTableRecordId();
+        $this->loadFromDb();
+        $lessonRow = $this->getFlds();
+
+        if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) {
+            if ($lessonRow['slesson_ended_by'] ==  User::USER_TYPE_TEACHER) {
+                $this->error = Label::getLabel('LBL_You_already_end_lesson!');
+                return false;
+            }
+            $this->assignValues(array('slesson_teacher_end_time' => date('Y-m-d H:i:s')));
+            return $this->save();
+        }
+
+        $dataUpdateArr = array(
+            'slesson_status' => ScheduledLesson::STATUS_COMPLETED,
+            'slesson_ended_by' => User::USER_TYPE_TEACHER,
+            'slesson_ended_on' => date('Y-m-d H:i:s'),
+            'slesson_teacher_end_time' => date('Y-m-d H:i:s'),
+        );
+
+        $db = FatApp::getDb();
+        $db->startTransaction();
+        if ($lessonRow['slesson_is_teacher_paid'] == 0) {
+            if ($this->payTeacherCommission()) {
+                $userNotification = new UserNotifications($lessonRow['slesson_teacher_id']);
+                $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
+                $dataUpdateArr['slesson_is_teacher_paid'] = 1;
+            }
+        }
+
+        $this->assignValues($dataUpdateArr);
+        if (!$this->save()) {
+            $db->rollbackTransaction();
+            return false;
+        }
+        $sLessonDetailSrch = new ScheduledLessonDetailsSearch();
+        $sLessonDetailSrch->addCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+        $sLessonDetailSrch->addMultipleFields(array('DISTINCT sldetail_id'));
+        $sLessonDetails = $sLessonDetailSrch->getRecordsByLessonId($lessonRow['slesson_id']);
+
+        foreach ($sLessonDetails as $sLessonDetail) {
+            $scheduledLessonDetailObj = new ScheduledLessonDetails($sLessonDetail['sldetail_id']);
+            $scheduledLessonDetailObj->assignValues(array('sldetail_learner_status' => ScheduledLesson::STATUS_COMPLETED));
+            if (!$scheduledLessonDetailObj->save()) {
+                $db->rollbackTransaction();
+                FatUtility::dieJsonError($scheduledLessonDetailObj->getError());
+            }
+        }
+        $db->commitTransaction();
+        return true;
     }
 }

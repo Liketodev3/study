@@ -70,6 +70,7 @@ class applicationConstants
     const MEETING_COMET_CHAT = 'comet_chat';
     const MEETING_ZOOM = 'zoom';
     const MEETING_LESSON_SPACE = 'lesson_space';
+    const MEETING_WIZIQ = 'wiziq';
 
     const PHONE_NO_REGEX = "^[0-9(\)-\-{\}  +-+]{4,16}$";
     const CREDIT_CARD_NO_REGEX = "^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$";
@@ -221,6 +222,16 @@ class applicationConstants
     public static function allowedFileExtensions()
     {
         return array('zip', 'txt', 'png', 'jpeg', 'jpg', 'gif', 'bmp', 'ico', 'tiff', 'tif', 'svg', 'svgz', 'rar', 'msi', 'cab', 'mp3', 'qt', 'mov', 'pdf', 'psd', 'ai', 'eps', 'ps', 'doc', 'docx', 'ppt', 'pptx');
+    }
+
+    public static function allowedImageFileExtensions()
+    {
+        return array('png', 'jpeg', 'jpg', 'gif', 'svg');
+    }
+
+    public static function allowedImageMimeTypes()
+    {
+        return array('image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml');
     }
 
     public static function getBlogPostStatusArr($langId)
@@ -432,6 +443,7 @@ class applicationConstants
             self::MEETING_COMET_CHAT => Label::getLabel('LBL_Comet_Chat'),
             self::MEETING_ZOOM => Label::getLabel('LBL_Zoom'),
             self::MEETING_LESSON_SPACE => Label::getLabel('LBL_Lesson_Space'),
+            self::MEETING_WIZIQ => Label::getLabel('LBL_WIZIQ'),
         );
     }
 

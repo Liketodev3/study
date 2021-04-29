@@ -11,5 +11,6 @@
 /fatlib
 /robots.txt
 /public/config.js
-/.vscode
+/vendor
 /nbproject
+/node_modules
