@@ -13,14 +13,31 @@ class TeacherController extends TeacherBaseController
        
         $teacherProfileProgress = User::getTeacherProfileProgress();
         /* Validate Teacher has filled complete profile[ */
-        $link = " <a href='" . CommonHelper::generateUrl('account', 'profileInfo') . "'>" . Label::getLabel('LBL_Click_Here') . "</a>";
+        $viewProfile = true;
         if (false == $teacherProfileProgress['isProfileCompleted']) {
-            Message::addInfo(sprintf(Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page_%s'), $link));
-            $this->set('viewProfile', false);
-        } else {
-            $this->set('viewProfile', true);
+            $viewProfile = false;
         }
         /* ] */
+     
+        $userId = UserAuthentication::getLoggedUserId();
+        $userObj = new User($userId);
+        $userDetails = $userObj->getDashboardData($this->siteLangId, true);
+        $durationArr = Statistics::getDurationTypesArr($this->siteLangId);
+        $statistics  = new Statistics($userId);
+        $earningData = $statistics->getEarning(Statistics::TYPE_ALL);
+
+        $frmSrch = $this->getSearchForm();
+        $frmSrch->fill(['status' => ScheduledLesson::STATUS_UPCOMING, 'show_group_classes' => ApplicationConstants::YES]);
+
+
+        $this->set('frmSrch', $frmSrch);
+        $this->set('durationArr', $durationArr);
+        $this->set('earningData', $earningData);
+        $this->set('teacherProfileProgress',  $teacherProfileProgress);
+        $this->set('userDetails', $userDetails);
+        $this->set('viewProfile', $viewProfile);
+        $this->set('userTotalWalletBalance', User::getUserBalance($userId, false));
+
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addJs('js/fateventcalendar.js');
@@ -30,15 +47,7 @@ class TeacherController extends TeacherBaseController
             }
         }
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
-        $userObj = new User(UserAuthentication::getLoggedUserId());
-        $userDetails = $userObj->getDashboardData(CommonHelper::getLangId(), true);
-        $durationArr = Statistics::getDurationTypesArr(CommonHelper::getLangId());
-        $frmSrch = $this->getSearchForm();
-        $frmSrch->fill(['status' => ScheduledLesson::STATUS_UPCOMING, 'show_group_classes' => ApplicationConstants::YES]);
-        $this->set('frmSrch', $frmSrch);
-        $this->set('durationArr', $durationArr);
-        $this->set('teacherProfileProgress',  $teacherProfileProgress);
-        $this->set('userDetails', $userDetails);
+
         $this->_template->render();
     }
 

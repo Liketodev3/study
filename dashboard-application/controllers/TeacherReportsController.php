@@ -20,24 +20,26 @@ class TeacherReportsController extends TeacherBaseController
 
     public function getStatisticalData()
     {
-        $post = FatApp::getPostedData();
-        if (!$post) {
+        $type = FatApp::getPostedData('type');
+        $duration = FatApp::getPostedData('duration' , FatUtility::VAR_INT, 0);
+        if (empty($type) || empty($duration)) {
             Message::addErrorMessage(Label::getLabel('MSG_ERROR_INVALID_ACCESS', $this->siteLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
         $statObj = new Statistics(UserAuthentication::getLoggedUserId());
-        switch ($post['type']) {
+
+        switch ($type) {
             case Statistics::REPORT_EARNING:
-                $earningData = $statObj->getEarning($post['duration']);
+                $earningData = $statObj->getEarning($duration);
                 $this->set('earningData', $earningData);
                 $this->_template->render(false, false);
                 break;
             case Statistics::REPORT_SOLD_LESSONS:
-                $soldLessons = $statObj->getSoldLessons($post['duration']);
+                $soldLessons = $statObj->getSoldLessons($duration);
                 $this->set('soldLessons', $soldLessons);
                 $this->set('siteLangId', $this->siteLangId);
                 $this->_template->render(false, false, 'teacher-reports/get-sold-lessons.php');
-                break;
+            break;
         }
     }
 

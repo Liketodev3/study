@@ -153,7 +153,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                         <hr>
 										<ul>
 											<?php foreach ($currencyData as $key => $currency) { ?>
-												<li class="menu__item <?php echo ($siteCurrencyId == $key) ? 'is-active' : ''; ?>"><a  onClick="setSiteDefaultCurrency(<?php echo $currencyId;?>)" href="javascript:void(0)"><?php echo  $currency; ?></a></li>
+												<li class="menu__item <?php echo ($siteCurrencyId == $key) ? 'is-active' : ''; ?>"><a  onClick="setSiteDefaultCurrency(<?php echo $key;?>)" href="javascript:void(0);"><?php echo  $currency; ?></a></li>
 											<?php } ?>
                                         </ul>
                                     </nav>

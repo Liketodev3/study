@@ -38,8 +38,8 @@
 							<div class="col-lg-4 col-md-6 col-sm-6">
 								<div class="stat">
 									<div class="stat__amount">
-										<span>Earnings</span>
-										<h5>$12154.00</h5>
+										<span><?php echo Label::getLabel('Lbl_Earnings'); ?></span>
+										<h5><?php echo CommonHelper::displayMoneyFormat($earningData); ?></h5>
 									</div>
 									<div class="stat__media bg-yellow">
 										<svg class="icon icon--money icon--40 color-white"><use xlink:href="images/sprite.yo-coach.svg#stats"></use></svg>
@@ -50,25 +50,25 @@
 							<div class="col-lg-4 col-md-6 col-sm-6">
 								<div class="stat">
 									<div class="stat__amount">
-										<span>Earnings</span>
-										<h5>$12154.00</h5>
+										<span><?php echo Label::getLabel('LBL_Scheduled'); ?></span>
+										<h5><?php echo $userDetails['teacherSchLessons']; ?></h5>
 									</div>
 									<div class="stat__media bg-secondary">
 										<svg class="icon icon--money icon--40 color-white"><use xlink:href="images/sprite.yo-coach.svg#stats_1"></use></svg>
 									</div>
-									<a href="#" class="stat__action"></a>
+									<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>" class="stat__action"></a>
 								</div>
 							</div>
 							<div class="col-lg-4 col-md-6 col-sm-6">
 								<div class="stat">
 									<div class="stat__amount">
-										<span>Earnings</span>
-										<h5>$12154.00</h5>
+										<span> <?php echo Label::getLabel('LBL_Wallet'); ?></span>
+										<h5><?php echo $userTotalWalletBalance; ?></h5>
 									</div>
 									<div class="stat__media bg-primary">
 										<svg class="icon icon--money icon--40 color-white"><use xlink:href="images/sprite.yo-coach.svg#stats_2"></use></svg>
 									</div>
-									<a href="#" class="stat__action"></a>
+									<a href="<?php echo CommonHelper::generateUrl('Wallet'); ?>" class="stat__action"></a>
 								</div>
 							</div>
 						</div>
@@ -93,14 +93,11 @@
 
 										<div class="sale-stat__select">
 											<div class="form-inline__item">
-												<select>
-													<option>This Week</option>
-													<option>Upcoming</option>
-													<option>Scheduled/rescheduled	</option>
-													<option>Need to be Scheduled	</option>
-													<option>Completed	</option>
-													<option>Cancelled	</option>
-												</select>
+											<select id="earningMonth" onchange="getStatisticalData(1)">
+												<?php foreach($durationArr as $key => $duration){?>
+													<option value="<?php echo $key; ?>"><?php echo $duration; ?></option>
+												<?php }?>
+											</select>
 											</div>
 										</div>
 									</div>
@@ -114,13 +111,10 @@
 
 										<div class="sale-stat__select">
 											<div class="form-inline__item">
-												<select>
-													<option>This Week</option>
-													<option>Upcoming</option>
-													<option>Scheduled/rescheduled	</option>
-													<option>Need to be Scheduled	</option>
-													<option>Completed	</option>
-													<option>Cancelled	</option>
+												<select id="lessonsMonth" onchange="getStatisticalData(2)">
+													<?php foreach($durationArr as $key=>$duration){?>
+														<option value="<?php echo $key; ?>"><?php echo $duration; ?></option>
+													<?php }?>
 												</select>
 											</div>
 										</div>
