@@ -23,4 +23,9 @@ var testTool = window.testTool;
 
 const ZOOM_API_KEY = '<?php echo FatApp::getConfig('CONF_ZOOM_API_KEY') ?>';
 </script>
-<div id="listItems"></div>
+<!-- [ PAGE ========= -->
+ <!-- <main class="page"> -->
+    <div class="session" id="listItems" ><!--id="listItems" -->
+    </div>
+</main>
+<!-- ] -->

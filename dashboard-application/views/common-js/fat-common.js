@@ -121,6 +121,7 @@ var fcom = {
 					$(document).trigger('close.mbsmessage');
 					//$.systemMessage(ans.msg,'alert alert--danger');
 					$.mbsmessage(ans.msg,true, 'alert alert--danger');
+					$.loader.hide();
 					/* Custom Code[ */
 					if( ans.redirectUrl ){
 						setTimeout(function(){ window.location.href = ans.redirectUrl }, 3000);

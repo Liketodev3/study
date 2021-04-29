@@ -1,101 +1,99 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 
-<?php if( !empty($flashCards) ) { ?>
-<div class="-padding-20">
-<table class="table">
-   <tr class="-hide-mobile">
-	  <th><?php echo Label::getLabel('LBL_Word'); ?></th>
-	  <th><?php echo Label::getLabel('LBL_Definition'); ?></th>
-	  <th></th>
-   </tr>
-   <?php foreach($flashCards as $flashCard){ ?>
-   <tr>
-	  <td width="35%">
-		 <span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Word'); ?></span>
-		 <span class="td__data"><?php echo $flashCard['flashcard_title']; echo " (".$flashCard['wordLanguageCode'].")";?></span>
-	  </td>
-	  
-	  <td width="35%">
-		 <span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Definition'); ?></span>
-		 <span class="td__data"><?php echo $flashCard['flashcard_defination'];  echo " (".$flashCard['wordDefLanguageCode'].")"; ?></span>
-	  </td>
-	  
-	  <td>
-		 <span class="td__caption -hide-desktop -show-mobile"><?php echo Label::getLabel('LBL_Action'); ?></span>
-		 <span class="td__data">
-         <?php if($myteacher == 0){ ?>
-			<a href="javascript:void(0)" onclick="flashCardForm(<?php echo $flashCard['sflashcard_slesson_id'] ?>, <?php echo $flashCard['flashcard_id']; ?>)" class="btn btn--small btn--secondary  btn--action">
-			   <span class="svg-icon">
-				  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 485.219 485.22" style="enable-background:new 0 0 485.219 485.22;" xml:space="preserve">
-					 <g>
-						<path d="M467.476,146.438l-21.445,21.455L317.35,39.23l21.445-21.457c23.689-23.692,62.104-23.692,85.795,0l42.886,42.897   C491.133,84.349,491.133,122.748,467.476,146.438z M167.233,403.748c-5.922,5.922-5.922,15.513,0,21.436   c5.925,5.955,15.521,5.955,21.443,0L424.59,189.335l-21.469-21.457L167.233,403.748z M60,296.54c-5.925,5.927-5.925,15.514,0,21.44   c5.922,5.923,15.518,5.923,21.443,0L317.35,82.113L295.914,60.67L60,296.54z M338.767,103.54L102.881,339.421   c-11.845,11.822-11.815,31.041,0,42.886c11.85,11.846,31.038,11.901,42.914-0.032l235.886-235.837L338.767,103.54z    M145.734,446.572c-7.253-7.262-10.749-16.465-12.05-25.948c-3.083,0.476-6.188,0.919-9.36,0.919   c-16.202,0-31.419-6.333-42.881-17.795c-11.462-11.491-17.77-26.687-17.77-42.887c0-2.954,0.443-5.833,0.859-8.703   c-9.803-1.335-18.864-5.629-25.972-12.737c-0.682-0.677-0.917-1.596-1.538-2.338L0,485.216l147.748-36.986   C147.097,447.637,146.36,447.193,145.734,446.572z" fill="#FFFFFF"/>
-					 </g>
-				  </svg>
-			   </span>
-			</a>
-            <?php if($flashCard['flashcard_created_by_user_id']==UserAuthentication::getLoggedUserId()): ?>
-			<a href="javascript:void(0);" onclick="removeFlashcard(<?php echo $flashCard['flashcard_id']; ?>);" class="btn btn--small btn--action">
-			   <span class="svg-icon">
-				  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" >
-					 <g>
-						<g>
-						   <path d="M425.298,51.358h-91.455V16.696c0-9.22-7.475-16.696-16.696-16.696H194.854c-9.22,0-16.696,7.475-16.696,16.696v34.662    H86.703c-9.22,0-16.696,7.475-16.696,16.696v51.357c0,9.22,7.475,16.696,16.696,16.696h338.593c9.22,0,16.696-7.475,16.696-16.696    V68.054C441.993,58.832,434.518,51.358,425.298,51.358z M300.45,51.358h-88.9V33.391h88.9V51.358z" fill="#FFFFFF"/>
-						</g>
-					 </g>
-					 <g>
-						<g>
-						   <path d="M93.192,169.497l13.844,326.516c0.378,8.937,7.735,15.988,16.68,15.988h264.568c8.945,0,16.302-7.051,16.68-15.989    l13.843-326.515H93.192z M205.53,444.105c0,9.22-7.475,16.696-16.696,16.696c-9.22,0-16.696-7.475-16.696-16.696V237.391    c0-9.22,7.475-16.696,16.696-16.696c9.22,0,16.696,7.475,16.696,16.696V444.105z M272.693,444.105    c0,9.22-7.475,16.696-16.696,16.696s-16.696-7.475-16.696-16.696V237.391c0-9.22,7.475-16.696,16.696-16.696    s16.696,7.475,16.696,16.696V444.105z M339.856,444.105c0,9.22-7.475,16.696-16.696,16.696s-16.696-7.475-16.696-16.696V237.391    c0-9.22,7.475-16.696,16.696-16.696s16.696,7.475,16.696,16.696V444.105z" fill="#FFFFFF"/>
-						</g>
-					 </g>
-				  </svg>
-			   </span>
-			</a>
-            <?php endif; ?>
-   <?php } ?>
-		 <a href="javascript:void(0);" onclick="viewFlashCard(<?php echo $flashCard['flashcard_id']; ?>)" class="btn btn--small btn--action">
-		 <span class="svg-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-<g>
-	<g>
-		<path fill="#FFFFFF" d="M508.177,245.995C503.607,240.897,393.682,121,256,121S8.394,240.897,3.823,245.995c-5.098,5.698-5.098,14.312,0,20.01
-			C8.394,271.103,118.32,391,256,391s247.606-119.897,252.177-124.995C513.274,260.307,513.274,251.693,508.177,245.995z M256,361
-			c-57.891,0-105-47.109-105-105s47.109-105,105-105s105,47.109,105,105S313.891,361,256,361z"/>
-	</g>
-</g>
-<g>
-	<g>
-		<path fill="#FFFFFF" d="M271,226c0-15.09,7.491-28.365,18.887-36.53C279.661,184.235,268.255,181,256,181c-41.353,0-75,33.647-75,75
-			c0,41.353,33.647,75,75,75c37.024,0,67.668-27.034,73.722-62.358C299.516,278.367,271,255.522,271,226z"/>
-	</g>
-</g>
-</svg></span>
-		 </a> </span>
-		
-	  </td>
-   </tr>
-   <?php } ?>
-</table>
-</div>
+<?php if (!empty($flashCards)) { ?>
+	<div class="sidebar__scroll">
+		<div class="flashcard-cover">
+			<div class="flash-card">
+				<?php foreach ($flashCards as $flashCard) { ?>
+					<div class="flash-card__item padding-bottom-4">
+						<p><?php echo $flashCard['flashcard_title'] . " (" . $flashCard['wordLanguageCode'] . ")"; ?></p>
+						<h6 class="flash-card-title bold-700 padding-bottom-4">
+							<?php echo $flashCard['flashcard_defination'] . " (" . $flashCard['wordDefLanguageCode'] . ")" ?>
+						</h6>
+						<div class="actions-group">
+							<a href="javascript:void(0);" onclick="viewFlashCard(<?php echo $flashCard['flashcard_id']; ?>);" class="btn btn--equal color-black margin-1 is-hover">
+								<svg class="icon icon--issue icon--small">
+									<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#view'; ?>"></use>
+								</svg>
+								<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_View'); ?></div>
+							</a>
 
-<?php 
-echo FatUtility::createHiddenFormFromData ( $postedData, array (
-	'name' => 'frmFlashCardSearchPaging'
-) );
-$pagingArr['callBackJsFunc'] = 'goToFlashCardSearchPage';
-$this->includeTemplate('_partial/pagination.php', $pagingArr,false);
-?>
+							<?php if ($myteacher == 0) { ?>
+								<a href="javascript:void(0);" onclick="flashCardForm(<?php echo $flashCard['sflashcard_slesson_id'] ?>, <?php echo $flashCard['flashcard_id']; ?>);" class="btn btn--equal color-black margin-1 is-hover">
+									<svg class="icon icon--issue icon--small">
+										<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#edit'; ?>"></use>
+									</svg>
+									<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Edit'); ?></div>
+								</a>
+								<?php if ($flashCard['flashcard_created_by_user_id'] == UserAuthentication::getLoggedUserId()) { ?>
+									<a href="javascript:void(0);" onclick="removeFlashcard(<?php echo $flashCard['flashcard_id']; ?>);" class="btn btn--equal color-black margin-1 is-hover">
+										<svg class="icon icon--issue icon--small">
+											<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#trash'; ?>"></use>
+										</svg>
+										<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Delete') ?></div>
+									</a>
+								<?php } ?>
+							<?php } ?>
 
+						</div>
+					</div>
+				<?php } ?>
 
-<?php } else { ?>  
-
-<div class="box -padding-30" style="margin-bottom: 30px;">
-	<div class="message-display">
-		<div class="message-display__icon">
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 408">
-			<path d="M488.468,408H23.532A23.565,23.565,0,0,1,0,384.455v-16.04a15.537,15.537,0,0,1,15.517-15.524h8.532V31.566A31.592,31.592,0,0,1,55.6,0H456.4a31.592,31.592,0,0,1,31.548,31.565V352.89h8.532A15.539,15.539,0,0,1,512,368.415v16.04A23.565,23.565,0,0,1,488.468,408ZM472.952,31.566A16.571,16.571,0,0,0,456.4,15.008H55.6A16.571,16.571,0,0,0,39.049,31.566V352.891h433.9V31.566ZM497,368.415a0.517,0.517,0,0,0-.517-0.517H287.524c0.012,0.172.026,0.343,0.026,0.517a7.5,7.5,0,0,1-7.5,7.5h-48.1a7.5,7.5,0,0,1-7.5-7.5c0-.175.014-0.346,0.026-0.517H15.517a0.517,0.517,0,0,0-.517.517v16.04a8.543,8.543,0,0,0,8.532,8.537H488.468A8.543,8.543,0,0,0,497,384.455h0v-16.04ZM63.613,32.081H448.387a7.5,7.5,0,0,1,0,15.008H63.613A7.5,7.5,0,0,1,63.613,32.081ZM305.938,216.138l43.334,43.331a16.121,16.121,0,0,1-22.8,22.8l-43.335-43.318a16.186,16.186,0,0,1-4.359-8.086,76.3,76.3,0,1,1,19.079-19.071A16,16,0,0,1,305.938,216.138Zm-30.4-88.16a56.971,56.971,0,1,0,0,80.565A57.044,57.044,0,0,0,275.535,127.978ZM63.613,320.81H448.387a7.5,7.5,0,0,1,0,15.007H63.613A7.5,7.5,0,0,1,63.613,320.81Z"></path>
-			</svg>
+			</div>
 		</div>
-		<h5><?php echo Label::getLabel('LBL_No_Result_Found!!'); ?></h5>
 	</div>
-</div>
-<?php } ?> 
+	<?php
+	echo FatUtility::createHiddenFormFromData($postedData, array(
+		'name' => 'frmFlashCardSearchPaging'
+	));
+	$pagingArr['callBackJsFunc'] = 'goToFlashCardSearchPage';
+	$this->includeTemplate('_partial/pagination.php', $pagingArr, false);
+	?>
+
+
+<?php } else { ?>
+	<div class="flashcard-cover">
+		<div class="message-display">
+			<div class="message-display__icon">
+				<svg xmlns="http://www.w3.org/2000/svg" width="189" height="162.015" viewBox="0 0 189 162.015">
+					<defs>
+						<style>
+							.a {
+								fill: #ccd0d9;
+							}
+
+							.b {
+								fill: #b1b5c4;
+							}
+
+							.c {
+								fill: none;
+							}
+						</style>
+					</defs>
+					<g transform="translate(-236.977 -3941)">
+						<path class="a" d="M232.424,85.2a4.367,4.367,0,1,0,4.367,4.367,4.367,4.367,0,0,0-4.367-4.367m2.148,4.3a2.148,2.148,0,1,1-2.148-2.148,2.154,2.154,0,0,1,2.148,2.148" transform="translate(187.261 3917.295)" />
+						<path class="a" d="M12.323,13.968H8.887V10.532a1.432,1.432,0,1,0-2.864,0v3.436H2.587a1.432,1.432,0,1,0,0,2.864H6.1v3.436a1.432,1.432,0,0,0,2.864,0V16.832h3.435A1.436,1.436,0,0,0,13.826,15.4a1.549,1.549,0,0,0-1.5-1.432" transform="translate(262.822 3953.899)" />
+						<path class="a" d="M222.292,7.3h-5.87V1.431a1.432,1.432,0,0,0-2.864,0V7.3h-5.87a1.432,1.432,0,0,0,0,2.864h5.87v5.87a1.432,1.432,0,1,0,2.864,0v-5.87h5.87a1.432,1.432,0,1,0,0-2.864" transform="translate(179.456 3953)" />
+						<path class="b" d="M36.586,167.223l-9.231-16.891a.626.626,0,0,0-.573-.43L20.7,148.184a.694.694,0,0,0-.642.071L7.594,154.91a2.573,2.573,0,0,0-1.288,1.575,2.481,2.481,0,0,0,.214,2l10.092,19.4a2.61,2.61,0,0,0,1.575,1.289,3.075,3.075,0,0,0,.787.143,2.98,2.98,0,0,0,1.145-.215l.143-.072,15.32-8.233a2.528,2.528,0,0,0,1.288-1.575,2.843,2.843,0,0,0-.286-2m-13.6-14.888-1-1.647,2.508.716ZM22.7,154.41h.071a1.025,1.025,0,0,0,.429-.143l3.221-1.933,8.591,15.677a.823.823,0,0,1,.071.716.771.771,0,0,1-.429.5L19.336,177.46a.823.823,0,0,1-.716.072,1.281,1.281,0,0,1-.572-.5l-10.022-19.4a1.028,1.028,0,0,1,.358-1.289l11.381-6.085,2.22,3.722a1.262,1.262,0,0,0,.5.358.262.262,0,0,0,.215.072" transform="translate(248.836 3900.167)" />
+						<path class="b" d="M14.41,164.576a.73.73,0,0,1-.573-.358.6.6,0,0,1,.286-.788l8.161-4.151a.593.593,0,1,1,.5,1.074L14.625,164.5a.261.261,0,0,1-.215.072" transform="translate(246.677 3896.68)" />
+						<path class="b" d="M20.01,174.814a.73.73,0,0,1-.573-.358.6.6,0,0,1,.286-.788l10.022-5.083a.593.593,0,0,1,.5,1.074l-10.022,5.083c0,.072-.072.072-.214.072" transform="translate(245.086 3894.089)" />
+						<path class="b" d="M22.81,179.793a.73.73,0,0,1-.573-.358.6.6,0,0,1,.286-.788l10.451-5.367a.593.593,0,1,1,.5,1.074l-10.452,5.367c-.072,0-.143.072-.215.072" transform="translate(244.536 3892.791)" />
+						<path class="b" d="M16.91,169.505a.73.73,0,0,1-.573-.358.6.6,0,0,1,.286-.787l10.022-5.083a.593.593,0,1,1,.5,1.074l-10.022,5.082a.263.263,0,0,1-.215.072" transform="translate(245.966 3895.573)" />
+						<path class="a" d="M785.43,659.033l-1.846.194-.194-1.846a.88.88,0,1,0-1.75.194l.194,1.846-1.846.194a.947.947,0,0,0-.778.972.881.881,0,0,0,.972.778l1.846-.194.194,1.846a.88.88,0,0,0,1.755-.138.543.543,0,0,0-.006-.058l-.194-1.846,1.846-.194a.945.945,0,0,0,.777-.972.884.884,0,0,0-.972-.778" transform="translate(-542.232 3433.121)" />
+						<path class="a" d="M865.657,663.316l-3.4-1.069,1.069-3.4a1.6,1.6,0,0,0-1.02-2.025l-.048-.016a1.6,1.6,0,0,0-2.024,1.016l-.016.053-1.069,3.4-3.5-1.069a1.6,1.6,0,0,0-2.024,1.016l-.016.053a1.6,1.6,0,0,0,1.015,2.024l.054.016,3.5,1.069-1.069,3.4a1.629,1.629,0,0,0,3.109.972h0l1.069-3.4,3.4,1.069a1.6,1.6,0,0,0,2.024-1.016l.016-.054a1.565,1.565,0,0,0-.946-2c-.041-.015-.082-.027-.123-.039" transform="translate(-543.8 3433.115)" />
+						<path class="a" d="M976.084,703.3l-2.333.292-.292-2.333a1.073,1.073,0,1,0-2.137.194l.292,2.333-2.333.292a1.073,1.073,0,1,0,.194,2.138h0l2.333-.292.292,2.333a1.073,1.073,0,1,0,2.138-.194l-.292-2.333,2.333-.292a1.154,1.154,0,0,0,.972-1.167,1.018,1.018,0,0,0-1.167-.972" transform="translate(-551.274 3360.007)" />
+						<path class="a" d="M929.487,657.308a4.275,4.275,0,1,0,4.275,4.275,4.275,4.275,0,0,0-4.275-4.275m0,6.607a2.364,2.364,0,0,1-2.333-2.333,2.333,2.333,0,1,1,4.667,0,2.364,2.364,0,0,1-2.333,2.333" transform="translate(-559.235 3412.691)" />
+						<rect class="c" width="173.457" height="140.791" transform="translate(250.594 3941)" />
+						<path class="a" d="M101.437,46.4,84.493,109.636a3.071,3.071,0,0,1-3.763,2.173L39.282,100.7A3.076,3.076,0,0,1,37.11,96.94l.447-1.668a1.971,1.971,0,1,1,3.808,1.021l-.222.828L80.91,107.776,97.4,46.22,80.534,41.7a1.971,1.971,0,0,1,1.02-3.808l17.71,4.745a3.076,3.076,0,0,1,2.172,3.763ZM75.125,97.808l-.485,1.812a1.971,1.971,0,1,0,3.808,1.02l.485-1.812a1.971,1.971,0,1,0-3.808-1.02ZM24.614,61.7a7.605,7.605,0,0,1,1.632-.263V21.535a3.076,3.076,0,0,1,3.072-3.072h42.91A3.076,3.076,0,0,1,75.3,21.535V61.443a7.6,7.6,0,0,1,1.632.263,6.8,6.8,0,0,1,4.8,8.315c-.937,3.5-3.931,6.156-6.433,7.972V87a3.076,3.076,0,0,1-3.073,3.073H29.318A3.076,3.076,0,0,1,26.246,87V77.993c-2.5-1.818-5.5-4.474-6.433-7.972a6.791,6.791,0,0,1,4.8-8.315ZM75.3,72.9A8.633,8.633,0,0,0,77.925,69a2.851,2.851,0,0,0-2.013-3.487,3.979,3.979,0,0,0-.611-.118ZM30.188,86.131h41.17V22.405H30.188V86.131ZM23.621,69A8.638,8.638,0,0,0,26.246,72.9v-7.51a3.956,3.956,0,0,0-.612.118A2.849,2.849,0,0,0,23.621,69Zm14.4,34.12-17.381,4.656L4.143,46.221l16.87-4.52a1.971,1.971,0,0,0-1.02-3.808L2.281,42.638A3.075,3.075,0,0,0,.109,46.4l16.944,63.235a3.069,3.069,0,0,0,3.763,2.174l18.221-4.882a1.971,1.971,0,0,0-1.021-3.808Z" transform="translate(284.183 3942.937)" />
+						<path class="a" d="M19.916,13.341H12.067L18.843,1.419A.948.948,0,0,0,18.02,0H6.639a.948.948,0,0,0-.9.648L.05,17.782a.947.947,0,0,0,.9,1.249H8.995L3.871,31.05a.948.948,0,0,0,1.58,1L20.625,14.919a.948.948,0,0,0-.708-1.579Zm0,0" transform="translate(324.524 3983.876)" />
+					</g>
+				</svg>
+			</div>
+
+			<h5><?php echo  Label::getLabel('LBL_NO_RECORD_FLASH_CARD_TITLE'); ?></h5>
+			<p><?php echo   Label::getLabel('LBL_NO_RECORD_FLASH_CARD_TEXT'); ?></p>
+			<a href="#" onclick="$('.flash-card-add-js').trigger('click');" class="btn bg-primary"><?php echo  Label::getLabel('LBL_Add_flash_card'); ?></a>
+		</div>
+	</div>
+<?php } ?>

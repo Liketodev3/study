@@ -157,9 +157,8 @@ class AccountController extends LoggedUserController
         $this->_template->addJs('js/cropper.js');
         $this->_template->addJs('js/intlTelInput.js');
         $this->_template->addCss('css/intlTelInput.css');
-        $this->_template->addJs('js/moment.min.js');
-        $this->_template->addJs('js/fullcalendar.min.js');
-        $this->_template->addJs('js/fateventcalendar.js');
+       
+
         if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
             if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
                 $this->_template->addJs("js/locales/$currentLangCode.js");
@@ -171,7 +170,7 @@ class AccountController extends LoggedUserController
 
     public function profileInfoForm()
     {
-        $profileImgFrm = $this->getProfileImageForm();
+        //$profileImgFrm = $this->getProfileImageForm();
         $stateId = 0;
         $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), [
                     'user_id',
@@ -187,7 +186,9 @@ class AccountController extends LoggedUserController
                     'user_profile_info'
         ]);
         $userRow['user_phone'] = ($userRow['user_phone'] == 0) ? '' : $userRow['user_phone'];
-        $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
+        // $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
+        $isTeacherDashboardActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
+        $profileFrm = $this->getProfileInfoForm($isTeacherDashboardActive);
         $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
         if ($userRow['user_is_teacher']) {
             $userRow['us_video_link'] = $user_settings['us_video_link'];
@@ -201,7 +202,7 @@ class AccountController extends LoggedUserController
         $this->set('isProfilePicUploaded', User::isProfilePicUploaded());
         $this->set('userRow', $userRow);
         $this->set('profileFrm', $profileFrm);
-        $this->set('profileImgFrm', $profileImgFrm);
+        //$this->set('profileImgFrm', $profileImgFrm);
         $this->set('languages', Language::getAllNames(false));
         $this->_template->render(false, false);
     }
@@ -278,8 +279,9 @@ class AccountController extends LoggedUserController
     public function setUpProfileImage()
     {
         $userId = UserAuthentication::getLoggedUserId();
-        $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
-        $profileImgFrm = $this->getProfileImageForm($isTeacher);
+        // $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
+        $isTeacherDashboardActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
+        $profileImgFrm = $this->getProfileImageForm($isTeacherDashboardActive);
 
         $post = FatApp::getPostedData();
         $post = $profileImgFrm->getFormDataFromArray($post);
@@ -316,9 +318,11 @@ class AccountController extends LoggedUserController
             CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', [$userId, 'MEDIUM', true], CONF_WEBROOT_FRONTEND) . '?' . time());
         }
-        $userSettings = new UserSetting($userId);
-        if(!$userSettings->saveData(['us_video_link' => $post['us_video_link']])){
-            FatUtility::dieJsonError($userSettings->getError());
+        if ($isTeacherDashboardActive) {
+            $userSettings = new UserSetting($userId);
+            if (!$userSettings->saveData(['us_video_link' => $post['us_video_link']])) {
+                FatUtility::dieJsonError($userSettings->getError());
+            }
         }
 
         $this->set('msg', Label::getLabel('MSG_Data_uploaded_successfully'));
@@ -327,8 +331,10 @@ class AccountController extends LoggedUserController
 
     public function setUpProfileInfo()
     {
-        $isTeacher = User::getAttributesById(UserAuthentication::getLoggedUserId(), 'user_is_teacher');
-        $frm = $this->getProfileInfoForm($isTeacher);
+        // $isTeacher = User::getAttributesById(UserAuthentication::getLoggedUserId(), 'user_is_teacher');
+        // $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
+        $isTeacherDashboardActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
+        $frm = $this->getProfileInfoForm($isTeacherDashboardActive);
         $post = FatApp::getPostedData();
         $post = $frm->getFormDataFromArray($post);
         if (false === $post) {
@@ -339,12 +345,12 @@ class AccountController extends LoggedUserController
         $db->startTransaction();
         $record = new TableRecord(UserSetting::DB_TBL);
         $record->setFlds(['us_site_lang' => $post['us_site_lang'], 'us_user_id' => UserAuthentication::getLoggedUserId()]);
-        if ($isTeacher) {
-            $bookingDurationOptions = array(0, 12, 24);
-            if (!in_array($post['us_booking_before'], $bookingDurationOptions)) {
-                Message::addErrorMessage('Invalid Selection of Booking Field');
-                FatUtility::dieWithError(Message::getHtml());
-            } //  code added on 23-08-2019
+        if ($isTeacherDashboardActive) {
+            // $bookingDurationOptions = array(0, 12, 24);
+            // if (!in_array($post['us_booking_before'], $bookingDurationOptions)) {
+            //     Message::addErrorMessage(Label::getLabel('Lbl_invalid_Selection_of Booking_Field'));
+            //     FatUtility::dieWithError(Message::getHtml());
+            // } //  code added on 23-08-2019
             $record->assignValues(['us_booking_before' => $post['us_booking_before']]); //  code added on 23-08-2019
         }
         $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
@@ -419,9 +425,13 @@ class AccountController extends LoggedUserController
     public function profileImageForm()
     {
         $userId = UserAuthentication::getLoggedUserId();
-        $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
-        $userSettings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
-        $profileImgFrm = $this->getProfileImageForm($isTeacher);
+        // $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
+        $userSettings = current(UserSetting::getUserSettings($userId));
+        
+        $isTeacherDashboardActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
+
+        $profileImgFrm = $this->getProfileImageForm( $isTeacherDashboardActive);
+
         $profileImgFrm->fill(['us_video_link' => $userSettings['us_video_link']]);
         $userFirstName =  UserAuthentication::getLoggedUserAttribute('user_first_name');
         $isProfilePicUploaded =  User::isProfilePicUploaded($userId);

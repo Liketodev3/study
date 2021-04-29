@@ -1,35 +1,12 @@
 <?php 
 	defined('SYSTEM_INIT') or die('Invalid Usage.'); 
 	$frmOrderSrch->developerTags['colClassPrefix'] = 'col-md-';
-	$frmOrderSrch->developerTags['fld_default_col'] = 3;
-
-	
-	// $fld = $frmOrderSrch->getField('keyword');
-	// $fld->setWrapperAttribute('class','col-md-3');
-	// $fld->developerTags['col'] = 3;
-	
-	// $fld = $frmOrderSrch->getField('status');
-	// $fld->setWrapperAttribute('class','col-md-3');
-	// $fld->developerTags['col'] = 3;
-	
-	// $fld = $frmOrderSrch->getField('date_from');
-	// $fld->setWrapperAttribute('class','col-md-3');
-	// $fld->developerTags['col'] = 2;
-	
-	// $fld = $frmOrderSrch->getField('date_to');
-	// $fld->setWrapperAttribute('class','col-md-3');
-	// $fld->developerTags['col'] = 2;
-	
-	// $submitBtnFld = $frmOrderSrch->getField('btn_submit');
-	// $submitBtnFld->setWrapperAttribute('class','col-md-4');
-	// $submitBtnFld->developerTags['col'] = 4;	
-
-	
+	$frmOrderSrch->developerTags['fld_default_col'] = 3;	
 	$frmOrderSrch->setFormTagAttribute('class', 'form form--small'); 
 	$frmOrderSrch->setFormTagAttribute('onSubmit', 'searchOrders(this); return false;'); 
 ?>
 <!-- [ PAGE ========= -->
-<main class="page">
+ <!-- <main class="page"> -->
     <div class="container container--fixed">
 
         <div class="page__head">
@@ -65,12 +42,3 @@
             </div>
             <!-- ] -->
         </div>
-        <div class="page__footer align-center">
-            <p class="small">Copyright © 2021 Yo!Coach Developed by <a href="#" class="underline color-primary">FATbit Technologies</a> . </p>
-        </div>
-
-    </div>
-
-
-</main>
-<!-- ] -->

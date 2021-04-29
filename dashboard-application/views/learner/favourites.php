@@ -9,45 +9,40 @@
 	$fld->setWrapperAttribute('class','col-md-5');
 	$fld->developerTags['col'] = 5;	
 ?>
-<section class="section section--grey section--page">
-	 <div class="container container--fixed">
-	   
-	   <div class="page-panel -clearfix">
-	   
-			<!--panel left start here-->
-			<div class="page-panel__left">
-				<?php $this->includeTemplate('account/_partial/dashboardNavigation.php'); ?>
-			</div>
-            <!--panel left end here--> 
+<!-- [ PAGE ========= -->
+ <!-- <main class="page"> -->
+    <div class="container container--fixed">
 
-	   
-			<!--panel right start here-->
-		   <div class="page-panel__right">
-				
-				 <!--page-head start here-->
-				 <div class="page-head">
-				   <div class="d-flex justify-content-between align-items-center">
-						 <div><h1><?php echo Label::getLabel('LBL_My_Teachers'); ?></h1></div>
-				 </div>
-				 </div>
-				 <!--page-head end here-->
-				 
-				 <!--page filters start here-->
-				 <div class="page-filters">
-					   <?php echo $frmFavSrch->getFormHtml(); ?>
-				   </div>
-				 <!--page filters end here-->
-			   
-				<!--Lessons list view start here-->
-				<div class="col-list-group">
-					<!--h6>Today</h6-->
-					<div class="col-list-container" id="listItems">
-						
-					</div>
-				</div>
-				<!--Lessons list view end here-->
-			</div>
-		   <!--panel right end here-->
-		</div>
-	 </div>
- </section>
+        <div class="page__head">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-sm-6">
+                    <h1> <?php echo Label::getLabel('Lbl_My_Teachers'); ?></h1>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="buttons-group d-flex align-items-center">
+                        <a href="javascript:void(0)" class="btn bg-secondary slide-toggle-js">
+                            <svg class="icon icon--clock icon--small margin-right-2">
+                                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#search'; ?>"></use>
+                            </svg>
+                            <?php echo Label::getLabel('Lbl_Search'); ?>
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- [ FILTERS ========= -->
+            <div class="search-filter slide-target-js" style="display: none;">
+                <?php echo $frmFavSrch->getFormHtml();  ?>
+            </div>
+            <!-- ] ========= -->
+
+        </div>
+
+        <div class="page__body">
+            <!-- [ PAGE PANEL ========= -->
+            <div class="page-content" id="listItems">
+            </div>
+            <!-- ] -->
+        </div>

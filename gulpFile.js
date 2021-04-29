@@ -72,9 +72,9 @@ function css(){
 } */
 
 function svg(){
-  return src('images/sprite/*.svg')
+  return src('dashboard-application/views/images/sprite/*.svg')
       .pipe(svgSprite(config))
-      .pipe(dest('images'));
+      .pipe(dest('dashboard-application/views/images'));
 }
 
 // Watch files

@@ -24,6 +24,9 @@ var testTool = window.testTool;
 var isConfirmpopOpen = false;
 const ZOOM_API_KEY = '<?php echo FatApp::getConfig('CONF_ZOOM_API_KEY', FatUtility::VAR_STRING, '') ?>';
 </script>
-<div class="box -padding-20">
-	<div id="listItems"></div>
-</div>
+<!-- [ PAGE ========= -->
+ <!-- <main class="page"> -->
+    <div class="session" id="listItems" ><!--id="listItems" -->
+    </div>
+</main>
+<!-- ] -->

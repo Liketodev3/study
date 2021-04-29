@@ -403,7 +403,64 @@ FOREIGN KEY (`testat_user_id`) REFERENCES `tbl_users` (`user_id`) ON DELETE REST
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
 ('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT', 1, 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!');
 
-
 ALTER TABLE `tbl_issues_reported` ADD `issrep_admin_comments` TEXT NULL AFTER `issrep_resolve_comments`;
 ALTER TABLE `tbl_issues_reported` ADD `issrep_updated_by_admin` DATETIME NULL AFTER `issrep_admin_comments`;
 ALTER TABLE `tbl_issues_reported` ADD `issrep_closed` TINYINT NOT NULL AFTER `issrep_updated_by_admin`;
+
+
+
+CREATE TABLE `tbl_extra_pages` (
+  `epage_id` int(11) NOT NULL,
+  `epage_identifier` varchar(255) NOT NULL,
+  `epage_type` tinyint(4) NOT NULL,
+  `epage_active` tinyint(1) NOT NULL,
+  `epage_default_content` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `tbl_extra_pages`
+--
+ALTER TABLE `tbl_extra_pages`
+  ADD PRIMARY KEY (`epage_id`);
+
+--
+-- AUTO_INCREMENT for table `tbl_extra_pages`
+--
+ALTER TABLE `tbl_extra_pages`
+  MODIFY `epage_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+CREATE TABLE `tbl_extra_pages_lang` (
+  `epagelang_epage_id` int(11) NOT NULL,
+  `epagelang_lang_id` int(11) NOT NULL,
+  `epage_label` varchar(255) NOT NULL,
+  `epage_content` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for table `tbl_extra_pages_lang`
+--
+ALTER TABLE `tbl_extra_pages_lang`
+  ADD UNIQUE KEY `epagelang_epage_id` (`epagelang_epage_id`,`epagelang_lang_id`);
+
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
+('LBL_PROFILE_INFO_HEADING', 1, 'To successfully register your profile as an expert and to you available in search results.'),
+('LBL_PROFILE_INFO_HEADING', 2, 'To successfully register your profile as an expert and to you available in search results.');
+
+INSERT INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES
+(1, 'Teacher Profile info bar', 1, 1, '<div class=\"infobar__list-content\">\r\n										<ol>\r\n											<li>Profile needs to be 80% completed</li>\r\n											<li>You have to complete lorem ipsum dolar summit text</li>\r\n											<li>After verify all the details you have to mark availbility in calendar section.</li>\r\n										</ol>\r\n									</div>');
+
+INSERT INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES
+(1, 1, 'Teacher Profile info bar', '<div class=\"infobar__list-content\">\r\n										<ol>\r\n											<li>Profile needs to be 80% completed</li>\r\n											<li>You have to complete lorem ipsum dolar summit text</li>\r\n											<li>After verify all the details you have to mark availbility in calendar section.</li>\r\n										</ol>\r\n									</div>'),
+(1, 2, 'Teacher Profile info bar', '<div class=\"infobar__list-content\">\r\n										<ol>\r\n											<li>Profile needs to be 80% completed</li>\r\n											<li>You have to complete lorem ipsum dolar summit text</li>\r\n											<li>After verify all the details you have to mark availbility in calendar section.</li>\r\n										</ol>\r\n									</div>');
+
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
+('LBL_NO_RECORD_FLASH_CARD_TITLE', 1, "You havn't added any <span>Flash-card</span> yet"),
+('LBL_NO_RECORD_FLASH_CARD_TITLE', 2, "You havn't added any <span>Flash-card</span> yet"),
+('LBL_NO_RECORD_FLASH_CARD_TEXT', 1, 'Click on the button "Add Flash-card" to add it. It will help you during the class'),
+('LBL_NO_RECORD_FLASH_CARD_TEXT', 2, 'Click on the button "Add Flash-card" to add it. It will help you during the class');

@@ -689,6 +689,20 @@ p {
         -ms-transform: rotate(-45deg) translate(0, -78%);
             transform: rotate(-45deg) translate(0, -78%); }
 
+.menu--steps li.profile--progress--menu:not(.is-completed) > a {
+  opacity: 1; }
+
+.menu--steps li.profile--progress--menu:not(.is-completed) .menu__icon {
+  background-color: var(--color-yellow);
+  display: block; }
+  .menu--steps li.profile--progress--menu:not(.is-completed) .menu__icon:before {
+    width: 9px;
+    height: 5px;
+    position: absolute;
+    left: 38%;
+    content: "!";
+    color: #fff; }
+
 @media (max-width: 1199px) {
   .menu--steps {
     border-bottom: 1px solid var(--color-primary);
@@ -862,6 +876,86 @@ p {
     right: 0;
     top: 0;
     bottom: 0; } }
+
+.montly-lesson-calendar .fc-header-toolbar {
+  padding: var(--padding-6) var(--padding-6) 0;
+  margin: 0 !important; }
+
+.montly-lesson-calendar .fc-view-harness {
+  margin: var(--padding-6); }
+  .montly-lesson-calendar .fc-view-harness .fc-scrollgrid {
+    border: 1px solid var(--color-gray-200); }
+
+.fc-scroller-harness .fc-col-header-cell {
+  border: 1px solid var(--color-gray-200); }
+  .fc-scroller-harness .fc-col-header-cell .fc-scrollgrid-sync-inner {
+    height: 40px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center; }
+    .fc-scroller-harness .fc-col-header-cell .fc-scrollgrid-sync-inner a {
+      text-transform: uppercase;
+      font-weight: 600; }
+
+.fc-scroller-harness .fc-scrollgrid-sync-table .fc-daygrid-day {
+  border: 1px solid var(--color-gray-200); }
+  .fc-scroller-harness .fc-scrollgrid-sync-table .fc-daygrid-day .fc-daygrid-event {
+    background: var(--color-gray-100);
+    padding: var(--padding-4) var(--padding-3);
+    height: 50px;
+    border-left: 2px solid var(--color-primary);
+    border-radius: 0;
+    margin-left: var(--margin-2);
+    margin-right: var(--margin-2);
+    margin-bottom: var(--margin-1) !important; }
+
+.fc-scrollgrid-section td {
+  border: none; }
+
+.fc-daygrid-day-frame .fc-daygrid-day-top {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+
+.fc-button-group .fc-button {
+  background: transparent;
+  border-radius: 0;
+  margin: var(--margin-1);
+  -webkit-box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.07);
+          box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.07);
+  border: 1px solid var(--color-gray-200);
+  width: 2.70rem;
+  height: 2.70rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 3px; }
+
+.fc-button-group .fc-button:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none; }
+
+.fc-button-group .fc-button:last-child {
+  margin: var(--margin-1) !important; }
+
+.fc-button-group .fc-button .fc-icon {
+  color: var(--color-black); }
+
+.fc-button-group .fc-button:hover {
+  background-color: transparent;
+  border-color: var(--color-gray-200); }
 
 .menu-vertical li a {
   display: block;
@@ -3360,6 +3454,23 @@ div.tagsinput div {
     .select2-container .select2-selection--single .select2-selection__arrow b {
       border-width: 6px 5px 0 5px !important; }
 
+.language {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+  .language .my_teacher_lang_heading {
+    margin-right: 4px; }
+  .language .btn--equal {
+    width: 2.5rem;
+    height: 2.5rem;
+    min-width: 2.5rem; }
+    .language .btn--equal .icon {
+      width: 15px;
+      height: 15px; }
+
 .list-container {
   position: relative; }
 
@@ -3977,15 +4088,11 @@ div.tagsinput div {
         position: static; } }
 
 .search-filter {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+  position: relative;
   background-color: var(--color-white);
   border-radius: var(--radius-1);
   padding: var(--padding-5) var(--padding-6) var(--padding-2);
-  -webkit-box-shadow: var(--boxShadow-vertical);
-          box-shadow: var(--boxShadow-vertical);
+  margin: var(--padding-6) 0;
   z-index: 3; }
 
 @media (max-width: 576px) {

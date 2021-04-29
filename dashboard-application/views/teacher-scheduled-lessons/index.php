@@ -1,7 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 
- <!-- [ PAGE ========= -->
- <main class="page">
+
 	<div class="container container--fixed">
 		<div class="page__head">
 			<h1><?php echo Label::getLabel('LBL_Manage_Lessons'); ?></h1>
@@ -161,12 +160,9 @@
 			</div>
 			<!-- ] -->
 		</div>
-		<div class="page__footer align-center">
-			<p class="small">Copyright © 2021 Yo!Coach Developed by <a href="#" class="underline color-primary">FATbit Technologies</a> . </p>
-		</div>
-	</div>
-</main>
+	
 <!-- ] -->
+<?php if(!empty($upcomingLesson)){ ?>
 <script>
 	
 jQuery(document).ready(function () {
@@ -177,3 +173,4 @@ jQuery(document).ready(function () {
         });
 });
 </script>
+<?php } ?>

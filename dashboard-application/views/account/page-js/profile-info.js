@@ -33,7 +33,7 @@ $(document).ready(function () {
 
 	getTeacherProfileProgress = function (showMessage) {
 		showMessage = (showMessage) ? showMessage : true;
-		if (!userIsTeacher) {
+		if (!userIsTeacher || !isTeacherDashboardTabActive) {
 			return;
 		}
 
@@ -53,14 +53,24 @@ $(document).ready(function () {
 				$.each(data.teacherProfileProgress, function (key, value) {
 					
 					switch (key) {
+
+						case 'isProfileCompleted':
+							if(value){
+								$('.is-profile-complete-js').removeClass('infobar__media-icon--alert').addClass('infobar__media-icon--tick');
+								$('.is-profile-complete-js').html('');
+							}else{
+								$('.is-profile-complete-js').removeClass('infobar__media-icon--tick').addClass('infobar__media-icon--alert');
+								$('.is-profile-complete-js').html('!');
+							}
+						break;
+						
 						case 'generalAvailabilityCount':
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.general-availability-js').parent('li').removeClass('is-completed');
-								$('.general-availability-progress-js').removeClass('is-active');
+								
 							} else {
 								$('.general-availability-js').parent('li').addClass('is-completed');
-								$('.general-availability-progress-js').addClass('is-active');
 							}
 							break;
 						// case 'userCountryId':
@@ -70,51 +80,40 @@ $(document).ready(function () {
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.profile-Info-js').parent('li').removeClass('is-completed');
-								$('.profile-Info-progress-js').removeClass('is-active');
 							} else {
 								$('.profile-Info-js').parent('li').addClass('is-completed');
-								$('.profile-Info-progress-js').addClass('is-active');
 							}
 							break;
 						case 'uqualificationCount':
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.teacher-qualification-js').parent('li').removeClass('is-completed');
-								$('.teacher-qualification-progress-js').removeClass('is-active');
 							} else {
 								$('.teacher-qualification-js').parent('li').addClass('is-completed');
-								$('.teacher-qualification-progress-js').addClass('is-active');
 							}
 							break;
 						case 'teachLangCount':
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.teacher-tech-lang-price-js').parent('li').removeClass('is-completed');
-								$('.teacher-lang-price-progress-js').removeClass('is-active');
 							} else {
 								$('.teacher-tech-lang-price-js').parent('li').addClass('is-completed');
-								$('.teacher-lang-price-progress-js').addClass('is-active');
 							}
 							break;
 						case 'slanguageCount':
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.teacher-lang-form-js').parent('li').removeClass('is-completed');
-								$('.teacher-lang-progress-js').removeClass('is-active');
-								
 							} else {
 								$('.teacher-lang-form-js').parent('li').addClass('is-completed');
-								$('.teacher-lang-progress-js').addClass('is-active');
 							}
 							break;
 						case 'preferenceCount':
 							value = parseInt(value);
 							if (0 >= value) {
 								$('.teacher-preferences-js').parent('li').removeClass('is-completed');
-								$('.teacher-preferences-progress-js').removeClass('is-active');
 							} else {
 								$('.teacher-preferences-js').parent('li').addClass('is-completed');
-								$('.teacher-preferences-progress-js').addClass('is-active');
 							}
 							break;
 						case 'percentage':
@@ -122,11 +121,15 @@ $(document).ready(function () {
 							value = value + "%";
 							$('.teacher-profile-progress-bar-js').css({ "width": value });
 							break;
-						case 'totalFields':
 						case 'totalFilledFields':
+							$('.progress__step').removeClass('is-active');
+							for (let totalFilledFields = 0; totalFilledFields < value; totalFilledFields++) {
+								$('.progress__step').eq(totalFilledFields).addClass('is-active');
+							}
 							value = data.teacherProfileProgress.totalFilledFields + "/" + data.teacherProfileProgress.totalFields;
 							$('.progress-count-js').text(value);
 							break;
+						
 					}
 				});
 			}
@@ -225,7 +228,6 @@ $(document).ready(function () {
 			}
 			
 			if(gotoProfileImageForm){
-				debugger;
 				$('.profile-imag-li').click();
 			}
 			// else{
@@ -246,13 +248,14 @@ $(document).ready(function () {
 	};
 
 
-	setupTeacherPreferences = function (frm, goToPaymentForm) {
+	setupTeacherPreferences = function (frm, goAvailablityForm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function (t) {
 			//$.mbsmessage.close();
-			if(goToPaymentForm) {
-				bankInfoForm();
+			if(goAvailablityForm) {
+				$('.general-availability-js').trigger('click');
+				window.location = fcom.makeUrl('Teacher', 'availability');
 			}else if(userIsTeacher){
 				getTeacherProfileProgress();
 			}
@@ -312,11 +315,14 @@ $(document).ready(function () {
 		jQuery.grep(newTeachLangs, function (el) {
 			if (jQuery.inArray(el, teachLangs) == -1) difference.push(el);
 		});
-
+		
 		if (difference.length <= 0) {
+			$.loader.show();
 			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
 				//$.mbsmessage.close();
-				teacherLanguagesForm();
+				// teacherLanguagesForm();
+				$.loader.hide();
+				getTeacherProfileProgress();
 			});
 			return;
 		}
@@ -330,10 +336,10 @@ $(document).ready(function () {
 					btnClass: 'btn btn--primary',
 					keys: ['enter', 'shift'],
 					action: function () {
+						$.loader.show();
 						fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
-							//$.mbsmessage.close();
-							teacherLanguagesForm();
-							// $("#teacher-tech-lang-price-js").click();
+							$.loader.hide();
+							getTeacherProfileProgress();
 						});
 					}
 				},
@@ -354,6 +360,26 @@ $(document).ready(function () {
 				getTeacherProfileProgress();
 			}
 		});
+	};
+
+	changeProficiency = function (obj, langId) {
+		langId = parseInt(langId);
+		if(langId <= 0){
+			return;
+		}
+		let value = obj.value;
+		slanguageSection = '.slanguage-'+langId;
+		slanguageCheckbox = '.slanguage-checkbox-'+langId;
+		if(value == ''){
+			$(slanguageSection).find('.badge-js').remove();
+			$(slanguageSection).removeClass('is-selected');
+			$(slanguageCheckbox).prop('checked',false);
+		}else{
+			$(slanguageSection).addClass('is-selected');
+			$(slanguageCheckbox).prop('checked',true);
+			$(slanguageSection).find('.badge-js').remove();
+			$(slanguageSection).find('.selection__trigger-label').append('<span class="badge color-secondary badge-js  badge--round badge--small margin-0">'+obj.selectedOptions[0].innerHTML+'</span>');
+		}
 	};
 
 
@@ -401,18 +427,6 @@ $(document).ready(function () {
 
 		});
 	};
-
-	teacherGeneralAvailability = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherGeneralAvailability'), '', function (t) {
-			$(dv).html(t);
-			if (userIsTeacher) {
-				getTeacherProfileProgress();
-			}
-
-		});
-	};
-
 
 	deleteLanguageRow = function (id) {
 		$.confirm({
@@ -466,40 +480,6 @@ $(document).ready(function () {
 		});
 	};
 
-	teacherWeeklySchedule = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherWeeklySchedule'), '', function (t) {
-			$(dv).html(t);
-
-		});
-	};
-
-	setupTeacherWeeklySchedule = function (frm) {
-		$(dv).html(fcom.getLoader());
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherWeeklySchedule'), 'data=' + frm, function (t) {
-			teacherWeeklySchedule()
-			//$("#w_calendar").fullCalendar("refetchEvents");
-		});
-	};
-
-	setupTeacherGeneralAvailability = function (frm) {
-		$(dv).html(fcom.getLoader());
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherGeneralAvailability'), 'data=' + frm, function (t) {
-			teacherGeneralAvailability();
-			//$("#ga_calendar").fullCalendar("refetchEvents");
-		});
-	};
-
-	deleteTeacherGeneralAvailability = function (id) {
-		if (confirm(langLbl['confirmRemove'])) {
-			$('#ga_calendar').fullCalendar('removeEvents', id);
-			//  fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherGeneralAvailability',[id]), '' , function(t) {
-			// 		if(userIsTeacher) {
-			// 		  getTeacherProfileProgress(false);
-			// 		}
-			// });
-		}
-	};
 
 	teacherPreferences = function () {
 		$(dv).html(fcom.getLoader());
@@ -738,87 +718,12 @@ $(document).ready(function () {
 					getLangProfileInfoForm(t.langId);
 					return;
 				}
-			}else if($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0){
+			}
+			else if($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0){
 				$('.profile-lang-tab.is-active').next('.profile-lang-tab').find('a').click();
 			}
 			
 		});
-	};
-
-	saveGeneralAvailability = function () {
-		var allevents = calendar.getEvents();
-		let data = allevents.map(function (e) {
-			return {
-				start: moment(e.start).format('HH:mm:ss'),
-				end: moment(e.end).format('HH:mm:ss'),
-				startTime: moment(e.start).format('HH:mm'),
-				endTime: moment(e.end).format('HH:mm'),
-				day: moment(e.start).format('d'),
-				dayStart: moment(e.start).format('d'),
-				dayEnd: moment(e.end).format('d'),
-				classtype: e.classType,
-			};
-		});
-
-		data.forEach(element => {
-
-			if ((element.dayStart != element.dayEnd)
-				&&
-				((element.endTime != '00:00') || (element.startTime == '00:00'))
-			) {
-
-				if ((element.dayEnd - element.dayStart == 1)) {
-
-					if ((element.endTime != '00:00') || (element.startTime != '00:00')) {
-
-						let elementClone = $.parseJSON(JSON.stringify(element));
-						elementClone.day = parseInt(element.dayEnd);
-						elementClone.start = '00:00:00';
-						elementClone.startTime = '00:00';
-						data[data.length] = elementClone;
-					}
-				} else {
-
-					for (let index = 0; index < element.dayEnd - element.dayStart; index++) {
-
-						if ((element.endTime == '00:00') && (parseInt(element.dayStart) + index + 1 == element.dayEnd)) {
-
-							continue;
-						}
-						let elementClone = $.parseJSON(JSON.stringify(element));
-						elementClone.day = parseInt(element.dayStart) + index + 1;
-						elementClone.start = '00:00:00';
-						elementClone.startTime = '00:00';
-						if (index + 1 != element.dayEnd - element.dayStart) {
-							elementClone.end = '24:00:00';
-							elementClone.endTime = '24:00';
-						}
-						data[data.length] = elementClone;
-					}
-				}
-				element.end = '24:00:00';
-				element.endTime = '24:00';
-			}
-		});
-		var json = JSON.stringify(data);
-
-		setupTeacherGeneralAvailability(json);
-	};
-
-	setUpWeeklyAvailability = function () {
-		var json = JSON.stringify(calendar.getEvents().map(function (e) {
-
-			return {
-				start: moment(e.start).format('HH:mm:ss'),
-				end: moment(e.end).format('HH:mm:ss'),
-				date: moment(e.start).format('YYYY-MM-DD'),
-				_id: e.extendedProps._id,
-				action: e.extendedProps.action,
-				classtype: e.extendedProps.classType,
-			};
-		}));
-
-		setupTeacherWeeklySchedule(json);
 	};
 
 })();

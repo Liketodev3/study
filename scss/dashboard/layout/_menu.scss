@@ -174,6 +174,19 @@
                 }
             }
         }
+        li.profile--progress--menu{
+            &:not(.is-completed){
+                & > a{opacity: 1;}
+                .#{$menu}{
+                    &__icon{background-color:var(--color-yellow); display: block;
+                        &:before{width:9px; height: 5px; position: absolute;left:38%; content:"!";color: #fff;}
+                    }
+                }
+            }
+        }
+
+
+        
 
         @media(max-width:theme('breakpoints.xl','value')){
             & {border-bottom: 1px solid theme('color.primary'); padding-#{theme('direction.right','value')}: 1rem;

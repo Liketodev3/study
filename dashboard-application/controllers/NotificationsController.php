@@ -25,21 +25,16 @@ class NotificationsController extends LoggedUserController
             'notification_id as noti_id',
             'notification_sub_record_id as noti_sub_record_id',
         ]);
-
         $srchNotification->setPageNumber($page);
         $srchNotification->setPageSize($pagesize);
         $rs = $srchNotification->getResultSet();
         $list = FatApp::getDb()->fetchAll($rs);
         $pages = $srchNotification->pages();
         $recordCount = $srchNotification->recordCount();
-        $startRecord = ($page - 1) * $pagesize + 1;
-        $endRecord = $pagesize;
-        if ($recordCount < $endRecord) {
-            $endRecord = $recordCount;
-        }
         $this->set('list', $list);
         $this->set('page', $page);
         $this->set('pageCount', $pages);
+        $this->set('pagesize', $pagesize);
         $this->set('recordCount', $recordCount);
         $this->set('postedData', $post);
         $this->_template->render(false, false);
@@ -108,11 +103,10 @@ class NotificationsController extends LoggedUserController
     {
         $notificationIds = FatApp::getPostedData('record_ids');
         if (!UserNotifications::deleteNotifications($notificationIds)) {
-            Message::addErrorMessage(Label::getLabel("ERROR_UNBALE_TO_DELETE", $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel("ERROR_UNBALE_TO_DELETE", $this->siteLangId));
         }
-        $this->set('msg', Label::getLabel('LBL_Notification_Deleted_Successfully!'));
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Notification_Deleted_Successfully!'));
+        
     }
 
     public function changeStatus()
@@ -121,13 +115,13 @@ class NotificationsController extends LoggedUserController
         $status = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
         $markread = FatApp::getPostedData('markread', FatUtility::VAR_INT, 0);
         if (!UserNotifications::changeNotifyStatus($status, $notificationIds)) {
-            Message::addErrorMessage(Label::getLabel("ERROR_UNBALE_TO_UPDATE_THE_STATUS", $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel("ERROR_UNBALE_TO_UPDATE_THE_STATUS", $this->siteLangId));
         }
+        $msg = '';
         if ($markread != 1) {
-            $this->set('msg', Label::getLabel('LBL_Status_Updated_Successfully!'));
+            $msg = Label::getLabel('LBL_Status_Updated_Successfully!', $this->siteLangId);
         }
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess($msg);
     }
 
 }

@@ -1,3 +1,9 @@
+        <div class="page__footer align-center">
+            <p class="small">Copyright © 2021 Yo!Coach Developed by <a href="#" class="underline color-primary">FATbit Technologies</a> . </p>
+        </div>
+    </div>
+</main>
+    <!-- ] -->
 </div>
 <!-- Custom Loader -->
 <div class="loading-wrapper" style="display: none;">

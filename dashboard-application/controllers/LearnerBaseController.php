@@ -22,10 +22,11 @@ class LearnerBaseController extends LoggedUserController
         $frm->addSelectBox(Label::getLabel('LBL_Status'), 'status', ScheduledLesson::getStatusArr() + [ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported')], '', [], Label::getLabel('LBL_All'))->requirements()->setInt();
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
-        $frm->addHiddenField('', 'show_group_classes', ApplicationConstants::NO);
+        $classType = applicationConstants::getClassTypes($this->siteLangId);
+        $frm->addSelectBox(Label::getLabel('LBL_Class_Type'), 'class_type', $classType, '', [], Label::getLabel('LBL_Group/one_to_one_class'));
         $btnSubmit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search'));
         $btnReset = $frm->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset'));
-        $btnSubmit->attachField($btnReset);
+        // $btnSubmit->attachField($btnReset);
         return $frm;
     }
 

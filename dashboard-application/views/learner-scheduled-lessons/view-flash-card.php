@@ -25,8 +25,4 @@
 			<td><?php echo FatDate::format($flashCardData['flashcard_added_on'], true); ?></td>
 		</tr>
 	</table>
-	
-	
-	
-	
 </div>

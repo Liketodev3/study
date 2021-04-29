@@ -9,7 +9,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->_template->addJs('js/jquery-confirm.min.js');
     }
 
-    public function index()
+    public function index($classType = '')
     {
         $this->_template->addJs('js/learnerLessonCommon.js');
         $this->_template->addJs('js/moment.min.js');
@@ -20,12 +20,25 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $this->_template->addJs("js/locales/$currentLangCode.js");
             }
         }
+        $classTypes = applicationConstants::getClassTypes($this->siteLangId);
+        if(!array_key_exists($classType, $classTypes)){
+            $classType = '';
+        }
+
         $this->_template->addJs(['js/jquery.barrating.min.js']);
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $frmSrch = $this->getSearchForm();
+        $frmSrch->getField('class_type')->value =  $classType;
         $this->set('frmSrch', $frmSrch);
         $lessonStatuses = ScheduledLesson::getStatusArr();
         $lessonStatuses += [ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported')];
+        $srch = new stdClass();
+        $this->searchLessons($srch, ['status' => ScheduledLesson::STATUS_UPCOMING], false, false);
+        $srch->doNotCalculateRecords();
+        $srch->setPageSize(1);
+        $srch->addOrder('CONCAT(slns.slesson_date, " ", slns.slesson_start_time)', 'ASC');
+        $upcomingLesson = FatApp::getDb()->fetch($srch->getResultSet());
+        $this->set('upcomingLesson', $upcomingLesson);
         $this->set('lessonStatuses', $lessonStatuses);
         $this->_template->render();
     }
@@ -44,9 +57,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         $srch->joinIssueReported(UserAuthentication::getLoggedUserId());
         $srch->joinLessonRescheduleLog();
+        $srch->joinLessonPLan();
         $srch->addFld([
             'IFNULL(iss.issrep_status,0) AS issrep_status',
             'IFNULL(iss.issrep_id,0) AS issrep_id',
+            'IFNULL(lp.tlpn_id,0) AS isLessonPlanAttach',
+            'lp.tlpn_title',
             'IFNULL(lrsl.lesreschlog_id,0) as lessonReschedulelogId',
             'IFNULL(iss.issrep_issues_resolve_type,0) AS issrep_issues_resolve_by',
             'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime',
@@ -58,6 +74,16 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $srch->addCondition('lrsl.lesreschlog_id', '>', '0');
             $srch->addCondition('slns.slesson_status', 'IN', [ScheduledLesson::STATUS_SCHEDULED, ScheduledLesson::STATUS_NEED_SCHEDULING]);
         }
+
+        switch($post['class_type']){
+            case ApplicationConstants::CLASS_TYPE_GROUP :
+                $srch->addCondition('slesson_grpcls_id', '>', 0);
+            break;
+            case ApplicationConstants::CLASS_TYPE_1_TO_1 :
+                $srch->addCondition('slesson_grpcls_id', '=', 0);
+            break;
+        }
+
         $srch->addOrder('slesson_status', 'ASC');
         $srch->addOrder('upcomingLessonOrder', 'DESC');
         $srch->addOrder('passedLessonsOrder', 'DESC');
@@ -168,6 +194,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $cnd = $srch->addCondition('ut.user_first_name', 'like', '%' . $keyword . '%');
                 $cnd->attachCondition('ut.user_last_name', 'like', '%' . $keyword . '%');
                 $cnd->attachCondition('sldetail_order_id', 'like', '%' . $keyword . '%');
+                $cnd->attachCondition('grpcls_title', 'like', '%' . $keyword . '%');
+                $cnd->attachCondition('grpclslang_grpcls_title', 'like', '%' . $keyword . '%');
             }
         }
         if (isset($post) && !empty($post['status'])) {
@@ -202,7 +230,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::exitWithErrorCode(404);
         }
         $lessonId = $lessonDetailRow['sldetail_slesson_id'];
-        $lessonRow = ScheduledLesson::getAttributesById($lessonId, ['slesson_id', 'slesson_grpcls_id']);
+        $lessonRow = ScheduledLesson::getAttributesById($lessonId, ['slesson_id','slesson_teacher_id', 'slesson_grpcls_id']);
         if (!$lessonRow || $lessonRow['slesson_id'] != $lessonId) {
             FatUtility::exitWithErrorCode(404);
         }
@@ -219,11 +247,22 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 $this->_template->addJs("js/locales/$currentLangCode.js");
             }
         }
+        $lessonRow['learnerId'] = $lessonDetailRow['sldetail_learner_id'];
+        $lessonRow['teacherId'] = $lessonRow['slesson_teacher_id'];
+        $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
+        if ($flashCardEnabled) {
+            /* flashCardSearch Form[ */
+            $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
+            $frmSrchFlashCard->fill(['lesson_id' => $lessonRow['slesson_id']]);
+            $this->set('frmSrchFlashCard', $frmSrchFlashCard);
+            /* ] */
+        }
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $this->_template->addJs(['js/jquery.barrating.min.js']);
         $this->set('lessonRow', $lessonRow);
         $this->set('lessonId', $lessonRow['slesson_id']);
         $this->set('lDetailId', $lDetailId);
+        $this->set('showFlashCard', $flashCardEnabled);
         $this->_template->render();
     }
 
@@ -253,7 +292,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addCondition('sld.sldetail_id', '=', $lDetailId);
         $srch->joinIssueReported(UserAuthentication::getLoggedUserId());
         $srch->joinLearnerCountry($this->siteLangId);
+        $srch->joinLessonPLan();
         $srch->addFld([
+            'IFNULL(lp.tlpn_id,0) AS isLessonPlanAttach',
+            'lp.tlpn_title',
             'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             'ul.user_first_name as learnerFname',
             'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',

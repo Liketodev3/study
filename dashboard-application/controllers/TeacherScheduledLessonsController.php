@@ -194,8 +194,20 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Access_Denied'));
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons'));
         }
+        $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
+        
+        $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
+        if ($flashCardEnabled) {
+            /* flashCardSearch Form[ */
+            $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
+            $frmSrchFlashCard->fill(['lesson_id' => $lessonId]);
+            $this->set('frmSrchFlashCard', $frmSrchFlashCard);
+            /* ] */
+        }
+
         $this->set('lessonRow', $lessonRow);
         $this->set('lessonId', $lessonRow['slesson_id']);
+        $this->set('showFlashCard', $flashCardEnabled);
         $this->_template->addJs('js/teacherLessonCommon.js');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
@@ -214,9 +226,12 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->joinGroupClass($this->siteLangId);
         $srch->doNotCalculateRecords();
         $srch->joinLessonRescheduleLog();
+        $srch->joinLessonPLan();
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
         $srch->joinTeacherCountry($this->siteLangId);
         $srch->addFld([
+            'IFNULL(lp.tlpn_id,0) AS isLessonPlanAttach',
+            'lp.tlpn_title',
             'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             'slns.slesson_teacher_id as teacherId',
             'ut.user_first_name as teacherFname',
@@ -231,6 +246,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->addGroupBy('slesson_id');
         $srch->addMultipleFields([
             'group_concat(CONCAT(ul.user_first_name, " ", ul.user_last_name) separator "^") AS learnerFullName',
+            'group_concat(ul.user_id separator "^") AS learnerIds',
             'group_concat(IFNULL(learnercountry_lang.country_name, ifnull(learnercountry.country_code, "")) separator "^") AS learnerCountryName',
         ]);
         $rs = $srch->getResultSet();

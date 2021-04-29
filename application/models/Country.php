@@ -67,14 +67,18 @@ class Country extends MyAppModel
         return $row;
     }
 
-    public static function getCountryById($countryId)
+    public static function getCountryById(int $countryId) : array
     {
+        $langId = CommonHelper::getLangId();
         $srch = new SearchBase(static::DB_TBL, 'c');
-        $srch->addMultipleFields(['country_id', 'country_name']);
-        $srch->joinTable(Country::DB_TBL_LANG, 'inner join', 'country_id = countrylang_country_id');
+        $srch->addMultipleFields(['country_id', 'IFNULL(country_name, "") as country_name']);
+        $srch->joinTable(Country::DB_TBL_LANG, 'LEFT join', 'country_id = countrylang_country_id and countrylang_lang_id = '.$langId);
         $srch->addCondition('country_id', '=', $countryId);
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
+        if(empty($row)){
+            return [];
+        }
         return $row;
     }
 

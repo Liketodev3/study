@@ -33,15 +33,20 @@ $closeSystemMessages = FatApp::getConfig("CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES",
 $closeSystemMessages = ($closeSystemMessages <= 0) ? 3 : $closeSystemMessages;
 $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $siteLangId, FatUtility::VAR_STRING, '');
 
-$loggedUserFirstName =  UserAuthentication::getLoggedUserAttribute('user_first_name');
-$loggedUserLastName =  UserAuthentication::getLoggedUserAttribute('user_last_name');
+$loggedUserFirstName = $userDetails['user_first_name'];
+$loggedUserLastName = $userDetails['user_last_name'];
 $loggedUserFullName = $loggedUserFirstName.' '.$loggedUserLastName;
+$loggedUserId = UserAuthentication::getLoggedUserId();
+
 
 $currentActiveTab =  User::getDashboardActiveTab();
 $canViewTeacherTab =  User::canViewTeacherTab();
 $isUserTeacher =   User::isTeacher();
 
 $bodyClass = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) ? 'dashboard-teacher' : 'dashboard-learner';
+
+$msgCnt = CommonHelper::getUnreadMsgCount();
+$unreadNotifications = UserNotifications::getUserUnreadNotifications($loggedUserId);
 ?>
 <script type="text/javascript">
 	
@@ -51,7 +56,8 @@ $bodyClass = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) ? '
 		var currencySymbolRight = '<?php echo $currencySymbolRight; ?>';
 		var SslUsed = '<?php $sslUsed; ?>';
 		var cookieConsent = <?php echo json_encode($cookieConsent); ?>;
-	
+        var timeZoneOffset = '<?php echo MyDate::getOffset(MyDate::getUserTimeZone()); ?>';
+
 		const CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = '<?php echo $closeSystemMessages; ?>';
 		const CONF_AUTO_CLOSE_SYSTEM_MESSAGES = '<?php echo FatApp::getConfig("CONF_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 0); ?>';
 
@@ -107,21 +113,21 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                         </li>
 
                         <li class="menu__item menu__item-home">
-                            <a href="#" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Home'); ?>">
+                            <a href="<?php echo CommonHelper::generateUrl('Account'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Home'); ?>">
                                 <svg class="icon icon--home"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#home'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Home'); ?></span>
                             </a>
                         </li>
 
-                        <li class="menu__item menu__item-messaging">
-                            <a href="<?php echo CommonHelper::generateUrl('Messages'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Messaging'); ?>" >  <!-- add  data-count="{count}" if any unread message -->
+                        <li class="menu__item menu__item-messaging  <?php echo ($controllerName == 'Messages') ? 'is-active' : ''; ?>">
+                            <a href="<?php echo CommonHelper::generateUrl('Messages'); ?>" class="menu__item-trigger" <?php echo ($msgCnt > 0) ? 'data-count="'.$msgCnt.'"' : ""; ?> title="<?php echo Label::getLabel('LBL_Messaging'); ?>" >  <!-- add  data-count="{count}" if any unread message -->
                                 <svg class="icon icon--messaging"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#message'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Messaging'); ?></span>
                             </a>
                         </li>
 
-                        <li class="menu__item menu__item-notifications">
-                            <a href="<?php echo CommonHelper::generateUrl('Notifications'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Notificatons'); ?>" > <!-- add  data-count="{count}" if any unread Notificatons -->
+                        <li class="menu__item menu__item-notifications <?php echo ($controllerName == 'Notifications') ? 'is-active' : ''; ?> ">
+                            <a href="<?php echo CommonHelper::generateUrl('Notifications'); ?>" class="menu__item-trigger" <?php echo ($unreadNotifications > 0) ? 'data-count="'.$unreadNotifications.'"' : ""; ?> title="<?php echo Label::getLabel('LBL_Notificatons'); ?>" > <!-- add  data-count="{count}" if any unread Notificatons -->
                                 <svg class="icon icon--notificatons"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#notification'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Notificatons'); ?></span>
                             </a>
@@ -155,7 +161,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                             </div>
                         </li>
 						<?php }  if ($currentActiveTab == User::USER_LEARNER_DASHBOARD) { ?>
-                        <li class="menu__item menu__item-favorites">
+                        <li class="menu__item menu__item-favorites <?php echo ($controllerName == 'Learner' && $action == 'favourites') ? 'is-active' : ''; ?>">
                             <a href="<?php echo CommonHelper::generateUrl('Learner', 'favourites'); ?>" class="menu__item-trigger" title="<?php echo Label::getLabel('LBL_Favorites'); ?>">
                                 <svg class="icon icon--favorites"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#favorite'; ?>"></use></svg>
                                 <span class="sr-only"><?php echo Label::getLabel('LBL_Favorites'); ?></span>
@@ -175,7 +181,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
             <!-- [ SIDE BAR PRIMARY ========= -->
             <div id="sidebar__primary" class="sidebar__primary">
                 <div class="sidebar__head">
-                    <figure class="logo"><a href="<?php echo CommonHelper::generateUrl(); ?>"><img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo $websiteName; ?>"></a></figure>              
+                    <figure class="logo"><a href="<?php echo CommonHelper::generateUrl('','',[],CONF_WEBROOT_FRONT_URL); ?>"><img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo $websiteName; ?>"></a></figure>              
                         <!-- [ PROFILE ========= -->
                         <div class="profile">
 
@@ -203,13 +209,27 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                             <div id="profile-target" class="profile__target">
                                 <div class="profile__target-details">
                                     <table>
-                                        <tr>
+                                        <?php 
+                                            $countryDetails =  Country::getCountryById($userDetails['user_country_id']);
+                                            if (!empty($countryDetails['country_name'])) {
+                                                ?>
+                                        <tr> 
                                             <th><?php echo label::getLabel('LBL_Location'); ?></th>
-                                            <td>France</td> 
+                                            <td>
+                                             <?php echo $countryDetails['country_name']; ?>
+                                            </td> 
                                         </tr>
+                                        <?php } ?>
                                         <tr>
                                             <th><?php echo label::getLabel('LBL_Time_Zone'); ?></th>
-                                            <td>12:20 PM (UTC +01:00)</td>
+                                            <td>
+                                                <?php 
+                                                    $userTimeZone = MyDate::getUserTimeZone($loggedUserId);
+                                                    $timezoneStr = CommonHelper::getDateOrTimeByTimeZone($userTimeZone, 'h:i A');
+                                                    echo $timezoneStr." (" . Label::getLabel('LBL_TIMEZONE_STRING') . " " . CommonHelper::getDateOrTimeByTimeZone($userTimeZone, 'P') . ")";
+                                                   
+                                                ?>
+                                            </td>
                                         </tr>
                                     </table>
                                     <span class="-gap-10"></span>
@@ -230,13 +250,23 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                 </div>
                 <div class="sidebar__body">
                     <div class="sidebar__scroll">
-                        <div id="primary-nav" class="menu-offset">
+                        <div id="primary-nav" class="menu-offset"><!-- Display flashcard list on left sidebar in lesson view page  -->
                             <?php
+                                $templateVariable = ['controllerName' => $controllerName, 'action' => $action];
                                 $sidebarMenuLayout = 'learner/_partial/learnerDashboardNavigation.php';
                                 if (User::canViewTeacherTab() && User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) {
                                     $sidebarMenuLayout = 'teacher/_partial/teacherDashboardNavigation.php';
                                 }
-                                $this->includeTemplate($sidebarMenuLayout, ['controllerName' => $controllerName, 'action' => $action]);
+                                if(isset($showFlashCard) && $showFlashCard) {
+                                  
+                                    $templateVariable['frmSrchFlashCard'] = $frmSrchFlashCard;
+                                    $templateVariable['lessonRow'] = $lessonRow;
+                                    $sidebarMenuLayout = 'learner/_partial/flashCardSidebarView.php';
+                                    if ($currentActiveTab == User::USER_TEACHER_DASHBOARD) {
+                                        $sidebarMenuLayout = 'teacher/_partial/flashCardSidebarView.php';
+                                    }
+                                }
+                                $this->includeTemplate($sidebarMenuLayout, $templateVariable);
                             ?>   
                         </div>
                     </div>
@@ -245,3 +275,5 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
             <!-- ] -->
         </aside>
         <!-- ] -->
+        <main class="page">
+            

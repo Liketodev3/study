@@ -2,17 +2,14 @@
 
 class LoggedUserController extends MyAppController
 {
-
+    protected $userDetails = [];
     public function __construct($action)
     {
         parent::__construct($action);
         UserAuthentication::checkLogin();
-        $userRow = $this->verifyLoggedUser();
-        if (CommonHelper::getLayoutDirection() == 'rtl') {
-            // $this->_template->addCss(['css/common-rtl.css', 'css/dashboard-rtl.css']);
-        } else {
-            // $this->_template->addCss(['css/common-ltr.css', 'css/dashboard-ltr.css']);
-        }
+        $this->userDetails = $this->verifyLoggedUser();
+        
+        $this->set('userDetails',$this->userDetails);
     }
 
     private function verifyLoggedUser()
@@ -21,9 +18,10 @@ class LoggedUserController extends MyAppController
         $srch->joinCredentials(false, false);
         $srch->addCondition('u.user_id', '=', UserAuthentication::getLoggedUserId());
         $srch->setPageSize(1);
-        $srch->addMultipleFields(['user_preferred_dashboard', 'credential_email', 'credential_active', 'credential_verified']);
+        $srch->addMultipleFields(['user_first_name', 'user_last_name', 'user_country_id', 'user_preferred_dashboard', 'credential_email', 'credential_active', 'credential_verified']);
         $rs = $srch->getResultSet();
         $userRow = FatApp::getDb()->fetch($rs);
+        
         if (empty($userRow) || $userRow['credential_active'] != 1) {
             if (FatUtility::isAjaxCall()) {
                 Message::addErrorMessage(Label::getLabel('ERR_YOUR_ACCOUNT_HAS_BEEN_DEACTIVATED_OR_NOT_ACTIVE'));

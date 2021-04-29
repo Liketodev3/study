@@ -431,50 +431,7 @@ $(document).ready(function(){
 		});
 		$(el).blur();
 	}
-
-	generateThread = function( id ){
-		//var data = 'threadId='+id;
-		if( isUserLogged() == 0 ){
-			logInFormPopUp();
-			return false;
-		}
-
-		fcom.updateWithAjax( fcom.makeUrl('Messages','initiate/'+id), '',function(ans){
-			$.mbsmessage.close();
-			if( ans.redirectUrl ){
-                if(ans.threadId){
-                    sessionStorage.setItem('threadId',ans.threadId);
-                }
-				window.location.href = ans.redirectUrl;
-				return;
-			}
-			$.facebox(ans.html, '');
-		});
-	};
-
-	sendMessage = function(frm){
-		if (!$(frm).validate()) return;
-		var data = fcom.frmData(frm);
-		var dv = "#frm_fat_id_frmSendMessage";
-		$(dv).html(fcom.getLoader());
-		fcom.updateWithAjax(fcom.makeUrl('Messages', 'sendMessage'), data, function(t) {
-		window.location.href = fcom.makeUrl('Messages');
-		});
-	};
-
-	// function resendVerificationLink(username){
-		// /* if(user==''){
-			// return false;
-		// } */
-		// //$(document).trigger('closeMsg.systemMessage');
-		// console.log(username + " is heare");
-		// $.systemMessage.close();
-		// /* $.mbsmessage(langLbl.processing,false,'alert--process alert');
-		// fcom.updateWithAjax( fcom.makeUrl('GuestUser','resendVerification',[username]),'',function(ans){
-			// $.mbsmessage(ans.msg, false, 'alert alert--success');
-		// }); */
-	// }
-
+	
 	closeNavigation = function(){
 		$('.subheader .nav__dropdown a').removeClass('is-active');
 		$('.subheader .nav__dropdown-target').fadeOut();

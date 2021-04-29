@@ -60,7 +60,7 @@ $(function() {
 	loadLessonsTab = function () {
 		
         let urlHashVal = window.location.hash.replace('#', '');
-        let activeTab = urlHashVal ? urlHashVal : statusUpcoming;
+        let activeTab = urlHashVal ? urlHashVal : '';
 		console.log('#lesson-status option[value="'+activeTab+'"]');
         $('#lesson-status option[value="'+activeTab+'"]').prop('selected', true);
 		searchLessons(document.frmSrch);
