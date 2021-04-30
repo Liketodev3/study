@@ -178,7 +178,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         <button onclick="cancelLesson('<?php echo $lessonData['slesson_id']; ?>');" class="btn btn--bordered color-third"><?php echo Label::getLabel('LBL_Cancel'); ?></button>
                     <?php } ?>
                     <?php if ($is_issue_reported) { ?>
-                        <button  onclick="resolveIssue('<?php echo $lessonData['slesson_id']; ?>');" class="btn btn--bordered color-third"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></button>
+                        <button onclick="resolveIssue('<?php echo $lessonData['slesson_id']; ?>');" class="btn btn--bordered color-third"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></button>
                     <?php } ?>
                 </div> 
             </div>
@@ -215,6 +215,9 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         break;
                         case ScheduledLesson::STATUS_SCHEDULED:
                             $showGoToDashboardBtn = false;
+                            if($curDateTimeunix > $endDateTimeUnixtime){
+                                $showGoToDashboardBtn = true;
+                            }
                         break;
                     }
                     if(!empty($statusInfoLabel)) {
@@ -228,8 +231,8 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                 <?php if ($lessonData['slesson_teacher_join_time'] == '0000-00-00 00:00:00' || $activeMettingTool == ApplicationConstants::MEETING_ZOOM) { ?>
                     <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startDateTimeUnixtime > $curDateTimeunix || $curDateTimeunix > $endDateTimeUnixtime || !$isScheduled ? 'style="display:none;"' : '') ?>>
                         <?php if ($activeMettingTool == ApplicationConstants::MEETING_ZOOM){ ?>
-                            <a href="javascript:void(0);" class="btn btn--primary btn--large -hide-mobile" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
-                            <a href="javascript:void(0);" class="btn btn--secondary btn--large" onclick="joinLessonFromApp(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
+                            <a href="javascript:void(0);" class="btn btn--primary" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
+                            <a href="javascript:void(0);" class="btn btn--secondary" onclick="joinLessonFromApp(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
                         <?php }else{ ?>
                             <a href="javascript:void(0);" class="btn btn--secondary btn--large" id="joinL" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>
                         <?php } ?>

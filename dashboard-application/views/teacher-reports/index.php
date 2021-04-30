@@ -85,38 +85,35 @@
     }
     
     
-    var w = $('.graph').width();
-google.load('visualization', '1', {'packages':['corechart', 'bar']});
-    google.setOnLoadCallback(createChart2);
-   window.onresize = createChart2;
-	  function createChart2() {  
-          console.log(1,'SDSD');
-        var data = new google.visualization.DataTable();
-		//fcom.ajax(fcom.makeUrl('TeacherReports','getReportingData'), '', function(res){
-            // console.log(res,'getReportingData');
+var w = $('.graph').width();
+    google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
-        data.addColumn('string', '<?php echo Label::getLabel('LBL_Duration', $siteLangId); ?>');
-        //data.addColumn('number', '<?php echo Label::getLabel('LBL_New_Users_Earnings', $siteLangId); ?>');
-        data.addColumn('number', '<?php echo Label::getLabel('LBL_Earnings', $siteLangId); ?>');
-        data.addRows([<?php echo html_entity_decode($arr, ENT_QUOTES, 'UTF-8'); ?>]);
-       // data.addRows([res]);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses', 'Style'],
+          ['2013',  1000,      400],
+          ['2014',  1170,      460],
+          ['2015',  660,       1120],
+          ['2016',  1030,      540]
+        ],[
+          ['Year', 'Sales', 'Expenses', 'Style'],
+          ['2013',  1000,      400],
+          ['2014',  1170,      460],
+          ['2015',  660,       1120],
+          ['2016',  1030,      540]
+        ]);
 
         var options = {
-            width: w,
-            height: 380,
-           title: '<?php echo Label::getLabel('LBL_Last_12_Months_Sales', $siteLangId); ?>',
-            title: '',
-            hAxis: {title: '<?php echo Label::getLabel('LBL_Month', $siteLangId); ?>'},
-            vAxis: {title: '<?php echo Label::getLabel('LBL_Earnings', $siteLangId); ?>'},
-            
-			colors: ['#9575cd', '#33ac71'],
-			dataOpacity: '0.5'			
+          title: 'Company Performance',
+          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0},
+          colors: ['black', 'blue']
         };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('reportListing'));
+        var chart = new google.visualization.AreaChart(document.getElementById('reportListing'));
         chart.draw(data, options);
-				//});
-    }
+      }
 	
 
 

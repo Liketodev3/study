@@ -164,6 +164,9 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         break;
                         case ScheduledLesson::STATUS_SCHEDULED:
                             $showGoToDashboardBtn = false;
+                            if($currentUnixTime > $endDateTimeUnixtime){
+                                $showGoToDashboardBtn = true;
+                            }
                         break;
                        
                     }

@@ -2,11 +2,8 @@
 defined('SYSTEM_INIT') or die('Invalid Usage.'); 
 $reportSearchForm->addFormTagAttribute('onsubmit', "getStatisticalData(this); return (false);");;
 
-$earingDuration = $reportSearchForm->getField('earing_duration');
-$earingDuration->addFieldTagAttribute('onChange','getStatisticalData(this.form); return (false);');
-
-$lessonDuration = $reportSearchForm->getField('lesson_duration');
-$lessonDuration->addFieldTagAttribute('onChange','getStatisticalData(this.form); return (false);');
+$durationType = $reportSearchForm->getField('duration_type');
+$durationType->addFieldTagAttribute('onChange','getStatisticalData(this.form); return (false);');
 
 $reportType = $reportSearchForm->getField('report_type[]');
 $reportType->addFieldTagAttribute('class','d-none');
@@ -104,33 +101,36 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 							<?php 
 								echo $reportSearchForm->getFormTag(); 
 								echo $reportType->getHTML();
+								echo $reportSearchForm->getFieldHtml('forGraph');
 							?>
 							<div class="row margin-bottom-6">
-								<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="col-lg-4 col-md-4 col-sm-4">
 									<div class="sale-stat sale-stat--primary color-yellow">
 										<div class="sale-stat__count">
-											<span><?php echo Label::getLabel('Lbl_Sales'); ?></span>
+											<span><?php echo Label::getLabel('Lbl_Duration_Type'); ?></span>
 											<h5 class="earing-amount-js"></h5>
 										</div>
 
 										<div class="sale-stat__select">
 											<div class="form-inline__item">
-											<?php echo $earingDuration->getHTML(); ?>
+											<?php echo $durationType->getHTML(); ?>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="col-lg-6 col-md-6 col-sm-6">
+								<div class="col-lg-4 col-md-4 col-sm-4">
+									<div class="sale-stat sale-stat--primary color-yellow">
+										<div class="sale-stat__count">
+											<span><?php echo Label::getLabel('Lbl_Sales'); ?></span>
+											<h5 class="earing-amount-js">5455</h5>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-sm-4">
 									<div class="sale-stat sale-stat--secondary color-secondary">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('LBL_Lessons_sold'); ?></span>
-											<h5 class="lessons-sold-count-js"></h5>
-										</div>
-
-										<div class="sale-stat__select">
-											<div class="form-inline__item">
-												<?php echo $lessonDuration->getHTML(); ?>
-											</div>
+											<h5 class="lessons-sold-count-js">45545</h5>
 										</div>
 									</div>
 								</div>

@@ -38,14 +38,15 @@ class TeacherBaseController extends LoggedUserController
         $durationArray = Statistics::getDurationTypesArr($langId);
         $reportType =  [Statistics::REPORT_EARNING => Statistics::REPORT_EARNING, Statistics::REPORT_SOLD_LESSONS => Statistics::REPORT_SOLD_LESSONS];
         $frm = new Form('reportSearchForm');
-        $field = $frm->addSelectBox(Label::getLabel('LBL_Earing_Duration'), 'earing_duration', $durationArray, Statistics::TYPE_TODAY);
+        $field = $frm->addSelectBox(Label::getLabel('LBL_Duration_type'), 'duration_type', $durationArray, Statistics::TYPE_TODAY);
         $field->requirements()->setInt();
         $field->requirements()->setRequired(true);
-        $field = $frm->addSelectBox(Label::getLabel('LBL_Lesson_Sold_Duration'), 'lesson_duration', $durationArray, Statistics::TYPE_TODAY);
-        $field->requirements()->setInt();
-        $field->requirements()->setRequired(true);
+        // $field = $frm->addSelectBox(Label::getLabel('LBL_Lesson_Sold_Duration'), 'lesson_duration', $durationArray, Statistics::TYPE_TODAY);
+        // $field->requirements()->setInt();
+        // $field->requirements()->setRequired(true);
         $field = $frm->addSelectBox('', 'report_type[]', $reportType, $reportType, ['multiple' => 'multiple']);
         $field->requirements()->setRequired(true);
+        $frm->addHiddenField('', 'forGraph', applicationConstants::NO);
         return $frm;
     }
 

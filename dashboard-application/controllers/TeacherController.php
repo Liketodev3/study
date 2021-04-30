@@ -35,7 +35,7 @@ class TeacherController extends TeacherBaseController
                 'listingView' => 'shortDetail'
             ]);
         $reportSearchForm =  $this->reportSearchForm($this->siteLangId);
-
+        $reportSearchForm->fill(['forGraph' => ApplicationConstants::YES]);
         $this->set('frmSrch', $frmSrch);
         $this->set('durationArr', $durationArr);
         $this->set('earningData', $earningData);
