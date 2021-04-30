@@ -83,6 +83,7 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
       } 
       if(empty($lessonArr)) {
          $variables['btn'] = '<a href="'.CommonHelper::generateFullUrl('TeacherScheduledLessons').'" class="btn bg-primary">'.Label::getLabel('LBL_View_All_Lessons').'</a>';
+         $variables['msgHeading'] = Label::getLabel('LBL_No_Upcoming_lessons!!');
          $this->includeTemplate('_partial/no-record-found.php', $variables, false);
  } ?>
 </div>

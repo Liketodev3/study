@@ -30,7 +30,7 @@ $fld->developerTags['col'] = 12;
 		<div>
 			<h4><?php echo Label::getLabel("LBL_Add_Group_Class") ?></h4>
 		</div>
-		<div><a class="btn btn--small" href="javascript:void(0);" onclick="searchGroupClasses(document.frmSrch);"><?php echo Label::getLabel("LBL_Cancel") ?></a></div>
+		<!-- <div><a class="btn btn--small" href="javascript:void(0);" onclick="searchGroupClasses(document.frmSrch);"><?php echo Label::getLabel("LBL_Cancel") ?></a></div> -->
 	</div>
 
 

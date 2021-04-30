@@ -196,13 +196,14 @@ foreach ($lessonArr as $key => $lessons) { ?>
 </div>
 <?php 
 if (empty($lessons)) {
+	$variables['msgHeading'] = Label::getLabel('LBL_No_Upcoming_lessons!!');
 	$variables['btn'] = '<a href="'.CommonHelper::generateFullUrl('LearnerScheduledLessons').'" class="btn bg-primary">'.Label::getLabel('LBL_View_All_Lessons').'</a>';
     $this->includeTemplate('_partial/no-record-found.php', $variables, false);
 } else {
     echo FatUtility::createHiddenFormFromData($postedData, array(
         'name' => 'frmSLnsSearchPaging'
     ));
-    if ($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('learner-scheduled-lessons'))) {
+    if ($referer == preg_replace("(^https?://)", "", CommonHelper::generateFullUrl('LearnerScheduledLessons'))) {
         $this->includeTemplate('_partial/pagination.php', $pagingArr, false);
     }
 }

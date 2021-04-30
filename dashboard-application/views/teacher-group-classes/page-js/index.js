@@ -10,9 +10,8 @@ $(function () {
     };
 
     form = function (id) {
-        $(dv).html(fcom.getLoader());
         fcom.ajax(fcom.makeUrl('TeacherGroupClasses', 'form', [id]), '', function (t) {
-            $(dv).html(t);
+            $.facebox(t, 'facebox-medium');
             jQuery('#grpcls_start_datetime,#grpcls_end_datetime').each(function () {
                 $(this).datetimepicker({
                     format: 'Y-m-d H:i',
@@ -87,8 +86,7 @@ $(function () {
     };
     editGroupClassLangForm = function (groupClassId, langId) {
         fcom.ajax(fcom.makeUrl('TeacherGroupClasses', 'langForm', [groupClassId, langId]), '', function (t) {
-            $(dv).html(t);
-
+            $.facebox(t, 'facebox-medium');
         });
     };
     setupGroupClassLang = function (frm) {
