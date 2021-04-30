@@ -981,6 +981,9 @@ p {
 .fc .fc-toolbar-title {
   font-size: 1.25em; }
 
+.fc-timegrid-event .fc-event-time {
+  text-align: center; }
+
 @media (max-width: 767px) {
   .fc .fc-header-toolbar {
     -webkit-box-orient: vertical;
@@ -2382,8 +2385,8 @@ strong.span-right {
   .infobar__media-icon--tick {
     color: var(--color-primary); }
     .infobar__media-icon--tick:before {
-      background-color: var(--color-white);
-      opacity: 1; }
+      background-color: var(--color-primary);
+      opacity: 0.1; }
   @media (max-width: 576px) {
     .infobar {
       padding: var(--padding-4); }
@@ -3509,15 +3512,14 @@ div.tagsinput div {
 
 .aside--progress--menu {
   position: relative; }
-  .aside--progress--menu::before {
+  .aside--progress--menu:not(.is-completed)::after {
     position: absolute;
     left: 0.8rem;
     top: 0.7rem;
     content: "!";
     color: #fff;
-    pointer-events: none;
-    z-index: 1; }
-  .aside--progress--menu::after {
+    pointer-events: none; }
+  .aside--progress--menu:not(.is-completed)::before {
     content: "";
     position: absolute;
     top: 1rem;
