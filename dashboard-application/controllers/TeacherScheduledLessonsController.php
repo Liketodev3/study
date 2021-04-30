@@ -114,7 +114,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $listingView = FatApp::getPostedData('listingView', FatUtility::VAR_STRING, '');
         $tplpath = '';
         if($listingView == 'shortDetail'){
-            $tplpath =   '_partial/short-detail-lesson-listing.php';
+            $tplpath =   'teacher-scheduled-lessons/_partial/short-detail-lesson-listing.php';
         }
         $this->_template->render(false, false, $tplpath);
     }

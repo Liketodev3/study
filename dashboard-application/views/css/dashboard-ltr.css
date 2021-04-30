@@ -3162,15 +3162,16 @@ div.tagsinput div {
         -ms-flex-direction: column;
             flex-direction: column; } }
 
-@media (max-width: 1299px) {
-  .dashboard .dashboard__primary {
-    -webkit-box-ordinal-group: 3;
-        -ms-flex-order: 2;
-            order: 2; } }
-
-@media (max-width: 1399px) {
-  .dashboard .dashboard__primary {
-    padding: 0 var(--padding-5); } }
+.dashboard .dashboard__primary {
+  width: 100%; }
+  @media (max-width: 1299px) {
+    .dashboard .dashboard__primary {
+      -webkit-box-ordinal-group: 3;
+          -ms-flex-order: 2;
+              order: 2; } }
+  @media (max-width: 1399px) {
+    .dashboard .dashboard__primary {
+      padding: 0 var(--padding-5); } }
 
 .dashboard .dashboard__secondary {
   background-color: #fff;
@@ -3185,14 +3186,15 @@ div.tagsinput div {
       margin: var(--margin-5) var(--margin-5) 0; } }
   @media (min-width: 1399px) {
     .dashboard .dashboard__secondary {
-      max-width: 28.6rem;
+      max-width: 25.6rem;
       position: -webkit-sticky;
       position: sticky;
       top: 0;
       bottom: 0;
       left: 0;
       z-index: 3;
-      height: 100vh; } }
+      height: 100vh;
+      width: 100%; } }
   @media (min-width: 1299px) and (max-width: 1399px) {
     .dashboard .dashboard__secondary {
       max-width: 22rem;
@@ -3206,8 +3208,7 @@ div.tagsinput div {
 
 .status-bar {
   border-radius: var(--radius-0);
-  padding: var(--padding-8) 0;
-  height: 100%; }
+  padding: var(--padding-8) 0; }
   @media (min-width: 991px) and (max-width: 1299px) {
     .status-bar {
       padding: var(--padding-8) var(--padding-4);

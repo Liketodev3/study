@@ -8,6 +8,7 @@ $curDate = $date->format('Y-m-d');
 $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
 
 $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
+if(!empty($lessonArr)){
 ?>
 <div class="scrollbar scrollbar-js">
 <?php
@@ -79,5 +80,10 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
                      </div>
             <?php } ?>
       </div>
-   <?php } ?>
-</div>
+ 
+   <?php  } ?> 
+   </div> 
+<?php }  else{
+         $variables['btn'] = '<a href="'.CommonHelper::generateFullUrl('TeacherScheduledLessons').'" class="btn bg-primary">'.Label::getLabel('LBL_View_All_Lessons').'</a>';
+         $this->includeTemplate('_partial/no-record-found.php', $variables, false);
+ } ?>

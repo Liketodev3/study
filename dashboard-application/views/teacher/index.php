@@ -60,7 +60,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 										<h5><?php echo $earningData['earning']; ?></h5>
 									</div>
 									<div class="stat__media bg-yellow">
-										<svg class="icon icon--money icon--40 color-white"><use xlink:href="images/sprite.yo-coach.svg#stats"></use></svg>
+										<svg class="icon icon--money icon--40 color-white"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#stats'; ?>"></use></svg>
 									</div>
 									<a href="#" class="stat__action"></a>
 								</div>
@@ -72,7 +72,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 										<h5><?php echo $userDetails['teacherSchLessons']; ?></h5>
 									</div>
 									<div class="stat__media bg-secondary">
-										<svg class="icon icon--money icon--40 color-white"><use xlink:href="images/sprite.yo-coach.svg#stats_1"></use></svg>
+										<svg class="icon icon--money icon--40 color-white"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#stats_1'; ?>"></use></svg>
 									</div>
 									<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>" class="stat__action"></a>
 								</div>
@@ -84,7 +84,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 										<h5><?php echo $userTotalWalletBalance; ?></h5>
 									</div>
 									<div class="stat__media bg-primary">
-										<svg class="icon icon--money icon--40 color-white"><use xlink:href="images/sprite.yo-coach.svg#stats_2"></use></svg>
+										<svg class="icon icon--money icon--40 color-white"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#stats_2'; ?>"></use></svg>
 									</div>
 									<a href="<?php echo CommonHelper::generateUrl('Wallet'); ?>" class="stat__action"></a>
 								</div>
