@@ -16,6 +16,7 @@ class UserNotifications extends FatModel
     const NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_LEARNER = 8;
     const NOTICATION_FOR_CANCEL_LESSON_BY_TEACHER = 9;
     const NOTICATION_FOR_CANCEL_LESSON_BY_LEARNER = 10;
+    const NOTICATION_FOR_CHANGE_PASSWORD = 11;
 
     private $userId = 0;
     private $recordId = 0;
@@ -46,6 +47,18 @@ class UserNotifications extends FatModel
         $this->recordId = 0;
         $title = Label::getLabel("LABEL_TEACHER_REQUEST_APPROVED", ($langId != applicationConstants::NO) ? $langId : CommonHelper::getLangId());
         $description = Label::getLabel("LABEL_TEACHER_REQUEST_APPROVED_DESCRIPTION", ($langId != applicationConstants::NO) ? $langId : CommonHelper::getLangId());
+        if (!$this->addNotification($title, $description)) {
+            return false;
+        }
+        return true;
+    }
+
+    public function sendChangePwdNotifi($langId = 0)
+    {
+        $this->type = self::NOTICATION_FOR_CHANGE_PASSWORD;
+        $this->recordId = 0;
+        $title = Label::getLabel("LBL_Password_Changed", ($langId != applicationConstants::NO) ? $langId : CommonHelper::getLangId());
+        $description = Label::getLabel("LBL_Change_Password_Description", ($langId != applicationConstants::NO) ? $langId : CommonHelper::getLangId());
         if (!$this->addNotification($title, $description)) {
             return false;
         }

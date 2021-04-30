@@ -160,6 +160,7 @@ class UsersController extends AdminBaseController
         FatApp::redirectUser(CommonHelper::generateUrl('account', '', array(), CONF_WEBROOT_FRONTEND));
     }
 
+
     public function setup()
     {
         $this->objPrivilege->canEditUsers();
@@ -206,9 +207,7 @@ class UsersController extends AdminBaseController
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
-            /* if(isset($data['credential_username'])){
-            $data['credential_username'] = htmlentities($data['credential_username']);
-            } */
+       
             $stateId = $data['user_state_id'];
             $frmUser->fill($data);
         }
@@ -352,19 +351,27 @@ class UsersController extends AdminBaseController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-    public function changePasswordForm($user_id)
+    public function changePasswordForm()
     {
         $this->objPrivilege->canEditUsers();
-        $user_id = FatUtility::int($user_id);
-        $frm = $this->getChangePasswordForm($user_id);
+        $userId = FatApp::getPostedData('userId',FatUtility::VAR_INT);
+        $frm = $this->getChangePasswordForm($userId,$this->adminLangId);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
 
     public function updatePassword()
     {
-        $pwdFrm = $this->getChangePasswordForm();
+        $userId = FatApp::getPostedData('userId',FatUtility::VAR_INT);
+
+        if(!$userId){
+            Message::addErrorMessage($pwdFrm->getValidationErrors());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        $pwdFrm = $this->getChangePasswordForm($userId,$this->adminLangId);
         $post = $pwdFrm->getFormDataFromArray(FatApp::getPostedData());
+
         if (!$pwdFrm->validate($post)) {
             Message::addErrorMessage($pwdFrm->getValidationErrors());
             FatUtility::dieJsonError(Message::getHtml());
@@ -377,16 +384,10 @@ class UsersController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_PASSWORD_MUST_BE_EIGHT_CHARACTERS_LONG_AND_ALPHANUMERIC', $this->adminLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $user_id = FatUtility::int($post['user_id']);
-        if ($user_id < 1) {
-            Message::addErrorMessage($this->str_invalid_request);
-            FatUtility::dieJsonError(Message::getHtml());
-        }
-        $userObj = new User($user_id);
-        $srch = $userObj->getUserSearchObj(array(
-            'user_id'
-        ));
+        $user = new User($userId);
+        $srch = $user->getUserSearchObj(['user_id','concat(user_first_name," ",user_last_name) as user_full_name','credential_email'],true);
         $rs = $srch->getResultSet();
+
         if (!$rs) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
@@ -396,11 +397,26 @@ class UsersController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        if (!$userObj->setLoginPassword($post['new_password'])) {
+        if (!$user->setLoginPassword($post['new_password'])) {
             Message::addErrorMessage(Label::getLabel('LBL_Password_could_not_be_set ', $this->adminLangId) . ' ' . $userObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
-        // TODo:: Can send change password notification using configuration
+
+        $userNoti = new UserNotifications($userId);
+        $userNoti->sendChangePwdNotifi($this->adminLangId);
+
+        $vars = [
+            '{user_full_name}'=>$data['user_full_name'],
+            '{user_email}'=>$data['credential_email'],
+            '{user_password}'=>$post['new_password'],
+        ];
+        
+        if(!EmailHandler::sendMailTpl($data['credential_email'],'user_password_changed_successfully',FatApp::getConfig('conf_default_site_lang'),$vars)){
+            Message::addErrorMessage(Label::getLabel('LBL_Mail_not_sent!',$this->adminLangId));
+            FatUtility::dieJsonError(Message::getHtml());
+            
+        }
+        
         $this->set('msg', $this->str_setup_successful);
         $this->_template->render(false, false, 'json-success.php');
     }
@@ -802,23 +818,17 @@ class UsersController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
-    private function getChangePasswordForm($user_id = 0)
+    private function getChangePasswordForm(int $userId,int $langId)
     {
-        $user_id = FatUtility::int($user_id);
         $frm = new Form('changePwdFrm');
-        $frm->addHiddenField('', 'user_id', $user_id);
-        $newPwd = $frm->addPasswordField(Label::getLabel('LBL_New_Password', $this->adminLangId), 'new_password', '', array(
-            'id' => 'new_password'
-        ));
-        $newPwd->requirements()->setRequired();
-        $conNewPwd = $frm->addPasswordField(Label::getLabel('LBL_Confirm_New_Password', $this->adminLangId), 'conf_new_password', '', array(
-            'id' => 'conf_new_password'
-        ));
+        $frm->addHiddenField('', 'userId', $userId);
+        $frm->addPasswordField(Label::getLabel('LBL_New_Password', $langId), 'new_password', '',['id' => 'new_password'])->requirements()->setRequired();
+        $conNewPwd = $frm->addPasswordField(Label::getLabel('LBL_Confirm_New_Password', $langId), 'conf_new_password', '', ['id' => 'conf_new_password']);
         $conNewPwdReq = $conNewPwd->requirements();
         $conNewPwdReq->setRequired();
         $conNewPwdReq->setCompareWith('new_password', 'eq');
-        $conNewPwdReq->setCustomErrorMessage(Label::getLabel('LBL_Confirm_Password_Not_Matched!', $this->adminLangId));
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId), array(
+        $conNewPwdReq->setCustomErrorMessage(Label::getLabel('LBL_Confirm_Password_Not_Matched!', $langId));
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $langId), array(
             'id' => 'btn_submit'
         ));
         return $frm;
@@ -836,4 +846,6 @@ class UsersController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
+
 }

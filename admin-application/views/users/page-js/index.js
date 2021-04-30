@@ -111,9 +111,22 @@ $(document).ready(function(){
 		});
 	};
 
+	changePassword = function(userId){
+		fcom.ajax(fcom.makeUrl('Users', 'changePasswordForm'),{userId:userId}, function(t) {
+			fcom.updateFaceboxContent(t);
+		});
+	}
+
+	updatePassword = function(frm){
+		if (!$(frm).validate()) return;
+		var data = fcom.frmData(frm);
+		fcom.updateWithAjax(fcom.makeUrl('Users', 'updatePassword'), data, function(t) {
+			$.facebox.close()
+		});
+	}
+
 	addTransaction = function(userId){
-		fcom.ajax(fcom.makeUrl('Users', 'transaction', [userId]), '', function(t) {
-			/* $('#facebox').height($(window).height() - 46).css('overflow-y','auto'); */
+		fcom.ajax(fcom.makeUrl('Users', 'transaction',[userId]), '', function(t) {
 			fcom.updateFaceboxContent(t);
 		});
 	};
