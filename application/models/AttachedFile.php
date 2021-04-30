@@ -577,43 +577,54 @@ class AttachedFile extends MyAppModel
         return $file;
     }
 
-    public function deleteFile($fileType, $recordId, $fileId = 0, $record_subid = 0, $langId = -1, $screen = 0)
+    public function deleteFile($fileType, $recordId, $fileId = 0, $recordSubId = 0, $langId = -1, $screen = 0):bool
     {
         $fileType = FatUtility::int($fileType);
         $recordId = FatUtility::int($recordId);
         $fileId = FatUtility::int($fileId);
-        $record_subid = FatUtility::int($record_subid);
+        $recordSubId = FatUtility::int($recordSubId);
         $langId = FatUtility::int($langId);
 
         if (!in_array($fileType, array(AttachedFile::FILETYPE_ADMIN_LOGO, AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, AttachedFile::FILETYPE_FRONT_LOGO, AttachedFile::FILETYPE_FRONT_WHITE_LOGO, AttachedFile::FILETYPE_EMAIL_LOGO, AttachedFile::FILETYPE_FAVICON, AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE, AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, AttachedFile::FILETYPE_WATERMARK_IMAGE, AttachedFile::FILETYPE_APPLE_TOUCH_ICON, AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, AttachedFile::FILETYPE_MOBILE_LOGO, AttachedFile::FILETYPE_CATEGORY_COLLECTION_BG_IMAGE, AttachedFile::FILETYPE_LESSON_PAGE_IMAGE)) && (!$fileType || !$recordId)) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
             return false;
         }
+
+        $fileRow = AttachedFile::getAttachment($fileType, $recordId, $recordSubId,$langId);
+        if(!$fileRow){
+            $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
+            return false;
+        }
+
+        $uploadedFilePath = CONF_UPLOADS_PATH.$fileRow['afile_physical_path'];
+        if(!unlink($uploadedFilePath)){
+            $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
+            return false;
+        }
+
         /* default will delete all files of requested recordId */
-        $smt1 = 'afile_type = ? AND afile_record_id = ?';
-        $dataArr1 = array($fileType, $recordId);
         $deleteStatementArr = array('smt' => 'afile_type = ? AND afile_record_id = ?', 'vals' => array($fileType, $recordId));
-        if ($record_subid > 0) {
-            $deleteStatementArr = array('smt' => 'afile_type = ? AND afile_record_id = ? AND afile_record_subid = ?', 'vals' => array($fileType, $recordId, $record_subid));
+        if ($recordSubId > 0) {
+            $deleteStatementArr = array('smt' => 'afile_type = ? AND afile_record_id = ? AND afile_record_subid = ?', 'vals' => array($fileType, $recordId, $recordSubId));
         }
         if ($langId != -1) {
             /* delete lang Specific file */
             $deleteStatementArr = array('smt' => 'afile_type = ? AND afile_record_id = ? AND afile_lang_id = ? AND afile_screen = ?', 'vals' => array($fileType, $recordId, $langId, $screen));
-            if ($record_subid > 0) {
-                $deleteStatementArr = array('smt' => 'afile_type = ? AND afile_record_id = ? AND afile_record_subid = ? AND afile_lang_id = ?', 'vals' => array($fileType, $recordId, $record_subid, $langId));
+            if ($recordSubId > 0) {
+                $deleteStatementArr = array('smt' => 'afile_type = ? AND afile_record_id = ? AND afile_record_subid = ? AND afile_lang_id = ?', 'vals' => array($fileType, $recordId, $recordSubId, $langId));
             }
         }
         if ($fileId) {
             /* delete single file */
             $deleteStatementArr = array('smt' => 'afile_type = ? AND afile_record_id = ? AND afile_id=?', 'vals' => array($fileType, $recordId, $fileId));
         }
-
+     
         $db = FatApp::getDb();
         if (!$db->deleteRecords('tbl_attached_files', $deleteStatementArr)) {
             $this->error = $db->getError();
             return false;
         }
-        //@todo:: not deleted physical file from the system.
+        
         return true;
     }
 
