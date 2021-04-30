@@ -24,11 +24,17 @@ class LearnerController extends LearnerBaseController
             }
         }
         $frmSrch = $this->getSearchForm();
-        $frmSrch->fill(['status' => ScheduledLesson::STATUS_UPCOMING, 'show_group_classes' => ApplicationConstants::YES]);
+        $frmSrch->fill([
+                'status' => ScheduledLesson::STATUS_UPCOMING, 
+                'show_group_classes' => ApplicationConstants::YES
+                ]);
         $this->set('frmSrch', $frmSrch);
-        $userObj = new User(UserAuthentication::getLoggedUserId());
+        $userId = UserAuthentication::getLoggedUserId();
+        $userObj = new User($userId);
         $userDetails = $userObj->getDashboardData(CommonHelper::getLangId());
+        // prx($userDetails);
         $this->set('userDetails', $userDetails);
+        $this->set('userTotalWalletBalance', User::getUserBalance($userId, false));
         $this->_template->render();
     }
 
