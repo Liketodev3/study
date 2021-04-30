@@ -981,6 +981,9 @@ p {
 .fc .fc-toolbar-title {
   font-size: 1.25em; }
 
+.fc-timegrid-event .fc-event-time {
+  text-align: center; }
+
 @media (max-width: 767px) {
   .fc .fc-header-toolbar {
     -webkit-box-orient: vertical;
@@ -2382,8 +2385,8 @@ strong.span-right {
   .infobar__media-icon--tick {
     color: var(--color-primary); }
     .infobar__media-icon--tick:before {
-      background-color: var(--color-white);
-      opacity: 1; }
+      background-color: var(--color-primary);
+      opacity: 0.1; }
   @media (max-width: 576px) {
     .infobar {
       padding: var(--padding-4); }
@@ -3159,15 +3162,16 @@ div.tagsinput div {
         -ms-flex-direction: column;
             flex-direction: column; } }
 
-@media (max-width: 1299px) {
-  .dashboard .dashboard__primary {
-    -webkit-box-ordinal-group: 3;
-        -ms-flex-order: 2;
-            order: 2; } }
-
-@media (max-width: 1399px) {
-  .dashboard .dashboard__primary {
-    padding: 0 var(--padding-5); } }
+.dashboard .dashboard__primary {
+  width: 100%; }
+  @media (max-width: 1299px) {
+    .dashboard .dashboard__primary {
+      -webkit-box-ordinal-group: 3;
+          -ms-flex-order: 2;
+              order: 2; } }
+  @media (max-width: 1399px) {
+    .dashboard .dashboard__primary {
+      padding: 0 var(--padding-5); } }
 
 .dashboard .dashboard__secondary {
   background-color: #fff;
@@ -3182,14 +3186,15 @@ div.tagsinput div {
       margin: var(--margin-5) var(--margin-5) 0; } }
   @media (min-width: 1399px) {
     .dashboard .dashboard__secondary {
-      max-width: 28.6rem;
+      max-width: 25.6rem;
       position: -webkit-sticky;
       position: sticky;
       top: 0;
       bottom: 0;
       left: 0;
       z-index: 3;
-      height: 100vh; } }
+      height: 100vh;
+      width: 100%; } }
   @media (min-width: 1299px) and (max-width: 1399px) {
     .dashboard .dashboard__secondary {
       max-width: 22rem;
@@ -3203,9 +3208,7 @@ div.tagsinput div {
 
 .status-bar {
   border-radius: var(--radius-0);
-  padding: var(--padding-8) 0;
-  height: 100%;
-  max-width: 540px; }
+  padding: var(--padding-8) 0; }
   @media (min-width: 991px) and (max-width: 1299px) {
     .status-bar {
       padding: var(--padding-8) var(--padding-4);
@@ -3510,15 +3513,14 @@ div.tagsinput div {
 
 .aside--progress--menu {
   position: relative; }
-  .aside--progress--menu::before {
+  .aside--progress--menu:not(.is-completed)::after {
     position: absolute;
     left: 0.8rem;
     top: 0.7rem;
     content: "!";
     color: #fff;
-    pointer-events: none;
-    z-index: 1; }
-  .aside--progress--menu::after {
+    pointer-events: none; }
+  .aside--progress--menu:not(.is-completed)::before {
     content: "";
     position: absolute;
     top: 1rem;
