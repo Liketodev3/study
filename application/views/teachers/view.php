@@ -252,7 +252,7 @@ foreach($userTeachLangs as $userTeachLang){
 				?>
 				<div class="box box--cta -padding-30">
 					<h4 class="-text-bold"><?php echo Label::getLabel('LBL_FREE_Trail'); ?></h4>
-					 <p><?php echo Label::getLabel( 'LBL_Book_your_trial_FREE_for_30_Mins_only' ); ?></p>
+					 <p><?php echo sprintf(Label::getLabel( 'LBL_TRIAL_LESSON_%S_MINS' ), FatApp::getConfig('CONF_TRIAL_LESSON_DURATION', FatUtility::VAR_INT, 30)); ?></p>
 					 <button type="button" <?php echo $onclick; ?> class="btn <?php echo $btnClass.' '.$disabledText; ?> btn--large btn--block"  <?php echo $disabledText; ?> ><?php echo Label::getLabel( $btnText ); ?></button>
 				 </div>
 				<?php } ?>
