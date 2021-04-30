@@ -133,7 +133,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
 </div>
 <div class="session__body">
     <div class="sesson-window"  style="background-image:url(<?php echo CommonHelper::generateUrl('Image', 'lesson', array($siteLangId), CONF_WEBROOT_FRONT_URL) ?>">
-        <div class="sesson-window__content" id="lessonBox"> <!-- session-window__frame -->
+        <div class="sesson-window__content lessonBox" id="lessonBox"> <!-- session-window__frame -->
         <div class="session-status">
                 <?php 
                     $showGoToDashboardBtn = true;

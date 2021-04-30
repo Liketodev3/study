@@ -165,8 +165,11 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
             </div>
             <div class="col-xl-4 col-lg-4 col-sm-12">
                 <div class="session-infobar__action">
-                    <span class="btn btn--live" id="end_lesson_timer" style="display:none;"></span>
-                    <button class="btn bg-red" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?></button>
+                    <span class="btn btn--live" id="end_lesson_timer" style="display:none;">
+                    </span>
+                    <button class="btn bg-red" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);">
+                        <?php echo Label::getLabel('LBL_End_Lesson'); ?>
+                    </button>
                     <?php if ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTimeunix < $startDateTimeUnixtime) { ?>
                         <button class="btn btn--third" onclick="requestReschedule('<?php echo $lessonData['slesson_id']; ?>');"><?php echo Label::getLabel('LBL_Reschedule'); ?></button>
                    
