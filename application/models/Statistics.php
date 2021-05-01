@@ -37,9 +37,11 @@ class Statistics extends MyAppModel
         $type = strtolower($type);
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
-        $nowDate = date('Y-m-d H:i:s');
-        $nowDateTimestamp = time();
+        $nowDate =  MyDate::changeDateTimezone(date('Y-m-d H:i:s'), $systemTimeZone, $user_timezone);
 
+        $nowDateTimestamp = strtotime($nowDate);
+    
+        $endDate = date('Y-m-d H:i:s');
         $srch = new OrderSearch();
         $srch->joinOrderProduct();
         $srch->joinScheduledLessonDetail();
@@ -50,50 +52,55 @@ class Statistics extends MyAppModel
         $srch->addMultipleFields(['IFNULL(sum(op_commission_charged),0) as earning']);
         switch ($type) {
             case static::TYPE_TODAY:
-                $startDate = MyDate::changeDateTimezone(date('Y-m-d', $nowDateTimestamp) . ' 12:00:00', $user_timezone, $systemTimeZone);
-                $srch->addCondition('mysql_func_DATE(order_date_added)', '=', 'mysql_func_DATE("' . $nowDate . '")', 'AND', true);
+                $startDate = MyDate::changeDateTimezone(date('Y-m-d', $nowDateTimestamp) . ' 00:00:00', $user_timezone, $systemTimeZone);
+               
                 if($forGraph){
                     $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%H:%i') as groupDate"]);
                     $srch->addGroupBy("DATE_FORMAT(order_date_added, '%H:%i')");
                 }
+
                 break;
             case static::TYPE_LAST_WEEK:
-                $startDate = date('Y-m-d H:i:s', strtotime('-1 week', $nowDateTimestamp));
-                $endDate = $nowDate;
-                $srch->addCondition('order_date_added', '>=', $startDate, 'AND', true);
-                $srch->addCondition('order_date_added', '<=', $endDate, 'AND', true);
+                $startDate = date('Y-m-d H:i:s', strtotime('monday last week', $nowDateTimestamp));
+                $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+                $endDate = date('Y-m-d H:i:s', strtotime('sunday last week', $nowDateTimestamp));
+                $endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
+
+              
                 if($forGraph){
-                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%W') as groupDate"]);
-                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%W')");
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%Y-%m-%d') as groupDate"]);
+                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%Y-%m-%d')");
                 }
                 break;
             case static::TYPE_THIS_MONTH:
                 $startDate = MyDate::changeDateTimezone(date('Y-m', $nowDateTimestamp) . '-01 00:00:00', $user_timezone, $systemTimeZone);
-                $srch->addCondition('mysql_func_MONTH(order_date_added)', '=', 'mysql_func_MONTH("' . $nowDate . '")', 'AND', true);
+
                 if($forGraph){
-                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%d-%m-%Y') as groupDate"]);
-                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%d-%m-%Y')");
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%Y-%m-%d') as groupDate"]);
+                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%Y-%m-%d')");
                 }
                 break;
             case static::TYPE_LAST_MONTH:
                 $startDate = date('Y-m-d', strtotime('first day of previous month', $nowDateTimestamp)) .' 00:00:00';
                 $endDate = date('Y-m-d', strtotime('last day of previous month +1 days', $nowDateTimestamp)) .' 00:00:00';
+
                 $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
                 $endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
-                $srch->addCondition('mysql_func_MONTH(order_date_added)', '=', 'mysql_func_MONTH("' . $nowDate . '" - INTERVAL 1 MONTH)', 'AND', true);
+
+              
                 if($forGraph){
-                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%d-%m-%Y') as groupDate"]);
-                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%d-%m-%Y')");
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%Y-%m-%d') as groupDate"]);
+                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%Y-%m-%d')");
                 }
                 break;
             case static::TYPE_LAST_YEAR:
                 $startDate = date('Y-m-d', strtotime('last year January 1st', $nowDateTimestamp)).' 00:00:00';
                 $endDate = date('Y-m-d', strtotime('last year December 31st +1 days', $nowDateTimestamp)) .' 00:00:00';
+                
                 $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
                 $endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
 
-                $srch->addMultipleFields(['MIN(date(order_date_added)) as fromDate, MAX(date(order_date_added)) as toDate', 'YEAR("' . $nowDate . '" - INTERVAL 1 YEAR) as ss']);
-                $srch->addCondition('mysql_func_YEAR(order_date_added)', '>=', 'mysql_func_YEAR("' . $nowDate . '" - INTERVAL 1 YEAR)', 'AND', true);
+              
                 if($forGraph){
                     $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%m-%Y') as groupDate"]);
                     $srch->addGroupBy("DATE_FORMAT(order_date_added, '%m-%Y')");
@@ -106,23 +113,29 @@ class Statistics extends MyAppModel
                 $srch->addMultipleFields(['MIN(date(order_date_added)) as fromDate, MAX(date(order_date_added)) as toDate']);
                 $srch->addCondition('order_date_added', '<=', $endDate, 'AND', true);
                 if($forGraph){
-                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%d-%m-%Y') as groupDate"]);
-                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%d-%m-%Y')");
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%Y-%m-%d') as groupDate"]);
+                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%Y-%m-%d')");
                 }
             break;
         }
 
+        if($type != static::TYPE_ALL ){
+            $srch->addCondition('order_date_added', '>=', $startDate, 'AND', true);
+            $srch->addCondition('order_date_added', '<=', $endDate, 'AND', true);
+    
+        }
         $data['fromDate'] = $startDate;
-        $data['toDate'] = $nowDate;
+        $data['toDate'] = $endDate;
         $data['earningData'] = [];
         if ($forGraph) {
+            
             $earningData = $this->db->fetchAll($srch->getResultSet(), 'groupDate');
             $data['earningData'] = $earningData;
             $data['earning'] = array_sum(array_column($earningData, 'earning'));
         }else{
             $earningData = $this->db->fetch($srch->getResultSet());
             $data['earningData'] =  $earningData;
-            $data['earning'] =  CommonHelper::displayMoneyFormat($earningData['earning']);
+            $data['earning'] =  $earningData['earning'];
         }
         return $data;
     }
@@ -132,8 +145,11 @@ class Statistics extends MyAppModel
         $type = strtolower($type);
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
-        $nowDate = date('Y-m-d H:i:s');
-        $nowDateTimestamp = time();
+       
+        $nowDate =  MyDate::changeDateTimezone(date('Y-m-d H:i:s'), $systemTimeZone, $user_timezone);
+        $nowDateTimestamp = strtotime($nowDate);
+        $endDate = date('Y-m-d H:i:s');
+
         $srch = new ScheduledLessonSearch();
         $srch->joinOrder();
         $srch->addCondition('slesson_teacher_id', '=', $this->userId);
@@ -141,10 +157,8 @@ class Statistics extends MyAppModel
         $srch->addMultipleFields(['count(slesson_id) as lessonCount, MIN(order_date_added) as fromDate, MAX(order_date_added) as toDate']);
         switch ($type) {
             case static::TYPE_TODAY:
-                $startDate = MyDate::changeDateTimezone(date('Y-m-d', $nowDateTimestamp) . ' 12:00:00', $user_timezone, $systemTimeZone);
-                $srch->addCondition('mysql_func_DATE(order_date_added)', '=', 'mysql_func_DATE("' . $nowDate . '")', 'AND', true);
-                $data = $this->db->fetch($srch->getResultSet());
-
+                $startDate = MyDate::changeDateTimezone(date('Y-m-d', $nowDateTimestamp) . ' 00:00:00', $user_timezone, $systemTimeZone);
+                
                 if($forGraph){
                     $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%H:%i') as groupDate"]);
                     $srch->addGroupBy("DATE_FORMAT(order_date_added, '%H:%i')");
@@ -152,51 +166,59 @@ class Statistics extends MyAppModel
 
                 break;
             case static::TYPE_LAST_WEEK:
-                $startDate = date('Y-m-d H:i:s', strtotime('-1 week', $nowDateTimestamp));
-                $endDate = $nowDate;
+                $startDate = date('Y-m-d H:i:s', strtotime('monday last week', $nowDateTimestamp));
+                $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+               
+                $endDate = date('Y-m-d H:i:s', strtotime('sunday last week', $nowDateTimestamp));
+                $endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
 
-                $srch->addCondition('order_date_added', '>=', $startDate, 'AND', true);
-                $srch->addCondition('order_date_added', '<=', $endDate, 'AND', true);
                 if($forGraph){
-                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%W') as groupDate"]);
-                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%W')");
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%Y-%m-%d') as groupDate"]);
+                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%Y-%m-%d')");
                 }
      
                 break;
             case static::TYPE_THIS_MONTH:
-                $startDate = MyDate::changeDateTimezone(date('Y-m', $nowDateTimestamp) . '-01 12:00:00', $user_timezone, $systemTimeZone);
-                $srch->addCondition('mysql_func_MONTH(order_date_added)', '=', 'mysql_func_MONTH("' . $nowDate . '")', 'AND', true);
+                $startDate = date('Y-m-d', strtotime('first day of previous month', $nowDateTimestamp)) .' 00:00:00';
+                $endDate = date('Y-m-d', strtotime('last day of previous month +1 days', $nowDateTimestamp)) .' 00:00:00';
+          
+                $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+                $endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
+
                 if($forGraph){
-                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%d-%m-%Y') as groupDate"]);
-                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%d-%m-%Y')");
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%Y-%m-%d') as groupDate"]);
+                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%Y-%m-%d')");
                 }
                 break;
             case static::TYPE_LAST_MONTH:
-                $startDate = date('Y-m-d', strtotime('first day of previous month', $nowDateTimestamp));
-                $endDate = date('Y-m-d', strtotime('last day of previous month', $nowDateTimestamp)) . ' 23:59:59';
+                $startDate = date('Y-m-d', strtotime('first day of previous month', $nowDateTimestamp)) .' 00:00:00';
+                $endDate = date('Y-m-d', strtotime('last day of previous month +1 days', $nowDateTimestamp)) .' 00:00:00';
+
                 $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
                 $endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
-           
-                $srch->addCondition('mysql_func_MONTH(order_date_added)', '=', 'mysql_func_MONTH("' . $nowDate . '" - INTERVAL 1 MONTH)', 'AND', true);
+
                 if($forGraph){
-                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%d-%m-%Y') as groupDate"]);
-                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%d-%m-%Y')");
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%Y-%m-%d') as groupDate"]);
+                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%Y-%m-%d')");
                 }
                 break;
             case static::TYPE_LAST_YEAR:
                 $startDate = date('Y-m-d', strtotime('last year January 1st', $nowDateTimestamp));
-                $endDate = date('Y-m-d', strtotime('last year December 31st', $nowDateTimestamp)) . ' 23:59:59';
+                $endDate = date('Y-m-d', strtotime('first day of january this year', $nowDateTimestamp));
+                
                 $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
                 $endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
-              
-                $srch->addMultipleFields(['count(slesson_id) as lessonCount, MIN(order_date_added) as fromDate, MAX(order_date_added) as toDate']);
-                $srch->addCondition('mysql_func_YEAR(order_date_added)', '>=', 'mysql_func_YEAR("' . $nowDate . '" - INTERVAL 1 YEAR)', 'AND', true);
+                             
                 if($forGraph){
                     $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%m-%Y') as groupDate"]);
                     $srch->addGroupBy("DATE_FORMAT(order_date_added, '%m-%Y')");
                 }
                 break;
         }
+
+       
+        $srch->addCondition('order_date_added', '>=', $startDate, 'AND', true);
+        $srch->addCondition('order_date_added', '<=', $endDate, 'AND', true);
 
         $data['fromDate'] = $startDate;
         $data['toDate'] = $nowDate;
