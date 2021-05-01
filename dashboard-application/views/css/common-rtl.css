@@ -946,7 +946,6 @@ img {
   padding: var(--padding-10);
   background-color: var(--color-white);
   margin-top: var(--margin-6);
-  min-height: 40rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

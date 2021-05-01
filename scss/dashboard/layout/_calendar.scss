@@ -101,6 +101,10 @@ $fc-scroller-harness: "fc-scroller-harness";
     font-size: 1.25em;
 }
 
+.fc-timegrid-event .fc-event-time{
+    text-align: center;
+}
+
 @media (max-width:theme('breakpoints.md','value')) {
     .fc .fc-header-toolbar{
         flex-direction: column;

@@ -38,7 +38,7 @@ $infobar: "infobar";
         }
         }
         &-icon--tick{color:theme('color.primary');
-            &:before{ background-color: theme('color.white');opacity: 1;}
+            &:before{ background-color: var(--color-primary);opacity: 0.1;}
         }
     }
     @media(max-width:theme('breakpoints.sm','value')){
