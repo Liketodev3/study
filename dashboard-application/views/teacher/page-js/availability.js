@@ -103,14 +103,9 @@ saveGeneralAvailability = function () {
 
 
 
-deleteTeacherGeneralAvailability = function (id) {
+deleteTeacherGeneralAvailability = function (event) {
 	if (confirm(langLbl['confirmRemove'])) {
-		$('#ga_calendar').fullCalendar('removeEvents', id);
-		//  fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherGeneralAvailability',[id]), '' , function(t) {
-		// 		if(userIsTeacher) {
-		// 		  getTeacherProfileProgress(false);
-		// 		}
-		// });
+		event.remove();
 	}
 };
 

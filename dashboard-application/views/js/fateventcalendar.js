@@ -385,11 +385,11 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
                 }
             }
         ],
-        eventClick: function(arg) {
-            if (confirm(langLbl.confirmRemove)) {
-                arg.event.remove()
-            }
-        },
+        // eventClick: function(arg) {
+        //     if (confirm(langLbl.confirmRemove)) {
+        //         arg.event.remove()
+        //     }
+        // },
         select: function (arg ) {
             var start = arg.start;
             var end = arg.end;
@@ -446,12 +446,11 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
         },
         eventDidMount: function(arg) {
             element = arg.el;
-            if(isNaN(arg.event.extendedProps._id)){
-               $(element).find(".fc-event-main-frame").prepend( "<span class='closeon'>X</span>" );
-            }
-            else{
-                $(element).find(".fc-event-main-frame").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+arg.event.extendedProps_id+");'>X</span>" );
-            }
+            let event = arg.event;
+                $(element).find(".fc-event-main-frame").prepend( "<span class='closeon'>X</span>" );
+                $(element).find(".closeon").click(function() {
+                    deleteTeacherGeneralAvailability(event);
+                 });
          }
     }
     var defaultConf = this.calDefaultConf;
