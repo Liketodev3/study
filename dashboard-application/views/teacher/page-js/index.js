@@ -38,7 +38,9 @@ getStatisticalData1 = function(form){
 			colors:["#f4d18c","#3bc0c0"],
 			legend: 'none',
 			// tooltip: {isHtml: true},
-			hAxis: {title: res.graphData.column.durationType},
+			hAxis: {
+				title: res.graphData.column.durationType,
+			},
 			animation:{
 				duration: 1000,
 				easing: 'out',

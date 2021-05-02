@@ -8,6 +8,7 @@ class Statistics extends MyAppModel
     const TYPE_LAST_MONTH = 4;
     const TYPE_LAST_YEAR = 5;
     const TYPE_ALL = 6;
+    const TYPE_THIS_YEAR = 7;
     const REPORT_EARNING = 1;
     const REPORT_SOLD_LESSONS = 2;
 
@@ -29,6 +30,7 @@ class Statistics extends MyAppModel
             static::TYPE_THIS_MONTH => Label::getLabel('LBL_This_Month', $langId),
             static::TYPE_LAST_MONTH => Label::getLabel('LBL_Last_Month', $langId),
             static::TYPE_LAST_YEAR => Label::getLabel('LBL_Last_Year', $langId),
+            static::TYPE_THIS_YEAR => Label::getLabel('LBL_This_Year', $langId),
         ];
     }
 
@@ -91,6 +93,17 @@ class Statistics extends MyAppModel
                 if($forGraph){
                     $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%Y-%m-%d') as groupDate"]);
                     $srch->addGroupBy("DATE_FORMAT(order_date_added, '%Y-%m-%d')");
+                }
+                break;
+            case static::TYPE_THIS_YEAR:
+                $startDate = date('Y-m-d', strtotime('first day of january this year', $nowDateTimestamp));
+                
+                $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+               
+                                
+                if($forGraph){
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%m-%Y') as groupDate"]);
+                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%m-%Y')");
                 }
                 break;
             case static::TYPE_LAST_YEAR:
@@ -200,6 +213,16 @@ class Statistics extends MyAppModel
                 if($forGraph){
                     $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%Y-%m-%d') as groupDate"]);
                     $srch->addGroupBy("DATE_FORMAT(order_date_added, '%Y-%m-%d')");
+                }
+                break;
+            case static::TYPE_THIS_YEAR:
+                $startDate = date('Y-m-d', strtotime('first day of january this year', $nowDateTimestamp));
+             
+                $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
+            
+                if($forGraph){
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%m-%Y') as groupDate"]);
+                    $srch->addGroupBy("DATE_FORMAT(order_date_added, '%m-%Y')");
                 }
                 break;
             case static::TYPE_LAST_YEAR:
