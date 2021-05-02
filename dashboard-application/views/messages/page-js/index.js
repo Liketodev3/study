@@ -80,17 +80,18 @@ function closethread() {
 function getThread(id, page) {
     page  = (page) ? page : messageThreadPage;
 
-    if(page = 1){
+    if(page == 1){
         messageThreadAjax = false;
     }
     
     if(messageThreadAjax){
         return false;
     }
+
     $.chatLoader.show();
     messageThreadPage += 1; 
     dv = ".message-details-js";
-    data = "thread_id=" + id + "&message="+page;
+    data = "thread_id=" + id + "&page="+page;
     fcom.ajax(fcom.makeUrl('Messages', 'messageSearch'), data, function (ans) {
         $.chatLoader.hide();
         var data = JSON.parse(ans);
@@ -99,9 +100,10 @@ function getThread(id, page) {
             $("html").addClass("show-message-details"); 
             $( ".chat-room__body" ).scrollTop($( ".chat-room__body" )[0].scrollHeight);
         }else{
-            $(dv).prepend(data.html);
+            $('.load-more-js').remove();
+            $('.chat-list').prepend(data.html);
         }
-        $(dv).prepend(data.loadMore);
+       // $(dv).prepend(data.loadMore);
     });
     $('html').addClass('show-message-details');
     threadListing(document.frmMessageSrch, id);
@@ -113,10 +115,13 @@ function goToLoadPrevious() {
 function sendMessage(frm) {
     if (!$(frm).validate()) return;
     var data = fcom.frmData(frm);
-    var dv = ".message-details-js";
-    $(dv).html(fcom.getLoader());
+
+    $.loader.show();
+   
     fcom.ajax(fcom.makeUrl('Messages', 'sendMessage'), data, function (t) {
         var data = JSON.parse(t);
+        $.loader.hide();
+        messageThreadPage = 1;
         getThread(data.threadId);
         threadListing(document.frmMessageSrch);
     });

@@ -33,7 +33,7 @@ if (!empty($arr_listing) && is_array($arr_listing)) {
 				<date><?php echo MyDate::format($row['message_date'], false, true,  $userTimeZone); ?></date>
 			</div>
 
-			<a href="javascript:void(0);" onclick="getThread(<?php echo $row['thread_id']; ?>);" class="msg-list__action msg-list__action-js"></a>
+			<a href="javascript:void(0);" onclick="getThread(<?php echo $row['thread_id']; ?>,1);" class="msg-list__action msg-list__action-js"></a>
 		</div>
 
 	<?php } ?>

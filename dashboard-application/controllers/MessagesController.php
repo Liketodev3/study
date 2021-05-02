@@ -101,10 +101,7 @@ class MessagesController extends LoggedUserController
         ksort($records);
         
         $pageCount = $srch->pages();
-        $recordCount = $srch->recordCount();
-        $this->set('arrListing', $records);
-        $this->set('userId', $userId);
-        $this->set('otherUserDetail', $otherUserDetail);
+
        
         $threadObj = new Thread($threadId);
         if (!$threadObj->markUserMessageRead($threadId, $userId)) {
@@ -114,10 +111,14 @@ class MessagesController extends LoggedUserController
         $frm = $this->sendMessageForm($this->siteLangId);
         $frm->fill(['message_thread_id' => $threadId]);
         $this->set('frm', $frm);
-        $json['html'] = $this->_template->render(false, false, 'messages/message-search.php', true);
+        $this->set('arrListing', $records);
+        $this->set('userId', $userId);
+        $this->set('threadId', $threadId);
+        $this->set('user$threadIdId', $threadId);
+        $this->set('otherUserDetail', $otherUserDetail);
         $this->set('pageCount', $pageCount);
         $this->set('page', $page);
-        $json['loadMore'] = $this->_template->render(false, false, 'messages/_partial/load-previous-btn', true);
+        $json['html'] = $this->_template->render(false, false, 'messages/message-search.php', true);
         $json['msg'] = '';
         FatUtility::dieJsonSuccess($json);
     }
