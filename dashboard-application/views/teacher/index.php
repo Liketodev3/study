@@ -174,5 +174,5 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 	<script>
 		var fecal = new FatEventCalendar(0,'<?php echo MyDate::displayTimezoneString();?>');
 		fecal.setLocale('<?php echo $currentLangCode ?>');
-		fecal.TeacherMonthlyCalendar( '<?php echo date('Y-m-d H:i:s', strtotime($nowDate)); ?>');
+		fecal.TeacherMonthlyCalendar( '<?php echo date('Y-m-d H:i:s', strtotime($nowDate)); ?>',1);
 	</script>
