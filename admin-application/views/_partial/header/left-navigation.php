@@ -278,18 +278,22 @@
 				$objPrivilege->canViewUrlRewrites(AdminAuthentication::getLoggedAdminId(), true)
 				//|| $objPrivilege->canViewEmailArchives(AdminAuthentication::getLoggedAdminId(), true)
 			) { ?>
-				<li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Misc', $adminLangId); ?></a>
+				<li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Seo', $adminLangId); ?></a>
 					<ul>
 						<?php if ($objPrivilege->canViewMetaTags(AdminAuthentication::getLoggedAdminId(), true)) { ?>
-							<li><a href="<?php echo CommonHelper::generateUrl('MetaTags'); ?>"><?php echo Label::getLabel('LBL_Meta_Tags_Management', $adminLangId); ?></a></li>
+							<li><a href="<?php echo CommonHelper::generateUrl('MetaTags'); ?>"><?php echo Label::getLabel('LBL_Meta_Tags', $adminLangId); ?></a></li>
 						<?php } ?>
 
 						<?php if ($objPrivilege->canViewUrlRewrites(AdminAuthentication::getLoggedAdminId(), true)) { ?>
-							<li><a href="<?php echo CommonHelper::generateUrl('UrlRewriting'); ?>"><?php echo Label::getLabel('LBL_Url_Rewriting', $adminLangId); ?></a></li>
+							<li><a href="<?php echo CommonHelper::generateUrl('UrlRewriting'); ?>"><?php echo Label::getLabel('LBL_Url_Rewrites', $adminLangId); ?></a></li>
 						<?php } ?>
 
 						<?php if ($objPrivilege->canViewImageAttributes(AdminAuthentication::getLoggedAdminId(), true)) { ?>
 							<li><a href="<?php echo CommonHelper::generateUrl('ImageAttributes'); ?>"><?php echo Label::getLabel('LBL_Image_Attributes', $adminLangId); ?></a></li>
+						<?php } ?>
+
+						<?php if ($objPrivilege->canViewRobotsSection(AdminAuthentication::getLoggedAdminId(), true)) { ?>
+							<li><a href="<?php echo CommonHelper::generateUrl('Robot'); ?>"><?php echo Label::getLabel('LBL_Robots', $adminLangId); ?></a></li>
 						<?php } ?>
 
 

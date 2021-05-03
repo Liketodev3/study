@@ -53,6 +53,7 @@ class AdminPrivilege
     const SECTION_TEACHING_LANGUAGES = 50;
     const SECTION_COMMISSION_REPORT  = 51;
     const SECTION_IMAGE_ATTRIBUTES = 52;
+    const SECTION_ROBOTS = 53;
 
     const PRIVILEGE_NONE = 0;
     const PRIVILEGE_READ = 1;
@@ -138,6 +139,7 @@ class AdminPrivilege
             static::SECTION_ISSUE_REPORT_OPTIONS => Label::getLabel('MSG_Manage_ISSUE_REPORT_OPTIONS', CommonHelper::getLangId()),
             static::SECTION_COMMISSION_REPORT => Label::getLabel('MSG_Commission_Report', CommonHelper::getLangId()),
             static::SECTION_IMAGE_ATTRIBUTES => Label::getLabel('MSG_Image_Attributes', CommonHelper::getLangId()),
+            static::SECTION_ROBOTS => Label::getLabel('MSG_Robots_Txt', CommonHelper::getLangId()),
         );
         return $arr;
     }
@@ -755,5 +757,13 @@ class AdminPrivilege
     public function canViewCommissionReport($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult);
+    }
+    public function canViewRobotsSection($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_ROBOTS, static::PRIVILEGE_READ, $returnResult);
+    }
+    public function canEditRobotsSection($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_ROBOTS, static::PRIVILEGE_WRITE, $returnResult);
     }
 }
