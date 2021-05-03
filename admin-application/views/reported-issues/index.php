@@ -3,9 +3,9 @@
 $frm->setFormTagAttribute('onsubmit', 'search(this, 1); return(false);');
 $frm->setFormTagAttribute('class', 'web_form');
 $frm->developerTags['colClassPrefix'] = 'col-md-';
-$frm->developerTags['fld_default_col'] = 6;
+$frm->developerTags['fld_default_col'] = 4;
 $fld = $frm->getField('btn_clear');
-$fld->addFieldTagAttribute('onclick', 'clear()');
+$fld->addFieldTagAttribute('onclick', 'clearSearch()');
 ?>
 <div class='page'>
     <div class='fixed_container'>

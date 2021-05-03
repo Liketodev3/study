@@ -17,7 +17,9 @@ class ReportedIssuesController extends AdminBaseController
 
     public function escalated()
     {
-        $this->set('frm', $this->getSearchForm());
+        $frm = $this->getSearchForm();
+        $frm->fill(['repiss_status' => ReportedIssue::STATUS_ESCLATED]);
+        $this->set('frm', $frm);
         $this->_template->addJs('reported-issues/page-js/index.js');
         $this->_template->render();
     }
@@ -39,6 +41,9 @@ class ReportedIssuesController extends AdminBaseController
         if (!empty($post['sldetail_order_id'])) {
             $srch->addCondition('sldetail.sldetail_order_id', 'LIKE', '%' . $post['sldetail_order_id'] . '%');
         }
+        if ($post['repiss_slesson_id'] != '') {
+            $srch->addCondition('repiss.repiss_slesson_id', '=', $post['repiss_slesson_id']);
+        }
         if ($post['sldetail_learner_id'] > 0) {
             $srch->addCondition('sldetail.sldetail_learner_id', '=', $post['sldetail_learner_id']);
         }
@@ -59,88 +64,32 @@ class ReportedIssuesController extends AdminBaseController
 
     public function view($issueId)
     {
-        $issueId = FatUtility::int($issueId);
-        if ($issueId < 1) {
-            FatUtility::dieWithError($this->str_invalid_request);
+        $issue = ReportedIssue::getIssueById($issueId);
+        if (empty($issue)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
-        $srch = ReportedIssue::getSearchObject();
-        $srch->addCondition('repiss.repiss_slesson_id', '=', $issueId);
-        $srch->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'slesson.slesson_teacher_id = us.us_user_id', 'us');
-        $srch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'slesson.slesson_slanguage_id = tlang.tlanguage_id', 'tlang');
-        $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'sll.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND sll.tlanguagelang_lang_id = ' . $this->adminLangId, 'sll');
-        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sldetail.sldetail_learner_id = ul.user_id', 'ul');
-        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'slesson.slesson_teacher_id = ut.user_id', 'ut');
-        $srch->addMultipleFields(['repiss.repiss_id', 'repiss.repiss_title', 'repiss.repiss_slesson_id',
-            'repiss.repiss_reported_on', 'repiss.repiss_reported_by', 'repiss.repiss_reported_by_type',
-            'repiss.repiss_status', 'repiss.repiss_comment', 'repiss.repiss_updated_on', "us.*",
-            'sldetail.sldetail_order_id', 'sldetail.sldetail_learner_id', 'sldetail.sldetail_learner_join_time',
-            'slesson.slesson_teacher_join_time', 'sldetail.sldetail_learner_end_time', 'slesson.slesson_teacher_id',
-            'slesson.slesson_teacher_end_time', 'slesson.slesson_ended_by', 'slesson.slesson_ended_on',
-            'IFNULL(sll.tlanguage_name, tlang.tlanguage_identifier) as tlanguage_name',
-            'CONCAT(user.user_first_name, " ", user.user_last_name) AS reporter_username',
-            'CONCAT(ul.user_first_name, " ", ul.user_last_name) AS learner_username',
-            'CONCAT(ut.user_first_name, " ", ut.user_last_name) AS teacher_username',
-            'order_net_amount', 'order_discount_total', 'op_qty', 'op_lpackage_is_free_trial', 'op_unit_price',
-        ]);
-        $srch->addGroupBy('repiss.repiss_id');
-        $issueDetail = FatApp::getDb()->fetchAll($srch->getResultSet());
-        $callHistory = IssuesReported::getCallHistory($issueDetail[0]['slesson_teacher_id']);
-        $issueStatusArr = IssuesReported::getResolveTypeArray($this->adminLangId);
-        $this->set("callHistory", $callHistory);
-        $this->set("statusArr", $issueStatusArr);
-        $this->set("issueDetail", $issueDetail);
+        $this->set("issue", $issue);
         $this->_template->render(false, false);
     }
 
-    public function actionForm($repissId)
+    public function actionForm($issueId)
     {
-        $repissId = FatUtility::int($repissId);
-        $issRepObj = new IssuesReported();
-        $srch = $issRepObj->getSearchObject();
-        $srch->addCondition('repiss_id', '=', $repissId);
-        $srch->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = us.us_user_id', 'us');
-        $srch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'sl.slesson_slanguage_id = tlang.tlanguage_id', 'tlang');
-        if ($this->adminLangId > 0) {
-            $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'sll.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND sll.tlanguagelang_lang_id = ' . $this->adminLangId, 'sll');
-        }
-        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sld.sldetail_learner_id = ul.user_id', 'ul');
-        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sl.slesson_teacher_id = ut.user_id', 'ut');
-        $srch->addMultipleFields([
-            "i.*",
-            "us.*",
-            'sld.sldetail_order_id',
-            'sl.slesson_teacher_id',
-            'sld.sldetail_learner_id',
-            'sld.sldetail_learner_join_time',
-            'sl.slesson_teacher_join_time',
-            'sld.sldetail_learner_end_time',
-            'sl.slesson_teacher_end_time',
-            'sl.slesson_ended_by',
-            'sl.slesson_ended_on',
-            'IFNULL(sll.tlanguage_name, tlang.tlanguage_identifier) as tlanguage_name',
-            'CONCAT(u.user_first_name, " " , u.user_last_name) AS reporter_username',
-            'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_username',
-            'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_username',
-            'i.repiss_admin_comments', 'i.repiss_updated_by_admin',
-            'order_net_amount',
-            'order_discount_total',
-            'op_qty',
-            'op_lpackage_is_free_trial',
-            'op_unit_price',
-        ]);
-        $srch->addGroupBy('repiss_id');
-        $issueDetail = FatApp::getDb()->fetchAll($srch->getResultSet());
-        if (empty($issueDetail)) {
+        $issue = ReportedIssue::getIssueById($issueId);
+        if (empty($issue)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
-
+        $logs = ReportedIssue::getIssueLogsById($issueId);
+        $lastLog = end($logs);
         $frm = $this->getActionForm();
-        $issue = end($issueDetail);
-        $frm->fill($issue);
+        $frm->fill([
+            'reislo_repiss_id' => $issue['repiss_id'],
+            'reislo_action' => $lastLog['reislo_action'] ?? ''
+        ]);
         $this->set('frm', $frm);
-        $this->set('issueDetail', $issueDetail);
-        $this->set('statusArr', IssuesReported::getResolveTypeArray($this->adminLangId));
-        $this->set('issues_options', IssueReportOptions::getOptionsArray($this->adminLangId));
+        $this->set('logs', $logs);
+        $this->set("issue", $issue);
+        $this->set('statusArr', ReportedIssue::getStatusArr());
+        $this->set('actionArr', ReportedIssue::getActionsArr());
         $this->_template->render(false, false);
     }
 
@@ -150,28 +99,11 @@ class ReportedIssuesController extends AdminBaseController
         if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
-        $record = new IssuesReported($post['repiss_id']);
-        $record->setFldValue('repiss_status', $post['repiss_status']);
-        $record->setFldValue('repiss_closed', $post['repiss_closed']);
-        $record->setFldValue('repiss_admin_comments', $post['repiss_admin_comments']);
-        if (!$record->save()) {
-            FatUtility::dieJsonError($record->getError());
+        $reportedIssue = new ReportedIssue($post['reislo_repiss_id'], $this->admin_id, ReportedIssue::USER_TYPE_SUPPORT);
+        if (!$reportedIssue->setupIssueAction($post['reislo_action'], $post['reislo_comment'])) {
+            FatUtility::dieJsonError($reportedIssue->getError());
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY'));
-    }
-
-    private function getActionForm()
-    {
-        $frm = new Form('actionFrm');
-        $repissId = $frm->addHiddenField('', 'repiss_id');
-        $repissId->requirements()->setRequired();
-        $repissId->requirements()->setIntPositive();
-        $arrOptions = IssueReportOptions::getOptionsArray($this->adminLangId);
-        $frm->addTextArea(Label::getLabel('LBL_ADMIN_COMMENT'), 'repiss_admin_comments', '');
-        $frm->addSelectBox(Label::getLabel('LBL_TAKE_ACTION', $this->adminLangId), 'repiss_status', IssuesReported::getResolveTypeArray())->requirements()->setRequired();
-        $frm->addCheckBox(Label::getLabel('LBL_MARK_IT_CLOSED'), 'repiss_closed', 1);
-        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
-        return $frm;
     }
 
     public function transaction($slessonId, $issueId)
@@ -300,15 +232,29 @@ class ReportedIssuesController extends AdminBaseController
         $frm = new Form('frmSearch');
         $frm->addTextBox(Label::getLabel('LBL_Teacher', $this->adminLangId), 'teacher');
         $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner');
+        $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'repiss_status', ReportedIssue::getStatusArr());
         $frm->addTextBox(Label::getLabel('LBL_Order_Id', $this->adminLangId), 'sldetail_order_id');
+        $frm->addTextBox(Label::getLabel('LBL_Lesson_Id', $this->adminLangId), 'repiss_slesson_id');
         $frm->addHiddenField('', 'pageSize', FatApp::getConfig('CONF_ADMIN_PAGESIZE'));
         $frm->addHiddenField('', 'page', 1);
-        $frm->addHiddenField('', 'repiss_status', 0);
         $frm->addHiddenField('', 'slesson_teacher_id', 0);
         $frm->addHiddenField('', 'sldetail_learner_id', 0);
         $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
         $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId));
         $fld_submit->attachField($fld_cancel);
+        return $frm;
+    }
+
+    private function getActionForm()
+    {
+        $frm = new Form('actionFrm');
+        $repissId = $frm->addHiddenField('', 'reislo_repiss_id');
+        $repissId->requirements()->setRequired();
+        $repissId->requirements()->setIntPositive();
+        $frm->addSelectBox(Label::getLabel('LBL_TAKE_ACTION', $this->adminLangId), 'reislo_action', ReportedIssue::getActionsArr())->requirements()->setRequired();
+        $frm->addTextArea(Label::getLabel('LBL_ADMIN_COMMENT'), 'reislo_comment', '');
+        $frm->addCheckBox(Label::getLabel('LBL_MARK_IT_CLOSE'), 'reislo_closed', 1);
+        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
         return $frm;
     }
 

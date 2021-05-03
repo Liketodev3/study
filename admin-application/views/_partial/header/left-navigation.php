@@ -77,8 +77,6 @@
             <?php if ($objPrivilege->canViewIssuesReported(AdminAuthentication::getLoggedAdminId(), true)) { ?>
                 <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Issues_Reported', $adminLangId); ?></a>
                     <ul>
-                        <li><a href="<?php echo CommonHelper::generateUrl('IssuesReported', 'escalated'); ?>"><?php echo Label::getLabel('LBL_Escalated_Issues', $adminLangId); ?></a></li>
-                        <li><a href="<?php echo CommonHelper::generateUrl('IssuesReported'); ?>"><?php echo Label::getLabel('LBL_All_Reported_Issues', $adminLangId); ?></a></li>
                         <li><a href="<?php echo CommonHelper::generateUrl('ReportedIssues', 'escalated'); ?>"><?php echo Label::getLabel('LBL_Escalated_Issues', $adminLangId); ?></a></li>
                         <li><a href="<?php echo CommonHelper::generateUrl('ReportedIssues'); ?>"><?php echo Label::getLabel('LBL_All_Reported_Issues', $adminLangId); ?></a></li>
                     </ul>

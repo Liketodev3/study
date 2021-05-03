@@ -1,96 +1,72 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<section class="section">
+    <div class="sectionhead">
+        <h4><?php echo Label::getLabel('LBL_Issue_Detail', $adminLangId); ?></h4>
+    </div>
+    <div class="sectionbody">
+        <table class="table table--details">
+            <tbody>
+                <tr><td><h3><?php echo $issue['repiss_title']; ?></h3></td></tr>
+                <tr>
+                    <td>
+                        <strong><?php echo Label::getLabel('LBL_Reported_By', $adminLangId); ?>:</strong> <?php echo $issue['reporter_username']; ?>, 
+                        <strong><?php echo Label::getLabel('LBL_Reported_Time', $adminLangId); ?>:</strong> <?php echo MyDate::format($issue['repiss_reported_on'], true, true, Admin::getAdminTimeZone()); ?>,
+                        <strong><?php echo Label::getLabel('LBL_Issue_Status', $adminLangId); ?>:</strong> <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?>
+                    </td>
+                </tr>
+                <tr><td><p><?php echo nl2br($issue['repiss_comment']); ?></p></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<?php if (count($logs)) { ?>
+    <section class="section">
+        <div class="sectionhead">
+            <h4><?php echo Label::getLabel('LBL_Issue_Log', $adminLangId); ?></h4>
+        </div>
+        <div class="sectionbody">
+            <table class="table table--details">
+                <thead>
+                    <tr>
+                        <th><?php echo Label::getLabel('LBL_SR_NO'); ?></th>
+                        <th><?php echo Label::getLabel('LBL_ACTION'); ?></th>
+                        <th><?php echo Label::getLabel('LBL_COMMENT'); ?></th>
+                        <th><?php echo Label::getLabel('LBL_ACTION_BY'); ?></th>
+                        <th><?php echo Label::getLabel('LBL_ACTION_ON'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $srNo = 1;
+                    foreach ($logs as $log) {
+                        ?>
+                        <tr>
+                            <td><?php echo $srNo++; ?></td>
+                            <td><?php echo $actionArr[$log['reislo_action']]; ?></td>
+                            <td><?php echo nl2br($log['reislo_comment']); ?></td>
+                            <td>
+                                <?php echo $log['user_fullname']; ?>
+                                <?php echo '(' . ReportedIssue::getUserTypeArr($log['reislo_added_by_type']) . ')'; ?>
+                            </td>
+                            <td><?php echo $log['reislo_added_on']; ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
+<?php } ?>
 <?php
-$lastIssue = end($issueDetail);
-$closed = FatUtility::int($lastIssue['issrep_closed'] ?? 0);
-if ($closed == 0) {
+if ($issue['repiss_status'] == ReportedIssue::STATUS_ESCLATED) {
     $frm->developerTags['colClassPrefix'] = 'col-md-';
     $frm->developerTags['fld_default_col'] = 12;
     $frm->setFormTagAttribute('id', 'actionForm');
     $frm->setFormTagAttribute('class', 'web_form');
     $frm->setFormTagAttribute('onsubmit', 'setupAction(this); return(false);');
-}
-$endedBy = isset(User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_by']]) ? User::getUserTypesArr($adminLangId)[$lastIssue['slesson_ended_by']] : "NA";
-?>
-<section class="section">
-    <div class="sectionhead">
-        <h4><?php echo Label::getLabel('LBL_View_Issue_Detail', $adminLangId); ?></h4>
-    </div>
-    <div class="sectionbody">
-        <table class="table table--details">
-            <tbody>
-                <tr>
-                    <td><strong><?php echo Label::getLabel('LBL_Reported_By', $adminLangId); ?>:</strong> <?php echo $lastIssue['reporter_username']; ?><br>
-                        <strong><?php echo Label::getLabel('LBL_Reported_Time', $adminLangId); ?>:</strong> <?php echo MyDate::format($lastIssue['issrep_added_on'], true, true, Admin::getAdminTimeZone()); ?><br>
-                        <strong><?php echo Label::getLabel('LBL_Issue_Status', $adminLangId); ?>:</strong> <?php echo $statusArr[$lastIssue['issrep_status']] ?? 'NA'; ?>
-                    </td>
-                    <td>
-                        <strong><?php echo Label::getLabel('LBL_Reason_by_Learner', $adminLangId); ?>:</strong>
-                        <?php
-                        foreach ($issueDetail as $details) {
-                            $_reasonIds = explode(',', $details['issrep_issues_to_report']);
-                            echo $details['issrep_comment'] . '<br />';
-                            echo '<strong>Date: ' . MyDate::format($details['issrep_added_on'], true, true, Admin::getAdminTimeZone()) . '</strong> <br /> <span>';
-                            echo '<strong>Options:</strong> ';
-                            foreach ($_reasonIds as $_ids) {
-                                echo $issues_options[$_ids] . '<br />';
-                            }
-                            echo'</span><br />';
-                        }
-                        ?>
-                    </td>
-                <tr>
-                    <?php if ($lastIssue['issrep_issues_resolve'] != '') { ?>
-                    <tr>
-                        <td width="50%"><strong><?php echo Label::getLabel('LBL_Reason_by_Teacher', $adminLangId); ?>:</strong>  </td>
-                        <td>
-                            <?php
-                            foreach ($issueDetail as $details) {
-                                echo $details['issrep_resolve_comments'] . '<br />';
-                                $_reasonIds = explode(',', $details['issrep_issues_resolve']);
-                                echo 'Date: <strong>' . MyDate::format($details['issrep_updated_on'], true, true, Admin::getAdminTimeZone()) . '</strong> <br /> <span>';
-                                echo '<strong>Options:</strong> ';
-                                foreach ($_reasonIds as $_ids) {
-                                    echo $issues_options[$_ids] . '<br />';
-                                }
-                                echo'</span><br />';
-                            }
-                            ?>
-                        </td>
-                    </tr>
-                <?php } ?>
-                <tr>
-                    <td><strong><?php echo Label::getLabel('LBL_Teacher_Resolve_by', $adminLangId); ?>:</strong></td>
-                    <td>
-                        <?php
-                        if ($lastIssue['issrep_status'] < 1) {
-                            echo Label::getLabel('LBL_NA');
-                        } else {
-                            foreach ($issueDetail as $details) {
-                                echo IssuesReported::getResolveTypeArray()[$details['issrep_issues_resolve_type']] . '<br />';
-                                echo '<strong>Date:' . MyDate::format($details['issrep_updated_on'], true, true, Admin::getAdminTimeZone()) . '</strong><br> ';
-                            }
-                        }
-                        ?>
-                    </td>
-                </tr>
-                <?php if (!empty($lastIssue['issrep_updated_by_admin']) && !empty($lastIssue['issrep_admin_comments'])) { ?>
-                    <tr>
-                        <td><strong><?php echo Label::getLabel('LBL_Admin_Resolution', $adminLangId); ?>:</strong></td>
-                        <td><?php echo IssuesReported::getResolveTypeArray()[$lastIssue['issrep_status']] ?? 'NA'; ?></td>
-                    </tr>
-                    <tr>
-                        <td><strong><?php echo Label::getLabel('LBL_Admin_comments', $adminLangId); ?>:</strong></td>
-                        <td><?php echo $lastIssue['issrep_admin_comments']; ?></td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-    </div>
-</section>
-<?php if ($closed == 0) { ?>
+    ?>
     <section class="section">
         <div class="sectionhead">
-            <h4><?php echo Label::getLabel('LBL_Issue_Reported_action_form'); ?></h4>
+            <h4><?php echo Label::getLabel('LBL_ACTION_FORM'); ?></h4>
         </div>
         <div class="sectionbody">
             <?php echo $frm->getFormHtml(); ?>

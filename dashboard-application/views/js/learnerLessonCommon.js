@@ -158,8 +158,17 @@ cancelLessonSetup = function (frm) {
 };
 
 issueReported = function (id) {
-    fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'issueReported', [id]), '', function (t) {
-        $.facebox(t, 'facebox-medium');
+    fcom.ajax(fcom.makeUrl('ReportIssue', 'form', [id]), '', function (res) {
+        if (isJson(res)) {
+            var response = JSON.parse(res);
+            if (response.status == 1) {
+                $.mbsmessage(response.msg, 'alert--success');
+            } else {
+                $.mbsmessage(response.msg, 'alert--danger');
+            }
+        } else {
+            $.facebox(t, 'facebox-medium');
+        }
     });
 };
 
@@ -168,7 +177,7 @@ issueReportedSetup = function (frm) {
         return;
     }
     $(frm).find('[type=submit]').attr('disabled', true);
-    var action = fcom.makeUrl('LearnerScheduledLessons', 'issueReportedSetup');
+    var action = fcom.makeUrl('ReportIssue', 'setup');
     fcom.updateWithAjax(action, fcom.frmData(frm), function (response) {
         $.facebox.close();
         if (response.status == 1) {

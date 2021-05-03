@@ -1,11 +1,11 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php
-$frm->setFormTagAttribute('onsubmit', 'searchIssuesReported(this,1); return(false);');
+$frm->setFormTagAttribute('onsubmit', 'search(this, 1); return(false);');
 $frm->setFormTagAttribute('class', 'web_form');
 $frm->developerTags['colClassPrefix'] = 'col-md-';
-$frm->developerTags['fld_default_col'] = 6;
+$frm->developerTags['fld_default_col'] = 4;
 $fld = $frm->getField('btn_clear');
-$fld->addFieldTagAttribute('onclick', 'clearIssueSearch()');
+$fld->addFieldTagAttribute('onclick', 'clearSearch()');
 ?>
 <div class='page'>
     <div class='fixed_container'>
@@ -16,7 +16,7 @@ $fld->addFieldTagAttribute('onclick', 'clearIssueSearch()');
                         <div class="col--first col-lg-6">
                             <span class="page__icon">
                                 <i class="ion-android-star"></i></span>
-                            <h5><?php echo Label::getLabel('LBL_escalated_Issues', $adminLangId); ?> </h5>
+                            <h5><?php echo Label::getLabel('LBL_Escalated_Issues', $adminLangId); ?> </h5>
                             <?php $this->includeTemplate('_partial/header/header-breadcrumb.php'); ?>
                         </div>
                     </div>
@@ -32,7 +32,7 @@ $fld->addFieldTagAttribute('onclick', 'clearIssueSearch()');
                 <section class="section">
                     <div class="sectionbody">
                         <div class="tablewrap">
-                            <div id="userListing">
+                            <div id="issueListing">
                                 <?php echo Label::getLabel('LBL_Processing...', $adminLangId); ?>
                             </div>
                         </div>

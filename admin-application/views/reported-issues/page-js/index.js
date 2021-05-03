@@ -75,7 +75,7 @@ $(document).ready(function () {
         });
     };
 
-    clear = function () {
+    clearSearch = function () {
         document.frmSearch.reset();
         if (document.frmSearch.slesson_teacher_id) {
             document.frmSearch.slesson_teacher_id.value = '';
@@ -94,19 +94,19 @@ $(document).ready(function () {
         });
     };
 
-    form = function (issrepId) {
+    actionForm = function (issrepId) {
         $.mbsmessage(langLbl.processing, true, 'alert alert--process');
-        fcom.ajax(fcom.makeUrl('ReportedIssues', 'form', [issrepId]), '', function (response) {
+        fcom.ajax(fcom.makeUrl('ReportedIssues', 'actionForm', [issrepId]), '', function (response) {
             $.mbsmessage.close();
             $.facebox(response, 'faceboxWidth');
         });
     };
 
-    setup = function (frm) {
+    setupAction = function (frm) {
         if (!$(frm).validate()) {
             return;
         }
-        fcom.updateWithAjax(fcom.makeUrl('ReportedIssues', 'setup'), fcom.frmData(frm), function (res) {
+        fcom.updateWithAjax(fcom.makeUrl('ReportedIssues', 'setupAction'), fcom.frmData(frm), function (res) {
             $.mbsmessage.close();
             $.facebox.close();
         });
