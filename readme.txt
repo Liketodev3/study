@@ -1,5 +1,16 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.12.1.20210503
+
+Release Date: 2021-05-03
+
+Fixes:
+
+    Bug-#053008 - Fix lesson interval on trial booking
+    Bug-#053005 - update free-trial duration label
+
+---------------------------------------------------------------------
+
 Release Number: TV-2.12.0.20210426
 
 Release Date: 2021-04-26
