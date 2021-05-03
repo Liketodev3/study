@@ -49,7 +49,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 					</div>
 					<!-- ] -->
 					<?php } ?>
-					<div class="stats-row margin-bottom-6">
+					<div class="stats-row margin-bottom-6 align-item-stretch">
 						<div class="row align-items-center">
 							<div class="col-lg-4 col-md-6 col-sm-6">
 								<div class="stat">
@@ -160,7 +160,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 					
 					<div class="status-bar__body">
 						<div class="calendar">
-								<div id='d_calendar'></div>
+								<div id='d_calendar' class="dashboard-calendar"></div>
 						</div>
 						<?php echo $frmSrch->getFormHtml(); ?>
 						<div class="listing-window" id="listItemsLessons">

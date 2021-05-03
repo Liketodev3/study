@@ -329,6 +329,7 @@ $sale-stat: "sale-stat";
     @media(min-width:theme('breakpoints.xxxl','value')){
         &{
             padding: var(--padding-12);
+            height: 100%;
         }
     }
     @media(max-width:theme('breakpoints.xxxl','value')){
@@ -348,10 +349,10 @@ $sale-stat: "sale-stat";
     }
 }
 .sale-stat--primary{
-    background-color: #F6B6500F;
+    background-color: #fff4e2;
 }
 .sale-stat--secondary{
-    background-color: #48C5D20F;
+    background-color: #e7fdff;
 }
 
 .graph-media{

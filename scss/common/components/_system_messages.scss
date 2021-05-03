@@ -287,9 +287,8 @@
 }
 
 .alert--positioned-top-full {
-    #{theme('direction.left','value')}: 0 !important;
-    #{theme('direction.right','value')}: 0 !important;
-    top: 0;
+    #{theme('direction.right','value')}: 12px !important;
+    top: 12px;
 }
 
 

@@ -11,7 +11,7 @@ $(function () {
 
     form = function (id) {
         fcom.ajax(fcom.makeUrl('TeacherGroupClasses', 'form', [id]), '', function (t) {
-            $.facebox(t, 'facebox-medium');
+            $.facebox(t, 'facebox-large');
             jQuery('#grpcls_start_datetime,#grpcls_end_datetime').each(function () {
                 $(this).datetimepicker({
                     format: 'Y-m-d H:i',

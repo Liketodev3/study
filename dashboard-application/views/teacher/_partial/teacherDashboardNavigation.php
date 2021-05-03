@@ -53,7 +53,7 @@ if(($tpp['isProfileCompleted'] == applicationConstants::YES) || ($tpp['totalFill
 			</li>
 			<li class="menu__item <?php echo ($controllerName == "TeacherIssueReported") ? 'is-active' : ''; ?>">
 				<a href="<?php echo CommonHelper::generateUrl('TeacherIssueReported'); ?>">
-					<svg class="icon icon--group-classes margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#report-issue'; ?>"></use></svg>
+					<svg class="icon icon--group-classes margin-right-2 padding-1"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#report-issue'; ?>"></use></svg>
 					<span><?php echo Label::getLabel('LBL_Issue_Reported'); ?></span>
 				</a>
 			</li>

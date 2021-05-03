@@ -57,6 +57,30 @@ $fc-scroller-harness: "fc-scroller-harness";
     }
 }
 
+$dashboard-calendar: "dashboard-calendar";
+
+.#{$dashboard-calendar} {
+    & .fc-daygrid-event{
+        background: no-repeat !important;
+        padding: 0 !important;
+        height: 50px !important;
+        border-left: none !important;
+        display: flex;
+        justify-content: center;
+
+        & .fc-event-time{
+            display: none;
+        }
+        & .fc-event-title{
+            display: none;
+        }
+    }
+
+    & .fc-daygrid-day-bottom{
+        display: none;
+    }
+}
+
 .fc-daygrid-day-frame{
 
     .fc-daygrid-day-top{
@@ -103,6 +127,10 @@ $fc-scroller-harness: "fc-scroller-harness";
 
 .fc-timegrid-event .fc-event-time{
     text-align: center;
+}
+
+.fc-view-harness{
+    height: 336px !important;
 }
 
 @media (max-width:theme('breakpoints.md','value')) {

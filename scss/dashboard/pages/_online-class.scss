@@ -201,14 +201,6 @@ $session-infobar: "session-infobar";
             font-weight: var(--font-weight-bold);
         }
     }
-}
-
-$session-resource: "session-resource";
-
-.#{&session-resource}{
-    cursor: pointer;
-    
-    position: relative;
 
     &::before{
         content: "";
@@ -224,12 +216,20 @@ $session-resource: "session-resource";
             content: none;
         }
     }
-
+    
     @media (min-width:theme('breakpoints.xxxl','value')) {
         &{
-            margin-#{theme('direction.left','value')}: var(--margin-10);
+            margin-#{theme('direction.right','value')}: var(--margin-10);
         }
     }
+}
+
+$session-resource: "session-resource";
+
+.#{&session-resource}{
+    cursor: pointer;
+    
+    position: relative;
 
     @media (max-width:theme('breakpoints.xxxl','value')) {
         &{
