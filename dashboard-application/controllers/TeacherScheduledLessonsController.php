@@ -377,7 +377,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         ]);
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addCondition('slns.slesson_status', '!=', ScheduledLesson::STATUS_CANCELLED);
-        $srch->addHaving('slesson_date_time', '>', $curDateTime);
+        // $srch->addHaving('slesson_date_time', '>', $curDateTime);
         $srch->joinLearner();
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);

@@ -1,9 +1,9 @@
 <?php 
 defined('SYSTEM_INIT') or die('Invalid Usage.'); 
-$reportSearchForm->addFormTagAttribute('onsubmit', "getStatisticalData(this); return (false);");;
+$reportSearchForm->addFormTagAttribute('onsubmit', "getStatisticalData1(this); return (false);");;
 
 $durationType = $reportSearchForm->getField('duration_type');
-$durationType->addFieldTagAttribute('onChange','getStatisticalData(this.form); return (false);');
+$durationType->addFieldTagAttribute('onChange','getStatisticalData1(this.form); return (false);');
 
 $reportType = $reportSearchForm->getField('report_type[]');
 $reportType->addFieldTagAttribute('class','d-none');
@@ -14,6 +14,7 @@ $frmSrch->setFormTagAttribute ( 'class', 'd-none');
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $userTimezone);
 
 ?>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <!-- [ PAGE ========= -->
  <!-- <main class="page"> -->
 		<div class="dashboard">
@@ -108,7 +109,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 									<div class="sale-stat sale-stat--primary color-yellow">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('Lbl_Duration_Type'); ?></span>
-											<h5 class="earing-amount-js"></h5>
+											<h5 class=""></h5>
 										</div>
 
 										<div class="sale-stat__select">
@@ -122,7 +123,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 									<div class="sale-stat sale-stat--primary color-yellow">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('Lbl_Sales'); ?></span>
-											<h5 class="earing-amount-js">5455</h5>
+											<h5 class="earing-amount-js"></h5>
 										</div>
 									</div>
 								</div>
@@ -130,15 +131,14 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 									<div class="sale-stat sale-stat--secondary color-secondary">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('LBL_Lessons_sold'); ?></span>
-											<h5 class="lessons-sold-count-js">45545</h5>
+											<h5 class="lessons-sold-count-js"></h5>
 										</div>
 									</div>
 								</div>
 							</div>
 							</form>
 							<?php echo $reportSearchForm->getExternalJS(); ?>
-							<div class="graph-media">
-								<img src="images/graph.png" alt="">
+							<div class="graph-media" id="chart_div">
 							</div>
 						</div>
 
@@ -174,5 +174,5 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 	<script>
 		var fecal = new FatEventCalendar(0,'<?php echo MyDate::displayTimezoneString();?>');
 		fecal.setLocale('<?php echo $currentLangCode ?>');
-		fecal.TeacherMonthlyCalendar( '<?php echo date('Y-m-d H:i:s', strtotime($nowDate)); ?>');
+		fecal.TeacherMonthlyCalendar( '<?php echo date('Y-m-d H:i:s', strtotime($nowDate)); ?>',1);
 	</script>
