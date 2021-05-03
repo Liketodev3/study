@@ -89,6 +89,9 @@ $(document).ready(function() {
             // $("body").css( {"pointer-events": "none"} );
             // $("body").css( {"cursor": "wait"} );
             //==================================//
+            // temporarily added 1 second to fix 45min slot booking issue with calendar
+            start = moment(start).add(1, 'seconds').set('second', 0);
+            end = moment(end).add(1, 'seconds').set('second', 0);
             var selectedDateTime = moment(start).format('YYYY-MM-DD HH:mm:ss');
             var validSelectDateTime = moment('<?php echo $nowDate; ?>').add('<?php echo $teacherBookingBefore;?>' ,'hours').format('YYYY-MM-DD HH:mm:ss');
 
