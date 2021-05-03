@@ -51,13 +51,13 @@ class Statistics extends MyAppModel
         $srch->addCondition('op_teacher_id', '=', $this->userId);
         $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
         $srch->addCondition('slesson_is_teacher_paid', '=', applicationConstants::YES);
-        $srch->addMultipleFields(['IFNULL(sum(op_commission_charged),0) as earning']);
+        $srch->addMultipleFields(['IFNULL(sum(op_commission_charged),0) as earning', 'order_date_added']);
         switch ($type) {
             case static::TYPE_TODAY:
                 $startDate = MyDate::changeDateTimezone(date('Y-m-d', $nowDateTimestamp) . ' 00:00:00', $user_timezone, $systemTimeZone);
                
                 if($forGraph){
-                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%H:%i') as groupDate"]);
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added,'%h:%i %p') as groupDate"]);
                     $srch->addGroupBy("DATE_FORMAT(order_date_added, '%H:%i')");
                 }
 
@@ -167,13 +167,13 @@ class Statistics extends MyAppModel
         $srch->joinOrder();
         $srch->addCondition('slesson_teacher_id', '=', $this->userId);
         $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
-        $srch->addMultipleFields(['count(slesson_id) as lessonCount, MIN(order_date_added) as fromDate, MAX(order_date_added) as toDate']);
+        $srch->addMultipleFields(['count(slesson_id) as lessonCount, MIN(order_date_added) as fromDate, MAX(order_date_added) as toDate', 'order_date_added']);
         switch ($type) {
             case static::TYPE_TODAY:
                 $startDate = MyDate::changeDateTimezone(date('Y-m-d', $nowDateTimestamp) . ' 00:00:00', $user_timezone, $systemTimeZone);
                 
                 if($forGraph){
-                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%H:%i') as groupDate"]);
+                    $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%h:%i %p') as groupDate"]);
                     $srch->addGroupBy("DATE_FORMAT(order_date_added, '%H:%i')");
                 }
 

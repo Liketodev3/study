@@ -27,7 +27,7 @@ class TeacherReportsController extends TeacherBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $durationField = $reportSearchForm->getField('duration_type');
-        $durationType = $durationField->options;
+        $durationTypeArray = $durationField->options;
         $statObj = new Statistics(UserAuthentication::getLoggedUserId());
         $responseArray = [
             'earningData' => [],
@@ -45,51 +45,83 @@ class TeacherReportsController extends TeacherBaseController
         }
 
         if($post['forGraph']){
-            $userTimezone =  MyDate::getUserTimeZone();
-            $systemTimezone =  MyDate::getTimeZone();
-            $fromDate = MyDate::changeDateTimezone($responseArray['earningData']['fromDate'], $systemTimezone, $userTimezone);
-            $toDate = MyDate::changeDateTimezone($responseArray['earningData']['toDate'], $systemTimezone, $userTimezone);
-            $earningLabel = Label::getLabel('Lbl_Earning');
-            $lessonSoldLabel = Label::getLabel('Lbl_LESSONS_SOLD');
-            $graphArray['column'] = [
-                'durationType' => $durationType[$post['duration_type']].' '.$fromDate.' - '.$toDate,
-                'earningLabel' => $earningLabel,
-                'lessonSoldLabel' => $lessonSoldLabel,
-            ];
-            $graphArray['rowData'] = [];
-            
-            $rowData = [];
-            if(!empty($responseArray['earningData']['earningData'])){
-                foreach ($responseArray['earningData']['earningData'] as $key => $value) {
-                    $rowData[$key] = [
-                        $key,
-                        CommonHelper::displayMoneyFormat($value['earning'], true, false, false),
-                        $earningLabel." ".CommonHelper::displayMoneyFormat($value['earning']),
-                        0,
-                        $lessonSoldLabel." 0"
-                    ];
-                }
-            }
-            if (!empty($responseArray['soldLessons']['lessonData'])) {
-                foreach ($responseArray['soldLessons']['lessonData'] as $key => $value) {
-                    if (array_key_exists($key, $rowData)) {
-                        $rowData[$key][3] = $value['lessonCount'];
-                        $rowData[$key][4] =  $lessonSoldLabel." ".$value['lessonCount'];
-                    } else {
-                        $rowData[$key] = [
-                        $key,
-                        0,
-                        $earningLabel." ".CommonHelper::displayMoneyFormat(0),
-                        $value['lessonCount'],
-                        $lessonSoldLabel." ".$value['lessonCount']
-                    ];
-                    }
-                }
-            }
-            $graphArray['rowData'] = array_values($rowData);
-            $responseArray['graphData'] = $graphArray;
+            $responseArray = $this->formatGraphArray($responseArray, $durationTypeArray, $post['duration_type']);
         }
+
         FatUtility::dieJsonSuccess($responseArray);
     }
 
+    private function formatGraphArray(array $responseArray, array $durationTypeArray,int $durationType) : array
+    {
+        $userTimezone =  MyDate::getUserTimeZone();
+        $systemTimezone =  MyDate::getTimeZone();
+        
+        $fromDate = MyDate::changeDateTimezone($responseArray['earningData']['fromDate'], $systemTimezone, $userTimezone);
+        $toDate = MyDate::changeDateTimezone($responseArray['earningData']['toDate'], $systemTimezone, $userTimezone);
+
+        $earningLabel = Label::getLabel('Lbl_Earning');
+        $lessonSoldLabel = Label::getLabel('Lbl_LESSONS_SOLD');
+        $graphArray['column'] = [
+            'durationType' => $durationTypeArray[$durationType].' '.$fromDate.' - '.$toDate,
+            'earningLabel' => $earningLabel,
+            'lessonSoldLabel' => $lessonSoldLabel,
+        ];
+        $graphArray['rowData'] = [];
+            
+        $rowData = [];
+        if(!empty($responseArray['earningData']['earningData'])){
+            foreach ($responseArray['earningData']['earningData'] as $key => $value) {
+            
+                $date = $this->getDateFormat($durationType, $value['order_date_added'], $userTimezone);
+                $rowData[$key] = [
+                    $date,
+                    CommonHelper::displayMoneyFormat($value['earning'], true, false, false),
+                    $earningLabel." ".CommonHelper::displayMoneyFormat($value['earning']),
+                    0,
+                    $lessonSoldLabel." 0"
+                ];
+            }
+        }
+        if (!empty($responseArray['soldLessons']['lessonData'])) {
+            foreach ($responseArray['soldLessons']['lessonData'] as $key => $value) {
+                if (array_key_exists($key, $rowData)) {
+                    $rowData[$key][3] = $value['lessonCount'];
+                    $rowData[$key][4] =  $lessonSoldLabel." ".$value['lessonCount'];
+                } else {
+
+                    $date = $this->getDateFormat($durationType, $value['order_date_added'], $userTimezone);
+                    $rowData[$key] = [
+                    $date,
+                    0,
+                    $earningLabel." ".CommonHelper::displayMoneyFormat(0),
+                    $value['lessonCount'],
+                    $lessonSoldLabel." ".$value['lessonCount']
+                ];
+                }
+            }
+        }
+        $graphArray['rowData'] = array_values($rowData);
+        $responseArray['graphData'] = $graphArray;
+        return $responseArray;
+    }
+
+    private function getDateFormat(int $durationType, string $date,string $userTimezone) :string
+    {
+        switch ($durationType) {
+            case Statistics::TYPE_TODAY:
+                $date = MyDate::convertTimeFromSystemToUserTimezone("h:i A",$date, true, $userTimezone);
+            break;
+            case Statistics::TYPE_THIS_YEAR:
+            case Statistics::TYPE_LAST_YEAR:
+                $date = MyDate::convertTimeFromSystemToUserTimezone("M-Y",$date, true, $userTimezone);
+            break;
+            default:
+                $date = MyDate::convertTimeFromSystemToUserTimezone("Y-m-d",$date, true, $userTimezone);
+            break;
+        }
+        return $date;
+    }
+
+
 }
+
