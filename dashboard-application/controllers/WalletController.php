@@ -220,7 +220,7 @@ class WalletController extends LoggedUserController
             Message::addErrorMessage($orderObj->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
-        $this->set('redirectUrl', CommonHelper::generateUrl('WalletPay', 'Recharge', [$order_id]));
+        $this->set('redirectUrl', CommonHelper::generateUrl('WalletPay', 'Recharge', [$order_id], CONF_WEBROOT_FRONTEND));
         $this->set('msg', Label::getLabel('MSG_Redirecting', $this->siteLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
