@@ -7,11 +7,13 @@ $alert: "alert";
   // z-index: 10000;
   display: flex;min-height: 60px;
   align-items: center;
-  min-width: 300px;
+  min-width: 244px;
   margin-bottom: theme('margin.3');
   padding: theme('padding.2') theme('padding.3'); color: theme('color.white');justify-content: space-between;
   background-color: theme('color.transparent');
   font-size: theme('font.size.small');
+  flex-direction: row-reverse;
+  border-radius: 5px;
 
   &__cross{
     margin-#{theme('direction.left','value')}: auto;
@@ -21,7 +23,7 @@ $alert: "alert";
     padding: theme('padding.1') theme('padding.2');
   }
 
-  &--success{padding-#{theme('direction.left','value')}: 60px;background-color:#00bd7d ;
+  &--success{padding-#{theme('direction.left','value')}: 10px;background-color:#00bd7d ;
     &:before{  background:url(/images/icon-success.svg) no-repeat;background-size:30px;position: absolute;#{theme('direction.left','value')}: 15px;top: 50%; transform: translate(0,-50%); content: "";width: 30px;height: 30px;}
   }
 

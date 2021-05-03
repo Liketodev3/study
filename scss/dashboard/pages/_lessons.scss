@@ -240,6 +240,7 @@ $page-filter: "page-filter";
 
 .#{$page-filter}{
     position: relative;
+    margin-top: var(--margin-4);
     @media(max-width:theme('breakpoints.xl','value')){
         &{ background-color:theme('color.white'); border-radius: theme('radius.1'); padding: theme('padding.4'); box-shadow: theme('boxShadow.all');
             [class*="col-"]{position:static;}

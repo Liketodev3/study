@@ -522,7 +522,167 @@
     position: sticky;
     top: 88px;
   }
-  
+
+
+  .calendar-view {
+    background: #fff;
+    padding: 20px;
+}
+
+.calendar-view [class*="col-"]:last-child {
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;
+    /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    /* NEW - Chrome */
+    display: flex;
+    /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    justify-content: flex-end;
+}
+
+.calendar-view .cal-status {
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;
+    /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    /* NEW - Chrome */
+    display: flex;
+    /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    align-items: center;
+    margin-bottom: 10px;
+
+}
+
+.calendar-view p {
+    margin: 0;
+}
+
+.calendar-view .fc-state-default {
+    background: #fff;
+}
+
+.calendar-view .fc-state-disabled.fc-today-button.fc-button {
+    cursor: default;
+}
+
+.calendar-view .fc button {
+    height: 35px;
+}
+
+.calendar-view .fc-toolbar .fc-left h2 {
+    font-size: 1.3rem;
+    line-height: 35px;
+}
+
+.calendar-view .fc-unthemed th {
+    padding: 30px 0 10px;
+    /* border-color:#eee; */
+}
+
+.calendar-view .fc-unthemed th.fc-axis.fc-widget-header {
+    width: 46px !important;
+}
+
+.calendar-view .fc-unthemed td {
+    /* border-color:#eee;  */
+    text-align: center;
+}
+
+.calendar-view .fc-unthemed .fc-today {
+    background: #f9f5fe !important;
+    font-weight: 700;
+    color: var(--color-secondary);
+}
+
+.calendar-view .fc-unthemed .fc-today.fc-day-top {
+    border-color: transparent !important;
+}
+
+.calendar-view .fc-unthemed .fc-today.fc-day {
+    border-color: #eee !important;
+}
+
+.calendar-view .fc-unthemed .fc-row.fc-rigid .fc-content-skeleton {
+    top: 10px;
+}
+
+.calendar-view .fc-unthemed .fc-more-cell {
+    position: relative;
+}
+
+.calendar-view .fc-unthemed .fc-more-cell .fc-more {
+    /* position:absolute;top:-70px;left:0;right:0; */
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+    text-transform: uppercase;
+    display: block;
+    margin: 10px 0 0;
+}
+
+.calendar-view .fc-unthemed .fc-day-top .fc-day-number {
+    float: none !important;
+}
+
+.calendar-view .fc-unthemed .fc-popover {
+    padding: 15px;
+    border-radius: 3px;
+    box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.04);
+}
+
+.calendar-view .fc-unthemed .fc-popover .fc-header {
+    padding: 0;
+    background: #fff;
+    margin-bottom: 10px;
+}
+
+/* .calendar-view .fc-more-popover .fc-event-container{padding:0;display: flex; flex-wrap: wrap;} */
+.calendar-view .fc-event-container .fc-day-grid-event {
+    background: var(--color-secondary);
+    border: none;
+    color: #fff;
+    padding: 5px;
+    text-align: #{theme('direction.left','value')};
+}
+
+.calendar-view .fc-more-popover .fc-event-container {
+    padding: 0;
+}
+
+
+.calendar-view .fc-more-popover .fc-event-container .fc-day-grid-event {
+    background: var(--color-secondary);
+    border: none;
+    margin: 5px 0 0;
+}
+
+.calendar-view .fc-event-container .fc-day-grid-event .fc-content {
+    color: #fff !important;
+}
+
+.calendar-view .fc-event-container .fc-day-grid-event .fc-content .avtar {
+    float: #{theme('direction.left','value')};
+    margin-#{theme('direction.right','value')}: 10px;
+}
+
+.calendar-view .fc-day-grid-event .fc-time {
+    font-weight: normal;
+    text-transform: uppercase;
+   padding-#{theme('direction.left','value')}: 10px;
+    display: block;
+}
+
+.calendar-view .fc-day-grid-event .fc-title {
+    font-weight: 600;
+    display: block;
+    font-size: 1rem;
+}
  
 
 @media (min-width: theme('breakpoints.xl','value')){
