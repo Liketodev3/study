@@ -170,6 +170,15 @@ class ProfileController extends AdminBaseController
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
+
+        if (CONF_USE_FAT_CACHE) {
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'ORIGINAL')));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM')));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'SMALL')));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'EXTRASMALL')));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId)));
+        }
+
         $this->set('msg', Label::getLabel('MSG_File_deleted_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
