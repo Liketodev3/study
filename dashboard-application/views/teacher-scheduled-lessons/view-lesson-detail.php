@@ -399,7 +399,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
     function endLessonCountDownTimer(curDate, endTime) {
         countDownTimer(curDate, endTime, function(w_res_data) {
             if (w_res_data) {
-                $('.end-lesson-btn-js').show();
+                $('.end-lesson-btn-js, #end_lesson_timer').show();
                 if (lesson_joined) {
                     $('#endL').show();
                 }
