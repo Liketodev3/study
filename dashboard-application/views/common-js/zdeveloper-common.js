@@ -16,23 +16,46 @@ function isUserLogged(){
 	});
 	return isUserLogged;
 }
-getStatisticalData = function(type){
+getStatisticalData = function(form){
 
-	if(type == 1){
-		duration = $('#earningMonth').val();
-	}
-	if(type == 2){
-		duration = $('#lessonsMonth').val();
-	}
-	fcom.ajax(fcom.makeUrl('TeacherReports','getStatisticalData'), 'duration='+duration+'&type='+type , function(res){
-		if(type == 1){
-			$('#earningContent').html(res);
-		}
-		if(type == 2){
-			$('#lessonsSold').html(res);
-		}
-	});
+	if (!$(form).validate()) return;
+	var data = fcom.frmData(form);
+	fcom.ajax(fcom.makeUrl('TeacherReports','getStatisticalData'), data , function(res){
+		console.log(res.earningData);
+		$('.earing-amount-js').html(res.earningData.earning);
+		$('.lessons-sold-count-js').html(res.soldLessons.lessonCount);
+	},{fOutMode:'json'});
 }
+generateThread = function (id) {
+	//var data = 'threadId='+id;
+	if (isUserLogged() == 0) {
+		logInFormPopUp();
+		return false;
+	}
+
+	fcom.updateWithAjax( fcom.makeUrl('Messages','initiate', [id], confWebRootUrl), '',function(ans){
+		$.mbsmessage.close();
+		if (ans.redirectUrl) {
+			if (ans.threadId) {
+				sessionStorage.setItem('threadId', ans.threadId);
+			}
+			window.location.href = ans.redirectUrl;
+			return;
+		}
+		$.facebox(ans.html, '');
+	});
+};
+
+sendMessage = function (frm) {
+	if (!$(frm).validate()) return;
+	var data = fcom.frmData(frm);
+	var dv = "#frm_fat_id_frmSendMessage";
+	$(dv).html(fcom.getLoader());
+	fcom.updateWithAjax(fcom.makeUrl('Messages', 'sendMessage', [], confWebRootUrl), data, function(t) {
+	window.location.href = fcom.makeUrl('Messages', '', [], confWebRootUrl);
+	});
+};
+
 getCookieConsentForm = function(){
 
 	fcom.ajax(fcom.makeUrl('Custom','cookieForm', [], confFrontEndUrl),'',function(t){

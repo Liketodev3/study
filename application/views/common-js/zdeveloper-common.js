@@ -427,10 +427,9 @@ $(document).ready(function () {
 		}
 		var data = 'teacher_id=' + teacher_id;
 		$.mbsmessage.close();
-		fcom.updateWithAjax(fcom.makeUrl('Learner', 'toggleTeacherFavorite'), data, function (ans) {
+		fcom.ajax(fcom.makeUrl('Learner', 'toggleTeacherFavorite', [], confWebDashUrl), data, function (ans) {
 			isRuningTeacherFavoriteAjax = false;
 			if (ans.status) {
-				
 				if (ans.action == 'A') {
 					$(el).addClass("is-active");
 				} else if (ans.action == 'R') {
@@ -439,8 +438,10 @@ $(document).ready(function () {
 				if (typeof searchfavorites != 'undefined') {
 					searchfavorites(document.frmFavSrch);
 				}
+			}else{
+				$.mbsmessage(ans.msg,true, 'alert alert--danger');
 			}
-		}, { errorFn: function () {
+		},{ fOutMode:'json', errorFn: function () {
 			isRuningTeacherFavoriteAjax = false;
 		}});
 		$(el).blur();

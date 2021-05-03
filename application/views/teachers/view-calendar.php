@@ -29,12 +29,12 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
     <?php if( 'free_trial' != $action ): ?>
     <small class="label label--warning"><?php echo Label::getLabel('Note_This_calendar_is_to_only_check_availability') ?></small>
     <?php endif; ?>
-
+    <div id='calendar-container'>
+        <div id='d_calendar'></div>
+    </div>
 </div>
 
-<div id='calendar-container'>
-    <div id='d_calendar'></div>
-</div>
+
 
 <div class="tooltipevent-wrapper-js d-none">
     <div class="tooltipevent" style="position:absolute;z-index:10001;">

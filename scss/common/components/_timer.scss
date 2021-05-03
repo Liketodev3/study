@@ -1,6 +1,6 @@
 $timer: "timer";
 
-.#{$timer}{ position: relative; display: flex; align-items: center; color: theme('color.third'); min-height: 32px;
+.#{$timer}{ position: relative; display: inline-flex; align-items: center; color: theme('color.third'); min-height: 32px;
 
     &__media{ margin-#{theme('direction.right','value')}: theme('margin-1');}
     &__controls{display: flex; align-items: center; }
@@ -23,4 +23,7 @@ $timer: "timer";
     }
 }
 
+.timezoneoffset {
+    margin-left: 5px;
+}
 

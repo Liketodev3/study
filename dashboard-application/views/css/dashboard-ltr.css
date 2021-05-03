@@ -118,7 +118,8 @@ p {
   width: 100%;
   border-radius: var(--radius-1);
   -webkit-box-shadow: var(--boxShadow-all);
-          box-shadow: var(--boxShadow-all); }
+          box-shadow: var(--boxShadow-all);
+  margin-top: var(--margin-5); }
   @media (min-width: 1199px) {
     .page-panel--flex {
       display: -webkit-box;
@@ -641,12 +642,16 @@ p {
   padding: calc(10px + 0.3vw) var(--padding-6); }
 
 .menu--steps .menu__icon {
-  width: 16px;
-  height: 16px;
+  min-width: 1.75em;
+  height: 1.75em;
   position: absolute;
   right: 1rem;
   top: 50%;
-  border-radius: var(--radius-round);
+  border-radius: 1.75em;
+  padding-left: var(--padding-1);
+  font-size: 0.66em;
+  line-height: 1.75em;
+  padding-right: var(--padding-1);
   -webkit-transform: translate(0, -50%);
       -ms-transform: translate(0, -50%);
           transform: translate(0, -50%);
@@ -687,21 +692,28 @@ p {
     content: "";
     -webkit-transform: rotate(-45deg) translate(0, -78%);
         -ms-transform: rotate(-45deg) translate(0, -78%);
-            transform: rotate(-45deg) translate(0, -78%); }
+            transform: rotate(-45deg) translate(0, -78%);
+    pointer-events: none; }
 
 .menu--steps li.profile--progress--menu:not(.is-completed) > a {
   opacity: 1; }
+  .menu--steps li.profile--progress--menu:not(.is-completed) > a::before {
+    content: none; }
 
 .menu--steps li.profile--progress--menu:not(.is-completed) .menu__icon {
   background-color: var(--color-yellow);
   display: block; }
   .menu--steps li.profile--progress--menu:not(.is-completed) .menu__icon:before {
-    width: 9px;
-    height: 5px;
     position: absolute;
-    left: 38%;
+    left: 0.43rem;
+    font-weight: 600;
     content: "!";
-    color: #fff; }
+    color: #fff;
+    font-size: 15px;
+    pointer-events: none; }
+  @media (max-width: 1199px) {
+    .menu--steps li.profile--progress--menu:not(.is-completed) .menu__icon {
+      right: 0; } }
 
 @media (max-width: 1199px) {
   .menu--steps {
@@ -915,8 +927,24 @@ p {
     margin-right: var(--margin-2);
     margin-bottom: var(--margin-1) !important; }
 
-.fc-scrollgrid-section td {
-  border: none; }
+.dashboard-calendar .fc-daygrid-event {
+  background: no-repeat !important;
+  padding: 0 !important;
+  height: 50px !important;
+  border-left: none !important;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+  .dashboard-calendar .fc-daygrid-event .fc-event-time {
+    display: none; }
+  .dashboard-calendar .fc-daygrid-event .fc-event-title {
+    display: none; }
+
+.dashboard-calendar .fc-daygrid-day-bottom {
+  display: none; }
 
 .fc-daygrid-day-frame .fc-daygrid-day-top {
   -webkit-box-pack: center;
@@ -956,6 +984,39 @@ p {
 .fc-button-group .fc-button:hover {
   background-color: transparent;
   border-color: var(--color-gray-200); }
+
+.fc-event-main-frame .closeon {
+  height: 22px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+
+.fc .fc-toolbar-title {
+  font-size: 1.25em; }
+
+.fc-timegrid-event .fc-event-time {
+  text-align: center; }
+
+.dashboard-calendar .fc-view-harness {
+  height: 336px !important; }
+
+@media (max-width: 767px) {
+  .fc .fc-header-toolbar {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: end;
+        -ms-flex-align: end;
+            align-items: end; }
+  .fc-toolbar-chunk {
+    margin-bottom: 10px; } }
 
 .menu-vertical li a {
   display: block;
@@ -2346,8 +2407,8 @@ strong.span-right {
   .infobar__media-icon--tick {
     color: var(--color-primary); }
     .infobar__media-icon--tick:before {
-      background-color: var(--color-white);
-      opacity: 1; }
+      background-color: var(--color-primary);
+      opacity: 0.1; }
   @media (max-width: 576px) {
     .infobar {
       padding: var(--padding-4); }
@@ -3123,15 +3184,16 @@ div.tagsinput div {
         -ms-flex-direction: column;
             flex-direction: column; } }
 
-@media (max-width: 1299px) {
-  .dashboard .dashboard__primary {
-    -webkit-box-ordinal-group: 3;
-        -ms-flex-order: 2;
-            order: 2; } }
-
-@media (max-width: 1399px) {
-  .dashboard .dashboard__primary {
-    padding: 0 var(--padding-5); } }
+.dashboard .dashboard__primary {
+  width: 100%; }
+  @media (max-width: 1299px) {
+    .dashboard .dashboard__primary {
+      -webkit-box-ordinal-group: 3;
+          -ms-flex-order: 2;
+              order: 2; } }
+  @media (max-width: 1399px) {
+    .dashboard .dashboard__primary {
+      padding: 0 var(--padding-5); } }
 
 .dashboard .dashboard__secondary {
   background-color: #fff;
@@ -3146,14 +3208,15 @@ div.tagsinput div {
       margin: var(--margin-5) var(--margin-5) 0; } }
   @media (min-width: 1399px) {
     .dashboard .dashboard__secondary {
-      max-width: 28.6rem;
+      max-width: 25.6rem;
       position: -webkit-sticky;
       position: sticky;
       top: 0;
       bottom: 0;
       left: 0;
       z-index: 3;
-      height: 100vh; } }
+      height: 100vh;
+      width: 100%; } }
   @media (min-width: 1299px) and (max-width: 1399px) {
     .dashboard .dashboard__secondary {
       max-width: 22rem;
@@ -3167,8 +3230,7 @@ div.tagsinput div {
 
 .status-bar {
   border-radius: var(--radius-0);
-  padding: var(--padding-8) 0;
-  height: 100%; }
+  padding: var(--padding-8) 0; }
   @media (min-width: 991px) and (max-width: 1299px) {
     .status-bar {
       padding: var(--padding-8) var(--padding-4);
@@ -3377,7 +3439,8 @@ div.tagsinput div {
           justify-content: space-between; }
   @media (min-width: 1399px) {
     .sale-stat {
-      padding: var(--padding-12); } }
+      padding: var(--padding-12);
+      height: 100%; } }
   @media (max-width: 1399px) {
     .sale-stat {
       padding: var(--padding-6) var(--padding-4);
@@ -3387,10 +3450,10 @@ div.tagsinput div {
       width: 140px; } }
 
 .sale-stat--primary {
-  background-color: #F6B6500F; }
+  background-color: #fff4e2; }
 
 .sale-stat--secondary {
-  background-color: #48C5D20F; }
+  background-color: #e7fdff; }
 
 .graph-media img {
   width: 100%; }
@@ -3470,6 +3533,52 @@ div.tagsinput div {
     .language .btn--equal .icon {
       width: 15px;
       height: 15px; }
+
+.aside--progress--menu {
+  position: relative; }
+  .aside--progress--menu:not(.is-completed)::after {
+    position: absolute;
+    right: 0.8rem;
+    top: 0.7rem;
+    content: "!";
+    color: #fff;
+    pointer-events: none; }
+  .aside--progress--menu:not(.is-completed)::before {
+    content: "";
+    position: absolute;
+    top: 1rem;
+    right: 0.65rem;
+    -webkit-transform: translate(25%, -25%);
+        -ms-transform: translate(25%, -25%);
+            transform: translate(25%, -25%);
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    min-width: 1.75em;
+    height: 1.75em;
+    border-radius: 1.75em;
+    padding-left: var(--padding-1);
+    padding-right: var(--padding-1);
+    content: attr(data-count);
+    font-size: 0.66em;
+    line-height: 1.75em;
+    background-color: var(--color-third);
+    pointer-events: none; }
+
+.main-dashboard .page__footer {
+  display: none; }
+
+.teacherscheduledlessons.view .page__footer {
+  display: none; }
+
+.learnerscheduledlessons.view .page__footer {
+  display: none; }
 
 .list-container {
   position: relative; }
@@ -4076,7 +4185,8 @@ div.tagsinput div {
       width: 50%; } }
 
 .page-filter {
-  position: relative; }
+  position: relative;
+  margin-top: var(--margin-4); }
   @media (max-width: 1199px) {
     .page-filter {
       background-color: var(--color-white);
@@ -4676,26 +4786,28 @@ div.tagsinput div {
   .session-time p span {
     font-weight: var(--font-weight-bold); }
 
+.session-time::before {
+  content: "";
+  position: absolute;
+  height: 13px;
+  width: 1px;
+  background: var(--color-black);
+  left: -17px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%); }
+  @media (max-width: 1399px) {
+    .session-time::before {
+      content: none; } }
+
+@media (min-width: 1399px) {
+  .session-time {
+    margin-right: var(--margin-10); } }
+
 .session-resource {
   cursor: pointer;
   position: relative; }
-  .session-resource::before {
-    content: "";
-    position: absolute;
-    height: 13px;
-    width: 1px;
-    background: var(--color-black);
-    left: -17px;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-            transform: translateY(-50%); }
-    @media (max-width: 1399px) {
-      .session-resource::before {
-        content: none; } }
-  @media (min-width: 1399px) {
-    .session-resource {
-      margin-left: var(--margin-10); } }
   @media (max-width: 1399px) {
     .session-resource {
       margin-left: var(--margin-4); } }
@@ -4849,71 +4961,71 @@ div.tagsinput div {
       width: 60px;
       height: 60px; }
 
-.more-student {
+.more-dropdown {
   margin-left: var(--margin-3); }
   @media (min-width: 991px) {
-    .more-student {
+    .more-dropdown {
       position: relative; } }
   @media (min-width: 1199px) {
-    .more-student:hover .menu__dropdown {
+    .more-dropdown:hover .menu__dropdown {
       opacity: 1;
       visibility: visible;
       top: 28px; } }
-  .more-student a {
+  .more-dropdown a {
     border-bottom: 1px dotted currentColor;
     cursor: pointer;
     font-size: 1.3rem; }
     @media (min-width: 1199px) and (max-width: 1299px) {
-      .more-student a {
+      .more-dropdown a {
         font-size: 1.1rem; } }
     @media (min-width: 767px) and (max-width: 1199px) {
-      .more-student a {
+      .more-dropdown a {
         font-size: 1.2rem; } }
     @media (min-width: 1299px) {
-      .more-student a {
-        font-size: 1.4rem; } }
-    @media (max-width: 576px) {
-      .more-student a {
+      .more-dropdown a {
         font-size: 1.2rem; } }
-  .more-student .more--dropdown {
+    @media (max-width: 576px) {
+      .more-dropdown a {
+        font-size: 1.2rem; } }
+  .more-dropdown .more--dropdown {
     background: var(--color-white);
     padding: var(--padding-3);
     min-width: 18rem; }
-    .more-student .more--dropdown::before {
+    .more-dropdown .more--dropdown::before {
       content: none; }
     @media (min-width: 767px) and (max-width: 991px) {
-      .more-student .more--dropdown {
+      .more-dropdown .more--dropdown {
         top: auto;
         left: 40px;
         right: 40px; } }
     @media (min-width: 991px) {
-      .more-student .more--dropdown {
+      .more-dropdown .more--dropdown {
         left: 0;
         z-index: 3;
         top: 40px; } }
-    .more-student .more--dropdown .profile-meta__details h4 {
+    .more-dropdown .more--dropdown .profile-meta__details h4 {
       max-width: 145px;
       white-space: nowrap;
       overflow: hidden;
       -o-text-overflow: ellipsis;
          text-overflow: ellipsis;
       font-size: var(--font-size-small); }
-    .more-student .more--dropdown li {
+    .more-dropdown .more--dropdown li {
       margin-bottom: var(--margin-2); }
-      .more-student .more--dropdown li .profile-meta {
+      .more-dropdown .more--dropdown li .profile-meta {
         margin-left: 0 !important;
         width: 100%;
         cursor: pointer; }
         @media (max-width: 576px) {
-          .more-student .more--dropdown li .profile-meta {
+          .more-dropdown .more--dropdown li .profile-meta {
             margin: 0; } }
-      .more-student .more--dropdown li:last-child {
+      .more-dropdown .more--dropdown li:last-child {
         margin-bottom: var(--margin-0); }
   @media (max-width: 767px) {
-    .more-student .is-visible {
+    .more-dropdown .is-visible {
       bottom: 32%; } }
   @media (min-width: 767px) and (max-width: 991px) {
-    .more-student .is-visible {
+    .more-dropdown .is-visible {
       bottom: 100%; } }
 
 .gift-card {

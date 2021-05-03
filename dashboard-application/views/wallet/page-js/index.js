@@ -51,6 +51,16 @@ $(document).ready(function () {
         });
     };
 
+    rechargeWalletForm = function () {
+        $.loader.show();
+        $.facebox(function () {
+            fcom.ajax(fcom.makeUrl('Wallet', 'rechargeWalletForm'), '', function (t) {
+                $.facebox(t, 'faceboxWidth');
+                $.loader.hide();
+            });
+        });
+    };
+
     giftcardRedeem = function (frm1) {
         if (!$(frm1).validate()) return;
         var data1 = fcom.frmData(frm1);

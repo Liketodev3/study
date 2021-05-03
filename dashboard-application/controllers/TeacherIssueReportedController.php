@@ -40,6 +40,11 @@ class TeacherIssueReportedController extends TeacherBaseController
             'op_lesson_duration',
             'op_lpackage_is_free_trial',
         ]);
+
+        if(!empty($post['keyword'])){
+          $keywordCondition = $srch->addCondition('user_first_name', 'LIKE', '%'.$post['keyword'].'%');
+          $keywordCondition->attachCondition('user_last_name', 'LIKE', '%'.$post['keyword'].'%');
+        }
         $srch->addOrder('issrep_status', 'ASC');
         $srch->addOrder('issrep_id', 'DESC');
         $srch->addGroupBy('issrep_id');

@@ -247,18 +247,15 @@ FatEventCalendar.prototype.LearnerMonthlyCalendar = function(current_time){
     this.startTimer(current_time);
 };
 
-FatEventCalendar.prototype.TeacherMonthlyCalendar = function(current_time, timeZone){
+FatEventCalendar.prototype.TeacherMonthlyCalendar = function(current_time, dayMaxEvents){
     var calConf = {
         initialView: '',
         now:current_time,
         headerToolbar: {
             left: 'time'
         },
-        eventSources: [
-            {
-                url: fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData',[])
-            }
-        ],
+        eventColor: 'green',
+        events:fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData',[]),
         select: function(arg){
             var start = arg.start;
             var end = arg.end;
@@ -266,7 +263,8 @@ FatEventCalendar.prototype.TeacherMonthlyCalendar = function(current_time, timeZ
                 calender.unselect();
                 return false;
             }
-        }
+        },
+        dayMaxEvents: (dayMaxEvents) ? dayMaxEvents : 3
     }
     var defaultConf = this.calDefaultConf;
     var conf = {...defaultConf, ...calConf};
@@ -385,11 +383,11 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
                 }
             }
         ],
-        eventClick: function(arg) {
-            if (confirm(langLbl.confirmRemove)) {
-                arg.event.remove()
-            }
-        },
+        // eventClick: function(arg) {
+        //     if (confirm(langLbl.confirmRemove)) {
+        //         arg.event.remove()
+        //     }
+        // },
         select: function (arg ) {
             var start = arg.start;
             var end = arg.end;
@@ -446,12 +444,13 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
         },
         eventDidMount: function(arg) {
             element = arg.el;
-            if(isNaN(arg.event.extendedProps._id)){
-               $(element).find(".fc-event-main-frame").prepend( "<span class='closeon'>X</span>" );
-            }
-            else{
-                $(element).find(".fc-event-main-frame").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+arg.event.extendedProps_id+");'>X</span>" );
-            }
+            let event = arg.event;
+                $(element).find(".fc-event-main-frame").prepend( "<span class='closeon'>X</span>" );
+                $(element).find(".closeon").click(function() {
+                    if (confirm(langLbl.confirmRemove)) {
+                        event.remove();
+                    }
+                 });
          }
     }
     var defaultConf = this.calDefaultConf;
@@ -488,11 +487,11 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function(current_time){
                 }
             }
         ],
-        eventClick: function(arg) {
-            if (confirm(langLbl.confirmRemove)) {
-                arg.event.remove()
-            }
-        },
+        // eventClick: function(arg) {
+        //     if (confirm(langLbl.confirmRemove)) {
+        //         arg.event.remove()
+        //     }
+        // },
         select: function (arg ) {
             var start = arg.start;
             var end = arg.end;
@@ -557,12 +556,13 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function(current_time){
         },
         eventDidMount: function(arg) {
             element = arg.el;
-            if(isNaN(arg.event.extendedProps._id)){
-               $(element).find(".fc-event-main-frame").prepend( "<span class='closeon'>X</span>" );
-            }
-            else{
-                $(element).find(".fc-event-main-frame").prepend( "<span class='closeon' onclick='deleteTeacherGeneralAvailability("+arg.event.extendedProps_id+");'>X</span>" );
-            }
+            let event = arg.event;
+                $(element).find(".fc-event-main-frame").prepend( "<span class='closeon'>X</span>" );
+                $(element).find(".closeon").click(function() {
+                    if (confirm(langLbl.confirmRemove)) {
+                        event.remove();
+                    }
+                 });
          }
     }
     var defaultConf = this.calDefaultConf;

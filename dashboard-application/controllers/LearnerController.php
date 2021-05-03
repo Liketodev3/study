@@ -24,11 +24,17 @@ class LearnerController extends LearnerBaseController
             }
         }
         $frmSrch = $this->getSearchForm();
-        $frmSrch->fill(['status' => ScheduledLesson::STATUS_UPCOMING, 'show_group_classes' => ApplicationConstants::YES]);
+        $frmSrch->fill([
+                'status' => ScheduledLesson::STATUS_UPCOMING, 
+                'show_group_classes' => ApplicationConstants::YES
+                ]);
         $this->set('frmSrch', $frmSrch);
-        $userObj = new User(UserAuthentication::getLoggedUserId());
+        $userId = UserAuthentication::getLoggedUserId();
+        $userObj = new User($userId);
         $userDetails = $userObj->getDashboardData(CommonHelper::getLangId());
+        // prx($userDetails);
         $this->set('userDetails', $userDetails);
+        $this->set('userTotalWalletBalance', User::getUserBalance($userId, false));
         $this->_template->render();
     }
 
@@ -154,9 +160,9 @@ class LearnerController extends LearnerBaseController
         $srch->addMultipleFields(['user_id', 'user_first_name', 'user_last_name',]);
         $teacher = FatApp::getDb()->fetch($srch->getResultSet());
         if (empty($teacher)) {
-            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request', $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request', $this->siteLangId));
         }
+        $message = '';
         $action = 'N'; //nothing happened
         $srch = new UserFavoriteTeacherSearch();
         $srch->doNotCalculateRecords();
@@ -166,21 +172,18 @@ class LearnerController extends LearnerBaseController
         if (!$row = $db->fetch($srch->getResultSet())) {
             $userObj = new User($loggedUserId);
             if (!$userObj->addUpdateUserFavoriteTeacher($teacherId)) {
-                Message::addErrorMessage(Label::getLabel('LBL_Some_problem_occurred,_Please_contact_webmaster', $this->siteLangId));
-                FatUtility::dieWithError(Message::getHtml());
+                $message = Label::getLabel('LBL_Some_problem_occurred,_Please_contact_webmaster', $this->siteLangId);
             }
             $action = 'A'; //Added to favorite
-            $this->set('msg', Label::getLabel('LBL_Teacher_has_been_marked_as_favourite_successfully', $this->siteLangId));
+            $message = Label::getLabel('LBL_Teacher_has_been_marked_as_favourite_successfully', $this->siteLangId);
         } else {
             if (!$db->deleteRecords(User::DB_TBL_TEACHER_FAVORITE, ['smt' => 'uft_user_id = ? AND uft_teacher_id = ?', 'vals' => [$loggedUserId, $teacherId]])) {
-                Message::addErrorMessage(Label::getLabel('LBL_Some_problem_occurred,_Please_contact_webmaster', $this->siteLangId));
-                FatUtility::dieWithError(Message::getHtml());
+                $message = Label::getLabel('LBL_Some_problem_occurred,_Please_contact_webmaster', $this->siteLangId);
             }
             $action = 'R'; //Removed from favorite
-            $this->set('msg', Label::getLabel('LBL_Teacher_has_been_removed_from_favourite_list', $this->siteLangId));
+            $message = Label::getLabel('LBL_Teacher_has_been_removed_from_favourite_list', $this->siteLangId);
         }
-        $this->set('action', $action);
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess(['msg' => $message, 'action' => $action]);
     }
 
     public function favourites()

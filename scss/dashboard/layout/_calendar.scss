@@ -57,9 +57,27 @@ $fc-scroller-harness: "fc-scroller-harness";
     }
 }
 
-.fc-scrollgrid-section{
-    td{
-        border: none;
+$dashboard-calendar: "dashboard-calendar";
+
+.#{$dashboard-calendar} {
+    & .fc-daygrid-event{
+        background: no-repeat !important;
+        padding: 0 !important;
+        height: 50px !important;
+        border-left: none !important;
+        display: flex;
+        justify-content: center;
+
+        & .fc-event-time{
+            display: none;
+        }
+        & .fc-event-title{
+            display: none;
+        }
+    }
+
+    & .fc-daygrid-day-bottom{
+        display: none;
     }
 }
 
@@ -95,4 +113,32 @@ $fc-scroller-harness: "fc-scroller-harness";
 .fc-button-group .fc-button:hover{
     background-color: transparent;
     border-color:var(--color-gray-200);
+}
+
+.fc-event-main-frame .closeon {
+    height: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.fc .fc-toolbar-title{
+    font-size: 1.25em;
+}
+
+.fc-timegrid-event .fc-event-time{
+    text-align: center;
+}
+
+.dashboard-calendar .fc-view-harness{
+    height: 336px !important;
+}
+
+@media (max-width:theme('breakpoints.md','value')) {
+    .fc .fc-header-toolbar{
+        flex-direction: column;
+        align-items: end;
+    }
+    .fc-toolbar-chunk{
+        margin-bottom: 10px;
+    }
 }

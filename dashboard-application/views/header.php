@@ -45,6 +45,7 @@ $isUserTeacher =   User::isTeacher();
 
 $bodyClass = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) ? 'dashboard-teacher' : 'dashboard-learner';
 
+$mainDashboardClass = (($controllerName == 'Teacher' || $controllerName == 'Learner') && $action == "index") ? "main-dashboard" : '';
 $msgCnt = CommonHelper::getUnreadMsgCount();
 $unreadNotifications = UserNotifications::getUserUnreadNotifications($loggedUserId);
 ?>
@@ -89,7 +90,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
 <?php } ?>
 </head>
 
-<body class="<?php echo $bodyClass.' '.strtolower($controllerName); ?>">
+<body class="<?php echo $bodyClass.' '.strtolower($controllerName).' '.strtolower($action).' '.$mainDashboardClass; ?>">
     <div class="site">
         <!-- [ SIDE BAR ========= -->
         <aside class="sidebar">
@@ -153,7 +154,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                         <hr>
 										<ul>
 											<?php foreach ($currencyData as $key => $currency) { ?>
-												<li class="menu__item <?php echo ($siteCurrencyId == $key) ? 'is-active' : ''; ?>"><a  onClick="setSiteDefaultCurrency(<?php echo $currencyId;?>)" href="javascript:void(0)"><?php echo  $currency; ?></a></li>
+												<li class="menu__item <?php echo ($siteCurrencyId == $key) ? 'is-active' : ''; ?>"><a  onClick="setSiteDefaultCurrency(<?php echo $key;?>)" href="javascript:void(0);"><?php echo  $currency; ?></a></li>
 											<?php } ?>
                                         </ul>
                                     </nav>
@@ -234,7 +235,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                     </table>
                                     <span class="-gap-10"></span>
                                     <div class="btns-group">
-                                        <?php if ($isUserTeacher && $currentActiveTab == User::USER_TEACHER_DASHBOARD) { ?>
+                                        <?php if ($isUserTeacher && $currentActiveTab == User::USER_TEACHER_DASHBOARD && !empty($teacherProfileProgress['isProfileCompleted'])) { ?>
                                          <a href="#" class="btn btn--bordered color-third btn--block margin-top-2"><?php echo label::getLabel('LBL_View_Public_Profile'); ?></a>
                                         <?php }
                                         if ($currentActiveTab == User::USER_LEARNER_DASHBOARD && $canViewTeacherTab) { ?>
@@ -255,6 +256,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                 $templateVariable = ['controllerName' => $controllerName, 'action' => $action];
                                 $sidebarMenuLayout = 'learner/_partial/learnerDashboardNavigation.php';
                                 if (User::canViewTeacherTab() && User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) {
+                                    $templateVariable['tpp'] = $teacherProfileProgress;
                                     $sidebarMenuLayout = 'teacher/_partial/teacherDashboardNavigation.php';
                                 }
                                 if(isset($showFlashCard) && $showFlashCard) {

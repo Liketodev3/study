@@ -8,8 +8,12 @@ class LoggedUserController extends MyAppController
         parent::__construct($action);
         UserAuthentication::checkLogin();
         $this->userDetails = $this->verifyLoggedUser();
-        
         $this->set('userDetails',$this->userDetails);
+        if (!FatUtility::isAjaxCall() && $this->userDetails['user_is_teacher'] == applicationConstants::YES) {
+            $this->teacherProfileProgress = User::getTeacherProfileProgress();
+            // prx($this->teacherProfileProgress);
+            $this->set('teacherProfileProgress', $this->teacherProfileProgress);
+        }
     }
 
     private function verifyLoggedUser()
@@ -18,7 +22,7 @@ class LoggedUserController extends MyAppController
         $srch->joinCredentials(false, false);
         $srch->addCondition('u.user_id', '=', UserAuthentication::getLoggedUserId());
         $srch->setPageSize(1);
-        $srch->addMultipleFields(['user_first_name', 'user_last_name', 'user_country_id', 'user_preferred_dashboard', 'credential_email', 'credential_active', 'credential_verified']);
+        $srch->addMultipleFields(['user_first_name', 'user_is_teacher', 'user_last_name', 'user_country_id', 'user_preferred_dashboard', 'credential_email', 'credential_active', 'credential_verified']);
         $rs = $srch->getResultSet();
         $userRow = FatApp::getDb()->fetch($rs);
         

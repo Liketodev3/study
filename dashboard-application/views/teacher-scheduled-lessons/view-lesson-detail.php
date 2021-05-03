@@ -101,7 +101,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         </div>
                     </div>
                     <?php if($numLearners > 1){ ?>
-                        <div class="more-student">
+                        <div class="more-dropdown">
                         <a class="menu__item-trigger trigger-js color-secondary" href="#more-stud"><?php echo  (count($numLearners) - 1).' '.Label::getInstance('LBL_More'); ?></a>
                         <ul class="menu__dropdown more--dropdown" id="more-stud">
                         <?php 
@@ -165,8 +165,13 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
             </div>
             <div class="col-xl-4 col-lg-4 col-sm-12">
                 <div class="session-infobar__action">
-                    <span class="btn btn--live" id="end_lesson_timer" style="display:none;"></span>
-                    <button class="btn bg-red" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?></button>
+                    <div class="end-lesson-btn end-lesson-btn-js"  style="display:none;">
+                        <p class=""><?php echo Label::getLabel('LBL_End_In'); ?></p>
+                        <span class="btn btn--live" id="end_lesson_timer"> </span>
+                    </div>
+                    <button class="btn bg-red" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);">
+                        <?php echo Label::getLabel('LBL_End_Lesson'); ?>
+                    </button>
                     <?php if ($lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTimeunix < $startDateTimeUnixtime) { ?>
                         <button class="btn btn--third" onclick="requestReschedule('<?php echo $lessonData['slesson_id']; ?>');"><?php echo Label::getLabel('LBL_Reschedule'); ?></button>
                    
@@ -175,7 +180,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         <button onclick="cancelLesson('<?php echo $lessonData['slesson_id']; ?>');" class="btn btn--bordered color-third"><?php echo Label::getLabel('LBL_Cancel'); ?></button>
                     <?php } ?>
                     <?php if ($is_issue_reported) { ?>
-                        <button  onclick="resolveIssue('<?php echo $lessonData['slesson_id']; ?>');" class="btn btn--bordered color-third"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></button>
+                        <button onclick="resolveIssue('<?php echo $lessonData['slesson_id']; ?>');" class="btn btn--bordered color-third"><?php echo Label::getLabel('LBL_Resolve_Issue'); ?></button>
                     <?php } ?>
                 </div> 
             </div>
@@ -212,6 +217,9 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         break;
                         case ScheduledLesson::STATUS_SCHEDULED:
                             $showGoToDashboardBtn = false;
+                            if($curDateTimeunix > $endDateTimeUnixtime){
+                                $showGoToDashboardBtn = true;
+                            }
                         break;
                     }
                     if(!empty($statusInfoLabel)) {
@@ -225,8 +233,8 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                 <?php if ($lessonData['slesson_teacher_join_time'] == '0000-00-00 00:00:00' || $activeMettingTool == ApplicationConstants::MEETING_ZOOM) { ?>
                     <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startDateTimeUnixtime > $curDateTimeunix || $curDateTimeunix > $endDateTimeUnixtime || !$isScheduled ? 'style="display:none;"' : '') ?>>
                         <?php if ($activeMettingTool == ApplicationConstants::MEETING_ZOOM){ ?>
-                            <a href="javascript:void(0);" class="btn btn--primary btn--large -hide-mobile" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
-                            <a href="javascript:void(0);" class="btn btn--secondary btn--large" onclick="joinLessonFromApp(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
+                            <a href="javascript:void(0);" class="btn btn--primary" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
+                            <a href="javascript:void(0);" class="btn btn--secondary" onclick="joinLessonFromApp(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
                         <?php }else{ ?>
                             <a href="javascript:void(0);" class="btn btn--secondary btn--large" id="joinL" onclick="joinLesson(CometJsonData,CometJsonFriendData);"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>
                         <?php } ?>
@@ -391,12 +399,12 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
     function endLessonCountDownTimer(curDate, endTime) {
         countDownTimer(curDate, endTime, function(w_res_data) {
             if (w_res_data) {
-                $('#end_lesson_timer').show();
+                $('.end-lesson-btn-js, #end_lesson_timer').show();
                 if (lesson_joined) {
                     $('#endL').show();
                 }
             } else {
-                $('#end_lesson_timer').hide();
+                $('.end-lesson-btn-js').hide();
             }
             $('#end_lesson_timer').html(w_res_data);
         });

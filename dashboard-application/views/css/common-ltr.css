@@ -946,7 +946,6 @@ img {
   padding: var(--padding-10);
   background-color: var(--color-white);
   margin-top: var(--margin-6);
-  min-height: 40rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -6623,9 +6622,8 @@ textarea[disabled] {
           transform: translateX(-50%) !important; }
 
 .alert--positioned-top-full {
-  left: 0 !important;
-  right: 0 !important;
-  top: 0; }
+  right: 12px !important;
+  top: 12px; }
 
 .alert p {
   color: inherit; }
@@ -6857,7 +6855,7 @@ textarea[disabled] {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  min-width: 300px;
+  min-width: 244px;
   margin-bottom: var(--margin-3);
   padding: var(--padding-2) var(--padding-3);
   color: var(--color-white);
@@ -6865,13 +6863,18 @@ textarea[disabled] {
       -ms-flex-pack: justify;
           justify-content: space-between;
   background-color: var(--color-transparent);
-  font-size: var(--font-size-small); }
+  font-size: var(--font-size-small);
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+  border-radius: 5px; }
   .alert__cross {
     margin-left: auto; }
   .alert--small {
     padding: var(--padding-1) var(--padding-2); }
   .alert--success {
-    padding-left: 60px;
+    padding-left: 10px;
     background-color: #00bd7d; }
     .alert--success:before {
       background: url(/images/icon-success.svg) no-repeat;
@@ -6997,9 +7000,9 @@ textarea[disabled] {
 
 .timer {
   position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -7026,6 +7029,9 @@ textarea[disabled] {
   color: var(--color-third);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium); }
+
+.timezoneoffset {
+  margin-left: 5px; }
 
 .container {
   padding-right: 15px;
@@ -9055,10 +9061,25 @@ textarea[disabled] {
   z-index: 99;
   opacity: 0.7; }
 
+.popup__body .img-description {
+  padding: var(--padding-4); }
+
+.img-description .rotator-info {
+  margin-bottom: 15px;
+  text-align: center; }
+
+.box .table-scroll {
+  margin-top: 15px; }
+
 @media (min-width: 1199px) {
   #facebox .content.facebox-medium {
     min-width: 800px;
     max-width: 800px; } }
+
+@media (min-width: 1199px) {
+  #facebox .content.facebox-large {
+    min-width: 1000px;
+    max-width: 1000px; } }
 
 @media (max-width: 1199px) {
   #facebox .scrollbar {
@@ -9998,9 +10019,6 @@ textarea[disabled] {
 .fc .fc-timegrid-slot:empty:before {
   content: '\00a0'; }
 
-.fc .fc-timegrid-slot-minor {
-  border-top-style: dotted; }
-
 .fc .fc-timegrid-slot-label-cushion {
   display: inline-block;
   white-space: nowrap; }
@@ -10922,18 +10940,13 @@ body[class*="jconfirm-no-scroll-"] {
   user-select: none;
   border-radius: 4px;
   min-height: 1em;
-  -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease,
- -webkit-box-shadow 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease,
- -webkit-box-shadow 0.1s ease;
+  -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
-  -o-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease,
- background 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease,
- background 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease,
- background 0.1s ease, -webkit-box-shadow 0.1s ease;
+  -o-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   -webkit-tap-highlight-color: transparent;
   border: 0;
   background-image: none; }

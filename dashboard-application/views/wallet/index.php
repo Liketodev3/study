@@ -1,9 +1,4 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
-$frmRechargeWallet->setFormTagAttribute('onSubmit', 'setUpWalletRecharge(this); return false;');
-$frmRechargeWallet->setFormTagAttribute('class', 'form');
-$frmRechargeWallet->developerTags['colClassPrefix'] = 'col-md-';
-$frmRechargeWallet->developerTags['fld_default_col'] = 3;
-
 // search wallet form start
 $frmSrch->setFormTagAttribute('onsubmit', 'searchCredits(this); return(false);');
 $frmSrch->setFormTagAttribute('class', 'form form--small');
@@ -83,17 +78,18 @@ $btnReset->addFieldTagAttribute('onclick', 'clearSearch()');
                         </div>
                         <div class="col-xl-auto col-lg-8  col-12">
                             <div class="buttons-group d-flex align-items-center">
-                                <a href="#" class="btn btn--transparent color-primary margin-1">
+                                <a href="javascript:void(0);" onclick="rechargeWalletForm();" class="btn btn--transparent color-primary margin-1">
                                     <svg class="icon icon--issue icon--small margin-right-2">
                                         <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#plus'; ?>"></use>
                                     </svg>
-                                    Add Money to Wallet
+                                    <?php echo Label::getLabel('LBL_ADD_MONEY_TO_WALLET'); ?>
+                                   
                                 </a>
                                 <a href="javascript:void(0);" onclick="redeemGiftcardForm();" class="btn btn--transparent color-primary margin-1">
                                     <svg class="icon icon--gift margin-right-1">
                                         <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#giftcards'; ?>"></use>
                                     </svg>
-                                    <?php echo Label::getLabel('Redeem_Gift_Card'); ?>
+                                    <?php echo Label::getLabel('LBL_Redeem_Gift_Card'); ?>
                                 </a>
                                 <?php if ($can_withdraw) { ?>
                                 <a href="javascript:void(0);" onclick="withdrwalRequestForm();"  class="btn btn--transparent color-primary margin-1">

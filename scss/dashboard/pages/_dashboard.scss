@@ -15,6 +15,7 @@ $dashboard: "dashboard";
 
     .#{$dashboard__primary}{
 
+        width: 100%;
         @media (max-width:theme('breakpoints.xxl','value')) {
             order: 2;
         }
@@ -41,13 +42,14 @@ $dashboard: "dashboard";
         
         @media (min-width:theme('breakpoints.xxxl','value')){
             &{
-                max-width: 28.6rem;
+                max-width: 25.6rem;
                 position: sticky;
                 top: 0;
                 bottom: 0;
                 left: 0;
                 z-index: 3;
                 height: 100vh;
+                width: 100%;
             }
         }
 
@@ -73,7 +75,6 @@ $status-bar: "status-bar";
 .#{&status-bar} {
     border-radius: theme('radius.0');
     padding: var(--padding-8) 0;
-    height: 100%;
 
     @media (min-width:theme('breakpoints.lg','value')) and (max-width:theme('breakpoints.xxl','value')) {
         &{
@@ -328,6 +329,7 @@ $sale-stat: "sale-stat";
     @media(min-width:theme('breakpoints.xxxl','value')){
         &{
             padding: var(--padding-12);
+            height: 100%;
         }
     }
     @media(max-width:theme('breakpoints.xxxl','value')){
@@ -347,10 +349,10 @@ $sale-stat: "sale-stat";
     }
 }
 .sale-stat--primary{
-    background-color: #F6B6500F;
+    background-color: #fff4e2;
 }
 .sale-stat--secondary{
-    background-color: #48C5D20F;
+    background-color: #e7fdff;
 }
 
 .graph-media{
@@ -444,3 +446,50 @@ $margin-bottom-6: "margin-bottom-6";
     }
 }
 
+$aside--progress--menu: "aside--progress--menu";
+.#{&aside--progress--menu} {
+    position: relative;
+
+    &:not(.is-completed){
+
+        &::after{
+            position: absolute;
+            #{theme('direction.right','value')}: 0.8rem;
+            top: 0.7rem;
+            content: "!";
+            color: #fff;
+            pointer-events: none;
+        }
+        &::before{
+            content: "";
+            position: absolute;
+            top: 1rem;
+            #{theme('direction.right','value')}: 0.65rem;
+            transform: translate(25%, -25%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 1.75em;
+            height: 1.75em;
+            border-radius: 1.75em;
+            padding-#{theme('direction.left','value')}: var(--padding-1);
+            padding-#{theme('direction.right','value')}: var(--padding-1);
+            content: attr(data-count);
+            font-size: 0.66em;
+            line-height: 1.75em;
+            background-color: var(--color-third);
+            pointer-events: none;
+        }
+    }
+    
+}
+
+.main-dashboard .page__footer{
+    display: none;
+}
+.teacherscheduledlessons.view .page__footer{
+    display: none;
+}
+.learnerscheduledlessons.view .page__footer{
+    display: none;
+}

@@ -51,11 +51,8 @@
 							<div class="timer margin-right-4">
 								<div class="timer__media"><span><svg class="icon icon--clock icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#clock'; ?>"></use></svg></span></div>
 								<div class="timer__content">
-									<div class="timer__controls timer-js" id="countdowntimer-upcoming" data-startTime="<?php echo $curDate; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>">
-										<!-- <div class="timer__digit">00</div>
-										<div class="timer__digit">01</div>
-										<div class="timer__digit">24</div>
-										<div class="timer__digit">47</div> -->
+									<div class="timer__controls timer-js color-white" id="countdowntimer-upcoming" data-startTime="<?php echo $curDate; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>">
+									
 									</div>
 								</div>
 							</div>

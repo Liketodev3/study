@@ -106,7 +106,12 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->set('referer', $referer);
         $this->set('lessonArr', $lessonArr);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
-        $this->_template->render(false, false);
+        $listingView = FatApp::getPostedData('listingView', FatUtility::VAR_STRING, '');
+        $tplpath = '';
+        if($listingView == 'shortDetail'){
+            $tplpath =   'teacher-scheduled-lessons/_partial/short-detail-lesson-listing.php';
+        }
+        $this->_template->render(false, false, $tplpath);
     }
 
     private function searchLessons($post = [], $getCancelledOrder = false, $addLessonDateOrder = true)
@@ -367,7 +372,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         ]);
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addCondition('slns.slesson_status', '!=', ScheduledLesson::STATUS_CANCELLED);
-        $srch->addHaving('slesson_date_time', '>', $curDateTime);
+        // $srch->addHaving('slesson_date_time', '>', $curDateTime);
         $srch->joinLearner();
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);

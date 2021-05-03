@@ -13,7 +13,6 @@ class WalletController extends LoggedUserController
         $userId = UserAuthentication::getLoggedUserId();
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
-        $this->set('frmRechargeWallet', $this->getRechargeWalletForm());
         $this->set('userTotalWalletBalance', User::getUserBalance($userId, false));
         $this->set('can_withdraw', User::canWithdraw($userId));
         $this->_template->render();
@@ -101,6 +100,12 @@ class WalletController extends LoggedUserController
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
         return $frm;
+    }
+
+    public function rechargeWalletForm()
+    {
+        $this->set('frmRechargeWallet', $this->getRechargeWalletForm());
+        $this->_template->render(false, false);
     }
 
     private function getRechargeWalletForm()
