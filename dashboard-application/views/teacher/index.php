@@ -29,9 +29,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 						<div class="row justify-content-between align-items-center">
 							<div class="col-sm-8 col-lg-6 col-xl-8">
 								<div class="d-flex">
-									<div class="infobar__media margin-right-5">
-										<div class="infobar__media-icon infobar__media-icon--tick"></div>
-									</div>
+									
 									<div class="infobar__content">
 										<h6 class="margin-bottom-1"><?php echo str_replace('{user-first-name}', $userDetails['user_first_name'], Label::getLabel('LBL_TEACHER_DASHBOARD_HEADING_{user-first-name}')); ?></h6>
 										<p class="margin-0"><?php echo Label::getLabel('LBL_TEACHER_DASHBOARD_INFO_TEXT'); ?></p>
