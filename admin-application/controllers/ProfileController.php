@@ -160,7 +160,7 @@ class ProfileController extends AdminBaseController
     }
     public function removeProfileImage()
     {
-        $adminId        = AdminAuthentication::getLoggedAdminId();
+        $adminId = AdminAuthentication::getLoggedAdminId();
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_ADMIN_PROFILE_IMAGE, $adminId)) {
             Message::addErrorMessage($fileHandlerObj->getError());
