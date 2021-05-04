@@ -104,6 +104,7 @@ class MyAppController extends FatController
             'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),
             'language' => Label::getLabel('Lbl_Language'),
             'myTimeZoneLabel' => Label::getLabel('Lbl_My_Current_Time'),
+            'timezoneString' => Label::getLabel('LBL_TIMEZONE_STRING'),
             'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson')
         ];
         $languages = Language::getAllNames(false);

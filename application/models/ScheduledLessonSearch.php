@@ -306,7 +306,8 @@ class ScheduledLessonSearch extends SearchBase
         $userFieldCnd->attachCondition('sld.sldetail_learner_id', ' IN ', $userIds, ' OR ');
         $directStr = " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) < '" . $endDateTime . "' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) > '" . $startDateTime . "' ) ";
         $this->addDirectCondition($directStr);
-        $this->addCondition('slns.slesson_status', ' IN ', [ScheduledLesson::STATUS_SCHEDULED, ScheduledLesson::STATUS_COMPLETED]);
+        // $this->addCondition('slns.slesson_status', ' IN ', [ScheduledLesson::STATUS_SCHEDULED, ScheduledLesson::STATUS_COMPLETED]);
+         $this->addCondition('slns.slesson_status', ' = ', ScheduledLesson::STATUS_SCHEDULED);
         $this->addMultipleFields(['slns.slesson_date', 'slns.slesson_start_time', 'slns.slesson_end_time', 'slns.slesson_id', 'sld.sldetail_order_id', 'sld.sldetail_learner_id']);
         return $this;
     }

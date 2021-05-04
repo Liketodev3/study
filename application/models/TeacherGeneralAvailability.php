@@ -11,7 +11,7 @@ class TeacherGeneralAvailability extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getGenaralAvailabilityJsonArr($userId, $post = [])
+    public static function getGenaralAvailabilityJsonArr($userId, $post = [], int $teacherBookingBefore = 0)
     {
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
@@ -38,6 +38,8 @@ class TeacherGeneralAvailability extends MyAppModel
         if (!empty($rows)) {
             $weekStartDateDB = '2018-01-07';
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStartDate);
+            $validStartDateTime =  strtotime("+ ".$teacherBookingBefore. " hours");
+            
             foreach ($rows as $row) {
                 $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
                 if ($row['tgavl_end_time'] == "00:00:00" || $row['tgavl_end_time'] <= $row['tgavl_start_time']) {
@@ -46,10 +48,30 @@ class TeacherGeneralAvailability extends MyAppModel
                 } else {
                     $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_end_time']));
                 }
-                $date = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($date)));
-                $endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($endDate)));
+
+                $dateUnixTime = strtotime($date);
+                $endDateUnixTime =  strtotime($endDate);
+
+                $date = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $dateUnixTime));
+                $endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $endDateUnixTime));
+
+                $dateUnixTime = strtotime($date);
+                $endDateUnixTime =  strtotime($endDate);
+                
+                if($teacherBookingBefore > 0){
+
+                    if($validStartDateTime > $endDateUnixTime){
+                        continue;
+                    }
+                   
+                    if( $validStartDateTime > $dateUnixTime ) {
+                        $date = date('Y-m-d H:i:s', $validStartDateTime);
+                    }
+                }
+
                 $tgavl_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $date, true, $user_timezone);
                 $tgavl_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDate, true, $user_timezone);
+        
                 $jsonArr[] = [
                     "title" => "",
                     "endW" => date('H:i:s', strtotime($tgavl_end_time)),

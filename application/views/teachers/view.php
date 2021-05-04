@@ -233,6 +233,7 @@ foreach ($userTeachLangs as $userTeachLang) {
 
 			<div class="col-xl-4 col-lg-4">
 				<?php
+             
 				if ($teacher['isFreeTrialEnabled']) {
 					$onclick = "";
 					$btnClass = "btn-secondary";

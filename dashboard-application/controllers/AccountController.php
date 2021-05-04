@@ -192,6 +192,7 @@ class AccountController extends LoggedUserController
         $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
         if ($userRow['user_is_teacher']) {
             $userRow['us_video_link'] = $user_settings['us_video_link'];
+            $userRow['us_is_trial_lesson_enabled'] = $user_settings['us_is_trial_lesson_enabled'];
             $userRow['us_booking_before'] = $user_settings['us_booking_before']; //== code added on 23-08-2019
             $userRow['us_google_access_token'] = $user_settings['us_google_access_token'];
             $userRow['us_google_access_token_expiry'] = $user_settings['us_google_access_token_expiry'];
@@ -345,19 +346,20 @@ class AccountController extends LoggedUserController
         $db->startTransaction();
         $record = new TableRecord(UserSetting::DB_TBL);
         $record->setFlds(['us_site_lang' => $post['us_site_lang'], 'us_user_id' => UserAuthentication::getLoggedUserId()]);
+           
         if ($isTeacherDashboardActive) {
             // $bookingDurationOptions = array(0, 12, 24);
             // if (!in_array($post['us_booking_before'], $bookingDurationOptions)) {
             //     Message::addErrorMessage(Label::getLabel('Lbl_invalid_Selection_of Booking_Field'));
             //     FatUtility::dieWithError(Message::getHtml());
             // } //  code added on 23-08-2019
-            $record->assignValues(['us_booking_before' => $post['us_booking_before']]); //  code added on 23-08-2019
+            $record->assignValues(['us_booking_before' => $post['us_booking_before'], 'us_is_trial_lesson_enabled' => $post['us_is_trial_lesson_enabled']]); //  code added on 23-08-2019
         }
         $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
         if ($post['us_site_lang'] != $user_settings['us_site_lang']) {
             CommonHelper::setDefaultSiteLangCookie($post['us_site_lang']);
         }
-        // prx($record->getFlds());
+        
         if (!$record->addNew([], $record->getFlds())) {
             $db->rollbackTransaction();
             FatUtility::dieJsonError($record->getError());

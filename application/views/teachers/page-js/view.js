@@ -74,17 +74,17 @@ $("document").ready(function(){
 });
 
 function viewCalendar( teacherId, action, languageId){
-	$.systemMessage(langLbl.requestProcessing,'alert alert--process');
+	$.loader.show();
 	if( action == 'free_trial' ) {
 		if( isUserLogged() == 0 ){
-			$.systemMessage.close();
+			$.loader.hide();
 			logInFormPopUp();
 			return false;
 		}
 	}
 
 	fcom.ajax(fcom.makeUrl('Teachers', 'viewCalendar',[teacherId, languageId]), 'action='+action, function(t) {
-			$.systemMessage.close();
+		$.loader.hide();
 		$.facebox( t,'facebox-medium');
 	});
 }

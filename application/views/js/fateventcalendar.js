@@ -120,15 +120,19 @@ FatEventCalendar.prototype.validateSelectedSlot = function (arg, current_time, d
     return true;
 };
 
-FatEventCalendar.prototype.WeeklyBookingCalendar = function(current_time, duration, bookingBefore){
+FatEventCalendar.prototype.AvailaibilityCalendar = function(current_time, duration, bookingBefore, selectable){
     var fecal = this;
+    var checkSlotAvailabiltAjaxRun = false;
     var calConf = {
         now:current_time,
-        selectable: true,
+        selectable: selectable,
         eventSources: [
             {
                 url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData',[this.teacherId]),
                 method: 'POST',
+                extraParams: {
+                    bookingBefore: bookingBefore
+                },
                 success: function(docs){
                     for(i in docs){
                         docs[i].display = 'background';
@@ -137,11 +141,11 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function(current_time, durati
                         docs[i].selectable = true;
                     }
                 }
-            },{
-                url: fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData',[this.teacherId]),
+            }, {
+                url: fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [this.teacherId]),
                 method: 'POST',
-                success: function(docs){
-                    for(i in docs){
+                success: function (docs) {
+                    for (i in docs) {
                         docs[i].display = 'background';
                         docs[i].color = 'var(--color-secondary)';
                     }
@@ -201,8 +205,9 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function(current_time, durati
     
     calendar.render();
 
-    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
+    jQuery('body').find(".fc-time-button").parent().html("<h6><span>" + langLbl.myTimeZoneLabel + " :-</span> <span class='timer'>" + moment(current_time).format('hh:mm A') + "</span><span class='timezoneoffset'>(" + langLbl.timezoneString + " " + timeZoneOffset + ")</span></h6>");
+    seconds = 2;
+
     this.startTimer(current_time);
 
     jQuery(".fc-today-button,button.fc-prev-button,button.fc-next-button").click(function() {
@@ -211,339 +216,4 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function(current_time, durati
     jQuery(document).bind('close.facebox', function() {
         jQuery('body > .tooltipevent').remove();
     });
-};
-
-
-FatEventCalendar.prototype.LearnerMonthlyCalendar = function(current_time){
-    var calConf = {
-        initialView: '',
-        now:current_time,
-        headerToolbar: {
-            left: 'time'
-        },
-        eventSources: [
-            {
-                url: fcom.makeUrl('LearnerScheduledLessons', 'calendarJsonData',[])
-            }
-        ],
-        select: function(arg){
-            var start = arg.start;
-            var end = arg.end;
-            if(moment(start).format('d')!=moment(end).format('d') ) {
-                calender.unselect();
-                return false;
-            }
-        }
-    }
-    var defaultConf = this.calDefaultConf;
-    var conf = {...defaultConf, ...calConf};
-
-    var calendarEl = document.getElementById('d_calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, conf);
-    
-    calendar.render();
-
-    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
-    this.startTimer(current_time);
-};
-
-FatEventCalendar.prototype.TeacherMonthlyCalendar = function(current_time){
-    var calConf = {
-        initialView: '',
-        now:current_time,
-        headerToolbar: {
-            left: 'time'
-        },
-        eventSources: [
-            {
-                url: fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData',[])
-            }
-        ],
-        select: function(arg){
-            var start = arg.start;
-            var end = arg.end;
-            if(moment(start).format('d')!=moment(end).format('d') ) {
-                calender.unselect();
-                return false;
-            }
-        }
-    }
-    var defaultConf = this.calDefaultConf;
-    var conf = {...defaultConf, ...calConf};
-
-    var calendarEl = document.getElementById('d_calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, conf);
-    
-    calendar.render();
-
-    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
-    this.startTimer(current_time);
-};
-
-FatEventCalendar.prototype.AvailaibilityCalendar = function(current_time, duration, bookingBefore, selectable){
-    var fecal = this;
-    var checkSlotAvailabiltAjaxRun = false;
-    var calConf = {
-        now:current_time,
-        selectable: selectable,
-        eventSources: [
-            {
-                url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData',[this.teacherId]),
-                method: 'POST',
-                success: function(docs){
-                    for(i in docs){
-                        docs[i].display = 'background';
-                        // docs[i].rendering ='background',
-                        docs[i].editable = false,
-                        docs[i].selectable = true;
-                    }
-                }
-            }
-        ],
-        select: function(arg){
-            jQuery('body #d_calendar .closeon').click();
-            jQuery("#loaderCalendar").show();
-            if(checkSlotAvailabiltAjaxRun) {
-                return false;
-            }
-
-            var time_diff = arg.end - arg.start;
-            var durationMS = FullCalendar.createDuration(duration).milliseconds;
-            if(time_diff<durationMS){
-                arg.end = new Date(arg.start);
-                var ms = arg.end.getTime() + durationMS;
-                arg.end.setTime(ms);
-                arg.endStr = moment(arg.end).format('YYYY-MM-DDTHH:mm:ssZ');
-            }
-            
-            if(!fecal.validateSelectedSlot(arg, current_time, duration, bookingBefore)){
-                jQuery("#loaderCalendar").hide();
-                jQuery("body").css( {"cursor": "default"} );
-                jQuery("body").css( {"pointer-events": "initial"} );
-                calendar.unselect();
-                return false;
-            }
-    
-            checkSlotAvailabiltAjaxRun = true;
-            var newEvent = {start: moment(arg.startStr).format('YYYY-MM-DD HH:mm:ss'), end: moment(arg.endStr).format('YYYY-MM-DD HH:mm:ss')};
-            fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability',[fecal.teacherId]), newEvent, function(doc) {
-                checkSlotAvailabiltAjaxRun = false;
-                jQuery("#loaderCalendar").hide();
-                jQuery("body").css( {"cursor": "default"} );
-                jQuery("body").css( {"pointer-events": "initial"} );
-                var res = JSON.parse(doc);
-                if( res.status == 1 ){
-                    this.getSlotBookingConfirmationBox(newEvent, arg.jsEvent);
-                }
-                if( res.status == 0 ){
-                    jQuery('body > .tooltipevent').remove();
-                    calendar.unselect();
-                }
-                if(res.msg && res.msg  != ""){
-                    jQuery.mbsmessage(res.msg,true,'alert alert--danger');
-                }
-            });
-        }
-    }
-    var defaultConf = this.calDefaultConf;
-    var conf = {...defaultConf, ...calConf};
-
-    var calendarEl = document.getElementById('d_calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, conf);
-    
-    calendar.render();
-
-    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
-    this.startTimer(current_time);
-
-    jQuery(".fc-today-button,button.fc-prev-button,button.fc-next-button").click(function() {
-        jQuery('body > .tooltipevent').remove();
-    });
-    jQuery(document).bind('close.facebox', function() {
-        jQuery('body > .tooltipevent').remove();
-    });
-};
-
-FatEventCalendar.prototype.TeacherGeneralAvailaibility = function(current_time){
-    var calConf = {
-        selectable: true,
-        editable: true,
-        now:current_time,
-        headerToolbar: {
-            left: 'time'
-        },
-        eventSources: [
-            {
-                url: fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData',[this.teacherId]),
-                method: 'POST',
-                success: function(docs){
-                    // console.log(doc);
-                    
-                }
-            }
-        ],
-        eventClick: function(arg) {
-            if (confirm(langLbl.confirmRemove)) {
-                arg.event.remove()
-            }
-        },
-        select: function (arg ) {
-            var start = arg.start;
-            var end = arg.end;
-            if(moment(start).format('d') != moment(end).format('d') ) {
-                calendar.unselect();
-                return false;
-            }
-            var newEvent = new Object();
-            newEvent.title = '';
-            newEvent.start = moment(start).format('YYYY-MM-DD')+"T"+moment(start).format('HH:mm:ss');
-            newEvent.end = moment(end).format('YYYY-MM-DD')+"T"+moment(end).format('HH:mm:ss'),
-            newEvent.startTime = moment(start).format('HH:mm:ss');
-            newEvent.endTime = moment(end).format('HH:mm:ss'),
-            newEvent.daysOfWeek = moment(start).format('d'),
-            newEvent.className = 'slot_available',
-            newEvent.classType = 1,
-            newEvent.allday = false;
-            newEvent.overlap = false;
-            
-            var events = calendar.getEvents();
-            for(i in events){
-                if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
-                    newEvent.end = moment(events[i].end).format('YYYY-MM-DD')+"T"+moment(events[i].end).format('HH:mm:ss');
-                    newEvent.endTime = moment(events[i].end).format('HH:mm:ss');
-                    events[i].remove();
-                }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
-                    newEvent.start = moment(events[i].start).format('YYYY-MM-DD')+"T"+moment(events[i].start).format('HH:mm:ss');
-                    newEvent.startTime = moment(events[i].start).format('HH:mm:ss');
-                    events[i].remove();
-                }
-            }         
-            calendar.addEvent(newEvent);
-        },
-        eventDrop: function(info){
-            var start = info.event.start;
-            var end = info.event.end;
-            var events = calendar.getEvents();
-            for(i in events){
-                if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
-                    info.event.setEnd(events[i].end);
-                    events[i].remove();
-                }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
-                    info.event.setStart(events[i].start);
-                    events[i].remove();
-                }
-            }
-        }
-    }
-    var defaultConf = this.calDefaultConf;
-    var conf = {...defaultConf, ...calConf};
-
-    var calendarEl = document.getElementById('ga_calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, conf);
-    
-    calendar.render();
-
-    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
-    this.startTimer(current_time);
-    return calendar;
-};
-
-
-FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function(current_time){
-    var calConf = {
-        selectable: true,
-        editable: true,
-        now:current_time,
-        eventSources: [
-            {
-                url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [this.teacherId]),
-                method: 'POST',
-                success: function(docs){
-                    // console.log(doc);
-                    for(i in docs){
-                        docs[i].extendedProps = {};
-                        docs[i].extendedProps._id = docs[i]._id || 0;
-                        docs[i].extendedProps.action = docs[i].action;
-                        docs[i].extendedProps.classType = docs[i].classType;
-                    }
-                }
-            }
-        ],
-        eventClick: function(arg) {
-            if (confirm(langLbl.confirmRemove)) {
-                arg.event.remove()
-            }
-        },
-        select: function (arg ) {
-            var start = arg.start;
-            var end = arg.end;
-            if(moment(current_time).diff(moment(start)) >= 0) {
-                calendar.unselect();
-                return false;
-            }
-            if(moment(start).format('d') != moment(end).format('d') ) {
-                calendar.unselect();
-                return false;
-            }
-            var newEvent = new Object();
-            newEvent.title = '';
-            newEvent.start = moment(start).format('YYYY-MM-DD')+"T"+moment(start).format('HH:mm:ss');
-            newEvent.end = moment(end).format('YYYY-MM-DD')+"T"+moment(end).format('HH:mm:ss'),
-            newEvent.startTime = moment(start).format('HH:mm:ss');
-            newEvent.endTime = moment(end).format('HH:mm:ss'),
-            newEvent.daysOfWeek = moment(start).format('d'),
-            newEvent.extendedProps = {};
-            newEvent.extendedProps._id = 0;
-            newEvent.extendedProps.className = 'slot_available',
-            newEvent.extendedProps.classType = 1,
-            newEvent.extendedProps.action = 'fromGeneralAvailability',
-            newEvent.className = 'slot_available',
-            newEvent.allday = false;
-            newEvent.overlap = false;
-            
-            var events = calendar.getEvents();
-            for(i in events){
-                if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
-                    newEvent.end = moment(events[i].end).format('YYYY-MM-DD')+"T"+moment(events[i].end).format('HH:mm:ss');
-                    newEvent.endTime = moment(events[i].end).format('HH:mm:ss');
-                    events[i].remove();
-                }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
-                    newEvent.start = moment(events[i].start).format('YYYY-MM-DD')+"T"+moment(events[i].start).format('HH:mm:ss');
-                    newEvent.startTime = moment(events[i].start).format('HH:mm:ss');
-                    events[i].remove();
-                }
-            }         
-            calendar.addEvent(newEvent);
-        },
-        eventDrop: function(info){
-            var start = info.event.start;
-            var end = info.event.end;
-            var events = calendar.getEvents();
-            for(i in events){
-                if(moment(end).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')){
-                    info.event.setEnd(events[i].end);
-                    events[i].remove();
-                }else if(moment(start).format('YYYY-MM-DD HH:mm:ss')==moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')){
-                    info.event.setStart(events[i].start);
-                    events[i].remove();
-                }
-            }
-        }
-    }
-    var defaultConf = this.calDefaultConf;
-    var conf = {...defaultConf, ...calConf};
-
-    var calendarEl = document.getElementById('w_calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, conf);
-    
-    calendar.render();
-
-    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
-    this.startTimer(current_time);
-    return calendar;
 };
