@@ -131,6 +131,9 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function(current_time, durati
             {
                 url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [this.teacherId], confFrontEndUrl),
                 method: 'POST',
+                extraParams: {
+                    bookingBefore: bookingBefore
+                  },
                 success: function(docs){
                     for(i in docs){
                         docs[i].display = 'background';
@@ -288,6 +291,9 @@ FatEventCalendar.prototype.AvailaibilityCalendar = function(current_time, durati
             {
                 url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [this.teacherId], confFrontEndUrl),
                 method: 'POST',
+                extraParams: {
+                    bookingBefore: bookingBefore
+                  },
                 success: function(docs){
                     for(i in docs){
                         docs[i].display = 'background';

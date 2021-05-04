@@ -51,7 +51,7 @@ $weekDayName =  CommonHelper::dayNames();
     <div class="tooltipevent" style="position:absolute;z-index:10001;">
         <div class="booking-view">
             <h3 class="-display-inline"><?php echo $userRow['user_first_name']; ?></h3>
-            <span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userRow['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>
+            <span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userRow['user_country_id'], 'DEFAULT'), CONF_WEBROOT_FRONTEND ); ?>" alt=""></span>
             <div class="inline-list">
                 <div class="inline-list__value highlight tooltipevent-time-js">
                     <strong><?php echo Label::getLabel("LBL_Date") ?></strong> 

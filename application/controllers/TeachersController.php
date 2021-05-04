@@ -503,13 +503,28 @@ class TeachersController extends MyAppController
         $endDate = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
         $weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId, $startDate, $endDate);
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
+        $teacherBookingBefore = FatApp::getPostedData('bookingBefore', FatUtility::VAR_INT, 0);
+        $teacherBookingBefore = FatUtility::convertToType($teacherBookingBefore, FatUtility::VAR_INT);
         $jsonArr = [];
+        $validStartDateTime =  strtotime("+ ".$teacherBookingBefore. " hours");
         if (!empty($weeklySchRows)) {
             /* code added on 15-07-2019 */
             foreach ($weeklySchRows as $row) {
-                $twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['twsch_end_date'] . ' ' . $row['twsch_end_time'], true, $userTimezone);
-                $twsch_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['twsch_date'] . ' ' . $row['twsch_start_time'], true, $userTimezone);
-                $twsch_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $row['twsch_date'] . ' ' . $row['twsch_start_time'], true, $userTimezone);
+                $endDateTime = $row['twsch_end_date'] . ' ' . $row['twsch_end_time'];
+                $startDateTime = $row['twsch_date'] . ' ' . $row['twsch_start_time'];
+               
+                if($validStartDateTime > strtotime($endDateTime)){
+                    continue;
+                }
+               
+                if( $validStartDateTime > strtotime($startDateTime) ) {
+                    $startDateTime = date('Y-m-d H:i:s', $validStartDateTime);
+                }
+               
+                $twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDateTime, true, $userTimezone);
+                $twsch_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $startDateTime, true, $userTimezone);
+                $twsch_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $startDateTime, true, $userTimezone);
+
                 $jsonArr[] = [
                     "title" => "",
                     "date" => $twsch_date,
@@ -528,7 +543,8 @@ class TeachersController extends MyAppController
         if (empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear) {
             $dateTime = new dateTime(date('Y-m-d H:i:s', $midPoint));
             $weekRange = MyDate::getWeekStartAndEndDate($dateTime);
-            $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, ['WeekStart' => $weekRange['weekStart'], 'WeekEnd' => $weekRange['weekEnd']]);
+            $weekData = ['WeekStart' => $weekRange['weekStart'], 'WeekEnd' => $weekRange['weekEnd']];
+            $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, $weekData, $teacherBookingBefore);
             $jsonArr = array_merge($jsonArr, $jsonArr2);
         }
         echo FatUtility::convertToJson($jsonArr);
