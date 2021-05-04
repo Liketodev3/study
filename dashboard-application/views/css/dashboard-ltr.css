@@ -1020,6 +1020,14 @@ p {
 .scheduled-lesson-popup .box h4 {
   margin-bottom: 10px; }
 
+.learnerscheduledlessons .booking-view {
+  text-align: left; }
+  .learnerscheduledlessons .booking-view .inline-list {
+    margin-bottom: 10px; }
+
+.scheduled-lesson-popup .box textarea {
+  height: 100px; }
+
 @media (max-width: 767px) {
   .fc .fc-header-toolbar {
     -webkit-box-orient: vertical;
@@ -3219,7 +3227,7 @@ div.tagsinput div {
       width: 100%; } }
   @media (min-width: 1299px) and (max-width: 1399px) {
     .dashboard .dashboard__secondary {
-      max-width: 22rem;
+      max-width: 25rem;
       position: -webkit-sticky;
       position: sticky;
       top: 0;
@@ -3280,12 +3288,21 @@ div.tagsinput div {
         grid-template-columns: 1fr 1fr;
         grid-column-gap: 30px; } }
 
+.learnerscheduledlessons .tooltipevent {
+  border-top: 3px solid var(--color-primary);
+  border-radius: 6px; }
+  .learnerscheduledlessons .tooltipevent .booking-view h3 {
+    font-size: 1.6rem;
+    margin-bottom: 5px; }
+
 .lesson-list-container .date {
   font-size: var(--font-size-small);
   text-transform: uppercase;
   color: var(--color-gray-1000);
   font-weight: var(--font-weight-medium);
   margin-bottom: var(--margin-4); }
+  .lesson-list-container .date .lesson-list:first-child {
+    margin-top: 10px; }
 
 .lesson-list {
   width: 100%;
@@ -3356,64 +3373,66 @@ div.tagsinput div {
   .lesson-list-container:last-child {
     margin-bottom: var(--margin-0); }
 
-.stat {
-  background-color: var(--color-white);
-  padding: var(--padding-6);
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  position: relative;
-  border-radius: var(--radius-1);
-  -webkit-box-shadow: var(--boxShadow-all);
-          box-shadow: var(--boxShadow-all);
-  -webkit-transition: all 0.2s;
-  -o-transition: all 0.2s;
-  transition: all 0.2s; }
-  .stat .stat__media {
-    width: 5.72rem;
-    height: 5.72rem;
+.stats-row {
+  margin-top: var(--margin-4); }
+  .stats-row .stat {
+    background-color: var(--color-white);
+    padding: var(--padding-6);
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
-    border-radius: var(--radius-round);
-    color: #fff; }
-    @media (min-width: 1299px) and (max-width: 1399px) {
-      .stat .stat__media {
-        width: 3.72rem;
-        height: 3.72rem; }
-        .stat .stat__media svg {
-          width: 2rem;
-          height: 2rem; } }
-  .stat span {
-    color: var(--color-gray-1000); }
-  .stat .stat__action {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    display: block; }
-  @media (min-width: 1199px) {
-    .stat:hover {
-      -webkit-box-shadow: var(--boxShadow-vertical);
-              box-shadow: var(--boxShadow-vertical);
-      margin-left: -5px;
-      margin-right: -5px; } }
-  @media (max-width: 1199px) {
-    .stat {
-      margin-bottom: var(--padding-6); } }
+    position: relative;
+    border-radius: var(--radius-1);
+    -webkit-box-shadow: var(--boxShadow-all);
+            box-shadow: var(--boxShadow-all);
+    -webkit-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s; }
+    .stats-row .stat .stat__media {
+      width: 5.72rem;
+      height: 5.72rem;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+      border-radius: var(--radius-round);
+      color: #fff; }
+      @media (min-width: 1299px) and (max-width: 1399px) {
+        .stats-row .stat .stat__media {
+          width: 3.72rem;
+          height: 3.72rem; }
+          .stats-row .stat .stat__media svg {
+            width: 2rem;
+            height: 2rem; } }
+    .stats-row .stat span {
+      color: var(--color-gray-1000); }
+    .stats-row .stat .stat__action {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: block; }
+    @media (min-width: 1199px) {
+      .stats-row .stat:hover {
+        -webkit-box-shadow: var(--boxShadow-vertical);
+                box-shadow: var(--boxShadow-vertical);
+        margin-left: -5px;
+        margin-right: -5px; } }
+    @media (max-width: 1199px) {
+      .stats-row .stat {
+        margin-bottom: var(--padding-6); } }
 
 .statistics {
   background-color: var(--color-white);
@@ -3578,6 +3597,9 @@ div.tagsinput div {
   display: none; }
 
 .learnerscheduledlessons.view .page__footer {
+  display: none; }
+
+.messages .page__footer {
   display: none; }
 
 .list-container {
@@ -4786,21 +4808,6 @@ div.tagsinput div {
   .session-time p span {
     font-weight: var(--font-weight-bold); }
 
-.session-time::before {
-  content: "";
-  position: absolute;
-  height: 13px;
-  width: 1px;
-  background: var(--color-black);
-  left: -17px;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-      -ms-transform: translateY(-50%);
-          transform: translateY(-50%); }
-  @media (max-width: 1399px) {
-    .session-time::before {
-      content: none; } }
-
 @media (min-width: 1399px) {
   .session-time {
     margin-right: var(--margin-10); } }
@@ -5027,6 +5034,13 @@ div.tagsinput div {
   @media (min-width: 767px) and (max-width: 991px) {
     .more-dropdown .is-visible {
       bottom: 100%; } }
+
+.countdown-timer {
+  background: var(--color-primary);
+  color: #fff;
+  padding: var(--padding-4) !important;
+  font-size: x-large !important;
+  letter-spacing: 2px; }
 
 .gift-card {
   position: relative;

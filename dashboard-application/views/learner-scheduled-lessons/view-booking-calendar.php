@@ -58,7 +58,7 @@ $weekDayName =  CommonHelper::dayNames();
                     <span>{{displayEventDate}}</span>
                 </div>
             </div>
-            <div class="-align-center">
+            <div class="-align-left">
                 <a href="javascript:void(0);" onClick="setUpLessonSchedule(<?php echo $teacher_id; ?>, <?php echo $lDetailId; ?>, '{{selectedStartDateTime}}', '{{selectedEndDateTime}}', '{{selectedDate}}' );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Confirm_It!'); ?></a>
             </div>
             <a onclick="$('body > .tooltipevent').remove();" href="javascript:;" class="-link-close"></a>
