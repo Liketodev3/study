@@ -9,7 +9,7 @@ $getAllMonthName =  CommonHelper::getAllMonthName();
 $weekDayName =  CommonHelper::dayNames();
 ?>
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
-<div class="calendar-view">
+<div class="calendar-view scheduled-lesson-popup">
 	<?php if($isRescheduleRequest) { ?>
 	<div class="box">
         <h4><?php echo Label::getLabel('Lbl_Reschedule_Reason'); ?><span class="spn_must_field">*</span></h4>
@@ -20,12 +20,12 @@ $weekDayName =  CommonHelper::dayNames();
 	</div>
 	<?php } ?>
 
-    <div class="row">
+    <div class="row ">
         <div class="col-sm-5">
             <h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
         </div>
 
-        <div class="col-sm-7 justify-content-sm-end justify-content-start">
+        <div class="col-sm-7 d-flex align-items-center justify-content-sm-end justify-content-start">
             <div class="cal-status">
                 <span class="ml-0 box-hint disabled-box">&nbsp;</span>
                 <p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
