@@ -228,7 +228,7 @@ class CommonHelper extends FatUtility
             $use_root_url = CONF_WEBROOT_URL;
         }
 
-        $srch = UrlRewrite::getSearchObject();
+        $srch = new UrlRewriteSearch();
         $srch->doNotCalculateRecords();
         $srch->setPagesize(1);
         $srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'original', 'LIKE', strtolower($controller) . '/' . strtolower($action));

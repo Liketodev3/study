@@ -28,7 +28,7 @@ class UrlHelper
 
     public static function getOriginalUrlFromCustom($url, $overideUrlParamter = '')
     {
-        $srch = UrlRewrite::getSearchObject();
+        $srch = new UrlRewriteSearch();
         $srch->doNotCalculateRecords();
         $srch->addMultipleFields(['urlrewrite_custom', 'urlrewrite_original']);
         $srch->setPageSize(1);
@@ -45,7 +45,7 @@ class UrlHelper
     public static function getCustomUrlFromOrignal($url, $overideUrlParamter = [], $urlQueryString = '')
     {
         $langId = CommonHelper::getLangId();
-        $srch = UrlRewrite::getSearchObject();
+        $srch = new UrlRewriteSearch();
         $srch->doNotCalculateRecords();
         $srch->addMultipleFields(['urlrewrite_custom', 'urlrewrite_original', 'urlrewrite_http_resp_code']);
         $srch->setPageSize(1);

@@ -86,7 +86,7 @@ class BlogPostCategoriesController extends AdminBaseController
             }
 
             /* url data[ */
-            $urlSrch = UrlRewrite::getSearchObject();
+            $urlSrch = new UrlRewriteSearch();
             $urlSrch->doNotCalculateRecords();
             $urlSrch->doNotLimitRecords();
             $urlSrch->addFld('urlrewrite_custom');
