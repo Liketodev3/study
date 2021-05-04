@@ -44,7 +44,6 @@ $phoneCode->addFieldTagAttribute('id', 'user_phone_code');
 $user_gender = $profileFrm->getField('user_gender');
 $user_gender->setOptionListTagAttribute('class', 'list-inline list-inline--onehalf');
 $jsonUserRow = FatUtility::convertToJson($userRow);
-
 ?>
 <script>
 	var userData = <?php echo $jsonUserRow; ?>;
@@ -301,9 +300,9 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
 											<div class="field-wraper">
 												<div class="field_cover">
 													<label class="switch-group d-flex align-items-center justify-content-between">
-														<span class="switch-group__label free-trial-status-js"><?php echo ($freeTrialField->value == applicationConstants::YES) ? Label::getLabel('LBL_Active') : Label::getLabel('LBL_In-active'); ?></span>
+														<span class="switch-group__label free-trial-status-js"><?php echo ($freeTrialField->checked) ? Label::getLabel('LBL_Active') : Label::getLabel('LBL_In-active'); ?></span>
 														<span class="switch switch--small">
-															<input class="switch__label" type="<?php echo $freeTrialField->fldType; ?>" name="<?php echo $freeTrialField->getName(); ?>" <?php echo ($freeTrialField->value == applicationConstants::YES) ? 'checked' : ''; ?>>
+															<input class="switch__label" type="<?php echo $freeTrialField->fldType; ?>" name="<?php echo $freeTrialField->getName(); ?>" value="<?php echo $freeTrialField->value; ?>" <?php echo ($freeTrialField->checked) ? 'checked' : ''; ?>>
 															<i class="switch__handle bg-green"></i>
 														</span>
 

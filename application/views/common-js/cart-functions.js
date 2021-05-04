@@ -19,7 +19,7 @@ var cart = {
 			var resObj = $.parseJSON(res);
 			if (resObj.status == 1) {
 				if (resObj.isFreeLesson) {
-					fcom.updateWithAjax(fcom.makeUrl('Checkout', 'confirmOrder', [], confWebDashUrl), '', function (ans) {
+					fcom.updateWithAjax(fcom.makeUrl('Checkout', 'confirmOrder'), '', function (ans) {
 						if (ans.redirectUrl != '') {
 							window.location.href = ans.redirectUrl;
 						}

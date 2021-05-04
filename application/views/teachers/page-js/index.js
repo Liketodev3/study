@@ -180,7 +180,7 @@ $("document").ready(function () {
 
 function viewCalendar(teacherId, action) {
     fcom.ajax(fcom.makeUrl('Teachers', 'viewCalendar', [teacherId]), 'action=' + action, function (t) {
-        $.facebox(t, 'facebox-medium');
+        $.facebox(t, 'facebox-large');
     });
 }
 
