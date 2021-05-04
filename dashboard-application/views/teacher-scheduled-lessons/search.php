@@ -59,7 +59,7 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
 							<div class="card-landscape__head">
 								<?php
 								$endDateTime = $lesson['slesson_end_date'] . " " . $lesson['slesson_end_time'];
-								$endDateTime =  MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $lessonsStartTime, true, $user_timezone);
+								$endDateTime =  MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $endDateTime, true, $user_timezone);
 								?>
 								<time class="card-landscape__time"><?php echo date('h:i A', $startUnixTime); ?></time>
 								<date class="card-landscape__date"><?php echo date('l, F d, Y', $startUnixTime); ?></date>

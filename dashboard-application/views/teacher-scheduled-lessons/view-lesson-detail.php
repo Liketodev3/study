@@ -165,8 +165,10 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
             </div>
             <div class="col-xl-4 col-lg-4 col-sm-12">
                 <div class="session-infobar__action">
-                    <span class="btn btn--live" id="end_lesson_timer" style="display:none;">
-                    </span>
+                    <div class="end-lesson-btn end-lesson-btn-js"  style="display:none;">
+                        <p class=""><?php echo Label::getLabel('LBL_End_In'); ?></p>
+                        <span class="btn btn--live" id="end_lesson_timer"> </span>
+                    </div>
                     <button class="btn bg-red" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);">
                         <?php echo Label::getLabel('LBL_End_Lesson'); ?>
                     </button>
@@ -397,12 +399,12 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
     function endLessonCountDownTimer(curDate, endTime) {
         countDownTimer(curDate, endTime, function(w_res_data) {
             if (w_res_data) {
-                $('#end_lesson_timer').show();
+                $('.end-lesson-btn-js, #end_lesson_timer').show();
                 if (lesson_joined) {
                     $('#endL').show();
                 }
             } else {
-                $('#end_lesson_timer').hide();
+                $('.end-lesson-btn-js').hide();
             }
             $('#end_lesson_timer').html(w_res_data);
         });

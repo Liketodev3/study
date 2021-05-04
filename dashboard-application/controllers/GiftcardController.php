@@ -275,10 +275,4 @@ class GiftcardController extends LoggedUserController
         }
     }
 
-    public function testGiftCard($orderId)
-    {
-        $giftcard = new Giftcard();
-        $giftcard->addGiftcardDetails($orderId);
-    }
-
 }

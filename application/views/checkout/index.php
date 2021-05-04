@@ -14,29 +14,25 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 				<div id="lessonDetails" class="col-xl-4 col-lg-4 col-md-12 -clear-right">
 					<div class="box -align-center" style="margin-bottom: 30px;">
 						<div class="-padding-30">
-							<div class="checkout__r">
-								<div class="check__media">
-									<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($cartData['user_first_name']); ?>">
+							<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($cartData['user_first_name']); ?>">
 
-										<?php
-										if (true == User::isProfilePicUploaded($cartData['user_id'])) {
-											$img = FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($cartData['user_id'], 'MEDIUM'), CONF_WEBROOT_FRONT_URL), CONF_DEF_CACHE_TIME, '.jpg');
-											echo '<img src="' . $img . '" />';
-										}
-										?>
-									</div>
-								</div>
-								<div class="check__info">
-									<h3 class="-display-inline"><?php echo $cartData['user_first_name']; ?></h3>
-
-									<?php if ($cartData['user_country_id'] > 0) { ?>
-										<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($cartData['user_country_id'], 'DEFAULT')); ?>" alt=""></span>
-									<?php } ?>
-
-									<p class="-no-margin-bottom"><?php echo ($cartData['user_state_name'] != '') ? $cartData['user_state_name'] . ', ' : '';
-																	echo $cartData['user_country_name']; ?></p>
-								</div>
+								<?php
+								if (true == User::isProfilePicUploaded($cartData['user_id'])) {
+									$img = FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($cartData['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg');
+									echo '<img src="' . $img . '" />';
+								}
+								?>
 							</div>
+
+							<span class="-gap"></span>
+							<h3 class="-display-inline"><?php echo $cartData['user_first_name']; ?></h3>
+
+							<?php if ($cartData['user_country_id'] > 0) { ?>
+								<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($cartData['user_country_id'], 'DEFAULT')); ?>" alt=""></span>
+							<?php } ?>
+
+							<p class="-no-margin-bottom"><?php echo ($cartData['user_state_name'] != '') ? $cartData['user_state_name'] . ', ' : '';
+															echo $cartData['user_country_name']; ?></p>
 						</div>
 						<div class="tabled">
 							<?php if ($cartData['lpackage_is_free_trial'] == applicationConstants::NO) { ?>
@@ -51,13 +47,11 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 							<?php } ?>
 							<div class="tabled__cell">
 								<span class="-color-light"><?php echo Label::getLabel('LBL_Duration'); ?></span><br>
-								<span class="cart-lesson-duration"> <?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cartData['lessonDuration']); ?></span> </div>
+								<span class="cart-lesson-duration"> <?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cartData['lessonDuration']); ?></span>
 							</div>
 						</div>
 					</div>
 				</div>
-
-
 				<?php if ($cartData['lpackage_is_free_trial'] == 0 && count($teachLanguages)) { ?>
 					<div class="col-xl-8 col-lg-8 col-md-12">
 						<div class="box -padding-20" style="margin-bottom:30px;">
@@ -71,7 +65,7 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 										<li class="<?php echo ($cartData['languageId'] == $key) ? 'is-active' : ''; ?>">
 											<label class="selection">
 												<span class="radio">
-												<input onClick="addToCart('<?php echo $cartData['user_id'] ?>', '<?php echo $cartData['lpackage_id']; ?>','<?php echo $key; ?>', '', '', '<?php echo isset($cartData['grpcls_id']) ? $cartData['grpcls_id'] : 0 ?>', '<?php echo $cartData['lessonDuration']; ?>');" type="radio" name="language" value="<?php echo $key; ?>" <?php echo ($cartData['languageId'] == $key) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
+													<input onClick="addToCart('<?php echo $cartData['user_id'] ?>', '<?php echo $cartData['lpackage_id']; ?>','<?php echo $key; ?>', '', '', '<?php echo isset($cartData['grpcls_id']) ? $cartData['grpcls_id'] : 0 ?>', '<?php echo $cartData['lessonDuration']; ?>');" type="radio" name="language" value="<?php echo $key; ?>" <?php echo ($cartData['languageId'] == $key) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
 												</span>
 												<span class="selection__item">
 													<?php echo $teachLanguage; ?> <small class="-float-right"> </small>
@@ -92,7 +86,7 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 
 				<div class="col-xl-8 col-lg-8 col-md-12" id="lsn-pckgs"></div>
 
-				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right checkout-cart-dir">
+				<div class="col-xl-4 col-lg-4 col-md-12 checkout-cart-dir">
 					<div class="box" style="margin-bottom: 30px;" id="financialSummaryListing">
 					</div>
 					<p class="-color-secondary">
@@ -103,6 +97,7 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 							<img src="<?php echo FatUtility::generateFullUrl('Image', 'allowedPaymentGatewayImage', array(CommonHelper::getLangId())); ?>">
 						</div>
 					<?php } ?>
+
 				</div>
 
 				<div class="col-xl-8 col-lg-8 col-md-12">
