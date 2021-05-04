@@ -20,7 +20,7 @@ setupLessonFeedback = function (frm) {
 
 requestReschedule = function (id) {
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'requestReschedule', [id]), '', function (t) {
-        $.facebox(t, 'facebox-medium booking-calendar-pop-js');
+        $.facebox(t, 'facebox-large booking-calendar-pop-js');
     });
 };
 
@@ -37,7 +37,7 @@ requestRescheduleSetup = function (frm) {
 viewBookingCalendar = function (id, action = '') {
     var data = { 'action': action };
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'viewBookingCalendar', [id]), data, function (t) {
-        $.facebox(t, 'facebox-medium booking-calendar-pop-js');
+        $.facebox(t, 'facebox-large booking-calendar-pop-js');
     });
 };
 
