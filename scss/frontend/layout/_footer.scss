@@ -205,13 +205,42 @@
 
 
 
-.list-inline label {
-    padding: 14px 10px 12px 10px;
+.preview--profile .avtar {
+    margin: 0 auto;
 }
 
-.list-onethird li label,
-.field_cover label {
+.inline-action {
+    font-size: 0;
+    text-align: center;
+    line-height: 46px;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background: var(--color-primary);
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid var(--color-primary);
+    color: #fff;
+    border-radius: 3px;
     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.inline-action.inline-action--add:before {
+    font-size: 1.8rem;
+    content: "+";
+}
+.inline-action.inline-action--minus:before {
+    font-size: 1.8rem;
+    content: "-";
+}
+#resume_listing .td__data .btn:first-child {
+    margin-left: 0;
+}
+#resume_listing .td__data .btn {
+    margin-left: 6px;
 }
 
 

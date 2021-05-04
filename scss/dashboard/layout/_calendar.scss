@@ -149,6 +149,22 @@ $dashboard-calendar: "dashboard-calendar";
     margin-bottom: 10px;
 }
 
+.learnerscheduledlessons{
+    .booking-view{
+        text-align: left;
+        .inline-list{
+            margin-bottom: 10px;
+        }
+    }
+}
+.scheduled-lesson-popup{
+    & .box{
+        textarea{
+            height: 100px;
+        }
+    }
+}
+
 @media (max-width:theme('breakpoints.md','value')) {
     .fc .fc-header-toolbar{
         flex-direction: column;
