@@ -6410,11 +6410,14 @@ textarea[disabled] {
   content: "";
   left: 0;
   position: absolute;
-  top: -10px;
+  top: 50%;
   z-index: 2;
   width: 30px;
   height: 30px;
-  display: block; }
+  display: block;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%); }
 
 #mbsmessage.alert--danger .content:before,
 .system_message.alert--danger .content:before {
@@ -6889,7 +6892,7 @@ textarea[disabled] {
       width: 30px;
       height: 30px; }
   .alert--info {
-    padding-left: 60px;
+    padding-left: 10px;
     background-color: #0055ff; }
     .alert--info:before {
       background: url(/images/icon-info.svg) no-repeat;
@@ -6904,7 +6907,7 @@ textarea[disabled] {
       width: 30px;
       height: 30px; }
   .alert--warning {
-    padding-left: 60px;
+    padding-left: 10px;
     background-color: #ffab22; }
     .alert--warning:before {
       background: url(/images/icon-info.svg) no-repeat;
@@ -6919,7 +6922,7 @@ textarea[disabled] {
       width: 30px;
       height: 30px; }
   .alert--danger {
-    padding-left: 60px;
+    padding-left: 10px;
     background-color: #ff0251; }
     .alert--danger:before {
       background: url(/images/icon-attention.svg) no-repeat;
