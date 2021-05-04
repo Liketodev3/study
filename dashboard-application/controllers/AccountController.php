@@ -360,15 +360,13 @@ class AccountController extends LoggedUserController
         // prx($record->getFlds());
         if (!$record->addNew([], $record->getFlds())) {
             $db->rollbackTransaction();
-            $this->error = $record->getError();
-            return false;
+            FatUtility::dieJsonError($record->getError());
         }
         $user = new User(UserAuthentication::getLoggedUserId());
         $user->assignValues($post);
         if (!$user->save()) {
             $db->rollbackTransaction();
-            Message::addErrorMessage($user->getError());
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError($user->getError());
         }
         $uaObj = new UserAuthentication();
         $uaObj->updateSessionData($post);
