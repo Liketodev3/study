@@ -40,12 +40,12 @@ $weekDayName =  CommonHelper::dayNames();
             </div>
         </div>
     </div>
-    <span> <?php echo MyDate::displayTimezoneString();?> </span>
+    <div id='calendar-container'>
+        <div id='d_calendar'></div>
+    </div>
 </div>
 
-<div id='calendar-container'>
-    <div id='d_calendar'></div>
-</div>
+
 
 <div class="tooltipevent-wrapper-js d-none">
     <div class="tooltipevent" style="position:absolute;z-index:10001;">

@@ -203,8 +203,8 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function(current_time, durati
     
     calendar.render();
 
-    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm A')+"</span></h6>");
-    
+    jQuery('body').find(".fc-time-button").parent().html("<h6><span>"+langLbl.myTimeZoneLabel+" :-</span> <span class='timer'>"+moment(current_time).format('hh:mm:ss A')+"</span><span class='timezoneoffset'>("+langLbl.timezoneString+" "+timeZoneOffset+")</span></h6>");
+    seconds = 2;
     this.startTimer(current_time);
 
     jQuery(".fc-today-button,button.fc-prev-button,button.fc-next-button").click(function() {
