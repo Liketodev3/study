@@ -11,7 +11,7 @@ class TeacherBaseController extends LoggedUserController
                 Message::addErrorMessage(Label::getLabel('MSG_ERROR_INVALID_ACCESS'));
                 FatUtility::dieWithError(Message::getHtml());
             }
-            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', 'form'));
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', 'form', [], CONF_WEBROOT_FRONTEND));
         }
         User::setDashboardActiveTab(User::USER_TEACHER_DASHBOARD);
         

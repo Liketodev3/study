@@ -83,6 +83,7 @@ class GuestUserController extends MyAppController
         $json['msg'] = Label::getLabel('LBL_Request_Processing..');
         $post = FatApp::getPostedData();
         $userType = User::USER_TYPE_LEANER;
+      
         if (UserAuthentication::isUserLogged()) {
             if ($post['signUpType'] == "teacher") {
                 $user_preferred_dashboard = User::USER_TEACHER_DASHBOARD;
@@ -90,6 +91,7 @@ class GuestUserController extends MyAppController
                 $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), ['user_preferred_dashboard']);
                 $user_preferred_dashboard = $userRow['user_preferred_dashboard'];
             }
+         
             $json['redirectUrl'] = User::getPreferedDashbordRedirectUrl($user_preferred_dashboard, false);
             FatUtility::dieJsonSuccess($json);
         }
