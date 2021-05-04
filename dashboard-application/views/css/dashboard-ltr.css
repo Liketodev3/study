@@ -1006,6 +1006,20 @@ p {
 .dashboard-calendar .fc-view-harness {
   height: 336px !important; }
 
+.scheduled-lesson-popup .box {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ececec; }
+
+.scheduled-lesson-popup .fc .fc-timegrid-slot {
+  height: 1.9em; }
+
+.calendar-view.scheduled-lesson-popup .cal-status {
+  margin-bottom: 0; }
+
+.scheduled-lesson-popup .box h4 {
+  margin-bottom: 10px; }
+
 @media (max-width: 767px) {
   .fc .fc-header-toolbar {
     -webkit-box-orient: vertical;
@@ -1016,7 +1030,9 @@ p {
         -ms-flex-align: end;
             align-items: end; }
   .fc-toolbar-chunk {
-    margin-bottom: 10px; } }
+    margin-bottom: 10px; }
+  .scheduled-lesson-popup h4 {
+    margin-bottom: 16px; } }
 
 .menu-vertical li a {
   display: block;
@@ -2947,9 +2963,6 @@ strong.span-right {
   right: 0;
   top: 0;
   bottom: 0; }
-
-#facebox .content h4 {
-  margin-bottom: 20px; }
 
 body.is-screen-on {
   position: fixed;

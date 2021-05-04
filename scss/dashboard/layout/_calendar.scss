@@ -133,6 +133,22 @@ $dashboard-calendar: "dashboard-calendar";
     height: 336px !important;
 }
 
+.scheduled-lesson-popup .box {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ececec;
+}
+
+.scheduled-lesson-popup .fc .fc-timegrid-slot{
+    height: 1.9em;
+}
+.calendar-view.scheduled-lesson-popup .cal-status{
+    margin-bottom: 0;
+}
+.scheduled-lesson-popup .box h4{
+    margin-bottom: 10px;
+}
+
 @media (max-width:theme('breakpoints.md','value')) {
     .fc .fc-header-toolbar{
         flex-direction: column;
@@ -140,5 +156,8 @@ $dashboard-calendar: "dashboard-calendar";
     }
     .fc-toolbar-chunk{
         margin-bottom: 10px;
+    }
+    .scheduled-lesson-popup h4{
+        margin-bottom: 16px;
     }
 }
