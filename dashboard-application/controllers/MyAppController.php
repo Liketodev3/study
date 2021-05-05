@@ -188,16 +188,6 @@ class MyAppController extends FatController
         return $frm;
     }
 
-    public function getStates($countryId, $stateId = 0)
-    {
-        $countryId = FatUtility::int($countryId);
-        $stateId = FatUtility::int($stateId);
-        $stateObj = new State();
-        $statesArr = $stateObj->getStatesByCountryId($countryId, $this->siteLangId);
-        $this->set('statesArr', $statesArr);
-        $this->set('stateId', $stateId);
-        $this->_template->render(false, false, '_partial/states-list.php');
-    }
 
     public function fatActionCatchAll($action)
     {

@@ -77,7 +77,7 @@ class MyDate extends FatDate
             $cookieConsent = CommonHelper::getCookieConsent();
             $isActivePreferencesCookie = (!empty($cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
             if (!empty($user_timezone) && $isActivePreferencesCookie) {
-                CommonHelper::setCookie("user_timezone", $user_timezone, time() + 365 * 24 * 60 * 60, CONF_WEBROOT_FRONT_URL, '', true);
+                CommonHelper::setCookie("user_timezone", $user_timezone, time() + 365 * 24 * 60 * 60, CONF_WEBROOT_FRONTEND, '', true);
             }
         }
     }

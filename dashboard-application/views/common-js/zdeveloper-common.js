@@ -1,10 +1,5 @@
 var isRuningTeacherFavoriteAjax =  false;
-function getCountryStates( countryId, stateId, dv ){
-	fcom.ajax(fcom.makeUrl('GuestUser','getStates',[countryId,stateId], confFrontEndUrl),'',function(res){
-		$(dv).empty();
-		$(dv).append(res);
-	});
-};
+
 function isUserLogged(){
 	var isUserLogged = 0;
 	$.ajax({
@@ -26,15 +21,12 @@ getStatisticalData = function(form){
 		$('.lessons-sold-count-js').html(res.soldLessons.lessonCount);
 	},{fOutMode:'json'});
 }
-generateThread = function (id) {
-	//var data = 'threadId='+id;
-	if (isUserLogged() == 0) {
-		logInFormPopUp();
-		return false;
-	}
 
+generateThread = function (id) {
+	$.loader.show();
 	fcom.updateWithAjax( fcom.makeUrl('Messages','initiate', [id], confWebRootUrl), '',function(ans){
 		$.mbsmessage.close();
+		$.loader.hide();
 		if (ans.redirectUrl) {
 			if (ans.threadId) {
 				sessionStorage.setItem('threadId', ans.threadId);
@@ -49,9 +41,11 @@ generateThread = function (id) {
 sendMessage = function (frm) {
 	if (!$(frm).validate()) return;
 	var data = fcom.frmData(frm);
-	var dv = "#frm_fat_id_frmSendMessage";
-	$(dv).html(fcom.getLoader());
+	// var dv = "#frm_fat_id_frmSendMessage";
+	// $(dv).html(fcom.getLoader());
+	$.loader.show();
 	fcom.updateWithAjax(fcom.makeUrl('Messages', 'sendMessage', [], confWebRootUrl), data, function(t) {
+		$.loader.hide();
 	window.location.href = fcom.makeUrl('Messages', '', [], confWebRootUrl);
 	});
 };

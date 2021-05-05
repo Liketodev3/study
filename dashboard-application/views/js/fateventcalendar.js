@@ -141,16 +141,17 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
                             docs[i].selectable = true;
                     }
                 }
-            }, {
+            },
+            {
                 url: fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [this.teacherId], confFrontEndUrl),
                 method: 'POST',
-                success: function (docs) {
-                    for (i in docs) {
-                        docs[i].display = 'background';
-                        docs[i].color = 'var(--color-secondary)';
-                    }
-                }
-            }
+                // success: function (docs) {
+                    // for (i in docs) {
+                    //     // docs[i].display = 'background';
+                    //     // docs[i].color = 'var(--color-secondary)';
+                    // }
+                // }
+            },
         ],
         select: function (arg) {
             jQuery('body #d_calendar .closeon').click();

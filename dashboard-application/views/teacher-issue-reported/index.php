@@ -19,7 +19,7 @@
     <div class="page__head">
         <div class="row align-items-center justify-content-between">
             <div class="col-sm-6">
-                <h1> <?php echo Label::getLabel('LBL_Issue_Reported'); ?></h1>
+                <h1> <?php echo Label::getLabel('LBL_Reported_Issues'); ?></h1>
             </div>
             <div class="col-sm-auto">
                 <div class="buttons-group d-flex align-items-center">

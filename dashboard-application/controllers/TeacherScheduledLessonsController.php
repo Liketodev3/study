@@ -286,7 +286,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     {
         $frmSrch = $this->getLessonFlashCardSearchForm();
         $post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
-        $myteacher = (isset(FatApp::getPostedData()['teacherId'])) ? FatApp::getPostedData()['teacherId'] : 0;
+        $teacherId = (isset(FatApp::getPostedData()['teacherId'])) ? FatApp::getPostedData()['teacherId'] : 0;
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
@@ -336,8 +336,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
         $this->set('startRecord', $startRecord);
         $this->set('endRecord', $endRecord);
+        $this->set('lessonId', $lessonId);
         $this->set('totalRecords', $totalRecords);
-        $this->set('myteacher', $myteacher);
+        $this->set('teacherId', $teacherId);
         /* ] */
         $this->_template->render(false, false, 'teacher-scheduled-lessons/search-flash-cards.php');
     }

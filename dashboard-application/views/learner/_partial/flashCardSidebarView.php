@@ -11,7 +11,7 @@
 <div class="fcard-search">
 	<div class="fcard-search__head">
 		<h6><?php echo Label::getLabel('LBL_Flashcards'); ?></h6>
-		<a href="javascript:void(0)" onclick="flashCardForm(<?php echo $lessonRow['slesson_id'] ?>, 0, <?php echo $lessonRow['learnerId'] ?>, <?php echo $lessonRow['teacherId'] ?>);" class="color-secondary underline padding-top-3 padding-bottom-3">  <?php echo Label::getLabel('LBL_Add'); ?></a>
+		<a href="javascript:void(0);" onclick="flashCardForm(<?php echo $lessonRow['slesson_id'] ?>, 0, <?php echo $lessonRow['learnerId'] ?>, <?php echo $lessonRow['teacherId'] ?>);" class="color-secondary underline padding-top-3 padding-bottom-3 flash-card-add-js">  <?php echo Label::getLabel('LBL_Add'); ?></a>
 	</div>
 	<div class="fcard-search__body">    
 		<input type="text" placeholder="Search flashcard..">

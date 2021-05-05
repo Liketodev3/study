@@ -479,10 +479,11 @@ class TeachersController extends MyAppController
             $slesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['slesson_date'] . ' ' . $data['slesson_start_time'], true, $userTimezone);
             $slesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['slesson_end_date'] . ' ' . $data['slesson_end_time'], true, $userTimezone);
             $jsonArr[] = [
-                "title" => $data['teacherTeachLanguageName'],
+                // "title" => $data['teacherTeachLanguageName'],
+                "title" => "",
                 "start" => $slesson_start_time,
                 "end" => $slesson_end_time,
-                "className" => "sch_data",
+                "className" => "sch_data booked-slot",
                 "classType" => "0",
             ];
             if ($data['slesson_grpcls_id'] > 0) {
