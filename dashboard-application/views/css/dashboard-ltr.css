@@ -3275,9 +3275,6 @@ div.tagsinput div {
     .status-bar .status-bar__body .listing-window {
       height: calc(100% - 297px);
       position: relative; }
-      .status-bar .status-bar__body .listing-window .scrollbar {
-        max-height: inherit;
-        height: calc(100% - 1px); }
       @media (min-width: 991px) and (max-width: 1299px) {
         .status-bar .status-bar__body .listing-window {
           height: calc(100% - 218px); } }
