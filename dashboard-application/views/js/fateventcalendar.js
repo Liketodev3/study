@@ -222,7 +222,9 @@ FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
         initialView: '',
         now: current_time,
         headerToolbar: {
-            left: 'time'
+            left: 'time',
+            center: 'title',
+            right: 'prev,next today'
         },
         eventSources: [
             {
@@ -250,11 +252,15 @@ FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
 
 FatEventCalendar.prototype.TeacherMonthlyCalendar = function (current_time, dayMaxEvents) {
     var calConf = {
-        initialView: '',
+        initialView: 'dayGridMonth',
+        
         now: current_time,
         headerToolbar: {
-            left: 'time'
+            left: 'time',
+            center: 'title',
+            right: 'prev,next today'
         },
+        dayHeaders : true,
         eventColor: 'green',
         events: fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData', []),
         select: function (arg) {
@@ -299,11 +305,6 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
                 }
             }
         ],
-        // eventClick: function(arg) {
-        //     if (confirm(langLbl.confirmRemove)) {
-        //         arg.event.remove()
-        //     }
-        // },
         select: function (arg) {
             var start = arg.start;
             var end = arg.end;
