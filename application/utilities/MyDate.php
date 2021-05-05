@@ -164,6 +164,14 @@ class MyDate extends FatDate
         ];
     }
 
+    public static function getMonthStartAndEndDate(DateTime $dateTime): array
+    {
+        return [
+            'monthStart' => $dateTime->modify('first day of this month')->format('Y-m-d'),
+            'monthEnd' =>  $dateTime->modify('last day of this month')->format('Y-m-d'),
+        ];
+    }
+
     public static function changeWeekDaysToDate(array $weekDays, array $timeSlotArr = []) : array
     {
         $user_timezone = MyDate::getUserTimeZone();

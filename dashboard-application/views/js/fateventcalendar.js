@@ -221,16 +221,16 @@ FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
     var calConf = {
         initialView: '',
         now: current_time,
+        dayMaxEvents:3,
         headerToolbar: {
             left: 'time',
             center: 'title',
             right: 'prev,next today'
         },
-        eventSources: [
-            {
-                url: fcom.makeUrl('LearnerScheduledLessons', 'calendarJsonData', [])
-            }
-        ],
+        events: {
+            url:  fcom.makeUrl('LearnerScheduledLessons', 'calendarJsonData'),
+            method: 'POST'
+        },
         select: function (arg) {
             var start = arg.start;
             var end = arg.end;
@@ -260,9 +260,11 @@ FatEventCalendar.prototype.TeacherMonthlyCalendar = function (current_time, dayM
             center: 'title',
             right: 'prev,next today'
         },
-        dayHeaders : true,
         eventColor: 'green',
-        events: fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData', []),
+        events: {
+            url:  fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData'),
+            method: 'POST'
+        },
         select: function (arg) {
             var start = arg.start;
             var end = arg.end;

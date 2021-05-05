@@ -402,7 +402,21 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
     public function calendarJsonData()
     {
-        $curDateTime = date('Y-m-d H:i:s');
+        $startDate = Fatapp::getPostedData('start', FatUtility::VAR_STRING, '');
+        $endDate = Fatapp::getPostedData('end', FatUtility::VAR_STRING, '');
+      
+        $userTimezone = MyDate::getUserTimeZone();
+		$systemTimeZone = MyDate::getTimeZone();
+
+        if (empty($startDate) || empty($endDate)) {
+            $monthStartAndEndDate = MyDate::getMonthStartAndEndDate(new DateTime());
+            $startDate = $monthStartAndEndDate['monthStart'];
+            $endDate = $monthStartAndEndDate['monthEnd'];
+        }else{
+            $startDate = MyDate::changeDateTimezone($startDate, $userTimezone, $systemTimeZone);
+            $endDate =  MyDate::changeDateTimezone($endDate, $userTimezone, $systemTimeZone);
+        }
+
         $cssClassNamesArr = ScheduledLesson::getStatusArr();
         $srch = new ScheduledLessonSearch();
         $srch->joinGroupClass($this->siteLangId);
@@ -421,8 +435,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'concat(slns.slesson_date," ",slns.slesson_start_time) AS slesson_date_time',
         ]);
         $srch->addCondition('sld.sldetail_learner_id', ' = ', UserAuthentication::getLoggedUserId());
-        $srch->addCondition('slns.slesson_status', '!= ', ScheduledLesson::STATUS_CANCELLED);
-        $srch->addHaving('slesson_date_time', '>', $curDateTime);
+        $srch->addCondition('slns.slesson_status', 'NOT IN', [ScheduledLesson::STATUS_CANCELLED, ScheduledLesson::STATUS_NEED_SCHEDULING]);
+        $srch->addCondition('CONCAT(slns.`slesson_date`, " ", slns.`slesson_start_time` )', '< ', $endDate);
+        $srch->addCondition('CONCAT(slns.`slesson_end_date`, " ", slns.`slesson_end_time` )', ' > ', $startDate);
         $srch->joinTeacher();
         $srch->addGroupBy('slesson_id');
         $rs = $srch->getResultSet();
