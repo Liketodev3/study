@@ -41,7 +41,7 @@ class GuestUserController extends MyAppController
             }
         }
         $userId = UserAuthentication::getLoggedUserId();
-        CommonHelper::setcookie('uc_id', $userId, time() + 3600 * 24 * 30, CONF_WEBROOT_URL, '', true);
+        CommonHelper::setcookie('uc_id', $userId, time() + 3600 * 24 * 30, CONF_WEBROOT_FRONTEND, '', true);
         $this->set('redirectUrl', User::getPreferedDashbordRedirectUrl());
         $this->set('msg', Label::getLabel("MSG_LOGIN_SUCCESSFULL"));
         $this->_template->render(false, false, 'json-success.php');
@@ -355,7 +355,7 @@ class GuestUserController extends MyAppController
         ];
         if (UserAuthentication::saveLoginToken($values)) {
             $cookieName = UserAuthentication::YOCOACHUSER_COOKIE_NAME;
-            $cookres = CommonHelper::setCookie($cookieName, $token, $expiry, CONF_WEBROOT_URL, '', true);
+            $cookres = CommonHelper::setCookie($cookieName, $token, $expiry, CONF_WEBROOT_FRONTEND, '', true);
             return true;
         }
         return false;

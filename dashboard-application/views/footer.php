@@ -1,18 +1,35 @@
         <div class="page__footer align-center">
-        <p class="small">
-            <?php 
+            <p class="small">
+                <?php
                 if (CommonHelper::demoUrl()) {
                     echo CommonHelper::replaceStringData(Label::getLabel('LBL_COPYRIGHT_TEXT', CommonHelper::getLangId()), ['{YEAR}' => '&copy; ' . date("Y"), '{PRODUCT}' => '<a target="_blank"  href="https://yo-coach.com">Yo!Coach</a>', '{OWNER}' => '<a target="_blank"  class="underline color-primary" href="https://www.fatbit.com/">FATbit Technologies</a>']);
                 } else {
                     echo Label::getLabel('LBL_COPYRIGHT', CommonHelper::getLangId()) . ' &copy; ' . date("Y ") . FatApp::getConfig("CONF_WEBSITE_NAME_" . CommonHelper::getLangId(), FatUtility::VAR_STRING);
-                } 
-            ?>
-        </p>
+                }
+                ?>
+            </p>
         </div>
         </div>
         </main>
         <!-- ] -->
         </div>
+
+        <?php
+        if (FatApp::getConfig('CONF_ENABLE_COOKIES', FatUtility::VAR_INT, 1) && !CommonHelper::getUserCookiesEnabled()) { ?>
+            <div class="cc-window cc-banner cc-type-info cc-theme-block cc-bottom cookie-alert no-print">
+                <?php if (FatApp::getConfig('CONF_COOKIES_TEXT_' . $siteLangId, FatUtility::VAR_STRING, '')) { ?>
+                    <div class="box-cookies">
+                        <span id="cookieconsent:desc" class="cc-message">
+                            <?php echo FatUtility::decodeHtmlEntities(FatApp::getConfig('CONF_COOKIES_TEXT_' . $siteLangId, FatUtility::VAR_STRING, '')); ?>
+                            <a href="<?php echo CommonHelper::generateUrl('cms', 'view', array(FatApp::getConfig('CONF_COOKIES_BUTTON_LINK', FatUtility::VAR_INT))); ?>"><?php echo Label::getLabel('LBL_Read_More', $siteLangId); ?></a></span>
+                        </span>
+                        <span class="cc-close cc-cookie-accept-js"><?php echo Label::getLabel('LBL_Accept_Cookies', $siteLangId); ?></span>
+                        <a href="javascript:void(0)" class="cc-close" onClick="getCookieConsentForm();"><?php echo Label::getLabel('LBL_Choose_Cookies', $siteLangId); ?></a>
+                    </div>
+                <?php } ?>
+            </div>
+        <?php } ?>
+
         <!-- Custom Loader -->
         <div class="loading-wrapper" style="display: none;">
             <div class="loading">
@@ -22,26 +39,26 @@
             </div>
         </div>
         <?php
-            $errorClass = '';
-            if (Message::getMessageCount() > 0) {
-                $errorClass = " alert--success";
-            }
+        $errorClass = '';
+        if (Message::getMessageCount() > 0) {
+            $errorClass = " alert--success";
+        }
 
-            if (Message::getErrorCount() > 0) {
-                $errorClass = " alert--danger";
-            }
+        if (Message::getErrorCount() > 0) {
+            $errorClass = " alert--danger";
+        }
 
-            if (Message::getDialogCount() > 0) {
-                $errorClass = " alert--info";
-            }
+        if (Message::getDialogCount() > 0) {
+            $errorClass = " alert--info";
+        }
 
-            if (Message::getInfoCount() > 0) {
-                $errorClass = " alert--warning";
-            }
+        if (Message::getInfoCount() > 0) {
+            $errorClass = " alert--warning";
+        }
         ?>
-        <?php if(!empty($errorClass)){ ?>
+        <?php if (!empty($errorClass)) { ?>
             <div id="mbsmessage" class="alert--positioned-top-full alert <?php echo $errorClass; ?>">
-                <div class="close" src="<?php echo CONF_WEBROOT_URL.'img/mbsmessage/close.gif'; ?>"></div>
+                <div class="close" src="<?php echo CONF_WEBROOT_URL . 'img/mbsmessage/close.gif'; ?>"></div>
                 <div>
                     <div class="content">
                         <?php echo html_entity_decode(Message::getHtml()); ?>
@@ -49,17 +66,17 @@
                 </div>
             </div>
             <script>
-            $("document").ready(function() {
-                if (CONF_AUTO_CLOSE_SYSTEM_MESSAGES == 1) {
-                    var time = CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES * 1000;
-                    setTimeout(function() {
+                $("document").ready(function() {
+                    if (CONF_AUTO_CLOSE_SYSTEM_MESSAGES == 1) {
+                        var time = CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES * 1000;
+                        setTimeout(function() {
+                            $(document).trigger('close.mbsmessage');
+                        }, time);
+                    }
+                    $("#mbsmessage .close").click(function() {
                         $(document).trigger('close.mbsmessage');
-                    }, time);
-                }
-                $("#mbsmessage .close").click(function() {
-                    $(document).trigger('close.mbsmessage');
+                    });
                 });
-            });
             </script>
         <?php } ?>
         <script>
@@ -151,8 +168,21 @@
 
             });
         </script>
+        <?php
 
+        if (FatApp::getConfig('CONF_ENABLE_LIVECHAT', FatUtility::VAR_STRING, '')) {
+            echo FatApp::getConfig('CONF_LIVE_CHAT_CODE', FatUtility::VAR_STRING, '');
+        }
+        if (FatApp::getConfig('CONF_SITE_TRACKER_CODE', FatUtility::VAR_STRING, '') && !empty($cookieConsent[UserCookieConsent::COOKIE_STATISTICS_FIELD])) {
+            echo FatApp::getConfig('CONF_SITE_TRACKER_CODE', FatUtility::VAR_STRING, '');
+        }
 
+        /* $autoRestartOn =  FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1);
+            if($autoRestartOn == applicationConstants::YES && CommonHelper::demoUrl()) {
+                $this->includeTemplate( 'restore-system/page-content.php');
+            } */
+
+        ?>
         </body>
 
         </html>

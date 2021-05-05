@@ -166,8 +166,9 @@ $(document).ready(function () {
 	setUpBankInfo = function (frm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
+		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpBankInfo'), data, function (t) {
-			bankInfoForm();
+			$.loader.hide();
 		});
 	};
 
@@ -183,8 +184,9 @@ $(document).ready(function () {
 	setUpPaypalInfo = function (frm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
+		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpPaypalInfo'), data, function (t) {
-			paypalEmailAddressForm();
+			$.loader.hide();
 		});
 	};
 
@@ -219,12 +221,13 @@ $(document).ready(function () {
 			$("html, body").animate({ scrollTop: $(".error").eq(0).offset().top - 100 }, "slow");
 			return false;
 		}
+		$.loader.show();
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileInfo'), data, function (t) {
 			setTimeout(function () {
 				$.systemMessage.close();
 			}, 3000);
-
+			$.loader.hide();
 			if (isCometChatMeetingToolActive) {
 				name = frm.user_first_name.value + " " + frm.user_last_name.value;
 				userSeoUrl = '';
@@ -262,8 +265,10 @@ $(document).ready(function () {
 	setupTeacherPreferences = function (frm, goAvailablityForm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
+		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function (t) {
 			//$.mbsmessage.close();
+			$.loader.hide();
 			if(goAvailablityForm) {
 				$('.general-availability-js').trigger('click');
 				window.location = fcom.makeUrl('Teacher', 'availability');
@@ -315,7 +320,7 @@ $(document).ready(function () {
 		});
 	};
 
-	setupTeacherLanguages = function (frm) {
+	setupTeacherLanguages = function (frm, goToPriceForm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		var newTeachLangs = $('[name^=teach_lang_id]').map(function () {
@@ -333,7 +338,11 @@ $(document).ready(function () {
 				//$.mbsmessage.close();
 				// teacherLanguagesForm();
 				$.loader.hide();
-				getTeacherProfileProgress();
+				if(goToPriceForm){
+					$('.teacher-tech-lang-price-js').trigger('click');
+				}else{
+					getTeacherProfileProgress();
+				}
 			});
 			return;
 		}
@@ -520,6 +529,7 @@ $(document).ready(function () {
 		var dv = $("#frm_fat_id_frmQualification");
 		$(frm.btn_submit).attr('disabled', 'disabled');
 		var formData = new FormData(frm);
+		$.loader.show();
 		$.ajax({
 			url: fcom.makeUrl('Teacher', 'setUpTeacherQualification'),
 			type: 'POST',
@@ -528,9 +538,11 @@ $(document).ready(function () {
 			contentType: false,
 			processData: false,
 			beforeSend: function () {
+				$.loader.show();
 				$.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
 			},
 			success: function (data, textStatus, jqXHR) {
+				$.loader.hide();
 				isRuningTeacherQualificationFormAjax = false;
 				$.mbsmessage.close();
 				var data = JSON.parse(data);
@@ -549,6 +561,7 @@ $(document).ready(function () {
 				}, 2000);
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
+				$.loader.hide();
 				isRuningTeacherQualificationFormAjax = false;
 				$.mbsmessage.close();
 				$.mbsmessage(jqXHR.msg, true, 'alert alert--danger');
@@ -723,7 +736,9 @@ $(document).ready(function () {
 	setUpProfileLangInfo = function (frm, gotToNextLangForm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
+		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileLangInfo'), data, function (t) {
+			$.loader.hide();
 			if(!gotToNextLangForm) {
 				if (t.langId > 0) {
 					getLangProfileInfoForm(t.langId);

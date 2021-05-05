@@ -69,7 +69,7 @@ class HomeController extends MyAppController
                 $isActivePreferencesCookie = (!empty($this->cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
 
                 if ($isActivePreferencesCookie) {
-                    CommonHelper::setCookie('defaultSiteCurrency', $currencyId, time() + 3600 * 24 * 10, CONF_WEBROOT_URL, '', true);
+                    CommonHelper::setCookie('defaultSiteCurrency', $currencyId, time() + 3600 * 24 * 10, CONF_WEBROOT_FRONTEND, '', true);
                 }
             }
         }

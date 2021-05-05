@@ -249,7 +249,7 @@ $(document).ready(function(){
 		}
 
 		$(".cc-cookie-accept-js").click(function () {
-				fcom.ajax(fcom.makeUrl('Custom', 'updateUserCookies'), '', function (t) {
+				fcom.ajax(fcom.makeUrl('Custom', 'updateUserCookies', [], confFrontEndUrl), '', function (t) {
 						$(".cookie-alert").hide('slow');
 						$(".cookie-alert").remove();
 						$.facebox.close();

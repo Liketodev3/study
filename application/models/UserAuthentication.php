@@ -214,7 +214,7 @@ class UserAuthentication extends FatModel
                 'vals' => [$_COOKIE[static::YOCOACHUSER_COOKIE_NAME]]
             ]);
         }
-        CommonHelper::setCookie($_COOKIE[static::YOCOACHUSER_COOKIE_NAME], '', time() - 3600, CONF_WEBROOT_URL, '', true);
+        CommonHelper::setCookie($_COOKIE[static::YOCOACHUSER_COOKIE_NAME], '', time() - 3600, CONF_WEBROOT_FRONTEND, '', true);
         return true;
     }
 
