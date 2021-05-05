@@ -1963,9 +1963,6 @@ strong.span-right {
 .terms_wrap label {
   display: inline-block; }
 
-.fc-toolbar.fc-header-toolbar {
-  margin-top: 20px; }
-
 .calendar-view .fc-toolbar .fc-left h6 {
   padding-top: 5px; }
 
@@ -3238,14 +3235,21 @@ div.tagsinput div {
 
 .status-bar {
   border-radius: var(--radius-0);
-  padding: var(--padding-8) 0; }
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 100%;
+  padding-top: calc(1rem + 26px); }
   @media (min-width: 991px) and (max-width: 1299px) {
     .status-bar {
       padding: var(--padding-8) var(--padding-4);
       max-height: 558px; } }
   .status-bar .status-bar__head {
     padding: 0 var(--padding-6);
-    padding-bottom: var(--padding-5);
     position: relative;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -3262,7 +3266,8 @@ div.tagsinput div {
       color: var(--color-gray-000); }
   .status-bar .status-bar__body {
     padding: var(--padding-6);
-    height: calc(100% - 56px); }
+    height: calc(100% - 56px);
+    overflow: auto; }
     .status-bar .status-bar__body .calendar {
       padding-bottom: var(--padding-6); }
       .status-bar .status-bar__body .calendar img {
