@@ -77,7 +77,7 @@ class MyDate extends FatDate
             $cookieConsent = CommonHelper::getCookieConsent();
             $isActivePreferencesCookie = (!empty($cookieConsent[UserCookieConsent::COOKIE_PREFERENCES_FIELD]));
             if (!empty($user_timezone) && $isActivePreferencesCookie) {
-                CommonHelper::setCookie("user_timezone", $user_timezone, time() + 365 * 24 * 60 * 60, CONF_WEBROOT_URL, '', true);
+                CommonHelper::setCookie("user_timezone", $user_timezone, time() + 365 * 24 * 60 * 60, CONF_WEBROOT_FRONTEND, '', true);
             }
         }
     }
@@ -161,6 +161,14 @@ class MyDate extends FatDate
         return [
             'weekStart' => $dateTime->format('Y-m-d'),
             'weekEnd' =>  $dateTime->modify('next saturday')->format('Y-m-d'),
+        ];
+    }
+
+    public static function getMonthStartAndEndDate(DateTime $dateTime): array
+    {
+        return [
+            'monthStart' => $dateTime->modify('first day of this month')->format('Y-m-d'),
+            'monthEnd' =>  $dateTime->modify('last day of this month')->format('Y-m-d'),
         ];
     }
 

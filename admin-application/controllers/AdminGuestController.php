@@ -259,7 +259,7 @@ class AdminGuestController extends FatController
         $adminAuthObj = AdminAuthentication::getInstance();
         if ($adminAuthObj->saveRememberLoginToken($values)) {
             $cookie_name = AdminAuthentication::ADMIN_REMEMBER_ME_COOKIE_NAME;
-            CommonHelper::setCookie($cookie_name, $token, $expiry, CONF_WEBROOT_FRONT_URL, '', true);
+            CommonHelper::setCookie($cookie_name, $token, $expiry, CONF_WEBROOT_FRONTEND, '', true);
             return true;
         }
         return false;

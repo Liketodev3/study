@@ -57,7 +57,7 @@ class TeacherSearch extends SearchBase
      * 
      * @return void
      */
-    public function applyPrimaryConditions(int $userId): void
+    public function applyPrimaryConditions(int $userId = 0): void
     {
         $this->addCondition('teacher.user_deleted', '=', 0);
         $this->addCondition('teacher.user_id', '!=',  $userId);

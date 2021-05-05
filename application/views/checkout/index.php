@@ -47,8 +47,7 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 							<?php } ?>
 							<div class="tabled__cell">
 								<span class="-color-light"><?php echo Label::getLabel('LBL_Duration'); ?></span><br>
-								<span class="cart-lesson-duration"> <?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cartData['lessonDuration']); ?></span>
-							</div>
+								<span class="cart-lesson-duration"> <?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cartData['lessonDuration']); ?></span> </div>
 						</div>
 					</div>
 				</div>
@@ -86,7 +85,7 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 
 				<div class="col-xl-8 col-lg-8 col-md-12" id="lsn-pckgs"></div>
 
-				<div class="col-xl-4 col-lg-4 col-md-12 checkout-cart-dir">
+				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right">
 					<div class="box" style="margin-bottom: 30px;" id="financialSummaryListing">
 					</div>
 					<p class="-color-secondary">

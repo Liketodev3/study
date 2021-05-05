@@ -85,7 +85,7 @@ function viewCalendar( teacherId, action, languageId){
 
 	fcom.ajax(fcom.makeUrl('Teachers', 'viewCalendar',[teacherId, languageId]), 'action='+action, function(t) {
 		$.loader.hide();
-		$.facebox( t,'facebox-medium');
+		$.facebox( t,'facebox-large');
 	});
 }
 

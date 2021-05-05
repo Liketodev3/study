@@ -8,8 +8,8 @@ function setCookie(key, value) {
 	if(secure){
 		samesite = " samesite=none;";
 	}
-	console.log(key + '=' + value + '; '+ secure+samesite+' expires=' + expires.toUTCString());
-	document.cookie = key + '=' + value + '; '+secure+samesite+' expires=' + expires.toUTCString();
+	console.log(key + '=' + value + '; '+secure+samesite+' expires=' + expires.toUTCString()+'; path='+confFrontEndUrl);
+	document.cookie = key + '=' + value + '; '+secure+samesite+' expires=' + expires.toUTCString()+'; path='+confFrontEndUrl;
 }
 function getCookie(key) {
     var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
@@ -20,6 +20,7 @@ function getCookie(key) {
 
 $(document).ready(function() {
 	var user_timezone  = getCookie('user_timezone');
+	console.log(user_timezone);
 	var tz = jstz.determine();
 	var timezone = tz.name();
 	

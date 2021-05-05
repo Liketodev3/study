@@ -93,7 +93,7 @@
 
 			<h5><?php echo  Label::getLabel('LBL_NO_RECORD_FLASH_CARD_TITLE'); ?></h5>
 			<p><?php echo   Label::getLabel('LBL_NO_RECORD_FLASH_CARD_TEXT'); ?></p>
-			<a href="#" onclick="$('.flash-card-add-js').trigger('click');" class="btn bg-primary"><?php echo  Label::getLabel('LBL_Add_flash_card'); ?></a>
+			<a href="javascript:void(0);" onclick="$('.flash-card-add-js').trigger('click');" class="btn bg-primary"><?php echo  Label::getLabel('LBL_Add_flash_card'); ?></a>
 		</div>
 	</div>
 <?php } ?>

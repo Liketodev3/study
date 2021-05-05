@@ -141,16 +141,17 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
                             docs[i].selectable = true;
                     }
                 }
-            }, {
+            },
+            {
                 url: fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [this.teacherId], confFrontEndUrl),
                 method: 'POST',
-                success: function (docs) {
-                    for (i in docs) {
-                        docs[i].display = 'background';
-                        docs[i].color = 'var(--color-secondary)';
-                    }
-                }
-            }
+                // success: function (docs) {
+                    // for (i in docs) {
+                    //     // docs[i].display = 'background';
+                    //     // docs[i].color = 'var(--color-secondary)';
+                    // }
+                // }
+            },
         ],
         select: function (arg) {
             jQuery('body #d_calendar .closeon').click();
@@ -221,14 +222,16 @@ FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
     var calConf = {
         initialView: '',
         now: current_time,
+        dayMaxEvents:3,
         headerToolbar: {
-            left: 'time'
+            left: 'time',
+            center: 'title',
+            right: 'prev,next today'
         },
-        eventSources: [
-            {
-                url: fcom.makeUrl('LearnerScheduledLessons', 'calendarJsonData', [])
-            }
-        ],
+        events: {
+            url:  fcom.makeUrl('LearnerScheduledLessons', 'calendarJsonData'),
+            method: 'POST'
+        },
         select: function (arg) {
             var start = arg.start;
             var end = arg.end;
@@ -250,13 +253,19 @@ FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
 
 FatEventCalendar.prototype.TeacherMonthlyCalendar = function (current_time, dayMaxEvents) {
     var calConf = {
-        initialView: '',
+        initialView: 'dayGridMonth',
+        
         now: current_time,
         headerToolbar: {
-            left: 'time'
+            left: 'time',
+            center: 'title',
+            right: 'prev,next today'
         },
         eventColor: 'green',
-        events: fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData', []),
+        events: {
+            url:  fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData'),
+            method: 'POST'
+        },
         select: function (arg) {
             var start = arg.start;
             var end = arg.end;
@@ -299,11 +308,6 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
                 }
             }
         ],
-        // eventClick: function(arg) {
-        //     if (confirm(langLbl.confirmRemove)) {
-        //         arg.event.remove()
-        //     }
-        // },
         select: function (arg) {
             var start = arg.start;
             var end = arg.end;

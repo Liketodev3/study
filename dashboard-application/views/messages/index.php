@@ -29,7 +29,7 @@ $submitFld->setWrapperAttribute('class', 'col-md-12'); ?>
                     </svg><?php echo Label::getLabel('LBL_Search'); ?>
                 </a>
                 <div class="window__search-form window__search-form-js">
-                    <a href="javascript:void(0)" class="-link-close window__search-field-js"></a>
+                    <a href="javascript:void(0);" class="-link-close window__search-field-js"></a>
                     <?php echo $frmSrch->getFormHtml(); ?>
                 </div>
             </div>
