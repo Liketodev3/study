@@ -17,12 +17,18 @@ foreach ($arr_flds as $val) {
 	$e = $th->appendElement('th', array(), $val);
 }
 $sr_no = $page == 1 ? 0 : $pageSize * ($page - 1);
-// echo '<pre>';print_r($gdprRequests);echo '</pre>';die();
+// echo '<pre>';print_r($gdprRequests);echo '</pre>';
 foreach ($gdprRequests as $sn => $row) {
 	$userFullName = User::getAttributesById($row['gdprdatareq_user_id'], 'concat(user_first_name, " " ,user_last_name)');
 	$sr_no++;
 	$tr = $tbl->appendElement('tr');
-
+	if($row['gdprdatareq_type'] == 1){
+		$gdprdatareq_type = Label::getLabel('LBL_Truncate_Data',$adminLangId);
+	}else if($row['gdprdatareq_type'] == 2){
+		$gdprdatareq_type = Label::getLabel('LBL_Anonymize_Data',$adminLangId);
+	}else{
+		$gdprdatareq_type = Label::getLabel('LBL_Not_Mentioned',$adminLangId);
+	}
 	foreach ($arr_flds as $key => $val) {
 		$td = $tr->appendElement('td');
 		switch ($key) {
@@ -33,7 +39,7 @@ foreach ($gdprRequests as $sn => $row) {
 				$td->appendElement('plaintext', array(), $row['gdprdatareq_reason']);
 				break;
 			case 'gdprdatareq_type':
-				$td->appendElement('plaintext', array(), $row['gdprdatareq_type']);
+				$td->appendElement('plaintext', array(), $gdprdatareq_type);
 				break;
 			case 'gdprdatareq_user_name':
 				$td->appendElement('plaintext', array(), $userFullName);
@@ -45,7 +51,7 @@ foreach ($gdprRequests as $sn => $row) {
 				$td->appendElement('plaintext', array(), FatDate::format($row[$key],true));
 				break;
 			case 'gdprdatareq_status':
-				$td->appendElement('plaintext', array(), $row['gdprdatareq_status'], true);
+				$td->appendElement('plaintext', array(), $gdprStatus[$row[$key]], true);
 			break;
 			case 'action':
 				$ul = $td->appendElement("ul",array("class"=>"actions"));

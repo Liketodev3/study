@@ -65,6 +65,7 @@ class GdprRequestsController extends AdminBaseController
         $this->set('endRecord', $endRecord);
         $this->set('totalRecords', $totalRecords);
         /* ] */
+        $this->set('gdprStatus', Gdpr::getGdprAdminStatusArr($this->adminLangId));
         $this->set('gdprRequests', $gdprRequests);
         $this->_template->render(false, false, null, false, false);
     }
@@ -99,8 +100,7 @@ class GdprRequestsController extends AdminBaseController
     private function changeGdprRequestStatusForm()
     {
         $frm = new Form('changeStatusForm');
-        $statusArr = new Gdpr();
-        $frm->addSelectBox('Status', 'gdprdatareq_status', $statusArr->getGdprAdminStatusArr($this->adminLangId), '')->requirements()->setRequired();
+        $frm->addSelectBox('Status', 'gdprdatareq_status', Gdpr::getGdprAdminStatusArr($this->adminLangId), '')->requirements()->setRequired();
         $frm->addHiddenField('', 'gdprdatareq_id', 0);
         $frm->addHiddenField('', 'gdprdatareq_user_id', 0);
         $frm->addSubmitButton('', 'btn_submit', 'Update');

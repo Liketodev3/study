@@ -36,11 +36,6 @@ class Gdpr extends MyAppModel
 
     public static function getGdprRequestTypeArr($langId)
     {
-        $langId = FatUtility::int($langId);
-        if ($langId == 0) {
-            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
-        }
-
         $arr=array(
             static::TRUNCATE_DATA => Label::getLabel('LBL_Erase_Data', $langId),
             static::ANONYMIZE_DATA => Label::getLabel('LBL_Anonymize_Data', $langId)
@@ -66,13 +61,8 @@ class Gdpr extends MyAppModel
         return $arr;
     }
     
-    public function getGdprAdminStatusArr($langId)
+    public static function getGdprAdminStatusArr($langId)
     {
-        $langId = FatUtility::int($langId);
-        if($langId == 0) {
-            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
-        }
-
         $arr = array(
             static::STATUS_DELETE_DATA => Label::getLabel('LBL_Erase_Data'),
             static::STATUS_COMPLETED => Label::getLabel('LBL_Completed'),
