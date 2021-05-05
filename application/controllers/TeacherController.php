@@ -439,6 +439,7 @@ class TeacherController extends TeacherBaseController
 
     public function deleteTeacherQualification($uqualification_id = 0)
     {
+        $userId = UserAuthentication::getLoggedUserId();
         $uqualification_id = FatUtility::int($uqualification_id);
         if ($uqualification_id < 1) {
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
@@ -461,6 +462,15 @@ class TeacherController extends TeacherBaseController
             Message::addErrorMessage($userQualification->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
+
+        if (CONF_USE_FAT_CACHE) {
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'ORIGINAL')));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM')));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'SMALL')));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'EXTRASMALL')));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId)));
+        }
+
         $this->set('msg', Label::getLabel('MSG_Qualification_Removed_Successfuly'));
         $this->_template->render(false, false, 'json-success.php');
     }

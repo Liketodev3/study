@@ -367,3 +367,34 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.8.20210409' WHERE `conf_na
 UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.9.20210414' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+
+-- Table structure for table `tbl_gdpr_data_requests`
+
+CREATE TABLE `tbl_gdpr_data_requests` (
+  `gdprdatareq_id` int(11) NOT NULL,
+  `gdprdatareq_user_id` int(11) NOT NULL,
+  `gdprdatareq_type` tinyint(1) NOT NULL DEFAULT '0',
+  `gdprdatareq_reason` text NOT NULL,
+  `gdprdatareq_status` tinyint(1) NOT NULL DEFAULT '0',
+  `gdprdatareq_added_on` datetime NOT NULL,
+  `gdprdatareq_updated_on` datetime NOT NULL,
+  `gdprdatareq_request_sent` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for table `tbl_gdpr_data_requests`
+--
+ALTER TABLE `tbl_gdpr_data_requests`
+  ADD PRIMARY KEY (`gdprdatareq_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tbl_gdpr_data_requests`
+--
+ALTER TABLE `tbl_gdpr_data_requests`
+  MODIFY `gdprdatareq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+

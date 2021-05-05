@@ -6,6 +6,7 @@ class LoggedUserController extends MyAppController
         parent::__construct($action);
         UserAuthentication::checkLogin();
         $userRow = $this->verifyLoggedUser();
+       
     }
 
     private function verifyLoggedUser()

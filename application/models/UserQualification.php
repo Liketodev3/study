@@ -26,4 +26,10 @@ class UserQualification extends MyAppModel
             static::EXPERIENCE_WORK => Label::getLabel('LBL_Work_Experience', $langId),
         );
     }
+
+    public static function deleteUserQualificationsDataByUserId($userId)
+    {
+        FatApp::getDb()->deleteRecords(static::DB_TBL, array('smt' => 'uqualification_user_id = ?', 'vals' => array($userId)));
+        return true;
+    }
 }

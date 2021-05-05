@@ -73,4 +73,22 @@ class UserSetting extends MyAppModel
         $rs = $srch->getResultSet();
         return FatApp::getDb()->fetchAll($rs);
     }
+
+    public static function truncateUserSettingsDataByUserId($userId)
+    {
+        $db = FatApp::getDb();
+        $tbl_user_settings_data = [
+            'us_video_link' => '',
+            'us_google_access_token' => '',
+        ];
+
+        if ($db->updateFromArray(static::DB_TBL, $tbl_user_settings_data, array(
+            'smt' => 'us_user_id=?',
+            'vals' => array(
+                $userId
+            )
+        ))){
+            return true;
+        }
+    }
 }
