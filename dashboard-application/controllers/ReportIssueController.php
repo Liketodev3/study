@@ -12,32 +12,9 @@ class ReportIssueController extends LoggedUserController
     {
         $sldetailId = FatUtility::int($sldetailId);
         $userId = UserAuthentication::getLoggedUserId();
-        $srch = new SearchBase('tbl_scheduled_lesson_details', 'sldetail');
-        $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_id=sldetail.sldetail_slesson_id', 'slesson');
-        $srch->addCondition('sldetail.sldetail_slesson_id', '=', $sldetailId);
-        $srch->addCondition('sldetail.sldetail_learner_id', '=', $userId);
-        $srch->addMultipleFields(['slesson_end_date', 'slesson_end_time']);
-        $srch->doNotCalculateRecords();
-        $srch->setPageSize(1);
-        $row = FatApp::getDb()->fetch($srch->getResultSet());
-        if (empty($row)) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
-        }
-        $lessonEndtime = $row['slesson_end_date'] . ' ' . $row['slesson_end_time'];
-        $reportHours = FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION');
-        strtotime($lessonEndtime, '+'.$reportHours);
-        
-        if (false) {
-        FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
-        }
-        $srch = new SearchBase('tbl_reported_issues');
-        $srch->addCondition('repiss_reported_by', '=', $userId);
-        $srch->addCondition('repiss_slesson_id', '=', $sldetailId);
-        $srch->doNotCalculateRecords();
-        $srch->setPageSize(1);
-        $row = FatApp::getDb()->fetch($srch->getResultSet());
-        if (!empty($row)) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_ALREADY_REPORTED_ISSUE'));
+        $reportIssue = new ReportedIssue(0, $userId);
+        if (!$lesson = $reportIssue->getLessonToReport($sldetailId)) {
+            FatUtility::dieJsonError($reportIssue->getError());
         }
         $frm = $this->getForm();
         $frm->fill(['repiss_slesson_id' => $sldetailId]);
@@ -51,37 +28,14 @@ class ReportIssueController extends LoggedUserController
         if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
-        $sldetailId = $post['repiss_slesson_id'];
         $userId = UserAuthentication::getLoggedUserId();
-        $srch = new SearchBase('tbl_scheduled_lesson_details');
-        $srch->addCondition('sldetail_learner_id', '=', $userId);
-        $srch->addCondition('sldetail_slesson_id', '=', $sldetailId);
-        $srch->setPageSize(1);
-        $srch->getResultSet();
-        if ($srch->recordCount() == 0) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        $sldetailId = FatUtility::int($post['repiss_slesson_id']);
+        $reportIssue = new ReportedIssue(0, $userId);
+        if (!$lesson = $reportIssue->getLessonToReport($sldetailId)) {
+            FatUtility::dieJsonError($reportIssue->getError());
         }
-        $srch = new SearchBase('tbl_reported_issues');
-        $srch->addCondition('repiss_reported_by', '=', $userId);
-        $srch->addCondition('repiss_slesson_id', '=', $sldetailId);
-        $srch->setPageSize(1);
-        $srch->getResultSet();
-        if ($srch->recordCount() > 0) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_ALREADY_REPORTED_ISSUE'));
-        }
-        $options = IssueReportOptions::getOptionsArray($this->siteLangId, User::USER_TYPE_LEANER);
-        $record = new TableRecord(ReportedIssue::DB_TBL);
-        $record->assignValues([
-            'repiss_comment' => $post['repiss_comment'],
-            'repiss_slesson_id' => $post['repiss_slesson_id'],
-            'repiss_title' => $options[$post['repiss_title']],
-            'repiss_status' => ReportedIssue::STATUS_PROGRESS,
-            'repiss_reported_by_type' => ReportedIssue::USER_TYPE_LEARNER,
-            'repiss_reported_on' => date('Y-m-d H:i:s'),
-            'repiss_reported_by' => $userId
-        ]);
-        if (!$record->addNew()) {
-            FatUtility::dieJsonError($record->getError());
+        if (!$reportIssue->setupIssue($sldetailId, $post['repiss_title'], $post['repiss_comment'])) {
+            FatUtility::dieJsonError($reportIssue->getError());
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY'));
     }

@@ -36,6 +36,24 @@ class ReportedIssue extends MyAppModel
         $this->objMainTableRecord->setSensitiveFields(['repiss_status']);
     }
 
+    public function setupIssue(int $sldetailId, int $titleId, string $comment): bool
+    {
+        $options = IssueReportOptions::getOptionsArray($this->commonLangId, User::USER_TYPE_LEANER);
+        $this->assignValues([
+            'repiss_comment' => $comment,
+            'repiss_slesson_id' => $sldetailId,
+            'repiss_title' => $options[$titleId] ?? 'NA',
+            'repiss_status' => static::STATUS_PROGRESS,
+            'repiss_reported_by_type' => static::USER_TYPE_LEARNER,
+            'repiss_reported_on' => date('Y-m-d H:i:s'),
+            'repiss_reported_by' => $this->userId
+        ]);
+        if (!$this->save()) {
+            return false;
+        }
+        return true;
+    }
+
     public function setupIssueAction(int $action, string $comment, bool $closed = false): bool
     {
         $db = FatApp::getDb();
@@ -161,7 +179,6 @@ class ReportedIssue extends MyAppModel
     {
         $adminLangId = CommonHelper::getLangId();
         $srch = ReportedIssue::getSearchObject();
-        $srch->addCondition('repiss.repiss_id', '=', FatUtility::int($issueId));
         $srch->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'slesson.slesson_teacher_id = us.us_user_id', 'us');
         $srch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'slesson.slesson_slanguage_id = tlang.tlanguage_id', 'tlang');
         $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'sll.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND sll.tlanguagelang_lang_id = ' . $adminLangId, 'sll');
@@ -179,6 +196,7 @@ class ReportedIssue extends MyAppModel
             'CONCAT(ut.user_first_name, " ", ut.user_last_name) AS teacher_username',
             'order_net_amount', 'order_discount_total', 'op_qty', 'op_lpackage_is_free_trial', 'op_unit_price',
         ]);
+        $srch->addCondition('repiss.repiss_id', '=', FatUtility::int($issueId));
         $srch->addGroupBy('repiss.repiss_id');
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -209,6 +227,39 @@ class ReportedIssue extends MyAppModel
         $srch->joinTable('tbl_order_products', 'INNER JOIN', 'op.op_order_id=orders.order_id', 'op');
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'repiss.repiss_reported_by=user.user_id', 'user');
         return $srch;
+    }
+
+    public function getLessonToReport(int $sldetailId)
+    {
+        $srch = new SearchBase('tbl_scheduled_lesson_details', 'sldetail');
+        $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_id=sldetail.sldetail_slesson_id', 'slesson');
+        $srch->addMultipleFields(['slesson_end_date', 'slesson_end_time']);
+        $srch->addCondition('sldetail.sldetail_learner_id', '=', $this->userId);
+        $srch->addCondition('sldetail.sldetail_id', '=', $sldetailId);
+        $srch->doNotCalculateRecords();
+        $srch->setPageSize(1);
+        $lesson = FatApp::getDb()->fetch($srch->getResultSet());
+        if (empty($lesson)) {
+            $this->error = Label::getLabel('LBL_INVALID_REQUEST');
+            return false;
+        }
+        $reportHours = FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION');
+        $lessonEnddate = $lesson['slesson_end_date'] . ' ' . $lesson['slesson_end_time'];
+        $lessonReportDate = strtotime($lessonEnddate . " +" . $reportHours . " hour");
+        if ($lessonReportDate <= strtotime(date('Y-m-d H:i:s'))) {
+            $this->error = Label::getLabel('LBL_REPORT_TIME_EXPIRED');
+            return false;
+        }
+        $srch = new SearchBase('tbl_reported_issues');
+        $srch->addCondition('repiss_reported_by', '=', $this->userId);
+        $srch->addCondition('repiss_slesson_id', '=', $sldetailId);
+        $srch->setPageSize(1);
+        $srch->getResultSet();
+        if ($srch->recordCount() > 0) {
+            $this->error = Label::getLabel('LBL_ALREADY_REPORTED_ISSUE');
+            return false;
+        }
+        return $lesson;
     }
 
     public static function getStatusFromActions($key)
