@@ -1028,6 +1028,10 @@ p {
 .scheduled-lesson-popup .box textarea {
   height: 100px; }
 
+.fc-v-event {
+  border: 1px solid #56ca8c;
+  background-color: #56ca8c; }
+
 @media (max-width: 767px) {
   .fc .fc-header-toolbar {
     -webkit-box-orient: vertical;
