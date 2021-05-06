@@ -12,21 +12,32 @@ class ReportIssueController extends LoggedUserController
     {
         $sldetailId = FatUtility::int($sldetailId);
         $userId = UserAuthentication::getLoggedUserId();
-        $srch = new SearchBase('tbl_scheduled_lesson_details');
-        $srch->addCondition('sldetail_learner_id', '=', $userId);
-        $srch->addCondition('sldetail_slesson_id', '=', $sldetailId);
+        $srch = new SearchBase('tbl_scheduled_lesson_details', 'sldetail');
+        $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_id=sldetail.sldetail_slesson_id', 'slesson');
+        $srch->addCondition('sldetail.sldetail_slesson_id', '=', $sldetailId);
+        $srch->addCondition('sldetail.sldetail_learner_id', '=', $userId);
+        $srch->addMultipleFields(['slesson_end_date', 'slesson_end_time']);
+        $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
-        $srch->getResultSet();
-        if ($srch->recordCount() == 0) {
+        $row = FatApp::getDb()->fetch($srch->getResultSet());
+        if (empty($row)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
+        $lessonEndtime = $row['slesson_end_date'] . ' ' . $row['slesson_end_time'];
+        $reportHours = FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION');
+        strtotime($lessonEndtime, '+'.$reportHours);
+        
+        if (false) {
+        FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
         $srch = new SearchBase('tbl_reported_issues');
         $srch->addCondition('repiss_reported_by', '=', $userId);
         $srch->addCondition('repiss_slesson_id', '=', $sldetailId);
+        $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
-        $srch->getResultSet();
-        if ($srch->recordCount() > 0) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        $row = FatApp::getDb()->fetch($srch->getResultSet());
+        if (!empty($row)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_ALREADY_REPORTED_ISSUE'));
         }
         $frm = $this->getForm();
         $frm->fill(['repiss_slesson_id' => $sldetailId]);
@@ -56,7 +67,7 @@ class ReportIssueController extends LoggedUserController
         $srch->setPageSize(1);
         $srch->getResultSet();
         if ($srch->recordCount() > 0) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+            FatUtility::dieJsonError(Label::getLabel('LBL_ALREADY_REPORTED_ISSUE'));
         }
         $options = IssueReportOptions::getOptionsArray($this->siteLangId, User::USER_TYPE_LEANER);
         $record = new TableRecord(ReportedIssue::DB_TBL);

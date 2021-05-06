@@ -162,12 +162,12 @@ issueReported = function (id) {
         if (isJson(res)) {
             var response = JSON.parse(res);
             if (response.status == 1) {
-                $.mbsmessage(response.msg, 'alert--success');
+                $.mbsmessage(response.msg, true, 'alert--success');
             } else {
-                $.mbsmessage(response.msg, 'alert--danger');
+                $.mbsmessage(response.msg, true, 'alert--danger');
             }
         } else {
-            $.facebox(t, 'facebox-medium');
+            $.facebox(res, 'facebox-medium');
         }
     });
 };
@@ -176,7 +176,6 @@ issueReportedSetup = function (frm) {
     if (!$(frm).validate()) {
         return;
     }
-    $(frm).find('[type=submit]').attr('disabled', true);
     var action = fcom.makeUrl('ReportIssue', 'setup');
     fcom.updateWithAjax(action, fcom.frmData(frm), function (response) {
         $.facebox.close();
@@ -185,7 +184,6 @@ issueReportedSetup = function (frm) {
             $("#lesson-status" + statusIssueReported).trigger("click");
         } else {
             $.mbsmessage(response.msg, true, 'alert alert--danger');
-            $(frm).find('[type=submit]').removeAttr('disabled');
         }
     });
 };
