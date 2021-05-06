@@ -459,5 +459,77 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ('LBL_NO_RECORD_FLASH_CARD_TEXT', 1, 'Click on the button "Add Flash-card" to add it. It will help you during the class'),
 ('LBL_NO_RECORD_FLASH_CARD_TEXT', 2, 'Click on the button "Add Flash-card" to add it. It will help you during the class');
 
+--
+-- Table structure for table `tbl_pricing_slabs`
+--
 
-  
+CREATE TABLE `tbl_pricing_slabs` (
+  `prislab_id` int(11) NOT NULL,
+  `prislab_min` int(11) NOT NULL,
+  `prislab_max` int(11) NOT NULL,
+  `prislab_active` tinyint(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_user_teach_languages`
+--
+
+CREATE TABLE `tbl_user_teach_languages` (
+  `utl_id` int(11) NOT NULL,
+  `utl_user_id` int(11) NOT NULL,
+  `utl_tlanguage_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_user_teach_lang_prices`
+--
+
+CREATE TABLE `tbl_user_teach_lang_prices` (
+  `ustelgpr_prislab_id` int(11) NOT NULL,
+  `ustelgpr_utl_id` int(11) NOT NULL,
+  `ustelgpr_slot` int(11) NOT NULL,
+  `ustelgpr_price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `tbl_pricing_slabs`
+--
+ALTER TABLE `tbl_pricing_slabs`
+  ADD PRIMARY KEY (`prislab_id`);
+
+--
+-- Indexes for table `tbl_user_teach_languages`
+--
+ALTER TABLE `tbl_user_teach_languages`
+  ADD PRIMARY KEY (`utl_id`),
+  ADD UNIQUE KEY `utl_user_id` (`utl_user_id`,`utl_tlanguage_id`);
+
+--
+-- Indexes for table `tbl_user_teach_lang_prices`
+--
+ALTER TABLE `tbl_user_teach_lang_prices`
+  ADD UNIQUE KEY `ustelgpr_prislab_id` (`ustelgpr_prislab_id`,`ustelgpr_utl_id`,`ustelgpr_slot`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tbl_pricing_slabs`
+--
+ALTER TABLE `tbl_pricing_slabs`
+  MODIFY `prislab_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_user_teach_languages`
+--
+ALTER TABLE `tbl_user_teach_languages`
+  MODIFY `utl_id` int(11) NOT NULL AUTO_INCREMENT;
