@@ -36,57 +36,52 @@ $weekDayName =  CommonHelper::dayNames();
                 startTime: moment(e.start).format('HH:mm'),
                 endTime: moment(e.end).format('HH:mm'),
                 day: moment(e.start).format('d'),
-                dayStart: moment(e.start).format('d'),
-                dayEnd: moment(e.end).format('d'),
+                dayStart: parseInt(moment(e.start).format('d')),
+                dayEnd: parseInt(moment(e.end).format('d')),
                 classtype: e.classType,
             };
         });
 
-        data.forEach(element => {
+        data.forEach(elm => {
+            if ((!(elm.dayEnd || elm.dayStart) && (elm.endTime == '00:00') && (elm.startTime == '00:00')) || (elm.dayStart > elm.dayEnd)) {
+                elm.dayEnd = 6;
+                elm.end = '24:00:00';
+                elm.endTime = '24:00';
+            }
 
-            if (
-                (element.dayStart != element.dayEnd)
-                &&
-                ((element.endTime != '00:00') || (element.startTime == '00:00'))
-            ) {
-
-                if ((element.dayEnd - element.dayStart == 1)) {
-
-                    if ((element.endTime != '00:00') || (element.startTime != '00:00')) {
-
-                        let elementClone = $.parseJSON(JSON.stringify(element));
-                        elementClone.day = parseInt(element.dayEnd);
+            if ((elm.dayStart != elm.dayEnd) && ((elm.endTime != '00:00') || (elm.startTime == '00:00'))) {
+                if ((elm.dayEnd - elm.dayStart == 1)) {
+                    if ((elm.endTime != '00:00') || (elm.startTime != '00:00')) {
+                        let elementClone = $.parseJSON(JSON.stringify(elm));
+                        elementClone.day = parseInt(elm.dayEnd);
                         elementClone.start = '00:00:00';
                         elementClone.startTime = '00:00';
                         data[data.length] = elementClone;
                     }
                 } else {
-
-                    for (let index = 0; index < element.dayEnd - element.dayStart; index++) {
-
-                        if ((element.endTime == '00:00') && (parseInt(element.dayStart) + index + 1 == element.dayEnd)) {
-
+                    for (let index = 0; index < elm.dayEnd - elm.dayStart; index++) {
+                        if ((elm.endTime == '00:00') && (elm.dayStart + index + 1 == elm.dayEnd)) {
                             continue;
                         }
-                        let elementClone = $.parseJSON(JSON.stringify(element));
-                        elementClone.day = parseInt(element.dayStart) + index + 1;
+                        let elementClone = $.parseJSON(JSON.stringify(elm));
+                        elementClone.day = parseInt(elm.dayStart) + index + 1;
                         elementClone.start = '00:00:00';
                         elementClone.startTime = '00:00';
-                        if (index + 1 != element.dayEnd - element.dayStart) {
+                        if (index + 1 != elm.dayEnd - elm.dayStart) {
                             elementClone.end = '24:00:00';
                             elementClone.endTime = '24:00';
                         }
                         data[data.length] = elementClone;
                     }
                 }
-                element.end = '24:00:00';
-                element.endTime = '24:00';
+                elm.end = '24:00:00';
+                elm.endTime = '24:00';
             }
         });
         var json = JSON.stringify(data);
 
         setupTeacherGeneralAvailability(json);
-        });
+    });
     function mergeEvents() {
         allevents = $("#ga_calendar").fullCalendar("clientEvents");
         if(allevents.length == 1) {
