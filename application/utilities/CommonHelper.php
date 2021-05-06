@@ -87,7 +87,7 @@ class CommonHelper extends FatUtility
         if (!$isActivePreferencesCookie) {
             return true;
         }
-        self::setCookie('defaultSiteLang', $langId, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_URL, '', true);
+        self::setCookie('defaultSiteLang', $langId, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_FRONTEND, '', true);
     }
 
     public static function getLangId()
@@ -1569,7 +1569,7 @@ class CommonHelper extends FatUtility
         if (empty($value)) {
             $value = json_encode(UserCookieConsent::fieldsArrayWithDefultValue());
         }
-        self::setCookie(UserCookieConsent::COOKIE_NAME, $value, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_URL, '', true);
+        self::setCookie(UserCookieConsent::COOKIE_NAME, $value, UserCookieConsent::getCookieExpireTime(), CONF_WEBROOT_FRONT_URL, '', true);
     }
 
     public static function getCookieConsent(): array

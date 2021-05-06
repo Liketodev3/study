@@ -8,14 +8,11 @@ $frmSrch->developerTags['fld_default_col'] = 4;
 
 $fldStatus = $frmSrch->getField('status');
 $frmSrch->removeField($fldStatus);
-//$fldStatus->developerTags['col'] = 3;
-
-// $fldSubmit = $frmSrch->getField('btn_submit');
-// $fldSubmit->developerTags['col'] = 4;
-
 $btnReset = $frmSrch->getField('btn_reset');
-//$btnReset->addFieldTagAttribute( 'style', 'margin-left:10px' );
 $btnReset->addFieldTagAttribute('onclick', 'clearSearch()');
+
+$btnSubmit = $frmSrch->getField('btn_submit');
+$btnSubmit->attachField($btnReset);
 
 ?>
 <!-- [ PAGE ========= -->

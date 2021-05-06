@@ -73,9 +73,9 @@ $frm->getField('terms')->htmlAfterField = $terms_caption;
 //$frm->setFormTagAttribute( 'onsubmit', 'setUpTeacherApproval(this); return false;' );
 $frm->setFormTagAttribute( 'action', CommonHelper::generateUrl( 'TeacherRequest', 'setUpTeacherApproval' ) );
 
-$profile_pic_preview_html = '<h5>'.Label::getLabel('LBL_Profile_Photo').'</h5>';
+$profile_pic_preview_html = '<h5 class="-align-center">'.Label::getLabel('LBL_Profile_Photo').'</h5>';
 $profile_pic_preview_html .= '<div class="-align-center"><div class="preview preview--profile">';
-$profile_pic_preview_html .= '<div class="avtar avtar--large avtar--centered" data-text="'. CommonHelper::getFirstChar($frm->getField( 'utrvalue_user_first_name' )->value). '">';
+$profile_pic_preview_html .= '<div class="avtar avtar--xlarge avtar--centered" data-text="'. CommonHelper::getFirstChar($frm->getField( 'utrvalue_user_first_name' )->value). '">';
 $isProfilePicUploaded = User::isProfilePicUploaded($userId);
 
 $profile_pic_preview_html .= '<img id="user-profile-pic--js" src="' . ($isProfilePicUploaded ? CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM'), CONF_WEBROOT_FRONTEND).'?t='.time() : '') . '" />';

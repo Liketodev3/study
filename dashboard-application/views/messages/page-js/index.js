@@ -15,15 +15,18 @@ $(document).ready(function () {
         sessionStorage.removeItem('threadId');
     }
 
-    $(".msg-list__action-js").click(function () {
-        $(this).parent().toggleClass("is-active");
+    $(".msg-list__action-js").click(function(){
+       
+        $(this).parent().toggleClass("is-active"); 
         $(".message-details-js").show();
         $("html").addClass("show-message-details"); return false;
-    });
-
-    $(".window__search-field-js").click(function () {
-        $(".window__search-form-js").toggle();
-    });
+    });  
+           
+    $(".msg-close-js").click(function(){
+        $(".message-details-js").hide();
+        $("html").removeClass("show-message-details"); return false;
+    });    
+           
   
 });
 var messageThreadPage = 1;

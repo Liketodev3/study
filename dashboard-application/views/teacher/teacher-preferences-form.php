@@ -14,7 +14,7 @@ $backBtn = $teacherPreferencesFrm->getField('btn_back');
 $backBtn->addFieldTagAttribute('onclick','teacherQualification()');
 
 $nextBtn = $teacherPreferencesFrm->getField('btn_next');
-$nextBtn->addFieldTagAttribute('onclick','setupTeacherPreferences(this.form, true); $(".general-availability-js").trigger("click"); return(false);');
+$nextBtn->addFieldTagAttribute('onclick','setupTeacherPreferences(this.form, true); return(false);');
 ?>
 <div class="content-panel__head border-bottom margin-bottom-5">
 	<div class="d-flex align-items-center justify-content-between">

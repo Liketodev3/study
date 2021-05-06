@@ -55,7 +55,7 @@ $dashboard: "dashboard";
 
         @media (min-width:theme('breakpoints.xxl','value')) and (max-width: theme('breakpoints.xxxl','value')){
             &{
-                max-width: 22rem;
+                max-width: 25rem;
                 position: sticky;
                 top: 0;
                 bottom: 0;
@@ -74,7 +74,10 @@ $status-bar: "status-bar";
 
 .#{&status-bar} {
     border-radius: theme('radius.0');
-    padding: var(--padding-8) 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-top: calc(1rem + 26px);
 
     @media (min-width:theme('breakpoints.lg','value')) and (max-width:theme('breakpoints.xxl','value')) {
         &{
@@ -83,8 +86,7 @@ $status-bar: "status-bar";
         }
     }
     .status-bar__head{
-        padding: 0 var(--padding-6);  
-        padding-bottom: var(--padding-5);
+        padding: 0 var(--padding-6) var(--padding-5);  
         position: relative;
         display: flex;
         justify-content: space-between;
@@ -94,10 +96,14 @@ $status-bar: "status-bar";
             font-size: var(--font-size-h5);
             color: var(--color-gray-000);
         }
+        .underline{
+            
+        }
     }
     .status-bar__body{
         padding: var(--padding-6); 
         height: calc(100% - 56px);
+        overflow: auto;
 
         .calendar{
             padding-bottom: var(--padding-6); 
@@ -142,6 +148,27 @@ $status-bar: "status-bar";
     }
 }
 
+.lesson-list-container{
+    .date{
+        span{
+            margin-bottom: 15px;
+        }
+    }
+}
+
+.learnerscheduledlessons{ 
+    .tooltipevent{
+        border-top: 3px solid var(--color-primary);
+        border-radius: 6px;
+        .booking-view{
+            h3{
+                font-size: 1.6rem;
+                margin-bottom: 5px;
+            }
+        }
+    }
+}
+
 $lesson-list-container: "lesson-list-container";
 
 .#{&lesson-list-container} {
@@ -152,6 +179,11 @@ $lesson-list-container: "lesson-list-container";
         color: var(--color-gray-1000);
         font-weight: var(--font-weight-medium);
         margin-bottom: var(--margin-4);
+        .lesson-list{
+            &:first-child{
+                margin-top: 10px;
+            }
+        }
     }
 
 }
@@ -238,64 +270,66 @@ $lesson-list: "lesson-list";
     }
 }
 
-$stat: "stat";
+$stats-row: "stats-row";
 
-.#{&stat}{
-    background-color: var(--color-white);
-    padding: var(--padding-6);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    border-radius: var(--radius-1);
-    box-shadow: var(--boxShadow-all);
-    transition: all 0.2s;
-
-    .stat__media {
-        width: 5.72rem;
-        height: 5.72rem;
+.#{&stats-row} {
+    margin-top: var(--margin-4);
+    .stat{
+        background-color: var(--color-white);
+        padding: var(--padding-6);
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
-        border-radius: theme('radius.round');
-        color: #fff;
+        position: relative;
+        border-radius: var(--radius-1);
+        box-shadow: var(--boxShadow-all);
+        transition: all 0.2s;
 
-        @media(min-width:theme('breakpoints.xxl','value')) and (max-width:theme('breakpoints.xxxl','value')){
-            &{
-                width: 3.72rem;
-                height: 3.72rem;
-                svg{
-                    width: 2rem;
-                    height: 2rem;
+        .stat__media {
+            width: 5.72rem;
+            height: 5.72rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: theme('radius.round');
+            color: #fff;
+
+            @media(min-width:theme('breakpoints.xxl','value')) and (max-width:theme('breakpoints.xxxl','value')){
+                &{
+                    width: 3.72rem;
+                    height: 3.72rem;
+                    svg{
+                        width: 2rem;
+                        height: 2rem;
+                    }
                 }
             }
         }
-    }
-    span{
-        color: var(--color-gray-1000);
-    }
-    .stat__action{
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        display: block;
-    }
+        span{
+            color: var(--color-gray-1000);
+        }
+        .stat__action{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: block;
+        }
 
-    @media(min-width:theme('breakpoints.xl','value')){
-        &:hover{
-            box-shadow: var(--boxShadow-vertical);
-            margin-left: -5px;
-            margin-right: -5px;
+        @media(min-width:theme('breakpoints.xl','value')){
+            &:hover{
+                box-shadow: var(--boxShadow-vertical);
+                margin-left: -5px;
+                margin-right: -5px;
+            }
+        }
+
+        @media(max-width:theme('breakpoints.xl','value')){
+            margin-bottom: var(--padding-6);
         }
     }
-
-    @media(max-width:theme('breakpoints.xl','value')){
-        margin-bottom: var(--padding-6);
-    }
 }
-
 
 $statistics: "statistics";
 
@@ -491,5 +525,8 @@ $aside--progress--menu: "aside--progress--menu";
     display: none;
 }
 .learnerscheduledlessons.view .page__footer{
+    display: none;
+}
+.messages .page__footer{
     display: none;
 }

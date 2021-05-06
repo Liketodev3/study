@@ -87,7 +87,7 @@ class CartController extends MyAppController
         if (!empty($freePackage) && ($freePackage['lpackage_id'] == $lpackageId)) {
             $this->set('isFreeLesson', ($cartData['orderNetAmount'] == 0));
         }
-        $this->set('redirectUrl', CommonHelper::generateUrl('Checkout', '', [], CONF_WEBROOT_DASHBOARD));
+        $this->set('redirectUrl', CommonHelper::generateUrl('Checkout'));
         if (isset($post['checkoutPage'])) {
             $this->set('msg', Label::getLabel('LBL_Package_Selected_Successfully.'));
         }

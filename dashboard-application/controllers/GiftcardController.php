@@ -169,7 +169,7 @@ class GiftcardController extends LoggedUserController
         if (false === $result) {
             FatApp::redirectUser(FatUtility::generateUrl('Giftcard'));
         }
-        FatApp::redirectUser(FatUtility::generateUrl('Giftcard', 'checkout'));
+        FatApp::redirectUser(FatUtility::generateUrl('GiftcardCheckout','',[], CONF_WEBROOT_FRONTEND));
     }
 
     public function addGiftcardToCart($giftcardData)
@@ -273,12 +273,6 @@ class GiftcardController extends LoggedUserController
                 Message::addErrorMessage($record->getError());
             }
         }
-    }
-
-    public function testGiftCard($orderId)
-    {
-        $giftcard = new Giftcard();
-        $giftcard->addGiftcardDetails($orderId);
     }
 
 }

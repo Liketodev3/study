@@ -28,6 +28,7 @@ $gcbuyerPhoneField = $formData->getField('gcbuyer_phone');
 $priceField = $formData->getField('giftcard_price');
 $gcrecipientNameField = $formData->getField('gcrecipient_name');
 $gcrecipientEmailField = $formData->getField('gcrecipient_email');
+$systemCurrencyData = CommonHelper::getSystemCurrencyData();
 ?>
 
 <!-- [ PAGE ========= -->
@@ -72,7 +73,11 @@ $gcrecipientEmailField = $formData->getField('gcrecipient_email');
                     <img src="<?php echo FatUtility::generateFullUrl('Image', 'siteWhiteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo Label::getLabel('LBL_Gift_card'); ?>">
                   </div>
                   <h6><?php echo Label::getLabel('LBL_Gift_Card_for'); ?></h6>
-                  <button class="btn btn--light btn-round color-primary giftcardPrice" style="margin: 2px;">00</button>
+                  <a  href="javascript:void(0);" class="btn btn--light btn-round color-primary" style="margin: 2px;">
+                    <span><?php echo $systemCurrencyData['currency_symbol_left']; ?></span>
+                    <span class="giftcardPrice">00</span>
+                    <span><?php echo $systemCurrencyData['currency_symbol_right']; ?></span>
+                  </a>
                 </div>
               </div>
             </div>

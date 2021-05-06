@@ -148,7 +148,7 @@ class BlogController extends MyAppController
         $srchCommentsFrm = $this->getCommentSearchForm($blogPostId);
         $this->set('srchCommentsFrm', $srchCommentsFrm);
         $this->_template->addJs(['js/slick.js']);
-        $this->_template->addCss(['css/slick.css']);
+        // $this->_template->addCss(['css/slick.css']);
         $this->_template->render();
     }
 

@@ -281,7 +281,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     {
         $frmSrch = $this->getLessonFlashCardSearchForm();
         $post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
-        $myteacher = (isset(FatApp::getPostedData()['teacherId'])) ? FatApp::getPostedData()['teacherId'] : 0;
+        $teacherId = (isset(FatApp::getPostedData()['teacherId'])) ? FatApp::getPostedData()['teacherId'] : 0;
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
@@ -331,8 +331,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         }
         $this->set('startRecord', $startRecord);
         $this->set('endRecord', $endRecord);
+        $this->set('lessonId', $lessonId);
         $this->set('totalRecords', $totalRecords);
-        $this->set('myteacher', $myteacher);
+        $this->set('teacherId', $teacherId);
         /* ] */
         $this->_template->render(false, false, 'teacher-scheduled-lessons/search-flash-cards.php');
     }
@@ -352,7 +353,21 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
     public function calendarJsonData()
     {
-        $curDateTime = date('Y-m-d H:i:s');
+        $startDate = Fatapp::getPostedData('start', FatUtility::VAR_STRING, '');
+        $endDate = Fatapp::getPostedData('end', FatUtility::VAR_STRING, '');
+      
+        $userTimezone = MyDate::getUserTimeZone();
+		$systemTimeZone = MyDate::getTimeZone();
+
+        if (empty($startDate) || empty($endDate)) {
+            $monthStartAndEndDate = MyDate::getMonthStartAndEndDate(new DateTime());
+            $startDate = $monthStartAndEndDate['monthStart'];
+            $endDate = $monthStartAndEndDate['monthEnd'];
+        }else{
+            $startDate = MyDate::changeDateTimezone($startDate, $userTimezone, $systemTimeZone);
+            $endDate =  MyDate::changeDateTimezone($endDate, $userTimezone, $systemTimeZone);
+        }
+
         $cssClassNamesArr = ScheduledLesson::getStatusArr();
         $srch = new ScheduledLessonSearch();
         $srch->joinGroupClass($this->siteLangId);
@@ -371,11 +386,14 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             'concat(slns.slesson_date," ",slns.slesson_start_time) AS slesson_date_time'
         ]);
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
-        $srch->addCondition('slns.slesson_status', '!=', ScheduledLesson::STATUS_CANCELLED);
+        $srch->addCondition('slns.slesson_status', 'NOT IN', [ScheduledLesson::STATUS_CANCELLED, ScheduledLesson::STATUS_NEED_SCHEDULING]);
+        $srch->addCondition('CONCAT(slns.`slesson_date`, " ", slns.`slesson_start_time` )', '< ', $endDate);
+        $srch->addCondition('CONCAT(slns.`slesson_end_date`, " ", slns.`slesson_end_time` )', ' > ', $startDate);
         // $srch->addHaving('slesson_date_time', '>', $curDateTime);
         $srch->joinLearner();
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
+
         $jsonArr = [];
         if (!empty($rows)) {
             $user_timezone = MyDate::getUserTimeZone();

@@ -2,10 +2,11 @@
 $pagination: "pagination";
 
 .#{$pagination}{
-  display: inline-flex;
+  display: flex;
   align-items: center;
   list-style: none;
   padding: 0;
+  justify-content: center_;
   & > ul{display: flex;align-items: center; flex-wrap: wrap; justify-content: center;}
 
   a,button{
@@ -13,11 +14,10 @@ $pagination: "pagination";
     display: inline-block;
     line-height:2.6rem;height:3rem;width:3rem;
     text-decoration: none;
+    border-radius: 5px;
     text-align: center; background-color: #fff; cursor: pointer;
     color: currentColor; font-size:theme("font.size.md"); border: 1px solid theme("color.gray.200"); margin: theme('margin.1');
-    &:hover{
-      background-color: theme("color.gray.100");
-    }
+
     &.is-active{
       color: theme('color.white');
      background: theme('color.primary');
@@ -82,4 +82,102 @@ $pagination: "pagination";
     a,button{border-radius: 1000px;}
   }
 
+}
+
+.pagination li.is-active a {
+  background: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: #fff
+}
+
+.pagination li.is-disabled {
+  opacity: .4
+}
+
+.pagination li.is-disabled a {
+  cursor: not-allowed
+}
+
+.pagination li.is-prev a:before {
+  position: absolute;
+  #{theme('direction.left','value')}: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-#{theme('direction.right','value')}: 5px solid #000;
+  margin: -5px 0 0 0; margin-#{theme('direction.left','value')}: -5px;
+}
+
+.pagination li.is-first a:before {
+  position: absolute;
+  #{theme('direction.left','value')}: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-#{theme('direction.left','value')}: 5px solid #000;
+  margin: -5px 0 0 0; margin-#{theme('direction.left','value')}: -1px;
+}
+
+.pagination li.is-first a:after {
+  position: absolute;
+  #{theme('direction.left','value')}: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-#{theme('direction.right','value')}: 5px solid #000;
+  margin: -5px 0 0 -6px
+}
+
+.pagination li.is-next a:before {
+  position: absolute;
+  #{theme('direction.left','value')}: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-#{theme('direction.left','value')}: 5px solid #000;
+  margin: -5px 0 0 0; margin-#{theme('direction.left','value')}: -3px;
+}
+
+
+.pagination li.is-last a:before {
+  position: absolute;
+  #{theme('direction.left','value')}: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-#{theme('direction.left','value')}: 5px solid #000;
+  margin: -5px 0 0 0; margin-#{theme('direction.left','value')}: -1px;
+}
+
+.pagination li.is-last a:after {
+  position: absolute;
+  #{theme('direction.left','value')}: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-#{theme('direction.right','value')}: 5px solid #000;
+  margin: -5px 0 0 0; margin-left: -6px;
+}
+
+.pagination{
+  width: 100%;
+  justify-content: center;
+}
+
+@media(min-width:theme('breakpoints.xl','value')){
+  .pagination li a:hover {
+    box-shadow: 1px 10px 16px 1px rgba(0,0,0,0.08);
+  }
+}
+@media (max-width:theme('breakpoints.md','value')){
+ 
+  .pagination li a {
+      width: 38px
+  }
 }

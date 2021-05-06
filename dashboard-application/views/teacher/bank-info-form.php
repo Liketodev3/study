@@ -11,7 +11,7 @@ $ifscCodeField = $frm->getField('ub_ifsc_swift_code');
 $ubBankAddress = $frm->getField('ub_bank_address');
 // $ub_bank_address->developerTags['col'] = 12;
 $btnBack = $frm->getField('btn_back');
-$btnBack->addFieldTagAttribute('onclick','teacherPreferencesForm()');
+$btnBack->addFieldTagAttribute('onclick', '$(".teacher-preferences-js").trigger("click");');
 ?>
 <div class="content-panel__head">
 	<div class="d-flex align-items-center justify-content-between">

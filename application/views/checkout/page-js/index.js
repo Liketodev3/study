@@ -21,10 +21,6 @@ $("document").ready(function () {
 	};
 
 	loadPaymentSummary = function () {
-		if ($('#payment_methods_tab').length > 0) {
-			loadTab($('#payment_methods_tab li.is-active a'));
-			return;
-		}
 		$(paymentDiv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Checkout', 'paymentSummary'), '', function (ans) {
 			try {
@@ -93,7 +89,7 @@ $("document").ready(function () {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 
-		fcom.updateWithAjax(fcom.makeUrl('Cart', 'applyPromoCode', [], confFrontEndUrl), data, function (res) {
+		fcom.updateWithAjax(fcom.makeUrl('Cart', 'applyPromoCode'), data, function (res) {
 			$("#facebox .close").trigger('click');
 			$.systemMessage.close();
 			loadFinancialSummary();
@@ -108,7 +104,7 @@ $("document").ready(function () {
 	};
 
 	removePromoCode = function () {
-		fcom.updateWithAjax(fcom.makeUrl('Cart', 'removePromoCode', [], confFrontEndUrl), '', function (res) {
+		fcom.updateWithAjax(fcom.makeUrl('Cart', 'removePromoCode'), '', function (res) {
 			loadFinancialSummary();
 			loadPaymentSummary();
 		});

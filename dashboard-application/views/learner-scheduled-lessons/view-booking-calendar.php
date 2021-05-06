@@ -9,7 +9,7 @@ $getAllMonthName =  CommonHelper::getAllMonthName();
 $weekDayName =  CommonHelper::dayNames();
 ?>
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
-<div class="calendar-view">
+<div class="calendar-view scheduled-lesson-popup">
 	<?php if($isRescheduleRequest) { ?>
 	<div class="box">
         <h4><?php echo Label::getLabel('Lbl_Reschedule_Reason'); ?><span class="spn_must_field">*</span></h4>
@@ -20,12 +20,12 @@ $weekDayName =  CommonHelper::dayNames();
 	</div>
 	<?php } ?>
 
-    <div class="row">
+    <div class="row ">
         <div class="col-sm-5">
             <h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
         </div>
 
-        <div class="col-sm-7 justify-content-sm-end justify-content-start">
+        <div class="col-sm-7 d-flex align-items-center justify-content-sm-end justify-content-start">
             <div class="cal-status">
                 <span class="ml-0 box-hint disabled-box">&nbsp;</span>
                 <p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
@@ -40,25 +40,25 @@ $weekDayName =  CommonHelper::dayNames();
             </div>
         </div>
     </div>
-    <span> <?php echo MyDate::displayTimezoneString();?> </span>
+    <div id='calendar-container'>
+        <div id='d_calendar'></div>
+    </div>
 </div>
 
-<div id='calendar-container'>
-    <div id='d_calendar'></div>
-</div>
+
 
 <div class="tooltipevent-wrapper-js d-none">
     <div class="tooltipevent" style="position:absolute;z-index:10001;">
         <div class="booking-view">
             <h3 class="-display-inline"><?php echo $userRow['user_first_name']; ?></h3>
-            <span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userRow['user_country_id'], 'DEFAULT') ); ?>" alt=""></span>
+            <span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($userRow['user_country_id'], 'DEFAULT'), CONF_WEBROOT_FRONTEND ); ?>" alt=""></span>
             <div class="inline-list">
                 <div class="inline-list__value highlight tooltipevent-time-js">
                     <strong><?php echo Label::getLabel("LBL_Date") ?></strong> 
                     <span>{{displayEventDate}}</span>
                 </div>
             </div>
-            <div class="-align-center">
+            <div class="-align-left">
                 <a href="javascript:void(0);" onClick="setUpLessonSchedule(<?php echo $teacher_id; ?>, <?php echo $lDetailId; ?>, '{{selectedStartDateTime}}', '{{selectedEndDateTime}}', '{{selectedDate}}' );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Confirm_It!'); ?></a>
             </div>
             <a onclick="$('body > .tooltipevent').remove();" href="javascript:;" class="-link-close"></a>

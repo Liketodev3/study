@@ -46,9 +46,7 @@
     bottom: 0;
 }
 
-#facebox .content h4 {
-    margin-bottom: 20px;
-}
+
 
 body.is-screen-on {
     position: fixed;
@@ -227,6 +225,16 @@ div.tagsinput div {
     #{theme('direction.right','value')}: 160px;
     top: 20px;
     z-index: 10;
+}
+
+.chat--info{
+    display: flex;
+    justify-content: center;
+}
+.chat--info .loadmore {
+    padding: 4px 12px;
+    border-radius: 10px;
+    z-index: 1;
 }
 
 @media (min-width:theme('breakpoints.xl','value')){

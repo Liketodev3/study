@@ -29,6 +29,7 @@ echo $str = '<script type="text/javascript">
 		var langLbl = ' . json_encode(
 			CommonHelper::htmlEntitiesDecode($jsVariables)
 		) . ';
+		var timeZoneOffset = "'.MyDate::getOffset(MyDate::getUserTimeZone()).'";
 		var CONF_AUTO_CLOSE_SYSTEM_MESSAGES = ' . FatApp::getConfig("CONF_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 0) . ';
 		var CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = ' . FatApp::getConfig("CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES", FatUtility::VAR_INT, 3) . ';
 		var layoutDirection ="'.$layoutDirection.'";

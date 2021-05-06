@@ -1,7 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $frm->setFormTagAttribute('id', 'teacherPreferencesFrm');
 $frm->setFormTagAttribute('class','form');
-$frm->setFormTagAttribute('onsubmit', 'setupTeacherLanguages(this); return(false);');
+$frm->setFormTagAttribute('onsubmit', 'setupTeacherLanguages(this, false); return(false);');
 // prx($frm->getAllFields());
 $teachLangField = $frm->getField('teach_lang_id');
 $teachLangFieldValue = $teachLangField->value;
@@ -10,7 +10,7 @@ $backBtn = $frm->getField('back_btn');
 $backBtn->addFieldTagAttribute("onClick","$('.profile-Info-js').trigger('click');");
 
 $nextBtn = $frm->getField('next_btn');
-$nextBtn->addFieldTagAttribute("onClick", "setupTeacherLanguages(this.form); $('.teacher-tech-lang-price-js').trigger('click'); return(false);");
+$nextBtn->addFieldTagAttribute("onClick", "setupTeacherLanguages(this.form, true); return(false);");
 
 $saveBtn = $frm->getField('submit');
 ?>

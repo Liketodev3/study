@@ -258,7 +258,7 @@ class AdminAuthentication extends FatModel
         if (strlen($_COOKIE[static::ADMIN_REMEMBER_ME_COOKIE_NAME])) {
             $db->deleteRecords('tbl_admin_auth_token', ['smt' => 'admauth_token = ?', 'vals' => [$_COOKIE[static::ADMIN_REMEMBER_ME_COOKIE_NAME]]]);
         }
-        CommonHelper::setCookie(static::ADMIN_REMEMBER_ME_COOKIE_NAME, '', time() - 3600, CONF_WEBROOT_FRONT_URL, '', true);
+        CommonHelper::setCookie(static::ADMIN_REMEMBER_ME_COOKIE_NAME, '', time() - 3600, CONF_WEBROOT_FRONTEND, '', true);
         return true;
     }
 

@@ -41,7 +41,7 @@ class GuestUserController extends MyAppController
             }
         }
         $userId = UserAuthentication::getLoggedUserId();
-        CommonHelper::setcookie('uc_id', $userId, time() + 3600 * 24 * 30, CONF_WEBROOT_URL, '', true);
+        CommonHelper::setcookie('uc_id', $userId, time() + 3600 * 24 * 30, CONF_WEBROOT_FRONTEND, '', true);
         $this->set('redirectUrl', User::getPreferedDashbordRedirectUrl());
         $this->set('msg', Label::getLabel("MSG_LOGIN_SUCCESSFULL"));
         $this->_template->render(false, false, 'json-success.php');
@@ -83,6 +83,7 @@ class GuestUserController extends MyAppController
         $json['msg'] = Label::getLabel('LBL_Request_Processing..');
         $post = FatApp::getPostedData();
         $userType = User::USER_TYPE_LEANER;
+      
         if (UserAuthentication::isUserLogged()) {
             if ($post['signUpType'] == "teacher") {
                 $user_preferred_dashboard = User::USER_TEACHER_DASHBOARD;
@@ -90,6 +91,7 @@ class GuestUserController extends MyAppController
                 $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), ['user_preferred_dashboard']);
                 $user_preferred_dashboard = $userRow['user_preferred_dashboard'];
             }
+         
             $json['redirectUrl'] = User::getPreferedDashbordRedirectUrl($user_preferred_dashboard, false);
             FatUtility::dieJsonSuccess($json);
         }
@@ -353,7 +355,7 @@ class GuestUserController extends MyAppController
         ];
         if (UserAuthentication::saveLoginToken($values)) {
             $cookieName = UserAuthentication::YOCOACHUSER_COOKIE_NAME;
-            $cookres = CommonHelper::setCookie($cookieName, $token, $expiry, CONF_WEBROOT_URL, '', true);
+            $cookres = CommonHelper::setCookie($cookieName, $token, $expiry, CONF_WEBROOT_FRONTEND, '', true);
             return true;
         }
         return false;
