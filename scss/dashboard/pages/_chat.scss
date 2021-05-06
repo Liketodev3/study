@@ -227,6 +227,16 @@ div.tagsinput div {
     z-index: 10;
 }
 
+.chat--info{
+    display: flex;
+    justify-content: center;
+}
+.chat--info .loadmore {
+    padding: 4px 12px;
+    border-radius: 10px;
+    z-index: 1;
+}
+
 @media (min-width:theme('breakpoints.xl','value')){
     
     .col-list--full.col-list [class*="col-"]:nth-child(2) {

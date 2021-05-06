@@ -10,7 +10,7 @@
 				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right">
 					<div class="box -align-center" style="margin-bottom: 30px;">
 						<div class="-padding-30">
-							<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($userDetails['user_first_name']); ?>">
+							<div class="avtar avtar--xlarge margin-auto avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($userDetails['user_first_name']); ?>">
 								<?php
 								if (true == User::isProfilePicUploaded($userDetails['user_id'])) {
 									$img = CommonHelper::generateUrl('Image', 'User', array($userDetails['user_id']));

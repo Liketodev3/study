@@ -3117,6 +3117,19 @@ div.tagsinput div {
   top: 20px;
   z-index: 10; }
 
+.chat--info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+
+.chat--info .loadmore {
+  padding: 4px 12px;
+  border-radius: 10px;
+  z-index: 1; }
+
 @media (min-width: 1199px) {
   .col-list--full.col-list [class*="col-"]:nth-child(2) {
     border-right: 1px solid #ddd; }
@@ -3249,7 +3262,7 @@ div.tagsinput div {
       padding: var(--padding-8) var(--padding-4);
       max-height: 558px; } }
   .status-bar .status-bar__head {
-    padding: 0 var(--padding-6);
+    padding: 0 var(--padding-6) var(--padding-5);
     position: relative;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -3275,6 +3288,9 @@ div.tagsinput div {
     .status-bar .status-bar__body .listing-window {
       height: calc(100% - 297px);
       position: relative; }
+      .status-bar .status-bar__body .listing-window .scrollbar {
+        max-height: inherit;
+        height: calc(100% - 1px); }
       @media (min-width: 991px) and (max-width: 1299px) {
         .status-bar .status-bar__body .listing-window {
           height: calc(100% - 218px); } }
@@ -3289,6 +3305,9 @@ div.tagsinput div {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-column-gap: 30px; } }
+
+.lesson-list-container .date span {
+  margin-bottom: 15px; }
 
 .learnerscheduledlessons .tooltipevent {
   border-top: 3px solid var(--color-primary);

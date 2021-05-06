@@ -2974,7 +2974,7 @@ img {
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     pointer-events: none;
-    content: attr(data-title);
+    content: attr(data-text);
     color: #fff; }
   .avtar img {
     position: relative;
@@ -4089,6 +4089,11 @@ textarea {
 .div-login-form .form input[type="submit"] {
   width: 100%; }
 
+#paymentDiv .input-helper {
+  background: #fff;
+  -webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+          box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); }
+
 .form input[type="submit"] {
   position: relative;
   background: var(--color-primary);
@@ -4099,7 +4104,7 @@ textarea {
   position: relative;
   cursor: pointer;
   border: none;
-  height: 2.8rem;
+  line-height: 40px;
   color: var(--color-white);
   border-radius: var(--radius-1);
   font-weight: 600;
@@ -4784,14 +4789,17 @@ textarea[disabled] {
   left: -20%; }
 
 .pagination {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   list-style: none;
-  padding: 0; }
+  padding: 0;
+  -webkit-box-pack: center_;
+      -ms-flex-pack: center_;
+          justify-content: center_; }
   .pagination > ul {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -4811,6 +4819,7 @@ textarea[disabled] {
     height: 3rem;
     width: 3rem;
     text-decoration: none;
+    border-radius: 5px;
     text-align: center;
     background-color: #fff;
     cursor: pointer;
@@ -4818,8 +4827,6 @@ textarea[disabled] {
     font-size: var(--font-size-md);
     border: 1px solid var(--color-gray-200);
     margin: var(--margin-1); }
-    .pagination a:hover, .pagination button:hover {
-      background-color: var(--color-gray-100); }
     .pagination a.is-active, .pagination button.is-active {
       color: var(--color-white);
       background: var(--color-primary);
@@ -4914,6 +4921,97 @@ textarea[disabled] {
     border-radius: var(--radius-curve); }
   .pagination--round a, .pagination--round button {
     border-radius: 1000px; }
+
+.pagination li.is-active a {
+  background: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: #fff; }
+
+.pagination li.is-disabled {
+  opacity: .4; }
+
+.pagination li.is-disabled a {
+  cursor: not-allowed; }
+
+.pagination li.is-prev a:before {
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid #000;
+  margin: -5px 0 0 0;
+  margin-right: -5px; }
+
+.pagination li.is-first a:before {
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid #000;
+  margin: -5px 0 0 0;
+  margin-right: -1px; }
+
+.pagination li.is-first a:after {
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid #000;
+  margin: -5px 0 0 -6px; }
+
+.pagination li.is-next a:before {
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid #000;
+  margin: -5px 0 0 0;
+  margin-right: -3px; }
+
+.pagination li.is-last a:before {
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid #000;
+  margin: -5px 0 0 0;
+  margin-right: -1px; }
+
+.pagination li.is-last a:after {
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  content: "";
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid #000;
+  margin: -5px 0 0 0;
+  margin-left: -6px; }
+
+.pagination {
+  width: 100%;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+
+@media (min-width: 1199px) {
+  .pagination li a:hover {
+    -webkit-box-shadow: 1px 10px 16px 1px rgba(0, 0, 0, 0.08);
+            box-shadow: 1px 10px 16px 1px rgba(0, 0, 0, 0.08); } }
+
+@media (max-width: 767px) {
+  .pagination li a {
+    width: 38px; } }
 
 .form--processing {
   position: relative;

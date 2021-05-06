@@ -110,7 +110,10 @@
     margin: -5px 0 0 0; margin-left: -6px;
 }
 
-
+.pagination{
+    width: 100%;
+    justify-content: center;
+}
 
 @media (max-width:theme('breakpoints.md','value')){
    

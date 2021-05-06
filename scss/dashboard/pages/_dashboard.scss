@@ -86,7 +86,7 @@ $status-bar: "status-bar";
         }
     }
     .status-bar__head{
-        padding: 0 var(--padding-6);  
+        padding: 0 var(--padding-6) var(--padding-5);  
         position: relative;
         display: flex;
         justify-content: space-between;
@@ -151,7 +151,7 @@ $status-bar: "status-bar";
 .lesson-list-container{
     .date{
         span{
-
+            margin-bottom: 15px;
         }
     }
 }

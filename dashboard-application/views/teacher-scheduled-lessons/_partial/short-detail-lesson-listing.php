@@ -15,18 +15,20 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
    foreach ($lessonArr as $key => $lessons) { ?>
       <div class="lesson-list-container">
          <?php if ($key != '0000-00-00') { ?>
-            <div class="date">
-               <span>
-                  <?php
-                  if (strtotime($curDate) == strtotime($key)) {
-                      echo Label::getLabel('LBL_Today');
-                  } elseif (strtotime($nextDate) == strtotime($key)) {
-                      echo Label::getLabel('LBL_Tommorrow');
-                  } else {
-                      echo date('l, F d, Y', strtotime($key));
-                  }
-                  ?>
-               </span>
+            <div class="lesson-list_head">
+               <div class="date">
+                  <p>
+                     <?php
+                     if (strtotime($curDate) == strtotime($key)) {
+                        echo Label::getLabel('LBL_Today');
+                     } elseif (strtotime($nextDate) == strtotime($key)) {
+                        echo Label::getLabel('LBL_Tommorrow');
+                     } else {
+                        echo date('l, F d, Y', strtotime($key));
+                     }
+                     ?>
+                  </p>
+               </div>
             </date>
          <?php } ?>
             <?php foreach ($lessons as $lesson) {
