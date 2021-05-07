@@ -740,5 +740,4 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_PRICE_SLAB, static::PRIVILEGE_WRITE, $returnResult);
     }
-
 }

@@ -13,14 +13,14 @@ class PriceSlabsController extends AdminBaseController
         $this->set("canEdit", $canEdit);
         $this->_template->render();
     }
-    
+
     public function search()
     {
-       
+
         $pagesize  = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $postedData =  FatApp::getPostedData();
-       
+
         $searchObject = PriceSlab::getSearchObject(false);
         $searchObject->addOrder('prislab_active', 'desc');
         $searchObject->addOrder('prislab_id', 'desc');
@@ -40,11 +40,11 @@ class PriceSlabsController extends AdminBaseController
         $this->_template->render(false, false);
     }
 
-    public function form(int $slotId = 0)
+    public function form(int $slabId = 0)
     {
-        $form = $this->getForm($slotId);
-        if (0 < $slotId) {
-            $data = PriceSlab::getAttributesById($slotId, array(
+        $form = $this->getForm($slabId);
+        if (0 < $slabId) {
+            $data = PriceSlab::getAttributesById($slabId, array(
                 'prislab_id',
                 'prislab_min',
                 'prislab_max'
@@ -52,10 +52,10 @@ class PriceSlabsController extends AdminBaseController
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
-           
+
             $form->fill($data);
         }
-        $this->set('psId', $slotId);
+        $this->set('psId', $slabId);
         $this->set('form', $form);
         $this->_template->render(false, false);
     }
@@ -66,51 +66,21 @@ class PriceSlabsController extends AdminBaseController
         $frm  = $this->getForm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
-            Message::addErrorMessage(current($frm->getValidationErrors()));
-            FatUtility::dieJsonError(Message::getHtml());
+            FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
         $psId = $post['prislab_id'];
         unset($post['prislab_id']);
-        $PriceSlabSearchObject = PriceSlab::getSearchObject();
-        $searchObject = clone $PriceSlabSearchObject;
-        $searchObject->addCondition('prislab_max','>=', $post['prislab_min']);
-        $searchObject->addCondition('prislab_min','<=',$post['prislab_max']);
-        $searchObject->addCondition('prislab_id','!=',$psId);
-        $resultSet = $searchObject->getResultSet();
-        $slotData = FatApp::getDb()->fetch($resultSet);
-        if(!empty($slotData)){
-            Message::addErrorMessage(Label::getLabel('LBL_YOUR_SLOT_IS_COLLAPSE_WITH_OTHER_SLOTS'));
-            FatUtility::dieJsonError(Message::getHtml());
+        $priceSlab = new PriceSlab($psId);
+        if ($priceSlab->isSlapCollapse($post['prislab_min'], $post['prislab_max'])) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_YOUR_SLOT_IS_COLLAPSE_WITH_OTHER_SLOTS'));
         }
 
-        if($post['prislab_min'] != 1){
-            $searchObject =  clone $PriceSlabSearchObject;
-            $searchObject->addCondition('prislab_min','=', 1);
-            $searchObject->addCondition('prislab_id','!=',$psId);
-            $resultSet = $searchObject->getResultSet();
-            $minSlotData = FatApp::getDb()->fetch($resultSet);
-            if(empty($minSlotData)){
-                Message::addErrorMessage(Label::getLabel('LBL_PLEASE_ADD_SLOT_WITH_MIN_VALUE_1_FIRST'));
-                FatUtility::dieJsonError(Message::getHtml());
-            }
+        $priceSlab->assignValues($post);
+        if (!$priceSlab->saveSlab($post['prislab_min'], $post['prislab_max'])) {
+            FatUtility::dieJsonError($priceSlab->getError());
         }
-       
-        $PriceSlab = new PriceSlab($psId);
-        $PriceSlab->assignValues($post);
-        if (!$PriceSlab->saveSlot($post['prislab_min'], $post['prislab_max'], $post['prislab_identifier'])) {
-            Message::addErrorMessage($PriceSlab->getError());
-            FatUtility::dieJsonError(Message::getHtml());
-        }
-        $psId =  $PriceSlab->getMainTableRecordId();
-        
-        $responseArray = [
-            'msg' => Label::getLabel('LBL_SLOT_SAVE_SUCCESSFULLY'),
-            'psId' => $psId,
-            'langId' => $newTabLangId,
-            'status' => applicationConstants::YES,
-        ];
-        FatUtility::dieJsonSuccess($responseArray);
-    } 
+        FatUtility::dieJsonSuccess(Label::getLabel('LBL_SLOT_SAVE_SUCCESSFULLY'));
+    }
 
     public function changeStatus()
     {
@@ -118,14 +88,15 @@ class PriceSlabsController extends AdminBaseController
         $psId = FatApp::getPostedData('psId', FatUtility::VAR_INT, 0);
         $status = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
 
-        $slotData = PriceSlab::getAttributesById($psId, array(
+        $slabData = PriceSlab::getAttributesById($psId, array(
             'prislab_id',
             'prislab_active'
         ));
-        if ($slotData == false) {
-            Message::addErrorMessage($this->str_invalid_request);
-            FatUtility::dieWithError(Message::getHtml());
+
+        if ($slabData == false) {
+            FatUtility::dieJsonError($this->str_invalid_request);
         }
+
         $PriceSlab  = new PriceSlab($psId);
         if (!$PriceSlab->changeStatus($status)) {
             Message::addErrorMessage($PriceSlab->getError());
@@ -134,20 +105,21 @@ class PriceSlabsController extends AdminBaseController
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
 
-    private function getForm(int $psId = 0) :object
-    { 
+    private function getForm(int $psId = 0): object
+    {
         $form  = new Form('PriceSlabFrm');
         $form->addHiddenField('', 'prislab_id', $psId);
         $minField = $form->addRequiredField(Label::getLabel('LBL_Min', $this->adminLangId), 'prislab_min');
-        $maxField=  $form->addRequiredField(Label::getLabel('LBL_max', $this->adminLangId), 'prislab_max');
         $minField->requirements()->setIntPositive();
-        $minField->requirements()->setRange(1,999999);
+        $minField->requirements()->setRange(1, 999999);
+
+        $maxField =  $form->addRequiredField(Label::getLabel('LBL_max', $this->adminLangId), 'prislab_max');
         $maxField->requirements()->setIntPositive();
-        $maxField->requirements()->setRange(1,999999);
+        $maxField->requirements()->setRange(1, 999999);
+
         $minField->requirements()->setCompareWith('prislab_max', 'lt', Label::getLabel('LBL_max', $this->adminLangId));
         $maxField->requirements()->setCompareWith('prislab_min', 'gt', Label::getLabel('LBL_min', $this->adminLangId));
-        // $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        // $form->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'prislab_active', $activeInactiveArr, '', array(), '');
+
         $form->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $form;
     }

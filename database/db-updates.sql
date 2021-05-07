@@ -476,11 +476,22 @@ CREATE TABLE `tbl_pricing_slabs` (
 -- Table structure for table `tbl_user_teach_languages`
 --
 
-CREATE TABLE `tbl_user_teach_languages` (
-  `utl_id` int(11) NOT NULL,
-  `utl_user_id` int(11) NOT NULL,
-  `utl_tlanguage_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `tbl_user_teach_languages`
+DROP INDEX `language`;
+
+ALTER TABLE `tbl_user_teach_languages`
+DROP INDEX `utl_single_lesson_amount`;
+
+ALTER TABLE `tbl_user_teach_languages`  
+DROP COLUMN `utl_single_lesson_amount`;
+
+ALTER TABLE `tbl_user_teach_languages`  
+DROP COLUMN `utl_bulk_lesson_amount`;
+
+ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_slanguage_id` `utl_tlanguage_id` INT(11) NOT NULL;
+
+ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_us_user_id` `utl_user_id` INT(11) NOT NULL;
 
 -- --------------------------------------------------------
 
@@ -509,7 +520,6 @@ ALTER TABLE `tbl_pricing_slabs`
 -- Indexes for table `tbl_user_teach_languages`
 --
 ALTER TABLE `tbl_user_teach_languages`
-  ADD PRIMARY KEY (`utl_id`),
   ADD UNIQUE KEY `utl_user_id` (`utl_user_id`,`utl_tlanguage_id`);
 
 --
@@ -528,8 +538,5 @@ ALTER TABLE `tbl_user_teach_lang_prices`
 ALTER TABLE `tbl_pricing_slabs`
   MODIFY `prislab_id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `tbl_user_teach_languages`
---
-ALTER TABLE `tbl_user_teach_languages`
-  MODIFY `utl_id` int(11) NOT NULL AUTO_INCREMENT;
+
+DROP TABLE `tbl_lesson_packages`, `tbl_lesson_packages_lang`;
