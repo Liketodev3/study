@@ -502,6 +502,9 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addHtml('', 'FlashCard', '<h3>' . Label::getLabel('LBL_FlashCards', $this->adminLangId) . '</h3>');
                 $frm->addCheckBox(Label::getLabel("CONF_ENABLE_FLASHCARD", $this->adminLangId), 'CONF_ENABLE_FLASHCARD', 1, [], false, 0);
 
+                $frm->addHtml('', 'Free_Trial', '<h3>' . Label::getLabel('LBL_Free_Trial', $this->adminLangId) . '</h3>');
+                $frm->addCheckBox(Label::getLabel("CONF_ENABLE_FREE_TRIAL", $this->adminLangId), 'CONF_ENABLE_FREE_TRIAL', applicationConstants::YES, [], false, applicationConstants::NO);
+
                 $frm->addHtml('', 'report_issue', '<h3>' . Label::getLabel('LBL_Report/Esclate_Issue_Time', $this->adminLangId) . '</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION", $this->adminLangId), "CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION");
                 $fld->requirements()->setIntPositive();
