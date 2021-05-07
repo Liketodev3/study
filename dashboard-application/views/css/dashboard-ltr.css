@@ -1035,6 +1035,10 @@ p {
   border: 1px solid #f05856;
   background-color: #f05856; }
 
+.availability-setting-calendar .slot_available {
+  background: #0ab359;
+  border-color: #0ab359; }
+
 @media (max-width: 767px) {
   .fc .fc-header-toolbar {
     -webkit-box-orient: vertical;
