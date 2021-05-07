@@ -18,6 +18,15 @@ $montly-lesson-calendar: "montly-lesson-calendar";
     }
 }
 
+$scheduled-lesson-popup: "scheduled-lesson-popup";
+
+.#{$scheduled-lesson-popup} {
+    
+    .fc-header-toolbar{
+        margin-top: 20px;
+    }
+}
+
 $fc-scroller-harness: "fc-scroller-harness";
 
 .#{$fc-scroller-harness} {
@@ -166,8 +175,8 @@ $dashboard-calendar: "dashboard-calendar";
 }
 
 .fc-v-event{
-    border: 1px solid #56ca8c;
-    background-color: #56ca8c;
+    border: 1px solid #f05856;
+    background-color: #f05856;
 }
 @media (max-width:theme('breakpoints.md','value')) {
     .fc .fc-header-toolbar{
