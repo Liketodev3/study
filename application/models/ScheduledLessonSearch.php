@@ -80,8 +80,8 @@ class ScheduledLessonSearch extends SearchBase
 
     public function joinGroupClass($langId)
     {
-        $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
-        $this->joinTable(TeacherGroupClasses::DB_TBL_LANG, 'LEFT OUTER JOIN', 'grpcls.grpcls_id = grpcls_l.grpclslang_grpcls_id and grpclslang_lang_id=' . $langId, 'grpcls_l');
+        $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT JOIN', 'grpcls.grpcls_id = slns.slesson_grpcls_id', 'grpcls');
+        $this->joinTable(TeacherGroupClasses::DB_TBL_LANG, 'LEFT JOIN', 'grpcls.grpcls_id = grpcls_l.grpclslang_grpcls_id and grpclslang_lang_id=' . $langId, 'grpcls_l');
     }
 
     public function joinTeacher()

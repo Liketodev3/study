@@ -43,6 +43,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if (empty($post['show_group_classes']) || $post['show_group_classes'] == ApplicationConstants::NO) {
             $srch->addCondition('slesson_grpcls_id', '=', 0);
         }
+//        $srch->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'repiss.repiss_slesson_id=sld.sldetail_id', 'repiss');
         $srch->joinLessonRescheduleLog();
         $srch->joinIssueReported();
         $srch->joinLessonPLan();
@@ -70,9 +71,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
+        //echo $srch->getQuery(); die;
         $rs = $srch->getResultSet();
         $lessons = FatApp::getDb()->fetchAll($rs);
-        // prx($srch->getQuery());
         $lessonArr = [];
         $user_timezone = MyDate::getUserTimeZone();
         foreach ($lessons as $lesson) {
@@ -108,8 +109,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->set('statusArr', ScheduledLesson::getStatusArr());
         $listingView = FatApp::getPostedData('listingView', FatUtility::VAR_STRING, '');
         $tplpath = '';
-        if($listingView == 'shortDetail'){
-            $tplpath =   'teacher-scheduled-lessons/_partial/short-detail-lesson-listing.php';
+        if ($listingView == 'shortDetail') {
+            $tplpath = 'teacher-scheduled-lessons/_partial/short-detail-lesson-listing.php';
         }
         $this->_template->render(false, false, $tplpath);
     }
@@ -355,17 +356,17 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     {
         $startDate = Fatapp::getPostedData('start', FatUtility::VAR_STRING, '');
         $endDate = Fatapp::getPostedData('end', FatUtility::VAR_STRING, '');
-      
+
         $userTimezone = MyDate::getUserTimeZone();
-		$systemTimeZone = MyDate::getTimeZone();
+        $systemTimeZone = MyDate::getTimeZone();
 
         if (empty($startDate) || empty($endDate)) {
             $monthStartAndEndDate = MyDate::getMonthStartAndEndDate(new DateTime());
             $startDate = $monthStartAndEndDate['monthStart'];
             $endDate = $monthStartAndEndDate['monthEnd'];
-        }else{
+        } else {
             $startDate = MyDate::changeDateTimezone($startDate, $userTimezone, $systemTimeZone);
-            $endDate =  MyDate::changeDateTimezone($endDate, $userTimezone, $systemTimeZone);
+            $endDate = MyDate::changeDateTimezone($endDate, $userTimezone, $systemTimeZone);
         }
 
         $cssClassNamesArr = ScheduledLesson::getStatusArr();

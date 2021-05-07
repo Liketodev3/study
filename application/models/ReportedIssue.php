@@ -220,7 +220,6 @@ class ReportedIssue extends MyAppModel
     public static function getSearchObject()
     {
         $srch = new SearchBase(static::DB_TBL, 'repiss');
-        #$srch->joinTable(static::DB_TBL_LOG, 'LEFT JOIN', 'reislo.reislo_repiss_id = repiss.repiss_id', 'reislo');
         $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_id=repiss.repiss_slesson_id', 'slesson');
         $srch->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sldetail.sldetail_slesson_id=slesson.slesson_id', 'sldetail');
         $srch->joinTable(Order::DB_TBL, 'INNER JOIN', 'orders.order_id=sldetail.sldetail_order_id', 'orders');

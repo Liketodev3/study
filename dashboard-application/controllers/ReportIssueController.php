@@ -40,7 +40,37 @@ class ReportIssueController extends LoggedUserController
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY'));
     }
 
-    public function getForm()
+    public function resolve()
+    {
+        $frm = $this->getForm();
+        if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
+            FatUtility::dieJsonError(current($frm->getValidationErrors()));
+        }
+        $userId = UserAuthentication::getLoggedUserId();
+        $sldetailId = FatUtility::int($post['repiss_slesson_id']);
+        $reportIssue = new ReportedIssue(0, $userId);
+        if (!$lesson = $reportIssue->getLessonToReport($sldetailId)) {
+            FatUtility::dieJsonError($reportIssue->getError());
+        }
+        if (!$reportIssue->setupIssue($sldetailId, $post['repiss_title'], $post['repiss_comment'])) {
+            FatUtility::dieJsonError($reportIssue->getError());
+        }
+        FatUtility::dieJsonSuccess(Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY'));
+    }
+
+    public function detail($issueId)
+    {
+        $issueId = FatUtility::int($issueId);
+        $issue = ReportedIssue::getIssueById($issueId);
+        if (empty($issue)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
+        $this->set('issue', $issue);
+        $this->set('userTimezone', MyDate::getUserTimeZone());
+        $this->_template->render(false, false);
+    }
+
+    private function getForm()
     {
         $frm = new Form('reportIssueFrm');
         $options = IssueReportOptions::getOptionsArray($this->siteLangId, User::USER_TYPE_LEANER);

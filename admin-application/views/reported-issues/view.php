@@ -14,7 +14,7 @@
                         <strong><?php echo Label::getLabel('LBL_Issue_Status', $adminLangId); ?>:</strong> <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?>
                     </td>
                 </tr>
-                <tr><td><p><?php echo nl2br($issue['repiss_comment']); ?></p></td></tr>
+                <tr><td><p><strong><?php echo Label::getLabel('LBL_Detail', $adminLangId); ?>:</strong> <?php echo nl2br($issue['repiss_comment']); ?></p></td></tr>
             </tbody>
         </table>
     </div>

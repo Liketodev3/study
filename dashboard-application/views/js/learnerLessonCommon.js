@@ -188,9 +188,20 @@ issueReportedSetup = function (frm) {
     });
 };
 
-issueDetails = function (issuelDetailId) {
-    fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'issueDetails', [issuelDetailId]), '', function (t) {
-        $.facebox(t, 'facebox-medium issueDetailPopup');
+issueDetails = function (id) {
+    $.mbsmessage(langLbl.processing, true, 'alert alert--process');
+    fcom.ajax(fcom.makeUrl('ReportIssue', 'detail', [id]), '', function (response) {
+        if (isJson(response)) {
+            var res = JSON.parse(response);
+            if (res.status == 1) {
+                $.mbsmessage(res.msg, true, 'alert alert--success');
+            } else {
+                $.mbsmessage(res.msg, true, 'alert alert--danger');
+            }
+        } else {
+            $.mbsmessage.close();
+            $.facebox(response, 'facebox-medium issueDetailPopup');
+        }
     });
 };
 

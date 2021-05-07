@@ -176,8 +176,8 @@ issueReportedSetup = function (frm) {
     });
 };
 
-issueDetails = function (issuelDetailId) {
-    fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'issueDetails', [issuelDetailId]), '', function (t) {
+issueDetails = function (id) {
+    fcom.ajax(fcom.makeUrl('ReportIssue', 'detail', [id]), '', function (t) {
         $.facebox(t, 'facebox-medium issueDetailPopup');
     });
 };
