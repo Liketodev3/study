@@ -18,13 +18,11 @@ class IssuesReported extends MyAppModel
     public function __construct($id = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
+        $this->objMainTableRecord->setSensitiveFields(['issrep_closed']);
     }
 
-    public static function getResolveTypeArray(int $langId = 0): array
+    public static function getResolveTypeArray(): array
     {
-        if ($langId < 1) {
-            $langId = CommonHelper::getLangId();
-        }
         return [
             self::RESOLVE_TYPE_LESSON_UNSCHEDULED => Label::getLabel('LBL_Reset_Lesson_to:_Unscheduled'),
             self::RESOLVE_TYPE_LESSON_COMPLETED => Label::getLabel('LBL_Mark_Lesson_as:_Completed'),
