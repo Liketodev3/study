@@ -30,12 +30,15 @@ class LessonSearch extends SearchBase
 
     public function addSearchDetailFields()
     {
-        
+        $fields = static::getSearchDetailFields();
+        foreach ($fields as $field => $alias) {
+            $this->addFld($field . ' AS ' . $alias);
+        }
     }
 
     public function addSearchListingFields()
     {
-        $fields = static::getSearchFields();
+        $fields = static::getSearchListingFields();
         foreach ($fields as $field => $alias) {
             $this->addFld($field . ' AS ' . $alias);
         }
@@ -88,6 +91,9 @@ class LessonSearch extends SearchBase
             $this->addCondition('slesson.slesson_teacher_id', ' = ', $teacherId);
         }
         /* ] */
+        if (!empty($post['sldetail_id'] ?? '')) {
+            $this->addCondition('sldetail.sldetail_id', '=', FatUtility::int($post['sldetail_id']));
+        }
         if (!empty($post['sldetail_learner_id'] ?? '')) {
             $this->addCondition('sldetail.sldetail_learner_id', '=', FatUtility::int($post['sldetail_learner_id']));
         }
@@ -115,8 +121,44 @@ class LessonSearch extends SearchBase
         }
         return $rows;
     }
-        
-    public static function getSearchFields()
+
+    public static function getSearchDetailFields()
+    {
+        return [
+            'slesson.slesson_id' => 'slesson_id',
+            'slesson.slesson_grpcls_id' => 'slesson_grpcls_id',
+            'slesson.slesson_teacher_id' => 'slesson_teacher_id',
+            'slesson.slesson_slanguage_id' => 'slesson_slanguage_id',
+            'slesson.slesson_has_issue' => 'slesson_has_issue',
+            'slesson.slesson_status' => 'slesson_status',
+            'slesson.slesson_date' => 'slesson_date',
+            'slesson.slesson_end_date' => 'slesson_end_date',
+            'slesson.slesson_start_time' => 'slesson_start_time',
+            'slesson.slesson_end_time' => 'slesson_end_time',
+            'slesson.slesson_is_teacher_paid' => 'slesson_is_teacher_paid',
+            'slesson.slesson_teacher_join_time' => 'slesson_teacher_join_time',
+            'sldetail.sldetail_id' => 'sldetail_id',
+            'sldetail.sldetail_order_id' => 'sldetail_order_id',
+            'sldetail.sldetail_learner_id' => 'sldetail_learner_id',
+            'sldetail.sldetail_learner_status' => 'sldetail_learner_status',
+            'sldetail.sldetail_learner_join_time' => 'sldetail_learner_join_time',
+            'op.op_lesson_duration' => 'op_lesson_duration',
+            'op.op_lpackage_is_free_trial' => 'op_lpackage_is_free_trial',
+            'IFNULL(grpclslang_grpcls_title, grpcls_title)' => 'grpcls_title',
+            'ut.user_first_name' => 'teacherFname',
+            'ut.user_last_name' => 'teacherLname',
+            'ut.user_url_name' => 'user_url_name',
+            'tclang.country_name' => 'country_name',
+            'IFNULL(repiss.repiss_id, 0)' => 'repiss_id',
+            'IFNULL(repiss.repiss_status, 0)' => 'repiss_status',
+            'lesreschlog.lesreschlog_id' => 'lesreschlog_id',
+            'CONCAT(slesson.slesson_date, " ", slesson.slesson_start_time)' => 'startDateTime',
+            '(CASE when CONCAT(slesson.slesson_date, " ", slesson.slesson_start_time) < NOW() then 0 ELSE 1 END )' => 'upcomingLessonOrder',
+            '(CASE when CONCAT(slesson.slesson_date, " ", slesson.slesson_start_time) < NOW() then CONCAT(slesson.slesson_date, " ", slesson.slesson_start_time) ELSE NOW() END )' => 'passedLessonsOrder',
+        ];
+    }
+
+    public static function getSearchListingFields()
     {
         return [
             'slesson.slesson_id' => 'slesson_id',
@@ -137,7 +179,7 @@ class LessonSearch extends SearchBase
             'sldetail.sldetail_learner_id' => 'learnerId',
             'op.op_lpackage_is_free_trial' => 'is_trial',
             'op.op_lesson_duration' => 'op_lesson_duration',
-            'IFNULL(grpclslang_grpcls_title,grpcls_title)' => 'grpcls_title',
+            'IFNULL(grpclslang_grpcls_title, grpcls_title)' => 'grpcls_title',
             'ut.user_first_name' => 'teacherFname',
             'ut.user_last_name' => 'teacherLname',
             'ut.user_url_name' => 'user_url_name',

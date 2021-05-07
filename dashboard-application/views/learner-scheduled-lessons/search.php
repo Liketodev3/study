@@ -160,7 +160,11 @@ $referer = preg_replace("(^https?://)", "", $referer);
                                             <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Schedule_Lesson'); ?></div>
                                         </a>
                                     <?php } ?>
-                                    <?php if ($lesson['repiss_id'] > 0) { ?>
+                                    <?php
+                                    $lessonEnddate = $lesson['slesson_end_date'] . ' ' . $lesson['slesson_end_time'];
+                                    $lessonReportDate = strtotime($lessonEnddate . " +" . $reportHours . " hour");
+                                    if ($lesson['repiss_id'] > 0) {
+                                        ?>
                                         <a  href="javascript:void(0);"  onclick="issueDetails('<?php echo $lesson['repiss_id']; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
                                             <svg class="icon icon--issue-details icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#view-report'; ?>"></use></svg>
                                             <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Issue_Details'); ?></div>
@@ -170,7 +174,7 @@ $referer = preg_replace("(^https?://)", "", $referer);
                                             ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED ||
                                             ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED &&
                                             $currentUnixTime > $endUnixTime && $lesson['slesson_teacher_join_time'] == 0)) &&
-                                            $lesson['repiss_id'] < 1
+                                            $lesson['repiss_id'] < 1 && $lessonReportDate > strtotime(date('Y-m-d H:i:s'))
                                     ) {
                                         ?>
                                         <a href="javascript:void(0);" onclick="issueReported('<?php echo $lesson['sldetail_id']; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">

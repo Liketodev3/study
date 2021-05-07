@@ -95,6 +95,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->set('lessonArr', $lessonArr);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
         $this->set('teachLanguages', TeachingLanguage::getAllLangs($this->siteLangId));
+        $this->set('reportHours', FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION'));
         $this->_template->render(false, false);
     }
 
@@ -177,11 +178,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
     public function view($lDetailId)
     {
         $lDetailId = FatUtility::int($lDetailId);
-        if (1 > $lDetailId) {
-            FatUtility::exitWithErrorCode(404);
-        }
-        $lessonDetailRow = ScheduledLessonDetails::getAttributesById($lDetailId, ['sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id']);
-        if (!$lessonDetailRow || $lessonDetailRow['sldetail_id'] != $lDetailId) {
+        $lessonDetailRow = ScheduledLessonDetails::getAttributesById($lDetailId,
+                        ['sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id']);
+        if (empty($lessonDetailRow)) {
             FatUtility::exitWithErrorCode(404);
         }
         $lessonId = $lessonDetailRow['sldetail_slesson_id'];
@@ -193,10 +192,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Access_Denied'));
             FatApp::redirectUser(CommonHelper::generateUrl('LearnerScheduledLessons'));
         }
-        $this->_template->addJs('js/learnerLessonCommon.js');
-        $this->_template->addJs('js/moment.min.js');
-        $this->_template->addJs('js/fullcalendar.min.js');
-        $this->_template->addJs('js/fateventcalendar.js');
         if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
             if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
                 $this->_template->addJs("js/locales/$currentLangCode.js");
@@ -206,75 +201,59 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $lessonRow['teacherId'] = $lessonRow['slesson_teacher_id'];
         $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
         if ($flashCardEnabled) {
-            /* flashCardSearch Form[ */
             $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
             $frmSrchFlashCard->fill(['lesson_id' => $lessonRow['slesson_id']]);
             $this->set('frmSrchFlashCard', $frmSrchFlashCard);
-            /* ] */
         }
-        $this->_template->addJs('js/jquery.countdownTimer.min.js');
-        $this->_template->addJs(['js/jquery.barrating.min.js']);
         $this->set('lessonRow', $lessonRow);
         $this->set('lessonId', $lessonRow['slesson_id']);
         $this->set('lDetailId', $lDetailId);
         $this->set('showFlashCard', $flashCardEnabled);
+        $this->_template->addJs('js/learnerLessonCommon.js');
+        $this->_template->addJs('js/moment.min.js');
+        $this->_template->addJs('js/fullcalendar.min.js');
+        $this->_template->addJs('js/fateventcalendar.js');
+        $this->_template->addJs('js/jquery.countdownTimer.min.js');
+        $this->_template->addJs(['js/jquery.barrating.min.js']);
         $this->_template->render();
     }
 
-    public function viewLessonDetail($lDetailId)
+    public function viewLessonDetail($ldetailId)
     {
         $userId = UserAuthentication::getLoggedUserId();
-        $lDetailId = FatUtility::int($lDetailId);
-        $srch = $this->searchLessons([], true);
-        $srch->joinGroupClass($this->siteLangId);
-        $srch->joinLearnerCountry($this->siteLangId);
-        $srch->joinIssueReported($userId);
-        $srch->joinLessonRescheduleLog();
-        $srch->joinLessonPLan();
-        $srch->addCondition('sldetail.sldetail_id', '=', $lDetailId);
+        $post = ['sldetail_learner_id' => $userId,
+            'sldetail_id' => FatUtility::int($ldetailId)];
+        $srch = new LessonSearch($this->siteLangId);
+        $srch->addSearchDetailFields();
+        $srch->applyPrimaryConditions();
+        $srch->applySearchConditions($post);
         $srch->doNotCalculateRecords();
-        $srch->addMultipleFields([
-            'IFNULL(lp.tlpn_id,0) AS isLessonPlanAttach', 'lp.tlpn_title',
-            'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
-            'ul.user_first_name as learnerFname',
-            'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
-            'IFNULL(lrsl.lesreschlog_id,0) as lessonReschedulelogId', 'ul.user_url_name',
-            'IFNULL(learnercountry_lang.country_name, learnercountry.country_code) as learnerCountryName',
-            'IFNULL(repiss.repiss_status,0) AS repiss_status',
-            'IFNULL(repiss.repiss_id,0) AS repiss_id',
-            'IFNULL(repiss.repiss_issues_resolve_type,0) AS repiss_issues_resolve_by',
-            'slesson.slesson_teacher_join_time',
-            'sldetail_learner_join_time',
-            'sldetail_learner_end_time',
-        ]);
-        $lesson = FatApp::getDb()->fetch($srch->getResultSet());
+        $srch->setPageSize(1);
+        $lesson = current($srch->fetchAll());
         if (empty($lesson)) {
             FatUtility::exitWithErrorCode(404);
         }
         $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
         if ($flashCardEnabled) {
-            /* flashCardSearch Form[ */
             $frmSrchFlashCard = $this->getLessonFlashCardSearchForm();
-            $frmSrchFlashCard->fill(['lesson_id' => $lessonRow['slesson_id']]);
+            $frmSrchFlashCard->fill(['lesson_id' => $lesson['slesson_id']]);
             $this->set('frmSrchFlashCard', $frmSrchFlashCard);
-            /* ] */
         }
+        $this->set('lesson', $lesson);
         $this->set('flashCardEnabled', $flashCardEnabled);
-        $this->set('lessonData', $lessonRow);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
+        $this->set('reportHours', FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION'));
         $this->_template->render(false, false);
     }
 
     public function searchFlashCards()
     {
         $frmSrch = $this->getLessonFlashCardSearchForm();
-        $myteacher = (isset(FatApp::getPostedData()['teacherId'])) ? FatApp::getPostedData()['teacherId'] : 0;
+        $myteacher = FatApp::getPostedData('teacherId', FatUtility::VAR_INT, 0);
         $post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
-        $page = $post['page'];
-        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $lessonId = $post['lesson_id'];
         $srch = new FlashCardSearch(false);
         $srch->joinSharedFlashCard();
@@ -296,34 +275,13 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'wordDefLang.slanguage_code as wordDefLanguageCode',
             'sflashcard_slesson_id'
         ]);
-        $srch->setPageSize($pageSize);
-        $srch->setPageNumber($page);
         if (!empty($post['keyword'])) {
             $srch->addCondition('flashcard_title', 'like', '%' . $post['keyword'] . '%');
         }
-        $rsFlashcard = $srch->getResultSet();
-        $flashCards = FatApp::getDb()->fetchAll($rsFlashcard);
-        $this->set('flashCards', $flashCards);
-        /* [ */
-        $totalRecords = $srch->recordCount();
-        $pagingArr = [
-            'pageCount' => $srch->pages(),
-            'page' => $page,
-            'pageSize' => $pageSize,
-            'recordCount' => $totalRecords,
-        ];
+        $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
+        $this->set('flashCards', $rows);
         $this->set('postedData', $post);
-        $this->set('pagingArr', $pagingArr);
-        $startRecord = ($page - 1) * $pageSize + 1;
-        $endRecord = $page * $pageSize;
-        if ($totalRecords < $endRecord) {
-            $endRecord = $totalRecords;
-        }
-        $this->set('startRecord', $startRecord);
-        $this->set('endRecord', $endRecord);
-        $this->set('totalRecords', $totalRecords);
         $this->set('myteacher', $myteacher);
-        /* ] */
         $this->_template->render(false, false, 'teacher-scheduled-lessons/search-flash-cards.php');
     }
 
