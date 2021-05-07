@@ -684,6 +684,14 @@
     font-size: 1rem;
 }
  
+.booked-slot {
+    background: #f05856;
+    border-color: #f05856;
+    text-align: center;
+    padding: 5px 0;
+}
+
+
 
 @media (min-width: theme('breakpoints.xl','value')){
     

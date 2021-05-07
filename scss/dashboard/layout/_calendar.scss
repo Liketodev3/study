@@ -165,6 +165,10 @@ $dashboard-calendar: "dashboard-calendar";
     }
 }
 
+.fc-v-event{
+    border: 1px solid #56ca8c;
+    background-color: #56ca8c;
+}
 @media (max-width:theme('breakpoints.md','value')) {
     .fc .fc-header-toolbar{
         flex-direction: column;
@@ -177,3 +181,4 @@ $dashboard-calendar: "dashboard-calendar";
         margin-bottom: 16px;
     }
 }
+
