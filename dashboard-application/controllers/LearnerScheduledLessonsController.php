@@ -1171,36 +1171,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Issue_Reported_Successfully!'));
     }
 
-    public function issueDetails($ldetailId)
-    {
-        $ldetailId = FatUtility::int($ldetailId);
-        $lessonId = ScheduledLessonDetails::getAttributesById($ldetailId, 'sldetail_slesson_id');
-        $issue = ReportedIssue::getIssueById($issueId);
-        
-        $srch = IssuesReported::getSearchObject();
-        $srch->addCondition('repiss_slesson_id', '=', $lessonId);
-        $srch->addCondition('repiss_reported_by', '=', UserAuthentication::getLoggedUserId());
-        $srch->addMultipleFields([
-            'i.*',
-            'slesson_id',
-            'sldetail_learner_id',
-            'slesson_date',
-            'slesson_start_time',
-            'slesson_status',
-            'slesson_slanguage_id',
-            'op_lesson_duration',
-            'op_lpackage_is_free_trial',
-        ]);
-        $srch->addGroupBy('repiss_id');
-        $srch->addOrder('repiss_id', 'ASC');
-        $rs = $srch->getResultSet();
-        $issuesReportedDetails = FatApp::getDb()->fetchAll($rs);
-        $this->set('issueDeatils', $issuesReportedDetails);
-        $this->set('issues_options', IssueReportOptions::getOptionsArray($this->siteLangId));
-        $this->set('resolve_type_options', IssuesReported::getResolveTypeArray());
-        $this->_template->render(false, false);
-    }
-
     private function getLessonFeedbackForm($lessonId, $langId)
     {
         $frm = new Form('frmLessonFeedback');
