@@ -898,6 +898,9 @@ p {
   .montly-lesson-calendar .fc-view-harness .fc-scrollgrid {
     border: 1px solid var(--color-gray-200); }
 
+.scheduled-lesson-popup .fc-header-toolbar {
+  margin-top: 20px; }
+
 .fc-scroller-harness .fc-col-header-cell {
   border: 1px solid var(--color-gray-200); }
   .fc-scroller-harness .fc-col-header-cell .fc-scrollgrid-sync-inner {
@@ -1029,8 +1032,8 @@ p {
   height: 100px; }
 
 .fc-v-event {
-  border: 1px solid #56ca8c;
-  background-color: #56ca8c; }
+  border: 1px solid #f05856;
+  background-color: #f05856; }
 
 @media (max-width: 767px) {
   .fc .fc-header-toolbar {
