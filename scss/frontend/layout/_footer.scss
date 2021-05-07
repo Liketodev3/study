@@ -243,7 +243,28 @@
     margin-left: 6px;
 }
 
+.booking-view {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+.booking-view .booking__head {
+    margin-bottom: 10px;
+}
 
+.coupon-offers li { border: 1px dashed rgba(0, 0, 0, 0.3); padding: 10px; margin: 10px 0 0; } .coupon-offers li p { margin: 0; } .coupon-offers li .coupon-code { font-weight: 700; } .apply-coupon__target .heading3 { font-weight: 600; font-size: 1.3rem; }
+.apply-coupon__target input[type="submit"] {
+    padding: 0 20px;
+    text-transform: uppercase;
+    display: block;
+    width: 100%;
+    border-radius: 0 3px 3px 0;
+}
+
+.apply-coupon__target input[type="text"] {
+    border-radius: 3px 0 0 3px;
+}
 @media  (min-width: theme('breakpoints.md','value')) {
     .footer h5 {
         pointer-events: none;
