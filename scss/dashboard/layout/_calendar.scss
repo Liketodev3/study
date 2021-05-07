@@ -178,6 +178,11 @@ $dashboard-calendar: "dashboard-calendar";
     border: 1px solid #f05856;
     background-color: #f05856;
 }
+
+.availability-setting-calendar .slot_available{
+    background: #0ab359;
+    border-color: #0ab359;
+}
 @media (max-width:theme('breakpoints.md','value')) {
     .fc .fc-header-toolbar{
         flex-direction: column;
