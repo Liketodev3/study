@@ -500,7 +500,7 @@ class CheckoutController extends LoggedUserController
         $confPaidLessonDuration = CommonHelper::getPaidLessonDurations();
         $userSrch = new UserSearch();
         $userTeachLangSrch = $userSrch->getMyTeachLangQry();
-        $userTeachLangSrch->addCondition('utl_us_user_id', '=', $teacher_id);
+        $userTeachLangSrch->addCondition('utl_user_id', '=', $teacher_id);
         $userTeachLangSrch->addCondition('utl_booking_slot', 'IN', $confPaidLessonDuration);
         $rs = $userTeachLangSrch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);

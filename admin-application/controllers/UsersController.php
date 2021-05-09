@@ -604,13 +604,13 @@ class UsersController extends AdminBaseController
         $langData = [
             [
                 'utl_slanguage_id' => 1,
-                'utl_us_user_id' => $userId,
+                'utl_user_id' => $userId,
                 'utl_single_lesson_amount' => 25,
                 'utl_bulk_lesson_amount' => 20,
             ],
             [
                 'utl_slanguage_id' => 2,
-                'utl_us_user_id' => $userId,
+                'utl_user_id' => $userId,
                 'utl_single_lesson_amount' => 25,
                 'utl_bulk_lesson_amount' => 20,
             ]

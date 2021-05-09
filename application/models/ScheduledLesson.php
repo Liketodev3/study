@@ -124,7 +124,7 @@ class ScheduledLesson extends MyAppModel
                 return false;
             }
             // remove from learner google calendar
-            $token = current(UserSetting::getUserSettings($lessonDetailRow['learnerId']))['us_google_access_token'];
+            $token = UserSetting::getUserSettings($lessonDetailRow['learnerId'])['us_google_access_token'];
             if ($token) {
                 $sLessonDetailObj->loadFromDb();
                 $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
@@ -180,7 +180,7 @@ class ScheduledLesson extends MyAppModel
                 return false;
             }
             // remove from learner google calendar
-            $token = current(UserSetting::getUserSettings($lessonDetailRow['learnerId']))['us_google_access_token'];
+            $token = UserSetting::getUserSettings($lessonDetailRow['learnerId'])['us_google_access_token'];
             if ($token) {
                 $sLessonDetailObj->loadFromDb();
                 $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');

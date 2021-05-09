@@ -117,7 +117,7 @@ class FreePayController extends MyAppController
             }
             $sldetailId = $slDetailsObj->getMainTableRecordId();
             // share on student google calendar
-            $token = current(UserSetting::getUserSettings($orderInfo['order_user_id']))['us_google_access_token'];
+            $token = UserSetting::getUserSettings($orderInfo['order_user_id'])['us_google_access_token'];
             if ($token) {
                 $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', [$sldetailId]);
                 $title = sprintf(Label::getLabel('LBL_%1$s_LESSON_Scheduled_with_%2$s'), Label::getLabel('LBL_Trial', $this->siteLangId), $orderInfo['teacherFullName']);
@@ -137,7 +137,7 @@ class FreePayController extends MyAppController
                 }
             }
             // share on teacher google calendar
-            $token = current(UserSetting::getUserSettings($orderInfo['op_teacher_id']))['us_google_access_token'];
+            $token = UserSetting::getUserSettings($orderInfo['op_teacher_id'])['us_google_access_token'];
             if ($token) {
                 $sLessonObj->loadFromDb();
                 $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');

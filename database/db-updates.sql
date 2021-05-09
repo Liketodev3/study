@@ -465,6 +465,37 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ('LBL_NO_RECORD_FLASH_CARD_TEXT', 1, 'Click on the button "Add Flash-card" to add it. It will help you during the class'),
 ('LBL_NO_RECORD_FLASH_CARD_TEXT', 2, 'Click on the button "Add Flash-card" to add it. It will help you during the class');
 
+
+--
+-- Table structure for table `tbl_user_teach_languages`
+--
+
+
+ALTER TABLE `tbl_user_teach_languages`
+DROP INDEX `language`;
+
+ALTER TABLE `tbl_user_teach_languages`
+DROP INDEX `utl_slanguage_id`;
+
+ALTER TABLE `tbl_user_teach_languages`  
+DROP COLUMN `utl_single_lesson_amount`;
+
+ALTER TABLE `tbl_user_teach_languages`  
+DROP COLUMN `utl_bulk_lesson_amount`;
+
+ALTER TABLE `tbl_user_teach_languages`  
+DROP COLUMN `utl_booking_slot`;
+
+ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_slanguage_id` `utl_tlanguage_id` INT(11) NOT NULL;
+
+ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_us_user_id` `utl_user_id` INT(11) NOT NULL;
+
+--
+-- Indexes for table `tbl_user_teach_languages`
+--
+ALTER TABLE `tbl_user_teach_languages`
+  ADD UNIQUE KEY `utl_user_id` (`utl_user_id`,`utl_tlanguage_id`);
+  
 --
 -- Table structure for table `tbl_pricing_slabs`
 --
@@ -478,26 +509,6 @@ CREATE TABLE `tbl_pricing_slabs` (
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `tbl_user_teach_languages`
---
-
-
-ALTER TABLE `tbl_user_teach_languages`
-DROP INDEX `language`;
-
-ALTER TABLE `tbl_user_teach_languages`
-DROP INDEX `utl_single_lesson_amount`;
-
-ALTER TABLE `tbl_user_teach_languages`  
-DROP COLUMN `utl_single_lesson_amount`;
-
-ALTER TABLE `tbl_user_teach_languages`  
-DROP COLUMN `utl_bulk_lesson_amount`;
-
-ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_slanguage_id` `utl_tlanguage_id` INT(11) NOT NULL;
-
-ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_us_user_id` `utl_user_id` INT(11) NOT NULL;
 
 -- --------------------------------------------------------
 
@@ -521,12 +532,6 @@ CREATE TABLE `tbl_user_teach_lang_prices` (
 --
 ALTER TABLE `tbl_pricing_slabs`
   ADD PRIMARY KEY (`prislab_id`);
-
---
--- Indexes for table `tbl_user_teach_languages`
---
-ALTER TABLE `tbl_user_teach_languages`
-  ADD UNIQUE KEY `utl_user_id` (`utl_user_id`,`utl_tlanguage_id`);
 
 --
 -- Indexes for table `tbl_user_teach_lang_prices`
@@ -583,3 +588,7 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 
 REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ENABLE_FREE_TRIAL', 1, 0);
 
+INSERT INTO `tbl_pricing_slabs` (`prislab_id`, `prislab_min`, `prislab_max`, `prislab_active`) VALUES
+(1, 1, 4, 1),
+(2, 5, 9, 1),
+(3, 10, 100, 1);

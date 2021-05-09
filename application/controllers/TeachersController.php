@@ -350,7 +350,7 @@ class TeachersController extends MyAppController
         MyDate::setUserTimeZone();
         $user_timezone = MyDate::getUserTimeZone();
         $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
-        $teacherBookingBefore = current(UserSetting::getUserSettings($teacher_id))['us_booking_before'];
+        $teacherBookingBefore = UserSetting::getUserSettings($teacher_id)['us_booking_before'];
         if ('' == $teacherBookingBefore) {
             $teacherBookingBefore = 0;
         }
@@ -602,7 +602,7 @@ class TeachersController extends MyAppController
         $srch->setTeacherDefinedCriteria(false, false);
         $tlangSrch = $srch->getMyTeachLangQry(true, $this->siteLangId, $teachLangId);
         $tlangSrch->addCondition('utl.utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
-        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_us_user_id', 'utls');
+        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_user_id', 'utls');
         $srch->joinUserSpokenLanguages($this->siteLangId);
         $srch->joinUserCountry($this->siteLangId);
         $srch->joinUserAvailibility();

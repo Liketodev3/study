@@ -38,7 +38,7 @@ class UserSearch extends SearchBase
         }
         if ($langCheck) {
             $tlangSrch = $this->getMyTeachLangQry();
-            $this->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_us_user_id', 'utls');
+            $this->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_user_id', 'utls');
         }
         $this->joinTable(UserQualification::DB_TBL, 'INNER JOIN', 'user_id = uqualification_user_id AND uqualification_active = ' . ApplicationConstants::ACTIVE, 'utqual');
         $this->joinTable(Preference::DB_TBL_USER_PREF, 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
@@ -254,13 +254,13 @@ class UserSearch extends SearchBase
             }
             $tlangSrch->addOrder('tlanguage_display_order');
         }
-        $tlangSrch->addMultipleFields(['utl_us_user_id', 'GROUP_CONCAT(utl_id) as utl_ids', 'GREATEST(max(utl_single_lesson_amount), max(utl_bulk_lesson_amount)) AS maxPrice', 'LEAST(min(utl_bulk_lesson_amount), min(utl_single_lesson_amount)) AS minPrice', 'GROUP_CONCAT(DISTINCT utl_slanguage_id) as utl_slanguage_ids', 'GROUP_CONCAT(utl_booking_slot) as utl_booking_slots']);
+        $tlangSrch->addMultipleFields(['utl_user_id', 'GROUP_CONCAT(utl_id) as utl_ids', 'GREATEST(max(utl_single_lesson_amount), max(utl_bulk_lesson_amount)) AS maxPrice', 'LEAST(min(utl_bulk_lesson_amount), min(utl_single_lesson_amount)) AS minPrice', 'GROUP_CONCAT(DISTINCT utl_slanguage_id) as utl_slanguage_ids', 'GROUP_CONCAT(utl_booking_slot) as utl_booking_slots']);
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
         $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);
         $tlangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
         $tlangSrch->addCondition('utl_slanguage_id', '>', 0);
-        $tlangSrch->addGroupBy('utl_us_user_id');
+        $tlangSrch->addGroupBy('utl_user_id');
         return $tlangSrch;
     }
 
@@ -284,11 +284,11 @@ class UserSearch extends SearchBase
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'INNER  JOIN', 'u.user_id = utsl1.utl_us_user_id AND utl_single_lesson_amount>0 AND utl_bulk_lesson_amount>0', 'utsl1');
+        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'INNER  JOIN', 'u.user_id = utsl1.utl_user_id AND utl_single_lesson_amount>0 AND utl_bulk_lesson_amount>0', 'utsl1');
         $this->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utsl1.utl_slanguage_id AND tlanguage_active = ' . applicationConstants::ACTIVE);
         $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl1.utl_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'tl_lang');
         $this->addMultipleFields([
-            'utsl1.utl_us_user_id',
+            'utsl1.utl_user_id',
             'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName',
             'GROUP_CONCAT(DISTINCT utl_id) as utl_ids',
             'max(utl_single_lesson_amount) as maxPrice',

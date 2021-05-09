@@ -558,7 +558,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError($sLessonDetailObj->getError());
         }
         // remove from student google calendar
-        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        $token = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId())['us_google_access_token'];
         if ($token) {
             $sLessonDetailObj->loadFromDb();
             $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
@@ -579,7 +579,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             }
         }
         // remove from teacher google calendar
-        $token = current(UserSetting::getUserSettings($lessonRow['teacherId']))['us_google_access_token'];
+        $token = UserSetting::getUserSettings($lessonRow['teacherId'])['us_google_access_token'];
         if ($token) {
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
@@ -825,7 +825,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         MyDate::setUserTimeZone();
         $user_timezone = MyDate::getUserTimeZone();
         $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
-        $teacherBookingBefore = current(UserSetting::getUserSettings($teacher_id))['us_booking_before'];
+        $teacherBookingBefore = UserSetting::getUserSettings($teacher_id)['us_booking_before'];
         if ('' == $teacherBookingBefore) {
             $teacherBookingBefore = 0;
         }
@@ -970,7 +970,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
         }
         // share on student google calendar
-        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        $token = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId())['us_google_access_token'];
         if ($token) {
             $sLessonDetailObj->loadFromDb();
             $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
@@ -996,7 +996,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             }
         }
         // share on teacher google calendar
-        $token = current(UserSetting::getUserSettings($lessonDetail['teacherId']))['us_google_access_token'];
+        $token = UserSetting::getUserSettings($lessonDetail['teacherId'])['us_google_access_token'];
         if ($token) {
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
