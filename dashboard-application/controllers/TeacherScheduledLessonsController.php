@@ -11,11 +11,6 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
     public function index()
     {
-        $this->_template->addJs('js/teacherLessonCommon.js');
-        $this->_template->addJs('js/moment.min.js');
-        $this->_template->addJs('js/jquery.countdownTimer.min.js');
-        $this->_template->addJs('js/fullcalendar.min.js');
-        $this->_template->addJs('js/fateventcalendar.js');
         $frmSrch = $this->getSearchForm();
         $this->set('frmSrch', $frmSrch);
         $lessonStatuses = ScheduledLesson::getStatusArr();
@@ -27,6 +22,11 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $upcomingLesson = FatApp::getDb()->fetch($srch->getResultSet());
         $this->set('lessonStatuses', $lessonStatuses);
         $this->set('upcomingLesson', $upcomingLesson);
+        $this->_template->addJs('js/teacherLessonCommon.js');
+        $this->_template->addJs('js/moment.min.js');
+        $this->_template->addJs('js/jquery.countdownTimer.min.js');
+        $this->_template->addJs('js/fullcalendar.min.js');
+        $this->_template->addJs('js/fateventcalendar.js');
         $this->_template->render();
     }
 
@@ -38,42 +38,18 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
-        $srch = $this->searchLessons($post, true, false);
-        // list on lessons not classes in lessons list
-        if (empty($post['show_group_classes']) || $post['show_group_classes'] == ApplicationConstants::NO) {
-            $srch->addCondition('slesson_grpcls_id', '=', 0);
-        }
-//        $srch->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'repiss.repiss_slesson_id=sld.sldetail_id', 'repiss');
-        $srch->joinLessonRescheduleLog();
-        $srch->joinIssueReported();
-        $srch->joinLessonPLan();
-        $srch->addFld([
-            'IFNULL(iss.issrep_status,0) AS issrep_status',
-            'IFNULL(iss.issrep_id,0) AS issrep_id',
-            'IFNULL(lp.tlpn_id,0) AS isLessonPlanAttach',
-            'lp.tlpn_title',
-            'IFNULL(lrsl.lesreschlog_id,0) as lessonReschedulelogId',
-            'CONCAT(slns.slesson_date, " ", slns.slesson_start_time) as startDateTime',
-            '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then 0 ELSE 1 END ) as upcomingLessonOrder',
-            '(CASE when CONCAT(slns.slesson_date, " ", slns.slesson_start_time) < NOW() then CONCAT(slns.slesson_date, " ", slns.slesson_start_time) ELSE NOW() END ) as passedLessonsOrder',
-        ]);
-        if (!empty($post['status']) && $post['status'] == ScheduledLesson::STATUS_RESCHEDULED) {
-            $srch->addCondition('lrsl.lesreschlog_id', '>', '0');
-            $srch->addCondition('slns.slesson_status', 'IN', [ScheduledLesson::STATUS_SCHEDULED, ScheduledLesson::STATUS_NEED_SCHEDULING]);
-        }
-        $srch->addOrder('slesson_status', 'ASC');
-        $srch->addOrder('upcomingLessonOrder', 'DESC');
-        $srch->addOrder('passedLessonsOrder', 'DESC');
-        $srch->addOrder('startDateTime', 'ASC');
-        $srch->addOrder('slesson_id', 'DESC');
-        $srch->addGroupBy('slesson_id');
-        $page = $post['page'];
-        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
+        $sortOrder = '';
+        $page = $post['page'] ?? 1;
+        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE');
+        $userId = UserAuthentication::getLoggedUserId();
+        $post = array_merge($post, ['slesson_teacher_id' => $userId]);
+        $srch = new LessonSearch($this->siteLangId);
+        $srch->addSearchListingFields();
+        $srch->applySearchConditions($post);
+        $srch->applyOrderBy($sortOrder);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-        //echo $srch->getQuery(); die;
-        $rs = $srch->getResultSet();
-        $lessons = FatApp::getDb()->fetchAll($rs);
+        $lessons = $srch->fetchAll();
         $lessonArr = [];
         $user_timezone = MyDate::getUserTimeZone();
         foreach ($lessons as $lesson) {
@@ -86,9 +62,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         /* [ */
         $totalRecords = $srch->recordCount();
         $pagingArr = [
-            'pageCount' => $srch->pages(),
             'page' => $page,
             'pageSize' => $pageSize,
+            'pageCount' => $srch->pages(),
             'recordCount' => $totalRecords,
         ];
         $this->set('postedData', $post);
@@ -98,15 +74,14 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         if ($totalRecords < $endRecord) {
             $endRecord = $totalRecords;
         }
-        $teachLanguages = TeachingLanguage::getAllLangs($this->siteLangId);
-        $this->set('teachLanguages', $teachLanguages);
         $this->set('startRecord', $startRecord);
         $this->set('endRecord', $endRecord);
         $this->set('totalRecords', $totalRecords);
-        /* ] */
         $this->set('referer', $referer);
         $this->set('lessonArr', $lessonArr);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
+        $this->set('teachLanguages', TeachingLanguage::getAllLangs($this->siteLangId));
+        $this->set('reportHours', FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION'));
         $listingView = FatApp::getPostedData('listingView', FatUtility::VAR_STRING, '');
         $tplpath = '';
         if ($listingView == 'shortDetail') {

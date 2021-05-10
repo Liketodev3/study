@@ -205,10 +205,34 @@ issueDetails = function (id) {
     });
 };
 
-reportIssueToAdmin = function (issueId, lDetailId, escalated_by) {
-    fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'reportIssueToAdmin', [issueId, lDetailId, escalated_by]), '', function (t) {
+esclateForm = function (id) {
+    fcom.ajax(fcom.makeUrl('ReportIssue', 'esclateForm', [id]), '', function (res) {
+        if (isJson(res)) {
+            var response = JSON.parse(res);
+            if (response.status == 1) {
+                $.mbsmessage(response.msg, true, 'alert--success');
+            } else {
+                $.mbsmessage(response.msg, true, 'alert--danger');
+            }
+        } else {
+            $.facebox(res, 'facebox-medium');
+        }
+    });
+};
+
+esclateSetup = function (frm) {
+    if (!$(frm).validate()) {
+        return;
+    }
+    issueId = frm.reislo_repiss_id.value;
+    var action = fcom.makeUrl('ReportIssue', 'esclateSetup');
+    fcom.updateWithAjax(action, fcom.frmData(frm), function (response) {
         $.facebox.close();
-        window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCompleted;
-        location.reload();
+        if (response.status == 1) {
+            issueDetails(issueId)
+            $.mbsmessage(response.msg, true, 'alert alert--success');
+        } else {
+            $.mbsmessage(response.msg, true, 'alert alert--danger');
+        }
     });
 };

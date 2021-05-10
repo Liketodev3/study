@@ -14,7 +14,7 @@ class ReportedIssue extends MyAppModel
     const STATUS_CLOSED = 4;
     /* Issue Actions */
     const ACTION_UNSCHEDULED = 1;
-    const ACTION_COMPLETE_NO_REFUND = 2;
+    const ACTION_COMPLETE_ZERO_REFUND = 2;
     const ACTION_COMPLETE_HALF_REFUND = 3;
     const ACTION_COMPLETE_FULL_REFUND = 4;
     const ACTION_ESCLATE_TO_ADMIN = 5;
@@ -39,11 +39,11 @@ class ReportedIssue extends MyAppModel
     public function setupIssue(int $sldetailId, int $titleId, string $comment): bool
     {
         $options = IssueReportOptions::getOptionsArray($this->commonLangId, User::USER_TYPE_LEANER);
+        $this->setFldValue('repiss_status', static::STATUS_PROGRESS);
         $this->assignValues([
             'repiss_comment' => $comment,
             'repiss_slesson_id' => $sldetailId,
             'repiss_title' => $options[$titleId] ?? 'NA',
-            'repiss_status' => static::STATUS_PROGRESS,
             'repiss_reported_by_type' => static::USER_TYPE_LEARNER,
             'repiss_reported_on' => date('Y-m-d H:i:s'),
             'repiss_reported_by' => $this->userId
@@ -66,8 +66,9 @@ class ReportedIssue extends MyAppModel
         $record->assignValues([
             'reislo_action' => $action,
             'reislo_comment' => $comment,
-            'reislo_added_on' => date('Y-m-d H:i:s'),
+            'reislo_repiss_id' => $issueId,
             'reislo_added_by' => $this->userId,
+            'reislo_added_on' => date('Y-m-d H:i:s'),
             'reislo_added_by_type' => $this->userType
         ]);
         if (!$record->addNew()) {
@@ -79,7 +80,7 @@ class ReportedIssue extends MyAppModel
             case static::ACTION_UNSCHEDULED:
                 $status = static::STATUS_RESOLVED;
                 break;
-            case static::ACTION_COMPLETE_NO_REFUND:
+            case static::ACTION_COMPLETE_ZERO_REFUND:
                 $status = static::STATUS_RESOLVED;
                 break;
             case static::ACTION_COMPLETE_HALF_REFUND:
@@ -265,7 +266,7 @@ class ReportedIssue extends MyAppModel
     {
         $arr = [
             static::ACTION_UNSCHEDULED => static::STATUS_RESOLVED,
-            static::ACTION_COMPLETE_NO_REFUND => static::STATUS_RESOLVED,
+            static::ACTION_COMPLETE_ZERO_REFUND => static::STATUS_RESOLVED,
             static::ACTION_COMPLETE_HALF_REFUND => static::STATUS_RESOLVED,
             static::ACTION_COMPLETE_FULL_REFUND => static::STATUS_RESOLVED,
             static::ACTION_ESCLATE_TO_ADMIN => static::STATUS_ESCLATED
@@ -304,7 +305,7 @@ class ReportedIssue extends MyAppModel
     {
         $arr = [
             static::ACTION_UNSCHEDULED => Label::getLabel('LBL_RESET_LESSON_TO_UNSCHEDULED'),
-            static::ACTION_COMPLETE_NO_REFUND => Label::getLabel('LBL_COMPLETE_AND_NO_REFUND'),
+            static::ACTION_COMPLETE_ZERO_REFUND => Label::getLabel('LBL_COMPLETE_AND_ZERO_REFUND'),
             static::ACTION_COMPLETE_HALF_REFUND => Label::getLabel('LBL_COMPLETE_AND_50%_REFUND'),
             static::ACTION_COMPLETE_FULL_REFUND => Label::getLabel('LBL_COMPLETE_AND_100%_REFUND'),
             static::ACTION_ESCLATE_TO_ADMIN => Label::getLabel('LBL_ESCLATE_TO_SUPPORT_TEAM')

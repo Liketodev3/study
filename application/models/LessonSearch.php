@@ -21,11 +21,20 @@ class LessonSearch extends SearchBase
         $this->joinTable(Order::DB_TBL, 'INNER JOIN', 'orders.order_id = sldetail.sldetail_order_id AND orders.order_type = ' . Order::TYPE_LESSON_BOOKING, 'orders');
         $this->joinTable(OrderProduct::DB_TBL, 'INNER JOIN', 'op.op_order_id = orders.order_id', 'op');
         $this->joinTable(User::DB_TBL, 'INNER JOIN', 'ut.user_id = slesson.slesson_teacher_id', 'ut');
+        $this->joinTable(User::DB_TBL, 'INNER JOIN', 'ul.user_id = sldetail.sldetail_learner_id', 'ul');
         $this->joinTable(TeacherGroupClasses::DB_TBL, 'LEFT JOIN', 'grpcls.grpcls_id = slesson.slesson_grpcls_id', 'grpcls');
         $this->joinTable(TeacherGroupClasses::DB_TBL_LANG, 'LEFT JOIN', 'gclang.grpclslang_grpcls_id = grpcls.grpcls_id and gclang.grpclslang_lang_id=' . $langId, 'gclang');
         $this->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'tclang.countrylang_country_id = ut.user_country_id AND tclang.countrylang_lang_id = ' . $langId, 'tclang');
+        $this->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'lclang.countrylang_country_id = ul.user_country_id AND lclang.countrylang_lang_id = ' . $langId, 'lclang');
         $this->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'repiss.repiss_slesson_id = sldetail.sldetail_id', 'repiss');
         $this->joinTable(LessonRescheduleLog::DB_TBL, 'LEFT JOIN', 'lesreschlog.lesreschlog_slesson_id=slesson.slesson_id', 'lesreschlog');
+    }
+
+    public function addAdditionalFields($fields = [])
+    {
+        foreach ($fields as $field => $alias) {
+            $this->addFld($field . ' AS ' . $alias);
+        }
     }
 
     public function addSearchDetailFields()
@@ -85,17 +94,14 @@ class LessonSearch extends SearchBase
                     $this->addCondition('slesson.slesson_status', '=', $post['status']);
             }
         }
-        /* called from My-teacher detail Page. [ */
-        $teacherId = FatApp::getPostedData('teacherId', FatUtility::VAR_INT, 0);
-        if (!empty($teacherId)) {
-            $this->addCondition('slesson.slesson_teacher_id', ' = ', $teacherId);
-        }
-        /* ] */
         if (!empty($post['sldetail_id'] ?? '')) {
             $this->addCondition('sldetail.sldetail_id', '=', FatUtility::int($post['sldetail_id']));
         }
         if (!empty($post['sldetail_learner_id'] ?? '')) {
             $this->addCondition('sldetail.sldetail_learner_id', '=', FatUtility::int($post['sldetail_learner_id']));
+        }
+        if (!empty($post['slesson_teacher_id'] ?? '')) {
+            $this->addCondition('slesson.slesson_teacher_id', ' = ', FatUtility::int($post['slesson_teacher_id']));
         }
     }
 
@@ -144,11 +150,15 @@ class LessonSearch extends SearchBase
             'sldetail.sldetail_learner_join_time' => 'sldetail_learner_join_time',
             'op.op_lesson_duration' => 'op_lesson_duration',
             'op.op_lpackage_is_free_trial' => 'op_lpackage_is_free_trial',
+            'orders.order_is_paid' => 'order_is_paid',
             'IFNULL(grpclslang_grpcls_title, grpcls_title)' => 'grpcls_title',
+            'ul.user_first_name' => 'learnerFname',
+            'ul.user_last_name' => 'learnerLname',
             'ut.user_first_name' => 'teacherFname',
             'ut.user_last_name' => 'teacherLname',
             'ut.user_url_name' => 'user_url_name',
             'tclang.country_name' => 'country_name',
+            'lclang.country_name' => 'learnerCountryName',
             'IFNULL(repiss.repiss_id, 0)' => 'repiss_id',
             'IFNULL(repiss.repiss_status, 0)' => 'repiss_status',
             'lesreschlog.lesreschlog_id' => 'lesreschlog_id',
@@ -179,11 +189,15 @@ class LessonSearch extends SearchBase
             'sldetail.sldetail_learner_id' => 'learnerId',
             'op.op_lpackage_is_free_trial' => 'is_trial',
             'op.op_lesson_duration' => 'op_lesson_duration',
+            'orders.order_is_paid' => 'order_is_paid',
             'IFNULL(grpclslang_grpcls_title, grpcls_title)' => 'grpcls_title',
+            'ul.user_first_name' => 'learnerFname',
+            'ul.user_last_name' => 'learnerLname',
             'ut.user_first_name' => 'teacherFname',
             'ut.user_last_name' => 'teacherLname',
             'ut.user_url_name' => 'user_url_name',
             'tclang.country_name' => 'country_name',
+            'lclang.country_name' => 'learnerCountryName',
             'lesreschlog.lesreschlog_id' => 'lesreschlog_id',
             'IFNULL(repiss.repiss_id, 0)' => 'repiss_id',
             'IFNULL(repiss.repiss_status, 0)' => 'repiss_status',
