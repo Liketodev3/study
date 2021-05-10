@@ -244,11 +244,11 @@ class User extends MyAppModel
         $tlangSrch->addMultipleFields(['utl_user_id', 'utl_id']);
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
-        /* @todo */
+        /* @todo-task */
         // $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);
         // $tlangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
         $tlangSrch->addCondition('utl_tlanguage_id', '>', 0);
-         /* @todo */
+         /* @todo-task */
         // $tlangSrch->addCondition('utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
         $tlangSrch->addCondition('tlanguage_active', '=', applicationConstants::YES);
         $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utl_user_id', 'utls');

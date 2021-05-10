@@ -41,7 +41,7 @@ class UserTeachLanguage extends MyAppModel
             $searchBase->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tlanguage_id = tlanguagelang_tlanguage_id and tlanguagelang_lang_id =' . $langId, 'tll');
         }
         if($withPrice){
-            $searchBase->joinTable(TeachLangPrice::DB_TBL, 'LEFT JOIN', 'ustelgpr.ustelgpr_utl_id = utl_tlanguage_id', 'ustelgpr');
+            $searchBase->joinTable(TeachLangPrice::DB_TBL, 'LEFT JOIN', 'ustelgpr.ustelgpr_utl_id = utl.utl_id', 'ustelgpr');
         }
         return $searchBase;
     }

@@ -7,13 +7,13 @@ class TeachLangPrice extends MyAppModel
     const DB_TBL_PREFIX = 'ustelgpr_';
 
     protected $slabId;
-    protected $teachLangId;
+    protected $userTeachLangId;
     protected $slot;
 
-    public function __construct(int $slabId = 0, int $teachLangId, int $slot = 0)
+    public function __construct(int $slabId = 0, int $userTeachLangId = 0, int $slot = 0)
     {
         $this->slabId = $slabId;
-        $this->teachLangId = $teachLangId;
+        $this->userTeachLangId = $userTeachLangId;
         $this->slot = $slot;
     }
 
@@ -21,34 +21,18 @@ class TeachLangPrice extends MyAppModel
     {
         $data = [
                     'ustelgpr_prislab_id' => $this->slabId,
-                    'ustelgpr_utl_id' => $this->teachLangId,
+                    'ustelgpr_utl_id' => $this->userTeachLangId,
                     'ustelgpr_slot' => $this->slot,
                     'ustelgpr_price' => $price
                 ];
 
-        $record = new TableRecord('tbl_teacher_stats');
+        $record = new TableRecord(self::DB_TBL);
         $record->assignValues($data);
         if (!$record->addNew([], $data)) {
             $this->error = $record->getError();
             return false;
         }
         return true;  
-    }
-
-    public function saveMutipleLangPrice($data)
-    {
-        $query = ' INSERT INTO ';
-        foreach ($data['duration'] as $durationKey => $duration) {
-            if(empty($duration) || $durationKey != $duration){
-                continue;
-            }
-
-            foreach ($data['teach_lang_price'][$duration] as $durationKey => $slots) {
-                foreach ($slots as $key => $price) {
-                       
-                }  
-            }
-        }
     }
 
 }
