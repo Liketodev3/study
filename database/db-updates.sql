@@ -1,8 +1,9 @@
 UPDATE `tbl_configurations` SET `conf_val` = '1' WHERE `conf_name` = 'CONF_USE_SSL';
 UPDATE `tbl_configurations` SET `conf_val` = '15,30,45,60,90,120' WHERE `conf_name` = 'CONF_PAID_LESSON_DURATION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.12.0.20210426' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
 ALTER TABLE `tbl_attached_files` ADD `afile_attribute_title` VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `afile_physical_path`;
-ALTER TABLE `tbl_attached_files` ADD `afile_attribute_alt` VARCHAR(256) CHARACTER SET ucs2 COLLATE ucs2_general_ci NOT NULL AFTER `afile_attribute_title`;
+ALTER TABLE `tbl_attached_files` ADD `afile_attribute_alt` VARCHAR(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `afile_attribute_title`;
 
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Specific_Language_Alter_Tags_Note', '1', 'Image alter message can be language specific . Please upload image for specific language before update alter tags');
@@ -37,3 +38,7 @@ ALTER TABLE `tbl_wiziq_teachers`  ADD PRIMARY KEY (`wizteach_user_id`);
 ALTER TABLE `tbl_wiziq_teachers`  ADD CONSTRAINT `tbl_wiziq_teachers_ibfk_1` 
 	FOREIGN KEY (`wizteach_user_id`) REFERENCES `tbl_users` (`user_id`) 
 	ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_TRIAL_LESSON_%S_MINS', '1', 'One time, %s minutes');
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.12.1.20210503' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
