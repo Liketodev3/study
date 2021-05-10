@@ -157,7 +157,17 @@ class TeacherController extends TeacherBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_DURATION_IS_REQURIED'));
         }
         // prx($post);
-       
+        foreach ($postData['duration'] as $durationKey => $duration) {
+            if(empty($duration) || $durationKey != $duration){
+                continue;
+            }
+
+            foreach ($post['teach_lang_price'][$duration] as $durationKey => $slots) {
+                foreach ($slots as $key => $price) {
+                        
+                }  
+            }
+        }
        
 
         /* Update Teach Lang Minimum & Maximum Prices */
