@@ -1,5 +1,18 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.13.0.20210510
+
+Release Date: 2021-05-10
+
+Updates:
+
+    - Disable Paygate and Paystack in restore DB.
+    - Integrate Wiziq conferencing tool
+    - URL rewrites
+    - Open graph meta tags
+
+----------------------------------------
+
 Release Number: TV-2.12.1.20210503
 
 Release Date: 2021-05-03

@@ -41,4 +41,5 @@ ALTER TABLE `tbl_wiziq_teachers`  ADD CONSTRAINT `tbl_wiziq_teachers_ibfk_1`
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_TRIAL_LESSON_%S_MINS', '1', 'One time, %s minutes');
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.12.1.20210503' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.13.0.20210510' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
