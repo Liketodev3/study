@@ -107,19 +107,6 @@ class User extends MyAppModel
         return $srch;
     }
 
-    public static function getLessonNotificationArr($langId = 0)
-    {
-        $langId = FatUtility::int($langId);
-        if ($langId < 1) {
-            $langId = CommonHelper::getLangId();
-        }
-        return [
-            static::USER_NOTICATION_NUMBER_12 => Label::getLabel('LBL_12_Hours', $langId),
-            static::USER_NOTICATION_NUMBER_24 => Label::getLabel('LBL_24_Hours', $langId),
-            static::USER_NOTICATION_NUMBER_48 => Label::getLabel('LBL_48_Hours', $langId),
-        ];
-    }
-
     public static function getWithdrawlMethodArray(): array
     {
         return [

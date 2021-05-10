@@ -35,4 +35,20 @@ class TeachLangPrice extends MyAppModel
         return true;  
     }
 
+    public function saveMutipleLangPrice($data)
+    {
+        $query = ' INSERT INTO ';
+        foreach ($data['duration'] as $durationKey => $duration) {
+            if(empty($duration) || $durationKey != $duration){
+                continue;
+            }
+
+            foreach ($data['teach_lang_price'][$duration] as $durationKey => $slots) {
+                foreach ($slots as $key => $price) {
+                       
+                }  
+            }
+        }
+    }
+
 }

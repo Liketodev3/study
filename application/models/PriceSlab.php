@@ -31,7 +31,7 @@ class PriceSlab extends MyAppModel
         return $searchBase;
     }
 
-    public static function getAllSlots(bool $activeOnly = true): array
+    public function getAllSlabs(bool $activeOnly = true): array
     {
         $searchObject = self::getSearchObject($activeOnly);
         $searchObject->doNotLimitRecords();

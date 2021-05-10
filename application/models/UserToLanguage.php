@@ -13,17 +13,6 @@ class UserToLanguage extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'user_id', $userId);
     }
 
-    public function getUserTeachlanguages(int $langId = 0) : object
-    {
-        $searchBase = new SearchBase(static::DB_TBL_TEACH, 'utl');
-        $searchBase->addCondition('utl_user_id', '=', $this->mainTableRecordId);
-        $searchBase->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utl_tlanguage_id', 'tl');
-        if ($langId > 0) {
-            $searchBase->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tlanguage_id = tlanguagelang_tlanguage_id and tlanguagelang_lang_id =' . $langId, 'tll');
-        }
-        return $searchBase;
-    }
-
     public static function getTeachingAssoc($teacherId, $langId = 0)
     {
         $langId = FatUtility::int($langId);
@@ -199,7 +188,7 @@ class UserToLanguage extends MyAppModel
         if(!$removeAll && !empty($langIds))
         {
             $langIds = implode(",", $langIds);
-            $query = ' and utsl_slanguage_id IN (' . $langIds . ')';
+            $query .= ' and utsl_slanguage_id IN (' . $langIds . ')';
         }
 
         $db->query($query);
