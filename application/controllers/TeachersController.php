@@ -131,13 +131,13 @@ class TeachersController extends MyAppController
 
 	public function teachLanguagesAutoCompleteJson()
 	{
-		
 		$srch = new TeachingLanguageSearch($this->siteLangId);
-		$keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '');
+		$srch->addChecks();
 		$srch->addOrder('tlanguage_display_order');
-        $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $srch->addMultipleFields(['tlanguage_id','IFNULL(tlanguage_name,tlanguage_identifier)as tlanguage_name']);
+
+		$keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '');
+		
 		if(!empty($keyword)){
           $conditaion =  $srch->addCondition('tlanguage_name', 'like', '%'.$keyword.'%');
           $conditaion->attachCondition('tlanguage_identifier', 'like', '%'.$keyword.'%');

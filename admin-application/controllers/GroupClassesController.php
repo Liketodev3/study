@@ -370,8 +370,8 @@ class GroupClassesController extends AdminBaseController
         $frm->addRequiredField(Label::getLabel('LBl_Title'), 'grpcls_title');
         $frm->addTextArea(Label::getLabel('LBl_DESCRIPTION'), 'grpcls_description')->requirements()->setRequired(true);
         $fld = $frm->addIntegerField(Label::getLabel('LBl_Max_No._Of_Learners'), 'grpcls_max_learner', '', array('id' => 'grpcls_max_learner'));
-        $fld->requirements()->setRange(1, 9999);
-        $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->adminLangId))->requirements()->setRequired(true);
+        $fld->requirements()->setRange(1,9999);
+        $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->adminLangId, false))->requirements()->setRequired(true);
         $fld = $frm->addFloatField(Label::getLabel('LBl_Entry_fee'), 'grpcls_entry_fee', '', array('id' => 'grpcls_entry_fee'));
         $fld->requirements()->setIntPositive(true);
         $start_time_fld = $frm->addRequiredField(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', array('id' => 'grpcls_start_datetime', 'autocomplete' => 'off'));

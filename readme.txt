@@ -11,6 +11,19 @@ Updates:
     - URL rewrites
     - Open graph meta tags
 
+-----------------------------------
+
+Release Number: TV-2.8.6.20210507
+
+Release Date: 2021-05-07
+
+Bugs:
+    Bug-#053087 - Fix availability issue of full week
+    Bug-#052900 - Only show teaching languages, bound with group classes list, in the dropdown.
+                - Do not show canceled group classes
+                - Only list upcoming and ongoing classes
+                - Teacher can not add group class with inactive teach lang
+
 ----------------------------------------
 
 Release Number: TV-2.12.1.20210503
@@ -21,6 +34,22 @@ Fixes:
 
     Bug-#053008 - Fix lesson interval on trial booking
     Bug-#053005 - update free-trial duration label
+
+------------------------------------------------
+
+Release Number: TV-2.8.5.20210421
+Release Date: 2021-04-21
+
+Bugs:
+    Bug-#050724 - Admin >> Remove Order Status dropdowns from General Settings.
+    Bug-#050538 - In Group class >>Why user can not set his group class price more than highest lesson package rate in website.
+    Bug-#050556 - If user did not join a lesson even session start time is crossed. but time left view is showing, which is wrong.
+    Bug-#050350 - List teacher even if bulk price is greater than maximum single lesson rate.
+    Bug-#051828 - Fix teach-lang multilingual issue and remove limit from records.
+    Bug-#052412 - Stop learner from reschduling lesson after a window passes.
+    Bug-#052672 - Fix media deletion on teach-langs section in admin
+    Bug-#052674 - Fix issue on req withdrawl submission
+    Bug-#052675 - Fix pagination and search issue in Top languages report
 
 ---------------------------------------------------------------------
 

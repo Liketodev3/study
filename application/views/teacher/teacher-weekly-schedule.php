@@ -19,8 +19,7 @@ $weekDayName =  CommonHelper::dayNames();
 	//moment().tz.setDefault("America/New_York");
 
    	$("#setUpWeeklyAvailability").click(function(){
-   		var json = JSON.stringify($("#w_calendar").fullCalendar("clientEvents").map(function(e) {
-            console.log(e);
+        let data = $("#w_calendar").fullCalendar("clientEvents").map(function(e) {
    			return 	{
    				start: moment(e.start).format('HH:mm:ss'),
    				end: moment(e.end).format('HH:mm:ss'),
@@ -28,8 +27,49 @@ $weekDayName =  CommonHelper::dayNames();
    				_id: e._id,
    				action: e.action,
    				classtype: e.classType,
+				dayStart: parseInt(moment(e.start).format('d')),
+				dayEnd: parseInt(moment(e.end).format('d')),
+				eStart: e.start
    			};
-   		}));
+   		});
+
+		data.forEach(elm => {
+            if ((!(elm.dayEnd || elm.dayStart) && (elm.end == '00:00:00') && (elm.start == '00:00:00')) || (elm.dayStart > elm.dayEnd)) {
+                elm.dayEnd = 6;
+                elm.end = '24:00:00';
+            }
+            
+            if ((elm.dayStart != elm.dayEnd) && ((elm.end != '00:00:00') || (elm.start == '00:00:00'))) {
+                if ((elm.dayEnd - elm.dayStart == 1)) {
+                    if ((elm.end != '00:00:00') || (elm.start != '00:00:00')) {
+                        let elementClone = $.parseJSON(JSON.stringify(elm));
+                        elementClone.day = elm.dayEnd;
+                        elementClone._id = '_fc';
+                        elementClone.start = '00:00:00';
+                        elementClone.date = moment(elm.eStart).add(1, 'days').format('YYYY-MM-DD');
+                        data[data.length] = elementClone;
+                    }
+                } else {
+                    for (let index = 0; index < elm.dayEnd - elm.dayStart; ++index) {
+                        if ((elm.end == '00:00:00') && (elm.dayStart + index + 1 == elm.dayEnd)) {
+                            continue;
+                        }
+                        let elementClone = $.parseJSON(JSON.stringify(elm));
+                        elementClone.day = elm.dayStart + index;
+                        elementClone.date = moment(elm.eStart).add(index+1, 'days').format('YYYY-MM-DD');
+                        elementClone.start = '00:00:00';
+                        if (index+1 != elm.dayEnd - elm.dayStart) {
+                            elementClone.end = '24:00:00';
+                        }
+                        elementClone._id = '_fc';
+                        data[data.length] = elementClone;
+                    }
+                }
+                elm.end = '24:00:00';
+            }
+
+        });
+   		var json = JSON.stringify(data);
    		setupTeacherWeeklySchedule(json);
    	});
 
@@ -52,7 +92,7 @@ $weekDayName =  CommonHelper::dayNames();
         }
 
          if(confirm(confirmMessage)){
-            console.log(edata,'edata');
+            // console.log(edata,'edata');
              $("#w_calendar").fullCalendar('updateEvent',edata);
              mergeEvents();
              return;
@@ -64,7 +104,6 @@ $weekDayName =  CommonHelper::dayNames();
         if(allevents.length == 1) {
             return;
         }
-        // debugger;
         $('#loaderCalendar').show();
         $.each(allevents, function( i, eItem )
         {
@@ -112,8 +151,8 @@ $weekDayName =  CommonHelper::dayNames();
                     // find event object in calendar
 
                     eventId = parseInt(eventId);
-                    console.log(eventitem);
-                    console.log(eventitem._id,eventId);
+                    // console.log(eventitem);
+                    // console.log(eventitem._id,eventId);
                     eventitemId =  eventitem._id;
                     if(eventId && Number.isInteger(eventId)) {
                         eventitem._id = eventId;
@@ -134,7 +173,7 @@ $weekDayName =  CommonHelper::dayNames();
                 }
             });
         });
-            console.log('loaderCalendar hide');
+            // console.log('loaderCalendar hide');
         $('#loaderCalendar').hide();
     }
    	$('#w_calendar').fullCalendar({
@@ -265,7 +304,7 @@ $weekDayName =  CommonHelper::dayNames();
    		}
    	},
    	eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
-   		console.log(event.start.isBefore(moment()));
+   		// console.log(event.start.isBefore(moment()));
    		if(moment().diff(moment(event.start)) >= 0) {
    			$("#w_calendar").fullCalendar("refetchEvents");
    			return false;

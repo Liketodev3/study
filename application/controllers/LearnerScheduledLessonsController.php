@@ -521,7 +521,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         $showCouponRefundNote = ($orderInfo['order_discount_total'] > 0) ? true : false;
-      
         $diff = MyDate::hoursDiff($to_time, $from_time);
         $deductionNote  = false;
         if (($lessonRow['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) && ($diff < FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) && ($lessonRow['order_net_amount'] > 0)) {
