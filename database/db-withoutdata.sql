@@ -1871,28 +1871,6 @@ CREATE TABLE `tbl_group_classes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_issues_reported`
---
-
-CREATE TABLE `tbl_issues_reported` (
-  `issrep_id` bigint(20) NOT NULL,
-  `issrep_is_for_admin` int(11) NOT NULL DEFAULT '0',
-  `issrep_slesson_id` int(11) NOT NULL,
-  `issrep_reported_by` int(11) NOT NULL,
-  `issrep_issues_to_report` varchar(255) NOT NULL,
-  `issrep_comment` varchar(255) NOT NULL,
-  `issrep_status` tinyint(4) NOT NULL,
-  `issrep_issues_resolve` varchar(255) NOT NULL,
-  `issrep_issues_resolve_type` int(11) NOT NULL,
-  `issrep_resolve_comments` longtext NOT NULL,
-  `issrep_added_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `issrep_updated_on` datetime NOT NULL,
-  `issrep_escalated_by` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tbl_issue_report_options`
 --
 
@@ -8429,12 +8407,6 @@ ALTER TABLE `tbl_group_classes`
   ADD PRIMARY KEY (`grpcls_id`);
 
 --
--- Indexes for table `tbl_issues_reported`
---
-ALTER TABLE `tbl_issues_reported`
-  ADD PRIMARY KEY (`issrep_id`);
-
---
 -- Indexes for table `tbl_issue_report_options`
 --
 ALTER TABLE `tbl_issue_report_options`
@@ -9093,12 +9065,6 @@ ALTER TABLE `tbl_group_classes`
   MODIFY `grpcls_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tbl_issues_reported`
---
-ALTER TABLE `tbl_issues_reported`
-  MODIFY `issrep_id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `tbl_issue_report_options`
 --
 ALTER TABLE `tbl_issue_report_options`
@@ -9747,3 +9713,35 @@ DELETE FROM `tbl_language_labels` WHERE  `label_key` = "LBL_You_are_not_cancelle
 DELETE FROM `tbl_language_labels` WHERE  `label_key` = "LBL_You_are_not_cancelled_the_order_because_some_lesson_are_scheduled";
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.6.20210405' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+--
+-- Table structure for table `tbl_reported_issues`
+--
+CREATE TABLE `tbl_reported_issues` (
+  `repiss_id` int NOT NULL,
+  `repiss_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `repiss_slesson_id` int NOT NULL,
+  `repiss_reported_on` datetime NOT NULL,
+  `repiss_reported_by` int NOT NULL,
+  `repiss_reported_by_type` int NOT NULL,
+  `repiss_status` int NOT NULL,
+  `repiss_comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `repiss_updated_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `tbl_reported_issues`  ADD PRIMARY KEY (`repiss_id`);
+ALTER TABLE `tbl_reported_issues`  MODIFY `repiss_id` int NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE `tbl_reported_issues_log` (
+  `reislo_id` int NOT NULL,
+  `reislo_repiss_id` int NOT NULL,
+  `reislo_action` int NOT NULL,
+  `reislo_comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reislo_added_on` datetime NOT NULL,
+  `reislo_added_by` int NOT NULL,
+  `reislo_added_by_type` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ALTER TABLE `tbl_reported_issues_log`  ADD PRIMARY KEY (`reislo_id`),  ADD KEY `reislo_repiss_id` (`reislo_repiss_id`);
+ALTER TABLE `tbl_reported_issues_log`   MODIFY `reislo_id` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tbl_reported_issues_log`   ADD CONSTRAINT `tbl_reported_issues_log_ibfk_1` 
+FOREIGN KEY (`reislo_repiss_id`) REFERENCES `tbl_reported_issues` (`repiss_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

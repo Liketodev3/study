@@ -103,12 +103,7 @@ class TeacherGroupClassesSearch extends SearchBase
     {
         $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
     }
-
-    function joinIssueReported($user_id = 0)
-    {
-        $this->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = sl.slesson_id' . ($user_id > 0 ? ' AND issrep_reported_by=' . $user_id : ''), 'iss');
-    }
-
+    
     public function joinClassLang($langId = 0)
     {
         $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'grpcls.grpcls_slanguage_id = tlanguage_id', 'teachl');

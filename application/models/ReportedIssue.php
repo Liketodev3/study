@@ -195,7 +195,8 @@ class ReportedIssue extends MyAppModel
             'CONCAT(user.user_first_name, " ", user.user_last_name) AS reporter_username',
             'CONCAT(ul.user_first_name, " ", ul.user_last_name) AS learner_username',
             'CONCAT(ut.user_first_name, " ", ut.user_last_name) AS teacher_username',
-            'order_net_amount', 'order_discount_total', 'op_qty', 'op_lpackage_is_free_trial', 'op_unit_price',
+            'order_net_amount', 'order_id', 'order_discount_total',
+            'op_qty', 'op_lpackage_is_free_trial', 'op_unit_price',
         ]);
         $srch->addCondition('repiss.repiss_id', '=', FatUtility::int($issueId));
         $srch->addGroupBy('repiss.repiss_id');

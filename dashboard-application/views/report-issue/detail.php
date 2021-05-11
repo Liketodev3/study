@@ -10,18 +10,16 @@
                     <tr><td colspan="2"><h4><?php echo $issue['repiss_title']; ?></h4></td></tr>
                     <tr><td colspan="2"><strong><?php echo Label::getLabel('LBL_Detail'); ?>:</strong> <?php echo nl2br($issue['repiss_comment']); ?></td></tr>
                     <tr>
-                        <?php if (true || $canEsclateIssue) { ?>
-                            <td><strong><?php echo Label::getLabel('LBL_Current_Status'); ?>:</strong> <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?></td>
-                            <td>
-                                <?php if ($issue['repiss_status'] = ReportedIssue::STATUS_RESOLVED) { ?>
-                                    <button onclick="esclateForm(<?php echo $issue['repiss_id']; ?>)" class="btn btn--filter">
-                                        <?php echo Label::getLabel('LBL_ESCLATE_TO_SUPPORT'); ?>
-                                    </button>
-                                <?php } elseif ($issue['repiss_status'] = ReportedIssue::STATUS_ESCLATED) { ?>
-                                    <?php echo Label::getLabel('LBL_ESCLATED_TO_SUPPORT_TEAM'); ?>
-                                <?php } ?>
-                            </td>
-                        <?php } ?>
+                        <td><strong><?php echo Label::getLabel('LBL_Current_Status'); ?>:</strong> <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?></td>
+                        <td>
+                            <?php if ($canEsclate) { ?>
+                                <button onclick="esclateForm(<?php echo $issue['repiss_id']; ?>)" class="btn btn--filter">
+                                    <?php echo Label::getLabel('LBL_ESCLATE_TO_SUPPORT_TEAM'); ?>
+                                </button>
+                            <?php } if ($issue['repiss_status'] == ReportedIssue::STATUS_ESCLATED) { ?>
+                                <?php echo Label::getLabel('LBL_ESCLATED_TO_SUPPORT_TEAM'); ?>
+                            <?php } ?>
+                        </td>
                     </tr>
                 </tbody>
             </table>

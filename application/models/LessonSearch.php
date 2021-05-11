@@ -65,6 +65,8 @@ class LessonSearch extends SearchBase
             foreach ($keywordsArr as $keyword) {
                 $cnd = $this->addCondition('ut.user_first_name', 'like', '%' . $keyword . '%');
                 $cnd->attachCondition('ut.user_last_name', 'like', '%' . $keyword . '%');
+                $cnd->attachCondition('ul.user_first_name', 'like', '%' . $keyword . '%');
+                $cnd->attachCondition('ul.user_last_name', 'like', '%' . $keyword . '%');
                 $cnd->attachCondition('sldetail.sldetail_order_id', 'like', '%' . $keyword . '%');
                 $cnd->attachCondition('grpcls.grpcls_title', 'like', '%' . $keyword . '%');
                 $cnd->attachCondition('gclang.grpclslang_grpcls_title', 'like', '%' . $keyword . '%');

@@ -40,13 +40,11 @@ class TeacherGroupClassesController extends TeacherBaseController
         $srch3->doNotLimitRecords();
         $srch3->addFld('slesson_teacher_join_time>0');
         $teacher_id = UserAuthentication::getLoggedUserId();
-       
+
         $srch = new TeacherGroupClassesSearch(false);
         $srch->joinGroupClassLang($this->siteLangId);
         $srch->joinScheduledLesson();
-        $srch->joinIssueReported();
         $srch->addMultipleFields([
-            'issrep_id',
             'grpcls_id',
             'grpcls_entry_fee',
             'grpcls_start_datetime',
@@ -58,15 +56,14 @@ class TeacherGroupClassesController extends TeacherBaseController
             '(' . $srch3->getQuery() . ') is_joined'
         ]);
         $srch->addCondition('grpcls_teacher_id', '=', $teacher_id);
-        if(!empty($post['status'])){
+        if (!empty($post['status'])) {
             $srch->addCondition('grpcls_status', '=', $post['status']);
         }
-        if(!empty($post['keyword'])){
-            $keywordCondition = $srch->addCondition('grpcls_title', 'like', '%' .$post['keyword']. '%');
+        if (!empty($post['keyword'])) {
+            $keywordCondition = $srch->addCondition('grpcls_title', 'like', '%' . $post['keyword'] . '%');
             $keywordCondition->attachCondition('grpclslang_grpcls_title', 'like', '%' . $post['keyword'] . '%');
-              
         }
-       
+
         $srch->addGroupBy('grpcls_id');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);

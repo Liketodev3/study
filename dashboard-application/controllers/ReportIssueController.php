@@ -46,10 +46,23 @@ class ReportIssueController extends LoggedUserController
         if (empty($issue)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
+        $logs = ReportedIssue::getIssueLogsById($issueId);
+        $log = end($logs);
+        $canEsclate = false;
+        $esclateHours = FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION');
+        $esclateDate = strtotime($issue['repiss_updated_on'] . " +" . $esclateHours . " hour");
+        if (
+                $esclateDate > strtotime(date('Y-m-d H:i:s')) &&
+                $issue['repiss_status'] == ReportedIssue::STATUS_RESOLVED &&
+                $issue['repiss_reported_by_type'] == ReportedIssue::USER_TYPE_TEACHER
+        ) {
+            $canEsclate = true;
+        }
+        $this->set('logs', $logs);
         $this->set('issue', $issue);
+        $this->set('canEsclate', $canEsclate);
         $this->set('userTimezone', MyDate::getUserTimeZone());
         $this->set('actionArr', ReportedIssue::getActionsArr());
-        $this->set('logs', ReportedIssue::getIssueLogsById($issueId));
         $this->_template->render(false, false);
     }
 
@@ -112,7 +125,9 @@ class ReportIssueController extends LoggedUserController
         $repissId = $frm->addHiddenField('', 'reislo_repiss_id');
         $repissId->requirements()->setRequired();
         $repissId->requirements()->setIntPositive();
-        $frm->addSelectBox(Label::getLabel('LBL_TAKE_ACTION'), 'reislo_action', ReportedIssue::getActionsArr())
+        $options = ReportedIssue::getActionsArr();
+        unset($options[ReportedIssue::ACTION_ESCLATE_TO_ADMIN]);
+        $frm->addSelectBox(Label::getLabel('LBL_TAKE_ACTION'), 'reislo_action', $options)
                 ->requirements()->setRequired(true);
         $frm->addTextArea(Label::getLabel('LBL_YOUR_COMMENT'), 'reislo_comment', '');
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Submit'));

@@ -11,14 +11,22 @@ $userTimezone = MyDate::getUserTimeZone();
         <div class="content-repeated-container">
             <table class="table table--details">
                 <tbody>
-                    <tr><td><h4><?php echo $issue['repiss_title']; ?></h4></td></tr>
-                    <tr><td><strong><?php echo Label::getLabel('LBL_Detail'); ?>:</strong> <?php echo nl2br($issue['repiss_comment']); ?></td></tr>
+                    <tr><td colspan="2"><h4><?php echo $issue['repiss_title']; ?></h4></td></tr>
                     <tr>
-                        <td>
-                            <strong><?php echo Label::getLabel('LBL_Reported_By'); ?>:</strong> <?php echo $issue['reporter_username']; ?>, 
-                            <strong><?php echo Label::getLabel('LBL_Reported_Time'); ?>:</strong> <?php echo MyDate::format($issue['repiss_reported_on'], true, true, $userTimezone); ?>,
-                            <strong><?php echo Label::getLabel('LBL_Issue_Status'); ?>:</strong> <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?>
-                        </td>
+                        <td><strong><?php echo Label::getLabel('LBL_Detail'); ?></strong></td>
+                        <td><?php echo nl2br($issue['repiss_comment']); ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong><?php echo Label::getLabel('LBL_Reported_By'); ?></strong></td>
+                        <td><?php echo $issue['reporter_username']; ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong><?php echo Label::getLabel('LBL_Reported_Time'); ?></strong></td>
+                        <td><?php echo MyDate::format($issue['repiss_reported_on'], true, true, $userTimezone); ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong><?php echo Label::getLabel('LBL_Current_Status'); ?></strong></td>
+                        <td><?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?></td>
                     </tr>
                 </tbody>
             </table>

@@ -234,8 +234,6 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons'));
         }
-        $issRepObj = new IssuesReported();
-        $is_issue_reported = !empty($issRepObj->getIssuesByLessonId($lessonId));
         $countReviews = TeacherLessonReview::getTeacherTotalReviews($lessonRow['teacherId'], $lessonRow['slesson_id'], $lessonRow['learnerId']);
         $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
         if ($flashCardEnabled) {
@@ -246,7 +244,6 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             /* ] */
         }
         $this->set('flashCardEnabled', $flashCardEnabled);
-        $this->set('is_issue_reported', $is_issue_reported);
         $this->set('lessonData', $lessonRow);
         $this->set('countReviews', $countReviews);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
@@ -662,90 +659,6 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $userNotification = new UserNotifications($lessonRow['learnerId']);
         $userNotification->sendSchLessonByTeacherNotification($lessonRow['sldetail_id']);
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Scheduled_Successfully!'));
-    }
-
-    private function getIssueReportedFrm()
-    {
-        $frm = new Form('issueReportedFrm');
-        $fld = $frm->addTextArea(Label::getLabel('LBL_Comment'), 'issue_reported_msg', '');
-        $fld->requirement->setRequired(true);
-        $fld = $frm->addHiddenField('', 'slesson_id');
-        $fld->requirements()->setRequired();
-        $fld->requirements()->setIntPositive();
-        $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Send'));
-        return $frm;
-    }
-
-    public function issueReported($lessonId)
-    {
-        $lessonId = FatUtility::int($lessonId);
-        $lessonRow = ScheduledLesson::getAttributesById($lessonId, ['slesson_teacher_id']);
-        if ($lessonRow['slesson_teacher_id'] != UserAuthentication::getLoggedUserId()) {
-            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
-            FatUtility::dieWithError(Message::getHtml());
-        }
-        $frm = $this->getIssueReportedFrm();
-        $frm->fill(['slesson_id' => $lessonId]);
-        $this->set('frm', $frm);
-        $this->_template->render(false, false);
-    }
-
-    public function issueReportedSetup()
-    {
-        $frm = $this->getIssueReportedFrm();
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-        if (false === $post) {
-            FatUtility::dieJsonError($frm->getValidationErrors());
-        }
-        $lessonId = $post['slesson_id'];
-        /* [ check If Already reorted */
-        if (IssuesReported::isAlreadyReported($lessonId, User::USER_TYPE_TEACHER)) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Issue_Already_Reported'));
-        }
-        /* ] */
-        /* [ */
-        $srch = $this->searchLessons();
-        $srch->joinLearnerCredentials();
-        $srch->doNotCalculateRecords();
-        $srch->setPageSize(1);
-        $srch->addCondition('slns.slesson_id', '=', $lessonId);
-        $srch->addFld([
-            'lcred.credential_email as learnerEmailId',
-            'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName'
-        ]);
-        $rs = $srch->getResultSet();
-        $lessonRow = FatApp::getDb()->fetch($rs);
-        if (!$lessonRow) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
-        }
-        /* ] */
-        /* save issue reported[ */
-        $reportedArr = [];
-        $reportedArr['issrep_comment'] = $post['issue_reported_msg'];
-        $reportedArr['issrep_reported_by'] = UserAuthentication::getLoggedUserId();
-        $reportedArr['issrep_slesson_id'] = $lessonId;
-        $record = new IssuesReported();
-        $record->assignValues($reportedArr);
-        if (!$record->save()) {
-            FatUtility::dieJsonError($record->getError());
-        }
-        /* ] */
-        /* send email to learner[ */
-        $vars = [
-            '{learner_name}' => $lessonRow['learnerFullName'],
-            '{teacher_name}' => $lessonRow['teacherFullName'],
-            '{lesson_name}' => $lessonRow['teacherTeachLanguageName'],
-            '{teacher_comment}' => $post['issue_reported_msg'],
-            '{lesson_date}' => FatDate::format($lessonRow['slesson_date']),
-            '{lesson_start_time}' => $lessonRow['slesson_start_time'],
-            '{lesson_end_time}' => $lessonRow['slesson_end_time'],
-            '{action}' => Label::getLabel('LBL_Issue_Reported'),
-        ];
-        if (!EmailHandler::sendMailTpl($lessonRow['learnerEmailId'], 'teacher_issue_reported_email', $this->siteLangId, $vars)) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
-        }
-        /* ] */
-        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Issue_Reported_SetUp_Successfully!'));
     }
 
     public function viewAssignedLessonPlan($lessonId)
