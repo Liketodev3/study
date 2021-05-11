@@ -69,22 +69,20 @@ class TeacherStat extends FatModel
      */
     public function setTeachLangPrices()
     {
-        $srch = new SearchBase('tbl_user_teach_languages');
-        $srch->addCondition('utl_user_id', '=', $this->userId);
-        $srch->addFld('MIN(utl_bulk_lesson_amount) AS bulkMinPrice');
-        $srch->addFld('MAX(utl_bulk_lesson_amount) AS bulkMaxPrice');
-        $srch->addFld('MIN(utl_single_lesson_amount) AS signleMinPrice');
-        $srch->addFld('MAX(utl_single_lesson_amount) AS signleMaxPrice');
-        $srch->addCondition('utl_bulk_lesson_amount', '>', 0);
-        $srch->addCondition('utl_single_lesson_amount', '>', 0);
+        $srch = new SearchBase(UserTeachLanguage::DB_TBL, 'utl');
+        $srch->joinTable(TeachLangPrice::DB_TBL, 'INNER JOIN', 'ustelgpr.ustelgpr_utl_id = utl.utl_id', 'ustelgpr');
+        $srch->addCondition('utl.utl_user_id', '=', $this->userId);
+        $srch->addFld('MIN(ustelgpr_price) AS minPrice');
+        $srch->addFld('MAX(ustelgpr_price) AS maxPrice');
+        $srch->addCondition('ustelgpr_price', '>', 0);
         $row = FatApp::getDb()->fetch($srch->getResultSet());
         $teachlang = 0;
         $minPrice = 0.0;
         $maxPrice = 0.0;
-        if (!empty($row) && $row['bulkMinPrice'] !== null && $row['bulkMaxPrice'] !== null) {
+        if (!empty($row) && $row['minPrice'] !== null && $row['maxPrice'] !== null) {
             $teachlang = 1;
-            $minPrice = FatUtility::float(min([$row['bulkMinPrice'], $row['signleMinPrice']]));
-            $maxPrice = FatUtility::float(max([$row['bulkMaxPrice'], $row['signleMaxPrice']]));
+            $minPrice = FatUtility::float($row['minPrice']);
+            $maxPrice = FatUtility::float($row['maxPrice']);
         }
         $data = ['testat_teachlang' => $teachlang, 'testat_minprice' => $minPrice, 'testat_maxprice' => $maxPrice];
         $record = new TableRecord('tbl_teacher_stats');

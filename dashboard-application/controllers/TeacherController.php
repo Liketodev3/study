@@ -108,16 +108,16 @@ class TeacherController extends TeacherBaseController
 
             foreach ($slabs as $slab) {
 
-                foreach ($userTeachLangData as $teachLangId => $uTeachLang) {
+                foreach ($userTeachLangData as $uTeachLangId => $uTeachLang) {
 
-                    $filedName = 'teach_lang_price[' . $lessonDuration . '][' . $slab['prislab_id'] . '][' . $teachLangId . ']';
+                    $filedName = 'teach_lang_price[' . $lessonDuration . '][' . $slab['prislab_id'] . '][' . $uTeachLangId . ']';
                     $label = $uTeachLang . ' [' . $lessonDuration . '][' . $slab['prislab_min'] . ' - ' . $slab['prislab_max'] . ']';
 
                     $fld = $frm->addFloatField($label, $filedName);
                     $fld->requirements()->setRange(1, 99999);
                     $fld->requirements()->setRequired(true);
 
-                    $keyField = $teachLangId . '-' . $slab['prislab_id'] . '-' . $lessonDuration;
+                    $keyField = $uTeachLangId . '-' . $slab['prislab_id'] . '-' . $lessonDuration;
 
                     if (!empty($userToTeachLangRows[$keyField]['ustelgpr_price'])) {
                         $fld->value = $userToTeachLangRows[$keyField]['ustelgpr_price'];
@@ -174,9 +174,7 @@ class TeacherController extends TeacherBaseController
 
             foreach ($slabs as $slabKey => $languages) {
                 foreach ($languages as $userTeachLangang => $price) {
-
                     $teachLangPrice = new TeachLangPrice($slabKey, $userTeachLangang, $duration);
-
                     if (!$teachLangPrice->saveTeachLangPrice($price)) {
                         $db->rollbackTransaction();
                         FatUtility::dieJsonError($teachLangPrice->getError());
@@ -187,8 +185,8 @@ class TeacherController extends TeacherBaseController
         }
 
         /* Update Teach Lang Minimum & Maximum Prices */
-       /* @todo-task */
-        // (new TeacherStat($userId))->setTeachLangPrices();
+        $userId =  UserAuthentication::getLoggedUserId();
+        (new TeacherStat($userId))->setTeachLangPrices();
         $db->commitTransaction();
 
         $this->set('msg', Label::getLabel('MSG_Setup_successful'));
