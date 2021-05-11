@@ -3,7 +3,7 @@
 	<table class="table table--styled table--responsive table--aligned-middle">
 		<tr class="title-row">
 			<th><?php echo $learnerLabel = Label::getLabel('LBL_Learner'); ?></th>
-			<th><?php echo $loclLabel = Label::getLabel('LBL_Lock_(Single/Bulk_Price)'); ?></th>
+			<th><?php echo $loclLabel = Label::getLabel('LBL_Lock_Lesson_offer(%)'); ?></th>
 			<th><?php echo $scheduledLabel = Label::getLabel('LBL_Scheduled'); ?></th>
 			<th><?php echo $pastLabel = Label::getLabel('LBL_Past'); ?></th>
 			<th><?php echo $unscheduledLabel = Label::getLabel('LBL_Unscheduled'); ?></th>
@@ -47,7 +47,7 @@
 								$svgIcon = 'lock';
                             }
 						?>
-						<a href="javascript:void(0);" onclick="offerPriceForm(<?php echo $student['learnerId']; ?>);" class="padding-3 <?php echo $svgIconClass; ?>">
+						<a href="javascript:void(0);" onclick="offerForm(<?php echo $student['learnerId']; ?>);" class="padding-3 <?php echo $svgIconClass; ?>">
 							<svg class="icon icon--clock icon--small margin-right-2">
 								<use xlink:href="<?php ?>images/sprite.yo-coach.svg#<?php echo $svgIcon ?>"></use>
 							</svg>
@@ -55,17 +55,16 @@
 						<div class="lesson-price">
 							<?php
 								$durations = explode(',', $student['lessonDuration']);
-								$singleLessonAmount = explode(',', $student['singleLessonAmount']);
-                                $bulkLessonAmount = explode(',', $student['bulkLessonAmount']);
+								$percentages = explode(',', $student['percentages']);
 								foreach ($durations as $i => $duration) {
 							?>
 								<p>
 									<?php
-										if (!empty($singleLessonAmount[$i])) {
-											echo sprintf(Label::getLabel('LBL_%d_mins'), $duration) . ': ' . CommonHelper::displayMoneyFormat($singleLessonAmount[$i]); ?> / <?php echo CommonHelper::displayMoneyFormat($bulkLessonAmount[$i]);
-										} else {
-											echo CommonHelper::displayMoneyFormat(0) . ' / ' . CommonHelper::displayMoneyFormat(0);
-										}
+                                        $percentage = '0%';
+										if (!empty($percentages[$i])) {
+											$percentage = sprintf(Label::getLabel('LBL_%d_mins'), $duration) . ': ' . $percentages[$i].'%';
+										} 
+                                        echo $percentage;
 									?>
 								</p>
 							<?php } ?>

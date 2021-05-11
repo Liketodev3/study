@@ -95,7 +95,7 @@ class TeacherSearch extends SearchBase
         if ($teachLangId > 0) {
             $srch = new SearchBase('tbl_user_teach_languages');
             $srch->addFld('DISTINCT utl_user_id as utl_user_id');
-            $srch->addCondition('utl_slanguage_id', '=', $teachLangId);
+            $srch->addCondition('utl_tlanguage_id', '=', $teachLangId);
             $srch->doNotCalculateRecords();
             $srch->doNotLimitRecords();
             $subTable = '(' . $srch->getQuery() . ')';
@@ -314,7 +314,7 @@ class TeacherSearch extends SearchBase
             return [];
         }
         $srch = new SearchBase('tbl_user_teach_languages', 'utl');
-        $srch->joinTable('tbl_teaching_languages_lang', 'INNER JOIN', 'tlanguage.tlanguagelang_tlanguage_id = utl.utl_slanguage_id', 'tlanguage');
+        $srch->joinTable('tbl_teaching_languages_lang', 'INNER JOIN', 'tlanguage.tlanguagelang_tlanguage_id = utl.utl_tlanguage_id', 'tlanguage');
         $srch->addMultipleFields(['utl.utl_user_id', 'GROUP_CONCAT(tlanguage.tlanguage_name) as tlanguage_name']);
         $srch->addCondition('tlanguage.tlanguagelang_lang_id', '=', $langId);
         $srch->addCondition('utl.utl_user_id', 'IN', $teacherIds);

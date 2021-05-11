@@ -22,17 +22,17 @@ $(function() {
 		searchStudents(frm);
 	};
 	
-	offerPriceForm = function(LearnerId){
+	offerForm = function(LearnerId){
 		var data = "top_learner_id="+LearnerId;
-		fcom.ajax(fcom.makeUrl('TeacherStudents','offerPriceForm'),data,function(t){
+		fcom.ajax(fcom.makeUrl('TeacherStudents','offerForm'),data,function(t){
 			$.facebox( t,'facebox-medium');
 		}); 
 	};
 	
-	setUpOfferPrice = function(frm){
+	setUpOffer = function(frm){
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('TeacherStudents','setUpOfferPrice'),data,function(t){
+		fcom.updateWithAjax(fcom.makeUrl('TeacherStudents','setUpOffer'),data,function(t){
 			$.facebox.close();				
 			var frm = document.frmTeacherStudentsSearchPaging;				
 			searchStudents(frm);

@@ -23,15 +23,31 @@ class TeacherStudentsController extends TeacherBaseController
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
         $teacherOfferPriceSrch = new SearchBase(TeacherOfferPrice::DB_TBL);
-        $teacherOfferPriceSrch->addMultipleFields(['top_learner_id', 'top_teacher_id',
-            'GROUP_CONCAT(top_single_lesson_price ORDER BY top_lesson_duration) as singleLessonAmount',
-            'GROUP_CONCAT(top_bulk_lesson_price ORDER BY top_lesson_duration) as bulkLessonAmount',
+        $teacherOfferPriceSrch->addMultipleFields([
+            'top_learner_id', 'top_teacher_id',
+            'GROUP_CONCAT(top_percentage ORDER BY top_lesson_duration) as percentages',
             'GROUP_CONCAT(top_lesson_duration ORDER BY top_lesson_duration) as lessonDuration'
         ]);
         $teacherOfferPriceSrch->addGroupBy('top_learner_id');
         $teacherOfferPriceSrch->doNotLimitRecords();
         $teacherOfferPriceSrch->doNotCalculateRecords();
+        
+        $page = $post['page'];
+        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
+
         $srch = new ScheduledLessonSearch(false);
+        $srch->addMultipleFields(['slns.slesson_id',
+            'sld.sldetail_learner_id as learnerId',
+            'slns.slesson_teacher_id as teacherId',
+            'ul.user_first_name as learnerFname',
+            'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
+            'COUNT(IF(slns.slesson_status = "' . ScheduledLesson::STATUS_SCHEDULED . '", 1, null)) as scheduledLessonCount',
+            'COUNT(IF(slns.slesson_status = "' . ScheduledLesson::STATUS_NEED_SCHEDULING . '",1,null)) as unScheduledLessonCount',
+            'COUNT(IF(CONCAT(slesson_date, " ", slesson_start_time) < "' . date('Y-m-d H:i:s') . '" AND slns.slesson_status!=' . ScheduledLesson::STATUS_CANCELLED . ' AND slns.slesson_date != "0000-00-00", 1, null)) as pastLessonCount',
+            'CASE WHEN percentages IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
+            'percentages',
+            'lessonDuration',
+        ]);
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->joinLearner();
@@ -41,25 +57,10 @@ class TeacherStudentsController extends TeacherBaseController
         $srch->addCondition('slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
         $srch->addCondition('sldetail_learner_status', '!=', ScheduledLesson::STATUS_CANCELLED);
         $srch->addGroupBy('sldetail_learner_id', 'slesson_status');
-        $page = $post['page'];
-        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
         $srch->addOrder('order_date_added', 'DESC');
         $srch->addOrder('ul.user_first_name');
-        $srch->addMultipleFields(['slns.slesson_id',
-            'sld.sldetail_learner_id as learnerId',
-            'slns.slesson_teacher_id as teacherId',
-            'ul.user_first_name as learnerFname',
-            'CONCAT(ul.user_first_name, " ", ul.user_last_name) as learnerFullName',
-            'COUNT(IF(slns.slesson_status="' . ScheduledLesson::STATUS_SCHEDULED . '", 1, null)) as scheduledLessonCount',
-            'COUNT(IF(slns.slesson_status="' . ScheduledLesson::STATUS_NEED_SCHEDULING . '",1,null)) as unScheduledLessonCount',
-            'COUNT(IF(CONCAT(slesson_date, " ", slesson_start_time) < "' . date('Y-m-d H:i:s') . '" AND slns.slesson_status!=' . ScheduledLesson::STATUS_CANCELLED . ' AND slns.slesson_date != "0000-00-00", 1, null)) as pastLessonCount',
-            'CASE WHEN singleLessonAmount IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
-            'singleLessonAmount',
-            'bulkLessonAmount',
-            'lessonDuration',
-        ]);
         if (!empty($post['keyword'])) {
             $keywordsArr = array_unique(array_filter(explode(' ', $post['keyword'])));
             foreach ($keywordsArr as $keyword) {
@@ -92,31 +93,35 @@ class TeacherStudentsController extends TeacherBaseController
         $this->_template->render(false, false);
     }
 
-    public function offerPriceForm()
+    public function offerForm()
     {
         $teacherId = UserAuthentication::getLoggedUserId();
         $learnerId = FatApp::getPostedData('top_learner_id', FatUtility::VAR_INT, 0);
-        $teacherOfferPrice = new TeacherOfferPrice();
-        $tofferPrices = $teacherOfferPrice->getTeacherOfferPrices($learnerId, $teacherId);
-        $offerPrices = ['top_learner_id' => $learnerId];
-        foreach ($tofferPrices as $tofferPrice) {
-            $offerPrices['top_single_lesson_price'][$tofferPrice['top_lesson_duration']] = $tofferPrice['top_single_lesson_price'];
-            $offerPrices['top_bulk_lesson_price'][$tofferPrice['top_lesson_duration']] = $tofferPrice['top_bulk_lesson_price'];
+        $teacherOffer = new TeacherOfferPrice();
+        $offerData = $teacherOffer->getTeacherOffer($learnerId, $teacherId);
+        $teacherOfferData = ['top_learner_id' => $learnerId];
+        $isOfferSet =  (!empty($offerData));
+
+        foreach ($offerData as $offer) {
+            $teacherOfferData['top_percentage'][$offer['top_lesson_duration']] = $offer['top_percentage'];
         }
-        $frm = $this->getOfferPriceForm();
-        $frm->fill($offerPrices);
+
+        $teachLangPrice = new TeachLangPrice();
+        $userSlots = $teachLangPrice->getTeachingSlots($teacherId);
+
+        $frm = $this->getOfferForm($userSlots);
+        $frm->fill($teacherOfferData);
         $this->set('frm', $frm);
-        $userToLang = new UserToLanguage($teacherId);
-        $userSlots = $userToLang->getTeachingSlots();
+     
         $this->set('userSlots', $userSlots);
-        $this->set('tofferPrices', $tofferPrices);
+        $this->set('isOfferSet', $isOfferSet);
         $this->set('user_info', User::getAttributesById($learnerId, ['user_id', 'user_first_name', 'user_last_name']));
         $this->_template->render(false, false);
     }
 
-    public function setUpOfferPrice()
+    public function setUpOffer()
     {
-        $frmSrch = $this->getOfferPriceForm();
+        $frmSrch = $this->getOfferForm();
         $post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
@@ -125,7 +130,7 @@ class TeacherStudentsController extends TeacherBaseController
             'top_teacher_id' => UserAuthentication::getLoggedUserId(),
             'top_learner_id' => $post['top_learner_id']
         ];
-        foreach ($post['top_single_lesson_price'] as $k => $price) {
+        foreach ($post['top_price'] as $k => $offer) {
             $data['top_single_lesson_price'] = $post['top_single_lesson_price'][$k];
             $data['top_bulk_lesson_price'] = $post['top_bulk_lesson_price'][$k];
             $data['top_lesson_duration'] = $k;
@@ -137,17 +142,19 @@ class TeacherStudentsController extends TeacherBaseController
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Price_Locked_Successfully!'));
     }
 
-    private function getOfferPriceForm()
+    private function getOfferForm(array $userSlots = null)
     {
-        $teacherId = UserAuthentication::getLoggedUserId();
-        $userToLang = new UserToLanguage($teacherId);
-        $userSlots = $userToLang->getTeachingSlots();
+        if($userSlots == null){
+            $teacherId = UserAuthentication::getLoggedUserId();
+            $teachLangPrice = new TeachLangPrice();
+            $userSlots = $teachLangPrice->getTeachingSlots($teacherId);
+        }
         $frm = new Form('frmOfferPrice');
         foreach ($userSlots as $slot) {
-            $fld = $frm->addRequiredField(sprintf(Label::getLabel('LBL_%d_min_slot_Price'), $slot), 'top_single_lesson_price[' . $slot . ']');
+            $label = str_replace('{slot}', $slot, Label::getLabel('LBL_{slot}_slot_Offer(%)'));
+            $fld = $frm->addRequiredField($label, 'top_percentage[' . $slot . ']');
             $fld->requirements()->setFloatPositive();
-            $fld = $frm->addRequiredField(sprintf(Label::getLabel('LBL_%d_min_slot_Price'), $slot), 'top_bulk_lesson_price[' . $slot . ']');
-            $fld->requirements()->setFloatPositive();
+            $fld->requirements()->setRange(1, 100);
         }
         $fld = $frm->addHiddenField('', 'top_learner_id');
         $fld->requirements()->setInt();

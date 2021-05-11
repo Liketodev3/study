@@ -508,7 +508,7 @@ class CheckoutController extends LoggedUserController
             Message::addErrorMessage(Label::getLabel('MSG_TEACHER_HAS_NOT_ANY_SLOT_DURATION'));
             FatUtility::dieWithError(Message::getHtml());
         }
-        $bookingDurations = array_unique(explode(',', $row['utl_booking_slots']));
+        $bookingDurations = array_unique(explode(',', $row['ustelgpr_slots']));
         $lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
         if (empty($lessonPackages)) {
             Message::addErrorMessage(Label::getLabel('MSG_PLEASE_CONCAT_WITH_ADMIN_NO_LESSON_PACKAGE_ACTIVE'));
