@@ -14,15 +14,6 @@ class LearnerController extends LearnerBaseController
             Message::addInfo(Label::getLabel('LBL_Please_Update_Your_Timezone'));
             FatApp::redirectUser(CommonHelper::generateUrl('account', 'profileInfo'));
         }
-        $this->_template->addJs('js/moment.min.js');
-        $this->_template->addJs('js/fullcalendar.min.js');
-        $this->_template->addJs('js/fateventcalendar.js');
-        $this->_template->addJs('js/jquery.countdownTimer.min.js');
-        if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
-            if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
-                $this->_template->addJs("js/locales/$currentLangCode.js");
-            }
-        }
         $frmSrch = $this->getSearchForm();
         $frmSrch->fill([
                 'status' => ScheduledLesson::STATUS_UPCOMING, 
@@ -35,6 +26,16 @@ class LearnerController extends LearnerBaseController
         // prx($userDetails);
         $this->set('userDetails', $userDetails);
         $this->set('userTotalWalletBalance', User::getUserBalance($userId, false));
+        $this->_template->addJs('js/learnerLessonCommon.js');
+        $this->_template->addJs('js/moment.min.js');
+        $this->_template->addJs('js/fullcalendar.min.js');
+        $this->_template->addJs('js/fateventcalendar.js');
+        $this->_template->addJs('js/jquery.countdownTimer.min.js');
+        if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
+            if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
+                $this->_template->addJs("js/locales/$currentLangCode.js");
+            }
+        }
         $this->_template->render();
     }
 

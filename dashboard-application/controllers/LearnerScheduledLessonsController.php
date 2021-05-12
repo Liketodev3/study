@@ -11,6 +11,18 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
     public function index($classType = '')
     {
+        $frmSrch = $this->getSearchForm();
+        $frmSrch->getField('class_type')->value = $classType;
+        $this->set('frmSrch', $frmSrch);
+        $lessonStatuses = ScheduledLesson::getStatusArr();
+        $lessonStatuses += [ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported')];
+        $srch = $this->searchLessons(['status' => ScheduledLesson::STATUS_UPCOMING], false, false);
+        $srch->doNotCalculateRecords();
+        $srch->setPageSize(1);
+        $srch->addOrder('CONCAT(slns.slesson_date, " ", slns.slesson_start_time)', 'ASC');
+        $upcomingLesson = FatApp::getDb()->fetch($srch->getResultSet());
+        $this->set('upcomingLesson', $upcomingLesson);
+        $this->set('lessonStatuses', $lessonStatuses);
         $this->_template->addJs('js/learnerLessonCommon.js');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
@@ -24,21 +36,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         if (!array_key_exists($classType, $classTypes)) {
             $classType = '';
         }
-
         $this->_template->addJs(['js/jquery.barrating.min.js']);
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
-        $frmSrch = $this->getSearchForm();
-        $frmSrch->getField('class_type')->value = $classType;
-        $this->set('frmSrch', $frmSrch);
-        $lessonStatuses = ScheduledLesson::getStatusArr();
-        $lessonStatuses += [ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported')];
-        $srch = $this->searchLessons(['status' => ScheduledLesson::STATUS_UPCOMING], false, false);
-        $srch->doNotCalculateRecords();
-        $srch->setPageSize(1);
-        $srch->addOrder('CONCAT(slns.slesson_date, " ", slns.slesson_start_time)', 'ASC');
-        $upcomingLesson = FatApp::getDb()->fetch($srch->getResultSet());
-        $this->set('upcomingLesson', $upcomingLesson);
-        $this->set('lessonStatuses', $lessonStatuses);
         $this->_template->render();
     }
 
