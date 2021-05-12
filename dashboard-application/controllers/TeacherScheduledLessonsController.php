@@ -44,8 +44,11 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $userId = UserAuthentication::getLoggedUserId();
         $post = array_merge($post, ['slesson_teacher_id' => $userId]);
         $srch = new LessonSearch($this->siteLangId);
+        $srch->joinTeacherLessonPlans();
         $srch->addSearchListingFields();
         $srch->applySearchConditions($post);
+        $srch->addFld('tlpn.tlpn_title');
+        $srch->addFld('tlpn.tlpn_id');
         $srch->applyOrderBy($sortOrder);
         $srch->addGroupBy('slesson_id');
         $srch->setPageSize($pageSize);
@@ -203,9 +206,12 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $post = ['slesson_teacher_id' => $userId,
             'slesson_id' => FatUtility::int($lessonId)];
         $srch = new LessonSearch($this->siteLangId);
+        $srch->joinTeacherLessonPlans();
         $srch->addSearchDetailFields();
         $srch->applyPrimaryConditions();
         $srch->applySearchConditions($post);
+        $srch->addFld('tlpn.tlpn_title');
+        $srch->addFld('tlpn.tlpn_id');
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $lesson = current($srch->fetchAll());

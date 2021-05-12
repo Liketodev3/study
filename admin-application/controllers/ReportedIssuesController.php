@@ -101,9 +101,8 @@ class ReportedIssuesController extends AdminBaseController
         if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
-        $closed = FatUtility::int($post['reislo_closed']) == 1 ? true : false;
         $reportedIssue = new ReportedIssue($post['reislo_repiss_id'], $this->admin_id, ReportedIssue::USER_TYPE_SUPPORT);
-        if (!$reportedIssue->setupIssueAction($post['reislo_action'], $post['reislo_comment'], $closed)) {
+        if (!$reportedIssue->setupIssueAction($post['reislo_action'], $post['reislo_comment'], true)) {
             FatUtility::dieJsonError($reportedIssue->getError());
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY'));
@@ -135,7 +134,6 @@ class ReportedIssuesController extends AdminBaseController
         $repissId->requirements()->setIntPositive();
         $frm->addSelectBox(Label::getLabel('LBL_TAKE_ACTION', $this->adminLangId), 'reislo_action', ReportedIssue::getActionsArr())->requirements()->setRequired();
         $frm->addTextArea(Label::getLabel('LBL_ADMIN_COMMENT'), 'reislo_comment', '');
-        $frm->addCheckBox(Label::getLabel('LBL_MARK_IT_CLOSE'), 'reislo_closed', 1, [], false, 0);
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
         return $frm;
     }

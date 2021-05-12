@@ -224,12 +224,10 @@ esclateSetup = function (frm) {
     if (!$(frm).validate()) {
         return;
     }
-    issueId = frm.reislo_repiss_id.value;
     var action = fcom.makeUrl('ReportIssue', 'esclateSetup');
     fcom.updateWithAjax(action, fcom.frmData(frm), function (response) {
         $.facebox.close();
         if (response.status == 1) {
-            issueDetails(issueId)
             $.mbsmessage(response.msg, true, 'alert alert--success');
         } else {
             $.mbsmessage(response.msg, true, 'alert alert--danger');

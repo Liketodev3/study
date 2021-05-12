@@ -56,9 +56,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $userId = UserAuthentication::getLoggedUserId();
         $post = array_merge($post, ['sldetail_learner_id' => $userId]);
         $srch = new LessonSearch($this->siteLangId);
+        $srch->joinTeacherLessonPlans();
         $srch->addSearchListingFields();
         $srch->applyPrimaryConditions();
         $srch->applySearchConditions($post);
+        $srch->addFld('tlpn.tlpn_title');
+        $srch->addFld('tlpn.tlpn_id');
         $srch->applyOrderBy($sortOrder);
         $srch->addGroupBy('slesson.slesson_id');
         $srch->setPageSize($pageSize);
@@ -1440,6 +1443,5 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         }
         CommonHelper::dieJsonSuccess(['data' => $meetingData, 'msg' => Label::getLabel('LBL_Joining._Please_Wait...')]);
     }
-
 
 }

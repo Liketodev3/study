@@ -1,3 +1,4 @@
+searchLessons = null;
 var isLessonCancelAjaxRun = false;
 requestReschedule = function (id) {
     fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'requestReschedule', [id]), '', function (t) {
@@ -70,9 +71,14 @@ changeLessonPlan = function (id) {
 };
 
 assignLessonPlanToLessons = function (lessonId, planId) {
-    fcom.updateWithAjax(fcom.makeUrl('TeacherScheduledLessons', 'assignLessonPlanToLessons'), 'ltp_slessonid=' + lessonId + '&ltp_tlpn_id=' + planId, function (t) {
+    var data = 'ltp_slessonid=' + lessonId + '&ltp_tlpn_id=' + planId;
+    fcom.updateWithAjax(fcom.makeUrl('TeacherScheduledLessons', 'assignLessonPlanToLessons'), data, function (t) {
         $.facebox.close();
-        location.reload();
+        if (searchLessons != null) {
+            searchLessons(document.frmSrch);
+        } else {
+            window.location.reload();
+        }
     });
 };
 
@@ -80,7 +86,11 @@ removeAssignedLessonPlan = function (lessonId) {
     if (confirm(langLbl.confirmRemove)) {
         fcom.updateWithAjax(fcom.makeUrl('TeacherScheduledLessons', 'removeAssignedLessonPlan'), 'ltp_slessonid=' + lessonId, function (t) {
             $.facebox.close();
-            location.reload();
+            if (searchLessons != null) {
+                searchLessons(document.frmSrch);
+            } else {
+                window.location.reload();
+            }
         });
     }
 };

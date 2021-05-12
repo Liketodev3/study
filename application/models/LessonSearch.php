@@ -30,6 +30,12 @@ class LessonSearch extends SearchBase
         $this->joinTable(LessonRescheduleLog::DB_TBL, 'LEFT JOIN', 'lesreschlog.lesreschlog_slesson_id=slesson.slesson_id', 'lesreschlog');
     }
 
+    public function joinTeacherLessonPlans()
+    {
+        $this->joinTable('tbl_scheduled_lessons_to_teachers_lessons_plan', 'LEFT JOIN', 'ltp.ltp_slessonid = slesson.slesson_id', 'ltp');
+        $this->joinTable(LessonPlan::DB_TBL, 'LEFT JOIN', 'tlpn.tlpn_id = ltp.ltp_tlpn_id', 'tlpn');
+    }
+
     public function addAdditionalFields($fields = [])
     {
         foreach ($fields as $field => $alias) {
@@ -154,6 +160,7 @@ class LessonSearch extends SearchBase
             'slesson.slesson_end_time' => 'slesson_end_time',
             'slesson.slesson_is_teacher_paid' => 'slesson_is_teacher_paid',
             'slesson.slesson_teacher_join_time' => 'slesson_teacher_join_time',
+            'slesson.slesson_teacher_end_time' => 'slesson_teacher_end_time',
             'sldetail.sldetail_id' => 'sldetail_id',
             'sldetail.sldetail_order_id' => 'sldetail_order_id',
             'sldetail.sldetail_learner_id' => 'sldetail_learner_id',
@@ -166,9 +173,10 @@ class LessonSearch extends SearchBase
             'IFNULL(grpclslang_grpcls_title, grpcls_title)' => 'grpcls_title',
             'ul.user_first_name' => 'learnerFname',
             'ul.user_last_name' => 'learnerLname',
+            'ul.user_url_name' => 'learnerUrlName',
             'ut.user_first_name' => 'teacherFname',
             'ut.user_last_name' => 'teacherLname',
-            'ut.user_url_name' => 'user_url_name',
+            'ut.user_url_name' => 'teacherUrlName',
             'tclang.country_name' => 'country_name',
             'lclang.country_name' => 'learnerCountryName',
             'IFNULL(repiss.repiss_id, 0)' => 'repiss_id',

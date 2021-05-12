@@ -103,22 +103,15 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
                         </div>
                         <?php
                         if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) {
-                            /**
-                             * @todo to be fixed
-                             * $lesson['isLessonPlanAttach'] = 0;
-                             */
-                            $lesson['isLessonPlanAttach'] = 0;
-                            if ($lesson['isLessonPlanAttach'] > 0) {
+                            if ($lesson['tlpn_id'] > 0) {
                                 ?>
                                 <div class="card-landscape__docs">
                                     <div class="d-flex align-items-center">
                                         <a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>')" class="attachment-file">
-                                            <svg class="icon icon--issue icon--attachement icon--xsmall color-black">
-                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#attach'; ?>"></use>
-                                            </svg>
+                                            <svg class="icon icon--issue icon--attachement icon--xsmall color-black"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#attach'; ?>"></use></svg>
                                             <?php echo $lesson['tlpn_title'] ?>
                                         </a>
-                                        <a href="javascript:void(0);" onclick="changeLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-black  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Change_Lesson_Plan'); ?></a>
+                                        <a href="javascript:void(0);" onclick="changeLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-black  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Change'); ?></a>
                                         <a href="javascript:void(0);" onclick="removeAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-black  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Remove'); ?></a>
                                     </div>
                                 </div>

@@ -29,7 +29,7 @@
                             <td><strong><?php echo Label::getLabel('LBL_NOT_HAPPY_WITH_SOLUTION?'); ?></strong></td>
                             <td>
                                 <?php if ($canEsclate) { ?>
-                                    <button onclick="esclateForm(<?php echo $issue['repiss_id']; ?>)" class="btn btn-small btn--filter">
+                                    <button onclick="esclateForm(<?php echo $issue['repiss_id']; ?>)" class="btn btn-small btn--primary">
                                         <?php echo Label::getLabel('LBL_ESCLATE_TO_SUPPORT_TEAM'); ?>
                                     </button>
                                 <?php } ?> 

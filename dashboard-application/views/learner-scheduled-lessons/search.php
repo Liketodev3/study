@@ -27,8 +27,6 @@ $referer = preg_replace("(^https?://)", "", $referer);
                 <?php
             }
             foreach ($lessons as $lesson) {
-                /* @todo To be fixed */
-                $lesson['isLessonPlanAttach'] = 0;
                 $lessonsStatus = $statusArr[$lesson['sldetail_learner_status']];
                 $lesson['lesreschlog_id'] = FatUtility::int($lesson['lesreschlog_id']);
                 if (
@@ -105,7 +103,7 @@ $referer = preg_replace("(^https?://)", "", $referer);
                                 <span class="card-landscape__status badge color-primary badge--curve badge--small margin-left-0"><?php echo Label::getLabel('LBL_Issue_Reported'); ?></span>
                             <?php } ?>
                         </div>
-                        <?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['isLessonPlanAttach'] > 0) { ?>
+                        <?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['tlpn_id'] > 0) { ?>
                             <div class="card-landscape__docs">
                                 <div class="d-flex align-items-center">
                                     <a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['sldetail_id']; ?>')" class="attachment-file">
