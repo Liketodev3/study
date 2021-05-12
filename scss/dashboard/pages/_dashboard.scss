@@ -362,7 +362,7 @@ $sale-stat: "sale-stat";
 
     @media(min-width:theme('breakpoints.xxxl','value')){
         &{
-            padding: var(--padding-12);
+            padding: var(--padding-12) var(--padding-8);
             height: 100%;
         }
     }

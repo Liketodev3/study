@@ -3490,7 +3490,7 @@ div.tagsinput div {
           justify-content: space-between; }
   @media (min-width: 1399px) {
     .sale-stat {
-      padding: var(--padding-12);
+      padding: var(--padding-12) var(--padding-8);
       height: 100%; } }
   @media (max-width: 1399px) {
     .sale-stat {
