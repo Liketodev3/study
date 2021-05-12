@@ -20,7 +20,7 @@ class PriceSlab extends MyAppModel
     }
 
 
-    public static function getSearchObject(bool $activeOnly = false): object
+    public static function getSearchObject(bool $activeOnly = false): SearchBase
     {
         $searchBase = new SearchBase(self::DB_TBL, 'ps');
 
@@ -35,8 +35,7 @@ class PriceSlab extends MyAppModel
     {
         $searchObject = self::getSearchObject($activeOnly);
         $searchObject->doNotLimitRecords();
-        $resultSet  =  $searchObject->getResultSet();
-        return  FatApp::getDb()->fetchAll($resultSet);
+        return  FatApp::getDb()->fetchAll($searchObject->getResultSet());
     }
 
     public function isSlapCollapse(int $min, int $max): bool
@@ -47,8 +46,24 @@ class PriceSlab extends MyAppModel
         $searchObject->addCondition('prislab_min', '<=', $max);
         $searchObject->addCondition('prislab_id', '!=', $this->mainTableRecordId);
         $searchObject->setPageSize(1);
-        $resultSet = $searchObject->getResultSet();
-        $slabData = FatApp::getDb()->fetch($resultSet);
+        $slabData = FatApp::getDb()->fetch($searchObject->getResultSet());
         return (!empty($slabData));
+    }
+
+    public static function getMinAndMaxSlab() : array
+    {
+        $searchObject = PriceSlab::getSearchObject();
+        $searchObject->doNotCalculateRecords();
+        $searchObject->setPageSize(1);
+        $searchObject->addCondition('prislab_active', '=', applicationConstants::ACTIVE);
+        $searchObject->addMultipleFields([
+            'min(prislab_min) as minSlab',
+            'max(prislab_max) as maxSlab'
+        ]);
+        $minAndMaxSlab = FatApp::getDb()->fetch($searchObject->getResultSet());
+        if(!empty($minAndMaxSlab)){
+           return $minAndMaxSlab;
+        }
+        return [];
     }
 }

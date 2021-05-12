@@ -132,6 +132,80 @@ class CartController extends MyAppController
         $this->_template->render(false, false, 'json-success.php');
     }
 
+    private function addToCartForm(): Form
+    {
+        $form = new Form('addToCart');
+        $teacherIdField = $form->addIntegerField(Label::getLabel('LBL_Teacher_Id'), 'teacher_id');
+        $teacherIdField->requirements()->setRequired(true);
+        $teacherIdField->requirements()->setRange(1, 99999999999);
+        
+        $getMinAndMaxSlab = PriceSlab::getMinAndMaxSlab();
+        $min = $max = 0;
+        if(!empty($getMinAndMaxSlab)){
+            $min = $getMinAndMaxSlab['minSlab'];
+            $max = $getMinAndMaxSlab['maxSlab'];
+        }
+
+       
+        $groupClassField = $form->addIntegerField(Label::getLabel('LBL_Group_Class'), 'grpcls_id');
+        $groupClassField->requirements()->setRequired(false);
+        $groupClassField->requirements()->setRange(1, 9999999);
+
+        $slabIdField = $form->addIntegerField(Label::getLabel('LBL_lesson_qty'), 'lessonQty');
+        $slabIdField->requirements()->setRequired(false);
+        $slabIdField->requirements()->setRange($min, $max);
+
+        $languageIdField = $form->addIntegerField(Label::getLabel('LBL_language_Id'), 'languageId');
+        $languageIdField->requirements()->setRequired(false);
+        $languageIdField->requirements()->setRange(1, 9999);
+        
+        $bookingSlot = applicationConstants::getBookingSlots();
+        $lessonDurationField = $form->addRadioButtons(Label::getLabel('LBL_lesson_duration'),'lessonDuration', $bookingSlot[0]);
+        $lessonDurationField->requirements()->setRequired(false);
+
+        $groupClassField->requirements()->addOnChangerequirementUpdate(0, 'gt');
+       
+        
+        $freeTrialField = $form->addRadioButtons(Label::getLabel('LBL_Free_trial'), 'is_free_trial', applicationConstants::getYesNoArr($this->siteLangId), applicationConstants::NO);
+        $freeTrialField->requirements()->setRequired(true);
+
+        $startDateTimeField = $form->addTextBox(Label::getLabel('LBL_Start_Date_Time'), 'startDateTime');
+        $startDateTimeField->requirements()->setRequired(false);
+
+        /* startDateTime requirements */
+        $startDateTimeField->requirements()->setRequired(true);
+        $freeTrialField->requirements()->addOnChangerequirementUpdate(applicationConstants::YES, 'eq', 'startDateTime',  $startDateTimeField->requirements());
+        
+        $startDateTimeField->requirements()->setRequired(false);
+        $freeTrialField->requirements()->addOnChangerequirementUpdate(applicationConstants::YES, 'ne', 'startDateTime',  $startDateTimeField->requirements());
+        /* ] */
+        
+        $endDateTimeField = $form->addTextBox(Label::getLabel('LBL_End_Date_Time'), 'endDateTime');
+        $endDateTimeField->requirements()->setRequired(false);
+
+        /* endDateTime requirements */
+        $endDateTimeField->requirements()->setRequired(true);
+        $freeTrialField->requirements()->addOnChangerequirementUpdate(applicationConstants::YES, 'eq', 'endDateTime',  $endDateTimeField->requirements());
+        
+        $endDateTimeField->requirements()->setRequired(false);
+        $freeTrialField->requirements()->addOnChangerequirementUpdate(applicationConstants::YES, 'ne', 'endDateTime',  $endDateTimeField->requirements());
+        /* ] */
+
+        $weekStartField = $form->addTextBox(Label::getLabel('LBL_week_Start'), 'weekStart');
+        $weekStartField->requirements()->setRequired(false);
+
+         /* weekStart requirements */
+         $weekStartField->requirements()->setRequired(true);
+         $freeTrialField->requirements()->addOnChangerequirementUpdate(applicationConstants::YES, 'eq', 'weekStart',  $weekStartField->requirements());
+         
+         $weekStartField->requirements()->setRequired(false);
+         $freeTrialField->requirements()->addOnChangerequirementUpdate(applicationConstants::YES, 'ne', 'weekStart',  $weekStartField->requirements());
+         /* ] */
+
+        return $form;
+    }
+    
+
     public function removePromoCode()
     {
         $cartObj = new Cart();

@@ -32,7 +32,7 @@ class UserTeachLanguage extends MyAppModel
         return true;  
     }
 
-    public function getUserTeachlanguages(int $langId = 0, $withPrice = false) : object
+    public function getUserTeachlanguages(int $langId = 0, $withPrice = false) : \SearchBase
     {
         $searchBase = new SearchBase(static::DB_TBL, 'utl');
         $searchBase->addCondition('utl_user_id', '=', $this->userId);

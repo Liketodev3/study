@@ -422,13 +422,17 @@ class CommonHelper extends FatUtility
         fpassthru($temp_memory);
     }
 
-    public static function getPercentValue($percentage, $total)
+    public static function getPercentValue(float $percentage, float $total): float
     {
         if (!$total) {
             return 0;
         }
-        $percent = $percentage / $total;
-        return $percent_friendly = number_format($percent * 100, 2) . '%';
+
+        if(0 > $percentage){
+         return $total;
+        }
+        $percentage = ($percentage / 100) *  $total;
+        return number_format($percentage, 2);
     }
 
     public static function verifyCaptcha($fld_name = 'g-recaptcha-response')

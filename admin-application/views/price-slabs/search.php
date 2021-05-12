@@ -3,8 +3,8 @@
 $arr_flds = array(
 	'listserial' => Label::getLabel('LBL_Sr_no.', $adminLangId),
 	'title' => Label::getLabel('LBL_Title', $adminLangId),
-	'prislab_min' => Label::getLabel('LBL_Min_Hours', $adminLangId),
-	'prislab_max' => Label::getLabel('LBL_Max_Hours', $adminLangId),
+	'prislab_min' => Label::getLabel('LBL_Min_Slabs', $adminLangId),
+	'prislab_max' => Label::getLabel('LBL_Max_Slabs', $adminLangId),
 	'prislab_active' => Label::getLabel('LBL_Status', $adminLangId),
 	'action' => Label::getLabel('LBL_Action', $adminLangId),
 );

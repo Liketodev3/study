@@ -597,4 +597,4 @@ INSERT INTO `tbl_pricing_slabs` (`prislab_id`, `prislab_min`, `prislab_max`, `pr
 ALTER TABLE `tbl_teacher_offer_price`
   DROP `top_bulk_lesson_price`;
 
-ALTER TABLE `tbl_teacher_offer_price` CHANGE `top_price` `top_percentage` DECIMAL(10,2) NOT NULL;
+ALTER TABLE `tbl_teacher_offer_price` CHANGE `top_single_lesson_price` `top_percentage` DECIMAL(10,2) NOT NULL;
