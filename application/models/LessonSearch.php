@@ -26,7 +26,7 @@ class LessonSearch extends SearchBase
         $this->joinTable(TeacherGroupClasses::DB_TBL_LANG, 'LEFT JOIN', 'gclang.grpclslang_grpcls_id = grpcls.grpcls_id and gclang.grpclslang_lang_id=' . $langId, 'gclang');
         $this->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'tclang.countrylang_country_id = ut.user_country_id AND tclang.countrylang_lang_id = ' . $langId, 'tclang');
         $this->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'lclang.countrylang_country_id = ul.user_country_id AND lclang.countrylang_lang_id = ' . $langId, 'lclang');
-        $this->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'repiss.repiss_slesson_id = sldetail.sldetail_id', 'repiss');
+        $this->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'repiss.repiss_sldetail_id = sldetail.sldetail_id', 'repiss');
         $this->joinTable(LessonRescheduleLog::DB_TBL, 'LEFT JOIN', 'lesreschlog.lesreschlog_slesson_id=slesson.slesson_id', 'lesreschlog');
     }
 
@@ -96,14 +96,23 @@ class LessonSearch extends SearchBase
                     $this->addCondition('slesson.slesson_status', '=', $post['status']);
             }
         }
-        if (!empty($post['sldetail_id'] ?? '')) {
+        if (!empty($post['grpcls_id'] ?? 0)) {
+            $this->addCondition('slesson.slesson_grpcls_id', '=', FatUtility::int($post['grpcls_id']));
+        }
+        if (!empty($post['slesson_id'] ?? 0)) {
+            $this->addCondition('slesson.slesson_id', '=', FatUtility::int($post['slesson_id']));
+        }
+        if (!empty($post['sldetail_id'] ?? 0)) {
             $this->addCondition('sldetail.sldetail_id', '=', FatUtility::int($post['sldetail_id']));
         }
-        if (!empty($post['sldetail_learner_id'] ?? '')) {
+        if (!empty($post['sldetail_learner_id'] ?? 0)) {
             $this->addCondition('sldetail.sldetail_learner_id', '=', FatUtility::int($post['sldetail_learner_id']));
         }
-        if (!empty($post['slesson_teacher_id'] ?? '')) {
+        if (!empty($post['slesson_teacher_id'] ?? 0)) {
             $this->addCondition('slesson.slesson_teacher_id', ' = ', FatUtility::int($post['slesson_teacher_id']));
+        }
+        if (!empty($post['grpcls_teacher_id'] ?? 0)) {
+            $this->addCondition('grpcls.grpcls_teacher_id', ' = ', FatUtility::int($post['grpcls_teacher_id']));
         }
     }
 
@@ -149,6 +158,7 @@ class LessonSearch extends SearchBase
             'sldetail.sldetail_order_id' => 'sldetail_order_id',
             'sldetail.sldetail_learner_id' => 'sldetail_learner_id',
             'sldetail.sldetail_learner_status' => 'sldetail_learner_status',
+            'sldetail.sldetail_learner_end_time' => 'sldetail_learner_end_time',
             'sldetail.sldetail_learner_join_time' => 'sldetail_learner_join_time',
             'op.op_lesson_duration' => 'op_lesson_duration',
             'op.op_lpackage_is_free_trial' => 'op_lpackage_is_free_trial',

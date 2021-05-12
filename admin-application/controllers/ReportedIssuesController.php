@@ -31,7 +31,7 @@ class ReportedIssuesController extends AdminBaseController
             FatUtility::dieWithError($this->str_invalid_request);
         }
         $srch = ReportedIssue::getSearchObject();
-        $srch->addMultipleFields(['repiss.repiss_id', 'repiss.repiss_title', 'repiss.repiss_slesson_id',
+        $srch->addMultipleFields(['repiss.repiss_id', 'repiss.repiss_title', 'repiss.repiss_sldetail_id',
             'repiss.repiss_reported_on', 'repiss.repiss_reported_by', 'repiss.repiss_reported_by_type',
             'repiss.repiss_status', 'repiss.repiss_comment', 'repiss.repiss_updated_on', 'sldetail.sldetail_order_id',
             'CONCAT(user.user_first_name, " ", user.user_last_name) AS reporter_username']);
@@ -41,8 +41,8 @@ class ReportedIssuesController extends AdminBaseController
         if (!empty($post['sldetail_order_id'])) {
             $srch->addCondition('sldetail.sldetail_order_id', 'LIKE', '%' . $post['sldetail_order_id'] . '%');
         }
-        if ($post['repiss_slesson_id'] != '') {
-            $srch->addCondition('repiss.repiss_slesson_id', '=', $post['repiss_slesson_id']);
+        if ($post['repiss_sldetail_id'] != '') {
+            $srch->addCondition('repiss.repiss_sldetail_id', '=', $post['repiss_sldetail_id']);
         }
         if ($post['sldetail_learner_id'] > 0) {
             $srch->addCondition('sldetail.sldetail_learner_id', '=', $post['sldetail_learner_id']);
@@ -116,7 +116,7 @@ class ReportedIssuesController extends AdminBaseController
         $frm->addTextBox(Label::getLabel('LBL_Learner', $this->adminLangId), 'learner');
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'repiss_status', ReportedIssue::getStatusArr());
         $frm->addTextBox(Label::getLabel('LBL_Order_Id', $this->adminLangId), 'sldetail_order_id');
-        $frm->addTextBox(Label::getLabel('LBL_Lesson_Id', $this->adminLangId), 'repiss_slesson_id');
+        $frm->addTextBox(Label::getLabel('LBL_Lesson_Id', $this->adminLangId), 'repiss_sldetail_id');
         $frm->addHiddenField('', 'pageSize', FatApp::getConfig('CONF_ADMIN_PAGESIZE'));
         $frm->addHiddenField('', 'page', 1);
         $frm->addHiddenField('', 'slesson_teacher_id', 0);

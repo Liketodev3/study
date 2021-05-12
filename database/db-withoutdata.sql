@@ -9720,7 +9720,7 @@ UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_
 CREATE TABLE `tbl_reported_issues` (
   `repiss_id` int NOT NULL,
   `repiss_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `repiss_slesson_id` int NOT NULL,
+  `repiss_sldetail_id` int NOT NULL,
   `repiss_reported_on` datetime NOT NULL,
   `repiss_reported_by` int NOT NULL,
   `repiss_reported_by_type` int NOT NULL,

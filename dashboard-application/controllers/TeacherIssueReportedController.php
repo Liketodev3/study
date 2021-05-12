@@ -8,10 +8,11 @@ class TeacherIssueReportedController extends TeacherBaseController
         parent::__construct($action);
     }
 
-    public function index()
+    public function index($gclassId = 0)
     {
         $this->_template->addJs('js/teacherLessonCommon.js');
         $frmSrch = $this->getSearchForm();
+        $frmSrch->fill(['grpcls_id' => $gclassId]);
         $this->set('frmSrch', $frmSrch);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
         $this->_template->render();

@@ -97,6 +97,9 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
                                 </span>
                             <?php } ?>
                             <span class="card-landscape__status badge color-secondary badge--curve badge--small margin-left-0"><?php echo $lessonsStatus; ?></span>
+                            <?php if ($lesson['repiss_id'] > 0) { ?>
+                                <span class="card-landscape__status badge color-primary badge--curve badge--small margin-left-0"><?php echo Label::getLabel('LBL_Issue_Reported'); ?></span>
+                            <?php } ?>
                         </div>
                         <?php
                         if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) {
@@ -172,11 +175,14 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
                                             <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Reschedule'); ?></div>
                                         </a>
                                     <?php } ?>
-                                    <?php if ($lesson['repiss_id'] > 0) { ?>
+                                    <?php if ($lesson['repiss_id'] > 0 && $lesson['slesson_grpcls_id'] > 0) { ?>
+                                        <a href="<?php echo CommonHelper::generateUrl('TeacherIssueReported', 'index', [$lesson['slesson_grpcls_id']]) ?>" target="_blank" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+                                            <svg class="icon icon--reschedule icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#view-report'; ?>"></use></svg>
+                                            <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Issue_Details'); ?></div>
+                                        </a>
+                                    <?php } else if ($lesson['repiss_id'] > 0) { ?>
                                         <a href="javascript:void(0);" onclick="issueDetails('<?php echo $lesson['repiss_id']; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-                                            <svg class="icon icon--reschedule icon--small">
-                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#view-report'; ?>"></use>
-                                            </svg>
+                                            <svg class="icon icon--reschedule icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#view-report'; ?>"></use></svg>
                                             <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Issue_Details'); ?></div>
                                         </a>
                                         <?php if ($lesson['repiss_status'] == ReportedIssue::STATUS_PROGRESS) { ?>

@@ -22,7 +22,6 @@ class TeacherGroupClassesController extends TeacherBaseController
     {
         $frmSrch = $this->getSearchForm();
         $post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
-        $referer = CommonHelper::redirectUserReferer(true);
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
@@ -41,43 +40,43 @@ class TeacherGroupClassesController extends TeacherBaseController
         $srch3->addFld('slesson_teacher_join_time>0');
         $teacher_id = UserAuthentication::getLoggedUserId();
 
-        $srch = new TeacherGroupClassesSearch(false);
-        $srch->joinGroupClassLang($this->siteLangId);
-        $srch->joinScheduledLesson();
+        $srch = new SearchBase(TeacherGroupClasses::DB_TBL, 'grpcls');
+        $srch->joinTable(TeacherGroupClasses::DB_TBL_LANG, 'LEFT JOIN', 'grpcls.grpcls_id = grpclsl.grpclslang_grpcls_id AND grpclsl.grpclslang_lang_id=' . $this->siteLangId, 'grpclsl');
+        $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_grpcls_id = grpcls.grpcls_id', 'slesson');
+        $srch->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sldetail.sldetail_slesson_id = slesson.slesson_id', 'sldetail');
+        $srch->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'sldetail.sldetail_id = repiss.repiss_sldetail_id', 'repiss');
+        $srch->addCondition('grpcls.grpcls_deleted', '=', applicationConstants::NO);
+        $srch->addCondition('grpcls.grpcls_teacher_id', '=', $teacher_id);
         $srch->addMultipleFields([
-            'grpcls_id',
-            'grpcls_entry_fee',
-            'grpcls_start_datetime',
-            'grpcls_end_datetime',
-            'grpcls_status',
-            'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
-            'slesson_id',
+            'grpcls.grpcls_id  as grpcls_id',
+            'grpcls.grpcls_status as grpcls_status',
+            'grpcls.grpcls_entry_fee as grpcls_entry_fee',
+            'grpcls.grpcls_start_datetime as grpcls_start_datetime',
+            'grpcls.grpcls_end_datetime as grpcls_end_datetime',
+            'repiss.repiss_id as repiss_id',
+            'IFNULL(grpclslang_grpcls_title, grpcls_title) as grpcls_title',
+            'slesson.slesson_id as slesson_id',
             '(' . $srch2->getQuery() . ') total_learners',
             '(' . $srch3->getQuery() . ') is_joined'
         ]);
-        $srch->addCondition('grpcls_teacher_id', '=', $teacher_id);
         if (!empty($post['status'])) {
-            $srch->addCondition('grpcls_status', '=', $post['status']);
+            $srch->addCondition('grpcls.grpcls_status', '=', $post['status']);
         }
         if (!empty($post['keyword'])) {
-            $keywordCondition = $srch->addCondition('grpcls_title', 'like', '%' . $post['keyword'] . '%');
-            $keywordCondition->attachCondition('grpclslang_grpcls_title', 'like', '%' . $post['keyword'] . '%');
+            $keywordCondition = $srch->addCondition('grpcls.grpcls_title', 'like', '%' . $post['keyword'] . '%');
+            $keywordCondition->attachCondition('grpclsl.grpclslang_grpcls_title', 'like', '%' . $post['keyword'] . '%');
         }
-
-        $srch->addGroupBy('grpcls_id');
+        $srch->addGroupBy('grpcls.grpcls_id');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-        $rs = $srch->getResultSet();
-        $classes = FatApp::getDb()->fetchAll($rs);
-        $user_timezone = MyDate::getUserTimeZone();
-        /* [ */
+        $classes = FatApp::getDb()->fetchAll($srch->getResultSet());
         $totalRecords = $srch->recordCount();
         $pagingArr = [
-            'pageCount' => $srch->pages(),
             'page' => $page,
             'pageSize' => $pageSize,
+            'pageCount' => $srch->pages(),
             'recordCount' => $totalRecords,
         ];
         $this->set('postedData', $post);
@@ -87,16 +86,14 @@ class TeacherGroupClassesController extends TeacherBaseController
         if ($totalRecords < $endRecord) {
             $endRecord = $totalRecords;
         }
-        $teachLanguages = TeachingLanguage::getAllLangs($this->siteLangId);
-        $this->set('teachLanguages', $teachLanguages);
+        $this->set('totalRecords', $totalRecords);
         $this->set('startRecord', $startRecord);
         $this->set('endRecord', $endRecord);
-        $this->set('totalRecords', $totalRecords);
-        /* ] */
-        $this->set('referer', $referer);
         $this->set('classes', $classes);
         $this->set('statusArr', ScheduledLesson::getStatusArr());
+        $this->set('referer', CommonHelper::redirectUserReferer(true));
         $this->set('classStatusArr', TeacherGroupClasses::getStatusArr());
+        $this->set('teachLanguages', TeachingLanguage::getAllLangs($this->siteLangId));
         $this->_template->render(false, false);
     }
 

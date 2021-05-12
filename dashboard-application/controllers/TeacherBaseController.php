@@ -21,6 +21,7 @@ class TeacherBaseController extends LoggedUserController
     protected function getSearchForm()
     {
         $frm = new Form('frmSrch');
+        $frm->addHiddenField(Label::getLabel('LBL_GROUP_CLASS'), 'grpcls_id');
         $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Keyword')]);
         $options = ScheduledLesson::getStatusArr() + [ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported')];
         $frm->addSelectBox(Label::getLabel('LBL_Status'), 'status', $options, '', [], Label::getLabel('LBL_All'))->requirements()->setInt();

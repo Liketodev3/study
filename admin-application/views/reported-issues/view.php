@@ -65,7 +65,7 @@
                     <td><strong><?php echo Label::getLabel('LBL_Order_Id', $adminLangId); ?>:</strong> <?php echo $issue['sldetail_order_id']; ?></td>
                 </tr>
                 <tr>
-                    <td><strong><?php echo Label::getLabel('LBL_Lesson_Id', $adminLangId); ?>:</strong>  <?php echo $issue['repiss_slesson_id']; ?></td>
+                    <td><strong><?php echo Label::getLabel('LBL_Lesson_Id', $adminLangId); ?>:</strong>  <?php echo $issue['repiss_sldetail_id']; ?></td>
                     <td><strong><?php echo Label::getLabel('LBL_Total_Lesson', $adminLangId); ?>:</strong> <?php echo $issue['op_qty']; ?></td>
                     <td><strong><?php echo Label::getLabel('LBL_Lesson_Price', $adminLangId); ?>:</strong>   <?php echo CommonHelper::displayMoneyFormat($issue['op_unit_price'], true, true); ?></td>
                 </tr>

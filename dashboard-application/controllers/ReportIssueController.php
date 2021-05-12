@@ -17,7 +17,7 @@ class ReportIssueController extends LoggedUserController
             FatUtility::dieJsonError($reportIssue->getError());
         }
         $frm = $this->getForm();
-        $frm->fill(['repiss_slesson_id' => $sldetailId]);
+        $frm->fill(['repiss_sldetail_id' => $sldetailId]);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
@@ -29,7 +29,7 @@ class ReportIssueController extends LoggedUserController
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
         $userId = UserAuthentication::getLoggedUserId();
-        $sldetailId = FatUtility::int($post['repiss_slesson_id']);
+        $sldetailId = FatUtility::int($post['repiss_sldetail_id']);
         $reportIssue = new ReportedIssue(0, $userId);
         if (!$lesson = $reportIssue->getLessonToReport($sldetailId)) {
             FatUtility::dieJsonError($reportIssue->getError());
@@ -48,16 +48,9 @@ class ReportIssueController extends LoggedUserController
         }
         $logs = ReportedIssue::getIssueLogsById($issueId);
         $log = end($logs);
-        $canEsclate = false;
         $esclateHours = FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION');
         $esclateDate = strtotime($issue['repiss_updated_on'] . " +" . $esclateHours . " hour");
-        if (
-                $esclateDate > strtotime(date('Y-m-d H:i:s')) &&
-                $issue['repiss_status'] == ReportedIssue::STATUS_RESOLVED &&
-                $issue['repiss_reported_by_type'] == ReportedIssue::USER_TYPE_TEACHER
-        ) {
-            $canEsclate = true;
-        }
+        $canEsclate = ($esclateDate > strtotime(date('Y-m-d H:i:s')) && $issue['repiss_status'] == ReportedIssue::STATUS_RESOLVED);
         $this->set('logs', $logs);
         $this->set('issue', $issue);
         $this->set('canEsclate', $canEsclate);
@@ -74,7 +67,7 @@ class ReportIssueController extends LoggedUserController
         $fld->requirements()->setRequired(true);
         $fld = $frm->addTextArea(Label::getLabel('LBL_Comment'), 'repiss_comment', '');
         $fld->requirement->setRequired(true);
-        $fld = $frm->addHiddenField(Label::getLabel('LBL_slesson_id'), 'repiss_slesson_id');
+        $fld = $frm->addHiddenField(Label::getLabel('LBL_slesson_id'), 'repiss_sldetail_id');
         $fld->requirements()->setRequired(true);
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_SUBMIT'));
         return $frm;

@@ -8,19 +8,37 @@
             <table class="table table--details">
                 <tbody>
                     <tr><td colspan="2"><h4><?php echo $issue['repiss_title']; ?></h4></td></tr>
-                    <tr><td colspan="2"><strong><?php echo Label::getLabel('LBL_Detail'); ?>:</strong> <?php echo nl2br($issue['repiss_comment']); ?></td></tr>
                     <tr>
-                        <td><strong><?php echo Label::getLabel('LBL_Current_Status'); ?>:</strong> <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?></td>
-                        <td>
-                            <?php if ($canEsclate) { ?>
-                                <button onclick="esclateForm(<?php echo $issue['repiss_id']; ?>)" class="btn btn--filter">
-                                    <?php echo Label::getLabel('LBL_ESCLATE_TO_SUPPORT_TEAM'); ?>
-                                </button>
-                            <?php } if ($issue['repiss_status'] == ReportedIssue::STATUS_ESCLATED) { ?>
-                                <?php echo Label::getLabel('LBL_ESCLATED_TO_SUPPORT_TEAM'); ?>
-                            <?php } ?>
-                        </td>
+                        <td><strong><?php echo Label::getLabel('LBL_Detail'); ?></strong></td>
+                        <td style="max-width: 350px;"><?php echo nl2br($issue['repiss_comment']); ?></td>
                     </tr>
+                    <tr>
+                        <td><strong><?php echo Label::getLabel('LBL_Reported_By'); ?></strong></td>
+                        <td><?php echo $issue['reporter_username']; ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong><?php echo Label::getLabel('LBL_Reported_Time'); ?></strong></td>
+                        <td><?php echo MyDate::format($issue['repiss_reported_on'], true, true, $userTimezone); ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong><?php echo Label::getLabel('LBL_Current_Status'); ?></strong></td>
+                        <td><?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?></td>
+                    </tr>
+                    <?php if ($canEsclate || $issue['repiss_status'] == ReportedIssue::STATUS_ESCLATED) { ?>
+                        <tr>
+                            <td><strong><?php echo Label::getLabel('LBL_NOT_HAPPY_WITH_SOLUTION?'); ?></strong></td>
+                            <td>
+                                <?php if ($canEsclate) { ?>
+                                    <button onclick="esclateForm(<?php echo $issue['repiss_id']; ?>)" class="btn btn-small btn--filter">
+                                        <?php echo Label::getLabel('LBL_ESCLATE_TO_SUPPORT_TEAM'); ?>
+                                    </button>
+                                <?php } ?> 
+                                <?php if ($issue['repiss_status'] == ReportedIssue::STATUS_ESCLATED) { ?>
+                                    <?php echo Label::getLabel('LBL_ESCLATED_TO_SUPPORT_TEAM'); ?>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>
@@ -79,7 +97,7 @@
                         <td><strong><?php echo Label::getLabel('LBL_Order_Id'); ?>:</strong> <?php echo $issue['sldetail_order_id']; ?></td>
                     </tr>
                     <tr>
-                        <td><strong><?php echo Label::getLabel('LBL_Lesson_Id'); ?>:</strong>  <?php echo $issue['repiss_slesson_id']; ?></td>
+                        <td><strong><?php echo Label::getLabel('LBL_Lesson_Id'); ?>:</strong>  <?php echo $issue['repiss_sldetail_id']; ?></td>
                         <td><strong><?php echo Label::getLabel('LBL_Total_Lesson'); ?>:</strong> <?php echo $issue['op_qty']; ?></td>
                         <td><strong><?php echo Label::getLabel('LBL_Lesson_Price'); ?>:</strong>   <?php echo CommonHelper::displayMoneyFormat($issue['op_unit_price'], true, true); ?></td>
                     </tr>

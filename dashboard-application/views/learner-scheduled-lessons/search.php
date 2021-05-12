@@ -101,6 +101,9 @@ $referer = preg_replace("(^https?://)", "", $referer);
                                 </span>
                             <?php } ?>
                             <span class="card-landscape__status badge color-secondary badge--curve badge--small margin-left-0"><?php echo $lessonsStatus; ?></span>
+                            <?php if ($lesson['repiss_id'] > 0) { ?>
+                                <span class="card-landscape__status badge color-primary badge--curve badge--small margin-left-0"><?php echo Label::getLabel('LBL_Issue_Reported'); ?></span>
+                            <?php } ?>
                         </div>
                         <?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['isLessonPlanAttach'] > 0) { ?>
                             <div class="card-landscape__docs">
