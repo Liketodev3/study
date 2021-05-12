@@ -148,8 +148,8 @@ class ConfigurationsController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
         if (!empty($unselectedSlot)) {
-            $userToLanguage = new UserToLanguage();
-            $userToLanguage->removeTeachSlots($unselectedSlot);
+            $teachLangPrice = new TeachLangPrice();
+            $teachLangPrice->deleteTeachSlots($unselectedSlot);
         }
         $this->set('msg', Label::getLabel('MSG_Setup_Successful', $this->adminLangId));
         $this->set('frmType', $frmType);
@@ -501,6 +501,18 @@ class ConfigurationsController extends AdminBaseController
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Users,_orders,_etc)", $this->adminLangId) . ".</small>";
                 $frm->addHtml('', 'FlashCard', '<h3>' . Label::getLabel('LBL_FlashCards', $this->adminLangId) . '</h3>');
                 $frm->addCheckBox(Label::getLabel("CONF_ENABLE_FLASHCARD", $this->adminLangId), 'CONF_ENABLE_FLASHCARD', 1, [], false, 0);
+
+                $frm->addHtml('', 'Free_Trial', '<h3>' . Label::getLabel('LBL_Free_Trial', $this->adminLangId) . '</h3>');
+                $frm->addCheckBox(Label::getLabel("CONF_ENABLE_FREE_TRIAL", $this->adminLangId), 'CONF_ENABLE_FREE_TRIAL', applicationConstants::YES, [], false, applicationConstants::NO);
+
+                $frm->addHtml('', 'report_issue', '<h3>' . Label::getLabel('LBL_Report/Esclate_Issue_Time', $this->adminLangId) . '</h3>');
+                $fld = $frm->addTextBox(Label::getLabel("CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION", $this->adminLangId), "CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION");
+                $fld->requirements()->setIntPositive();
+                $fld->requirements()->setRange(0, 100);
+                $fld = $frm->addTextBox(Label::getLabel("CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION", $this->adminLangId), "CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION");
+                $fld->requirements()->setIntPositive();
+                $fld->requirements()->setRange(0, 100);
+
                 $frm->addHtml('', 'Grpcls', '<h3>' . Label::getLabel('LBL_Group_Class', $this->adminLangId) . '</h3>');
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Cancellation_Refund_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_CLASS_REFUND_PERCENTAGE");
                 $fld3->requirements()->setIntPositive();

@@ -119,6 +119,7 @@ class TeachersController extends MyAppController
         }
         $teacher_id = $teacherData['user_id'];
         $teacher_id = FatUtility::int($teacher_id);
+        
         /* preferences/skills[ */
         $prefSrch = new UserToPreferenceSearch();
         $prefSrch->joinToPreference($this->siteLangId);
@@ -128,13 +129,13 @@ class TeachersController extends MyAppController
         $prefSrch->addMultipleFields(['preference_type', 'GROUP_CONCAT(IFNULL(preference_title, preference_identifier)) as preference_titles']);
         $prefRs = $prefSrch->getResultSet();
         $teacherPreferences = FatApp::getDb()->fetchAll($prefRs);
+        
         /* ] */
         $srch = new UserSearch();
         $srch->setTeacherDefinedCriteria(true);
         $srch->joinUserLang($this->siteLangId);
         $srch->joinTeacherLessonData();
         $srch->joinUserSpokenLanguages($this->siteLangId);
-        $srch->joinUserTeachLanguage($this->siteLangId);
         $srch->joinUserCountry($this->siteLangId);
         $srch->joinUserState($this->siteLangId);
         if (UserAuthentication::isUserLogged()) {
@@ -153,32 +154,28 @@ class TeachersController extends MyAppController
             'user_country_id',
             'IFNULL(country_name, country_code) as user_country_name',
             'IFNULL(state_name, state_identifier) as user_state_name',
-            'IFNULL(tlanguage_name, tlanguage_identifier) as teachlanguage_name',
             'us_video_link',
             'us_is_trial_lesson_enabled',
             'minPrice',
             'maxPrice',
             'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
-            'utl_slanguage_ids',
-            'utl_booking_slots'
+            'utl_tlanguage_ids',
+            'ustelgpr_slots'
         ]);
         $rs = $srch->getResultSet();
         $teacher = FatApp::getDb()->fetch($rs);
+        
         if (empty($teacher)) {
             FatUtility::exitWithErrorCode(404);
         }
         /* [ */
-        $isFreeTrialEnabled = false;
-        $freeTrialPackageRow = LessonPackage::getFreeTrialPackage($this->siteLangId);
-        if ($teacher['us_is_trial_lesson_enabled'] == applicationConstants::YES && $freeTrialPackageRow) {
-            $isFreeTrialEnabled = true;
-            $this->set('freeTrialPackageRow', $freeTrialPackageRow);
-        }
-        $teacher['isFreeTrialEnabled'] = $isFreeTrialEnabled;
+        $freeTrialConfiguration = FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
+        $teacher['isFreeTrialEnabled'] = ($freeTrialConfiguration == applicationConstants::YES);
         /* ] */
         /* Languages and prices [ */
         $userToLanguage = new UserToLanguage($teacher_id);
-        $userTeachLangs = $userToLanguage->getTeacherPricesForLearner($this->siteLangId, UserAuthentication::getLoggedUserId(true));
+        $loggedUserId = UserAuthentication::getLoggedUserId(true);
+        $userTeachLangs = $userToLanguage->getTeacherPricesForLearner($this->siteLangId, $loggedUserId);
         $tlangArr = [];
         foreach ($userTeachLangs as $userTeachLang) {
             $tlangArr[$userTeachLang['tlanguage_id']] = $userTeachLang['tlanguage_name'];
@@ -193,7 +190,7 @@ class TeachersController extends MyAppController
         /* ] */
         $teacher['isAlreadyPurchasedFreeTrial'] = false;
         if (UserAuthentication::isUserLogged()) {
-            $teacher['isAlreadyPurchasedFreeTrial'] = LessonPackage::isAlreadyPurchasedFreeTrial(UserAuthentication::getLoggedUserId(), $teacher_id);
+            $teacher['isAlreadyPurchasedFreeTrial'] = LessonPackage::isAlreadyPurchasedFreeTrial($loggedUserId, $teacher_id);
         }
         $teacherLessonReviewObj = new TeacherLessonReviewSearch();
         $teacherLessonReviewObj->joinTeacher();
@@ -210,7 +207,7 @@ class TeachersController extends MyAppController
         $reviews = FatApp::getDb()->fetch($teacherLessonReviewObj->getResultSet());
         $this->set('reviews', $reviews);
         $frmReviewSearch = $this->getTeacherReviewSearchForm(FatApp::getConfig('CONF_FRONTEND_PAGESIZE'));
-        $frmReviewSearch->fill(['tlreview_teacher_user_id' => $teacher_id, 'teach_lang_name' => $teacher['teachlanguage_name']]);
+        $frmReviewSearch->fill(['tlreview_teacher_user_id' => $teacher_id]);
         $this->set('frmReviewSearch', $frmReviewSearch);
         $teacher['proficiencyArr'] = SpokenLanguage::getProficiencyArr(CommonHelper::getLangId());
         $teacher['preferences'] = $teacherPreferences;
@@ -243,7 +240,6 @@ class TeachersController extends MyAppController
     public function getTeacherReviews()
     {
         $teacherId = FatApp::getPostedData('tlreview_teacher_user_id');
-        $langName = FatApp::getPostedData('teach_lang_name');
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $orderBy = FatApp::getPostedData('orderBy', FatUtility::VAR_STRING, 'most_recent');
         $page = ($page) ? $page : 1;
@@ -282,7 +278,6 @@ class TeachersController extends MyAppController
         $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $this->set('reviewsList', $records);
         $this->set('page', $page);
-        $this->set('langName', $langName);
         $this->set('pageCount', $srch->pages());
         $this->set('postedData', FatApp::getPostedData());
         $json['startRecord'] = !empty($records) ? ($page - 1) * $pageSize + 1 : 0;
@@ -350,7 +345,7 @@ class TeachersController extends MyAppController
         MyDate::setUserTimeZone();
         $user_timezone = MyDate::getUserTimeZone();
         $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
-        $teacherBookingBefore = current(UserSetting::getUserSettings($teacher_id))['us_booking_before'];
+        $teacherBookingBefore = UserSetting::getUserSettings($teacher_id)['us_booking_before'];
         if ('' == $teacherBookingBefore) {
             $teacherBookingBefore = 0;
         }
@@ -602,7 +597,7 @@ class TeachersController extends MyAppController
         $srch->setTeacherDefinedCriteria(false, false);
         $tlangSrch = $srch->getMyTeachLangQry(true, $this->siteLangId, $teachLangId);
         $tlangSrch->addCondition('utl.utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
-        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_us_user_id', 'utls');
+        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_user_id', 'utls');
         $srch->joinUserSpokenLanguages($this->siteLangId);
         $srch->joinUserCountry($this->siteLangId);
         $srch->joinUserAvailibility();

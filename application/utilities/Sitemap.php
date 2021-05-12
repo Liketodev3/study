@@ -11,7 +11,7 @@ class Sitemap
         $srch->addFld('DISTINCT user_url_name, CONCAT(user_first_name, " ", user_last_name) as user_full_name');
         $srch->setTeacherDefinedCriteria(false, false);
         $tlangSrch = $srch->getMyTeachLangQry(true, $langId);
-        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_us_user_id', 'utls');
+        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_user_id', 'utls');
         $srch->joinUserSpokenLanguages($langId);
         $srch->joinUserCountry($langId);
         $srch->joinUserAvailibility();

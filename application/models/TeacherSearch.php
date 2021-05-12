@@ -94,12 +94,12 @@ class TeacherSearch extends SearchBase
         $teachLangId = FatUtility::int($post['teachLangId'] ?? 0);
         if ($teachLangId > 0) {
             $srch = new SearchBase('tbl_user_teach_languages');
-            $srch->addFld('DISTINCT utl_us_user_id as utl_us_user_id');
-            $srch->addCondition('utl_slanguage_id', '=', $teachLangId);
+            $srch->addFld('DISTINCT utl_user_id as utl_user_id');
+            $srch->addCondition('utl_tlanguage_id', '=', $teachLangId);
             $srch->doNotCalculateRecords();
             $srch->doNotLimitRecords();
             $subTable = '(' . $srch->getQuery() . ')';
-            $this->joinTable($subTable, 'INNER JOIN', 'utl.utl_us_user_id = teacher.user_id', 'utl');
+            $this->joinTable($subTable, 'INNER JOIN', 'utl.utl_user_id = teacher.user_id', 'utl');
         }
 
         /* Speak Language */
@@ -314,11 +314,11 @@ class TeacherSearch extends SearchBase
             return [];
         }
         $srch = new SearchBase('tbl_user_teach_languages', 'utl');
-        $srch->joinTable('tbl_teaching_languages_lang', 'INNER JOIN', 'tlanguage.tlanguagelang_tlanguage_id = utl.utl_slanguage_id', 'tlanguage');
-        $srch->addMultipleFields(['utl.utl_us_user_id', 'GROUP_CONCAT(tlanguage.tlanguage_name) as tlanguage_name']);
+        $srch->joinTable('tbl_teaching_languages_lang', 'INNER JOIN', 'tlanguage.tlanguagelang_tlanguage_id = utl.utl_tlanguage_id', 'tlanguage');
+        $srch->addMultipleFields(['utl.utl_user_id', 'GROUP_CONCAT(tlanguage.tlanguage_name) as tlanguage_name']);
         $srch->addCondition('tlanguage.tlanguagelang_lang_id', '=', $langId);
-        $srch->addCondition('utl.utl_us_user_id', 'IN', $teacherIds);
-        $srch->addGroupBy('utl.utl_us_user_id');
+        $srch->addCondition('utl.utl_user_id', 'IN', $teacherIds);
+        $srch->addGroupBy('utl.utl_user_id');
         $srch->doNotCalculateRecords();
         $result = $srch->getResultSet();
         return FatApp::getDb()->fetchAllAssoc($result);

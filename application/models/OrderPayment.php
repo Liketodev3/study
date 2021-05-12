@@ -242,7 +242,7 @@ class OrderPayment extends Order
                             }
 
                             // share on student google calendar
-                            $token = current(UserSetting::getUserSettings($orderInfo['order_user_id']))['us_google_access_token'];
+                            $token = UserSetting::getUserSettings($orderInfo['order_user_id'])['us_google_access_token'];
                             if ($token) {
                                 $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', [$sldetailId]);
                                 $google_cal_data = [
@@ -262,7 +262,7 @@ class OrderPayment extends Order
                                 }
                             }
                             // share on teacher google calendar
-                            $token = current(UserSetting::getUserSettings($orderInfo['op_teacher_id']))['us_google_access_token'];
+                            $token = UserSetting::getUserSettings($orderInfo['op_teacher_id'])['us_google_access_token'];
                             if ($token) {
                                 $sLessonObj = new ScheduledLesson($slesson_id);
                                 $sLessonObj->loadFromDb();
