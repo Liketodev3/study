@@ -468,7 +468,6 @@ CREATE TABLE `tbl_reported_issues` (
   `repiss_sldetail_id` int NOT NULL,
   `repiss_reported_on` datetime NOT NULL,
   `repiss_reported_by` int NOT NULL,
-  `repiss_reported_by_type` int NOT NULL,
   `repiss_status` int NOT NULL,
   `repiss_comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `repiss_updated_on` datetime DEFAULT NULL

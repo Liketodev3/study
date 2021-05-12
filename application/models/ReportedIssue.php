@@ -43,10 +43,9 @@ class ReportedIssue extends MyAppModel
         $this->assignValues([
             'repiss_comment' => $comment,
             'repiss_sldetail_id' => $sldetailId,
-            'repiss_title' => $options[$titleId] ?? 'NA',
-            'repiss_reported_by_type' => static::USER_TYPE_LEARNER,
+            'repiss_reported_by' => $this->userId,
             'repiss_reported_on' => date('Y-m-d H:i:s'),
-            'repiss_reported_by' => $this->userId
+            'repiss_title' => $options[$titleId] ?? 'NA'
         ]);
         if (!$this->save()) {
             return false;
@@ -185,9 +184,8 @@ class ReportedIssue extends MyAppModel
         $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'sll.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND sll.tlanguagelang_lang_id = ' . $adminLangId, 'sll');
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sldetail.sldetail_learner_id = ul.user_id', 'ul');
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'slesson.slesson_teacher_id = ut.user_id', 'ut');
-        $srch->addMultipleFields(['repiss.repiss_id', 'repiss.repiss_title', 'repiss.repiss_sldetail_id',
-            'repiss.repiss_reported_on', 'repiss.repiss_reported_by', 'repiss.repiss_reported_by_type',
-            'repiss.repiss_status', 'repiss.repiss_comment', 'repiss.repiss_updated_on', "us.*",
+        $srch->addMultipleFields(['repiss.repiss_id', 'repiss.repiss_title', 'repiss.repiss_sldetail_id', 'repiss.repiss_reported_on',
+            'repiss.repiss_reported_by', 'repiss.repiss_status', 'repiss.repiss_comment', 'repiss.repiss_updated_on', "us.*",
             'sldetail.sldetail_order_id', 'sldetail.sldetail_learner_id', 'sldetail.sldetail_learner_join_time',
             'slesson.slesson_teacher_join_time', 'sldetail.sldetail_learner_end_time', 'slesson.slesson_teacher_id',
             'slesson.slesson_teacher_end_time', 'slesson.slesson_ended_by', 'slesson.slesson_ended_on',
@@ -315,6 +313,18 @@ class ReportedIssue extends MyAppModel
             return $arr;
         }
         return $arr[$key] ?? Label::getLabel('LBL_NA');
+    }
+
+    public function transactionSettlement(int $status): bool
+    {
+        $srch = new SearchBase(static::DB_TBL, 'repiss');
+        $srch->addCondition('repiss.repiss_status', '=', $status);
+        $srch->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sldetail.sldetail_id=repiss.repiss_sldetail_id', 'sldetail');
+        $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_id=sldetail.sldetail_slesson_id', 'slesson');
+        $srch->joinTable(Order::DB_TBL, 'INNER JOIN', 'orders.order_id=sldetail.sldetail_order_id', 'orders');
+        $srch->joinTable('tbl_order_products', 'INNER JOIN', 'op.op_order_id=orders.order_id', 'op');
+        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'repiss.repiss_reported_by=user.user_id', 'user');
+        return true;
     }
 
 }

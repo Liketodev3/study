@@ -32,8 +32,8 @@ class ReportedIssuesController extends AdminBaseController
         }
         $srch = ReportedIssue::getSearchObject();
         $srch->addMultipleFields(['repiss.repiss_id', 'repiss.repiss_title', 'repiss.repiss_sldetail_id',
-            'repiss.repiss_reported_on', 'repiss.repiss_reported_by', 'repiss.repiss_reported_by_type',
-            'repiss.repiss_status', 'repiss.repiss_comment', 'repiss.repiss_updated_on', 'sldetail.sldetail_order_id',
+            'repiss.repiss_reported_on', 'repiss.repiss_reported_by', 'repiss.repiss_status',
+            'repiss.repiss_comment', 'repiss.repiss_updated_on', 'sldetail.sldetail_order_id',
             'CONCAT(user.user_first_name, " ", user.user_last_name) AS reporter_username']);
         if ($post['repiss_status'] > 0) {
             $srch->addCondition('repiss.repiss_status', '=', $post['repiss_status']);
