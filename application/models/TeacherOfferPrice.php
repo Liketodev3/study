@@ -15,8 +15,13 @@ class TeacherOfferPrice extends MyAppModel
         $this->learnerId =  $learnerId;
     }
 
-    public function saveOffer(float $percentage, int $lesonDuration )
+    public function saveOffer(float $percentage, int $lesonDuration)
     {
+        if (0 > $this->teacherId || 0 > $this->learnerId) {
+            $this->error = Label::getLabel('LBL_INVALID_REQUEST');
+            return false;
+        }
+
         $data = [
             'top_percentage' => $percentage,
             'top_lesson_duration' => $lesonDuration,
@@ -27,17 +32,17 @@ class TeacherOfferPrice extends MyAppModel
         return $this->addNew([], $data);
     }
 
-    public function removeOffer(int $learnerId, int $teacherId): bool
+    public function removeOffer(): bool
     {
-        if (0 > $learnerId || 0 > $teacherId) {
-            $this->error = Label::getLabel('LBL_Invalid_Request');
+        if (0 > $this->teacherId || 0 > $this->learnerId) {
+            $this->error = Label::getLabel('LBL_INVALID_REQUEST');
             return false;
         }
         $db = FatApp::getDb();
         if (!$db->deleteRecords(static::DB_TBL, [
-                    "smt" => "top_learner_id = ? and top_teacher_id = ?",
-                    "vals" => [$learnerId, $teacherId]
-                ])) {
+            "smt" => "top_learner_id = ? and top_teacher_id = ?",
+            "vals" => [$this->learnerId, $this->teacherId]
+        ])) {
             $this->error = $db->getError();
             return false;
         }
@@ -66,5 +71,4 @@ class TeacherOfferPrice extends MyAppModel
         $srch->doNotCalculateRecords();
         return FatApp::getDb()->fetchAll($srch->getResultSet());
     }
-
 }

@@ -2,7 +2,7 @@
 $frm->setFormTagAttribute('class','form');
 $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 12;
-$frm->setFormTagAttribute('onsubmit', 'setUpOfferPrice(this); return(false);');
+$frm->setFormTagAttribute('onsubmit', 'setUpOffer(this); return(false);');
  ?>
 <div class="box -padding-20">
 	<?php //echo $frm->getFormHtml(); ?>

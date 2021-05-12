@@ -39,12 +39,12 @@ $(function() {
 		}); 
 	};
 	
-	unlockOfferPrice = function(learnerId){
+	unlockOffer = function(learnerId){
 		var agree = confirm(langLbl.confirmUnLockPrice);
 		if( !agree ){
 			return false;
 		}
-		fcom.updateWithAjax(fcom.makeUrl('TeacherStudents', 'unlockOfferPrice'), 'learnerId='+learnerId , function(t) {
+		fcom.updateWithAjax(fcom.makeUrl('TeacherStudents', 'unlockOffer'), 'learnerId='+learnerId , function(t) {
 			$.facebox.close();	
 			var frm = document.frmTeacherStudentsSearchPaging;				
 			searchStudents(frm);

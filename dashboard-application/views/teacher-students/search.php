@@ -60,11 +60,11 @@
 							?>
 								<p>
 									<?php
-                                        $percentage = '0%';
+                                        $percentageStr = Label::getLabel('LBL_N/A');
 										if (!empty($percentages[$i])) {
-											$percentage = sprintf(Label::getLabel('LBL_%d_mins'), $duration) . ': ' . $percentages[$i].'%';
+											$percentageStr = sprintf(Label::getLabel('LBL_%d_mins'), $duration) . ': ' . $percentages[$i].'%';
 										} 
-                                        echo $percentage;
+                                        echo $percentageStr;
 									?>
 								</p>
 							<?php } ?>
