@@ -226,9 +226,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $post = ['sldetail_learner_id' => $userId,
             'sldetail_id' => FatUtility::int($ldetailId)];
         $srch = new LessonSearch($this->siteLangId);
+        $srch->joinTeacherLessonPlans();
         $srch->addSearchDetailFields();
         $srch->applyPrimaryConditions();
         $srch->applySearchConditions($post);
+        $srch->addFld('tlpn.tlpn_title');
+        $srch->addFld('tlpn.tlpn_id');
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $lesson = current($srch->fetchAll());
