@@ -282,7 +282,7 @@ foreach ($userTeachLangs as $key => $value) {
 															foreach ($value['langPrices'] as $priceInfo) {
 																$onclick = '';
 																if ($loggedUserId != $teacher['user_id']) {
-																	// $onclick = "cart.add('" . $teacher['user_id'] . "','" . $lessonPackage['lpackage_id'] . "','','','" . $lang_id . "', 0, '" . $slot . "')";
+																	 $onclick = "cart.add('" . $teacher['user_id'] . "','" . $lessonPackage['lpackage_id'] . "','','','" . $lang_id . "', 0, '" . $slot . "')";
 																} ?>
 																<li>
 																	<a href="javascript:;" onClick="<?php echo $onclick; ?>">

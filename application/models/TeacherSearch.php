@@ -391,4 +391,15 @@ class TeacherSearch extends SearchBase
     {
         $this->conditions = [];
     }
+
+     /**
+     * Join setting Tabel
+     * 
+     * @return void
+     */
+
+    public function joinSettingTabel(): void
+    {
+        $this->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = teacher.user_id', 'us');
+    }
 }

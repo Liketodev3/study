@@ -172,7 +172,7 @@ class TeachersController extends MyAppController
         }
         /* [ */
         $freeTrialConfiguration = FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
-        $teacher['isFreeTrialEnabled'] = ($freeTrialConfiguration == applicationConstants::YES);
+        $teacher['isFreeTrialEnabled'] = ($freeTrialConfiguration == applicationConstants::YES &&  $teacher['us_is_trial_lesson_enabled'] == applicationConstants::YES);
         /* ] */
         /* Languages and prices [ */
         
@@ -214,7 +214,7 @@ class TeachersController extends MyAppController
         /* ] */
         $teacher['isAlreadyPurchasedFreeTrial'] = false;
         if (UserAuthentication::isUserLogged()) {
-            $teacher['isAlreadyPurchasedFreeTrial'] = LessonPackage::isAlreadyPurchasedFreeTrial($loggedUserId, $teacherId);
+            $teacher['isAlreadyPurchasedFreeTrial'] = OrderProduct::isAlreadyPurchasedFreeTrial($loggedUserId, $teacherId);
         }
 
         $teacherLessonReviewObj = new TeacherLessonReviewSearch();
@@ -415,7 +415,7 @@ class TeachersController extends MyAppController
         $tWsch = new TeacherWeeklySchedule();
         $checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime);
         $returnArray = [
-            'status' => $checkAvialSlots,
+            'status' => ($checkAvialSlots) ? applicationConstants::YES :applicationConstants::NO,
         ];
         if (!empty($tWsch->getError())) {
             $returnArray['msg'] = $tWsch->getError();

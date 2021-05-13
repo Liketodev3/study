@@ -9,11 +9,7 @@ class LoggedUserController extends MyAppController
         UserAuthentication::checkLogin();
         $this->userDetails = $this->verifyLoggedUser();
         $this->set('userDetails',$this->userDetails);
-        if (!FatUtility::isAjaxCall() && $this->userDetails['user_is_teacher'] == applicationConstants::YES) {
-            $this->teacherProfileProgress = User::getTeacherProfileProgress();
-            // prx($this->teacherProfileProgress);
-            $this->set('teacherProfileProgress', $this->teacherProfileProgress);
-        }
+       
     }
 
     private function verifyLoggedUser()
