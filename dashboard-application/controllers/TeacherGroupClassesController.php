@@ -37,7 +37,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         $srch3->addDirectCondition('slesson_grpcls_id=grpcls_id');
         $srch3->doNotCalculateRecords();
         $srch3->doNotLimitRecords();
-        $srch3->addFld('slesson_teacher_join_time>0');
+        $srch3->addFld('slesson_teacher_join_time > 0');
         $teacher_id = UserAuthentication::getLoggedUserId();
 
         $srch = new SearchBase(TeacherGroupClasses::DB_TBL, 'grpcls');

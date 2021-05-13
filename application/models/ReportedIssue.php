@@ -357,10 +357,16 @@ class ReportedIssue extends MyAppModel
 
     /**
      * Completed Lesson Transaction Settlement cronjob
+     * 
+     * Step 1. Get completed lesson without issue
+     * Step 2. Add payment to teacher's wallet
+     * Step 3. Mark lesson detail record as paid
+     * 
      * @return boolean
      */
     public static function completedLessonSettlement()
     {
+        /* Get completed lesson without issue */
         $hours = FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION');
         $srch = new SearchBase(ScheduledLesson::DB_TBL, 'slesson');
         $srch->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sldetail.sldetail_slesson_id=slesson.slesson_id', 'sldetail');
@@ -378,6 +384,12 @@ class ReportedIssue extends MyAppModel
         $srch->doNotCalculateRecords();
         $resultSet = $srch->getResultSet();
         while ($lesson = FatApp::getDb()->fetch($resultSet)) {
+            $db = FatApp::getDb();
+            if (!$db->startTransaction()) {
+                $this->error = Label::getLabel('LBL_PLEASE_TRY_AGAIN');
+                return false;
+            }
+            /* Add payment to teacher's wallet */
             $teacherPercent = 100 - $lesson['op_commission_percentage'];
             $teacherAmount = ( $teacherPercent * $lesson['op_unit_price']) / 100;
             $txn = new Transaction($lesson['slesson_teacher_id']);
@@ -392,6 +404,21 @@ class ReportedIssue extends MyAppModel
             ];
             if (!$txn->addTransaction($data)) {
                 $this->error = $txn->getError();
+                $db->rollbackTransaction();
+                return false;
+            }
+            /* Mark lesson detail record as paid */
+            $whr = ['smt' => 'sldetail_id = ?', 'vals' => [$lesson['sldetail_id']]];
+            $record = new TableRecord(ScheduledLessonDetails::DB_TBL);
+            $record->setFldValue('sldetail_is_teacher_paid', '1');
+            if (!$record->update($whr)) {
+                $this->error = $record->getError();
+                $db->rollbackTransaction();
+                return false;
+            }
+            if (!$db->commitTransaction()) {
+                $this->error = Label::getLabel('LBL_PLEASE_TRY_AGAIN');
+                $db->rollbackTransaction();
                 return false;
             }
         }
