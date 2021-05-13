@@ -134,8 +134,7 @@ $isTeacherDashboardTabActive = (User::getDashboardActiveTab() == User::USER_TEAC
 								</a>
 							</li>
 							<li class="menu__item">
-								<a href="#">
-									
+								<a href="javascript::void(0)" onclick="deleteAccount()">									
 									<?php echo Label::getLabel('LBL_Deactivate_Account');?>
 									<span class="menu__icon"></span>
 								</a>

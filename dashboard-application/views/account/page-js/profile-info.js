@@ -282,7 +282,7 @@ $(document).ready(function () {
 
 	teacherLanguagesForm = function () {
 		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherLanguagesForm'), '', function (t) {
+		fcom.ajax(fcom.makeUrl('Teacher', 'teacherLanguagesForm'), '', function(t) {
 			$(dv).html(t);
 			teachLangs = $('[name^=teach_lang_id]').map(function () {
 				return this.value
@@ -474,18 +474,18 @@ $(document).ready(function () {
 		});
 	};
 
-	deleteTeachLanguageRow = function (id) {
+	deleteAccount = function () {
 		$.confirm({
 			title: langLbl.Confirm,
-			content: langLbl.confirmRemove,
+			content: langLbl.gdprDeleteAccDesc,
 			buttons: {
 				Proceed: {
 					text: langLbl.Proceed,
 					btnClass: 'btn btn--primary',
 					keys: ['enter', 'shift'],
 					action: function () {
-						fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeachLanguageRow', [id]), '', function (t) {
-							teacherLanguagesForm();
+						fcom.ajax(fcom.makeUrl('Account', 'deleteAccountForm'), '', function (t) {
+							$.facebox(t);
 						});
 					}
 				},
@@ -498,6 +498,19 @@ $(document).ready(function () {
 				}
 			}
 		});
+	};
+
+	setUpGdprDelAcc = function(frm){
+
+		if (!$(frm).validate()) return false;
+		var data = fcom.frmData(frm);
+		$.loader.show();
+		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpGdprDeleteAcc'),data, function (t) {
+			$.loader.hide();
+			$.facebox.close();
+						
+		});
+
 	};
 
 
@@ -521,7 +534,7 @@ $(document).ready(function () {
 	};
 
 	setUpTeacherQualification = function (frm) {
-		if (!$(frm).validate()) return false;
+		if(!$(frm).validate()) return false;
 		if (isRuningTeacherQualificationFormAjax) {
 			return false;
 		}
@@ -573,7 +586,7 @@ $(document).ready(function () {
 	deleteTeacherQualification = function (id) {
 		if (confirm(langLbl['confirmRemove'])) {
 			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherQualification', [id]), '', function (t) {
-				teacherQualification();
+				$.facebox(fcom.getLoader());
 				$.facebox.close();
 			});
 		}
@@ -739,15 +752,7 @@ $(document).ready(function () {
 		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileLangInfo'), data, function (t) {
 			$.loader.hide();
-			if(!gotToNextLangForm) {
-				if (t.langId > 0) {
-					getLangProfileInfoForm(t.langId);
-					return;
-				}
-			}
-			else if($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0){
-				$('.profile-lang-tab.is-active').next('.profile-lang-tab').find('a').click();
-			}
+			f
 			
 		});
 	};

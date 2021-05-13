@@ -534,17 +534,30 @@ class AttachedFile extends MyAppModel
         return $file;
     }
 
-    public function deleteFile($fileType, $recordId, $fileId = 0, $record_subid = 0, $langId = -1, $screen = 0)
+    public function deleteFile($fileType, $recordId, $fileId = 0, $recordSubId  = 0, $langId = -1, $screen = 0):bool
     {
         $fileType = FatUtility::int($fileType);
         $recordId = FatUtility::int($recordId);
         $fileId = FatUtility::int($fileId);
-        $record_subid = FatUtility::int($record_subid);
+        $recordSubId = FatUtility::int($recordSubId);
         $langId = FatUtility::int($langId);
         if (!in_array($fileType, array(AttachedFile::FILETYPE_ADMIN_LOGO, AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, AttachedFile::FILETYPE_FRONT_LOGO, AttachedFile::FILETYPE_FRONT_WHITE_LOGO, AttachedFile::FILETYPE_EMAIL_LOGO, AttachedFile::FILETYPE_FAVICON, AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE, AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, AttachedFile::FILETYPE_WATERMARK_IMAGE, AttachedFile::FILETYPE_APPLE_TOUCH_ICON, AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, AttachedFile::FILETYPE_MOBILE_LOGO, AttachedFile::FILETYPE_CATEGORY_COLLECTION_BG_IMAGE, AttachedFile::FILETYPE_LESSON_PAGE_IMAGE)) && (!$fileType || !$recordId)) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
             return false;
         }
+
+        $fileRow = AttachedFile::getAttachment($fileType, $recordId, $recordSubId,$langId);
+        if(!$fileRow){
+            $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
+            return false;
+        }
+
+        $uploadedFilePath = CONF_UPLOADS_PATH.$fileRow['afile_physical_path'];
+        if(!unlink($uploadedFilePath)){
+            $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
+            return false;
+        }
+
         /* default will delete all files of requested recordId */
         $smt1 = 'afile_type = ? AND afile_record_id = ?';
         $dataArr1 = [$fileType, $recordId];

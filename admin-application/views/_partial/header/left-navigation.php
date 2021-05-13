@@ -341,6 +341,10 @@
                 <li><a href="<?php echo CONF_WEBROOT_FRONT_URL ?>sitemap.xml" target="_blank"><?php echo Label::getLabel('LBL_View_XML', $adminLangId); ?></a></li>
             </ul>
 		</li>
+		<!--  GDPR Requests Enable/Disable Start -->
+        <li><a href="<?php echo CommonHelper::generateUrl('GdprRequests')?>"><?php echo Label::getLabel('LBL_Gdpr_Approval_Requests',$adminLangId);?></a>
+		</li>
+		<!--  GDPR Requests Enable/Disable End -->
 	</ul>
 	</div>
 </aside>
