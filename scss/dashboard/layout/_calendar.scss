@@ -18,6 +18,15 @@ $montly-lesson-calendar: "montly-lesson-calendar";
     }
 }
 
+$scheduled-lesson-popup: "scheduled-lesson-popup";
+
+.#{$scheduled-lesson-popup} {
+    
+    .fc-header-toolbar{
+        margin-top: 20px;
+    }
+}
+
 $fc-scroller-harness: "fc-scroller-harness";
 
 .#{$fc-scroller-harness} {
@@ -165,6 +174,15 @@ $dashboard-calendar: "dashboard-calendar";
     }
 }
 
+.fc-v-event{
+    border: 1px solid #f05856;
+    background-color: #f05856;
+}
+
+.availability-setting-calendar .slot_available{
+    background: #0ab359;
+    border-color: #0ab359;
+}
 @media (max-width:theme('breakpoints.md','value')) {
     .fc .fc-header-toolbar{
         flex-direction: column;
@@ -177,3 +195,4 @@ $dashboard-calendar: "dashboard-calendar";
         margin-bottom: 16px;
     }
 }
+

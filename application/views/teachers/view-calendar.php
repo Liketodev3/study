@@ -38,18 +38,23 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 <div class="tooltipevent-wrapper-js d-none">
     <div class="tooltipevent" style="position:absolute;z-index:10001;">
         <div class="booking-view">
-            <h3 class="-display-inline"><?php echo $teacher_name; ?></h3>
-            <span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($teacher_country_id, 'DEFAULT') ); ?>" alt=""></span>
-            <div class="inline-list">
-                <div class="inline-list__value highlight tooltipevent-time-js">
-                    <strong><?php echo Label::getLabel("LBL_Date") ?></strong> 
-                    <span>{{displayEventDate}}</span>
+            <div class="booking__head">
+                <h3 class="-display-inline"><?php echo $teacher_name; ?></h3>
+                <span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image','countryFlag', array($teacher_country_id, 'DEFAULT') ); ?>" alt=""></span>
+            </div>
+            <div class="booking__body">
+                <div class="inline-list">
+                    <div class="inline-list__value highlight tooltipevent-time-js">
+                        <strong><?php echo Label::getLabel("LBL_Date") ?></strong> 
+                        <span>{{displayEventDate}}</span>
+                    </div>
                 </div>
+                <div class="-gap-10"></div>
+                <div class="-align-left">
+                    <a href="javascript:void(0);" onClick="cart.add(<?php echo $teacher_id; ?>, <?php echo $lPackageId; ?>, '{{selectedStartDateTime}}', '{{selectedEndDateTime}}', '<?php echo $languageId;?>' );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Book_Lesson!'); ?></a>
+                </div>
+                <a onclick="$('body > .tooltipevent').remove();" href="javascript:;" class="-link-close"></a>
             </div>
-            <div class="-align-center">
-                <a href="javascript:void(0);" onClick="cart.add(<?php echo $teacher_id; ?>, <?php echo $lPackageId; ?>, '{{selectedStartDateTime}}', '{{selectedEndDateTime}}', '<?php echo $languageId;?>' );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Book_Lesson!'); ?></a>
-            </div>
-            <a onclick="$('body > .tooltipevent').remove();" href="javascript:;" class="-link-close"></a>
         </div>
     </div>
 </div>

@@ -651,9 +651,12 @@ img {
 }
 
 .booked-box {
-    background: var(--color-secondary);
+    background: #f05856;
 }
 
+.available-box{
+    background: rgba(20, 224, 110, 0.3);
+}
 
 .-gap-negative {
     margin-top: -30px;
