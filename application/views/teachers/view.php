@@ -28,6 +28,9 @@ foreach ($userTeachLangs as $key => $value) {
 	$price = $price - $percentage;
 	$teacherLangPrices[$slotSlabKey]['langPrices'][] = [
 		'teachLangName' => $value['teachLangName'],
+		'ustelgpr_slot' => $value['ustelgpr_slot'],
+		'prislab_min' => $value['prislab_min'],
+		'teachLangName' => $value['teachLangName'],
 		'utl_tlanguage_id' => $value['utl_tlanguage_id'],
 		'ustelgpr_prislab_id' => $value['ustelgpr_prislab_id'],
 		'ustelgpr_price' => $price,
@@ -282,11 +285,11 @@ foreach ($userTeachLangs as $key => $value) {
 															foreach ($value['langPrices'] as $priceInfo) {
 																$onclick = '';
 																if ($loggedUserId != $teacher['user_id']) {
-																	 $onclick = "cart.add('" . $teacher['user_id'] . "','" . $lessonPackage['lpackage_id'] . "','','','" . $lang_id . "', 0, '" . $slot . "')";
+																	 $onclick = "cart.add('" . $teacher['user_id'] . "','" . $priceInfo['utl_tlanguage_id'] . "','" . $priceInfo['ustelgpr_slot'] . "','" . $priceInfo['prislab_min'] . "')";
 																} ?>
 																<li>
 																	<a href="javascript:;" onClick="<?php echo $onclick; ?>">
-																		<div class="Lprice-lang"><?php echo $priceInfo['teachLangName'] ?></div>
+																		<div class="Lprice-lang"><?php echo $priceInfo['teachLangName']; ?></div>
 																		<div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($priceInfo['ustelgpr_price']) ?></div>
 																	</a>
 																</li>
@@ -302,10 +305,7 @@ foreach ($userTeachLangs as $key => $value) {
 							</div>
 							<?php if ($loggedUserId != $teacher['user_id']) { ?>
 								<div class="Lprice-btn">
-									<?php if (!empty($bookingDuration)) { ?>
-										<a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['user_id']; ?>', '<?php echo $lessonPackage['lpackage_id'] ?>', '','', <?php echo $teacherLanguage . ', 0, ' . $bookingDuration; ?> )" class="btn btn--primary"><?php echo Label::getLabel('LBL_Book_Now') ?></a>
-									<?php } ?>
-
+										<a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['user_id']; ?>','<?php echo $teacherLanguage; ?>','<?php echo $teacher['slot']; ?>', '<?php echo $teacher['minSlab']; ?>')" class="btn btn--primary"><?php echo Label::getLabel('LBL_Book_Now') ?></a>
 									<a href="javascript:void(0)" onClick="generateThread(<?php echo $teacher['user_id']; ?>)" class="btn btn--primary btn-outline-primary">
 										<span class="svg-icon">
 											<svg xmlns="http://www.w3.org/2000/svg" width="15" height="11.782" viewBox="0 0 15 11.782">

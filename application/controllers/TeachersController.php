@@ -160,6 +160,9 @@ class TeachersController extends MyAppController
             'us_is_trial_lesson_enabled',
             'minPrice',
             'maxPrice',
+            'minSlab',
+            'maxSlab',
+            'slot',
             'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
             'utl_tlanguage_ids',
             'ustelgpr_slots'
@@ -204,6 +207,7 @@ class TeachersController extends MyAppController
         else{
             $getUserTeachLanguages->addFld('0 as top_percentage');
         }
+
         $userTeachlanguages = FatApp::getDb()->fetchAll($getUserTeachLanguages->getResultSet());
         // prx($userTeachlanguages);
 
@@ -216,7 +220,7 @@ class TeachersController extends MyAppController
         if (UserAuthentication::isUserLogged()) {
             $teacher['isAlreadyPurchasedFreeTrial'] = OrderProduct::isAlreadyPurchasedFreeTrial($loggedUserId, $teacherId);
         }
-
+        // prx($teacher);
         $teacherLessonReviewObj = new TeacherLessonReviewSearch();
         $teacherLessonReviewObj->joinTeacher();
         $teacherLessonReviewObj->joinLearner();

@@ -48,8 +48,8 @@ class CartController extends LoggedUserController
         if($isFreeTrial == applicationConstants::YES && $teacher['us_is_trial_lesson_enabled'] == applicationConstants::NO){
             FatUtility::dieJsonError(Label::getLabel('LBL_FREE_TRIAL_NOT_ENABLE_BY_TEACHER'));
         }
-
-        if (!empty($startDateTime) && !empty($endDateTime)) {
+       
+        if ($isFreeTrial == applicationConstants::YES && !empty($startDateTime) && !empty($endDateTime)) {
             $userTimezone = MyDate::getUserTimeZone();
             $systemTimeZone = MyDate::getTimeZone();
 
@@ -74,6 +74,7 @@ class CartController extends LoggedUserController
             FatUtility::dieJsonError($cart->getError());
         }
         /* ] */
+        
         $cartData = $cart->getCart($this->siteLangId);
         if(empty($cartData)){
             FatUtility::dieJsonError($cart->getError());
@@ -183,8 +184,8 @@ class CartController extends LoggedUserController
         $groupClassField->requirements()->addOnChangerequirementUpdate(0, 'le', 'lessonDuration', $lessonDurationField->requirements());
 
 
-        $freeTrialField = $form->addRadioButtons(Label::getLabel('LBL_Free_trial'), 'isFreeTrial', applicationConstants::getYesNoArr($this->siteLangId), applicationConstants::NO);
-        $freeTrialField->requirements()->setRequired(true);
+        $freeTrialField = $form->addCheckBox(Label::getLabel('LBL_Free_trial'), 'isFreeTrial', applicationConstants::YES, [], false, applicationConstants::NO);
+        $freeTrialField->requirements()->setRequired(false);
 
         $startDateTimeField = $form->addTextBox(Label::getLabel('LBL_Start_Date_Time'), 'startDateTime');
         $startDateTimeField->requirements()->setRequired(false);

@@ -26,7 +26,7 @@ foreach ($records as $sn => $row) {
 				$td->appendElement('plaintext', array(), $sr_no);
 				break;
 			case 'title':
-				$title = Label::getLabel('LBL_{min}_to_{max}'); //5 to 9 hrs
+				$title = Label::getLabel('LBL_{min}_to_{max}_Lesson(s)'); //5 to 9 hrs
 				$title = str_replace(['{min}', '{max}'], [$row['prislab_min'], $row['prislab_max']], $title);
 				$td->appendElement('plaintext', array(), $title);
 				break;

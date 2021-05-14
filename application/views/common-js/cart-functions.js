@@ -8,7 +8,7 @@ var cart = {
 		}
 		return false;
 	},
-	add: function (teacherId, lessonQty, lessonDuration, languageId) {
+	add: function (teacherId, languageId, lessonDuration, lessonQty) {
 		teacherId = parseInt(teacherId);
 		lessonQty = parseInt(lessonQty);
 		lessonDuration = parseInt(lessonDuration);

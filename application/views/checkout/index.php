@@ -1,5 +1,9 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
-$layoutDirection = CommonHelper::getLayoutDirection(); ?>
+<?php 
+	defined('SYSTEM_INIT') or die('Invalid Usage.');
+	$layoutDirection = CommonHelper::getLayoutDirection(); 
+    $teachLanguages = array_column($userTeachLanguages, 'teachLangName', 'utl_tlanguage_id');
+    $bookingDurations = array_column($userTeachLanguages, 'ustelgpr_slot', 'ustelgpr_slot');
+?>
 <script>
 	var teachLanguages = <?php echo FatUtility::convertToJson($teachLanguages); ?>
 </script>
@@ -30,12 +34,9 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 							<?php if ($cartData['user_country_id'] > 0) { ?>
 								<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($cartData['user_country_id'], 'DEFAULT')); ?>" alt=""></span>
 							<?php } ?>
-
-							<p class="-no-margin-bottom"><?php echo ($cartData['user_state_name'] != '') ? $cartData['user_state_name'] . ', ' : '';
-															echo $cartData['user_country_name']; ?></p>
 						</div>
 						<div class="tabled">
-							<?php if ($cartData['lpackage_is_free_trial'] == applicationConstants::NO) { ?>
+							<?php if ($cartData['isFreeTrial'] == applicationConstants::NO && $cartData['lessonQty'] > 0) { ?>
 								<div class="tabled__cell">
 									<span class="-color-light"><?php echo Label::getLabel('LBL_Language'); ?></span><br>
 									<span class="cart-lang-id-js">
@@ -47,11 +48,12 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 							<?php } ?>
 							<div class="tabled__cell">
 								<span class="-color-light"><?php echo Label::getLabel('LBL_Duration'); ?></span><br>
-								<span class="cart-lesson-duration"> <?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cartData['lessonDuration']); ?></span> </div>
+								<span class="cart-lesson-duration"> <?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cartData['lessonDuration']); ?></span>
+							</div>
 						</div>
 					</div>
 				</div>
-				<?php if ($cartData['lpackage_is_free_trial'] == 0 && count($teachLanguages)) { ?>
+				<?php if ($cartData['isFreeTrial'] == applicationConstants::NO && $cartData['lessonQty'] > 0) { ?>
 					<div class="col-xl-8 col-lg-8 col-md-12">
 						<div class="box -padding-20" style="margin-bottom:30px;">
 							<h3><?php echo Label::getLabel('LBL_Languages_Offered'); ?></h3>
@@ -60,11 +62,10 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 							<div class="selection-list">
 								<ul>
 									<?php foreach ($teachLanguages as $key => $teachLanguage) { ?>
-										<?php if (isset($cartData['grpcls_id']) && $cartData['grpcls_id'] > 0 && $cartData['languageId'] != $key) continue; ?>
 										<li class="<?php echo ($cartData['languageId'] == $key) ? 'is-active' : ''; ?>">
 											<label class="selection">
 												<span class="radio">
-													<input onClick="addToCart('<?php echo $cartData['user_id'] ?>', '<?php echo $cartData['lpackage_id']; ?>','<?php echo $key; ?>', '', '', '<?php echo isset($cartData['grpcls_id']) ? $cartData['grpcls_id'] : 0 ?>', '<?php echo $cartData['lessonDuration']; ?>');" type="radio" name="language" value="<?php echo $key; ?>" <?php echo ($cartData['languageId'] == $key) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
+													<input onchange="addToCart('<?php echo $cartData['teacherId']; ?>', '<?php echo $key; ?>','<?php echo $cartData['lessonDuration']; ?>', '<?php echo $cartData['lessonQty']; ?>');" type="radio" name="language" value="<?php echo $key; ?>" <?php echo ($cartData['languageId'] == $key) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
 												</span>
 												<span class="selection__item">
 													<?php echo $teachLanguage; ?> <small class="-float-right"> </small>
@@ -75,15 +76,35 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 								</ul>
 							</div>
 
-							<?php /* <p><strong>NOTE:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna tempor incididunt ut labore et dolore magna aliqua.</p> */ ?>
-
 						</div>
+					</div>
+					<div class="col-xl-8 col-lg-8 col-md-12" id="booking-durations-js">
+						<div class="box -padding-20" style="margin-bottom:30px;">
+							<h3><?php echo Label::getLabel('LBL_Slot_Duration'); ?></h3>
+							<p><?php echo Label::getLabel('LBL_Choose_Duration_for_lesson'); ?></p>
+							<div class="selection-list">
+								<ul>
+									<?php foreach ($bookingDurations as $lessonDuration) { ?>
+										<li class="<?php echo ($cartData['lessonDuration'] == $lessonDuration) ? 'is-active' : ''; ?>">
+											<label class="selection">
+												<span class="radio">
+													<input onchange="addToCart('<?php echo $cartData['teacherId']; ?>', '<?php echo $cartData['languageId']; ?>','<?php echo $lessonDuration; ?>', '<?php echo $cartData['lessonQty']; ?>');" type="radio" name="lessonDuration" value="<?php echo $lessonDuration; ?>" <?php echo ($cartData['lessonDuration'] == $lessonDuration) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
+												</span>
+												<span class="selection__item">
+													<?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $lessonDuration); ?> <small class="-float-right"> </small>
+												</span>
+											</label>
+										</li>
+									<?php } ?>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-8 col-lg-8 col-md-12" id="price-slabs">
 					</div>
 				<?php } ?>
 
-				<div class="col-xl-8 col-lg-8 col-md-12" id="booking-durations-js"></div>
-
-				<div class="col-xl-8 col-lg-8 col-md-12" id="lsn-pckgs"></div>
+			
 
 				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right">
 					<div class="box" style="margin-bottom: 30px;" id="financialSummaryListing">
@@ -112,7 +133,6 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 					</div>
 				</div>
 			</div>
-
 		</div>
 </section>
 
@@ -121,8 +141,8 @@ $layoutDirection = CommonHelper::getLayoutDirection(); ?>
 	if ($cartData['orderNetAmount'] > 0) {
 		echo 'loadPaymentSummary();';
 	}
-	if ($cartData['lpackage_is_free_trial'] == 0 and $cartData['user_id'] > 0 and $cartData['languageId'] > 0) {
+	if ($cartData['isFreeTrial'] == applicationConstants::NO && $cartData['lessonQty'] > 0) {
 	?>
-		getLangPackages('<?php echo $cartData['user_id']; ?>', <?php echo $cartData['languageId'] . ',' . $cartData['lessonDuration']; ?>);
+		getTeacherPriceSlabs(<?php echo $cartData['languageId'] . ',' . $cartData['lessonDuration']; ?>);
 	<?php } ?>
 </script>

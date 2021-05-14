@@ -21,35 +21,21 @@ class CheckoutController extends LoggedUserController
             }
             FatApp::redirectUser(CommonHelper::generateUrl());
         }
-        if (0 >= $cartData['grpcls_id']) {
-            $lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
-            if (empty($lessonPackages)) {
-                Message::addErrorMessage(Label::getLabel('MSG_PLEASE_CONCAT_WITH_ADMIN_NO_LESSON_PACKAGE_ACTIVE'));
-                FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
+        if (0 >= $cartData['grpclsId']) {
+            $getUserTeachLanguages = $this->getTeacherTeachLanguages($cartData['teacherId']);
+            $userTeachLanguages = FatApp::getDb()->fetchAll($getUserTeachLanguages->getResultSet());
+            if(empty($userTeachLanguages)){
+                Message::addErrorMessage(Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.'));
+                FatApp::redirectUser(CommonHelper::generateUrl());
             }
-            $this->set('lessonPackages', $lessonPackages);
-            $lessonPackageIds = array_column($lessonPackages, 'lpackage_id', 'lpackage_id');
-            if (!array_key_exists($cartData['lpackage_id'], $lessonPackageIds)) {
-                $cartData['lpackage_id'] = $lessonPackages[0]['lpackage_id'];
-                $cart = new Cart();
-                $cart->updateLessonPackageId($cartData['lpackage_id']);
-            }
+            $this->set('userTeachLanguages', $userTeachLanguages);
         }
-        $userToLanguage = new UserToLanguage($cartData['user_id']);
-        $tLangSettings = $userToLanguage->getTeachingSettings($this->siteLangId);
-        $tlangArr = [];
-        foreach ($tLangSettings as $tLangSetting) {
-            $tlangArr[$tLangSetting['tlanguage_id']] = $tLangSetting['tlanguage_name'];
-        }
-        $this->set('teachLanguages', $tlangArr);
+
         $confirmForm = $this->getConfirmFormWithNoAmount($this->siteLangId);
         if ($cartData['orderNetAmount'] <= 0) {
             $confirmForm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Confirm_Order'));
         }
         $this->set('confirmForm', $confirmForm);
-        $bookingDurations = array_unique(array_column($tLangSettings, 'utl_booking_slot'));
-        sort($bookingDurations);
-        $this->set('bookingDurations', $bookingDurations);
         $this->set('cartData', $cartData);
         $this->_template->render();
     }
@@ -358,20 +344,20 @@ class CheckoutController extends LoggedUserController
         if (0 >= $orderNetAmount) {
             $redirectUrl = CommonHelper::generateUrl('FreePay', 'Charge', [$order->getOrderId()], CONF_WEBROOT_FRONT_URL);
             $this->set('redirectUrl', $redirectUrl);
-            FatUtility::dieJsonSuccess(['redirectUrl'=> $redirectUrl, 'msg' => $msg]);
+            FatUtility::dieJsonSuccess(['redirectUrl' => $redirectUrl, 'msg' => $msg]);
         }
         $userId = UserAuthentication::getLoggedUserId();
         $userWalletBalance = User::getUserBalance($userId);
         if ($orderNetAmount > 0 && $cartData['cartWalletSelected'] && ($userWalletBalance >= $orderNetAmount) && !$pmethodId) {
             $redirectUrl = CommonHelper::generateUrl('WalletPay', 'Charge', [$order->getOrderId()], CONF_WEBROOT_FRONTEND);
-            FatUtility::dieJsonSuccess(['redirectUrl'=> $redirectUrl, 'msg' => $msg]);
+            FatUtility::dieJsonSuccess(['redirectUrl' => $redirectUrl, 'msg' => $msg]);
         }
         if ($pmethodId > 0) {
             $controller = $paymentMethod['pmethod_code'] . 'Pay';
             $redirectUrl = CommonHelper::generateUrl($controller, 'charge', [$order->getOrderId()], CONF_WEBROOT_FRONTEND);
             $this->cartObj->clear();
             $this->cartObj->updateUserCart();
-            FatUtility::dieJsonSuccess(['redirectUrl'=> $redirectUrl, 'msg' => $msg]);
+            FatUtility::dieJsonSuccess(['redirectUrl' => $redirectUrl, 'msg' => $msg]);
             $this->_template->render(false, false, 'json-success.php');
         }
         Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
@@ -475,6 +461,39 @@ class CheckoutController extends LoggedUserController
         $this->_template->render(false, false);
     }
 
+    public function getTeacherPriceSlabs()
+    {
+        $pricSlabForm = $this->pricSlabForm();
+        $post =  $pricSlabForm->getFormDataFromArray(FatApp::getPostedData());
+
+        if($post == false){
+            FatUtility::dieJsonError(current($pricSlabForm->getValidationErrors()));
+        }
+       
+        $cartData = $this->cartObj->getCart($this->siteLangId);
+        $criteria = ['isUserLogged' => true, 'hasItems' => true];
+        if (!$this->isEligibleForNextStep($criteria)) {
+            $errMsg = Label::getLabel('MSG_Something_went_wrong,_please_try_after_some_time.');
+            if (Message::getErrorCount()) {
+                $errMsg = Message::getHtml();
+            } 
+            FatUtility::dieWithError($errMsg);
+        }
+
+        $getUserTeachLanguages = $this->getTeacherTeachLanguages($cartData['teacherId']);
+        $getUserTeachLanguages->addCondition('utl_tlanguage_id', '=', $post['languageId']);
+        $getUserTeachLanguages->addCondition('ustelgpr_slot', '=' , $post['lessonDuration']);
+        $getUserTeachLanguages->addFld('IF(prislab_max >= '.$cartData['lessonQty'].' and prislab_min <= '.$cartData['lessonQty'].', 1,0) as isSlapCollapse');
+        $slabs = FatApp::getDb()->fetchAll($getUserTeachLanguages->getResultSet(), 'ustelgpr_prislab_id');
+        if(empty($slabs)){
+            FatUtility::dieJsonError(Label::getLabel('LBL_SLAB_NOT_AVAILABLE'));
+        }
+        
+        $this->set('slabs', $slabs);
+        $this->set('cartData', $cartData);
+        $this->_template->render(false, false);
+    }
+
     public function getBookingDurations()
     {
         $cartData = $this->cartObj->getCart($this->siteLangId);
@@ -519,4 +538,40 @@ class CheckoutController extends LoggedUserController
         $this->set('bookingDurations', $bookingDurations);
         $this->_template->render(false, false);
     }
+
+    private function getTeacherTeachLanguages(int $teacherId): SearchBase
+    {
+        $loggedUserId = UserAuthentication::getLoggedUserId();
+        $userTeachLanguage = new UserTeachLanguage($teacherId);
+        $getUserTeachLanguages = $userTeachLanguage->getUserTeachlanguages($this->siteLangId, true);
+        $getUserTeachLanguages->joinTable(PriceSlab::DB_TBL, 'INNER JOIN', 'prislab.prislab_id = ustelgpr.ustelgpr_prislab_id', 'prislab');
+        $getUserTeachLanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
+        $getUserTeachLanguages->doNotCalculateRecords();
+        $getUserTeachLanguages->addMultipleFields([
+            'IFNULL(tlanguage_name, tlanguage_identifier) as teachLangName',
+            'utl_id',
+            'utl_tlanguage_id',
+            'ustelgpr_prislab_id',
+            'ustelgpr_slot',
+            'ustelgpr_price',
+            'prislab_min',
+            'prislab_max',
+            'ustelgpr_price',
+            'IFNULL(top_percentage,0) as top_percentage',
+        ]);
+        return $getUserTeachLanguages;
+    }
+
+    private function pricSlabForm() : Form
+    {
+        $form = new Form('pricSlabsForm');
+        $languageId = $form->addIntegerField(Label::getLabel('Lbl_Teach_language'),  'languageId');
+        $languageId->requirements()->setRequired();
+        $languageId->requirements()->setRange(1,99999999);
+        $durations = CommonHelper::getPaidLessonDurations();
+        $lessonDuration = $form->addSelectBox(Label::getLabel('Lbl_Duration'),  'lessonDuration', array_flip($durations));
+        $lessonDuration->requirements()->setRequired(true);
+        return $form;
+    }
+
 }

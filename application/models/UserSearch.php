@@ -240,6 +240,8 @@ class UserSearch extends SearchBase
     {
         $tlangSrch = new SearchBase(UserTeachLanguage::DB_TBL, 'utl');
         $tlangSrch->joinTable(TeachLangPrice::DB_TBL, 'INNER JOIN', 'ustelgpr.ustelgpr_utl_id = utl.utl_id', 'ustelgpr');
+        $tlangSrch->joinTable(PriceSlab::DB_TBL, 'INNER JOIN', 'prislab.prislab_id = ustelgpr.ustelgpr_prislab_id', 'prislab');
+        $tlangSrch->addCondition('prislab.prislab_active', '=', applicationConstants::YES);
         if ($addJoinTeachLangTable) {
             $langId = FatUtility::int($langId);
             if ($langId < 1) {
@@ -247,7 +249,7 @@ class UserSearch extends SearchBase
             }
             $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utl.utl_tlanguage_id');
             $tlangSrch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utl.utl_tlanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
-            $tlangSrch->addCondition('tlanguage_active', '=', '1');
+            $tlangSrch->addCondition('tlanguage_active', '=', applicationConstants::YES);
 
             
             $tlangSrch->addMultipleFields(['GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY tlanguage_name,tlanguage_identifier ) as teacherTeachLanguageName']);
@@ -257,10 +259,21 @@ class UserSearch extends SearchBase
             }
             $tlangSrch->addOrder('tlanguage_display_order');
         }
-        $tlangSrch->addMultipleFields(['utl_user_id', 'GROUP_CONCAT(utl_id) as utl_ids', ' max(ustelgpr_price) AS maxPrice', 'min(ustelgpr_price) AS minPrice', 'GROUP_CONCAT(DISTINCT utl_tlanguage_id) as utl_tlanguage_ids', 'GROUP_CONCAT(ustelgpr_slot) as ustelgpr_slots']);
+        $tlangSrch->addMultipleFields([
+            'utl_user_id', 
+            'GROUP_CONCAT(utl_id) as utl_ids', 
+            'min(ustelgpr_slot) as slot', 
+            'max(ustelgpr_price) AS maxPrice', 
+            'min(ustelgpr_price) AS minPrice', 
+            'min(prislab.prislab_min) as minSlab', 
+            'max(prislab.prislab_max) as maxSlab', 
+            'GROUP_CONCAT(DISTINCT utl_tlanguage_id) as utl_tlanguage_ids', 
+            'GROUP_CONCAT(DISTINCT ustelgpr_slot) as ustelgpr_slots'
+        ]);
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
         $tlangSrch->addCondition('ustelgpr_price', '>', 0);
+        $tlangSrch->addCondition('ustelgpr_slot', 'IN', CommonHelper::getPaidLessonDurations());
         $tlangSrch->addCondition('utl_tlanguage_id', '>', 0);
         $tlangSrch->addGroupBy('utl_user_id');
         return $tlangSrch;
