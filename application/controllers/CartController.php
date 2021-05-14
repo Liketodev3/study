@@ -75,15 +75,18 @@ class CartController extends LoggedUserController
         }
         /* ] */
         $cartData = $cart->getCart($this->siteLangId);
-        $freePackage = LessonPackage::getFreeTrialPackage();
-        if (!empty($freePackage) && ($freePackage['lpackage_id'] == $lpackageId)) {
-            $this->set('isFreeLesson', ($cartData['orderNetAmount'] == 0));
+        if(empty($cartData)){
+            FatUtility::dieJsonError($cart->getError());
         }
+
+        $this->set('isFreeLesson', $isFreeTrial);
         $this->set('redirectUrl', CommonHelper::generateUrl('Checkout'));
+        $msg = '';
         if (isset($post['checkoutPage'])) {
-            $this->set('msg', Label::getLabel('LBL_Package_Selected_Successfully.'));
+            $msg = Label::getLabel('LBL_ITEM_ADD_TO_CART.');
         }
-        $this->_template->render(false, false, 'json-success.php');
+
+        FatUtility::dieJsonSuccess(['isFreeLesson' => $isFreeTrial, 'redirectUrl' => CommonHelper::generateUrl('Checkout'), 'msg' => $msg]);
     }
 
     public function applyPromoCode()

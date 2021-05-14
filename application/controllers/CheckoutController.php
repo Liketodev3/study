@@ -310,7 +310,7 @@ class CheckoutController extends LoggedUserController
         $op_lesson_duration = $cartData['lessonDuration']; //FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60);
         $cartData['op_commission_charged'] = 0;
         $cartData['op_commission_percentage'] = 0;
-        if ($cartData['lpackage_is_free_trial']) {
+        if ($cartData['isFreeTrial']) {
             $op_lesson_duration = FatApp::getConfig('conf_trial_lesson_duration', FatUtility::VAR_INT, 30);
         } else {
             $commissionDetails = Commission::getTeacherCommission($cartData['user_id'], $cartData['grpcls_id']);
@@ -323,31 +323,29 @@ class CheckoutController extends LoggedUserController
             $teacherCommission = $teacherCommission;
             $cartData['op_commission_charged'] = $teacherCommission;
         }
-        $products[$cartData['lpackage_id']] = [
-            'op_grpcls_id' => $cartData['grpcls_id'],
-            'op_lpackage_id' => $cartData['lpackage_id'],
-            'op_lpackage_lessons' => $cartData['lpackage_lessons'],
-            'op_lpackage_is_free_trial' => $cartData['lpackage_is_free_trial'],
+
+        $products = [
+            'op_grpcls_id' => $cartData['grpclsId'],
+            'op_lpackage_is_free_trial' => $cartData['isFreeTrial'],
             'op_lesson_duration' => $op_lesson_duration,
             'op_teacher_id' => $cartData['user_id'],
-            'op_qty' => $cartData['grpcls_id'] == 0 ? $cartData['lpackage_lessons'] : 1,
+            'op_qty' => $cartData['grpclsId'] == 0 ? $cartData['lpackage_lessons'] : 1,
             'op_commission_charged' => $cartData['op_commission_charged'],
             'op_commission_percentage' => $cartData['op_commission_percentage'],
             'op_unit_price' => $cartData['itemPrice'],
-            'op_orderstatus_id' => FatApp::getConfig("CONF_DEFAULT_ORDER_STATUS"),
-            'op_slanguage_id' => $cartData['languageId'],
+            'op_tlanguage_id' => $cartData['languageId'],
         ];
         $productsLangData = [];
-        $allLanguages = Language::getAllNames();
-        foreach ($allLanguages as $lang_id => $language_name) {
-            $langSpecificLPackageRow = LessonPackage::getAttributesByLangId($lang_id, $cartData['lpackage_id']);
-            if (!$langSpecificLPackageRow) {
-                continue;
-            }
-            $productsLangData[$lang_id] = ['oplang_lang_id' => $lang_id, 'op_lpackage_title' => $langSpecificLPackageRow['lpackage_title']];
-        }
-        $products[$cartData['lpackage_id']]['productsLangData'] = $productsLangData;
-        $orderData['products'] = $products;
+        // $allLanguages = Language::getAllNames();
+        // foreach ($allLanguages as $lang_id => $language_name) {
+        //     $langSpecificLPackageRow = LessonPackage::getAttributesByLangId($lang_id, $cartData['lpackage_id']);
+        //     if (!$langSpecificLPackageRow) {
+        //         continue;
+        //     }
+        //     $productsLangData[$lang_id] = ['oplang_lang_id' => $lang_id, 'op_lpackage_title' => $langSpecificLPackageRow['lpackage_title']];
+        // }
+        $products['productsLangData'] = $productsLangData;
+        $orderData['products'][] = $products;
         /* ] */
         $order = new Order();
         if (!$order->addUpdate($orderData)) {
@@ -356,27 +354,24 @@ class CheckoutController extends LoggedUserController
         }
         /* ] */
         $redirectUrl = '';
+        $msg = Label::getLabel('LBL_Processing...', $this->siteLangId);
         if (0 >= $orderNetAmount) {
             $redirectUrl = CommonHelper::generateUrl('FreePay', 'Charge', [$order->getOrderId()], CONF_WEBROOT_FRONT_URL);
-            $this->set('msg', Label::getLabel('LBL_Processing...', $this->siteLangId));
             $this->set('redirectUrl', $redirectUrl);
-            $this->_template->render(false, false, 'json-success.php');
+            FatUtility::dieJsonSuccess(['redirectUrl'=> $redirectUrl, 'msg' => $msg]);
         }
         $userId = UserAuthentication::getLoggedUserId();
         $userWalletBalance = User::getUserBalance($userId);
         if ($orderNetAmount > 0 && $cartData['cartWalletSelected'] && ($userWalletBalance >= $orderNetAmount) && !$pmethodId) {
             $redirectUrl = CommonHelper::generateUrl('WalletPay', 'Charge', [$order->getOrderId()], CONF_WEBROOT_FRONTEND);
-            $this->set('msg', Label::getLabel('LBL_Processing...', $this->siteLangId));
-            $this->set('redirectUrl', $redirectUrl);
-            $this->_template->render(false, false, 'json-success.php');
+            FatUtility::dieJsonSuccess(['redirectUrl'=> $redirectUrl, 'msg' => $msg]);
         }
         if ($pmethodId > 0) {
             $controller = $paymentMethod['pmethod_code'] . 'Pay';
             $redirectUrl = CommonHelper::generateUrl($controller, 'charge', [$order->getOrderId()], CONF_WEBROOT_FRONTEND);
-            $this->set('msg', Label::getLabel('LBL_Processing...', $this->siteLangId));
-            $this->set('redirectUrl', $redirectUrl);
             $this->cartObj->clear();
             $this->cartObj->updateUserCart();
+            FatUtility::dieJsonSuccess(['redirectUrl'=> $redirectUrl, 'msg' => $msg]);
             $this->_template->render(false, false, 'json-success.php');
         }
         Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));

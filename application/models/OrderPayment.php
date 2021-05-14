@@ -132,7 +132,7 @@ class OrderPayment extends Order
         $orderProductSrch->addMultipleFields([
             'op_teacher_id',
             'op_grpcls_id',
-            'op_slanguage_id',
+            'op_tlanguage_id',
             'op_lpackage_lessons',
             'op_lpackage_is_free_trial'
         ]);

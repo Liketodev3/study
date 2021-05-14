@@ -49,7 +49,7 @@ var cart = {
 		fcom.ajax(fcom.makeUrl('Cart', 'add'), data, function (res) {
 			if (res.status == 1) {
 				if (res.isFreeLesson) {
-					confirmOrder();
+					cart.confirmOrder();
 					return;
 				}
 				if (res.redirectUrl) {
