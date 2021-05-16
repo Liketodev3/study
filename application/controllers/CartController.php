@@ -39,7 +39,7 @@ class CartController extends LoggedUserController
         }
         $teacher = $this->checkTeacherIsValid($teacherId);
         /* [ */
-        
+        // prx($teacher);
         if (empty($teacher)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
@@ -128,95 +128,7 @@ class CartController extends LoggedUserController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-    private function addToCartForm(): Form
-    {
-        $form = new Form('addToCart');
-        $teacherIdField = $form->addIntegerField(Label::getLabel('LBL_Teacher_Id'), 'teacherId');
-        $teacherIdField->requirements()->setRequired(true);
-        $teacherIdField->requirements()->setRange(1, 99999999999);
-
-        $getMinAndMaxSlab = PriceSlab::getMinAndMaxSlab();
-        $min = $max = 0;
-        if (!empty($getMinAndMaxSlab)) {
-            $min = $getMinAndMaxSlab['minSlab'];
-            $max = $getMinAndMaxSlab['maxSlab'];
-        }
-
-
-        $groupClassField = $form->addIntegerField(Label::getLabel('LBL_Group_Class'), 'grpclsId');
-        $groupClassField->requirements()->setRequired(false);
-        $groupClassField->requirements()->setRange(1, 9999999);
-
-        $slabIdField = $form->addIntegerField(Label::getLabel('LBL_lesson_qty'), 'lessonQty');
-        $slabIdField->requirements()->setRequired(false);
-        $slabIdField->requirements()->setRange($min, $max);
-
-        $slabIdField->requirements()->setRequired(true);
-        $groupClassField->requirements()->addOnChangerequirementUpdate(0, 'gt', 'lessonQty', $slabIdField->requirements());
-
-        $slabIdField->requirements()->setRequired(false);
-        $groupClassField->requirements()->addOnChangerequirementUpdate(0, 'le', 'lessonQty', $slabIdField->requirements());
-
-
-
-        $languageIdField = $form->addIntegerField(Label::getLabel('LBL_language_Id'), 'languageId');
-        $languageIdField->requirements()->setRequired(false);
-        $languageIdField->requirements()->setRange(1, 9999);
-
-
-        $languageIdField->requirements()->setRequired(true);
-        $groupClassField->requirements()->addOnChangerequirementUpdate(0, 'gt', 'languageId', $languageIdField->requirements());
-
-        $languageIdField->requirements()->setRequired(false);
-        $groupClassField->requirements()->addOnChangerequirementUpdate(0, 'le', 'languageId', $languageIdField->requirements());
-
-
-
-        $bookingSlot = applicationConstants::getBookingSlots();
-        $lessonDurationField = $form->addSelectBox(Label::getLabel('LBL_lesson_duration'), 'lessonDuration', array_flip($bookingSlot));
-        $slabIdField->requirements()->setIntPositive();
-        $lessonDurationField->requirements()->setRequired(true);
-        
-        $lessonDurationField->requirements()->setRequired(true);
-        $groupClassField->requirements()->addOnChangerequirementUpdate(0, 'gt', 'lessonDuration', $lessonDurationField->requirements());
-
-        $lessonDurationField->requirements()->setRequired(false);
-        $groupClassField->requirements()->addOnChangerequirementUpdate(0, 'le', 'lessonDuration', $lessonDurationField->requirements());
-
-
-        $freeTrialField = $form->addCheckBox(Label::getLabel('LBL_Free_trial'), 'isFreeTrial', applicationConstants::YES, [], false, applicationConstants::NO);
-        $freeTrialField->requirements()->setRequired(false);
-
-        $startDateTimeField = $form->addTextBox(Label::getLabel('LBL_Start_Date_Time'), 'startDateTime');
-        $startDateTimeField->requirements()->setRequired(false);
-
-        /* startDateTime requirements */
-        $startDateTimeField->requirements()->setRequired(true);
-        $freeTrialField->requirements()->addOnChangerequirementUpdate(applicationConstants::YES, 'eq', 'startDateTime',  $startDateTimeField->requirements());
-
-        $startDateTimeField->requirements()->setRequired(false);
-        $freeTrialField->requirements()->addOnChangerequirementUpdate(applicationConstants::YES, 'ne', 'startDateTime',  $startDateTimeField->requirements());
-        /* ] */
-
-        $endDateTimeField = $form->addTextBox(Label::getLabel('LBL_End_Date_Time'), 'endDateTime');
-        $endDateTimeField->requirements()->setRequired(false);
-        
-        // $startDateTimeField->requirements()->setCompareWith('endDateTime', 'lt', Label::getLabel('LBL_End_Date_Time'));
-        // $endDateTimeField->requirements()->setCompareWith('startDateTime', 'gt', Label::getLabel('LBL_Start_Date_Time'));
-
-
-        /* endDateTime requirements */
-        $endDateTimeField->requirements()->setRequired(true);
-        $freeTrialField->requirements()->addOnChangerequirementUpdate(applicationConstants::YES, 'eq', 'endDateTime',  $endDateTimeField->requirements());
-
-        $endDateTimeField->requirements()->setRequired(false);
-        $freeTrialField->requirements()->addOnChangerequirementUpdate(applicationConstants::YES, 'ne', 'endDateTime',  $endDateTimeField->requirements());
-        /* ] */
-
-        $weekStartField = $form->addTextBox(Label::getLabel('LBL_week_Start'), 'weekStart');
-        $weekStartField->requirements()->setRequired(false);
-        return $form;
-    }
+    
 
 
     public function removePromoCode()

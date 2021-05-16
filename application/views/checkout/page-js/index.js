@@ -143,8 +143,9 @@ $("document").ready(function () {
         addToCartAjaxRunning = true;
 		var data = '&teacherId=' + teacherId + '&lessonQty=' + lessonQty + '&languageId=' + languageId + '&lessonDuration=' + lessonDuration;
         fcom.ajax(fcom.makeUrl('Cart', 'add'), data, function (ans) {
-			$.loader.hide();
+			
 			if (ans.status != 1) {
+				$.loader.hide();
 				addToCartAjaxRunning = false;
 				$.mbsmessage(ans.msg,true, 'alert alert--danger');
 				if( ans.redirectUrl ){
@@ -153,7 +154,6 @@ $("document").ready(function () {
 				return ;
 			}
 			if (ans.redirectUrl) {
-                //fcom.waitAndRedirect( ans.redirectUrl );
                 loadFinancialSummary();
                 loadPaymentSummary();
 				getTeacherPriceSlabs(languageId, lessonDuration);
@@ -161,6 +161,7 @@ $("document").ready(function () {
             $('.cart-lang-id-js').html(teachLanguages[languageId]);
             $('.cart-lesson-duration').html(langLbl.lessonMints.replace("%s", lessonDuration));
             addToCartAjaxRunning = false;
+			$.loader.hide();
         }, {
 			fOutMode:'json',
             errorFn: function (errorDet) {

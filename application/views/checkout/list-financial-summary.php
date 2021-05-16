@@ -2,40 +2,13 @@
 <div class="-padding-20 -no-padding-bottom">
 	<h3><?php echo Label::getLabel('LBL_Cart'); ?></h3>
 </div>
-
-<!-- coupon area[ -->
-<?php //if( $cart['orderNetAmount'] > 0 ){ 
-?>
 <div class="-padding-20">
 	<div class="apply-coupon">
 		<a href="javascript:void(0)" class="coupon-input btn btn--gray btn--block btn--large apply-coupon__trigger-js"><?php echo Label::getLabel('LBL_Apply_Coupon') ?></a>
 		<div class="cpn-frm">
-			<!--<div class="apply-coupon__target apply-coupon__target-js" style="display: none;">
-				<div class="-padding-20">
-					<form class="form form--small">
-						<div class="d-flex">
-							<div class="col-md-8">
-								<input type="text">
-							</div>
-							<div class="col-md-4">
-								<input type="submit" value="apply">
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="-padding-20 -no-padding-top">
-					<div class="applied-coupon">
-						<p>Coupon <strong>"NEW10"</strong> Applied</p>
-						<a href="#" class="btn btn--small btn--secondary">Remove</a>
-					</div>
-				</div>
-			</div>-->
 		</div>
 	</div>
 </div>
-<?php //} 
-?>
-<!-- ] -->
 
 
 <div class="table-total">
@@ -45,8 +18,8 @@
 				<h6><strong><?php echo $cart['itemName']; ?></strong><br><small>
 
 						<?php
-						if (!empty($cart['lpackage_lessons'])) {
-							echo Label::getLabel('LBL_Lesson_Count') . ': ' . sprintf(Label::getLabel('LBL_%s_Lesson(s)'), $cart['lpackage_lessons']) . '<br>';
+						if (!empty($cart['lessonQty'])) {
+							echo Label::getLabel('LBL_Lesson_Count') . ': ' . sprintf(Label::getLabel('LBL_%s_Lesson(s)'), $cart['lessonQty']) . '<br>';
 						}
 						if (!empty($cart['lessonDuration'])) {
 							echo Label::getLabel('LBL_Duration') . ': ' . sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cart['lessonDuration']) . '<br>';

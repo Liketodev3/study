@@ -75,6 +75,12 @@ class PriceSlabsController extends AdminBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_YOUR_SLOT_IS_COLLAPSE_WITH_OTHER_SLOTS'));
         }
 
+        if($post['prislab_min'] != PriceSlab::STARTING_SLAB){
+            if (!$priceSlab->isStartingSlabSet()) {
+                FatUtility::dieJsonError(sprintf(Label::getLabel('LBL_PLEASE_ADD_SLOT_WITH_MIN_VALUE_%d_FIRST'), PriceSlab::STARTING_SLAB));
+            }
+        }
+
         $priceSlab->assignValues($post);
         if (!$priceSlab->saveSlab($post['prislab_min'], $post['prislab_max'])) {
             FatUtility::dieJsonError($priceSlab->getError());
@@ -109,14 +115,17 @@ class PriceSlabsController extends AdminBaseController
     {
         $form  = new Form('PriceSlabFrm');
         $form->addHiddenField('', 'prislab_id', $psId);
+
+
         $minField = $form->addRequiredField(Label::getLabel('LBL_Min', $this->adminLangId), 'prislab_min');
         $minField->requirements()->setIntPositive();
-        $minField->requirements()->setRange(1, 999999);
+        $minField->requirements()->setRange(1, 9999);
 
         $maxField =  $form->addRequiredField(Label::getLabel('LBL_max', $this->adminLangId), 'prislab_max');
         $maxField->requirements()->setIntPositive();
-        $maxField->requirements()->setRange(1, 999999);
-
+        $maxField->requirements()->setRange(2, 9999);
+        
+       
         $minField->requirements()->setCompareWith('prislab_max', 'lt', Label::getLabel('LBL_max', $this->adminLangId));
         $maxField->requirements()->setCompareWith('prislab_min', 'gt', Label::getLabel('LBL_min', $this->adminLangId));
 
