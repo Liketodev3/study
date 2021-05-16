@@ -133,7 +133,7 @@ class OrderPayment extends Order
             'op_teacher_id',
             'op_grpcls_id',
             'op_tlanguage_id',
-            'op_lpackage_lessons',
+            'op_qty',
             'op_lpackage_is_free_trial'
         ]);
         $rs = $orderProductSrch->getResultSet();
@@ -164,7 +164,7 @@ class OrderPayment extends Order
             /* and for free trial made entry from freepaycontroller */
             /* add schedulaed lessons[ */
             if ($orderProductRow) {
-                $counter = $orderInfo['op_lpackage_lessons'] > 0 ? $orderInfo['op_lpackage_lessons'] : 1;
+                $counter = $orderInfo['op_qty'] > 0 ? $orderInfo['op_qty'] : 1;
                 for ($i = 0; $i < $counter; $i++) {
                     if ($orderInfo['op_lpackage_is_free_trial'] == 0) {
                         $slesson_id = 0;

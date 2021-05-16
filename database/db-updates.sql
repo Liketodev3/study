@@ -600,3 +600,6 @@ ALTER TABLE `tbl_teacher_offer_price`
 ALTER TABLE `tbl_teacher_offer_price` CHANGE `top_single_lesson_price` `top_percentage` DECIMAL(10,2) NOT NULL;
 
 ALTER TABLE `tbl_order_products` CHANGE `op_slanguage_id` `op_tlanguage_id` INT(11) NOT NULL;
+
+ALTER TABLE `tbl_order_products`
+  DROP `op_lpackage_lessons`;
