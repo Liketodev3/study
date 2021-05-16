@@ -138,7 +138,6 @@ class PurchasedLessonsController extends AdminBaseController
         $scheduledLessonSearchObj = new ScheduledLessonSearch(false);
         $scheduledLessonSearchObj->joinTeacher();
         $scheduledLessonSearchObj->joinLearner();
-        $scheduledLessonSearchObj->joinIssueReported();
         $scheduledLessonSearchObj->joinOrder();
         $scheduledLessonSearchObj->joinOrderProducts();
         $scheduledLessonSearchObj->joinTeacherTeachLanguage();
@@ -160,8 +159,6 @@ class PurchasedLessonsController extends AdminBaseController
             'sldetail_learner_end_time',
             'slesson_added_on',
             'order_is_paid',
-            'IFNULL(iss.issrep_status,0) AS issrep_status',
-            'IFNULL(iss.issrep_id,0) AS issrep_id',
             'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_name',
             'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_name',
             'IFNULL(tl_l.tlanguage_name, t_t_lang.tlanguage_identifier) as teacherTeachLanguageName',

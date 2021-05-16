@@ -103,11 +103,6 @@ class ScheduledLessonSearch extends SearchBase
         $this->isTeacherSettingsJoined = true;
     }
 
-    public function joinIssueReported($user_id = 0)
-    {
-        $this->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = slns.slesson_id' . ($user_id > 0 ? ' AND issrep_reported_by=' . $user_id : ''), 'iss');
-    }
-
     public function joinTeacherCountry($langId = 0)
     {
         $langId = FatUtility::int($langId);
@@ -307,7 +302,7 @@ class ScheduledLessonSearch extends SearchBase
         $directStr = " ( CONCAT(slns.`slesson_date`, ' ', slns.`slesson_start_time` ) < '" . $endDateTime . "' AND CONCAT(slns.`slesson_end_date`, ' ', slns.`slesson_end_time` ) > '" . $startDateTime . "' ) ";
         $this->addDirectCondition($directStr);
         // $this->addCondition('slns.slesson_status', ' IN ', [ScheduledLesson::STATUS_SCHEDULED, ScheduledLesson::STATUS_COMPLETED]);
-         $this->addCondition('slns.slesson_status', ' = ', ScheduledLesson::STATUS_SCHEDULED);
+        $this->addCondition('slns.slesson_status', ' = ', ScheduledLesson::STATUS_SCHEDULED);
         $this->addMultipleFields(['slns.slesson_date', 'slns.slesson_start_time', 'slns.slesson_end_time', 'slns.slesson_id', 'sld.sldetail_order_id', 'sld.sldetail_learner_id']);
         return $this;
     }

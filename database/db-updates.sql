@@ -403,11 +403,6 @@ FOREIGN KEY (`testat_user_id`) REFERENCES `tbl_users` (`user_id`) ON DELETE REST
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
 ('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT', 1, 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!');
 
-ALTER TABLE `tbl_issues_reported` ADD `issrep_admin_comments` TEXT NULL AFTER `issrep_resolve_comments`;
-ALTER TABLE `tbl_issues_reported` ADD `issrep_updated_by_admin` DATETIME NULL AFTER `issrep_admin_comments`;
-ALTER TABLE `tbl_issues_reported` ADD `issrep_closed` TINYINT NOT NULL AFTER `issrep_updated_by_admin`;
-
-
 
 CREATE TABLE `tbl_extra_pages` (
   `epage_id` int(11) NOT NULL,
@@ -552,15 +547,32 @@ ALTER TABLE `tbl_pricing_slabs`
 
 DROP TABLE `tbl_lesson_packages`, `tbl_lesson_packages_lang`;
 
+REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ENABLE_FREE_TRIAL', 1, 0);
+
+INSERT INTO `tbl_pricing_slabs` (`prislab_id`, `prislab_min`, `prislab_max`, `prislab_active`) VALUES
+(1, 1, 4, 1),
+(2, 5, 9, 1),
+(3, 10, 100, 1);
+
+
+ALTER TABLE `tbl_teacher_offer_price`
+  DROP `top_bulk_lesson_price`;
+
+ALTER TABLE `tbl_teacher_offer_price` CHANGE `top_single_lesson_price` `top_percentage` DECIMAL(10,2) NOT NULL;
+
+ALTER TABLE `tbl_order_products` CHANGE `op_slanguage_id` `op_tlanguage_id` INT(11) NOT NULL;
+
+ALTER TABLE `tbl_order_products`
+  DROP `op_lpackage_lessons`;
+
 -- task_84683_report_an_issue
 
 CREATE TABLE `tbl_reported_issues` (
   `repiss_id` int NOT NULL,
   `repiss_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `repiss_slesson_id` int NOT NULL,
+  `repiss_sldetail_id` int NOT NULL,
   `repiss_reported_on` datetime NOT NULL,
   `repiss_reported_by` int NOT NULL,
-  `repiss_reported_by_type` int NOT NULL,
   `repiss_status` int NOT NULL,
   `repiss_comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `repiss_updated_on` datetime DEFAULT NULL
@@ -583,23 +595,17 @@ ALTER TABLE `tbl_reported_issues_log`  MODIFY `reislo_id` int NOT NULL AUTO_INCR
 ALTER TABLE `tbl_reported_issues_log`  ADD CONSTRAINT `tbl_reported_issues_log_ibfk_1` 
 FOREIGN KEY (`reislo_repiss_id`) REFERENCES `tbl_reported_issues` (`repiss_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
+INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION', '24', '1');
+INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION', '24', '1');
+
+INSERT INTO `tbl_cron_schedules` (`cron_id`, `cron_name`, `cron_command`, `cron_duration`, `cron_active`) 
+VALUES (NULL, 'Resolved Issue Transaction Settlements', 'ReportedIssue/resolvedIssueSettlement', '60', '1');
+INSERT INTO `tbl_cron_schedules` (`cron_id`, `cron_name`, `cron_command`, `cron_duration`, `cron_active`) 
+VALUES (NULL, 'Completed Lesson Transaction Settlements', 'ReportedIssue/completedLessonSettlement', '60', '1');
+
+ALTER TABLE `tbl_scheduled_lesson_details` ADD `sldetail_is_teacher_paid` INT NOT NULL AFTER `sldetail_added_on`;
+ALTER TABLE `tbl_scheduled_lessons`  DROP `slesson_is_teacher_paid`;
+
+
 REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION', '24', '1');
 REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION', '24', '1');
-
-REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ENABLE_FREE_TRIAL', 1, 0);
-
-INSERT INTO `tbl_pricing_slabs` (`prislab_id`, `prislab_min`, `prislab_max`, `prislab_active`) VALUES
-(1, 1, 4, 1),
-(2, 5, 9, 1),
-(3, 10, 100, 1);
-
-
-ALTER TABLE `tbl_teacher_offer_price`
-  DROP `top_bulk_lesson_price`;
-
-ALTER TABLE `tbl_teacher_offer_price` CHANGE `top_single_lesson_price` `top_percentage` DECIMAL(10,2) NOT NULL;
-
-ALTER TABLE `tbl_order_products` CHANGE `op_slanguage_id` `op_tlanguage_id` INT(11) NOT NULL;
-
-ALTER TABLE `tbl_order_products`
-  DROP `op_lpackage_lessons`;

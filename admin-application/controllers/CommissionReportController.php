@@ -31,7 +31,6 @@ class CommissionReportController extends AdminBaseController
         $orderSearch->joinScheduledLessonDetail();
         $orderSearch->joinScheduledLesson();
         $orderSearch->joinScheduledLesson();
-        $orderSearch->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = sl.slesson_id and issrep_status IN(' . IssuesReported::STATUS_OPEN . ',' . IssuesReported::STATUS_PROGRESS . ')', 'iss');
         $orderSearch->addCondition('slesson_status', '=', ScheduledLesson::STATUS_COMPLETED);
         $orderSearch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
         $orderSearch->addCondition('order_net_amount', '>', 0);
@@ -49,7 +48,6 @@ class CommissionReportController extends AdminBaseController
         if ($dateFrom) {
             $orderSearch->addDirectCondition("DATE(order_date_added) >= '" . $post['datefrom'] . "'");
         }
-        $orderSearch->addDirectCondition('ISNULL(issrep_status)');
         $orderSearch->addHaving('totalAdminCommission', '>', 0);
         $orderSearch->addGroupBy('order_id');
         $user = new User();

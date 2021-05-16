@@ -1871,28 +1871,6 @@ CREATE TABLE `tbl_group_classes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_issues_reported`
---
-
-CREATE TABLE `tbl_issues_reported` (
-  `issrep_id` bigint(20) NOT NULL,
-  `issrep_is_for_admin` int(11) NOT NULL DEFAULT '0',
-  `issrep_slesson_id` int(11) NOT NULL,
-  `issrep_reported_by` int(11) NOT NULL,
-  `issrep_issues_to_report` varchar(255) NOT NULL,
-  `issrep_comment` varchar(255) NOT NULL,
-  `issrep_status` tinyint(4) NOT NULL,
-  `issrep_issues_resolve` varchar(255) NOT NULL,
-  `issrep_issues_resolve_type` int(11) NOT NULL,
-  `issrep_resolve_comments` longtext NOT NULL,
-  `issrep_added_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `issrep_updated_on` datetime NOT NULL,
-  `issrep_escalated_by` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tbl_issue_report_options`
 --
 
@@ -8429,12 +8407,6 @@ ALTER TABLE `tbl_group_classes`
   ADD PRIMARY KEY (`grpcls_id`);
 
 --
--- Indexes for table `tbl_issues_reported`
---
-ALTER TABLE `tbl_issues_reported`
-  ADD PRIMARY KEY (`issrep_id`);
-
---
 -- Indexes for table `tbl_issue_report_options`
 --
 ALTER TABLE `tbl_issue_report_options`
@@ -9091,12 +9063,6 @@ ALTER TABLE `tbl_gift_cards`
 --
 ALTER TABLE `tbl_group_classes`
   MODIFY `grpcls_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tbl_issues_reported`
---
-ALTER TABLE `tbl_issues_reported`
-  MODIFY `issrep_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbl_issue_report_options`

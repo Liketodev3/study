@@ -6,15 +6,48 @@
     <div class="sectionbody">
         <table class="table table--details">
             <tbody>
-                <tr><td><h3><?php echo $issue['repiss_title']; ?></h3></td></tr>
+                <tr><td><h4><?php echo $issue['repiss_title']; ?></h4></td></tr>
+                <tr><td><strong><?php echo Label::getLabel('LBL_Detail'); ?>:</strong> <?php echo nl2br($issue['repiss_comment']); ?></td></tr>
+                <tr><td><strong><?php echo Label::getLabel('LBL_Current_Status'); ?>:</strong> <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<section class="section">
+    <div class="sectionhead">
+        <h4><?php echo Label::getLabel('LBL_ISSUE_LOGS', $adminLangId); ?></h4>
+    </div>
+    <div class="sectionbody">
+        <table class="table table--details">
+            <thead>
+                <tr>
+                    <th><?php echo Label::getLabel('LBL_ACTION_BY'); ?></th>
+                    <th><?php echo Label::getLabel('LBL_ACTION'); ?></th>
+                    <th><?php echo Label::getLabel('LBL_COMMENT'); ?></th>
+                    <th><?php echo Label::getLabel('LBL_ACTION_ON'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
                 <tr>
                     <td>
-                        <strong><?php echo Label::getLabel('LBL_Reported_By', $adminLangId); ?>:</strong> <?php echo $issue['reporter_username']; ?>, 
-                        <strong><?php echo Label::getLabel('LBL_Reported_Time', $adminLangId); ?>:</strong> <?php echo MyDate::format($issue['repiss_reported_on'], true, true, Admin::getAdminTimeZone()); ?>,
-                        <strong><?php echo Label::getLabel('LBL_Issue_Status', $adminLangId); ?>:</strong> <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?>
+                        <?php echo $issue['reporter_username']; ?>
+                        <?php echo '(' . ReportedIssue::getUserTypeArr(ReportedIssue::USER_TYPE_LEARNER) . ')'; ?>
                     </td>
+                    <td><?php echo $issue['repiss_title']; ?></td>
+                    <td><?php echo nl2br($issue['repiss_comment']); ?></td>
+                    <td><?php echo $issue['repiss_reported_on']; ?></td>
                 </tr>
-                <tr><td><p><strong><?php echo Label::getLabel('LBL_Detail', $adminLangId); ?>:</strong> <?php echo nl2br($issue['repiss_comment']); ?></p></td></tr>
+                <?php foreach ($logs as $log) { ?>
+                    <tr>
+                        <td>
+                            <?php echo $log['user_fullname']; ?>
+                            <?php echo '(' . ReportedIssue::getUserTypeArr($log['reislo_added_by_type']) . ')'; ?>
+                        </td>
+                        <td><?php echo $actionArr[$log['reislo_action']]; ?></td>
+                        <td><?php echo nl2br($log['reislo_comment']); ?></td>
+                        <td><?php echo $log['reislo_added_on']; ?></td>
+                    </tr>
+                <?php } ?>
             </tbody>
         </table>
     </div>
@@ -32,7 +65,7 @@
                     <td><strong><?php echo Label::getLabel('LBL_Order_Id', $adminLangId); ?>:</strong> <?php echo $issue['sldetail_order_id']; ?></td>
                 </tr>
                 <tr>
-                    <td><strong><?php echo Label::getLabel('LBL_Lesson_Id', $adminLangId); ?>:</strong>  <?php echo $issue['repiss_slesson_id']; ?></td>
+                    <td><strong><?php echo Label::getLabel('LBL_Lesson_Id', $adminLangId); ?>:</strong>  <?php echo $issue['repiss_sldetail_id']; ?></td>
                     <td><strong><?php echo Label::getLabel('LBL_Total_Lesson', $adminLangId); ?>:</strong> <?php echo $issue['op_qty']; ?></td>
                     <td><strong><?php echo Label::getLabel('LBL_Lesson_Price', $adminLangId); ?>:</strong>   <?php echo CommonHelper::displayMoneyFormat($issue['op_unit_price'], true, true); ?></td>
                 </tr>

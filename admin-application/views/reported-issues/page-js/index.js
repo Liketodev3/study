@@ -109,6 +109,7 @@ $(document).ready(function () {
         fcom.updateWithAjax(fcom.makeUrl('ReportedIssues', 'setupAction'), fcom.frmData(frm), function (res) {
             $.mbsmessage.close();
             $.facebox.close();
+            search(document.frmUserSearchPaging);
         });
     };
 
