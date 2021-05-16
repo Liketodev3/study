@@ -141,7 +141,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             'slns.slesson_end_time',
             'slns.slesson_status',
             'sld.sldetail_learner_status',
-            'slns.slesson_is_teacher_paid',
+            'sld.sldetail_is_teacher_paid',
             '"-" as teacherTeachLanguageName',
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration'
@@ -1326,12 +1326,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             ];
             $lessonId = $lessonRow['slesson_id'];
             // pay teacher
-            if ($lessonRow['slesson_is_teacher_paid'] == 0) {
+            if ($lessonRow['sldetail_is_teacher_paid'] == 0) {
                 $lessonObj = new ScheduledLesson($lessonId);
                 if ($lessonObj->payTeacherCommission()) {
                     $userNotification = new UserNotifications($lessonRow['teacherId']);
                     $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
-                    $dataUpdateArr['slesson_is_teacher_paid'] = 1;
+                    $dataUpdateArr['sldetail_is_teacher_paid'] = 1;
                 }
             }
             // update lesson status details

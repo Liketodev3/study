@@ -59,7 +59,7 @@ class ScheduledLessonSearch extends SearchBase
             'slns.slesson_end_time',
             'slns.slesson_status',
             'sld.sldetail_learner_status',
-            'slns.slesson_is_teacher_paid',
+            'sld.sldetail_is_teacher_paid',
             '"-" as teacherTeachLanguageName',
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration',

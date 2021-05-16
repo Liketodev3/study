@@ -600,12 +600,9 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 
 INSERT INTO `tbl_cron_schedules` (`cron_id`, `cron_name`, `cron_command`, `cron_duration`, `cron_active`) 
 VALUES (NULL, 'Resolved Issue Transaction Settlements', 'ReportedIssue/resolvedIssueSettlement', '60', '1');
+
 INSERT INTO `tbl_cron_schedules` (`cron_id`, `cron_name`, `cron_command`, `cron_duration`, `cron_active`) 
 VALUES (NULL, 'Completed Lesson Transaction Settlements', 'ReportedIssue/completedLessonSettlement', '60', '1');
 
 ALTER TABLE `tbl_scheduled_lesson_details` ADD `sldetail_is_teacher_paid` INT NOT NULL AFTER `sldetail_added_on`;
 ALTER TABLE `tbl_scheduled_lessons`  DROP `slesson_is_teacher_paid`;
-
-
-REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION', '24', '1');
-REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION', '24', '1');

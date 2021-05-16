@@ -185,7 +185,7 @@ class OrderPayment extends Order
                         $sLessonArr = [
                             'slesson_teacher_id' => $orderInfo['op_teacher_id'],
                             'slesson_grpcls_id' => $orderInfo['op_grpcls_id'],
-                            'slesson_slanguage_id' => $orderInfo['op_slanguage_id'],
+                            'slesson_slanguage_id' => $orderInfo['op_tlanguage_id'],
                             'slesson_date' => $slesson_date,
                             'slesson_end_date' => $slesson_end_date,
                             'slesson_start_time' => $slesson_start_time,

@@ -97,16 +97,15 @@
 						<div class="lesson-price">
 							<?php
 								$durations = explode(',', $teacher['lessonDuration']);
-								$singleLessonAmount = explode(',', $teacher['singleLessonAmount']);
-                                $bulkLessonAmount = explode(',', $teacher['bulkLessonAmount']);
+								$percentage = explode(',', $teacher['percentage']);
 								foreach ($durations as $i => $duration) {
 							?>
 								<p>
 									<?php
-										if (!empty($singleLessonAmount[$i])) {
-											echo sprintf(Label::getLabel('LBL_%d_mins'), $duration) . ': ' . CommonHelper::displayMoneyFormat($singleLessonAmount[$i]); ?> / <?php echo CommonHelper::displayMoneyFormat($bulkLessonAmount[$i]);
+										if (!empty($percentage[$i])) {
+											echo sprintf(Label::getLabel('LBL_%d_mins'), $duration) . ': ' . $percentage[$i]."%";
 										} else {
-											echo CommonHelper::displayMoneyFormat(0) . ' / ' . CommonHelper::displayMoneyFormat(0);
+											echo Label::getLabel('LBL_N/A');
 										}
 									?>
 								</p>
