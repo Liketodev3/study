@@ -116,8 +116,8 @@ class TeacherController extends TeacherBaseController
 
                     $keyField = $uTeachLangId . '-' . $slab['prislab_id'] . '-' . $lessonDuration;
 
-                    if (!empty($userToTeachLangRows[$keyField]['ustelgpr_price'])) {
-                        $fld->value = $userToTeachLangRows[$keyField]['ustelgpr_price'];
+                    if (!empty($userTeachingLang[$keyField]['ustelgpr_price'])) {
+                        $fld->value = $userTeachingLang[$keyField]['ustelgpr_price'];
                     }
 
                     $durationFld->requirements()->addOnChangerequirementUpdate($lessonDuration, 'eq', $filedName, $fld->requirements());

@@ -15,6 +15,11 @@ if (!empty($defaultSlot)) {
 }
 $lessonDurations = CommonHelper::getPaidLessonDurations();
 $userTeachLangData = array_column($userToTeachLangRows, 'teachLangName', 'utl_id');
+
+$updatePrice = $frm->addFloatField(Label::getLabel('Lbl_Upadte_price'), 'price_update');
+$updatePrice->requirements()->setRange(1, 99999);
+$updatePrice->addFieldTagAttribute('onchange','updatePrice(this, this.form);');
+$updatePrice->addFieldTagAttribute('placeholder','0.00');
 ?>
 <div class="content-panel__head">
     <div class="d-flex align-items-center justify-content-between">
@@ -58,7 +63,7 @@ $userTeachLangData = array_column($userToTeachLangRows, 'teachLangName', 'utl_id
                                     <div>
                                         <div class="common-slot-price d-flex align-items-center">
                                             <label class="field_label mb-0"><?php echo Label::getLabel('Lbl_add_price') ?></label>
-                                            <input type="text" placeholder="$0.00">
+                                            <?php echo $updatePrice->getHTML(); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -73,13 +78,14 @@ $userTeachLangData = array_column($userToTeachLangRows, 'teachLangName', 'utl_id
                                                     <?php 
                                                         foreach ($userTeachLangData  as $uTeachLangId => $uTeachLang) { 
                                                         $filedName = 'teach_lang_price[' . $lessonDuration . '][' . $slab['prislab_id'] . '][' . $uTeachLangId . ']';
-                                                    
+                                                        $priceField = $frm->getField($filedName);
+                                                        $priceField->addFieldTagAttribute('class', 'slab-price-js');
                                                     ?>
                                                         <div class="col-6 col-md-3 col-sm-3 col-lg-3 col-xl-3">
                                                             <div class="field-wrapper">
                                                                 <label class="field_label"><?php echo $uTeachLang; ?></label>
                                                                 <?php
-                                                                    echo $frm->getFieldHtml($filedName);
+                                                                    echo $priceField->getHTML();
                                                                  ?>
                                                             </div>
                                                         </div>
@@ -97,16 +103,31 @@ $userTeachLangData = array_column($userToTeachLangRows, 'teachLangName', 'utl_id
             <div class="form__actions">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <input type="button" value="Back">
+                        <input type="button" name="Back" value="Back">
                     </div>
                     <div>
-                        <input type="submit" value="Save">
-                        <input type="button" value="Next">
+                        <input type="submit" name="Save" value="Save">
+                        <input type="button"  name="Next" value="Next">
                     </div>
                 </div>
             </div>
         </div>
     </form>
+    <?php 
+        echo $frm->getExternalJs();
+    ?>
 </div>
+<script>
+var confirmLabel = `<?php echo Label::getLabel('Lbl_Are_You_Sure_To_Update_This_Price!'); ?>`
+function updatePrice (fieldObj, form){
+	if (!$(form).validate()) return;
+    if(!confirm(confirmLabel)) return;
+	let price = $(fieldObj).val();
+	$(fieldObj).parents('.price-box').find('.slab-price-js').val(price);
+};
+
+</script>
+
 <?php 
 //echo $frm->getFormHtml();
+
