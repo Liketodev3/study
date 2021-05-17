@@ -32,7 +32,7 @@ class OrderProductSearch extends SearchBase
     {
         $onCondition = 'sld.sldetail_slesson_id = sl.slesson_id';
         if ($addTeacherPaidCondition) {
-            $onCondition .= ' AND sl.slesson_is_teacher_paid = ' . applicationConstants::YES;
+            $onCondition .= ' AND sld.sldetail_is_teacher_paid = ' . applicationConstants::YES;
         }
         $this->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', $onCondition, 'sl');
     }

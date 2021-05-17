@@ -54,7 +54,7 @@ class Statistics extends MyAppModel
         $srch->joinScheduledLesson();
         $srch->addCondition('op_teacher_id', '=', $this->userId);
         $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
-        $srch->addCondition('slesson_is_teacher_paid', '=', applicationConstants::YES);
+        $srch->addCondition('sld.sldetail_is_teacher_paid', '=', applicationConstants::YES);
         $srch->addMultipleFields(['IFNULL(sum(op_commission_charged),0) as earning', 'order_date_added']);
         switch ($type) {
             case static::TYPE_TODAY:

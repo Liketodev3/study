@@ -37,9 +37,6 @@ class AdminStatistic extends MyAppModel
                 $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
                 $srch->addGroupBy('op.op_id');
                 $srch->joinScheduleLessonDetails();
-                /**
-                 * @todo Teacher earning to be discussed with field slesson_is_teacher_paid
-                 */
                 $srch->joinScheduleLesson();
                 $srch->doNotCalculateRecords();
                 $srch->doNotLimitRecords();

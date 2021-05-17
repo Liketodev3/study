@@ -102,7 +102,7 @@ class OrderSearch extends SearchBase
     {
         $onCondition = 'sl.slesson_id = sld.sldetail_slesson_id';
         if ($addIsPaidCheck) {
-            $onCondition .= ' AND sl.slesson_is_teacher_paid = ' . applicationConstants::YES;
+            $onCondition .= ' AND sld.sldetail_is_teacher_paid = ' . applicationConstants::YES;
         }
         $this->joinTable(ScheduledLesson::DB_TBL, 'LEFT OUTER JOIN', $onCondition, 'sl');
     }

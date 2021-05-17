@@ -466,20 +466,15 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 --
 
 
-ALTER TABLE `tbl_user_teach_languages`
-DROP INDEX `language`;
+ALTER TABLE `tbl_user_teach_languages` DROP INDEX `language`;
 
-ALTER TABLE `tbl_user_teach_languages`
-DROP INDEX `utl_slanguage_id`;
+ALTER TABLE `tbl_user_teach_languages` DROP INDEX `utl_slanguage_id`;
 
-ALTER TABLE `tbl_user_teach_languages`  
-DROP COLUMN `utl_single_lesson_amount`;
+ALTER TABLE `tbl_user_teach_languages` DROP COLUMN `utl_single_lesson_amount`;
 
-ALTER TABLE `tbl_user_teach_languages`  
-DROP COLUMN `utl_bulk_lesson_amount`;
+ALTER TABLE `tbl_user_teach_languages` DROP COLUMN `utl_bulk_lesson_amount`;
 
-ALTER TABLE `tbl_user_teach_languages`  
-DROP COLUMN `utl_booking_slot`;
+ALTER TABLE `tbl_user_teach_languages` DROP COLUMN `utl_booking_slot`;
 
 ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_slanguage_id` `utl_tlanguage_id` INT(11) NOT NULL;
 
@@ -488,8 +483,7 @@ ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_us_user_id` `utl_user_id` INT
 --
 -- Indexes for table `tbl_user_teach_languages`
 --
-ALTER TABLE `tbl_user_teach_languages`
-  ADD UNIQUE KEY `utl_user_id` (`utl_user_id`,`utl_tlanguage_id`);
+ALTER TABLE `tbl_user_teach_languages`  ADD UNIQUE KEY `utl_user_id` (`utl_user_id`,`utl_tlanguage_id`);
   
 --
 -- Table structure for table `tbl_pricing_slabs`
@@ -555,15 +549,13 @@ INSERT INTO `tbl_pricing_slabs` (`prislab_id`, `prislab_min`, `prislab_max`, `pr
 (3, 10, 100, 1);
 
 
-ALTER TABLE `tbl_teacher_offer_price`
-  DROP `top_bulk_lesson_price`;
+ALTER TABLE `tbl_teacher_offer_price`  DROP `top_bulk_lesson_price`;
 
 ALTER TABLE `tbl_teacher_offer_price` CHANGE `top_single_lesson_price` `top_percentage` DECIMAL(10,2) NOT NULL;
 
 ALTER TABLE `tbl_order_products` CHANGE `op_slanguage_id` `op_tlanguage_id` INT(11) NOT NULL;
 
-ALTER TABLE `tbl_order_products`
-  DROP `op_lpackage_lessons`;
+ALTER TABLE `tbl_order_products`  DROP `op_lpackage_lessons`;
 
 -- task_84683_report_an_issue
 

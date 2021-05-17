@@ -60,7 +60,7 @@ class TeacherSearch extends SearchBase
     public function applyPrimaryConditions(int $userId = 0): void
     {
         $this->addCondition('teacher.user_deleted', '=', 0);
-        $this->addCondition('teacher.user_id', '!=',  $userId);
+        $this->addCondition('teacher.user_id', '!=', $userId);
         $this->addCondition('teacher.user_is_teacher', '=', 1);
         $this->addCondition('teacher.user_country_id', '>', 0);
         $this->addCondition('teacher.user_url_name', '!=', "");
@@ -154,13 +154,14 @@ class TeacherSearch extends SearchBase
         }
 
         /* Min & Max Price */
-        $minPrice = FatUtility::float($post['minPriceRange'] ?? 0);
-        $maxPrice = FatUtility::float($post['maxPriceRange'] ?? 0);
-        $minPrice = CommonHelper::getDefaultCurrencyValue($minPrice, false, false);
-        $maxPrice = CommonHelper::getDefaultCurrencyValue($maxPrice, false, false);
-        $this->addCondition('testat.testat_minprice', '>=', $minPrice);
-        $this->addCondition('testat.testat_maxprice', '<=', $maxPrice);
-
+        $minPrice = CommonHelper::getDefaultCurrencyValue(FatUtility::float($post['minPriceRange'] ?? 0), false, false);
+        $maxPrice = CommonHelper::getDefaultCurrencyValue(FatUtility::float($post['maxPriceRange'] ?? 0), false, false);
+        if (!empty($minPrice)) {
+            $this->addCondition('testat.testat_minprice', '>=', $minPrice);
+        }
+        if (!empty($maxPrice)) {
+            $this->addCondition('testat.testat_maxprice', '<=', $maxPrice);
+        }
         /* Preferences Filter (Teacher’s accent, Teaches level, Subjects, Test preparations, Lesson includes, Learner’s age group) */
         $preferences = explode(",", $post['preferenceFilter'] ?? '');
         $preferences = array_filter(FatUtility::int($preferences));
@@ -392,14 +393,14 @@ class TeacherSearch extends SearchBase
         $this->conditions = [];
     }
 
-     /**
+    /**
      * Join setting Tabel
      * 
      * @return void
      */
-
     public function joinSettingTabel(): void
     {
         $this->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = teacher.user_id', 'us');
     }
+
 }
