@@ -61,43 +61,40 @@ class TeacherController extends TeacherBaseController
         $this->_template->render();
     }
 
-    private function getSettingsForm()
+    private function getSettingsForm(array $userTeachingLang = null, array $slabs = null) : Form
     {
-        $db = FatApp::getDb();
 
         $frm = new Form('frmSettings');
-        $lessonDurations = explode(',', FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_STRING, 60));
+        $lessonDurations = CommonHelper::getPaidLessonDurations();
 
-        $priceSlab =  new PriceSlab();
-        $slabs = $priceSlab->getAllSlabs();
+        if($userTeachingLang === null){
+            $userTeachingLang = $this->getUserTeachLangData();
+        }
+        $userTeachLangData = array_column($userTeachingLang, 'teachLangName', 'utl_id');
 
-        $teacherId = UserAuthentication::getLoggedUserId();
-
-        $userTeachLanguage = new UserTeachLanguage($teacherId);
-        $userTeachlangs = $userTeachLanguage->getUserTeachlanguages($this->siteLangId, true);
-        $userTeachlangs->addMultiplefields([
-            'IFNULL(`ustelgpr_slot`, 0) as ustelgpr_slot',
-            'ustelgpr_prislab_id',
-            'utl_tlanguage_id',
-            'ustelgpr_price',
-            'utl_id',
-            'CONCAT(`utl_id`, "-", IFNULL(`ustelgpr_prislab_id`,0), "-", IFNULL(`ustelgpr_slot`, 0)) as keyField',
-            'IFNULL(tlanguage_name, tlanguage_identifier) as teachLangName'
-        ]);
-        $userTeachlangs->addCondition('utl_user_id', '=', $teacherId);
-        $userToTeachLangRows = $db->fetchAll($userTeachlangs->getResultSet(), 'keyField');
+        $teacherLessonDuration = array_column($userTeachingLang, 'ustelgpr_slot', 'ustelgpr_slot');
+        $teacherLessonDuration = array_column($userTeachingLang, 'ustelgpr_slot', 'ustelgpr_slot');
         
-        $userTeachLangData = array_column($userToTeachLangRows, 'teachLangName', 'utl_id');
-
-        $teacherLessonDuration = array_column($userToTeachLangRows, 'ustelgpr_slot', 'ustelgpr_slot');
-
+        if($slabs === null){
+            $priceSlab =  new PriceSlab();
+            $slabs = $priceSlab->getAllSlabs();
+        }
+       
+        // if(empty($userTeachingLang)){
+           
+        // }else{
+        //     $minSlabs =  array_column($userTeachingLang, 'prislab_min', 'keyField');
+        //     $maxSlabs =  array_column($userTeachingLang, 'prislab_max', 'keyField');
+        //     $slabs  = array_merge_recursive($minSlabs, $maxSlabs);
+          
+        // }
         // $frm->addHtml(Label::getLabel('LBL_Lesson_Durations'), 'lesson_duration_head', '');
 
         $defaultSlot = FatApp::getConfig('conf_default_paid_lesson_duration', FatUtility::VAR_STRING, 60);
 
         foreach ($lessonDurations as $lessonDuration) {
 
-            $durationFld = $frm->addCheckBox(sprintf(Label::getLabel('LBL_%d_minutes'), $lessonDuration), 'duration[' . $lessonDuration . ']', $lessonDuration, [], false, 0);
+            $durationFld = $frm->addCheckBox(sprintf(Label::getLabel('LBL_%d_mins'), $lessonDuration), 'duration[' . $lessonDuration . ']', $lessonDuration, [], false, 0);
             if ($lessonDuration == $defaultSlot) {
                 $durationFld->requirements()->setRequired(true);
             }
@@ -139,8 +136,13 @@ class TeacherController extends TeacherBaseController
 
     public function settingsInfoForm()
     {
-        $frm = $this->getSettingsForm();
+        $userTeachingLang = $this->getUserTeachLangData();
+        $priceSlab =  new PriceSlab();
+        $slabs = $priceSlab->getAllSlabs();
+        $frm = $this->getSettingsForm($userTeachingLang, $slabs);
         $this->set('frm', $frm);
+        $this->set('userToTeachLangRows', $userTeachingLang);
+        $this->set('slabs', $slabs);
         $this->_template->render(false, false);
     }
 
@@ -838,5 +840,26 @@ class TeacherController extends TeacherBaseController
         $this->set('ordersData', $ordersData);
         $this->set('postedData', $post);
         $this->_template->render(false, false);
+    }
+
+    private function getUserTeachLangData()
+    {
+        $teacherId = UserAuthentication::getLoggedUserId();
+        $userTeachLanguage = new UserTeachLanguage($teacherId);
+        $userTeachlangs = $userTeachLanguage->getUserTeachlanguages($this->siteLangId, true);
+        $userTeachlangs->addMultiplefields([
+            'IFNULL(`ustelgpr_slot`, 0) as ustelgpr_slot',
+            'ustelgpr_prislab_id',
+            'utl_tlanguage_id',
+            'ustelgpr_price',
+            'utl_id',
+            'prislab_min',
+            'prislab_max',
+            'CONCAT(`utl_id`, "-", IFNULL(`ustelgpr_prislab_id`,0), "-", IFNULL(`ustelgpr_slot`, 0)) as keyField',
+            'IFNULL(tlanguage_name, tlanguage_identifier) as teachLangName'
+        ]);
+        $userTeachlangs->joinTable(PriceSlab::DB_TBL, 'INNER JOIN', 'prislab.prislab_id = ustelgpr.ustelgpr_prislab_id', 'prislab');
+       
+        return FatApp::getDb()->fetchAll($userTeachlangs->getResultSet(), 'keyField');
     }
 }
