@@ -100,7 +100,7 @@ class UrlRewritingController extends AdminBaseController
         $row = [];
 
         $originalUrl = FatApp::getPostedData('urlrewrite_original', FatUtility::VAR_STRING, '');
-        if ($originalUrl != '') {
+        if (0 < $urlrewriteId) {
             $srch = new UrlRewriteSearch();
             $srch->addCondition('ur.urlrewrite_original', '=',  $originalUrl);
             $row = FatApp::getDb()->fetchAll($srch->getResultSet(), 'urlrewrite_lang_id');
@@ -109,7 +109,6 @@ class UrlRewritingController extends AdminBaseController
                 FatUtility::dieJsonError(Message::getHtml());
             }
         }
-
         $langArr = Language::getAllNames();
         foreach ($langArr as $langId => $langName) {
             $recordId = 0;
@@ -117,12 +116,21 @@ class UrlRewritingController extends AdminBaseController
                 $recordId = $row[$langId]['urlrewrite_id'];
             }
             $url = $post['urlrewrite_custom'][$langId];
-            $data = [
-                'urlrewrite_original' => $originalUrl,
-                'urlrewrite_lang_id' => $langId,
-                'urlrewrite_http_resp_code' => $post['urlrewrite_http_resp_code'][$langId],
-                'urlrewrite_custom' => CommonHelper::seoUrl($url)
-            ];
+
+            if($recordId > 0){
+                $data = [
+                    'urlrewrite_http_resp_code' => $post['urlrewrite_http_resp_code'][$langId],
+                    'urlrewrite_custom' => CommonHelper::seoUrl($url)
+                ];
+            }else{
+                $data = [
+                    'urlrewrite_original' => $originalUrl,
+                    'urlrewrite_lang_id' => $langId,
+                    'urlrewrite_http_resp_code' => $post['urlrewrite_http_resp_code'][$langId],
+                    'urlrewrite_custom' => CommonHelper::seoUrl($url)
+                ];
+            }
+            
             $record = new UrlRewrite($recordId);
             $record->assignValues($data);
 
