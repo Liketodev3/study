@@ -21,8 +21,9 @@ class TeachingLanguageSearch extends SearchBase
 
     public function joinActiveTeachers()
     {
-        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'INNER JOIN', 'tl.tlanguage_id = utl.utl_slanguage_id', 'utl');
-        $this->joinTable(User::DB_TBL, 'INNER JOIN', 'u.user_id = utl.utl_us_user_id', 'u');
+        $this->joinTable(UserTeachLanguage::DB_TBL, 'INNER JOIN', 'tl.tlanguage_id = utl.utl_tlanguage_id', 'utl');
+        $this->joinTable(TeachLangPrice::DB_TBL, 'INNER JOIN', 'ustelgpr.ustelgpr_utl_id = utl.utl_id', 'ustelgpr');
+        $this->joinTable(User::DB_TBL, 'INNER JOIN', 'u.user_id = utl.utl_user_id', 'u');
         $this->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'u.user_id = cred.credential_user_id', 'cred');
     }
 

@@ -199,10 +199,10 @@ class ScheduledLessonDetails extends MyAppModel
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->addCondition('sld.sldetail_id', ' = ', $this->getMainTableRecordId());
-        $srch->addCondition('slns.slesson_is_teacher_paid', ' = ', 0);
-        $srch->addCondition('op.op_lpackage_is_free_trial', ' = ', 0);
+        $srch->addCondition('sld.sldetail_is_teacher_paid', '=', 0);
+        $srch->addCondition('op.op_lpackage_is_free_trial', '=', 0);
         $data = $db->fetch($srch->getResultSet());
-        if (!$data) {
+        if (empty($data)) {
             return true;
         }
         $utxn_comments = sprintf(Label::getLabel('LBL_LessonId:_%s_Refund_Payment', CommonHelper::getLangId()), $data['slesson_id']);

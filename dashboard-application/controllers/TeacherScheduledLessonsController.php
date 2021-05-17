@@ -133,7 +133,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             'slns.slesson_status',
             'sld.sldetail_learner_status',
             'sld.sldetail_order_id',
-            'slns.slesson_is_teacher_paid',
+            'sld.sldetail_is_teacher_paid',
             '"-" as teacherTeachLanguageName',
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration'
@@ -456,7 +456,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError($sLessonObj->getError());
         }
         // remove from teacher google calendar
-        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        $token = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId())['us_google_access_token'];
         if ($token) {
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
@@ -545,7 +545,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError($sLessonObj->getError());
         }
         // remove from teacher google calendar
-        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        $token = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId())['us_google_access_token'];
         if ($token) {
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
@@ -1041,14 +1041,6 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $db = FatApp::getDb();
         $db->startTransaction();
         $dataUpdateArr = [];
-        if ($lessonRow['slesson_is_teacher_paid'] == 0) {
-            $lessonObj = new ScheduledLesson($lessonId);
-            if ($lessonObj->payTeacherCommission()) {
-                $userNotification = new UserNotifications($lessonRow['teacherId']);
-                $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
-                $dataUpdateArr['slesson_is_teacher_paid'] = 1;
-            }
-        }
         $lessonMeetingDetail = new LessonMeetingDetail($lessonId, $lessonRow['teacherId']);
         if ($meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)) {
             $meetingRow = json_decode($meetingRow, true);

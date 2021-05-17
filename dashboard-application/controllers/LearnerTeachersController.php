@@ -39,9 +39,9 @@ class LearnerTeachersController extends LearnerBaseController
         $unSchLesSrch->addCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_NEED_SCHEDULING);
         $teacherOfferPriceSrch = new SearchBase(TeacherOfferPrice::DB_TBL);
         $teacherOfferPriceSrch->addMultipleFields([
-            'top_learner_id', 'top_teacher_id',
-            'GROUP_CONCAT(top_single_lesson_price ORDER BY top_lesson_duration) as singleLessonAmount',
-            'GROUP_CONCAT(top_bulk_lesson_price ORDER BY top_lesson_duration) as bulkLessonAmount',
+            'top_learner_id', 
+            'top_teacher_id',
+            'GROUP_CONCAT(top_percentage ORDER BY top_lesson_duration) as percentage',
             'GROUP_CONCAT(top_lesson_duration ORDER BY top_lesson_duration) as lessonDuration'
         ]);
         $teacherOfferPriceSrch->addGroupBy('top_learner_id');
@@ -72,9 +72,8 @@ class LearnerTeachersController extends LearnerBaseController
             '(' . $schLesSrch->getQuery() . ') as scheduledLessonCount',
             '(' . $pastLesSrch->getQuery() . ') as pastLessonCount',
             '(' . $unSchLesSrch->getQuery() . ') as unScheduledLessonCount',
-            'singleLessonAmount',
-            'bulkLessonAmount',
-            'CASE WHEN singleLessonAmount IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
+            'percentage',
+            'CASE WHEN percentage IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
             'lessonDuration'
         ]);
         $page = $post['page'];
@@ -93,7 +92,6 @@ class LearnerTeachersController extends LearnerBaseController
         $teachers = FatApp::getDb()->fetchAll($rs);
         $this->set('teachers', $teachers);
 
-        $lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
         /* [ */
         $totalRecords = $srch->recordCount();
         $pagingArr = [
@@ -112,7 +110,6 @@ class LearnerTeachersController extends LearnerBaseController
         $this->set('startRecord', $startRecord);
         $this->set('endRecord', $endRecord);
         $this->set('totalRecords', $totalRecords);
-        $this->set('lessonPackages', $lessonPackages);
         /* ] */
         $this->_template->render(false, false);
     }

@@ -60,7 +60,7 @@ class TeacherSearch extends SearchBase
     public function applyPrimaryConditions(int $userId = 0): void
     {
         $this->addCondition('teacher.user_deleted', '=', 0);
-        $this->addCondition('teacher.user_id', '!=',  $userId);
+        $this->addCondition('teacher.user_id', '!=', $userId);
         $this->addCondition('teacher.user_is_teacher', '=', 1);
         $this->addCondition('teacher.user_country_id', '>', 0);
         $this->addCondition('teacher.user_url_name', '!=', "");
@@ -94,12 +94,12 @@ class TeacherSearch extends SearchBase
         $teachLangId = FatUtility::int($post['teachLangId'] ?? 0);
         if ($teachLangId > 0) {
             $srch = new SearchBase('tbl_user_teach_languages');
-            $srch->addFld('DISTINCT utl_us_user_id as utl_us_user_id');
-            $srch->addCondition('utl_slanguage_id', '=', $teachLangId);
+            $srch->addFld('DISTINCT utl_user_id as utl_user_id');
+            $srch->addCondition('utl_tlanguage_id', '=', $teachLangId);
             $srch->doNotCalculateRecords();
             $srch->doNotLimitRecords();
             $subTable = '(' . $srch->getQuery() . ')';
-            $this->joinTable($subTable, 'INNER JOIN', 'utl.utl_us_user_id = teacher.user_id', 'utl');
+            $this->joinTable($subTable, 'INNER JOIN', 'utl.utl_user_id = teacher.user_id', 'utl');
         }
 
         /* Speak Language */
@@ -154,13 +154,14 @@ class TeacherSearch extends SearchBase
         }
 
         /* Min & Max Price */
-        $minPrice = FatUtility::float($post['minPriceRange'] ?? 0);
-        $maxPrice = FatUtility::float($post['maxPriceRange'] ?? 0);
-        $minPrice = CommonHelper::getDefaultCurrencyValue($minPrice, false, false);
-        $maxPrice = CommonHelper::getDefaultCurrencyValue($maxPrice, false, false);
-        $this->addCondition('testat.testat_minprice', '>=', $minPrice);
-        $this->addCondition('testat.testat_maxprice', '<=', $maxPrice);
-
+        $minPrice = CommonHelper::getDefaultCurrencyValue(FatUtility::float($post['minPriceRange'] ?? 0), false, false);
+        $maxPrice = CommonHelper::getDefaultCurrencyValue(FatUtility::float($post['maxPriceRange'] ?? 0), false, false);
+        if (!empty($minPrice)) {
+            $this->addCondition('testat.testat_minprice', '>=', $minPrice);
+        }
+        if (!empty($maxPrice)) {
+            $this->addCondition('testat.testat_maxprice', '<=', $maxPrice);
+        }
         /* Preferences Filter (Teacher’s accent, Teaches level, Subjects, Test preparations, Lesson includes, Learner’s age group) */
         $preferences = explode(",", $post['preferenceFilter'] ?? '');
         $preferences = array_filter(FatUtility::int($preferences));
@@ -314,11 +315,11 @@ class TeacherSearch extends SearchBase
             return [];
         }
         $srch = new SearchBase('tbl_user_teach_languages', 'utl');
-        $srch->joinTable('tbl_teaching_languages_lang', 'INNER JOIN', 'tlanguage.tlanguagelang_tlanguage_id = utl.utl_slanguage_id', 'tlanguage');
-        $srch->addMultipleFields(['utl.utl_us_user_id', 'GROUP_CONCAT(tlanguage.tlanguage_name) as tlanguage_name']);
+        $srch->joinTable('tbl_teaching_languages_lang', 'INNER JOIN', 'tlanguage.tlanguagelang_tlanguage_id = utl.utl_tlanguage_id', 'tlanguage');
+        $srch->addMultipleFields(['utl.utl_user_id', 'GROUP_CONCAT(tlanguage.tlanguage_name) as tlanguage_name']);
         $srch->addCondition('tlanguage.tlanguagelang_lang_id', '=', $langId);
-        $srch->addCondition('utl.utl_us_user_id', 'IN', $teacherIds);
-        $srch->addGroupBy('utl.utl_us_user_id');
+        $srch->addCondition('utl.utl_user_id', 'IN', $teacherIds);
+        $srch->addGroupBy('utl.utl_user_id');
         $srch->doNotCalculateRecords();
         $result = $srch->getResultSet();
         return FatApp::getDb()->fetchAllAssoc($result);
@@ -391,4 +392,15 @@ class TeacherSearch extends SearchBase
     {
         $this->conditions = [];
     }
+
+    /**
+     * Join setting Tabel
+     * 
+     * @return void
+     */
+    public function joinSettingTabel(): void
+    {
+        $this->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = teacher.user_id', 'us');
+    }
+
 }

@@ -5,6 +5,7 @@ class AccountController extends LoggedUserController
 
     public function __construct($action)
     {
+        
         parent::__construct($action);
         $this->_template->addJs('js/jquery-confirm.min.js');
     }
@@ -189,16 +190,16 @@ class AccountController extends LoggedUserController
         // $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
         $isTeacherDashboardActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
         $profileFrm = $this->getProfileInfoForm($isTeacherDashboardActive);
-        $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
+        $userSettings = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
         if ($userRow['user_is_teacher']) {
-            $userRow['us_video_link'] = $user_settings['us_video_link'];
-            $userRow['us_is_trial_lesson_enabled'] = $user_settings['us_is_trial_lesson_enabled'];
-            $userRow['us_booking_before'] = $user_settings['us_booking_before']; //== code added on 23-08-2019
-            $userRow['us_google_access_token'] = $user_settings['us_google_access_token'];
-            $userRow['us_google_access_token_expiry'] = $user_settings['us_google_access_token_expiry'];
+            $userRow['us_video_link'] = $userSettings['us_video_link'];
+            $userRow['us_is_trial_lesson_enabled'] = $userSettings['us_is_trial_lesson_enabled'];
+            $userRow['us_booking_before'] = $userSettings['us_booking_before']; //== code added on 23-08-2019
+            $userRow['us_google_access_token'] = $userSettings['us_google_access_token'];
+            $userRow['us_google_access_token_expiry'] = $userSettings['us_google_access_token_expiry'];
         }
         $userRow['user_phone'] = $userRow['user_phone_code'].$userRow['user_phone'];
-        $userRow['us_site_lang'] = $user_settings['us_site_lang'];
+        $userRow['us_site_lang'] = $userSettings['us_site_lang'];
         $profileFrm->fill($userRow);
         $this->set('isProfilePicUploaded', User::isProfilePicUploaded());
         $this->set('userRow', $userRow);
@@ -355,7 +356,7 @@ class AccountController extends LoggedUserController
             // } //  code added on 23-08-2019
             $record->assignValues(['us_booking_before' => $post['us_booking_before'], 'us_is_trial_lesson_enabled' => $post['us_is_trial_lesson_enabled']]); //  code added on 23-08-2019
         }
-        $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
+        $user_settings = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
         if ($post['us_site_lang'] != $user_settings['us_site_lang']) {
             CommonHelper::setDefaultSiteLangCookie($post['us_site_lang']);
         }
@@ -412,8 +413,8 @@ class AccountController extends LoggedUserController
             $fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'), 'us_booking_before', $bookingOptionArr, 'us_booking_before', [], Label::getLabel('LBL_Select'));
             $fld3->requirement->setRequired(true);
 
-            $freeTrialPackage = LessonPackage::getFreeTrialPackage();
-            if (!empty($freeTrialPackage) && $freeTrialPackage['lpackage_active'] == applicationConstants::YES) {
+            $isFreeTrialActive =  FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
+            if ($isFreeTrialActive == applicationConstants::YES) {
                 $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', applicationConstants::YES, [], true, applicationConstants::NO);
             }
         }
@@ -426,7 +427,7 @@ class AccountController extends LoggedUserController
     {
         $userId = UserAuthentication::getLoggedUserId();
         // $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
-        $userSettings = current(UserSetting::getUserSettings($userId));
+        $userSettings = UserSetting::getUserSettings($userId);
         
         $isTeacherDashboardActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
 

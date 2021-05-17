@@ -235,7 +235,7 @@ class Giftcard extends MyAppModel
         $orderProductData['op_order_id'] = $orderId;
         $orderProductData['op_invoice_number'] = $opInvoiceNumber;
         $orderProductData['op_qty'] = 1;
-        $orderProductData['op_orderstatus_id'] = 1;
+        // $orderProductData['op_orderstatus_id'] = 1;
         $orderProductData['op_unit_price'] = $cartRecord->giftcard_price;
         $resultOp = $db->insertFromArray(OrderProduct::DB_TBL, $orderProductData);
         if (false === $resultOp) {

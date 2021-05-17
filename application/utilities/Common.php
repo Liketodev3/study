@@ -18,47 +18,6 @@ class Common
         $template->set("allLanguages", TeachingLanguage::getAllLangsWithUserCount(CommonHelper::getLangId()));
     }
 
-    public static function upcomingScheduledLessons($template)
-    {
-        $srch = new ScheduledLessonSearch(false);
-        $srch->addGroupBy('slesson_id');
-        $srch->joinOrder();
-        $srch->joinOrderProducts();
-        $srch->joinTeacher();
-        $srch->joinLearner();
-        $srch->joinTeacherCountry(CommonHelper::getLangId());
-        $srch->addCondition('order_is_paid', ' = ', Order::ORDER_IS_PAID);
-        $srch->joinTeacherSettings();
-        $srch->joinTeacherTeachLanguageView(CommonHelper::getLangId());
-        $srch->addOrder('slesson_date', 'ASC');
-        $srch->addOrder('slesson_status', 'ASC');
-        $srch->addMultipleFields([
-            'slns.slesson_id',
-            'slns.slesson_slanguage_id',
-            'sld.sldetail_learner_id as learnerId',
-            'slns.slesson_teacher_id as teacherId',
-            'ut.user_first_name as teacherFname',
-            'ut.user_url_name as user_url_name',
-            'ut.user_last_name as teacherLname',
-            'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
-            'IFNULL(teachercountry_lang.country_name, teachercountry.country_code) as teacherCountryName',
-            'slns.slesson_date',
-            'slns.slesson_start_time',
-            'slns.slesson_end_time',
-            'slns.slesson_status',
-            'slns.slesson_is_teacher_paid',
-            'op_lpackage_is_free_trial as is_trial',
-            'op_lesson_duration'
-        ]);
-        $srch->addCondition('slesson_status', ' = ', ScheduledLesson::STATUS_SCHEDULED);
-        $srch->addCondition('mysql_func_CONCAT(slns.slesson_date," ",slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
-        $srch->setPageSize(10);
-        $srch->setPageNumber(1);
-        $rs = $srch->getResultSet();
-        $lessons = FatApp::getDb()->fetchAll($rs);
-        $template->set("lessons", $lessons);
-    }
-
     public static function topRatedTeachers($template)
     {
         $userObj = new UserSearch();

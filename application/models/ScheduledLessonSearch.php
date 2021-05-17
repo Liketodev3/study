@@ -59,7 +59,7 @@ class ScheduledLessonSearch extends SearchBase
             'slns.slesson_end_time',
             'slns.slesson_status',
             'sld.sldetail_learner_status',
-            'slns.slesson_is_teacher_paid',
+            'sld.sldetail_is_teacher_paid',
             '"-" as teacherTeachLanguageName',
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration',
@@ -237,10 +237,10 @@ class ScheduledLessonSearch extends SearchBase
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'ut.user_id = utsl.utl_us_user_id', 'utsl');
-        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl.utl_slanguage_id');
-        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl.utl_slanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
-        $this->addMultipleFields(['utsl.utl_us_user_id', 'GROUP_CONCAT(DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY IFNULL(tlanguage_name, tlanguage_identifier) ASC) AS teacherTeachLanguageName']);
+        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'ut.user_id = utsl.utl_user_id', 'utsl');
+        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl.utl_tlanguage_id');
+        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl.utl_tlanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
+        $this->addMultipleFields(['utsl.utl_user_id', 'GROUP_CONCAT(DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY IFNULL(tlanguage_name, tlanguage_identifier) ASC) AS teacherTeachLanguageName']);
     }
 
     public static function isSlotBooked(int $teacherId, $startDateTime, $endDateTime)

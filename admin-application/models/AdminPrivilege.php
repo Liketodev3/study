@@ -58,6 +58,7 @@ class AdminPrivilege
     const PRIVILEGE_READ = 1;
     const PRIVILEGE_WRITE = 2;
     const SECTION_RESCHEDULE_REPORT = 52;
+    const SECTION_PRICE_SLAB = 53;
 
     private static $instance = null;
     private $loadedPermissions = [];
@@ -77,65 +78,68 @@ class AdminPrivilege
 
     public static function getPermissionArr()
     {
+        $langId = CommonHelper::getLangId();
         $arr = [
-            static::PRIVILEGE_NONE => Label::getLabel('MSG_None', CommonHelper::getLangId()),
-            static::PRIVILEGE_READ => Label::getLabel('MSG_Read_Only', CommonHelper::getLangId()),
-            static::PRIVILEGE_WRITE => Label::getLabel('MSG_Read_and_Write', CommonHelper::getLangId())
+            static::PRIVILEGE_NONE => Label::getLabel('MSG_None', $langId),
+            static::PRIVILEGE_READ => Label::getLabel('MSG_Read_Only', $langId),
+            static::PRIVILEGE_WRITE => Label::getLabel('MSG_Read_and_Write', $langId)
         ];
         return $arr;
     }
 
     public static function getPermissionModulesArr()
     {
+        $langId = CommonHelper::getLangId();
         $arr = [
-            static::SECTION_ADMIN_DASHBOARD => Label::getLabel('MSG_Admin_Dashboard', CommonHelper::getLangId()),
-            static::SECTION_TEACHER_APPROVAL_FORM => Label::getLabel('MSG_Teacher_Approval_Form', CommonHelper::getLangId()),
-            static::SECTION_TEACHER_APPROVAL_REQUESTS => Label::getLabel('MSG_Teacher_Approval_Requests', CommonHelper::getLangId()),
-            static::SECTION_USERS => Label::getLabel('MSG_Users', CommonHelper::getLangId()),
-            static::SECTION_CONTENT_PAGES => Label::getLabel('MSG_Content_Pages', CommonHelper::getLangId()),
-            static::SECTION_CONTENT_BLOCKS => Label::getLabel('MSG_Content_Blocks', CommonHelper::getLangId()),
-            static::SECTION_NAVIGATION_MANAGEMENT => Label::getLabel('MSG_Navigation_Management', CommonHelper::getLangId()),
-            static::SECTION_COUNTRIES => Label::getLabel('MSG_Countries', CommonHelper::getLangId()),
-            static::SECTION_STATES => Label::getLabel('MSG_States', CommonHelper::getLangId()),
-            static::SECTION_SOCIALPLATFORM => Label::getLabel('MSG_Social_Platform', CommonHelper::getLangId()),
-            static::SECTION_DISCOUNT_COUPONS => Label::getLabel('MSG_Discount_Coupons', CommonHelper::getLangId()),
-            static::SECTION_LANGUAGE_LABELS => Label::getLabel('MSG_Language_Labels', CommonHelper::getLangId()),
-            static::SECTION_SLIDES => Label::getLabel('MSG_Home_Page_Slide_Management', CommonHelper::getLangId()),
-            static::SECTION_BANNERS => Label::getLabel('MSG_Banners', CommonHelper::getLangId()),
-            static::SECTION_TEACHER_PREFFERENCES => Label::getLabel('MSG_Teacher_Preferences', CommonHelper::getLangId()),
-            static::SECTION_SPOKEN_LANGUAGES => Label::getLabel('MSG_Spoken_Languages', CommonHelper::getLangId()),
-            static::SECTION_TEACHING_LANGUAGES => Label::getLabel('MSG_Teaching_Languages', CommonHelper::getLangId()),
-            static::SECTION_GENERAL_SETTINGS => Label::getLabel('MSG_General_Settings', CommonHelper::getLangId()),
-            static::SECTION_PAYMENT_METHODS => Label::getLabel('MSG_Payment_Methods', CommonHelper::getLangId()),
-            static::SECTION_CURRENCY_MANAGEMENT => Label::getLabel('MSG_Currency_Management', CommonHelper::getLangId()),
-            static::SECTION_EMAIL_TEMPLATES => Label::getLabel('MSG_Email_Templates', CommonHelper::getLangId()),
-            static::SECTION_META_TAGS => Label::getLabel('MSG_Meta_Tags', CommonHelper::getLangId()),
-            static::SECTION_URL_REWRITE => Label::getLabel('MSG_Url_Rewriting', CommonHelper::getLangId()),
-            static::SECTION_ADMIN_USERS => Label::getLabel('MSG_Admin_Users', CommonHelper::getLangId()),
-            static::SECTION_SLIDES => Label::getLabel('MSG_Home_Page_Slide_Management', CommonHelper::getLangId()),
-            static::SECTION_TESTIMONIAL => Label::getLabel('MSG_Testimonial', CommonHelper::getLangId()),
-            static::SECTION_BLOG_POST_CATEGORIES => Label::getLabel('MSG_Blog_Categories', CommonHelper::getLangId()),
-            static::SECTION_BLOG_POSTS => Label::getLabel('MSG_Blog_Posts', CommonHelper::getLangId()),
-            static::SECTION_BLOG_CONTRIBUTIONS => Label::getLabel('MSG_Blog_Contributions', CommonHelper::getLangId()),
-            static::SECTION_BLOG_COMMENTS => Label::getLabel('MSG_Blog_Comments', CommonHelper::getLangId()),
-            static::SECTION_LANGUAGE_LABELS => Label::getLabel('MSG_Language_Labels', CommonHelper::getLangId()),
-            static::SECTION_BIBLE_CONTENT => Label::getLabel('MSG_Bible_Content', CommonHelper::getLangId()),
-            static::SECTION_MANAGE_PURCHASED_LESSONS => Label::getLabel('MSG_Manage_Purchased_lessons', CommonHelper::getLangId()),
-            static::SECTION_ISSUES_REPORTED => Label::getLabel('MSG_Manage_Issues_Reported', CommonHelper::getLangId()),
-            static::SECTION_GIFTCARDS => Label::getLabel('MSG_GIFTCARDS', CommonHelper::getLangId()),
-            static::SECTION_WITHDRAW_REQUESTS => Label::getLabel('MSG_Withdraw_Requests', CommonHelper::getLangId()),
-            static::SECTION_TEACHER_REVIEWS => Label::getLabel('MSG_Teacher_Reviews', CommonHelper::getLangId()),
-            static::SECTION_COMMISSION => Label::getLabel('MSG_Commission', CommonHelper::getLangId()),
-            static::SECTION_SALES_REPORT => Label::getLabel('MSG_Sales_Report', CommonHelper::getLangId()),
-            static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs', CommonHelper::getLangId()),
-            static::SECTION_TOP_LANGUAGES_REPORT => Label::getLabel('MSG_Top_Languages_Report', CommonHelper::getLangId()),
-            static::SECTION_TEACHER_PERFORMANCE_REPORT => Label::getLabel('MSG_Teacher_Performance_Report', CommonHelper::getLangId()),
-            static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs', CommonHelper::getLangId()),
-            static::SECTION_FAQ_CATEGORY => Label::getLabel('MSG_Manage_faq_Categories', CommonHelper::getLangId()),
-            static::SECTION_GROUP_CLASSES => Label::getLabel('MSG_Manage_GROUP_CLASSES', CommonHelper::getLangId()),
-            static::SECTION_TIMEZONES => Label::getLabel('MSG_Manage_Timezones', CommonHelper::getLangId()),
-            static::SECTION_ISSUE_REPORT_OPTIONS => Label::getLabel('MSG_Manage_ISSUE_REPORT_OPTIONS', CommonHelper::getLangId()),
-            static::SECTION_COMMISSION_REPORT => Label::getLabel('MSG_Commission_Report', CommonHelper::getLangId()),
+            static::SECTION_ADMIN_DASHBOARD => Label::getLabel('MSG_Admin_Dashboard', $langId),
+            static::SECTION_TEACHER_APPROVAL_FORM => Label::getLabel('MSG_Teacher_Approval_Form', $langId),
+            static::SECTION_TEACHER_APPROVAL_REQUESTS => Label::getLabel('MSG_Teacher_Approval_Requests', $langId),
+            static::SECTION_USERS => Label::getLabel('MSG_Users', $langId),
+            static::SECTION_CONTENT_PAGES => Label::getLabel('MSG_Content_Pages', $langId),
+            static::SECTION_CONTENT_BLOCKS => Label::getLabel('MSG_Content_Blocks', $langId),
+            static::SECTION_NAVIGATION_MANAGEMENT => Label::getLabel('MSG_Navigation_Management', $langId),
+            static::SECTION_COUNTRIES => Label::getLabel('MSG_Countries', $langId),
+            static::SECTION_STATES => Label::getLabel('MSG_States', $langId),
+            static::SECTION_SOCIALPLATFORM => Label::getLabel('MSG_Social_Platform', $langId),
+            static::SECTION_DISCOUNT_COUPONS => Label::getLabel('MSG_Discount_Coupons', $langId),
+            static::SECTION_LANGUAGE_LABELS => Label::getLabel('MSG_Language_Labels', $langId),
+            static::SECTION_SLIDES => Label::getLabel('MSG_Home_Page_Slide_Management', $langId),
+            static::SECTION_BANNERS => Label::getLabel('MSG_Banners', $langId),
+            static::SECTION_TEACHER_PREFFERENCES => Label::getLabel('MSG_Teacher_Preferences', $langId),
+            static::SECTION_SPOKEN_LANGUAGES => Label::getLabel('MSG_Spoken_Languages', $langId),
+            static::SECTION_TEACHING_LANGUAGES => Label::getLabel('MSG_Teaching_Languages', $langId),
+            static::SECTION_GENERAL_SETTINGS => Label::getLabel('MSG_General_Settings', $langId),
+            static::SECTION_PAYMENT_METHODS => Label::getLabel('MSG_Payment_Methods', $langId),
+            static::SECTION_CURRENCY_MANAGEMENT => Label::getLabel('MSG_Currency_Management', $langId),
+            static::SECTION_EMAIL_TEMPLATES => Label::getLabel('MSG_Email_Templates', $langId),
+            static::SECTION_META_TAGS => Label::getLabel('MSG_Meta_Tags', $langId),
+            static::SECTION_URL_REWRITE => Label::getLabel('MSG_Url_Rewriting', $langId),
+            static::SECTION_ADMIN_USERS => Label::getLabel('MSG_Admin_Users', $langId),
+            static::SECTION_SLIDES => Label::getLabel('MSG_Home_Page_Slide_Management', $langId),
+            static::SECTION_TESTIMONIAL => Label::getLabel('MSG_Testimonial', $langId),
+            static::SECTION_BLOG_POST_CATEGORIES => Label::getLabel('MSG_Blog_Categories', $langId),
+            static::SECTION_BLOG_POSTS => Label::getLabel('MSG_Blog_Posts', $langId),
+            static::SECTION_BLOG_CONTRIBUTIONS => Label::getLabel('MSG_Blog_Contributions', $langId),
+            static::SECTION_BLOG_COMMENTS => Label::getLabel('MSG_Blog_Comments', $langId),
+            static::SECTION_LANGUAGE_LABELS => Label::getLabel('MSG_Language_Labels', $langId),
+            static::SECTION_BIBLE_CONTENT => Label::getLabel('MSG_Bible_Content', $langId),
+            static::SECTION_MANAGE_PURCHASED_LESSONS => Label::getLabel('MSG_Manage_Purchased_lessons', $langId),
+            static::SECTION_ISSUES_REPORTED => Label::getLabel('MSG_Manage_Issues_Reported', $langId),
+            static::SECTION_GIFTCARDS => Label::getLabel('MSG_GIFTCARDS', $langId),
+            static::SECTION_WITHDRAW_REQUESTS => Label::getLabel('MSG_Withdraw_Requests', $langId),
+            static::SECTION_TEACHER_REVIEWS => Label::getLabel('MSG_Teacher_Reviews', $langId),
+            static::SECTION_COMMISSION => Label::getLabel('MSG_Commission', $langId),
+            static::SECTION_SALES_REPORT => Label::getLabel('MSG_Sales_Report', $langId),
+            static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs', $langId),
+            static::SECTION_TOP_LANGUAGES_REPORT => Label::getLabel('MSG_Top_Languages_Report', $langId),
+            static::SECTION_TEACHER_PERFORMANCE_REPORT => Label::getLabel('MSG_Teacher_Performance_Report', $langId),
+            static::SECTION_FAQ => Label::getLabel('MSG_Manage_faqs', $langId),
+            static::SECTION_FAQ_CATEGORY => Label::getLabel('MSG_Manage_faq_Categories', $langId),
+            static::SECTION_GROUP_CLASSES => Label::getLabel('MSG_Manage_GROUP_CLASSES', $langId),
+            static::SECTION_TIMEZONES => Label::getLabel('MSG_Manage_Timezones', $langId),
+            static::SECTION_ISSUE_REPORT_OPTIONS => Label::getLabel('MSG_Manage_ISSUE_REPORT_OPTIONS', $langId),
+            static::SECTION_COMMISSION_REPORT => Label::getLabel('MSG_Commission_Report', $langId),
+            static::SECTION_PRICE_SLAB => Label::getLabel('MSG_Price_Slab', $langId),
         ];
         return $arr;
     }
@@ -316,16 +320,6 @@ class AdminPrivilege
     public function canEditCountries($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_COUNTRIES, static::PRIVILEGE_WRITE, $returnResult);
-    }
-
-    public function canViewZones($adminId = 0, $returnResult = false)
-    {
-        return $this->checkPermission($adminId, static::SECTION_ZONES, static::PRIVILEGE_READ, $returnResult);
-    }
-
-    public function canEditZones($adminId = 0, $returnResult = false)
-    {
-        return $this->checkPermission($adminId, static::SECTION_ZONES, static::PRIVILEGE_WRITE, $returnResult);
     }
 
     public function canViewStates($adminId = 0, $returnResult = false)
@@ -737,4 +731,13 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult);
     }
 
+    public function canViewPriceSlab($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_PRICE_SLAB, static::PRIVILEGE_READ, $returnResult);
+    }
+
+    public function canEditPriceSlab($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_PRICE_SLAB, static::PRIVILEGE_WRITE, $returnResult);
+    }
 }

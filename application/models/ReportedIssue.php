@@ -225,7 +225,7 @@ class ReportedIssue extends MyAppModel
         }
         return true;
     }
-
+    
     /**
      * Get Issue Info By Id
      * 

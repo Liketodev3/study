@@ -269,9 +269,9 @@ function htmlEncode(value) {
         }
 
         /* sort by[ */
-        var sortBy = $("select[name='filterSortBy'] option:selected").val();
-        if (sortBy != '') {
-            data = data + "&sortBy=" + sortBy;
+        var sortOrder = $("select[name='filterSortBy'] option:selected").val();
+        if (sortOrder != '') {
+            data = data + "&sortOrder=" + sortOrder;
         }
         /* ] */
 

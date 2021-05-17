@@ -186,7 +186,6 @@ class Cronjob extends FatModel
             'slns.slesson_start_time',
             'slns.slesson_end_time',
             'slns.slesson_status',
-            'slns.slesson_is_teacher_paid',
             '"-" as teacherTeachLanguageName',
             'op_lpackage_is_free_trial as is_trial',
             'op_lesson_duration'

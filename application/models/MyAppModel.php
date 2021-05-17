@@ -97,7 +97,7 @@ class MyAppModel extends FatModel
         $result = $this->objMainTableRecord->loadFromDb([
             'smt' => $this->mainTableIdField . " = ?",
             'vals' => [$this->mainTableRecordId]
-                ], $prepare_dates_for_display);
+        ], $prepare_dates_for_display);
         if (!$result) {
             $this->error = $this->objMainTableRecord->getError();
         }
@@ -294,5 +294,4 @@ class MyAppModel extends FatModel
         $this->mainTableRecordId = $this->objMainTableRecord->getId();
         return true;
     }
-
 }

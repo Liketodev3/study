@@ -107,19 +107,6 @@ class User extends MyAppModel
         return $srch;
     }
 
-    public static function getLessonNotificationArr($langId = 0)
-    {
-        $langId = FatUtility::int($langId);
-        if ($langId < 1) {
-            $langId = CommonHelper::getLangId();
-        }
-        return [
-            static::USER_NOTICATION_NUMBER_12 => Label::getLabel('LBL_12_Hours', $langId),
-            static::USER_NOTICATION_NUMBER_24 => Label::getLabel('LBL_24_Hours', $langId),
-            static::USER_NOTICATION_NUMBER_48 => Label::getLabel('LBL_48_Hours', $langId),
-        ];
-    }
-
     public static function getWithdrawlMethodArray(): array
     {
         return [
@@ -253,16 +240,18 @@ class User extends MyAppModel
         /* ] */
         /* teachLanguage[ */
         $tlangSrch = new SearchBase(UserToLanguage::DB_TBL_TEACH, 'utl');
-        $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utl_slanguage_id', 'tl');
-        $tlangSrch->addMultipleFields(['utl_us_user_id', 'utl_id']);
+        $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utl_tlanguage_id', 'tl');
+        $tlangSrch->addMultipleFields(['utl_user_id', 'utl_id']);
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
-        $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);
-        $tlangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
-        $tlangSrch->addCondition('utl_slanguage_id', '>', 0);
-        $tlangSrch->addCondition('utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
+        /* @todo-task */
+        // $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);
+        // $tlangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
+        $tlangSrch->addCondition('utl_tlanguage_id', '>', 0);
+         /* @todo-task */
+        // $tlangSrch->addCondition('utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
         $tlangSrch->addCondition('tlanguage_active', '=', applicationConstants::YES);
-        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utl_us_user_id', 'utls');
+        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utl_user_id', 'utls');
         /* ] */
         $srch->joinTable(TeacherGeneralAvailability::DB_TBL, 'LEFT JOIN', 'user_id = tgavl_user_id', 'tga');
         $srch->addGroupBy('user_id');

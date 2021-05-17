@@ -30,7 +30,6 @@ class CommissionReportController extends AdminBaseController
         $orderSearch->joinOrderProduct();
         $orderSearch->joinScheduledLessonDetail();
         $orderSearch->joinScheduledLesson();
-        $orderSearch->joinScheduledLesson();
         $orderSearch->addCondition('slesson_status', '=', ScheduledLesson::STATUS_COMPLETED);
         $orderSearch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
         $orderSearch->addCondition('order_net_amount', '>', 0);

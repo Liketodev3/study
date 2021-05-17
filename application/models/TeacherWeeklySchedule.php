@@ -223,7 +223,8 @@ class TeacherWeeklySchedule extends MyAppModel
             return false;
         }
         if ($startTime > $endTime) {
-            return 0;
+            $this->error = Label::getLabel('LBL_START_TIME_IS_GREATER_THEN_END_TIME');
+            return false;
         }
         $db = FatApp::getDb();
         $srch = new ScheduledLessonSearch(false);
@@ -234,11 +235,12 @@ class TeacherWeeklySchedule extends MyAppModel
         $scheduledLessonData = $db->fetch($getResultSet);
         if (!empty($scheduledLessonData)) {
             $this->error = Label::getLabel('LBL_Either_You_or_teacher_not_available_for_this_slot');
-            return 0;
+            return false;
         }
         $dateTime = new DateTime($startTime);
         $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);
         $weekStart = $weekStartAndEndDate['weekStart'];
+
         $tWsrchC = new TeacherWeeklyScheduleSearch(false, false);
         $tWsrchC->addCondition('twsch_user_id', '=', $userId);
         $tWsrchC->addMultipleFields(['twsch_is_available']);
@@ -246,6 +248,7 @@ class TeacherWeeklySchedule extends MyAppModel
         $tWsrchC->setPageSize(1);
         $tWRsC = $tWsrchC->getResultSet();
         $tWcountC = $tWRsC->totalRecords();
+       
         if ($tWcountC > 0) {
             $tWsrch = clone $tWsrchC;
             $tWsrch->addCondition('mysql_func_CONCAT(twsch_date," ", twsch_start_time)', '<=', $startTime, 'AND', true);
@@ -256,10 +259,11 @@ class TeacherWeeklySchedule extends MyAppModel
             $tWRows = $db->fetch($tWRs);
             if ($tWcount > 0) {
                 if ($tWRows['twsch_is_available'] == static::AVAILABLE) {
-                    return 1;
+                    return true;
                 }
             }
-            return 0;
+            $this->error = Label::getLabel('LBL_NO_SLOT_AVAILABEL_ON_THIS_TIME_RANGE');
+            return false;
         }
         $gaSrch = new TeacherGeneralAvailabilitySearch();
         $gaSrch->addCondition('tgavl_user_id', '=', $userId);
@@ -290,12 +294,13 @@ class TeacherWeeklySchedule extends MyAppModel
             }
         }
         if ($generalAvail > 0) {
-            return 1;
+            return true;
         }
-        return 0;
+        $this->error = Label::getLabel('LBL_NO_SLOT_AVAILABEL_ON_THIS_TIME_RANGE');
+        return false;
     }
 
-    public static function isSlotAvailable($teacherId, $startDateTime, $endDateTime, $weekStart)
+    public static function isSlotAvailable($teacherId, $startDateTime, $endDateTime, $weekStart = '')
     {
         $teacherId = FatUtility::int($teacherId);
         if ($teacherId < 1) {
