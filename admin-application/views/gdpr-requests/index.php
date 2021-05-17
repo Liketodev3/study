@@ -19,19 +19,17 @@
                     </div>
                     <div class="sectionbody space togglewrap" style="display:none;">
                     <?php
-                    $frmSrch->setFormTagAttribute ( 'onsubmit', 'searchGdprRequests(this); return(false);');
-                    $frmSrch->setFormTagAttribute ( 'class', 'web_form' );
+                    $frmSrch->setFormTagAttribute( 'onsubmit', 'searchGdprRequests(this); return(false);');
+                    $frmSrch->setFormTagAttribute( 'class', 'web_form' );
 
                     $frmSrch->developerTags['colClassPrefix'] = 'col-md-';
                     $frmSrch->developerTags['fld_default_col'] = 6;
                     
-                    $submitBtnFld = $frmSrch->getField('btn_submit');
-                    $submitBtnFld->setFieldTagAttribute('class','btn--block');
+                    $submitBtnFld = $frmSrch->getField('btn_submit')->setFieldTagAttribute('class','btn--block');
                     $submitBtnFld->developerTags['col'] = 4;
                     
-
-                    $btnReset = $frmSrch->getField( 'btn_reset' );
-                    $btnReset->addFieldTagAttribute('onclick','clearSearch()');
+                    $btnReset = $frmSrch->getField( 'btn_reset' )->setFieldTagAttribute('onclick','clearSearch()');
+                    //$submitBtnFld->attachField($btnReset);
                     echo $frmSrch->getFormHtml(); ?>
                     </div>
                 </section>

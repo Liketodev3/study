@@ -1,5 +1,5 @@
 <?php
-class GDPR extends MyAppModel
+class Gdpr extends MyAppModel
 {
     const DB_TBL = 'tbl_gdpr_data_requests';
     const DB_TBL_PREFIX = 'gdprdatareq_';
@@ -9,7 +9,7 @@ class GDPR extends MyAppModel
 
     const STATUS_PENDING = 1;
     const STATUS_COMPLETED = 2;
-    const STATUS_DELETE_DATA = 3;
+    const STATUS_DELETED_DATA = 3;
     const STATUS_DELETED_REQUESTED = 4;
 
 
@@ -27,10 +27,13 @@ class GDPR extends MyAppModel
 
     public static function getRequestFromUserId(int $userId)
     {
+    
         $srch = new SearchBase(static::DB_TBL);
         $srch->addCondition('gdprdatareq_user_id', '=', $userId);
+        $srch->addCondition('gdprdatareq_status', '=', static::STATUS_PENDING);    
         $rs = $srch->getResultSet();
         $requestData = FatApp::getDb()->fetch($rs);
+        
         return $requestData;
     }
 
@@ -43,33 +46,28 @@ class GDPR extends MyAppModel
         return $arr;
     }
 
-    public function attachedFileTypeArr($langId)
-    {
-        $langId = FatUtility::int($langId);
-        if ($langId == 0) {
-            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $this->commonLangId), E_USER_ERROR);
-        }
+    public static function getStatusArr(int $langId){
 
+       return [
+           static::STATUS_PENDING => Label::getLabel('LBL_PENDING',$langId),
+           static::STATUS_COMPLETED => Label::getLabel('LBL_COMPLETED',$langId),
+           static::STATUS_DELETED_DATA => Label::getLabel('LBL_DELETED_DATA',$langId),
+           static::STATUS_DELETED_REQUESTED => Label::getLabel('LBL_DELETED_REQUESTED',$langId),
+       ];
+    }
+
+    public function attachedFileTypeArr()
+    {
         $arr=[
             AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_PROFILE_IMAGE,
             AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, 
             AttachedFile::FILETYPE_USER_PROFILE_IMAGE, 
             AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, 
             AttachedFile::FILETYPE_USER_QUALIFICATION_FILE,
-            AttachedFile::FILETYPE_COUNTRY_FLAG,
         ];
         return $arr;
     }
-    
-    public static function getGdprAdminStatusArr($langId)
-    {
-        $arr = array(
-            static::STATUS_DELETE_DATA => Label::getLabel('LBL_Erase_Data'),
-            static::STATUS_COMPLETED => Label::getLabel('LBL_Completed'),
-        );
-        return $arr; 
-    }
-
+  
     public static function getRequestStatus()
     {
         $getReqStatus = new SearchBase(static::DB_TBL);
@@ -77,17 +75,11 @@ class GDPR extends MyAppModel
         return $getReqStatus;
     }
 
-    public function truncateUserPersonalData($userId):bool
+    public function truncateUserPersonalData(int $userId):bool
     {
         $is_deleted = 0;
-        $userId = FatUtility::convertToType($userId, FatUtility::VAR_INT);
-        if(1 > $userId)
-        {
-            $this->error = Label::getLabel('MSG_Invalid_Request', $this->commonLangId);
-            return false;
-        }
-        
-        $user_file_type_arr = $this->attachedFileTypeArr($this->commonLangId);
+   
+        $user_file_type_arr = $this->attachedFileTypeArr();
         foreach ($user_file_type_arr as $user_file_type_value) {
             $attchedFile = new AttachedFile();
             if( $attchedFile->deleteFile($user_file_type_value, $userId, $fileId = 0, $record_subid = 0, $langId = -1, $screen = 0) )

@@ -1,6 +1,13 @@
 <?php
 class GdprController extends LoggedUserController
-{ 
+{
+    public function __construct($action)
+    {
+        parent::__construct($action);
+        $this->objPrivilege->canViewGdprRequests($this->admin_id, true);
+      
+    }
+
     public function index()
     {
         $userId = UserAuthentication::getLoggedUserId();
@@ -11,7 +18,7 @@ class GdprController extends LoggedUserController
         $this->_template->render();
     }
 
-    private function getGdprRequestForm() 
+    private function getGdprRequestForm()
     {
         $frm = new Form('gdprRequestForm');
         $frm->addFormTagAttribute('class', 'form');
@@ -22,7 +29,7 @@ class GdprController extends LoggedUserController
         return $frm;
     }
 
-    public function gdprApprovalReuest() 
+    public function gdprApprovalReuest()
     {
         $gdpr_request_data = [];
         $userId = UserAuthentication::getLoggedUserId();
@@ -41,8 +48,8 @@ class GdprController extends LoggedUserController
         $gdpr_request_data['gdprdatareq_reason']    = $post['gdprdatareq_reason'];
         $gdpr_request_data['gdprdatareq_type']      = Gdpr::TRUNCATE_DATA;
         $gdpr_request_data['gdprdatareq_added_on']  = date('Y-m-d H:i:s');
-        $gdpr_request_data['gdprdatareq_updated_on']= date('Y-m-d H:i:s');
-        $gdpr_request_data['gdprdatareq_request_sent']= applicationConstants::YES;
+        $gdpr_request_data['gdprdatareq_updated_on'] = date('Y-m-d H:i:s');
+        $gdpr_request_data['gdprdatareq_request_sent'] = applicationConstants::YES;
         $gdprObj = new Gdpr();
         $gdprObj->assignValues($gdpr_request_data);
         if (!$gdprObj->save()) {
@@ -51,5 +58,4 @@ class GdprController extends LoggedUserController
         $this->set('msg', Label::getLabel("LBL_GDPR_Request_Added_Successfully!"));
         $this->_template->render(false, false, 'json-success.php');
     }
-    
 }

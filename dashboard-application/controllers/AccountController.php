@@ -430,10 +430,13 @@ class AccountController extends LoggedUserController
             Message::addErrorMessage(Label::getLabel('LBL_User_not_logged'));
             FatUtility::dieWithError(Message::getHtml());
         }
-
-        $gdprId = GDPR::getRequestFromUserId($userId);
-
-        if($gdpr[])
+    
+        $gdprId = Gdpr::getRequestFromUserId($userId);
+        if(!empty($gdprId)){
+            Message::addErrorMessage(Label::getLabel('LBL_You_already_requested_erase_date',$this->siteLangId));
+            FatUtility::dieWithError(Message::getHtml());
+        
+        }
         $frm =  $this->getDeleteAccountForm($userId);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
@@ -455,13 +458,13 @@ class AccountController extends LoggedUserController
         $gdpr_request_data = [
         'gdprdatareq_user_id'=> $userId,
         'gdprdatareq_reason'=> $post['gdprdatareq_reason'],
-        'gdprdatareq_type'=> GDPR::TRUNCATE_DATA,
+        'gdprdatareq_type'=> Gdpr::TRUNCATE_DATA,
         'gdprdatareq_added_on'=>date('Y-m-d H:i:s'),
         'gdprdatareq_updated_on'=>date('Y-m-d H:i:s'),
-        'gdprdatareq_status'=>GDPR::STATUS_PENDING,
+        'gdprdatareq_status'=>Gdpr::STATUS_PENDING,
         ];
 
-        $gdpr = new GDPR();
+        $gdpr = new Gdpr();
         $gdpr->assignValues($gdpr_request_data);
         if (!$gdpr->save()) {
             FatUtility::dieJsonError($gdpr->getError());

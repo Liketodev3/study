@@ -58,6 +58,7 @@ class AdminPrivilege
     const PRIVILEGE_READ = 1;
     const PRIVILEGE_WRITE = 2;
     const SECTION_RESCHEDULE_REPORT = 52;
+    const SECTION_GDPR_REQUESTS = 53;
 
     private static $instance = null;
     private $loadedPermissions = [];
@@ -136,6 +137,7 @@ class AdminPrivilege
             static::SECTION_TIMEZONES => Label::getLabel('MSG_Manage_Timezones', CommonHelper::getLangId()),
             static::SECTION_ISSUE_REPORT_OPTIONS => Label::getLabel('MSG_Manage_ISSUE_REPORT_OPTIONS', CommonHelper::getLangId()),
             static::SECTION_COMMISSION_REPORT => Label::getLabel('MSG_Commission_Report', CommonHelper::getLangId()),
+            static::SECTION_GDPR_REQUESTS => Label::getLabel('Msg_Manage_Gdpr_Requests',CommonHelper::getLangId()),
         ];
         return $arr;
     }
@@ -735,6 +737,14 @@ class AdminPrivilege
     public function canViewCommissionReport($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult);
+    }
+
+    public function canViewGdprRequests($adminId = 0,$returnResult = false){
+        return $this->checkPermission($adminId, static::SECTION_GDPR_REQUESTS, static::PRIVILEGE_READ, $returnResult);
+    }
+
+    public function canEditGdprRequests($adminId = 0,$returnResult = false){
+        return $this->checkPermission($adminId, static::SECTION_GDPR_REQUESTS, static::PRIVILEGE_WRITE, $returnResult);
     }
 
 }

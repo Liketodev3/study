@@ -283,7 +283,7 @@
 			){ ?>
 		<li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Misc',$adminLangId);?></a>
 			<ul>
-				<?php if( $objPrivilege->canViewMetaTags( AdminAuthentication::getLoggedAdminId(), true ) ){ ?>
+				<?php if($objPrivilege->canViewMetaTags( AdminAuthentication::getLoggedAdminId(), true ) ){ ?>
 					<li><a href="<?php echo CommonHelper::generateUrl('MetaTags'); ?>"><?php echo Label::getLabel('LBL_Meta_Tags_Management',$adminLangId);?></a></li>
 				<?php } ?>
 
@@ -328,7 +328,7 @@
 		<!--  ] -->
         
         <!--Admin Users[-->
-		<?php if( $objPrivilege->canViewAdminUsers(AdminAuthentication::getLoggedAdminId(), true) || $objPrivilege->canViewAdminUsers(AdminAuthentication::getLoggedAdminId(), true) ){ ?>
+		<?php if($objPrivilege->canViewAdminUsers(AdminAuthentication::getLoggedAdminId(), true) || $objPrivilege->canViewAdminUsers(AdminAuthentication::getLoggedAdminId(), true)){ ?>
 		<li><a href="<?php echo CommonHelper::generateUrl('AdminUsers')?>"><?php echo Label::getLabel('LBL_Manage_Admin_Users',$adminLangId);?></a>
 		</li>
 		<?php } ?>
@@ -342,9 +342,9 @@
             </ul>
 		</li>
 		<!--  GDPR Requests Enable/Disable Start -->
-        <li><a href="<?php echo CommonHelper::generateUrl('GdprRequests')?>"><?php echo Label::getLabel('LBL_Gdpr_Approval_Requests',$adminLangId);?></a>
-		</li>
-		<!--  GDPR Requests Enable/Disable End -->
+		<?php if($objPrivilege->canViewGdprRequests(AdminAuthentication::getLoggedAdminId(), true)){ ?>
+        <li><a href="<?php echo CommonHelper::generateUrl('GdprRequests')?>"><?php echo Label::getLabel('LBL_User_Gdpr_Requests',$adminLangId);?></a></li>
+		<?php } ?>	
 	</ul>
 	</div>
 </aside>
