@@ -366,21 +366,13 @@ class PurchasedLessonsController extends AdminBaseController
         $db->startTransaction();
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
         $sLessonObj->loadFromDb();
+        /**
+         * @todo Wallet transactions
+         * 
+         * Update lesson detail statuses
+         */
         if ($status == ScheduledLesson::STATUS_COMPLETED) {
-            if ($lessonRow['slesson_is_teacher_paid'] == 0) {
-                $sLessonObj->setFldValue('slesson_ended_on', date('Y-m-d H:i:s'));
-                $lessonObj = new ScheduledLesson($slesson_id);
-                if ($lessonObj->payTeacherCommission()) {
-                    $userNotification = new UserNotifications($lessonRow['slesson_teacher_id']);
-                    $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
-                    $sLessonObj->setFldValue('slesson_is_teacher_paid', 1);
-                }
-            } else {
-                $trnObj = new Transaction($lessonRow['slesson_teacher_id']);
-                if (!$trnObj->changeStatusByLessonId($slesson_id, Transaction::STATUS_COMPLETED)) {
-                    FatUtility::dieJsonError($trnObj->getError());
-                }
-            }
+            $sLessonObj->setFldValue('slesson_ended_on', date('Y-m-d H:i:s'));
         }
         if ($status == ScheduledLesson::STATUS_CANCELLED) {
             if (!$sLessonObj->cancelLessonByTeacher('')) {

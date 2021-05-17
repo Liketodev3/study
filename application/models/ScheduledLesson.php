@@ -18,20 +18,16 @@ class ScheduledLesson extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getStatusArr($langId = 0)
+    public static function getStatusArr()
     {
-        $langId = FatUtility::int($langId);
-        if ($langId < 1) {
-            $langId = CommonHelper::getLangId();
-        }
         return [
-            static::STATUS_UPCOMING => Label::getLabel('LBL_Upcoming', $langId),
-            static::STATUS_SCHEDULED => Label::getLabel('LBL_Scheduled', $langId),
-            static::STATUS_RESCHEDULED => Label::getLabel('LBL_Rescheduled', $langId),
-            static::STATUS_NEED_SCHEDULING => Label::getLabel('LBL_Need_to_be_scheduled', $langId),
-            static::STATUS_COMPLETED => Label::getLabel('LBL_Completed', $langId),
-            static::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled', $langId),
-            static::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported_Status', $langId),
+            static::STATUS_UPCOMING => Label::getLabel('LBL_Upcoming'),
+            static::STATUS_SCHEDULED => Label::getLabel('LBL_Scheduled'),
+            static::STATUS_RESCHEDULED => Label::getLabel('LBL_Rescheduled'),
+            static::STATUS_NEED_SCHEDULING => Label::getLabel('LBL_Need_to_be_scheduled'),
+            static::STATUS_COMPLETED => Label::getLabel('LBL_Completed'),
+            static::STATUS_CANCELLED => Label::getLabel('LBL_Cancelled'),
+            static::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported_Status'),
         ];
     }
 
@@ -43,72 +39,9 @@ class ScheduledLesson extends MyAppModel
         return parent::save();
     }
 
-    public function payTeacherCommission()
-    {
-        $srch = new ScheduledLessonSearch();
-        $srch->joinOrder();
-        $srch->joinOrderProducts();
-        $srch->joinLearner();
-        $srch->addMultipleFields(['slesson_id', 'slesson_grpcls_id', 'slesson_teacher_id',
-            'op_commission_charged', 'CONCAT(user_first_name, " ", user_last_name) as user_full_name']);
-        $srch->addCondition('slns.slesson_id', ' = ', $this->getMainTableRecordId());
-        $srch->addCondition('slns.slesson_is_teacher_paid', ' = ', 0);
-        $srch->addCondition('op.op_lpackage_is_free_trial', ' = ', 0);
-        $cnd = $srch->addCondition('slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
-        $cnd = $srch->addCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
-        $cnd->attachCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_COMPLETED);
-        $rs = $srch->getResultSet();
-        $rows = FatApp::getDb()->fetchAll($rs);
-        if (empty($rows)) {
-            return false;
-        }
-        foreach ($rows as $data) {
-            $tObj = new Transaction($data['slesson_teacher_id']);
-            $comment = sprintf(Label::getLabel('LBL_LessonId:_%s_Payment_Received', CommonHelper::getLangId()), $this->getMainTableRecordId());
-            if ($data['slesson_grpcls_id']) {
-                $comment = sprintf(Label::getLabel('LBL_Group_Class_Payment_Received_for_user:_%s', CommonHelper::getLangId()), $data['user_full_name']);
-            }
-            $data = [
-                'utxn_user_id' => $data['slesson_teacher_id'],
-                'utxn_date' => date('Y-m-d H:i:s'),
-                'utxn_comments' => $comment,
-                'utxn_status' => Transaction::STATUS_COMPLETED,
-                'utxn_type' => Transaction::TYPE_LOADED_MONEY_TO_WALLET,
-                'utxn_credit' => $data['op_commission_charged'],
-                'utxn_slesson_id' => $data['slesson_id'],
-            ];
-            if (!$tObj->addTransaction($data)) {
-                trigger_error($tObj->getError(), E_USER_ERROR);
-            }
-        }
-        return true;
-    }
-
-    public function holdPayment($user_id, $lesson_id)
-    {
-        $db = FatApp::getDb();
-        $update_cond = ['smt' => 'utxn_user_id = ? and utxn_slesson_id = ? AND utxn_status=?', 'vals' => [$user_id, $lesson_id, Transaction::STATUS_COMPLETED]];
-        if (!$db->updateFromArray(Transaction::DB_TBL, ['utxn_status' => Transaction::STATUS_PENDING], $update_cond, false, [], '', 1)) {
-            return false;
-        }
-        return true;
-    }
-
-    public function changeLessonStatus($lesson_id, $status)
-    {
-        $lesson_id = FatUtility::int($lesson_id);
-        $status = FatUtility::int($status);
-        $db = FatApp::getDb();
-        $coustomQuery = "UPDATE " . ScheduledLesson::DB_TBL . " as sl INNER JOIN " . ScheduledLessonDetails::DB_TBL . " as sld ON ( sl.slesson_id = sld.sldetail_slesson_id ) ";
-        $coustomQuery .= " SET  sld.sldetail_learner_status = " . $status . " , sl.slesson_status = " . $status;
-        $coustomQuery .= " where sl.slesson_id = '" . $lesson_id . "'";
-        if (!$db->query($coustomQuery)) {
-            $this->error = $db->getError();
-            return false;
-        }
-        return true;
-    }
-
+    /**
+     * @todo Add cancel hours check from configuration
+     */
     public function cancelLessonByTeacher($reason = '')
     {
         $lessonDetailRows = ScheduledLessonDetails::getScheduledRecordsByLessionId($this->getMainTableRecordId());
@@ -228,7 +161,5 @@ class ScheduledLesson extends MyAppModel
         $this->assignValues(['slesson_teacher_join_time' => date('Y-m-d H:i:s')]);
         return $this->save();
     }
-
-    
 
 }

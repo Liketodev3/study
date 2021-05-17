@@ -1324,16 +1324,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 'slesson_ended_on' => date('Y-m-d H:i:s'),
                 'slesson_teacher_end_time' => date('Y-m-d H:i:s'),
             ];
-            $lessonId = $lessonRow['slesson_id'];
-            // pay teacher
-            if ($lessonRow['sldetail_is_teacher_paid'] == 0) {
-                $lessonObj = new ScheduledLesson($lessonId);
-                if ($lessonObj->payTeacherCommission()) {
-                    $userNotification = new UserNotifications($lessonRow['teacherId']);
-                    $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
-                    $dataUpdateArr['sldetail_is_teacher_paid'] = 1;
-                }
-            }
             // update lesson status details
             $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
             $sLessonObj->assignValues($dataUpdateArr);

@@ -1041,14 +1041,6 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $db = FatApp::getDb();
         $db->startTransaction();
         $dataUpdateArr = [];
-        if ($lessonRow['sldetail_is_teacher_paid'] == 0) {
-            $lessonObj = new ScheduledLesson($lessonId);
-            if ($lessonObj->payTeacherCommission()) {
-                $userNotification = new UserNotifications($lessonRow['teacherId']);
-                $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
-                $dataUpdateArr['sldetail_is_teacher_paid'] = 1;
-            }
-        }
         $lessonMeetingDetail = new LessonMeetingDetail($lessonId, $lessonRow['teacherId']);
         if ($meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)) {
             $meetingRow = json_decode($meetingRow, true);
