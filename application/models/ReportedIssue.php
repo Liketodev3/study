@@ -13,7 +13,7 @@ class ReportedIssue extends MyAppModel
     const STATUS_ESCLATED = 3;
     const STATUS_CLOSED = 4;
     /* Issue Actions */
-    const ACTION_UNSCHEDULED = 1;
+    const ACTION_RESET_AND_UNSCHEDULED = 1;
     const ACTION_COMPLETE_ZERO_REFUND = 2;
     const ACTION_COMPLETE_HALF_REFUND = 3;
     const ACTION_COMPLETE_FULL_REFUND = 4;
@@ -103,16 +103,18 @@ class ReportedIssue extends MyAppModel
         if ($action == static::ACTION_ESCLATE_TO_ADMIN) {
             $status = static::STATUS_ESCLATED;
         }
+        if ($closed) {
+            $status = static::STATUS_CLOSED;
+        }
         $refund = 0;
         if ($action == static::ACTION_COMPLETE_HALF_REFUND) {
             $refund = 50;
         }
-        if ($action == static::ACTION_COMPLETE_HALF_REFUND) {
+        if ($action == static::ACTION_COMPLETE_FULL_REFUND) {
             $refund = 100;
         }
         /* Transaction settlement for refund percentage */
         if ($closed && !$this->executeLessonTransactions($issueId, $refund)) {
-            $status = static::STATUS_CLOSED;
             $db->rollbackTransaction();
             return false;
         }
@@ -225,7 +227,7 @@ class ReportedIssue extends MyAppModel
         }
         return true;
     }
-    
+
     /**
      * Get Issue Info By Id
      * 
@@ -455,11 +457,11 @@ class ReportedIssue extends MyAppModel
     public static function getActionsArr($key = null)
     {
         $arr = [
-            static::ACTION_UNSCHEDULED => Label::getLabel('LBL_RESET_LESSON_TO_UNSCHEDULED'),
+            static::ACTION_RESET_AND_UNSCHEDULED => Label::getLabel('LBL_RESET_AND_UNSCHEDULED'),
             static::ACTION_COMPLETE_ZERO_REFUND => Label::getLabel('LBL_COMPLETE_AND_ZERO_REFUND'),
             static::ACTION_COMPLETE_HALF_REFUND => Label::getLabel('LBL_COMPLETE_AND_50%_REFUND'),
             static::ACTION_COMPLETE_FULL_REFUND => Label::getLabel('LBL_COMPLETE_AND_100%_REFUND'),
-            static::ACTION_ESCLATE_TO_ADMIN => Label::getLabel('LBL_ESCLATE_TO_SUPPORT_TEAM')
+            static::ACTION_ESCLATE_TO_ADMIN => Label::getLabel('LBL_ESCALATE_TO_SUPPORT_TEAM')
         ];
         if ($key === null) {
             return $arr;

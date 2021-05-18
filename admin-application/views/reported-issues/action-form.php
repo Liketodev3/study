@@ -1,18 +1,4 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<section class="section">
-    <div class="sectionhead">
-        <h4><?php echo Label::getLabel('LBL_Issue_Detail', $adminLangId); ?></h4>
-    </div>
-    <div class="sectionbody">
-        <table class="table table--details">
-            <tbody>
-                <tr><td><h3><?php echo $issue['repiss_title']; ?></h3></td></tr>
-                <tr><td><strong><?php echo Label::getLabel('LBL_Detail'); ?>:</strong> <?php echo nl2br($issue['repiss_comment']); ?></td></tr>
-                <tr><td><strong><?php echo Label::getLabel('LBL_Current_Status', $adminLangId); ?>:</strong> <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?></td></tr>
-            </tbody>
-        </table>
-    </div>
-</section>
 <?php if (count($logs)) { ?>
     <section class="section">
         <div class="sectionhead">
@@ -29,6 +15,15 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td>
+                            <?php echo $issue['reporter_username']; ?>
+                            <?php echo '(' . ReportedIssue::getUserTypeArr(ReportedIssue::USER_TYPE_LEARNER) . ')'; ?>
+                        </td>
+                        <td><?php echo $issue['repiss_title']; ?></td>
+                        <td><?php echo nl2br($issue['repiss_comment']); ?></td>
+                        <td><?php echo $issue['repiss_reported_on']; ?></td>
+                    </tr>
                     <?php foreach ($logs as $log) { ?>
                         <tr>
                             <td>
