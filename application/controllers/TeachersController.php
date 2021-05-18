@@ -129,7 +129,7 @@ class TeachersController extends MyAppController
         $prefRs = $prefSrch->getResultSet();
         $teacherPreferences = FatApp::getDb()->fetchAll($prefRs);
 
-        $loggedUserId = UserAuthentication::getLoggedUserId();
+        $loggedUserId = UserAuthentication::getLoggedUserId(true);
         /* ] */
         $srch = new UserSearch();
         $srch->doNotCalculateRecords();
@@ -658,7 +658,7 @@ class TeachersController extends MyAppController
         if ($langTeach > 0) {
             if (is_numeric($langTeach)) {
                 //$srch->addCondition( 'us.us_teach_slanguage_id', '=', $langTeach );
-                $srch->addDirectCondition('FIND_IN_SET(' . $langTeach . ', utl_slanguage_ids)');
+                $srch->addDirectCondition('FIND_IN_SET(' . $langTeach . ', utl_tlanguage_ids)');
             }
         }
         /* ] */

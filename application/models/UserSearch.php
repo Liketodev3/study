@@ -263,8 +263,8 @@ class UserSearch extends SearchBase
             'min(ustelgpr_slot) as slot', 
             'max(ustelgpr_price) AS maxPrice', 
             'min(ustelgpr_price) AS minPrice', 
-            'min(prislab.ustelgpr_min_slab) as minSlab', 
-            'max(prislab.ustelgpr_max_slab) as maxSlab', 
+            'min(ustelgpr.ustelgpr_min_slab) as minSlab', 
+            'max(ustelgpr.ustelgpr_max_slab) as maxSlab', 
             'GROUP_CONCAT(DISTINCT utl_tlanguage_id) as utl_tlanguage_ids', 
             'GROUP_CONCAT(DISTINCT ustelgpr_slot) as ustelgpr_slots'
         ]);
@@ -286,9 +286,7 @@ class UserSearch extends SearchBase
         $this->joinUserCountry(CommonHelper::getLangId());
         $this->addOrder('teacher_rating', 'DESC');
         $this->setPageSize(6);
-        $db = FatApp::getDb();
-        $rs = $this->getResultSet();
-        return $teachersList = $db->fetchAll($rs);
+        return  FatApp::getDb()->fetchAll($this->getResultSet());
     }
 
     public function joinUserTeachingLanguages($langId = 0, $keyword = '')

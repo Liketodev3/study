@@ -36,6 +36,7 @@ echo $str = '<script type="text/javascript">
 		var currencySymbolLeft = "' . $currencySymbolLeft . '";
 		var currencySymbolRight = "' . $currencySymbolRight . '";
 		const confWebRootUrl = "' . CONF_WEBROOT_URL . '";
+		const confFrontEndUrl = "' . CONF_WEBROOT_URL . '";
 		const confWebDashUrl = "' . CONF_WEBROOT_DASHBOARD . '";
 		var SslUsed = '. $SslUsed .';
 		var cookieConsent = ' . json_encode($cookieConsent) . ';
