@@ -599,7 +599,8 @@ VALUES (NULL, 'Completed Lesson Transaction Settlements', 'ReportedIssue/complet
 ALTER TABLE `tbl_scheduled_lesson_details` ADD `sldetail_is_teacher_paid` INT NOT NULL AFTER `sldetail_added_on`;
 ALTER TABLE `tbl_scheduled_lessons`  DROP `slesson_is_teacher_paid`;
 
-ALTER TABLE `tbl_user_teach_languages` DROP INDEX `ustelgpr_prislab_id`;
+ALTER TABLE `tbl_user_teach_lang_prices` DROP INDEX `ustelgpr_prislab_id`;
+
 ALTER TABLE `tbl_user_teach_lang_prices` DROP `ustelgpr_prislab_id`;
 
 ALTER TABLE `tbl_user_teach_lang_prices` ADD `ustelgpr_min_slab` INT NOT NULL AFTER `ustelgpr_price`, ADD `ustelgpr_max_slab` INT NOT NULL AFTER `ustelgpr_min_slab`;

@@ -342,7 +342,7 @@ class TeachersController extends MyAppController
         if (!in_array($postedAction, $allowedActionArr)) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $bookingMinutesDuration = FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60);
+        $bookingMinutesDuration = FatApp::getConfig('CONF_DEFAULT_PAID_LESSON_DURATION', FatUtility::VAR_INT, 60);
         if ('free_trial' == $postedAction) {
             $bookingMinutesDuration = FatApp::getConfig('conf_trial_lesson_duration', FatUtility::VAR_INT, 30);
             $freeTrialEnable = FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);

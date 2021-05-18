@@ -50,6 +50,17 @@ class TeachLangPrice extends MyAppModel
         return true;
     }
 
+    public function deleteAllUserPrice(int $teacherId): bool
+    {
+        $query = 'DELETE ' . TeachLangPrice::DB_TBL . ' FROM ' . TeachLangPrice::DB_TBL . ' INNER JOIN ' . UserTeachLanguage::DB_TBL . ' utl ON utl.utl_id = ustelgpr_utl_id and utl.utl_user_id = ' . $teacherId;
+        $db = FatApp::getDb();
+        $db->query($query);
+        if ($db->getError()) {
+            return false;
+        }
+        return true;
+    }
+
 
     public function getTeachingSlots(int $teacherId)
     {
