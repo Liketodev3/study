@@ -72,10 +72,8 @@ $(document).ready(function(){
 	};
 	
 		reloadList = function() {
-		// var frm = document.frmReviewSearchPaging;
 		searchGdprRequests(document.frmSrch);
 	}
-
 	changeStatus = function(requestId){
 		$.facebox(function(){
 			fcom.ajax(fcom.makeUrl('GdprRequests', 'view'), {id:requestId}, function(t){
@@ -83,14 +81,6 @@ $(document).ready(function(){
 			});
 		});
 	};
-
-	eraseUserPersonalData = function(data) {
-		fcom.ajax(fcom.makeUrl('GdprRequests', 'eraseUserPersonalData'), data, function(t) {
-			// $(document).trigger('close.facebox');
-			// reloadList();
-		});
-	};
-
 	updateStatus = function(frm){
 		if(!$(frm).validate()) return;
 		var data = fcom.frmData(frm);

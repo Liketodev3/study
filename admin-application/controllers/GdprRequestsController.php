@@ -113,38 +113,33 @@ class GdprRequestsController extends AdminBaseController
 
     public function updateStatus()
     {
-        $gdpr_request_id = FatApp::getPostedData('gdprdatareq_id', FatUtility::VAR_INT, 0);
+        $gdprRequestId = FatApp::getPostedData('gdprdatareq_id', FatUtility::VAR_INT, 0);
         $status = FatApp::getPostedData('gdprdatareq_status', FatUtility::VAR_INT, 0);
-        if ($gdpr_request_id > 0) {
+        if ($gdprRequestId> 0) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $statusFetched = Gdpr::getAttributesById($gdpr_request_id, 'gdprdatareq_status');
-        if ( is_null($statusFetched) ) {
+        $gdprRequestDetail = Gdpr::getAttributesById($gdprRequestId);
+        if ($gdprRequestDetail) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieWithError(Message::getHtml());
         }
+
+        if($status==Gdpr::STATUS_DELETED_DATA){
+            $gdpr = new Gdpr();
+            if($gdpr->truncateUserPersonalData($gdprRequestDetail['gdprdatareq_user_id'])){
+                Message::addErrorMessage($gdpr->getError());
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+        }
+        
         $assignValues = array('gdprdatareq_status' => $status);
-        $record = new Gdpr($gdpr_request_id);
+        $record = new Gdpr($gdprRequestId);
         $record->assignValues($assignValues);
         if (!$record->save()) {
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Updated_Successfully!'));
-    }
-
-    private function eraseUserPersonalData()
-    {
-        $userID = FatApp::getPostedData('gdprdatareq_user_id', FatUtility::VAR_INT, 0);
-        $eraseUserData = new Gdpr();
-        if(!$eraseUserData->truncateUserPersonalData($userID))
-        {
-            Message::addErrorMessage($record->getError());
-            FatUtility::dieJsonError(Message::getHtml());
-        }
-        $this->set('msg', 'Data Truncated Successfully!');
-        $this->set('gdprdatareq_user_id', $userID);
-        $this->_template->render(false, false, 'json-success.php');
     }
 }

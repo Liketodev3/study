@@ -867,7 +867,7 @@ class User extends MyAppModel
     public static function truncateUserData($userId)
     {
         $db = FatApp::getDb();
-        // Truncating tbl_users --> start
+        
         $tbl_users_data = [
             'user_url_name' => '',
             'user_first_name' => '',
@@ -886,62 +886,31 @@ class User extends MyAppModel
             'user_state_id' => NULL,
             'user_city' => '',
         ];
-
-        if ($db->updateFromArray(static::DB_TBL, $tbl_users_data, array(
-            'smt' => 'user_id=?',
-            'vals' => array(
-                $userId
-            )
-        ))){
-            return true;
-        }
+        $db->updateFromArray(static::DB_TBL, $tbl_users_data,['smt' => 'user_id=?','vals' => [$userId]]);
+        
     }
     
     public static function truncateUserCredentialsData($userId)
     {
         $db = FatApp::getDb();
-        $tbl_user_credentials_data = [
-            'credential_username' => '',
-            'credential_email' => '',
-        ];
-
-        if ($db->updateFromArray(static::DB_TBL_CRED, $tbl_user_credentials_data, array(
-            'smt' => 'credential_user_id=?',
-            'vals' => array(
-                $userId
-            )
-        ))){
-            return true;
-        }
+        $tbl_user_credentials_data = ['credential_username' => '','credential_email' => ''];
+        $db->updateFromArray(static::DB_TBL_CRED, $tbl_user_credentials_data, ['smt' => 'credential_user_id=?','vals'=>[$userId]])
+        
     }
 
     public static function truncateUsersLangDataByUserId($userId)
     {
-        $db = FatApp::getDb();
-        $tbl_users_lang_data = [
-            'userlang_user_profile_Info' => ''
-        ];
-
-        if ($db->updateFromArray(static::DB_TBL_LANG, $tbl_users_lang_data, array(
-            'smt' => 'userlang_user_id=?',
-            'vals' => array(
-                $userId
-            )
-        ))){
-            return true;
-        }
+        FatApp::getDb()->deleteRecords(static::DB_TBL_LANG, array('smt' => 'userlang_user_id = ?', 'vals' => array($userId)));
     }
 
     public static function deleteUserBankInfoDataByUserId($userId)
     {
         FatApp::getDb()->deleteRecords(static::DB_TBL_USR_BANK_INFO, array('smt' => 'ub_user_id = ?', 'vals' => array($userId)));
-        return true;
     }
 
     public static function deleteUserEmailVerificationDataByUserId($userId)
     {
         FatApp::getDb()->deleteRecords(static::DB_TBL_USER_EMAIL_VER, array('smt' => 'uev_user_id = ?', 'vals' => array($userId)));
-        return true;
     }
 
     public static function truncateUserWithdrawalRequestsDataByUserId($userId)
@@ -956,12 +925,7 @@ class User extends MyAppModel
             'withdrawal_paypal_email_id' => ''
         ];
 
-        if ($db->updateFromArray(static::DB_TBL_USR_WITHDRAWAL_REQ, $tbl_user_withdrawal_requests_data, array(
-            'smt' => 'withdrawal_user_id=?',
-            'vals' => array(
-                $userId
-            )
-        ))){
+        if ($db->updateFromArray(static::DB_TBL_USR_WITHDRAWAL_REQ, $tbl_user_withdrawal_requests_data, ['smt' => 'withdrawal_user_id=?','vals' => [$userId]]){
             return true;
         }
     }

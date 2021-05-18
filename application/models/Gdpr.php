@@ -58,14 +58,14 @@ class Gdpr extends MyAppModel
 
     public function attachedFileTypeArr()
     {
-        $arr=[
+        return [
             AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_PROFILE_IMAGE,
             AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, 
             AttachedFile::FILETYPE_USER_PROFILE_IMAGE, 
             AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, 
             AttachedFile::FILETYPE_USER_QUALIFICATION_FILE,
         ];
-        return $arr;
+        
     }
   
     public static function getRequestStatus()
@@ -75,39 +75,28 @@ class Gdpr extends MyAppModel
         return $getReqStatus;
     }
 
-    public function truncateUserPersonalData(int $userId):bool
+    public function truncateUserPersonalData(int $userId)
     {
-        $is_deleted = 0;
-   
-        $user_file_type_arr = $this->attachedFileTypeArr();
-        foreach ($user_file_type_arr as $user_file_type_value) {
-            $attchedFile = new AttachedFile();
-            if( $attchedFile->deleteFile($user_file_type_value, $userId, $fileId = 0, $record_subid = 0, $langId = -1, $screen = 0) )
-            {
-                $is_deleted = 1;
+        $attchedFile = new AttachedFile();
+        foreach($this->attachedFileTypeArr() as $user_file_type_value) {
+            if(!$attchedFile->deleteFile($user_file_type_value, $userId)){
+                Message::addErrorMessage($attchedFile->getError());
+                $this->err = Message::getHtml();
+                return false;
             }
         }
-
-        if( User::truncateUserData($userId) && User::truncateUserCredentialsData($userId) && User::truncateUsersLangDataByUserId($userId) && User::deleteUserBankInfoDataByUserId($userId) && User::deleteUserEmailVerificationDataByUserId($userId) && User::truncateUserWithdrawalRequestsDataByUserId($userId) && UserSetting::truncateUserSettingsDataByUserId($userId) && UserQualification::deleteUserQualificationsDataByUserId($userId) && UserEmailChangeRequest::deleteUserEmailChangeRequestDataByUserId($userId))
-        {
-            $db = FatApp::getDb();
-            $updateDeletedField = [
-                'user_deleted' => applicationConstants::YES
-            ];  
-            if ($db->updateFromArray(User::DB_TBL, $updateDeletedField, array(
-                'smt' => 'user_id=?',
-                'vals' => array(
-                    $userId
-                )
-            ))){
-                $is_deleted = 1;
-            }
-        }
-        if($is_deleted == 1){
-            return true;
-        }else{
-            return false;
-        }
+        User::truncateUserData($userId);
+        User::truncateUserCredentialsData($userId);
+        User::truncateUsersLangDataByUserId($userId);
+        User::deleteUserBankInfoDataByUserId($userId);
+        User::deleteUserEmailVerificationDataByUserId($userId);
+        User::deleteUserEmailVerificationDataByUserId($userId);
+        User::truncateUserWithdrawalRequestsDataByUserId($userId);
+        UserSetting::truncateUserSettingsDataByUserId($userId);
+        UserQualification::deleteUserQualificationsDataByUserId($userId);
+        UserEmailChangeRequest::deleteUserEmailChangeRequestDataByUserId($userId);
+        $db = FatApp::getDb();
+        $db->updateFromArray(User::DB_TBL,['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?','vals' => [$userId]));
+        return true;
     }
-
 }
