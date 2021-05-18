@@ -61,7 +61,7 @@ class TeacherController extends TeacherBaseController
         $this->_template->render();
     }
 
-    private function getSettingsForm(array $userTeachingLang = null, array $slabs = null) : Form
+    private function getSettingsForm(array $userTeachingLang = null, array $slabs = null,bool $showAdminSlab = false) : Form
     {
 
         $frm = new Form('frmSettings');
@@ -70,25 +70,29 @@ class TeacherController extends TeacherBaseController
         if($userTeachingLang === null){
             $userTeachingLang = $this->getUserTeachLangData();
         }
-        $userTeachLangData = array_column($userTeachingLang, 'teachLangName', 'utl_id');
+        // prx($userTeachingLang);
+        if($slabs === null){
+            $priceSum = array_sum(array_column($userTeachingLang, 'ustelgpr_price'));
+           
+            if($priceSum > 0 && !$showAdminSlab){
+                $slabs = $this->formatTeacherSlabs($userTeachingLang);
+            }else{
+                $priceSlab =  new PriceSlab();
+                $slabs = $priceSlab->getAllSlabs(true, ['prislab_min as minSlab','prislab_max as maxSlab', 'CONCAT(prislab_min,"-",prislab_max) as minMaxKey']);
+            }
+        }
 
-        $teacherLessonDuration = array_column($userTeachingLang, 'ustelgpr_slot', 'ustelgpr_slot');
+        $userTeachLangData = array_column($userTeachingLang, 'teachLangName', 'utl_id');
+       
         $teacherLessonDuration = array_column($userTeachingLang, 'ustelgpr_slot', 'ustelgpr_slot');
         
-        if($slabs === null){
-            $priceSlab =  new PriceSlab();
-            $slabs = $priceSlab->getAllSlabs();
-        }
-       
-        // if(empty($userTeachingLang)){
-           
-        // }else{
-        //     $minSlabs =  array_column($userTeachingLang, 'prislab_min', 'keyField');
-        //     $maxSlabs =  array_column($userTeachingLang, 'prislab_max', 'keyField');
-        //     $slabs  = array_merge_recursive($minSlabs, $maxSlabs);
-          
-        // }
-        // $frm->addHtml(Label::getLabel('LBL_Lesson_Durations'), 'lesson_duration_head', '');
+        $updatePrice = $frm->addFloatField(Label::getLabel('Lbl_Add_price'), 'price_update'); // only use for view and update value by ajax
+        $updatePrice->requirements()->setRange(1, 99999);
+        $updatePrice->requirements()->setRequired(false); 
+
+        $showAdminSlabField = $frm->addHiddenField('', 'showAdminSlab', ($showAdminSlab) ? applicationConstants::YES : applicationConstants::NO); 
+        $showAdminSlabField->requirements()->setRange(0,1);
+        $showAdminSlabField->requirements()->setRequired(true); 
 
         $defaultSlot = FatApp::getConfig('conf_default_paid_lesson_duration', FatUtility::VAR_STRING, 60);
 
@@ -99,24 +103,24 @@ class TeacherController extends TeacherBaseController
                 $durationFld->requirements()->setRequired(true);
             }
 
-            if (array_key_exists($lessonDuration, $teacherLessonDuration)) {
+            if (array_key_exists($lessonDuration, $teacherLessonDuration) || $lessonDuration == $defaultSlot) {
                 $durationFld->checked = true;
             }
-
+           
             foreach ($slabs as $slab) {
 
                 foreach ($userTeachLangData as $uTeachLangId => $uTeachLang) {
 
-                    $filedName = 'teach_lang_price[' . $lessonDuration . '][' . $slab['prislab_id'] . '][' . $uTeachLangId . ']';
-                    $label = $uTeachLang . ' [' . $lessonDuration . '][' . $slab['prislab_min'] . ' - ' . $slab['prislab_max'] . ']';
+                    $filedName = 'ustelgpr_price[' . $lessonDuration . '][' .$slab['minMaxKey']. '][' . $uTeachLangId . ']';
+                   
+                    $label = $uTeachLang;
 
                     $fld = $frm->addFloatField($label, $filedName);
                     $fld->requirements()->setRange(1, 99999);
                     $fld->requirements()->setRequired(true);
 
-                    $keyField = $uTeachLangId . '-' . $slab['prislab_id'] . '-' . $lessonDuration;
-
-                    if (!empty($userTeachingLang[$keyField]['ustelgpr_price'])) {
+                    $keyField = $uTeachLangId . '-' . $slab['minMaxKey'] . '-' . $lessonDuration;
+                    if (!empty($userTeachingLang[$keyField]['ustelgpr_price']) && !$showAdminSlab) {
                         $fld->value = $userTeachingLang[$keyField]['ustelgpr_price'];
                     }
 
@@ -131,18 +135,46 @@ class TeacherController extends TeacherBaseController
             }
         }
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_SAVE_CHANGES'));
+        $frm->addButton('', 'nextBtn', Label::getLabel('LBL_Next'));
+        $frm->addButton('', 'backBtn', Label::getLabel('LBL_Back'));
+    
         return $frm;
     }
 
     public function settingsInfoForm()
     {
+        $showAdminSlab = FatApp::getPostedData('showAdminSlab', FatUtility::VAR_BOOLEAN, false);
+        
         $userTeachingLang = $this->getUserTeachLangData();
+
         $priceSlab =  new PriceSlab();
-        $slabs = $priceSlab->getAllSlabs();
-        $frm = $this->getSettingsForm($userTeachingLang, $slabs);
+        $slabData = $priceSlab->getAllSlabs(true, ['prislab_min as minSlab','prislab_max as maxSlab', 'CONCAT(prislab_min,"-",prislab_max) as minMaxKey']);
+        
+        $teacherAddedSlabs = array_column($userTeachingLang, 'minMaxKey', 'minMaxKey');
+        unset($teacherAddedSlabs['0-0']);
+        $slabDifference = [];
+        
+        if(!empty($userTeachingLang)){
+            $adminAddedSlabs = array_column($slabData, 'minMaxKey', 'minMaxKey');
+            $slabDifference = array_diff($adminAddedSlabs, $teacherAddedSlabs);
+        }
+
+        $priceSum = array_sum(array_column($userTeachingLang, 'ustelgpr_price'));
+
+        $slabs = $slabData;
+        if($priceSum > 0 && !$showAdminSlab){
+            $slabs = $this->formatTeacherSlabs($userTeachingLang);
+        }
+
+        $frm = $this->getSettingsForm($userTeachingLang, $slabs, $showAdminSlab);
+        
         $this->set('frm', $frm);
         $this->set('userToTeachLangRows', $userTeachingLang);
+        $this->set('slabDifference', $slabDifference);
+        $this->set('showAdminSlab', $showAdminSlab);
         $this->set('slabs', $slabs);
+        $this->set('priceSum', $priceSum);
+
         $this->_template->render(false, false);
     }
 
@@ -172,12 +204,14 @@ class TeacherController extends TeacherBaseController
                 continue;
             }
 
-            $slabs = $post['teach_lang_price'][$duration];
+            $slabs = $post['ustelgpr_price'][$duration];
 
             foreach ($slabs as $slabKey => $languages) {
+                $slabAarray = explode('-',$slabKey);
+                /*$slabAarray[0] == minslab , $slabAarray[1] == maxslab */
                 foreach ($languages as $userTeachLangang => $price) {
-                    $teachLangPrice = new TeachLangPrice($slabKey, $userTeachLangang, $duration);
-                    if (!$teachLangPrice->saveTeachLangPrice($price)) {
+                    $teachLangPrice = new TeachLangPrice($duration, $userTeachLangang,);
+                    if (!$teachLangPrice->saveTeachLangPrice($slabAarray[0], $slabAarray[1], $price)) {
                         $db->rollbackTransaction();
                         FatUtility::dieJsonError($teachLangPrice->getError());
                     }
@@ -357,7 +391,7 @@ class TeacherController extends TeacherBaseController
     {
         $teacherId = UserAuthentication::getLoggedUserId();
 
-        $teachLangPriceQuery = 'DELETE ' . UserTeachLanguage::DB_TBL . ', ustelgpr FROM ' . UserTeachLanguage::DB_TBL . ' LEFT JOIN ' . TeachLangPrice::DB_TBL . ' ustelgpr ON ustelgpr.ustelgpr_utl_id = utl_tlanguage_id WHERE utl_user_id = ' . $teacherId;;
+        $teachLangPriceQuery = 'DELETE ' . UserTeachLanguage::DB_TBL . ', ustelgpr FROM ' . UserTeachLanguage::DB_TBL . ' LEFT JOIN ' . TeachLangPrice::DB_TBL . ' ustelgpr ON ustelgpr.ustelgpr_utl_id = utl_id WHERE utl_user_id = ' . $teacherId;;
 
         if (!empty($langIds)) {
             $langIds = implode(",", $langIds);
@@ -448,7 +482,7 @@ class TeacherController extends TeacherBaseController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-    private function deleteTeachLangSlots(\Database $db, array $slots = [], &$error)
+    private function deleteTeachLangSlots(Database $db, array $slots = [], &$error)
     {
         $teacherId = UserAuthentication::getLoggedUserId();
 
@@ -847,19 +881,35 @@ class TeacherController extends TeacherBaseController
         $teacherId = UserAuthentication::getLoggedUserId();
         $userTeachLanguage = new UserTeachLanguage($teacherId);
         $userTeachlangs = $userTeachLanguage->getUserTeachlanguages($this->siteLangId, true);
+        $userTeachlangs->doNotCalculateRecords();
         $userTeachlangs->addMultiplefields([
             'IFNULL(`ustelgpr_slot`, 0) as ustelgpr_slot',
-            'ustelgpr_prislab_id',
             'utl_tlanguage_id',
             'ustelgpr_price',
             'utl_id',
-            'prislab_min',
-            'prislab_max',
-            'CONCAT(`utl_id`, "-", IFNULL(`ustelgpr_prislab_id`,0), "-", IFNULL(`ustelgpr_slot`, 0)) as keyField',
+            'ustelgpr_min_slab',
+            'ustelgpr_max_slab',
+            'CONCAT(IFNULL(ustelgpr_min_slab,0),"-",IFNULL(ustelgpr_max_slab,0)) as minMaxKey',
+            'CONCAT(`utl_id`, "-", IFNULL(`ustelgpr_min_slab`,0),"-", IFNULL(`ustelgpr_max_slab`,0), "-", IFNULL(`ustelgpr_slot`, 0)) as keyField',
             'IFNULL(tlanguage_name, tlanguage_identifier) as teachLangName'
         ]);
-        $userTeachlangs->joinTable(PriceSlab::DB_TBL, 'INNER JOIN', 'prislab.prislab_id = ustelgpr.ustelgpr_prislab_id', 'prislab');
-       
         return FatApp::getDb()->fetchAll($userTeachlangs->getResultSet(), 'keyField');
+    }
+
+    
+    private function formatTeacherSlabs(array $slabData) : array
+    {
+        $returnArray =[];
+        foreach ($slabData as $key => $value) {
+            if($value['ustelgpr_min_slab'] > 0 && $value['ustelgpr_max_slab'] > $value['ustelgpr_min_slab']){
+                $returnArray[$value['minMaxKey']] = [
+                    'minSlab' => $value['ustelgpr_min_slab'],
+                    'maxSlab' => $value['ustelgpr_max_slab'],
+                    'minMaxKey' => $value['minMaxKey'],
+                ];
+            }
+          
+        }
+        return $returnArray;
     }
 }

@@ -185,17 +185,12 @@ class TeachersController extends MyAppController
             'IFNULL(tlanguage_name, tlanguage_identifier) as teachLangName',
             'utl_id',
             'utl_tlanguage_id',
-            'ustelgpr_prislab_id',
             'ustelgpr_slot',
             'ustelgpr_price',
-            'prislab_min',
-            'prislab_max',
-            'ustelgpr_price',
-                // 'CONCAT(ustelgpr_slot,"-",ustelgpr_prislab_id) as slotSlabKey',
-                // 'CONCAT(ustelgpr_slot,"-",ustelgpr_prislab_id,"-", utl_tlanguage_id) as slotSlabLangKey',
-                // '0 as top_percentage'
+            'ustelgpr_min_slab',
+            'ustelgpr_max_slab',
+            'ustelgpr_price'
         ]);
-        $getUserTeachLanguages->joinTable(PriceSlab::DB_TBL, 'INNER JOIN', 'prislab.prislab_id = ustelgpr.ustelgpr_prislab_id', 'prislab');
         if (UserAuthentication::isUserLogged()) {
             $getUserTeachLanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
             $getUserTeachLanguages->addMultipleFields([

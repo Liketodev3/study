@@ -33,9 +33,12 @@ class PriceSlab extends MyAppModel
         return $searchBase;
     }
 
-    public function getAllSlabs(bool $activeOnly = true): array
+    public function getAllSlabs(bool $activeOnly = true, array $attr = ['ps.*']): array
     {
         $searchObject = self::getSearchObject($activeOnly);
+        if(!empty($attr)){
+            $searchObject->addMultipleFields($attr);
+        }
         $searchObject->doNotLimitRecords();
         return  FatApp::getDb()->fetchAll($searchObject->getResultSet());
     }

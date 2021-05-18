@@ -120,7 +120,6 @@ class UserToLanguage extends MyAppModel
     {
         $srch = new SearchBase(static::DB_TBL_TEACH, 'utl');
         $srch->joinTable(TeachLangPrice::DB_TBL, 'INNER JOIN', 'ustelgpr.ustelgpr_utl_id = utl.utl_id', 'ustelgpr');
-        $srch->joinTable(PriceSlab::DB_TBL, 'INNER JOIN', 'prislab.prislab_id = ustelgpr.ustelgpr_prislab_id', 'prislab');
         $srch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utl.utl_tlanguage_id');
         $srch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utl.utl_tlanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
         $srch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'ustelgpr_slot = top_lesson_duration AND top_teacher_id = utl_user_id AND top_learner_id = ' . $learnerId, 'top');
@@ -130,14 +129,13 @@ class UserToLanguage extends MyAppModel
             'IFNULL(top.top_percentage, 0) as top_percentage',
             'ustelgpr_slot',
             'ustelgpr_slot',
-            'prislab_min',
-            'prislab_max',
+            'ustelgpr_min_slab',
+            'ustelgpr_max_slab',
         ]);
         $srch->addCondition('utl_user_id', '=', $this->getMainTableRecordId());
         $srch->addCondition('ustelgpr_price', '>', 0);
         $srch->addCondition('utl_tlanguage_id', '>', 0);
         $srch->addCondition('tlanguage_active', '=', applicationConstants::YES);
-        $srch->addCondition('prislab_active', '=', applicationConstants::YES);
         if (!empty($slotDuration)) {
             $slotDuration = FatUtility::convertToType($slotDuration, FatUtility::VAR_INT);
             $srch->addCondition('ustelgpr.ustelgpr_slot', '=', $slotDuration);

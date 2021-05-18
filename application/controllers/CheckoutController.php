@@ -440,8 +440,9 @@ class CheckoutController extends LoggedUserController
         $getUserTeachLanguages = $this->getTeacherTeachLanguages($cartData['teacherId']);
         $getUserTeachLanguages->addCondition('utl_tlanguage_id', '=', $post['languageId']);
         $getUserTeachLanguages->addCondition('ustelgpr_slot', '=' , $post['lessonDuration']);
-        $getUserTeachLanguages->addFld('IF(prislab_max >= '.$cartData['lessonQty'].' and prislab_min <= '.$cartData['lessonQty'].', 1,0) as isSlapCollapse');
-        $slabs = FatApp::getDb()->fetchAll($getUserTeachLanguages->getResultSet(), 'ustelgpr_prislab_id');
+        $getUserTeachLanguages->addFld('IF(ustelgpr_max_slab >= '.$cartData['lessonQty'].' and ustelgpr_min_slab <= '.$cartData['lessonQty'].', 1,0) as isSlapCollapse');
+        $getUserTeachLanguages->addFld('CONCAT(ustelgpr_min_slab,"-", ustelgpr_max_slab) as minMaxKey');
+        $slabs = FatApp::getDb()->fetchAll($getUserTeachLanguages->getResultSet(), 'minMaxKey');
         if(empty($slabs)){
             FatUtility::dieJsonError(Label::getLabel('LBL_SLAB_NOT_AVAILABLE'));
         }
@@ -455,18 +456,16 @@ class CheckoutController extends LoggedUserController
         $loggedUserId = UserAuthentication::getLoggedUserId();
         $userTeachLanguage = new UserTeachLanguage($teacherId);
         $getUserTeachLanguages = $userTeachLanguage->getUserTeachlanguages($this->siteLangId, true);
-        $getUserTeachLanguages->joinTable(PriceSlab::DB_TBL, 'INNER JOIN', 'prislab.prislab_id = ustelgpr.ustelgpr_prislab_id', 'prislab');
         $getUserTeachLanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
         $getUserTeachLanguages->doNotCalculateRecords();
         $getUserTeachLanguages->addMultipleFields([
             'IFNULL(tlanguage_name, tlanguage_identifier) as teachLangName',
             'utl_id',
             'utl_tlanguage_id',
-            'ustelgpr_prislab_id',
             'ustelgpr_slot',
             'ustelgpr_price',
-            'prislab_min',
-            'prislab_max',
+            'ustelgpr_min_slab',
+            'ustelgpr_max_slab',
             'ustelgpr_price',
             'IFNULL(top_percentage,0) as top_percentage',
         ]);

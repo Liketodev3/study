@@ -202,16 +202,14 @@ class Cart extends FatModel
         } elseif (!$isFreeTrial && $lessonQty > 0) {
 
             $teacherSearch->joinTable(TeachLangPrice::DB_TBL, 'INNER JOIN', 'ustelgpr.ustelgpr_utl_id = utl.utl_id', 'ustelgpr');
-            $teacherSearch->joinTable(PriceSlab::DB_TBL, 'INNER JOIN', 'prislab.prislab_id = ustelgpr.ustelgpr_prislab_id', 'prislab');
             $teacherSearch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $this->cart_user_id . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
 
             $teacherSearch->addCondition('ustelgpr.ustelgpr_slot', '=', $lessonDuration);
             $teacherSearch->addCondition('ustelgpr.ustelgpr_price', '>', 0);
-            $teacherSearch->addCondition('prislab.prislab_max', '>=', $lessonQty);
-            $teacherSearch->addCondition('prislab.prislab_min', '<=', $lessonQty);
-            $teacherSearch->addCondition('prislab.prislab_active', '<=', applicationConstants::YES);
+            $teacherSearch->addCondition('ustelgpr.ustelgpr_max_slab', '>=', $lessonQty);
+            $teacherSearch->addCondition('ustelgpr.ustelgpr_min_slab', '<=', $lessonQty);
 
-            $teacherSearch->addMultipleFields(['ustelgpr_price', 'prislab_min', 'prislab_max', 'top_teacher_id', 'IFNULL(top_percentage,0) as offerPercentage']);
+            $teacherSearch->addMultipleFields(['ustelgpr_price', 'ustelgpr_min_slab', 'ustelgpr_max_slab', 'top_teacher_id', 'IFNULL(top_percentage,0) as offerPercentage']);
         }else{
             $this->removeCartKey($key);
             $this->error = Label::getLabel('LBL_Invalid_Request');
@@ -225,12 +223,6 @@ class Cart extends FatModel
             'user_country_id',
             'utl.*',
         ]);
-        // if ($langId > 0) {
-        //     $teacherSrch->addMultipleFields([
-        //         'IFNULL(country_name, country_code) as user_country_name',
-        //         'IFNULL(state_name, state_identifier) as user_state_name'
-        //     ]);
-        // }
         $itemName = '';
         
         $teacher = FatApp::getDb()->fetch($teacherSearch->getResultSet());

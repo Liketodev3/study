@@ -1,7 +1,7 @@
 <?php
 defined('SYSTEM_INIT') or die('Invalid Usage.'); 
-$minValueArray = array_column($slabs, 'prislab_min', 'isSlapCollapse');
-$maxValueArray = array_column($slabs, 'prislab_max', 'isSlapCollapse');
+$minValueArray = array_column($slabs, 'ustelgpr_min_slab', 'isSlapCollapse');
+$maxValueArray = array_column($slabs, 'ustelgpr_max_slab', 'isSlapCollapse');
 
 $isSlapCollapse  =  (!empty($minValueArray[1]));
 $minValue = $minValueArray[0];
@@ -53,7 +53,7 @@ if($isSlapCollapse){
 				$percentage = CommonHelper::getPercentValue($slab['top_percentage'], $price);
 				$price = $price - $percentage;
 				$title = Label::getLabel('LBL_{min}_to_{max}_Lesson(s)');
-				$title = str_replace(['{min}', '{max}'], [$slab['prislab_min'], $slab['prislab_max']], $title);
+				$title = str_replace(['{min}', '{max}'], [$slab['ustelgpr_min_slab'], $slab['ustelgpr_max_slab']], $title);
 			?>
 				<li class="<?php echo ($slab['isSlapCollapse']) ? 'is-active' : ''; ?>">
 					<label class="selection">
