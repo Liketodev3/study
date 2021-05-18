@@ -101,6 +101,9 @@ class ReportedIssuesController extends AdminBaseController
         if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
+        if (ReportedIssue::ACTION_ESCLATE_TO_ADMIN == $post['reislo_action']) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_PLEASE_SELECT_DIFFERENT_ACTION'));
+        }
         $reportedIssue = new ReportedIssue($post['reislo_repiss_id'], $this->admin_id, ReportedIssue::USER_TYPE_SUPPORT);
         if (!$reportedIssue->setupIssueAction($post['reislo_action'], $post['reislo_comment'], true)) {
             FatUtility::dieJsonError($reportedIssue->getError());

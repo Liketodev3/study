@@ -95,9 +95,9 @@ $(document).ready(function () {
     };
 
     actionForm = function (issrepId) {
-        $.mbsmessage(langLbl.processing, true, 'alert alert--process');
+        $.systemMessage(langLbl.processing, true, 'alert alert--process');
         fcom.ajax(fcom.makeUrl('ReportedIssues', 'actionForm', [issrepId]), '', function (response) {
-            $.mbsmessage.close();
+            $.systemMessage.close();
             $.facebox(response, 'faceboxWidth');
         });
     };
@@ -107,9 +107,11 @@ $(document).ready(function () {
             return;
         }
         fcom.updateWithAjax(fcom.makeUrl('ReportedIssues', 'setupAction'), fcom.frmData(frm), function (res) {
-            $.mbsmessage.close();
-            $.facebox.close();
-            search(document.frmUserSearchPaging);
+            $.systemMessage.close();
+            if (res.status == 1) {
+                $.facebox.close();
+                search(document.frmUserSearchPaging);
+            }
         });
     };
 
