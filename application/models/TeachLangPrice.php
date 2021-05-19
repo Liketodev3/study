@@ -6,23 +6,22 @@ class TeachLangPrice extends MyAppModel
     const DB_TBL = 'tbl_user_teach_lang_prices';
     const DB_TBL_PREFIX = 'ustelgpr_';
 
-    protected $slabId;
     protected $userTeachLangId;
     protected $slot;
 
-    public function __construct(int $slabId = 0, int $userTeachLangId = 0, int $slot = 0)
+    public function __construct(int $slot = 0, int $userTeachLangId = 0)
     {
-        $this->slabId = $slabId;
         $this->userTeachLangId = $userTeachLangId;
         $this->slot = $slot;
     }
 
-    public function saveTeachLangPrice(int $price) : bool
+    public function saveTeachLangPrice(int $minSlab, int $maxSlab, float $price) : bool
     {
         $data = [
-                    'ustelgpr_prislab_id' => $this->slabId,
                     'ustelgpr_utl_id' => $this->userTeachLangId,
                     'ustelgpr_slot' => $this->slot,
+                    'ustelgpr_min_slab' => $minSlab,
+                    'ustelgpr_max_slab' => $maxSlab,
                     'ustelgpr_price' => $price
                 ];
 
@@ -45,6 +44,17 @@ class TeachLangPrice extends MyAppModel
         $slots = implode(",", $slots);
         $db = FatApp::getDb();
         $db->query('DELETE  FROM ' . self::DB_TBL . ' WHERE ustelgpr_price IN (' . $slots . ')');
+        if ($db->getError()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function deleteAllUserPrice(int $teacherId): bool
+    {
+        $query = 'DELETE ' . TeachLangPrice::DB_TBL . ' FROM ' . TeachLangPrice::DB_TBL . ' INNER JOIN ' . UserTeachLanguage::DB_TBL . ' utl ON utl.utl_id = ustelgpr_utl_id and utl.utl_user_id = ' . $teacherId;
+        $db = FatApp::getDb();
+        $db->query($query);
         if ($db->getError()) {
             return false;
         }

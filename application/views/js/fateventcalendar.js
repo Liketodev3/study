@@ -1,6 +1,7 @@
+var timeInterval;
 var FatEventCalendar = function(teacherId){
     this.teacherId = teacherId;
-    var timeInterval;
+   
     var seconds = 2;
 
     this.calDefaultConf = {
@@ -48,7 +49,7 @@ var FatEventCalendar = function(teacherId){
     };
 
     updateTime = function(time) {
-        jQuery('body').find(".fc-toolbar-ltr h6 span.timer").html(moment(time).add(seconds,'seconds').format('hh:mm A'));
+        jQuery('body').find(".fc-toolbar-ltr h6 span.timer").html(moment(time).add(seconds,'seconds').format('hh:mm:ss A'));
     };
 
     this.setLocale = function(locale){
@@ -205,7 +206,7 @@ FatEventCalendar.prototype.AvailaibilityCalendar = function(current_time, durati
     
     calendar.render();
 
-    jQuery('body').find(".fc-time-button").parent().html("<h6><span>" + langLbl.myTimeZoneLabel + " :-</span> <span class='timer'>" + moment(current_time).format('hh:mm A') + "</span><span class='timezoneoffset'>(" + langLbl.timezoneString + " " + timeZoneOffset + ")</span></h6>");
+    jQuery('body').find(".fc-time-button").parent().html("<h6><span>" + langLbl.myTimeZoneLabel + " :-</span> <span class='timer'>" + moment(current_time).format('hh:mm:ss A') + "</span><span class='timezoneoffset'>(" + langLbl.timezoneString + " " + timeZoneOffset + ")</span></h6>");
     seconds = 2;
 
     this.startTimer(current_time);

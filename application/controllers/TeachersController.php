@@ -129,7 +129,7 @@ class TeachersController extends MyAppController
         $prefRs = $prefSrch->getResultSet();
         $teacherPreferences = FatApp::getDb()->fetchAll($prefRs);
 
-        $loggedUserId = UserAuthentication::getLoggedUserId();
+        $loggedUserId = UserAuthentication::getLoggedUserId(true);
         /* ] */
         $srch = new UserSearch();
         $srch->doNotCalculateRecords();
@@ -185,17 +185,12 @@ class TeachersController extends MyAppController
             'IFNULL(tlanguage_name, tlanguage_identifier) as teachLangName',
             'utl_id',
             'utl_tlanguage_id',
-            'ustelgpr_prislab_id',
             'ustelgpr_slot',
             'ustelgpr_price',
-            'prislab_min',
-            'prislab_max',
-            'ustelgpr_price',
-                // 'CONCAT(ustelgpr_slot,"-",ustelgpr_prislab_id) as slotSlabKey',
-                // 'CONCAT(ustelgpr_slot,"-",ustelgpr_prislab_id,"-", utl_tlanguage_id) as slotSlabLangKey',
-                // '0 as top_percentage'
+            'ustelgpr_min_slab',
+            'ustelgpr_max_slab',
+            'ustelgpr_price'
         ]);
-        $getUserTeachLanguages->joinTable(PriceSlab::DB_TBL, 'INNER JOIN', 'prislab.prislab_id = ustelgpr.ustelgpr_prislab_id', 'prislab');
         if (UserAuthentication::isUserLogged()) {
             $getUserTeachLanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
             $getUserTeachLanguages->addMultipleFields([
@@ -347,7 +342,7 @@ class TeachersController extends MyAppController
         if (!in_array($postedAction, $allowedActionArr)) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $bookingMinutesDuration = FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60);
+        $bookingMinutesDuration = FatApp::getConfig('CONF_DEFAULT_PAID_LESSON_DURATION', FatUtility::VAR_INT, 60);
         if ('free_trial' == $postedAction) {
             $bookingMinutesDuration = FatApp::getConfig('conf_trial_lesson_duration', FatUtility::VAR_INT, 30);
             $freeTrialEnable = FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
@@ -663,7 +658,7 @@ class TeachersController extends MyAppController
         if ($langTeach > 0) {
             if (is_numeric($langTeach)) {
                 //$srch->addCondition( 'us.us_teach_slanguage_id', '=', $langTeach );
-                $srch->addDirectCondition('FIND_IN_SET(' . $langTeach . ', utl_slanguage_ids)');
+                $srch->addDirectCondition('FIND_IN_SET(' . $langTeach . ', utl_tlanguage_ids)');
             }
         }
         /* ] */

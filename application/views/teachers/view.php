@@ -16,10 +16,10 @@ $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR
 $teacherLangPrices = [];
 $bookingDuration = '';
 foreach ($userTeachLangs as $key => $value) {
-	$slotSlabKey = $value['ustelgpr_slot'] . '-' . $value['ustelgpr_prislab_id'];
+	$slotSlabKey = $value['ustelgpr_slot'] . '-' . $value['ustelgpr_min_slab'].'-'.$value['ustelgpr_max_slab'];
 	if (!array_key_exists($slotSlabKey, $teacherLangPrices)) {
 		$teacherLangPrices[$slotSlabKey] = [
-			'title' => sprintf(Label::getLabel('LBL_%d_min_[%s_-_%s]_Lessons'),  $value['ustelgpr_slot'], $value['prislab_min'], $value['prislab_max']),
+			'title' => sprintf(Label::getLabel('LBL_%d_min_[%s_-_%s]_Lessons'),  $value['ustelgpr_slot'], $value['ustelgpr_min_slab'], $value['ustelgpr_max_slab']),
 			'langPrices' => []
 		];
 	}
@@ -29,10 +29,10 @@ foreach ($userTeachLangs as $key => $value) {
 	$teacherLangPrices[$slotSlabKey]['langPrices'][] = [
 		'teachLangName' => $value['teachLangName'],
 		'ustelgpr_slot' => $value['ustelgpr_slot'],
-		'prislab_min' => $value['prislab_min'],
+		'ustelgpr_max_slab' => $value['ustelgpr_max_slab'],
+		'ustelgpr_min_slab' => $value['ustelgpr_min_slab'],
 		'teachLangName' => $value['teachLangName'],
 		'utl_tlanguage_id' => $value['utl_tlanguage_id'],
-		'ustelgpr_prislab_id' => $value['ustelgpr_prislab_id'],
 		'ustelgpr_price' => $price,
 		'top_percentage' => $value['top_percentage'],
 	];
@@ -285,7 +285,7 @@ foreach ($userTeachLangs as $key => $value) {
 															foreach ($value['langPrices'] as $priceInfo) {
 																$onclick = '';
 																if ($loggedUserId != $teacher['user_id']) {
-																	 $onclick = "cart.add('" . $teacher['user_id'] . "','" . $priceInfo['utl_tlanguage_id'] . "','" . $priceInfo['ustelgpr_slot'] . "','" . $priceInfo['prislab_min'] . "')";
+																	 $onclick = "cart.add('" . $teacher['user_id'] . "','" . $priceInfo['utl_tlanguage_id'] . "','" . $priceInfo['ustelgpr_slot'] . "','" . $priceInfo['ustelgpr_min_slab'] . "')";
 																} ?>
 																<li>
 																	<a href="javascript:;" onClick="<?php echo $onclick; ?>">

@@ -84,7 +84,7 @@
 			<div class="form__actions">
 				<div class="d-flex align-items-center justify-content-between">
 					<div>
-						<input type="button" onclick="teacherSettingsForm()"  value="<?php echo label::getLabel('LBL_back'); ?>">
+						<input type="button" onclick="$('.teacher-tech-lang-price-js').trigger('click');"  value="<?php echo label::getLabel('LBL_back'); ?>">
 					</div>
 					<div>
 						<input type="button" value="<?php echo label::getLabel('LBL_next'); ?>" onclick="$('.teacher-preferences-js').trigger('click');">

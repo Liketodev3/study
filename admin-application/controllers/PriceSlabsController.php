@@ -75,12 +75,6 @@ class PriceSlabsController extends AdminBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_YOUR_SLOT_IS_COLLAPSE_WITH_OTHER_SLOTS'));
         }
 
-        if($post['prislab_min'] != PriceSlab::STARTING_SLAB){
-            if (!$priceSlab->isStartingSlabSet()) {
-                FatUtility::dieJsonError(sprintf(Label::getLabel('LBL_PLEASE_ADD_SLOT_WITH_MIN_VALUE_%d_FIRST'), PriceSlab::STARTING_SLAB));
-            }
-        }
-
         $priceSlab->assignValues($post);
         if (!$priceSlab->saveSlab($post['prislab_min'], $post['prislab_max'])) {
             FatUtility::dieJsonError($priceSlab->getError());

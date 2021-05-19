@@ -43,7 +43,7 @@ var cart = {
 		cart.addToCart(data);
 	},
 	addToCart: function (data) {
-		if(!isUserLogged()){
+		if(!cart.isUserLogged()){
 			return false;
 		}
 		fcom.ajax(fcom.makeUrl('Cart', 'add'), data, function (res) {

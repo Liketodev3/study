@@ -30,6 +30,20 @@ $(document).ready(function () {
 			$(dv).html(t);
 		});
 	};
+	
+	updateSlots = function (slotFieldObj)
+	{
+		let	slot = $(slotFieldObj).val();
+		let isChecked =  $(slotFieldObj).is(":checked");
+		let slotSection = $('.price-box-'+slot+'-js');
+		slotSection.find('.slab-price-js,.add-price-js').val('');
+		if(isChecked){
+			slotSection.removeClass('d-none');
+			$("html, body").animate({ scrollTop: slotSection.offset().top },1200);
+		}else{
+			slotSection.addClass('d-none');
+		}
+	};
 
 	getTeacherProfileProgress = function (showMessage) {
 		showMessage = (showMessage) ? showMessage : true;
@@ -403,9 +417,11 @@ $(document).ready(function () {
 	};
 
 
-	teacherSettingsForm = function () {
+	teacherSettingsForm = function (showAdminSlab) {
 		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'settingsInfoForm'), '', function (t) {
+		showAdminSlab =  (showAdminSlab) ? 1 : 0;
+		data = "showAdminSlab="+showAdminSlab;
+		fcom.ajax(fcom.makeUrl('Teacher', 'settingsInfoForm'), data, function (t) {
 			$(dv).html(t);
 			selectDuration();
 			if (userIsTeacher) {
@@ -429,11 +445,17 @@ $(document).ready(function () {
 		});
 	};
 
-	setUpTeacherSettings = function (frm) {
+	setUpTeacherSettings = function (frm, goToExpForm) {
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
+		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpSettings'), data, function (t) {
-			teacherSettingsForm();
+			$.loader.hide();
+			if(goToExpForm){
+				$('.teacher-qualification-js').trigger('click');
+			}else{
+				getTeacherProfileProgress();
+			}
 		});
 	};
 

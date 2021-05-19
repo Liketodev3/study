@@ -131,7 +131,7 @@ class LearnerController extends LearnerBaseController
             'utsl.spoken_languages_proficiency',
             'us_video_link',
             'us_is_trial_lesson_enabled',
-            'utl_slanguage_ids'
+            'utl_tlanguage_ids'
         ]);
         $rs = $srch->getResultSet();
         $teacher = FatApp::getDb()->fetch($rs);
