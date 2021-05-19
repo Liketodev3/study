@@ -9,9 +9,7 @@
 			<th><?php echo $scheduledLabel = Label::getLabel('LBL_Scheduled'); ?></th>
 			<th><?php echo $pastLabel = Label::getLabel('LBL_Past'); ?></th>
 			<th><?php echo $unscheduledLabel = Label::getLabel('LBL_Unscheduled'); ?></th>
-			<?php if(!empty($lessonPackages)){ ?>
 			<th><?php echo $actionLabel= Label::getLabel('LBL_Actions'); ?></th>
-			<?php } ?>
 		</tr>
 		<?php 
 			foreach ($teachers as $teacher) {  
@@ -134,14 +132,13 @@
 					<div class="flex-cell__content"><?php echo $teacher['unScheduledLessonCount']; ?></div>
 				</div>
 			</td>
-			
-			<?php if(!empty($lessonPackages)){ ?>
 			<td>
+				<?php if(!empty($teacher['utl_tlanguage_id']) && !empty($teacher['ustelgpr_slot']) && !empty($teacher['ustelgpr_min_slab'])){ ?>						
 				<div class="flex-cell">
 					<div class="flex-cell__label"><?php echo $actionLabel; ?></div>
 					<div class="flex-cell__content">
 						<div class="actions-group">
-							<a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['teacherId']; ?>', '<?php echo $lessonPackages[0]['lpackage_id'] ?>','','', null, null, null )" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+							<a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['teacherId']; ?>', '<?php echo $teacher['utl_tlanguage_id']; ?>','<?php echo $teacher['ustelgpr_slot']; ?>','<?php echo $teacher['ustelgpr_min_slab']; ?>')" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
 								<svg class="icon icon--buy">
 									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#icon-buy'; ?>"></use>
 								</svg>

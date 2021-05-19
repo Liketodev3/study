@@ -61,6 +61,7 @@ class LearnerTeachersController extends LearnerBaseController
         $srch->joinRatingReview();
         $srch->joinUserTeachLanguages($this->siteLangId);
         $srch->joinTable('(' . $teacherOfferPriceSrch->getQuery() . ')', 'LEFT JOIN', 'sldetail_learner_id = top_learner_id AND top_teacher_id = slesson_teacher_id', 'top');
+        $srch->joinTable(TeachLangPrice::DB_TBL, 'LEFT JOIN', 'ustelgpr.ustelgpr_utl_id = utsl.utl_id', 'ustelgpr');
         $srch->addMultipleFields([
             'slns.slesson_teacher_id as teacherId',
             'slns.slesson_slanguage_id as languageID',
@@ -73,6 +74,9 @@ class LearnerTeachersController extends LearnerBaseController
             '(' . $pastLesSrch->getQuery() . ') as pastLessonCount',
             '(' . $unSchLesSrch->getQuery() . ') as unScheduledLessonCount',
             'percentage',
+            'utl_tlanguage_id',
+            'ustelgpr_min_slab',
+            'ustelgpr_slot',
             'CASE WHEN percentage IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
             'lessonDuration'
         ]);
@@ -81,6 +85,7 @@ class LearnerTeachersController extends LearnerBaseController
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
         $srch->addOrder('ut.user_first_name');
+       
         if (isset($post['keyword']) && !empty($post['keyword'])) {
             $keywordsArr = array_unique(array_filter(explode(' ', $post['keyword'])));
             foreach ($keywordsArr as $keyword) {

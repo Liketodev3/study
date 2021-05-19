@@ -23,6 +23,7 @@ setUpWeeklyAvailability = function () {
 			start: moment(e.start).format('HH:mm:ss'),
 			end: moment(e.end).format('HH:mm:ss'),
 			date: moment(e.start).format('YYYY-MM-DD'),
+			endDate: moment(e.end).format('YYYY-MM-DD'),
 			_id: e.extendedProps._id,
 			action: e.extendedProps.action,
 			classtype: e.extendedProps.classType,

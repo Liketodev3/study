@@ -153,12 +153,11 @@ class LearnerController extends LearnerBaseController
         $srch = new UserSearch();
         $srch->setTeacherDefinedCriteria();
         $srch->joinUserSpokenLanguages($this->siteLangId);
-        $srch->joinUserTeachLanguage($this->siteLangId);
         $srch->joinUserCountry($this->siteLangId);
         $srch->joinUserState($this->siteLangId);
         $srch->setPageSize(1);
         $srch->addCondition('user_id', '=', $teacherId);
-        $srch->addMultipleFields(['user_id', 'user_first_name', 'user_last_name',]);
+        $srch->addMultipleFields(['user_id', 'user_first_name', 'user_last_name']);
         $teacher = FatApp::getDb()->fetch($srch->getResultSet());
         if (empty($teacher)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request', $this->siteLangId));

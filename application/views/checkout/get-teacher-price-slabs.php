@@ -1,16 +1,7 @@
 <?php
 defined('SYSTEM_INIT') or die('Invalid Usage.'); 
-$minValueArray = array_column($slabs, 'ustelgpr_min_slab', 'isSlapCollapse');
-$maxValueArray = array_column($slabs, 'ustelgpr_max_slab', 'isSlapCollapse');
-
-$isSlapCollapse  =  (!empty($minValueArray[1]));
-$minValue = $minValueArray[0];
-$maxValue = $maxValueArray[0];
-
-if($isSlapCollapse){
-	$minValue = $minValueArray[1];
-	$maxValue = $maxValueArray[1];
-}
+$minValue = min(array_column($slabs, 'ustelgpr_min_slab', 'ustelgpr_min_slab'));
+$maxValue = max(array_column($slabs, 'ustelgpr_max_slab', 'ustelgpr_max_slab'));
 
 
 ?>
@@ -58,7 +49,8 @@ if($isSlapCollapse){
 				<li class="<?php echo ($slab['isSlapCollapse']) ? 'is-active' : ''; ?>">
 					<label class="selection">
 						<span class="radio">
-							<input onchange="addToCart('<?php echo $cartData['teacherId']; ?>', '<?php echo  $cartData['languageId']; ?>','<?php echo $cartData['lessonDuration']; ?>', '<?php echo $slab['prislab_min']; ?>');" type="radio" <?php echo ($slab['isSlapCollapse']) ? 'checked="checked"' : ''; ?> name="lessonQty-pack" value="<?php echo $slab['prislab_min']; ?>"><i class="input-helper"></i>
+							<!-- <input onchange="addToCart(<?php //echo $cartData['teacherId'].', '.$cartData['languageId'].', '.$cartData['lessonDuration'] .', '.$slab['ustelgpr_min_slab']; ?>);" type="radio" <?php //echo ($slab['isSlapCollapse']) ? 'checked="checked"' : ''; ?> name="lessonQty-pack" value="<?php //echo $slab['ustelgpr_min_slab']; ?>"> -->
+							<!-- <i class="input-helper"></i> -->
 						</span>
 						<span class="selection__item">
 							<?php echo $title; ?> <small class="-float-right"> <?php echo CommonHelper::displayMoneyFormat($price); ?>/ <?php echo Label::getLabel('LBL_Per_Lesson'); ?></small>

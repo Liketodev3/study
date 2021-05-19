@@ -36,7 +36,7 @@ class TeacherGroupClassesSearch extends SearchBase
             'user_url_name',
             'user_timezone as teacher_timezone',
             'grpcls_id',
-            'grpcls_slanguage_id',
+            'grpcls_tlanguage_id',
             'grpcls_teacher_id',
             'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             'IFNULL(grpclslang_grpcls_description,grpcls_description) as grpcls_description',
@@ -106,7 +106,7 @@ class TeacherGroupClassesSearch extends SearchBase
     
     public function joinClassLang($langId = 0)
     {
-        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'grpcls.grpcls_slanguage_id = tlanguage_id', 'teachl');
+        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'grpcls.grpcls_tlanguage_id = tlanguage_id', 'teachl');
         $langId = FatUtility::int($langId);
         if ($langId > 0) {
             $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'teachl.tlanguage_id = teachl_lang.tlanguagelang_tlanguage_id AND teachl_lang.tlanguagelang_lang_id = ' . $langId, 'teachl_lang');

@@ -4,7 +4,7 @@ class UserTeachLanguage extends MyAppModel
 {
 
     const DB_TBL = 'tbl_user_teach_languages';
-    const DB_TBL_PREFIX = '	utl_';
+    const DB_TBL_PREFIX = 'utl_';
 
     protected $userId;
     protected $slot;
@@ -45,5 +45,7 @@ class UserTeachLanguage extends MyAppModel
         }
         return $searchBase;
     }
+
+ 
 
 }

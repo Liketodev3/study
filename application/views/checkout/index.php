@@ -1,12 +1,21 @@
-<?php 
-	defined('SYSTEM_INIT') or die('Invalid Usage.');
-	$layoutDirection = CommonHelper::getLayoutDirection(); 
-    $teachLanguages = array_column($userTeachLanguages, 'teachLangName', 'utl_tlanguage_id');
-    $bookingDurations = array_column($userTeachLanguages, 'ustelgpr_slot', 'ustelgpr_slot');
+<?php
+defined('SYSTEM_INIT') or die('Invalid Usage.');
+$layoutDirection = CommonHelper::getLayoutDirection();
+$lessonDuration = $cartData['lessonDuration'];
+if($cartData['grpclsId'] > 0 && !empty($cartData['startDateTime']) && !empty($cartData['endDateTime'])){
+   
+	$lessonDuration = Mydate::timeDiffInMints($cartData['startDateTime'], $cartData['endDateTime']);
+	// prx($cartData);
+}
+	
+if ($cartData['isFreeTrial'] == applicationConstants::NO && $cartData['lessonQty'] > 0) {
+	$teachLanguages = array_column($userTeachLanguages, 'teachLangName', 'utl_tlanguage_id');
+	$bookingDurations = array_column($userTeachLanguages, 'ustelgpr_slot', 'ustelgpr_slot'); 
 ?>
-<script>
-	var teachLanguages = <?php echo FatUtility::convertToJson($teachLanguages); ?>
-</script>
+	<script>
+		var teachLanguages = <?php echo FatUtility::convertToJson($teachLanguages); ?>
+	</script>
+<?php } ?>
 <section class="section section--grey section--page">
 	<div class="container container--narrow">
 
@@ -48,7 +57,7 @@
 							<?php } ?>
 							<div class="tabled__cell">
 								<span class="-color-light"><?php echo Label::getLabel('LBL_Duration'); ?></span><br>
-								<span class="cart-lesson-duration"> <?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cartData['lessonDuration']); ?></span>
+								<span class="cart-lesson-duration"> <?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $lessonDuration); ?></span>
 							</div>
 						</div>
 					</div>
@@ -65,7 +74,7 @@
 										<li class="<?php echo ($cartData['languageId'] == $key) ? 'is-active' : ''; ?>">
 											<label class="selection">
 												<span class="radio">
-													<input onchange="addToCart('<?php echo $cartData['teacherId']; ?>', '<?php echo $key; ?>','<?php echo $cartData['lessonDuration']; ?>', '<?php echo $cartData['lessonQty']; ?>');" type="radio" name="language" value="<?php echo $key; ?>" <?php echo ($cartData['languageId'] == $key) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
+													<input onchange="updateCart(<?php echo $cartData['teacherId']; ?>);" type="radio" name="language" value="<?php echo $key; ?>" <?php echo ($cartData['languageId'] == $key) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
 												</span>
 												<span class="selection__item">
 													<?php echo $teachLanguage; ?> <small class="-float-right"> </small>
@@ -88,7 +97,7 @@
 										<li class="<?php echo ($cartData['lessonDuration'] == $lessonDuration) ? 'is-active' : ''; ?>">
 											<label class="selection">
 												<span class="radio">
-													<input onchange="addToCart('<?php echo $cartData['teacherId']; ?>', '<?php echo $cartData['languageId']; ?>','<?php echo $lessonDuration; ?>', '<?php echo $cartData['lessonQty']; ?>');" type="radio" name="lessonDuration" value="<?php echo $lessonDuration; ?>" <?php echo ($cartData['lessonDuration'] == $lessonDuration) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
+													<input onchange="updateCart(<?php echo $cartData['teacherId']; ?>);" type="radio" name="lessonDuration" value="<?php echo $lessonDuration; ?>" <?php echo ($cartData['lessonDuration'] == $lessonDuration) ? 'checked="checked"' : ''; ?>><i class="input-helper"></i>
 												</span>
 												<span class="selection__item">
 													<?php echo sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $lessonDuration); ?> <small class="-float-right"> </small>
@@ -104,7 +113,7 @@
 					</div>
 				<?php } ?>
 
-			
+
 
 				<div class="col-xl-4 col-lg-4 col-md-12 -clear-right">
 					<div class="box" style="margin-bottom: 30px;" id="financialSummaryListing">

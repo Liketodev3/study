@@ -606,3 +606,5 @@ ALTER TABLE `tbl_user_teach_lang_prices` DROP `ustelgpr_prislab_id`;
 ALTER TABLE `tbl_user_teach_lang_prices` ADD `ustelgpr_min_slab` INT NOT NULL AFTER `ustelgpr_price`, ADD `ustelgpr_max_slab` INT NOT NULL AFTER `ustelgpr_min_slab`;
 
 ALTER TABLE `tbl_user_teach_lang_prices` ADD UNIQUE( `ustelgpr_utl_id`, `ustelgpr_slot`, `ustelgpr_min_slab`, `ustelgpr_max_slab`);
+
+ALTER TABLE `tbl_group_classes` CHANGE `grpcls_slanguage_id` `grpcls_tlanguage_id` INT(11) NOT NULL;

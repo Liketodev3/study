@@ -227,4 +227,16 @@ class MyDate extends FatDate
         return $hours;
     }
 
+    public static function timeDiffInMints($date1, $date2): int
+    {
+        $date1 = new DateTime($date1);
+        $date2 = new DateTime( $date2);
+        $difference = $date1->diff($date2);
+        
+        $minutes = $difference->days * 24 * 60;
+        $minutes += $difference->h * 60;
+        $minutes += $difference->i;
+        return $minutes;
+    }
+
 }

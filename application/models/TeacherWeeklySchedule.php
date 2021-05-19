@@ -94,21 +94,18 @@ class TeacherWeeklySchedule extends MyAppModel
         return true;
     }
 
-    public function addTeacherWeeklySchedule($post, $userId)
+    public function addTeacherWeeklySchedule($post, int $userId)
     {
-        if (empty($post)) {
+        if (empty($post) || $userId < 1) {
             $this->error = Label::getLabel('LBL_Invalid_Request');
             return false;
         }
-        $userId = FatUtility::int($userId);
-        if ($userId < 1) {
-            $this->error = Label::getLabel('LBL_Invalid_Request');
-            return false;
-        }
+
         $postJson = json_decode($post['data']);
         if (empty($postJson)) {
             return true;
         }
+
         $postJsonArr = [];
         $dateArray = [];
         $postDataId = [];
@@ -117,17 +114,17 @@ class TeacherWeeklySchedule extends MyAppModel
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
         foreach ($postJson as $k => $postObj) {
-            /* [ Clubbing the continuous timeslots */
-            if ($k > 0 and ($postJson[$k - 1]->date == $postObj->date) and ($postJson[$k - 1]->start == $postObj->start)) {
-                $postJsonArr[count($postJsonArr) - 1]->end = ($postObj->end > $postJsonArr[count($postJsonArr) - 1]->end) ? $postObj->end : $postJsonArr[count($postJsonArr) - 1]->end;
-                continue;
-            }
-            /* ] */
-            $date = date('Y-m-d', strtotime(MyDate::changeDateTimezone($postObj->date, $user_timezone, $systemTimeZone)));
+            $dateTime =  MyDate::changeDateTimezone($postObj->date. ' ' . $postObj->start, $user_timezone, $systemTimeZone);
+            $date = date('Y-m-d', strtotime($dateTime));
             $dateArray[$date] = $date;
-            $postDataId[$postObj->_id] = $postObj->_id;
+           
+            if (!empty($postObj->_id) && $postObj->action != "fromGeneralAvailability") {
+                $postDataId[$postObj->_id] = $postObj->_id;
+            }
+            
             $postJsonArr[] = $postObj;
         }
+       
         if (!empty($dateArray)) {
             $db = FatApp::getDb();
             $srch = new TeacherWeeklyScheduleSearch();
@@ -140,66 +137,45 @@ class TeacherWeeklySchedule extends MyAppModel
             $dateRecordId = $db->fetchAllAssoc($rs);
             $needToDelete = array_diff_key($dateRecordId, $postDataId);
         }
+       
         $db->startTransaction();
         foreach ($postJsonArr as $val) {
-            if (preg_match('/_fc/', $val->_id) || $val->action == "fromGeneralAvailability") {
-                if (strtotime($val->date) >= strtotime(date('Y-m-d')) && isset($val->classtype)) {
-                    if (strtotime($val->date . ' ' . $val->end) <= strtotime($val->date . ' ' . $val->start)) {
-                        $endDate = date('Y-m-d', strtotime('+1 day', strtotime($val->date)));
-                    } else {
-                        $endDate = $val->date;
-                    }
-                    $twsch_start_time = MyDate::changeDateTimezone($val->start, $user_timezone, $systemTimeZone);
-                    $twsch_end_time = MyDate::changeDateTimezone($val->end, $user_timezone, $systemTimeZone);
-                    $twsch_date = MyDate::changeDateTimezone($val->date . ' ' . $val->start, $user_timezone, $systemTimeZone);
-                    $twsch_end_date = MyDate::changeDateTimezone($endDate . ' ' . $val->end, $user_timezone, $systemTimeZone);
-                    $weekDates = MyDate::getWeekStartAndEndDate(new DateTime($twsch_date));
-                    $midPoint = (strtotime($weekDates['weekStart']) + strtotime($weekDates['weekEnd'])) / 2;
-                    $twsch_weekyear = date('W-Y', $midPoint);
-                    $insertArr = [
-                        'twsch_user_id' => $userId,
-                        'twsch_start_time' => $twsch_start_time,
-                        'twsch_end_time' => $twsch_end_time,
-                        'twsch_weekyear' => $twsch_weekyear,
-                        "twsch_is_available" => $val->classtype,
-                        'twsch_date' => date('Y-m-d', strtotime($twsch_date)),
-                        'twsch_end_date' => date('Y-m-d', strtotime($twsch_end_date))
-                    ];
-                    if (!$db->insertFromArray(TeacherWeeklySchedule::DB_TBL, $insertArr, false)) {
-                        $db->rollbackTransaction();
-                        $this->error = $db->getError();
-                        return false;
-                    }
-                }
-            } else {
-                /* code added  on 12-07-2019 */
-                if (strtotime($val->date . ' ' . $val->end) <= strtotime($val->date . ' ' . $val->start)) {
-                    $endDate = date('Y-m-d', strtotime('+1 day', strtotime($val->date)));
-                } else {
-                    $endDate = $val->date;
-                }
-                $twsch_start_time = MyDate::changeDateTimezone($val->start, $user_timezone, $systemTimeZone);
-                $twsch_end_time = MyDate::changeDateTimezone($val->end, $user_timezone, $systemTimeZone);
-                $twsch_date = MyDate::changeDateTimezone($val->date . ' ' . $val->start, $user_timezone, $systemTimeZone);
-                $twsch_end_date = MyDate::changeDateTimezone($endDate . ' ' . $val->end, $user_timezone, $systemTimeZone);
-                $weekDates = MyDate::getWeekStartAndEndDate(new DateTime($twsch_date));
-                $midPoint = (strtotime($weekDates['weekStart']) + strtotime($weekDates['weekEnd'])) / 2;
-                $twsch_weekyear = date('W-Y', $midPoint);
-                // echo $twsch_weekyear;die;
-                $updateArr = [
-                    'twsch_start_time' => $twsch_start_time,
-                    'twsch_end_time' => $twsch_end_time,
-                    'twsch_weekyear' => $twsch_weekyear,
-                    "twsch_is_available" => $val->classtype,
-                    'twsch_date' => $twsch_date,
-                    'twsch_end_date' => date('Y-m-d', strtotime($twsch_end_date))
-                ];
-                $updateWhereArr = ['smt' => 'twsch_id = ? and twsch_user_id = ?', 'vals' => [$val->_id, $userId]];
-                if (!$db->updateFromArray(TeacherWeeklySchedule::DB_TBL, $updateArr, $updateWhereArr)) {
-                    $db->rollbackTransaction();
-                    $this->error = $db->getError();
-                    return false;
-                }
+            if(empty($val->date) && empty($val->start) && empty($val->endDate) && empty($val->end)){
+                continue;
+            }
+
+            $val->classtype = (isset($val->classtype)) ? $val->classtype : 0;
+            $val->action = (!empty($val->action)) ?  $val->action : '';
+
+            $startDateTime = MyDate::changeDateTimezone($val->date . ' ' . $val->start, $user_timezone, $systemTimeZone);
+            $endDateTime = MyDate::changeDateTimezone($val->endDate . ' ' . $val->end, $user_timezone, $systemTimeZone);
+            
+            $startDateTimeUnix = strtotime($startDateTime);
+            $endDateTimeUnix = strtotime($endDateTime);
+
+            $weekDates = MyDate::getWeekStartAndEndDate(new DateTime($startDateTime));
+            $midPoint = (strtotime($weekDates['weekStart']) + strtotime($weekDates['weekEnd'])) / 2;
+            $twschWeekYear = date('W-Y', $midPoint);
+
+            $updateArr = [
+                'twsch_start_time' => date('H:i:s', $startDateTimeUnix),
+                'twsch_end_time' => date('H:i:s', $endDateTimeUnix),
+                'twsch_weekyear' => $twschWeekYear,
+                "twsch_is_available" => $val->classtype,
+                'twsch_date' => date('Y-m-d', $startDateTimeUnix),
+                'twsch_end_date' => date('Y-m-d', $endDateTimeUnix),
+                'twsch_user_id' => $userId,
+                'twsch_id' => 0,
+            ];
+            if (!empty($val->_id) && $val->action != "fromGeneralAvailability") {
+                $updateArr['twsch_id'] = $val->_id;
+            }
+            $record = new TableRecord(self::DB_TBL);
+            $record->assignValues($updateArr);
+            if (!$record->addNew([], $updateArr)) {
+                $db->rollbackTransaction();
+                $this->error = $record->getError();
+                return false;
             }
         }
         if (!empty($needToDelete)) {

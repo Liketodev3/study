@@ -1,12 +1,19 @@
 var cart = {
-	isUserLogged: function (){
-		$.loader.show();
-		if (isUserLogged() == 0) {
-			logInFormPopUp();
-			$.loader.hide();
+	update: function (teacherId) {
+
+		teacherId = parseInt(teacherId);
+
+		if(1 > teacherId)
+		{
 			return false;
 		}
-		return false;
+		
+		lessonQty = parseInt($("#lessonQty").val());
+		lessonDuration = parseInt($('[name="lessonDuration"]').val());
+		languageId = parseInt($('[name="language"]').val());
+
+		var data = '&teacherId=' + teacherId + '&lessonQty=' + lessonQty + '&languageId=' + languageId + '&lessonDuration=' + lessonDuration;
+		cart.addToCart(data);
 	},
 	add: function (teacherId, languageId, lessonDuration, lessonQty) {
 		teacherId = parseInt(teacherId);
@@ -22,7 +29,7 @@ var cart = {
 	},
 	addGroupClass: function (teacherId, groupClassId) {
 		teacherId = parseInt(teacherId);
-		groupClassId = parseInt(lessonQty);
+		groupClassId = parseInt(groupClassId);
 		if(1 > teacherId || 1 > groupClassId)
 		{
 			return false;
@@ -43,10 +50,14 @@ var cart = {
 		cart.addToCart(data);
 	},
 	addToCart: function (data) {
-		if(!cart.isUserLogged()){
+		$.loader.show();
+		if (isUserLogged() == 0) {
+			$.loader.hide();
+			logInFormPopUp();
 			return false;
 		}
 		fcom.ajax(fcom.makeUrl('Cart', 'add'), data, function (res) {
+			$.loader.hide();
 			if (res.status == 1) {
 				if (res.isFreeLesson) {
 					cart.confirmOrder();

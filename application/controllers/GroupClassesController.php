@@ -24,7 +24,7 @@ class GroupClassesController extends MyAppController
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
         if (isset($post['language']) && $post['language'] !== "") {
-            $srch->addCondition('grpcls_slanguage_id', '=', $post['language']);
+            $srch->addCondition('grpcls_tlanguage_id', '=', $post['language']);
         }
         if (isset($post['custom_filter'])) {
             switch ($post['custom_filter']) {

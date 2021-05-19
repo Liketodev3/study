@@ -25,8 +25,15 @@
 							echo Label::getLabel('LBL_Duration') . ': ' . sprintf(Label::getLabel('LBL_%s_Mins/Lesson'), $cart['lessonDuration']) . '<br>';
 						}
 
-						if ($cart['startDateTime'] != '' && $cart['endDateTime']) {
-							echo date("M d, Y h:i A", strtotime($cart['startDateTime'])) . '-' . date("h:i A", strtotime($cart['endDateTime']));
+						if (!empty($cart['startDateTime']) && !empty($cart['endDateTime'])) {
+							
+							$userTimezone = MyDate::getUserTimeZone();
+							$systemTimeZone = MyDate::getTimeZone();
+
+							$startDateTime = MyDate::changeDateTimezone($cart['startDateTime'], $userTimezone, $systemTimeZone);
+							$endDateTime = MyDate::changeDateTimezone($cart['endDateTime'], $userTimezone, $systemTimeZone);
+
+							echo date("M d, Y h:i A", strtotime($startDateTime)) . '-' . date("h:i A", strtotime($endDateTime));
 						} ?>
 					</small></h6>
 			</td>

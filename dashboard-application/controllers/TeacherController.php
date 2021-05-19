@@ -149,14 +149,14 @@ class TeacherController extends TeacherBaseController
 
         $priceSlab =  new PriceSlab();
         $slabData = $priceSlab->getAllSlabs(true, ['prislab_min as minSlab','prislab_max as maxSlab', 'CONCAT(prislab_min,"-",prislab_max) as minMaxKey']);
-        
+       
         $teacherAddedSlabs = array_column($userTeachingLang, 'minMaxKey', 'minMaxKey');
         unset($teacherAddedSlabs['0-0']);
         $slabDifference = [];
         
         if(!empty($userTeachingLang)){
             $adminAddedSlabs = array_column($slabData, 'minMaxKey', 'minMaxKey');
-            $slabDifference = array_diff($adminAddedSlabs, $teacherAddedSlabs);
+            $slabDifference = array_merge(array_diff($adminAddedSlabs, $teacherAddedSlabs), array_diff($teacherAddedSlabs, $adminAddedSlabs));
         }
 
         $priceSum = array_sum(array_column($userTeachingLang, 'ustelgpr_price'));

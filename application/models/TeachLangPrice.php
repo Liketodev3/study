@@ -77,4 +77,20 @@ class TeachLangPrice extends MyAppModel
         return FatApp::getDb()->fetchAllAssoc($rs);
     }
 
+    public static function isSlapCollapse(int $teacherId, int $min, int $max, array $teachLangIds = []): bool
+    {
+        $srch = new SearchBase(static::DB_TBL, 'ustelgpr');
+        $srch->joinTable(UserTeachLanguage::DB_TBL, 'INNER JOIN', 'utl.utl_id = ustelgpr_utl_id', 'utl');
+        $srch->doNotCalculateRecords();
+        $srch->addCondition('ustelgpr_max_slab', '>=', $min);
+        $srch->addCondition('ustelgpr_min_slab', '<=', $max);
+        $srch->addCondition('utl.utl_user_id', '=', $teacherId);
+        if(!empty($teachLangIds)){
+            $srch->addCondition('utl.utl_tlanguage_id', 'IN', $teachLangIds);
+        }
+        $srch->setPageSize(1);
+        $slabData = FatApp::getDb()->fetch($srch->getResultSet());
+        return (!empty($slabData));
+    }
+
 }

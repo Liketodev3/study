@@ -41,7 +41,7 @@ class ScheduledLessonSearch extends SearchBase
             'slns.slesson_grpcls_id',
             'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             'IFNULL(grpclslang_grpcls_description,grpcls_description) as grpcls_description',
-            'grpcls_slanguage_id',
+            'grpcls_tlanguage_id',
             'grpcls.grpcls_status',
             'sld.sldetail_id',
             'sld.sldetail_order_id',
@@ -237,7 +237,7 @@ class ScheduledLessonSearch extends SearchBase
         if ($langId < 1) {
             $langId = CommonHelper::getLangId();
         }
-        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'LEFT  JOIN', 'ut.user_id = utsl.utl_user_id', 'utsl');
+        $this->joinTable(UserTeachLanguage::DB_TBL, 'LEFT JOIN', 'ut.user_id = utsl.utl_user_id', 'utsl');
         $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utsl.utl_tlanguage_id');
         $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl.utl_tlanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
         $this->addMultipleFields(['utsl.utl_user_id', 'GROUP_CONCAT(DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY IFNULL(tlanguage_name, tlanguage_identifier) ASC) AS teacherTeachLanguageName']);

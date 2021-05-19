@@ -135,22 +135,18 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
                 },
                 success: function (docs) {
                     for (i in docs) {
-                        docs[i].display = 'background';
-                        // docs[i].rendering ='background',
-                        docs[i].editable = false,
+                        docs[i].selectable = false;
+                        if ((parseInt(docs[i].classType))) {
+                            docs[i].display = 'background';
                             docs[i].selectable = true;
+                        }
+                        docs[i].editable = false;
                     }
                 }
             },
             {
                 url: fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [this.teacherId], confFrontEndUrl),
-                method: 'POST',
-                // success: function (docs) {
-                // for (i in docs) {
-                //     // docs[i].display = 'background';
-                //     // docs[i].color = 'var(--color-secondary)';
-                // }
-                // }
+                method: 'POST'
             },
         ],
         select: function (arg) {
@@ -317,28 +313,27 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
                 return false;
             }
             var newEvent = new Object();
-            newEvent.title = '';
             newEvent.start = start;//moment(start).format('YYYY-MM-DD')+"T"+moment(start).format('HH:mm:ss');
             newEvent.end = end;//moment(end).format('YYYY-MM-DD')+"T"+moment(end).format('HH:mm:ss'),
-            newEvent.startTime = moment(start).format('HH:mm:ss');
-            newEvent.endTime = moment(end).format('HH:mm:ss'),
-                newEvent.daysOfWeek = moment(start).format('d'),
-                newEvent.className = 'slot_available',
-                newEvent.classType = 1,
-                newEvent.allday = false;
+            newEvent.classType = 1,
+            // newEvent.allday = false;
             newEvent.overlap = false;
             var events = calendar.getEvents();
             for (i in events) {
-                if (moment(end).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')) {
-                    newEvent.end = moment(events[i].end).format('YYYY-MM-DD') + "T" + moment(events[i].end).format('HH:mm:ss');
-                    newEvent.endTime = moment(events[i].end).format('HH:mm:ss');
-                    events[i].remove();
-                } else if (moment(start).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')) {
-                    newEvent.start = moment(events[i].start).format('YYYY-MM-DD') + "T" + moment(events[i].start).format('HH:mm:ss');
-                    newEvent.startTime = moment(events[i].start).format('HH:mm:ss');
+                if ( moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
+
+                    if(moment(start) > moment(events[i].start)){
+                        newEvent.start = moment(events[i].start).format('YYYY-MM-DD') + "T" + moment(events[i].start).format('HH:mm:ss');
+                    }
+    
+                    if(moment(end) < moment(events[i].end)){
+                        newEvent.end = moment(events[i].end).format('YYYY-MM-DD') + "T" + moment(events[i].end).format('HH:mm:ss');
+                    }
                     events[i].remove();
                 }
             }
+
+             
             // calendar.addEvent(newEvent);
             calendar.addEvent({
                 title: '',
@@ -354,11 +349,16 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
             var end = info.event.end;
             var events = calendar.getEvents();
             for (i in events) {
-                if (moment(end).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')) {
-                    info.event.setEnd(events[i].end);
-                    events[i].remove();
-                } else if (moment(start).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')) {
-                    info.event.setStart(events[i].start);
+
+                if ( moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
+
+                    if(moment(start) > moment(events[i].start)){
+                        info.event.setStart(events[i].start);
+                    }
+    
+                    if(moment(end) < moment(events[i].end)){
+                        info.event.setEnd(events[i].end);
+                    }
                     events[i].remove();
                 }
             }
@@ -409,11 +409,6 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function (current_time) 
                 }
             }
         ],
-        // eventClick: function(arg) {
-        //     if (confirm(langLbl.confirmRemove)) {
-        //         arg.event.remove()
-        //     }
-        // },
         select: function (arg) {
             var start = arg.start;
             var end = arg.end;
@@ -444,22 +439,26 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function (current_time) 
 
             var events = calendar.getEvents();
             for (i in events) {
-                if (moment(end).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')) {
-                    newEvent.end = moment(events[i].end).format('YYYY-MM-DD') + "T" + moment(events[i].end).format('HH:mm:ss');
-                    newEvent.endTime = moment(events[i].end).format('HH:mm:ss');
+                if ( moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
+                    newEvent.extendedProps._id = events[i].extendedProps_id;
+
+                    if(moment(start) > moment(events[i].start)){
+                        newEvent.start = moment(events[i].start).format('YYYY-MM-DD') + "T" + moment(events[i].start).format('HH:mm:ss');
+                    }
+
+                    if(moment(end) < moment(events[i].end)){
+                        newEvent.end = moment(events[i].end).format('YYYY-MM-DD') + "T" + moment(events[i].end).format('HH:mm:ss');
+                    }
                     events[i].remove();
-                } else if (moment(start).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')) {
-                    newEvent.start = moment(events[i].start).format('YYYY-MM-DD') + "T" + moment(events[i].start).format('HH:mm:ss');
-                    newEvent.startTime = moment(events[i].start).format('HH:mm:ss');
-                    events[i].remove();
-                }
+                } 
+                
             }
             // calendar.addEvent(newEvent);
             calendar.addEvent({
                 title: '',
                 start: newEvent.start,
                 overlap :false,
-                className: 'slot_unavailable',
+                className: 'slot_available',
                 end: newEvent.end,
                 allDay: arg.allDay,
                 extendedProps: newEvent.extendedProps
@@ -470,37 +469,43 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function (current_time) 
             var end = info.event.end;
             var events = calendar.getEvents();
             for (i in events) {
-                if (moment(end).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')) {
-                    info.event.setEnd(events[i].end);
-                    events[i].remove();
-                } else if (moment(start).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')) {
-                    info.event.setStart(events[i].start);
+                if ( moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
+                    if(moment(start) > moment(events[i].start)){
+                        info.event.setStart(events[i].start);
+                    }
+                    
+                    if(moment(end) < moment(events[i].end)){
+                        info.event.setEnd(events[i].end);
+                    }
                     events[i].remove();
                 }
             }
         },
         eventDidMount: function (arg) {
             let element = arg.el;
-            var newArg = arg
             $(element).find(".fc-event-main-frame").prepend("<span class='closeon'>X</span>");
             $(element).find(".closeon").on("click", function(evt) {
                 let event = arg.event;
-                let element= arg.el;
-                console.log(event);
-                let confirmMsg = langLbl.disableSlot;
-                let newClassType = 0;
-                let className = "slot_unavailable";
-                if(parseInt(event.extendedProps.classType) == 0){
-                    confirmMsg = langLbl.enableSlot;
-                    newClassType = 1;
-                    className = "slot_available";
-                }
-        
-                if (confirm(confirmMsg)) {
-                    event.setExtendedProp('classType', newClassType);
-                    $(element).addClass(className);
-                    $(element).removeClass(event.extendedProps.className);
-                    event.setExtendedProp('className', className);
+                if(parseInt(event.extendedProps._id) > 0){
+                    let element= arg.el;
+                    console.log(event);
+                    let confirmMsg = langLbl.disableSlot;
+                    let newClassType = 0;
+                    let className = "slot_unavailable";
+                    if(parseInt(event.extendedProps.classType) == 0){
+                        confirmMsg = langLbl.enableSlot;
+                        newClassType = 1;
+                        className = "slot_available";
+                    }
+            
+                    if (confirm(confirmMsg)) {
+                        event.setExtendedProp('classType', newClassType);
+                        $(element).addClass(className);
+                        $(element).removeClass(event.extendedProps.className);
+                        event.setExtendedProp('className', className);
+                    }
+                }else{
+                    event.remove();
                 }
             });
            

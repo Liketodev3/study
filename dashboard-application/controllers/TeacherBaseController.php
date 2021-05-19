@@ -25,6 +25,7 @@ class TeacherBaseController extends LoggedUserController
         $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Keyword')]);
         $options = ScheduledLesson::getStatusArr() + [ScheduledLesson::STATUS_ISSUE_REPORTED => Label::getLabel('LBL_Issue_Reported')];
         $frm->addSelectBox(Label::getLabel('LBL_Status'), 'status', $options, '', [], Label::getLabel('LBL_All'))->requirements()->setInt();
+        $frm->addHiddenField('', 'listingView', '');
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
         $classType = applicationConstants::getClassTypes($this->siteLangId);

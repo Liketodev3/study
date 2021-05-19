@@ -172,6 +172,21 @@ $("document").ready(function () {
         });
     };
 
+	updateCart =  function (teacherId) {
+
+		teacherId = parseInt(teacherId);
+
+		if(1 > teacherId)
+		{
+			return false;
+		}
+		
+		lessonQty = parseInt($("#lessonQty").val());
+		lessonDuration = parseInt($('[name="lessonDuration"]:checked').val());
+		languageId = parseInt($('[name="language"]:checked').val());
+		addToCart(teacherId, languageId, lessonDuration, lessonQty);
+	};
+
 	getTeacherPriceSlabs = function (languageId, lessonDuration) {
 
 		var data = 'languageId=' + languageId + '&lessonDuration=' + lessonDuration;

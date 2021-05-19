@@ -236,7 +236,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                     <span class="-gap-10"></span>
                                     <div class="btns-group">
                                         <?php if ($isUserTeacher && $currentActiveTab == User::USER_TEACHER_DASHBOARD && !empty($teacherProfileProgress['isProfileCompleted'])) { ?>
-                                         <a href="#" class="btn btn--bordered color-third btn--block margin-top-2"><?php echo label::getLabel('LBL_View_Public_Profile'); ?></a>
+                                         <a href="<?php echo CommonHelper::generateFullUrl('teachers', 'view',[$userDetails['user_url_name']], CONF_WEBROOT_FRONTEND); ?>" class="btn btn--bordered color-third btn--block margin-top-2"><?php echo label::getLabel('LBL_View_Public_Profile'); ?></a>
                                         <?php }
                                         if ($currentActiveTab == User::USER_LEARNER_DASHBOARD && $canViewTeacherTab) { ?>
                                             <a href="<?php echo CommonHelper::generateUrl('Teacher'); ?>" class="btn bg-third btn--block margin-top-4"><?php echo label::getLabel('LBL_Switch_to_Teacher_Profile'); ?></a>

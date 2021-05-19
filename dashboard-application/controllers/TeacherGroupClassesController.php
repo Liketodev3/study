@@ -42,8 +42,8 @@ class TeacherGroupClassesController extends TeacherBaseController
 
         $srch = new SearchBase(TeacherGroupClasses::DB_TBL, 'grpcls');
         $srch->joinTable(TeacherGroupClasses::DB_TBL_LANG, 'LEFT JOIN', 'grpcls.grpcls_id = grpclsl.grpclslang_grpcls_id AND grpclsl.grpclslang_lang_id=' . $this->siteLangId, 'grpclsl');
-        $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_grpcls_id = grpcls.grpcls_id', 'slesson');
-        $srch->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sldetail.sldetail_slesson_id = slesson.slesson_id', 'sldetail');
+        $srch->joinTable(ScheduledLesson::DB_TBL, 'LEFT JOIN', 'slesson.slesson_grpcls_id = grpcls.grpcls_id', 'slesson');
+        $srch->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT JOIN', 'sldetail.sldetail_slesson_id = slesson.slesson_id', 'sldetail');
         $srch->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'sldetail.sldetail_id = repiss.repiss_sldetail_id', 'repiss');
         $srch->addCondition('grpcls.grpcls_deleted', '=', applicationConstants::NO);
         $srch->addCondition('grpcls.grpcls_teacher_id', '=', $teacher_id);
@@ -67,6 +67,7 @@ class TeacherGroupClassesController extends TeacherBaseController
             $keywordCondition->attachCondition('grpclsl.grpclslang_grpcls_title', 'like', '%' . $post['keyword'] . '%');
         }
         $srch->addGroupBy('grpcls.grpcls_id');
+        $srch->addOrder('grpcls.grpcls_id', 'desc');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageSize($pageSize);
@@ -356,7 +357,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         $fld->requirements()->setRequired(false);
         $max_learners = FatApp::getConfig('CONF_GROUP_CLASS_MAX_LEARNERS', FatUtility::VAR_INT, 9999);
         $fld->requirements()->setRange(1, $max_learners);
-        $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->siteLangId), '', [], Label::getLabel('LBL_Select'))->requirements()->setRequired(true);
+        $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_tlanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->siteLangId), '', [], Label::getLabel('LBL_Select'))->requirements()->setRequired(true);
         $fld = $frm->addFloatField(Label::getLabel('LBl_Entry_fee'), 'grpcls_entry_fee', '', ['id' => 'grpcls_entry_fee']);
         $fld->requirements()->setPositive(true);
         $fld->requirements()->setRange(0, 9999999);
