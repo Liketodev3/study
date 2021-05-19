@@ -1,4 +1,14 @@
 This file shares the details of the Yo!Coach version and change log.
+
+Release Number: TV-2.12.2.20210519
+
+Release Date: 2021-05-19
+
+Updates:
+    Task-83884-New Dashboard Design
+
+---------------------------------------------------------
+
 Release Number: TV-2.12.1.20210503
 
 Release Date: 2021-05-03
