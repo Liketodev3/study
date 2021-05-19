@@ -82,7 +82,7 @@
 							if ($paymentMethods) {
 								$count = 1;
 								foreach ($paymentMethods as $key => $val) { ?>
-									<li class="<?php echo ($count == 1) ? 'is-active' : ''; ?>"><a class="<?php echo ($count == 1) ? 'is-active' : ''; ?>" href="<?php echo CommonHelper::generateUrl('Checkout', 'paymentTab', array($val['pmethod_id'])); ?>"><?php echo $val['pmethod_name']; ?></a></li>
+									<li class="<?php echo ($count == 1) ? 'is-active' : ''; ?>"><a class="<?php echo ($count == 1) ? 'is-active' : ''; ?>" href="<?php echo CommonHelper::generateUrl('Checkout', 'paymentTab', array($val['pmethod_id']), '', null, false, false); ?>"><?php echo $val['pmethod_name']; ?></a></li>
 							<?php
 									$count++;
 								}

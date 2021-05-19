@@ -54,6 +54,7 @@ class AttachedFile extends MyAppModel
     const FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE = 45;
     const FILETYPE_PWA_APP_ICON = 46;
     const FILETYPE_PWA_SPLASH_ICON = 47;
+    const FILETYPE_OPENGRAPH_IMAGE = 48;
 
     public function __construct($fileId = 0)
     {
@@ -65,6 +66,12 @@ class AttachedFile extends MyAppModel
     {
         return $arr = [];
         return $arr;
+    }
+
+    public static function getSearchObject()
+    {
+        $srch = new SearchBase(static::DB_TBL, 'ta');
+        return $srch;
     }
 
     public static function setTimeParam($dateTime)
@@ -136,18 +143,27 @@ class AttachedFile extends MyAppModel
         return null;
     }
 
-    public function saveAttachment($fl, $fileType, $recordId, $recordSubid, $name, $displayOrder = 0, $uniqueRecord = false, $langId = 0, $screen = 0)
+    public function saveAttachment($fl, $fileType, $recordId, $recordSubid, $name, $displayOrder = 0, $uniqueRecord = false, $langId = 0, $screen = 0, $allowImageExt = false)
     {
+
+        if ($allowImageExt) {
+            $allowedFileExtensions =  applicationConstants::allowedImageFileExtensions();
+            $allowedMimeTypes = applicationConstants::allowedImageMimeTypes();
+        } else {
+            $allowedFileExtensions =  applicationConstants::allowedFileExtensions();
+            $allowedMimeTypes = applicationConstants::allowedMimeTypes();
+        }
+
         $defaultLangIdForErrors = ($langId == 0) ? $this->commonLangId : $langId;
         if (!empty($name) && !empty($fl)) {
             $fileExt = pathinfo($name, PATHINFO_EXTENSION);
             $fileExt = strtolower($fileExt);
-            if (!in_array($fileExt, applicationConstants::allowedFileExtensions())) {
+            if (!in_array($fileExt, $allowedFileExtensions)) {
                 $this->error = Label::getLabel('MSG_INVALID_FILE_EXTENSION', $defaultLangIdForErrors);
                 return false;
             }
             $fileMimeType = mime_content_type($fl);
-            if (!in_array($fileMimeType, applicationConstants::allowedMimeTypes())) {
+            if (!in_array($fileMimeType, $allowedMimeTypes)) {
                 $this->error = Label::getLabel('MSG_INVALID_FILE_MIME_TYPE', $defaultLangIdForErrors);
                 return false;
             }
@@ -603,4 +619,15 @@ class AttachedFile extends MyAppModel
         return mime_content_type($filepath);
     }
 
+    public static function getFileTypesArrForImgAttrs(int $langId): array
+    {
+        return [
+            AttachedFile::FILETYPE_BANNER => Label::getLabel('IMGA_Banner', $langId),
+            AttachedFile::FILETYPE_HOME_PAGE_BANNER => Label::getLabel('IMGA_Home_Page_Banner', $langId),
+            AttachedFile::FILETYPE_CPAGE_BACKGROUND_IMAGE => Label::getLabel('IMGA_CPAGE_BACKGROUND_IMAGE', $langId),
+            AttachedFile::FILETYPE_TEACHING_LANGUAGES => Label::getLabel('IMGA_TEACHING_LANGUAGES', $langId),
+            AttachedFile::FILETYPE_FLAG_TEACHING_LANGUAGES => Label::getLabel('IMGA_TEACHING_LANGUAGES_FLAG', $langId),
+            AttachedFile::FILETYPE_BLOG_POST_IMAGE => Label::getLabel('IMGA_BLOG_POST_IMAGE', $langId),
+        ];
+    }
 }

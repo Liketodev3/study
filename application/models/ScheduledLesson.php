@@ -229,4 +229,57 @@ class ScheduledLesson extends MyAppModel
         return $this->save();
     }
 
+    public function endLesson()
+    {
+        $lessonId = $this->getMainTableRecordId();
+        $this->loadFromDb();
+        $lessonRow = $this->getFlds();
+
+        if ($lessonRow['slesson_status'] == ScheduledLesson::STATUS_COMPLETED) {
+            if ($lessonRow['slesson_ended_by'] ==  User::USER_TYPE_TEACHER) {
+                $this->error = Label::getLabel('LBL_You_already_end_lesson!');
+                return false;
+            }
+            $this->assignValues(array('slesson_teacher_end_time' => date('Y-m-d H:i:s')));
+            return $this->save();
+        }
+
+        $dataUpdateArr = array(
+            'slesson_status' => ScheduledLesson::STATUS_COMPLETED,
+            'slesson_ended_by' => User::USER_TYPE_TEACHER,
+            'slesson_ended_on' => date('Y-m-d H:i:s'),
+            'slesson_teacher_end_time' => date('Y-m-d H:i:s'),
+        );
+
+        $db = FatApp::getDb();
+        $db->startTransaction();
+        if ($lessonRow['slesson_is_teacher_paid'] == 0) {
+            if ($this->payTeacherCommission()) {
+                $userNotification = new UserNotifications($lessonRow['slesson_teacher_id']);
+                $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
+                $dataUpdateArr['slesson_is_teacher_paid'] = 1;
+            }
+        }
+
+        $this->assignValues($dataUpdateArr);
+        if (!$this->save()) {
+            $db->rollbackTransaction();
+            return false;
+        }
+        $sLessonDetailSrch = new ScheduledLessonDetailsSearch();
+        $sLessonDetailSrch->addCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+        $sLessonDetailSrch->addMultipleFields(array('DISTINCT sldetail_id'));
+        $sLessonDetails = $sLessonDetailSrch->getRecordsByLessonId($lessonRow['slesson_id']);
+
+        foreach ($sLessonDetails as $sLessonDetail) {
+            $scheduledLessonDetailObj = new ScheduledLessonDetails($sLessonDetail['sldetail_id']);
+            $scheduledLessonDetailObj->assignValues(array('sldetail_learner_status' => ScheduledLesson::STATUS_COMPLETED));
+            if (!$scheduledLessonDetailObj->save()) {
+                $db->rollbackTransaction();
+                FatUtility::dieJsonError($scheduledLessonDetailObj->getError());
+            }
+        }
+        $db->commitTransaction();
+        return true;
+    }
 }

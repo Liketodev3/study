@@ -1172,4 +1172,26 @@ class GuestUserController extends MyAppController
         $this->logout();
     }
 
+    public function wiziqCallback($lessonId, $teacherId, $token)
+    {
+        $lessonId = FatUtility::int($lessonId);
+        $teacherId = FatUtility::int($teacherId);
+        $signature = CommonHelper::decrypt($token);
+        if (empty($lessonId) || empty($teacherId) || empty($signature)) {
+            FatUtility::exitWithErrorCode(404);
+        }
+        $meetDetail = new LessonMeetingDetail($lessonId, $teacherId);
+        $meetingData = $meetDetail->getMeetingDetails(LessonMeetingDetail::KEY_WIZIQ_RAW_DATA);
+        $detail = json_decode($meetingData, true);
+        if (empty($detail) || ($detail['signature'] ?? '') != $signature) {
+            FatUtility::exitWithErrorCode(404);
+        }
+        (new ScheduledLesson($lessonId))->endLesson();
+        $userId = UserAuthentication::getLoggedUserId(true);
+        if ($userId == $teacherId) {
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$lessonId]));
+        } else {
+            FatApp::redirectUser(CommonHelper::generateUrl('Learner'));
+        }
+    }
 }

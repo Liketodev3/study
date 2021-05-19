@@ -57,5 +57,5 @@ $this->includeTemplate( 'header/commonHead2.php', $commonHead2DataArr );
 /* ] */
 
 if( !isset($exculdeMainHeaderDiv) ){
-	$this->includeTemplate('header/top.php',array('siteLangId'=>$siteLangId),false);
+	$this->includeTemplate('header/top.php',array('siteLangId'=>$siteLangId, 'languages' => $languages),false);
 }

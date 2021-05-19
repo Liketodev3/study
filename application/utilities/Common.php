@@ -111,9 +111,7 @@ class Common
 
     public static function headerUserLoginArea($template)
     {
-        if (UserAuthentication::isUserLogged()) {
-            $template->set('userName', UserAuthentication::getLoggedUserAttribute('user_first_name'));
-        }
+        $template->set('userName', UserAuthentication::getLoggedUserAttribute('user_first_name', true));
         $controllerName = FatApp::getController();
         $arr = explode('-', FatUtility::camel2dashed($controllerName));
         array_pop($arr);

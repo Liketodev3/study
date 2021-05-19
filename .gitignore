@@ -12,6 +12,7 @@
 /robots.txt
 /node_modules
 /public/config.js
-/.vscode/*
-/nbproject/
-/vendor/
+/vendor
+/nbproject
+/node_modules
+/.vscode

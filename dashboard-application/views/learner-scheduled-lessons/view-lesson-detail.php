@@ -109,7 +109,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                     <button class="btn bg-red end_lesson_now" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lessonData['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?>
                     </button>
                 <?php if ($lessonData['sldetail_learner_status'] != ScheduledLesson::STATUS_CANCELLED) { ?>
-                    <?php if ($lessonData['slesson_grpcls_id'] <= 0 && $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $currentUnixTime < $startDateTimeUnixtime) { ?>
+                    <?php if ($lessonData['slesson_grpcls_id'] <= 0 && $lessonData['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && MyDate::hoursDiff($lessonData['slesson_date'] . ' ' . $lessonData['slesson_start_time']) >= FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) { ?>
                         <button class="btn btn--third reschedule-lesson--js" onclick="requestReschedule('<?php echo $lessonData['sldetail_id']; ?>');"><?php echo Label::getLabel('LBL_Reschedule'); ?></button>
                     <?php } ?>
                     <?php if (($lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING || $lessonData['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) && $currentUnixTime < $startDateTimeUnixtime) { ?>

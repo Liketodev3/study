@@ -542,10 +542,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         $showCouponRefundNote = ($orderInfo['order_discount_total'] > 0) ? true : false;
-        
-        $diff = round(($to_time - $from_time) / 3600, 2);
-        $deductionNote = false;
-        if (($lessonRow['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $diff < 24) && $lessonRow['order_net_amount'] > 0) {
+      
+        $diff = MyDate::hoursDiff($to_time, $from_time);
+        $deductionNote  = false;
+        if (($lessonRow['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) && ($diff < FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) && ($lessonRow['order_net_amount'] > 0)) {
             $deductionNote = ($lessonRow['op_lpackage_is_free_trial'] == applicationConstants::YES) ? false : true;
         }
         $frm = $this->getCancelLessonFrm($deductionNote, $showCouponRefundNote, $lessonRow['sldetail_order_id']);
@@ -737,22 +737,29 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         ]);
         $getLessonDetailObj->addCondition(ScheduledLessonDetails::tblFld('learner_status'), '=', ScheduledLesson::STATUS_SCHEDULED);
         $getResultSet = $getLessonDetailObj->getResultSet();
-        $getLessonDetail = $db->fetch($getResultSet);
-        if (empty($getLessonDetail)) {
+        $data = $db->fetch($getResultSet);
+        if (empty($data)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
+        $hoursDiff = MyDate::hoursDiff($data['slesson_date'] . ' ' . $data['slesson_start_time']);
+        
+        if ($hoursDiff < FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) {
+            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
+            FatUtility::dieWithError(Message::getHtml());
+        }
+
         $teacherBookingBefore = 0;
-        if (!empty($getLessonDetail['teacherBookingBefore'])) {
-            $teacherBookingBefore = $getLessonDetail['teacherBookingBefore'];
+        if (!empty($data['teacherBookingBefore'])) {
+            $teacherBookingBefore = $data['teacherBookingBefore'];
         }
         $user_timezone = MyDate::getUserTimeZone();
         $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
         $userRow = [
-            'user_full_name' => $getLessonDetail['teacherFullName'],
-            'user_first_name' => $getLessonDetail['teacherFirstName'],
-            'user_country_id' => $getLessonDetail['teacherCountryId']
+            'user_full_name' => $data['teacherFullName'],
+            'user_first_name' => $data['teacherFirstName'],
+            'user_country_id' => $data['teacherCountryId']
         ];
-        $action = ($getLessonDetail['op_lpackage_is_free_trial'] == applicationConstants::YES) ? 'free_trial' : '';
+        $action = ($data['op_lpackage_is_free_trial'] == applicationConstants::YES) ? 'free_trial' : '';
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
         $frm = $this->getRescheduleFrm();
         $frm->fill(['sldetail_id' => $lDetailId]);
@@ -763,9 +770,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->set('userRow', $userRow);
         $this->set('isRescheduleRequest', true);
         $this->set('action', $action);
-        $this->set('teacher_id', $getLessonDetail['teacherId']);
-        $this->set('lessonId', $getLessonDetail['slesson_id']);
-        $this->set('lessonRow', $getLessonDetail);
+        $this->set('teacher_id', $data['teacherId']);
+        $this->set('lessonId', $data['slesson_id']);
+        $this->set('lessonRow', $data);
         $this->set('lDetailId', $lDetailId);
         $this->set('cssClassArr', $cssClassNamesArr);
         $currentLangCode = strtolower(Language::getLangCode($this->siteLangId));

@@ -62,4 +62,3 @@ echo FatUtility::createHiddenFormFromData ( $postedData, array (
 ) );
 $pagingArr = array('pageCount'=>$pageCount,'page'=>$page,'recordCount'=>$recordCount,'adminLangId'=>$adminLangId);
 $this->includeTemplate('_partial/pagination.php', $pagingArr,false);
-?>

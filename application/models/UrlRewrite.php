@@ -6,7 +6,10 @@ class UrlRewrite extends MyAppModel
     const DB_TBL = 'tbl_url_rewrites';
     const DB_TBL_PREFIX = 'urlrewrite_';
 
-    private $db;
+    const HTTP_CODE_REDIRECT_PERMANENTLY = 301;
+    const HTTP_CODE_REDIRECT_TEMPERARY = 302;
+    const HTTP_CODE_PAGE_NOT_FOUND = 404;
+    const HTTP_CODE_NOT_AVAILABLE = 410;
 
     public function __construct($id = 0)
     {
@@ -18,6 +21,16 @@ class UrlRewrite extends MyAppModel
     {
         $srch = new SearchBase(static::DB_TBL, 'ur');
         return $srch;
+    }
+
+    public static function getHttpCodeArr(int $langId)
+    {
+        return [
+            static::HTTP_CODE_REDIRECT_PERMANENTLY => Label::getLabel('LBL_301_Redirect_permanently', $langId),
+            static::HTTP_CODE_REDIRECT_TEMPERARY => Label::getLabel('LBL_302_Redirect_temprary', $langId),
+            static::HTTP_CODE_PAGE_NOT_FOUND => Label::getLabel('LBL_404_Page_Not_Found', $langId),
+            static::HTTP_CODE_NOT_AVAILABLE => Label::getLabel('LBL_410_No_Longer_Available', $langId),
+        ];
     }
 
     public static function getDataByCustomUrl($customUrl, $excludeThisOriginalUrl = false)

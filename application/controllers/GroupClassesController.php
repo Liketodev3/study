@@ -11,36 +11,42 @@ class GroupClassesController extends MyAppController
     }
 
     public function search()
-    {
-        $frm = $this->getSearchForm();
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-        if ($post === false) {
-            FatUtility::dieJsonError(current($frm->getValidationErrors()));
-        }
-        $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
-        if ($page < 2) {
-            $page = 1;
-        }
-        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
-        $srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
-        if (isset($post['language']) && $post['language'] !== "") {
-            $srch->addCondition('grpcls_slanguage_id', '=', $post['language']);
-        }
-        if (isset($post['custom_filter'])) {
-            switch ($post['custom_filter']) {
-                case TeacherGroupClasses::FILTER_UPCOMING:
-                    $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-                    $srch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
+	{
+		$frm = $this->getSearchForm();
+		$post = $frm->getFormDataFromArray(FatApp::getPostedData());
+		if ($post === false) {
+			FatUtility::dieJsonError(current($frm->getValidationErrors()));
+		}
+
+		$page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
+		if ($page < 2) {
+			$page = 1;
+		}
+		$pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
+		$srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
+
+		if (isset($post['language']) && $post['language'] !== "") {
+			$srch->addCondition('grpcls_slanguage_id', '=', $post['language']);
+		}
+		if (isset($post['custom_filter'])) {
+			switch ($post['custom_filter']) {
+				case TeacherGroupClasses::FILTER_UPCOMING:
+					$srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+					$srch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
+					break;
+				case TeacherGroupClasses::FILTER_ONGOING:
+					$srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+					$srch->addCondition('grpcls_start_datetime', '<=', date('Y-m-d H:i:s'));
+					$srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
+					break;
+				default:
+					$srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
                     break;
-                case TeacherGroupClasses::FILTER_ONGOING:
-                    $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-                    $srch->addCondition('grpcls_start_datetime', '<=', date('Y-m-d H:i:s'));
-                    $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
-                    break;
-            }
-        }
-        $srch->setPageSize($pageSize);
-        $srch->setPageNumber($page);
+			}
+		}
+
+		$srch->setPageSize($pageSize);
+		$srch->setPageNumber($page);
         $rs = $srch->getResultSet();
         $classesList = FatApp::getDb()->fetchAll($rs);
         $pagingArr = [
@@ -75,16 +81,16 @@ class GroupClassesController extends MyAppController
         $this->_template->render();
     }
 
-    private function getSearchForm()
-    {
-        $frm = new Form('frmTeacherSrch');
-        $frm->addSelectBox('', 'custom_filter', TeacherGroupClasses::getCustomFilterAr(), '', [], Label::getLabel('LBL_ALL'));
-        $frm->addSelectBox('', 'language', TeachingLanguage::getAllLangs($this->siteLangId), '', [], Label::getLabel('LBL_Choose_Language'));
-        $frm->addTextBox('', 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_Class')]);
-        $fld = $frm->addHiddenField('', 'page', 1);
-        $fld->requirements()->setIntPositive();
-        $frm->addSubmitButton('', 'btnSrchSubmit', '');
-        return $frm;
-    }
+	private function getSearchForm()
+	{
+		$frm = new Form('frmTeacherSrch');
+		$frm->addSelectBox('', 'custom_filter', TeacherGroupClasses::getCustomFilterAr(), '', array(), Label::getLabel('LBL_ALL'));
+		$frm->addSelectBox('', 'language', TeacherGroupClassesSearch::getTeachLangs($this->siteLangId), '', array(), Label::getLabel('LBL_Choose_Language'));
+		$frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_Class')));
+		$fld = $frm->addHiddenField('', 'page', 1);
+		$fld->requirements()->setIntPositive();
+		$frm->addSubmitButton('', 'btnSrchSubmit', '');
+		return $frm;
+	}
 
 }

@@ -53,7 +53,9 @@ class AdminPrivilege
     const SECTION_TOP_LANGUAGES_REPORT = 48;
     const SECTION_FAQ_CATEGORY = 49;
     const SECTION_TEACHING_LANGUAGES = 50;
-    const SECTION_COMMISSION_REPORT = 51;
+    const SECTION_COMMISSION_REPORT  = 51;
+    const SECTION_IMAGE_ATTRIBUTES = 52;
+
     const PRIVILEGE_NONE = 0;
     const PRIVILEGE_READ = 1;
     const PRIVILEGE_WRITE = 2;
@@ -136,6 +138,7 @@ class AdminPrivilege
             static::SECTION_TIMEZONES => Label::getLabel('MSG_Manage_Timezones', CommonHelper::getLangId()),
             static::SECTION_ISSUE_REPORT_OPTIONS => Label::getLabel('MSG_Manage_ISSUE_REPORT_OPTIONS', CommonHelper::getLangId()),
             static::SECTION_COMMISSION_REPORT => Label::getLabel('MSG_Commission_Report', CommonHelper::getLangId()),
+            static::SECTION_IMAGE_ATTRIBUTES => Label::getLabel('MSG_Image_Attributes', CommonHelper::getLangId()),
         ];
         return $arr;
     }
@@ -438,14 +441,24 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_META_TAGS, static::PRIVILEGE_WRITE, $returnResult);
     }
 
-    public function canViewUrlRewrite($adminId = 0, $returnResult = false)
+    public function canViewUrlRewrites($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_URL_REWRITE, static::PRIVILEGE_READ, $returnResult);
     }
 
-    public function canEditUrlRewrite($adminId = 0, $returnResult = false)
+    public function canEditUrlRewrites($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_URL_REWRITE, static::PRIVILEGE_WRITE, $returnResult);
+    }
+
+    public function canViewImageAttributes($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_IMAGE_ATTRIBUTES, static::PRIVILEGE_READ, $returnResult);
+    }
+
+    public function canEditImageAttributes($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_IMAGE_ATTRIBUTES, static::PRIVILEGE_WRITE, $returnResult);
     }
 
     public function canViewEmailArchives($adminId = 0, $returnResult = false)
@@ -736,5 +749,4 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult);
     }
-
 }

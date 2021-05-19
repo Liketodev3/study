@@ -1,5 +1,4 @@
-<?php
-defined('SYSTEM_INIT') or die('Invalid Usage.');
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
 ?>
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
@@ -32,8 +31,6 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
         <div id='d_calendar'></div>
     </div>
 </div>
-
-
 
 <div class="tooltipevent-wrapper-js d-none">
     <div class="tooltipevent" style="position:absolute;z-index:10001;">

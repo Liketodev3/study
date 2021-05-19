@@ -124,6 +124,7 @@ class MyAppController extends FatController
         $this->set('jsVariables', $jsVariables);
         $this->set('controllerName', $controllerName);
         $this->set('action', $this->action);
+        $this->set('languages', $languages);
         $this->set('canonicalUrl', Common::getCanonicalUrl());
     }
 

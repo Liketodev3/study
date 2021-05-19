@@ -2,51 +2,58 @@
 
 class UrlRewritingController extends AdminBaseController
 {
-
-    private $canView;
-    private $canEdit;
-
     public function __construct($action)
     {
         parent::__construct($action);
-        $this->canView = $this->objPrivilege->canViewUrlRewrite($this->admin_id, true);
-        $this->canEdit = $this->objPrivilege->canEditUrlRewrite($this->admin_id, true);
-        $this->set("canView", $this->canView);
-        $this->set("canEdit", $this->canEdit);
+        $this->objPrivilege->canViewUrlRewrites();
     }
 
     public function index()
     {
-        $this->objPrivilege->canViewUrlRewrite();
-        $srchFrm = $this->getSearchForm();
+        $canEdit = $this->objPrivilege->canEditUrlRewrites(true);
+        $srchFrm = $this->getSearchForm($this->adminLangId);
         $this->set("srchFrm", $srchFrm);
+        $this->set("canEdit", $canEdit);
         $this->_template->render();
     }
 
     public function search()
     {
-        $this->objPrivilege->canViewUrlRewrite();
+        $canEdit = $this->objPrivilege->canEditUrlRewrites();
         $pageSize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-        $searchForm = $this->getSearchForm();
+        $searchForm = $this->getSearchForm($this->adminLangId);
         $data = FatApp::getPostedData();
-        $page = (empty($data['page']) || $data['page'] <= 0) ? 1 : $data['page'];
         $post = $searchForm->getFormDataFromArray($data);
+        if (false === $post) {
+            Message::addErrorMessage(current($searchForm->getValidationErrors()));
+            FatUtility::dieJsonError(Message::getHtml());
+        }
         $srch = UrlRewrite::getSearchObject($this->adminLangId);
+        $srch->joinTable(Language::DB_TBL, 'LEFT OUTER JOIN', 'lng.language_id = ur.urlrewrite_lang_id', 'lng');
+
         if (!empty($post['keyword'])) {
             $condition = $srch->addCondition('ur.urlrewrite_original', 'like', '%' . $post['keyword'] . '%');
             $condition->attachCondition('ur.urlrewrite_custom', 'like', '%' . $post['keyword'] . '%', 'OR');
         }
-        $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
-        if ($page < 2) {
-            $page = 1;
+
+        if ($post['lang_id'] > 0) {
+            $srch->addCondition('ur.urlrewrite_lang_id', '=', $post['lang_id']);
         }
+
+        $page = max(FatApp::getPostedData('page', FatUtility::VAR_INT, 1), 1);
+
         $srch->setPageNumber($page);
         $srch->setPageSize($pageSize);
+        $srch->addMultipleFields([
+            'urlrewrite_id', 'urlrewrite_original', 'urlrewrite_custom',
+            'urlrewrite_http_resp_code', 'language_code'
+        ]);
         $srch->addOrder('urlrewrite_id', 'DESC');
         $srch->addOrder('urlrewrite_original', 'asc');
         $rs = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($rs);
         $this->set("arr_listing", $records);
+        $this->set("canEdit", $canEdit);
         $this->set('pageCount', $srch->pages());
         $this->set('recordCount', $srch->recordCount());
         $this->set('page', $page);
@@ -55,26 +62,27 @@ class UrlRewritingController extends AdminBaseController
         $this->_template->render(false, false);
     }
 
-    public function form($urlrewrite_id = 0)
+    public function form()
     {
-        $this->objPrivilege->canViewUrlRewrite();
-        $urlrewrite_id = FatUtility::int($urlrewrite_id);
-        $frm = $this->getForm();
-        $frm->fill(['urlrewrite_id' => $urlrewrite_id]);
-        if (0 < $urlrewrite_id) {
+        $this->objPrivilege->canViewUrlRewrites();
+        $post = FatApp::getPostedData();
+        $urlrewrite_id = FatUtility::int($post['UrlRewriteId']);
+        $frm = $this->getForm($urlrewrite_id, $this->adminLangId);
+        if (!empty($post['originalUrl'])) {
             $srch = UrlRewrite::getSearchObject();
-            $srch->addCondition('urlrewrite_id', '=', $urlrewrite_id);
+            $srch->addCondition('ur.urlrewrite_original', '=', $post['originalUrl']);
             $rs = $srch->getResultSet();
-            $data = FatApp::getDb()->fetch($rs);
-            if ($data === false) {
+            $data = [];
+            while ($row = FatApp::getDb()->fetch($rs)) {
+                $data['urlrewrite_original'] = $row['urlrewrite_original'];
+                $data['urlrewrite_custom'][$row['urlrewrite_lang_id']] = $row['urlrewrite_custom'];
+                $data['urlrewrite_http_resp_code'][$row['urlrewrite_lang_id']] = $row['urlrewrite_http_resp_code'];
+            }
+            if (empty($data)) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
-            $urlRewriteData = UrlRewrite::getAttributesById($urlrewrite_id);
-            $customUrl = explode("/", $urlRewriteData['urlrewrite_custom']);
-            $data['urlrewrite_custom'] = $customUrl[0];
             $frm->fill($data);
         }
-        $this->set('languages', Language::getAllNames());
         $this->set('urlrewrite_id', $urlrewrite_id);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
@@ -82,78 +90,103 @@ class UrlRewritingController extends AdminBaseController
 
     public function setup()
     {
-        $this->objPrivilege->canEditUrlRewrite();
-        $frm = $this->getForm();
+        $this->objPrivilege->canEditUrlRewrites();
+        $urlrewriteId = FatApp::getPostedData('urlrewrite_id', FatUtility::VAR_INT, 0);
+        $frm = $this->getForm($urlrewriteId, $this->adminLangId);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $urlrewrite_id = FatUtility::int($post['urlrewrite_id']);
-        unset($post['urlrewrite_id']);
-        $url = FatApp::getPostedData('urlrewrite_custom', FatUtility::VAR_STRING);
-        $post['urlrewrite_custom'] = trim(CommonHelper::seoUrl($url), '/\\');
-        $url = FatApp::getPostedData('urlrewrite_original', FatUtility::VAR_STRING);
-        $post['urlrewrite_original'] = trim($url, '/\\');
-        if ($urlrewrite_id > 0) {
-            $urlRewriteData = UrlRewrite::getAttributesById($urlrewrite_id);
-            $customUrl = explode("/", $urlRewriteData['urlrewrite_custom']);
-            $attachId = isset($customUrl[1]) ? $customUrl[1] : '';
-            if ($attachId) {
-                $post['urlrewrite_custom'] .= '/' . $attachId;
+
+        $row = [];
+
+        $originalUrl = FatApp::getPostedData('urlrewrite_original', FatUtility::VAR_STRING, '');
+        if ($originalUrl != '') {
+            $srch = UrlRewrite::getSearchObject();
+            $srch->addCondition('ur.urlrewrite_original', '=',  $originalUrl);
+            $row = FatApp::getDb()->fetchAll($srch->getResultSet(), 'urlrewrite_lang_id');
+            if (empty($row)) {
+                Message::addErrorMessage(Label::getLabel('MSG_INVALID_REQUEST', $this->adminLangId));
+                FatUtility::dieJsonError(Message::getHtml());
             }
         }
-        $record = new UrlRewrite($urlrewrite_id);
-        $record->assignValues($post);
-        if (!$record->save()) {
-            Message::addErrorMessage($record->getError());
-            FatUtility::dieJsonError(Message::getHtml());
+
+        $langArr = Language::getAllNames();
+        foreach ($langArr as $langId => $langName) {
+            $recordId = 0;
+            if (array_key_exists($langId, $row)) {
+                $recordId = $row[$langId]['urlrewrite_id'];
+            }
+            $url = $post['urlrewrite_custom'][$langId];
+            $data = [
+                'urlrewrite_original' => $originalUrl,
+                'urlrewrite_lang_id' => $langId,
+                'urlrewrite_http_resp_code' => $post['urlrewrite_http_resp_code'][$langId],
+                'urlrewrite_custom' => CommonHelper::seoUrl($url)
+            ];
+            $record = new UrlRewrite($recordId);
+            $record->assignValues($data);
+
+            if (!$record->save()) {
+                Message::addErrorMessage($record->getError());
+                FatUtility::dieJsonError(Message::getHtml());
+            }
         }
         $this->set('msg', $this->str_setup_successful);
-        $this->set('urlrewrite_id', $urlrewrite_id);
+        $this->set('urlrewrite_id', $urlrewriteId);
         $this->_template->render(false, false, 'json-success.php');
     }
 
     public function deleteRecord()
     {
-        $this->objPrivilege->canEditUrlRewrite();
-        $urlrewrite_id = FatApp::getPostedData('id', FatUtility::VAR_INT, 0);
-        if ($urlrewrite_id < 1) {
+        $this->objPrivilege->canEditUrlRewrites();
+        $urlRewriteid = FatApp::getPostedData('id', FatUtility::VAR_INT, 0);
+
+        if ($urlRewriteid < 1) {
             FatUtility::dieJsonError($this->str_invalid_request_id);
         }
-        $res = UrlRewrite::getAttributesById($urlrewrite_id, ['urlrewrite_id']);
-        if ($res == false) {
+
+        $urlRewrite = new UrlRewrite($urlRewriteid);
+
+        if (!$urlRewrite->loadFromDb()) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $obj = new UrlRewrite($urlrewrite_id);
-        if (!$obj->deleteRecord(false)) {
-            Message::addErrorMessage($obj->getError());
+
+        if (!$urlRewrite->deleteRecord(false)) {
+            Message::addErrorMessage($urlRewrite->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
 
-    private function getSearchForm()
+    private function getSearchForm(int $langId)
     {
         $frm = new Form('frmSearch');
-        $f1 = $frm->addTextBox(Label::getLabel('LBL_Keyword', $this->adminLangId), 'keyword');
-        $fld_submit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $this->adminLangId));
-        $fld_cancel = $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $this->adminLangId), ['onclick' => 'clearSearch();']);
-        $fld_submit->attachField($fld_cancel);
+        $frm->addTextBox(Label::getLabel('LBL_Keyword', $langId), 'keyword');
+        $langArr = Language::getAllNames();
+        $defaultLangId = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
+        $frm->addSelectBox(Label::getLabel('LBL_Language', $langId), 'lang_id', $langArr, $defaultLangId);
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $langId));
+        $frm->addButton("", "btn_clear", Label::getLabel('LBL_Clear_Search', $langId));
         return $frm;
     }
 
-    private function getForm($urlrewrite_id = 0)
+    private function getForm(int $urlrewrite_id = 0, int $langId)
     {
-        $this->objPrivilege->canViewUrlRewrite();
-        $urlrewrite_id = FatUtility::int($urlrewrite_id);
         $frm = new Form('frmUrlRewrite');
-        $frm->addHiddenField('', 'urlrewrite_id');
-        $frm->addRequiredField(Label::getLabel('LBL_Original_URL', $this->adminLangId), 'urlrewrite_original');
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Custom_URL', $this->adminLangId), 'urlrewrite_custom');
-        $fld->htmlAfterField = '<small>' . Label::getLabel('LBL_Example:_Custom_URL_Example', $this->adminLangId) . '</small>';
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
+        $frm->addHiddenField('', 'urlrewrite_id', $urlrewrite_id);
+        $frm->addRequiredField(Label::getLabel('LBL_Original_URL', $langId), 'urlrewrite_original');
+        $langArr = Language::getAllNames();
+        foreach ($langArr as $langId => $langName) {
+            $frm->addRequiredField(Label::getLabel('LBL_Custom_URL', $langId) . '(' . $langName . ')', 'urlrewrite_custom[' . $langId . ']');
+            $fldhttpcode = $frm->addSelectBox(Label::getLabel('LBL_Http_Code', $langId) . '(' . $langName . ')', 'urlrewrite_http_resp_code[' . $langId . ']', UrlRewrite::getHttpCodeArr($langId));
+            $fldhttpcode->requirements()->setRequired();
+        }
+        $frm->addHTML('', '', '<small>' . Label::getLabel('LBL_Example_Custom_URL_Example', $langId) . '</small>');
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $langId));
         return $frm;
     }
 

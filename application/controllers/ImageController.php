@@ -419,14 +419,14 @@ class ImageController extends FatController
                     $w = 1920;
                     $h = 800;
                     break;
-                case 'TABLET':
-                    $w = 1024;
-                    $h = 500;
-                    break;
-                case 'MOBILE':
-                    $w = 640;
-                    $h = 360;
-                    break;
+                // case 'TABLET':
+                //     $w = 1024;
+                //     $h = 500;
+                //     break;
+                // case 'MOBILE':
+                //     $w = 640;
+                //     $h = 360;
+                //     break;
                 default:
                     $w = 1920;
                     $h = 800;
@@ -641,4 +641,29 @@ class ImageController extends FatController
         AttachedFile::displayImage($image_name, $w, $h);
     }
 
+    public function openGraphImage($metaId, $lang_id, $sizeType = 'NORMAL')
+    {
+        $metaId = FatUtility::int($metaId);
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metaId, 0, $lang_id, false, 0);
+        $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
+        if ($sizeType) {
+            switch (strtoupper($sizeType)) {
+                case 'SMALL':
+                    $w = 200;
+                    $h = 100;
+                    break;
+                case 'NORMAL':
+                    $w = 1200;
+                    $h = 630;
+                    break;
+                default:
+                    $w = 1200;
+                    $h = 630;
+                    break;
+            }
+            AttachedFile::displayImage($image_name, $w, $h, '', '', ImageResize::IMG_RESIZE_RESET_DIMENSIONS, false, true);
+        } else {
+            AttachedFile::displayOriginalImage($image_name, '', '',  true);
+        }
+    }
 }

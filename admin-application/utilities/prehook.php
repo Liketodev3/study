@@ -3,6 +3,7 @@
 define('CONF_FORM_ERROR_DISPLAY_TYPE', Form::FORM_ERROR_TYPE_AFTER_FIELD);
 define('CONF_FORM_REQUIRED_STAR_WITH', Form::FORM_REQUIRED_STAR_WITH_CAPTION);
 define('CONF_FORM_REQUIRED_STAR_POSITION', Form::FORM_REQUIRED_STAR_POSITION_AFTER);
+define('LANG_CODES_ARR', Language::getAllCodesAssoc());
 FatApplication::getInstance()->setControllersForStaticFileServer(['images', 'js', 'css', 'img', 'innovas', 'assetmanager']);
 $innova_settings = [
     'width' => '650', 'height' => '400', 'arrStyle' => '[["body",false,"","min-height:250px;"]]', 'groups' => ' [

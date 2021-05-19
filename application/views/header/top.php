@@ -38,7 +38,7 @@ if(FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1) && CommonHe
                     <nav class="nav nav--primary nav--actions -display-inline">
                         <ul>
 							<li class="nav__dropdown -hide-mobile">
-								<?php $this->includeTemplate( 'header/languageArea.php' );	?>
+								<?php $this->includeTemplate( 'header/languageArea.php' , ['languages' => $languages, 'siteLangId' => $siteLangId]);	?>
 							</li>
 							<?php if(UserAuthentication::isUserLogged()){
 								$msgCnt = CommonHelper::getUnreadMsgCount();
