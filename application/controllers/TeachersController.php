@@ -517,21 +517,22 @@ class TeachersController extends MyAppController
         $endDate = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
         $weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId, $startDate, $endDate);
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
-        $teacherBookingBefore = FatApp::getPostedData('bookingBefore', FatUtility::VAR_INT, 0);
-        $teacherBookingBefore = FatUtility::convertToType($teacherBookingBefore, FatUtility::VAR_INT);
+        $teacherBookingBefore = FatApp::getPostedData('bookingBefore', FatUtility::VAR_INT, NULL);
         $jsonArr = [];
         $validStartDateTime = strtotime("+ " . $teacherBookingBefore . " hours");
+       
         if (!empty($weeklySchRows)) {
             /* code added on 15-07-2019 */
             foreach ($weeklySchRows as $row) {
                 $endDateTime = $row['twsch_end_date'] . ' ' . $row['twsch_end_time'];
                 $startDateTime = $row['twsch_date'] . ' ' . $row['twsch_start_time'];
-
+               
                 if ($validStartDateTime > strtotime($endDateTime)) {
                     continue;
                 }
 
                 if ($validStartDateTime > strtotime($startDateTime)) {
+                    
                     $startDateTime = date('Y-m-d H:i:s', $validStartDateTime);
                 }
 

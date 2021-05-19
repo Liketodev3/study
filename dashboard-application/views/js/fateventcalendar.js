@@ -65,6 +65,16 @@ var FatEventCalendar = function (teacherId) {
         }, 1000);
     };
 
+    isColliding = function (div1, div2) {
+
+        let d1ffset = div1.offset();
+        let d1Top = d1ffset.top + div1.outerHeight(true);
+
+        let d2ffset = div2.offset();
+        let d2Top = d2ffset.top + div2.outerHeight(true);
+        return (d1ffset.top <= d2ffset.top && d1Top >= d2Top);
+    };
+
     getSlotBookingConfirmationBox = function (calEvent, jsEvent) {
         var monthName = moment(calEvent.start).format('MMMM');
         var date = monthName + " " + moment(calEvent.start).format('DD, YYYY');
@@ -150,9 +160,21 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
             },
         ],
         select: function (arg) {
+            let slotAvailableEl =  $(arg.jsEvent.target).parents('.fc-timegrid-col-frame').find('.slot_available');
+            if(slotAvailableEl.length == 0){
+                calendar.unselect();
+                return false;
+            }
+
+            if(!isColliding($(slotAvailableEl).parent(), $(arg.jsEvent.target))){
+                calendar.unselect();
+                return false;
+            }
+
             jQuery('body #d_calendar .closeon').click();
             jQuery("#loaderCalendar").show();
             if (checkSlotAvailabiltAjaxRun) {
+                calendar.unselect();
                 return false;
             }
 
