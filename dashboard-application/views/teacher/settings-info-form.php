@@ -110,7 +110,7 @@ $nextBtn->addFieldTagAttribute('onclick', "setUpTeacherSettings(this.form, true)
                                             <h6><?php echo sprintf(Label::getLabel('LBL_Slab_%d_to_%d_Lessons'), $slab['minSlab'], $slab['maxSlab']) ?></h6>
                                         </div>
                                         <div class="slab__body">
-                                            <div class="row align-items-center justify-content-between">
+                                            <div class="row align-items-center">
                                                 <?php
                                                 foreach ($userTeachLangData  as $uTeachLangId => $uTeachLang) {
                                                     $filedName = 'ustelgpr_price[' . $lessonDuration . '][' . $slab['minMaxKey'] . '][' . $uTeachLangId . ']';
