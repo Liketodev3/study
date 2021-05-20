@@ -456,3 +456,17 @@ $(document).ready(function(){
 
 
 })(jQuery);
+
+
+/**
+* Check JSON String
+* @returns {Boolean}
+*/
+function isJson(str) {
+   try {
+       JSON.parse(str);
+   } catch (e) {
+       return false;
+   }
+   return true;
+}

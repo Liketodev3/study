@@ -160,19 +160,11 @@ class MyDate extends FatDate
         $dateTime = $dateTime->modify('last saturday')->modify('+1 day');
         return [
             'weekStart' => $dateTime->format('Y-m-d'),
-            'weekEnd' =>  $dateTime->modify('next saturday')->format('Y-m-d'),
+            'weekEnd' => $dateTime->modify('next saturday')->format('Y-m-d'),
         ];
     }
 
-    public static function getMonthStartAndEndDate(DateTime $dateTime): array
-    {
-        return [
-            'monthStart' => $dateTime->modify('first day of this month')->format('Y-m-d'),
-            'monthEnd' =>  $dateTime->modify('last day of this month')->format('Y-m-d'),
-        ];
-    }
-
-    public static function changeWeekDaysToDate(array $weekDays, array $timeSlotArr = []) : array
+    public static function changeWeekDaysToDate(array $weekDays, array $timeSlotArr = []): array
     {
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
@@ -181,31 +173,31 @@ class MyDate extends FatDate
             $dateTime = new DateTime();
             $dateTime->setISODate(2018, 2, $day);
             $day = $dateTime->format('d');
-            $date = "2018-01-".$day;
-            
+            $date = "2018-01-" . $day;
+
             if (!empty($timeSlotArr)) {
                 foreach ($timeSlotArr as $timeKey => $timeSlot) {
-                    $startDateTime = $date.' '.$timeSlot['startTime'];
-                    $endDateTime = $date.' '.$timeSlot['endTime'];
+                    $startDateTime = $date . ' ' . $timeSlot['startTime'];
+                    $endDateTime = $date . ' ' . $timeSlot['endTime'];
 
                     $startDateTime = MyDate::changeDateTimezone($startDateTime, $user_timezone, $systemTimeZone);
                     $endDateTime = MyDate::changeDateTimezone($endDateTime, $user_timezone, $systemTimeZone);
-                    
+
                     $newWeekDayArray[] = [
-                                        'startDate' => $startDateTime,
-                                        'endDate' => $endDateTime
-                                    ];
+                        'startDate' => $startDateTime,
+                        'endDate' => $endDateTime
+                    ];
                 }
             } else {
-                $dateStart = $date." 00:00:00";
-                $date =  date('Y-m-d', strtotime($date." +1 day"));
-                $dateEnd = $date." 00:00:00";
+                $dateStart = $date . " 00:00:00";
+                $date = date('Y-m-d', strtotime($date . " +1 day"));
+                $dateEnd = $date . " 00:00:00";
                 $dateStart = MyDate::changeDateTimezone($dateStart, $user_timezone, $systemTimeZone);
                 $dateEnd = MyDate::changeDateTimezone($dateEnd, $user_timezone, $systemTimeZone);
                 $newWeekDayArray[] = [
-                                        'startDate' => $dateStart,
-                                        'endDate' => $dateEnd,
-                                    ];
+                    'startDate' => $dateStart,
+                    'endDate' => $dateEnd,
+                ];
             }
         }
 
@@ -217,4 +209,27 @@ class MyDate extends FatDate
         $fromDate = $fromDate ?: date('Y-m-d H:i:s');
         return round((strtotime($toDate) - strtotime($fromDate)) / 3600, $roundUpTo);
     }
+    public static function getMonthStartAndEndDate(DateTime $dateTime): array
+    {
+        return [
+            'monthStart' => $dateTime->modify('first day of this month')->format('Y-m-d'),
+            'monthEnd' => $dateTime->modify('last day of this month')->format('Y-m-d'),
+        ];
+    }
+
+    /**
+     * Time Difference In Hours
+     * @param string $date1
+     * @param string $date2
+     * @return int $hours
+     */
+    public static function timeDiffInHours($date1, $date2): int
+    {
+        $hours = round((strtotime($date2) - strtotime($date1)) / 3600, 1);
+        if ($hours < 1) {
+            return 0;
+        }
+        return $hours;
+    }
+
 }

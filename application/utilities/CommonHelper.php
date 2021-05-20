@@ -1763,4 +1763,46 @@ class CommonHelper extends FatUtility
         $iv = substr(hash('sha256', ENCRYPTION_IV), 0, 16);
         return openssl_decrypt(base64_decode($string), "AES-256-CBC", $key, 0, $iv);
     }
+    /**
+     * Can Report Issue
+     * @param string $starttime
+     * @return bool
+     */
+    public static function canReportIssue(string $starttime): bool
+    {
+        if ($starttime == '0000-00-00 00:00:00') {
+            return false;
+        }
+        $currenttime = date('Y-m-d H:i:s');
+        if (strtotime($currenttime) > strtotime($starttime)) {
+            return false;
+        }
+        $hours = MyDate::timeDiffInHours($currenttime, $starttime);
+        if ($hours >= FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Can Esclate Issue
+     * @param string $starttime
+     * @return bool
+     */
+    public static function canEsclateIssue(string $starttime): bool
+    {
+        if ($starttime == '0000-00-00 00:00:00') {
+            return false;
+        }
+        $currenttime = date('Y-m-d H:i:s');
+        if (strtotime($currenttime) > strtotime($starttime)) {
+            return false;
+        }
+        $hours = MyDate::timeDiffInHours($currenttime, $starttime);
+        if ($hours >= FatApp::getConfig('CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION')) {
+            return true;
+        }
+        return false;
+    }
+
 }

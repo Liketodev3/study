@@ -66,12 +66,10 @@ class GroupClassesController extends MyAppController
 
     public function view($grpcls_id)
     {
-        $srch = new stdClass();
         $srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
         $srch->addCondition('grpcls_id', '=', $grpcls_id);
         $srch->setPageSize(1);
-        $rs = $srch->getResultSet();
-        $classData = FatApp::getDb()->fetch($rs);
+        $classData = FatApp::getDb()->fetch($srch->getResultSet());
         if (empty($classData)) {
             FatUtility::exitWithErrorCode(404);
         }
