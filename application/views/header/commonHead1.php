@@ -8,7 +8,8 @@ if( $controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
 <head>
 <meta charset="utf-8">
 <meta name="author" content="">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0,user-scalable=0"/>
 <link rel="shortcut icon" href="<?php echo CommonHelper::generateUrl('Image','favicon', array($siteLangId)); ?>">
 <link rel="apple-touch-icon" href="<?php echo CommonHelper::generateUrl('Image','appleTouchIcon', array($siteLangId)); ?>">
 <link rel="apple-touch-icon" sizes="72x72" href="<?php echo CONF_WEBROOT_URL; ?>images/apple-touch-icon-72x72.png">
