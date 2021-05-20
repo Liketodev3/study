@@ -322,17 +322,13 @@ class ImageController extends FatController
     {
         $countryId = FatUtility::int($countryId);
         $fileRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_COUNTRY_FLAG, $countryId);
-        $imageName = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
+        $imageName = $fileRow['afile_physical_path'] ?? '';
         switch (strtoupper($sizeType)) {
             case 'THUMB':
-                $w = 100;
-                $h = 100;
-                AttachedFile::displayImage($imageName, $w, $h);
+                AttachedFile::displayImage($imageName, 100, 100);
                 break;
             case 'DEFAULT':
-                $w = 30;
-                $h = 20;
-                AttachedFile::displayImage($imageName, $w, $h);
+                AttachedFile::displayImage($imageName, 30, 20);
                 break;
             default:
                 AttachedFile::displayOriginalImage($imageName);

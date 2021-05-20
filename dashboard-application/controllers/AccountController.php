@@ -7,6 +7,7 @@ class AccountController extends LoggedUserController
     {
         parent::__construct($action);
         $this->_template->addJs('js/jquery-confirm.min.js');
+        $this->_template->addCss('css/jquery-confirm.min.css');
     }
 
     public function index()
@@ -301,6 +302,12 @@ class AccountController extends LoggedUserController
             if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)) {
                 Message::addErrorMessage($fileHandlerObj->getError());
                 FatUtility::dieJsonError(Message::getHtml());
+            }
+            if (CONF_USE_FAT_CACHE) {
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'ORIGINAL')));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM')));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'SMALL')));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId)));
             }
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', [$userId, 'ORIGINAL', 0], CONF_WEBROOT_FRONTEND) . '?' . time());
         }

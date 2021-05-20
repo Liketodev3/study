@@ -7,6 +7,19 @@ Release Date: 2021-05-19
 Updates:
     Task-83884-New Dashboard Design
 
+--------------------------------------------------------
+
+Release Number: TV-2.13.0.20210510
+
+Release Date: 2021-05-10
+
+Updates:
+
+    - Disable Paygate and Paystack in restore DB.
+    - Integrate Wiziq conferencing tool
+    - URL rewrites
+    - Open graph meta tags
+
 ---------------------------------------------------------
 
 Release Number: TV-2.12.1.20210503
