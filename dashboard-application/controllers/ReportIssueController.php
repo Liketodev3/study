@@ -123,7 +123,8 @@ class ReportIssueController extends LoggedUserController
         unset($options[ReportedIssue::ACTION_ESCLATE_TO_ADMIN]);
         $frm->addSelectBox(Label::getLabel('LBL_TAKE_ACTION'), 'reislo_action', $options)
                 ->requirements()->setRequired(true);
-        $frm->addTextArea(Label::getLabel('LBL_YOUR_COMMENT'), 'reislo_comment', '');
+        $frm->addTextArea(Label::getLabel('LBL_YOUR_COMMENT'), 'reislo_comment', '')
+                ->requirements()->setRequired(true);
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Submit'));
         return $frm;
     }
