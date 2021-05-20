@@ -1,21 +1,13 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <section class="section">
     <div class="sectionhead">
-        <h4><?php echo Label::getLabel('LBL_Issue_Detail', $adminLangId); ?></h4>
-    </div>
-    <div class="sectionbody">
-        <table class="table table--details">
-            <tbody>
-                <tr><td><h4><?php echo $issue['repiss_title']; ?></h4></td></tr>
-                <tr><td><strong><?php echo Label::getLabel('LBL_Detail'); ?>:</strong> <?php echo nl2br($issue['repiss_comment']); ?></td></tr>
-                <tr><td><strong><?php echo Label::getLabel('LBL_Current_Status'); ?>:</strong> <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?></td></tr>
-            </tbody>
-        </table>
-    </div>
-</section>
-<section class="section">
-    <div class="sectionhead">
         <h4><?php echo Label::getLabel('LBL_ISSUE_LOGS', $adminLangId); ?></h4>
+        <div>
+            <h4>
+                <?php echo Label::getLabel('LBL_ISSUE_STATUS'); ?>:</strong> 
+                <?php echo ReportedIssue::getStatusArr($issue['repiss_status']); ?>
+            </h4>  
+        </div>
     </div>
     <div class="sectionbody">
         <table class="table table--details">

@@ -19,12 +19,10 @@ class CommissionReportController extends AdminBaseController
     public function search()
     {
         $frm = $this->searchForm();
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-        if (false === $post) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_No_Record_Found', $this->adminLangId));
+        if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
+            FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
-        $page = ($page < 0) ? 1 : $page;
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $orderSearch = new OrderSearch();
         $orderSearch->joinOrderProduct();
