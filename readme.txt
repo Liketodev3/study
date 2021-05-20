@@ -1,5 +1,17 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.15.0.20210520
+
+Release Date: 2021-05-20
+
+Updates:
+    Task-83046-Amazon S3 and CDN
+    Task-84083-Wiziq
+    Task-84683-Refactored Report a problem
+    Task-81797-Volume prices lessons
+
+--------------------------------------------------------
+
 Release Number: TV-2.14.0.20210519
 
 Release Date: 2021-05-19

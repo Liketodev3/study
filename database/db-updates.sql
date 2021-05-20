@@ -333,3 +333,5 @@ ALTER TABLE `tbl_user_teach_lang_prices` ADD `ustelgpr_min_slab` INT NOT NULL AF
 ALTER TABLE `tbl_user_teach_lang_prices` ADD UNIQUE( `ustelgpr_utl_id`, `ustelgpr_slot`, `ustelgpr_min_slab`, `ustelgpr_max_slab`);
 
 ALTER TABLE `tbl_group_classes` CHANGE `grpcls_slanguage_id` `grpcls_tlanguage_id` INT(11) NOT NULL;
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.15.0.20210520' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
