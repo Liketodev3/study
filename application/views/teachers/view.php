@@ -23,7 +23,7 @@ foreach ($userTeachLangs as $key => $value) {
 			'langPrices' => []
 		];
 	}
-	$price = $value['ustelgpr_price'];
+	$price = FatUtility::float($value['ustelgpr_price']);
 	$percentage = CommonHelper::getPercentValue($value['top_percentage'], $price);
 	$price = $price - $percentage;
 	$teacherLangPrices[$slotSlabKey]['langPrices'][] = [

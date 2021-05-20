@@ -7,7 +7,6 @@ $(document).ready(function () {
 		$('.tab-ul-js li').removeClass('is-active');
 		$(this).parent('li').addClass('is-active');
 	});
-	$(document).on('change', '[name^=duration]', selectDuration);
 });
 
 (function () {
@@ -29,20 +28,6 @@ $(document).ready(function () {
 		fcom.ajax(fcom.makeUrl('Account', 'changePasswordForm'), '', function (t) {
 			$(dv).html(t);
 		});
-	};
-	
-	updateSlots = function (slotFieldObj)
-	{
-		let	slot = $(slotFieldObj).val();
-		let isChecked =  $(slotFieldObj).is(":checked");
-		let slotSection = $('.price-box-'+slot+'-js');
-		slotSection.find('.slab-price-js,.add-price-js').val('');
-		if(isChecked){
-			slotSection.removeClass('d-none');
-			$("html, body").animate({ scrollTop: slotSection.offset().top },1200);
-		}else{
-			slotSection.addClass('d-none');
-		}
 	};
 
 	getTeacherProfileProgress = function (showMessage) {
@@ -66,21 +51,21 @@ $(document).ready(function () {
 				}
 				tpp = data.teacherProfileProgress;
 				$.each(tpp, function (key, value) {
-					
+
 					switch (key) {
 
 						case 'isProfileCompleted':
-							if(value){
+							if (value) {
 								$('.is-profile-complete-js').removeClass('infobar__media-icon--alert').addClass('infobar__media-icon--tick');
 								$('.is-profile-complete-js').html('');
 								$('.aside--progress--menu').addClass('is-completed');
-							}else{
+							} else {
 								$('.is-profile-complete-js').removeClass('infobar__media-icon--tick').addClass('infobar__media-icon--alert');
 								$('.is-profile-complete-js').html('!');
-								
+
 							}
-						break;
-						
+							break;
+
 						case 'generalAvailabilityCount':
 							value = parseInt(value);
 							if (0 >= value) {
@@ -89,12 +74,12 @@ $(document).ready(function () {
 							} else {
 								$('.general-availability-js').parent('li').addClass('is-completed');
 								$('.availability-setting-js').addClass('is-completed');
-								
+
 							}
 							break;
 						// case 'userCountryId':
 						case 'userProfile':
-							
+
 							// case 'userTimeZone':
 							value = parseInt(value);
 							if (0 >= value) {
@@ -147,14 +132,14 @@ $(document).ready(function () {
 							}
 							value = tpp.totalFilledFields + "/" + tpp.totalFields;
 							$('.progress-count-js').text(value);
-							if((parseInt(tpp.isProfileCompleted) == 1) || (parseInt(tpp.totalFilledFields) == (parseInt(tpp.totalFields) - 1) &&  parseInt(tpp.generalAvailabilityCount) == 0)){
+							if ((parseInt(tpp.isProfileCompleted) == 1) || (parseInt(tpp.totalFilledFields) == (parseInt(tpp.totalFields) - 1) && parseInt(tpp.generalAvailabilityCount) == 0)) {
 								$('.profile-setting-js').addClass('is-completed');
-							}else{
+							} else {
 								$('.profile-setting-js').removeClass('is-completed');
 							}
-							
+
 							break;
-						
+
 					}
 				});
 			}
@@ -173,7 +158,7 @@ $(document).ready(function () {
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher', 'bankInfoForm'), '', function (t) {
 			$(dv).html(t);
-		
+
 		});
 	};
 
@@ -254,8 +239,8 @@ $(document).ready(function () {
 			if (userIsTeacher) {
 				getTeacherProfileProgress();
 			}
-			
-			if(gotoProfileImageForm){
+
+			if (gotoProfileImageForm) {
 				$('.profile-imag-li').click();
 			}
 			// else{
@@ -283,14 +268,14 @@ $(document).ready(function () {
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function (t) {
 			//$.mbsmessage.close();
 			$.loader.hide();
-			if(goAvailablityForm) {
+			if (goAvailablityForm) {
 				$('.general-availability-js').trigger('click');
 				window.location = fcom.makeUrl('Teacher', 'availability');
-			}else if(userIsTeacher){
+			} else if (userIsTeacher) {
 				getTeacherProfileProgress();
 			}
-			
-			
+
+
 		});
 	};
 
@@ -345,16 +330,14 @@ $(document).ready(function () {
 		jQuery.grep(newTeachLangs, function (el) {
 			if (jQuery.inArray(el, teachLangs) == -1) difference.push(el);
 		});
-		
+
 		if (difference.length <= 0) {
 			$.loader.show();
 			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
-				//$.mbsmessage.close();
-				// teacherLanguagesForm();
 				$.loader.hide();
-				if(goToPriceForm){
+				if (goToPriceForm) {
 					$('.teacher-tech-lang-price-js').trigger('click');
-				}else{
+				} else {
 					getTeacherProfileProgress();
 				}
 			});
@@ -398,62 +381,54 @@ $(document).ready(function () {
 
 	changeProficiency = function (obj, langId) {
 		langId = parseInt(langId);
-		if(langId <= 0){
+		if (langId <= 0) {
 			return;
 		}
 		let value = obj.value;
-		slanguageSection = '.slanguage-'+langId;
-		slanguageCheckbox = '.slanguage-checkbox-'+langId;
-		if(value == ''){
+		slanguageSection = '.slanguage-' + langId;
+		slanguageCheckbox = '.slanguage-checkbox-' + langId;
+		if (value == '') {
 			$(slanguageSection).find('.badge-js').remove();
 			$(slanguageSection).removeClass('is-selected');
-			$(slanguageCheckbox).prop('checked',false);
-		}else{
+			$(slanguageCheckbox).prop('checked', false);
+		} else {
 			$(slanguageSection).addClass('is-selected');
-			$(slanguageCheckbox).prop('checked',true);
+			$(slanguageCheckbox).prop('checked', true);
 			$(slanguageSection).find('.badge-js').remove();
-			$(slanguageSection).find('.selection__trigger-label').append('<span class="badge color-secondary badge-js  badge--round badge--small margin-0">'+obj.selectedOptions[0].innerHTML+'</span>');
+			$(slanguageSection).find('.selection__trigger-label').append('<span class="badge color-secondary badge-js  badge--round badge--small margin-0">' + obj.selectedOptions[0].innerHTML + '</span>');
 		}
 	};
 
 
 	teacherSettingsForm = function (showAdminSlab) {
 		$(dv).html(fcom.getLoader());
-		showAdminSlab =  (showAdminSlab) ? 1 : 0;
-		data = "showAdminSlab="+showAdminSlab;
+		showAdminSlab = (showAdminSlab) ? 1 : 0;
+		data = "showAdminSlab=" + showAdminSlab;
 		fcom.ajax(fcom.makeUrl('Teacher', 'settingsInfoForm'), data, function (t) {
 			$(dv).html(t);
-			selectDuration();
 			if (userIsTeacher) {
 				getTeacherProfileProgress();
 			}
 		});
 	};
 
-	selectDuration = function () {
-		$('[name^=duration]').each((i, fld) => {
-			if ($(fld).is(':checked')) {
-				$('input[name^="utl_single_lesson_amount["][name*="][' + fld.value + ']').closest('.fld_wrapper-js').show();
-				$('input[name^="utl_bulk_lesson_amount["][name*="][' + fld.value + ']').closest('.fld_wrapper-js').show();
-			} else {
-				$('input[name^="utl_single_lesson_amount["][name*="][' + fld.value + ']').closest('.fld_wrapper-js').hide();
-				$('input[name^="utl_bulk_lesson_amount["][name*="][' + fld.value + ']').closest('.fld_wrapper-js').hide();
-
-				$('input[name^="utl_single_lesson_amount["][name*="][' + fld.value + ']').val('0.00');
-				$('input[name^="utl_bulk_lesson_amount["][name*="][' + fld.value + ']').val('0.00');
-			}
-		});
-	};
-
 	setUpTeacherSettings = function (frm, goToExpForm) {
-		if (!$(frm).validate()) return;
+		if (!$(frm).validate()) {
+			$('.price-box__body').removeClass('d-none');
+			$('.price-box .arrow-toggle').addClass('is-active');
+			let errorlist = $('.errorlist').first().parents('.price-box');
+			$("html, body").animate({
+                scrollTop: errorlist.offset().top
+            }, 1200);
+			return;
+		}
 		var data = fcom.frmData(frm);
 		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpSettings'), data, function (t) {
 			$.loader.hide();
-			if(goToExpForm){
+			if (goToExpForm) {
 				$('.teacher-qualification-js').trigger('click');
-			}else{
+			} else {
 				getTeacherProfileProgress();
 			}
 		});
@@ -636,18 +611,18 @@ $(document).ready(function () {
 						userSeoUrl = userSeoBaseUrl + userData.user_url_name;
 						updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
 					}
-						
+
 					$.mbsmessage(json.msg, true, 'alert alert--success');
-					if(goToLangForm && $('.profile-lang-li').length > 0){
+					if (goToLangForm && $('.profile-lang-li').length > 0) {
 						$('.profile-lang-li').first().click();
-					}else{
+					} else {
 						profileImageForm();
 					}
 				} else {
 					$.mbsmessage(json.msg, true, 'alert alert--danger');
 					return false;
 				}
-				
+
 			}
 		});
 	};
@@ -761,16 +736,16 @@ $(document).ready(function () {
 		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileLangInfo'), data, function (t) {
 			$.loader.hide();
-			if(!gotToNextLangForm) {
+			if (!gotToNextLangForm) {
 				if (t.langId > 0) {
 					getLangProfileInfoForm(t.langId);
 					return;
 				}
 			}
-			else if($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0){
+			else if ($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0) {
 				$('.profile-lang-tab.is-active').next('.profile-lang-tab').find('a').click();
 			}
-			
+
 		});
 	};
 

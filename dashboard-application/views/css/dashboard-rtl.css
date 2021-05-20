@@ -2975,17 +2975,33 @@ strong.span-right {
               align-items: flex-start; }
       .price-box__head .common-slot-price {
         margin-top: 10px; } }
-  .price-box__head:before {
-    content: "";
-    border-right: 6px solid transparent;
-    border-left: 6px solid transparent;
-    border-top: 7px solid var(--color-gray-600);
-    left: 22px;
+  .price-box__head .arrow-toggle {
+    position: absolute;
+    left: 0;
     top: 50%;
-    -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-            transform: translateY(-50%);
-    position: absolute; }
+    -webkit-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+            transform: translate(0, -50%);
+    width: 40px;
+    height: 40px;
+    cursor: pointer; }
+    .price-box__head .arrow-toggle:before {
+      content: "";
+      border-right: 6px solid transparent;
+      border-left: 6px solid transparent;
+      border-top: 7px solid var(--color-gray-600);
+      left: 22px;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+          -ms-transform: translateY(-50%);
+              transform: translateY(-50%);
+      position: absolute; }
+    .price-box__head .arrow-toggle.is-active:before {
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid var(--color-gray-600);
+      -webkit-transform: translateY(-70%);
+          -ms-transform: translateY(-70%);
+              transform: translateY(-70%); }
 
 .slab-wrapper {
   margin-bottom: 20px; }

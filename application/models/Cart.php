@@ -257,7 +257,7 @@ class Cart extends FatModel
                 $itemName = str_replace('{qty}', $lessonQty, $title);
 
                 if (!empty($teacher['offerPercentage'])) {
-                    $percentage = CommonHelper::getPercentValue($teacher['offerPercentage'], $teacher['ustelgpr_price']);
+                    $percentage = CommonHelper::getPercentValue($teacher['offerPercentage'],  FatUtility::float($teacher['ustelgpr_price']));
                     $itemPrice =  $teacher['ustelgpr_price'] - $percentage;
                 }
                 $totalPrice = $itemPrice * $lessonQty;

@@ -983,9 +983,9 @@ class CommonHelper extends FatUtility
         return empty(trim($value)) ? '-' : $value;
     }
 
-    public static function getPlaceholderForAmtField($langId)
+    public static function getPlaceholderForAmtField()
     {
-        return Label::getLabel('Lbl_Amount_in', $langId) . ' ' . static::concatCurrencySymbolWithAmtLbl();
+        return self::$_currency_symbol_left.'0.00'.self::$_currency_symbol_right;
     }
 
     public static function concatCurrencySymbolWithAmtLbl()

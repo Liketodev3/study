@@ -200,7 +200,8 @@ class TeachersController extends MyAppController
         } else {
             $getUserTeachLanguages->addFld('0 as top_percentage');
         }
-
+        $getUserTeachLanguages->addCondition('ustelgpr_price', '>', 0);
+        $getUserTeachLanguages->addCondition('ustelgpr_min_slab', '>', 0);
         $userTeachlanguages = FatApp::getDb()->fetchAll($getUserTeachLanguages->getResultSet());
         // prx($userTeachlanguages);
 

@@ -209,9 +209,15 @@ class TeacherController extends TeacherBaseController
                 continue;
             }
 
+            if(empty($post['ustelgpr_price'])){
+                continue;
+            }
             $slabs = $post['ustelgpr_price'][$duration];
 
             foreach ($slabs as $slabKey => $languages) {
+                if(empty($languages)){
+                    continue;
+                }
                 $slabAarray = explode('-',$slabKey);
                 /*$slabAarray[0] == minslab , $slabAarray[1] == maxslab */
                 foreach ($languages as $userTeachLangang => $price) {

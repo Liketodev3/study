@@ -485,16 +485,25 @@ $sale-stat__count: "sale-stat__count";
             }
         }
     }
-    &:before{
-        content: "";
-        border-#{theme('direction.left','value')}: 6px solid transparent;
-        border-#{theme('direction.right','value')}: 6px solid transparent; 
-        border-top: 7px solid var(--color-gray-600);
-        #{theme('direction.right','value')}: 22px;
-        top: 50%;
-        transform: translateY(-50%);
-        position: absolute;
+    
+    .arrow-toggle{position: absolute; #{theme('direction.right','value')}: 0; top:50%;transform: translate(0,-50%); width: 40px; height: 40px; cursor: pointer;
+        &:before{
+            content: "";
+            border-#{theme('direction.left','value')}: 6px solid transparent;
+            border-#{theme('direction.right','value')}: 6px solid transparent; 
+            border-top: 7px solid var(--color-gray-600);
+            #{theme('direction.right','value')}: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            position: absolute;
+        }
+        &.is-active:before{
+          border-top: 7px solid transparent; border-bottom: 7px solid var(--color-gray-600);
+          transform: translateY(-70%);
+          
+        }
     }
+
 }
 
  

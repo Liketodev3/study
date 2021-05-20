@@ -40,7 +40,7 @@ $maxValue = max(array_column($slabs, 'ustelgpr_max_slab', 'ustelgpr_max_slab'));
 		<ul>
 			<?php
 			foreach ($slabs as $slab) {
-				$price = $slab['ustelgpr_price'];
+				$price =  FatUtility::float($slab['ustelgpr_price']);
 				$percentage = CommonHelper::getPercentValue($slab['top_percentage'], $price);
 				$price = $price - $percentage;
 				$title = Label::getLabel('LBL_{min}_to_{max}_Lesson(s)');
