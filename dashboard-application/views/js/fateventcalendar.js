@@ -66,12 +66,14 @@ var FatEventCalendar = function (teacherId) {
     };
 
     isColliding = function (div1, div2) {
-
         let d1ffset = div1.offset();
         let d1Top = d1ffset.top + div1.outerHeight(true);
 
         let d2ffset = div2.offset();
         let d2Top = d2ffset.top + div2.outerHeight(true);
+
+        console.log(d1ffset.top, d2ffset.top, d1Top, d2Top);
+        console.log((d1ffset.top <= d2ffset.top && d1Top >= d2Top));
         return (d1ffset.top <= d2ffset.top && d1Top >= d2Top);
     };
 
@@ -166,10 +168,10 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
                 return false;
             }
 
-            if(!isColliding($(slotAvailableEl).parent(), $(arg.jsEvent.target))){
-                calendar.unselect();
-                return false;
-            }
+            // if(!isColliding($(slotAvailableEl).parent(), $(arg.jsEvent.target))){
+            //     calendar.unselect();
+            //     return false;
+            // }
 
             jQuery('body #d_calendar .closeon').click();
             jQuery("#loaderCalendar").show();
@@ -310,6 +312,7 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
     var calConf = {
         selectable: true,
         editable: true,
+        slotEventOverlap: false,
         now: current_time,
         headerToolbar: {
             left: 'time',
@@ -319,11 +322,7 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
         eventSources: [
             {
                 url: fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData', [this.teacherId], confFrontEndUrl),
-                method: 'POST',
-                success: function (docs) {
-                    // console.log(doc);
-
-                }
+                method: 'POST'
             }
         ],
         select: function (arg) {
@@ -370,15 +369,22 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
             var start = info.event.start;
             var end = info.event.end;
             var events = calendar.getEvents();
+            console.log(info);
+            console.log(events);
             for (i in events) {
+                if(events[i]._instance.instanceId == info.oldEvent._instance.instanceId && events[i]._instance.defId == info.oldEvent._instance.defId){
+                    continue;
+                }
 
                 if ( moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
 
                     if(moment(start) > moment(events[i].start)){
+                        start  = events[i].start;
                         info.event.setStart(events[i].start);
                     }
     
                     if(moment(end) < moment(events[i].end)){
+                        end = events[i].end;
                         info.event.setEnd(events[i].end);
                     }
                     events[i].remove();
@@ -419,7 +425,6 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function (current_time) 
                 url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [this.teacherId], confFrontEndUrl),
                 method: 'POST',
                 success: function (docs) {
-                    // console.log(doc);
                     for (i in docs) {
                         docs[i].overlap = false;
                         docs[i].extendedProps = {};
@@ -491,6 +496,11 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function (current_time) 
             var end = info.event.end;
             var events = calendar.getEvents();
             for (i in events) {
+                
+                if(events[i]._instance.instanceId == info.oldEvent._instance.instanceId && events[i]._instance.defId == info.oldEvent._instance.defId){
+                    continue;
+                }
+
                 if ( moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
                     if(moment(start) > moment(events[i].start)){
                         info.event.setStart(events[i].start);
