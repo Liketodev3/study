@@ -6,7 +6,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
     public function __construct($action)
     {
         parent::__construct($action);
-        $this->_template->addJs('js/jquery-confirm.min.js');
+        // $this->_template->addJs('js/jquery-confirm.min.js');
     }
 
     public function index($classType = '')
