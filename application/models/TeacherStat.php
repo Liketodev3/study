@@ -70,7 +70,7 @@ class TeacherStat extends FatModel
     public function setTeachLangPrices()
     {
         $srch = new SearchBase('tbl_user_teach_languages');
-        $srch->addCondition('utl_us_user_id', '=', $this->userId);
+        $srch->addCondition('utl_user_id', '=', $this->userId);
         $srch->addFld('MIN(utl_bulk_lesson_amount) AS bulkMinPrice');
         $srch->addFld('MAX(utl_bulk_lesson_amount) AS bulkMaxPrice');
         $srch->addFld('MIN(utl_single_lesson_amount) AS signleMinPrice');

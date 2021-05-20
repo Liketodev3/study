@@ -184,7 +184,7 @@ class Cart extends FatModel
             $cnd2 = ' AND top_lesson_duration=' . $lessonDuration;
             $slotDurationActive = (in_array($lessonDuration, CommonHelper::getPaidLessonDurations()));
         }
-        $teacherSrch->joinTable("tbl_user_teach_languages", 'INNER JOIN', 'utl_us_user_id = ' . $teacher_id . ' AND utl_slanguage_id = ' . $languageId . $cnd, 'utl');
+        $teacherSrch->joinTable("tbl_user_teach_languages", 'INNER JOIN', 'utl_user_id = ' . $teacher_id . ' AND utl_slanguage_id = ' . $languageId . $cnd, 'utl');
         /* find, if have added any offer price is locked with this teacher[ */
         $teacherSrch->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top_teacher_id = user_id AND top_learner_id = ' . $this->cart_user_id . $cnd2, 'top');
         /* ] */

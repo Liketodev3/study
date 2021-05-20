@@ -223,7 +223,7 @@ class TeacherGroupClassesSearch extends SearchBase
         /* teachLanguage[ */
         if ($langCheck) {
             $tlangSrch = $this->getMyTeachLangQry();
-            $this->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_us_user_id', 'utls');
+            $this->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_user_id', 'utls');
         }
         /* ] */
         /* qualification/experience[ */

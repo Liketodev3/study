@@ -62,7 +62,7 @@ class CartController extends MyAppController
                 FatUtility::dieJsonError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
             }
         }
-        $teacherBookingBefore = current(UserSetting::getUserSettings($teacher_id))['us_booking_before'];
+        $teacherBookingBefore = UserSetting::getUserSettings($teacher_id)['us_booking_before'];
         if ('' == $teacherBookingBefore) {
             $teacherBookingBefore = 0;
         }

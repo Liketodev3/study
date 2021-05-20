@@ -491,7 +491,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError($sLessonObj->getError());
         }
         // remove from teacher google calendar
-        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        $token = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId())['us_google_access_token'];
         if ($token) {
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
@@ -580,7 +580,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError($sLessonObj->getError());
         }
         // remove from teacher google calendar
-        $token = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()))['us_google_access_token'];
+        $token = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId())['us_google_access_token'];
         if ($token) {
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');

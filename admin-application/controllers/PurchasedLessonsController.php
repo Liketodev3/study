@@ -391,7 +391,7 @@ class PurchasedLessonsController extends AdminBaseController
                 FatUtility::dieJsonError($sLessonObj->getError());
             }
             // remove from teacher google calendar
-            $token = current(UserSetting::getUserSettings($sLessonObj->getFldValue('slesson_teacher_id')))['us_google_access_token'];
+            $token = UserSetting::getUserSettings($sLessonObj->getFldValue('slesson_teacher_id'))['us_google_access_token'];
             if ($token) {
                 $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
                 if ($oldCalId) {

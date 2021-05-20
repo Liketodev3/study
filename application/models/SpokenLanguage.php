@@ -78,7 +78,7 @@ class SpokenLanguage extends MyAppModel
         $spokenLangSrch = new SpokenLanguageSearch($langId);
         $spokenLangSrch->addChecks();
         $spokenLangSrch->joinActiveTeachers();
-        $spokenLangSrch->addMultiplefields(['slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name', 'count(DISTINCT utl_us_user_id) as teacherCount']);
+        $spokenLangSrch->addMultiplefields(['slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name', 'count(DISTINCT utl_user_id) as teacherCount']);
         $spokenLangSrch->addGroupBy('utl_slanguage_id');
         $spokenLangSrch->addCondition('user_is_teacher', '=', 1);
         $spokenLangSrch->addCondition('user_country_id', '>', 0);

@@ -253,16 +253,18 @@ class User extends MyAppModel
         /* ] */
         /* teachLanguage[ */
         $tlangSrch = new SearchBase(UserToLanguage::DB_TBL_TEACH, 'utl');
-        $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utl_slanguage_id', 'tl');
-        $tlangSrch->addMultipleFields(['utl_us_user_id', 'utl_id']);
+        $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utl_tlanguage_id', 'tl');
+        $tlangSrch->addMultipleFields(['utl_user_id', 'utl_id']);
         $tlangSrch->doNotCalculateRecords();
         $tlangSrch->doNotLimitRecords();
-        $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);
-        $tlangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
-        $tlangSrch->addCondition('utl_slanguage_id', '>', 0);
-        $tlangSrch->addCondition('utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
+        /* @todo */
+        // $tlangSrch->addCondition('utl_single_lesson_amount', '>', 0);
+        // $tlangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
+        $tlangSrch->addCondition('utl_tlanguage_id', '>', 0);
+         /* @todo */
+        // $tlangSrch->addCondition('utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
         $tlangSrch->addCondition('tlanguage_active', '=', applicationConstants::YES);
-        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utl_us_user_id', 'utls');
+        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utl_user_id', 'utls');
         /* ] */
         $srch->joinTable(TeacherGeneralAvailability::DB_TBL, 'LEFT JOIN', 'user_id = tgavl_user_id', 'tga');
         $srch->addGroupBy('user_id');

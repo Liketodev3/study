@@ -78,7 +78,7 @@ class TeachingLanguage extends MyAppModel
         $teachingLangSrch = new TeachingLanguageSearch($langId);
         $teachingLangSrch->addChecks();
         $teachingLangSrch->joinActiveTeachers();
-        $teachingLangSrch->addMultiplefields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name', 'count(DISTINCT utl_us_user_id) as teacherCount']);
+        $teachingLangSrch->addMultiplefields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name', 'count(DISTINCT utl_user_id) as teacherCount']);
         $teachingLangSrch->addGroupBy('utl_slanguage_id');
         $teachingLangSrch->addCondition('user_is_teacher', '=', 1);
         $teachingLangSrch->addCondition('user_country_id', '>', 0);
