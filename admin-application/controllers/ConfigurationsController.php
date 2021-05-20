@@ -511,10 +511,10 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addHtml('', 'report_issue', '<h3>' . Label::getLabel('LBL_Report/Esclate_Issue_Time', $this->adminLangId) . '</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION", $this->adminLangId), "CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION");
                 $fld->requirements()->setIntPositive();
-                $fld->requirements()->setRange(0, 100);
+                $fld->requirements()->setRange(0, 168);
                 $fld = $frm->addTextBox(Label::getLabel("CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION", $this->adminLangId), "CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION");
                 $fld->requirements()->setIntPositive();
-                $fld->requirements()->setRange(0, 100);
+                $fld->requirements()->setRange(0, 168);
 
                 $frm->addHtml('', 'Grpcls', '<h3>' . Label::getLabel('LBL_Group_Class', $this->adminLangId) . '</h3>');
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Cancellation_Refund_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_CLASS_REFUND_PERCENTAGE");

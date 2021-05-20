@@ -137,7 +137,7 @@ class ReportedIssuesController extends AdminBaseController
         $repissId->requirements()->setIntPositive();
         $options = ReportedIssue::getActionsArr();
         $frm->addSelectBox(Label::getLabel('LBL_TAKE_ACTION', $this->adminLangId), 'reislo_action', $options)->requirements()->setRequired();
-        $frm->addTextArea(Label::getLabel('LBL_ADMIN_COMMENT'), 'reislo_comment', '');
+        $frm->addTextArea(Label::getLabel('LBL_ADMIN_COMMENT'), 'reislo_comment', '')->requirements()->setRequired();
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
         return $frm;
     }

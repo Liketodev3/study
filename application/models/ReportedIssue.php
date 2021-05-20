@@ -46,6 +46,11 @@ class ReportedIssue extends MyAppModel
      */
     public function setupIssue(int $sldetailId, int $titleId, string $comment): bool
     {
+        $db = FatApp::getDb();
+        if (!$db->startTransaction()) {
+            $this->error = Label::getLabel('LBL_PLEASE_TRY_AGAIN');
+            return false;
+        }
         $options = IssueReportOptions::getOptionsArray($this->commonLangId, User::USER_TYPE_LEANER);
         $this->setFldValue('repiss_status', static::STATUS_PROGRESS);
         $this->assignValues([
@@ -56,6 +61,16 @@ class ReportedIssue extends MyAppModel
             'repiss_title' => $options[$titleId] ?? 'NA'
         ]);
         if (!$this->save()) {
+            $db->rollbackTransaction();
+            return false;
+        }
+        if (!$this->sendUserNotification($this->getMainTableRecordId())) {
+            $db->rollbackTransaction();
+            return false;
+        }
+        if (!$db->commitTransaction()) {
+            $this->error = Label::getLabel('LBL_PLEASE_TRY_AGAIN');
+            $db->rollbackTransaction();
             return false;
         }
         return true;
@@ -137,6 +152,10 @@ class ReportedIssue extends MyAppModel
                 return false;
             }
         }
+        if (!$this->sendUserNotification($this->getMainTableRecordId())) {
+            $db->rollbackTransaction();
+            return false;
+        }
         if (!$db->commitTransaction()) {
             $this->error = Label::getLabel('LBL_PLEASE_TRY_AGAIN');
             $db->rollbackTransaction();
@@ -184,6 +203,9 @@ class ReportedIssue extends MyAppModel
                 $this->error = $oprod->getError();
                 return false;
             }
+            if (!$this->sendRefundNotification($issue['sldetail_learner_id'], $issue['slesson_id'])) {
+                return false;
+            }
             return true;
         }
         if ($percent == 50) {
@@ -224,6 +246,82 @@ class ReportedIssue extends MyAppModel
                 $this->error = $oprod->getError();
                 return false;
             }
+            if (!$this->sendRefundNotification($issue['sldetail_learner_id'], $issue['slesson_id'])) {
+                return false;
+            }
+            $record = new UserNotifications($issue['slesson_teacher_id']);
+            if (!$record->sendWalletCreditNotification($issue['slesson_id'])) {
+                $this->error = $record->getError();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function sendRefundNotification($userId, $lessonId)
+    {
+        $record = new UserNotifications($userId);
+        $record->sendNotifcationMetaData(UserNotifications::NOTICATION_FOR_ISSUE_REFUNDED, $lessonId);
+        $title = Label::getLabel("LBL_REFUND_GRANTED_FOR_ISSUE_TITLE");
+        $description = Label::getLabel("LBL_REFUND_GRANTED_FOR_ISSUE_DESCRIPTION");
+        if (!$record->addNotification($title, $description)) {
+            $this->error = $record->getError();
+            return false;
+        }
+        return true;
+    }
+
+    private function sendUserNotification($issueId)
+    {
+        $srch = new SearchBase(ScheduledLessonDetails::DB_TBL, 'sldetail');
+        $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_id=sldetail.sldetail_slesson_id', 'slesson');
+        $srch->joinTable(ReportedIssue::DB_TBL, 'INNER JOIN', 'repiss.repiss_sldetail_id=sldetail.sldetail_id', 'repiss');
+        $srch->addMultipleFields(['repiss_status', 'slesson_id', 'slesson_teacher_id', 'sldetail_learner_id']);
+        $srch->addCondition('repiss.repiss_id', '=', $issueId);
+        $srch->doNotCalculateRecords();
+        $row = FatApp::getDb()->fetch($srch->getResultSet());
+        if (empty($row)) {
+            $this->error = Label::getLabel('LBL_INVALID_REQUEST');
+            return false;
+        }
+        $userId = 0;
+        $notiType = 0;
+        $title = '';
+        $description = '';
+        switch ($row['repiss_status']) {
+            case static::STATUS_PROGRESS:
+                $userId = $row['slesson_teacher_id'];
+                $notiType = UserNotifications::NOTICATION_FOR_ISSUE_REPORTED;
+                $title = Label::getLabel('LBL_ISSUE_REPORTED_NOTIFICATION_TITLE');
+                $description = Label::getLabel('LBL_ISSUE_REPORTED_NOTIFICATION_DETAIL');
+                break;
+            case static::STATUS_RESOLVED:
+                $userId = $row['sldetail_learner_id'];
+                $notiType = UserNotifications::NOTICATION_FOR_ISSUE_RESOLVED;
+                $title = Label::getLabel('LBL_ISSUE_RESOLVED_NOTIFICATION_TITLE');
+                $description = Label::getLabel('LBL_ISSUE_RESOLVED_NOTIFICATION_DETAIL');
+                break;
+            case static::STATUS_ESCLATED:
+                $userId = $row['slesson_teacher_id'];
+                $notiType = UserNotifications::NOTICATION_FOR_ISSUE_ESCLATED;
+                $title = Label::getLabel('LBL_ISSUE_ESCLATED_NOTIFICATION_TITLE');
+                $description = Label::getLabel('LBL_ISSUE_ESCLATED_NOTIFICATION_DETAIL');
+                break;
+            case static::STATUS_CLOSED:
+                $userId = $row['sldetail_learner_id'];
+                $notiType = UserNotifications::NOTICATION_FOR_ISSUE_CLOSED;
+                $title = Label::getLabel('LBL_ISSUE_CLOSED_NOTIFICATION_TITLE');
+                $description = Label::getLabel('LBL_ISSUE_CLOSED_NOTIFICATION_DETAIL');
+                break;
+            default :
+                $this->error = Label::getLabel('LBL_INVALID_REQUEST');
+                return false;
+        }
+        $record = new UserNotifications($userId);
+        $record->sendNotifcationMetaData($notiType, $row['slesson_id']);
+        if (!$record->addNotification($title, $description)) {
+            $this->error = $record->getError();
+            return false;
         }
         return true;
     }
