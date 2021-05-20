@@ -162,4 +162,11 @@ class DummyController extends MyAppController
             die;
         }
     }
+
+    public function index()
+    {
+//        var_dump(ReportedIssue::resolvedIssueSettlement());
+//        var_dump(ReportedIssue::completedLessonSettlement());
+    }
+
 }

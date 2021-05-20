@@ -29,32 +29,26 @@ class TeacherGroupClassesSearch extends SearchBase
         $srch2->addDirectCondition('slesson_grpcls_id=grpcls_id');
         $srch2->doNotLimitRecords(true);
         $srch2->doNotCalculateRecords(true);
-        
-        $addFlds && $srch->addMultipleFields(
-            [
-                'user_id',
-                'user_first_name',
-                'user_last_name',
-                'CONCAT(user_first_name," ", user_last_name) as user_full_name',
-                'user_url_name',
-                'user_timezone as teacher_timezone',
-                'grpcls_id',
-                'grpcls_slanguage_id',
-                'grpcls_teacher_id',
-                'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
-                'IFNULL(grpclslang_grpcls_description,grpcls_description) as grpcls_description',
-                'grpcls_entry_fee',
-                'grpcls_start_datetime',
-                'grpcls_end_datetime',
-                'grpcls_max_learner',
-                'grpcls_status',
-                'grpcls_added_on',
-                'IFNULL(tlanguage_name, tlanguage_identifier) as teacher_language',
-                // 'count(DISTINCT sldetail_learner_id) as total_learners'
-                '(' . $srch2->getQuery() . ') as total_learners'
-            ]
-        );
-
+        $addFlds && $srch->addMultipleFields(['user_id',
+            'user_first_name',
+            'user_last_name',
+            'CONCAT(user_first_name," ", user_last_name) as user_full_name',
+            'user_url_name',
+            'user_timezone as teacher_timezone',
+            'grpcls_id',
+            'grpcls_tlanguage_id',
+            'grpcls_teacher_id',
+            'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
+            'IFNULL(grpclslang_grpcls_description,grpcls_description) as grpcls_description',
+            'grpcls_entry_fee',
+            'grpcls_start_datetime',
+            'grpcls_end_datetime',
+            'grpcls_max_learner',
+            'grpcls_status',
+            'grpcls_added_on',
+            'IFNULL(tlanguage_name, tlanguage_identifier) as teacher_language',
+            '(' . $srch2->getQuery() . ') as total_learners',
+        ]);
         if (UserAuthentication::isUserLogged()) {
             $user_id = UserAuthentication::getLoggedUserId();
             $addFlds && $srch->addFld('(SELECT IF(sldetail_id>0, 1, 0) FROM `tbl_scheduled_lesson_details` INNER JOIN `tbl_scheduled_lessons` ON slesson_id=sldetail_slesson_id  WHERE slesson_grpcls_id=grpcls_id AND sldetail_learner_status='.ScheduledLesson::STATUS_SCHEDULED.' AND sldetail_learner_id='.$user_id.' LIMIT 1) is_in_class');
@@ -111,15 +105,10 @@ class TeacherGroupClassesSearch extends SearchBase
     {
         $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
     }
-
-    function joinIssueReported($user_id = 0)
-    {
-        $this->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = sl.slesson_id' . ($user_id > 0 ? ' AND issrep_reported_by=' . $user_id : ''), 'iss');
-    }
-
+    
     public function joinClassLang($langId = 0)
     {
-        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'grpcls.grpcls_slanguage_id = tlanguage_id', 'teachl');
+        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'grpcls.grpcls_tlanguage_id = tlanguage_id', 'teachl');
         $langId = FatUtility::int($langId);
         if ($langId > 0) {
             $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'teachl.tlanguage_id = teachl_lang.tlanguagelang_tlanguage_id AND teachl_lang.tlanguagelang_lang_id = ' . $langId, 'teachl_lang');

@@ -5,8 +5,7 @@
 	} ?>
 
 <?php $this->includeTemplate( 'home/_partial/homePageHowItWorks.php' ); ?>
-<?php /* $this->includeTemplate( 'home/_partial/upcomingScheduledLessons.php' ); */ ?>
 <?php $this->includeTemplate( 'home/_partial/homePageSlidesAboveFooter.php' ); ?>
 
-<?php $this->includeTemplate( 'home/_partial/topRatedTeachers.php' ); ?>
+<?php $this->includeTemplate( 'home/_partial/topRatedTeachers.php' );?>
 <?php $this->includeTemplate( 'home/_partial/newsLetterFrm.php',array('newsLetterForm' => $newsLetterForm, 'siteLangId' => $siteLangId) ); ?>

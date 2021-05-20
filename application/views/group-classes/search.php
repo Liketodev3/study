@@ -80,7 +80,7 @@
                 <?php elseif( $class['grpcls_status']!=TeacherGroupClasses::STATUS_ACTIVE): ?>
                 <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Class_Not_active') ?>" class="btn btn--gray btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                 <?php else: ?>
-                <a href="javascript:void(0);"  onClick="cart.add( '<?php echo $class['grpcls_teacher_id']; ?>', '0', '','','<?php echo $class['grpcls_slanguage_id']; ?>', '<?php echo $class['grpcls_id'] ?>' )" class="btn btn--primary btn--medium"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
+                <a href="javascript:void(0);"  onClick="cart.addGroupClass( '<?php echo $class['grpcls_teacher_id']; ?>','<?php echo $class['grpcls_id'] ?>' )" class="btn btn--primary btn--medium"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                 <?php endif; ?>
                 </div>
             </div>

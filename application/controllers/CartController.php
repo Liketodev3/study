@@ -1,6 +1,6 @@
 <?php
 
-class CartController extends MyAppController
+class CartController extends LoggedUserController
 {
 
     public function __construct($action)
@@ -10,88 +10,84 @@ class CartController extends MyAppController
 
     public function add()
     {
-        if (!UserAuthentication::isUserLogged()) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Please_login_to_book'));
-        }
-        $post = FatApp::getPostedData();
+        $addToCartForm = $this->addToCartForm();
+        $post = $addToCartForm->getFormDataFromArray(FatApp::getPostedData());
+
         if (false == $post) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+            FatUtility::dieJsonError(current($addToCartForm->getValidationErrors()));
         }
+     
         /* [ */
-        $startDateTime = FatApp::getPostedData('startDateTime', FatUtility::VAR_STRING, '');
-        $endDateTime = FatApp::getPostedData('endDateTime', FatUtility::VAR_STRING, '');
-        $weekStart = FatApp::getPostedData('weekStart', FatUtility::VAR_STRING, '');
-        $weekEnd = FatApp::getPostedData('weekEnd', FatUtility::VAR_STRING, '');
-        $lessonDuration = FatApp::getPostedData('lessonDuration', FatUtility::VAR_INT, 0);
+        $grpclsId = $post['grpclsId'];
+        $lessonQty = $post['lessonQty'];
+        $teacherId = $post['teacherId'];
+        $isFreeTrial = $post['isFreeTrial'];
+        $languageId = $post['languageId'];
+        $endDateTime = $post['endDateTime'];
+        $startDateTime = $post['startDateTime'];
+        $lessonDuration =  FatApp::getPostedData('lessonDuration', FatUtility::VAR_INT, 0);
+        
         /* ] */
-        $grpclsId = FatApp::getPostedData('grpcls_id', FatUtility::VAR_INT, 0);
-        $teacher_id = FatApp::getPostedData('teacher_id', FatUtility::VAR_INT, 0);
-        $lpackageId = FatApp::getPostedData('lpackageId', FatUtility::VAR_INT, 0);
-        $languageId = FatApp::getPostedData('languageId', FatUtility::VAR_INT, 1);
-        if ($teacher_id == UserAuthentication::getLoggedUserId()) {
+        $loggedUserId = UserAuthentication::getLoggedUserId();
+        if ($teacherId == $loggedUserId) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $db = FatApp::getDb();
+
+        $freeTrialConfiguration = FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
+        if($isFreeTrial == applicationConstants::YES && $freeTrialConfiguration == applicationConstants::NO){
+            FatUtility::dieJsonError(Label::getLabel('LBL_FREE_TRIAL_NOT_ENABLE'));
+        }
+        $teacher = $this->checkTeacherIsValid($teacherId);
         /* [ */
-        $srch = new UserSearch();
-        $srch->setTeacherDefinedCriteria();
-        $srch->addCondition('user_id', '=', $teacher_id);
-        $srch->setPageSize(1);
-        $srch->addMultipleFields(['user_id']);
-        $rs = $srch->getResultSet();
-        $teacher = $db->fetch($rs);
-        if (!$teacher) {
+        // prx($teacher);
+        if (empty($teacher)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         /* ] */
-        $teacher_id = $teacher['user_id'];
-        if ($startDateTime != '' && $endDateTime != '') {
-            $user_timezone = MyDate::getUserTimeZone();
+
+        if($isFreeTrial == applicationConstants::YES && $teacher['us_is_trial_lesson_enabled'] == applicationConstants::NO){
+            FatUtility::dieJsonError(Label::getLabel('LBL_FREE_TRIAL_NOT_ENABLE_BY_TEACHER'));
+        }
+       
+        if ($isFreeTrial == applicationConstants::YES && !empty($startDateTime) && !empty($endDateTime)) {
+            $userTimezone = MyDate::getUserTimeZone();
             $systemTimeZone = MyDate::getTimeZone();
-            $startDateTime = MyDate::changeDateTimezone($startDateTime, $user_timezone, $systemTimeZone);
-            $endDateTime = MyDate::changeDateTimezone($endDateTime, $user_timezone, $systemTimeZone);
-            $scheduledLessonSearchObj = new ScheduledLessonSearch(false);
-            $userIds = [$teacher_id, UserAuthentication::getLoggedUserId()];
-            $scheduledLessonSearchObj->checkUserLessonBooking($userIds, $startDateTime, $endDateTime);
-            $getResultSet = $scheduledLessonSearchObj->getResultSet();
-            $scheduledLessonData = $db->fetch($getResultSet);
-            if (!empty($scheduledLessonData)) {
-                FatUtility::dieJsonError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
-            }
-            if (!TeacherWeeklySchedule::isSlotAvailable($teacher_id, $startDateTime, $endDateTime, $weekStart)) {
-                FatUtility::dieJsonError(Label::getLabel('LBL_Requested_Slot_is_not_available'));
-            }
-        }
-        $teacherBookingBefore = UserSetting::getUserSettings($teacher_id)['us_booking_before'];
-        if ('' == $teacherBookingBefore) {
-            $teacherBookingBefore = 0;
-        }
-        if ($startDateTime != '' && $endDateTime != '') {
-            $validDate = date('Y-m-d H:i:s', strtotime('+' . $teacherBookingBefore . 'hours', strtotime(date('Y-m-d H:i:s'))));
-            $selectedDate = $startDateTime;
-            $validDateTimeStamp = strtotime($validDate);
-            $SelectedDateTimeStamp = strtotime($selectedDate); //== always should be greater then current date
-            $difference = $SelectedDateTimeStamp - $validDateTimeStamp; //== Difference should be always greaten then 0
-            if ($difference < 1) {
+
+            $validDate = strtotime('+' . $teacher['us_booking_before'] . 'hours');
+
+            $startDateTime = MyDate::changeDateTimezone($startDateTime, $userTimezone, $systemTimeZone);
+            $endDateTime = MyDate::changeDateTimezone($endDateTime, $userTimezone, $systemTimeZone);
+
+            if($validDate > strtotime($startDateTime)){
                 FatUtility::dieJsonError(Label::getLabel('LBL_Booking_Close_For_This_Teacher'));
             }
+
+            $teacherWeeklySchedule = new TeacherWeeklySchedule();
+            if (!$teacherWeeklySchedule->checkCalendarTimeSlotAvailability($teacherId, $startDateTime, $endDateTime)) {
+                FatUtility::dieJsonError($teacherWeeklySchedule->getError());
+            }
         }
+
         /* add to cart[ */
         $cart = new Cart();
-        if (!$cart->add($teacher_id, $lpackageId, $languageId, $startDateTime, $endDateTime, $grpclsId, $lessonDuration)) {
+        if (!$cart->add($teacherId, $languageId, $lessonQty, $grpclsId, $lessonDuration, $isFreeTrial, $startDateTime, $endDateTime)) {
             FatUtility::dieJsonError($cart->getError());
         }
         /* ] */
+        
         $cartData = $cart->getCart($this->siteLangId);
-        $freePackage = LessonPackage::getFreeTrialPackage();
-        if (!empty($freePackage) && ($freePackage['lpackage_id'] == $lpackageId)) {
-            $this->set('isFreeLesson', ($cartData['orderNetAmount'] == 0));
+        if(empty($cartData)){
+            FatUtility::dieJsonError($cart->getError());
         }
+
+        $this->set('isFreeLesson', $isFreeTrial);
         $this->set('redirectUrl', CommonHelper::generateUrl('Checkout'));
+        $msg = '';
         if (isset($post['checkoutPage'])) {
-            $this->set('msg', Label::getLabel('LBL_Package_Selected_Successfully.'));
+            $msg = Label::getLabel('LBL_ITEM_ADD_TO_CART.');
         }
-        $this->_template->render(false, false, 'json-success.php');
+
+        FatUtility::dieJsonSuccess(['isFreeLesson' => $isFreeTrial, 'redirectUrl' => CommonHelper::generateUrl('Checkout'), 'msg' => $msg]);
     }
 
     public function applyPromoCode()
@@ -132,6 +128,9 @@ class CartController extends MyAppController
         $this->_template->render(false, false, 'json-success.php');
     }
 
+    
+
+
     public function removePromoCode()
     {
         $cartObj = new Cart();
@@ -144,4 +143,18 @@ class CartController extends MyAppController
         $this->_template->render(false, false, 'json-success.php');
     }
 
+    private function checkTeacherIsValid(int $teacherId) : array
+    {
+        $teacherSearch = new TeacherSearch($this->siteLangId);
+        $teacherSearch->applyPrimaryConditions();
+        $teacherSearch->joinSettingTabel();
+        $teacherSearch->addCondition('user_id', '=', $teacherId);
+        $teacherSearch->setPageSize(1);
+        $teacherSearch->addMultipleFields(['user_id','us_is_trial_lesson_enabled', 'us_booking_before']);
+        $teacher = FatApp::getDb()->fetch($teacherSearch->getResultSet());
+        if(!empty($teacher)){
+            return $teacher;
+        }
+        return [];
+    }
 }

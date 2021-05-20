@@ -124,11 +124,6 @@ FOREIGN KEY (`testat_user_id`) REFERENCES `tbl_users` (`user_id`) ON DELETE REST
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
 ('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT', 1, 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!');
 
-ALTER TABLE `tbl_issues_reported` ADD `issrep_admin_comments` TEXT NULL AFTER `issrep_resolve_comments`;
-ALTER TABLE `tbl_issues_reported` ADD `issrep_updated_by_admin` DATETIME NULL AFTER `issrep_admin_comments`;
-ALTER TABLE `tbl_issues_reported` ADD `issrep_closed` TINYINT NOT NULL AFTER `issrep_updated_by_admin`;
-
-
 
 CREATE TABLE `tbl_extra_pages` (
   `epage_id` int(11) NOT NULL,
@@ -192,20 +187,15 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 --
 
 
-ALTER TABLE `tbl_user_teach_languages`
-DROP INDEX `language`;
+ALTER TABLE `tbl_user_teach_languages` DROP INDEX `language`;
 
-ALTER TABLE `tbl_user_teach_languages`
-DROP INDEX `utl_slanguage_id`;
+ALTER TABLE `tbl_user_teach_languages` DROP INDEX `utl_slanguage_id`;
 
-ALTER TABLE `tbl_user_teach_languages`  
-DROP COLUMN `utl_single_lesson_amount`;
+ALTER TABLE `tbl_user_teach_languages` DROP COLUMN `utl_single_lesson_amount`;
 
-ALTER TABLE `tbl_user_teach_languages`  
-DROP COLUMN `utl_bulk_lesson_amount`;
+ALTER TABLE `tbl_user_teach_languages` DROP COLUMN `utl_bulk_lesson_amount`;
 
-ALTER TABLE `tbl_user_teach_languages`  
-DROP COLUMN `utl_booking_slot`;
+ALTER TABLE `tbl_user_teach_languages` DROP COLUMN `utl_booking_slot`;
 
 ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_slanguage_id` `utl_tlanguage_id` INT(11) NOT NULL;
 
@@ -214,8 +204,7 @@ ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_us_user_id` `utl_user_id` INT
 --
 -- Indexes for table `tbl_user_teach_languages`
 --
-ALTER TABLE `tbl_user_teach_languages`
-  ADD UNIQUE KEY `utl_user_id` (`utl_user_id`,`utl_tlanguage_id`);
+ALTER TABLE `tbl_user_teach_languages`  ADD UNIQUE KEY `utl_user_id` (`utl_user_id`,`utl_tlanguage_id`);
   
 --
 -- Table structure for table `tbl_pricing_slabs`
@@ -273,15 +262,30 @@ ALTER TABLE `tbl_pricing_slabs`
 
 DROP TABLE `tbl_lesson_packages`, `tbl_lesson_packages_lang`;
 
+REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ENABLE_FREE_TRIAL', 1, 0);
+
+INSERT INTO `tbl_pricing_slabs` (`prislab_id`, `prislab_min`, `prislab_max`, `prislab_active`) VALUES
+(1, 1, 4, 1),
+(2, 5, 9, 1),
+(3, 10, 100, 1);
+
+
+ALTER TABLE `tbl_teacher_offer_price`  DROP `top_bulk_lesson_price`;
+
+ALTER TABLE `tbl_teacher_offer_price` CHANGE `top_single_lesson_price` `top_percentage` DECIMAL(10,2) NOT NULL;
+
+ALTER TABLE `tbl_order_products` CHANGE `op_slanguage_id` `op_tlanguage_id` INT(11) NOT NULL;
+
+ALTER TABLE `tbl_order_products`  DROP `op_lpackage_lessons`;
+
 -- task_84683_report_an_issue
 
 CREATE TABLE `tbl_reported_issues` (
   `repiss_id` int NOT NULL,
   `repiss_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `repiss_slesson_id` int NOT NULL,
+  `repiss_sldetail_id` int NOT NULL,
   `repiss_reported_on` datetime NOT NULL,
   `repiss_reported_by` int NOT NULL,
-  `repiss_reported_by_type` int NOT NULL,
   `repiss_status` int NOT NULL,
   `repiss_comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `repiss_updated_on` datetime DEFAULT NULL
@@ -311,9 +315,21 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.14.0.20210519' WHERE `conf_na
 INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION', '24', '1');
 INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION', '24', '1');
 
-REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ENABLE_FREE_TRIAL', 1, 0);
+INSERT INTO `tbl_cron_schedules` (`cron_id`, `cron_name`, `cron_command`, `cron_duration`, `cron_active`) 
+VALUES (NULL, 'Resolved Issue Transaction Settlements', 'ReportedIssue/resolvedIssueSettlement', '60', '1');
 
-INSERT INTO `tbl_pricing_slabs` (`prislab_id`, `prislab_min`, `prislab_max`, `prislab_active`) VALUES
-(1, 1, 4, 1),
-(2, 5, 9, 1),
-(3, 10, 100, 1);
+INSERT INTO `tbl_cron_schedules` (`cron_id`, `cron_name`, `cron_command`, `cron_duration`, `cron_active`) 
+VALUES (NULL, 'Completed Lesson Transaction Settlements', 'ReportedIssue/completedLessonSettlement', '60', '1');
+
+ALTER TABLE `tbl_scheduled_lesson_details` ADD `sldetail_is_teacher_paid` INT NOT NULL AFTER `sldetail_added_on`;
+ALTER TABLE `tbl_scheduled_lessons`  DROP `slesson_is_teacher_paid`;
+
+ALTER TABLE `tbl_user_teach_lang_prices` DROP INDEX `ustelgpr_prislab_id`;
+
+ALTER TABLE `tbl_user_teach_lang_prices` DROP `ustelgpr_prislab_id`;
+
+ALTER TABLE `tbl_user_teach_lang_prices` ADD `ustelgpr_min_slab` INT NOT NULL AFTER `ustelgpr_price`, ADD `ustelgpr_max_slab` INT NOT NULL AFTER `ustelgpr_min_slab`;
+
+ALTER TABLE `tbl_user_teach_lang_prices` ADD UNIQUE( `ustelgpr_utl_id`, `ustelgpr_slot`, `ustelgpr_min_slab`, `ustelgpr_max_slab`);
+
+ALTER TABLE `tbl_group_classes` CHANGE `grpcls_slanguage_id` `grpcls_tlanguage_id` INT(11) NOT NULL;

@@ -3,8 +3,8 @@
 $arr_flds = array(
 	'listserial' => Label::getLabel('LBL_Sr_no.', $adminLangId),
 	'title' => Label::getLabel('LBL_Title', $adminLangId),
-	'prislab_min' => Label::getLabel('LBL_Min_Hours', $adminLangId),
-	'prislab_max' => Label::getLabel('LBL_Max_Hours', $adminLangId),
+	'prislab_min' => Label::getLabel('LBL_Min_Slabs', $adminLangId),
+	'prislab_max' => Label::getLabel('LBL_Max_Slabs', $adminLangId),
 	'prislab_active' => Label::getLabel('LBL_Status', $adminLangId),
 	'action' => Label::getLabel('LBL_Action', $adminLangId),
 );
@@ -26,7 +26,7 @@ foreach ($records as $sn => $row) {
 				$td->appendElement('plaintext', array(), $sr_no);
 				break;
 			case 'title':
-				$title = Label::getLabel('LBL_{min}_to_{max}'); //5 to 9 hrs
+				$title = Label::getLabel('LBL_{min}_to_{max}_Lesson(s)'); //5 to 9 hrs
 				$title = str_replace(['{min}', '{max}'], [$row['prislab_min'], $row['prislab_max']], $title);
 				$td->appendElement('plaintext', array(), $title);
 				break;

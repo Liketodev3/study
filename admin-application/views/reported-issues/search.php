@@ -4,7 +4,7 @@ defined('SYSTEM_INIT') or die('Invalid Usage.');
 
 $arr_flds = [
     'listserial' => Label::getLabel('LBL_S.No.', $adminLangId),
-    'repiss_slesson_id' => Label::getLabel('LBL_Lesson_Id', $adminLangId),
+    'repiss_sldetail_id' => Label::getLabel('LBL_Lesson_Id', $adminLangId),
     'sldetail_order_id' => Label::getLabel('LBL_Order_Id', $adminLangId),
     'repiss_title' => Label::getLabel('LBL_Issue', $adminLangId),
     'repiss_reported_by' => Label::getLabel('LBL_Reported_By', $adminLangId),

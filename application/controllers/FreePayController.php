@@ -28,7 +28,7 @@ class FreePayController extends MyAppController
         $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PENDING);
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'op.op_teacher_id = tu.user_id', 'tu');
         $srch->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'tu.user_id = cred.credential_user_id', 'cred');
-        $srch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'op.op_slanguage_id = tlang.tlanguage_id', 'tlang');
+        $srch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'op.op_tlanguage_id = tlang.tlanguage_id', 'tlang');
         $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'ttlang.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND tlanguagelang_lang_id = ' . $this->siteLangId, 'ttlang');
         $srch->addMultipleFields([
             'order_id',
@@ -36,7 +36,7 @@ class FreePayController extends MyAppController
             'order_net_amount',
             'order_wallet_amount_charge',
             'op_teacher_id',
-            'op_slanguage_id',
+            'op_tlanguage_id',
             'cred.credential_email',
             'CONCAT(tu.user_first_name, " ", tu.user_last_name) as teacherFullName',
             'IFNULL(tlanguage_name, tlanguage_identifier) AS teacherTeachLanguageName',
@@ -66,7 +66,7 @@ class FreePayController extends MyAppController
         $cartObj = new Cart();
         $cartData = $cartObj->getCart($this->siteLangId);
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
-        $isFreeTrial = ($cartData['lpackage_is_free_trial'] == applicationConstants::YES);
+        $isFreeTrial = ($cartData['isFreeTrial'] == applicationConstants::YES);
         if (!$orderPaymentObj->chargeFreeOrder(0, $isFreeTrial)) {
             Message::addErrorMessage($orderPaymentObj->getError());
             if ($isAjaxCall) {
@@ -75,10 +75,10 @@ class FreePayController extends MyAppController
             CommonHelper::redirectUserReferer();
         }
         /* add schedulaed lessons[ */
-        if ($cartData['lpackage_is_free_trial']) { //== only for free trial
+        if ($cartData['isFreeTrial']) { //== only for free trial
             $sLessonArr = [
                 'slesson_teacher_id' => $orderInfo['op_teacher_id'],
-                'slesson_slanguage_id' => $orderInfo['op_slanguage_id'],
+                'slesson_slanguage_id' => $orderInfo['op_tlanguage_id'],
                 'slesson_date' => date('Y-m-d', strtotime($cartData['startDateTime'])),
                 'slesson_end_date' => date('Y-m-d', strtotime($cartData['endDateTime'])),
                 'slesson_start_time' => date('H:i:s', strtotime($cartData['startDateTime'])),

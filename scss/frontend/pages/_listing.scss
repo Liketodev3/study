@@ -529,7 +529,7 @@
     padding: 20px;
 }
 
-.calendar-view [class*="col-"]:last-child {
+.calendar-view .col-sm-7.justify-content-sm-end.justify-content-start {
     display: -webkit-box;
     /* OLD - iOS 6-, Safari 3.1-6 */
     display: -moz-box;

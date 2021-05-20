@@ -1,9 +1,5 @@
 <?php
 defined('SYSTEM_INIT') or die('Invalid Usage.');
-/**
- * @todo to be fixed isLessonPlanAttach
- */
-$lesson['isLessonPlanAttach'] = 0;
 $teacherFullName = $lesson['teacherFname'] . ' ' . $lesson['teacherLname'];
 $user_timezone = MyDate::getUserTimeZone();
 $curDate = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
@@ -94,7 +90,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                             </p>
                         </div>
                     <?php } ?>
-                    <?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['isLessonPlanAttach'] > 0) { ?>
+                    <?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED && $lesson['tlpn_id'] > 0) { ?>
                         <div class="session-resource">
                             <a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['sldetail_id']; ?>')" class="attachment-file">
                                 <svg class="icon icon--issue icon--attachement icon--xsmall color-black"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#attach'; ?>"></use></svg>

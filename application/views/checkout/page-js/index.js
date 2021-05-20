@@ -127,53 +127,73 @@ $("document").ready(function () {
 	};
 
 
-	addToCart = function (teacherId, lpackageId, languageId, startDateTime, endDateTime, grpclsId, lessonDuration) {
-        $.loader.show();
-    
-        startDateTime ||= '';
-        endDateTime ||= '';
-        grpclsId ||= 0;
-        lessonDuration ||= 60;
-    
-        if (parseInt(grpclsId) > 0) {
-            $.loader.hide();
-            addToCartAjaxRunning = false;
-            event.preventDefault();
-            return false;
-        }
-    
+	addToCart = function(teacherId, languageId, lessonDuration, lessonQty) {
+		$.loader.show();
+		teacherId = parseInt(teacherId);
+		lessonQty = parseInt(lessonQty);
+		lessonDuration = parseInt(lessonDuration);
+		languageId = parseInt(languageId);
+		
         if (addToCartAjaxRunning) {
-            event.preventDefault();
+			event.preventDefault();
             return false;
         }
-    
+
+		
         addToCartAjaxRunning = true;
-        var data = 'teacher_id=' + teacherId + '&languageId=' + languageId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId + '&lessonDuration=' + lessonDuration + '&checkoutPage=1';
-        fcom.updateWithAjax(fcom.makeUrl('Cart', 'add'), data, function (ans) {
-            if (ans.redirectUrl) {
-                //fcom.waitAndRedirect( ans.redirectUrl );
+		var data = '&teacherId=' + teacherId + '&lessonQty=' + lessonQty + '&languageId=' + languageId + '&lessonDuration=' + lessonDuration;
+        fcom.ajax(fcom.makeUrl('Cart', 'add'), data, function (ans) {
+			
+			if (ans.status != 1) {
+				$.loader.hide();
+				addToCartAjaxRunning = false;
+				$.mbsmessage(ans.msg,true, 'alert alert--danger');
+				if( ans.redirectUrl ){
+					setTimeout(function(){ window.location.href = ans.redirectUrl }, 3000);
+				}
+				return ;
+			}
+			if (ans.redirectUrl) {
                 loadFinancialSummary();
                 loadPaymentSummary();
-                getLangPackages(teacherId, languageId, lessonDuration);
+				getTeacherPriceSlabs(languageId, lessonDuration);
             }
             $('.cart-lang-id-js').html(teachLanguages[languageId]);
             $('.cart-lesson-duration').html(langLbl.lessonMints.replace("%s", lessonDuration));
-            $.loader.hide();
             addToCartAjaxRunning = false;
+			$.loader.hide();
         }, {
+			fOutMode:'json',
             errorFn: function (errorDet) {
+				$.loader.hide();
                 addToCartAjaxRunning = false;
                 console.log(errorDet);
             }
         });
     };
 
-	getLangPackages = function (teacherId, languageId, lessonDuration) {
+	updateCart =  function (teacherId) {
 
-		var data = 'teacher_id=' + teacherId + '&languageId=' + languageId + '&lessonDuration=' + lessonDuration;
-		fcom.ajax(fcom.makeUrl('Checkout', 'getLanguagePackages'), data, function (ans) {
-			$('#lsn-pckgs').html(ans);
-			getBookingDurations();
+		teacherId = parseInt(teacherId);
+
+		if(1 > teacherId)
+		{
+			return false;
+		}
+		
+		lessonQty = parseInt($("#lessonQty").val());
+		lessonDuration = parseInt($('[name="lessonDuration"]:checked').val());
+		languageId = parseInt($('[name="language"]:checked').val());
+		addToCart(teacherId, languageId, lessonDuration, lessonQty);
+	};
+
+	getTeacherPriceSlabs = function (languageId, lessonDuration) {
+
+		var data = 'languageId=' + languageId + '&lessonDuration=' + lessonDuration;
+		$.loader.show()
+		fcom.ajax(fcom.makeUrl('Checkout', 'getTeacherPriceSlabs'), data, function (ans) {
+			$('#price-slabs').html(ans);
+			$.loader.hide()
 		});
 	};
 

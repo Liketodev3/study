@@ -79,14 +79,13 @@ class TeachingLanguage extends MyAppModel
         $teachingLangSrch->addChecks();
         $teachingLangSrch->joinActiveTeachers();
         $teachingLangSrch->addMultiplefields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name', 'count(DISTINCT utl_user_id) as teacherCount']);
-        $teachingLangSrch->addGroupBy('utl_slanguage_id');
+        $teachingLangSrch->addGroupBy('utl_tlanguage_id');
         $teachingLangSrch->addCondition('user_is_teacher', '=', 1);
         $teachingLangSrch->addCondition('user_country_id', '>', 0);
         $teachingLangSrch->addCondition('credential_active', '=', 1);
         $teachingLangSrch->addCondition('credential_verified', '=', 1);
-        $teachingLangSrch->addCondition('utl_single_lesson_amount', '>', 0);
-        $teachingLangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
-        $teachingLangSrch->addCondition('utl_slanguage_id', '>', 0);
+        $teachingLangSrch->addCondition('ustelgpr_price', '>', 0);
+        $teachingLangSrch->addCondition('utl_tlanguage_id', '>', 0);
         /* qualification/experience[ */
         $qSrch = new UserQualificationSearch();
         $qSrch->addMultipleFields(['uqualification_user_id']);

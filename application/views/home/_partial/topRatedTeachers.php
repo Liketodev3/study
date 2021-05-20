@@ -32,7 +32,7 @@
 
                                 <ul class="tags">
 
-                                    <?php echo CommonHelper::getTeachLangs($topRatedTeacher['utl_slanguage_ids'], true); ?>
+                                    <?php echo CommonHelper::getTeachLangs($topRatedTeacher['utl_tlanguage_ids'], true); ?>
                                 </ul>
                             </div>
                         </div>
