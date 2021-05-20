@@ -99,6 +99,10 @@ $referer = preg_replace("(^https?://)", "", $referer);
                                 </span>
                             <?php } ?>
                             <span class="card-landscape__status badge color-secondary badge--curve badge--small margin-left-0"><?php echo $lessonsStatus; ?></span>
+                            <?php if($lesson['slesson_grpcls_id'] > 0){ ?>
+                                <span class="card-landscape__status badge color-secondary badge--curve badge--small margin-left-0"><?php echo Label::getLabel('LBL_GROUP_CLASS'); ?></span>
+                            <?php }  ?>
+                            
                             <?php if ($lesson['repiss_id'] > 0) { ?>
                                 <span class="card-landscape__status badge color-primary badge--curve badge--small margin-left-0"><?php echo Label::getLabel('LBL_Issue_Reported'); ?></span>
                             <?php } ?>
@@ -171,10 +175,10 @@ $referer = preg_replace("(^https?://)", "", $referer);
                                     </a>
                                     <?php
                                 } else if (
+                                        $lesson['repiss_id'] < 1 && $lessonReportDate > $currentUnixTime &&
                                         ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED ||
                                         ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED &&
-                                        $currentUnixTime > $endUnixTime && $lesson['slesson_teacher_join_time'] == 0)) &&
-                                        $lesson['repiss_id'] < 1 && $lessonReportDate > strtotime(date('Y-m-d H:i:s'))
+                                        $currentUnixTime > $endUnixTime && $lesson['slesson_teacher_join_time'] == '0000-00-00 00:00:00')) 
                                 ) {
                                     ?>
                                     <a href="javascript:void(0);" onclick="issueReported('<?php echo $lesson['sldetail_id']; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">

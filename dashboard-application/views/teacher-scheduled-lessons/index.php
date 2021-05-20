@@ -92,6 +92,9 @@
                                 </select>
                             </div>
                             <div class="form-inline__item">
+                                <?php echo $classType->getHTML('class_type'); ?>
+                            </div>
+                            <div class="form-inline__item">
                                 <?php echo $frmSrch->getFormTag(); ?>
                                 <div class="search-form">
                                     <div class="search-form__field">
@@ -99,9 +102,6 @@
                                         echo $frmSrch->getFieldHTML('keyword');
                                         echo $frmSrch->getFieldHTML('page');
                                         ?>
-                                    </div>
-                                    <div class="form-inline__item">
-                                        <?php echo $classType->getHTML('class_type'); ?>
                                     </div>
                                     <div class="search-form__action search-form__action--submit">
                                         <?php echo $frmSrch->getFieldHTML('btn_submit'); ?>

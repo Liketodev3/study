@@ -96,7 +96,10 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
                                     ?>
                                 </span>
                             <?php } ?>
-                            <span class="card-landscape__status badge color-secondary badge--curve badge--small margin-left-0"><?php echo $lessonsStatus; ?></span>
+                            <span class="card-landscape__status badge color-primary badge--curve badge--small margin-left-0"><?php echo $lessonsStatus; ?></span>
+                            <?php if($lesson['slesson_grpcls_id'] > 0){ ?>
+                                <span class="card-landscape__status badge color-primary badge--curve badge--small margin-left-0"><?php echo Label::getLabel('LBL_GROUP_CLASS'); ?></span>
+                            <?php }  ?>
                             <?php if ($lesson['repiss_id'] > 0) { ?>
                                 <span class="card-landscape__status badge color-primary badge--curve badge--small margin-left-0"><?php echo Label::getLabel('LBL_Issue_Reported'); ?></span>
                             <?php } ?>
