@@ -5,9 +5,7 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.12.0.20210426' WHERE `conf_na
 ALTER TABLE `tbl_attached_files` ADD `afile_attribute_title` VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `afile_physical_path`;
 ALTER TABLE `tbl_attached_files` ADD `afile_attribute_alt` VARCHAR(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL AFTER `afile_attribute_title`;
 
-
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Specific_Language_Alter_Tags_Note', '1', 'Image alter message can be language specific . Please upload image for specific language before update alter tags');
-
 
 ALTER TABLE `tbl_meta_tags_lang` ADD `meta_og_title` VARCHAR(90) NOT NULL AFTER `meta_other_meta_tags`;
 
@@ -22,7 +20,6 @@ ALTER TABLE `tbl_url_rewrites` ADD `urlrewrite_http_resp_code` VARCHAR(10) NOT N
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Example_Custom_URL_Example', '1', 'Example: If Site URL Will Be http://domainname.com/cms/view/1 And You Want To Rewrite Then Original URL: Cms/view/1 custom URL: My-custom-page Browsing URL : http://domainname.com/my-custom-page');
 
-
 INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES 
 ('WIZIQ_API_SECRET_KEY', '', '0'), ('WIZIQ_API_ACCESS_KEY', '', '0'), 
 ('WIZIQ_API_CLASSAPI_URL', '', '1'), ('WIZIQ_API_SERVICE_URL', '', '0');
@@ -34,14 +31,18 @@ CREATE TABLE `tbl_wiziq_teachers` (
   `wizteach_created` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+ALTER TABLE `tbl_wiziq_teachers`  ADD PRIMARY KEY (`wizteach_user_id`);
+ALTER TABLE `tbl_wiziq_teachers`  ADD CONSTRAINT `tbl_wiziq_teachers_ibfk_1` 
+	FOREIGN KEY (`wizteach_user_id`) REFERENCES `tbl_users` (`user_id`) 
+	ON DELETE RESTRICT ON UPDATE RESTRICT;
+
 --
 ALTER TABLE `tbl_group_classes_lang`
   ADD PRIMARY KEY (`grpclslang_grpcls_id`,`grpclslang_lang_id`);
 
 DELETE FROM `tbl_language_labels` WHERE `label_key` = 'LBL_Calender';
 
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_Invalid_Username', '1', 'Username accepts only letters,numbers,(-),(_)'),
- ('htmlAfterField_LESSON_DURATIONS_TEXT', '1', 'Please notify your tutors in advance before you change the lesson duration, since this can impact the tutor profile listing on the frontend.');
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('htmlAfterField_LESSON_DURATIONS_TEXT', '1', 'Please notify your tutors in advance before you change the lesson duration, since this can impact the tutor profile listing on the frontend.');
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.1.20210326' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
@@ -67,26 +68,27 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.2.20210331' WHERE `conf_na
 
 UPDATE `tbl_email_templates` SET `etpl_body` = '<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#f5f5f5\" style=\"font-family:Arial; color:#333; line-height:26px;\"> \r\n        \r\n        \r\n	<tbody>            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:30px 0;\"></td>    \r\n            \r\n		</tr>    \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:0 0 0;\">          \r\n                    \r\n				<!--\r\n				header start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #fff;border-bottom: 1px solid #eee;\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:20px 40px;\"><a href=\"#\" style=\"display: block;\">{Company_Logo}</a></td>                  \r\n                                \r\n							<td style=\"text-align:right;padding: 40px;\">                      {social_media_icons}\r\n                      </td>              \r\n                            \r\n						</tr>          \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				header end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n       \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>                    \r\n				<!--\r\n				page body start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">             \r\n                  \r\n                        \r\n					<tbody>                        \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;\">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:20px 0 60px;\">                                     <img src=\"icon-account.png\" alt=\"\" />                                     \r\n												<h5 style=\"margin: 0;padding: 0; text-transform: uppercase; font-size: 16px;font-weight: 500;color: #333;\"></h5>                                     \r\n												<h2 style=\"margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;\">Teacher {action} The Lesson!</h2>                                  </td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                  \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; \">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:60px 0 70px;\">                                      \r\n												<h3 style=\"margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;\">Dear {learner_name}</h3>Teacher ({teacher_name}) has {action} the lesson ({lesson_name}).<br /><a href=\"{lesson_url}\">Click here</a> to view lesson.<br>\r\n												Reason:   <br />\r\n												{teacher_comment}</td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                 \r\n                \r\n              \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page body end here\r\n				-->\r\n				                          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>          \r\n                    \r\n				<!--\r\n				page footer start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                                \r\n							<td style=\"height:30px;\"></td>                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:30px 0; font-size:20px; color:#000;\">                                  Need more help?<br />\r\n												                                                     <a href=\"{contact_us_url}\" style=\"color:#e84c3d;\">We‘re here, ready to talk</a>                              </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:20px 0 30px; font-size:13px; color:#999;\">                                  Be sure to add <a href=\"#\" style=\"color: #e84c3d\">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br />\r\n												                                                    <br />\r\n												                                                    &copy; 2018, {website_name}. All Rights Reserved.\r\n                                      \r\n                                  </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                  \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0; height:50px;\"></td>              \r\n                            \r\n						</tr>              \r\n                  \r\n              \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page footer end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n        \r\n        \r\n	</tbody>    \r\n</table>', `etpl_replacements` = '{lesson_id}\r\n{learner_name}\r\n{teacher_name}\r\n{lesson_name}\r\n{teacher_comment}\r\n{lesson_date}\r\n{lesson_start_time}\r\n{lesson_end_time}\r\n{action}\r\n{lesson_url}' WHERE `tbl_email_templates`.`etpl_code` = 'teacher_reschedule_email' AND `tbl_email_templates`.`etpl_lang_id` = 1;
 
-
 UPDATE `tbl_email_templates` SET `etpl_body` = '<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#f5f5f5\" style=\"font-family:Arial; color:#333; line-height:26px;\"> \r\n        \r\n        \r\n	<tbody>            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:30px 0;\"></td>    \r\n            \r\n		</tr>    \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td style=\"background:#e84c3d;padding:0 0 0;\">          \r\n                    \r\n				<!--\r\n				header start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"background: #fff;border-bottom: 1px solid #eee;\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:20px 40px;\"><a href=\"#\" style=\"display: block;\">{Company_Logo}</a></td>                  \r\n                                \r\n							<td style=\"text-align:right;padding: 40px;\">                      {social_media_icons}\r\n                      </td>              \r\n                            \r\n						</tr>          \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				header end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n       \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>                    \r\n				<!--\r\n				page body start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">             \r\n                  \r\n                        \r\n					<tbody>                        \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee;\">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:20px 0 60px;\">                                     <img src=\"icon-account.png\" alt=\"\" />                                     \r\n												<h5 style=\"margin: 0;padding: 0; text-transform: uppercase; font-size: 16px;font-weight: 500;color: #333;\"></h5>                                     \r\n												<h2 style=\"margin:8px 0 0;padding: 0; font-size:30px;font-weight: 700;color: #e84c3d;\">Teacher Cancel The Lesson!</h2>                                  </td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                  \r\n						<tr>                      \r\n							<td style=\"background:#fff;padding:0 40px; text-align:center; color:#999;vertical-align:top; border-bottom:1px solid #eee; \">                          \r\n								<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">                              \r\n                              \r\n									<tbody>\r\n										<tr>                                  \r\n											<td style=\"padding:60px 0 70px;\">                                      \r\n												<h3 style=\"margin: 0 0 10px;font-size: 24px; font-weight: 500; padding: 0;color: #333;\">Dear {learner_name} </h3>Teacher ({teacher_name}) has cancelled the lesson ({lesson_name}).<br /><a href="{lesson_url}">Click here</a> to view lesson.<br />\r\n												Reason:   <br />\r\n												{teacher_comment}</td>                              \r\n										</tr>                             \r\n                          \r\n									</tbody>\r\n								</table>                      </td>                  \r\n						</tr>                  \r\n                 \r\n                \r\n              \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page body end here\r\n				-->\r\n				                          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n            \r\n		<tr>      \r\n                \r\n			<td>          \r\n                    \r\n				<!--\r\n				page footer start here\r\n				-->\r\n				                       \r\n              \r\n                    \r\n				<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">              \r\n                        \r\n					<tbody>                            \r\n						<tr>                                \r\n							<td style=\"height:30px;\"></td>                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"background:rgba(0,0,0,0.04);padding:0 30px; text-align:center; color:#999;vertical-align:top;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:30px 0; font-size:20px; color:#000;\">                                  Need more help?<br />\r\n												                                                     <a href=\"{contact_us_url}\" style=\"color:#e84c3d;\">We‘re here, ready to talk</a>                              </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0 40px; color:#999;vertical-align:top; line-height:20px; text-align: center;\">                      \r\n                                    \r\n								<table width=\"100%\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">                          \r\n                                        \r\n									<tbody>                                            \r\n										<tr>                              \r\n                                                \r\n											<td style=\"padding:20px 0 30px; font-size:13px; color:#999;\">                                  Be sure to add <a href=\"#\" style=\"color: #e84c3d\">{notifcation_email}</a> to your address book or safe sender list so our emails get to your inbox.<br />\r\n												                                                    <br />\r\n												                                                    &copy; 2018, {website_name}. All Rights Reserved.\r\n                                      \r\n                                  </td>                          \r\n                                            \r\n										</tr>                          \r\n                          \r\n                                        \r\n									</tbody>                                    \r\n								</table>                  </td>              \r\n                            \r\n						</tr>              \r\n                  \r\n                            \r\n						<tr>                  \r\n                                \r\n							<td style=\"padding:0; height:50px;\"></td>              \r\n                            \r\n						</tr>              \r\n                  \r\n              \r\n                        \r\n					</tbody>                    \r\n				</table>          \r\n                    \r\n				<!--\r\n				page footer end here\r\n				-->\r\n				                       \r\n          </td>    \r\n            \r\n		</tr>    \r\n        \r\n        \r\n        \r\n        \r\n	</tbody>    \r\n</table>', `etpl_replacements` = '{lesson_id}\r\n{learner_name}\r\n{teacher_name}\r\n{lesson_name}\r\n{teacher_comment}\r\n{lesson_date}\r\n{lesson_start_time}\r\n{lesson_end_time}\r\n{action}\r\n{lesson_url}' WHERE `tbl_email_templates`.`etpl_code` = 'teacher_cancelled_email' AND `tbl_email_templates`.`etpl_lang_id` = 1; 
+
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.3.20210331' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.4.20210402' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
 ALTER TABLE `tbl_users` ADD `user_phone_code` VARCHAR(6) NOT NULL AFTER `user_last_name`;
+
 ALTER TABLE `tbl_user_teacher_request_values` ADD `utrvalue_user_phone_code` VARCHAR(6) NOT NULL AFTER `utrvalue_user_gender`;
+
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.5.20210403' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
 ('LBL_PHONE_NO_VALIDATION_MSG', 1, 'Please add vaild phone no and length between 4 to 16'),
 ('LBL_Note:_Enter_Number_of_lessons_in_a_package', 1, 'Note: Enter Number Of Lessons In A Package'),
 ('LBL_Note:_Enter_Number_of_lessons_in_a_package', 2, 'ملاحظة: أدخل عدد من الدروس في حزمة)');
-ALTER TABLE `tbl_wiziq_teachers`  ADD PRIMARY KEY (`wizteach_user_id`);
-ALTER TABLE `tbl_wiziq_teachers`  ADD CONSTRAINT `tbl_wiziq_teachers_ibfk_1` 
-	FOREIGN KEY (`wizteach_user_id`) REFERENCES `tbl_users` (`user_id`) 
-	ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_TRIAL_LESSON_%S_MINS', '1', 'One time, %s minutes');
+
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.12.1.20210503' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.13.0.20210510' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
@@ -134,10 +136,6 @@ CREATE TABLE `tbl_extra_pages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Indexes for dumped tables
---
-
---
 -- Indexes for table `tbl_extra_pages`
 --
 ALTER TABLE `tbl_extra_pages`
@@ -162,11 +160,6 @@ CREATE TABLE `tbl_extra_pages_lang` (
 ALTER TABLE `tbl_extra_pages_lang`
   ADD UNIQUE KEY `epagelang_epage_id` (`epagelang_epage_id`,`epagelang_lang_id`);
 
-
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
-('LBL_PROFILE_INFO_HEADING', 1, 'To successfully register your profile as an expert and to you available in search results.'),
-('LBL_PROFILE_INFO_HEADING', 2, 'To successfully register your profile as an expert and to you available in search results.');
-
 INSERT INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES
 (1, 'Teacher Profile info bar', 1, 1, '<div class=\"infobar__list-content\">\r\n										<ol>\r\n											<li>Profile needs to be 80% completed</li>\r\n											<li>You have to complete lorem ipsum dolar summit text</li>\r\n											<li>After verify all the details you have to mark availbility in calendar section.</li>\r\n										</ol>\r\n									</div>');
 
@@ -176,16 +169,18 @@ INSERT INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `
 
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
+('LBL_PROFILE_INFO_HEADING', 1, 'To successfully register your profile as an expert and to you available in search results.'),
+('LBL_PROFILE_INFO_HEADING', 2, 'To successfully register your profile as an expert and to you available in search results.');
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
 ('LBL_NO_RECORD_FLASH_CARD_TITLE', 1, "You havn't added any <span>Flash-card</span> yet"),
 ('LBL_NO_RECORD_FLASH_CARD_TITLE', 2, "You havn't added any <span>Flash-card</span> yet"),
 ('LBL_NO_RECORD_FLASH_CARD_TEXT', 1, 'Click on the button "Add Flash-card" to add it. It will help you during the class'),
 ('LBL_NO_RECORD_FLASH_CARD_TEXT', 2, 'Click on the button "Add Flash-card" to add it. It will help you during the class');
 
-
 --
 -- Table structure for table `tbl_user_teach_languages`
 --
-
 
 ALTER TABLE `tbl_user_teach_languages` DROP INDEX `language`;
 
@@ -200,6 +195,8 @@ ALTER TABLE `tbl_user_teach_languages` DROP COLUMN `utl_booking_slot`;
 ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_slanguage_id` `utl_tlanguage_id` INT(11) NOT NULL;
 
 ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_us_user_id` `utl_user_id` INT(11) NOT NULL;
+
+DELETE teachLANG FROM `tbl_user_teach_languages` as teachLANG WHERE teachLANG.`utl_id` NOT IN(SELECT * FROM (SELECT MIN(n.utl_id) FROM `tbl_user_teach_languages` n GROUP BY n.utl_user_id, n.utl_tlanguage_id) X )
 
 --
 -- Indexes for table `tbl_user_teach_languages`
@@ -217,41 +214,12 @@ CREATE TABLE `tbl_pricing_slabs` (
   `prislab_active` tinyint(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_user_teach_lang_prices`
---
-
-CREATE TABLE `tbl_user_teach_lang_prices` (
-  `ustelgpr_prislab_id` int(11) NOT NULL,
-  `ustelgpr_utl_id` int(11) NOT NULL,
-  `ustelgpr_slot` int(11) NOT NULL,
-  `ustelgpr_price` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Indexes for dumped tables
---
-
 --
 -- Indexes for table `tbl_pricing_slabs`
 --
+
 ALTER TABLE `tbl_pricing_slabs`
   ADD PRIMARY KEY (`prislab_id`);
-
---
--- Indexes for table `tbl_user_teach_lang_prices`
---
-ALTER TABLE `tbl_user_teach_lang_prices`
-  ADD UNIQUE KEY `ustelgpr_prislab_id` (`ustelgpr_prislab_id`,`ustelgpr_utl_id`,`ustelgpr_slot`);
-
---
--- AUTO_INCREMENT for dumped tables
---
 
 --
 -- AUTO_INCREMENT for table `tbl_pricing_slabs`
@@ -259,6 +227,28 @@ ALTER TABLE `tbl_user_teach_lang_prices`
 ALTER TABLE `tbl_pricing_slabs`
   MODIFY `prislab_id` int(11) NOT NULL AUTO_INCREMENT;
 
+
+--
+-- Table structure for table `tbl_user_teach_lang_prices`
+--
+
+CREATE TABLE `tbl_user_teach_lang_prices` (
+  `ustelgpr_utl_id` int(11) NOT NULL,
+  `ustelgpr_slot` int(11) NOT NULL,
+  `ustelgpr_price` decimal(10,2) NOT NULL,
+  `ustelgpr_min_slab` int(11) NOT NULL,
+  `ustelgpr_max_slab` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for table `tbl_user_teach_lang_prices`
+--
+ALTER TABLE `tbl_user_teach_lang_prices`
+  ADD UNIQUE KEY `ustelgpr_utl_id` (`ustelgpr_utl_id`,`ustelgpr_slot`,`ustelgpr_min_slab`,`ustelgpr_max_slab`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
 
 DROP TABLE `tbl_lesson_packages`, `tbl_lesson_packages_lang`;
 
@@ -308,10 +298,6 @@ ALTER TABLE `tbl_reported_issues_log`  MODIFY `reislo_id` int NOT NULL AUTO_INCR
 ALTER TABLE `tbl_reported_issues_log`  ADD CONSTRAINT `tbl_reported_issues_log_ibfk_1` 
 FOREIGN KEY (`reislo_repiss_id`) REFERENCES `tbl_reported_issues` (`repiss_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-  
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.5.20210421' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.6.20210507' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
-UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.14.0.20210519' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION', '24', '1');
 INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION', '24', '1');
 
@@ -324,14 +310,9 @@ VALUES (NULL, 'Completed Lesson Transaction Settlements', 'ReportedIssue/complet
 ALTER TABLE `tbl_scheduled_lesson_details` ADD `sldetail_is_teacher_paid` INT NOT NULL AFTER `sldetail_added_on`;
 ALTER TABLE `tbl_scheduled_lessons`  DROP `slesson_is_teacher_paid`;
 
-ALTER TABLE `tbl_user_teach_lang_prices` DROP INDEX `ustelgpr_prislab_id`;
-
-ALTER TABLE `tbl_user_teach_lang_prices` DROP `ustelgpr_prislab_id`;
-
-ALTER TABLE `tbl_user_teach_lang_prices` ADD `ustelgpr_min_slab` INT NOT NULL AFTER `ustelgpr_price`, ADD `ustelgpr_max_slab` INT NOT NULL AFTER `ustelgpr_min_slab`;
-
-ALTER TABLE `tbl_user_teach_lang_prices` ADD UNIQUE( `ustelgpr_utl_id`, `ustelgpr_slot`, `ustelgpr_min_slab`, `ustelgpr_max_slab`);
-
 ALTER TABLE `tbl_group_classes` CHANGE `grpcls_slanguage_id` `grpcls_tlanguage_id` INT(11) NOT NULL;
 
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.5.20210421' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.6.20210507' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.14.0.20210519' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.15.0.20210520' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

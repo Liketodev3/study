@@ -262,7 +262,7 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
             <?php
             if (
                     $objPrivilege->canViewMetaTags($adminLoggedId, true) ||
-                    $objPrivilege->canViewUrlRewrite($adminLoggedId, true)
+                    $objPrivilege->canViewUrlRewrites($adminLoggedId, true)
             || $objPrivilege->canViewImageAttributes($adminLoggedId, true)
             ) {
                 ?>
@@ -271,7 +271,7 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                         <?php if ($objPrivilege->canViewMetaTags($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('MetaTags'); ?>"><?php echo Label::getLabel('LBL_Meta_Tags_Management', $adminLangId); ?></a></li>
                         <?php } ?>
-                        <?php if ($objPrivilege->canViewUrlRewrite($adminLoggedId, true)) { ?>
+                        <?php if ($objPrivilege->canViewUrlRewrites($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('UrlRewriting'); ?>"><?php echo Label::getLabel('LBL_Url_Rewriting', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewImageAttributes($adminLoggedId, true)) { ?>
