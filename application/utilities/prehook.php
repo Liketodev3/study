@@ -40,3 +40,6 @@ FatApp::setViewDataProvider('home/_partial/topRatedTeachers.php', ['Common', 'to
 FatApp::setViewDataProvider('home/_partial/upcomingScheduledLessons.php', ['Common', 'upcomingScheduledLessons']);
 FatApp::setViewDataProvider('header/explore-subjects.php', ['Common', 'getExploreSubjects']);
 FatApp::setViewDataProvider('header/right-section.php', ['Common', 'headerLanguageArea']);
+FatApp::setViewDataProvider('home/_partial/secondBlockAftrSlider.php', ['Common', 'getContentfromExtraPage']);
+
+

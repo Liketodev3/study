@@ -80,6 +80,7 @@ class Common
         $rs = $bannerSrch->getResultSet();
         $bannerLocation = $db->fetchAll($rs, 'blocation_key');
         $banners = $bannerLocation;
+
         foreach ($bannerLocation as $val) {
             $srch = new BannerSearch(CommonHelper::getLangId(), true);
             $srch->doNotCalculateRecords();
@@ -89,6 +90,9 @@ class Common
             $bannerListing = $db->fetchAll($rs, 'banner_id');
             $banners[$val['blocation_key']]['banners'] = $bannerListing;
         }
+
+        //CommonHelper::printArray($banners,true);
+
         $template->set("banners", $banners);
         $template->set('siteLangId', CommonHelper::getLangId());
     }
@@ -303,6 +307,13 @@ class Common
             $rootUrl .= $_SERVER['SERVER_NAME'];
         }
         return $rootUrl . CONF_WEBROOT_URL . (!empty($row) ? $row['urlrewrite_custom'] : $uri);
+    }
+
+    public static function getContentfromExtraPage($template){
+
+     $epageDetail = Extrapage::getBlockContent(Extrapage::BLOCK_WHY_US,commonHelper::getLangId());
+     $template->set('epage',$epageDetail);
+
     }
 
     public static function getExploreSubjects($template){
