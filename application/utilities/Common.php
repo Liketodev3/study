@@ -105,8 +105,11 @@ class Common
 
     public static function headerLanguageArea($template)
     {
+          
         $template->set('siteLangId', CommonHelper::getLangId());
+        $template->set('siteCurrencyId',CommonHelper::getCurrencyId());
         $template->set('languages', Language::getAllNames(false));
+        $template->set('currencies',Currency::getCurrencyAssoc(CommonHelper::getLangId()));
     }
 
     public static function headerUserLoginArea($template)
@@ -302,4 +305,8 @@ class Common
         return $rootUrl . CONF_WEBROOT_URL . (!empty($row) ? $row['urlrewrite_custom'] : $uri);
     }
 
+    public static function getExploreSubjects($template){
+        $teachLangs = TeachingLanguage::getAllLangs();
+        $template->set('teachLangs',$teachLangs);
+    }
 }

@@ -1,6 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 
-  <?php if( isset($slides) && count($slides) ){
+  <?php if( isset($slides) && count($slides) ){	
 		$this->includeTemplate( 'home/_partial/homePageSlides.php', array( 'slides' =>$slides, 'siteLangId' => $siteLangId ),false );
 	} ?>
 

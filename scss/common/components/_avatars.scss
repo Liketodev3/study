@@ -12,8 +12,7 @@ $avtar: "avtar";
   height: 3.428rem;
   font-size: theme('font.size.md');
   font-weight: 700;
-  text-transform: uppercase;overflow: hidden;
-  background: var(--color-gray-200);
+ text-transform: uppercase;overflow: hidden;
 
   &:before{
      position: absolute;
@@ -23,7 +22,7 @@ $avtar: "avtar";
      -webkit-transform: translate(-50%,-50%);
      -ms-transform: translate(-50%,-50%);
      pointer-events: none;
-     content: attr(data-text);
+     content: attr(data-title);
      color: #fff;
     }
     & img{position: relative;width: 100%; height: 100%;}

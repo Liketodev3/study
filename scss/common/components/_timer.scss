@@ -1,9 +1,9 @@
 $timer: "timer";
 
-.#{$timer}{ position: relative; display: inline-flex; align-items: center; color: theme('color.third'); min-height: 32px;
+.#{$timer}{ position: relative; display: flex; align-items: center; color: theme('color.third'); min-height: 32px;
 
     &__media{ margin-#{theme('direction.right','value')}: theme('margin-1');}
-    &__controls{display: flex; align-items: center; }
+    &__controls{display: flex; align-items: center;}
     &__digit{position: relative; font-weight: 600;
         
         &:not(:last-child):after{content: ":"; margin: 0 0.1rem;}
@@ -11,19 +11,3 @@ $timer: "timer";
     
 
 }
-
-.timer{
-    .timer__content{
-        .timer__controls{
-            background: transparent !important;
-            color: var(--color-third);
-            font-size: var(--font-size-md);
-            font-weight: var(--font-weight-medium);
-        }
-    }
-}
-
-.timezoneoffset {
-    margin-left: 5px;
-}
-

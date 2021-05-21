@@ -73,13 +73,6 @@ textarea {
 .div-login-form .form input[type="submit"] {
     width: 100%;
 }
-#paymentDiv{ 
-    .input-helper {
-        background: #fff;
-        box-shadow: 2px 2px 4px rgba(0,0,0,0.10);
-    }
-}
-
 .form input[type="submit"] {position: relative;
     background:theme('color.primary');
     display: inline-block;
@@ -89,7 +82,8 @@ textarea {
     position: relative;
     cursor: pointer;
     border: none;
-    line-height: 40px;
+    height:2.8rem;
+
     color: theme('color.white');
     border-radius: theme('radius.1');
     font-weight: 600; margin-#{theme('direction.right','value')}: 10px;

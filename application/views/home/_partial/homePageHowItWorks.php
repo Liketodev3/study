@@ -22,7 +22,7 @@ $firstBlockdata = isset($banners['BLOCK_FIRST_AFTER_HOMESLIDER']) ? $banners['BL
 			</div>
 			</div>
 		</div>
-                        <?php $i++; }?>
+        <?php $i++; }?>
 	</div>
 </section>
 <?php } */ ?>

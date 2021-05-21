@@ -44,6 +44,7 @@ class CustomRouter
             if ($controller == '') {
                 $controller = 'Content';
             }
+         
             if ($action == '') {
                 $action = 'error404';
             }

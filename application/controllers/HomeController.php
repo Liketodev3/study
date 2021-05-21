@@ -6,9 +6,7 @@ class HomeController extends MyAppController
     public function index()
     {
         if (UserAuthentication::isUserLogged()) {
-            // if (User::isTeacher()) {
-            //     FatApp::redirectUser(CommonHelper::generateUrl('Account', '', [], CONF_WEBROOT_DASHBOARD));
-            // }
+      
             FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
         }
         $db = FatApp::getDb();

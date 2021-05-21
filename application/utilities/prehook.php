@@ -38,3 +38,5 @@ FatApp::setViewDataProvider('footer/bottomNavigation.php', ['Navigation', 'foote
 FatApp::setViewDataProvider('home/_partial/languagesWithTeachersCount.php', ['Common', 'languagesWithTeachersCount']);
 FatApp::setViewDataProvider('home/_partial/topRatedTeachers.php', ['Common', 'topRatedTeachers']);
 FatApp::setViewDataProvider('home/_partial/upcomingScheduledLessons.php', ['Common', 'upcomingScheduledLessons']);
+FatApp::setViewDataProvider('header/explore-subjects.php', ['Common', 'getExploreSubjects']);
+FatApp::setViewDataProvider('header/right-section.php', ['Common', 'headerLanguageArea']);
