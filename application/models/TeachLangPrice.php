@@ -43,7 +43,7 @@ class TeachLangPrice extends MyAppModel
 
         $slots = implode(",", $slots);
         $db = FatApp::getDb();
-        $db->query('DELETE  FROM ' . self::DB_TBL . ' WHERE ustelgpr_price IN (' . $slots . ')');
+        $db->query('DELETE  FROM ' . self::DB_TBL . ' WHERE ustelgpr_slot IN (' . $slots . ')');
         if ($db->getError()) {
             return false;
         }

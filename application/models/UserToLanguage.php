@@ -159,23 +159,17 @@ class UserToLanguage extends MyAppModel
         return FatApp::getDb()->fetchAll($srch->getResultSet());
     }
 
-    public function removeSpeakLang(array $langIds = [], $removeAll = false): bool
+    public function removeSpeakLang(array $langIds = []): bool
     {
-        if(0 >= $this->mainTableRecordId){
-            $this->error = Label::getLabel('MSG_Invalid_Request');
-            return false;
-        }
-        
-        if(empty($langIds) && !$removeAll){
-            $this->error = Label::getLabel('MSG_Invalid_Request');
-            return false; 
-        }
-
         $db = FatApp::getDb();
 
-        $query = 'DELETE  FROM ' . self::DB_TBL . ' WHERE utsl_user_id = '.$this->mainTableRecordId;
+        $query = 'DELETE  FROM ' . self::DB_TBL . ' WHERE  1 = 1';
         
-        if(!$removeAll && !empty($langIds))
+        if(!empty($this->mainTableRecordId)){
+            $query .= ' and utsl_user_id = '.$this->mainTableRecordId;
+        }
+    
+        if(!empty($langIds))
         {
             $langIds = implode(",", $langIds);
             $query .= ' and utsl_slanguage_id IN (' . $langIds . ')';
@@ -184,6 +178,7 @@ class UserToLanguage extends MyAppModel
         $db->query($query);
 
         if ($db->getError()) {
+            $this->error = $db->getError();
             return false;
         }
         

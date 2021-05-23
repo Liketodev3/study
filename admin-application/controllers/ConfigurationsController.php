@@ -147,9 +147,14 @@ class ConfigurationsController extends AdminBaseController
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
+       
         if (!empty($unselectedSlot)) {
+            
             $teachLangPrice = new TeachLangPrice();
             $teachLangPrice->deleteTeachSlots($unselectedSlot);
+
+            $teacherStat = new TeacherStat(0);
+            $teacherStat->setTeachLangPricesBulk();
         }
         $this->set('msg', Label::getLabel('MSG_Setup_Successful', $this->adminLangId));
         $this->set('frmType', $frmType);

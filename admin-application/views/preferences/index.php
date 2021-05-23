@@ -18,11 +18,7 @@
 				<section class="section searchform_filter">
 					<div class="sectionhead">
 						<h4> <?php echo Label::getLabel('LBL_Search...', $adminLangId); ?></h4>
-						<div class="label--note text-right">
-							<strong class="-color-secondary span-right">
-								<?php echo Label::getLabel('LBL_PREFERENCES_UPDATE_NOTICE'); ?>
-							</strong>
-						</div>
+						
 					</div>
 					<div class="sectionbody space togglewrap" style="display:none;">
 						<?php
@@ -40,6 +36,11 @@
 				<section class="section">
 					<div class="sectionhead">
 						<h4><?php echo Preference::getPreferenceTypeArr($adminLangId)[$type]; ?></h4>
+						<div class="label--note text-left">
+							<strong class="-color-secondary">
+								<?php echo Label::getLabel('LBL_PREFERENCES_UPDATE_NOTICE'); ?>
+							</strong>
+						</div>
 						<?php if ($canEdit) {
 
 							$ul = new HtmlElement("ul", array("class" => "actions actions--centered"));

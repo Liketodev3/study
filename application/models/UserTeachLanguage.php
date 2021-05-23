@@ -46,6 +46,30 @@ class UserTeachLanguage extends MyAppModel
         return $searchBase;
     }
 
+    public function removeTeachLang(array $langIds = []): bool
+    {
+        $query = 'DELETE ' . UserTeachLanguage::DB_TBL . ', ustelgpr FROM ' . UserTeachLanguage::DB_TBL . ' LEFT JOIN ' . TeachLangPrice::DB_TBL . ' ustelgpr ON ustelgpr.ustelgpr_utl_id = utl_id WHERE 1 = 1';
+        if(!empty($this->userId)){
+            $query .=' and utl_user_id = ' . $this->userId;
+        }
+
+        if(!empty($langIds))
+        {
+            $langIds = implode(",", $langIds);
+            $query .= ' and utl_tlanguage_id IN (' . $langIds . ')';
+        }
+
+        $db = FatApp::getDb();
+
+        $db->query($query);
+
+        if ($db->getError()) {
+            $this->error = $db->getError();
+            return false;
+        }
+        
+        return true;
+    }
  
 
 }

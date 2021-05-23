@@ -184,6 +184,12 @@ class PreferencesController extends AdminBaseController
         if (!$deleteRecord->deletePreference($preference_id)) {
             FatUtility::dieWithError($deleteRecord->getError());
         }
+
+        $this->removeUserPreferences([$preference_id]);
+
+        $teacherStat = new TeacherStat(0);
+        $teacherStat->setPreferenceBulk();
+        
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
 
@@ -220,6 +226,27 @@ class PreferencesController extends AdminBaseController
             $this->set('msg', Label::getLabel('LBL_Order_Updated_Successfully', $this->adminLangId));
             $this->_template->render(false, false, 'json-success.php');
         }
+    }
+
+    private function removeUserPreferences(array $preferencesIds = []): bool
+    {
+        $query = 'DELETE FROM ' . Preference::DB_TBL_USER_PREF. ' WHERE 1 = 1';
+       
+        if(!empty($preferencesIds))
+        {
+            $preferencesIds = implode(",", $preferencesIds);
+            $query .= ' and utpref_preference_id IN (' . $preferencesIds . ')';
+        }
+
+        $db = FatApp::getDb();
+        $db->query($query);
+
+        if ($db->getError()) {
+            $this->error = $db->getError();
+            return false;
+        }
+        
+        return true;
     }
 
 }

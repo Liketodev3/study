@@ -389,8 +389,10 @@ class TeacherController extends TeacherBaseController
                 FatUtility::dieJsonError($db->getError());
             }
         }
-        /* Update Teacher's teach language stat */
+        /* Update Teacher's teach & speak language stat */
+        (new TeacherStat($teacherId))->setTeachLangPrices();
         (new TeacherStat($teacherId))->setSpeakLang();
+
         $db->commitTransaction();
         $this->set('msg', Label::getLabel('MSG_Setup_successful'));
         $this->_template->render(false, false, 'json-success.php');
