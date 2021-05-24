@@ -191,6 +191,8 @@ _carousel.each(function () {
 });
 //End of Common Carousel
 
+
+
 $('.vert-carousel').slick({
     slidesToShow: 3,
     slidesToScroll: 1,

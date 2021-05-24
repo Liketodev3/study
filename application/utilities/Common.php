@@ -15,7 +15,9 @@ class Common
 
     public static function languagesWithTeachersCount($template)
     {
-        $template->set("allLanguages", TeachingLanguage::getAllLangsWithUserCount(CommonHelper::getLangId()));
+        $siteLangId = CommonHelper::getLangId();      
+        $template->set("allLanguages", TeachingLanguage::getAllLangsWithUserCount($siteLangId));
+        $template->set('siteLangId',$siteLangId);
     }
 
     public static function upcomingScheduledLessons($template)
@@ -59,6 +61,7 @@ class Common
         $template->set("lessons", $lessons);
     }
 
+
     public static function topRatedTeachers($template)
     {
         $userObj = new UserSearch();
@@ -90,9 +93,6 @@ class Common
             $bannerListing = $db->fetchAll($rs, 'banner_id');
             $banners[$val['blocation_key']]['banners'] = $bannerListing;
         }
-
-        //CommonHelper::printArray($banners,true);
-
         $template->set("banners", $banners);
         $template->set('siteLangId', CommonHelper::getLangId());
     }
@@ -309,15 +309,57 @@ class Common
         return $rootUrl . CONF_WEBROOT_URL . (!empty($row) ? $row['urlrewrite_custom'] : $uri);
     }
 
-    public static function getContentfromExtraPage($template){
+    public static function getBrowseTutorSection($template){
+        $browseTutorPage = Extrapage::getBlockContent(Extrapage::BLOCK_BROWSE_TUTOR,commonHelper::getLangId());
+        $template->set('browseTutorPage', $browseTutorPage);
+    }
 
-     $epageDetail = Extrapage::getBlockContent(Extrapage::BLOCK_WHY_US,commonHelper::getLangId());
-     $template->set('epage',$epageDetail);
-
+    
+    public static function whyUsTemplateContent($template)
+    {
+     $epageDetail = Extrapage::getBlockContent(Extrapage::BLOCK_WHY_US, CommonHelper::getLangId());
+     $template->set('epage', $epageDetail);
     }
 
     public static function getExploreSubjects($template){
         $teachLangs = TeachingLanguage::getAllLangs();
         $template->set('teachLangs',$teachLangs);
     }
+
+    
+    public static function upcomingGroupClass($template)
+    {
+        $siteLangId = commonHelper::getLangId();
+        $pageSize = 3;
+        $srch = TeacherGroupClassesSearch::getSearchObj($siteLangId);
+        $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+        $srch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
+        $srch->setPageSize($pageSize);
+        $rs = $srch->getResultSet();
+        $classesList = FatApp::getDb()->fetchAll($rs);
+        $template->set('siteLangId',$siteLangId);
+        $template->set('classes', $classesList);
+    }
+
+    public static function getBlogs($template){
+
+        $siteLangId = CommonHelper::getLangId();
+        $blogSrch = BlogPost::getSearchObject($siteLangId,true);
+        
+
+    }
+
+    public static function getTestmonials($template)
+    {
+        $pageSize = 4;
+        $siteLangId = CommonHelper::getLangId();
+        $testmonialSrch = Testimonial::getSearchObject($siteLangId,true);
+        $testmonialSrch->joinTable(AttachedFile::DB_TBL, 'INNER  JOIN', 'af.afile_record_id = t.testimonial_id and afile_type =' . AttachedFile::FILETYPE_TESTIMONIAL_IMAGE,'af');
+        $testmonialSrch->setPageSize($pageSize);
+        $testmonialList = FatApp::getDb()->fetchAll($testmonialSrch->getResultSet());
+
+        $template->set('testmonialList',$testmonialList);
+        $template->set('siteLangId',$siteLangId);
+    }
+
 }

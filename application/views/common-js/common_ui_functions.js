@@ -7,8 +7,6 @@ $(document).ready(function() {
         $('.sidebar__body').css('height', 'calc(100% - ' +$('.sidebar__head').innerHeight()+'px');
     });
 
-
-
     /* COMMON TOGGLES */ 
     var _body = $('html');
     var _toggle = $('.trigger-js');
@@ -40,9 +38,6 @@ $(document).ready(function() {
         });
     });
     
-
-
-
     /* FOR FOOTER */
     if( $(window).width() < 767 ){
         /* FOR FOOTER TOGGLES */
@@ -124,6 +119,108 @@ $(document).ready(function() {
       });
       
 
- 
+      $('.slider-onethird-js').slick({
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        infinite: false,
+        arrows: true,
+        adaptiveHeight: true,
+        dots: false,
+        prevArrow: '<button class="slick-prev cursor-hide" aria-label="Previous" type="button">Previous</button>',
+        nextArrow: '<button class="slick-next cursor-hide" aria-label="Next" type="button">Next</button>',
+        responsive: [
+          {
+             breakpoint: 1199,
+             settings: {
+               slidesToShow: 2,
+             }
+           },
+           {
+             breakpoint: 1023,
+             settings: {
+               slidesToShow: 2,
+             }
+           },
+           {
+             breakpoint: 767,
+             settings: {
+               slidesToShow:2,         
+             }
+           },
+        
+           {
+             breakpoint: 576,
+             settings: {
+              slidesToShow:1,
+             }
+           } 
+           
+       ]
+      });
+
+$('.step-slider-js').slick({
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  arrows: false,
+  dots: true,
+  asNavFor: '.slider-tabs--js'
+});
+
+$('.slider-tabs--js').slick({
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    asNavFor: '.step-slider-js',
+    dots: true,
+    centerMode: true,
+    focusOnSelect: true
+  });
+
+  $('.slider-quote-js').slick({
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    autoplay:false,
+    adaptiveHeight: true,
+    dots: false,
+    prevArrow: '<button class="slick-prev cursor-hide" aria-label="Previous" type="button">Previous</button>',
+    nextArrow: '<button class="slick-next cursor-hide" aria-label="Next" type="button">Next</button>',
+    responsive: [
+      {
+      breakpoint:1023,
+        settings: {
+          fade: false,
+          infinite: true,
+          arrows: true,
+            centerMode:true,  
+            centerPadding: '15%',
+            dots: false,
+        }
+      } ,
+      {
+        breakpoint:767,
+          settings: {
+            fade: false,
+            infinite: true,
+            dots: false,
+            arrows: true,
+              centerMode:true,  
+              centerPadding: '15%',
+   
+          }
+        } ,
+        {
+          breakpoint: 576,
+          settings: {
+            fade: false,
+            infinite: true,
+            dots: false,
+            arrows: true,
+              centerMode:true,  
+              centerPadding: '5%',
+   
+          }
+        } 
+    ]
+  });
      
 });

@@ -40,6 +40,10 @@ FatApp::setViewDataProvider('home/_partial/topRatedTeachers.php', ['Common', 'to
 FatApp::setViewDataProvider('home/_partial/upcomingScheduledLessons.php', ['Common', 'upcomingScheduledLessons']);
 FatApp::setViewDataProvider('header/explore-subjects.php', ['Common', 'getExploreSubjects']);
 FatApp::setViewDataProvider('header/right-section.php', ['Common', 'headerLanguageArea']);
-FatApp::setViewDataProvider('home/_partial/secondBlockAftrSlider.php', ['Common', 'getContentfromExtraPage']);
+FatApp::setViewDataProvider('home/_partial/secondBlockAftrSlider.php', ['Common', 'whyUsTemplateContent']);
+FatApp::setViewDataProvider('home/_partial/browseTutor.php', ['Common', 'getBrowseTutorSection']);
+FatApp::setViewDataProvider('home/_partial/upcomingGroupClasses.php', ['Common', 'upcomingGroupClass']);
+FatApp::setViewDataProvider('home/_partial/testmonials.php', ['Common', 'getTestmonials']);
+FatApp::setViewDataProvider('home/_partial/blogGrids.php', ['Common', 'getTestmonials']);
 
 

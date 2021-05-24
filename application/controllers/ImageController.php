@@ -456,9 +456,9 @@ class ImageController extends FatController
                 AttachedFile::displayImage($image_name, $w, $h);
                 break;
             default:
-            $w = 2000;
-            $h = 900;
-            AttachedFile::displayImage($image_name, $w, $h);
+                $w = 2000;
+                $h = 900;
+                AttachedFile::displayImage($image_name, $w, $h);
                 break;
         }
     }
@@ -490,6 +490,10 @@ class ImageController extends FatController
             case 'NORMAL':
                 $w = 625;
                 $h = 391;
+                break;
+            case 'MEDIUM':
+                $w = 275;
+                $h = 275;
                 break;
             default:
                 $h = 500;
@@ -631,10 +635,10 @@ class ImageController extends FatController
 
         switch ($size) {
             case '144':
-                $w = $h =  144;
+                $w = $h = 144;
                 break;
             case '512':
-                $w = $h =  512;
+                $w = $h = 512;
                 break;
             default:
                 $w = $h = 100;

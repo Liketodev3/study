@@ -1,13 +1,15 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 
-  <?php if( isset($slides) && count($slides) ){	
-		$this->includeTemplate( 'home/_partial/homePageSlides.php', array( 'slides' =>$slides, 'siteLangId' => $siteLangId ),false );
-	} ?>
+if (isset($slides) && count($slides)) {
+    $this->includeTemplate('home/_partial/homePageSlides.php', ['slides' => $slides, 'siteLangId' => $siteLangId], false); //prehook
+}
 
-<?php $this->includeTemplate( 'home/_partial/secondBlockAftrSlider.php' ); ?>
-<?php $this->includeTemplate('home/_partial/languagesWithTeachersCount.php'); ?>
-<?php $this->includeTemplate( 'home/_partial/topRatedTeachers.php' ); ?>
-<?php  $this->includeTemplate( 'home/_partial/staticBanner.php' ); ?>
-<!-- <?php $this->includeTemplate( 'home/_partial/homePageSlidesAboveFooter.php' ); ?> -->
-
-<?php $this->includeTemplate( 'home/_partial/newsLetterFrm.php',array('newsLetterForm' => $newsLetterForm, 'siteLangId' => $siteLangId) ); ?>
+$this->includeTemplate('home/_partial/secondBlockAftrSlider.php');
+$this->includeTemplate('home/_partial/languagesWithTeachersCount.php');
+$this->includeTemplate('home/_partial/topRatedTeachers.php');
+$this->includeTemplate('home/_partial/browseTutor.php');
+$this->includeTemplate('home/_partial/upcomingGroupClasses.php');
+$this->includeTemplate('home/_partial/testmonials.php');
+$this->includeTemplate('home/_partial/homePageHowItWorks.php');
+$this->includeTemplate('home/_partial/blogGrids.php');
+$this->includeTemplate('home/_partial/newsLetterFrm.php', array('newsLetterForm' => $newsLetterForm, 'siteLangId' => $siteLangId));

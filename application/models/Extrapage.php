@@ -8,6 +8,7 @@ class Extrapage extends MyAppModel
     const DB_TBL_LANG_PREFIX = 'epagelang_';
     const BLOCK_PROFILE_INFO_BAR = 1;
     const BLOCK_WHY_US = 2;
+    const BLOCK_BROWSE_TUTOR = 3;
     private $pageType;
 
     public function __construct($epageId = 0, $pageType = '')
