@@ -196,7 +196,7 @@ ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_slanguage_id` `utl_tlanguage_
 
 ALTER TABLE `tbl_user_teach_languages` CHANGE `utl_us_user_id` `utl_user_id` INT(11) NOT NULL;
 
-DELETE teachLANG FROM `tbl_user_teach_languages` as teachLANG WHERE teachLANG.`utl_id` NOT IN(SELECT * FROM (SELECT MIN(n.utl_id) FROM `tbl_user_teach_languages` n GROUP BY n.utl_user_id, n.utl_tlanguage_id) X )
+DELETE teachLANG FROM `tbl_user_teach_languages` as teachLANG WHERE teachLANG.`utl_id` NOT IN(SELECT * FROM (SELECT MIN(n.utl_id) FROM `tbl_user_teach_languages` n GROUP BY n.utl_user_id, n.utl_tlanguage_id) X );
 
 --
 -- Indexes for table `tbl_user_teach_languages`
