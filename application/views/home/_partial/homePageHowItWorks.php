@@ -5,8 +5,6 @@
 ?>
 <?php if (!empty($hWorksdata)) {
 ?>
-
-
     <section class="section section--step">
         <div class="container container--narrow">
             <div class="section__head">
@@ -17,27 +15,17 @@
                 <div class="step-wrapper">
                     <div class="step-container__head">
                         <div class="step-tabs slider-tabs--js">
-                           
+                           <?php foreach(array_column($hWorksdata['banners'],'banner_title') as $bannerTitle){ ?>
                             <div>
                                 <button class="slider-tabs__action">
-                                    <span class="slider-tabs__number">01. </span>
-                                    <span class="slider-tabs__label">Search</span>
+                                    <span class="slider-tabs__label"><?php echo $bannerTitle; ?></span>
                                 </button>
                             </div>
-                            <div>
-                                <button class="slider-tabs__action">
-                                    <span class="slider-tabs__number">02. </span>
-                                    <span class="slider-tabs__label">Book</span>
-                                </button>
-                            </div>
-                            <div>
-                                <button class="slider-tabs__action">
-                                    <span class="slider-tabs__number">03. </span>
-                                    <span class="slider-tabs__label">Learn</span>
-                                </button>
-                            </div>
+                            <?php } ?>
+                     
                         </div>
                     </div>
+                  
                     <div class="step-container__body">
                         <div class="step-slider step-slider-js">
                         <?php

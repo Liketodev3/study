@@ -2,8 +2,7 @@
 </div>
 <!--footer start here-->
 <footer id="footer">
-	<p><?php echo FatApp::getConfig("CONF_WEBSITE_NAME_" . $adminLangId, FatUtility::VAR_STRING, 'Copyright &copy; ' . date('Y') . ' <a href="javascript:void(0);">FATbit.com');
-		echo " " . FatApp::getConfig("CONF_YOCOACH_VERSION", FatUtility::VAR_STRING, 'V1.0') ?> </p>
+	<p><?php echo FatApp::getConfig("CONF_WEBSITE_NAME_" . $adminLangId, FatUtility::VAR_STRING, 'Copyright &copy; ' . date('Y') . ' <a href="javascript:void(0);">FATbit.com');		echo " " . FatApp::getConfig("CONF_YOCOACH_VERSION", FatUtility::VAR_STRING, 'V1.0') ?> </p>
 </footer>
 <!--footer start here-->
 

@@ -36,6 +36,10 @@ $alert: "alert";
 &:before{  background: url(/images/icon-attention.svg) no-repeat;background-size:30px;position: absolute;#{theme('direction.left','value')}: 15px;top: 50%; transform: translate(0,-50%);content: "";width: 30px;height: 30px;}
 }
 
+&--attention{
+&:before{  background: url(/images/icon-attention.svg) no-repeat;background-size:30px;position: absolute;#{theme('direction.left','value')}: 15px;top: 50%; transform: translate(0,-50%);content: "";width: 30px;height: 30px;}
+}
+
 &--sticky{position: fixed;bottom:30px;#{theme('direction.left','value')}:30px;z-index: 10; max-width: 500px; margin: 0; }
 
 

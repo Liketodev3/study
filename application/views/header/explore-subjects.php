@@ -9,7 +9,7 @@
                                     <nav class="menu--inline">
                                         <ul>
 											<?php foreach($teachLangs as $teachLangId=>$teachlang){  ?>
-                                            <li class="menu__item "><a href="<?php echo $teachLangId; ?>"><?php echo $teachlang; ?></a></li>
+                                            <li class="menu__item "><a href="<?php echo CommonHelper::generateUrl('teachers','index',[$teachLangId]); ?>"><?php echo $teachlang; ?></a></li>
                                             <?php }?>
                                         </ul>
                                     </nav>

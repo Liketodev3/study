@@ -97,7 +97,7 @@
   --color-third-inverse: #fff;
   --color-red: #ff0251;
   --color-red-inverse: #fff;
-  --color-green: #1DCE70;
+  --color-green: #5CE49B;
   --color-green-inverse: #fff;
   --color-yellow: #ffab22;
   --color-yellow-inverse: #fff;
@@ -116,6 +116,10 @@
   --color-gray-100: #f2f2f2;
   --color-dark-blue: #152352;
   --color-dark: #111;
+  --color-gray-dark: #333;
+  --color-green-80: #7de9af;
+  --color-green-60: #9defc3;
+  --color-green-40: #bef4d7;
   --boxShadow-l-r: 0px 0px 5px rgba(0, 0, 0, 0.1);
   --boxShadow-vertical: 5px 15px 20px 0px rgba(0, 0, 0, 0.1);
   --boxShadow-all:  0 0 4px rgba(0, 0, 0, 0.1);
@@ -625,7 +629,7 @@ ul {
   background-color: var(--color-red-inverse) !important; }
 
 .bg-green {
-  color: #ffffff;
+  color: #000000;
   background-color: var(--color-green) !important; }
 
 .bg-green-inverse {
@@ -699,6 +703,22 @@ ul {
 .bg-dark {
   color: #ffffff;
   background-color: var(--color-dark) !important; }
+
+.bg-gray-dark {
+  color: #ffffff;
+  background-color: var(--color-gray-dark) !important; }
+
+.bg-green-80 {
+  color: #000000;
+  background-color: var(--color-green-80) !important; }
+
+.bg-green-60 {
+  color: #000000;
+  background-color: var(--color-green-60) !important; }
+
+.bg-green-40 {
+  color: #000000;
+  background-color: var(--color-green-40) !important; }
 
 .border, .-border {
   border: 1px solid var(--color-gray-200); }
@@ -2849,6 +2869,18 @@ img {
 
 .color-dark {
   color: var(--color-dark) !important; }
+
+.color-gray-dark {
+  color: var(--color-gray-dark) !important; }
+
+.color-green-80 {
+  color: var(--color-green-80) !important; }
+
+.color-green-60 {
+  color: var(--color-green-60) !important; }
+
+.color-green-40 {
+  color: var(--color-green-40) !important; }
 
 .accordian-group {
   margin: 0 0 40px 0; }
@@ -6944,6 +6976,18 @@ textarea[disabled] {
       content: "";
       width: 30px;
       height: 30px; }
+  .alert--attention:before {
+    background: url(/images/icon-attention.svg) no-repeat;
+    background-size: 30px;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    -webkit-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+            transform: translate(0, -50%);
+    content: "";
+    width: 30px;
+    height: 30px; }
   .alert--sticky {
     position: fixed;
     bottom: 30px;
@@ -8965,9 +9009,12 @@ textarea[disabled] {
   max-width: 100%; }
 
 #facebox {
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: fixed;
+  top: 100px;
+  right: 50%;
+  -webkit-transform: translate(-50%, 0);
+      -ms-transform: translate(-50%, 0);
+          transform: translate(-50%, 0);
   z-index: 999;
   text-align: right; }
 

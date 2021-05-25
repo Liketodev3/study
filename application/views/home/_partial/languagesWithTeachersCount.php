@@ -17,13 +17,13 @@
                         <span><?php echo $language['tlanguage_name'] ?></span>
                         <div class="lesson-count"><?php echo $language['teacherCount'].' '.Label::getLabel('Lbl_Teachers',$siteLangId); ?></div>
                     </div>
-                    <a class="flag__action" href="<?php echo CommonHelper::generateUrl('Teachers','Index', array( $language['tlanguage_id'] )) ?>"></a>
+                    <a class="flag__action" href="<?php echo CommonHelper::generateUrl('Teachers','Index', array( $language['tlanguage_id'])); ?>"></a>
                 </div>
                 <?php } ?>
         
             </div>
             <div class="more-info align-center">
-                <p><?php echo Label::getLabel("LBL_different_language_note",$siteLangId); ?> <a href="#"><?php echo Label::getLabel('LBL_Browse_them_now',$siteLangId); ?></a></p>
+                <p><?php echo Label::getLabel("LBL_different_language_note",$siteLangId); ?> <a href="<?php echo CommonHelper::generateUrl('teachers','index'); ?>"><?php echo Label::getLabel('LBL_Browse_them_now',$siteLangId); ?></a></p>
             </div>
             </div>
     

@@ -44,15 +44,12 @@
                     <img data-aspect-ratio="10:3" srcset="' . $desktop_url . '" alt="">
                 </picture>
             </div></div>';
-
     if ($slide['slide_url']) {
         $out .= '</a>';
     }
-
     echo $out;
 }?>
 	</div>
-
    <div class="slideshow-content">
         <h1><?php echo Label::getLabel('LBL_Slider_Title_Text'); ?></h1>
         <p><?php echo Label::getLabel('LBL_Slider_Description_Text'); ?></p>

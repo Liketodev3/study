@@ -1,7 +1,8 @@
 #facebox {
-    position: absolute;
-    top: 0;
-    #{theme('direction.left','value')}: 0;
+    position: fixed;
+    top: 100px;
+    #{theme('direction.left','value')}: 50%;
+    transform: translate(-50%,0);
     z-index: 999;
     text-align: #{theme('direction.left','value')};
 }

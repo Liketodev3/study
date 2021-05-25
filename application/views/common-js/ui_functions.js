@@ -203,51 +203,6 @@ $('.vert-carousel').slick({
 });
 
 
-$('.quote-slider').slick({
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: true,
-    infinite: false,
-    fade: false,
-    adaptiveHeight: true,
-    asNavFor: '.quote-thumbs',
-    responsive: [
-        {
-
-            breakpoint: 992,
-            settings: {
-                arrows: false
-            }
-        }
-        ]
-});
-$('.quote-thumbs').slick({
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    asNavFor: '.quote-slider',
-    dots: false,
-    centerMode: true,
-    focusOnSelect: true,
-    responsive: [
-        {
-
-            breakpoint: 1025,
-            settings: {
-                slidesToShow: 4,
-            }
-        },
-
-        {
-
-            breakpoint: 768,
-            settings: {
-                slidesToShow: 2,
-            }
-        }
-        ]
-
-});
-
 //  custom loader js start
 $.loader = {
     selector: '.loading-wrapper',

@@ -12,4 +12,3 @@ $this->includeTemplate('home/_partial/upcomingGroupClasses.php');
 $this->includeTemplate('home/_partial/testmonials.php');
 $this->includeTemplate('home/_partial/homePageHowItWorks.php');
 $this->includeTemplate('home/_partial/blogGrids.php');
-$this->includeTemplate('home/_partial/newsLetterFrm.php', array('newsLetterForm' => $newsLetterForm, 'siteLangId' => $siteLangId));

@@ -21,29 +21,35 @@ FatApp::setViewDataProvider('header/userLoginArea.php', ['Common', 'headerUserLo
 FatApp::setViewDataProvider('footer/languageCurrencySection.php', ['Common', 'languageCurrencySection']);
 FatApp::setViewDataProvider('header/currencySection.php', ['Common', 'languageCurrencySection']);
 FatApp::setViewDataProvider('header/languageSection.php', ['Common', 'languageCurrencySection']);
-FatApp::setViewDataProvider('footer/socialMedia.php', ['Common', 'footerSocialMedia']);
+FatApp::setViewDataProvider('footer/socialMediaSection.php', ['Common', 'footerSocialMedia']);
 FatApp::setViewDataProvider('guest-user/_partial/learner-social-media-signup.php', ['Common', 'learnerSocialMediaSignUp']);
 FatApp::setViewDataProvider('teachers/_partial/teacherLeftFilters.php', ['Common', 'teacherLeftFilters']);
 FatApp::setViewDataProvider('teachers/_partial/teacherTopFilters.php', ['Common', 'teacherLeftFilters']);
 FatApp::setViewDataProvider('_partial/blogSidePanel.php', ['Common', 'blogSidePanelArea']);
 FatApp::setViewDataProvider('_partial/blogTopFeaturedCategories.php', ['Common', 'blogTopFeaturedCategories']);
 FatApp::setViewDataProvider('header/navigation.php', ['Navigation', 'headerNavigation']);
-FatApp::setViewDataProvider('footer/navigation.php', ['Navigation', 'footerNavigation']);
+
 FatApp::setViewDataProvider('navigationMore.php', ['Navigation', 'headerMoreNavigation']);
 FatApp::setViewDataProvider('account/_partial/dashboardNavigation.php', ['Navigation', 'dashboardNavigation']);
 FatApp::setViewDataProvider('_partial/dashboardRightNavigation.php', ['Navigation', 'dashboardRightNavigation']);
 FatApp::setViewDataProvider('_partial/tutorListNavigation.php', ['Navigation', 'tutorListNavigation']);
-FatApp::setViewDataProvider('footer/rightNavigation.php', ['Navigation', 'footerRightNavigation']);
+
 FatApp::setViewDataProvider('footer/bottomNavigation.php', ['Navigation', 'footerBottomNavigation']);
 FatApp::setViewDataProvider('home/_partial/languagesWithTeachersCount.php', ['Common', 'languagesWithTeachersCount']);
 FatApp::setViewDataProvider('home/_partial/topRatedTeachers.php', ['Common', 'topRatedTeachers']);
 FatApp::setViewDataProvider('home/_partial/upcomingScheduledLessons.php', ['Common', 'upcomingScheduledLessons']);
-FatApp::setViewDataProvider('header/explore-subjects.php', ['Common', 'getExploreSubjects']);
-FatApp::setViewDataProvider('header/right-section.php', ['Common', 'headerLanguageArea']);
+FatApp::setViewDataProvider('header/explore-subjects.php', ['Common', 'getTeachLanguages']);
+FatApp::setViewDataProvider('footer/footerRowThird.php', ['Common', 'getTeachLanguages']);
+FatApp::setViewDataProvider('header/right-section.php', ['Common', 'headerUserLoginArea']);
 FatApp::setViewDataProvider('home/_partial/secondBlockAftrSlider.php', ['Common', 'whyUsTemplateContent']);
 FatApp::setViewDataProvider('home/_partial/browseTutor.php', ['Common', 'getBrowseTutorSection']);
 FatApp::setViewDataProvider('home/_partial/upcomingGroupClasses.php', ['Common', 'upcomingGroupClass']);
 FatApp::setViewDataProvider('home/_partial/testmonials.php', ['Common', 'getTestmonials']);
-FatApp::setViewDataProvider('home/_partial/blogGrids.php', ['Common', 'getTestmonials']);
+FatApp::setViewDataProvider('home/_partial/blogGrids.php', ['Common', 'getBlogsForGrids']);
+FatApp::setViewDataProvider('footer/langCurSection.php',['Common', 'languageCurrencySection']);
+
+FatApp::setViewDataProvider('footer/footerSignUpNavigation.php',['Navigation', 'footerSignUpNavigation']);
+FatApp::setViewDataProvider('footer/extraLinks.php', ['Navigation', 'footerNavigation']);
+FatApp::setViewDataProvider('footer/moreLinksNavigation.php', ['Navigation', 'footerRightNavigation']);
 
 

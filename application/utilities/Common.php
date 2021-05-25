@@ -64,6 +64,7 @@ class Common
 
     public static function topRatedTeachers($template)
     {
+        $siteLangId = CommonHelper::getLangId();
         $userObj = new UserSearch();
         $topRatedTeachers = $userObj->getTopRatedTeachers();
         if ($topRatedTeachers) {
@@ -73,6 +74,7 @@ class Common
                 }
             }
         }
+        $template->set('siteLangId',$siteLangId);
         $template->set("topRatedTeachers", $topRatedTeachers);
     }
 
@@ -109,7 +111,6 @@ class Common
 
     public static function headerLanguageArea($template)
     {
-          
         $template->set('siteLangId', CommonHelper::getLangId());
         $template->set('siteCurrencyId',CommonHelper::getCurrencyId());
         $template->set('languages', Language::getAllNames(false));
@@ -129,6 +130,11 @@ class Common
         $action = FatApp::getAction();
         $template->set('controllerName', $controllerName);
         $template->set('action', $action);
+        $template->set('siteLangId', CommonHelper::getLangId());
+        $template->set('siteCurrencyId',CommonHelper::getCurrencyId());
+        $template->set('languages', Language::getAllNames(false));
+        $template->set('currencies',Currency::getCurrencyAssoc(CommonHelper::getLangId()));
+        
     }
 
     public static function languageCurrencySection($template)
@@ -321,9 +327,11 @@ class Common
      $template->set('epage', $epageDetail);
     }
 
-    public static function getExploreSubjects($template){
+    public static function getTeachLanguages($template){
+        $siteLangId = CommonHelper::getLangId();
         $teachLangs = TeachingLanguage::getAllLangs();
         $template->set('teachLangs',$teachLangs);
+        $template->set('siteLangId',$siteLangId);
     }
 
     
@@ -357,9 +365,25 @@ class Common
         $testmonialSrch->joinTable(AttachedFile::DB_TBL, 'INNER  JOIN', 'af.afile_record_id = t.testimonial_id and afile_type =' . AttachedFile::FILETYPE_TESTIMONIAL_IMAGE,'af');
         $testmonialSrch->setPageSize($pageSize);
         $testmonialList = FatApp::getDb()->fetchAll($testmonialSrch->getResultSet());
-
         $template->set('testmonialList',$testmonialList);
         $template->set('siteLangId',$siteLangId);
+    }
+
+    public static function getBlogsForGrids($template)
+    {
+        $pageSize = 4;
+        $siteLangId = CommonHelper::getLangId();
+        $blogPostSrch = BlogPost::getSearchObject($siteLangId,true,true);
+        $blogPostSrch->joinTable(AttachedFile::DB_TBL, 'INNER  JOIN', 'af.afile_record_id = bp.post_id and afile_type =' . AttachedFile::FILETYPE_BLOG_POST_IMAGE,'af');
+        $blogPostSrch->setPageSize($pageSize);
+        $blogPostsList = FatApp::getDb()->fetchAll($blogPostSrch->getResultSet());        
+        $template->set('blogPostsList',$blogPostsList);
+        $template->set('siteLangId',$siteLangId);
+    }
+
+    public static function footerSignUpNavigation($template){
+        
+
     }
 
 }

@@ -90,58 +90,170 @@ $('.vert-carousel').slick({
     arrow: true,
     vertical: true
 });    
-    
-$('.quote-slider').slick({
-    slidesToShow: 1,
-	rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
-    slidesToScroll: 1,
-    arrows: true,
-    infinite: false,
-    fade: false,
-    asNavFor: '.quote-thumbs',
-    responsive: [
-        {
+  
+// $(".banner_link_how_works").click(function(e) {
+// 	e.preventDefault();
+//     $('html, body').animate({
+//         scrollTop: $("#how-it-works").offset().top
+//     }, 1000);
+// });
 
-            breakpoint: 992,
-            settings: {
-                arrows: false
-            }
-        }
-        ]
-});
-$('.quote-thumbs').slick({
+
+$('.slideshow-js').slick({
+    dots: true,
+    infinite: true,
+    speed: 500,
+    fade: true,
+    cssEase: 'linear',
+    arrows: false,
+    rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+  });
+  
+
+  $('.slider-onethird-js').slick({
     slidesToShow: 3,
     slidesToScroll: 1,
-	rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
-    asNavFor: '.quote-slider',
+    infinite: false,
+    rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+    arrows: true,
+    adaptiveHeight: true,
     dots: false,
-    centerMode: true,
-    focusOnSelect: true,
+    prevArrow: '<button class="slick-prev cursor-hide" aria-label="Previous" type="button">Previous</button>',
+    nextArrow: '<button class="slick-next cursor-hide" aria-label="Next" type="button">Next</button>',
     responsive: [
-        {
+      {
+         breakpoint: 1199,
+         settings: {
+           slidesToShow: 2,
+         }
+       },
+       {
+         breakpoint: 1023,
+         settings: {
+           slidesToShow: 2,
+         }
+       },
+       {
+         breakpoint: 767,
+         settings: {
+           slidesToShow:2,         
+         }
+       },
+    
+       {
+         breakpoint: 576,
+         settings: {
+          slidesToShow:1,
+         }
+       } 
+       
+   ]
+  });
 
-            breakpoint: 1025,
-            settings: {
-                slidesToShow: 4,
-            }
-        },
+$('.step-slider-js').slick({
+slidesToShow: 1,
+slidesToScroll: 1,
+rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+arrows: false,
+dots: true,
+asNavFor: '.slider-tabs--js'
+});
 
-        {
+$('.slider-tabs--js').slick({
+slidesToShow: 3,
+slidesToScroll: 1,
+asNavFor: '.step-slider-js',
+rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+dots: true,
+centerMode: true,
+focusOnSelect: true
+});
 
-            breakpoint: 768,
-            settings: {
-                slidesToShow: 2,
-            }
-        }
-        ]
+$('.slider-quote-js').slick({
+slidesToShow: 1,
+slidesToScroll: 1,
+arrows: true,
+rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+autoplay:false,
+adaptiveHeight: true,
+dots: false,
+prevArrow: '<button class="slick-prev cursor-hide" aria-label="Previous" type="button">Previous</button>',
+nextArrow: '<button class="slick-next cursor-hide" aria-label="Next" type="button">Next</button>',
+responsive: [
+  {
+  breakpoint:1023,
+    settings: {
+      fade: false,
+      infinite: true,
+      arrows: true,
+        centerMode:true,  
+        centerPadding: '15%',
+        dots: false,
+    }
+  } ,
+  {
+    breakpoint:767,
+      settings: {
+        fade: false,
+        infinite: true,
+        dots: false,
+        arrows: true,
+          centerMode:true,  
+          centerPadding: '15%',
 
-});    
+      }
+    } ,
+    {
+      breakpoint: 576,
+      settings: {
+        fade: false,
+        infinite: true,
+        dots: false,
+        arrows: true,
+          centerMode:true,  
+          centerPadding: '5%',
 
-$(".banner_link_how_works").click(function(e) {
-	e.preventDefault();
-    $('html, body').animate({
-        scrollTop: $("#how-it-works").offset().top
-    }, 1000);
+      }
+    } 
+]
+});
+
+$('.slider-onehalf-js').slick({
+slidesToShow: 2,
+slidesToScroll: 1,
+infinite: false,
+rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+arrows: true,
+adaptiveHeight: true,
+dots: false,
+
+responsive: [
+ 
+  {
+     breakpoint: 1199,
+     settings: {
+       slidesToShow:2,
+       dots: false,
+       arrows: true,
+     }
+   },
+   {
+     breakpoint: 1023,
+     settings: {
+       slidesToShow:1,
+       dots: false,
+       arrows: true,
+     }
+   },
+   {
+     breakpoint: 767,
+     settings: {
+      slidesToShow: 1,
+      dots: false,
+      arrows: true,
+     }
+   }, 
+]
 });
     
 });
