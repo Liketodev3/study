@@ -46,13 +46,13 @@
                                                 <p class="class-price"><?php echo CommonHelper::displayMoneyFormat($classesDetails['grpcls_entry_fee']) ?></p>
                                                 <div class="timer">
 
-                                                    <?php if ($startUnixTime > $currentUnixTime && $i == 1) { ?>
+                                                    <?php if ($startUnixTime > $currentUnixTime) { ?>
                                                         <div class="timer__media">
                                                             <span> <svg class="icon icon--clock">
                                                                     <use xlink:href="images/sprite.yo-coach.svg#clock"></use>
                                                                 </svg></span>
                                                         </div>
-                                                        <div class="timer__controls countdowntimer timer-js" data-startTime="<?php echo $curDateTime; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>"></div>
+                                                        <div class="timer__controls countdowntimer timer-js" id="grup-class_<?php echo $i; ?>" data-startTime="<?php echo $curDateTime; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>"></div>
                                                     <?php } ?>
 
                                                 </div>

@@ -351,6 +351,7 @@ class Common
         $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
         $srch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
         $srch->setPageSize($pageSize);
+        $srch->addOrder('grpcls_start_datetime','Asc');
         $rs = $srch->getResultSet();
         $classesList = FatApp::getDb()->fetchAll($rs);
         $template->set('siteLangId',$siteLangId);
