@@ -1,3 +1,4 @@
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php if ($testmonialList) {?>
     <section class="section section--quote">
         <div class="container container--narrow">

@@ -1,3 +1,4 @@
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php if ($blogPostsList) {?>
     <section class="section">
         <div class="container container--narrow">

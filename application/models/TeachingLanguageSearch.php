@@ -26,4 +26,9 @@ class TeachingLanguageSearch extends SearchBase
         $this->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'u.user_id = cred.credential_user_id', 'cred');
     }
 
+    public function joinOrderProduct(){
+        $this->joinTable(OrderProduct::DB_TBL, 'INNER JOIN', 'tl.tlanguage_id = op.op_slanguage_id', 'op');
+        $this->joinTable(Order::DB_TBL, 'INNER JOIN', 'op.op_order_id = o.order_id', 'o');
+    }
+
 }

@@ -71,7 +71,7 @@
             <a class="header-dropdown__trigger trigger-js" href="#profile-nav">
                 <div class="teacher-profile">
                     <div class="teacher__media">
-                        <div class="avtar avtar--xsmall" data-text="<?php echo CommonHelper::getFirstChar(UserAuthentication::getLoggedUserAttribute('user_first_name')); ?>">
+                        <div class="avtar avtar--xsmall" data-title="<?php echo CommonHelper::getFirstChar(UserAuthentication::getLoggedUserAttribute('user_first_name')); ?>">
                                             <?php
                                             if (true == User::isProfilePicUploaded()) { ?>
                                                          <img src=" <?php echo CommonHelper::generateUrl('Image', 'user', array(UserAuthentication::getLoggedUserId(), 'EXTRASMALL')) . '?t=' . time() ?>" alt="">
@@ -90,19 +90,19 @@
                         <ul>
 
                             <?php if (User::canViewTeacherTab() && User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD) { ?>
-                                <li class="menu__item <?php echo ("Teacher" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('Teacher'); ?>"><?php echo Label::getLabel('LBL_Dashboard'); ?></a></li>
-                                <li class="menu__item <?php echo ("TeacherStudents" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('TeacherStudents'); ?>"><?php echo Label::getLabel('LBL_My_Students'); ?></a></li>
-                                <li class="menu__item <?php echo ("TeacherScheduledLessons" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>"><?php echo Label::getLabel('LBL_Lessons'); ?></a></li>
+                                <li class="menu__item <?php echo ("Teacher" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('Teacher','index',[],CONF_WEBROOT_DASHBOARD); ?>"><?php echo Label::getLabel('LBL_Dashboard'); ?></a></li>
+                                <li class="menu__item <?php echo ("TeacherStudents" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('TeacherStudents','index',[],CONF_WEBROOT_DASHBOARD); ?>"><?php echo Label::getLabel('LBL_My_Students'); ?></a></li>
+                                <li class="menu__item <?php echo ("TeacherScheduledLessons" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons',CONF_WEBROOT_DASHBOARD); ?>"><?php echo Label::getLabel('LBL_Lessons'); ?></a></li>
 
                             <?php }
 
                             if (User::canViewLearnerTab() && User::getDashboardActiveTab() == User::USER_LEARNER_DASHBOARD) { ?>
-                                <li class="menu__item <?php echo ("Learner" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('Learner'); ?>"><?php echo Label::getLabel('LBL_Dashboard'); ?></a></li>
-                                <li class="menu__item <?php echo ("LearnerTeachers" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('LearnerTeachers'); ?>"><?php echo Label::getLabel('LBL_My_Teachers'); ?></a></li>
-                                <li class="menu__item <?php echo ("LearnerScheduledLessons" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons'); ?>"><?php echo Label::getLabel('LBL_Lessons'); ?></a></li>
+                                <li class="menu__item <?php echo ("Learner" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('Learner','index',[],CONF_WEBROOT_DASHBOARD); ?>"><?php echo Label::getLabel('LBL_Dashboard'); ?></a></li>
+                                <li class="menu__item <?php echo ("LearnerTeachers" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('LearnerTeachers','index',[],CONF_WEBROOT_DASHBOARD); ?>"><?php echo Label::getLabel('LBL_My_Teachers'); ?></a></li>
+                                <li class="menu__item <?php echo ("LearnerScheduledLessons" == $controllerName) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons','index',[],CONF_WEBROOT_DASHBOARD); ?>"><?php echo Label::getLabel('LBL_Lessons'); ?></a></li>
                             <?php } ?>
 
-                            <li class="menu__item <?php echo ("Account" == $controllerName && "profileInfo" == $action) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('Account', 'ProfileInfo'); ?>"><?php echo Label::getLabel('LBL_Settings'); ?></a></li>
+                            <li class="menu__item <?php echo ("Account" == $controllerName && "profileInfo" == $action) ? 'is-active' : ''; ?>"><a href="<?php echo CommonHelper::generateUrl('Account', 'ProfileInfo',[],CONF_WEBROOT_DASHBOARD); ?>"><?php echo Label::getLabel('LBL_Settings'); ?></a></li>
                             <li class="menu__item"><a href="<?php echo CommonHelper::generateUrl('GuestUser', 'logout'); ?>"><?php echo Label::getLabel('LBL_Logout'); ?></a></li>
                        
                         </ul>

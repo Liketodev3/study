@@ -1,3 +1,4 @@
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php if($allLanguages){ ?>
 
 <section class="section section--language">

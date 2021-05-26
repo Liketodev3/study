@@ -20,6 +20,14 @@ class Common
         $template->set('siteLangId',$siteLangId);
     }
 
+    public static function languagesWithOrdersCount($template){
+
+        $siteLangId = CommonHelper::getLangId();
+        $template->set("allLanguages", TeachingLanguage::getAllLangsWithOrderCount($siteLangId));
+        $template->set("siteLangId", $siteLangId);
+
+    }
+
     public static function upcomingScheduledLessons($template)
     {
         $srch = new ScheduledLessonSearch(false);

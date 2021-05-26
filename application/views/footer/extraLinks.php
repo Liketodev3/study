@@ -2,7 +2,7 @@
 <?php if (!empty($footer_navigation)) {?>
 
 
-<div class="col-md-3">
+<div class="col-md-6 col-lg-3">
                     <div class="footer-group toggle-group">
                         <div class="footer__group-title toggle-trigger-js">
                             <h5 class=""><?php echo Label::getLabel('LBL_Contact'); ?></h5>

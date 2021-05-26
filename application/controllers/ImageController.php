@@ -421,16 +421,8 @@ class ImageController extends FatController
                     $h = 416;
                     break;
                 case 'DESKTOP':
-                    $w = 1920;
-                    $h = 800;
-                    break;
-                case 'TABLET':
-                    $w = 1024;
-                    $h = 500;
-                    break;
-                case 'MOBILE':
-                    $w = 640;
-                    $h = 360;
+                    $w = 2000;
+                    $h = 900;
                     break;
                 default:
                     $w = 2000;

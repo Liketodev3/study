@@ -45,6 +45,7 @@ FatApp::setViewDataProvider('home/_partial/secondBlockAftrSlider.php', ['Common'
 FatApp::setViewDataProvider('home/_partial/browseTutor.php', ['Common', 'getBrowseTutorSection']);
 FatApp::setViewDataProvider('home/_partial/upcomingGroupClasses.php', ['Common', 'upcomingGroupClass']);
 FatApp::setViewDataProvider('home/_partial/testmonials.php', ['Common', 'getTestmonials']);
+FatApp::setViewDataProvider('home/_partial/homePageSlides.php', ['Common', 'languagesWithOrdersCount']);
 FatApp::setViewDataProvider('home/_partial/blogGrids.php', ['Common', 'getBlogsForGrids']);
 FatApp::setViewDataProvider('footer/langCurSection.php',['Common', 'languageCurrencySection']);
 

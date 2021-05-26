@@ -20,7 +20,7 @@ class TeachingLanguage extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getSearchObject($langId = 0, $active = true)
+    public static function getSearchObject($langId = 0,$active = true)
     {
         $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 't');
@@ -106,6 +106,24 @@ class TeachingLanguage extends MyAppModel
         $teachingLangSrch->addOrder('tlanguage_display_order', 'asc');
         $rs = $teachingLangSrch->getResultSet();
         $teachingLanguagesArr = FatApp::getDb()->fetchAll($rs);
+        return $teachingLanguagesArr;
+    }
+
+    public static function getAllLangsWithOrderCount($langId = 0)
+    {
+        $pagesize = 5;
+        $langId = FatUtility::int($langId);
+        if ($langId < 1) {
+            $langId = CommonHelper::getLangId();
+        }
+        $teachingLangSrch = new TeachingLanguageSearch($langId);
+        $teachingLangSrch->addChecks();
+        $teachingLangSrch->joinOrderProduct();
+        $teachingLangSrch->addMultiplefields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name', 'count(o.order_id) as orderCount']);
+        $teachingLangSrch->addGroupBy('tlanguage_id');
+        $teachingLangSrch->addOrder('count(o.order_id)','desc');    
+        $teachingLangSrch->setPageSize($pagesize);
+        $teachingLanguagesArr = FatApp::getDb()->fetchAll($teachingLangSrch->getResultSet());
         return $teachingLanguagesArr;
     }
 
