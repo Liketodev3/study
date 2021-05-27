@@ -8,9 +8,11 @@ class MyAppController extends FatController
         parent::__construct($action);
         CommonHelper::initCommonVariables();
         $this->initCommonVariables();
-        if (FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0)
-        && ($this->_controllerName != "MaintenanceController")
-        && ($this->_controllerName != 'Home' && $action != 'setSiteDefaultLang')) {
+        if (
+            FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && ($this->_controllerName != "MaintenanceController")
+            && ($this->_controllerName != 'Home' && $action != 'setSiteDefaultLang' && $this->_controllerName != 'Custom'
+            && $action != 'updateUserCookies' && $action != 'cookieForm' && $action != 'saveCookieSetting')
+        ) {
             UserAuthentication::logout();
             FatUtility::isAjaxCall() && FatUtility::dieJsonError(Label::getLabel('MSG_Maintenance_Mode_Text'));
             FatApp::redirectUser(CommonHelper::generateUrl('maintenance'));

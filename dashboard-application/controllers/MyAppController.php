@@ -9,7 +9,12 @@ class MyAppController extends FatController
         $this->action = $action;
         CommonHelper::initCommonVariables();
         $this->initCommonVariables();
-        if (FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && ($this->_controllerName != "MaintenanceController")) {
+
+        if (
+            FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && ($this->_controllerName != "MaintenanceController")
+            && ($this->_controllerName != 'Home' && $action != 'setSiteDefaultLang' && $this->_controllerName != 'Custom'
+            && $action != 'updateUserCookies' && $action != 'cookieForm' && $action != 'saveCookieSetting')
+        ) {
             UserAuthentication::logout();
             FatUtility::isAjaxCall() && FatUtility::dieWithError(Label::getLabel('MSG_Maintenance_Mode_Text'));
             FatApp::redirectUser(CommonHelper::generateUrl('maintenance', '', [], CONF_WEBROOT_FRONTEND));
@@ -51,8 +56,7 @@ class MyAppController extends FatController
         $this->siteLangId = CommonHelper::getLangId();
         $this->siteCurrencyId = CommonHelper::getCurrencyId();
         /* [ */
-        $controllerName = get_class($this);
-        $arr = explode('-', FatUtility::camel2dashed($controllerName));
+        $arr = explode('-', FatUtility::camel2dashed($this->_controllerName));
         array_pop($arr);
         $urlController = implode('-', $arr);
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
