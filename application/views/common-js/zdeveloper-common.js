@@ -344,11 +344,14 @@ $(document).ready(function(){
 		});
 	};
 
-	logInFormPopUp = function(){
-		$.facebox(function() {
-			fcom.ajax( fcom.makeUrl('GuestUser', 'logInFormPopUp', []), '', function(res){
+	logInFormPopUp = function () {
+		fcom.ajax(fcom.makeUrl('GuestUser', 'logInFormPopUp', []), '', function (res) {
+			try {
+				let data = JSON.parse(res);
+				!data.status ? $.mbsmessage(data.msg, true, 'alert alert--danger') : void (0);
+			} catch (exc) {
 				$.facebox(res, '');
-			});
+			}
 		});
 	};
 
