@@ -322,3 +322,6 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.15.0.20210520' WHERE `conf_na
 -- drop TABLE if EXISTS tbl_reported_issues_logs;
 -- drop TABLE if EXISTS tbl_reported_issues_log;
 -- drop TABLE if EXISTS tbl_reported_issues;
+
+
+ALTER TABLE `tbl_reported_issues` ADD `repiss_slesson_id` INT NOT NULL AFTER `repiss_title`;
