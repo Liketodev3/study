@@ -256,7 +256,7 @@ class Common
         } else {
             $rootUrl .= $_SERVER['SERVER_NAME'];
         }
-        return $rootUrl . CONF_WEBROOT_URL . (!empty($row) ? $row['urlrewrite_custom'] : $uri);
+        return $rootUrl . CONF_WEBROOT_URL . ($row['urlrewrite_custom'] ?? $uri);
     }
 
 }

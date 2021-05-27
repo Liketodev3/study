@@ -63,7 +63,7 @@ class BlogPostsController extends AdminBaseController
                 FatUtility::dieWithError(Label::getLabel('MSG_Invalid_Request', $this->adminLangId));
             }
             /* url data[ */
-            $urlSrch = UrlRewrite::getSearchObject();
+            $urlSrch = new UrlRewriteSearch();
             $urlSrch->doNotCalculateRecords();
             $urlSrch->doNotLimitRecords();
             $urlSrch->addFld('urlrewrite_custom');
@@ -145,7 +145,7 @@ class BlogPostsController extends AdminBaseController
         if ($post['urlrewrite_custom'] == '') {
             FatApp::getDb()->deleteRecords(UrlRewrite::DB_TBL, ['smt' => 'urlrewrite_original = ?', 'vals' => [$blogOriginalUrl]]);
         } else {
-            $urlSrch = UrlRewrite::getSearchObject();
+            $urlSrch = new UrlRewriteSearch();
             $urlSrch->doNotCalculateRecords();
             $urlSrch->doNotLimitRecords();
             $urlSrch->addFld('urlrewrite_custom');

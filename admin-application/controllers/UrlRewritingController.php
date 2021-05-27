@@ -19,7 +19,7 @@ class UrlRewritingController extends AdminBaseController
 
     public function search()
     {
-        $canEdit = $this->objPrivilege->canEditUrlRewrites();
+        $canEdit = $this->objPrivilege->canEditUrlRewrites(true);
         $pageSize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $searchForm = $this->getSearchForm($this->adminLangId);
         $data = FatApp::getPostedData();
@@ -28,7 +28,7 @@ class UrlRewritingController extends AdminBaseController
             Message::addErrorMessage(current($searchForm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $srch = UrlRewrite::getSearchObject($this->adminLangId);
+        $srch = new UrlRewriteSearch();
         $srch->joinTable(Language::DB_TBL, 'LEFT OUTER JOIN', 'lng.language_id = ur.urlrewrite_lang_id', 'lng');
 
         if (!empty($post['keyword'])) {
@@ -64,12 +64,11 @@ class UrlRewritingController extends AdminBaseController
 
     public function form()
     {
-        $this->objPrivilege->canViewUrlRewrites();
         $post = FatApp::getPostedData();
-        $urlrewrite_id = FatUtility::int($post['UrlRewriteId']);
-        $frm = $this->getForm($urlrewrite_id, $this->adminLangId);
+        $urlRewriteId = FatUtility::int($post['UrlRewriteId']);
+        $frm = $this->getForm($urlRewriteId, $this->adminLangId);
         if (!empty($post['originalUrl'])) {
-            $srch = UrlRewrite::getSearchObject();
+            $srch = new UrlRewriteSearch();
             $srch->addCondition('ur.urlrewrite_original', '=', $post['originalUrl']);
             $rs = $srch->getResultSet();
             $data = [];
@@ -83,7 +82,6 @@ class UrlRewritingController extends AdminBaseController
             }
             $frm->fill($data);
         }
-        $this->set('urlrewrite_id', $urlrewrite_id);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
@@ -103,8 +101,8 @@ class UrlRewritingController extends AdminBaseController
         $row = [];
 
         $originalUrl = FatApp::getPostedData('urlrewrite_original', FatUtility::VAR_STRING, '');
-        if ($originalUrl != '') {
-            $srch = UrlRewrite::getSearchObject();
+        if (0 < $urlrewriteId) {
+            $srch = new UrlRewriteSearch();
             $srch->addCondition('ur.urlrewrite_original', '=',  $originalUrl);
             $row = FatApp::getDb()->fetchAll($srch->getResultSet(), 'urlrewrite_lang_id');
             if (empty($row)) {
@@ -112,7 +110,6 @@ class UrlRewritingController extends AdminBaseController
                 FatUtility::dieJsonError(Message::getHtml());
             }
         }
-
         $langArr = Language::getAllNames();
         foreach ($langArr as $langId => $langName) {
             $recordId = 0;
@@ -120,12 +117,21 @@ class UrlRewritingController extends AdminBaseController
                 $recordId = $row[$langId]['urlrewrite_id'];
             }
             $url = $post['urlrewrite_custom'][$langId];
-            $data = [
-                'urlrewrite_original' => $originalUrl,
-                'urlrewrite_lang_id' => $langId,
-                'urlrewrite_http_resp_code' => $post['urlrewrite_http_resp_code'][$langId],
-                'urlrewrite_custom' => CommonHelper::seoUrl($url)
-            ];
+
+            if($recordId > 0){
+                $data = [
+                    'urlrewrite_http_resp_code' => $post['urlrewrite_http_resp_code'][$langId],
+                    'urlrewrite_custom' => CommonHelper::seoUrl($url)
+                ];
+            }else{
+                $data = [
+                    'urlrewrite_original' => $originalUrl,
+                    'urlrewrite_lang_id' => $langId,
+                    'urlrewrite_http_resp_code' => $post['urlrewrite_http_resp_code'][$langId],
+                    'urlrewrite_custom' => CommonHelper::seoUrl($url)
+                ];
+            }
+            
             $record = new UrlRewrite($recordId);
             $record->assignValues($data);
 
@@ -142,13 +148,13 @@ class UrlRewritingController extends AdminBaseController
     public function deleteRecord()
     {
         $this->objPrivilege->canEditUrlRewrites();
-        $urlRewriteid = FatApp::getPostedData('id', FatUtility::VAR_INT, 0);
+        $urlRewriteId = FatApp::getPostedData('id', FatUtility::VAR_INT, 0);
 
-        if ($urlRewriteid < 1) {
+        if ($urlRewriteId < 1) {
             FatUtility::dieJsonError($this->str_invalid_request_id);
         }
 
-        $urlRewrite = new UrlRewrite($urlRewriteid);
+        $urlRewrite = new UrlRewrite($urlRewriteId);
 
         if (!$urlRewrite->loadFromDb()) {
             Message::addErrorMessage($this->str_invalid_request_id);

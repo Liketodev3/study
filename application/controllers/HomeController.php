@@ -70,7 +70,7 @@ class HomeController extends MyAppController
             $uriSegments = array_merge($urlwithoutparameter, $replaceArray);
         }
 
-        $srch = UrlRewrite::getSearchObject();
+        $srch = new UrlRewriteSearch();
         $srch->joinTable(UrlRewrite::DB_TBL, 'LEFT OUTER JOIN', 'temp.urlrewrite_original = ur.urlrewrite_original and temp.urlrewrite_lang_id = ' . $langId, 'temp');
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
