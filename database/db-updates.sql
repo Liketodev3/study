@@ -206,3 +206,4 @@ UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.1.1' WHERE `tbl_configuration
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_CLASS_ENDS_IN', 1, 'class <span>ends</span> In');
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.5.20210421' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.6.20210507' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';

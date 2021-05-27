@@ -1,5 +1,19 @@
 This file shares the details of the Yo!Coach version and change log.
 
+
+Release Number: TV-2.8.6.20210507
+
+Release Date: 2021-05-07
+
+Bugs:
+    Bug-#053087 - Fix availability issue of full week
+    Bug-#052900 - Only show teaching languages, bound with group classes list, in the dropdown.
+                - Do not show canceled group classes
+                - Only list upcoming and ongoing classes
+                - Teacher can not add group class with inactive teach lang
+
+------------------------------------------------
+
 Release Number: TV-2.8.5.20210421
 Release Date: 2021-04-21
 
