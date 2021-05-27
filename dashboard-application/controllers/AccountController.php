@@ -84,6 +84,7 @@ class AccountController extends LoggedUserController
         $this->_template->render(false, false, 'json-success.php');
     }
 
+    // @fix
     public function setUpEmail()
     {
         $EmailFrm = $this->getChangeEmailForm();

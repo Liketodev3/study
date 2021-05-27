@@ -359,10 +359,13 @@ $(document).ready(function () {
 
 	logInFormPopUp = function () {
 		$.loader.show();
-		$.facebox(function () {
-			fcom.ajax(fcom.makeUrl('GuestUser', 'logInFormPopUp', []), '', function (res) {
+		fcom.ajax(fcom.makeUrl('GuestUser', 'logInFormPopUp', []), '', function (res) {
+			try {
+				let data = JSON.parse(res);
+				!data.status ? $.mbsmessage(data.msg, true, 'alert alert--danger') : void (0);
+			} catch (exc) {
 				$.facebox(res, '');
-			});
+			}
 		});
 		$.loader.hide();
 	};
@@ -437,7 +440,6 @@ $(document).ready(function () {
 		$.mbsmessage.close();
 		fcom.ajax(fcom.makeUrl('Learner', 'toggleTeacherFavorite', [], confWebDashUrl), data, function (ans) {
 			isRuningTeacherFavoriteAjax = false;
-			debugger;
 			if (ans.status) {
 				if (ans.action == 'A') {
 					$(el).addClass("is-active");

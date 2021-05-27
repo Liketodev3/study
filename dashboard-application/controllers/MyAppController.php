@@ -7,18 +7,13 @@ class MyAppController extends FatController
     {
         parent::__construct($action);
         $this->action = $action;
-        if (FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && (get_class($this) != "MaintenanceController") && (get_class($this) != 'Home' && $action != 'setLanguage')) {
-            if (UserAuthentication::isUserLogged()) {
-                UserAuthentication::logout();
-            }
-            if (FatUtility::isAjaxCall()) {
-                Message::addErrorMessage(Label::getLabel(Label::getLabel('MSG_Maintenance_Mode_Text')));
-                FatUtility::dieWithError(Message::getHtml());
-            }
-            FatApp::redirectUser(CommonHelper::generateUrl('maintenance'));
-        }
         CommonHelper::initCommonVariables();
         $this->initCommonVariables();
+        if (FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && ($this->_controllerName != "MaintenanceController")) {
+            UserAuthentication::logout();
+            FatUtility::isAjaxCall() && FatUtility::dieWithError(Label::getLabel('MSG_Maintenance_Mode_Text'));
+            FatApp::redirectUser(CommonHelper::generateUrl('maintenance', '', [], CONF_WEBROOT_FRONTEND));
+        }
     }
 
     public function pwaManifest()
@@ -30,7 +25,7 @@ class MyAppController extends FatController
         }
         $pwaManifest['icons'] = [
             [
-                "src" => CommonHelper::generateUrl('Image', 'pwaIcon', ['144']),
+                "src" => CommonHelper::generateUrl('Image', 'pwaIcon', ['144'], CONF_WEBROOT_FRONTEND),
                 "sizes" => "144x144",
                 "type" => "image/png"
             ],
@@ -136,7 +131,7 @@ class MyAppController extends FatController
         $this->set('currencyData', $currencyData);
         $this->set('jsVariables', $jsVariables);
         $this->set('controllerName', $controllerName);
-        $this->set('action', $this->action);
+        $this->set('action', $this->_actionName);
         $this->set('canonicalUrl', Common::getCanonicalUrl());
     }
 

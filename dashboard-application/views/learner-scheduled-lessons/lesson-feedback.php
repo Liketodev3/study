@@ -1,5 +1,5 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
-$frm->setFormTagAttribute( 'class', 'form form--horizontal web_form' );
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+$frm->setFormTagAttribute('class', 'form form--horizontal web_form');
 $frm->setFormTagAttribute('onsubmit', 'setupLessonFeedback(this); return(false);');
 $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 12;
@@ -10,8 +10,13 @@ $frm->developerTags['fld_default_col'] = 12;
 </div>
 <div class="gap"></div>
 
-<script >
-	$(document).ready(function () {
-		$('.star-rating').barrating({ showSelectedRating:false });
+<script>
+	$(document).ready(function() {
+		$('.star-rating').barrating({
+			showSelectedRating: false
+		});
+		$('select.star-rating').each(function() {
+			$(this).before($(this).next());
+		});
 	});
 </script>

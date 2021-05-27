@@ -284,7 +284,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
     }
     var worker = new Worker(siteConstants.webroot + 'js/worker-time-interval.js?');
     function joinLessonButtonAction() {
-        $("#joinL").hide();
+        $("#joinL, .reschedule-lesson--js, .cancel-lesson--js").hide();
         $("#endL").show();
         $('.screen-chat-js').show();
         $('.lessonBox').removeClass('sesson-window__content').addClass('session-window__frame').show();
@@ -293,7 +293,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
         checkNewFlashCards();
     }
     function endLessonButtonAction() {
-        $("#joinL").hide();
+        $("#joinL, .reschedule-lesson--js, .cancel-lesson--js").hide();
         $("#end_lesson_time_div, #endL, .screen-chat-js").hide();
         $('.lessonBox').removeClass('session-window__frame').addClass('sesson-window__content').hide();
         searchFlashCards(document.frmFlashCardSrch);
@@ -399,7 +399,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                     if (w_res_data) {
                         $('.timer.start-lesson-timer').show();
                     } else {
-                        $('.timer.start-lesson-timer').hide();
+                        $('.timer.start-lesson-timer,.reschedule-lesson--js,.cancel-lesson--js').hide();
                         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'startLessonAuthentication', [CometJsonFriendData.lessonId]), '', function (t) {
                             if (t != 0) {
                                 $(".join_lesson_now").show();

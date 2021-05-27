@@ -8,8 +8,10 @@ lessonFeedback = function (lDetailId) {
 };
 
 setupLessonFeedback = function (frm) {
-    if (!$(frm).validate())
+    if (!$(frm).validate()) {
         return false;
+    }
+
     var data = fcom.frmData(frm);
 
     fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setupLessonFeedback'), data, function (t) {
@@ -37,7 +39,7 @@ requestRescheduleSetup = function (frm) {
 };
 
 viewBookingCalendar = function (id, action = '') {
-    var data = {'action': action};
+    var data = { 'action': action };
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'viewBookingCalendar', [id]), data, function (t) {
         $.facebox(t, 'facebox-large booking-calendar-pop-js');
     });
@@ -149,7 +151,7 @@ cancelLessonSetup = function (frm) {
         $.facebox.close();
         window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusUpcoming;
         location.reload();
-    }, {fOutMode: 'json'});
+    }, { fOutMode: 'json' });
 
     // fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'cancelLessonSetup'), data , function(t) {
     // 		$.facebox.close();
@@ -162,9 +164,9 @@ issueReported = function (id) {
         if (isJson(res)) {
             var response = JSON.parse(res);
             if (response.status == 1) {
-                $.mbsmessage(response.msg, true, 'alert--success');
+                $.mbsmessage(response.msg, true, 'alert alert--success');
             } else {
-                $.mbsmessage(response.msg, true, 'alert--danger');
+                $.mbsmessage(response.msg, true, 'alert alert--danger');
             }
         } else {
             $.facebox(res, 'facebox-medium');
@@ -210,9 +212,9 @@ esclateForm = function (id) {
         if (isJson(res)) {
             var response = JSON.parse(res);
             if (response.status == 1) {
-                $.mbsmessage(response.msg, true, 'alert--success');
+                $.mbsmessage(response.msg, true, 'alert alert--success');
             } else {
-                $.mbsmessage(response.msg, true, 'alert--danger');
+                $.mbsmessage(response.msg, true, 'alert alert--danger');
             }
         } else {
             $.facebox(res, 'facebox-medium');

@@ -7,7 +7,7 @@ if (isset($includeEditor) && $includeEditor) { ?>
     <link rel="manifest" href="<?php echo CommonHelper::generateUrl('MyApp', 'PwaManifest'); ?>">
     <script>
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("<?php echo CONF_WEBROOT_URL; ?>sw.js");
+            navigator.serviceWorker.register("<?php echo CONF_WEBROOT_FRONTEND; ?>sw.js");
         }
     </script>
 <?php } ?>

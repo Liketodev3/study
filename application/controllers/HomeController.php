@@ -57,7 +57,7 @@ class HomeController extends MyAppController
             if (in_array(strtoupper($uriComponents[0]), LANG_CODES_ARR)) {
                 $pathname = ltrim(substr(ltrim($pathname, '/'), strlen($uriComponents[0])), '/');
             } else {
-                $pathname = ltrim($pathname, '/');
+                $pathname = ltrim($pathname, CONF_WEBROOT_FRONTEND);
             }
         }
         $uriSegments = explode('/', $pathname);
@@ -93,13 +93,12 @@ class HomeController extends MyAppController
                 $redirectUrl .= $row['customurl'];
             }
         }
-
         if (empty($redirectUrl)) {
-            $redirectUrl = CommonHelper::generateFullUrl('', '', [], '', null, false, false, false);
+            $redirectUrl = rtrim(CommonHelper::generateFullUrl('', '', [], '', null, false, false), '/');
             if (FatApp::getConfig('CONF_LANG_SPECIFIC_URL', FatUtility::VAR_INT, 0) && count(LANG_CODES_ARR) > 1 && $langId != FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1)) {
-                $redirectUrl .=  strtolower(LANG_CODES_ARR[$langId]) . '/';
+                $redirectUrl .=  '/' . strtolower(LANG_CODES_ARR[$langId]);
             }
-            $redirectUrl .=  ltrim($pathname, '/');
+            $redirectUrl .=  '/' . ltrim($pathname, '/');
         }
 
 
@@ -110,6 +109,7 @@ class HomeController extends MyAppController
                 CommonHelper::setDefaultSiteLangCookie($langId);
             }
         }
+
         $this->set('redirectUrl', $redirectUrl);
         $this->_template->render(false, false, 'json-success.php');
     }

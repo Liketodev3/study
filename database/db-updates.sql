@@ -290,7 +290,8 @@ CREATE TABLE `tbl_reported_issues_log` (
   `reislo_action` int NOT NULL,
   `reislo_comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `reislo_added_on` datetime NOT NULL,
-  `reislo_added_by` int NOT NULL
+  `reislo_added_by` int NOT NULL,
+  `reislo_added_by_type` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 ALTER TABLE `tbl_reported_issues_log`  ADD PRIMARY KEY (`reislo_id`),  ADD KEY `reislo_repiss_id` (`reislo_repiss_id`);
@@ -316,3 +317,8 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.5.20210421' WHERE `conf_nam
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.6.20210507' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.14.0.20210519' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.15.0.20210520' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+
+-- drop TABLE if EXISTS tbl_reported_issues_logs;
+-- drop TABLE if EXISTS tbl_reported_issues_log;
+-- drop TABLE if EXISTS tbl_reported_issues;
