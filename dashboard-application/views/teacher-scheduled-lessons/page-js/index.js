@@ -58,13 +58,16 @@ $(function() {
 	};
 
 	loadLessonsTab = function () {
-		
         let urlHashVal = window.location.hash.replace('#', '');
         let activeTab = urlHashVal ? urlHashVal : '';
-		console.log('#lesson-status option[value="'+activeTab+'"]');
         $('#lesson-status option[value="'+activeTab+'"]').prop('selected', true);
 		searchLessons(document.frmSrch);
     }
 	// clearSearch();
 	loadLessonsTab();
+});
+$(document).ready(function () {
+    $('#lesson-status').change(function (event) {
+        window.location.href = fcom.makeUrl('TeacherScheduledLessons', '', [], confWebRootUrl) + '#' + $('#lesson-status').val();
+    });
 });

@@ -148,6 +148,11 @@ resolveSetup = function (frm) {
     }
     fcom.updateWithAjax(fcom.makeUrl('ReportIssue', 'resolveSetup'), fcom.frmData(frm), function (t) {
         $.facebox.close();
+        if (t.status == 0) {
+            return $.mbsmessage(t.msg, true, 'alert alert--danger');
+        }
+        $.mbsmessage(t.msg, true, 'alert alert--success');
+        window.location.reload();
     });
 };
 

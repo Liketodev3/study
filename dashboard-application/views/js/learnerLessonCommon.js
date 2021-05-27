@@ -181,12 +181,11 @@ issueReportedSetup = function (frm) {
     var action = fcom.makeUrl('ReportIssue', 'setup');
     fcom.updateWithAjax(action, fcom.frmData(frm), function (response) {
         $.facebox.close();
-        if (response.status == 1) {
-            $.mbsmessage(response.msg, true, 'alert alert--success');
-            $("#lesson-status" + statusIssueReported).trigger("click");
-        } else {
-            $.mbsmessage(response.msg, true, 'alert alert--danger');
+        if (response.status == 0) {
+            return $.mbsmessage(response.msg, true, 'alert alert--danger');
         }
+        $.mbsmessage(response.msg, true, 'alert alert--success');
+        $("#lesson-status").length ? $("#lesson-status").val(statusIssueReported).trigger('change') : window.location.reload();
     });
 };
 

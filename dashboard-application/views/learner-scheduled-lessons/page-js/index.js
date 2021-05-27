@@ -91,14 +91,11 @@ $(function () {
     };
 
     loadLessonsTab = function () {
-		
         let urlHashVal = window.location.hash.replace('#', '');
         let activeTab = urlHashVal ? urlHashVal : '';
-		console.log('#lesson-status option[value="'+activeTab+'"]');
         $('#lesson-status option[value="'+activeTab+'"]').prop('selected', true);
 		searchLessons(document.frmSrch);
     }
-	// clearSearch();
 	loadLessonsTab();
 });
 
@@ -106,4 +103,9 @@ $(function () {
 $(document).on('click', '.tab-switch a', function () {
     $('.tab-switch a').removeClass('is-active');
     $(this).addClass('is-active');
+});
+$(document).ready(function () {
+    $('#lesson-status').change(function (event) {
+        window.location.href = fcom.makeUrl('LearnerScheduledLessons', '', [], confWebRootUrl) + '#' + $('#lesson-status').val();
+    });
 });
