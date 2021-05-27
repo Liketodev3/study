@@ -59,6 +59,7 @@
 
             $out .= '</div>';
             echo $out;
+            
         } ?>
 	</div>
 

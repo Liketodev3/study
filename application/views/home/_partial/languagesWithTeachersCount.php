@@ -9,7 +9,6 @@
                 <?php foreach($allLanguages as $language){
                     $languageImage = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','showLanguageImage',array($language['tlanguage_id'],'NORMAL')),CONF_IMG_CACHE_TIME, '.jpg');
                     $languageFlagImage = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','showLanguageFlagImage',array($language['tlanguage_id'],'SMALL')),CONF_IMG_CACHE_TIME, '.jpg');
-
                     ?>
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-5">
                         <div class="course_card_container">

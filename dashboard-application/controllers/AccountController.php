@@ -107,8 +107,9 @@ class AccountController extends LoggedUserController
             FatUtility::dieWithError(Message::getHtml());
         }
         $_token = $userObj->prepareUserVerificationCode();
-        if (!$this->sendEmailChangeVerificationLink($_token, $userData)) {
-            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
+        $error = '';
+        if (!$this->sendEmailChangeVerificationLink($_token, $userData, $error)) {
+            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . ' : '. $error);
             FatUtility::dieWithError(Message::getHtml());
         }
         $emailChangeReqObj = new UserEmailChangeRequest();
@@ -147,6 +148,13 @@ class AccountController extends LoggedUserController
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
+        if (CONF_USE_FAT_CACHE) {
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'ORIGINAL'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'SMALL'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'EXTRASMALL'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId), CONF_WEBROOT_FRONTEND));
+        }
         $this->set('msg', Label::getLabel('MSG_File_deleted_successfully'));
         $this->_template->render(false, false, 'json-success.php');
     }
@@ -158,7 +166,7 @@ class AccountController extends LoggedUserController
         $this->_template->addJs('js/cropper.js');
         $this->_template->addJs('js/intlTelInput.js');
         $this->_template->addCss('css/intlTelInput.css');
-       
+
 
         if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
             if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
@@ -304,10 +312,10 @@ class AccountController extends LoggedUserController
                 FatUtility::dieJsonError(Message::getHtml());
             }
             if (CONF_USE_FAT_CACHE) {
-                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'ORIGINAL')));
-                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM')));
-                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'SMALL')));
-                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId)));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'ORIGINAL'), CONF_WEBROOT_FRONTEND));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM'), CONF_WEBROOT_FRONTEND));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'SMALL'), CONF_WEBROOT_FRONTEND));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId), CONF_WEBROOT_FRONTEND));
             }
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', [$userId, 'ORIGINAL', 0], CONF_WEBROOT_FRONTEND) . '?' . time());
         }
@@ -485,7 +493,7 @@ class AccountController extends LoggedUserController
         return $frm;
     }
 
-    private function sendEmailChangeVerificationLink($_token, $data)
+    private function sendEmailChangeVerificationLink($_token, $data, &$error)
     {
         $link = CommonHelper::generateFullUrl('GuestUser', 'verifyEmail', [$_token]);
         $data = [
@@ -496,6 +504,7 @@ class AccountController extends LoggedUserController
         ];
         $email = new EmailHandler();
         if (true !== $email->sendEmailChangeVerificationLink($this->siteLangId, $data)) {
+            $error = $email->getError();
             return false;
         }
         return true;
