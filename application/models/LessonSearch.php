@@ -14,7 +14,14 @@
 class LessonSearch extends SearchBase
 {
 
-    public function __construct(int $langId)
+    /**
+     * @todo to be improved
+     * USER_TYPE_LEARNER = 1;
+     * USER_TYPE_TEACHER = 2;
+     * @param int $langId
+     * @param type $userType
+     */
+    public function __construct(int $langId, int $userType = 1)
     {
         parent::__construct(ScheduledLesson::DB_TBL, 'slesson');
         $this->joinTable(ScheduledLessonDetails::DB_TBL, 'INNER JOIN', 'sldetail.sldetail_slesson_id = slesson.slesson_id', 'sldetail');
@@ -26,8 +33,12 @@ class LessonSearch extends SearchBase
         $this->joinTable(TeacherGroupClasses::DB_TBL_LANG, 'LEFT JOIN', 'gclang.grpclslang_grpcls_id = grpcls.grpcls_id and gclang.grpclslang_lang_id=' . $langId, 'gclang');
         $this->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'tclang.countrylang_country_id = ut.user_country_id AND tclang.countrylang_lang_id = ' . $langId, 'tclang');
         $this->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'lclang.countrylang_country_id = ul.user_country_id AND lclang.countrylang_lang_id = ' . $langId, 'lclang');
-        $this->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'repiss.repiss_sldetail_id = sldetail.sldetail_id', 'repiss');
         $this->joinTable(LessonRescheduleLog::DB_TBL, 'LEFT JOIN', 'lesreschlog.lesreschlog_slesson_id=slesson.slesson_id', 'lesreschlog');
+        if (ReportedIssue::USER_TYPE_TEACHER == $userType) {
+            $this->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'repiss.repiss_slesson_id = slesson.slesson_id', 'repiss');
+        } else {
+            $this->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'repiss.repiss_sldetail_id = sldetail.sldetail_id', 'repiss');
+        }
     }
 
     public function joinTeacherLessonPlans()

@@ -43,7 +43,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE');
         $userId = UserAuthentication::getLoggedUserId();
         $post = array_merge($post, ['slesson_teacher_id' => $userId]);
-        $srch = new LessonSearch($this->siteLangId);
+        $srch = new LessonSearch($this->siteLangId,,  ReportedIssue::USER_TYPE_TEACHER);
         $srch->joinTeacherLessonPlans();
         $srch->addSearchListingFields();
         $srch->applySearchConditions($post);
@@ -205,7 +205,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $userId = UserAuthentication::getLoggedUserId();
         $post = ['slesson_teacher_id' => $userId,
             'slesson_id' => FatUtility::int($lessonId)];
-        $srch = new LessonSearch($this->siteLangId);
+        $srch = new LessonSearch($this->siteLangId, ReportedIssue::USER_TYPE_TEACHER);
         $srch->joinTeacherLessonPlans();
         $srch->addSearchDetailFields();
         $srch->applyPrimaryConditions();

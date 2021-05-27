@@ -51,10 +51,12 @@ class ReportedIssue extends MyAppModel
             $this->error = Label::getLabel('LBL_PLEASE_TRY_AGAIN');
             return false;
         }
+        $slessonId = ScheduledLessonDetails::getAttributesById($sldetailId, 'sldetail_slesson_id');
         $options = IssueReportOptions::getOptionsArray($this->commonLangId, User::USER_TYPE_LEANER);
         $this->setFldValue('repiss_status', static::STATUS_PROGRESS);
         $this->assignValues([
             'repiss_comment' => $comment,
+            'repiss_slesson_id' => $slessonId,
             'repiss_sldetail_id' => $sldetailId,
             'repiss_reported_by' => $this->userId,
             'repiss_reported_on' => date('Y-m-d H:i:s'),
