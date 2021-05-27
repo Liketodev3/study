@@ -54,13 +54,14 @@ class AdminPrivilege
     const SECTION_FAQ_CATEGORY = 49;
     const SECTION_TEACHING_LANGUAGES = 50;
     const SECTION_COMMISSION_REPORT  = 51;
-    const SECTION_IMAGE_ATTRIBUTES = 52;
+    const SECTION_RESCHEDULE_REPORT = 52;
+    const SECTION_ROBOTS = 53;
+    const SECTION_IMAGE_ATTRIBUTES = 54;
+    const SECTION_PRICE_SLAB = 55;
 
     const PRIVILEGE_NONE = 0;
     const PRIVILEGE_READ = 1;
     const PRIVILEGE_WRITE = 2;
-    const SECTION_RESCHEDULE_REPORT = 52;
-    const SECTION_PRICE_SLAB = 53;
 
     private static $instance = null;
     private $loadedPermissions = [];
@@ -143,6 +144,7 @@ class AdminPrivilege
             static::SECTION_COMMISSION_REPORT => Label::getLabel('MSG_Commission_Report', $langId),
             static::SECTION_PRICE_SLAB => Label::getLabel('MSG_Price_Slab', $langId),
             static::SECTION_IMAGE_ATTRIBUTES => Label::getLabel('MSG_Image_Attributes', $langId),
+            static::SECTION_ROBOTS => Label::getLabel('MSG_Robots_Txt', $langId),
         ];
         return $arr;
     }
@@ -752,5 +754,15 @@ class AdminPrivilege
     public function canEditPriceSlab($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_PRICE_SLAB, static::PRIVILEGE_WRITE, $returnResult);
+    }
+
+    public function canViewRobotsSection($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_ROBOTS, static::PRIVILEGE_READ, $returnResult);
+    }
+    
+    public function canEditRobotsSection($adminId = 0, $returnResult = false)
+    {
+        return $this->checkPermission($adminId, static::SECTION_ROBOTS, static::PRIVILEGE_WRITE, $returnResult);
     }
 }

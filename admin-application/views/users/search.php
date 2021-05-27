@@ -102,22 +102,18 @@ foreach ($arr_listing as $sn=>$row){
 					$innerLi=$innerUl->appendElement('li');
 					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId),"onclick"=>"userForm(".$row['user_id'].")"),Label::getLabel('LBL_Edit',$adminLangId), true);
 
-					/* $innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Rewards',$adminLangId),"onclick"=>"rewards(".$row['user_id'].")"),Label::getLabel('LBL_Rewards',$adminLangId), true); */
-
 					$innerLi=$innerUl->appendElement("li");
 					$innerLi->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green',
 					'title'=>Label::getLabel('LBL_Transactions',$adminLangId),"onclick"=>"transactions(".$row['user_id'].")"),Label::getLabel('LBL_Transactions',$adminLangId), true);
 
-					/* $innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Change_Password',$adminLangId),"onclick"=>"changePasswordForm(".$row['user_id'].")"),Label::getLabel('LBL_Change_Password',$adminLangId), true); */
+					$innerLi=$innerUl->appendElement('li');
+					$innerLi->appendElement('a', array('href'=>"javascript:void(0)",'onClick'=>"changePassword(".$row['user_id'].")",'class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Change_Password',$adminLangId)),Label::getLabel('LBL_Change_Password',$adminLangId), true);
 
 					$innerLi=$innerUl->appendElement('li');
-					// $innerLi->appendElement('a', array('href'=>CommonHelper::generateUrl('Users','login',array($row['user_id'])),'target'=>'_blank','class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Log_into_store',$adminLangId)),Label::getLabel('LBL_Log_into_Profile',$adminLangId), true);
 					$innerLi->appendElement('a', array('href'=>"javascript:void(0)",'onClick'=>"userLogin(".$row['user_id'].")",'class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Log_into_store',$adminLangId)),Label::getLabel('LBL_Log_into_Profile',$adminLangId), true);
 
-					/* $innerLi=$innerUl->appendElement('li');
-					$innerLi->appendElement('a', array('href'=>'javascript:void(0)','class'=>'button small green','title'=>Label::getLabel('LBL_Email_User',$adminLangId),"onclick"=>"sendMailForm(".$row['user_id'].")"),Label::getLabel('LBL_Email_User',$adminLangId), true); */
+
+
 				}
 			break;
 			default:

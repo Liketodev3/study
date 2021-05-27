@@ -369,7 +369,7 @@ class User extends MyAppModel
 
     public function setLoginPassword($password)
     {
-        if (!($this->getMainTableRecordId() > 0)) {
+        if ($this->getMainTableRecordId() <= 0) {
             $this->error = Label::getLabel('ERR_INVALID_REQUEST_USER_NOT_INITIALIZED', $this->commonLangId);
             return false;
         }

@@ -15,11 +15,12 @@ class UserNotifications extends FatModel
     const NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_LEARNER = 8;
     const NOTICATION_FOR_CANCEL_LESSON_BY_TEACHER = 9;
     const NOTICATION_FOR_CANCEL_LESSON_BY_LEARNER = 10;
-    const NOTICATION_FOR_ISSUE_REFUNDED = 10;
-    const NOTICATION_FOR_ISSUE_REPORTED = 11;
-    const NOTICATION_FOR_ISSUE_RESOLVED = 12;
-    const NOTICATION_FOR_ISSUE_ESCLATED = 13;
-    const NOTICATION_FOR_ISSUE_CLOSED = 14;
+    const NOTICATION_FOR_ISSUE_REFUNDED = 11;
+    const NOTICATION_FOR_ISSUE_REPORTED = 12;
+    const NOTICATION_FOR_ISSUE_RESOLVED = 13;
+    const NOTICATION_FOR_ISSUE_ESCLATED = 14;
+    const NOTICATION_FOR_ISSUE_CLOSED = 15;
+    const NOTICATION_FOR_CHANGE_PASSWORD = 16;
 
     private $userId = 0;
     private $recordId = 0;
@@ -54,6 +55,15 @@ class UserNotifications extends FatModel
             return false;
         }
         return true;
+    }
+
+    public function sendChangePwdNotifi($langId = 0)
+    {
+        $this->type = self::NOTICATION_FOR_CHANGE_PASSWORD;
+        $this->recordId = 0;
+        $title = Label::getLabel("LBL_Password_Changed", ($langId != applicationConstants::NO) ? $langId : CommonHelper::getLangId());
+        $description = Label::getLabel("LBL_Change_Password_Description", ($langId != applicationConstants::NO) ? $langId : CommonHelper::getLangId());
+        return $this->addNotification($title, $description);
     }
 
     public function sendWalletCreditNotification($lessonId = 0)
