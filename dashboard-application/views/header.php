@@ -70,7 +70,6 @@ $unreadNotifications = UserNotifications::getUserUnreadNotifications($loggedUser
 		const statusCompleted = <?php echo FatUtility::int(ScheduledLesson::STATUS_COMPLETED); ?>;
 		const statusCanceled = <?php echo FatUtility::int(ScheduledLesson::STATUS_CANCELLED); ?>;
 		const statusIssueReported = <?php echo FatUtility::int(ScheduledLesson::STATUS_ISSUE_REPORTED); ?>;
-	
 	</script>
 <?php
     echo $this->getJsCssIncludeHtml(!CONF_DEVELOPMENT_MODE);

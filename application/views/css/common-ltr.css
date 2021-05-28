@@ -9009,14 +9009,14 @@ textarea[disabled] {
   max-width: 100%; }
 
 #facebox {
-  position: fixed;
-  top: 100px;
-  left: 50%;
-  -webkit-transform: translate(-50%, 0);
-      -ms-transform: translate(-50%, 0);
-          transform: translate(-50%, 0);
+  position: absolute;
+  top: 0;
+  left: 0;
   z-index: 999;
   text-align: left; }
+  @media (max-width: 767px) {
+    #facebox {
+      right: 0; } }
 
 #facebox .popup {
   position: relative; }
@@ -9030,7 +9030,7 @@ textarea[disabled] {
 @media (min-width: 320px) {
   #facebox .content {
     overflow: auto;
-    max-height: 80vh !important; } }
+    height: 100vh !important; } }
 
 @media (min-width: 767px) {
   #facebox .content {
@@ -9040,7 +9040,7 @@ textarea[disabled] {
 
 @media (min-width: 1024px) {
   #facebox .content {
-    max-height: 50vh !important;
+    max-height: 74vh !important;
     overflow-y: auto;
     overflow-x: hidden; } }
 
@@ -9115,17 +9115,9 @@ textarea[disabled] {
     min-width: 800px;
     max-width: 800px; } }
 
-@media (max-width: 1199px) {
+@media (max-width: 767px) {
   #facebox .scrollbar {
-    overflow: auto; }
-  #facebox {
-    left: 30px !important;
-    right: 30px !important; } }
-
-@media (max-width: 1023px) {
-  #facebox {
-    left: 10px !important;
-    right: 10px !important; } }
+    overflow: auto; } }
 
 @media (max-width: 767px) {
   #facebox .content {

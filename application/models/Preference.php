@@ -29,8 +29,8 @@ class Preference extends MyAppModel
             static::TYPE_ACCENTS => Label::getLabel('LBL_Accents', $langId),
             static::TYPE_TEACHES_LEVEL => Label::getLabel('LBL_Teaches_Level', $langId),
             static::TYPE_SUBJECTS => Label::getLabel('LBL_Subjects', $langId),
-            static::TYPE_TEST_PREPARATIONS => Label::getLabel('LBL_Test_Preparations', $langId),
             static::TYPE_LESSONS => Label::getLabel('LBL_Lesson_includes', $langId),
+            static::TYPE_TEST_PREPARATIONS => Label::getLabel('LBL_Test_Preparations', $langId),
             static::TYPE_LEARNER_AGES => Label::getLabel('LBL_Learner_Ages', $langId),
         ];
     }

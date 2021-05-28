@@ -23,6 +23,12 @@ if( $controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <link rel="canonical" href="<?php echo $canonicalUrl;?>" />
 
+<script type="text/javascript">
+
+		const confFrontEndUrl =  '<?php echo CONF_WEBROOT_FRONTEND; ?>';
+	
+	</script>
+
 <?php
 $jsVariables = CommonHelper::htmlEntitiesDecode($jsVariables);
 $SslUsed = ( FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_BOOLEAN, false)) ? 1 : 0;
@@ -43,4 +49,5 @@ echo $str = '<script type="text/javascript">
 		if( CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES <= 0  ){
 			CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = 3;
 		}
+		
 	</script>' . "\r\n";

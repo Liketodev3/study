@@ -22,6 +22,7 @@ class TeachersController extends MyAppController
         $timeSlotArr = TeacherGeneralAvailability::timeSlotArr();
         $this->set('daysArr', $daysArr);
         $this->set('timeSlotArr', $timeSlotArr);
+        $this->set('siteLangId',CommonHelper::getLangId());
         $this->_template->addJs('js/enscroll-0.6.2.min.js');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
@@ -50,7 +51,7 @@ class TeachersController extends MyAppController
         $srch->applyOrderBy($sortOrder);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-        // prx($srch->getQuery());
+
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $records = $srch->formatTeacherSearchData($rawData, $userId);
         $recordCount = $srch->getRecordCount();
@@ -58,6 +59,7 @@ class TeachersController extends MyAppController
         $endRecord = ($recordCount < $page * $pageSize) ? $recordCount : $page * $pageSize;
         $recordCountTxt = ($recordCount > SEARCH_MAX_COUNT) ? $recordCount . '+' : $recordCount;
         $showing = 'Showing ' . $startRecord . ' - ' . $endRecord . ' Of ' . $recordCountTxt . ' ' . Label::getLabel('lbl_teachers');
+
         $this->set('showing', $showing);
         $this->set('teachers', $records);
         $this->set('postedData', $post);

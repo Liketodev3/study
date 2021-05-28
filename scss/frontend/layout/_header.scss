@@ -117,7 +117,7 @@ $header-primary: 'header-primary';
 
 .header-dropdown{
     .header-dropdown__trigger{
-        padding: 0.5rem 1.2rem;
+        padding: 0.65rem 1.2rem;
         font-weight: 600;
         text-transform: uppercase;
         display: flex;
@@ -441,6 +441,7 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
     position: relative;
     max-height: 445px;
     min-height: 100%;
+    overflow: auto;
     &::before{
         content: "";
         border-#{theme('direction.right','value')}: 9px solid transparent;
@@ -548,7 +549,7 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
         }
         
         .header-controls__action{
-            padding: calc(var(--padding-4) - 1px) var(--padding-5);
+            padding: calc(var(--padding-4) + 2px) var(--padding-5);
             display: block;
             position: relative;
             svg{

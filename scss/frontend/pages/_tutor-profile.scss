@@ -408,7 +408,6 @@
     .slider__item{
         padding: var(--padding-2) var(--padding-3) var(--padding-16);
         .card{
-            padding: calc(var(--padding-10) - 3px) var(--padding-6);
             .card__head{
                 h3{
                     font-size: calc(var(--font-size-h5) - 2px);
@@ -417,9 +416,6 @@
                     display: -webkit-box;
                     -webkit-line-clamp: 2; /* number of lines to show */
                     -webkit-box-orient: vertical;
-                }
-                &::before{
-                    #{theme('direction.left','value')}: -20px;
                 }
             }
         }
@@ -600,12 +596,12 @@
         .review__shorting{
             position: relative;
             select {
-                width: 158px;
+                width: 127px;
                 border: none;
                 background-image: none;
+                padding: 0;
                 color: inherit;
                 background-color: transparent;
-                padding: 0 var(--padding-6);
                 &:focus{
                     box-shadow: none;
                 }
@@ -615,8 +611,8 @@
                 position: absolute;
                 width: 7px;
                 height: 7px;
-                border-left: 2px solid var(--color-dark);
-                border-bottom: 2px solid var(--color-dark);
+                border-left: 2px solid var(--color-gray-dark);
+                border-bottom: 2px solid var(--color-gray-dark);
                 #{theme('direction.right','value')}: 9px;
                 top: 15px;
                 transform: rotate(-45deg);
@@ -687,7 +683,10 @@
 }
 
 .profile-secondary {
-    
+    @media(min-width: theme('breakpoints.xl','value')){
+        position: sticky;
+        top: 150px;
+    }
 
     @media(max-width: theme('breakpoints.lg','value')){
         margin: var(--margin-6) 0;
@@ -695,19 +694,13 @@
     }
 }
 
-.right-panel{
-    @media(min-width: theme('breakpoints.xl','value')){
-        position: sticky;
-        top: 150px;
-    }
-}
 .box--book {
     padding: var(--padding-10);
     border: 1px solid var(--color-gray-400);
     @media(max-width: theme('breakpoints.lg','value')){
         padding: var(--padding-10);
     }
-    @media(min-width: theme('breakpoints.xxl','value')){
+    @media(min-width: theme('breakpoints.xxxl','value')){
         padding: var(--padding-18) var(--padding-20) var(--padding-10);
     }
 }
@@ -793,15 +786,12 @@
             width: 630px;
         }
 
-        @media(min-width: theme('breakpoints.xl','value')) and (max-width: theme('breakpoints.xxl','value')){
+        @media(min-width: theme('breakpoints.xl','value')) and (max-width: theme('breakpoints.xxxl','value')){
             width: 750px;
         }
 
-        @media(min-width: theme('breakpoints.xxl','value')) and (max-width: theme('breakpoints.xxxl','value')){
-            max-width: 800px;
-        }
         @media(min-width: theme('breakpoints.xxxl','value')){
-            width: 900px;
+            max-width: 900px;
         }
     }
     .profile-primary{
@@ -820,15 +810,12 @@
             width: 630px;
         }
 
-        @media(min-width: theme('breakpoints.xl','value')) and (max-width: theme('breakpoints.xxl','value')){
+        @media(min-width: theme('breakpoints.xl','value')) and (max-width: theme('breakpoints.xxxl','value')){
             width: 750px;
         }
 
-        @media(min-width: theme('breakpoints.xxl','value')) and (max-width: theme('breakpoints.xxxl','value')){
-            max-width: 800px;
-        }
         @media(min-width: theme('breakpoints.xxxl','value')){
-            width: 900px;
+            max-width: 900px;
         }
     }
     .profile-secondary{
@@ -839,15 +826,12 @@
             grid-row-end: 3;
         }
       
-        @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
+        @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xl','value')){
             width: 300px;
         }
 
-        @media(min-width: theme('breakpoints.xxl','value')) and (max-width: theme('breakpoints.xxxl','value')){
-            width: 360px;
-        }
         @media(min-width: theme('breakpoints.xxxl','value')){
-            width: 400px;
+            width: 420px;
         }
     }
 }

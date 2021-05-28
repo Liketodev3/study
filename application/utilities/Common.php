@@ -172,6 +172,7 @@ class Common
 
     public static function teacherLeftFilters($template)
     {
+        $siteLangId = CommonHelper::getLangId();
         $frmFilters = new Form('teacherFilters');
         $filterSortBy = [
             'popularity_desc' => Label::getLabel('LBL_By_Popularity'),
@@ -198,6 +199,10 @@ class Common
             $allPreferences[$teacherPreference['preference_type']][] = $teacherPreference;
         }
         $template->set('allPreferences', $allPreferences);
+        $template->set('preferenceTypeArr',Preference::getPreferenceTypeArr(CommonHelper::getLangId()));
+
+        // CommonHelper::printArray($allPreferences);
+        // CommonHelper::printArray(Preference::getPreferenceTypeArr(CommonHelper::getLangId()));
         /* ] */
         /* spoken languages[ */
         $spokenLangSrch = clone $teacherSrchObj;
@@ -215,6 +220,8 @@ class Common
         $priceSrch = clone $teacherSrchObj;
         $priceRs = $priceSrch->getResultSet();
         $priceArr = FatApp::getDb()->fetchAll($priceRs);
+
+        
 
         if ($priceArr) {
             $newArr = [];
@@ -242,9 +249,11 @@ class Common
         $fromSrch->addGroupBy('user_country_id');
         $fromRs = $fromSrch->getResultSet();
         $fromArr = FatApp::getDb()->fetchAll($fromRs);
+        $teachLangs =  TeachingLanguage::getAllLangs($siteLangId);
+        $template->set('teachLangs',$teachLangs);        
         $template->set('fromArr', $fromArr);
-        /* ] */
         $template->set('genderArr', User::getGenderArr());
+        $template->set('siteLangId',$siteLangId);
         $template->set('frmFilters', $frmFilters);
     }
 

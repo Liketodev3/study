@@ -5,7 +5,6 @@ if ($__controller != 'TeachersController' && isset($_SESSION['search_filters']))
 	unset($_SESSION['search_filters']);
 }
 /***********/
-
 /* commonHead1[ */
 $commonHead1DataArr = array(
 	'siteLangId'	=>	$siteLangId,

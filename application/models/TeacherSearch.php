@@ -158,8 +158,11 @@ class TeacherSearch extends SearchBase
         $maxPrice = FatUtility::float($post['maxPriceRange'] ?? 0);
         $minPrice = CommonHelper::getDefaultCurrencyValue($minPrice, false, false);
         $maxPrice = CommonHelper::getDefaultCurrencyValue($maxPrice, false, false);
-        $this->addCondition('testat.testat_minprice', '>=', $minPrice);
-        $this->addCondition('testat.testat_maxprice', '<=', $maxPrice);
+        if($minPrice && $maxPrice){
+            $this->addCondition('testat.testat_minprice', '>=', $minPrice);
+            $this->addCondition('testat.testat_maxprice', '<=', $maxPrice);
+        }
+        
 
         /* Preferences Filter (Teacher’s accent, Teaches level, Subjects, Test preparations, Lesson includes, Learner’s age group) */
         $preferences = explode(",", $post['preferenceFilter'] ?? '');
