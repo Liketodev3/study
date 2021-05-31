@@ -647,7 +647,7 @@ class CommonHelper extends FatUtility
         if (strlen($string) < 1) {
             return false;
         }
-        if (!preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%-_]{8,15}$/', $string)) {
+        if (!preg_match('/' . applicationConstants::PASSWORD_REGEX . '/', $string)) {
             return false;
         }
         return true;

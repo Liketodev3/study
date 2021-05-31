@@ -697,13 +697,13 @@ class UsersController extends AdminBaseController
     {
         $frm = new Form('changePwdFrm');
         $frm->addHiddenField('', 'userId', $userId);
-        $frm->addPasswordField(Label::getLabel('LBL_New_Password', $langId), 'new_password', '', ['id' => 'new_password'])->requirements()->setRequired();
-        //@todo regexp for password
+        $fld = $frm->addPasswordField(Label::getLabel('LBL_New_Password', $langId), 'new_password', '', ['id' => 'new_password']);$fld->requirements()->setRequired();
+        $fld->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
+        $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_8_Digit_AlphaNumeric_Password', $langId));
         $conNewPwd = $frm->addPasswordField(Label::getLabel('LBL_Confirm_New_Password', $langId), 'conf_new_password', '', ['id' => 'conf_new_password']);
         $conNewPwdReq = $conNewPwd->requirements();
         $conNewPwdReq->setRequired();
         $conNewPwdReq->setCompareWith('new_password', 'eq');
-        $conNewPwdReq->setCustomErrorMessage(Label::getLabel('LBL_Confirm_Password_Not_Matched!', $langId));
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $langId), array(
             'id' => 'btn_submit'
         ));

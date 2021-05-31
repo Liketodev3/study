@@ -482,7 +482,7 @@ class AccountController extends LoggedUserController
         $curPwd->requirements()->setRequired();
         $newPwd = $frm->addPasswordField(Label::getLabel('LBL_NEW_PASSWORD'), 'new_password');
         $newPwd->requirements()->setRequired();
-        $newPwd->requirements()->setRegularExpressionToValidate("^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%-_]{8,15}$");
+        $newPwd->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
         $newPwd->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Valid_password'));
         $conNewPwd = $frm->addPasswordField(Label::getLabel('LBL_CONFIRM_NEW_PASSWORD'), 'conf_new_password');
         $conNewPwdReq = $conNewPwd->requirements();
