@@ -278,7 +278,7 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                             <li><a href="<?php echo CommonHelper::generateUrl('ImageAttributes'); ?>"><?php echo Label::getLabel('LBL_Image_Attributes', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewRobotsSection($adminLoggedId, true)) { ?>
-                            <li><a href="<?php echo CommonHelper::generateUrl('Robot'); ?>"><?php echo Label::getLabel('LBL_Robots', $adminLangId); ?></a></li>
+                            <li><a href="<?php echo CommonHelper::generateUrl('Bots'); ?>"><?php echo Label::getLabel('LBL_Robots', $adminLangId); ?></a></li>
                         <?php } ?>
                     </ul>
                 </li>
