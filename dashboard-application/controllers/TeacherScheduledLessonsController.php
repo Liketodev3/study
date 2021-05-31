@@ -688,10 +688,15 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
         /* validation[ */
-        $lessonDetail = ScheduledLesson::getAttributesById($lessonId, ['slesson_teacher_id']);
-        if ($lessonDetail['slesson_teacher_id'] != UserAuthentication::getLoggedUserId()) {
+        $lessonDetail = ScheduledLesson::getAttributesById($lessonId);
+        $canEdit = ($lessonDetail['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) ||
+        (($lessonDetail['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) &&
+        (strtotime($lessonDetail['slesson_end_date'] . " " . $lessonDetail['slesson_end_time']) > strtotime(date('Y-m-d H:i:s'))));
+
+        if (($lessonDetail['slesson_teacher_id'] != UserAuthentication::getLoggedUserId()) || !$canEdit) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Access_Denied'));
         }
+
         $planDetail = LessonPlan::getAttributesById($planId, ['tlpn_user_id']);
         if ($planDetail['tlpn_user_id'] != UserAuthentication::getLoggedUserId()) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Access_Denied'));

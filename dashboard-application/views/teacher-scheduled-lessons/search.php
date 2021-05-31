@@ -26,6 +26,9 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
             }
             foreach ($lessons as $lesson) {
                 $lessonsStatus = $statusArr[$lesson['sldetail_learner_status']];
+                $endDateTimeYMD = $lesson['slesson_end_date'] . " " . $lesson['slesson_end_time'];
+                $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING)
+                || (($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) && (strtotime($endDateTimeYMD) > strtotime($date->format('Y-m-d H:i:s'))));
                 $lesson['lesreschlog_id'] = FatUtility::int($lesson['lesreschlog_id']);
                 if (
                         $lesson['lesreschlog_id'] > 0 &&
@@ -53,8 +56,7 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
                             ?>
                             <div class="card-landscape__head">
                                 <?php
-                                $endDateTime = $lesson['slesson_end_date'] . " " . $lesson['slesson_end_time'];
-                                $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $endDateTime, true, $user_timezone);
+                                $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $endDateTimeYMD, true, $user_timezone);
                                 ?>
                                 <time class="card-landscape__time"><?php echo date('h:i A', $startUnixTime); ?></time>
                                 <date class="card-landscape__date"><?php echo date('l, F d, Y', $startUnixTime); ?></date>
@@ -118,7 +120,7 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
                                         <a href="javascript:void(0);" onclick="removeAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-black  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Remove'); ?></a>
                                     </div>
                                 </div>
-                            <?php } else { ?>
+                            <?php } else if ($canEdit) { ?>
                                 <div class="card-landscape__docs">
                                     <a href="javascript:void(0);" onclick="listLessonPlans('<?php echo $lesson['slesson_id']; ?>');" class="btn btn--transparent btn--addition color-black btn--small"><?php echo Label::getLabel('LBL_Add_Lesson_Plan'); ?></a>
                                 </div>
