@@ -1430,7 +1430,7 @@ class CommonHelper extends FatUtility
 
     public static function formatTimeSlotArr($arr)
     {
-        $timeSlotArr = array_intersect_key(TeacherGeneralAvailability::timeSlotArr(), array_flip($arr));
+        $timeSlotArr = array_intersect_key(TeacherGeneralAvailability::timeSlots(), array_flip($arr));
         $formattedArr = [];
         foreach ($timeSlotArr as $k => $timeSlot) {
             $breakTimeStrng = explode('-', $timeSlot);

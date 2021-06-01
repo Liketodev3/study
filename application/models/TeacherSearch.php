@@ -49,6 +49,13 @@ class TeacherSearch extends SearchBase
             'testat.testat_reviewes' => 'totReviews',
             'testat.testat_minprice' => 'minPrice',
             'testat.testat_maxprice' => 'maxPrice',
+            'testat.testat_day1' => 'testat_day1',
+            'testat.testat_day2' => 'testat_day2',
+            'testat.testat_day3' => 'testat_day3',
+            'testat.testat_day4' => 'testat_day4',
+            'testat.testat_day5' => 'testat_day5',
+            'testat.testat_day6' => 'testat_day6',
+            'testat.testat_day7' => 'testat_day7',
         ];
     }
 
@@ -116,26 +123,36 @@ class TeacherSearch extends SearchBase
         $weekDays = (array) ($post['filterWeekDays'] ?? []);
         $timeSlots = (array) ($post['filterTimeSlots'] ?? []);
         if (count($weekDays) > 0 || count($timeSlots) > 0) {
+            $timeSlotArr = [];
+            if (!empty($timeSlots)) {
+                $timeSlotArr = CommonHelper::formatTimeSlotArr($timeSlots);
+            }
             $srch = new SearchBase('tbl_teachers_general_availability');
             $srch->addFld('DISTINCT tgavl_user_id as tgavl_user_id');
-            if (count($weekDays) > 0) {
-                $srch->addCondition('tgavl_day', 'IN', $weekDays);
-            }
-            $systemTimezone = MyDate::getTimeZone();
-            $userTimezone = MyDate::getUserTimeZone();
-            $timeSlots = CommonHelper::formatTimeSlotArr($timeSlots);
-            foreach ($timeSlots as $key => $formatedVal) {
-                $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
-                $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
-                $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $userTimezone, $systemTimezone)));
-                $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $userTimezone, $systemTimezone)));
-                if ($key == 0) {
-                    $cnd = $srch->addCondition('tgavl_start_time', '<=', $startTime, 'AND');
-                    $cnd->attachCondition('tgavl_end_time', '>=', $startTime, 'AND');
-                } else {
-                    $cnd2 = $cnd->attachCondition('tgavl_start_time', '<=', $endTime, 'OR');
-                    $cnd2->attachCondition('tgavl_end_time', '>=', $endTime, 'AND');
+            if (is_array($weekDays) && !empty($weekDays)) {
+                $weekDates = MyDate::changeWeekDaysToDate($weekDays, $timeSlotArr);
+                $condition = ' ( ';
+                foreach ($weekDates as $weekDayKey => $date) {
+                    $condition .= ($weekDayKey == 0) ? '' : ' OR ';
+                    $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "' . $date['endDate'] . '" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "' . $date['startDate'] . '" ) ';
                 }
+                $condition .= ' ) ';
+                $srch->addDirectCondition($condition);
+            }
+            if (empty($weekDays) && !empty($timeSlotArr)) {
+                $systemTimezone = MyDate::getTimeZone();
+                $userTimezone = MyDate::getUserTimeZone();
+                $condition = '( ';
+                foreach ($timeSlotArr as $key => $formatedVal) {
+                    $condition .= ($key == 0) ? '' : 'OR';
+                    $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
+                    $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
+                    $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $userTimezone, $systemTimezone)));
+                    $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $userTimezone, $systemTimezone)));
+                    $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","' . $endTime . '") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","' . $startTime . '") ) ';
+                }
+                $condition .= ' ) ';
+                $srch->addDirectCondition($condition);
             }
             $srch->doNotCalculateRecords();
             $srch->doNotLimitRecords();

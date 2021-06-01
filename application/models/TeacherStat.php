@@ -163,7 +163,7 @@ class TeacherStat extends FatModel
      */
     public function setGavailability(array $post)
     {
-        $availability = json_decode($post['data'] ?? '');
+        $availability = json_decode($post['data'] ?? '', true);
         $data = [
             'testat_gavailability' => 0,
             'testat_day1' => null,
@@ -174,16 +174,23 @@ class TeacherStat extends FatModel
             'testat_day6' => null,
             'testat_day7' => null
         ];
+        $day1 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
+        $day2 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
+        $day3 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
+        $day4 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
+        $day5 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
+        $day6 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
+        $day7 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
         if (!empty($availability)) {
             $data = [
-                'testat_gavailability' => 0,
-                'testat_day1' => null,
-                'testat_day2' => null,
-                'testat_day3' => null,
-                'testat_day4' => null,
-                'testat_day5' => null,
-                'testat_day6' => null,
-                'testat_day7' => null
+                'testat_gavailability' => 1,
+                'testat_day1' => json_encode($day1),
+                'testat_day2' => json_encode($day2),
+                'testat_day3' => json_encode($day3),
+                'testat_day4' => json_encode($day4),
+                'testat_day5' => json_encode($day5),
+                'testat_day6' => json_encode($day6),
+                'testat_day7' => json_encode($day7)
             ];
         }
         $record = new TableRecord('tbl_teacher_stats');
