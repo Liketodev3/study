@@ -43,7 +43,7 @@ class BotsController extends AdminBaseController
     {
         $frm = new Form('frmRobots');
         $botsTxt = file_exists($this->fileName) ? file_get_contents($this->fileName) : '';
-        $frm->addTextArea('', 'botsTxt', $botsTxt); //Label::getLabel('LBL_Robots_File_Txt', $langId)
+        $frm->addTextArea('', 'botsTxt', $botsTxt, ['title' => Label::getLabel('LBL_Robots_File_Txt', $langId)]);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $langId));
         return $frm;
     }

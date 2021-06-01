@@ -266,7 +266,7 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
             || $objPrivilege->canViewImageAttributes($adminLoggedId, true)
             ) {
                 ?>
-                <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Misc', $adminLangId); ?></a>
+                <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_SEO', $adminLangId); ?></a>
                     <ul>
                         <?php if ($objPrivilege->canViewMetaTags($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('MetaTags'); ?>"><?php echo Label::getLabel('LBL_Meta_Tags_Management', $adminLangId); ?></a></li>
