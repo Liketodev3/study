@@ -38,12 +38,14 @@ class TeachersController extends MyAppController
 
     public function teachersList()
     {
+   
         $post = FatApp::getPostedData();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 12);
         $sortOrder = FatApp::getPostedData('sortOrder', FatUtility::VAR_INT, 1);
         $userId = UserAuthentication::isUserLogged() ? UserAuthentication::getLoggedUserId() : 0;
         $langId = CommonHelper::getLangId();
+        $_SESSION['search_filters'] = $post;
         $srch = new TeacherSearch($langId);
         $srch->addSearchListingFields();
         $srch->applyPrimaryConditions($userId);
@@ -810,4 +812,51 @@ class TeachersController extends MyAppController
         $frm->addSubmitButton('', 'btnTeacherSrchSubmit', '');
         return $frm;
     }
+
+    
+	public function getTeacherAvailability(int $userId){
+		
+		if ($userId < 1) {
+            trigger_error(Label::getLabel('LBL_Invalid_Request'));
+		}
+		$array = TeacherGeneralAvailability::getVisibleSlotsArray();
+		$srch = new TeacherGeneralAvailabilitySearch();
+        $srch->addMultipleFields(array('GROUP_CONCAT(tgavl_day) as tgavl_day','GROUP_CONCAT(tgavl_start_time) as tgavl_start_time','GROUP_CONCAT(tgavl_end_time) as tgavl_end_time'));
+        $srch->addCondition('tgavl_user_id', '=', $userId);
+
+        $srch->addOrder('tgavl_date', 'ASC');
+
+        $rs = $srch->getResultSet();
+		$rows = FatApp::getDb()->fetch($rs);
+
+		CommonHelper::printArray($rows);
+
+		$availabilityDays =  explode(",",$rows['tgavl_day']);
+		$availabilityStartTime =  explode(",",$rows['tgavl_start_time']);
+		$availabilityEndTime =  explode(",",$rows['tgavl_end_time']);
+
+		$time = [];
+		foreach($availabilityDays as $key => $val){
+			$tgavl_start_time = strtotime($availabilityStartTime[$key]);
+			$tgavl_end_time =  strtotime($availabilityEndTime[$key]);
+			$slotEnd = false;
+			foreach ($array as $slotkey=>$slotval){
+				$time_difference = 0;
+				if($tgavl_start_time >= strtotime($slotval['start_time']) && $tgavl_start_time <  strtotime($slotval['end_time'])){
+					$time_difference  =  (strtotime($slotval['end_time'])-$tgavl_start_time)/3600;
+				}elseif ($tgavl_start_time < strtotime($slotval['start_time']) && $tgavl_end_time > strtotime($slotval['end_time'])){
+					$time_difference  =  (strtotime($slotval['end_time'])-strtotime($slotval['start_time']))/3600;
+				}elseif ($tgavl_start_time < strtotime($slotval['start_time']) && $tgavl_end_time <= strtotime($slotval['end_time'])){
+					$time_difference  =  ((($tgavl_end_time-strtotime($slotval['start_time']))/3600)!=0)?($tgavl_end_time-strtotime($slotval['start_time']))/3600:4;
+					$slotEnd = true;	
+				}
+				$time[$val][$slotkey]= isset($time[$val][$slotkey]) ? ceil($time[$val][$slotkey]+$time_difference): ceil($time_difference);	
+				if($slotEnd){
+					continue 2;
+				}
+			}
+		}
+		
+		CommonHelper::printArray($time,true);
+	}
 }

@@ -30,11 +30,9 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 							<div class="filter__body filter__body-target filter-target-js" style="display: none;">
 								<div class="dropdown-listing">
 									<ul>
-
 										<?php foreach ($teachLangs as $teachLangId => $teachLangName) { ?>
 											<li><a href="javascript:void(0)" class="select-teach-lang-js" teachLangId="<?php echo $teachLangId; ?>"><?php echo $teachLangName; ?></a></li>
 										<?php } ?>
-
 									</ul>
 								</div>
 							</div>
