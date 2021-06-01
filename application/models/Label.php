@@ -112,7 +112,7 @@ class Label extends MyAppModel
             $lang_array[$lblKey][$langId] = $str;
         }
 
-        return $str;
+        return addslashes($str);
     }
 
     public function addUpdateData($data = array())
