@@ -1,9 +1,11 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+<?php
+defined('SYSTEM_INIT') or die('Invalid Usage.');
 MyDate::setUserTimeZone();
 $user_timezone = MyDate::getUserTimeZone();
 $date = new DateTime("now", new DateTimeZone($user_timezone));
 $curDate = $date->format('Y-m-d');
-$nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate))); ?>
+$nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
+?>
 
 <div class="table-scroll">
     <table class="table table--styled table--responsive">
@@ -14,92 +16,84 @@ $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate))); ?>
             <th><?php echo $statusLabel = Label::getLabel('LBL_Status'); ?></th>
             <th><?php echo $actionLabel = Label::getLabel('LBL_Actions'); ?></th>
         </tr>
-    <?php foreach ($classes as $i => $class) { ?>
-        <tr>
+        <?php foreach ($classes as $i => $class) { ?>
+            <tr>
 
-            <td>
-                <div class="flex-cell">
-                    <div class="flex-cell__label"><?php echo $detailLabel; ?></div>
-                    <div class="flex-cell__content">
-                        <div class="data-group">
-                            <span class="bold-600"> <?php echo $class['grpcls_title']; ?></span><br>
-                            <span><?php echo Label::getLabel('LBL_Booked_Seats'); ?> - <?php echo $class['total_learners']; ?></span><br>
-                            <span><?php echo Label::getLabel('LBL_Entry_fee'); ?> -  <?php echo CommonHelper::displayMoneyFormat($class['grpcls_entry_fee']); ?></span>
+                <td>
+                    <div class="flex-cell">
+                        <div class="flex-cell__label"><?php echo $detailLabel; ?></div>
+                        <div class="flex-cell__content">
+                            <div class="data-group">
+                                <span class="bold-600"> <?php echo $class['grpcls_title']; ?></span><br>
+                                <span><?php echo Label::getLabel('LBL_Booked_Seats'); ?> - <?php echo $class['total_learners']; ?></span><br>
+                                <span><?php echo Label::getLabel('LBL_Entry_fee'); ?> -  <?php echo CommonHelper::displayMoneyFormat($class['grpcls_entry_fee']); ?></span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-            </td>
-            <td>
-                <div class="flex-cell">
-                    <div class="flex-cell__label"><?php echo $startAtLabel; ?> </div>
-                    <div class="flex-cell__content"><?php echo MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i', $class['grpcls_start_datetime'], true, $user_timezone); ?></div>
-                </div>
-            </td>
-            <td>
-                <div class="flex-cell">
-                    <div class="flex-cell__label"><?php echo $endAtLabel; ?></div>
-                    <div class="flex-cell__content"><?php echo MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i', $class['grpcls_end_datetime'], true, $user_timezone); ?></div>
-                </div>
-            </td>
-            <td>
-                <div class="flex-cell">
-                    <div class="flex-cell__label"><?php echo $statusLabel; ?></div>
-                    <div class="flex-cell__content"><span class="badge color-secondary badge--curve"><?php echo $classStatusArr[$class['grpcls_status']]; ?></span></div>
-                </div>
-            </td>
-            <td>
-                <div class="flex-cell">
-                    <div class="flex-cell__label"><?php echo $actionLabel; ?></div>
-                    <div class="flex-cell__content">
-                        <div class="actions-group">
-                            <?php if ($class['slesson_id']) { ?>
-                                <a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons', 'view', array($class['slesson_id'])); ?>" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-                                    <svg class="icon icon--issue icon--small">
-                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#enter'; ?>"></use>
-                                    </svg>
-                                    <div class="tooltip tooltip--top bg-black"><?php echo ($class['is_joined'] ? Label::getLabel("LBL_View_Class") : Label::getLabel("LBL_Start_Class")); ?></div>
-                                </a>
-                                <?php if($class['issrep_id'] > 0) { ?>
-                                    <a href="javascript:void(0);" onclick="resolveIssue('<?php echo $class['slesson_id']; ?>')" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+                </td>
+                <td>
+                    <div class="flex-cell">
+                        <div class="flex-cell__label"><?php echo $startAtLabel; ?> </div>
+                        <div class="flex-cell__content"><?php echo MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i', $class['grpcls_start_datetime'], true, $user_timezone); ?></div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex-cell">
+                        <div class="flex-cell__label"><?php echo $endAtLabel; ?></div>
+                        <div class="flex-cell__content"><?php echo MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i', $class['grpcls_end_datetime'], true, $user_timezone); ?></div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex-cell">
+                        <div class="flex-cell__label"><?php echo $statusLabel; ?></div>
+                        <div class="flex-cell__content"><span class="badge color-secondary badge--curve"><?php echo $classStatusArr[$class['grpcls_status']]; ?></span></div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex-cell">
+                        <div class="flex-cell__label"><?php echo $actionLabel; ?></div>
+                        <div class="flex-cell__content">
+                            <div class="actions-group">
+                                <?php if ($class['slesson_id']) { ?>
+                                    <a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons', 'view', array($class['slesson_id'])); ?>" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
                                         <svg class="icon icon--issue icon--small">
-                                            <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#view-report'; ?>"></use>
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#enter'; ?>"></use>
                                         </svg>
-                                        <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel("LBL_Class_Issue_details") ?></div>
+                                        <div class="tooltip tooltip--top bg-black"><?php echo ($class['is_joined'] ? Label::getLabel("LBL_View_Class") : Label::getLabel("LBL_Start_Class")); ?></div>
                                     </a>
+                                    <?php if ($class['repiss_id'] > 0) { ?>
+                                        <a href="<?php echo CommonHelper::generateUrl('TeacherIssueReported', 'index', [$class['grpcls_id']]) ?>" target="_blank" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+                                            <svg class="icon icon--issue icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#view-report'; ?>"></use></svg>
+                                            <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel("LBL_Class_Issue_details") ?></div>
+                                        </a>
+                                    <?php } ?>
                                 <?php } ?>
-                            <?php } ?>
-                            <?php if ($class['grpcls_status'] == TeacherGroupClasses::STATUS_ACTIVE) { ?>
-                                <?php if (strtotime($class['grpcls_start_datetime']) > time()) { ?>
-                                    <a ref="javascript:void(0);" onclick="form('<?php echo $class['grpcls_id'];  ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-                                        <svg class="icon icon--issue icon--small">
-                                            <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#edit'; ?>"></use>
-                                        </svg>
-                                        <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel("LBL_Edit"); ?></div>
-                                    </a>
-                                <?php }else{ ?>
-                                    <a ref="javascript:void(0);" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-                                        <svg class="icon icon--issue icon--small">
-                                            <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#edit'; ?>"></use>
-                                        </svg>
-                                        <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Can_not_edit_old_classes'); ?></div>
-                                    </a>
+                                <?php if ($class['grpcls_status'] == TeacherGroupClasses::STATUS_ACTIVE) { ?>
+                                    <?php if (strtotime($class['grpcls_start_datetime']) > time()) { ?>
+                                        <a ref="javascript:void(0);" onclick="form('<?php echo $class['grpcls_id']; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+                                            <svg class="icon icon--issue icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#edit'; ?>"></use></svg>
+                                            <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel("LBL_Edit"); ?></div>
+                                        </a>
+                                    <?php } else { ?>
+                                        <a ref="javascript:void(0);" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+                                            <svg class="icon icon--issue icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#edit'; ?>"></use></svg>
+                                            <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Can_not_edit_old_classes'); ?></div>
+                                        </a>
+                                    <?php } ?>
+                                    <?php if (empty($class['repiss_id']) && $class['grpcls_status'] != TeacherGroupClasses::STATUS_COMPLETED) { ?>
+                                        <a href="javascript:void(0);" onclick="cancelClass('<?php echo $class['grpcls_id']; ?>');"  class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+                                            <svg class="icon icon--issue icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#trash'; ?>"></use></svg>
+                                            <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel("LBL_Cancel") ?></div>
+                                        </a>
+                                    <?php } ?>
                                 <?php } ?>
-                                <?php if (empty($class['issrep_id']) && $class['grpcls_status'] != TeacherGroupClasses::STATUS_COMPLETED) { ?>
-                                    <a href="javascript:void(0);" onclick="cancelClass('<?php echo $class['grpcls_id'];  ?>');"  class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-                                    <svg class="icon icon--issue icon--small">
-                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#trash'; ?>"></use>
-                                    </svg>
-                                    <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel("LBL_Cancel") ?></div>
-                                </a>
-                                <?php } ?>
-                             <?php } ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </td>
-        </tr>
-    <?php } ?>
+                </td>
+            </tr>
+        <?php } ?>
     </table>
 </div>
 <?php

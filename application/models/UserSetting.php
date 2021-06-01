@@ -40,7 +40,7 @@ class UserSetting extends MyAppModel
         return $data;
     }
 
-    public static function getUserSettings($userId, $tlangId = null, $duration = 0)
+    public static function getUserSettings(int $userId)
     {
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
@@ -54,21 +54,11 @@ class UserSetting extends MyAppModel
             'us_teach_slanguage_id',
             'us_google_access_token',
             'us_google_access_token_expiry',
-            'us_site_lang',
-            'utl.*'
+            'us_site_lang'
         ]);
-        $srch->joinTable("tbl_user_teach_languages", 'LEFT JOIN', 'utl_us_user_id = us_user_id', 'utl');
+       
         $srch->addCondition('us_user_id', '=', $userId);
-        $srch->addOrder('utl_booking_slot', 'DESC');
-        // if greater than 0, then specific otherwise all
-        if ($duration > 0) {
-            $srch->addCondition('utl_booking_slot', '=', $duration);
-        }
-        if ($tlangId) {
-            $srch->addCondition('utl_slanguage_id', '=', $tlangId);
-        }
-        $rs = $srch->getResultSet();
-        return FatApp::getDb()->fetchAll($rs);
+        return FatApp::getDb()->fetch($srch->getResultSet());
     }
 
 }

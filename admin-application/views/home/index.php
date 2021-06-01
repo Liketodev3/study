@@ -288,7 +288,7 @@
 							</li>
 						</ul>
 					</div>
-					<div class="box__body ">
+					<div class="box__body space">
 						<!--<div class="graph-container"><img src="images/traffic_graph.jpg" style="margin:auto;" alt=""></div>-->
 						<div class="graph-container">
 							<div id="piechart" class="ct-chart ct-perfect-fourth graph--traffic"></div>

@@ -8,8 +8,8 @@ function setCookie(key, value) {
 	if(secure){
 		samesite = " samesite=none;";
 	}
-	console.log(key + '=' + value + '; '+secure+samesite+' expires=' + expires.toUTCString()+'; path='+confFrontEndUrl);
-	document.cookie = key + '=' + value + '; '+secure+samesite+' expires=' + expires.toUTCString()+'; path='+confFrontEndUrl;
+	console.log(key + '=' + value + '; '+secure+samesite+' expires=' + expires.toUTCString()+'; path='+confWebRootUrl);
+	document.cookie = key + '=' + value + '; '+secure+samesite+' expires=' + expires.toUTCString()+'; path='+confWebRootUrl;
 }
 function getCookie(key) {
     var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');

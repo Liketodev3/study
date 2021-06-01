@@ -34,7 +34,7 @@ foreach ($arr_listing as $sn => $row) {
 			case 'action':
 				$ul = $td->appendElement("ul", array("class" => "actions actions--centered"));
 				if ($canEdit) {
-					//	$li = $ul->appendElement("li");
+
 					$li = $ul->appendElement("li", array('class' => 'droplink'));
 
 					$li->appendElement('a', array('href' => 'javascript:void(0)', 'class' => 'button small green', 'title' => Label::getLabel('LBL_Edit', $adminLangId)), '<i class="ion-android-more-horizontal icon"></i>', true);

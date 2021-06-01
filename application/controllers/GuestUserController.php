@@ -377,7 +377,7 @@ class GuestUserController extends MyAppController
         $fld = $frm->addPasswordField(Label::getLabel('LBL_Password'), 'user_password');
         $fld->requirements()->setRequired();
         $fld->setRequiredStarPosition(Form::FORM_REQUIRED_STAR_POSITION_NONE);
-        $fld->requirements()->setRegularExpressionToValidate("^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%-_]{8,15}$");
+        $fld->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
         $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_8_Digit_AlphaNumeric_Password'));
         $termsConditionLabel = Label::getLabel('LBL_I_accept_to_the');
         $fld = $frm->addCheckBox($termsConditionLabel, 'agree', 1);
@@ -1056,7 +1056,7 @@ class GuestUserController extends MyAppController
         $frm = new Form('frmResetPwd');
         $fld_np = $frm->addPasswordField(Label::getLabel('LBL_NEW_PASSWORD', $siteLangId), 'new_pwd');
         $fld_np->requirements()->setRequired();
-        $fld_np->requirements()->setRegularExpressionToValidate("^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%-_]{8,15}$");
+        $fld_np->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
         $fld_np->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_Valid_password', $siteLangId));
         $fld_cp = $frm->addPasswordField(Label::getLabel('LBL_CONFIRM_NEW_PASSWORD', $siteLangId), 'confirm_pwd');
         $fld_cp->requirements()->setRequired();
@@ -1172,4 +1172,26 @@ class GuestUserController extends MyAppController
         $this->logout();
     }
 
+    public function wiziqCallback($lessonId, $teacherId, $token)
+    {
+        $lessonId = FatUtility::int($lessonId);
+        $teacherId = FatUtility::int($teacherId);
+        $signature = CommonHelper::decrypt($token);
+        if (empty($lessonId) || empty($teacherId) || empty($signature)) {
+            FatUtility::exitWithErrorCode(404);
+        }
+        $meetDetail = new LessonMeetingDetail($lessonId, $teacherId);
+        $meetingData = $meetDetail->getMeetingDetails(LessonMeetingDetail::KEY_WIZIQ_RAW_DATA);
+        $detail = json_decode($meetingData, true);
+        if (empty($detail) || ($detail['signature'] ?? '') != $signature) {
+            FatUtility::exitWithErrorCode(404);
+        }
+        (new ScheduledLesson($lessonId))->endLesson();
+        $userId = UserAuthentication::getLoggedUserId(true);
+        if ($userId == $teacherId) {
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$lessonId]));
+        } else {
+            FatApp::redirectUser(CommonHelper::generateUrl('Learner'));
+        }
+    }
 }

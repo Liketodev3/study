@@ -84,6 +84,7 @@ class AccountController extends LoggedUserController
         $this->_template->render(false, false, 'json-success.php');
     }
 
+    // @fix
     public function setUpEmail()
     {
         $EmailFrm = $this->getChangeEmailForm();
@@ -106,8 +107,9 @@ class AccountController extends LoggedUserController
             FatUtility::dieWithError(Message::getHtml());
         }
         $_token = $userObj->prepareUserVerificationCode();
-        if (!$this->sendEmailChangeVerificationLink($_token, $userData)) {
-            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
+        $error = '';
+        if (!$this->sendEmailChangeVerificationLink($_token, $userData, $error)) {
+            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . ' : '. $error);
             FatUtility::dieWithError(Message::getHtml());
         }
         $emailChangeReqObj = new UserEmailChangeRequest();
@@ -146,6 +148,13 @@ class AccountController extends LoggedUserController
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
+        if (CONF_USE_FAT_CACHE) {
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'ORIGINAL'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'SMALL'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'EXTRASMALL'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId), CONF_WEBROOT_FRONTEND));
+        }
         $this->set('msg', Label::getLabel('MSG_File_deleted_successfully'));
         $this->_template->render(false, false, 'json-success.php');
     }
@@ -157,7 +166,7 @@ class AccountController extends LoggedUserController
         $this->_template->addJs('js/cropper.js');
         $this->_template->addJs('js/intlTelInput.js');
         $this->_template->addCss('css/intlTelInput.css');
-       
+
 
         if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
             if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
@@ -189,16 +198,16 @@ class AccountController extends LoggedUserController
         // $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
         $isTeacherDashboardActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
         $profileFrm = $this->getProfileInfoForm($isTeacherDashboardActive);
-        $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
+        $userSettings = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
         if ($userRow['user_is_teacher']) {
-            $userRow['us_video_link'] = $user_settings['us_video_link'];
-            $userRow['us_is_trial_lesson_enabled'] = $user_settings['us_is_trial_lesson_enabled'];
-            $userRow['us_booking_before'] = $user_settings['us_booking_before']; //== code added on 23-08-2019
-            $userRow['us_google_access_token'] = $user_settings['us_google_access_token'];
-            $userRow['us_google_access_token_expiry'] = $user_settings['us_google_access_token_expiry'];
+            $userRow['us_video_link'] = $userSettings['us_video_link'];
+            $userRow['us_is_trial_lesson_enabled'] = $userSettings['us_is_trial_lesson_enabled'];
+            $userRow['us_booking_before'] = $userSettings['us_booking_before']; //== code added on 23-08-2019
+            $userRow['us_google_access_token'] = $userSettings['us_google_access_token'];
+            $userRow['us_google_access_token_expiry'] = $userSettings['us_google_access_token_expiry'];
         }
         $userRow['user_phone'] = $userRow['user_phone_code'].$userRow['user_phone'];
-        $userRow['us_site_lang'] = $user_settings['us_site_lang'];
+        $userRow['us_site_lang'] = $userSettings['us_site_lang'];
         $profileFrm->fill($userRow);
         $this->set('isProfilePicUploaded', User::isProfilePicUploaded());
         $this->set('userRow', $userRow);
@@ -302,6 +311,12 @@ class AccountController extends LoggedUserController
                 Message::addErrorMessage($fileHandlerObj->getError());
                 FatUtility::dieJsonError(Message::getHtml());
             }
+            if (CONF_USE_FAT_CACHE) {
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'ORIGINAL'), CONF_WEBROOT_FRONTEND));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM'), CONF_WEBROOT_FRONTEND));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'SMALL'), CONF_WEBROOT_FRONTEND));
+                FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId), CONF_WEBROOT_FRONTEND));
+            }
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', [$userId, 'ORIGINAL', 0], CONF_WEBROOT_FRONTEND) . '?' . time());
         }
         if ($post['action'] == "avatar" && !empty($_FILES['user_profile_image']['tmp_name'])) {
@@ -355,7 +370,7 @@ class AccountController extends LoggedUserController
             // } //  code added on 23-08-2019
             $record->assignValues(['us_booking_before' => $post['us_booking_before'], 'us_is_trial_lesson_enabled' => $post['us_is_trial_lesson_enabled']]); //  code added on 23-08-2019
         }
-        $user_settings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
+        $user_settings = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
         if ($post['us_site_lang'] != $user_settings['us_site_lang']) {
             CommonHelper::setDefaultSiteLangCookie($post['us_site_lang']);
         }
@@ -412,8 +427,8 @@ class AccountController extends LoggedUserController
             $fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'), 'us_booking_before', $bookingOptionArr, 'us_booking_before', [], Label::getLabel('LBL_Select'));
             $fld3->requirement->setRequired(true);
 
-            $freeTrialPackage = LessonPackage::getFreeTrialPackage();
-            if (!empty($freeTrialPackage) && $freeTrialPackage['lpackage_active'] == applicationConstants::YES) {
+            $isFreeTrialActive =  FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
+            if ($isFreeTrialActive == applicationConstants::YES) {
                 $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', applicationConstants::YES, [], true, applicationConstants::NO);
             }
         }
@@ -426,7 +441,7 @@ class AccountController extends LoggedUserController
     {
         $userId = UserAuthentication::getLoggedUserId();
         // $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
-        $userSettings = current(UserSetting::getUserSettings($userId));
+        $userSettings = UserSetting::getUserSettings($userId);
         
         $isTeacherDashboardActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
 
@@ -467,7 +482,7 @@ class AccountController extends LoggedUserController
         $curPwd->requirements()->setRequired();
         $newPwd = $frm->addPasswordField(Label::getLabel('LBL_NEW_PASSWORD'), 'new_password');
         $newPwd->requirements()->setRequired();
-        $newPwd->requirements()->setRegularExpressionToValidate("^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%-_]{8,15}$");
+        $newPwd->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
         $newPwd->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Valid_password'));
         $conNewPwd = $frm->addPasswordField(Label::getLabel('LBL_CONFIRM_NEW_PASSWORD'), 'conf_new_password');
         $conNewPwdReq = $conNewPwd->requirements();
@@ -478,7 +493,7 @@ class AccountController extends LoggedUserController
         return $frm;
     }
 
-    private function sendEmailChangeVerificationLink($_token, $data)
+    private function sendEmailChangeVerificationLink($_token, $data, &$error)
     {
         $link = CommonHelper::generateFullUrl('GuestUser', 'verifyEmail', [$_token]);
         $data = [
@@ -489,6 +504,7 @@ class AccountController extends LoggedUserController
         ];
         $email = new EmailHandler();
         if (true !== $email->sendEmailChangeVerificationLink($this->siteLangId, $data)) {
+            $error = $email->getError();
             return false;
         }
         return true;

@@ -26,11 +26,6 @@ class GroupClassesController extends AdminBaseController
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
         $srch = TeacherGroupClassesSearch::getSearchObj($this->adminLangId);
-        $srch->joinIssueReported();
-        $srch->addMultipleFields(['issrep_id']);
-        // $srch->joinTeacher();
-        // $srch->joinTeacherCredentials();
-
         $keyword = FatApp::getPostedData('teacher', null, '');
         $user_id = FatApp::getPostedData('teacher_id', FatUtility::VAR_INT, -1);
         if ($user_id > 0) {
@@ -60,9 +55,8 @@ class GroupClassesController extends AdminBaseController
         $srch->addOrder('grpcls_start_datetime', 'DESC');
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-        $rs = $srch->getResultSet();
-        $classes = FatApp::getDb()->fetchAll($rs);
-       
+        $classes = FatApp::getDb()->fetchAll($srch->getResultSet());
+
         $user_timezone = MyDate::getUserTimeZone();
         $totalRecords = $srch->recordCount();
         $this->set('postedData', $post);
@@ -138,7 +132,7 @@ class GroupClassesController extends AdminBaseController
         if ($post === false) {
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
-        $price = UserToLanguage::getAttributesByUserAndLangId($teacher_id, $post['grpcls_slanguage_id'], 'utl_single_lesson_amount');
+        $price = UserToLanguage::getAttributesByUserAndLangId($teacher_id, $post['grpcls_tlanguage_id'], 'utl_single_lesson_amount');
         if (empty($price) || $price < 1) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Price_needs_to_be_set_for_the_selected_language"));
         }
@@ -183,7 +177,6 @@ class GroupClassesController extends AdminBaseController
         }
         $db = FatApp::getDb();
         $srch = TeacherGroupClassesSearch::getSearchObj($this->adminLangId);
-        $srch->joinIssueReported();
         $srch->addMultipleFields(['issrep_id']);
         $srch->doNotCalculateRecords();
         $srch->setPagesize(1);
@@ -193,10 +186,10 @@ class GroupClassesController extends AdminBaseController
         if (empty($class_details)) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
-        if($class_details['issrep_id'] > 0 || $class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED){
+        if ($class_details['issrep_id'] > 0 || $class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
-       
+
         $db->startTransaction();
         /* update all lesson status for this class[ */
         $sLessonSrchObj = new ScheduledLessonSearch();
@@ -234,21 +227,20 @@ class GroupClassesController extends AdminBaseController
         }
         $db = FatApp::getDb();
         $srch = TeacherGroupClassesSearch::getSearchObj($this->adminLangId);
-        $srch->joinIssueReported();
         $srch->addMultipleFields(['issrep_id']);
         $srch->doNotCalculateRecords();
         $srch->setPagesize(1);
         $srch->addCondition('grpcls_id', '=', $grpclsId);
-        $class_details =  $db->fetch($srch->getResultSet());
+        $class_details = $db->fetch($srch->getResultSet());
 
         if (empty($class_details)) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
-        if($class_details['issrep_id'] > 0 || $class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED){
+        if ($class_details['issrep_id'] > 0 || $class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
 
-       
+
         $db->startTransaction();
         $teacherGroupClassObj = new TeacherGroupClasses($grpclsId);
         $teacherGroupClassObj->cancelClass();
@@ -337,7 +329,7 @@ class GroupClassesController extends AdminBaseController
         $frm->addTextArea(Label::getLabel('LBl_DESCRIPTION'), 'grpcls_description')->requirements()->setRequired(true);
         $fld = $frm->addIntegerField(Label::getLabel('LBl_Max_No._Of_Learners'), 'grpcls_max_learner', '', ['id' => 'grpcls_max_learner']);
         $fld->requirements()->setRange(1, 9999);
-        $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_slanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->adminLangId))->requirements()->setRequired(true);
+        $frm->addSelectBox(Label::getLabel('LBl_Language'), 'grpcls_tlanguage_id', UserToLanguage::getTeachingAssoc($teacher_id, $this->adminLangId))->requirements()->setRequired(true);
         $fld = $frm->addFloatField(Label::getLabel('LBl_Entry_fee'), 'grpcls_entry_fee', '', ['id' => 'grpcls_entry_fee']);
         $fld->requirements()->setIntPositive(true);
         $start_time_fld = $frm->addRequiredField(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', ['id' => 'grpcls_start_datetime', 'autocomplete' => 'off']);

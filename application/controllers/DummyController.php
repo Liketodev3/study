@@ -8,6 +8,33 @@ class DummyController extends MyAppController
         parent::__construct($action);
     }
 
+    public function wiziq()
+    {
+        /**
+         * $parameters["title"] = $data['title'];
+         * $parameters["duration"] = $data['duration'];
+         * $parameters["start_time"] = $data['start_time'];
+         * $parameters["presenter_id"] = $data['presenter_id'];
+         * $parameters["presenter_name"] = $data['presenter_name'];
+         * $parameters["presenter_email"] = $data['presenter_email'];
+         */
+        $wiziq = new Wiziq();
+        $meetingData = [
+            "title" => 'My PHP Class',
+            "start_time" => '2021-04-14 16:30:00',
+            "presenter_id" => '45',
+            "presenter_name" => 'Sher Singh',
+            "presenter_email" => 'sher.singh@fatbit.in',
+            'duration' => '60'
+        ];
+        $data = $wiziq->createMeeting($meetingData);
+        if ($data === false) {
+            throw new Exception($wiziq->getError());
+        }
+        var_dump($data);
+        die;
+    }
+
     public function getAttachments($fileTypes)
     {
         $srch = new SearchBase(AttachedFile::DB_TBL);
@@ -134,6 +161,12 @@ class DummyController extends MyAppController
             print_r(array_values($response));
             die;
         }
+    }
+
+    public function index()
+    {
+//        var_dump(ReportedIssue::resolvedIssueSettlement());
+//        var_dump(ReportedIssue::completedLessonSettlement());
     }
 
 }

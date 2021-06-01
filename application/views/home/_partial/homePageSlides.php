@@ -51,6 +51,7 @@
                 $out .= '</a>';
             }
             echo $out;
+            
         } ?>
     </div>
     <div class="slideshow-content">

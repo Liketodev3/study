@@ -11,7 +11,7 @@ $getAllfields = $teacherPreferencesFrm->getAllFields();
 $teachLangField = $teacherPreferencesFrm->getField('teach_lang');
 
 $backBtn = $teacherPreferencesFrm->getField('btn_back');
-$backBtn->addFieldTagAttribute('onclick','teacherQualification()');
+$backBtn->addFieldTagAttribute('onclick', "$('.teacher-qualification-js').trigger('click');");;
 
 $nextBtn = $teacherPreferencesFrm->getField('btn_next');
 $nextBtn->addFieldTagAttribute('onclick','setupTeacherPreferences(this.form, true); return(false);');

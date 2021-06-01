@@ -132,8 +132,8 @@ class OrderPayment extends Order
         $orderProductSrch->addMultipleFields([
             'op_teacher_id',
             'op_grpcls_id',
-            'op_slanguage_id',
-            'op_lpackage_lessons',
+            'op_tlanguage_id',
+            'op_qty',
             'op_lpackage_is_free_trial'
         ]);
         $rs = $orderProductSrch->getResultSet();
@@ -164,7 +164,7 @@ class OrderPayment extends Order
             /* and for free trial made entry from freepaycontroller */
             /* add schedulaed lessons[ */
             if ($orderProductRow) {
-                $counter = $orderInfo['op_lpackage_lessons'] > 0 ? $orderInfo['op_lpackage_lessons'] : 1;
+                $counter = $orderInfo['op_qty'] > 0 ? $orderInfo['op_qty'] : 1;
                 for ($i = 0; $i < $counter; $i++) {
                     if ($orderInfo['op_lpackage_is_free_trial'] == 0) {
                         $slesson_id = 0;
@@ -185,7 +185,7 @@ class OrderPayment extends Order
                         $sLessonArr = [
                             'slesson_teacher_id' => $orderInfo['op_teacher_id'],
                             'slesson_grpcls_id' => $orderInfo['op_grpcls_id'],
-                            'slesson_slanguage_id' => $orderInfo['op_slanguage_id'],
+                            'slesson_slanguage_id' => $orderInfo['op_tlanguage_id'],
                             'slesson_date' => $slesson_date,
                             'slesson_end_date' => $slesson_end_date,
                             'slesson_start_time' => $slesson_start_time,
@@ -242,7 +242,7 @@ class OrderPayment extends Order
                             }
 
                             // share on student google calendar
-                            $token = current(UserSetting::getUserSettings($orderInfo['order_user_id']))['us_google_access_token'];
+                            $token = UserSetting::getUserSettings($orderInfo['order_user_id'])['us_google_access_token'];
                             if ($token) {
                                 $view_url = CommonHelper::generateFullUrl('LearnerScheduledLessons', 'view', [$sldetailId]);
                                 $google_cal_data = [
@@ -262,7 +262,7 @@ class OrderPayment extends Order
                                 }
                             }
                             // share on teacher google calendar
-                            $token = current(UserSetting::getUserSettings($orderInfo['op_teacher_id']))['us_google_access_token'];
+                            $token = UserSetting::getUserSettings($orderInfo['op_teacher_id'])['us_google_access_token'];
                             if ($token) {
                                 $sLessonObj = new ScheduledLesson($slesson_id);
                                 $sLessonObj->loadFromDb();

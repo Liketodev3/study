@@ -41,7 +41,7 @@ class Language extends MyAppModel
         }
     }
 
-    public static function getAllCodesAssoc($withDefaultValue = false, $recordId = 0, $active = true, $deleted = false)
+    public static function getAllCodesAssoc($withDefaultValue = false, $langId = 1, $recordId = 0, $active = true, $deleted = false)
     {
         $srch = new SearchBase(static::DB_TBL);
         $srch->addOrder(static::tblFld('id'));
@@ -56,7 +56,7 @@ class Language extends MyAppModel
         $srch->addMultipleFields([static::tblFld('id'), static::tblFld('code')]);
         $row = FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
         if ($withDefaultValue) {
-            return array(0 => 'Universal') + $row;
+            return array(0 => Label::getLabel('LBL_All', $langId)) + $row;
         }
         return $row;
     }

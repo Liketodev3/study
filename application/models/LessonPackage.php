@@ -45,29 +45,7 @@ class LessonPackage extends MyAppModel
         return $row;
     }
 
-    public static function isAlreadyPurchasedFreeTrial($learnerId, $teacherId)
-    {
-        $learnerId = FatUtility::int($learnerId);
-        $teacherId = FatUtility::int($teacherId);
-        if ($learnerId < 1 || $teacherId < 1) {
-            trigger_error("Invalid Request", E_USER_ERROR);
-        }
-        $srch = new OrderProductSearch(0, true, false);
-        $srch->joinOrders();
-        $srch->joinScheduleLessonDetails();
-        $srch->joinScheduleLesson(false);
-        $srch->setPageSize(1);
-        $srch->addCondition('order_user_id', '=', $learnerId);
-        $srch->addCondition('op_teacher_id', '=', $teacherId);
-        $srch->addCondition('op_lpackage_is_free_trial', '=', 1);
-        $srch->addCondition('slesson_status', '!=', ScheduledLesson::STATUS_CANCELLED);
-        $srch->addMultipleFields(['op_id']);
-        $rs = $srch->getResultSet();
-        if (empty(FatApp::getDb()->fetch($rs))) {
-            return false;
-        }
-        return true;
-    }
+  
 
     public function canRecordMarkDelete($lPackageId): bool
     {

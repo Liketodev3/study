@@ -306,8 +306,8 @@ class TeacherRequestsController extends AdminBaseController
             if (!empty($teachLanguagesArr)) {
                 foreach ($teachLanguagesArr as $key => $slanguage_id) {
                     $dataArr = [
-                        'utl_us_user_id' => $requestRow['utrequest_user_id'],
-                        'utl_slanguage_id' => $slanguage_id,
+                        'utl_user_id' => $requestRow['utrequest_user_id'],
+                        'utl_tlanguage_id' => $slanguage_id,
                     ];
                     if (!$db->insertFromArray(UserToLanguage::DB_TBL_TEACH, $dataArr, false, [], $dataArr)) {
                         Message::addErrorMessage($db->getError());

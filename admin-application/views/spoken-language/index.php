@@ -35,6 +35,11 @@
 		<section class="section">
 		<div class="sectionhead">
 			<h4><?php echo Label::getLabel('LBL_Spoken_Language_Listing',$adminLangId); ?></h4>
+				<div class="label--note text-left">
+					<strong class="-color-secondary">
+						<?php echo Label::getLabel('LBL_SPOKEN_LANGUAGE_UPDATE_NOTICE'); ?>
+					</strong>
+				</div>
 			<?php if($canEdit){
 
 			$ul = new HtmlElement( "ul",array("class"=>"actions actions--centered") );

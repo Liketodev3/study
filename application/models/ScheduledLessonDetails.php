@@ -199,10 +199,10 @@ class ScheduledLessonDetails extends MyAppModel
         $srch->joinOrder();
         $srch->joinOrderProducts();
         $srch->addCondition('sld.sldetail_id', ' = ', $this->getMainTableRecordId());
-        $srch->addCondition('slns.slesson_is_teacher_paid', ' = ', 0);
-        $srch->addCondition('op.op_lpackage_is_free_trial', ' = ', 0);
+        $srch->addCondition('sld.sldetail_is_teacher_paid', '=', 0);
+        $srch->addCondition('op.op_lpackage_is_free_trial', '=', 0);
         $data = $db->fetch($srch->getResultSet());
-        if (!$data) {
+        if (empty($data)) {
             return true;
         }
         $utxn_comments = sprintf(Label::getLabel('LBL_LessonId:_%s_Refund_Payment', CommonHelper::getLangId()), $data['slesson_id']);
@@ -257,15 +257,15 @@ class ScheduledLessonDetails extends MyAppModel
             $transactionType = Transaction::TYPE_ORDER_CANCELLED_REFUND;
             $isDiscountApply = true;
         }
-        $to_time = strtotime($data['slesson_date'] . ' ' . $data['slesson_start_time']);
-        $from_time = strtotime(date('Y-m-d H:i:s'));
-        $diff = round(($to_time - $from_time) / 3600, 2);
+
+        $diff = MyDate::hoursDiff($data['slesson_date'] . ' ' . $data['slesson_start_time']);
+
         $perUnitAmount = $data['op_unit_price'];
         if (!$learner && $data['order_discount_total'] > 0) {
             $perUnitAmount = round(($data['order_net_amount'] / $data['op_qty']), 2);
         }
 
-        if ($learner && !$isDiscountApply && ($data['slesson_date'] != "0000-00-00" && $diff < 24)) {
+        if ($learner && !$isDiscountApply && ($data['slesson_date'] != "0000-00-00") && ($diff < FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24))) {
             if ($data['slesson_grpcls_id'] > 0) {
                 $perUnitAmount = (FatApp::getConfig('CONF_LEARNER_CLASS_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10) * $perUnitAmount) / 100;
             } else {

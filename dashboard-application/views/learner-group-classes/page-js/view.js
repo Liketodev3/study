@@ -201,7 +201,9 @@ $(function() {
                             keys: ['enter', 'shift'],
                             action: function(){
                                 fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'endLessonSetup'), 'lessonId='+lessonId , function(t) {
-                                        clearInterval(checkEveryMinuteStatusVar);
+									if (typeof checkEveryMinuteStatusVar != "undefined") {
+										clearInterval(checkEveryMinuteStatusVar);
+									}
                                         $('.screen-chat-js').hide();
                                         sessionStorage.removeItem('cometChatUserExists');
                                         endLessonButtonAction();
@@ -224,7 +226,9 @@ $(function() {
 		//if(confirm(langLbl.confirmRemove))
 		//{
 			fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'endLessonSetup'), 'lessonId='+lessonId , function(t) {
+				if (typeof checkEveryMinuteStatusVar != "undefined") {
 					clearInterval(checkEveryMinuteStatusVar);
+				}
 					$('.screen-chat-js').hide();
 					sessionStorage.removeItem('cometChatUserExists');
 					endLessonButtonAction();

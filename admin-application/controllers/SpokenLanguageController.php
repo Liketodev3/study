@@ -87,6 +87,15 @@ class SpokenLanguageController extends AdminBaseController
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
+
+        if($post['slanguage_active'] == applicationConstants::NO){
+            $userToLanguage = new UserToLanguage();
+            $userToLanguage->removeSpeakLang([$sLangId]);
+
+            $teacherStat = new TeacherStat(0);
+            $teacherStat->setSpeakLangBulk();
+        }
+
         $newTabLangId = 0;
         if ($sLangId > 0) {
             $languages = Language::getAllNames();
@@ -183,6 +192,14 @@ class SpokenLanguageController extends AdminBaseController
             Message::addErrorMessage($obj->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
+        if($status == applicationConstants::NO){
+            $userToLanguage = new UserToLanguage();
+            $userToLanguage->removeSpeakLang([$sLangId]);
+
+            $teacherStat = new TeacherStat(0);
+            $teacherStat->setSpeakLangBulk();
+        }
+
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
 
@@ -199,6 +216,13 @@ class SpokenLanguageController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
+
+        $userToLanguage = new UserToLanguage();
+        $userToLanguage->removeSpeakLang([$slanguage_id]);
+        
+        $teacherStat = new TeacherStat(0);
+        $teacherStat->setSpeakLangBulk();
+        
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
 

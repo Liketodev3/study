@@ -143,12 +143,17 @@ $(function () {
         var joinUrl = fcom.makeUrl('Zoom', 'Meeting') + '?' +
             testTool.serialize(meetingConfig);
 
-        // testTool.createZoomNode("websdk-iframe", joinUrl);
+
         let html = '<div style="width:' + chat_width + ';height:' + chat_height + ';max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;">';
         html += '<iframe  style="width:100%;height:100%;" src="' + joinUrl + '" allow="camera; microphone; fullscreen;display-capture" frameborder="0"></iframe>';
         html += '</div>';
         $("#lessonBox").html(html);
     };
+
+    createWiziqBox = function (data) {
+        window.location.href = data.presenter_url;
+    };
+
 
     joinLessonFromApp = function (learnerId, teacherId) {
         var joinFromApp = YES;
@@ -156,7 +161,10 @@ $(function () {
     };
 
     createChatBox = function (data, joinFromApp) {
-        if (isCometChatMeetingToolActive) {
+        if (isWiziqMettingToolActive) {
+            joinLessonButtonAction();
+            return createWiziqBox(data);
+        } else if (isCometChatMeetingToolActive) {
             joinLessonButtonAction();
             return createCometChatBox();
         } else if (isLessonSpaceMeetingToolActive) {
@@ -196,7 +204,7 @@ $(function () {
     };
 
     endLesson = function (lDetailId) {
-        if(isConfirmpopOpen){
+        if (isConfirmpopOpen) {
             return;
         }
         isConfirmpopOpen = true;

@@ -12,6 +12,11 @@ class LessonMeetingDetail extends MyAppModel
     const KEY_ZOOM_JOIN_URL = "ZOOM_JOIN_URL";
     const KEY_ZOOM_RAW_DATA = "ZOOM_RAW_DATA";
 
+    const KEY_WIZIQ_CLASS_ID = "WIZIQ_CLASS_ID";
+    const KEY_WIZIQ_START_URL = "WIZIQ_START_URL";
+    const KEY_WIZIQ_JOIN_URL = "WIZIQ_JOIN_URL";
+    const KEY_WIZIQ_RAW_DATA = "WIZIQ_RAW_DATA";
+
     private $lessonId;
     private $userId;
 
@@ -68,6 +73,7 @@ class LessonMeetingDetail extends MyAppModel
         $lessonMeetingDetail->addCondition('lmeetdetail_user_id', '=', $this->userId);
         $lessonMeetingDetail->addCondition('lmeetdetail_key', '=', $key);
         $lessonMeetingDetail->addOrder('lmeetdetail_id', 'desc');
+        $lessonMeetingDetail->doNotCalculateRecords();
         $lessonMeetingDetail->setPageSize(1);
         $resultSet = $lessonMeetingDetail->getResultSet();
         $meetingData = FatApp::getDb()->fetch($resultSet);

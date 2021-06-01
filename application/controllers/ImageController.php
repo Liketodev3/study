@@ -322,17 +322,13 @@ class ImageController extends FatController
     {
         $countryId = FatUtility::int($countryId);
         $fileRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_COUNTRY_FLAG, $countryId);
-        $imageName = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
+        $imageName = $fileRow['afile_physical_path'] ?? '';
         switch (strtoupper($sizeType)) {
             case 'THUMB':
-                $w = 100;
-                $h = 100;
-                AttachedFile::displayImage($imageName, $w, $h);
+                AttachedFile::displayImage($imageName, 100, 100);
                 break;
             case 'DEFAULT':
-                $w = 30;
-                $h = 20;
-                AttachedFile::displayImage($imageName, $w, $h);
+                AttachedFile::displayImage($imageName, 30, 20);
                 break;
             default:
                 AttachedFile::displayOriginalImage($imageName);
@@ -603,11 +599,9 @@ class ImageController extends FatController
     public function pwaIcon(int $size = 100)
     {
         $image_name = '';
-
         if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_APP_ICON, 0, 0, 0, true)) {
             $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         }
-
         switch ($size) {
             case '144':
                 $w = $h = 144;
@@ -625,11 +619,9 @@ class ImageController extends FatController
     public function pwaSplashIcon(int $size = 100)
     {
         $image_name = '';
-
         if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0, 0, 0, true)) {
             $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         }
-
         switch ($size) {
             case '144':
                 $w = $h = 144;
@@ -642,6 +634,32 @@ class ImageController extends FatController
                 break;
         }
         AttachedFile::displayImage($image_name, $w, $h);
+    }
+
+    public function openGraphImage($metaId, $lang_id, $sizeType = 'NORMAL')
+    {
+        $metaId = FatUtility::int($metaId);
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metaId, 0, $lang_id, false, 0);
+        $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
+        if ($sizeType) {
+            switch (strtoupper($sizeType)) {
+                case 'SMALL':
+                    $w = 200;
+                    $h = 100;
+                    break;
+                case 'NORMAL':
+                    $w = 1200;
+                    $h = 630;
+                    break;
+                default:
+                    $w = 1200;
+                    $h = 630;
+                    break;
+            }
+            AttachedFile::displayImage($image_name, $w, $h, '', '', ImageResize::IMG_RESIZE_RESET_DIMENSIONS, false, true);
+        } else {
+            AttachedFile::displayOriginalImage($image_name, '', '', true);
+        }
     }
 
 }

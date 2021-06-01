@@ -14,15 +14,6 @@ class LearnerController extends LearnerBaseController
             Message::addInfo(Label::getLabel('LBL_Please_Update_Your_Timezone'));
             FatApp::redirectUser(CommonHelper::generateUrl('account', 'profileInfo'));
         }
-        $this->_template->addJs('js/moment.min.js');
-        $this->_template->addJs('js/fullcalendar.min.js');
-        $this->_template->addJs('js/fateventcalendar.js');
-        $this->_template->addJs('js/jquery.countdownTimer.min.js');
-        if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
-            if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
-                $this->_template->addJs("js/locales/$currentLangCode.js");
-            }
-        }
         $frmSrch = $this->getSearchForm();
         $frmSrch->fill([
                 'status' => ScheduledLesson::STATUS_UPCOMING, 
@@ -35,6 +26,16 @@ class LearnerController extends LearnerBaseController
         // prx($userDetails);
         $this->set('userDetails', $userDetails);
         $this->set('userTotalWalletBalance', User::getUserBalance($userId, false));
+        $this->_template->addJs('js/learnerLessonCommon.js');
+        $this->_template->addJs('js/moment.min.js');
+        $this->_template->addJs('js/fullcalendar.min.js');
+        $this->_template->addJs('js/fateventcalendar.js');
+        $this->_template->addJs('js/jquery.countdownTimer.min.js');
+        if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
+            if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
+                $this->_template->addJs("js/locales/$currentLangCode.js");
+            }
+        }
         $this->_template->render();
     }
 
@@ -130,7 +131,7 @@ class LearnerController extends LearnerBaseController
             'utsl.spoken_languages_proficiency',
             'us_video_link',
             'us_is_trial_lesson_enabled',
-            'utl_slanguage_ids'
+            'utl_tlanguage_ids'
         ]);
         $rs = $srch->getResultSet();
         $teacher = FatApp::getDb()->fetch($rs);
@@ -152,12 +153,11 @@ class LearnerController extends LearnerBaseController
         $srch = new UserSearch();
         $srch->setTeacherDefinedCriteria();
         $srch->joinUserSpokenLanguages($this->siteLangId);
-        $srch->joinUserTeachLanguage($this->siteLangId);
         $srch->joinUserCountry($this->siteLangId);
         $srch->joinUserState($this->siteLangId);
         $srch->setPageSize(1);
         $srch->addCondition('user_id', '=', $teacherId);
-        $srch->addMultipleFields(['user_id', 'user_first_name', 'user_last_name',]);
+        $srch->addMultipleFields(['user_id', 'user_first_name', 'user_last_name']);
         $teacher = FatApp::getDb()->fetch($srch->getResultSet());
         if (empty($teacher)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request', $this->siteLangId));

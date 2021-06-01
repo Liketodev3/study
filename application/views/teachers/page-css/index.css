@@ -1,6 +1,5 @@
-.ui-autocomplete { 
-    height: 200px;
-    overflow-y: auto;
-    overflow-x: hidden;
- }
- 
+.ui-autocomplete {
+  height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

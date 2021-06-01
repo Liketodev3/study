@@ -13,6 +13,7 @@
 /robots.txt
 /node_modules
 /public/config.js
-/.vscode/*
-/nbproject/
 /vendor/
+/nbproject
+/node_modules
+/.vscode

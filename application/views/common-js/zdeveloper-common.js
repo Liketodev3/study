@@ -306,10 +306,18 @@ $(document).ready(function () {
 		},
 
 		setSiteDefaultLang = function (langId) {
-			fcom.ajax(fcom.makeUrl('Home', 'setSiteDefaultLang', [langId]), '', function (res) {
-				document.location.reload();
+			var url = window.location.pathname;
+			var srchString = window.location.search;
+			var data = 'pathname=' + url;
+			fcom.ajax(fcom.makeUrl('Home', 'setSiteDefaultLang', [langId]), data, function (res) {
+				var ans = $.parseJSON(res);
+				if (ans.status == 1) {
+					window.location.href = ans.redirectUrl + srchString;
+				}
 			});
 		},
+
+
 
 		setSiteDefaultCurrency = function (currencyId) {
 			fcom.ajax(fcom.makeUrl('Home', 'setSiteDefaultCurrency', [currencyId]), '', function (res) {
@@ -351,10 +359,13 @@ $(document).ready(function () {
 
 	logInFormPopUp = function () {
 		$.loader.show();
-		$.facebox(function () {
-			fcom.ajax(fcom.makeUrl('GuestUser', 'logInFormPopUp', []), '', function (res) {
+		fcom.ajax(fcom.makeUrl('GuestUser', 'logInFormPopUp', []), '', function (res) {
+			try {
+				let data = JSON.parse(res);
+				!data.status ? $.mbsmessage(data.msg, true, 'alert alert--danger') : void (0);
+			} catch (exc) {
 				$.facebox(res, '');
-			});
+			}
 		});
 		$.loader.hide();
 	};
@@ -415,7 +426,7 @@ $(document).ready(function () {
 	};
 
 	toggleTeacherFavorite = function (teacher_id, el) {
-		
+
 		if (isRuningTeacherFavoriteAjax) {
 			return false;
 		}
@@ -433,11 +444,12 @@ $(document).ready(function () {
 				if (ans.action == 'A') {
 					$(el).addClass("is-active");
 				} else if (ans.action == 'R') {
-					$(el).removeClass("is-active");	
+					$(el).removeClass("is-active");
 				}
 				if (typeof searchfavorites != 'undefined') {
 					searchfavorites(document.frmFavSrch);
 				}
+				$.mbsmessage(ans.msg,true, 'alert alert--success');
 			}else{
 				$.mbsmessage(ans.msg,true, 'alert alert--danger');
 			}

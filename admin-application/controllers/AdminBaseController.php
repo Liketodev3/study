@@ -34,6 +34,7 @@ class AdminBaseController extends FatController
                 Message::addErrorMessage(Label::getLabel('LBL_Your_session_seems_to_be_expired', CommonHelper::getLangId()));
                 FatUtility::dieWithError(Message::getHtml());
             }
+
             FatApp::redirectUser(CommonHelper::generateUrl('AdminGuest', 'loginForm'));
         }
         $this->objPrivilege = AdminPrivilege::getInstance();
