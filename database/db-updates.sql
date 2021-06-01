@@ -338,7 +338,7 @@ REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `l
 , (NULL, 'LBL_Robots_File_Txt', '1', 'robots.txt')
 , (NULL, 'LBL_Robots_File_Content', '1', 'robots.txt')
 , (NULL, 'LBL_Edit_Robots_File', '1', 'Edit robots.txt')
-, (NULL, 'NOTE_Robots_File_Modification', '1', 'Modify this file only if you understand it\'s impact on the website's indexing on search engines.')
+, (NULL, 'NOTE_Robots_File_Modification', '1', 'Modify this file only if you understand it\'s impact on the website\'s indexing on search engines.')
 ;
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.16.0.20210601' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
