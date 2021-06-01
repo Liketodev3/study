@@ -319,11 +319,6 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.14.0.20210519' WHERE `conf_na
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.15.0.20210520' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
 
--- drop TABLE if EXISTS tbl_reported_issues_logs;
--- drop TABLE if EXISTS tbl_reported_issues_log;
--- drop TABLE if EXISTS tbl_reported_issues;
-
-
 ALTER TABLE `tbl_reported_issues` ADD `repiss_slesson_id` INT NOT NULL AFTER `repiss_title`;
 
 
@@ -342,3 +337,6 @@ REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `l
 ;
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.16.0.20210601' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Remember_Me', '1', 'Stay logged in');
