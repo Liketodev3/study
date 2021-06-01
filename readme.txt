@@ -1,8 +1,8 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Release Number: TV-2.15.1.20210531
+Release Number: TV-2.16.0.20210601
 
-Release Date: 2021-05-31
+Release Date: 2021-06-01
 
 Fixes:
     #054136
@@ -26,9 +26,8 @@ Fixes:
 Enhancements: 
 
     Admin can change user's password
-    Admin can edit Robots.txt
+    Admin can edit robots.txt
     Delete image from cache when user remove or update image
-
 
 --------------------------------------------------------
 
