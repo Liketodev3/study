@@ -5,6 +5,7 @@ echo $frmTeacherSrch->getFormTag();
 
 $frmTeacherSrch->getField('teach_language_name')->setFieldTagAttribute('class', 'form__input');
 $frmTeacherSrch->getField('teach_availability')->setFieldTagAttribute('class', 'form__input form__input-js');
+$pageFld = $frmTeacherSrch->getField('page');
 $frmTeacherSrch->getField('teach_availability')->setFieldTagAttribute('autocomplete', 'off');
 $frmTeacherSrch->getField('teach_availability')->setFieldTagAttribute('readonly', 'readonly');
 $keywordfld =   $frmTeacherSrch->getField('keyword');
@@ -26,6 +27,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 								</svg>
 								<input class="filter__input filter__input-js" name="teach_language_name" val="<?php echo ($keywordlanguage)?$keywordlanguage:''; ?>" type="text" placeholder="<?php echo ($keywordlanguage)?$keywordlanguage:Label::getLabel('LBL_Language_Placeholder',$siteLangId);?>">
 								<input name="teachLangId" val="" type="hidden">
+								<?php echo $pageFld->getHtml(); ?>
 							</div>
 							<div class="filter__body filter__body-target filter-target-js" style="display: none;">
 								<div class="dropdown-listing">
@@ -104,6 +106,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 							</div>
 						</div>
 					</div>
+
 					<div class="filter__secondary">
 						<span class="overlay overlay--filters btn--filters-js"></span>
 						<div class="filter-group">
@@ -111,12 +114,13 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 								<div class="filter__head filter__head-trigger filter-trigger-js">
 									<h6><?php echo Label::getLabel('LBL_Location', $siteLangId); ?></h6>
 								</div>
+
 								<div class="filter__body filter__body-target filter-target-js" style="display: none;">
 									<div class="listing-dropdown">
 										<ul>
 											<?php foreach ($fromArr as $countryId => $countryName) { ?>
 												<li>
-													<label id="location_<?php echo $countryId; ?>"><span class="checkbox"><input type="checkbox" name="filterFromCountry[]" value="<?php echo $countryName['user_country_id']; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $countryName['country_name']; ?></span></label>
+													<label id="location_<?php echo $countryName['user_country_id']; ?>"><span class="checkbox"><input <?php echo (in_array($countryName['user_country_id'],$fromCountry_filter)? "checked='checked'": "") ?> type="checkbox" name="filterFromCountry[]" value="<?php echo $countryName['user_country_id']; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $countryName['country_name']; ?></span></label>
 												</li>
 											<?php  } ?>
 
@@ -134,7 +138,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 										<ul>
 											<?php foreach ($spokenLangsArr as $spokenLangId => $spokenLangName) { ?>
 												<li>
-													<label id="spoken_<?php echo $spokenLangId; ?>""><span class="checkbox"><input type="checkbox" name="filterSpokenLanguage[]" value="<?php echo $spokenLangId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $spokenLangName; ?></span></label>
+													<label id="spoken_<?php echo $spokenLangId; ?>""><span class="checkbox"><input <?php echo (in_array($spokenLangId,$spokenLanguage_filter)? "checked='checked'": "") ?> type="checkbox" name="filterSpokenLanguage[]" value="<?php echo $spokenLangId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $spokenLangName; ?></span></label>
 												</li>
 											<?php } ?>
 
@@ -142,6 +146,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 									</div>
 								</div>
 							</div>
+							
 							<div class="filter-group__inner">
 								<div class="filter__head filter__head-trigger filter-trigger-js">
 									<h6><?php echo Label::getLabel('LBL_Gender', $siteLangId); ?></h6>
@@ -151,7 +156,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 										<ul>
 											<?php foreach ($genderArr as $genderId => $genderName) { ?>
 												<li>
-													<label id="gender_"<?php echo $genderId; ?>><span class="checkbox"><input type="checkbox" name="filterGender[]" value="<?php echo $generId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $genderName; ?></span></label>
+													<label id="gender_"<?php echo $genderId; ?>><span class="checkbox"><input <?php echo (in_array($genderId,$gender_filter)? "checked='checked'": "") ?> type="checkbox" name="filterGender[]" value="<?php echo $genderId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $genderName; ?></span></label>
 												</li>
 											<?php } ?>
 
@@ -159,6 +164,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 									</div>
 								</div>
 							</div>
+
 							<?php foreach ($preferenceTypeArr as $key => $preferenceType) {
 								if (!isset($allPreferences[$key])) {
 									continue;
@@ -172,7 +178,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 											<ul>
 												<?php foreach ($allPreferences[$key] as $preference) { ?>
 													<li>
-														<label id="prefrence_<?php echo $preference['preference_id']; ?>"><span class="checkbox"><input type="checkbox" name="filterPreferences[]" value="<?php echo $preference['preference_id']; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $preference['preference_titles']; ?></span></label>
+														<label id="prefrence_<?php echo $preference['preference_id']; ?>"><span class="checkbox"><input <?php echo (in_array($preference['preference_id'],$preferenceFilter_filter)? "checked='checked'": "") ?> type="checkbox" name="filterPreferences[]" value="<?php echo $preference['preference_id']; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $preference['preference_titles']; ?></span></label>
 													</li>
 												<?php } ?>
 

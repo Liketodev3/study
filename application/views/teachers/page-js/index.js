@@ -167,14 +167,14 @@ $("document").ready(function () {
         e.stopPropagation();
     });
 
-    $(".settings__trigger-js").click(function () {
-        var t = $(this).parents(".toggle-group").children(".settings__target-js").is(":hidden");
-        $(".toggle-group .settings__target-js").hide();
-        $(".toggle-group .settings__trigger-js").removeClass("is--active");
-        if (t) {
-        $(this).parents(".toggle-group").children(".settings__target-js").toggle().parents(".toggle-group").children(".settings__trigger-js").addClass("is--active")
-        }
-    });
+    // $(".settings__trigger-js").click(function () {
+    //     var t = $(this).parents(".toggle-group").children(".settings__target-js").is(":hidden");
+    //     $(".toggle-group .settings__target-js").hide();
+    //     $(".toggle-group .settings__trigger-js").removeClass("is--active");
+    //     if (t) {
+    //     $(this).parents(".toggle-group").children(".settings__target-js").toggle().parents(".toggle-group").children(".settings__trigger-js").addClass("is--active")
+    //     }
+    // });
     
     /* FOR NAV TOGGLES */ 
     $('.btn--filters-js').click(function() {
@@ -259,6 +259,7 @@ function htmlEncode(value) {
         /* from country filter[ */
         var fromCountry = [];
         $.each($("input[name='filterFromCountry[]']:checked"), function () {
+
             var id = $(this).closest("label").attr('id');
             addFilter(id, this);
             fromCountry.push($(this).val());
