@@ -13,7 +13,7 @@ class TeacherGeneralAvailability extends MyAppModel
 
     public static function getGenaralAvailabilityJsonArr($userId, $post = [], int $teacherBookingBefore = NULL)
     {
-       
+
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
             trigger_error(Label::getLabel('LBL_Invalid_Request'));
@@ -36,9 +36,9 @@ class TeacherGeneralAvailability extends MyAppModel
             $weekStartDateDB = '2018-01-07';
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStartDate);
             $bookingBefore = (!is_null($teacherBookingBefore)) ? 0 : $teacherBookingBefore;
-            
-            $validStartDateTime =  strtotime("+ ".$bookingBefore. " hours");
-            
+
+            $validStartDateTime = strtotime("+ " . $bookingBefore . " hours");
+
             foreach ($rows as $row) {
                 $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
                 if ($row['tgavl_end_time'] == "00:00:00" || $row['tgavl_end_time'] <= $row['tgavl_start_time']) {
@@ -49,28 +49,27 @@ class TeacherGeneralAvailability extends MyAppModel
                 }
 
                 $dateUnixTime = strtotime($date);
-                $endDateUnixTime =  strtotime($endDate);
+                $endDateUnixTime = strtotime($endDate);
 
                 $date = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $dateUnixTime));
                 $endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $endDateUnixTime));
 
                 $dateUnixTime = strtotime($date);
-                $endDateUnixTime =  strtotime($endDate);
-               
-              
-                if(!is_null($teacherBookingBefore)){
-                    if($validStartDateTime > $endDateUnixTime){
+                $endDateUnixTime = strtotime($endDate);
+
+                if (!is_null($teacherBookingBefore)) {
+                    if ($validStartDateTime > $endDateUnixTime) {
                         continue;
                     }
-                   
-                    if( $validStartDateTime > $dateUnixTime ) {
+
+                    if ($validStartDateTime > $dateUnixTime) {
                         $date = date('Y-m-d H:i:s', $validStartDateTime);
                     }
                 }
 
                 $tgavl_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $date, true, $user_timezone);
                 $tgavl_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDate, true, $user_timezone);
-        
+
                 $jsonArr[] = [
                     "title" => "",
                     "endW" => date('H:i:s', strtotime($tgavl_end_time)),
@@ -148,17 +147,16 @@ class TeacherGeneralAvailability extends MyAppModel
             $systemTimeZone = MyDate::getTimeZone();
             $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
             foreach ($postJsonArr as $val) {
-                $weekNumber =  2;
-                
+                $weekNumber = 2;
+
                 $gendate = new DateTime();
-               
+
                 $gendate->setISODate(2018, $weekNumber, $val->day);
                 $dayNum = $gendate->format('d');
                 $startDate = "2018-01-" . $dayNum . " " . date('H:i:s', strtotime($val->startTime));
                 $custom_tgavl_start = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
 
-               
-                if($val->day <= 6 &&( $val->dayEnd == 0 && $val->endTime == "00:00")){
+                if ($val->day <= 6 && ( $val->dayEnd == 0 && $val->endTime == "00:00")) {
                     $weekNumber = 3;
                 }
 
@@ -204,6 +202,18 @@ class TeacherGeneralAvailability extends MyAppModel
             3 => '12 - 16',
             4 => '16 - 20',
             5 => '20 - 24',
+        ];
+    }
+
+    public static function timeSlots()
+    {
+        return [
+            0 => '00:00 - 04:00',
+            1 => '04:00 - 08:00',
+            2 => '08:00 - 12:00',
+            3 => '12:00 - 16:00',
+            4 => '16:00 - 20:00',
+            5 => '20:00 - 24:00',
         ];
     }
 

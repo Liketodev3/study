@@ -67,6 +67,7 @@ class TeachersController extends MyAppController
         $this->set('pageSize', $pageSize);
         $this->set('recordCount', $recordCount);
         $this->set('pageCount', ceil($recordCount / $pageSize));
+        $this->set('slots', TeacherGeneralAvailability::timeSlotArr());
         $this->_template->render(false, false);
     }
 

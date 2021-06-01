@@ -1,4 +1,12 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php
+$colorClass = [
+    1 => 'cell-green-40',
+    2 => 'cell-green-60',
+    3 => 'cell-green-80',
+    4 => 'cell-green-100',
+];
+?>
 <?php if ($teachers) { ?>
     <div class="listing-cover" id="teachersListingContainer">
         <div class="sorting__head">
@@ -146,182 +154,34 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="cal-cell">00 - 04</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-100 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">4 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-80 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">3 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-60 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">2 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-40 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">1 Hrs</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="cal-cell">00 - 04</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-100 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">4 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-80 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">3 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-60 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">2 Hrs</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="cal-cell">00 - 04</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-80 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">3 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-60 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">2 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-40 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">1 Hrs</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="cal-cell">00 - 04</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-100 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">4 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-80 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">3 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-60 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">2 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-40 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">1 Hrs</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="cal-cell">00 - 04</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-100 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">4 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-100 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">4 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-100 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">4 Hrs</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="cal-cell">00 - 04</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-60 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">2 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-60 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">2 Hrs</div>
-                                                        </td>
-                                                        <td class="is-hover">
-                                                            <div class="cell-green-60 cal-cell"></div>
-                                                            <div class="tooltip tooltip--top bg-black">2 Hrs</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="cal-cell"></div>
-                                                        </td>
-                                                    </tr>
+                                                    <?php
+                                                    foreach ($slots as $key => $slot) {
+                                                        $days = [
+                                                            json_decode($teacher['testat_day1'], 1),
+                                                            json_decode($teacher['testat_day2'], 1),
+                                                            json_decode($teacher['testat_day3'], 1),
+                                                            json_decode($teacher['testat_day4'], 1),
+                                                            json_decode($teacher['testat_day5'], 1),
+                                                            json_decode($teacher['testat_day6'], 1),
+                                                            json_decode($teacher['testat_day7'], 1)
+                                                        ];
+                                                        ?>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="cal-cell"><?php echo $slot; ?></div>
+                                                            </td>
+                                                            <?php foreach ($days as $day) { ?>
+                                                                <td class="is-hover">
+                                                                    <?php if ($day[$key][1] > 0) { ?>
+                                                                        <div class="cal-cell <?php echo $colorClass[$day[$key][1]]; ?>"></div>
+                                                                        <div class="tooltip tooltip--top bg-black"><?php echo $day[$key][1]; ?> <?php echo Label::getLabel('LBL_Hrs'); ?></div>
+                                                                    <?php } else { ?>
+                                                                        <div class="cal-cell"></div>
+                                                                    <?php } ?>
+                                                                </td>
+                                                            <?php } ?>
+                                                        </tr>
+                                                    <?php } ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -355,3 +215,4 @@
     </div>
     <?php
 }
+    
