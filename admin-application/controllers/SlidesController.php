@@ -229,6 +229,14 @@ class SlidesController extends AdminBaseController
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
+
+        if (CONF_USE_FAT_CACHE) {
+            FatCache::delete(CommonHelper::generateUrl('Image','slide',array($slide_id, $slide_screen, $lang_id, 'MOBILE')));
+            FatCache::delete(CommonHelper::generateUrl('Image','slide',array($slide_id, $slide_screen, $lang_id, 'TABLET')));
+            FatCache::delete(CommonHelper::generateUrl('Image','slide',array($slide_id, $slide_screen, $lang_id, 'DESKTOP')));
+            FatCache::delete(CommonHelper::generateUrl('Image','slide',array($slide_id, $slide_screen, $lang_id, 'THUMB')));
+        }
+        
         $this->set('slideId', $slide_id);
         $this->set('file', $_FILES['file']['name']);
         $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_uploaded_successfully', $this->adminLangId));
@@ -247,6 +255,12 @@ class SlidesController extends AdminBaseController
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_HOME_PAGE_BANNER, $slide_id, 0, 0, $lang_id, $screen)) {
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
+        }
+        if (CONF_USE_FAT_CACHE) {
+            FatCache::delete(CommonHelper::generateUrl('Image','slide',array($slide_id, $screen, $lang_id, 'MOBILE')));
+            FatCache::delete(CommonHelper::generateUrl('Image','slide',array($slide_id, $screen, $lang_id, 'TABLET')));
+            FatCache::delete(CommonHelper::generateUrl('Image','slide',array($slide_id, $screen, $lang_id, 'DESKTOP')));
+            FatCache::delete(CommonHelper::generateUrl('Image','slide',array($slide_id, $screen, $lang_id, 'THUMB')));
         }
         $this->set('msg', Label::getLabel('MSG_Deleted_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');

@@ -60,7 +60,7 @@ class CmsController extends MyAppController
         }
         switch ($action) {
             default:
-                $nodes[] = ['title' => $title];
+                $nodes[] = ['title' => $title ?? ''];
                 break;
         }
         return $nodes;

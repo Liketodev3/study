@@ -13,7 +13,6 @@ $(document).ready(function(){
 		/*[ this block should be written before overriding html of 'form's parent div/element, otherwise it will through exception in ie due to form being removed from div */
 		var data = fcom.frmData(frm);
 		/*]*/
-		// debugger;
 		if( append == 1 ){
 			$(dv).prepend(fcom.getLoader());
 		} else {

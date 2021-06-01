@@ -90,6 +90,13 @@ class TeachingLanguageController extends AdminBaseController
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
+        if($post['tlanguage_active'] == applicationConstants::NO){
+            $userTeachLanguage = new UserTeachLanguage();
+            $userTeachLanguage->removeTeachLang([$tLangId]);
+
+            $teacherStat = new TeacherStat(0);
+            $teacherStat->setTeachLangPricesBulk();
+        }
         $newTabLangId = 0;
         if ($tLangId > 0) {
             $languages = Language::getAllNames();
@@ -186,6 +193,15 @@ class TeachingLanguageController extends AdminBaseController
             Message::addErrorMessage($obj->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
+        
+        if($status == applicationConstants::NO){
+            $userTeachLanguage = new UserTeachLanguage();
+            $userTeachLanguage->removeTeachLang([$sLangId]);
+
+            $teacherStat = new TeacherStat(0);
+            $teacherStat->setTeachLangPricesBulk();
+        }
+
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
 
@@ -202,6 +218,13 @@ class TeachingLanguageController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
+
+        $userTeachLanguage = new UserTeachLanguage();
+        $userTeachLanguage->removeTeachLang([$tlanguage_id]);
+
+        $teacherStat = new TeacherStat(0);
+        $teacherStat->setTeachLangPricesBulk();
+
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
 
@@ -363,6 +386,10 @@ class TeachingLanguageController extends AdminBaseController
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError($fileHandlerObj->getError());
         }
+
+        if (CONF_USE_FAT_CACHE) {
+            FatCache::delete(CommonHelper::generateUrl('Image','showLanguageFlagImage',array($tlanguage_id,'SMALL')));
+         }
         $this->set('tlanguage_id', $tlanguage_id);
         $this->set('file', $_FILES['file']['name']);
         $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_uploaded_successfully', $this->adminLangId));
@@ -382,6 +409,12 @@ class TeachingLanguageController extends AdminBaseController
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
+        
+        if (CONF_USE_FAT_CACHE) {
+            FatCache::delete(CommonHelper::generateUrl('Image','showLanguageImage',array($tlanguage_id,'NORMAL')));
+            FatCache::delete(CommonHelper::generateUrl('Image','showLanguageImage',array($tlanguage_id)));
+        }
+
         $this->set('msg', Label::getLabel('MSG_Deleted_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
@@ -399,6 +432,10 @@ class TeachingLanguageController extends AdminBaseController
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
+        if (CONF_USE_FAT_CACHE) {
+           FatCache::delete(CommonHelper::generateUrl('Image','showLanguageFlagImage',array($tlanguage_id,'SMALL')));
+        }
+        
         $this->set('msg', Label::getLabel('MSG_Deleted_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }

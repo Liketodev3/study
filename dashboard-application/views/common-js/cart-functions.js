@@ -1,40 +1,22 @@
 var cart = {
-	add: function( teacherId, lpackageId, startDateTime, endDateTime, languageId, grpclsId, lessonDuration ){
-		$('.loading-wrapper').show();
-		if( isUserLogged() == 0 ){
-			logInFormPopUp();
-			$('.loading-wrapper').hide();
-			return false;
-		}
-		
-		startDateTime = startDateTime || '';
-		endDateTime = endDateTime || '';
-		grpclsId = grpclsId || 0;
-		lessonDuration = lessonDuration || null;
-
-		var data = 'grpcls_id=' + grpclsId + '&teacher_id=' + teacherId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime + '&lpackageId=' + lpackageId +'&languageId='+ languageId + '&lessonDuration=' + lessonDuration;
-		
+	add: function(teacherId, languageId, lessonDuration, lessonQty) {
+		teacherId = parseInt(teacherId);
+		lessonQty = parseInt(lessonQty);
+		lessonDuration = parseInt(lessonDuration);
+		languageId = parseInt(languageId);
+		$.loader.show();
+		var data = '&teacherId=' + teacherId + '&lessonQty=' + lessonQty + '&languageId=' + languageId + '&lessonDuration=' + lessonDuration;
 		fcom.ajax( fcom.makeUrl('Cart','add', [], confFrontEndUrl), data ,function(res){
-
-			var resObj = $.parseJSON(res);
-			if(resObj.status == 1){
-				if(resObj.isFreeLesson){
-					fcom.updateWithAjax(fcom.makeUrl('Checkout', 'confirmOrder'), '', function(ans) {
-						if( ans.redirectUrl != '' ){
-							window.location.href = ans.redirectUrl;
-						}
-					});
-					return;
-				}
-				if( resObj.redirectUrl ){
-					window.location.href = resObj.redirectUrl;
+			$.loader.hide();
+			if(res.status == 1){
+				if( res.redirectUrl ){
+					window.location.href = res.redirectUrl;
 					return;
 				}
 			}
-			$('.loading-wrapper').hide();
-			$.mbsmessage(resObj.msg,true, 'alert alert--danger');
+			$.mbsmessage(res.msg,true, 'alert alert--danger');
 
 			
-		});
+		},{fOutMode:'json'});
 	}
 };

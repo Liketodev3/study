@@ -76,7 +76,6 @@ function viewCalendar (frm){
 		$(dv).html(t);
 	});
 };
-
 function drawChart(graphArray, options) {
 	containerDiv = document.getElementById("chart_div");
 

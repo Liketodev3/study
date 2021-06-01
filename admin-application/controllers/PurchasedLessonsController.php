@@ -131,94 +131,72 @@ class PurchasedLessonsController extends AdminBaseController
     public function purchasedLessonsSearch()
     {
         $searchFrm = $this->getPurchasedLessonsSearchForm();
-        $postData = FatApp::getPostedData();
-        $data = $searchFrm->getFormDataFromArray($postData);
-        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
-        $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
-        $scheduledLessonSearchObj = new ScheduledLessonSearch(false);
-        $scheduledLessonSearchObj->joinTeacher();
-        $scheduledLessonSearchObj->joinLearner();
-        $scheduledLessonSearchObj->joinIssueReported();
-        $scheduledLessonSearchObj->joinOrder();
-        $scheduledLessonSearchObj->joinOrderProducts();
-        $scheduledLessonSearchObj->joinTeacherTeachLanguage();
-        $scheduledLessonSearchObj->addMultipleFields([
-            'sldetail_id',
-            'slesson_id',
-            'slesson_grpcls_id',
-            'op_lpackage_is_free_trial',
-            'slesson_status',
-            'slesson_ended_by',
-            'slesson_date',
-            'slesson_end_date',
-            'slesson_ended_on',
-            'slesson_start_time',
-            'slesson_end_time',
-            'slesson_teacher_join_time',
-            'sldetail_learner_join_time',
-            'slesson_teacher_end_time',
-            'sldetail_learner_end_time',
-            'slesson_added_on',
-            'order_is_paid',
-            'IFNULL(iss.issrep_status,0) AS issrep_status',
-            'IFNULL(iss.issrep_id,0) AS issrep_id',
+        $data = $searchFrm->getFormDataFromArray(FatApp::getPostedData());
+        $srch = new ScheduledLessonSearch(false);
+        $srch->joinTeacher();
+        $srch->joinLearner();
+        $srch->joinOrder();
+        $srch->joinOrderProducts();
+        $srch->joinTeacherTeachLanguage();
+        $srch->addMultipleFields([
+            'sldetail_id', 'slesson_id', 'slesson_grpcls_id', 'slesson_status',
+            'slesson_ended_by', 'slesson_date', 'slesson_end_date', 'slesson_ended_on',
+            'slesson_start_time', 'slesson_end_time', 'slesson_teacher_join_time',
+            'sldetail_learner_join_time', 'slesson_teacher_end_time', 'sldetail_learner_end_time',
+            'slesson_added_on', 'op_lpackage_is_free_trial', 'order_is_paid',
             'CONCAT(ul.user_first_name, " " , ul.user_last_name) AS learner_name',
             'CONCAT(ut.user_first_name, " " , ut.user_last_name) AS teacher_name',
             'IFNULL(tl_l.tlanguage_name, t_t_lang.tlanguage_identifier) as teacherTeachLanguageName',
         ]);
         if (!empty($data['slesson_teacher_id'])) {
             $teacherId = FatUtility::int($data['slesson_teacher_id']);
-            $scheduledLessonSearchObj->addCondition('slesson_teacher_id', '=', $teacherId);
+            $srch->addCondition('slesson_teacher_id', '=', $teacherId);
         }
         if (!empty($data['sldetail_learner_id'])) {
             $learnerId = FatUtility::int($data['sldetail_learner_id']);
-            $scheduledLessonSearchObj->addCondition('sldetail_learner_id', '=', $learnerId);
+            $srch->addCondition('sldetail_learner_id', '=', $learnerId);
         }
         if (!empty($data['sldetail_order_id'])) {
-            $scheduledLessonSearchObj->addCondition('sldetail_order_id', '=', $data['sldetail_order_id']);
+            $srch->addCondition('sldetail_order_id', '=', $data['sldetail_order_id']);
         }
         if ($data['slesson_status'] > 0) {
             $status = FatUtility::int($data['slesson_status']);
             switch ($status) {
                 case ScheduledLesson::STATUS_ISSUE_REPORTED:
-                    $scheduledLessonSearchObj->addCondition('issrep_id', '>', 0);
+                    $srch->joinTable(ReportedIssue::DB_TBL, 'INNER JOIN', 'repiss.repiss_sldetail_id = sld.sldetail_id', 'repiss');
+                    $srch->addCondition('repiss.repiss_id', '>', 0);
                     break;
                 case ScheduledLesson::STATUS_UPCOMING:
-                    $scheduledLessonSearchObj->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
-                    $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
+                    $srch->addCondition('mysql_func_CONCAT(slns.slesson_date, " ", slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
+                    $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
                     break;
                 case ScheduledLesson::STATUS_SCHEDULED:
-                    $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', $status);
+                    $srch->addCondition('slns.slesson_status', '=', $status);
                     break;
                 default:
-                    $scheduledLessonSearchObj->addCondition('slns.slesson_status', '=', $status);
+                    $srch->addCondition('slns.slesson_status', '=', $status);
                     break;
             }
         }
-        $scheduledLessonSearchObj->addOrder('slesson_date', 'desc');
-        $scheduledLessonSearchObj->setPageNumber($page);
-        $scheduledLessonSearchObj->setPageSize($pagesize);
-        $resultSet = $scheduledLessonSearchObj->getResultSet();
+        $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        $srch->setPageNumber($page);
+        $srch->setPageSize($pagesize);
+        $resultSet = $srch->getResultSet();
         $records = FatApp::getDb()->fetchAll($resultSet);
         $this->set("arr_listing", $records);
-        $this->set('pageCount', $scheduledLessonSearchObj->pages());
+        $this->set('pageCount', $srch->pages());
         $this->set('page', $page);
         $this->set('pageSize', $pagesize);
         $this->set('postedData', $data);
-        $this->set('recordCount', $scheduledLessonSearchObj->recordCount());
+        $this->set('recordCount', $srch->recordCount());
         $this->_template->render(false, false, null, false, false);
     }
 
     public function search()
     {
-        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $frmSearch = $this->getOrderPurchasedLessonsForm();
-        $data = FatApp::getPostedData();
-        $post = $frmSearch->getFormDataFromArray($data);
-        $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
-        if ($page < 2) {
-            $page = 1;
-        }
+        $post = $frmSearch->getFormDataFromArray(FatApp::getPostedData());
         $srch = new OrderSearch(false, false);
         $srch->addGroupBy('order_id');
         $srch->joinOrderProduct();
@@ -227,22 +205,14 @@ class PurchasedLessonsController extends AdminBaseController
         $srch->joinTeacherLessonLanguage($this->adminLangId);
         $srch->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'op_teacher_id = tCredentials.credential_user_id', 'tCredentials');
         $srch->joinGroupClass($this->adminLangId);
-        $srch->addMultipleFields([
-            'order_id',
-            'grpcls_id',
-            'op_qty',
-            'grpcls.grpcls_title',
-            'order_user_id',
-            'op_teacher_id',
-            'op_lpackage_is_free_trial',
-            'order_is_paid',
-            'order_net_amount',
+        $srch->addMultipleFields(['order_id', 'grpcls_id', 'op_qty',
+            'grpcls.grpcls_title', 'order_user_id', 'op_teacher_id',
+            'op_lpackage_is_free_trial', 'order_is_paid', 'order_net_amount',
             'CONCAT(u.user_first_name, " " , u.user_last_name) AS learner_username',
             'CONCAT(t.user_first_name, " " , t.user_last_name) AS teacher_username',
             'tCredentials.credential_email as teacherEmail',
-            'cred.credential_email as userEmail',
+            'cred.credential_email as userEmail', 'order_currency_code',
             'COALESCE(NULLIF(sl.tlanguage_name, ""), tlang.tlanguage_identifier) AS language',
-            'order_currency_code'
         ]);
         if (isset($post['op_teacher_id']) and $post['op_teacher_id'] > 0) {
             $user_is_teacher = FatUtility::int($post['op_teacher_id']);
@@ -268,6 +238,8 @@ class PurchasedLessonsController extends AdminBaseController
             }
         }
         $srch->addOrder('order_date_added', 'desc');
+        $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
+        $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
         $records = FatApp::getDb()->fetchAll($srch->getResultSet());
@@ -293,11 +265,9 @@ class PurchasedLessonsController extends AdminBaseController
     public function viewDetail($slesson_id)
     {
         $slesson_id = FatUtility::int($slesson_id);
-        $statusArr = ScheduledLesson::getStatusArr();
         if (1 > $slesson_id) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        /* [ */
         $srch = new ScheduledLessonSearch(false);
         $srch->joinGroupClass($this->adminLangId);
         $srch->joinOrder();
@@ -327,12 +297,11 @@ class PurchasedLessonsController extends AdminBaseController
             'op_lesson_duration'
         ]);
         $lessonRow = FatApp::getDb()->fetch($srch->getResultSet());
-        if (!$lessonRow) {
+        if (empty($lessonRow)) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        /* ] */
-        $this->set("statusArr", $statusArr);
         $this->set("lessonRow", $lessonRow);
+        $this->set("statusArr", ScheduledLesson::getStatusArr());
         $this->_template->render(false, false);
     }
 
@@ -369,21 +338,13 @@ class PurchasedLessonsController extends AdminBaseController
         $db->startTransaction();
         $sLessonObj = new ScheduledLesson($lessonRow['slesson_id']);
         $sLessonObj->loadFromDb();
+        /**
+         * @todo Wallet transactions
+         * 
+         * Update lesson detail statuses
+         */
         if ($status == ScheduledLesson::STATUS_COMPLETED) {
-            if ($lessonRow['slesson_is_teacher_paid'] == 0) {
-                $sLessonObj->setFldValue('slesson_ended_on', date('Y-m-d H:i:s'));
-                $lessonObj = new ScheduledLesson($slesson_id);
-                if ($lessonObj->payTeacherCommission()) {
-                    $userNotification = new UserNotifications($lessonRow['slesson_teacher_id']);
-                    $userNotification->sendWalletCreditNotification($lessonRow['slesson_id']);
-                    $sLessonObj->setFldValue('slesson_is_teacher_paid', 1);
-                }
-            } else {
-                $trnObj = new Transaction($lessonRow['slesson_teacher_id']);
-                if (!$trnObj->changeStatusByLessonId($slesson_id, Transaction::STATUS_COMPLETED)) {
-                    FatUtility::dieJsonError($trnObj->getError());
-                }
-            }
+            $sLessonObj->setFldValue('slesson_ended_on', date('Y-m-d H:i:s'));
         }
         if ($status == ScheduledLesson::STATUS_CANCELLED) {
             if (!$sLessonObj->cancelLessonByTeacher('')) {
@@ -391,7 +352,7 @@ class PurchasedLessonsController extends AdminBaseController
                 FatUtility::dieJsonError($sLessonObj->getError());
             }
             // remove from teacher google calendar
-            $token = current(UserSetting::getUserSettings($sLessonObj->getFldValue('slesson_teacher_id')))['us_google_access_token'];
+            $token = UserSetting::getUserSettings($sLessonObj->getFldValue('slesson_teacher_id'))['us_google_access_token'];
             if ($token) {
                 $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
                 if ($oldCalId) {
@@ -404,6 +365,13 @@ class PurchasedLessonsController extends AdminBaseController
         if (!$sLessonObj->save()) {
             $db->rollbackTransaction();
             Message::addErrorMessage($sLessonObj->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $record = new ScheduledLessonDetails($sldetailId);
+        $record->assignValues(['sldetail_learner_status' => $status]);
+        if (!$record->save()) {
+            $db->rollbackTransaction();
+            Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
         $db->commitTransaction();

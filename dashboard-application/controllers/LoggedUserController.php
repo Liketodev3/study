@@ -22,7 +22,7 @@ class LoggedUserController extends MyAppController
         $srch->joinCredentials(false, false);
         $srch->addCondition('u.user_id', '=', UserAuthentication::getLoggedUserId());
         $srch->setPageSize(1);
-        $srch->addMultipleFields(['user_first_name', 'user_is_teacher', 'user_last_name', 'user_country_id', 'user_preferred_dashboard', 'credential_email', 'credential_active', 'credential_verified']);
+        $srch->addMultipleFields(['user_first_name', 'user_url_name', 'user_is_teacher', 'user_last_name', 'user_country_id', 'user_preferred_dashboard', 'credential_email', 'credential_active', 'credential_verified']);
         $rs = $srch->getResultSet();
         $userRow = FatApp::getDb()->fetch($rs);
         

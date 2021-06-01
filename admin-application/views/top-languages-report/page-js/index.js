@@ -10,7 +10,7 @@ $(document).ready(function(){
 		if(typeof page == undefined || page == null){
 			page =1;
 		}
-		var frm = document.frmSalesReportSearchPaging;		
+		var frm = document.frmSalesReportSchedulePaging;		
 		$(frm.page).val(page);
 		searchTopLangReport(frm);
 	};
@@ -20,7 +20,7 @@ $(document).ready(function(){
 	window.location=url;
 	}
 	reloadList = function() {
-		var frm = document.frmSalesReportSearchPaging;
+		var frm = document.frmSalesReportSchedulePaging;
 		searchTopLangReport(frm);
 	};
 	

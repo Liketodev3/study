@@ -57,6 +57,7 @@ class CronController extends MyAppController
                 echo '<br>Ended';
             }
         }
+        die;
         if (!$found) {
             echo "No record found";
         }

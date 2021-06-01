@@ -11,12 +11,16 @@ class UserNotifications extends FatModel
     const NOTICATION_FOR_SCHEDULED_LESSON_BY_LEARNER = 2;
     const NOTICATION_FOR_SCHEDULED_LESSON_BY_TEACHER = 3;
     const NOTICATION_FOR_WALLET_CREDIT_ON_LESSON_COMPLETE = 4;
-    const NOTICATION_FOR_ISSUE_REFUND = 5;
-    const NOTICATION_FOR_ISSUE_RESOLVE = 6;
     const NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER = 7;
     const NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_LEARNER = 8;
     const NOTICATION_FOR_CANCEL_LESSON_BY_TEACHER = 9;
     const NOTICATION_FOR_CANCEL_LESSON_BY_LEARNER = 10;
+    const NOTICATION_FOR_ISSUE_REFUNDED = 11;
+    const NOTICATION_FOR_ISSUE_REPORTED = 12;
+    const NOTICATION_FOR_ISSUE_RESOLVED = 13;
+    const NOTICATION_FOR_ISSUE_ESCLATED = 14;
+    const NOTICATION_FOR_ISSUE_CLOSED = 15;
+    const NOTICATION_FOR_CHANGE_PASSWORD = 16;
 
     private $userId = 0;
     private $recordId = 0;
@@ -51,6 +55,15 @@ class UserNotifications extends FatModel
             return false;
         }
         return true;
+    }
+
+    public function sendChangePwdNotifi($langId = 0)
+    {
+        $this->type = self::NOTICATION_FOR_CHANGE_PASSWORD;
+        $this->recordId = 0;
+        $title = Label::getLabel("LBL_Password_Changed", ($langId != applicationConstants::NO) ? $langId : CommonHelper::getLangId());
+        $description = Label::getLabel("LBL_Change_Password_Description", ($langId != applicationConstants::NO) ? $langId : CommonHelper::getLangId());
+        return $this->addNotification($title, $description);
     }
 
     public function sendWalletCreditNotification($lessonId = 0)
@@ -526,10 +539,11 @@ class UserNotifications extends FatModel
         ];
         $tableRecord = new TableRecord(self::DB_TBL);
         $tableRecord->assignValues($saveData);
-        if ($tableRecord->addNew()) {
-            return true;
+        if (!$tableRecord->addNew()) {
+            $this->error = $tableRecord->getError();
+            return false;
         }
-        return false;
+        return true;
     }
 
     public function markRead($notificationId)
@@ -609,30 +623,6 @@ class UserNotifications extends FatModel
             return false;
         }
         SmsHandler::archiveSms($phoneNo, '', $title);
-        return true;
-    }
-
-    public function sendIssueRefundNotification($lessonId, $_step)
-    {
-        $this->recordId = $lessonId;
-        $this->subRecordId = UserAuthentication::getLoggedUserId();
-        $title = '';
-        $description = '';
-        switch ($_step) {
-            case IssuesReported::ISSUE_REPORTED_NOTIFICATION:
-                $this->type = self::NOTICATION_FOR_ISSUE_REFUND;
-                $title = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER", CommonHelper::getLangId());
-                $description = Label::getLabel("LABEL_LESSON_ISSUE_REPORTED_BY_LEARNER_DESCRIPTION", CommonHelper::getLangId());
-                break;
-            case IssuesReported::ISSUE_RESOLVE_NOTIFICATION:
-                $this->type = self::NOTICATION_FOR_ISSUE_RESOLVE;
-                $title = Label::getLabel("LABEL_LESSON_ISSUE_RESOLVED_BY_TEACHER", CommonHelper::getLangId());
-                $description = Label::getLabel("LABEL_LESSON_RESOLVED_BY_TEACHER_DESCRIPTION", CommonHelper::getLangId());
-                break;
-        }
-        if (!$this->addNotification($title, $description)) {
-            return false;
-        }
         return true;
     }
 

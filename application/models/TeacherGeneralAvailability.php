@@ -11,8 +11,9 @@ class TeacherGeneralAvailability extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getGenaralAvailabilityJsonArr($userId, $post = [], int $teacherBookingBefore = 0)
+    public static function getGenaralAvailabilityJsonArr($userId, $post = [], int $teacherBookingBefore = NULL)
     {
+       
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
             trigger_error(Label::getLabel('LBL_Invalid_Request'));
@@ -23,22 +24,20 @@ class TeacherGeneralAvailability extends MyAppModel
         $srch->addOrder('tgavl_date', 'ASC');
         $rs = $srch->getResultSet();
         $rows = FatApp::getDb()->fetchAll($rs);
-        $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
         $jsonArr = [];
         $user_timezone = MyDate::getUserTimeZone();
         if (!empty($post)) {
-            $nowDate = $post['WeekEnd'];
             $weekStartDate = $post['WeekStart'];
-            $weekEndDate = $post['WeekEnd'];
         } else {
             $weekStartAndEndDate = MyDate::getWeekStartAndEndDate(new DateTime());
             $weekStartDate = $weekStartAndEndDate['weekStart'];
-            $weekEndDate = $weekStartAndEndDate['weekEnd'];
         }
         if (!empty($rows)) {
             $weekStartDateDB = '2018-01-07';
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStartDate);
-            $validStartDateTime =  strtotime("+ ".$teacherBookingBefore. " hours");
+            $bookingBefore = (!is_null($teacherBookingBefore)) ? 0 : $teacherBookingBefore;
+            
+            $validStartDateTime =  strtotime("+ ".$bookingBefore. " hours");
             
             foreach ($rows as $row) {
                 $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
@@ -57,9 +56,9 @@ class TeacherGeneralAvailability extends MyAppModel
 
                 $dateUnixTime = strtotime($date);
                 $endDateUnixTime =  strtotime($endDate);
-                
-                if($teacherBookingBefore > 0){
-
+               
+              
+                if(!is_null($teacherBookingBefore)){
                     if($validStartDateTime > $endDateUnixTime){
                         continue;
                     }

@@ -1,5 +1,4 @@
-<?php
-defined('SYSTEM_INIT') or die('Invalid Usage.');
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
 ?>
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
@@ -26,14 +25,12 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
     
     <!-- (<span id="currentTime"> </span>) -->
     <?php if( 'free_trial' != $action ): ?>
-    <small class="label label--warning"><?php echo Label::getLabel('Note_This_calendar_is_to_only_check_availability') ?></small>
+    <small class="label label--warning"><?php echo Label::getLabel('Note_This_calendar_is_to_only_check_availability'); ?></small>
     <?php endif; ?>
     <div id='calendar-container'>
         <div id='d_calendar'></div>
     </div>
 </div>
-
-
 
 <div class="tooltipevent-wrapper-js d-none">
     <div class="tooltipevent" style="position:absolute;z-index:10001;">
@@ -51,7 +48,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
                 </div>
                 <div class="-gap-10"></div>
                 <div class="-align-left">
-                    <a href="javascript:void(0);" onClick="cart.add(<?php echo $teacher_id; ?>, <?php echo $lPackageId; ?>, '{{selectedStartDateTime}}', '{{selectedEndDateTime}}', '<?php echo $languageId;?>' );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Book_Lesson!'); ?></a>
+                    <a href="javascript:void(0);" onClick="cart.addFreeTrial(<?php echo $teacher_id; ?>, '{{selectedStartDateTime}}', '{{selectedEndDateTime}}', '<?php echo $languageId;?>' );" class="btn btn--secondary btn--small btn--wide"><?php echo Label::getLabel('LBL_Book_Lesson!'); ?></a>
                 </div>
                 <a onclick="$('body > .tooltipevent').remove();" href="javascript:;" class="-link-close"></a>
             </div>

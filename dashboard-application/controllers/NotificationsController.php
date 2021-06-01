@@ -65,10 +65,13 @@ class NotificationsController extends LoggedUserController
             case UserNotifications::NOTICATION_FOR_WALLET_CREDIT_ON_LESSON_COMPLETE:
                 $notificationRedirectUrl = CommonHelper::generateUrl('Wallet');
                 break;
-            case UserNotifications::NOTICATION_FOR_ISSUE_REFUND:
+            case UserNotifications::NOTICATION_FOR_ISSUE_REPORTED:
+            case UserNotifications::NOTICATION_FOR_ISSUE_ESCLATED:
                 $notificationRedirectUrl = CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$notificationRecordId]);
                 break;
-            case UserNotifications::NOTICATION_FOR_ISSUE_RESOLVE:
+            case UserNotifications::NOTICATION_FOR_ISSUE_REFUNDED:
+            case UserNotifications::NOTICATION_FOR_ISSUE_RESOLVED:
+            case UserNotifications::NOTICATION_FOR_ISSUE_CLOSED:
                 $notificationRedirectUrl = CommonHelper::generateUrl('LearnerScheduledLessons', 'view', [$notificationRecordId]);
                 break;
             case UserNotifications::NOTICATION_FOR_LESSON_STATUS_UPDATED_BY_ADMIN_TEACHER:
@@ -106,7 +109,6 @@ class NotificationsController extends LoggedUserController
             FatUtility::dieJsonError(Label::getLabel("ERROR_UNBALE_TO_DELETE", $this->siteLangId));
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Notification_Deleted_Successfully!'));
-        
     }
 
     public function changeStatus()

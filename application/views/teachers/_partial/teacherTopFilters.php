@@ -24,14 +24,14 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 								<svg class="icon icon--language">
 									<use xlink:href="images/sprite.yo-coach.svg#language"></use>
 								</svg>
-								<input class="filter__input filter__input-js" name="teach_language_name" type="text" placeholder="English">
+								<input class="filter__input filter__input-js" name="teach_language_name" val="<?php echo ($keywordlanguage)?$keywordlanguage:''; ?>" type="text" placeholder="<?php echo ($keywordlanguage)?$keywordlanguage:Label::getLabel('LBL_Language_Placeholder',$siteLangId);?>">
 								<input name="teachLangId" val="" type="hidden">
 							</div>
 							<div class="filter__body filter__body-target filter-target-js" style="display: none;">
 								<div class="dropdown-listing">
 									<ul>
 										<?php foreach ($teachLangs as $teachLangId => $teachLangName) { ?>
-											<li><a href="javascript:void(0)" class="select-teach-lang-js" teachLangId="<?php echo $teachLangId; ?>"><?php echo $teachLangName; ?></a></li>
+											<li <?php echo ($teachLangName == $keywordlanguage)?'class="is--active"':'' ?>><a href="javascript:void(0)" class="select-teach-lang-js" teachLangId="<?php echo $teachLangId; ?>"><?php echo $teachLangName; ?></a></li>
 										<?php } ?>
 									</ul>
 								</div>
@@ -104,7 +104,6 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 							</div>
 						</div>
 					</div>
-
 					<div class="filter__secondary">
 						<span class="overlay overlay--filters btn--filters-js"></span>
 						<div class="filter-group">

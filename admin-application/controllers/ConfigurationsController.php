@@ -147,9 +147,14 @@ class ConfigurationsController extends AdminBaseController
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
+       
         if (!empty($unselectedSlot)) {
-            $userToLanguage = new UserToLanguage();
-            $userToLanguage->removeTeachSlots($unselectedSlot);
+            
+            $teachLangPrice = new TeachLangPrice();
+            $teachLangPrice->deleteTeachSlots($unselectedSlot);
+
+            $teacherStat = new TeacherStat(0);
+            $teacherStat->setTeachLangPricesBulk();
         }
         $this->set('msg', Label::getLabel('MSG_Setup_Successful', $this->adminLangId));
         $this->set('frmType', $frmType);
@@ -490,6 +495,9 @@ class ConfigurationsController extends AdminBaseController
                 $fld = $frm->addRadioButtons(Label::getLabel("LBL_New_Review_Alert_Email", $this->adminLangId), 'CONF_REVIEW_ALERT_EMAIL', applicationConstants::getYesNoArr($this->adminLangId), '', ['class' => 'list-inline']);
                 break;
             case Configurations::FORM_SEO:
+                $fld = $frm->addCheckBox(Label::getLabel('LBL_ENABLE_LANGUAGE_CODE_TO_SITE_URLS', $this->adminLangId), 'CONF_LANG_SPECIFIC_URL', 1, array(), false, 0);
+                $fld->htmlAfterField = '<small>' . Label::getLabel("LBL_LANGUAGE_CODE_TO_SITE_URLS_EXAMPLES", $this->adminLangId) . '</small>';
+
                 $fld2 = $frm->addTextarea(Label::getLabel('LBL_Site_Tracker_Code', $this->adminLangId), 'CONF_SITE_TRACKER_CODE');
                 $fld2->htmlAfterField = '<small>' . Label::getLabel("LBL_This_is_the_site_tracker_script,_used_to_track_and_analyze_data_about_how_people_are_getting_to_your_website._e.g.,_Google_Analytics.", $this->adminLangId) . ' http://www.google.com/analytics/</small>';
                 break;
@@ -501,6 +509,18 @@ class ConfigurationsController extends AdminBaseController
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Users,_orders,_etc)", $this->adminLangId) . ".</small>";
                 $frm->addHtml('', 'FlashCard', '<h3>' . Label::getLabel('LBL_FlashCards', $this->adminLangId) . '</h3>');
                 $frm->addCheckBox(Label::getLabel("CONF_ENABLE_FLASHCARD", $this->adminLangId), 'CONF_ENABLE_FLASHCARD', 1, [], false, 0);
+
+                $frm->addHtml('', 'Free_Trial', '<h3>' . Label::getLabel('LBL_Free_Trial', $this->adminLangId) . '</h3>');
+                $frm->addCheckBox(Label::getLabel("CONF_ENABLE_FREE_TRIAL", $this->adminLangId), 'CONF_ENABLE_FREE_TRIAL', applicationConstants::YES, [], false, applicationConstants::NO);
+
+                $frm->addHtml('', 'report_issue', '<h3>' . Label::getLabel('LBL_Report/Esclate_Issue_Time', $this->adminLangId) . '</h3>');
+                $fld = $frm->addTextBox(Label::getLabel("CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION", $this->adminLangId), "CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION");
+                $fld->requirements()->setIntPositive();
+                $fld->requirements()->setRange(0, 168);
+                $fld = $frm->addTextBox(Label::getLabel("CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION", $this->adminLangId), "CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION");
+                $fld->requirements()->setIntPositive();
+                $fld->requirements()->setRange(0, 168);
+
                 $frm->addHtml('', 'Grpcls', '<h3>' . Label::getLabel('LBL_Group_Class', $this->adminLangId) . '</h3>');
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Class_Cancellation_Refund_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_CLASS_REFUND_PERCENTAGE");
                 $fld3->requirements()->setIntPositive();
@@ -509,14 +529,21 @@ class ConfigurationsController extends AdminBaseController
                 $fld3->requirements()->setIntPositive();
                 $fld3->requirements()->setRange(0, 1000);
                 $frm->addIntegerField(Label::getLabel("LBL_Class_Max_learners", $this->adminLangId), "CONF_GROUP_CLASS_MAX_LEARNERS");
+
                 $frm->addHtml('', 'Admin', '<h3>' . Label::getLabel('LBL_Teacher_Dashboard', $this->adminLangId) . '</h3>');
+
                 $fld3 = $frm->addTextBox(Label::getLabel("LBL_Default_Items_Per_Page", $this->adminLangId), "CONF_FRONTEND_PAGESIZE");
                 $fld3->requirements()->setRange(1, 500);
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_number_of_records_shown_per_page_(Lessons,_orders,_etc)", $this->adminLangId) . ".</small>";
+
                 $bookingSlots = applicationConstants::getBookingSlots();
-                $fld = $frm->addCheckBoxes(Label::getLabel("LBL_Lesson_durations", $this->adminLangId), "CONF_PAID_LESSON_DURATION", array_combine($bookingSlots, $bookingSlots), [], ['class' => 'list-inline']);
-                $fld->htmlAfterField = "<br><small>" . Label::getLabel("htmlAfterField_LESSON_DURATIONS_TEXT", $this->adminLangId) . ".</small>";
-                $frm->addRadioButtons(Label::getLabel("LBL_Default_Lesson_duration", $this->adminLangId), "CONF_DEFAULT_PAID_LESSON_DURATION", array_combine($bookingSlots, $bookingSlots), '', ['class' => 'list-inline']);
+                $fld = $frm->addCheckBoxes(Label::getLabel("LBL_Lesson_durations", $this->adminLangId), "CONF_PAID_LESSON_DURATION", $bookingSlots, array(), array('class' => 'list-inline'));
+                $fld->htmlAfterField = "<br><small>".Label::getLabel("htmlAfterField_LESSON_DURATIONS_TEXT", $this->adminLangId).".</small>";
+
+                $frm->addRadioButtons(Label::getLabel("LBL_Default_Lesson_duration",  $this->adminLangId), "CONF_DEFAULT_PAID_LESSON_DURATION", $bookingSlots, '', array('class' => 'list-inline'))->requirements()->setRequired();
+                
+                $frm->addRadioButtons(Label::getLabel("LBL_Trial_Lesson_duration",  $this->adminLangId), "CONF_TRIAL_LESSON_DURATION",
+                    $bookingSlots, '', array('class' => 'list-inline'))->requirements()->setRequired();
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_END_LESSON_DURATION", $this->adminLangId), "CONF_ALLOW_TEACHER_END_LESSON");
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Duration_After_Teacher_Can_End_Lesson_(In_Minutes)", $this->adminLangId) . ".</small>";
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_LEARNER_REFUND_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_REFUND_PERCENTAGE");
@@ -589,6 +616,13 @@ class ConfigurationsController extends AdminBaseController
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Comet_Chat_Auth", $this->adminLangId), 'CONF_COMET_CHAT_AUTH');
                 $frm->addHtml('', 'lessonspace_api_key', '<h3>' . Label::getLabel("LBL_Lessonspace_API_Key", $this->adminLangId) . '</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Lessonspace_Api_Key", $this->adminLangId), 'CONF_LESSONSPACE_API_KEY');
+
+                $frm->addHtml('', 'WIZIQ_MEETING_API', '<h3>' . Label::getLabel("LBL_WIZIQ_MEETING_API", $this->adminLangId) . '</h3>');
+                $frm->addTextBox(Label::getLabel("WIZIQ_API_SECRET_KEY", $this->adminLangId), 'WIZIQ_API_SECRET_KEY');
+                $frm->addTextBox(Label::getLabel("WIZIQ_API_ACCESS_KEY", $this->adminLangId), 'WIZIQ_API_ACCESS_KEY');
+                $frm->addTextBox(Label::getLabel("WIZIQ_API_SERVICE_URL", $this->adminLangId), 'WIZIQ_API_SERVICE_URL');
+                $frm->addTextBox(Label::getLabel("WIZIQ_API_CLASSAPI_URL", $this->adminLangId), 'WIZIQ_API_CLASSAPI_URL');
+
                 $frm->addHtml('', 'Newsletter', '<h3>' . Label::getLabel("LBL_Newsletter_Subscription", $this->adminLangId) . '</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Mailchimp_Key", $this->adminLangId), 'CONF_MAILCHIMP_KEY');
                 $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_This_is_the_Mailchimp's_application_key_used_in_subscribe_and_send_newsletters.", $this->adminLangId) . "</small>";

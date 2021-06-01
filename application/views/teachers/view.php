@@ -6,29 +6,38 @@ $pixelToFillRight = $avgRating / 5 * 160;
 $pixelToFillRight = FatUtility::convertToType($pixelToFillRight, FatUtility::VAR_FLOAT);
 
 $teacherLanguage = 0;
+
 if (!empty($teacher['teachLanguages'])) {
 	$teacherLanguage = key($teacher['teachLanguages']);
 }
+
 $langId = CommonHelper::getLangId();
 $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR_STRING, '');
-
-$teacherLangPrices = [
-	'single' => [],
-	'bulk' => []
-];
+$teacherLangPrices = [];
 $bookingDuration = '';
-foreach ($userTeachLangs as $userTeachLang) {
-
-	$teacherLangPrices['single'][$userTeachLang['utl_booking_slot']][$userTeachLang['tlanguage_id']] = array(
-		'lang_name' => $userTeachLang['tlanguage_name'],
-		'price' => $userTeachLang['utl_single_lesson_amount']
-	);
-	$teacherLangPrices['bulk'][$userTeachLang['utl_booking_slot']][$userTeachLang['tlanguage_id']] = array(
-		'lang_name' => $userTeachLang['tlanguage_name'],
-		'price' => $userTeachLang['utl_bulk_lesson_amount']
-	);
-	$bookingDuration = $userTeachLang['utl_booking_slot'];
+foreach ($userTeachLangs as $key => $value) {
+	$slotSlabKey = $value['ustelgpr_slot'] . '-' . $value['ustelgpr_min_slab'].'-'.$value['ustelgpr_max_slab'];
+	if (!array_key_exists($slotSlabKey, $teacherLangPrices)) {
+		$teacherLangPrices[$slotSlabKey] = [
+			'title' => sprintf(Label::getLabel('LBL_%d_min_[%s_-_%s]_Lessons'),  $value['ustelgpr_slot'], $value['ustelgpr_min_slab'], $value['ustelgpr_max_slab']),
+			'langPrices' => []
+		];
+	}
+	$price = FatUtility::float($value['ustelgpr_price']);
+	$percentage = CommonHelper::getPercentValue($value['top_percentage'], $price);
+	$price = $price - $percentage;
+	$teacherLangPrices[$slotSlabKey]['langPrices'][] = [
+		'teachLangName' => $value['teachLangName'],
+		'ustelgpr_slot' => $value['ustelgpr_slot'],
+		'ustelgpr_max_slab' => $value['ustelgpr_max_slab'],
+		'ustelgpr_min_slab' => $value['ustelgpr_min_slab'],
+		'teachLangName' => $value['teachLangName'],
+		'utl_tlanguage_id' => $value['utl_tlanguage_id'],
+		'ustelgpr_price' => $price,
+		'top_percentage' => $value['top_percentage'],
+	];
 }
+
 ?>
 <title><?php echo Label::getLabel('LBL_Learn') . " " . implode(', ', $teacher['teachLanguages']) . " " . Label::getLabel('LBL_from') . " " . $teacher['user_full_name'] . " " . Label::getLabel('LBL_on') . " " . $websiteName; ?></title>
 
@@ -58,7 +67,6 @@ foreach ($userTeachLangs as $userTeachLang) {
 				<div class="box -padding-30">
 					<div class="box__profile-head">
 						<div class="row">
-
 							<!-- Image[ -->
 							<div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 -align-center">
 								<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
@@ -68,13 +76,9 @@ foreach ($userTeachLangs as $userTeachLang) {
 										echo '<img src="' . $img . '" />';
 									}
 									?>
-									<?php /* if( $teacher['is_online'] ){ ?>
-									<span class="tag-online"></span>
-									<?php } */ ?>
 								</div>
 							</div>
 							<!-- ] -->
-
 							<div class="col-xl-5 col-lg-5 col-md-5 col-sm-5">
 								<div class="teacher__info">
 									<h3 class="-display-inline"><?php echo $teacher['user_full_name']; ?></h3>
@@ -154,7 +158,7 @@ foreach ($userTeachLangs as $userTeachLang) {
 								<div class="box-highlighted box-language">
 									<div class="row d-block justify-content-between">
 										<div class="col"><strong><?php echo Label::getLabel('LBL_Teaches:'); ?></strong></div>
-										<div class="col"><?php echo CommonHelper::getTeachLangs($teacher['utl_slanguage_ids'], '', 1); ?></div>
+										<div class="col"><?php echo CommonHelper::getTeachLangs($teacher['utl_tlanguage_ids'], '', 1); ?></div>
 									</div>
 								</div>
 								<div class="box-highlighted">
@@ -233,7 +237,7 @@ foreach ($userTeachLangs as $userTeachLang) {
 
 			<div class="col-xl-4 col-lg-4">
 				<?php
-             
+
 				if ($teacher['isFreeTrialEnabled']) {
 					$onclick = "";
 					$btnClass = "btn-secondary";
@@ -250,109 +254,69 @@ foreach ($userTeachLangs as $userTeachLang) {
 						$disabledText = "disabled";
 					}
 				?>
-					<div class="box box--cta -padding-30">
-						<h4 class="-text-bold"><?php echo Label::getLabel('LBL_FREE_Trail'); ?></h4>
-						<p><?php echo Label::getLabel('LBL_Book_your_trial_FREE_for_30_Mins_only'); ?></p>
-						<button type="button" <?php echo $onclick; ?> class="btn <?php echo $btnClass . ' ' . $disabledText; ?> btn--large btn--block" <?php echo $disabledText; ?>><?php echo Label::getLabel($btnText); ?></button>
-					</div>
+				<div class="box box--cta -padding-30">
+					<h4 class="-text-bold"><?php echo Label::getLabel('LBL_FREE_Trail'); ?></h4>
+					 <p><?php echo sprintf(Label::getLabel( 'LBL_TRIAL_LESSON_%S_MINS' ), FatApp::getConfig('CONF_TRIAL_LESSON_DURATION', FatUtility::VAR_INT, 30)); ?></p>
+					 <button type="button" <?php echo $onclick; ?> class="btn <?php echo $btnClass.' '.$disabledText; ?> btn--large btn--block"  <?php echo $disabledText; ?> ><?php echo Label::getLabel( $btnText ); ?></button>
+				 </div>
 				<?php } ?>
 
 				<div class="box box--cta box--sticky">
 					<div class="fat-tab">
-						<?php if (!empty($bookingDuration)) { ?>
-							<div class="box-head -padding-20">
-								<h4 class="-text-bold"><?php echo Label::getLabel("LBL_Lesson_Prices"); ?></h4>
-								<div class="tab-group tabs-scroll-js">
-									<ul>
-										<li class="is-active">
-											<a href="javascript:;" class="tab-a" data-id="tab_single_price">
-												<?php echo Label::getLabel("LBL_Single") ?>
-											</a>
-										</li>
-										<li>
-											<a href="javascript:;" class="tab-a" data-id="tab_bulk_price">
-												<?php echo Label::getLabel("LBL_Bulk") ?>
-											</a>
-										</li>
-									</ul>
+						<?php //if (!empty($bookingDuration)) { 
+						?>
+						<div class="box-head -padding-20">
+							<h4 class="-text-bold"><?php echo Label::getLabel("LBL_Lesson_Prices"); ?></h4>
+						</div>
+						<div class="box-body">
+							<div class="tab-body">
+								<div class="tab tab-active">
+									<div class="scrollbar custom-scrollbar scrollbar-js">
+										<div class="Lprice-cover">
+											<?php
+											foreach ($teacherLangPrices as $slotSlabKey => $value) { ?>
+												<div class="Lprice__wrapper">
+													<div class="Lprice-head">
+														<b><?php echo $value['title']; ?></b>
+													</div>
+													<div class="Lprice-body">
+														<ul>
+															<?php
+															foreach ($value['langPrices'] as $priceInfo) {
+																$onclick = '';
+																if ($loggedUserId != $teacher['user_id']) {
+																	 $onclick = "cart.add('" . $teacher['user_id'] . "','" . $priceInfo['utl_tlanguage_id'] . "','" . $priceInfo['ustelgpr_slot'] . "','" . $priceInfo['ustelgpr_min_slab'] . "')";
+																} ?>
+																<li>
+																	<a href="javascript:;" onClick="<?php echo $onclick; ?>">
+																		<div class="Lprice-lang"><?php echo $priceInfo['teachLangName']; ?></div>
+																		<div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($priceInfo['ustelgpr_price']) ?></div>
+																	</a>
+																</li>
+															<?php
+															} ?>
+														</ul>
+													</div>
+												</div>
+											<?php } ?>
+										</div>
+									</div>
 								</div>
 							</div>
-							<div class="box-body">
-								<div class="tab-body">
-									<div class="tab tab-active" data-id="tab_single_price">
-										<div class="scrollbar custom-scrollbar scrollbar-js">
-											<div class="Lprice-cover" id="style-4">
-												<?php
-												$lessonPackages = $teacher['lessonPackages'];
-												if (count($lessonPackages)) {
-													$lessonPackage = $lessonPackages[0];
-												}
-												// prx($teacherLangPrices);
-												foreach ($teacherLangPrices['single'] as $slot => $prices) : ?>
-													<div class="Lprice__wrapper">
-														<div class="Lprice-head">
-															<b><?php echo sprintf(Label::getLabel('LBL_%d_min'), $slot) ?></b>
-														</div>
-														<div class="Lprice-body">
-															<ul>
-																<?php
-																foreach ($prices as $lang_id => $price_info) :
-																	$onclick = '';
-																	if (!empty($lessonPackages) && $loggedUserId != $teacher['user_id']) {
-																		$onclick = "cart.add('" . $teacher['user_id'] . "','" . $lessonPackage['lpackage_id'] . "','','','" . $lang_id . "', 0, '" . $slot . "')";
-																	}
-																?>
-																	<li>
-																		<a href="javascript:;" onClick="<?php echo $onclick; ?>">
-																			<div class="Lprice-lang"><?php echo $price_info['lang_name'] ?></div>
-																			<div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($price_info['price']) ?></div>
-																		</a>
-																	</li>
-																<?php endforeach; ?>
-															</ul>
-														</div>
-													</div>
-												<?php endforeach; ?>
-											</div>
-										</div>
-									</div>
-									<div class="tab" data-id="tab_bulk_price">
-										<div class="scrollbar custom-scrollbar scrollbar-js">
-											<div class="Lprice-cover" id="style-4">
-												<?php
-												foreach ($teacherLangPrices['bulk'] as $slot => $prices) : ?>
-													<div class="Lprice__wrapper">
-														<div class="Lprice-head">
-															<b><?php echo sprintf(Label::getLabel('LBL_%d_min'), $slot) ?></b>
-														</div>
-														<div class="Lprice-body">
-															<ul>
-																<?php
-																foreach ($prices as $lang_id => $price_info) :
-																	$onclick = '';
-																	if (!empty($lessonPackages) && $loggedUserId != $teacher['user_id']) {
-																		$onclick = "cart.add('" . $teacher['user_id'] . "','" . $lessonPackage['lpackage_id'] . "','','','" . $lang_id . "', 0, '" . $slot . "')";
-																	}
-																?>
-																	<li>
-																		<a href="javascript:;" onClick="<?php echo $onclick; ?>">
-																			<div class="Lprice-lang"><?php echo $price_info['lang_name'] ?></div>
-																			<div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($price_info['price']) ?></div>
-																		</a>
-																	</li>
-																<?php endforeach; ?>
-															</ul>
-														</div>
-													</div>
-												<?php endforeach; ?>
-											</div>
-										</div>
-									</div>
+							<?php if ($loggedUserId != $teacher['user_id']) { ?>
+								<div class="Lprice-btn">
+										<a href="javascript:void(0);" onClick="cart.add( '<?php echo $teacher['user_id']; ?>','<?php echo $teacherLanguage; ?>','<?php echo $teacher['slot']; ?>', '<?php echo $teacher['minSlab']; ?>')" class="btn btn--primary"><?php echo Label::getLabel('LBL_Book_Now') ?></a>
+									<a href="javascript:void(0)" onClick="generateThread(<?php echo $teacher['user_id']; ?>)" class="btn btn--primary btn-outline-primary">
+										<span class="svg-icon">
+											<svg xmlns="http://www.w3.org/2000/svg" width="15" height="11.782" viewBox="0 0 15 11.782">
+												<path d="M1032.66,878.814q-2.745,1.859-4.17,2.888c-0.31.234-.57,0.417-0.77,0.548a4.846,4.846,0,0,1-.79.4,2.424,2.424,0,0,1-.92.2h-0.02a2.424,2.424,0,0,1-.92-0.2,4.846,4.846,0,0,1-.79-0.4c-0.2-.131-0.46-0.314-0.77-0.548-0.76-.552-2.14-1.515-4.16-2.888a4.562,4.562,0,0,1-.85-0.728v6.646a1.3,1.3,0,0,0,.39.946,1.309,1.309,0,0,0,.95.393h12.32a1.309,1.309,0,0,0,.95-0.393,1.3,1.3,0,0,0,.39-0.946v-6.646a4.545,4.545,0,0,1-.84.728h0Zm0.44-4.135a1.287,1.287,0,0,0-.94-0.393h-12.32a1.189,1.189,0,0,0-.99.435,1.7,1.7,0,0,0-.35,1.088,1.933,1.933,0,0,0,.46,1.143,4.157,4.157,0,0,0,.98.967c0.19,0.133.76,0.531,1.72,1.192s1.68,1.171,2.19,1.528c0.05,0.039.17,0.124,0.35,0.255s0.34,0.238.46,0.318,0.26,0.172.43,0.272a2.493,2.493,0,0,0,.48.226,1.308,1.308,0,0,0,.42.076h0.02a1.308,1.308,0,0,0,.42-0.076,2.493,2.493,0,0,0,.48-0.226c0.17-.1.31-0.191,0.43-0.272s0.27-.187.46-0.318,0.3-.216.35-0.255q0.765-.535,3.92-2.72a3.887,3.887,0,0,0,1.02-1.03,2.238,2.238,0,0,0,.41-1.264A1.267,1.267,0,0,0,1033.1,874.679Z" transform="translate(-1018.5 -874.281)"></path>
+											</svg>
+										</span>
+										<?php echo Label::getLabel('LBL_Message'); ?>
+									</a>
 								</div>
 							<?php } ?>
-							<?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher, 'bookingDuration' => $bookingDuration, 'loggedUserId' => $loggedUserId), false); ?>
-
-							</div>
+						</div>
 					</div>
 
 					<hr class="-no-margin">
