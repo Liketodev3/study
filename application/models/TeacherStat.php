@@ -2,6 +2,7 @@
 
 class TeacherStat extends FatModel
 {
+
     private $userId;
 
     function __construct(int $userId)
@@ -107,7 +108,7 @@ class TeacherStat extends FatModel
         $srch->setPageSize(1);
         $srch->getResultSet();
         $speaklang = $srch->recordCount() > 0 ? 1 : 0;
-        $data =  ['testat_speaklang' => $speaklang];
+        $data = ['testat_speaklang' => $speaklang];
         $record = new TableRecord('tbl_teacher_stats');
         $record->setFldValue('testat_user_id', $this->userId);
         $record->assignValues($data);
@@ -158,9 +159,31 @@ class TeacherStat extends FatModel
     /**
      * testat_gavailability
      */
-    public function setGavailability(int $availability)
+    public function setGavailability(array $post)
     {
-        $data = ['testat_gavailability' => $availability];
+        $availability = json_decode($post['data'] ?? '');
+        $data = [
+            'testat_gavailability' => 0,
+            'testat_day1' => null,
+            'testat_day2' => null,
+            'testat_day3' => null,
+            'testat_day4' => null,
+            'testat_day5' => null,
+            'testat_day6' => null,
+            'testat_day7' => null
+        ];
+        if (!empty($availability)) {
+            $data = [
+                'testat_gavailability' => 0,
+                'testat_day1' => null,
+                'testat_day2' => null,
+                'testat_day3' => null,
+                'testat_day4' => null,
+                'testat_day5' => null,
+                'testat_day6' => null,
+                'testat_day7' => null
+            ];
+        }
         $record = new TableRecord('tbl_teacher_stats');
         $record->setFldValue('testat_user_id', $this->userId);
         $record->assignValues($data);
@@ -170,4 +193,5 @@ class TeacherStat extends FatModel
         }
         return true;
     }
+
 }

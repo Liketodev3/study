@@ -661,8 +661,7 @@ class TeacherController extends TeacherBaseController
             FatUtility::dieWithError($tGAvail->getError());
         }
         /* Update Teacher's General Availability Stat */
-        $available  = json_decode($post['data'] ?? '') ? 1 : 0;
-        (new TeacherStat($userId))->setGavailability($available);
+        (new TeacherStat($userId))->setGavailability($post);
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Availability_updated_successfully!'));
     }
 

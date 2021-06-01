@@ -477,5 +477,14 @@ REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, 
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_newsletter_descritption', '1', 'Enter your email and subscribe to receive notifications of new posts by email.');
 
-
-  
+--
+-- Teacher search query update
+--  
+ALTER TABLE `tbl_teacher_stats` 
+    ADD `testat_day1` JSON NULL AFTER `testat_gavailability`, 
+    ADD `testat_day2` JSON NULL AFTER `testat_day1`, 
+    ADD `testat_day3` JSON NULL AFTER `testat_day2`, 
+    ADD `testat_day4` JSON NULL AFTER `testat_day3`, 
+    ADD `testat_day5` JSON NULL AFTER `testat_day4`, 
+    ADD `testat_day6` JSON NULL AFTER `testat_day5`, 
+    ADD `testat_day7` JSON NULL AFTER `testat_day6`;
