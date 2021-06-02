@@ -49,7 +49,7 @@ var isSetupAjaxrun = false;
 
         $.confirm({
             title: langLbl.Confirm,
-            content: 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!',
+            content: langLbl.confirmDeleteLessonPlanText,
             buttons: {
                 Proceed: {
                     text: langLbl.Proceed,

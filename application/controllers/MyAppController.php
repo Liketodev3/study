@@ -73,9 +73,8 @@ class MyAppController extends FatController
 			'confirmCancelessonText' => Label::getLabel('LBL_Are_you_sure_want_to_cancel_this_lesson'),
 			'teacherProfileIncompleteMsg' => Label::getLabel('LBL_Please_Complete_Profile_to_be_visible_on_teachers_listing_page'),
 			'requriedRescheduleMesssage' => Label::getLabel('Lbl_Reschedule_Reason_Is_Requried'),  
-			'language' => Label::getLabel('Lbl_Language'),  
-            //'siteCurrencyId' => $this->siteCurrencyId,
-            //'controllerName' => $controllerName,
+            'language' => Label::getLabel('Lbl_Language'),
+            'confirmDeleteLessonPlanText' => Label::getLabel('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT'),
         );
 
         $languages = Language::getAllNames(false);
