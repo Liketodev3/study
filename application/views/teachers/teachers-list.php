@@ -8,7 +8,6 @@ $colorClass = [
 ];
 ?>
 <?php if ($teachers) { ?>
-    <div class="listing-cover" id="teachersListingContainer">
         <div class="sorting__head">
             <div class="sorting__title">
                 <h4><?php echo sprintf(Label::getLabel('LBL_Found_the_best_%s_teachers_for_you'), $recordCount) ?></h4>
@@ -17,7 +16,7 @@ $colorClass = [
                 <!-- <b>Sort By:</b> -->
                 <select name="filterSortBy" id="sort">
                     <?php foreach ($filters as $filterVal => $filterLabel) { ?>
-                        <option value="<?php echo $filterVal; ?>"><?php echo $filterLabel; ?></option>
+                        <option <?php echo ($postedData['sortOrder']==$filterVal) ? "selected='selected'":''; ?> value="<?php echo $filterVal; ?>"><?php echo $filterLabel; ?></option>
                     <?php } ?>
                 </select>
                 <div class="btn--filter">
@@ -126,8 +125,7 @@ $colorClass = [
                         </div>
                         <?php
                                 
-                                $getUserSettings = UserSetting::getUserSettings($teacher['user_id']);
-                                $youTubeVideoArr = explode("?v=", $getUserSettings['us_video_link']); ?>
+                                $youTubeVideoArr = explode("?v=",$teacher['us_video_link']); ?>
                         <div class="box__secondary">
                             <div class="panel-box">
                                 <div class="panel-box__head">
@@ -139,7 +137,7 @@ $colorClass = [
                                         <li>
                                             <a class="panel-action" content="video" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Introduction',$siteLangId); ?></a>
                                         </li>
-                                        <?php } ?>
+                                        <?php   } ?>
                                     </ul>
                                 </div>
 
@@ -205,7 +203,6 @@ $colorClass = [
                 </div> -->
             </div>
         </div>
-    </div>
 <?php
     echo FatUtility::createHiddenFormFromData($postedData, array('name' => 'frmTeacherSearchPaging'));
     $pagingArr = ['page' => $page, 'pageCount' => $pageCount, 'recordCount' => $recordCount];

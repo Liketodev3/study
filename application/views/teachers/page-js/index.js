@@ -238,7 +238,7 @@ function htmlEncode(value) {
         var data = fcom.frmData(frm);
         //alert( data );
         var dv = $("#teachersListingContainer");
-        $(dv).html(fcom.getLoader());
+       
 
         /* spoken language filters[ */
         var spokenLanguages = [];
@@ -296,10 +296,8 @@ function htmlEncode(value) {
         if (typeof $("input[name=priceFilterMaxValue]").val() != "undefined") {
             data = data + "&maxPriceRange=" + $("input[name=priceFilterMaxValue]").val();
         }
-
         /* sort by[ */
-        var sortOrder = $("select[name='filterSortBy']option:selected");
-        //alert(sortOrder);
+        var sortOrder = $("select[name='filterSortBy']").val();
         if (sortOrder) {
             data = data + "&sortOrder=" + sortOrder;
         }else{
@@ -307,7 +305,7 @@ function htmlEncode(value) {
 
         }
         /* ] */
-
+        $(dv).html(fcom.getLoader());
 
         fcom.ajax(fcom.makeUrl('Teachers', 'teachersList'), data, function (ans) {
             $.mbsmessage.close();
