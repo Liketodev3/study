@@ -2,13 +2,37 @@
 
 class FlashCardsController extends LoggedUserController
 {
-
     public function __construct($action)
     {
         parent::__construct($action);
         if (!FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true)) {
             FatUtility::exitWithErrorCode(404);
         }
+    }
+
+    public function setUp()
+    {
+        $frm = $this->getForm();
+        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+        if (false === $post) {
+            FatUtility::dieJsonError($frm->getValidationErrors());
+        }
+        $flashCardId = FatApp::getPostedData('flashcard_id', FatUtility::VAR_INT, 0);
+        if ($flashCardId > 0) {
+            $row = FlashCard::getAttributesById($flashCardId, ['flashcard_user_id']);
+            if ($row['flashcard_user_id'] != UserAuthentication::getLoggedUserId()) {
+                FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+            }
+        }
+        $post['flashcard_user_id'] = UserAuthentication::getLoggedUserId();
+        $post['flashcard_created_by_user_id'] = UserAuthentication::getLoggedUserId();
+        $flashCardObj = new FlashCard($flashCardId);
+        $flashCardObj->assignValues($post);
+        if (!$flashCardObj->save($post)) {
+            FatUtility::dieJsonError($flashCardObj->getError());
+        }
+        $this->set('msg', Label::getLabel('LBL_Flashcard_Saved_Successfully!'));
+        $this->_template->render(false, false, 'json-success.php');
     }
 
     public function index()
@@ -47,14 +71,14 @@ class FlashCardsController extends LoggedUserController
             'wordDefLang.slanguage_code as wordDefLanguageCode',
         ]);
         if (!empty($post['keyword'])) {
-            $srch->addCondition('flashcard_title', 'like', '%' . $post['keyword'] . '%');
+            $srch->addCondition('flashcard_title', 'like', '%'.$post['keyword'].'%');
         }
         if (!empty($post['slanguage_id'])) {
             $srch->addCondition('flashcard_slanguage_id', '=', $post['slanguage_id']);
         }
         $rs = $srch->getResultSet();
         $flashCards = FatApp::getDb()->fetchAll($rs);
-        /* [ */
+        // [
         $totalRecords = $srch->recordCount();
         $pagingArr = [
             'pageCount' => $srch->pages(),
@@ -72,22 +96,9 @@ class FlashCardsController extends LoggedUserController
         $this->set('startRecord', $startRecord);
         $this->set('endRecord', $endRecord);
         $this->set('totalRecords', $totalRecords);
-        /* ] */
+        // ]
         $this->set('flashCards', $flashCards);
         $this->_template->render(false, false);
-    }
-
-    private function getSearchForm()
-    {
-        $frm = new Form('frmSrch');
-        $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Keyword')]);
-        $frm->addSelectBox(Label::getLabel('LBL_Language'), 'slanguage_id', SpokenLanguage::getAllLangs(CommonHelper::getLangId(), true), '', [], Label::getLabel('LBL_All'))->requirements()->setInt();
-        $fld = $frm->addHiddenField('', 'page', 1);
-        $fld->requirements()->setIntPositive();
-        $btnSubmit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search'));
-        $btnReset = $frm->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset'));
-        $btnSubmit->attachField($btnReset);
-        return $frm;
     }
 
     public function form($flashCardId = 0)
@@ -103,49 +114,6 @@ class FlashCardsController extends LoggedUserController
         $this->_template->render(false, false);
     }
 
-    public function setUp()
-    {
-        $frm = $this->getForm();
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-        if (false === $post) {
-            FatUtility::dieJsonError($frm->getValidationErrors());
-        }
-        $flashCardId = FatApp::getPostedData('flashcard_id', FatUtility::VAR_INT, 0);
-        if ($flashCardId > 0) {
-            $row = FlashCard::getAttributesById($flashCardId, ['flashcard_user_id']);
-            if ($row['flashcard_user_id'] != UserAuthentication::getLoggedUserId()) {
-                FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
-            }
-        }
-        $post['flashcard_user_id'] = UserAuthentication::getLoggedUserId();
-        $post['flashcard_created_by_user_id'] = UserAuthentication::getLoggedUserId();
-        $flashCardObj = new FlashCard($flashCardId);
-        $flashCardObj->assignValues($post);
-        if (!$flashCardObj->save($post)) {
-            FatUtility::dieJsonError($flashCardObj->getError());
-        }
-        $this->set('msg', Label::getLabel("LBL_Flashcard_Saved_Successfully!"));
-        $this->_template->render(false, false, 'json-success.php');
-    }
-
-    private function getForm()
-    {
-        $frm = new Form('flashcardFrm');
-        $frm->addRequiredField(Label::getLabel('LBL_Title'), 'flashcard_title');
-        $langArr = SpokenLanguage::getAllLangs(CommonHelper::getLangId(), true);
-        $fld = $frm->addSelectBox(Label::getLabel('LBL_Title_Language'), 'flashcard_slanguage_id', $langArr);
-        $fld->requirements()->setRequired(true);
-        $frm->addRequiredField(Label::getLabel('LBL_Defination'), 'flashcard_defination');
-        $fld = $frm->addSelectBox(Label::getLabel('LBL_Defination_Language'), 'flashcard_defination_slanguage_id', $langArr);
-        $fld->requirements()->setRequired(true);
-        $frm->addTextBox(Label::getLabel('LBL_Pronunciation'), 'flashcard_pronunciation');
-        $fld = $frm->addHiddenField('', 'flashcard_id', 0);
-        $fld->requirements()->setInt();
-        $frm->addTextArea(Label::getLabel('LBL_Notes'), 'flashcard_notes');
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save'));
-        return $frm;
-    }
-
     public function remove($flashCardId)
     {
         $flashCardId = FatUtility::int($flashCardId);
@@ -157,29 +125,29 @@ class FlashCardsController extends LoggedUserController
         if (!$flashCardObj->deleteRecord()) {
             FatUtility::dieJsonError($flashCardObj->getError());
         }
-        FatUtility::dieJsonSuccess(Label::getLabel("LBL_Record_Deleted_Successfully!"));
+        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Record_Deleted_Successfully!'));
     }
 
     public function viewFlashCardReviewSection()
     {
         $srch = new FlashCardSearch();
         $srch->addCondition('flashcard_user_id', ' = ', UserAuthentication::getLoggedUserId());
-        /* [ */
+        // [
         $todayReviewedCountSrch = clone $srch;
         $todayReviewedCountSrch->doNotLimitRecords();
         $todayReviewedCountSrch->addCondition('mysql_func_DATE(flashcard_accuracy_added_on)', '=', date('Y-m-d'), 'AND', true);
         $todayReviewedCountSrch->addMultipleFields(['COUNT(flashcard_id) as todayReviewedCounts']);
         $rs = $todayReviewedCountSrch->getResultSet();
         $todayReviewedCountsRow = FatApp::getDb()->fetch($rs);
-        /* ] */
-        /* [ */
+        // ]
+        // [
         $allFCardSrch = clone $srch;
         $allFCardSrch->doNotLimitRecords();
         $allFCardSrch->addMultipleFields(['COUNT(flashcard_id) as allFCardCounts']);
         $rs = $allFCardSrch->getResultSet();
         $allFCardCountsRow = FatApp::getDb()->fetch($rs);
-        /* ] */
-        /* [ */
+        // ]
+        // [
         $lastReviewedOnSrch = clone $srch;
         $lastReviewedOnSrch->addCondition('flashcard_accuracy', '!=', 0);
         $lastReviewedOnSrch->addOrder('flashcard_accuracy_added_on', 'DESC');
@@ -187,10 +155,10 @@ class FlashCardsController extends LoggedUserController
         $lastReviewedOnSrch->addFld('flashcard_accuracy_added_on');
         $rs = $lastReviewedOnSrch->getResultSet();
         $lastReviewedOnRow = FatApp::getDb()->fetch($rs);
-        /* ] */
+        // ]
         $this->set('todayReviewedCounts', $todayReviewedCountsRow['todayReviewedCounts']);
         $this->set('allFCardCounts', $allFCardCountsRow['allFCardCounts']);
-        $this->set('lastReviewedOnDate', $lastReviewedOnRow['flashcard_accuracy_added_on']);
+        $this->set('lastReviewedOnDate', !empty($lastReviewedOnRow) ? $lastReviewedOnRow['flashcard_accuracy_added_on'] : '');
         $this->_template->render(false, false);
     }
 
@@ -198,7 +166,7 @@ class FlashCardsController extends LoggedUserController
     {
         $srch = new FlashCardSearch();
         $srch->addCondition('flashcard_user_id', ' = ', UserAuthentication::getLoggedUserId());
-        /* [ */
+        // [
         $todayReviewedCountSrch = clone $srch;
         $todayReviewedCountSrch->doNotLimitRecords();
         $todayReviewedCountSrch->addCondition('mysql_func_DATE(flashcard_accuracy_added_on)', '=', date('Y-m-d'), 'AND', true);
@@ -206,18 +174,18 @@ class FlashCardsController extends LoggedUserController
         $rs = $todayReviewedCountSrch->getResultSet();
         $todayReviewedCountsRow = FatApp::getDb()->fetch($rs);
         $todayReviewedCount = $todayReviewedCountsRow['todayReviewedCounts'];
-        /* ] */
-        /* [ */
+        // ]
+        // [
         $allFCardSrch = clone $srch;
         $allFCardSrch->doNotLimitRecords();
         $allFCardSrch->addMultipleFields(['COUNT(flashcard_id) as allFCardCounts']);
         $rs = $allFCardSrch->getResultSet();
         $allFCardCountsRow = FatApp::getDb()->fetch($rs);
         $allFCardCount = $allFCardCountsRow['allFCardCounts'];
-        /* ] */
+        // ]
         $currentReviewedCount = $todayReviewedCount + 1;
         $currentReviewedCount = min($currentReviewedCount, $allFCardCount);
-        /* [ */
+        // [
         $flashCardSrch = clone $srch;
         $flashCardSrch->joinWordLanguage();
         $flashCardSrch->joinWordDefinitionLanguage();
@@ -230,14 +198,14 @@ class FlashCardsController extends LoggedUserController
             'wordDefLang.slanguage_code as wordDefLanguageCode',
         ]);
         $flashCardSrch->setPageSize(1);
-        /* ] */
+        // ]
         if ($todayReviewedCount == $allFCardCount) {
             $page = FatApp::getPostedData('currentReviewedCount', FatUtility::VAR_INT, 1);
             $currentReviewedCount = 1;
             if ($page > 0) {
                 $currentReviewedCount = $page + 1;
             }
-            $page += 1;
+            ++$page;
             $flashCardSrch->setPageNumber($page);
             $flashCardSrch->addOrder('flashcard_accuracy_added_on', 'DESC');
             $flashCardSrch->addOrder('flashcard_title', 'DESC');
@@ -247,10 +215,10 @@ class FlashCardsController extends LoggedUserController
             $flashCardSrch->addOrder('flashcard_title', 'DESC');
             $flashCardSrch->addCondition('mysql_func_DATE(flashcard_accuracy_added_on)', '!=', date('Y-m-d'), 'AND', true);
         }
-        /* [ */
+        // [
         $rs = $flashCardSrch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
-        /* ] */
+        // ]
         $this->set('currentReviewedCount', $currentReviewedCount);
         $this->set('allFCardCounts', $allFCardCount);
         $this->set('flashCardData', $row);
@@ -274,37 +242,37 @@ class FlashCardsController extends LoggedUserController
         if (!$flashCard->save()) {
             FatUtility::dieJsonError($flashCard->getError());
         }
-        $this->set('msg', Label::getLabel("LBL_FlashCard_Reviewed_Successfully!"));
+        $this->set('msg', Label::getLabel('LBL_FlashCard_Reviewed_Successfully!'));
         $this->_template->render(false, false, 'json-success.php');
     }
 
     public function reviewResult()
     {
         $srchBase = new FlashCardSearch(false);
-        $srchBase->addMultipleFields(['flashcard_id',]);
+        $srchBase->addMultipleFields(['flashcard_id']);
         $srchBase->addCondition('flashcard_user_id', ' = ', UserAuthentication::getLoggedUserId());
-        /*         * Counting Correct Flashcards** */
+        // Counting Correct Flashcards
         $srchCorrect = clone $srchBase;
         $srchCorrect->addCondition('flashcard_accuracy', ' = ', FlashCard::ACCURACY_LEVEL_CORRECT);
         $rsCorrect = $srchCorrect->getResultSet();
         $countCorrect = $srchCorrect->recordCount();
-        /*         * Counting Correct Flashcards** */
-        /*         * Counting InCorrect Flashcards** */
+        // Counting Correct Flashcards
+        // Counting InCorrect Flashcards
         $srchInCorrect = clone $srchBase;
         $srchInCorrect->addCondition('flashcard_accuracy', ' = ', FlashCard::ACCURACY_LEVEL_WRONG);
         $rsInCorrect = $srchInCorrect->getResultSet();
         $countIncorrect = $srchInCorrect->recordCount();
-        /*         * Counting InCorrect Flashcards** */
-        /*         * Counting AlmostCorrect Flashcards** */
+        // Counting InCorrect Flashcards
+        // Counting AlmostCorrect Flashcards
         $srchAlmostCorrect = clone $srchBase;
         $srchAlmostCorrect->addCondition('flashcard_accuracy', ' = ', FlashCard::ACCURACY_LEVEL_ALMOST);
         $rsAlmostCorrect = $srchAlmostCorrect->getResultSet();
         $countAlmostCorrect = $srchAlmostCorrect->recordCount();
-        /*         * Counting AlmostCorrect Flashcards** */
-        /*         * Fetching 1st flashcard id for restart** */
+        // Counting AlmostCorrect Flashcards
+        // Fetching 1st flashcard id for restart
         $rs = $srchBase->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
-        /*         * Fetching 1st flashcard id for restart** */
+        // Fetching 1st flashcard id for restart
         $this->set('flashCardId', $row['flashcard_id']);
         $this->set('countAlmostCorrect', $countAlmostCorrect);
         $this->set('countIncorrect', $countIncorrect);
@@ -312,4 +280,36 @@ class FlashCardsController extends LoggedUserController
         $this->_template->render(false, false);
     }
 
+    private function getSearchForm()
+    {
+        $frm = new Form('frmSrch');
+        $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword'), 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Keyword')]);
+        $frm->addSelectBox(Label::getLabel('LBL_Language'), 'slanguage_id', SpokenLanguage::getAllLangs(CommonHelper::getLangId(), true), '', [], Label::getLabel('LBL_All'))->requirements()->setInt();
+        $fld = $frm->addHiddenField('', 'page', 1);
+        $fld->requirements()->setIntPositive();
+        $btnSubmit = $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search'));
+        $btnReset = $frm->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset'));
+        $btnSubmit->attachField($btnReset);
+
+        return $frm;
+    }
+
+    private function getForm()
+    {
+        $frm = new Form('flashcardFrm');
+        $frm->addRequiredField(Label::getLabel('LBL_Title'), 'flashcard_title');
+        $langArr = SpokenLanguage::getAllLangs(CommonHelper::getLangId(), true);
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Title_Language'), 'flashcard_slanguage_id', $langArr);
+        $fld->requirements()->setRequired(true);
+        $frm->addRequiredField(Label::getLabel('LBL_Defination'), 'flashcard_defination');
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Defination_Language'), 'flashcard_defination_slanguage_id', $langArr);
+        $fld->requirements()->setRequired(true);
+        $frm->addTextBox(Label::getLabel('LBL_Pronunciation'), 'flashcard_pronunciation');
+        $fld = $frm->addHiddenField('', 'flashcard_id', 0);
+        $fld->requirements()->setInt();
+        $frm->addTextArea(Label::getLabel('LBL_Notes'), 'flashcard_notes');
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save'));
+
+        return $frm;
+    }
 }
