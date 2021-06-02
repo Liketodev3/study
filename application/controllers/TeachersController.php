@@ -38,6 +38,12 @@ class TeachersController extends MyAppController
 
     public function teachersList()
     {
+
+        $filterSortBy = [
+            'popularity_desc' => Label::getLabel('LBL_By_Popularity'),
+            'price_asc' => Label::getLabel('LBL_By_Price_Low_to_High'),
+            'price_desc' => Label::getLabel('LBL_By_Price_High_to_Low'),
+        ];
    
         $post = FatApp::getPostedData();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
@@ -55,6 +61,8 @@ class TeachersController extends MyAppController
         $srch->setPageNumber($page);
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $records = $srch->formatTeacherSearchData($rawData, $userId);
+
+        
         $recordCount = $srch->getRecordCount();
         $startRecord = ($recordCount > 0) ? (($page - 1) * $pageSize + 1) : 0;
         $endRecord = ($recordCount < $page * $pageSize) ? $recordCount : $page * $pageSize;
@@ -68,6 +76,7 @@ class TeachersController extends MyAppController
         $this->set('recordCount', $recordCount);
         $this->set('pageCount', ceil($recordCount / $pageSize));
         $this->set('slots', TeacherGeneralAvailability::timeSlotArr());
+        $this->set('filters', $filterSortBy);
         $this->_template->render(false, false);
     }
 

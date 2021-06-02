@@ -11,8 +11,6 @@ class TeacherController extends TeacherBaseController
     public function index()
     {
 
-        // $teacherProfileProgress = User::getTeacherProfileProgress();
-        /* Validate Teacher has filled complete profile[ */
 
         $viewProfile = true;
         if (false == $this->teacherProfileProgress['isProfileCompleted']) {

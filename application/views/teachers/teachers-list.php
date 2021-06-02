@@ -15,11 +15,10 @@ $colorClass = [
             </div>
             <div class="sorting__box">
                 <!-- <b>Sort By:</b> -->
-                <select name="sort" id="sort">
-                    <option value="volvo">Popularity</option>
-                    <option value="saab">Lorem</option>
-                    <option value="opel">Lorem</option>
-                    <option value="audi">Lorem</option>
+                <select name="filterSortBy" id="sort">
+                    <?php foreach ($filters as $filterVal => $filterLabel) { ?>
+                        <option value="<?php echo $filterVal; ?>"><?php echo $filterLabel; ?></option>
+                    <?php } ?>
                 </select>
                 <div class="btn--filter">
                     <a href="javascript:void(0)" class="btn btn--primary btn--block btn--filters-js">
@@ -71,7 +70,7 @@ $colorClass = [
                                             </div>
                                         </a>
                                         <div class="follow ">
-                                            <a class="is--active" href="#">
+                                            <a class="<?php echo($teacher['uft_id'])?'is--active':'';?>"  onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>,this)" href="javascript:void()">
                                                 <svg class="icon icon--heart">
                                                     <use xlink:href="images/sprite.yo-coach.svg#heart"></use>
                                                 </svg>
@@ -125,32 +124,39 @@ $colorClass = [
                                 </div>
                             </div>
                         </div>
+                        <?php
+                                
+                                $getUserSettings = UserSetting::getUserSettings($teacher['user_id']);
+                                $youTubeVideoArr = explode("?v=", $getUserSettings['us_video_link']); ?>
                         <div class="box__secondary">
                             <div class="panel-box">
                                 <div class="panel-box__head">
                                     <ul>
                                         <li class="is--active">
-                                            <a class="panel-action" href="#">Availbility</a>
+                                            <a class="panel-action" content="calender" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Availability',$siteLangId); ?></a>
                                         </li>
+                                        <?php if(isset($youTubeVideoArr[1])) {?>
                                         <li>
-                                            <a class="panel-action" href="#">Introduction</a>
+                                            <a class="panel-action" content="video" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Introduction',$siteLangId); ?></a>
                                         </li>
+                                        <?php } ?>
                                     </ul>
                                 </div>
+
                                 <div class="panel-box__body">
-                                    <div class="panel-content">
+                                    <div class="panel-content calender">
                                         <div class="custom-calendar">
                                             <table>
                                                 <thead>
                                                     <tr>
                                                         <th>&nbsp;</th>
-                                                        <th>Mon</th>
-                                                        <th>tue</th>
-                                                        <th>wed</th>
-                                                        <th>thu</th>
-                                                        <th>fri</th>
-                                                        <th>sat</th>
-                                                        <th>sun</th>
+                                                        <th><?php echo Label::getLabel('LBL_Mon',$siteLangId); ?></th>
+                                                        <th><?php echo Label::getLabel('LBL_Tue',$siteLangId); ?></th>
+                                                        <th><?php echo Label::getLabel('LBL_Wed',$siteLangId); ?></th>
+                                                        <th><?php echo Label::getLabel('LBL_Thu',$siteLangId); ?></th>
+                                                        <th><?php echo Label::getLabel('LBL_Fri',$siteLangId); ?></th>
+                                                        <th><?php echo Label::getLabel('LBL_Sat',$siteLangId); ?></th>
+                                                        <th><?php echo Label::getLabel('LBL_Sun',$siteLangId); ?></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -165,7 +171,7 @@ $colorClass = [
                                                             json_decode($teacher['testat_day6'], 1),
                                                             json_decode($teacher['testat_day7'], 1)
                                                         ];
-                                                        ?>
+                                                    ?>
                                                         <tr>
                                                             <td>
                                                                 <div class="cal-cell"><?php echo $slot; ?></div>
@@ -186,6 +192,9 @@ $colorClass = [
                                             </table>
                                         </div>
                                     </div>
+                                    <div class="panel-content video" style="display:none;">
+                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $youTubeVideoArr[1]; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -197,12 +206,12 @@ $colorClass = [
             </div>
         </div>
     </div>
-    <?php
+<?php
     echo FatUtility::createHiddenFormFromData($postedData, array('name' => 'frmTeacherSearchPaging'));
     $pagingArr = ['page' => $page, 'pageCount' => $pageCount, 'recordCount' => $recordCount];
     $this->includeTemplate('_partial/pagination.php', $pagingArr, false);
 } else {
-    ?>
+?>
     <div class="box -padding-30" style="margin-bottom: 30px;">
         <div class="message-display">
             <div class="message-display__icon">
@@ -213,6 +222,5 @@ $colorClass = [
             <h5><?php echo Label::getLabel('LBL_No_Result_found!!'); ?></h5>
         </div>
     </div>
-    <?php
+<?php
 }
-    
