@@ -10,15 +10,7 @@ class TeachersController extends MyAppController
         }
         $frmSrch = $this->getTeacherSearchForm($teachLangId);
         $this->set('frmTeacherSrch', $frmSrch);
-        $daysArr = [
-            0 => Label::getLabel('LBL_Sunday'),
-            1 => Label::getLabel('LBL_Monday'),
-            2 => Label::getLabel('LBL_Tuesday'),
-            3 => Label::getLabel('LBL_Wednesday'),
-            4 => Label::getLabel('LBL_Thursday'),
-            5 => Label::getLabel('LBL_Friday'),
-            6 => Label::getLabel('LBL_Saturday')
-        ];
+        $daysArr = applicationConstants::getWeekDays();
         $timeSlotArr = TeacherGeneralAvailability::timeSlotArr();
         $this->set('daysArr', $daysArr);
         $this->set('timeSlotArr', $timeSlotArr);
@@ -38,7 +30,7 @@ class TeachersController extends MyAppController
 
     public function teachersList()
     {
-   
+
         $post = FatApp::getPostedData();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 12);

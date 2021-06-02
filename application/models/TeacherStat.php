@@ -77,7 +77,7 @@ class TeacherStat extends FatModel
         $srch->addFld('MIN(IFNULL(ustelgpr_price, 0)) AS minPrice');
         $srch->addFld('MAX(IFNULL(ustelgpr_price, 0)) AS maxPrice');
         $srch->addFld('tlanguage_id');
-        // $srch->addCondition('ustelgpr_price', '>', 0);
+// $srch->addCondition('ustelgpr_price', '>', 0);
         $row = FatApp::getDb()->fetch($srch->getResultSet());
         $teachlang = 0;
         $minPrice = 0.0;
@@ -159,38 +159,24 @@ class TeacherStat extends FatModel
     }
 
     /**
-     * testat_gavailability
+     * testat_availability
      */
-    public function setGavailability(array $post)
+    public function setAvailability(array $post)
     {
         $availability = json_decode($post['data'] ?? '', true);
-        $data = [
-            'testat_gavailability' => 0,
-            'testat_day1' => null,
-            'testat_day2' => null,
-            'testat_day3' => null,
-            'testat_day4' => null,
-            'testat_day5' => null,
-            'testat_day6' => null,
-            'testat_day7' => null
-        ];
-        $day1 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day2 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day3 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day4 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day5 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day6 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day7 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
+        $data = ['testat_availability' => 0, 'testat_timeslots' => null];
         if (!empty($availability)) {
             $data = [
-                'testat_gavailability' => 1,
-                'testat_day1' => json_encode($day1),
-                'testat_day2' => json_encode($day2),
-                'testat_day3' => json_encode($day3),
-                'testat_day4' => json_encode($day4),
-                'testat_day5' => json_encode($day5),
-                'testat_day6' => json_encode($day6),
-                'testat_day7' => json_encode($day7)
+                'testat_availability' => 1,
+                'testat_timeslots' => json_encode([
+                    'd1' => [0, 4, 0, 2, 1, 4],
+                    'd2' => [0, 4, 0, 2, 1, 4],
+                    'd3' => [0, 4, 0, 2, 1, 4],
+                    'd4' => [0, 4, 0, 2, 1, 4],
+                    'd5' => [0, 4, 0, 2, 1, 4],
+                    'd6' => [0, 4, 0, 2, 1, 4],
+                    'd7' => [0, 4, 0, 2, 1, 4]
+                ])
             ];
         }
         $record = new TableRecord('tbl_teacher_stats');

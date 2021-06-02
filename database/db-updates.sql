@@ -370,3 +370,15 @@ ALTER TABLE `tbl_teacher_stats`
     ADD `testat_day5` JSON NULL AFTER `testat_day4`, 
     ADD `testat_day6` JSON NULL AFTER `testat_day5`, 
     ADD `testat_day7` JSON NULL AFTER `testat_day6`;
+
+ALTER TABLE `tbl_teacher_stats`
+    DROP `testat_day1`,
+    DROP `testat_day2`,
+    DROP `testat_day3`,
+    DROP `testat_day4`,
+    DROP `testat_day5`,
+    DROP `testat_day6`,
+    DROP `testat_day7`;
+
+ALTER TABLE `tbl_teacher_stats` ADD `testat_timeslots` JSON NOT NULL AFTER `testat_gavailability`;
+ALTER TABLE `tbl_teacher_stats` CHANGE `testat_gavailability` `testat_availability` INT NOT NULL;
