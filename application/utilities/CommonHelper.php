@@ -1561,7 +1561,7 @@ class CommonHelper extends FatUtility
                 $second_array = array_slice($teachLangs, 2, count($teachLangs));
                 ?>
                 <div class="language">
-                    <?php foreach ($first_array as $teachLang) { ?>
+                    <?php foreach ($first_array as $teachLang){ ?>
                         <span class="main-language"><?php echo $teachLang; ?></span>
                     <?php } ?>
                     <ul>

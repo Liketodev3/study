@@ -20,6 +20,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $srch->addOrder('CONCAT(slns.slesson_date, " ", slns.slesson_start_time)', 'ASC');
+
         $upcomingLesson = FatApp::getDb()->fetch($srch->getResultSet());
         $this->set('upcomingLesson', $upcomingLesson);
         $this->set('lessonStatuses', $lessonStatuses);
@@ -65,6 +66,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addGroupBy('slesson.slesson_id');
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
+
         $lessons = $srch->fetchAll();
         $lessonArr = [];
         $user_timezone = MyDate::getUserTimeZone();

@@ -76,6 +76,7 @@ class CustomRouter
                 }
             }
             /* ] */
+            
 
             $url = ((!empty($row['urlrewrite_original'])) ? $row['urlrewrite_original'] : '') . $urlQueryString;
 
@@ -88,8 +89,9 @@ class CustomRouter
             $arr = explode('/', $url);
             $controller = array_shift($arr);
             $action = array_shift($arr);
-
+            
             $queryString = $arr;
+
             if ($controller != '' && $action == '') {
                 $action = 'index';
             }
