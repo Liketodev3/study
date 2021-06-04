@@ -60,36 +60,8 @@ $this->includeTemplate('teachers/_partial/teacherTopFilters.php',['frmTeacherSrc
 
 </section>
 
-<!-- <section class="section section--gray section--listing section--listing-js">
-    <div class="container container--narrow">
-		<div class="row -clearfix">
-            <?php
-			/* Left Side Filters Side Bar [ */
-			$this->includeTemplate('teachers/_partial/teacherLeftFilters.php', array( 'spokenLanguage_filter' => $spokenLanguage_filter, 'preferenceFilter_filter'=> $preferenceFilter_filter, 'fromCountry_filter' => $fromCountry_filter, 'gender_filter' => $gender_filter, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice, 'siteLangId' => $siteLangId ));
-			/* ] */
-			?>
-
-            <div class="col-xl-9 col-lg-12 -float-right" id="teachersListingContainer">
-
-            </div>
-
-            <div class="col-xl-3 col-lg-12 -float-left d-block d-xl-none">
-                <div class="box box--cta -padding-30 -align-center">
-                    <h4 class="-text-bold"><?php echo Label::getLabel('LBL_Want_to_be_a_teacher?'); ?></h4>
-                    <p><?php $str = Label::getLabel( 'LBL_If_you\'re_interested_in_being_a_teacher_on_{sitename},_please_apply_here.' );
-					 $siteName = FatApp::getConfig( 'CONF_WEBSITE_NAME_'.$siteLangId, FatUtility::VAR_STRING, '' );
-					 $str = str_replace( "{sitename}", $siteName, $str );
-					 echo $str;
-					 ?></p>
-                    <a href="javascript:void(0)" onClick="signUpFormPopUp('teacher');" class="btn btn--primary btn--block"><?php echo Label::getLabel('LBL_Apply_to_be_a_teacher'); ?></a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section> -->
 <script>
 if ( window.history.replaceState ) {
-  window.history.replaceState( null, null, window.location.href );
+  window.history.replaceState( null, null, window.location.href);
 }
 </script>

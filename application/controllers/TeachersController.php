@@ -31,6 +31,12 @@ class TeachersController extends MyAppController
     public function teachersList()
     {
 
+        $filterSortBy = [
+            'popularity_desc' => Label::getLabel('LBL_By_Popularity'),
+            'price_asc' => Label::getLabel('LBL_By_Price_Low_to_High'),
+            'price_desc' => Label::getLabel('LBL_By_Price_High_to_Low'),
+        ];
+
         $post = FatApp::getPostedData();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 12);
@@ -47,11 +53,22 @@ class TeachersController extends MyAppController
         $srch->setPageNumber($page);
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $records = $srch->formatTeacherSearchData($rawData, $userId);
+        $getTeachersId = array_column($records, 'user_id');
+
+        $userVideoSrch = new UserSettingSearch();
+        $userVideoSrch->addCondition('us_user_id', 'In', $getTeachersId);
+        $userVideoSrch->addMultipleFields(['us_user_id', 'us_video_link']);
+        $videoData = FatApp::getDb()->fetchAllAssoc($userVideoSrch->getResultSet(), 'us_user_id');
+        foreach ($records as $key => $teacher) {
+            $records[$key]['us_video_link']  = $videoData[$teacher['user_id']];
+        }
+
         $recordCount = $srch->getRecordCount();
         $startRecord = ($recordCount > 0) ? (($page - 1) * $pageSize + 1) : 0;
         $endRecord = ($recordCount < $page * $pageSize) ? $recordCount : $page * $pageSize;
         $recordCountTxt = ($recordCount > SEARCH_MAX_COUNT) ? $recordCount . '+' : $recordCount;
         $showing = 'Showing ' . $startRecord . ' - ' . $endRecord . ' Of ' . $recordCountTxt . ' ' . Label::getLabel('lbl_teachers');
+
         $this->set('showing', $showing);
         $this->set('teachers', $records);
         $this->set('postedData', $post);
@@ -60,6 +77,7 @@ class TeachersController extends MyAppController
         $this->set('recordCount', $recordCount);
         $this->set('pageCount', ceil($recordCount / $pageSize));
         $this->set('slots', TeacherGeneralAvailability::timeSlotArr());
+        $this->set('filters', $filterSortBy);
         $this->_template->render(false, false);
     }
 

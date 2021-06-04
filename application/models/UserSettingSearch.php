@@ -28,4 +28,8 @@ class UserSettingSearch extends SearchBase
         $this->addMultipleFields(['language_id', 'language_code']);
     }
 
+    public function getUserVideos(){
+        
+    }
+
 }
