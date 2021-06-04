@@ -222,6 +222,7 @@ class TeacherSearch extends SearchBase
             $record['teacherTeachLanguageName'] = $teachLangs[$record['user_id']] ?? '';
             $record['spoken_language_names'] = $speakLangs[$record['user_id']]['slanguage_name'] ?? '';
             $record['spoken_languages_proficiency'] = $speakLangs[$record['user_id']]['utsl_proficiency'] ?? '';
+            $record['testat_timeslots'] = json_decode($record['testat_timeslots'], true);
             $records[$key] = $record;
         }
         return $records;

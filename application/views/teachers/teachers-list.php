@@ -154,27 +154,16 @@ $colorClass = [
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php
-                                                    foreach ($slots as $key => $slot) {
-                                                        $days = [
-                                                            json_decode($teacher['testat_day1'], 1),
-                                                            json_decode($teacher['testat_day2'], 1),
-                                                            json_decode($teacher['testat_day3'], 1),
-                                                            json_decode($teacher['testat_day4'], 1),
-                                                            json_decode($teacher['testat_day5'], 1),
-                                                            json_decode($teacher['testat_day6'], 1),
-                                                            json_decode($teacher['testat_day7'], 1)
-                                                        ];
-                                                        ?>
+                                                    <?php foreach ($teacher['testat_timeslots'] as $day => $hours) { ?>
                                                         <tr>
                                                             <td>
-                                                                <div class="cal-cell"><?php echo $slot; ?></div>
+                                                                <div class="cal-cell"><?php echo $slots[0]; ?></div>
                                                             </td>
-                                                            <?php foreach ($days as $day) { ?>
+                                                            <?php foreach ($hours as $hour) { ?>
                                                                 <td class="is-hover">
-                                                                    <?php if ($day[$key][1] > 0) { ?>
-                                                                        <div class="cal-cell <?php echo $colorClass[$day[$key][1]]; ?>"></div>
-                                                                        <div class="tooltip tooltip--top bg-black"><?php echo $day[$key][1]; ?> <?php echo Label::getLabel('LBL_Hrs'); ?></div>
+                                                                    <?php if ($hour > 0) { ?>
+                                                                        <div class="cal-cell <?php echo $colorClass[$hour]; ?>"></div>
+                                                                        <div class="tooltip tooltip--top bg-black"><?php echo $hour; ?> <?php echo Label::getLabel('LBL_Hrs'); ?></div>
                                                                     <?php } else { ?>
                                                                         <div class="cal-cell"></div>
                                                                     <?php } ?>

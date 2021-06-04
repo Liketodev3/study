@@ -164,20 +164,69 @@ class TeacherStat extends FatModel
     public function setAvailability(array $post)
     {
         $availability = json_decode($post['data'] ?? '', true);
-        $data = ['testat_availability' => 0, 'testat_timeslots' => null];
+        $emptySlots = [
+            'd0' => [0, 0, 0, 0, 0, 0],
+            'd1' => [0, 0, 0, 0, 0, 0],
+            'd2' => [0, 0, 0, 0, 0, 0],
+            'd3' => [0, 0, 0, 0, 0, 0],
+            'd4' => [0, 0, 0, 0, 0, 0],
+            'd5' => [0, 0, 0, 0, 0, 0],
+            'd6' => [0, 0, 0, 0, 0, 0]
+        ];
+        $data = ['testat_availability' => 0, 'testat_timeslots' => json_encode($emptySlots)];
         if (!empty($availability)) {
-            $data = [
-                'testat_availability' => 1,
-                'testat_timeslots' => json_encode([
-                    'd1' => [0, 4, 0, 2, 1, 4],
-                    'd2' => [0, 4, 0, 2, 1, 4],
-                    'd3' => [0, 4, 0, 2, 1, 4],
-                    'd4' => [0, 4, 0, 2, 1, 4],
-                    'd5' => [0, 4, 0, 2, 1, 4],
-                    'd6' => [0, 4, 0, 2, 1, 4],
-                    'd7' => [0, 4, 0, 2, 1, 4]
-                ])
+            $srch = new SearchBase(TeacherGeneralAvailability::DB_TBL);
+            $srch->addMultipleFields(['tgavl_day',
+                'CONCAT(tgavl_date, " ", tgavl_start_time) as startdate',
+                'CONCAT(tgavl_end_date, " ", tgavl_end_time) as enddate'
+            ]);
+            $srch->addCondition('tgavl_user_id', '=', $this->userId);
+            $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
+            $timeSlots = [
+                ['2018-01-07 00:00:00', '2018-01-07 04:00:00'], ['2018-01-07 04:00:00', '2018-01-07 08:00:00'],
+                ['2018-01-07 08:00:00', '2018-01-07 12:00:00'], ['2018-01-07 12:00:00', '2018-01-07 16:00:00'],
+                ['2018-01-07 16:00:00', '2018-01-07 20:00:00'], ['2018-01-07 20:00:00', '2018-01-08 00:00:00'],
             ];
+            $daySlots = [];
+            foreach ($rows as $row) {
+                $daySlot = [];
+                $startdate = strtotime($row ['startdate']);
+                $enddate = strtotime($row ['enddate']);
+                foreach ($timeSlots as $index => $slotDates) {
+                    $slotStart = strtotime($slotDates[0] . ' +' . $row['tgavl_day'] . ' day');
+                    $slotEnd = strtotime($slotDates[1] . ' +' . $row['tgavl_day'] . ' day');
+                    if ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate <= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($startdate - $enddate) / 3600);
+                    } elseif ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate >= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($startdate - $slotEnd) / 3600);
+                    } elseif ($startdate <= $slotStart && $enddate >= $slotStart && $enddate <= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($slotStart - $enddate) / 3600);
+                    } elseif ($startdate <= $slotStart && $enddate >= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($slotStart - $slotEnd) / 3600);
+                    } else {
+                        $daySlot[$index] = 0;
+                    }
+                }
+                $daySlots[$row['tgavl_day']][] = $daySlot;
+            }
+            $filledSlots = [];
+            foreach ($daySlots as $day => $slots) {
+                $arr = [0, 0, 0, 0, 0, 0];
+                foreach ($slots as $slot) {
+                    $arr[0] += $slot[0];
+                    $arr[1] += $slot[1];
+                    $arr[2] += $slot[2];
+                    $arr[3] += $slot[3];
+                    $arr[4] += $slot[4];
+                    $arr[5] += $slot[5];
+                }
+                $filledSlots['d' . $day] = $arr;
+            }
+            $flvs = [];
+            foreach ($emptySlots as $day => $esv) {
+                $flvs[$day] = $filledSlots[$day] ?? $esv;
+            }
+            $data = ['testat_availability' => 1, 'testat_timeslots' => json_encode($flvs)];
         }
         $record = new TableRecord('tbl_teacher_stats');
         $record->setFldValue('testat_user_id', $this->userId);

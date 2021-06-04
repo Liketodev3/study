@@ -195,7 +195,7 @@ class TeachersController extends MyAppController
             $getUserTeachLanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
             $getUserTeachLanguages->addMultipleFields([
                 'IFNULL(top_percentage,0) as top_percentage',
-                    // 'top_lesson_duration'
+                // 'top_lesson_duration'
             ]);
         } else {
             $getUserTeachLanguages->addFld('0 as top_percentage');
@@ -497,7 +497,7 @@ class TeachersController extends MyAppController
         echo FatUtility::convertToJson($jsonArr);
     }
 
-    public function getTeacherWeeklyScheduleJsonData(int $userId)
+    public function getTeacherWeeklyScheduleJsonData($userId)
     {
         $post = FatApp::getPostedData();
         if (false === $post) {
@@ -513,7 +513,11 @@ class TeachersController extends MyAppController
         $weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId, $startDate, $endDate);
 
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
-        $teacherBookingBefore = FatApp::getPostedData('bookingBefore', FatUtility::VAR_INT, NULL);
+        $teacherBookingBefore = null;
+        if (isset($_POST['bookingBefore'])) {
+            $teacherBookingBefore = FatUtility::int(FatApp::getPostedData('bookingBefore'));
+        }
+
         $jsonArr = [];
         $validStartDateTime = strtotime("+ " . $teacherBookingBefore . " hours");
 
@@ -806,5 +810,4 @@ class TeachersController extends MyAppController
         $frm->addSubmitButton('', 'btnTeacherSrchSubmit', '');
         return $frm;
     }
-
 }
