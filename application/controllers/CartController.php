@@ -80,14 +80,14 @@ class CartController extends LoggedUserController
             FatUtility::dieJsonError($cart->getError());
         }
 
-        $this->set('isFreeLesson', $isFreeTrial);
-        $this->set('redirectUrl', CommonHelper::generateUrl('Checkout'));
+
         $msg = '';
         if (isset($post['checkoutPage'])) {
             $msg = Label::getLabel('LBL_ITEM_ADD_TO_CART.');
         }
 
-        FatUtility::dieJsonSuccess(['isFreeLesson' => $isFreeTrial, 'redirectUrl' => CommonHelper::generateUrl('Checkout'), 'msg' => $msg]);
+        // 'redirectUrl' => CommonHelper::generateUrl('Checkout')
+        FatUtility::dieJsonSuccess(['isFreeLesson' => $isFreeTrial, 'msg' => $msg]);
     }
 
     public function applyPromoCode()
