@@ -640,3 +640,7 @@ body[dir="rtl"] .accordian__body {
         max-width: fit-content;
     }
 }
+
+.schedule-list li .span-left {
+    float: right;
+}

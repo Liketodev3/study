@@ -284,7 +284,7 @@ class OrderPayment extends Order
                                 '{class_start_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $grpClsRow['grpcls_start_datetime'], true, $grpClsRow['teacherTimeZone']),
                                 '{class_end_time}' =>  MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $grpClsRow['grpcls_end_datetime'], true, $grpClsRow['teacherTimeZone']),
                                 '{learner_comment}' => '',
-                                '{status}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
+                                '{status}' => Label::getLabel('VERB_Scheduled'),
                             );
 
                             if (!EmailHandler::sendMailTpl($grpClsRow['teacherEmailId'], 'learner_class_book_email', $defaultSiteLangId, $vars)) {

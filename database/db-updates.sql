@@ -209,4 +209,11 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.5.20210421' WHERE `conf_nam
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.6.20210507' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
-('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT', 1, 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!');
+('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT', 1, 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!')
+,('LBL_%s_Tutors', 1, '%s Tutors')
+,('LBL_%s_Tutors', 2, '%s مدرسون')
+,('VERB_Issue_Reported', 1, 'reported issue')
+,('VERB_Scheduled', 1, 'scheduled')
+,('VERB_Rescheduled', 1, 'rescheduled')
+,('VERB_Canceled', 1, 'canceled')
+;

@@ -471,7 +471,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $scheduledLessonObj->joinLearner();
         $scheduledLessonObj->joinOrder();
         $scheduledLessonObj->joinOrderProducts();
-        $scheduledLessonObj->addMultipleFields(['slesson_grpcls_id', 'sldetail_learner_id', 'slesson_date','sldetail_order_id','slesson_start_time','op_lpackage_is_free_trial','order_net_amount']);
+        $scheduledLessonObj->addMultipleFields(['slesson_grpcls_id', 'sldetail_learner_id', 'slesson_date','sldetail_order_id','slesson_start_time','op_lpackage_is_free_trial','order_net_amount', 'sldetail_learner_status']);
         $scheduledLessonObj->addCondition('sldetail_id', '=', $lDetailId);
         $scheduledLessonObj->addCondition('sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
         $scheduledLessonObj->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
@@ -506,7 +506,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         $to_time = $lessonRow['slesson_date'] . ' ' . $lessonRow['slesson_start_time'];
         $from_time = date('Y-m-d H:i:s');
-
         if($lessonRow['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $from_time >= $to_time){
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatUtility::dieWithError(Message::getHtml());
@@ -665,7 +664,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{lesson_date}'     => FatDate::format($start_date),
             '{lesson_start_time}' => $start_time,
             '{lesson_end_time}' => $end_time,
-            '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_CANCELLED],
+            '{action}' => Label::getLabel('VERB_Canceled', $this->siteLangId),
         );
 
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], 'learner_cancelled_email', $this->siteLangId, $vars)) {
@@ -837,7 +836,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{lesson_date}' => $lessonRow['slesson_date'],
             '{lesson_start_time}' => $lessonRow['slesson_start_time'],
             '{lesson_end_time}' => $lessonRow['slesson_end_time'],
-            '{action}' => Label::getLabel('LBL_Rescheduled'),
+            '{action}' => Label::getLabel('VERB_Rescheduled', $this->siteLangId),
         );
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], $tpl, $this->siteLangId, $vars)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
@@ -1003,7 +1002,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $grpclsObj = new TeacherGroupClasses($grpclsId);
             $grpclsObj->cancelClass();
         }
-        $action = ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED];
+        $action = Label::getLabel('VERB_Scheduled', $this->siteLangId);
 
         if($lessonDetail['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $rescheduleReason) {
 
@@ -1022,7 +1021,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 FatUtility::dieJsonError($lessonResLogObj->getError());
             }
 
-            $action = ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_RESCHEDULED];
+            $action = Label::getLabel('VERB_Rescheduled', $this->siteLangId);
 
         }
         $db->commitTransaction();
@@ -1255,7 +1254,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{lesson_date}' => $lessonRow['slesson_date'],
             '{lesson_start_time}' => $lessonRow['slesson_start_time'],
             '{lesson_end_time}' => $lessonRow['slesson_end_time'],
-            '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_ISSUE_REPORTED],
+            '{action}' => Label::getLabel('VERB_Issue_Reported', $this->siteLangId),
         );
 
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], $tpl, $this->siteLangId, $vars)) {
