@@ -584,7 +584,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{lesson_date}' => FatDate::format($start_date),
             '{lesson_start_time}' => $start_time,
             '{lesson_end_time}' => $end_time,
-            '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_CANCELLED],
+            '{action}' => Label::getLabel('VERB_Canceled', $this->siteLangId),
         ];
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], 'learner_cancelled_email', $this->siteLangId, $vars)) {
             Message::addErrorMessage(Label::getLabel("LBL_Mail_not_sent!!"));
@@ -752,7 +752,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{lesson_date}' => $lessonRow['slesson_date'],
             '{lesson_start_time}' => $lessonRow['slesson_start_time'],
             '{lesson_end_time}' => $lessonRow['slesson_end_time'],
-            '{action}' => Label::getLabel('LBL_Rescheduled'),
+            '{action}' => Label::getLabel('VERB_Rescheduled', $this->siteLangId),
         ];
         if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], $tpl, $this->siteLangId, $vars)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
@@ -908,7 +908,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $grpclsObj = new TeacherGroupClasses($grpclsId);
             $grpclsObj->cancelClass();
         }
-        $action = ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED];
+        $action = Label::getLabel('VERB_Scheduled', $this->siteLangId);
         if ($lessonDetail['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED && $rescheduleReason) {
             $lessonResLogArr = [
                 'lesreschlog_slesson_id' => $lessonDetail['slesson_id'],
@@ -923,7 +923,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
                 FatUtility::dieJsonError($lessonResLogObj->getError());
             }
             $lessonStsLog->addLog(ScheduledLesson::STATUS_SCHEDULED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $rescheduleReason);
-            $action = ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_RESCHEDULED];
+            $action = Label::getLabel('VERB_Rescheduled', $this->siteLangId);
         }
         $db->commitTransaction();
         $vars = [

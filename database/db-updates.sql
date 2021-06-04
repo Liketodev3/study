@@ -340,3 +340,13 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.16.0.20210601' WHERE `conf_na
 
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Remember_Me', '1', 'Stay logged in');
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
+('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT', 1, 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!')
+,('LBL_%s_Tutors', 1, '%s Tutors')
+,('LBL_%s_Tutors', 2, '%s مدرسون')
+,('VERB_Issue_Reported', 1, 'reported issue')
+,('VERB_Scheduled', 1, 'scheduled')
+,('VERB_Rescheduled', 1, 'rescheduled')
+,('VERB_Canceled', 1, 'canceled')
+;

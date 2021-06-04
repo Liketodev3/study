@@ -252,7 +252,7 @@ class EmailHandler extends FatModel
             '{lesson_start_time}' => $data['startTime'], // H:i:s
             '{lesson_end_time}' => $data['endTime'], // H:i:s
             '{learner_comment}' => '',
-            '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
+            '{action}' => Label::getLabel('VERB_Scheduled', $langId),
         ];
         if (self::sendMailTpl($to, $tpl, $langId, $vars)) {
             return true;
