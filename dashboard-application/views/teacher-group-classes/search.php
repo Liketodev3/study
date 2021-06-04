@@ -55,14 +55,15 @@ $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
                         <div class="flex-cell__label"><?php echo $actionLabel; ?></div>
                         <div class="flex-cell__content">
                             <div class="actions-group">
-                                <?php if ($class['slesson_id']) { ?>
+                                <?php if ($class['slesson_id']) {
+                                    if($class['grpcls_end_datetime'] > date('Y-m-d H:i:s')){ ?>
                                     <a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons', 'view', array($class['slesson_id'])); ?>" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
                                         <svg class="icon icon--issue icon--small">
                                         <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#enter'; ?>"></use>
                                         </svg>
                                         <div class="tooltip tooltip--top bg-black"><?php echo ($class['is_joined'] ? Label::getLabel("LBL_View_Class") : Label::getLabel("LBL_Start_Class")); ?></div>
                                     </a>
-                                    <?php if ($class['repiss_id'] > 0) { ?>
+                                    <?php } if ($class['repiss_id'] > 0) { ?>
                                         <a href="<?php echo CommonHelper::generateUrl('TeacherIssueReported', 'index', [$class['grpcls_id']]) ?>" target="_blank" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
                                             <svg class="icon icon--issue icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#view-report'; ?>"></use></svg>
                                             <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel("LBL_Class_Issue_details") ?></div>
