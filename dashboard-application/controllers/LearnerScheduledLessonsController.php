@@ -66,7 +66,6 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addGroupBy('slesson.slesson_id');
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-
         $lessons = $srch->fetchAll();
         $lessonArr = [];
         $user_timezone = MyDate::getUserTimeZone();

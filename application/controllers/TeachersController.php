@@ -44,7 +44,7 @@ class TeachersController extends MyAppController
             'price_asc' => Label::getLabel('LBL_By_Price_Low_to_High'),
             'price_desc' => Label::getLabel('LBL_By_Price_High_to_Low'),
         ];
-   
+
         $post = FatApp::getPostedData();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 12);
@@ -62,15 +62,15 @@ class TeachersController extends MyAppController
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $records = $srch->formatTeacherSearchData($rawData, $userId);
         $getTeachersId = array_column($records, 'user_id');
-        
+
         $userVideoSrch = new UserSettingSearch();
-        $userVideoSrch->addCondition('us_user_id','In', $getTeachersId);
-        $userVideoSrch->addMultipleFields(['us_user_id','us_video_link']);
-        $videoData = FatApp::getDb()->fetchAllAssoc($userVideoSrch->getResultSet(),'us_user_id');
-        foreach($records as $key=>$teacher){
+        $userVideoSrch->addCondition('us_user_id', 'In', $getTeachersId);
+        $userVideoSrch->addMultipleFields(['us_user_id', 'us_video_link']);
+        $videoData = FatApp::getDb()->fetchAllAssoc($userVideoSrch->getResultSet(), 'us_user_id');
+        foreach ($records as $key => $teacher) {
             $records[$key]['us_video_link']  = $videoData[$teacher['user_id']];
         }
-        
+
         $recordCount = $srch->getRecordCount();
         $startRecord = ($recordCount > 0) ? (($page - 1) * $pageSize + 1) : 0;
         $endRecord = ($recordCount < $page * $pageSize) ? $recordCount : $page * $pageSize;
@@ -221,7 +221,7 @@ class TeachersController extends MyAppController
             $getUserTeachLanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
             $getUserTeachLanguages->addMultipleFields([
                 'IFNULL(top_percentage,0) as top_percentage',
-                    // 'top_lesson_duration'
+                // 'top_lesson_duration'
             ]);
         } else {
             $getUserTeachLanguages->addFld('0 as top_percentage');
@@ -253,23 +253,25 @@ class TeachersController extends MyAppController
         $teacherLessonReviewObj->addMultipleFields(['COUNT(DISTINCT tlreview_postedby_user_id) as totStudents']);
         $reviews = FatApp::getDb()->fetch($teacherLessonReviewObj->getResultSet());
         $this->set('reviews', $reviews);
-        $srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
-        $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-        $srch->addCondition('grpcls_status', '=',  $teacherId);
-        $srch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
-        $srch->setPageSize(5);
-        $srch->addOrder('grpcls_start_datetime', 'Asc');
-        $rs = $srch->getResultSet();
+
+        $grpClassSrch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
+        $grpClassSrch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+        $grpClassSrch->addCondition('grpcls_teacher_id', '=',  $teacherId);
+        $grpClassSrch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
+        $grpClassSrch->setPageSize(5);
+        $grpClassSrch->addOrder('grpcls_start_datetime', 'Asc');
+        $rs = $grpClassSrch->getResultSet();
         $classesList = FatApp::getDb()->fetchAll($rs);
-        $this->set('groupClasses',$classesList);
+        $this->set('groupClasses', $classesList);
         $frmReviewSearch = $this->getTeacherReviewSearchForm(FatApp::getConfig('CONF_FRONTEND_PAGESIZE'));
         $frmReviewSearch->fill(['tlreview_teacher_user_id' => $teacherId]);
         $this->set('frmReviewSearch', $frmReviewSearch);
         $teacher['proficiencyArr'] = SpokenLanguage::getProficiencyArr(CommonHelper::getLangId());
         $teacher['preferences'] = $teacherPreferences;
-        $teacher['proficiencyArr'] = SpokenLanguage::getProficiencyArr(CommonHelper::getLangId());
+        $this->set('preferencesTypeArr', Preference::getPreferenceTypeArr());
         $this->set('teacher', $teacher);
         $this->set('loggedUserId', UserAuthentication::getLoggedUserId(true));
+        $this->set('sortArr', TeacherLessonReview::getReviewSortArr($this->siteLangId));
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addJs('js/fateventcalendar.js');
@@ -289,17 +291,17 @@ class TeachersController extends MyAppController
         $frm->addHiddenField('', 'teach_lang_name');
         $frm->addHiddenField('', 'page');
         $frm->addHiddenField('', 'pageSize', $pageSize);
-        $frm->addHiddenField('', 'orderBy', 'most_recent');
         return $frm;
     }
 
     public function getTeacherReviews()
     {
+
         $teacherId = FatApp::getPostedData('tlreview_teacher_user_id');
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $orderBy = FatApp::getPostedData('orderBy', FatUtility::VAR_STRING, 'most_recent');
         $page = ($page) ? $page : 1;
-        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
+        $pageSize = 5;
         $srch = new TeacherLessonReviewSearch();
         $srch->joinTeacher();
         $srch->joinLearner();
@@ -327,24 +329,33 @@ class TeachersController extends MyAppController
             case 'most_helpful':
                 $srch->addOrder('helpful', 'desc');
                 break;
+            case 'date_posted_desc':
+                $srch->addOrder('tlr.tlreview_posted_on', 'desc');
+                break;
+            case 'date_posted_asc':
+                $srch->addOrder('tlr.tlreview_posted_on', 'asc');
+                break;
             default:
                 $srch->addOrder('tlr.tlreview_posted_on', 'desc');
                 break;
         }
         $records = FatApp::getDb()->fetchAll($srch->getResultSet());
-        $this->set('reviewsList', $records);
         $this->set('page', $page);
-        $this->set('pageCount', $srch->pages());
-        $this->set('postedData', FatApp::getPostedData());
+		$this->set('pageCount', $srch->pages());
+        foreach ($records as $key => $record) {
+            $records[$key]['img'] = (User::isProfilePicUploaded($record['tlreview_postedby_user_id'])) ? CommonHelper::generateUrl('Image', 'user', array($record['tlreview_postedby_user_id'])) : '';
+            $records[$key]['fChar'] = CommonHelper::getFirstChar($record['lname']);
+            $records[$key]['tlreview_posted_on'] = FatDate::format($record['tlreview_posted_on']);
+            $records[$key]['lessonCount'] = '(' . $record['lessonCount'] . Label::getLabel('LBL_Lessons', $this->siteLangId) . ')';
+            $records[$key]['iconSrc'] = CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#rating';
+            $records[$key]['tlreview_description'] = nl2br($record['tlreview_description']);
+        }
         $json['startRecord'] = !empty($records) ? ($page - 1) * $pageSize + 1 : 0;
-        $json['recordsToDisplay'] = count($records);
-        $json['totalRecords'] = $srch->recordCount();
         $json['msg'] = Label::getLabel('LBL_Request_Processing..');
-        $json['html'] = $this->_template->render(false, false, '_partial/teacher-reviews-list.php', true, false);
+        $json['records'] = $records;
+        $json['displayRecords'] = sprintf(Label::getLabel('LBL_Displaying_Reviews_%d_of_%d', $this->siteLangId), ($page > 1)? (($page-1)*$pageSize+count($records)):count($records), $srch->recordCount());
         $json['loadMoreBtnHtml'] = $this->_template->render(false, false, '_partial/load-more-teacher-reviews-btn.php', true, false);
-        array_map(function ($val) {
-            $val = iconv('UTF-8', 'UTF-8//IGNORE', $val);
-        }, $json);
+
         FatUtility::dieJsonSuccess($json);
     }
 
@@ -841,5 +852,4 @@ class TeachersController extends MyAppController
         $frm->addSubmitButton('', 'btnTeacherSrchSubmit', '');
         return $frm;
     }
-
 }
