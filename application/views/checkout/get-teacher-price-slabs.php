@@ -30,12 +30,16 @@
 
 		<div class="selection-tabs selection--checkout selection--lesson selection--onethird">
 			<?php
+			$lessonQtyPrice = 0;
 			foreach ($slabs as $slab) {
 				$price =  FatUtility::float($slab['ustelgpr_price']);
 				$percentage = CommonHelper::getPercentValue($slab['top_percentage'], $price);
 				$price = $price - $percentage;
 				$title = Label::getLabel('LBL_{min}_to_{max}_Lesson(s)');
 				$title = str_replace(['{min}', '{max}'], [$slab['ustelgpr_min_slab'], $slab['ustelgpr_max_slab']], $title);
+				if ($slab['ustelgpr_max_slab'] >= $lessonQty || $slab['ustelgpr_min_slab'] <= $lessonQty) {
+					$lessonQtyPrice = $price;
+				}
 			?>
 				<label class="selection-tabs__label">
 					<input type="radio" class="selection-tabs__input" name="lessonQty-pack">
@@ -48,13 +52,12 @@
 		</div>
 
 		<div class="total-price">
-			<form>
-				<button class="btn btn--count" id="decrease" onclick="decreaseValue()"><?php echo Label::getLabel('LBL_-'); ?></button>
-				<!-- <input type="text" id="number" value="0" /> -->
-				<input type="text" id="lessonQty" name="lessonQty" min="<?php echo $minValue; ?>" max="<?php echo $maxValue; ?>" value="<?php echo $lessonQty;  ?>">
-				<button class="btn btn--count" id="increase" onclick="increaseValue()"><?php echo Label::getLabel('LBL_+'); ?></button>
-			</form>
-			<p class="slab-price-js"></p>
+			<button class="btn btn--count" onclick="decreaseValue()"><?php echo Label::getLabel('LBL_-'); ?></button>
+			<!-- <input type="text" id="number" value="0" /> -->
+			<input type="text" id="lessonQty" onchange="changeLessonQty();" name="lessonQty" min="<?php echo $minValue; ?>" max="<?php echo $maxValue; ?>" value="<?php echo $lessonQty;  ?>">
+			<button class="btn btn--count" onclick="increaseValue();"><?php echo Label::getLabel('LBL_+'); ?></button>
+			<button class="btn btn--primary color-white" onclick="cart.getLessonQtyPrice();"><?php echo Label::getLabel('LBL_UPDATE_QTY'); ?></button>
+			<p class="slab-price-js"><?php echo sprintf(Label::getLabel('LBL_TOTAL_PRICE_-_%s'), CommonHelper::displayMoneyFormat($lessonQtyPrice)); ?></p>
 		</div>
 	</div>
 	<div class="box-foot">
@@ -62,10 +65,10 @@
 			<div class="teacher-profile">
 				<div class="teacher__media">
 					<div class="avtar avtar-md">
-						<img src="<?php echo CommonHelper::generateUrl('Image', 'user', array($teacher['user_id'])) . '?' . time(); ?>" alt="><?php echo $teacher['user_first_name'].' '.$teacher['user_last_name']; ?>">
+						<img src="<?php echo CommonHelper::generateUrl('Image', 'user', array($teacher['user_id'])) . '?' . time(); ?>" alt="><?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?>">
 					</div>
 				</div>
-				<div class="teacher__name"><?php echo $teacher['user_first_name'].' '.$teacher['user_last_name']; ?></div>
+				<div class="teacher__name"><?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?></div>
 			</div>
 			<div class="step-breadcrumb">
 				<ul>
@@ -80,21 +83,50 @@
 	</div>
 </div>
 <script>
-	lessonQty  = parseInt('<?php echo $lessonQty; ?>');
-	cart.lessonQty = lessonQty;
+	cart.lessonQty = parseInt('<?php echo $lessonQty; ?>');
+
+	minLessonQty = parseInt('<?php echo $minValue; ?>');
+	maxLessonQty = parseInt('<?php echo $maxValue; ?>');
+
+	var lessonQtyInput = document.getElementById('lessonQty');
+
 	function increaseValue() {
-		var value = parseInt(document.getElementById('number').value, 10);
-		value = isNaN(value) ? 0 : value;
-		value++;
-		document.getElementById('number').value = value;
+		let qty = parseInt(lessonQtyInput.value);
+		qty += 1;
+		if (qty > maxLessonQty) {
+			return;
+		}
+		cart.lessonQty = qty;
+		lessonQtyInput.value = qty;
 	}
 
 	function decreaseValue() {
-		var value = parseInt(document.getElementById('number').value, 10);
-		value = isNaN(value) ? 0 : value;
-		value < 1 ? value = 1 : '';
-		value--;
-		document.getElementById('number').value = value;
+
+		let qty = parseInt(lessonQtyInput.value);
+		qty -= 1;
+		if (qty < minLessonQty) {
+			return;
+		}
+		cart.lessonQty = qty;
+		lessonQtyInput.value = qty;
+	}
+
+	function changeLessonQty() {
+
+		let qty = lessonQtyInput.value;
+
+		if (!$.Validation.getRule('integer').check(true, qty)) {
+			lessonQtyInput.value = cart.lessonQty;
+			return;
+		}
+
+		qty = parseInt(qty);
+		if (qty > maxLessonQty || qty < minLessonQty) {
+			lessonQtyInput.value = cart.lessonQty;
+			return;
+		}
+		cart.lessonQty = qty;
+		lessonQtyInput.value = qty;
 	}
 
 	$('.btn--close').click(function() {

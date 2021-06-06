@@ -160,7 +160,7 @@ class CheckoutController extends LoggedUserController
         if (empty($teacher)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
         }
-       
+
 
         $userTeachLanguage = new UserTeachLanguage($teacherId);
         $getUserTeachlanguages = $userTeachLanguage->getUserTeachlanguages($this->siteLangId, true, 'INNER JOIN');
@@ -179,13 +179,13 @@ class CheckoutController extends LoggedUserController
             'ustelgpr_slot',
             'tlanguage_id',
         ]);
-        $getUserTeachlanguages->addGroupBy('ustelgpr_slot');
-        $slabs = FatApp::getDb()->fetchAll($getUserTeachlanguages->getResultSet(), 'ustelgpr_slot');
+        $getUserTeachlanguages->addGroupBy('minMaxKey');
+        $slabs = FatApp::getDb()->fetchAll($getUserTeachlanguages->getResultSet(), 'minMaxKey');
 
         if (empty($slabs)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_THIS_TEACHER_DOES_NOT_HAVE_ANY_SLABS'));
         }
-        
+
         $minValue = min(array_column($slabs, 'ustelgpr_min_slab', 'ustelgpr_min_slab'));
         $maxValue = max(array_column($slabs, 'ustelgpr_max_slab', 'ustelgpr_max_slab'));
 
@@ -203,6 +203,120 @@ class CheckoutController extends LoggedUserController
         $this->set('teacher', $teacher);
         $this->set('slot', $slot);
         $this->_template->render(false, false);
+    }
+
+    public function getLessonQtyPrice()
+    {
+        $teacherId =  FatApp::getPostedData('teacherId', FatUtility::VAR_INT, 0);
+        $teachLangId =  FatApp::getPostedData('teachLangId', FatUtility::VAR_INT, 0);
+        $slot =  FatApp::getPostedData('slot', FatUtility::VAR_INT, 0);
+        $lessonQty =  FatApp::getPostedData('lessonQty', FatUtility::VAR_INT, 0);
+
+        $loggedUserId = UserAuthentication::getLoggedUserId();
+        if (1 > $lessonQty || 1 > $slot || 1 > $teacherId || 1 > $teachLangId || $teacherId == $loggedUserId) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+        }
+
+        $teacher = $this->checkTeacherIsValid($teacherId);
+
+        if (empty($teacher)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+        }
+
+
+        $userTeachLanguage = new UserTeachLanguage($teacherId);
+        $getUserTeachlanguages = $userTeachLanguage->getUserTeachlanguages($this->siteLangId, true, 'INNER JOIN');
+        $getUserTeachlanguages->doNotCalculateRecords();
+        $getUserTeachlanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
+        $getUserTeachlanguages->addCondition('tlanguage_id', '=', $teachLangId);
+        $getUserTeachlanguages->addCondition('ustelgpr_slot', '=', $slot);
+        $getUserTeachlanguages->addCondition('ustelgpr_max_slab', '>=', $lessonQty);
+        $getUserTeachlanguages->addCondition('ustelgpr_min_slab', '<=', $lessonQty);
+        $getUserTeachlanguages->addMultipleFields([
+            'IFNULL(top_percentage,0) as top_percentage',
+            'ustelgpr_price',
+        ]);
+        $slab = FatApp::getDb()->fetch($getUserTeachlanguages->getResultSet(), 'minMaxKey');
+
+        if (empty($slab)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_THIS_TEACHER_DOES_NOT_HAVE_ANY_SLABS'));
+        }
+
+        $price =  FatUtility::float($slab['ustelgpr_price']);
+        $percentage = CommonHelper::getPercentValue($slab['top_percentage'], $price);
+        $price = ($price - $percentage) * $lessonQty;
+
+        $data = [
+            'msg' => '',
+            'price' => $price,
+            'priceLabel' => sprintf(Label::getLabel('LBL_TOTAL_PRICE_-_%s'), CommonHelper::displayMoneyFormat($price)),
+        ];
+        FatUtility::dieJsonSuccess($data);
+    }
+
+    public function getPaymentSummary()
+    {
+        $teacherId =  FatApp::getPostedData('teacherId', FatUtility::VAR_INT, 0);
+        $teachLangId =  FatApp::getPostedData('teachLangId', FatUtility::VAR_INT, 0);
+        $slot =  FatApp::getPostedData('slot', FatUtility::VAR_INT, 0);
+        $lessonQty =  FatApp::getPostedData('lessonQty', FatUtility::VAR_INT, 0);
+
+        $loggedUserId = UserAuthentication::getLoggedUserId();
+        if (1 > $lessonQty || 1 > $slot || 1 > $teacherId || 1 > $teachLangId || $teacherId == $loggedUserId) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+        }
+
+        $teacher = $this->checkTeacherIsValid($teacherId);
+
+        if (empty($teacher)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request'));
+        }
+
+
+        $userTeachLanguage = new UserTeachLanguage($teacherId);
+        $getUserTeachlanguages = $userTeachLanguage->getUserTeachlanguages($this->siteLangId, true, 'INNER JOIN');
+        $getUserTeachlanguages->doNotCalculateRecords();
+        $getUserTeachlanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
+        $getUserTeachlanguages->addCondition('tlanguage_id', '=', $teachLangId);
+        $getUserTeachlanguages->addCondition('ustelgpr_slot', '=', $slot);
+        $getUserTeachlanguages->addCondition('ustelgpr_max_slab', '>=', $lessonQty);
+        $getUserTeachlanguages->addCondition('ustelgpr_min_slab', '<=', $lessonQty);
+        $getUserTeachlanguages->addMultipleFields([
+            'IFNULL(top_percentage,0) as top_percentage',
+            'ustelgpr_price',
+        ]);
+        $slab = FatApp::getDb()->fetch($getUserTeachlanguages->getResultSet(), 'minMaxKey');
+
+        if (empty($slab)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_THIS_TEACHER_DOES_NOT_HAVE_ANY_SLABS'));
+        }
+        $price =  FatUtility::float($slab['ustelgpr_price']);
+        $percentage = CommonHelper::getPercentValue($slab['top_percentage'], $price);
+        $price = ($price - $percentage) * $lessonQty;
+
+        $userId = UserAuthentication::getLoggedUserId();
+        $userWalletBalance = User::getUserBalance($userId);
+        $paymentMethods = [];
+        if ($price > 0) {
+            /* Payment Methods[ */
+            $pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
+            $pmSrch->doNotCalculateRecords();
+            $pmSrch->doNotLimitRecords();
+            $pmSrch->addMultipleFields([
+                'pmethod_id',
+                'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name',
+                'pmethod_code',
+                'pmethod_description'
+            ]);
+            $pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
+            $pmRs = $pmSrch->getResultSet();
+            $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
+            /* ] */
+        }
+        $this->set('userWalletBalance', $userWalletBalance);
+        $this->set('paymentMethods', $paymentMethods);
+        $this->set('teacher', $$teacher);
+        $this->set('postedData', $postedData);
     }
 
     private function getPromoCouponsForm($langId)

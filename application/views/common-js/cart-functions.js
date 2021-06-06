@@ -51,6 +51,26 @@ var cart = {
 		data = "teacherId="+teacherId+"&teachLangId="+teachLangId+"&slot="+slot+"&lessonQty="+lessonQty;
 		cart.checkoutStep("getTeacherPriceSlabs", data);
 	},
+	getLessonQtyPrice :function(){
+		teacherId = parseInt(cart.teacherId);
+		teachLangId =  parseInt(cart.teachLangId);
+		slot =  parseInt(cart.slot);
+		lessonQty =  parseInt(cart.lessonQty);
+		if(1> lessonQty && 1 > teacherId || 1 > teachLangId || 1 > slot)
+		{
+			return false;
+		}
+		data = "teacherId="+teacherId+"&teachLangId="+teachLangId+"&slot="+slot+"&lessonQty="+lessonQty;
+		fcom.ajax(fcom.makeUrl('Checkout', 'getLessonQtyPrice'), data, function (res) {
+			res.status = parseInt(res.status);
+			if (res.status == 1) {
+				$('.slab-price-js').html(res.priceLabel);
+				return;
+			}
+			$.mbsmessage(res.msg, true, 'alert alert--danger');
+			
+		},{fOutMode:'json'});
+	},
 	update: function (teacherId) {
 
 		teacherId = parseInt(teacherId);
