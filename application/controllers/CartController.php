@@ -80,67 +80,52 @@ class CartController extends LoggedUserController
             FatUtility::dieJsonError($cart->getError());
         }
 
-
         $msg = '';
         if (isset($post['checkoutPage'])) {
             $msg = Label::getLabel('LBL_ITEM_ADD_TO_CART.');
         }
-
+        
         // 'redirectUrl' => CommonHelper::generateUrl('Checkout')
         FatUtility::dieJsonSuccess(['isFreeLesson' => $isFreeTrial, 'msg' => $msg]);
     }
 
     public function applyPromoCode()
     {
-        UserAuthentication::checkLogin();
-        $post = FatApp::getPostedData();
+        $couponCode = FatApp::getPostedData('coupon_code', FatUtility::VAR_STRING, '');
         $loggedUserId = UserAuthentication::getLoggedUserId();
-        if (false == $post) {
-            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request', $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
+        if ( empty($couponCode) || empty($loggedUserId)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request', $this->siteLangId));
         }
-        if (empty($post['coupon_code'])) {
-            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request', $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
-        }
-        $couponCode = $post['coupon_code'];
+       
         $couponInfo = DiscountCoupons::getValidCoupons($loggedUserId, $this->siteLangId, $couponCode);
         if ($couponInfo == false) {
-            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Coupon_Code', $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Coupon_Code', $this->siteLangId));
         }
         $cartObj = new Cart();
         if (!$cartObj->updateCartDiscountCoupon($couponInfo['coupon_code'])) {
-            Message::addErrorMessage(Label::getLabel('LBL_Action_Trying_Perform_Not_Valid', $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel('LBL_Action_Trying_Perform_Not_Valid', $this->siteLangId));
         }
+
         $holdCouponData = [
             'couponhold_coupon_id' => $couponInfo['coupon_id'],
             'couponhold_user_id' => UserAuthentication::getLoggedUserId(),
             'couponhold_added_on' => date('Y-m-d H:i:s'),
         ];
         if (!FatApp::getDb()->insertFromArray(DiscountCoupons::DB_TBL_COUPON_HOLD, $holdCouponData, true, [], $holdCouponData)) {
-            Message::addErrorMessage(Label::getLabel('LBL_Action_Trying_Perform_Not_Valid', $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel('LBL_Action_Trying_Perform_Not_Valid', $this->siteLangId));
         }
         $cartObj->removeUsedRewardPoints();
-        $this->set('msg', Label::getLabel("MSG_cart_discount_coupon_applied", $this->siteLangId));
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess(Label::getLabel("MSG_cart_discount_coupon_applied", $this->siteLangId));
     }
-
-    
-
 
     public function removePromoCode()
     {
         $cartObj = new Cart();
         if (!$cartObj->removeCartDiscountCoupon()) {
-            Message::addErrorMessage(Label::getLabel('LBL_Action_Trying_Perform_Not_Valid', $this->siteLangId));
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonSuccess(Label::getLabel("LBL_Action_Trying_Perform_Not_Valid", $this->siteLangId));
         }
         $cartObj->removeUsedRewardPoints();
-        $this->set('msg', Label::getLabel("MSG_cart_discount_coupon_removed", $this->siteLangId));
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess(Label::getLabel("MSG_cart_discount_coupon_removed", $this->siteLangId));
     }
 
     private function checkTeacherIsValid(int $teacherId) : array

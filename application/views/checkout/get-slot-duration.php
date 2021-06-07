@@ -22,7 +22,7 @@
 		<div class="selection-tabs selection--checkout selection--duration selection--onehalf">
 			<?php foreach ($slotDurations as $duration) { ?>
 				<label class="selection-tabs__label">
-					<input type="radio" onchange="cart.slot = this.value;" class="selection-tabs__input" value="<?php echo $duration['ustelgpr_slot']; ?>" <?php echo ($slot == $duration['ustelgpr_slot']) ? 'checked' : ''; ?> name="lessonDuration">
+					<input type="radio" onchange="cart.lessonDuration = this.value;" class="selection-tabs__input" value="<?php echo $duration['ustelgpr_slot']; ?>" <?php echo ($lessonDuration == $duration['ustelgpr_slot']) ? 'checked' : ''; ?> name="lessonDuration">
 					<div class="selection-tabs__title">
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
 							<g>
@@ -57,6 +57,5 @@
 	</div>
 </div>
 <script>
-	slot = '<?php echo $slot; ?>';
-	cart.slot = parseInt(slot);
+	cart.lessonDuration = parseInt('<?php echo $lessonDuration; ?>');
 </script>

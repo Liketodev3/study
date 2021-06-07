@@ -73,12 +73,12 @@
 			<div class="step-breadcrumb">
 				<ul>
 					<li><a href="javascript:void(0);"><?php echo $teachLangName; ?></a></li>
-					<li><a href="javascript:void(0);"><?php echo sprintf(Label::getLabel('LBL_%s_Mins'), $slot); ?></a></li>
+					<li><a href="javascript:void(0);"><?php echo sprintf(Label::getLabel('LBL_%s_Mins'), $lessonDuration); ?></a></li>
 				</ul>
 			</div>
 		</div>
 		<div class="box-foot__right">
-			<a href="javascript:void(0);" class="btn btn--primary color-white"><?php echo LabeL::getLabel('LBL_NEXT'); ?></a>
+			<a href="javascript:void(0);" onclick="cart.addTeacherLesson();" class="btn btn--primary color-white"><?php echo LabeL::getLabel('LBL_NEXT'); ?></a>
 		</div>
 	</div>
 </div>
