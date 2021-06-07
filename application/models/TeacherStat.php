@@ -174,16 +174,23 @@ class TeacherStat extends FatModel
             ]);
             $srch->addCondition('tgavl_user_id', '=', $this->userId);
             $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
+            $records = [];
+            foreach ($rows as $key => $row) {
+                $tmpRecords = $this->breakIntoDays($row);
+                foreach ($tmpRecords as $tmpRecord) {
+                    array_push($records, $tmpRecord);
+                }
+            }
             $timeSlots = [
                 ['2018-01-07 00:00:00', '2018-01-07 04:00:00'], ['2018-01-07 04:00:00', '2018-01-07 08:00:00'],
                 ['2018-01-07 08:00:00', '2018-01-07 12:00:00'], ['2018-01-07 12:00:00', '2018-01-07 16:00:00'],
                 ['2018-01-07 16:00:00', '2018-01-07 20:00:00'], ['2018-01-07 20:00:00', '2018-01-08 00:00:00'],
             ];
             $daySlots = [];
-            foreach ($rows as $row) {
+            foreach ($records as $row) {
                 $daySlot = [];
-                $startdate = strtotime($row ['startdate']);
-                $enddate = strtotime($row ['enddate']);
+                $startdate = strtotime($row['startdate']);
+                $enddate = strtotime($row['enddate']);
                 foreach ($timeSlots as $index => $slotDates) {
                     $slotStart = strtotime($slotDates[0] . ' +' . $row['tgavl_day'] . ' day');
                     $slotEnd = strtotime($slotDates[1] . ' +' . $row['tgavl_day'] . ' day');
@@ -228,6 +235,23 @@ class TeacherStat extends FatModel
             return false;
         }
         return true;
+    }
+
+    private function breakIntoDays(array $row, array $records = []): array
+    {
+        if (date('Y-m-d', strtotime($row['startdate'])) != date('Y-m-d', strtotime($row['enddate']))) {
+            array_push($records, [
+                'tgavl_day' => $row['tgavl_day'],
+                'startdate' => $row['startdate'],
+                'enddate' => date('Y-m-d', strtotime($row['startdate'])) . ' 23:59:59'
+            ]);
+            $newStartDate = date('Y-m-d', strtotime($row['startdate'] . ' +1 day')) . ' 00:00:00';
+            $newRow = ['tgavl_day' => $row['tgavl_day'] + 1, 'startdate' => $newStartDate, 'enddate' => $row['enddate']];
+            return $this->breakIntoDays($newRow, $records);
+        } else {
+            array_push($records, $row);
+            return $records;
+        }
     }
 
     public function setTeachLangPricesBulk()
