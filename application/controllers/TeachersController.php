@@ -359,30 +359,22 @@ class TeachersController extends MyAppController
         FatUtility::dieJsonSuccess($json);
     }
 
-    public function viewCalendar($teacher_id = 0, $languageId = 1)
+    public function viewCalendar(int $teacherId = 0, int $languageId = 1)
     {
-        $teacher_id = FatUtility::int($teacher_id);
-        $languageId = FatUtility::int($languageId);
-        if ($teacher_id < 1) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
-        }
-        $srch = new UserSearch();
-        $srch->setTeacherDefinedCriteria();
-        $srch->setPageSize(1);
-        $srch->addCondition('user_id', '=', $teacher_id);
-
-        $srch->addMultipleFields(['user_first_name', 'CONCAT(user_first_name," ",user_last_name) as user_full_name', 'user_country_id',]);
-        $userRow = FatApp::getDb()->fetch($srch->getResultSet());
-        if (!$userRow) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
-        }
+        $user  = new User($teacherId);
+        $postedAction = FatApp::getPostedData('action');
         $allowedActionArr = ['free_trial', 'paid'];
 
-        $postedAction = FatApp::getPostedData('action');
         if (!in_array($postedAction, $allowedActionArr)) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
+
+        if(!$user->loadFromDb()){
+            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
+        }
+        $userRow = $user->getFlds();   
         $bookingMinutesDuration = FatApp::getConfig('CONF_DEFAULT_PAID_LESSON_DURATION', FatUtility::VAR_INT, 60);
+        
         if ('free_trial' == $postedAction) {
             $bookingMinutesDuration = FatApp::getConfig('conf_trial_lesson_duration', FatUtility::VAR_INT, 30);
             $freeTrialEnable = FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
@@ -399,7 +391,7 @@ class TeachersController extends MyAppController
         $this->set('bookingSnapDuration', $bookingSnapDuration);
         $user_timezone = MyDate::getUserTimeZone();
         $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
-        $teacherBookingBefore = UserSetting::getUserSettings($teacher_id)['us_booking_before'];
+        $teacherBookingBefore = UserSetting::getUserSettings( $teacherId)['us_booking_before'];
         if ('' == $teacherBookingBefore) {
             $teacherBookingBefore = 0;
         }
@@ -413,7 +405,7 @@ class TeachersController extends MyAppController
         $this->set('action', $postedAction);
         $this->set('teacher_name', $userRow['user_first_name']);
         $this->set('teacher_country_id', $userRow['user_country_id']);
-        $this->set('teacher_id', $teacher_id);
+        $this->set('teacher_id',  $teacherId);
         $this->set('languageId', $languageId);
         $this->set('cssClassArr', $cssClassNamesArr);
         $this->_template->render(false, false);

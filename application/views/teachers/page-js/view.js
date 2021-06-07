@@ -15,7 +15,6 @@ function getSortedReviews(elm) {
 	if ($(elm).length) {
 		var sortBy = $(elm).data('sort');
 		if (sortBy) {
-			//document.frmReviewSearch.orderBy.value = $(elm).data('sort');
 			$(elm).parent().siblings().removeClass('is-active');
 			$(elm).parent().addClass('is-active');
 		}
@@ -97,8 +96,8 @@ $("document").ready(function () {
 
 });
 
-function viewCalendar(teacherId, action, languageId) {
-	$.loader.show();
+function viewCalendar(teacherId, languageId, action='') {
+	var dv = $('#availbility');
 	if (action == 'free_trial') {
 		if (isUserLogged() == 0) {
 			$.loader.hide();
@@ -106,10 +105,8 @@ function viewCalendar(teacherId, action, languageId) {
 			return false;
 		}
 	}
-
 	fcom.ajax(fcom.makeUrl('Teachers', 'viewCalendar', [teacherId, languageId]), 'action=' + action, function (t) {
-		$.loader.hide();
-		$.facebox(t, 'facebox-large');
+		$(dv).html(t);
 	});
 }
 
@@ -136,7 +133,7 @@ function getReviewDiv(data) {
 reviews = function (frm) {
 	var html = '';
 	var dv = '#itemRatings';
-	var data = fcom.frmData(frm);	
+	var data = fcom.frmData(frm);
 	data+='&OrderBy='+$('select[name="orderBy"]').val();
 	fcom.updateWithAjax(fcom.makeUrl('Teachers', 'getTeacherReviews'), data,function (ans) {
 		if (!ans.records) {

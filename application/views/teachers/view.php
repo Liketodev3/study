@@ -207,7 +207,7 @@ foreach ($userTeachLangs as $key => $value) {
                         <div class="-gap"></div>
 
                         <div class="alert alert--attention alert--small alert--note" role="alert">
-                            <b>Note:</b> Not finding your ideal time? <a href="#">Contact</a> this teacher to request a slot outside of their current schedule
+                            <b><?php echo Label::getLabel('LBL_Note',$siteLangId) ?></b><?php echo Label::getLabel('LBL_Not_finding_your_ideal_time',$siteLangId); ?> <a onClick="generateThread(<?php echo $teacher['user_id']; ?>)" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Contact',$siteLangId); ?></a> this teacher to request a slot outside of their current schedule
                         </div>
                     </div>
 
@@ -372,16 +372,15 @@ foreach ($userTeachLangs as $key => $value) {
                         <div class="box box--book">
                             <div class="book__actions">
                                 <a href="#" class="btn btn--primary btn--xlarge btn--block color-white "><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
-                                <a href="#" class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary">
+                                <a href="javascript:void(0)" onClick="generateThread(<?php echo $teacher['user_id']; ?>);" class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary">
                                     <svg class="icon icon--envelope">
                                         <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope' ?>"></use>
                                     </svg>
                                     <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
                                 </a>
                                 <a href="#availbility" class="color-primary btn--link scroll"><?php echo Label::getLabel('LBL_View_Full_Availbility', $siteLangId); ?></a>
-
                                 <div class="-gap"></div>
-                                <a href="#" class="btn btn--secondary btn--trial btn--block color-white "><span><?php echo Label::getLabel('LBL_BOOK_FREE', $siteLangId) ?></span> <?php echo Label::getLabel('LBL_Trial_Class', $siteLangId);  ?></a>
+                                <a href="#" class="btn btn--secondary btn--trial btn--block color-white"><span><?php echo Label::getLabel('LBL_BOOK_FREE', $siteLangId) ?></span> <?php echo Label::getLabel('LBL_Trial_Class', $siteLangId);  ?></a>
                                 <p><?php echo Label::getLabel('LBL_Trial_Lesson_One_Time', $siteLangId); ?></p>
                             </div>
                         </div>
@@ -394,5 +393,6 @@ foreach ($userTeachLangs as $key => $value) {
 <script type="text/javascript">
     $(document).ready(function() {
         searchQualifications(<?php echo $teacher['user_id']; ?>);
+        viewCalendar(<?php echo $teacher['user_id'].','.$siteLangId.', "paid"'; ?>);
     });
 </script>

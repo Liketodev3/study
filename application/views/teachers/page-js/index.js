@@ -337,6 +337,7 @@ function htmlEncode(value) {
     };
 
     addFilter = function (id, obj,from) {
+        $('.filter-tags').show();
         var click = "onclick=removeFilter('" + id + "',this)";
         var filter = htmlEncode($(obj).parents(".filter-form__inner, .filter-group__inner").find("h6").text());
         $filterVal = htmlEncode($(obj).parents(".selection-tabs__label, label").find(".name").text());
@@ -356,6 +357,15 @@ function htmlEncode(value) {
         $('.' + id).parent("li").remove();
         $('input[name=\'teachLangId\']').val('');
         $('input[name=\'teach_language_name\']').val('');
+        searchTeachers(document.frmTeacherSrch);
+    }
+    removeAllFilters = function () {
+        $('input:checkbox').removeAttr('checked');
+        $('input[name=\'teachLangId\']').val('');
+        $('input[name=\'teach_language_name\']').val('');
+        $('input[name=\'keyword\']').val('');
+        $('.filter-tags').hide();
+        $('.filter-tags').html('');
         searchTeachers(document.frmTeacherSrch);
     }
 

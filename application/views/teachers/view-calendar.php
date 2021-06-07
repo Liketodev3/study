@@ -5,7 +5,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 <div class="calendar-view">
     <div class="row">
         <div class="col-sm-5">
-            <h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
+            <h4><?php echo $userRow['user_first_name']." ".$userRow['user_last_name']." ". Label::getLabel('Lbl_Calendar'); ?></h4>
         </div>
         <div class="col-sm-7 justify-content-sm-end justify-content-start">
             <div class="cal-status">
