@@ -77,7 +77,7 @@ class TeacherStat extends FatModel
         $srch->addFld('MIN(IFNULL(ustelgpr_price, 0)) AS minPrice');
         $srch->addFld('MAX(IFNULL(ustelgpr_price, 0)) AS maxPrice');
         $srch->addFld('tlanguage_id');
-        // $srch->addCondition('ustelgpr_price', '>', 0);
+// $srch->addCondition('ustelgpr_price', '>', 0);
         $row = FatApp::getDb()->fetch($srch->getResultSet());
         $teachlang = 0;
         $minPrice = 0.0;
@@ -159,39 +159,73 @@ class TeacherStat extends FatModel
     }
 
     /**
-     * testat_gavailability
+     * testat_availability
      */
-    public function setGavailability(array $post)
+    public function setAvailability(array $post)
     {
         $availability = json_decode($post['data'] ?? '', true);
-        $data = [
-            'testat_gavailability' => 0,
-            'testat_day1' => null,
-            'testat_day2' => null,
-            'testat_day3' => null,
-            'testat_day4' => null,
-            'testat_day5' => null,
-            'testat_day6' => null,
-            'testat_day7' => null
-        ];
-        $day1 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day2 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day3 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day4 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day5 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day6 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
-        $day7 = [[1, 4], [2, 0], [3, 2], [4, 1], [5, 4], [6, 0]];
+        $emptySlots = CommonHelper::getEmptyDaySlots();
+        $data = ['testat_availability' => 0, 'testat_timeslots' => json_encode($emptySlots)];
         if (!empty($availability)) {
-            $data = [
-                'testat_gavailability' => 1,
-                'testat_day1' => json_encode($day1),
-                'testat_day2' => json_encode($day2),
-                'testat_day3' => json_encode($day3),
-                'testat_day4' => json_encode($day4),
-                'testat_day5' => json_encode($day5),
-                'testat_day6' => json_encode($day6),
-                'testat_day7' => json_encode($day7)
+            $srch = new SearchBase(TeacherGeneralAvailability::DB_TBL);
+            $srch->addMultipleFields(['tgavl_day',
+                'CONCAT(tgavl_date, " ", tgavl_start_time) as startdate',
+                'CONCAT(tgavl_end_date, " ", tgavl_end_time) as enddate'
+            ]);
+            $srch->addCondition('tgavl_user_id', '=', $this->userId);
+            $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
+            $records = [];
+            foreach ($rows as $key => $row) {
+                $tmpRecords = $this->breakIntoDays($row);
+                foreach ($tmpRecords as $tmpRecord) {
+                    array_push($records, $tmpRecord);
+                }
+            }
+            $timeSlots = [
+                ['2018-01-07 00:00:00', '2018-01-07 04:00:00'], ['2018-01-07 04:00:00', '2018-01-07 08:00:00'],
+                ['2018-01-07 08:00:00', '2018-01-07 12:00:00'], ['2018-01-07 12:00:00', '2018-01-07 16:00:00'],
+                ['2018-01-07 16:00:00', '2018-01-07 20:00:00'], ['2018-01-07 20:00:00', '2018-01-08 00:00:00'],
             ];
+            $daySlots = [];
+            foreach ($records as $row) {
+                $daySlot = [];
+                $startdate = strtotime($row['startdate']);
+                $enddate = strtotime($row['enddate']);
+                foreach ($timeSlots as $index => $slotDates) {
+                    $slotStart = strtotime($slotDates[0] . ' +' . $row['tgavl_day'] . ' day');
+                    $slotEnd = strtotime($slotDates[1] . ' +' . $row['tgavl_day'] . ' day');
+                    if ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate <= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($startdate - $enddate) / 3600);
+                    } elseif ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate >= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($startdate - $slotEnd) / 3600);
+                    } elseif ($startdate <= $slotStart && $enddate >= $slotStart && $enddate <= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($slotStart - $enddate) / 3600);
+                    } elseif ($startdate <= $slotStart && $enddate >= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($slotStart - $slotEnd) / 3600);
+                    } else {
+                        $daySlot[$index] = 0;
+                    }
+                }
+                $daySlots[$row['tgavl_day']][] = $daySlot;
+            }
+            $filledSlots = [];
+            foreach ($daySlots as $day => $slots) {
+                $arr = [0, 0, 0, 0, 0, 0];
+                foreach ($slots as $slot) {
+                    $arr[0] += $slot[0];
+                    $arr[1] += $slot[1];
+                    $arr[2] += $slot[2];
+                    $arr[3] += $slot[3];
+                    $arr[4] += $slot[4];
+                    $arr[5] += $slot[5];
+                }
+                $filledSlots['d' . $day] = $arr;
+            }
+            $flvs = [];
+            foreach ($emptySlots as $day => $esv) {
+                $flvs[$day] = $filledSlots[$day] ?? $esv;
+            }
+            $data = ['testat_availability' => 1, 'testat_timeslots' => json_encode($flvs)];
         }
         $record = new TableRecord('tbl_teacher_stats');
         $record->setFldValue('testat_user_id', $this->userId);
@@ -201,6 +235,23 @@ class TeacherStat extends FatModel
             return false;
         }
         return true;
+    }
+
+    private function breakIntoDays(array $row, array $records = []): array
+    {
+        if (date('Y-m-d', strtotime($row['startdate'])) != date('Y-m-d', strtotime($row['enddate']))) {
+            array_push($records, [
+                'tgavl_day' => $row['tgavl_day'],
+                'startdate' => $row['startdate'],
+                'enddate' => date('Y-m-d', strtotime($row['startdate'])) . ' 23:59:59'
+            ]);
+            $newStartDate = date('Y-m-d', strtotime($row['startdate'] . ' +1 day')) . ' 00:00:00';
+            $newRow = ['tgavl_day' => $row['tgavl_day'] + 1, 'startdate' => $newStartDate, 'enddate' => $row['enddate']];
+            return $this->breakIntoDays($newRow, $records);
+        } else {
+            array_push($records, $row);
+            return $records;
+        }
     }
 
     public function setTeachLangPricesBulk()

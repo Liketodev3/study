@@ -267,8 +267,8 @@ foreach ($userTeachLangs as $key => $value) {
                                                         </div>
                                                     </div>
                                                     <div class="card__row--action">
-                                                        <a href="<?php echo CommonHelper::generateUrl('GroupClasses', 'view', array($classesDetails['grpcls_id'])); ?>" class="btn btn--bordered color-primary"><?php echo Label::getLabel('LBL_View_Details', commonHelper::getLangId()); ?></a>
-                                                        <a href="javascript:void(0);" onClick="cart.add( '<?php echo $classesDetails['grpcls_teacher_id']; ?>', '0', '','','<?php echo $classesDetails['grpcls_slanguage_id']; ?>', '<?php echo $classesDetails['grpcls_id'] ?>' )" class="btn btn--primary"><?php echo Label::getLabel("LBL_Book_Now"); ?></a>
+                                                        <a href="<?php echo CommonHelper::generateUrl('GroupClasses', 'view', array($classDetails['grpcls_id'])); ?>" class="btn btn--bordered color-primary"><?php echo Label::getLabel('LBL_View_Details', commonHelper::getLangId()); ?></a>
+                                                        <a href="javascript:void(0);" onClick="cart.add( '<?php echo $classesDetails['grpcls_teacher_id']; ?>', '0', '','','<?php echo $classDetails['grpcls_slanguage_id']; ?>', '<?php echo $classesDetails['grpcls_id'] ?>' )" class="btn btn--primary"><?php echo Label::getLabel("LBL_Book_Now"); ?></a>
                                                     </div>
                                                 </div>
                                             </div>

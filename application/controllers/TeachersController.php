@@ -10,15 +10,7 @@ class TeachersController extends MyAppController
         }
         $frmSrch = $this->getTeacherSearchForm($teachLangId);
         $this->set('frmTeacherSrch', $frmSrch);
-        $daysArr = [
-            0 => Label::getLabel('LBL_Sunday'),
-            1 => Label::getLabel('LBL_Monday'),
-            2 => Label::getLabel('LBL_Tuesday'),
-            3 => Label::getLabel('LBL_Wednesday'),
-            4 => Label::getLabel('LBL_Thursday'),
-            5 => Label::getLabel('LBL_Friday'),
-            6 => Label::getLabel('LBL_Saturday')
-        ];
+        $daysArr = applicationConstants::getWeekDays();
         $timeSlotArr = TeacherGeneralAvailability::timeSlotArr();
         $this->set('daysArr', $daysArr);
         $this->set('timeSlotArr', $timeSlotArr);
@@ -38,13 +30,6 @@ class TeachersController extends MyAppController
 
     public function teachersList()
     {
-
-        $filterSortBy = [
-            'popularity_desc' => Label::getLabel('LBL_By_Popularity'),
-            'price_asc' => Label::getLabel('LBL_By_Price_Low_to_High'),
-            'price_desc' => Label::getLabel('LBL_By_Price_High_to_Low'),
-        ];
-
         $post = FatApp::getPostedData();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 12);
@@ -61,22 +46,11 @@ class TeachersController extends MyAppController
         $srch->setPageNumber($page);
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $records = $srch->formatTeacherSearchData($rawData, $userId);
-        $getTeachersId = array_column($records, 'user_id');
-
-        $userVideoSrch = new UserSettingSearch();
-        $userVideoSrch->addCondition('us_user_id', 'In', $getTeachersId);
-        $userVideoSrch->addMultipleFields(['us_user_id', 'us_video_link']);
-        $videoData = FatApp::getDb()->fetchAllAssoc($userVideoSrch->getResultSet(), 'us_user_id');
-        foreach ($records as $key => $teacher) {
-            $records[$key]['us_video_link']  = $videoData[$teacher['user_id']];
-        }
-
         $recordCount = $srch->getRecordCount();
         $startRecord = ($recordCount > 0) ? (($page - 1) * $pageSize + 1) : 0;
         $endRecord = ($recordCount < $page * $pageSize) ? $recordCount : $page * $pageSize;
         $recordCountTxt = ($recordCount > SEARCH_MAX_COUNT) ? $recordCount . '+' : $recordCount;
         $showing = 'Showing ' . $startRecord . ' - ' . $endRecord . ' Of ' . $recordCountTxt . ' ' . Label::getLabel('lbl_teachers');
-
         $this->set('showing', $showing);
         $this->set('teachers', $records);
         $this->set('postedData', $post);
@@ -85,7 +59,6 @@ class TeachersController extends MyAppController
         $this->set('recordCount', $recordCount);
         $this->set('pageCount', ceil($recordCount / $pageSize));
         $this->set('slots', TeacherGeneralAvailability::timeSlotArr());
-        $this->set('filters', $filterSortBy);
         $this->_template->render(false, false);
     }
 
@@ -535,7 +508,7 @@ class TeachersController extends MyAppController
         echo FatUtility::convertToJson($jsonArr);
     }
 
-    public function getTeacherWeeklyScheduleJsonData(int $userId)
+    public function getTeacherWeeklyScheduleJsonData($userId)
     {
         $post = FatApp::getPostedData();
         if (false === $post) {
@@ -551,7 +524,11 @@ class TeachersController extends MyAppController
         $weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId, $startDate, $endDate);
 
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
-        $teacherBookingBefore = FatApp::getPostedData('bookingBefore', FatUtility::VAR_INT, NULL);
+        $teacherBookingBefore = null;
+        if (isset($_POST['bookingBefore'])) {
+            $teacherBookingBefore = FatUtility::int(FatApp::getPostedData('bookingBefore'));
+        }
+
         $jsonArr = [];
         $validStartDateTime = strtotime("+ " . $teacherBookingBefore . " hours");
 

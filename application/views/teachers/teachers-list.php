@@ -8,207 +8,191 @@ $colorClass = [
 ];
 ?>
 <?php if ($teachers) { ?>
-        <div class="sorting__head">
-            <div class="sorting__title">
-                <h4><?php echo sprintf(Label::getLabel('LBL_Found_the_best_%s_teachers_for_you',$siteLangId), $recordCount) ?></h4>
-            </div>
-            <div class="sorting__box">
-                <!-- <b>Sort By:</b> -->
-                <select name="filterSortBy" id="sort">
-                    <?php foreach ($filters as $filterVal => $filterLabel) { ?>
-                        <option <?php echo ($postedData['sortOrder']==$filterVal) ? "selected='selected'":''; ?> value="<?php echo $filterVal; ?>"><?php echo $filterLabel; ?></option>
-                    <?php } ?>
-                </select>
-                <div class="btn--filter">
-                    <a href="javascript:void(0)" class="btn btn--primary btn--block btn--filters-js">
-                        <span class="svg-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="15px" height="15px" viewBox="0 0 402.577 402.577" style="enable-background:new 0 0 402.577 402.577;" xml:space="preserve">
-                                <g>
-                                    <path d="M400.858,11.427c-3.241-7.421-8.85-11.132-16.854-11.136H18.564c-7.993,0-13.61,3.715-16.846,11.136
-                                          c-3.234,7.801-1.903,14.467,3.999,19.985l140.757,140.753v138.755c0,4.955,1.809,9.232,5.424,12.854l73.085,73.083
-                                          c3.429,3.614,7.71,5.428,12.851,5.428c2.282,0,4.66-0.479,7.135-1.43c7.426-3.238,11.14-8.851,11.14-16.845V172.166L396.861,31.413
-                                          C402.765,25.895,404.093,19.231,400.858,11.427z"></path>
-                                </g>
-                            </svg></span>
-                        <?php echo Label::getLabel('LBL_Filters', $siteLangId) ?></a></a>
-                </div>
+    <div class="sorting__head">
+        <div class="sorting__title">
+            <h4><?php echo sprintf(Label::getLabel('LBL_Found_the_best_%s_teachers_for_you',$siteLangId), $recordCount) ?></h4>
+        </div>
+        <div class="sorting__box">
+            <!-- <b>Sort By:</b> -->
+            <select name="filterSortBy" id="sort">
+                <?php $sortBy = CommonHelper::getSortbyArr(); ?>
+                <?php foreach ($sortBy as $filterVal => $filterLabel) { ?>
+                    <option <?php echo ($postedData['sortOrder'] == $filterVal) ? "selected='selected'" : ''; ?> value="<?php echo $filterVal; ?>"><?php echo $filterLabel; ?></option>
+                <?php } ?>
+            </select>
+            <div class="btn--filter">
+                <a href="javascript:void(0)" class="btn btn--primary btn--block btn--filters-js">
+                    <span class="svg-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="15px" height="15px" viewBox="0 0 402.577 402.577" style="enable-background:new 0 0 402.577 402.577;" xml:space="preserve">
+                            <g>
+                                <path d="M400.858,11.427c-3.241-7.421-8.85-11.132-16.854-11.136H18.564c-7.993,0-13.61,3.715-16.846,11.136
+                                      c-3.234,7.801-1.903,14.467,3.999,19.985l140.757,140.753v138.755c0,4.955,1.809,9.232,5.424,12.854l73.085,73.083
+                                      c3.429,3.614,7.71,5.428,12.851,5.428c2.282,0,4.66-0.479,7.135-1.43c7.426-3.238,11.14-8.851,11.14-16.845V172.166L396.861,31.413
+                                      C402.765,25.895,404.093,19.231,400.858,11.427z"></path>
+                            </g>
+                        </svg></span>
+                    <?php echo Label::getLabel('LBL_Filters', $siteLangId) ?></a></a>
             </div>
         </div>
-        <div class="listing__body">
-            <div class="box-wrapper" id="teachersListingContainer">
-                <?php foreach ($teachers as $teacher) { ?>
-                    <div class="box box-list ">
-                        <div class="box__primary">
-                            <div class="list__head">
-                                <div class="list__media ">
-                                    <div class="avtar avtar--centered ratio ratio--1by1" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
-                                        <?php if (User::isProfilePicUploaded($teacher['user_id'])) { ?>
-                                            <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><img src="<?php echo FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg'); ?>" alt=""></a>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                                <div class="list__price">
-                                    <p><?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></p>
-                                </div>
-                                <div class="list__action">
-                                    <a href="#" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
-                                    <a href="javascript:void(0)" onClick="generateThread(<?php echo $teacher['user_id']; ?>);" class="btn btn--bordered color-primary btn--block">
-                                        <svg class="icon icon--envelope">
-                                            <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#envelope' ?>"></use>
-                                        </svg>
-                                        <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
-                                    </a>
+    </div>
+    <div class="listing__body">
+        <div class="box-wrapper" id="teachersListingContainer">
+            <?php foreach ($teachers as $teacher) { ?>
+                <div class="box box-list ">
+                    <div class="box__primary">
+                        <div class="list__head">
+                            <div class="list__media ">
+                                <div class="avtar avtar--centered ratio ratio--1by1" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
+                                    <?php if (User::isProfilePicUploaded($teacher['user_id'])) { ?>
+                                        <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><img src="<?php echo FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg'); ?>" alt=""></a>
+                                    <?php } ?>
                                 </div>
                             </div>
-                            <div class="list__body">
-                                <div class="profile-detail">
-                                    <div class="profile-detail__head">
-                                        <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>" class="tutor-name">
-                                            <h4><?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?></h4>
-                                            <div class="flag">
-                                                <img src="images/flag-new/flag-uk.png" alt="">
-                                            </div>
-                                        </a>
-                                        <div class="follow ">
-                                            <a class="<?php echo($teacher['uft_id'])?'is--active':'';?>"  onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>,this)" href="javascript:void(0)">
-                                                <svg class="icon icon--heart">
-                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#heart'; ?>"></use>
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="profile-detail__body">
-                                        <div class="info-wrapper">
-                                            <div class="info-tag location">
-                                                <svg class="icon icon--location">
-                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#location' ?>"></use>
-                                                </svg>
-                                                <span class="lacation__name"><?php echo $teacher['user_country_name']; ?></span>
-                                            </div>
-                                            <div class="info-tag ratings">
-                                                <svg class="icon icon--rating">
-                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#rating' ?>"></use>
-                                                </svg>
-                                                <span class="value"><?php echo FatUtility::convertToType($teacher['teacher_rating'], FatUtility::VAR_FLOAT);?></span>
-                                                <span class="count"><?php echo '('.$teacher['totReviews'].')'; ?></span>
-                                            </div>
-                                            <div class="info-tag list-count">
-                                                <div class="total-count"><span class="value"><?php echo $teacher['studentIdsCnt'] ?></span><?php Label::getLabel('LBL_Student',$siteLangId); ?></div> - <div class="total-count"><span class="value"><?php echo $teacher['teacherTotLessons'] ?></span><?php echo Label::getLabel('LBL_Lessons',$siteLangId); ?></div>
-                                            </div>
-                                        </div>
-                                        <div class="tutor-info">
-                                            <div class="tutor-info__inner">
-                                                <div class="info__title">
-                                                    <h6><?php Label::getLabel('LBL_Teaches',$siteLangId); ?></h6>
-                                                </div>
-                                                <div class="info__language">
-                                                    <?php echo $teacher['teacherTeachLanguageName']; ?>
-                                                </div>
-                                            </div>
-                                            <div class="tutor-info__inner">
-                                                <div class="info__title">
-                                                    <h6><?php echo Label::getLabel('LBL_Speaks', $siteLangId); ?></h6>
-                                                </div>
-                                                <div class="info__language">
-                                                    <?php echo $teacher['spoken_language_names']; ?>
-                                                </div>
-                                            </div>
-                                            <div class="tutor-info__inner">
-                                                <div class="info__title">
-                                                    <h6><?php echo LABEL::getLabel('LBL_About', $siteLangId); ?></h6>
-                                                </div>
-                                                <p><?php echo $teacher['user_profile_info'] ?><a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><?php echo Label::getLabel('LBL_View_Profile',$siteLangId) ?></a></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="list__price">
+                                <p><?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></p>
+                            </div>
+                            <div class="list__action">
+                                <a href="#" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                                <a href="#" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>,this)" class="btn btn--bordered color-primary btn--block">
+                                    <svg class="icon icon--envelope">
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#envelope'; ?>"></use>
+                                    </svg>
+                                    <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
+                                </a>
                             </div>
                         </div>
-                        <?php
-                                
-                                $youTubeVideoArr = explode("?v=",$teacher['us_video_link']); ?>
-                        <div class="box__secondary">
-                            <div class="panel-box">
-                                <div class="panel-box__head">
-                                    <ul>
-                                        <li class="is--active">
-                                            <a class="panel-action" content="calender" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Availability',$siteLangId); ?></a>
-                                        </li>
-                                        <?php if(isset($youTubeVideoArr[1])) {?>
-                                        <li>
-                                            <a class="panel-action" content="video" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Introduction',$siteLangId); ?></a>
-                                        </li>
-                                        <?php   } ?>
-                                    </ul>
+                        <div class="list__body">
+                            <div class="profile-detail">
+                                <div class="profile-detail__head">
+                                    <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>" class="tutor-name">
+                                        <h4><?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?></h4>
+                                        <div class="flag">
+                                            <img src="<?php echo CONF_WEBROOT_URL.'images/flag-new/flag-uk.png' ?>" alt="">
+                                        </div>
+                                    </a>
+                                    <div class="follow ">
+                                        <a class="<?php echo ($teacher['uft_id']) ? 'is--active' : ''; ?>" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" href="javascript:void()">
+                                            <svg class="icon icon--heart">
+                                                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#heart'; ?>"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </div>
-
-                                <div class="panel-box__body">
-                                    <div class="panel-content calender">
-                                        <div class="custom-calendar">
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th>&nbsp;</th>
-                                                        <th><?php echo Label::getLabel('LBL_Mon',$siteLangId); ?></th>
-                                                        <th><?php echo Label::getLabel('LBL_Tue',$siteLangId); ?></th>
-                                                        <th><?php echo Label::getLabel('LBL_Wed',$siteLangId); ?></th>
-                                                        <th><?php echo Label::getLabel('LBL_Thu',$siteLangId); ?></th>
-                                                        <th><?php echo Label::getLabel('LBL_Fri',$siteLangId); ?></th>
-                                                        <th><?php echo Label::getLabel('LBL_Sat',$siteLangId); ?></th>
-                                                        <th><?php echo Label::getLabel('LBL_Sun',$siteLangId); ?></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    foreach ($slots as $key => $slot) {
-                                                        $days = [
-                                                            json_decode($teacher['testat_day1'], 1),
-                                                            json_decode($teacher['testat_day2'], 1),
-                                                            json_decode($teacher['testat_day3'], 1),
-                                                            json_decode($teacher['testat_day4'], 1),
-                                                            json_decode($teacher['testat_day5'], 1),
-                                                            json_decode($teacher['testat_day6'], 1),
-                                                            json_decode($teacher['testat_day7'], 1)
-                                                        ];
-                                                    ?>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="cal-cell"><?php echo $slot; ?></div>
-                                                            </td>
-                                                            <?php foreach ($days as $day) { ?>
-                                                                <td class="is-hover">
-                                                                    <?php if ($day[$key][1] > 0) { ?>
-                                                                        <div class="cal-cell <?php echo $colorClass[$day[$key][1]]; ?>"></div>
-                                                                        <div class="tooltip tooltip--top bg-black"><?php echo $day[$key][1]; ?> <?php echo Label::getLabel('LBL_Hrs',$siteLangId); ?></div>
-                                                                    <?php } else { ?>
-                                                                        <div class="cal-cell"></div>
-                                                                    <?php } ?>
-                                                                </td>
-                                                            <?php } ?>
-                                                        </tr>
-                                                    <?php } ?>
-                                                </tbody>
-                                            </table>
+                                <div class="profile-detail__body">
+                                    <div class="info-wrapper">
+                                        <div class="info-tag location">
+                                            <svg class="icon icon--location">
+                                                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#location'; ?>"></use>
+                                            </svg>
+                                            <span class="lacation__name"><?php echo $teacher['user_country_name']; ?></span>
+                                        </div>
+                                        <div class="info-tag ratings">
+                                            <svg class="icon icon--rating">
+                                                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#rating'; ?>"></use>
+                                            </svg>
+                                            <span class="value"><?php  echo FatUtility::convertToType($teacher['teacher_rating'], FatUtility::VAR_FLOAT); ?></span>
+                                            <span class="count"><?php echo '('.$teacher['totReviews'].')'; ?></span>
+                                        </div>
+                                        <div class="info-tag list-count">
+                                            <div class="total-count"><span class="value"><?php echo $teacher['studentIdsCnt'];  ?></span><?php echo Label::getLabel('LBL_Students',$siteLangId); ?></div> - <div class="total-count"><span class="value"><?php echo $teacher['teacherTotLessons']; ?></span><?php echo Label::getLabel('LBL_Lessons',$siteLangId);  ?></div>
                                         </div>
                                     </div>
-                                    <div class="panel-content video" style="display:none;">
-                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $youTubeVideoArr[1]; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                    <div class="tutor-info">
+                                        <div class="tutor-info__inner">
+                                            <div class="info__title">
+                                                <h6><?php Label::getLabel('LBL_Teaches',$siteLangId); ?></h6>
+                                            </div>
+                                            <div class="info__language">
+                                                <?php echo $teacher['teacherTeachLanguageName']; ?>
+                                            </div>
+                                        </div>
+                                        <div class="tutor-info__inner">
+                                            <div class="info__title">
+                                                <h6><?php echo Label::getLabel('LBL_Speaks', $siteLangId); ?></h6>
+                                            </div>
+                                            <div class="info__language">
+                                                <?php echo $teacher['spoken_language_names']; ?>
+                                            </div>
+                                        </div>
+                                        <div class="tutor-info__inner">
+                                            <div class="info__title">
+                                                <h6><?php echo LABEL::getLabel('LBL_About', $siteLangId); ?></h6>
+                                            </div>
+                                            <p><?php echo $teacher['user_profile_info'] ?><a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><?php echo Label::getLabel('LBL_View_Profile',$siteLangId) ?></a></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                <?php } ?>
-                <!-- <div class="show-more">
-                        <a href="#" class="btn btn--show">Show More</a>
-                </div> -->
-            </div>
+                    <div class="box__secondary">
+                        <div class="panel-box">
+                            <div class="panel-box__head">
+                                <ul>
+                                    <li class="is--active">
+                                        <a class="panel-action" content="calender" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Availability', $siteLangId); ?></a>
+                                    </li>
+                                    <?php if (!empty($teacher['us_video_link'])) { ?>
+                                        <li>
+                                            <a class="panel-action" content="video" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Introduction', $siteLangId); ?></a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                            </div>
+
+                            <div class="panel-box__body">
+                                <div class="panel-content calender">
+                                    <div class="custom-calendar">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>&nbsp;</th>
+                                                    <th><?php echo Label::getLabel('LBL_Sun', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Mon', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Tue', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Wed', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Thu', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Fri', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Sat', $siteLangId); ?></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php $timeslots = $teacher['testat_timeslots'] ?? CommonHelper::getEmptyDaySlots(); ?>
+                                                <?php foreach ($slots as $index => $slot) { ?>
+                                                    <tr>
+                                                        <td><div class="cal-cell"><?php echo $slot; ?></div></td>
+                                                        <?php foreach ($timeslots as $day => $hours) { ?>
+                                                            <?php $hour = $hours[$index] ?? 0; ?>
+                                                            <td class="is-hover">
+                                                                <?php if ($hour > 0) { ?>
+                                                                    <div class="cal-cell <?php echo $colorClass[$hour]; ?>"></div>
+                                                                    <div class="tooltip tooltip--top bg-black"><?php echo $hour; ?> <?php echo Label::getLabel('LBL_Hrs',$siteLangId); ?></div>
+                                                                <?php } else { ?>
+                                                                    <div class="cal-cell"></div>
+                                                                <?php } ?>
+                                                            </td>
+                                                        <?php } ?>
+                                                    </tr>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="panel-content video" style="display:none;">
+                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $teacher['us_video_link']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
         </div>
-<?php
+    </div>
+    <?php
     echo FatUtility::createHiddenFormFromData($postedData, array('name' => 'frmTeacherSearchPaging'));
     $pagingArr = ['page' => $page, 'pageCount' => $pageCount, 'recordCount' => $recordCount];
     $this->includeTemplate('_partial/pagination.php', $pagingArr, false);
 } else {
-?>
+    ?>
     <div class="box -padding-30" style="margin-bottom: 30px;">
         <div class="message-display">
             <div class="message-display__icon">
@@ -219,5 +203,5 @@ $colorClass = [
             <h5><?php echo Label::getLabel('LBL_No_Result_found!!',$siteLangId); ?></h5>
         </div>
     </div>
-<?php
+    <?php
 }

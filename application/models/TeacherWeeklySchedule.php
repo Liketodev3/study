@@ -82,8 +82,11 @@ class TeacherWeeklySchedule extends MyAppModel
         $gaCount = $gaRs->totalRecords();
         if ($weeklySchCount > 0 && $gaCount > 0) {
             $weeklyDateAvailability = ($weeklyDate['twsch_is_available'] == TeacherWeeklySchedule::UNAVAILABLE) ? TeacherWeeklySchedule::AVAILABLE : TeacherWeeklySchedule::UNAVAILABLE;
-            $db->updateFromArray(TeacherWeeklySchedule::DB_TBL, ['twsch_is_available' => $weeklyDateAvailability],
-                    ['smt' => 'twsch_date = ? and twsch_end_date = ? and twsch_start_time = ? and twsch_end_time = ? and twsch_user_id = ?', 'vals' => [$date, $endDate, $startTime, $endTime, $userId]]);
+            $db->updateFromArray(
+                TeacherWeeklySchedule::DB_TBL,
+                ['twsch_is_available' => $weeklyDateAvailability],
+                ['smt' => 'twsch_date = ? and twsch_end_date = ? and twsch_start_time = ? and twsch_end_time = ? and twsch_user_id = ?', 'vals' => [$date, $endDate, $startTime, $endTime, $userId]]
+            );
             return true;
         }
         $deleteRecords = $db->deleteRecords(TeacherWeeklySchedule::DB_TBL, ['smt' => 'twsch_user_id = ? and twsch_id = ?', 'vals' => [$userId, $id]]);
@@ -114,17 +117,17 @@ class TeacherWeeklySchedule extends MyAppModel
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
         foreach ($postJson as $k => $postObj) {
-            $dateTime =  MyDate::changeDateTimezone($postObj->date. ' ' . $postObj->start, $user_timezone, $systemTimeZone);
+            $dateTime =  MyDate::changeDateTimezone($postObj->date . ' ' . $postObj->start, $user_timezone, $systemTimeZone);
             $date = date('Y-m-d', strtotime($dateTime));
             $dateArray[$date] = $date;
-           
+
             if (!empty($postObj->_id) && $postObj->action != "fromGeneralAvailability") {
                 $postDataId[$postObj->_id] = $postObj->_id;
             }
-            
+
             $postJsonArr[] = $postObj;
         }
-       
+
         if (!empty($dateArray)) {
             $db = FatApp::getDb();
             $srch = new TeacherWeeklyScheduleSearch();
@@ -137,10 +140,10 @@ class TeacherWeeklySchedule extends MyAppModel
             $dateRecordId = $db->fetchAllAssoc($rs);
             $needToDelete = array_diff_key($dateRecordId, $postDataId);
         }
-       
+
         $db->startTransaction();
         foreach ($postJsonArr as $val) {
-            if(empty($val->date) && empty($val->start) && empty($val->endDate) && empty($val->end)){
+            if (empty($val->date) && empty($val->start) && empty($val->endDate) && empty($val->end)) {
                 continue;
             }
 
@@ -149,7 +152,7 @@ class TeacherWeeklySchedule extends MyAppModel
 
             $startDateTime = MyDate::changeDateTimezone($val->date . ' ' . $val->start, $user_timezone, $systemTimeZone);
             $endDateTime = MyDate::changeDateTimezone($val->endDate . ' ' . $val->end, $user_timezone, $systemTimeZone);
-            
+
             $startDateTimeUnix = strtotime($startDateTime);
             $endDateTimeUnix = strtotime($endDateTime);
 
@@ -180,7 +183,7 @@ class TeacherWeeklySchedule extends MyAppModel
         }
         if (!empty($needToDelete)) {
             if (!$db->query('DELETE FROM ' . TeacherWeeklySchedule::DB_TBL . ' WHERE twsch_user_id = ' . $userId .
-                            ' and twsch_id IN (' . implode(",", array_keys($needToDelete)) . ')')) {
+                ' and twsch_id IN (' . implode(",", array_keys($needToDelete)) . ')')) {
                 $db->rollbackTransaction();
                 $this->error = $db->getError();
                 return false;
@@ -224,7 +227,7 @@ class TeacherWeeklySchedule extends MyAppModel
         $tWsrchC->setPageSize(1);
         $tWRsC = $tWsrchC->getResultSet();
         $tWcountC = $tWRsC->totalRecords();
-       
+
         if ($tWcountC > 0) {
             $tWsrch = clone $tWsrchC;
             $tWsrch->addCondition('mysql_func_CONCAT(twsch_date," ", twsch_start_time)', '<=', $startTime, 'AND', true);
@@ -253,17 +256,11 @@ class TeacherWeeklySchedule extends MyAppModel
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStart);
             foreach ($gARows as $row) {
                 $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
-                if ($row['tgavl_end_time'] == "00:00:00" || $row['tgavl_end_time'] <= $row['tgavl_start_time']) {
-                    $date1 = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_end_time']));
-                    $endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime($date1)));
-                } else {
-                    $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_end_time']));
-                }
+                $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']));
+
                 $_startDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($date)));
                 $_endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($endDate)));
-                if (strtotime($_endDate) <= strtotime($_startDate)) {
-                    $_endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime($_endDate)));
-                }
+
                 if (strtotime($_startDate) <= strtotime($startTime) && strtotime($_endDate) >= strtotime($endTime)) {
                     $generalAvail++;
                 }
@@ -336,17 +333,11 @@ class TeacherWeeklySchedule extends MyAppModel
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStart);
             foreach ($gARows as $row) {
                 $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
-                if ($row['tgavl_end_time'] == "00:00:00" || $row['tgavl_end_time'] <= $row['tgavl_start_time']) {
-                    $date1 = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_end_time']));
-                    $endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime($date1)));
-                } else {
-                    $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_end_time']));
-                }
+                $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']));
+
                 $_startDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($date)));
                 $_endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($endDate)));
-                if (strtotime($_endDate) <= strtotime($_startDate)) {
-                    $_endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime($_endDate)));
-                }
+
                 if (strtotime($_startDate) <= strtotime($startDateTime) && strtotime($_endDate) >= strtotime($endDateTime)) {
                     $generalAvail++;
                 }
@@ -357,5 +348,4 @@ class TeacherWeeklySchedule extends MyAppModel
         }
         return true;
     }
-
 }

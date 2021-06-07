@@ -146,6 +146,7 @@ class LearnerController extends LearnerBaseController
 
     public function toggleTeacherFavorite()
     {
+        
         $post = FatApp::getPostedData();
         $teacherId = FatUtility::int($post['teacher_id']);
         $loggedUserId = UserAuthentication::getLoggedUserId();
