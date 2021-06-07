@@ -127,11 +127,11 @@ class TeacherSearch extends SearchBase
             $condition = [];
             foreach ($weekDays as $day) {
                 foreach ($timeSlots as $slot) {
-                    array_push($condition, '(JSON_EXTRACT(testat_timeslots, "$.d' . $day . '[' . $slot . ']") > 0)');
+                    array_push($condition, 'JSON_EXTRACT(testat_timeslots, "$.d' . $day . '[' . $slot . ']") > 0');
                 }
             }
             if (count($condition)) {
-                $this->addDirectCondition(implode(" OR ", $condition), 'AND');
+                $this->addDirectCondition('(' . implode(" OR ", $condition) . ')', 'AND');
             }
         }
         /* From Country */
@@ -215,6 +215,7 @@ class TeacherSearch extends SearchBase
         $langData = static::getTeachersLangData($langId, $teacherIds);
         $teachLangs = static::getTeachLangs($langId, $teacherIds);
         $speakLangs = static::getSpeakLangs($langId, $teacherIds);
+        $videos = static::getYouTubeVideos($teacherIds);
         foreach ($records as $key => $record) {
             $record['uft_id'] = $favorites[$record['user_id']] ?? 0;
             $record['user_profile_info'] = $langData[$record['user_id']] ?? '';
@@ -223,9 +224,28 @@ class TeacherSearch extends SearchBase
             $record['spoken_language_names'] = $speakLangs[$record['user_id']]['slanguage_name'] ?? '';
             $record['spoken_languages_proficiency'] = $speakLangs[$record['user_id']]['utsl_proficiency'] ?? '';
             $record['testat_timeslots'] = json_decode($record['testat_timeslots'], true);
+            $record['us_video_link'] = explode("?v=", $videos[$record['user_id']] ?? '')[1] ?? '';
             $records[$key] = $record;
         }
         return $records;
+    }
+
+    /**
+     * Get YouTube Videos
+     * 
+     * @param array $teacherIds
+     * @return array
+     */
+    public static function getYouTubeVideos(array $teacherIds): array
+    {
+        if (count($teacherIds) == 0) {
+            return [];
+        }
+        $srch = new SearchBase(UserSetting::DB_TBL);
+        $srch->addCondition('us_user_id', 'In', $teacherIds);
+        $srch->addMultipleFields(['us_user_id', 'us_video_link']);
+        $srch->doNotCalculateRecords();
+        return FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
     }
 
     /**

@@ -164,15 +164,7 @@ class TeacherStat extends FatModel
     public function setAvailability(array $post)
     {
         $availability = json_decode($post['data'] ?? '', true);
-        $emptySlots = [
-            'd0' => [0, 0, 0, 0, 0, 0],
-            'd1' => [0, 0, 0, 0, 0, 0],
-            'd2' => [0, 0, 0, 0, 0, 0],
-            'd3' => [0, 0, 0, 0, 0, 0],
-            'd4' => [0, 0, 0, 0, 0, 0],
-            'd5' => [0, 0, 0, 0, 0, 0],
-            'd6' => [0, 0, 0, 0, 0, 0]
-        ];
+        $emptySlots = CommonHelper::getEmptyDaySlots();
         $data = ['testat_availability' => 0, 'testat_timeslots' => json_encode($emptySlots)];
         if (!empty($availability)) {
             $srch = new SearchBase(TeacherGeneralAvailability::DB_TBL);

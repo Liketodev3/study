@@ -1808,4 +1808,26 @@ class CommonHelper extends FatUtility
         return false;
     }
 
+    public static function getEmptyDaySlots()
+    {
+        return [
+            'd0' => [0, 0, 0, 0, 0, 0],
+            'd1' => [0, 0, 0, 0, 0, 0],
+            'd2' => [0, 0, 0, 0, 0, 0],
+            'd3' => [0, 0, 0, 0, 0, 0],
+            'd4' => [0, 0, 0, 0, 0, 0],
+            'd5' => [0, 0, 0, 0, 0, 0],
+            'd6' => [0, 0, 0, 0, 0, 0]
+        ];
+    }
+
+    public static function getSortbyArr()
+    {
+        return [
+            'popularity_desc' => Label::getLabel('LBL_By_Popularity'),
+            'price_asc' => Label::getLabel('LBL_By_Price_Low_to_High'),
+            'price_desc' => Label::getLabel('LBL_By_Price_High_to_Low'),
+        ];
+    }
+
 }

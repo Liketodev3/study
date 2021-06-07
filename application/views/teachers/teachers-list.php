@@ -15,7 +15,8 @@ $colorClass = [
         <div class="sorting__box">
             <!-- <b>Sort By:</b> -->
             <select name="filterSortBy" id="sort">
-                <?php foreach ($filters as $filterVal => $filterLabel) { ?>
+                <?php $sortBy = CommonHelper::getSortbyArr(); ?>
+                <?php foreach ($sortBy as $filterVal => $filterLabel) { ?>
                     <option <?php echo ($postedData['sortOrder'] == $filterVal) ? "selected='selected'" : ''; ?> value="<?php echo $filterVal; ?>"><?php echo $filterLabel; ?></option>
                 <?php } ?>
             </select>
@@ -24,9 +25,9 @@ $colorClass = [
                     <span class="svg-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="15px" height="15px" viewBox="0 0 402.577 402.577" style="enable-background:new 0 0 402.577 402.577;" xml:space="preserve">
                             <g>
                                 <path d="M400.858,11.427c-3.241-7.421-8.85-11.132-16.854-11.136H18.564c-7.993,0-13.61,3.715-16.846,11.136
-                                          c-3.234,7.801-1.903,14.467,3.999,19.985l140.757,140.753v138.755c0,4.955,1.809,9.232,5.424,12.854l73.085,73.083
-                                          c3.429,3.614,7.71,5.428,12.851,5.428c2.282,0,4.66-0.479,7.135-1.43c7.426-3.238,11.14-8.851,11.14-16.845V172.166L396.861,31.413
-                                          C402.765,25.895,404.093,19.231,400.858,11.427z"></path>
+                                      c-3.234,7.801-1.903,14.467,3.999,19.985l140.757,140.753v138.755c0,4.955,1.809,9.232,5.424,12.854l73.085,73.083
+                                      c3.429,3.614,7.71,5.428,12.851,5.428c2.282,0,4.66-0.479,7.135-1.43c7.426-3.238,11.14-8.851,11.14-16.845V172.166L396.861,31.413
+                                      C402.765,25.895,404.093,19.231,400.858,11.427z"></path>
                             </g>
                         </svg></span>
                     <?php echo Label::getLabel('LBL_Filters', $siteLangId) ?></a></a>
@@ -69,7 +70,7 @@ $colorClass = [
                                         </div>
                                     </a>
                                     <div class="follow ">
-                                        <a class="<?php echo ($teacher['uft_id']) ? 'is--active' : ''; ?>" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>,this)" href="javascript:void()">
+                                        <a class="<?php echo ($teacher['uft_id']) ? 'is--active' : ''; ?>" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" href="javascript:void()">
                                             <svg class="icon icon--heart">
                                                 <use xlink:href="images/sprite.yo-coach.svg#heart"></use>
                                             </svg>
@@ -123,9 +124,6 @@ $colorClass = [
                             </div>
                         </div>
                     </div>
-                    <?php
-
-                    $youTubeVideoArr = explode("?v=", $teacher['us_video_link']); ?>
                     <div class="box__secondary">
                         <div class="panel-box">
                             <div class="panel-box__head">
@@ -133,11 +131,11 @@ $colorClass = [
                                     <li class="is--active">
                                         <a class="panel-action" content="calender" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Availability', $siteLangId); ?></a>
                                     </li>
-                                    <?php if (isset($youTubeVideoArr[1])) { ?>
+                                    <?php if (!empty($teacher['us_video_link'])) { ?>
                                         <li>
                                             <a class="panel-action" content="video" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Introduction', $siteLangId); ?></a>
                                         </li>
-                                    <?php   } ?>
+                                    <?php } ?>
                                 </ul>
                             </div>
 
@@ -148,22 +146,22 @@ $colorClass = [
                                             <thead>
                                                 <tr>
                                                     <th>&nbsp;</th>
+                                                    <th><?php echo Label::getLabel('LBL_Sun', $siteLangId); ?></th>
                                                     <th><?php echo Label::getLabel('LBL_Mon', $siteLangId); ?></th>
                                                     <th><?php echo Label::getLabel('LBL_Tue', $siteLangId); ?></th>
                                                     <th><?php echo Label::getLabel('LBL_Wed', $siteLangId); ?></th>
                                                     <th><?php echo Label::getLabel('LBL_Thu', $siteLangId); ?></th>
                                                     <th><?php echo Label::getLabel('LBL_Fri', $siteLangId); ?></th>
                                                     <th><?php echo Label::getLabel('LBL_Sat', $siteLangId); ?></th>
-                                                    <th><?php echo Label::getLabel('LBL_Sun', $siteLangId); ?></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($teacher['testat_timeslots'] as $day => $hours) { ?>
+                                                <?php $timeslots = $teacher['testat_timeslots'] ?? CommonHelper::getEmptyDaySlots(); ?>
+                                                <?php foreach ($slots as $index => $slot) { ?>
                                                     <tr>
-                                                        <td>
-                                                            <div class="cal-cell"><?php echo $slots[0]; ?></div>
-                                                        </td>
-                                                        <?php foreach ($hours as $hour) { ?>
+                                                        <td><div class="cal-cell"><?php echo $slot; ?></div></td>
+                                                        <?php foreach ($timeslots as $day => $hours) { ?>
+                                                            <?php $hour = $hours[$index] ?? 0; ?>
                                                             <td class="is-hover">
                                                                 <?php if ($hour > 0) { ?>
                                                                     <div class="cal-cell <?php echo $colorClass[$hour]; ?>"></div>
@@ -180,7 +178,7 @@ $colorClass = [
                                     </div>
                                 </div>
                                 <div class="panel-content video" style="display:none;">
-                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $youTubeVideoArr[1]; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $teacher['us_video_link']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                 </div>
                             </div>
                         </div>
@@ -189,12 +187,12 @@ $colorClass = [
             <?php } ?>
         </div>
     </div>
-<?php
+    <?php
     echo FatUtility::createHiddenFormFromData($postedData, array('name' => 'frmTeacherSearchPaging'));
     $pagingArr = ['page' => $page, 'pageCount' => $pageCount, 'recordCount' => $recordCount];
     $this->includeTemplate('_partial/pagination.php', $pagingArr, false);
 } else {
-?>
+    ?>
     <div class="box -padding-30" style="margin-bottom: 30px;">
         <div class="message-display">
             <div class="message-display__icon">
@@ -205,5 +203,5 @@ $colorClass = [
             <h5><?php echo Label::getLabel('LBL_No_Result_found!!'); ?></h5>
         </div>
     </div>
-<?php
+    <?php
 }
