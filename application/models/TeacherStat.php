@@ -175,7 +175,15 @@ class TeacherStat extends FatModel
             $srch->addCondition('tgavl_user_id', '=', $this->userId);
             $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
             $records = [];
+            $currentDate = date('Y-m-d H:i:s');
+            $systemTimezone = MyDate::getTimeZone();
+            $userTimezone = MyDate::getUserTimeZone();
+            $userDate = MyDate::changeDateTimezone($currentDate, $userTimezone, $systemTimezone);
+            $hourDiff = MyDate::hoursDiff($currentDate, $userDate);
             foreach ($rows as $key => $row) {
+                $row['tgavl_day'] = $row['tgavl_day'] % 6;
+                $row['startdate'] = date('Y-m-d H:i:s', strtotime($row['startdate'] . ' ' . $hourDiff . ' hour'));
+                $row['enddate'] = date('Y-m-d H:i:s', strtotime($row['enddate'] . ' ' . $hourDiff . ' hour'));
                 $tmpRecords = $this->breakIntoDays($row);
                 foreach ($tmpRecords as $tmpRecord) {
                     array_push($records, $tmpRecord);
