@@ -7,13 +7,11 @@ $alert: "alert";
   // z-index: 10000;
   display: flex;min-height: 60px;
   align-items: center;
-  min-width: 244px;
+  min-width: 300px;
   margin-bottom: theme('margin.3');
   padding: theme('padding.2') theme('padding.3'); color: theme('color.white');justify-content: space-between;
   background-color: theme('color.transparent');
   font-size: theme('font.size.small');
-  flex-direction: row-reverse;
-  border-radius: 5px;
 
   &__cross{
     margin-#{theme('direction.left','value')}: auto;
@@ -23,18 +21,22 @@ $alert: "alert";
     padding: theme('padding.1') theme('padding.2');
   }
 
-  &--success{padding-#{theme('direction.left','value')}: 10px;background-color:#00bd7d ;
+  &--success{padding-#{theme('direction.left','value')}: 60px;background-color:#00bd7d ;
     &:before{  background:url(/images/icon-success.svg) no-repeat;background-size:30px;position: absolute;#{theme('direction.left','value')}: 15px;top: 50%; transform: translate(0,-50%); content: "";width: 30px;height: 30px;}
   }
 
-  &--info{padding-#{theme('direction.left','value')}: 10px;background-color:#0055ff ;
+  &--info{padding-#{theme('direction.left','value')}: 60px;background-color:#0055ff ;
   &:before{  background: url(/images/icon-info.svg) no-repeat;background-size:30px;position: absolute;#{theme('direction.left','value')}: 15px;top: 50%; transform: translate(0,-50%);content: "";width: 30px;height: 30px;}
 }
-&--warning{padding-#{theme('direction.left','value')}: 10px;background-color:#ffab22 ;
+&--warning{padding-#{theme('direction.left','value')}: 60px;background-color:#ffab22 ;
 &:before{  background: url(/images/icon-info.svg) no-repeat;background-size:30px;position: absolute;#{theme('direction.left','value')}: 15px;top: 50%; transform: translate(0,-50%);content: "";width: 30px;height: 30px;}
 }
 
-&--danger{padding-#{theme('direction.left','value')}: 10px;background-color:#ff0251 ;
+&--danger{padding-#{theme('direction.left','value')}: 60px;background-color:#ff0251 ;
+&:before{  background: url(/images/icon-attention.svg) no-repeat;background-size:30px;position: absolute;#{theme('direction.left','value')}: 15px;top: 50%; transform: translate(0,-50%);content: "";width: 30px;height: 30px;}
+}
+
+&--attention{
 &:before{  background: url(/images/icon-attention.svg) no-repeat;background-size:30px;position: absolute;#{theme('direction.left','value')}: 15px;top: 50%; transform: translate(0,-50%);content: "";width: 30px;height: 30px;}
 }
 

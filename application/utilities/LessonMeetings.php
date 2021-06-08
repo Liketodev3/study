@@ -21,7 +21,7 @@ class LessonMeetings
             case ApplicationConstants::MEETING_COMET_CHAT:
                 return $this->getCometChatMeetingData($lessonData);
                 break;
-			case ApplicationConstants::MEETING_WIZIQ:
+            case ApplicationConstants::MEETING_WIZIQ:
                 if ($loggedUserId == $lessonData['teacherId']) {
                     return $this->getHostWiziqMeetingData($lessonData);
                 }
@@ -208,7 +208,7 @@ class LessonMeetings
         }
         return [];
     }
-	
+
     private function getHostWiziqMeetingData(array $lessonData): array
     {
         $meetDetail = $this->getHostWiziqMeetingDetails($lessonData);

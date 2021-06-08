@@ -54,13 +54,33 @@ class applicationConstants
     const MEETING_ZOOM = 'zoom';
     const MEETING_LESSON_SPACE = 'lesson_space';
     const MEETING_WIZIQ = 'wiziq';
-
     const PHONE_NO_REGEX = "^[0-9(\)-\-{\}  +-+]{4,16}$";
     const PASSWORD_REGEX = "^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%-_]{8,15}$";
     const CREDIT_CARD_NO_REGEX = "^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$";
     const CVV_NO_REGEX = "^[0-9]{3,4}$";
     const CLASS_TYPE_GROUP = 'group';
     const CLASS_TYPE_1_TO_1 = '1to1';
+    /* weekdays */
+    const DAY_SUNDAY = 0;
+    const DAY_MONDAY = 1;
+    const DAY_TUESDAY = 2;
+    const DAY_WEDNESDAY = 3;
+    const DAY_THURSDAY = 4;
+    const DAY_FRIDAY = 5;
+    const DAY_SATURDAY = 6;
+
+    public static function getWeekDays()
+    {
+        return [
+            static::DAY_SUNDAY => Label::getLabel('LBL_Sunday'),
+            static::DAY_MONDAY => Label::getLabel('LBL_Monday'),
+            static::DAY_TUESDAY => Label::getLabel('LBL_Tuesday'),
+            static::DAY_WEDNESDAY => Label::getLabel('LBL_Wednesday'),
+            static::DAY_THURSDAY => Label::getLabel('LBL_Thursday'),
+            static::DAY_FRIDAY => Label::getLabel('LBL_Friday'),
+            static::DAY_SATURDAY => Label::getLabel('LBL_Saturday')
+        ];
+    }
 
     public static function getWeightUnitsArr($langId)
     {
@@ -74,7 +94,6 @@ class applicationConstants
             static::WEIGHT_POUND => Label::getLabel('LBL_Pound', $langId),
         ];
     }
-
 
     public static function getClassTypeArray(int $langId)
     {

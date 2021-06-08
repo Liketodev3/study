@@ -27,12 +27,11 @@
     content: "";
     #{theme('direction.left','value')}: 0;
     position: absolute;
-    top: 50%;
+    top: -10px;
     z-index: 2;
     width: 30px;
     height: 30px;
     display: block;
-    transform: translateY(-50%);
 }
 
 #mbsmessage.alert--danger .content:before,
@@ -288,8 +287,9 @@
 }
 
 .alert--positioned-top-full {
-    #{theme('direction.right','value')}: 12px !important;
-    top: 12px;
+    #{theme('direction.left','value')}: 0 !important;
+    #{theme('direction.right','value')}: 0 !important;
+    top: 0;
 }
 
 

@@ -174,15 +174,12 @@ class MyDate extends FatDate
             $dateTime->setISODate(2018, 2, $day);
             $day = $dateTime->format('d');
             $date = "2018-01-" . $day;
-
             if (!empty($timeSlotArr)) {
                 foreach ($timeSlotArr as $timeKey => $timeSlot) {
                     $startDateTime = $date . ' ' . $timeSlot['startTime'];
                     $endDateTime = $date . ' ' . $timeSlot['endTime'];
-
                     $startDateTime = MyDate::changeDateTimezone($startDateTime, $user_timezone, $systemTimeZone);
                     $endDateTime = MyDate::changeDateTimezone($endDateTime, $user_timezone, $systemTimeZone);
-
                     $newWeekDayArray[] = [
                         'startDate' => $startDateTime,
                         'endDate' => $endDateTime
@@ -200,7 +197,6 @@ class MyDate extends FatDate
                 ];
             }
         }
-
         return $newWeekDayArray;
     }
 
@@ -209,6 +205,7 @@ class MyDate extends FatDate
         $fromDate = $fromDate ?: date('Y-m-d H:i:s');
         return round((strtotime($toDate) - strtotime($fromDate)) / 3600, $roundUpTo);
     }
+
     public static function getMonthStartAndEndDate(DateTime $dateTime): array
     {
         return [
@@ -235,9 +232,9 @@ class MyDate extends FatDate
     public static function timeDiffInMints($date1, $date2): int
     {
         $date1 = new DateTime($date1);
-        $date2 = new DateTime( $date2);
+        $date2 = new DateTime($date2);
         $difference = $date1->diff($date2);
-        
+
         $minutes = $difference->days * 24 * 60;
         $minutes += $difference->h * 60;
         $minutes += $difference->i;

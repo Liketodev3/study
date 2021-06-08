@@ -295,8 +295,8 @@ class ImageController extends FatController
                 $h = '';
                 break;
             case 'MEDIUM':
-                $w = 150;
-                $h = 150;
+                $w = 275;
+                $h = 275;
                 break;
             case 'SMALL':
                 $w = 60;
@@ -373,6 +373,11 @@ class ImageController extends FatController
                 $h = 200;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
+            case 'MEDIUM':
+                $w = 600;
+                $h = 450;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+                break;
             case 'BANNER':
                 $w = 945;
                 $h = 535;
@@ -412,20 +417,12 @@ class ImageController extends FatController
                     $h = 416;
                     break;
                 case 'DESKTOP':
-                    $w = 1920;
-                    $h = 800;
+                    $w = 2000;
+                    $h = 900;
                     break;
-                // case 'TABLET':
-                //     $w = 1024;
-                //     $h = 500;
-                //     break;
-                // case 'MOBILE':
-                //     $w = 640;
-                //     $h = 360;
-                //     break;
                 default:
-                    $w = 1920;
-                    $h = 800;
+                    $w = 2000;
+                    $h = 900;
                     break;
             }
             AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_CROP, false, true);
@@ -452,7 +449,9 @@ class ImageController extends FatController
                 AttachedFile::displayImage($image_name, $w, $h);
                 break;
             default:
-                AttachedFile::displayOriginalImage($image_name);
+                $w = 2000;
+                $h = 900;
+                AttachedFile::displayImage($image_name, $w, $h);
                 break;
         }
     }
@@ -484,6 +483,10 @@ class ImageController extends FatController
             case 'NORMAL':
                 $w = 625;
                 $h = 391;
+                break;
+            case 'MEDIUM':
+                $w = 275;
+                $h = 275;
                 break;
             default:
                 $h = 500;
@@ -553,8 +556,8 @@ class ImageController extends FatController
         $image_name = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
         switch (strtoupper($sizeType)) {
             case 'SMALL':
-                $w = 40;
-                $h = 40;
+                $w = 120;
+                $h = 120;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
                 break;
             default:
@@ -596,11 +599,9 @@ class ImageController extends FatController
     public function pwaIcon(int $size = 100)
     {
         $image_name = '';
-
         if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_APP_ICON, 0, 0, 0, true)) {
             $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         }
-
         switch ($size) {
             case '144':
                 $w = $h = 144;
@@ -618,17 +619,15 @@ class ImageController extends FatController
     public function pwaSplashIcon(int $size = 100)
     {
         $image_name = '';
-
         if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0, 0, 0, true)) {
             $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         }
-
         switch ($size) {
             case '144':
-                $w = $h =  144;
+                $w = $h = 144;
                 break;
             case '512':
-                $w = $h =  512;
+                $w = $h = 512;
                 break;
             default:
                 $w = $h = 100;
@@ -641,7 +640,7 @@ class ImageController extends FatController
     {
         $metaId = FatUtility::int($metaId);
         $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metaId, 0, $lang_id, false, 0);
-        $image_name = isset($file_row['afile_physical_path']) ?  $file_row['afile_physical_path'] : '';
+        $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         if ($sizeType) {
             switch (strtoupper($sizeType)) {
                 case 'SMALL':
@@ -659,7 +658,8 @@ class ImageController extends FatController
             }
             AttachedFile::displayImage($image_name, $w, $h, '', '', ImageResize::IMG_RESIZE_RESET_DIMENSIONS, false, true);
         } else {
-            AttachedFile::displayOriginalImage($image_name, '', '',  true);
+            AttachedFile::displayOriginalImage($image_name, '', '', true);
         }
     }
+
 }

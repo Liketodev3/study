@@ -15,11 +15,62 @@ class Common
 
     public static function languagesWithTeachersCount($template)
     {
-        $template->set("allLanguages", TeachingLanguage::getAllLangsWithUserCount(CommonHelper::getLangId()));
+        $siteLangId = CommonHelper::getLangId();
+        $template->set("allLanguages", TeachingLanguage::getAllLangsWithUserCount($siteLangId));
+        $template->set('siteLangId', $siteLangId);
+    }
+
+    public static function languagesWithOrdersCount($template)
+    {
+        $siteLangId = CommonHelper::getLangId();
+        $template->set("allLanguages", TeachingLanguage::getAllLangsWithOrderCount($siteLangId));
+        $template->set("siteLangId", $siteLangId);
+    }
+
+    public static function upcomingScheduledLessons($template)
+    {
+        $srch = new ScheduledLessonSearch(false);
+        $srch->addGroupBy('slesson_id');
+        $srch->joinOrder();
+        $srch->joinOrderProducts();
+        $srch->joinTeacher();
+        $srch->joinLearner();
+        $srch->joinTeacherCountry(CommonHelper::getLangId());
+        $srch->addCondition('order_is_paid', ' = ', Order::ORDER_IS_PAID);
+        $srch->joinTeacherSettings();
+        $srch->joinTeacherTeachLanguageView(CommonHelper::getLangId());
+        $srch->addOrder('slesson_date', 'ASC');
+        $srch->addOrder('slesson_status', 'ASC');
+        $srch->addMultipleFields([
+            'slns.slesson_id',
+            'slns.slesson_slanguage_id',
+            'sld.sldetail_learner_id as learnerId',
+            'slns.slesson_teacher_id as teacherId',
+            'ut.user_first_name as teacherFname',
+            'ut.user_url_name as user_url_name',
+            'ut.user_last_name as teacherLname',
+            'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName',
+            'IFNULL(teachercountry_lang.country_name, teachercountry.country_code) as teacherCountryName',
+            'slns.slesson_date',
+            'slns.slesson_start_time',
+            'slns.slesson_end_time',
+            'slns.slesson_status',
+            'slns.slesson_is_teacher_paid',
+            'op_lpackage_is_free_trial as is_trial',
+            'op_lesson_duration'
+        ]);
+        $srch->addCondition('slesson_status', ' = ', ScheduledLesson::STATUS_SCHEDULED);
+        $srch->addCondition('mysql_func_CONCAT(slns.slesson_date," ",slns.slesson_start_time )', '>=', date('Y-m-d H:i:s'), 'AND', true);
+        $srch->setPageSize(10);
+        $srch->setPageNumber(1);
+        $rs = $srch->getResultSet();
+        $lessons = FatApp::getDb()->fetchAll($rs);
+        $template->set("lessons", $lessons);
     }
 
     public static function topRatedTeachers($template)
     {
+        $siteLangId = CommonHelper::getLangId();
         $userObj = new UserSearch();
         $topRatedTeachers = $userObj->getTopRatedTeachers();
         if ($topRatedTeachers) {
@@ -29,6 +80,7 @@ class Common
                 }
             }
         }
+        $template->set('siteLangId', $siteLangId);
         $template->set("topRatedTeachers", $topRatedTeachers);
     }
 
@@ -65,7 +117,9 @@ class Common
     public static function headerLanguageArea($template)
     {
         $template->set('siteLangId', CommonHelper::getLangId());
+        $template->set('siteCurrencyId', CommonHelper::getCurrencyId());
         $template->set('languages', Language::getAllNames(false));
+        $template->set('currencies', Currency::getCurrencyAssoc(CommonHelper::getLangId()));
     }
 
     public static function headerUserLoginArea($template)
@@ -79,6 +133,10 @@ class Common
         $action = FatApp::getAction();
         $template->set('controllerName', $controllerName);
         $template->set('action', $action);
+        $template->set('siteLangId', CommonHelper::getLangId());
+        $template->set('siteCurrencyId', CommonHelper::getCurrencyId());
+        $template->set('languages', Language::getAllNames(false));
+        $template->set('currencies', Currency::getCurrencyAssoc(CommonHelper::getLangId()));
     }
 
     public static function languageCurrencySection($template)
@@ -108,6 +166,7 @@ class Common
 
     public static function teacherLeftFilters($template)
     {
+        $siteLangId = CommonHelper::getLangId();
         $frmFilters = new Form('teacherFilters');
         $filterSortBy = [
             'popularity_desc' => Label::getLabel('LBL_By_Popularity'),
@@ -118,7 +177,6 @@ class Common
         $teacherSrchObj = new UserSearch();
         $teacherSrchObj->setTeacherDefinedCriteria(true);
         $teacherSrchObj->doNotLimitRecords();
-
         /* preferences/skills[ */
         $prefSrch = clone $teacherSrchObj;
         $prefSrch->joinTable(Preference::DB_TBL_USER_PREF, 'INNER JOIN', 'u.user_id = utp.utpref_user_id', 'utp');
@@ -134,8 +192,8 @@ class Common
             $allPreferences[$teacherPreference['preference_type']][] = $teacherPreference;
         }
         $template->set('allPreferences', $allPreferences);
-        /* ] */
-        /* spoken languages[ */
+        $template->set('preferenceTypeArr', Preference::getPreferenceTypeArr(CommonHelper::getLangId()));
+  
         $spokenLangSrch = clone $teacherSrchObj;
         $spokenLangSrch->joinTable(UserToLanguage::DB_TBL, 'INNER JOIN', 'u.user_id = utsl2.utsl_user_id', 'utsl2');
         $spokenLangSrch->joinTable(SpokenLanguage::DB_TBL, 'INNER JOIN', 'utsl_slanguage_id = slanguage_id AND slanguage_active = 1');
@@ -151,14 +209,12 @@ class Common
         $priceSrch = clone $teacherSrchObj;
         $priceRs = $priceSrch->getResultSet();
         $priceArr = FatApp::getDb()->fetchAll($priceRs);
-
         if ($priceArr) {
             $newArr = [];
             $newArr['minPrice'] = min(array_column($priceArr, 'minPrice'));
             $newArr['maxPrice'] = max(array_column($priceArr, 'maxPrice'));
             $priceArr = $newArr;
         }
-
         if (CommonHelper::getCurrencyId() != CommonHelper::getSystemCurrencyId()) {
             $priceArr['minPrice'] = CommonHelper::displayMoneyFormat(($priceArr['minPrice']) ?? 0, false, false, false);
             $priceArr['maxPrice'] = CommonHelper::displayMoneyFormat(($priceArr['maxPrice']) ?? 0, false, false, false);
@@ -178,9 +234,11 @@ class Common
         $fromSrch->addGroupBy('user_country_id');
         $fromRs = $fromSrch->getResultSet();
         $fromArr = FatApp::getDb()->fetchAll($fromRs);
+        $teachLangs = TeachingLanguage::getAllLangs($siteLangId);
+        $template->set('teachLangs', $teachLangs);
         $template->set('fromArr', $fromArr);
-        /* ] */
         $template->set('genderArr', User::getGenderArr());
+        $template->set('siteLangId', $siteLangId);
         $template->set('frmFilters', $frmFilters);
     }
 
@@ -257,6 +315,76 @@ class Common
             $rootUrl .= $_SERVER['SERVER_NAME'];
         }
         return $rootUrl . CONF_WEBROOT_URL . ($row['urlrewrite_custom'] ?? $uri);
+    }
+
+    public static function getBrowseTutorSection($template)
+    {
+        $browseTutorPage = Extrapage::getBlockContent(Extrapage::BLOCK_BROWSE_TUTOR, commonHelper::getLangId());
+        $template->set('browseTutorPage', $browseTutorPage);
+    }
+
+    public static function whyUsTemplateContent($template)
+    {
+        $epageDetail = Extrapage::getBlockContent(Extrapage::BLOCK_WHY_US, CommonHelper::getLangId());
+        $template->set('epage', $epageDetail);
+    }
+
+    public static function getTeachLanguages($template)
+    {
+        $siteLangId = CommonHelper::getLangId();
+        $teachLangs = TeachingLanguage::getAllLangs();
+        $template->set('teachLangs', $teachLangs);
+        $template->set('siteLangId', $siteLangId);
+    }
+
+    public static function upcomingGroupClass($template)
+    {
+        $siteLangId = commonHelper::getLangId();
+        $pageSize = 3;
+        $srch = TeacherGroupClassesSearch::getSearchObj($siteLangId);
+        $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+        $srch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
+        $srch->setPageSize($pageSize);
+        $srch->addOrder('grpcls_start_datetime', 'Asc');
+        $rs = $srch->getResultSet();
+        $classesList = FatApp::getDb()->fetchAll($rs);
+        $template->set('siteLangId', $siteLangId);
+        $template->set('classes', $classesList);
+    }
+
+    public static function getBlogs($template)
+    {
+        $siteLangId = CommonHelper::getLangId();
+        $blogSrch = BlogPost::getSearchObject($siteLangId, true);
+    }
+
+    public static function getTestmonials($template)
+    {
+        $pageSize = 4;
+        $siteLangId = CommonHelper::getLangId();
+        $testmonialSrch = Testimonial::getSearchObject($siteLangId, true);
+        $testmonialSrch->joinTable(AttachedFile::DB_TBL, 'INNER  JOIN', 'af.afile_record_id = t.testimonial_id and afile_type =' . AttachedFile::FILETYPE_TESTIMONIAL_IMAGE, 'af');
+        $testmonialSrch->setPageSize($pageSize);
+        $testmonialList = FatApp::getDb()->fetchAll($testmonialSrch->getResultSet());
+        $template->set('testmonialList', $testmonialList);
+        $template->set('siteLangId', $siteLangId);
+    }
+
+    public static function getBlogsForGrids($template)
+    {
+        $pageSize = 4;
+        $siteLangId = CommonHelper::getLangId();
+        $blogPostSrch = BlogPost::getSearchObject($siteLangId, true, true);
+        $blogPostSrch->joinTable(AttachedFile::DB_TBL, 'INNER  JOIN', 'af.afile_record_id = bp.post_id and afile_type =' . AttachedFile::FILETYPE_BLOG_POST_IMAGE, 'af');
+        $blogPostSrch->setPageSize($pageSize);
+        $blogPostsList = FatApp::getDb()->fetchAll($blogPostSrch->getResultSet());
+        $template->set('blogPostsList', $blogPostsList);
+        $template->set('siteLangId', $siteLangId);
+    }
+
+    public static function footerSignUpNavigation($template)
+    {
+        
     }
 
 }

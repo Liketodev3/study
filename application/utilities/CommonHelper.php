@@ -194,8 +194,7 @@ class CommonHelper extends FatUtility
     {
         $langId = self::$_lang_id;
 
-
-        if ($useLangCode == true && FatApp::getConfig('CONF_LANG_SPECIFIC_URL', FatUtility::VAR_INT, 0) && count(LANG_CODES_ARR) > 1 && $langId  != FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1)) {
+        if ($useLangCode == true && FatApp::getConfig('CONF_LANG_SPECIFIC_URL', FatUtility::VAR_INT, 0) && count(LANG_CODES_ARR) > 1 && $langId != FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1)) {
 
             $use_root_url = rtrim($use_root_url, '/') . '/' . strtolower(LANG_CODES_ARR[$langId]) . '/';
         }
@@ -216,7 +215,6 @@ class CommonHelper extends FatUtility
         $srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'original', 'LIKE', strtolower($controller) . '/' . strtolower($action));
         $srch->addCondition(UrlRewrite::DB_TBL_PREFIX . 'lang_id', '=', $langId);
         $rs = $srch->getResultSet();
-
 
         if ($row = FatApp::getDb()->fetch($rs)) {
             if (strpos($row['urlrewrite_custom'], 'urlparameter') !== false) {
@@ -454,10 +452,10 @@ class CommonHelper extends FatUtility
             return 0;
         }
 
-        if(0 > $percentage){
-         return $total;
+        if (0 > $percentage) {
+            return $total;
         }
-        $percentage = ($percentage / 100) *  $total;
+        $percentage = ($percentage / 100) * $total;
         return number_format($percentage, 2);
     }
 
@@ -1011,7 +1009,7 @@ class CommonHelper extends FatUtility
 
     public static function getPlaceholderForAmtField()
     {
-        return self::$_currency_symbol_left.'0.00'.self::$_currency_symbol_right;
+        return self::$_currency_symbol_left . '0.00' . self::$_currency_symbol_right;
     }
 
     public static function concatCurrencySymbolWithAmtLbl()
@@ -1432,7 +1430,7 @@ class CommonHelper extends FatUtility
 
     public static function formatTimeSlotArr($arr)
     {
-        $timeSlotArr = array_intersect_key(TeacherGeneralAvailability::timeSlotArr(), array_flip($arr));
+        $timeSlotArr = array_intersect_key(TeacherGeneralAvailability::timeSlots(), array_flip($arr));
         $formattedArr = [];
         foreach ($timeSlotArr as $k => $timeSlot) {
             $breakTimeStrng = explode('-', $timeSlot);
@@ -1767,6 +1765,7 @@ class CommonHelper extends FatUtility
         $iv = substr(hash('sha256', ENCRYPTION_IV), 0, 16);
         return openssl_decrypt(base64_decode($string), "AES-256-CBC", $key, 0, $iv);
     }
+
     /**
      * Can Report Issue
      * @param string $starttime
@@ -1807,6 +1806,28 @@ class CommonHelper extends FatUtility
             return true;
         }
         return false;
+    }
+
+    public static function getEmptyDaySlots()
+    {
+        return [
+            'd0' => [0, 0, 0, 0, 0, 0],
+            'd1' => [0, 0, 0, 0, 0, 0],
+            'd2' => [0, 0, 0, 0, 0, 0],
+            'd3' => [0, 0, 0, 0, 0, 0],
+            'd4' => [0, 0, 0, 0, 0, 0],
+            'd5' => [0, 0, 0, 0, 0, 0],
+            'd6' => [0, 0, 0, 0, 0, 0]
+        ];
+    }
+
+    public static function getSortbyArr()
+    {
+        return [
+            'popularity_desc' => Label::getLabel('LBL_By_Popularity'),
+            'price_asc' => Label::getLabel('LBL_By_Price_Low_to_High'),
+            'price_desc' => Label::getLabel('LBL_By_Price_High_to_Low'),
+        ];
     }
 
 }

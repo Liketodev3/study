@@ -248,8 +248,6 @@ class UserSearch extends SearchBase
             $tlangSrch->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'tlanguage_id = utl.utl_tlanguage_id');
             $tlangSrch->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utl.utl_tlanguage_id AND tlanguagelang_lang_id = ' . $langId, 'sl_lang');
             $tlangSrch->addCondition('tlanguage_active', '=', applicationConstants::YES);
-
-            
             $tlangSrch->addMultipleFields(['GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ORDER BY tlanguage_name,tlanguage_identifier ) as teacherTeachLanguageName']);
             if (!empty($teachLangId)) {
                 $tlangSrch->addMultipleFields(['SUM(CASE when utl.utl_tlanguage_id = ' . $teachLangId . ' then 1 else 0 end) as teachLangId ']);
@@ -258,14 +256,14 @@ class UserSearch extends SearchBase
             $tlangSrch->addOrder('tlanguage_display_order');
         }
         $tlangSrch->addMultipleFields([
-            'utl_user_id', 
-            'GROUP_CONCAT(utl_id) as utl_ids', 
-            'min(ustelgpr_slot) as slot', 
-            'max(ustelgpr_price) AS maxPrice', 
-            'min(ustelgpr_price) AS minPrice', 
-            'min(ustelgpr.ustelgpr_min_slab) as minSlab', 
-            'max(ustelgpr.ustelgpr_max_slab) as maxSlab', 
-            'GROUP_CONCAT(DISTINCT utl_tlanguage_id) as utl_tlanguage_ids', 
+            'utl_user_id',
+            'GROUP_CONCAT(utl_id) as utl_ids',
+            'min(ustelgpr_slot) as slot',
+            'max(ustelgpr_price) AS maxPrice',
+            'min(ustelgpr_price) AS minPrice',
+            'min(ustelgpr.ustelgpr_min_slab) as minSlab',
+            'max(ustelgpr.ustelgpr_max_slab) as maxSlab',
+            'GROUP_CONCAT(DISTINCT utl_tlanguage_id) as utl_tlanguage_ids',
             'GROUP_CONCAT(DISTINCT ustelgpr_slot) as ustelgpr_slots'
         ]);
         $tlangSrch->doNotCalculateRecords();
@@ -279,14 +277,17 @@ class UserSearch extends SearchBase
 
     public function getTopRatedTeachers()
     {
+        $pageSize = 8;
         $this->addMultipleFields(['u.*', 'utls.*', 'cl.*']);
         $this->setTeacherDefinedCriteria();
         $this->addGroupBy('u.user_id');
         $this->joinRatingReview();
         $this->joinUserCountry(CommonHelper::getLangId());
         $this->addOrder('teacher_rating', 'DESC');
-        $this->setPageSize(6);
-        return  FatApp::getDb()->fetchAll($this->getResultSet());
+        $this->setPageSize($pageSize);
+        $db = FatApp::getDb();
+        $rs = $this->getResultSet();
+        return $teachersList = $db->fetchAll($rs);
     }
 
     public function joinUserTeachingLanguages($langId = 0, $keyword = '')

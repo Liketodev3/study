@@ -12,6 +12,7 @@ class Navigations extends MyAppModel
     const NAVTYPE_HEADER_MORE = 3;
     const NAVTYPE_FOOTER_RIGHT = 4;
     const NAVTYPE_FOOTER_BOTTOM = 5;
+    const NAVTYPE_FOOTER_SIGNUP = 6;
 
     public function __construct($id = 0)
     {

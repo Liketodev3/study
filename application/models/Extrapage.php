@@ -4,12 +4,11 @@ class Extrapage extends MyAppModel
 {
     const DB_TBL = 'tbl_extra_pages';
     const DB_TBL_PREFIX = 'epage_';
-
     const DB_TBL_LANG = 'tbl_extra_pages_lang';
     const DB_TBL_LANG_PREFIX = 'epagelang_';
-
     const BLOCK_PROFILE_INFO_BAR = 1;
-
+    const BLOCK_WHY_US = 2;
+    const BLOCK_BROWSE_TUTOR = 3;
     private $pageType;
 
     public function __construct($epageId = 0, $pageType = '')
@@ -21,13 +20,12 @@ class Extrapage extends MyAppModel
     public static function getSearchObject($langId = 0, $isActive = true)
     {
         $srch = new SearchBase(static::DB_TBL, 'ep');
-
         if ($langId > 0) {
             $srch->joinTable(
                 static::DB_TBL_LANG,
                 'LEFT OUTER JOIN',
                 'ep_l.' . static::DB_TBL_LANG_PREFIX . 'epage_id = ep.' . static::tblFld('id') . ' and
-			ep_l.' . static::DB_TBL_LANG_PREFIX . 'lang_id = ' . $langId,
+			     ep_l.' . static::DB_TBL_LANG_PREFIX . 'lang_id = ' . $langId,
                 'ep_l'
             );
         }
@@ -92,8 +90,6 @@ class Extrapage extends MyAppModel
 
     public static function getBlockContent(int $pageType , int $langId = 0) : string
     {
-       
-
         $langId = (0 > $langId) ? $langId : CommonHelper::getLangId();
         $srch = self::getSearchObject($langId);
         $srch->addCondition('ep.epage_type', '=', $pageType);
@@ -101,9 +97,7 @@ class Extrapage extends MyAppModel
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
         $rs = $srch->getResultSet();
-      
         $resultData = FatApp::getDb()->fetch($rs);
-        
         if(empty($resultData['epage_content'])){
             return "";
         }

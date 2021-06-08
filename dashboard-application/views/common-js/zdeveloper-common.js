@@ -437,9 +437,9 @@ $(document).ready(function(){
 			isRuningTeacherFavoriteAjax = false;
 			if( ans.status ){
 				if( ans.action == 'A' ){
-					$(el).addClass("is-active");
+					$(el).addClass("is--active");
 				} else if( ans.action == 'R' ){
-					$(el).removeClass("is-active");
+					$(el).removeClass("is--active");
 				}
                 if(typeof searchfavorites != 'undefined'){
                     searchfavorites(document.frmFavSrch);

@@ -137,7 +137,7 @@ class BlogController extends MyAppController
         $title = $blogPostData['post_title'];
         $post_description = trim(CommonHelper::subStringByWords(strip_tags(CommonHelper::renderHtml($blogPostData["post_description"], true)), 500));
         $post_description .= ' - ' . Label::getLabel('LBL_See_more_at', $this->siteLangId) . ": " . CommonHelper::getCurrUrl();
-        $postImageUrl = CommonHelper::generateFullUrl('Image', 'blogPostFront', [$blogPostData['post_id'], $this->siteLangId, '']);
+        $postImageUrl = CommonHelper::generateFullUrl('Image', 'blogPostFront', [$blogPostData['post_id'],$this->siteLangId,'']);
         $socialShareContent = [
             'type' => 'Blog Post',
             'title' => $title,

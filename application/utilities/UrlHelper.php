@@ -35,7 +35,6 @@ class UrlHelper
         }
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
-
         return $row;
     }
 
@@ -59,13 +58,12 @@ class UrlHelper
         }
         $rs = $srch->getResultSet();
         $row = FatApp::getDb()->fetch($rs);
-
         if (!is_null($row)) {
             if (strpos($row['urlrewrite_custom'], 'urlparameter') !== false) {
                 $row['urlrewrite_custom'] = implode('/', array_slice(explode('/', $row['urlrewrite_custom']), 0, 2)) . $urlQueryString;
             }
-
             return $row;
         }
     }
+
 }

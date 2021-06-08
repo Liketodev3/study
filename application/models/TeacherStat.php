@@ -2,6 +2,7 @@
 
 class TeacherStat extends FatModel
 {
+
     private $userId;
 
     function __construct(int $userId)
@@ -76,12 +77,12 @@ class TeacherStat extends FatModel
         $srch->addFld('MIN(IFNULL(ustelgpr_price, 0)) AS minPrice');
         $srch->addFld('MAX(IFNULL(ustelgpr_price, 0)) AS maxPrice');
         $srch->addFld('tlanguage_id');
-        // $srch->addCondition('ustelgpr_price', '>', 0);
+// $srch->addCondition('ustelgpr_price', '>', 0);
         $row = FatApp::getDb()->fetch($srch->getResultSet());
         $teachlang = 0;
         $minPrice = 0.0;
         $maxPrice = 0.0;
-        if(!empty($row)){
+        if (!empty($row)) {
             $teachlang = 1;
         }
         if (!empty($row) && $row['minPrice'] !== null && $row['maxPrice'] !== null) {
@@ -109,7 +110,7 @@ class TeacherStat extends FatModel
         $srch->setPageSize(1);
         $srch->getResultSet();
         $speaklang = $srch->recordCount() > 0 ? 1 : 0;
-        $data =  ['testat_speaklang' => $speaklang];
+        $data = ['testat_speaklang' => $speaklang];
         $record = new TableRecord('tbl_teacher_stats');
         $record->setFldValue('testat_user_id', $this->userId);
         $record->assignValues($data);
@@ -158,11 +159,82 @@ class TeacherStat extends FatModel
     }
 
     /**
-     * testat_gavailability
+     * testat_availability
      */
-    public function setGavailability(int $availability)
+    public function setAvailability(array $post)
     {
-        $data = ['testat_gavailability' => $availability];
+        $availability = json_decode($post['data'] ?? '', true);
+        $emptySlots = CommonHelper::getEmptyDaySlots();
+        $data = ['testat_availability' => 0, 'testat_timeslots' => json_encode($emptySlots)];
+        if (!empty($availability)) {
+            $srch = new SearchBase(TeacherGeneralAvailability::DB_TBL);
+            $srch->addMultipleFields(['tgavl_day',
+                'CONCAT(tgavl_date, " ", tgavl_start_time) as startdate',
+                'CONCAT(tgavl_end_date, " ", tgavl_end_time) as enddate'
+            ]);
+            $srch->addCondition('tgavl_user_id', '=', $this->userId);
+            $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
+            $records = [];
+            $currentDate = date('Y-m-d H:i:s');
+            $systemTimezone = MyDate::getTimeZone();
+            $userTimezone = MyDate::getUserTimeZone();
+            $userDate = MyDate::changeDateTimezone($currentDate, $userTimezone, $systemTimezone);
+            $hourDiff = MyDate::hoursDiff($currentDate, $userDate);
+            foreach ($rows as $key => $row) {
+                $row['tgavl_day'] = $row['tgavl_day'] % 6;
+                $row['startdate'] = date('Y-m-d H:i:s', strtotime($row['startdate'] . ' ' . $hourDiff . ' hour'));
+                $row['enddate'] = date('Y-m-d H:i:s', strtotime($row['enddate'] . ' ' . $hourDiff . ' hour'));
+                $tmpRecords = $this->breakIntoDays($row);
+                foreach ($tmpRecords as $tmpRecord) {
+                    array_push($records, $tmpRecord);
+                }
+            }
+            $timeSlots = [
+                ['2018-01-07 00:00:00', '2018-01-07 04:00:00'], ['2018-01-07 04:00:00', '2018-01-07 08:00:00'],
+                ['2018-01-07 08:00:00', '2018-01-07 12:00:00'], ['2018-01-07 12:00:00', '2018-01-07 16:00:00'],
+                ['2018-01-07 16:00:00', '2018-01-07 20:00:00'], ['2018-01-07 20:00:00', '2018-01-08 00:00:00'],
+            ];
+            $daySlots = [];
+            foreach ($records as $row) {
+                $daySlot = [];
+                $startdate = strtotime($row['startdate']);
+                $enddate = strtotime($row['enddate']);
+                foreach ($timeSlots as $index => $slotDates) {
+                    $slotStart = strtotime($slotDates[0] . ' +' . $row['tgavl_day'] . ' day');
+                    $slotEnd = strtotime($slotDates[1] . ' +' . $row['tgavl_day'] . ' day');
+                    if ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate <= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($startdate - $enddate) / 3600);
+                    } elseif ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate >= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($startdate - $slotEnd) / 3600);
+                    } elseif ($startdate <= $slotStart && $enddate >= $slotStart && $enddate <= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($slotStart - $enddate) / 3600);
+                    } elseif ($startdate <= $slotStart && $enddate >= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($slotStart - $slotEnd) / 3600);
+                    } else {
+                        $daySlot[$index] = 0;
+                    }
+                }
+                $daySlots[$row['tgavl_day']][] = $daySlot;
+            }
+            $filledSlots = [];
+            foreach ($daySlots as $day => $slots) {
+                $arr = [0, 0, 0, 0, 0, 0];
+                foreach ($slots as $slot) {
+                    $arr[0] += $slot[0];
+                    $arr[1] += $slot[1];
+                    $arr[2] += $slot[2];
+                    $arr[3] += $slot[3];
+                    $arr[4] += $slot[4];
+                    $arr[5] += $slot[5];
+                }
+                $filledSlots['d' . $day] = $arr;
+            }
+            $flvs = [];
+            foreach ($emptySlots as $day => $esv) {
+                $flvs[$day] = $filledSlots[$day] ?? $esv;
+            }
+            $data = ['testat_availability' => 1, 'testat_timeslots' => json_encode($flvs)];
+        }
         $record = new TableRecord('tbl_teacher_stats');
         $record->setFldValue('testat_user_id', $this->userId);
         $record->assignValues($data);
@@ -173,11 +245,28 @@ class TeacherStat extends FatModel
         return true;
     }
 
+    private function breakIntoDays(array $row, array $records = []): array
+    {
+        if (date('Y-m-d', strtotime($row['startdate'])) != date('Y-m-d', strtotime($row['enddate']))) {
+            array_push($records, [
+                'tgavl_day' => $row['tgavl_day'],
+                'startdate' => $row['startdate'],
+                'enddate' => date('Y-m-d', strtotime($row['startdate'])) . ' 23:59:59'
+            ]);
+            $newStartDate = date('Y-m-d', strtotime($row['startdate'] . ' +1 day')) . ' 00:00:00';
+            $newRow = ['tgavl_day' => $row['tgavl_day'] + 1, 'startdate' => $newStartDate, 'enddate' => $row['enddate']];
+            return $this->breakIntoDays($newRow, $records);
+        } else {
+            array_push($records, $row);
+            return $records;
+        }
+    }
+
     public function setTeachLangPricesBulk()
     {
         FatApp::getDb()->query("UPDATE `tbl_teacher_stats` LEFT JOIN (SELECT IF(COUNT(userTeachLang.`utl_id`) > 0, 1, 0) AS teachLangCount, userTeachLang.`utl_user_id` AS teachLangUserId, MIN(IFNULL(langPrice.`ustelgpr_price`, 0) ) AS minPrice, MAX(IFNULL(langPrice.`ustelgpr_price`, 0) ) AS maxPrice FROM `tbl_user_teach_languages` AS userTeachLang INNER JOIN `tbl_teaching_languages` AS teachLang ON teachLang.tlanguage_id = userTeachLang.utl_tlanguage_id LEFT JOIN `tbl_user_teach_lang_prices` AS langPrice ON langPrice.ustelgpr_utl_id = userTeachLang.utl_id GROUP BY userTeachLang.`utl_user_id`) utl ON  utl.teachLangUserId = `testat_user_id` SET `testat_teachlang` = IFNULL(utl.teachLangCount, 0), `testat_minprice` = IFNULL(utl.minPrice, 0), `testat_maxprice` = IFNULL(utl.maxPrice, 0)");
     }
-    
+
     public function setPreferenceBulk()
     {
         FatApp::getDb()->query("UPDATE `tbl_teacher_stats` LEFT JOIN (SELECT userPre.`utpref_user_id` AS tPreUserId,  IF(COUNT(userPre.`utpref_user_id`) > 0, 1, 0) AS userPreCount FROM `tbl_user_to_preference` AS userPre INNER JOIN `tbl_preferences` AS prefer ON prefer.preference_id = userPre.utpref_preference_id GROUP BY userPre.`utpref_user_id`) teacherPre ON teacherPre.tPreUserId = `testat_user_id` SET `testat_preference` = IFNULL(teacherPre.userPreCount,0)");

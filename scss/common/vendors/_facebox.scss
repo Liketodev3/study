@@ -4,6 +4,9 @@
     #{theme('direction.left','value')}: 0;
     z-index: 999;
     text-align: #{theme('direction.left','value')};
+    @media(max-width: theme('breakpoints.md','value')){
+        #{theme('direction.right','value')}: 0;
+    }
 }
 
 #facebox .popup {
@@ -20,7 +23,7 @@
 	
  #facebox .content {
         overflow: auto;
-        max-height: 80vh!important;
+        height: 100vh!important;
     } 
 }
 
@@ -36,7 +39,7 @@
 @media  (min-width: 1024px) {
 	
 	#facebox .content {
-	max-height: 50vh!important;
+	max-height: 74vh!important;
     overflow-y: auto;
     overflow-x: hidden;
 	}
@@ -124,17 +127,7 @@
     opacity: 0.7;
 }
 
-.popup__body .img-description {
-    padding: var(--padding-4);
-}
-.img-description .rotator-info {
-    margin-bottom: 15px;
-    text-align: center;
-}
 
-.box .table-scroll {
-    margin-top: 15px;
-}
 
 @media (min-width:1199px) {
     #facebox .content.facebox-medium {
@@ -143,31 +136,14 @@
     }
 }
 
-@media (min-width:1199px) {
-    #facebox .content.facebox-large {
-        min-width: 1000px;
-        max-width: 1000px;
-    }
-}
-
-@media (max-width:1199px) {
+@media (max-width:767px) {
     #facebox .scrollbar {
         overflow: auto;
     }
 
-    #facebox {
-        left: 30px !important;
-        right: 30px !important;
-    }
 }
 
-@media (max-width:1023px) {
 
-    #facebox {
-        left: 10px !important;
-        right: 10px !important;
-    }
-}
 
 @media (max-width:767px) {
     #facebox .content {

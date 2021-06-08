@@ -19,6 +19,19 @@ $("document").ready(function () {
         searchTeachers(frm);
     });
 
+    $(document).on('click', '.select-teach-lang-js', function() {
+        var langName = $(this).html();
+        var langId = $(this).attr('teachLangId');
+      $('input[name=\'teachLangId\']').val(langId);
+      $("input[name='teach_language_name']").val(langName);
+      $('.filter-trigger-js').removeClass('is-active');
+      $('.filter-target-js').slideUp();
+      $('#frm_fat_id_frmTeacherSrch').submit();
+      $('.language_keyword').parent("li").remove();
+      $('#searched-filters').append("<li><a href='javascript:void(0);' class= 'language_keyword tag__clickable' onclick='removeFilterCustom(\"language_keyword\",this)' >" + langLbl.language + " : " + langName + "</a></li>");
+
+    });
+
     $("input[name='filterPreferences[]']").change(function () {
         var id = $(this).closest("label").attr('id');
         if ($(this).is(":checked")) {
@@ -54,6 +67,23 @@ $("document").ready(function () {
         }
     });
 
+    $('input[name=\'btnTeacherSrchSubmit\']').click(function (e) {
+        if (!$(document.frmTeacherSrch).validate()) {
+            e.preventDefault();
+            return;
+        }
+    });
+
+    $(document).on('click','.panel-action',function(){
+
+        $(this).parents('.panel-box').find('.panel-content').hide();
+        $(this).parents('.panel-box').find('.'+$(this).attr('content')).show();
+
+        $(this).parent().siblings().removeClass('is--active');
+        $(this).parent().addClass('is--active');
+
+    });
+
 
     var priceFilterMinValue = $("input[name='priceFilterMinValue']").val();
     var priceFilterMaxValue = $("input[name='priceFilterMaxValue']").val();
@@ -80,9 +110,10 @@ $("document").ready(function () {
     });
 
     $("input[name='filterFromCountry[]']").change(function () {
+     
         var id = $(this).closest("label").attr('id');
         if ($(this).is(":checked")) {
-            addFilter(id, this);
+            addFilter(id, this,'filterfromCountry');
         } else {
             removeFilter(id, this);
         }
@@ -99,7 +130,7 @@ $("document").ready(function () {
         searchTeachers(frm);
     });
 
-    $("select[name='filterSortBy']").change(function () {
+    $(document).on('change',"select[name='filterSortBy']",function () {
         searchTeachers(frm);
     });
 
@@ -112,6 +143,14 @@ $("document").ready(function () {
         }
     });
 
+    $("input[name='keyword']").keyup(function (e) {
+        var code = e.which;
+        if (code == 13) {
+            e.preventDefault();            
+            searchTeachers(frm);
+        }
+    });
+
     $("input[name='priceFilterMaxValue']").keyup(function (e) {
         var code = e.which;
         if (code == 13) {
@@ -121,38 +160,7 @@ $("document").ready(function () {
         }
     });
 
-    $("input[name='teach_language_name']").autocomplete({
-        'minLength': 0,
-        'source': function (request, response) {
-            $.ajax({
-                url: fcom.makeUrl('Teachers', 'teachLanguagesAutoCompleteJson'),
-                data: {keyword: request.term, fIsAjax: 1},
-                dataType: 'json',
-                type: 'post',
-                success: function (json) {
-                    response($.map(json, function (item) {
-                        return {
-                            value: item['name'],
-                            id: item['id'],
-                        };
-                    }));
-                },
-            });
-        },
-        'select': function (event, ui) {
-            event.preventDefault();
-            $('input[name=\'teach_language_name\']').val(ui.item.label);
-            $('input[name=\'teachLangId\']').val(ui.item.id);
-            $('#frm_fat_id_frmTeacherSrch').submit();
-            $('.language_keyword').parent("li").remove();
-            $('#searched-filters').append("<li><a href='javascript:void(0);' class= 'language_keyword tag__clickable' onclick='removeFilterCustom(\"language_keyword\",this)' >" + langLbl.language + " : " + ui.item.label + "</a></li>");
-
-            //addFilter ( 'language_keyword', this );
-            //window.location.href = "/teachers/index/" + ui.item.value;
-        }
-    }).bind('focus', function () {
-        $(this).autocomplete("search");
-    });
+ 
 
     $('input[name=\'teach_language_name\']').click(function () {
         $('input[name=\'teach_language_id\']').val('');
@@ -175,6 +183,24 @@ $("document").ready(function () {
     $('.form-filters').click(function (e) {
         e.stopPropagation();
     });
+    
+    /* FOR NAV TOGGLES */ 
+    $('.btn--filters-js').click(function() {
+        $(this).toggleClass("is-active");
+        $('html').toggleClass("show-filters-js"); 
+    });
+    
+    /* FUNCTION FOR COLLAPSEABLE LINKS */     
+    $('.filter-trigger-js').click(function(){
+      if($(this).hasClass('is-active')){
+          $(this).removeClass('is-active');
+          $(this).siblings('.filter-target-js').slideUp();return false;
+      }
+      $('.filter-trigger-js').removeClass('is-active');
+      $(this).addClass("is-active");
+         $('.filter-target-js').slideUp();
+         $(this).siblings('.filter-target-js').slideDown();
+    });
 
 });
 
@@ -189,6 +215,8 @@ function htmlEncode(value) {
 }
 
 (function () {
+
+    
     updateRange = function (from, to) {
         range.update({
             from: from,
@@ -210,7 +238,7 @@ function htmlEncode(value) {
         var data = fcom.frmData(frm);
         //alert( data );
         var dv = $("#teachersListingContainer");
-        $(dv).html(fcom.getLoader());
+       
 
         /* spoken language filters[ */
         var spokenLanguages = [];
@@ -239,6 +267,7 @@ function htmlEncode(value) {
         /* from country filter[ */
         var fromCountry = [];
         $.each($("input[name='filterFromCountry[]']:checked"), function () {
+
             var id = $(this).closest("label").attr('id');
             addFilter(id, this);
             fromCountry.push($(this).val());
@@ -267,14 +296,16 @@ function htmlEncode(value) {
         if (typeof $("input[name=priceFilterMaxValue]").val() != "undefined") {
             data = data + "&maxPriceRange=" + $("input[name=priceFilterMaxValue]").val();
         }
-
         /* sort by[ */
-        var sortOrder = $("select[name='filterSortBy'] option:selected").val();
-        if (sortOrder != '') {
+        var sortOrder = $("select[name='filterSortBy']").val();
+        if (sortOrder) {
             data = data + "&sortOrder=" + sortOrder;
+        }else{
+            data = data + "&sortOrder=popularity_desc";
+
         }
         /* ] */
-
+        $(dv).html(fcom.getLoader());
 
         fcom.ajax(fcom.makeUrl('Teachers', 'teachersList'), data, function (ans) {
             $.mbsmessage.close();
@@ -305,14 +336,13 @@ function htmlEncode(value) {
         searchTeachers(document.frmTeacherSrch);
     };
 
-    addFilter = function (id, obj) {
+    addFilter = function (id, obj,from) {
         var click = "onclick=removeFilter('" + id + "',this)";
-        var filter = htmlEncode($(obj).closest("div.block__body-target-js").siblings("div.block__head-trigger-js").text());
-        $filterVal = htmlEncode($(obj).parent().text());
-
+        var filter = htmlEncode($(obj).parents(".filter-form__inner, .filter-group__inner").find("h6").text());
+        $filterVal = htmlEncode($(obj).parents(".selection-tabs__label, label").find(".name").text());
         if (!$('#searched-filters').find('a').hasClass(id)) {
             id += ' tag__clickable';
-            $('#searched-filters').append("<li><a href='javascript:void(0);' class=\' " + id + " \'" + click + ">" + filter + ": " + $filterVal + "</a></li>");
+            $('#searched-filters > ul').append("<li><a href='javascript:void(0);' class=\' " + id + " \'" + click + ">" + filter + ": " + $filterVal + "</a></li>");
         }
     };
 
@@ -338,14 +368,11 @@ function htmlEncode(value) {
     addPricefilter = function () {
         $('.price').parent("li").remove();
         if (!$('#searched-filters').find('a').hasClass('price')) {
-            var filterCaption = htmlEncode($("#price_range").closest("div.block__body-target-js").siblings("div.block__head-trigger-js").text());
+            var filterCaption = htmlEncode($("#price_range").parents('.filter-form__inner').find("h6").text());
             var varcurrencySymbolLeft = $('<textarea />').html(currencySymbolLeft).text();
             var varcurrencySymbolRight = $('<textarea />').html(currencySymbolRight).text();
             $('#searched-filters').append('<li><a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilter(this)" >' + filterCaption + ': ' + varcurrencySymbolLeft + $("input[name=priceFilterMinValue]").val() + varcurrencySymbolRight + ' - ' + varcurrencySymbolLeft + $("input[name=priceFilterMaxValue]").val() + varcurrencySymbolRight + '</a></li>');
         }
-        /* searchArr['price_min_range'] = $("input[name=priceFilterMinValue]").val();
-         searchArr['price_max_range'] = $("input[name=priceFilterMaxValue]").val();
-         searchArr['currency'] = langLbl.siteCurrencyId; */
         var frm = document.frmTeacherSrch;
         searchTeachers(frm);
     }
@@ -390,5 +417,7 @@ function htmlEncode(value) {
         updateRange(minPrice, maxPrice);
         range.reset();
     }
+
+
 
 })();
