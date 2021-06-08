@@ -670,9 +670,7 @@ class TeacherController extends TeacherBaseController
             foreach ($slabs as $slab) {
                 foreach ($userTeachLangData as $uTeachLangId => $uTeachLang) {
                     $filedName = 'ustelgpr_price[' . $lessonDuration . '][' . $slab['minMaxKey'] . '][' . $uTeachLangId . ']';
-
                     $label = $filedName;
-
                     $fld = $frm->addFloatField($uTeachLang, $filedName);
                     $fld->requirements()->setRange(1, 99999);
                     $fld->requirements()->setRequired(true);
