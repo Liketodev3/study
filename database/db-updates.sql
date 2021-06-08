@@ -372,6 +372,7 @@ ALTER TABLE `tbl_teacher_stats`
     ADD `testat_day6` JSON NULL AFTER `testat_day5`, 
     ADD `testat_day7` JSON NULL AFTER `testat_day6`;
 
+
 ALTER TABLE `tbl_teacher_stats`
     DROP `testat_day1`,
     DROP `testat_day2`,
@@ -383,3 +384,7 @@ ALTER TABLE `tbl_teacher_stats`
 
 ALTER TABLE `tbl_teacher_stats` ADD `testat_timeslots` JSON NOT NULL AFTER `testat_gavailability`;
 ALTER TABLE `tbl_teacher_stats` CHANGE `testat_gavailability` `testat_availability` INT NOT NULL;
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_CHECKOUT_SLAB_TITLE', 1, 'You can buy multiple lessons as per you convenience.'),
+ ('LBL_CHECKOUT_SLAB_DESCRIPTION', 1, 'Please choose the same by adding the quantity of the lesson. We have following options below.');
+

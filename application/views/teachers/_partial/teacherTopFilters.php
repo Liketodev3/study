@@ -23,7 +23,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 						<div class="filter-form__inner">
 							<div class="filter__head filter__head-trigger filter-trigger-js">
 								<svg class="icon icon--language">
-									<use xlink:href="images/sprite.yo-coach.svg#language"></use>
+									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#language'; ?>"></use>
 								</svg>
 								<input class="filter__input filter__input-js" name="teach_language_name" val="<?php echo ($keywordlanguage)?$keywordlanguage:''; ?>" type="text" placeholder="<?php echo ($keywordlanguage)?$keywordlanguage:Label::getLabel('LBL_Language_Placeholder',$siteLangId);?>">
 								<input name="teachLangId" val="" type="hidden">

@@ -2882,6 +2882,44 @@ img {
 .color-green-40 {
   color: var(--color-green-40) !important; }
 
+.ratio {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: #eee; }
+  .ratio:before {
+    display: block;
+    content: ""; }
+  .ratio--1by1:before {
+    padding-bottom: 100%; }
+  .ratio--4by3:before {
+    padding-bottom: 75%; }
+  .ratio--3by4:before {
+    padding-bottom: 133.33333%; }
+  .ratio--16by9:before {
+    padding-bottom: 56.25%; }
+  .ratio--9by16:before {
+    padding-bottom: 177.77778%; }
+  .ratio--2by1:before {
+    padding-bottom: 50%; }
+  .ratio--1by2:before {
+    padding-bottom: 200%; }
+  .ratio--3by1:before {
+    padding-bottom: 33.33333%; }
+  .ratio--1by3:before {
+    padding-bottom: 300%; }
+  .ratio--4by1:before {
+    padding-bottom: 25%; }
+  .ratio--1by4:before {
+    padding-bottom: 400%; }
+  .ratio > * {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: 0 auto; }
+
 .accordian-group {
   margin: 0 0 40px 0; }
 
@@ -13307,14 +13345,6 @@ a.ui-button:active {
   padding: 10px;
   color: inherit; }
 
-/*
-
- * Author - Harshen Amarnath Pandey
- * Version - 1.0.8
- * Release - 18th April 2015
- * Copyright (c) 2014 - 2018 Harshen Pandey
-*/
-/* jquery.countdownTimer.css*/
 .xdsoft_datetimepicker {
   -webkit-box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.506);
           box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.506);

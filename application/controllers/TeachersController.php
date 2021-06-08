@@ -226,6 +226,15 @@ class TeachersController extends MyAppController
         $teacherLessonReviewObj->addMultipleFields(['COUNT(DISTINCT tlreview_postedby_user_id) as totStudents']);
         $reviews = FatApp::getDb()->fetch($teacherLessonReviewObj->getResultSet());
         $this->set('reviews', $reviews);
+        $srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
+        $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+        $srch->addCondition('grpcls_status', '=',  $teacherId);
+        $srch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
+        $srch->setPageSize(5);
+        $srch->addOrder('grpcls_start_datetime', 'Asc');
+        $rs = $srch->getResultSet();
+        $classesList = FatApp::getDb()->fetchAll($rs);
+        $this->set('groupClasses',$classesList);
         $frmReviewSearch = $this->getTeacherReviewSearchForm(FatApp::getConfig('CONF_FRONTEND_PAGESIZE'));
         $frmReviewSearch->fill(['tlreview_teacher_user_id' => $teacherId]);
         $this->set('frmReviewSearch', $frmReviewSearch);

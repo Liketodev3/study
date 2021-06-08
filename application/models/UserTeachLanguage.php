@@ -32,7 +32,7 @@ class UserTeachLanguage extends MyAppModel
         return true;  
     }
 
-    public function getUserTeachlanguages(int $langId = 0, $withPrice = false) : SearchBase
+    public function getUserTeachlanguages(int $langId = 0, $withPrice = false, string $priceTablejoinType = 'LEFT JOIN') : SearchBase
     {
         $searchBase = new SearchBase(static::DB_TBL, 'utl');
         $searchBase->addCondition('utl_user_id', '=', $this->userId);
@@ -41,7 +41,7 @@ class UserTeachLanguage extends MyAppModel
             $searchBase->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'tlanguage_id = tlanguagelang_tlanguage_id and tlanguagelang_lang_id =' . $langId, 'tll');
         }
         if($withPrice){
-            $searchBase->joinTable(TeachLangPrice::DB_TBL, 'LEFT JOIN', 'ustelgpr.ustelgpr_utl_id = utl.utl_id', 'ustelgpr');
+            $searchBase->joinTable(TeachLangPrice::DB_TBL, $priceTablejoinType, 'ustelgpr.ustelgpr_utl_id = utl.utl_id', 'ustelgpr');
         }
         return $searchBase;
     }

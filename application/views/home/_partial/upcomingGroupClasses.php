@@ -1,7 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 
 <?php if ($classes) { ?>
-
     <section class="section section--upcoming-class">
         <div class="container container--narrow">
             <div class="section__head d-flex justify-content-between align-items-center">

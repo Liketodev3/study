@@ -196,10 +196,11 @@ class Cart extends FatModel
         $teacherSearch->addCondition('teacher.user_id', '=', $teacherId);
         $teacherSearch->setPageSize(1);
 
-        $teacherSearch->addMultipleFields(['user_id', 'us_is_trial_lesson_enabled', 'us_booking_before']);
+        $teacherSearch->addMultipleFields(['user_id', 'us_is_trial_lesson_enabled', 'us_booking_before', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name']);
 
         $teacherSearch->joinTable(UserTeachLanguage::DB_TBL, 'INNER JOIN', 'utl.utl_user_id = teacher.user_id AND utl.utl_tlanguage_id = ' . $languageId, 'utl');
         $teacherSearch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utl_tlanguage_id', 'tl');
+        $teacherSearch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT JOIN', 'utll.tlanguagelang_lang_id = tl.tlanguage_id AND utll.tlanguagelang_lang_id = ' . $langId, 'utll');
 
         //@fix: free trial condition
         if ($grpclsId > 0) {
@@ -207,7 +208,7 @@ class Cart extends FatModel
             $teacherSearch->joinTable(TeacherGroupClasses::DB_TBL, 'INNER JOIN', 'grpcls.grpcls_teacher_id = teacher.user_id', 'grpcls');
             $teacherSearch->joinTable(TeacherGroupClasses::DB_TBL_LANG, 'LEFT JOIN', 'gclang.grpclslang_grpcls_id = grpcls.grpcls_id && gclang.grpclslang_lang_id = ' . $langId, 'gclang');
             $teacherSearch->addCondition('grpcls.grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-            $teacherSearch->addMultipleFields(['grpcls_entry_fee', 'IFNULL(grpcls_title, grpcls_title) as grpcls_title']);
+            $teacherSearch->addMultipleFields(['grpcls_entry_fee', 'IFNULL(grpclslang_grpcls_title, grpcls_title) as grpcls_title']);
             $teacherSearch->addCondition('grpcls.grpcls_entry_fee', ' > ', 0);
             $teacherSearch->addCondition('grpcls.grpcls_id', ' = ', $grpclsId);
         } elseif (!$isFreeTrial && $lessonQty > 0) {
