@@ -17,12 +17,14 @@ if ($userWalletBalance > 0) {
 ?>
 <div class="box box--checkout">
 	<div class="box__head">
-		<a href="javascript:void(0);" class="btn btn--bordered color-black btn--back">
-			<svg class="icon icon--back">
-				<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
-			</svg>
-			<?php echo Label::getLabel('LBL_BACK'); ?>
-		</a>
+		<?php if (0 > $cartData['grpclsId']) { ?>
+			<a href="javascript:void(0);" onclick="cart.proceedToStep({},'getTeacherPriceSlabs');" class="btn btn--bordered color-black btn--back">
+				<svg class="icon icon--back">
+					<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
+				</svg>
+				<?php echo Label::getLabel('LBL_BACK'); ?>
+			</a>
+		<?php } ?>
 		<h4><?php echo Label::getLabel('LBL_SELECT_PAYMENT_METHOD'); ?></h4>
 		<a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
 			<svg class="icon icon--close">
@@ -132,14 +134,19 @@ if ($userWalletBalance > 0) {
 								<b><?php echo $cartData['itemName']; ?></b>
 								<?php if (!empty($cartData['lessonQty'])) { ?>
 									<p><?php echo str_replace(['{lesson-qty}', '{duration}'], [$cartData['lessonQty'], $cartData['lessonDuration']], Label::getLabel('LBL_Lesson_Count:_{lesson-qty}_Lesson(s)_Duration:_{duration}_Mins/lesson')); ?></p>
-								<?php }
+									<p><?php echo str_replace('{item-price}', CommonHelper::displayMoneyFormat($cartData['itemPrice']), Label::getLabel('LBL_Item_Price:_{item-price}/lesson')); ?></p>
+									<?php if (!empty($cartData['tlanguage_name'])) { ?>
+										<p><?php echo str_replace('{teach-language}', $cartData['tlanguage_name'], Label::getLabel('LBL_TEACH_LANGUAGE_:_{teach-language}')); ?></p>
+								<?php
+									}
+								}
 								if (!empty($cartData['startDateTime']) && !empty($cartData['endDateTime'])) {
 									$userTimezone = MyDate::getUserTimeZone();
 									$systemTimeZone = MyDate::getTimeZone();
 
 									$startDateTime = MyDate::changeDateTimezone($cartData['startDateTime'], $userTimezone, $systemTimeZone);
 									$endDateTime = MyDate::changeDateTimezone($cartData['endDateTime'], $userTimezone, $systemTimeZone);
-									echo '<p>'.date("M d, Y h:i A", strtotime($startDateTime)) . ' - ' . date("h:i A", strtotime($endDateTime)).'</p>';
+									echo '<p>' . date("M d, Y h:i A", strtotime($startDateTime)) . ' - ' . date("h:i A", strtotime($endDateTime)) . '</p>';
 								}
 								?>
 
@@ -179,7 +186,7 @@ if ($userWalletBalance > 0) {
 						</div>
 					</div>
 					<button href="javascript:void(0);" onclick="cart.confirmOrder();" class="btn btn--primary btn--large btn--block color-white"><?php echo Label::getLabel('LBL_CONFIRM_PAYMENT'); ?></button>
-					<p class="payment-note">
+					<p class="payment-note color-secondary">
 						<?php
 						$labelstr =  Label::getLabel('LBL_*_All_Purchases_are_in_{default-currency-code}._Foreign_transaction_fees_might_apply,_according_to_your_bank\'s_policies');
 						echo  str_replace("{default-currency-code}", CommonHelper::getSystemCurrencyData()['currency_code'], $labelstr);

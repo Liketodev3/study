@@ -40,10 +40,6 @@ defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 			<div class="teacher__name"><?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?></div>
 		</div>
 
-		<a href="javascript:void(0);" class="btn btn--primary color-white" onclick="cart.getSlotDuration();"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
+		<a href="javascript:void(0);" class="btn btn--primary color-white" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>, languageId: <?php echo $languageId; ?>},'getSlotDuration');"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
 	</div>
 </div>
-<script>
-	languageId =  '<?php echo $languageId; ?>';
-	cart.languageId = parseInt(languageId);
-</script>
