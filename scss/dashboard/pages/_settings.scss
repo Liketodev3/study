@@ -38,7 +38,7 @@ $infobar: "infobar";
         }
         }
         &-icon--tick{color:theme('color.primary');
-            &:before{ background-color: theme('color.primary');opacity: 0.1;}
+            &:before{ background-color: theme('color.white');opacity: 1;}
         }
     }
     @media(max-width:theme('breakpoints.sm','value')){
@@ -254,13 +254,12 @@ $selection-tabs: "selection-tabs";
 $price-box: "price-box";
 
 .#{$price-box}{border:1px solid theme('color.gray.200'); position: relative; margin-top: theme('margin.6');
-    &__head{padding: theme('padding.4') theme('padding.6');border-bottom:1px solid theme('color.gray.200');;padding-#{theme('direction.right','value')}: var(--padding-18) }
-    &__body{padding: theme('padding.4') theme('padding.6') theme('padding.2');}
+    &__head{padding: theme('padding.4') theme('padding.6');border-bottom:1px solid theme('color.gray.200');padding-#{theme('direction.right','value')}: var(--padding-18)}
+    
+    &__body{padding: theme('padding.6')}
   
     & .field_label{margin-bottom: 0.5rem;}
 }
-  
-
 
   
 $actions-group: "actions-group";
@@ -485,25 +484,16 @@ $sale-stat__count: "sale-stat__count";
             }
         }
     }
-    
-    .arrow-toggle{position: absolute; #{theme('direction.right','value')}: 0; top:50%;transform: translate(0,-50%); width: 40px; height: 40px; cursor: pointer;
-        &:before{
-            content: "";
-            border-#{theme('direction.left','value')}: 6px solid transparent;
-            border-#{theme('direction.right','value')}: 6px solid transparent; 
-            border-top: 7px solid var(--color-gray-600);
-            #{theme('direction.right','value')}: 22px;
-            top: 50%;
-            transform: translateY(-50%);
-            position: absolute;
-        }
-        &.is-active:before{
-          border-top: 7px solid transparent; border-bottom: 7px solid var(--color-gray-600);
-          transform: translateY(-70%);
-          
-        }
+    &:before{
+        content: "";
+        border-#{theme('direction.left','value')}: 6px solid transparent;
+        border-#{theme('direction.right','value')}: 6px solid transparent; 
+        border-top: 7px solid var(--color-gray-600);
+        #{theme('direction.right','value')}: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        position: absolute;
     }
-
 }
 
  

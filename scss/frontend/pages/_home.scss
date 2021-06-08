@@ -1160,7 +1160,7 @@ $card: 'card';
     background: theme('color.dark-blue');
     color: var(--color-white);
     @media(max-width: theme('breakpoints.md','value')) {
-        padding: 0;
+        padding: 0 !important;
     }
 }
 

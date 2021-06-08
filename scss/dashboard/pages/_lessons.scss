@@ -240,7 +240,6 @@ $page-filter: "page-filter";
 
 .#{$page-filter}{
     position: relative;
-    margin-top: var(--margin-4);
     @media(max-width:theme('breakpoints.xl','value')){
         &{ background-color:theme('color.white'); border-radius: theme('radius.1'); padding: theme('padding.4'); box-shadow: theme('boxShadow.all');
             [class*="col-"]{position:static;}
@@ -254,7 +253,7 @@ $page-filter: "page-filter";
 $search-filter: "search-filter";
 
 .#{$search-filter}{
-    position: relative; background-color:theme('color.white'); border-radius: theme('radius.1'); padding: theme('padding.5') theme('padding.6') theme('padding.2');  margin: theme('padding.6') 0; z-index: 3;
+    position: absolute; top: 100%; left: 0; right: 0; background-color:theme('color.white'); border-radius: theme('radius.1'); padding: theme('padding.5') theme('padding.6') theme('padding.2');  box-shadow: theme('boxShadow.vertical');z-index: 3;
    
    
 } 

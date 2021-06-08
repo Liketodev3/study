@@ -9,6 +9,8 @@ class Extrapage extends MyAppModel
     const BLOCK_PROFILE_INFO_BAR = 1;
     const BLOCK_WHY_US = 2;
     const BLOCK_BROWSE_TUTOR = 3;
+    const BLOCK_CONTACT_BANNER_SECTION = 4;
+    const BLOCK_CONTACT_LEFT_SECTION = 5;
     private $pageType;
 
     public function __construct($epageId = 0, $pageType = '')
