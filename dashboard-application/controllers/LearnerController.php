@@ -146,6 +146,7 @@ class LearnerController extends LearnerBaseController
 
     public function toggleTeacherFavorite()
     {
+        
         $post = FatApp::getPostedData();
         $teacherId = FatUtility::int($post['teacher_id']);
         $loggedUserId = UserAuthentication::getLoggedUserId();
@@ -159,6 +160,7 @@ class LearnerController extends LearnerBaseController
         $srch->addCondition('user_id', '=', $teacherId);
         $srch->addMultipleFields(['user_id', 'user_first_name', 'user_last_name']);
         $teacher = FatApp::getDb()->fetch($srch->getResultSet());
+
         if (empty($teacher)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request', $this->siteLangId));
         }
