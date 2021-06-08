@@ -19,7 +19,7 @@ class TeacherGeneralAvailability extends MyAppModel
             trigger_error(Label::getLabel('LBL_Invalid_Request'));
         }
         $srch = new TeacherGeneralAvailabilitySearch();
-        $srch->addMultipleFields(['tgavl_day', 'tgavl_start_time', 'tgavl_end_time', 'tgavl_user_id', 'tgavl_id', 'tgavl_date']);
+        $srch->addMultipleFields(['tgavl_day', 'tgavl_start_time', 'tgavl_end_time', 'tgavl_user_id', 'tgavl_id', 'tgavl_date', 'tgavl_end_date']);
         $srch->addCondition('tgavl_user_id', '=', $userId);
         $srch->addOrder('tgavl_date', 'ASC');
         $rs = $srch->getResultSet();
@@ -41,12 +41,7 @@ class TeacherGeneralAvailability extends MyAppModel
 
             foreach ($rows as $row) {
                 $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
-                if ($row['tgavl_end_time'] == "00:00:00" || $row['tgavl_end_time'] <= $row['tgavl_start_time']) {
-                    $date1 = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_end_time']));
-                    $endDate = date('Y-m-d H:i:s', strtotime('+1 days', strtotime($date1)));
-                } else {
-                    $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_end_time']));
-                }
+                $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']));
 
                 $dateUnixTime = strtotime($date);
                 $endDateUnixTime = strtotime($endDate);
@@ -133,14 +128,16 @@ class TeacherGeneralAvailability extends MyAppModel
         array_multisort($sort['day'], SORT_ASC, $sort['start'], SORT_ASC, $postJson);
         /* ] */
         /* [ Clubbing the continuous timeslots */
-        foreach ($postJson as $k => $postObj) {
+        /* foreach ($postJson as $k => $postObj) {
             if ($k > 0 and ($postJson[$k - 1]->day == $postObj->day) and ($postJson[$k - 1]->endTime == $postObj->startTime)) {
                 $postJsonArr[count($postJsonArr) - 1]->endTime = $postObj->endTime;
                 continue;
             }
             $postJsonArr[] = $postObj;
         }
+        */
         /* ] */
+        $postJsonArr = $postJson;
         if ($deleteRecords) {
             /* code added  on 12-07-2019 */
             $user_timezone = MyDate::getUserTimeZone();
@@ -156,7 +153,7 @@ class TeacherGeneralAvailability extends MyAppModel
                 $startDate = "2018-01-" . $dayNum . " " . date('H:i:s', strtotime($val->startTime));
                 $custom_tgavl_start = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
 
-                if ($val->day <= 6 && ( $val->dayEnd == 0 && $val->endTime == "00:00")) {
+                if ($val->day <= 6 && ($val->dayEnd == 0 && $val->endTime == "00:00")) {
                     $weekNumber = 3;
                 }
 
@@ -241,5 +238,4 @@ class TeacherGeneralAvailability extends MyAppModel
         }
         return $datesArray;
     }
-
 }

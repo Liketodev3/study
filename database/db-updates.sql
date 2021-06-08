@@ -341,22 +341,25 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.16.0.20210601' WHERE `conf_na
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Remember_Me', '1', 'Stay logged in');
 
-REPLACE `tbl_language_labels` SET `label_caption` = 'Master Any Language with Online Tutors' WHERE `label_key` = 'LBL_Slider_Title_Text' AND `label_lang_id` = 1;
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
+('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT', 1, 'Are You Sure! By Removing This Lesson Will Also Unlink It From Courses And Scheduled Lessons!')
+,('LBL_%s_Tutors', 1, '%s Tutors')
+,('LBL_%s_Tutors', 2, '%s مدرسون')
+,('VERB_Issue_Reported', 1, 'reported issue')
+,('VERB_Scheduled', 1, 'scheduled')
+,('VERB_Rescheduled', 1, 'rescheduled')
+,('VERB_Canceled', 1, 'canceled');
 
-REPLACE `tbl_language_labels` SET `label_caption` = 'Learn any language at any time from anywhere.' WHERE `label_key` = 'LBL_Slider_Description_Text' AND `label_lang_id` = 1;
+Update `tbl_language_labels` SET `label_caption` = 'Master Any Language with Online Tutors' WHERE `label_key` = 'LBL_Slider_Title_Text' AND `label_lang_id` = 1;
+Update `tbl_language_labels` SET `label_caption` = 'Learn any language at any time from anywhere.' WHERE `label_key` = 'LBL_Slider_Description_Text' AND `label_lang_id` = 1;
+Update `tbl_language_labels` SET `label_caption` = 'Search by Language or Subject' WHERE `label_key` = 'LBL_I_am_learning...' AND `label_lang_id` = 1;
+Update `tbl_language_labels` SET `label_caption` = 'What language do you want to learn?' WHERE `label_key` = 'Lbl_What_Language_You_want_to_learn?' AND 'label_lang_id' = 1;
 
-REPLACE `tbl_language_labels` SET `label_caption` = 'Search by Language or Subject' WHERE `label_key` = 'LBL_I_am_learning...' AND `label_lang_id` = 1;
-
-REPLACE `tbl_language_labels` SET `label_caption` = 'What language do you want to learn?' WHERE `label_key` = 'Lbl_What_Language_You_want_to_learn?' AND 'label_lang_id' = 1;
 
 REPLACE INTO `tbl_extra_pages` (`epage_id`,`epage_identifier`,`epage_type`,`epage_active`, `epage_default_content`) VALUES ('2', 'Why Us Block', '2', '1', '    <section class=\"section section--services\">\r\n        <div class=\"container container--narrow\">\r\n            <div class=\"section__head\">\r\n                <h2>We make language learning easy & simpler</h2>\r\n            </div>\r\n\r\n            <div class=\"section__body\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-md-6\">\r\n                        <div class=\"service\">\r\n                            <div class=\"service__media\">\r\n                                <img src=\"images/55x55.svg\">\r\n                            </div>\r\n                            <div class=\"service__content\">\r\n                                <h3>Professional Tutors</h3>\r\n                                <p>Choose from over a myriad of professional & experienced teachers to be fluent in any language.</p>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-6\">\r\n                        <div class=\"service\">\r\n                            <div class=\"service__media\">\r\n                                <img src=\"images/55x55_1.svg\">\r\n                            </div>\r\n                            <div class=\"service__content\">\r\n                                <h3>1-on-1 Live sessions</h3>\r\n                                <p>Connect with your teachers via 1-on-1 live chat sessions and build a deeper understanding of a language.</p>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-6\">\r\n                        <div class=\"service\">\r\n                            <div class=\"service__media\">\r\n                                <img src=\"images/55x55_2.svg\">\r\n                            </div>\r\n                            <div class=\"service__content\">\r\n                                <h3>Group Classes</h3>\r\n                                <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo</p>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-6\">\r\n                        <div class=\"service\">\r\n                            <div class=\"service__media\">\r\n                                <img src=\"images/55x55_3.svg\">\r\n                            </div>\r\n                            <div class=\"service__content\">\r\n                                <h3>Convenience & Flexibility</h3>\r\n                                <p>Schedule lessons as per your availability and learn at your own pace with no constraints of time and place.</p>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>');
-
 REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES ('2', '1', 'Why Us Block', '    <section class=\"section section--services\">\r\n        <div class=\"container container--narrow\">\r\n            <div class=\"section__head\">\r\n                <h2>We make language learning easy & simpler</h2>\r\n            </div>\r\n\r\n            <div class=\"section__body\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-md-6\">\r\n                        <div class=\"service\">\r\n                            <div class=\"service__media\">\r\n                                <img src=\"images/55x55.svg\">\r\n                            </div>\r\n                            <div class=\"service__content\">\r\n                                <h3>Professional Tutors</h3>\r\n                                <p>Choose from over a myriad of professional & experienced teachers to be fluent in any language.</p>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-6\">\r\n                        <div class=\"service\">\r\n                            <div class=\"service__media\">\r\n                                <img src=\"images/55x55_1.svg\">\r\n                            </div>\r\n                            <div class=\"service__content\">\r\n                                <h3>1-on-1 Live sessions</h3>\r\n                                <p>Connect with your teachers via 1-on-1 live chat sessions and build a deeper understanding of a language.</p>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-6\">\r\n                        <div class=\"service\">\r\n                            <div class=\"service__media\">\r\n                                <img src=\"images/55x55_2.svg\">\r\n                            </div>\r\n                            <div class=\"service__content\">\r\n                                <h3>Group Classes</h3>\r\n                                <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo</p>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-6\">\r\n                        <div class=\"service\">\r\n                            <div class=\"service__media\">\r\n                                <img src=\"images/55x55_3.svg\">\r\n                            </div>\r\n                            <div class=\"service__content\">\r\n                                <h3>Convenience & Flexibility</h3>\r\n                                <p>Schedule lessons as per your availability and learn at your own pace with no constraints of time and place.</p>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>');
-
 REPLACE INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES ('3', 'Browse tutor section', '3', '1', '    <section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\r\n        <div class=\"container container--narrow\">\r\n            <div class=\"cta-content\">\r\n                <h2>Speak any language fluently with the help of professional tutors</h2>\r\n                <button class=\"btn btn--secondary btn--large \">Browse Tutors</button>\r\n            </div>\r\n        </div>\r\n    </section>');
-
 REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES ('3', '1', 'Browse Tutor', '    <section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\r\n        <div class=\"container container--narrow\">\r\n            <div class=\"cta-content\">\r\n                <h2>Speak any language fluently with the help of professional tutors</h2>\r\n                <button class=\"btn btn--secondary btn--large \">Browse Tutors</button>\r\n            </div>\r\n        </div>\r\n    </section>');
-
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_newsletter_descritption', '1', 'Enter your email and subscribe to receive notifications of new posts by email.');
 
 --
@@ -371,5 +374,19 @@ ALTER TABLE `tbl_teacher_stats`
     ADD `testat_day6` JSON NULL AFTER `testat_day5`, 
     ADD `testat_day7` JSON NULL AFTER `testat_day6`;
 
+
+ALTER TABLE `tbl_teacher_stats`
+    DROP `testat_day1`,
+    DROP `testat_day2`,
+    DROP `testat_day3`,
+    DROP `testat_day4`,
+    DROP `testat_day5`,
+    DROP `testat_day6`,
+    DROP `testat_day7`;
+
+ALTER TABLE `tbl_teacher_stats` ADD `testat_timeslots` JSON NOT NULL AFTER `testat_gavailability`;
+ALTER TABLE `tbl_teacher_stats` CHANGE `testat_gavailability` `testat_availability` INT NOT NULL;
+
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_CHECKOUT_SLAB_TITLE', 1, 'You can buy multiple lessons as per you convenience.'),
  ('LBL_CHECKOUT_SLAB_DESCRIPTION', 1, 'Please choose the same by adding the quantity of the lesson. We have following options below.');
+

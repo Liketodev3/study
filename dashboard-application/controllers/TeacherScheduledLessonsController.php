@@ -643,7 +643,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             '{lesson_date}' => FatDate::format($post['date']),
             '{lesson_start_time}' => $post['startTime'],
             '{lesson_end_time}' => $post['endTime'],
-            '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
+            '{action}' => Label::getLabel('VERB_Scheduled', $this->siteLangId),
         ];
         if (!EmailHandler::sendMailTpl($lessonRow['learnerEmailId'], 'teacher_scheduled_lesson_email', $this->siteLangId, $vars)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));

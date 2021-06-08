@@ -673,7 +673,7 @@ class User extends MyAppModel
                 if (true != User::isLearnerProfileCompleted()) {
                     $redirectUrl = CommonHelper::generateFullUrl('learner', '', [], CONF_WEBROOT_DASHBOARD);
                 } else {
-                    $redirectUrl = CommonHelper::generateFullUrl('teachers', '', [], CONF_WEBROOT_DASHBOARD);
+                    $redirectUrl = CommonHelper::generateFullUrl('teachers', '', [], CONF_WEBROOT_FRONTEND);
                 }
                 break;
             case User::USER_TEACHER_DASHBOARD:

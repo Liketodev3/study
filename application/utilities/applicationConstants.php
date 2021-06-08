@@ -60,6 +60,27 @@ class applicationConstants
     const CVV_NO_REGEX = "^[0-9]{3,4}$";
     const CLASS_TYPE_GROUP = 'group';
     const CLASS_TYPE_1_TO_1 = '1to1';
+    /* weekdays */
+    const DAY_SUNDAY = 0;
+    const DAY_MONDAY = 1;
+    const DAY_TUESDAY = 2;
+    const DAY_WEDNESDAY = 3;
+    const DAY_THURSDAY = 4;
+    const DAY_FRIDAY = 5;
+    const DAY_SATURDAY = 6;
+
+    public static function getWeekDays()
+    {
+        return [
+            static::DAY_SUNDAY => Label::getLabel('LBL_Sunday'),
+            static::DAY_MONDAY => Label::getLabel('LBL_Monday'),
+            static::DAY_TUESDAY => Label::getLabel('LBL_Tuesday'),
+            static::DAY_WEDNESDAY => Label::getLabel('LBL_Wednesday'),
+            static::DAY_THURSDAY => Label::getLabel('LBL_Thursday'),
+            static::DAY_FRIDAY => Label::getLabel('LBL_Friday'),
+            static::DAY_SATURDAY => Label::getLabel('LBL_Saturday')
+        ];
+    }
 
     public static function getWeightUnitsArr($langId)
     {

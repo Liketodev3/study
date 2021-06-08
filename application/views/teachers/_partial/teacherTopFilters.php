@@ -42,7 +42,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 						<div class="filter-form__inner">
 							<div class="filter__head filter__head-trigger filter-trigger-js">
 								<svg class="icon icon--availbility">
-									<use xlink:href="images/sprite.yo-coach.svg#availability"></use>
+									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#availability'; ?>"></use>
 								</svg>
 								<h6><?php echo Label::getLabel("LBL_Availability", $siteLangId) ?></h6>
 							</div>
@@ -75,7 +75,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 						<div class="filter-form__inner">
 							<div class="filter__head filter__head-trigger filter-trigger-js">
 								<svg class="icon icon--price-tag">
-									<use xlink:href="images/sprite.yo-coach.svg#price-tag"></use>
+									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#price-tag' ?>"></use>
 								</svg>
 								<h6><?php echo Label::getLabel('LBL_Price', $siteLangId); ?></h6>
 							</div>
@@ -101,7 +101,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 							<div class="filter__head">
 								<input type="text" name="keyword" id="keyword" placeholder="<?php echo Label::getLabel('LBL_Search_By_Name_And_Keword'); ?>">
 								<svg class="icon icon--search">
-									<use xlink:href="images/sprite.yo-coach.svg#search"></use>
+									<use xlink:href="<?php echo CONF_WEBROOT_URL.' images/sprite.yo-coach.svg#search'; ?>"></use>
 								</svg>
 							</div>
 						</div>
@@ -194,7 +194,9 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 		</div>
 	</div>
 
-	<div class="filter-tags">
+
+
+	<div class="filter-tags" <?php echo ($keywordlanguage != '' || ($minPrice != $priceArr['minPrice']  || $maxPrice != $priceArr['maxPrice'])|| $keyword != '') ? 'style="display:block"':'style="display:none"' ?>>
 		<div class="container container--narrow">
 			<div class="filter-tags-list" id="searched-filters">
 				<ul>
@@ -217,40 +219,14 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 						</li>
 					<?php } ?>
 
-					<li class="clear-filter"><a href="#">Clear All Filters</a></li>
+					<li class="clear-filter"><a href="javascript:void(0);" onclick="removeAllFilters();"><?php echo Label::getLabel('LBL_Clear_All_Filters',$siteLangId); ?></a></li>
 				</ul>
 			</div>
 		</div>
 	</div>
+
 </form>
 
-<!-- <div class="section__tags">
-	<div class="container container--fixed">
-		<div class="tag-list">
-			<ul id="searched-filters">
-				<?php if ($keywordlanguage != '') { ?>
-					<li>
-						<a href="javascript:void(0);" class="language_keyword tag__clickable " onclick="removeFilterCustom('language_keyword',this)">
-							<?php echo Label::getLabel('LBL_Language'); ?> : <?php echo $keywordlanguage; ?> </a>
-					</li>
-				<?php } ?>
-				<?php if ((isset($minPrice) && isset($maxPrice)) && ($minPrice != 0 && $maxPrice != 0) && ($minPrice != $priceArr['minPrice']  || $maxPrice != $priceArr['maxPrice'])) { ?>
-					<li>
-						<a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilterCustom(this, '<?= ($priceArr['minPrice']); ?>', '<?= ($priceArr['maxPrice']); ?>')">
-							<?php echo Label::getLabel('LBL_Price'); ?>: <?php echo CommonHelper::getCurrencySymbolRight() ? CommonHelper::getCurrencySymbolRight() : CommonHelper::getCurrencySymbolLeft(); ?><?= CommonHelper::displayMoneyFormat(($minPrice) ?? 0, false, false, false, false, false); ?> - <?php echo CommonHelper::getCurrencySymbolRight() ? CommonHelper::getCurrencySymbolRight() : CommonHelper::getCurrencySymbolLeft(); ?><?= CommonHelper::displayMoneyFormat(($maxPrice) ?? 0, false, false, false, false, false); ?></a>
-					</li>
-				<?php } ?>
-				<?php if ($keyword != '') { ?>
-					<li>
-						<a href="javascript:void(0);" class="userKeyword tag__clickable " onclick="removeFilterUser('userKeyword',this)">
-							<?php echo Label::getLabel('LBL_User'); ?> : <?php echo $keyword; ?> </a>
-					</li>
-				<?php } ?>
-
-			</ul>
-		</div>
-	</div>
-</div> -->
 </form>
 <?php
 echo $frmTeacherSrch->getExternalJS();

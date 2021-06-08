@@ -1,5 +1,9 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Enhancements:
+    *Task-81998: Support to php7.4
+
+---------------------------------
 Release Number: TV-2.16.0.20210601
 
 Release Date: 2021-06-01
