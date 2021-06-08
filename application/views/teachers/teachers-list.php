@@ -10,7 +10,7 @@ $colorClass = [
 <?php if ($teachers) { ?>
     <div class="sorting__head">
         <div class="sorting__title">
-            <h4><?php echo sprintf(Label::getLabel('LBL_Found_the_best_%s_teachers_for_you',$siteLangId), $recordCount) ?></h4>
+            <h4><?php echo sprintf(Label::getLabel('LBL_Found_the_best_%s_teachers_for_you', $siteLangId), $recordCount) ?></h4>
         </div>
         <div class="sorting__box">
             <!-- <b>Sort By:</b> -->
@@ -51,10 +51,10 @@ $colorClass = [
                                 <p><?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></p>
                             </div>
                             <div class="list__action">
-                                <a href="#" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
-                                <a href="#" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>,this)" class="btn btn--bordered color-primary btn--block">
+                                <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getUserTeachLangues');" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                                <a href="javascript:void(0);" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>,this)" class="btn btn--bordered color-primary btn--block">
                                     <svg class="icon icon--envelope">
-                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#envelope'; ?>"></use>
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
                                     </svg>
                                     <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
                                 </a>
@@ -66,13 +66,13 @@ $colorClass = [
                                     <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>" class="tutor-name">
                                         <h4><?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?></h4>
                                         <div class="flag">
-                                            <img src="<?php echo CONF_WEBROOT_URL.'images/flag-new/flag-uk.png' ?>" alt="">
+                                            <img src="<?php echo CONF_WEBROOT_URL . 'images/flag-new/flag-uk.png' ?>" alt="">
                                         </div>
                                     </a>
                                     <div class="follow ">
                                         <a class="<?php echo ($teacher['uft_id']) ? 'is--active' : ''; ?>" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" href="javascript:void()">
                                             <svg class="icon icon--heart">
-                                                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#heart'; ?>"></use>
+                                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#heart'; ?>"></use>
                                             </svg>
                                         </a>
                                     </div>
@@ -81,25 +81,25 @@ $colorClass = [
                                     <div class="info-wrapper">
                                         <div class="info-tag location">
                                             <svg class="icon icon--location">
-                                                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#location'; ?>"></use>
+                                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#location'; ?>"></use>
                                             </svg>
                                             <span class="lacation__name"><?php echo $teacher['user_country_name']; ?></span>
                                         </div>
                                         <div class="info-tag ratings">
                                             <svg class="icon icon--rating">
-                                                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#rating'; ?>"></use>
+                                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#rating'; ?>"></use>
                                             </svg>
-                                            <span class="value"><?php  echo FatUtility::convertToType($teacher['teacher_rating'], FatUtility::VAR_FLOAT); ?></span>
-                                            <span class="count"><?php echo '('.$teacher['totReviews'].')'; ?></span>
+                                            <span class="value"><?php echo FatUtility::convertToType($teacher['teacher_rating'], FatUtility::VAR_FLOAT); ?></span>
+                                            <span class="count"><?php echo '(' . $teacher['totReviews'] . ')'; ?></span>
                                         </div>
                                         <div class="info-tag list-count">
-                                            <div class="total-count"><span class="value"><?php echo $teacher['studentIdsCnt'];  ?></span><?php echo Label::getLabel('LBL_Students',$siteLangId); ?></div> - <div class="total-count"><span class="value"><?php echo $teacher['teacherTotLessons']; ?></span><?php echo Label::getLabel('LBL_Lessons',$siteLangId);  ?></div>
+                                            <div class="total-count"><span class="value"><?php echo $teacher['studentIdsCnt'];  ?></span><?php echo Label::getLabel('LBL_Students', $siteLangId); ?></div> - <div class="total-count"><span class="value"><?php echo $teacher['teacherTotLessons']; ?></span><?php echo Label::getLabel('LBL_Lessons', $siteLangId);  ?></div>
                                         </div>
                                     </div>
                                     <div class="tutor-info">
                                         <div class="tutor-info__inner">
                                             <div class="info__title">
-                                                <h6><?php Label::getLabel('LBL_Teaches',$siteLangId); ?></h6>
+                                                <h6><?php Label::getLabel('LBL_Teaches', $siteLangId); ?></h6>
                                             </div>
                                             <div class="info__language">
                                                 <?php echo $teacher['teacherTeachLanguageName']; ?>
@@ -117,7 +117,7 @@ $colorClass = [
                                             <div class="info__title">
                                                 <h6><?php echo LABEL::getLabel('LBL_About', $siteLangId); ?></h6>
                                             </div>
-                                            <p><?php echo $teacher['user_profile_info'] ?><a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><?php echo Label::getLabel('LBL_View_Profile',$siteLangId) ?></a></p>
+                                            <p><?php echo $teacher['user_profile_info'] ?><a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><?php echo Label::getLabel('LBL_View_Profile', $siteLangId) ?></a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -159,13 +159,15 @@ $colorClass = [
                                                 <?php $timeslots = $teacher['testat_timeslots'] ?? CommonHelper::getEmptyDaySlots(); ?>
                                                 <?php foreach ($slots as $index => $slot) { ?>
                                                     <tr>
-                                                        <td><div class="cal-cell"><?php echo $slot; ?></div></td>
+                                                        <td>
+                                                            <div class="cal-cell"><?php echo $slot; ?></div>
+                                                        </td>
                                                         <?php foreach ($timeslots as $day => $hours) { ?>
                                                             <?php $hour = $hours[$index] ?? 0; ?>
                                                             <td class="is-hover">
                                                                 <?php if ($hour > 0) { ?>
                                                                     <div class="cal-cell <?php echo $colorClass[$hour]; ?>"></div>
-                                                                    <div class="tooltip tooltip--top bg-black"><?php echo $hour; ?> <?php echo Label::getLabel('LBL_Hrs',$siteLangId); ?></div>
+                                                                    <div class="tooltip tooltip--top bg-black"><?php echo $hour; ?> <?php echo Label::getLabel('LBL_Hrs', $siteLangId); ?></div>
                                                                 <?php } else { ?>
                                                                     <div class="cal-cell"></div>
                                                                 <?php } ?>
@@ -187,12 +189,12 @@ $colorClass = [
             <?php } ?>
         </div>
     </div>
-    <?php
+<?php
     echo FatUtility::createHiddenFormFromData($postedData, array('name' => 'frmTeacherSearchPaging'));
     $pagingArr = ['page' => $page, 'pageCount' => $pageCount, 'recordCount' => $recordCount];
     $this->includeTemplate('_partial/pagination.php', $pagingArr, false);
 } else {
-    ?>
+?>
     <div class="box -padding-30" style="margin-bottom: 30px;">
         <div class="message-display">
             <div class="message-display__icon">
@@ -200,8 +202,8 @@ $colorClass = [
                     <path d="M488.468,408H23.532A23.565,23.565,0,0,1,0,384.455v-16.04a15.537,15.537,0,0,1,15.517-15.524h8.532V31.566A31.592,31.592,0,0,1,55.6,0H456.4a31.592,31.592,0,0,1,31.548,31.565V352.89h8.532A15.539,15.539,0,0,1,512,368.415v16.04A23.565,23.565,0,0,1,488.468,408ZM472.952,31.566A16.571,16.571,0,0,0,456.4,15.008H55.6A16.571,16.571,0,0,0,39.049,31.566V352.891h433.9V31.566ZM497,368.415a0.517,0.517,0,0,0-.517-0.517H287.524c0.012,0.172.026,0.343,0.026,0.517a7.5,7.5,0,0,1-7.5,7.5h-48.1a7.5,7.5,0,0,1-7.5-7.5c0-.175.014-0.346,0.026-0.517H15.517a0.517,0.517,0,0,0-.517.517v16.04a8.543,8.543,0,0,0,8.532,8.537H488.468A8.543,8.543,0,0,0,497,384.455h0v-16.04ZM63.613,32.081H448.387a7.5,7.5,0,0,1,0,15.008H63.613A7.5,7.5,0,0,1,63.613,32.081ZM305.938,216.138l43.334,43.331a16.121,16.121,0,0,1-22.8,22.8l-43.335-43.318a16.186,16.186,0,0,1-4.359-8.086,76.3,76.3,0,1,1,19.079-19.071A16,16,0,0,1,305.938,216.138Zm-30.4-88.16a56.971,56.971,0,1,0,0,80.565A57.044,57.044,0,0,0,275.535,127.978ZM63.613,320.81H448.387a7.5,7.5,0,0,1,0,15.007H63.613A7.5,7.5,0,0,1,63.613,320.81Z"></path>
                 </svg>
             </div>
-            <h5><?php echo Label::getLabel('LBL_No_Result_found!!',$siteLangId); ?></h5>
+            <h5><?php echo Label::getLabel('LBL_No_Result_found!!', $siteLangId); ?></h5>
         </div>
     </div>
-    <?php
+<?php
 }

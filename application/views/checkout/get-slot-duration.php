@@ -1,7 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <div class="box box--checkout">
 	<div class="box__head">
-		<a href="javascript:void(0);" class=" btn btn--bordered color-black btn--back">
+		<a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getUserTeachLangues');" class=" btn btn--bordered color-black btn--back">
 			<svg class="icon icon--back">
 				<use xlink:href="<?php echo CONF_WEBROOT_URL .'images/sprite.yo-coach.svg#back'; ?>"></use>
 			</svg>
@@ -52,10 +52,7 @@
 			</div>
 		</div>
 		<div class="box-foot__right">
-			<a href="javascript:void(0);" class="btn btn--primary color-white" onclick="cart.getTeacherPriceSlabs();"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
+			<a href="javascript:void(0);" class="btn btn--primary color-white" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>, languageId: <?php echo $languageId; ?>, lessonDuration : <?php echo $lessonDuration; ?>},'getTeacherPriceSlabs');"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
 		</div>
 	</div>
 </div>
-<script>
-	cart.lessonDuration = parseInt('<?php echo $lessonDuration; ?>');
-</script>

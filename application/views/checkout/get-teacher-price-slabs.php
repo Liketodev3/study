@@ -1,7 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <div class="box box--checkout">
 	<div class="box__head">
-		<a href="javascript:void(0);" class="btn btn--bordered color-black btn--back">
+		<a href="javascript:void(0);" onclick="cart.proceedToStep({},'getTeacherPriceSlabs');" class="btn btn--bordered color-black btn--back">
 			<svg class="icon icon--back">
 				<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
 			</svg>
@@ -37,8 +37,8 @@
 				$price = $price - $percentage;
 				$title = Label::getLabel('LBL_{min}_to_{max}_Lesson(s)');
 				$title = str_replace(['{min}', '{max}'], [$slab['ustelgpr_min_slab'], $slab['ustelgpr_max_slab']], $title);
-				if ($slab['ustelgpr_max_slab'] >= $lessonQty || $slab['ustelgpr_min_slab'] <= $lessonQty) {
-					$lessonQtyPrice = $price;
+				if ($slab['ustelgpr_max_slab'] >= $lessonQty && $slab['ustelgpr_min_slab'] <= $lessonQty) {
+					$lessonQtyPrice = $price * $lessonQty;
 				}
 			?>
 				<label class="selection-tabs__label">
@@ -52,10 +52,9 @@
 		</div>
 
 		<div class="total-price">
-			<button class="btn btn--count" onclick="decreaseValue()"><?php echo Label::getLabel('LBL_-'); ?></button>
-			<!-- <input type="text" id="number" value="0" /> -->
+			<button class="btn btn--count" onclick="decrement()"><?php echo Label::getLabel('LBL_-'); ?></button>
 			<input type="text" id="lessonQty" onchange="changeLessonQty();" name="lessonQty" min="<?php echo $minValue; ?>" max="<?php echo $maxValue; ?>" value="<?php echo $lessonQty;  ?>">
-			<button class="btn btn--count" onclick="increaseValue();"><?php echo Label::getLabel('LBL_+'); ?></button>
+			<button class="btn btn--count" onclick="increment();"><?php echo Label::getLabel('LBL_+'); ?></button>
 			<button class="btn btn--primary color-white" onclick="cart.getLessonQtyPrice();"><?php echo Label::getLabel('LBL_UPDATE_QTY'); ?></button>
 			<p class="slab-price-js"><?php echo sprintf(Label::getLabel('LBL_TOTAL_PRICE_-_%s'), CommonHelper::displayMoneyFormat($lessonQtyPrice)); ?></p>
 		</div>
@@ -78,59 +77,48 @@
 			</div>
 		</div>
 		<div class="box-foot__right">
-			<a href="javascript:void(0);" onclick="cart.addTeacherLesson();" class="btn btn--primary color-white"><?php echo LabeL::getLabel('LBL_NEXT'); ?></a>
+			<a href="javascript:void(0);" onclick="cart.proceedToStep({},'getPaymentSummary');" class="btn btn--primary color-white"><?php echo LabeL::getLabel('LBL_NEXT'); ?></a>
 		</div>
 	</div>
 </div>
 <script>
 	cart.lessonQty = parseInt('<?php echo $lessonQty; ?>');
 
-	minLessonQty = parseInt('<?php echo $minValue; ?>');
-	maxLessonQty = parseInt('<?php echo $maxValue; ?>');
+	minLessonQty = parseInt(<?php echo $minValue; ?>);
+	maxLessonQty = parseInt(<?php echo $maxValue; ?>);
 
 	var lessonQtyInput = document.getElementById('lessonQty');
 
-	function increaseValue() {
+	function increment() {
 		let qty = parseInt(lessonQtyInput.value);
-		qty += 1;
-		if (qty > maxLessonQty) {
-			return;
+		if (maxLessonQty > qty) {
+			++cart.props.lessonQty;
+			lessonQtyInput.value = cart.props.lessonQty;
 		}
-		cart.lessonQty = qty;
-		lessonQtyInput.value = qty;
+
 	}
 
-	function decreaseValue() {
-
+	function decrement() {
 		let qty = parseInt(lessonQtyInput.value);
-		qty -= 1;
-		if (qty < minLessonQty) {
-			return;
+		if (minLessonQty < qty) {
+			--cart.props.lessonQty;
+			lessonQtyInput.value = cart.props.lessonQty;
 		}
-		cart.lessonQty = qty;
-		lessonQtyInput.value = qty;
 	}
 
 	function changeLessonQty() {
-
 		let qty = lessonQtyInput.value;
-
 		if (!$.Validation.getRule('integer').check(true, qty)) {
-			lessonQtyInput.value = cart.lessonQty;
+			lessonQtyInput.value = cart.props.lessonQty;
 			return;
 		}
 
 		qty = parseInt(qty);
-		if (qty > maxLessonQty || qty < minLessonQty) {
-			lessonQtyInput.value = cart.lessonQty;
-			return;
+		if (maxLessonQty > qty && minLessonQty < qty) {
+			cart.props.lessonQty = qty;
+			lessonQtyInput.value = qty;
+            return;
 		}
-		cart.lessonQty = qty;
-		lessonQtyInput.value = qty;
+		lessonQtyInput.value = cart.props.lessonQty;
 	}
-
-	$('.btn--close').click(function() {
-		$('#facebox').hide();
-		$('#facebox_overlay').hide();
-	});
 </script>

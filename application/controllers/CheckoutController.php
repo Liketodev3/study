@@ -139,6 +139,7 @@ class CheckoutController extends LoggedUserController
         $this->set('slotDurations', $slotDurations);
         $this->set('teachLangName', $teachLangName);
         $this->set('teacher', $teacher);
+        $this->set('languageId', $languageId);
         $this->set('lessonDuration', $lessonDuration);
         $this->_template->render(false, false);
     }
@@ -343,16 +344,6 @@ class CheckoutController extends LoggedUserController
         $this->set('cartData', $cartData);
         $this->set('WalletPaymentForm', $WalletPaymentForm);
         $this->_template->render(false, false);
-    }
-
-    private function getPromoCouponsForm($langId)
-    {
-        $langId = FatUtility::int($langId);
-        $frm = new Form('frmPromoCoupons');
-        $fld = $frm->addTextBox(Label::getLabel('LBL_Coupon_code', $langId), 'coupon_code', '', ['placeholder' => Label::getLabel('LBL_Enter_Your_code', $langId)]);
-        $fld->requirements()->setRequired();
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Apply', $langId));
-        return $frm;
     }
 
     public function walletSelection()
