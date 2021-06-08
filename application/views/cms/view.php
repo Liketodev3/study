@@ -1,93 +1,51 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage'); ?>
-
 <?php if ($cPage['cpage_layout'] == Contentpage::CONTENT_PAGE_LAYOUT1_TYPE) { ?>
+    <section class="section padding-bottom-0">
+        <div class="container container--fixed">
+            <div class="intro-head">
+                <h6 class="small-title"><?php echo $cPage['cpage_title']; ?></h6>
+                <?php if ($cPage['cpage_image_title']) { ?>
+                    <h2><?php echo $cPage['cpage_image_title']; ?></h2>
+                <?php } ?>
+                <?php if ($cPage['cpage_image_content']) { ?>
+                    <p><?php echo $cPage['cpage_image_content']; ?></p>
+                <?php } ?>
+            </div>
 
-    <section class="banner banner--main">
-
-        <div class="banner__media"><img src="<?php echo CommonHelper::generateUrl('image', 'cpageBackgroundImage', array($cPage['cpage_id'], $siteLangId, '', 0, false), CONF_WEBROOT_URL); ?>" alt="" /></div>
-        <div class="banner__content banner__content--centered">
-            <h1><?php echo $cPage['cpage_image_title']; ?></h1>
-            <p><?php echo $cPage['cpage_image_content']; ?></p>
-            <?php if (($teacherRequestStatus == null || $teacherRequestStatus == TeacherRequest::STATUS_CANCELLED)) { ?>
-                <a href="javascript:void(0)" onclick="signUpFormPopUp('teacher')" class="btn btn--primary btn--large"><?php echo Label::getLabel('LBL_Start_Teaching'); ?></a>
-            <?php } ?>
+            <div class="about-media">
+                <div class="media">
+                    <img src="<?php echo CommonHelper::generateUrl('image', 'cpageBackgroundImage', array($cPage['cpage_id'], $siteLangId, '', 0, false), CONF_WEBROOT_URL); ?>" alt="">
+                </div>
+            </div>
         </div>
     </section>
     <?php
-    if ($blockData) { ?>
-        <div class="container--cms">
-            <?php if (isset($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_1])  && $blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_1]['cpblocklang_text']) { ?>
-                <section class="space">
-                    <div class="fixed-container">
-                        <?php echo FatUtility::decodeHtmlEntities($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_1]['cpblocklang_text']); ?>
-                    </div>
-                </section>
-            <?php }
-            if (isset($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_2])  && $blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_2]['cpblocklang_text']) { ?>
-                <section class="space bg--gray">
-                    <div class="fixed-container">
-                        <?php echo FatUtility::decodeHtmlEntities($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_2]['cpblocklang_text']); ?>
-                    </div>
-                </section>
-            <?php }
-            if (isset($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_3])  && $blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_3]['cpblocklang_text']) { ?>
-                <section class="space bg--second">
-                    <div class="fixed-container">
-                        <?php echo FatUtility::decodeHtmlEntities($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_3]['cpblocklang_text']); ?>
-                    </div>
-                </section>
-            <?php }
-            if (isset($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_4])  && $blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_4]['cpblocklang_text']) { ?>
-                <section class="space">
-                    <div class="fixed-container">
-                        <?php echo FatUtility::decodeHtmlEntities($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_4]['cpblocklang_text']); ?>
-                    </div>
-                </section>
-            <?php }
-            if (isset($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_5])  &&  $blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_5]['cpblocklang_text']) { ?>
-                <section class="space">
-                    <div class="divider"></div>
-                    <div class="fixed-container">
+    if ($blockData) {
 
-                        <?php echo FatUtility::decodeHtmlEntities($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_5]['cpblocklang_text']); ?>
-                    </div>
-                </section>
-            <?php } ?>
+        if (isset($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_1])  && $blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_1]['cpblocklang_text']) {
+            echo FatUtility::decodeHtmlEntities($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_1]['cpblocklang_text']);
+        }
 
-
-
-        </div>
-    <?php
+        if (isset($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_2])  && $blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_2]['cpblocklang_text']) {
+            echo FatUtility::decodeHtmlEntities($blockData[Contentpage::CONTENT_PAGE_LAYOUT1_BLOCK_2]['cpblocklang_text']);
+        }
     }
-    ?>
-<?php } else { ?>
+} else { ?>
 
-    <?php /*if(!$isAppUser){?>
-<div class="breadcrumb">
-    <?php //$this->includeTemplate('_partial/custom/header-breadcrumb.php'); ?>
-</div>
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="heading3"><?php echo $cPage['cpage_title']; ?></div>
-    </div>
-</div><?php }*/ ?>
-
-    <section class="section section--gray section--page">
-        <div class="container container--narrow">
-            <div class="section__head">
-                <h2><?php echo $cPage['cpage_title']; ?></h2>
+    <section class="section padding-bottom-0">
+        <div class="container container--fixed">
+            <div class="intro-head">
+                <h6 class="small-title"><?php echo $cPage['cpage_title']; ?></h6>
             </div>
-            <div class="section__body">
-                <div class="box -padding-30">
-                    <div class="cms-container">
-                        <?php echo FatUtility::decodeHtmlEntities($cPage['cpage_content']) ?>
-                    </div>
+            <div class="about-media">
+                <div class="media">
+                    <img src="<?php echo CommonHelper::generateUrl('image', 'cpageBackgroundImage', array($cPage['cpage_id'], $siteLangId, '', 0, false), CONF_WEBROOT_URL); ?>" alt="">
                 </div>
             </div>
         </div>
     </section>
 <?php } ?>
+
 <script>
     /* for faq toggles */
     $(".accordian__body-js").hide();
@@ -104,5 +62,67 @@
             $(this).siblings('.accordian__body-js').slideDown();
         }
     });
+
+    $('.slider-onehalf-js').slick({
+        centerPadding: '0px',
+        slidesToShow: 2,
+        slidesToScroll: 1,
+        prevArrow: $('.prev-slide'),
+        nextArrow: $('.next-slide'),
+        dots: true,
+        responsive: [{
+                breakpoint: 768,
+                settings: {
+                    centerPadding: '0px',
+                    slidesToShow: 2,
+                    arrows: false
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    centerPadding: '0px',
+                    slidesToShow: 1,
+                    arrows: false
+                }
+            }
+        ]
+    });
+
+
+
+    /* [ FOR PRODUCTS */
+    $('.step-slider-js').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        dots: true,
+        asNavFor: '.slider-tabs--js'
+    });
+
+    $('.slider-tabs--js').slick({
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        asNavFor: '.step-slider-js',
+        dots: true,
+        centerMode: true,
+        focusOnSelect: true
+    });
+
+
+    $(".settings__trigger-js").click(function() {
+        var t = $(this).parents(".toggle-group").children(".settings__target-js").is(":hidden");
+        $(".toggle-group .settings__target-js").hide();
+        $(".toggle-group .settings__trigger-js").removeClass("is--active");
+        if (t) {
+            $(this).parents(".toggle-group").children(".settings__target-js").toggle().parents(".toggle-group").children(".settings__trigger-js").addClass("is--active")
+        }
+    });
+
+    /* FOR NAV TOGGLES */
+    $('.btn--filters-js').click(function() {
+        $(this).toggleClass("is-active");
+        $('html').toggleClass("show-filters-js");
+    });
 </script>
-</div><!-- div id=body class=body ends here -->
+</div>
