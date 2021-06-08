@@ -1,14 +1,69 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<?php $frmSrch->setFormTagAttribute ( 'onSubmit', 'search(this); return(false);' );
-$frmSrch->setFormTagAttribute ( 'class', 'group-class-search' );
-$frmSrch->getField( 'btnSrchSubmit' )->setFieldTagAttribute('class', 'form__action');
-$frmSrch->getField( 'keyword' )->setFieldTagAttribute('class', 'keyword-search');
+<?php $frmSrch->setFormTagAttribute('onSubmit', 'search(this); return(false);');
+$frmSrch->setFormTagAttribute('class', 'group-class-search');
+$frmSrch->getField('btnSrchSubmit')->setFieldTagAttribute('class', 'form__action');
+$frmSrch->getField('keyword')->setFieldTagAttribute('class', 'keyword-search');
 ?>
- 
- <section class="section section--search">
+<!-- [ MAIN BODY ========= -->
+
+<section class="section--gray">
+
+
+    <div class="main__head">
+        <div class="container container--narrow">
+            <div class="filter-wrapper filter--group">
+                <div class="filter-form">
+                    <div class="filter__primary">
+                        <div class="filter-form__inner">
+                            <div class="filter__head filter__head-trigger filter-trigger-js">
+                                <svg class="icon icon--language">
+                                    <use xlink:href="images/sprite.yo-coach.svg#language"></use>
+                                </svg>
+                                <input class="filter__input filter__input-js" type="text" placeholder="English">
+                            </div>
+                            <div class="filter__body filter__body-target filter-target-js" style="display: none;">
+                                <div class="dropdown-listing">
+                                    <ul>
+                                        <li><a href="#">Engilsh</a></li>
+                                        <li class="is--active"><a href="#">Spanish</a></li>
+                                        <li><a href="#">German</a></li>
+                                        <li><a href="#">French</a></li>
+                                        <li><a href="#">Dutch</a></li>
+                                        <li><a href="#">Hindi</a></li>
+                                        <li><a href="#">Punjabi</a></li>
+                                        <li><a href="#">Tamil</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filter-form__inner filter--search">
+                            <div class="filter__head">
+                                <input type="text" placeholder="Search By Name and Keyword...">
+                                <svg class="icon icon--search">
+                                    <use xlink:href="images/sprite.yo-coach.svg#search"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main__body">
+        <div class="container container--narrow" id="listingContainer">
+           
+        </div>
+    </div>
+
+</section>
+
+<!-- ] -->
+<section class="section section--search">
     <div class="container container--narrow">
         <div class="row justify-content-between align-items-center">
-        
+
             <div class="col-xl-4 col-lg-4 col-md-4">
                 <h1><?php echo Label::getLabel("LBL_Group_Classes") ?></h1>
             </div>
@@ -18,13 +73,13 @@ $frmSrch->getField( 'keyword' )->setFieldTagAttribute('class', 'keyword-search')
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form__element">
-                            <?php echo $frmSrch->getFieldHtml('language'); ?>
+                                <?php echo $frmSrch->getFieldHtml('language'); ?>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-3">
                             <div class="form__element">
-                            <?php echo $frmSrch->getFieldHtml('custom_filter'); ?>
+                                <?php echo $frmSrch->getFieldHtml('custom_filter'); ?>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -39,7 +94,7 @@ $frmSrch->getField( 'keyword' )->setFieldTagAttribute('class', 'keyword-search')
                                     </span>
                                 </span>
                             </div>
-                        
+
                         </div>
                     </div>
                     </form>
@@ -47,19 +102,19 @@ $frmSrch->getField( 'keyword' )->setFieldTagAttribute('class', 'keyword-search')
                 </div>
 
             </div>
-            
-        </div>
-    </div>
- </div>
-<section class="section section--gray section--listing section--listing-js">
-    <div class="container container--narrow">
 
-		<div id="listingContainer">
         </div>
     </div>
-</section>
-<script>
-if ( window.history.replaceState ) {
-  window.history.replaceState( null, null, window.location.href );
-}
-</script>
+    </div>
+    <section class="section section--gray section--listing section--listing-js">
+        <div class="container container--narrow">
+
+            <div id="listingContainer">
+            </div>
+        </div>
+    </section>
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
