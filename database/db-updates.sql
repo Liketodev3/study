@@ -390,3 +390,20 @@ ALTER TABLE `tbl_teacher_stats` CHANGE `testat_gavailability` `testat_availabili
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_CHECKOUT_SLAB_TITLE', 1, 'You can buy multiple lessons as per you convenience.'),
  ('LBL_CHECKOUT_SLAB_DESCRIPTION', 1, 'Please choose the same by adding the quantity of the lesson. We have following options below.');
 
+REPLACE INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES (NULL, 'Contact Banner', '4', '1', '<div class=\"intro-head\"><h6 class=\"small-title\">Contact Us</h6><h2>Want to get in touch?<br> We would love to hear from you.</h2></div><div class=\"about-media\"><div class=\"media\"><img src=\"images/contact_hero.png\" alt=\"\"></div></div>');
+
+REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES ('4', '1', 'Contact Banner', '<div class=\"intro-head\"><h6 class=\"small-title\">Contact Us</h6><h2>Want to get in touch?<br> We would love to hear from you.</h2></div><div class=\"about-media\"><div class=\"media\"><img src=\"images/contact_hero.png\" alt=\"\"></div></div>');
+
+REPLACE INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES (5, 'Contact left section', 5, 1, '<div class=\"col-md-5 col-lg-4\"><div class=\"contact-info\"><div class=\"contact-info__row\"><div class=\"contact__icon\"><svg class=\"icon icon--address\"><use xlink:href=\"images/sprite.yo-coach.svg#address\"></use></svg></div><div class=\"contact__content\"><h6>Address</h6><p>Yo-Coach Pvt. Ltd.<br> Plot No. 268, Lorem Ipsum, Industrial Area<br> Sector 82, Mohali, Punjab</p></div></div><div class=\"contact-info__row\"><div class=\"contact__icon\"> <svg class=\"icon icon--mail\"><use xlink:href=\"images/sprite.yo-coach.svg#mail\"></use></svg></div><div class=\"contact__content\"><h6>Email</h6><p>sales@yo-oach.com <br> info@yo-coach.com</p></div></div><div class=\"contact-info__row\"><div class=\"contact__icon\"><svg class=\"icon icon--telephone\"><use xlink:href=\"images/sprite.yo-coach.svg#telephone\"></use></svg></div><div class=\"contact__content\"><h6>Phone no.</h6><p>(+44) 020 7846 0316 <br> (+44) 020 7846 0316 <br> (+44) 020 7846 0316</p></div></div></div></div>');
+
+REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES ('5', '1', 'Contact Left Section', '<div class=\"col-md-5 col-lg-4\"><div class=\"contact-info\"><div class=\"contact-info__row\"><div class=\"contact__icon\"><svg class=\"icon icon--address\"><use xlink:href=\"images/sprite.yo-coach.svg#address\"></use></svg></div><div class=\"contact__content\"><h6>Address</h6><p>Yo-Coach Pvt. Ltd.<br> Plot No. 268, Lorem Ipsum, Industrial Area<br> Sector 82, Mohali, Punjab</p></div></div><div class=\"contact-info__row\"><div class=\"contact__icon\"> <svg class=\"icon icon--mail\"><use xlink:href=\"images/sprite.yo-coach.svg#mail\"></use></svg></div><div class=\"contact__content\"><h6>Email</h6><p>sales@yo-oach.com <br> info@yo-coach.com</p></div></div><div class=\"contact-info__row\"><div class=\"contact__icon\"><svg class=\"icon icon--telephone\"><use xlink:href=\"images/sprite.yo-coach.svg#telephone\"></use></svg></div><div class=\"contact__content\"><h6>Phone no.</h6><p>(+44) 020 7846 0316 <br> (+44) 020 7846 0316 <br> (+44) 020 7846 0316</p></div></div></div></div>');
+
+DELETE FROM `tbl_content_pages` WHERE `tbl_content_pages`.`cpage_id` = 5
+
+DELETE FROM `tbl_content_pages_lang` WHERE `tbl_content_pages_lang`.`cpagelang_cpage_id` = 5 AND `tbl_content_pages_lang`.`cpagelang_lang_id` = 1;
+
+DELETE FROM `tbl_content_pages_lang` WHERE `tbl_content_pages_lang`.`cpagelang_cpage_id` = 5 AND `tbl_content_pages_lang`.`cpagelang_lang_id` = 2;
+
+
+
+

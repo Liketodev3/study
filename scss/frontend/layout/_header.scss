@@ -117,7 +117,7 @@ $header-primary: 'header-primary';
 
 .header-dropdown{
     .header-dropdown__trigger{
-        padding: 0.65rem 1.2rem;
+        padding: 0 1.2rem;
         font-weight: 600;
         text-transform: uppercase;
         display: flex;
@@ -170,8 +170,8 @@ $header-primary: 'header-primary';
         }
         .icon--globe{
             @media(max-width: theme('breakpoints.md','value')) {
-                width: 35px;
-                height: 35px;
+                width: 30px;
+                height: 30px;
                 fill: var(--color-white);
             }
             
@@ -249,6 +249,11 @@ $menu: 'menu';
             }
             
         }
+        .is--active{
+            a{
+                color: var(--color-primary);
+            }
+        }
     }
 }
 
@@ -267,6 +272,17 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
 
 .#{$header-dropdown--arrow} {
     margin-#{theme('direction.right','value')}: var(--margin-2);
+
+    .dropdown__cover{
+        overflow: unset;
+    }
+
+    .header-dropdown__trigger{
+        .icon--globe{
+            width: 14px;
+            height: 14px;
+        }
+    }
 }
 
 
@@ -405,6 +421,15 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
                         border-color: var(--color-primary);
                     }
                 }
+            }
+        }
+    }
+
+    .header-dropdown__trigger{
+        .icon{
+            @media(max-width: theme('breakpoints.md','value')) {
+                width: 17px;
+                height: 17px;
             }
         }
     }
@@ -549,7 +574,7 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
         }
         
         .header-controls__action{
-            padding: calc(var(--padding-4) + 2px) var(--padding-5);
+            padding: calc(var(--padding-3) + 2px) var(--padding-5);
             display: block;
             position: relative;
             svg{
@@ -652,8 +677,8 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 6px;
-    right: 2px;
+    top: 1px;
+    #{theme('direction.right','value')}: 2px;
     padding: 3px 4px;
 }
 

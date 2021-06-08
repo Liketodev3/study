@@ -46,7 +46,9 @@
     bottom: 0;
 }
 
-
+#facebox .content h4 {
+    margin-bottom: 20px;
+}
 
 body.is-screen-on {
     position: fixed;
@@ -65,34 +67,6 @@ body.is-screen-on .header .container {
     max-width: 100%;
 }
 
-// .timer .colorDefinition {
-//     border-color: transparent;
-//     background: var(--color-secondary) !important;
-// }
-
-// .timer .size_lg {
-//     font-size: 24px;
-//     padding: 0 10px;
-// }
-
-// @media (min-width:theme('breakpoints.md','value')) {
-//     .timer .size_lg {
-//         font-size: 50px;
-
-//     }
-// }
-
-
-// .timer.timer--small .colorDefinition {
-//     background: #000 !important;
-// }
-
-// .timer.timer--small .size_lg {
-//     font-size: 30px;
-//     padding: 0 10px;
-//     height: 50px;
-//     display: block;
-// }
 
 
 
@@ -225,16 +199,6 @@ div.tagsinput div {
     #{theme('direction.right','value')}: 160px;
     top: 20px;
     z-index: 10;
-}
-
-.chat--info{
-    display: flex;
-    justify-content: center;
-}
-.chat--info .loadmore {
-    padding: 4px 12px;
-    border-radius: 10px;
-    z-index: 1;
 }
 
 @media (min-width:theme('breakpoints.xl','value')){
