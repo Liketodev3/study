@@ -201,12 +201,6 @@ class MyAppController extends FatController
     public function setUpNewsLetter()
     {
         $post = FatApp::getPostedData();
-        $frm = Common::getNewsLetterForm(CommonHelper::getLangId());
-        $post = $frm->getFormDataFromArray($post);
-        if ($post === false) {
-            Message::addErrorMessage($frm->getValidationErrors());
-            FatUtility::dieWithError(Message::getHtml());
-        }
         $siteLangId = CommonHelper::getLangId();
         $api_key = FatApp::getConfig("CONF_MAILCHIMP_KEY");
         $list_id = FatApp::getConfig("CONF_MAILCHIMP_LIST_ID");
@@ -214,7 +208,7 @@ class MyAppController extends FatController
             Message::addErrorMessage(Label::getLabel("LBL_Newsletter_is_not_configured_yet,_Please_contact_admin", $siteLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-        require_once(CONF_INSTALLATION_PATH . 'library/Mailchimp.php');
+        require_once(CONF_INSTALLATION_PATH . 'library/third-party/Mailchimp.php');
         $MailchimpObj = new Mailchimp($api_key);
         $Mailchimp_ListsObj = new Mailchimp_Lists($MailchimpObj);
         try {
