@@ -50,7 +50,7 @@ $colorClass = [
                                     <p><?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></p>
                                 </div>
                                 <div class="list__action">
-                                    <a href="#" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                                    <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getUserTeachLangues');" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
                                     <a href="#" class="btn btn--bordered color-primary btn--block">
                                         <svg class="icon icon--envelope">
                                             <use xlink:href="images/sprite.yo-coach.svg#envelope"></use>

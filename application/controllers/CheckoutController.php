@@ -139,6 +139,7 @@ class CheckoutController extends LoggedUserController
         $this->set('slotDurations', $slotDurations);
         $this->set('teachLangName', $teachLangName);
         $this->set('teacher', $teacher);
+        $this->set('languageId', $languageId);
         $this->set('lessonDuration', $lessonDuration);
         $this->_template->render(false, false);
     }

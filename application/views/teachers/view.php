@@ -86,8 +86,7 @@ foreach ($userTeachLangs as $key => $value) {
                             <div class="tutor-lang"><b><?php echo Label::getLabel('LBL_Teaches:'); ?></b> <?php echo implode(', ', $teacher['teachLanguages']); ?></div>
 
                             <div class="detail-actions">
-                                <a href="javascript:void(0);" 
-                                ="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>,this)" class="btn btn--bordered color-black">
+                                <a href="javascript:void(0);"="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>,this)" class="btn btn--bordered color-black">
                                     <svg class="icon icon--heart">
                                         <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#heart'; ?>"></use>
                                     </svg>
@@ -169,11 +168,10 @@ foreach ($userTeachLangs as $key => $value) {
                                                     <div class="lesson-list">
                                                         <ul>
                                                             <?php foreach ($slabDetails['langPrices'] as $priceDetails) {
-
                                                                 $onclick = '';
-																if ($loggedUserId != $teacher['user_id']) {
-																	 $onclick = "cart.add('" . $teacher['user_id'] . "','" . $priceDetails['utl_tlanguage_id'] . "','" . $priceDetails['ustelgpr_slot'] . "','" . $priceDetails['ustelgpr_min_slab'] . "')";
-																}    
+                                                                if ($loggedUserId != $teacher['user_id']) {
+                                                                    $onclick = "cart.proceedToStep({teacherId: " . $teacher['user_id'] . ",languageId: " . $priceDetails['utl_tlanguage_id'] . ",lessonDuration: " . $priceDetails['ustelgpr_slot'] . "},'getTeacherPriceSlabs')";
+                                                                }
                                                             ?>
                                                                 <li>
                                                                     <a href="javascript:void(0);" onclick="<?php echo $onclick; ?>">
@@ -859,7 +857,7 @@ foreach ($userTeachLangs as $key => $value) {
 
                     <div class="box box--book">
                         <div class="book__actions">
-                            <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white " onclick="cart.getTeachLangues(<?php echo $teacher['user_id']; ?>);"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                            <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white " onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getUserTeachLangues');"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
                             <a href="#" class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary">
                                 <svg class="icon icon--envelope">
                                     <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope' ?>"></use>
