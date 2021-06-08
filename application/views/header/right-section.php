@@ -11,11 +11,11 @@
     <div class="header-dropdown header-dropdown--arrow">
         <a class="header-dropdown__trigger trigger-js" href="#languages-nav">
             <svg class="icon icon--globe">
-                <use xlink:href="images/sprite.yo-coach.svg#globe"></use>
+                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#globe'; ?>"></use>
             </svg>
             <span><?php echo $languages[$siteLangId]['language_code'] . ' - ' . $currencies[$siteCurrencyId]; ?></span>
             <svg class="icon icon--arrow">
-                <use xlink:href="images/sprite.yo-coach.svg#arrow-black"></use>
+                <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#arrow-black' ?>"></use>
             </svg>
         </a>
         <div id="languages-nav" class="header-dropdown__target">
@@ -80,7 +80,7 @@
                     </div>
                     <div class="teacher__name"><?php echo $userName; ?></div>
                     <svg class="icon icon--arrow">
-                        <use xlink:href="images/sprite.yo-coach.svg#arrow-black"></use>
+                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#arrow-black' ?>"></use>
                     </svg>
                 </div>
             </a>

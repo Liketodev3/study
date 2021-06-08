@@ -3,8 +3,8 @@
     <section class="section">
         <div class="container container--narrow">
             <div class="section__head d-flex justify-content-between align-items-center">
-                <h2>Latest Blogs</h2>
-                <a class="view-all" href="#">View All</a>
+                <h2><?php echo Label::getLabel('LBL_Latest_Blogs',$siteLangId); ?></h2>
+                <a class="view-all" href="<?php echo CommonHelper::generateUrl('Blog') ?>"><?php echo Label::getLabel('LBL_View_Blogs',$siteLangId); ?></a>
             </div>
             <div class="section__body">
                 <div class="blog-wrapper">
@@ -25,12 +25,12 @@
                                                 <h3><?php echo $postDetail['post_title'] ?></h3>
                                             </div>
                                             <div class="blog__date">
-                                                <svg class="icon icon--calendar"><use xlink:href="images/sprite.yo-coach.svg#calendar"></use></svg>
+                                                <svg class="icon icon--calendar"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#calendar' ?>"></use></svg>
                                                 <span><?php echo FatDate::format($postDetail['post_published_on']); ?> </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="#" class="blog__action"></a>
+                                    <a href="<?php echo CommonHelper::generateUrl('Blog','PostDetail',[ $postDetail['post_id']]); ?>"  class="blog__action"></a>
                                 </div>
                             </div>
                         </div>

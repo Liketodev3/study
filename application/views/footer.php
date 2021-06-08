@@ -1,11 +1,12 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-</div><!-- div id=body class=body ends here -->
+</div>
 <footer class="footer">
     <section class="section section--footer">
         <div class="container container--narrow">
-            <?php $this->includeTemplate('footer/footerRowOne.php');  ?>
-            <?php $this->includeTemplate('footer/footerRowSecond.php');  ?>
-            <?php $this->includeTemplate('footer/footerRowThird.php');  ?>
+      
+            <?php $this->includeTemplate('footer/footerRowOne.php',['siteLangId'=>$siteLangId]);  ?>
+            <?php $this->includeTemplate('footer/footerRowSecond.php',['siteLangId'=>$siteLangId]);  ?>
+            <?php $this->includeTemplate('footer/footerRowThird.php',['siteLangId'=>$siteLangId]);  ?>
         </div>
     </section>
     <?php $this->includeTemplate('footer/copyRightSection.php');  ?>

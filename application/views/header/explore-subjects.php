@@ -1,7 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 	<div class="header-dropdown">
                             <a class="header-dropdown__trigger trigger-js" href="#explore">
-                                <svg class="icon icon--menu"><use xlink:href="images/sprite.yo-coach.svg#burger-menu"></use></svg>
+                                <svg class="icon icon--menu"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#burger-menu'; ?>"></use></svg>
                                 <span><?php echo Label::getLabel('LBL_EXPLORE_SUBJECTS',CommonHelper::getLangId()); ?></span>
                             </a>
                             <div id="explore" class="header-dropdown__target">

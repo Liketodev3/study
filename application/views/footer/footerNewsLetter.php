@@ -3,10 +3,10 @@
     <div class="col-md-6 col-lg-3">
         <div class="footer-group toggle-group">
             <div class="footer__group-title toggle-trigger-js">
-                <h5 class=""><?php echo Label::getLabel('LBL_SignUp_To_NewsLetter', CommonHelper::getLangId()) ?></h5>
+                <h5 class=""><?php echo Label::getLabel('LBL_SignUp_To_NewsLetter', $siteLangId) ?></h5>
             </div>
             <div class="footer__group-content toggle-target-js">
-                <p><?php Label::getLabel('LBL_newsletter_descritption', CommonHelper::getLangId()); ?></p>
+                <p><?php Label::getLabel('LBL_newsletter_descritption', $siteLangId); ?></p>
                 <div class="email-field">
                     <input type="text" name="email" placeholder="Enter Email">
                     <svg class="icon icon--envelope">

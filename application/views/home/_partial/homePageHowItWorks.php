@@ -46,8 +46,8 @@ $hWorksdata = isset($banners['BLOCK_HOW_IT_WORKS']) ? $banners['BLOCK_HOW_IT_WOR
                                                     <div class="step__actions">
                                                         <a href="<?php echo CommonHelper::getBannerUrl($banners['banner_btn_url']); ?>" class="btn btn--primary"><?php echo $banners['banner_btn_caption']; ?></a>
                                                         <a href="#" class="btn-video">
-                                                            <svg class="icon icon--play"><use xlink:href="images/sprite.yo-coach.svg#play"></use></svg>
-                                                            <span><?php echo Label::getLabel('LBL_Watch_Video'); ?></span>
+                                                            <svg class="icon icon--play"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#play'; ?>"></use></svg>
+                                                            <span><?php echo Label::getLabel('LBL_Watch_Video',$siteLangId); ?></span>
                                                         </a>
                                                     </div>
                                                 </div>

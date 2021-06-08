@@ -3,7 +3,7 @@
     <section class="section">
         <div class="container container--narrow">
             <div class="section__head">
-                <h2><?php echo Label::getLabel('Lbl_Top_Rated_Teachers'); ?></h2>
+                <h2><?php echo Label::getLabel('Lbl_Top_Rated_Teachers',$siteLangId); ?></h2>
             </div>
             <div class="section__body">
                 <div class="row">
@@ -19,11 +19,11 @@
                                     <a class="tile__title" href="<?php echo CommonHelper::generateUrl('Teachers', 'view', [$topRatedTeacher['user_url_name']]); ?>"><h4><?php echo $topRatedTeacher['user_first_name'] . ' ' . $topRatedTeacher['user_last_name']; ?></h4></a>
                                     <div class="info-wrapper">
                                         <div class="info-tag location">
-                                            <svg class="icon icon--location"><use xlink:href="images/sprite.yo-coach.svg#location"></use></svg>
+                                            <svg class="icon icon--location"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#location'; ?>"></use></svg>
                                             <span class="lacation__name"><?php echo $topRatedTeacher['country_name']; ?></span>
                                         </div>
                                         <div class="info-tag ratings">
-                                            <svg class="icon icon--rating"><use xlink:href="images/sprite.yo-coach.svg#rating"></use></svg>
+                                            <svg class="icon icon--rating"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#rating' ?>"></use></svg>
                                             <span class="value"><?php echo $topRatedTeacher['teacher_rating'] ?? 0; ?></span>
                                             <span class="count"><?php echo '(' . $topRatedTeacher['totReviews'] . ')'; ?></span>
                                         </div>
