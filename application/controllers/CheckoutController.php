@@ -346,16 +346,6 @@ class CheckoutController extends LoggedUserController
         $this->_template->render(false, false);
     }
 
-    private function getPromoCouponsForm($langId)
-    {
-        $langId = FatUtility::int($langId);
-        $frm = new Form('frmPromoCoupons');
-        $fld = $frm->addTextBox(Label::getLabel('LBL_Coupon_code', $langId), 'coupon_code', '', ['placeholder' => Label::getLabel('LBL_Enter_Your_code', $langId)]);
-        $fld->requirements()->setRequired();
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Apply', $langId));
-        return $frm;
-    }
-
     public function walletSelection()
     {
         $payFromWallet = FatApp::getPostedData('payFromWallet', FatUtility::VAR_INT, 0);
