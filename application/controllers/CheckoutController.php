@@ -496,7 +496,7 @@ class CheckoutController extends LoggedUserController
         $orderNetAmount = $cartData["orderNetAmount"];
         $walletAmountCharge = $cartData["walletAmountCharge"];
 
-        $coupon_discount_total = $cartData['cartDiscounts']['coupon_discount_total'];
+        $coupon_discount_total = FatUtility::float($cartData['cartDiscounts']['coupon_discount_total'] ?? 0);
         $orderData = [
             'order_id' => $order_id,
             'order_type' => Order::TYPE_LESSON_BOOKING,
