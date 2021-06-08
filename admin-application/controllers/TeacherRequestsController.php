@@ -202,10 +202,12 @@ class TeacherRequestsController extends AdminBaseController
         $srch = new TeacherRequestSearch();
         $srch->joinUserCredentials();
         $srch->joinTeacherRequestValues();
+        $srch->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = user.user_id', 'us');
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $srch->addMultipleFields([
+            'us_site_lang',
             'utrequest_status',
             'utrequest_user_id',
             'utrequest_comments',
@@ -342,7 +344,7 @@ class TeacherRequestsController extends AdminBaseController
             }
             /* ] */
             $userNotification = new UserNotifications($requestRow['utrequest_user_id']);
-            $userNotification->sendTeacherApprovalNotification();
+            $userNotification->sendTeacherApprovalNotification($requestRow['us_site_lang']);
             /* Update Teacher's Stat */
             $stat = new TeacherStat($requestRow['utrequest_user_id']);
             $stat->setTeachLangPrices();
@@ -428,4 +430,5 @@ class TeacherRequestsController extends AdminBaseController
         }
         AttachedFile::downloadFile($fileRow['afile_name'], $fileRow['afile_physical_path']);
     }
+
 }
