@@ -202,7 +202,7 @@ class TeacherRequestsController extends AdminBaseController
         $srch = new TeacherRequestSearch();
         $srch->joinUserCredentials();
         $srch->joinTeacherRequestValues();
-        $srch->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = user.user_id', 'us');
+        $srch->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = u.user_id', 'us');
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -273,7 +273,7 @@ class TeacherRequestsController extends AdminBaseController
             /* ] */
             /* syncing user profile pic[ */
             $requestedProfilePicRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_PROFILE_IMAGE, $requestRow['utrequest_user_id']);
-            if ($requestedProfilePicRow['afile_physical_path'] != "") {
+            if (!empty($requestedProfilePicRow['afile_physical_path'] ?? '')) {
                 $profilePicDataArr = [
                     'afile_type' => AttachedFile::FILETYPE_USER_PROFILE_IMAGE,
                     'afile_record_id' => $requestRow['utrequest_user_id'],
