@@ -17,7 +17,7 @@ defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 		<div class="selection-tabs selection--checkout selection--language selection--onehalf">
 			<?php foreach ($teachLanguages as $language) { ?>
 				<label class="selection-tabs__label">
-					<input type="radio" onchange="cart.languageId = this.value;" class="selection-tabs__input" value="<?php echo $language['tlanguage_id']; ?>" <?php echo ($languageId == $language['tlanguage_id']) ? 'checked' : ''; ?> name="languageId">
+					<input type="radio" onchange="cart.props.languageId = this.value;" class="selection-tabs__input" value="<?php echo $language['tlanguage_id']; ?>" <?php echo ($languageId == $language['tlanguage_id']) ? 'checked' : ''; ?> name="languageId">
 					<div class="selection-tabs__title">
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
 							<g>
@@ -40,6 +40,6 @@ defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 			<div class="teacher__name"><?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?></div>
 		</div>
 
-		<a href="javascript:void(0);" class="btn btn--primary color-white" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>, languageId: <?php echo $languageId; ?>},'getSlotDuration');"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
+		<a href="javascript:void(0);" class="btn btn--primary color-white" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getSlotDuration');"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
 	</div>
 </div>
