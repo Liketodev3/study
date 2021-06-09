@@ -55,8 +55,8 @@
         } ?>
     </div>
     <div class="slideshow-content">
-        <h1><?php echo Label::getLabel('LBL_Slider_Title_Text'); ?></h1>
-        <p><?php echo Label::getLabel('LBL_Slider_Description_Text'); ?></p>
+        <h1><?php echo Label::getLabel('LBL_Slider_Title_Text',$siteLangId); ?></h1>
+        <p><?php echo Label::getLabel('LBL_Slider_Description_Text',$siteLangId); ?></p>
         <div class="slideshow__form">
         <form method="POST" class="form" action="<?php echo CommonHelper::generateFullUrl('Teachers'); ?>" name="homeSearchForm" id="homeSearchForm" >
               
@@ -64,17 +64,17 @@
 			
                 <div class="slideshow-input">
                     <svg class="icon icon--search">
-                        <use xlink:href="images/sprite.yo-coach.svg#search"></use>
+                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#search'; ?>"></use>
                     </svg>
-                    <input type="text" name="language" placeholder="<?php echo Label::getLabel('LBL_I_am_learning...'); ?>">
+                    <input type="text" name="language" placeholder="<?php echo Label::getLabel('LBL_I_am_learning...',$siteLangId); ?>">
                     <input type="hidden" name="teachLangId">
                    
                 </div>
-                <button class="btn btn--secondary btn--large btn--block"><?php echo Label::getLabel('LBL_Search_for_teachers'); ?></button>
+                <button class="btn btn--secondary btn--large btn--block"><?php echo Label::getLabel('LBL_Search_for_teachers',$siteLangId); ?></button>
             </form>
         </div>
         <div class="tags-inline">
-            <b><?php echo Label::getLabel("LBL_Popular:") ?></b>
+            <b><?php echo Label::getLabel("LBL_Popular:",$siteLangId) ?></b>
             <ul>
                 <?php
                 $lastElment = end($allLanguages);

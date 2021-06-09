@@ -9051,14 +9051,17 @@ textarea[disabled] {
   max-width: 100%; }
 
 #facebox {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 999;
-  text-align: left; }
-  @media (max-width: 767px) {
+  position: fixed;
+  z-index: 999; }
+  #facebox .content {
+    border-radius: 0; }
+  @media (min-width: 767px) {
     #facebox {
-      right: 0; } }
+      left: 50% !important;
+      top: 100px !important;
+      -webkit-transform: translate(-50%, 0);
+          -ms-transform: translate(-50%, 0);
+              transform: translate(-50%, 0); } }
 
 #facebox .popup {
   position: relative; }
