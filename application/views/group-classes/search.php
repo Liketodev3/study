@@ -80,7 +80,7 @@ $curDateTimeUnix =   strtotime($curDateTime);
                                     <?php elseif ($class['grpcls_status'] != TeacherGroupClasses::STATUS_ACTIVE) : ?>
                                         <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Class_Not_active') ?>" class="btn btn--primary btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                                     <?php else : ?>
-                                        <a href="javascript:void(0);" onClick="cart.proceedToStep({teacherId:<?php echo $class['grpcls_teacher_id']; ?>,grpclsId:<?php echo $class['grpcls_id'] ?>, languageId : <?php echo $class['grpcls_tlanguage_id'] ?>},'getPaymentSummary');" class="btn btn--primary btn--medium"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
+                                        <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId:<?php echo $class['grpcls_teacher_id']; ?>,grpclsId:<?php echo $class['grpcls_id'] ?>, languageId : <?php echo $class['grpcls_tlanguage_id'] ?>},'getPaymentSummary');" class="btn btn--primary btn--medium"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                                     <?php endif; ?>
                                 </div>
                             </div>

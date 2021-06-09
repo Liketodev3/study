@@ -65,6 +65,11 @@ class GroupClassesController extends MyAppController
     public function view($grpcls_id)
     {
         $srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
+        $srch->joinTable(Country::DB_TBL, 'LEFT JOIN', 'ut.user_country_id = country.country_id', 'country');
+        $srch->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'country.country_id = countryLang.countrylang_country_id and countryLang.countrylang_lang_id = '.$this->siteLangId, 'countryLang');
+        $srch->joinTable('tbl_teacher_stats', 'LEFT JOIN', 'testat.testat_user_id = ut.user_id', 'testat');
+        
+        $srch->addMultipleFields(['IFNULL(country_name, country_code) as country_name', 'testat_reviewes', 'testat_ratings']);
         $srch->addCondition('grpcls_id', '=', $grpcls_id);
         $srch->setPageSize(1);
         $classData = FatApp::getDb()->fetch($srch->getResultSet());
