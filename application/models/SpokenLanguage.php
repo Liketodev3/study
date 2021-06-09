@@ -69,43 +69,4 @@ class SpokenLanguage extends MyAppModel
         return $spokenLanguagesArr;
     }
 
-    public static function getAllLangsWithUserCount($langId = 0)
-    {
-        $langId = FatUtility::int($langId);
-        if ($langId < 1) {
-            $langId = CommonHelper::getLangId();
-        }
-        $spokenLangSrch = new SpokenLanguageSearch($langId);
-        $spokenLangSrch->addChecks();
-        $spokenLangSrch->joinActiveTeachers();
-        $spokenLangSrch->addMultiplefields(['slanguage_id', 'IFNULL(slanguage_name, slanguage_identifier) as slanguage_name', 'count(DISTINCT utl_user_id) as teacherCount']);
-        $spokenLangSrch->addGroupBy('utl_slanguage_id');
-        $spokenLangSrch->addCondition('user_is_teacher', '=', 1);
-        $spokenLangSrch->addCondition('user_country_id', '>', 0);
-        $spokenLangSrch->addCondition('credential_active', '=', 1);
-        $spokenLangSrch->addCondition('credential_verified', '=', 1);
-        $spokenLangSrch->addCondition('utl_single_lesson_amount', '>', 0);
-        $spokenLangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
-        $spokenLangSrch->addCondition('utl_slanguage_id', '>', 0);
-        /* qualification/experience[ */
-        $qSrch = new UserQualificationSearch();
-        $qSrch->addMultipleFields(['uqualification_user_id']);
-        $qSrch->addCondition('uqualification_active', '=', 1);
-        $qSrch->addGroupBy('uqualification_user_id');
-        $spokenLangSrch->joinTable("(" . $qSrch->getQuery() . ")", 'INNER JOIN', 'user_id = uqualification_user_id', 'utqual');
-        /* ] */
-        /* user preferences/skills[ */
-        $skillSrch = new UserToPreferenceSearch();
-        $skillSrch->addMultipleFields(['utpref_user_id', 'GROUP_CONCAT(utpref_preference_id) as utpref_preference_ids']);
-        $skillSrch->addGroupBy('utpref_user_id');
-        $spokenLangSrch->joinTable("(" . $skillSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utpref_user_id', 'utpref');
-        /* ] */
-        $spokenLangSrch->addOrder('slanguage_display_order');
-        $spokenLangSrch->doNotCalculateRecords();
-        $spokenLangSrch->setPageSize(6);
-        $rs = $spokenLangSrch->getResultSet();
-        $spokenLanguagesArr = FatApp::getDb()->fetchAll($rs);
-        return $spokenLanguagesArr;
-    }
-
 }

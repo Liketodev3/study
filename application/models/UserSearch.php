@@ -290,27 +290,4 @@ class UserSearch extends SearchBase
         return $teachersList = $db->fetchAll($rs);
     }
 
-    public function joinUserTeachingLanguages($langId = 0, $keyword = '')
-    {
-        $langId = FatUtility::int($langId);
-        if ($langId < 1) {
-            $langId = CommonHelper::getLangId();
-        }
-        $this->joinTable(UserToLanguage::DB_TBL_TEACH, 'INNER  JOIN', 'u.user_id = utsl1.utl_user_id AND utl_single_lesson_amount>0 AND utl_bulk_lesson_amount>0', 'utsl1');
-        $this->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage_id = utsl1.utl_tlanguage_id AND tlanguage_active = ' . applicationConstants::ACTIVE);
-        $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'tlanguagelang_tlanguage_id = utsl1.utl_tlanguage_id AND tlanguagelang_lang_id = ' . $langId, 'tl_lang');
-        $this->addMultipleFields([
-            'utsl1.utl_user_id',
-            'GROUP_CONCAT( DISTINCT IFNULL(tlanguage_name, tlanguage_identifier) ) as teacherTeachLanguageName',
-            'GROUP_CONCAT(DISTINCT utl_id) as utl_ids',
-            'max(utl_single_lesson_amount) as maxPrice',
-            'min(utl_bulk_lesson_amount) as minPrice',
-            'GROUP_CONCAT(DISTINCT utl_tlanguage_id) as utl_tlanguage_ids'
-        ]);
-        if (!empty($keyword)) {
-            $cnd = $this->addCondition('tlanguage_name', 'LIKE', '%' . $keyword . '%');
-            $cnd->attachCondition('tlanguage_identifier', 'LIKE', '%' . $keyword . '%');
-        }
-    }
-
 }
