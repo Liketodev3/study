@@ -19,8 +19,8 @@ var FatEventCalendar = function (teacherId) {
             meridiem: 'short'
         },
         views: {
-            timeGridWeek: { // name of view
-                titleFormat: { month: 'short', day: '2-digit', year: 'numeric' }
+            timeGridWeek: {// name of view
+                titleFormat: {month: 'short', day: '2-digit', year: 'numeric'}
             }
         },
         nowIndicator: true,
@@ -165,19 +165,19 @@ FatEventCalendar.prototype.AvailaibilityCalendar = function (current_time, durat
 
             if (!fecal.validateSelectedSlot(arg, current_time, duration, bookingBefore)) {
                 jQuery("#loaderCalendar").hide();
-                jQuery("body").css({ "cursor": "default" });
-                jQuery("body").css({ "pointer-events": "initial" });
+                jQuery("body").css({"cursor": "default"});
+                jQuery("body").css({"pointer-events": "initial"});
                 calendar.unselect();
                 return false;
             }
 
             checkSlotAvailabiltAjaxRun = true;
-            var newEvent = { start: moment(arg.startStr).format('YYYY-MM-DD HH:mm:ss'), end: moment(arg.endStr).format('YYYY-MM-DD HH:mm:ss') };
+            var newEvent = {start: moment(arg.startStr).format('YYYY-MM-DD HH:mm:ss'), end: moment(arg.endStr).format('YYYY-MM-DD HH:mm:ss')};
             fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability', [fecal.teacherId]), newEvent, function (doc) {
                 checkSlotAvailabiltAjaxRun = false;
                 jQuery("#loaderCalendar").hide();
-                jQuery("body").css({ "cursor": "default" });
-                jQuery("body").css({ "pointer-events": "initial" });
+                jQuery("body").css({"cursor": "default"});
+                jQuery("body").css({"pointer-events": "initial"});
                 var res = JSON.parse(doc);
                 if (res.status == 1) {
                     this.getSlotBookingConfirmationBox(newEvent, arg.jsEvent);
@@ -193,9 +193,13 @@ FatEventCalendar.prototype.AvailaibilityCalendar = function (current_time, durat
         }
     }
     var defaultConf = this.calDefaultConf;
-    var conf = { ...defaultConf, ...calConf };
+    var conf = {...defaultConf, ...calConf};
+    if (selectable) {
+        var calendarEl = document.getElementById('d_calendarfree_trial');
+    } else {
+        var calendarEl = document.getElementById('d_calendar');
+    }
 
-    var calendarEl = document.getElementById('d_calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, conf);
 
     calendar.render();
