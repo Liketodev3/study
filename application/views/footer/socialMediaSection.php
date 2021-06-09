@@ -11,9 +11,7 @@
                         <?php foreach ($rows as $row) { ?>
                             <li>
                                 <a title="<?php echo $row['splatform_identifier']; ?>" <?php if ($row['splatform_url'] != '') { ?>target="_blank" <?php } ?> href="<?php echo ($row['splatform_url'] != '') ? $row['splatform_url'] : 'javascript:void(0)'; ?>">
-                                    <svg class="icon icon--facebook">
-                                        <use xlink:href="images/sprite.yo-coach.svg#<?php echo strtolower($row['splatform_identifier']);  ?>"></use>
-                                    </svg>
+                                    <img src = "<?php echo CommonHelper::generateUrl('Image','SocialPlatform',array($row['splatform_id'])); ?>" alt=""/>
                                     <span><?php echo $row['splatform_identifier']; ?></span>
                                 </a>
                             </li>

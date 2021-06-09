@@ -43,7 +43,6 @@ if ( isset( $_SESSION['search_filters'] ) && !empty( $_SESSION['search_filters']
 
 }
 
-
 /* Teacher Top Filters [ */
 $this->includeTemplate('teachers/_partial/teacherTopFilters.php',['frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'keywordlanguage' => $keywordlanguage, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice , 'keyword'=>$keyword, 'spokenLanguage_filter' => $spokenLanguage_filter, 'preferenceFilter_filter'=> $preferenceFilter_filter, 'fromCountry_filter' => $fromCountry_filter, 'gender_filter' => $gender_filter, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice, 'siteLangId' => $siteLangId]);
 /* ] */
