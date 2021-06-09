@@ -38,13 +38,14 @@ class GroupClassesController extends MyAppController
                     $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
                     break;
                 default:
-					$srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
+                    $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
                     break;
-			}
-		}
+            }
+            $frm->fill($post);
+        }
 
-		$srch->setPageSize($pageSize);
-		$srch->setPageNumber($page);
+        $srch->setPageSize($pageSize);
+        $srch->setPageNumber($page);
         $rs = $srch->getResultSet();
         $classesList = FatApp::getDb()->fetchAll($rs);
         $pagingArr = [
@@ -58,6 +59,7 @@ class GroupClassesController extends MyAppController
         $this->set('min_booking_time', $min_booking_time);
         $post['page'] = $page;
         $this->set('postedData', $post);
+        $this->set('frm', $frm);
         $this->set('pagingArr', $pagingArr);
         $this->_template->render(false, false);
     }
@@ -82,16 +84,15 @@ class GroupClassesController extends MyAppController
         $this->_template->render();
     }
 
-	private function getSearchForm()
-	{
-		$frm = new Form('frmTeacherSrch');
-		$frm->addSelectBox('', 'custom_filter', TeacherGroupClasses::getCustomFilterAr(), '', array(), Label::getLabel('LBL_ALL'));
-		$frm->addSelectBox('', 'language', TeacherGroupClassesSearch::getTeachLangs($this->siteLangId), '', array(), Label::getLabel('LBL_Choose_Language'));
-		$frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_Class')));
-		$fld = $frm->addHiddenField('', 'page', 1);
-		$fld->requirements()->setIntPositive();
-		$frm->addSubmitButton('', 'btnSrchSubmit', '');
-		return $frm;
-	}
-
+    private function getSearchForm()
+    {
+        $frm = new Form('frmTeacherSrch');
+        $frm->addSelectBox('', 'custom_filter', TeacherGroupClasses::getCustomFilterAr(), '', array(), Label::getLabel('LBL_ALL'));
+        $frm->addSelectBox('', 'language', TeacherGroupClassesSearch::getTeachLangs($this->siteLangId), '', array(), Label::getLabel('LBL_All_Language'));
+        $frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_Class')));
+        $fld = $frm->addHiddenField('', 'page', 1);
+        $fld->requirements()->setIntPositive();
+        $frm->addSubmitButton('', 'btnSrchSubmit', '');
+        return $frm;
+    }
 }
