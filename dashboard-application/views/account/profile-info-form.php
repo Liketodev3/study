@@ -35,8 +35,6 @@ $nextButton = $profileFrm->getField('btn_next');
 // prx($profileFrm);
 $nextButton->addFieldTagAttribute('onClick','setUpProfileInfo(this.form, true); return(false);');
 
-$user_profile_info = $profileFrm->getField('user_profile_info');
-$user_profile_info->developerTags['col'] = 12;
 
 $profileFrm->getField('user_phone')->addFieldTagAttribute('id', 'user_phone');
 $phoneCode  = $profileFrm->getField('user_phone_code');

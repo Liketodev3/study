@@ -109,7 +109,7 @@ class AccountController extends LoggedUserController
         $_token = $userObj->prepareUserVerificationCode();
         $error = '';
         if (!$this->sendEmailChangeVerificationLink($_token, $userData, $error)) {
-            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . ' : '. $error);
+            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . ' : ' . $error);
             FatUtility::dieWithError(Message::getHtml());
         }
         $emailChangeReqObj = new UserEmailChangeRequest();
@@ -167,7 +167,6 @@ class AccountController extends LoggedUserController
         $this->_template->addJs('js/intlTelInput.js');
         $this->_template->addCss('css/intlTelInput.css');
 
-
         if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
             if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
                 $this->_template->addJs("js/locales/$currentLangCode.js");
@@ -200,14 +199,14 @@ class AccountController extends LoggedUserController
         $profileFrm = $this->getProfileInfoForm($isTeacherDashboardActive);
         $userSettings = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
         if ($userRow['user_is_teacher']) {
-            $userRow['us_video_link'] = $userSettings['us_video_link'];
-            $userRow['us_is_trial_lesson_enabled'] = $userSettings['us_is_trial_lesson_enabled'];
-            $userRow['us_booking_before'] = $userSettings['us_booking_before']; //== code added on 23-08-2019
-            $userRow['us_google_access_token'] = $userSettings['us_google_access_token'];
-            $userRow['us_google_access_token_expiry'] = $userSettings['us_google_access_token_expiry'];
+            $userRow['us_video_link'] = $userSettings['us_video_link'] ?? '';
+            $userRow['us_is_trial_lesson_enabled'] = $userSettings['us_is_trial_lesson_enabled'] ?? '';
+            $userRow['us_booking_before'] = $userSettings['us_booking_before'] ?? ''; //== code added on 23-08-2019
+            $userRow['us_google_access_token'] = $userSettings['us_google_access_token'] ?? '';
+            $userRow['us_google_access_token_expiry'] = $userSettings['us_google_access_token_expiry'] ?? '';
         }
-        $userRow['user_phone'] = $userRow['user_phone_code'].$userRow['user_phone'];
-        $userRow['us_site_lang'] = $userSettings['us_site_lang'];
+        $userRow['user_phone'] = $userRow['user_phone_code'] . $userRow['user_phone'];
+        $userRow['us_site_lang'] = $userSettings['us_site_lang'] ?? '';
         $profileFrm->fill($userRow);
         $this->set('isProfilePicUploaded', User::isProfilePicUploaded());
         $this->set('userRow', $userRow);
@@ -361,7 +360,7 @@ class AccountController extends LoggedUserController
         $db->startTransaction();
         $record = new TableRecord(UserSetting::DB_TBL);
         $record->setFlds(['us_site_lang' => $post['us_site_lang'], 'us_user_id' => UserAuthentication::getLoggedUserId()]);
-           
+
         if ($isTeacherDashboardActive) {
             // $bookingDurationOptions = array(0, 12, 24);
             // if (!in_array($post['us_booking_before'], $bookingDurationOptions)) {
@@ -374,7 +373,7 @@ class AccountController extends LoggedUserController
         if ($post['us_site_lang'] != $user_settings['us_site_lang']) {
             CommonHelper::setDefaultSiteLangCookie($post['us_site_lang']);
         }
-        
+
         if (!$record->addNew([], $record->getFlds())) {
             $db->rollbackTransaction();
             FatUtility::dieJsonError($record->getError());
@@ -404,17 +403,16 @@ class AccountController extends LoggedUserController
             $fldUname->requirements()->setRegularExpressionToValidate('^[A-Za-z0-9-_]{3,35}$');
             $fldUname->requirements()->setCustomErrorMessage(Label::getLabel('LBL_Invalid_Username', $this->siteLangId));
         }
-        
+
         $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'user_first_name');
         $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'user_last_name');
-        
+
         $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'user_gender', User::getGenderArr());
         $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
         $fldPhn->requirements()->setCustomErrorMessage(Label::getLabel('LBL_PHONE_NO_VALIDATION_MSG'));
         $frm->addHiddenField('', 'user_phone_code');
 
-       
         $countryObj = new Country();
         $countriesArr = $countryObj->getCountriesArr($this->siteLangId);
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'user_country_id', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), [], Label::getLabel('LBL_Select'));
@@ -427,7 +425,7 @@ class AccountController extends LoggedUserController
             $fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'), 'us_booking_before', $bookingOptionArr, 'us_booking_before', [], Label::getLabel('LBL_Select'));
             $fld3->requirement->setRequired(true);
 
-            $isFreeTrialActive =  FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
+            $isFreeTrialActive = FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
             if ($isFreeTrialActive == applicationConstants::YES) {
                 $frm->addCheckBox(Label::getLabel('LBL_Enable_Trial_Lesson'), 'us_is_trial_lesson_enabled', applicationConstants::YES, [], true, applicationConstants::NO);
             }
@@ -437,26 +435,28 @@ class AccountController extends LoggedUserController
         $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next'));
         return $frm;
     }
+
     public function profileImageForm()
     {
         $userId = UserAuthentication::getLoggedUserId();
         // $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
         $userSettings = UserSetting::getUserSettings($userId);
-        
+
         $isTeacherDashboardActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
 
-        $profileImgFrm = $this->getProfileImageForm( $isTeacherDashboardActive);
+        $profileImgFrm = $this->getProfileImageForm($isTeacherDashboardActive);
 
-        $profileImgFrm->fill(['us_video_link' => $userSettings['us_video_link']]);
-        $userFirstName =  UserAuthentication::getLoggedUserAttribute('user_first_name');
-        $isProfilePicUploaded =  User::isProfilePicUploaded($userId);
+        $profileImgFrm->fill(['us_video_link' => $userSettings['us_video_link'] ?? '']);
+        $userFirstName = UserAuthentication::getLoggedUserAttribute('user_first_name');
+        $isProfilePicUploaded = User::isProfilePicUploaded($userId);
         $this->set('profileImgFrm', $profileImgFrm);
         $this->set('isProfilePicUploaded', $isProfilePicUploaded);
         $this->set('userId', $userId);
         $this->set('userFirstName', $userFirstName);
-      
+
         $this->_template->render(false, false);
     }
+
     private function getProfileImageForm($teacher = false)
     {
         $frm = new Form('frmProfile', ['id' => 'frmProfile']);
@@ -511,8 +511,8 @@ class AccountController extends LoggedUserController
     }
 
     public function GoogleCalendarAuthorize()
-    {   
-     
+    {
+
         require_once CONF_INSTALLATION_PATH . 'library/third-party/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_' . $this->siteLangId)); // Set your applicatio name

@@ -194,7 +194,7 @@ class TeachersController extends MyAppController
             $getUserTeachLanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
             $getUserTeachLanguages->addMultipleFields([
                 'IFNULL(top_percentage,0) as top_percentage',
-                // 'top_lesson_duration'
+                    // 'top_lesson_duration'
             ]);
         } else {
             $getUserTeachLanguages->addFld('0 as top_percentage');
@@ -229,7 +229,7 @@ class TeachersController extends MyAppController
 
         $grpClassSrch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
         $grpClassSrch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-        $grpClassSrch->addCondition('grpcls_teacher_id', '=',  $teacherId);
+        $grpClassSrch->addCondition('grpcls_teacher_id', '=', $teacherId);
         $grpClassSrch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
         $grpClassSrch->setPageSize(5);
         $grpClassSrch->addOrder('grpcls_start_datetime', 'Asc');
@@ -314,7 +314,7 @@ class TeachersController extends MyAppController
         }
         $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         $this->set('page', $page);
-		$this->set('pageCount', $srch->pages());
+        $this->set('pageCount', $srch->pages());
         foreach ($records as $key => $record) {
             $records[$key]['img'] = (User::isProfilePicUploaded($record['tlreview_postedby_user_id'])) ? CommonHelper::generateUrl('Image', 'user', array($record['tlreview_postedby_user_id'])) : '';
             $records[$key]['fChar'] = CommonHelper::getFirstChar($record['lname']);
@@ -326,15 +326,17 @@ class TeachersController extends MyAppController
         $json['startRecord'] = !empty($records) ? ($page - 1) * $pageSize + 1 : 0;
         $json['msg'] = Label::getLabel('LBL_Request_Processing..');
         $json['records'] = $records;
-        $json['displayRecords'] = sprintf(Label::getLabel('LBL_Displaying_Reviews_%d_of_%d', $this->siteLangId), ($page > 1)? (($page-1)*$pageSize+count($records)):count($records), $srch->recordCount());
+        $json['displayRecords'] = sprintf(Label::getLabel('LBL_Displaying_Reviews_%d_of_%d', $this->siteLangId), ($page > 1) ? (($page - 1) * $pageSize + count($records)) : count($records), $srch->recordCount());
         $json['loadMoreBtnHtml'] = $this->_template->render(false, false, '_partial/load-more-teacher-reviews-btn.php', true, false);
 
         FatUtility::dieJsonSuccess($json);
     }
 
-    public function viewCalendar(int $teacherId = 0, int $languageId = 1)
+    public function viewCalendar($teacherId = 0, $languageId = 1)
     {
-        $user  = new User($teacherId);
+        $teacherId = FatUtility::int($teacherId);
+        $languageId = FatUtility::int($languageId);
+        $user = new User($teacherId);
         $postedAction = FatApp::getPostedData('action');
         $allowedActionArr = ['free_trial', 'paid'];
 
@@ -342,12 +344,12 @@ class TeachersController extends MyAppController
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
 
-        if(!$user->loadFromDb()){
+        if (!$user->loadFromDb()) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $userRow = $user->getFlds();   
+        $userRow = $user->getFlds();
         $bookingMinutesDuration = FatApp::getConfig('CONF_DEFAULT_PAID_LESSON_DURATION', FatUtility::VAR_INT, 60);
-        
+
         if ('free_trial' == $postedAction) {
             $bookingMinutesDuration = FatApp::getConfig('conf_trial_lesson_duration', FatUtility::VAR_INT, 30);
             $freeTrialEnable = FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
@@ -364,7 +366,7 @@ class TeachersController extends MyAppController
         $this->set('bookingSnapDuration', $bookingSnapDuration);
         $user_timezone = MyDate::getUserTimeZone();
         $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
-        $teacherBookingBefore = UserSetting::getUserSettings( $teacherId)['us_booking_before'];
+        $teacherBookingBefore = UserSetting::getUserSettings($teacherId)['us_booking_before'];
         if ('' == $teacherBookingBefore) {
             $teacherBookingBefore = 0;
         }
@@ -378,7 +380,7 @@ class TeachersController extends MyAppController
         $this->set('action', $postedAction);
         $this->set('teacher_name', $userRow['user_first_name']);
         $this->set('teacher_country_id', $userRow['user_country_id']);
-        $this->set('teacher_id',  $teacherId);
+        $this->set('teacher_id', $teacherId);
         $this->set('languageId', $languageId);
         $this->set('cssClassArr', $cssClassNamesArr);
         $this->_template->render(false, false);
@@ -821,4 +823,5 @@ class TeachersController extends MyAppController
         $frm->addSubmitButton('', 'btnTeacherSrchSubmit', '');
         return $frm;
     }
+
 }

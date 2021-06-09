@@ -2,7 +2,7 @@
 
 <?php 
 $requestStatus = $teacherRequestRow['utrequest_status'];
-$dashboardUrl = CommonHelper::generateUrl('learner');
+$dashboardUrl = CommonHelper::generateUrl('learner','index',[],CONF_WEBROOT_DASHBOARD);
 ?>
 <section class="section section--grey section--page">
     <div class="container container--fixed">

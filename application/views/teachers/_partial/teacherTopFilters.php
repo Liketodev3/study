@@ -194,9 +194,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 		</div>
 	</div>
 
-
-
-	<div class="filter-tags" <?php echo ($keywordlanguage != '' || ($minPrice != $priceArr['minPrice']  || $maxPrice != $priceArr['maxPrice'])|| $keyword != '') ? 'style="display:block"':'style="display:none"' ?>>
+	<div class="filter-tags" <?php echo ($keywordlanguage != '' || ($minPrice != ($priceArr['minPrice']??0)  || $maxPrice != ($priceArr['maxPrice'] ??0))|| $keyword != '') ? 'style="display:block"':'style="display:none"' ?>>
 		<div class="container container--narrow">
 			<div class="filter-tags-list" id="searched-filters">
 				<ul>

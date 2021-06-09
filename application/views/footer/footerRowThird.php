@@ -3,7 +3,7 @@
 <div class="row footer--row">
     <div class="footer-group toggle-group">
         <div class="footer__group-title toggle-trigger-js">
-            <h5><?php echo Label::getLabel('LBL_Languages'); ?></h5>
+            <h5><?php echo Label::getLabel('LBL_Languages',$siteLangId); ?></h5>
         </div>
         <div class="footer__group-content toggle-target-js">
             <div class="footer__group-tag">

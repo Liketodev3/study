@@ -37,7 +37,6 @@ class Cart extends FatModel
         }
     }
 
-
     public function add(int $teacherId, int $languageId, int $lessonQty, int $grpclsId = 0, int $lessonDuration = 0, int $isFreeTrial = 0, $startDateTime = '', $endDateTime = '')
     {
 
@@ -56,7 +55,7 @@ class Cart extends FatModel
         $teacherSearch->setPageSize(1);
         $teacherSearch->addMultipleFields(['user_id', 'us_is_trial_lesson_enabled']);
         $userRow = $db->fetch($teacherSearch->getResultSet());
-       
+
         if (!$userRow) {
             $this->error = Label::getLabel('LBL_Teacher_not_found');
             return false;
@@ -94,17 +93,13 @@ class Cart extends FatModel
                     $languageId = $userTeachLangs[0]['tlanguage_id'];
                 }
 
-                if(!TeachLangPrice::isSlapCollapse($teacherId, $lessonQty, $lessonQty, [$languageId])){
+                if (!TeachLangPrice::isSlapCollapse($teacherId, $lessonQty, $lessonQty, [$languageId])) {
                     $this->error = Label::getLabel('LBL_THIS_SLAB_IS_NOT_AVAILABLE');
                     return false;
                 }
-
-               
-
             }
-           
         } elseif ($grpclsId > 0) {
-           
+
             $classDetails = TeacherGroupClasses::getAttributesById($grpclsId, ['grpcls_id', 'grpcls_teacher_id', 'grpcls_tlanguage_id', 'grpcls_start_datetime', 'grpcls_end_datetime', 'grpcls_max_learner', 'grpcls_status']);
             if ($grpclsId !== $classDetails['grpcls_id']) {
                 $this->error = Label::getLabel('LBL_Invalid_Request');
@@ -157,7 +152,7 @@ class Cart extends FatModel
             $startDateTime = MyDate::changeDateTimezone($classDetails['grpcls_start_datetime'], $userTimezone, $systemTimeZone);
             $endDateTime = MyDate::changeDateTimezone($classDetails['grpcls_end_datetime'], $userTimezone, $systemTimeZone);
         }
-       
+
         $key = $teacherId . '_' . $grpclsId;
         $key = base64_encode(serialize($key));
         $this->SYSTEM_ARR['cart'][$key] = [
@@ -212,7 +207,7 @@ class Cart extends FatModel
             $teacherSearch->addCondition('grpcls.grpcls_entry_fee', ' > ', 0);
             $teacherSearch->addCondition('grpcls.grpcls_id', ' = ', $grpclsId);
         } elseif (!$isFreeTrial && $lessonQty > 0) {
-          
+
             if (!in_array($lessonDuration, CommonHelper::getPaidLessonDurations())) {
                 $this->removeCartKey($key);
                 $this->error = Label::getLabel('LBL_Invalid_Request');
@@ -228,10 +223,17 @@ class Cart extends FatModel
             $teacherSearch->addCondition('ustelgpr.ustelgpr_min_slab', '<=', $lessonQty);
 
             $teacherSearch->addMultipleFields(['ustelgpr_price', 'ustelgpr_min_slab', 'ustelgpr_max_slab', 'top_teacher_id', 'IFNULL(top_percentage,0) as offerPercentage']);
-        }else{
+        } elseif ($isFreeTrial) {
+            $teacherSearch->addCondition('us_is_trial_lesson_enabled', ' = ', applicationConstants::YES);
+            if (OrderProduct::isAlreadyPurchasedFreeTrial($this->cart_user_id, $teacherId)) {
+                $this->removeCartKey($key);
+                $this->error = Label::getLabel('LBL_You_already_purchased_free_trial_for_this_teacher');
+                return false;
+            }
+        } else {
             $this->removeCartKey($key);
             $this->error = Label::getLabel('LBL_Invalid_Request');
-            return false; 
+            return false;
         }
         /* ] */
         $teacherSearch->addMultipleFields([
@@ -254,13 +256,13 @@ class Cart extends FatModel
             $totalPrice = $itemPrice = 0;
             $itemName = Label::getLabel('LBL_Free_trial');
             if (!$isFreeTrial) {
-                $itemPrice =  $teacher['ustelgpr_price'];
+                $itemPrice = $teacher['ustelgpr_price'];
                 $title = Label::getLabel('LBL_{qty}_Lessons');
                 $itemName = str_replace('{qty}', $lessonQty, $title);
 
                 if (!empty($teacher['offerPercentage'])) {
-                    $percentage = CommonHelper::getPercentValue($teacher['offerPercentage'],  FatUtility::float($teacher['ustelgpr_price']));
-                    $itemPrice =  $teacher['ustelgpr_price'] - $percentage;
+                    $percentage = CommonHelper::getPercentValue($teacher['offerPercentage'], FatUtility::float($teacher['ustelgpr_price']));
+                    $itemPrice = $teacher['ustelgpr_price'] - $percentage;
                 }
                 $totalPrice = $itemPrice * $lessonQty;
             }
@@ -304,7 +306,7 @@ class Cart extends FatModel
             $cartTaxTotal = 0;
             $cartDiscounts = $this->getCouponDiscounts($langId);
             $totalSiteCommission = 0;
-            $totalDiscountAmount = (isset($cartDiscounts['coupon_discount_total'])) ? $cartDiscounts['coupon_discount_total'] : 0;
+            $totalDiscountAmount = $cartDiscounts['coupon_discount_total'] ?? 0;
             $orderNetAmount = ($cartTotal + $cartTaxTotal) - $totalDiscountAmount;
             $walletAmountCharge = ($this->isCartUserWalletSelected()) ? min($orderNetAmount, $userWalletBalance) : 0;
             $orderPaymentGatewayCharges = $orderNetAmount - $walletAmountCharge;
@@ -410,14 +412,6 @@ class Cart extends FatModel
         $cartSubTotal = $this->getSubTotal($langId);
         $couponData = [];
         if ($couponInfo) {
-            $discountTotal = 0;
-            if ($couponInfo['coupon_discount_in_percent'] == applicationConstants::FLAT) {
-                $couponInfo['coupon_discount_value'] = min($couponInfo['coupon_discount_value'], $cartSubTotal);
-            }
-            if ($discountTotal > $couponInfo['coupon_max_discount_value'] && $couponInfo['coupon_discount_in_percent'] == applicationConstants::PERCENTAGE) {
-                $discountTotal = $couponInfo['coupon_max_discount_value'];
-            }
-            /* ] */
             $labelArr = [
                 'coupon_label' => $couponInfo["coupon_title"],
                 'coupon_id' => $couponInfo["coupon_id"],
@@ -425,17 +419,21 @@ class Cart extends FatModel
                 'max_discount_value' => $couponInfo["coupon_max_discount_value"]
             ];
             if ($couponInfo['coupon_discount_in_percent'] == applicationConstants::PERCENTAGE) {
-                $cartSubTotal = $cartSubTotal * $couponInfo['coupon_discount_value'] / 100;
+                $couponDiscountValue = $cartSubTotal * $couponInfo['coupon_discount_value'] / 100;
             } elseif ($couponInfo['coupon_discount_in_percent'] == applicationConstants::FLAT) {
-                if ($cartSubTotal > $couponInfo["coupon_discount_value"]) {
-                    $cartSubTotal = $couponInfo["coupon_discount_value"];
-                }
+                $couponDiscountValue = $couponInfo["coupon_discount_value"];
+            }
+            if ($cartSubTotal < $couponDiscountValue) {
+                $couponDiscountValue = $cartSubTotal;
+            }
+            if ($couponDiscountValue > $couponInfo["coupon_max_discount_value"]) {
+                $couponDiscountValue = $couponInfo["coupon_max_discount_value"];
             }
             $couponData = [
                 'coupon_discount_type' => $couponInfo["coupon_type"],
                 'coupon_code' => $couponInfo["coupon_code"],
                 'coupon_discount_value' => $couponInfo["coupon_discount_value"],
-                'coupon_discount_total' => $cartSubTotal,
+                'coupon_discount_total' => $couponDiscountValue,
                 'coupon_info' => json_encode($labelArr),
             ];
         }
@@ -484,4 +482,5 @@ class Cart extends FatModel
         $this->updateUserCart();
         return true;
     }
+
 }

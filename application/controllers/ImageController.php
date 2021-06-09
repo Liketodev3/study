@@ -111,7 +111,7 @@ class ImageController extends FatController
             default:
                 $w = 30;
                 $h = 30;
-                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+                AttachedFile::displayImage($image_name, $w, $h, $default_image,'',ImageResize::IMG_RESIZE_EXTRA_CROP);
                 break;
         }
     }
@@ -522,7 +522,7 @@ class ImageController extends FatController
         $fileRow = AttachedFile::getAttachment($imgType, $bannerId, 0, $langId, true, 0);
         $image_name = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
         $default_image = 'no_image_user.jpg';
-        AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
+        AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_CROP, false, true);
     }
 
     public function showLanguageImage($sLanguageId, $sizeType = '', $langId = 0)

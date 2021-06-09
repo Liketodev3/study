@@ -1,6 +1,7 @@
 <?php
 defined('SYSTEM_INIT') or die('Invalid Usage.');
 $hWorksdata = isset($banners['BLOCK_HOW_IT_WORKS']) ? $banners['BLOCK_HOW_IT_WORKS'] : '';
+
 ?>
 <?php if (!empty($hWorksdata)) { ?>
     <section class="section section--step">
@@ -27,7 +28,7 @@ $hWorksdata = isset($banners['BLOCK_HOW_IT_WORKS']) ? $banners['BLOCK_HOW_IT_WOR
                             <?php
                             $i = 1;
                             foreach ($hWorksdata['banners'] as $banners) {
-                                ?>
+                            ?>
                                 <div>
                                     <div class="step">
                                         <div class="row ">
@@ -44,11 +45,17 @@ $hWorksdata = isset($banners['BLOCK_HOW_IT_WORKS']) ? $banners['BLOCK_HOW_IT_WOR
                                                     <p><?php echo $banners['banner_description']; ?></p>
 
                                                     <div class="step__actions">
-                                                        <a href="<?php echo CommonHelper::getBannerUrl($banners['banner_btn_url']); ?>" class="btn btn--primary"><?php echo $banners['banner_btn_caption']; ?></a>
-                                                        <a href="#" class="btn-video">
-                                                            <svg class="icon icon--play"><use xlink:href="images/sprite.yo-coach.svg#play"></use></svg>
-                                                            <span><?php echo Label::getLabel('LBL_Watch_Video'); ?></span>
-                                                        </a>
+                                                        <?php if ($banners['banner_btn_url']) { ?>
+                                                            <a href="<?php echo CommonHelper::getBannerUrl($banners['banner_btn_url']); ?>" class="btn btn--primary"><?php echo $banners['banner_btn_caption']; ?></a>
+                                                        <?php } ?>
+                                                        <?php if ($banners['banner_video_url']) { ?>
+                                                            <a href="<?php echo $banners['banner_video_url']; ?>" target="_blank" class="btn-video">
+                                                                <svg class="icon icon--play">
+                                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#play'; ?>"></use>
+                                                                </svg>
+                                                                <span><?php echo $banners['banner_video_caption']; ?></span>
+                                                            </a>
+                                                        <?php } ?>
                                                     </div>
                                                 </div>
 
@@ -56,7 +63,7 @@ $hWorksdata = isset($banners['BLOCK_HOW_IT_WORKS']) ? $banners['BLOCK_HOW_IT_WOR
                                         </div>
                                     </div>
                                 </div>
-                                <?php
+                            <?php
                                 $i++;
                             }
                             ?>

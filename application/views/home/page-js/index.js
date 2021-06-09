@@ -13,7 +13,10 @@ $("document").ready(function(){
 			}
 		}]
 	});
+
+
 	$("input[name='language']").autocomplete({
+    'autoFocus':true,
     'minLength': 0,
 		'source': function(request, response) {
 			$.ajax({
@@ -38,7 +41,9 @@ $("document").ready(function(){
 			$('#homeSearchForm').submit();
 			//window.location.href = window.location.href + "teachers/index/" + ui.item.value;
 		}
-	});	
+	}).bind('focus', function () {
+    $(this).autocomplete("search");
+});	
 
 //Common Carousel
 var _carousel = $('.js-carousel');

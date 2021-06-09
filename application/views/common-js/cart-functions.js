@@ -69,7 +69,7 @@ var cart = {
             return false;
         }
         var data = 'isFreeTrial=1' + '&teacherId=' + teacherId + '&languageId=' + languageId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime;
-        cart.addToCart(data);
+        cart.add(data);
     },
     add: function (data) {
         $.loader.show();

@@ -4,10 +4,10 @@
 
 <div class="row footer--row">
 <?php
-$this->includeTemplate('footer/moreLinksNavigation.php');
-$this->includeTemplate('footer/extraLinks.php');
-$this->includeTemplate('footer/footerSignUpNavigation.php');
-$this->includeTemplate('footer/footerNewsLetter.php');
+$this->includeTemplate('footer/moreLinksNavigation.php',['siteLangId'=>$siteLangId]);
+$this->includeTemplate('footer/extraLinks.php',['siteLangId'=>$siteLangId]);
+$this->includeTemplate('footer/footerSignUpNavigation.php',['siteLangId'=>$siteLangId]);
+$this->includeTemplate('footer/footerNewsLetter.php',['siteLangId'=>$siteLangId]);
 ?>
 
 

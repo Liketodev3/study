@@ -812,7 +812,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $grpclsObj = new TeacherGroupClasses($grpclsId);
             $grpclsObj->cancelClass();
         }
-        $action = ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED];
+        $action = Label::getLabel('VERB_Scheduled', $this->siteLangId);
         if (ScheduledLesson::STATUS_SCHEDULED == $lessonDetail['sldetail_learner_status'] && $rescheduleReason) {
             $lessonResLogArr = [
                 'lesreschlog_slesson_id' => $lessonDetail['slesson_id'],
