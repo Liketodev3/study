@@ -154,7 +154,7 @@ foreach ($userTeachLangs as $key => $value) {
                                                             foreach ($slabDetails['langPrices'] as $priceDetails) {
                                                                 $onclick = '';
                                                                 if ($loggedUserId != $teacher['user_id']) {
-                                                                    $onclick = "cart.proceedToStep({teacherId: " . $teacher['user_id'] . ",languageId: " . $priceDetails['utl_tlanguage_id'] . ",lessonDuration: " . $priceDetails['ustelgpr_slot'] . "},'getTeacherPriceSlabs')";
+                                                                    $onclick = "cart.proceedToStep({teacherId: " . $teacher['user_id'] . ",languageId: " . $priceDetails['utl_tlanguage_id'] . ",lessonDuration: " . $priceDetails['ustelgpr_slot'] . ", lessonQty: " . $priceDetails['ustelgpr_min_slab'] . "},'getTeacherPriceSlabs')";
                                                                 }
                                                                 ?>
                                                                 <li>
