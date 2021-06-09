@@ -53,7 +53,6 @@
 	 clearPuchasedLessonSearch = function(){
 		document.purchasedLessonsSearchForm.reset();
 		document.purchasedLessonsSearchForm.slesson_teacher_id.value = '';
-		document.purchasedLessonsSearchForm.slesson_learner_id.value = '';
 		searchPuchasedLessons(document.purchasedLessonsSearchForm );
 	};
 

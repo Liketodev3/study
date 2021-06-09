@@ -41,7 +41,7 @@ $colorClass = [
                     <div class="box__primary">
                         <div class="list__head">
                             <div class="list__media ">
-                                <div class="avtar avtar--centered ratio ratio--1by1" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
+                                <div class="avtar avtar--centered" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
                                     <?php if (User::isProfilePicUploaded($teacher['user_id'])) { ?>
                                         <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><img src="<?php echo FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg'); ?>" alt=""></a>
                                     <?php } ?>

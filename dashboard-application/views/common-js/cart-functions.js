@@ -1,5 +1,5 @@
 var cart = {
-	props:{
+	props: {
 		teacherId: 0,
 		languageId: 0,
 		lessonDuration: 0,
@@ -8,19 +8,21 @@ var cart = {
 	couponCode: '',
 	isWalletSelect: 0,
 	paymentMethodId: 0,
-	getLessonQtyPrice: function () {
+	getLessonQtyPrice: function (lessonQty) {
 		teacherId = parseInt(cart.props.teacherId);
 		languageId = parseInt(cart.props.languageId);
 		lessonDuration = parseInt(cart.props.lessonDuration);
-		lessonQty = parseInt(cart.props.lessonQty);
+		lessonQty = parseInt(lessonQty);
 		if (1 > lessonQty && 1 > teacherId || 1 > languageId || 1 > lessonDuration) {
 			return false;
 		}
-
-		fcom.ajax(fcom.makeUrl('Checkout', 'getLessonQtyPrice',[],confFrontEndUrl), cart.props, function (res) {
+		props = cart.props
+		props.lessonQty = lessonQty;
+		fcom.ajax(fcom.makeUrl('Checkout', 'getLessonQtyPrice', [], confFrontEndUrl), props, function (res) {
 			res.status = parseInt(res.status);
 			if (res.status == 1) {
 				$('.slab-price-js').html(res.priceLabel);
+				cart.props.lessonQty = lessonQty;
 				return;
 			}
 			$.mbsmessage(res.msg, true, 'alert alert--danger');
@@ -31,7 +33,7 @@ var cart = {
 		cart.isWalletSelect = ($(el).is(":checked")) ? 1 : 0;
 		var data = 'payFromWallet=' + cart.isWalletSelect;
 		$.loader.show();
-		fcom.ajax(fcom.makeUrl('Checkout', 'walletSelection',[], confFrontEndUrl), data, function (ans) {
+		fcom.ajax(fcom.makeUrl('Checkout', 'walletSelection', [], confFrontEndUrl), data, function (ans) {
 			$.loader.hide();
 			cart.checkoutStep("getPaymentSummary", "");
 		});
@@ -46,8 +48,13 @@ var cart = {
 			cart.checkoutStep("getPaymentSummary", "");
 		});
 	},
+	removePromoCode: function () {
+		fcom.updateWithAjax(fcom.makeUrl('Cart', 'removePromoCode'), '', function (res) {
+            cart.checkoutStep("getPaymentSummary", "");
+		});
+	},
 	proceedToStep: function (cartDetails, step) {
-		this.props =  $.extend(true, cart.props, cartDetails);
+		this.props = $.extend(true, cart.props, cartDetails);
 		if (step == 'getPaymentSummary') {
 			return cart.add(this.props);
 		}
@@ -95,8 +102,9 @@ var cart = {
 		cart.paymentMethodId = parseInt($('[name="payment_method"]:checked').val());
 		orderType = parseInt(orderType);
 		data = "order_type=" + orderType + "&pmethod_id=" + cart.paymentMethodId;
-
+		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Checkout', 'confirmOrder', [], confFrontEndUrl), data, function (ans) {
+			$.loader.hide();
 			if (ans.redirectUrl != '') {
 				window.location.href = ans.redirectUrl;
 			}
@@ -105,17 +113,16 @@ var cart = {
 };
 
 $(document).bind('afterClose.facebox', function () {
-	if($("#facebox").find('.checkout-step').length > 0)
-	{
+	$(document).bind('afterClose.facebox', function () {
 		cart.props = {
-			teacherId : 0,
-			languageId : 0,
-			lessonDuration : 0,
-			lessonQty : 0,
+			teacherId: 0,
+			languageId: 0,
+			lessonDuration: 0,
+			lessonQty: 0,
 		};
 		cart.couponCode = '';
 		cart.isWalletSelect = 0;
 		cart.paymentMethodId = 0;
-	}
+	});
 
 });

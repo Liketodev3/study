@@ -8,19 +8,21 @@ var cart = {
     couponCode: '',
     isWalletSelect: 0,
     paymentMethodId: 0,
-    getLessonQtyPrice: function () {
+    getLessonQtyPrice: function (lessonQty) {
         teacherId = parseInt(cart.props.teacherId);
         languageId = parseInt(cart.props.languageId);
         lessonDuration = parseInt(cart.props.lessonDuration);
-        lessonQty = parseInt(cart.props.lessonQty);
+        lessonQty = parseInt(lessonQty);
         if (1 > lessonQty && 1 > teacherId || 1 > languageId || 1 > lessonDuration) {
             return false;
         }
-
+        props = cart.props
+		props.lessonQty = lessonQty;
         fcom.ajax(fcom.makeUrl('Checkout', 'getLessonQtyPrice'), cart.props, function (res) {
             res.status = parseInt(res.status);
             if (res.status == 1) {
                 $('.slab-price-js').html(res.priceLabel);
+                cart.props.lessonQty = lessonQty;
                 return;
             }
             $.mbsmessage(res.msg, true, 'alert alert--danger');
@@ -46,6 +48,11 @@ var cart = {
             cart.checkoutStep("getPaymentSummary", "");
         });
     },
+    removePromoCode: function () {
+		fcom.updateWithAjax(fcom.makeUrl('Cart', 'removePromoCode'), '', function (res) {
+            cart.checkoutStep("getPaymentSummary", "");
+		});
+	},
     proceedToStep: function (cartDetails, step) {
         this.props = $.extend(true, cart.props, cartDetails);
         if (step == 'getPaymentSummary') {
@@ -62,7 +69,7 @@ var cart = {
             return false;
         }
         var data = 'isFreeTrial=1' + '&teacherId=' + teacherId + '&languageId=' + languageId + '&startDateTime=' + startDateTime + '&endDateTime=' + endDateTime;
-        cart.addToCart(data);
+        cart.add(data);
     },
     add: function (data) {
         $.loader.show();
@@ -129,8 +136,6 @@ var cart = {
 };
 
 $(document).bind('afterClose.facebox', function () {
-    if ($("#facebox").find('.checkout-step').length > 0)
-    {
         cart.props = {
             teacherId: 0,
             languageId: 0,
@@ -140,6 +145,4 @@ $(document).bind('afterClose.facebox', function () {
         cart.couponCode = '';
         cart.isWalletSelect = 0;
         cart.paymentMethodId = 0;
-    }
-
 });

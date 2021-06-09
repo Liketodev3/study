@@ -1,6 +1,8 @@
 <?php
+
 class ImageAttributesController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -68,7 +70,7 @@ class ImageAttributesController extends AdminBaseController
                 break;
         }
         $srch->addOrder('afile_id', 'DESC');
-        $page =  max(FatApp::getPostedData('page', FatUtility::VAR_INT, 1), 1);
+        $page = max(FatApp::getPostedData('page', FatUtility::VAR_INT, 1), 1);
         $srch->setPageNumber($page);
         $srch->setPageSize($pageSize);
         $rs = $srch->getResultSet();
@@ -89,7 +91,7 @@ class ImageAttributesController extends AdminBaseController
     {
         $recordId = FatApp::getPostedData('recordId', FatUtility::VAR_INT, 0);
         $type = FatApp::getPostedData('type', FatUtility::VAR_INT, MetaTag::META_GROUP_DEFAULT);
-        $fileId =  FatApp::getPostedData('afileId', FatUtility::VAR_INT, 0);
+        $fileId = FatApp::getPostedData('afileId', FatUtility::VAR_INT, 0);
 
         if (!$fileId || !$type || !$recordId) {
             Message::addErrorMessage($this->str_invalid_request_id);
@@ -98,7 +100,7 @@ class ImageAttributesController extends AdminBaseController
 
         $frm = $this->getForm($recordId, $type, $fileId, $this->adminLangId);
 
-        if (0 <  $fileId) {
+        if (0 < $fileId) {
             $srch = AttachedFile::getSearchObject();
             $srch->addCondition('afile_id', '=', $fileId);
             $rs = $srch->getResultSet();
@@ -118,27 +120,23 @@ class ImageAttributesController extends AdminBaseController
         $fileId = FatUtility::int($post['fileId']);
 
         if (!$recordId || !$moduleType || !$fileId) {
-            Message::addErrorMessage($this->str_invalid_request_id);
-            FatUtility::dieJsonError(Message::getHtml());
+            FatUtility::dieJsonError($this->str_invalid_request_id);
         }
 
         $frm = $this->getForm($recordId, $moduleType, $fileId, $this->adminLangId);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
-            Message::addErrorMessage(current($frm->getValidationErrors()));
-            FatUtility::dieJsonError(Message::getHtml());
+            FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
 
         $db = FatApp::getDb();
 
         $where = ['smt' => 'afile_record_id = ? and afile_id = ?', 'vals' => [$recordId, $fileId]];
         if (!$db->updateFromArray(AttachedFile::DB_TBL, ['afile_attribute_title' => $post['afile_attribute_title'], 'afile_attribute_alt' => $post['afile_attribute_alt']], $where)) {
-            Message::addErrorMessage($db->getError());
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError($db->getError());
         }
-
-        $this->set('msg', $this->str_setup_successful);
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess($this->str_setup_successful);
+        ;
     }
 
     private function getSearchForm(int $imageAttributeType, int $langId)
@@ -162,4 +160,5 @@ class ImageAttributesController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $langId));
         return $frm;
     }
+
 }

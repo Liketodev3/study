@@ -1106,6 +1106,15 @@ p {
 .footer__logo {
   max-width: 140px; }
 
+.footer_social-links li a {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; }
+  .footer_social-links li a img {
+    width: 24px;
+    height: 24px;
+    margin-left: var(--margin-3); }
+
 .slideshow .slideshow__item::before {
   content: "";
   position: absolute;

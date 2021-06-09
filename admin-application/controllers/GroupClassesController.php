@@ -132,13 +132,6 @@ class GroupClassesController extends AdminBaseController
         if ($post === false) {
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
-        $price = UserToLanguage::getAttributesByUserAndLangId($teacher_id, $post['grpcls_tlanguage_id'], 'utl_single_lesson_amount');
-        if (empty($price) || $price < 1) {
-            FatUtility::dieJsonError(Label::getLabel("LBL_Price_needs_to_be_set_for_the_selected_language"));
-        }
-        if ($price < $post['grpcls_entry_fee']) {
-            FatUtility::dieJsonError(Label::getLabel("LBL_Price_needs_to_be_less_than_single_lesson"));
-        }
         $post['grpcls_teacher_id'] = $teacher_id;
         if ($post['grpcls_start_datetime'] < date('Y-m-d H:i:s')) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Can_not_add_time_for_old_date'));
