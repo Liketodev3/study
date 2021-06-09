@@ -13,7 +13,7 @@
                         <span><?php echo FatApp::getConfig('CONF_CONTACT_EMAIL', null, ''); ?></span>
                     </li>
                     <li>
-                        <svg class="icon icon--phone"><use xlink:href="images/sprite.yo-coach.svg#phone"></use></svg>
+                        <svg class="icon icon--phone"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#phone';?>"></use></svg>
                         <span><?php echo Label::getLabel('LBL_Call_Us',$siteLangId).': '.FatApp::getConfig('CONF_SITE_PHONE', null, ''); ?></span>
                     </li>
                 </ul>

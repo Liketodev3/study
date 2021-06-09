@@ -32,15 +32,13 @@
     }
 } else { ?>
 
-    <section class="section padding-bottom-0">
-        <div class="container container--fixed">
-            <div class="intro-head">
-                <h6 class="small-title"><?php echo $cPage['cpage_title']; ?></h6>
+    <section class="section">
+        <div class="container container--narrow">
+            <div class="main__title">
+                <h2><?php echo $cPage['cpage_title']; ?></h2>
             </div>
-            <div class="about-media">
-                <div class="media">
-                    <img src="<?php echo CommonHelper::generateUrl('image', 'cpageBackgroundImage', array($cPage['cpage_id'], $siteLangId, '', 0, false), CONF_WEBROOT_URL); ?>" alt="">
-                </div>
+            <div class="who-we__content">
+                <?php echo FatUtility::decodeHtmlEntities($cPage['cpage_content']) ?></p>
             </div>
         </div>
     </section>

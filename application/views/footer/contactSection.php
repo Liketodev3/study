@@ -9,7 +9,7 @@
                 <ul class="footer_contact_details">
                     <li>
                         <svg class="icon icon--pin">
-                            <use xlink:href="images/sprite.yo-coach.svg#pin"></use>
+                            <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#pin'; ?>"></use>
                         </svg>
                         <span><?php echo FatApp::getConfig('CONF_ADDRESS_' . CommonHelper::getLangId(), null, ''); ?></span>
                     </li>
