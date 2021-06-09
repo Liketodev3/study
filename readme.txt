@@ -1,7 +1,13 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.17.0.20210609
+
+Release Date: 2021-06-09
+
+*Important Note: From this release onwards, JSON support is required in MySQL.
+
 Updates:
-    *Task-85738: HTML integration of Homepage
+    *Task-85738: HTML integration - Homepage
     *Task-85971: HTML integration - Find a tutor page
     *Task-85882: HTML integration - Tutor profile page
     *Task-86241: HTML integration - Checkout Pages
