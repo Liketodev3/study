@@ -38,13 +38,14 @@ class GroupClassesController extends MyAppController
                     $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
                     break;
                 default:
-					$srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
+                    $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
                     break;
-			}
-		}
+            }
+            $frm->fill($post);
+        }
 
-		$srch->setPageSize($pageSize);
-		$srch->setPageNumber($page);
+        $srch->setPageSize($pageSize);
+        $srch->setPageNumber($page);
         $rs = $srch->getResultSet();
         $classesList = FatApp::getDb()->fetchAll($rs);
         $pagingArr = [
@@ -58,6 +59,7 @@ class GroupClassesController extends MyAppController
         $this->set('min_booking_time', $min_booking_time);
         $post['page'] = $page;
         $this->set('postedData', $post);
+        $this->set('frm', $frm);
         $this->set('pagingArr', $pagingArr);
         $this->_template->render(false, false);
     }
@@ -65,6 +67,11 @@ class GroupClassesController extends MyAppController
     public function view($grpcls_id)
     {
         $srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
+        $srch->joinTable(Country::DB_TBL, 'LEFT JOIN', 'ut.user_country_id = country.country_id', 'country');
+        $srch->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'country.country_id = countryLang.countrylang_country_id and countryLang.countrylang_lang_id = '.$this->siteLangId, 'countryLang');
+        $srch->joinTable('tbl_teacher_stats', 'LEFT JOIN', 'testat.testat_user_id = ut.user_id', 'testat');
+        
+        $srch->addMultipleFields(['IFNULL(country_name, country_code) as country_name', 'testat_reviewes', 'testat_ratings']);
         $srch->addCondition('grpcls_id', '=', $grpcls_id);
         $srch->setPageSize(1);
         $classData = FatApp::getDb()->fetch($srch->getResultSet());
@@ -77,16 +84,15 @@ class GroupClassesController extends MyAppController
         $this->_template->render();
     }
 
-	private function getSearchForm()
-	{
-		$frm = new Form('frmTeacherSrch');
-		$frm->addSelectBox('', 'custom_filter', TeacherGroupClasses::getCustomFilterAr(), '', array(), Label::getLabel('LBL_ALL'));
-		$frm->addSelectBox('', 'language', TeacherGroupClassesSearch::getTeachLangs($this->siteLangId), '', array(), Label::getLabel('LBL_Choose_Language'));
-		$frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_Class')));
-		$fld = $frm->addHiddenField('', 'page', 1);
-		$fld->requirements()->setIntPositive();
-		$frm->addSubmitButton('', 'btnSrchSubmit', '');
-		return $frm;
-	}
-
+    private function getSearchForm()
+    {
+        $frm = new Form('frmTeacherSrch');
+        $frm->addSelectBox('', 'custom_filter', TeacherGroupClasses::getCustomFilterAr(), '', array(), Label::getLabel('LBL_ALL'));
+        $frm->addSelectBox('', 'language', TeacherGroupClassesSearch::getTeachLangs($this->siteLangId), '', array(), Label::getLabel('LBL_All_Language'));
+        $frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_Class')));
+        $fld = $frm->addHiddenField('', 'page', 1);
+        $fld->requirements()->setIntPositive();
+        $frm->addSubmitButton('', 'btnSrchSubmit', '');
+        return $frm;
+    }
 }
