@@ -722,9 +722,9 @@ $dashboard-calendar: "dashboard-calendar";
     }
 }
 
-.slot_unavailable {
-    background: var(--color-secondary);
-    border-color: var(--color-secondary);
+.fc .slot_unavailable {
+    background: var(--color-red);
+    border-color: var(--color-red);
 }
 
 .status-bar__body{

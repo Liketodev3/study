@@ -737,7 +737,10 @@ ul {
                 transform: rotate(-45deg) translate(0, -78%); }
 
 .selection--checkout {
-  margin: 0 auto; }
+  margin: 0 auto;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
   .selection--checkout .selection-tabs__label {
     padding: var(--padding-3);
     margin-bottom: 0; }
@@ -766,7 +769,8 @@ ul {
             margin-right: var(--margin-2); } }
 
 .selection--onehalf {
-  max-width: 605px; }
+  max-width: 605px;
+  min-width: 605px; }
   .selection--onehalf .selection-tabs__label {
     -webkit-box-flex: 0;
         -ms-flex: 0 0 50%;
@@ -774,7 +778,8 @@ ul {
     max-width: 50%; }
 
 .selection--onethird {
-  max-width: 765px; }
+  max-width: 765px;
+  min-width: 765px; }
   @media (max-width: 576px) {
     .selection--onethird .selection-tabs__label {
       -webkit-box-flex: 0;
@@ -1820,9 +1825,9 @@ ul {
   .scheduled-lesson-popup h4 {
     margin-bottom: 16px; } }
 
-.slot_unavailable {
-  background: var(--color-secondary);
-  border-color: var(--color-secondary); }
+.fc .slot_unavailable {
+  background: var(--color-red);
+  border-color: var(--color-red); }
 
 .status-bar__body .fc-header-toolbar .fc-toolbar-chunk:first-child {
   display: none; }

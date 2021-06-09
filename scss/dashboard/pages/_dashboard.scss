@@ -531,3 +531,40 @@ $aside--progress--menu: "aside--progress--menu";
 }
 
 
+.menu--steps{
+    .profile--progress--menu{
+        &:not(.is-completed){
+            a{
+                opacity: 1;
+
+                .menu__icon{
+                    background-color: var(--color-yellow);
+                    display: block;
+                }
+            }
+
+        }
+        .menu__icon{
+            min-width: 1.75em;
+            height: 1.75em;
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            border-radius: 1.75em;
+            padding-left: var(--padding-1);
+            font-size: 0.66em;
+            line-height: 1.75em;
+            padding-right: var(--padding-1);
+            transform: translate(0, -50%);
+            &::before{
+                position: absolute;
+                left: 0.43rem;
+                font-weight: 600;
+                content: "!";
+                color: #fff;
+                font-size: 15px;
+                pointer-events: none;
+            }
+        }
+    }
+}
