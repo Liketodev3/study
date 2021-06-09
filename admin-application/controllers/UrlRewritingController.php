@@ -2,6 +2,7 @@
 
 class UrlRewritingController extends AdminBaseController
 {
+
     public function __construct($action)
     {
         parent::__construct($action);
@@ -91,23 +92,17 @@ class UrlRewritingController extends AdminBaseController
         $this->objPrivilege->canEditUrlRewrites();
         $urlrewriteId = FatApp::getPostedData('urlrewrite_id', FatUtility::VAR_INT, 0);
         $frm = $this->getForm($urlrewriteId, $this->adminLangId);
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-
-        if (false === $post) {
-            Message::addErrorMessage(current($frm->getValidationErrors()));
-            FatUtility::dieJsonError(Message::getHtml());
+        if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
+            FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
-
         $row = [];
-
         $originalUrl = FatApp::getPostedData('urlrewrite_original', FatUtility::VAR_STRING, '');
         if (0 < $urlrewriteId) {
             $srch = new UrlRewriteSearch();
-            $srch->addCondition('ur.urlrewrite_original', '=',  $originalUrl);
+            $srch->addCondition('ur.urlrewrite_original', '=', $originalUrl);
             $row = FatApp::getDb()->fetchAll($srch->getResultSet(), 'urlrewrite_lang_id');
             if (empty($row)) {
-                Message::addErrorMessage(Label::getLabel('MSG_INVALID_REQUEST', $this->adminLangId));
-                FatUtility::dieJsonError(Message::getHtml());
+                FatUtility::dieJsonError(Label::getLabel('MSG_INVALID_REQUEST', $this->adminLangId));
             }
         }
         $langArr = Language::getAllNames();
@@ -118,12 +113,12 @@ class UrlRewritingController extends AdminBaseController
             }
             $url = $post['urlrewrite_custom'][$langId];
 
-            if($recordId > 0){
+            if ($recordId > 0) {
                 $data = [
                     'urlrewrite_http_resp_code' => $post['urlrewrite_http_resp_code'][$langId],
                     'urlrewrite_custom' => CommonHelper::seoUrl($url)
                 ];
-            }else{
+            } else {
                 $data = [
                     'urlrewrite_original' => $originalUrl,
                     'urlrewrite_lang_id' => $langId,
@@ -131,18 +126,13 @@ class UrlRewritingController extends AdminBaseController
                     'urlrewrite_custom' => CommonHelper::seoUrl($url)
                 ];
             }
-            
             $record = new UrlRewrite($recordId);
             $record->assignValues($data);
-
             if (!$record->save()) {
-                Message::addErrorMessage($record->getError());
-                FatUtility::dieJsonError(Message::getHtml());
+                FatUtility::dieJsonError($record->getError());
             }
         }
-        $this->set('msg', $this->str_setup_successful);
-        $this->set('urlrewrite_id', $urlrewriteId);
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess(['urlrewrite_id' => $urlrewriteId, 'msg' => $this->str_setup_successful]);
     }
 
     public function deleteRecord()
