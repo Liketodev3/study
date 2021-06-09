@@ -1,11 +1,13 @@
-#facebox {
-    position: absolute;
-    top: 0;
-    #{theme('direction.left','value')}: 0;
+#facebox{
+    position: fixed;
     z-index: 999;
-    text-align: #{theme('direction.left','value')};
-    @media(max-width: theme('breakpoints.md','value')){
-        #{theme('direction.right','value')}: 0;
+    .content {
+        border-radius: 0;
+    }
+    @media(min-width: theme('breakpoints.md','value')){
+        #{theme('direction.left','value')}: 50% !important;
+        top: 100px !important;
+        transform: translate(-50%,0);
     }
 }
 

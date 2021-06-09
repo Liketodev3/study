@@ -180,7 +180,6 @@
     @media(min-width: theme('breakpoints.xl','value')) {
         display: flex;
         align-items: center;
-        justify-content: space-between;
     }
 }
 
@@ -199,11 +198,13 @@
 }
 
 .filter-group__inner{
+    cursor: pointer;
     .filter__head{
         @media(min-width: theme('breakpoints.xl','value')) {
             position: relative;
             text-align: left;
-            padding-right: var(--margin-6);
+            padding-#{theme('direction.right','value')}: var(--margin-6);
+            margin-#{theme('direction.right','value')}: var(--margin-8);
             &::before{
                 content: "";
                 position: absolute;
@@ -225,7 +226,7 @@
                 color: var(--color-dark);
                 font-weight: normal;
                 font-size: 14px;
-                cursor: pointer;
+                
             }
         }
     }

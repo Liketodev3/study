@@ -13,6 +13,10 @@
 @import 'common/base/root';
 @import 'common/base/reset';
 
+// modules
+@import 'common/modules/checkout';
+@import 'common/modules/custom_calendar';
+
 // utilities
 @import "common/utilities/alignment";
 @import "common/utilities/backgrounds";

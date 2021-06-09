@@ -13,6 +13,7 @@ $avtar: "avtar";
   font-size: theme('font.size.md');
   font-weight: 700;
  text-transform: uppercase;overflow: hidden;
+ background: var(--color-primary);
 
   &:before{
      position: absolute;

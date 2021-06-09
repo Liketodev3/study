@@ -3100,15 +3100,16 @@ div.tagsinput div {
         -ms-flex-direction: column;
             flex-direction: column; } }
 
-@media (max-width: 1299px) {
-  .dashboard .dashboard__primary {
-    -webkit-box-ordinal-group: 3;
-        -ms-flex-order: 2;
-            order: 2; } }
-
-@media (max-width: 1399px) {
-  .dashboard .dashboard__primary {
-    padding: 0 var(--padding-5); } }
+.dashboard .dashboard__primary {
+  width: 100%; }
+  @media (max-width: 1299px) {
+    .dashboard .dashboard__primary {
+      -webkit-box-ordinal-group: 3;
+          -ms-flex-order: 2;
+              order: 2; } }
+  @media (max-width: 1399px) {
+    .dashboard .dashboard__primary {
+      padding: 0 var(--padding-5); } }
 
 .dashboard .dashboard__secondary {
   background-color: #fff;
@@ -3123,14 +3124,15 @@ div.tagsinput div {
       margin: var(--margin-5) var(--margin-5) 0; } }
   @media (min-width: 1399px) {
     .dashboard .dashboard__secondary {
-      max-width: 28.6rem;
+      max-width: 25.6rem;
       position: -webkit-sticky;
       position: sticky;
       top: 0;
       bottom: 0;
       left: 0;
       z-index: 3;
-      height: 100vh; } }
+      height: 100vh;
+      width: 100%; } }
   @media (min-width: 1299px) and (max-width: 1399px) {
     .dashboard .dashboard__secondary {
       max-width: 22rem;
@@ -3144,15 +3146,21 @@ div.tagsinput div {
 
 .status-bar {
   border-radius: var(--radius-0);
-  padding: var(--padding-8) 0;
-  height: 100%; }
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 100%;
+  padding-top: calc(1rem + 26px); }
   @media (min-width: 991px) and (max-width: 1299px) {
     .status-bar {
       padding: var(--padding-8) var(--padding-4);
       max-height: 558px; } }
   .status-bar .status-bar__head {
-    padding: 0 var(--padding-6);
-    padding-bottom: var(--padding-5);
+    padding: 0 var(--padding-6) var(--padding-5);
     position: relative;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -3169,7 +3177,8 @@ div.tagsinput div {
       color: var(--color-gray-000); }
   .status-bar .status-bar__body {
     padding: var(--padding-6);
-    height: calc(100% - 56px); }
+    height: calc(100% - 56px);
+    overflow: auto; }
     .status-bar .status-bar__body .calendar {
       padding-bottom: var(--padding-6); }
       .status-bar .status-bar__body .calendar img {
@@ -3180,6 +3189,8 @@ div.tagsinput div {
       .status-bar .status-bar__body .listing-window .scrollbar {
         max-height: inherit;
         height: calc(100% - 1px); }
+      .status-bar .status-bar__body .listing-window .message-display {
+        min-height: 25rem; }
       @media (min-width: 991px) and (max-width: 1299px) {
         .status-bar .status-bar__body .listing-window {
           height: calc(100% - 218px); } }
@@ -3195,12 +3206,24 @@ div.tagsinput div {
         grid-template-columns: 1fr 1fr;
         grid-column-gap: 30px; } }
 
+.lesson-list-container .date span {
+  margin-bottom: 15px; }
+
+.learnerscheduledlessons .tooltipevent {
+  border-top: 3px solid var(--color-primary);
+  border-radius: 6px; }
+  .learnerscheduledlessons .tooltipevent .booking-view h3 {
+    font-size: 1.6rem;
+    margin-bottom: 5px; }
+
 .lesson-list-container .date {
   font-size: var(--font-size-small);
   text-transform: uppercase;
   color: var(--color-gray-1000);
   font-weight: var(--font-weight-medium);
   margin-bottom: var(--margin-4); }
+  .lesson-list-container .date .lesson-list:first-child {
+    margin-top: 10px; }
 
 .lesson-list {
   width: 100%;
@@ -3404,6 +3427,98 @@ div.tagsinput div {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center; }
+
+.select2-container .select2-selection--single {
+  height: 2.8rem !important;
+  border: 1px solid var(--color-gray-300) !important;
+  position: relative;
+  border-radius: var(--radius-1) !important; }
+  .select2-container .select2-selection--single .select2-selection__rendered {
+    line-height: 38px !important;
+    padding: 0 var(--padding-4) !important;
+    color: #999 !important;
+    padding-right: 30px !important; }
+  .select2-container .select2-selection--single .select2-selection__arrow {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    height: 40px !important;
+    top: 0 !important;
+    right: 5px !important; }
+    .select2-container .select2-selection--single .select2-selection__arrow b {
+      border-width: 6px 5px 0 5px !important; }
+
+.language {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+  .language .my_teacher_lang_heading {
+    margin-right: 4px; }
+  .language .btn--equal {
+    width: 2.5rem;
+    height: 2.5rem;
+    min-width: 2.5rem; }
+    .language .btn--equal .icon {
+      width: 15px;
+      height: 15px; }
+
+.aside--progress--menu {
+  position: relative; }
+  .aside--progress--menu:not(.is-completed)::after {
+    position: absolute;
+    right: 0.8rem;
+    top: 0.7rem;
+    content: "!";
+    color: #fff;
+    pointer-events: none; }
+  .aside--progress--menu:not(.is-completed)::before {
+    content: "";
+    position: absolute;
+    top: 1rem;
+    right: 0.65rem;
+    -webkit-transform: translate(25%, -25%);
+        -ms-transform: translate(25%, -25%);
+            transform: translate(25%, -25%);
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    min-width: 1.75em;
+    height: 1.75em;
+    border-radius: 1.75em;
+    padding-left: var(--padding-1);
+    padding-right: var(--padding-1);
+    content: attr(data-count);
+    font-size: 0.66em;
+    line-height: 1.75em;
+    background-color: var(--color-third);
+    pointer-events: none; }
+
+.main-dashboard .page__footer {
+  display: none; }
+
+.teacherscheduledlessons.view .page__footer {
+  display: none; }
+
+.learnerscheduledlessons.view .page__footer {
+  display: none; }
+
+.messages .page__footer {
+  display: none; }
 
 .list-container {
   position: relative; }
