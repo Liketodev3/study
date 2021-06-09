@@ -63,7 +63,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->addFld('tlpn.tlpn_title');
         $srch->addFld('tlpn.tlpn_id');
         $srch->applyOrderBy($sortOrder);
-        $srch->addGroupBy('slesson.slesson_id');
+        $srch->addGroupBy('sldetail.sldetail_id');
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
         $lessons = $srch->fetchAll();
@@ -466,7 +466,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         // start: saving log in new table i.e. tbl_lesson_status_log
         $lessonStsLog->addLog(ScheduledLesson::STATUS_CANCELLED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $post['cancel_lesson_msg']);
         // End: saving log in new table i.e. tbl_lesson_status_log
-        $db->commitTransaction();
+        // $db->commitTransaction();
         // send email to teacher[
         $start_date = $lessonRow['slesson_date'];
         $start_time = $lessonRow['slesson_start_time'];
@@ -492,10 +492,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{lesson_end_time}' => $end_time,
             '{action}' => Label::getLabel('VERB_Canceled', $this->siteLangId),
         ];
-        if (!EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], 'learner_cancelled_email', $this->siteLangId, $vars)) {
-            Message::addErrorMessage(Label::getLabel('LBL_Mail_not_sent!!'));
-            FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
-        }
+        EmailHandler::sendMailTpl($lessonRow['teacherEmailId'], 'learner_cancelled_email', $this->siteLangId, $vars);
         // ]
         $isGroupClass = ($lessonRow['slesson_grpcls_id'] > 0) ? applicationConstants::YES : applicationConstants::NO;
 
