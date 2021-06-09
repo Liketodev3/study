@@ -306,7 +306,7 @@ class Cart extends FatModel
             $cartTaxTotal = 0;
             $cartDiscounts = $this->getCouponDiscounts($langId);
             $totalSiteCommission = 0;
-            $totalDiscountAmount = (isset($cartDiscounts['coupon_discount_total'])) ? $cartDiscounts['coupon_discount_total'] : 0;
+            $totalDiscountAmount = $cartDiscounts['coupon_discount_total'] ?? 0;
             $orderNetAmount = ($cartTotal + $cartTaxTotal) - $totalDiscountAmount;
             $walletAmountCharge = ($this->isCartUserWalletSelected()) ? min($orderNetAmount, $userWalletBalance) : 0;
             $orderPaymentGatewayCharges = $orderNetAmount - $walletAmountCharge;
@@ -412,14 +412,6 @@ class Cart extends FatModel
         $cartSubTotal = $this->getSubTotal($langId);
         $couponData = [];
         if ($couponInfo) {
-            $discountTotal = 0;
-            if ($couponInfo['coupon_discount_in_percent'] == applicationConstants::FLAT) {
-                $couponInfo['coupon_discount_value'] = min($couponInfo['coupon_discount_value'], $cartSubTotal);
-            }
-            if ($discountTotal > $couponInfo['coupon_max_discount_value'] && $couponInfo['coupon_discount_in_percent'] == applicationConstants::PERCENTAGE) {
-                $discountTotal = $couponInfo['coupon_max_discount_value'];
-            }
-            /* ] */
             $labelArr = [
                 'coupon_label' => $couponInfo["coupon_title"],
                 'coupon_id' => $couponInfo["coupon_id"],
@@ -427,17 +419,21 @@ class Cart extends FatModel
                 'max_discount_value' => $couponInfo["coupon_max_discount_value"]
             ];
             if ($couponInfo['coupon_discount_in_percent'] == applicationConstants::PERCENTAGE) {
-                $cartSubTotal = $cartSubTotal * $couponInfo['coupon_discount_value'] / 100;
+                $couponDiscountValue = $cartSubTotal * $couponInfo['coupon_discount_value'] / 100;
             } elseif ($couponInfo['coupon_discount_in_percent'] == applicationConstants::FLAT) {
-                if ($cartSubTotal > $couponInfo["coupon_discount_value"]) {
-                    $cartSubTotal = $couponInfo["coupon_discount_value"];
-                }
+                $couponDiscountValue = $couponInfo["coupon_discount_value"];
+            }
+            if ($cartSubTotal < $couponDiscountValue) {
+                $couponDiscountValue = $cartSubTotal;
+            }
+            if ($couponDiscountValue > $couponInfo["coupon_max_discount_value"]) {
+                $couponDiscountValue = $couponInfo["coupon_max_discount_value"];
             }
             $couponData = [
                 'coupon_discount_type' => $couponInfo["coupon_type"],
                 'coupon_code' => $couponInfo["coupon_code"],
                 'coupon_discount_value' => $couponInfo["coupon_discount_value"],
-                'coupon_discount_total' => $cartSubTotal,
+                'coupon_discount_total' => $couponDiscountValue,
                 'coupon_info' => json_encode($labelArr),
             ];
         }

@@ -4,8 +4,6 @@ $langFrm->setFormTagAttribute('class', 'form');
 $langFrm->developerTags['colClassPrefix'] = 'col-md-';
 $langFrm->developerTags['fld_default_col'] = 6;
 $langFrm->setFormTagAttribute('onsubmit', 'setupGroupClassLang(this); return(false);');
-$submit = $langFrm->getField('submit');
-$submit->developerTags['col'] = 12;
 $submit = $langFrm->getField('grpclslang_grpcls_title');
 $submit->developerTags['col'] = 12;
 $submit = $langFrm->getField('grpclslang_grpcls_description');
