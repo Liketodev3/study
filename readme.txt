@@ -1,7 +1,58 @@
 This file shares the details of the Yo!Coach version and change log.
 
-Enhancements:
+Updates:
+    *Task-85738: HTML integration of Homepage
+    *Task-85971: HTML integration - Find a tutor page
+    *Task-85882: HTML integration - Tutor profile page
+    *Task-86241: HTML integration - Checkout Pages
+    *Task-86244: HTML integration - Contact us
+    *Task-86242: HTML integration - Group classes
+    *Task-86243: HTML integration - About us
     *Task-81998: Support to php7.4
+
+Fixes:
+    #049560
+    #053371
+    #053989
+    #054100
+    #054394
+    #054389
+    #053877
+    #053867
+    #053837
+    #053678
+    #054530
+    #054440
+    #054505
+    #054442
+    #051040
+    #052092
+    #040850
+    #040857
+    #049561
+    #050881
+    #050898
+    #051789
+    #051882
+    #052099
+    #052972
+    #053506
+    #053770
+    #054725
+    #054686
+    #054589
+    #045765
+    #054607
+    #054387
+    #054609
+    #053498
+    #054263
+    #054657
+    #053674
+    #053212
+    #051411
+    #054729
+
 
 ---------------------------------
 Release Number: TV-2.16.0.20210601

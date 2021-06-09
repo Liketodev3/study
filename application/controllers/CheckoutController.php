@@ -288,8 +288,10 @@ class CheckoutController extends LoggedUserController
             $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
             /* ] */
         }
-
+        $orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
+        $couponsList = DiscountCoupons::getValidCoupons($teacherId, $this->siteLangId, '', $orderId);
         $this->set('userWalletBalance', $userWalletBalance);
+        $this->set('couponsList', $couponsList);
         $this->set('paymentMethods', $paymentMethods);
         $this->set('cartData', $cartData);
         $this->_template->render(false, false);

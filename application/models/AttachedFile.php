@@ -149,10 +149,10 @@ class AttachedFile extends MyAppModel
     {
 
         if ($allowImageExt) {
-            $allowedFileExtensions =  applicationConstants::allowedImageFileExtensions();
+            $allowedFileExtensions = applicationConstants::allowedImageFileExtensions();
             $allowedMimeTypes = applicationConstants::allowedImageMimeTypes();
         } else {
-            $allowedFileExtensions =  applicationConstants::allowedFileExtensions();
+            $allowedFileExtensions = applicationConstants::allowedFileExtensions();
             $allowedMimeTypes = applicationConstants::allowedMimeTypes();
         }
 
@@ -408,13 +408,13 @@ class AttachedFile extends MyAppModel
             header("Pragma: public");
             header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($imagePath)) . ' GMT', true, 200);
             header("Expires: " . date('r', strtotime("+30 Day")));
-            $fileContents =  file_get_contents($imagePath);
+            $fileContents = file_get_contents($imagePath);
             echo $fileContents;
             if ($cache) {
                 FatCache::set($cacheKey, $fileContents, '.jpg');
             }
         } catch (Exception $e) {
-            $fileContents =  file_get_contents($no_image);
+            $fileContents = file_get_contents($no_image);
             FatCache::set($cacheKey, $fileContents, '.jpg');
             echo $fileContents;
         }
@@ -539,7 +539,7 @@ class AttachedFile extends MyAppModel
         return $file;
     }
 
-    public function deleteFile($fileType, $recordId, $fileId = 0, $recordSubId = 0, $langId = -1, $screen = 0):bool
+    public function deleteFile($fileType, $recordId, $fileId = 0, $recordSubId = 0, $langId = -1, $screen = 0): bool
     {
         $fileType = FatUtility::int($fileType);
         $recordId = FatUtility::int($recordId);
@@ -551,14 +551,14 @@ class AttachedFile extends MyAppModel
             return false;
         }
 
-        $fileRow = AttachedFile::getAttachment($fileType, $recordId, $recordSubId,$langId);
-        if(!$fileRow){
+        $fileRow = AttachedFile::getAttachment($fileType, $recordId, $recordSubId, $langId);
+        if (!$fileRow) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
             return false;
         }
 
-        $uploadedFilePath = CONF_UPLOADS_PATH.$fileRow['afile_physical_path'];
-        if(!unlink($uploadedFilePath)){
+        $uploadedFilePath = CONF_UPLOADS_PATH . $fileRow['afile_physical_path'];
+        if (file_exists($uploadedFilePath) && !unlink($uploadedFilePath)) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
             return false;
         }
@@ -584,7 +584,7 @@ class AttachedFile extends MyAppModel
             $this->error = $db->getError();
             return false;
         }
-        
+
         return true;
     }
 
@@ -609,12 +609,12 @@ class AttachedFile extends MyAppModel
             trigger_error('S3 Settings not found.', E_USER_ERROR);
         }
         $client = S3Client::factory([
-            'credentials' => [
-                'key' => S3_KEY,
-                'secret' => S3_SECRET
-            ],
-            'region' => S3_REGION,
-            'version' => 'latest'
+                    'credentials' => [
+                        'key' => S3_KEY,
+                        'secret' => S3_SECRET
+                    ],
+                    'region' => S3_REGION,
+                    'version' => 'latest'
         ]);
         $client->registerStreamWrapper();
     }
@@ -678,4 +678,5 @@ class AttachedFile extends MyAppModel
             AttachedFile::FILETYPE_BLOG_POST_IMAGE => Label::getLabel('IMGA_BLOG_POST_IMAGE', $langId),
         ];
     }
+
 }
