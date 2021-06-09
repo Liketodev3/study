@@ -65,6 +65,7 @@ class EmailHandler extends FatModel
         } else {
             return static::sendMail($to, $subject, $body, '', $tpl, $langId);
         }
+        return true;
     }
 
     public function sendTxnNotification($txnId, $langId)
@@ -105,7 +106,7 @@ class EmailHandler extends FatModel
                 ])) {
             return false;
         }
-        if (!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))) {
+        if (!ALLOW_EMAILS || FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0) == applicationConstants::NO) {
             return true;
         }
         $host = $smtp_arr["host"] ?? FatApp::getConfig("CONF_SMTP_HOST");
@@ -155,13 +156,14 @@ class EmailHandler extends FatModel
                 ])) {
             return false;
         }
-        if (!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))) {
+        if (!ALLOW_EMAILS || FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0) == applicationConstants::NO) {
             return true;
         }
         $subject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
         $body = base64_encode($body);
         if (!mail($to, $subject, $body, $headers)) {
             return false;
+            
         }
         return true;
     }

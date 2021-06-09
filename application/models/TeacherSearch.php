@@ -113,27 +113,46 @@ class TeacherSearch extends SearchBase
             $subTable = '(' . $srch->getQuery() . ')';
             $this->joinTable($subTable, 'INNER JOIN', 'utsl.utsl_user_id = teacher.user_id', 'utsl');
         }
-        /* Week Day and Time Slot */
-        $allWeekDays = applicationConstants::getWeekDays();
-        $allTimeSlots = TeacherGeneralAvailability::timeSlotArr();
-        $weekDays = (array) FatUtility::int($post['filterWeekDays'] ?? []);
-        $timeSlots = (array) FatUtility::int($post['filterTimeSlots'] ?? []);
-        if (empty($weekDays) && !empty($timeSlots)) {
-            $weekDays = array_keys($allWeekDays);
-        } else if (!empty($weekDays) && empty($timeSlots)) {
-            $timeSlots = array_keys($allTimeSlots);
-        }
-        if (count($allWeekDays) !== count($weekDays) || count($allTimeSlots) !== count($timeSlots)) {
-            $condition = [];
-            foreach ($weekDays as $day) {
-                foreach ($timeSlots as $slot) {
-                    array_push($condition, 'JSON_EXTRACT(testat_timeslots, "$.d' . $day . '[' . $slot . ']") > 0');
-                }
-            }
-            if (count($condition)) {
-                $this->addDirectCondition('(' . implode(" OR ", $condition) . ')', 'AND');
-            }
-        }
+       /* Week Day and Time Slot */
+       $weekDays = (array) ($post['filterWeekDays'] ?? []);
+       $timeSlots = (array) ($post['filterTimeSlots'] ?? []);
+       if (count($weekDays) > 0 || count($timeSlots) > 0) {
+           $timeSlotArr = [];
+           if (!empty($timeSlots)) {
+               $timeSlotArr = CommonHelper::formatTimeSlotArr($timeSlots);
+           }
+           $srch = new SearchBase('tbl_teachers_general_availability');
+           $srch->addFld('DISTINCT tgavl_user_id as tgavl_user_id');
+           if (is_array($weekDays) && !empty($weekDays)) {
+               $weekDates = MyDate::changeWeekDaysToDate($weekDays, $timeSlotArr);
+               $condition = ' ( ';
+               foreach ($weekDates as $weekDayKey => $date) {
+                   $condition .= ($weekDayKey == 0) ? '' : ' OR ';
+                   $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "' . $date['endDate'] . '" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "' . $date['startDate'] . '" ) ';
+               }
+               $condition .= ' ) ';
+               $srch->addDirectCondition($condition);
+           }
+           if (empty($weekDays) && !empty($timeSlotArr)) {
+               $systemTimezone = MyDate::getTimeZone();
+               $userTimezone = MyDate::getUserTimeZone();
+               $condition = '( ';
+               foreach ($timeSlotArr as $key => $formatedVal) {
+                   $condition .= ($key == 0) ? '' : 'OR';
+                   $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
+                   $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
+                   $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $userTimezone, $systemTimezone)));
+                   $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $userTimezone, $systemTimezone)));
+                   $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","' . $endTime . '") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","' . $startTime . '") ) ';
+               }
+               $condition .= ' ) ';
+               $srch->addDirectCondition($condition);
+           }
+           $srch->doNotCalculateRecords();
+           $srch->doNotLimitRecords();
+           $subTable = '(' . $srch->getQuery() . ')';
+           $this->joinTable($subTable, 'INNER JOIN', 'tgavl.tgavl_user_id = teacher.user_id', 'tgavl');
+       }
         /* From Country */
         $fromCountries = explode(",", $post['fromCountry'] ?? '');
         $fromCountries = array_filter(FatUtility::int($fromCountries));

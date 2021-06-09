@@ -230,17 +230,13 @@ class OrderPayment extends Order
                                 '{learner_comment}' => '',
                                 '{status}' => Label::getLabel('VERB_Scheduled'),
                             ];
-
-                            if (!EmailHandler::sendMailTpl($grpClsRow['teacherEmailId'], 'learner_class_book_email', $defaultSiteLangId, $vars)) {
-                                FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
-                            }
+                            EmailHandler::sendMailTpl($grpClsRow['teacherEmailId'], 'learner_class_book_email', $defaultSiteLangId, $vars);
+                           
                             $vars['{class_date}'] = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $grpClsRow['grpcls_start_datetime'], false, $grpClsRow['learnerTimeZone']);
                             $vars['{class_start_time}'] = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $grpClsRow['grpcls_start_datetime'], true, $grpClsRow['learnerTimeZone']);
                             $vars['{class_end_time}'] = MyDate::convertTimeFromSystemToUserTimezone('H:i:s', $grpClsRow['grpcls_end_datetime'], true, $grpClsRow['learnerTimeZone']);
-
-                            if (!EmailHandler::sendMailTpl($grpClsRow['learnerEmailId'], 'class_book_email_confirmation', $defaultSiteLangId, $vars)) {
-                                FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
-                            }
+                            EmailHandler::sendMailTpl($grpClsRow['learnerEmailId'], 'class_book_email_confirmation', $defaultSiteLangId, $vars);
+                           
 
                             // share on student google calendar
                             $token = UserSetting::getUserSettings($orderInfo['order_user_id'])['us_google_access_token'];
