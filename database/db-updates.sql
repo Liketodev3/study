@@ -349,3 +349,6 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.17.0.20210609' WHERE `conf_na
 ALTER TABLE `tbl_url_rewrites` DROP INDEX `url_rewrite_original`;
 ALTER TABLE `tbl_url_rewrites` DROP INDEX `url_rewrite_custom`;
 ALTER TABLE `tbl_url_rewrites` ADD UNIQUE( `urlrewrite_original`, `urlrewrite_custom`, `urlrewrite_lang_id`);
+REPLACE  INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_faq_title_second', '1', 'Questions? We Have Answers');
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_find_an_answer', '1', 'Can\'t find an answer?');
