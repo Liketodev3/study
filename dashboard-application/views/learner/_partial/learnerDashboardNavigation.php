@@ -1,4 +1,3 @@
-<?php $params = FatApp::getParameters(); ?>
 <div class="menu-group">
     <h6 class="heading-6"><?php echo label::getLabel('LBL_Profile'); ?></h6>
     <nav class="menu menu--primary">
@@ -22,16 +21,10 @@
     <h6 class="heading-6"><?php echo Label::getLabel('Lbl_Booking'); ?></h6>
     <nav class="menu menu--primary">
         <ul>
-            <li class="menu__item <?php echo ( $controllerName == "LearnerScheduledLessons" && $action == 'index' && empty($params[0])) ? 'is-active' : ''; ?>">
+            <li class="menu__item <?php echo ( $controllerName == "LearnerScheduledLessons" && $action == 'index') ? 'is-active' : ''; ?>">
                 <a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons'); ?>">
                     <svg class="icon icon--lesson margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#lessons'; ?>"></use></svg>
-                    <span><?php echo Label::getLabel('Lbl_Lessons'); ?></span>
-                </a>
-            </li>
-            <li class="menu__item <?php echo ( $controllerName == "LearnerScheduledLessons" && $action == "index" && !empty($params[0])) ? 'is-active' : ''; ?>">
-                <a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons', 'index', [ApplicationConstants::CLASS_TYPE_GROUP]); ?>">
-                    <svg class="icon icon--group-classes margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#group-classes'; ?>"></use></svg>
-                    <span><?php echo Label::getLabel('Lbl_Group_Classes'); ?></span>
+                    <span><?php echo Label::getLabel('LBL_YOURS_SESSION'); ?></span>
                 </a>
             </li>
             <li class="menu__item <?php echo ($controllerName == "LearnerTeachers") ? 'is-active' : ''; ?>">

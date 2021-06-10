@@ -736,7 +736,17 @@ $dashboard-calendar: "dashboard-calendar";
             .fc-toolbar-title {
                 font-size: var(--font-size-lg) ;
             }
+           
         }
     }
 }
 
+.fc-toolbar-chunk{
+    h6{
+        display: flex;
+        align-items: center;
+        .timer{
+            margin: 0 var(--margin-3);
+        }
+    }
+}

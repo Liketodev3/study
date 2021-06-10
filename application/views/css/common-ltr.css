@@ -1835,6 +1835,16 @@ ul {
 .status-bar__body .fc-header-toolbar .fc-toolbar-chunk .fc-toolbar-title {
   font-size: var(--font-size-lg); }
 
+.fc-toolbar-chunk h6 {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+  .fc-toolbar-chunk h6 .timer {
+    margin: 0 var(--margin-3); }
+
 .align-left {
   text-align: left !important; }
 
@@ -7812,11 +7822,14 @@ textarea[disabled] {
   content: "";
   left: 0;
   position: absolute;
-  top: -10px;
+  top: 50%;
   z-index: 2;
   width: 30px;
   height: 30px;
-  display: block; }
+  display: block;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%); }
 
 #mbsmessage.alert--danger .content:before,
 .system_message.alert--danger .content:before {
