@@ -2206,7 +2206,8 @@ strong.span-right {
       top: 0;
       bottom: 0;
       content: "";
-      opacity: 0.1; }
+      opacity: 0.1;
+      background-color: currentColor; }
   .infobar__media-icon--alert {
     color: var(--color-yellow);
     font-size: var(--font-size-xxxl);
@@ -2251,9 +2252,6 @@ strong.span-right {
     background: rgba(255, 1, 0, 0); } }
   .infobar__media-icon--tick {
     color: var(--color-primary); }
-    .infobar__media-icon--tick:before {
-      background-color: var(--color-white);
-      opacity: 1; }
   @media (max-width: 576px) {
     .infobar {
       padding: var(--padding-4); }
