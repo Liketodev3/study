@@ -56,13 +56,29 @@ $(function () {
 
     viewFlashCard = function (flashcardId) {
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'viewFlashCard', [flashcardId]), '', function (t) {
-            $.facebox(t, 'facebox-medium');
+            try {
+                var res = JSON.parse(t)
+                console.log(res);
+                if (res.status == 0) {
+                    $.mbsmessage(res.msg, true, 'alert alert--danger');
+                }
+            } catch (error) {
+                $.facebox(t, 'facebox-medium');
+            }
         });
     };
 
     flashCardForm = function (lessonId, flashcardId) {
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'flashCardForm'), 'flashcardId=' + flashcardId + '&lessonId=' + lessonId, function (t) {
-            $.facebox(t, 'facebox-medium');
+            try {
+                var res = JSON.parse(t)
+                console.log(res);
+                if (res.status == 0) {
+                    $.mbsmessage(res.msg, true, 'alert alert--danger');
+                }
+            } catch (error) {
+                $.facebox(t, 'facebox-medium');
+            }
         });
     };
 

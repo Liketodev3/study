@@ -203,8 +203,10 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     {
         $lessonId = FatUtility::int($lessonId);
         $userId = UserAuthentication::getLoggedUserId();
-        $post = ['slesson_teacher_id' => $userId,
-            'slesson_id' => FatUtility::int($lessonId)];
+        $post = [
+            'slesson_teacher_id' => $userId,
+            'slesson_id' => FatUtility::int($lessonId)
+        ];
         $srch = new LessonSearch($this->siteLangId, ReportedIssue::USER_TYPE_TEACHER);
         $srch->joinTeacherLessonPlans();
         $srch->addSearchDetailFields();
@@ -245,6 +247,10 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
     public function searchFlashCards()
     {
+        if (empty(FatApp::getConfig('CONF_ENABLE_FLASHCARD'))) {
+            Message::addErrorMessage(Label::getLabel('LBL_INVALID_REQUEST'));
+            FatUtility::dieWithError(Message::getHtml());
+        }
         $frmSrch = $this->getLessonFlashCardSearchForm();
         $post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
         $teacherId = (isset(FatApp::getPostedData()['teacherId'])) ? FatApp::getPostedData()['teacherId'] : 0;
@@ -516,7 +522,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $srch->setPageSize(1);
         $srch->addCondition('slns.slesson_id', '=', $lessonId);
         $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
-        $srch->addFld(['lcred.credential_user_id as learnerId',
+        $srch->addFld([
+            'lcred.credential_user_id as learnerId',
             'sld.sldetail_id',
             'lcred.credential_email as learnerEmailId',
             'CONCAT(ut.user_first_name, " ", ut.user_last_name) as teacherFullName'
@@ -690,8 +697,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         /* validation[ */
         $lessonDetail = ScheduledLesson::getAttributesById($lessonId);
         $canEdit = ($lessonDetail['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) ||
-        (($lessonDetail['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) &&
-        (strtotime($lessonDetail['slesson_end_date'] . " " . $lessonDetail['slesson_end_time']) > strtotime(date('Y-m-d H:i:s'))));
+            (($lessonDetail['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) &&
+                (strtotime($lessonDetail['slesson_end_date'] . " " . $lessonDetail['slesson_end_time']) > strtotime(date('Y-m-d H:i:s'))));
 
         if (($lessonDetail['slesson_teacher_id'] != UserAuthentication::getLoggedUserId()) || !$canEdit) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Access_Denied'));
@@ -806,6 +813,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
     public function viewFlashCard($flashcardId)
     {
+        if (empty(FatApp::getConfig('CONF_ENABLE_FLASHCARD'))) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
         $flashcardId = FatUtility::int($flashcardId);
         $srch = new FlashCardSearch();
         $srch->joinSharedFlashCard();
@@ -838,6 +848,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
     public function removeFlashcard($flashCardId)
     {
+        if (empty(FatApp::getConfig('CONF_ENABLE_FLASHCARD'))) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
         $flashCardId = FatUtility::int($flashCardId);
         /* validation [ */
         $srch = new FlashCardSearch();
@@ -887,7 +900,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
     public function flashCardForm()
     {
-        $post = FatApp::getPostedData();
+        if (empty(FatApp::getConfig('CONF_ENABLE_FLASHCARD'))) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
         $flashCardId = FatApp::getPostedData('flashcardId', FatUtility::VAR_INT, 0);
         $lessonId = FatApp::getPostedData('lessonId', FatUtility::VAR_INT, 0);
         if ($lessonId <= 0) {
@@ -906,6 +921,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
 
     public function setupFlashCard()
     {
+        if (empty(FatApp::getConfig('CONF_ENABLE_FLASHCARD'))) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
         $frm = $this->getFlashcardFrm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
@@ -950,7 +968,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     {
         $srch = $this->searchLessons();
         $srch->joinTeacherCredentials();
-        $srch->addMultipleFields(['slns.slesson_id', 'op_id',
+        $srch->addMultipleFields([
+            'slns.slesson_id', 'op_id',
             'tcred.credential_email as teacherEmail',
             'ut.user_first_name as teacherFirstName',
             'ut.user_last_name as teacherLastName',
@@ -993,7 +1012,8 @@ class TeacherScheduledLessonsController extends TeacherBaseController
     public function checkEveryMinuteStatus($lessonId)
     {
         $srch = new ScheduledLessonSearch(false);
-        $srch->addMultipleFields(['slns.slesson_status', 'slesson_teacher_end_time',
+        $srch->addMultipleFields([
+            'slns.slesson_status', 'slesson_teacher_end_time',
             'IF(slesson_grpcls_id=0, sld.sldetail_learner_status, 0) as sldetail_learner_status'
         ]);
         $srch->addCondition('slns.slesson_teacher_id', '=', UserAuthentication::getLoggedUserId());
@@ -1098,5 +1118,4 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->set('lesonId', $lessonId);
         $this->_template->render(false, false);
     }
-
 }

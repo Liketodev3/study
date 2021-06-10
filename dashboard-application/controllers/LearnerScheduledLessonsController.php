@@ -106,8 +106,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
     {
         $lDetailId = FatUtility::int($lDetailId);
         $lessonDetailRow = ScheduledLessonDetails::getAttributesById(
-                        $lDetailId,
-                        ['sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id']
+            $lDetailId,
+            ['sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id']
         );
         if (empty($lessonDetailRow)) {
             FatUtility::exitWithErrorCode(404);
@@ -150,8 +150,10 @@ class LearnerScheduledLessonsController extends LearnerBaseController
     public function viewLessonDetail($ldetailId)
     {
         $userId = UserAuthentication::getLoggedUserId();
-        $post = ['sldetail_learner_id' => $userId,
-            'sldetail_id' => FatUtility::int($ldetailId),];
+        $post = [
+            'sldetail_learner_id' => $userId,
+            'sldetail_id' => FatUtility::int($ldetailId),
+        ];
         $srch = new LessonSearch($this->siteLangId);
         $srch->joinTeacherLessonPlans();
         $srch->addSearchDetailFields();
@@ -180,8 +182,12 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
     public function searchFlashCards()
     {
+        if (empty(FatApp::getConfig('CONF_ENABLE_FLASHCARD'))) {
+            Message::addErrorMessage(Label::getLabel('LBL_INVALID_REQUEST'));
+            FatUtility::dieWithError(Message::getHtml());
+        }
         $frmSrch = $this->getLessonFlashCardSearchForm();
-        $myteacher = FatApp::getPostedData('teacherId', FatUtility::VAR_INT, 0);
+        $teacherId = FatApp::getPostedData('teacherId', FatUtility::VAR_INT, 0);
         $post = $frmSrch->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
@@ -213,7 +219,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
         $this->set('flashCards', $rows);
         $this->set('postedData', $post);
-        $this->set('myteacher', $myteacher);
+        $this->set('teacherId', $teacherId);
         $this->_template->render(false, false, 'teacher-scheduled-lessons/search-flash-cards.php');
     }
 
@@ -1032,6 +1038,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
     public function viewFlashCard($flashcardId)
     {
+        if (empty(FatApp::getConfig('CONF_ENABLE_FLASHCARD'))) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
         $flashcardId = FatUtility::int($flashcardId);
         $srch = new FlashCardSearch();
         $srch->joinSharedFlashCard();
@@ -1064,6 +1073,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
     public function removeFlashcard($flashCardId)
     {
+        if (empty(FatApp::getConfig('CONF_ENABLE_FLASHCARD'))) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
         $flashCardId = FatUtility::int($flashCardId);
         // validation [
         $srch = new FlashCardSearch();
@@ -1095,6 +1107,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
     public function flashCardForm()
     {
+        if (empty(FatApp::getConfig('CONF_ENABLE_FLASHCARD'))) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
         $post = FatApp::getPostedData();
         $flashCardId = FatApp::getPostedData('flashcardId', FatUtility::VAR_INT, 0);
         $lessonId = $post['lessonId'];
@@ -1117,6 +1132,9 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
     public function setupFlashCard()
     {
+        if (empty(FatApp::getConfig('CONF_ENABLE_FLASHCARD'))) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
         $frm = $this->getFlashcardFrm();
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
@@ -1227,7 +1245,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
     public function checkEveryMinuteStatus($lDetailId)
     {
         $srch = new ScheduledLessonSearch();
-        $srch->addMultipleFields(['IF(slns.slesson_teacher_join_time>0, 1, 0) as has_teacher_joined',
+        $srch->addMultipleFields([
+            'IF(slns.slesson_teacher_join_time>0, 1, 0) as has_teacher_joined',
             'IF(sld.sldetail_learner_join_time>0, 1, 0) as has_learner_joined',
             'sld.sldetail_learner_status',
             'slns.slesson_status',
@@ -1458,5 +1477,4 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         return FatApp::getDb()->fetch($rs);
     }
-
 }
