@@ -50,7 +50,7 @@ var cart = {
 	},
 	removePromoCode: function () {
 		fcom.updateWithAjax(fcom.makeUrl('Cart', 'removePromoCode'), '', function (res) {
-            cart.checkoutStep("getPaymentSummary", "");
+			cart.checkoutStep("getPaymentSummary", "");
 		});
 	},
 	proceedToStep: function (cartDetails, step) {
@@ -104,9 +104,10 @@ var cart = {
 		data = "order_type=" + orderType + "&pmethod_id=" + cart.paymentMethodId;
 		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Checkout', 'confirmOrder', [], confFrontEndUrl), data, function (ans) {
-			$.loader.hide();
 			if (ans.redirectUrl != '') {
 				window.location.href = ans.redirectUrl;
+			} else {
+				$.loader.hide();
 			}
 		});
 	}
