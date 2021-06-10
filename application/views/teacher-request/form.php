@@ -50,9 +50,6 @@ $fldPhone->addFieldTagAttribute('id', 'utrvalue_user_phone');
 
 $frm->getField('utrvalue_user_phone_code')->addFieldTagAttribute('id', 'utrvalue_user_phone_code');
 
-$fldPhotId = $frm->getField('user_photo_id');
-$fldPhotId->developerTags['col'] = 12;
-
 $frm->getField('about_me_fields_heading')->developerTags['col'] = 8;
 
 $introduction_fields_heading = $frm->getField('introduction_fields_heading');
