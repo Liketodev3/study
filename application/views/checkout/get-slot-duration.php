@@ -22,7 +22,7 @@
 		<div class="selection-tabs selection--checkout selection--duration selection--onehalf">
 			<?php foreach ($slotDurations as $duration) { ?>
 				<label class="selection-tabs__label">
-					<input type="radio" onchange="cart.lessonDuration = this.value;" class="selection-tabs__input" value="<?php echo $duration['ustelgpr_slot']; ?>" <?php echo ($lessonDuration == $duration['ustelgpr_slot']) ? 'checked' : ''; ?> name="lessonDuration">
+					<input type="radio" onchange="cart.props.lessonDuration = this.value;" class="selection-tabs__input" value="<?php echo $duration['ustelgpr_slot']; ?>" <?php echo ($lessonDuration == $duration['ustelgpr_slot']) ? 'checked' : ''; ?> name="lessonDuration">
 					<div class="selection-tabs__title">
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
 							<g>
@@ -52,7 +52,10 @@
 			</div>
 		</div>
 		<div class="box-foot__right">
-			<a href="javascript:void(0);" class="btn btn--primary color-white" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>, languageId: <?php echo $languageId; ?>, lessonDuration : <?php echo $lessonDuration; ?>},'getTeacherPriceSlabs');"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
+			<a href="javascript:void(0);" class="btn btn--primary color-white" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>, languageId: <?php echo $languageId; ?>},'getTeacherPriceSlabs');"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
 		</div>
 	</div>
 </div>
+<script>
+	cart.props.lessonDuration = parseInt('<?php echo $lessonDuration; ?>');
+</script>

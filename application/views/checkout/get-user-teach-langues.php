@@ -43,3 +43,6 @@ defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 		<a href="javascript:void(0);" class="btn btn--primary color-white" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getSlotDuration');"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
 	</div>
 </div>
+<script>
+	cart.props.languageId = parseInt('<?php echo $languageId; ?>');
+</script>
