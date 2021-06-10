@@ -70,7 +70,7 @@ class TeacherGroupClassesController extends TeacherBaseController
         $srch->addOrder('grpcls.grpcls_id', 'desc');
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
-        $srch->setPageSize($pageSize);
+        $srch->setPageSize(1);
         $srch->setPageNumber($page);
         $classes = FatApp::getDb()->fetchAll($srch->getResultSet());
         $totalRecords = $srch->recordCount();
