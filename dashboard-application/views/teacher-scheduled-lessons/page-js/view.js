@@ -58,12 +58,17 @@ $(function () {
     };
 
     setupFlashCard = function (frm) {
-        if (!$(frm).validate())
+        if (!$(frm).validate()) {
             return false;
+        }
+        frm.btn_submit.setAttribute('disabled', true);
         var data = fcom.frmData(frm);
         fcom.updateWithAjax(fcom.makeUrl('TeacherScheduledLessons', 'setupFlashCard'), data, function (t) {
             searchFlashCards(frmFlashCardSrch);
             $.facebox.close();
+            if (t.status == 0) {
+                frm.btn_submit.removeAttribute('disabled');
+            }
         });
     };
 
