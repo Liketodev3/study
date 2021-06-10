@@ -18,12 +18,12 @@
 <section class="section section--faq">
 	<div class="container container--narrow">
 		<div class="faq-cover">
-			<!-- <div class="search-panel">
+			<div class="search-panel">
 				<svg class="icon icon--search">
-					<use xlink:href="images/sprite.yo-coach.svg#search"></use>
+					<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#search'; ?>"></use>
 				</svg>
-				<input type="text" placeholder="Enter a word or phrase that you're looking for help with">
-			</div> -->
+				<input type="text" name="faq_search" placeholder="Enter a word or phrase that you're looking for help with">
+			</div>
 			<?php foreach ($finaldata as $catId => $faqDetails) { ?>
 				<div id="<?php echo 'section_' . $catId ?>" <?php echo (array_keys($finaldata)[0] != $catId) ? 'style="display:none;"' : ''; ?> class="faq-container">
 					<?php foreach ($faqDetails as $ques) { ?>
@@ -83,4 +83,12 @@
 		$(this).parent().addClass('is--active');
 		$('#'+$(this).attr('data-cat-id')).show();
 	});
+
+	$(document).ready(function(){
+            $('input[name="faq_search"]').keyup(function(){
+            var text = $(this).val();
+            $('.faq-row').hide();
+            $('.faq-row:contains("'+text+'")').show();      
+            });
+        });
 </script>
