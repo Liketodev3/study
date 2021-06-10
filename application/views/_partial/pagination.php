@@ -49,30 +49,32 @@ if ( null != $arguments ) {
 				); */
 				
 $pagination .= FatUtility::getPageString( 
-	'<li><a href="javascript:void(0);" onclick="' . $callBackJsFunc . '">xxpagexx</a></li>', 
+	'<li><button onclick="' . $callBackJsFunc . '">xxpagexx</button></li>', 
 	$pageCount,
 	$pageNumber,
-	'<li class="is-active"><a href="javascript:void(0)">xxpagexx</a></li>',
-	'<li class="is-more"><a href="javascript:void(0);">...</a></li> ',
+	'<li><button class="is-active">xxpagexx</button></li>',
+	'<li><button class="is-disabled">...</button></li> ',
 	$linksToDisp,
-	'<li class="is-prev"><a href="javascript:void(0)" onclick="' . $callBackJsFunc . '" title="'.Label::getLabel('LBL_Previous').'"></a></li>',
-	'<li class="is-next"><a href="javascript:void(0)" onclick="' . $callBackJsFunc . '" title="'.Label::getLabel('LBL_Next').'"></a></li>',
-	'<li class="is-prev"><a href="javascript:void(0)" onclick="' . $callBackJsFunc . '" title="'.Label::getLabel('LBL_Previous').'"></a></li>',
-	'<li class="is-next"><a href="javascript:void(0)" onclick="' . $callBackJsFunc . '" title="'.Label::getLabel('LBL_Next').'"></a></li>'
+	'<li><button class="is-backward"  onclick="' . $callBackJsFunc . '" title="'.Label::getLabel('LBL_Previous').'"></button></li>',
+	'<li><button class="is-forward" onclick="' . $callBackJsFunc . '" title="'.Label::getLabel('LBL_Next').'"></button></li>',
+	'<li><button class="is-prev" onclick="' . $callBackJsFunc . '" title="'.Label::getLabel('LBL_Previous').'"></button></li>',
+	'<li><button class="is-next" onclick="' . $callBackJsFunc . '" title="'.Label::getLabel('LBL_Next_2').'"></button></li>'
 	);
 
 $ul = new HtmlElement(
 		'ul',
 		array(
-			'class' => 'pagination pagination--center',
+			// 'class' => 'pagination pagination--center',
 		),
 		$pagination,
 		true
 	);	
 ?>
-
-<?php echo $ul->getHtml();?>
-
+ <div class="table-controls padding-6">
+ 	<div class="pagination pagination--centered">
+		<?php echo $ul->getHtml();?>
+	</div>
+</div>
 <?php 
 /* <div class="section footinfo">
 	<aside class="grid_1"><?php echo $ul->getHtml();?></aside>

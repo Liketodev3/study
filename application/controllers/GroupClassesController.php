@@ -44,7 +44,7 @@ class GroupClassesController extends MyAppController
             $frm->fill($post);
         }
 
-        $srch->setPageSize(1);
+        $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
         $rs = $srch->getResultSet();
         $classesList = FatApp::getDb()->fetchAll($rs);
