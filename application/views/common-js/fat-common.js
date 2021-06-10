@@ -122,14 +122,15 @@ var fcom = {
 					//$.systemMessage(ans.msg,'alert alert--danger');
 					$.mbsmessage(ans.msg,true, 'alert alert--danger');
 					/* Custom Code[ */
-						$.loader.hide();
 					if( ans.redirectUrl ){
-						setTimeout(function(){ window.location.href = ans.redirectUrl }, 3000);
+						setTimeout(function(){window.location.href = ans.redirectUrl }, 3000);
+					}else{
+						$.loader.hide();
 					}
 					/* ] */
 					return ;
 				}
-
+				
 				$.mbsmessage( ans.msg,true, 'alert alert--success');
 
 				if( CONF_AUTO_CLOSE_SYSTEM_MESSAGES == 1 ){
