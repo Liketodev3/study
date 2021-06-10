@@ -1111,6 +1111,7 @@ p {
   display: -ms-flexbox;
   display: flex; }
   .footer_social-links li a img {
+    opacity: 1;
     width: 24px;
     height: 24px;
     margin-right: var(--margin-3); }
