@@ -67,7 +67,7 @@ class ReportIssueController extends LoggedUserController
     private function getForm()
     {
         $frm = new Form('reportIssueFrm');
-        $options = IssueReportOptions::getOptionsArray($this->siteLangId, ReportedIssue::USER_TYPE_LEANER);
+        $options = IssueReportOptions::getOptionsArray($this->siteLangId, ReportedIssue::USER_TYPE_LEARNER);
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Subject'), 'repiss_title', $options);
         $fld->requirements()->setRequired(true);
         $fld = $frm->addTextArea(Label::getLabel('LBL_Comment'), 'repiss_comment', '');
