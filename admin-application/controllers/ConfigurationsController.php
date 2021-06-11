@@ -553,8 +553,10 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addHtml('', 'Withdrawal', '<h3>' . Label::getLabel("LBL_Withdrawal", $this->adminLangId) . '</h3>');
                 $fld = $frm->addIntegerField(Label::getLabel("LBL_Minimum_Withdrawal_Amount", $this->adminLangId) . ' [' . $this->siteDefaultCurrencyCode . ']', 'CONF_MIN_WITHDRAW_LIMIT', '');
                 $fld->htmlAfterField = "<small> " . Label::getLabel("LBL_This_is_the_minimum_withdrawable_amount.", $this->adminLangId) . "</small>";
+                $fld->requirements()->setRange(1, 999999);
                 $fld = $frm->addIntegerField(Label::getLabel("LBL_Minimum_Interval_[Days]", $this->adminLangId), 'CONF_MIN_INTERVAL_WITHDRAW_REQUESTS', '');
                 $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_This_is_the_minimum_interval_in_days_between_two_withdrawal_requests.", $this->adminLangId) . "</small>";
+                $fld->requirements()->setRange(0, 999999);
                 $frm->addHtml('', 'Checkout', '<h3>' . Label::getLabel("LBL_Checkout", $this->adminLangId) . '</h3>');
                 $fld1 = $frm->addCheckBox(Label::getLabel('LBL_Activate_Live_Payment_Transaction_Mode', $this->adminLangId), 'CONF_TRANSACTION_MODE', 1, [], false, 0);
                 $fld1->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_Transaction_Mode_To_Live_Environment", $this->adminLangId) . "</small>";
