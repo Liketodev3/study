@@ -13,10 +13,11 @@ $submit->developerTags['col'] = 12;
 $fld = $frm->getField('grpcls_max_learner');
 $fld->developerTags['col'] = 12;
 ?>
-<div class="box -padding-20">
-	<!--page-head start here-->
+<div class="popup">
 
-	<div class="tabs-small tabs-offset tabs-scroll-js">
+	<div class="popup__head">
+		<h4><?php echo Label::getLabel("LBL_Add_Group_Class") ?></h4>
+		<div class="tabs tabs--line border-bottom-0">
 		<ul>
 			<li class="is-active"><a href="javascript:void(0)"><?php echo Label::getLabel('LBL_General'); ?></a></li>
 			<?php foreach ($languages as $langId => $language) { ?>
@@ -25,16 +26,13 @@ $fld->developerTags['col'] = 12;
 			<?php } ?>
 		</ul>
 	</div>
-
-	<div class="d-flex justify-content-between align-items-center">
-		<div>
-			<h4><?php echo Label::getLabel("LBL_Add_Group_Class") ?></h4>
-		</div>
-		<!-- <div><a class="btn btn--small" href="javascript:void(0);" onclick="searchGroupClasses(document.frmSrch);"><?php echo Label::getLabel("LBL_Cancel") ?></a></div> -->
 	</div>
 
 
-	<span class="-gap"></span>
-	<!--page-head end here-->
+
+
+
+	<div class="popup__body">
 	<?php echo $frm->getFormHtml(); ?>
+			</div>
 </div>

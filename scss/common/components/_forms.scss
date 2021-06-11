@@ -28,7 +28,7 @@ input[type=text],
 select,
 textarea,.switch-group {
     border: none;
-    border: 1px solid theme('color.gray.200');
+    border: 1px solid theme('color.gray.300');
     height:2.8rem;
     padding: 0 theme('padding.4');
     width: 100%;
@@ -122,9 +122,10 @@ textarea {
     height: 2.8rem;
     line-height: 2.8rem;
     color:theme('color.primary');
-    border-radius: theme('radius.1'); font-weight: 600;
+     font-weight: 600;
     -webkit-transition: .3s all ease-in-out;
-    transition: .3s all ease-in-out
+    transition: .3s all ease-in-out;
+
 }
 
 
@@ -134,7 +135,7 @@ textarea {
 }
 
 textarea {
-    height: 200px;
+    height:150px;
     padding: theme('padding.4'); line-height: 1.4;
 
     @media(max-width:theme('breakpoints.md','value')){
