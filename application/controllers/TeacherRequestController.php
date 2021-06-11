@@ -10,6 +10,16 @@ class TeacherRequestController extends MyAppController
     public function index()
     {
         $applyTeachFrm = $this->getApplyTeachFrm($this->siteLangId);
+        $sectionAfterBanner = ExtraPage::getBlockContent(ExtraPage::BLOCK_APPLY_TO_TEACH_BENEFITS_SECTION,$this->siteLangId);
+        $featursSection = ExtraPage::getBlockContent(ExtraPage::BLOCK_APPLY_TO_TEACH_FEATURES_SECTION,$this->siteLangId);
+        $becometutorSection = ExtraPage::getBlockContent(ExtraPage::BLOCK_APPLY_TO_TEACH_BECOME_A_TUTOR_SECTION,$this->siteLangId);
+        $staticBannerSection = ExtraPage::getBlockContent(ExtraPage::BLOCK_APPLY_TO_TEACH_STATIC_BANNER,$this->siteLangId);
+
+        $this->set('faqs',$this->getApplyToTeachFaqs());
+        $this->set('sectionAfterBanner',$sectionAfterBanner);
+        $this->set('featuresSection',$featursSection);
+        $this->set('becometutorSection',$becometutorSection);
+        $this->set('staticBannerSection',$staticBannerSection);
         $this->set('applyTeachFrm',$applyTeachFrm);
         $this->_template->render();
     }
@@ -487,5 +497,15 @@ class TeacherRequestController extends MyAppController
         $frm->addHiddenField('', 'user_preferred_dashboard', User::USER_LEARNER_DASHBOARD);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Register',$langId));
         return $frm;
+    }
+
+    private function getApplyToTeachFaqs(){
+        $srch = Faq::getSearchObject($this->siteLangId, false);
+        $srch->addMultipleFields(['faq_identifier', 'faq_id', 'faq_category', 'faq_active', 'faq_title','faq_description']);
+        $srch->addCondition('faq_category','=',Faq::CATEGORY_APPLY_TO_TEACH);
+        $srch->addOrder('faq_active', 'desc');
+        $records = FatApp::getDb()->fetchAll($srch->getResultSet());
+
+        return  $records;
     }
 }
