@@ -179,7 +179,23 @@ foreach ($userTeachLangs as $key => $value) {
                         ?>
                     </div>
                 </div>
-                <div class="panel-cover" id="availbility">
+                <div class="panel-cover" >
+                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
+                        <h3><?php echo Label::getLabel('LBL_Schdule', $siteLangId) ?></h3>
+                    </div>
+                    <div class="panel-cover__body panel__body-target panel__body-target-js">
+                        <div  class="calendar-wrapper">
+                            <div id="availbility" class="calendar-wrapper__body">
+                               
+                            </div>
+                        </div>
+                        <div class="-gap"></div>
+                        <div class="alert alert--attention alert--small alert--note" role="alert">
+                            <b><?php echo Label::getLabel('LBL_Note', $siteLangId) ?></b><?php echo Label::getLabel('LBL_Not_finding_your_ideal_time', $siteLangId); ?>
+                            <a onClick="generateThread(<?php echo $teacher['user_id']; ?>)" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Contact', $siteLangId); ?></a>
+                            <?php echo Label::getLabel('LBL_slot_outside_message',$siteLangId); ?>
+                        </div>
+                    </div>
                 </div>
                 <?php if (count($groupClasses) > 0) { ?>
                     <div class="panel-cover">

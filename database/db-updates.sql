@@ -352,3 +352,4 @@ ALTER TABLE `tbl_url_rewrites` ADD UNIQUE( `urlrewrite_original`, `urlrewrite_cu
 REPLACE  INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_faq_title_second', '1', 'Questions? We Have Answers');
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_find_an_answer', '1', 'Can\'t find an answer?');
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_slot_outside_message', '1', 'this teacher to request a slot outside of their current schedule')
