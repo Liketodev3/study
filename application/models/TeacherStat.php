@@ -74,22 +74,15 @@ class TeacherStat extends FatModel
         $srch->joinTable(TeachingLanguage::DB_TBL, 'INNER JOIN', 'tlanguage.tlanguage_id = utl.utl_tlanguage_id', 'tlanguage');
         $srch->joinTable(TeachLangPrice::DB_TBL, 'LEFT JOIN', 'ustelgpr.ustelgpr_utl_id = utl.utl_id', 'ustelgpr');
         $srch->addCondition('utl.utl_user_id', '=', $this->userId);
-        $srch->addFld('MIN(IFNULL(ustelgpr_price, 0)) AS minPrice');
-        $srch->addFld('MAX(IFNULL(ustelgpr_price, 0)) AS maxPrice');
+        $srch->addFld('MIN(ustelgpr_price) AS minPrice');
+        $srch->addFld('MAX(ustelgpr_price) AS maxPrice');
         $srch->addFld('tlanguage_id');
-// $srch->addCondition('ustelgpr_price', '>', 0);
         $row = FatApp::getDb()->fetch($srch->getResultSet());
-        $teachlang = 0;
-        $minPrice = 0.0;
-        $maxPrice = 0.0;
-        if (!empty($row)) {
-            $teachlang = 1;
-        }
-        if (!empty($row) && $row['minPrice'] !== null && $row['maxPrice'] !== null) {
-            $minPrice = FatUtility::float($row['minPrice']);
-            $maxPrice = FatUtility::float($row['maxPrice']);
-        }
-        $data = ['testat_teachlang' => $teachlang, 'testat_minprice' => $minPrice, 'testat_maxprice' => $maxPrice];
+        $data = [
+            'testat_teachlang' => empty($row) ? 0 : 1,
+            'testat_minprice' => FatUtility::float($row['minPrice'] ?? 0),
+            'testat_maxprice' => FatUtility::float($row['maxPrice'] ?? 0)
+        ];
         $record = new TableRecord('tbl_teacher_stats');
         $record->setFldValue('testat_user_id', $this->userId);
         $record->assignValues($data);
@@ -168,7 +161,8 @@ class TeacherStat extends FatModel
         $data = ['testat_availability' => 0, 'testat_timeslots' => json_encode($emptySlots)];
         if (!empty($availability)) {
             $srch = new SearchBase(TeacherGeneralAvailability::DB_TBL);
-            $srch->addMultipleFields(['tgavl_day',
+            $srch->addMultipleFields([
+                'tgavl_day',
                 'CONCAT(tgavl_date, " ", tgavl_start_time) as startdate',
                 'CONCAT(tgavl_end_date, " ", tgavl_end_time) as enddate'
             ]);
@@ -264,7 +258,7 @@ class TeacherStat extends FatModel
 
     public function setTeachLangPricesBulk()
     {
-        FatApp::getDb()->query("UPDATE `tbl_teacher_stats` LEFT JOIN (SELECT IF(COUNT(userTeachLang.`utl_id`) > 0, 1, 0) AS teachLangCount, userTeachLang.`utl_user_id` AS teachLangUserId, MIN(IFNULL(langPrice.`ustelgpr_price`, 0) ) AS minPrice, MAX(IFNULL(langPrice.`ustelgpr_price`, 0) ) AS maxPrice FROM `tbl_user_teach_languages` AS userTeachLang INNER JOIN `tbl_teaching_languages` AS teachLang ON teachLang.tlanguage_id = userTeachLang.utl_tlanguage_id LEFT JOIN `tbl_user_teach_lang_prices` AS langPrice ON langPrice.ustelgpr_utl_id = userTeachLang.utl_id GROUP BY userTeachLang.`utl_user_id`) utl ON  utl.teachLangUserId = `testat_user_id` SET `testat_teachlang` = IFNULL(utl.teachLangCount, 0), `testat_minprice` = IFNULL(utl.minPrice, 0), `testat_maxprice` = IFNULL(utl.maxPrice, 0)");
+        FatApp::getDb()->query("UPDATE `tbl_teacher_stats` LEFT JOIN (SELECT IF(COUNT(userTeachLang.`utl_id`) > 0, 1, 0) AS teachLangCount, userTeachLang.`utl_user_id` AS teachLangUserId, MIN(langPrice.`ustelgpr_price`) AS minPrice, MAX(langPrice.`ustelgpr_price`) AS maxPrice FROM `tbl_user_teach_languages` AS userTeachLang INNER JOIN `tbl_teaching_languages` AS teachLang ON teachLang.tlanguage_id = userTeachLang.utl_tlanguage_id LEFT JOIN `tbl_user_teach_lang_prices` AS langPrice ON langPrice.ustelgpr_utl_id = userTeachLang.utl_id GROUP BY userTeachLang.`utl_user_id`) utl ON  utl.teachLangUserId = `testat_user_id` SET `testat_teachlang` = IFNULL(utl.teachLangCount, 0), `testat_minprice` = IFNULL(utl.minPrice, 0), `testat_maxprice` = IFNULL(utl.maxPrice, 0)");
     }
 
     public function setPreferenceBulk()
@@ -276,5 +270,4 @@ class TeacherStat extends FatModel
     {
         FatApp::getDb()->query("UPDATE `tbl_teacher_stats` LEFT JOIN (SELECT userSpokenLang.`utsl_user_id` AS spokenUserId,  IF(COUNT(userSpokenLang.`utsl_user_id`) > 0, 1, 0) AS userSpokenCount FROM `tbl_user_to_spoken_languages` AS userSpokenLang INNER JOIN `tbl_spoken_languages` AS slanguage ON slanguage.slanguage_id = userSpokenLang.utsl_slanguage_id GROUP BY userSpokenLang.`utsl_user_id`) teacherSpoken ON teacherSpoken.spokenUserId = `testat_user_id` SET `testat_speaklang` = IFNULL(teacherSpoken.userSpokenCount,0)");
     }
-
 }
