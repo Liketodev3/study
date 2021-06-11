@@ -92,10 +92,10 @@ foreach ($userTeachLangs as $key => $value) {
                                     <div class="toggle-dropdown__target toggle-dropdown__target-js">
                                         <h6><?php echo Label::getLabel('LBL_Share_On', $siteLangId); ?></h6>
                                         <ul class="social--share clearfix">
-                                            <li class="social--fb"><span class="st_facebook_large" displaytext="Facebook" st_processed="yes"><img alt="" src="/images/social_01.svg"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span class="stLarge" style="background-image: url(&quot;https://ws.sharethis.com/images/2017/facebook_32.png&quot;);"></span></span></span></li>
-                                            <li class="social--tw"><span class="st_twitter_large" displaytext="Tweet" st_processed="yes"><img alt="" src="/images/social_02.svg"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span class="stLarge" style="background-image: url(&quot;https://ws.sharethis.com/images/2017/twitter_32.png&quot;);"></span></span></span></li>
-                                            <li class="social--pt"><span class="st_pinterest_large" displaytext="Pinterest" st_processed="yes"><img alt="" src="/images/social_05.svg"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span class="stLarge" style="background-image: url(&quot;https://ws.sharethis.com/images/2017/pinterest_32.png&quot;);"></span></span></span></li>
-                                            <li class="social--mail"><span class="st_email_large" displaytext="Email" st_processed="yes"><img alt="" src="/images/social_06.svg"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span class="stLarge" style="background-image: url(&quot;https://ws.sharethis.com/images/2017/email_32.png&quot;);"></span></span></span></li>
+                                        <li class="social--fb"><span class='st_facebook_large' displayText='Facebook'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_01.svg"></span></li>
+											<li class="social--tw"><span class='st_twitter_large' displayText='Tweet'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_02.svg"></span></li>
+											<li class="social--pt"><span class='st_pinterest_large' displayText='Pinterest'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_05.svg"></span></li>
+											<li class="social--mail"><span class='st_email_large' displayText='Email'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_06.svg"></span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -393,3 +393,4 @@ foreach ($userTeachLangs as $key => $value) {
         viewCalendar(<?php echo $teacher['user_id'] . ',' . $teacherLanguage . ', "paid"'; ?>);
     });
 </script>
+<?php echo $this->includeTemplate( '_partial/shareThisScript.php' ); ?>
