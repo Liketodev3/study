@@ -127,9 +127,10 @@ var cart = {
         data = "order_type=" + orderType + "&pmethod_id=" + cart.paymentMethodId;
 
         fcom.updateWithAjax(fcom.makeUrl('Checkout', 'confirmOrder'), data, function (ans) {
-            $.loader.hide();
             if (ans.redirectUrl != '') {
                 window.location.href = ans.redirectUrl;
+            }else{
+                $.loader.hide();
             }
         });
     }

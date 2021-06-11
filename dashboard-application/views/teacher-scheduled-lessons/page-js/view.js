@@ -39,13 +39,29 @@ $(function () {
 
     flashCardForm = function (lessonId, flashcardId) {
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'flashCardForm'), 'flashcardId=' + flashcardId + '&lessonId=' + lessonId, function (t) {
-            $.facebox(t, 'facebox-medium');
+            try {
+                var res = JSON.parse(t)
+                console.log(res);
+                if (res.status == 0) {
+                    $.mbsmessage(res.msg, true, 'alert alert--danger');
+                }
+            } catch (error) {
+                $.facebox(t, 'facebox-medium');
+            }
         });
     };
 
     viewFlashCard = function (flashcardId) {
         fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'viewFlashCard', [flashcardId]), '', function (t) {
-            $.facebox(t, 'facebox-medium');
+            try {
+                var res = JSON.parse(t)
+                console.log(res);
+                if (res.status == 0) {
+                    $.mbsmessage(res.msg, true, 'alert alert--danger');
+                }
+            } catch (error) {
+                $.facebox(t, 'facebox-medium');
+            }
         });
     };
 
@@ -58,12 +74,17 @@ $(function () {
     };
 
     setupFlashCard = function (frm) {
-        if (!$(frm).validate())
+        if (!$(frm).validate()) {
             return false;
+        }
+        frm.btn_submit.setAttribute('disabled', true);
         var data = fcom.frmData(frm);
         fcom.updateWithAjax(fcom.makeUrl('TeacherScheduledLessons', 'setupFlashCard'), data, function (t) {
             searchFlashCards(frmFlashCardSrch);
             $.facebox.close();
+            if (t.status == 0) {
+                frm.btn_submit.removeAttribute('disabled');
+            }
         });
     };
 

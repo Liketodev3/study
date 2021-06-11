@@ -185,5 +185,4 @@ class UrlRewritingController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $langId));
         return $frm;
     }
-
 }

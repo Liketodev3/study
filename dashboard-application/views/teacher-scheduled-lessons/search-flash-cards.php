@@ -18,7 +18,7 @@
                                 <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_View'); ?></div>
                             </a>
 
-                            <?php if ($myteacher == 0) { ?>
+                            <?php if ($teacherId == 0) { ?>
                                 <a href="javascript:void(0);" onclick="flashCardForm(<?php echo $flashCard['sflashcard_slesson_id'] ?>, <?php echo $flashCard['flashcard_id']; ?>);" class="btn btn--equal color-black margin-1 is-hover">
                                     <svg class="icon icon--issue icon--small">
                                         <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#edit'; ?>"></use>

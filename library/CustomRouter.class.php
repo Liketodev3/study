@@ -70,13 +70,14 @@ class CustomRouter
                     $customUrlFromOrig = UrlHelper::getCustomUrlFromOrignal($customUrl[0], $urlWithoutParm, $urlQueryString);
 
                     if (!is_null($customUrlFromOrig)) {
-                        header("Location:" . rtrim(FatUtility::generateFullUrl(CONF_WEBROOT_URL), '/') . '/' . $customUrlFromOrig['urlrewrite_custom'], true, $customUrlFromOrig['urlrewrite_http_resp_code']);
+                        $code = FatUtility::int($customUrlFromOrig['urlrewrite_http_resp_code']);
+                        header("Location:" . rtrim(FatUtility::generateFullUrl(CONF_WEBROOT_URL), '/') . '/' . $customUrlFromOrig['urlrewrite_custom'], true, $code);
                         header("Connection: close");
                     }
                 }
             }
             /* ] */
-            
+
 
             $url = ((!empty($row['urlrewrite_original'])) ? $row['urlrewrite_original'] : '') . $urlQueryString;
 
@@ -89,7 +90,7 @@ class CustomRouter
             $arr = explode('/', $url);
             $controller = array_shift($arr);
             $action = array_shift($arr);
-            
+
             $queryString = $arr;
 
             if ($controller != '' && $action == '') {
@@ -101,5 +102,4 @@ class CustomRouter
             }
         }
     }
-
 }
