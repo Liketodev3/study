@@ -51,7 +51,7 @@ class ReportIssueController extends LoggedUserController
         $log = end($logs);
         $esclateHours = FatApp::getConfig('CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION');
         $esclateDate = strtotime($issue['repiss_updated_on'] . " +" . $esclateHours . " hour");
-        $canEsclate = ($log['reislo_added_by'] != $userId && $esclateDate > strtotime(date('Y-m-d H:i:s')) && $issue['repiss_status'] == ReportedIssue::STATUS_RESOLVED);
+        $canEsclate = ($log['reislo_added_by'] ?? '' != $userId && $esclateDate > strtotime(date('Y-m-d H:i:s')) && $issue['repiss_status'] == ReportedIssue::STATUS_RESOLVED);
         $this->set('logs', $logs);
         $this->set('issue', $issue);
         $this->set('canEsclate', $canEsclate);
