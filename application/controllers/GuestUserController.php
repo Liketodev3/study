@@ -91,7 +91,6 @@ class GuestUserController extends MyAppController
                 $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), ['user_preferred_dashboard']);
                 $user_preferred_dashboard = $userRow['user_preferred_dashboard'];
             }
-         
             $json['redirectUrl'] = User::getPreferedDashbordRedirectUrl($user_preferred_dashboard, false);
             FatUtility::dieJsonSuccess($json);
         }

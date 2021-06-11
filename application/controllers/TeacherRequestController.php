@@ -2,24 +2,19 @@
 
 class TeacherRequestController extends MyAppController
 {
-
     private $userId;
-
     public function __construct($action)
     {
-        parent::__construct($action);
-																
-        if (UserAuthentication::getLoggedUserId(true)) {
-            $this->userId = UserAuthentication::getLoggedUserId();
-        } elseif (UserAuthentication::getGuestTeacherUserId()) {
-            $this->userId = UserAuthentication::getGuestTeacherUserId();
-        } else {
-            Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access'));
-            CommonHelper::redirectUserReferer();
-        }
+        parent::__construct($action);																
+    }
+    public function index()
+    {
+        $applyTeachFrm = $this->getApplyTeachFrm($this->siteLangId);
+        $this->set('applyTeachFrm',$applyTeachFrm);
+        $this->_template->render();
     }
 
-    public function index()
+    public function index_backup()
     {
         $srch = new TeacherRequestSearch();
         $srch->joinUsers();
@@ -34,7 +29,6 @@ class TeacherRequestController extends MyAppController
         $srch->addOrder('utrequest_id', 'desc');
         $rs = $srch->getResultSet();
         $teacherRequestRow = FatApp::getDb()->fetch($rs);
-
         if (!$teacherRequestRow) {
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', 'form'));
         }
@@ -357,6 +351,49 @@ class TeacherRequestController extends MyAppController
         AttachedFile::downloadFile($fileRow['afile_name'], $fileRow['afile_physical_path']);
     }
 
+    public function setUpProfileImage()
+    {
+        $userId = $this->userId;
+        $post = FatApp::getPostedData();
+        if (empty($post)) {
+            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported'));
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+
+        if ($post['action'] == "demo_avatar") {
+            if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
+                $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
+                Message::addErrorMessage(Label::getLabel($msgLblKey));
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+            $fileHandlerObj = new AttachedFile();
+            if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)) {
+                Message::addErrorMessage($fileHandlerObj->getError());
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'ORIGINAL', 0)) . '?' . time());
+        }
+
+        if ($post['action'] == "avatar") {
+            if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
+                $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
+                Message::addErrorMessage(Label::getLabel($msgLblKey));
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+            $fileHandlerObj = new AttachedFile();
+            if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)) {
+                Message::addErrorMessage($fileHandlerObj->getError());
+                FatUtility::dieJsonError(Message::getHtml());
+            }
+            $data = json_decode(stripslashes($post['img_data']));
+            CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
+            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'MEDIUM', true)) . '?' . time());
+        }
+
+        $this->set('msg', Label::getLabel('MSG_File_uploaded_successfully'));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+
     private function getForm()
     {
         $langId = $this->siteLangId;
@@ -376,11 +413,7 @@ class TeacherRequestController extends MyAppController
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
         $fldPhn->requirements()->setCustomErrorMessage(Label::getLabel('LBL_PHONE_NO_VALIDATION_MSG'));
         $frm->addHiddenField('', 'utrvalue_user_phone_code');
-											   
-																																												
-												
-																																					 
-			
+
         $fld = $frm->addFileUpload(Label::getLabel('LBL_Photo_Id'), 'user_photo_id');
         $fld->htmlAfterField = "<small>" . Label::getLabel('LBL_Photo_Id_Type') . "</small>";
         $headfld = $frm->addHtml('', 'about_me_fields_heading', '');
@@ -441,46 +474,18 @@ class TeacherRequestController extends MyAppController
         return $frm;
     }
 
-    public function setUpProfileImage()
-    {
-        $userId = $this->userId;
-        $post = FatApp::getPostedData();
-        if (empty($post)) {
-            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported'));
-            FatUtility::dieJsonError(Message::getHtml());
-        }
-
-        if ($post['action'] == "demo_avatar") {
-            if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
-                $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
-                Message::addErrorMessage(Label::getLabel($msgLblKey));
-                FatUtility::dieJsonError(Message::getHtml());
-            }
-            $fileHandlerObj = new AttachedFile();
-            if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)) {
-                Message::addErrorMessage($fileHandlerObj->getError());
-                FatUtility::dieJsonError(Message::getHtml());
-            }
-            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'ORIGINAL', 0)) . '?' . time());
-        }
-
-        if ($post['action'] == "avatar") {
-            if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
-                $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
-                Message::addErrorMessage(Label::getLabel($msgLblKey));
-                FatUtility::dieJsonError(Message::getHtml());
-            }
-            $fileHandlerObj = new AttachedFile();
-            if (!$res = $fileHandlerObj->saveImage($_FILES['user_profile_image']['tmp_name'], AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, $userId, 0, $_FILES['user_profile_image']['name'], -1, $unique_record = true)) {
-                Message::addErrorMessage($fileHandlerObj->getError());
-                FatUtility::dieJsonError(Message::getHtml());
-            }
-            $data = json_decode(stripslashes($post['img_data']));
-            CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
-            $this->set('file', CommonHelper::generateFullUrl('Image', 'user', array($userId, 'MEDIUM', true)) . '?' . time());
-        }
-
-        $this->set('msg', Label::getLabel('MSG_File_uploaded_successfully'));
-        $this->_template->render(false, false, 'json-success.php');
+    private function getApplyTeachFrm(int $langId){
+        $frm = new Form('frmApplyTeachFrm');
+        $frm->addHiddenField('', 'user_id', 0);
+        $fld = $frm->addEmailField(Label::getLabel('LBL_Email_ID',$langId), 'user_email', '', ['autocomplete="off"']);
+        $fld->setUnique('tbl_user_credentials', 'credential_email', 'credential_user_id', 'user_id', 'user_id');
+        $fld = $frm->addPasswordField(Label::getLabel('LBL_Password',$langId), 'user_password');
+        $fld->requirements()->setRequired();
+        $fld->setRequiredStarPosition(Form::FORM_REQUIRED_STAR_POSITION_NONE);
+        $fld->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
+        $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_8_Digit_AlphaNumeric_Password',$langId));
+        $frm->addHiddenField('', 'user_preferred_dashboard', User::USER_LEARNER_DASHBOARD);
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Register',$langId));
+        return $frm;
     }
 }

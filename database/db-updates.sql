@@ -351,4 +351,6 @@ ALTER TABLE `tbl_url_rewrites` DROP INDEX `url_rewrite_custom`;
 ALTER TABLE `tbl_url_rewrites` ADD UNIQUE( `urlrewrite_original`, `urlrewrite_custom`, `urlrewrite_lang_id`);
 REPLACE  INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_faq_title_second', '1', 'Questions? We Have Answers');
 
-REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_find_an_answer', '1', 'Can\'t find an answer?');
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_find_an_answer', '1', 'Can`t find an answer?');
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Apply_to_Teach_Descritpion', '1', 'Teach what you are passionate about.');
