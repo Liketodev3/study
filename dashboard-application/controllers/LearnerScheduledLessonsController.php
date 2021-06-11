@@ -106,8 +106,8 @@ class LearnerScheduledLessonsController extends LearnerBaseController
     {
         $lDetailId = FatUtility::int($lDetailId);
         $lessonDetailRow = ScheduledLessonDetails::getAttributesById(
-            $lDetailId,
-            ['sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id']
+                        $lDetailId,
+                        ['sldetail_id', 'sldetail_slesson_id', 'sldetail_learner_id']
         );
         if (empty($lessonDetailRow)) {
             FatUtility::exitWithErrorCode(404);
@@ -850,7 +850,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
         }
         // share on student google calendar
-        $token = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId())['us_google_access_token'];
+        $token = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId())['us_google_access_token'] ?? '';
         if ($token) {
             $sLessonDetailObj->loadFromDb();
             $oldCalId = $sLessonDetailObj->getFldValue('sldetail_learner_google_calendar_id');
@@ -876,7 +876,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             }
         }
         // share on teacher google calendar
-        $token = UserSetting::getUserSettings($lessonDetail['teacherId'])['us_google_access_token'];
+        $token = UserSetting::getUserSettings($lessonDetail['teacherId'])['us_google_access_token'] ?? '';
         if ($token) {
             $sLessonObj->loadFromDb();
             $oldCalId = $sLessonObj->getFldValue('slesson_teacher_google_calendar_id');
@@ -933,8 +933,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         ]);
         $srch->joinTable('tbl_scheduled_lessons_to_teachers_lessons_plan', 'inner join', 'tlpn_id = ltp_tlpn_id');
         $srch->addCondition('ltp_slessonid', '=', $lessonId);
-        $rs = $srch->getResultSet();
-        $rows = FatApp::getDb()->fetch($rs);
+        $rows = FatApp::getDb()->fetch($srch->getResultSet());
         $this->set('statusArr', LessonPlan::getDifficultyArr());
         $this->set('data', $rows);
         $this->_template->render(false, false);
@@ -1477,4 +1476,5 @@ class LearnerScheduledLessonsController extends LearnerBaseController
 
         return FatApp::getDb()->fetch($rs);
     }
+
 }
