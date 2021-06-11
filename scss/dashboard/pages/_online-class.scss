@@ -286,6 +286,7 @@ $sesson-window: "sesson-window";
                 font-weight: var(--font-weight-normal);
                 margin-bottom: var(--margin-6);
                 color: #fff;
+                text-transform: uppercase;
             }
         }
     }
@@ -571,4 +572,13 @@ $more-student: "more-student";
             bottom: 100%;
         }
     }
+}
+
+.countdown-timer{
+    font-size: theme('font.size.h3');
+    padding: theme('padding.5') theme('padding.10');
+    background-color: var(--color-secondary);
+    color: theme('color.white');
+    font-weight: theme('font.weight.medium');
+    border-radius: theme('radius.1');
 }

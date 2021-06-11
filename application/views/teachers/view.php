@@ -148,7 +148,7 @@ foreach ($userTeachLangs as $key => $value) {
                                                     </div>
                                                 </div>
                                                 <div class="card__body">
-                                                    <div class="lesson-list">
+                                                    <div class="lesson-slot-info">
                                                         <ul>
                                                             <?php
                                                             foreach ($slabDetails['langPrices'] as $priceDetails) {
@@ -160,6 +160,7 @@ foreach ($userTeachLangs as $key => $value) {
                                                                 <li>
                                                                     <a href="javascript:void(0);" onclick="<?php echo $onclick; ?>">
                                                                         <div class="lesson lesson--time"><?php echo $priceDetails['ustelgpr_slot'] . ' ' . Label::getLabel('LBL_Mins', $siteLangId); ?></div>
+                                                                        <div class="space"></div>
                                                                         <div class="lesson lesson--price"><?php echo CommonHelper::displayMoneyFormat($priceDetails['ustelgpr_price']); ?></div>
                                                                     </a>
                                                                 </li>
