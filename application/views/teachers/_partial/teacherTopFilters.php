@@ -100,7 +100,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 						<div class="filter-form__inner filter--search">
 							<div class="filter__head">
 								<input type="text" name="keyword" id="keyword" placeholder="<?php echo Label::getLabel('LBL_Search_By_Name_And_Keword'); ?>">
-								<svg class="icon icon--search">
+								<svg id="btnTeacherSrchSubmit" class="icon icon--search">
 									<use xlink:href="<?php echo CONF_WEBROOT_URL.' images/sprite.yo-coach.svg#search'; ?>"></use>
 								</svg>
 							</div>
@@ -156,7 +156,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 										<ul>
 											<?php foreach ($genderArr as $genderId => $genderName) { ?>
 												<li>
-													<label id="gender_"<?php echo $genderId; ?>><span class="checkbox"><input <?php echo (in_array($genderId,$gender_filter)? "checked='checked'": "") ?> type="checkbox" name="filterGender[]" value="<?php echo $genderId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $genderName; ?></span></label>
+													<label id="gender_<?php echo $genderId; ?>"><span class="checkbox"><input <?php echo (in_array($genderId,$gender_filter)? "checked='checked'": "") ?> type="checkbox" name="filterGender[]" value="<?php echo $genderId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $genderName; ?></span></label>
 												</li>
 											<?php } ?>
 
