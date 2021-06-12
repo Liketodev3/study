@@ -108,8 +108,8 @@
 }
 
 .step-nav{
-    position: fixed;
-    top: 84px;
+    position: absolute;
+    top: -15px;
     #{theme('direction.left','value')}: 50%;
     transform: translateX(-50%);
     z-index: 1;

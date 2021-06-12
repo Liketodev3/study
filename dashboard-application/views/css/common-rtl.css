@@ -676,8 +676,8 @@ ul {
   border: none !important; }
 
 .step-nav {
-  position: fixed;
-  top: 84px;
+  position: absolute;
+  top: -15px;
   right: 50%;
   -webkit-transform: translateX(-50%);
       -ms-transform: translateX(-50%);
@@ -1355,7 +1355,8 @@ ul {
 
 .learnerscheduledlessons .tooltipevent {
   border-top: 3px solid var(--color-primary);
-  border-radius: 6px; }
+  border-radius: 6px;
+  z-index: 999 !important; }
   .learnerscheduledlessons .tooltipevent .booking-view h3 {
     font-size: 1.6rem;
     margin-bottom: 5px; }
@@ -1872,21 +1873,22 @@ ul {
   border: 1px solid var(--color-gray-100) !important;
   font-weight: var(--font-weight-medium); }
 
-.calendar-view [class*="col-"]:last-child {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex; }
-
-.calendar-view .cal-status {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  margin-bottom: 10px; }
-  .calendar-view .cal-status p {
-    margin-bottom: 0; }
+.calendar-view {
+  padding: var(--padding-8); }
+  .calendar-view [class*="col-"]:last-child {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex; }
+  .calendar-view .cal-status {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    margin-bottom: 10px; }
+    .calendar-view .cal-status p {
+      margin-bottom: 0; }
 
 .align-left {
   text-align: right !important; }
@@ -7901,37 +7903,6 @@ textarea[disabled] {
   padding: 0 40px;
   word-break: break-all; }
 
-#mbsmessage .content:before,
-.system_message .content:before {
-  background-size: 30px !important;
-  content: "";
-  right: 0;
-  position: absolute;
-  top: 50%;
-  z-index: 2;
-  width: 30px;
-  height: 30px;
-  display: block;
-  -webkit-transform: translateY(-50%);
-      -ms-transform: translateY(-50%);
-          transform: translateY(-50%); }
-
-#mbsmessage.alert--danger .content:before,
-.system_message.alert--danger .content:before {
-  background: url(../images/icon--attention.svg) no-repeat; }
-
-#mbsmessage.alert--success .content:before,
-.system_message.alert--success .content:before {
-  background: url(../images/icon--success.svg) no-repeat; }
-
-#mbsmessage.alert--info .content:before,
-.system_message.alert--info .content:before {
-  background: url(../images/icon--info.svg) no-repeat no-repeat; }
-
-#mbsmessage.alert--warning .content:before,
-.system_message.alert--warning .content:before {
-  background: url(../images/icon--warning.svg) no-repeat no-repeat; }
-
 .div_error {
   text-align: left;
   padding: 20px 60px 20px 60px;
@@ -8377,7 +8348,7 @@ textarea[disabled] {
     padding-right: 10px;
     background-color: #00bd7d; }
     .alert--success:before {
-      background: url(/images/icon-success.svg) no-repeat;
+      background: url(../../../images/icon-success.svg) no-repeat;
       background-size: 30px;
       position: absolute;
       right: 15px;
@@ -8392,7 +8363,7 @@ textarea[disabled] {
     padding-right: 10px;
     background-color: #0055ff; }
     .alert--info:before {
-      background: url(/images/icon-info.svg) no-repeat;
+      background: url(../../../images/icon-success.svg) no-repeat;
       background-size: 30px;
       position: absolute;
       right: 15px;
@@ -8407,7 +8378,7 @@ textarea[disabled] {
     padding-right: 10px;
     background-color: #ffab22; }
     .alert--warning:before {
-      background: url(/images/icon-info.svg) no-repeat;
+      background: url(../../../images/icon-success.svg) no-repeat;
       background-size: 30px;
       position: absolute;
       right: 15px;
@@ -8422,7 +8393,7 @@ textarea[disabled] {
     padding-right: 10px;
     background-color: #ff0251; }
     .alert--danger:before {
-      background: url(/images/icon-attention.svg) no-repeat;
+      background: url(../../../images/icon-success.svg) no-repeat;
       background-size: 30px;
       position: absolute;
       right: 15px;

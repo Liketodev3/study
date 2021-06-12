@@ -160,6 +160,7 @@ $status-bar: "status-bar";
     .tooltipevent{
         border-top: 3px solid var(--color-primary);
         border-radius: 6px;
+        z-index: 999 !important;
         .booking-view{
             h3{
                 font-size: 1.6rem;
@@ -784,6 +785,7 @@ $dashboard-calendar: "dashboard-calendar";
 }
 
 .calendar-view{
+    padding: theme('padding.8');
     [class*="col-"]{
         &:last-child{
             display: flex;
