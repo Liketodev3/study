@@ -700,10 +700,20 @@ $dashboard-calendar: "dashboard-calendar";
         }
     }
 }
+.fc-event.booked-slot {
+    background: var(--color-red);
+    border-color: var(--color-red);
+}
 
-.fc-v-event{
-    border: 1px solid #f05856;
-    background-color: #f05856;
+.cal-status .booked-box{
+    background: var(--color-red);
+}
+.cal-status .available-box{
+    background: var(--color-green);
+}
+.fc-event.slot_unavailable{
+    background: var(--color-gray-500);
+    border-color: var(--color-gray-500);
 }
 
 .availability-setting-calendar .slot_available{
@@ -723,10 +733,6 @@ $dashboard-calendar: "dashboard-calendar";
     }
 }
 
-.fc .slot_unavailable {
-    background: var(--color-red);
-    border-color: var(--color-red);
-}
 
 .status-bar__body{
     .fc-header-toolbar{
@@ -737,7 +743,7 @@ $dashboard-calendar: "dashboard-calendar";
             .fc-toolbar-title {
                 font-size: var(--font-size-lg) ;
             }
-           
+            
         }
     }
 }
@@ -749,6 +755,9 @@ $dashboard-calendar: "dashboard-calendar";
         .timer{
             margin: 0 var(--margin-3);
         }
+    }
+    h2{
+        font-size: 1.3rem !important;
     }
 }
 
@@ -762,6 +771,16 @@ $dashboard-calendar: "dashboard-calendar";
             background-color: theme('color.white');
             border-color: theme('color.white');
             box-shadow: none;
+            height: auto;
+
+            &:hover{
+                background: transparent;
+                border-color: inherit;
+                color: inherit;
+            }
+            &:focus{
+                box-shadow: none;
+            }
         }
         .fc-button{
             &:last-child{
@@ -772,7 +791,7 @@ $dashboard-calendar: "dashboard-calendar";
         }
     }
     .fc-today-button{
-        height: 39px;
+        height: 39px !important;
         text-transform: uppercase !important;
         background: theme('color.white') !important;
         color: var(--color-dark) !important;
@@ -799,4 +818,18 @@ $dashboard-calendar: "dashboard-calendar";
             margin-bottom: 0;
         }
     }
+}
+
+.tooltipevent{
+    box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.03);
+    background: #fff;
+    padding: 35px 20px 20px;
+    border: 1px solid #e2e2e4;
+    line-height: 1.6;
+    min-width: 280px;
+    text-align: left;
+}
+.tooltipevent {
+    border-top: 3px solid var(--color-primary);
+    border-radius: 6px;
 }

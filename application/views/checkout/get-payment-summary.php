@@ -31,8 +31,6 @@ if ($userWalletBalance > 0) {
                                 ?>"></use>
             </svg>
         </a> -->
-    </div>
-    <div class="box__body">
         <?php if (1 > $cartData['grpclsId']) { ?>
             <div class="step-nav">
                 <ul>
@@ -43,6 +41,9 @@ if ($userWalletBalance > 0) {
                 </ul>
             </div>
         <?php } ?>
+    </div>
+    <div class="box__body">
+       
         <div class="selection-tabs selection--checkout selection--payment">
 
             <div class="row">

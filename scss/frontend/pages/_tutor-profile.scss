@@ -102,6 +102,11 @@
         font-weight: 600;
         color: var(--color-dark) !important;
     }
+    .is--active{
+        background: var(--color-primary);
+        color: var(--color-white) !important;
+        border-color: var(--color-primary);
+    }
     .icon{
         padding: 4px;
         margin-#{theme('direction.right','value')}: var(--margin-3);

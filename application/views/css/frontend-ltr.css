@@ -98,7 +98,8 @@
   display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
-          align-items: center; }
+          align-items: center;
+  height: 42px; }
   .header-dropdown .header-dropdown__trigger span {
     margin-left: var(--margin-2); }
     @media (max-width: 767px) {
@@ -224,10 +225,7 @@
   opacity: 0;
   visibility: hidden;
   width: 100%;
-  padding-top: calc(var(--padding-8) - 1px);
-  -webkit-transition: all 0.4s;
-  -o-transition: all 0.4s;
-  transition: all 0.4s; }
+  padding-top: calc(var(--padding-8) - 1px); }
 
 .menu--inline ul .menu__item {
   padding: 0;
@@ -327,9 +325,6 @@
 
 .header-dropdown--arrow .dropdown__cover {
   padding: var(--padding-6) var(--padding-8) var(--padding-10); }
-  .header-dropdown--arrow .dropdown__cover::before {
-    right: 18px;
-    left: unset; }
 
 .header-dropdown--arrow .settings {
   margin-bottom: var(--margin-8); }
@@ -346,9 +341,9 @@
 
 .dropdown__cover {
   position: relative;
-  max-height: 445px;
+  max-height: 334px;
   min-height: 100%;
-  overflow: auto; }
+  margin-top: 2px; }
   .dropdown__cover::before {
     content: "";
     border-right: 9px solid transparent;
@@ -358,6 +353,9 @@
     left: 39px;
     position: absolute;
     pointer-events: none; }
+
+.header-dropdown--explore .dropdown__cover {
+  overflow: auto; }
 
 @media (min-width: 767px) {
   .user-icon {
@@ -465,6 +463,9 @@
         fill: var(--color-dark) !important; } }
   .header-controls .header-dropdown--arrow {
     margin: 0; }
+    .header-controls .header-dropdown--arrow .dropdown__cover::before {
+      right: 26px;
+      left: unset; }
   @media (max-width: 767px) {
     .header-controls .header-dropdown--arrow .is-visible {
       bottom: 100%;
@@ -1231,7 +1232,8 @@ p {
           -ms-transform: rotate(45deg);
               transform: rotate(45deg);
       right: 24px;
-      top: 24px; }
+      top: 24px;
+      pointer-events: none; }
     .slideshow__form .slideshow-input svg {
       fill: var(--color-gray-1000); }
     .slideshow__form .slideshow-input input {
@@ -2447,6 +2449,11 @@ p {
     left: 18px;
     top: 22px; } }
 
+.slick-track {
+  -webkit-transform: none !important;
+      -ms-transform: none !important;
+          transform: none !important; }
+
 .box.box--narrow .field_label {
   display: block;
   width: 100%; }
@@ -3263,7 +3270,8 @@ p {
     fill: var(--color-primary) !important; }
 
 .dropdown-price {
-  width: 280px; }
+  width: 280px;
+  padding: var(--padding-3) var(--padding-4); }
   @media (max-width: 767px) {
     .dropdown-price {
       margin: 0 auto; } }
@@ -3387,7 +3395,7 @@ p {
   border-bottom: 1px solid var(--color-gray-300); }
 
 .price-field {
-  padding: 0 var(--padding-4) var(--padding-4);
+  padding: var(--padding-4) 0 0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex; }
@@ -5350,6 +5358,11 @@ p {
   margin-right: var(--margin-5);
   font-weight: 600;
   color: var(--color-dark) !important; }
+
+.detail-actions .is--active {
+  background: var(--color-primary);
+  color: var(--color-white) !important;
+  border-color: var(--color-primary); }
 
 .detail-actions .icon {
   padding: 4px;

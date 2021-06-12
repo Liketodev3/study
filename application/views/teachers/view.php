@@ -1,5 +1,4 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<?php
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
 $teacherLanguage = key($teacher['teachLanguages']);
 
 $langId = CommonHelper::getLangId();
@@ -39,7 +38,7 @@ foreach ($userTeachLangs as $key => $value) {
             <div class="profile-head">
                 <div class="detail-wrapper">
                     <div class="profile__media">
-                        <div class="avatar avatar-xlarge ratio ratio--1by1" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
+                        <div class="avtar avtar--xlarge" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
                             <?php if (true == User::isProfilePicUploaded($teacher['user_id'])) { ?>
                                 <img src="<?php echo FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg'); ?>" alt="">
                             <?php } ?>

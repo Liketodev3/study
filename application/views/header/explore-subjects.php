@@ -1,5 +1,5 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<div class="header-dropdown">
+<div class="header-dropdown header-dropdown--explore">
     <a class="header-dropdown__trigger trigger-js" href="#explore">
         <svg class="icon icon--menu">
             <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#burger-menu'; ?>"></use>

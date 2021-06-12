@@ -4,15 +4,19 @@
     .content {
         border-radius: 0;
     }
-   /* @media(min-width: theme('breakpoints.md','value')){
-        #{theme('direction.left','value')}: 50% !important;
-       
-        transform: translateX(-50%);
-    }*/
+    @media  (max-width: theme('breakpoints.md','value')) {
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+    }
 }
 
 #facebox .popup {
     position: relative;
+    @media  (max-width: theme('breakpoints.md','value')) {
+        height: 100%;
+    }
 }
 #facebox .field_label:empty{display: none;}
 
@@ -24,7 +28,10 @@
     display: block;
     min-width:500px;
     background: #fff;
-
+    @media  (max-width: theme('breakpoints.md','value')) {
+        max-height: 100% !important;
+        height: 100%; 
+    }
 }
 @media  (min-width: theme('breakpoints.xl','value')) {
 
@@ -77,28 +84,13 @@
     top: -35px;
     #{theme('direction.right','value')}: 0;
     transform: none;
+    &::before{
+        color: #fff;
+    }
 }
 
 #facebox .close img {
     display: none;
-}
-
-#facebox .close:after {
-    color: #fff;
-    content: "+";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    font-size: 2rem;
-    font-weight: 300;
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    line-height: 1.2;
-    text-align: center;
 }
 
 #facebox .loading {

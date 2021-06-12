@@ -1,4 +1,12 @@
         <div class="page__footer align-center">
+            <div class="footer-nav">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Find a Tutor</a></li>
+                    <li><a href="#">Apply to Teach</a></li>
+                    <li><a href="#">Contact US</a></li>
+                </ul>
+            </div>
             <p class="small">
                 <?php
                 if (CommonHelper::demoUrl()) {
