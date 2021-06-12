@@ -46,9 +46,9 @@ class HomeController extends MyAppController
 
         $pathname = ltrim(FatApp::getPostedData('pathname', FatUtility::VAR_STRING, ''), '/');
         $redirectUrl = '';
-        if (empty($pathname)) {
+        /* if (empty($pathname)) {
             $redirectUrl = CommonHelper::generateFullUrl();
-        }
+        } */
         $uriComponents = explode('/', $pathname);
 
         if (!empty($uriComponents)) {

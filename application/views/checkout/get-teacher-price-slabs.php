@@ -19,7 +19,7 @@
         </div>
         <!-- <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
             <svg class="icon icon--close">
-            <use xlink:href="<?php //echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; ?>"></use>
+            <use xlink:href="<?php //echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close';        ?>"></use>
             </svg>
         </a> -->
     </div>
@@ -115,11 +115,11 @@
         }
 
         qty = parseInt(qty);
-        if (maxLessonQty > qty && minLessonQty < qty) {
-           // cart.props.lessonQty = qty;
+        if (maxLessonQty >= qty && minLessonQty <= qty) {
             lessonQtyInput.value = qty;
             return;
+        } else {
+            lessonQtyInput.value = cart.props.lessonQty;
         }
-        lessonQtyInput.value = cart.props.lessonQty;
     }
 </script>

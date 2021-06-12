@@ -101,7 +101,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 							<div class="filter__head">
 								<input type="text" name="keyword" id="keyword" placeholder="<?php echo Label::getLabel('LBL_Search_By_Name_And_Keword'); ?>">
 								<svg id="btnTeacherSrchSubmit" class="icon icon--search">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL.' images/sprite.yo-coach.svg#search'; ?>"></use>
+									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#search'; ?>"></use>
 								</svg>
 							</div>
 						</div>

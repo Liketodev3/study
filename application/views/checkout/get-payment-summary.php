@@ -8,9 +8,11 @@ if ($userWalletBalance > 0) {
     $remainingWalletBalance = ($userWalletBalance - $cartData['orderNetAmount']);
     $remainingWalletBalance = ($remainingWalletBalance < 0) ? 0 : $remainingWalletBalance;
 
-    $walletDeduction = $userWalletBalance;
-    if ($cartData["cartWalletSelected"] && $cartData['orderNetAmount'] < $userWalletBalance) {
-        $walletDeduction = $cartData['orderNetAmount'];
+    if ($cartData['cartWalletSelected'] > 0) {
+        $walletDeduction = $userWalletBalance;
+        if ($cartData["cartWalletSelected"] && $cartData['orderNetAmount'] < $userWalletBalance) {
+            $walletDeduction = $cartData['orderNetAmount'];
+        }
     }
 }
 ?>
@@ -28,7 +30,7 @@ if ($userWalletBalance > 0) {
         <!-- <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
             <svg class="icon icon--close">
             <use xlink:href="<?php //echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; 
-                                ?>"></use>
+        ?>"></use>
             </svg>
         </a> -->
         <?php if (1 > $cartData['grpclsId']) { ?>
@@ -56,60 +58,60 @@ if ($userWalletBalance > 0) {
                             <?php if ($userWalletBalance > 0) { ?>
                                 <label class="selection-tabs__label selection--wallet">
                                     <input type="checkbox" class="selection-tabs__input" onChange="cart.walletSelection(this);" <?php echo ($cartData["cartWalletSelected"]) ? 'checked="checked"' : ''; ?> name="pay_from_wallet">
-                                    <div class="selection-tabs__title">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                                            <g>
-                                                <path d="M12,22A10,10,0,1,1,22,12,10,10,0,0,1,12,22Zm-1-6,7.07-7.071L16.659,7.515,11,13.172,8.174,10.343,6.76,11.757Z" transform="translate(-2 -2)" />
-                                            </g>
-                                        </svg>
-                                        <div class="payment-type">
-                                            <p><?php echo $walletCreditLabel; ?></p>
-                                            <p class="is-selected">
-                                                <?php
-                                                if ($cartData["cartWalletSelected"] && $userWalletBalance >= $cartData['orderNetAmount']) {
-                                                    echo Label::getLabel('LBL_Sufficient_balance_in_your_wallet');
-                                                } else {
-                                                    echo sprintf(Label::getLabel('LBL_Wallet_Credits_(%s)'), CommonHelper::displayMoneyFormat($userWalletBalance));
-                                                }
-                                                ?>
-                                            </p>
+                                        <div class="selection-tabs__title">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                                                <g>
+                                                    <path d="M12,22A10,10,0,1,1,22,12,10,10,0,0,1,12,22Zm-1-6,7.07-7.071L16.659,7.515,11,13.172,8.174,10.343,6.76,11.757Z" transform="translate(-2 -2)" />
+                                                </g>
+                                            </svg>
+                                            <div class="payment-type">
+                                                <p><?php echo $walletCreditLabel; ?></p>
+                                                <p class="is-selected">
+                                                    <?php
+                                                    if ($cartData["cartWalletSelected"] && $userWalletBalance >= $cartData['orderNetAmount']) {
+                                                        echo Label::getLabel('LBL_Sufficient_balance_in_your_wallet');
+                                                    } else {
+                                                        echo sprintf(Label::getLabel('LBL_Wallet_Credits_(%s)'), CommonHelper::displayMoneyFormat($userWalletBalance));
+                                                    }
+                                                    ?>
+                                                </p>
+                                            </div>
+                                            <div class="balance-payment">
+                                                <ul>
+                                                    <li>
+                                                        <p><?php echo Label::getLabel('LBL_Payment_To_Be_Made'); ?></p>
+                                                        <div class="space"></div>
+                                                        <b><?php echo CommonHelper::displayMoneyFormat($cartData['orderNetAmount']); ?></b>
+                                                    </li>
+                                                    <li>
+                                                        <p><?php echo Label::getLabel('LBL_Amount_In_Your_Wallet'); ?></p>
+                                                        <div class="space"></div>
+                                                        <b><?php echo CommonHelper::displayMoneyFormat($userWalletBalance); ?></b>
+                                                    </li>
+                                                    <li>
+                                                        <p><?php echo Label::getLabel('LBL_Remaining_Wallet_Balance'); ?></p>
+                                                        <div class="space"></div>
+                                                        <b><?php echo CommonHelper::displayMoneyFormat($remainingWalletBalance); ?></b>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                        <div class="balance-payment">
-                                            <ul>
-                                                <li>
-                                                    <p><?php echo Label::getLabel('LBL_Payment_To_Be_Made'); ?></p>
-                                                    <div class="space"></div>
-                                                    <b><?php echo CommonHelper::displayMoneyFormat($cartData['orderNetAmount']); ?></b>
-                                                </li>
-                                                <li>
-                                                    <p><?php echo Label::getLabel('LBL_Amount_In_Your_Wallet'); ?></p>
-                                                    <div class="space"></div>
-                                                    <b><?php echo CommonHelper::displayMoneyFormat($userWalletBalance); ?></b>
-                                                </li>
-                                                <li>
-                                                    <p><?php echo Label::getLabel('LBL_Remaining_Wallet_Balance'); ?></p>
-                                                    <div class="space"></div>
-                                                    <b><?php echo CommonHelper::displayMoneyFormat($remainingWalletBalance); ?></b>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
                                 </label>
                             <?php } ?>
                             <?php $counter = 0; ?>
                             <?php foreach ($paymentMethods as $key => $value) { ?>
                                 <label class="selection-tabs__label payment-method-js">
                                     <input type="radio" class="selection-tabs__input" value="<?php echo $value['pmethod_id']; ?>" <?php echo empty($counter) ? 'checked' : ''; ?> name="payment_method">
-                                    <div class="selection-tabs__title">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                                            <g>
-                                                <path d="M12,22A10,10,0,1,1,22,12,10,10,0,0,1,12,22Zm-1-6,7.07-7.071L16.659,7.515,11,13.172,8.174,10.343,6.76,11.757Z" transform="translate(-2 -2)" />
-                                            </g>
-                                        </svg>
-                                        <div class="payment-type">
-                                            <p><?php echo $value['pmethod_name']; ?></p>
+                                        <div class="selection-tabs__title">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                                                <g>
+                                                    <path d="M12,22A10,10,0,1,1,22,12,10,10,0,0,1,12,22Zm-1-6,7.07-7.071L16.659,7.515,11,13.172,8.174,10.343,6.76,11.757Z" transform="translate(-2 -2)" />
+                                                </g>
+                                            </svg>
+                                            <div class="payment-type">
+                                                <p><?php echo $value['pmethod_name']; ?></p>
+                                            </div>
                                         </div>
-                                    </div>
                                 </label>
                                 <?php $counter++; ?>
                             <?php } ?>
@@ -126,7 +128,7 @@ if ($userWalletBalance > 0) {
                             <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#price-tag'; ?>"></use>
                         </svg>
                         <input type="text" id="coupon_code" name="coupon_code" placeholder="<?php echo Label::getLabel('LBL_ENTER_COUPON_CODE'); ?>">
-                        <a href="javascript:void(0);" onclick="cart.applyPromoCode(document.getElementById('coupon_code').value);" class="btn btn--secondary btn--small color-white"><?php echo Label::getLabel('LBL_APPLY'); ?></a>
+                            <a href="javascript:void(0);" onclick="cart.applyPromoCode(document.getElementById('coupon_code').value);" class="btn btn--secondary btn--small color-white"><?php echo Label::getLabel('LBL_APPLY'); ?></a>
                     </div>
                     <?php if (!empty($cartData['cartDiscounts']['coupon_code'])) { ?>
                         <div class="coupon-applied">
@@ -149,7 +151,7 @@ if ($userWalletBalance > 0) {
                                     <p><?php echo str_replace('{item-price}', CommonHelper::displayMoneyFormat($cartData['itemPrice']), Label::getLabel('LBL_Item_Price:_{item-price}/lesson')); ?></p>
                                     <?php if (!empty($cartData['tlanguage_name'])) { ?>
                                         <p><?php echo str_replace('{teach-language}', $cartData['tlanguage_name'], Label::getLabel('LBL_TEACH_LANGUAGE_:_{teach-language}')); ?></p>
-                                <?php
+                                        <?php
                                     }
                                 }
                                 if (!empty($cartData['startDateTime']) && !empty($cartData['endDateTime'])) {
@@ -176,10 +178,10 @@ if ($userWalletBalance > 0) {
                                     <b><?php echo '-' . CommonHelper::displayMoneyFormat($cartData['cartDiscounts']['coupon_discount_total']); ?></b>
                                 </div>
                             </div>
-                        <?php
+                            <?php
                         }
                         if ($cartData['cartWalletSelected'] > 0) {
-                        ?>
+                            ?>
                             <div class="payment__row">
                                 <div>
                                     <b><?php echo Label::getLabel('LBL_WALLET_DEDUCTION'); ?></b>
@@ -194,8 +196,7 @@ if ($userWalletBalance > 0) {
                                 <b class="color-primary"><?php echo Label::getLabel('LBL_Total'); ?></b>
                             </div>
                             <div>
-                                <?php $cartData['orderNetAmount'] = ($userWalletBalance > $cartData['orderNetAmount']) ? $userWalletBalance : $cartData['orderNetAmount']; ?>
-                                <b class="color-primary"><?php echo CommonHelper::displayMoneyFormat($cartData['orderNetAmount'] - $userWalletBalance); ?></b>
+                                <b class="color-primary"><?php echo CommonHelper::displayMoneyFormat($cartData['orderNetAmount'] - $walletDeduction); ?></b>
                             </div>
                         </div>
                     </div>
@@ -244,27 +245,27 @@ if ($userWalletBalance > 0) {
 
 <script>
 
-$(".settings__trigger-js").click(function () {
-    var t = $(this).parents(".toggle-group").children(".settings__target-js").is(":hidden");
-    $(".toggle-group .settings__target-js").hide();
-    $(".toggle-group .settings__trigger-js").removeClass("is--active");
-    if (t) {
-    $(this).parents(".toggle-group").children(".settings__target-js").toggle().parents(".toggle-group").children(".settings__trigger-js").addClass("is--active")
-    }
-});
+    $(".settings__trigger-js").click(function () {
+        var t = $(this).parents(".toggle-group").children(".settings__target-js").is(":hidden");
+        $(".toggle-group .settings__target-js").hide();
+        $(".toggle-group .settings__trigger-js").removeClass("is--active");
+        if (t) {
+            $(this).parents(".toggle-group").children(".settings__target-js").toggle().parents(".toggle-group").children(".settings__trigger-js").addClass("is--active")
+        }
+    });
 
-$('.slide-toggle-js').click(function(e){
-    e.preventDefault();
-    $(this).parent('.toggle-dropdown').toggleClass("is-active");
-});
+    $('.slide-toggle-js').click(function (e) {
+        e.preventDefault();
+        $(this).parent('.toggle-dropdown').toggleClass("is-active");
+    });
 
 
-$(".slide-toggle-js").click(function(){
-    $(".slide-target-js").slideToggle();
-});
+    $(".slide-toggle-js").click(function () {
+        $(".slide-target-js").slideToggle();
+    });
 
-$('.btn--close').click(function(){
-    $('.slide-target-js').slideUp("slow");
-});
+    $('.btn--close').click(function () {
+        $('.slide-target-js').slideUp("slow");
+    });
 
 </script>
