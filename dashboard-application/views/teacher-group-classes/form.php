@@ -12,6 +12,10 @@ $submit = $frm->getField('submit');
 $submit->developerTags['col'] = 12;
 $fld = $frm->getField('grpcls_max_learner');
 $fld->developerTags['col'] = 12;
+$fld = $frm->getField('grpcls_title');
+$fld->developerTags['col'] = 12;
+$fld = $frm->getField('grpcls_description');
+$fld->developerTags['col'] = 12;
 ?>
 <div class="box -padding-20">
 	<!--page-head start here-->

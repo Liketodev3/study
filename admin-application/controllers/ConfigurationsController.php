@@ -553,8 +553,10 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addHtml('', 'Withdrawal', '<h3>' . Label::getLabel("LBL_Withdrawal", $this->adminLangId) . '</h3>');
                 $fld = $frm->addIntegerField(Label::getLabel("LBL_Minimum_Withdrawal_Amount", $this->adminLangId) . ' [' . $this->siteDefaultCurrencyCode . ']', 'CONF_MIN_WITHDRAW_LIMIT', '');
                 $fld->htmlAfterField = "<small> " . Label::getLabel("LBL_This_is_the_minimum_withdrawable_amount.", $this->adminLangId) . "</small>";
+                $fld->requirements()->setRange(1, 999999);
                 $fld = $frm->addIntegerField(Label::getLabel("LBL_Minimum_Interval_[Days]", $this->adminLangId), 'CONF_MIN_INTERVAL_WITHDRAW_REQUESTS', '');
                 $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_This_is_the_minimum_interval_in_days_between_two_withdrawal_requests.", $this->adminLangId) . "</small>";
+                $fld->requirements()->setRange(0, 999999);
                 $frm->addHtml('', 'Checkout', '<h3>' . Label::getLabel("LBL_Checkout", $this->adminLangId) . '</h3>');
                 $fld1 = $frm->addCheckBox(Label::getLabel('LBL_Activate_Live_Payment_Transaction_Mode', $this->adminLangId), 'CONF_TRANSACTION_MODE', 1, [], false, 0);
                 $fld1->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Set_Transaction_Mode_To_Live_Environment", $this->adminLangId) . "</small>";
@@ -670,8 +672,10 @@ class ConfigurationsController extends AdminBaseController
             case Configurations::FORM_GENERAL:
                 $frm->addTextBox(Label::getLabel("LBL_Site_Name", $this->adminLangId), 'CONF_WEBSITE_NAME_' . $langId);
                 $frm->addTextBox(Label::getLabel("LBL_Site_Owner", $this->adminLangId), 'CONF_SITE_OWNER_' . $langId);
-                $frm->addTextarea(Label::getLabel("LBL_ADDRESS", $this->adminLangId), 'CONF_ADDRESS_' . $langId);
-                $frm->addTextarea(Label::getLabel('LBL_Cookies_Policies_Text', $this->adminLangId), 'CONF_COOKIES_TEXT_' . $langId);
+                $fld = $frm->addTextarea(Label::getLabel("LBL_ADDRESS", $this->adminLangId), 'CONF_ADDRESS_' . $langId);
+                $fld->requirements()->setLength(20, 130);
+                $fld = $frm->addTextarea(Label::getLabel('LBL_Cookies_Policies_Text', $this->adminLangId), 'CONF_COOKIES_TEXT_' . $langId);
+                $fld->requirements()->setLength(50, 200);
                 break;
             case Configurations::FORM_EMAIL:
                 $frm->addTextBox(Label::getLabel("LBL_From_Name", $this->adminLangId), 'CONF_FROM_NAME_' . $langId);

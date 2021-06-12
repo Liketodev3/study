@@ -1,110 +1,94 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.');?>
-<section class="section section--grey section--page">
- <div class="container container--narrow">
-	
-	 <div class="section__head">
-		 <h2><?php echo strtoupper(Label::getLabel('LBL_FAQ'));?></h2>
-	 </div>
-	 <div class="section__body">
-		<div class="row justify-content-between">
-		   
-			<div class="col-xl-4 col-lg-4 col-md-4 -hide-responsive">
-				<div class="left__fixed">
-					<div id="left__fixed">
-						<nav class="nav-vertical">
-							<ul>
-								<?php $i=1; foreach($typeArr as $val){ ?>
-								<li><a href="#category_<?php echo $i; ?>" class="scroll"><?php echo $val; ?></a></li>
-								<?php $i++; } ?>
-							</ul>
-						</nav>
-					</div>
-				</div>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<section class="section padding-bottom-0">
+	<div class="container container--fixed">
+		<div class="intro-head">
+			<h6 class="small-title"><?php echo strtoupper(Label::getLabel('LBL_FAQ', $siteLangId)); ?></h6>
+			<h2><?php echo Label::getLabel('LBL_faq_title_second', $siteLangId) ?></h2>
+		</div>
+	</div>
+</section>
+<div class="panel-nav">
+	<ul>
+		<?php foreach ($typeArr as $catId => $catDetails) { ?>
+			<li class="panel-nav__item <?php echo (reset($typeArr) == $catDetails) ? 'is--active' : '' ?>"><a href="javascript:void(0)" class="faq-panel-js" data-cat-id="<?php echo 'section_' . $catId ?>"><?php echo $catDetails; ?></a></li>
+		<?php } ?>
+	</ul>
+</div>
+
+<section class="section section--faq">
+	<div class="container container--narrow">
+		<div class="faq-cover">
+			<div class="search-panel">
+				<svg class="icon icon--search">
+					<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#search'; ?>"></use>
+				</svg>
+				<input type="text" name="faq_search" placeholder="Enter a word or phrase that you're looking for help with">
 			</div>
-			
-			<div class="col-xl-8 col-lg-12 col-md-12">
-               <?php if(empty($finaldata)){
-                   $this->includeTemplate('_partial/no-record-found.php');
-               } ?>
-			   <?php $i=1; foreach($finaldata as $key=>$data){ ?>
-				<div id="category_<?php echo $i; ?>" class="box box--faqs">
-				   <div class="-padding-30">
-					   <div class="box__top">
-							<div class="d-flex justify-content-between align-items-center">
-								<h4><?php echo $typeArr[$key]; ?></h4>
-								<a href="<?php echo CommonHelper::generateUrl('Faq','category',array($key)); ?>" class="-link-underline"><?php echo Label::getLabel('LBL_'.count($data).'_Articles') ?></a>
+			<?php foreach ($finaldata as $catId => $faqDetails) { ?>
+				<div id="<?php echo 'section_' . $catId ?>" <?php echo (array_keys($finaldata)[0] != $catId) ? 'style="display:none;"' : ''; ?> class="faq-container">
+					<?php foreach ($faqDetails as $ques) { ?>
+						<div class="faq-row faq-group-js">
+							<a href="javascript:void(0)" class="faq-title faq__trigger faq__trigger-js">
+								<h5><?php echo $ques['faq_title']; ?></h5>
+							</a>
+							<div class="faq-answer faq__target faq__target-js">
+								<p><?php echo $ques['faq_description']; ?></p>
 							</div>
 						</div>
-					</div>
-
-					<div class="box__body">
-						<nav class="vertical-links">
-							<ul>
-								<?php  foreach($data as $val){ ?>
-								<li><a href="<?php echo CommonHelper::generateUrl('Faq','View',array($val['faq_id'])); ?>"><?php echo $val['faq_title']; ?></a></li>
-								<?php } ?>
-							</ul>
-						</nav>
-						<span class="-gap"></span>
-					</div>
+					<?php } ?>
 				</div>
-				
-				<?php $i++; } ?>
-
-				
-			</div>
+			<?php } ?>
 		</div>
-	 </div>
-	 
- </div>
+	</div>
 </section>
 
-	<script>   
- 
-     /* for click scroll function */
-    $(".scroll").click(function(event){
-    event.preventDefault();
-    var full_url = this.href;
-    var parts = full_url.split("#");
-    var trgt = parts[1];
-    var target_offset = $("#"+trgt).offset();
+<section class="section">
+	<div class="container container--narrow">
+		<div class="contact-cta">
+			<div class="contact__content">
+				<h3><?php echo Label::getLabel('LBL_find_an_answer',$siteLangId); ?></h3>
+				<p><?php echo sprintf(Label::getLabel('LBL_call_us_message',$siteLangId),FatApp::getConfig('CONF_CONTACT_EMAIL', FatUtility::VAR_STRING, ''),FatApp::getConfig('CONF_SITE_PHONE', FatUtility::VAR_STRING, '')); ?></p>
+			</div>
+			<a href="<?php echo CommonHelper::generateUrl('Contact'); ?>" class="btn btn--primary color-white"><?php echo Label::getLabel('LBL_Contact_Us',$siteLangId); ?></a>
+		</div>
+	</div>
+</section>
 
-    var target_top = target_offset.top-110;
-    $('html, body').animate({scrollTop:target_top}, 800);
-    });  
+<script>
+	$(".settings__trigger-js").click(function() {
+		var t = $(this).parents(".toggle-group").children(".settings__target-js").is(":hidden");
+		$(".toggle-group .settings__target-js").hide();
+		$(".toggle-group .settings__trigger-js").removeClass("is--active");
+		if (t) {
+			$(this).parents(".toggle-group").children(".settings__target-js").toggle().parents(".toggle-group").children(".settings__trigger-js").addClass("is--active")
+		}
+	});
 
-    $('.list--vertical-js li a').click(function(){
-        $('.list--vertical-js li a').removeClass('is-active');
-        $(this).addClass('is-active');
-    });
-    
-     /* for sticky left panel */
+	$(".faq__trigger-js").click(function(e) {
+		e.preventDefault();
+		if ($(this).parents('.faq-group-js').hasClass('is-active')) {
+			$(this).siblings('.faq__target-js').slideUp();
+			$('.faq-group-js').removeClass('is-active');
+		} else {
+			$('.faq-group-js').removeClass('is-active');
+			$(this).parents('.faq-group-js').addClass('is-active');
+			$('.faq__target-js').slideUp();
+			$(this).siblings('.faq__target-js').slideDown();
+		}
+	});
 
-  if($(window).width()>1200){
-    function sticky_relocate() {
-        var window_top = $(window).scrollTop();
-        var div_top = $('.left__fixed').offset().top -100;
-        var sticky_left = $('#left__fixed');
-        if((window_top + sticky_left.height()) >= ($('.footer').offset().top - 100)){
-            var to_reduce = ((window_top + sticky_left.height()) - ($('.footer').offset().top - 100));
-            var set_stick_top = -100 - to_reduce;
-            sticky_left.css('top', set_stick_top+'px');
-        }else{
-            sticky_left.css('top', '110px');
-            if (window_top > div_top) {
-                $('#left__fixed').addClass('stick');
-            } else {
-                $('#left__fixed').removeClass('stick');
-            }
-        }
-    }
+	$(".faq-panel-js").click(function(){
+		$(".faq-panel-js").parent().removeClass('is--active');
+		$(".faq-container").hide();
+		$(this).parent().addClass('is--active');
+		$('#'+$(this).attr('data-cat-id')).show();
+	});
 
-    $(function () {
-        $(window).scroll(sticky_relocate);
-        sticky_relocate();
-    });
-}  
-    
-    
-    
+	$(document).ready(function(){
+            $('input[name="faq_search"]').keyup(function(){
+            var text = $(this).val();
+            $('.faq-row').hide();
+            $('.faq-row:contains("'+text+'")').show();      
+            });
+        });
 </script>

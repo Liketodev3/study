@@ -38,13 +38,13 @@ foreach ($userTeachLangs as $key => $value) {
         <div class="profile-cover">
             <div class="profile-head">
                 <div class="detail-wrapper">
-                    <?php if (true == User::isProfilePicUploaded($teacher['user_id'])) { ?>
-                        <div class="profile__media">
-                            <div class="avatar avatar-xlarge ratio ratio--1by1">
+                    <div class="profile__media">
+                        <div class="avatar avatar-xlarge ratio ratio--1by1" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
+                            <?php if (true == User::isProfilePicUploaded($teacher['user_id'])) { ?>
                                 <img src="<?php echo FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg'); ?>" alt="">
-                            </div>
+                            <?php } ?>
                         </div>
-                    <?php } ?>
+                    </div>
                     <div class="profile-detail">
                         <div class="profile-detail__head">
                             <div href="#" class="tutor-name">
@@ -58,13 +58,13 @@ foreach ($userTeachLangs as $key => $value) {
                             <div class="info-wrapper">
                                 <div class="info-tag location">
                                     <svg class="icon icon--location">
-                                    <use xlink:href=" <?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#location' ?>"></use>
+                                        <use xlink:href=" <?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#location' ?>"></use>
                                     </svg>
                                     <span class="lacation__name"><?php echo ($teacher['user_state_name'] != '') ? $teacher['user_state_name'] . ', ' : ''; ?> <?php echo $teacher['user_country_name']; ?></span>
                                 </div>
                                 <div class="info-tag ratings">
                                     <svg class="icon icon--rating">
-                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#rating' ?>"></use>
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#rating' ?>"></use>
                                     </svg>
                                     <span class="value"><?php echo FatUtility::convertToType($reviews['prod_rating'], FatUtility::VAR_FLOAT); ?></span>
                                     <span class="count"><?php echo '(' . FatUtility::int($reviews['totReviews']) . ')'; ?></span>
@@ -76,26 +76,26 @@ foreach ($userTeachLangs as $key => $value) {
                             <div class="har-rate"><?php echo Label::getLabel('LBL_Hourly_Rate'); ?><b><?php echo CommonHelper::displayMoneyFormat($teacher['minPrice']); ?> - <?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></b></div>
                             <div class="tutor-lang"><b><?php echo Label::getLabel('LBL_Teaches:'); ?></b> <?php echo implode(', ', $teacher['teachLanguages']); ?></div>
                             <div class="detail-actions">
-                                <a href="javascript:void(0)" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" class="btn btn--bordered color-black">
+                                <a href="javascript:void(0)" onclick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" class="btn btn--bordered color-black">
                                     <svg class="icon icon--heart">
-                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#heart'; ?>"></use>
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#heart'; ?>"></use>
                                     </svg>
                                     <?php echo Label::getLabel('LBL_Favorite'); ?>
                                 </a>
                                 <div class="toggle-dropdown">
                                     <a href="#" class="btn btn--bordered color-black toggle-dropdown__link-js">
                                         <svg class="icon icon--share">
-                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#share'; ?>"></use>
+                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#share'; ?>"></use>
                                         </svg>
                                         <?php echo Label::getLabel('LBL_Share', $siteLangId); ?>
                                     </a>
                                     <div class="toggle-dropdown__target toggle-dropdown__target-js">
                                         <h6><?php echo Label::getLabel('LBL_Share_On', $siteLangId); ?></h6>
                                         <ul class="social--share clearfix">
-                                            <li class="social--fb"><span class="st_facebook_large" displaytext="Facebook" st_processed="yes"><img alt="" src="/images/social_01.svg"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span class="stLarge" style="background-image: url(&quot;https://ws.sharethis.com/images/2017/facebook_32.png&quot;);"></span></span></span></li>
-                                            <li class="social--tw"><span class="st_twitter_large" displaytext="Tweet" st_processed="yes"><img alt="" src="/images/social_02.svg"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span class="stLarge" style="background-image: url(&quot;https://ws.sharethis.com/images/2017/twitter_32.png&quot;);"></span></span></span></li>
-                                            <li class="social--pt"><span class="st_pinterest_large" displaytext="Pinterest" st_processed="yes"><img alt="" src="/images/social_05.svg"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span class="stLarge" style="background-image: url(&quot;https://ws.sharethis.com/images/2017/pinterest_32.png&quot;);"></span></span></span></li>
-                                            <li class="social--mail"><span class="st_email_large" displaytext="Email" st_processed="yes"><img alt="" src="/images/social_06.svg"><span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton"><span class="stLarge" style="background-image: url(&quot;https://ws.sharethis.com/images/2017/email_32.png&quot;);"></span></span></span></li>
+                                            <li class="social--fb"><span class='st_facebook_large' displayText='Facebook'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_01.svg"></span></li>
+                                            <li class="social--tw"><span class='st_twitter_large' displayText='Tweet'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_02.svg"></span></li>
+                                            <li class="social--pt"><span class='st_pinterest_large' displayText='Pinterest'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_05.svg"></span></li>
+                                            <li class="social--mail"><span class='st_email_large' displayText='Email'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_06.svg"></span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -148,7 +148,7 @@ foreach ($userTeachLangs as $key => $value) {
                                                     </div>
                                                 </div>
                                                 <div class="card__body">
-                                                    <div class="lesson-list">
+                                                    <div class="lesson-slot-info">
                                                         <ul>
                                                             <?php
                                                             foreach ($slabDetails['langPrices'] as $priceDetails) {
@@ -156,10 +156,11 @@ foreach ($userTeachLangs as $key => $value) {
                                                                 if ($loggedUserId != $teacher['user_id']) {
                                                                     $onclick = "cart.proceedToStep({teacherId: " . $teacher['user_id'] . ",languageId: " . $priceDetails['utl_tlanguage_id'] . ",lessonDuration: " . $priceDetails['ustelgpr_slot'] . ", lessonQty: " . $priceDetails['ustelgpr_min_slab'] . "},'getTeacherPriceSlabs')";
                                                                 }
-                                                                ?>
+                                                            ?>
                                                                 <li>
                                                                     <a href="javascript:void(0);" onclick="<?php echo $onclick; ?>">
                                                                         <div class="lesson lesson--time"><?php echo $priceDetails['ustelgpr_slot'] . ' ' . Label::getLabel('LBL_Mins', $siteLangId); ?></div>
+                                                                        <div class="space"></div>
                                                                         <div class="lesson lesson--price"><?php echo CommonHelper::displayMoneyFormat($priceDetails['ustelgpr_price']); ?></div>
                                                                     </a>
                                                                 </li>
@@ -172,29 +173,27 @@ foreach ($userTeachLangs as $key => $value) {
                                     </div>
                                 <?php } ?>
                             </div>
-                            <?php
+                        <?php
                             $i++;
                         }
                         ?>
                     </div>
                 </div>
-                <div class="panel-cover" id="availbility">
+                <div class="panel-cover" >
                     <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
                         <h3><?php echo Label::getLabel('LBL_Schdule', $siteLangId) ?></h3>
                     </div>
                     <div class="panel-cover__body panel__body-target panel__body-target-js">
-                        <div class="calendar-wrapper">
-                            <div class="calendar-wrapper__body">
-                                <div class="calender__media">
-                                    <img src="images/calendar_new.png" alt="">
-                                </div>
+                        <div  class="calendar-wrapper">
+                            <div id="availbility" class="calendar-wrapper__body">
+                               
                             </div>
                         </div>
                         <div class="-gap"></div>
                         <div class="alert alert--attention alert--small alert--note" role="alert">
                             <b><?php echo Label::getLabel('LBL_Note', $siteLangId) ?></b><?php echo Label::getLabel('LBL_Not_finding_your_ideal_time', $siteLangId); ?>
                             <a onClick="generateThread(<?php echo $teacher['user_id']; ?>)" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Contact', $siteLangId); ?></a>
-                            this teacher to request a slot outside of their current schedule
+                            <?php echo Label::getLabel('LBL_slot_outside_message',$siteLangId); ?>
                         </div>
                     </div>
                 </div>
@@ -206,13 +205,22 @@ foreach ($userTeachLangs as $key => $value) {
                         <div class="panel-cover__body panel__body-target panel__body-target-js">
                             <div class="slider slider--onethird silder--group-class slider-onethird-js">
                                 <?php
+
+
+                                $disabledClass = 'disabled';
+                                $bookNowClick = '';
                                 foreach ($groupClasses as $key => $classDetails) {
                                     $user_timezone = MyDate::getUserTimeZone();
                                     $startTime = MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $classDetails['grpcls_start_datetime'], true, $user_timezone);
                                     $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
                                     $startUnixTime = strtotime($startTime);
                                     $currentUnixTime = strtotime($curDateTime);
-                                    ?>
+
+                                    if ($loggedUserId != $teacher['user_id']) {
+                                        $disabledClass = '';
+                                        $bookNowClick = 'onclick="cart.proceedToStep({teacherId:' . $classDetails['grpcls_teacher_id'] . ', grpclsId:' . $classDetails['grpcls_id'] . ', languageId:' . $classDetails['grpcls_tlanguage_id'] . '}, \'getPaymentSummary\');"';
+                                    }
+                                ?>
                                     <div>
                                         <div class="slider__item">
                                             <div class="card card--bg color-primary">
@@ -242,7 +250,7 @@ foreach ($userTeachLangs as $key => $value) {
                                                                 <?php if ($startUnixTime > $currentUnixTime) { ?>
                                                                     <div class="timer__media">
                                                                         <span> <svg class="icon icon--clock">
-                                                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#clock' ?>"></use>
+                                                                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#clock' ?>"></use>
                                                                             </svg></span>
                                                                     </div>
                                                                     <div class="timer__controls countdowntimer timer-js" id="grup-class_<?php echo $key; ?>" data-startTime="<?php echo $curDateTime; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>"></div>
@@ -252,7 +260,8 @@ foreach ($userTeachLangs as $key => $value) {
                                                     </div>
                                                     <div class="card__row--action">
                                                         <a href="<?php echo CommonHelper::generateUrl('GroupClasses', 'view', array($classDetails['grpcls_id'])); ?>" class="btn btn--bordered color-primary"><?php echo Label::getLabel('LBL_View_Details', commonHelper::getLangId()); ?></a>
-                                                        <a href="javascript:void(0);" onClick="cart.proceedToStep({teacherId:<?php echo $classDetails['grpcls_teacher_id']; ?>, grpclsId:<?php echo $classDetails['grpcls_id'] ?>, languageId: <?php echo $classDetails['grpcls_tlanguage_id'] ?>}, 'getPaymentSummary');" class="btn btn--primary"><?php echo Label::getLabel("LBL_Book_Now"); ?></a>
+
+                                                        <a href="javascript:void(0);" <?php echo $bookNowClick; ?> class="btn btn--primary <?php echo $disabledClass; ?>"><?php echo Label::getLabel("LBL_Book_Now"); ?></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -293,41 +302,43 @@ foreach ($userTeachLangs as $key => $value) {
                     <div class="panel-cover__body panel__body-target panel__body-target-js" id="qualificationsList">
                     </div>
                 </div>
-                <div class="panel-cover">
-                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
-                        <h3><?php echo Label::getLabel('LBL_Reviews', $siteLangId); ?></h3>
-                    </div>
-                    <?php echo $frmReviewSearch->getFormHtml(); ?>
-                    <div class="panel-cover__body panel__body-target panel__body-target-js">
-                        <div class="rating-details">
-                            <div class="rating__count">
-                                <h1><?php echo FatUtility::convertToType($reviews['prod_rating'], FatUtility::VAR_FLOAT); ?></h1>
-                            </div>
-                            <div class="rating__info">
-                                <b><?php echo Label::getLabel('LBL_Overall_Ratings', $siteLangId); ?></b>
-                            </div>
+                <?php if ($reviews['prod_rating'] > 0) { ?>
+                    <div class="panel-cover">
+                        <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
+                            <h3><?php echo Label::getLabel('LBL_Reviews', $siteLangId); ?></h3>
                         </div>
-                        <div class="reviews-wrapper">
-                            <div class="reviews-wrapper__head">
-                                <p id="recordToDisplay"></p>
-                                <div class="review__shorting">
-                                    <select name="orderBy" id="sort">
-                                        <?php foreach ($sortArr as $sortKey => $sortValue) { ?>
-                                            <option value="<?php echo $sortKey; ?>"><?php echo $sortValue; ?></option>
-                                        <?php } ?>
-                                    </select>
+                        <?php echo $frmReviewSearch->getFormHtml(); ?>
+                        <div class="panel-cover__body panel__body-target panel__body-target-js">
+                            <div class="rating-details">
+                                <div class="rating__count">
+                                    <h1><?php echo FatUtility::convertToType($reviews['prod_rating'], FatUtility::VAR_FLOAT); ?></h1>
+                                </div>
+                                <div class="rating__info">
+                                    <b><?php echo Label::getLabel('LBL_Overall_Ratings', $siteLangId); ?></b>
                                 </div>
                             </div>
-                            <div id="itemRatings" class="reviews-wrapper__body">
-                            </div>
-                            <div class="reviews-wrapper__foot">
-                                <div class="show-more">
-                                    <a href="javascript:void(0);" class="btn btn--show"><?php echo Label::getLabel('Lbl_SHOW_MORE'); ?></a>
+                            <div class="reviews-wrapper">
+                                <div class="reviews-wrapper__head">
+                                    <p id="recordToDisplay"></p>
+                                    <div class="review__shorting">
+                                        <select name="orderBy" id="sort">
+                                            <?php foreach ($sortArr as $sortKey => $sortValue) { ?>
+                                                <option value="<?php echo $sortKey; ?>"><?php echo $sortValue; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="itemRatings" class="reviews-wrapper__body">
+                                </div>
+                                <div class="reviews-wrapper__foot">
+                                    <div class="show-more">
+                                        <a href="javascript:void(0);" class="btn btn--show"><?php echo Label::getLabel('Lbl_SHOW_MORE'); ?></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
             <div class="profile-secondary">
                 <div class="right-panel">
@@ -335,23 +346,33 @@ foreach ($userTeachLangs as $key => $value) {
                     if ($teacher['us_video_link'] != '') {
                         $youTubeVideoArr = explode("?v=", $teacher['us_video_link']);
                         if (count($youTubeVideoArr) > 1) {
-                            ?>
+                    ?>
                             <div class="dummy-video">
                                 <div class="video-media ratio ratio--16by9">
                                     <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $youTubeVideoArr[1]; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                 </div>
                             </div>
                             <div class="-gap"></div>
-                            <?php
+                    <?php
                         }
                     }
                     ?>
                     <div class="box box--book">
                         <div class="book__actions">
-                            <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white " onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>}, 'getUserTeachLangues');"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
-                            <a href="#" class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary">
+                            <?php
+                            $disabledClass = '';
+                            $bookNowClick = 'onclick="cart.proceedToStep({teacherId: ' . $teacher['user_id'] . '}, \'getUserTeachLangues\');"';
+                            $contactClick = 'onclick="generateThread(' . $teacher['user_id'] . ');"';
+                            if ($loggedUserId == $teacher['user_id']) {
+                                $disabledClass = 'disabled';
+                                $bookNowClick = '';
+                                $contactClick = '';
+                            }
+                            ?>
+                            <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                            <a href="javascript:void(0);" <?php echo $contactClick; ?> class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary <?php echo $disabledClass; ?>">
                                 <svg class="icon icon--envelope">
-                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope' ?>"></use>
+                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
                                 </svg>
                                 <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
                             </a>
@@ -374,7 +395,7 @@ foreach ($userTeachLangs as $key => $value) {
                                     $onclick = "";
                                     $disabledText = "disabled";
                                 }
-                                ?>
+                            ?>
                                 <a href="javascript:void(0);" <?php echo $onclick; ?> class="btn btn--secondary btn--trial btn--block color-white <?php echo $btnClass . ' ' . $disabledText; ?> " <?php echo $disabledText; ?>>
                                     <span><?php echo Label::getLabel($btnText, $siteLangId); ?></span>
                                 </a>
@@ -388,8 +409,9 @@ foreach ($userTeachLangs as $key => $value) {
     </div>
 </section>
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         searchQualifications(<?php echo $teacher['user_id']; ?>);
         viewCalendar(<?php echo $teacher['user_id'] . ',' . $teacherLanguage . ', "paid"'; ?>);
     });
 </script>
+<?php echo $this->includeTemplate('_partial/shareThisScript.php'); ?>

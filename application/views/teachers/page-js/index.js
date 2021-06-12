@@ -60,19 +60,11 @@ $("document").ready(function () {
 
     });
 
-    $('input[name=\'btnTeacherSrchSubmit\']').click(function (e) {
-        if (!$(document.frmTeacherSrch).validate()) {
-            e.preventDefault();
-            return;
-        }
+    $('#btnTeacherSrchSubmit').click(function (e) {
+        searchTeachers(frm);
     });
 
-    $('input[name=\'btnTeacherSrchSubmit\']').click(function (e) {
-        if (!$(document.frmTeacherSrch).validate()) {
-            e.preventDefault();
-            return;
-        }
-    });
+  
 
     $(document).on('click','.panel-action',function(){
 
@@ -139,7 +131,6 @@ $("document").ready(function () {
         if (code == 13) {
             e.preventDefault();
             addPricefilter();
-            //searchTeachers( frm );
         }
     });
 
@@ -156,7 +147,6 @@ $("document").ready(function () {
         if (code == 13) {
             e.preventDefault();
             addPricefilter();
-            //searchTeachers( frm );
         }
     });
 
@@ -376,12 +366,14 @@ function htmlEncode(value) {
     }
 
     addPricefilter = function () {
+        $('.filter-tags').show();
+
         $('.price').parent("li").remove();
         if (!$('#searched-filters').find('a').hasClass('price')) {
             var filterCaption = htmlEncode($("#price_range").parents('.filter-form__inner').find("h6").text());
             var varcurrencySymbolLeft = $('<textarea />').html(currencySymbolLeft).text();
             var varcurrencySymbolRight = $('<textarea />').html(currencySymbolRight).text();
-            $('#searched-filters').append('<li><a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilter(this)" >' + filterCaption + ': ' + varcurrencySymbolLeft + $("input[name=priceFilterMinValue]").val() + varcurrencySymbolRight + ' - ' + varcurrencySymbolLeft + $("input[name=priceFilterMaxValue]").val() + varcurrencySymbolRight + '</a></li>');
+            $('#searched-filters').find('ul').append('<li><a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilter(this)" >' + filterCaption + ': ' + varcurrencySymbolLeft + $("input[name=priceFilterMinValue]").val() + varcurrencySymbolRight + ' - ' + varcurrencySymbolLeft + $("input[name=priceFilterMaxValue]").val() + varcurrencySymbolRight + '</a></li>');
         }
         var frm = document.frmTeacherSrch;
         searchTeachers(frm);

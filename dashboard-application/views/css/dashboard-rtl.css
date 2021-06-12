@@ -2206,8 +2206,7 @@ strong.span-right {
       top: 0;
       bottom: 0;
       content: "";
-      opacity: 0.1;
-      background-color: currentColor; }
+      opacity: 0.1; }
   .infobar__media-icon--alert {
     color: var(--color-yellow);
     font-size: var(--font-size-xxxl);
@@ -2252,6 +2251,15 @@ strong.span-right {
     background: rgba(255, 1, 0, 0); } }
   .infobar__media-icon--tick {
     color: var(--color-primary); }
+    .infobar__media-icon--tick:before {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      content: "";
+      opacity: 0.1;
+      background-color: currentColor; }
   @media (max-width: 576px) {
     .infobar {
       padding: var(--padding-4); }
@@ -3173,7 +3181,7 @@ div.tagsinput div {
       -ms-flex-direction: column;
           flex-direction: column;
   height: 100%;
-  padding-top: calc(1rem + 26px); }
+  padding-top: var(--padding-4); }
   @media (min-width: 991px) and (max-width: 1299px) {
     .status-bar {
       padding: var(--padding-8) var(--padding-4);
@@ -4852,7 +4860,8 @@ div.tagsinput div {
         font-size: large;
         font-weight: var(--font-weight-normal);
         margin-bottom: var(--margin-6);
-        color: #fff; }
+        color: #fff;
+        text-transform: uppercase; }
   .sesson-window .session-window__frame {
     position: absolute;
     left: 0;
@@ -5016,6 +5025,14 @@ div.tagsinput div {
   @media (min-width: 767px) and (max-width: 991px) {
     .more-student .is-visible {
       bottom: 100%; } }
+
+.countdown-timer {
+  font-size: var(--font-size-h3);
+  padding: var(--padding-5) var(--padding-10);
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-1); }
 
 .gift-card {
   position: relative;

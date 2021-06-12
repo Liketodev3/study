@@ -79,7 +79,7 @@ $status-bar: "status-bar";
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding-top: calc(1rem + 26px);
+    padding-top: var(--padding-4);
 
     @media (min-width:theme('breakpoints.lg','value')) and (max-width:theme('breakpoints.xxl','value')) {
         &{
