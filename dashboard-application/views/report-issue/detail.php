@@ -32,8 +32,7 @@
                                     <button onclick="esclateForm(<?php echo $issue['repiss_id']; ?>)" class="btn btn-small btn--primary">
                                         <?php echo Label::getLabel('LBL_ESCLATE_TO_SUPPORT_TEAM'); ?>
                                     </button>
-                                <?php } ?> 
-                                <?php if ($issue['repiss_status'] == ReportedIssue::STATUS_ESCLATED) { ?>
+                                <?php } elseif ($issue['repiss_status'] == ReportedIssue::STATUS_ESCLATED) { ?>
                                     <?php echo Label::getLabel('LBL_ESCLATED_TO_SUPPORT_TEAM'); ?>
                                 <?php } ?>
                             </td>
