@@ -30,9 +30,6 @@
 					$frmSrch->developerTags['colClassPrefix'] = 'col-md-';
 					$frmSrch->developerTags['fld_default_col'] = 4;
 
-					$fldLanguage = $frmSrch->getField('slanguage_id');
-					$fldStatus->developerTags['col'] = 4;
-
 					$fldSubmit = $frmSrch->getField('btn_submit');
 					$fldSubmit->developerTags['col'] = 4;
 
