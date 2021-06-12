@@ -353,6 +353,7 @@ $(document).ready(function(){
 	};
 
 	setUpSignUp = function( frm ){
+
 		if ( !$(frm).validate() ){ return; }
 			fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'setUpSignUp'), fcom.frmData(frm), function(res) {
 			if( res.redirectUrl ){

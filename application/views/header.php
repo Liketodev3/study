@@ -17,7 +17,7 @@ $commonHead1DataArr = array(
 	'cookieConsent' =>  $cookieConsent
 );
 
-$this->includeTemplate( 'header/commonHead1.php', $commonHead1DataArr, false);
+$this->includeTemplate('header/commonHead1.php', $commonHead1DataArr, false);
 /* ] */
 
 echo $this->writeMetaTags();
@@ -48,13 +48,16 @@ switch ($controllerName) {
 	case 'Teach':
 		array_push($htmlBodyClassesArr, 'is-landing');
 		break;
+	case 'TeacherRequest':
+		array_push($htmlBodyClassesArr, 'is-landing is-registration');
+		break;
 }
 $htmlBodyClassesString = implode(" ", $htmlBodyClassesArr);
 $commonHead2DataArr['htmlBodyClassesString'] = $htmlBodyClassesString;
 
-$this->includeTemplate( 'header/commonHead2.php', $commonHead2DataArr );
+$this->includeTemplate('header/commonHead2.php', $commonHead2DataArr);
 /* ] */
 
-if( !isset($exculdeMainHeaderDiv) ){
-	$this->includeTemplate('header/top.php',array('siteLangId'=>$siteLangId, 'languages' => $languages),false);
+if (!isset($exculdeMainHeaderDiv)) {
+	$this->includeTemplate('header/top.php', array('siteLangId' => $siteLangId, 'languages' => $languages), false);
 }

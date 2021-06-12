@@ -135,7 +135,10 @@ class GuestUserController extends MyAppController
     {
         $frm = $this->getSignUpForm();
         $post = FatApp::getPostedData();
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+        if(!isset($post['user_first_name'])){
+            $post['user_first_name'] = strstr($post['user_email'], '@', true);
+        }
+        $post = $frm->getFormDataFromArray($post);
         if ($post == false) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             if (FatUtility::isAjaxCall()) {
@@ -193,7 +196,7 @@ class GuestUserController extends MyAppController
         $redirectUrl = CommonHelper::redirectUserReferer(true);
         if ($user->getMainTableRecordId() and $user_registered_initially_for == User::USER_TYPE_TEACHER) {
             $_SESSION[UserAuthentication::SESSION_GUEST_USER_ELEMENT_NAME] = $user->getMainTableRecordId();
-            $redirectUrl = CommonHelper::generateUrl('TeacherRequest');
+            $redirectUrl = CommonHelper::generateUrl('TeacherRequest','personalDetailForm');
         } else {
             unset($_SESSION[UserAuthentication::SESSION_GUEST_USER_ELEMENT_NAME]);
         }
@@ -370,7 +373,7 @@ class GuestUserController extends MyAppController
         $frm = new Form('frmRegister');
         $frm->addHiddenField('', 'user_id', 0);
         $fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'user_first_name');
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'user_last_name');
+        $fld = $frm->addTextBox(Label::getLabel('LBL_Last_Name'), 'user_last_name');
         $fld = $frm->addEmailField(Label::getLabel('LBL_Email_ID'), 'user_email', '', ['autocomplete="off"']);
         $fld->setUnique('tbl_user_credentials', 'credential_email', 'credential_user_id', 'user_id', 'user_id');
         $fld = $frm->addPasswordField(Label::getLabel('LBL_Password'), 'user_password');

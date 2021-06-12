@@ -261,7 +261,7 @@ class UserAuthentication extends FatModel
 
     public static function getGuestTeacherUserId()
     {
-        return FatUtility::int($_SESSION[static::SESSION_GUEST_USER_ELEMENT_NAME]);
+        return ($_SESSION[static::SESSION_GUEST_USER_ELEMENT_NAME]) ? FatUtility::int($_SESSION[static::SESSION_GUEST_USER_ELEMENT_NAME]):0;
     }
 
     public function getUserByEmail($email, $isActive = true, $isVerfied = true)
