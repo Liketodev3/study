@@ -109,6 +109,51 @@ var FatEventCalendar = function (teacherId) {
         });
     };
 
+    eventMerging = function (info, events) {
+        var start = info.event.start;
+        var end = info.event.end;
+
+        let calendarStartDateTime = calendar.view.currentStart;
+        let calendarEndDateTime = calendar.view.currentEnd;
+
+        if (moment(calendarStartDateTime) > moment(info.event.end) || moment(calendarEndDateTime) < moment(info.event.start)) {
+            info.event.remove();
+            return;
+        }
+
+        if (moment(calendarStartDateTime) > moment(info.event.start)) {
+            start = calendarStartDateTime;
+            info.event.setStart(calendarStartDateTime);
+        }
+
+        if (moment(calendarEndDateTime) < moment(info.event.end)) {
+            end = calendarEndDateTime;
+            info.event.setEnd(calendarEndDateTime);
+        }
+        console.log(events);
+        for (i in events) {
+
+            if (events[i]._instance.instanceId == info.oldEvent._instance.instanceId && events[i]._instance.defId == info.oldEvent._instance.defId) {
+                continue;
+            }
+
+            if (moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
+
+                if (moment(start) > moment(events[i].start)) {
+                    start = events[i].start;
+                    info.event.setStart(events[i].start);
+                }
+
+                if (moment(end) < moment(events[i].end)) {
+                    end = events[i].end;
+                    info.event.setEnd(events[i].end);
+                }
+
+                events[i].remove();
+            }
+        }
+    }
+
 };
 
 FatEventCalendar.prototype.validateSelectedSlot = function (arg, current_time, duration, bookingBefore) {
@@ -354,8 +399,6 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
                 }
             }
 
-
-            // calendar.addEvent(newEvent);
             calendar.addEvent({
                 title: '',
                 start: newEvent.start,
@@ -363,37 +406,37 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
                 className: 'slot_available',
                 allDay: arg.allDay
             });
-            // calendar.unselect();
         },
         eventDrop: function (info) {
-            var start = info.event.start;
-            var end = info.event.end;
             var events = calendar.getEvents();
-            console.log(info);
-            console.log(events);
-            for (i in events) {
-                if (events[i]._instance.instanceId == info.oldEvent._instance.instanceId && events[i]._instance.defId == info.oldEvent._instance.defId) {
-                    continue;
-                }
+            eventMerging(info, events);
+        },
 
-                if (moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
+        eventResize: function (info) {
+            var events = calendar.getEvents();
+            eventMerging(info, events);
 
-                    if (moment(start) > moment(events[i].start)) {
-                        start = events[i].start;
-                        info.event.setStart(events[i].start);
-                    }
-
-                    if (moment(end) < moment(events[i].end)) {
-                        end = events[i].end;
-                        info.event.setEnd(events[i].end);
-                    }
-                    events[i].remove();
-                }
-            }
         },
         eventDidMount: function (arg) {
-            element = arg.el;
+            let calendarStartDateTime = calendar.view.currentStart;
+            let calendarEndDateTime = calendar.view.currentEnd;
             let event = arg.event;
+
+            if (moment(calendarStartDateTime) > moment(event.end) || moment(calendarEndDateTime) < moment(event.start)) {
+                event.remove();
+                return;
+            }
+
+            if (moment(calendarStartDateTime) > moment(event.start)) {
+                event.setStart(calendarStartDateTime);
+            }
+
+            if (moment(calendarEndDateTime) < moment(event.end)) {
+                event.setEnd(calendarEndDateTime);
+            }
+
+            element = arg.el;
+
             $(element).find(".fc-event-main-frame").prepend("<span class='closeon'>X</span>");
             $(element).find(".closeon").click(function () {
                 if (confirm(langLbl.confirmRemove)) {
@@ -495,26 +538,14 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function (current_time) 
             });
         },
         eventDrop: function (info) {
-            var start = info.event.start;
-            var end = info.event.end;
             var events = calendar.getEvents();
-            for (i in events) {
+            eventMerging(info, events);
+        },
 
-                if (events[i]._instance.instanceId == info.oldEvent._instance.instanceId && events[i]._instance.defId == info.oldEvent._instance.defId) {
-                    continue;
-                }
+        eventResize: function (info) {
+            var events = calendar.getEvents();
+            eventMerging(info, events);
 
-                if (moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
-                    if (moment(start) > moment(events[i].start)) {
-                        info.event.setStart(events[i].start);
-                    }
-
-                    if (moment(end) < moment(events[i].end)) {
-                        info.event.setEnd(events[i].end);
-                    }
-                    events[i].remove();
-                }
-            }
         },
         eventDidMount: function (arg) {
             let element = arg.el;

@@ -35,7 +35,7 @@ class TeacherGeneralAvailability extends MyAppModel
         if (!empty($rows)) {
             $weekStartDateDB = '2018-01-07';
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStartDate);
-            $bookingBefore = (!is_null($teacherBookingBefore)) ? 0 : $teacherBookingBefore;
+            $bookingBefore = $teacherBookingBefore??0;
 
             $validStartDateTime = strtotime("+ " . $bookingBefore . " hours");
 
@@ -172,20 +172,28 @@ class TeacherGeneralAvailability extends MyAppModel
                 $tgavl_end = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
                 $tgavl_start_time = date('H:i:00', strtotime($tgavl_start));
                 $tgavl_end_time = date('H:i:00', strtotime($tgavl_end));
+
+                $startDateTimeUnix = strtotime(date('Y-m-d', strtotime($custom_tgavl_start)).' '.$tgavl_start_time);
+                $endDateTimeUnix = strtotime(date('Y-m-d', strtotime($custom_tgavl_end)).' '.$tgavl_end_time);
+                    if($startDateTimeUnix > $endDateTimeUnix){
+                        $startDateTimeUnix =  strtotime('-1 days', $startDateTimeUnix);
+                    }
                 $day = MyDate::getDayNumber($custom_tgavl_start);
                 $insertArr = [
                     'tgavl_day' => $day,
                     'tgavl_user_id' => $userId,
                     'tgavl_start_time' => $tgavl_start_time,
                     'tgavl_end_time' => $tgavl_end_time,
-                    'tgavl_date' => $custom_tgavl_start,
+                    'tgavl_date' => date('Y-m-d',  $startDateTimeUnix),
                     'tgavl_end_date' => $custom_tgavl_end,
                 ];
+                // pr( $insertArr);    
                 if (!$db->insertFromArray(TeacherGeneralAvailability::DB_TBL, $insertArr)) {
                     $this->error = $db->getError();
                     return false;
                 }
             }
+            // die;
         }
         return true;
     }
