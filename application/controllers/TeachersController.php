@@ -521,10 +521,11 @@ class TeachersController extends MyAppController
         }
         $userTimezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
+
+   
         $startDate = MyDate::changeDateTimezone($post['start'], $userTimezone, $systemTimeZone);
         $endDate = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
         $weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId, $startDate, $endDate);
-
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
         $teacherBookingBefore = null;
         if (isset($_POST['bookingBefore'])) {
@@ -549,13 +550,17 @@ class TeachersController extends MyAppController
                 }
                 $twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDateTime, true, $userTimezone);
                 $twsch_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $startDateTime, true, $userTimezone);
+                
                 $twsch_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $startDateTime, true, $userTimezone);
+                $midPoint = (strtotime($twsch_start_time) + strtotime($twsch_end_time)) / 2;
+                $twschWeekYear = date('W-Y', $midPoint);
+                
                 $jsonArr[] = [
                     "title" => "",
                     "date" => $twsch_date,
                     "start" => $twsch_start_time,
                     "end" => $twsch_end_time,
-                    "weekyear" => $row['twsch_weekyear'],
+                    "weekyear" =>  $twschWeekYear,
                     '_id' => $row['twsch_id'],
                     'classType' => $row['twsch_is_available'],
                     'className' => $cssClassNamesArr[$row['twsch_is_available']],
@@ -565,6 +570,7 @@ class TeachersController extends MyAppController
         }
         $midPoint = (strtotime($startDate) + strtotime($endDate)) / 2;
         $twsch_weekyear = date('W-Y', $midPoint);
+        // prx($jsonArr);
         if (empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear) {
             $dateTime = new dateTime(date('Y-m-d H:i:s', $midPoint));
             $weekRange = MyDate::getWeekStartAndEndDate($dateTime);

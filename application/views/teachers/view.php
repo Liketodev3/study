@@ -49,7 +49,7 @@ foreach ($userTeachLangs as $key => $value) {
                             <div href="#" class="tutor-name">
                                 <h4><?php echo $teacher['user_full_name']; ?></h4>
                                 <div class="flag">
-                                    <img src="<?php echo CONF_WEBROOT_URL; ?>images/flag-new/flag-uk.png" alt="">
+                                    <img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($teacher['user_country_id'], 'DEFAULT')); ?>" alt="">
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@ foreach ($userTeachLangs as $key => $value) {
                             <div class="har-rate"><?php echo Label::getLabel('LBL_Hourly_Rate'); ?><b><?php echo CommonHelper::displayMoneyFormat($teacher['minPrice']); ?> - <?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></b></div>
                             <div class="tutor-lang"><b><?php echo Label::getLabel('LBL_Teaches:'); ?></b> <?php echo implode(', ', $teacher['teachLanguages']); ?></div>
                             <div class="detail-actions">
-                                <a href="javascript:void(0)" onclick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" class="btn btn--bordered color-black">
+                                <a href="javascript:void(0)" onclick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" class="btn btn--bordered color-black <?php echo ($teacher['uft_id']) ? 'is--active' : ''; ?>">
                                     <svg class="icon icon--heart">
                                         <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#heart'; ?>"></use>
                                     </svg>

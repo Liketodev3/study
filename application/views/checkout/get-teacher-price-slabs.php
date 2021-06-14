@@ -57,7 +57,7 @@
             <input type="text" id="lessonQty" onchange="changeLessonQty();" name="lessonQty" min="<?php echo $minValue; ?>" max="<?php echo $maxValue; ?>" value="<?php echo $lessonQty; ?>">
             <button class="btn btn--count" onclick="increment();"><?php echo Label::getLabel('LBL_+'); ?></button>
             <button class="btn btn--primary color-white" onclick="cart.getLessonQtyPrice(document.getElementById('lessonQty').value);"><?php echo Label::getLabel('LBL_UPDATE_QTY'); ?></button>
-            <p class="slab-price-js"><?php echo sprintf(Label::getLabel('LBL_TOTAL_PRICE_-_%s'), CommonHelper::displayMoneyFormat($lessonQtyPrice)); ?></p>
+            <p class="slab-price-js"><?php echo sprintf(Label::getLabel('LBL_TOTAL_PRICE_:_%s'), CommonHelper::displayMoneyFormat($lessonQtyPrice)); ?></p>
         </div>
     </div>
     <div class="box-foot">

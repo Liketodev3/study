@@ -463,7 +463,8 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addSelectBox(Label::getLabel('LBL_About_Us', $this->adminLangId), 'CONF_ABOUT_US_PAGE', $cpagesArr);
                 $frm->addSelectBox(Label::getLabel('LBL_Privacy_Policy_Page', $this->adminLangId), 'CONF_PRIVACY_POLICY_PAGE', $cpagesArr);
                 $frm->addSelectBox(Label::getLabel('LBL_Terms_and_Conditions_Page', $this->adminLangId), 'CONF_TERMS_AND_CONDITIONS_PAGE', $cpagesArr);
-                $frm->addSelectBox(Label::getLabel('LBL_Cookies_Policies_Page', $this->adminLangId), 'CONF_COOKIES_BUTTON_LINK', $cpagesArr);
+                $frm->addSelectBox(Label::getLabel('LBL_APPLY_TO_TEACH_PAGE', $this->adminLangId), 'CONF_COOKIES_BUTTON_LINK', $cpagesArr);
+                $frm->addSelectBox(Label::getLabel('LBL_Cookies_Policies_Page', $this->adminLangId), 'CONF_APPLY_TO_TEACH_PAGE', $cpagesArr);
                 $fld1 = $frm->addCheckBox(Label::getLabel('LBL_Cookies_Policies', $this->adminLangId), 'CONF_ENABLE_COOKIES', 1, [], false, 0);
                 $fld1->htmlAfterField = "<br><small>" . Label::getLabel("LBL_cookies_policies_section_will_be_shown_on_frontend", $this->adminLangId) . "</small>";
                 break;
