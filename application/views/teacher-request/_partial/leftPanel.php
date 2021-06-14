@@ -26,7 +26,7 @@
 					<?php echo Label::getLabel('LBL_Resume',$siteLangId); ?>
 				</a>
 			</li>
-			<li class="steps__item change-block-js" data-blocks-show="5">
+			<li class="steps__item" data-blocks-show="5">
 				<a href="javascript:void(0)">
 					<span class="step__icon"></span>
 					<?php echo Label::getLabel('LBL_Confirmation',$siteLangId); ?>

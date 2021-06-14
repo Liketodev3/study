@@ -6,6 +6,15 @@ class TeacherRequestController extends MyAppController
     public function __construct($action)
     {
         parent::__construct($action);
+        //UserAuthentication::getGuestTeacherUserId() ||
+        if (UserAuthentication::getLoggedUserId(true)) {
+            $this->userId = UserAuthentication::getLoggedUserId();
+        } elseif (true) {
+            $this->userId = 99;
+        } else {
+            Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access'));
+            CommonHelper::redirectUserReferer();
+        }
     }
     public function index()
     {
@@ -24,115 +33,44 @@ class TeacherRequestController extends MyAppController
         $this->_template->render();
     }
 
-    public function index_backup()
-    {
-        $srch = new TeacherRequestSearch();
-        $srch->joinUsers();
-        $srch->addCondition('utrequest_user_id', '=', $this->userId);
-        $srch->addMultiplefields([
-            'utrequest_attempts',
-            'utrequest_id',
-            'utrequest_status',
-            'concat(user_first_name, " ", user_last_name) as user_name',
-            'utrequest_reference'
-        ]);
-        $srch->addOrder('utrequest_id', 'desc');
-        $rs = $srch->getResultSet();
-        $teacherRequestRow = FatApp::getDb()->fetch($rs);
-        if (!$teacherRequestRow) {
-            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', 'form'));
-        }
-        $this->set('teacherRequestRow', $teacherRequestRow);
-        $this->_template->render();
-    }
-
     public function form()
     {
-        //$guestUserId = UserAuthentication::getGuestTeacherUserId();
+        $this->_template->addJs('js/jquery.form.js');
+        $this->_template->addJs('js/cropper.js');
+        $this->_template->addCss('css/cropper.css');
+        $this->_template->addJs('js/jquery.inputmask.bundle.js');
+        $this->_template->addJs('js/intlTelInput.js');
+        $this->_template->addCss('css/intlTelInput.css');
+
         $guestUserId = 99;
+        $this->userId = $guestUserId;
+
         if (!$guestUserId) {
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
         }
 
         $user = new User($guestUserId);
-        if(!$user->loadFromDb()){
+        if (!$user->loadFromDb()) {
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
         }
-
-        $frm = $this->getForm($this->siteLangId);
+        $spokenLangs = SpokenLanguage::getAllLangs($this->siteLangId, true);
+        $frm = $this->getForm($this->siteLangId,$spokenLangs);
         $userDetails = $user->getFlds();
-
         if ($userDetails) {
             $assignArray = [];
             $assignArray['utrvalue_user_first_name'] = $userDetails['user_first_name'];
             $assignArray['utrvalue_user_last_name'] = $userDetails['user_last_name'];
             $frm->fill($assignArray);
-        }       
+        }
+        $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
+        // $this->set('',$profArr)
         $this->set('frm', $frm);
+        $this->set('speakLangs',$spokenLangs);
         $this->set('exculdeMainHeaderDiv', false);
-        $this->_template->render(true, false);
-    }
-
-    public function form_bkup()
-    {
-        $teacherRequestRow = TeacherRequest::getData($this->userId);
-        if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_APPROVED) {
-            if (true !== User::canAccessTeacherDashboard()) {
-                die("Please contact web master, Though your teacher request is approved, But Still not marked as teacher.");
-            }
-            FatApp::redirectUser(CommonHelper::generateUrl('Teacher'));
-        }
-
-        if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_PENDING) {
-            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
-        }
-        /* check if maximum attempts reached [ */
-        if (true === TeacherRequest::isMadeMaximumAttempts($this->userId)) {
-            Message::addErrorMessage(Label::getLabel('MSG_You_already_consumed_max_attempts'));
-            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
-        }
-        /* ] */
-        $frm = $this->getForm();
-        $userDetails = User::getAttributesById($this->userId, ['user_first_name', 'user_last_name']);
-
-        if ($userDetails) {
-            $assignArray = [];
-            $assignArray['utrvalue_user_first_name'] = $userDetails['user_first_name'];
-            $assignArray['utrvalue_user_last_name'] = $userDetails['user_last_name'];
-            $frm->fill($assignArray);
-        }
-        if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-            $frm->fill($post);
-        }
-
-        /* [ */
-        $cPageSrch = ContentPage::getSearchObject($this->siteLangId);
-        $cPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_TERMS_AND_CONDITIONS_PAGE', FatUtility::VAR_INT, 0));
-        $cpage = FatApp::getDb()->fetch($cPageSrch->getResultSet());
-        if (!empty($cpage) && is_array($cpage)) {
-            $termsAndConditionsLinkHref = CommonHelper::generateUrl('Cms', 'view', [$cpage['cpage_id']]);
-        } else {
-            $termsAndConditionsLinkHref = 'javascript:void(0)';
-        }
-        $this->set('termsAndConditionsLinkHref', $termsAndConditionsLinkHref);
-        /* ] */
-
-        $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $this->siteLangId, FatUtility::VAR_STRING, '');
-        $this->set('websiteName', $websiteName);
-        $this->set('frm', $frm);
-
-        // image cropper
+        $this->set('userDetails', $userDetails);
         $this->set('profileImgFrm', $this->getProfileImageForm());
-        $this->set('userId', $this->userId);
-        $this->_template->addJs('js/jquery.form.js');
-        $this->_template->addJs('js/cropper.js');
 
-        $this->_template->addJs('js/jquery.inputmask.bundle.js');
-        $this->_template->addJs('js/intlTelInput.js');
-        $this->_template->addCss('css/intlTelInput.css');
-
-        $this->_template->render(true, true, 'teacher-request/form.php');
+        $this->_template->render(true, false);
     }
 
     public function setUpTeacherApproval()
@@ -301,6 +239,7 @@ class TeacherRequestController extends MyAppController
 
         $uqualification_id = FatApp::getPostedData('uqualification_id', FatUtility::VAR_INT, 0);
         $qualification = new UserQualification($uqualification_id);
+
         $post['uqualification_user_id'] = $this->userId;
         $db = FatApp::getDb();
         $db->startTransaction();
@@ -425,10 +364,11 @@ class TeacherRequestController extends MyAppController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-  
 
-    private function getForm(int $langId)
+
+    private function getForm(int $langId,$spokenLangs=null)
     {
+        $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
         /* [ */
         $spokenLanguagesArr = SpokenLanguage::getAllLangs($langId, true);
         $teachingLanguagesArr = TeachingLanguage::getAllLangs($langId, true);
@@ -450,13 +390,16 @@ class TeacherRequestController extends MyAppController
         $fld->htmlAfterField = "<small>" . Label::getLabel('LBL_Photo_Id_Type') . "</small>";
         $headfld = $frm->addHtml('', 'about_me_fields_heading', '');
 
+        $frm->addFileUpload(Label::getLabel('LBL_profile_photo'), 'user_profile_pic');
+
+
         $bioFld = $frm->addHtml('', 'bio', '');
         $headfld->attachField($bioFld);
 
-        $fld = $frm->addTextArea('', 'utrvalue_user_profile_info');
+        $fld = $frm->addTextArea(Label::getLabel('LBL_Biography', $langId), 'utrvalue_user_profile_info');
         $fld->requirements()->setLength(1, 500);
         $headfld->attachField($fld);
-
+        $frm->addHiddenField('', 'utrvalue_user_phone_code');
 
         $brFld = $frm->addHtml('', 'br', '<br><br>');
         $headfld->attachField($brFld);
@@ -467,7 +410,7 @@ class TeacherRequestController extends MyAppController
         $bioFld = $frm->addHtml('', 'youtube_head', '');
         $headfld->attachField($bioFld);
 
-        $fld = $frm->addTextBox('', 'utrvalue_user_video_link');
+        $fld = $frm->addTextBox(Label::getLabel('LBL_Introduction_video', $langId), 'utrvalue_user_video_link');
         $headfld->attachField($fld);
 
         $frm->addHtml('', 'profile_pic_preview', '');
@@ -475,14 +418,24 @@ class TeacherRequestController extends MyAppController
         $frm->addHtml('', 'brFld', '<br>');
 
         $frm->addHtml('', 'language_fields_heading', '');
-        $fld = $frm->addSelectBox(Label::getLabel('LBL_What_Language_Do_You_Want_To_Teach?'), 'utrvalue_user_teach_slanguage_id[]', $teachingLanguagesArr, [], [], Label::getLabel('LBL_Select'));
-        $fld->requirements()->setRequired();
-        $fld = $frm->addHtml('', 'add_anotherteach_language', '');
-        $fld = $frm->addSelectBox(Label::getLabel('LBL_Languages_You_Speak'), 'utrvalue_user_language_speak[]', $spokenLanguagesArr, [], [], Label::getLabel('LBL_Select'));
-        $fld->requirements()->setRequired();
-        $fldProficiency = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utrvalue_user_language_speak_proficiency[]', SpokenLanguage::getProficiencyArr($langId), [], [], Label::getLabel('LBL_Select'));
-        $fldProficiency->requirements()->setRequired();
-        $fld = $frm->addHtml('', 'add_anotherspoken_language', '');
+        $frm->addCheckBoxes(Label::getLabel('LBL_Language_To_Teach'), 'utrvalue_user_teach_slanguage_id[]', $teachingLanguagesArr)->requirements()->setRequired();
+         $langArr = $spokenLangs ?: SpokenLanguage::getAllLangs($langId, true);
+        foreach ($langArr as $key => $lang) {
+            $speekLangField = $frm->addCheckBox(Label::getLabel('LBL_Language_I_Speak'), 'utsl_slanguage_id[' . $key . ']', $key, ['class' => 'utsl_slanguage_id'], false, '0');
+            $proficiencyField = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utsl_proficiency[' . $key . ']', $profArr, '', ['class' => 'utsl_proficiency select__dropdown'], Label::getLabel("LBL_I_don't_speak_this_language"));
+    
+            $proficiencyField->requirements()->setRequired();
+            $speekLangField->requirements()->addOnChangerequirementUpdate(0, 'gt', $proficiencyField->getName(), $proficiencyField->requirements());
+
+            $proficiencyField->requirements()->setRequired(false);
+            $speekLangField->requirements()->addOnChangerequirementUpdate(0, 'le', $proficiencyField->getName(), $proficiencyField->requirements());
+
+            $speekLangField->requirements()->setRequired();
+            $proficiencyField->requirements()->addOnChangerequirementUpdate(0, 'gt', $proficiencyField->getName(), $speekLangField->requirements());
+
+            $speekLangField->requirements()->setRequired(false);
+            $proficiencyField->requirements()->addOnChangerequirementUpdate(0, 'le', $proficiencyField->getName(), $speekLangField->requirements());
+        }
         /* Resume[ */
         $frm->addHtml('', 'resume_fields_heading', '');
         $frm->addHtml('', 'resume_listing_html', '');

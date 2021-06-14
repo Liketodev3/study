@@ -61,7 +61,7 @@ $("document").ready(function(){
 	};
 
 	searchTeacherQualification = function(){
-		var dv = $('#resume_listing');
+		var dv = $('#block--4');
 		$(dv).html( fcom.getLoader() );
 
 		fcom.ajax( fcom.makeUrl('TeacherRequest', 'searchTeacherQualification'),'',function(res){

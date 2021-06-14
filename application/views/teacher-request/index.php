@@ -14,13 +14,42 @@ $applyTeachFrm->developerTags['fld_default_col'] = 12;
             <img src="<?php echo CommonHelper::generateUrl('image', 'applyToTeachBanner', [$siteLangId], CONF_WEBROOT_URL); ?>" alt="">
         </picture>
     </div>
+  <?php if(UserAuthentication::getLoggedUserId(true) && User::isLearner()){ ?>
     <div class="slideshow-content">
+            <h1>Apply to Teach</h1>
+            <p>Teach what you are passionate about.</p>
+
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Obcaecati adipisci veritatis corporis itaque quisquam sunt, voluptatem ea consequuntur, fugit...</p>
+            <a href="<?php echo CommonHelper::generateUrl('TeacherRequest'); ?>" class="btn btn--secondary btn--large btn--block "><?php echo Label::getLabel('LBL_BECOME_A_TUTOR',$siteLangId); ?></a>
+            <div class="row justify-content-center margin-top-4">
+                <p>Checkout the FAQ area if you have any questions and how to become a tutor on Yo!Coach.</p>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <a href="#faq-area" class="btn btn--block btn--white scroll">
+                        See FAQ
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="#how-it-works" class="btn btn--block btn--white scroll ">
+                        How it Works
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    <?php }elseif(UserAuthentication::getLoggedUserId(true) && User::isTeacher()){ ?>
+
+    <?php }else{?>
+        <div class="slideshow-content">
         <h1><?php echo Label::getLabel('LBL_Apply_To_Teach', $siteLangId); ?></h1>
         <p><?php echo Label::getLabel('LBL_Apply_to_Teach_Descritpion', $siteLangId);  ?></p>
         <div class="form-register">
         <?php echo $applyTeachFrm->getFormHtml(); ?>          
         </div>
     </div>
+        <?php }  ?>
+   
 </section>
 <?php echo FatUtility::decodeHtmlEntities($sectionAfterBanner); ?>
 <?php echo FatUtility::decodeHtmlEntities($featuresSection); ?>

@@ -70,7 +70,7 @@ $(document).ready(function(){
 
 	setUpGoToTop();
 
-	setUpStickyHeader();
+	// /setUpStickyHeader();
 
 	toggleNavDropDownForDevices();
 

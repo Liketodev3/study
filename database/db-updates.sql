@@ -367,3 +367,22 @@ REPLACE INTO `tbl_faq_categories` (`faqcat_id`, `faqcat_identifier`, `faqcat_act
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_tutor_reg_description', '1', 'Contrary to popular belief, Lorem Ipsum is not simply random text.Ipsum to popular belief, Lorem Ipsum is simply dummy text of the printing');
 
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Profile_media_title', '1', 'Add Profile Photo, Video and Biography');
+
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Profile_media_desc', '1', 'Lorem Ipsum is not simply random text.Ipsum to popular belief, Lorem Ipsum is simply dummy text of the printing Contrary to popular belief,');
+
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Profile_Pic_Fld_Desc', '1', '(Experts use profile picture to look professional)');
+
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_video_desc', '1', '(Experts use videos to present their skillsets)');
+
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_About_self_Fld_Desc', '1', '(Experts use videos to present their skillsets)');
+
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (6454, 'LBL_Languages_section_Title', 1, 'Add Languages as you teach and as you speak');
+
+
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Languages_section_Desc', '1', 'Lorem Ipsum is not simply random text.Ipsum to popular belief, Lorem Ipsum is simply dummy text of the printing Contrary to popular belief,');
+
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Resume_Section_Title', '1', 'Add your resumes & eperiences');
+
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Resume_section_desc', '1', 'You have to add your resume, its a mandatory to create a profile as a tutor.');
+
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_resume_upload_msg', '1', 'You have to add your resume, its a mandatory to create a profile as a tutor.');

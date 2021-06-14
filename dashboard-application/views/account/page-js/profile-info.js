@@ -513,7 +513,6 @@ $(document).ready(function () {
 			$.mbsmessage.close();
 			$.systemMessage.close()
 			$.facebox(t, 'facebox-medium');
-			//teacherQualification();
 		});
 	};
 
