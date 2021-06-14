@@ -40,7 +40,6 @@ class TeacherRequestController extends MyAppController
         $this->_template->addCss('css/intlTelInput.css');
 
         if (!$this->userId) {
-
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
         }
 
@@ -80,6 +79,9 @@ class TeacherRequestController extends MyAppController
             $this->form();
             return;
         }
+
+        $teacherRequest = $this->verifyTeacherRequestRow();
+        if(in_array($teacherRequest['utrequest_id'],['']))
         /* ] */
         /* Validation[ */
         $frm = $this->getForm($this->siteLangId);
@@ -351,8 +353,6 @@ class TeacherRequestController extends MyAppController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-
-
     private function getForm(int $langId, $spokenLangs = null)
     {
         $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
@@ -430,7 +430,7 @@ class TeacherRequestController extends MyAppController
     public function logoutGuestUser()
     {
         UserAuthentication::logoutGuestTeacher();
-        FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
+        FatApp::redirectUser(CommonHelper::generateUrl());
     }
 
     private function getProfileImageForm()
@@ -474,5 +474,23 @@ class TeacherRequestController extends MyAppController
         $records = FatApp::getDb()->fetchAll($srch->getResultSet());
 
         return  $records;
+    }
+
+    private function verifyTeacherRequestRow(){
+        $srch = new TeacherRequestSearch();
+		$srch->joinUsers();
+		$srch->addCondition('utrequest_user_id', '=', $this->userId);
+		$srch->addMultiplefields(array(
+			'utrequest_attempts',
+			'utrequest_id',
+			'utrequest_status',
+			'concat(user_first_name, " ", user_last_name) as user_name',
+			'utrequest_reference'
+		));
+		$srch->addOrder('utrequest_id', 'desc');
+		$rs = $srch->getResultSet();
+		$teacherRequestRow = FatApp::getDb()->fetch($rs);
+
+        return $teacherRequestRow;
     }
 }
