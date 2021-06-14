@@ -200,11 +200,11 @@
                     margin-#{theme('direction.right','value')}: var(--margin-2);
                 }
             }
-            // span{
-            //     font-size: unset;
-            //     text-transform: lowercase;
-            //     font-weight: normal;
-            // }
+            span{
+                font-size: unset;
+                text-transform: lowercase;
+                font-weight: normal;
+            }
         }
         
     }

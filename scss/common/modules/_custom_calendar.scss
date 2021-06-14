@@ -828,11 +828,7 @@ $dashboard-calendar: "dashboard-calendar";
             }
         }
     }
-    [class*="col-"]{
-        &:last-child{
-            display: flex;
-        }
-    }
+
     .cal-status{
         display: flex;
         align-items: center;
@@ -847,6 +843,7 @@ $dashboard-calendar: "dashboard-calendar";
             margin-bottom: var(--margin-4);
         }
         [class*="col-sm-7"]{
+            display: flex;
             @media(min-width:theme('breakpoints.md','value')){
                 justify-content: flex-end;
             }

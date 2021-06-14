@@ -17,7 +17,6 @@ var FatEventCalendar = function (teacherId) {
             minute: '2-digit',
             meridiem: 'short'
         },
-        height : 'auto',
         views: {
             timeGridWeek: { // name of view
                 titleFormat: { month: 'short', day: '2-digit', year: 'numeric' }
@@ -251,7 +250,10 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
 
     var calendarEl = document.getElementById('d_calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, conf);
-
+    if($( window ).width() <= 767) {
+        console.log($( window ).width(), 'width');
+        // calendar.setOption('height', 'auto');
+      }
     calendar.render();
 
     jQuery('body').find(".fc-time-button").parent().html("<h6><span>" + langLbl.myTimeZoneLabel + " :-</span> <span class='timer'>" + moment(current_time).format('hh:mm:ss A') + "</span><span class='timezoneoffset'>(" + langLbl.timezoneString + " " + timeZoneOffset + ")</span></h6>");
@@ -264,6 +266,8 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
     jQuery(document).bind('close.facebox', function () {
         jQuery('body > .tooltipevent').remove();
     });
+    
+  
 };
 
 FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
