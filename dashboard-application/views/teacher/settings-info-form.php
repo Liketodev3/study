@@ -68,7 +68,7 @@ $placeHolder  =  CommonHelper::getPlaceholderForAmtField();
 
                     $dataFatreqChange =   $durationFld->requirements()->getOnchangeRequirementUpdatesArray();
                     $dataFatreqChange = FatUtility::convertToJson($dataFatreqChange, JSON_HEX_QUOT); ?>
-                    <label class="selection-tabs__label">
+                    <label class="selection-tabs__label <?php echo ($defaultSlot == $value) ? 'selection-disabled' : ''; ?>">
                         <input type="checkbox" value="<?php echo $durationFld->value; ?>" onclick="updateSlots(this);" onchange="fatUpdateRequirement(this);" data-field-caption='<?php echo $durationFld->getCaption(); ?>' data-fat-req-change='<?php echo $dataFatreqChange; ?>' data-fatreq='<?php echo $dataFatreq; ?>' name="<?php echo $durationFld->getName(); ?>" <?php echo $checkedStr; ?> <?php echo ($defaultSlot == $value) ? 'disabled' : ''; ?> class="selection-tabs__input">
                         <div class="selection-tabs__title"><?php echo $value; ?><span><?php echo Label::getLabel('Lbl_Mins'); ?></span></div>
                     </label>
@@ -196,6 +196,10 @@ $placeHolder  =  CommonHelper::getPlaceholderForAmtField();
         let formValid = $(form).validate();
         if (!$.Validation.getRule('floating').check(true, price)) {
             if (!formValid) return;
+        }
+        price  = parseFloat(price);
+        if(1 > price){
+            return;
         }
         price = (price == '') ? 0.00 : price;
         price = parseFloat(price).toFixed(2);
