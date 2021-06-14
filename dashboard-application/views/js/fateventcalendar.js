@@ -113,24 +113,6 @@ var FatEventCalendar = function (teacherId) {
         var start = info.event.start;
         var end = info.event.end;
 
-        let calendarStartDateTime = calendar.view.currentStart;
-        let calendarEndDateTime = calendar.view.currentEnd;
-
-        if (moment(calendarStartDateTime) > moment(info.event.end) || moment(calendarEndDateTime) < moment(info.event.start)) {
-            info.event.remove();
-            return;
-        }
-
-        if (moment(calendarStartDateTime) > moment(info.event.start)) {
-            start = calendarStartDateTime;
-            info.event.setStart(calendarStartDateTime);
-        }
-
-        if (moment(calendarEndDateTime) < moment(info.event.end)) {
-            end = calendarEndDateTime;
-            info.event.setEnd(calendarEndDateTime);
-        }
-        console.log(events);
         for (i in events) {
 
             if (events[i]._instance.instanceId == info.oldEvent._instance.instanceId && events[i]._instance.defId == info.oldEvent._instance.defId) {
@@ -408,11 +390,45 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
             });
         },
         eventDrop: function (info) {
+            let calendarStartDateTime = calendar.view.currentStart;
+            let calendarEndDateTime = calendar.view.currentEnd;
+            
+            if (moment(calendarStartDateTime) > moment(info.event.end) || moment(calendarEndDateTime) < moment(info.event.start)) {
+                info.event.remove();
+                return;
+            }
+            
+            if (moment(calendarStartDateTime) > moment(info.event.start)) {
+                
+                info.event.setStart(calendarStartDateTime);
+            }
+            
+            if (moment(calendarEndDateTime) < moment(info.event.end)) {
+                info.event.setEnd(calendarEndDateTime);
+            }
+            
             var events = calendar.getEvents();
             eventMerging(info, events);
         },
 
         eventResize: function (info) {
+            let calendarStartDateTime = calendar.view.currentStart;
+            let calendarEndDateTime = calendar.view.currentEnd;
+
+            if (moment(calendarStartDateTime) > moment(info.event.end) || moment(calendarEndDateTime) < moment(info.event.start)) {
+                info.event.remove();
+                return;
+            }
+
+            if (moment(calendarStartDateTime) > moment(info.event.start)) {
+
+                info.event.setStart(calendarStartDateTime);
+            }
+
+            if (moment(calendarEndDateTime) < moment(info.event.end)) {
+                info.event.setEnd(calendarEndDateTime);
+            }
+            
             var events = calendar.getEvents();
             eventMerging(info, events);
 
