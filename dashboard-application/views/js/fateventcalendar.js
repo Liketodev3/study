@@ -346,6 +346,7 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
             center: '',
             right: ''
         },
+        dayHeaderFormat: {weekday: 'short'},
         eventSources: [
             {
                 url: fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData', [this.teacherId], confFrontEndUrl),
@@ -392,21 +393,21 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
         eventDrop: function (info) {
             let calendarStartDateTime = calendar.view.currentStart;
             let calendarEndDateTime = calendar.view.currentEnd;
-            
+
             if (moment(calendarStartDateTime) > moment(info.event.end) || moment(calendarEndDateTime) < moment(info.event.start)) {
                 info.event.remove();
                 return;
             }
-            
+
             if (moment(calendarStartDateTime) > moment(info.event.start)) {
-                
+
                 info.event.setStart(calendarStartDateTime);
             }
-            
+
             if (moment(calendarEndDateTime) < moment(info.event.end)) {
                 info.event.setEnd(calendarEndDateTime);
             }
-            
+
             var events = calendar.getEvents();
             eventMerging(info, events);
         },
@@ -428,7 +429,7 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
             if (moment(calendarEndDateTime) < moment(info.event.end)) {
                 info.event.setEnd(calendarEndDateTime);
             }
-            
+
             var events = calendar.getEvents();
             eventMerging(info, events);
 
