@@ -21,14 +21,14 @@
 		$('#block--' + showBlock).show();
 	})
 
-	$('.btn-Back').click(function() {
+	$(document).on('click','.btn-Back',function() {
 		var blockId = parseInt($('.is-process').attr('data-blocks-show')) - 1;
 		$('.change-block-js').removeClass('is-process');
 		$('li[data-blocks-show="' + blockId + '"]').addClass('is-process');
 		$('.page-block__body').hide();
 		$('#block--' + blockId).show();
 	});
-	$('.btn--next').click(function() {
+	$(document).on('click','.btn--next',function() {
 		var blockId = parseInt($('.is-process').attr('data-blocks-show')) + 1;
 		$('.change-block-js').removeClass('is-process');
 		$('li[data-blocks-show="' + blockId + '"]').addClass('is-process');

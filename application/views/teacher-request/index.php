@@ -40,7 +40,7 @@ $applyTeachFrm->developerTags['fld_default_col'] = 12;
         <div class="slideshow-content">
     <h1><?php echo Label::getLabel('LBL_Apply_To_Teach', $siteLangId); ?></h1>
     <p><?php echo Label::getLabel('LBL_Apply_to_Teach_Descritpion', $siteLangId);  ?></p>
-            <a href="<?php echo CommonHelper::generateUrl('TeacherRequest'); ?>" class="btn btn--secondary btn--large btn--block "><?php echo Label::getLabel('LBL_BECOME_A_TUTOR',$siteLangId); ?></a>
+            <a href="<?php echo CommonHelper::generateUrl('TeacherRequest','form'); ?>" class="btn btn--secondary btn--large btn--block "><?php echo Label::getLabel('LBL_BECOME_A_TUTOR',$siteLangId); ?></a>
             <div class="row justify-content-center margin-top-4">
                 <p><?php echo Label::getLabel('LBL_Faqs_Description',$siteLangId); ?></p>
             </div>

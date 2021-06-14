@@ -16,7 +16,7 @@
 					<div class="header__right">
 
 						<div class="head__action">
-							<a class="" href="<?php echo CommonHelper::generateUrl('TeacherRequest','logoutGuestUser'); ?>">
+							<a class="" href="<?php echo (UserAuthentication::getLoggedUserId(true))?CommonHelper::generateUrl('GuestUser','logout'):CommonHelper::generateUrl('TeacherRequest','logoutGuestUser'); ?>">
 								<svg class="icon icon--logout">
 									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#logout' ?>"></use>
 								</svg>

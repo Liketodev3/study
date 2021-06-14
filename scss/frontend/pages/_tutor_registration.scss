@@ -296,6 +296,11 @@ $is-registration: 'is-registration';
         }
     }
 
+    .block-content__foot {
+        display: flex;
+        justify-content: space-between;
+    }  
+
     .list-inline{
         label{
             width: 100%;

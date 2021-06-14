@@ -134,7 +134,7 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
 
                                 </div>
                                 <div class="block-content__foot">
-                                    <button class="btn btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
+                                    <button class="btn btn--primary color-white btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
                                 </div>
                             </div>
                         </div>
@@ -154,7 +154,7 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                     <form class="form">
                                         <div class="img-upload">
                                             <div class="img-upload__media">
-                                                <div class="avtar avtar--large ratio ratio--1by1" data-title="<?php echo CommonHelper::getFirstChar($frm->getField('utrvalue_user_first_name')->value); ?>">
+                                                <div class="avtar avtar--large" data-title="<?php echo CommonHelper::getFirstChar($frm->getField('utrvalue_user_first_name')->value); ?>">
                                                     <?php if (User::isProfilePicUploaded($userDetails['user_id'])) { ?>
                                                         <img id="user-profile-pic--js" src="<?php echo CommonHelper::generateUrl('image', 'user', [$userDetails['user_id']]); ?>">
                                                     <?php } ?>
@@ -196,8 +196,8 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                         </div>
                                 </div>
                                 <div class="block-content__foot">
-                                    <button class="btn btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
-                                    <button class="btn btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
+                                    <button class="btn btn--bordered color-primary btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
+                                    <button class="btn btn--primary color-white btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
                                 </div>
                             </div>
                         </div>
@@ -290,8 +290,8 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                         </div>
                                 </div>
                                 <div class="block-content__foot">
-                                    <button class="btn btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
-                                    <button class="btn btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
+                                    <button class="btn btn--bordered color-primary btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
+                                    <button class="btn btn--primary color-white btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
                                 </div>
                             </div>
                         </div>

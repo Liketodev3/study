@@ -6558,6 +6558,13 @@ p {
       border-right: none; }
     .block-content .block-content__body .form .row:last-child [class*="col-md-12"] .field-set {
       margin-bottom: 0; }
+  .block-content .block-content__foot {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between; }
   .block-content .list-inline label {
     width: 100%;
     border-radius: 0; }
@@ -7002,5 +7009,8 @@ p {
         bottom: -5%;
         border: 5px solid var(--color-gray-100);
         right: -2%; } }
+
+.form-register .form {
+  text-align: left; }
 
 /*# sourceMappingURL=frontend-rtl.css.map */

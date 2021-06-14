@@ -39,14 +39,12 @@ class TeacherRequestController extends MyAppController
         $this->_template->addJs('js/intlTelInput.js');
         $this->_template->addCss('css/intlTelInput.css');
 
-        $guestUserId =  UserAuthentication::getGuestTeacherUserId();
-        $this->userId = $guestUserId;
+        if (!$this->userId) {
 
-        if (!$guestUserId) {
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
         }
 
-        $user = new User($guestUserId);
+        $user = new User($this->userId);
         if (!$user->loadFromDb()) {
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
         }
