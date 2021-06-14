@@ -94,6 +94,13 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 								<div class="col-md-6">
 									<h4><?php echo Label::getLabel('Lbl_Sale_Statistics'); ?></h4>
 								</div>
+								<div class="col-md-6">
+									<div class="sale-stat__select">
+										<div class="form-inline__item">
+											<?php echo $durationType->getHTML(); ?>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="page-panel__body">
@@ -103,7 +110,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 								echo $reportSearchForm->getFieldHtml('forGraph');
 							?>
 							<div class="row margin-bottom-6">
-								<div class="col-lg-4 col-md-4 col-sm-4">
+								<!-- <div class="col-lg-4 col-md-4 col-sm-4">
 									<div class="sale-stat sale-stat--primary color-yellow">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('Lbl_Duration_Type'); ?></span>
@@ -112,21 +119,21 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 
 										<div class="sale-stat__select">
 											<div class="form-inline__item">
-											<?php echo $durationType->getHTML(); ?>
+											
 											</div>
 										</div>
 									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4">
-									<div class="sale-stat sale-stat--primary color-yellow">
+								</div> -->
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="sale-stat sale-stat--primary sale-stat--yellow">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('Lbl_Sales'); ?></span>
 											<h5 class="earing-amount-js"></h5>
 										</div>
 									</div>
 								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4">
-									<div class="sale-stat sale-stat--secondary color-secondary">
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="sale-stat sale-stat--secondary sale-stat--sky">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('LBL_Lessons_sold'); ?></span>
 											<h5 class="lessons-sold-count-js"></h5>

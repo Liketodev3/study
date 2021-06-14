@@ -35,7 +35,7 @@
 }
 @media  (min-width: theme('breakpoints.xl','value')) {
 
-    #facebox .content.facebox-large{min-width: 700px;}
+    #facebox .content.facebox-large{min-width: 920px;}
 }
 
 @media  (min-width: 767px) {
@@ -85,7 +85,9 @@
     #{theme('direction.right','value')}: 0;
     transform: none;
     &::before{
-        color: #fff;
+        @media(min-width:theme('breakpoints.md','value')){ 
+            color: #fff;
+        }
     }
 }
 
@@ -157,5 +159,9 @@
     }
 }
 
-
+#facebox .calendar-view{
+    @media(min-width:theme('breakpoints.md','value')){
+        padding: var(--padding-6);
+    }
+}
 

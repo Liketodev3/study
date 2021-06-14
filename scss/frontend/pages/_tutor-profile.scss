@@ -680,6 +680,11 @@
         margin: var(--margin-6) 0;
         width: 100%;
     }
+
+    .right-panel{
+        position: sticky;
+        top: 180px;
+    }
 }
 
 .box--book {
@@ -759,6 +764,10 @@
         display: flex;
         flex-wrap: wrap;
     }
+
+    @media(max-width: theme('breakpoints.md','value')){
+        justify-content: center;
+    }
     scroll-behavior: smooth;
     .profile-head{
         order: 1;
@@ -821,5 +830,38 @@
         @media(min-width: theme('breakpoints.xxxl','value')){
             width: 420px;
         }
+    }
+}
+
+.panel-box__foot{
+    text-align: center;
+    position: relative;
+    .link-detail{
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        bottom: -48px;
+        left: 50%;
+        transition: all 0.2s;
+        transform: translatex(-50%);
+        padding: var(--padding-3);
+        color: var(--color-primary);
+        font-weight: 600;
+        text-decoration-style: dotted;
+        text-decoration-color: var(--color-primary);
+        text-decoration: underline;
+    }
+}
+
+.box-list{
+    transition: all 0.2s;
+    &:hover{
+        box-shadow: theme('boxShadow.vertical');
+        .link-detail{
+            opacity: 1;
+            visibility: visible;
+            bottom: -20px;
+        }
+
     }
 }
