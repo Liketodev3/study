@@ -5001,6 +5001,30 @@ div.tagsinput div {
   height: calc(100% - 94px);
   overflow: auto; }
 
+.sidebar__links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  position: absolute;
+  bottom: 10px;
+  background: #fff;
+  right: 50%;
+  justify-content: center;
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%); }
+  .sidebar__links a {
+    text-transform: uppercase;
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    padding: var(--padding-3) var(--padding-2);
+    white-space: nowrap; }
+
 .session-status {
   max-width: 452px;
   position: relative;

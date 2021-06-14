@@ -553,6 +553,9 @@
 
 .tutor-info__inner{
     margin-bottom: calc(var(--margin-6) + 2px);
+    &:last-child{
+        margin-bottom: 0;
+    }
     .info__title{
         margin-bottom: 5px;
         h6{
@@ -566,6 +569,7 @@
         line-height: 20px;
     }
     p{
+        margin-bottom: 0;
         a{
             color: var(--color-black);
             text-decoration: underline;
@@ -573,6 +577,38 @@
     }
 }
 
+.panel-box__foot{
+    text-align: center;
+    position: relative;
+    .link-detail{
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        bottom: -38px;
+        left: 50%;
+        transition: all 0.2s;
+        transform: translatex(-50%);
+        padding: var(--padding-3);
+        color: var(--color-primary);
+        font-weight: 600;
+        text-decoration-style: dotted;
+        text-decoration-color: var(--color-primary);
+        text-decoration: underline;
+    }
+}
+
+.box-list{
+    transition: all 0.2s;
+    &:hover{
+        box-shadow: theme('boxShadow.vertical');
+        .link-detail{
+            opacity: 1;
+            visibility: visible;
+            bottom: -10px;
+        }
+
+    }
+}
 
 .box__secondary{
     border-left: 1px solid var(--color-gray-200);

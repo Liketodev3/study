@@ -422,6 +422,26 @@ $flash-card: "flash-card";
     }
 }
 
+.sidebar__links{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 10px;
+    background: #fff;
+    #{theme('direction.left','value')}: 50%;
+    justify-content: center;
+    transform: translateX(-50%);
+    a{
+        text-transform: uppercase;
+        color: var(--color-primary);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: underline;
+        padding: var(--padding-3) var(--padding-2);
+        white-space: nowrap;
+    }
+}
+
 $session-status: "session-status";
 
 .#{&session-status} {

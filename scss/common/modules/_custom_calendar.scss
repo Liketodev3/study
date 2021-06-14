@@ -819,7 +819,15 @@ $dashboard-calendar: "dashboard-calendar";
 }
 
 .calendar-view{
-    
+    @media(max-width:theme('breakpoints.md','value')){
+        height: 100%;
+        #calendar-container{
+            height: calc(100% - 100px);
+            >div{
+                height: 100%;
+            }
+        }
+    }
     [class*="col-"]{
         &:last-child{
             display: flex;
@@ -834,9 +842,18 @@ $dashboard-calendar: "dashboard-calendar";
         }
     }
     .calendar-view__head{
+        
+        @media(min-width:theme('breakpoints.md','value')){
+            margin-bottom: var(--margin-4);
+        }
         [class*="col-sm-7"]{
             @media(min-width:theme('breakpoints.md','value')){
                 justify-content: flex-end;
+            }
+        }
+        @media(min-width:theme('breakpoints.xxl','value')){
+            h4{
+                font-size: var(--font-size-h4);
             }
         }
         @media(max-width:theme('breakpoints.md','value')){
@@ -853,6 +870,16 @@ $dashboard-calendar: "dashboard-calendar";
 
     .fc-header-toolbar{
         .fc-toolbar-chunk{
+            &:first-child{
+                margin-#{theme('direction.right','value')}: auto;
+            }
+            
+            @media(min-width:theme('breakpoints.md','value')){
+                h2{
+                    margin-right: var(--margin-5);
+                }
+            }
+
             @media(max-width:theme('breakpoints.md','value')){
                 width: 100%;
                 text-align: center;

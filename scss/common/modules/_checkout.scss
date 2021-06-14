@@ -200,11 +200,11 @@
                     margin-#{theme('direction.right','value')}: var(--margin-2);
                 }
             }
-            span{
-                font-size: unset;
-                text-transform: lowercase;
-                font-weight: normal;
-            }
+            // span{
+            //     font-size: unset;
+            //     text-transform: lowercase;
+            //     font-weight: normal;
+            // }
         }
         
     }
@@ -498,6 +498,11 @@
     .selection-tabs__label{
         pointer-events: none;
     }
+}
+
+.selection-disabled{
+    opacity: 0.7;
+    cursor: no-drop !important;
 }
 
 .balance-payment{

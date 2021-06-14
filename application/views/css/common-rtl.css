@@ -772,10 +772,6 @@ ul {
         @media (max-width: 576px) {
           .selection--checkout .selection-tabs__label .selection-tabs__title svg {
             margin-left: var(--margin-2); } }
-      .selection--checkout .selection-tabs__label .selection-tabs__title span {
-        font-size: unset;
-        text-transform: lowercase;
-        font-weight: normal; }
 
 @media (min-width: 767px) {
   .selection--onehalf {
@@ -1041,6 +1037,10 @@ ul {
 
 .selection--lesson .selection-tabs__label {
   pointer-events: none; }
+
+.selection-disabled {
+  opacity: 0.7;
+  cursor: no-drop !important; }
 
 .balance-payment {
   margin-top: var(--margin-6);
@@ -1916,6 +1916,14 @@ ul {
   border: 1px solid var(--color-gray-100) !important;
   font-weight: var(--font-weight-medium); }
 
+@media (max-width: 767px) {
+  .calendar-view {
+    height: 100%; }
+    .calendar-view #calendar-container {
+      height: calc(100% - 100px); }
+      .calendar-view #calendar-container > div {
+        height: 100%; } }
+
 .calendar-view [class*="col-"]:last-child {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1933,10 +1941,18 @@ ul {
     margin-bottom: 0; }
 
 @media (min-width: 767px) {
+  .calendar-view .calendar-view__head {
+    margin-bottom: var(--margin-4); } }
+
+@media (min-width: 767px) {
   .calendar-view .calendar-view__head [class*="col-sm-7"] {
     -webkit-box-pack: end;
         -ms-flex-pack: end;
             justify-content: flex-end; } }
+
+@media (min-width: 1299px) {
+  .calendar-view .calendar-view__head h4 {
+    font-size: var(--font-size-h4); } }
 
 @media (max-width: 767px) {
   .calendar-view .calendar-view__head {
@@ -1948,6 +1964,13 @@ ul {
       -webkit-box-pack: center;
           -ms-flex-pack: center;
               justify-content: center; } }
+
+.calendar-view .fc-header-toolbar .fc-toolbar-chunk:first-child {
+  margin-left: auto; }
+
+@media (min-width: 767px) {
+  .calendar-view .fc-header-toolbar .fc-toolbar-chunk h2 {
+    margin-right: var(--margin-5); } }
 
 @media (max-width: 767px) {
   .calendar-view .fc-header-toolbar .fc-toolbar-chunk {
@@ -10656,6 +10679,9 @@ textarea[disabled] {
 @media (min-width: 767px) {
   #facebox .calendar-view {
     padding: var(--padding-6); } }
+
+.show-facebox {
+  position: fixed; }
 
 .fc-icon, .fc-unselectable {
   -moz-user-select: none;

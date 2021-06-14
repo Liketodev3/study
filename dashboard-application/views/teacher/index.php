@@ -89,6 +89,11 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 					</div>
 
 					<div class="page-panel">
+					<?php 
+								echo $reportSearchForm->getFormTag(); 
+								echo $reportType->getHTML();
+								echo $reportSearchForm->getFieldHtml('forGraph');
+							?>
 						<div class="page-panel__head border-bottom-0">
 							<div class="row">
 								<div class="col-md-6">
@@ -104,26 +109,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 							</div>
 						</div>
 						<div class="page-panel__body">
-							<?php 
-								echo $reportSearchForm->getFormTag(); 
-								echo $reportType->getHTML();
-								echo $reportSearchForm->getFieldHtml('forGraph');
-							?>
 							<div class="row margin-bottom-6">
-								<!-- <div class="col-lg-4 col-md-4 col-sm-4">
-									<div class="sale-stat sale-stat--primary color-yellow">
-										<div class="sale-stat__count">
-											<span><?php echo Label::getLabel('Lbl_Duration_Type'); ?></span>
-											<h5 class=""></h5>
-										</div>
-
-										<div class="sale-stat__select">
-											<div class="form-inline__item">
-											
-											</div>
-										</div>
-									</div>
-								</div> -->
 								<div class="col-lg-6 col-md-6 col-sm-6">
 									<div class="sale-stat sale-stat--primary sale-stat--yellow">
 										<div class="sale-stat__count">
@@ -141,14 +127,14 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 									</div>
 								</div>
 							</div>
-							</form>
+						
 							<?php echo $reportSearchForm->getExternalJS(); ?>
 							<div class="graph-media" id="chart_div">
 							</div>
 						</div>
 
 					</div>
-
+					</form>
 				</div>
 
 				<!-- <div class="page__footer align-center">
