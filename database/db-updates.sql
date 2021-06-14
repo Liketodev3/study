@@ -386,3 +386,5 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Resume_section_desc', '1', 'You have to add your resume, its a mandatory to create a profile as a tutor.');
 
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_resume_upload_msg', '1', 'You have to add your resume, its a mandatory to create a profile as a tutor.');
+
+INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Faqs_Description', '1', 'Checkout the FAQ area if you have any questions and how to become a tutor on Yo!Coach.');

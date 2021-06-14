@@ -196,7 +196,7 @@ class GuestUserController extends MyAppController
         $redirectUrl = CommonHelper::redirectUserReferer(true);
         if ($user->getMainTableRecordId() and $user_registered_initially_for == User::USER_TYPE_TEACHER) {
             $_SESSION[UserAuthentication::SESSION_GUEST_USER_ELEMENT_NAME] = $user->getMainTableRecordId();
-            $redirectUrl = CommonHelper::generateUrl('TeacherRequest','personalDetailForm');
+            $redirectUrl = CommonHelper::generateUrl('TeacherRequest','form');
         } else {
             unset($_SESSION[UserAuthentication::SESSION_GUEST_USER_ELEMENT_NAME]);
         }

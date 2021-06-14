@@ -121,7 +121,13 @@ $("document").ready(function(){
 					}
 					$.mbsmessage(result.msg,true, 'alert alert--success');
 					if( result.redirectUrl ){
-						setTimeout(function(){ window.location.href = result.redirectUrl }, 2000);
+						setTimeout(function(){ 
+							
+							$('.page-block__body').hide();
+							$('.change-block-js').removeClass('is-process');
+							$('li[data-blocks-show="5"]').addClass('is-process');
+							$('#block--5').show();			
+						}, 2000);
 							return;
 					}
 				} catch (e) {
@@ -207,6 +213,26 @@ $("document").ready(function(){
 			$(this).cropper("zoom", 0.5);
 		  },
 		})
+	};
+
+	changeProficiency = function(obj, langId) {
+		langId = parseInt(langId);
+		if (langId <= 0) {
+			return;
+		}
+		let value = obj.value;
+		slanguageSection = '.slanguage-' + langId;
+		slanguageCheckbox = '.slanguage-checkbox-' + langId;
+		if (value == '') {
+			$(slanguageSection).find('.badge-js').remove();
+			$(slanguageSection).removeClass('is-selected');
+			$(slanguageCheckbox).prop('checked', false);
+		} else {
+			$(slanguageSection).addClass('is-selected');
+			$(slanguageCheckbox).prop('checked', true);
+			$(slanguageSection).find('.badge-js').remove();
+			$(slanguageSection).find('.selection__trigger-label').append('<span class="badge color-secondary badge-js  badge--round badge--small margin-0">' + obj.selectedOptions[0].innerHTML + '</span>');
+		}
 	};
 
 	sumbmitProfileImage = function(){

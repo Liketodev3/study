@@ -89,7 +89,7 @@
 								<div class="field_cover">
 										<label>
 											<span class="checkbox">
-												<input data-field-caption="Remember Me" type="checkbox" name="remember_me" value="1">
+												<input data-field-caption="Remember Me" type="checkbox" name="terms" value="1">
 												<i class="input-helper"></i>
 											</span>
 											<?php echo Label::getLabel('LBL_Accept_Tutor_Approval',$siteLangId); ?> <a href="<?php echo CommonHelper::generateUrl('cms','view',[2]) ?>"><?php echo Label::getLabel('LBL_Terms_and_Conditions',$siteLangId); ?></a>
@@ -102,6 +102,7 @@
 			</div>
 			<div class="block-content__foot">
 			<button class="btn btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
+            <input type="submit" name="btn_submit" value="<?php echo Label::getLabel('LBL_Save',$siteLangId); ?>"/>
 		</div>
 		</div>
 	</div>
@@ -265,7 +266,7 @@
                                                     <div class="field_cover">
                                                         <label>
                                                             <span class="checkbox">
-                                                                <input data-field-caption="Remember Me" type="checkbox" name="remember_me" value="1">
+                                                                <input data-field-caption="Remember Me" type="checkbox" name="terms" value="1">
                                                                 <i class="input-helper"></i>
                                                             </span>
                                                            <?php echo Label::getLabel('LBL_Accept_Tutor_Approval',$siteLangId); ?><a href="<?php echo CommonHelper::generateUrl('cms','view',[2]) ?>"><?php echo Label::getLabel('LBL_Terms_and_Conditions',$siteLangId); ?></a>
@@ -278,6 +279,7 @@
                                 </div>
                                 <div class="block-content__foot">
                                     <button class="btn btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
+                                    <input type="submit" name="btn_submit" value="<?php echo Label::getLabel('LBL_Save',$siteLangId); ?>"/>
                                 </div>
                             </div>
                         </div>

@@ -1,6 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $this->includeTemplate('teacher-request/_partial/header.php', ['siteLangId' => $siteLangId]);
-
+$frm->setFormTagAttribute('class', 'form');
+$frm->setFormTagAttribute('onsubmit', 'setUpTeacherApproval(this); return false;');
 $usrFirstName = $frm->getField('utrvalue_user_first_name');
 $usrLastName = $frm->getField('utrvalue_user_last_name');
 $usrPhoneCode = $frm->getField('utrvalue_user_phone_code');
@@ -28,6 +29,7 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                         <h4><?php echo Label::getLabel('LBL_Tutor_registration', $siteLangId); ?></h4>
                     </div>
                 </div>
+                <?php echo $frm->getFormTag(); ?>
                 <div class="page-block__body" id="block--1">
                     <div class="row justify-content-center no-gutters">
                         <div class="col-md-12 col-lg-10 col-xl-8">
@@ -38,7 +40,7 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                         <p><?php echo Label::getLabel('LBL_tutor_reg_description', $siteLangId) ?></p>
                                     </div>
                                 </div>
-                                <?php $frm->getFormHtml(); ?>
+                               
                                 <div class="block-content__body">
 
                                     <div class="row">
@@ -101,13 +103,10 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                                 </div>
                                                 <div class="field-wraper phone--number">
                                                     <div class="row no-gutters">
-                                                        <div class="col-2 col-md-2">
+                                                 
+                                                        <div class="col-12 col-md-12">
                                                             <div class="field_cover">
-                                                                <?php echo $usrPhoneCode->getHtml(); ?>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-10 col-md-10">
-                                                            <div class="field_cover">
+                                                            <?php echo $usrPhoneCode->getHtml(); ?>
                                                                 <?php echo $usrPhone->getHtml(); ?>
                                                             </div>
                                                         </div>
@@ -133,10 +132,9 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                         </div>
                                     </div>
 
-                                    </form>
                                 </div>
                                 <div class="block-content__foot">
-                                    <button class="btn btn-next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
+                                    <button class="btn btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
                                 </div>
                             </div>
                         </div>
@@ -196,11 +194,10 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
                                 </div>
                                 <div class="block-content__foot">
                                     <button class="btn btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
-                                    <button class="btn btn-next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
+                                    <button class="btn btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
                                 </div>
                             </div>
                         </div>
@@ -249,7 +246,7 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                                 </div>
                                                 <div class="colum-layout__cell">
                                                     <div class="colum-layout__head">
-                                                        <span class="bold-600"><?php echo Label::getLabel('LBL_Language_I_Speak',$siteLangId); ?></span>
+                                                        <span class="bold-600"><?php echo Label::getLabel('LBL_Language_I_Speak', $siteLangId); ?></span>
                                                     </div>
                                                     <div class="colum-layout__body">
 
@@ -257,8 +254,8 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                                             <?php
 
                                                             foreach ($speakLangs as $key => $value) {
-                                                                $speakLangField = $frm->getField('utsl_slanguage_id[' . $key . ']');
-                                                                $proficiencyField = $frm->getField('utsl_proficiency[' . $key . ']');
+                                                                $speakLangField = $frm->getField('utrvalue_user_language_speak[' . $key . ']');
+                                                                $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[' . $key . ']');
                                                                 $proficiencyField->addFieldTagAttribute('onchange', 'changeProficiency(this,' . $key . ');');
                                                                 $proficiencyField->addFieldTagAttribute('data-lang-id', $key);
                                                                 $isLangSpeak = $speakLangField->checked;
@@ -275,7 +272,7 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                                                                     ?>
                                                                                 </span> <?php echo $value; ?>
 
-                                                        
+
                                                                             </span>
                                                                             <span class="selection__trigger-icon"></span>
                                                                         </span>
@@ -291,28 +288,25 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
                                 </div>
                                 <div class="block-content__foot">
                                     <button class="btn btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
-                                    <button class="btn btn-next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
+                                    <button class="btn btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="page-block__body" id="block--4" style="display:none;">
-
                 </div>
                 <div class="page-block__body" id="block--5" style="display:none;">
                     <div class="row justify-content-center no-gutters">
                         <div class="col-md-12 col-lg-10 col-xl-11">
                             <div class="block-content">
                                 <div class="block-content__head d-flex justify-content-center">
-                                    <h5>Application Awaiting Approval</h5>
+                                    <h5><?php echo Label::getLabel('LBL_Application_Awaiting_Approval',$siteLangId); ?></h5>
                                 </div>
                                 <div class="block-content__body">
-
                                     <div class="message-display message--resume message--confirmetion">
                                         <div class="message-display__icon">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="220" height="160" viewBox="0 0 220 160">
@@ -459,13 +453,12 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                                 </g>
                                             </svg>
                                         </div>
-
-                                        <h5>Hello James Anderson</h5>
-                                        <p>Thank You For Submitting Your Application</p>
+                                        <h5><?php echo Label::getLabel('LBL_Hello',$siteLangId); ?> <?php echo $userDetails['user_first_name']; ?></h5>
+                                        <p><?php echo Label::getLabel('LBL_Thank_You_For_Submitting_Your_Application',$siteLangId); ?></p>
                                         <div class="application-no">
-                                            Application Reference: <b>24-1622799988</b>
+                                           <?php echo Label::getLabel('LBL_Application_Reference',$siteLangId) ?><span id="reg-no"></span>
                                         </div>
-                                        <a href="#" class="btn btn--bordered btn--small color-secondary">Visit My Account</a>
+                                        <a href="<?php echo CommonHelper::generateUrl('learner','',[],CONF_WEBROOT_DASHBOARD) ?>" class="btn btn--bordered btn--small color-secondary"><?php echo Label::getLabel('LBL_Visit_My_Account',$siteLangId); ?></a>
                                     </div>
                                 </div>
 
@@ -473,6 +466,8 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                         </div>
                     </div>
                 </div>
+                <?php echo $frm->getExternalJS(); ?>
+                </form>
             </div>
         </div>
     </div>

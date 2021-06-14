@@ -1,6 +1,8 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 /** Filter Session Destroy **/
 $__controller = FatApp::getController();
+$__method = FatApp::getAction();
+
 if ($__controller != 'TeachersController' && isset($_SESSION['search_filters'])) {
 	//unset($_SESSION['search_filters']);
 }
@@ -49,7 +51,12 @@ switch ($controllerName) {
 		array_push($htmlBodyClassesArr, 'is-landing');
 		break;
 	case 'TeacherRequest':
-		array_push($htmlBodyClassesArr, 'is-landing is-registration');
+		if($__method=='index'){
+			array_push($htmlBodyClassesArr, 'is-landing');
+		}else{
+			array_push($htmlBodyClassesArr, 'is-landing is-registration');
+		}
+		
 		break;
 }
 $htmlBodyClassesString = implode(" ", $htmlBodyClassesArr);
