@@ -7003,4 +7003,7 @@ p {
         border: 5px solid var(--color-gray-100);
         right: -2%; } }
 
+.form-register .form {
+  text-align: left; }
+
 /*# sourceMappingURL=frontend-rtl.css.map */
