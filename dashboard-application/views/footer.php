@@ -1,10 +1,11 @@
         <div class="page__footer align-center">
             <div class="footer-nav">
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Find a Tutor</a></li>
-                    <li><a href="#">Apply to Teach</a></li>
-                    <li><a href="#">Contact US</a></li>
+                    <li><a href="<?php echo CommonHelper::generateUrl('', '', [], CONF_WEBROOT_FRONT_URL); ?>"><?php echo Label::getLabel('LBL_HOME'); ?></a></li>
+                    <li><a href="<?php echo CommonHelper::generateUrl('Teachers', '', [], CONF_WEBROOT_FRONT_URL); ?>"><?php echo Label::getLabel('LBL_FIND_A_TUTOR'); ?></a></li>
+                    <?php if (User::getDashboardActiveTab() == User::USER_LEARNER_DASHBOARD) { ?>
+                        <li><a href="<?php echo CommonHelper::generateUrl('cms', 'view', [FatApp::getConfig('CONF_APPLY_TO_TEACH_PAGE', FatUtility::VAR_INT)], CONF_WEBROOT_FRONT_URL); ?>"><?php echo Label::getLabel('LBL_APPLY_TO_TEACH'); ?></a></li>
+                    <?php } ?>
                 </ul>
             </div>
             <p class="small">
@@ -74,6 +75,7 @@
                 </div>
             </div>
             <script>
+                $.mbsmessage.settings.initialized = true;
                 $("document").ready(function() {
                     if (CONF_AUTO_CLOSE_SYSTEM_MESSAGES == 1) {
                         var time = CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES * 1000;

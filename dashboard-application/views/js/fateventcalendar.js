@@ -17,6 +17,7 @@ var FatEventCalendar = function (teacherId) {
             minute: '2-digit',
             meridiem: 'short'
         },
+        height : 'auto',
         views: {
             timeGridWeek: { // name of view
                 titleFormat: { month: 'short', day: '2-digit', year: 'numeric' }

@@ -353,3 +353,8 @@ REPLACE  INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_find_an_answer', '1', 'Can\'t find an answer?');
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_slot_outside_message', '1', 'this teacher to request a slot outside of their current schedule');
+
+REPLACE INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES ('CONF_APPLY_TO_TEACH_PAGE', '7', '0');
+
+
+

@@ -554,6 +554,7 @@ class TeachersController extends MyAppController
                 $twsch_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $startDateTime, true, $userTimezone);
                 $midPoint = (strtotime($twsch_start_time) + strtotime($twsch_end_time)) / 2;
                 $twschWeekYear = date('W-Y', $midPoint);
+                
                 $jsonArr[] = [
                     "title" => "",
                     "date" => $twsch_date,
