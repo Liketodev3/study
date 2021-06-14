@@ -57,6 +57,7 @@ $unreadNotifications = UserNotifications::getUserUnreadNotifications($loggedUser
 		var currencySymbolRight = '<?php echo $currencySymbolRight; ?>';
 		var SslUsed = '<?php $sslUsed; ?>';
 		var cookieConsent = <?php echo json_encode($cookieConsent); ?>;
+		var userTimeZone = '<?php echo MyDate::getUserTimeZone(); ?>';
         var timeZoneOffset = '<?php echo MyDate::getOffset(MyDate::getUserTimeZone()); ?>';
 
 		const CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = '<?php echo $closeSystemMessages; ?>';

@@ -20,7 +20,7 @@ var FatEventCalendar = function (teacherId) {
         },
         views: {
             timeGridWeek: {// name of view
-                titleFormat: {month: 'short', day: '2-digit', year: 'numeric'}
+                titleFormat: { month: 'short', day: '2-digit', year: 'numeric' }
             }
         },
         nowIndicator: true,
@@ -128,22 +128,22 @@ FatEventCalendar.prototype.AvailaibilityCalendar = function (current_time, durat
         selectable: selectable,
         eventSources: [
             {
-                url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [this.teacherId]),
-                method: 'POST',
-                extraParams: {
-                    bookingBefore: bookingBefore
-                },
-                success: function (docs) {
-                    for (i in docs) {
-                        docs[i].selectable = false;
-                        if ((parseInt(docs[i].classType))) {
-                            docs[i].display = 'background';
-                            docs[i].selectable = true;
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss') + "&bookingBefore=" + bookingBefore;
+                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [fecal.teacherId]), postData, function (docs) {
+                        for (i in docs) {
+                            docs[i].selectable = false;
+                            if ((parseInt(docs[i].classType))) {
+                                docs[i].display = 'background';
+                                docs[i].selectable = true;
+                            }
+                            docs[i].editable = false;
                         }
-                        docs[i].editable = false;
-                    }
+                        successCallback(docs);
+                    }, { fOutMode: 'json' });
                 }
-            }, {
+            },
+            {
                 url: fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [this.teacherId]),
                 method: 'POST'
             }
@@ -165,19 +165,19 @@ FatEventCalendar.prototype.AvailaibilityCalendar = function (current_time, durat
 
             if (!fecal.validateSelectedSlot(arg, current_time, duration, bookingBefore)) {
                 jQuery("#loaderCalendar").hide();
-                jQuery("body").css({"cursor": "default"});
-                jQuery("body").css({"pointer-events": "initial"});
+                jQuery("body").css({ "cursor": "default" });
+                jQuery("body").css({ "pointer-events": "initial" });
                 calendar.unselect();
                 return false;
             }
 
             checkSlotAvailabiltAjaxRun = true;
-            var newEvent = {start: moment(arg.startStr).format('YYYY-MM-DD HH:mm:ss'), end: moment(arg.endStr).format('YYYY-MM-DD HH:mm:ss')};
+            var newEvent = { start: moment(arg.startStr).format('YYYY-MM-DD HH:mm:ss'), end: moment(arg.endStr).format('YYYY-MM-DD HH:mm:ss') };
             fcom.ajax(fcom.makeUrl('Teachers', 'checkCalendarTimeSlotAvailability', [fecal.teacherId]), newEvent, function (doc) {
                 checkSlotAvailabiltAjaxRun = false;
                 jQuery("#loaderCalendar").hide();
-                jQuery("body").css({"cursor": "default"});
-                jQuery("body").css({"pointer-events": "initial"});
+                jQuery("body").css({ "cursor": "default" });
+                jQuery("body").css({ "pointer-events": "initial" });
                 var res = JSON.parse(doc);
                 if (res.status == 1) {
                     this.getSlotBookingConfirmationBox(newEvent, arg.jsEvent);
@@ -193,7 +193,7 @@ FatEventCalendar.prototype.AvailaibilityCalendar = function (current_time, durat
         }
     }
     var defaultConf = this.calDefaultConf;
-    var conf = {...defaultConf, ...calConf};
+    var conf = { ...defaultConf, ...calConf };
     if (selectable) {
         var calendarEl = document.getElementById('d_calendarfree_trial');
     } else {

@@ -2,7 +2,7 @@ var timeInterval;
 var FatEventCalendar = function (teacherId) {
     this.teacherId = teacherId;
     var seconds = 2;
-
+    teacherId = teacherId;
     this.calDefaultConf = {
         initialView: 'timeGridWeek',
         headerToolbar: {
@@ -167,20 +167,20 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
         selectable: true,
         eventSources: [
             {
-                url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [this.teacherId], confFrontEndUrl),
-                method: 'POST',
-                extraParams: {
-                    bookingBefore: bookingBefore
-                },
-                success: function (docs) {
-                    for (i in docs) {
-                        docs[i].selectable = false;
-                        if ((parseInt(docs[i].classType))) {
-                            docs[i].display = 'background';
-                            docs[i].selectable = true;
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss') + "&bookingBefore=" + bookingBefore;
+
+                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [fecal.teacherId], confFrontEndUrl), postData, function (docs) {
+                        for (i in docs) {
+                            docs[i].selectable = false;
+                            if ((parseInt(docs[i].classType))) {
+                                docs[i].display = 'background';
+                                docs[i].selectable = true;
+                            }
+                            docs[i].editable = false;
                         }
-                        docs[i].editable = false;
-                    }
+                        successCallback(docs);
+                    }, { fOutMode: 'json' });
                 }
             },
             {
@@ -275,9 +275,12 @@ FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
             center: 'title',
             right: 'prev,next today'
         },
-        events: {
-            url: fcom.makeUrl('LearnerScheduledLessons', 'calendarJsonData'),
-            method: 'POST'
+        events: function (fetchInfo, successCallback, failureCallback) {
+            postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
+
+            fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'calendarJsonData'), postData, function (docs) {
+                successCallback(docs);
+            }, { fOutMode: 'json' });
         },
         select: function (arg) {
             var start = arg.start;
@@ -309,9 +312,12 @@ FatEventCalendar.prototype.TeacherMonthlyCalendar = function (current_time, dayM
             right: 'prev,next today'
         },
         eventColor: 'green',
-        events: {
-            url: fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData'),
-            method: 'POST'
+        events: function (fetchInfo, successCallback, failureCallback) {
+            postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
+
+            fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData'), postData, function (docs) {
+                successCallback(docs);
+            }, { fOutMode: 'json' });
         },
         select: function (arg) {
             var start = arg.start;
@@ -346,7 +352,7 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
             center: '',
             right: ''
         },
-        dayHeaderFormat: {weekday: 'short'},
+        dayHeaderFormat: { weekday: 'short' },
         eventSources: [
             {
                 url: fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData', [this.teacherId], confFrontEndUrl),
@@ -480,25 +486,22 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function (current_time) 
         selectable: true,
         editable: true,
         now: current_time,
-        eventSources: [
-            {
-                url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [this.teacherId], confFrontEndUrl),
-                method: 'POST',
-                extraParams: {
-                    bookingBefore: 0
-                },
-                success: function (docs) {
-                    for (i in docs) {
-                        docs[i].overlap = false;
-                        docs[i].extendedProps = {};
-                        docs[i].extendedProps._id = docs[i]._id || 0;
-                        docs[i].extendedProps.action = docs[i].action;
-                        docs[i].extendedProps.classType = docs[i].classType;
-                        docs[i].extendedProps.className = docs[i].className;
-                    }
+        events: function (fetchInfo, successCallback, failureCallback) {
+            postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss') + "&bookingBefore=0";
+
+            fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [fecal.teacherId], confFrontEndUrl), postData, function (docs) {
+                for (i in docs) {
+                    console.log(docs[i]);
+                    docs[i].overlap = false;
+                    docs[i].extendedProps = {};
+                    docs[i].extendedProps._id = (docs[i]._id) ? docs[i]._id : 0;
+                    docs[i].extendedProps.action = docs[i].action;
+                    docs[i].extendedProps.classType = docs[i].classType;
+                    docs[i].extendedProps.className = docs[i].className;
                 }
-            }
-        ],
+                successCallback(docs);
+            }, { fOutMode: 'json' });
+        },
         select: function (arg) {
             var start = arg.start;
             var end = arg.end;
