@@ -101,8 +101,10 @@ class TeacherRequestController extends MyAppController
             return;
         }
 
-        $teacherRequest = $this->verifyTeacherRequestRow();
-        if(in_array($teacherRequest['utrequest_id'],['']))
+        /**
+         * need to check if user has/have already pending request
+         * system will behave accordingly
+         */
         /* ] */
         /* Validation[ */
         $frm = $this->getForm($this->siteLangId);
