@@ -234,7 +234,7 @@ $account-deactivation-info: "account-deactivation-info";
 
 $selection-tabs: "selection-tabs";
 
-.#{$selection-tabs}{display:flex; align-items: center; justify-content: center; flex-wrap: nowrap;overflow: auto;
+.#{$selection-tabs}{display:flex; align-items: center; justify-content: center; flex-wrap: wrap;overflow: auto;
 
     @media(max-width:theme('breakpoints.md','value')){
         &{justify-content: flex-start;}
@@ -387,6 +387,7 @@ $sale-stat__count: "sale-stat__count";
         font-size: var(--font-size-small);
         text-transform: uppercase;
         line-height: 0.72rem;
+        font-weight: 600;
     }
     h5{
         font-size: var(--font-size-h4);

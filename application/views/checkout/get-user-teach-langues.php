@@ -3,8 +3,6 @@ defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <div class="box box--checkout">
 	<div class="box__head">
 		<h4><?php echo Label::getLabel('LBL_SELECT_YOUR_LANGUAGE'); ?></h4>
-	</div>
-	<div class="box__body">
 		<div class="step-nav">
 			<ul>
 				<li class="step-nav_item is-process"><a href="#"><?php echo Label::getLabel('LBL_1'); ?></a></li>
@@ -13,6 +11,9 @@ defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 				<li class="step-nav_item"><a href="#"><?php echo Label::getLabel('LBL_4'); ?></a></li>
 			</ul>
 		</div>
+	</div>
+	<div class="box__body">
+		
 
 		<div class="selection-tabs selection--checkout selection--language selection--onehalf">
 			<?php foreach ($teachLanguages as $language) { ?>

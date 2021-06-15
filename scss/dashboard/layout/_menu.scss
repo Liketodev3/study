@@ -309,3 +309,14 @@
   @media(max-width:theme('breakpoints.xl','value')){
     html.is-toggle{position: fixed; left: 0;right: 0;top: 0; bottom: 0;}
   }
+
+
+  $more-dropdown: "more-dropdown";
+
+  .#{$more-dropdown}{ position: relative;
+
+    .#{$menu}{
+        &__dropdown{#{theme('direction.left','value')}: 0;top: 0;}
+    }
+}
+

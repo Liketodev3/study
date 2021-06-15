@@ -1,5 +1,4 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<?php
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
 $teacherLanguage = key($teacher['teachLanguages']);
 
 $langId = CommonHelper::getLangId();
@@ -39,7 +38,7 @@ foreach ($userTeachLangs as $key => $value) {
             <div class="profile-head">
                 <div class="detail-wrapper">
                     <div class="profile__media">
-                        <div class="avatar avatar-xlarge ratio ratio--1by1" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
+                        <div class="avtar avtar--xlarge" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
                             <?php if (true == User::isProfilePicUploaded($teacher['user_id'])) { ?>
                                 <img src="<?php echo FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg'); ?>" alt="">
                             <?php } ?>
@@ -50,7 +49,7 @@ foreach ($userTeachLangs as $key => $value) {
                             <div href="#" class="tutor-name">
                                 <h4><?php echo $teacher['user_full_name']; ?></h4>
                                 <div class="flag">
-                                    <img src="<?php echo CONF_WEBROOT_URL; ?>images/flag-new/flag-uk.png" alt="">
+                                    <img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($teacher['user_country_id'], 'DEFAULT')); ?>" alt="">
                                 </div>
                             </div>
                         </div>
@@ -76,7 +75,7 @@ foreach ($userTeachLangs as $key => $value) {
                             <div class="har-rate"><?php echo Label::getLabel('LBL_Hourly_Rate'); ?><b><?php echo CommonHelper::displayMoneyFormat($teacher['minPrice']); ?> - <?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></b></div>
                             <div class="tutor-lang"><b><?php echo Label::getLabel('LBL_Teaches:'); ?></b> <?php echo implode(', ', $teacher['teachLanguages']); ?></div>
                             <div class="detail-actions">
-                                <a href="javascript:void(0)" onclick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" class="btn btn--bordered color-black">
+                                <a href="javascript:void(0)" onclick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" class="btn btn--bordered color-black <?php echo ($teacher['uft_id']) ? 'is--active' : ''; ?>">
                                     <svg class="icon icon--heart">
                                         <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#heart'; ?>"></use>
                                     </svg>

@@ -8,8 +8,6 @@
 			<?php echo Label::getLabel('LBL_BACK'); ?>
 		</a>
 		<h4><?php echo Label::getLabel('LBL_SELECT_SLOTS_DURATION'); ?></h4>
-	</div>
-	<div class="box__body">
 		<div class="step-nav">
 			<ul>
 				<li class="step-nav_item is-completed"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_1'); ?></a><span class="step-icon"></span></li>
@@ -18,7 +16,8 @@
 				<li class="step-nav_item"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_4'); ?></a></li>
 			</ul>
 		</div>
-
+	</div>
+	<div class="box__body">
 		<div class="selection-tabs selection--checkout selection--duration selection--onehalf">
 			<?php foreach ($slotDurations as $duration) { ?>
 				<label class="selection-tabs__label">

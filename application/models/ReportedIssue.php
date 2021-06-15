@@ -278,7 +278,7 @@ class ReportedIssue extends MyAppModel
         $srch = new SearchBase(ScheduledLessonDetails::DB_TBL, 'sldetail');
         $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_id=sldetail.sldetail_slesson_id', 'slesson');
         $srch->joinTable(ReportedIssue::DB_TBL, 'INNER JOIN', 'repiss.repiss_sldetail_id=sldetail.sldetail_id', 'repiss');
-        $srch->addMultipleFields(['repiss_status', 'slesson_id', 'slesson_teacher_id', 'sldetail_learner_id']);
+        $srch->addMultipleFields(['repiss_status', 'slesson_id', 'slesson_teacher_id', 'sldetail_learner_id', 'sldetail_id']);
         $srch->addCondition('repiss.repiss_id', '=', $issueId);
         $srch->doNotCalculateRecords();
         $row = FatApp::getDb()->fetch($srch->getResultSet());
@@ -289,6 +289,7 @@ class ReportedIssue extends MyAppModel
         $userId = 0;
         $notiType = 0;
         $title = '';
+        $lessonId = $row['slesson_id'];
         $description = '';
         switch ($row['repiss_status']) {
             case static::STATUS_PROGRESS:
@@ -299,6 +300,7 @@ class ReportedIssue extends MyAppModel
                 break;
             case static::STATUS_RESOLVED:
                 $userId = $row['sldetail_learner_id'];
+                $lessonId = $row['sldetail_id'];
                 $notiType = UserNotifications::NOTICATION_FOR_ISSUE_RESOLVED;
                 $title = Label::getLabel('LBL_ISSUE_RESOLVED_NOTIFICATION_TITLE');
                 $description = Label::getLabel('LBL_ISSUE_RESOLVED_NOTIFICATION_DETAIL');
@@ -311,6 +313,7 @@ class ReportedIssue extends MyAppModel
                 break;
             case static::STATUS_CLOSED:
                 $userId = $row['sldetail_learner_id'];
+                $lessonId = $row['sldetail_id'];
                 $notiType = UserNotifications::NOTICATION_FOR_ISSUE_CLOSED;
                 $title = Label::getLabel('LBL_ISSUE_CLOSED_NOTIFICATION_TITLE');
                 $description = Label::getLabel('LBL_ISSUE_CLOSED_NOTIFICATION_DETAIL');
@@ -320,7 +323,7 @@ class ReportedIssue extends MyAppModel
                 return false;
         }
         $record = new UserNotifications($userId);
-        $record->sendNotifcationMetaData($notiType, $row['slesson_id']);
+        $record->sendNotifcationMetaData($notiType, $lessonId);
         if (!$record->addNotification($title, $description)) {
             $this->error = $record->getError();
             return false;

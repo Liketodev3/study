@@ -66,7 +66,7 @@ $colorClass = [
                                     <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>" class="tutor-name">
                                         <h4><?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?></h4>
                                         <div class="flag">
-                                            <img src="<?php echo CONF_WEBROOT_URL . 'images/flag-new/flag-uk.png' ?>" alt="">
+                                            <img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($teacher['user_country_id'], 'DEFAULT')); ?>" alt="">
                                         </div>
                                     </a>
                                     <div class="follow ">
@@ -182,6 +182,10 @@ $colorClass = [
                                 <div class="panel-content video" style="display:none;">
                                     <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $teacher['us_video_link']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                 </div>
+                            </div>
+
+                            <div class="panel-box__foot">
+                                <a href="#" class="link-detail">View Details</a>
                             </div>
                         </div>
                     </div>

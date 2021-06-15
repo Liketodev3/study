@@ -108,7 +108,7 @@ function viewCalendar(teacherId, languageId, action = '') {
     }
     fcom.ajax(fcom.makeUrl('Teachers', 'viewCalendar', [teacherId, languageId]), 'action=' + action, function (t) {
         if (action == 'free_trial') {
-            $.facebox(t);
+            $.facebox(t, 'facebox-large');
         } else {
             $(dv).html(t);
         }
