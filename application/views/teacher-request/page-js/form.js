@@ -100,10 +100,7 @@ $("document").ready(function(){
 		}
 		setUpTeacherApprovalAjax = true;
 		data =  new FormData(frm);
-		// console.log(frm.user_profile_pic.files);
-		/* if(frm.user_profile_pic.files.length > 0) {
-			data.append('user_profile_pic',frm.user_profile_pic.files[0]);
-		} */
+
 		if(frm.user_photo_id.files.length > 0) {
 			data.append('user_photo_id',frm.user_photo_id.files[0]);
 		}
@@ -143,16 +140,9 @@ $("document").ready(function(){
 					$.mbsmessage(e,true, 'alert alert--danger');
 						return;
 				}
-				console.log(result);
 			}
 		});
-		// fcom.updateWithAjax(fcom.makeUrl('TeacherRequest', 'setUpTeacherApproval'), fcom.frmData(frm), function(res) {
-		// 	return false;
-		// 	// if( res.redirectUrl ){
-		// 	// 	window.location.href = res.redirectUrl;
-		// 	// 	return;
-		// 	// }
-		// },{contentType: false,processData: false});
+		
 	};
 
 	popupImage = function(input){

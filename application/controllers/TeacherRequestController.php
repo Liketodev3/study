@@ -44,30 +44,25 @@ class TeacherRequestController extends MyAppController
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
         }
 
-
         $teacherRequestRow = TeacherRequest::getData($this->userId);
-		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_APPROVED) {
-			if (true !== User::canAccessTeacherDashboard()) {
-				die("Please contact web master, Though your teacher request is approved, But Still not marked as teacher.");
-			}
-			FatApp::redirectUser(CommonHelper::generateUrl('Teacher'));
-		}
-        
-		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_PENDING) {
-			
-		}
-		/* check if maximum attempts reached [ */
-		if (true === TeacherRequest::isMadeMaximumAttempts($this->userId)) {
-			Message::addErrorMessage(Label::getLabel('MSG_You_already_consumed_max_attempts'));
-			FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
-		}
-		/* ] */
+        if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_APPROVED) {
+            if (true !== User::canAccessTeacherDashboard()) {
+                die("Please contact web master, Though your teacher request is approved, But Still not marked as teacher.");
+            }
+            FatApp::redirectUser(CommonHelper::generateUrl('Teacher'));
+        }
+
+        if (true === TeacherRequest::isMadeMaximumAttempts($this->userId)) {
+            Message::addErrorMessage(Label::getLabel('MSG_You_already_consumed_max_attempts'));
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
+        }
+        /* ] */
 
         if (!$this->userId) {
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
         }
 
-      
+
         $spokenLangs = SpokenLanguage::getAllLangs($this->siteLangId, true);
         $frm = $this->getForm($this->siteLangId, $spokenLangs);
         $userDetails = $user->getFlds();
@@ -102,10 +97,10 @@ class TeacherRequestController extends MyAppController
         }
 
         $teacherRequest = $this->verifyTeacherRequestRow();
-        if(in_array($teacherRequest['utrequest_id'],['']))
-        /* ] */
-        /* Validation[ */
-        $frm = $this->getForm($this->siteLangId);
+        if (in_array($teacherRequest['utrequest_id'], ['']))
+            /* ] */
+            /* Validation[ */
+            $frm = $this->getForm($this->siteLangId);
         $post = FatApp::getPostedData();
 
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
@@ -246,10 +241,8 @@ class TeacherRequestController extends MyAppController
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $uqualification_id = FatApp::getPostedData('uqualification_id', FatUtility::VAR_INT, 0);
         $qualification = new UserQualification($uqualification_id);
-
         $post['uqualification_user_id'] = $this->userId;
         $db = FatApp::getDb();
         $db->startTransaction();
@@ -293,7 +286,6 @@ class TeacherRequestController extends MyAppController
             Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
             FatUtility::dieWithError(Message::getHtml());
         }
-
         /* [ */
         $srch = new UserQualificationSearch();
         $srch->addCondition('uqualification_user_id', '=', $this->userId);
@@ -384,10 +376,8 @@ class TeacherRequestController extends MyAppController
         $frm = new Form('frmTeacherApprovalForm');
         $frm->addHtml('', 'general_fields_heading', '');
         $fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'utrvalue_user_first_name');
-
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'utrvalue_user_last_name');
-
-        $fld = $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'utrvalue_user_gender', User::getGenderArr($langId), User::GENDER_MALE);
+        $fld = $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'utrvalue_user_gender', User::getGenderArr($langId),User::GENDER_MALE);
         $fld->requirements()->setRequired();
         $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone_Number'), 'utrvalue_user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
@@ -399,27 +389,20 @@ class TeacherRequestController extends MyAppController
         $frm->addFileUpload(Label::getLabel('LBL_profile_photo'), 'user_profile_pic');
         $bioFld = $frm->addHtml('', 'bio', '');
         $headfld->attachField($bioFld);
-
         $fld = $frm->addTextArea(Label::getLabel('LBL_Biography', $langId), 'utrvalue_user_profile_info');
         $fld->requirements()->setLength(1, 500);
         $headfld->attachField($fld);
         $frm->addHiddenField('', 'utrvalue_user_phone_code');
         $brFld = $frm->addHtml('', 'br', '<br><br>');
         $headfld->attachField($brFld);
-
         $fld = $frm->addHtml('', 'introduction_fields_heading', '');
         $headfld->attachField($fld);
-
         $bioFld = $frm->addHtml('', 'youtube_head', '');
         $headfld->attachField($bioFld);
-
         $fld = $frm->addTextBox(Label::getLabel('LBL_Introduction_video', $langId), 'utrvalue_user_video_link');
         $headfld->attachField($fld);
-
         $frm->addHtml('', 'profile_pic_preview', '');
-
         $frm->addHtml('', 'brFld', '<br>');
-
         $frm->addHtml('', 'language_fields_heading', '');
         $frm->addCheckBoxes(Label::getLabel('LBL_Language_To_Teach'), 'utrvalue_user_teach_slanguage_id[]', $teachingLanguagesArr)->requirements()->setRequired();
         $langArr = $spokenLangs ?: SpokenLanguage::getAllLangs($langId, true);
@@ -439,10 +422,10 @@ class TeacherRequestController extends MyAppController
             $speekLangField->requirements()->setRequired(false);
             $proficiencyField->requirements()->addOnChangerequirementUpdate(0, 'le', $proficiencyField->getName(), $speekLangField->requirements());
         }
-        /* Resume[ */
+
         $frm->addHtml('', 'resume_fields_heading', '');
         $frm->addHtml('', 'resume_listing_html', '');
-        /* ] */
+
         $fld = $frm->addCheckBox(Label::getLabel('LBL_Accept_Teacher_Approval_Terms_&_condition'), 'terms', 1);
         $fld->requirements()->setRequired();
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
@@ -469,6 +452,22 @@ class TeacherRequestController extends MyAppController
 
     private function getApplyTeachFrm(int $langId)
     {
+        $cPPageSrch = ContentPage::getSearchObject($this->siteLangId);
+        $cPPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE', FatUtility::VAR_INT, 0));
+        $cpppage = FatApp::getDb()->fetch($cPPageSrch->getResultSet());
+        if (!empty($cpppage) && is_array($cpppage)) {
+            $privacyPolicyLinkHref = CommonHelper::generateUrl('Cms', 'view', [$cpppage['cpage_id']]);
+        } else {
+            $privacyPolicyLinkHref = 'javascript:void(0)';
+        }
+        $cPageSrch = ContentPage::getSearchObject($this->siteLangId);
+        $cPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_TERMS_AND_CONDITIONS_PAGE', FatUtility::VAR_INT, 0));
+        $cpage = FatApp::getDb()->fetch($cPageSrch->getResultSet());
+        if (!empty($cpage) && is_array($cpage)) {
+            $termsAndConditionsLinkHref = CommonHelper::generateUrl('Cms', 'view', [$cpage['cpage_id']]);
+        }else{
+            $termsAndConditionsLinkHref = 'javascript:void(0)';
+        }  
         $frm = new Form('frmApplyTeachFrm');
         $frm->addHiddenField('', 'user_id', 0);
         $fld = $frm->addEmailField(Label::getLabel('LBL_Email_ID', $langId), 'user_email', '', ['autocomplete' => 'off']);
@@ -479,7 +478,16 @@ class TeacherRequestController extends MyAppController
         $fld->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
         $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_8_Digit_AlphaNumeric_Password', $langId));
         $frm->addHiddenField('', 'user_preferred_dashboard', User::USER_TEACHER_DASHBOARD);
-        $fld = $frm->addCheckBox(Label::getLabel('LBL_I_accept_to_the', $langId), 'agree', 1);
+        $cPageSrch = ContentPage::getSearchObject($this->siteLangId);
+        $cPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_TERMS_AND_CONDITIONS_PAGE', FatUtility::VAR_INT, 0));
+        $cpage = FatApp::getDb()->fetch($cPageSrch->getResultSet());
+        if (!empty($cpage) && is_array($cpage)) {
+            $fld = $frm->addCheckBox(Label::getLabel('LBL_I_accept_to_the', $langId), 'agree', 1);
+            $termLink = ' <a target="_blank" class = "-link-underline link-color" href="' . $termsAndConditionsLinkHref . '">' . Label::getLabel('LBL_TERMS_AND_CONDITION') . '</a> and <a href="' . $privacyPolicyLinkHref . '" target="_blank" class = "-link-underline link-color" >' . Label::getLabel('LBL_Privacy_Policy') . '</a>';
+            $terms_caption = '<span>' . $termLink . '</span>';
+            $frm->getField('agree')->addWrapperAttribute('class', 'terms_wrap');
+            $frm->getField('agree')->htmlAfterField = $terms_caption;
+        }
         $fld->requirements()->setRequired();
         $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Terms_and_Condition_and_Privacy_Policy_are_mandatory.', $langId));
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Register', $langId));
@@ -497,21 +505,21 @@ class TeacherRequestController extends MyAppController
         return  $records;
     }
 
-    private function verifyTeacherRequestRow(){
+    private function verifyTeacherRequestRow()
+    {
         $srch = new TeacherRequestSearch();
-		$srch->joinUsers();
-		$srch->addCondition('utrequest_user_id', '=', $this->userId);
-		$srch->addMultiplefields(array(
-			'utrequest_attempts',
-			'utrequest_id',
-			'utrequest_status',
-			'concat(user_first_name, " ", user_last_name) as user_name',
-			'utrequest_reference'
-		));
-		$srch->addOrder('utrequest_id', 'desc');
-		$rs = $srch->getResultSet();
-		$teacherRequestRow = FatApp::getDb()->fetch($rs);
-
+        $srch->joinUsers();
+        $srch->addCondition('utrequest_user_id', '=', $this->userId);
+        $srch->addMultiplefields(array(
+            'utrequest_attempts',
+            'utrequest_id',
+            'utrequest_status',
+            'concat(user_first_name, " ", user_last_name) as user_name',
+            'utrequest_reference'
+        ));
+        $srch->addOrder('utrequest_id', 'desc');
+        $rs = $srch->getResultSet();
+        $teacherRequestRow = FatApp::getDb()->fetch($rs);
         return $teacherRequestRow;
     }
 }
