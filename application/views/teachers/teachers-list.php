@@ -185,7 +185,7 @@ $colorClass = [
                             </div>
 
                             <div class="panel-box__foot">
-                                <a href="#" class="link-detail">View Details</a>
+                                <a href="javascript:void(0);" onclick="viewCalendar(<?php echo $teacher['user_id']; ?>,'paid')" class="link-detail"><?php echo Label::getLabel('LBL_View_Full_availability'); ?></a>
                             </div>
                         </div>
                     </div>

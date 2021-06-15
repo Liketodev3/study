@@ -819,7 +819,7 @@ ul {
       -ms-flex-align: center;
           align-items: center; }
   .teacher-profile .teacher__media {
-    margin-right: calc(var(--margin-4) + 1px); }
+    margin-left: calc(var(--margin-4) + 1px); }
     .teacher-profile .teacher__media .avtar {
       border-radius: 0; }
 
@@ -1828,7 +1828,12 @@ ul {
 
 .fc-event.slot_unavailable {
   background: var(--color-gray-500);
-  border-color: var(--color-gray-500); }
+  border-color: transparent;
+  background-image: -o-linear-gradient(45deg, #dddddd 14.29%, #ffffff 14.29%, #ffffff 50%, #dddddd 50%, #dddddd 64.29%, #ffffff 64.29%, #ffffff 100%);
+  background-image: linear-gradient(45deg, #dddddd 14.29%, #ffffff 14.29%, #ffffff 50%, #dddddd 50%, #dddddd 64.29%, #ffffff 64.29%, #ffffff 100%);
+  background-size: 9.90px 9.90px; }
+  .fc-event.slot_unavailable .fc-event-time {
+    display: none; }
 
 .availability-setting-calendar .slot_available {
   background: #0ab359;
@@ -1847,6 +1852,9 @@ ul {
     margin-bottom: 10px; }
   .scheduled-lesson-popup h4 {
     margin-bottom: 16px; } }
+
+.fc-timegrid-col-events {
+  margin: 0 !important; }
 
 .status-bar__body .fc-header-toolbar .fc-toolbar-chunk:first-child {
   display: none; }
@@ -2020,6 +2028,10 @@ ul {
 .tooltipevent {
   border-top: 3px solid var(--color-primary);
   border-radius: 6px; }
+
+.fc .fc-bg-event {
+  background: #1DCE70 !important;
+  opacity: 0.3 !important; }
 
 .align-left {
   text-align: right !important; }
@@ -2712,7 +2724,9 @@ img {
   line-height: 1; }
 
 .disabled-box {
-  background: #d9d9d9; }
+  background-image: -o-linear-gradient(45deg, #dddddd 14.29%, #ffffff 14.29%, #ffffff 50%, #dddddd 50%, #dddddd 64.29%, #ffffff 64.29%, #ffffff 100%);
+  background-image: linear-gradient(45deg, #dddddd 14.29%, #ffffff 14.29%, #ffffff 50%, #dddddd 50%, #dddddd 64.29%, #ffffff 64.29%, #ffffff 100%);
+  background-size: 9.90px 9.90px; }
 
 .booked-box {
   background: var(--color-secondary); }
@@ -5636,7 +5650,7 @@ textarea {
   position: relative;
   cursor: pointer;
   border: none;
-  height: 2.8rem;
+  line-height: 40px;
   color: var(--color-white);
   font-weight: 600;
   margin-left: 10px;
@@ -10686,6 +10700,10 @@ textarea[disabled] {
 .show-facebox {
   position: fixed;
   width: 100%; }
+
+#facebox .img-container {
+  max-height: 500px;
+  overflow: auto; }
 
 .fc-icon, .fc-unselectable {
   -moz-user-select: none;

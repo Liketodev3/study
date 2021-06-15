@@ -2646,6 +2646,12 @@ p {
     margin-bottom: var(--margin-4); }
     .listing-dropdown ul li:last-child {
       margin-bottom: 0; }
+    .listing-dropdown ul li .checkbox .input-helper::before {
+      left: 3px;
+      bottom: 6.1px; }
+    .listing-dropdown ul li .checkbox .input-helper::after {
+      left: 6px;
+      bottom: 3px; }
 
 .filter-group__inner {
   cursor: pointer; }
@@ -4508,7 +4514,7 @@ p {
 .is--blog .banner--main .form-search .form__action-wrap {
   position: absolute;
   right: 0;
-  top: 0;
+  top: 50%;
   width: 60px;
   height: 60px; }
 

@@ -81,12 +81,9 @@ textarea {
     position: relative;
     cursor: pointer;
     border: none;
-    height:2.8rem;
-
+    line-height: 40px;
     color: theme('color.white');
     font-weight: 600; margin-#{theme('direction.right','value')}: 10px;
-
-   
     -webkit-transition: .3s all ease-in-out;
     transition: .3s all ease-in-out
 }

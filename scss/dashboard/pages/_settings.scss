@@ -533,6 +533,15 @@ $slab-wrapper: "slab-wrapper";
             font-weight: 600;
         }
     }
+    .field-wrapper{
+        position: relative;
+        .errorlist{
+            position: absolute;
+            bottom: -21px;
+            left: 0;
+            width: 100%;
+        }
+    }
 }
 
 .field-wrapper{
