@@ -144,8 +144,12 @@ FatEventCalendar.prototype.AvailaibilityCalendar = function (current_time, durat
                 }
             },
             {
-                url: fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [this.teacherId]),
-                method: 'POST'
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
+                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [fecal.teacherId]), postData, function (docs) {
+                        successCallback(docs);
+                    }, { fOutMode: 'json' });
+                }
             }
         ],
         select: function (arg) {
