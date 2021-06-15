@@ -1,6 +1,6 @@
 <?php
 
-class Extrapage extends MyAppModel
+class ExtraPage extends MyAppModel
 {
     const DB_TBL = 'tbl_extra_pages';
     const DB_TBL_PREFIX = 'epage_';
