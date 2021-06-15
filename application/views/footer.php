@@ -26,7 +26,7 @@
 	</div>
 	<?php } ?>
 </div>
-<?php }?>
+<?php } ?>
 
 <?php if (FatApp::getConfig('CONF_ENABLE_LIVECHAT', FatUtility::VAR_STRING, '')) {
     echo FatApp::getConfig('CONF_LIVE_CHAT_CODE', FatUtility::VAR_STRING, '');
