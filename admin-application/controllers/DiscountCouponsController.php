@@ -54,7 +54,7 @@ class DiscountCouponsController extends AdminBaseController
     public function setup()
     {
         $this->objPrivilege->canEditDiscountCoupons();
-        $frm = $this->getForm();
+        $frm = $this->getForm($this->adminLangId);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -130,7 +130,7 @@ class DiscountCouponsController extends AdminBaseController
     {
         $this->objPrivilege->canEditDiscountCoupons();
         $coupon_id = FatUtility::int($coupon_id);
-        $frm = $this->getForm();
+        $frm = $this->getForm($this->adminLangId);
         if (0 < $coupon_id) {
             $data = DiscountCoupons::getAttributesById($coupon_id);
             if ($data === false) {
@@ -258,38 +258,52 @@ class DiscountCouponsController extends AdminBaseController
         return $frm;
     }
 
-    private function getForm()
+    private function getForm(int $langId)
     {
         $frm = new Form('frmCoupon');
         $frm->addHiddenField('', 'coupon_id');
-        $frm->addRequiredField(Label::getLabel('LBL_Coupon_Identifier', $this->adminLangId), 'coupon_identifier');
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Coupon_Code', $this->adminLangId), 'coupon_code');
+        $frm->addRequiredField(Label::getLabel('LBL_Coupon_Identifier', $langId), 'coupon_identifier');
+        $fld = $frm->addRequiredField(Label::getLabel('LBL_Coupon_Code', $langId), 'coupon_code');
         $fld->setUnique(DiscountCoupons::DB_TBL, 'coupon_code', 'coupon_id', 'coupon_id', 'coupon_id');
-        $percentageFlatArr = applicationConstants::getPercentageFlatArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Discount_in', $this->adminLangId), 'coupon_discount_in_percent', $percentageFlatArr, '', [], '');
-        $frm->addFloatField(Label::getLabel('LBL_Discount_Value', $this->adminLangId), 'coupon_discount_value');
-        $frm->addFloatField(Label::getLabel('LBL_Min_Order_Value', $this->adminLangId), 'coupon_min_order_value');
-        $frm->addFloatField(Label::getLabel('LBL_Max_Discount_Value', $this->adminLangId), 'coupon_max_discount_value');
-        $frm->addDateField(Label::getLabel('LBL_Date_From', $this->adminLangId), 'coupon_start_date', '', ['readonly' => 'readonly', 'class' => 'small dateTimeFld field--calender']);
-        $frm->addDateField(Label::getLabel('LBL_Date_To', $this->adminLangId), 'coupon_end_date', '', ['readonly' => 'readonly', 'class' => 'small dateTimeFld field--calender']);
-        $frm->addIntegerField(Label::getLabel('LBL_Uses_Per_Coupon', $this->adminLangId), 'coupon_uses_count', 1);
-        $frm->addIntegerField(Label::getLabel('LBL_Uses_Per_Customer', $this->adminLangId), 'coupon_uses_coustomer', 1);
-        $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
-        $frm->addSelectBox(Label::getLabel('LBL_Coupon_Status', $this->adminLangId), 'coupon_active', $activeInactiveArr, '', [], '');
+        $frm->addSelectBox(Label::getLabel('LBL_Discount_in', $langId), 'coupon_discount_in_percent', applicationConstants::getPercentageFlatArr($langId), '', [], '');
+        $frm->addFloatField(Label::getLabel('LBL_Discount_Value', $langId), 'coupon_discount_value')->requirements()->setFloatPositive();
+        $frm->addFloatField(Label::getLabel('LBL_Min_Order_Value', $langId), 'coupon_min_order_value');
+        $frm->addFloatField(Label::getLabel('LBL_Max_Discount_Value', $langId), 'coupon_max_discount_value');
+        $frm->addDateField(Label::getLabel('LBL_Date_From', $langId), 'coupon_start_date', '', ['readonly' => 'readonly', 'class' => 'small dateTimeFld field--calender']);
+        $frm->addDateField(Label::getLabel('LBL_Date_To', $langId), 'coupon_end_date', '', ['readonly' => 'readonly', 'class' => 'small dateTimeFld field--calender']);
+        $frm->addIntegerField(Label::getLabel('LBL_Uses_Per_Coupon', $langId), 'coupon_uses_count', 1)->requirements()->setIntPositive();
+        $frm->addIntegerField(Label::getLabel('LBL_Uses_Per_Customer', $langId), 'coupon_uses_coustomer', 1)->requirements()->setIntPositive();
+        $frm->addSelectBox(Label::getLabel('LBL_Coupon_Status', $langId), 'coupon_active', applicationConstants::getActiveInactiveArr($langId), '', [], '');
+
         $couponMinOrderValueReqTrue = new FormFieldRequirement('coupon_min_order_value', 'value');
         $couponMinOrderValueReqTrue->setRequired();
+
         $couponMinOrderValueReqFalse = new FormFieldRequirement('coupon_min_order_value', 'value');
         $couponMinOrderValueReqFalse->setRequired(false);
+
         $couponMaxDiscountValueReqTrue = new FormFieldRequirement('coupon_max_discount_value', 'value');
         $couponMaxDiscountValueReqTrue->setRequired();
+        $couponMaxDiscountValueReqTrue->setFloatPositive();
+        $couponMaxDiscountValueReqTrue->setRange('0.01', '9999999999');
+
         $couponMaxDiscountValueReqFalse = new FormFieldRequirement('coupon_max_discount_value', 'value');
         $couponMaxDiscountValueReqFalse->setRequired(false);
-        $couponMaxDiscountValueReqTrue->setFloatPositive();
-        $couponMaxDiscountValueReqTrue->setRange('0.00001', '9999999999');
-        $coupon_discount_in_percent_fld = $frm->getField('coupon_discount_in_percent');
-        $coupon_discount_in_percent_fld->requirements()->addOnChangerequirementUpdate(applicationConstants::PERCENTAGE, 'eq', 'coupon_max_discount_value', $couponMaxDiscountValueReqTrue);
-        $coupon_discount_in_percent_fld->requirements()->addOnChangerequirementUpdate(applicationConstants::FLAT, 'eq', 'coupon_max_discount_value', $couponMaxDiscountValueReqFalse);
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
+
+        $discAmtPercLimit = new FormFieldRequirement('coupon_discount_value', Label::getLabel('LBL_Discount_Value', $langId));
+        $discAmtPercLimit->setRange('0.01', '100');
+
+        $discAmtFlatLimit = clone $discAmtPercLimit;
+        $discAmtFlatLimit->setRange('0.01', '9999999999');
+
+        $discTypFldReq = $frm->getField('coupon_discount_in_percent')->requirements();
+
+        $discTypFldReq->addOnChangerequirementUpdate(applicationConstants::PERCENTAGE, 'eq', 'coupon_max_discount_value', $couponMaxDiscountValueReqTrue);
+        $discTypFldReq->addOnChangerequirementUpdate(applicationConstants::FLAT, 'eq', 'coupon_max_discount_value', $couponMaxDiscountValueReqFalse);
+
+        $discTypFldReq->addOnChangerequirementUpdate(applicationConstants::PERCENTAGE, 'eq', 'coupon_discount_value', $discAmtPercLimit);
+        $discTypFldReq->addOnChangerequirementUpdate(applicationConstants::FLAT, 'eq', 'coupon_discount_value', $discAmtFlatLimit);
+
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $langId));
         return $frm;
     }
 
