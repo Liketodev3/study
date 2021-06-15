@@ -10,6 +10,14 @@ $("document").ready(function(){
 
 
 (function($){
+
+	validaBlock = function() {
+		var blockFields = ['utrvalue_user_first_name','utrvalue_user_last_name'];
+        var fld = $('name=utrvalue_user_first_name')
+
+		$.Validation.getRule('floating').check
+	};
+
 	teacherQualificationForm = function( uqualification_id ){
 		$.facebox(function() {
 			fcom.ajax( fcom.makeUrl('TeacherRequest', 'teacherQualificationForm', []), 'uqualification_id='+uqualification_id, function(res){
@@ -122,9 +130,9 @@ $("document").ready(function(){
 					$.mbsmessage(result.msg,true, 'alert alert--success');
 					if( result.redirectUrl ){
 						setTimeout(function(){ 
-							
 							$('.page-block__body').hide();
 							$('.change-block-js').removeClass('is-process');
+							$('li[data-blocks-show').removeClass('change-block-js')
 							$('li[data-blocks-show="5"]').addClass('is-process');
 							$('#block--5').show();			
 						}, 2000);

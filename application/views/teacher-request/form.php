@@ -157,7 +157,9 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                                 <div class="avtar avtar--large" data-title="<?php echo CommonHelper::getFirstChar($frm->getField('utrvalue_user_first_name')->value); ?>">
                                                     <?php if (User::isProfilePicUploaded($userDetails['user_id'])) { ?>
                                                         <img id="user-profile-pic--js" src="<?php echo CommonHelper::generateUrl('image', 'user', [$userDetails['user_id']]); ?>">
-                                                    <?php } ?>
+                                                    <?php }else{ ?>
+                                                        <img id="user-profile-pic--js" src="">
+                                                    <?php  } ?>
                                                 </div>
                                             </div>
                                             <div class="img-upload__content">
@@ -458,7 +460,9 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                         <div class="application-no">
                                            <?php echo Label::getLabel('LBL_Application_Reference',$siteLangId) ?><span id="reg-no"></span>
                                         </div>
+                                        <?php if(UserAuthentication::getLoggedUserId(true)){ ?>
                                         <a href="<?php echo CommonHelper::generateUrl('learner','',[],CONF_WEBROOT_DASHBOARD) ?>" class="btn btn--bordered btn--small color-secondary"><?php echo Label::getLabel('LBL_Visit_My_Account',$siteLangId); ?></a>
+                                        <?php } ?>
                                     </div>
                                 </div>
 

@@ -8,19 +8,19 @@
 					<?php echo Label::getLabel('LBL_Personal_Info',$siteLangId); ?>
 				</a>
 			</li>
-			<li class="steps__item change-block-js" data-blocks-show="2">
+			<li class="steps__item" data-blocks-show="2">
 				<a href="javascript:void(0)">
 					<span class="step__icon"></span>
 					<?php echo Label::getLabel('LBL_Profile_Media',$siteLangId); ?>
 				</a>
 			</li>
-			<li class="steps__item change-block-js" data-blocks-show="3">
+			<li class="steps__item" data-blocks-show="3">
 				<a href="javascript:void(0)">
 					<span class="step__icon"></span>
 					<?php echo Label::getLabel('LBL_Languages',$siteLangId); ?>
 				</a>
 			</li>
-			<li class="steps__item change-block-js" data-blocks-show="4">
+			<li class="steps__item" data-blocks-show="4">
 				<a href="javascript:void(0)">
 					<span class="step__icon"></span>
 					<?php echo Label::getLabel('LBL_Resume',$siteLangId); ?>

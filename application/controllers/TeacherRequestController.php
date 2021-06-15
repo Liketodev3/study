@@ -39,6 +39,25 @@ class TeacherRequestController extends MyAppController
         $this->_template->addJs('js/intlTelInput.js');
         $this->_template->addCss('css/intlTelInput.css');
 
+
+        $teacherRequestRow = TeacherRequest::getData($this->userId);
+		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_APPROVED) {
+			if (true !== User::canAccessTeacherDashboard()) {
+				die("Please contact web master, Though your teacher request is approved, But Still not marked as teacher.");
+			}
+			FatApp::redirectUser(CommonHelper::generateUrl('Teacher'));
+		}
+        
+		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_PENDING) {
+			
+		}
+		/* check if maximum attempts reached [ */
+		if (true === TeacherRequest::isMadeMaximumAttempts($this->userId)) {
+			Message::addErrorMessage(Label::getLabel('MSG_You_already_consumed_max_attempts'));
+			FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
+		}
+		/* ] */
+
         if (!$this->userId) {
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
         }
