@@ -28,7 +28,7 @@
                                                 <svg class="icon icon--calendar"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#calendar' ?>"></use></svg>
                                                 <span><?php echo FatDate::format($postDetail['post_published_on']); ?> </span>
                                             </div>
-                                            <a href="<?php echo CommonHelper::generateUrl('Blog','PostDetail',[ $postDetail['post_id']]); ?>" class="btn btn--primary color-white">View blog</a>
+                                            <a href="<?php echo CommonHelper::generateUrl('Blog','PostDetail',[ $postDetail['post_id']]); ?>" class="btn btn--secondary color-white">View blog</a>
                                         </div>
                                     </div>
                                     <!-- <a href=""  class="blog__action"></a> -->
