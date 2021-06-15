@@ -709,7 +709,12 @@ $dashboard-calendar: "dashboard-calendar";
 }
 .fc-event.slot_unavailable{
     background: var(--color-gray-500);
-    border-color: var(--color-gray-500);
+    border-color: transparent;
+    background-image: linear-gradient(45deg, #dddddd 14.29%, #ffffff 14.29%, #ffffff 50%, #dddddd 50%, #dddddd 64.29%, #ffffff 64.29%, #ffffff 100%);
+    background-size: 9.90px 9.90px;
+    .fc-event-time{
+        display: none;
+    }
 }
 
 .availability-setting-calendar .slot_available{
@@ -727,6 +732,10 @@ $dashboard-calendar: "dashboard-calendar";
     .scheduled-lesson-popup h4{
         margin-bottom: 16px;
     }
+}
+
+.fc-timegrid-col-events{
+    margin: 0 !important;
 }
 
 
@@ -929,3 +938,7 @@ $dashboard-calendar: "dashboard-calendar";
     border-radius: 6px;
 }
 
+.fc .fc-bg-event{
+    background: #1DCE70 !important;
+    opacity: 0.3 !important;
+}

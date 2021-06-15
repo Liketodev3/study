@@ -2542,7 +2542,7 @@ p {
       -webkit-transform: rotate(45deg);
           -ms-transform: rotate(45deg);
               transform: rotate(45deg);
-      right: 24px;
+      left: 24px;
       top: 24px; }
     .filter-form__inner .filter__head input {
       border: none;
@@ -2646,6 +2646,12 @@ p {
     margin-bottom: var(--margin-4); }
     .listing-dropdown ul li:last-child {
       margin-bottom: 0; }
+    .listing-dropdown ul li .checkbox .input-helper::before {
+      left: 3px;
+      bottom: 6.1px; }
+    .listing-dropdown ul li .checkbox .input-helper::after {
+      left: 6px;
+      bottom: 3px; }
 
 .filter-group__inner {
   cursor: pointer; }
@@ -2766,7 +2772,7 @@ p {
     -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);
             transform: rotate(45deg);
-    right: 15px;
+    left: 15px;
     top: 15px;
     opacity: 0.2; }
   .sorting__box {
@@ -2875,12 +2881,12 @@ p {
 @media (min-width: 767px) {
   .list__body {
     width: calc(100% - 140px);
-    margin-left: var(--margin-14); } }
+    margin-right: var(--margin-14); } }
 
 @media (min-width: 767px) and (max-width: 1199px) {
   .list__body {
     width: calc(100% - 200px);
-    margin-left: var(--margin-10); } }
+    margin-right: var(--margin-10); } }
 
 .profile-detail {
   color: var(--color-dark); }
@@ -4508,7 +4514,7 @@ p {
 .is--blog .banner--main .form-search .form__action-wrap {
   position: absolute;
   right: 0;
-  top: 0;
+  top: 50%;
   width: 60px;
   height: 60px; }
 
@@ -5733,14 +5739,14 @@ p {
     height: calc(100% + 56px);
     width: 1px;
     background: var(--color-gray-300);
-    left: 22%;
+    right: 22%;
     -webkit-transform: translateX(-50%);
         -ms-transform: translateX(-50%);
             transform: translateX(-50%);
     top: 0; }
     @media (max-width: 767px) {
       .resume-wrapper::before {
-        left: 25%;
+        right: 25%;
         height: calc(100% + 30px); } }
   .resume-wrapper::after {
     content: "";
@@ -5755,7 +5761,7 @@ p {
             transform: translateX(-50%); }
     @media (max-width: 767px) {
       .resume-wrapper::after {
-        left: 25%; } }
+        right: 25%; } }
   .resume-wrapper .resume__primary {
     width: 30%; }
   .resume-wrapper .resume__secondary {
