@@ -202,7 +202,7 @@ class TeacherRequestsController extends AdminBaseController
         $srch = new TeacherRequestSearch();
         $srch->joinUserCredentials();
         $srch->joinTeacherRequestValues();
-        $srch->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = u.user_id', 'us');
+        $srch->joinTable(UserSetting::DB_TBL, 'LEFT JOIN', 'us.us_user_id = u.user_id', 'us');
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -233,6 +233,7 @@ class TeacherRequestsController extends AdminBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         /* ] */
+       
         $requestRow['utrequest_comments'] = $comment;
         $statusArr = TeacherRequest::getStatusArr($this->adminLangId);
         unset($statusArr[TeacherRequest::STATUS_PENDING]);

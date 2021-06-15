@@ -184,8 +184,12 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
                 }
             },
             {
-                url: fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [this.teacherId], confFrontEndUrl),
-                method: 'POST'
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
+                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [fecal.teacherId], confFrontEndUrl), postData, function (docs) {
+                        successCallback(docs);
+                    }, { fOutMode: 'json' });
+                }
             },
         ],
         select: function (arg) {
@@ -360,8 +364,12 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
         dayHeaderFormat: { weekday: 'short' },
         eventSources: [
             {
-                url: fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData', [this.teacherId], confFrontEndUrl),
-                method: 'POST'
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
+                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData', [fecal.teacherId], confFrontEndUrl), postData, function (docs) {
+                        successCallback(docs);
+                    }, { fOutMode: 'json' });
+                }
             }
         ],
         select: function (arg) {

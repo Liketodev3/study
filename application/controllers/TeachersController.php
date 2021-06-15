@@ -412,7 +412,6 @@ class TeachersController extends MyAppController
             $getResultSet = $checkGroupClassTiming->getResultSet();
             $scheduledLessonData = FatApp::getDb()->fetch($getResultSet);
             if (!empty($scheduledLessonData)) {
-                Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE');
                 FatUtility::dieJsonError(Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE'));
             }
         }
