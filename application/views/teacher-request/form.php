@@ -40,14 +40,18 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                         <p><?php echo Label::getLabel('LBL_tutor_reg_description', $siteLangId) ?></p>
                                     </div>
                                 </div>
-                               
+
                                 <div class="block-content__body">
 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="field-set">
                                                 <div class="caption-wraper">
-                                                    <label class="field_label"><?php echo $usrFirstName->getCaption(); ?></label>
+                                                    <label class="field_label"><?php echo $usrFirstName->getCaption(); ?>
+                                                    <?php if ($usrFirstName->requirement->isRequired()) { ?>
+                                                        <span class="spn_must_field">*</span>
+                                                    <?php } ?>
+                                                    </label>
                                                 </div>
                                                 <div class="field-wraper">
                                                     <div class="field_cover">
@@ -59,7 +63,11 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                         <div class="col-md-6">
                                             <div class="field-set">
                                                 <div class="caption-wraper">
-                                                    <label class="field_label"><?php echo $usrLastName->getCaption(); ?></label>
+                                                    <label class="field_label"><?php echo $usrLastName->getCaption(); ?>
+                                                    <?php if ($usrLastName->requirement->isRequired()) { ?>
+                                                        <span class="spn_must_field">*</span>
+                                                    <?php } ?>
+                                                    </label>
                                                 </div>
                                                 <div class="field-wraper">
                                                     <div class="field_cover">
@@ -74,7 +82,11 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                         <div class="col-md-12">
                                             <div class="field-set">
                                                 <div class="caption-wraper">
-                                                    <label class="field_label"><?php echo $usrGender->getCaption(); ?></label>
+                                                    <label class="field_label"><?php echo $usrGender->getCaption(); ?>
+                                                    <?php if ($usrGender->requirement->isRequired()) { ?>
+                                                        <span class="spn_must_field">*</span>
+                                                    <?php } ?>
+                                                    </label>
                                                 </div>
 
                                                 <div class="field-wraper">
@@ -99,14 +111,18 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                         <div class="col-md-12">
                                             <div class="field-set">
                                                 <div class="caption-wraper">
-                                                    <label class="field_label"><?php echo $usrPhone->getCaption(); ?></label>
+                                                    <label class="field_label"><?php echo $usrPhone->getCaption(); ?>
+                                                    <?php if ($usrPhone->requirement->isRequired()) { ?>
+                                                        <span class="spn_must_field">*</span>
+                                                    <?php } ?>
+                                                    </label>
                                                 </div>
                                                 <div class="field-wraper phone--number">
                                                     <div class="row no-gutters">
-                                                 
+
                                                         <div class="col-12 col-md-12">
                                                             <div class="field_cover">
-                                                            <?php echo $usrPhoneCode->getHtml(); ?>
+                                                                <?php echo $usrPhoneCode->getHtml(); ?>
                                                                 <?php echo $usrPhone->getHtml(); ?>
                                                             </div>
                                                         </div>
@@ -121,7 +137,11 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                         <div class="col-md-12">
                                             <div class="field-set">
                                                 <div class="caption-wraper">
-                                                    <label class="field_label"><?php echo $usrPhotoId->getCaption(); ?> <span><?php echo Label::getLabel('LBL_Allowed_Extension', $siteLangId); ?></span></label>
+                                                    <label class="field_label"><?php echo $usrPhotoId->getCaption(); ?> <span><?php echo Label::getLabel('LBL_Allowed_Extension', $siteLangId); ?></span>
+                                                    <?php if ($usrPhone->requirement->isRequired()) { ?>
+                                                        <span class="spn_must_field">*</span>
+                                                    <?php } ?>
+                                                    </label>
                                                 </div>
                                                 <div class="field-wraper">
                                                     <div class="field_cover">
@@ -157,8 +177,8 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                                 <div class="avtar avtar--large" data-title="<?php echo CommonHelper::getFirstChar($frm->getField('utrvalue_user_first_name')->value); ?>">
                                                     <?php if (User::isProfilePicUploaded($userDetails['user_id'])) { ?>
                                                         <img id="user-profile-pic--js" src="<?php echo CommonHelper::generateUrl('image', 'user', [$userDetails['user_id']]); ?>">
-                                                    <?php }else{ ?>
-                                                        <img id="user-profile-pic--js" src="">
+                                                    <?php } else { ?>
+                                                        <img id="user-profile-pic--js" style="display:none;" src="">
                                                     <?php  } ?>
                                                 </div>
                                             </div>
@@ -172,7 +192,11 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                             <div class="col-md-12">
                                                 <div class="field-set">
                                                     <div class="caption-wraper">
-                                                        <label class="field_label"><?php echo $usrVideoLink->getCaption(); ?><span><?php echo Label::getLabel('LBL_video_desc', $siteLangId); ?></span></label>
+                                                        <label class="field_label"><?php echo $usrVideoLink->getCaption(); ?><span><?php echo Label::getLabel('LBL_video_desc', $siteLangId); ?></span>
+                                                        <?php if ($usrVideoLink->requirement->isRequired()) { ?>
+                                                        <span class="spn_must_field">*</span>
+                                                    <?php } ?>
+                                                    </label>
                                                     </div>
                                                     <div class="field-wraper">
                                                         <div class="field_cover">
@@ -186,7 +210,11 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                             <div class="col-md-12">
                                                 <div class="field-set">
                                                     <div class="caption-wraper">
-                                                        <label class="field_label"><?php echo $usrBio->getCaption(); ?> <span><?php echo Label::getLabel('LBL_About_self_Fld_Desc', $siteLangId); ?></span></label>
+                                                        <label class="field_label"><?php echo $usrBio->getCaption(); ?> <span><?php echo Label::getLabel('LBL_About_self_Fld_Desc', $siteLangId); ?></span>
+                                                        <?php if ($usrBio->requirement->isRequired()) { ?>
+                                                        <span class="spn_must_field">*</span>
+                                                    <?php } ?>
+                                                    </label>
                                                     </div>
                                                     <div class="field-wraper">
                                                         <div class="field_cover">
@@ -306,7 +334,7 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                         <div class="col-md-12 col-lg-10 col-xl-11">
                             <div class="block-content">
                                 <div class="block-content__head d-flex justify-content-center">
-                                    <h5><?php echo Label::getLabel('LBL_Application_Awaiting_Approval',$siteLangId); ?></h5>
+                                    <h5><?php echo Label::getLabel('LBL_Application_Awaiting_Approval', $siteLangId); ?></h5>
                                 </div>
                                 <div class="block-content__body">
                                     <div class="message-display message--resume message--confirmetion">
@@ -455,13 +483,13 @@ $proficiencyField = $frm->getField('utrvalue_user_language_speak_proficiency[]')
                                                 </g>
                                             </svg>
                                         </div>
-                                        <h5><?php echo Label::getLabel('LBL_Hello',$siteLangId); ?> <?php echo $userDetails['user_first_name']; ?></h5>
-                                        <p><?php echo Label::getLabel('LBL_Thank_You_For_Submitting_Your_Application',$siteLangId); ?></p>
+                                        <h5><?php echo Label::getLabel('LBL_Hello', $siteLangId); ?> <?php echo $userDetails['user_first_name']; ?></h5>
+                                        <p><?php echo Label::getLabel('LBL_Thank_You_For_Submitting_Your_Application', $siteLangId); ?></p>
                                         <div class="application-no">
-                                           <?php echo Label::getLabel('LBL_Application_Reference',$siteLangId) ?><span id="reg-no"></span>
+                                            <?php echo Label::getLabel('LBL_Application_Reference', $siteLangId) ?><span id="reg-no"></span>
                                         </div>
-                                        <?php if(UserAuthentication::getLoggedUserId(true)){ ?>
-                                        <a href="<?php echo CommonHelper::generateUrl('learner','',[],CONF_WEBROOT_DASHBOARD) ?>" class="btn btn--bordered btn--small color-secondary"><?php echo Label::getLabel('LBL_Visit_My_Account',$siteLangId); ?></a>
+                                        <?php if (UserAuthentication::getLoggedUserId(true)) { ?>
+                                            <a href="<?php echo CommonHelper::generateUrl('learner', '', [], CONF_WEBROOT_DASHBOARD) ?>" class="btn btn--bordered btn--small color-secondary"><?php echo Label::getLabel('LBL_Visit_My_Account', $siteLangId); ?></a>
                                         <?php } ?>
                                     </div>
                                 </div>

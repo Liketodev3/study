@@ -6542,16 +6542,6 @@ p {
     @media (max-width: 991px) {
       .block-content .block-content__body .field-set {
         margin-bottom: var(--margin-6); } }
-    .block-content .block-content__body .field-set .caption-wraper span {
-      font-size: 0.9rem;
-      color: var(--color-gray-800);
-      font-weight: normal;
-      margin-left: var(--margin-3); }
-      @media (max-width: 576px) {
-        .block-content .block-content__body .field-set .caption-wraper span {
-          margin-left: var(--margin-0);
-          margin-top: var(--margin-3);
-          display: block; } }
     .block-content .block-content__body .field-set .caption-wraper .field_label {
       color: var(--color-dark); }
     .block-content .block-content__body .phone--number input:first-child {

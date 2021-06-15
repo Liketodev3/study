@@ -30,23 +30,21 @@
 		return false;
 	});
 	$(document).on('click', '.btn--next', function() {
-		if(!$(document.frmTeacherApprovalForm).validate()){
-			return false;
-		}
+
 		//var flag = true
 		var blockId = parseInt($('.is-process').attr('data-blocks-show'))+1;
-		// var elements = $("#block--" + blockId).find('input[data-fatreq]').each(function() {
-		// 	var value = $(this).val();
-		// 	var validation_rules = JSON.parse($(this).attr('data-fatreq'));
-		// 	$.each(validation_rules, function(key, val) {
-		// 		flag = $.Validation.getRule(key).check(val,value);
-		// 	});
-		// });
-		// console.log(flag);
-		// if(!flag){
-		// 	alert('validation failed');
+		var elements = $("#block--" + blockId).find('input[data-fatreq]').each(function() {
+			var value = $(this).val();
+			var validation_rules = JSON.parse($(this).attr('data-fatreq')); $(this).data('fatreq')
+			$.each(validation_rules, function(key, val) {
+				flag = $.Validation.getRule(key).check(val, value);
+			});
+		});
+		console.log(flag);
+		if(!flag){
+			alert('validation failed');
 			
-		// }
+		}
 		// return false;
 		$('.change-block-js').removeClass('is-process');
 		$('li[data-blocks-show="' + blockId + '"]').addClass('change-block-js');

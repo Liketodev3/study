@@ -254,6 +254,7 @@ $("document").ready(function(){
 				$(document).trigger('close.facebox');
 				$('.loading-wrapper').hide();
 				// $("[name=user_profile_pic]").prop("files",$("[name=user_profile_image]").prop("files"));
+				$('#user-profile-pic--js').show();
 				$('#user-profile-pic--js').attr('src', json.file);
 			}
 		});

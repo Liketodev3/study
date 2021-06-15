@@ -39,6 +39,11 @@ class TeacherRequestController extends MyAppController
         $this->_template->addJs('js/intlTelInput.js');
         $this->_template->addCss('css/intlTelInput.css');
 
+        $user = new User($this->userId);
+        if (!$user->loadFromDb()) {
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
+        }
+
 
         $teacherRequestRow = TeacherRequest::getData($this->userId);
 		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_APPROVED) {
@@ -62,10 +67,7 @@ class TeacherRequestController extends MyAppController
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
         }
 
-        $user = new User($this->userId);
-        if (!$user->loadFromDb()) {
-            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
-        }
+      
         $spokenLangs = SpokenLanguage::getAllLangs($this->siteLangId, true);
         $frm = $this->getForm($this->siteLangId, $spokenLangs);
         $userDetails = $user->getFlds();
