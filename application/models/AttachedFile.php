@@ -57,6 +57,7 @@ class AttachedFile extends MyAppModel
     const FILETYPE_PWA_APP_ICON = 46;
     const FILETYPE_PWA_SPLASH_ICON = 47;
     const FILETYPE_OPENGRAPH_IMAGE = 48;
+    const FILETYPE_APPLY_TO_TEACH_BANNER = 49;
 
     public function __construct($fileId = 0)
     {
@@ -546,13 +547,14 @@ class AttachedFile extends MyAppModel
         $fileId = FatUtility::int($fileId);
         $recordSubId = FatUtility::int($recordSubId);
         $langId = FatUtility::int($langId);
-        if (!in_array($fileType, array(AttachedFile::FILETYPE_ADMIN_LOGO, AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, AttachedFile::FILETYPE_FRONT_LOGO, AttachedFile::FILETYPE_FRONT_WHITE_LOGO, AttachedFile::FILETYPE_EMAIL_LOGO, AttachedFile::FILETYPE_FAVICON, AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE, AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, AttachedFile::FILETYPE_WATERMARK_IMAGE, AttachedFile::FILETYPE_APPLE_TOUCH_ICON, AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, AttachedFile::FILETYPE_MOBILE_LOGO, AttachedFile::FILETYPE_CATEGORY_COLLECTION_BG_IMAGE, AttachedFile::FILETYPE_LESSON_PAGE_IMAGE)) && (!$fileType || !$recordId)) {
+        if (!in_array($fileType, array(AttachedFile::FILETYPE_ADMIN_LOGO, AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, AttachedFile::FILETYPE_FRONT_LOGO, AttachedFile::FILETYPE_FRONT_WHITE_LOGO, AttachedFile::FILETYPE_EMAIL_LOGO, AttachedFile::FILETYPE_FAVICON, AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE, AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, AttachedFile::FILETYPE_WATERMARK_IMAGE, AttachedFile::FILETYPE_APPLE_TOUCH_ICON, AttachedFile::FILETYPE_BLOG_PAGE_IMAGE, AttachedFile::FILETYPE_MOBILE_LOGO, AttachedFile::FILETYPE_CATEGORY_COLLECTION_BG_IMAGE, AttachedFile::FILETYPE_LESSON_PAGE_IMAGE,AttachedFile::FILETYPE_APPLY_TO_TEACH_BANNER)) && (!$fileType || !$recordId)) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
             return false;
         }
 
         $fileRow = AttachedFile::getAttachment($fileType, $recordId, $recordSubId, $langId);
         if (!$fileRow) {
+         
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
             return false;
         }

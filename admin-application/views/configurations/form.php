@@ -62,7 +62,6 @@ switch ($frmType){
 		$adminLogoFld = $frm->getField('admin_logo');
 		$desktopLogoFld = $frm->getField('front_logo');
 		$desktopWhiteLogoFld = $frm->getField('front_white_logo');
-		// $watermarkFld = $frm->getField('watermark');
 		$emailLogoFld = $frm->getField('email_logo');
 		$socialFeedImgFld = $frm->getField('social_feed_image');
 		$faviconFld = $frm->getField('favicon');
@@ -71,9 +70,8 @@ switch ($frmType){
 		$mobileLogo= $frm->getField('mobile_logo');
         $blogImg= $frm->getField('blog_img');
         $lessonImg= $frm->getField('lesson_img');
+		$applyToTeachForm= $frm->getField('apply_to_teach_banner');
         $allowedPaymentGatewayImg = $frm->getField('allowed_payment_gateways_img');
-
-		// $blogImg->developerTags['col'] = 12;
 
         if($canEdit){
             $adminLogoFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '142*45');
@@ -99,8 +97,9 @@ switch ($frmType){
             $paymentPageLogo->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
 
             $allowedPaymentGatewayImg->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '500*67');
+
+			$applyToTeachForm->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '2000*900');
             
-            // $watermarkFld->htmlAfterField = sprintf(Label::getLabel('LBL_Dimensions_%s', $adminLangId), '168*37');
         }else{
             $adminLogoFld->setFieldTagAttribute('class', 'hide');
             $desktopLogoFld->setFieldTagAttribute('class', 'hide');
@@ -111,7 +110,6 @@ switch ($frmType){
             $mobileLogo->setFieldTagAttribute('class', 'hide');
             $appleTouchIcon->setFieldTagAttribute('class', 'hide');
             $paymentPageLogo->setFieldTagAttribute('class', 'hide');
-            // $watermarkFld->setFieldTagAttribute('class', 'hide');
         }
         
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_ADMIN_LOGO, 0, 0, $lang_id ) ){
@@ -201,6 +199,11 @@ switch ($frmType){
 		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_LESSON_PAGE_IMAGE, 0, 0, $lang_id ) ){
 			$lessonImg->htmlAfterField .= '<div class="uploaded--image" style="width:100%"><img src="'.FatUtility::generateFullUrl('Image','lesson', array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a class="remove--img" href="javascript:void(0);" onclick="removeLessonImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
 		}
+
+		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_APPLY_TO_TEACH_BANNER, 0, 0, $lang_id)){			
+			$applyToTeachForm->htmlAfterField .= '<div class="uploaded--image" style="width:100%"><img src="'.FatUtility::generateFullUrl('Image','applyToTeachBanner', array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a class="remove--img" href="javascript:void(0);" onclick="removeApplyToTeachBannerImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
+		}
+
 		if( AttachedFile::getAttachment(AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE, 0, 0, $lang_id ) ){
 			$allowedPaymentGatewayImg->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','allowedPaymentGatewayImage', array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"><a class="remove--img" href="javascript:void(0);" onclick="removeAllowedPaymentGatewayImage('.$lang_id.')" ><i class="ion-close-round"></i></a></div><br>';
 		}

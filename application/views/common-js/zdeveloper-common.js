@@ -53,7 +53,7 @@ $(document).ready(function () {
 
 	setUpGoToTop();
 
-	setUpStickyHeader();
+	//setUpStickyHeader();
 
 	toggleNavDropDownForDevices();
 
@@ -344,8 +344,8 @@ $(document).ready(function () {
 	setUpSignUp = function (frm) {
 		if (!$(frm).validate()) { return; }
 		$.loader.show()
-		fcom.ajax(fcom.makeUrl('GuestUser', 'setUpSignUp'), fcom.frmData(frm), function (res) {
-
+		data=fcom.frmData(frm);
+		fcom.ajax(fcom.makeUrl('GuestUser', 'setUpSignUp'), fcom.frmData(frm), function(res) {
 			if (res.status == 1) {
 				window.location.href = res.redirectUrl;
 				return;

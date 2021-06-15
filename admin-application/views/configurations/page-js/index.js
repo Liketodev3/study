@@ -192,6 +192,13 @@ $(document).ready(function(){
 		});
 	};
 
+	removeApplyToTeachBannerImage = function(lang_id){
+		if(!confirm(langLbl.confirmDeleteImage)){return;}
+		fcom.updateWithAjax(fcom.makeUrl('Configurations', 'removeApplyToTeachBannerPage', [lang_id]), '', function(t) {
+			getLangForm( document.frmConfiguration.form_type.value, lang_id );
+		});
+	};
+
 	removeAllowedPaymentGatewayImage = function(lang_id){
 		if(!confirm(langLbl.confirmDeleteImage)){return;}
 		fcom.updateWithAjax(fcom.makeUrl('Configurations', 'removeAllowedPaymentGatewayImage', [lang_id]), '', function(t) {

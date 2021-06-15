@@ -113,6 +113,7 @@ class MyAppController extends FatController
         if (CommonHelper::getLayoutDirection() == 'rtl') {
             $this->_template->addCss(['css/common-rtl.css', 'css/frontend-rtl.css']);
         } else {
+            
             $this->_template->addCss(['css/common-ltr.css', 'css/frontend-ltr.css']);
         }
         $this->set('cookieConsent', $cookieConsent);

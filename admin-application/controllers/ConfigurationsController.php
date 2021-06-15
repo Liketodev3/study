@@ -205,15 +205,14 @@ class ConfigurationsController extends AdminBaseController
     {
         $this->objPrivilege->canEditGeneralSettings();
         $post = FatApp::getPostedData();
+
         if (empty($post)) {
-            Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported', $this->adminLangId));
-            FatUtility::dieJsonError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Request_Or_File_not_supported', $this->adminLangId));
         }
         $file_type = FatApp::getPostedData('file_type', FatUtility::VAR_INT, 0);
         $lang_id = FatApp::getPostedData('lang_id', FatUtility::VAR_INT, 0);
         if (!$file_type) {
-            Message::addErrorMessage($this->str_invalid_request);
-            FatUtility::dieJsonError(Message::getHtml());
+            FatUtility::dieJsonError($this->str_invalid_request);
         }
         $allowedFileTypeArr = [
             AttachedFile::FILETYPE_ADMIN_LOGO,
@@ -229,19 +228,19 @@ class ConfigurationsController extends AdminBaseController
             AttachedFile::FILETYPE_BLOG_PAGE_IMAGE,
             AttachedFile::FILETYPE_LESSON_PAGE_IMAGE,
             AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE,
+            AttachedFile::FILETYPE_APPLY_TO_TEACH_BANNER
         ];
         if (!in_array($file_type, $allowedFileTypeArr)) {
-            Message::addErrorMessage($this->str_invalid_request);
-            FatUtility::dieJsonError(Message::getHtml());
+            FatUtility::dieJsonError($this->str_invalid_request);
         }
+
         if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
-            Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
-            FatUtility::dieJsonError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
         }
+
         $fileHandlerObj = new AttachedFile();
         if (!$res = $fileHandlerObj->saveAttachment($_FILES['file']['tmp_name'], $file_type, 0, 0, $_FILES['file']['name'], -1, $unique_record = true, $lang_id)) {
-            Message::addErrorMessage($fileHandlerObj->getError());
-            FatUtility::dieJsonError(Message::getHtml());
+            FatUtility::dieJsonError($fileHandlerObj->getError());
         }
         $this->set('file', $_FILES['file']['name']);
         $this->set('frmType', Configurations::FORM_GENERAL);
@@ -426,6 +425,18 @@ class ConfigurationsController extends AdminBaseController
         $this->_template->render(false, false, 'json-success.php');
     }
 
+    public function removeApplyToTeachBannerPage($lang_id = 0)
+    {
+        $lang_id = FatUtility::int($lang_id);
+        $fileHandlerObj = new AttachedFile();
+        if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_APPLY_TO_TEACH_BANNER, 0, 0, 0, $lang_id)) {
+            
+            FatUtility::dieJsonError($fileHandlerObj->getError());
+        }
+        $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+
     public function removeAllowedPaymentGatewayImage(int $langId = 0)
     {
         $langId = FatUtility::int($langId);
@@ -534,7 +545,7 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addRadioButtons(Label::getLabel("LBL_Default_Lesson_duration",  $this->adminLangId), "CONF_DEFAULT_PAID_LESSON_DURATION", $bookingSlots, '', array('class' => 'list-inline'))->requirements()->setRequired();
                 
                 $frm->addRadioButtons(Label::getLabel("LBL_Trial_Lesson_duration",  $this->adminLangId), "CONF_TRIAL_LESSON_DURATION",
-                    $bookingSlots, '', array('class' => 'list-inline'))->requirements()->setRequired();
+                $bookingSlots, '', array('class' => 'list-inline'))->requirements()->setRequired();
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_END_LESSON_DURATION", $this->adminLangId), "CONF_ALLOW_TEACHER_END_LESSON");
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Duration_After_Teacher_Can_End_Lesson_(In_Minutes)", $this->adminLangId) . ".</small>";
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_LEARNER_REFUND_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_REFUND_PERCENTAGE");
@@ -609,13 +620,11 @@ class ConfigurationsController extends AdminBaseController
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Comet_Chat_Auth", $this->adminLangId), 'CONF_COMET_CHAT_AUTH');
                 $frm->addHtml('', 'lessonspace_api_key', '<h3>' . Label::getLabel("LBL_Lessonspace_API_Key", $this->adminLangId) . '</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Lessonspace_Api_Key", $this->adminLangId), 'CONF_LESSONSPACE_API_KEY');
-
                 $frm->addHtml('', 'WIZIQ_MEETING_API', '<h3>' . Label::getLabel("LBL_WIZIQ_MEETING_API", $this->adminLangId) . '</h3>');
                 $frm->addTextBox(Label::getLabel("WIZIQ_API_SECRET_KEY", $this->adminLangId), 'WIZIQ_API_SECRET_KEY');
                 $frm->addTextBox(Label::getLabel("WIZIQ_API_ACCESS_KEY", $this->adminLangId), 'WIZIQ_API_ACCESS_KEY');
                 $frm->addTextBox(Label::getLabel("WIZIQ_API_SERVICE_URL", $this->adminLangId), 'WIZIQ_API_SERVICE_URL');
                 $frm->addTextBox(Label::getLabel("WIZIQ_API_CLASSAPI_URL", $this->adminLangId), 'WIZIQ_API_CLASSAPI_URL');
-
                 $frm->addHtml('', 'Newsletter', '<h3>' . Label::getLabel("LBL_Newsletter_Subscription", $this->adminLangId) . '</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Mailchimp_Key", $this->adminLangId), 'CONF_MAILCHIMP_KEY');
                 $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_This_is_the_Mailchimp's_application_key_used_in_subscribe_and_send_newsletters.", $this->adminLangId) . "</small>";
@@ -682,17 +691,18 @@ class ConfigurationsController extends AdminBaseController
                 $frm->addTextBox(Label::getLabel("LBL_From_Name", $this->adminLangId), 'CONF_FROM_NAME_' . $langId);
                 break;
             case Configurations::FORM_MEDIA:
-                $admin_logo_fld = $frm->addButton('Admin Logo', 'admin_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'admin_logo', 'data-file_type' => AttachedFile::FILETYPE_ADMIN_LOGO]);
-                $front_white_logo_fld = $frm->addButton('Desktop White Logo', 'front_white_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'front_white_logo', 'data-file_type' => AttachedFile::FILETYPE_FRONT_WHITE_LOGO]);
-                $front_logo_fld = $frm->addButton('Desktop Logo', 'front_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'front_logo', 'data-file_type' => AttachedFile::FILETYPE_FRONT_LOGO]);
-                $email_logo_fld = $frm->addButton('Email Template Logo', 'email_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'email_logo', 'data-file_type' => AttachedFile::FILETYPE_EMAIL_LOGO]);
-                $favicon_fld = $frm->addButton('Website Favicon', 'favicon', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'favicon', 'data-file_type' => AttachedFile::FILETYPE_FAVICON]);
-                $social_logo_fld = $frm->addButton('Social Media Logo', 'social_feed_image', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'social_feed_image', 'data-file_type' => AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE]);
-                $payment_logo_fld = $frm->addButton('Payment Page Logo', 'payment_page_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'payment_page_logo', 'data-file_type' => AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO]);
-                $appletouch_fld = $frm->addButton('Apple Touch Icon', 'apple_touch_icon', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'apple_touch_icon', 'data-file_type' => AttachedFile::FILETYPE_APPLE_TOUCH_ICON]);
-                $mobilelogo_fld = $frm->addButton('Mobile Logo', 'mobile_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'mobile_logo', 'data-file_type' => AttachedFile::FILETYPE_MOBILE_LOGO]);
-                $blogimg_fld = $frm->addButton('Blog Image', 'blog_img', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'blog_img', 'data-file_type' => AttachedFile::FILETYPE_BLOG_PAGE_IMAGE]);
-                $blogimg_fld = $frm->addButton('Lesson Image', 'lesson_img', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'lesson_img', 'data-file_type' => AttachedFile::FILETYPE_LESSON_PAGE_IMAGE]);
+                $frm->addButton('Admin Logo', 'admin_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'admin_logo', 'data-file_type' => AttachedFile::FILETYPE_ADMIN_LOGO]);
+                $frm->addButton('Desktop White Logo', 'front_white_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'front_white_logo', 'data-file_type' => AttachedFile::FILETYPE_FRONT_WHITE_LOGO]);
+                $frm->addButton('Desktop Logo', 'front_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'front_logo', 'data-file_type' => AttachedFile::FILETYPE_FRONT_LOGO]);
+                $frm->addButton('Email Template Logo', 'email_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'email_logo', 'data-file_type' => AttachedFile::FILETYPE_EMAIL_LOGO]);
+                $frm->addButton('Website Favicon', 'favicon', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'favicon', 'data-file_type' => AttachedFile::FILETYPE_FAVICON]);
+                $frm->addButton('Social Media Logo', 'social_feed_image', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'social_feed_image', 'data-file_type' => AttachedFile::FILETYPE_SOCIAL_FEED_IMAGE]);
+                $frm->addButton('Payment Page Logo', 'payment_page_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'payment_page_logo', 'data-file_type' => AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO]);
+                $frm->addButton('Apple Touch Icon', 'apple_touch_icon', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'apple_touch_icon', 'data-file_type' => AttachedFile::FILETYPE_APPLE_TOUCH_ICON]);
+                $frm->addButton('Mobile Logo', 'mobile_logo', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'mobile_logo', 'data-file_type' => AttachedFile::FILETYPE_MOBILE_LOGO]);
+                $frm->addButton('Blog Image', 'blog_img', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'blog_img', 'data-file_type' => AttachedFile::FILETYPE_BLOG_PAGE_IMAGE]);
+                $frm->addButton('Lesson Image', 'lesson_img', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'lesson_img', 'data-file_type' => AttachedFile::FILETYPE_LESSON_PAGE_IMAGE]);
+                $frm->addButton('Apply To Teach Banner Image', 'apply_to_teach_banner', 'Upload file', ['class' => 'logoFiles-Js', 'id' => 'lesson_img', 'data-file_type' => AttachedFile::FILETYPE_APPLY_TO_TEACH_BANNER]);
                 $frm->addButton(label::getLabel('LBL_ALLOWED_PAYMENT_GATEWAY_IMAGE'), 'allowed_payment_gateways_img', label::getLabel('LBL_UPLOAD_FILE'), ['class' => 'logoFiles-Js', 'id' => 'allowed_payment_gateways_img', 'data-file_type' => AttachedFile::FILETYPE_ALLOWED_PAYMENT_GATEWAYS_IMAGE]);
                 break;
             case Configurations::FORM_SERVER:

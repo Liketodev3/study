@@ -319,13 +319,13 @@ class Common
 
     public static function getBrowseTutorSection($template)
     {
-        $browseTutorPage = Extrapage::getBlockContent(Extrapage::BLOCK_BROWSE_TUTOR, commonHelper::getLangId());
+        $browseTutorPage = ExtraPage::getBlockContent(ExtraPage::BLOCK_BROWSE_TUTOR, commonHelper::getLangId());
         $template->set('browseTutorPage', $browseTutorPage);
     }
 
     public static function whyUsTemplateContent($template)
     {
-        $epageDetail = Extrapage::getBlockContent(Extrapage::BLOCK_WHY_US, CommonHelper::getLangId());
+        $epageDetail = ExtraPage::getBlockContent(ExtraPage::BLOCK_WHY_US, CommonHelper::getLangId());
         $template->set('epage', $epageDetail);
     }
 

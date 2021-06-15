@@ -10,6 +10,7 @@ class Faq extends MyAppModel
     const CATEGORY_GENERAL_QUERIES = 1;
     const CATEGORY_APPLICATION = 2;
     const CATEGORY_PAYMENTS = 3;
+    const CATEGORY_APPLY_TO_TEACH = 4;
 
     public function __construct($id = 0)
     {

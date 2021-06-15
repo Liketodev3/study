@@ -10,6 +10,14 @@ $("document").ready(function(){
 
 
 (function($){
+
+	validaBlock = function() {
+		var blockFields = ['utrvalue_user_first_name','utrvalue_user_last_name'];
+        var fld = $('name=utrvalue_user_first_name')
+
+		$.Validation.getRule('floating').check
+	};
+
 	teacherQualificationForm = function( uqualification_id ){
 		$.facebox(function() {
 			fcom.ajax( fcom.makeUrl('TeacherRequest', 'teacherQualificationForm', []), 'uqualification_id='+uqualification_id, function(res){
@@ -61,7 +69,7 @@ $("document").ready(function(){
 	};
 
 	searchTeacherQualification = function(){
-		var dv = $('#resume_listing');
+		var dv = $('#block--4');
 		$(dv).html( fcom.getLoader() );
 
 		fcom.ajax( fcom.makeUrl('TeacherRequest', 'searchTeacherQualification'),'',function(res){
@@ -121,7 +129,13 @@ $("document").ready(function(){
 					}
 					$.mbsmessage(result.msg,true, 'alert alert--success');
 					if( result.redirectUrl ){
-						setTimeout(function(){ window.location.href = result.redirectUrl }, 2000);
+						setTimeout(function(){ 
+							$('.page-block__body').hide();
+							$('.change-block-js').removeClass('is-process');
+							$('li[data-blocks-show').removeClass('change-block-js')
+							$('li[data-blocks-show="5"]').addClass('is-process');
+							$('#block--5').show();			
+						}, 2000);
 							return;
 					}
 				} catch (e) {
@@ -209,6 +223,26 @@ $("document").ready(function(){
 		})
 	};
 
+	changeProficiency = function(obj, langId) {
+		langId = parseInt(langId);
+		if (langId <= 0) {
+			return;
+		}
+		let value = obj.value;
+		slanguageSection = '.slanguage-' + langId;
+		slanguageCheckbox = '.slanguage-checkbox-' + langId;
+		if (value == '') {
+			$(slanguageSection).find('.badge-js').remove();
+			$(slanguageSection).removeClass('is-selected');
+			$(slanguageCheckbox).prop('checked', false);
+		} else {
+			$(slanguageSection).addClass('is-selected');
+			$(slanguageCheckbox).prop('checked', true);
+			$(slanguageSection).find('.badge-js').remove();
+			$(slanguageSection).find('.selection__trigger-label').append('<span class="badge color-secondary badge-js  badge--round badge--small margin-0">' + obj.selectedOptions[0].innerHTML + '</span>');
+		}
+	};
+
 	sumbmitProfileImage = function(){
 		$('.loading-wrapper').show();
 		$("#frmProfileImage").ajaxSubmit({
@@ -220,6 +254,7 @@ $("document").ready(function(){
 				$(document).trigger('close.facebox');
 				$('.loading-wrapper').hide();
 				// $("[name=user_profile_pic]").prop("files",$("[name=user_profile_image]").prop("files"));
+				$('#user-profile-pic--js').show();
 				$('#user-profile-pic--js').attr('src', json.file);
 			}
 		});

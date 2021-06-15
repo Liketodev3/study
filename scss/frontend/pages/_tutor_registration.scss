@@ -258,17 +258,17 @@ $is-registration: 'is-registration';
                 margin-bottom: theme('margin.6');
             }
             .caption-wraper{
-                span{
-                    font-size: 0.9rem;
-                    color: theme('color.gray.800');
-                    font-weight: normal;
-                    margin-#{theme('direction.left','value')}: theme('margin.3');
-                    @media(max-width: theme('breakpoints.sm','value')) {
-                        margin-#{theme('direction.left','value')}: theme('margin.0');
-                        margin-top: theme('margin.3');
-                        display: block;
-                    }
-                }
+                // span{
+                //     font-size: 0.9rem;
+                //     color: theme('color.gray.800');
+                //     font-weight: normal;
+                //     margin-#{theme('direction.left','value')}: theme('margin.3');
+                //     @media(max-width: theme('breakpoints.sm','value')) {
+                //         margin-#{theme('direction.left','value')}: theme('margin.0');
+                //         margin-top: theme('margin.3');
+                //         display: block;
+                //     }
+                // }
                 .field_label{
                     color: theme('color.dark');
                 }
@@ -295,6 +295,11 @@ $is-registration: 'is-registration';
             }
         }
     }
+
+    .block-content__foot {
+        display: flex;
+        justify-content: space-between;
+    }  
 
     .list-inline{
         label{
