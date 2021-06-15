@@ -96,11 +96,21 @@ class TeacherRequestController extends MyAppController
             return;
         }
 
+<<<<<<< HEAD
         $teacherRequest = $this->verifyTeacherRequestRow();
         if (in_array($teacherRequest['utrequest_id'], ['']))
             /* ] */
             /* Validation[ */
             $frm = $this->getForm($this->siteLangId);
+=======
+        /**
+         * need to check if user has/have already pending request
+         * system will behave accordingly
+         */
+        /* ] */
+        /* Validation[ */
+        $frm = $this->getForm($this->siteLangId);
+>>>>>>> eb0307cd3b208c91d30e72a88a5dd1ad3cad56f3
         $post = FatApp::getPostedData();
 
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
