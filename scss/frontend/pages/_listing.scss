@@ -73,7 +73,7 @@
             border-right: 2px solid var(--color-gray-500);
             border-bottom: 2px solid var(--color-gray-500);
             transform: rotate(45deg);
-            right: 24px;
+            #{theme('direction.right','value')}: 24px;
             top: 24px;
         }
         input{
@@ -192,6 +192,19 @@
             margin-bottom: var(--margin-4);
             &:last-child{
                 margin-bottom: 0;
+            }
+
+            .checkbox{
+                .input-helper{
+                    &::before{
+                        left: 3px;
+                        bottom: 6.1px;
+                    }
+                    &::after{
+                        left: 6px;
+                        bottom: 3px;
+                    }
+                }
             }
         }
     }
@@ -332,7 +345,7 @@
             border-right: 2px solid var(--color-dark);
             border-bottom: 2px solid var(--color-dark);
             transform: rotate(45deg);
-            right: 15px;
+            #{theme('direction.right','value')}: 15px;
             top: 15px;
             opacity: 0.2;
         }
@@ -457,12 +470,12 @@
 .list__body {
     @media(min-width: theme('breakpoints.md','value')){
         width: calc(100% - 140px);
-        margin-left: var(--margin-14);
+        margin-#{theme('direction.left','value')}: var(--margin-14);
     }
 
     @media(min-width: theme('breakpoints.md','value')) and (max-width: theme('breakpoints.xl','value')){
         width: calc(100% - 200px);
-        margin-left: var(--margin-10);
+        margin-#{theme('direction.left','value')}: var(--margin-10);
     }
 }
 

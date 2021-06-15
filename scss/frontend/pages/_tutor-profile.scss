@@ -498,12 +498,12 @@
         height: calc(100% + 56px);
         width: 1px;
         background: var(--color-gray-300);
-        left: 22%;
+        #{theme('direction.left','value')}: 22%;
         transform: translateX(-50%);
         top: 0;
 
         @media(max-width: theme('breakpoints.md','value')){
-            left: 25%;
+            #{theme('direction.left','value')}: 25%;
             height: calc(100% + 30px);
         }
     }
@@ -518,7 +518,7 @@
         transform: translateX(-50%);
 
         @media(max-width: theme('breakpoints.md','value')){
-            left: 25%;
+            #{theme('direction.left','value')}: 25%;
         }
     }
 

@@ -13,7 +13,6 @@
             <!-- [ PAGE PANEL ========= -->
             <div class="page-content"  id="ordersListing">
               
-                </div>
                 <!-- ] ========= -->
             </div>
             <!-- ] -->

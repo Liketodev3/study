@@ -169,3 +169,10 @@
     position: fixed;
     width: 100%;
 }
+
+#facebox{
+    .img-container {
+        max-height: 500px;
+        overflow: auto;
+    }
+}
