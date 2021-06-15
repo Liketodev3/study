@@ -2,8 +2,7 @@
 </div>
 <footer class="footer">
     <section class="section section--footer">
-        <div class="container container--narrow">
-      
+        <div class="container container--narrow">     
             <?php $this->includeTemplate('footer/footerRowOne.php',['siteLangId'=>$siteLangId]);  ?>
             <?php $this->includeTemplate('footer/footerRowSecond.php',['siteLangId'=>$siteLangId]);  ?>
             <?php $this->includeTemplate('footer/footerRowThird.php',['siteLangId'=>$siteLangId]);  ?>

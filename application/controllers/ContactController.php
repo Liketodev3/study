@@ -10,9 +10,9 @@ class ContactController extends MyAppController
             $post = $contactFrm->getFormDataFromArray($post);
             $contactFrm->fill($post);
         }
-        $contactBanner = Extrapage::getBlockContent(Extrapage::BLOCK_CONTACT_BANNER_SECTION, $this->siteLangId);
+        $contactBanner = ExtraPage::getBlockContent(ExtraPage::BLOCK_CONTACT_BANNER_SECTION, $this->siteLangId);
      
-        $contactLeftSection = Extrapage::getBlockContent(Extrapage::BLOCK_CONTACT_LEFT_SECTION, $this->siteLangId);
+        $contactLeftSection = ExtraPage::getBlockContent(ExtraPage::BLOCK_CONTACT_LEFT_SECTION, $this->siteLangId);
         $this->set('contactBanner',$contactBanner);
         $this->set('contactLeftSection',$contactLeftSection);
         $this->set('contactFrm', $contactFrm);
