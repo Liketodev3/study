@@ -183,6 +183,10 @@ $colorClass = [
                                     <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $teacher['us_video_link']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                 </div>
                             </div>
+
+                            <div class="panel-box__foot">
+                                <a href="#" class="link-detail">View Details</a>
+                            </div>
                         </div>
                     </div>
                 </div>

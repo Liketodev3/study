@@ -269,8 +269,17 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                     }
                                 }
                                 $this->includeTemplate($sidebarMenuLayout, $templateVariable);
-                            ?>   
+                            ?>  
+                            
+                            <div class="sidebar__links">
+                            <a href="<?php echo CommonHelper::generateUrl('Teachers','',[], CONF_WEBROOT_FRONT_URL); ?>"><?php echo Label::getLabel('LBL_FIND_A_TUTOR'); ?></a> 
+                            <?php if (User::getDashboardActiveTab() == User::USER_LEARNER_DASHBOARD) { ?>
+                                <a href="<?php echo CommonHelper::generateUrl('cms', 'view', [FatApp::getConfig('CONF_APPLY_TO_TEACH_PAGE', FatUtility::VAR_INT, '')], CONF_WEBROOT_FRONT_URL); ?>"><?php echo Label::getLabel('LBL_APPLY_TO_TEACH'); ?></a>
+                            <?php } ?>
                         </div>
+                        </div>
+
+                       
                     </div>
                 </div>
             </div>

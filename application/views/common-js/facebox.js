@@ -113,7 +113,7 @@
 
             $('#facebox').show().css({
 
-                top: getPageScroll()[1] + (getPageHeight() / 10),
+                top: '100px',
                 left: $(window).width() / 2 - ($('#facebox .popup').outerWidth() / 2)
             })
 

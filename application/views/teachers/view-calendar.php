@@ -4,22 +4,24 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 ?>
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
 <div class="calendar-view">
-    <div class="row">
-        <div class="col-sm-5">
-            <h4><?php echo $userRow['user_first_name'] . " " . $userRow['user_last_name'] . " " . Label::getLabel('Lbl_Calendar'); ?></h4>
-        </div>
-        <div class="col-sm-7 justify-content-sm-end justify-content-start">
-            <div class="cal-status">
-                <span class="ml-0 box-hint disabled-box">&nbsp;</span>
-                <p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
+    <div class="calendar-view__head">    
+        <div class="row">
+            <div class="col-sm-5">
+                <h4><?php echo $userRow['user_first_name'] . " " . $userRow['user_last_name'] . " " . Label::getLabel('Lbl_Calendar'); ?></h4>
             </div>
-            <div class="cal-status">
-                <span class="box-hint available-box">&nbsp;</span>
-                <p><?php echo Label::getLabel('Lbl_Available'); ?></p>
-            </div>
-            <div class="cal-status">
-                <span class="box-hint booked-box">&nbsp;</span>
-                <p><?php echo Label::getLabel('Lbl_Booked'); ?></p>
+            <div class="col-sm-7">
+                <div class="cal-status">
+                    <span class="ml-0 box-hint disabled-box">&nbsp;</span>
+                    <p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
+                </div>
+                <div class="cal-status">
+                    <span class="box-hint available-box">&nbsp;</span>
+                    <p><?php echo Label::getLabel('Lbl_Available'); ?></p>
+                </div>
+                <div class="cal-status">
+                    <span class="box-hint booked-box">&nbsp;</span>
+                    <p><?php echo Label::getLabel('Lbl_Booked'); ?></p>
+                </div>
             </div>
         </div>
     </div>

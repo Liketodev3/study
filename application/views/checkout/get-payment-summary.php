@@ -121,7 +121,7 @@ if ($userWalletBalance > 0) {
                 <div class="col-md-6  <?php echo ($cartData['orderNetAmount'] > 0) ? ' col-xl-5 offset-xl-1' : 'col-xl-12'; ?>">
                     <div class="selection-title">
                         <p><?php echo Label::getLabel('LBL_Have_a_Coupon?'); ?></p>
-                        <a href="javascript:void(0);" class="color-primary btn--link slide-toggle-js">View Coupons</a>
+                        <a href="javascript:void(0);" class="color-primary btn--link slide-toggle-coupon-js"><?php echo Label::getLabel('LBL_View_Coupons'); ?></a>
                     </div>
                     <div class="apply-coupon">
                         <svg class="icon icon--price-tag">
@@ -200,7 +200,7 @@ if ($userWalletBalance > 0) {
                             </div>
                         </div>
                     </div>
-                    <div class="coupon-box slide-target-js">
+                    <div class="coupon-box slide-target-coupon-js">
                         <div class="coupon-box__head">
                             <p><?PHP echo Label::getLabel('LBL_AVAILABLE_COUPONS'); ?></p>
                             <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
@@ -245,27 +245,18 @@ if ($userWalletBalance > 0) {
 
 <script>
 
-    $(".settings__trigger-js").click(function () {
-        var t = $(this).parents(".toggle-group").children(".settings__target-js").is(":hidden");
-        $(".toggle-group .settings__target-js").hide();
-        $(".toggle-group .settings__trigger-js").removeClass("is--active");
-        if (t) {
-            $(this).parents(".toggle-group").children(".settings__target-js").toggle().parents(".toggle-group").children(".settings__trigger-js").addClass("is--active")
-        }
-    });
-
-    $('.slide-toggle-js').click(function (e) {
+    $('.slide-toggle-coupon-js').click(function (e) {
         e.preventDefault();
         $(this).parent('.toggle-dropdown').toggleClass("is-active");
     });
 
 
-    $(".slide-toggle-js").click(function () {
-        $(".slide-target-js").slideToggle();
+    $(".slide-toggle-coupon-js").click(function () {
+        $(".slide-target-coupon-js").slideToggle();
     });
 
     $('.btn--close').click(function () {
-        $('.slide-target-js').slideUp("slow");
+        $('.slide-target-coupon-js').slideUp("slow");
     });
 
 </script>

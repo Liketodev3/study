@@ -383,12 +383,8 @@ $sale-stat: "sale-stat";
         }
     }
 }
-.sale-stat--primary{
-    background-color: #fff4e2;
-}
-.sale-stat--secondary{
-    background-color: #e7fdff;
-}
+
+
 
 .graph-media{
     img{
@@ -666,7 +662,7 @@ $dashboard-calendar: "dashboard-calendar";
 }
 
 .dashboard-calendar .fc-view-harness{
-    height: 336px !important;
+    height: 300px !important;
 }
 
 .scheduled-lesson-popup .box {
@@ -741,7 +737,7 @@ $dashboard-calendar: "dashboard-calendar";
                 display: none;
             }
             .fc-toolbar-title {
-                font-size: var(--font-size-lg) ;
+                font-size: 1.1rem ;
             }
             
         }
@@ -757,29 +753,48 @@ $dashboard-calendar: "dashboard-calendar";
         }
     }
     h2{
-        font-size: 1.3rem !important;
+        font-size: 1.1rem !important;
+        text-transform: uppercase;
     }
 }
 
 .fc{ 
     .fc-button-group{
-        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
+        
         border-radius: theme('radius.1');
         border: 1px solid var(--color-gray-100);
+        
+        @media(min-width:theme('breakpoints.md','value')){
+            box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
+        }
         .fc-button-primary{
-            color: theme('color.gray.500');
+            color: theme('color.primary');
             background-color: theme('color.white');
             border-color: theme('color.white');
-            box-shadow: none;
             height: auto;
-
+            padding: var(--padding-2);
+            @media(max-width:theme('breakpoints.md','value')){
+                box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
+            }
+            @media(min-width:theme('breakpoints.md','value')){
+                box-shadow: none;
+            }
             &:hover{
                 background: transparent;
                 border-color: inherit;
                 color: inherit;
+                box-shadow: none;
+                border: transparent;
             }
             &:focus{
                 box-shadow: none;
+            }
+            &:last-child{
+                margin-#{theme('direction.left','value')}: 0 !important;
+            }
+            &:active{
+                background-color: theme('color.primary') !important;
+                border-color: theme('color.primary') !important;
             }
         }
         .fc-button{
@@ -804,12 +819,16 @@ $dashboard-calendar: "dashboard-calendar";
 }
 
 .calendar-view{
-    padding: theme('padding.8');
-    [class*="col-"]{
-        &:last-child{
-            display: flex;
+    @media(max-width:theme('breakpoints.md','value')){
+        height: 100%;
+        #calendar-container{
+            height: calc(100% - 100px);
+            >div{
+                height: 100%;
+            }
         }
     }
+
     .cal-status{
         display: flex;
         align-items: center;
@@ -818,6 +837,82 @@ $dashboard-calendar: "dashboard-calendar";
             margin-bottom: 0;
         }
     }
+    .calendar-view__head{
+        
+        @media(min-width:theme('breakpoints.md','value')){
+            margin-bottom: var(--margin-4);
+        }
+        [class*="col-sm-7"]{
+            display: flex;
+            @media(min-width:theme('breakpoints.md','value')){
+                justify-content: flex-end;
+            }
+        }
+        @media(min-width:theme('breakpoints.xxl','value')){
+            h4{
+                font-size: var(--font-size-h4);
+            }
+        }
+        @media(max-width:theme('breakpoints.md','value')){
+            padding: var(--padding-5);
+            text-align: center;
+            h4{
+                margin-bottom: var(--margin-4);
+            }
+            [class*="col-sm-7"]{
+                justify-content: center;
+            }
+        }
+    }
+
+    .fc-header-toolbar{
+        .fc-toolbar-chunk{
+            &:first-child{
+                margin-#{theme('direction.right','value')}: auto;
+            }
+            
+            @media(min-width:theme('breakpoints.md','value')){
+                h2{
+                    margin-right: var(--margin-5);
+                }
+            }
+
+            @media(max-width:theme('breakpoints.md','value')){
+                width: 100%;
+                text-align: center;
+                h6{
+                    justify-content: center;
+                }
+            }
+            @media(max-width:theme('breakpoints.md','value')){
+                .fc-button-group{
+                    display: inline-table;
+                    border: transparent;
+                    width: 100%;
+                    padding: 0 var(--padding-6);
+                    .fc-button{
+                        box-shadow: none;
+                        border: 1px solid var(--color-gray-200);
+                        &:first-child{
+                            float: #{theme('direction.left','value')};
+                        }
+                        &:last-child{
+                            float: #{theme('direction.right','value')};
+                        }
+                    }
+                    
+                }
+                .fc-today-button{
+                    position: absolute;
+                    opacity: 1;
+                    left: 50%;
+                    transform: translatex(-50%);
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+   
 }
 
 .tooltipevent{
@@ -833,3 +928,4 @@ $dashboard-calendar: "dashboard-calendar";
     border-top: 3px solid var(--color-primary);
     border-radius: 6px;
 }
+

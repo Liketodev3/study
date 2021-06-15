@@ -500,6 +500,11 @@
     }
 }
 
+.selection-disabled{
+    opacity: 0.7;
+    cursor: no-drop !important;
+}
+
 .balance-payment{
     margin-top: var(--margin-6);
     color: var(--color-dark);
