@@ -8,6 +8,7 @@ class TeachersController extends MyAppController
         if (empty($teachLangId)) {
             $teachLangId = FatApp::getPostedData('teachLangId', FatUtility::VAR_INT, 0);
         }
+      
         $frmSrch = $this->getTeacherSearchForm($teachLangId);
         $this->set('frmTeacherSrch', $frmSrch);
         $daysArr = applicationConstants::getWeekDays();
@@ -625,7 +626,6 @@ class TeachersController extends MyAppController
     {
         $teachLangId = FatApp::getPostedData('teachLangId', FatUtility::VAR_INT, 0);
         $postedData = FatApp::getPostedData();
-        $_SESSION['search_filters'] = $postedData;
         $srch = new UserSearch(false);
         $srch->setTeacherDefinedCriteria(false, false);
         $tlangSrch = $srch->getMyTeachLangQry(true, $this->siteLangId, $teachLangId);
@@ -790,38 +790,26 @@ class TeachersController extends MyAppController
     private function getTeacherSearchForm($teachLangId = 0)
     {
         $teachLangName = '';
-        $keyword = '';
-        if (empty($teachLangId)) {
-            $teachLangId = (!empty($_SESSION['search_filters']['teachLangId'])) ? $_SESSION['search_filters']['teachLangId'] : $teachLangId;
-        }
         if ($teachLangId) {
             $srch = new TeachingLanguageSearch($this->siteLangId);
             $srch->addCondition('tlanguage_id', '=', $teachLangId);
-
             $srch->addMultipleFields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name']);
-
             $srch->doNotCalculateRecords();
             $srch->setPageSize(1);
             $rs = $srch->getResultSet();
             $languages = FatApp::getDb()->fetch($rs);
+           
             if (!empty($languages['tlanguage_id'])) {
                 $teachLangId = $languages['tlanguage_id'];
                 $teachLangName = $languages['tlanguage_name'];
             }
         }
-        if (!empty($teachLangName)) {
-            $_SESSION['search_filters']['teach_language_name'] = $teachLangName;
-        }
-        if (isset($_SESSION['search_filters']) && !empty($_SESSION['search_filters'])) {
-            if (isset($_SESSION['search_filters']['keyword']) && !empty($_SESSION['search_filters']['keyword'])) {
-                $keyword = $_SESSION['search_filters']['keyword'];
-            }
-        }
+
         $frm = new Form('frmTeacherSrch');
         $frm->addTextBox('', 'teach_language_name', $teachLangName, ['placeholder' => Label::getLabel('LBL_Select_a_language')]);
         $frm->addHiddenField('', 'teachLangId', $teachLangId);
         $frm->addTextBox('', 'teach_availability', '', ['placeholder' => Label::getLabel('LBL_Select_date_time')]);
-        $keyword = $frm->addTextBox('', 'keyword', $keyword, ['placeholder' => Label::getLabel('LBL_Search_By_Teacher_Name')]);
+        $keyword = $frm->addTextBox('', 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Teacher_Name')]);
         $keyword->requirements()->setLength(0, 15);
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
