@@ -228,3 +228,4 @@ Installation steps:
             {document_root}/user-uploads including all sub directories.
             {document_root}/user-uploads/caching.
             {document_root}/public/cache
+
