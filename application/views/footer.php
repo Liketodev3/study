@@ -2,8 +2,7 @@
 </div>
 <footer class="footer">
     <section class="section section--footer">
-        <div class="container container--narrow">
-      
+        <div class="container container--narrow">     
             <?php $this->includeTemplate('footer/footerRowOne.php',['siteLangId'=>$siteLangId]);  ?>
             <?php $this->includeTemplate('footer/footerRowSecond.php',['siteLangId'=>$siteLangId]);  ?>
             <?php $this->includeTemplate('footer/footerRowThird.php',['siteLangId'=>$siteLangId]);  ?>
@@ -26,7 +25,7 @@
 	</div>
 	<?php } ?>
 </div>
-<?php }?>
+<?php } ?>
 
 <?php if (FatApp::getConfig('CONF_ENABLE_LIVECHAT', FatUtility::VAR_STRING, '')) {
     echo FatApp::getConfig('CONF_LIVE_CHAT_CODE', FatUtility::VAR_STRING, '');

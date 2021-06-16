@@ -19,16 +19,17 @@ $("document").ready(function () {
         searchTeachers(frm);
     });
 
-    $(document).on('click', '.select-teach-lang-js', function() {
+    $(document).on('click', '.select-teach-lang-js', function () {
         var langName = $(this).html();
         var langId = $(this).attr('teachLangId');
-      $('input[name=\'teachLangId\']').val(langId);
-      $("input[name='teach_language_name']").val(langName);
-      $('.filter-trigger-js').removeClass('is-active');
-      $('.filter-target-js').slideUp();
-      $('#frm_fat_id_frmTeacherSrch').submit();
-      $('.language_keyword').parent("li").remove();
-      $('#searched-filters').append("<li><a href='javascript:void(0);' class= 'language_keyword tag__clickable' onclick='removeFilterCustom(\"language_keyword\",this)' >" + langLbl.language + " : " + langName + "</a></li>");
+        $('input[name=\'teachLangId\']').val(langId);
+        $("input[name='teach_language_name']").val(langName);
+        $('.filter-trigger-js').removeClass('is-active');
+        $('.filter-target-js').slideUp();
+        $('#frm_fat_id_frmTeacherSrch').submit();
+        $('.language_keyword').parent("li").remove();
+        $('#searched-filters').find('ul').append("<li class='filter-li-js'><a href='javascript:void(0);' class= 'language_keyword tag__clickable' onclick='removeFilterCustom(\"language_keyword\",this)' >" + langLbl.language + " : " + langName + "</a></li>");
+        showAppliedFilterSection();
 
     });
 
@@ -60,16 +61,25 @@ $("document").ready(function () {
 
     });
 
-    $('#btnTeacherSrchSubmit').click(function (e) {
+    $('#btnTeacherSrchSubmit').click(function () {
+
+        let keywordValue = $("#keyword").val();
+        if (keywordValue != '') {
+
+            $('#searched-filters').find('ul').append("<li class='filter-li-js'><a href='javascript:void(0);' class='userKeyword tag__clickable' onclick='removeFilterUser(\"userKeyword\",this)' >" + langLbl.userFilterLabel + " : " + keywordValue + "</a></li>");
+        } else {
+            $('.userKeyword').parent().remove();
+            hideAppliedFilterSection();
+        }
         searchTeachers(frm);
     });
 
-  
 
-    $(document).on('click','.panel-action',function(){
+
+    $(document).on('click', '.panel-action', function () {
 
         $(this).parents('.panel-box').find('.panel-content').hide();
-        $(this).parents('.panel-box').find('.'+$(this).attr('content')).show();
+        $(this).parents('.panel-box').find('.' + $(this).attr('content')).show();
 
         $(this).parent().siblings().removeClass('is--active');
         $(this).parent().addClass('is--active');
@@ -102,10 +112,10 @@ $("document").ready(function () {
     });
 
     $("input[name='filterFromCountry[]']").change(function () {
-     
+
         var id = $(this).closest("label").attr('id');
         if ($(this).is(":checked")) {
-            addFilter(id, this,'filterfromCountry');
+            addFilter(id, this, 'filterfromCountry');
         } else {
             removeFilter(id, this);
         }
@@ -122,7 +132,7 @@ $("document").ready(function () {
         searchTeachers(frm);
     });
 
-    $(document).on('change',"select[name='filterSortBy']",function () {
+    $(document).on('change', "select[name='filterSortBy']", function () {
         searchTeachers(frm);
     });
 
@@ -137,7 +147,7 @@ $("document").ready(function () {
     $("input[name='keyword']").keyup(function (e) {
         var code = e.which;
         if (code == 13) {
-            e.preventDefault();            
+            e.preventDefault();
             searchTeachers(frm);
         }
     });
@@ -150,7 +160,7 @@ $("document").ready(function () {
         }
     });
 
- 
+
 
     $('input[name=\'teach_language_name\']').click(function () {
         $('input[name=\'teach_language_id\']').val('');
@@ -173,23 +183,22 @@ $("document").ready(function () {
     $('.form-filters').click(function (e) {
         e.stopPropagation();
     });
-    
-    /* FOR NAV TOGGLES */ 
-    $('.btn--filters-js').click(function() {
+    /* FOR NAV TOGGLES */
+    $('.btn--filters-js').click(function () {
         $(this).toggleClass("is-active");
-        $('html').toggleClass("show-filters-js"); 
+        $('html').toggleClass("show-filters-js");
     });
-    
-    /* FUNCTION FOR COLLAPSEABLE LINKS */     
-    $('.filter-trigger-js').click(function(){
-      if($(this).hasClass('is-active')){
-          $(this).removeClass('is-active');
-          $(this).siblings('.filter-target-js').slideUp();return false;
-      }
-      $('.filter-trigger-js').removeClass('is-active');
-      $(this).addClass("is-active");
-         $('.filter-target-js').slideUp();
-         $(this).siblings('.filter-target-js').slideDown();
+
+    /* FUNCTION FOR COLLAPSEABLE LINKS */
+    $('.filter-trigger-js').click(function () {
+        if ($(this).hasClass('is-active')) {
+            $(this).removeClass('is-active');
+            $(this).siblings('.filter-target-js').slideUp(); return false;
+        }
+        $('.filter-trigger-js').removeClass('is-active');
+        $(this).addClass("is-active");
+        $('.filter-target-js').slideUp();
+        $(this).siblings('.filter-target-js').slideDown();
     });
 
 });
@@ -206,7 +215,7 @@ function htmlEncode(value) {
 
 (function () {
 
-    
+
     updateRange = function (from, to) {
         range.update({
             from: from,
@@ -228,7 +237,7 @@ function htmlEncode(value) {
         var data = fcom.frmData(frm);
         //alert( data );
         var dv = $("#teachersListingContainer");
-       
+
 
         /* spoken language filters[ */
         var spokenLanguages = [];
@@ -290,7 +299,7 @@ function htmlEncode(value) {
         var sortOrder = $("select[name='filterSortBy']").val();
         if (sortOrder) {
             data = data + "&sortOrder=" + sortOrder;
-        }else{
+        } else {
             data = data + "&sortOrder=popularity_desc";
 
         }
@@ -317,29 +326,38 @@ function htmlEncode(value) {
         searchArr = [];
         document.frmTeacherSrch.reset();
         document.frmTeacherSrch.reset();
-
-        /* $('#filters a').each(function(){
-         id = $(this).attr('class');
-         clearFilters(id,this);
-         });
-         updatePriceFilter(); */
         searchTeachers(document.frmTeacherSrch);
     };
 
-    addFilter = function (id, obj,from) {
+    addFilter = function (id, obj, from) {
         $('.filter-tags').show();
         var click = "onclick=removeFilter('" + id + "',this)";
         var filter = htmlEncode($(obj).parents(".filter-form__inner, .filter-group__inner").find("h6").text());
         $filterVal = htmlEncode($(obj).parents(".selection-tabs__label, label").find(".name").text());
         if (!$('#searched-filters').find('a').hasClass(id)) {
             id += ' tag__clickable';
-            $('#searched-filters > ul').append("<li><a href='javascript:void(0);' class=\' " + id + " \'" + click + ">" + filter + ": " + $filterVal + "</a></li>");
+            $('#searched-filters').find('ul').append("<li class='filter-li-js'><a href='javascript:void(0);' class=\' " + id + " \'" + click + ">" + filter + ": " + $filterVal + "</a></li>");
+            showAppliedFilterSection();
         }
     };
+    hideAppliedFilterSection = function () {
+        console.log('hello');
+        if (1 > $('li.filter-li-js').length) {
+            $('.filter-tags').addClass('d-none');
+            $('.clear-filter').addClass('d-none');
+        }
+    }
+    showAppliedFilterSection = function () {
+        if ($('li.filter-li-js').length > 0) {
+            $('.filter-tags').removeClass('d-none');
+            $('.clear-filter').removeClass('d-none');
+        }
+    }
 
     removeFilter = function (id, obj) {
         $('.' + id).parent("li").remove();
         $('#' + id).find('input[type=\'checkbox\']').prop('checked', false);
+        hideAppliedFilterSection();
         searchTeachers(document.frmTeacherSrch);
     }
 
@@ -347,6 +365,7 @@ function htmlEncode(value) {
         $('.' + id).parent("li").remove();
         $('input[name=\'teachLangId\']').val('');
         $('input[name=\'teach_language_name\']').val('');
+        hideAppliedFilterSection();
         searchTeachers(document.frmTeacherSrch);
     }
     removeAllFilters = function () {
@@ -354,26 +373,27 @@ function htmlEncode(value) {
         $('input[name=\'teachLangId\']').val('');
         $('input[name=\'teach_language_name\']').val('');
         $('input[name=\'keyword\']').val('');
-        $('.filter-tags').hide();
-        $('.filter-tags').html('');
+        $('li.filter-li-js').remove();
+        hideAppliedFilterSection();
         searchTeachers(document.frmTeacherSrch);
     }
 
     removeFilterUser = function (id, obj) {
         $('.' + id).parent("li").remove();
         $('input[name=\'keyword\']').val('');
+        hideAppliedFilterSection();
         searchTeachers(document.frmTeacherSrch);
     }
 
     addPricefilter = function () {
         $('.filter-tags').show();
-
         $('.price').parent("li").remove();
         if (!$('#searched-filters').find('a').hasClass('price')) {
             var filterCaption = htmlEncode($("#price_range").parents('.filter-form__inner').find("h6").text());
             var varcurrencySymbolLeft = $('<textarea />').html(currencySymbolLeft).text();
             var varcurrencySymbolRight = $('<textarea />').html(currencySymbolRight).text();
-            $('#searched-filters').find('ul').append('<li><a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilter(this)" >' + filterCaption + ': ' + varcurrencySymbolLeft + $("input[name=priceFilterMinValue]").val() + varcurrencySymbolRight + ' - ' + varcurrencySymbolLeft + $("input[name=priceFilterMaxValue]").val() + varcurrencySymbolRight + '</a></li>');
+            $('#searched-filters').find('ul').append('<li class="filter-li-js"><a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilter(this)" >' + filterCaption + ': ' + varcurrencySymbolLeft + $("input[name=priceFilterMinValue]").val() + varcurrencySymbolRight + ' - ' + varcurrencySymbolLeft + $("input[name=priceFilterMaxValue]").val() + varcurrencySymbolRight + '</a></li>');
+            showAppliedFilterSection();
         }
         var frm = document.frmTeacherSrch;
         searchTeachers(frm);
@@ -381,25 +401,20 @@ function htmlEncode(value) {
 
     removePriceFilter = function () {
         updatePriceFilter();
-        /* delete searchArr['price_min_range'];
-         delete searchArr['price_max_range'];
-         delete searchArr['currency'];
-         */		searchTeachers(document.frmTeacherSrch);
+        searchTeachers(document.frmTeacherSrch);
+        hideAppliedFilterSection();
         $('.price').parent("li").remove();
 
     }
     removePriceFilterCustom = function (e, minPrice, maxPrice) {
-        //updatePriceFilter();
-        /* delete searchArr['price_min_range'];
-         delete searchArr['price_max_range'];
-         delete searchArr['currency'];
-         */		$('input[name="priceFilterMinValue"]').val(minPrice);
+        $('input[name="priceFilterMinValue"]').val(minPrice);
         $('input[name="priceFilterMaxValue"]').val(maxPrice);
         var $range = $("#price_range");
         range = $range.data("ionRangeSlider");
         updateRange(minPrice, maxPrice);
         range.reset();
         $('.price').parent("li").remove();
+        hideAppliedFilterSection();
         searchTeachers(document.frmTeacherSrch);
     }
 
@@ -419,9 +434,5 @@ function htmlEncode(value) {
         updateRange(minPrice, maxPrice);
         range.reset();
     }
-
-    
-
-
 
 })();

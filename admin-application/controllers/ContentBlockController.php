@@ -18,7 +18,7 @@ class ContentBlockController extends AdminBaseController
 
     public function search()
     {
-        $srch = Extrapage::getSearchObject($this->adminLangId, false);
+        $srch = ExtraPage::getSearchObject($this->adminLangId, false);
         $srch->addOrder('epage_active', 'DESC');
         $srch->addOrder('epage_id', 'DESC');
         $rs = $srch->getResultSet();
@@ -38,7 +38,7 @@ class ContentBlockController extends AdminBaseController
         $blockFrm = $this->getForm($epage_id, $this->adminLangId);
 
         if (0 < $epage_id) {
-            $data = Extrapage::getAttributesById($epage_id, array('epage_id', 'epage_identifier', 'epage_active'));
+            $data = ExtraPage::getAttributesById($epage_id, array('epage_id', 'epage_identifier', 'epage_active'));
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
@@ -69,7 +69,7 @@ class ContentBlockController extends AdminBaseController
             FatUtility::dieJsonError(Message::getHtml());
         }
 
-        $data = Extrapage::getAttributesById($epage_id, array('epage_id', 'epage_identifier'));
+        $data = ExtraPage::getAttributesById($epage_id, array('epage_id', 'epage_identifier'));
         if ($data === false) {
             Message::addErrorMessage($this->str_invalid_request);
             FatUtility::dieJsonError(Message::getHtml());
@@ -78,7 +78,7 @@ class ContentBlockController extends AdminBaseController
         $newTabLangId = 0;
         $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
-            if (!$row = Extrapage::getAttributesByLangId($langId, $epage_id)) {
+            if (!$row = ExtraPage::getAttributesByLangId($langId, $epage_id)) {
                 $newTabLangId = $langId;
                 break;
             }
@@ -99,9 +99,9 @@ class ContentBlockController extends AdminBaseController
             FatUtility::dieWithError($this->str_invalid_request);
         }
 
-        $epageData = Extrapage::getAttributesById($epage_id);
+        $epageData = ExtraPage::getAttributesById($epage_id);
         $blockLangFrm = $this->getLangForm($epage_id, $lang_id);
-        $langData = Extrapage::getAttributesByLangId($lang_id, $epage_id);
+        $langData = ExtraPage::getAttributesByLangId($lang_id, $epage_id);
         if ($langData) {
             $blockLangFrm->fill($langData);
         }
@@ -143,7 +143,7 @@ class ContentBlockController extends AdminBaseController
             'epage_content' => $post['epage_content'],
         );
 
-        $epageObj = new Extrapage($epage_id);
+        $epageObj = new ExtraPage($epage_id);
         if (!$epageObj->updateLangData($lang_id, $data)) {
             Message::addErrorMessage($epageObj->getError());
             FatUtility::dieWithError(Message::getHtml());
@@ -152,7 +152,7 @@ class ContentBlockController extends AdminBaseController
         $newTabLangId = 0;
         $languages = Language::getAllNames();
         foreach ($languages as $langId => $langName) {
-            if (!$row = Extrapage::getAttributesByLangId($langId, $epage_id)) {
+            if (!$row = ExtraPage::getAttributesByLangId($langId, $epage_id)) {
                 $newTabLangId = $langId;
                 break;
             }
@@ -173,7 +173,7 @@ class ContentBlockController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
         }
-        $contentBlockData = Extrapage::getAttributesById($epageId, array('epage_active'));
+        $contentBlockData = ExtraPage::getAttributesById($epageId, array('epage_active'));
 
         if (!$contentBlockData) {
             Message::addErrorMessage($this->str_invalid_request);
@@ -197,7 +197,7 @@ class ContentBlockController extends AdminBaseController
             );
         }
 
-        $EPageObj = new Extrapage($epageId);
+        $EPageObj = new ExtraPage($epageId);
 
         if (!$EPageObj->changeStatus($status)) {
             Message::addErrorMessage($EPageObj->getError());

@@ -2,8 +2,20 @@
 
 $frmTeacherSrch->setFormTagAttribute('onSubmit', 'searchTeachers(this); return(false);');
 echo $frmTeacherSrch->getFormTag();
+$languageName = $frmTeacherSrch->getField('teach_language_name');
 
-$frmTeacherSrch->getField('teach_language_name')->setFieldTagAttribute('class', 'form__input');
+$languageName->setFieldTagAttribute('class', 'filter__input filter__input-js');
+$placeholder = Label::getLabel('LBL_Language_Placeholder', $siteLangId);
+
+$teachLanguageValue = $languageName->value;
+if(!empty($teachLanguageValue)){
+    $placeholder = $teachLanguageValue;
+}
+
+$languageName->setFieldTagAttribute('class', 'filter__input filter__input-js');
+
+$teachLangIdFld = $frmTeacherSrch->getField('teachLangId');
+
 $frmTeacherSrch->getField('teach_availability')->setFieldTagAttribute('class', 'form__input form__input-js');
 $pageFld = $frmTeacherSrch->getField('page');
 $frmTeacherSrch->getField('teach_availability')->setFieldTagAttribute('autocomplete', 'off');
@@ -13,8 +25,6 @@ $keywordfld->setFieldTagAttribute('class', 'form__input');
 $keywordfld->setFieldTagAttribute('id', 'keyword');
 $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class', 'form__action');
 ?>
-
-<form>
 	<div class="main__head">
 		<div class="container container--narrow">
 			<div class="filter-wrapper">
@@ -23,17 +33,19 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 						<div class="filter-form__inner">
 							<div class="filter__head filter__head-trigger filter-trigger-js">
 								<svg class="icon icon--language">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#language'; ?>"></use>
+									<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#language'; ?>"></use>
 								</svg>
-								<input class="filter__input filter__input-js" name="teach_language_name" val="<?php echo ($keywordlanguage)?$keywordlanguage:''; ?>" type="text" placeholder="<?php echo ($keywordlanguage)?$keywordlanguage:Label::getLabel('LBL_Language_Placeholder',$siteLangId);?>">
-								<input name="teachLangId" val="" type="hidden">
-								<?php echo $pageFld->getHtml(); ?>
+								<?php
+                                	echo $languageName->getHtml();
+									echo $pageFld->getHtml(); 
+									echo $teachLangIdFld->getHTML(); 
+								?>
 							</div>
 							<div class="filter__body filter__body-target filter-target-js" style="display: none;">
 								<div class="dropdown-listing">
 									<ul>
 										<?php foreach ($teachLangs as $teachLangId => $teachLangName) { ?>
-											<li <?php echo ($teachLangName == $keywordlanguage)?'class="is--active"':'' ?>><a href="javascript:void(0)" class="select-teach-lang-js" teachLangId="<?php echo $teachLangId; ?>"><?php echo $teachLangName; ?></a></li>
+											<li <?php echo ( $teachLangId == $teachLangIdFld ->value) ? 'class="is--active"' : '' ?>><a href="javascript:void(0)" class="select-teach-lang-js" teachLangId="<?php echo $teachLangId; ?>"><?php echo $teachLangName; ?></a></li>
 										<?php } ?>
 									</ul>
 								</div>
@@ -42,7 +54,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 						<div class="filter-form__inner">
 							<div class="filter__head filter__head-trigger filter-trigger-js">
 								<svg class="icon icon--availbility">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#availability'; ?>"></use>
+									<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#availability'; ?>"></use>
 								</svg>
 								<h6><?php echo Label::getLabel("LBL_Availability", $siteLangId) ?></h6>
 							</div>
@@ -75,7 +87,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 						<div class="filter-form__inner">
 							<div class="filter__head filter__head-trigger filter-trigger-js">
 								<svg class="icon icon--price-tag">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#price-tag' ?>"></use>
+									<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#price-tag' ?>"></use>
 								</svg>
 								<h6><?php echo Label::getLabel('LBL_Price', $siteLangId); ?></h6>
 							</div>
@@ -99,9 +111,9 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 						</div>
 						<div class="filter-form__inner filter--search">
 							<div class="filter__head">
-								<input type="text" name="keyword" id="keyword" placeholder="<?php echo Label::getLabel('LBL_Search_By_Name_And_Keword'); ?>">
+								<input type="text" name="keyword" id="keyword" placeholder="<?php echo Label::getLabel('LBL_SEARCH_BY_NAME_AND_KEYWORD'); ?>">
 								<svg id="btnTeacherSrchSubmit" class="icon icon--search">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#search'; ?>"></use>
+									<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#search'; ?>"></use>
 								</svg>
 							</div>
 						</div>
@@ -120,7 +132,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 										<ul>
 											<?php foreach ($fromArr as $countryId => $countryName) { ?>
 												<li>
-													<label id="location_<?php echo $countryName['user_country_id']; ?>"><span class="checkbox"><input <?php echo (in_array($countryName['user_country_id'],$fromCountry_filter)? "checked='checked'": "") ?> type="checkbox" name="filterFromCountry[]" value="<?php echo $countryName['user_country_id']; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $countryName['country_name']; ?></span></label>
+													<label id="location_<?php echo $countryName['user_country_id']; ?>"><span class="checkbox"><input type="checkbox" name="filterFromCountry[]" value="<?php echo $countryName['user_country_id']; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $countryName['country_name']; ?></span></label>
 												</li>
 											<?php  } ?>
 
@@ -138,7 +150,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 										<ul>
 											<?php foreach ($spokenLangsArr as $spokenLangId => $spokenLangName) { ?>
 												<li>
-													<label id="spoken_<?php echo $spokenLangId; ?>""><span class="checkbox"><input <?php echo (in_array($spokenLangId,$spokenLanguage_filter)? "checked='checked'": "") ?> type="checkbox" name="filterSpokenLanguage[]" value="<?php echo $spokenLangId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $spokenLangName; ?></span></label>
+													<label id="spoken_<?php echo $spokenLangId; ?>"><span class=" checkbox"><input type="checkbox" name="filterSpokenLanguage[]" value="<?php echo $spokenLangId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $spokenLangName; ?></span></label>
 												</li>
 											<?php } ?>
 
@@ -146,7 +158,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="filter-group__inner">
 								<div class="filter__head filter__head-trigger filter-trigger-js">
 									<h6><?php echo Label::getLabel('LBL_Gender', $siteLangId); ?></h6>
@@ -156,7 +168,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 										<ul>
 											<?php foreach ($genderArr as $genderId => $genderName) { ?>
 												<li>
-													<label id="gender_<?php echo $genderId; ?>"><span class="checkbox"><input <?php echo (in_array($genderId,$gender_filter)? "checked='checked'": "") ?> type="checkbox" name="filterGender[]" value="<?php echo $genderId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $genderName; ?></span></label>
+													<label id="gender_<?php echo $genderId; ?>"><span class="checkbox"><input  type="checkbox" name="filterGender[]" value="<?php echo $genderId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $genderName; ?></span></label>
 												</li>
 											<?php } ?>
 
@@ -178,7 +190,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 											<ul>
 												<?php foreach ($allPreferences[$key] as $preference) { ?>
 													<li>
-														<label id="prefrence_<?php echo $preference['preference_id']; ?>"><span class="checkbox"><input <?php echo (in_array($preference['preference_id'],$preferenceFilter_filter)? "checked='checked'": "") ?> type="checkbox" name="filterPreferences[]" value="<?php echo $preference['preference_id']; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $preference['preference_titles']; ?></span></label>
+														<label id="prefrence_<?php echo $preference['preference_id']; ?>"><span class="checkbox"><input type="checkbox" name="filterPreferences[]" value="<?php echo $preference['preference_id']; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $preference['preference_titles']; ?></span></label>
 													</li>
 												<?php } ?>
 
@@ -193,31 +205,18 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 			</div>
 		</div>
 	</div>
-
-	<div class="filter-tags" <?php echo ($keywordlanguage != '' || ($minPrice != ($priceArr['minPrice']??0)  || $maxPrice != ($priceArr['maxPrice'] ??0))|| $keyword != '') ? 'style="display:block"':'style="display:none"' ?>>
+	<?php $filterApply = (!empty($teachLanguageValue)); ?>
+	<div class="filter-tags <?php echo (!$filterApply) ? 'd-none' : ''; ?>">
 		<div class="container container--narrow">
 			<div class="filter-tags-list" id="searched-filters">
 				<ul>
-					<?php if ($keywordlanguage != '') { ?>
-						<li>
+					<li class="clear-filter <?php echo (!$filterApply) ? 'd-none' : ''; ?>"><a href="javascript:void(0);" onclick="removeAllFilters();"><?php echo Label::getLabel('LBL_Clear_All_Filters', $siteLangId); ?></a></li>
+					<?php if ($filterApply) { ?>
+						<li class="filter-li-js">
 							<a href="javascript:void(0);" class="language_keyword tag__clickable " onclick="removeFilterCustom('language_keyword',this)">
-								<?php echo Label::getLabel('LBL_Language'); ?> : <?php echo $keywordlanguage; ?> </a>
+								<?php echo Label::getLabel('LBL_Language'); ?> : <?php echo $teachLanguageValue; ?> </a>
 						</li>
 					<?php } ?>
-					<?php if ((isset($minPrice) && isset($maxPrice)) && ($minPrice != 0 && $maxPrice != 0) && ($minPrice != $priceArr['minPrice']  || $maxPrice != $priceArr['maxPrice'])) { ?>
-						<li>
-							<a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilterCustom(this, '<?= ($priceArr['minPrice']); ?>', '<?= ($priceArr['maxPrice']); ?>')">
-								<?php echo Label::getLabel('LBL_Price'); ?>: <?php echo CommonHelper::getCurrencySymbolRight() ? CommonHelper::getCurrencySymbolRight() : CommonHelper::getCurrencySymbolLeft(); ?><?= CommonHelper::displayMoneyFormat(($minPrice) ?? 0, false, false, false, false, false); ?> - <?php echo CommonHelper::getCurrencySymbolRight() ? CommonHelper::getCurrencySymbolRight() : CommonHelper::getCurrencySymbolLeft(); ?><?= CommonHelper::displayMoneyFormat(($maxPrice) ?? 0, false, false, false, false, false); ?></a>
-						</li>
-					<?php } ?>
-					<?php if ($keyword != '') { ?>
-						<li>
-							<a href="javascript:void(0);" class="userKeyword tag__clickable " onclick="removeFilterUser('userKeyword',this)">
-								<?php echo Label::getLabel('LBL_User'); ?> : <?php echo $keyword; ?> </a>
-						</li>
-					<?php } ?>
-
-					<li class="clear-filter"><a href="javascript:void(0);" onclick="removeAllFilters();"><?php echo Label::getLabel('LBL_Clear_All_Filters',$siteLangId); ?></a></li>
 				</ul>
 			</div>
 		</div>

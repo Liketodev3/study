@@ -6717,22 +6717,19 @@ p {
     @media (max-width: 991px) {
       .block-content .block-content__body .field-set {
         margin-bottom: var(--margin-6); } }
-    .block-content .block-content__body .field-set .caption-wraper span {
-      font-size: 0.9rem;
-      color: var(--color-gray-800);
-      font-weight: normal;
-      margin-right: var(--margin-3); }
-      @media (max-width: 576px) {
-        .block-content .block-content__body .field-set .caption-wraper span {
-          margin-right: var(--margin-0);
-          margin-top: var(--margin-3);
-          display: block; } }
     .block-content .block-content__body .field-set .caption-wraper .field_label {
       color: var(--color-dark); }
     .block-content .block-content__body .phone--number input:first-child {
       border-right: none; }
     .block-content .block-content__body .form .row:last-child [class*="col-md-12"] .field-set {
       margin-bottom: 0; }
+  .block-content .block-content__foot {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between; }
   .block-content .list-inline label {
     width: 100%;
     border-radius: 0; }
@@ -7177,5 +7174,8 @@ p {
         bottom: -5%;
         border: 5px solid var(--color-gray-100);
         right: -2%; } }
+
+.form-register .form {
+  text-align: left; }
 
 /*# sourceMappingURL=frontend-rtl.css.map */

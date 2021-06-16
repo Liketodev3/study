@@ -202,9 +202,13 @@ class CommonHelper extends FatUtility
 
         $url = FatUtility::generateUrl($controller, $action, $queryData, $use_root_url, $url_rewriting);
 
-        if (in_array(strtolower($controller), ['jscss', 'image'])) {
+        if (UrlHelper::isStaticContentProvider($controller, $action)) {
             return $url;
         }
+        
+        /* if (in_array(strtolower($controller), ['jscss', 'image'])) {
+            return $url;
+        } */
 
         if (!$use_root_url) {
             $use_root_url = CONF_WEBROOT_URL;

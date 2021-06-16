@@ -10,7 +10,6 @@ class TeacherController extends TeacherBaseController
 
     public function index()
     {
-
         $viewProfile = true;
         if (false == $this->teacherProfileProgress['isProfileCompleted']) {
             $viewProfile = false;

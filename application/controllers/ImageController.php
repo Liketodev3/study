@@ -21,10 +21,13 @@ class ImageController extends FatController
                 $h = 100;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
-            default:
-                $h = 37;
-                $w = 168;
+            case 'ORIG':
                 AttachedFile::displayOriginalImage($image_name, $default_image);
+                break;
+            default:
+                $h = 46;
+                $w = 160;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
         }
     }
@@ -206,6 +209,27 @@ class ImageController extends FatController
         $lang_id = FatUtility::int($lang_id);
         $recordId = 0;
         $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_LESSON_PAGE_IMAGE, $recordId, 0, $lang_id);
+        $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
+        $default_image = '';
+        switch (strtoupper($sizeType)) {
+            case 'THUMB':
+                $w = 200;
+                $h = 60;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+                break;
+            default:
+                $h = 900;
+                $w = 2000;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+                break;
+        }
+    }
+
+    public function applyToTeachBanner($lang_id = 0, $sizeType = '')
+    {
+        $lang_id = FatUtility::int($lang_id);
+        $recordId = 0;
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_APPLY_TO_TEACH_BANNER, $recordId, 0, $lang_id);
         $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         $default_image = '';
         switch (strtoupper($sizeType)) {

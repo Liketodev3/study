@@ -472,7 +472,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         // start: saving log in new table i.e. tbl_lesson_status_log
         $lessonStsLog->addLog(ScheduledLesson::STATUS_CANCELLED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $post['cancel_lesson_msg']);
         // End: saving log in new table i.e. tbl_lesson_status_log
-        // $db->commitTransaction();
+        $db->commitTransaction();
         // send email to teacher[
         $start_date = $lessonRow['slesson_date'];
         $start_time = $lessonRow['slesson_start_time'];
