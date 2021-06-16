@@ -90,10 +90,10 @@ class AccountController extends LoggedUserController
         $EmailFrm = $this->getChangeEmailForm();
         $post = $EmailFrm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
-            Message::addErrorMessage($EmailFrm->getValidationErrors());
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(current($EmailFrm->getValidationErrors()));
         }
-        $userObj = new User(UserAuthentication::getLoggedUserId());
+        $userId = UserAuthentication::getLoggedUserId();
+        $userObj = new User($userId);
         $srch = $userObj->getUserSearchObj(['user_id', 'user_first_name', 'user_last_name', 'credential_password']);
         $rs = $srch->getResultSet();
         $userRow = FatApp::getDb()->fetch($rs, 'user_id');
@@ -103,19 +103,17 @@ class AccountController extends LoggedUserController
             'user_last_name' => $userRow['user_last_name']
         ];
         if ($userRow['credential_password'] != UserAuthentication::encryptPassword($post['current_password'])) {
-            Message::addErrorMessage(Label::getLabel('MSG_YOUR_CURRENT_PASSWORD_MIS_MATCHED'));
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel('MSG_YOUR_CURRENT_PASSWORD_MIS_MATCHED'));
         }
         $_token = $userObj->prepareUserVerificationCode();
         $error = '';
         if (!$this->sendEmailChangeVerificationLink($_token, $userData, $error)) {
-            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . ' : ' . $error);
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel('MSG_Unable_to_process_your_requset') . ' : ' . $error);
         }
         $emailChangeReqObj = new UserEmailChangeRequest();
-        $emailChangeReqObj->deleteOldLinkforUser(UserAuthentication::getLoggedUserId());
+        $emailChangeReqObj->deleteOldLinkforUser($userId);
         $postData = [
-            'uecreq_user_id' => UserAuthentication::getLoggedUserId(),
+            'uecreq_user_id' => $userId,
             'uecreq_email' => $post['new_email'],
             'uecreq_token' => $_token,
             'uecreq_status' => 0,
@@ -125,11 +123,9 @@ class AccountController extends LoggedUserController
         ];
         $emailChangeReqObj->assignValues($postData);
         if (!$emailChangeReqObj->save()) {
-            Message::addErrorMessage(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
-            FatUtility::dieWithError(Message::getHtml());
+            FatUtility::dieJsonError(Label::getLabel('MSG_Unable_to_process_your_requset') . $emailChangeReqObj->getError());
         }
-        $this->set('msg', Label::getLabel('MSG_Please_verify_your_email'));
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess(Label::getLabel('MSG_Please_verify_your_email'));
     }
 
     public function removeProfileImage()
@@ -488,7 +484,7 @@ class AccountController extends LoggedUserController
 
     private function sendEmailChangeVerificationLink($_token, $data, &$error)
     {
-        $link = CommonHelper::generateFullUrl('GuestUser', 'verifyEmail', [$_token]);
+        $link = CommonHelper::generateFullUrl('GuestUser', 'verifyEmail', [$_token], CONF_WEBROOT_FRONT_URL);
         $data = [
             'user_first_name' => $data['user_first_name'],
             'user_last_name' => $data['user_last_name'],

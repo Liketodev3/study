@@ -612,7 +612,7 @@ class EmailHandler extends FatModel
             $this->error = Label::getLabel('MSG_Invalid_Request', $this->commonLangId);
             return false;
         }
-        $subjectIds = json_decode($reqData['utrvalue_user_teach_slanguage_id']);
+        $subjectIds = json_decode($reqData['utrvalue_user_teach_slanguage_id'], true);
         $teachingLanguagesArr = TeachingLanguage::getAllLangs($this->commonLangId);
         $subjectNames = array_map(
                 function ($n) use ($teachingLanguagesArr) {
