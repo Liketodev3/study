@@ -459,13 +459,13 @@ textarea[disabled] {
 @media (max-width:theme('breakpoints.sm','value')) {
 
 
-    .form input[type=button],
-    .form input[type=reset],
-    .form input[type=submit] {
-        width: 100%;
-        display: block;
-        margin: 0 0 5px 0
-    }
+    // .form input[type=button],
+    // .form input[type=reset],
+    // .form input[type=submit] {
+    //     width: 100%;
+    //     display: block;
+    //     margin: 0 0 5px 0
+    // }
 
     .field_label:empty {
         display: none
