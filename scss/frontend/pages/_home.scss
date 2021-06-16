@@ -764,7 +764,7 @@ $card: 'card';
 }
 
 .timer{
-    color: var(--color-secondary);
+
     .timer__media{
         margin-#{theme('direction.right','value')}: var(--margin-2);
         svg{
@@ -1072,9 +1072,22 @@ $card: 'card';
 }
 
 .blog-card{
-    position: relative;
+    position: relative; overflow: hidden;
     @media(max-width: theme('breakpoints.xl','value')){
         margin-bottom: var(--margin-6);
+    }
+
+    &:hover{
+        .blog__detail{
+            bottom: 0 !important;
+        }
+
+        .blog__media{
+            
+            img{
+                transform: scale(1.1);
+            }
+        }
     }
     .blog__head{
         &::before{
@@ -1089,12 +1102,18 @@ $card: 'card';
             opacity: 0.8;
 
             @media(min-width: theme('breakpoints.md','value')){
-                background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(255, 255, 255, 0) 40%);
+                background: rgba(0, 0, 0, 0) linear-gradient(0deg, rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 100%) repeat scroll 0 0;
+                transform: translateY(0px);
             }
             @media(max-width: theme('breakpoints.md','value')){
                 &{
                     background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
                 }
+            }
+        }
+        .blog__media{
+            img{
+                transition: .3s ease-in-out;   
             }
         }
        
@@ -1105,8 +1124,10 @@ $card: 'card';
             color: var(--color-white);
             z-index: 1;
             padding: var(--padding-12);
-            bottom: 0;
-            pointer-events: none;
+            bottom: -84px;
+         
+            transition: .3s ease-in-out;
+
             @media(max-width: theme('breakpoints.sm','value')){
                 padding: var(--padding-6) var(--padding-14);
             }
@@ -1134,6 +1155,7 @@ $card: 'card';
             .blog__date{
                 display: flex;
                 align-items: center;
+                margin-bottom: var(--margin-8);
                 .icon{
                     width: 16px;
                     height: 16px;
@@ -1143,6 +1165,10 @@ $card: 'card';
                 span{
                     font-weight: 600;
                 }
+            }
+            .btn{
+                text-transform: uppercase;
+                font-weight: theme('font.weight.medium');
             }
         }
     }

@@ -652,13 +652,12 @@ $dashboard-calendar: "dashboard-calendar";
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.fc .fc-toolbar-title{
-    font-size: 1.25em;
+    color: var(--color-dark);
 }
 
 .fc-timegrid-event .fc-event-time{
     text-align: center;
+    color: var(--color-dark);
 }
 
 .dashboard-calendar .fc-view-harness{
@@ -739,117 +738,23 @@ $dashboard-calendar: "dashboard-calendar";
 }
 
 
-.status-bar__body{
-    .fc-header-toolbar{
-        .fc-toolbar-chunk{
-            &:first-child{
-                display: none;
-            }
-            .fc-toolbar-title {
-                font-size: 1.1rem ;
-            }
-            
-        }
-    }
-}
-
-.fc-toolbar-chunk{
-    h6{
-        display: flex;
-        align-items: center;
-        .timer{
-            margin: 0 var(--margin-3);
-        }
-    }
-    h2{
-        font-size: 1.1rem !important;
-        text-transform: uppercase;
-    }
-}
-
-.fc{ 
-    .fc-button-group{
-        
-        border-radius: theme('radius.1');
-        border: 1px solid var(--color-gray-100);
-        
-        @media(min-width:theme('breakpoints.md','value')){
-            box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
-        }
-        .fc-button-primary{
-            color: theme('color.primary');
-            background-color: theme('color.white');
-            border-color: theme('color.white');
-            height: auto;
-            padding: var(--padding-2);
-            @media(max-width:theme('breakpoints.md','value')){
-                box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
-            }
-            @media(min-width:theme('breakpoints.md','value')){
-                box-shadow: none;
-            }
-            &:hover{
-                background: transparent;
-                border-color: inherit;
-                color: inherit;
-                box-shadow: none;
-                border: transparent;
-            }
-            &:focus{
-                box-shadow: none;
-            }
-            &:last-child{
-                margin-#{theme('direction.left','value')}: 0 !important;
-            }
-            &:active{
-                background-color: theme('color.primary') !important;
-                border-color: theme('color.primary') !important;
-            }
-        }
-        .fc-button{
-            &:last-child{
-                border-#{theme('direction.left','value')}: 1px solid theme('color.gray.100');
-                margin-#{theme('direction.left','value')}: 0;
-            }
-            
-        }
-    }
-    .fc-today-button{
-        height: 39px !important;
-        text-transform: uppercase !important;
-        background: theme('color.white') !important;
-        color: var(--color-dark) !important;
-        font-size: 0.9rem !important;
-        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
-        padding: 0 var(--padding-5) !important;
-        border: 1px solid theme('color.gray.100') !important;
-        font-weight: theme('font.weight.medium');
-    }
-}
-
 .calendar-view{
+
     @media(max-width:theme('breakpoints.md','value')){
         height: 100%;
         #calendar-container{
-            height: calc(100% - 100px);
+            height: calc(100% - 90px);
             >div{
                 height: 100%;
             }
         }
     }
 
-    .cal-status{
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-        p{
-            margin-bottom: 0;
-        }
-    }
+    
     .calendar-view__head{
         
         @media(min-width:theme('breakpoints.md','value')){
-            margin-bottom: var(--margin-4);
+            margin-bottom: var(--margin-8);
         }
         [class*="col-sm-7"]{
             display: flex;
@@ -857,9 +762,11 @@ $dashboard-calendar: "dashboard-calendar";
                 justify-content: flex-end;
             }
         }
-        @media(min-width:theme('breakpoints.xxl','value')){
-            h4{
-                font-size: var(--font-size-h4);
+        h4{
+            color: var(--color-dark);
+            font-weight: theme('font.weight.bold');
+            @media(min-width:theme('breakpoints.xxl','value')){
+                font-size: var(--font-size-h5);
             }
         }
         @media(max-width:theme('breakpoints.md','value')){
@@ -872,28 +779,77 @@ $dashboard-calendar: "dashboard-calendar";
                 justify-content: center;
             }
         }
+
+        .cal-status{
+            display: flex;
+            align-items: center;
+            margin-#{theme('direction.right','value')}: theme('margin.10');
+            &:last-child{
+                margin-#{theme('direction.right','value')}: theme('margin.0'); 
+            }
+            p{
+                margin-bottom: 0;
+                font-size: theme('font.size.sm');
+                text-transform: uppercase;
+                color: theme('color.dark');
+            }
+            .box-hint{
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                border: none;
+                margin: 0 theme('padding.2') 0 0;
+            }
+            .disabled-box {
+                background: theme('color.gray.200');
+            }
+        }
     }
 
     .fc-header-toolbar{
+        padding: var(--padding-6) var(--padding-6);
+        margin-bottom: 0 !important;
+        border: 1px solid var(--color-gray-300);
+        border-bottom: transparent;
+        @media(max-width:theme('breakpoints.md','value')){
+            border-left: transparent;
+            border-right: transparent;
+        }
         .fc-toolbar-chunk{
             &:first-child{
                 margin-#{theme('direction.right','value')}: auto;
+                @media(max-width:theme('breakpoints.md','value')){
+                    margin: auto;
+                }
             }
-            
-            @media(min-width:theme('breakpoints.md','value')){
-                h2{
+            h2{
+                font-size: var(--font-size-h6);
+                color: var(--color-dark);
+                text-transform: uppercase;
+                @media(min-width:theme('breakpoints.md','value')){
                     margin-right: var(--margin-5);
                 }
             }
 
+            h6{
+                display: flex;
+                align-items: center;
+                font-size: var(--font-size-h6);
+                text-transform: uppercase;
+                color: var(--color-dark);
+                @media(max-width:theme('breakpoints.md','value')){
+                    justify-content: center;
+                }
+                .timer{
+                    color: var(--color-dark);
+                    margin: var(--margin-1);
+                }
+               
+                
+            }
             @media(max-width:theme('breakpoints.md','value')){
                 width: 100%;
                 text-align: center;
-                h6{
-                    justify-content: center;
-                }
-            }
-            @media(max-width:theme('breakpoints.md','value')){
                 .fc-button-group{
                     display: inline-table;
                     border: transparent;
@@ -919,9 +875,106 @@ $dashboard-calendar: "dashboard-calendar";
                     margin-left: 0;
                 }
             }
+
+            .fc-button-group{
+        
+                border-radius: theme('radius.0');
+    
+                .fc-button-primary{
+                    color: var(--color-dark);
+                    background-color: theme('color.white');
+                    height: auto;
+                    padding: var(--padding-2);
+                    width: 50px;
+                    height: 40px;
+                    border: 1px solid var(--color-gray-200);
+                    border-radius: 0;
+                    box-shadow: none;
+                    
+                    &:focus{
+                        box-shadow: none;
+                    }
+                    &:active{
+                        background-color: theme('color.primary');
+                        border-color: theme('color.primary');
+                        color: var(--color-white);
+                    }
+                }
+            }
+            .fc-today-button{
+                background-color: theme('color.white');
+                padding: 0 var(--padding-8);
+                height: 40px;
+                border: 1px solid var(--color-gray-200);
+                border-radius: 0;
+                color: var(--color-dark);
+                text-transform: uppercase;
+                font-weight: 600;
+                opacity: 1;
+            }
+        }
+    }
+
+    .fc-timegrid{
+        .fc-col-header{
+            .fc-day-today{
+                color: var(--color-primary);
+                position: relative;
+                a{
+                    font-weight: bold;
+                }
+                &::before{
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    top: 0;
+                    content: "";
+                    pointer-events: none;
+                    background-color: currentColor;
+                    opacity: 0.1;
+                }
+            }
+        }
+        .fc-timegrid-body{
+            .fc-day-today{
+                position: relative;
+                color: var(--color-primary);
+                background: transparent;
+                &::before{
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    top: 0;
+                    content: "";
+                    pointer-events: none;
+                    background-color: currentColor;
+                    opacity: 0.06;
+                }
+            }
         }
     }
    
+}
+
+.weekly-calendar{
+    .fc-event-main{
+        .fc-event-time{
+            display: block;
+        }
+    }
+}
+
+.dashboard-calendar{
+    .fc-toolbar-chunk{
+        .fc-today-button{
+            padding: 0 theme('padding.5') !important;
+        }
+        .fc-prev-button, .fc-next-button{
+            width: 42px !important;
+        }
+    }
 }
 
 .tooltipevent{
@@ -941,4 +994,12 @@ $dashboard-calendar: "dashboard-calendar";
 .fc .fc-bg-event{
     background: #1DCE70 !important;
     opacity: 0.3 !important;
+}
+
+.fc .fc-timegrid-slot{
+    height: 35px !important;
+}
+
+.fc-timegrid-event{
+    border-radius: 0;
 }

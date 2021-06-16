@@ -282,7 +282,7 @@ FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
         headerToolbar: {
             left: 'time',
             center: 'title',
-            right: 'prev,next today'
+            right: 'prev,next'
         },
         events: function (fetchInfo, successCallback, failureCallback) {
             postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
@@ -318,7 +318,7 @@ FatEventCalendar.prototype.TeacherMonthlyCalendar = function (current_time, dayM
         headerToolbar: {
             left: 'time',
             center: 'title',
-            right: 'prev,next today'
+            right: 'prev,next'
         },
         eventColor: 'green',
         events: function (fetchInfo, successCallback, failureCallback) {

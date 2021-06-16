@@ -28,7 +28,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 
 <!-- (<span id="currentTime"> </span>) -->
     <?php if ('free_trial' != $action): ?>
-        <small class="label label--warning"><?php echo Label::getLabel('Note_This_calendar_is_to_only_check_availability'); ?></small>
+        <div class="note note--secondary mb-5"> <svg class="icon icon--explanation"><use xlink:href="/YoCoach/images/sprite.yo-coach.svg#explanation"></use></svg><p><b>Note:</b><?php echo Label::getLabel('This_calendar_is_to_only_check_availability'); ?></p></div>
 <?php endif; ?>
     <div id='calendar-container'>
         <div id='d_calendar<?php echo ($action === 'free_trial') ? 'free_trial' : ''; ?>'></div>

@@ -151,7 +151,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 					
 					<div class="status-bar__body">
 						<div class="calendar">
-								<div id='d_calendar' class="dashboard-calendar"></div>
+								<div id='d_calendar' class="dashboard-calendar calendar-view"></div>
 						</div>
 						<?php echo $frmSrch->getFormHtml(); ?>
 						<div class="listing-window" id="listItemsLessons">

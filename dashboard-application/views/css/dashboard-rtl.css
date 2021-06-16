@@ -1424,8 +1424,7 @@ p {
   margin-bottom: 10px; }
 
 .calendar-view {
-  background: #fff;
-  padding: 20px; }
+  background: #fff; }
 
 .calendar-view .cal-status {
   display: -webkit-box;

@@ -60,30 +60,6 @@
      margin-#{theme('direction.right','value')}: 10px;
 }
 
-.blog__media {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    -webkit-transition: 0.3s all ease-in-out;
-    -moz-transition: 0.3s all ease-in-out;
-    -o-transition: 0.3s all ease-in-out;
-    transition: 0.3s all ease-in-out;
-}
-
-.blog__media:before {
-    display: block;
-    padding-bottom: 66%;
-    content: "";
-}
-
-.blog__media img {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-}
 
 .blog__author {
     display: block;

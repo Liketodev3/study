@@ -467,11 +467,11 @@ textarea[disabled] {
     //     margin: 0 0 5px 0
     // }
 
-    .field_label:empty {
-        display: none
-    }
-
     .list-onethird li {
         width: 100%
     }
+}
+
+.errorlist.erlist_agree {
+    bottom: -26px;
 }
