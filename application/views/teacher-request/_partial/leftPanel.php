@@ -3,25 +3,25 @@
 	<nav class="steps steps--vertical">
 		<ul>
 			<li class="steps__item is-process change-block-js" data-blocks-show="1">
-				<a href="javascript:void(0)">
+				<a href="javascript:void(0)" onclick="createForm(1);">
 					<span class="step__icon"></span>
 					<?php echo Label::getLabel('LBL_Personal_Info',$siteLangId); ?>
 				</a>
 			</li>
 			<li class="steps__item" data-blocks-show="2">
-				<a href="javascript:void(0)">
+				<a href="javascript:void(0)" onclick="createForm(2);">
 					<span class="step__icon"></span>
 					<?php echo Label::getLabel('LBL_Profile_Media',$siteLangId); ?>
 				</a>
 			</li>
 			<li class="steps__item" data-blocks-show="3">
-				<a href="javascript:void(0)">
+				<a href="javascript:void(0)" onclick="createForm(3);">
 					<span class="step__icon"></span>
 					<?php echo Label::getLabel('LBL_Languages',$siteLangId); ?>
 				</a>
 			</li>
 			<li class="steps__item" data-blocks-show="4">
-				<a href="javascript:void(0)">
+				<a href="javascript:void(0)" onclick="createForm(4);">
 					<span class="step__icon"></span>
 					<?php echo Label::getLabel('LBL_Resume',$siteLangId); ?>
 				</a>

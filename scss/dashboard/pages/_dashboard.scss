@@ -79,7 +79,7 @@ $status-bar: "status-bar";
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding-top: calc(1rem + 26px);
+    padding-top: var(--padding-4);
 
     @media (min-width:theme('breakpoints.lg','value')) and (max-width:theme('breakpoints.xxl','value')) {
         &{
@@ -112,7 +112,6 @@ $status-bar: "status-bar";
         }
         
         .listing-window{
-            height: calc(100% - 297px);
             position: relative;
             
             .scrollbar{
@@ -123,21 +122,21 @@ $status-bar: "status-bar";
             .message-display{
                 min-height: 25rem;
             }
-            @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
-                &{
-                    height: calc(100% - 218px);
-                }
-            }
-            @media(min-width:theme('breakpoints.xxxl','value')){
-                &{
-                    height: calc(100% - 393px);
-                }
-            }
-            @media(max-width:theme('breakpoints.md','value')){
-                &{
-                    height: 300px;
-                }
-            }
+            // @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
+            //     &{
+            //         height: calc(100% - 218px);
+            //     }
+            // }
+            // @media(min-width:theme('breakpoints.xxxl','value')){
+            //     &{
+            //         height: calc(100% - 393px);
+            //     }
+            // }
+            // @media(max-width:theme('breakpoints.md','value')){
+            //     &{
+            //         height: 300px;
+            //     }
+            // }
         }
 
         @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
@@ -372,21 +371,51 @@ $sale-stat: "sale-stat";
         }
     }
 
-    .sale-stat__select{
+    
+}
 
-        @media(max-width:theme('breakpoints.lg','value')){
-            &{
-                width: 140px;
-            }
+.sale-stat__select{
+    float: #{theme('direction.right','value')};
+    @media(max-width:theme('breakpoints.lg','value')){
+        &{
+            width: 140px;
         }
     }
 }
-.sale-stat--primary{
-    background-color: #F6B6500F;
+
+.sale-stat{
+    position: relative;
 }
-.sale-stat--secondary{
-    background-color: #48C5D20F;
+
+.sale-stat--yellow{
+    color: var(--color-third);
+    &::before{
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        content: "";
+        pointer-events: none;
+        background-color: currentColor;
+        opacity: 0.06;
+    }
 }
+.sale-stat--sky{
+    color: #48C5D2;
+    &::before{
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        content: "";
+        pointer-events: none;
+        background-color: currentColor;
+        opacity: 0.06;
+    }
+}
+
 
 .graph-media{
     img{

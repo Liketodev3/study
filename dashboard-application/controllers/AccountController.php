@@ -346,8 +346,6 @@ class AccountController extends LoggedUserController
 
     public function setUpProfileInfo()
     {
-        // $isTeacher = User::getAttributesById(UserAuthentication::getLoggedUserId(), 'user_is_teacher');
-        // $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
         $isTeacherDashboardActive = (User::getDashboardActiveTab() == User::USER_TEACHER_DASHBOARD);
         $frm = $this->getProfileInfoForm($isTeacherDashboardActive);
         $post = FatApp::getPostedData();
@@ -362,15 +360,10 @@ class AccountController extends LoggedUserController
         $record->setFlds(['us_site_lang' => $post['us_site_lang'], 'us_user_id' => UserAuthentication::getLoggedUserId()]);
 
         if ($isTeacherDashboardActive) {
-            // $bookingDurationOptions = array(0, 12, 24);
-            // if (!in_array($post['us_booking_before'], $bookingDurationOptions)) {
-            //     Message::addErrorMessage(Label::getLabel('Lbl_invalid_Selection_of Booking_Field'));
-            //     FatUtility::dieWithError(Message::getHtml());
-            // } //  code added on 23-08-2019
             $record->assignValues(['us_booking_before' => $post['us_booking_before'], 'us_is_trial_lesson_enabled' => $post['us_is_trial_lesson_enabled']]); //  code added on 23-08-2019
         }
         $user_settings = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
-        if ($post['us_site_lang'] != $user_settings['us_site_lang']) {
+        if ($post['us_site_lang'] != $user_settings['us_site_lang'] ?? '') {
             CommonHelper::setDefaultSiteLangCookie($post['us_site_lang']);
         }
 

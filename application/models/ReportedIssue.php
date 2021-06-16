@@ -192,7 +192,7 @@ class ReportedIssue extends MyAppModel
                 'utxn_slesson_id' => $issue['slesson_id'],
                 'utxn_credit' => $issue['op_unit_price'],
                 'utxn_user_id' => $issue['sldetail_learner_id'],
-                'utxn_comments' => 'Refund of order ' . $issue['order_id'],
+                'utxn_comments' => 'Refund of Lesson ' . $issue['slesson_id'],
                 'utxn_status' => Transaction::STATUS_COMPLETED,
                 'utxn_type' => Transaction::TYPE_ISSUE_REFUND,
             ];
@@ -220,7 +220,7 @@ class ReportedIssue extends MyAppModel
                 'utxn_user_id' => $issue['sldetail_learner_id'],
                 'utxn_status' => Transaction::STATUS_COMPLETED,
                 'utxn_type' => Transaction::TYPE_ISSUE_REFUND,
-                'utxn_comments' => 'Refund of order ' . $issue['order_id']
+                'utxn_comments' => 'Refund of Lesson ' . $issue['slesson_id'],
             ];
             if (!$txn->addTransaction($data)) {
                 $this->error = $txn->getError();
@@ -235,7 +235,7 @@ class ReportedIssue extends MyAppModel
                 'utxn_slesson_id' => $issue['slesson_id'],
                 'utxn_credit' => $refundAmount,
                 'utxn_user_id' => $issue['slesson_teacher_id'],
-                'utxn_comments' => 'Payment of order ' . $issue['order_id'],
+                'utxn_comments' => 'Payment of Lesson ' . $issue['slesson_id'],
                 'utxn_status' => Transaction::STATUS_COMPLETED,
                 'utxn_type' => Transaction::TYPE_LESSON_BOOKING,
             ];
@@ -278,7 +278,7 @@ class ReportedIssue extends MyAppModel
         $srch = new SearchBase(ScheduledLessonDetails::DB_TBL, 'sldetail');
         $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_id=sldetail.sldetail_slesson_id', 'slesson');
         $srch->joinTable(ReportedIssue::DB_TBL, 'INNER JOIN', 'repiss.repiss_sldetail_id=sldetail.sldetail_id', 'repiss');
-        $srch->addMultipleFields(['repiss_status', 'slesson_id', 'slesson_teacher_id', 'sldetail_learner_id']);
+        $srch->addMultipleFields(['repiss_status', 'slesson_id', 'slesson_teacher_id', 'sldetail_learner_id', 'sldetail_id']);
         $srch->addCondition('repiss.repiss_id', '=', $issueId);
         $srch->doNotCalculateRecords();
         $row = FatApp::getDb()->fetch($srch->getResultSet());
@@ -289,6 +289,7 @@ class ReportedIssue extends MyAppModel
         $userId = 0;
         $notiType = 0;
         $title = '';
+        $lessonId = $row['slesson_id'];
         $description = '';
         switch ($row['repiss_status']) {
             case static::STATUS_PROGRESS:
@@ -299,6 +300,7 @@ class ReportedIssue extends MyAppModel
                 break;
             case static::STATUS_RESOLVED:
                 $userId = $row['sldetail_learner_id'];
+                $lessonId = $row['sldetail_id'];
                 $notiType = UserNotifications::NOTICATION_FOR_ISSUE_RESOLVED;
                 $title = Label::getLabel('LBL_ISSUE_RESOLVED_NOTIFICATION_TITLE');
                 $description = Label::getLabel('LBL_ISSUE_RESOLVED_NOTIFICATION_DETAIL');
@@ -311,6 +313,7 @@ class ReportedIssue extends MyAppModel
                 break;
             case static::STATUS_CLOSED:
                 $userId = $row['sldetail_learner_id'];
+                $lessonId = $row['sldetail_id'];
                 $notiType = UserNotifications::NOTICATION_FOR_ISSUE_CLOSED;
                 $title = Label::getLabel('LBL_ISSUE_CLOSED_NOTIFICATION_TITLE');
                 $description = Label::getLabel('LBL_ISSUE_CLOSED_NOTIFICATION_DETAIL');
@@ -320,7 +323,7 @@ class ReportedIssue extends MyAppModel
                 return false;
         }
         $record = new UserNotifications($userId);
-        $record->sendNotifcationMetaData($notiType, $row['slesson_id']);
+        $record->sendNotifcationMetaData($notiType, $lessonId);
         if (!$record->addNotification($title, $description)) {
             $this->error = $record->getError();
             return false;
@@ -371,11 +374,11 @@ class ReportedIssue extends MyAppModel
     public static function getIssueLogsById(int $issueId): array
     {
         $srch = new SearchBase(ReportedIssue::DB_TBL_LOG, 'reislo');
-        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'user.user_id=reislo.reislo_added_by', 'user');
+        $srch->joinTable(User::DB_TBL, 'LEFT JOIN', 'user.user_id=reislo.reislo_added_by and reislo.reislo_added_by_type IN (1,2)', 'user');
+        $srch->joinTable('tbl_admin', 'LEFT JOIN', 'admin.admin_id=reislo.reislo_added_by and reislo.reislo_added_by_type IN (3)', 'admin');
         $srch->addCondition('reislo_repiss_id', '=', FatUtility::int($issueId));
-        $srch->addMultipleFields([
-            'CONCAT(user.user_first_name, " ", user.user_last_name) AS user_fullname', 'reislo_repiss_id',
-            'reislo_action', 'reislo_comment', 'reislo_added_on', 'reislo_added_by', 'reislo_added_by_type']);
+        $srch->addMultipleFields(['reislo_repiss_id', 'reislo_action', 'reislo_comment', 'reislo_added_on', 'reislo_added_by', 'reislo_added_by_type',
+            'CASE WHEN reislo_added_by_type = 3 THEN admin.admin_name ELSE CONCAT(user.user_first_name, " ", user.user_last_name) END as user_fullname']);
         $srch->addOrder('reislo.reislo_id', 'ASC');
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
@@ -500,7 +503,7 @@ class ReportedIssue extends MyAppModel
                 'utxn_slesson_id' => $lesson['slesson_id'],
                 'utxn_credit' => $teacherAmount,
                 'utxn_user_id' => $lesson['slesson_teacher_id'],
-                'utxn_comments' => 'Payment of order ' . $lesson['order_id'],
+                'utxn_comments' => 'Payment of Lesson ' . $lesson['slesson_id'],
                 'utxn_status' => Transaction::STATUS_COMPLETED,
                 'utxn_type' => Transaction::TYPE_LESSON_BOOKING,
             ];

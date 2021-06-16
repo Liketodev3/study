@@ -330,7 +330,6 @@ class GuestUserController extends MyAppController
         Message::addMessage(Label::getLabel("MSG_EMAIL_VERIFIED_SUCCESFULLY"));
         FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
     }
-
     public function logout()
     {
         unset($_SESSION[UserAuthentication::SESSION_ELEMENT_NAME]);

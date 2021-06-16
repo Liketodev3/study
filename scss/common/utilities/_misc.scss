@@ -646,8 +646,59 @@ img {
 
 
 
-.disabled-box {
-    background: #d9d9d9;
+$note: "note";
+
+.#{$note} {
+    position: relative; 
+    padding: theme('padding.2');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .icon{
+        width: 14px;
+        height: 14px;
+        margin-#{theme('direction.right','value')}: theme('margin.2');
+    }
+    &::before{
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        opacity: 0.05;
+        background-color: currentColor;
+        pointer-events: none;
+    }
+    p{
+        color: inherit;
+        margin-bottom: 0;
+    }
+}
+
+.note--secondary{
+    color: theme('color.secondary'); 
+}
+
+.note--primary{
+    color: theme('color.primary'); 
+}
+
+.note--blank{
+    background: transparent;
+    &::before{
+        content: none;
+    }
+}
+
+.note--vertical-border {
+    border-top: 1px solid var(--color-gray-200);
+    border-bottom: 1px solid var(--color-gray-200);
+    padding: var(--padding-6) 0;
+}
+
+.panel--calendar{
+    border-bottom: transparent;
 }
 
 .booked-box {

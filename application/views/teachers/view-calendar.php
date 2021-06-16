@@ -4,29 +4,31 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 ?>
 <div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
 <div class="calendar-view">
-    <div class="row">
-        <div class="col-sm-5">
-            <h4><?php echo $userRow['user_first_name'] . " " . $userRow['user_last_name'] . " " . Label::getLabel('Lbl_Calendar'); ?></h4>
-        </div>
-        <div class="col-sm-7 justify-content-sm-end justify-content-start">
-            <div class="cal-status">
-                <span class="ml-0 box-hint disabled-box">&nbsp;</span>
-                <p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
+    <div class="calendar-view__head">    
+        <div class="row">
+            <div class="col-sm-5">
+                <h4><?php echo $userRow['user_first_name'] . " " . $userRow['user_last_name'] . " " . Label::getLabel('Lbl_Calendar'); ?></h4>
             </div>
-            <div class="cal-status">
-                <span class="box-hint available-box">&nbsp;</span>
-                <p><?php echo Label::getLabel('Lbl_Available'); ?></p>
-            </div>
-            <div class="cal-status">
-                <span class="box-hint booked-box">&nbsp;</span>
-                <p><?php echo Label::getLabel('Lbl_Booked'); ?></p>
+            <div class="col-sm-7">
+                <div class="cal-status">
+                    <span class="ml-0 box-hint disabled-box">&nbsp;</span>
+                    <p><?php echo Label::getLabel('LBL_Not_Available'); ?></p>
+                </div>
+                <div class="cal-status">
+                    <span class="box-hint available-box">&nbsp;</span>
+                    <p><?php echo Label::getLabel('Lbl_Available'); ?></p>
+                </div>
+                <div class="cal-status">
+                    <span class="box-hint booked-box">&nbsp;</span>
+                    <p><?php echo Label::getLabel('Lbl_Booked'); ?></p>
+                </div>
             </div>
         </div>
     </div>
 
 <!-- (<span id="currentTime"> </span>) -->
     <?php if ('free_trial' != $action): ?>
-        <small class="label label--warning"><?php echo Label::getLabel('Note_This_calendar_is_to_only_check_availability'); ?></small>
+        <div class="note note--secondary mb-5"> <svg class="icon icon--explanation"><use xlink:href="/YoCoach/images/sprite.yo-coach.svg#explanation"></use></svg><p><b>Note:</b><?php echo Label::getLabel('This_calendar_is_to_only_check_availability'); ?></p></div>
 <?php endif; ?>
     <div id='calendar-container'>
         <div id='d_calendar<?php echo ($action === 'free_trial') ? 'free_trial' : ''; ?>'></div>

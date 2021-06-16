@@ -49,10 +49,15 @@
 											<div class="flex-cell">
 												<div class="flex-cell__label"><?php echo Label::getLabel('LBL_Attachement',$siteLangId) ?> </div>
 												<div class="flex-cell__content">
-													<?php $file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $userId ,$row['uqualification_id'] ); ?>
+													<?php $file_row = AttachedFile::getAttachment( AttachedFile::FILETYPE_USER_QUALIFICATION_FILE, $userId ,$row['uqualification_id'] );
+                                                    if(!empty($file_row)){
+                                                    ?>
 													<a href="<?php echo CommonHelper::generateUrl('TeacherRequest', 'downloadResume', array($file_row['afile_record_subid'])); ?>" class="attachment-file">
 														<svg class="icon icon--issue icon--attachement icon--small color-primary"><use xlink:href="images/sprite.yo-coach.svg#attach"></use></svg>
 														<?php echo $file_row['afile_name'];  ?></a>
+                                                    <?php } else{
+                                                        echo Label::getLabel('LBL_N/A');
+                                                    } ?>
 												</div>
 											</div>
 
@@ -101,7 +106,7 @@
 				</div>
 			</div>
 			<div class="block-content__foot">
-			<button class="btn btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
+			<button class="btn btn--bordered color-primary btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
             <input type="submit" name="btn_submit" value="<?php echo Label::getLabel('LBL_Save',$siteLangId); ?>"/>
 		</div>
 		</div>

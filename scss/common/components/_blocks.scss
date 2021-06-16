@@ -2,13 +2,13 @@
 .block__head {
     position: relative;
     padding: 15px 20px;
-    border-bottom: 1px solid #e9e8eb;
+    border-bottom: 1px solid theme('color.gray.300');
 }
 
 .block__body {
     position: relative;
     padding: 20px;
-    border-bottom: 1px solid #e9e8eb;
+    border-bottom: 1px solid theme('color.gray.300');
 }
 
 .block__head h6 {

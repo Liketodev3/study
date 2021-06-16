@@ -19,7 +19,7 @@ $weekDayName =  CommonHelper::dayNames();
 		echo $commentField->getHTML(); ?>
 	</div>
 	<?php } ?>
-
+    <div class="calendar-view__head">
     <div class="row ">
         <div class="col-sm-5">
             <h4><?php echo $userRow['user_full_name']." ".Label::getLabel('Lbl_Calendar'); ?></h4>
@@ -39,6 +39,7 @@ $weekDayName =  CommonHelper::dayNames();
                 <p><?php echo Label::getLabel('Lbl_Booked'); ?></p>
             </div>
         </div>
+    </div>
     </div>
     <div id='calendar-container'>
         <div id='d_calendar'></div>

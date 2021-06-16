@@ -160,6 +160,7 @@ $status-bar: "status-bar";
     .tooltipevent{
         border-top: 3px solid var(--color-primary);
         border-radius: 6px;
+        z-index: 999 !important;
         .booking-view{
             h3{
                 font-size: 1.6rem;
@@ -382,12 +383,8 @@ $sale-stat: "sale-stat";
         }
     }
 }
-.sale-stat--primary{
-    background-color: #fff4e2;
-}
-.sale-stat--secondary{
-    background-color: #e7fdff;
-}
+
+
 
 .graph-media{
     img{
@@ -655,17 +652,16 @@ $dashboard-calendar: "dashboard-calendar";
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.fc .fc-toolbar-title{
-    font-size: 1.25em;
+    color: var(--color-dark);
 }
 
 .fc-timegrid-event .fc-event-time{
     text-align: center;
+    color: var(--color-dark);
 }
 
 .dashboard-calendar .fc-view-harness{
-    height: 336px !important;
+    height: 300px !important;
 }
 
 .scheduled-lesson-popup .box {
@@ -699,10 +695,25 @@ $dashboard-calendar: "dashboard-calendar";
         }
     }
 }
+.fc-event.booked-slot {
+    background: var(--color-red);
+    border-color: var(--color-red);
+}
 
-.fc-v-event{
-    border: 1px solid #f05856;
-    background-color: #f05856;
+.cal-status .booked-box{
+    background: var(--color-red);
+}
+.cal-status .available-box{
+    background: var(--color-green);
+}
+.fc-event.slot_unavailable{
+    background: var(--color-gray-500);
+    border-color: transparent;
+    background-image: linear-gradient(45deg, #dddddd 14.29%, #ffffff 14.29%, #ffffff 50%, #dddddd 50%, #dddddd 64.29%, #ffffff 64.29%, #ffffff 100%);
+    background-size: 9.90px 9.90px;
+    .fc-event-time{
+        display: none;
+    }
 }
 
 .availability-setting-calendar .slot_available{
@@ -722,31 +733,273 @@ $dashboard-calendar: "dashboard-calendar";
     }
 }
 
-.fc .slot_unavailable {
-    background: var(--color-red);
-    border-color: var(--color-red);
+.fc-timegrid-col-events{
+    margin: 0 !important;
 }
 
-.status-bar__body{
+
+.calendar-view{
+
+    @media(max-width:theme('breakpoints.md','value')){
+        height: 100%;
+        #calendar-container{
+            height: calc(100% - 90px);
+            >div{
+                height: 100%;
+            }
+        }
+    }
+
+    
+    .calendar-view__head{
+        
+        @media(min-width:theme('breakpoints.md','value')){
+            margin-bottom: var(--margin-8);
+        }
+        [class*="col-sm-7"]{
+            display: flex;
+            @media(min-width:theme('breakpoints.md','value')){
+                justify-content: flex-end;
+            }
+        }
+        h4{
+            color: var(--color-dark);
+            font-weight: theme('font.weight.bold');
+            @media(min-width:theme('breakpoints.xxl','value')){
+                font-size: var(--font-size-h5);
+            }
+        }
+        @media(max-width:theme('breakpoints.md','value')){
+            padding: var(--padding-5);
+            text-align: center;
+            h4{
+                margin-bottom: var(--margin-4);
+            }
+            [class*="col-sm-7"]{
+                justify-content: center;
+            }
+        }
+
+        .cal-status{
+            display: flex;
+            align-items: center;
+            margin-#{theme('direction.right','value')}: theme('margin.10');
+            &:last-child{
+                margin-#{theme('direction.right','value')}: theme('margin.0'); 
+            }
+            p{
+                margin-bottom: 0;
+                font-size: theme('font.size.sm');
+                text-transform: uppercase;
+                color: theme('color.dark');
+            }
+            .box-hint{
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                border: none;
+                margin: 0 theme('padding.2') 0 0;
+            }
+            .disabled-box {
+                background: theme('color.gray.200');
+            }
+        }
+    }
+
     .fc-header-toolbar{
+        padding: var(--padding-6) var(--padding-6);
+        margin-bottom: 0 !important;
+        border: 1px solid var(--color-gray-300);
+        border-bottom: transparent;
+        @media(max-width:theme('breakpoints.md','value')){
+            border-left: transparent;
+            border-right: transparent;
+        }
         .fc-toolbar-chunk{
             &:first-child{
-                display: none;
+                margin-#{theme('direction.right','value')}: auto;
+                @media(max-width:theme('breakpoints.md','value')){
+                    margin: auto;
+                }
             }
-            .fc-toolbar-title {
-                font-size: var(--font-size-lg) ;
+            h2{
+                font-size: var(--font-size-h6);
+                color: var(--color-dark);
+                text-transform: uppercase;
+                @media(min-width:theme('breakpoints.md','value')){
+                    margin-right: var(--margin-5);
+                }
             }
-           
+
+            h6{
+                display: flex;
+                align-items: center;
+                font-size: var(--font-size-h6);
+                text-transform: uppercase;
+                color: var(--color-dark);
+                @media(max-width:theme('breakpoints.md','value')){
+                    justify-content: center;
+                }
+                .timer{
+                    color: var(--color-dark);
+                    margin: var(--margin-1);
+                }
+               
+                
+            }
+            @media(max-width:theme('breakpoints.md','value')){
+                width: 100%;
+                text-align: center;
+                .fc-button-group{
+                    display: inline-table;
+                    border: transparent;
+                    width: 100%;
+                    padding: 0 var(--padding-6);
+                    .fc-button{
+                        box-shadow: none;
+                        border: 1px solid var(--color-gray-200);
+                        &:first-child{
+                            float: #{theme('direction.left','value')};
+                        }
+                        &:last-child{
+                            float: #{theme('direction.right','value')};
+                        }
+                    }
+                    
+                }
+                .fc-today-button{
+                    position: absolute;
+                    opacity: 1;
+                    left: 50%;
+                    transform: translatex(-50%);
+                    margin-left: 0;
+                }
+            }
+
+            .fc-button-group{
+        
+                border-radius: theme('radius.0');
+    
+                .fc-button-primary{
+                    color: var(--color-dark);
+                    background-color: theme('color.white');
+                    height: auto;
+                    padding: var(--padding-2);
+                    width: 50px;
+                    height: 40px;
+                    border: 1px solid var(--color-gray-200);
+                    border-radius: 0;
+                    box-shadow: none;
+                    
+                    &:focus{
+                        box-shadow: none;
+                    }
+                    &:active{
+                        background-color: theme('color.primary');
+                        border-color: theme('color.primary');
+                        color: var(--color-white);
+                    }
+                }
+            }
+            .fc-today-button{
+                background-color: theme('color.white');
+                padding: 0 var(--padding-8);
+                height: 40px;
+                border: 1px solid var(--color-gray-200);
+                border-radius: 0;
+                color: var(--color-dark);
+                text-transform: uppercase;
+                font-weight: 600;
+                opacity: 1;
+            }
+        }
+    }
+
+    .fc-timegrid{
+        .fc-col-header{
+            .fc-day-today{
+                color: var(--color-primary);
+                position: relative;
+                a{
+                    font-weight: bold;
+                }
+                &::before{
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    top: 0;
+                    content: "";
+                    pointer-events: none;
+                    background-color: currentColor;
+                    opacity: 0.1;
+                }
+            }
+        }
+        .fc-timegrid-body{
+            .fc-day-today{
+                position: relative;
+                color: var(--color-primary);
+                background: transparent;
+                &::before{
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    top: 0;
+                    content: "";
+                    pointer-events: none;
+                    background-color: currentColor;
+                    opacity: 0.06;
+                }
+            }
+        }
+    }
+   
+}
+
+.weekly-calendar{
+    .fc-event-main{
+        .fc-event-time{
+            display: block;
         }
     }
 }
 
-.fc-toolbar-chunk{
-    h6{
-        display: flex;
-        align-items: center;
-        .timer{
-            margin: 0 var(--margin-3);
+.dashboard-calendar{
+    .fc-toolbar-chunk{
+        .fc-today-button{
+            padding: 0 theme('padding.5') !important;
+        }
+        .fc-prev-button, .fc-next-button{
+            width: 42px !important;
         }
     }
+}
+
+.tooltipevent{
+    box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.03);
+    background: #fff;
+    padding: 35px 20px 20px;
+    border: 1px solid #e2e2e4;
+    line-height: 1.6;
+    min-width: 280px;
+    text-align: left;
+}
+.tooltipevent {
+    border-top: 3px solid var(--color-primary);
+    border-radius: 6px;
+}
+
+.fc .fc-bg-event{
+    background: #1DCE70 !important;
+    opacity: 0.3 !important;
+}
+
+.fc .fc-timegrid-slot{
+    height: 35px !important;
+}
+
+.fc-timegrid-event{
+    border-radius: 0;
 }

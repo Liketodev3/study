@@ -113,46 +113,46 @@ class TeacherSearch extends SearchBase
             $subTable = '(' . $srch->getQuery() . ')';
             $this->joinTable($subTable, 'INNER JOIN', 'utsl.utsl_user_id = teacher.user_id', 'utsl');
         }
-       /* Week Day and Time Slot */
-       $weekDays = (array) ($post['filterWeekDays'] ?? []);
-       $timeSlots = (array) ($post['filterTimeSlots'] ?? []);
-       if (count($weekDays) > 0 || count($timeSlots) > 0) {
-           $timeSlotArr = [];
-           if (!empty($timeSlots)) {
-               $timeSlotArr = CommonHelper::formatTimeSlotArr($timeSlots);
-           }
-           $srch = new SearchBase('tbl_teachers_general_availability');
-           $srch->addFld('DISTINCT tgavl_user_id as tgavl_user_id');
-           if (is_array($weekDays) && !empty($weekDays)) {
-               $weekDates = MyDate::changeWeekDaysToDate($weekDays, $timeSlotArr);
-               $condition = ' ( ';
-               foreach ($weekDates as $weekDayKey => $date) {
-                   $condition .= ($weekDayKey == 0) ? '' : ' OR ';
-                   $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "' . $date['endDate'] . '" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "' . $date['startDate'] . '" ) ';
-               }
-               $condition .= ' ) ';
-               $srch->addDirectCondition($condition);
-           }
-           if (empty($weekDays) && !empty($timeSlotArr)) {
-               $systemTimezone = MyDate::getTimeZone();
-               $userTimezone = MyDate::getUserTimeZone();
-               $condition = '( ';
-               foreach ($timeSlotArr as $key => $formatedVal) {
-                   $condition .= ($key == 0) ? '' : 'OR';
-                   $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
-                   $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
-                   $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $userTimezone, $systemTimezone)));
-                   $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $userTimezone, $systemTimezone)));
-                   $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","' . $endTime . '") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","' . $startTime . '") ) ';
-               }
-               $condition .= ' ) ';
-               $srch->addDirectCondition($condition);
-           }
-           $srch->doNotCalculateRecords();
-           $srch->doNotLimitRecords();
-           $subTable = '(' . $srch->getQuery() . ')';
-           $this->joinTable($subTable, 'INNER JOIN', 'tgavl.tgavl_user_id = teacher.user_id', 'tgavl');
-       }
+        /* Week Day and Time Slot */
+        $weekDays = (array) ($post['filterWeekDays'] ?? []);
+        $timeSlots = (array) ($post['filterTimeSlots'] ?? []);
+        if (count($weekDays) > 0 || count($timeSlots) > 0) {
+            $timeSlotArr = [];
+            if (!empty($timeSlots)) {
+                $timeSlotArr = CommonHelper::formatTimeSlotArr($timeSlots);
+            }
+            $srch = new SearchBase('tbl_teachers_general_availability');
+            $srch->addFld('DISTINCT tgavl_user_id as tgavl_user_id');
+            if (is_array($weekDays) && !empty($weekDays)) {
+                $weekDates = MyDate::changeWeekDaysToDate($weekDays, $timeSlotArr);
+                $condition = ' ( ';
+                foreach ($weekDates as $weekDayKey => $date) {
+                    $condition .= ($weekDayKey == 0) ? '' : ' OR ';
+                    $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "' . $date['endDate'] . '" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "' . $date['startDate'] . '" ) ';
+                }
+                $condition .= ' ) ';
+                $srch->addDirectCondition($condition);
+            }
+            if (empty($weekDays) && !empty($timeSlotArr)) {
+                $systemTimezone = MyDate::getTimeZone();
+                $userTimezone = MyDate::getUserTimeZone();
+                $condition = '( ';
+                foreach ($timeSlotArr as $key => $formatedVal) {
+                    $condition .= ($key == 0) ? '' : 'OR';
+                    $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
+                    $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
+                    $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $userTimezone, $systemTimezone)));
+                    $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $userTimezone, $systemTimezone)));
+                    $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","' . $endTime . '") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","' . $startTime . '") ) ';
+                }
+                $condition .= ' ) ';
+                $srch->addDirectCondition($condition);
+            }
+            $srch->doNotCalculateRecords();
+            $srch->doNotLimitRecords();
+            $subTable = '(' . $srch->getQuery() . ')';
+            $this->joinTable($subTable, 'INNER JOIN', 'tgavl.tgavl_user_id = teacher.user_id', 'tgavl');
+        }
         /* From Country */
         $fromCountries = explode(",", $post['fromCountry'] ?? '');
         $fromCountries = array_filter(FatUtility::int($fromCountries));
@@ -164,11 +164,9 @@ class TeacherSearch extends SearchBase
         $maxPrice = FatUtility::float($post['maxPriceRange'] ?? 0);
         $minPrice = CommonHelper::getDefaultCurrencyValue($minPrice, false, false);
         $maxPrice = CommonHelper::getDefaultCurrencyValue($maxPrice, false, false);
-        if (!empty($minPrice)) {
-            $this->addCondition('testat.testat_minprice', '>=', $minPrice);
-        }
-        if (!empty($maxPrice)) {
-            $this->addCondition('testat.testat_maxprice', '<=', $maxPrice);
+        if (!empty($minPrice) && !empty($maxPrice)) {
+            $this->addCondition('testat.testat_minprice', '<=', $maxPrice);
+            $this->addCondition('testat.testat_maxprice', '>=', $minPrice);
         }
         /* Preferences Filter (Teacher’s accent, Teaches level, Subjects, Test preparations, Lesson includes, Learner’s age group) */
         $preferences = explode(",", $post['preferenceFilter'] ?? '');
@@ -429,5 +427,4 @@ class TeacherSearch extends SearchBase
     {
         $this->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = teacher.user_id', 'us');
     }
-
 }

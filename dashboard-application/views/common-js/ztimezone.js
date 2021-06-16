@@ -20,7 +20,6 @@ function getCookie(key) {
 
 $(document).ready(function() {
 	var user_timezone  = getCookie('user_timezone');
-	console.log(user_timezone);
 	var tz = jstz.determine();
 	var timezone = tz.name();
 	
