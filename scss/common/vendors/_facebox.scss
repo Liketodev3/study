@@ -33,10 +33,16 @@
         height: 100%; 
     }
 }
-@media  (min-width: theme('breakpoints.xl','value')) {
 
-    #facebox .content.facebox-large{min-width: 920px;}
+
+#facebox {
+    .content.facebox-large{
+        @media(min-width: theme('breakpoints.xl','value')) {
+            min-width: 920px;
+        }
+    }
 }
+
 
 @media  (min-width: 767px) {
 	
@@ -178,6 +184,14 @@
     .calendar-view{
         @media(min-width:theme('breakpoints.md','value')){
             padding: theme('padding.6');
+        }
+
+        .fc-header-toolbar{
+            @media(max-width:theme('breakpoints.md','value')){
+                border-left: transparent;
+                border-right: transparent;
+                flex-direction: column;
+            }
         }
     }
 }

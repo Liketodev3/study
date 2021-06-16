@@ -429,7 +429,7 @@ $margin-bottom-6: "margin-bottom-6";
 }
 
 .select2-container{
-
+    width: 100% !important;
     .select2-selection--single{
         height: 2.8rem !important;
         border: 1px solid var(--color-gray-300) !important;
@@ -657,7 +657,6 @@ $dashboard-calendar: "dashboard-calendar";
 
 .fc-timegrid-event .fc-event-time{
     text-align: center;
-    color: var(--color-dark);
 }
 
 .dashboard-calendar .fc-view-harness{
@@ -721,10 +720,6 @@ $dashboard-calendar: "dashboard-calendar";
     border-color: #0ab359;
 }
 @media (max-width:theme('breakpoints.md','value')) {
-    .fc .fc-header-toolbar{
-        flex-direction: column;
-        align-items: end;
-    }
     .fc-toolbar-chunk{
         margin-bottom: 10px;
     }
@@ -812,8 +807,8 @@ $dashboard-calendar: "dashboard-calendar";
         border: 1px solid var(--color-gray-300);
         border-bottom: transparent;
         @media(max-width:theme('breakpoints.md','value')){
-            border-left: transparent;
-            border-right: transparent;
+            flex-direction: column;
+            padding: var(--padding-6) var(--padding-3);
         }
         .fc-toolbar-chunk{
             &:first-child{
@@ -967,12 +962,18 @@ $dashboard-calendar: "dashboard-calendar";
 }
 
 .dashboard-calendar{
-    .fc-toolbar-chunk{
-        .fc-today-button{
-            padding: 0 theme('padding.5') !important;
+    .fc-header-toolbar{
+        @media(max-width:theme('breakpoints.md','value')){
+            flex-direction: row;
         }
-        .fc-prev-button, .fc-next-button{
-            width: 42px !important;
+        .fc-toolbar-chunk{
+            width: auto;
+            .fc-today-button{
+                padding: 0 theme('padding.5') !important;
+            }
+            .fc-prev-button, .fc-next-button{
+                width: 42px !important;
+            }
         }
     }
 }
@@ -997,7 +998,7 @@ $dashboard-calendar: "dashboard-calendar";
 }
 
 .fc .fc-timegrid-slot{
-    height: 35px !important;
+    height: 30px !important;
 }
 
 .fc-timegrid-event{

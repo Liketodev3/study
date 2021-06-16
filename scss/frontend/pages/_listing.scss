@@ -586,6 +586,7 @@
         a{
             color: var(--color-black);
             text-decoration: underline;
+            margin-#{theme('direction.left','value')}: theme('margin.2');
         }
     }
 }

@@ -22,6 +22,9 @@ $slideshow: "slideshow";
 
     .slick-dots {
         bottom: 32px;
+        @media(max-width: theme('breakpoints.md','value')){
+            display: none !important;
+        }
     }
 
 }
@@ -79,11 +82,11 @@ $slideshow: "slideshow";
             margin: -4px 0 0;
             transform: translate(0, 0);
             #{theme('direction.left','value')}: auto;
-            padding: 20px;
+            padding: theme('padding.6') theme('padding.8') theme('padding.10');
             text-align: center;
             min-width: 100%;
             color: var(--color-dark);
-
+            border-bottom: 1px solid theme('color.gray.200');
         }
     }
 
@@ -114,6 +117,7 @@ $slideshow: "slideshow";
         margin-bottom: calc(var(--margin-10) - 3px);
         @media(max-width: theme('breakpoints.xl','value')) {
             margin-bottom: var(--margin-6);
+            font-size: 1.1rem;
         }
     }
     
@@ -131,6 +135,7 @@ $slideshow: "slideshow";
     .slideshow-input{
         position: relative;
         margin-bottom: var(--margin-6);
+
         &::after{
             content: "";
             position: absolute;
@@ -143,11 +148,14 @@ $slideshow: "slideshow";
             #{theme('direction.right','value')}: 24px;
             top: 24px;
             pointer-events: none;
+            @media(max-width: theme('breakpoints.md','value')) {
+                top: 20px;
+            }
         }
         svg{
             fill: var(--color-gray-1000);
         }
-        input{
+        input[type="text"]{
             border-radius: 0;
             height: 60px;
             padding-#{theme('direction.left','value')}: var(--padding-16);
@@ -158,7 +166,7 @@ $slideshow: "slideshow";
                 height: 50px;
             }
             @media(max-width: theme('breakpoints.md','value')) {
-                height: 60px;
+                height: 50px;
                 border: 1px solid var(--color-gray-500);
             }
         }
@@ -181,39 +189,37 @@ $slideshow: "slideshow";
             height: 50px;
         }
         @media(max-width: theme('breakpoints.md','value')) {
-            height: 60px;
+            height: 50px;
             font-weight: 600;
             font-size: 16px;
+            
         }
     }
 }
 
 .tags-inline{
     display: flex;
-    align-items: center;
     justify-content: center;
     b{
         margin-#{theme('direction.right','value')}: var(--margin-3);
         color: inherit;
+        font-size: 1.1rem;
     }
     ul{
         display: flex;
         align-items: center;
         margin-#{theme('direction.left','value')}: var(--margin-2);
+        flex-wrap: wrap;
 
         .tags-inline__item{
             margin: 0;
             a{
-                height: 42px;
                 display: flex;
                 align-items: center;
                 border: none;
                 padding: 0 2px;
                 color: inherit;
-                font-size: var(--font-size-medium);
-                @media(max-width: theme('breakpoints.md','value')) {
-                    font-size: 12px;
-                }
+                font-size: 1.1rem;
             }
             :hover{
                 color: var(--color-secondary);
@@ -226,11 +232,14 @@ $slideshow: "slideshow";
     padding: var(--padding-0) !important;
     text-align: center;
     margin-bottom: var(--margin-20);
+    
     @media (max-width:theme('breakpoints.lg','value')){
         & {
             margin-bottom: var(--margin-10);
         }
     }
+
+    
 
     h2{
         line-height: 40px !important;
@@ -242,9 +251,11 @@ $slideshow: "slideshow";
             font-weight: 600;
             line-height: 2.5rem !important;
         }
+        @media (max-width:theme('breakpoints.md','value')){
+            font-size: theme('font.size.h4');
+        }
     }
     .view-all{
-        font-size: 16px;
         font-weight: 600;
         color: var(--color-primary);
         padding-bottom: 5px;
@@ -253,15 +264,10 @@ $slideshow: "slideshow";
 }
 
 .section--services{
-    [class*="col-"]{
-        &:last-child{
-            .service{
-                @media (max-width:theme('breakpoints.md','value')){
-                    margin-bottom: var(--margin-0);
-                    padding-bottom: var(--padding-0);
-                    border-bottom: none;
-                }
-            }
+    .section__head{
+        @media (max-width:theme('breakpoints.md','value')){
+            max-width: 80%;
+            margin: 0 auto var(--margin-8);         
         }
     }
 }
@@ -282,9 +288,13 @@ $service: 'service';
 
     @media (max-width:theme('breakpoints.md','value')){
         &{
-            margin-bottom: var(--margin-8);
-            padding-bottom: var(--padding-4);
-            border-bottom: 1px solid var(--color-gray-200);
+            flex-direction: column;
+            text-align: center;
+            margin-bottom: theme('margin.5');
+            flex-direction: column;
+            text-align: center;
+            padding: theme('padding.8') theme('padding.10');
+            border: 1px solid theme('color.gray.200');
             
         }
     }
@@ -311,24 +321,40 @@ $service: 'service';
 
         @media (max-width:theme('breakpoints.lg','value')){
             &{
-                min-width: 80px;
-                height: 80px;
+                min-width: 56px;
+                height: 56px;
+                margin: 0 auto theme('margin.6');
                 img{
-                    max-width: 40px;
+                    max-width: 30px;
                 }
             }
         }
 
     }
     .service__content{
-        margin-#{theme('direction.left','value')}: var(--margin-6);
+        @media (min-width:theme('breakpoints.md','value')){
+            margin-#{theme('direction.left','value')}: var(--margin-6);
+        }
         h3{
             font-size: calc(var(--font-size-h4) - 1px);
             margin-bottom: var(--margin-4);
             line-height: 20px;
+            @media (max-width:theme('breakpoints.md','value')){
+                font-size: theme('font.size.medium');
+                margin-bottom: theme('margin.3');
+            }
         }
         p{
-            font-size: 15px;
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+    }
+}
+
+.section--services {
+    .section__body{
+        @media (max-width:theme('breakpoints.md','value')){
+            padding: 0 var(--padding-8);
         }
     }
 }
@@ -344,7 +370,9 @@ $flag-wrapper: 'flag-wrapper';
     flex-wrap: wrap;
     flex: 1;
     justify-content: center;
-
+    @media(max-width: theme('breakpoints.md','value')) {
+        justify-content: space-between;
+    }
     .flag__box{
         width: 148px;
         display: flex;
@@ -363,9 +391,16 @@ $flag-wrapper: 'flag-wrapper';
                 background-color: var(--color-white);
             }
         }
-        @media(max-width: theme('breakpoints.sm','value')) {
+        @media(max-width: theme('breakpoints.md','value')) {
             &{
-                width: 125px;
+                margin: 0 0 theme('margin.6');
+                flex: 0 0 48%;
+                max-width: 48%;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                padding: theme('padding.4');
+                border: 1px solid theme('color.gray.200');
             }
         }
         .flag__media{
@@ -378,11 +413,20 @@ $flag-wrapper: 'flag-wrapper';
             align-items: center;
             margin-bottom: var(--margin-6);
             background: #fff;
+            @media(max-width: theme('breakpoints.md','value')) {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 0;
+                margin-right: theme('margin.4');
+            }
         }
 
         .flag__name{
             text-align: center;
             font-weight: 600;
+            @media(max-width: theme('breakpoints.md','value')){
+                text-align: #{theme('direction.left','value')};
+            }
             .lesson-count {
                 margin-top: 4px;
                 line-height: 30px;
@@ -392,6 +436,10 @@ $flag-wrapper: 'flag-wrapper';
 
                 @media(min-width: theme('breakpoints.xl','value')){
                     color: transparent;
+                }
+
+                @media(max-width: theme('breakpoints.md','value')){
+                    line-height: 20px;
                 }
             }
         }
@@ -423,18 +471,19 @@ $flag-wrapper: 'flag-wrapper';
     p{
         color: #111;
         font-size: 16px;
+        margin-bottom: 0;
+        @media(max-width: theme('breakpoints.md','value')){
+            font-size: 1.1rem;
+        }
         a{
             color: var(--color-primary);
             font-weight: 600;
             position: relative;
             padding-bottom: 4px;
-            &::before{
-                content: "";
-                width: 100%;
-                position: absolute;
-                height: 1px;
-                background: var(--color-primary);
-                bottom: 0;
+            text-decoration: underline;
+            @media(max-width: theme('breakpoints.md','value')){
+                display: block;
+                margin-top: theme('margin.2');
             }
         }
     }
@@ -482,7 +531,7 @@ $tutor-card: 'tutor-card';
 $tile: 'tile';
 
 .#{$tile} {
-    margin-bottom: var(--margin-18);
+    margin-bottom: var(--margin-10);
     transition: all 0.3s;
     position: relative;
 
@@ -491,6 +540,14 @@ $tile: 'tile';
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
             margin-bottom: var(--margin-10);
         }
+    }
+
+    @media(max-width: theme('breakpoints.md','value')){
+        box-shadow: none;
+        margin-bottom: 0;
+        padding: theme('padding.6');
+        border: 1px solid theme('color.gray.200');
+        min-width: 200px;
     }
     .card__row--action {
         padding: 0;
@@ -506,15 +563,29 @@ $tile: 'tile';
     }
 }
 
+.teacher-wrapper{
+    .row{
+        flex-wrap: nowrap;
+        overflow: auto;
+    }
+    [class*="col-"]{
+        padding-#{theme('direction.right','value')}: 0;
+        &:last-child{
+            margin-#{theme('direction.right','value')}: theme('margin.5');
+        }
+    }
+}
 
-.tile:hover{
-    box-shadow: var(--boxShadow-vertical);
-    .card__row--action{
-        opacity: 1;
-        visibility: visible;
-        padding-top: var(--padding-3);
-        padding-bottom: var(--padding-3);
-        transform: translateY(100%);
+@media(min-width: theme('breakpoints.md','value')){
+    .tile:hover{
+        box-shadow: var(--boxShadow-vertical);
+        .card__row--action{
+            opacity: 1;
+            visibility: visible;
+            padding-top: var(--padding-3);
+            padding-bottom: var(--padding-3);
+            transform: translateY(100%);
+        }
     }
 }
 
@@ -538,9 +609,16 @@ $tile: 'tile';
             padding: var(--padding-5) var(--padding-5) var(--padding-20);
         }
     }
+
+    @media(max-width: theme('breakpoints.md','value')){
+        padding: theme('padding.5') 0 0 0;
+    }
     
     .info-wrapper{
         justify-content: center;
+        @media(max-width: theme('breakpoints.md','value')){
+            flex-direction: column;
+        }
     }
 
     .tile__title{
@@ -549,6 +627,10 @@ $tile: 'tile';
             font-size: calc(var(--font-size-medium) + 1px);
             font-weight: bold;
             color: #111;
+            @media(max-width: theme('breakpoints.md','value')){
+                font-size: 1.1rem;
+                font-weight: theme('font.weight.medium');
+            }
         }
     }
 
@@ -559,6 +641,14 @@ $tile: 'tile';
     }
 
     
+}
+
+.section--language{
+    .tile{
+        @media(max-width: theme('breakpoints.md','value')){
+            max-width: 200px;
+        }
+    }
 }
 
 .info-wrapper{
@@ -572,6 +662,11 @@ $tile: 'tile';
         margin-#{theme('direction.right','value')}: var(--margin-5);
         &:last-child{
             margin-#{theme('direction.right','value')}: var(--margin-0);
+        }
+
+        @media(max-width: theme('breakpoints.md','value')){
+            margin-#{theme('direction.right','value')}: 0;
+            margin-bottom: theme('margin.4');
         }
         .icon--location{
             width: 11px;
@@ -620,7 +715,6 @@ $section--cta: 'section--cta';
     &::before{
         content: "";
         position: absolute;
-
         background: linear-gradient(to right, rgba(0,0,0,0.8) 0%,rgba(255,255,255,0.0) 100%);
         pointer-events: none;
         top: 0;
@@ -629,9 +723,16 @@ $section--cta: 'section--cta';
         right: 0;
     }
     
+    @media(max-width: theme('breakpoints.md','value')){
+        min-height: 400px;
+    }
     .cta-content{
         max-width: 380px;
         color: #fff;
+        @media(max-width: theme('breakpoints.md','value')){
+            max-width: 224px;
+            margin: theme('margin.20') 0;
+        }
         h2{
             font-size: var(--font-size-h1);
             font-weight: normal;
@@ -866,7 +967,7 @@ $card: 'card';
         }
 
         @media(max-width:theme('breakpoints.md','value')){
-            padding: var(--padding-12) var(--padding-8);
+            text-align: center;
         }
 
         .quote__media{
@@ -878,6 +979,9 @@ $card: 'card';
 
             @media(max-width:theme('breakpoints.md','value')){
                 margin-bottom: var(--margin-6);
+                width: 140px;
+                height: 140px;
+                margin: 0 auto theme('margin.6');
             }
 
             .quote__box{
@@ -893,6 +997,14 @@ $card: 'card';
                 svg{
                     fill: var(--color-white)
                 }
+
+                @media(max-width:theme('breakpoints.md','value')){
+                    width: 40px;
+                    height: 40px;
+                    svg{
+                        max-width: 18px;
+                    }
+                }
             }
     
         }
@@ -904,8 +1016,6 @@ $card: 'card';
                 margin-#{theme('direction.left','value')}: var(--padding-26);
             }
 
-            
-
             p{
                 font-size: var(--font-size-h4);
                 line-height: 3rem;
@@ -914,7 +1024,8 @@ $card: 'card';
 
                 @media(max-width:theme('breakpoints.md','value')){
                     margin-bottom: var(--margin-14);
-                    font-size: var(--font-size-lg);
+                    font-size: 1.1rem;
+                    line-height: 2.3rem;
                 }
             }
 
@@ -926,6 +1037,10 @@ $card: 'card';
                     opacity: 0.07;
                     fill: var(--color-white);
                 }
+
+                @media(max-width:theme('breakpoints.md','value')){
+                    bottom: 30px; 
+                }
             }
         }
        
@@ -935,10 +1050,13 @@ $card: 'card';
 .quote-info{
     padding-#{theme('direction.left','value')}: var(--padding-5);
     position: relative;
+    @media(max-width:theme('breakpoints.md','value')){
+        display: inline-block;
+    }
     &::before{
         content: "";
         position: absolute;
-        height: 100%;
+        height: 25px;
         width: 2px;
         background: rgba(255,255,255,0.5);
         #{theme('direction.left','value')}: 0;
@@ -946,7 +1064,6 @@ $card: 'card';
     }
     h4{
         margin-bottom: 10px;
-        font-size: calc(var(--font-size-h5) + 2px);
     }
     span{
         font-size: var(--font-size-medium);
@@ -982,6 +1099,11 @@ $card: 'card';
 
         @media(max-width: theme('breakpoints.lg','value')) {
             padding: var(--padding-0);
+        }
+
+        @media(max-width: theme('breakpoints.md','value')) {
+            text-align: center;
+            margin-top: var(--margin-6);
         }
 
         h3{
@@ -1129,7 +1251,11 @@ $card: 'card';
             transition: .3s ease-in-out;
 
             @media(max-width: theme('breakpoints.sm','value')){
-                padding: var(--padding-6) var(--padding-14);
+                padding: var(--padding-6);
+            }
+
+            @media(max-width: theme('breakpoints.md','value')){
+                bottom: 0;
             }
             .tags-inline__item{
                 padding: var(--padding-1) var(--padding-3);
@@ -1659,8 +1785,4 @@ $card: 'card';
     top: 22px;
 }
 
-}
-
-.slick-track{
-    transform: none !important;
 }
