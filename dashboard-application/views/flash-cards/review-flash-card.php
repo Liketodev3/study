@@ -1,23 +1,13 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-<!--div class="progress">
-   <div class="progress__bar" style="width: 15%;"></div>
-</div-->
-<?php /* if( $currentReviewedCount == 0 ){ ?>
-<script >
-	//jQuery(document).trigger('close.facebox');
-	//loadFlashCardReviewSection();
-	reviewResult();
-</script>
-<?php } */ ?>
 <div class="box -padding-30 -skin">
 	<div class="box__count -float-right"><span id="currentReviewedCount"><?php echo $currentReviewedCount; ?></span>/<span id="allFCardCounts"></span><?php echo $allFCardCounts; ?></div>
 	<span class="-gap"></span>
 	<div id="card-1" class="card">
 		<div class="other-front">
-			<div class="box__caption"><h5><?php echo Label::getLabel('LBL_Word') ?> : <?php echo $flashCardData['flashcard_title']; ?></h5></div>
+			<div class="box__caption"><h5><?php echo Label::getLabel('LBL_Word'); ?> : <?php echo $flashCardData['flashcard_title']??''; ?></h5></div>
 		</div>
 		<div class="other-back">
-			<div class="box__caption"><h5><?php echo Label::getLabel('LBL_Defination') ?> :<?php echo $flashCardData['flashcard_defination']; ?></h5></div>
+			<div class="box__caption"><h5><?php echo Label::getLabel('LBL_Defination'); ?> :<?php echo $flashCardData['flashcard_defination']??''; ?></h5></div>
 			<span class="-gap"></span>
 			<div class="row row--actions">
 				<?php 
@@ -25,8 +15,9 @@
 					if( $key == 1 ){ $cls = 'status-correct'; }
 					if( $key == 2 ){ $cls = 'status-top'; }
 					if( $key == 3 ){ $cls = 'danger'; }
+					$onClick = !empty($flashCardData['flashcard_id']) ? 'onclick="setUpFlashCardReview('.$flashCardData['flashcard_id'].','.$key.')': '';
 				?>
-				<div class="col-4"><a href="javascript:void(0);" onclick="setUpFlashCardReview(<?php echo $flashCardData['flashcard_id']; ?>,<?php echo $key; ?>);" class="btn btn--<?php echo $cls; ?> btn--block"><?php echo $val; ?></a></div>
+				<div class="col-4"><a href="javascript:void(0);" <?php echo $onClick; ?> class="btn btn--<?php echo $cls; ?> btn--block"><?php echo $val; ?></a></div>
 				<?php } ?>
 			</div>
 		</div>

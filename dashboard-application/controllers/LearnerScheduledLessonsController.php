@@ -432,7 +432,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             FatUtility::dieJsonError($sLessonDetailObj->getError());
         }
         // remove from student google calendar
-        $learnerSettings = current(UserSetting::getUserSettings(UserAuthentication::getLoggedUserId()));
+        $learnerSettings = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
         $token = !empty($learnerSettings['us_google_access_token']) ? $learnerSettings['us_google_access_token'] : '';
         if ($token) {
             $sLessonDetailObj->loadFromDb();
@@ -835,7 +835,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             $lessonStsLog->addLog(ScheduledLesson::STATUS_SCHEDULED, User::USER_TYPE_LEANER, UserAuthentication::getLoggedUserId(), $rescheduleReason);
             $action = Label::getLabel('VERB_Rescheduled', $this->siteLangId);
         }
-        $db->commitTransaction();
+         $db->commitTransaction();
         $vars = [
             '{learner_name}' => $lessonDetail['learnerFullName'],
             '{teacher_name}' => $lessonDetail['teacherFullName'],
@@ -846,9 +846,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             '{learner_comment}' => $rescheduleReason,
             '{action}' => strtolower($action),
         ];
-        if (!EmailHandler::sendMailTpl($lessonDetail['teacherEmailId'], 'learner_schedule_email', $this->siteLangId, $vars)) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_Mail_not_sent!'));
-        }
+        EmailHandler::sendMailTpl($lessonDetail['teacherEmailId'], 'learner_schedule_email', $this->siteLangId, $vars);
         // share on student google calendar
         $token = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId())['us_google_access_token'] ?? '';
         if ($token) {
