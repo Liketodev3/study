@@ -1,5 +1,59 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.18.0.20210616
+
+Release Date: 2021-06-16
+
+Updates:
+
+    *Task-86496: HTML integration - Apply to Teach
+    
+Fixes:
+	#054985
+	#054864
+	#054959
+	#054983
+	#054957
+	#054963
+	#054971
+	#054972
+	#055003
+	#055011
+	#055022
+	#054936
+	#054956
+	#054851
+	#054887
+	#054890
+	#054962
+	#054960
+	#054958
+	#052330
+	#044551
+	#048309
+	#054853
+	#044549
+	#052179
+	#052430
+	#054050
+	#050216
+	#050836
+	#051672
+	#051711
+	#051714
+	#052085
+	#055008
+	#055027
+	#055007
+	#054974
+	
+Enhancements: 
+
+    UI/UX improvements on dashboard and other section
+    View Full Availability on teacher listing
+
+--------------------------------------------------------
+
 Release Number: TV-2.17.0.20210609
 
 Release Date: 2021-06-09
