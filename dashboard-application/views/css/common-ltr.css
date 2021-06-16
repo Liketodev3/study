@@ -1783,10 +1783,12 @@ ul {
           justify-content: center;
   -webkit-box-align: center;
       -ms-flex-align: center;
-          align-items: center; }
+          align-items: center;
+  color: var(--color-dark); }
 
 .fc-timegrid-event .fc-event-time {
-  text-align: center; }
+  text-align: center;
+  color: var(--color-dark); }
 
 .dashboard-calendar .fc-view-harness {
   height: 300px !important; }
@@ -1954,7 +1956,8 @@ ul {
             -ms-flex-pack: center;
                 justify-content: center; } }
     .calendar-view .fc-header-toolbar .fc-toolbar-chunk h6 .timer {
-      color: var(--color-dark); }
+      color: var(--color-dark);
+      margin: var(--margin-1); }
   @media (max-width: 767px) {
     .calendar-view .fc-header-toolbar .fc-toolbar-chunk {
       width: 100%;
@@ -2041,6 +2044,15 @@ ul {
     pointer-events: none;
     background-color: currentColor;
     opacity: 0.06; }
+
+.weekly-calendar .fc-event-main .fc-event-time {
+  display: block; }
+
+.dashboard-calendar .fc-toolbar-chunk .fc-today-button {
+  padding: 0 var(--padding-5) !important; }
+
+.dashboard-calendar .fc-toolbar-chunk .fc-prev-button, .dashboard-calendar .fc-toolbar-chunk .fc-next-button {
+  width: 42px !important; }
 
 .tooltipevent {
   -webkit-box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.03);
@@ -6052,10 +6064,11 @@ textarea[disabled] {
     width: 100%;
     display: block;
     margin: 0 0 5px 0; }
-  .field_label:empty {
-    display: none; }
   .list-onethird li {
     width: 100%; } }
+
+.terms_wrap .errorlist.erlist_agree {
+  bottom: -10px; }
 
 .label {
   color: #fff;
@@ -10664,9 +10677,6 @@ textarea[disabled] {
     #facebox .popup {
       height: 100%; } }
 
-#facebox .field_label:empty {
-  display: none; }
-
 .popup__head {
   padding: var(--padding-10);
   padding-bottom: 0;
@@ -10781,6 +10791,10 @@ textarea[disabled] {
 #facebox .img-container {
   max-height: 500px;
   overflow: auto; }
+
+@media (min-width: 767px) {
+  #facebox .calendar-view {
+    padding: var(--padding-6); } }
 
 .fc-icon, .fc-unselectable {
   -moz-user-select: none;

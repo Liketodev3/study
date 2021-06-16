@@ -18,7 +18,7 @@
         height: 100%;
     }
 }
-#facebox .field_label:empty{display: none;}
+// #facebox .field_label:empty{display: none;}
 
 .popup__head{padding: theme('padding.10'); padding-bottom: 0;  border-bottom: 1px solid theme('color.gray.300');}
 .popup__body{padding: theme('padding.10');}
@@ -174,5 +174,10 @@
     .img-container {
         max-height: 500px;
         overflow: auto;
+    }
+    .calendar-view{
+        @media(min-width:theme('breakpoints.md','value')){
+            padding: theme('padding.6');
+        }
     }
 }

@@ -652,10 +652,12 @@ $dashboard-calendar: "dashboard-calendar";
     display: flex;
     justify-content: center;
     align-items: center;
+    color: var(--color-dark);
 }
 
 .fc-timegrid-event .fc-event-time{
     text-align: center;
+    color: var(--color-dark);
 }
 
 .dashboard-calendar .fc-view-harness{
@@ -737,6 +739,7 @@ $dashboard-calendar: "dashboard-calendar";
 
 
 .calendar-view{
+
     @media(max-width:theme('breakpoints.md','value')){
         height: 100%;
         #calendar-container{
@@ -839,6 +842,7 @@ $dashboard-calendar: "dashboard-calendar";
                 }
                 .timer{
                     color: var(--color-dark);
+                    margin: var(--margin-1);
                 }
                
                 
@@ -954,7 +958,24 @@ $dashboard-calendar: "dashboard-calendar";
    
 }
 
+.weekly-calendar{
+    .fc-event-main{
+        .fc-event-time{
+            display: block;
+        }
+    }
+}
 
+.dashboard-calendar{
+    .fc-toolbar-chunk{
+        .fc-today-button{
+            padding: 0 theme('padding.5') !important;
+        }
+        .fc-prev-button, .fc-next-button{
+            width: 42px !important;
+        }
+    }
+}
 
 .tooltipevent{
     box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.03);

@@ -19,7 +19,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
 	</div>
 </div>
 <div class="page-panel__body availability-setting-calendar" id='calendar-container'>
-    <div id='w_calendar'></div>
+    <div id='w_calendar' class="calendar-view availability-calendar weekly-calendar"></div>
 </div>
 
 <script>
