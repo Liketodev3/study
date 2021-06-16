@@ -106,7 +106,7 @@
 				</div>
 			</div>
 			<div class="block-content__foot">
-			<button class="btn btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
+			<button class="btn btn--bordered color-primary btn-Back"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
             <input type="submit" name="btn_submit" value="<?php echo Label::getLabel('LBL_Save',$siteLangId); ?>"/>
 		</div>
 		</div>
