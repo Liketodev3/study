@@ -418,3 +418,5 @@ INSERT INTO `tbl_url_rewrites` (`urlrewrite_original`, `urlrewrite_custom`, `url
 ( 'TeacherRequest', 'apply-to-teach', 1, '301'), ('TeacherRequest', 'apply-to-teach', 2, '301');
 INSERT INTO `tbl_url_rewrites` (`urlrewrite_original`, `urlrewrite_custom`, `urlrewrite_lang_id`, `urlrewrite_http_resp_code`) VALUES
 ('TeacherRequest/form', 'apply-to-teach/form', 1, '301'), ('TeacherRequest/form', 'apply-to-teach/form', 2, '301');
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.18.0.20210616' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
