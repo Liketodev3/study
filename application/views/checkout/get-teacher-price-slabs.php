@@ -8,17 +8,7 @@
             <?php echo Label::getLabel('LBL_BACK'); ?>
         </a>
         <h4><?php echo Label::getLabel('LBL_Select_Your_Lesson'); ?></h4>
-        <!-- <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
-            <svg class="icon icon--close">
-            <use xlink:href="<?php //echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; ?>"></use>
-            </svg>
-        </a> -->
-    </div>
-    <div class="box__body">
-        <div class="checkout-title">
-            <p><?php echo Label::getLabel('LBL_CHECKOUT_SLAB_TITLE'); ?></p>
-            <p> <?php echo Label::getLabel('LBL_CHECKOUT_SLAB_DESCRIPTION'); ?></p>
-        </div>
+        
         <div class="step-nav">
             <ul>
                 <li class="step-nav_item is-completed"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_1'); ?></a> <span class="step-icon"></span></li>
@@ -26,6 +16,17 @@
                 <li class="step-nav_item is-process"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_3'); ?></a></li>
                 <li class="step-nav_item"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_4'); ?></a></li>
             </ul>
+        </div>
+        <!-- <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
+            <svg class="icon icon--close">
+            <use xlink:href="<?php //echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close';        ?>"></use>
+            </svg>
+        </a> -->
+    </div>
+    <div class="box__body">
+        <div class="checkout-title">
+            <p><?php echo Label::getLabel('LBL_CHECKOUT_SLAB_TITLE'); ?></p>
+            <p> <?php echo Label::getLabel('LBL_CHECKOUT_SLAB_DESCRIPTION'); ?></p>
         </div>
 
         <div class="selection-tabs selection--checkout selection--lesson selection--onethird">
@@ -56,7 +57,7 @@
             <input type="text" id="lessonQty" onchange="changeLessonQty();" name="lessonQty" min="<?php echo $minValue; ?>" max="<?php echo $maxValue; ?>" value="<?php echo $lessonQty; ?>">
             <button class="btn btn--count" onclick="increment();"><?php echo Label::getLabel('LBL_+'); ?></button>
             <button class="btn btn--primary color-white" onclick="cart.getLessonQtyPrice(document.getElementById('lessonQty').value);"><?php echo Label::getLabel('LBL_UPDATE_QTY'); ?></button>
-            <p class="slab-price-js"><?php echo sprintf(Label::getLabel('LBL_TOTAL_PRICE_-_%s'), CommonHelper::displayMoneyFormat($lessonQtyPrice)); ?></p>
+            <p class="slab-price-js"><?php echo sprintf(Label::getLabel('LBL_TOTAL_PRICE_:_%s'), CommonHelper::displayMoneyFormat($lessonQtyPrice)); ?></p>
         </div>
     </div>
     <div class="box-foot">
@@ -114,11 +115,11 @@
         }
 
         qty = parseInt(qty);
-        if (maxLessonQty > qty && minLessonQty < qty) {
-           // cart.props.lessonQty = qty;
+        if (maxLessonQty >= qty && minLessonQty <= qty) {
             lessonQtyInput.value = qty;
             return;
+        } else {
+            lessonQtyInput.value = cart.props.lessonQty;
         }
-        lessonQtyInput.value = cart.props.lessonQty;
     }
 </script>

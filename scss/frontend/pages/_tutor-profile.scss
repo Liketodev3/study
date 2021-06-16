@@ -102,6 +102,11 @@
         font-weight: 600;
         color: var(--color-dark) !important;
     }
+    .is--active{
+        background: var(--color-primary);
+        color: var(--color-white) !important;
+        border-color: var(--color-primary);
+    }
     .icon{
         padding: 4px;
         margin-#{theme('direction.right','value')}: var(--margin-3);
@@ -289,45 +294,28 @@
 }
 
 
-.lesson-list{
+.lesson-slot-info{
+
     ul{
         li{
             position: relative;
             margin-bottom: var(--margin-3);
             &:last-child{
-                margin-bottom: 0;
-            }
-            &::before{
-                content: "";
-                position: absolute;
-                width: calc(100% - 40px);
-                height: 1px;
-                bottom: 8px;
-                #{theme('direction.left','value')}: 50%;
-                background: #dedede;
-                transform: translateX(-50%); 
+                margin-bottom: var(--margin-0);
             }
             a{
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
+                margin-bottom: var(--margin-2);
                 height: 30px;
-                
+                .space{
+                    border-bottom: 1px solid var(--color-gray-400);
+                    height: 19px;
+                    width: 100%;
+                    margin: 0 var(--margin-3);
+                }
                 .lesson{
-                    background: #fff;
-                    position: relative;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
-                    line-height: 30px;
-                    display: block;
                     white-space: nowrap;
-                    max-width: 130px;
-                }
-                .lesson--time{
-                    padding-#{theme('direction.right','value')}: var(--padding-4);
-                }
-                .lesson--price{
-                    padding-#{theme('direction.left','value')}: var(--padding-4);
                 }
             }
         }
@@ -510,12 +498,12 @@
         height: calc(100% + 56px);
         width: 1px;
         background: var(--color-gray-300);
-        left: 22%;
+        #{theme('direction.left','value')}: 22%;
         transform: translateX(-50%);
         top: 0;
 
         @media(max-width: theme('breakpoints.md','value')){
-            left: 25%;
+            #{theme('direction.left','value')}: 25%;
             height: calc(100% + 30px);
         }
     }
@@ -530,7 +518,7 @@
         transform: translateX(-50%);
 
         @media(max-width: theme('breakpoints.md','value')){
-            left: 25%;
+            #{theme('direction.left','value')}: 25%;
         }
     }
 
@@ -692,6 +680,11 @@
         margin: var(--margin-6) 0;
         width: 100%;
     }
+
+    .right-panel{
+        position: sticky;
+        top: 180px;
+    }
 }
 
 .box--book {
@@ -771,6 +764,10 @@
         display: flex;
         flex-wrap: wrap;
     }
+
+    @media(max-width: theme('breakpoints.md','value')){
+        justify-content: center;
+    }
     scroll-behavior: smooth;
     .profile-head{
         order: 1;
@@ -835,3 +832,4 @@
         }
     }
 }
+

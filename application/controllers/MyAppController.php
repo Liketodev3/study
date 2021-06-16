@@ -103,6 +103,7 @@ class MyAppController extends FatController
             'myTimeZoneLabel' => Label::getLabel('Lbl_My_Current_Time'),
             'timezoneString' => Label::getLabel('LBL_TIMEZONE_STRING'),
             'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson'),
+            'userFilterLabel' => Label::getLabel('LBL_User'),
             'confirmDeleteLessonPlanText' => Label::getLabel('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT'),
         ];
         $languages = Language::getAllNames(false);

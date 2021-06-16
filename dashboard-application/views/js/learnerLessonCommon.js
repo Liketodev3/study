@@ -60,6 +60,7 @@ setUpLessonSchedule = function (teacherId, lDetailId, startTime, endTime, date) 
         }
     }
     $.mbsmessage.close();
+    $.loader.show();
     $.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'isSlotTaken'), 'teacherId=' + teacherId + '&startTime=' + startTime + '&endTime=' + endTime + '&date=' + date, function (t) {
         t = JSON.parse(t);
@@ -74,6 +75,7 @@ setUpLessonSchedule = function (teacherId, lDetailId, startTime, endTime, date) 
 
         if (slot > 0) {
             $.mbsmessage.close();
+            $.loader.hide();
             $.confirm({
                 title: langLbl.Confirm,
                 content: langLbl.bookedSlotAlert,
@@ -83,9 +85,9 @@ setUpLessonSchedule = function (teacherId, lDetailId, startTime, endTime, date) 
                         btnClass: 'btn btn--primary',
                         keys: ['enter', 'shift'],
                         action: function () {
+                            $.loader.show();
                             $.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
                             fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function (doc) {
-                                $.facebox.close();
                                 window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
                                 location.reload();
                             });
@@ -103,8 +105,6 @@ setUpLessonSchedule = function (teacherId, lDetailId, startTime, endTime, date) 
         } else {
 
             fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function (doc) {
-                $.mbsmessage.close();
-                $.facebox.close();
                 window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
                 location.reload();
             });

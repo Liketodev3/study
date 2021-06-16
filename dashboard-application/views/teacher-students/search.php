@@ -9,7 +9,9 @@
 			<th><?php echo $unscheduledLabel = Label::getLabel('LBL_Unscheduled'); ?></th>
 			<th><?php echo $actionLabel= Label::getLabel('LBL_Actions'); ?></th>
 		</tr>
-		<?php foreach ($students as $student) { ?>
+		<?php 
+        $offerPriceLabel = Label::getLabel('LBL_SET_LESSON_OFFER(%)_FOR_LEARNER');
+		foreach ($students as $student) { ?>
 		<tr>
 			<td>
 				<div class="flex-cell">
@@ -47,11 +49,14 @@
 								$svgIcon = 'lock';
                             }
 						?>
-						<a href="javascript:void(0);" onclick="offerForm(<?php echo $student['learnerId']; ?>);" class="padding-3 <?php echo $svgIconClass; ?>">
+						<div class="actions-group">
+						<a href="javascript:void(0);" onclick="offerForm(<?php echo $student['learnerId']; ?>);" class="btn btn--bordered noborder btn--shadow btn--equal margin-1 is-hover padding-3 is-hover <?php echo $svgIconClass; ?>">
 							<svg class="icon icon--clock icon--small margin-right-2">
-								<use xlink:href="<?php ?>images/sprite.yo-coach.svg#<?php echo $svgIcon ?>"></use>
+								<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#'.$svgIcon; ?>"></use>
 							</svg>
+							<div class="tooltip tooltip--top bg-black"><?php echo $offerPriceLabel; ?></div>
 						</a>
+						</div>
 						<div class="lesson-price">
 							<?php
 								$durations = explode(',', $student['lessonDuration']);

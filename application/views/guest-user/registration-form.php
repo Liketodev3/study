@@ -19,12 +19,10 @@
 	$fldAgree->addWrapperAttribute('id', 'termLabelWrapper');
 	$termLink ='';
 	$termLink .= ' <a target="_blank" class = "-link-underline link-color" href="'.$termsAndConditionsLinkHref.'">'.Label::getLabel('LBL_TERMS_AND_CONDITION').'</a> and <a href="'. $privacyPolicyLinkHref .'" target="_blank" class = "-link-underline link-color" >'. Label::getLabel('LBL_Privacy_Policy') . '</a>';
-	//$fldAgree->htmlAfterField = $termLink;
-	
-	/* ] */
-	
-	
-?>
+										//$fldAgree->htmlAfterField = $termLink;
+
+										/* ] */
+$userTypeArray = ['userType' => $userType ?? User::USER_TYPE_LEANER]; ?>
 <section class="section section--page">
 	<div class="container container--fixed">
 		<div class="row justify-content-center">
@@ -35,7 +33,7 @@
 					</div>
 					<div class="box__body -padding-40">
 					
-						<?php $this->includeTemplate( 'guest-user/_partial/learner-social-media-signup.php' );	?>
+						<?php $this->includeTemplate('guest-user/_partial/learner-social-media-signup.php', $userTypeArray); ?>
 					
 						<?php echo $frm->getFormHtml(); ?>
 						<a href="<?php echo CommonHelper::generateUrl('GuestUser','loginForm'); ?>" class="-link-underline"><?php echo Label::getLabel('LBL_Back_to_Login'); ?></a>

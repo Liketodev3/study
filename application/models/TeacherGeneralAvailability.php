@@ -35,7 +35,7 @@ class TeacherGeneralAvailability extends MyAppModel
         if (!empty($rows)) {
             $weekStartDateDB = '2018-01-07';
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStartDate);
-            $bookingBefore = (!is_null($teacherBookingBefore)) ? 0 : $teacherBookingBefore;
+            $bookingBefore = $teacherBookingBefore ?? 0;
 
             $validStartDateTime = strtotime("+ " . $bookingBefore . " hours");
 
@@ -112,8 +112,8 @@ class TeacherGeneralAvailability extends MyAppModel
         }
         $postJson = json_decode($post['data']);
         $db = FatApp::getDb();
-        $weekendDate = date('Y-m-d', strtotime('next Saturday +1 day'));
         $deleteRecords = $db->deleteRecords(TeacherGeneralAvailability::DB_TBL, ['smt' => 'tgavl_user_id = ?', 'vals' => [$userId]]);
+        
         if (empty($postJson)) {
             return true;
         }
@@ -127,22 +127,12 @@ class TeacherGeneralAvailability extends MyAppModel
         # sort by event_type desc and then title asc
         array_multisort($sort['day'], SORT_ASC, $sort['start'], SORT_ASC, $postJson);
         /* ] */
-        /* [ Clubbing the continuous timeslots */
-        /* foreach ($postJson as $k => $postObj) {
-            if ($k > 0 and ($postJson[$k - 1]->day == $postObj->day) and ($postJson[$k - 1]->endTime == $postObj->startTime)) {
-                $postJsonArr[count($postJsonArr) - 1]->endTime = $postObj->endTime;
-                continue;
-            }
-            $postJsonArr[] = $postObj;
-        }
-        */
-        /* ] */
+    
         $postJsonArr = $postJson;
         if ($deleteRecords) {
             /* code added  on 12-07-2019 */
             $user_timezone = MyDate::getUserTimeZone();
             $systemTimeZone = MyDate::getTimeZone();
-            $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
             foreach ($postJsonArr as $val) {
                 $weekNumber = 2;
 
@@ -162,6 +152,7 @@ class TeacherGeneralAvailability extends MyAppModel
                 $dayNum = $gendate->format('d');
                 $endDate = "2018-01-" . $dayNum . " " . date('H:i:s', strtotime($val->endTime));
                 $custom_tgavl_end = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
+
                 $startDate = date('Y-m-d H:i:s', strtotime($val->startTime));
                 $endDate = date('Y-m-d H:i:s', strtotime($val->endTime));
                 if ($val->endTime == "00:00") {
@@ -172,14 +163,24 @@ class TeacherGeneralAvailability extends MyAppModel
                 $tgavl_end = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
                 $tgavl_start_time = date('H:i:00', strtotime($tgavl_start));
                 $tgavl_end_time = date('H:i:00', strtotime($tgavl_end));
+                $startDateTimeUnix = strtotime(date('Y-m-d', strtotime($custom_tgavl_start)) . ' ' . $tgavl_start_time);
+                $endDateTimeUnix = strtotime(date('Y-m-d', strtotime($custom_tgavl_end)) . ' ' . $tgavl_end_time);
+
+                if ($startDateTimeUnix > $endDateTimeUnix) {
+                    $startDateTimeUnix =  strtotime('-1 days', $startDateTimeUnix);
+                }
+                
+                if ((strtotime($custom_tgavl_end) - strtotime($custom_tgavl_start)) != ($endDateTimeUnix - $startDateTimeUnix)) {
+                    $endDateTimeUnix =  $startDateTimeUnix + (strtotime($custom_tgavl_end) - strtotime($custom_tgavl_start));
+                }
                 $day = MyDate::getDayNumber($custom_tgavl_start);
                 $insertArr = [
                     'tgavl_day' => $day,
                     'tgavl_user_id' => $userId,
                     'tgavl_start_time' => $tgavl_start_time,
                     'tgavl_end_time' => $tgavl_end_time,
-                    'tgavl_date' => $custom_tgavl_start,
-                    'tgavl_end_date' => $custom_tgavl_end,
+                    'tgavl_date' => date('Y-m-d',  $startDateTimeUnix),
+                    'tgavl_end_date' => date('Y-m-d',  $endDateTimeUnix),
                 ];
                 if (!$db->insertFromArray(TeacherGeneralAvailability::DB_TBL, $insertArr)) {
                     $this->error = $db->getError();

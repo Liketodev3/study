@@ -15,7 +15,7 @@ switch(strtoupper($stats_type)){
 	break;
 	case 'TRAFFIC_SOURCE':
 		$pieChatStats="[['Source', 'Visitors'],";
-		if($stats_info['totalsForAllResults']>0){
+		if(($stats_info['totalsForAllResults']??0)>0){
 			foreach($stats_info['rows'] as $key=>$val){
 				if($key==''){continue;}
 				$pieChatStats.="['".$key."',".intval($val['visit'])."],";

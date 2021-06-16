@@ -4,7 +4,7 @@ $infobar: "infobar";
     background-color: theme('color.white');position: relative;  border-radius: theme('radius.1'); box-shadow: theme('boxShadow.all'); padding: theme('padding-6'); margin-bottom: theme('margin-6');margin-top: theme('margin-4');
     &__media{
         &-icon{width: 3.5rem; height: 3.5rem; border-radius: theme('radius.round');display: flex; align-items: center; justify-content: center;overflow: hidden; position: relative;
-            &:before{position: absolute; left: 0; right: 0; top: 0; bottom: 0; content: "";opacity: 0.1;background-color: currentColor;}
+            &:before{position: absolute; left: 0; right: 0; top: 0; bottom: 0; content: "";opacity: 0.1;}
         }
         &-icon--alert{color:theme('color.yellow'); font-size: theme('font.size.xxxl'); font-weight: 700;
             &:before{ background-color: theme('color.yellow');}
@@ -38,7 +38,7 @@ $infobar: "infobar";
         }
         }
         &-icon--tick{color:theme('color.primary');
-            
+            &:before{position: absolute; left: 0; right: 0; top: 0; bottom: 0; content: "";opacity: 0.1;background-color: currentColor;}
         }
     }
     @media(max-width:theme('breakpoints.sm','value')){
@@ -234,7 +234,7 @@ $account-deactivation-info: "account-deactivation-info";
 
 $selection-tabs: "selection-tabs";
 
-.#{$selection-tabs}{display:flex; align-items: center; justify-content: center; flex-wrap: nowrap;overflow: auto;
+.#{$selection-tabs}{display:flex; align-items: center; justify-content: center; flex-wrap: wrap;overflow: auto;
 
     @media(max-width:theme('breakpoints.md','value')){
         &{justify-content: flex-start;}
@@ -387,6 +387,7 @@ $sale-stat__count: "sale-stat__count";
         font-size: var(--font-size-small);
         text-transform: uppercase;
         line-height: 0.72rem;
+        font-weight: 600;
     }
     h5{
         font-size: var(--font-size-h4);
@@ -530,6 +531,15 @@ $slab-wrapper: "slab-wrapper";
         h6{
             font-size: 14px;
             font-weight: 600;
+        }
+    }
+    .field-wrapper{
+        position: relative;
+        .errorlist{
+            position: absolute;
+            bottom: -21px;
+            left: 0;
+            width: 100%;
         }
     }
 }

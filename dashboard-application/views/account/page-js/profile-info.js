@@ -2,422 +2,429 @@ var isRuningTeacherQualificationFormAjax = false;
 
 var teachLangs = [];
 $(document).ready(function () {
-	profileInfoForm();
-	$('body').on('click', '.tab-ul-js li a', function () {
-		$('.tab-ul-js li').removeClass('is-active');
-		$(this).parent('li').addClass('is-active');
-	});
+    profileInfoForm();
+    $('body').on('click', '.tab-ul-js li a', function () {
+        $('.tab-ul-js li').removeClass('is-active');
+        $(this).parent('li').addClass('is-active');
+    });
 });
 
 (function () {
-	var runningAjaxReq = false;
-	var dv = '#formBlock-js';
-	var paymentInfoDiv = '#paymentInfoDiv';
-	var profileInfoFormDiv = '#profileInfoFrmBlock';
+    var runningAjaxReq = false;
+    var dv = '#formBlock-js';
+    var paymentInfoDiv = '#paymentInfoDiv';
+    var profileInfoFormDiv = '#profileInfoFrmBlock';
 
-	checkRunningAjax = function () {
-		if (runningAjaxReq == true) {
-			console.log(runningAjaxMsg);
-			return;
-		}
-		runningAjaxReq = true;
-	};
+    checkRunningAjax = function () {
+        if (runningAjaxReq == true) {
+            console.log(runningAjaxMsg);
+            return;
+        }
+        runningAjaxReq = true;
+    };
 
-	changePasswordForm = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Account', 'changePasswordForm'), '', function (t) {
-			$(dv).html(t);
-		});
-	};
+    changePasswordForm = function () {
+        $(dv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Account', 'changePasswordForm'), '', function (t) {
+            $(dv).html(t);
+        });
+    };
 
-	getTeacherProfileProgress = function (showMessage) {
-		showMessage = (showMessage) ? showMessage : true;
-		if (!userIsTeacher || !isTeacherDashboardTabActive) {
-			return;
-		}
+    getTeacherProfileProgress = function (showMessage) {
+        showMessage = (showMessage) ? showMessage : true;
+        if (!userIsTeacher || !isTeacherDashboardTabActive) {
+            return;
+        }
 
-		fcom.ajax(fcom.makeUrl('Teacher', 'getTeacherProfileProgress'), '', function (data) {
+        fcom.ajax(fcom.makeUrl('Teacher', 'getTeacherProfileProgress'), '', function (data) {
 
-			if (data && data.teacherProfileProgress) {
-				if (!data.teacherProfileProgress.isProfileCompleted && showMessage) {
-					setTimeout(function () {
-						$.systemMessage.close();
-						$.mbsmessage.close();
-						$.systemMessage(langLbl.teacherProfileIncompleteMsg, 'alert alert--warning');
-						setTimeout(function () {
-							$.systemMessage.close();
-						}, 950);
-					}, 600);
-				}
-				tpp = data.teacherProfileProgress;
-				$.each(tpp, function (key, value) {
+            if (data && data.teacherProfileProgress) {
+                if (!data.teacherProfileProgress.isProfileCompleted && showMessage) {
+                    setTimeout(function () {
+                        $.systemMessage.close();
+                        $.mbsmessage.close();
+                        $.systemMessage(langLbl.teacherProfileIncompleteMsg, 'alert alert--warning');
+                        setTimeout(function () {
+                            $.systemMessage.close();
+                        }, 950);
+                    }, 600);
+                }
+                tpp = data.teacherProfileProgress;
+                $.each(tpp, function (key, value) {
 
-					switch (key) {
+                    switch (key) {
 
-						case 'isProfileCompleted':
-							if (value) {
-								$('.is-profile-complete-js').removeClass('infobar__media-icon--alert').addClass('infobar__media-icon--tick');
-								$('.is-profile-complete-js').html('');
-								$('.aside--progress--menu').addClass('is-completed');
-							} else {
-								$('.is-profile-complete-js').removeClass('infobar__media-icon--tick').addClass('infobar__media-icon--alert');
-								$('.is-profile-complete-js').html('!');
+                        case 'isProfileCompleted':
+                            if (value) {
+                                $('.is-profile-complete-js').removeClass('infobar__media-icon--alert').addClass('infobar__media-icon--tick');
+                                $('.is-profile-complete-js').html('');
+                                $('.aside--progress--menu').addClass('is-completed');
+                            } else {
+                                $('.is-profile-complete-js').removeClass('infobar__media-icon--tick').addClass('infobar__media-icon--alert');
+                                $('.is-profile-complete-js').html('!');
 
-							}
-							break;
+                            }
+                            break;
 
-						case 'generalAvailabilityCount':
-							value = parseInt(value);
-							if (0 >= value) {
-								$('.general-availability-js').parent('li').removeClass('is-completed');
-								$('.availability-setting-js').removeClass('is-completed');
-							} else {
-								$('.general-availability-js').parent('li').addClass('is-completed');
-								$('.availability-setting-js').addClass('is-completed');
+                        case 'generalAvailabilityCount':
+                            value = parseInt(value);
+                            if (0 >= value) {
+                                $('.general-availability-js').parent('li').removeClass('is-completed');
+                                $('.availability-setting-js').removeClass('is-completed');
+                            } else {
+                                $('.general-availability-js').parent('li').addClass('is-completed');
+                                $('.availability-setting-js').addClass('is-completed');
 
-							}
-							break;
-						// case 'userCountryId':
-						case 'userProfile':
+                            }
+                            break;
+                            // case 'userCountryId':
+                        case 'userProfile':
 
-							// case 'userTimeZone':
-							value = parseInt(value);
-							if (0 >= value) {
-								$('.profile-Info-js').parent('li').removeClass('is-completed');
-							} else {
-								$('.profile-Info-js').parent('li').addClass('is-completed');
-							}
-							break;
-						case 'uqualificationCount':
-							value = parseInt(value);
-							if (0 >= value) {
-								$('.teacher-qualification-js').parent('li').removeClass('is-completed');
-							} else {
-								$('.teacher-qualification-js').parent('li').addClass('is-completed');
-							}
-							break;
-						case 'teachLangCount':
-							value = parseInt(value);
-							if (0 >= value) {
-								$('.teacher-tech-lang-price-js').parent('li').removeClass('is-completed');
-							} else {
-								$('.teacher-tech-lang-price-js').parent('li').addClass('is-completed');
-							}
-							break;
-						case 'slanguageCount':
-							value = parseInt(value);
-							if (0 >= value) {
-								$('.teacher-lang-form-js').parent('li').removeClass('is-completed');
-							} else {
-								$('.teacher-lang-form-js').parent('li').addClass('is-completed');
-							}
-							break;
-						case 'preferenceCount':
-							value = parseInt(value);
-							if (0 >= value) {
-								$('.teacher-preferences-js').parent('li').removeClass('is-completed');
-							} else {
-								$('.teacher-preferences-js').parent('li').addClass('is-completed');
-							}
-							break;
-						case 'percentage':
-							$('.teacher-profile-progress-bar-js').attr("aria-valuenow", value);
-							value = value + "%";
-							$('.teacher-profile-progress-bar-js').css({ "width": value });
-							break;
-						case 'totalFilledFields':
-							$('.progress__step').removeClass('is-active');
-							for (let totalFilledFields = 0; totalFilledFields < value; totalFilledFields++) {
-								$('.progress__step').eq(totalFilledFields).addClass('is-active');
-							}
-							value = tpp.totalFilledFields + "/" + tpp.totalFields;
-							$('.progress-count-js').text(value);
-							if ((parseInt(tpp.isProfileCompleted) == 1) || (parseInt(tpp.totalFilledFields) == (parseInt(tpp.totalFields) - 1) && parseInt(tpp.generalAvailabilityCount) == 0)) {
-								$('.profile-setting-js').addClass('is-completed');
-							} else {
-								$('.profile-setting-js').removeClass('is-completed');
-							}
+                            // case 'userTimeZone':
+                            value = parseInt(value);
+                            if (0 >= value) {
+                                $('.profile-Info-js').parent('li').removeClass('is-completed');
+                            } else {
+                                $('.profile-Info-js').parent('li').addClass('is-completed');
+                            }
+                            break;
+                        case 'uqualificationCount':
+                            value = parseInt(value);
+                            if (0 >= value) {
+                                $('.teacher-qualification-js').parent('li').removeClass('is-completed');
+                            } else {
+                                $('.teacher-qualification-js').parent('li').addClass('is-completed');
+                            }
+                            break;
+                        case 'teachLangCount':
+                            value = parseInt(value);
+                            if (0 >= value) {
+                                $('.teacher-tech-lang-price-js').parent('li').removeClass('is-completed');
+                            } else {
+                                $('.teacher-tech-lang-price-js').parent('li').addClass('is-completed');
+                            }
+                            break;
+                        case 'slanguageCount':
+                            value = parseInt(value);
+                            if (0 >= value) {
+                                $('.teacher-lang-form-js').parent('li').removeClass('is-completed');
+                            } else {
+                                $('.teacher-lang-form-js').parent('li').addClass('is-completed');
+                            }
+                            break;
+                        case 'preferenceCount':
+                            value = parseInt(value);
+                            if (0 >= value) {
+                                $('.teacher-preferences-js').parent('li').removeClass('is-completed');
+                            } else {
+                                $('.teacher-preferences-js').parent('li').addClass('is-completed');
+                            }
+                            break;
+                        case 'percentage':
+                            $('.teacher-profile-progress-bar-js').attr("aria-valuenow", value);
+                            value = value + "%";
+                            $('.teacher-profile-progress-bar-js').css({"width": value});
+                            break;
+                        case 'totalFilledFields':
+                            $('.progress__step').removeClass('is-active');
+                            for (let totalFilledFields = 0; totalFilledFields < value; totalFilledFields++) {
+                                $('.progress__step').eq(totalFilledFields).addClass('is-active');
+                            }
+                            value = tpp.totalFilledFields + "/" + tpp.totalFields;
+                            $('.progress-count-js').text(value);
+                            if ((parseInt(tpp.isProfileCompleted) == 1) || (parseInt(tpp.totalFilledFields) == (parseInt(tpp.totalFields) - 1) && parseInt(tpp.generalAvailabilityCount) == 0)) {
+                                $('.profile-setting-js').addClass('is-completed');
+                            } else {
+                                $('.profile-setting-js').removeClass('is-completed');
+                            }
 
-							break;
+                            break;
 
-					}
-				});
-			}
+                    }
+                });
+            }
 
-		}, { fOutMode: 'json' });
-	}
+        }, {fOutMode: 'json'});
+    }
 
-	changeEmailForm = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Account', 'changeEmailForm'), '', function (t) {
-			$(dv).html(t);
-		});
-	};
+    changeEmailForm = function () {
+        $(dv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Account', 'changeEmailForm'), '', function (t) {
+            $(dv).html(t);
+        });
+    };
 
-	bankInfoForm = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'bankInfoForm'), '', function (t) {
-			$(dv).html(t);
+    bankInfoForm = function () {
+        $(dv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Teacher', 'bankInfoForm'), '', function (t) {
+            $(dv).html(t);
 
-		});
-	};
+        });
+    };
 
-	setUpBankInfo = function (frm) {
-		if (!$(frm).validate()) return;
-		var data = fcom.frmData(frm);
-		$.loader.show();
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpBankInfo'), data, function (t) {
-			$.loader.hide();
-		});
-	};
+    setUpBankInfo = function (frm) {
+        if (!$(frm).validate())
+            return;
+        var data = fcom.frmData(frm);
+        $.loader.show();
+        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpBankInfo'), data, function (t) {
+            $.loader.hide();
+        });
+    };
 
-	paypalEmailAddressForm = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'paypalEmailAddressForm'), '', function (t) {
-			$(dv).html(t);
-			$('#innerTabs > li').removeClass('is-active');
-			$('#innerTabs > li:nth-child(2)').addClass('is-active');
-		});
-	};
+    paypalEmailAddressForm = function () {
+        $(dv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Teacher', 'paypalEmailAddressForm'), '', function (t) {
+            $(dv).html(t);
+            $('#innerTabs > li').removeClass('is-active');
+            $('#innerTabs > li:nth-child(2)').addClass('is-active');
+        });
+    };
 
-	setUpPaypalInfo = function (frm) {
-		if (!$(frm).validate()) return;
-		var data = fcom.frmData(frm);
-		$.loader.show();
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpPaypalInfo'), data, function (t) {
-			$.loader.hide();
-		});
-	};
+    setUpPaypalInfo = function (frm) {
+        if (!$(frm).validate())
+            return;
+        var data = fcom.frmData(frm);
+        $.loader.show();
+        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpPaypalInfo'), data, function (t) {
+            $.loader.hide();
+        });
+    };
 
-	setUpPassword = function (frm) {
-		if (!$(frm).validate()) return;
-		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpPassword'), data, function (t) {
-			changePasswordForm();
-		});
-	};
+    setUpPassword = function (frm) {
+        if (!$(frm).validate())
+            return;
+        var data = fcom.frmData(frm);
+        fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpPassword'), data, function (t) {
+            changePasswordForm();
+        });
+    };
 
-	setUpEmail = function (frm) {
-		if (!$(frm).validate()) return;
-		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpEmail'), data, function (t) {
-			changeEmailForm();
-		});
-	};
+    setUpEmail = function (frm) {
+        if (!$(frm).validate())
+            return;
+        var data = fcom.frmData(frm);
+        fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpEmail'), data, function (t) {
+            changeEmailForm();
+        });
+    };
 
-	profileInfoForm = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Account', 'ProfileInfoForm'), '', function (t) {
-			$(dv).html(t);
-			if (userIsTeacher) {
-				getTeacherProfileProgress();
-			}
-		});
-	};
+    profileInfoForm = function () {
+        $(dv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Account', 'ProfileInfoForm'), '', function (t) {
+            $(dv).html(t);
+            if (userIsTeacher) {
+                getTeacherProfileProgress();
+            }
+        });
+    };
 
-	setUpProfileInfo = function (frm, gotoProfileImageForm) {
-		if (!$(frm).validate()) {
-			$("html, body").animate({ scrollTop: $(".error").eq(0).offset().top - 100 }, "slow");
-			return false;
-		}
-		$.loader.show();
-		var data = fcom.frmData(frm);
-		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileInfo'), data, function (t) {
-			setTimeout(function () {
-				$.systemMessage.close();
-			}, 3000);
-			$.loader.hide();
-			if (isCometChatMeetingToolActive) {
-				name = frm.user_first_name.value + " " + frm.user_last_name.value;
-				userSeoUrl = '';
-				if (frm.user_url_name) {
-					userSeoUrl = userSeoBaseUrl + frm.user_url_name.value;
-				}
-				updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
-			}
+    setUpProfileInfo = function (frm, gotoProfileImageForm) {
+        if (!$(frm).validate()) {
+            $("html, body").animate({scrollTop: $(".error").eq(0).offset().top - 100}, "slow");
+            return false;
+        }
+        $.loader.show();
+        var data = fcom.frmData(frm);
+        fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileInfo'), data, function (t) {
+            setTimeout(function () {
+                $.systemMessage.close();
+            }, 3000);
+            $.loader.hide();
+            if (isCometChatMeetingToolActive) {
+                name = frm.user_first_name.value + " " + frm.user_last_name.value;
+                userSeoUrl = '';
+                if (frm.user_url_name) {
+                    userSeoUrl = userSeoBaseUrl + frm.user_url_name.value;
+                }
+                updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
+            }
 
-			if (userIsTeacher) {
-				getTeacherProfileProgress();
-			}
+            if (userIsTeacher) {
+                getTeacherProfileProgress();
+            }
 
-			if (gotoProfileImageForm) {
-				$('.profile-imag-li').click();
-			}
-			// else{
-			// 	getLangProfileInfoForm(1);
-			// }
-			return true;
-		});
-	};
+            if (gotoProfileImageForm) {
+                $('.profile-imag-li').click();
+            }
+            // else{
+            // 	getLangProfileInfoForm(1);
+            // }
+            return true;
+        });
+    };
 
-	teacherPreferencesForm = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherPreferencesForm'), '', function (t) {
-			$(dv).html(t);
-			if (userIsTeacher) {
-				getTeacherProfileProgress();
-			}
-		});
-	};
-
-
-	setupTeacherPreferences = function (frm, goAvailablityForm) {
-		if (!$(frm).validate()) return;
-		var data = fcom.frmData(frm);
-		$.loader.show();
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function (t) {
-			//$.mbsmessage.close();
-			$.loader.hide();
-			if (goAvailablityForm) {
-				$('.general-availability-js').trigger('click');
-				window.location = fcom.makeUrl('Teacher', 'availability');
-			} else if (userIsTeacher) {
-				getTeacherProfileProgress();
-			}
+    teacherPreferencesForm = function () {
+        $(dv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Teacher', 'teacherPreferencesForm'), '', function (t) {
+            $(dv).html(t);
+            if (userIsTeacher) {
+                getTeacherProfileProgress();
+            }
+        });
+    };
 
 
-		});
-	};
-
-	teacherLanguagesForm = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherLanguagesForm'), '', function (t) {
-			$(dv).html(t);
-			teachLangs = $('[name^=teach_lang_id]').map(function () {
-				return this.value
-			}).get();
-
-			if (userIsTeacher) {
-				getTeacherProfileProgress();
-			}
-		});
-	};
-
-	updateCometChatUser = function (userId, name, avatarURL, profileURL) {
-		if (!isCometChatMeetingToolActive) {
-			return true;
-		}
-		var settings = {
-			"async": true,
-			"crossDomain": true,
-			"url": "https://api.cometondemand.net/api/v2/updateUser",
-			"method": "POST",
-			"headers": {
-				"api-key": chat_api_key,
-				"content-type": "application/x-www-form-urlencoded",
-			},
-			"data": {
-				"UID": userId,
-				"name": name,
-				"avatarURL": avatarURL,
-				"profileURL": profileURL,
-			}
-		}
-
-		$.ajax(settings).done(function (response) {
-			console.log(response);
-		});
-	};
-
-	setupTeacherLanguages = function (frm, goToPriceForm) {
-		if (!$(frm).validate()) return;
-		var data = fcom.frmData(frm);
-		var newTeachLangs = $('[name^=teach_lang_id]').map(function () {
-			return this.value
-		}).get();
-
-		var difference = [];
-		jQuery.grep(newTeachLangs, function (el) {
-			if (jQuery.inArray(el, teachLangs) == -1) difference.push(el);
-		});
-
-		if (difference.length <= 0) {
-			$.loader.show();
-			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
-				$.loader.hide();
-				if (goToPriceForm) {
-					$('.teacher-tech-lang-price-js').trigger('click');
-				} else {
-					getTeacherProfileProgress();
-				}
-			});
-			return;
-		}
-
-		$.confirm({
-			title: langLbl.Confirm,
-			content: langLbl.languageUpdateAlert,
-			buttons: {
-				Proceed: {
-					text: langLbl.Proceed,
-					btnClass: 'btn btn--primary',
-					keys: ['enter', 'shift'],
-					action: function () {
-						$.loader.show();
-						fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
-							$.loader.hide();
-							getTeacherProfileProgress();
-						});
-					}
-				},
-				Quit: {
-					text: langLbl.Quit,
-					btnClass: 'btn btn--secondary',
-					keys: ['enter', 'shift'],
-					action: function () {
-					}
-				}
-			}
-		});
-	};
-
-	setPreferredDashboad = function (id) {
-		fcom.updateWithAjax(fcom.makeUrl('Account', 'setPrefferedDashboard', [id]), '', function (res) {
-			if (userIsTeacher) {
-				getTeacherProfileProgress();
-			}
-		});
-	};
-
-	changeProficiency = function (obj, langId) {
-		langId = parseInt(langId);
-		if (langId <= 0) {
-			return;
-		}
-		let value = obj.value;
-		slanguageSection = '.slanguage-' + langId;
-		slanguageCheckbox = '.slanguage-checkbox-' + langId;
-		if (value == '') {
-			$(slanguageSection).find('.badge-js').remove();
-			$(slanguageSection).removeClass('is-selected');
-			$(slanguageCheckbox).prop('checked', false);
-		} else {
-			$(slanguageSection).addClass('is-selected');
-			$(slanguageCheckbox).prop('checked', true);
-			$(slanguageSection).find('.badge-js').remove();
-			$(slanguageSection).find('.selection__trigger-label').append('<span class="badge color-secondary badge-js  badge--round badge--small margin-0">' + obj.selectedOptions[0].innerHTML + '</span>');
-		}
-	};
+    setupTeacherPreferences = function (frm, goAvailablityForm) {
+        if (!$(frm).validate())
+            return;
+        var data = fcom.frmData(frm);
+        $.loader.show();
+        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherPreferences'), data, function (t) {
+            //$.mbsmessage.close();
+            $.loader.hide();
+            if (goAvailablityForm) {
+                $('.general-availability-js').trigger('click');
+                window.location = fcom.makeUrl('Teacher', 'availability');
+            } else if (userIsTeacher) {
+                getTeacherProfileProgress();
+            }
 
 
-	teacherSettingsForm = function (showAdminSlab) {
-		$(dv).html(fcom.getLoader());
-		showAdminSlab = (showAdminSlab) ? 1 : 0;
-		data = "showAdminSlab=" + showAdminSlab;
-		fcom.ajax(fcom.makeUrl('Teacher', 'settingsInfoForm'), data, function (t) {
-			$(dv).html(t);
-			if (userIsTeacher) {
-				getTeacherProfileProgress();
-			}
-		});
-	};
+        });
+    };
 
-	setUpTeacherSettings = function (frm, goToExpForm) {
-		if (!$(frm).validate()) {
-			$('.price-box__body').removeClass('d-none');
-			$('.price-box .arrow-toggle').addClass('is-active');
-			let errorlist = $('.errorlist').first().parents('.price-box');
-			$("html, body").animate({
+    teacherLanguagesForm = function () {
+        $(dv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Teacher', 'teacherLanguagesForm'), '', function (t) {
+            $(dv).html(t);
+            teachLangs = $('[name^=teach_lang_id]').map(function () {
+                return this.value
+            }).get();
+
+            if (userIsTeacher) {
+                getTeacherProfileProgress();
+            }
+        });
+    };
+
+    updateCometChatUser = function (userId, name, avatarURL, profileURL) {
+        if (!isCometChatMeetingToolActive) {
+            return true;
+        }
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "https://api.cometondemand.net/api/v2/updateUser",
+            "method": "POST",
+            "headers": {
+                "api-key": chat_api_key,
+                "content-type": "application/x-www-form-urlencoded",
+            },
+            "data": {
+                "UID": userId,
+                "name": name,
+                "avatarURL": avatarURL,
+                "profileURL": profileURL,
+            }
+        }
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+    };
+
+    setupTeacherLanguages = function (frm, goToPriceForm) {
+        if (!$(frm).validate())
+            return;
+        var data = fcom.frmData(frm);
+        var newTeachLangs = $('[name^=teach_lang_id]').map(function () {
+            return this.value
+        }).get();
+
+        var difference = [];
+        jQuery.grep(newTeachLangs, function (el) {
+            if (jQuery.inArray(el, teachLangs) == -1)
+                difference.push(el);
+        });
+
+        if (difference.length <= 0) {
+            $.loader.show();
+            fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
+                $.loader.hide();
+                if (goToPriceForm) {
+                    $('.teacher-tech-lang-price-js').trigger('click');
+                } else {
+                    getTeacherProfileProgress();
+                }
+            });
+            return;
+        }
+
+        $.confirm({
+            title: langLbl.Confirm,
+            content: langLbl.languageUpdateAlert,
+            buttons: {
+                Proceed: {
+                    text: langLbl.Proceed,
+                    btnClass: 'btn btn--primary',
+                    keys: ['enter', 'shift'],
+                    action: function () {
+                        $.loader.show();
+                        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
+                            $.loader.hide();
+                            getTeacherProfileProgress();
+                        });
+                    }
+                },
+                Quit: {
+                    text: langLbl.Quit,
+                    btnClass: 'btn btn--secondary',
+                    keys: ['enter', 'shift'],
+                    action: function () {
+                    }
+                }
+            }
+        });
+    };
+
+    setPreferredDashboad = function (id) {
+        fcom.updateWithAjax(fcom.makeUrl('Account', 'setPrefferedDashboard', [id]), '', function (res) {
+            if (userIsTeacher) {
+                getTeacherProfileProgress();
+            }
+        });
+    };
+
+    changeProficiency = function (obj, langId) {
+        langId = parseInt(langId);
+        if (langId <= 0) {
+            return;
+        }
+        let value = obj.value;
+        slanguageSection = '.slanguage-' + langId;
+        slanguageCheckbox = '.slanguage-checkbox-' + langId;
+        if (value == '') {
+            $(slanguageSection).find('.badge-js').remove();
+            $(slanguageSection).removeClass('is-selected');
+            $(slanguageCheckbox).prop('checked', false);
+        } else {
+            $(slanguageSection).addClass('is-selected');
+            $(slanguageCheckbox).prop('checked', true);
+            $(slanguageSection).find('.badge-js').remove();
+            $(slanguageSection).find('.selection__trigger-label').append('<span class="badge color-secondary badge-js  badge--round badge--small margin-0">' + obj.selectedOptions[0].innerHTML + '</span>');
+        }
+    };
+
+
+    teacherSettingsForm = function (showAdminSlab) {
+        $(dv).html(fcom.getLoader());
+        showAdminSlab = (showAdminSlab) ? 1 : 0;
+        data = "showAdminSlab=" + showAdminSlab;
+        fcom.ajax(fcom.makeUrl('Teacher', 'settingsInfoForm'), data, function (t) {
+            $(dv).html(t);
+            if (userIsTeacher) {
+                getTeacherProfileProgress();
+            }
+        });
+    };
+
+    setUpTeacherSettings = function (frm, goToExpForm) {
+        if (!$(frm).validate()) {
+            $('.price-box__body').removeClass('d-none');
+            $('.price-box .arrow-toggle').addClass('is-active');
+            let errorlist = $('.errorlist').first().parents('.price-box');
+            $("html, body").animate({
                 scrollTop: errorlist.offset().top
             }, 1200);
 			return;
@@ -708,7 +715,7 @@ $(document).ready(function () {
 				if (json.status == 1) {
 					$("#avatar-action").val("avatar");
 					var fn = "sumbmitProfileImage();";
-					$.facebox('<div class="popup__body"><div class="img-container "><img alt="Picture" src="" class="img_responsive" id="new-img" /></div><div class="img-description"><div class="rotator-info">Use Mouse Scroll to Adjust Image</div><div class="-align-center rotator-actions"><a href="javascript:void(0)" class="btn btn--primary btn--sm" title="' + $("#rotate_left").val() + '" data-option="-90" data-method="rotate">' + $("#rotate_left").val() + '</a>&nbsp;<a onclick=' + fn + ' href="javascript:void(0)" class="btn btn--secondary btn--sm">' + $("#update_profile_img").val() + '</a>&nbsp;<a href="javascript:void(0)" class="btn btn--primary btn--sm rotate-right" title="' + $("#rotate_right").val() + '" data-option="90" data-method="rotate">' + $("#rotate_right").val() + '</a></div></div></div>', '');
+					$.facebox('<div class="popup__body"><div class="img-container "><img alt="Picture" src="" class="img_responsive" id="new-img" /></div><div class="img-description"><div class="rotator-info" style="padding:8px;text-align:center;">' + useMouseScroll + '</div><div class="-align-center rotator-actions"><a href="javascript:void(0)" class="btn btn--primary btn--sm" title="' + $("#rotate_left").val() + '" data-option="-90" data-method="rotate">' + $("#rotate_left").val() + '</a>&nbsp;<a onclick=' + fn + ' href="javascript:void(0)" class="btn btn--secondary btn--sm">' + $("#update_profile_img").val() + '</a>&nbsp;<a href="javascript:void(0)" class="btn btn--primary btn--sm rotate-right" title="' + $("#rotate_right").val() + '" data-option="90" data-method="rotate">' + $("#rotate_right").val() + '</a></div></div></div>', '');
 					$('#new-img').attr('src', json.file);
 					$('#new-img').width(wid);
 					cropImage($('#new-img'));

@@ -51,7 +51,11 @@ class ReportIssueController extends LoggedUserController
         $log = end($logs);
         $esclateHours = FatApp::getConfig('CONF_ESCLATE_ISSUE_HOURS_AFTER_RESOLUTION');
         $esclateDate = strtotime($issue['repiss_updated_on'] . " +" . $esclateHours . " hour");
-        $canEsclate = ($log['reislo_added_by'] != $userId && $esclateDate > strtotime(date('Y-m-d H:i:s')) && $issue['repiss_status'] == ReportedIssue::STATUS_RESOLVED);
+        $canEsclate = false;
+        if (($esclateDate > strtotime(date('Y-m-d H:i:s')) && ($issue['repiss_status'] == ReportedIssue::STATUS_RESOLVED) &&
+                (($log['reislo_added_by_type'] ?? 0) == ReportedIssue::USER_TYPE_TEACHER) && (($log['reislo_added_by'] ?? 0) != $userId))) {
+            $canEsclate = true;
+        }
         $this->set('logs', $logs);
         $this->set('issue', $issue);
         $this->set('canEsclate', $canEsclate);
@@ -63,7 +67,7 @@ class ReportIssueController extends LoggedUserController
     private function getForm()
     {
         $frm = new Form('reportIssueFrm');
-        $options = IssueReportOptions::getOptionsArray($this->siteLangId, User::USER_TYPE_LEANER);
+        $options = IssueReportOptions::getOptionsArray($this->siteLangId, ReportedIssue::USER_TYPE_LEARNER);
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Subject'), 'repiss_title', $options);
         $fld->requirements()->setRequired(true);
         $fld = $frm->addTextArea(Label::getLabel('LBL_Comment'), 'repiss_comment', '');
