@@ -27,27 +27,22 @@ $slideshow: "slideshow";
         }
     }
 
-}
+    
 
 .slick-dots {
     position: absolute;
-    #{theme('direction.left','value')}: 50%;
+   left: 50%;
     transform: translateX(-50%);
-    li{
-        button{
-            width: 30px;
-            height: 6px;
-            border: none;
-            
-        }
+    button{
+        width: 30px;
+      background: rgba(255, 255, 255, 0.6);
         
-    }
-
-    @media(max-width: theme('breakpoints.xxl','value')){
-        bottom: 14px;
-    }
-    
+    }    
 }
+
+}
+
+
 
 .slideshow-content{
     position: absolute;
@@ -177,7 +172,7 @@ $slideshow: "slideshow";
             height: 20px;
             top: 50%;
             transform: translateY(-50%);
-            left: 20px;
+            #{theme('direction.left','value')}: 20px;
             opacity: 0.3;
         }
         
@@ -665,7 +660,6 @@ $tile: 'tile';
         }
 
         @media(max-width: theme('breakpoints.md','value')){
-            margin-#{theme('direction.right','value')}: 0;
             margin-bottom: theme('margin.4');
         }
         .icon--location{
@@ -886,10 +880,10 @@ $card: 'card';
 }
 
 .slick-next{
-    #{theme('direction.right','value')}: -170px;
+    right: -170px;
 }
 .slick-prev{
-    #{theme('direction.left','value')}: -170px;
+    left: -170px;
 }
 
 .slick-arrow{
@@ -912,10 +906,10 @@ $card: 'card';
 
         @media(min-width:theme('breakpoints.xxxl','value')){
             .slick-next{
-                #{theme('direction.right','value')}: -10%;
+               right: -10%;
 
             }.slick-prev{
-                #{theme('direction.left','value')}: -10%;
+                left: -10%;
             }
             .slick-arrow{
                 &::before{
@@ -927,28 +921,28 @@ $card: 'card';
 
         @media(min-width:theme('breakpoints.xl','value')) and (max-width:theme('breakpoints.xxxl','value')){
             .slick-next{
-                #{theme('direction.right','value')}: -5%;
+               right: -5%;
 
             }.slick-prev{
-                #{theme('direction.left','value')}: -5%;
+               left: -5%;
             }
         }
 
         @media(min-width:theme('breakpoints.md','value')) and (max-width:theme('breakpoints.xl','value')){
             .slick-next{
-                #{theme('direction.right','value')}: -1.2rem;
+               right: -1.2rem;
 
             }.slick-prev{
-                #{theme('direction.left','value')}: -1.2rem;
+               left: -1.2rem;
             }
         }
 
         @media(max-width:theme('breakpoints.sm','value')){
             .slick-next{
-                #{theme('direction.right','value')}: -15px;
+                right: -15px;
 
             }.slick-prev{
-                #{theme('direction.left','value')}: -15px;
+              left: -15px;
             }
         }
         
@@ -1692,6 +1686,8 @@ $card: 'card';
         box-shadow: 0 0 5px rgba(0,0,0,0.10);
         top: 100%;
         transition: 0.3s all ease-in-out;
+        max-height: 235px;
+        overflow: auto;
         @media(max-width: theme('breakpoints.md','value')){
             top: unset;
             bottom: 80%;
@@ -1706,6 +1702,7 @@ $card: 'card';
                     padding: var(--padding-3);
                     display: block;
                     color: var(--color-dark);
+                    width: 100%;
                 }
             }
             .is--active{

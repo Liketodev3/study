@@ -43,6 +43,7 @@
     }
 }
 
+#frmLoginPopUp .caption-wraper .field_label:empty, #frmLoginPopUp .caption-wraper:empty, #frmRegisterPopUp .caption-wraper .field_label:empty, #frmRegisterPopUp .caption-wraper:empty{display: none;}
 
 @media  (min-width: 767px) {
 	

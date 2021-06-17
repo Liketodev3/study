@@ -763,9 +763,12 @@ $dashboard-calendar: "dashboard-calendar";
             @media(min-width:theme('breakpoints.xxl','value')){
                 font-size: var(--font-size-h5);
             }
+            @media(min-width:theme('breakpoints.lg','value')) and (max-width:theme('breakpoints.xl','value')){
+                font-size: theme('font.size.h6');
+            }
         }
         @media(max-width:theme('breakpoints.md','value')){
-            padding: var(--padding-5);
+            padding: var(--padding-5) var(--padding-1);
             text-align: center;
             h4{
                 margin-bottom: var(--margin-4);
@@ -779,6 +782,9 @@ $dashboard-calendar: "dashboard-calendar";
             display: flex;
             align-items: center;
             margin-#{theme('direction.right','value')}: theme('margin.10');
+            @media(max-width:theme('breakpoints.xl','value')){
+                margin-#{theme('direction.right','value')}: theme('margin.4'); 
+            }
             &:last-child{
                 margin-#{theme('direction.right','value')}: theme('margin.0'); 
             }
@@ -1003,4 +1009,7 @@ $dashboard-calendar: "dashboard-calendar";
 
 .fc-timegrid-event{
     border-radius: 0;
+}
+.fc .fc-toolbar{
+    flex-wrap: wrap;
 }

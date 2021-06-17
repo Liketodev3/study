@@ -2,7 +2,7 @@
 
 /*+========================SECTION============================*/
 .section {
-    padding: calc(3rem + 38px) 0;
+    padding: 4rem 0;
     position: relative;
     @media(max-width: theme('breakpoints.md','value')) {
         padding: theme('padding.12') 0;

@@ -74,34 +74,35 @@ foreach ($userTeachLangs as $key => $value) {
                             </div>
                             <div class="har-rate"><?php echo Label::getLabel('LBL_Hourly_Rate'); ?><b><?php echo CommonHelper::displayMoneyFormat($teacher['minPrice']); ?> - <?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></b></div>
                             <div class="tutor-lang"><b><?php echo Label::getLabel('LBL_Teaches:'); ?></b> <?php echo implode(', ', $teacher['teachLanguages']); ?></div>
-                            <div class="detail-actions">
-                                <a href="javascript:void(0)" onclick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" class="btn btn--bordered color-black <?php echo ($teacher['uft_id']) ? 'is--active' : ''; ?>">
-                                    <svg class="icon icon--heart">
-                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#heart'; ?>"></use>
-                                    </svg>
-                                    <?php echo Label::getLabel('LBL_Favorite'); ?>
-                                </a>
-                                <div class="toggle-dropdown">
-                                    <a href="#" class="btn btn--bordered color-black toggle-dropdown__link-js">
-                                        <svg class="icon icon--share">
-                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#share'; ?>"></use>
-                                        </svg>
-                                        <?php echo Label::getLabel('LBL_Share', $siteLangId); ?>
-                                    </a>
-                                    <div class="toggle-dropdown__target toggle-dropdown__target-js">
-                                        <h6><?php echo Label::getLabel('LBL_Share_On', $siteLangId); ?></h6>
-                                        <ul class="social--share clearfix">
-                                            <li class="social--fb"><span class='st_facebook_large' displayText='Facebook'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_01.svg"></span></li>
-                                            <li class="social--tw"><span class='st_twitter_large' displayText='Tweet'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_02.svg"></span></li>
-                                            <li class="social--pt"><span class='st_pinterest_large' displayText='Pinterest'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_05.svg"></span></li>
-                                            <li class="social--mail"><span class='st_email_large' displayText='Email'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_06.svg"></span></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <a href="#lessons-prices" class="color-primary btn--link scroll"><?php Label::getLabel('LBL_View_Lessons_Packages', $siteLangId); ?></a>
-                            </div>
                         </div>
                     </div>
+
+                    <div class="detail-actions">
+                            <a href="javascript:void(0)" onclick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" class="btn btn--bordered color-black <?php echo ($teacher['uft_id']) ? 'is--active' : ''; ?>">
+                                <svg class="icon icon--heart">
+                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#heart'; ?>"></use>
+                                </svg>
+                                <?php echo Label::getLabel('LBL_Favorite'); ?>
+                            </a>
+                            <div class="toggle-dropdown">
+                                <a href="#" class="btn btn--bordered color-black toggle-dropdown__link-js">
+                                    <svg class="icon icon--share">
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#share'; ?>"></use>
+                                    </svg>
+                                    <?php echo Label::getLabel('LBL_Share', $siteLangId); ?>
+                                </a>
+                                <div class="toggle-dropdown__target toggle-dropdown__target-js">
+                                    <h6><?php echo Label::getLabel('LBL_Share_On', $siteLangId); ?></h6>
+                                    <ul class="social--share clearfix">
+                                        <li class="social--fb"><span class='st_facebook_large' displayText='Facebook'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_01.svg"></span></li>
+                                        <li class="social--tw"><span class='st_twitter_large' displayText='Tweet'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_02.svg"></span></li>
+                                        <li class="social--pt"><span class='st_pinterest_large' displayText='Pinterest'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_05.svg"></span></li>
+                                        <li class="social--mail"><span class='st_email_large' displayText='Email'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_06.svg"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <a href="#lessons-prices" class="color-primary btn--link scroll"><?php Label::getLabel('LBL_View_Lessons_Packages', $siteLangId); ?></a>
+                        </div>
                 </div>
             </div>
             <div class="profile-primary">
@@ -374,7 +375,7 @@ foreach ($userTeachLangs as $key => $value) {
                                 <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
                             </a>
                             <a href="#availbility" class="color-primary btn--link scroll"><?php echo Label::getLabel('LBL_View_Full_Availbility', $siteLangId); ?></a>
-                            <div class="-gap"></div>
+                            <div class="-gap"></div><div class="-gap"></div>
 
                             <?php
                             if ($teacher['isFreeTrialEnabled']) {
