@@ -1,4 +1,4 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); 
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $teacherLanguage = key($teacher['teachLanguages']);
 
 $langId = CommonHelper::getLangId();
@@ -178,19 +178,22 @@ foreach ($userTeachLangs as $key => $value) {
                         ?>
                     </div>
                 </div>
-                <div class="panel-cover panel--calendar" >
+                <div class="panel-cover panel--calendar">
                     <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
                         <h3><?php echo Label::getLabel('LBL_Schedule', $siteLangId) ?></h3>
                     </div>
                     <div class="panel-cover__body panel__body-target panel__body-target-js">
-                        <div  class="calendar-wrapper">
+                        <div class="calendar-wrapper">
                             <div id="availbility" class="calendar-wrapper__body">
-                               
+
                             </div>
                         </div>
                         <div class="-gap"></div>
                         <div class="note note--blank note--vertical-border">
-                            <svg class="icon icon--sound"><use xlink:href="/YoCoach/images/sprite.yo-coach.svg#sound"></use></svg><p><b>Note:</b> Not finding your ideal time? <a class="bold-600" href="#">Contact</a> this teacher to request a slot outside of their current schedule</p>
+                            <svg class="icon icon--sound">
+                                <use xlink:href="/YoCoach/images/sprite.yo-coach.svg#sound"></use>
+                            </svg>
+                            <p><b>Note:</b> Not finding your ideal time? <a class="bold-600" href="#">Contact</a> this teacher to request a slot outside of their current schedule</p>
                         </div>
                     </div>
                 </div>
@@ -339,19 +342,14 @@ foreach ($userTeachLangs as $key => $value) {
             </div>
             <div class="profile-secondary">
                 <div class="right-panel">
-                    <?php
-                    if ($teacher['us_video_link'] != '') {
-                        $youTubeVideoArr = explode("?v=", $teacher['us_video_link']);
-                        if (count($youTubeVideoArr) > 1) {
-                    ?>
-                            <div class="dummy-video">
-                                <div class="video-media ratio ratio--16by9">
-                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $youTubeVideoArr[1]; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                                </div>
+                    <?php if (!empty(CommonHelper::validateIntroVideoLink($teacher['us_video_link']))) { ?>
+                        <div class="dummy-video">
+                            <div class="video-media ratio ratio--16by9">
+                                <iframe width="100%" height="100%" src="<?php echo CommonHelper::validateIntroVideoLink($teacher['us_video_link']); ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                             </div>
-                            <div class="-gap"></div>
+                        </div>
+                        <div class="-gap"></div>
                     <?php
-                        }
                     }
                     ?>
                     <div class="box box--book">

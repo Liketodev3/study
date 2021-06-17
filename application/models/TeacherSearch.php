@@ -242,7 +242,7 @@ class TeacherSearch extends SearchBase
             $record['spoken_language_names'] = $speakLangs[$record['user_id']]['slanguage_name'] ?? '';
             $record['spoken_languages_proficiency'] = $speakLangs[$record['user_id']]['utsl_proficiency'] ?? '';
             $record['testat_timeslots'] = $timeslots[$record['user_id']] ?? CommonHelper::getEmptyDaySlots();
-            $record['us_video_link'] = explode("?v=", $videos[$record['user_id']] ?? '')[1] ?? '';
+            $record['us_video_link'] = CommonHelper::validateIntroVideoLink($videos[$record['user_id']]);
             $records[$key] = $record;
         }
         return $records;
