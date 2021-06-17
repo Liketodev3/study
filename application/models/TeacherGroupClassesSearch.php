@@ -66,7 +66,7 @@ class TeacherGroupClassesSearch extends SearchBase
             $srch->addCondition('grpcls_status', '!=', TeacherGroupClasses::STATUS_CANCELLED);
         }
         $srch->setTeacherDefinedCriteria(false, false);
-        $srch->addOrder('grpcls_start_datetime', 'DESC');
+        $srch->addOrder('grpcls_start_datetime', 'ASC');
         $srch->addGroupBy('grpcls_id');
         return $srch;
     }
