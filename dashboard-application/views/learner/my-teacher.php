@@ -28,9 +28,6 @@
 										echo '<img src="'.$img.'" />';
 									}
 									?>
-									<?php /* if( $teacher['is_online'] ){ ?>
-									<span class="tag-online"></span>
-									<?php } */ ?>
 								</div> 
 							</div>
 							<!-- ] -->

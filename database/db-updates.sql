@@ -423,6 +423,12 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.18.0.20210616' WHERE `conf_na
 
 -- -------------------------------------------------- --
 
+REPLACE INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES(3, 'Browse tutor section', 3, 1, '<section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\n	<div class=\"container container--narrow\">\n		<div class=\"cta-content\">\n			<h2>Speak any language fluently with the help of professional tutors</h2><a class=\"btn btn--secondary btn--large\" href=\"/teachers\">Browse Tutors</a></div></div></section>');
+
+REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES
+(3, 1, 'Browse Tutor', '\r\n<section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\r\n	<div class=\"container container--narrow\">\r\n		<div class=\"cta-content\">\r\n			<h2>Speak any language fluently with the help of professional tutors</h2><a class=\"btn btn--secondary btn--large\" href=\"/teachers\">Browse Tutors</a></div></div></section>');
+
+
 ALTER TABLE `tbl_url_rewrites` DROP INDEX IF EXISTS `url_rewrite_original`;
 ALTER TABLE `tbl_url_rewrites` DROP INDEX IF EXISTS `url_rewrite_custom`;
 ALTER TABLE `tbl_url_rewrites` ADD UNIQUE(`urlrewrite_original`, `urlrewrite_lang_id`);
