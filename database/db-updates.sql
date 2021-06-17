@@ -415,8 +415,14 @@ DELETE FROM `tbl_content_pages_lang` WHERE `cpagelang_cpage_id` = 7;
 DELETE FROM `tbl_content_pages_block_lang` WHERE `cpblocklang_cpage_id` = 7;
 
 INSERT INTO `tbl_url_rewrites` (`urlrewrite_original`, `urlrewrite_custom`, `urlrewrite_lang_id`, `urlrewrite_http_resp_code`) VALUES
-( 'TeacherRequest', 'apply-to-teach', 1, '301'), ('TeacherRequest', 'apply-to-teach', 2, '301');
+('TeacherRequest', 'apply-to-teach', 1, '301'), ('TeacherRequest', 'apply-to-teach-ar', 2, '301');
 INSERT INTO `tbl_url_rewrites` (`urlrewrite_original`, `urlrewrite_custom`, `urlrewrite_lang_id`, `urlrewrite_http_resp_code`) VALUES
-('TeacherRequest/form', 'apply-to-teach/form', 1, '301'), ('TeacherRequest/form', 'apply-to-teach/form', 2, '301');
+('TeacherRequest/form', 'apply-to-teach/form', 1, '301'), ('TeacherRequest/form', 'apply-to-teach-ar/form', 2, '301');
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.18.0.20210616' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+
+ALTER TABLE `tbl_url_rewrites` DROP INDEX IF EXISTS `url_rewrite_original`;
+ALTER TABLE `tbl_url_rewrites` DROP INDEX IF EXISTS `url_rewrite_custom`;
+ALTER TABLE `tbl_url_rewrites` ADD UNIQUE(`urlrewrite_original`, `urlrewrite_lang_id`);
+ALTER TABLE `tbl_url_rewrites` ADD UNIQUE(`urlrewrite_custom`);

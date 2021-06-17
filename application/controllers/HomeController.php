@@ -5,17 +5,15 @@ class HomeController extends MyAppController
 
     public function index()
     {
-        if (UserAuthentication::isUserLogged()) {
-      
-            FatApp::redirectUser(CommonHelper::generateUrl('Teachers'));
-        }
         $db = FatApp::getDb();
         /* Main Slides[ */
         $srchSlide = new SlideSearch($this->siteLangId);
         $srchSlide->doNotCalculateRecords();
         $srchSlide->joinAttachedFile();
-        $srchSlide->addMultipleFields(['slide_id', 'slide_record_id', 'slide_type',
-            'IFNULL(slide_title, slide_identifier) as slide_title', 'slide_target', 'slide_url']);
+        $srchSlide->addMultipleFields([
+            'slide_id', 'slide_record_id', 'slide_type',
+            'IFNULL(slide_title, slide_identifier) as slide_title', 'slide_target', 'slide_url'
+        ]);
         $srchSlide->addOrder('slide_display_order');
         $totalSlidesPageSize = FatApp::getConfig('CONF_TOTAL_SLIDES_HOME_PAGE', FatUtility::VAR_INT, 4);
         $ppcSlides = [];
@@ -132,5 +130,4 @@ class HomeController extends MyAppController
             }
         }
     }
-
 }
