@@ -30,7 +30,7 @@ switch ($formStep) {
 }
 
 
-
+$formStep=5;
 
 ?>
 <?php echo $frm->getFormTag() ?>
