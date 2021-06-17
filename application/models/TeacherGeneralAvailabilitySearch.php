@@ -12,4 +12,8 @@ class TeacherGeneralAvailabilitySearch extends SearchBase
         }
     }
 
+    public function joinUser(){
+		$this->joinTable( User::DB_TBL, 'INNER JOIN', 'tga.tgavl_user_id = u.user_id', 'u' );
+	}
+
 }

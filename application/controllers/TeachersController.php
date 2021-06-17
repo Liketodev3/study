@@ -401,7 +401,7 @@ class TeachersController extends MyAppController
         $user_timezone = MyDate::getUserTimeZone();
         $startDateTime = MyDate::changeDateTimezone($post['start'], $user_timezone, $systemTimeZone);
         $endDateTime = MyDate::changeDateTimezone($post['end'], $user_timezone, $systemTimeZone);
-
+        
         if (strtotime($startDateTime) < strtotime(date('Y-m-d H:i:s'))) {
             FatUtility::dieJsonSuccess(0);
         }

@@ -51,6 +51,8 @@
 				startTime: moment(e.start).format('HH:mm'),
 				endTime: moment(e.end).format('HH:mm'),
 				day: moment(e.start).format('d'),
+				startDateTime: moment(e.start).format('YYYY-MM-DD HH:mm:ss'),
+				endDateTime: moment(e.end).format('YYYY-MM-DD HH:mm:ss'),
 				dayStart: moment(e.start).format('d'),
 				dayEnd: moment(e.end).format('d'),
 				classtype: e.classType,

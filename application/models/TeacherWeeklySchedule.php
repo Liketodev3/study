@@ -250,10 +250,14 @@ class TeacherWeeklySchedule extends MyAppModel
         $gaRs = $gaSrch->getResultSet();
         $gARows = $db->fetchAll($gaRs);
         $gaCount = $gaRs->totalRecords();
+       
         $generalAvail = 0;
         if ($gaCount > 0) {
             $weekStartDateDB = '2018-01-07';
+          
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStart);
+            $startTime = date('Y-m-d H:i:s', strtotime('- ' . $weekDiff . ' weeks', strtotime($startTime)));
+            prx($startTime);
             foreach ($gARows as $row) {
                 $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
                 $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']));
