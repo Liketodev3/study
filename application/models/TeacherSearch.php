@@ -232,6 +232,7 @@ class TeacherSearch extends SearchBase
         $langData = static::getTeachersLangData($langId, $teacherIds);
         $teachLangs = static::getTeachLangs($langId, $teacherIds);
         $speakLangs = static::getSpeakLangs($langId, $teacherIds);
+        $timeslots = static::getTimeslots($userId, $teacherIds);
         $videos = static::getYouTubeVideos($teacherIds);
         foreach ($records as $key => $record) {
             $record['uft_id'] = $favorites[$record['user_id']] ?? 0;
@@ -240,8 +241,8 @@ class TeacherSearch extends SearchBase
             $record['teacherTeachLanguageName'] = $teachLangs[$record['user_id']] ?? '';
             $record['spoken_language_names'] = $speakLangs[$record['user_id']]['slanguage_name'] ?? '';
             $record['spoken_languages_proficiency'] = $speakLangs[$record['user_id']]['utsl_proficiency'] ?? '';
-            $record['testat_timeslots'] = json_decode($record['testat_timeslots'], true);
-            $record['us_video_link'] = explode("?v=", $videos[$record['user_id']] ?? '')[1] ?? '';
+            $record['testat_timeslots'] = $timeslots[$record['user_id']] ?? CommonHelper::getEmptyDaySlots();
+            $record['us_video_link'] = CommonHelper::validateIntroVideoLink($videos[$record['user_id']]);
             $records[$key] = $record;
         }
         return $records;
@@ -375,6 +376,116 @@ class TeacherSearch extends SearchBase
     }
 
     /**
+     * Get Availabile Timeslots
+     * 
+     * @param array $teacherIds
+     * @return array
+     */
+    public static function getTimeslots(int $userId, array $teacherIds): array
+    {
+        if (count($teacherIds) == 0) {
+            return [];
+        }
+        $srch = new SearchBase(TeacherGeneralAvailability::DB_TBL);
+        $srch->addMultipleFields(['tgavl_day', 'tgavl_user_id',
+            'CONCAT(tgavl_date, " ", tgavl_start_time) as startdate',
+            'CONCAT(tgavl_end_date, " ", tgavl_end_time) as enddate'
+        ]);
+        $srch->addCondition('tgavl_user_id', 'IN', $teacherIds);
+        $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
+        $users = [];
+        foreach ($rows as $row) {
+            if (isset($users[$row['tgavl_user_id']])) {
+                array_push($users[$row['tgavl_user_id']], $row);
+            } else {
+                $users[$row['tgavl_user_id']] = [$row];
+            }
+        }
+        $userTimeslots = [];
+        $currentDate = date('Y-m-d H:i:s');
+        $systemTimezone = MyDate::getTimeZone();
+        $userTimezone = MyDate::getUserTimeZone($userId);
+        $userDate = MyDate::changeDateTimezone($currentDate, $userTimezone, $systemTimezone);
+        $hourDiff = MyDate::hoursDiff($currentDate, $userDate);
+        $emptySlots = CommonHelper::getEmptyDaySlots();
+        foreach ($users as $id => $user) {
+            $records = [];
+            foreach ($user as $key => $row) {
+                $row['tgavl_day'] = $row['tgavl_day'] % 6;
+                $row['startdate'] = date('Y-m-d H:i:s', strtotime($row['startdate'] . ' ' . $hourDiff . ' hour'));
+                $row['enddate'] = date('Y-m-d H:i:s', strtotime($row['enddate'] . ' ' . $hourDiff . ' hour'));
+                $tmpRecords = static::breakIntoDays($row);
+                foreach ($tmpRecords as $tmpRecord) {
+                    array_push($records, $tmpRecord);
+                }
+            }
+            $timeSlots = [
+                ['2018-01-07 00:00:00', '2018-01-07 04:00:00'], ['2018-01-07 04:00:00', '2018-01-07 08:00:00'],
+                ['2018-01-07 08:00:00', '2018-01-07 12:00:00'], ['2018-01-07 12:00:00', '2018-01-07 16:00:00'],
+                ['2018-01-07 16:00:00', '2018-01-07 20:00:00'], ['2018-01-07 20:00:00', '2018-01-08 00:00:00'],
+            ];
+            $daySlots = [];
+            foreach ($records as $row) {
+                $daySlot = [];
+                $startdate = strtotime($row['startdate']);
+                $enddate = strtotime($row['enddate']);
+                foreach ($timeSlots as $index => $slotDates) {
+                    $slotStart = strtotime($slotDates[0] . ' +' . $row['tgavl_day'] . ' day');
+                    $slotEnd = strtotime($slotDates[1] . ' +' . $row['tgavl_day'] . ' day');
+                    if ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate <= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($startdate - $enddate) / 3600);
+                    } elseif ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate >= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($startdate - $slotEnd) / 3600);
+                    } elseif ($startdate <= $slotStart && $enddate >= $slotStart && $enddate <= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($slotStart - $enddate) / 3600);
+                    } elseif ($startdate <= $slotStart && $enddate >= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($slotStart - $slotEnd) / 3600);
+                    } else {
+                        $daySlot[$index] = 0;
+                    }
+                }
+                $daySlots[$row['tgavl_day']][] = $daySlot;
+            }
+            $filledSlots = [];
+            foreach ($daySlots as $day => $slots) {
+                $arr = [0, 0, 0, 0, 0, 0];
+                foreach ($slots as $slot) {
+                    $arr[0] += $slot[0];
+                    $arr[1] += $slot[1];
+                    $arr[2] += $slot[2];
+                    $arr[3] += $slot[3];
+                    $arr[4] += $slot[4];
+                    $arr[5] += $slot[5];
+                }
+                $filledSlots['d' . $day] = $arr;
+            }
+            $flvs = [];
+            foreach ($emptySlots as $day => $esv) {
+                $flvs[$day] = $filledSlots[$day] ?? $esv;
+            }
+            $userTimeslots[$id] = $flvs;
+        }
+        return $userTimeslots;
+    }
+
+    private static function breakIntoDays(array $row, array $records = []): array
+    {
+        if (date('Y-m-d', strtotime($row['startdate'])) != date('Y-m-d', strtotime($row['enddate']))) {
+            array_push($records, [
+                'tgavl_day' => MyDate::getDayNumber($row['startdate']),
+                'startdate' => $row['startdate'],
+                'enddate' => date('Y-m-d', strtotime($row['startdate'])) . ' 23:59:59'
+            ]);
+            $newStartDate = date('Y-m-d', strtotime($row['startdate'] . ' +1 day')) . ' 00:00:00';
+            $newRow = ['tgavl_day' => MyDate::getDayNumber($newStartDate), 'startdate' => $newStartDate, 'enddate' => $row['enddate']];
+            return static::breakIntoDays($newRow, $records);
+        } else {
+            array_push($records, $row);
+            return $records;
+        }
+    }
+
+    /**
      * Get Record Count
      * to be updated as per requirements
      * 
@@ -427,4 +538,5 @@ class TeacherSearch extends SearchBase
     {
         $this->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = teacher.user_id', 'us');
     }
+
 }

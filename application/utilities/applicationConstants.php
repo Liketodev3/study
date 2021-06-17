@@ -69,6 +69,8 @@ class applicationConstants
     const DAY_FRIDAY = 5;
     const DAY_SATURDAY = 6;
 
+    const INTRODUCTION_VIDEO_LINK_REGEX = "^(https|http):\/\/(?:www\.)?youtube.com\/embed\/[A-z0-9]+";
+
     public static function getWeekDays()
     {
         return [

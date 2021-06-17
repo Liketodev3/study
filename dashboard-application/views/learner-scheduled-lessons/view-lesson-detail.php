@@ -103,7 +103,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
             <div class="col-xl-4 col-lg-4 col-sm-12">
             <div class="session-infobar__action">
                     <span class="btn btn--live" id="end_lesson_timer" style="display:none;"> </span>
-                    <button class="btn bg-red end_lesson_now" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lesson['slesson_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?>
+                    <button class="btn bg-red end_lesson_now" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lesson['sldetail_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?>
                     </button>
                 <?php if ($lesson['sldetail_learner_status'] != ScheduledLesson::STATUS_CANCELLED) { ?>
                     <?php if ($lesson['slesson_grpcls_id'] <= 0 && $lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && MyDate::hoursDiff($lesson['slesson_date'] . ' ' . $lesson['slesson_start_time']) >= FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) { ?>

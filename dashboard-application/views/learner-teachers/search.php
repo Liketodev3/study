@@ -13,7 +13,7 @@
 		</tr>
 		<?php
 		foreach ($teachers as $teacher) {
-			$teacherDetailPageUrl = CommonHelper::generateUrl('Learner', 'my-teacher', array($teacher['user_url_name'])); ?>
+			$teacherDetailPageUrl = CommonHelper::generateUrl('teachers', 'view', array($teacher['user_url_name']),CONF_WEBROOT_FRONTEND); ?>
 			<tr>
 				<td>
 					<div class="flex-cell">

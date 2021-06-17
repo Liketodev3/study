@@ -625,7 +625,7 @@ class AttachedFile extends MyAppModel
     {
         try {
             $extension = strtolower(pathinfo($filename)['extension'] ?? '');
-            if (empty($extension)) {
+            if (empty($extension) && file_exists($filename)) {
                 return mime_content_type($filename);
             }
             switch ($extension) {

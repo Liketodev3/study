@@ -52,7 +52,7 @@ $colorClass = [
                             </div>
                             <div class="list__action">
                                 <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getUserTeachLangues');" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
-                                <a href="javascript:void(0);"onclick="generateThread(<?php echo $teacher['user_id']; ?>);" class="btn btn--bordered color-primary btn--block">
+                                <a href="javascript:void(0);" onclick="generateThread(<?php echo $teacher['user_id']; ?>);" class="btn btn--bordered color-primary btn--block">
                                     <svg class="icon icon--envelope">
                                         <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
                                     </svg>
@@ -179,9 +179,11 @@ $colorClass = [
                                         </table>
                                     </div>
                                 </div>
-                                <div class="panel-content video" style="display:none;">
-                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $teacher['us_video_link']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                                </div>
+                                <?php if (!empty($teacher['us_video_link'])) { ?>
+                                    <div class="panel-content video" style="display:none;">
+                                        <iframe width="100%" height="100%" src="<?php echo $teacher['us_video_link']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                    </div>
+                                <?php } ?>
                             </div>
 
                             <div class="panel-box__foot">
