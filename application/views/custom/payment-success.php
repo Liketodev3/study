@@ -27,8 +27,8 @@
                                 <?php } elseif (!empty($lessonInfo) && ($lessonInfo['op_lpackage_is_free_trial'] == 1)) { ?>
                                     <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons', '', [], CONF_WEBROOT_DASHBOARD) . '#' . ScheduledLesson::STATUS_SCHEDULED; ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_my_Lessons'); ?></a>
                                 <?php } else { ?>
-                                    <h5><?php echo Label::getLabel('MSG_You_can_schedule_lessons_here'); ?></h5>
-                                    <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons', '', [], CONF_WEBROOT_DASHBOARD) . '#' . ScheduledLesson::STATUS_NEED_SCHEDULING; ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_my_Lessons'); ?></a>
+                                    <h5><?php echo Label::getLabel('MSG_VIEW_YOUR_ORDER'); ?></h5>
+                                    <a href="<?php echo CommonHelper::generateUrl('Learner', 'orders', [], CONF_WEBROOT_DASHBOARD); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_GO_TO_MY_ORDERS'); ?></a>
                                 <?php } ?>
                             </div>
                         </div>

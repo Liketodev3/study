@@ -30,7 +30,10 @@ $submitBtn->setFieldTagAttribute('form', $frm->getFormTagAttribute('id'));
 			</nav>
 			<div class="tabs-data">
 				<div class="padding-6 padding-bottom-0">
-				<?php echo $frm->getFormTag(); ?>
+				<?php 
+					echo $frm->getFormTag(); 
+					echo $frm->getFieldHTML('user_id'); 
+				?>
 					<div class="row">
 						<div class="col-md-6">
 							<div class="field-set">

@@ -415,8 +415,25 @@ DELETE FROM `tbl_content_pages_lang` WHERE `cpagelang_cpage_id` = 7;
 DELETE FROM `tbl_content_pages_block_lang` WHERE `cpblocklang_cpage_id` = 7;
 
 INSERT INTO `tbl_url_rewrites` (`urlrewrite_original`, `urlrewrite_custom`, `urlrewrite_lang_id`, `urlrewrite_http_resp_code`) VALUES
-( 'TeacherRequest', 'apply-to-teach', 1, '301'), ('TeacherRequest', 'apply-to-teach', 2, '301');
+('TeacherRequest', 'apply-to-teach', 1, '301'), ('TeacherRequest', 'apply-to-teach-ar', 2, '301');
 INSERT INTO `tbl_url_rewrites` (`urlrewrite_original`, `urlrewrite_custom`, `urlrewrite_lang_id`, `urlrewrite_http_resp_code`) VALUES
-('TeacherRequest/form', 'apply-to-teach/form', 1, '301'), ('TeacherRequest/form', 'apply-to-teach/form', 2, '301');
+('TeacherRequest/form', 'apply-to-teach/form', 1, '301'), ('TeacherRequest/form', 'apply-to-teach-ar/form', 2, '301');
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.18.0.20210616' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+-- -------------------------------------------------- --
+
+REPLACE INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES(3, 'Browse tutor section', 3, 1, '<section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\n	<div class=\"container container--narrow\">\n		<div class=\"cta-content\">\n			<h2>Speak any language fluently with the help of professional tutors</h2><a class=\"btn btn--secondary btn--large\" href=\"/teachers\">Browse Tutors</a></div></div></section>');
+
+REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES
+(3, 1, 'Browse Tutor', '\r\n<section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\r\n	<div class=\"container container--narrow\">\r\n		<div class=\"cta-content\">\r\n			<h2>Speak any language fluently with the help of professional tutors</h2><a class=\"btn btn--secondary btn--large\" href=\"/teachers\">Browse Tutors</a></div></div></section>');
+
+
+ALTER TABLE `tbl_url_rewrites` DROP INDEX IF EXISTS `url_rewrite_original`;
+ALTER TABLE `tbl_url_rewrites` DROP INDEX IF EXISTS `url_rewrite_custom`;
+ALTER TABLE `tbl_url_rewrites` ADD UNIQUE(`urlrewrite_original`, `urlrewrite_lang_id`);
+ALTER TABLE `tbl_url_rewrites` ADD UNIQUE(`urlrewrite_custom`);
+
+ALTER TABLE `tbl_teacher_stats` CHANGE `testat_timeslots` `testat_timeslots`  JSON CHECK (JSON_VALID(testat_timeslots));
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_EXPLORE_SUBJECTS', '1', 'Explore Languages'), ('LBL_EXPLORE_SUBJECTS', '2', 'Explore Languages');

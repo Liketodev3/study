@@ -26,24 +26,7 @@ class GroupClassesController extends MyAppController
         if (isset($post['language']) && $post['language'] !== "") {
             $srch->addCondition('grpcls_tlanguage_id', '=', $post['language']);
         }
-        if (isset($post['custom_filter'])) {
-            switch ($post['custom_filter']) {
-                case TeacherGroupClasses::FILTER_UPCOMING:
-                    $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-                    $srch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
-                    break;
-                case TeacherGroupClasses::FILTER_ONGOING:
-                    $srch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
-                    $srch->addCondition('grpcls_start_datetime', '<=', date('Y-m-d H:i:s'));
-                    $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
-                    break;
-                default:
-                    $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
-                    break;
-            }
-            $frm->fill($post);
-        }
-
+        $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
         $rs = $srch->getResultSet();
@@ -87,7 +70,6 @@ class GroupClassesController extends MyAppController
     private function getSearchForm()
     {
         $frm = new Form('frmTeacherSrch');
-        $frm->addSelectBox('', 'custom_filter', TeacherGroupClasses::getCustomFilterAr(), '', array(), Label::getLabel('LBL_ALL'));
         $frm->addSelectBox('', 'language', TeacherGroupClassesSearch::getTeachLangs($this->siteLangId), '', array(), Label::getLabel('LBL_All_Language'));
         $frm->addTextBox('', 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_Class')));
         $fld = $frm->addHiddenField('', 'page', 1);

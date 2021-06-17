@@ -3,7 +3,6 @@ defined('SYSTEM_INIT') or die('Invalid Usage.');
 $userTimezone = MyDate::getUserTimeZone();
 $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $userTimezone);
 $curDateTimeUnix =   strtotime($curDateTime);
-$frm->getField('custom_filter')->addFieldTagAttribute('form', 'group-class-search');
 ?>
 
 <div class="group-cover">
@@ -12,11 +11,6 @@ $frm->getField('custom_filter')->addFieldTagAttribute('form', 'group-class-searc
             <?php if (!empty($classes)) { ?>
                 <h4><b><?php echo $pagingArr['recordCount']; ?> </b><?php echo Label::getLabel('LBL_GROUP_CLASSES_FOR_YOU.'); ?></h4>
             <?php } ?>
-        </div>
-        <div class="sorting__box">
-            <!-- <b>Sort By:</b> -->
-            <?php echo $frm->getFieldHtml('custom_filter'); ?>
-
         </div>
     </div>
     <?php if (!empty($classes)) { ?>

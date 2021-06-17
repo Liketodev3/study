@@ -57,7 +57,7 @@ class EmailHandler extends FatModel
             $body = str_replace($key, $val, $body);
         }
         if (FatApp::getConfig('CONF_SEND_SMTP_EMAIL')) {
-            if (!$sendEmail = static::sendSmtpEmail($to, $subject, $body, '', $tpl, $langId, '', $smtp_arr)) {
+            if (!static::sendSmtpEmail($to, $subject, $body, '', $tpl, $langId, '', $smtp_arr)) {
                 return static::sendMail($to, $subject, $body, '', $tpl, $langId);
             } else {
                 return true;
@@ -612,7 +612,7 @@ class EmailHandler extends FatModel
             $this->error = Label::getLabel('MSG_Invalid_Request', $this->commonLangId);
             return false;
         }
-        $subjectIds = json_decode($reqData['utrvalue_user_teach_slanguage_id']);
+        $subjectIds = json_decode($reqData['utrvalue_user_teach_slanguage_id'], true);
         $teachingLanguagesArr = TeachingLanguage::getAllLangs($this->commonLangId);
         $subjectNames = array_map(
                 function ($n) use ($teachingLanguagesArr) {

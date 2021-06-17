@@ -125,16 +125,11 @@
                                 <dt><?php echo Label::getLabel('LBL_Profile_info', $adminLangId); ?></dt>
                                 <dd><?php echo $row['utrvalue_user_profile_info']; ?> &nbsp; </dd>
                             </dl>
-                            <!--<dl class="list">
-                                    <dt><?php echo Label::getLabel('LBL_Teaching_Language', $adminLangId); ?></dt>
-                                    <dd><?php echo $spokenLanguagesArr[$row['utrvalue_user_teach_slanguage_id']]; ?></dd>
-                            </dl> -->
 
                             <dl class="list">
                                 <dt><?php echo Label::getLabel('LBL_Teaching_Language', $adminLangId); ?></dt>
                                 <dd>
                                     <?php
-                                    //print_r( $row['utrvalue_user_teach_slanguage_id'] );
                                     if (isset($row['utrvalue_user_teach_slanguage_id']) && !empty($row['utrvalue_user_teach_slanguage_id']) && is_array($row['utrvalue_user_teach_slanguage_id'])) {
                                         foreach ($row['utrvalue_user_teach_slanguage_id'] as $key => $val) {
                                             echo $TeachingLanguagesArr[$val] . ', ';

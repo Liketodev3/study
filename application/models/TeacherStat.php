@@ -154,81 +154,9 @@ class TeacherStat extends FatModel
     /**
      * testat_availability
      */
-    public function setAvailability(array $post)
+    public function setAvailability(int $available)
     {
-        $availability = json_decode($post['data'] ?? '', true);
-        $emptySlots = CommonHelper::getEmptyDaySlots();
-        $data = ['testat_availability' => 0, 'testat_timeslots' => json_encode($emptySlots)];
-        if (!empty($availability)) {
-            $srch = new SearchBase(TeacherGeneralAvailability::DB_TBL);
-            $srch->addMultipleFields([
-                'tgavl_day',
-                'CONCAT(tgavl_date, " ", tgavl_start_time) as startdate',
-                'CONCAT(tgavl_end_date, " ", tgavl_end_time) as enddate'
-            ]);
-            $srch->addCondition('tgavl_user_id', '=', $this->userId);
-            $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
-            $records = [];
-            $currentDate = date('Y-m-d H:i:s');
-            $systemTimezone = MyDate::getTimeZone();
-            $userTimezone = MyDate::getUserTimeZone();
-            $userDate = MyDate::changeDateTimezone($currentDate, $userTimezone, $systemTimezone);
-            $hourDiff = MyDate::hoursDiff($currentDate, $userDate);
-            foreach ($rows as $key => $row) {
-                $row['tgavl_day'] = $row['tgavl_day'] % 6;
-                $row['startdate'] = date('Y-m-d H:i:s', strtotime($row['startdate'] . ' ' . $hourDiff . ' hour'));
-                $row['enddate'] = date('Y-m-d H:i:s', strtotime($row['enddate'] . ' ' . $hourDiff . ' hour'));
-                $tmpRecords = $this->breakIntoDays($row);
-                foreach ($tmpRecords as $tmpRecord) {
-                    array_push($records, $tmpRecord);
-                }
-            }
-            $timeSlots = [
-                ['2018-01-07 00:00:00', '2018-01-07 04:00:00'], ['2018-01-07 04:00:00', '2018-01-07 08:00:00'],
-                ['2018-01-07 08:00:00', '2018-01-07 12:00:00'], ['2018-01-07 12:00:00', '2018-01-07 16:00:00'],
-                ['2018-01-07 16:00:00', '2018-01-07 20:00:00'], ['2018-01-07 20:00:00', '2018-01-08 00:00:00'],
-            ];
-            $daySlots = [];
-            foreach ($records as $row) {
-                $daySlot = [];
-                $startdate = strtotime($row['startdate']);
-                $enddate = strtotime($row['enddate']);
-                foreach ($timeSlots as $index => $slotDates) {
-                    $slotStart = strtotime($slotDates[0] . ' +' . $row['tgavl_day'] . ' day');
-                    $slotEnd = strtotime($slotDates[1] . ' +' . $row['tgavl_day'] . ' day');
-                    if ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate <= $slotEnd) {
-                        $daySlot[$index] = ceil(abs($startdate - $enddate) / 3600);
-                    } elseif ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate >= $slotEnd) {
-                        $daySlot[$index] = ceil(abs($startdate - $slotEnd) / 3600);
-                    } elseif ($startdate <= $slotStart && $enddate >= $slotStart && $enddate <= $slotEnd) {
-                        $daySlot[$index] = ceil(abs($slotStart - $enddate) / 3600);
-                    } elseif ($startdate <= $slotStart && $enddate >= $slotEnd) {
-                        $daySlot[$index] = ceil(abs($slotStart - $slotEnd) / 3600);
-                    } else {
-                        $daySlot[$index] = 0;
-                    }
-                }
-                $daySlots[$row['tgavl_day']][] = $daySlot;
-            }
-            $filledSlots = [];
-            foreach ($daySlots as $day => $slots) {
-                $arr = [0, 0, 0, 0, 0, 0];
-                foreach ($slots as $slot) {
-                    $arr[0] += $slot[0];
-                    $arr[1] += $slot[1];
-                    $arr[2] += $slot[2];
-                    $arr[3] += $slot[3];
-                    $arr[4] += $slot[4];
-                    $arr[5] += $slot[5];
-                }
-                $filledSlots['d' . $day] = $arr;
-            }
-            $flvs = [];
-            foreach ($emptySlots as $day => $esv) {
-                $flvs[$day] = $filledSlots[$day] ?? $esv;
-            }
-            $data = ['testat_availability' => 1, 'testat_timeslots' => json_encode($flvs)];
-        }
+        $data = ['testat_availability' => $available];
         $record = new TableRecord('tbl_teacher_stats');
         $record->setFldValue('testat_user_id', $this->userId);
         $record->assignValues($data);
@@ -237,23 +165,6 @@ class TeacherStat extends FatModel
             return false;
         }
         return true;
-    }
-
-    private function breakIntoDays(array $row, array $records = []): array
-    {
-        if (date('Y-m-d', strtotime($row['startdate'])) != date('Y-m-d', strtotime($row['enddate']))) {
-            array_push($records, [
-                'tgavl_day' => $row['tgavl_day'],
-                'startdate' => $row['startdate'],
-                'enddate' => date('Y-m-d', strtotime($row['startdate'])) . ' 23:59:59'
-            ]);
-            $newStartDate = date('Y-m-d', strtotime($row['startdate'] . ' +1 day')) . ' 00:00:00';
-            $newRow = ['tgavl_day' => $row['tgavl_day'] + 1, 'startdate' => $newStartDate, 'enddate' => $row['enddate']];
-            return $this->breakIntoDays($newRow, $records);
-        } else {
-            array_push($records, $row);
-            return $records;
-        }
     }
 
     public function setTeachLangPricesBulk()
@@ -270,4 +181,5 @@ class TeacherStat extends FatModel
     {
         FatApp::getDb()->query("UPDATE `tbl_teacher_stats` LEFT JOIN (SELECT userSpokenLang.`utsl_user_id` AS spokenUserId,  IF(COUNT(userSpokenLang.`utsl_user_id`) > 0, 1, 0) AS userSpokenCount FROM `tbl_user_to_spoken_languages` AS userSpokenLang INNER JOIN `tbl_spoken_languages` AS slanguage ON slanguage.slanguage_id = userSpokenLang.utsl_slanguage_id GROUP BY userSpokenLang.`utsl_user_id`) teacherSpoken ON teacherSpoken.spokenUserId = `testat_user_id` SET `testat_speaklang` = IFNULL(teacherSpoken.userSpokenCount,0)");
     }
+
 }
