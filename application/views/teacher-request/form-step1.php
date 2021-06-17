@@ -1,5 +1,6 @@
 <?php
 defined('SYSTEM_INIT') or die('Invalid Usage.');
+$frm->setFormTagAttribute('class', 'form');
 $frm->setFormTagAttribute('onsubmit', 'setupStep1(this); return(false);');
 $usrFirstName = $frm->getField('utrequest_first_name');
 $usrLastName = $frm->getField('utrequest_last_name');
@@ -132,7 +133,15 @@ $usrPhotoId = $frm->getField('user_photo_id');
                         </div>
                     </div>
                     <div class="block-content__foot">
-                        <button type="submit" class="btn btn--primary color-white btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
+                        <div class="form__actions">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div></div>
+                                <div>
+                                    <input type="submit" name="save" value="<?php echo Label::getLabel('LBL_SAVE', $siteLangId); ?>" />
+                                    <input type="button" name="next" onclick="setupStep1(document.frmFormStep1, true)" value="<?php echo Label::getLabel('LBL_NEXT', $siteLangId); ?>" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

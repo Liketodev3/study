@@ -122,10 +122,9 @@ class TeacherRequestController extends MyAppController
         if (empty($request)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
-        $frm = $this->getFormStep4($this->siteLangId);
-        $frm->fill(['terms' => applicationConstants::YES]);
+        $frm = $this->getFormStep4();
+        $frm->fill($request);
         $this->set('frm', $frm);
-        $this->set('rows', []);
         $this->set('request', $request);
         $this->set('user', User::getAttributesById($userId));
         $this->_template->render(false, false);
@@ -244,13 +243,19 @@ class TeacherRequestController extends MyAppController
         if (empty($request)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
+        $teachLangs = array_filter(FatUtility::int($post['utrequest_teach_slanguage_id']));
+        $speakLangs = array_filter(FatUtility::int(array_values($post['utrequest_language_speak'])));
+        $speakLangsProf = array_filter(FatUtility::int(array_values($post['utrequest_language_speak_proficiency'])));
+        if (empty($speakLangs) || empty($speakLangsProf)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_SPEAK_LANGUAGE_AND_PROFICIENCY_REQUIRED'));
+        }
         $record = new TableRecord('tbl_user_teacher_requests');
         $data = [
             'utrequest_step' => 4,
             'utrequest_id' => $request['utrequest_id'],
-            'utrequest_teach_slanguage_id' => json_encode(array_filter(FatUtility::int($post['utrequest_teach_slanguage_id']))),
-            'utrequest_language_speak' => json_encode(array_filter(FatUtility::int(array_values($post['utrequest_language_speak'])))),
-            'utrequest_language_speak_proficiency' => json_encode(array_filter(FatUtility::int(array_values($post['utrequest_language_speak_proficiency'])))),
+            'utrequest_teach_slanguage_id' => json_encode($teachLangs),
+            'utrequest_language_speak' => json_encode($speakLangs),
+            'utrequest_language_speak_proficiency' => json_encode($speakLangsProf),
         ];
         $record->assignValues($data);
         if (!$record->addNew([], $data)) {
@@ -273,8 +278,13 @@ class TeacherRequestController extends MyAppController
         if (empty($request)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
+        $qualifications = new UserQualificationSearch();
+        $rows = $qualifications->getUserQualification($userId);
+        if (empty($rows)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_TEACHER_QUALIFICATION_REQUIRED'));
+        }
         $record = new TableRecord('tbl_user_teacher_requests');
-        $record->assignValues(['utrequest_step' => 5]);
+        $record->assignValues(['utrequest_step' => 5, 'utrequest_terms' => $post['utrequest_terms']]);
         if (!$record->update(['smt' => 'utrequest_id = ?', 'vals' => [$request['utrequest_id']]])) {
             FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
         }
@@ -300,7 +310,9 @@ class TeacherRequestController extends MyAppController
     {
         $frm = new Form('frmFormStep2');
         $frm->addTextArea(Label::getLabel('LBL_Biography', $langId), 'utrequest_profile_info')->requirements()->setLength(1, 500);
-        $frm->addTextBox(Label::getLabel('LBL_Introduction_video', $langId), 'utrequest_video_link');
+        $fld = $frm->addTextBox(Label::getLabel('LBL_Introduction_video', $langId), 'utrequest_video_link');
+        $fld->requirements()->setRegularExpressionToValidate(applicationConstants::INTRODUCTION_VIDEO_LINK_REGEX);
+        $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_Valid_Video_Link'));
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
         return $frm;
     }
@@ -333,153 +345,11 @@ class TeacherRequestController extends MyAppController
     private function getFormStep4()
     {
         $frm = new Form('frmFormStep4');
-        $frm->addCheckBox(Label::getLabel('LBL_Accept_Teacher_Approval_Terms_&_condition'), 'terms', 1)->requirements()->setRequired();
+        $frm->addCheckBox(Label::getLabel('LBL_Accept_Teacher_Approval_Terms_&_condition'), 'utrequest_terms', 1, [], false, 0)->requirements()->setRequired();
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
         return $frm;
     }
-
-    public function CreateForm()
-    {
-        $user = new User($this->userId);
-        if (!$user->loadFromDb()) {
-            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
-        }
-        $spokenLangs = SpokenLanguage::getAllLangs($this->siteLangId, true);
-        $formStep = FatApp::getPostedData('step', FatUtility::VAR_INT, 1);
-        $frm = $this->getForm($formStep, $this->siteLangId, $spokenLangs);
-        $userDetails = $user->getFlds();
-
-        $userQualifications = new UserQualificationSearch();
-        $rows = $userQualifications->getUserQualification($this->userId);
-        if ($userDetails) {
-            $assignArray = [];
-            $assignArray['utrvalue_user_first_name'] = $userDetails['user_first_name'];
-            $assignArray['utrvalue_user_last_name'] = $userDetails['user_last_name'];
-            $frm->fill($assignArray);
-        }
-
-        $this->set('frm', $frm);
-        $this->set('speakLangs', $spokenLangs);
-        $this->set('exculdeMainHeaderDiv', false);
-        $this->set('userDetails', $userDetails);
-        $this->set('profileImgFrm', $this->getProfileImageForm());
-        $this->set('formStep', $formStep);
-        $this->set('rows', $rows);
-        $this->_template->render(false, false);
-    }
-
-    public function setUpTeacherApproval()
-    {
-
-        if (true === TeacherRequest::isMadeMaximumAttempts($this->userId)) {
-            $msg1 = Label::getLabel('MSG_You_already_consumed_max_attempts');
-            $msg2 = Label::getLabel('MSG_Visit_previous_request_page_{teacher-request-url}');
-            $msg2 = str_replace("{teacher-request-url}", "<a href='" . CommonHelper::generateUrl('TeacherRequest') . "'>" . Label::getLabel('LBL_Click') . "</a>", $msg2);
-            if (FatUtility::isAjaxCall()) {
-                FatUtility::dieWithError($msg1 . ' ' . $msg2);
-            }
-            Message::addErrorMessage($msg1 . ' ' . $msg2);
-            $this->form();
-            return;
-        }
-
-        /**
-         * need to check if user has/have already pending request
-         * system will behave accordingly
-         */
-        /* ] */
-        /* Validation[ */
-        $frm = $this->getForm($this->siteLangId);
-        $post = FatApp::getPostedData();
-
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-
-        if (false === $post) {
-            if (FatUtility::isAjaxCall()) {
-                FatUtility::dieWithError(current($frm->getValidationErrors()));
-            }
-            Message::addErrorMessage(current($frm->getValidationErrors()));
-            $this->form();
-            return;
-        }
-        /* ] */
-        $srch = new UserQualificationSearch();
-        $srch->addCondition('uqualification_user_id', '=', $this->userId);
-        $srch->addMultiplefields(['uqualification_id', 'uqualification_user_id']);
-        $rs = $srch->getResultSet();
-        if (empty($rs->totalRecords())) {
-            if (FatUtility::isAjaxCall()) {
-                FatUtility::dieWithError(Label::getLabel('MSG_please_upload_Your_Resume'));
-            }
-            Message::addErrorMessage(Label::getLabel('MSG_please_upload_Your_Resume'));
-            $this->form();
-            return;
-        }
-
-        /* file handling[ */
-        if (!User::isProfilePicUploaded($this->userId)) {
-            if (FatUtility::isAjaxCall()) {
-                FatUtility::dieWithError(Label::getLabel('MSG_Please_select_a_Profile_Pic'));
-            }
-            Message::addErrorMessage(Label::getLabel('MSG_Please_select_a_Profile_Pic'));
-            $this->form();
-            return;
-        }
-
-        $userId = $this->userId;
-        $fileHandlerObj = new AttachedFile();
-        /* ] */
-        if (!empty($_FILES['user_photo_id']['name']) && !empty($_FILES['user_photo_id']['error'])) {
-            if (FatUtility::isAjaxCall()) {
-                FatUtility::dieJsonError($attachedFile->getErrMsgByErrCode($_FILES['user_photo_id']['error']));
-            }
-            Message::addErrorMessage($attachedFile->getErrMsgByErrCode($_FILES['user_photo_id']['error']));
-            $this->form();
-            return;
-        }
-
-        /* Proof File[ */
-        if (!empty($_FILES['user_photo_id']['tmp_name'])) {
-            $attachedFile = new AttachedFile();
-            if (!$attachedFile->saveDoc($_FILES['user_photo_id']['tmp_name'], $attachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, $userId, 0, $_FILES['user_photo_id']['name'], -1, true)) {
-                if (FatUtility::isAjaxCall()) {
-                    FatUtility::dieWithError($attachedFile->getError());
-                }
-                Message::addErrorMessage($attachedFile->getError());
-                $this->form();
-                return;
-            }
-        }
-        /* ] */
-        /* ] */
-        $languageRow = Language::getAttributesById($this->siteLangId);
-        $post['utrequest_language_id'] = $languageRow['language_id'];
-        $post['utrequest_language_code'] = $languageRow['language_code'];
-        $teacherRequest = new TeacherRequest();
-        if (true !== $teacherRequest->saveData($post, $this->userId)) {
-            if (FatUtility::isAjaxCall()) {
-                FatUtility::dieWithError($teacherRequest->getError());
-            }
-            Message::addErrorMessage($teacherRequest->getError());
-            $this->form();
-            return;
-        }
-
-        if ($teacherRequest->getMainTableRecordId()) {
-            $emailHandler = new EmailHandler($this->siteLangId);
-            $emailHandler->sendTeacherRequestEmailToAdmin($teacherRequest->getMainTableRecordId());
-        }
-
-        $successMsg = Label::getLabel('MSG_Teacher_Approval_Request_Setup_Successful');
-        if (FatUtility::isAjaxCall()) {
-            $this->set('redirectUrl', CommonHelper::generateUrl('TeacherRequest'));
-            $this->set('msg', $successMsg);
-            $this->_template->render(false, false, 'json-success.php');
-        }
-        Message::addMessage($successMsg);
-        FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
-    }
-
+    
     public function searchTeacherQualification()
     {
         $srch = new UserQualificationSearch();
@@ -493,11 +363,8 @@ class TeacherRequestController extends MyAppController
             'uqualification_institute_address',
             'uqualification_institute_name',
         ]);
-
-        $rs = $srch->getResultSet();
-        $rows = FatApp::getDb()->fetchAll($rs);
-        $this->set("userId", $this->userId);
-        $this->set("rows", $rows);
+        $this->set("rows", FatApp::getDb()->fetchAll($srch->getResultSet()));
+        $this->set("user", User::getAttributesById($this->userId));
         $this->_template->render(false, false);
     }
 
@@ -653,110 +520,7 @@ class TeacherRequestController extends MyAppController
         $this->set('msg', Label::getLabel('MSG_File_uploaded_successfully'));
         $this->_template->render(false, false, 'json-success.php');
     }
-
-    private function getForm(int $formstep, int $langId, $spokenLangs = null)
-    {
-        $frm = new Form('frmTeacherApprovalForm');
-
-        switch ($formstep) {
-            case 1:
-                $fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'utrvalue_user_first_name');
-                $fld = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'utrvalue_user_last_name');
-                $fld = $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'utrvalue_user_gender', User::getGenderArr($langId), User::GENDER_MALE);
-                $fld->requirements()->setRequired();
-                $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone_Number'), 'utrvalue_user_phone');
-                $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
-                $fldPhn->requirements()->setCustomErrorMessage(Label::getLabel('LBL_PHONE_NO_VALIDATION_MSG'));
-                $frm->addHiddenField('', 'utrvalue_user_phone_code');
-                $fld = $frm->addFileUpload(Label::getLabel('LBL_Photo_Id'), 'user_photo_id');
-                break;
-            case 2:
-                $fld = $frm->addTextArea(Label::getLabel('LBL_Biography', $langId), 'utrvalue_user_profile_info');
-                $fld->requirements()->setLength(1, 500);
-                $fld = $frm->addTextBox(Label::getLabel('LBL_Introduction_video', $langId), 'utrvalue_user_video_link');
-                break;
-            case 3:
-                $frm->jsErrorDivId = 'errorDiv';
-                $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
-                $teachingLanguagesArr = TeachingLanguage::getAllLangs($langId, true);
-                $fld = $frm->addCheckBoxes(Label::getLabel('LBL_Language_To_Teach'), 'utrvalue_user_teach_slanguage_id[]', $teachingLanguagesArr);
-                $fld->requirements()->setSelectionRange(1, count($teachingLanguagesArr));
-                $fld->requirements()->setRequired();
-                $langArr = $spokenLangs ?: SpokenLanguage::getAllLangs($langId, true);
-                foreach ($langArr as $key => $lang) {
-                    $speekLangField = $frm->addCheckBox(Label::getLabel('LBL_Language_I_Speak'), 'utrvalue_user_language_speak[' . $key . ']', $key, ['class' => 'utsl_slanguage_id'], false, '0');
-                    $proficiencyField = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utrvalue_user_language_speak_proficiency[' . $key . ']', $profArr, '', ['class' => 'utsl_proficiency select__dropdown'], Label::getLabel("LBL_I_don't_speak_this_language"));
-
-                    $proficiencyField->requirements()->setRequired();
-                    $speekLangField->requirements()->addOnChangerequirementUpdate(0, 'gt', $proficiencyField->getName(), $proficiencyField->requirements());
-
-                    $proficiencyField->requirements()->setRequired(false);
-                    $speekLangField->requirements()->addOnChangerequirementUpdate(0, 'le', $proficiencyField->getName(), $proficiencyField->requirements());
-
-                    $speekLangField->requirements()->setRequired();
-                    $proficiencyField->requirements()->addOnChangerequirementUpdate(0, 'gt', $proficiencyField->getName(), $speekLangField->requirements());
-
-                    $speekLangField->requirements()->setRequired(false);
-                    $proficiencyField->requirements()->addOnChangerequirementUpdate(0, 'le', $proficiencyField->getName(), $speekLangField->requirements());
-                }
-                break;
-            case 4:
-                $fld = $frm->addCheckBox(Label::getLabel('LBL_Accept_Teacher_Approval_Terms_&_condition'), 'terms', 1);
-                $fld->requirements()->setRequired();
-                break;
-        }
-        switch ($formstep) {
-            case 1:
-                $fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'utrvalue_user_first_name');
-                $fld = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'utrvalue_user_last_name');
-                $fld = $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'utrvalue_user_gender', User::getGenderArr($langId), User::GENDER_MALE);
-                $fld->requirements()->setRequired();
-                $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone_Number'), 'utrvalue_user_phone');
-                $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
-                $fldPhn->requirements()->setCustomErrorMessage(Label::getLabel('LBL_PHONE_NO_VALIDATION_MSG'));
-                $frm->addHiddenField('', 'utrvalue_user_phone_code');
-                $fld = $frm->addFileUpload(Label::getLabel('LBL_Photo_Id'), 'user_photo_id');
-                break;
-            case 2:
-                $fld = $frm->addTextArea(Label::getLabel('LBL_Biography', $langId), 'utrvalue_user_profile_info');
-                $fld->requirements()->setLength(1, 500);
-                $fld = $frm->addTextBox(Label::getLabel('LBL_Introduction_video', $langId), 'utrvalue_user_video_link');
-                break;
-            case 3:
-                $frm->jsErrorDivId = 'errorDiv';
-                $frm->jsErrorDisplay = Form::FORM_ERROR_TYPE_SUMMARY;
-                $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
-                $teachingLanguagesArr = TeachingLanguage::getAllLangs($langId, true);
-                $fld = $frm->addCheckBoxes(Label::getLabel('LBL_Language_To_Teach'), 'utrvalue_user_teach_slanguage_id[]', $teachingLanguagesArr);
-                $fld->requirements()->setSelectionRange(1, count($teachingLanguagesArr));
-                $fld->requirements()->setRequired();
-                $langArr = $spokenLangs ?: SpokenLanguage::getAllLangs($langId, true);
-                foreach ($langArr as $key => $lang) {
-                    $speekLangField = $frm->addCheckBox(Label::getLabel('LBL_Language_I_Speak'), 'utrvalue_user_language_speak[' . $key . ']', $key, ['class' => 'utsl_slanguage_id'], false, '0');
-                    $proficiencyField = $frm->addSelectBox(Label::getLabel('LBL_Language_Proficiency'), 'utrvalue_user_language_speak_proficiency[' . $key . ']', $profArr, '', ['class' => 'utsl_proficiency select__dropdown'], Label::getLabel("LBL_I_don't_speak_this_language"));
-
-                    $proficiencyField->requirements()->setRequired();
-                    $speekLangField->requirements()->addOnChangerequirementUpdate(0, 'gt', $proficiencyField->getName(), $proficiencyField->requirements());
-
-                    $proficiencyField->requirements()->setRequired(false);
-                    $speekLangField->requirements()->addOnChangerequirementUpdate(0, 'le', $proficiencyField->getName(), $proficiencyField->requirements());
-
-                    $speekLangField->requirements()->setRequired();
-                    $proficiencyField->requirements()->addOnChangerequirementUpdate(0, 'gt', $proficiencyField->getName(), $speekLangField->requirements());
-
-                    $speekLangField->requirements()->setRequired(false);
-                    $proficiencyField->requirements()->addOnChangerequirementUpdate(0, 'le', $proficiencyField->getName(), $speekLangField->requirements());
-                }
-                break;
-            case 4:
-                $fld = $frm->addCheckBox(Label::getLabel('LBL_Accept_Teacher_Approval_Terms_&_condition'), 'terms', 1);
-                $fld->requirements()->setRequired();
-                break;
-        }
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
-        return $frm;
-    }
-
+    
     public function logoutGuestUser()
     {
         UserAuthentication::logoutGuestTeacher();

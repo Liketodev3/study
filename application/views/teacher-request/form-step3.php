@@ -1,5 +1,6 @@
 <?php
 defined('SYSTEM_INIT') or die('Invalid Usage.');
+$frm->setFormTagAttribute('class', 'form');
 $frm->setFormTagAttribute('onsubmit', 'setupStep3(this); return(false);');
 $teachLangField = $frm->getField('utrequest_teach_slanguage_id');
 $speakLangField = $frm->getField('utrequest_language_speak[]');
@@ -31,7 +32,7 @@ $proficiencyField = $frm->getField('utrequest_language_speak_proficiency[]');
                                         <span class="bold-600"><?php echo $teachLangField->getCaption(); ?></span>
                                     </div>
                                     <div class="colum-layout__body">
-                                        <div class="colum-layout__scroll scrollbar scrollbar-js" tabindex="0" style="width: 431px; padding-right: 10px; outline: none; overflow: hidden;">
+                                        <div class="colum-layout__scroll scrollbar scrollbar-js" tabindex="0">
                                             <?php foreach ($teachLangField->options as $key => $value) { ?>
                                                 <div class="selection">
                                                     <label class="selection__trigger">
@@ -44,14 +45,7 @@ $proficiencyField = $frm->getField('utrequest_language_speak_proficiency[]');
                                                 </div>
                                             <?php } ?>
                                         </div>
-                                        <div style="position: absolute; z-index: 1; margin: 0px; padding: 0px; display: none; left: 453px; top: 125px;">
-                                            <div class="enscroll-track scrollbar-track" style="position: relative; height: 450px;">
-                                                <a href="" class="scrollbar-handle" style="position: absolute; z-index: 1; height: 450px;">
-                                                    <div class="top"></div>
-                                                    <div class="bottom"></div>
-                                                </a>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="colum-layout__cell">
@@ -101,8 +95,15 @@ $proficiencyField = $frm->getField('utrequest_language_speak_proficiency[]');
                         </div>
                     </div>
                     <div class="block-content__foot">
-                        <button type="button" class="btn btn--bordered color-primary btn-Back" onclick="getform(2);"><?php echo Label::getLabel('LBL_Back', $siteLangId); ?></button>
-                        <button type="submit" class="btn btn--primary color-white btn--next"><?php echo Label::getLabel('LBL_Next', $siteLangId); ?></button>
+                        <div class="form__actions">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div><input type="button" name="back" onclick="getform(2);" value="<?php echo Label::getLabel('LBL_Back', $siteLangId); ?>"></div>
+                                <div>
+                                    <input type="submit" name="save" value="<?php echo Label::getLabel('LBL_SAVE', $siteLangId); ?>" />
+                                    <input type="button" name="next" onclick="setupStep3(document.frmFormStep3, true)" value="<?php echo Label::getLabel('LBL_NEXT', $siteLangId); ?>" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,3 +112,13 @@ $proficiencyField = $frm->getField('utrequest_language_speak_proficiency[]');
         <?php echo $frm->getExternalJs(); ?>
     </div>          
 </div>
+<script>
+    $(document).ready(function () {
+        if ($(window).width() > 1199) {
+            $('.scrollbar-js').enscroll({
+                verticalTrackClass: 'scrollbar-track',
+                verticalHandleClass: 'scrollbar-handle'
+            });
+        }
+    });
+</script>

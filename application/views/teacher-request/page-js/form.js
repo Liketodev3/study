@@ -1,6 +1,3 @@
-var teacherQualificationAjax = false;
-var setUpTeacherApprovalAjax = false;
-
 (function ($) {
 
     getform = function (step) {
@@ -19,101 +16,89 @@ var setUpTeacherApprovalAjax = false;
         });
     };
 
-    setupStep1 = function (frm) {
+    setupStep1 = function (frm, loadNext = false) {
         if (!$(frm).validate()) {
             return;
         }
         var data = new FormData(frm);
-        $.mbsmessage(langLbl.processing, true, 'alert alert--process');
         fcom.ajaxMultipart(fcom.makeUrl('TeacherRequest', 'setupStep1'), data, function (response) {
             var res = JSON.parse(response);
             if (res.status == 1) {
-                $.mbsmessage(response.msg, true, 'alert alert--success');
-                getform(res.step);
+                $.mbsmessage(res.msg, true, 'alert alert--success');
+                if (loadNext) {
+                    getform(res.step);
+                }
             } else {
-                $.mbsmessage(response.msg, true, 'alert alert--danger');
+                $.mbsmessage(res.msg, true, 'alert alert--danger');
             }
         });
     }
 
-    setupStep2 = function (frm) {
+    setupStep2 = function (frm, loadNext = false) {
         if (!$(frm).validate()) {
             return;
         }
-        $.mbsmessage(langLbl.processing, true, 'alert alert--process');
         fcom.ajax(fcom.makeUrl('TeacherRequest', 'setupStep2', []), fcom.frmData(frm), function (response) {
             var res = JSON.parse(response);
             if (res.status == 1) {
-                $.mbsmessage(response.msg, true, 'alert alert--success');
-                getform(res.step);
+                $.mbsmessage(res.msg, true, 'alert alert--success');
+                if (loadNext) {
+                    getform(res.step);
+                }
             } else {
-                $.mbsmessage(response.msg, true, 'alert alert--danger');
+                $.mbsmessage(res.msg, true, 'alert alert--danger');
             }
         });
     }
 
-    setupStep3 = function (frm) {
-        if (!$(frm).validate()) {
-//            return;
-        }
-        $.mbsmessage(langLbl.processing, true, 'alert alert--process');
+    setupStep3 = function (frm, loadNext = false) {
         fcom.ajax(fcom.makeUrl('TeacherRequest', 'setupStep3', []), fcom.frmData(frm), function (response) {
             var res = JSON.parse(response);
             if (res.status == 1) {
-                $.mbsmessage(response.msg, true, 'alert alert--success');
-                getform(res.step);
+                $.mbsmessage(res.msg, true, 'alert alert--success');
+                if (loadNext) {
+                    getform(res.step);
+                }
             } else {
-                $.mbsmessage(response.msg, true, 'alert alert--danger');
+                $.mbsmessage(res.msg, true, 'alert alert--danger');
             }
         });
     }
 
-    setupStep4 = function (frm) {
+    setupStep4 = function (frm, loadNext = false) {
         if (!$(frm).validate()) {
             return;
         }
-        $.mbsmessage(langLbl.processing, true, 'alert alert--process');
         fcom.ajax(fcom.makeUrl('TeacherRequest', 'setupStep4', []), fcom.frmData(frm), function (response) {
             var res = JSON.parse(response);
             if (res.status == 1) {
-                $.mbsmessage(response.msg, true, 'alert alert--success');
-                getform(res.step);
+                $.mbsmessage(res.msg, true, 'alert alert--success');
+                if (loadNext) {
+                    getform(res.step);
+                }
             } else {
-                $.mbsmessage(response.msg, true, 'alert alert--danger');
+                $.mbsmessage(res.msg, true, 'alert alert--danger');
             }
         });
     }
 
-    teacherQualificationForm = function (uqualification_id) {
-        fcom.ajax(fcom.makeUrl('TeacherRequest', 'teacherQualificationForm', []), 'uqualification_id=' + uqualification_id, function (res) {
-            $.facebox(res, 'facebox-medium');
-
-        });
-
-    };
-
-    createForm = function (step) {
-        fcom.ajax(fcom.makeUrl('TeacherRequest', 'createForm'), {step: step}, function (res) {
-            $('li[data-blocks-show]').removeClass('is-process');
-            $('li[data-blocks-show="' + step + '"]').addClass('is-process');
-            $('.page-block__body').html(res);
-            if (step == 1) {
-                intTell();
-                var dial_code = $.trim($('.iti__selected-dial-code').text());
-                $('#user_phone_code').val(dial_code);
-                setTimeout(() => {
-                    setPhoneNumberMask();
-                }, 100);
-            } else if (step == 3) {
-                if ($(window).width() > 1199) {
-                    $('.scrollbar-js').enscroll({
-                        verticalTrackClass: 'scrollbar-track',
-                        verticalHandleClass: 'scrollbar-handle'
-                    });
-                }
-            }
-
-        });
+    validateVideolink = function (field) {
+        $(document.frmFormStep2).validate();
+        var url = field.value;
+        if (!url && url == '') {
+            return false;
+        }
+        var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+        var matches = url.match(regExp);
+        if (matches && matches[2].length == 11) {
+            valideUrl = "https://www.youtube.com/embed/";
+            valideUrl += matches[2];
+            $(field).val(valideUrl);
+            $(document.frmFormStep2).validate();
+            return matches[1];
+        }
+        $(field).val('');
+        return false;
     };
 
     setPhoneNumberMask = function () {
@@ -126,128 +111,45 @@ var setUpTeacherApprovalAjax = false;
         }
     };
 
+    teacherQualificationForm = function (uqualification_id) {
+        fcom.ajax(fcom.makeUrl('TeacherRequest', 'teacherQualificationForm', []), 'uqualification_id=' + uqualification_id, function (res) {
+            $.facebox(res, 'facebox-medium');
+        });
+
+    };
+
     setUpTeacherQualification = function (frm) {
         if (!$(frm).validate()) {
             return;
         }
-        if (teacherQualificationAjax) {
-            return false;
-        }
-        teacherQualificationAjax = true;
-        var dv = $("#frm_fat_id_frmQualification");
-
-        var formData = new FormData(frm);
-        $.ajax({
-            url: fcom.makeUrl('TeacherRequest', 'setUpTeacherQualification'),
-            type: 'POST',
-            data: formData,
-            mimeType: "multipart/form-data",
-            contentType: false,
-            //dataType: 'json',
-            processData: false,
-            beforeSend: function () {
-                $.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
-            },
-            success: function (data, textStatus, jqXHR) {
-
-                teacherQualificationAjax = false;
-                $.mbsmessage.close();
-                var data = JSON.parse(data);
-                if (data.status == 0) {
-                    $.mbsmessage(data.msg, true, 'alert alert--danger');
-                } else {
-                    $.mbsmessage(data.msg, true, 'alert alert--success');
-                    reloadQualificationList();
-                    $(document).trigger('close.facebox');
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                teacherQualificationAjax = false;
-                $.mbsmessage.close();
-                $.mbsmessage(jqXHR.msg, true, 'alert alert--danger');
-                $(frm.btn_submit).attr('disabled', '');
+        var data = new FormData(frm);
+        fcom.ajaxMultipart(fcom.makeUrl('TeacherRequest', 'setUpTeacherQualification'), data, function (response) {
+            var res = JSON.parse(response);
+            if (res.status == 1) {
+                $.mbsmessage(res.msg, true, 'alert alert--success');
+                searchTeacherQualification();
+            } else {
+                $.mbsmessage(res.msg, true, 'alert alert--danger');
             }
         });
     };
 
     searchTeacherQualification = function () {
-        var dv = $('#block--4');
-        $(dv).html(fcom.getLoader());
-
+        $('#qualification-container').html(fcom.getLoader());
         fcom.ajax(fcom.makeUrl('TeacherRequest', 'searchTeacherQualification'), '', function (res) {
-            $(dv).html(res);
+            $.facebox.close();
+            $('#qualification-container').html(res);
         });
-    };
-
-    reloadQualificationList = function () {
-        searchTeacherQualification();
     };
 
     deleteTeacherQualification = function (uqualification_id) {
         if (!confirm(langLbl.confirmRemove)) {
             return;
         }
-
         fcom.updateWithAjax(fcom.makeUrl('TeacherRequest', 'deleteTeacherQualification'), '&uqualification_id=' + uqualification_id, function () {
-            reloadQualificationList();
-            $(document).trigger('close.facebox');
+            searchTeacherQualification();
+            $.facebox.close();
         });
-    };
-
-    setUpTeacherApproval = function (frm) {
-
-        if (!$(frm).validate()) {
-            //$("html, body").animate({ scrollTop: $(".error").eq(0).offset().top - 100 }, "slow");
-            return;
-        }
-        if (setUpTeacherApprovalAjax) {
-            return false;
-        }
-        setUpTeacherApprovalAjax = true;
-        data = new FormData(frm);
-
-        if (frm.user_photo_id.files.length > 0) {
-            data.append('user_photo_id', frm.user_photo_id.files[0]);
-        }
-        data.append('fIsAjax', 1);
-        data.append('fOutMode', 'json');
-        $.systemMessage(langLbl.processing, 'alert--process');
-        $.ajax({
-            method: "POST",
-            url: fcom.makeUrl('TeacherRequest', 'setUpTeacherApproval'),
-            processData: false,
-            contentType: false,
-            data: data,
-            // async: false,
-            success: function (result) {
-                try {
-                    $.systemMessage.close();
-                    result = JSON.parse(result);
-                    if (result.status != 1) {
-                        setUpTeacherApprovalAjax = false;
-                        $(document).trigger('close.mbsmessage');
-                        $.mbsmessage(result.msg, true, 'alert alert--danger');
-                        return false;
-                    }
-                    $.mbsmessage(result.msg, true, 'alert alert--success');
-                    if (result.redirectUrl) {
-                        setTimeout(function () {
-                            $('.page-block__body').hide();
-                            $('.change-block-js').removeClass('is-process');
-                            $('li[data-blocks-show').removeClass('change-block-js')
-                            $('li[data-blocks-show="5"]').addClass('is-process');
-                            $('#block--5').show();
-                        }, 2000);
-                        return;
-                    }
-                } catch (e) {
-                    setUpTeacherApprovalAjax = false;
-                    $.mbsmessage(e, true, 'alert alert--danger');
-                    return;
-                }
-            }
-        });
-
     };
 
     popupImage = function (input) {
@@ -370,7 +272,6 @@ var setUpTeacherApprovalAjax = false;
                 $.mbsmessage(json.msg, true, 'alert alert--success');
                 $(document).trigger('close.facebox');
                 $('.loading-wrapper').hide();
-                // $("[name=user_profile_pic]").prop("files",$("[name=user_profile_image]").prop("files"));
                 $('#user-profile-pic--js').show();
                 $('#user-profile-pic--js').attr('src', json.file);
             }
@@ -406,7 +307,5 @@ var setUpTeacherApprovalAjax = false;
             },
         })
     };
-
-
 
 })(jQuery);
