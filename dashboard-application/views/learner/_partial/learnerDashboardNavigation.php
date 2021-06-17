@@ -24,7 +24,7 @@
             <li class="menu__item <?php echo ( $controllerName == "LearnerScheduledLessons" && $action == 'index') ? 'is-active' : ''; ?>">
                 <a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons'); ?>">
                     <svg class="icon icon--lesson margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#lessons'; ?>"></use></svg>
-                    <span><?php echo Label::getLabel('LBL_YOURS_SESSION'); ?></span>
+                    <span><?php echo Label::getLabel('LBL_LESSONS'); ?></span>
                 </a>
             </li>
             <li class="menu__item <?php echo ($controllerName == "LearnerTeachers") ? 'is-active' : ''; ?>">
