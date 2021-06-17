@@ -253,18 +253,22 @@ class TeacherWeeklySchedule extends MyAppModel
        
         $generalAvail = 0;
         if ($gaCount > 0) {
-            $weekStartDateDB = '2018-01-07';
+            $weekStartDateDB = TeacherGeneralAvailability::DB_WEEK_STARTDATE;
           
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStart);
-            $startTime = date('Y-m-d H:i:s', strtotime('- ' . $weekDiff . ' weeks', strtotime($startTime)));
-            prx($startTime);
+            //$startTime = date('Y-m-d H:i:s', strtotime('- ' . $weekDiff . ' weeks', strtotime($startTime)));
+           
             foreach ($gARows as $row) {
-                $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
-                $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']));
-
+                $date = $row['tgavl_date'] . ' ' . $row['tgavl_start_time'];
+                $endDate = $row['tgavl_end_date'] . ' ' . $row['tgavl_end_time'];
+     
                 $_startDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($date)));
                 $_endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($endDate)));
+                pr($_startDate);
+                pr($_endDate); 
 
+                pr($startTime);
+                pr($endTime);
                 if (strtotime($_startDate) <= strtotime($startTime) && strtotime($_endDate) >= strtotime($endTime)) {
                     $generalAvail++;
                 }

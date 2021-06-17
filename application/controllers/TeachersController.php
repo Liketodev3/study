@@ -398,9 +398,10 @@ class TeachersController extends MyAppController
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
         $systemTimeZone = MyDate::getTimeZone();
-        $user_timezone = MyDate::getUserTimeZone();
-        $startDateTime = MyDate::changeDateTimezone($post['start'], $user_timezone, $systemTimeZone);
-        $endDateTime = MyDate::changeDateTimezone($post['end'], $user_timezone, $systemTimeZone);
+        $userTimezone = MyDate::getUserTimeZone();
+
+        $startDateTime = MyDate::changeDateTimezone($post['start'], $userTimezone, $systemTimeZone);
+        $endDateTime = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
         
         if (strtotime($startDateTime) < strtotime(date('Y-m-d H:i:s'))) {
             FatUtility::dieJsonSuccess(0);

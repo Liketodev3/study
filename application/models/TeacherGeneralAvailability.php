@@ -46,11 +46,9 @@ class TeacherGeneralAvailability extends MyAppModel
             $teacherTimeZone =  (empty($rows[0]['user_timezone'])) ? MyDate::getTimeZone() : $rows[0]['user_timezone'];
 
             foreach ($rows as $row) {
-                $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
-                $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']));
 
-                $dateUnixTime = strtotime($date);
-                $endDateUnixTime = strtotime($endDate);
+                $dateUnixTime = strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']);
+                $endDateUnixTime = strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']);
 
                 $date = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $dateUnixTime));
                 $endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $endDateUnixTime));
@@ -68,22 +66,20 @@ class TeacherGeneralAvailability extends MyAppModel
                     }
                 }
 
-                $removeIsdstTimeFromStartTime =  MyDate::isDateWithDST($date, $teacherTimeZone);
-                $removeIsdstTimeFromEndTime =  MyDate::isDateWithDST($endDate, $teacherTimeZone);
+                $removedstTimeFromStartTime =  MyDate::isDateWithDST($date, $teacherTimeZone);
+                $removedstTimeFromEndTime =  MyDate::isDateWithDST($endDate, $teacherTimeZone);
 
-                $tgavl_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $date, true, $userTimezone, $removeIsdstTimeFromStartTime);
-                $tgavl_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDate, true, $userTimezone, $removeIsdstTimeFromEndTime);
+                $startDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $date, true, $userTimezone, $removedstTimeFromStartTime);
+                $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDate, true, $userTimezone, $removedstTimeFromEndTime);
 
                 $jsonArr[] = [
                     "title" => "",
-                    "endW" => date('H:i:s', strtotime($tgavl_end_time)),
-                    "startW" => date('H:i:s', strtotime($tgavl_start_time)),
-                    "end" => $tgavl_end_time,
-                    "start" => $tgavl_start_time,
+                    "start" => $startDateTime,
+                    "end" => $endDateTime,
                     '_id' => $row['tgavl_id'],
                     "classType" => 1,
                     'action' => 'fromGeneralAvailability',
-                    "day" => MyDate::getDayNumber($tgavl_start_time),
+                    "day" => MyDate::getDayNumber($startDateTime),
                     'className' => "slot_available"
                 ];
             }
