@@ -457,7 +457,9 @@ class AccountController extends LoggedUserController
         $frm->addHiddenField('', 'action', 'avatar', ['id' => 'avatar-action']);
         $frm->addHiddenField('', 'img_data', '', ['id' => 'img_data']);
         if ($teacher) {
-            $frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'), 'us_video_link', '');
+            $vidoLinkfield = $frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'), 'us_video_link', '');
+            $vidoLinkfield->requirements()->setRegularExpressionToValidate(applicationConstants::INTRODUCTION_VIDEO_LINK_REGEX);
+			$vidoLinkfield->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_Valid_Video_Link'));
         }
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next'));

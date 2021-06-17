@@ -30,6 +30,27 @@ $(document).ready(function () {
         });
     };
 
+    validateVideolink = function (field) {
+        $(document.frmProfile).validate();
+        var url = field.value;
+        if (!url && url == '') {
+            return false;
+        }
+        var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+        var matches = url.match(regExp);
+        if (matches && matches[2].length == 11) {
+            console.log(matches);
+            valideUrl = "https://www.youtube.com/embed/";
+            valideUrl += matches[2];
+            $(field).val(valideUrl);
+            $(document.frmProfile).validate();
+            return matches[1];
+        }
+        $(field).val('');
+        return false;
+
+    };
+
     getTeacherProfileProgress = function (showMessage) {
         showMessage = (showMessage) ? showMessage : true;
         if (!userIsTeacher || !isTeacherDashboardTabActive) {
@@ -77,7 +98,7 @@ $(document).ready(function () {
 
                             }
                             break;
-                            // case 'userCountryId':
+                        // case 'userCountryId':
                         case 'userProfile':
 
                             // case 'userTimeZone':
@@ -123,7 +144,7 @@ $(document).ready(function () {
                         case 'percentage':
                             $('.teacher-profile-progress-bar-js').attr("aria-valuenow", value);
                             value = value + "%";
-                            $('.teacher-profile-progress-bar-js').css({"width": value});
+                            $('.teacher-profile-progress-bar-js').css({ "width": value });
                             break;
                         case 'totalFilledFields':
                             $('.progress__step').removeClass('is-active');
@@ -144,7 +165,7 @@ $(document).ready(function () {
                 });
             }
 
-        }, {fOutMode: 'json'});
+        }, { fOutMode: 'json' });
     }
 
     changeEmailForm = function () {
@@ -221,7 +242,7 @@ $(document).ready(function () {
 
     setUpProfileInfo = function (frm, gotoProfileImageForm) {
         if (!$(frm).validate()) {
-            $("html, body").animate({scrollTop: $(".error").eq(0).offset().top - 100}, "slow");
+            $("html, body").animate({ scrollTop: $(".error").eq(0).offset().top - 100 }, "slow");
             return false;
         }
         $.loader.show();
@@ -427,332 +448,332 @@ $(document).ready(function () {
             $("html, body").animate({
                 scrollTop: errorlist.offset().top
             }, 1200);
-			return;
-		}
-		var data = fcom.frmData(frm);
-		$.loader.show();
-		fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpSettings'), data, function (t) {
-			$.loader.hide();
-			if (goToExpForm) {
-				$('.teacher-qualification-js').trigger('click');
-			} else {
-				getTeacherProfileProgress();
-			}
-		});
-	};
+            return;
+        }
+        var data = fcom.frmData(frm);
+        $.loader.show();
+        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setUpSettings'), data, function (t) {
+            $.loader.hide();
+            if (goToExpForm) {
+                $('.teacher-qualification-js').trigger('click');
+            } else {
+                getTeacherProfileProgress();
+            }
+        });
+    };
 
-	teacherQualification = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherQualification'), '', function (t) {
-			$(dv).html(t);
-			if (userIsTeacher) {
-				getTeacherProfileProgress();
-			}
+    teacherQualification = function () {
+        $(dv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Teacher', 'teacherQualification'), '', function (t) {
+            $(dv).html(t);
+            if (userIsTeacher) {
+                getTeacherProfileProgress();
+            }
 
-		});
-	};
+        });
+    };
 
-	deleteLanguageRow = function (id) {
-		$.confirm({
-			title: langLbl.Confirm,
-			content: langLbl.confirmRemove,
-			buttons: {
-				Proceed: {
-					text: langLbl.Proceed,
-					btnClass: 'btn btn--primary',
-					keys: ['enter', 'shift'],
-					action: function () {
-						fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteLanguageRow', [id]), '', function (t) {
-							teacherLanguagesForm();
-						});
-					}
-				},
-				Quit: {
-					text: langLbl.Quit,
-					btnClass: 'btn btn--secondary',
-					keys: ['enter', 'shift'],
-					action: function () {
-					}
-				}
-			}
-		});
-	};
+    deleteLanguageRow = function (id) {
+        $.confirm({
+            title: langLbl.Confirm,
+            content: langLbl.confirmRemove,
+            buttons: {
+                Proceed: {
+                    text: langLbl.Proceed,
+                    btnClass: 'btn btn--primary',
+                    keys: ['enter', 'shift'],
+                    action: function () {
+                        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteLanguageRow', [id]), '', function (t) {
+                            teacherLanguagesForm();
+                        });
+                    }
+                },
+                Quit: {
+                    text: langLbl.Quit,
+                    btnClass: 'btn btn--secondary',
+                    keys: ['enter', 'shift'],
+                    action: function () {
+                    }
+                }
+            }
+        });
+    };
 
-	deleteTeachLanguageRow = function (id) {
-		$.confirm({
-			title: langLbl.Confirm,
-			content: langLbl.confirmRemove,
-			buttons: {
-				Proceed: {
-					text: langLbl.Proceed,
-					btnClass: 'btn btn--primary',
-					keys: ['enter', 'shift'],
-					action: function () {
-						fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeachLanguageRow', [id]), '', function (t) {
-							teacherLanguagesForm();
-						});
-					}
-				},
-				Quit: {
-					text: langLbl.Quit,
-					btnClass: 'btn btn--secondary',
-					keys: ['enter', 'shift'],
-					action: function () {
-					}
-				}
-			}
-		});
-	};
+    deleteTeachLanguageRow = function (id) {
+        $.confirm({
+            title: langLbl.Confirm,
+            content: langLbl.confirmRemove,
+            buttons: {
+                Proceed: {
+                    text: langLbl.Proceed,
+                    btnClass: 'btn btn--primary',
+                    keys: ['enter', 'shift'],
+                    action: function () {
+                        fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeachLanguageRow', [id]), '', function (t) {
+                            teacherLanguagesForm();
+                        });
+                    }
+                },
+                Quit: {
+                    text: langLbl.Quit,
+                    btnClass: 'btn btn--secondary',
+                    keys: ['enter', 'shift'],
+                    action: function () {
+                    }
+                }
+            }
+        });
+    };
 
 
-	teacherPreferences = function () {
-		$(dv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherPreferences'), '', function (t) {
-			$(dv).html(t);
+    teacherPreferences = function () {
+        $(dv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Teacher', 'teacherPreferences'), '', function (t) {
+            $(dv).html(t);
 
-		});
-	};
+        });
+    };
 
-	teacherQualificationForm = function (id) {
-		isRuningTeacherQualificationFormAjax = false;
-		$.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
-		fcom.ajax(fcom.makeUrl('Teacher', 'teacherQualificationForm', [id]), '', function (t) {
-			$.mbsmessage.close();
-			$.systemMessage.close()
-			$.facebox(t, 'facebox-medium');
-		});
-	};
+    teacherQualificationForm = function (id) {
+        isRuningTeacherQualificationFormAjax = false;
+        $.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
+        fcom.ajax(fcom.makeUrl('Teacher', 'teacherQualificationForm', [id]), '', function (t) {
+            $.mbsmessage.close();
+            $.systemMessage.close()
+            $.facebox(t, 'facebox-medium');
+        });
+    };
 
-	setUpTeacherQualification = function (frm) {
-		if (!$(frm).validate()) return false;
-		if (isRuningTeacherQualificationFormAjax) {
-			return false;
-		}
-		isRuningTeacherQualificationFormAjax = true;
-		var dv = $("#frm_fat_id_frmQualification");
-		$(frm.btn_submit).attr('disabled', 'disabled');
-		var formData = new FormData(frm);
-		$.loader.show();
-		$.ajax({
-			url: fcom.makeUrl('Teacher', 'setUpTeacherQualification'),
-			type: 'POST',
-			data: formData,
-			mimeType: "multipart/form-data",
-			contentType: false,
-			processData: false,
-			beforeSend: function () {
-				$.loader.show();
-				$.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
-			},
-			success: function (data, textStatus, jqXHR) {
-				$.loader.hide();
-				isRuningTeacherQualificationFormAjax = false;
-				$.mbsmessage.close();
-				var data = JSON.parse(data);
+    setUpTeacherQualification = function (frm) {
+        if (!$(frm).validate()) return false;
+        if (isRuningTeacherQualificationFormAjax) {
+            return false;
+        }
+        isRuningTeacherQualificationFormAjax = true;
+        var dv = $("#frm_fat_id_frmQualification");
+        $(frm.btn_submit).attr('disabled', 'disabled');
+        var formData = new FormData(frm);
+        $.loader.show();
+        $.ajax({
+            url: fcom.makeUrl('Teacher', 'setUpTeacherQualification'),
+            type: 'POST',
+            data: formData,
+            mimeType: "multipart/form-data",
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                $.loader.show();
+                $.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
+            },
+            success: function (data, textStatus, jqXHR) {
+                $.loader.hide();
+                isRuningTeacherQualificationFormAjax = false;
+                $.mbsmessage.close();
+                var data = JSON.parse(data);
 
-				if (data.status == 0) {
-					isRuningTeacherQualificationFormAjax = false;
-					$.mbsmessage(data.msg, true, 'alert alert--danger');
-					return false;
-				}
-				$.mbsmessage(data.msg, true, 'alert alert--success');
-				$(frm.btn_submit).removeAttr("disabled");
-				teacherQualification();
-				$.facebox.close();
-				setTimeout(function () {
-					$.mbsmessage.close();
-				}, 2000);
-			},
-			error: function (jqXHR, textStatus, errorThrown) {
-				$.loader.hide();
-				isRuningTeacherQualificationFormAjax = false;
-				$.mbsmessage.close();
-				$.mbsmessage(jqXHR.msg, true, 'alert alert--danger');
-				$(frm.btn_submit).removeAttr("disabled");
-			}
-		});
-	};
+                if (data.status == 0) {
+                    isRuningTeacherQualificationFormAjax = false;
+                    $.mbsmessage(data.msg, true, 'alert alert--danger');
+                    return false;
+                }
+                $.mbsmessage(data.msg, true, 'alert alert--success');
+                $(frm.btn_submit).removeAttr("disabled");
+                teacherQualification();
+                $.facebox.close();
+                setTimeout(function () {
+                    $.mbsmessage.close();
+                }, 2000);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $.loader.hide();
+                isRuningTeacherQualificationFormAjax = false;
+                $.mbsmessage.close();
+                $.mbsmessage(jqXHR.msg, true, 'alert alert--danger');
+                $(frm.btn_submit).removeAttr("disabled");
+            }
+        });
+    };
 
-	deleteTeacherQualification = function (id) {
-		if (confirm(langLbl['confirmRemove'])) {
-			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherQualification', [id]), '', function (t) {
-				teacherQualification();
-				$.facebox.close();
-			});
-		}
-	};
+    deleteTeacherQualification = function (id) {
+        if (confirm(langLbl['confirmRemove'])) {
+            fcom.updateWithAjax(fcom.makeUrl('Teacher', 'deleteTeacherQualification', [id]), '', function (t) {
+                teacherQualification();
+                $.facebox.close();
+            });
+        }
+    };
 
-	profileImageForm = function () {
-		$(profileInfoFormDiv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Account', 'profileImageForm'), '', function (t) {
-			$(profileInfoFormDiv).html(t);
-		});
-	};
+    profileImageForm = function () {
+        $(profileInfoFormDiv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Account', 'profileImageForm'), '', function (t) {
+            $(profileInfoFormDiv).html(t);
+        });
+    };
 
-	removeProfileImage = function () {
-		$.loader.show();
-		fcom.ajax(fcom.makeUrl('Account', 'removeProfileImage'), '', function (t) {
-			$.loader.hide();
-			profileImageForm();
-			if (isCometChatMeetingToolActive) {
-				name = userData.user_first_name + " " + userData.user_last_name;
-				userSeoUrl = userSeoBaseUrl + userData.user_url_name;
-				updateCometChatUser(userData.user_id, name, '', userSeoUrl);
-			}
+    removeProfileImage = function () {
+        $.loader.show();
+        fcom.ajax(fcom.makeUrl('Account', 'removeProfileImage'), '', function (t) {
+            $.loader.hide();
+            profileImageForm();
+            if (isCometChatMeetingToolActive) {
+                name = userData.user_first_name + " " + userData.user_last_name;
+                userSeoUrl = userSeoBaseUrl + userData.user_url_name;
+                updateCometChatUser(userData.user_id, name, '', userSeoUrl);
+            }
 
-		});
-	};
+        });
+    };
 
-	sumbmitProfileImage = function (goToLangForm) {
-		$.loader.show();
-		$("#frmProfile").ajaxSubmit({
-			delegation: true,
-			success: function (json) {
-				json = $.parseJSON(json);
-				$.loader.hide();
-				$(document).trigger('close.facebox');
-				if (json.status == 1) {
-					if (isCometChatMeetingToolActive) {
-						name = userData.user_first_name + " " + userData.user_last_name;
-						userSeoUrl = userSeoBaseUrl + userData.user_url_name;
-						updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
-					}
+    sumbmitProfileImage = function (goToLangForm) {
+        $.loader.show();
+        $("#frmProfile").ajaxSubmit({
+            delegation: true,
+            success: function (json) {
+                json = $.parseJSON(json);
+                $.loader.hide();
+                $(document).trigger('close.facebox');
+                if (json.status == 1) {
+                    if (isCometChatMeetingToolActive) {
+                        name = userData.user_first_name + " " + userData.user_last_name;
+                        userSeoUrl = userSeoBaseUrl + userData.user_url_name;
+                        updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
+                    }
 
-					$.mbsmessage(json.msg, true, 'alert alert--success');
-					if (goToLangForm && $('.profile-lang-li').length > 0) {
-						$('.profile-lang-li').first().click();
-					} else {
-						profileImageForm();
-					}
-				} else {
-					$.mbsmessage(json.msg, true, 'alert alert--danger');
-					return false;
-				}
+                    $.mbsmessage(json.msg, true, 'alert alert--success');
+                    if (goToLangForm && $('.profile-lang-li').length > 0) {
+                        $('.profile-lang-li').first().click();
+                    } else {
+                        profileImageForm();
+                    }
+                } else {
+                    $.mbsmessage(json.msg, true, 'alert alert--danger');
+                    return false;
+                }
 
-			}
-		});
-	};
+            }
+        });
+    };
 
-	$(document).on('click', '[data-method]', function () {
-		var data = $(this).data(),
-			$target,
-			result;
+    $(document).on('click', '[data-method]', function () {
+        var data = $(this).data(),
+            $target,
+            result;
 
-		if (data.method) {
-			data = $.extend({}, data); // Clone a new one
-			if (typeof data.target !== 'undefined') {
-				$target = $(data.target);
-				if (typeof data.option === 'undefined') {
-					try {
-						data.option = JSON.parse($target.val());
-					} catch (e) {
-						console.log(e.message);
-					}
-				}
-			}
-			result = $image.cropper(data.method, data.option);
-			if (data.method === 'getCroppedCanvas') {
-				$('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
-			}
+        if (data.method) {
+            data = $.extend({}, data); // Clone a new one
+            if (typeof data.target !== 'undefined') {
+                $target = $(data.target);
+                if (typeof data.option === 'undefined') {
+                    try {
+                        data.option = JSON.parse($target.val());
+                    } catch (e) {
+                        console.log(e.message);
+                    }
+                }
+            }
+            result = $image.cropper(data.method, data.option);
+            if (data.method === 'getCroppedCanvas') {
+                $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
+            }
 
-			if ($.isPlainObject(result) && $target) {
-				try {
-					$target.val(JSON.stringify(result));
-				} catch (e) {
-					console.log(e.message);
-				}
-			}
+            if ($.isPlainObject(result) && $target) {
+                try {
+                    $target.val(JSON.stringify(result));
+                } catch (e) {
+                    console.log(e.message);
+                }
+            }
 
-		}
-	});
+        }
+    });
 
-	var $image;
-	cropImage = function (obj) {
-		$image = obj;
-		$image.cropper({
-			aspectRatio: 1,
-			// autoCropArea: 0.4545,
-			// strict: true,
-			guides: false,
-			highlight: false,
-			dragCrop: false,
-			cropBoxMovable: false,
-			cropBoxResizable: false,
-			rotatable: true,
-			responsive: true,
-			crop: function (e) {
-				var json = [
-					'{"x":' + e.detail.x,
-					'"y":' + e.detail.y,
-					'"height":' + e.detail.height,
-					'"width":' + e.detail.width,
-					'"rotate":' + e.detail.rotate + '}'
-				].join();
-				$("#img_data").val(json);
-			},
-			built: function () {
-				$(this).cropper("zoom", 0.5);
-			},
-		})
-	};
+    var $image;
+    cropImage = function (obj) {
+        $image = obj;
+        $image.cropper({
+            aspectRatio: 1,
+            // autoCropArea: 0.4545,
+            // strict: true,
+            guides: false,
+            highlight: false,
+            dragCrop: false,
+            cropBoxMovable: false,
+            cropBoxResizable: false,
+            rotatable: true,
+            responsive: true,
+            crop: function (e) {
+                var json = [
+                    '{"x":' + e.detail.x,
+                    '"y":' + e.detail.y,
+                    '"height":' + e.detail.height,
+                    '"width":' + e.detail.width,
+                    '"rotate":' + e.detail.rotate + '}'
+                ].join();
+                $("#img_data").val(json);
+            },
+            built: function () {
+                $(this).cropper("zoom", 0.5);
+            },
+        })
+    };
 
-	popupImage = function (input) {
-		$.facebox(fcom.getLoader());
+    popupImage = function (input) {
+        $.facebox(fcom.getLoader());
 
-		wid = $(window).width();
-		if (wid > 767) {
-			wid = 500;
-		} else {
-			wid = 280;
-		}
+        wid = $(window).width();
+        if (wid > 767) {
+            wid = 500;
+        } else {
+            wid = 280;
+        }
 
-		var defaultform = "#frmProfile";
-		$("#avatar-action").val("demo_avatar");
-		$(defaultform).ajaxSubmit({
-			delegation: true,
-			success: function (json) {
-				json = $.parseJSON(json);
-				if (json.status == 1) {
-					$("#avatar-action").val("avatar");
-					var fn = "sumbmitProfileImage();";
-					$.facebox('<div class="popup__body"><div class="img-container "><img alt="Picture" src="" class="img_responsive" id="new-img" /></div><div class="img-description"><div class="rotator-info" style="padding:8px;text-align:center;">' + useMouseScroll + '</div><div class="-align-center rotator-actions"><a href="javascript:void(0)" class="btn btn--primary btn--sm" title="' + $("#rotate_left").val() + '" data-option="-90" data-method="rotate">' + $("#rotate_left").val() + '</a>&nbsp;<a onclick=' + fn + ' href="javascript:void(0)" class="btn btn--secondary btn--sm">' + $("#update_profile_img").val() + '</a>&nbsp;<a href="javascript:void(0)" class="btn btn--primary btn--sm rotate-right" title="' + $("#rotate_right").val() + '" data-option="90" data-method="rotate">' + $("#rotate_right").val() + '</a></div></div></div>', '');
-					$('#new-img').attr('src', json.file);
-					$('#new-img').width(wid);
-					cropImage($('#new-img'));
-				} else {
-					$.mbsmessage(json.msg, true, 'alert alert--danger');
-					$(document).trigger('close.facebox');
-					return false;
-					//$.facebox('<div class="popup__body"><div class="img-container marginTop20">'+json.msg+'</div></div>');
-				}
-			}
-		});
-	};
+        var defaultform = "#frmProfile";
+        $("#avatar-action").val("demo_avatar");
+        $(defaultform).ajaxSubmit({
+            delegation: true,
+            success: function (json) {
+                json = $.parseJSON(json);
+                if (json.status == 1) {
+                    $("#avatar-action").val("avatar");
+                    var fn = "sumbmitProfileImage();";
+                    $.facebox('<div class="popup__body"><div class="img-container "><img alt="Picture" src="" class="img_responsive" id="new-img" /></div><div class="img-description"><div class="rotator-info" style="padding:8px;text-align:center;">' + useMouseScroll + '</div><div class="-align-center rotator-actions"><a href="javascript:void(0)" class="btn btn--primary btn--sm" title="' + $("#rotate_left").val() + '" data-option="-90" data-method="rotate">' + $("#rotate_left").val() + '</a>&nbsp;<a onclick=' + fn + ' href="javascript:void(0)" class="btn btn--secondary btn--sm">' + $("#update_profile_img").val() + '</a>&nbsp;<a href="javascript:void(0)" class="btn btn--primary btn--sm rotate-right" title="' + $("#rotate_right").val() + '" data-option="90" data-method="rotate">' + $("#rotate_right").val() + '</a></div></div></div>', '');
+                    $('#new-img').attr('src', json.file);
+                    $('#new-img').width(wid);
+                    cropImage($('#new-img'));
+                } else {
+                    $.mbsmessage(json.msg, true, 'alert alert--danger');
+                    $(document).trigger('close.facebox');
+                    return false;
+                    //$.facebox('<div class="popup__body"><div class="img-container marginTop20">'+json.msg+'</div></div>');
+                }
+            }
+        });
+    };
 
-	getLangProfileInfoForm = function (id) {
-		$(profileInfoFormDiv).html(fcom.getLoader());
-		fcom.ajax(fcom.makeUrl('Account', 'userLangForm', [id]), '', function (t) {
-			$(profileInfoFormDiv).html(t);
-		});
-	};
+    getLangProfileInfoForm = function (id) {
+        $(profileInfoFormDiv).html(fcom.getLoader());
+        fcom.ajax(fcom.makeUrl('Account', 'userLangForm', [id]), '', function (t) {
+            $(profileInfoFormDiv).html(t);
+        });
+    };
 
-	setUpProfileLangInfo = function (frm, gotToNextLangForm) {
-		if (!$(frm).validate()) return;
-		var data = fcom.frmData(frm);
-		$.loader.show();
-		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileLangInfo'), data, function (t) {
-			$.loader.hide();
-			if (!gotToNextLangForm) {
-				if (t.langId > 0) {
-					getLangProfileInfoForm(t.langId);
-					return;
-				}
-			}
-			else if ($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0) {
-				$('.profile-lang-tab.is-active').next('.profile-lang-tab').find('a').click();
-			}
+    setUpProfileLangInfo = function (frm, gotToNextLangForm) {
+        if (!$(frm).validate()) return;
+        var data = fcom.frmData(frm);
+        $.loader.show();
+        fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileLangInfo'), data, function (t) {
+            $.loader.hide();
+            if (!gotToNextLangForm) {
+                if (t.langId > 0) {
+                    getLangProfileInfoForm(t.langId);
+                    return;
+                }
+            }
+            else if ($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0) {
+                $('.profile-lang-tab.is-active').next('.profile-lang-tab').find('a').click();
+            }
 
-		});
-	};
+        });
+    };
 
 })();

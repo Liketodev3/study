@@ -68,24 +68,24 @@ class StripePayController extends PaymentController
         } elseif ($orderInfo && $orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
             try {
                 $session = \Stripe\Checkout\Session::create([
-                            'customer_email' => $orderInfo['customer_email'],
-                            'payment_method_types' => ['card'],
-                            'metadata' => [
-                                'order_id' => $orderId
+                    'customer_email' => $orderInfo['customer_email'],
+                    'payment_method_types' => ['card'],
+                    'metadata' => [
+                        'order_id' => $orderId
+                    ],
+                    'line_items' => [[
+                        'price_data' => [
+                            'currency' => $systemCurrencyCode,
+                            'product_data' => [
+                                'name' => Label::getLabel('LBL_Buy_Lessons'),
                             ],
-                            'line_items' => [[
-                            'price_data' => [
-                                'currency' => $systemCurrencyCode,
-                                'product_data' => [
-                                    'name' => Label::getLabel('LBL_Buy_Lessons'),
-                                ],
-                                'unit_amount' => $payableAmount
-                            ],
-                            'quantity' => 1,
-                                ]],
-                            'mode' => 'payment',
-                            'success_url' => CommonHelper::generateFullUrl('StripePay', 'callback') . "?session_id={CHECKOUT_SESSION_ID}",
-                            'cancel_url' => CommonHelper::getPaymentCancelPageUrl(),
+                            'unit_amount' => $payableAmount
+                        ],
+                        'quantity' => 1,
+                    ]],
+                    'mode' => 'payment',
+                    'success_url' => CommonHelper::generateFullUrl('StripePay', 'callback') . "?session_id={CHECKOUT_SESSION_ID}",
+                    'cancel_url' => CommonHelper::getPaymentCancelPageUrl(),
                 ]);
                 $this->set('stripeSessionId', $session->id);
             } catch (exception $e) {
@@ -135,7 +135,7 @@ class StripePayController extends PaymentController
         $payload = file_get_contents('php://input');
         try {
             $event = \Stripe\Event::constructFrom(
-                            json_decode($payload, true)
+                json_decode($payload, true)
             );
         } catch (\UnexpectedValueException $e) {
             // Invalid payload
@@ -163,7 +163,7 @@ class StripePayController extends PaymentController
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
         if ($orderInfo["order_is_paid"] == Order::ORDER_IS_PAID) {
-            FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess'));
+            FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess', [$orderId]));
         }
         $paymentGatewayCharge = $orderPaymentObj->getOrderPaymentGatewayAmount();
         $payableAmount = $this->formatPayableAmount($paymentGatewayCharge);
@@ -181,7 +181,6 @@ class StripePayController extends PaymentController
             $orderPaymentObj->addOrderPaymentComments($payment_comments);
             FatApp::redirectUser($session->cancel_url);
         }
-        FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess'));
+        FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess', [$orderId]));
     }
-
 }

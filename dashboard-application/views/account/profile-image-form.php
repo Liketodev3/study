@@ -7,6 +7,7 @@
     $profileImageField = $profileImgFrm->getField('user_profile_image');
     if ($profileImgFrm->getField('us_video_link')) {
         $videoLinkField = $profileImgFrm->getField('us_video_link');
+		$videoLinkField->addFieldTagAttribute('onblur','validateVideolink(this);');
         $videoLinkField->addFieldTagAttribute('placeholder', Label::getLabel('LBL_VIDEO_LINK_PLACEHOLDER'));
     }
     $nextButton = $profileImgFrm->getField('btn_next');

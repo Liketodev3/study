@@ -41,8 +41,8 @@ class CommonHelper extends FatUtility
             }
         }
         $currencyData = Currency::getAttributesById(
-                        self::$_currency_id,
-                        ['currency_code', 'currency_symbol_left', 'currency_symbol_right', 'currency_value']
+            self::$_currency_id,
+            ['currency_code', 'currency_symbol_left', 'currency_symbol_right', 'currency_value']
         );
         self::$_currency_symbol_left = $currencyData['currency_symbol_left'];
         self::$_currency_symbol_right = $currencyData['currency_symbol_right'];
@@ -205,7 +205,7 @@ class CommonHelper extends FatUtility
         if (UrlHelper::isStaticContentProvider($controller, $action)) {
             return $url;
         }
-        
+
         /* if (in_array(strtolower($controller), ['jscss', 'image'])) {
             return $url;
         } */
@@ -866,7 +866,7 @@ class CommonHelper extends FatUtility
     {
         $instance = FatApplication::getInstance();
         if ('' == $template) {
-            $themeDirName = FatUtility::camel2dashed(substr($instance->getController(), 0, -(strlen('controller'))));
+            $themeDirName = FatUtility::camel2dashed(substr($instance->getController(), 0, - (strlen('controller'))));
             $actionName = FatUtility::camel2dashed($instance->getAction()) . '.php';
             $template = $themeDirName . '/' . $actionName;
         }
@@ -1315,22 +1315,22 @@ class CommonHelper extends FatUtility
         }
 
         return preg_replace(
-                [
-                    '#<(img|input)(>| .*?>)#s',
-                    // Remove a line break and two or more white-space(s) between tag(s)
-                    '#(<!--.*?-->)|(>)(?:\n*|\s{2,})(<)|^\s*|\s*$#s',
-                    '#(<!--.*?-->)|(?<!\>)\s+(<\/.*?>)|(<[^\/]*?>)\s+(?!\<)#s', // t+c || o+t
-                    '#(<!--.*?-->)|(<[^\/]*?>)\s+(<[^\/]*?>)|(<\/.*?>)\s+(<\/.*?>)#s', // o+o || c+c
-                    '#(<!--.*?-->)|(<\/.*?>)\s+(\s)(?!\<)|(?<!\>)\s+(\s)(<[^\/]*?\/?>)|(<[^\/]*?\/?>)\s+(\s)(?!\<)#s', // c+t || t+o || o+t -- separated by long white-space(s)
-                    '#(<!--.*?-->)|(<[^\/]*?>)\s+(<\/.*?>)#s', // empty tag
-                    '#<(img|input)(>| .*?>)<\/\1>#s', // reset previous fix
-                    '#(&nbsp;)&nbsp;(?![<\s])#', // clean up ...
-                    '#(?<=\>)(&nbsp;)(?=\<)#', // --ibid
-                    // Remove HTML comment(s) except IE comment(s)
-                    '#\s*<!--(?!\[if\s).*?-->\s*|(?<!\>)\n+(?=\<[^!])#s',
-                ],
-                ['<$1$2</$1>', '$1$2$3', '$1$2$3', '$1$2$3$4$5', '$1$2$3$4$5$6$7', '$1$2$3', '<$1$2', '$1 ', '$1', ''],
-                $input
+            [
+                '#<(img|input)(>| .*?>)#s',
+                // Remove a line break and two or more white-space(s) between tag(s)
+                '#(<!--.*?-->)|(>)(?:\n*|\s{2,})(<)|^\s*|\s*$#s',
+                '#(<!--.*?-->)|(?<!\>)\s+(<\/.*?>)|(<[^\/]*?>)\s+(?!\<)#s', // t+c || o+t
+                '#(<!--.*?-->)|(<[^\/]*?>)\s+(<[^\/]*?>)|(<\/.*?>)\s+(<\/.*?>)#s', // o+o || c+c
+                '#(<!--.*?-->)|(<\/.*?>)\s+(\s)(?!\<)|(?<!\>)\s+(\s)(<[^\/]*?\/?>)|(<[^\/]*?\/?>)\s+(\s)(?!\<)#s', // c+t || t+o || o+t -- separated by long white-space(s)
+                '#(<!--.*?-->)|(<[^\/]*?>)\s+(<\/.*?>)#s', // empty tag
+                '#<(img|input)(>| .*?>)<\/\1>#s', // reset previous fix
+                '#(&nbsp;)&nbsp;(?![<\s])#', // clean up ...
+                '#(?<=\>)(&nbsp;)(?=\<)#', // --ibid
+                // Remove HTML comment(s) except IE comment(s)
+                '#\s*<!--(?!\[if\s).*?-->\s*|(?<!\>)\n+(?=\<[^!])#s',
+            ],
+            ['<$1$2</$1>', '$1$2$3', '$1$2$3', '$1$2$3$4$5', '$1$2$3$4$5$6$7', '$1$2$3', '<$1$2', '$1 ', '$1', ''],
+            $input
         );
     }
 
@@ -1341,30 +1341,30 @@ class CommonHelper extends FatUtility
         }
 
         return preg_replace(
-                [
-                    '#("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')|\/\*(?!\!)(?>.*?\*\/)|^\s*|\s*$#s',
-                    // Remove unused white-space(s)
-                    '#("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\'|\/\*(?>.*?\*\/))|\s*+;\s*+(})\s*+|\s*+([*$~^|]?+=|[{};,>~+]|\s*+-(?![0-9\.])|!important\b)\s*+|([[(:])\s++|\s++([])])|\s++(:)\s*+(?!(?>[^{}"\']++|"(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')*+{)|^\s++|\s++\z|(\s)\s+#si',
-                    // Replace `0(cm|em|ex|in|mm|pc|pt|px|vh|vw|%)` with `0`
-                    '#(?<=[\s:])(0)(cm|em|ex|in|mm|pc|pt|px|vh|vw|%)#si',
-                    // Replace `:0 0 0 0` with `:0`
-                    '#:(0\s+0|0\s+0\s+0\s+0)(?=[;\}]|\!important)#i',
-                    // Replace `background-position:0` with `background-position:0 0`
-                    '#(background-position):0(?=[;\}])#si',
-                    // Replace `0.6` with `.6`, but only when preceded by `:`, `,`, `-` or a white-space
-                    '#(?<=[\s:,\-])0+\.(\d+)#s',
-                    // Minify string value
-                    '#(\/\*(?>.*?\*\/))|(?<!content\:)([\'"])([a-z_][a-z0-9\-_]*?)\2(?=[\s\{\}\];,])#si',
-                    '#(\/\*(?>.*?\*\/))|(\burl\()([\'"])([^\s]+?)\3(\))#si',
-                    // Minify HEX color code
-                    '#(?<=[\s:,\-]\#)([a-f0-6]+)\1([a-f0-6]+)\2([a-f0-6]+)\3#i',
-                    // Replace `(border|outline):none` with `(border|outline):0`
-                    '#(?<=[\{;])(border|outline):none(?=[;\}\!])#',
-                    // Remove empty selector(s)
-                    '#(\/\*(?>.*?\*\/))|(^|[\{\}])(?:[^\s\{\}]+)\{\}#s',
-                ],
-                ['$1', '$1$2$3$4$5$6$7', '$1', ':0', '$1:0 0', '.$1', '$1$3', '$1$2$4$5', '$1$2$3', '$1:0', '$1$2'],
-                $input
+            [
+                '#("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')|\/\*(?!\!)(?>.*?\*\/)|^\s*|\s*$#s',
+                // Remove unused white-space(s)
+                '#("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\'|\/\*(?>.*?\*\/))|\s*+;\s*+(})\s*+|\s*+([*$~^|]?+=|[{};,>~+]|\s*+-(?![0-9\.])|!important\b)\s*+|([[(:])\s++|\s++([])])|\s++(:)\s*+(?!(?>[^{}"\']++|"(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')*+{)|^\s++|\s++\z|(\s)\s+#si',
+                // Replace `0(cm|em|ex|in|mm|pc|pt|px|vh|vw|%)` with `0`
+                '#(?<=[\s:])(0)(cm|em|ex|in|mm|pc|pt|px|vh|vw|%)#si',
+                // Replace `:0 0 0 0` with `:0`
+                '#:(0\s+0|0\s+0\s+0\s+0)(?=[;\}]|\!important)#i',
+                // Replace `background-position:0` with `background-position:0 0`
+                '#(background-position):0(?=[;\}])#si',
+                // Replace `0.6` with `.6`, but only when preceded by `:`, `,`, `-` or a white-space
+                '#(?<=[\s:,\-])0+\.(\d+)#s',
+                // Minify string value
+                '#(\/\*(?>.*?\*\/))|(?<!content\:)([\'"])([a-z_][a-z0-9\-_]*?)\2(?=[\s\{\}\];,])#si',
+                '#(\/\*(?>.*?\*\/))|(\burl\()([\'"])([^\s]+?)\3(\))#si',
+                // Minify HEX color code
+                '#(?<=[\s:,\-]\#)([a-f0-6]+)\1([a-f0-6]+)\2([a-f0-6]+)\3#i',
+                // Replace `(border|outline):none` with `(border|outline):0`
+                '#(?<=[\{;])(border|outline):none(?=[;\}\!])#',
+                // Remove empty selector(s)
+                '#(\/\*(?>.*?\*\/))|(^|[\{\}])(?:[^\s\{\}]+)\{\}#s',
+            ],
+            ['$1', '$1$2$3$4$5$6$7', '$1', ':0', '$1:0 0', '.$1', '$1$3', '$1$2$4$5', '$1$2$3', '$1:0', '$1$2'],
+            $input
         );
     }
 
@@ -1376,19 +1376,19 @@ class CommonHelper extends FatUtility
         }
 
         return preg_replace(
-                [
-                    '#\s*("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')\s*|\s*\/\*(?!\!|@cc_on)(?>[\s\S]*?\*\/)\s*|\s*(?<![\:\=])\/\/.*(?=[\n\r]|$)|^\s*|\s*$#',
-                    // Remove white-space(s) outside the string and regex
-                    '#("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\'|\/\*(?>.*?\*\/)|\/(?!\/)[^\n\r]*?\/(?=[\s.,;]|[gimuy]|$))|\s*([!%&*\(\)\-=+\[\]\{\}|;:,.<>?\/])\s*#s',
-                    // Remove the last semicolon
-                    '#;+\}#',
-                    // Minify object attribute(s) except JSON attribute(s). From `{'foo':'bar'}` to `{foo:'bar'}`
-                    '#([\{,])([\'])(\d+|[a-z_][a-z0-9_]*)\2(?=\:)#i',
-                    // --ibid. From `foo['bar']` to `foo.bar`
-                    '#([a-z0-9_\)\]])\[([\'"])([a-z_][a-z0-9_]*)\2\]#i',
-                ],
-                ['$1', '$1$2', '}', '$1$3', '$1.$3'],
-                $input
+            [
+                '#\s*("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\')\s*|\s*\/\*(?!\!|@cc_on)(?>[\s\S]*?\*\/)\s*|\s*(?<![\:\=])\/\/.*(?=[\n\r]|$)|^\s*|\s*$#',
+                // Remove white-space(s) outside the string and regex
+                '#("(?:[^"\\\]++|\\\.)*+"|\'(?:[^\'\\\\]++|\\\.)*+\'|\/\*(?>.*?\*\/)|\/(?!\/)[^\n\r]*?\/(?=[\s.,;]|[gimuy]|$))|\s*([!%&*\(\)\-=+\[\]\{\}|;:,.<>?\/])\s*#s',
+                // Remove the last semicolon
+                '#;+\}#',
+                // Minify object attribute(s) except JSON attribute(s). From `{'foo':'bar'}` to `{foo:'bar'}`
+                '#([\{,])([\'])(\d+|[a-z_][a-z0-9_]*)\2(?=\:)#i',
+                // --ibid. From `foo['bar']` to `foo.bar`
+                '#([a-z0-9_\)\]])\[([\'"])([a-z_][a-z0-9_]*)\2\]#i',
+            ],
+            ['$1', '$1$2', '}', '$1$3', '$1.$3'],
+            $input
         );
     }
 
@@ -1422,8 +1422,8 @@ class CommonHelper extends FatUtility
         }
         //Something to write to txt log
         $log = 'User: ' . $_SERVER['REMOTE_ADDR'] . ' - ' . date('F j, Y, g:i a') . PHP_EOL .
-                'data: ' . $str . PHP_EOL .
-                '-------------------------' . PHP_EOL;
+            'data: ' . $str . PHP_EOL .
+            '-------------------------' . PHP_EOL;
         $file = CONF_UPLOADS_PATH . './log_' . date('Y-m-d') . '.txt';
         //Save string to log, use FILE_APPEND to append.
         file_put_contents($file, $log, FILE_APPEND);
@@ -1662,9 +1662,9 @@ class CommonHelper extends FatUtility
             if (count($teachLangs) > 2) {
                 $first_array = array_slice($teachLangs, 0, 2);
                 $second_array = array_slice($teachLangs, 2, count($teachLangs));
-                ?>
+?>
                 <div class="language">
-                    <?php foreach ($first_array as $teachLang){ ?>
+                    <?php foreach ($first_array as $teachLang) { ?>
                         <span class="main-language"><?php echo $teachLang; ?></span>
                     <?php } ?>
                     <ul>
@@ -1679,14 +1679,14 @@ class CommonHelper extends FatUtility
                         </li>
                     </ul>
                 </div>
-                <?php
+            <?php
                 return;
             }
             echo '<div class="language">';
             foreach ($teachLangs as $teachLang) {
-                ?>
+            ?>
                 <span class="main-language"><?php echo $teachLang; ?></span>
-                <?php
+<?php
             }
             echo '</div>';
 
@@ -1954,4 +1954,18 @@ class CommonHelper extends FatUtility
         ];
     }
 
+    public static function validateIntroVideoLink($link): string
+    {
+        if (empty($link)) {
+            return '';
+        }
+        $pattern = "#" . applicationConstants::INTRODUCTION_VIDEO_LINK_REGEX . "#";
+        if (!preg_match($pattern, $link, $matches)) {
+            return '';
+        }
+        if (empty($matches[1])) {
+            $link = "//" . $link;
+        }
+        return $link;
+    }
 }
