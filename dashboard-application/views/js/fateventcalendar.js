@@ -254,10 +254,10 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
 
     var calendarEl = document.getElementById('d_calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, conf);
-    if($( window ).width() <= 767) {
-        console.log($( window ).width(), 'width');
+    if ($(window).width() <= 767) {
+        console.log($(window).width(), 'width');
         // calendar.setOption('height', 'auto');
-      }
+    }
     calendar.render();
 
     jQuery('body').find(".fc-time-button").parent().html("<h6><span>" + langLbl.myTimeZoneLabel + " :-</span> <span class='timer'>" + moment(current_time).format('hh:mm:ss A') + "</span><span class='timezoneoffset'>(" + langLbl.timezoneString + " " + timeZoneOffset + ")</span></h6>");
@@ -270,8 +270,8 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
     jQuery(document).bind('close.facebox', function () {
         jQuery('body > .tooltipevent').remove();
     });
-    
-  
+
+
 };
 
 FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
@@ -354,6 +354,7 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
     var calConf = {
         selectable: true,
         editable: true,
+        initialDate: '2018-01-07',
         slotEventOverlap: false,
         now: current_time,
         headerToolbar: {
