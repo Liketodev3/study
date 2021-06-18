@@ -1,8 +1,4 @@
 /* FOR NAV TOGGLES 
-$('.toggle--nav-js').click(function () {
-    $(this).toggleClass("is-active");
-    $('html').toggleClass("show-nav-js");
-});*/
 
 /* FOR LANGUAGE/CURRENCY
 $('.nav__item-settings-js').click(function () {

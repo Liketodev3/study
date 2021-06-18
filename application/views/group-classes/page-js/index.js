@@ -41,6 +41,15 @@ $("document").ready(function () {
         search(frm);
     });
 
+    $(document).on('keyup',"input[name='keyword']",function (e) {
+        var code = e.which;
+        if (code == 13) {
+            e.preventDefault();
+            var frm = document.frmTeacherSrch;
+            search(frm);
+        }
+    });
+
 });
 
 (function () {
@@ -48,11 +57,14 @@ $("document").ready(function () {
         var data = fcom.frmData(frm);
         var dv = $("#listingContainer");
         $(dv).html(fcom.getLoader());
+        console.log(data);
 
         fcom.ajax(fcom.makeUrl('GroupClasses', 'search'), data, function (t) {
             $(dv).html(t);
         });
     };
+
+    
     setTeachLangId = function (el, id, name) {
         if (typeof page == undefined || page == null) {
             page = 1;
