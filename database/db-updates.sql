@@ -482,3 +482,7 @@ ALTER TABLE `tbl_user_teacher_requests`   MODIFY `utrequest_id` bigint NOT NULL 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description', '1', 'By signing up with Yo!Coach, you agree to %s and %s');
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_COUPON_APPLIED', '1', 'Applied');
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
+('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}', 1, '<p>Your order has been successfully processed!</p><p>You can view your order history by going to the <a class=\"color-secondary\" href=\"{dashboard-url}\">my account</a> page .</p><p>Please direct any questions you have to the <a class=\"color-secondary\" href=\"{contact-us-page-url}\">web portal owner</a>.</p><p>Thanks for choosing us online!'),
+('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}', 2, '<p> تم تجهيز طلبك بنجاح! </ P> <p> ويمكنك عرض التاريخ طلبك عن طريق الذهاب إلى <a class=\"color-secondary\" href=\"{dashboard-url}\"> صفحتي حساب </A>. </ P > <p> يرجى توجيه أي أسئلة لديك إلى <a class=\"color-secondary\" href=\"{contact-us-page-url}\"> البوابة الإلكترونية مالك </A>. </ P> <p> وشكرا لاختيارك لنا على الانترنت!');
