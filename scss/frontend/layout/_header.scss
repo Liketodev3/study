@@ -8,6 +8,12 @@
     #{theme('direction.right','value')}: 0;
     top: 0;
     z-index: 11;
+
+    // @media(min-width: theme('breakpoints.xxxl','value')) {
+    //     .container{
+    //         width: 1800px;
+    //     }
+    // }
 }
 
 $header-primary: 'header-primary';
@@ -765,3 +771,5 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
         }
     }
 }
+
+
