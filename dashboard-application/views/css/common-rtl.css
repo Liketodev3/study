@@ -1852,7 +1852,7 @@ ul {
   .calendar-view {
     height: 100%; }
     .calendar-view #calendar-container {
-      height: calc(100% - 90px); }
+      height: calc(100% - 145px); }
       .calendar-view #calendar-container > div {
         height: 100%; } }
 
