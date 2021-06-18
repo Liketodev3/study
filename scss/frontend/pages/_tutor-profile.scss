@@ -179,6 +179,13 @@
             align-items: center;
             justify-content: space-between;
             position: relative;
+
+            @media(min-width: theme('breakpoints.md','value')){
+                &{
+                    pointer-events: none;
+                } 
+            }
+
             @media(max-width: theme('breakpoints.md','value')){
                 
                 &::after{
@@ -200,7 +207,7 @@
                     font-size: 1.2rem;
                 }
                 @media(min-width: theme('breakpoints.xl','value')){
-                    font-size: var(--font-size-xxl);
+                    font-size: var(--font-size-xxl); pointer-events: none;
                 }
             }
             
@@ -691,6 +698,7 @@
     }
     @media(max-width: theme('breakpoints.md','value')){
         border: none;
+        padding: 0 theme('padding.4');
     }
 }
 .book__actions {
@@ -754,6 +762,11 @@
     @media(min-width: theme('breakpoints.lg','value')){
         display: grid;
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media(max-width: theme('breakpoints.md','value')){
+        display: flex;
+        flex-direction: column;
     }
 
     scroll-behavior: smooth;

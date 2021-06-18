@@ -110,7 +110,7 @@ foreach ($userTeachLangs as $key => $value) {
                     <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
                         <h3><?php echo Label::getLabel('LBL_About', $siteLangId); ?> <?php echo $teacher['user_full_name']; ?></h3>
                     </div>
-                    <div class="panel-cover__body panel__body-target panel__body-target-js">
+                    <div class="panel-cover__body panel__body-target panel__body-target-js" style="display:block;">
                         <div class="content__row">
                             <p><?php echo nl2br($teacher['user_profile_info']); ?></p>
                         </div>
@@ -180,13 +180,12 @@ foreach ($userTeachLangs as $key => $value) {
                     </div>
                 </div>
                 <div class="panel-cover panel--calendar">
-                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
+                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js calendar--trigger-js">
                         <h3><?php echo Label::getLabel('LBL_Schedule', $siteLangId) ?></h3>
                     </div>
                     <div class="panel-cover__body panel__body-target panel__body-target-js">
                         <div class="calendar-wrapper">
                             <div id="availbility" class="calendar-wrapper__body">
-
                             </div>
                         </div>
                         <div class="-gap"></div>
@@ -411,13 +410,18 @@ foreach ($userTeachLangs as $key => $value) {
         $('.panel__head-trigger-js').click(function () {
             if ($(this).hasClass('is-active')) {
                 $(this).removeClass('is-active');
-                $(this).siblings('.panel__body-target-js').slideUp(); return false;
+                $(this).siblings('.panel__body-target-js').slideUp(); 
+                return false;
             }
             $('.panel__head-trigger-js').removeClass('is-active');
             $(this).addClass("is-active");
             $('.panel__body-target-js').slideUp();
             $(this).siblings('.panel__body-target-js').slideDown();
             $('.slider-onethird-js').slick('reinit');
+            if($(this).hasClass('calendar--trigger-js'))
+            {
+                window.viewOnlyCal.render();
+            }
         });
     });
 </script>

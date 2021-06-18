@@ -718,6 +718,9 @@ $dashboard-calendar: "dashboard-calendar";
 .availability-setting-calendar .slot_available{
     background: #0ab359;
     border-color: #0ab359;
+    .fc-event-time{
+        color: theme('color.dark');
+    }
 }
 @media (max-width:theme('breakpoints.md','value')) {
     .fc-toolbar-chunk{
