@@ -115,8 +115,7 @@ class WalletController extends LoggedUserController
         $str = str_replace("{site-currency-symbol}", CommonHelper::getSystemCurrencySymbol(), $str);
         $fld = $frm->addFloatField($str, 'amount');
         $fld->requirements()->setFloatPositive();
-        $minWithdrawLimit = FatApp::getConfig('CONF_MIN_WITHDRAW_LIMIT', FatUtility::VAR_INT, 1);
-        $fld->requirements()->setRange($minWithdrawLimit, 999999);
+        $fld->requirements()->setRange(1, 999999);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Add_Money_to_account', $this->siteLangId));
         return $frm;
     }

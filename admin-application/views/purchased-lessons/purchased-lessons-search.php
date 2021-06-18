@@ -81,7 +81,7 @@ foreach ($arr_listing as $sn => $row) {
 				if ($row['slesson_status'] == ScheduledLesson::STATUS_CANCELLED) {
 					$selectStatusArr = array(ScheduledLesson::STATUS_CANCELLED => $selectStatusArr[ScheduledLesson::STATUS_CANCELLED]);
 				}
-				$select = new HtmlElement('select', array('id' => 'user_confirmed_select_' . $row['sldetail_id'], 'class' => 'lesson-status-dropdown', 'name' => 'order_is_paid', 'onchange' => "updateScheduleStatus(this, '" . $row['sldetail_id'] . "',this.value,'" . $row['slesson_status'] . "')"));
+				$select = new HtmlElement('select', array('id' => 'user_confirmed_select_' . $row['sldetail_id'], 'class' => 'lesson-status-dropdown status-field', 'name' => 'order_is_paid', 'onchange' => "updateScheduleStatus(this, '" . $row['sldetail_id'] . "',this.value,'" . $row['slesson_status'] . "')"));
 				if ($row['slesson_grpcls_id'] > 0) {
 					$disabledStatusArr[] = ScheduledLesson::STATUS_NEED_SCHEDULING;
 				}

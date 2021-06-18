@@ -2766,7 +2766,8 @@ strong.span-right {
   margin-top: 3px; }
 
 .menu-offset {
-  height: 100%; }
+  height: 100%;
+  position: relative; }
 
 .infobar--primary {
   background: var(--color-primary);
@@ -3622,19 +3623,22 @@ div.tagsinput div {
   min-width: 1.75em;
   height: 1.75em;
   position: absolute;
-  right: 1rem;
+  left: 1rem;
   top: 50%;
   border-radius: 1.75em;
-  padding-left: var(--padding-1);
+  padding-right: var(--padding-1);
   font-size: 0.66em;
   line-height: 1.75em;
-  padding-right: var(--padding-1);
+  padding-left: var(--padding-1);
   -webkit-transform: translate(0, -50%);
       -ms-transform: translate(0, -50%);
           transform: translate(0, -50%); }
+  @media (max-width: 767px) {
+    .menu--steps .profile--progress--menu .menu__icon {
+      left: 0rem; } }
   .menu--steps .profile--progress--menu .menu__icon::before {
     position: absolute;
-    left: 0.43rem;
+    right: 0.43rem;
     font-weight: 600;
     content: "!";
     color: #fff;
@@ -5008,11 +5012,8 @@ div.tagsinput div {
   position: absolute;
   bottom: 0px;
   background: #fff;
-  right: 50%;
+  right: 0;
   justify-content: center;
-  -webkit-transform: translateX(-50%);
-      -ms-transform: translateX(-50%);
-          transform: translateX(-50%);
   width: 100%;
   height: 44px;
   -webkit-box-align: center;

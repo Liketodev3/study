@@ -577,17 +577,20 @@ $aside--progress--menu: "aside--progress--menu";
             min-width: 1.75em;
             height: 1.75em;
             position: absolute;
-            right: 1rem;
+            #{theme('direction.right','value')}: 1rem;
             top: 50%;
             border-radius: 1.75em;
-            padding-left: var(--padding-1);
+            padding-#{theme('direction.left','value')}: var(--padding-1);
             font-size: 0.66em;
             line-height: 1.75em;
-            padding-right: var(--padding-1);
+            padding-#{theme('direction.right','value')}: var(--padding-1);
             transform: translate(0, -50%);
+            @media (max-width:theme('breakpoints.md','value')) {
+                #{theme('direction.right','value')}: 0rem;
+            }
             &::before{
                 position: absolute;
-                left: 0.43rem;
+                #{theme('direction.left','value')}: 0.43rem;
                 font-weight: 600;
                 content: "!";
                 color: #fff;

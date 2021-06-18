@@ -41,7 +41,7 @@ foreach ($arr_listing as $sn=>$row){
                         $status = array(Order::ORDER_IS_CANCELLED => $status[Order::ORDER_IS_CANCELLED]);
                     }
 					if($canEdit){
-						$select = new HtmlElement('select',array('id'=>'user_confirmed_select_'.$row['order_id'],'name'=>'order_is_paid','onchange'=>"updateOrderStatus(this,'".$row['order_id']."',this.value,'".$row[$key]."')"));
+						$select = new HtmlElement('select',array('class'=>'status-field','id'=>'user_confirmed_select_'.$row['order_id'],'name'=>'order_is_paid','onchange'=>"updateOrderStatus(this,'".$row['order_id']."',this.value,'".$row[$key]."')"));
 						foreach($status as $status_key=>$status_value){
 							if($status_key == $row[$key]){
 								$select->appendElement('option',array('value'=>$status_key,'selected'=>'selected'), $status_value);

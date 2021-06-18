@@ -88,7 +88,6 @@ class LearnerController extends LearnerBaseController
         $this->_template->render(false, false);
     }
 
-    //public function myTeacher($teacherId){
     public function myTeacher($user_name)
     {
         $srchTeacher = new UserSearch();
@@ -126,13 +125,14 @@ class LearnerController extends LearnerBaseController
             'IFNULL(uft_id, 0) as uft_id',
             'IFNULL(country_name, country_code) as user_country_name',
             'IFNULL(state_name, state_identifier) as user_state_name',
-            'IFNULL(slanguage_name, slanguage_identifier) as teachlanguage_name',
+            'IFNULL(tlanguage_name, tlanguage_identifier) as teachlanguage_name',
             'utsl.spoken_language_names',
             'utsl.spoken_languages_proficiency',
             'us_video_link',
             'us_is_trial_lesson_enabled',
             'utl_tlanguage_ids'
         ]);
+
         $rs = $srch->getResultSet();
         $teacher = FatApp::getDb()->fetch($rs);
         if (empty($teacher)) {

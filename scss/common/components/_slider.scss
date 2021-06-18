@@ -133,24 +133,24 @@
 }
 
 .slick-arrow.slick-prev {
-    #{theme('direction.left','value')}: 0;
+  left: 0;
 }
 
 .slick-arrow.slick-prev:before {
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
     margin-#{theme('direction.left','value')}: -6px;
 }
 
 .slick-arrow.slick-next {
-    #{theme('direction.right','value')}: 0;
+    right: 0;
 }
 
 .slick-arrow.slick-next:before {
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
-    -ms-transform: rotate(-135deg);
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
     margin-#{theme('direction.left','value')}: -10px;
 }
 
@@ -158,25 +158,29 @@
     opacity: 0;
 }
 
-
-.slick-dots li {
-    display: inline-block;
-    vertical-align: top;
-     margin-#{theme('direction.right','value')}: 10px;
+.slick-dots {
+ 
+    text-align: center;
+    li{
+        display: inline-block;
+        vertical-align: top;
+         margin-#{theme('direction.right','value')}: 10px;
+        button{
+            width: 30px;
+            height: 6px;
+            border: none; font-size: 0; background: rgba(0, 0, 0, 0.2);
+            
+        }
+        &.slick-active{
+           button{ background:theme('color.primary');}
+        }
+        
+    }
+   
 }
 
-.slick-dots li button {
-    width: 16px;
-    height: 16px;
-    background: rgba(255, 255, 255, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    font-size: 0;
-}
 
 
 
-.slick-dots li.slick-active button {
-    background:theme('color.primary');
-    border-color:theme('color.primary');
 
-}
+

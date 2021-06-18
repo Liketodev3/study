@@ -46,28 +46,27 @@ class TeacherRequestController extends MyAppController
 
 
         $teacherRequestRow = TeacherRequest::getData($this->userId);
-		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_APPROVED) {
-			if (true !== User::canAccessTeacherDashboard()) {
-				die("Please contact web master, Though your teacher request is approved, But Still not marked as teacher.");
-			}
-			FatApp::redirectUser(CommonHelper::generateUrl('Teacher'));
-		}
-        
-		if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_PENDING) {
-			
-		}
-		/* check if maximum attempts reached [ */
-		if (true === TeacherRequest::isMadeMaximumAttempts($this->userId)) {
-			Message::addErrorMessage(Label::getLabel('MSG_You_already_consumed_max_attempts'));
-			FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
-		}
-		/* ] */
+        if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_APPROVED) {
+            if (true !== User::canAccessTeacherDashboard()) {
+                die("Please contact web master, Though your teacher request is approved, But Still not marked as teacher.");
+            }
+            FatApp::redirectUser(CommonHelper::generateUrl('Teacher', '', [], CONF_WEBROOT_DASHBOARD));
+        }
+
+        if (false !== $teacherRequestRow && $teacherRequestRow['utrequest_status'] == TeacherRequest::STATUS_PENDING) {
+        }
+        /* check if maximum attempts reached [ */
+        if (true === TeacherRequest::isMadeMaximumAttempts($this->userId)) {
+            Message::addErrorMessage(Label::getLabel('MSG_You_already_consumed_max_attempts'));
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
+        }
+        /* ] */
 
         if (!$this->userId) {
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest'));
         }
 
-      
+
         $spokenLangs = SpokenLanguage::getAllLangs($this->siteLangId, true);
         $frm = $this->getForm($this->siteLangId, $spokenLangs);
         $userDetails = $user->getFlds();
@@ -499,20 +498,21 @@ class TeacherRequestController extends MyAppController
         return  $records;
     }
 
-    private function verifyTeacherRequestRow(){
+    private function verifyTeacherRequestRow()
+    {
         $srch = new TeacherRequestSearch();
-		$srch->joinUsers();
-		$srch->addCondition('utrequest_user_id', '=', $this->userId);
-		$srch->addMultiplefields(array(
-			'utrequest_attempts',
-			'utrequest_id',
-			'utrequest_status',
-			'concat(user_first_name, " ", user_last_name) as user_name',
-			'utrequest_reference'
-		));
-		$srch->addOrder('utrequest_id', 'desc');
-		$rs = $srch->getResultSet();
-		$teacherRequestRow = FatApp::getDb()->fetch($rs);
+        $srch->joinUsers();
+        $srch->addCondition('utrequest_user_id', '=', $this->userId);
+        $srch->addMultiplefields(array(
+            'utrequest_attempts',
+            'utrequest_id',
+            'utrequest_status',
+            'concat(user_first_name, " ", user_last_name) as user_name',
+            'utrequest_reference'
+        ));
+        $srch->addOrder('utrequest_id', 'desc');
+        $rs = $srch->getResultSet();
+        $teacherRequestRow = FatApp::getDb()->fetch($rs);
 
         return $teacherRequestRow;
     }
