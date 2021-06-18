@@ -1,5 +1,21 @@
 (function ($) {
 
+    resubmit = function () {
+        fcom.ajax(fcom.makeUrl('TeacherRequest', 'formStep1', []), 'resubmit=1', function (res) {
+            try {
+                var response = JSON.parse(res);
+                if (response.sttus == 1) {
+                    $.mbsmessage(response.msg, true, 'alert alert--success');
+                } else {
+                    $.mbsmessage(response.msg, true, 'alert alert--danger');
+                }
+            } catch (e) {
+                $.mbsmessage.close();
+                $("#main-container").html(res);
+            }
+        });
+    };
+    
     getform = function (step) {
         fcom.ajax(fcom.makeUrl('TeacherRequest', 'formStep' + step, []), '', function (res) {
             try {

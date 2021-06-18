@@ -38,18 +38,33 @@ class TeacherRequestController extends MyAppController
     {
         $srch = new SearchBase('tbl_user_teacher_requests');
         $srch->addCondition('utrequest_user_id', '=', $userId);
+        $srch->addOrder('utrequest_id', 'DESC');
         $srch->doNotCalculateRecords();
         return FatApp::getDb()->fetch($srch->getResultSet());
     }
 
+    private function getRequestCount(int $userId)
+    {
+        $srch = new SearchBase('tbl_user_teacher_requests');
+        $srch->addCondition('utrequest_user_id', '=', $userId);
+        $srch->getResultSet();
+        return $srch->recordCount();
+    }
+
     public function form()
     {
-        if (FatUtility::int($this->userId) < 1) {
+        $userId = FatUtility::int($this->userId);
+        if ($userId < 1) {
             UserAuthentication::logoutGuestTeacher();
             FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', '', [], CONF_WEBROOT_FRONTEND));
         }
-        $request = $this->getRequest($this->userId);
-        $this->set('step', $request['utrequest_step'] ?? 1);
+        $requestCount = $this->getRequestCount($userId);
+        $allowedCount = FatApp::getConfig('CONF_MAX_TEACHER_REQUEST_ATTEMPT');
+        if ($requestCount == $allowedCount) {
+            $this->set('step', 5);
+        } else {
+            $this->set('step', $this->getRequest($userId)['utrequest_step'] ?? 1);
+        }
         $this->set('exculdeMainHeaderDiv', false);
         $this->_template->addJs('js/jquery.form.js');
         $this->_template->addJs('js/cropper.js');
@@ -59,16 +74,28 @@ class TeacherRequestController extends MyAppController
         $this->_template->render(true, false);
     }
 
+    private function attemptReachedCheck()
+    {
+        if ($this->getRequestCount($this->userId) <= FatApp::getConfig('CONF_MAX_TEACHER_REQUEST_ATTEMPT')) {
+            return true;
+        }
+        FatUtility::dieJsonError(Label::getLabel('LBL_YOU_HAVE_REACH_MAX_ATTEMPTS_TO_SUBMIT_REQUEST'));
+    }
+
     public function formStep1()
     {
         $userId = FatUtility::int($this->userId);
         if ($userId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
+        $resubmit = FatApp::getPostedData('resubmit', FatUtility::VAR_INT, 0);
+        $this->attemptReachedCheck();
         $frm = $this->getFormStep1($this->siteLangId);
         $request = $this->getRequest($userId);
-        if (!empty($request)) {
+        if (!empty($request) && $resubmit == 0) {
             $frm->fill($request);
+        } else {
+            $frm->fill(['resubmit' => $resubmit]);
         }
         $this->set('frm', $frm);
         $this->set('request', $request);
@@ -82,6 +109,7 @@ class TeacherRequestController extends MyAppController
         if ($userId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
+        $this->attemptReachedCheck();
         $request = $this->getRequest($userId);
         if (empty($request)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
@@ -100,6 +128,7 @@ class TeacherRequestController extends MyAppController
         if ($userId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
+        $this->attemptReachedCheck();
         $request = $this->getRequest($userId);
         if (empty($request)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
@@ -123,6 +152,7 @@ class TeacherRequestController extends MyAppController
         if ($userId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
+        $this->attemptReachedCheck();
         $request = $this->getRequest($userId);
         if (empty($request)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
@@ -150,6 +180,8 @@ class TeacherRequestController extends MyAppController
         $this->set('fileRow', $fileRow);
         $this->set('request', $request);
         $this->set('user', User::getAttributesById($userId));
+        $this->set('requestCount', $this->getRequestCount($userId));
+        $this->set('allowedCount', FatApp::getConfig('CONF_MAX_TEACHER_REQUEST_ATTEMPT'));
         $this->_template->render(false, false);
     }
 
@@ -159,11 +191,11 @@ class TeacherRequestController extends MyAppController
         if ($userId < 1) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
+        $resubmit = FatApp::getPostedData('resubmit', FatUtility::VAR_INT, 0);
         $frm = $this->getFormStep1($this->siteLangId);
         if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
-
         if (!empty($_FILES['user_photo_id']['tmp_name'] ?? '')) {
             $file = new AttachedFile();
             $photoName = $_FILES['user_photo_id']['name'];
@@ -187,7 +219,7 @@ class TeacherRequestController extends MyAppController
             'utrequest_phone_number' => $post['utrequest_phone_number'],
         ];
         $request = $this->getRequest($userId);
-        if (!empty($request)) {
+        if (!empty($request) && $resubmit == applicationConstants::NO) {
             $data = [
                 'utrequest_id' => $request['utrequest_id'],
                 'utrequest_first_name' => $post['utrequest_first_name'],
@@ -199,8 +231,14 @@ class TeacherRequestController extends MyAppController
         }
         $record = new TableRecord('tbl_user_teacher_requests');
         $record->assignValues($data);
-        if (!$record->addNew([], $data)) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
+        if ($resubmit == applicationConstants::YES) {
+            if (!$record->addNew()) {
+                FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
+            }
+        } else {
+            if (!$record->addNew([], $data)) {
+                FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
+            }
         }
         FatUtility::dieJsonSuccess(['step' => 2, 'msg' => Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY')]);
     }
@@ -271,9 +309,17 @@ class TeacherRequestController extends MyAppController
         if (empty($request)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
-        $teachLangs = array_filter(FatUtility::int($post['utrequest_teach_slanguage_id']));
-        $speakLangs = array_filter(FatUtility::int(array_values($post['utrequest_language_speak'])));
-        $speakLangsProf = array_filter(FatUtility::int(array_values($post['utrequest_language_speak_proficiency'])));
+        $teachLangs = json_encode(array_filter(FatUtility::int($post['utrequest_teach_slanguage_id'])));
+        $speakLangs = [];
+        $speakLangArr = array_filter(FatUtility::int(array_values($post['utrequest_language_speak'])));
+        foreach ($speakLangArr as $key => $value) {
+            array_push($speakLangs, $value);
+        }
+        $speakLangsProf = [];
+        $speakLangsProfArr = array_filter(FatUtility::int(array_values($post['utrequest_language_speak_proficiency'])));
+        foreach ($speakLangsProfArr as $key => $value) {
+            array_push($speakLangsProf, $value);
+        }
         if (empty($speakLangs) || empty($speakLangsProf)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_SPEAK_LANGUAGE_AND_PROFICIENCY_REQUIRED'));
         }
@@ -281,10 +327,11 @@ class TeacherRequestController extends MyAppController
         $data = [
             'utrequest_step' => 4,
             'utrequest_id' => $request['utrequest_id'],
-            'utrequest_teach_slanguage_id' => json_encode($teachLangs),
+            'utrequest_teach_slanguage_id' => $teachLangs,
             'utrequest_language_speak' => json_encode($speakLangs),
             'utrequest_language_speak_proficiency' => json_encode($speakLangsProf),
         ];
+
         $record->assignValues($data);
         if (!$record->addNew([], $data)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
@@ -329,6 +376,7 @@ class TeacherRequestController extends MyAppController
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
         $fldPhn->requirements()->setCustomErrorMessage(Label::getLabel('LBL_PHONE_NO_VALIDATION_MSG'));
         $frm->addHiddenField('', 'utrequest_phone_code');
+        $frm->addHiddenField('', 'resubmit', 0);
         $frm->addFileUpload(Label::getLabel('LBL_Photo_Id'), 'user_photo_id');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
         return $frm;

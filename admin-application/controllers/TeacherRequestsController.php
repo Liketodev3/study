@@ -115,8 +115,7 @@ class TeacherRequestsController extends AdminBaseController
             'utrequest_profile_info',
             'utrequest_teach_slanguage_id',
             'utrequest_language_speak',
-            'utrequest_language_speak_proficiency',
-            'count(utrequest_id) as totalRequest'
+            'utrequest_language_speak_proficiency'
         ]);
         $srch->addGroupBy('utrequest_id');
         $row = FatApp::getDb()->fetch($srch->getResultSet());
@@ -132,16 +131,13 @@ class TeacherRequestsController extends AdminBaseController
         $photo_id_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, $row['utrequest_user_id']);
         $this->set('photo_id_row', $photo_id_row);
         /* ] */
-        $otherRequest = [];
         /* previous request  data[ */
-        if ($row['totalRequest'] > 0) {
-            $srch = new TeacherRequestSearch();
-            $srch->addCondition('utrequest_user_id', '=', $row['utrequest_user_id']);
-            $srch->addCondition('utrequest_id', '!=', $utrequest_id);
-            $srch->addOrder('utrequest_id', 'desc');
-            $rs = $srch->getResultSet();
-            $otherRequest = FatApp::getDb()->fetchAll($rs);
-        }
+        $srch = new TeacherRequestSearch();
+        $srch->addCondition('utrequest_user_id', '=', $row['utrequest_user_id']);
+        $srch->addCondition('utrequest_id', '!=', $utrequest_id);
+        $srch->addOrder('utrequest_id', 'desc');
+        $rs = $srch->getResultSet();
+        $otherRequest = FatApp::getDb()->fetchAll($rs);
         /* ] */
         $this->set('spokenLanguagesArr', SpokenLanguage::getAllLangs($this->adminLangId));
         $this->set('TeachingLanguagesArr', TeachingLanguage::getAllLangs($this->adminLangId));
@@ -231,7 +227,7 @@ class TeacherRequestsController extends AdminBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         /* ] */
-       
+
         $requestRow['utrequest_comments'] = $comment;
         $statusArr = TeacherRequest::getStatusArr($this->adminLangId);
         unset($statusArr[TeacherRequest::STATUS_PENDING]);

@@ -147,6 +147,7 @@ $usrPhone->value = $usrPhoneCode->value . $usrPhone->value;
                 </div>
             </div>
         </div>
+        <?php echo $frm->getFieldHtml('resubmit'); ?>
         </form>
         <?php echo $frm->getExternalJs(); ?>
     </div>          

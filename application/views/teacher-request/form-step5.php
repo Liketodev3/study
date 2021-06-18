@@ -8,15 +8,31 @@
     </div> 
     <div class="page-block__body">
         <div class="block-content">
-            <div class="block-content__head d-flex justify-content-center">
-                <?php if ($request['utrequest_status'] == TeacherRequest::STATUS_PENDING) { ?>
+            <?php if ($request['utrequest_status'] == TeacherRequest::STATUS_PENDING) { ?>
+                <div class="block-content__head d-flex justify-content-center">
                     <h5><?php echo Label::getLabel('LBL_APPLICATION_AWAITING_APPROVAL', $siteLangId); ?></h5>
-                <?php } elseif ($request['utrequest_status'] == TeacherRequest::STATUS_CANCELLED) { ?>
+                </div>
+            <?php } elseif ($requestCount >= $allowedCount && $request['utrequest_status'] == TeacherRequest::STATUS_CANCELLED) { ?>
+                <div class="block-content__head d-flex justify-content-center">
+                    <h5><?php echo Label::getLabel('LBL_YOU_HAVE_REACH_MAX_ATTEMPTS_TO_SUBMIT_REQUEST', $siteLangId); ?></h5>
+                </div>
+            <?php } elseif ($request['utrequest_status'] == TeacherRequest::STATUS_CANCELLED) { ?>
+                <div class="block-content__head  d-flex justify-content-center">
                     <h5><?php echo Label::getLabel('LBL_APPLICATION_HAS_BEEN_REJECTED', $siteLangId); ?></h5>
-                <?php } elseif ($request['utrequest_status'] == TeacherRequest::STATUS_APPROVED) { ?>
-                    <h5><?php echo Label::getLabel('LBL_APPLICATION_HAS_BEEN_APPROVED', $siteLangId); ?></h5>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <p><?php echo Label::getLabel('LBL_YOU_CAN_RESUBMIT_APPLICATION', $siteLangId); ?></p>
+                </div>
+                <?php if ($requestCount < $allowedCount) { ?>
+                    <div class="d-flex justify-content-center">
+                        <a href="javascript:void(0)" onclick="resubmit();" class="btn btn--bordered btn--small color-secondary"><?php echo Label::getLabel('LBL_Resubmit', $siteLangId); ?></a>
+                    </div>
                 <?php } ?>
-            </div>
+            <?php } elseif ($request['utrequest_status'] == TeacherRequest::STATUS_APPROVED) { ?>
+                <div class="block-content__head d-flex justify-content-center">
+                    <h5><?php echo Label::getLabel('LBL_APPLICATION_HAS_BEEN_APPROVED', $siteLangId); ?></h5>
+                </div>
+            <?php } ?>
             <div class="block-content__body">
                 <div class="message-display message--resume message--confirmetion">
                     <div class="message-display__icon">
