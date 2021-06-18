@@ -7211,18 +7211,18 @@ textarea[disabled] {
   left: 0; }
 
 .slick-arrow.slick-prev:before {
-  transform: rotate(135deg);
-  -webkit-transform: rotate(135deg);
-  -ms-transform: rotate(135deg);
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
   margin-left: -6px; }
 
 .slick-arrow.slick-next {
   right: 0; }
 
 .slick-arrow.slick-next:before {
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+  -ms-transform: rotate(-135deg);
   margin-left: -10px; }
 
 .slick-arrow.slick-disabled {

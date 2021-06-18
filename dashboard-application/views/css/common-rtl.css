@@ -7199,7 +7199,7 @@ textarea[disabled] {
   width: 14px;
   height: 14px;
   position: absolute;
-  right: 50%;
+  left: 50%;
   top: 50%;
   margin: -7px 0 0 0;
   margin-right: -7px;
@@ -7211,18 +7211,18 @@ textarea[disabled] {
   left: 0; }
 
 .slick-arrow.slick-prev:before {
-  transform: rotate(135deg);
-  -webkit-transform: rotate(135deg);
-  -ms-transform: rotate(135deg);
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
   margin-right: -6px; }
 
 .slick-arrow.slick-next {
   right: 0; }
 
 .slick-arrow.slick-next:before {
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+  -ms-transform: rotate(-135deg);
   margin-right: -10px; }
 
 .slick-arrow.slick-disabled {
