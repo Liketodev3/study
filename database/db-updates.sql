@@ -474,3 +474,5 @@ CREATE TABLE `tbl_user_teacher_requests` (
 
 ALTER TABLE `tbl_user_teacher_requests`   ADD PRIMARY KEY (`utrequest_id`);
 ALTER TABLE `tbl_user_teacher_requests`   MODIFY `utrequest_id` bigint NOT NULL AUTO_INCREMENT;
+
+DROP TABLE `tbl_user_teacher_request_values`;
