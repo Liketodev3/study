@@ -137,9 +137,9 @@
 }
 
 .slick-arrow.slick-prev:before {
-    transform: rotate(135deg);
-    -webkit-transform: rotate(135deg);
-    -ms-transform: rotate(135deg);
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
     margin-#{theme('direction.left','value')}: -6px;
 }
 
@@ -148,9 +148,9 @@
 }
 
 .slick-arrow.slick-next:before {
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-    -ms-transform: rotate(-45deg);
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+    -ms-transform: rotate(-135deg);
     margin-#{theme('direction.left','value')}: -10px;
 }
 

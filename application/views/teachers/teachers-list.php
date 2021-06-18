@@ -118,13 +118,16 @@ $colorClass = [
                             </div>
                         </div>
                         <div class="list__action">
-                            <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getUserTeachLangues');" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
-                            <a href="javascript:void(0);" onclick="generateThread(<?php echo $teacher['user_id']; ?>);" class="btn btn--bordered color-primary btn--block">
-                                <svg class="icon icon--envelope">
-                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
-                                </svg>
-                                <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
-                            </a>
+                            <div class="list__action-btn">
+                                <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getUserTeachLangues');" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                                <a href="javascript:void(0);"onclick="generateThread(<?php echo $teacher['user_id']; ?>);" class="btn btn--bordered color-primary btn--block">
+                                    <svg class="icon icon--envelope">
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
+                                    </svg>
+                                    <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
+                                </a>
+                            </div>
+                            <a href="javascript:void(0);" onclick="viewCalendar(<?php echo $teacher['user_id']; ?>,'paid')" class="link-detail"><?php echo Label::getLabel('LBL_View_Full_availability'); ?></a>
                         </div>
                     </div>
                     <div class="box__secondary">
@@ -181,7 +184,6 @@ $colorClass = [
                                             </tbody>
                                         </table>
                                     </div>
-                                    <a href="javascript:void(0);" onclick="viewCalendar(<?php echo $teacher['user_id']; ?>,'paid')" class="link-detail"><?php echo Label::getLabel('LBL_View_Full_availability'); ?></a>
                                 </div>
                                 <?php if (!empty($teacher['us_video_link'])) { ?>
                                     <div class="panel-content video" style="display:none;">

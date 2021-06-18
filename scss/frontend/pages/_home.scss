@@ -31,7 +31,7 @@ $slideshow: "slideshow";
 
 .slick-dots {
     position: absolute;
-   left: 50%;
+    left: 50%;
     transform: translateX(-50%);
     button{
         width: 30px;
@@ -51,7 +51,7 @@ $slideshow: "slideshow";
     min-width: 520px;
     max-width: 520px;
     color: #111;
-    margin: 0 0 0 -600px;
+    margin: 0 0 0 -650px;
     transform: translate(0, -50%);
     z-index: 2;
     padding: var(--padding-14) var(--padding-18);
@@ -59,9 +59,6 @@ $slideshow: "slideshow";
     backdrop-filter: saturate(180%) blur(20px);
     background: rgba(255,255,255,0.7);
 
-    @media(max-width: theme('breakpoints.xxl','value')) {
-        margin: 0 0 0 -560px;
-    }
     @media(max-width: theme('breakpoints.xl','value')) {
         padding: var(--padding-8) var(--padding-10);
         min-width: 450px;
@@ -296,7 +293,7 @@ $service: 'service';
 
     .service__media{
         min-width: 100px;
-        height: 100px;
+        min-height: 100px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -559,16 +556,19 @@ $tile: 'tile';
 }
 
 .teacher-wrapper{
-    .row{
-        flex-wrap: nowrap;
-        overflow: auto;
-    }
-    [class*="col-"]{
-        padding-#{theme('direction.right','value')}: 0;
-        &:last-child{
-            margin-#{theme('direction.right','value')}: theme('margin.5');
+    @media(max-width: theme('breakpoints.md','value')){
+        .row{
+            flex-wrap: nowrap;
+            overflow: auto;
+        }
+        [class*="col-"]{
+            padding-#{theme('direction.right','value')}: 0;
+            &:last-child{
+                margin-#{theme('direction.right','value')}: theme('margin.5');
+            }
         }
     }
+    
 }
 
 @media(min-width: theme('breakpoints.md','value')){
@@ -868,6 +868,10 @@ $card: 'card';
             vertical-align: sub;
             fill: var(--color-secondary);
         }
+    }
+
+    .timer__controls {
+        font-weight: 600;
     }
 }
 
