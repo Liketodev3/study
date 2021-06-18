@@ -437,3 +437,5 @@ ALTER TABLE `tbl_url_rewrites` ADD UNIQUE(`urlrewrite_custom`);
 ALTER TABLE `tbl_teacher_stats` CHANGE `testat_timeslots` `testat_timeslots`  JSON CHECK (JSON_VALID(testat_timeslots));
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_EXPLORE_SUBJECTS', '1', 'Explore Languages'), ('LBL_EXPLORE_SUBJECTS', '2', 'Explore Languages');
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description', '1', ' By signing up with Yo!Coach, you agree to');
