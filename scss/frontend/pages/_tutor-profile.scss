@@ -179,6 +179,13 @@
             align-items: center;
             justify-content: space-between;
             position: relative;
+
+            @media(min-width: theme('breakpoints.md','value')){
+                &{
+                    pointer-events: none;
+                } 
+            }
+
             @media(max-width: theme('breakpoints.md','value')){
                 
                 &::after{
@@ -200,7 +207,7 @@
                     font-size: 1.2rem;
                 }
                 @media(min-width: theme('breakpoints.xl','value')){
-                    font-size: var(--font-size-xxl);
+                    font-size: var(--font-size-xxl); pointer-events: none;
                 }
             }
             

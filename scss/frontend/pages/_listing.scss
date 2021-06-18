@@ -485,7 +485,7 @@ $box__primary: "box__primary";
 .list__body{
     
     @media(min-width: theme('breakpoints.md','value')){
-        max-width: calc(100% - 180px);
+        max-width: calc(100% - 180px); min-width: calc(100% - 180px);
     }
     @media(min-width: theme('breakpoints.md','value')){
         float: right;
@@ -648,6 +648,9 @@ $box__primary: "box__primary";
 }
 
 .about__detail{
+    @media(min-width: theme('breakpoints.xl','value')){
+        min-height: 60px;
+    }
     p{
         margin-bottom: 0;
         overflow: hidden;

@@ -110,7 +110,7 @@ foreach ($userTeachLangs as $key => $value) {
                     <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
                         <h3><?php echo Label::getLabel('LBL_About', $siteLangId); ?> <?php echo $teacher['user_full_name']; ?></h3>
                     </div>
-                    <div class="panel-cover__body panel__body-target panel__body-target-js">
+                    <div class="panel-cover__body panel__body-target panel__body-target-js" style="display:block;">
                         <div class="content__row">
                             <p><?php echo nl2br($teacher['user_profile_info']); ?></p>
                         </div>
