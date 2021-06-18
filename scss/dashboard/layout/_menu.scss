@@ -304,6 +304,10 @@
         
     }
 
+    @media(min-width:theme('breakpoints.xl','value')){
+        &{position: relative; height: 100%;}
+    }
+
   }
 
   @media(max-width:theme('breakpoints.xl','value')){

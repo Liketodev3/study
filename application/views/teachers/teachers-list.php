@@ -183,6 +183,9 @@ $colorClass = [
                                                 <?php } ?>
                                             </tbody>
                                         </table>
+
+                                        <a href="javascript:void(0);" onclick="viewCalendar(<?php echo $teacher['user_id']; ?>,'paid')" class="link-detail"><?php echo Label::getLabel('LBL_View_Full_availability'); ?></a>
+
                                     </div>
                                 </div>
                                 <?php if (!empty($teacher['us_video_link'])) { ?>

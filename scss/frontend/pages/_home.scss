@@ -51,7 +51,7 @@ $slideshow: "slideshow";
     min-width: 520px;
     max-width: 520px;
     color: #111;
-    margin: 0 0 0 -650px;
+    margin-#{theme('direction.left','value')}:-650px;
     transform: translate(0, -50%);
     z-index: 2;
     padding: var(--padding-14) var(--padding-18);
@@ -272,7 +272,7 @@ $service: 'service';
     color: theme('color.dark');
     
     
-    @media (min-width:theme('breakpoints.lg','value')){
+    @media (min-width:theme('breakpoints.md','value')){
         &{
             padding: var(--padding-12) var(--padding-10);
         }
@@ -290,6 +290,7 @@ $service: 'service';
             
         }
     }
+
 
     .service__media{
         min-width: 100px;
@@ -314,7 +315,7 @@ $service: 'service';
         @media (max-width:theme('breakpoints.lg','value')){
             &{
                 min-width: 56px;
-                height: 56px;
+                min-height: 56px;
                 margin: 0 auto theme('margin.6');
                 img{
                     max-width: 30px;

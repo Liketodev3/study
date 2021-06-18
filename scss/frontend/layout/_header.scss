@@ -203,6 +203,11 @@ $header-primary: 'header-primary';
         }
     }
 
+    @media(max-width: theme('breakpoints.md','value')) {
+      .header-action, .header-action .header__action{display: contents;}
+    }
+
+
     
 }
 
