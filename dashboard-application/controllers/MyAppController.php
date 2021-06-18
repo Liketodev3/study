@@ -190,10 +190,10 @@ class MyAppController extends FatController
     }
 
 
-    public function fatActionCatchAll($action)
+    /* public function fatActionCatchAll($action)
     {
         $this->_template->render(false, false, 'error-pages/404.php');
-    }
+    } */
 
     public function includeDateTimeFiles()
     {

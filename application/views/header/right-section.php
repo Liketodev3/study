@@ -1,7 +1,7 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <div class="header-controls">
     <div class="header-controls__item">
-        <a href="#" class="header-controls__action">
+        <a href="<?php echo CommonHelper::generateUrl('', '', [], CONF_WEBROOT_FRONTEND); ?>" class="header-controls__action">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16.076" viewBox="0 0 18 16.076">
                 <path d="M15.727,17.428H4.273a.818.818,0,0,1-.818-.818V9.246H1L9.449,1.565a.818.818,0,0,1,1.1,0L19,9.246H16.545v7.364A.818.818,0,0,1,15.727,17.428Zm-4.909-1.636h4.091V7.738L10,3.275,5.091,7.738v8.053H9.182V10.882h1.636Z" transform="translate(-1 -1.352)" />
             </svg>
@@ -51,30 +51,16 @@
             </div>
         </div>
     </div>
-    <div class="header-controls__item">
-        <a href="#" class="header-controls__action">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16.8" viewBox="0 0 16 16.8">
-                <path d="M16.4,14H18v1.6H2V14H3.6V8.4a6.4,6.4,0,0,1,12.8,0Zm-1.6,0V8.4a4.8,4.8,0,0,0-9.6,0V14ZM7.6,17.2h4.8v1.6H7.6Z" transform="translate(-2 -2)" />
-            </svg>
-        </a>
-    </div>
-    <div class="header-controls__item">
-        <a href="#" class="header-controls__action">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.4" viewBox="0 0 16 14.4">
-                <path d="M2.8,3H17.2a.8.8,0,0,1,.8.8V16.6a.8.8,0,0,1-.8.8H2.8a.8.8,0,0,1-.8-.8V3.8A.8.8,0,0,1,2.8,3ZM16.4,6.39l-6.342,5.68L3.6,6.373V15.8H16.4ZM4.009,4.6l6.04,5.33L16,4.6Z" transform="translate(-2 -3)" />
-            </svg>
-        </a>
-    </div>
     <?php if (UserAuthentication::isUserLogged()) {
-         $msgCnt = CommonHelper::getUnreadMsgCount();
+        $msgCnt = CommonHelper::getUnreadMsgCount();
         $unreadNotificationsCnt = CommonHelper::getUnreadNotifications();
-        ?>
+    ?>
         <div class="header-controls__item header--notification">
-            <a href="<?php echo CommonHelper::generateUrl('Notifications','index',[],CONF_WEBROOT_DASHBOARD); ?>" class="header-controls__action">
-            <?php
-             if(count($unreadNotificationsCnt) > 0){ ?>
-                <span class="head-count"><?php echo count($unreadNotificationsCnt); ?></span>
-            <?php } ?>
+            <a href="<?php echo CommonHelper::generateUrl('Notifications', '', [], CONF_WEBROOT_DASHBOARD); ?>" class="header-controls__action">
+                <?php
+                if (count($unreadNotificationsCnt) > 0) { ?>
+                    <span class="head-count"><?php echo count($unreadNotificationsCnt); ?></span>
+                <?php } ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16.8" viewBox="0 0 16 16.8">
                     <path d="M16.4,14H18v1.6H2V14H3.6V8.4a6.4,6.4,0,0,1,12.8,0Zm-1.6,0V8.4a4.8,4.8,0,0,0-9.6,0V14ZM7.6,17.2h4.8v1.6H7.6Z" transform="translate(-2 -2)" />
                 </svg>
@@ -82,9 +68,9 @@
         </div>
 
         <div class="header-controls__item header--message">
-            <a href="<?php echo CommonHelper::generateUrl('Messages','index',[],CONF_WEBROOT_DASHBOARD); ?>" class="header-controls__action">
-            <?php  if($msgCnt > 0){ ?>
-                <span class="head-count"><?php echo $msgCnt; ?></span>
+            <a href="<?php echo CommonHelper::generateUrl('Messages', '', [], CONF_WEBROOT_DASHBOARD); ?>" class="header-controls__action">
+                <?php if ($msgCnt > 0) { ?>
+                    <span class="head-count"><?php echo $msgCnt; ?></span>
                 <?php } ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.4" viewBox="0 0 16 14.4">
                     <path d="M2.8,3H17.2a.8.8,0,0,1,.8.8V16.6a.8.8,0,0,1-.8.8H2.8a.8.8,0,0,1-.8-.8V3.8A.8.8,0,0,1,2.8,3ZM16.4,6.39l-6.342,5.68L3.6,6.373V15.8H16.4ZM4.009,4.6l6.04,5.33L16,4.6Z" transform="translate(-2 -3)" />

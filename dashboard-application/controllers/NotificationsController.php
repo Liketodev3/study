@@ -45,10 +45,9 @@ class NotificationsController extends LoggedUserController
         $notificationId = intval($notificationId);
         $notificationData = UserNotifications::getUserNotificationsByNotificationId(UserAuthentication::getLoggedUserId(), $notificationId);
 
-        $notificationRedirectUrl = CommonHelper::generateUrl('notifications', 'my-notifications');
+        $notificationRedirectUrl = CommonHelper::generateUrl('Notifications');
         $notificationType = $notificationData['notification_record_type'];
         $notificationRecordId = $notificationData['notification_record_id'];
-        $notificationSubRecordId = $notificationData['notification_sub_record_id'];
         $notificationRead = $notificationData['notification_read'];
         switch ($notificationType) {
             case UserNotifications::NOTICATION_FOR_TEACHER_APPROVAL:
