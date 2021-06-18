@@ -359,7 +359,7 @@ class AccountController extends LoggedUserController
             $record->assignValues(['us_booking_before' => $post['us_booking_before'], 'us_is_trial_lesson_enabled' => $post['us_is_trial_lesson_enabled']]); //  code added on 23-08-2019
         }
         $user_settings = UserSetting::getUserSettings(UserAuthentication::getLoggedUserId());
-        if ($post['us_site_lang'] != $user_settings['us_site_lang'] ?? '') {
+        if ($post['us_site_lang'] != (!empty($user_settings['us_site_lang']) ? $user_settings['us_site_lang'] : '')) {
             CommonHelper::setDefaultSiteLangCookie($post['us_site_lang']);
         }
 
