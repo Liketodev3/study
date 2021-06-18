@@ -6,7 +6,7 @@ $testimonialMediaFrm->developerTags['fld_default_col'] = 12;
 $fld2 = $testimonialMediaFrm->getField('testimonial_image');	
 $fld2->addFieldTagAttribute('class','btn btn--primary btn--sm');
 
-$preferredDimensionsStr = '<small class="text--small">'.sprintf(Label::getLabel('LBL_Preferred_Dimensions_%s',$adminLangId),'625*391').'</small>';
+$preferredDimensionsStr = '<small class="text--small">'.sprintf(Label::getLabel('LBL_Preferred_Dimensions_%s',$adminLangId),'275 × 275').'</small>';
 
 $htmlAfterField = $preferredDimensionsStr; 
 if( !empty($testimonialImages) ){
