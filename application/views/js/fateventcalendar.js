@@ -208,6 +208,8 @@ FatEventCalendar.prototype.AvailaibilityCalendar = function (current_time, durat
 
     calendar.render();
 
+    window.viewOnlyCal = calendar;
+
     jQuery('body').find(".fc-time-button").parent().html("<h6><span>" + langLbl.myTimeZoneLabel + " :-</span> <span class='timer'>" + moment(current_time).format('hh:mm:ss A') + "</span><span class='timezoneoffset'>(" + langLbl.timezoneString + " " + timeZoneOffset + ")</span></h6>");
     seconds = 2;
 

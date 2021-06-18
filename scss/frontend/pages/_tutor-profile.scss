@@ -691,6 +691,7 @@
     }
     @media(max-width: theme('breakpoints.md','value')){
         border: none;
+        padding: 0 theme('padding.4');
     }
 }
 .book__actions {
@@ -754,6 +755,11 @@
     @media(min-width: theme('breakpoints.lg','value')){
         display: grid;
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media(max-width: theme('breakpoints.md','value')){
+        display: flex;
+        flex-direction: column;
     }
 
     scroll-behavior: smooth;
