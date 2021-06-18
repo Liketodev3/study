@@ -553,6 +553,7 @@ class AttachedFile extends MyAppModel
         }
 
         $fileRow = AttachedFile::getAttachment($fileType, $recordId, $recordSubId, $langId);
+    
         if (!$fileRow) {
          
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
