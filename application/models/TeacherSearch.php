@@ -387,7 +387,8 @@ class TeacherSearch extends SearchBase
             return [];
         }
         $srch = new SearchBase(TeacherGeneralAvailability::DB_TBL);
-        $srch->addMultipleFields(['tgavl_day', 'tgavl_user_id',
+        $srch->addMultipleFields([
+            'tgavl_day', 'tgavl_user_id',
             'CONCAT(tgavl_date, " ", tgavl_start_time) as startdate',
             'CONCAT(tgavl_end_date, " ", tgavl_end_time) as enddate'
         ]);
@@ -395,11 +396,7 @@ class TeacherSearch extends SearchBase
         $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
         $users = [];
         foreach ($rows as $row) {
-            if (isset($users[$row['tgavl_user_id']])) {
-                array_push($users[$row['tgavl_user_id']], $row);
-            } else {
-                $users[$row['tgavl_user_id']] = [$row];
-            }
+            $users[$row['tgavl_user_id']][] = $row;
         }
         $userTimeslots = [];
         $currentDate = date('Y-m-d H:i:s');
@@ -538,5 +535,4 @@ class TeacherSearch extends SearchBase
     {
         $this->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = teacher.user_id', 'us');
     }
-
 }
