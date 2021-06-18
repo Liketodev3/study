@@ -474,6 +474,41 @@ textarea[disabled] {
     }
 }
 
+.field_cover{
+    label{
+        .errorlist{
+            margin-bottom: -45px;
+        }
+    }
+}
+
 .errorlist.erlist_agree {
     bottom: -26px;
+}
+
+
+.btn-file{
+    position: relative;
+    input[type=file] {
+        position: relative;
+        max-width: 120px;
+        min-height: 41px;
+        border: 1px solid;
+        padding: 0;
+        &:before{
+            content: "Upload file";
+            position: absolute;
+            height: 2.8rem;
+            line-height: 2.8rem;
+            font-weight: 500;   
+            align-items: center;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: .3s all ease-in-out;
+            white-space: nowrap;
+        }
+    }
 }

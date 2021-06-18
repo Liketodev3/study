@@ -6943,11 +6943,12 @@ p {
     .img-upload .img-upload__content .btn {
       height: 30px; }
 
-.block-content__foot .form__actions input[type="button"] {
-  border-radius: 0; }
-
-.block-content__foot .form__actions input[type="submit"] {
-  border-radius: 0; }
+.block-content__foot .form__actions {
+  width: 100%; }
+  .block-content__foot .form__actions input[type="button"] {
+    border-radius: 0; }
+  .block-content__foot .form__actions input[type="submit"] {
+    border-radius: 0; }
 
 @media (min-width: 767px) {
   .colum-layout {

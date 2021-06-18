@@ -6074,8 +6074,42 @@ textarea[disabled] {
   .list-onethird li {
     width: 100%; } }
 
+.field_cover label .errorlist {
+  margin-bottom: -45px; }
+
 .errorlist.erlist_agree {
   bottom: -26px; }
+
+.btn-file {
+  position: relative; }
+  .btn-file input[type=file] {
+    position: relative;
+    max-width: 120px;
+    min-height: 41px;
+    border: 1px solid;
+    padding: 0; }
+    .btn-file input[type=file]:before {
+      content: "Upload file";
+      position: absolute;
+      height: 2.8rem;
+      line-height: 2.8rem;
+      font-weight: 500;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+      display: -webkit-inline-box;
+      display: -ms-inline-flexbox;
+      display: inline-flex;
+      -webkit-box-pack: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      align-items: center;
+      position: relative;
+      cursor: pointer;
+      -webkit-transition: .3s all ease-in-out;
+      -o-transition: .3s all ease-in-out;
+      transition: .3s all ease-in-out;
+      white-space: nowrap; }
 
 .label {
   color: #fff;
