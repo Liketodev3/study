@@ -65,7 +65,32 @@
             </svg>
         </a>
     </div>
-    <?php if (UserAuthentication::isUserLogged()) { ?>
+    <?php if (UserAuthentication::isUserLogged()) {
+         $msgCnt = CommonHelper::getUnreadMsgCount();
+        $unreadNotificationsCnt = CommonHelper::getUnreadNotifications();
+        ?>
+        <div class="header-controls__item header--notification">
+            <a href="<?php echo CommonHelper::generateUrl('Notifications','index',[],CONF_WEBROOT_DASHBOARD); ?>" class="header-controls__action">
+            <?php
+             if(count($unreadNotificationsCnt) > 0){ ?>
+                <span class="head-count"><?php echo count($unreadNotificationsCnt); ?></span>
+            <?php } ?>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16.8" viewBox="0 0 16 16.8">
+                    <path d="M16.4,14H18v1.6H2V14H3.6V8.4a6.4,6.4,0,0,1,12.8,0Zm-1.6,0V8.4a4.8,4.8,0,0,0-9.6,0V14ZM7.6,17.2h4.8v1.6H7.6Z" transform="translate(-2 -2)" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="header-controls__item header--message">
+            <a href="<?php echo CommonHelper::generateUrl('Messages','index',[],CONF_WEBROOT_DASHBOARD); ?>" class="header-controls__action">
+            <?php  if($msgCnt > 0){ ?>
+                <span class="head-count"><?php echo $msgCnt; ?></span>
+                <?php } ?>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.4" viewBox="0 0 16 14.4">
+                    <path d="M2.8,3H17.2a.8.8,0,0,1,.8.8V16.6a.8.8,0,0,1-.8.8H2.8a.8.8,0,0,1-.8-.8V3.8A.8.8,0,0,1,2.8,3ZM16.4,6.39l-6.342,5.68L3.6,6.373V15.8H16.4ZM4.009,4.6l6.04,5.33L16,4.6Z" transform="translate(-2 -3)" />
+                </svg>
+            </a>
+        </div>
 
         <div class="header-dropdown header-dropwown--profile">
             <a class="header-dropdown__trigger trigger-js" href="#profile-nav">

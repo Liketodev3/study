@@ -2739,7 +2739,7 @@ p {
 
 .filter--search .filter__head {
   position: relative;
-  border-right: 1px solid var(--color-gray-200); }
+  border: 1px solid var(--color-gray-200); }
   @media (min-width: 1399px) {
     .filter--search .filter__head {
       max-width: 590px;
@@ -3108,7 +3108,7 @@ p {
   width: 36px;
   height: 36px;
   padding: 5px;
-  background: var(--color-gray-100);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 50%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3293,7 +3293,7 @@ p {
         height: 2px;
         background: var(--color-primary);
         bottom: 0;
-        right: 50%;
+        left: 50%;
         -webkit-transform: translateX(-50%);
             -ms-transform: translateX(-50%);
                 transform: translateX(-50%); }

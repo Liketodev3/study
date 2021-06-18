@@ -50,7 +50,6 @@ $colorClass = [
                             <div class="list__price">
                                 <p><?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></p>
                             </div>
-                           
                         </div>
                         <div class="list__body">
                             <div class="profile-detail">
@@ -184,9 +183,11 @@ $colorClass = [
                                     </div>
                                     <a href="javascript:void(0);" onclick="viewCalendar(<?php echo $teacher['user_id']; ?>,'paid')" class="link-detail"><?php echo Label::getLabel('LBL_View_Full_availability'); ?></a>
                                 </div>
-                                <div class="panel-content video" style="display:none;">
-                                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $teacher['us_video_link']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                                </div>
+                                <?php if (!empty($teacher['us_video_link'])) { ?>
+                                    <div class="panel-content video" style="display:none;">
+                                        <iframe width="100%" height="100%" src="<?php echo $teacher['us_video_link']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>

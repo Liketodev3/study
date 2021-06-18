@@ -125,9 +125,9 @@ class TeacherRequestsController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Request', $this->adminLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-        $row['utrvalue_user_teach_slanguage_id'] = json_decode($row['utrvalue_user_teach_slanguage_id']);
-        $row['utrvalue_user_language_speak'] = json_decode($row['utrvalue_user_language_speak']);
-        $row['utrvalue_user_language_speak_proficiency'] = json_decode($row['utrvalue_user_language_speak_proficiency']);
+        $row['utrvalue_user_teach_slanguage_id'] = json_decode($row['utrvalue_user_teach_slanguage_id'], true);
+        $row['utrvalue_user_language_speak'] = json_decode($row['utrvalue_user_language_speak'], true);
+        $row['utrvalue_user_language_speak_proficiency'] = json_decode($row['utrvalue_user_language_speak_proficiency'], true);
         $this->set('row', $row);
         /* photoId Proof row[ */
         $photo_id_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, $row['utrequest_user_id']);
@@ -305,7 +305,7 @@ class TeacherRequestsController extends AdminBaseController
             /* ] */
             /* syncing teach languages[ */
             $db = FatApp::getDb();
-            $teachLanguagesArr = json_decode($requestRow['utrvalue_user_teach_slanguage_id']);
+            $teachLanguagesArr = json_decode($requestRow['utrvalue_user_teach_slanguage_id'], true);
             if (!empty($teachLanguagesArr)) {
                 foreach ($teachLanguagesArr as $key => $slanguage_id) {
                     $dataArr = [
@@ -321,8 +321,8 @@ class TeacherRequestsController extends AdminBaseController
             /* ] */
             /* syncing spoken languages[ */
             $db = FatApp::getDb();
-            $spokenLanguagesArr = json_decode($requestRow['utrvalue_user_language_speak']);
-            $spokenLanguageProfArr = json_decode($requestRow['utrvalue_user_language_speak_proficiency']);
+            $spokenLanguagesArr = json_decode($requestRow['utrvalue_user_language_speak'], true);
+            $spokenLanguageProfArr = json_decode($requestRow['utrvalue_user_language_speak_proficiency'], true);
             if (!empty($spokenLanguagesArr)) {
                 foreach ($spokenLanguagesArr as $key => $slanguage_id) {
                     $dataArr = [
