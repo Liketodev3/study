@@ -21,7 +21,7 @@
                     <?php } ?>
                 </div>
                 <div class="more-info align-center">
-                    <p><?php echo Label::getLabel("LBL_different_language_note", $siteLangId); ?> <a href="<?php echo CommonHelper::generateUrl('teachers', 'index'); ?>"><?php echo Label::getLabel('LBL_Browse_them_now', $siteLangId); ?></a></p>
+                    <p><?php echo Label::getLabel("LBL_different_language_note", $siteLangId); ?> <a href="<?php echo CommonHelper::generateUrl('teachers'); ?>"><?php echo Label::getLabel('LBL_Browse_them_now', $siteLangId); ?></a></p>
                 </div>
             </div>
         </div>

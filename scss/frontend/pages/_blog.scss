@@ -464,7 +464,6 @@
 }
 
 .section--upper {
-    margin: -120px 0 0;
     padding: 60px 0;
 }
 
@@ -920,4 +919,20 @@
     height: 20px;
     margin: auto;
     pointer-events: none;
+}
+
+.box--blog{
+    .box__head{
+        .slick-arrow{
+            &::before{
+                border-color: theme('color.dark');
+            }
+        }
+    }
+}
+
+.banner__media{
+    img{
+        margin: 0 auto;
+    }
 }

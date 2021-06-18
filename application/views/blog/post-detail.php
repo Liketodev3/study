@@ -7,7 +7,7 @@
          <?php $this->includeTemplate('_partial/blogSidePanel.php'); ?> 
          <div class="col-xl-9 col-lg-8" id="listItem">
             <!--Post details start here-->   
-            <div class="box -border">
+            <div class="box box--blog -border">
                <div class="box__head -no-shadow -no-padding-bottom">
                   <div class="slider-single slider-single-js">
                      <?php foreach($post_images as $post_image){ ?>

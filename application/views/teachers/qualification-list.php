@@ -12,10 +12,16 @@ foreach( $qualifications as $qualification ){
 <div class="col-xl-8 col-lg-8 col-sm-8">
 
 	<div class="resume-wrapper">
-		<div class="resume__primary"><b><?php echo $qualification['uqualification_start_year'] ?> - <?php echo $qualification['uqualification_end_year'] ?></b></div>
-		<div class="resume__secondary">
-			<b><?php echo $qualification['uqualification_title']; ?></b>
-			<p><?php echo $qualification['uqualification_institute_name']; ?></p>
+		<div class="row">
+			<div class="col-4 col-sm-4">
+				<div class="resume__primary"><b><?php echo $qualification['uqualification_start_year'] ?> - <?php echo $qualification['uqualification_end_year'] ?></b></div>
+			</div>
+			<div class="col-7 col-ms-7 offset-1">
+				<div class="resume__secondary">
+					<b><?php echo $qualification['uqualification_title']; ?></b>
+					<p><?php echo $qualification['uqualification_institute_name']; ?></p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
