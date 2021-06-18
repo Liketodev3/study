@@ -445,6 +445,8 @@ REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description', '1', ' By signing up with Yo!Coach, you agree to');
 
 
+
+
 -- task_86496_apply_to_teach
 
 DROP TABLE `tbl_user_teacher_requests`;
@@ -474,3 +476,6 @@ CREATE TABLE `tbl_user_teacher_requests` (
 
 ALTER TABLE `tbl_user_teacher_requests`   ADD PRIMARY KEY (`utrequest_id`);
 ALTER TABLE `tbl_user_teacher_requests`   MODIFY `utrequest_id` bigint NOT NULL AUTO_INCREMENT;
+
+DROP TABLE `tbl_user_teacher_request_values`;
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description_%s_%s_%s', '1', 'By signing up with Yo!Coach, you agree to %s %s %s');
