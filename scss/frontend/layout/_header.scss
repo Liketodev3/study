@@ -203,6 +203,11 @@ $header-primary: 'header-primary';
         }
     }
 
+    @media(max-width: theme('breakpoints.md','value')) {
+      .header-action, .header-action .header__action{display: contents;}
+    }
+
+
     
 }
 
@@ -581,7 +586,7 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
         }
         
         .header-controls__action{
-            padding: calc(var(--padding-3) + 2px) var(--padding-5);
+            padding: theme('padding.5') theme('padding.5');
             display: block;
             position: relative;
             svg{

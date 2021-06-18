@@ -445,5 +445,36 @@ REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description', '1', ' By signing up with Yo!Coach, you agree to');
 
 
-REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description_%s_%s_%s', '1', 'By signing up with Yo!Coach, you agree to %s %s %s');
 
+
+-- task_86496_apply_to_teach
+
+DROP TABLE `tbl_user_teacher_requests`;
+CREATE TABLE `tbl_user_teacher_requests` (
+  `utrequest_id` bigint NOT NULL,
+  `utrequest_user_id` bigint NOT NULL,
+  `utrequest_reference` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_language_id` int NOT NULL,
+  `utrequest_date` datetime NOT NULL,
+  `utrequest_status` tinyint(1) NOT NULL,
+  `utrequest_status_change_date` datetime NOT NULL,
+  `utrequest_comments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_attempts` int NOT NULL,
+  `utrequest_step` int NOT NULL DEFAULT '1',
+  `utrequest_terms` tinyint NOT NULL,
+  `utrequest_first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_last_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_gender` int NOT NULL,
+  `utrequest_phone_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_phone_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_video_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_profile_info` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_teach_slanguage_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_language_speak` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_language_speak_proficiency` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `tbl_user_teacher_requests`   ADD PRIMARY KEY (`utrequest_id`);
+ALTER TABLE `tbl_user_teacher_requests`   MODIFY `utrequest_id` bigint NOT NULL AUTO_INCREMENT;
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description_%s_%s_%s', '1', 'By signing up with Yo!Coach, you agree to %s %s %s');

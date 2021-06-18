@@ -664,6 +664,12 @@ $box__primary: "box__primary";
 
 .list__action{
     position: relative;
+
+    .link-detail{
+        @media(min-width: theme('breakpoints.md','value')){
+            display: none;
+        }
+    }
 }
 
 .link-detail{
@@ -702,7 +708,7 @@ $box__primary: "box__primary";
             .link-detail{
                 opacity: 1;
                 visibility: visible;
-                bottom: -47px;
+                bottom: -18px;
             }
 
         }
@@ -789,6 +795,10 @@ $box__primary: "box__primary";
             font-size: 12px;
             padding-bottom: var(--padding-2);
         }
+    }
+
+    .link-detail{
+
     }
 }
 

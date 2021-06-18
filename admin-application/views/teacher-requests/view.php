@@ -103,39 +103,39 @@
                             </dl>
                             <dl class="list">
                                 <dt><?php echo Label::getLabel('LBL_First_Name', $adminLangId); ?></dt>
-                                <dd><?php echo $row['utrvalue_user_first_name']; ?></dd>
+                                <dd><?php echo $row['utrequest_first_name']; ?></dd>
                             </dl>
                             <dl class="list">
                                 <dt><?php echo Label::getLabel('LBL_Last_Name', $adminLangId); ?></dt>
-                                <dd><?php echo $row['utrvalue_user_last_name']; ?></dd>
+                                <dd><?php echo $row['utrequest_last_name']; ?></dd>
                             </dl>
                             <dl class="list">
                                 <dt><?php echo Label::getLabel('LBL_Gender', $adminLangId); ?></dt>
-                                <dd><?php echo User::getGenderArr($adminLangId)[$row['utrvalue_user_gender']]; ?></dd>
+                                <dd><?php echo User::getGenderArr($adminLangId)[$row['utrequest_gender']]; ?></dd>
                             </dl>
                             <dl class="list">
                                 <dt><?php echo Label::getLabel('LBL_Phone_Number', $adminLangId); ?></dt>
-                                <dd><?php echo $row['utrvalue_user_phone_code'] . $row['utrvalue_user_phone']; ?></dd>
+                                <dd><?php echo $row['utrequest_phone_code'] . $row['utrequest_phone_number']; ?></dd>
                             </dl>
                             <dl class="list">
                                 <dt><?php echo Label::getLabel('LBL_You_Tube_Video_Link', $adminLangId); ?></dt>
-                                <dd><?php echo $row['utrvalue_user_video_link']; ?> &nbsp;</dd>
+                                <dd><?php echo $row['utrequest_video_link']; ?> &nbsp;</dd>
                             </dl>
                             <dl class="list">
                                 <dt><?php echo Label::getLabel('LBL_Profile_info', $adminLangId); ?></dt>
-                                <dd><?php echo $row['utrvalue_user_profile_info']; ?> &nbsp; </dd>
+                                <dd><?php echo $row['utrequest_profile_info']; ?> &nbsp; </dd>
                             </dl>
 
                             <dl class="list">
                                 <dt><?php echo Label::getLabel('LBL_Teaching_Language', $adminLangId); ?></dt>
                                 <dd>
                                     <?php
-                                    if (isset($row['utrvalue_user_teach_slanguage_id']) && !empty($row['utrvalue_user_teach_slanguage_id']) && is_array($row['utrvalue_user_teach_slanguage_id'])) {
-                                        foreach ($row['utrvalue_user_teach_slanguage_id'] as $key => $val) {
+                                    if (isset($row['utrequest_teach_slanguage_id']) && !empty($row['utrequest_teach_slanguage_id']) && is_array($row['utrequest_teach_slanguage_id'])) {
+                                        foreach ($row['utrequest_teach_slanguage_id'] as $key => $val) {
                                             echo $TeachingLanguagesArr[$val] . ', ';
                                         }
                                     } else {
-                                        echo $TeachingLanguagesArr[$row['utrvalue_user_teach_slanguage_id']] . ', ';
+                                        echo $TeachingLanguagesArr[$row['utrequest_teach_slanguage_id']] . ', ';
                                     }
                                     ?> &nbsp;
                                 </dd>
@@ -144,8 +144,8 @@
                             <dl class="list">
                                 <dt><?php echo Label::getLabel('LBL_Spoken_Language', $adminLangId); ?></dt>
                                 <dd>
-                                    <?php foreach ($row['utrvalue_user_language_speak'] as $key => $val) { ?>
-                                        <?php echo $spokenLanguagesArr[$val] . ' : ' . $spokenLanguageProfArr[$row['utrvalue_user_language_speak_proficiency'][$key]] . '<br/>'; ?>
+                                    <?php foreach ($row['utrequest_language_speak'] as $key => $val) { ?>
+                                        <?php echo $spokenLanguagesArr[$val] . ' : ' . $spokenLanguageProfArr[$row['utrequest_language_speak_proficiency'][$key]] . '<br/>'; ?>
                                     <?php } ?>
                                 </dd>
                             </dl>
