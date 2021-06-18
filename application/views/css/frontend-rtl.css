@@ -5648,9 +5648,6 @@ p {
     @media (max-width: 767px) {
       .profile-primary .panel-cover .panel-cover__head h3 {
         font-size: 1.2rem; } }
-    @media (max-width: 1199px) {
-      .profile-primary .panel-cover .panel-cover__head h3 {
-        font-size: var(--font-size-h3); } }
     @media (min-width: 1199px) {
       .profile-primary .panel-cover .panel-cover__head h3 {
         font-size: var(--font-size-xxl); } }

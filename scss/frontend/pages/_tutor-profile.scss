@@ -199,9 +199,6 @@
                 @media(max-width: theme('breakpoints.md','value')){
                     font-size: 1.2rem;
                 }
-                @media(max-width: theme('breakpoints.xl','value')){
-                    font-size: theme('font.size.h3');
-                }
                 @media(min-width: theme('breakpoints.xl','value')){
                     font-size: var(--font-size-xxl);
                 }
