@@ -57,9 +57,6 @@ $(document).ready(function () {
 
 	toggleNavDropDownForDevices();
 
-	toggleHeaderNavigationForDevices();
-
-	/* toggleFooterLinksForDevices(); */
 
 	toggleHeaderCurrencyLanguageForDevices();
 
@@ -205,14 +202,6 @@ $(document).ready(function () {
 					$(this).siblings('.nav__dropdown-target-js').slideDown();
 				});
 			}
-		},
-
-		toggleHeaderNavigationForDevices = function () {
-			$('.toggle--nav-js').click(function () {
-				$(this).toggleClass("is-active");
-				$('html').toggleClass("show-nav-js");
-				$('html').removeClass("show-dashboard-js");
-			});
 		},
 
 		jQuery(document).ready(function (e) {

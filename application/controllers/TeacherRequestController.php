@@ -483,7 +483,7 @@ class TeacherRequestController extends MyAppController
         $fld = $frm->addCheckBox(Label::getLabel('LBL_I_accept_to_the', $langId), 'agree', 1);
         $fld->requirements()->setRequired();
         $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Terms_and_Condition_and_Privacy_Policy_are_mandatory.', $langId));
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Register', $langId));
+        $frm->addSubmitButton(Label::getLabel('LBL_REGISTER_WITH_EMAIL',$this->siteLangId), 'btn_submit', Label::getLabel('LBL_Register', $langId));
         return $frm;
     }
 

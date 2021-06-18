@@ -18,10 +18,13 @@
             <div class="box-cookies">
                 <span id="cookieconsent:desc" class="cc-message">
                     <?php echo FatUtility::decodeHtmlEntities(FatApp::getConfig('CONF_COOKIES_TEXT_' . $siteLangId, FatUtility::VAR_STRING, '')); ?>
-                    <a href="<?php echo CommonHelper::generateUrl('cms', 'view', array(FatApp::getConfig('CONF_COOKIES_BUTTON_LINK', FatUtility::VAR_INT))); ?>"><?php echo Label::getLabel('LBL_Read_More', $siteLangId); ?></a></span>
-                </span>
-                <span class="cc-close cc-cookie-accept-js"><?php echo Label::getLabel('LBL_Accept_Cookies', $siteLangId); ?></span>
-                <a href="javascript:void(0)" class="cc-close" onClick="getCookieConsentForm()"><?php echo Label::getLabel('LBL_Choose_Cookies', $siteLangId); ?></a>
+                    <?php  $readMorePage =  FatApp::getConfig('CONF_COOKIES_BUTTON_LINK', FatUtility::VAR_INT);
+                    if ($readMorePage) { ?>
+                        <a href="<?php echo CommonHelper::generateUrl('cms', 'view', [$readMorePage]); ?>"><?php echo Label::getLabel('LBL_Read_More', $siteLangId); ?></a></span>
+            <?php } ?>
+            </span>
+            <span class="cc-close cc-cookie-accept-js"><?php echo Label::getLabel('LBL_Accept_Cookies', $siteLangId); ?></span>
+            <a href="javascript:void(0)" class="cc-close" onClick="getCookieConsentForm()"><?php echo Label::getLabel('LBL_Choose_Cookies', $siteLangId); ?></a>
             </div>
         <?php } ?>
     </div>
