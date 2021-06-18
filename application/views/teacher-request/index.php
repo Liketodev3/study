@@ -118,7 +118,7 @@ $applyTeachFrm->developerTags['fld_default_col'] = 12;
                     $termsConditionPage = FatApp::getConfig('CONF_TERMS_AND_CONDITIONS_PAGE', FatUtility::VAR_INT, 0);
                     $privacyPolicy = FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE', FatUtility::VAR_INT, 0);
                     ?>
-                    <p><?php echo sprintf(Label::getLabel('LBL_Accept_Description_%s_%s_%s',$siteLangId),'<a href="'.CommonHelper::generateUrl('CMS','view',[$termsConditionPage]).'" class="color-primary">'.Label::getLabel('LBL_Terms_and_Condtions',$siteLangId).'</a>',Label::getLabel('LBL_And',$siteLangId),'<a href="'.CommonHelper::generateUrl('cms','view',[$privacyPolicy]).'" class="color-primary">'.Label::getLabel('LBL_Privacy_Policy',$siteLangId).'</a>'); ?></p>
+                    <p><?php echo sprintf(Label::getLabel('LBL_Accept_Description',$siteLangId),'<a href="'.CommonHelper::generateUrl('Cms','view',[$termsConditionPage]).'" class="color-primary">'.Label::getLabel('LBL_Terms_and_Condtions',$siteLangId).'</a>','<a href="'.CommonHelper::generateUrl('cms','view',[$privacyPolicy]).'" class="color-primary">'.Label::getLabel('LBL_Privacy_Policy',$siteLangId).'</a>'); ?></p>
                 </div>
             </div>
         </div>
