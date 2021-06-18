@@ -53,7 +53,9 @@ cancelLessonSetup = function (frm) {
 };
 
 viewBookingCalendar = function (id) {
+    $.mbsmessage(langLbl.processing, true, 'alert alert--process');
     fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'viewBookingCalendar', [id]), '', function (t) {
+        $.mbsmessage.close();
         $.facebox(t, 'facebox-medium');
     });
 };

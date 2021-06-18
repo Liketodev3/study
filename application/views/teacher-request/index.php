@@ -114,7 +114,12 @@ $applyTeachFrm->developerTags['fld_default_col'] = 12;
                 </form>
                 <?php echo $applyTeachFrm->getExternalJs(); ?>
                 <div class="row justify-content-center">
-                    <p><?php echo Label::getLabel('LBL_Accept_Description', $siteLangId); ?><a href="<?php echo CommonHelper::generateUrl('CMS', 'view', [2]) ?>" class="color-primary"><?php echo Label::getLabel('LBL_Terms_and_Condtions', $siteLangId); ?></a><?php echo Label::getLabel('LBL_And', $siteLangId); ?> <a href="<?php echo CommonHelper::generateUrl('cms', 'view', [3]); ?>" class="color-primary"><?php echo Label::getLabel('LBL_Privacy_Policy') ?></a></p>
+                    <?php 
+                    $termsConditionPage = FatApp::getConfig('CONF_TERMS_AND_CONDITIONS_PAGE', FatUtility::VAR_INT, 0);
+                    $privacyPolicy = FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE', FatUtility::VAR_INT, 0);
+                    ?>
+                    <p><?php echo sprintf(Label::getLabel('LBL_Accept_Description',$siteLangId),'<a href="'.CommonHelper::generateUrl('Cms','view',[$termsConditionPage]).'" class="color-primary">'.Label::getLabel('LBL_Terms_and_Condtions',$siteLangId).'</a>','<a href="'.CommonHelper::generateUrl('cms','view',[$privacyPolicy]).'" class="color-primary">'.Label::getLabel('LBL_Privacy_Policy',$siteLangId).'</a>'); ?></p>
+                    <p><?php echo Label::getLabel('LBL_Already_have_an_account?'); ?> <a href="javascript:void(0);" onClick="logInFormPopUp()" class="-link-underline link-color"><?php echo Label::getLabel('LBL_Sign_In'); ?></a></p>
                 </div>
             </div>
         </div>
