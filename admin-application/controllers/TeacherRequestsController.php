@@ -95,7 +95,6 @@ class TeacherRequestsController extends AdminBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         $srch = new TeacherRequestSearch();
-        $srch->joinTeacherRequestValues();
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -107,16 +106,16 @@ class TeacherRequestsController extends AdminBaseController
             'utrequest_attempts',
             'utrequest_comments',
             'utrequest_status',
-            'utrvalue_user_first_name',
-            'utrvalue_user_last_name',
-            'utrvalue_user_gender',
-            'utrvalue_user_phone',
-            'utrvalue_user_phone_code',
-            'utrvalue_user_video_link',
-            'utrvalue_user_profile_info',
-            'utrvalue_user_teach_slanguage_id',
-            'utrvalue_user_language_speak',
-            'utrvalue_user_language_speak_proficiency',
+            'utrequest_first_name',
+            'utrequest_last_name',
+            'utrequest_gender',
+            'utrequest_phone_number',
+            'utrequest_phone_code',
+            'utrequest_video_link',
+            'utrequest_profile_info',
+            'utrequest_teach_slanguage_id',
+            'utrequest_language_speak',
+            'utrequest_language_speak_proficiency',
             'count(utrequest_id) as totalRequest'
         ]);
         $srch->addGroupBy('utrequest_id');
@@ -125,9 +124,9 @@ class TeacherRequestsController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Request', $this->adminLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-        $row['utrvalue_user_teach_slanguage_id'] = json_decode($row['utrvalue_user_teach_slanguage_id'], true);
-        $row['utrvalue_user_language_speak'] = json_decode($row['utrvalue_user_language_speak'], true);
-        $row['utrvalue_user_language_speak_proficiency'] = json_decode($row['utrvalue_user_language_speak_proficiency'], true);
+        $row['utrequest_teach_slanguage_id'] = json_decode($row['utrequest_teach_slanguage_id'], true);
+        $row['utrequest_language_speak'] = json_decode($row['utrequest_language_speak'], true);
+        $row['utrequest_language_speak_proficiency'] = json_decode($row['utrequest_language_speak_proficiency'], true);
         $this->set('row', $row);
         /* photoId Proof row[ */
         $photo_id_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, $row['utrequest_user_id']);
@@ -201,7 +200,6 @@ class TeacherRequestsController extends AdminBaseController
         /* [ */
         $srch = new TeacherRequestSearch();
         $srch->joinUserCredentials();
-        $srch->joinTeacherRequestValues();
         $srch->joinTable(UserSetting::DB_TBL, 'LEFT JOIN', 'us.us_user_id = u.user_id', 'us');
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
@@ -215,16 +213,16 @@ class TeacherRequestsController extends AdminBaseController
             'user_first_name',
             'user_last_name',
             'credential_email',
-            'utrvalue_user_first_name',
-            'utrvalue_user_last_name',
-            'utrvalue_user_gender',
-            'utrvalue_user_phone',
-            'utrvalue_user_phone_code',
-            'utrvalue_user_profile_info',
-            'utrvalue_user_video_link',
-            'utrvalue_user_teach_slanguage_id',
-            'utrvalue_user_language_speak',
-            'utrvalue_user_language_speak_proficiency'
+            'utrequest_first_name',
+            'utrequest_last_name',
+            'utrequest_gender',
+            'utrequest_phone_number',
+            'utrequest_phone_code',
+            'utrequest_profile_info',
+            'utrequest_video_link',
+            'utrequest_teach_slanguage_id',
+            'utrequest_language_speak',
+            'utrequest_language_speak_proficiency'
         ]);
         $rs = $srch->getResultSet();
         $requestRow = FatApp::getDb()->fetch($rs);
@@ -259,12 +257,12 @@ class TeacherRequestsController extends AdminBaseController
             $userUpdateDataArr = [
                 'user_is_teacher' => 1,
                 'user_preferred_dashboard' => User::USER_TEACHER_DASHBOARD,
-                'user_first_name' => $requestRow['utrvalue_user_first_name'],
-                'user_last_name' => $requestRow['utrvalue_user_last_name'],
-                'user_gender' => $requestRow['utrvalue_user_gender'],
-                'user_phone' => $requestRow['utrvalue_user_phone'],
-                'user_phone_code' => $requestRow['utrvalue_user_phone_code'],
-                'user_profile_info' => $requestRow['utrvalue_user_profile_info'],
+                'user_first_name' => $requestRow['utrequest_first_name'],
+                'user_last_name' => $requestRow['utrequest_last_name'],
+                'user_gender' => $requestRow['utrequest_gender'],
+                'user_phone' => $requestRow['utrequest_phone_number'],
+                'user_phone_code' => $requestRow['utrequest_phone_code'],
+                'user_profile_info' => $requestRow['utrequest_profile_info'],
             ];
             $user->assignValues($userUpdateDataArr);
             if (true != $user->save()) {
@@ -296,7 +294,7 @@ class TeacherRequestsController extends AdminBaseController
             $userSetting = new UserSetting($requestRow['utrequest_user_id']);
             $settingDataArr = [
                 'us_user_id' => $requestRow['utrequest_user_id'],
-                'us_video_link' => $requestRow['utrvalue_user_video_link'],
+                'us_video_link' => $requestRow['utrequest_video_link'],
             ];
             if (true != $userSetting->saveData($settingDataArr)) {
                 Message::addErrorMessage($userSetting->getError());
@@ -305,7 +303,7 @@ class TeacherRequestsController extends AdminBaseController
             /* ] */
             /* syncing teach languages[ */
             $db = FatApp::getDb();
-            $teachLanguagesArr = json_decode($requestRow['utrvalue_user_teach_slanguage_id'], true);
+            $teachLanguagesArr = json_decode($requestRow['utrequest_teach_slanguage_id'], true);
             if (!empty($teachLanguagesArr)) {
                 foreach ($teachLanguagesArr as $key => $slanguage_id) {
                     $dataArr = [
@@ -321,8 +319,8 @@ class TeacherRequestsController extends AdminBaseController
             /* ] */
             /* syncing spoken languages[ */
             $db = FatApp::getDb();
-            $spokenLanguagesArr = json_decode($requestRow['utrvalue_user_language_speak'], true);
-            $spokenLanguageProfArr = json_decode($requestRow['utrvalue_user_language_speak_proficiency'], true);
+            $spokenLanguagesArr = json_decode($requestRow['utrequest_language_speak'], true);
+            $spokenLanguageProfArr = json_decode($requestRow['utrequest_language_speak_proficiency'], true);
             if (!empty($spokenLanguagesArr)) {
                 foreach ($spokenLanguagesArr as $key => $slanguage_id) {
                     $dataArr = [
