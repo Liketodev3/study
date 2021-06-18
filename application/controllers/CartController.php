@@ -56,7 +56,6 @@ class CartController extends LoggedUserController
             $validDate = strtotime('+' . $teacher['us_booking_before'] . 'hours');
 
             $startDateTime = MyDate::changeDateTimezone($startDateTime, $userTimezone, $systemTimeZone);
-            prx($startDateTime);
             $endDateTime = MyDate::changeDateTimezone($endDateTime, $userTimezone, $systemTimeZone);
 
             if($validDate > strtotime($startDateTime)){

@@ -8,7 +8,7 @@ class TeachersController extends MyAppController
         if (empty($teachLangId)) {
             $teachLangId = FatApp::getPostedData('teachLangId', FatUtility::VAR_INT, 0);
         }
-      
+
         $frmSrch = $this->getTeacherSearchForm($teachLangId);
         $this->set('frmTeacherSrch', $frmSrch);
         $daysArr = applicationConstants::getWeekDays();
@@ -195,7 +195,7 @@ class TeachersController extends MyAppController
             $getUserTeachLanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
             $getUserTeachLanguages->addMultipleFields([
                 'IFNULL(top_percentage,0) as top_percentage',
-                    // 'top_lesson_duration'
+                // 'top_lesson_duration'
             ]);
         } else {
             $getUserTeachLanguages->addFld('0 as top_percentage');
@@ -402,10 +402,11 @@ class TeachersController extends MyAppController
 
         $startDateTime = MyDate::changeDateTimezone($post['start'], $userTimezone, $systemTimeZone);
         $endDateTime = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
-        
+
         if (strtotime($startDateTime) < strtotime(date('Y-m-d H:i:s'))) {
             FatUtility::dieJsonSuccess(0);
         }
+
         if (UserAuthentication::isUserLogged()) {
             $loggedUserId = UserAuthentication::getLoggedUserId();
             $checkGroupClassTiming = TeacherGroupClassesSearch::checkGroupClassTiming([$loggedUserId], $startDateTime, $endDateTime);
@@ -523,9 +524,10 @@ class TeachersController extends MyAppController
         $userTimezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
 
-   
+
         $startDate = MyDate::changeDateTimezone($post['start'], $userTimezone, $systemTimeZone);
         $endDate = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
+        
         $weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId, $startDate, $endDate);
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
         $teacherBookingBefore = null;
@@ -551,11 +553,15 @@ class TeachersController extends MyAppController
                 }
                 $twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDateTime, true, $userTimezone);
                 $twsch_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $startDateTime, true, $userTimezone);
-                
+
                 $twsch_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $startDateTime, true, $userTimezone);
-                $midPoint = (strtotime($twsch_start_time) + strtotime($twsch_end_time)) / 2;
-                $twschWeekYear = date('W-Y', $midPoint);
+               
+                $midPoint = (strtotime($startDateTime) + strtotime($endDateTime)) / 2;
                 
+                $dateTime = new dateTime(date('Y-m-d H:i:s', $midPoint));
+                $weekRange = MyDate::getWeekStartAndEndDate($dateTime);
+                $twschWeekYear = date('W-Y', strtotime($weekRange['weekStart']));
+
                 $jsonArr[] = [
                     "title" => "",
                     "date" => $twsch_date,
@@ -570,11 +576,12 @@ class TeachersController extends MyAppController
             }
         }
         $midPoint = (strtotime($startDate) + strtotime($endDate)) / 2;
-        $twsch_weekyear = date('W-Y', $midPoint);
-        // prx($jsonArr);
+        $dateTime = new dateTime(date('Y-m-d H:i:s', $midPoint));
+        $weekRange = MyDate::getWeekStartAndEndDate($dateTime);
+        
+        $twsch_weekyear = date('W-Y', strtotime($weekRange['weekStart']));
+
         if (empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear) {
-            $dateTime = new dateTime(date('Y-m-d H:i:s', $midPoint));
-            $weekRange = MyDate::getWeekStartAndEndDate($dateTime);
             $weekData = ['WeekStart' => $weekRange['weekStart'], 'WeekEnd' => $weekRange['weekEnd']];
             $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, $weekData, $teacherBookingBefore);
             $jsonArr = array_merge($jsonArr, $jsonArr2);
@@ -799,7 +806,7 @@ class TeachersController extends MyAppController
             $srch->setPageSize(1);
             $rs = $srch->getResultSet();
             $languages = FatApp::getDb()->fetch($rs);
-           
+
             if (!empty($languages['tlanguage_id'])) {
                 $teachLangId = $languages['tlanguage_id'];
                 $teachLangName = $languages['tlanguage_name'];
@@ -817,5 +824,4 @@ class TeachersController extends MyAppController
         $frm->addSubmitButton('', 'btnTeacherSrchSubmit', '');
         return $frm;
     }
-
 }

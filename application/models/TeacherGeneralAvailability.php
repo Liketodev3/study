@@ -23,7 +23,7 @@ class TeacherGeneralAvailability extends MyAppModel
         }
         $srch = new TeacherGeneralAvailabilitySearch();
         $srch->joinUser();
-        $srch->addMultipleFields(['tgavl_day', 'tgavl_start_time', 'tgavl_end_time', 'tgavl_user_id', 'tgavl_id', 'tgavl_date', 'tgavl_end_date', 'user_timezone']);
+        $srch->addMultipleFields(['tga.*', 'user_timezone']);
         $srch->addCondition('tgavl_user_id', '=', $userId);
         $srch->addOrder('tgavl_date', 'ASC');
         $rs = $srch->getResultSet();
@@ -164,7 +164,7 @@ class TeacherGeneralAvailability extends MyAppModel
                 }
 
                 if ($isEndDateWithDST) {
-                    $isEndDateWithDST = strtotime('+1 Hours', $isEndDateWithDST);
+                    $endDateTimeUnix = strtotime('+1 Hours', $endDateTimeUnix);
                 }
 
                 $day = MyDate::getDayNumber($startDateTime);

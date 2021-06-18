@@ -11,8 +11,7 @@ onmessage = function(e){
         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);        
         var html = ("0" + days).slice(-2)+ ":";
         html += ("0" + hours).slice(-2)+ ":";
         html += ("0" + minutes).slice(-2)+ ":";
@@ -23,7 +22,7 @@ onmessage = function(e){
             postMessage('');
             clearInterval(x);
         }else{
-            postMessage(html);
+            // postMessage(html);
         }
         now+=1000;
     }, 1000);
