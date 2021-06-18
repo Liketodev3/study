@@ -408,6 +408,17 @@ foreach ($userTeachLangs as $key => $value) {
     $(document).ready(function() {
         searchQualifications(<?php echo $teacher['user_id']; ?>);
         viewCalendar(<?php echo $teacher['user_id'] . ',' . $teacherLanguage . ', "paid"'; ?>);
+        $('.panel__head-trigger-js').click(function () {
+            if ($(this).hasClass('is-active')) {
+                $(this).removeClass('is-active');
+                $(this).siblings('.panel__body-target-js').slideUp(); return false;
+            }
+            $('.panel__head-trigger-js').removeClass('is-active');
+            $(this).addClass("is-active");
+            $('.panel__body-target-js').slideUp();
+            $(this).siblings('.panel__body-target-js').slideDown();
+            $('.slider-onethird-js').slick('reinit');
+        });
     });
 </script>
 <?php echo $this->includeTemplate('_partial/shareThisScript.php'); ?>
