@@ -3108,7 +3108,7 @@ p {
   width: 36px;
   height: 36px;
   padding: 5px;
-  background: var(--color-gray-100);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 50%;
   display: -webkit-box;
   display: -ms-flexbox;
