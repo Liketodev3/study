@@ -444,3 +444,6 @@ REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, 
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description', '1', ' By signing up with Yo!Coach, you agree to');
 
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description_%s_%s_%s', '1', 'By signing up with Yo!Coach, you agree to %s %s %s');
+
