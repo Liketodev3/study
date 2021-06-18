@@ -40,7 +40,9 @@ requestRescheduleSetup = function (frm) {
 
 viewBookingCalendar = function (id, action = '') {
     var data = { 'action': action };
+    $.mbsmessage(langLbl.processing, true, 'alert alert--process');
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'viewBookingCalendar', [id]), data, function (t) {
+        $.mbsmessage.close();
         $.facebox(t, 'facebox-large booking-calendar-pop-js');
     });
 };
