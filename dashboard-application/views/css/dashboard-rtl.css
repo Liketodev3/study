@@ -855,6 +855,11 @@ p {
       -ms-transform: translate3d(0px, 0px, 0px);
       visibility: visible; } }
 
+@media (min-width: 1199px) {
+  .menu-offset {
+    position: relative;
+    height: 100%; } }
+
 @media (max-width: 1199px) {
   html.is-toggle {
     position: fixed;
@@ -2764,10 +2769,6 @@ strong.span-right {
   font-size: var(--font-size-h4);
   color: var(--color-gray-000);
   margin-top: 3px; }
-
-.menu-offset {
-  height: 100%;
-  position: relative; }
 
 .infobar--primary {
   background: var(--color-primary);

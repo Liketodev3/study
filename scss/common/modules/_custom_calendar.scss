@@ -738,7 +738,7 @@ $dashboard-calendar: "dashboard-calendar";
     @media(max-width:theme('breakpoints.md','value')){
         height: 100%;
         #calendar-container{
-            height: calc(100% - 90px);
+            height: calc(100% - 145px);
             >div{
                 height: 100%;
             }

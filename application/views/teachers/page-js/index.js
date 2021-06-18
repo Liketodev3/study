@@ -1,6 +1,6 @@
 var searchArr = [];
 $("document").ready(function () {
-    $('.btn--filters-js').click(function () {
+    $(document).on('click','.btn--filters-js',function () {
         $(this).toggleClass("is-active");
         $('html').toggleClass("show-filters-js");
     });
@@ -184,10 +184,7 @@ $("document").ready(function () {
         e.stopPropagation();
     });
     /* FOR NAV TOGGLES */
-    $('.btn--filters-js').click(function () {
-        $(this).toggleClass("is-active");
-        $('html').toggleClass("show-filters-js");
-    });
+
 
     /* FUNCTION FOR COLLAPSEABLE LINKS */
     $('.filter-trigger-js').click(function () {

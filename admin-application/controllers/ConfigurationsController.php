@@ -302,7 +302,7 @@ class ConfigurationsController extends AdminBaseController
         $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
-        if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_FRONT_LOGO, 0, 0, 0, $lang_id)) {
+        if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_FRONT_WHITE_LOGO, 0, 0, 0, $lang_id)) {
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
