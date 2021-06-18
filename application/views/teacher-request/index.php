@@ -6,9 +6,11 @@ $userEmail = $applyTeachFrm->getField('user_email');
 $userEmail->setFieldTagAttribute('placeholder', Label::getLabel('LBL_Email', $siteLangId));
 $userPassword =  $applyTeachFrm->getField('user_password');
 $userPassword->setFieldTagAttribute('placeholder', Label::getLabel('LBL_Password', $siteLangId));
-
+$accept = $applyTeachFrm->getField('agree');
+$accept->setFieldTagAttribute('checked','checked');
+$accept->setFieldTagAttribute('class','d-none');
 $userPrefDash = $applyTeachFrm->getField('user_preferred_dashboard');
-$submitBtn=$applyTeachFrm->getField('btn_submit');
+$submitBtn = $applyTeachFrm->getField('btn_submit');
 $submitBtn->setFieldTagAttribute('class', 'btn btn--secondary btn--large btn--block ');
 $applyTeachFrm->developerTags['colClassPrefix'] = 'col-md-';
 $applyTeachFrm->developerTags['fld_default_col'] = 12;
@@ -106,6 +108,7 @@ $applyTeachFrm->developerTags['fld_default_col'] = 12;
                                 </div>
                             </div>
                         </div>
+                        <?php echo $accept->getHTML(); ?>
                     </div>
                     <?php echo $submitBtn->getHTML(); ?>
                 </form>
