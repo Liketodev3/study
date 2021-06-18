@@ -163,7 +163,6 @@ class EmailHandler extends FatModel
         $body = base64_encode($body);
         if (!mail($to, $subject, $body, $headers)) {
             return false;
-            
         }
         return true;
     }
@@ -582,7 +581,6 @@ class EmailHandler extends FatModel
     public function sendTeacherRequestEmailToAdmin($utrequest_id)
     {
         $srch = new TeacherRequestSearch();
-        $srch->joinTeacherRequestValues();
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -594,15 +592,15 @@ class EmailHandler extends FatModel
             'utrequest_attempts',
             'utrequest_comments',
             'utrequest_status',
-            'utrvalue_user_first_name',
-            'utrvalue_user_last_name',
-            'utrvalue_user_gender',
-            'utrvalue_user_phone',
-            'utrvalue_user_video_link',
-            'utrvalue_user_profile_info',
-            'utrvalue_user_teach_slanguage_id',
-            'utrvalue_user_language_speak',
-            'utrvalue_user_language_speak_proficiency',
+            'utrequest_first_name',
+            'utrequest_last_name',
+            'utrequest_gender',
+            'utrequest_phone_number',
+            'utrequest_video_link',
+            'utrequest_profile_info',
+            'utrequest_teach_slanguage_id',
+            'utrequest_language_speak',
+            'utrequest_language_speak_proficiency',
             'count(utrequest_id) as totalRequest'
         ]);
         $srch->addGroupBy('utrequest_id');
@@ -612,19 +610,19 @@ class EmailHandler extends FatModel
             $this->error = Label::getLabel('MSG_Invalid_Request', $this->commonLangId);
             return false;
         }
-        $subjectIds = json_decode($reqData['utrvalue_user_teach_slanguage_id'], true);
+        $subjectIds = json_decode($reqData['utrequest_teach_slanguage_id'], true);
         $teachingLanguagesArr = TeachingLanguage::getAllLangs($this->commonLangId);
         $subjectNames = array_map(
                 function ($n) use ($teachingLanguagesArr) {
-            return $teachingLanguagesArr[$n];
-        },
+                    return $teachingLanguagesArr[$n];
+                },
                 $subjectIds
         );
         $tpl = 'tpl_teacher_request_received';
         $vars = [
             '{refnum}' => $reqData['utrequest_reference'],
-            '{name}' => $reqData['utrvalue_user_first_name'] . ' ' . $reqData['utrvalue_user_last_name'],
-            '{phone}' => $reqData['utrvalue_user_phone'],
+            '{name}' => $reqData['utrequest_first_name'] . ' ' . $reqData['utrequest_last_name'],
+            '{phone}' => $reqData['utrequest_phone_number'],
             '{request_date}' => $reqData['utrequest_date'],
             '{subjects}' => implode(',', $subjectNames),
         ];

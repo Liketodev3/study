@@ -297,7 +297,12 @@
             if (this.field.attr('data-fat-arr-index')) {
             	clname += '_' + this.field.attr('data-fat-arr-index');
             }
+
             $('.'+clname).remove();
+            if(this.settings.summaryElementId != '' && $('#'+this.settings.summaryElementId).length > 0){
+                // $('#'+this.settings.summaryElementId).html('');
+            }
+            
 
             var obj = this,
                 field = obj.field,
@@ -384,6 +389,7 @@
                 }
                 switch(this.settings.errordisplay){
                 case 1:
+                    console.log(errorlist.empty());
                     $('#'+this.settings.summaryElementId).append(errorlist.empty());
                     document.getElementById(this.settings.summaryElementId).scrollIntoView();
                     break;
@@ -424,7 +430,11 @@
                     }
                     else {
                     		var li=$(document.createElement('li')).append($(document.createElement('a')).html(errors[error]).attr({'href':'javascript:void(0);'}).bind('click', function(){$(field).focus();}));
-                    		li.appendTo(errorlist);
+                    		if(this.settings.errordisplay == 1){
+                                $('#'+this.settings.summaryElementId).append( li.appendTo(errorlist));
+                            }else{
+                                li.appendTo(errorlist);
+                            }
                     }
                 }
                 obj.valid = false;
