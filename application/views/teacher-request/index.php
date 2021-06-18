@@ -119,6 +119,7 @@ $applyTeachFrm->developerTags['fld_default_col'] = 12;
                     $privacyPolicy = FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE', FatUtility::VAR_INT, 0);
                     ?>
                     <p><?php echo sprintf(Label::getLabel('LBL_Accept_Description',$siteLangId),'<a href="'.CommonHelper::generateUrl('Cms','view',[$termsConditionPage]).'" class="color-primary">'.Label::getLabel('LBL_Terms_and_Condtions',$siteLangId).'</a>','<a href="'.CommonHelper::generateUrl('cms','view',[$privacyPolicy]).'" class="color-primary">'.Label::getLabel('LBL_Privacy_Policy',$siteLangId).'</a>'); ?></p>
+                    <p><?php echo Label::getLabel('LBL_Already_have_an_account?'); ?> <a href="javascript:void(0);" onClick="logInFormPopUp()" class="-link-underline link-color"><?php echo Label::getLabel('LBL_Sign_In'); ?></a></p>
                 </div>
             </div>
         </div>
