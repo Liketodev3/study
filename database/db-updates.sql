@@ -480,3 +480,5 @@ ALTER TABLE `tbl_user_teacher_requests`   ADD PRIMARY KEY (`utrequest_id`);
 ALTER TABLE `tbl_user_teacher_requests`   MODIFY `utrequest_id` bigint NOT NULL AUTO_INCREMENT;
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description', '1', 'By signing up with Yo!Coach, you agree to %s and %s');
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_COUPON_APPLIED', '1', 'Applied');

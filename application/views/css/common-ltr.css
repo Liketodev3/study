@@ -1838,6 +1838,8 @@ ul {
 .availability-setting-calendar .slot_available {
   background: #0ab359;
   border-color: #0ab359; }
+  .availability-setting-calendar .slot_available .fc-event-time {
+    color: var(--color-dark); }
 
 @media (max-width: 767px) {
   .fc-toolbar-chunk {
@@ -5749,12 +5751,14 @@ textarea {
   position: relative;
   cursor: pointer;
   border: none;
-  line-height: 40px;
+  height: 2.8rem;
+  line-height: 2.8rem;
   color: var(--color-white);
   font-weight: 600;
   -webkit-transition: .3s all ease-in-out;
   -o-transition: .3s all ease-in-out;
-  transition: .3s all ease-in-out; }
+  transition: .3s all ease-in-out;
+  margin-right: var(--margin-3); }
 
 .form input[type="button"] {
   position: relative;
@@ -6070,8 +6074,42 @@ textarea[disabled] {
   .list-onethird li {
     width: 100%; } }
 
+.field_cover label .errorlist {
+  margin-bottom: -45px; }
+
 .errorlist.erlist_agree {
   bottom: -26px; }
+
+.btn-file {
+  position: relative; }
+  .btn-file input[type=file] {
+    position: relative;
+    max-width: 120px;
+    min-height: 41px;
+    border: 1px solid;
+    padding: 0; }
+    .btn-file input[type=file]:before {
+      content: "Upload file";
+      position: absolute;
+      height: 2.8rem;
+      line-height: 2.8rem;
+      font-weight: 500;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+      display: -webkit-inline-box;
+      display: -ms-inline-flexbox;
+      display: inline-flex;
+      -webkit-box-pack: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      align-items: center;
+      position: relative;
+      cursor: pointer;
+      -webkit-transition: .3s all ease-in-out;
+      -o-transition: .3s all ease-in-out;
+      transition: .3s all ease-in-out;
+      white-space: nowrap; }
 
 .label {
   color: #fff;
@@ -12586,18 +12624,13 @@ body[class*="jconfirm-no-scroll-"] {
   user-select: none;
   border-radius: 4px;
   min-height: 1em;
-  -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease,
- -webkit-box-shadow 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease,
- -webkit-box-shadow 0.1s ease;
+  -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
-  -o-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease,
- background 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease,
- background 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease,
- background 0.1s ease, -webkit-box-shadow 0.1s ease;
+  -o-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   -webkit-tap-highlight-color: transparent;
   border: 0;
   background-image: none; }
@@ -13369,7 +13402,7 @@ body[class*="jconfirm-no-scroll-"] {
   top: 0;
   left: 0;
   cursor: default;
-  max-height: 366px;
+  max-height: 220px;
   overflow-x: hidden;
   overflow-y: auto; }
 

@@ -319,6 +319,7 @@ $service: 'service';
                 margin: 0 auto theme('margin.6');
                 img{
                     max-width: 30px;
+                    max-height: 30px;
                 }
             }
         }
@@ -572,7 +573,7 @@ $tile: 'tile';
     
 }
 
-@media(min-width: theme('breakpoints.md','value')){
+@media(min-width: theme('breakpoints.xl','value')){
     .tile:hover{
         box-shadow: var(--boxShadow-vertical);
         .card__row--action{

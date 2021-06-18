@@ -48,7 +48,7 @@ $profileImageUploaded = User::isProfilePicUploaded($user['user_id']);
                                     <?php if (!$profileImageUploaded) { ?><span class="spn_must_field">*</span><?php } ?>
                                 </h6>
                                 <p><?php echo Label::getLabel('LBL_Profile_Pic_Fld_Desc', $siteLangId); ?></p>
-                                <?php echo $profileImageField->getHTML(); ?>
+                                <div class="btn-file"><?php echo $profileImageField->getHTML(); ?></div>
                             </div>
                         </div>
                         <div class="row">
