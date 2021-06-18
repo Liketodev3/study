@@ -184,14 +184,13 @@ class FreePayController extends MyAppController
         $cartObj->updateUserCart();
         /* ] */
         if ($isAjaxCall) {
-            $this->set('redirectUrl', CommonHelper::generateUrl('Custom', 'paymentSuccess'));
+            $this->set('redirectUrl', CommonHelper::generateUrl('Custom', 'paymentSuccess', [$orderId]));
             $this->set('msg', Label::getLabel("MSG_Payment_from_wallet_made_successfully", $this->siteLangId));
             $this->_template->render(false, false, 'json-success.php');
         }
         if ($cartData['lpackage_is_free_trial']) {
             FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'trialBookedSuccess', [$orderId]));
         }
-        FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess'));
+        FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess', [$orderId]));
     }
-
 }
