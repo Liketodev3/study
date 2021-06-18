@@ -1,13 +1,16 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
 $applyTeachFrm->setFormTagAttribute('class', 'form');
 $applyTeachFrm->setFormTagAttribute('onsubmit', 'setUpSignUp(this); return(false);');
+$userId = $applyTeachFrm->getField('user_id');
 $userEmail = $applyTeachFrm->getField('user_email');
 $userEmail->setFieldTagAttribute('placeholder', Label::getLabel('LBL_Email', $siteLangId));
 $userPassword =  $applyTeachFrm->getField('user_password');
 $userPassword->setFieldTagAttribute('placeholder', Label::getLabel('LBL_Password', $siteLangId));
-
+$accept = $applyTeachFrm->getField('agree');
+$accept->setFieldTagAttribute('checked','checked');
+$accept->setFieldTagAttribute('class','d-none');
 $userPrefDash = $applyTeachFrm->getField('user_preferred_dashboard');
-$submitBtn=$applyTeachFrm->getField('btn_submit');
+$submitBtn = $applyTeachFrm->getField('btn_submit');
 $submitBtn->setFieldTagAttribute('class', 'btn btn--secondary btn--large btn--block ');
 $applyTeachFrm->developerTags['colClassPrefix'] = 'col-md-';
 $applyTeachFrm->developerTags['fld_default_col'] = 12;
@@ -78,6 +81,7 @@ $applyTeachFrm->developerTags['fld_default_col'] = 12;
                                     <div class="field_cover">
                                         <?php echo $userEmail->getHTML(); ?>
                                         <?php echo $userPrefDash->getHtml(); ?>
+                                        <?php echo $userId->getHtml(); ?>
                                     </div>
                                 </div>
                             </div>
@@ -104,18 +108,18 @@ $applyTeachFrm->developerTags['fld_default_col'] = 12;
                                 </div>
                             </div>
                         </div>
+                        <?php echo $accept->getHTML(); ?>
                     </div>
-                    <button class="btn btn--secondary btn--large btn--block "><?php CommonHelper::printArray($submitBtn,true); ?></button>
+                    <?php echo $submitBtn->getHTML(); ?>
                 </form>
+                <?php echo $applyTeachFrm->getExternalJs(); ?>
                 <div class="row justify-content-center">
-                    <p>By signing up with Yo!Coach, you agree to <a href="javascript:0;" class="color-primary">Terms and Conditions</a> and <a href="javascript:0;" class="color-primary">Privacy Policy</a></p>
+                    <p><?php echo Label::getLabel('LBL_Accept_Description',$siteLangId); ?><a href="<?php echo CommonHelper::generateUrl('CMS','view',[2]) ?>" class="color-primary"><?php echo Label::getLabel('LBL_Terms_and_Condtions',$siteLangId); ?></a><?php echo Label::getLabel('LBL_And',$siteLangId); ?> <a href="<?php echo CommonHelper::generateUrl('cms','view',[3]); ?>" class="color-primary"><?php echo Label::getLabel('LBL_Privacy_Policy') ?></a></p>
                 </div>
-
             </div>
-
         </div>
     <?php }  ?>
-
+    
 </section>
 <?php echo FatUtility::decodeHtmlEntities($sectionAfterBanner); ?>
 <?php echo FatUtility::decodeHtmlEntities($featuresSection); ?>

@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	getStatisticalData1(document.reportSearchForm);
+	getStatisticalData(document.reportSearchForm);
 	searchLessons(document.frmSrch);
 })
 
@@ -14,8 +14,7 @@ function searchLessons (frm){
 	});
 };
 
-getStatisticalData1 = function(form){
-	console.log("sdsdsssssd");
+getStatisticalData = function(form){
 	if (!$(form).validate()) return;
 	var data = fcom.frmData(form);
 	fcom.ajax(fcom.makeUrl('TeacherReports','getStatisticalData'), data , function(res){

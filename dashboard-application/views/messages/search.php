@@ -2,7 +2,7 @@
 
 if (!empty($arr_listing) && is_array($arr_listing)) {
 	$loggedUserId = UserAuthentication::getLoggedUserId();
-	$userTimeZone = MyDate::getUserTimeZone($loggedUserId);
+	$userTimeZone = MyDate::getUserTimeZone();
 	foreach ($arr_listing as $sn => $row) {
 
 		$imgUserId = $row['message_from_user_id'];
@@ -30,7 +30,7 @@ if (!empty($arr_listing) && is_array($arr_listing)) {
 			<div class="msg-list__right">
 				<h6><?php echo $imgUserName; ?></h6>
 				<p><?php echo CommonHelper::truncateCharacters($row['message_text'], 280); ?></p>
-				<date><?php echo MyDate::format($row['message_date'], false, true,  $userTimeZone); ?></date>
+				<date><?php echo MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $row['message_date'], true, $userTimeZone); ?></date>
 			</div>
 
 			<a href="javascript:void(0);" onclick="getThread(<?php echo $row['thread_id']; ?>,1);" class="msg-list__action msg-list__action-js"></a>

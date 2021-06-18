@@ -11,7 +11,7 @@ if ($page == 1) {
 }
 
 $nextPage = $page + 1;
-$userTimeZone = MyDate::getUserTimeZone($userId);
+$userTimeZone = MyDate::getUserTimeZone();
 $senderImage =  '';
 $senderName =  $otherUserDetail['user_first_name'] . ' ' . $otherUserDetail['user_last_name'];
 if (true == User::isProfilePicUploaded($otherUserDetail['user_id'])) {
@@ -52,12 +52,13 @@ if ($page == 1) { ?>
             $date = '';
             foreach ($arrListing as $row) {
                 $fromMe =  ($row['message_from_user_id'] == $userId);
-                $msgDate = MyDate::format($row['message_date'], true, true, $userTimeZone);
+                $msgDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['message_date'], true, $userTimeZone);
                 $msgDateUnix = strtotime($msgDate);
                 if (empty($date)  || ($date != date('Ymd', $msgDateUnix))) {
             ?>
                     <!-- <div class="chat chat--info">
-                        <span class="span"><?php //echo date('Y-m-d', $msgDateUnix); ?></span>
+                        <span class="span"><?php //echo date('Y-m-d', $msgDateUnix); 
+                                            ?></span>
                     </div> -->
                 <?php $date = date('Ymd', $msgDateUnix);
                 } ?>

@@ -1,9 +1,9 @@
 <?php 
 defined('SYSTEM_INIT') or die('Invalid Usage.'); 
-$reportSearchForm->addFormTagAttribute('onsubmit', "getStatisticalData1(this); return (false);");;
+$reportSearchForm->addFormTagAttribute('onsubmit', "getStatisticalData(this); return (false);");;
 
 $durationType = $reportSearchForm->getField('duration_type');
-$durationType->addFieldTagAttribute('onChange','getStatisticalData1(this.form); return (false);');
+$durationType->addFieldTagAttribute('onChange','getStatisticalData(this.form); return (false);');
 
 $reportType = $reportSearchForm->getField('report_type[]');
 $reportType->addFieldTagAttribute('class','d-none');

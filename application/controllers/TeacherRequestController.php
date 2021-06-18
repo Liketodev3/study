@@ -480,10 +480,10 @@ class TeacherRequestController extends MyAppController
         $fld->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
         $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_8_Digit_AlphaNumeric_Password', $langId));
         $frm->addHiddenField('', 'user_preferred_dashboard', User::USER_TEACHER_DASHBOARD);
-        $fld = $frm->addCheckBox(Label::getLabel('LBL_I_accept_to_the', $langId), 'agree', 1);
+        $fld = $frm->addCheckBox(Label::getLabel('LBL_I_accept_to_the', $langId), 'agree', 1, [], false, 0);
         $fld->requirements()->setRequired();
         $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Terms_and_Condition_and_Privacy_Policy_are_mandatory.', $langId));
-        $frm->addSubmitButton(Label::getLabel('LBL_REGISTER_WITH_EMAIL',$this->siteLangId), 'btn_submit', Label::getLabel('LBL_Register', $langId));
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_REGISTER_WITH_EMAIL',$this->siteLangId));
         return $frm;
     }
 

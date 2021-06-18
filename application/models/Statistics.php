@@ -44,7 +44,7 @@ class Statistics extends MyAppModel
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
         $nowDate = MyDate::changeDateTimezone(date('Y-m-d H:i:s'), $systemTimeZone, $user_timezone);
-
+        
         $nowDateTimestamp = strtotime($nowDate);
 
         $endDate = date('Y-m-d H:i:s');
@@ -59,7 +59,7 @@ class Statistics extends MyAppModel
         switch ($type) {
             case static::TYPE_TODAY:
                 $startDate = MyDate::changeDateTimezone(date('Y-m-d', $nowDateTimestamp) . ' 00:00:00', $user_timezone, $systemTimeZone);
-
+               
                 if ($forGraph) {
                     $srch->addMultipleFields(["DATE_FORMAT(order_date_added,'%h:%i %p') as groupDate"]);
                     $srch->addGroupBy("DATE_FORMAT(order_date_added, '%H:%i')");
@@ -88,10 +88,9 @@ class Statistics extends MyAppModel
             case static::TYPE_LAST_MONTH:
                 $startDate = date('Y-m-d', strtotime('first day of previous month', $nowDateTimestamp)) . ' 00:00:00';
                 $endDate = date('Y-m-d', strtotime('last day of previous month +1 days', $nowDateTimestamp)) . ' 00:00:00';
-
+              
                 $startDate = MyDate::changeDateTimezone($startDate, $user_timezone, $systemTimeZone);
                 $endDate = MyDate::changeDateTimezone($endDate, $user_timezone, $systemTimeZone);
-
                 if ($forGraph) {
                     $srch->addMultipleFields(["DATE_FORMAT(order_date_added, '%Y-%m-%d') as groupDate"]);
                     $srch->addGroupBy("DATE_FORMAT(order_date_added, '%Y-%m-%d')");
