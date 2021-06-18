@@ -21,7 +21,7 @@ foreach ($arrListing as $sn => $row){
 	
 	foreach ($arr_flds as $key => $val){
 
-		$div = $tr->appendElement('td')->appendElement('div', array('flex-cell'));
+		$div = $tr->appendElement('td')->appendElement('div', array('class'=>'flex-cell'));
 		$div->appendElement('div', array('class'=>'flex-cell__label'), $val, true);
 		
 		switch ($key){
