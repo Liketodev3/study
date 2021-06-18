@@ -44,7 +44,12 @@ class TeacherRequestController extends MyAppController
 
     public function form()
     {
-        $this->set('step', 1);
+        if (FatUtility::int($this->userId) < 1) {
+            UserAuthentication::logoutGuestTeacher();
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherRequest', '', [], CONF_WEBROOT_FRONTEND));
+        }
+        $request = $this->getRequest($this->userId);
+        $this->set('step', $request['utrequest_step'] ?? 1);
         $this->set('exculdeMainHeaderDiv', false);
         $this->_template->addJs('js/jquery.form.js');
         $this->_template->addJs('js/cropper.js');
@@ -214,6 +219,29 @@ class TeacherRequestController extends MyAppController
         if (empty($request)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
+        $imageFile = '';
+        $fileType = AttachedFile::FILETYPE_USER_PROFILE_IMAGE;
+        if ($post['action'] == "avatar") {
+            $fileType = AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE;
+        }
+        if (!empty($_FILES['user_profile_image']['tmp_name'])) {
+            if (!is_uploaded_file($_FILES['user_profile_image']['tmp_name'])) {
+                $msgLblKey = CommonHelper::getFileUploadErrorLblKeyFromCode($_FILES['user_profile_image']['error']);
+                FatUtility::dieJsonError(Label::getLabel($msgLblKey));
+            }
+            $file = new AttachedFile();
+            $fileName = $_FILES['user_profile_image']['name'];
+            $tmpName = $_FILES['user_profile_image']['tmp_name'];
+            if (!$res = $file->saveImage($tmpName, $fileType, $userId, 0, $fileName, -1, true)) {
+                FatUtility::dieJsonError($file->getError());
+            }
+            $data = json_decode(stripslashes($post['img_data']));
+            CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
+            $imageFile = CommonHelper::generateFullUrl('Image', 'userFull', [$userId], CONF_WEBROOT_FRONTEND) . '?' . time();
+        }
+        if (!User::isProfilePicUploaded($userId)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_PROFILE_PICTURE_REQURED'));
+        }
         $record = new TableRecord('tbl_user_teacher_requests');
         $data = [
             'utrequest_step' => 3,
@@ -225,7 +253,7 @@ class TeacherRequestController extends MyAppController
         if (!$record->addNew([], $data)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
         }
-        FatUtility::dieJsonSuccess(['step' => 3, 'msg' => Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY')]);
+        FatUtility::dieJsonSuccess(['step' => 3, 'file' => $imageFile, 'msg' => Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY')]);
     }
 
     public function setupStep3()
@@ -293,7 +321,7 @@ class TeacherRequestController extends MyAppController
 
     private function getFormStep1($langId)
     {
-        $frm = new Form('frmFormStep1');
+        $frm = new Form('frmFormStep1', ['id' => 'frmFormStep1']);
         $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'utrequest_first_name')->requirements()->setRequired();
         $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'utrequest_last_name')->requirements()->setRequired();
         $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'utrequest_gender', User::getGenderArr($langId), User::GENDER_MALE)->requirements()->setRequired();
@@ -308,18 +336,24 @@ class TeacherRequestController extends MyAppController
 
     private function getFormStep2($langId)
     {
-        $frm = new Form('frmFormStep2');
+        $frm = new Form('frmFormStep2', ['id' => 'frmFormStep2']);
+        $frm->addFileUpload(Label::getLabel('LBL_Profile_Picture'), 'user_profile_image', ['onchange' => 'popupImage(this)', 'accept' => 'image/*']);
         $frm->addTextArea(Label::getLabel('LBL_Biography', $langId), 'utrequest_profile_info')->requirements()->setLength(1, 500);
         $fld = $frm->addTextBox(Label::getLabel('LBL_Introduction_video', $langId), 'utrequest_video_link');
         $fld->requirements()->setRegularExpressionToValidate(applicationConstants::INTRODUCTION_VIDEO_LINK_REGEX);
         $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_Valid_Video_Link'));
+        $frm->addHiddenField('', 'update_profile_img', Label::getLabel('LBL_Update_Profile_Picture'), ['id' => 'update_profile_img']);
+        $frm->addHiddenField('', 'rotate_left', Label::getLabel('LBL_Rotate_Left'), ['id' => 'rotate_left']);
+        $frm->addHiddenField('', 'rotate_right', Label::getLabel('LBL_Rotate_Right'), ['id' => 'rotate_right']);
+        $frm->addHiddenField('', 'img_data', '', ['id' => 'img_data']);
+        $frm->addHiddenField('', 'action', 'avatar', ['id' => 'avatar-action']);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
         return $frm;
     }
 
     private function getFormStep3($langId, $spokenLangs)
     {
-        $frm = new Form('frmFormStep3');
+        $frm = new Form('frmFormStep3', ['id' => 'frmFormStep3']);
         $profArr = SpokenLanguage::getProficiencyArr($this->siteLangId);
         $teachingLanguagesArr = TeachingLanguage::getAllLangs($langId, true);
         $fld = $frm->addCheckBoxes(Label::getLabel('LBL_Language_To_Teach'), 'utrequest_teach_slanguage_id', $teachingLanguagesArr);
@@ -344,12 +378,12 @@ class TeacherRequestController extends MyAppController
 
     private function getFormStep4()
     {
-        $frm = new Form('frmFormStep4');
+        $frm = new Form('frmFormStep4', ['id' => 'frmFormStep4']);
         $frm->addCheckBox(Label::getLabel('LBL_Accept_Teacher_Approval_Terms_&_condition'), 'utrequest_terms', 1, [], false, 0)->requirements()->setRequired();
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes'));
         return $frm;
     }
-    
+
     public function searchTeacherQualification()
     {
         $srch = new UserQualificationSearch();
@@ -520,7 +554,7 @@ class TeacherRequestController extends MyAppController
         $this->set('msg', Label::getLabel('MSG_File_uploaded_successfully'));
         $this->_template->render(false, false, 'json-success.php');
     }
-    
+
     public function logoutGuestUser()
     {
         UserAuthentication::logoutGuestTeacher();

@@ -9,7 +9,13 @@
     <div class="page-block__body">
         <div class="block-content">
             <div class="block-content__head d-flex justify-content-center">
-                <h5><?php echo Label::getLabel('LBL_Application_Awaiting_Approval', $siteLangId); ?></h5>
+                <?php if ($request['utrequest_status'] == TeacherRequest::STATUS_PENDING) { ?>
+                    <h5><?php echo Label::getLabel('LBL_APPLICATION_AWAITING_APPROVAL', $siteLangId); ?></h5>
+                <?php } elseif ($request['utrequest_status'] == TeacherRequest::STATUS_CANCELLED) { ?>
+                    <h5><?php echo Label::getLabel('LBL_APPLICATION_HAS_BEEN_REJECTED', $siteLangId); ?></h5>
+                <?php } elseif ($request['utrequest_status'] == TeacherRequest::STATUS_APPROVED) { ?>
+                    <h5><?php echo Label::getLabel('LBL_APPLICATION_HAS_BEEN_APPROVED', $siteLangId); ?></h5>
+                <?php } ?>
             </div>
             <div class="block-content__body">
                 <div class="message-display message--resume message--confirmetion">
@@ -132,7 +138,7 @@
                     <h5><?php echo Label::getLabel('LBL_Hello', $siteLangId); ?> <?php echo $user['user_first_name']; ?></h5>
                     <p><?php echo Label::getLabel('LBL_Thank_You_For_Submitting_Your_Application', $siteLangId); ?></p>
                     <div class="application-no">
-                        <?php echo Label::getLabel('LBL_Application_Reference', $siteLangId) ?><span id="reg-no"></span>
+                        <?php echo Label::getLabel('LBL_Application_Reference', $siteLangId) ?>: <span id="reg-no"><?php echo $request['utrequest_reference']; ?></span>
                     </div>
                     <?php if (UserAuthentication::getLoggedUserId(true)) { ?>
                         <a href="<?php echo CommonHelper::generateUrl('learner', '', [], CONF_WEBROOT_DASHBOARD) ?>" class="btn btn--bordered btn--small color-secondary"><?php echo Label::getLabel('LBL_Visit_My_Account', $siteLangId); ?></a>

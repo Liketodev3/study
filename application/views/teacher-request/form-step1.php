@@ -10,6 +10,7 @@ $usrPhoneCode->setFieldTagAttribute('id', 'utrequest_phone_code');
 $usrPhone = $frm->getField('utrequest_phone_number');
 $usrPhone->setFieldTagAttribute('id', 'utrequest_phone_number');
 $usrPhotoId = $frm->getField('user_photo_id');
+$usrPhone->value = $usrPhoneCode->value . $usrPhone->value;
 ?>
 <?php $this->includeTemplate('teacher-request/_partial/leftPanel.php', ['siteLangId' => $siteLangId, 'step' => 1]); ?>
 <div class="page-block__right">
@@ -151,8 +152,41 @@ $usrPhotoId = $frm->getField('user_photo_id');
     </div>          
 </div>
 <script>
+    var statusActive = '<?php echo Label::getLabel('LBL_Active'); ?>';
+    var statusInActive = '<?php echo Label::getLabel('LBL_In-active'); ?>';
+    var countryData = window.intlTelInputGlobals.getCountryData();
+    for (var i = 0; i < countryData.length; i++) {
+        var country = countryData[i];
+        country.name = country.name.replace(/ *\([^)]*\) */g, "");
+    }
+
+    var input = document.querySelector("#utrequest_phone_number");
+    $("#utrequest_phone_number").inputmask();
+    input.addEventListener("countrychange", function () {
+        var dial_code = $.trim($('.iti__selected-dial-code').text());
+        setPhoneNumberMask();
+        $('#utrequest_phone_code').val(dial_code);
+    });
+
+    var telInput = window.intlTelInput(input, {
+        separateDialCode: true,
+        initialCountry: "us",
+        utilsScript: siteConstants.webroot + "js/utils.js",
+    });
+
+    setPhoneNumberMask = function () {
+        let placeholder = $("#utrequest_phone_number").attr("placeholder");
+        if (placeholder) {
+            placeholderlength = placeholder.length;
+            placeholder = placeholder.replace(/[0-9.]/g, '9');
+            $("#utrequest_phone_number").inputmask({"mask": placeholder});
+        }
+    };
     $(document).ready(function () {
-        intTell();
-        $('#utrequest_phone_code').val($.trim($('.iti__selected-dial-code').text()));
+        var dial_code = $.trim($('.iti__selected-dial-code').text());
+        $('#utrequest_phone_code').val(dial_code);
+        setTimeout(() => {
+            setPhoneNumberMask();
+        }, 100);
     });
 </script>
