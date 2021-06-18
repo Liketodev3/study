@@ -26,7 +26,7 @@ class GroupClassesController extends MyAppController
         if (isset($post['language']) && $post['language'] !== "") {
             $srch->addCondition('grpcls_tlanguage_id', '=', $post['language']);
         }
-        $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
+        $srch->addCondition('grpcls_end_datetime', '>', date('Y-m-d H:i:s'));
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
         $rs = $srch->getResultSet();
