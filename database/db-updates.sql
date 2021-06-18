@@ -486,3 +486,7 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
 ('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}', 1, '<p>Your order has been successfully processed!</p><p>You can view your order history by going to the <a class=\"color-secondary\" href=\"{dashboard-url}\">my account</a> page .</p><p>Please direct any questions you have to the <a class=\"color-secondary\" href=\"{contact-us-page-url}\">web portal owner</a>.</p><p>Thanks for choosing us online!'),
 ('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}', 2, '<p> تم تجهيز طلبك بنجاح! </ P> <p> ويمكنك عرض التاريخ طلبك عن طريق الذهاب إلى <a class=\"color-secondary\" href=\"{dashboard-url}\"> صفحتي حساب </A>. </ P > <p> يرجى توجيه أي أسئلة لديك إلى <a class=\"color-secondary\" href=\"{contact-us-page-url}\"> البوابة الإلكترونية مالك </A>. </ P> <p> وشكرا لاختيارك لنا على الانترنت!');
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.19.0.20210618' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+------------------

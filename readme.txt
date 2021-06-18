@@ -1,5 +1,72 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.19.0.20210618
+
+Release Date: 2021-06-18
+
+Updates:
+    *Task-86496: HTML integration - Apply to Teach
+
+Fixes:
+    #054442
+    #054443
+    #051840
+    #055182
+    #055183
+    #054851
+    #055022
+    #055178
+    #055177
+    #055121
+    #052330
+    #055005
+    #054983
+    #053877
+    #051883
+    #054873
+    #053481
+    #050216
+    #051411
+    #053212
+    #053674
+    #053498
+    #054609
+    #054387
+    #045765
+    #054686
+    #054725
+    #053770
+    #053506
+    #052972
+    #052099
+    #051882
+    #051789
+    #050898
+    #050881
+    #049561
+    #040857
+    #040850
+    #051040
+    #054505
+    #054440
+    #054530
+    #053678
+    #053371
+    #049560
+
+Know issues:
+
+    #055184
+    #055191
+    #055028
+    #054638
+    #Popup scroll in mobile resolution
+    #Dashboard calendar mobile view
+    #Dashboard manage lesson upcoming text overlap
+    #Arrows icons' rotation issue in RTL
+
+----------------------------------------------------------------
+
 Release Number: TV-2.18.0.20210616
 
 Release Date: 2021-06-16
