@@ -24,6 +24,8 @@ function getSortedReviews(elm) {
 
 $("document").ready(function () {
 
+    loadOneThirdSlick();
+
     $('.toggle-dropdown__link-js').each(function () {
         $(this).click(function () {
             $(this).parent('.toggle-dropdown').toggleClass("is-active");
@@ -72,7 +74,7 @@ $("document").ready(function () {
     }
 
 
-    loadOneThirdSlick();
+    
     $(document).on('change', '#teachLang', function () {
         $(".slider--onethird").hide();
         $('div[data-lang-id="' + $(this).val() + '"]').show();

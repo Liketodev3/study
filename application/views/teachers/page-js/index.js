@@ -5,6 +5,12 @@ $("document").ready(function () {
         $('html').toggleClass("show-filters-js");
     });
 
+    $('input[name="teach_language_name"]').keyup(function(){
+        var text = $(this).val();
+        $('.select-teach-lang-js').parent().hide();
+        $('.select-teach-lang-js:contains("'+text+'")').parent().show();      
+        });
+
     var frm = document.frmTeacherSrch;
 
     searchTeachers(frm);
