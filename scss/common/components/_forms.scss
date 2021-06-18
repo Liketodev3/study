@@ -83,7 +83,7 @@ textarea {
     border: none;
     line-height: 40px;
     color: theme('color.white');
-    font-weight: 600; margin-#{theme('direction.right','value')}: 10px;
+    font-weight: 600;
     -webkit-transition: .3s all ease-in-out;
     transition: .3s all ease-in-out
 }
@@ -459,13 +459,13 @@ textarea[disabled] {
 @media (max-width:theme('breakpoints.sm','value')) {
 
 
-    .form input[type=button],
-    .form input[type=reset],
-    .form input[type=submit] {
-        width: 100%;
-        display: block;
-        margin: 0 0 5px 0
-    }
+    // .form input[type=button],
+    // .form input[type=reset],
+    // .form input[type=submit] {
+    //     width: 100%;
+    //     display: block;
+    //     margin: 0 0 5px 0
+    // }
 
     .list-onethird li {
         width: 100%

@@ -50,15 +50,6 @@ $colorClass = [
                             <div class="list__price">
                                 <p><?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></p>
                             </div>
-                            <div class="list__action">
-                                <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getUserTeachLangues');" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
-                                <a href="javascript:void(0);" onclick="generateThread(<?php echo $teacher['user_id']; ?>);" class="btn btn--bordered color-primary btn--block">
-                                    <svg class="icon icon--envelope">
-                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
-                                    </svg>
-                                    <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
-                                </a>
-                            </div>
                         </div>
                         <div class="list__body">
                             <div class="profile-detail">
@@ -99,7 +90,7 @@ $colorClass = [
                                     <div class="tutor-info">
                                         <div class="tutor-info__inner">
                                             <div class="info__title">
-                                                <h6><?php Label::getLabel('LBL_Teaches', $siteLangId); ?></h6>
+                                                <h6><?php Label::getLabel('LBL_Teaches', $siteLangId); ?>Teaches</h6>
                                             </div>
                                             <div class="info__language">
                                                 <?php echo $teacher['teacherTeachLanguageName']; ?>
@@ -113,15 +104,27 @@ $colorClass = [
                                                 <?php echo $teacher['spoken_language_names']; ?>
                                             </div>
                                         </div>
-                                        <div class="tutor-info__inner">
+                                        <div class="tutor-info__inner info--about">
                                             <div class="info__title">
                                                 <h6><?php echo LABEL::getLabel('LBL_About', $siteLangId); ?></h6>
                                             </div>
-                                            <p><?php echo $teacher['user_profile_info'] ?><a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><?php echo Label::getLabel('LBL_View_Profile', $siteLangId) ?></a></p>
+                                            <div class="about__detail">
+                                                <p><?php echo $teacher['user_profile_info'] ?></p>
+                                                <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><?php echo Label::getLabel('LBL_View_Profile', $siteLangId) ?></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="list__action">
+                            <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getUserTeachLangues');" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                            <a href="javascript:void(0);" onclick="generateThread(<?php echo $teacher['user_id']; ?>);" class="btn btn--bordered color-primary btn--block">
+                                <svg class="icon icon--envelope">
+                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
+                                </svg>
+                                <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
+                            </a>
                         </div>
                     </div>
                     <div class="box__secondary">
@@ -178,16 +181,13 @@ $colorClass = [
                                             </tbody>
                                         </table>
                                     </div>
+                                    <a href="javascript:void(0);" onclick="viewCalendar(<?php echo $teacher['user_id']; ?>,'paid')" class="link-detail"><?php echo Label::getLabel('LBL_View_Full_availability'); ?></a>
                                 </div>
                                 <?php if (!empty($teacher['us_video_link'])) { ?>
                                     <div class="panel-content video" style="display:none;">
                                         <iframe width="100%" height="100%" src="<?php echo $teacher['us_video_link']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                     </div>
                                 <?php } ?>
-                            </div>
-
-                            <div class="panel-box__foot">
-                                <a href="javascript:void(0);" onclick="viewCalendar(<?php echo $teacher['user_id']; ?>,'paid')" class="link-detail"><?php echo Label::getLabel('LBL_View_Full_availability'); ?></a>
                             </div>
                         </div>
                     </div>
