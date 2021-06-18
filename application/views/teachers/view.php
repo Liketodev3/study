@@ -31,6 +31,17 @@ foreach ($userTeachLangs as $key => $value) {
         'top_percentage' => $value['top_percentage'],
     ];
 }
+
+
+$disabledClass = '';
+$bookNowClick = 'onclick="cart.proceedToStep({teacherId: ' . $teacher['user_id'] . '}, \'getUserTeachLangues\');"';
+$contactClick = 'onclick="generateThread(' . $teacher['user_id'] . ');"';
+if ($loggedUserId == $teacher['user_id']) {
+    $disabledClass = 'disabled';
+    $bookNowClick = '';
+    $contactClick = '';
+}
+
 ?>
 <section class="section section--profile">
     <div class="container container--fixed">
@@ -194,7 +205,7 @@ foreach ($userTeachLangs as $key => $value) {
                             <svg class="icon icon--sound">
                                 <use xlink:href="/YoCoach/images/sprite.yo-coach.svg#sound"></use>
                             </svg>
-                            <p><b>Note:</b> Not finding your ideal time? <a class="bold-600" href="#">Contact</a> this teacher to request a slot outside of their current schedule</p>
+                            <p><b><?php echo Label::getLabel('LBL_Note:') ?></b><?php echo Label::getLabel('LBL_Not_finding_your_ideal_time?'); ?><a class="bold-600" href="javascript:void(0)" <?php echo $contactClick; ?>><?php echo Label::getLabel('LBL_Contact'); ?></a> <?php echo Label::getLabel('LBL_this_teacher_to_request_a_slot_outside_of_their_current_schedule'); ?></p>
                         </div>
                     </div>
                 </div>
@@ -355,16 +366,7 @@ foreach ($userTeachLangs as $key => $value) {
                     ?>
                     <div class="box box--book">
                         <div class="book__actions">
-                            <?php
-                            $disabledClass = '';
-                            $bookNowClick = 'onclick="cart.proceedToStep({teacherId: ' . $teacher['user_id'] . '}, \'getUserTeachLangues\');"';
-                            $contactClick = 'onclick="generateThread(' . $teacher['user_id'] . ');"';
-                            if ($loggedUserId == $teacher['user_id']) {
-                                $disabledClass = 'disabled';
-                                $bookNowClick = '';
-                                $contactClick = '';
-                            }
-                            ?>
+                      
                             <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
                             <a href="javascript:void(0);" <?php echo $contactClick; ?> class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary <?php echo $disabledClass; ?>">
                                 <svg class="icon icon--envelope">
