@@ -390,8 +390,10 @@ class TeacherSearch extends SearchBase
         $srch->addMultipleFields([
             'tgavl_day', 'tgavl_user_id',
             'CONCAT(tgavl_date, " ", tgavl_start_time) as startdate',
-            'CONCAT(tgavl_end_date, " ", tgavl_end_time) as enddate'
+            'CONCAT(tgavl_end_date, " ", tgavl_end_time) as enddate',
+            'user_timezone'
         ]);
+        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'user.user_id = tgavl_user_id', 'user');
         $srch->addCondition('tgavl_user_id', 'IN', $teacherIds);
         $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
         $users = [];
@@ -403,14 +405,18 @@ class TeacherSearch extends SearchBase
         $systemTimezone = MyDate::getTimeZone();
         $userTimezone = MyDate::getUserTimeZone($userId);
         $userDate = MyDate::changeDateTimezone($currentDate, $userTimezone, $systemTimezone);
-        $hourDiff = MyDate::hoursDiff($currentDate, $userDate);
         $emptySlots = CommonHelper::getEmptyDaySlots();
         foreach ($users as $id => $user) {
             $records = [];
+            $teacherTimeZone = (empty($user[0]['user_timezone'])) ? MyDate::getTimeZone() : $user[0]['user_timezone'];
             foreach ($user as $key => $row) {
+                $removedstTimeFromStartTime = MyDate::isDateWithDST($row['startdate'], $teacherTimeZone);
+                $removedstTimeFromEndTime = MyDate::isDateWithDST($row['enddate'], $teacherTimeZone);
+                $startDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['startdate'], true, $userTimezone, $removedstTimeFromStartTime);
+                $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['enddate'], true, $userTimezone, $removedstTimeFromEndTime);
                 $row['tgavl_day'] = $row['tgavl_day'] % 6;
-                $row['startdate'] = date('Y-m-d H:i:s', strtotime($row['startdate'] . ' ' . $hourDiff . ' hour'));
-                $row['enddate'] = date('Y-m-d H:i:s', strtotime($row['enddate'] . ' ' . $hourDiff . ' hour'));
+                $row['startdate'] = $startDateTime;
+                $row['enddate'] = $endDateTime;
                 $tmpRecords = static::breakIntoDays($row);
                 foreach ($tmpRecords as $tmpRecord) {
                     array_push($records, $tmpRecord);
@@ -426,6 +432,7 @@ class TeacherSearch extends SearchBase
                 $daySlot = [];
                 $startdate = strtotime($row['startdate']);
                 $enddate = strtotime($row['enddate']);
+
                 foreach ($timeSlots as $index => $slotDates) {
                     $slotStart = strtotime($slotDates[0] . ' +' . $row['tgavl_day'] . ' day');
                     $slotEnd = strtotime($slotDates[1] . ' +' . $row['tgavl_day'] . ' day');
@@ -535,4 +542,5 @@ class TeacherSearch extends SearchBase
     {
         $this->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = teacher.user_id', 'us');
     }
+
 }
