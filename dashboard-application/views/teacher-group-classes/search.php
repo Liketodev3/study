@@ -84,7 +84,7 @@ $nextDate = date('Y-m-d', strtotime('+1 days', strtotime($curDate)));
                                     <?php } ?>
                                     <?php if (empty($class['repiss_id']) && $class['grpcls_status'] != TeacherGroupClasses::STATUS_COMPLETED) { ?>
                                         <a href="javascript:void(0);" onclick="cancelClass('<?php echo $class['grpcls_id']; ?>');"  class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-                                            <svg class="icon icon--issue icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#trash'; ?>"></use></svg>
+                                            <svg class="icon icon--issue icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#cancel'; ?>"></use></svg>
                                             <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel("LBL_Cancel") ?></div>
                                         </a>
                                     <?php } ?>
