@@ -21,7 +21,7 @@ $frm->developerTags['fld_default_col'] = '12';
                     <div class="sectionhead">
                         <h4><?php echo Label::getLabel('LBL_Robots_File_Content', $adminLangId); ?></h4>
                         <div class="label--note text-right">
-                            <strong class="-color-secondary span-right"><?php echo Label::getLabel('NOTE_Robots_File_Modification', $adminLangId); ?><span class="spn_must_field">*</span>
+                            <strong class="-color-secondary span-right"><?php echo stripslashes(Label::getLabel('NOTE_Robots_File_Modification', $adminLangId)); ?><span class="spn_must_field">*</span>
                             </strong>
                         </div>
                     </div>
