@@ -272,7 +272,7 @@ if ($loggedUserId == $teacher['user_id']) {
                                                     <div class="card__row--action">
                                                         <a href="<?php echo CommonHelper::generateUrl('GroupClasses', 'view', array($classDetails['grpcls_id'])); ?>" class="btn btn--bordered color-primary"><?php echo Label::getLabel('LBL_View_Details', commonHelper::getLangId()); ?></a>
 
-                                                        <a href="javascript:void(0);" <?php echo $bookNowOnClickClick; ?> class="btn btn--primary <?php echo $disabledClass; ?>"><?php echo Label::getLabel("LBL_Book_Now"); ?></a>
+                                                        <a href="javascript:void(0);" <?php echo $bookNowClick; ?> class="btn btn--primary <?php echo $disabledClass; ?>"><?php echo Label::getLabel("LBL_Book_Now"); ?></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -366,7 +366,7 @@ if ($loggedUserId == $teacher['user_id']) {
                     <div class="box box--book">
                         <div class="book__actions">
                       
-                            <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                            <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowOnClickClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
                             <a href="javascript:void(0);" <?php echo $contactClick; ?> class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary <?php echo $disabledClass; ?>">
                                 <svg class="icon icon--envelope">
                                     <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
