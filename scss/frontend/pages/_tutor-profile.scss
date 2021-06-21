@@ -683,7 +683,7 @@
 
     .right-panel{
         position: sticky;
-        top: 180px;
+        top: 153px;
     }
 }
 
@@ -737,6 +737,7 @@
     border: 1px solid var(--color-gray-200);
     position: relative;
     margin-left: var(--margin-4);
+    
     &::before{
         content: "";
         position: absolute;
@@ -748,6 +749,7 @@
         transform: rotate(45deg);
         #{theme('direction.right','value')}: 15px;
         top: 15px;
+        pointer-events: none;
     }
     select{
         padding: 0 var(--padding-6);

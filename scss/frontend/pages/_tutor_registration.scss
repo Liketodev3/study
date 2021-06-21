@@ -4,8 +4,9 @@ $is-registration: 'is-registration';
     background-color: theme('color.gray.200');
     position: relative;
 
-    .header{
-        
+    .header{transform: translateY(0);
+        .container{max-width: 1220px;}
+      
         @media(min-width: theme('breakpoints.md','value')) {
             position: absolute;
         }
@@ -604,8 +605,8 @@ $profile-media: "profile-media";
         }
         .actions-group{
             .btn{
-                border-radius: 5px;
-                box-shadow: theme('boxShadow.all');
+                // border-radius: 5px;
+                // box-shadow: theme('boxShadow.all');
                 .icon{
                     fill: inherit;
                     width: 14px;
