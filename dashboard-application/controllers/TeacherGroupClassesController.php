@@ -119,6 +119,8 @@ class TeacherGroupClassesController extends TeacherBaseController
                 $fld->requirements()->setRequired(false);
                 $fld = $frm->getField('grpcls_entry_fee');
                 $fld->setFieldTagAttribute('disabled', 'disabled');
+                $fld = $frm->getField('grpcls_tlanguage_id');
+                $fld->setFieldTagAttribute('disabled', 'disabled');
                 $fld->setFieldTagAttribute('title', Label::getLabel("LBL_Price_can_not_change_for_Booked_Class"));
                 $fld->requirements()->setRequired(false);
             }
@@ -151,6 +153,7 @@ class TeacherGroupClassesController extends TeacherBaseController
                 $post['grpcls_start_datetime'] = MyDate::changeDateTimezone($class_details['grpcls_start_datetime'], $systemTimeZone, $user_timezone);
                 $post['grpcls_end_datetime'] = MyDate::changeDateTimezone($class_details['grpcls_end_datetime'], $systemTimeZone, $user_timezone);
                 $post['grpcls_entry_fee'] = $class_details['grpcls_entry_fee'];
+                $post['grpcls_tlanguage_id'] = $class_details['grpcls_tlanguage_id'];
             }
         }
         $post = $frm->getFormDataFromArray($post);
@@ -382,5 +385,4 @@ class TeacherGroupClassesController extends TeacherBaseController
         $btnSubmit->attachField($btnReset);
         return $form;
     }
-
 }
