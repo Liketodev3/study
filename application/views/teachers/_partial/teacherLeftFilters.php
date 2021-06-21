@@ -33,7 +33,7 @@ if (empty($minPrice) && empty($maxPrice)) {
         </ul>
     </div>
 
-    <span class="overlay overlay--filters btn--filters-js"></span>
+  
     <div class="filters">
         <div class="box">
             <div class="box__head d-flex justify-content-between align-items-center">

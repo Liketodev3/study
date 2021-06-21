@@ -172,9 +172,11 @@
     }
 }
 
-.show-facebox{
-    position: fixed;
-    width: 100%;
+@media(max-width:theme('breakpoints.md','value')){
+    .show-facebox{
+        position: fixed;
+        width: 100%;
+    }
 }
 
 #facebox{

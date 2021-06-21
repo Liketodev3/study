@@ -29,6 +29,16 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 		<div class="container container--narrow">
 			<div class="filter-wrapper">
 				<div class="filter-form">
+				<div class="filter-form__head">
+					<div class="row">
+						<div class="col-8">
+							<h3> Filters</h3>
+						</div>
+						<div class="col-auto margin-left-auto">
+							<button class="close close--filters-js"></button>
+						</div>
+					</div>
+				</div>
 					<div class="filter__primary">
 						<div class="filter-form__inner">
 							<div class="filter__head filter__head-trigger filter-trigger-js">
@@ -120,7 +130,7 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 					</div>
 
 					<div class="filter__secondary">
-						<span class="overlay overlay--filters btn--filters-js"></span>
+					
 						<div class="filter-group">
 							<div class="filter-group__inner">
 								<div class="filter__head filter__head-trigger filter-trigger-js">

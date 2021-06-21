@@ -389,10 +389,7 @@ p {
             box-shadow: var(--boxShadow-vertical);
     z-index: 1;
     opacity: 0;
-    visibility: hidden;
-    -webkit-transition: all 0.2s;
-    -o-transition: all 0.2s;
-    transition: all 0.2s; }
+    visibility: hidden; }
     @media (max-width: 1199px) {
       .profile__target {
         right: auto;
@@ -5019,7 +5016,8 @@ div.tagsinput div {
   height: 44px;
   -webkit-box-align: center;
       -ms-flex-align: center;
-          align-items: center; }
+          align-items: center;
+  border-top: 1px solid var(--color-gray-200); }
   .sidebar__links a {
     text-transform: uppercase;
     color: var(--color-primary);

@@ -10820,9 +10820,10 @@ textarea[disabled] {
   #facebox .calendar-view {
     padding: var(--padding-6); } }
 
-.show-facebox {
-  position: fixed;
-  width: 100%; }
+@media (max-width: 767px) {
+  .show-facebox {
+    position: fixed;
+    width: 100%; } }
 
 #facebox .img-container {
   max-height: 500px;
