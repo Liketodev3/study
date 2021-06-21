@@ -34,11 +34,11 @@ foreach ($userTeachLangs as $key => $value) {
 
 
 $disabledClass = '';
-$bookNowClick = 'onclick="cart.proceedToStep({teacherId: ' . $teacher['user_id'] . '}, \'getUserTeachLangues\');"';
+$bookNowOnClickClick = 'onclick="cart.proceedToStep({teacherId: ' . $teacher['user_id'] . '}, \'getUserTeachLangues\');"';
 $contactClick = 'onclick="generateThread(' . $teacher['user_id'] . ');"';
 if ($loggedUserId == $teacher['user_id']) {
     $disabledClass = 'disabled';
-    $bookNowClick = '';
+    $bookNowOnClickClick = '';
     $contactClick = '';
 }
 
@@ -272,7 +272,7 @@ if ($loggedUserId == $teacher['user_id']) {
                                                     <div class="card__row--action">
                                                         <a href="<?php echo CommonHelper::generateUrl('GroupClasses', 'view', array($classDetails['grpcls_id'])); ?>" class="btn btn--bordered color-primary"><?php echo Label::getLabel('LBL_View_Details', commonHelper::getLangId()); ?></a>
 
-                                                        <a href="javascript:void(0);" <?php echo $bookNowClick; ?> class="btn btn--primary <?php echo $disabledClass; ?>"><?php echo Label::getLabel("LBL_Book_Now"); ?></a>
+                                                        <a href="javascript:void(0);" <?php echo $bookNowOnClickClick; ?> class="btn btn--primary <?php echo $disabledClass; ?>"><?php echo Label::getLabel("LBL_Book_Now"); ?></a>
                                                     </div>
                                                 </div>
                                             </div>
