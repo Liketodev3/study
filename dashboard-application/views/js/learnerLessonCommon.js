@@ -8,12 +8,15 @@ lessonFeedback = function (lDetailId) {
 };
 
 setupLessonFeedback = function (frm) {
-    if (!$(frm).validate()) return false;
+    if (!$(frm).validate()) {
+        return false;
+    }
+
     var data = fcom.frmData(frm);
 
     fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setupLessonFeedback'), data, function (t) {
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCompleted;
+        window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCompleted;
         location.reload();
     });
 };
@@ -25,18 +28,21 @@ requestReschedule = function (id) {
 };
 
 requestRescheduleSetup = function (frm) {
-    if (!$(frm).validate()) return;
+    if (!$(frm).validate())
+        return;
     var data = fcom.frmData(frm);
     fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'requestRescheduleSetup'), data, function (t) {
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
+        window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
         location.reload();
     });
 };
 
 viewBookingCalendar = function (id, action = '') {
     var data = { 'action': action };
+    $.mbsmessage(langLbl.processing, true, 'alert alert--process');
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'viewBookingCalendar', [id]), data, function (t) {
+        $.mbsmessage.close();
         $.facebox(t, 'facebox-large booking-calendar-pop-js');
     });
 };
@@ -56,6 +62,7 @@ setUpLessonSchedule = function (teacherId, lDetailId, startTime, endTime, date) 
         }
     }
     $.mbsmessage.close();
+    $.loader.show();
     $.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'isSlotTaken'), 'teacherId=' + teacherId + '&startTime=' + startTime + '&endTime=' + endTime + '&date=' + date, function (t) {
         t = JSON.parse(t);
@@ -70,6 +77,7 @@ setUpLessonSchedule = function (teacherId, lDetailId, startTime, endTime, date) 
 
         if (slot > 0) {
             $.mbsmessage.close();
+            $.loader.hide();
             $.confirm({
                 title: langLbl.Confirm,
                 content: langLbl.bookedSlotAlert,
@@ -79,10 +87,10 @@ setUpLessonSchedule = function (teacherId, lDetailId, startTime, endTime, date) 
                         btnClass: 'btn btn--primary',
                         keys: ['enter', 'shift'],
                         action: function () {
+                            $.loader.show();
                             $.mbsmessage(langLbl.requestProcessing, false, 'alert alert--process');
                             fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function (doc) {
-                                $.facebox.close();
-                                window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
+                                window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
                                 location.reload();
                             });
                         }
@@ -99,9 +107,7 @@ setUpLessonSchedule = function (teacherId, lDetailId, startTime, endTime, date) 
         } else {
 
             fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setUpLessonSchedule'), ajaxData, function (doc) {
-                $.mbsmessage.close();
-                $.facebox.close();
-                window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
+                window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusScheduled;
                 location.reload();
             });
         }
@@ -126,7 +132,8 @@ cancelLessonSetup = function (frm) {
         return false;
     }
     isLessonCancelAjaxRun = true;
-    if (!$(frm).validate()) return;
+    if (!$(frm).validate())
+        return;
     var data = fcom.frmData(frm);
     fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'cancelLessonSetup'), data, function (ans) {
         isLessonCancelAjaxRun = false;
@@ -135,14 +142,16 @@ cancelLessonSetup = function (frm) {
             $.mbsmessage(ans.msg, true, 'alert alert--danger');
             /* Custom Code[ */
             if (ans.redirectUrl) {
-                setTimeout(function () { window.location.href = ans.redirectUrl }, 3000);
+                setTimeout(function () {
+                    window.location.href = ans.redirectUrl
+                }, 3000);
             }
             /* ] */
             return;
         }
         $.mbsmessage(ans.msg, true, 'alert alert--success');
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusUpcoming;
+        window.location.href = fcom.makeUrl('LearnerScheduledLessons') + '#' + statusUpcoming;
         location.reload();
     }, { fOutMode: 'json' });
 
@@ -153,32 +162,78 @@ cancelLessonSetup = function (frm) {
 };
 
 issueReported = function (id) {
-    fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'issueReported', [id]), '', function (t) {
-        $.facebox(t, 'facebox-medium');
+    fcom.ajax(fcom.makeUrl('ReportIssue', 'form', [id]), '', function (res) {
+        if (isJson(res)) {
+            var response = JSON.parse(res);
+            if (response.status == 1) {
+                $.mbsmessage(response.msg, true, 'alert alert--success');
+            } else {
+                $.mbsmessage(response.msg, true, 'alert alert--danger');
+            }
+        } else {
+            $.facebox(res, 'facebox-medium');
+        }
     });
 };
 
 issueReportedSetup = function (frm) {
-    if (!$(frm).validate()) return;
-    $(frm).find('[type=submit]').attr('disabled', true);
-    var data = fcom.frmData(frm);
-    fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'issueReportedSetup'), data, function (t) {
+    if (!$(frm).validate()) {
+        return;
+    }
+    var action = fcom.makeUrl('ReportIssue', 'setup');
+    fcom.updateWithAjax(action, fcom.frmData(frm), function (response) {
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCompleted;
-        location.reload();
+        if (response.status == 0) {
+            return $.mbsmessage(response.msg, true, 'alert alert--danger');
+        }
+        $.mbsmessage(response.msg, true, 'alert alert--success');
+        $("#lesson-status").length ? $("#lesson-status").val(statusIssueReported).trigger('change') : window.location.reload();
     });
 };
 
-issueDetails = function (issuelDetailId) {
-    fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'issueDetails', [issuelDetailId]), '', function (t) {
-        $.facebox(t, 'facebox-medium issueDetailPopup');
+issueDetails = function (id) {
+    $.mbsmessage(langLbl.processing, true, 'alert alert--process');
+    fcom.ajax(fcom.makeUrl('ReportIssue', 'detail', [id]), '', function (response) {
+        if (isJson(response)) {
+            var res = JSON.parse(response);
+            if (res.status == 1) {
+                $.mbsmessage(res.msg, true, 'alert alert--success');
+            } else {
+                $.mbsmessage(res.msg, true, 'alert alert--danger');
+            }
+        } else {
+            $.mbsmessage.close();
+            $.facebox(response, 'facebox-medium issueDetailPopup');
+        }
     });
 };
 
-reportIssueToAdmin = function (issueId, lDetailId, escalated_by) {
-    fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'reportIssueToAdmin', [issueId, lDetailId, escalated_by]), '', function (t) {
+esclateForm = function (id) {
+    fcom.ajax(fcom.makeUrl('ReportIssue', 'esclateForm', [id]), '', function (res) {
+        if (isJson(res)) {
+            var response = JSON.parse(res);
+            if (response.status == 1) {
+                $.mbsmessage(response.msg, true, 'alert alert--success');
+            } else {
+                $.mbsmessage(response.msg, true, 'alert alert--danger');
+            }
+        } else {
+            $.facebox(res, 'facebox-medium');
+        }
+    });
+};
+
+esclateSetup = function (frm) {
+    if (!$(frm).validate()) {
+        return;
+    }
+    var action = fcom.makeUrl('ReportIssue', 'esclateSetup');
+    fcom.updateWithAjax(action, fcom.frmData(frm), function (response) {
         $.facebox.close();
-        window.location.href= fcom.makeUrl('LearnerScheduledLessons') + '#' + statusCompleted;
-        location.reload();
+        if (response.status == 1) {
+            $.mbsmessage(response.msg, true, 'alert alert--success');
+        } else {
+            $.mbsmessage(response.msg, true, 'alert alert--danger');
+        }
     });
 };

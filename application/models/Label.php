@@ -11,14 +11,6 @@ class Label extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $labelId);
     }
 
-    public static function getInstance()
-    {
-        if (self::$_instance === null) {
-            self::$_instance = new self();
-        }
-        return self::$_instance;
-    }
-
     public static function getSearchObject($langId = 0)
     {
         $langId = FatUtility::int($langId);
@@ -98,7 +90,8 @@ class Label extends MyAppModel
             global $lang_array;
             $lang_array[$lblKey][$langId] = $str;
         }
-        return $str;
+
+        return addslashes($str);
     }
 
     public function addUpdateData($data = [])

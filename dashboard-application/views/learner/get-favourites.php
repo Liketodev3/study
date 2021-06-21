@@ -3,6 +3,7 @@
 	<table class="table table--styled table--responsive table--aligned-middle">
 		<tr class="title-row">
 			<th><?php echo $teacherLabel = Label::getLabel('LBL_Teacher'); ?></th>
+			<th><?php echo $teachesLabel = Label::getLabel('LBL_Teaches'); ?></th>
 			<th><?php echo $actionLabel = Label::getLabel('LBL_Action'); ?></th>
 		</tr>
 		<?php
@@ -30,38 +31,25 @@
 								<div class="profile-meta__details">
 									<p class="bold-600 color-black"><?php echo $favourite['user_first_name'] . ' ' . $favourite['user_last_name']; ?></p>
 									<p class="small"><?php echo $countriesArr[$favourite['user_country_id']]; ?></p>
-									<?php
-									if ($favourite['teacherTeachLanguageName'] != '' && !empty($favourite['teacherTeachLanguageName'])) {
-										$teachLangs = explode(',', $favourite['teacherTeachLanguageName']);
-										if (count($teachLangs) > 1) {
-											$first_array = array_slice($teachLangs, 0, 1);
-											$second_array = array_slice($teachLangs, 1, count($teachLangs));
-									?>
-											<div class="language">
-												<p class="my_teacher_lang_heading"><span><?php echo Label::getLabel('LBL_Teaches:'); ?></span> </p>
-												<?php foreach ($first_array as $teachLang) {  ?>
-													<span class="main-language"><?php echo $teachLang; ?></span>
-												<?php } ?>
 									
-												<div class="more-dropdown">
-													<a class="menu__item-trigger trigger-js color-secondary" href="#more-lang<?php echo $favourite['uft_teacher_id']; ?>"><?php echo count($second_array).' '.Label::getLabel('LBL_More'); ?></a>
-													<ul class="menu__dropdown more--dropdown" id="more-lang<?php echo $favourite['uft_teacher_id']; ?>">
-														<?php foreach ($second_array as $key => $teachLang) { ?>
-															<li>
-																<h6><?php echo $teachLang; ?></h6>	
-															</li>
-														<?php } ?>
-													</ul>
-												</div>
-											</div>
-									<?php
-										} else {
-											echo ' <p><span>' . Label::getLabel('LBL_Teaches:') . '</span> ' . $favourite['teacherTeachLanguageName'] . ' </p>';
-										}
-									}
-									?>
 								</div>
 							</div>
+						</div>
+					</div>
+				</td>
+				<td>
+
+					<div class="flex-cell">
+						<div class="flex-cell__label"><?php echo $teachesLabel; ?></div>
+						<div class="flex-cell__content">
+							<?php $teachLangs = explode(',', $favourite['teacherTeachLanguageName']??''); ?>
+							<?php if(count($teachLangs)){ ?>
+								<ul class="list-inline">
+									<?php foreach($teachLangs as $teachLang){ ?>
+										<li><span class="main-language"><?php echo $teachLang; ?></span></li>
+									<?php } ?>
+								</ul>
+							<?php } ?>
 						</div>
 					</div>
 				</td>
@@ -69,7 +57,7 @@
 					<div class="flex-cell">
 						<div class="flex-cell__label"><?php echo $actionLabel; ?></div>
 						<div class="flex-cell__content">
-							<a href="javascript:void(0);" onclick="toggleTeacherFavorite(<?php echo $favourite['uft_teacher_id']; ?>,this);" class="btn color-white btn--bordered bg-primary btn--shadow">
+							<a href="javascript:void(0);" onclick="toggleTeacherFavorite(<?php echo $favourite['uft_teacher_id']; ?>,this);" class="btn btn--small bg-primary">
 								<?php echo Label::getLabel('LBL_Unfavorite'); ?>
 							</a>
 						</div>

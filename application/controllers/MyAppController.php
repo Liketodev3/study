@@ -6,19 +6,17 @@ class MyAppController extends FatController
     public function __construct($action)
     {
         parent::__construct($action);
-        $this->action = $action;
-        if (FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && (get_class($this) != "MaintenanceController") && (get_class($this) != 'Home' && $action != 'setLanguage')) {
-            if (UserAuthentication::isUserLogged()) {
-                UserAuthentication::logout();
-            }
-            if (FatUtility::isAjaxCall()) {
-                Message::addErrorMessage(Label::getLabel(Label::getLabel('MSG_Maintenance_Mode_Text')));
-                FatUtility::dieWithError(Message::getHtml());
-            }
-            FatApp::redirectUser(CommonHelper::generateUrl('maintenance'));
-        }
         CommonHelper::initCommonVariables();
         $this->initCommonVariables();
+        if (
+            FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && ($this->_controllerName != "MaintenanceController")
+            && ($this->_controllerName != 'Home' && $action != 'setSiteDefaultLang' && $this->_controllerName != 'Custom'
+            && $action != 'updateUserCookies' && $action != 'cookieForm' && $action != 'saveCookieSetting')
+        ) {
+            UserAuthentication::logout();
+            FatUtility::isAjaxCall() && FatUtility::dieJsonError(Label::getLabel('MSG_Maintenance_Mode_Text'));
+            FatApp::redirectUser(CommonHelper::generateUrl('maintenance'));
+        }
     }
 
     public function pwaManifest()
@@ -30,7 +28,7 @@ class MyAppController extends FatController
         }
         $pwaManifest['icons'] = [
             [
-                "src" => CommonHelper::generateUrl('Image', 'pwaIcon', ['144']),
+                "src" => CommonHelper::generateUrl('Image', 'pwaIcon', ['144'], CONF_WEBROOT_FRONTEND),
                 "sizes" => "144x144",
                 "type" => "image/png"
             ],
@@ -56,8 +54,7 @@ class MyAppController extends FatController
         $this->siteLangId = CommonHelper::getLangId();
         $this->siteCurrencyId = CommonHelper::getCurrencyId();
         /* [ */
-        $controllerName = get_class($this);
-        $arr = explode('-', FatUtility::camel2dashed($controllerName));
+        $arr = explode('-', FatUtility::camel2dashed($this->_controllerName));
         array_pop($arr);
         $urlController = implode('-', $arr);
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
@@ -105,7 +102,9 @@ class MyAppController extends FatController
             'language' => Label::getLabel('Lbl_Language'),
             'myTimeZoneLabel' => Label::getLabel('Lbl_My_Current_Time'),
             'timezoneString' => Label::getLabel('LBL_TIMEZONE_STRING'),
-            'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson')
+            'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson'),
+            'userFilterLabel' => Label::getLabel('LBL_User'),
+            'confirmDeleteLessonPlanText' => Label::getLabel('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT'),
         ];
         $languages = Language::getAllNames(false);
         foreach ($languages as $val) {
@@ -114,6 +113,7 @@ class MyAppController extends FatController
         if (CommonHelper::getLayoutDirection() == 'rtl') {
             $this->_template->addCss(['css/common-rtl.css', 'css/frontend-rtl.css']);
         } else {
+            
             $this->_template->addCss(['css/common-ltr.css', 'css/frontend-ltr.css']);
         }
         $this->set('cookieConsent', $cookieConsent);
@@ -123,7 +123,8 @@ class MyAppController extends FatController
         $this->set('siteCurrencyId', $this->siteCurrencyId);
         $this->set('jsVariables', $jsVariables);
         $this->set('controllerName', $controllerName);
-        $this->set('action', $this->action);
+        $this->set('action', $this->_actionName);
+        $this->set('languages', $languages);
         $this->set('canonicalUrl', Common::getCanonicalUrl());
     }
 
@@ -202,12 +203,6 @@ class MyAppController extends FatController
     public function setUpNewsLetter()
     {
         $post = FatApp::getPostedData();
-        $frm = Common::getNewsLetterForm(CommonHelper::getLangId());
-        $post = $frm->getFormDataFromArray($post);
-        if ($post === false) {
-            Message::addErrorMessage($frm->getValidationErrors());
-            FatUtility::dieWithError(Message::getHtml());
-        }
         $siteLangId = CommonHelper::getLangId();
         $api_key = FatApp::getConfig("CONF_MAILCHIMP_KEY");
         $list_id = FatApp::getConfig("CONF_MAILCHIMP_LIST_ID");
@@ -215,7 +210,7 @@ class MyAppController extends FatController
             Message::addErrorMessage(Label::getLabel("LBL_Newsletter_is_not_configured_yet,_Please_contact_admin", $siteLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-        require_once(CONF_INSTALLATION_PATH . 'library/Mailchimp.php');
+        require_once(CONF_INSTALLATION_PATH . 'library/third-party/Mailchimp.php');
         $MailchimpObj = new Mailchimp($api_key);
         $Mailchimp_ListsObj = new Mailchimp_Lists($MailchimpObj);
         try {

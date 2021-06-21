@@ -43,6 +43,7 @@ class TeacherSearch extends SearchBase
             'teacher.user_first_name' => 'user_first_name',
             'teacher.user_last_name' => 'user_last_name',
             'teacher.user_country_id' => 'user_country_id',
+            'testat.testat_timeslots' => 'testat_timeslots',
             'testat.testat_students' => 'studentIdsCnt',
             'testat.testat_lessions' => 'teacherTotLessons',
             'testat.testat_ratings' => 'teacher_rating',
@@ -60,7 +61,7 @@ class TeacherSearch extends SearchBase
     public function applyPrimaryConditions(int $userId = 0): void
     {
         $this->addCondition('teacher.user_deleted', '=', 0);
-        $this->addCondition('teacher.user_id', '!=',  $userId);
+        $this->addCondition('teacher.user_id', '!=', $userId);
         $this->addCondition('teacher.user_is_teacher', '=', 1);
         $this->addCondition('teacher.user_country_id', '>', 0);
         $this->addCondition('teacher.user_url_name', '!=', "");
@@ -70,7 +71,7 @@ class TeacherSearch extends SearchBase
         $this->addCondition('testat.testat_qualification', '=', 1);
         $this->addCondition('testat.testat_teachlang', '=', 1);
         $this->addCondition('testat.testat_speaklang', '=', 1);
-        $this->addCondition('testat.testat_gavailability', '=', 1);
+        $this->addCondition('testat.testat_availability', '=', 1);
     }
 
     /**
@@ -89,19 +90,17 @@ class TeacherSearch extends SearchBase
             $fullNameField = 'mysql_func_CONCAT(teacher.user_first_name, " ", teacher.user_last_name)';
             $cond->attachCondition($fullNameField, 'LIKE', '%' . $keyword . '%', 'OR', true);
         }
-
         /* Teach Language */
         $teachLangId = FatUtility::int($post['teachLangId'] ?? 0);
         if ($teachLangId > 0) {
             $srch = new SearchBase('tbl_user_teach_languages');
-            $srch->addFld('DISTINCT utl_us_user_id as utl_us_user_id');
-            $srch->addCondition('utl_slanguage_id', '=', $teachLangId);
+            $srch->addFld('DISTINCT utl_user_id as utl_user_id');
+            $srch->addCondition('utl_tlanguage_id', '=', $teachLangId);
             $srch->doNotCalculateRecords();
             $srch->doNotLimitRecords();
             $subTable = '(' . $srch->getQuery() . ')';
-            $this->joinTable($subTable, 'INNER JOIN', 'utl.utl_us_user_id = teacher.user_id', 'utl');
+            $this->joinTable($subTable, 'INNER JOIN', 'utl.utl_user_id = teacher.user_id', 'utl');
         }
-
         /* Speak Language */
         $speakLangs = explode(",", $post['spokenLanguage'] ?? '');
         $speakLangIds = array_filter(FatUtility::int($speakLangs));
@@ -114,53 +113,61 @@ class TeacherSearch extends SearchBase
             $subTable = '(' . $srch->getQuery() . ')';
             $this->joinTable($subTable, 'INNER JOIN', 'utsl.utsl_user_id = teacher.user_id', 'utsl');
         }
-
         /* Week Day and Time Slot */
         $weekDays = (array) ($post['filterWeekDays'] ?? []);
         $timeSlots = (array) ($post['filterTimeSlots'] ?? []);
         if (count($weekDays) > 0 || count($timeSlots) > 0) {
+            $timeSlotArr = [];
+            if (!empty($timeSlots)) {
+                $timeSlotArr = CommonHelper::formatTimeSlotArr($timeSlots);
+            }
             $srch = new SearchBase('tbl_teachers_general_availability');
             $srch->addFld('DISTINCT tgavl_user_id as tgavl_user_id');
-            if (count($weekDays) > 0) {
-                $srch->addCondition('tgavl_day', 'IN', $weekDays);
-            }
-            $systemTimezone = MyDate::getTimeZone();
-            $userTimezone = MyDate::getUserTimeZone();
-            $timeSlots = CommonHelper::formatTimeSlotArr($timeSlots);
-            foreach ($timeSlots as $key => $formatedVal) {
-                $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
-                $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
-                $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $userTimezone, $systemTimezone)));
-                $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $userTimezone, $systemTimezone)));
-                if ($key == 0) {
-                    $cnd = $srch->addCondition('tgavl_start_time', '<=', $startTime, 'AND');
-                    $cnd->attachCondition('tgavl_end_time', '>=', $startTime, 'AND');
-                } else {
-                    $cnd2 = $cnd->attachCondition('tgavl_start_time', '<=', $endTime, 'OR');
-                    $cnd2->attachCondition('tgavl_end_time', '>=', $endTime, 'AND');
+            if (is_array($weekDays) && !empty($weekDays)) {
+                $weekDates = MyDate::changeWeekDaysToDate($weekDays, $timeSlotArr);
+                $condition = ' ( ';
+                foreach ($weekDates as $weekDayKey => $date) {
+                    $condition .= ($weekDayKey == 0) ? '' : ' OR ';
+                    $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "' . $date['endDate'] . '" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "' . $date['startDate'] . '" ) ';
                 }
+                $condition .= ' ) ';
+                $srch->addDirectCondition($condition);
+            }
+            if (empty($weekDays) && !empty($timeSlotArr)) {
+                $systemTimezone = MyDate::getTimeZone();
+                $userTimezone = MyDate::getUserTimeZone();
+                $condition = '( ';
+                foreach ($timeSlotArr as $key => $formatedVal) {
+                    $condition .= ($key == 0) ? '' : 'OR';
+                    $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
+                    $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
+                    $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $userTimezone, $systemTimezone)));
+                    $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $userTimezone, $systemTimezone)));
+                    $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","' . $endTime . '") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","' . $startTime . '") ) ';
+                }
+                $condition .= ' ) ';
+                $srch->addDirectCondition($condition);
             }
             $srch->doNotCalculateRecords();
             $srch->doNotLimitRecords();
             $subTable = '(' . $srch->getQuery() . ')';
             $this->joinTable($subTable, 'INNER JOIN', 'tgavl.tgavl_user_id = teacher.user_id', 'tgavl');
         }
-
         /* From Country */
         $fromCountries = explode(",", $post['fromCountry'] ?? '');
         $fromCountries = array_filter(FatUtility::int($fromCountries));
         if (count($fromCountries)) {
             $this->addCondition('teacher.user_country_id', 'IN', $fromCountries);
         }
-
         /* Min & Max Price */
         $minPrice = FatUtility::float($post['minPriceRange'] ?? 0);
         $maxPrice = FatUtility::float($post['maxPriceRange'] ?? 0);
         $minPrice = CommonHelper::getDefaultCurrencyValue($minPrice, false, false);
         $maxPrice = CommonHelper::getDefaultCurrencyValue($maxPrice, false, false);
-        $this->addCondition('testat.testat_minprice', '>=', $minPrice);
-        $this->addCondition('testat.testat_maxprice', '<=', $maxPrice);
-
+        if (!empty($minPrice) && !empty($maxPrice)) {
+            $this->addCondition('testat.testat_minprice', '<=', $maxPrice);
+            $this->addCondition('testat.testat_maxprice', '>=', $minPrice);
+        }
         /* Preferences Filter (Teacher’s accent, Teaches level, Subjects, Test preparations, Lesson includes, Learner’s age group) */
         $preferences = explode(",", $post['preferenceFilter'] ?? '');
         $preferences = array_filter(FatUtility::int($preferences));
@@ -173,7 +180,6 @@ class TeacherSearch extends SearchBase
             $subTable = '(' . $srch->getQuery() . ')';
             $this->joinTable($subTable, 'INNER JOIN', 'utpref.utpref_user_id = teacher.user_id', 'utpref');
         }
-
         /* Tutor Gender */
         $genders = array_filter(FatUtility::int(explode(",", $post['gender'] ?? '')));
         if (count($genders) == 1) {
@@ -226,6 +232,8 @@ class TeacherSearch extends SearchBase
         $langData = static::getTeachersLangData($langId, $teacherIds);
         $teachLangs = static::getTeachLangs($langId, $teacherIds);
         $speakLangs = static::getSpeakLangs($langId, $teacherIds);
+        $timeslots = static::getTimeslots($userId, $teacherIds);
+        $videos = static::getYouTubeVideos($teacherIds);
         foreach ($records as $key => $record) {
             $record['uft_id'] = $favorites[$record['user_id']] ?? 0;
             $record['user_profile_info'] = $langData[$record['user_id']] ?? '';
@@ -233,9 +241,29 @@ class TeacherSearch extends SearchBase
             $record['teacherTeachLanguageName'] = $teachLangs[$record['user_id']] ?? '';
             $record['spoken_language_names'] = $speakLangs[$record['user_id']]['slanguage_name'] ?? '';
             $record['spoken_languages_proficiency'] = $speakLangs[$record['user_id']]['utsl_proficiency'] ?? '';
+            $record['testat_timeslots'] = $timeslots[$record['user_id']] ?? CommonHelper::getEmptyDaySlots();
+            $record['us_video_link'] = CommonHelper::validateIntroVideoLink($videos[$record['user_id']]);
             $records[$key] = $record;
         }
         return $records;
+    }
+
+    /**
+     * Get YouTube Videos
+     * 
+     * @param array $teacherIds
+     * @return array
+     */
+    public static function getYouTubeVideos(array $teacherIds): array
+    {
+        if (count($teacherIds) == 0) {
+            return [];
+        }
+        $srch = new SearchBase(UserSetting::DB_TBL);
+        $srch->addCondition('us_user_id', 'In', $teacherIds);
+        $srch->addMultipleFields(['us_user_id', 'us_video_link']);
+        $srch->doNotCalculateRecords();
+        return FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
     }
 
     /**
@@ -314,11 +342,11 @@ class TeacherSearch extends SearchBase
             return [];
         }
         $srch = new SearchBase('tbl_user_teach_languages', 'utl');
-        $srch->joinTable('tbl_teaching_languages_lang', 'INNER JOIN', 'tlanguage.tlanguagelang_tlanguage_id = utl.utl_slanguage_id', 'tlanguage');
-        $srch->addMultipleFields(['utl.utl_us_user_id', 'GROUP_CONCAT(tlanguage.tlanguage_name) as tlanguage_name']);
+        $srch->joinTable('tbl_teaching_languages_lang', 'INNER JOIN', 'tlanguage.tlanguagelang_tlanguage_id = utl.utl_tlanguage_id', 'tlanguage');
+        $srch->addMultipleFields(['utl.utl_user_id', 'GROUP_CONCAT(tlanguage.tlanguage_name) as tlanguage_name']);
         $srch->addCondition('tlanguage.tlanguagelang_lang_id', '=', $langId);
-        $srch->addCondition('utl.utl_us_user_id', 'IN', $teacherIds);
-        $srch->addGroupBy('utl.utl_us_user_id');
+        $srch->addCondition('utl.utl_user_id', 'IN', $teacherIds);
+        $srch->addGroupBy('utl.utl_user_id');
         $srch->doNotCalculateRecords();
         $result = $srch->getResultSet();
         return FatApp::getDb()->fetchAllAssoc($result);
@@ -348,6 +376,120 @@ class TeacherSearch extends SearchBase
     }
 
     /**
+     * Get Availabile Timeslots
+     * 
+     * @param array $teacherIds
+     * @return array
+     */
+    public static function getTimeslots(int $userId, array $teacherIds): array
+    {
+        if (count($teacherIds) == 0) {
+            return [];
+        }
+        $srch = new SearchBase(TeacherGeneralAvailability::DB_TBL);
+        $srch->addMultipleFields([
+            'tgavl_day', 'tgavl_user_id',
+            'CONCAT(tgavl_date, " ", tgavl_start_time) as startdate',
+            'CONCAT(tgavl_end_date, " ", tgavl_end_time) as enddate',
+            'user_timezone'
+        ]);
+        $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'user.user_id = tgavl_user_id', 'user');
+        $srch->addCondition('tgavl_user_id', 'IN', $teacherIds);
+        $rows = FatApp::getDb()->fetchAll($srch->getResultSet());
+        $users = [];
+        foreach ($rows as $row) {
+            $users[$row['tgavl_user_id']][] = $row;
+        }
+        $userTimeslots = [];
+        $currentDate = date('Y-m-d H:i:s');
+        $systemTimezone = MyDate::getTimeZone();
+        $userTimezone = MyDate::getUserTimeZone($userId);
+        $userDate = MyDate::changeDateTimezone($currentDate, $userTimezone, $systemTimezone);
+        $emptySlots = CommonHelper::getEmptyDaySlots();
+        foreach ($users as $id => $user) {
+            $records = [];
+            $teacherTimeZone = (empty($user[0]['user_timezone'])) ? MyDate::getTimeZone() : $user[0]['user_timezone'];
+            foreach ($user as $key => $row) {
+                $removedstTimeFromStartTime = MyDate::isDateWithDST($row['startdate'], $teacherTimeZone);
+                $removedstTimeFromEndTime = MyDate::isDateWithDST($row['enddate'], $teacherTimeZone);
+                $startDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['startdate'], true, $userTimezone, $removedstTimeFromStartTime);
+                $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['enddate'], true, $userTimezone, $removedstTimeFromEndTime);
+                $row['tgavl_day'] = $row['tgavl_day'] % 6;
+                $row['startdate'] = $startDateTime;
+                $row['enddate'] = $endDateTime;
+                $tmpRecords = static::breakIntoDays($row);
+                foreach ($tmpRecords as $tmpRecord) {
+                    array_push($records, $tmpRecord);
+                }
+            }
+            $timeSlots = [
+                ['2018-01-07 00:00:00', '2018-01-07 04:00:00'], ['2018-01-07 04:00:00', '2018-01-07 08:00:00'],
+                ['2018-01-07 08:00:00', '2018-01-07 12:00:00'], ['2018-01-07 12:00:00', '2018-01-07 16:00:00'],
+                ['2018-01-07 16:00:00', '2018-01-07 20:00:00'], ['2018-01-07 20:00:00', '2018-01-08 00:00:00'],
+            ];
+            $daySlots = [];
+            foreach ($records as $row) {
+                $daySlot = [];
+                $startdate = strtotime($row['startdate']);
+                $enddate = strtotime($row['enddate']);
+
+                foreach ($timeSlots as $index => $slotDates) {
+                    $slotStart = strtotime($slotDates[0] . ' +' . $row['tgavl_day'] . ' day');
+                    $slotEnd = strtotime($slotDates[1] . ' +' . $row['tgavl_day'] . ' day');
+                    if ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate <= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($startdate - $enddate) / 3600);
+                    } elseif ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate >= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($startdate - $slotEnd) / 3600);
+                    } elseif ($startdate <= $slotStart && $enddate >= $slotStart && $enddate <= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($slotStart - $enddate) / 3600);
+                    } elseif ($startdate <= $slotStart && $enddate >= $slotEnd) {
+                        $daySlot[$index] = ceil(abs($slotStart - $slotEnd) / 3600);
+                    } else {
+                        $daySlot[$index] = 0;
+                    }
+                }
+                $daySlots[$row['tgavl_day']][] = $daySlot;
+            }
+            $filledSlots = [];
+            foreach ($daySlots as $day => $slots) {
+                $arr = [0, 0, 0, 0, 0, 0];
+                foreach ($slots as $slot) {
+                    $arr[0] += $slot[0];
+                    $arr[1] += $slot[1];
+                    $arr[2] += $slot[2];
+                    $arr[3] += $slot[3];
+                    $arr[4] += $slot[4];
+                    $arr[5] += $slot[5];
+                }
+                $filledSlots['d' . $day] = $arr;
+            }
+            $flvs = [];
+            foreach ($emptySlots as $day => $esv) {
+                $flvs[$day] = $filledSlots[$day] ?? $esv;
+            }
+            $userTimeslots[$id] = $flvs;
+        }
+        return $userTimeslots;
+    }
+
+    private static function breakIntoDays(array $row, array $records = []): array
+    {
+        if (date('Y-m-d', strtotime($row['startdate'])) != date('Y-m-d', strtotime($row['enddate']))) {
+            array_push($records, [
+                'tgavl_day' => MyDate::getDayNumber($row['startdate']),
+                'startdate' => $row['startdate'],
+                'enddate' => date('Y-m-d', strtotime($row['startdate'])) . ' 23:59:59'
+            ]);
+            $newStartDate = date('Y-m-d', strtotime($row['startdate'] . ' +1 day')) . ' 00:00:00';
+            $newRow = ['tgavl_day' => MyDate::getDayNumber($newStartDate), 'startdate' => $newStartDate, 'enddate' => $row['enddate']];
+            return static::breakIntoDays($newRow, $records);
+        } else {
+            array_push($records, $row);
+            return $records;
+        }
+    }
+
+    /**
      * Get Record Count
      * to be updated as per requirements
      * 
@@ -374,7 +516,6 @@ class TeacherSearch extends SearchBase
             }
             $recordCount = FatUtility::int($db->fetch($rs)['total'] ?? 0);
         }
-
         $this->order = $order;
         $this->page = $page;
         $this->pageSize = $pageSize;
@@ -391,4 +532,15 @@ class TeacherSearch extends SearchBase
     {
         $this->conditions = [];
     }
+
+    /**
+     * Join setting Tabel
+     * 
+     * @return void
+     */
+    public function joinSettingTabel(): void
+    {
+        $this->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = teacher.user_id', 'us');
+    }
+
 }

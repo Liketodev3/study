@@ -12,18 +12,10 @@ class Gdpr extends MyAppModel
     const STATUS_DELETED_DATA = 3;
     const STATUS_DELETED_REQUESTED = 4;
 
-
     public function __construct($id = 0)
     {
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
-
-    public static function getSearchObj()
-    {
-        $srch = new SearchBase(static::DB_TBL);
-        $srch->addOrder('gdprdatareq_added_on', 'DESC');
-        return $srch;
-    } 
 
     public static function getRequestFromUserId(int $userId)
     {
@@ -77,14 +69,16 @@ class Gdpr extends MyAppModel
 
     public function truncateUserPersonalData(int $userId)
     {
+     
         $attchedFile = new AttachedFile();
-        foreach($this->attachedFileTypeArr() as $user_file_type_value) {
-            if(!$attchedFile->deleteFile($user_file_type_value, $userId)){
-                Message::addErrorMessage($attchedFile->getError());
-                $this->err = Message::getHtml();
-                return false;
-            }
-        }
+        // foreach($this->attachedFileTypeArr() as $user_file_type_value) {
+        //     if(!$attchedFile->deleteFile($user_file_type_value, $userId)){
+        //         Message::addErrorMessage($attchedFile->getError());
+        //         $this->err = Message::getHtml();
+        //         return false;
+        //     }
+        // }
+       
         User::truncateUserData($userId);
         User::truncateUserCredentialsData($userId);
         User::truncateUsersLangDataByUserId($userId);
@@ -96,7 +90,7 @@ class Gdpr extends MyAppModel
         UserQualification::deleteUserQualificationsDataByUserId($userId);
         UserEmailChangeRequest::deleteUserEmailChangeRequestDataByUserId($userId);
         $db = FatApp::getDb();
-        $db->updateFromArray(User::DB_TBL,['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?','vals' => [$userId]));
+        $db->updateFromArray(User::DB_TBL,['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?','vals' => [$userId]]);
         return true;
     }
 }

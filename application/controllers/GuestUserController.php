@@ -91,7 +91,6 @@ class GuestUserController extends MyAppController
                 $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), ['user_preferred_dashboard']);
                 $user_preferred_dashboard = $userRow['user_preferred_dashboard'];
             }
-         
             $json['redirectUrl'] = User::getPreferedDashbordRedirectUrl($user_preferred_dashboard, false);
             FatUtility::dieJsonSuccess($json);
         }
@@ -136,7 +135,10 @@ class GuestUserController extends MyAppController
     {
         $frm = $this->getSignUpForm();
         $post = FatApp::getPostedData();
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+        if(!isset($post['user_first_name'])){
+            $post['user_first_name'] = strstr($post['user_email'], '@', true);
+        }
+        $post = $frm->getFormDataFromArray($post);
         if ($post == false) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             if (FatUtility::isAjaxCall()) {
@@ -194,7 +196,7 @@ class GuestUserController extends MyAppController
         $redirectUrl = CommonHelper::redirectUserReferer(true);
         if ($user->getMainTableRecordId() and $user_registered_initially_for == User::USER_TYPE_TEACHER) {
             $_SESSION[UserAuthentication::SESSION_GUEST_USER_ELEMENT_NAME] = $user->getMainTableRecordId();
-            $redirectUrl = CommonHelper::generateUrl('TeacherRequest');
+            $redirectUrl = CommonHelper::generateUrl('TeacherRequest','form');
         } else {
             unset($_SESSION[UserAuthentication::SESSION_GUEST_USER_ELEMENT_NAME]);
         }
@@ -328,7 +330,6 @@ class GuestUserController extends MyAppController
         Message::addMessage(Label::getLabel("MSG_EMAIL_VERIFIED_SUCCESFULLY"));
         FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
     }
-
     public function logout()
     {
         unset($_SESSION[UserAuthentication::SESSION_ELEMENT_NAME]);
@@ -371,13 +372,13 @@ class GuestUserController extends MyAppController
         $frm = new Form('frmRegister');
         $frm->addHiddenField('', 'user_id', 0);
         $fld = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'user_first_name');
-        $fld = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'user_last_name');
+        $fld = $frm->addTextBox(Label::getLabel('LBL_Last_Name'), 'user_last_name');
         $fld = $frm->addEmailField(Label::getLabel('LBL_Email_ID'), 'user_email', '', ['autocomplete="off"']);
         $fld->setUnique('tbl_user_credentials', 'credential_email', 'credential_user_id', 'user_id', 'user_id');
         $fld = $frm->addPasswordField(Label::getLabel('LBL_Password'), 'user_password');
         $fld->requirements()->setRequired();
         $fld->setRequiredStarPosition(Form::FORM_REQUIRED_STAR_POSITION_NONE);
-        $fld->requirements()->setRegularExpressionToValidate("^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%-_]{8,15}$");
+        $fld->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
         $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_8_Digit_AlphaNumeric_Password'));
         $termsConditionLabel = Label::getLabel('LBL_I_accept_to_the');
         $fld = $frm->addCheckBox($termsConditionLabel, 'agree', 1);
@@ -1056,7 +1057,7 @@ class GuestUserController extends MyAppController
         $frm = new Form('frmResetPwd');
         $fld_np = $frm->addPasswordField(Label::getLabel('LBL_NEW_PASSWORD', $siteLangId), 'new_pwd');
         $fld_np->requirements()->setRequired();
-        $fld_np->requirements()->setRegularExpressionToValidate("^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%-_]{8,15}$");
+        $fld_np->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
         $fld_np->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_Valid_password', $siteLangId));
         $fld_cp = $frm->addPasswordField(Label::getLabel('LBL_CONFIRM_NEW_PASSWORD', $siteLangId), 'confirm_pwd');
         $fld_cp->requirements()->setRequired();
@@ -1172,4 +1173,26 @@ class GuestUserController extends MyAppController
         $this->logout();
     }
 
+    public function wiziqCallback($lessonId, $teacherId, $token)
+    {
+        $lessonId = FatUtility::int($lessonId);
+        $teacherId = FatUtility::int($teacherId);
+        $signature = CommonHelper::decrypt($token);
+        if (empty($lessonId) || empty($teacherId) || empty($signature)) {
+            FatUtility::exitWithErrorCode(404);
+        }
+        $meetDetail = new LessonMeetingDetail($lessonId, $teacherId);
+        $meetingData = $meetDetail->getMeetingDetails(LessonMeetingDetail::KEY_WIZIQ_RAW_DATA);
+        $detail = json_decode($meetingData, true);
+        if (empty($detail) || ($detail['signature'] ?? '') != $signature) {
+            FatUtility::exitWithErrorCode(404);
+        }
+        (new ScheduledLesson($lessonId))->endLesson();
+        $userId = UserAuthentication::getLoggedUserId(true);
+        if ($userId == $teacherId) {
+            FatApp::redirectUser(CommonHelper::generateUrl('TeacherScheduledLessons', 'view', [$lessonId]));
+        } else {
+            FatApp::redirectUser(CommonHelper::generateUrl('Learner'));
+        }
+    }
 }

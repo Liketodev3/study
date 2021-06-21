@@ -1871,28 +1871,6 @@ CREATE TABLE `tbl_group_classes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_issues_reported`
---
-
-CREATE TABLE `tbl_issues_reported` (
-  `issrep_id` bigint(20) NOT NULL,
-  `issrep_is_for_admin` int(11) NOT NULL DEFAULT '0',
-  `issrep_slesson_id` int(11) NOT NULL,
-  `issrep_reported_by` int(11) NOT NULL,
-  `issrep_issues_to_report` varchar(255) NOT NULL,
-  `issrep_comment` varchar(255) NOT NULL,
-  `issrep_status` tinyint(4) NOT NULL,
-  `issrep_issues_resolve` varchar(255) NOT NULL,
-  `issrep_issues_resolve_type` int(11) NOT NULL,
-  `issrep_resolve_comments` longtext NOT NULL,
-  `issrep_added_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `issrep_updated_on` datetime NOT NULL,
-  `issrep_escalated_by` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tbl_issue_report_options`
 --
 
@@ -8429,12 +8407,6 @@ ALTER TABLE `tbl_group_classes`
   ADD PRIMARY KEY (`grpcls_id`);
 
 --
--- Indexes for table `tbl_issues_reported`
---
-ALTER TABLE `tbl_issues_reported`
-  ADD PRIMARY KEY (`issrep_id`);
-
---
 -- Indexes for table `tbl_issue_report_options`
 --
 ALTER TABLE `tbl_issue_report_options`
@@ -9093,12 +9065,6 @@ ALTER TABLE `tbl_group_classes`
   MODIFY `grpcls_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tbl_issues_reported`
---
-ALTER TABLE `tbl_issues_reported`
-  MODIFY `issrep_id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `tbl_issue_report_options`
 --
 ALTER TABLE `tbl_issue_report_options`
@@ -9587,10 +9553,10 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.8.2.20210209' WHERE `tbl_conf
 
 REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('Twocheckout', 'Twocheckout', '1', 6, 1);
 
-REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('PayGate payweb-3', 'PayGate', '1', 7, 1);
+REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`,`pmethod_type`) VALUES ('PayGate payweb-3', 'PayGate', 0, 7, 1);
 -- Task-81501 Meta tags management
 
-REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES ('Paystack', 1, 'Paystack', 1, 10);
+REPLACE INTO `tbl_payment_methods` (`pmethod_identifier`, `pmethod_type`, `pmethod_code`, `pmethod_active`, `pmethod_display_order`) VALUES ('Paystack', 1, 'Paystack', 0, 10);
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
 ('HTMLAFTER_PWA_APP_SHORT_NAME', '1', 'Used when there is insufficient space to display the full name of the application. 15 characters or less.'),
 ('HTMLAFTER_PWA_Description', '1', 'A brief description of what your app is about.'),

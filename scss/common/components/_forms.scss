@@ -29,7 +29,6 @@ select,
 textarea,.switch-group {
     border: none;
     border: 1px solid theme('color.gray.300');
-    border-radius: theme('radius.1');
     height:2.8rem;
     padding: 0 theme('padding.4');
     width: 100%;
@@ -73,13 +72,6 @@ textarea {
 .div-login-form .form input[type="submit"] {
     width: 100%;
 }
-#paymentDiv{ 
-    .input-helper {
-        background: #fff;
-        box-shadow: 2px 2px 4px rgba(0,0,0,0.10);
-    }
-}
-
 .form input[type="submit"] {position: relative;
     background:theme('color.primary');
     display: inline-block;
@@ -89,14 +81,13 @@ textarea {
     position: relative;
     cursor: pointer;
     border: none;
-    line-height: 40px;
+    height: 2.8rem;
+    line-height: 2.8rem;
     color: theme('color.white');
-    border-radius: theme('radius.1');
-    font-weight: 600; margin-#{theme('direction.right','value')}: 10px;
-
-   
+    font-weight: 600;
     -webkit-transition: .3s all ease-in-out;
-    transition: .3s all ease-in-out
+    transition: .3s all ease-in-out;
+    margin-#{theme('direction.right','value')}: theme('margin.3');
 }
 
 .form input[type="button"] {position: relative;
@@ -112,7 +103,7 @@ textarea {
     height: 2.8rem;
     line-height: 2.8rem;
     color:theme('color.primary');
-    border-radius: theme('radius.1'); font-weight: 600;
+    font-weight: 600;
     -webkit-transition: .3s all ease-in-out;
     transition: .3s all ease-in-out
 }
@@ -130,9 +121,10 @@ textarea {
     height: 2.8rem;
     line-height: 2.8rem;
     color:theme('color.primary');
-    border-radius: theme('radius.1'); font-weight: 600;
+     font-weight: 600;
     -webkit-transition: .3s all ease-in-out;
-    transition: .3s all ease-in-out
+    transition: .3s all ease-in-out;
+
 }
 
 
@@ -142,7 +134,7 @@ textarea {
 }
 
 textarea {
-    height: 200px;
+    height:150px;
     padding: theme('padding.4'); line-height: 1.4;
 
     @media(max-width:theme('breakpoints.md','value')){
@@ -469,19 +461,54 @@ textarea[disabled] {
 @media (max-width:theme('breakpoints.sm','value')) {
 
 
-    .form input[type=button],
-    .form input[type=reset],
-    .form input[type=submit] {
-        width: 100%;
-        display: block;
-        margin: 0 0 5px 0
-    }
-
-    .field_label:empty {
-        display: none
-    }
+    // .form input[type=button],
+    // .form input[type=reset],
+    // .form input[type=submit] {
+    //     width: 100%;
+    //     display: block;
+    //     margin: 0 0 5px 0
+    // }
 
     .list-onethird li {
         width: 100%
+    }
+}
+
+.field_cover{
+    label{
+        .errorlist{
+            margin-bottom: -45px;
+        }
+    }
+}
+
+.errorlist.erlist_agree {
+    bottom: -26px;
+}
+
+
+.btn-file{
+    position: relative;
+    input[type=file] {
+        position: relative;
+        max-width: 120px;
+        min-height: 41px;
+        border: 1px solid;
+        padding: 0;
+        &:before{
+            content: "Upload file";
+            position: absolute;
+            height: 2.8rem;
+            line-height: 2.8rem;
+            font-weight: 500;   
+            align-items: center;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: .3s all ease-in-out;
+            white-space: nowrap;
+        }
     }
 }

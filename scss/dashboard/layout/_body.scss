@@ -3,37 +3,37 @@
     margin: 0;
     font-weight: 600;
     line-height: 1.4;
-    color: inherit
+    color: inherit;
 }
 
 .h1,
 h1 {
-    font-size: 2.2rem
+    font-size: 2.2rem;
 }
 
 .h2,
 h2 {
-    font-size: 2rem
+    font-size: 2rem;
 }
 
 .h3,
 h3 {
-    font-size: 1.75rem
+    font-size: 1.5rem;
 }
 
 .h4,
 h4 {
-    font-size: 1.3rem
+    font-size: 1.3rem;
 }
 
 .h5,
 h5 {
-    font-size: 1.2rem
+    font-size: 1.2rem;
 }
 
 .h6,
 h6 {
-    font-size: 1.1rem
+    font-size: 1.1rem;
 }
 
 p {
@@ -80,7 +80,7 @@ $page: "page";
   //   padding-#{theme('direction.left','value')}:290px;
   // }
 
-    &__head{padding: theme('padding.8') 0 0; position: relative; 
+    &__head{padding: theme('padding.8') 0 theme('padding.4'); position: relative; 
       h1{font-size: theme('font.size.h4');}
       
       
@@ -146,7 +146,7 @@ $box-white: "box-white";
 
 $page-panel: "page-panel";
 
-.#{$page-panel}{background-color: theme('color.white'); position: relative; width: 100%;border-radius: theme('radius.1'); box-shadow: theme('boxShadow.all');margin-top: var(--margin-5);
+.#{$page-panel}{background-color: theme('color.white'); position: relative; width: 100%;border-radius: theme('radius.1'); box-shadow: theme('boxShadow.all');
 
   @media(min-width:theme('breakpoints.xl','value')){
       &{

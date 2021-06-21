@@ -9,7 +9,7 @@ $img_fld->addFieldTagAttribute('class','btn btn--primary btn--sm');
 $langFld = $imagesFrm->getField('lang_id');
 $langFld->addFieldTagAttribute('class','language-js');
 
-$preferredDimensionsStr = '<small class="text--small">'.sprintf(Label::getLabel('LBL_Preferred_Dimensions_%s',$adminLangId),'945*535').'</small>';
+$preferredDimensionsStr = '<small class="text--small">'.sprintf(Label::getLabel('LBL_Preferred_Dimensions_%s',$adminLangId),'945*710').'</small>';
 $htmlAfterField = $preferredDimensionsStr;
 $img_fld->htmlAfterField = $htmlAfterField; 
 ?>

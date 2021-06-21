@@ -17,9 +17,10 @@ class HomeController extends AdminBaseController
         $this->set('configuredAnalytics', false);
         $this->set('objPrivilege', $this->objPrivilege);
         phpFastCache::setup("storage", "files");
-        phpFastCache::setup("path", CONF_UPLOADS_PATH . "caching");
+        phpFastCache::setup("path", CONF_INSTALLATION_PATH . "public/caching");
         $cache = phpFastCache();
         $dashboardInfo = $cache->get("dashboardInfo" . $this->adminLangId);
+
         if ($dashboardInfo == null) {
             include_once CONF_INSTALLATION_PATH . 'library/third-party/analytics/AnalyticsAPI.php';
             try {
@@ -88,7 +89,7 @@ class HomeController extends AdminBaseController
         $interval = isset($post['interval']) ? $post['interval'] : '';
         include_once CONF_INSTALLATION_PATH . 'library/third-party/analytics/AnalyticsAPI.php';
         phpFastCache::setup("storage", "files");
-        phpFastCache::setup("path", CONF_UPLOADS_PATH . "caching");
+        phpFastCache::setup("path", CONF_INSTALLATION_PATH . "public/caching");
         $cache = phpFastCache();
         $result = $cache->get("dashboardInfo_" . $type . '_' . $interval . '_' . $this->adminLangId);
         if ($result == null) {
@@ -130,7 +131,7 @@ class HomeController extends AdminBaseController
 
     public function clearCache()
     {
-        CommonHelper::recursiveDelete(CONF_UPLOADS_PATH . "caching");
+        phpFastCache::setup("path", CONF_INSTALLATION_PATH . "public/caching");
         FatCache::clearAll();
         Message::addMessage(Label::getLabel('LBL_Cache_has_been_cleared', $this->adminLangId));
     }

@@ -1,130 +1,220 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-
-<?php if ($teachers) { ?>
-	<div class="result-container">
-		<p><?php echo $showing; ?></p>
-		<?php
-		$proficiencyArr = SpokenLanguage::getProficiencyArr(CommonHelper::getLangId());
-		foreach ($teachers as $teacher) {
-			$teacherUrl = CommonHelper::generateUrl('Teachers', 'profile') . '/' . $teacher['user_url_name'];
-		?>
-			<div class="box box-list -padding-30 -hover-shadow -transition">
-				<div class="box__content">
-					<div class="row">
-						<div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 -align-center">
-							<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
-								<?php
-								if (User::isProfilePicUploaded($teacher['user_id'])) {
-									$img = FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg');
-									echo '<a href="' . $teacherUrl . '"><img src="' . $img . '" /></a>';
-								}
-								?>
-							</div>
-							<span class="-gap"></span>
-							<div class="box__price">
-								<?php echo Label::getLabel('LBL_Starts_from'); ?>
-								<h6><?php echo CommonHelper::displayMoneyFormat($teacher['minPrice']); ?></h6>
-							</div>
-						</div>
-
-						<div class="col-xl-9 col-lg-9 col-md-9 col-sm-8">
-							<div class="box-list__head row justify-content-between">
-								<div class="col-xl-9 col-lg-9 col-md-8">
-									<h3 class="-display-inline"><a href="<?php echo $teacherUrl; ?>"><?php echo $teacher['user_first_name'] . " " . $teacher['user_last_name']; ?></a></h3>
-
-									<?php if ($teacher['user_country_id'] > 0) { ?>
-										<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($teacher['user_country_id'], 'DEFAULT')); ?>" alt=""></span>
-									<?php } ?>
-
-									<div class="ratings -display-inline">
-										<span class="ratings__star -display-inline">
-											<?php for ($i = 0; $i < round($teacher['teacher_rating']); $i++) { ?>
-												<img src="<?php echo CONF_WEBROOT_URL; ?>images/star-filled.svg" alt="" />
-											<?php }
-											for ($i = 0; $i < 5 - round($teacher['teacher_rating']); $i++) { ?>
-												<img src="<?php echo CONF_WEBROOT_URL; ?>images/star-empty.svg" alt="" />
-											<?php } //} 
-											?>
-										</span>
-										<?php if ($teacher['totReviews']) { ?>
-											<span class="ratings__count -display-inline">
-												<a href="<?php echo $teacherUrl; ?>" class="-link-underline"><?php echo $teacher['totReviews'] . ' ' . Label::getLabel('LBL_Reviews'); ?></a>
-											</span>
-										<?php } ?>
-									</div>
-								</div>
-								<div class="col-auto">
-									<a href="javascript:void(0)" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" class="btn btn--small btn--bordered btn--fav <?php echo ($teacher['uft_id']) ? 'is-active' : ''; ?>">
-										<span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="12" viewBox="0 0 14 12">
-												<path d="M1313.03,714.438l-4.53,4.367-4.54-4.375a4.123,4.123,0,0,1-1.46-2.774,3.455,3.455,0,0,1,.17-1.117,2.067,2.067,0,0,1,.43-0.769,1.972,1.972,0,0,1,.63-0.465,2.818,2.818,0,0,1,.74-0.242,4.378,4.378,0,0,1,.76-0.063,2.222,2.222,0,0,1,.88.2,3.987,3.987,0,0,1,.86.5,8.351,8.351,0,0,1,.68.563,6.435,6.435,0,0,1,.47.48,0.506,0.506,0,0,0,.76,0,6.435,6.435,0,0,1,.47-0.48,8.351,8.351,0,0,1,.68-0.563,3.987,3.987,0,0,1,.86-0.5,2.222,2.222,0,0,1,.88-0.2,4.378,4.378,0,0,1,.76.063,2.818,2.818,0,0,1,.74.242,1.972,1.972,0,0,1,.63.465,2.067,2.067,0,0,1,.43.769,3.455,3.455,0,0,1,.17,1.117,4.126,4.126,0,0,1-1.47,2.782h0Zm1.48-5.469a3.76,3.76,0,0,0-2.74-.969,3.064,3.064,0,0,0-.99.168,3.963,3.963,0,0,0-.94.453q-0.435.285-.75,0.535c-0.2.167-.4,0.344-0.59,0.532-0.19-.188-0.39-0.365-0.59-0.532s-0.46-.345-0.75-0.535a3.963,3.963,0,0,0-.94-0.453,3.064,3.064,0,0,0-.99-0.168,3.76,3.76,0,0,0-2.74.969,3.586,3.586,0,0,0-.99,2.687,3.479,3.479,0,0,0,.18,1.078,5.7,5.7,0,0,0,.42.946,7.129,7.129,0,0,0,.53.761c0.2,0.248.35,0.418,0.44,0.512a2.683,2.683,0,0,0,.21.2l4.88,4.7a0.48,0.48,0,0,0,.68,0l4.87-4.687a5.122,5.122,0,0,0,1.79-3.516A3.586,3.586,0,0,0,1314.51,708.969Z" transform="translate(-1301.5 -708)" />
-											</svg>
-										</span> <?php echo Label::getLabel('LBL_Favorite'); ?>
-									</a>
-								</div>
-							</div>
-							<div class="box-list__body">
-								<div class="grid-group">
-									<?php
-									$teacherTeachLanguageName = explode(",", $teacher['teacherTeachLanguageName']);
-									$teacherTeachLanguageName = "<strong>" . implode(", </strong><strong>", $teacherTeachLanguageName) . "</strong>";
-									?>
-									<div class="grid"><span><?php echo Label::getLabel('LBL_Teaches'); ?>: <?php echo $teacherTeachLanguageName; ?></span></div>
-									<div class="grid"><span><?php echo Label::getLabel('LBL_From'); ?>: <strong><?php echo $teacher['user_country_name']; ?></strong></span></div>
-									<div class="grid"><span><?php echo Label::getLabel('LBL_Lessons'); ?>: <strong><?php echo $teacher['teacherTotLessons']; ?></strong></span></div>
-									<div class="grid"><span><?php echo Label::getLabel('LBL_Students'); ?>: <strong><?php echo $teacher['studentIdsCnt']; ?></strong></span></div>
-								</div>
-								<?php
-								/* Spoken Languages[ */
-								$teacher['proficiencyArr'] = $proficiencyArr;
-								$this->includeTemplate('teachers/_partial/spokenLanguages.php', $teacher, false);
-								/* ] */
-								?>
-								<?php if (!empty($teacher['user_profile_info'])) { ?>
-									<div class="box__description">
-										<p><?php echo nl2br($teacher['user_profile_info']); ?></p>
-									</div>
-								<?php
-								} else {
-									echo '<p></p>';
-								}
-								?>
-								<a href="javascript:void(0)" onClick="viewCalendar(<?php echo $teacher['user_id'] ?>, 'paid');" class="btn btn--bordered box__action-js">
-									<span class="svg-icon">
-										<svg xmlns="http://www.w3.org/2000/svg" width="14.844" height="16" viewBox="0 0 14.844 16">
-											<path d="M563.643,153.571h2.571v2.572h-2.571v-2.572Zm3.143,0h2.857v2.572h-2.857v-2.572Zm-3.143-3.428h2.571V153h-2.571v-2.857Zm3.143,0h2.857V153h-2.857v-2.857ZM563.643,147h2.571v2.571h-2.571V147Zm6.571,6.571h2.857v2.572h-2.857v-2.572ZM566.786,147h2.857v2.571h-2.857V147Zm6.857,6.571h2.571v2.572h-2.571v-2.572Zm-3.429-3.428h2.857V153h-2.857v-2.857Zm-3.227-4.656a0.278,0.278,0,0,1-.2.084h-0.572a0.287,0.287,0,0,1-.285-0.285v-2.572a0.287,0.287,0,0,1,.285-0.285h0.572a0.287,0.287,0,0,1,.285.285v2.572A0.278,0.278,0,0,1,566.987,145.487Zm6.656,4.656h2.571V153h-2.571v-2.857ZM570.214,147h2.857v2.571h-2.857V147Zm3.429,0h2.571v2.571h-2.571V147Zm0.2-1.513a0.278,0.278,0,0,1-.2.084h-0.572a0.289,0.289,0,0,1-.285-0.285v-2.572a0.289,0.289,0,0,1,.285-0.285h0.572a0.289,0.289,0,0,1,.286.285v2.572A0.279,0.279,0,0,1,573.844,145.487Zm3.174-1.576a1.1,1.1,0,0,0-.8-0.34h-1.143v-0.857a1.431,1.431,0,0,0-1.428-1.428h-0.572a1.432,1.432,0,0,0-1.428,1.428v0.857h-3.429v-0.857a1.431,1.431,0,0,0-1.428-1.428h-0.572a1.431,1.431,0,0,0-1.428,1.428v0.857h-1.143a1.16,1.16,0,0,0-1.143,1.143v11.429a1.16,1.16,0,0,0,1.143,1.143h12.571a1.16,1.16,0,0,0,1.143-1.143V144.714A1.1,1.1,0,0,0,577.018,143.911Z" transform="translate(-562.5 -141.281)" />
-										</svg>
-									</span><?php echo Label::getLabel('LBL_Availability'); ?>
-								</a> &nbsp; &nbsp;
-								<a href="javascript:void(0)" onClick="generateThread(<?php echo $teacher['user_id']; ?>)" class="btn btn--bordered">
-									<span class="svg-icon">
-										<svg xmlns="http://www.w3.org/2000/svg" width="15" height="11.782" viewBox="0 0 15 11.782">
-											<path d="M1032.66,878.814q-2.745,1.859-4.17,2.888c-0.31.234-.57,0.417-0.77,0.548a4.846,4.846,0,0,1-.79.4,2.424,2.424,0,0,1-.92.2h-0.02a2.424,2.424,0,0,1-.92-0.2,4.846,4.846,0,0,1-.79-0.4c-0.2-.131-0.46-0.314-0.77-0.548-0.76-.552-2.14-1.515-4.16-2.888a4.562,4.562,0,0,1-.85-0.728v6.646a1.3,1.3,0,0,0,.39.946,1.309,1.309,0,0,0,.95.393h12.32a1.309,1.309,0,0,0,.95-0.393,1.3,1.3,0,0,0,.39-0.946v-6.646a4.545,4.545,0,0,1-.84.728h0Zm0.44-4.135a1.287,1.287,0,0,0-.94-0.393h-12.32a1.189,1.189,0,0,0-.99.435,1.7,1.7,0,0,0-.35,1.088,1.933,1.933,0,0,0,.46,1.143,4.157,4.157,0,0,0,.98.967c0.19,0.133.76,0.531,1.72,1.192s1.68,1.171,2.19,1.528c0.05,0.039.17,0.124,0.35,0.255s0.34,0.238.46,0.318,0.26,0.172.43,0.272a2.493,2.493,0,0,0,.48.226,1.308,1.308,0,0,0,.42.076h0.02a1.308,1.308,0,0,0,.42-0.076,2.493,2.493,0,0,0,.48-0.226c0.17-.1.31-0.191,0.43-0.272s0.27-.187.46-0.318,0.3-.216.35-0.255q0.765-.535,3.92-2.72a3.887,3.887,0,0,0,1.02-1.03,2.238,2.238,0,0,0,.41-1.264A1.267,1.267,0,0,0,1033.1,874.679Z" transform="translate(-1018.5 -874.281)" />
-										</svg>
-									</span><?php echo Label::getLabel('LBL_Message'); ?>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php
-		}
-		?>
-	</div>
 <?php
-	echo FatUtility::createHiddenFormFromData($postedData, array('name' => 'frmTeacherSearchPaging'));
-	$pagingArr = ['page' => $page, 'pageCount' => $pageCount, 'recordCount' => $recordCount];
-	$this->includeTemplate('_partial/pagination.php', $pagingArr, false);
-} else { ?>
-	<div class="box -padding-30" style="margin-bottom: 30px;">
-		<div class="message-display">
-			<div class="message-display__icon">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 408">
-					<path d="M488.468,408H23.532A23.565,23.565,0,0,1,0,384.455v-16.04a15.537,15.537,0,0,1,15.517-15.524h8.532V31.566A31.592,31.592,0,0,1,55.6,0H456.4a31.592,31.592,0,0,1,31.548,31.565V352.89h8.532A15.539,15.539,0,0,1,512,368.415v16.04A23.565,23.565,0,0,1,488.468,408ZM472.952,31.566A16.571,16.571,0,0,0,456.4,15.008H55.6A16.571,16.571,0,0,0,39.049,31.566V352.891h433.9V31.566ZM497,368.415a0.517,0.517,0,0,0-.517-0.517H287.524c0.012,0.172.026,0.343,0.026,0.517a7.5,7.5,0,0,1-7.5,7.5h-48.1a7.5,7.5,0,0,1-7.5-7.5c0-.175.014-0.346,0.026-0.517H15.517a0.517,0.517,0,0,0-.517.517v16.04a8.543,8.543,0,0,0,8.532,8.537H488.468A8.543,8.543,0,0,0,497,384.455h0v-16.04ZM63.613,32.081H448.387a7.5,7.5,0,0,1,0,15.008H63.613A7.5,7.5,0,0,1,63.613,32.081ZM305.938,216.138l43.334,43.331a16.121,16.121,0,0,1-22.8,22.8l-43.335-43.318a16.186,16.186,0,0,1-4.359-8.086,76.3,76.3,0,1,1,19.079-19.071A16,16,0,0,1,305.938,216.138Zm-30.4-88.16a56.971,56.971,0,1,0,0,80.565A57.044,57.044,0,0,0,275.535,127.978ZM63.613,320.81H448.387a7.5,7.5,0,0,1,0,15.007H63.613A7.5,7.5,0,0,1,63.613,320.81Z"></path>
-				</svg>
-			</div>
+$colorClass = [
+    1 => 'cell-green-40',
+    2 => 'cell-green-60',
+    3 => 'cell-green-80',
+    4 => 'cell-green-100',
+];
+?>
+<?php if ($teachers) { ?>
+    <div class="sorting__head">
+        <div class="sorting__title">
+            <h4><?php echo sprintf(Label::getLabel('LBL_Found_the_best_%s_teachers_for_you', $siteLangId), $recordCount) ?></h4>
+        </div>
+        <div class="sorting__box">
+            <!-- <b>Sort By:</b> -->
+            <select name="filterSortBy" id="sort">
+                <?php $sortBy = CommonHelper::getSortbyArr(); ?>
+                <?php foreach ($sortBy as $filterVal => $filterLabel) { ?>
+                    <option <?php echo ($postedData['sortOrder'] == $filterVal) ? "selected='selected'" : ''; ?> value="<?php echo $filterVal; ?>"><?php echo $filterLabel; ?></option>
+                <?php } ?>
+            </select>
+            <div class="btn--filter">
+                <a href="javascript:void(0)" class="btn btn--primary btn--block btn--filters-js">
+                    <span class="svg-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="15px" height="15px" viewBox="0 0 402.577 402.577" style="enable-background:new 0 0 402.577 402.577;" xml:space="preserve">
+                            <g>
+                                <path d="M400.858,11.427c-3.241-7.421-8.85-11.132-16.854-11.136H18.564c-7.993,0-13.61,3.715-16.846,11.136
+                                      c-3.234,7.801-1.903,14.467,3.999,19.985l140.757,140.753v138.755c0,4.955,1.809,9.232,5.424,12.854l73.085,73.083
+                                      c3.429,3.614,7.71,5.428,12.851,5.428c2.282,0,4.66-0.479,7.135-1.43c7.426-3.238,11.14-8.851,11.14-16.845V172.166L396.861,31.413
+                                      C402.765,25.895,404.093,19.231,400.858,11.427z"></path>
+                            </g>
+                        </svg></span>
+                    <?php echo Label::getLabel('LBL_Filters', $siteLangId) ?></a></a>
+            </div>
+        </div>
+    </div>
+    <div class="listing__body">
+        <div class="box-wrapper" id="teachersListingContainer">
+            <?php foreach ($teachers as $teacher) { ?>
+                <div class="box box-list ">
+                    <div class="box__primary">
+                        <div class="list__head">
+                            <div class="list__media ">
+                                <div class="avtar avtar--centered" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
+                                    <?php if (User::isProfilePicUploaded($teacher['user_id'])) { ?>
+                                        <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><img src="<?php echo FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg'); ?>" alt=""></a>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="list__price">
+                                <p><?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></p>
+                            </div>
+                        </div>
+                        <div class="list__body">
+                            <div class="profile-detail">
+                                <div class="profile-detail__head">
+                                    <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>" class="tutor-name">
+                                        <h4><?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?></h4>
+                                        <div class="flag">
+                                            <img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($teacher['user_country_id'], 'DEFAULT')); ?>" alt="">
+                                        </div>
+                                    </a>
+                                    <div class="follow ">
+                                        <a class="<?php echo ($teacher['uft_id']) ? 'is--active' : ''; ?>" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" href="javascript:void(0)">
+                                            <svg class="icon icon--heart">
+                                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#heart'; ?>"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="profile-detail__body">
+                                    <div class="info-wrapper">
+                                        <div class="info-tag location">
+                                            <svg class="icon icon--location">
+                                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#location'; ?>"></use>
+                                            </svg>
+                                            <span class="lacation__name"><?php echo $teacher['user_country_name']; ?></span>
+                                        </div>
+                                        <div class="info-tag ratings">
+                                            <svg class="icon icon--rating">
+                                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#rating'; ?>"></use>
+                                            </svg>
+                                            <span class="value"><?php echo FatUtility::convertToType($teacher['teacher_rating'], FatUtility::VAR_FLOAT); ?></span>
+                                            <span class="count"><?php echo '(' . $teacher['totReviews'] . ')'; ?></span>
+                                        </div>
+                                        <div class="info-tag list-count">
+                                            <div class="total-count"><span class="value"><?php echo $teacher['studentIdsCnt'];  ?></span><?php echo Label::getLabel('LBL_Students', $siteLangId); ?></div> - <div class="total-count"><span class="value"><?php echo $teacher['teacherTotLessons']; ?></span><?php echo Label::getLabel('LBL_Lessons', $siteLangId);  ?></div>
+                                        </div>
+                                    </div>
+                                    <div class="tutor-info">
+                                        <div class="tutor-info__inner">
+                                            <div class="info__title">
+                                                <h6><?php Label::getLabel('LBL_Teaches', $siteLangId); ?>Teaches</h6>
+                                            </div>
+                                            <div class="info__language">
+                                                <?php echo $teacher['teacherTeachLanguageName']; ?>
+                                            </div>
+                                        </div>
+                                        <div class="tutor-info__inner">
+                                            <div class="info__title">
+                                                <h6><?php echo Label::getLabel('LBL_Speaks', $siteLangId); ?></h6>
+                                            </div>
+                                            <div class="info__language">
+                                                <?php echo $teacher['spoken_language_names']; ?>
+                                            </div>
+                                        </div>
+                                        <div class="tutor-info__inner info--about">
+                                            <div class="info__title">
+                                                <h6><?php echo LABEL::getLabel('LBL_About', $siteLangId); ?></h6>
+                                            </div>
+                                            <div class="about__detail">
+                                                <p><?php echo $teacher['user_profile_info'] ?></p>
+                                                <a href="<?php echo CommonHelper::generateUrl('teachers', 'view', [$teacher['user_url_name']]) ?>"><?php echo Label::getLabel('LBL_View_Profile', $siteLangId) ?></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list__action">
+                            <div class="list__action-btn">
+                                <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['user_id']; ?>},'getUserTeachLangues');" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                                <a href="javascript:void(0);"onclick="generateThread(<?php echo $teacher['user_id']; ?>);" class="btn btn--bordered color-primary btn--block">
+                                    <svg class="icon icon--envelope">
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
+                                    </svg>
+                                    <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
+                                </a>
+                            </div>
+                            <a href="javascript:void(0);" onclick="viewCalendar(<?php echo $teacher['user_id']; ?>,'paid')" class="link-detail"><?php echo Label::getLabel('LBL_View_Full_availability'); ?></a>
+                        </div>
+                    </div>
+                    <div class="box__secondary">
+                        <div class="panel-box">
+                            <div class="panel-box__head">
+                                <ul>
+                                    <li class="is--active">
+                                        <a class="panel-action" content="calender" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Availability', $siteLangId); ?></a>
+                                    </li>
+                                    <?php if (!empty($teacher['us_video_link'])) { ?>
+                                        <li>
+                                            <a class="panel-action" content="video" href="javascript:void(0)"><?php echo Label::getLabel('LBL_Introduction', $siteLangId); ?></a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                            </div>
 
-			<h5><?php echo Label::getLabel('LBL_No_Result_found!!'); ?></h5>
-		</div>
-	</div>
-<?php } ?>
+                            <div class="panel-box__body">
+                                <div class="panel-content calender">
+                                    <div class="custom-calendar">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>&nbsp;</th>
+                                                    <th><?php echo Label::getLabel('LBL_Sun', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Mon', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Tue', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Wed', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Thu', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Fri', $siteLangId); ?></th>
+                                                    <th><?php echo Label::getLabel('LBL_Sat', $siteLangId); ?></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php $timeslots = $teacher['testat_timeslots'] ?? CommonHelper::getEmptyDaySlots(); ?>
+                                                <?php foreach ($slots as $index => $slot) { ?>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="cal-cell"><?php echo $slot; ?></div>
+                                                        </td>
+                                                        <?php foreach ($timeslots as $day => $hours) { ?>
+                                                            <?php $hour = $hours[$index] ?? 0; ?>
+                                                            <td class="is-hover">
+                                                                <?php if ($hour > 0) { ?>
+                                                                    <div class="cal-cell <?php echo $colorClass[$hour]; ?>"></div>
+                                                                    <div class="tooltip tooltip--top bg-black"><?php echo $hour; ?> <?php echo Label::getLabel('LBL_Hrs', $siteLangId); ?></div>
+                                                                <?php } else { ?>
+                                                                    <div class="cal-cell"></div>
+                                                                <?php } ?>
+                                                            </td>
+                                                        <?php } ?>
+                                                    </tr>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+
+                                        <a href="javascript:void(0);" onclick="viewCalendar(<?php echo $teacher['user_id']; ?>,'paid')" class="link-detail"><?php echo Label::getLabel('LBL_View_Full_availability'); ?></a>
+
+                                    </div>
+                                </div>
+                                <?php if (!empty($teacher['us_video_link'])) { ?>
+                                    <div class="panel-content video" style="display:none;">
+                                        <iframe width="100%" height="100%" src="<?php echo $teacher['us_video_link']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+<?php
+    echo FatUtility::createHiddenFormFromData($postedData, array('name' => 'frmTeacherSearchPaging'));
+    $pagingArr = ['page' => $page, 'pageCount' => $pageCount, 'recordCount' => $recordCount];
+    $this->includeTemplate('_partial/pagination.php', $pagingArr, false);
+} else {
+?>
+    <div class="box -padding-30" style="margin-bottom: 30px;">
+        <div class="message-display">
+            <div class="message-display__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 408">
+                    <path d="M488.468,408H23.532A23.565,23.565,0,0,1,0,384.455v-16.04a15.537,15.537,0,0,1,15.517-15.524h8.532V31.566A31.592,31.592,0,0,1,55.6,0H456.4a31.592,31.592,0,0,1,31.548,31.565V352.89h8.532A15.539,15.539,0,0,1,512,368.415v16.04A23.565,23.565,0,0,1,488.468,408ZM472.952,31.566A16.571,16.571,0,0,0,456.4,15.008H55.6A16.571,16.571,0,0,0,39.049,31.566V352.891h433.9V31.566ZM497,368.415a0.517,0.517,0,0,0-.517-0.517H287.524c0.012,0.172.026,0.343,0.026,0.517a7.5,7.5,0,0,1-7.5,7.5h-48.1a7.5,7.5,0,0,1-7.5-7.5c0-.175.014-0.346,0.026-0.517H15.517a0.517,0.517,0,0,0-.517.517v16.04a8.543,8.543,0,0,0,8.532,8.537H488.468A8.543,8.543,0,0,0,497,384.455h0v-16.04ZM63.613,32.081H448.387a7.5,7.5,0,0,1,0,15.008H63.613A7.5,7.5,0,0,1,63.613,32.081ZM305.938,216.138l43.334,43.331a16.121,16.121,0,0,1-22.8,22.8l-43.335-43.318a16.186,16.186,0,0,1-4.359-8.086,76.3,76.3,0,1,1,19.079-19.071A16,16,0,0,1,305.938,216.138Zm-30.4-88.16a56.971,56.971,0,1,0,0,80.565A57.044,57.044,0,0,0,275.535,127.978ZM63.613,320.81H448.387a7.5,7.5,0,0,1,0,15.007H63.613A7.5,7.5,0,0,1,63.613,320.81Z"></path>
+                </svg>
+            </div>
+            <h5><?php echo Label::getLabel('LBL_No_Result_found!!', $siteLangId); ?></h5>
+        </div>
+    </div>
+<?php
+}

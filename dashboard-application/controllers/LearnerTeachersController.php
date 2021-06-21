@@ -39,9 +39,9 @@ class LearnerTeachersController extends LearnerBaseController
         $unSchLesSrch->addCondition('sldetail_learner_status', '=', ScheduledLesson::STATUS_NEED_SCHEDULING);
         $teacherOfferPriceSrch = new SearchBase(TeacherOfferPrice::DB_TBL);
         $teacherOfferPriceSrch->addMultipleFields([
-            'top_learner_id', 'top_teacher_id',
-            'GROUP_CONCAT(top_single_lesson_price ORDER BY top_lesson_duration) as singleLessonAmount',
-            'GROUP_CONCAT(top_bulk_lesson_price ORDER BY top_lesson_duration) as bulkLessonAmount',
+            'top_learner_id', 
+            'top_teacher_id',
+            'GROUP_CONCAT(top_percentage ORDER BY top_lesson_duration) as percentage',
             'GROUP_CONCAT(top_lesson_duration ORDER BY top_lesson_duration) as lessonDuration'
         ]);
         $teacherOfferPriceSrch->addGroupBy('top_learner_id');
@@ -61,6 +61,7 @@ class LearnerTeachersController extends LearnerBaseController
         $srch->joinRatingReview();
         $srch->joinUserTeachLanguages($this->siteLangId);
         $srch->joinTable('(' . $teacherOfferPriceSrch->getQuery() . ')', 'LEFT JOIN', 'sldetail_learner_id = top_learner_id AND top_teacher_id = slesson_teacher_id', 'top');
+        $srch->joinTable(TeachLangPrice::DB_TBL, 'LEFT JOIN', 'ustelgpr.ustelgpr_utl_id = utsl.utl_id', 'ustelgpr');
         $srch->addMultipleFields([
             'slns.slesson_teacher_id as teacherId',
             'slns.slesson_slanguage_id as languageID',
@@ -72,9 +73,11 @@ class LearnerTeachersController extends LearnerBaseController
             '(' . $schLesSrch->getQuery() . ') as scheduledLessonCount',
             '(' . $pastLesSrch->getQuery() . ') as pastLessonCount',
             '(' . $unSchLesSrch->getQuery() . ') as unScheduledLessonCount',
-            'singleLessonAmount',
-            'bulkLessonAmount',
-            'CASE WHEN singleLessonAmount IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
+            'percentage',
+            'utl_tlanguage_id',
+            'ustelgpr_min_slab',
+            'ustelgpr_slot',
+            'CASE WHEN percentage IS NULL THEN 0 ELSE 1 END as isSetUpOfferPrice',
             'lessonDuration'
         ]);
         $page = $post['page'];
@@ -82,6 +85,7 @@ class LearnerTeachersController extends LearnerBaseController
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
         $srch->addOrder('ut.user_first_name');
+       
         if (isset($post['keyword']) && !empty($post['keyword'])) {
             $keywordsArr = array_unique(array_filter(explode(' ', $post['keyword'])));
             foreach ($keywordsArr as $keyword) {
@@ -93,7 +97,6 @@ class LearnerTeachersController extends LearnerBaseController
         $teachers = FatApp::getDb()->fetchAll($rs);
         $this->set('teachers', $teachers);
 
-        $lessonPackages = LessonPackage::getPackagesWithoutTrial($this->siteLangId);
         /* [ */
         $totalRecords = $srch->recordCount();
         $pagingArr = [
@@ -112,7 +115,6 @@ class LearnerTeachersController extends LearnerBaseController
         $this->set('startRecord', $startRecord);
         $this->set('endRecord', $endRecord);
         $this->set('totalRecords', $totalRecords);
-        $this->set('lessonPackages', $lessonPackages);
         /* ] */
         $this->_template->render(false, false);
     }

@@ -192,7 +192,7 @@
                                             $btn->addFieldTagAttribute('class', 'btn btn-primary');
                                             echo $frm->getFieldHtml('btn_submit');
                                             ?>
-                                            <a href="<?php echo $cancelBtnUrl; ?>" class="btn btn--large"><?php echo Label::getLabel('LBL_Cancel', $siteLangId); ?></a>
+                                            <a href="<?php echo $cancelBtnUrl; ?>" class="btn btn--medium"><?php echo Label::getLabel('LBL_Cancel', $siteLangId); ?></a>
                                         </div>
                                     </div>
                                 </div>

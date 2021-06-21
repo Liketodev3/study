@@ -1,36 +1,29 @@
-<?php if($allLanguages){
-    ?>
-        <section class="section -no-padding-top section_course_card">
-            <div class="container container--mdnarrow">
-                <div class="section-title">
-                    <h2><?php echo Label::getLabel('Lbl_What_Language_You_want_to_learn?'); ?></h2>
-                </div>
-                <div class="row justify-content-center scroller--horizontal">
-                <?php foreach($allLanguages as $language){
-                    $languageImage = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','showLanguageImage',array($language['tlanguage_id'],'NORMAL')),CONF_IMG_CACHE_TIME, '.jpg');
-                    $languageFlagImage = FatCache::getCachedUrl(CommonHelper::generateUrl('Image','showLanguageFlagImage',array($language['tlanguage_id'],'SMALL')),CONF_IMG_CACHE_TIME, '.jpg');
-
-                    ?>
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-5">
-                        <div class="course_card_container">
-                            <figure class="course-selector-image"><img alt="" src="<?php echo $languageImage; ?>" ></figure>
-                            <div class="course_flag_card">
-                                <img class="flag-icon"  alt="" src="<?php echo $languageFlagImage; ?>">
-                                <div class="course-info">
-                                    <h4><?php echo $language['tlanguage_name'] ?></h4>
-                                    <p><?php echo $language['teacherCount'].' '.Label::getLabel('Lbl_Teachers'); ?></p>
-                                </div>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<?php if ($allLanguages) { ?>
+    <section class="section section--language">
+        <div class="container container--narrow">
+            <div class="section__head">
+                <h2><?php echo Label::getLabel('Lbl_What_Language_You_want_to_learn?', $siteLangId); ?></h2>
+            </div>
+            <div class="section__body">
+                <div class="flag-wrapper">
+                    <?php foreach ($allLanguages as $language) { ?>
+                        <div class="flag__box">
+                            <div class="flag__media">
+                                <img src="<?php echo FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'showLanguageFlagImage', array($language['tlanguage_id'], 'SMALL')), CONF_IMG_CACHE_TIME, '.jpg'); ?>" alt="">
                             </div>
-                            <a href="<?php echo CommonHelper::generateUrl('Teachers','Index', array( $language['tlanguage_id'] )) ?>" class="whole-link">
-                            </a>
+                            <div class="flag__name">
+                                <span><?php echo $language['tlanguage_name'] ?></span>
+                                <div class="lesson-count"><?php echo $language['teacherCount'] . ' ' . Label::getLabel('Lbl_Teachers', $siteLangId); ?></div>
+                            </div>
+                            <a class="flag__action" href="<?php echo CommonHelper::generateUrl('Teachers', 'Index', array($language['tlanguage_id'])); ?>"></a>
                         </div>
-                    </div>
                     <?php } ?>
                 </div>
-                <div class="align-center card-more-content">
-                    <?php echo Label::getLabel('Lbl_We_have_teacher_in_different_languages!'); ?>
-                    <a href="<?php echo CommonHelper::generateUrl('Teachers') ?>" class="arrow-link"><?php echo Label::getLabel('Lbl_Browse_them_now!'); ?></a>
+                <div class="more-info align-center">
+                    <p><?php echo Label::getLabel("LBL_different_language_note", $siteLangId); ?> <a href="<?php echo CommonHelper::generateUrl('teachers'); ?>"><?php echo Label::getLabel('LBL_Browse_them_now', $siteLangId); ?></a></p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 <?php } ?>

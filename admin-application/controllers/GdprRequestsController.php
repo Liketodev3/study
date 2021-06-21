@@ -5,7 +5,6 @@ class GdprRequestsController extends AdminBaseController
     {
         parent::__construct($action);
         $this->objPrivilege->canViewGdprRequests($this->admin_id, true);
-      
     }
 
     public function index()
@@ -23,9 +22,9 @@ class GdprRequestsController extends AdminBaseController
         if (false === $post) {
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
-        $srch = Gdpr::getSearchObj();
+        $srch = new GdprReqSearch();
         if (isset($post['keyword']) && !empty($post['keyword'])) {
-           $srch->addCondition('gdprdatareq_reason', 'LIKE', '%' . $post['keyword'] . '%');
+            $srch->addCondition('gdprdatareq_reason', 'LIKE', '%' . $post['keyword'] . '%');
         }
 
         if (isset($post['status']) && $post['status'] !== "") {
@@ -37,18 +36,18 @@ class GdprRequestsController extends AdminBaseController
         $page = $post['page'];
         $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
         $srch->addOrder('gdprdatareq_added_on', 'DESC');
+        $srch->addCondition('gdprdatareq_status', '!=', Gdpr::STATUS_DELETED_REQUESTED);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
         $rs = $srch->getResultSet();
-        $gdprRequests = FatApp::getDb()->fetchAll($rs);   
-        
+        $gdprRequests = FatApp::getDb()->fetchAll($rs);
+
         /* [ */
         $totalRecords = $srch->recordCount();
         $this->set('postedData', $post);
         $this->set('pageCount', $srch->pages());
         $this->set('page', $page);
         $this->set('pageSize', $pageSize);
-        $this->set('postedData', $post);
         $this->set('canEdit', $canEdit);
         $this->set('recordCount', $srch->recordCount());
         $startRecord = ($page - 1) * $pageSize + 1;
@@ -67,18 +66,18 @@ class GdprRequestsController extends AdminBaseController
 
     public function view()
     {
-        $id = FatApp::getPostedData('id',FatUtility::VAR_INT,0);
-        if($id <= 0){
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request',$this->adminLangId));
+        $gdprRequestid = FatApp::getPostedData('id', FatUtility::VAR_INT, 0);
+        if ($gdprRequestid <= 0) {
+            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request', $this->adminLangId));
         }
         $srch = new GdprReqSearch();
         $srch->joinUser();
-        $srch->addCondition('gdprdatareq_id','=',$id);
-        $rs = $srch->getResultSet();       
-        $reqDetail = FatApp::getDb()->fetch($rs); 
+        $srch->addCondition('gdprdatareq_id', '=', $gdprRequestid);
+        $rs = $srch->getResultSet();
+        $reqDetail = FatApp::getDb()->fetch($rs);
 
-        if(!$reqDetail){
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request',$this->adminLangId));
+        if (!$reqDetail) {
+            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request', $this->adminLangId));
         }
 
         $frm = $this->changeGdprRequestStatusForm($this->adminLangId);
@@ -92,13 +91,13 @@ class GdprRequestsController extends AdminBaseController
     protected function getSearchForm(int $langId)
     {
         $frm = new Form('frmSrch');
-        $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword',$langId), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_By_Keyword',$langId)));
+        $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword', $langId), 'keyword', '', array('placeholder' => Label::getLabel('LBL_Search_By_Keyword', $langId)));
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
-        $frm->addSelectBox(Label::getLabel('LBl_Status',$langId), 'status', Gdpr::getStatusArr($this->adminLangId));
-        $frm->addDateField(Label::getLabel('LBl_Added_On',$langId), 'added_on');
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search',$langId));
-        $frm->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset',$langId)); 
+        $frm->addSelectBox(Label::getLabel('LBl_Status', $langId), 'status', Gdpr::getStatusArr($this->adminLangId));
+        $frm->addDateField(Label::getLabel('LBl_Added_On', $langId), 'added_on');
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $langId));
+        $frm->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset', $langId));
         return $frm;
     }
 
@@ -115,30 +114,25 @@ class GdprRequestsController extends AdminBaseController
     {
         $gdprRequestId = FatApp::getPostedData('gdprdatareq_id', FatUtility::VAR_INT, 0);
         $status = FatApp::getPostedData('gdprdatareq_status', FatUtility::VAR_INT, 0);
-        if ($gdprRequestId> 0) {
-            Message::addErrorMessage($this->str_invalid_request_id);
-            FatUtility::dieJsonError(Message::getHtml());
-        }
-        $gdprRequestDetail = Gdpr::getAttributesById($gdprRequestId);
-        if ($gdprRequestDetail) {
-            Message::addErrorMessage($this->str_invalid_request);
-            FatUtility::dieWithError(Message::getHtml());
+        $gdpr = new Gdpr($gdprRequestId);
+
+        if (!$gdpr->loadFromDb()) {
+            FatUtility::dieWithError($this->str_invalid_request);
         }
 
-        if($status==Gdpr::STATUS_DELETED_DATA){
-            $gdpr = new Gdpr();
-            if($gdpr->truncateUserPersonalData($gdprRequestDetail['gdprdatareq_user_id'])){
-                Message::addErrorMessage($gdpr->getError());
-                FatUtility::dieJsonError(Message::getHtml());
+        $gdprRequestDetail = $gdpr->getFlds();
+
+        if ($status == Gdpr::STATUS_DELETED_DATA) {
+            
+            if (!$gdpr->truncateUserPersonalData($gdprRequestDetail['gdprdatareq_user_id'])) {
+                FatUtility::dieJsonError($gdpr->getError());
             }
-        }
-        
+        }       
+      
         $assignValues = array('gdprdatareq_status' => $status);
-        $record = new Gdpr($gdprRequestId);
-        $record->assignValues($assignValues);
-        if (!$record->save()) {
-            Message::addErrorMessage($record->getError());
-            FatUtility::dieJsonError(Message::getHtml());
+        $gdpr->assignValues($assignValues);
+        if (!$gdpr->save()) {
+            FatUtility::dieJsonError($gdpr->getError());
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_Updated_Successfully!'));
     }

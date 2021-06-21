@@ -2,12 +2,11 @@ var isRuningTeacherQualificationFormAjax = false;
 
 var teachLangs = [];
 $(document).ready(function () {
-	profileInfoForm();
-	$('body').on('click', '.tab-ul-js li a', function () {
-		$('.tab-ul-js li').removeClass('is-active');
-		$(this).parent('li').addClass('is-active');
-	});
-	$(document).on('change', '[name^=duration]', selectDuration);
+    profileInfoForm();
+    $('body').on('click', '.tab-ul-js li a', function () {
+        $('.tab-ul-js li').removeClass('is-active');
+        $(this).parent('li').addClass('is-active');
+    });
 });
 
 (function () {

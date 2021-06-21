@@ -56,13 +56,29 @@ $(function () {
 
     viewFlashCard = function (flashcardId) {
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'viewFlashCard', [flashcardId]), '', function (t) {
-            $.facebox(t, 'facebox-medium');
+            try {
+                var res = JSON.parse(t)
+                console.log(res);
+                if (res.status == 0) {
+                    $.mbsmessage(res.msg, true, 'alert alert--danger');
+                }
+            } catch (error) {
+                $.facebox(t, 'facebox-medium');
+            }
         });
     };
 
     flashCardForm = function (lessonId, flashcardId) {
         fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'flashCardForm'), 'flashcardId=' + flashcardId + '&lessonId=' + lessonId, function (t) {
-            $.facebox(t, 'facebox-medium');
+            try {
+                var res = JSON.parse(t)
+                console.log(res);
+                if (res.status == 0) {
+                    $.mbsmessage(res.msg, true, 'alert alert--danger');
+                }
+            } catch (error) {
+                $.facebox(t, 'facebox-medium');
+            }
         });
     };
 
@@ -93,11 +109,17 @@ $(function () {
     };
 
     setupFlashCard = function (frm) {
-        if (!$(frm).validate()) return false;
+        if (!$(frm).validate()) {
+            return false;
+        }
+        frm.btn_submit.setAttribute('disabled', true);
         var data = fcom.frmData(frm);
         fcom.updateWithAjax(fcom.makeUrl('LearnerScheduledLessons', 'setupFlashCard'), data, function (t) {
             searchFlashCards(frmFlashCardSrch);
             $.facebox.close();
+            if (t.status == 0) {
+                frm.btn_submit.removeAttribute('disabled');
+            }
         });
     };
 
@@ -143,12 +165,17 @@ $(function () {
         var joinUrl = fcom.makeUrl('Zoom', 'Meeting') + '?' +
             testTool.serialize(meetingConfig);
 
-        // testTool.createZoomNode("websdk-iframe", joinUrl);
+
         let html = '<div style="width:' + chat_width + ';height:' + chat_height + ';max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;">';
         html += '<iframe  style="width:100%;height:100%;" src="' + joinUrl + '" allow="camera; microphone; fullscreen;display-capture" frameborder="0"></iframe>';
         html += '</div>';
         $("#lessonBox").html(html);
     };
+
+    createWiziqBox = function (data) {
+        window.location.href = data.presenter_url;
+    };
+
 
     joinLessonFromApp = function (learnerId, teacherId) {
         var joinFromApp = YES;
@@ -156,7 +183,10 @@ $(function () {
     };
 
     createChatBox = function (data, joinFromApp) {
-        if (isCometChatMeetingToolActive) {
+        if (isWiziqMettingToolActive) {
+            joinLessonButtonAction();
+            return createWiziqBox(data);
+        } else if (isCometChatMeetingToolActive) {
             joinLessonButtonAction();
             return createCometChatBox();
         } else if (isLessonSpaceMeetingToolActive) {
@@ -196,7 +226,7 @@ $(function () {
     };
 
     endLesson = function (lDetailId) {
-        if(isConfirmpopOpen){
+        if (isConfirmpopOpen) {
             return;
         }
         isConfirmpopOpen = true;

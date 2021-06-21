@@ -8,20 +8,14 @@ class TeachersController extends MyAppController
         if (empty($teachLangId)) {
             $teachLangId = FatApp::getPostedData('teachLangId', FatUtility::VAR_INT, 0);
         }
+
         $frmSrch = $this->getTeacherSearchForm($teachLangId);
         $this->set('frmTeacherSrch', $frmSrch);
-        $daysArr = [
-            0 => Label::getLabel('LBL_Sunday'),
-            1 => Label::getLabel('LBL_Monday'),
-            2 => Label::getLabel('LBL_Tuesday'),
-            3 => Label::getLabel('LBL_Wednesday'),
-            4 => Label::getLabel('LBL_Thursday'),
-            5 => Label::getLabel('LBL_Friday'),
-            6 => Label::getLabel('LBL_Saturday')
-        ];
+        $daysArr = applicationConstants::getWeekDays();
         $timeSlotArr = TeacherGeneralAvailability::timeSlotArr();
         $this->set('daysArr', $daysArr);
         $this->set('timeSlotArr', $timeSlotArr);
+        $this->set('siteLangId', CommonHelper::getLangId());
         $this->_template->addJs('js/enscroll-0.6.2.min.js');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
@@ -40,9 +34,10 @@ class TeachersController extends MyAppController
         $post = FatApp::getPostedData();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 12);
-        $sortOrder = FatApp::getPostedData('sortOrder', FatUtility::VAR_INT, 1);
+        $sortOrder = FatApp::getPostedData('sortOrder', FatUtility::VAR_STRING, '');
         $userId = UserAuthentication::isUserLogged() ? UserAuthentication::getLoggedUserId() : 0;
         $langId = CommonHelper::getLangId();
+        $_SESSION['search_filters'] = $post;
         $srch = new TeacherSearch($langId);
         $srch->addSearchListingFields();
         $srch->applyPrimaryConditions($userId);
@@ -50,7 +45,6 @@ class TeachersController extends MyAppController
         $srch->applyOrderBy($sortOrder);
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-        // prx($srch->getQuery());
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $records = $srch->formatTeacherSearchData($rawData, $userId);
         $recordCount = $srch->getRecordCount();
@@ -65,21 +59,26 @@ class TeachersController extends MyAppController
         $this->set('pageSize', $pageSize);
         $this->set('recordCount', $recordCount);
         $this->set('pageCount', ceil($recordCount / $pageSize));
+        $this->set('slots', TeacherGeneralAvailability::timeSlotArr());
         $this->_template->render(false, false);
     }
 
     public function spokenLanguagesAutoCompleteJson()
     {
+
         $srch = new SpokenLanguageSearch($this->siteLangId);
         $srch->addChecks();
+
         $keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '');
         if (!empty($keyword)) {
             $cnd = $srch->addCondition('slanguage_identifier', 'like', '%' . $keyword . '%');
             $cnd->attachCondition('slanguage_name', 'like', '%' . $keyword . '%', 'OR');
         }
+
         $languages = FatApp::getDb()->fetchAll($srch->getResultSet(), 'slanguage_id');
         $json = array();
         foreach ($languages as $key => $language) {
+
             $json[] = ['id' => $key, 'name' => $language['slanguage_name'],];
         }
         die(json_encode($json));
@@ -87,64 +86,67 @@ class TeachersController extends MyAppController
 
     public function teachLanguagesAutoCompleteJson()
     {
+
         $srch = new TeachingLanguageSearch($this->siteLangId);
         $keyword = FatApp::getPostedData('keyword', FatUtility::VAR_STRING, '');
         $srch->addOrder('tlanguage_display_order');
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $srch->addMultipleFields(['tlanguage_id','IFNULL(tlanguage_name,tlanguage_identifier)as tlanguage_name']);
-        if(!empty($keyword)){
-        $conditaion =  $srch->addCondition('tlanguage_name', 'like', '%'.$keyword.'%');
-        $conditaion->attachCondition('tlanguage_identifier', 'like', '%'.$keyword.'%');
+        $srch->addMultipleFields(['tlanguage_id', 'IFNULL(tlanguage_name,tlanguage_identifier)as tlanguage_name']);
+        if (!empty($keyword)) {
+            $conditaion = $srch->addCondition('tlanguage_name', 'like', '%' . $keyword . '%');
+            $conditaion->attachCondition('tlanguage_identifier', 'like', '%' . $keyword . '%');
         }
         $rs = $srch->getResultSet();
         $languages = FatApp::getDb()->fetchAll($rs, 'tlanguage_id');
         $json = [];
         foreach ($languages as $key => $language) {
+
             $json[] = ['id' => $key, 'name' => $language['tlanguage_name'],];
         }
         die(json_encode($json));
     }
 
-    public function view($user_name)
+    public function view($userName)
     {
         $srchTeacher = new UserSearch();
         $srchTeacher->addMultipleFields(['user_id']);
-        $srchTeacher->addCondition('user_url_name', '=', $user_name);
+        $srchTeacher->addCondition('user_url_name', '=', $userName);
         $srchTeacher->setPageSize(1);
         $rsTeacher = $srchTeacher->getResultSet();
         $teacherData = FatApp::getDb()->fetch($rsTeacher);
         if (empty($teacherData)) {
             FatUtility::exitWithErrorCode(404);
         }
-        $teacher_id = $teacherData['user_id'];
-        $teacher_id = FatUtility::int($teacher_id);
+        $teacherId = $teacherData['user_id'];
+        $teacherId = FatUtility::int($teacherId);
         /* preferences/skills[ */
         $prefSrch = new UserToPreferenceSearch();
         $prefSrch->joinToPreference($this->siteLangId);
-        $prefSrch->addCondition('utpref_user_id', '=', $teacher_id);
+        $prefSrch->addCondition('utpref_user_id', '=', $teacherId);
         $prefSrch->addOrder('preference_type');
         $prefSrch->addGroupBy('preference_type');
         $prefSrch->addMultipleFields(['preference_type', 'GROUP_CONCAT(IFNULL(preference_title, preference_identifier)) as preference_titles']);
         $prefRs = $prefSrch->getResultSet();
         $teacherPreferences = FatApp::getDb()->fetchAll($prefRs);
+        $loggedUserId = UserAuthentication::getLoggedUserId(true);
         /* ] */
         $srch = new UserSearch();
+        $srch->doNotCalculateRecords();
         $srch->setTeacherDefinedCriteria(true);
         $srch->joinUserLang($this->siteLangId);
         $srch->joinTeacherLessonData();
         $srch->joinUserSpokenLanguages($this->siteLangId);
-        $srch->joinUserTeachLanguage($this->siteLangId);
         $srch->joinUserCountry($this->siteLangId);
         $srch->joinUserState($this->siteLangId);
         if (UserAuthentication::isUserLogged()) {
-            $srch->joinFavouriteTeachers(UserAuthentication::getLoggedUserId());
+            $srch->joinFavouriteTeachers($loggedUserId);
             $srch->addFld('uft_id');
         } else {
             $srch->addFld('0 as uft_id');
         }
         $srch->setPageSize(1);
-        $srch->addCondition('user_id', '=', $teacher_id);
+        $srch->addCondition('user_id', '=', $teacherId);
         $srch->addMultipleFields([
             'user_id',
             'user_first_name',
@@ -153,48 +155,64 @@ class TeachersController extends MyAppController
             'user_country_id',
             'IFNULL(country_name, country_code) as user_country_name',
             'IFNULL(state_name, state_identifier) as user_state_name',
-            'IFNULL(tlanguage_name, tlanguage_identifier) as teachlanguage_name',
+            // 'IFNULL(tlanguage_name, tlanguage_identifier) as teachlanguage_name',						   
             'us_video_link',
             'us_is_trial_lesson_enabled',
             'minPrice',
             'maxPrice',
+            'minSlab',
+            'maxSlab',
+            'slot',
             'IFNULL(userlang_user_profile_Info, user_profile_info) as user_profile_info',
-            'utl_slanguage_ids',
-            'utl_booking_slots'
+            'utl_tlanguage_ids',
+            'ustelgpr_slots'
         ]);
+
         $rs = $srch->getResultSet();
         $teacher = FatApp::getDb()->fetch($rs);
         if (empty($teacher)) {
             FatUtility::exitWithErrorCode(404);
         }
         /* [ */
-        $isFreeTrialEnabled = false;
-        $freeTrialPackageRow = LessonPackage::getFreeTrialPackage($this->siteLangId);
-        if ($teacher['us_is_trial_lesson_enabled'] == applicationConstants::YES && $freeTrialPackageRow) {
-            $isFreeTrialEnabled = true;
-            $this->set('freeTrialPackageRow', $freeTrialPackageRow);
-        }
-        $teacher['isFreeTrialEnabled'] = $isFreeTrialEnabled;
+        $freeTrialConfiguration = FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
+        $teacher['isFreeTrialEnabled'] = ($freeTrialConfiguration == applicationConstants::YES && $teacher['us_is_trial_lesson_enabled'] == applicationConstants::YES);
         /* ] */
         /* Languages and prices [ */
-        $userToLanguage = new UserToLanguage($teacher_id);
-        $userTeachLangs = $userToLanguage->getTeacherPricesForLearner($this->siteLangId, UserAuthentication::getLoggedUserId(true));
-        $tlangArr = [];
-        foreach ($userTeachLangs as $userTeachLang) {
-            $tlangArr[$userTeachLang['tlanguage_id']] = $userTeachLang['tlanguage_name'];
+        $userTeachLanguage = new UserTeachLanguage($teacherId);
+        $getUserTeachLanguages = $userTeachLanguage->getUserTeachlanguages($this->siteLangId, true);
+        $getUserTeachLanguages->doNotCalculateRecords();
+        $getUserTeachLanguages->addMultipleFields([
+            'IFNULL(tlanguage_name, tlanguage_identifier) as teachLangName',
+            'utl_id',
+            'utl_tlanguage_id',
+            'ustelgpr_slot',
+            'ustelgpr_price',
+            'ustelgpr_min_slab',
+            'ustelgpr_max_slab',
+            'ustelgpr_price'
+        ]);
+        if (UserAuthentication::isUserLogged()) {
+            $getUserTeachLanguages->joinTable(TeacherOfferPrice::DB_TBL, 'LEFT JOIN', 'top.top_teacher_id = utl.utl_user_id and top.top_learner_id = ' . $loggedUserId . ' and top.top_lesson_duration = ustelgpr.ustelgpr_slot', 'top');
+            $getUserTeachLanguages->addMultipleFields([
+                'IFNULL(top_percentage,0) as top_percentage',
+                // 'top_lesson_duration'
+            ]);
+        } else {
+            $getUserTeachLanguages->addFld('0 as top_percentage');
         }
-        $this->set('userTeachLangs', $userTeachLangs);
-        $srch = LessonPackage::getSearchObject($this->siteLangId);
-        $srch->addCondition('lpackage_is_free_trial', '=', 0);
-        $srch->addMultipleFields(['lpackage_id', 'IFNULL(lpackage_title, lpackage_identifier) as lpackage_title', 'lpackage_lessons']);
-        $lessonPackages = FatApp::getDb()->fetchAll($srch->getResultSet());
-        $teacher['lessonPackages'] = $lessonPackages;
+        $getUserTeachLanguages->addCondition('ustelgpr_price', '>', 0);
+        $getUserTeachLanguages->addCondition('ustelgpr_min_slab', '>', 0);
+        $userTeachlanguages = FatApp::getDb()->fetchAll($getUserTeachLanguages->getResultSet());
+        // prx($userTeachlanguages);
+        $tlangArr = array_column($userTeachlanguages, 'teachLangName', 'utl_tlanguage_id');
+        $this->set('userTeachLangs', $userTeachlanguages);
         $teacher['teachLanguages'] = $tlangArr;
         /* ] */
         $teacher['isAlreadyPurchasedFreeTrial'] = false;
         if (UserAuthentication::isUserLogged()) {
-            $teacher['isAlreadyPurchasedFreeTrial'] = LessonPackage::isAlreadyPurchasedFreeTrial(UserAuthentication::getLoggedUserId(), $teacher_id);
+            $teacher['isAlreadyPurchasedFreeTrial'] = OrderProduct::isAlreadyPurchasedFreeTrial($loggedUserId, $teacherId);
         }
+
         $teacherLessonReviewObj = new TeacherLessonReviewSearch();
         $teacherLessonReviewObj->joinTeacher();
         $teacherLessonReviewObj->joinLearner();
@@ -204,19 +222,30 @@ class TeachersController extends MyAppController
         $teacherLessonReviewObj->doNotCalculateRecords();
         $teacherLessonReviewObj->doNotLimitRecords();
         $teacherLessonReviewObj->addCondition('tlr.tlreview_status', '=', TeacherLessonReview::STATUS_APPROVED);
-        $teacherLessonReviewObj->addCondition('tlreview_teacher_user_id', '=', $teacher_id);
+        $teacherLessonReviewObj->addCondition('tlreview_teacher_user_id', '=', $teacherId);
         $teacherLessonReviewObj->addMultipleFields(["ROUND(AVG(tlrating_rating),2) as prod_rating", "count(DISTINCT tlreview_id) as totReviews"]);
         $teacherLessonReviewObj->addMultipleFields(['COUNT(DISTINCT tlreview_postedby_user_id) as totStudents']);
         $reviews = FatApp::getDb()->fetch($teacherLessonReviewObj->getResultSet());
         $this->set('reviews', $reviews);
+
+        $grpClassSrch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
+        $grpClassSrch->addCondition('grpcls_status', '=', TeacherGroupClasses::STATUS_ACTIVE);
+        $grpClassSrch->addCondition('grpcls_teacher_id', '=', $teacherId);
+        $grpClassSrch->addCondition('grpcls_start_datetime', '>', date('Y-m-d H:i:s'));
+        $grpClassSrch->setPageSize(5);
+        $grpClassSrch->addOrder('grpcls_start_datetime', 'Asc');
+        $rs = $grpClassSrch->getResultSet();
+        $classesList = FatApp::getDb()->fetchAll($rs);
+        $this->set('groupClasses', $classesList);
         $frmReviewSearch = $this->getTeacherReviewSearchForm(FatApp::getConfig('CONF_FRONTEND_PAGESIZE'));
-        $frmReviewSearch->fill(['tlreview_teacher_user_id' => $teacher_id, 'teach_lang_name' => $teacher['teachlanguage_name']]);
+        $frmReviewSearch->fill(['tlreview_teacher_user_id' => $teacherId]);
         $this->set('frmReviewSearch', $frmReviewSearch);
         $teacher['proficiencyArr'] = SpokenLanguage::getProficiencyArr(CommonHelper::getLangId());
         $teacher['preferences'] = $teacherPreferences;
-        $teacher['proficiencyArr'] = SpokenLanguage::getProficiencyArr(CommonHelper::getLangId());
+        $this->set('preferencesTypeArr', Preference::getPreferenceTypeArr());
         $this->set('teacher', $teacher);
         $this->set('loggedUserId', UserAuthentication::getLoggedUserId(true));
+        $this->set('sortArr', TeacherLessonReview::getReviewSortArr($this->siteLangId));
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addJs('js/fateventcalendar.js');
@@ -236,18 +265,17 @@ class TeachersController extends MyAppController
         $frm->addHiddenField('', 'teach_lang_name');
         $frm->addHiddenField('', 'page');
         $frm->addHiddenField('', 'pageSize', $pageSize);
-        $frm->addHiddenField('', 'orderBy', 'most_recent');
         return $frm;
     }
 
     public function getTeacherReviews()
     {
+
         $teacherId = FatApp::getPostedData('tlreview_teacher_user_id');
-        $langName = FatApp::getPostedData('teach_lang_name');
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
         $orderBy = FatApp::getPostedData('orderBy', FatUtility::VAR_STRING, 'most_recent');
         $page = ($page) ? $page : 1;
-        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
+        $pageSize = 5;
         $srch = new TeacherLessonReviewSearch();
         $srch->joinTeacher();
         $srch->joinLearner();
@@ -275,70 +303,60 @@ class TeachersController extends MyAppController
             case 'most_helpful':
                 $srch->addOrder('helpful', 'desc');
                 break;
+            case 'date_posted_desc':
+                $srch->addOrder('tlr.tlreview_posted_on', 'desc');
+                break;
+            case 'date_posted_asc':
+                $srch->addOrder('tlr.tlreview_posted_on', 'asc');
+                break;
             default:
                 $srch->addOrder('tlr.tlreview_posted_on', 'desc');
                 break;
         }
         $records = FatApp::getDb()->fetchAll($srch->getResultSet());
-        $this->set('reviewsList', $records);
         $this->set('page', $page);
-        $this->set('langName', $langName);
         $this->set('pageCount', $srch->pages());
-        $this->set('postedData', FatApp::getPostedData());
+        foreach ($records as $key => $record) {
+            $records[$key]['img'] = (User::isProfilePicUploaded($record['tlreview_postedby_user_id'])) ? CommonHelper::generateUrl('Image', 'user', array($record['tlreview_postedby_user_id'])) : '';
+            $records[$key]['fChar'] = CommonHelper::getFirstChar($record['lname']);
+            $records[$key]['tlreview_posted_on'] = FatDate::format($record['tlreview_posted_on']);
+            $records[$key]['lessonCount'] = '(' . $record['lessonCount'] . Label::getLabel('LBL_Lessons', $this->siteLangId) . ')';
+            $records[$key]['iconSrc'] = CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#rating';
+            $records[$key]['tlreview_description'] = nl2br($record['tlreview_description']);
+        }
         $json['startRecord'] = !empty($records) ? ($page - 1) * $pageSize + 1 : 0;
-        $json['recordsToDisplay'] = count($records);
-        $json['totalRecords'] = $srch->recordCount();
         $json['msg'] = Label::getLabel('LBL_Request_Processing..');
-        $json['html'] = $this->_template->render(false, false, '_partial/teacher-reviews-list.php', true, false);
+        $json['records'] = $records;
+        $json['displayRecords'] = sprintf(Label::getLabel('LBL_Displaying_Reviews_%d_of_%d', $this->siteLangId), ($page > 1) ? (($page - 1) * $pageSize + count($records)) : count($records), $srch->recordCount());
         $json['loadMoreBtnHtml'] = $this->_template->render(false, false, '_partial/load-more-teacher-reviews-btn.php', true, false);
-        array_map(function ($val) {
-            $val = iconv('UTF-8', 'UTF-8//IGNORE', $val);
-        }, $json);
+
         FatUtility::dieJsonSuccess($json);
     }
 
-    public function viewCalendar($teacher_id = 0, $languageId = 1)
+    public function viewCalendar($teacherId = 0, $languageId = 1)
     {
-        $teacher_id = FatUtility::int($teacher_id);
+        $teacherId = FatUtility::int($teacherId);
         $languageId = FatUtility::int($languageId);
-        if ($teacher_id < 1) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
-        }
-        $srch = new UserSearch();
-        $srch->setTeacherDefinedCriteria();
-        $srch->setPageSize(1);
-        $srch->addCondition('user_id', '=', $teacher_id);
-        $srch->addMultipleFields(['user_first_name', 'CONCAT(user_first_name," ",user_last_name) as user_full_name', 'user_country_id',]);
-        $userRow = FatApp::getDb()->fetch($srch->getResultSet());
-        if (!$userRow) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
-        }
-        $allowedActionArr = ['free_trial', 'paid'];
+        $user = new User($teacherId);
         $postedAction = FatApp::getPostedData('action');
+        $allowedActionArr = ['free_trial', 'paid'];
+
         if (!in_array($postedAction, $allowedActionArr)) {
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
-        $bookingMinutesDuration = FatApp::getConfig('conf_paid_lesson_duration', FatUtility::VAR_INT, 60);
+
+        if (!$user->loadFromDb()) {
+            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
+        }
+        $userRow = $user->getFlds();
+        $bookingMinutesDuration = FatApp::getConfig('CONF_DEFAULT_PAID_LESSON_DURATION', FatUtility::VAR_INT, 60);
+
         if ('free_trial' == $postedAction) {
             $bookingMinutesDuration = FatApp::getConfig('conf_trial_lesson_duration', FatUtility::VAR_INT, 30);
-            $freeTrialPackageRow = LessonPackage::getFreeTrialPackage();
-            $lPackageId = $freeTrialPackageRow['lpackage_id'];
-        } else {
-            /* [ */
-            $srch = LessonPackage::getSearchObject();
-            $srch->addCondition('lpackage_is_free_trial', '=', 0);
-            $srch->addOrder('lpackage_id', 'ASC');
-            $srch->setPageSize(1);
-            $srch->addFld('lpackage_id');
-            $rs = $srch->getResultSet();
-            $lessonPackageRow = FatApp::getDb()->fetch($rs);
-            if (!empty($lessonPackageRow)) {
-                $lPackageId = $lessonPackageRow['lpackage_id'];
+            $freeTrialEnable = FatApp::getConfig('CONF_ENABLE_FREE_TRIAL', FatUtility::VAR_INT, 0);
+            if ($freeTrialEnable == applicationConstants::NO) {
+                FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
             }
-            /* ] */
-        }
-        if ($lPackageId <= 0) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Packages_are_not_configured_by_admin'));
         }
         $hour = floor($bookingMinutesDuration / 60);
         $hour = ($hour > 9) ? $hour : '0' . $hour;
@@ -347,10 +365,9 @@ class TeachersController extends MyAppController
         $bookingSnapDuration = $hour . ':' . $min;
         $this->set('bookingMinutesDuration', $bookingMinutesDuration);
         $this->set('bookingSnapDuration', $bookingSnapDuration);
-        MyDate::setUserTimeZone();
         $user_timezone = MyDate::getUserTimeZone();
         $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
-        $teacherBookingBefore = current(UserSetting::getUserSettings($teacher_id))['us_booking_before'];
+        $teacherBookingBefore = UserSetting::getUserSettings($teacherId)['us_booking_before'];
         if ('' == $teacherBookingBefore) {
             $teacherBookingBefore = 0;
         }
@@ -360,12 +377,11 @@ class TeachersController extends MyAppController
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
         $currentLangCode = strtolower(Language::getLangCode($this->siteLangId));
         $this->set('currentLangCode', $currentLangCode);
-        $this->set('lPackageId', $lPackageId);
         $this->set('userRow', $userRow);
         $this->set('action', $postedAction);
         $this->set('teacher_name', $userRow['user_first_name']);
         $this->set('teacher_country_id', $userRow['user_country_id']);
-        $this->set('teacher_id', $teacher_id);
+        $this->set('teacher_id', $teacherId);
         $this->set('languageId', $languageId);
         $this->set('cssClassArr', $cssClassNamesArr);
         $this->_template->render(false, false);
@@ -382,12 +398,15 @@ class TeachersController extends MyAppController
             FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
         }
         $systemTimeZone = MyDate::getTimeZone();
-        $user_timezone = MyDate::getUserTimeZone();
-        $startDateTime = MyDate::changeDateTimezone($post['start'], $user_timezone, $systemTimeZone);
-        $endDateTime = MyDate::changeDateTimezone($post['end'], $user_timezone, $systemTimeZone);
+        $userTimezone = MyDate::getUserTimeZone();
+
+        $startDateTime = MyDate::changeDateTimezone($post['start'], $userTimezone, $systemTimeZone);
+        $endDateTime = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
+
         if (strtotime($startDateTime) < strtotime(date('Y-m-d H:i:s'))) {
             FatUtility::dieJsonSuccess(0);
         }
+
         if (UserAuthentication::isUserLogged()) {
             $loggedUserId = UserAuthentication::getLoggedUserId();
             $checkGroupClassTiming = TeacherGroupClassesSearch::checkGroupClassTiming([$loggedUserId], $startDateTime, $endDateTime);
@@ -396,14 +415,14 @@ class TeachersController extends MyAppController
             $getResultSet = $checkGroupClassTiming->getResultSet();
             $scheduledLessonData = FatApp::getDb()->fetch($getResultSet);
             if (!empty($scheduledLessonData)) {
-                Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE');
                 FatUtility::dieJsonError(Label::getLabel('LBL_YOU_ALREDY_HAVE_A_GROUP_CLASS_BETWEEN_THIS_TIME_RANGE'));
             }
         }
+
         $tWsch = new TeacherWeeklySchedule();
         $checkAvialSlots = $tWsch->checkCalendarTimeSlotAvailability($userId, $startDateTime, $endDateTime);
         $returnArray = [
-            'status' => $checkAvialSlots,
+            'status' => ($checkAvialSlots) ? applicationConstants::YES : applicationConstants::NO,
         ];
         if (!empty($tWsch->getError())) {
             $returnArray['msg'] = $tWsch->getError();
@@ -435,7 +454,6 @@ class TeachersController extends MyAppController
         }
         $weekStartDate = Fatapp::getPostedData('start', FatUtility::VAR_STRING, '');
         $weekEndDate = Fatapp::getPostedData('end', FatUtility::VAR_STRING, '');
-        
         $userTimezone = MyDate::getUserTimeZone();
 		$systemTimeZone = MyDate::getTimeZone();
 
@@ -443,11 +461,10 @@ class TeachersController extends MyAppController
             $weekStartAndEndDate = MyDate::getWeekStartAndEndDate(new DateTime());
             $weekStartDate = $weekStartAndEndDate['weekStart'];
             $weekEndDate = $weekStartAndEndDate['weekEnd'];
-        }else{
+        } else {
             $weekStartDate = MyDate::changeDateTimezone($weekStartDate, $userTimezone, $systemTimeZone);
-            $weekEndDate =  MyDate::changeDateTimezone($weekEndDate, $userTimezone, $systemTimeZone);
+            $weekEndDate = MyDate::changeDateTimezone($weekEndDate, $userTimezone, $systemTimeZone);
         }
-
         $db = FatApp::getDb();
         $srch = new ScheduledLessonSearch();
         $srch->addGroupBy('slesson_id');
@@ -462,6 +479,7 @@ class TeachersController extends MyAppController
             'slns.slesson_end_date',
             'slns.slesson_grpcls_id',
         ]);
+
         $userIds = [];
         $userIds[] = $userId;
         if (UserAuthentication::isUserLogged()) {
@@ -472,9 +490,11 @@ class TeachersController extends MyAppController
         $srch->addCondition('slns.slesson_status', '=', ScheduledLesson::STATUS_SCHEDULED);
         $srch->addCondition('CONCAT(slns.`slesson_date`, " ", slns.`slesson_start_time` )', '< ', $weekEndDate);
         $srch->addCondition('CONCAT(slns.`slesson_end_date`, " ", slns.`slesson_end_time` )', ' > ', $weekStartDate);
+
         $data = $db->fetchAll($srch->getResultSet());
         $jsonArr = [];
         $groupClassIds = [];
+
         foreach ($data as $data) {
             $slesson_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['slesson_date'] . ' ' . $data['slesson_start_time'], true, $userTimezone);
             $slesson_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $data['slesson_end_date'] . ' ' . $data['slesson_end_time'], true, $userTimezone);
@@ -493,7 +513,7 @@ class TeachersController extends MyAppController
         echo FatUtility::convertToJson($jsonArr);
     }
 
-    public function getTeacherWeeklyScheduleJsonData(int $userId)
+    public function getTeacherWeeklyScheduleJsonData($userId)
     {
         $post = FatApp::getPostedData();
         if (false === $post) {
@@ -504,38 +524,51 @@ class TeachersController extends MyAppController
         }
         $userTimezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
+
+
         $startDate = MyDate::changeDateTimezone($post['start'], $userTimezone, $systemTimeZone);
         $endDate = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
+        
         $weeklySchRows = TeacherWeeklySchedule::getWeeklyScheduleJsonArr($userId, $startDate, $endDate);
         $cssClassNamesArr = TeacherWeeklySchedule::getWeeklySchCssClsNameArr();
-        $teacherBookingBefore = FatApp::getPostedData('bookingBefore', FatUtility::VAR_INT, 0);
-        $teacherBookingBefore = FatUtility::convertToType($teacherBookingBefore, FatUtility::VAR_INT);
+        $teacherBookingBefore = null;
+        if (isset($_POST['bookingBefore'])) {
+            $teacherBookingBefore = FatUtility::int(FatApp::getPostedData('bookingBefore'));
+        }
+
         $jsonArr = [];
-        $validStartDateTime =  strtotime("+ ".$teacherBookingBefore. " hours");
+        $validStartDateTime = strtotime("+ " . $teacherBookingBefore . " hours");
+
         if (!empty($weeklySchRows)) {
             /* code added on 15-07-2019 */
             foreach ($weeklySchRows as $row) {
                 $endDateTime = $row['twsch_end_date'] . ' ' . $row['twsch_end_time'];
                 $startDateTime = $row['twsch_date'] . ' ' . $row['twsch_start_time'];
-               
-                if($validStartDateTime > strtotime($endDateTime)){
+
+                if ($validStartDateTime > strtotime($endDateTime)) {
                     continue;
                 }
-               
-                if( $validStartDateTime > strtotime($startDateTime) ) {
+                if ($validStartDateTime > strtotime($startDateTime)) {
+
                     $startDateTime = date('Y-m-d H:i:s', $validStartDateTime);
                 }
-               
                 $twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDateTime, true, $userTimezone);
                 $twsch_start_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $startDateTime, true, $userTimezone);
+
                 $twsch_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $startDateTime, true, $userTimezone);
+               
+                $midPoint = (strtotime($startDateTime) + strtotime($endDateTime)) / 2;
+                
+                $dateTime = new dateTime(date('Y-m-d H:i:s', $midPoint));
+                $weekRange = MyDate::getWeekStartAndEndDate($dateTime);
+                $twschWeekYear = date('W-Y', strtotime($weekRange['weekStart']));
 
                 $jsonArr[] = [
                     "title" => "",
                     "date" => $twsch_date,
                     "start" => $twsch_start_time,
                     "end" => $twsch_end_time,
-                    "weekyear" => $row['twsch_weekyear'],
+                    "weekyear" =>  $twschWeekYear,
                     '_id' => $row['twsch_id'],
                     'classType' => $row['twsch_is_available'],
                     'className' => $cssClassNamesArr[$row['twsch_is_available']],
@@ -544,14 +577,18 @@ class TeachersController extends MyAppController
             }
         }
         $midPoint = (strtotime($startDate) + strtotime($endDate)) / 2;
-        $twsch_weekyear = date('W-Y', $midPoint);
+        $dateTime = new dateTime(date('Y-m-d H:i:s', $midPoint));
+        $weekRange = MyDate::getWeekStartAndEndDate($dateTime);
+        
+        $twsch_weekyear = date('W-Y', strtotime($weekRange['weekStart']));
+
         if (empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear) {
-            $dateTime = new dateTime(date('Y-m-d H:i:s', $midPoint));
-            $weekRange = MyDate::getWeekStartAndEndDate($dateTime);
             $weekData = ['WeekStart' => $weekRange['weekStart'], 'WeekEnd' => $weekRange['weekEnd']];
             $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, $weekData, $teacherBookingBefore);
             $jsonArr = array_merge($jsonArr, $jsonArr2);
         }
+
+
         echo FatUtility::convertToJson($jsonArr);
     }
 
@@ -571,6 +608,7 @@ class TeachersController extends MyAppController
         $srch->addCondition('uqualification_active', '=', 1);
         $srch->addOrder('uqualification_experience_type');
         $srch->addOrder('uqualification_start_year');
+
         $srch->addMultiplefields([
             'uqualification_id',
             'uqualification_experience_type',
@@ -597,12 +635,11 @@ class TeachersController extends MyAppController
     {
         $teachLangId = FatApp::getPostedData('teachLangId', FatUtility::VAR_INT, 0);
         $postedData = FatApp::getPostedData();
-        $_SESSION['search_filters'] = $postedData;
         $srch = new UserSearch(false);
         $srch->setTeacherDefinedCriteria(false, false);
         $tlangSrch = $srch->getMyTeachLangQry(true, $this->siteLangId, $teachLangId);
         $tlangSrch->addCondition('utl.utl_booking_slot', 'IN', CommonHelper::getPaidLessonDurations());
-        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_us_user_id', 'utls');
+        $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_user_id', 'utls');
         $srch->joinUserSpokenLanguages($this->siteLangId);
         $srch->joinUserCountry($this->siteLangId);
         $srch->joinUserAvailibility();
@@ -649,56 +686,45 @@ class TeachersController extends MyAppController
         if ($langTeach > 0) {
             if (is_numeric($langTeach)) {
                 //$srch->addCondition( 'us.us_teach_slanguage_id', '=', $langTeach );
-                $srch->addDirectCondition('FIND_IN_SET(' . $langTeach . ', utl_slanguage_ids)');
+                $srch->addDirectCondition('FIND_IN_SET(' . $langTeach . ', utl_tlanguage_ids)');
             }
         }
         /* ] */
         /* Week Day [ */
-		$weekDays = FatApp::getPostedData('filterWeekDays', FatUtility::VAR_STRING, array());
-		$timeSlots = FatApp::getPostedData('filterTimeSlots', FatUtility::VAR_STRING, array());
-        
-		$timeSlotArr = [];
-
-		if(!empty($timeSlots)) {
-			$timeSlotArr = CommonHelper::formatTimeSlotArr($timeSlots);
-		}
-
-		if (is_array($weekDays) && !empty($weekDays)) {
-
-			$weekDates = MyDate::changeWeekDaysToDate($weekDays, $timeSlotArr);
-			$condition = ' ( ';
-            foreach ($weekDates as $weekDayKey =>  $date) {
-				$condition .= ($weekDayKey == 0) ? '' : ' OR ';
-				$condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "'.$date['endDate'].'" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "'.$date['startDate'].'" ) ';
-			}
-			$condition .= ' ) ';
-			$srch->addDirectCondition($condition);
-		
-		}
-		/* ] */
-		/* Time Slot [ */
-
+        $weekDays = FatApp::getPostedData('filterWeekDays', FatUtility::VAR_STRING, array());
+        $timeSlots = FatApp::getPostedData('filterTimeSlots', FatUtility::VAR_STRING, array());
+        $timeSlotArr = [];
+        if (!empty($timeSlots)) {
+            $timeSlotArr = CommonHelper::formatTimeSlotArr($timeSlots);
+        }
+        if (is_array($weekDays) && !empty($weekDays)) {
+            $weekDates = MyDate::changeWeekDaysToDate($weekDays, $timeSlotArr);
+            $condition = ' ( ';
+            foreach ($weekDates as $weekDayKey => $date) {
+                $condition .= ($weekDayKey == 0) ? '' : ' OR ';
+                $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) < "' . $date['endDate'] . '" and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) > "' . $date['startDate'] . '" ) ';
+            }
+            $condition .= ' ) ';
+            $srch->addDirectCondition($condition);
+        }
+        /* ] */
+        /* Time Slot [ */
         if (empty($weekDays) && !empty($timeSlotArr)) {
-
             $systemTimeZone = MyDate::getTimeZone();
             $user_timezone = MyDate::getUserTimeZone();
-
             $condition = ' ( ';
-            
-			foreach ($timeSlotArr as $key => $formatedVal) {
+            foreach ($timeSlotArr as $key => $formatedVal) {
                 $condition .= ($key == 0) ? '' : ' OR ';
                 $startTime = date('Y-m-d') . ' ' . $formatedVal['startTime'];
                 $endTime = date('Y-m-d') . ' ' . $formatedVal['endTime'];
                 $startTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($startTime, $user_timezone, $systemTimeZone)));
                 $endTime = date('H:i:s', strtotime(MyDate::changeDateTimezone($endTime, $user_timezone, $systemTimeZone)));
-
-                $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","'.$endTime.'") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","'.$startTime.'") ) ';
+                $condition .= ' ( CONCAT(`tgavl_date`," ",`tgavl_start_time`) <  CONCAT(`tgavl_end_date`," ","' . $endTime . '") and CONCAT(`tgavl_end_date`," ",`tgavl_end_time`) >  CONCAT(`tgavl_date`," ","' . $startTime . '") ) ';
             }
-                
             $condition .= ' ) ';
             $srch->addDirectCondition($condition);
-		}
-		/* ] */
+        }
+        /* ] */
         /* [ */
         $gender = FatApp::getPostedData('gender', FatUtility::VAR_STRING, NULL);
         if (!empty($gender)) {
@@ -728,6 +754,7 @@ class TeachersController extends MyAppController
         $filterSortBy = explode('_', $filterSortBy);
         $sortBy = $filterSortBy[0];
         $sortOrder = $filterSortBy[1];
+
         if (!in_array($sortOrder, ['asc', 'desc'])) {
             $sortOrder = 'asc';
         }
@@ -772,10 +799,6 @@ class TeachersController extends MyAppController
     private function getTeacherSearchForm($teachLangId = 0)
     {
         $teachLangName = '';
-        $keyword = '';
-        if (empty($teachLangId)) {
-            $teachLangId = (!empty($_SESSION['search_filters']['teachLangId'])) ? $_SESSION['search_filters']['teachLangId'] : $teachLangId;
-        }
         if ($teachLangId) {
             $srch = new TeachingLanguageSearch($this->siteLangId);
             $srch->addCondition('tlanguage_id', '=', $teachLangId);
@@ -784,24 +807,18 @@ class TeachersController extends MyAppController
             $srch->setPageSize(1);
             $rs = $srch->getResultSet();
             $languages = FatApp::getDb()->fetch($rs);
+
             if (!empty($languages['tlanguage_id'])) {
                 $teachLangId = $languages['tlanguage_id'];
                 $teachLangName = $languages['tlanguage_name'];
             }
         }
-        if (!empty($teachLangName)) {
-            $_SESSION['search_filters']['teach_language_name'] = $teachLangName;
-        }
-        if (isset($_SESSION['search_filters']) && !empty($_SESSION['search_filters'])) {
-            if (isset($_SESSION['search_filters']['keyword']) && !empty($_SESSION['search_filters']['keyword'])) {
-                $keyword = $_SESSION['search_filters']['keyword'];
-            }
-        }
+
         $frm = new Form('frmTeacherSrch');
         $frm->addTextBox('', 'teach_language_name', $teachLangName, ['placeholder' => Label::getLabel('LBL_Select_a_language')]);
         $frm->addHiddenField('', 'teachLangId', $teachLangId);
         $frm->addTextBox('', 'teach_availability', '', ['placeholder' => Label::getLabel('LBL_Select_date_time')]);
-        $keyword = $frm->addTextBox('', 'keyword', $keyword, ['placeholder' => Label::getLabel('LBL_Search_By_Teacher_Name')]);
+        $keyword = $frm->addTextBox('', 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Teacher_Name')]);
         $keyword->requirements()->setLength(0, 15);
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();

@@ -13,8 +13,8 @@ class TeacherGroupClassesSearch extends SearchBase
             $this->addCondition('grpcls_deleted', '=', applicationConstants::NO);
         }
     }
-
-    public static function getSearchObj($langId)
+    
+    public static function getSearchObj($langId, bool $addFlds = true)
     {
         $postedData = FatApp::getPostedData();
         $srch = new self(false);
@@ -29,14 +29,14 @@ class TeacherGroupClassesSearch extends SearchBase
         $srch2->addDirectCondition('slesson_grpcls_id=grpcls_id');
         $srch2->doNotLimitRecords(true);
         $srch2->doNotCalculateRecords(true);
-        $srch->addMultipleFields(['user_id',
+        $addFlds && $srch->addMultipleFields(['user_id',
             'user_first_name',
             'user_last_name',
             'CONCAT(user_first_name," ", user_last_name) as user_full_name',
             'user_url_name',
             'user_timezone as teacher_timezone',
             'grpcls_id',
-            'grpcls_slanguage_id',
+            'grpcls_tlanguage_id',
             'grpcls_teacher_id',
             'IFNULL(grpclslang_grpcls_title,grpcls_title) as grpcls_title',
             'IFNULL(grpclslang_grpcls_description,grpcls_description) as grpcls_description',
@@ -47,13 +47,13 @@ class TeacherGroupClassesSearch extends SearchBase
             'grpcls_status',
             'grpcls_added_on',
             'IFNULL(tlanguage_name, tlanguage_identifier) as teacher_language',
-            '(' . $srch2->getQuery() . ') as total_learners'
+            '(' . $srch2->getQuery() . ') as total_learners',
         ]);
         if (UserAuthentication::isUserLogged()) {
             $user_id = UserAuthentication::getLoggedUserId();
-            $srch->addFld('(SELECT IF(sldetail_id>0, 1, 0) FROM `tbl_scheduled_lesson_details` INNER JOIN `tbl_scheduled_lessons` ON slesson_id=sldetail_slesson_id  WHERE slesson_grpcls_id=grpcls_id AND sldetail_learner_status=' . ScheduledLesson::STATUS_SCHEDULED . ' AND sldetail_learner_id=' . $user_id . ' LIMIT 1) is_in_class');
-        } else {
-            $srch->addFld('0 as is_in_class');
+            $addFlds && $srch->addFld('(SELECT IF(sldetail_id>0, 1, 0) FROM `tbl_scheduled_lesson_details` INNER JOIN `tbl_scheduled_lessons` ON slesson_id=sldetail_slesson_id  WHERE slesson_grpcls_id=grpcls_id AND sldetail_learner_status='.ScheduledLesson::STATUS_SCHEDULED.' AND sldetail_learner_id='.$user_id.' LIMIT 1) is_in_class');
+        }else{
+            $addFlds && $srch->addFld('0 as is_in_class');
         }
         if (isset($postedData['keyword']) && !empty($postedData['keyword'])) {
            $condition = $srch->addCondition('grpcls_title', 'LIKE', '%' . $postedData['keyword'] . '%');
@@ -62,9 +62,11 @@ class TeacherGroupClassesSearch extends SearchBase
 
         if (isset($postedData['status']) && $postedData['status'] !== "") {
             $srch->addCondition('grpcls_status', '=', $postedData['status']);
+        } else {
+            $srch->addCondition('grpcls_status', '!=', TeacherGroupClasses::STATUS_CANCELLED);
         }
         $srch->setTeacherDefinedCriteria(false, false);
-        $srch->addOrder('grpcls_start_datetime', 'DESC');
+        $srch->addOrder('grpcls_start_datetime', 'ASC');
         $srch->addGroupBy('grpcls_id');
         return $srch;
     }
@@ -103,15 +105,10 @@ class TeacherGroupClassesSearch extends SearchBase
     {
         $this->joinTable(ScheduledLessonDetails::DB_TBL, 'LEFT OUTER JOIN', 'sld.sldetail_slesson_id = sl.slesson_id', 'sld');
     }
-
-    function joinIssueReported($user_id = 0)
-    {
-        $this->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = sl.slesson_id' . ($user_id > 0 ? ' AND issrep_reported_by=' . $user_id : ''), 'iss');
-    }
-
+    
     public function joinClassLang($langId = 0)
     {
-        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'grpcls.grpcls_slanguage_id = tlanguage_id', 'teachl');
+        $this->joinTable(TeachingLanguage::DB_TBL, 'LEFT JOIN', 'grpcls.grpcls_tlanguage_id = tlanguage_id', 'teachl');
         $langId = FatUtility::int($langId);
         if ($langId > 0) {
             $this->joinTable(TeachingLanguage::DB_TBL . '_lang', 'LEFT JOIN', 'teachl.tlanguage_id = teachl_lang.tlanguagelang_tlanguage_id AND teachl_lang.tlanguagelang_lang_id = ' . $langId, 'teachl_lang');
@@ -215,7 +212,7 @@ class TeacherGroupClassesSearch extends SearchBase
         /* teachLanguage[ */
         if ($langCheck) {
             $tlangSrch = $this->getMyTeachLangQry();
-            $this->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_us_user_id', 'utls');
+            $this->joinTable("(" . $tlangSrch->getQuery() . ")", 'INNER JOIN', 'user_id = utl_user_id', 'utls');
         }
         /* ] */
         /* qualification/experience[ */
@@ -266,5 +263,22 @@ class TeacherGroupClassesSearch extends SearchBase
         $searchBase->addCondition('grpcls_end_datetime', '>', $startDateTime);
         return $searchBase;
     }
-
+    
+    public static function getTeachLangs(int $langId)
+    {
+        $srch = static::getSearchObj($langId, false);
+        $srch->joinClassLang($langId);
+        $srch->doNotCalculateRecords();
+        $srch->addMultipleFields(
+            array(
+                'tlanguage_id',
+                'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name'
+            )
+        );
+        $srch->addCondition('grpcls_end_datetime', '>=', date('Y-m-d H:i:s'));
+        $srch->addOrder('tlanguage_display_order');
+        $rs = $srch->getResultSet();
+        $teachingLanguagesArr = FatApp::getDb()->fetchAllAssoc($rs);
+        return $teachingLanguagesArr;
+    }
 }

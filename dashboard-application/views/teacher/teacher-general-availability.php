@@ -18,7 +18,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d H:i:s', date('Y-m
 	</div>
 </div>
 <div class="page-panel__body availability-setting-calendar" id='calendar-container'>
-    <div id='ga_calendar'></div>
+    <div id='ga_calendar' class="calendar-view availability-calendar general-calendar"></div>
 </div>
 
 

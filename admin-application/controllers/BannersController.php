@@ -290,7 +290,9 @@ class BannersController extends AdminBaseController
             'banner_title' => $post['banner_title'],
             'banner_description' => $post['banner_description'],
             'banner_btn_caption' => $post['banner_btn_caption'],
-            'banner_btn_url' => $post['banner_btn_url']
+            'banner_btn_url' => $post['banner_btn_url'],
+            'banner_video_caption' => $post['banner_video_caption'],
+            'banner_video_url' => $post['banner_video_url']
         ];
         $bannerObj = new Banner($banner_id);
         if (!$bannerObj->updateLangData($lang_id, $data)) {
@@ -454,7 +456,6 @@ class BannersController extends AdminBaseController
         $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_uploaded_successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
-
     public function removeBanner($banner_id, $lang_id, $screen, $secondary = false)
     {
         $banner_id = FatUtility::int($banner_id);
@@ -561,6 +562,8 @@ class BannersController extends AdminBaseController
         $frm->addTextArea(Label::getLabel('LBL_Banner_Description', $this->adminLangId), 'banner_description');
         $frm->addTextBox(Label::getLabel('LBL_Banner_Button_Caption', $this->adminLangId), 'banner_btn_caption');
         $frm->addTextBox(Label::getLabel('LBL_Banner_Button_Link', $this->adminLangId), 'banner_btn_url');
+        $frm->addTextBox(Label::getLabel('LBL_Banner_Video_Caption', $this->adminLangId), 'banner_video_caption');
+        $frm->addTextBox(Label::getLabel('LBL_Banner_Video_Link', $this->adminLangId), 'banner_video_url');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Update', $this->adminLangId));
         return $frm;
     }
@@ -652,7 +655,6 @@ class BannersController extends AdminBaseController
         $screenTypesArr = applicationConstants::getDisplaysArr($this->adminLangId);
         return [0 => ''] + $screenTypesArr;
     }
-
     public function Thumb($bannerId, $langId = 0, $screen = 0, $secondary = false)
     {
         $this->showBanner($bannerId, $langId, 100, 100, $screen, $secondary);

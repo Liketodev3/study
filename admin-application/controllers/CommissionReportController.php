@@ -19,19 +19,15 @@ class CommissionReportController extends AdminBaseController
     public function search()
     {
         $frm = $this->searchForm();
-        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-        if (false === $post) {
-            FatUtility::dieJsonError(Label::getLabel('LBL_No_Record_Found', $this->adminLangId));
+        if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
+            FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
-        $page = ($page < 0) ? 1 : $page;
         $pagesize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
         $orderSearch = new OrderSearch();
         $orderSearch->joinOrderProduct();
         $orderSearch->joinScheduledLessonDetail();
         $orderSearch->joinScheduledLesson();
-        $orderSearch->joinScheduledLesson();
-        $orderSearch->joinTable(IssuesReported::DB_TBL, 'LEFT JOIN', 'iss.issrep_slesson_id = sl.slesson_id and issrep_status IN(' . IssuesReported::STATUS_OPEN . ',' . IssuesReported::STATUS_PROGRESS . ')', 'iss');
         $orderSearch->addCondition('slesson_status', '=', ScheduledLesson::STATUS_COMPLETED);
         $orderSearch->addCondition('order_is_paid', '=', Order::ORDER_IS_PAID);
         $orderSearch->addCondition('order_net_amount', '>', 0);
@@ -49,7 +45,6 @@ class CommissionReportController extends AdminBaseController
         if ($dateFrom) {
             $orderSearch->addDirectCondition("DATE(order_date_added) >= '" . $post['datefrom'] . "'");
         }
-        $orderSearch->addDirectCondition('ISNULL(issrep_status)');
         $orderSearch->addHaving('totalAdminCommission', '>', 0);
         $orderSearch->addGroupBy('order_id');
         $user = new User();

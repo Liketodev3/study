@@ -37,6 +37,9 @@ theme('boxShadow.1')
 for radius
 theme('radius.round')
 
+for weight
+theme('font.weight.medium')
+
 for border color
  border-top: 1px solid theme('color.gray.200');
 

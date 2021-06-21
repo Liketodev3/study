@@ -95,7 +95,6 @@ class TeacherRequestsController extends AdminBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         $srch = new TeacherRequestSearch();
-        $srch->joinTeacherRequestValues();
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -107,17 +106,16 @@ class TeacherRequestsController extends AdminBaseController
             'utrequest_attempts',
             'utrequest_comments',
             'utrequest_status',
-            'utrvalue_user_first_name',
-            'utrvalue_user_last_name',
-            'utrvalue_user_gender',
-            'utrvalue_user_phone',
-            'utrvalue_user_phone_code',
-            'utrvalue_user_video_link',
-            'utrvalue_user_profile_info',
-            'utrvalue_user_teach_slanguage_id',
-            'utrvalue_user_language_speak',
-            'utrvalue_user_language_speak_proficiency',
-            'count(utrequest_id) as totalRequest'
+            'utrequest_first_name',
+            'utrequest_last_name',
+            'utrequest_gender',
+            'utrequest_phone_number',
+            'utrequest_phone_code',
+            'utrequest_video_link',
+            'utrequest_profile_info',
+            'utrequest_teach_slanguage_id',
+            'utrequest_language_speak',
+            'utrequest_language_speak_proficiency'
         ]);
         $srch->addGroupBy('utrequest_id');
         $row = FatApp::getDb()->fetch($srch->getResultSet());
@@ -125,24 +123,21 @@ class TeacherRequestsController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Request', $this->adminLangId));
             FatUtility::dieWithError(Message::getHtml());
         }
-        $row['utrvalue_user_teach_slanguage_id'] = json_decode($row['utrvalue_user_teach_slanguage_id']);
-        $row['utrvalue_user_language_speak'] = json_decode($row['utrvalue_user_language_speak']);
-        $row['utrvalue_user_language_speak_proficiency'] = json_decode($row['utrvalue_user_language_speak_proficiency']);
+        $row['utrequest_teach_slanguage_id'] = json_decode($row['utrequest_teach_slanguage_id'], true);
+        $row['utrequest_language_speak'] = json_decode($row['utrequest_language_speak'], true);
+        $row['utrequest_language_speak_proficiency'] = json_decode($row['utrequest_language_speak_proficiency'], true);
         $this->set('row', $row);
         /* photoId Proof row[ */
         $photo_id_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, $row['utrequest_user_id']);
         $this->set('photo_id_row', $photo_id_row);
         /* ] */
-        $otherRequest = [];
         /* previous request  data[ */
-        if ($row['totalRequest'] > 0) {
-            $srch = new TeacherRequestSearch();
-            $srch->addCondition('utrequest_user_id', '=', $row['utrequest_user_id']);
-            $srch->addCondition('utrequest_id', '!=', $utrequest_id);
-            $srch->addOrder('utrequest_id', 'desc');
-            $rs = $srch->getResultSet();
-            $otherRequest = FatApp::getDb()->fetchAll($rs);
-        }
+        $srch = new TeacherRequestSearch();
+        $srch->addCondition('utrequest_user_id', '=', $row['utrequest_user_id']);
+        $srch->addCondition('utrequest_id', '!=', $utrequest_id);
+        $srch->addOrder('utrequest_id', 'desc');
+        $rs = $srch->getResultSet();
+        $otherRequest = FatApp::getDb()->fetchAll($rs);
         /* ] */
         $this->set('spokenLanguagesArr', SpokenLanguage::getAllLangs($this->adminLangId));
         $this->set('TeachingLanguagesArr', TeachingLanguage::getAllLangs($this->adminLangId));
@@ -201,11 +196,12 @@ class TeacherRequestsController extends AdminBaseController
         /* [ */
         $srch = new TeacherRequestSearch();
         $srch->joinUserCredentials();
-        $srch->joinTeacherRequestValues();
+        $srch->joinTable(UserSetting::DB_TBL, 'LEFT JOIN', 'us.us_user_id = u.user_id', 'us');
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $srch->addMultipleFields([
+            'us_site_lang',
             'utrequest_status',
             'utrequest_user_id',
             'utrequest_comments',
@@ -213,16 +209,16 @@ class TeacherRequestsController extends AdminBaseController
             'user_first_name',
             'user_last_name',
             'credential_email',
-            'utrvalue_user_first_name',
-            'utrvalue_user_last_name',
-            'utrvalue_user_gender',
-            'utrvalue_user_phone',
-            'utrvalue_user_phone_code',
-            'utrvalue_user_profile_info',
-            'utrvalue_user_video_link',
-            'utrvalue_user_teach_slanguage_id',
-            'utrvalue_user_language_speak',
-            'utrvalue_user_language_speak_proficiency'
+            'utrequest_first_name',
+            'utrequest_last_name',
+            'utrequest_gender',
+            'utrequest_phone_number',
+            'utrequest_phone_code',
+            'utrequest_profile_info',
+            'utrequest_video_link',
+            'utrequest_teach_slanguage_id',
+            'utrequest_language_speak',
+            'utrequest_language_speak_proficiency'
         ]);
         $rs = $srch->getResultSet();
         $requestRow = FatApp::getDb()->fetch($rs);
@@ -231,6 +227,7 @@ class TeacherRequestsController extends AdminBaseController
             FatUtility::dieWithError(Message::getHtml());
         }
         /* ] */
+
         $requestRow['utrequest_comments'] = $comment;
         $statusArr = TeacherRequest::getStatusArr($this->adminLangId);
         unset($statusArr[TeacherRequest::STATUS_PENDING]);
@@ -256,12 +253,12 @@ class TeacherRequestsController extends AdminBaseController
             $userUpdateDataArr = [
                 'user_is_teacher' => 1,
                 'user_preferred_dashboard' => User::USER_TEACHER_DASHBOARD,
-                'user_first_name' => $requestRow['utrvalue_user_first_name'],
-                'user_last_name' => $requestRow['utrvalue_user_last_name'],
-                'user_gender' => $requestRow['utrvalue_user_gender'],
-                'user_phone' => $requestRow['utrvalue_user_phone'],
-                'user_phone_code' => $requestRow['utrvalue_user_phone_code'],
-                'user_profile_info' => $requestRow['utrvalue_user_profile_info'],
+                'user_first_name' => $requestRow['utrequest_first_name'],
+                'user_last_name' => $requestRow['utrequest_last_name'],
+                'user_gender' => $requestRow['utrequest_gender'],
+                'user_phone' => $requestRow['utrequest_phone_number'],
+                'user_phone_code' => $requestRow['utrequest_phone_code'],
+                'user_profile_info' => $requestRow['utrequest_profile_info'],
             ];
             $user->assignValues($userUpdateDataArr);
             if (true != $user->save()) {
@@ -271,7 +268,7 @@ class TeacherRequestsController extends AdminBaseController
             /* ] */
             /* syncing user profile pic[ */
             $requestedProfilePicRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_PROFILE_IMAGE, $requestRow['utrequest_user_id']);
-            if ($requestedProfilePicRow['afile_physical_path'] != "") {
+            if (!empty($requestedProfilePicRow['afile_physical_path'] ?? '')) {
                 $profilePicDataArr = [
                     'afile_type' => AttachedFile::FILETYPE_USER_PROFILE_IMAGE,
                     'afile_record_id' => $requestRow['utrequest_user_id'],
@@ -293,7 +290,7 @@ class TeacherRequestsController extends AdminBaseController
             $userSetting = new UserSetting($requestRow['utrequest_user_id']);
             $settingDataArr = [
                 'us_user_id' => $requestRow['utrequest_user_id'],
-                'us_video_link' => $requestRow['utrvalue_user_video_link'],
+                'us_video_link' => $requestRow['utrequest_video_link'],
             ];
             if (true != $userSetting->saveData($settingDataArr)) {
                 Message::addErrorMessage($userSetting->getError());
@@ -302,12 +299,12 @@ class TeacherRequestsController extends AdminBaseController
             /* ] */
             /* syncing teach languages[ */
             $db = FatApp::getDb();
-            $teachLanguagesArr = json_decode($requestRow['utrvalue_user_teach_slanguage_id']);
+            $teachLanguagesArr = json_decode($requestRow['utrequest_teach_slanguage_id'], true);
             if (!empty($teachLanguagesArr)) {
                 foreach ($teachLanguagesArr as $key => $slanguage_id) {
                     $dataArr = [
-                        'utl_us_user_id' => $requestRow['utrequest_user_id'],
-                        'utl_slanguage_id' => $slanguage_id,
+                        'utl_user_id' => $requestRow['utrequest_user_id'],
+                        'utl_tlanguage_id' => $slanguage_id,
                     ];
                     if (!$db->insertFromArray(UserToLanguage::DB_TBL_TEACH, $dataArr, false, [], $dataArr)) {
                         Message::addErrorMessage($db->getError());
@@ -318,8 +315,8 @@ class TeacherRequestsController extends AdminBaseController
             /* ] */
             /* syncing spoken languages[ */
             $db = FatApp::getDb();
-            $spokenLanguagesArr = json_decode($requestRow['utrvalue_user_language_speak']);
-            $spokenLanguageProfArr = json_decode($requestRow['utrvalue_user_language_speak_proficiency']);
+            $spokenLanguagesArr = json_decode($requestRow['utrequest_language_speak'], true);
+            $spokenLanguageProfArr = json_decode($requestRow['utrequest_language_speak_proficiency'], true);
             if (!empty($spokenLanguagesArr)) {
                 foreach ($spokenLanguagesArr as $key => $slanguage_id) {
                     $dataArr = [
@@ -342,7 +339,7 @@ class TeacherRequestsController extends AdminBaseController
             }
             /* ] */
             $userNotification = new UserNotifications($requestRow['utrequest_user_id']);
-            $userNotification->sendTeacherApprovalNotification();
+            $userNotification->sendTeacherApprovalNotification($requestRow['us_site_lang']);
             /* Update Teacher's Stat */
             $stat = new TeacherStat($requestRow['utrequest_user_id']);
             $stat->setTeachLangPrices();
@@ -428,4 +425,5 @@ class TeacherRequestsController extends AdminBaseController
         }
         AttachedFile::downloadFile($fileRow['afile_name'], $fileRow['afile_physical_path']);
     }
+
 }

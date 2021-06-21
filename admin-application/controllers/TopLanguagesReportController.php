@@ -96,7 +96,7 @@ class TopLanguagesReportController extends AdminBaseController
         if (isset($post['country_id']) && $post['country_id'] > 0) {
             $srch->addCondition('ul.user_country_id', '=', $post['country_id']);
             $this->set('country_id', $post['country_id']);
-            $joinQuery = ' INNER JOIN `tbl_users` AS countUl ON countUl.user_id = sld.sldetail_learner_id  where slesson_slanguage_id = slns.slesson_slanguage_id AND countUl.user_country_id = ' . $post['country_id'];
+            $joinQuery = ' slns INNER JOIN `tbl_scheduled_lesson_details` AS sld ON sld.sldetail_slesson_id = slns.slesson_id INNER JOIN `tbl_users` AS countUl ON countUl.user_id = sld.sldetail_learner_id  where slesson_slanguage_id = slns.slesson_slanguage_id AND countUl.user_country_id = '. $post['country_id'];
         } else {
             $joinQuery = ' WHERE slesson_slanguage_id = slns.slesson_slanguage_id';
         }

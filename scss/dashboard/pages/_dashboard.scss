@@ -15,6 +15,8 @@ $dashboard: "dashboard";
 
     .#{$dashboard__primary}{
 
+
+
         width: 100%;
         @media (max-width:theme('breakpoints.xxl','value')) {
             order: 2;
@@ -55,7 +57,7 @@ $dashboard: "dashboard";
 
         @media (min-width:theme('breakpoints.xxl','value')) and (max-width: theme('breakpoints.xxxl','value')){
             &{
-                max-width: 25rem;
+                max-width: 22rem;
                 position: sticky;
                 top: 0;
                 bottom: 0;
@@ -77,7 +79,7 @@ $status-bar: "status-bar";
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding-top: calc(1rem + 26px);
+    padding-top: var(--padding-4);
 
     @media (min-width:theme('breakpoints.lg','value')) and (max-width:theme('breakpoints.xxl','value')) {
         &{
@@ -96,9 +98,6 @@ $status-bar: "status-bar";
             font-size: var(--font-size-h5);
             color: var(--color-gray-000);
         }
-        .underline{
-            
-        }
     }
     .status-bar__body{
         padding: var(--padding-6); 
@@ -113,7 +112,6 @@ $status-bar: "status-bar";
         }
         
         .listing-window{
-            height: calc(100% - 297px);
             position: relative;
             
             .scrollbar{
@@ -121,21 +119,24 @@ $status-bar: "status-bar";
                 height: calc(100% - 1px);
             }
 
-            @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
-                &{
-                    height: calc(100% - 218px);
-                }
+            .message-display{
+                min-height: 25rem;
             }
-            @media(min-width:theme('breakpoints.xxxl','value')){
-                &{
-                    height: calc(100% - 393px);
-                }
-            }
-            @media(max-width:theme('breakpoints.md','value')){
-                &{
-                    height: 300px;
-                }
-            }
+            // @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
+            //     &{
+            //         height: calc(100% - 218px);
+            //     }
+            // }
+            // @media(min-width:theme('breakpoints.xxxl','value')){
+            //     &{
+            //         height: calc(100% - 393px);
+            //     }
+            // }
+            // @media(max-width:theme('breakpoints.md','value')){
+            //     &{
+            //         height: 300px;
+            //     }
+            // }
         }
 
         @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
@@ -270,66 +271,64 @@ $lesson-list: "lesson-list";
     }
 }
 
-$stats-row: "stats-row";
+$stat: "stat";
 
-.#{&stats-row} {
-    margin-top: var(--margin-4);
-    .stat{
-        background-color: var(--color-white);
-        padding: var(--padding-6);
+.#{&stat}{
+    background-color: var(--color-white);
+    padding: var(--padding-6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    border-radius: var(--radius-1);
+    box-shadow: var(--boxShadow-all);
+    transition: all 0.2s;
+
+    .stat__media {
+        width: 5.72rem;
+        height: 5.72rem;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        position: relative;
-        border-radius: var(--radius-1);
-        box-shadow: var(--boxShadow-all);
-        transition: all 0.2s;
+        border-radius: theme('radius.round');
+        color: #fff;
 
-        .stat__media {
-            width: 5.72rem;
-            height: 5.72rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: theme('radius.round');
-            color: #fff;
-
-            @media(min-width:theme('breakpoints.xxl','value')) and (max-width:theme('breakpoints.xxxl','value')){
-                &{
-                    width: 3.72rem;
-                    height: 3.72rem;
-                    svg{
-                        width: 2rem;
-                        height: 2rem;
-                    }
+        @media(min-width:theme('breakpoints.xxl','value')) and (max-width:theme('breakpoints.xxxl','value')){
+            &{
+                width: 3.72rem;
+                height: 3.72rem;
+                svg{
+                    width: 2rem;
+                    height: 2rem;
                 }
             }
         }
-        span{
-            color: var(--color-gray-1000);
-        }
-        .stat__action{
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            display: block;
-        }
+    }
+    span{
+        color: var(--color-gray-1000);
+    }
+    .stat__action{
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        display: block;
+    }
 
-        @media(min-width:theme('breakpoints.xl','value')){
-            &:hover{
-                box-shadow: var(--boxShadow-vertical);
-                margin-left: -5px;
-                margin-right: -5px;
-            }
-        }
-
-        @media(max-width:theme('breakpoints.xl','value')){
-            margin-bottom: var(--padding-6);
+    @media(min-width:theme('breakpoints.xl','value')){
+        &:hover{
+            box-shadow: var(--boxShadow-vertical);
+            margin-left: -5px;
+            margin-right: -5px;
         }
     }
+
+    @media(max-width:theme('breakpoints.xl','value')){
+        margin-bottom: var(--padding-6);
+    }
 }
+
 
 $statistics: "statistics";
 
@@ -363,7 +362,6 @@ $sale-stat: "sale-stat";
     @media(min-width:theme('breakpoints.xxxl','value')){
         &{
             padding: var(--padding-12);
-            height: 100%;
         }
     }
     @media(max-width:theme('breakpoints.xxxl','value')){
@@ -373,21 +371,51 @@ $sale-stat: "sale-stat";
         }
     }
 
-    .sale-stat__select{
+    
+}
 
-        @media(max-width:theme('breakpoints.lg','value')){
-            &{
-                width: 140px;
-            }
+.sale-stat__select{
+    float: #{theme('direction.right','value')};
+    @media(max-width:theme('breakpoints.lg','value')){
+        &{
+            width: 140px;
         }
     }
 }
-.sale-stat--primary{
-    background-color: #fff4e2;
+
+.sale-stat{
+    position: relative;
 }
-.sale-stat--secondary{
-    background-color: #e7fdff;
+
+.sale-stat--yellow{
+    color: var(--color-third);
+    &::before{
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        content: "";
+        pointer-events: none;
+        background-color: currentColor;
+        opacity: 0.06;
+    }
 }
+.sale-stat--sky{
+    color: #48C5D2;
+    &::before{
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        content: "";
+        pointer-events: none;
+        background-color: currentColor;
+        opacity: 0.06;
+    }
+}
+
 
 .graph-media{
     img{
@@ -529,4 +557,46 @@ $aside--progress--menu: "aside--progress--menu";
 }
 .messages .page__footer{
     display: none;
+}
+
+
+.menu--steps{
+    .profile--progress--menu{
+        &:not(.is-completed){
+            a{
+                opacity: 1;
+
+                .menu__icon{
+                    background-color: var(--color-yellow);
+                    display: block;
+                }
+            }
+
+        }
+        .menu__icon{
+            min-width: 1.75em;
+            height: 1.75em;
+            position: absolute;
+            #{theme('direction.right','value')}: 1rem;
+            top: 50%;
+            border-radius: 1.75em;
+            padding-#{theme('direction.left','value')}: var(--padding-1);
+            font-size: 0.66em;
+            line-height: 1.75em;
+            padding-#{theme('direction.right','value')}: var(--padding-1);
+            transform: translate(0, -50%);
+            @media (max-width:theme('breakpoints.md','value')) {
+                #{theme('direction.right','value')}: 0rem;
+            }
+            &::before{
+                position: absolute;
+                #{theme('direction.left','value')}: 0.43rem;
+                font-weight: 600;
+                content: "!";
+                color: #fff;
+                font-size: 15px;
+                pointer-events: none;
+            }
+        }
+    }
 }

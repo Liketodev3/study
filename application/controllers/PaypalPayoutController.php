@@ -1,6 +1,6 @@
 <?php
 
-class PaypalPayoutController extends PaymentController
+class PaypalPayoutController extends MyAppController
 {
 
     public function callback()

@@ -30,9 +30,4 @@ class TeacherRequestSearch extends SearchBase
         $this->joinTable(User::DB_TBL_CRED, 'INNER JOIN', 'u.user_id = cred.credential_user_id', 'cred');
     }
 
-    public function joinTeacherRequestValues()
-    {
-        $this->joinTable(TeacherRequestValue::DB_TBL, 'INNER JOIN', 'tr.utrequest_id = utrvalue.utrvalue_utrequest_id', 'utrvalue');
-    }
-
 }

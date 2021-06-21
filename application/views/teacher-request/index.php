@@ -1,70 +1,170 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
-
-<?php 
-$requestStatus = $teacherRequestRow['utrequest_status'];
-$dashboardUrl = CommonHelper::generateUrl('learner');
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+$applyTeachFrm->setFormTagAttribute('class', 'form');
+$applyTeachFrm->setFormTagAttribute('onsubmit', 'setUpSignUp(this); return(false);');
+$userId = $applyTeachFrm->getField('user_id');
+$userEmail = $applyTeachFrm->getField('user_email');
+$userEmail->setFieldTagAttribute('placeholder', Label::getLabel('LBL_Email', $siteLangId));
+$userPassword =  $applyTeachFrm->getField('user_password');
+$userPassword->setFieldTagAttribute('placeholder', Label::getLabel('LBL_Password', $siteLangId));
+$accept = $applyTeachFrm->getField('agree');
+$accept->setFieldTagAttribute('checked', 'checked');
+$accept->setFieldTagAttribute('class', 'd-none');
+$userPrefDash = $applyTeachFrm->getField('user_preferred_dashboard');
+$submitBtn = $applyTeachFrm->getField('btn_submit');
+$submitBtn->setFieldTagAttribute('class', 'btn btn--secondary btn--large btn--block ');
+$applyTeachFrm->developerTags['colClassPrefix'] = 'col-md-';
+$applyTeachFrm->developerTags['fld_default_col'] = 12;
 ?>
-<section class="section section--grey section--page">
-    <div class="container container--fixed">
-        <div class="page-panel -clearfix">
-            <div class="page__panel-narrow">
-                <div class="row justify-content-center">
-                    <div class="col-xl-6 col-lg-8 col-md-10">
-                        <div class="box -padding-30">
-                            <div class="message-display">
-							
-                                <div class="message-display__icon">
-									
-									<?php if( $requestStatus == TeacherRequest::STATUS_PENDING ){ ?>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-                                        <path fill="#000" d="M644.96,336.583H656V326H574v10.581h10.808v31.211l24.348,15.764L583.709,398.89l0.115,0.178-0.06.036v31.314H574V441h82V430.418H643.922V399.144L619.244,383.59l25.765-15.526-0.11-.179,0.061-.035V336.583Zm-6.168,66.172v27.663H588.9V401.877l25.148-15.149Zm1.046-37.678-25.547,15.395-24.356-15.363V336.583h49.9v28.494Zm-3.054-2.454V350.9H593.011v11.669l21.252,13.648Z" transform="translate(-555 -323.5)" />
-                                        <path class="-color-fill" d="M603.772,422.014l-12.043,1.569v4.48H636.1v-4.48l-10.964-1.3-11.214-4.277Z" transform="translate(-555 -323.5)" />
-                                    </svg>
-									<?php } else if( $requestStatus == TeacherRequest::STATUS_APPROVED ){
-                                                    //$dashboardUrl = CommonHelper::generateUrl('teacher');
-                                    ?>
-									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-									  <path fill="#000" d="M105.823,52.206a4.4,4.4,0,0,0-4.4,4.393v4.425a43.258,43.258,0,0,1-43.3,43.188H58.092a43.213,43.213,0,1,1,.024-86.426h0.026a43.111,43.111,0,0,1,17.6,3.741A4.395,4.395,0,1,0,79.325,13.5,51.871,51.871,0,0,0,58.147,9H58.116a52,52,0,1,0-.029,104h0.031a52.054,52.054,0,0,0,52.108-51.973V56.6A4.4,4.4,0,0,0,105.823,52.206Z" transform="translate(-0.516 -1)"></path>
-									  <path class="-color-fill" d="M113.706,15.075a4.409,4.409,0,0,0-6.226,0L58.117,64.335,46.918,53.16a4.4,4.4,0,0,0-6.226,6.213L55,73.655a4.409,4.409,0,0,0,6.226,0l52.476-52.367A4.386,4.386,0,0,0,113.706,15.075Z" transform="translate(-0.516 -1)"></path>
-									</svg>
-									<?php } else { ?>
-										
-									<?php } ?>
-									
-                                </div>
-								
-                                <span class="-gap"></span>
-								<h1 class="-color-secondary"><?php echo Label::getLabel('LBL_Hello') ,' ', $teacherRequestRow["user_name"]?> </h1>
-								<h4> <?php echo Label::getLabel('LBL_Thank_you_for_submitting_your_application')?></h4>
-								
-								<?php if( $requestStatus == TeacherRequest::STATUS_CANCELLED ){ ?>
-								<span class="-gap"></span>
-								<h6><?php echo Label::getLabel('LBL_Think_Error_Please_Contact_Us')?></h6>
-								<a class="btn btn--secondary" href="<?php echo CommonHelper::generateUrl('TeacherRequest', 'form'); ?>"><?php echo Label::getLabel('LBL_Submit_Revised_Request')?></a>
-								<span class="-gap"></span>
-								<?php } ?>
-								
-								<p><?php echo Label::getLabel('LBL_Application_Reference')?>: <strong><?php echo $teacherRequestRow["utrequest_reference"]; ?></strong></p>
-                            </div>
-							                            <div class="-align-center"><a href="<?php echo $dashboardUrl; ?>" class="btn btn--secondary btn--large"><?php echo Label::getLabel('LBL_Go_to_Dashboard')?></a></div>
-                            <hr><span class="-gap"></span>
+<section class="section padding-0">
 
-                            <div class="-align-center">
-								<?php if( $requestStatus == TeacherRequest::STATUS_PENDING ){ ?>
-                                <h6><?php echo Label::getLabel('LBL_application_awaiting_approval')?></h6>
-								
-								<?php } else if( $requestStatus == TeacherRequest::STATUS_APPROVED ){ ?>
-								<h6><?php echo Label::getLabel('LBL_Your_Application_Approved'); ?></h6>
-								
-								<?php } else { ?>
-								<h6><?php echo Label::getLabel('LBL_Your_Application_Declined')?></h6>
-								<?php } ?>
+    <div class="slideshow full-view-banner">
+        <picture class="hero-img">
+            <img src="<?php echo CommonHelper::generateUrl('image', 'applyToTeachBanner', [$siteLangId], CONF_WEBROOT_URL); ?>" alt="">
+        </picture>
+    </div>
+    <?php if (UserAuthentication::getLoggedUserId(true) && User::isTeacher()) { ?>
+        <div class="slideshow-content">
+            <h1><?php echo Label::getLabel('LBL_Apply_To_Teach', $siteLangId); ?></h1>
+            <p><?php echo Label::getLabel('LBL_Apply_to_Teach_Descritpion', $siteLangId);  ?></p>
+
+            <div class="row justify-content-center margin-top-4">
+                <p><?php echo Label::getLabel('LBL_Faqs_Description', $siteLangId); ?></p>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <a href="#faq-area" class="btn btn--block btn--white scroll">
+                        <?php echo Label::getLabel('LBL_FAQS', $siteLangId); ?>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="#how-it-works" class="btn btn--block btn--white scroll ">
+                        <?php echo Label::getLabel('LBL_How_IT_Works', $siteLangId); ?>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    <?php } elseif (UserAuthentication::getLoggedUserId(true) && User::isLearner()) { ?>
+        <div class="slideshow-content">
+            <h1><?php echo Label::getLabel('LBL_Apply_To_Teach', $siteLangId); ?></h1>
+            <p><?php echo Label::getLabel('LBL_Apply_to_Teach_Descritpion', $siteLangId);  ?></p>
+            <a href="<?php echo CommonHelper::generateUrl('TeacherRequest', 'form'); ?>" class="btn btn--secondary btn--large btn--block "><?php echo Label::getLabel('LBL_BECOME_A_TUTOR', $siteLangId); ?></a>
+            <div class="row justify-content-center margin-top-4">
+                <p><?php echo Label::getLabel('LBL_Faqs_Description', $siteLangId); ?></p>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <a href="#faq-area" class="btn btn--block btn--white scroll">
+                        <?php echo Label::getLabel('LBL_FAQS', $siteLangId); ?>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="#how-it-works" class="btn btn--block btn--white scroll ">
+                        <?php echo Label::getLabel('LBL_How_IT_Works', $siteLangId); ?>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    <?php } else { ?>
+
+        <div class="slideshow-content">
+            <h1><?php echo Label::getLabel('LBL_Apply_To_Teach', $siteLangId); ?></h1>
+            <p><?php echo Label::getLabel('LBL_Apply_to_Teach_Descritpion', $siteLangId);  ?></p>
+            <div class="form-register">
+                <?php echo $applyTeachFrm->getFormTag(); ?>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="field-set">
+                            <div class="field-wraper">
+                                <div class="field_cover">
+                                    <?php echo $userEmail->getHTML(); ?>
+                                    <?php echo $userPrefDash->getHtml(); ?>
+                                    <?php echo $userId->getHtml(); ?>
+                                </div>
                             </div>
-							
                         </div>
                     </div>
+
+                        <div class="col-sm-12">
+                            <div class="field-set">
+                                <div class="field-wraper">
+                                    <div class="field_cover">
+                                        <?php echo $userPassword->getHTML(); ?>
+                                        <a href="javascript:0;" class="password-toggle">
+                                            <span class="icon">
+                                                <svg id="hide-password" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="16.2" height="17.134" viewBox="0 0 16.2 17.134">
+                                                    <path id="Path_6420" data-name="Path 6420" d="M13.685,15.853a7.764,7.764,0,0,1-4.4,1.375,8.437,8.437,0,0,1-8.1-7.269,9.083,9.083,0,0,1,2.5-4.9L1.339,2.536,2.4,1.393,17.222,17.384l-1.059,1.142-2.478-2.673ZM4.74,6.2A7.383,7.383,0,0,0,2.71,9.96a7.171,7.171,0,0,0,3.846,5.031,6.307,6.307,0,0,0,6.038-.316l-1.518-1.638A3.187,3.187,0,0,1,6.9,12.532a3.852,3.852,0,0,1-.468-4.507ZM9.965,11.84,7.538,9.222a2.136,2.136,0,0,0,.419,2.166,1.774,1.774,0,0,0,2.008.452Zm5.909,1.829L14.8,12.514A7.509,7.509,0,0,0,15.852,9.96,7.262,7.262,0,0,0,12.72,5.324a6.315,6.315,0,0,0-5.272-.745L6.267,3.3a7.7,7.7,0,0,1,3.014-.614,8.437,8.437,0,0,1,8.1,7.269,9.2,9.2,0,0,1-1.506,3.709Zm-6.8-7.337a3.236,3.236,0,0,1,2.59,1.058,3.8,3.8,0,0,1,.98,2.794L9.073,6.332Z" transform="translate(-1.181 -1.393)" fill="#a2a2a2" />
+                                                </svg>
+                                            </span>
+                                            <span class="icon">
+                                                <svg id="show-password" xmlns="http://www.w3.org/2000/svg" width="16.2" height="14.538" viewBox="0 0 16.2 14.538">
+                                                    <path id="Path_6422" data-name="Path 6422" d="M9.281,3a8.437,8.437,0,0,1,8.1,7.269,8.436,8.436,0,0,1-8.1,7.269,8.437,8.437,0,0,1-8.1-7.269A8.436,8.436,0,0,1,9.281,3Zm0,12.922a6.873,6.873,0,0,0,6.571-5.652,6.873,6.873,0,0,0-6.57-5.647A6.873,6.873,0,0,0,2.71,10.27a6.874,6.874,0,0,0,6.571,5.653Zm0-2.019a3.509,3.509,0,0,1-3.369-3.634A3.509,3.509,0,0,1,9.281,6.634a3.509,3.509,0,0,1,3.369,3.634A3.509,3.509,0,0,1,9.281,13.9Zm0-1.615a1.95,1.95,0,0,0,1.872-2.019A1.95,1.95,0,0,0,9.281,8.25a1.95,1.95,0,0,0-1.872,2.019A1.95,1.95,0,0,0,9.281,12.288Z" transform="translate(-1.181 -3)" fill="#a2a2a2" />
+                                                </svg>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php echo $accept->getHTML(); ?>
+                </div>
+                <?php echo $submitBtn->getHTML(); ?>
+                </form>
+                <?php echo $applyTeachFrm->getExternalJs(); ?>
+                <div class="row justify-content-center">
+                    <?php 
+                    $termsConditionPage = FatApp::getConfig('CONF_TERMS_AND_CONDITIONS_PAGE', FatUtility::VAR_INT, 0);
+                    $privacyPolicy = FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE', FatUtility::VAR_INT, 0);
+                    ?>
+                    <p><?php echo sprintf(Label::getLabel('LBL_Accept_Description',$siteLangId),'<a href="'.CommonHelper::generateUrl('Cms','view',[$termsConditionPage]).'" class="color-primary">'.Label::getLabel('LBL_Terms_and_Condtions',$siteLangId).'</a>','<a href="'.CommonHelper::generateUrl('cms','view',[$privacyPolicy]).'" class="color-primary">'.Label::getLabel('LBL_Privacy_Policy',$siteLangId).'</a>'); ?></p>
                 </div>
             </div>
         </div>
-    </div>
+    <?php }  ?>
+
 </section>
+<?php echo FatUtility::decodeHtmlEntities($sectionAfterBanner); ?>
+<?php echo FatUtility::decodeHtmlEntities($featuresSection); ?>
+<?php echo FatUtility::decodeHtmlEntities($becometutorSection); ?>
+<?php echo FatUtility::decodeHtmlEntities($staticBannerSection); ?>
+<?php if (!empty($faqs)) { ?>
+    <section class="section section--faq" id="faq-area">
+        <div class="container container--narrow">
+            <div class="section__head">
+                <h2><?php echo Label::getLabel('LBL_faq_title_second', $siteLangId); ?></h2>
+            </div>
+            <div class="faq-cover">
+                <div class="faq-container">
+                    <?php foreach ($faqs as $ques) { ?>
+                        <div class="faq-row faq-group-js">
+                            <a href="javascript:void(0)" class="faq-title faq__trigger faq__trigger-js">
+                                <h5><?php echo $ques['faq_title']; ?></h5>
+                            </a>
+                            <div class="faq-answer faq__target faq__target-js">
+                                <p><?php echo $ques['faq_description']; ?></p>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php $this->includeTemplate('_partial/contact-us-section.php', ['siteLangId' => $siteLangId]); ?>
+<?php } ?>
+<script>
+    $(".faq__trigger-js").click(function(e) {
+        e.preventDefault();
+        if ($(this).parents('.faq-group-js').hasClass('is-active')) {
+            $(this).siblings('.faq__target-js').slideUp();
+            $('.faq-group-js').removeClass('is-active');
+        } else {
+            $('.faq-group-js').removeClass('is-active');
+            $(this).parents('.faq-group-js').addClass('is-active');
+            $('.faq__target-js').slideUp();
+            $(this).siblings('.faq__target-js').slideDown();
+        }
+    });
+</script>

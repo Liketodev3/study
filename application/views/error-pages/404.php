@@ -1,7 +1,4 @@
 <?php
-	$ctrl = new ErrorController('index');
-	$ctrl->index();
-	exit;
-?>
-
-
+$ctrl = new ErrorController('index');
+$ctrl->index();
+exit;

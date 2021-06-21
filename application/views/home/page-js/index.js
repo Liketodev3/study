@@ -13,7 +13,11 @@ $("document").ready(function(){
 			}
 		}]
 	});
+
+
 	$("input[name='language']").autocomplete({
+    'autoFocus':true,
+    'minLength': 0,
 		'source': function(request, response) {
 			$.ajax({
 				url: fcom.makeUrl('Teachers', 'teachLanguagesAutoCompleteJson'),
@@ -24,7 +28,7 @@ $("document").ready(function(){
 					response($.map(json, function(item) {
 						return {
 							value: item['name'], 
-                            id: item['id'],	
+              id: item['id'],	
 						};
 					}));
 				},
@@ -37,7 +41,9 @@ $("document").ready(function(){
 			$('#homeSearchForm').submit();
 			//window.location.href = window.location.href + "teachers/index/" + ui.item.value;
 		}
-	});	
+	}).bind('focus', function () {
+    $(this).autocomplete("search");
+});	
 
 //Common Carousel
 var _carousel = $('.js-carousel');
@@ -90,58 +96,206 @@ $('.vert-carousel').slick({
     arrow: true,
     vertical: true
 });    
-    
-$('.quote-slider').slick({
-    slidesToShow: 1,
-	rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
-    slidesToScroll: 1,
-    arrows: true,
-    infinite: false,
-    fade: false,
-    asNavFor: '.quote-thumbs',
-    responsive: [
-        {
+  
+// $(".banner_link_how_works").click(function(e) {
+// 	e.preventDefault();
+//     $('html, body').animate({
+//         scrollTop: $("#how-it-works").offset().top
+//     }, 1000);
+// });
 
-            breakpoint: 992,
-            settings: {
-                arrows: false
-            }
-        }
-        ]
-});
-$('.quote-thumbs').slick({
+
+$('.slideshow-js').slick({
+    dots: true,
+    infinite: true,
+    speed: 500,
+    fade: true,
+    cssEase: 'linear',
+    arrows: false,
+    rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+  });
+  
+
+  $('.slider-onethird-js').slick({
     slidesToShow: 3,
     slidesToScroll: 1,
-	rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
-    asNavFor: '.quote-slider',
+    infinite: false,
+    rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+    arrows: true,
+    adaptiveHeight: true,
     dots: false,
-    centerMode: true,
-    focusOnSelect: true,
+    prevArrow: '<button class="slick-prev cursor-hide" aria-label="Previous" type="button">Previous</button>',
+    nextArrow: '<button class="slick-next cursor-hide" aria-label="Next" type="button">Next</button>',
     responsive: [
-        {
+      {
+         breakpoint: 1199,
+         settings: {
+           slidesToShow: 2,
+           arrows: false,
+           dots:true
+         }
+       },
+       {
+         breakpoint: 1023,
+         settings: {
+           slidesToShow: 2,
+           arrows: false,
+           dots:true
+         }
+       },
+       {
+         breakpoint: 767,
+         settings: {
+           slidesToShow:2, 
+           arrows: false,
+           dots:true        
+         }
+       },
+    
+       {
+         breakpoint: 576,
+         settings: {
+          slidesToShow:1,
+          arrows: false,
+           dots:true
+         }
+       } 
+       
+   ]
+  });
 
-            breakpoint: 1025,
-            settings: {
-                slidesToShow: 4,
-            }
-        },
+$('.step-slider-js').slick({
+slidesToShow: 1,
+slidesToScroll: 1,
+rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+arrows: false,
+dots: true,
+asNavFor: '.slider-tabs--js'
+});
 
-        {
+$('.slider-tabs--js').slick({
+slidesToShow: 3,
+slidesToScroll: 1,
+asNavFor: '.step-slider-js',
+rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+dots: true,
+centerMode: true,
+focusOnSelect: true
+});
 
-            breakpoint: 768,
-            settings: {
-                slidesToShow: 2,
-            }
-        }
-        ]
+$('.slider-quote-js').slick({
+slidesToShow: 1,
+slidesToScroll: 1,
+arrows: true,
+rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+autoplay:false,
+adaptiveHeight: true,
+dots: false,
+prevArrow: '<button class="slick-prev cursor-hide" aria-label="Previous" type="button">Previous</button>',
+nextArrow: '<button class="slick-next cursor-hide" aria-label="Next" type="button">Next</button>',
+responsive: [
+  {
+  breakpoint:1199,
+    settings: {
+      fade: false,
+      infinite: true,
+     
+        centerMode:true,  
+        centerPadding: '15%',
+       
+        arrows: false,
+           dots:true
+    }
+  } ,
 
-});    
+  {
+    breakpoint:1023,
+      settings: {
+        fade: false,
+        infinite: true,
+       
+          centerMode:true,  
+          centerPadding: '15%',
+         
+          arrows: false,
+             dots:true
+      }
+    } ,
+  {
+    breakpoint:767,
+      settings: {
+        fade: false,
+        infinite: true,
+       
+          centerMode:true,  
+          centerPadding: '15%',
+         
+          arrows: false,
+             dots:true
 
-$(".banner_link_how_works").click(function(e) {
-	e.preventDefault();
-    $('html, body').animate({
-        scrollTop: $("#how-it-works").offset().top
-    }, 1000);
+      }
+    } ,
+    {
+      breakpoint: 576,
+      settings: {
+        fade: false,
+      infinite: true,
+     
+        centerMode:true,  
+        centerPadding: '5%',
+       
+        arrows: false,
+           dots:true
+
+      }
+    } 
+]
+});
+
+$('.slider-onehalf-js').slick({
+slidesToShow: 2,
+slidesToScroll: 1,
+infinite: false,
+rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+arrows: true,
+adaptiveHeight: true,
+dots: false,
+
+responsive: [
+ 
+  {
+     breakpoint: 1199,
+     settings: {
+       slidesToShow:2,
+       dots: true,
+       arrows: false,
+     }
+   },
+   {
+     breakpoint: 1023,
+     settings: {
+       slidesToShow:1,
+       dots: true,
+       arrows: false,
+     }
+   },
+   {
+     breakpoint: 767,
+     settings: {
+      slidesToShow: 1,
+      dots: true,
+      arrows: false,
+     }
+   }, 
+]
+});
+
+$('.countdowntimer').each(function (i) {
+  $(this).countdowntimer({
+      startDate : $(this).data('starttime'),
+      dateAndTime : $(this).data('endtime'),
+      size : "sm",
+  });
 });
     
 });

@@ -53,13 +53,10 @@ $(document).ready(function () {
 
 	setUpGoToTop();
 
-	setUpStickyHeader();
+	//setUpStickyHeader();
 
 	toggleNavDropDownForDevices();
 
-	toggleHeaderNavigationForDevices();
-
-	/* toggleFooterLinksForDevices(); */
 
 	toggleHeaderCurrencyLanguageForDevices();
 
@@ -207,14 +204,6 @@ $(document).ready(function () {
 			}
 		},
 
-		toggleHeaderNavigationForDevices = function () {
-			$('.toggle--nav-js').click(function () {
-				$(this).toggleClass("is-active");
-				$('html').toggleClass("show-nav-js");
-				$('html').removeClass("show-dashboard-js");
-			});
-		},
-
 		jQuery(document).ready(function (e) {
 			function t(t) {
 				e(t).bind("click", function (t) {
@@ -306,10 +295,18 @@ $(document).ready(function () {
 		},
 
 		setSiteDefaultLang = function (langId) {
-			fcom.ajax(fcom.makeUrl('Home', 'setSiteDefaultLang', [langId]), '', function (res) {
-				document.location.reload();
+			var url = window.location.pathname;
+			var srchString = window.location.search;
+			var data = 'pathname=' + url;
+			fcom.ajax(fcom.makeUrl('Home', 'setSiteDefaultLang', [langId]), data, function (res) {
+				var ans = $.parseJSON(res);
+				if (ans.status == 1) {
+					window.location.href = ans.redirectUrl + srchString;
+				}
 			});
 		},
+
+
 
 		setSiteDefaultCurrency = function (currencyId) {
 			fcom.ajax(fcom.makeUrl('Home', 'setSiteDefaultCurrency', [currencyId]), '', function (res) {
@@ -336,8 +333,8 @@ $(document).ready(function () {
 	setUpSignUp = function (frm) {
 		if (!$(frm).validate()) { return; }
 		$.loader.show()
-		fcom.ajax(fcom.makeUrl('GuestUser', 'setUpSignUp'), fcom.frmData(frm), function (res) {
-
+		data=fcom.frmData(frm);
+		fcom.ajax(fcom.makeUrl('GuestUser', 'setUpSignUp'), fcom.frmData(frm), function(res) {
 			if (res.status == 1) {
 				window.location.href = res.redirectUrl;
 				return;
@@ -351,10 +348,13 @@ $(document).ready(function () {
 
 	logInFormPopUp = function () {
 		$.loader.show();
-		$.facebox(function () {
-			fcom.ajax(fcom.makeUrl('GuestUser', 'logInFormPopUp', []), '', function (res) {
+		fcom.ajax(fcom.makeUrl('GuestUser', 'logInFormPopUp', []), '', function (res) {
+			try {
+				let data = JSON.parse(res);
+				!data.status ? $.mbsmessage(data.msg, true, 'alert alert--danger') : void (0);
+			} catch (exc) {
 				$.facebox(res, '');
-			});
+			}
 		});
 		$.loader.hide();
 	};
@@ -415,7 +415,7 @@ $(document).ready(function () {
 	};
 
 	toggleTeacherFavorite = function (teacher_id, el) {
-		
+
 		if (isRuningTeacherFavoriteAjax) {
 			return false;
 		}
@@ -431,13 +431,14 @@ $(document).ready(function () {
 			isRuningTeacherFavoriteAjax = false;
 			if (ans.status) {
 				if (ans.action == 'A') {
-					$(el).addClass("is-active");
+					$(el).addClass("is--active");
 				} else if (ans.action == 'R') {
-					$(el).removeClass("is-active");	
+					$(el).removeClass("is--active");
 				}
 				if (typeof searchfavorites != 'undefined') {
 					searchfavorites(document.frmFavSrch);
 				}
+				$.mbsmessage(ans.msg,true, 'alert alert--success');
 			}else{
 				$.mbsmessage(ans.msg,true, 'alert alert--danger');
 			}

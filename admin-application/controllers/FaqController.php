@@ -191,7 +191,7 @@ class FaqController extends AdminBaseController
         $frm = new Form('frmFaq');
         $frm->addHiddenField('', 'faq_id', $faqId);
         $frm->addRequiredField(Label::getLabel('LBL_Faq_Identifier', $this->adminLangId), 'faq_identifier');
-        $fld = $frm->addSelectBox(Label::getLabel('LBL_faq_category', $this->adminLangId), 'faq_category', Faq::getFaqCategoryArr());
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_faq_category', $this->adminLangId), 'faq_category', Faq::getFaqCategoryArr($this->adminLangId));
         $fld->requirement->setRequired(true);
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'faq_active', $activeInactiveArr, '', [], '');

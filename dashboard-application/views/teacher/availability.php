@@ -18,7 +18,7 @@
 								</p>
 
 								<div class="infobar__content-more margin-top-3 expand-target-js" style="display: none;">
-									<?php echo Extrapage::getBlockContent(Extrapage::BLOCK_PROFILE_INFO_BAR, $siteLangId); ?>
+									<?php echo ExtraPage::getBlockContent(ExtraPage::BLOCK_PROFILE_INFO_BAR,$siteLangId); ?>
 								</div>
 
 							</div>

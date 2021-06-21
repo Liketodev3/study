@@ -70,7 +70,7 @@ $(document).ready(function(){
 
 	setUpGoToTop();
 
-	setUpStickyHeader();
+	// /setUpStickyHeader();
 
 	toggleNavDropDownForDevices();
 
@@ -353,6 +353,7 @@ $(document).ready(function(){
 	};
 
 	setUpSignUp = function( frm ){
+
 		if ( !$(frm).validate() ){ return; }
 			fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'setUpSignUp'), fcom.frmData(frm), function(res) {
 			if( res.redirectUrl ){
@@ -437,9 +438,9 @@ $(document).ready(function(){
 			isRuningTeacherFavoriteAjax = false;
 			if( ans.status ){
 				if( ans.action == 'A' ){
-					$(el).addClass("is-active");
+					$(el).addClass("is--active");
 				} else if( ans.action == 'R' ){
-					$(el).removeClass("is-active");
+					$(el).removeClass("is--active");
 				}
                 if(typeof searchfavorites != 'undefined'){
                     searchfavorites(document.frmFavSrch);
@@ -456,3 +457,17 @@ $(document).ready(function(){
 
 
 })(jQuery);
+
+
+/**
+* Check JSON String
+* @returns {Boolean}
+*/
+function isJson(str) {
+   try {
+       JSON.parse(str);
+   } catch (e) {
+       return false;
+   }
+   return true;
+}

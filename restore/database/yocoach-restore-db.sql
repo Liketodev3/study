@@ -2358,35 +2358,6 @@ INSERT INTO `tbl_group_classes_lang` (`grpclslang_grpcls_id`, `grpclslang_lang_i
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_issues_reported`
---
-
-CREATE TABLE `tbl_issues_reported` (
-  `issrep_id` bigint(20) NOT NULL,
-  `issrep_is_for_admin` int(11) NOT NULL DEFAULT '0',
-  `issrep_slesson_id` int(11) NOT NULL,
-  `issrep_reported_by` int(11) NOT NULL,
-  `issrep_issues_to_report` varchar(255) NOT NULL,
-  `issrep_comment` varchar(255) NOT NULL,
-  `issrep_status` tinyint(4) NOT NULL,
-  `issrep_issues_resolve` varchar(255) NOT NULL,
-  `issrep_issues_resolve_type` int(11) NOT NULL,
-  `issrep_resolve_comments` longtext NOT NULL,
-  `issrep_added_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `issrep_updated_on` datetime NOT NULL,
-  `issrep_escalated_by` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `tbl_issues_reported`
---
-
-INSERT INTO `tbl_issues_reported` (`issrep_id`, `issrep_is_for_admin`, `issrep_slesson_id`, `issrep_reported_by`, `issrep_issues_to_report`, `issrep_comment`, `issrep_status`, `issrep_issues_resolve`, `issrep_issues_resolve_type`, `issrep_resolve_comments`, `issrep_added_on`, `issrep_updated_on`, `issrep_escalated_by`) VALUES
-(1, 1, 11, 2, '5', 'I waited for at least 15 minutes the teacher turned late.', 1, '7', 3, 'I joined on time.', '2020-11-27 09:32:22', '2020-11-27 12:51:39', 1);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tbl_issue_report_options`
 --
 
@@ -7142,8 +7113,8 @@ INSERT INTO `tbl_payment_methods` (`pmethod_id`, `pmethod_identifier`, `pmethod_
 (4, 'Paypal Payout', 2, 'PaypalPayout', 1, 3),
 (5, 'Bank Payout', 2, 'BankPayout', 1, 4),
 (6, 'Twocheckout', 1, 'Twocheckout', 1, 6),
-(7, 'PayGate payweb-3', 1, 'PayGate', 1, 7),
-(8, 'Paystack', 1, 'Paystack', 1, 10);
+(7, 'PayGate payweb-3', 1, 'PayGate', 0, 7),
+(8, 'Paystack', 1, 'Paystack', 0, 10);
 
 -- --------------------------------------------------------
 
@@ -10573,12 +10544,6 @@ ALTER TABLE `tbl_group_classes_lang`
   ADD PRIMARY KEY (`grpclslang_grpcls_id`,`grpclslang_lang_id`);
 
 --
--- Indexes for table `tbl_issues_reported`
---
-ALTER TABLE `tbl_issues_reported`
-  ADD PRIMARY KEY (`issrep_id`);
-
---
 -- Indexes for table `tbl_issue_report_options`
 --
 ALTER TABLE `tbl_issue_report_options`
@@ -11257,12 +11222,6 @@ ALTER TABLE `tbl_gift_cards`
 --
 ALTER TABLE `tbl_group_classes`
   MODIFY `grpcls_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
-
---
--- AUTO_INCREMENT for table `tbl_issues_reported`
---
-ALTER TABLE `tbl_issues_reported`
-  MODIFY `issrep_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_issue_report_options`

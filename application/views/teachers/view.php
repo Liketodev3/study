@@ -1,374 +1,430 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.');
-$totReviews = FatUtility::int($reviews['totReviews']);
-$avgRating = FatUtility::convertToType($reviews['prod_rating'], FatUtility::VAR_FLOAT);
+$teacherLanguage = key($teacher['teachLanguages']);
 
-$pixelToFillRight = $avgRating / 5 * 160;
-$pixelToFillRight = FatUtility::convertToType($pixelToFillRight, FatUtility::VAR_FLOAT);
-
-$teacherLanguage = 0;
-if (!empty($teacher['teachLanguages'])) {
-	$teacherLanguage = key($teacher['teachLanguages']);
-}
 $langId = CommonHelper::getLangId();
 $websiteName = FatApp::getConfig('CONF_WEBSITE_NAME_' . $langId, FatUtility::VAR_STRING, '');
-
-$teacherLangPrices = [
-	'single' => [],
-	'bulk' => []
-];
+$teacherLangPrices = [];
 $bookingDuration = '';
-foreach ($userTeachLangs as $userTeachLang) {
-
-	$teacherLangPrices['single'][$userTeachLang['utl_booking_slot']][$userTeachLang['tlanguage_id']] = array(
-		'lang_name' => $userTeachLang['tlanguage_name'],
-		'price' => $userTeachLang['utl_single_lesson_amount']
-	);
-	$teacherLangPrices['bulk'][$userTeachLang['utl_booking_slot']][$userTeachLang['tlanguage_id']] = array(
-		'lang_name' => $userTeachLang['tlanguage_name'],
-		'price' => $userTeachLang['utl_bulk_lesson_amount']
-	);
-	$bookingDuration = $userTeachLang['utl_booking_slot'];
+foreach ($userTeachLangs as $key => $value) {
+    if (!array_key_exists($value['utl_tlanguage_id'], $teacherLangPrices)) {
+        $teacherLangPrices[$value['utl_tlanguage_id']] = [];
+    }
+    $slotSlabKey = $value['ustelgpr_min_slab'] . '-' . $value['ustelgpr_max_slab'];
+    if (!array_key_exists($slotSlabKey, $teacherLangPrices[$value['utl_tlanguage_id']])) {
+        $teacherLangPrices[$value['utl_tlanguage_id']][$slotSlabKey] = [
+            'title' => sprintf(Label::getLabel('LBL_[%s_-_%s]_Lessons'), $value['ustelgpr_min_slab'], $value['ustelgpr_max_slab']),
+            'lang_name' => $value['teachLangName'],
+            'langPrices' => []
+        ];
+    }
+    $price = FatUtility::float($value['ustelgpr_price']);
+    $percentage = CommonHelper::getPercentValue($value['top_percentage'], $price);
+    $price = $price - $percentage;
+    $teacherLangPrices[$value['utl_tlanguage_id']][$slotSlabKey]['langPrices'][] = [
+        'teachLangName' => $value['teachLangName'],
+        'ustelgpr_slot' => $value['ustelgpr_slot'],
+        'ustelgpr_max_slab' => $value['ustelgpr_max_slab'],
+        'ustelgpr_min_slab' => $value['ustelgpr_min_slab'],
+        'teachLangName' => $value['teachLangName'],
+        'utl_tlanguage_id' => $value['utl_tlanguage_id'],
+        'ustelgpr_price' => $price,
+        'top_percentage' => $value['top_percentage'],
+    ];
 }
+
+
+$disabledClass = '';
+$bookNowClick = 'onclick="cart.proceedToStep({teacherId: ' . $teacher['user_id'] . '}, \'getUserTeachLangues\');"';
+$contactClick = 'onclick="generateThread(' . $teacher['user_id'] . ');"';
+if ($loggedUserId == $teacher['user_id']) {
+    $disabledClass = 'disabled';
+    $bookNowClick = '';
+    $contactClick = '';
+}
+
 ?>
-<title><?php echo Label::getLabel('LBL_Learn') . " " . implode(', ', $teacher['teachLanguages']) . " " . Label::getLabel('LBL_from') . " " . $teacher['user_full_name'] . " " . Label::getLabel('LBL_on') . " " . $websiteName; ?></title>
+<section class="section section--profile">
+    <div class="container container--fixed">
+        <div class="profile-cover">
+            <div class="profile-head">
+                <div class="detail-wrapper">
+                    <div class="profile__media">
+                        <div class="avtar avtar--xlarge" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
+                            <?php if (true == User::isProfilePicUploaded($teacher['user_id'])) { ?>
+                                <img src="<?php echo FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg'); ?>" alt="">
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <div class="profile-detail">
+                        <div class="profile-detail__head">
+                            <div href="#" class="tutor-name">
+                                <h4><?php echo $teacher['user_full_name']; ?></h4>
+                                <div class="flag">
+                                    <img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($teacher['user_country_id'], 'DEFAULT')); ?>" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-detail__body">
+                            <div class="info-wrapper">
+                                <div class="info-tag location">
+                                    <svg class="icon icon--location">
+                                        <use xlink:href=" <?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#location' ?>"></use>
+                                    </svg>
+                                    <span class="lacation__name"><?php echo ($teacher['user_state_name'] != '') ? $teacher['user_state_name'] . ', ' : ''; ?> <?php echo $teacher['user_country_name']; ?></span>
+                                </div>
+                                <div class="info-tag ratings">
+                                    <svg class="icon icon--rating">
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#rating' ?>"></use>
+                                    </svg>
+                                    <span class="value"><?php echo FatUtility::convertToType($reviews['prod_rating'], FatUtility::VAR_FLOAT); ?></span>
+                                    <span class="count"><?php echo '(' . FatUtility::int($reviews['totReviews']) . ')'; ?></span>
+                                </div>
+                                <div class="info-tag list-count">
+                                    <div class="total-count"><span class="value"><?php echo $teacher['studentIdsCnt']; ?></span><?php echo Label::getLabel('LBL_Students', $siteLangId) ?></div> - <div class="total-count"><span class="value"><?php echo $teacher['teacherTotLessons']; ?></span><?php echo Label::getLabel('LBL_Lessons', $siteLangId); ?></div>
+                                </div>
+                            </div>
+                            <div class="har-rate"><?php echo Label::getLabel('LBL_Hourly_Rate'); ?><b><?php echo CommonHelper::displayMoneyFormat($teacher['minPrice']); ?> - <?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></b></div>
+                            <div class="tutor-lang"><b><?php echo Label::getLabel('LBL_Teaches:'); ?></b> <?php echo implode(', ', $teacher['teachLanguages']); ?></div>
+                        </div>
+                    </div>
 
-<section class="section section--gray section--details">
-	<div class="container container--narrow">
-		<div class="breadcrumb">
-			<ul>
-				<li><a href="<?php echo CommonHelper::generateUrl(); ?>"><?php echo Label::getLabel('LBL_Home'); ?></a></li>
-				<li><a href="<?php echo CommonHelper::generateUrl('teachers'); ?>"><?php echo Label::getLabel('LBL_Tutors'); ?></a></li>
-				<li><?php echo $teacher['user_full_name']; ?></li>
-			</ul>
-		</div>
-
-		<div class="row">
-			<div class="col-xl-8 col-lg-8">
-				<?php
-				if ($teacher['us_video_link'] != '') {
-					$youTubeVideoArr = explode("?v=", $teacher['us_video_link']);
-					if (count($youTubeVideoArr) > 1) {
-				?>
-						<div class="video">
-							<iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $youTubeVideoArr[1]; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-						</div>
-				<?php }
-				}
-				?>
-				<div class="box -padding-30">
-					<div class="box__profile-head">
-						<div class="row">
-
-							<!-- Image[ -->
-							<div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 -align-center">
-								<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
-									<?php
-									if (true == User::isProfilePicUploaded($teacher['user_id'])) {
-										$img = FatCache::getCachedUrl(CommonHelper::generateUrl('Image', 'User', array($teacher['user_id'], 'MEDIUM')), CONF_DEF_CACHE_TIME, '.jpg');
-										echo '<img src="' . $img . '" />';
-									}
-									?>
-									<?php /* if( $teacher['is_online'] ){ ?>
-									<span class="tag-online"></span>
-									<?php } */ ?>
-								</div>
-							</div>
-							<!-- ] -->
-
-							<div class="col-xl-5 col-lg-5 col-md-5 col-sm-5">
-								<div class="teacher__info">
-									<h3 class="-display-inline"><?php echo $teacher['user_full_name']; ?></h3>
-
-									<?php if ($teacher['user_country_id'] > 0) { ?>
-										<span class="flag -display-inline"><img src="<?php echo CommonHelper::generateUrl('Image', 'countryFlag', array($teacher['user_country_id'], 'DEFAULT')); ?>" alt=""></span>
-									<?php } ?>
-
-									<!-- User Location[ -->
-									<div class="location">
-										<span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="11.625" height="15.969" viewBox="0 0 11.625 15.969">
-
-												<path d="M462.04,225.016a5.805,5.805,0,0,0-5.81,5.788c0,3.96,5.2,9.774,5.421,10.02a0.524,0.524,0,0,0,.778,0c0.221-.246,5.42-6.06,5.42-10.02A5.8,5.8,0,0,0,462.04,225.016Zm0,8.7a2.912,2.912,0,1,1,2.923-2.912A2.921,2.921,0,0,1,462.04,233.716Z" transform="translate(-456.219 -225.031)" />
-											</svg></span>
-										<?php echo ($teacher['user_state_name'] != '') ? $teacher['user_state_name'] . ', ' : ''; ?> <?php echo $teacher['user_country_name']; ?>
-
-									</div>
-
-									<!-- ] -->
-									<div class="box__price -margin-tb-15">
-										<?php echo Label::getLabel('LBL_Hourly_Rate'); ?>
-										<h6><?php echo CommonHelper::displayMoneyFormat($teacher['minPrice']); ?> - <?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></h6>
-									</div>
-
-									<!-- Reviews[ -->
-									<div class="ratings -margin-b-15">
-										<span class="ratings__star -display-inline">
-											<?php // if(round($avgRating)){
-											for ($i = 0; $i < round($avgRating); $i++) { ?>
-												<img src="<?php echo CONF_WEBROOT_URL; ?>images/star-filled.svg" alt="">
-											<?php }
-											for ($i = 0; $i < 5 - round($avgRating); $i++) { ?>
-												<img src="<?php echo CONF_WEBROOT_URL; ?>images/star-empty.svg" alt="">
-											<?php } //} 
-											?>
-
-										</span>
-										<?php if ($totReviews) { ?>
-											<span class="ratings__count -display-inline"><a href="#itemRatings" class="-link-underline"><?php echo $totReviews . ' ' . Label::getLabel('Lbl_Reviews'); ?></a></span>
-										<?php } ?>
-									</div>
-
-									<!-- Favorite[ -->
-									<a href="javascript:void(0)" onClick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>,this)" class="btn btn--small btn--bordered btn--fav <?php echo ($teacher['uft_id']) ? 'is-active' : ''; ?>">
-										<span class="svg-icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="12" viewBox="0 0 14 12">
-												<path d="M1313.03,714.438l-4.53,4.367-4.54-4.375a4.123,4.123,0,0,1-1.46-2.774,3.455,3.455,0,0,1,.17-1.117,2.067,2.067,0,0,1,.43-0.769,1.972,1.972,0,0,1,.63-0.465,2.818,2.818,0,0,1,.74-0.242,4.378,4.378,0,0,1,.76-0.063,2.222,2.222,0,0,1,.88.2,3.987,3.987,0,0,1,.86.5,8.351,8.351,0,0,1,.68.563,6.435,6.435,0,0,1,.47.48,0.506,0.506,0,0,0,.76,0,6.435,6.435,0,0,1,.47-0.48,8.351,8.351,0,0,1,.68-0.563,3.987,3.987,0,0,1,.86-0.5,2.222,2.222,0,0,1,.88-0.2,4.378,4.378,0,0,1,.76.063,2.818,2.818,0,0,1,.74.242,1.972,1.972,0,0,1,.63.465,2.067,2.067,0,0,1,.43.769,3.455,3.455,0,0,1,.17,1.117,4.126,4.126,0,0,1-1.47,2.782h0Zm1.48-5.469a3.76,3.76,0,0,0-2.74-.969,3.064,3.064,0,0,0-.99.168,3.963,3.963,0,0,0-.94.453q-0.435.285-.75,0.535c-0.2.167-.4,0.344-0.59,0.532-0.19-.188-0.39-0.365-0.59-0.532s-0.46-.345-0.75-0.535a3.963,3.963,0,0,0-.94-0.453,3.064,3.064,0,0,0-.99-0.168,3.76,3.76,0,0,0-2.74.969,3.586,3.586,0,0,0-.99,2.687,3.479,3.479,0,0,0,.18,1.078,5.7,5.7,0,0,0,.42.946,7.129,7.129,0,0,0,.53.761c0.2,0.248.35,0.418,0.44,0.512a2.683,2.683,0,0,0,.21.2l4.88,4.7a0.48,0.48,0,0,0,.68,0l4.87-4.687a5.122,5.122,0,0,0,1.79-3.516A3.586,3.586,0,0,0,1314.51,708.969Z" transform="translate(-1301.5 -708)" />
-											</svg></span>
-										<?php echo Label::getLabel('LBL_Favorite'); ?>
-									</a>
-									<!-- ] -->
-									<!-- Sharing[ -->
-									<div class="toggle-dropdown">
-										<a href="javascript:void(0)" class="btn btn--small btn--bordered toggle-dropdown__link-js">
-											<span class="svg-icon">
-												<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
-													<path d="M591.3,313.672l-2.813-1.406c0.011-.115.016-0.2,0.016-0.266s0-.151-0.016-0.266l2.813-1.406a2.5,2.5,0,1,0-.8-1.828c0,0.063,0,.151.016,0.266l-2.813,1.406a2.5,2.5,0,1,0,0,3.656l2.813,1.406c-0.011.115-.016,0.2-0.016,0.266a2.5,2.5,0,1,0,.8-1.828h0Z" transform="translate(-583.5 -306)" />
-												</svg>
-											</span>
-											<?php echo Label::getLabel('LBL_Share'); ?>
-										</a>
-										<div class="toggle-dropdown__target toggle-dropdown__target-js">
-											<h6><?php echo Label::getLabel('LBL_Share_On'); ?></h6>
-											<ul class="social--share clearfix">
-												<li class="social--fb"><span class='st_facebook_large' displayText='Facebook'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_01.svg"></span></li>
-												<li class="social--tw"><span class='st_twitter_large' displayText='Tweet'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_02.svg"></span></li>
-												<li class="social--pt"><span class='st_pinterest_large' displayText='Pinterest'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_05.svg"></span></li>
-												<li class="social--mail"><span class='st_email_large' displayText='Email'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_06.svg"></span></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<!-- ] -->
-							</div>
-
-							<!-- [-->
-							<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4">
-								<div class="box-highlighted box-language">
-									<div class="row d-block justify-content-between">
-										<div class="col"><strong><?php echo Label::getLabel('LBL_Teaches:'); ?></strong></div>
-										<div class="col"><?php echo CommonHelper::getTeachLangs($teacher['utl_slanguage_ids'], '', 1); ?></div>
-									</div>
-								</div>
-								<div class="box-highlighted">
-									<div class="row justify-content-between">
-										<div class="col"><strong><?php echo Label::getLabel('LBL_Students:'); ?></strong></div>
-										<div class="col -align-right"><?php echo $teacher['studentIdsCnt']; ?></div>
-									</div>
-								</div>
-								<div class="box-highlighted">
-									<div class="row justify-content-between">
-										<div class="col"><strong><?php echo Label::getLabel('LBL_Lessons:'); ?></strong></div>
-										<div class="col -align-right"><?php echo $teacher['teacherTotLessons']; ?></div>
-									</div>
-								</div>
-							</div>
-							<!-- ] -->
-
-						</div>
-					</div>
-
-					<hr>
-
-					<div class="box__profile-body">
-						<?php
-						/* Spoken Languages[ */
-						$this->includeTemplate('teachers/_partial/spokenLanguages.php', $teacher, false);
-						/* ] */
-						?>
-
-						<div class="content-inline">
-							<p class="-small-title"><strong><?php echo Label::getLabel('LBL_About_Me'); ?></strong></p>
-							<p><?php echo nl2br($teacher['user_profile_info']); ?></p>
-							<!--<a href="javascript:void(0)" class="btn btn--small btn--bordered btn--wide btn--arrow">Show More</a>-->
-						</div>
-					</div>
-				</div>
-
-				<?php $this->includeTemplate('teachers/_partial/preferencesSkills.php', $teacher, false); ?>
-
-				<div class="box box--toggle">
-					<div class="box__head box__head-trigger box__head-trigger-js">
-						<h4><?php echo Label::getLabel('LBL_Resume'); ?></h4>
-					</div>
-					<div class="box__body box__body-target box__body-target-js -padding-30" id="qualificationsList">
-					</div>
-				</div>
-				<?php if (round($avgRating) > 0) { ?>
-					<div class="box box--toggle">
-						<div class="box__head box__head-trigger box__head-trigger-js">
-							<h4><?php echo Label::getLabel('Lbl_Ratings'); ?></h4>
-						</div>
-						<div class="box__body box__body-target box__body-target-js -padding-30">
-
-							<div class="ratings -display-inline">
-								<span class="ratings__star -display-inline">
-									<?php for ($i = 0; $i < round($avgRating); $i++) { ?>
-										<img src="<?php echo CONF_WEBROOT_URL; ?>images/star-filled.svg" alt="">
-									<?php }
-									for ($i = 0; $i < 5 - round($avgRating); $i++) { ?>
-										<img src="<?php echo CONF_WEBROOT_URL; ?>images/star-empty.svg" alt="">
-									<?php } ?>
-								</span>
-								<h6><?php echo $avgRating; ?> <?php echo Label::getLabel('Lbl_Average'); ?></h6>
-								<p><?php echo $totReviews; ?> <?php echo Label::getLabel('Lbl_ratings'); ?>, <span id="reviewsTotal"><?php echo $reviews['totStudents']; ?></span> <?php echo Label::getLabel('Lbl_students'); ?></p>
-							</div>
-							<span class="-gap"></span>
-
-							<?php echo $frmReviewSearch->getFormHtml(); ?>
-							<div id="itemRatings"></div>
-							<div id="loadMoreReviewsBtnDiv"></div>
-						</div>
-					</div>
-				<?php } ?>
-			</div>
+                    <div class="detail-actions">
+                            <a href="javascript:void(0)" onclick="toggleTeacherFavorite(<?php echo $teacher['user_id']; ?>, this)" class="btn btn--bordered color-black <?php echo ($teacher['uft_id']) ? 'is--active' : ''; ?>">
+                                <svg class="icon icon--heart">
+                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#heart'; ?>"></use>
+                                </svg>
+                                <?php echo Label::getLabel('LBL_Favorite'); ?>
+                            </a>
+                            <div class="toggle-dropdown">
+                                <a href="#" class="btn btn--bordered color-black toggle-dropdown__link-js">
+                                    <svg class="icon icon--share">
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#share'; ?>"></use>
+                                    </svg>
+                                    <?php echo Label::getLabel('LBL_Share', $siteLangId); ?>
+                                </a>
+                                <div class="toggle-dropdown__target toggle-dropdown__target-js">
+                                    <h6><?php echo Label::getLabel('LBL_Share_On', $siteLangId); ?></h6>
+                                    <ul class="social--share clearfix">
+                                        <li class="social--fb"><span class='st_facebook_large' displayText='Facebook'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_01.svg"></span></li>
+                                        <li class="social--tw"><span class='st_twitter_large' displayText='Tweet'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_02.svg"></span></li>
+                                        <li class="social--pt"><span class='st_pinterest_large' displayText='Pinterest'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_05.svg"></span></li>
+                                        <li class="social--mail"><span class='st_email_large' displayText='Email'><img alt="" src="<?php echo CONF_WEBROOT_URL; ?>images/social_06.svg"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <a href="#lessons-prices" class="color-primary btn--link scroll"><?php Label::getLabel('LBL_View_Lessons_Packages', $siteLangId); ?></a>
+                        </div>
+                </div>
+            </div>
+            <div class="profile-primary">
+                <div class="panel-cover">
+                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
+                        <h3><?php echo Label::getLabel('LBL_About', $siteLangId); ?> <?php echo $teacher['user_full_name']; ?></h3>
+                    </div>
+                    <div class="panel-cover__body panel__body-target panel__body-target-js" style="display:block;">
+                        <div class="content__row">
+                            <p><?php echo nl2br($teacher['user_profile_info']); ?></p>
+                        </div>
+                        <div class="content__row">
+                            <h4><?php echo Label::getLabel('LBL_Speaks', $siteLangId); ?></h4>
+                            <p><?php $this->includeTemplate('teachers/_partial/spokenLanguages.php', $teacher, false); ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-cover" id="lessons-prices">
+                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
+                        <h3><?php echo Label::getLabel('LBL_Lessons_Prices', $siteLangId); ?></h3>
+                    </div>
+                    <div class="panel-cover__body panel__body-target panel__body-target-js">
+                        <div class="panel-head__right">
+                            <label><?php echo Label::getLabel('LBL_Select_Language'); ?></label>
+                            <div class="select--box">
+                                <select name="teachLanguages" id="teachLang">
+                                    <?php foreach ($teacher['teachLanguages'] as $langId => $langName) { ?>
+                                        <option value="<?php echo $langId; ?>"><?php echo $langName; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <?php $i = 1; ?>
+                        <?php foreach ($teacherLangPrices as $teachLangId => $teachLangPriceSlabs) { ?>
+                            <div <?php echo (($i != 1) ? "style='display:none'" : "") ?> data-lang-id="<?php echo $teachLangId; ?>" class="slider slider--onethird slider--prices slider-onethird-js">
+                                <?php foreach ($teachLangPriceSlabs as $slab => $slabDetails) { ?>
+                                    <div>
+                                        <div class="slider__item">
+                                            <div class="card">
+                                                <div class="card__head">
+                                                    <div class="card__title">
+                                                        <h4 class="color-primary"><?php echo $slabDetails['title']; ?></h4>
+                                                    </div>
+                                                </div>
+                                                <div class="card__body">
+                                                    <div class="lesson-slot-info">
+                                                        <ul>
+                                                            <?php
+                                                            foreach ($slabDetails['langPrices'] as $priceDetails) {
+                                                                $onclick = '';
+                                                                if ($loggedUserId != $teacher['user_id']) {
+                                                                    $onclick = "cart.proceedToStep({teacherId: " . $teacher['user_id'] . ",languageId: " . $priceDetails['utl_tlanguage_id'] . ",lessonDuration: " . $priceDetails['ustelgpr_slot'] . ", lessonQty: " . $priceDetails['ustelgpr_min_slab'] . "},'getTeacherPriceSlabs')";
+                                                                }
+                                                            ?>
+                                                                <li>
+                                                                    <a href="javascript:void(0);" onclick="<?php echo $onclick; ?>">
+                                                                        <div class="lesson lesson--time"><?php echo $priceDetails['ustelgpr_slot'] . ' ' . Label::getLabel('LBL_Mins', $siteLangId); ?></div>
+                                                                        <div class="space"></div>
+                                                                        <div class="lesson lesson--price"><?php echo CommonHelper::displayMoneyFormat($priceDetails['ustelgpr_price']); ?></div>
+                                                                    </a>
+                                                                </li>
+                                                            <?php } ?>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php
+                            $i++;
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="panel-cover panel--calendar">
+                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js calendar--trigger-js">
+                        <h3><?php echo Label::getLabel('LBL_Schedule', $siteLangId) ?></h3>
+                    </div>
+                    <div class="panel-cover__body panel__body-target panel__body-target-js">
+                        <div class="calendar-wrapper">
+                            <div id="availbility" class="calendar-wrapper__body">
+                            </div>
+                        </div>
+                        <div class="-gap"></div>
+                        <div class="note note--blank note--vertical-border">
+                            <svg class="icon icon--sound">
+                                <use xlink:href="/YoCoach/images/sprite.yo-coach.svg#sound"></use>
+                            </svg>
+                            <p><b><?php echo Label::getLabel('LBL_Note:') ?></b><?php echo Label::getLabel('LBL_Not_finding_your_ideal_time?'); ?><a class="bold-600" href="javascript:void(0)" <?php echo $contactClick; ?>><?php echo Label::getLabel('LBL_Contact'); ?></a> <?php echo Label::getLabel('LBL_this_teacher_to_request_a_slot_outside_of_their_current_schedule'); ?></p>
+                        </div>
+                    </div>
+                </div>
+                <?php if (count($groupClasses) > 0) { ?>
+                    <div class="panel-cover">
+                        <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
+                            <h3><?php echo Label::getLabel('LBL_Group_Classes', $siteLangId); ?></h3>
+                        </div>
+                        <div class="panel-cover__body panel__body-target panel__body-target-js">
+                            <div class="slider slider--onethird silder--group-class slider-onethird-js">
+                                <?php
 
 
-			<div class="col-xl-4 col-lg-4">
-				<?php
-             
-				if ($teacher['isFreeTrialEnabled']) {
-					$onclick = "";
-					$btnClass = "btn-secondary";
-					$disabledText = "disabled";
-					$btnText =  "LBL_You_already_have_availed_the_Trial";
-					if (!$teacher['isAlreadyPurchasedFreeTrial'] && !empty($teacherLanguage)) {
-						$disabledText = "";
-						$onclick = "onclick=\"viewCalendar(" . $teacher['user_id'] . ",'free_trial'," . $teacherLanguage . ")\"";
-						$btnClass = 'btn-primary';
-						$btnText =  "LBL_Book_Free_Trial";
-					}
-					if ($loggedUserId == $teacher['user_id']) {
-						$onclick = "";
-						$disabledText = "disabled";
-					}
-				?>
-					<div class="box box--cta -padding-30">
-						<h4 class="-text-bold"><?php echo Label::getLabel('LBL_FREE_Trail'); ?></h4>
-						<p><?php echo Label::getLabel('LBL_Book_your_trial_FREE_for_30_Mins_only'); ?></p>
-						<button type="button" <?php echo $onclick; ?> class="btn <?php echo $btnClass . ' ' . $disabledText; ?> btn--large btn--block" <?php echo $disabledText; ?>><?php echo Label::getLabel($btnText); ?></button>
-					</div>
-				<?php } ?>
+                                $disabledClass = 'disabled';
+                                $bookNowClick = '';
+                                foreach ($groupClasses as $key => $classDetails) {
+                                    $user_timezone = MyDate::getUserTimeZone();
+                                    $startTime = MyDate::convertTimeFromSystemToUserTimezone('M-d-Y H:i:s', $classDetails['grpcls_start_datetime'], true, $user_timezone);
+                                    $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('Y-m-d H:i:s'), true, $user_timezone);
+                                    $startUnixTime = strtotime($startTime);
+                                    $currentUnixTime = strtotime($curDateTime);
 
-				<div class="box box--cta box--sticky">
-					<div class="fat-tab">
-						<?php if (!empty($bookingDuration)) { ?>
-							<div class="box-head -padding-20">
-								<h4 class="-text-bold"><?php echo Label::getLabel("LBL_Lesson_Prices"); ?></h4>
-								<div class="tab-group tabs-scroll-js">
-									<ul>
-										<li class="is-active">
-											<a href="javascript:;" class="tab-a" data-id="tab_single_price">
-												<?php echo Label::getLabel("LBL_Single") ?>
-											</a>
-										</li>
-										<li>
-											<a href="javascript:;" class="tab-a" data-id="tab_bulk_price">
-												<?php echo Label::getLabel("LBL_Bulk") ?>
-											</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-							<div class="box-body">
-								<div class="tab-body">
-									<div class="tab tab-active" data-id="tab_single_price">
-										<div class="scrollbar custom-scrollbar scrollbar-js">
-											<div class="Lprice-cover" id="style-4">
-												<?php
-												$lessonPackages = $teacher['lessonPackages'];
-												if (count($lessonPackages)) {
-													$lessonPackage = $lessonPackages[0];
-												}
-												// prx($teacherLangPrices);
-												foreach ($teacherLangPrices['single'] as $slot => $prices) : ?>
-													<div class="Lprice__wrapper">
-														<div class="Lprice-head">
-															<b><?php echo sprintf(Label::getLabel('LBL_%d_min'), $slot) ?></b>
-														</div>
-														<div class="Lprice-body">
-															<ul>
-																<?php
-																foreach ($prices as $lang_id => $price_info) :
-																	$onclick = '';
-																	if (!empty($lessonPackages) && $loggedUserId != $teacher['user_id']) {
-																		$onclick = "cart.add('" . $teacher['user_id'] . "','" . $lessonPackage['lpackage_id'] . "','','','" . $lang_id . "', 0, '" . $slot . "')";
-																	}
-																?>
-																	<li>
-																		<a href="javascript:;" onClick="<?php echo $onclick; ?>">
-																			<div class="Lprice-lang"><?php echo $price_info['lang_name'] ?></div>
-																			<div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($price_info['price']) ?></div>
-																		</a>
-																	</li>
-																<?php endforeach; ?>
-															</ul>
-														</div>
-													</div>
-												<?php endforeach; ?>
-											</div>
-										</div>
-									</div>
-									<div class="tab" data-id="tab_bulk_price">
-										<div class="scrollbar custom-scrollbar scrollbar-js">
-											<div class="Lprice-cover" id="style-4">
-												<?php
-												foreach ($teacherLangPrices['bulk'] as $slot => $prices) : ?>
-													<div class="Lprice__wrapper">
-														<div class="Lprice-head">
-															<b><?php echo sprintf(Label::getLabel('LBL_%d_min'), $slot) ?></b>
-														</div>
-														<div class="Lprice-body">
-															<ul>
-																<?php
-																foreach ($prices as $lang_id => $price_info) :
-																	$onclick = '';
-																	if (!empty($lessonPackages) && $loggedUserId != $teacher['user_id']) {
-																		$onclick = "cart.add('" . $teacher['user_id'] . "','" . $lessonPackage['lpackage_id'] . "','','','" . $lang_id . "', 0, '" . $slot . "')";
-																	}
-																?>
-																	<li>
-																		<a href="javascript:;" onClick="<?php echo $onclick; ?>">
-																			<div class="Lprice-lang"><?php echo $price_info['lang_name'] ?></div>
-																			<div class="Lprice-price"><?php echo CommonHelper::displayMoneyFormat($price_info['price']) ?></div>
-																		</a>
-																	</li>
-																<?php endforeach; ?>
-															</ul>
-														</div>
-													</div>
-												<?php endforeach; ?>
-											</div>
-										</div>
-									</div>
-								</div>
-							<?php } ?>
-							<?php $this->includeTemplate('teachers/_partial/book_lesson.php', array('teacher' => $teacher, 'bookingDuration' => $bookingDuration, 'loggedUserId' => $loggedUserId), false); ?>
+                                    if ($loggedUserId != $teacher['user_id']) {
+                                        $disabledClass = '';
+                                        $bookNowClick = 'onclick="cart.proceedToStep({teacherId:' . $classDetails['grpcls_teacher_id'] . ', grpclsId:' . $classDetails['grpcls_id'] . ', languageId:' . $classDetails['grpcls_tlanguage_id'] . '}, \'getPaymentSummary\');"';
+                                    }
+                                ?>
+                                    <div>
+                                        <div class="slider__item">
+                                            <div class="card card--bg color-primary">
+                                                <div class="card__head">
+                                                    <h3><?php echo $classDetails['grpcls_title']; ?></h3>
+                                                </div>
+                                                <div class="card__body">
+                                                    <div class="card__row">
+                                                        <?php
+                                                        $user_timezone = MyDate::getUserTimeZone();
+                                                        $date_by_user_timezone = MyDate::convertTimeFromSystemToUserTimezone('M d, Y', $classDetails['grpcls_start_datetime'], true, $user_timezone);
+                                                        $from_time_by_user_timezone = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $classDetails['grpcls_start_datetime'], true, $user_timezone);
+                                                        $to_time_by_user_timezone = MyDate::convertTimeFromSystemToUserTimezone('h:i A', $classDetails['grpcls_end_datetime'], true, $user_timezone);
+                                                        ?>
+                                                        <span><?php echo Label::getLabel('LBL_Date_&_Time', $siteLangId) ?></span>
+                                                        <p><?php echo $date_by_user_timezone . ',' . $from_time_by_user_timezone . '-' . $to_time_by_user_timezone; ?></p>
+                                                    </div>
+                                                    <div class="card__row">
+                                                        <span><?php echo Label::getLabel('LBL_Tutor', $siteLangId); ?></span>
+                                                        <p><?php echo $classDetails['user_full_name']; ?></p>
+                                                    </div>
+                                                    <div class="card__row">
+                                                        <span><?php echo Label::getLabel("LBL_Price", $siteLangId) ?></span>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <p class="class-price"><?php echo CommonHelper::displayMoneyFormat($classDetails['grpcls_entry_fee']) ?></p>
+                                                            <div class="timer">
+                                                                <?php if ($startUnixTime > $currentUnixTime) { ?>
+                                                                    <div class="timer__media">
+                                                                        <span> <svg class="icon icon--clock">
+                                                                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#clock' ?>"></use>
+                                                                            </svg></span>
+                                                                    </div>
+                                                                    <div class="timer__controls countdowntimer timer-js" id="grup-class_<?php echo $key; ?>" data-startTime="<?php echo $curDateTime; ?>" data-endTime="<?php echo date('Y/m/d H:i:s', $startUnixTime); ?>"></div>
+                                                                <?php } ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card__row--action">
+                                                        <a href="<?php echo CommonHelper::generateUrl('GroupClasses', 'view', array($classDetails['grpcls_id'])); ?>" class="btn btn--bordered color-primary"><?php echo Label::getLabel('LBL_View_Details', commonHelper::getLangId()); ?></a>
 
-							</div>
-					</div>
+                                                        <a href="javascript:void(0);" <?php echo $bookNowClick; ?> class="btn btn--primary <?php echo $disabledClass; ?>"><?php echo Label::getLabel("LBL_Book_Now"); ?></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <div class="panel-cover">
+                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
+                        <h3><?php echo Label::getLabel('LBL_Teaching_Expertise', $siteLangId) ?></h3>
+                    </div>
+                    <?php foreach ($teacher['preferences'] as $prefDetail) { ?>
+                        <div class="panel-cover__body panel__body-target panel__body-target-js">
+                            <div class="content-wrapper content--tick">
+                                <div class="content__head">
+                                    <h4><?php echo $preferencesTypeArr[$prefDetail['preference_type']] ?></h4>
+                                </div>
+                                <div class="content__body">
+                                    <div class="tick-listing tick-listing--onethird">
+                                        <ul>
+                                            <?php foreach (explode(',', $prefDetail['preference_titles']) as $prefName) { ?>
+                                                <li><?php echo $prefName ?></li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="panel-cover">
+                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
+                        <h3><?php echo Label::getLabel('LBL_Teaching_Qualifications', $siteLangId); ?></h3>
+                    </div>
+                    <div class="panel-cover__body panel__body-target panel__body-target-js" id="qualificationsList">
+                    </div>
+                </div>
+                <?php if ($reviews['prod_rating'] > 0) { ?>
+                    <div class="panel-cover">
+                        <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
+                            <h3><?php echo Label::getLabel('LBL_Reviews', $siteLangId); ?></h3>
+                        </div>
+                        <?php echo $frmReviewSearch->getFormHtml(); ?>
+                        <div class="panel-cover__body panel__body-target panel__body-target-js">
+                            <div class="rating-details">
+                                <div class="rating__count">
+                                    <h1><?php echo FatUtility::convertToType($reviews['prod_rating'], FatUtility::VAR_FLOAT); ?></h1>
+                                </div>
+                                <div class="rating__info">
+                                    <b><?php echo Label::getLabel('LBL_Overall_Ratings', $siteLangId); ?></b>
+                                </div>
+                            </div>
+                            <div class="reviews-wrapper">
+                                <div class="reviews-wrapper__head">
+                                    <p id="recordToDisplay"></p>
+                                    <div class="review__shorting">
+                                        <select name="orderBy" id="sort">
+                                            <?php foreach ($sortArr as $sortKey => $sortValue) { ?>
+                                                <option value="<?php echo $sortKey; ?>"><?php echo $sortValue; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="itemRatings" class="reviews-wrapper__body">
+                                </div>
+                                <div class="reviews-wrapper__foot">
+                                    <div class="show-more">
+                                        <a href="javascript:void(0);" class="btn btn--show"><?php echo Label::getLabel('Lbl_SHOW_MORE'); ?></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+            <div class="profile-secondary">
+                <div class="right-panel">
+                    <?php if (!empty(CommonHelper::validateIntroVideoLink($teacher['us_video_link']))) { ?>
+                        <div class="dummy-video">
+                            <div class="video-media ratio ratio--16by9">
+                                <iframe width="100%" height="100%" src="<?php echo CommonHelper::validateIntroVideoLink($teacher['us_video_link']); ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="-gap"></div>
+                    <?php
+                    }
+                    ?>
+                    <div class="box box--book">
+                        <div class="book__actions">
+                      
+                            <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                            <a href="javascript:void(0);" <?php echo $contactClick; ?> class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary <?php echo $disabledClass; ?>">
+                                <svg class="icon icon--envelope">
+                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
+                                </svg>
+                                <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
+                            </a>
+                            <a href="#availbility" class="color-primary btn--link scroll"><?php echo Label::getLabel('LBL_View_Full_Availbility', $siteLangId); ?></a>
+                            <div class="-gap"></div><div class="-gap"></div>
 
-					<hr class="-no-margin">
-					<div class="box box--cta -padding-30 -no-margin-top -align-center">
-						<a href="javascript:void(0);" onclick="viewCalendar('<?php echo $teacher['user_id']; ?>','paid')" class="-link -color-secondary"><?php echo Label::getLabel('LBL_View_Calendar_Availability'); ?></a>
-					</div>
-				</div>
-
-			</div>
-		</div>
-
-	</div>
+                            <?php
+                            if ($teacher['isFreeTrialEnabled']) {
+                                $onclick = "";
+                                $btnClass = "btn-secondary";
+                                $disabledText = "disabled";
+                                $btnText = "LBL_You_already_have_availed_the_Trial";
+                                if (!$teacher['isAlreadyPurchasedFreeTrial'] && !empty($teacherLanguage)) {
+                                    $disabledText = "";
+                                    $onclick = "onclick=\"viewCalendar(" . $teacher['user_id'] . "," . $teacherLanguage . ",'free_trial')\"";
+                                    $btnClass = 'btn-primary';
+                                    $btnText = "LBL_Book_Free_Trial";
+                                }
+                                if ($loggedUserId == $teacher['user_id']) {
+                                    $onclick = "";
+                                    $disabledText = "disabled";
+                                }
+                            ?>
+                                <a href="javascript:void(0);" <?php echo $onclick; ?> class="btn btn--secondary btn--trial btn--block color-white <?php echo $btnClass . ' ' . $disabledText; ?> " <?php echo $disabledText; ?>>
+                                    <span><?php echo Label::getLabel($btnText, $siteLangId); ?></span>
+                                </a>
+                                <p><?php echo Label::getLabel('LBL_Trial_Lesson_One_Time', $siteLangId); ?></p>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <script type="text/javascript">
-	$(document).ready(function() {
-		searchQualifications(<?php echo $teacher['user_id']; ?>);
-	});
+    $(document).ready(function() {
+        searchQualifications(<?php echo $teacher['user_id']; ?>);
+        viewCalendar(<?php echo $teacher['user_id'] . ',' . $teacherLanguage . ', "paid"'; ?>);
+        $('.panel__head-trigger-js').click(function () {
+            if ($(this).hasClass('is-active')) {
+                $(this).removeClass('is-active');
+                $(this).siblings('.panel__body-target-js').slideUp(); 
+                return false;
+            }
+            $('.panel__head-trigger-js').removeClass('is-active');
+            $(this).addClass("is-active");
+            $('.panel__body-target-js').slideUp();
+            $(this).siblings('.panel__body-target-js').slideDown();
+            $('.slider-onethird-js').slick('reinit');
+            if($(this).hasClass('calendar--trigger-js'))
+            {
+                window.viewOnlyCal.render();
+            }
+        });
+    });
 </script>
 <?php echo $this->includeTemplate('_partial/shareThisScript.php'); ?>

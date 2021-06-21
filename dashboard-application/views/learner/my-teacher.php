@@ -28,9 +28,6 @@
 										echo '<img src="'.$img.'" />';
 									}
 									?>
-									<?php /* if( $teacher['is_online'] ){ ?>
-									<span class="tag-online"></span>
-									<?php } */ ?>
 								</div> 
 							</div>
 							<!-- ] -->
@@ -91,7 +88,7 @@
 								<div class="box-highlighted box-language">
 									<div class="row d-block justify-content-between">
 										<div class="col"><strong><?php echo Label::getLabel('LBL_Teaches:'); ?></strong></div>
-										<div class="col"><?php echo CommonHelper::getTeachLangs($teacher['utl_slanguage_ids'], '', 1); ?></div>
+										<div class="col"><?php echo CommonHelper::getTeachLangs($teacher['utl_tlanguage_ids'], '', 1); ?></div>
 									</div>
 								</div>
 								

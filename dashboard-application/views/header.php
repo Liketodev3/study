@@ -12,8 +12,8 @@ $layoutDirection = CommonHelper::getLayoutDirection();
 <meta charset="utf-8">
 <?php echo $this->writeMetaTags(); ?>
 <!-- MOBILE SPECIFIC METAS ===================== -->
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0,user-scalable=0"/>
 <!-- FONTS ================================================== -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet"> 
@@ -57,6 +57,7 @@ $unreadNotifications = UserNotifications::getUserUnreadNotifications($loggedUser
 		var currencySymbolRight = '<?php echo $currencySymbolRight; ?>';
 		var SslUsed = '<?php $sslUsed; ?>';
 		var cookieConsent = <?php echo json_encode($cookieConsent); ?>;
+		var userTimeZone = '<?php echo MyDate::getUserTimeZone(); ?>';
         var timeZoneOffset = '<?php echo MyDate::getOffset(MyDate::getUserTimeZone()); ?>';
 
 		const CONF_TIME_AUTO_CLOSE_SYSTEM_MESSAGES = '<?php echo $closeSystemMessages; ?>';
@@ -70,7 +71,6 @@ $unreadNotifications = UserNotifications::getUserUnreadNotifications($loggedUser
 		const statusCompleted = <?php echo FatUtility::int(ScheduledLesson::STATUS_COMPLETED); ?>;
 		const statusCanceled = <?php echo FatUtility::int(ScheduledLesson::STATUS_CANCELLED); ?>;
 		const statusIssueReported = <?php echo FatUtility::int(ScheduledLesson::STATUS_ISSUE_REPORTED); ?>;
-	
 	</script>
 <?php
     echo $this->getJsCssIncludeHtml(!CONF_DEVELOPMENT_MODE);
@@ -84,7 +84,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
 <link rel="manifest" href="<?php echo CommonHelper::generateUrl('MyApp', 'PwaManifest'); ?>">
 <script>
 	if ("serviceWorker" in navigator) {
-		navigator.serviceWorker.register("<?php echo CONF_WEBROOT_URL; ?>sw.js");
+		navigator.serviceWorker.register("<?php echo CONF_WEBROOT_FRONTEND; ?>sw.js");
 	}
 </script>
 <?php } ?>
@@ -236,7 +236,7 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                     <span class="-gap-10"></span>
                                     <div class="btns-group">
                                         <?php if ($isUserTeacher && $currentActiveTab == User::USER_TEACHER_DASHBOARD && !empty($teacherProfileProgress['isProfileCompleted'])) { ?>
-                                         <a href="#" class="btn btn--bordered color-third btn--block margin-top-2"><?php echo label::getLabel('LBL_View_Public_Profile'); ?></a>
+                                         <a href="<?php echo CommonHelper::generateFullUrl('teachers', 'view',[$userDetails['user_url_name']], CONF_WEBROOT_FRONTEND); ?>" class="btn btn--bordered color-third btn--block margin-top-2"><?php echo label::getLabel('LBL_View_Public_Profile'); ?></a>
                                         <?php }
                                         if ($currentActiveTab == User::USER_LEARNER_DASHBOARD && $canViewTeacherTab) { ?>
                                             <a href="<?php echo CommonHelper::generateUrl('Teacher'); ?>" class="btn bg-third btn--block margin-top-4"><?php echo label::getLabel('LBL_Switch_to_Teacher_Profile'); ?></a>
@@ -269,8 +269,17 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
                                     }
                                 }
                                 $this->includeTemplate($sidebarMenuLayout, $templateVariable);
-                            ?>   
+                            ?>  
+                            
+                            <div class="sidebar__links">
+                            <a href="<?php echo CommonHelper::generateUrl('Teachers','',[], CONF_WEBROOT_FRONT_URL); ?>"><?php echo Label::getLabel('LBL_FIND_A_TUTOR'); ?></a> 
+                            <?php if (User::getDashboardActiveTab() == User::USER_LEARNER_DASHBOARD) { ?>
+                                <a href="<?php echo CommonHelper::generateUrl('TeacherRequest', '', [], CONF_WEBROOT_FRONT_URL); ?>"><?php echo Label::getLabel('LBL_APPLY_TO_TEACH'); ?></a>
+                            <?php } ?>
                         </div>
+                        </div>
+
+                       
                     </div>
                 </div>
             </div>

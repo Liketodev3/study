@@ -324,18 +324,18 @@ class TestimonialsController extends AdminBaseController
         $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         switch (strtoupper($sizeType)) {
             case 'MINITHUMB':
-                $w = 42;
-                $h = 52;
+                $w = 40;
+                $h = 40;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
             case 'THUMB':
-                $w = 61;
-                $h = 61;
+                $w = 50;
+                $h = 50;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
             default:
-                $h = 118;
-                $w = 276;
+                $h = 260;
+                $w = 260;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
         }

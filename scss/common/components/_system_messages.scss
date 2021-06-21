@@ -21,40 +21,40 @@
 
 }
 
-#mbsmessage .content:before,
-.system_message .content:before {
-    background-size: 30px !important;
-    content: "";
-    #{theme('direction.left','value')}: 0;
-    position: absolute;
-    top: 50%;
-    z-index: 2;
-    width: 30px;
-    height: 30px;
-    display: block;
-    transform: translateY(-50%);
-}
+// #mbsmessage .content:before,
+// .system_message .content:before {
+//     background-size: 30px !important;
+//     content: "";
+//     #{theme('direction.left','value')}: 0;
+//     position: absolute;
+//     top: 50%;
+//     z-index: 2;
+//     width: 30px;
+//     height: 30px;
+//     display: block;
+//     transform: translateY(-50%);
+// }
 
-#mbsmessage.alert--danger .content:before,
-.system_message.alert--danger .content:before {
-    background: url(../images/icon--attention.svg) no-repeat;
+// #mbsmessage.alert--danger .content:before,
+// .system_message.alert--danger .content:before {
+//     background: url(../images/icon--attention.svg) no-repeat;
 
-}
+// }
 
-#mbsmessage.alert--success .content:before,
-.system_message.alert--success .content:before {
-    background: url(../images/icon--success.svg) no-repeat;
-}
+// #mbsmessage.alert--success .content:before,
+// .system_message.alert--success .content:before {
+//     background: url(../images/icon--success.svg) no-repeat;
+// }
 
-#mbsmessage.alert--info .content:before,
-.system_message.alert--info .content:before {
-    background: url(../images/icon--info.svg) no-repeat no-repeat;
-}
+// #mbsmessage.alert--info .content:before,
+// .system_message.alert--info .content:before {
+//     background: url(../images/icon--info.svg) no-repeat no-repeat;
+// }
 
-#mbsmessage.alert--warning .content:before,
-.system_message.alert--warning .content:before {
-    background: url(../images/icon--warning.svg) no-repeat no-repeat;
-}
+// #mbsmessage.alert--warning .content:before,
+// .system_message.alert--warning .content:before {
+//     background: url(../images/icon--warning.svg) no-repeat no-repeat;
+// }
 
 
 
@@ -288,8 +288,8 @@
 }
 
 .alert--positioned-top-full {
-    #{theme('direction.right','value')}: 12px !important;
-    top: 12px;
+    #{theme('direction.right','value')}: 15px !important;
+    top: 15px;
 }
 
 

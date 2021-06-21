@@ -57,7 +57,7 @@ class EmailHandler extends FatModel
             $body = str_replace($key, $val, $body);
         }
         if (FatApp::getConfig('CONF_SEND_SMTP_EMAIL')) {
-            if (!$sendEmail = static::sendSmtpEmail($to, $subject, $body, '', $tpl, $langId, '', $smtp_arr)) {
+            if (!static::sendSmtpEmail($to, $subject, $body, '', $tpl, $langId, '', $smtp_arr)) {
                 return static::sendMail($to, $subject, $body, '', $tpl, $langId);
             } else {
                 return true;
@@ -65,6 +65,7 @@ class EmailHandler extends FatModel
         } else {
             return static::sendMail($to, $subject, $body, '', $tpl, $langId);
         }
+        return true;
     }
 
     public function sendTxnNotification($txnId, $langId)
@@ -105,7 +106,7 @@ class EmailHandler extends FatModel
                 ])) {
             return false;
         }
-        if (!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))) {
+        if (!ALLOW_EMAILS || FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0) == applicationConstants::NO) {
             return true;
         }
         $host = $smtp_arr["host"] ?? FatApp::getConfig("CONF_SMTP_HOST");
@@ -155,7 +156,7 @@ class EmailHandler extends FatModel
                 ])) {
             return false;
         }
-        if (!(ALLOW_EMAILS && FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0))) {
+        if (!ALLOW_EMAILS || FatApp::getConfig('CONF_SEND_EMAIL', FatUtility::VAR_INT, 0) == applicationConstants::NO) {
             return true;
         }
         $subject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
@@ -252,7 +253,7 @@ class EmailHandler extends FatModel
             '{lesson_start_time}' => $data['startTime'], // H:i:s
             '{lesson_end_time}' => $data['endTime'], // H:i:s
             '{learner_comment}' => '',
-            '{action}' => ScheduledLesson::getStatusArr()[ScheduledLesson::STATUS_SCHEDULED],
+            '{action}' => Label::getLabel('VERB_Scheduled', $langId),
         ];
         if (self::sendMailTpl($to, $tpl, $langId, $vars)) {
             return true;
@@ -580,7 +581,6 @@ class EmailHandler extends FatModel
     public function sendTeacherRequestEmailToAdmin($utrequest_id)
     {
         $srch = new TeacherRequestSearch();
-        $srch->joinTeacherRequestValues();
         $srch->addCondition('utrequest_id', '=', $utrequest_id);
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
@@ -592,15 +592,15 @@ class EmailHandler extends FatModel
             'utrequest_attempts',
             'utrequest_comments',
             'utrequest_status',
-            'utrvalue_user_first_name',
-            'utrvalue_user_last_name',
-            'utrvalue_user_gender',
-            'utrvalue_user_phone',
-            'utrvalue_user_video_link',
-            'utrvalue_user_profile_info',
-            'utrvalue_user_teach_slanguage_id',
-            'utrvalue_user_language_speak',
-            'utrvalue_user_language_speak_proficiency',
+            'utrequest_first_name',
+            'utrequest_last_name',
+            'utrequest_gender',
+            'utrequest_phone_number',
+            'utrequest_video_link',
+            'utrequest_profile_info',
+            'utrequest_teach_slanguage_id',
+            'utrequest_language_speak',
+            'utrequest_language_speak_proficiency',
             'count(utrequest_id) as totalRequest'
         ]);
         $srch->addGroupBy('utrequest_id');
@@ -610,19 +610,19 @@ class EmailHandler extends FatModel
             $this->error = Label::getLabel('MSG_Invalid_Request', $this->commonLangId);
             return false;
         }
-        $subjectIds = json_decode($reqData['utrvalue_user_teach_slanguage_id']);
+        $subjectIds = json_decode($reqData['utrequest_teach_slanguage_id'], true);
         $teachingLanguagesArr = TeachingLanguage::getAllLangs($this->commonLangId);
         $subjectNames = array_map(
                 function ($n) use ($teachingLanguagesArr) {
-            return $teachingLanguagesArr[$n];
-        },
+                    return $teachingLanguagesArr[$n];
+                },
                 $subjectIds
         );
         $tpl = 'tpl_teacher_request_received';
         $vars = [
             '{refnum}' => $reqData['utrequest_reference'],
-            '{name}' => $reqData['utrvalue_user_first_name'] . ' ' . $reqData['utrvalue_user_last_name'],
-            '{phone}' => $reqData['utrvalue_user_phone'],
+            '{name}' => $reqData['utrequest_first_name'] . ' ' . $reqData['utrequest_last_name'],
+            '{phone}' => $reqData['utrequest_phone_number'],
             '{request_date}' => $reqData['utrequest_date'],
             '{subjects}' => implode(',', $subjectNames),
         ];

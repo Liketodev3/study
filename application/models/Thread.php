@@ -2,7 +2,6 @@
 
 class Thread extends MyAppModel
 {
-
     const DB_TBL = 'tbl_threads';
     const DB_TBL_PREFIX = 'thread_';
     const DB_TBL_THREAD_MESSAGES = 'tbl_thread_messages';
@@ -12,13 +11,14 @@ class Thread extends MyAppModel
 
     public function __construct($id = 0)
     {
-        parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
+        parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX.'id', $id);
         $this->db = FatApp::getDb();
     }
 
     public static function getSearchObject()
     {
         $srch = new SearchBase(static::DB_TBL, 't');
+
         return $srch;
     }
 
@@ -30,6 +30,7 @@ class Thread extends MyAppModel
         if (!FatApp::getDb()->insertFromArray(Thread::DB_TBL_THREAD_MESSAGES, $data)) {
             $this->error = FatApp::getDb()->getError();
         }
+
         return FatApp::getDb()->getInsertId();
     }
 
@@ -39,6 +40,7 @@ class Thread extends MyAppModel
             return true;
         }
         $this->error = FatApp::getDb()->getError();
+
         return false;
     }
 
@@ -52,9 +54,10 @@ class Thread extends MyAppModel
         $srch->addHaving('mysql_func_count(distinct threaduser_id)', '>', 1, 'AND', true);
         $srch->addMultipleFields(['threaduser_thread_id']);
         $res = FatApp::getDb()->fetch($srch->getResultSet());
-        if ($res['threaduser_thread_id']) {
+        if (!empty($res['threaduser_thread_id'])) {
             return self::isThreadExist($res['threaduser_thread_id']);
         }
+
         return $this->createThread($userArr);
     }
 
@@ -70,6 +73,7 @@ class Thread extends MyAppModel
         $threadObj->assignValues($threadDataToSave);
         if (!$threadObj->save()) {
             $this->error = $threadObj->getError();
+
             return false;
         }
         foreach ($data as $id) {
@@ -78,10 +82,12 @@ class Thread extends MyAppModel
             $threadUserArr['threaduser_thread_id'] = $threadObj->mainTableRecordId;
             if (!$db->insertFromArray(Thread::DB_TBL_THREAD_USERS, $threadUserArr)) {
                 $this->error = $db->getError();
+
                 return false;
             }
         }
         $db->commitTransaction();
+
         return $threadObj->mainTableRecordId;
     }
 
@@ -92,6 +98,7 @@ class Thread extends MyAppModel
         $srch->doNotLimitRecords();
         $srch->addCondition('thread_id', '=', $threadId);
         $res = FatApp::getDb()->fetch($srch->getResultSet());
+
         return $res['thread_id'] ?? 0;
     }
 
@@ -102,11 +109,12 @@ class Thread extends MyAppModel
         $srch->joinMessagePostedFromUser();
         $srch->joinMessagePostedToUser();
         $srch->addMultipleFields(['tth.*', 'ttm.message_id', 'ttm.message_text', 'ttm.message_date',
-            '(CASE WHEN tfr.user_id = ' . $userId . ' THEN 0 ELSE ttm.message_is_unread END) AS message_is_unread', 'ttm.message_to']);
+            '(CASE WHEN tfr.user_id = '.$userId.' THEN 0 ELSE ttm.message_is_unread END) AS message_is_unread', 'ttm.message_to', ]);
         $srch->addCondition('ttm.message_deleted', '=', 0);
         $cnd = $srch->addCondition('ttm.message_from', '=', $userId);
         $cnd->attachCondition('ttm.message_to', '=', $userId, 'OR');
         $srch->addOrder('ttm.message_date', 'Desc');
+
         return $srch;
     }
 
@@ -116,7 +124,7 @@ class Thread extends MyAppModel
         $srch->addCondition('threaduser_thread_id', '=', $threadId);
         $srch->addMultipleFields(['threaduser_id']);
         $res = FatApp::getDb()->fetchAll($srch->getResultSet(), 'threaduser_id');
+
         return array_keys($res);
     }
-
 }

@@ -265,7 +265,7 @@ img {
 
 .message-display {
     text-align: center;
-    padding: theme('padding.10'); background-color:theme('color.white') ; margin-top: theme('margin.6'); display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: theme('padding.10'); background-color:theme('color.white') ; margin-top: theme('margin.6'); min-height: 40rem; display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
 
 .message-display h5 {
@@ -646,17 +646,63 @@ img {
 
 
 
-.disabled-box {
-    background: #d9d9d9;
+$note: "note";
+
+.#{$note} {
+    position: relative; 
+    padding: theme('padding.2');
+    display: flex;
+    justify-content: center;
+    .icon{
+        min-width: 14px;
+        height: 14px;
+        margin-#{theme('direction.right','value')}: theme('margin.2');
+        margin-top: theme('margin.2');
+    }
+    &::before{
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        opacity: 0.05;
+        background-color: currentColor;
+        pointer-events: none;
+    }
+    p{
+        color: inherit;
+        margin-bottom: 0;
+    }
+}
+
+.note--secondary{
+    color: theme('color.secondary'); 
+}
+
+.note--primary{
+    color: theme('color.primary'); 
+}
+
+.note--blank{
+    background: transparent;
+    &::before{
+        content: none;
+    }
+}
+
+.note--vertical-border {
+    padding: var(--padding-6) 0;
+}
+
+.panel--calendar{
+    border-bottom: transparent;
 }
 
 .booked-box {
-    background: #f05856;
+    background: var(--color-secondary);
 }
 
-.available-box{
-    background: rgba(20, 224, 110, 0.3);
-}
 
 .-gap-negative {
     margin-top: -30px;

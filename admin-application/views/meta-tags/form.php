@@ -24,6 +24,7 @@ if ($metaType == MetaTag::META_GROUP_OTHER) {
 						foreach ($languages as $langId => $langName) { ?>
 							<li class="<?php echo $inactive; ?>"><a href="javascript:void(0);" <?php if ($metaId > 0) { ?> onclick="editMetaTagLangForm(<?php echo "$metaId,$langId,'$metaType'" ?>);" <?php } ?>><?php echo $langName; ?></a></li>
 						<?php } ?>
+
 					</ul>
 					<div class="tabs_panel_wrap">
 						<div class="tabs_panel">

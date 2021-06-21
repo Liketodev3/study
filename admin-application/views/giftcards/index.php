@@ -29,10 +29,6 @@
 								$keywordFld->developerTags['col'] = 4;
 								$keywordFld->htmlAfterField = '<small>'. Label::getLabel('LBL_Search_in_Order_Id,_Giftcard_Code',$adminLangId) .'</small>';
 
-								$buyerFld = $frmSearch->getField('recipient_name');
-								$buyerFld->developerTags['col'] = 4;
-								$buyerFld->htmlAfterField = '<small></small>';
-
 								$statusFld = $frmSearch->getField('order_is_paid');
 								$statusFld->developerTags['col'] = 4;
 

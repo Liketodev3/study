@@ -2,7 +2,7 @@ var timeInterval;
 var FatEventCalendar = function (teacherId) {
     this.teacherId = teacherId;
     var seconds = 2;
-
+    teacherId = teacherId;
     this.calDefaultConf = {
         initialView: 'timeGridWeek',
         headerToolbar: {
@@ -65,6 +65,18 @@ var FatEventCalendar = function (teacherId) {
         }, 1000);
     };
 
+    isColliding = function (div1, div2) {
+        let d1ffset = div1.offset();
+        let d1Top = d1ffset.top + div1.outerHeight(true);
+
+        let d2ffset = div2.offset();
+        let d2Top = d2ffset.top + div2.outerHeight(true);
+
+        console.log(d1ffset.top, d2ffset.top, d1Top, d2Top);
+        console.log((d1ffset.top <= d2ffset.top && d1Top >= d2Top));
+        return (d1ffset.top <= d2ffset.top && d1Top >= d2Top);
+    };
+
     getSlotBookingConfirmationBox = function (calEvent, jsEvent) {
         var monthName = moment(calEvent.start).format('MMMM');
         var date = monthName + " " + moment(calEvent.start).format('DD, YYYY');
@@ -97,6 +109,33 @@ var FatEventCalendar = function (teacherId) {
         });
     };
 
+    eventMerging = function (info, events) {
+        var start = info.event.start;
+        var end = info.event.end;
+
+        for (i in events) {
+
+            if (events[i]._instance.instanceId == info.oldEvent._instance.instanceId && events[i]._instance.defId == info.oldEvent._instance.defId) {
+                continue;
+            }
+
+            if (moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
+
+                if (moment(start) > moment(events[i].start)) {
+                    start = events[i].start;
+                    info.event.setStart(events[i].start);
+                }
+
+                if (moment(end) < moment(events[i].end)) {
+                    end = events[i].end;
+                    info.event.setEnd(events[i].end);
+                }
+
+                events[i].remove();
+            }
+        }
+    }
+
 };
 
 FatEventCalendar.prototype.validateSelectedSlot = function (arg, current_time, duration, bookingBefore) {
@@ -128,35 +167,47 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
         selectable: true,
         eventSources: [
             {
-                url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [this.teacherId], confFrontEndUrl),
-                method: 'POST',
-                extraParams: {
-                    bookingBefore: bookingBefore
-                },
-                success: function (docs) {
-                    for (i in docs) {
-                        docs[i].display = 'background';
-                        // docs[i].rendering ='background',
-                        docs[i].editable = false,
-                            docs[i].selectable = true;
-                    }
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss') + "&bookingBefore=" + bookingBefore;
+
+                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [fecal.teacherId], confFrontEndUrl), postData, function (docs) {
+                        for (i in docs) {
+                            docs[i].selectable = false;
+                            if ((parseInt(docs[i].classType))) {
+                                docs[i].display = 'background';
+                                docs[i].selectable = true;
+                            }
+                            docs[i].editable = false;
+                        }
+                        successCallback(docs);
+                    }, { fOutMode: 'json' });
                 }
             },
             {
-                url: fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [this.teacherId], confFrontEndUrl),
-                method: 'POST',
-                // success: function (docs) {
-                    // for (i in docs) {
-                    //     // docs[i].display = 'background';
-                    //     // docs[i].color = 'var(--color-secondary)';
-                    // }
-                // }
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
+                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherScheduledLessonData', [fecal.teacherId], confFrontEndUrl), postData, function (docs) {
+                        successCallback(docs);
+                    }, { fOutMode: 'json' });
+                }
             },
         ],
         select: function (arg) {
+            let slotAvailableEl = $(arg.jsEvent.target).parents('.fc-timegrid-col-frame').find('.slot_available');
+            if (slotAvailableEl.length == 0) {
+                calendar.unselect();
+                return false;
+            }
+
+            // if(!isColliding($(slotAvailableEl).parent(), $(arg.jsEvent.target))){
+            //     calendar.unselect();
+            //     return false;
+            // }
+
             jQuery('body #d_calendar .closeon').click();
             jQuery("#loaderCalendar").show();
             if (checkSlotAvailabiltAjaxRun) {
+                calendar.unselect();
                 return false;
             }
 
@@ -203,7 +254,10 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
 
     var calendarEl = document.getElementById('d_calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, conf);
-
+    if ($(window).width() <= 767) {
+        console.log($(window).width(), 'width');
+        // calendar.setOption('height', 'auto');
+    }
     calendar.render();
 
     jQuery('body').find(".fc-time-button").parent().html("<h6><span>" + langLbl.myTimeZoneLabel + " :-</span> <span class='timer'>" + moment(current_time).format('hh:mm:ss A') + "</span><span class='timezoneoffset'>(" + langLbl.timezoneString + " " + timeZoneOffset + ")</span></h6>");
@@ -216,21 +270,26 @@ FatEventCalendar.prototype.WeeklyBookingCalendar = function (current_time, durat
     jQuery(document).bind('close.facebox', function () {
         jQuery('body > .tooltipevent').remove();
     });
+
+
 };
 
 FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
     var calConf = {
         initialView: '',
         now: current_time,
-        dayMaxEvents:3,
+        dayMaxEvents: 3,
         headerToolbar: {
             left: 'time',
             center: 'title',
-            right: 'prev,next today'
+            right: 'prev,next'
         },
-        events: {
-            url:  fcom.makeUrl('LearnerScheduledLessons', 'calendarJsonData'),
-            method: 'POST'
+        events: function (fetchInfo, successCallback, failureCallback) {
+            postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
+
+            fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'calendarJsonData'), postData, function (docs) {
+                successCallback(docs);
+            }, { fOutMode: 'json' });
         },
         select: function (arg) {
             var start = arg.start;
@@ -254,17 +313,20 @@ FatEventCalendar.prototype.LearnerMonthlyCalendar = function (current_time) {
 FatEventCalendar.prototype.TeacherMonthlyCalendar = function (current_time, dayMaxEvents) {
     var calConf = {
         initialView: 'dayGridMonth',
-        
+
         now: current_time,
         headerToolbar: {
             left: 'time',
             center: 'title',
-            right: 'prev,next today'
+            right: 'prev,next'
         },
         eventColor: 'green',
-        events: {
-            url:  fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData'),
-            method: 'POST'
+        events: function (fetchInfo, successCallback, failureCallback) {
+            postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
+
+            fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'calendarJsonData'), postData, function (docs) {
+                successCallback(docs);
+            }, { fOutMode: 'json' });
         },
         select: function (arg) {
             var start = arg.start;
@@ -292,19 +354,22 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
     var calConf = {
         selectable: true,
         editable: true,
+        initialDate: '2018-01-07',
+        slotEventOverlap: false,
         now: current_time,
         headerToolbar: {
             left: 'time',
             center: '',
             right: ''
         },
+        dayHeaderFormat: { weekday: 'short' },
         eventSources: [
             {
-                url: fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData', [this.teacherId], confFrontEndUrl),
-                method: 'POST',
-                success: function (docs) {
-                    // console.log(doc);
-
+                events: function (fetchInfo, successCallback, failureCallback) {
+                    postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
+                    fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData', [fecal.teacherId], confFrontEndUrl), postData, function (docs) {
+                        successCallback(docs);
+                    }, { fOutMode: 'json' });
                 }
             }
         ],
@@ -317,54 +382,98 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
                 return false;
             }
             var newEvent = new Object();
-            newEvent.title = '';
             newEvent.start = start;//moment(start).format('YYYY-MM-DD')+"T"+moment(start).format('HH:mm:ss');
             newEvent.end = end;//moment(end).format('YYYY-MM-DD')+"T"+moment(end).format('HH:mm:ss'),
-            newEvent.startTime = moment(start).format('HH:mm:ss');
-            newEvent.endTime = moment(end).format('HH:mm:ss'),
-                newEvent.daysOfWeek = moment(start).format('d'),
-                newEvent.className = 'slot_available',
-                newEvent.classType = 1,
-                newEvent.allday = false;
-            newEvent.overlap = false;
+            newEvent.classType = 1,
+                // newEvent.allday = false;
+                newEvent.overlap = false;
             var events = calendar.getEvents();
             for (i in events) {
-                if (moment(end).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')) {
-                    newEvent.end = moment(events[i].end).format('YYYY-MM-DD') + "T" + moment(events[i].end).format('HH:mm:ss');
-                    newEvent.endTime = moment(events[i].end).format('HH:mm:ss');
-                    events[i].remove();
-                } else if (moment(start).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')) {
-                    newEvent.start = moment(events[i].start).format('YYYY-MM-DD') + "T" + moment(events[i].start).format('HH:mm:ss');
-                    newEvent.startTime = moment(events[i].start).format('HH:mm:ss');
+                if (moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
+
+                    if (moment(start) > moment(events[i].start)) {
+                        newEvent.start = moment(events[i].start).format('YYYY-MM-DD') + "T" + moment(events[i].start).format('HH:mm:ss');
+                    }
+
+                    if (moment(end) < moment(events[i].end)) {
+                        newEvent.end = moment(events[i].end).format('YYYY-MM-DD') + "T" + moment(events[i].end).format('HH:mm:ss');
+                    }
                     events[i].remove();
                 }
             }
-            // calendar.addEvent(newEvent);
+
             calendar.addEvent({
                 title: '',
                 start: newEvent.start,
                 end: newEvent.end,
+                className: 'slot_available',
                 allDay: arg.allDay
             });
-            // calendar.unselect();
         },
         eventDrop: function (info) {
-            var start = info.event.start;
-            var end = info.event.end;
-            var events = calendar.getEvents();
-            for (i in events) {
-                if (moment(end).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')) {
-                    info.event.setEnd(events[i].end);
-                    events[i].remove();
-                } else if (moment(start).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')) {
-                    info.event.setStart(events[i].start);
-                    events[i].remove();
-                }
+            let calendarStartDateTime = calendar.view.currentStart;
+            let calendarEndDateTime = calendar.view.currentEnd;
+
+            if (moment(calendarStartDateTime) > moment(info.event.end) || moment(calendarEndDateTime) < moment(info.event.start)) {
+                info.event.remove();
+                return;
             }
+
+            if (moment(calendarStartDateTime) > moment(info.event.start)) {
+
+                info.event.setStart(calendarStartDateTime);
+            }
+
+            if (moment(calendarEndDateTime) < moment(info.event.end)) {
+                info.event.setEnd(calendarEndDateTime);
+            }
+
+            var events = calendar.getEvents();
+            eventMerging(info, events);
+        },
+
+        eventResize: function (info) {
+            let calendarStartDateTime = calendar.view.currentStart;
+            let calendarEndDateTime = calendar.view.currentEnd;
+
+            if (moment(calendarStartDateTime) > moment(info.event.end) || moment(calendarEndDateTime) < moment(info.event.start)) {
+                info.event.remove();
+                return;
+            }
+
+            if (moment(calendarStartDateTime) > moment(info.event.start)) {
+
+                info.event.setStart(calendarStartDateTime);
+            }
+
+            if (moment(calendarEndDateTime) < moment(info.event.end)) {
+                info.event.setEnd(calendarEndDateTime);
+            }
+
+            var events = calendar.getEvents();
+            eventMerging(info, events);
+
         },
         eventDidMount: function (arg) {
-            element = arg.el;
+            let calendarStartDateTime = calendar.view.currentStart;
+            let calendarEndDateTime = calendar.view.currentEnd;
             let event = arg.event;
+
+            if (moment(calendarStartDateTime) > moment(event.end) || moment(calendarEndDateTime) < moment(event.start)) {
+                event.remove();
+                return;
+            }
+
+            if (moment(calendarStartDateTime) > moment(event.start)) {
+                event.setStart(calendarStartDateTime);
+            }
+
+            if (moment(calendarEndDateTime) < moment(event.end)) {
+                event.setEnd(calendarEndDateTime);
+            }
+
+            element = arg.el;
+
             $(element).find(".fc-event-main-frame").prepend("<span class='closeon'>X</span>");
             $(element).find(".closeon").click(function () {
                 if (confirm(langLbl.confirmRemove)) {
@@ -391,26 +500,22 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function (current_time) 
         selectable: true,
         editable: true,
         now: current_time,
-        eventSources: [
-            {
-                url: fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [this.teacherId], confFrontEndUrl),
-                method: 'POST',
-                success: function (docs) {
-                    // console.log(doc);
-                    for (i in docs) {
-                        docs[i].extendedProps = {};
-                        docs[i].extendedProps._id = docs[i]._id || 0;
-                        docs[i].extendedProps.action = docs[i].action;
-                        docs[i].extendedProps.classType = docs[i].classType;
-                    }
+        events: function (fetchInfo, successCallback, failureCallback) {
+            postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss') + "&bookingBefore=0";
+
+            fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherWeeklyScheduleJsonData', [fecal.teacherId], confFrontEndUrl), postData, function (docs) {
+                for (i in docs) {
+                    console.log(docs[i]);
+                    docs[i].overlap = false;
+                    docs[i].extendedProps = {};
+                    docs[i].extendedProps._id = (docs[i]._id) ? docs[i]._id : 0;
+                    docs[i].extendedProps.action = docs[i].action;
+                    docs[i].extendedProps.classType = docs[i].classType;
+                    docs[i].extendedProps.className = docs[i].className;
                 }
-            }
-        ],
-        // eventClick: function(arg) {
-        //     if (confirm(langLbl.confirmRemove)) {
-        //         arg.event.remove()
-        //     }
-        // },
+                successCallback(docs);
+            }, { fOutMode: 'json' });
+        },
         select: function (arg) {
             var start = arg.start;
             var end = arg.end;
@@ -422,6 +527,7 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function (current_time) 
                 calendar.unselect();
                 return false;
             }
+
             var newEvent = new Object();
             newEvent.title = '';
             newEvent.start = moment(start).format('YYYY-MM-DD') + "T" + moment(start).format('HH:mm:ss');
@@ -440,48 +546,71 @@ FatEventCalendar.prototype.TeacherWeeklyAvailaibility = function (current_time) 
 
             var events = calendar.getEvents();
             for (i in events) {
-                if (moment(end).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')) {
-                    newEvent.end = moment(events[i].end).format('YYYY-MM-DD') + "T" + moment(events[i].end).format('HH:mm:ss');
-                    newEvent.endTime = moment(events[i].end).format('HH:mm:ss');
-                    events[i].remove();
-                } else if (moment(start).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')) {
-                    newEvent.start = moment(events[i].start).format('YYYY-MM-DD') + "T" + moment(events[i].start).format('HH:mm:ss');
-                    newEvent.startTime = moment(events[i].start).format('HH:mm:ss');
+                if (moment(end) >= moment(events[i].start) && moment(start) <= moment(events[i].end)) {
+                    newEvent.extendedProps._id = events[i].extendedProps_id;
+
+                    if (moment(start) > moment(events[i].start)) {
+                        newEvent.start = moment(events[i].start).format('YYYY-MM-DD') + "T" + moment(events[i].start).format('HH:mm:ss');
+                    }
+
+                    if (moment(end) < moment(events[i].end)) {
+                        newEvent.end = moment(events[i].end).format('YYYY-MM-DD') + "T" + moment(events[i].end).format('HH:mm:ss');
+                    }
                     events[i].remove();
                 }
+
             }
             // calendar.addEvent(newEvent);
             calendar.addEvent({
                 title: '',
                 start: newEvent.start,
+                overlap: false,
+                className: 'slot_available',
                 end: newEvent.end,
                 allDay: arg.allDay,
                 extendedProps: newEvent.extendedProps
             });
         },
         eventDrop: function (info) {
-            var start = info.event.start;
-            var end = info.event.end;
             var events = calendar.getEvents();
-            for (i in events) {
-                if (moment(end).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].start).format('YYYY-MM-DD HH:mm:ss')) {
-                    info.event.setEnd(events[i].end);
-                    events[i].remove();
-                } else if (moment(start).format('YYYY-MM-DD HH:mm:ss') == moment(events[i].end).format('YYYY-MM-DD HH:mm:ss')) {
-                    info.event.setStart(events[i].start);
-                    events[i].remove();
-                }
-            }
+            eventMerging(info, events);
+        },
+
+        eventResize: function (info) {
+            var events = calendar.getEvents();
+            eventMerging(info, events);
+
         },
         eventDidMount: function (arg) {
-            element = arg.el;
-            let event = arg.event;
+            let element = arg.el;
             $(element).find(".fc-event-main-frame").prepend("<span class='closeon'>X</span>");
-            $(element).find(".closeon").click(function () {
-                if (confirm(langLbl.confirmRemove)) {
+            $(element).find(".closeon").on("click", function (evt) {
+                let event = arg.event;
+                if (parseInt(event.extendedProps._id) > 0) {
+                    let element = arg.el;
+                    console.log(event);
+                    let confirmMsg = langLbl.disableSlot;
+                    let newClassType = 0;
+                    let className = "slot_unavailable";
+                    if (parseInt(event.extendedProps.classType) == 0) {
+                        confirmMsg = langLbl.enableSlot;
+                        newClassType = 1;
+                        className = "slot_available";
+                    }
+
+                    if (confirm(confirmMsg)) {
+                        event.setExtendedProp('classType', newClassType);
+                        $(element).addClass(className);
+                        $(element).removeClass(event.extendedProps.className);
+                        event.setExtendedProp('className', className);
+                    }
+                } else {
                     event.remove();
                 }
             });
+
+
+
         }
     }
     var defaultConf = this.calDefaultConf;

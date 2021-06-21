@@ -3,13 +3,15 @@
 	<table class="table table--styled table--responsive table--aligned-middle">
 		<tr class="title-row">
 			<th><?php echo $learnerLabel = Label::getLabel('LBL_Learner'); ?></th>
-			<th><?php echo $loclLabel = Label::getLabel('LBL_Lock_(Single/Bulk_Price)'); ?></th>
+			<th><?php echo $loclLabel = Label::getLabel('LBL_Lock_Lesson_offer(%)'); ?></th>
 			<th><?php echo $scheduledLabel = Label::getLabel('LBL_Scheduled'); ?></th>
 			<th><?php echo $pastLabel = Label::getLabel('LBL_Past'); ?></th>
 			<th><?php echo $unscheduledLabel = Label::getLabel('LBL_Unscheduled'); ?></th>
 			<th><?php echo $actionLabel= Label::getLabel('LBL_Actions'); ?></th>
 		</tr>
-		<?php foreach ($students as $student) { ?>
+		<?php 
+        $offerPriceLabel = Label::getLabel('LBL_SET_LESSON_OFFER(%)_FOR_LEARNER');
+		foreach ($students as $student) { ?>
 		<tr>
 			<td>
 				<div class="flex-cell">
@@ -47,25 +49,27 @@
 								$svgIcon = 'lock';
                             }
 						?>
-						<a href="javascript:void(0);" onclick="offerPriceForm(<?php echo $student['learnerId']; ?>);" class="padding-3 <?php echo $svgIconClass; ?>">
+						<div class="actions-group">
+						<a href="javascript:void(0);" onclick="offerForm(<?php echo $student['learnerId']; ?>);" class="btn btn--bordered noborder btn--shadow btn--equal margin-1 is-hover padding-3 is-hover <?php echo $svgIconClass; ?>">
 							<svg class="icon icon--clock icon--small margin-right-2">
-								<use xlink:href="<?php ?>images/sprite.yo-coach.svg#<?php echo $svgIcon ?>"></use>
+								<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#'.$svgIcon; ?>"></use>
 							</svg>
+							<div class="tooltip tooltip--top bg-black"><?php echo $offerPriceLabel; ?></div>
 						</a>
+						</div>
 						<div class="lesson-price">
 							<?php
 								$durations = explode(',', $student['lessonDuration']);
-								$singleLessonAmount = explode(',', $student['singleLessonAmount']);
-                                $bulkLessonAmount = explode(',', $student['bulkLessonAmount']);
+								$percentages = explode(',', $student['percentages']);
 								foreach ($durations as $i => $duration) {
 							?>
 								<p>
 									<?php
-										if (!empty($singleLessonAmount[$i])) {
-											echo sprintf(Label::getLabel('LBL_%d_mins'), $duration) . ': ' . CommonHelper::displayMoneyFormat($singleLessonAmount[$i]); ?> / <?php echo CommonHelper::displayMoneyFormat($bulkLessonAmount[$i]);
-										} else {
-											echo CommonHelper::displayMoneyFormat(0) . ' / ' . CommonHelper::displayMoneyFormat(0);
-										}
+                                        $percentageStr = Label::getLabel('LBL_N/A');
+										if (!empty($percentages[$i])) {
+											$percentageStr = sprintf(Label::getLabel('LBL_%d_mins'), $duration) . ': ' . $percentages[$i].'%';
+										} 
+                                        echo $percentageStr;
 									?>
 								</p>
 							<?php } ?>

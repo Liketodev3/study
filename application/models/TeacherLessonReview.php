@@ -14,6 +14,20 @@ class TeacherLessonReview extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
+    public static function getReviewSortArr(int $langId){
+        $langId = FatUtility::int($langId);
+        if ($langId == 0) {
+            trigger_error(Label::getLabel('MSG_Language_Id_not_specified.', $langId), E_USER_ERROR);
+        }
+        $arr = [
+            'most_helpful' => Label::getLabel('LBL_Most_Helpful',$langId),
+            'date_posted_desc' => Label::getLabel('LBL_Sort_By_Newest',$langId),
+            'date_posted_asc' => Label::getLabel('LBL_Sort_By_Oldest',$langId),
+        ];
+        return $arr;
+
+    }
+
     public static function getReviewStatusArr($langId)
     {
         $langId = FatUtility::int($langId);

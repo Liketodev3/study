@@ -7,18 +7,18 @@ class MyAppController extends FatController
     {
         parent::__construct($action);
         $this->action = $action;
-        if (FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && (get_class($this) != "MaintenanceController") && (get_class($this) != 'Home' && $action != 'setLanguage')) {
-            if (UserAuthentication::isUserLogged()) {
-                UserAuthentication::logout();
-            }
-            if (FatUtility::isAjaxCall()) {
-                Message::addErrorMessage(Label::getLabel(Label::getLabel('MSG_Maintenance_Mode_Text')));
-                FatUtility::dieWithError(Message::getHtml());
-            }
-            FatApp::redirectUser(CommonHelper::generateUrl('maintenance'));
-        }
         CommonHelper::initCommonVariables();
         $this->initCommonVariables();
+
+        if (
+            FatApp::getConfig("CONF_MAINTENANCE", FatUtility::VAR_INT, 0) && ($this->_controllerName != "MaintenanceController")
+            && ($this->_controllerName != 'Home' && $action != 'setSiteDefaultLang' && $this->_controllerName != 'Custom'
+            && $action != 'updateUserCookies' && $action != 'cookieForm' && $action != 'saveCookieSetting')
+        ) {
+            UserAuthentication::logout();
+            FatUtility::isAjaxCall() && FatUtility::dieWithError(Label::getLabel('MSG_Maintenance_Mode_Text'));
+            FatApp::redirectUser(CommonHelper::generateUrl('maintenance', '', [], CONF_WEBROOT_FRONTEND));
+        }
     }
 
     public function pwaManifest()
@@ -30,7 +30,7 @@ class MyAppController extends FatController
         }
         $pwaManifest['icons'] = [
             [
-                "src" => CommonHelper::generateUrl('Image', 'pwaIcon', ['144']),
+                "src" => CommonHelper::generateUrl('Image', 'pwaIcon', ['144'], CONF_WEBROOT_FRONTEND),
                 "sizes" => "144x144",
                 "type" => "image/png"
             ],
@@ -56,8 +56,7 @@ class MyAppController extends FatController
         $this->siteLangId = CommonHelper::getLangId();
         $this->siteCurrencyId = CommonHelper::getCurrencyId();
         /* [ */
-        $controllerName = get_class($this);
-        $arr = explode('-', FatUtility::camel2dashed($controllerName));
+        $arr = explode('-', FatUtility::camel2dashed($this->_controllerName));
         array_pop($arr);
         $urlController = implode('-', $arr);
         $controllerName = ucfirst(FatUtility::dashed2Camel($urlController));
@@ -111,6 +110,8 @@ class MyAppController extends FatController
             'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson'),
             'confirmDeleteLessonPlanText' => Label::getLabel('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT'),
             'gdprDeleteAccDesc' => Label::getLabel('LBL_Gdpr_Delete_Account_Request_Description'),
+            'disableSlot' => Label::getLabel('LBL_Do_you_want_to_disable_the_slot'),
+            'enableSlot' => Label::getLabel('LBL_Do_you_want_to_enable_the_slot_again')
         ];
         $languages = Language::getAllNames(false);
 
@@ -135,7 +136,7 @@ class MyAppController extends FatController
         $this->set('currencyData', $currencyData);
         $this->set('jsVariables', $jsVariables);
         $this->set('controllerName', $controllerName);
-        $this->set('action', $this->action);
+        $this->set('action', $this->_actionName);
         $this->set('canonicalUrl', Common::getCanonicalUrl());
     }
 
@@ -190,10 +191,10 @@ class MyAppController extends FatController
     }
 
 
-    public function fatActionCatchAll($action)
+    /* public function fatActionCatchAll($action)
     {
         $this->_template->render(false, false, 'error-pages/404.php');
-    }
+    } */
 
     public function includeDateTimeFiles()
     {

@@ -1,20 +1,20 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.');
+<?php defined('SYSTEM_INIT') or exit('Invalid Usage.');
 $teacherPreferencesFrm->setFormTagAttribute('id', 'teacherPreferencesFrm');
-$teacherPreferencesFrm->setFormTagAttribute('class','form');
+$teacherPreferencesFrm->setFormTagAttribute('class', 'form');
 $teacherPreferencesFrm->setFormTagAttribute('onsubmit', 'setupTeacherPreferences(this, false); return(false);');
 $teacherPreferencesFrm->developerTags['colClassPrefix'] = 'col-md-';
 $teacherPreferencesFrm->developerTags['fld_default_col'] = 12;
 $teach_lang = $teacherPreferencesFrm->getField('teach_lang');
-$teach_lang->value = CommonHelper::htmlEntitiesDecode($teachLang);
+$teach_lang->value = !empty($teachLang) ? CommonHelper::htmlEntitiesDecode($teachLang) : '';
 $teach_lang->developerTags['col'] = 6;
 $getAllfields = $teacherPreferencesFrm->getAllFields();
 $teachLangField = $teacherPreferencesFrm->getField('teach_lang');
 
 $backBtn = $teacherPreferencesFrm->getField('btn_back');
-$backBtn->addFieldTagAttribute('onclick','teacherQualification()');
+$backBtn->addFieldTagAttribute('onclick', "$('.teacher-qualification-js').trigger('click');");
 
 $nextBtn = $teacherPreferencesFrm->getField('btn_next');
-$nextBtn->addFieldTagAttribute('onclick','setupTeacherPreferences(this.form, true); return(false);');
+$nextBtn->addFieldTagAttribute('onclick', 'setupTeacherPreferences(this.form, true); return(false);');
 ?>
 <div class="content-panel__head border-bottom margin-bottom-5">
 	<div class="d-flex align-items-center justify-content-between">
@@ -41,14 +41,12 @@ $nextBtn->addFieldTagAttribute('onclick','setupTeacherPreferences(this.form, tru
 					</div>
 				</div>
 			</div>
-			<?php 
-				foreach ($getAllfields as $key => $field) {
-					if( in_array($field->getName(), ['teach_lang', 'submit', 'btn_next', 'btn_back'])) {
-						continue;
-					}
-					$field->developerTags['cbHtmlBeforeCheckbox'] = '<span class="checkbox">';
-					$field->developerTags['cbHtmlAfterCheckbox'] = '<i class="input-helper"></i></span>';
-			?>
+			<?php foreach ($getAllfields as $key => $field) {
+    if (in_array($field->getName(), ['teach_lang', 'submit', 'btn_next', 'btn_back'])) {
+        continue;
+    }
+    $field->developerTags['cbHtmlBeforeCheckbox'] = '<span class="checkbox">';
+    $field->developerTags['cbHtmlAfterCheckbox'] = '<i class="input-helper"></i></span>'; ?>
 				<div class="row">
 					<div class="col-md-12">
 						<div class="field-set">
@@ -63,7 +61,8 @@ $nextBtn->addFieldTagAttribute('onclick','setupTeacherPreferences(this.form, tru
 						</div>
 					</div>
 				</div>
-			<?php  } ?>
+			<?php
+} ?>
 		</div>
 		<div class="form__actions">
 			<div class="d-flex align-items-center justify-content-between">

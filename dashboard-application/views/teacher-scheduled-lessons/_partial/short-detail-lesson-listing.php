@@ -33,9 +33,8 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
          <?php } ?>
             <?php foreach ($lessons as $lesson) {
                       $lessonsStatus = $statusArr[$lesson['sldetail_learner_status']];
-                      $lesson['lessonReschedulelogId'] =  FatUtility::int($lesson['lessonReschedulelogId']);
 
-                      if ($lesson['lessonReschedulelogId'] > 0 &&($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING || $lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED)) {
+                      if (FatUtility::int($lesson['lesreschlog_id']) > 0 &&($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING || $lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED)) {
                           $lessonsStatus = Label::getLabel('LBL_Rescheduled');
                           if ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) {
                               $lessonsStatus = Label::getLabel('LBL_Pending_for_Reschedule');
@@ -48,7 +47,7 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
                       if ($lesson['slesson_grpcls_id'] > 0) {
                           $teachLang =  $lesson['grpcls_title'];
                       } ?>
-                     <div class="lesson-list">
+                     <div class="lesson-list short-details">
                         <div class="lesson-list__left">
                            <div class="avtar avtar--small avtar--centered" data-title="<?php echo CommonHelper::getFirstChar($lesson['learnerFname']); ?>">
                               <?php

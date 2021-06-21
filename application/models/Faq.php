@@ -6,9 +6,11 @@ class Faq extends MyAppModel
     const DB_TBL = 'tbl_faq';
     const DB_TBL_PREFIX = 'faq_';
     const DB_TBL_LANG = 'tbl_faq_lang';
+
     const CATEGORY_GENERAL_QUERIES = 1;
     const CATEGORY_APPLICATION = 2;
     const CATEGORY_PAYMENTS = 3;
+    const CATEGORY_APPLY_TO_TEACH = 4;
 
     public function __construct($id = 0)
     {
@@ -16,7 +18,7 @@ class Faq extends MyAppModel
         $this->db = FatApp::getDb();
     }
 
-    public static function getFaqCategoryArr($langid = 0)
+    public static function getFaqCategoryArr(int $langid)
     {
         $srch = FaqCategory::getSearchObject($langid);
         $srch->addCondition('faqcat_active', '=', 1);
@@ -40,9 +42,8 @@ class Faq extends MyAppModel
         return $category_options;
     }
 
-    public static function getSearchObject($langId = 0, $active = true)
+    public static function getSearchObject(int $langId, $active = true)
     {
-        $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 't');
         if ($langId > 0) {
             $srch->joinTable(static::DB_TBL_LANG, 'LEFT OUTER JOIN', 't_l.faqlang_faq_id = t.faq_id AND faqlang_lang_id = ' . $langId, 't_l');

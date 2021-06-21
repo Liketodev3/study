@@ -20,7 +20,7 @@ class TeachingLanguage extends MyAppModel
         parent::__construct(static::DB_TBL, static::DB_TBL_PREFIX . 'id', $id);
     }
 
-    public static function getSearchObject($langId = 0, $active = true)
+    public static function getSearchObject($langId = 0,$active = true)
     {
         $langId = FatUtility::int($langId);
         $srch = new SearchBase(static::DB_TBL, 't');
@@ -78,15 +78,14 @@ class TeachingLanguage extends MyAppModel
         $teachingLangSrch = new TeachingLanguageSearch($langId);
         $teachingLangSrch->addChecks();
         $teachingLangSrch->joinActiveTeachers();
-        $teachingLangSrch->addMultiplefields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name', 'count(DISTINCT utl_us_user_id) as teacherCount']);
-        $teachingLangSrch->addGroupBy('utl_slanguage_id');
+        $teachingLangSrch->addMultiplefields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name', 'count(DISTINCT utl_user_id) as teacherCount']);
+        $teachingLangSrch->addGroupBy('utl_tlanguage_id');
         $teachingLangSrch->addCondition('user_is_teacher', '=', 1);
         $teachingLangSrch->addCondition('user_country_id', '>', 0);
         $teachingLangSrch->addCondition('credential_active', '=', 1);
         $teachingLangSrch->addCondition('credential_verified', '=', 1);
-        $teachingLangSrch->addCondition('utl_single_lesson_amount', '>', 0);
-        $teachingLangSrch->addCondition('utl_bulk_lesson_amount', '>', 0);
-        $teachingLangSrch->addCondition('utl_slanguage_id', '>', 0);
+        $teachingLangSrch->addCondition('ustelgpr_price', '>', 0);
+        $teachingLangSrch->addCondition('utl_tlanguage_id', '>', 0);
         /* qualification/experience[ */
         $qSrch = new UserQualificationSearch();
         $qSrch->addMultipleFields(['uqualification_user_id']);
@@ -105,7 +104,27 @@ class TeachingLanguage extends MyAppModel
         $teachingLangSrch->addOrder('teacherCount', 'desc');
         $teachingLangSrch->addOrder('tlanguage_display_order', 'asc');
         $rs = $teachingLangSrch->getResultSet();
+
+
         $teachingLanguagesArr = FatApp::getDb()->fetchAll($rs);
+        return $teachingLanguagesArr;
+    }
+
+    public static function getAllLangsWithOrderCount($langId = 0)
+    {
+        $pagesize = 5;
+        $langId = FatUtility::int($langId);
+        if ($langId < 1) {
+            $langId = CommonHelper::getLangId();
+        }
+        $teachingLangSrch = new TeachingLanguageSearch($langId);
+        $teachingLangSrch->addChecks();
+        $teachingLangSrch->joinOrderProduct();
+        $teachingLangSrch->addMultiplefields(['tlanguage_id', 'IFNULL(tlanguage_name, tlanguage_identifier) as tlanguage_name', 'count(o.order_id) as orderCount']);
+        $teachingLangSrch->addGroupBy('tlanguage_id');
+        $teachingLangSrch->addOrder('count(o.order_id)','desc');    
+        $teachingLangSrch->setPageSize($pagesize);
+        $teachingLanguagesArr = FatApp::getDb()->fetchAll($teachingLangSrch->getResultSet());
         return $teachingLanguagesArr;
     }
 

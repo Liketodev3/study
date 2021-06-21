@@ -41,24 +41,20 @@ class Language extends MyAppModel
         }
     }
 
-    public static function getAllCodesAssoc($withDefaultValue = false, $recordId = 0, $active = true, $deleted = false)
+    public static function getAllCodesAssoc(bool $withDefaultValue = false, int $langId = 1, int $recordId = 0, bool $active = true): array
     {
         $srch = new SearchBase(static::DB_TBL);
         $srch->addOrder(static::tblFld('id'));
-        if ($active === true) {
-            $srch->addCondition('language_active', '=', applicationConstants::ACTIVE);
-        }
-        if ($recordId > 0) {
-            $srch->addCondition(static::tblFld('id'), '=', FatUtility::int($recordId));
-        }
+        $active && $srch->addCondition('language_active', '=', applicationConstants::ACTIVE);
+        ($recordId > 0) && $srch->addCondition(static::tblFld('id'), '=', FatUtility::int($recordId));
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
-        $srch->addMultipleFields([static::tblFld('id'), static::tblFld('code')]);
-        $row = FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
+        $srch->addMultipleFields([static::tblFld('id'), 'upper(' . static::tblFld('code') . ')']);
+        $records = FatApp::getDb()->fetchAllAssoc($srch->getResultSet());
         if ($withDefaultValue) {
-            return array(0 => 'Universal') + $row;
+            $records[0] = Label::getLabel('LBL_All', $langId);
         }
-        return $row;
+        return $records;
     }
 
     public static function getLangCode($langId)

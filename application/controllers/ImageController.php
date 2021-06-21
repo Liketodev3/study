@@ -21,10 +21,13 @@ class ImageController extends FatController
                 $h = 100;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
-            default:
-                $h = 37;
-                $w = 168;
+            case 'ORIG':
                 AttachedFile::displayOriginalImage($image_name, $default_image);
+                break;
+            default:
+                $h = 46;
+                $w = 160;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
         }
     }
@@ -111,7 +114,7 @@ class ImageController extends FatController
             default:
                 $w = 30;
                 $h = 30;
-                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+                AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_CROP);
                 break;
         }
     }
@@ -195,7 +198,7 @@ class ImageController extends FatController
                 break;
             default:
                 $h = 480;
-                $w = 1600;
+                $w = 1900;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
         }
@@ -206,6 +209,27 @@ class ImageController extends FatController
         $lang_id = FatUtility::int($lang_id);
         $recordId = 0;
         $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_LESSON_PAGE_IMAGE, $recordId, 0, $lang_id);
+        $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
+        $default_image = '';
+        switch (strtoupper($sizeType)) {
+            case 'THUMB':
+                $w = 200;
+                $h = 60;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+                break;
+            default:
+                $h = 900;
+                $w = 2000;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+                break;
+        }
+    }
+
+    public function applyToTeachBanner($lang_id = 0, $sizeType = '')
+    {
+        $lang_id = FatUtility::int($lang_id);
+        $recordId = 0;
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_APPLY_TO_TEACH_BANNER, $recordId, 0, $lang_id);
         $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         $default_image = '';
         switch (strtoupper($sizeType)) {
@@ -295,8 +319,8 @@ class ImageController extends FatController
                 $h = '';
                 break;
             case 'MEDIUM':
-                $w = 150;
-                $h = 150;
+                $w = 275;
+                $h = 275;
                 break;
             case 'SMALL':
                 $w = 60;
@@ -318,21 +342,27 @@ class ImageController extends FatController
         }
     }
 
+    public function userFull($userId)
+    {
+        $userId = FatUtility::int($userId);
+        $fileRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId);
+        if (false == $fileRow || $fileRow['afile_physical_path'] == "") {
+            AttachedFile::displayImage('', '', '', 'no_image.jpg');
+        }
+        AttachedFile::displayOriginalImage($fileRow['afile_physical_path'], '', '', true);
+    }
+
     public function countryFlag($countryId, $sizeType = 'default')
     {
         $countryId = FatUtility::int($countryId);
         $fileRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_COUNTRY_FLAG, $countryId);
-        $imageName = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
+        $imageName = $fileRow['afile_physical_path'] ?? '';
         switch (strtoupper($sizeType)) {
             case 'THUMB':
-                $w = 100;
-                $h = 100;
-                AttachedFile::displayImage($imageName, $w, $h);
+                AttachedFile::displayImage($imageName, 100, 100);
                 break;
             case 'DEFAULT':
-                $w = 30;
-                $h = 20;
-                AttachedFile::displayImage($imageName, $w, $h);
+                AttachedFile::displayImage($imageName, 30, 20);
                 break;
             default:
                 AttachedFile::displayOriginalImage($imageName);
@@ -377,9 +407,14 @@ class ImageController extends FatController
                 $h = 200;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
+            case 'MEDIUM':
+                $w = 600;
+                $h = 450;
+                AttachedFile::displayImage($image_name, $w, $h, $default_image);
+                break;
             case 'BANNER':
                 $w = 945;
-                $h = 535;
+                $h = 710;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
             default:
@@ -416,20 +451,12 @@ class ImageController extends FatController
                     $h = 416;
                     break;
                 case 'DESKTOP':
-                    $w = 1920;
-                    $h = 800;
-                    break;
-                case 'TABLET':
-                    $w = 1024;
-                    $h = 500;
-                    break;
-                case 'MOBILE':
-                    $w = 640;
-                    $h = 360;
+                    $w = 2000;
+                    $h = 900;
                     break;
                 default:
-                    $w = 1920;
-                    $h = 800;
+                    $w = 2000;
+                    $h = 900;
                     break;
             }
             AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_CROP, false, true);
@@ -456,7 +483,9 @@ class ImageController extends FatController
                 AttachedFile::displayImage($image_name, $w, $h);
                 break;
             default:
-                AttachedFile::displayOriginalImage($image_name);
+                $w = 2000;
+                $h = 900;
+                AttachedFile::displayImage($image_name, $w, $h);
                 break;
         }
     }
@@ -488,6 +517,10 @@ class ImageController extends FatController
             case 'NORMAL':
                 $w = 625;
                 $h = 391;
+                break;
+            case 'MEDIUM':
+                $w = 275;
+                $h = 275;
                 break;
             default:
                 $h = 500;
@@ -523,7 +556,7 @@ class ImageController extends FatController
         $fileRow = AttachedFile::getAttachment($imgType, $bannerId, 0, $langId, true, 0);
         $image_name = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
         $default_image = 'no_image_user.jpg';
-        AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
+        AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_CROP, false, true);
     }
 
     public function showLanguageImage($sLanguageId, $sizeType = '', $langId = 0)
@@ -557,8 +590,8 @@ class ImageController extends FatController
         $image_name = isset($fileRow['afile_physical_path']) ? $fileRow['afile_physical_path'] : '';
         switch (strtoupper($sizeType)) {
             case 'SMALL':
-                $w = 40;
-                $h = 40;
+                $w = 120;
+                $h = 120;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_ADDSPACE, false, true);
                 break;
             default:
@@ -600,11 +633,9 @@ class ImageController extends FatController
     public function pwaIcon(int $size = 100)
     {
         $image_name = '';
-
         if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_APP_ICON, 0, 0, 0, true)) {
             $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         }
-
         switch ($size) {
             case '144':
                 $w = $h = 144;
@@ -622,23 +653,47 @@ class ImageController extends FatController
     public function pwaSplashIcon(int $size = 100)
     {
         $image_name = '';
-
         if ($file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_PWA_SPLASH_ICON, 0, 0, 0, true)) {
             $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
         }
-
         switch ($size) {
             case '144':
-                $w = $h =  144;
+                $w = $h = 144;
                 break;
             case '512':
-                $w = $h =  512;
+                $w = $h = 512;
                 break;
             default:
                 $w = $h = 100;
                 break;
         }
         AttachedFile::displayImage($image_name, $w, $h);
+    }
+
+    public function openGraphImage($metaId, $lang_id, $sizeType = 'NORMAL')
+    {
+        $metaId = FatUtility::int($metaId);
+        $file_row = AttachedFile::getAttachment(AttachedFile::FILETYPE_OPENGRAPH_IMAGE, $metaId, 0, $lang_id, false, 0);
+        $image_name = isset($file_row['afile_physical_path']) ? $file_row['afile_physical_path'] : '';
+        if ($sizeType) {
+            switch (strtoupper($sizeType)) {
+                case 'SMALL':
+                    $w = 200;
+                    $h = 100;
+                    break;
+                case 'NORMAL':
+                    $w = 1200;
+                    $h = 630;
+                    break;
+                default:
+                    $w = 1200;
+                    $h = 630;
+                    break;
+            }
+            AttachedFile::displayImage($image_name, $w, $h, '', '', ImageResize::IMG_RESIZE_RESET_DIMENSIONS, false, true);
+        } else {
+            AttachedFile::displayOriginalImage($image_name, '', '', true);
+        }
     }
 
 }

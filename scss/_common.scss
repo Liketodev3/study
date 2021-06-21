@@ -13,6 +13,10 @@
 @import 'common/base/root';
 @import 'common/base/reset';
 
+// modules
+@import 'common/modules/checkout';
+@import 'common/modules/custom_calendar';
+
 // utilities
 @import "common/utilities/alignment";
 @import "common/utilities/backgrounds";
@@ -25,6 +29,7 @@
 @import "common/utilities/spacing";
 @import "common/utilities/spinner";
 @import "common/utilities/color";
+@import "common/utilities/ratio";
 
 
 // components
@@ -74,7 +79,6 @@
 @import "common/vendors/jquery-confirm.min";
 @import "common/vendors/jquery-ui-timepicker-addon";
 @import "common/vendors/jquery-ui";
-@import "common/vendors/jquery.countdownTimer";
 @import "common/vendors/jquery.datetimepicker";
 @import "common/vendors/jquery.tagsinput.min";
 @import "common/vendors/slick";

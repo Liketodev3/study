@@ -1,29 +1,35 @@
-<?php 
+<?php function getInBytes($value)
+{
+    $value = trim($value);
+    $last_char = strtolower($value[strlen($value) - 1]);
+    $value = (int) $value;
 
-function getInBytes($value){
-	$value = trim($value);
-	$last_char = strtolower($value[strlen($value) - 1]);
-	switch($last_char){
-		case 'g': $value *= 1024;
-		case 'm': $value *= 1024;
-		case 'k': $value *= 1024;
-	}
-	return $value;
+    switch ($last_char) {
+        case 'g': $value *= 1024;
+        // no break
+        case 'm': $value *= 1024;
+        // no break
+        case 'k': $value *= 1024;
+    }
+
+    return $value;
 }
-function apacheGetModules(){
-	if (function_exists('apache_get_modules')) {
-		$apacheGetModules = apache_get_modules();
-	}else {
-		$apacheGetModules = array();
-	}
-	return $apacheGetModules;
+function apacheGetModules()
+{
+    if (function_exists('apache_get_modules')) {
+        $apacheGetModules = apache_get_modules();
+    } else {
+        $apacheGetModules = [];
+    }
+
+    return $apacheGetModules;
 }
-$title='System Requirement check';
+$title = 'System Requirement check';
 $text_install_php = '1. Please configure your PHP settings to match requirements listed below.';
 $text_install_extension = '2. Please make sure the PHP extensions listed below are installed.';
 $text_msql_version = '3. Please make sure you have Mysql version 5.6 or greater than 5.6';
-$text_note='Note: In some server environment, script unable to detect server settings. So if you have configured your server as per required settings, You can install <a href="http://www.fatbit.com/" target="_blank">FatBit</a> Powered Scripts. ';
-$text_strict_trans_tables='4. sql_mode - strict_trans_tables should be disabled.';
+$text_note = 'Note: In some server environment, script unable to detect server settings. So if you have configured your server as per required settings, You can install <a href="http://www.fatbit.com/" target="_blank">FatBit</a> Powered Scripts. ';
+$text_strict_trans_tables = '4. sql_mode - strict_trans_tables should be disabled.';
 $text_setting = 'PHP Settings';
 $text_current = 'Current Settings';
 $text_required = 'Required Settings';
@@ -60,10 +66,9 @@ $text_mbstring = 'mbstring';
 $text_short_open_tag = 'Short Open Tag';
 $text_rewrite_url = 'Url Rewriting (mod_rewrite)';
 
-
 $button_continue = 'Continue';
 $button_back = 'Back';
-$memory_limit = getInBytes(ini_get('memory_limit'))>=getInBytes('32M');
+$memory_limit = getInBytes(ini_get('memory_limit')) >= getInBytes('32M');
 $php_version = phpversion();
 //$mysql_version = mysql_get_server_info();
 $register_globals = ini_get('register_globals');
@@ -72,19 +77,19 @@ $file_uploads = ini_get('file_uploads');
 
 $allow_url_fopen = ini_get('allow_url_fopen');
 $session_auto_start = ini_get('session_auto_start');
-$safeModeOn=ini_get('safe_mode');
+$safeModeOn = ini_get('safe_mode');
 $short_open_tag = ini_get('short_open_tag');
 
-if(in_array('mod_rewrite', apacheGetModules())){
-	$rewrite_url=true;
-}else{
-	$rewrite_url=false;
+if (in_array('mod_rewrite', apacheGetModules())) {
+    $rewrite_url = true;
+} else {
+    $rewrite_url = false;
 }
 
-if (!array_filter(array('mysqli'), 'extension_loaded')) {
-	$db = false;
+if (!array_filter(['mysqli'], 'extension_loaded')) {
+    $db = false;
 } else {
-	$db = true;
+    $db = true;
 }
 
 $gd = extension_loaded('gd');
@@ -95,7 +100,6 @@ $iconv = function_exists('iconv');
 $mbstring = extension_loaded('mbstring');
 $ioncube = extension_loaded('IonCube Loader');
 $json = extension_loaded('json');
-
 
 ?>
 <!DOCTYPE html>
@@ -215,7 +219,7 @@ h1.heading small{font-size:14px;font-weight:400;line-height:1;display:block;}
 	  </div>
 	  
   </header>
-  <?php if ($error_warning) { ?>
+  <?php if (!empty($error_warning)) { ?>
   <div class="alert alert--danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
     <button type="button" class="close" data-dismiss="alert">&times;</button>
   </div>
@@ -367,7 +371,7 @@ h1.heading small{font-size:14px;font-weight:400;line-height:1;display:block;}
                 </td>
               </tr>
 			  <?php /*?>
-			  <tr>
+              <tr>
                 <td><?php echo $text_safe_mode; ?></td>
                 <td><?php if ($safeModeOn) { ?>
                   <?php echo $text_on; ?>
@@ -384,7 +388,7 @@ h1.heading small{font-size:14px;font-weight:400;line-height:1;display:block;}
                   <span class="text-danger"><i class="fa fa-minus-circle svg-icn delete"><svg class="icon icon--check"><use xlink:href="#Check_Close" /></svg></i></span>
                   <?php } ?>
                 </td>
-              </tr> <?php */?>
+              </tr> <?php */ ?>
 			  <tr>
                 <td><?php echo $text_short_open_tag; ?></td>
                 <td><?php if ($short_open_tag) { ?>

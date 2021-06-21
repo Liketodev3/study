@@ -29,7 +29,6 @@ class LearnerGroupClassesController extends LearnerBaseController
             FatUtility::dieWithError($frmSrch->getValidationErrors());
         }
         $srch = ScheduledLessonSearch::getSearchLessonsObj($this->siteLangId);
-        $srch->joinIssueReported(User::USER_TYPE_LEANER);
         $srch->addFld([
             'IFNULL(iss.issrep_status,0) AS issrep_status',
             'IFNULL(iss.issrep_id,0) AS issrep_id',

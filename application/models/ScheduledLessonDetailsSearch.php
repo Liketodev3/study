@@ -55,26 +55,28 @@ class ScheduledLessonDetailsSearch extends SearchBase
         }
     }
 
-    public function getRefundPercentage($sldetailId): int
-    {
-        $this->joinScheduledLesson();
-        $this->addCondition('sldetail_id', '=', $sldetailId);
-        $rs = $this->getResultSet();
-        $data = FatApp::getDb()->fetch($rs);
-        if (empty($data)) {
-            return 0; // if not exist refund nothing, mark charges 100%
-        }
-        $to_time = strtotime($data['slesson_date'] . ' ' . $data['slesson_start_time']);
-        $from_time = strtotime(date('Y-m-d H:i:s'));
-        $diff = round(($to_time - $from_time) / 3600, 2);
-        if ($data['slesson_grpcls_id'] > 0) {
-            return FatApp::getConfig('CONF_LEARNER_CLASS_REFUND_PERCENTAGE', FatUtility::VAR_INT, 100); // refund charges for class
-        }
-        if ($diff < 24) {
-            return FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10);
-        }
-        return 100; // do not charge
-    }
+    // public function getRefundPercentage($sldetailId): int
+    // {
+    //     $this->joinScheduledLesson();
+    //     $this->addCondition('sldetail_id', '=', $sldetailId);
+    //     $rs = $this->getResultSet();
+    //     $data = FatApp::getDb()->fetch($rs);
+    //     if (empty($data)) {
+    //         return 0; // if not exist refund nothing, mark charges 100%
+    //     }
+
+    //     $diff = MyDate::hoursDiff($data['slesson_date'] . ' ' . $data['slesson_start_time']);
+
+    //     if ($data['slesson_grpcls_id'] > 0) {
+    //         return FatApp::getConfig('CONF_LEARNER_CLASS_REFUND_PERCENTAGE', FatUtility::VAR_INT, 100); // refund charges for class
+    //     }
+
+    //     if ($diff < FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) {
+    //         return FatApp::getConfig('CONF_LEARNER_REFUND_PERCENTAGE', FatUtility::VAR_INT, 10);
+    //     }
+
+    //     return 100; // do not charge
+    // }
 
     public function getDetailsById(int $sDetailsID): array
     {
@@ -84,5 +86,9 @@ class ScheduledLessonDetailsSearch extends SearchBase
         $data = FatApp::getDb()->fetch($rs);
         return $data;
     }
-
+    public function getRecordsByLessonId($lessonId)
+    {
+        $this->addCondition('sldetail_slesson_id', '=', $lessonId);
+        return FatApp::getDb()->fetchAll($this->getResultSet());
+    }
 }

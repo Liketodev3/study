@@ -1,9 +1,9 @@
 <?php 
 defined('SYSTEM_INIT') or die('Invalid Usage.'); 
-$reportSearchForm->addFormTagAttribute('onsubmit', "getStatisticalData1(this); return (false);");;
+$reportSearchForm->addFormTagAttribute('onsubmit', "getStatisticalData(this); return (false);");;
 
 $durationType = $reportSearchForm->getField('duration_type');
-$durationType->addFieldTagAttribute('onChange','getStatisticalData1(this.form); return (false);');
+$durationType->addFieldTagAttribute('onChange','getStatisticalData(this.form); return (false);');
 
 $reportType = $reportSearchForm->getField('report_type[]');
 $reportType->addFieldTagAttribute('class','d-none');
@@ -89,44 +89,37 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 					</div>
 
 					<div class="page-panel">
+					<?php 
+								echo $reportSearchForm->getFormTag(); 
+								echo $reportType->getHTML();
+								echo $reportSearchForm->getFieldHtml('forGraph');
+							?>
 						<div class="page-panel__head border-bottom-0">
 							<div class="row">
 								<div class="col-md-6">
 									<h4><?php echo Label::getLabel('Lbl_Sale_Statistics'); ?></h4>
 								</div>
-							</div>
-						</div>
-						<div class="page-panel__body">
-							<?php 
-								echo $reportSearchForm->getFormTag(); 
-								echo $reportType->getHTML();
-								echo $reportSearchForm->getFieldHtml('forGraph');
-							?>
-							<div class="row margin-bottom-6">
-								<div class="col-lg-4 col-md-4 col-sm-4">
-									<div class="sale-stat sale-stat--primary color-yellow">
-										<div class="sale-stat__count">
-											<span><?php echo Label::getLabel('Lbl_Duration_Type'); ?></span>
-											<h5 class=""></h5>
-										</div>
-
-										<div class="sale-stat__select">
-											<div class="form-inline__item">
+								<div class="col-md-6">
+									<div class="sale-stat__select">
+										<div class="form-inline__item">
 											<?php echo $durationType->getHTML(); ?>
-											</div>
 										</div>
 									</div>
 								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4">
-									<div class="sale-stat sale-stat--primary color-yellow">
+							</div>
+						</div>
+						<div class="page-panel__body">
+							<div class="row margin-bottom-6">
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="sale-stat sale-stat--primary sale-stat--yellow">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('Lbl_Sales'); ?></span>
 											<h5 class="earing-amount-js"></h5>
 										</div>
 									</div>
 								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4">
-									<div class="sale-stat sale-stat--secondary color-secondary">
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="sale-stat sale-stat--secondary sale-stat--sky">
 										<div class="sale-stat__count">
 											<span><?php echo Label::getLabel('LBL_Lessons_sold'); ?></span>
 											<h5 class="lessons-sold-count-js"></h5>
@@ -134,14 +127,14 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 									</div>
 								</div>
 							</div>
-							</form>
+						
 							<?php echo $reportSearchForm->getExternalJS(); ?>
 							<div class="graph-media" id="chart_div">
 							</div>
 						</div>
 
 					</div>
-
+					</form>
 				</div>
 
 				<!-- <div class="page__footer align-center">
@@ -158,7 +151,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 					
 					<div class="status-bar__body">
 						<div class="calendar">
-								<div id='d_calendar' class="dashboard-calendar"></div>
+								<div id='d_calendar' class="dashboard-calendar calendar-view"></div>
 						</div>
 						<?php echo $frmSrch->getFormHtml(); ?>
 						<div class="listing-window" id="listItemsLessons">
