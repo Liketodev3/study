@@ -886,34 +886,32 @@ class User extends MyAppModel
             'user_state_id' => NULL,
             'user_city' => '',
         ];
-
-
-        $db->updateFromArray(static::DB_TBL, $tbl_users_data, ['smt' => 'user_id=?', 'vals' => [$this->mainTableRecordId]]);
+        return $db->updateFromArray(static::DB_TBL, $tbl_users_data, ['smt' => 'user_id=?', 'vals' => [$this->mainTableRecordId]]);
     }
 
-    public  function truncateUserCredentialsData()
+    public  function truncateUserCredentials()
     {
         $db = FatApp::getDb();
-        $tbl_user_credentials_data = ['credential_username' => NULL, 'credential_email' => NULL];
-        $db->updateFromArray(static::DB_TBL_CRED, $tbl_user_credentials_data, ['smt' => 'credential_user_id=?', 'vals' => [$this->mainTableRecordId]]);
+        $tbl_user_credentials_data = ['credential_username' => NULL, 'credential_email' => NULL];        
+        return $db->updateFromArray(static::DB_TBL_CRED, $tbl_user_credentials_data, ['smt' => 'credential_user_id=?', 'vals' => [$this->mainTableRecordId]]);
     }
 
-    public function truncateUsersLangDataByUserId()
+    public function truncateUsersLangData()
     {
-        FatApp::getDb()->deleteRecords(static::DB_TBL_LANG, array('smt' => 'userlang_user_id = ?', 'vals' => [$this->mainTableRecordId]));
+        return FatApp::getDb()->deleteRecords(static::DB_TBL_LANG, array('smt' => 'userlang_user_id = ?', 'vals' => [$this->mainTableRecordId]));
     }
 
-    public function deleteUserBankInfoDataByUserId()
+    public function deleteUserBankInfoData()
     {
-        FatApp::getDb()->deleteRecords(static::DB_TBL_USR_BANK_INFO, array('smt' => 'ub_user_id = ?', 'vals' => [$this->mainTableRecordId]));
+        return FatApp::getDb()->deleteRecords(static::DB_TBL_USR_BANK_INFO, array('smt' => 'ub_user_id = ?', 'vals' => [$this->mainTableRecordId]));
     }
 
-    public function deleteUserEmailVerificationDataByUserId()
+    public function deleteUserEmailVerificationData()
     {
-        FatApp::getDb()->deleteRecords(static::DB_TBL_USER_EMAIL_VER, array('smt' => 'uev_user_id = ?', 'vals' => [$this->mainTableRecordId]));
+        return FatApp::getDb()->deleteRecords(static::DB_TBL_USER_EMAIL_VER, array('smt' => 'uev_user_id = ?', 'vals' => [$this->mainTableRecordId]));
     }
 
-    public function truncateUserWithdrawalRequestsDataByUserId()
+    public function truncateUserWithdrawalRequestsData()
     {
         $db = FatApp::getDb();
         $tbl_user_withdrawal_requests_data = [
@@ -924,20 +922,18 @@ class User extends MyAppModel
             'withdrawal_bank_address' => '',
             'withdrawal_paypal_email_id' => ''
         ];
-        if ($db->updateFromArray(static::DB_TBL_USR_WITHDRAWAL_REQ, $tbl_user_withdrawal_requests_data, ['smt' => 'withdrawal_user_id=?', 'vals' => [$this->mainTableRecordId]])) {
-            return true;
-        }
+        return $db->updateFromArray(static::DB_TBL_USR_WITHDRAWAL_REQ, $tbl_user_withdrawal_requests_data, ['smt' => 'withdrawal_user_id=?', 'vals' => [$this->mainTableRecordId]]);
     }
     public function deleteUserSetting()
     {
-        FatApp::getDb()->deleteRecords(UserSetting::DB_TBL, array('smt' => 'us_user_id  = ?', 'vals' => [$this->mainTableRecordId]));
+        return FatApp::getDb()->deleteRecords(UserSetting::DB_TBL, array('smt' => 'us_user_id  = ?', 'vals' => [$this->mainTableRecordId]));
     }
     public function deleteUserQualifications()
     {
-        FatApp::getDb()->deleteRecords(UserQualification::DB_TBL, ['smt' => 'uqualification_user_id = ?', 'vals' => [$this->mainTableRecordId]]);
+        return FatApp::getDb()->deleteRecords(UserQualification::DB_TBL, ['smt' => 'uqualification_user_id = ?', 'vals' => [$this->mainTableRecordId]]);
     }
     public  function deleteUserEmailChangeRequests()
     {
-        FatApp::getDb()->deleteRecords(static::DB_TBL, ['smt' => 'uecreq_user_id = ?', 'vals' => [$this->mainTableRecordId]]);
+        return FatApp::getDb()->deleteRecords(static::DB_TBL, ['smt' => 'uecreq_user_id = ?', 'vals' => [$this->mainTableRecordId]]);
     }
 }

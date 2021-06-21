@@ -78,21 +78,16 @@ class Gdpr extends MyAppModel
         $db = FatApp::getDb();
         $db->startTransaction();
         $user = new user($userId);
-        $user->truncateUserData();
-        $user->truncateUserCredentialsData();
-        $user->truncateUsersLangDataByUserId();
-        $user->deleteUserBankInfoDataByUserId();
-        $user->deleteUserEmailVerificationDataByUserId();
-        $user->deleteUserEmailVerificationDataByUserId();
-        $user->truncateUserWithdrawalRequestsDataByUserId();
-        $user->deleteUserSetting();
-        $user->deleteUserQualifications();
-        $user->deleteUserEmailChangeRequests();
-        if ($user->getError()) {
+        if(!$user->truncateUserData() || !$user->truncateUserCredentials() || !$user->truncateUsersLangData() || !$user->deleteUserBankInfoData() || !$user->deleteUserEmailVerificationData() || !$user->truncateUserWithdrawalRequestsData() || !$user->deleteUserSetting() || !$user->deleteUserQualifications() || !$user->deleteUserEmailChangeRequests()){
             $db->rollbackTransaction();
             return false;
         }
-        $db->updateFromArray(User::DB_TBL, ['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?', 'vals' => [$userId]]);
+
+        if($db->updateFromArray(User::DB_TBL, ['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?', 'vals' => [$userId]])){
+            $db->rollbackTransaction();
+            return false;
+        }
+        
         $db->commitTransaction();
         return true;
     }
