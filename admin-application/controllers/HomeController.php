@@ -20,8 +20,8 @@ class HomeController extends AdminBaseController
         phpFastCache::setup("path", CONF_INSTALLATION_PATH . "public/caching");
         $cache = phpFastCache();
         $dashboardInfo = $cache->get("dashboardInfo" . $this->adminLangId);
-
         if ($dashboardInfo == null) {
+            $dashboardInfo = [];
             include_once CONF_INSTALLATION_PATH . 'library/third-party/analytics/AnalyticsAPI.php';
             try {
                 $analytics = new AnalyticsAPI();
@@ -42,9 +42,9 @@ class HomeController extends AdminBaseController
                     $dashboardInfo['visitsCount'] = (isset($visitCount)) ? $visitCount : '';
                 }
             } catch (exception $e) {
-                
             }
             $statsObj = new AdminStatistic();
+            $dashboardInfo["stats"] = [];
             $dashboardInfo["stats"]["totalUsers"] = $statsObj->getStats('total_members');
             $dashboardInfo["stats"]["totalLessons"] = $statsObj->getStats('total_lessons');
             $dashboardInfo["stats"]["totalCompletedLessons"] = $statsObj->getStats('total_lessons', ScheduledLesson::STATUS_COMPLETED);
@@ -91,7 +91,7 @@ class HomeController extends AdminBaseController
         phpFastCache::setup("storage", "files");
         phpFastCache::setup("path", CONF_INSTALLATION_PATH . "public/caching");
         $cache = phpFastCache();
-        $result = $cache->get("dashboardInfo_" . $type . '_' . $interval . '_' . $this->adminLangId);
+        $result = $cache->get("dashboardInfo_" . $type . '_' . $interval);
         if ($result == null) {
             if (strtoupper($type) == 'TOP_LESSON_LANGUAGES') {
                 $statsObj = new AdminStatistic();
@@ -122,7 +122,7 @@ class HomeController extends AdminBaseController
                     echo $e->getMessage();
                 }
             }
-            $cache->set("dashboardInfo_" . $type . '_' . $interval . '_' . $this->adminLangId, $result, 24 * 60 * 60);
+            $cache->set("dashboardInfo_" . $type . '_' . $interval, $result, 24 * 60 * 60);
         }
         $this->set('stats_type', strtoupper($type));
         $this->set('stats_info', $result);
@@ -131,8 +131,28 @@ class HomeController extends AdminBaseController
 
     public function clearCache()
     {
-        phpFastCache::setup("path", CONF_INSTALLATION_PATH . "public/caching");
         FatCache::clearAll();
+        phpFastCache::setup("path", CONF_INSTALLATION_PATH . "public/caching");
+        $cache = phpFastCache();
+        $dashboardStatsType = [
+            'TOP_LESSON_LANGUAGES',
+            'TOP_COUNTRIES',
+            'TOP_REFERRERS',
+            'TRAFFIC_SOURCE',
+            'VISITORS_STATS'
+        ];
+        $intervalType = [
+            'today',
+            'Weekly',
+            'Monthly',
+            'Yearly',
+        ];
+        $cache->set("dashboardInfo" . $this->adminLangId, '', -1);
+        foreach ($dashboardStatsType as $key => $statsType) {
+            foreach ($intervalType as $key => $interval) {
+                $cache->set("dashboardInfo_" . $statsType . '_' . $interval, '', -1);
+            }
+        }
         Message::addMessage(Label::getLabel('LBL_Cache_has_been_cleared', $this->adminLangId));
     }
 
@@ -150,5 +170,4 @@ class HomeController extends AdminBaseController
         Message::addErrorMessage(Label::getLabel('MSG_Please_select_any_language', $this->adminLangId));
         FatUtility::dieWithError(Message::getHtml());
     }
-
 }
