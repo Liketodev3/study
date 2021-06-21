@@ -66,6 +66,7 @@ $applyTeachFrm->developerTags['fld_default_col'] = 12;
             <p><?php echo Label::getLabel('LBL_Apply_to_Teach_Descritpion', $siteLangId); ?></p>
             <div class="form-register">
                 <?php echo $applyTeachFrm->getFormTag(); ?>
+                <?php echo $applyTeachFrm->getField('agree')->getHtml(); ?>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="field-set">

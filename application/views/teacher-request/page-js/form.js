@@ -15,7 +15,7 @@
             }
         });
     };
-    
+
     getform = function (step) {
         fcom.ajax(fcom.makeUrl('TeacherRequest', 'formStep' + step, []), '', function (res) {
             try {
@@ -37,12 +37,15 @@
             return;
         }
         var data = new FormData(frm);
+        $.mbsmessage(langLbl.processing, false, 'alert alert--process');
         fcom.ajaxMultipart(fcom.makeUrl('TeacherRequest', 'setupStep1'), data, function (response) {
             var res = JSON.parse(response);
             if (res.status == 1) {
                 $.mbsmessage(res.msg, true, 'alert alert--success');
                 if (loadNext) {
                     getform(res.step);
+                } else {
+                    getform(1);
                 }
             } else {
                 $.mbsmessage(res.msg, true, 'alert alert--danger');
@@ -54,6 +57,7 @@
         if (!$(frm).validate()) {
             return;
         }
+        $.mbsmessage(langLbl.processing, false, 'alert alert--process');
         fcom.ajax(fcom.makeUrl('TeacherRequest', 'setupStep2', []), fcom.frmData(frm), function (response) {
             var res = JSON.parse(response);
             if (res.status == 1) {
@@ -71,6 +75,7 @@
     }
 
     setupStep3 = function (frm, loadNext = false) {
+        $.mbsmessage(langLbl.processing, false, 'alert alert--process');
         fcom.ajax(fcom.makeUrl('TeacherRequest', 'setupStep3', []), fcom.frmData(frm), function (response) {
             var res = JSON.parse(response);
             if (res.status == 1) {
@@ -88,6 +93,7 @@
         if (!$(frm).validate()) {
             return;
         }
+        $.mbsmessage(langLbl.processing, false, 'alert alert--process');
         fcom.ajax(fcom.makeUrl('TeacherRequest', 'setupStep4', []), fcom.frmData(frm), function (response) {
             var res = JSON.parse(response);
             if (res.status == 1) {
