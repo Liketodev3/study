@@ -634,7 +634,8 @@ class TeacherRequestController extends MyAppController
         $fld->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
         $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_8_Digit_AlphaNumeric_Password', $langId));
         $frm->addHiddenField('', 'user_preferred_dashboard', User::USER_TEACHER_DASHBOARD);
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_REGISTER_WITH_EMAIL',$this->siteLangId));
+        $frm->addHiddenField('', 'agree', 1)->requirements()->setRequired();
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_REGISTER_WITH_EMAIL', $this->siteLangId));
         return $frm;
     }
 

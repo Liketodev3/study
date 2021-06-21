@@ -18,25 +18,19 @@ $fld = $frm->getField('grpcls_description');
 $fld->developerTags['col'] = 12;
 ?>
 <div class="popup">
-
 	<div class="popup__head">
 		<h4><?php echo Label::getLabel("LBL_Add_Group_Class") ?></h4>
 		<div class="tabs tabs--line border-bottom-0">
-		<ul>
-			<li class="is-active"><a href="javascript:void(0)"><?php echo Label::getLabel('LBL_General'); ?></a></li>
-			<?php foreach ($languages as $langId => $language) { ?>
-				<li><a href="javascript:void(0)" <?php if ($grpclsId > 0) { ?> onclick="editGroupClassLangForm(<?php echo $grpclsId ?>, <?php echo $langId; ?>);" <?php } ?>><?php echo $language['language_name']; ?></a></li>
+			<ul>
+				<li class="is-active"><a href="javascript:void(0)"><?php echo Label::getLabel('LBL_General'); ?></a></li>
+				<?php foreach ($languages as $langId => $language) { ?>
+					<li><a href="javascript:void(0)" <?php if ($grpclsId > 0) { ?> onclick="editGroupClassLangForm(<?php echo $grpclsId ?>, <?php echo $langId; ?>);" <?php } ?>><?php echo $language['language_name']; ?></a></li>
 
-			<?php } ?>
-		</ul>
+				<?php } ?>
+			</ul>
+		</div>
 	</div>
-	</div>
-
-
-
-
-
 	<div class="popup__body">
-	<?php echo $frm->getFormHtml(); ?>
-			</div>
+		<?php echo $frm->getFormHtml(); ?>
+	</div>
 </div>
