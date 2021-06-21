@@ -490,3 +490,7 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.19.0.20210618' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
 ------------------
+
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_REGISTER_WITH_EMAIL', 1, 'REGISTER WITH EMAIL')
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_BY_SIGNING_UP_YOU_AGREE_TO_TERMS', 1, 'By signing up with Yo!Coach, you agree to %s and %s');
