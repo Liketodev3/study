@@ -2922,8 +2922,9 @@ p {
               flex-direction: column; } }
   @media (max-width: 1199px) {
     .sorting__head {
-      -ms-flex-wrap: wrap;
-          flex-wrap: wrap; } }
+      -webkit-box-align: start;
+          -ms-flex-align: start;
+              align-items: flex-start; } }
 
 @media (max-width: 1199px) {
   .sorting__box {
@@ -2941,17 +2942,17 @@ p {
     .sorting__box .btn--filter {
       width: 47%; } }
 
-@media (min-width: 576px) and (max-width: 1199px) {
+@media (max-width: 767px) {
   .sorting__box select {
     height: 50px; } }
 
-@media (min-width: 576px) and (max-width: 1199px) {
+@media (max-width: 767px) {
   .btn--filter .btn {
     height: 50px; } }
 
-@media (max-width: 991px) {
+@media (max-width: 1199px) {
   .sorting__title {
-    margin-bottom: var(--margin-6); } }
+    width: 80%; } }
 
 .sorting__title h4 {
   font-weight: 600;
@@ -3605,6 +3606,14 @@ p {
     opacity: 0;
     visibility: hidden;
     z-index: 999; } }
+
+@media (max-width: 767px) {
+  .show-filters-js {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0; } }
 
 @media (max-width: 767px) {
   .show-filters-js .filter-form {
@@ -6784,23 +6793,29 @@ p {
 .is-registration {
   background-color: var(--color-gray-200);
   position: relative; }
-  @media (min-width: 767px) {
-    .is-registration .header {
-      position: absolute; } }
-  @media (max-width: 767px) {
-    .is-registration .header {
-      background-color: var(--color-white); } }
-  .is-registration .header .header-primary {
-    -webkit-box-shadow: none;
-            box-shadow: none;
-    background: none; }
+  .is-registration .header {
+    -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+            transform: translateY(0); }
+    .is-registration .header .container {
+      max-width: 1220px; }
     @media (min-width: 767px) {
-      .is-registration .header .header-primary {
-        padding: var(--padding-10);
-        padding-left: var(--padding-16); } }
+      .is-registration .header {
+        position: absolute; } }
     @media (max-width: 767px) {
-      .is-registration .header .header-primary .header__right .header-dropwown--profile .is-visible {
-        padding: var(--padding-8); } }
+      .is-registration .header {
+        background-color: var(--color-white); } }
+    .is-registration .header .header-primary {
+      -webkit-box-shadow: none;
+              box-shadow: none;
+      background: none; }
+      @media (min-width: 767px) {
+        .is-registration .header .header-primary {
+          padding: var(--padding-10);
+          padding-left: var(--padding-16); } }
+      @media (max-width: 767px) {
+        .is-registration .header .header-primary .header__right .header-dropwown--profile .is-visible {
+          padding: var(--padding-8); } }
   .is-registration .copyright {
     -webkit-box-pack: center !important;
         -ms-flex-pack: center !important;
@@ -7296,13 +7311,9 @@ p {
       .form--register table .attachment-file .icon {
         width: 12px;
         fill: var(--color-gray-900); }
-    .form--register table .actions-group .btn {
-      border-radius: 5px;
-      -webkit-box-shadow: var(--boxShadow-all);
-              box-shadow: var(--boxShadow-all); }
-      .form--register table .actions-group .btn .icon {
-        fill: inherit;
-        width: 14px; }
+    .form--register table .actions-group .btn .icon {
+      fill: inherit;
+      width: 14px; }
 
 .accept--field {
   color: var(--color-gray-1000); }

@@ -318,7 +318,7 @@
         flex-direction: column;
     }
     @media(max-width: theme('breakpoints.xl','value')) {
-        flex-wrap: wrap;
+        align-items: flex-start;
 
     }
 }
@@ -341,7 +341,7 @@
 }
 
 .sorting__box{
-    @media(min-width: theme('breakpoints.sm','value')) and (max-width: theme('breakpoints.xl','value')){
+    @media(max-width: theme('breakpoints.md','value')){
         select{
             height: 50px;
         }
@@ -349,7 +349,7 @@
 }
 
 .btn--filter{
-    @media(min-width: theme('breakpoints.sm','value')) and (max-width: theme('breakpoints.xl','value')) {
+    @media(max-width: theme('breakpoints.md','value')) {
         .btn{
             height: 50px;
         }
@@ -357,8 +357,8 @@
 }
 
 .sorting__title{
-    @media(max-width: theme('breakpoints.lg','value')) {
-        margin-bottom: var(--margin-6);
+    @media(max-width: theme('breakpoints.xl','value')) {
+        width: 80%;
     }
     h4{
         font-weight: 600;
@@ -1113,6 +1113,9 @@ $box__primary: "box__primary";
 }
 
 .show-filters-js {
+    @media(max-width: theme('breakpoints.md','value')){
+        &{position: fixed; left: 0; right: 0; bottom: 0; top: 0;}
+    }
     .filter-form{
         @media(max-width: theme('breakpoints.md','value')){
             opacity: 1;
