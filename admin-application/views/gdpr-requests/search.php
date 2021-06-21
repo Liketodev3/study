@@ -17,7 +17,6 @@ foreach ($arr_flds as $val) {
 	$e = $th->appendElement('th', array(), $val);
 }
 $sr_no = $page == 1 ? 0 : $pageSize * ($page - 1);
-// echo '<pre>';print_r($gdprRequests);echo '</pre>';
 foreach ($gdprRequests as $sn => $row) {
 	$userFullName = User::getAttributesById($row['gdprdatareq_user_id'], 'concat(user_first_name, " " ,user_last_name)');
 	$sr_no++;
@@ -57,12 +56,7 @@ foreach ($gdprRequests as $sn => $row) {
 				$ul = $td->appendElement("ul",array("class"=>"actions"));
 				if($canEdit){
 					$li = $ul->appendElement("li");
-					$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 'title'=>'Edit',"onclick"=>"changeStatus(".$row['gdprdatareq_id'].")"),'<i class="ion-eye icon"></i>', true);
-					/* $li = $ul->appendElement("li");
-					$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 'title'=>'Edit',"onclick"=>"brandForm(".$row['brand_id'].")"),'<i class="ion-eye icon"></i>', true);
-
-					$li = $ul->appendElement("li");
-					$li->appendElement('a', array('href'=>"javascript:void(0)", 'class'=>'button small green', 'title'=>'Delete',"onclick"=>"deleteRecord(".$row['brand_id'].")"),'<i class="ion-android-delete icon"></i>', true); */
+					$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green', 'title'=>'Edit',"onclick"=>"view(".$row['gdprdatareq_id'].")"),'<i class="ion-eye icon"></i>', true);
 				}
 			break;
 			default:

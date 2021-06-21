@@ -864,14 +864,14 @@ class User extends MyAppModel
         return (bool) self::getAttributesById($userId, 'user_is_teacher');
     }
 
-    public static function truncateUserData($userId,$langId = 1)
+    public function truncateUserData($langId = 1)
     {
         $db = FatApp::getDb();
 
         $tbl_users_data = [
             'user_url_name' => '',
-            'user_first_name' => FatApp::getConfig("CONF_WEBSITE_NAME",FatUtility::VAR_STRING,''),
-            'user_last_name' => Label::getLabel('LBL_User',$langId),
+            'user_first_name' => Label::getLabel('LBL_Deleted', $langId),
+            'user_last_name' => Label::getLabel('LBL_User', $langId),
             'user_phone' => '',
             'user_gender' => NULL,
             'user_dob' => NULL,
@@ -887,37 +887,33 @@ class User extends MyAppModel
             'user_city' => '',
         ];
 
-    
-        if(!$db->updateFromArray(static::DB_TBL, $tbl_users_data, ['smt' => 'user_id=?', 'vals' => [$userId]])){
-            return false;
-        }
+
+        $db->updateFromArray(static::DB_TBL, $tbl_users_data, ['smt' => 'user_id=?', 'vals' => [$this->mainTableRecordId]]);
     }
 
-    public static function truncateUserCredentialsData($userId)
+    public  function truncateUserCredentialsData()
     {
         $db = FatApp::getDb();
-        $tbl_user_credentials_data = ['credential_username' => '', 'credential_email' => ''];
-        if(!$db->updateFromArray(static::DB_TBL_CRED, $tbl_user_credentials_data, ['smt' => 'credential_user_id=?', 'vals' => [$userId]])){
-            return false;
-        }
+        $tbl_user_credentials_data = ['credential_username' => NULL, 'credential_email' => NULL];
+        $db->updateFromArray(static::DB_TBL_CRED, $tbl_user_credentials_data, ['smt' => 'credential_user_id=?', 'vals' => [$this->mainTableRecordId]]);
     }
 
-    public static function truncateUsersLangDataByUserId($userId)
+    public function truncateUsersLangDataByUserId()
     {
-        FatApp::getDb()->deleteRecords(static::DB_TBL_LANG, array('smt' => 'userlang_user_id = ?', 'vals' => array($userId)));
+        FatApp::getDb()->deleteRecords(static::DB_TBL_LANG, array('smt' => 'userlang_user_id = ?', 'vals' => [$this->mainTableRecordId]));
     }
 
-    public static function deleteUserBankInfoDataByUserId($userId)
+    public function deleteUserBankInfoDataByUserId()
     {
-        FatApp::getDb()->deleteRecords(static::DB_TBL_USR_BANK_INFO, array('smt' => 'ub_user_id = ?', 'vals' => array($userId)));
+        FatApp::getDb()->deleteRecords(static::DB_TBL_USR_BANK_INFO, array('smt' => 'ub_user_id = ?', 'vals' => [$this->mainTableRecordId]));
     }
 
-    public static function deleteUserEmailVerificationDataByUserId($userId)
+    public function deleteUserEmailVerificationDataByUserId()
     {
-        FatApp::getDb()->deleteRecords(static::DB_TBL_USER_EMAIL_VER, array('smt' => 'uev_user_id = ?', 'vals' => array($userId)));
+        FatApp::getDb()->deleteRecords(static::DB_TBL_USER_EMAIL_VER, array('smt' => 'uev_user_id = ?', 'vals' => [$this->mainTableRecordId]));
     }
 
-    public static function truncateUserWithdrawalRequestsDataByUserId(int $userId)
+    public function truncateUserWithdrawalRequestsDataByUserId()
     {
         $db = FatApp::getDb();
         $tbl_user_withdrawal_requests_data = [
@@ -928,9 +924,20 @@ class User extends MyAppModel
             'withdrawal_bank_address' => '',
             'withdrawal_paypal_email_id' => ''
         ];
-
-        if ($db->updateFromArray(static::DB_TBL_USR_WITHDRAWAL_REQ, $tbl_user_withdrawal_requests_data, ['smt' => 'withdrawal_user_id=?', 'vals' => [$userId]])) {
+        if ($db->updateFromArray(static::DB_TBL_USR_WITHDRAWAL_REQ, $tbl_user_withdrawal_requests_data, ['smt' => 'withdrawal_user_id=?', 'vals' => [$this->mainTableRecordId]])) {
             return true;
         }
+    }
+    public function deleteUserSetting()
+    {
+        FatApp::getDb()->deleteRecords(UserSetting::DB_TBL, array('smt' => 'us_user_id  = ?', 'vals' => [$this->mainTableRecordId]));
+    }
+    public function deleteUserQualifications()
+    {
+        FatApp::getDb()->deleteRecords(UserQualification::DB_TBL, ['smt' => 'uqualification_user_id = ?', 'vals' => [$this->mainTableRecordId]]);
+    }
+    public  function deleteUserEmailChangeRequests()
+    {
+        FatApp::getDb()->deleteRecords(static::DB_TBL, ['smt' => 'uecreq_user_id = ?', 'vals' => [$this->mainTableRecordId]]);
     }
 }

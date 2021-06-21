@@ -10,7 +10,7 @@ class Gdpr extends MyAppModel
     const STATUS_PENDING = 1;
     const STATUS_COMPLETED = 2;
     const STATUS_DELETED_DATA = 3;
-    const STATUS_DELETED_REQUESTED = 4;
+    const STATUS_DELETED_REQUEST = 4;
 
     public function __construct($id = 0)
     {
@@ -19,78 +19,81 @@ class Gdpr extends MyAppModel
 
     public static function getRequestFromUserId(int $userId)
     {
-    
+
         $srch = new SearchBase(static::DB_TBL);
         $srch->addCondition('gdprdatareq_user_id', '=', $userId);
-        $srch->addCondition('gdprdatareq_status', '=', static::STATUS_PENDING);    
+        $srch->addCondition('gdprdatareq_status', '=', static::STATUS_PENDING);
         $rs = $srch->getResultSet();
         $requestData = FatApp::getDb()->fetch($rs);
-        
         return $requestData;
     }
 
     public static function getGdprRequestTypeArr($langId)
     {
-        $arr=array(
+        $arr = [
             static::TRUNCATE_DATA => Label::getLabel('LBL_Erase_Data', $langId),
             static::ANONYMIZE_DATA => Label::getLabel('LBL_Anonymize_Data', $langId)
-        );
+        ];
         return $arr;
     }
 
-    public static function getStatusArr(int $langId){
+    public static function getStatusArr(int $langId)
+    {
 
-       return [
-           static::STATUS_PENDING => Label::getLabel('LBL_PENDING',$langId),
-           static::STATUS_COMPLETED => Label::getLabel('LBL_COMPLETED',$langId),
-           static::STATUS_DELETED_DATA => Label::getLabel('LBL_DELETED_DATA',$langId),
-           static::STATUS_DELETED_REQUESTED => Label::getLabel('LBL_DELETED_REQUESTED',$langId),
-       ];
+        return [
+            static::STATUS_PENDING => Label::getLabel('LBL_PENDING', $langId),
+            static::STATUS_COMPLETED => Label::getLabel('LBL_COMPLETED', $langId),
+            static::STATUS_DELETED_DATA => Label::getLabel('LBL_DELETED_DATA', $langId),
+            static::STATUS_DELETED_REQUEST => Label::getLabel('LBL_DELETED_REQUESTED', $langId),
+        ];
     }
 
     public function attachedFileTypeArr()
     {
         return [
             AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_PROFILE_IMAGE,
-            AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF, 
-            AttachedFile::FILETYPE_USER_PROFILE_IMAGE, 
-            AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, 
+            AttachedFile::FILETYPE_TEACHER_APPROVAL_USER_APPROVAL_PROOF,
+            AttachedFile::FILETYPE_USER_PROFILE_IMAGE,
+            AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE,
             AttachedFile::FILETYPE_USER_QUALIFICATION_FILE,
         ];
-        
     }
-  
+
     public static function getRequestStatus()
     {
         $getReqStatus = new SearchBase(static::DB_TBL);
-        $getReqStatus->addMultipleFields(array('gdprdatareq_user_id', 'gdprdatareq_id', 'gdprdatareq_status'));
+        $getReqStatus->addMultipleFields(['gdprdatareq_user_id', 'gdprdatareq_id', 'gdprdatareq_status']);
         return $getReqStatus;
     }
 
     public function truncateUserPersonalData(int $userId)
     {
-     
+
         $attchedFile = new AttachedFile();
-        // foreach($this->attachedFileTypeArr() as $user_file_type_value) {
-        //     if(!$attchedFile->deleteFile($user_file_type_value, $userId)){
-        //         Message::addErrorMessage($attchedFile->getError());
-        //         $this->err = Message::getHtml();
-        //         return false;
-        //     }
-        // }
-       
-        User::truncateUserData($userId);
-        User::truncateUserCredentialsData($userId);
-        User::truncateUsersLangDataByUserId($userId);
-        User::deleteUserBankInfoDataByUserId($userId);
-        User::deleteUserEmailVerificationDataByUserId($userId);
-        User::deleteUserEmailVerificationDataByUserId($userId);
-        User::truncateUserWithdrawalRequestsDataByUserId($userId);
-        UserSetting::truncateUserSettingsDataByUserId($userId);
-        UserQualification::deleteUserQualificationsDataByUserId($userId);
-        UserEmailChangeRequest::deleteUserEmailChangeRequestDataByUserId($userId);
+        foreach ($this->attachedFileTypeArr() as $user_file_type_value) {
+            if (!$attchedFile->deleteFile($user_file_type_value, $userId)) {
+                continue;
+            }
+        }
         $db = FatApp::getDb();
-        $db->updateFromArray(User::DB_TBL,['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?','vals' => [$userId]]);
+        $db->startTransaction();
+        $user = new user($userId);
+        $user->truncateUserData();
+        $user->truncateUserCredentialsData();
+        $user->truncateUsersLangDataByUserId();
+        $user->deleteUserBankInfoDataByUserId();
+        $user->deleteUserEmailVerificationDataByUserId();
+        $user->deleteUserEmailVerificationDataByUserId();
+        $user->truncateUserWithdrawalRequestsDataByUserId();
+        $user->deleteUserSetting();
+        $user->deleteUserQualifications();
+        $user->deleteUserEmailChangeRequests();
+        if ($user->getError()) {
+            $db->rollbackTransaction();
+            return false;
+        }
+        $db->updateFromArray(User::DB_TBL, ['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?', 'vals' => [$userId]]);
+        $db->commitTransaction();
         return true;
     }
 }
