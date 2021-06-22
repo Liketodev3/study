@@ -519,7 +519,9 @@ CREATE TABLE `tbl_gdpr_data_requests` (
    PRIMARY KEY (`gdprdatareq_id`)
 ) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_Gdpr_Delete_Account_Request_Description', '1', 'This request will delete all your personal data from the platform. After deleting you will have to again signup to use the platform');
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
+('LBL_Gdpr_Delete_Account_Request_Description', '1', 'This request will delete all your personal data from the platform. After deleting you will have to again signup to use the platform'),
+('LBL_Delete_Account_Form', '1', 'Delete Account');
 
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_You_already_Requested_Delete_Account', '1', 'You Already Requested For Delete Account ?');
