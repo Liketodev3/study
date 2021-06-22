@@ -129,7 +129,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         } else if ($reportHours > 0 &&
                                 (($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED ||
                                 ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED &&
-                                $currentUnixTime > $endDateTimeUnixtime && $lesson['slesson_teacher_join_time'] == 0)) &&
+                                $currentUnixTime > $endDateTimeUnixtime && $lesson['slesson_teacher_join_time'] == '0000-00-00 00:00:00')) &&
                                 $lesson['repiss_id'] < 1 && $lessonReportDate > strtotime(date('Y-m-d H:i:s')))
                         ) {
                             ?>
