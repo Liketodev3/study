@@ -259,7 +259,7 @@
   @media (min-width: 1199px) {
     .header-dropdown__target {
       top: 150%;
-      padding-top: calc(var(--padding-8) - 1px); } }
+      padding-top: calc(var(--padding-8) - 2px); } }
 
 .menu--inline ul .menu__item {
   padding: 0;
@@ -488,7 +488,8 @@
         padding: var(--padding-5) var(--padding-5); } }
   @media (max-width: 767px) {
     .header-controls div:not(.header-dropwown--profile) a {
-      padding: var(--padding-5) var(--padding-4); }
+      padding: var(--padding-5) var(--padding-4);
+      height: auto; }
       .header-controls div:not(.header-dropwown--profile) a svg {
         fill: var(--color-white);
         width: 17px;
@@ -1471,7 +1472,7 @@ p {
           transform: translateX(-50%); }
   .slideshow .slick-dots button {
     width: 30px;
-    background: rgba(255, 255, 255, 0.6); }
+    background: rgba(255, 255, 255, 0.4); }
 
 .slideshow-content {
   position: absolute;
@@ -2249,6 +2250,8 @@ p {
       left: -15px; } }
   .quote-slider .slider .slider__item {
     padding: 0 var(--padding-4); }
+  .quote-slider .slider .slick-dots .slick-active button {
+    background-color: var(--color-white); }
   .quote-slider .quote {
     padding: var(--padding-12) 0; }
     @media (min-width: 767px) {
@@ -2405,9 +2408,9 @@ p {
 
 @media (min-width: 1199px) {
   .blog-wrapper .slick-next {
-    left: -5%; }
-  .blog-wrapper .slick-prev {
     right: -5%; }
+  .blog-wrapper .slick-prev {
+    left: -5%; }
   .blog-wrapper .slick-arrow::before {
     border-color: #666; } }
 
@@ -2963,6 +2966,13 @@ p {
     padding: 0 var(--padding-5); }
   .btn--filter {
     width: 49%; } }
+  @media (max-width: 767px) and (min-width: 767px) and (max-width: 1199px) {
+    .btn--filter {
+      margin-left: var(--margin-3); } }
+
+@media (min-width: 767px) and (max-width: 1199px) {
+  .btn--filter {
+    margin-left: var(--margin-3); } }
 
 @media (max-width: 1199px) {
   .sorting__title {
@@ -3359,13 +3369,14 @@ p {
       .custom-calendar tbody td .cal-cell {
         margin: 0 auto; } }
   .custom-calendar tbody td .tooltip {
-    width: 48px;
+    width: auto;
     height: 21px;
     border-radius: 2px;
     line-height: 13px;
     -webkit-box-pack: center;
         -ms-flex-pack: center;
-            justify-content: center; }
+            justify-content: center;
+    white-space: nowrap; }
   .custom-calendar tbody td .cell-green-100 {
     background-color: var(--color-green); }
   .custom-calendar tbody td .cell-green-80 {

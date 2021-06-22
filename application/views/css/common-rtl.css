@@ -2099,6 +2099,22 @@ ul {
   -ms-flex-wrap: wrap;
       flex-wrap: wrap; }
 
+.calendar-loader {
+  position: absolute;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  height: 100%;
+  z-index: 9;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+
 .align-left {
   text-align: right !important; }
 
@@ -7279,7 +7295,7 @@ textarea[disabled] {
       height: 6px;
       border: none;
       font-size: 0;
-      background: rgba(0, 0, 0, 0.2); }
+      background: rgba(255, 255, 255, 0.2); }
     .slick-dots li.slick-active button {
       background: var(--color-primary); }
 

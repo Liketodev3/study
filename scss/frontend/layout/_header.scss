@@ -336,7 +336,7 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
   
     @media(min-width: theme('breakpoints.xl','value')){
         &{
-            top: 150%;  padding-top: calc(var(--padding-8) - 1px); 
+            top: 150%;  padding-top: calc(var(--padding-8) - 2px); 
         }
     }
 }
@@ -631,6 +631,7 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
             @media(max-width: theme('breakpoints.md','value')){
                 a{
                     padding: theme('padding.5') theme('padding.4');
+                    height: auto;
                     svg{
                         fill: theme('color.white');
                         width: 17px;

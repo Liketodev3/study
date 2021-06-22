@@ -42,7 +42,7 @@ $sidebar: "sidebar";
             flex-direction: column;
             width: 16.45rem;
             height: 100%;
-
+            transform: translate(0);
 
             &.is-visible{
                 width: 0; opacity: 0;visibility: hidden; white-space: nowrap; transform: translateX(-100%);overflow: hidden;

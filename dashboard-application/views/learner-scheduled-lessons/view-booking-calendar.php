@@ -8,7 +8,7 @@ $isRescheduleRequest = (!empty($isRescheduleRequest));
 $getAllMonthName =  CommonHelper::getAllMonthName();
 $weekDayName =  CommonHelper::dayNames();
 ?>
-<div id="loaderCalendar" style="display: none;"><div class="loader"></div></div>
+<div id="loaderCalendar" class="calendar-loader" style="display: none;"><div class="loader"></div></div>
 <div class="calendar-view scheduled-lesson-popup">
 	<?php if($isRescheduleRequest) { ?>
 	<div class="box">

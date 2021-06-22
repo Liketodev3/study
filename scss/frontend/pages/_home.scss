@@ -35,7 +35,7 @@ $slideshow: "slideshow";
     transform: translateX(-50%);
     button{
         width: 30px;
-      background: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.4);
         
     }    
 }
@@ -46,12 +46,12 @@ $slideshow: "slideshow";
 
 .slideshow-content{
     position: absolute;
-    #{theme('direction.left','value')}: 50%;
+    left: 50%;
     top: 50%;
     min-width: 520px;
     max-width: 520px;
     color: #111;
-    margin-#{theme('direction.left','value')}:-650px;
+    margin-left:-650px;
     transform: translate(0, -50%);
     z-index: 2;
     padding: var(--padding-14) var(--padding-18);
@@ -955,6 +955,14 @@ $card: 'card';
         .slider__item{
             padding: 0 var(--padding-4);
         }
+
+        .slick-dots{
+            .slick-active{
+                button{
+                    background-color: theme('color.white');
+                }
+            }
+        }
     }
 
     .quote {
@@ -1149,9 +1157,9 @@ $card: 'card';
 
     @media(min-width: theme('breakpoints.xl','value')){
         .slick-next{
-            #{theme('direction.left','value')}: -5%;
+            right: -5%;
         }.slick-prev{
-            #{theme('direction.right','value')}: -5%;
+            left: -5%;
         }
         .slick-arrow{
             &::before{

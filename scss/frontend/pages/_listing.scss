@@ -360,17 +360,24 @@
     }
 }
 @media(max-width: theme('breakpoints.md','value')) {
-select{
-    width: 49%;
-    border-radius: 0;
-    padding: 0 var(--padding-5);
+    select{
+        width: 49%;
+        border-radius: 0;
+        padding: 0 var(--padding-5);
+    }
+    .btn--filter{
+        width: 49%;
+        @media(min-width: theme('breakpoints.md','value')) and (max-width: theme('breakpoints.xl','value')) {
+            margin-#{theme('direction.left','value')}: theme('margin.3');
+        }
+    }
 }
+
 .btn--filter{
-    width: 49%;
+    @media(min-width: theme('breakpoints.md','value')) and (max-width: theme('breakpoints.xl','value')) {
+        margin-#{theme('direction.left','value')}: theme('margin.3');
+    }
 }
-}
-
-
 
 .sorting__title{
     @media(max-width: theme('breakpoints.xl','value')) {
@@ -849,11 +856,12 @@ $box__primary: "box__primary";
                 }
             }
             .tooltip{
-                width: 48px;
+                width: auto;
                 height: 21px;
                 border-radius: 2px;
                 line-height: 13px;
                 justify-content: center;
+                white-space: nowrap;
             }
             .cell-green-100{
                 background-color: var(--color-green);
@@ -1354,3 +1362,4 @@ $box__primary: "box__primary";
         }
     }
 }
+
