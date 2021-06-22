@@ -336,7 +336,7 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
   
     @media(min-width: theme('breakpoints.xl','value')){
         &{
-            top: 150%;  padding-top: calc(var(--padding-8) - 1px); 
+            top: 150%;  padding-top: calc(var(--padding-8) - 2px); 
         }
     }
 }
@@ -616,13 +616,32 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
         }
         
         .header-controls__action{
-            padding: theme('padding.5') theme('padding.5');
+            @media(min-width: theme('breakpoints.md','value')){
+                padding: theme('padding.5') theme('padding.5');
+            }
             display: block;
             position: relative;
-            svg{
-                fill: var(--color-white);
-            }
+        }
+        
+    }
 
+    div{
+        &:not(.header-dropwown--profile){
+           
+            @media(max-width: theme('breakpoints.md','value')){
+                a{
+                    padding: theme('padding.5') theme('padding.4');
+                    height: auto;
+                    svg{
+                        fill: theme('color.white');
+                        width: 17px;
+                        height: 17px;
+                    }
+                    .lang{
+                        display: none;
+                    }
+                }
+            }
            
         }
     }

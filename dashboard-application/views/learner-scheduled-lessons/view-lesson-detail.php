@@ -71,7 +71,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                                 <?php
                                 if (true == User::isProfilePicUploaded($lesson['slesson_teacher_id'])) {
                                     $img = CommonHelper::generateUrl('Image', 'user', array($lesson['slesson_teacher_id'], 'normal', 1), CONF_WEBROOT_FRONT_URL) . '?' . time();
-                                    echo '<img src="' . $img . '"  alt="' . $teacherFullName . '" />';
+                                    echo '<img src="' . $img . '" />';
                                 }
                                 ?>
                             </span>
@@ -197,7 +197,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                 <?php if ($lesson['sldetail_learner_join_time'] == '0000-00-00 00:00:00' || $activeMettingTool == ApplicationConstants::MEETING_ZOOM) { ?>
                     <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startDateTimeUnixtime > $currentUnixTime || $currentUnixTime > $endDateTimeUnixtime || !$isScheduled ? 'style="display:none;"' : '') ?>>
                         <?php if ($activeMettingTool == ApplicationConstants::MEETING_ZOOM) { ?>
-                            <a href="javascript:void(0);" class="btn btn--primary btn--large" onclick="joinLesson('<?php echo $chatId; ?>', '<?php echo $lesson['slesson_teacher_id']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
+                            <a href="javascript:void(0);" class="btn btn--primary" onclick="joinLesson('<?php echo $chatId; ?>', '<?php echo $lesson['slesson_teacher_id']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
                             <a href="javascript:void(0);" class="btn btn--secondary" onclick="joinLessonFromApp('<?php echo $chatId; ?>', '<?php echo $lesson['slesson_teacher_id']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
                         <?php } else { ?>
                             <a href="javascript:void(0);" class="btn btn--secondary btn--large" id="joinL" onclick="joinLesson('<?php echo $chatId; ?>', '<?php echo $lesson['slesson_teacher_id']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson'); ?></a>

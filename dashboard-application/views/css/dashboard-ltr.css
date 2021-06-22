@@ -237,7 +237,10 @@ p {
           -ms-flex-direction: column;
               flex-direction: column;
       width: 16.45rem;
-      height: 100%; }
+      height: 100%;
+      -webkit-transform: translate(0);
+          -ms-transform: translate(0);
+              transform: translate(0); }
       .sidebar__primary.is-visible {
         width: 0;
         opacity: 0;
@@ -1414,6 +1417,10 @@ p {
   .join-btns .btn {
     font-size: 14px; } }
 
+@media (max-width: 767px) and (max-width: 767px) {
+  .join-btns .btn {
+    margin-bottom: var(--margin-2); } }
+
 @media (max-width: 500px) {
   #teacherPreferencesFrm.form .field_label.-display-block {
     min-height: 1%;
@@ -1809,22 +1816,6 @@ html.show-facebox body {
   background: #fff;
   padding: 60px;
   width: 100%; }
-
-#loaderCalendar {
-  position: absolute;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.5);
-  height: 100%;
-  z-index: 9;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center; }
 
 .profile-progress {
   font-weight: 500;
@@ -2233,6 +2224,91 @@ strong.span-right {
     margin-top: 10px; }
   .fc-toolbar.fc-header-toolbar {
     margin-top: 10px; } }
+
+.tags {
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0; }
+
+.tags li {
+  float: left; }
+
+.tage {
+  background: #eee;
+  border-radius: 3px 0 0 3px;
+  color: #999;
+  display: inline-block;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 20px 0 23px;
+  position: relative;
+  margin: 0 10px 10px 0;
+  text-decoration: none;
+  -webkit-transition: color 0.2s; }
+
+.tage::before {
+  background: #fff;
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
+          box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
+  content: '';
+  height: 6px;
+  left: 10px;
+  position: absolute;
+  width: 6px;
+  top: 10px; }
+
+.tage::after {
+  background: #fff;
+  border-bottom: 13px solid transparent;
+  border-left: 10px solid #eee;
+  border-top: 13px solid transparent;
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0; }
+
+.tage:hover {
+  background-color: #B26DE6;
+  color: #fff; }
+
+.tage:hover span {
+  color: #fff; }
+
+.tage:hover::after {
+  border-left-color: #B26DE6; }
+
+.table-box-bordered {
+  width: 100%;
+  margin-top: 30px;
+  padding: 20px; }
+
+.table-box-bordered h5 {
+  margin-bottom: 10px; }
+
+.table-pricing {
+  width: 100%;
+  border-collapse: separate; }
+
+.table-pricing td {
+  padding: 5px 0; }
+
+.field-price-small {
+  border: 1px solid #ddd;
+  height: 40px;
+  padding: 10px;
+  width: 100%;
+  text-align: center; }
+
+.box-signle-price {
+  background: #f9f8f0; }
+
+.box-signle-price h5 {
+  color: #7a6d09; }
+
+.box-bulk-price {
+  background: #faf3f2; }
 
 .infobar {
   background-color: var(--color-white);
@@ -3538,8 +3614,7 @@ div.tagsinput div {
 .select2-container .select2-selection--single {
   height: 2.8rem !important;
   border: 1px solid var(--color-gray-300) !important;
-  position: relative;
-  border-radius: var(--radius-1) !important; }
+  position: relative; }
   .select2-container .select2-selection--single .select2-selection__rendered {
     line-height: 38px !important;
     padding: 0 var(--padding-4) !important;
@@ -5023,7 +5098,7 @@ div.tagsinput div {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   background: #fff;
   left: 0;

@@ -259,7 +259,7 @@
   @media (min-width: 1199px) {
     .header-dropdown__target {
       top: 150%;
-      padding-top: calc(var(--padding-8) - 1px); } }
+      padding-top: calc(var(--padding-8) - 2px); } }
 
 .menu--inline ul .menu__item {
   padding: 0;
@@ -481,11 +481,21 @@
     .header-controls .header-controls__item .header-actions {
       display: none !important; } }
   .header-controls .header-controls__item .header-controls__action {
-    padding: var(--padding-5) var(--padding-5);
     display: block;
     position: relative; }
-    .header-controls .header-controls__item .header-controls__action svg {
-      fill: var(--color-white); }
+    @media (min-width: 767px) {
+      .header-controls .header-controls__item .header-controls__action {
+        padding: var(--padding-5) var(--padding-5); } }
+  @media (max-width: 767px) {
+    .header-controls div:not(.header-dropwown--profile) a {
+      padding: var(--padding-5) var(--padding-4);
+      height: auto; }
+      .header-controls div:not(.header-dropwown--profile) a svg {
+        fill: var(--color-white);
+        width: 17px;
+        height: 17px; }
+      .header-controls div:not(.header-dropwown--profile) a .lang {
+        display: none; } }
   @media (min-width: 1199px) {
     .header-controls .header--notification {
       display: block; }
@@ -1462,7 +1472,7 @@ p {
           transform: translateX(-50%); }
   .slideshow .slick-dots button {
     width: 30px;
-    background: rgba(255, 255, 255, 0.6); }
+    background: rgba(255, 255, 255, 0.4); }
 
 .slideshow-content {
   position: absolute;
@@ -2240,6 +2250,8 @@ p {
       left: -15px; } }
   .quote-slider .slider .slider__item {
     padding: 0 var(--padding-4); }
+  .quote-slider .slider .slick-dots .slick-active button {
+    background-color: var(--color-white); }
   .quote-slider .quote {
     padding: var(--padding-12) 0; }
     @media (min-width: 767px) {
@@ -2396,9 +2408,9 @@ p {
 
 @media (min-width: 1199px) {
   .blog-wrapper .slick-next {
-    left: -5%; }
-  .blog-wrapper .slick-prev {
     right: -5%; }
+  .blog-wrapper .slick-prev {
+    left: -5%; }
   .blog-wrapper .slick-arrow::before {
     border-color: #666; } }
 
@@ -2843,6 +2855,10 @@ p {
     width: 100%;
     padding-top: var(--padding-3); } }
 
+.filter-form .filter__secondary .is-active::before {
+  top: 20px;
+  opacity: 1; }
+
 @media (min-width: 1199px) {
   .filter-group {
     display: -webkit-box;
@@ -2868,6 +2884,8 @@ p {
 
 .filter-group__inner {
   cursor: pointer; }
+  .filter-group__inner:last-child .filter__head {
+    margin-right: var(--margin-0); }
   @media (min-width: 1199px) {
     .filter-group__inner .filter__head {
       position: relative;
@@ -2948,6 +2966,13 @@ p {
     padding: 0 var(--padding-5); }
   .btn--filter {
     width: 49%; } }
+  @media (max-width: 767px) and (min-width: 767px) and (max-width: 1199px) {
+    .btn--filter {
+      margin-left: var(--margin-3); } }
+
+@media (min-width: 767px) and (max-width: 1199px) {
+  .btn--filter {
+    margin-left: var(--margin-3); } }
 
 @media (max-width: 1199px) {
   .sorting__title {
@@ -3072,9 +3097,10 @@ p {
         right: 0;
         top: 0;
         bottom: 0;
-        background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.8)), to(rgba(255, 255, 255, 0)));
-        background: -o-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(255, 255, 255, 0) 100%); } }
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(10%, rgba(0, 0, 0, 0.8)), color-stop(60%, rgba(255, 255, 255, 0)));
+        background: -o-linear-gradient(top, rgba(0, 0, 0, 0.8) 10%, rgba(255, 255, 255, 0) 60%);
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 10%, rgba(255, 255, 255, 0) 60%);
+        pointer-events: none; } }
   .list__head .list__price p {
     font-weight: bold;
     color: var(--color-dark);
@@ -3193,7 +3219,7 @@ p {
   width: 36px;
   height: 36px;
   padding: 5px;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3343,13 +3369,14 @@ p {
       .custom-calendar tbody td .cal-cell {
         margin: 0 auto; } }
   .custom-calendar tbody td .tooltip {
-    width: 48px;
+    width: auto;
     height: 21px;
     border-radius: 2px;
     line-height: 13px;
     -webkit-box-pack: center;
         -ms-flex-pack: center;
-            justify-content: center; }
+            justify-content: center;
+    white-space: nowrap; }
   .custom-calendar tbody td .cell-green-100 {
     background-color: var(--color-green); }
   .custom-calendar tbody td .cell-green-80 {
@@ -3721,20 +3748,26 @@ p {
       transition: all 0.3s; }
     .filter__head h6 {
       font-weight: normal;
-      color: var(--color-gray-000); }
-    .filter__head.is-active:before {
-      border-color: var(--color-primary);
-      -webkit-transform: rotate(226deg) !important;
-          -ms-transform: rotate(226deg) !important;
-              transform: rotate(226deg) !important; }
-    .filter__head.is-active h6 {
-      font-weight: 600;
-      color: var(--color-primary); }
-    .filter__head.is-active .icon {
-      fill: var(--color-primary); }
-    .filter__head.is-active input[type="text"] {
-      color: var(--color-primary);
-      font-weight: 600; } }
+      color: var(--color-gray-000); } }
+
+.filter__head.is-active:before {
+  border-color: var(--color-primary);
+  -webkit-transform: rotate(226deg) !important;
+      -ms-transform: rotate(226deg) !important;
+          transform: rotate(226deg) !important;
+  top: 27px; }
+
+.filter__head.is-active h6 {
+  font-weight: 600;
+  color: var(--color-primary); }
+
+.filter__head.is-active .icon {
+  fill: var(--color-primary);
+  opacity: 1; }
+
+.filter__head.is-active input[type="text"] {
+  color: var(--color-primary);
+  font-weight: 600; }
 
 @media (max-width: 767px) {
   .filter-tags-list ul {
@@ -6489,12 +6522,11 @@ p {
     bottom: 0; }
     @media (min-width: 991px) {
       .slider--value .slick-dots {
-        left: 82px; } }
+        left: 82px;
+        position: absolute; } }
     .slider--value .slick-dots .slick-active button {
       background-color: var(--color-white);
       border-color: var(--color-white); }
-    .slider--value .slick-dots li:not(.slick-active) button {
-      opacity: 0.15; }
 
 .slide-box {
   color: var(--color-white);

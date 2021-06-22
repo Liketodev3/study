@@ -422,10 +422,11 @@ $flash-card: "flash-card";
     }
 }
 
+
 .sidebar__links{
     display: flex;
     justify-content: center;
-    position: absolute;
+    position: fixed;
     bottom: 0px;
     background: #fff;
     #{theme('direction.left','value')}: 0;

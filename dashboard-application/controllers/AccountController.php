@@ -415,7 +415,7 @@ class AccountController extends LoggedUserController
             FatUtility::dieWithError(Message::getHtml());
         }
     
-        $gdprId = Gdpr::getRequestFromUserId($userId);
+        $gdprId = GdprRequest::getRequestFromUserId($userId);
         if(!empty($gdprId)){
             Message::addErrorMessage(Label::getLabel('LBL_You_already_requested_erase_date',$this->siteLangId));
             FatUtility::dieWithError(Message::getHtml());
@@ -442,13 +442,13 @@ class AccountController extends LoggedUserController
         $gdpr_request_data = [
         'gdprdatareq_user_id'=> $userId,
         'gdprdatareq_reason'=> $post['gdprdatareq_reason'],
-        'gdprdatareq_type'=> Gdpr::TRUNCATE_DATA,
+        'gdprdatareq_type'=> GdprRequest::TRUNCATE_DATA,
         'gdprdatareq_added_on'=>date('Y-m-d H:i:s'),
         'gdprdatareq_updated_on'=>date('Y-m-d H:i:s'),
-        'gdprdatareq_status'=>Gdpr::STATUS_PENDING,
+        'gdprdatareq_status'=>GdprRequest::STATUS_PENDING,
         ];
 
-        $gdpr = new Gdpr();
+        $gdpr = new GdprRequest();
         $gdpr->assignValues($gdpr_request_data);
         if (!$gdpr->save()) {
             FatUtility::dieJsonError($gdpr->getError());

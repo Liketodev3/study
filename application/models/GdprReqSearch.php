@@ -4,7 +4,7 @@ class GdprReqSearch extends SearchBase
 {
     public function __construct()
     {
-        parent::__construct(Gdpr::DB_TBL, 'gdpr');
+        parent::__construct(GdprRequest::DB_TBL, 'gdpr');
     }
 
     public function joinUser($joinCredentials = false)

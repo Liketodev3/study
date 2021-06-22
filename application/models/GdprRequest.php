@@ -81,7 +81,7 @@ class GdprRequest extends MyAppModel
             return false;
         }
         if(!$db->updateFromArray(User::DB_TBL, ['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?', 'vals' => [$userId]])){
-            $this->error = $db->getError();
+            $this->error = $user->getError();
             $db->rollbackTransaction();
             return false;
         }
